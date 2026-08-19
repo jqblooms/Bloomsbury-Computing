@@ -241,6 +241,7 @@ const HexPad = ({ onInput, onDelete, onSubmit }) => (
     </div>
 );
 
+const HelpModal = ({ levelId, onClose }) => {
     const content = { 1:{title:"Place Values (Drag)",body:"Drag values (1, 2, 4...) to fill gaps."}, 2:{title:"Place Values (Type)",body:"Type the missing place values from memory."}, 3:{title:"Bit Flipper",body:"Click bits to match the target Decimal number."}, 4:{title:"Decoder",body:"Convert Binary to Decimal. Type the total."}, 5:{title:"Bin Add Rules",body:"Solve single column binary addition.\nRules:\n0+0=0\n0+1=1\n1+1=0 (carry 1)\n1+1+1=1 (carry 1)"}, 6:{title:"Binary Addition",body:"Add two binary numbers. Use the Carry row (top) to track your work."}, 7:{title:"Hex Reader",body:"Convert Hex to Decimal. A=10, B=11... F=15.\nExample: A5 = (10 × 16) + 5 = 165."}, 8:{title:"Hex Writer",body:"Convert Decimal to Hex.\nTip: Divide by 16. Quotient is first digit, Remainder is second."}, 9:{title:"Bin to Hex",body:"Split 8 bits into two nibbles. Convert each nibble (8-4-2-1) to a Hex digit."}, 10:{title:"Hex to Bin",body:"Convert each Hex digit into its 4-bit binary equivalent using the 8-4-2-1 columns."}, 11:{title:"Final Exam",body:"15 questions mixed from all levels.\nNo time limit for Game Over, but time is tracked.\nTry to beat your previous score!"} };
     const data = content[levelId] || { title: "Help", body: "Good luck!" };
     return (
