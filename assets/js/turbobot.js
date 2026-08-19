@@ -172,7 +172,8 @@
       '  box-shadow:0 12px 32px rgba(15,23,42,0.35);',
       '}',
       '.tb-hidden-by-mode { display:none!important; }',
-      '[class*="toggle-buttons_button"] {',
+      '[class*="toggle-buttons_button"],',
+      '[class*="stage-header_stage-button_"] {',
       '  pointer-events:none!important;',
       '  cursor:default!important;',
       '}',
@@ -1000,6 +1001,11 @@
       button.setAttribute('tabindex', '-1');
       button.setAttribute('aria-disabled', 'true');
       button.disabled = true;
+    });
+
+    document.querySelectorAll('[class*="stage-header_stage-button_"]').forEach(function (button) {
+      button.setAttribute('tabindex', '-1');
+      button.setAttribute('aria-disabled', 'true');
     });
   }
 
