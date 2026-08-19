@@ -172,6 +172,10 @@
       '  box-shadow:0 12px 32px rgba(15,23,42,0.35);',
       '}',
       '.tb-hidden-by-mode { display:none!important; }',
+      '[class*="toggle-buttons_button"] {',
+      '  pointer-events:none!important;',
+      '  cursor:default!important;',
+      '}',
       '@media (max-width: 900px) {',
       '  .tb-panel.tb-floating { left:10px; right:10px; width:auto; min-width:0; top:52vh; }',
       '}'
@@ -983,6 +987,22 @@
     });
   }
 
+  function lockStageSize() {
+    var smallStageButton = document.querySelector('[aria-label="Switch to small stage"]');
+    var largeStageButton = document.querySelector('[aria-label="Switch to full stage"]');
+
+    if (smallStageButton && smallStageButton.getAttribute('aria-pressed') !== 'true') {
+      try { smallStageButton.click(); } catch (e) {}
+    }
+
+    [smallStageButton, largeStageButton].forEach(function (button) {
+      if (!button) return;
+      button.setAttribute('tabindex', '-1');
+      button.setAttribute('aria-disabled', 'true');
+      button.disabled = true;
+    });
+  }
+
   function pruneUi() {
     [
       'Motion',
@@ -996,6 +1016,7 @@
       'Sounds'
     ].forEach(hideByText);
     filterVisibleFlyoutBlocks();
+    lockStageSize();
   }
 
   function scheduleInitialCategorySelect() {
