@@ -811,6 +811,17 @@ function init() {
 
     editor.on("change", updateLineCount);
 
+    // CodeMirror measures its gutter/character widths against whatever size
+    // its container has at creation time. When this page is preloaded inside
+    // a hidden (display:none) tab, as it is on the main site, that size is
+    // 0x0 and the measurement is wrong until something explicitly tells it
+    // to remeasure, which is why line numbers and text overlap until an
+    // unrelated change (like reaching a two-digit line count) forces a
+    // relayout. Refresh whenever the editor's real size changes instead.
+    new ResizeObserver(function () {
+        editor.refresh();
+    }).observe(document.getElementById('editor-container'));
+
     // Setup UI Listeners
     document.getElementById("btn-play").addEventListener("click", playCode);
     document.getElementById("btn-stop").addEventListener("click", resetLevel);
