@@ -1023,6 +1023,9 @@
     ].forEach(hideByText);
     filterVisibleFlyoutBlocks();
     lockStageSize();
+    if (!state.didSelectCategory && selectEventsCategory()) {
+      filterVisibleFlyoutBlocks();
+    }
   }
 
   function scheduleInitialCategorySelect() {
