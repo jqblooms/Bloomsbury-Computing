@@ -945,7 +945,7 @@
       filterVisibleFlyoutBlocks();
       return true;
     }
-    var direct = document.querySelector('.scratchCategoryId-event');
+    var direct = document.querySelector('.scratchCategoryId-events');
     if (direct) {
       try {
         dispatchCategorySelection(direct);
@@ -972,7 +972,7 @@
   }
 
   function isEventsCategorySelected() {
-    var item = document.querySelector('.scratchCategoryId-event');
+    var item = document.querySelector('.scratchCategoryId-events');
     return !!(item && /\bcategorySelected\b/.test(item.className || ''));
   }
 
