@@ -134,26 +134,25 @@
             
             <button onclick="document.getElementById('help-modal').classList.add('hidden')" style="position: absolute; top: 15px; right: 15px; background: #ff5555; color: white; border: none; padding: 5px 12px; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 16px;">X</button>
             
-            <h2 style="margin-top: 0; color: #50fa7b; border-bottom: 1px solid #44475a; padding-bottom: 10px;">Python Lightbot Dictionary</h2>
+            <h2 style="margin-top: 0; color: #50fa7b; border-bottom: 1px solid #44475a; padding-bottom: 10px;">Commands</h2>
 
-            <h3 style="color: #8be9fd; margin-bottom: 5px;">🤖 Robot Commands</h3>
-            <p style="font-size: 14px; color: #bfbfbf; margin-top: 0;">These are the specific functions you can use to control Wall-E.</p>
+            <h3 style="color: #8be9fd; margin-bottom: 5px;">Moving Wall-E</h3>
             <ul style="line-height: 1.8; background: #1e1f29; padding: 15px 20px 15px 40px; border-radius: 5px; font-family: monospace; font-size: 15px;">
-                <li><span style="color: #ffb86c">walk_forward()</span> - Moves forward 1 space.</li>
-                <li><span style="color: #ffb86c">turn_left()</span>    - Turns 90 degrees to the left.</li>
-                <li><span style="color: #ffb86c">turn_right()</span>   - Turns 90 degrees to the right.</li>
-                <li><span style="color: #ffb86c">jump()</span>         - Jumps up or down a ledge while moving forward.</li>
-                <li><span style="color: #ffb86c">light()</span>        - Lights up a blue tile (or turns it off). Light them all to win!</li>
+                <li><span style="color: #ffb86c">walk_forward()</span> - move forward one space</li>
+                <li><span style="color: #ffb86c">turn_left()</span>    - turn 90 degrees left</li>
+                <li><span style="color: #ffb86c">turn_right()</span>   - turn 90 degrees right</li>
+                <li><span style="color: #ffb86c">jump()</span>         - jump up or down a ledge while moving forward</li>
+                <li><span style="color: #ffb86c">light()</span>        - toggle a tile on or off; light every tile to win</li>
             </ul>
 
-            <h3 style="color: #bd93f9; margin-bottom: 5px; margin-top: 25px;">🔁 For Loops</h3>
-            <p style="font-size: 14px; margin-top: 0; color: #bfbfbf;">Use a <code>for</code> loop when you know exactly how many times to repeat an action. The <code>i</code> acts as the iterator (a built-in counter).</p>
+            <h3 style="color: #bd93f9; margin-bottom: 5px; margin-top: 25px;">For loops</h3>
+            <p style="font-size: 14px; margin-top: 0; color: #bfbfbf;">Repeats a fixed number of times, counted by <code>i</code>.</p>
             <pre style="background: #1e1f29; padding: 15px; border-radius: 5px; color: #f8f8f2; border-left: 4px solid #bd93f9; margin-top: 10px;"><code><span style="color: #ff79c6">for</span> i <span style="color: #ff79c6">in</span> <span style="color: #8be9fd">range</span>(4):
     walk_forward()
     light()</code></pre>
 
-            <h3 style="color: #ff79c6; margin-bottom: 5px; margin-top: 25px;">🔄 While Loops</h3>
-            <p style="font-size: 14px; margin-top: 0; color: #bfbfbf;">Use a <code>while</code> loop to keep repeating as long as a condition is true. You must manually increase your iterator (<code>i</code>) so the loop eventually finishes, otherwise your game will freeze in an infinite loop!</p>
+            <h3 style="color: #ff79c6; margin-bottom: 5px; margin-top: 25px;">While loops</h3>
+            <p style="font-size: 14px; margin-top: 0; color: #bfbfbf;">Repeats as long as the condition holds. Increase <code>i</code> yourself, or the loop never ends.</p>
             <pre style="background: #1e1f29; padding: 15px; border-radius: 5px; color: #f8f8f2; border-left: 4px solid #ff79c6; margin-top: 10px;"><code>i = 0
 <span style="color: #ff79c6">while</span> i < 3:
     jump()
