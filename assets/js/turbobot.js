@@ -45,7 +45,7 @@
     useNativeLevels: !params.has('levelString'),
     levelString: decodeURIComponent(params.get('levelString') || '') || DEFAULT_LEVEL,
     pybotUrl: params.get('pybotUrl') ||
-      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260821a' + (params.has('levelString') ? '&hideMenu=true' : ''))
+      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260821b' + (params.has('levelString') ? '&hideMenu=true' : ''))
   };
 
   function loadBlockSaves() {
@@ -1078,8 +1078,13 @@
       }, true);
     });
     document.addEventListener('click', function () {
+      // Clicking a block category swaps the flyout's contents without a
+      // childList mutation the observer above ever sees, so it never gets
+      // re-filtered on its own. Re-run the filter (and the panel resync)
+      // after every click, staggered to catch that render whenever it lands.
       [40, 160, 420, 900].forEach(function (delay) {
         setTimeout(syncPanelDock, delay);
+        setTimeout(filterVisibleFlyoutBlocks, delay);
       });
     }, true);
     ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (eventName) {
