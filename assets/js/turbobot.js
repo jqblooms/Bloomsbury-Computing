@@ -45,7 +45,7 @@
     useNativeLevels: !params.has('levelString'),
     levelString: decodeURIComponent(params.get('levelString') || '') || DEFAULT_LEVEL,
     pybotUrl: params.get('pybotUrl') ||
-      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260821c' + (params.has('levelString') ? '&hideMenu=true' : ''))
+      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260822a' + (params.has('levelString') ? '&hideMenu=true' : ''))
   };
 
   function loadBlockSaves() {
@@ -488,6 +488,27 @@
       return originalUpdateToolbox(filterToolboxXml(toolboxXml));
     };
     state.toolboxPatchAttached = true;
+
+    // scratch-gui builds the real toolbox (and its flyout) during its own
+    // mount, which reliably finishes before this polling loop ever finds a
+    // workspace to patch. Wrapping updateToolbox above only filters calls
+    // made from here on, so without this the flyout keeps showing every
+    // block until something unrelated happens to trigger another toolbox
+    // update. Re-run it once now, through our patched version, using
+    // whatever toolbox is already sitting on the workspace, so the flyout
+    // is correct immediately instead of depending on a later event.
+    var existingTree = workspace.options && workspace.options.languageTree;
+    if (existingTree) {
+      try {
+        var existingXml = typeof existingTree === 'string'
+          ? existingTree
+          : new XMLSerializer().serializeToString(existingTree);
+        workspace.updateToolbox(existingXml);
+      } catch (e) {
+        console.warn('[TurboBot] Could not re-filter existing toolbox:', e);
+      }
+    }
+
     setTimeout(function () {
       filterVisibleFlyoutBlocks();
       selectEventsCategory();
