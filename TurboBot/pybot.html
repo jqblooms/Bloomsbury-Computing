@@ -811,6 +811,19 @@ function init() {
 
     editor.on("change", updateLineCount);
 
+    // Loading a level replaces the editor's content wholesale via
+    // setValue() (starter code, saved code, injected code, resets). If the
+    // gutter's width measurement was ever taken while stale (see the
+    // ResizeObserver below), swapping in new multi-line content is exactly
+    // when the mismeasurement becomes visible, since the gutter has to grow
+    // to fit the new line count. Refresh on every setValue rather than
+    // patching each of the several call sites that use it.
+    var originalSetValue = editor.setValue.bind(editor);
+    editor.setValue = function (value) {
+        originalSetValue(value);
+        editor.refresh();
+    };
+
     // CodeMirror measures its gutter/character widths against whatever size
     // its container has at creation time. When this page is preloaded inside
     // a hidden (display:none) tab, as it is on the main site, that size is

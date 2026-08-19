@@ -45,7 +45,7 @@
     useNativeLevels: !params.has('levelString'),
     levelString: decodeURIComponent(params.get('levelString') || '') || DEFAULT_LEVEL,
     pybotUrl: params.get('pybotUrl') ||
-      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260822c' + (params.has('levelString') ? '&hideMenu=true' : ''))
+      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260822d' + (params.has('levelString') ? '&hideMenu=true' : ''))
   };
 
   function loadBlockSaves() {
@@ -521,29 +521,20 @@
       String(type || '').indexOf('turbobot_') === 0;
   }
 
-  function filterVisibleFlyoutBlocks(reason) {
-    if (state.isPointerDown) {
-      console.log('[TurboBot][debug] filter skipped (isPointerDown), reason=', reason);
-      return;
-    }
+  function filterVisibleFlyoutBlocks() {
+    if (state.isPointerDown) return;
     var workspace = getScratchWorkspace();
     if (!workspace || !workspace.getFlyout) return;
     try {
       var flyout = workspace.getFlyout();
       var flyoutWorkspace = flyout && flyout.getWorkspace && flyout.getWorkspace();
       if (!flyoutWorkspace || !flyoutWorkspace.getTopBlocks) return;
-      var shown = 0, hidden = 0;
       flyoutWorkspace.getTopBlocks(false).forEach(function (block) {
         var root = block && block.getSvgRoot && block.getSvgRoot();
         if (!root) return;
-        var allowed = isAllowedFlyoutBlock(block.type);
-        root.style.display = allowed ? '' : 'none';
-        if (allowed) shown++; else hidden++;
+        root.style.display = isAllowedFlyoutBlock(block.type) ? '' : 'none';
       });
-      console.log('[TurboBot][debug] filter ran, reason=', reason, 'shown=', shown, 'hidden=', hidden);
-    } catch (e) {
-      console.log('[TurboBot][debug] filter threw, reason=', reason, e);
-    }
+    } catch (e) {}
   }
 
   function getWorkspaceXml() {
@@ -1127,24 +1118,25 @@
     // filter on every scroll frame; it's cheap since it only walks blocks
     // that already exist.
     var scrollFilterQueued = false;
-    document.addEventListener('scroll', function (e) {
-      console.log('[TurboBot][debug] scroll event fired on', e.target);
+    document.addEventListener('scroll', function () {
       if (scrollFilterQueued) return;
       scrollFilterQueued = true;
       requestAnimationFrame(function () {
         scrollFilterQueued = false;
-        filterVisibleFlyoutBlocks('scroll');
+        filterVisibleFlyoutBlocks();
       });
     }, true);
 
+    // Blockly pans the flyout on mouse wheel via an internal SVG transform
+    // rather than native scrolling, so 'scroll' above never actually fires
+    // for it (confirmed live); 'wheel' is what really drives it.
     var wheelFilterQueued = false;
-    document.addEventListener('wheel', function (e) {
-      console.log('[TurboBot][debug] wheel event fired on', e.target);
+    document.addEventListener('wheel', function () {
       if (wheelFilterQueued) return;
       wheelFilterQueued = true;
       requestAnimationFrame(function () {
         wheelFilterQueued = false;
-        filterVisibleFlyoutBlocks('wheel');
+        filterVisibleFlyoutBlocks();
       });
     }, true);
   }
