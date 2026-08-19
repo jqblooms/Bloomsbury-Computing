@@ -45,7 +45,7 @@
     useNativeLevels: !params.has('levelString'),
     levelString: decodeURIComponent(params.get('levelString') || '') || DEFAULT_LEVEL,
     pybotUrl: params.get('pybotUrl') ||
-      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260819f' + (params.has('levelString') ? '&hideMenu=true' : ''))
+      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260821a' + (params.has('levelString') ? '&hideMenu=true' : ''))
   };
 
   function loadBlockSaves() {
