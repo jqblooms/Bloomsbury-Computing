@@ -41,6 +41,7 @@
     restoringWorkspace: false,
     workspaceAutosaveAttached: false,
     toolboxPatchAttached: false,
+    isPointerDown: false,
     useNativeLevels: !params.has('levelString'),
     levelString: decodeURIComponent(params.get('levelString') || '') || DEFAULT_LEVEL,
     pybotUrl: params.get('pybotUrl') ||
@@ -500,6 +501,7 @@
   }
 
   function filterVisibleFlyoutBlocks() {
+    if (state.isPointerDown) return;
     var workspace = getScratchWorkspace();
     if (!workspace || !workspace.getFlyout) return;
     try {
@@ -1048,6 +1050,15 @@
     });
     observer.observe(document.body, { childList: true, subtree: true });
     window.addEventListener('resize', syncPanelDock);
+    document.addEventListener('pointerdown', function () {
+      state.isPointerDown = true;
+    }, true);
+    ['pointerup', 'pointercancel'].forEach(function (eventName) {
+      document.addEventListener(eventName, function () {
+        state.isPointerDown = false;
+        filterVisibleFlyoutBlocks();
+      }, true);
+    });
     document.addEventListener('click', function () {
       [40, 160, 420, 900].forEach(function (delay) {
         setTimeout(syncPanelDock, delay);
