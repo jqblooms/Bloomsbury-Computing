@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Blitz - Teacher Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- PDF.js for parsing PDF files directly -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom Scrollbar for the table */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const App = () => {
+            const [students, setStudents] = useState([]);
+            const [isDragging, setIsDragging] = useState(false);
+            const [errorMsg, setErrorMsg] = useState("");
+
+            // Setup PDF.js Worker
+            useEffect(() => {
+                if (window.pdfjsLib) {
+                    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                }
+            }, []);
+
+            // Function to generate fake data so you can test the dashboard immediately
+            const loadSampleData = () => {
+                const samples = ["Alice Smith", "Bob Jones", "Charlie Brown", "Diana Prince", "Evan Wright"].map(name => {
+                    const details = [];
+                    let correctCount = 0;
+                    for (let i = 1; i <= 15; i++) {
+                        const isCorrect = Math.random() > 0.2; 
+                        if (isCorrect) correctCount++;
+                        details.push({
+                            questionNum: i,
+                            isCorrect: isCorrect,
+                            type: i < 5 ? "Binary" : "Hex",
+                            userAnswer: isCorrect ? "CorrectAns" : "WrongAns",
+                            correctAnswer: "CorrectAns"
+                        });
+                    }
+                    return {
+                        id: Math.random().toString(36).substr(2, 9),
+                        name: name,
+                        date: new Date().toISOString(),
+                        score: correctCount,
+                        total: 15,
+                        details: details
+                    };
+                });
+                setStudents(prev => [...prev, ...samples]);
+                setErrorMsg("");
+            };
+
+            // Heuristic PDF Parser (Upgraded for better accuracy)
+            const extractDataFromPDF = async (arrayBuffer, fileName) => {
+                const data = new Uint8Array(arrayBuffer);
+                const pdf = await window.pdfjsLib.getDocument({ data: data }).promise;
+                let textItems = [];
+                
+                // Extract text from all pages
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    textItems = textItems.concat(textContent.items.map(item => item.str.trim()).filter(s => s.length > 0));
+                }
+
+                let studentName = fileName.replace(/\.pdf$/i, '').replace(/[-_]/g, ' ').replace(/ExamData/i, '').trim();
+                let score = 0;
+                let details = [];
+
+                // Join all text to easily regex the score
+                const fullText = textItems.join(' ').toLowerCase();
+                
+                // Better Score Regex: looks for "score: 12", "12/15", "12 / 15"
+                const scoreMatch = fullText.match(/score[\s:]*(\d+)/) || fullText.match(/(\d+)\s*\/\s*15/);
+                if (scoreMatch) {
+                    score = parseInt(scoreMatch[1]);
+                }
+
+                // Better Details Extraction: look exactly for the correct/incorrect markers
+                const markers = [];
+                for (let i = 0; i < textItems.length; i++) {
+                    const item = textItems[i].toLowerCase();
+                    if (['✓', 'x', '✗', 'correct', 'incorrect'].includes(item)) {
+                        markers.push({ index: i, val: item });
+                    }
+                }
+
+                // If we found the 15 table rows (or close to it)
+                if (markers.length >= 15) {
+                    // Assume the last 15 markers are the table rows
+                    const tableMarkers = markers.slice(-15);
+                    for (let i = 0; i < 15; i++) {
+                        const marker = tableMarkers[i];
+                        const isCorrect = marker.val === '✓' || marker.val === 'correct';
+                        
+                        // Grab preceding text chunks to guess the answers (for tooltips)
+                        const preItems = textItems.slice(Math.max(0, marker.index - 4), marker.index);
+                        
+                        details.push({
+                            questionNum: i + 1,
+                            isCorrect: isCorrect,
+                            type: preItems[preItems.length - 3] || "Parsed",
+                            userAnswer: preItems[preItems.length - 2] || "?",
+                            correctAnswer: preItems[preItems.length - 1] || "?"
+                        });
+                    }
+                } else {
+                    // Fallback strategy: scan for sequences starting with numbers
+                    let expectedQ = 1;
+                    for (let i = 0; i < textItems.length; i++) {
+                        if (textItems[i] === expectedQ.toString()) {
+                            const lookahead = textItems.slice(i + 1, i + 8);
+                            const lookaheadStr = lookahead.join(' ').toLowerCase();
+                            
+                            // Use word boundaries so "incorrect" doesn't trigger "correct"
+                            const hasCorrect = /\bcorrect\b/.test(lookaheadStr) || lookaheadStr.includes('✓') || /\btrue\b/.test(lookaheadStr);
+                            const hasIncorrect = /\bincorrect\b/.test(lookaheadStr) || lookaheadStr.includes('✗') || lookaheadStr.includes('x') || /\bfalse\b/.test(lookaheadStr);
+                            
+                            if (hasCorrect || hasIncorrect) {
+                                details.push({
+                                    questionNum: expectedQ,
+                                    isCorrect: hasCorrect && !hasIncorrect,
+                                    type: lookahead[0] || "?",
+                                    userAnswer: lookahead[1] || "?",
+                                    correctAnswer: lookahead[2] || "?"
+                                });
+                                expectedQ++;
+                                if (expectedQ > 15) break;
+                            }
+                        }
+                    }
+                }
+
+                // Final safety checks
+                const calculatedScore = details.filter(d => d.isCorrect).length;
+                if (score === 0 || score > 15) score = calculatedScore;
+                
+                // If we still found no score and no details, parsing failed completely
+                if (score === 0 && details.length === 0) {
+                    throw new Error("Could not find any readable scores or tables in this PDF.");
+                }
+
+                return {
+                    id: Math.random().toString(36).substr(2, 9),
+                    name: studentName || "Unknown Student",
+                    date: new Date().toISOString(),
+                    score: Math.max(score, calculatedScore), // Prefer highest valid score found
+                    total: 15,
+                    details: details // If length < 15, heatmap will safely show '-' instead of wrong
+                };
+            };
+
+            const processFile = (file) => {
+                return new Promise(async (resolve, reject) => {
+                    // 1. Handle PDF Extraction
+                    if (file.name.toLowerCase().endsWith('.pdf')) {
+                        try {
+                            const arrayBuffer = await new Promise((res, rej) => {
+                                const reader = new FileReader();
+                                reader.onload = e => res(e.target.result);
+                                reader.onerror = e => rej(e);
+                                reader.readAsArrayBuffer(file);
+                            });
+                            
+                            const data = await extractDataFromPDF(arrayBuffer, file.name);
+                            resolve(data);
+                        } catch (err) {
+                            console.error(err);
+                            reject(`Failed to extract data from PDF: ${file.name}. Ensure it contains the Exam Table.`);
+                        }
+                        return;
+                    }
+
+                    // 2. Handle standard JSON
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            if (!data.name || !data.details) {
+                                reject(`Invalid format in ${file.name}. Missing student name or exam details.`);
+                            } else {
+                                data.id = Math.random().toString(36).substr(2, 9);
+                                resolve(data);
+                            }
+                        } catch (err) {
+                            reject(`Failed to parse ${file.name}. Make sure it is a valid JSON or PDF file.`);
+                        }
+                    };
+                    reader.onerror = () => reject(`Error reading ${file.name}`);
+                    reader.readAsText(file);
+                });
+            };
+
+            const handleDrop = async (e) => {
+                e.preventDefault();
+                setIsDragging(false);
+                setErrorMsg("");
+
+                const files = Array.from(e.dataTransfer.files);
+                if (files.length === 0) return;
+
+                const newStudents = [];
+                const errors = [];
+
+                for (const file of files) {
+                    try {
+                        const studentData = await processFile(file);
+                        newStudents.push(studentData);
+                    } catch (err) {
+                        errors.push(err);
+                    }
+                }
+
+                if (errors.length > 0) {
+                    setErrorMsg(errors.join(" | "));
+                }
+
+                if (newStudents.length > 0) {
+                    setStudents(prev => [...prev, ...newStudents].sort((a, b) => b.score - a.score));
+                }
+            };
+
+            const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true); };
+            const handleDragLeave = (e) => { e.preventDefault(); setIsDragging(false); };
+            
+            const clearData = () => {
+                if (window.confirm("Are you sure you want to clear all class data?")) {
+                    setStudents([]);
+                    setErrorMsg("");
+                }
+            };
+
+            return (
+                <div className="min-h-screen p-8 flex flex-col items-center">
+                    {/* Header */}
+                    <div className="w-full max-w-7xl flex justify-between items-end mb-8 border-b border-slate-700 pb-4">
+                        <div>
+                            <h1 className="text-4xl font-bold text-white mb-2 font-mono tracking-tight">
+                                <span className="text-blue-500">Binary</span>Blitz
+                            </h1>
+                            <h2 className="text-xl text-slate-400">Teacher Analytics Dashboard</h2>
+                        </div>
+                        <div className="flex gap-4">
+                            <button onClick={loadSampleData} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded font-semibold transition-colors">
+                                Load Sample Data
+                            </button>
+                            {students.length > 0 && (
+                                <button onClick={clearData} className="px-4 py-2 bg-red-900/50 hover:bg-red-800 text-red-200 border border-red-700 rounded font-semibold transition-colors">
+                                    Clear Class
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Error Message Display */}
+                    {errorMsg && (
+                        <div className="w-full max-w-7xl mb-6 p-4 bg-red-900/30 border border-red-500/50 text-red-300 rounded-lg fade-in">
+                            <strong>Notice:</strong> {errorMsg}
+                        </div>
+                    )}
+
+                    {/* Dropzone */}
+                    <div 
+                        className={`w-full max-w-7xl h-32 mb-8 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center transition-all duration-200 ${
+                            isDragging ? 'border-blue-400 bg-blue-900/20 scale-[1.01]' : 'border-slate-600 bg-slate-800/50 hover:bg-slate-800'
+                        }`}
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                    >
+                        <svg className={`w-10 h-10 mb-2 ${isDragging ? 'text-blue-400' : 'text-slate-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                        <p className="text-lg text-slate-300 font-medium">
+                            {isDragging ? 'Drop files now...' : 'Drag & Drop student JSON or PDF files here'}
+                        </p>
+                        <p className="text-sm text-slate-500 mt-1">Select multiple files to add the whole class at once</p>
+                    </div>
+
+                    {/* Class Heatmap Table */}
+                    {students.length > 0 ? (
+                        <div className="w-full max-w-7xl bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden fade-in">
+                            <div className="p-6 border-b border-slate-700 flex justify-between items-center bg-slate-800/80">
+                                <h3 className="text-xl font-bold text-white">Class Heatmap ({students.length} Students)</h3>
+                                <div className="flex items-center gap-6 text-sm">
+                                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-green-500"></span> Correct</div>
+                                    <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-red-500"></span> Incorrect</div>
+                                </div>
+                            </div>
+                            
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-slate-900 text-slate-400 text-sm uppercase tracking-wider">
+                                            <th className="p-4 font-semibold sticky left-0 bg-slate-900 z-10 border-r border-slate-700">Student Name</th>
+                                            <th className="p-4 font-semibold text-center border-r border-slate-700">Score</th>
+                                            {/* Generate Q1 to Q15 Headers */}
+                                            {Array.from({length: 15}, (_, i) => (
+                                                <th key={i} className="p-4 font-mono font-semibold text-center min-w-[3rem]">Q{i+1}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-700">
+                                        {students.map((student) => (
+                                            <tr key={student.id} className="hover:bg-slate-700/50 transition-colors">
+                                                <td className="p-4 font-medium text-white sticky left-0 bg-slate-800 border-r border-slate-700 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.3)]">
+                                                    {student.name}
+                                                </td>
+                                                <td className="p-4 text-center border-r border-slate-700">
+                                                    <span className={`px-3 py-1 rounded-full font-bold text-sm ${
+                                                        student.score >= 12 ? 'bg-green-900/50 text-green-400' :
+                                                        student.score >= 8 ? 'bg-yellow-900/50 text-yellow-400' :
+                                                        'bg-red-900/50 text-red-400'
+                                                    }`}>
+                                                        {student.score}/{student.total}
+                                                    </span>
+                                                </td>
+                                                
+                                                {/* Map through the details array for the ticks/crosses */}
+                                                {Array.from({length: 15}, (_, i) => {
+                                                    const detail = student.details.find(d => d.questionNum === i + 1);
+                                                    
+                                                    if (!detail) {
+                                                        return <td key={i} className="p-4 text-center text-slate-600">-</td>;
+                                                    }
+
+                                                    return (
+                                                        <td key={i} className="p-0 text-center">
+                                                            <div className={`w-full h-full p-4 flex items-center justify-center ${
+                                                                detail.isCorrect ? 'text-green-500 bg-green-900/10' : 'text-red-500 bg-red-900/10'
+                                                            }`} title={`User answered: ${detail.userAnswer} | Correct: ${detail.correctAnswer}`}>
+                                                                {detail.isCorrect ? '✓' : '✗'}
+                                                            </div>
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="w-full max-w-7xl py-20 flex flex-col items-center justify-center text-slate-500 border border-slate-700 border-dashed rounded-2xl bg-slate-800/30">
+                            <svg className="w-16 h-16 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                            <p className="text-xl font-medium">No student data loaded yet.</p>
+                            <p className="mt-2 text-sm">Drop JSON files or PDFs above, or load sample data to see the heatmap.</p>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

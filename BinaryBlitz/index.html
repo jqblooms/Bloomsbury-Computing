@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Binary Blitz</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+        body { font-family: 'JetBrains Mono', monospace; overflow: hidden; touch-action: manipulation; background-color: #0f172a; }
+        #root { height: 100%; width: 100%; }
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)} }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .cursor-blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50%{opacity:0} }
+        .custom-scrollbar { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.3) rgba(255,255,255,.1); }
+        .custom-scrollbar::-webkit-scrollbar{width:6px}
+        .custom-scrollbar::-webkit-scrollbar-track{background:rgba(255,255,255,.1)}
+        .custom-scrollbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:3px}
+        .no-select{user-select:none;-webkit-user-select:none}
+        .backdrop-blur-md{backdrop-filter:blur(12px)}
+        @keyframes pulse-ring { 0%{transform:scale(0.9);opacity:1} 100%{transform:scale(1.4);opacity:0} }
+        .pulse-ring::before{content:'';position:absolute;inset:-4px;border-radius:inherit;border:2px solid currentColor;animation:pulse-ring 1.5s ease-out infinite}
+        @keyframes countdown-shrink { from{width:100%} to{width:0%} }
+        .countdown-bar { animation: countdown-shrink linear forwards; }
+        @keyframes score-pop { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
+        .score-pop { animation: score-pop 0.4s ease-out; }
+        @keyframes slide-up { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+        .slide-up { animation: slide-up 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="text-white h-screen w-screen overflow-hidden">
+<div id="root"></div>
+
+<script>
+// Bloomsbury Computing identity bridge: when embedded in the main site,
+// the parent posts the signed-in user's display name here instead of
+// this game asking for one itself.
+window.__bcPlayerName = null;
+window.addEventListener('message', function (event) {
+  var data = event.data;
+  if (data && data.type === 'BC_IDENTITY' && data.name) {
+    window.__bcPlayerName = data.name;
+  }
+});
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+// --- CONSTANTS ---
+const POWERS = [128, 64, 32, 16, 8, 4, 2, 1];
+const NIBBLE_POWERS = [8, 4, 2, 1, 8, 4, 2, 1];
+const HEX_POWERS = [16, 1];
+const BASE_DURATION_REF = 30000;
+
+const LEVELS = {
+    1: { title: "Place Values (Drag)", color: "blue", desc: "Sorted Options." },
+    2: { title: "Place Values (Type)", color: "red", desc: "Type place values." },
+    3: { title: "Bit Flipper (Dec)", color: "emerald", desc: "Match decimal target." },
+    4: { title: "Decoder (Bin→Dec)", color: "purple", desc: "Binary to Decimal." },
+    5: { title: "Bin Addition", color: "pink", desc: "Full binary sum." },
+    6: { title: "Hex Reader", color: "orange", desc: "Hex to Decimal." },
+    7: { title: "Hex Writer", color: "teal", desc: "Decimal to Hex." },
+    8: { title: "Bin to Hex", color: "cyan", desc: "Split to Nibbles." },
+    9: { title: "Hex to Bin", color: "yellow", desc: "Match Hex Nibbles." },
+    10: { title: "FINAL EXAM", color: "rose", desc: "15 Questions. No Timer." }
+};
+
+// --- UTILS ---
+const calculateMaxTime = (currentScore, isHardMode, multiplier = 1) => {
+    const steps = Math.floor(currentScore / 250);
+    const speedPercent = Math.min(120, 10 + (steps * 10));
+    let duration = (BASE_DURATION_REF * 100) / speedPercent;
+    if (isHardMode) duration = duration / 2.5;
+    return duration * multiplier;
+};
+
+const generateQuestion = (level, isHardMode) => {
+    const decimal = Math.floor(Math.random() * 255) + 1;
+    const binaryString = decimal.toString(2).padStart(8, '0');
+    const bits = binaryString.split('').map(Number);
+    const hexString = decimal.toString(16).toUpperCase().padStart(2, '0');
+    const hexChars = hexString.split('');
+    if (level === 1 || level === 2) {
+        const activeIndices = bits.map((b, i) => b === 1 ? i : -1).filter(i => i !== -1);
+        const numToHide = Math.min(activeIndices.length, level === 1 ? Math.ceil(Math.random() * 2) : Math.ceil(Math.random() * 3) + 1);
+        const shuffledIndices = [...activeIndices].sort(() => 0.5 - Math.random());
+        const missingIndices = shuffledIndices.slice(0, numToHide).sort((a, b) => a - b);
+        const missingValues = missingIndices.map(i => POWERS[i]);
+        return { decimal, bits, missingIndices, missingValues };
+    }
+    if (level === 5) {
+        const bitsCount = isHardMode ? 12 : 8;
+        const maxVal = Math.pow(2, bitsCount) - 1;
+        const valA = Math.floor(Math.random() * maxVal);
+        const valB = Math.floor(Math.random() * maxVal);
+        const total = valA + valB;
+        const binA = valA.toString(2).padStart(bitsCount, '0').split('').map(Number);
+        const binB = valB.toString(2).padStart(bitsCount, '0').split('').map(Number);
+        const binResult = total.toString(2).padStart(bitsCount + 1, '0').split('').map(Number);
+        return { binA, binB, binResult, bitsCount, missingIndices: [] };
+    }
+    return { decimal, bits, hexString, hexChars, missingIndices: [], missingValues: [] };
+};
+
+const saveScore = (score, level) => {
+    const key = `binaryGame_scores_lvl${level}`;
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    stored.push({ score, date: new Date().toISOString() });
+    stored.sort((a, b) => b.score - a.score);
+    localStorage.setItem(key, JSON.stringify(stored.slice(0, 5)));
+};
+
+const saveExamResult = (score, total, time, details = []) => {
+    const key = 'binaryGame_exam_history';
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    stored.push({ score, total, time, details, date: new Date().toISOString() });
+    if (stored.length > 10) stored.shift();
+    localStorage.setItem(key, JSON.stringify(stored));
+};
+
+const saveActivity = (level, score, duration, correct, wrong) => {
+    const key = 'binaryGame_activity_log';
+    const log = JSON.parse(localStorage.getItem(key) || '[]');
+    log.push({ timestamp: new Date().toISOString(), level, score, duration, correct: correct || 0, wrong: wrong || 0 });
+    localStorage.setItem(key, JSON.stringify(log));
+};
+
+const getDailyStats = () => {
+    const log = JSON.parse(localStorage.getItem('binaryGame_activity_log') || '[]');
+    const allExams = JSON.parse(localStorage.getItem('binaryGame_exam_history') || '[]');
+    const today = new Date().toLocaleDateString();
+    const stats = {};
+    let totalTime = 0;
+    log.forEach(entry => {
+        if (new Date(entry.timestamp).toLocaleDateString() === today) {
+            if (!stats[entry.level]) stats[entry.level] = { plays: 0, best: 0, time: 0, correct: 0, wrong: 0 };
+            stats[entry.level].plays += 1;
+            stats[entry.level].best = Math.max(stats[entry.level].best, entry.score);
+            stats[entry.level].time += entry.duration;
+            stats[entry.level].correct += entry.correct;
+            stats[entry.level].wrong += entry.wrong;
+            totalTime += entry.duration;
+        }
+    });
+    const examHistory = allExams.filter(entry => new Date(entry.date).toLocaleDateString() === today);
+    return { stats, totalTime, examHistory };
+};
+
+const getScores = (level) => JSON.parse(localStorage.getItem(`binaryGame_scores_lvl${level}`) || '[]');
+const getExamHistory = () => JSON.parse(localStorage.getItem('binaryGame_exam_history') || '[]');
+
+const formatTime = (ms) => {
+    const seconds = Math.floor(ms / 1000);
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}m ${s}s`;
+};
+
+const generateReportPDF = (name, dailyData) => {
+    const { stats, totalTime, examHistory } = dailyData;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    doc.setFillColor(15, 23, 42);
+    doc.rect(0, 0, pageWidth, 30, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("courier", "bold");
+    doc.setFontSize(22);
+    doc.text('Binary Blitz Report', 14, 21);
+    doc.setTextColor(148, 163, 184);
+    doc.setFontSize(12);
+    doc.text(`Play Time: ${formatTime(totalTime)}`, pageWidth - 14, 20, { align: 'right' });
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text(`Student: ${name}`, 14, 45);
+    doc.setTextColor(100, 116, 139);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(new Date().toLocaleDateString(), pageWidth - 14, 45, { align: 'right' });
+    const tableData = [];
+    Object.entries(LEVELS).forEach(([id, data]) => {
+        if (id === '10') return;
+        const stat = stats[id] || { plays: 0, best: 0, time: 0, correct: 0, wrong: 0 };
+        const totalAttempts = stat.correct + stat.wrong;
+        const accuracy = totalAttempts > 0 ? Math.round((stat.correct / totalAttempts) * 100) : '-';
+        tableData.push([`${id}. ${data.title}`, stat.plays || '-', stat.best || '-', stat.correct, stat.wrong || '-', accuracy === '-' ? '-' : `${accuracy}%`, stat.time > 0 ? formatTime(stat.time) : '-']);
+    });
+    doc.autoTable({ startY: 55, head: [['LEVEL', 'PLAYS', 'BEST', 'SOLVED', 'FAULTS', 'ACC%', 'TIME']], body: tableData, theme: 'striped', headStyles: { fillColor: [51, 65, 85], font: 'courier' }, styles: { font: 'courier', fontSize: 10, textColor: [15, 23, 42] }, columnStyles: { 6: { halign: 'right' } } });
+    let finalY = doc.lastAutoTable.finalY + 15;
+    doc.setFillColor(244, 63, 94);
+    doc.rect(0, finalY, pageWidth, 15, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("courier", "bold");
+    doc.setFontSize(14);
+    doc.text('FINAL EXAM STATUS', 14, finalY + 10);
+    finalY += 25;
+    const todaysExams = examHistory.filter(e => new Date(e.date).toLocaleDateString() === new Date().toLocaleDateString());
+    const latest = todaysExams.length > 0 ? todaysExams[todaysExams.length - 1] : null;
+    const previous = todaysExams.length > 1 ? todaysExams[todaysExams.length - 2] : null;
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "normal");
+    doc.text('Most Recent Attempt (Today):', 14, finalY);
+    if (latest) {
+        doc.setTextColor(22, 163, 74);
+        doc.setFont("courier", "bold");
+        doc.text(`${latest.score} / ${latest.total}`, 90, finalY);
+        doc.setTextColor(100, 116, 139);
+        doc.setFont("courier", "normal");
+        doc.text(`(${formatTime(latest.time)})`, 120, finalY);
+    } else {
+        doc.setTextColor(148, 163, 184);
+        doc.setFont("helvetica", "italic");
+        doc.text('Not yet attempted today', 90, finalY);
+    }
+    finalY += 12;
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "normal");
+    doc.text('Previous Attempt (Today):', 14, finalY);
+    if (previous) {
+        doc.setTextColor(51, 65, 85);
+        doc.setFont("courier", "bold");
+        doc.text(`${previous.score} / ${previous.total}`, 90, finalY);
+        doc.setTextColor(100, 116, 139);
+        doc.setFont("courier", "normal");
+        doc.text(`(${formatTime(previous.time)})`, 120, finalY);
+    } else {
+        doc.setTextColor(148, 163, 184);
+        doc.setFont("helvetica", "italic");
+        doc.text('-', 90, finalY);
+    }
+    if (latest && latest.details && latest.details.length > 0) {
+        doc.addPage();
+        doc.setFillColor(244, 63, 94);
+        doc.rect(0, 0, pageWidth, 25, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("courier", "bold");
+        doc.setFontSize(16);
+        doc.text('FINAL EXAM DETAILED BREAKDOWN', 14, 17);
+        const breakdownData = latest.details.map(d => [`Q${d.questionNum}`, d.type, d.userAnswer, d.correctAnswer, d.isCorrect ? 'Correct' : 'Incorrect']);
+        doc.autoTable({ startY: 35, head: [['#', 'Question Type', 'Your Answer', 'Correct Answer', 'Result']], body: breakdownData, theme: 'grid', headStyles: { fillColor: [51, 65, 85], font: 'courier' }, styles: { font: 'courier', fontSize: 10 }, columnStyles: { 0: { cellWidth: 15 }, 4: { fontStyle: 'bold' } }, didParseCell: function(data) { if (data.section === 'body' && data.column.index === 4) { if (data.cell.raw === 'Correct') { data.cell.styles.textColor = [22, 163, 74]; } else { data.cell.styles.textColor = [239, 68, 68]; } } } });
+    }
+    doc.save(`${name.replace(/\s+/g, '_')}_Binary_Blitz_Report.pdf`);
+};
+
+// --- GAME LOOP ---
+const useGameLoop = (active, onGameOver, isHardMode, timeMultiplier = 1) => {
+    const [stress, setStress] = useState(0);
+    const [score, setScore] = useState(0);
+    const [gameSpeed, setGameSpeed] = useState(10);
+    const stressRef = useRef(0);
+    const scoreRef = useRef(0);
+    const maxTimeRef = useRef(calculateMaxTime(0, isHardMode, timeMultiplier));
+    const lastTimeRef = useRef(Date.now());
+    const frameRef = useRef();
+    const resetRound = useCallback((pointsToAdd = 0) => {
+        const newScore = scoreRef.current + pointsToAdd;
+        scoreRef.current = newScore;
+        setScore(newScore);
+        const newStress = Math.max(0, stressRef.current - 0.3);
+        stressRef.current = newStress;
+        setStress(newStress);
+        maxTimeRef.current = calculateMaxTime(newScore, isHardMode, timeMultiplier);
+        const steps = Math.floor(newScore / 250);
+        setGameSpeed(Math.min(120, 10 + (steps * 10)));
+    }, [isHardMode, timeMultiplier]);
+    useEffect(() => {
+        if (!active) { cancelAnimationFrame(frameRef.current); return; }
+        lastTimeRef.current = Date.now();
+        const loop = () => {
+            const now = Date.now();
+            const delta = now - lastTimeRef.current;
+            lastTimeRef.current = now;
+            const increase = delta / maxTimeRef.current;
+            stressRef.current += increase;
+            if (stressRef.current >= 1) {
+                stressRef.current = 1; setStress(1); cancelAnimationFrame(frameRef.current); onGameOver(scoreRef.current); return;
+            }
+            setStress(stressRef.current);
+            frameRef.current = requestAnimationFrame(loop);
+        };
+        frameRef.current = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(frameRef.current);
+    }, [active, onGameOver]);
+    const addStress = useCallback((amount) => { stressRef.current = Math.min(0.99, stressRef.current + amount); setStress(stressRef.current); }, []);
+    return { stress, score, resetRound, addStress, gameSpeed };
+};
+
+// --- SHARED COMPONENTS ---
+const Button = ({ onClick, children, className = "", disabled = false, variant = "primary" }) => {
+    const base = "font-bold py-3 px-6 rounded-lg shadow-lg transform transition-all active:scale-95 no-select flex items-center justify-center";
+    const variants = { primary: "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/50", secondary: "bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600", danger: "bg-red-600 hover:bg-red-500 text-white shadow-red-900/50", help: "bg-slate-700 hover:bg-slate-600 text-white border border-slate-500", success: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/50", quiz: "bg-violet-600 hover:bg-violet-500 text-white shadow-violet-900/50" };
+    return <button type="button" onClick={onClick} disabled={disabled} className={`${base} ${variants[variant]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>{children}</button>;
+};
+
+const Toggle = ({ checked, onChange, label }) => (
+    <div className="flex items-center justify-center mb-6 cursor-pointer" onClick={() => onChange(!checked)}>
+        <span className={`mr-3 font-bold text-sm ${checked ? 'text-red-400' : 'text-slate-400'}`}>{label}</span>
+        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+            <div className={`w-12 h-6 rounded-full shadow-inner transition-colors duration-200 ${checked ? 'bg-red-900' : 'bg-slate-700'}`}></div>
+            <div className={`absolute w-6 h-6 rounded-full shadow inset-y-0 left-0 transition-transform duration-200 ease-in-out ${checked ? 'translate-x-6 bg-red-500' : 'translate-x-0 bg-slate-400'}`}></div>
+        </div>
+    </div>
+);
+
+const BinaryDisplay = ({ bits, hideHeaders, useNibbles }) => (
+    <div className="flex justify-between items-center w-full gap-1 mb-4">
+        {bits.map((b, i) => (
+            <div key={i} className={`flex flex-col items-center flex-1 ${i === 4 ? 'ml-6' : ''}`}>
+                {!hideHeaders && <div className={`text-[10px] mb-1 ${useNibbles ? 'text-cyan-400 font-bold' : 'text-slate-500'}`}>{useNibbles ? NIBBLE_POWERS[i] : POWERS[i]}</div>}
+                <div className={`w-full h-10 md:h-12 flex items-center justify-center font-mono text-xl rounded ${b===1 ? 'bg-slate-200 text-slate-900 font-bold' : 'bg-slate-800 text-slate-500'}`}>{b}</div>
+            </div>
+        ))}
+    </div>
+);
+
+const Numpad = ({ onInput, onDelete, onSubmit }) => (
+    <div className="grid grid-cols-3 gap-2 w-full max-w-xs mx-auto mb-4">
+        {[1,2,3,4,5,6,7,8,9].map(n => <button type="button" key={n} onClick={() => onInput(n.toString())} className="h-12 bg-slate-700 hover:bg-slate-600 rounded text-xl font-bold text-white shadow-lg active:scale-95 touch-manipulation">{n}</button>)}
+        <button type="button" onClick={onDelete} className="h-12 bg-slate-800 hover:bg-red-900/50 text-red-400 rounded font-bold text-sm touch-manipulation">DEL</button>
+        <button type="button" onClick={() => onInput('0')} className="h-12 bg-slate-700 hover:bg-slate-600 rounded text-xl font-bold text-white shadow-lg active:scale-95 touch-manipulation">0</button>
+        <button type="button" onClick={onSubmit} className="h-12 bg-green-600 hover:bg-green-500 rounded font-bold text-white shadow-lg active:scale-95 touch-manipulation">GO</button>
+    </div>
+);
+
+const HexPad = ({ onInput, onDelete, onSubmit }) => (
+    <div className="grid grid-cols-4 gap-2 w-full max-w-sm mx-auto mb-4">
+        {['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'].map(char => <button type="button" key={char} onClick={() => onInput(char)} className="h-10 bg-slate-700 hover:bg-slate-600 rounded text-lg font-bold text-white shadow active:scale-95 touch-manipulation">{char}</button>)}
+        <button type="button" onClick={onDelete} className="col-span-2 h-10 bg-slate-800 text-red-400 rounded font-bold touch-manipulation">DELETE</button>
+        <button type="button" onClick={onSubmit} className="col-span-2 h-10 bg-green-600 text-white rounded font-bold touch-manipulation">ENTER</button>
+    </div>
+);
+
+const ExportModal = ({ onClose }) => {
+    const [name, setName] = useState("");
+    const handleExport = () => { if (!name.trim()) return; generateReportPDF(name, getDailyStats()); onClose(); };
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 fade-in">
+            <div className="bg-slate-800 border border-slate-600 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+                <h2 className="text-2xl font-bold text-white mb-4">Export Session Report</h2>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Student Name" className="w-full p-3 bg-slate-900 border border-slate-700 rounded-lg text-white mb-6 focus:outline-none focus:border-blue-500" autoFocus />
+                <div className="flex gap-3">
+                    <Button onClick={onClose} variant="secondary" className="flex-1">Cancel</Button>
+                    <Button onClick={handleExport} disabled={!name.trim()} variant="success" className="flex-1">Download PDF</Button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const HelpModal = ({ levelId, onClose }) => {
+    const content = { 1:{title:"Place Values (Drag)",body:"Drag values (1, 2, 4...) to fill gaps."}, 2:{title:"Place Values (Type)",body:"Type the missing place values from memory."}, 3:{title:"Bit Flipper",body:"Click bits to match the target Decimal number."}, 4:{title:"Decoder",body:"Convert Binary to Decimal. Type the total."}, 5:{title:"Bin Add Rules",body:"Solve single column binary addition.\nRules:\n0+0=0\n0+1=1\n1+1=0 (carry 1)\n1+1+1=1 (carry 1)"}, 6:{title:"Binary Addition",body:"Add two binary numbers. Use the Carry row (top) to track your work."}, 7:{title:"Hex Reader",body:"Convert Hex to Decimal. A=10, B=11... F=15.\nExample: A5 = (10 × 16) + 5 = 165."}, 8:{title:"Hex Writer",body:"Convert Decimal to Hex.\nTip: Divide by 16. Quotient is first digit, Remainder is second."}, 9:{title:"Bin to Hex",body:"Split 8 bits into two nibbles. Convert each nibble (8-4-2-1) to a Hex digit."}, 10:{title:"Hex to Bin",body:"Convert each Hex digit into its 4-bit binary equivalent using the 8-4-2-1 columns."}, 11:{title:"Final Exam",body:"15 questions mixed from all levels.\nNo time limit for Game Over, but time is tracked.\nTry to beat your previous score!"} };
+    const data = content[levelId] || { title: "Help", body: "Good luck!" };
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 fade-in" onClick={onClose}>
+            <div className="bg-slate-800 border border-slate-600 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative" onClick={e => e.stopPropagation()}>
+                <h2 className="text-2xl font-bold text-white mb-4">{data.title}</h2>
+                <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">{data.body}</p>
+                <Button onClick={onClose} className="w-full mt-6">Close</Button>
+            </div>
+        </div>
+    );
+};
+
+const DraggableCalculator = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [pos, setPos] = useState({ x: 20, y: 20 });
+    const [dragging, setDragging] = useState(false);
+    const [rel, setRel] = useState({ x: 0, y: 0 });
+    const [calcDisplay, setCalcDisplay] = useState("0");
+    const [expression, setExpression] = useState("");
+    const handleMouseDown = (e) => { if (e.target.closest('.drag-handle')) { setDragging(true); setRel({ x: e.clientX - pos.x, y: e.clientY - pos.y }); } };
+    const handleMouseMove = useCallback((e) => { if (dragging) { setPos({ x: e.clientX - rel.x, y: e.clientY - rel.y }); } }, [dragging, rel]);
+    const handleMouseUp = () => setDragging(false);
+    useEffect(() => { if (dragging) { window.addEventListener('mousemove', handleMouseMove); window.addEventListener('mouseup', handleMouseUp); } else { window.removeEventListener('mousemove', handleMouseMove); window.removeEventListener('mouseup', handleMouseUp); } return () => { window.removeEventListener('mousemove', handleMouseMove); window.removeEventListener('mouseup', handleMouseUp); }; }, [dragging, handleMouseMove]);
+    useEffect(() => { setPos({ x: window.innerWidth / 2 - 128, y: window.innerHeight / 2 - 160 }); }, []);
+    const onBtnClick = (val) => { if (val === 'C') { setCalcDisplay("0"); setExpression(""); } else if (val === '=') { try { const safeExpr = expression.replace(/[^0-9+\-*/.]/g, ''); const res = Function(`"use strict";return (${safeExpr})`)(); setCalcDisplay(String(res)); setExpression(String(res)); } catch { setCalcDisplay("Error"); setExpression(""); } } else { const newExpr = (expression === "0" && !['+','-','*','/'].includes(val)) ? val : expression + val; setExpression(newExpr); setCalcDisplay(newExpr); } };
+    return (<> <button onClick={() => setIsOpen(!isOpen)} className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 rounded-full shadow-2xl flex items-center justify-center text-white z-40 hover:bg-blue-500 hover:scale-110 transition-all border-2 border-blue-400" title="Calculator"><svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg></button> {isOpen && (<div className="fixed w-64 bg-slate-800 rounded-xl shadow-2xl border border-slate-600 overflow-hidden z-50 flex flex-col" style={{ left: pos.x, top: pos.y }} onMouseDown={handleMouseDown}><div className="bg-slate-700 p-2 flex justify-between items-center cursor-move drag-handle select-none"><span className="text-xs font-bold text-slate-300 ml-2">CALCULATOR</span><button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white px-2">×</button></div><div className="bg-slate-900 p-4 text-right"><div className="text-2xl font-mono text-white truncate">{calcDisplay}</div></div><div className="grid grid-cols-4 gap-1 p-2 bg-slate-800">{['7','8','9','/','4','5','6','*','1','2','3','-','C','0','=','+'].map(btn => (<button key={btn} onClick={() => onBtnClick(btn)} className={`h-10 rounded font-bold transition-colors ${ btn === 'C' ? 'bg-red-900/50 text-red-400 hover:bg-red-900' : btn === '=' ? 'bg-blue-600 text-white hover:bg-blue-500' : ['/','*','-','+'].includes(btn) ? 'bg-slate-600 text-blue-300 hover:bg-slate-500' : 'bg-slate-700 text-white hover:bg-slate-600' }`}>{btn}</button>))}</div></div>)} </>);
+};
+
+const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children, isHardMode }) => {
+    const bgOpacity = Math.min(0.85, stress);
+    const barWidth = Math.max(0, (1 - stress) * 100);
+    return (
+        <div className={`h-full flex flex-col p-4 relative transition-colors duration-100 ${stress > 0.85 ? 'shake' : ''}`} style={{ backgroundColor: `rgba(185, 28, 28, ${bgOpacity})` }}>
+            <div className="flex justify-between items-center mb-4 z-10 shrink-0">
+                <button onClick={onExit} className="p-2 bg-slate-900/50 hover:bg-slate-800 rounded-full text-white backdrop-blur-sm"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg></button>
+                <div className="flex flex-col items-center">
+                    <span className={`text-xs font-bold tracking-widest uppercase mb-1 ${isHardMode ? 'text-red-400' : 'text-slate-300'}`}>{levelName} {isHardMode && '★'}</span>
+                    <div className={`bg-slate-900/90 px-6 py-1 rounded-full border shadow-lg ${isHardMode ? 'border-red-500/50' : 'border-blue-500/30'}`}><span className="text-xl font-mono text-white font-bold">{score}</span></div>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">SPEED</span>
+                    <span className={`text-xl font-bold font-mono ${gameSpeed > 100 || isHardMode ? 'text-red-400 animate-pulse' : 'text-blue-400'}`}>{gameSpeed}%</span>
+                    <button onClick={onHelp} className="mt-1 text-xs bg-slate-700 hover:bg-white hover:text-black rounded-full w-6 h-6 flex items-center justify-center font-bold transition-colors" title="Level Help">?</button>
+                </div>
+            </div>
+            <div className="w-full h-2 bg-slate-900/50 rounded-full mb-4 overflow-hidden z-10 shrink-0"><div className={`h-full transition-all duration-100 ${stress > 0.7 ? 'bg-red-500' : 'bg-blue-500'}`} style={{ width: `${barWidth}%` }}></div></div>
+            <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
+        </div>
+    );
+};
+
+const ExamLayout = ({ currentQ, totalQ, onExit, children }) => (
+    <div className="h-full flex flex-col p-4 bg-slate-900 relative">
+        <div className="flex justify-between items-center mb-6 z-10 shrink-0">
+            <button onClick={onExit} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full text-white"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg></button>
+            <div className="text-xl font-bold text-rose-400 tracking-widest">FINAL EXAM</div>
+            <div className="bg-slate-800 px-4 py-1 rounded-full border border-rose-500/30"><span className="text-white font-mono">Q: {currentQ} / {totalQ}</span></div>
+        </div>
+        <div className="w-full h-2 bg-slate-800 rounded-full mb-8 overflow-hidden"><div className="h-full bg-rose-500 transition-all duration-300" style={{ width: `${(currentQ / totalQ) * 100}%` }}></div></div>
+        <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
+    </div>
+);
+
+// --- GENERIC LEVEL LOGIC ---
+const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
+    const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
+    const handleGameEnd = useCallback((s) => { const duration = Date.now() - startTimeRef.current; onGameOver(s, level, duration, correctRef.current, wrongRef.current); }, [onGameOver, level]);
+    const handleExit = () => onExit(level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
+    const timeMultiplier = (level === 5) ? 5 : 1;
+    const { stress, score, resetRound, addStress, gameSpeed } = useGameLoop(true, handleGameEnd, isHardMode, timeMultiplier);
+    const [question, setQuestion] = useState(null);
+    const [input, setInput] = useState("");
+    const [shake, setShake] = useState(false);
+    const [userBits, setUserBits] = useState([]);
+    const [carryBits, setCarryBits] = useState([]);
+    useEffect(() => { nextQuestion(); }, [level]);
+    const handleInput = useCallback((char) => { if (input.length < (level===7||level===8 ? 2 : 3)) setInput(prev => prev + char); }, [input, level]);
+    const handleBackspace = useCallback(() => { setInput(prev => prev.slice(0,-1)); }, []);
+    const handleSubmit = useCallback(() => {
+        if (!question) return;
+        let correct = false;
+        if ((level===4||level===6) && parseInt(input)===question.decimal) correct=true;
+        else if ((level===7||level===8) && input===question.hexString) correct=true;
+        else if (level===5) { if(parseInt(userBits.join(''),2)===parseInt(question.binResult.join(''),2)) correct=true; }
+        if (correct) { correctRef.current += 1; setTimeout(() => nextQuestion(100), 200); }
+        else { wrongRef.current += 1; setShake(true); setTimeout(() => setShake(false), 500); addStress(0.2); setInput(""); }
+    }, [question, input, level, userBits, addStress]);
+    useEffect(() => {
+        const handleKey = (e) => {
+            const char = e.key.toUpperCase();
+            if ((level===7||level===8) && /^[0-9A-F]$/.test(char)) handleInput(char);
+            else if ((level===4||level===6) && /^[0-9]$/.test(char)) handleInput(char);
+            if (e.key==='Backspace') handleBackspace();
+            if (e.key==='Enter') handleSubmit();
+        };
+        window.addEventListener('keydown', handleKey);
+        return () => window.removeEventListener('keydown', handleKey);
+    }, [handleInput, handleBackspace, handleSubmit, level]);
+    const nextQuestion = (points=0) => {
+        const q = generateQuestion(level, isHardMode);
+        setQuestion(q); setInput(""); 
+        if (level===5) { setUserBits(Array(q.bitsCount+1).fill(0)); setCarryBits(Array(q.bitsCount+1).fill(0)); }
+        if (level===9) setUserBits(Array(8).fill(0));
+        resetRound(isHardMode ? Math.floor(points*2.5) : points);
+    };
+    const handleToggleBit = (idx) => {
+        if (![5,9].includes(level)) return;
+        const newBits = [...userBits]; newBits[idx] = newBits[idx]===0 ? 1 : 0; setUserBits(newBits);
+        if (level===5) { const currentVal=parseInt(newBits.join(''),2); const targetVal=parseInt(question.binResult.join(''),2); if(currentVal===targetVal){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
+        if (level===9) { const val=newBits.reduce((a,b,i)=>a+(b*POWERS[i]),0); if(val===question.decimal){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
+    };
+    const handleToggleCarry = (idx) => { const newCarries=[...carryBits]; newCarries[idx]=newCarries[idx]===0?1:0; setCarryBits(newCarries); };
+    if (!question) return null;
+    if (level===5) return (
+        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L5: Addition" isHardMode={isHardMode}>
+            <div className="w-full max-w-4xl bg-slate-800/50 p-4 rounded-xl border border-slate-700 overflow-x-auto flex justify-center">
+                <div className="grid gap-1 items-center" style={{ gridTemplateColumns: `repeat(${question.bitsCount+1}, minmax(3rem, 1fr))` }}>
+                    {carryBits.map((c,i) => (<button key={`c-${i}`} onClick={()=>handleToggleCarry(i)} className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-full text-sm font-bold border-2 transition-all ${c?'bg-orange-500 border-orange-400 text-white':'bg-slate-800 border-slate-600 text-slate-600'}`}>{c}</button>))}
+                    <div className="col-span-full h-2 border-b border-slate-600 mb-2"></div>
+                    {Array(question.bitsCount+1).fill(0).map((_,i) => { const bitIdx=i-1; const val=(i===0)?0:(question.binA[bitIdx]!==undefined?question.binA[bitIdx]:0); return (<div key={`a-${i}`} className={`font-mono text-xl md:text-2xl text-center py-1 ${val?'text-white':'text-slate-500'}`}>{val}</div>); })}
+                    {Array(question.bitsCount+1).fill(0).map((_,i) => { const bitIdx=i-1; const val=(i===0)?0:(question.binB[bitIdx]!==undefined?question.binB[bitIdx]:0); return (<div key={`b-${i}`} className={`font-mono text-xl md:text-2xl text-center py-1 border-b-2 border-slate-500 relative ${val?'text-white':'text-slate-500'}`}>{i===0&&<span className="absolute -left-4 text-slate-400">+</span>}{val}</div>); })}
+                    {userBits.map((b,i) => (<button key={`r-${i}`} onClick={()=>handleToggleBit(i)} className={`w-8 h-10 md:w-12 md:h-14 mt-2 mx-auto rounded font-bold font-mono text-xl transition-all ${b?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{b}</button>))}
+                </div>
+            </div>
+            <div className="mt-4 text-center text-xs text-slate-400 uppercase tracking-widest">Top Row: Carries (Click to Toggle) <br/> Bottom Row: Answer (Click to Toggle)</div>
+        </GameLayout>
+    );
+    if (level===6) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L6: Hex Reader" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">CONVERT TO DECIMAL</div><div className="flex justify-center gap-2">{question.hexChars.map((c,i)=>(<div key={i} className="flex flex-col items-center">{!isHardMode&&<div className="text-xs text-slate-500 mb-1">{HEX_POWERS[i]}</div>}<div className="w-16 h-20 bg-slate-700 rounded text-4xl font-mono flex items-center justify-center font-bold border-2 border-slate-600">{c}</div></div>))}</div></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+    if (level===7) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L7: Hex Writer" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">CONVERT TO HEX</div><div className="text-6xl font-bold font-mono">{question.decimal}</div></div><div className="flex justify-center gap-2 mb-6"><div className={`w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 ${shake?'border-red-500':'border-blue-500'}`}>{input[0]||'_'}</div><div className={`w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 ${shake?'border-red-500':'border-blue-500'}`}>{input[1]||'_'}</div></div><HexPad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+    if (level===8) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L8: Bin to Hex" isHardMode={isHardMode}><div className="mb-8 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={true}/></div><div className="flex justify-center gap-2 mb-6"><div className="w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 border-blue-500">{input[0]||'_'}</div><div className="w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 border-blue-500">{input[1]||'_'}</div></div><HexPad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+    if (level===9) { const currentVal=userBits.reduce((a,b,i)=>a+(b*POWERS[i]),0); const currentHex=currentVal.toString(16).toUpperCase().padStart(2,'0'); return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L9: Hex to Bin" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">MATCH THIS HEX</div><div className="text-6xl font-bold font-mono text-yellow-400">{question.hexString}</div></div><div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 w-full max-w-4xl mb-4"><div className="flex justify-between items-center gap-1">{POWERS.map((_,i)=>(<div key={i} className={`flex flex-col items-center flex-1 ${i===4?'ml-6':''}`}>{!isHardMode&&<div className="text-[10px] text-cyan-400 font-bold mb-1">{NIBBLE_POWERS[i]}</div>}<button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-12 rounded font-bold text-xl transition-all ${userBits[i]?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>))}</div></div>{!isHardMode&&(<div className="text-center"><span className="text-sm text-slate-400">Current: </span><span className={`font-mono font-bold text-2xl ${currentHex===question.hexString?'text-green-400':'text-slate-200'}`}>{currentHex}</span></div>)}</GameLayout>; }
+    return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L4: Decoder" isHardMode={isHardMode}><div className="mb-6 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false}/></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+};
+
+const Level1Comp = ({ onExit, onGameOver, isHardMode, onHelp }) => {
+    const startTimeRef=useRef(Date.now()); const correctRef=useRef(0); const wrongRef=useRef(0);
+    const handleGameEnd=useCallback((s)=>onGameOver(s,1,Date.now()-startTimeRef.current,correctRef.current,wrongRef.current),[onGameOver]);
+    const handleExit=()=>onExit(1,Date.now()-startTimeRef.current,correctRef.current,wrongRef.current,score);
+    const {stress,score,resetRound,addStress,gameSpeed}=useGameLoop(true,handleGameEnd,isHardMode);
+    const [q,setQ]=useState(null); const [filled,setFilled]=useState({}); const [opts,setOpts]=useState([]); const [sel,setSel]=useState(null);
+    useEffect(()=>next(),[]);
+    const next=(pts=0)=>{const nq=generateQuestion(1);setQ(nq);setFilled({});setSel(null);resetRound(isHardMode?Math.floor(pts*2.5):pts);const c=nq.missingValues;const d=[128,64,32,16,8,4,2,1].filter(x=>!c.includes(x)).concat([12,24,48,96]).sort(()=>0.5-Math.random());setOpts([...c,...d.slice(0,8-c.length)].sort((a,b)=>a-b));};
+    const clickSlot=(i,v)=>{if(sel!==null&&!filled[i]){if(sel===v){const nf={...filled,[i]:sel};setFilled(nf);setOpts(o=>o.map(x=>x===sel?-1:x));setSel(null);if(Object.keys(nf).length===q.missingIndices.length){correctRef.current+=1;setTimeout(()=>next(50+q.missingIndices.length*10),200);}}else{wrongRef.current+=1;addStress(0.15);setSel(null);}}};
+    const drop=(e,i,v)=>{e.preventDefault();const val=parseInt(e.dataTransfer.getData("t"));if(val===v){const nf={...filled,[i]:val};setFilled(nf);setOpts(o=>o.map(x=>x===val?-1:x));if(Object.keys(nf).length===q.missingIndices.length){correctRef.current+=1;setTimeout(()=>next(50+q.missingIndices.length*10),200);}}else{wrongRef.current+=1;addStress(0.15);}};
+    if(!q)return null;
+    return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L1: Drag & Drop" isHardMode={isHardMode}><div className="w-full max-w-4xl bg-slate-800/50 p-4 rounded-xl border border-slate-700 mb-8 overflow-x-auto"><div className="flex gap-1 min-w-[600px]">{POWERS.map((p,i)=>{const isT=q.missingIndices.includes(i),isF=filled[i];if(q.bits[i]===0)return<div key={i} className="flex-1 opacity-50 flex flex-col items-center gap-2"><div className="w-full h-16 rounded bg-slate-900 text-slate-500 flex items-center justify-center font-bold">{p}</div><div className="w-full h-10 rounded bg-slate-800 flex items-center justify-center">0</div></div>;if(!isT)return<div key={i} className="flex-1 flex flex-col items-center gap-2"><div className="w-full h-16 rounded bg-slate-700 text-white flex items-center justify-center font-bold">{p}</div><div className="w-full h-10 rounded bg-slate-700 text-white flex items-center justify-center font-bold">1</div></div>;return <div key={i} className="flex-1 flex flex-col items-center gap-2" onClick={()=>clickSlot(i,p)} onDragOver={e=>e.preventDefault()} onDrop={e=>drop(e,i,p)}><div className={`w-full h-16 rounded border-2 border-dashed flex items-center justify-center cursor-pointer font-bold text-xl ${isF?'bg-green-500/20 border-green-500 text-green-400':sel?'animate-pulse border-blue-400':'border-slate-500'}`}>{isF?p:sel?'TAP':'?'}</div><div className="w-full h-10 rounded bg-slate-700 text-white flex items-center justify-center font-bold">1</div></div>})}<div className="px-4 text-2xl font-bold text-white flex items-center">= {q.decimal}</div></div></div><div className="grid grid-cols-4 gap-4 w-full max-w-lg mb-8">{opts.map((o,i)=>o===-1?<div key={i} className="h-16"/>:<div key={i} draggable onDragStart={e=>e.dataTransfer.setData("t",o)} onClick={()=>setSel(sel===o?null:o)} className={`h-16 flex items-center justify-center font-bold text-xl cursor-pointer rounded shadow-lg ${sel===o?'bg-yellow-500 text-black':'bg-blue-600 text-white'}`}>{o}</div>)}</div></GameLayout>;
+};
+
+const Level2Comp = ({ onExit, onGameOver, isHardMode, onHelp }) => {
+    const startTimeRef=useRef(Date.now()); const correctRef=useRef(0); const wrongRef=useRef(0);
+    const handleGameEnd=useCallback((s)=>onGameOver(s,2,Date.now()-startTimeRef.current,correctRef.current,wrongRef.current),[onGameOver]);
+    const handleExit=()=>onExit(2,Date.now()-startTimeRef.current,correctRef.current,wrongRef.current,0);
+    const {stress,score,resetRound,addStress,gameSpeed}=useGameLoop(true,handleGameEnd,isHardMode);
+    const [q,setQ]=useState(null); const [filled,setFilled]=useState({}); const [sel,setSel]=useState(null); const [inp,setInp]=useState("");
+    useEffect(()=>next(),[]);
+    useEffect(()=>{const h=(e)=>{if(sel===null)return;if(e.key>='0'&&e.key<='9')k(e.key);if(e.key==='Backspace')b();if(e.key==='Enter')s();};window.addEventListener('keydown',h);return ()=>window.removeEventListener('keydown',h);},[sel,inp]);
+    const next=(pts=0)=>{const nq=generateQuestion(2);setQ(nq);setFilled({});setInp("");setSel(nq.missingIndices[0]);resetRound(isHardMode?Math.floor(pts*2.5):pts);};
+    const k=(c)=>{if(inp.length<3)setInp(p=>p+c)}; const b=()=>setInp(p=>p.slice(0,-1));
+    const s=()=>{if(!inp||sel===null)return;if(parseInt(inp)===POWERS[sel]){const nf={...filled,[sel]:parseInt(inp)};setFilled(nf);setInp("");const nx=q.missingIndices.find(i=>!nf[i]);if(nx!==undefined)setSel(nx);else{setSel(null);correctRef.current+=1;setTimeout(()=>next(75+q.missingIndices.length*15),200);}}else{wrongRef.current+=1;addStress(0.2);setInp("");}};
+    if(!q)return null;
+    return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L2: Memory Type" isHardMode={isHardMode}><div className="w-full max-w-4xl bg-slate-800/50 p-4 rounded-xl border border-slate-700 mb-6 overflow-x-auto"><div className="flex gap-1 min-w-[600px]">{POWERS.map((p,i)=>{const isT=q.missingIndices.includes(i),isF=filled[i];if(q.bits[i]===0)return<div key={i} className="flex-1 opacity-50 flex flex-col items-center gap-2"><div className="w-full h-16 rounded bg-slate-900 text-slate-500 flex items-center justify-center font-bold">{p}</div><div className="w-full h-10 rounded bg-slate-800 flex items-center justify-center">0</div></div>;if(!isT)return<div key={i} className="flex-1 flex flex-col items-center gap-2"><div className="w-full h-16 rounded bg-slate-700 text-white flex items-center justify-center font-bold">{p}</div><div className="w-full h-10 rounded bg-slate-700 text-white flex items-center justify-center font-bold">1</div></div>;return <div key={i} className="flex-1 flex flex-col items-center gap-2"><button type="button" onClick={()=>!isF&&setSel(i)} className={`w-full h-16 border-2 flex items-center justify-center font-bold text-xl rounded ${isF?'bg-green-500/20 border-green-500 text-green-400':sel===i?'border-blue-400 bg-blue-500/10 text-white':'border-slate-500'}`}>{isF?p:sel===i?inp+'|':'?'}</button><div className="w-full h-10 rounded bg-slate-700 text-white flex items-center justify-center font-bold">1</div></div>})}<div className="px-4 text-2xl font-bold text-white flex items-center">= {q.decimal}</div></div></div><Numpad onInput={k} onDelete={b} onSubmit={s}/></GameLayout>;
+};
+
+const Level3Comp = ({ onExit, onGameOver, isHardMode, onHelp }) => {
+    const startTimeRef=useRef(Date.now()); const correctRef=useRef(0); const wrongRef=useRef(0);
+    const handleGameEnd=useCallback((s)=>onGameOver(s,3,Date.now()-startTimeRef.current,correctRef.current,0),[onGameOver]);
+    const handleExit=()=>onExit(3,Date.now()-startTimeRef.current,correctRef.current,0,score);
+    const {stress,score,resetRound,addStress,gameSpeed}=useGameLoop(true,handleGameEnd,isHardMode);
+    const [q,setQ]=useState(null); const [bits,setBits]=useState(Array(8).fill(0));
+    useEffect(()=>next(),[]);
+    const next=(pts=0)=>{setQ(generateQuestion(3));setBits(Array(8).fill(0));resetRound(isHardMode?Math.floor(pts*2.5):pts);};
+    const toggle=(i)=>{const nb=[...bits];nb[i]=nb[i]?0:1;setBits(nb);if(nb.reduce((a,b,x)=>a+b*POWERS[x],0)===q.decimal){correctRef.current+=1;setTimeout(()=>next(100),200);}};
+    if(!q)return null;
+    const cur=bits.reduce((a,b,x)=>a+b*POWERS[x],0);
+    return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L3: Bit Flipper" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm">TARGET</div><div className="text-6xl font-bold font-mono text-white">{q.decimal}</div></div><div className="bg-slate-800/50 p-4 rounded-xl w-full max-w-4xl mb-8 overflow-x-auto"><div className="flex gap-1 min-w-[600px]">{POWERS.map((p,i)=><div key={i} className="flex-1 flex flex-col items-center gap-2"><div className="w-full h-14 rounded bg-slate-900/30 text-slate-500 flex items-center justify-center font-bold">{p}</div><button type="button" onClick={()=>toggle(i)} className={`w-full h-16 rounded font-bold text-2xl ${bits[i]?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{bits[i]}</button></div>)}</div></div><div className="flex items-center gap-4 text-slate-300"><span>SUM:</span><span className="text-3xl font-bold font-mono">{isHardMode?'???':cur}</span></div></GameLayout>;
+};
+
+const ExamLevel = ({ onExit, onFinish, isHardMode }) => {
+    const startTimeRef=useRef(Date.now());
+    const [currentQIndex,setCurrentQIndex]=useState(0);
+    const [correctCount,setCorrectCount]=useState(0);
+    const [questions,setQuestions]=useState([]);
+    const [input,setInput]=useState("");
+    const [userBits,setUserBits]=useState([]);
+    const [carryBits,setCarryBits]=useState([]);
+    const [sel,setSel]=useState(null);
+    const [examDetails,setExamDetails]=useState([]);
+    useEffect(()=>{ const qs=[]; for(let i=0;i<15;i++){const randLevel=Math.floor(Math.random()*9)+1;const q=generateQuestion(randLevel,isHardMode);q.levelType=randLevel;qs.push(q);} setQuestions(qs); if(qs.length>0)setupQuestionState(qs[0]); },[isHardMode]);
+    const setupQuestionState=(q)=>{ setInput("");setSel(null); if(q.levelType===5){const count=q.bitsCount||8;setUserBits(Array(count+1).fill(0));setCarryBits(Array(count+1).fill(0));}else if(q.levelType===3||q.levelType===9){setUserBits(Array(8).fill(0));}else{setUserBits([]);} if(q.levelType===2&&q.missingIndices&&q.missingIndices.length>0)setSel(q.missingIndices[0]); else if(q.levelType===1&&q.missingIndices&&q.missingIndices.length>0)setSel(q.missingIndices[0]); };
+    const handleNext=()=>{ const q=questions[currentQIndex]; let isCorrect=false; let uAns=input===""?"None":input; let cAns=""; let qType=""; if(q.levelType===1||q.levelType===2){isCorrect=parseInt(input)===POWERS[sel];cAns=POWERS[sel].toString();qType="Missing Place Value";}else if(q.levelType===3){isCorrect=userBits.reduce((a,b,i)=>a+(b*POWERS[i]),0)===q.decimal;uAns=userBits.join('');cAns=q.decimal.toString(2).padStart(8,'0');qType=`Make Decimal: ${q.decimal}`;}else if(q.levelType===4||q.levelType===6){isCorrect=parseInt(input)===q.decimal;cAns=q.decimal.toString();qType=q.levelType===4?"Bin to Dec":"Hex to Dec";}else if(q.levelType===5){isCorrect=parseInt(userBits.join(''),2)===parseInt(q.binResult.join(''),2);uAns=userBits.join('');cAns=q.binResult.join('');qType="Binary Sum";}else if(q.levelType===7||q.levelType===8){isCorrect=input.toUpperCase()===q.hexString.toUpperCase();cAns=q.hexString;qType=q.levelType===7?"Dec to Hex":"Bin to Hex";uAns=uAns.toUpperCase();}else if(q.levelType===9){isCorrect=userBits.reduce((a,b,i)=>a+(b*POWERS[i]),0)===q.decimal;uAns=userBits.join('');cAns=q.decimal.toString(2).padStart(8,'0');qType=`Hex to Bin: ${q.hexString}`;}
+    if(isCorrect)setCorrectCount(prev=>prev+1);
+    const currentDetail={questionNum:currentQIndex+1,type:qType,userAnswer:uAns,correctAnswer:cAns,isCorrect};
+    const newDetails=[...examDetails,currentDetail]; setExamDetails(newDetails);
+    if(currentQIndex<14){setCurrentQIndex(prev=>prev+1);setupQuestionState(questions[currentQIndex+1]);}else{const duration=Date.now()-startTimeRef.current;onFinish(correctCount+(isCorrect?1:0),15,duration,newDetails);}};
+    const handleInput=(char)=>setInput(prev=>prev+char);
+    const handleBackspace=()=>setInput(prev=>prev.slice(0,-1));
+    const handleToggleBit=(idx)=>{const newBits=[...userBits];newBits[idx]=newBits[idx]?0:1;setUserBits(newBits);};
+    const handleToggleCarry=(idx)=>{const newC=[...carryBits];newC[idx]=newC[idx]?0:1;setCarryBits(newC);};
+    if(questions.length===0)return <div>Loading Exam...</div>;
+    const q=questions[currentQIndex];
+    const renderContent=()=>{
+        if(q.levelType===1||q.levelType===2)return <div className="flex flex-col items-center"><div className="mb-4 text-slate-300 font-bold">Type the missing place value:</div><div className="flex gap-1 mb-6">{POWERS.map((p,i)=>(<div key={i} className="flex flex-col items-center"><div className={`w-10 h-16 border-2 flex items-center justify-center font-bold ${i===sel?'border-blue-500 bg-blue-900/50 text-white':'border-slate-700 text-slate-500'}`}>{i===sel?input:(q.missingIndices&&q.missingIndices.includes(i)?'?':p)}</div><div className="text-slate-500 mt-1">{q.bits[i]}</div></div>))}</div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleNext}/></div>;
+        if(q.levelType===3)return <div className="flex flex-col items-center"><div className="mb-4 text-slate-300 font-bold">Toggle bits to make: {q.decimal}</div><div className="text-4xl text-white mb-4">{q.decimal}</div><div className="flex gap-1 mb-6">{POWERS.map((p,i)=>(<div key={i} className="flex flex-col items-center"><div className="text-xs text-slate-500">{p}</div><button onClick={()=>handleToggleBit(i)} className={`w-10 h-14 rounded border ${userBits[i]?'bg-blue-600 border-blue-400':'bg-slate-800 border-slate-600'}`}>{userBits[i]}</button></div>))}</div><Button onClick={handleNext} className="w-full max-w-xs">NEXT QUESTION</Button></div>;
+        if(q.levelType===4)return <div className="flex flex-col items-center"><div className="mb-6"><div className="mb-2 text-slate-300 font-bold">Convert Binary to Decimal:</div><BinaryDisplay bits={q.bits} hideHeaders={false} useNibbles={false}/></div><div className="text-3xl font-mono mb-4 text-blue-400">{input}_</div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleNext}/></div>;
+        if(q.levelType===6)return <div className="flex flex-col items-center"><div className="mb-6"><div className="mb-2 text-slate-300 font-bold">Convert Hex to Decimal:</div><div className="flex gap-2 justify-center">{q.hexChars.map((c,i)=><div key={i} className="text-4xl font-mono bg-slate-800 p-4 rounded">{c}</div>)}</div></div><div className="text-3xl font-mono mb-4 text-blue-400">{input}_</div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleNext}/></div>;
+        if(q.levelType===5)return <div className="flex flex-col items-center w-full"><div className="mb-4 text-slate-300 font-bold">Calculate the Binary Sum:</div><div className="overflow-x-auto w-full flex justify-center mb-6"><div className="grid gap-1" style={{gridTemplateColumns:`repeat(${q.bitsCount+1}, minmax(2rem, 1fr))`}}>{carryBits.map((c,i)=><button key={`c${i}`} onClick={()=>handleToggleCarry(i)} className={`w-8 h-8 rounded text-xs ${c?'bg-orange-500':'bg-slate-700'}`}>{c}</button>)}<div className="col-span-full h-1 bg-slate-600 my-1"></div>{Array(q.bitsCount+1).fill(0).map((_,i)=><div key={`a${i}`} className="text-center">{i===0?0:(q.binA[i-1]||0)}</div>)}{Array(q.bitsCount+1).fill(0).map((_,i)=><div key={`b${i}`} className="text-center border-b border-slate-500">{i===0?0:(q.binB[i-1]||0)}</div>)}{userBits.map((b,i)=><button key={`r${i}`} onClick={()=>handleToggleBit(i)} className={`w-8 h-10 rounded ${b?'bg-blue-600':'bg-slate-700'}`}>{b}</button>)}</div></div><Button onClick={handleNext}>NEXT</Button></div>;
+        if(q.levelType===7)return <div className="flex flex-col items-center"><div className="mb-4 text-slate-300 font-bold">Convert Decimal to Hex:</div><div className="mb-6 text-4xl text-white font-mono">{q.decimal}</div><div className="flex gap-2 mb-4 text-3xl font-mono text-teal-400">{input}_</div><HexPad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleNext}/></div>;
+        if(q.levelType===8)return <div className="flex flex-col items-center"><div className="mb-4 text-slate-300 font-bold">Convert Binary to Hex:</div><div className="mb-6"><BinaryDisplay bits={q.bits} hideHeaders={false} useNibbles={true}/></div><div className="flex gap-2 mb-4 text-3xl font-mono text-teal-400">{input}_</div><HexPad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleNext}/></div>;
+        if(q.levelType===9)return <div className="flex flex-col items-center"><div className="mb-4 text-slate-300 font-bold">Convert Hex to Binary:</div><div className="text-4xl font-mono text-yellow-400 mb-6">{q.hexString}</div><div className="flex gap-1 mb-6">{POWERS.map((p,i)=>(<div key={i} className={`flex flex-col items-center ${i===4?'ml-4':''}`}><div className="text-[10px] text-slate-500">{NIBBLE_POWERS[i]}</div><button onClick={()=>handleToggleBit(i)} className={`w-8 h-12 rounded border ${userBits[i]?'bg-blue-600 border-blue-400':'bg-slate-800 border-slate-600'}`}>{userBits[i]}</button></div>))}</div><Button onClick={handleNext} className="w-full max-w-xs">NEXT</Button></div>;
+        return <div>Unknown Q</div>;
+    };
+    return (<ExamLayout currentQ={currentQIndex+1} totalQ={15} onExit={()=>onExit(10,0,0,0,0)}><div className="w-full max-w-3xl mx-auto pt-8">{renderContent()}</div></ExamLayout>);
+};
+
+// ============================================================
+// MAIN MENU
+// ============================================================
+const MainMenu = ({ onStart, isHardMode, setHardMode, onExport, playerName }) => {
+    const [helpLevel, setHelpLevel] = useState(null);
+    return (
+        <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar">
+            {helpLevel && <HelpModal levelId={helpLevel} onClose={() => setHelpLevel(null)} />}
+            <div className="text-center mb-4 mt-6">
+                <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 mb-1">BINARY BLITZ</h1>
+                <p className="text-slate-400 text-sm">Master the bits. 10 Levels.</p>
+                <p className="text-violet-400 text-xs mt-1 font-mono">👤 {playerName}</p>
+            </div>
+            <div className="flex gap-3 mb-5 flex-wrap justify-center items-center">
+                <Toggle checked={isHardMode} onChange={setHardMode} label="HARD MODE" />
+                <Button variant="success" className="py-2 px-4 text-sm h-9" onClick={onExport}>Export Report</Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl pb-24">
+                {Object.entries(LEVELS).map(([id, data]) => {
+                    const scores = getScores(id);
+                    const topScore = scores.length > 0 ? scores[0].score : '-';
+                    const isExam = id === '10';
+                    return (
+                        <div key={id} className={`bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-${data.color}-500 transition-all flex flex-col relative group`}>
+                            <div className="flex justify-between items-start mb-2">
+                                <h2 className={`text-lg font-bold text-${data.color}-400`}>{data.title}</h2>
+                                <button onClick={() => setHelpLevel(id)} className="text-slate-500 hover:text-white bg-slate-700 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold transition-colors">?</button>
+                            </div>
+                            <p className="text-xs text-slate-400 mb-4">{data.desc}</p>
+                            <div className="flex-1"></div>
+                            <div className="flex justify-between items-end mt-4">
+                                {isExam ? (
+                                    <div className="text-xs text-slate-500">Last: <span className="text-white font-mono">{getExamHistory().length > 0 ? getExamHistory().slice(-1)[0].score + '/15' : '-'}</span></div>
+                                ) : (
+                                    <div className="text-xs text-slate-500">Best: <span className="text-white font-mono">{topScore}</span></div>
+                                )}
+                                <button onClick={() => onStart(parseInt(id))} className={`px-4 py-2 rounded-lg bg-${data.color}-600 hover:bg-${data.color}-500 text-white font-bold text-sm shadow-lg`}>{isExam ? 'START' : 'PLAY'}</button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const GameOver = ({ score, level, onRestart, onHome }) => (
+    <div className="flex flex-col items-center justify-center h-full p-4 fade-in space-y-8 text-center bg-slate-900/95 z-50 absolute inset-0">
+        <h2 className="text-6xl font-bold text-red-500 shake">GAME OVER</h2>
+        <div className="bg-slate-800 p-8 rounded-2xl border-2 border-slate-700 shadow-2xl w-full max-w-sm">
+            <p className="text-slate-400 uppercase tracking-widest text-sm mb-2">Level {level} Score</p>
+            <p className="text-7xl font-mono font-bold text-white">{score}</p>
+        </div>
+        <div className="flex flex-col space-y-3 w-full max-w-xs">
+            <Button onClick={onRestart} className="w-full text-lg">Try Again</Button>
+            <Button onClick={onHome} variant="secondary" className="w-full">Back to Menu</Button>
+        </div>
+    </div>
+);
+
+const ExamResults = ({ score, total, duration, onHome }) => (
+    <div className="flex flex-col items-center justify-center h-full p-4 fade-in space-y-8 text-center bg-slate-900 z-50 absolute inset-0">
+        <h2 className="text-5xl font-bold text-white mb-4">Exam Complete</h2>
+        <div className="bg-slate-800 p-8 rounded-2xl border-2 border-slate-700 shadow-2xl w-full max-w-md">
+            <div className="text-slate-400 uppercase tracking-widest text-sm mb-2">Score</div>
+            <div className="text-6xl font-mono font-bold text-rose-400 mb-6">{score} <span className="text-2xl text-slate-500">/ {total}</span></div>
+            <div className="flex justify-between text-sm border-t border-slate-700 pt-4">
+                <span className="text-slate-400">Time Taken:</span>
+                <span className="text-white font-mono">{formatTime(duration)}</span>
+            </div>
+        </div>
+        <Button onClick={onHome} variant="primary" className="w-full max-w-xs">Return to Menu</Button>
+    </div>
+);
+
+// ============================================================
+// APP ROOT
+// ============================================================
+const App = () => {
+    // No name prompt: when embedded in Bloomsbury Computing the parent page
+    // already knows who's signed in and posts it here. Standalone use (or
+    // before that message arrives) just falls back to "Player".
+    const [playerName, setPlayerName] = useState(() => window.__bcPlayerName || 'Player');
+    useEffect(() => {
+        if (window.__bcPlayerName) { setPlayerName(window.__bcPlayerName); return; }
+        const handler = (event) => {
+            const data = event.data;
+            if (data && data.type === 'BC_IDENTITY' && data.name) setPlayerName(data.name);
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    }, []);
+    const [view, setView] = useState('menu');
+    const [activeLevel, setActiveLevel] = useState(1);
+    const [lastScore, setLastScore] = useState(0);
+    const [lastExamStats, setLastExamStats] = useState(null);
+    const [isHardMode, setHardMode] = useState(false);
+    const [showExport, setShowExport] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
+    const sessionStart = useRef(Date.now());
+    const [sessionStats, setSessionStats] = useState({});
+
+    useEffect(() => {
+        let keyBuffer = '';
+        const handleKeyDown = (e) => {
+            if (e.shiftKey && e.key.length === 1) {
+                keyBuffer += e.key.toUpperCase();
+                if (keyBuffer.length > 3) keyBuffer = keyBuffer.slice(-3);
+                if (keyBuffer === 'DEV') { window.open('analyser.html', '_blank'); keyBuffer = ''; }
+            } else if (!e.shiftKey) { keyBuffer = ''; }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    const updateStats = (level, score, duration, correct, wrong) => {
+        setSessionStats(prev => {
+            const current = prev[level] || { plays: 0, time: 0, best: 0, correct: 0, wrong: 0 };
+            return { ...prev, [level]: { plays: current.plays + 1, time: current.time + duration, best: Math.max(current.best, score), correct: current.correct + correct, wrong: current.wrong + wrong } };
+        });
+    };
+
+    const handleGameOver = (score, level, duration, correct, wrong) => {
+        saveScore(score, level); saveActivity(level, score, duration, correct, wrong);
+        updateStats(level, score, duration, correct, wrong);
+        setLastScore(score); setActiveLevel(level); setView('gameover');
+    };
+
+    const handleExit = (level, duration, correct, wrong, score) => {
+        if (level !== 10) saveScore(score, level);
+        saveActivity(level, score, duration, correct, wrong);
+        updateStats(level, score, duration, correct, wrong);
+        setView('menu');
+    };
+
+    const handleExamFinish = (score, total, duration, details) => {
+        saveExamResult(score, total, duration, details);
+        saveActivity(10, score, duration, score, total - score);
+        updateStats(10, score, duration, score, total - score);
+        setLastExamStats({ score, total, duration });
+        setView('exam_results');
+    };
+
+    return (
+        <div className="w-full h-full relative">
+            <DraggableCalculator />
+            {showExport && <ExportModal onClose={() => setShowExport(false)} />}
+            {showHelp && <HelpModal levelId={activeLevel} onClose={() => setShowHelp(false)} />}
+
+            {view === 'menu' && (
+                <MainMenu
+                    onStart={(lvl) => { setActiveLevel(lvl); setView(lvl === 10 ? 'exam' : 'game'); }}
+                    isHardMode={isHardMode}
+                    setHardMode={setHardMode}
+                    onExport={() => setShowExport(true)}
+                    playerName={playerName}
+                />
+            )}
+
+            {view === 'game' && (
+                activeLevel===1 ? <Level1Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)}/> :
+                activeLevel===2 ? <Level2Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)}/> :
+                activeLevel===3 ? <Level3Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)}/> :
+                <GenericLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)}/>
+            )}
+
+            {view === 'exam' && <ExamLevel onExit={(l,d) => handleExit(l,d,0,0,0)} onFinish={handleExamFinish} isHardMode={isHardMode}/>}
+            {view === 'gameover' && <GameOver score={lastScore} level={activeLevel} onRestart={() => setView('game')} onHome={() => setView('menu')}/>}
+            {view === 'exam_results' && <ExamResults {...lastExamStats} onHome={() => setView('menu')}/>}
+        </div>
+    );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
