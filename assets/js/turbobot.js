@@ -45,7 +45,7 @@
     useNativeLevels: !params.has('levelString'),
     levelString: decodeURIComponent(params.get('levelString') || '') || DEFAULT_LEVEL,
     pybotUrl: params.get('pybotUrl') ||
-      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260716k' + (params.has('levelString') ? '&hideMenu=true' : ''))
+      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260819f' + (params.has('levelString') ? '&hideMenu=true' : ''))
   };
 
   function loadBlockSaves() {
@@ -909,7 +909,22 @@
     }
     if (event.data.type === 'LEVEL_COMPLETE') {
       setStatus('Complete: ' + (event.data.medal || '') + ' ' + event.data.lines + ' lines');
+      relayLevelComplete(event.data);
     }
+  }
+
+  function relayLevelComplete(data) {
+    if (window.parent === window) return;
+    try {
+      window.parent.postMessage({
+        type: 'LEVEL_COMPLETE',
+        appHint: 'turbobot',
+        level: data.level,
+        medal: data.medal,
+        lines: data.lines,
+        time: data.time
+      }, '*');
+    } catch (e) {}
   }
 
   function closestClickable(el) {

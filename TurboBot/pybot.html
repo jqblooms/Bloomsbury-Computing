@@ -1625,13 +1625,16 @@ function handleWin() {
         localStorage.setItem('lightbotSave', JSON.stringify(savedData));
     }
 
-    postToParent({
-        type: 'LEVEL_COMPLETE',
-        level: currentLevelIndex,
-        medal,
-        lines: linesUsed,
-        time: timeElapsed
-    });
+    if (!isCustomLevel) {
+        postToParent({
+            type: 'LEVEL_COMPLETE',
+            appHint: 'pybot',
+            level: currentLevelIndex,
+            medal,
+            lines: linesUsed,
+            time: timeElapsed
+        });
+    }
 }
 
 // Start

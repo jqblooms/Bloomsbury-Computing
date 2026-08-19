@@ -17,9 +17,22 @@
   </head>
   <body>
     <iframe
-      src="../scratch/editor.html?turbobot=1&tbv=20260819e"
+      id="tb-frame"
+      src="../scratch/editor.html?turbobot=1&tbv=20260819f"
       allow="microphone; camera"
       allowfullscreen
     ></iframe>
+    <script>
+      // Relay level-completion messages from the TurboWarp/TurboBot iframe
+      // up to whatever embeds this page (the Bloomsbury Computing app).
+      window.addEventListener('message', function (event) {
+        var frame = document.getElementById('tb-frame');
+        if (!frame || event.source !== frame.contentWindow || !event.data) return;
+        if (event.data.type !== 'LEVEL_COMPLETE') return;
+        if (window.parent !== window) {
+          window.parent.postMessage(event.data, '*');
+        }
+      });
+    </script>
   </body>
 </html>
