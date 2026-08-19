@@ -45,7 +45,7 @@
     useNativeLevels: !params.has('levelString'),
     levelString: decodeURIComponent(params.get('levelString') || '') || DEFAULT_LEVEL,
     pybotUrl: params.get('pybotUrl') ||
-      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260822a' + (params.has('levelString') ? '&hideMenu=true' : ''))
+      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260822b' + (params.has('levelString') ? '&hideMenu=true' : ''))
   };
 
   function loadBlockSaves() {
@@ -1111,6 +1111,21 @@
     ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(function (eventName) {
       document.addEventListener(eventName, handleFullscreenChange);
     });
+
+    // The flyout also lazily renders blocks as they scroll into view, which
+    // is the same "no observable mutation" gap as the category-click case
+    // above, just triggered by scrolling instead of clicking. Re-run the
+    // filter on every scroll frame; it's cheap since it only walks blocks
+    // that already exist.
+    var scrollFilterQueued = false;
+    document.addEventListener('scroll', function () {
+      if (scrollFilterQueued) return;
+      scrollFilterQueued = true;
+      requestAnimationFrame(function () {
+        scrollFilterQueued = false;
+        filterVisibleFlyoutBlocks();
+      });
+    }, true);
   }
 
   function scheduleDockPanel() {
