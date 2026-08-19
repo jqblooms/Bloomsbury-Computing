@@ -1003,6 +1003,9 @@
         try { el.click(); } catch (_e) {}
       }
     });
+    // The synthetic 'pointerdown' above has no matching 'pointerup', so make
+    // sure it never leaves the drag-tracking flag stuck on.
+    state.isPointerDown = false;
   }
 
   function lockStageSize() {
@@ -1068,7 +1071,7 @@
     document.addEventListener('pointerdown', function () {
       state.isPointerDown = true;
     }, true);
-    ['pointerup', 'pointercancel'].forEach(function (eventName) {
+    ['pointerup', 'pointercancel', 'mouseup'].forEach(function (eventName) {
       document.addEventListener(eventName, function () {
         state.isPointerDown = false;
         filterVisibleFlyoutBlocks();
