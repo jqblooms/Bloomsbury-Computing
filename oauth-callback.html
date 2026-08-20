@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Signing in…</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+  p { max-width: 320px; }
+</style>
+</head>
+<body>
+<p id="msg">Signing you in&hellip; this window should close automatically.</p>
+<script>
+// Google's OAuth 2.0 implicit-flow popup lands here with the access token
+// in the URL fragment (never sent to any server, per the implicit-flow
+// spec). We hand it back to whichever window opened this popup — the
+// Bloomsbury Computing admin page, running inside Apps Script's sandboxed
+// HtmlService iframe — and close.
+//
+// window.opener may be that iframe rather than a top-level window, and its
+// exact origin (a per-script googleusercontent.com sandbox domain) isn't
+// something this static page can know in advance, so postMessage uses '*'.
+// The token itself is never logged or sent anywhere except Google's own
+// Classroom API by the receiving page, and this callback page only ever
+// runs for a user who just completed Google's own consent screen for this
+// exact OAuth client.
+(function () {
+  var params = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  var accessToken = params.get('access_token');
+  var error = params.get('error');
+
+  if (window.opener) {
+    if (accessToken) {
+      window.opener.postMessage({ type: 'BC_CLASSROOM_TOKEN', accessToken: accessToken }, '*');
+    } else {
+      window.opener.postMessage({ type: 'BC_CLASSROOM_TOKEN_ERROR', error: error || 'unknown_error' }, '*');
+    }
+  }
+
+  document.getElementById('msg').textContent = accessToken
+    ? 'Signed in. You can close this window.'
+    : 'Sign-in did not complete. You can close this window and try again.';
+
+  setTimeout(function () { window.close(); }, accessToken ? 600 : 2000);
+})();
+</script>
+</body>
+</html>
