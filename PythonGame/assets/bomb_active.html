@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin: 0; background: transparent; display: flex; align-items: center; justify-content: center; min-height: 220px; }
+  .wrap { position: relative; width: 200px; height: 220px; }
+  .explosion { display: none; position: absolute; top: 0; left: 0; width: 200px; height: 220px; }
+  @keyframes bomb-shake {
+    0%,100% { transform: translate(0,0) rotate(0deg); }
+    25%      { transform: translate(-2px,1px) rotate(-2deg); }
+    75%      { transform: translate(2px,-1px) rotate(2deg); }
+  }
+  .bomb-body { animation: bomb-shake 0.12s infinite 0.2s; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <svg id="bomb-svg" viewBox="0 0 200 220" width="200" height="220">
+    <defs>
+      <radialGradient id="bgrad" cx="40%" cy="35%">
+        <stop offset="0%" stop-color="#555"/>
+        <stop offset="100%" stop-color="#111"/>
+      </radialGradient>
+      <!-- Single shared fuse path used by burn overlay AND spark motion -->
+      <path id="fuse" d="M 158 18 C 140 40 110 60 100 82"/>
+    </defs>
+
+    <g class="bomb-body">
+      <circle cx="100" cy="140" r="52" fill="url(#bgrad)" stroke="#000" stroke-width="2"/>
+      <ellipse cx="85" cy="120" rx="14" ry="8" fill="#666" opacity="0.4"/>
+      <rect x="94" y="84" width="12" height="18" rx="3" fill="#888" stroke="#555" stroke-width="1.5"/>
+    </g>
+
+    <!-- Static fuse rope (drawn tip→bomb so it matches the motion path) -->
+    <use href="#fuse" fill="none" stroke="#8B4513" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Burn: reveals from tip toward bomb using dashoffset -->
+    <use href="#fuse" fill="none" stroke="#D2691E" stroke-width="2.5" stroke-linecap="round"
+         stroke-dasharray="110" stroke-dashoffset="110">
+      <animate attributeName="stroke-dashoffset" from="110" to="0" dur="2s" begin="0.2s" fill="freeze"/>
+    </use>
+
+    <!-- Spark follows the exact same path as the fuse -->
+    <circle r="4" fill="#FFF176">
+      <animateMotion dur="2s" begin="0.2s" fill="freeze" calcMode="linear" rotate="none">
+        <mpath href="#fuse"/>
+      </animateMotion>
+    </circle>
+    <circle r="9" fill="#FF4500" opacity="0.45">
+      <animateMotion dur="2s" begin="0.2s" fill="freeze" calcMode="linear" rotate="none">
+        <mpath href="#fuse"/>
+      </animateMotion>
+    </circle>
+  </svg>
+
+  <svg class="explosion" id="exp-svg" viewBox="0 0 200 220" width="200" height="220">
+    <circle cx="100" cy="140" fill="none" stroke="#FF4500" stroke-width="5" r="0">
+      <animate attributeName="r" values="0;95" dur="0.5s" begin="0s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0" dur="0.5s" begin="0s" fill="freeze"/>
+    </circle>
+    <circle cx="100" cy="140" fill="none" stroke="#FFD700" stroke-width="7" r="0">
+      <animate attributeName="r" values="0;65" dur="0.4s" begin="0.06s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0" dur="0.4s" begin="0.06s" fill="freeze"/>
+    </circle>
+    <circle cx="100" cy="140" fill="#FF8C00" r="0">
+      <animate attributeName="r" values="0;45" dur="0.25s" begin="0s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;1;0" dur="0.4s" begin="0s" fill="freeze"/>
+    </circle>
+    <line x1="100" y1="140" x2="100" y2="140" stroke="#FF8C00" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="y2" values="140;40" dur="0.45s" begin="0s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0" dur="0.45s" begin="0s" fill="freeze"/>
+    </line>
+    <line x1="100" y1="140" x2="100" y2="140" stroke="#FFD700" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="x2" values="100;185" dur="0.45s" begin="0.03s" fill="freeze"/>
+      <animate attributeName="y2" values="140;75" dur="0.45s" begin="0.03s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0" dur="0.45s" begin="0.03s" fill="freeze"/>
+    </line>
+    <line x1="100" y1="140" x2="100" y2="140" stroke="#FFD700" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="x2" values="100;15" dur="0.45s" begin="0.03s" fill="freeze"/>
+      <animate attributeName="y2" values="140;75" dur="0.45s" begin="0.03s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0" dur="0.45s" begin="0.03s" fill="freeze"/>
+    </line>
+    <line x1="100" y1="140" x2="100" y2="140" stroke="#FF4500" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="x2" values="100;180" dur="0.45s" begin="0.05s" fill="freeze"/>
+      <animate attributeName="y2" values="140;185" dur="0.45s" begin="0.05s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0" dur="0.45s" begin="0.05s" fill="freeze"/>
+    </line>
+    <line x1="100" y1="140" x2="100" y2="140" stroke="#FF4500" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="x2" values="100;20" dur="0.45s" begin="0.05s" fill="freeze"/>
+      <animate attributeName="y2" values="140;185" dur="0.45s" begin="0.05s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0" dur="0.45s" begin="0.05s" fill="freeze"/>
+    </line>
+    <line x1="100" y1="140" x2="100" y2="140" stroke="#FF8C00" stroke-width="3" stroke-linecap="round">
+      <animate attributeName="y2" values="140;210" dur="0.45s" begin="0.02s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0" dur="0.45s" begin="0.02s" fill="freeze"/>
+    </line>
+    <text x="100" y="148" text-anchor="middle" font-size="56" font-family="sans-serif" opacity="0">💥
+      <animate attributeName="opacity" values="0;1;1;0" dur="0.55s" begin="0.05s" fill="freeze"/>
+    </text>
+  </svg>
+</div>
+
+<script>
+  setTimeout(() => {
+    document.getElementById('bomb-svg').style.display = 'none';
+    const exp = document.getElementById('exp-svg');
+    exp.style.display = 'block';
+    exp.querySelectorAll('animate').forEach(a => a.beginElement());
+  }, 2200);
+</script>
+</body>
+</html>

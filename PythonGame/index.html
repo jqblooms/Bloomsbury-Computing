@@ -1,0 +1,4446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://skulpt.org/js/skulpt.min.js" type="text/javascript"></script>
+    <script src="https://skulpt.org/js/skulpt-stdlib.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Python Error Defense</title>
+    <style>
+        /* Base Reset & Variables */
+        :root {
+            --bg-color: #1e1e1e;
+            --text-color: #d4d4d4;
+            --code-bg: #2d2d2d;
+            --accent-blue: #569cd6;
+            --accent-green: #6a9955;
+            --accent-red: #f44336;
+            --accent-orange: #ce9178;
+            --accent-purple: #c586c0;
+            --accent-yellow: #dcdcaa;
+            --accent-dark-purple: #6c5ce7;
+            --accent-teal: #4ec9b0;
+            /* For Level 7 */
+            --accent-cyan: #4fc1ff;
+            /* For Level 8 */
+            --accent-indigo: #5c2d91;
+            /* For Level 9 */
+            --accent-pink: #d16969;
+            /* For Level 10 */
+            --accent-brown: #ce723b;
+            /* For Level 11 */
+            --accent-magenta: #da70d6;
+            /* For Level 12 */
+            --accent-crimson: #dc143c;
+            /* For Level 13 */
+            --accent-coral: #ff7f50;
+            /* For Level 14 */
+            --accent-gold: #ffd700;
+            --ceiling-color: #ff0000;
+            --header-height: 70px;
+            --console-height: 80px;
+        }
+
+        * {
+            box-sizing: border-box;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body.hammer-active,
+        body.hammer-active *,
+        body.hammer-active button,
+        body.hammer-active .btn {
+            cursor: none !important;
+        }
+
+        input,
+        textarea {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Screens */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 100;
+            background-color: rgba(30, 30, 30, 0.98);
+            transition: opacity 0.3s;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .screen-content {
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* HUD */
+        #top-bar {
+            height: var(--header-height);
+            width: 100%;
+            background-color: #252526;
+            border-bottom: 2px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        .hud-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .hud-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-home {
+            background: #444;
+            border: none;
+            border-radius: 8px;
+            width: 45px;
+            height: 45px;
+            color: white;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .btn-home:active {
+            transform: scale(0.95);
+        }
+
+        /* CONSOLE WINDOW */
+        #console-bar {
+            width: 100%;
+            height: var(--console-height);
+            background-color: #111;
+            border-bottom: 1px solid #444;
+            padding: 5px 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            overflow-y: auto;
+            z-index: 15;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+            transition: box-shadow 0.2s, border-color 0.2s;
+            border: 2px solid #333;
+        }
+
+        .console-line {
+            margin: 1px 0;
+            line-height: 1.2;
+            white-space: pre-wrap;
+            opacity: 0.9;
+        }
+
+        .console-flash {
+            animation: flash-white 0.8s ease-in-out infinite;
+        }
+
+        @keyframes flash-white {
+            0% {
+                border-color: #333;
+                box-shadow: inset 0 0 0 0 transparent;
+            }
+
+            50% {
+                border-color: #fff;
+                box-shadow: inset 0 0 20px 5px rgba(255, 255, 255, 0.2);
+            }
+
+            100% {
+                border-color: #333;
+                box-shadow: inset 0 0 0 0 transparent;
+            }
+        }
+
+        #console-input-wrapper {
+            display: none;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            color: #fff;
+        }
+
+        #console-prompt {
+            color: #fff;
+            white-space: pre;
+        }
+
+        #console-real-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: inherit;
+            flex-grow: 1;
+        }
+
+        /* Game Area */
+        #game-area {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            overflow: hidden;
+            z-index: 2;
+            background-color: var(--bg-color);
+        }
+
+        #ceiling {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: repeating-linear-gradient(45deg, #cc0000, #cc0000 10px, #ff0000 10px, #ff0000 20px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid #fff;
+            z-index: 10;
+            transition: top 0.5s ease-out;
+        }
+
+        #ceiling::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            width: 100%;
+            height: 200vh;
+            background-color: rgba(40, 0, 0, 0.9);
+            pointer-events: none;
+        }
+
+        #danger-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 50%, rgba(255, 0, 0, 0.4));
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+            transition: opacity 0.2s;
+        }
+
+        .flashing {
+            animation: flash 1s infinite alternate;
+        }
+
+        @keyframes flash {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        #logic-notice {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            background-color: rgba(78, 201, 176, 0.95);
+            color: #1e1e1e;
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            display: none;
+            z-index: 80;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            border: 1px solid #fff;
+        }
+
+        #logic-notice.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes bombFlash {
+            0% {
+                opacity: 1;
+                transform: scale(0.5);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+        }
+
+        .powerup-item {
+            cursor: pointer;
+            border-radius: 6px;
+            padding: 4px;
+            transition: background 0.15s;
+        }
+
+        .powerup-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .powerup-item.powerup-active {
+            background: rgba(86, 156, 214, 0.25);
+            outline: 1px solid #569cd6;
+        }
+
+        .powerup-item[data-type="ice"].powerup-active {
+            outline-color: #7de8ff;
+            background: rgba(125, 232, 255, 0.15);
+        }
+
+        .powerup-item[data-type="hammer"].powerup-active {
+            outline-color: #e8a84a;
+            background: rgba(232, 168, 74, 0.15);
+        }
+
+        #powerups-panel {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            z-index: 50;
+            transition: transform 0.3s ease;
+        }
+
+        #powerups-panel.hidden {
+            transform: translateY(-50%) translateX(calc(100% - 20px));
+        }
+
+        #powerups-content {
+            background: rgba(30, 30, 30, 0.92);
+            border: 1px solid #444;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 70px;
+            align-items: center;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.4);
+            order: 2;
+        }
+
+        #powerups-toggle {
+            background: rgba(30, 30, 30, 0.92);
+            border: 1px solid #444;
+            border-right: none;
+            border-radius: 6px 0 0 6px;
+            color: #d4d4d4;
+            width: 20px;
+            height: 48px;
+            cursor: pointer;
+            font-size: 0.6rem;
+            padding: 0;
+            flex-shrink: 0;
+            order: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+
+        #powerups-toggle:hover {
+            background: rgba(86, 156, 214, 0.3);
+        }
+
+        .powerup-header {
+            font-size: 0.55rem;
+            letter-spacing: 1px;
+            color: #888;
+            text-align: center;
+        }
+
+        .powerup-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .powerup-icon {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .powerup-count {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #dcdcaa;
+            font-family: 'Consolas', monospace;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 1px 6px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        #well-done-msg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            background-color: rgba(106, 153, 85, 0.95);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 20px rgba(106, 153, 85, 0.6);
+            text-align: center;
+            border: 2px solid #fff;
+        }
+
+        #well-done-msg.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        /* Code Blocks */
+        .code-block {
+            position: absolute;
+            background-color: var(--code-bg);
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            white-space: pre-wrap;
+            max-width: 60vw;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.1s, border-color 0.2s, background-color 0.2s;
+            transform: translateX(-50%);
+            z-index: 3;
+        }
+
+        .code-block.selected {
+            border-color: #fff;
+            background-color: #3c3c3c;
+            transform: translateX(-50%) scale(1.1);
+            z-index: 50;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .float-text {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.2rem;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            z-index: 20;
+        }
+
+        @keyframes floatUp {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+        }
+
+        .code-string {
+            color: var(--accent-orange);
+        }
+
+        .code-func {
+            color: var(--accent-blue);
+        }
+
+        .code-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .code-error {
+            text-decoration: underline wavy var(--accent-red);
+        }
+
+        .green-keyword {
+            color: #6a9955;
+            font-weight: bold;
+        }
+
+        /* Controls */
+        #controls {
+            min-height: 140px;
+            width: 100%;
+            background-color: #252526;
+            border-top: 2px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        .control-panel {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .control-panel.active-flex {
+            display: flex;
+        }
+
+        .control-panel.active-grid {
+            display: grid;
+        }
+
+        #controls-text {
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #controls-mcq {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        #controls-multi {
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @keyframes powerupEarned {
+
+            0%,
+            100% {
+                background: transparent;
+                box-shadow: none;
+            }
+
+            25% {
+                background: rgba(220, 220, 100, 0.4);
+                box-shadow: 0 0 12px rgba(220, 220, 100, 0.8);
+            }
+
+            75% {
+                background: rgba(220, 220, 100, 0.4);
+                box-shadow: 0 0 12px rgba(220, 220, 100, 0.8);
+            }
+        }
+
+        .powerup-item.powerup-earned {
+            animation: powerupEarned 0.4s ease-in-out 4;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-game {
+            width: 45%;
+            height: 80%;
+        }
+
+        .input-group {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            gap: 10px;
+        }
+
+        #code-input {
+            flex-grow: 1;
+            background: #1e1e1e;
+            border: 2px solid #444;
+            color: var(--text-color);
+            padding: 12px;
+            font-family: 'Consolas', monospace;
+            font-size: 16px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        #code-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        #code-input-area {
+            flex-grow: 1;
+            background: #1e1e1e;
+            border: 2px solid #444;
+            color: var(--text-color);
+            padding: 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            border-radius: 8px;
+            outline: none;
+            resize: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        #code-input-area:focus {
+            border-color: var(--accent-green);
+        }
+
+        .btn-fix {
+            background-color: var(--accent-blue);
+            width: 100px;
+        }
+
+        .btn-option {
+            background-color: #333;
+            border: 1px solid #555;
+            color: #d4d4d4;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+            white-space: pre-wrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+            text-align: center;
+        }
+
+        .btn-option:active {
+            background-color: #444;
+            transform: translateY(2px);
+        }
+
+        /* Menu & Quadrants Grid */
+        #menu-screen h1 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        #menu-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            max-width: 1200px;
+            flex-grow: 1;
+            gap: 15px;
+            padding: 10px;
+            overflow
+            : hidden;
+        }
+
+        .CodeMirror {
+            height: 100%;
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+        }
+
+#python-editor-wrapper {
+    height: 50vh;
+    max-height: 50vh;
+    overflow: hidden;
+}
+
+#python-editor-wrapper .CodeMirror {
+    height: 100%;
+}
+
+        #test-panel {
+            width: 220px;
+            min-width: 220px;
+            background: #151515;
+            border: 2px dashed #444;
+            border-radius: 10px;
+            display: none;
+            /* Changed: Hidden by default */
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #main-menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .quadrant {
+            background: #252526;
+            border: 2px solid #333;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quadrant.locked {
+            opacity: 0.6;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .quadrant-header {
+            background: #333;
+            color: #fff;
+            padding: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 2px solid #222;
+        }
+
+        .quadrant-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #controls-mcq .btn-option {
+            white-space: pre;
+            font-family: monospace;
+            text-align: left;
+        }
+
+        .level-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-level {
+            background-color: var(--accent-green);
+            width: 100%;
+            flex: 2;
+            height: 50px;
+            font-size: 0.9rem;
+            box-shadow: 0 0 5px rgba(106, 153, 85, 0.4);
+            margin: 0;
+        }
+
+        .btn-level-2 {
+            background-color: #ce9178;
+            box-shadow: 0 0 5px rgba(206, 145, 120, 0.4);
+        }
+
+        .btn-level-3 {
+            background-color: #569cd6;
+            box-shadow: 0 0 5px rgba(86, 156, 214, 0.4);
+        }
+
+        .btn-level-4 {
+            background-color: var(--accent-purple);
+            box-shadow: 0 0 5px rgba(197, 134, 192, 0.4);
+        }
+
+        .btn-level-5 {
+            background-color: var(--accent-yellow);
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(220, 220, 170, 0.4);
+        }
+
+        .btn-level-6 {
+            background-color: var(--accent-dark-purple);
+            color: #fff;
+            box-shadow: 0 0 5px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-level-7 {
+            background-color: var(--accent-teal);
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(78, 201, 176, 0.4);
+        }
+
+        .btn-level-8 {
+            background-color: var(--accent-cyan);
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(79, 193, 255, 0.4);
+        }
+
+        .btn-level-9 {
+            background-color: var(--accent-indigo);
+            color: #fff;
+            box-shadow: 0 0 5px rgba(92, 45, 145, 0.4);
+        }
+
+        .btn-level-10 {
+            background-color: var(--accent-pink);
+            color: #fff;
+            box-shadow: 0 0 5px rgba(209, 105, 105, 0.4);
+        }
+
+        .btn-level-11 {
+            background-color: var(--accent-brown);
+            color: #fff;
+            box-shadow: 0 0 5px rgba(206, 114, 59, 0.4);
+        }
+
+        .btn-level-12 {
+            background-color: var(--accent-magenta);
+            color: #fff;
+            box-shadow: 0 0 5px rgba(218, 112, 214, 0.4);
+        }
+
+        .btn-level-13 {
+            background-color: var(--accent-crimson);
+            color: #fff;
+            box-shadow: 0 0 5px rgba(220, 20, 60, 0.4);
+        }
+
+        .btn-level-14 {
+            background-color: var(--accent-coral);
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(255, 127, 80, 0.4);
+        }
+
+        .btn-level-15 {
+            background-color: #27ae60;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-level-16 {
+            background-color: #20b2aa;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(32, 178, 170, 0.4);
+        }
+
+        .btn-level-17 {
+            background-color: #8e44ad;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(142, 68, 173, 0.4);
+        }
+
+        .btn-level-18 {
+            background-color: #e67e22;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(230, 126, 34, 0.4);
+        }
+
+        .btn-level-19 {
+            background-color: #2980b9;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(41, 128, 185, 0.4);
+        }
+
+        .btn-level-20 {
+            background-color: #c0392b;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(192, 57, 43, 0.4);
+        }
+
+        .btn-level-21 {
+            background-color: #16a085;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(22, 160, 133, 0.4);
+        }
+
+        .btn-level-22 {
+            background-color: #d35400;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(211, 84, 0, 0.4);
+        }
+
+        .btn-level-23 {
+            background-color: #2c3e50;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(44, 62, 80, 0.4);
+        }
+
+        .btn-level-24 {
+            background-color: #f39c12;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-level-25 {
+            background-color: #7f8c8d;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(127, 140, 141, 0.4);
+        }
+
+        .btn-level-26 {
+            background-color: #9b59b6;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(155, 89, 182, 0.4);
+        }
+
+        .btn-level-27 {
+            background-color: #1abc9c;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(26, 188, 156, 0.4);
+        }
+
+        .btn-level-28 {
+            background-color: #e84393;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(232, 67, 147, 0.4);
+        }
+
+        .btn-level-29 {
+            background-color: #34495e;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(52, 73, 94, 0.4);
+        }
+
+        .btn-level-30 {
+            background-color: #fd79a8;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(253, 121, 168, 0.4);
+        }
+
+        .btn-level-31 {
+            background-color: #00b894;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(0, 184, 148, 0.4);
+        }
+
+        .btn-level-32 {
+            background-color: #6c5ce7;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-level-33 {
+            background-color: #fdcb6e;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(253, 203, 110, 0.4);
+        }
+
+        .btn-level-34 {
+            background-color: #e17055;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(225, 112, 85, 0.4);
+        }
+
+        .btn-level-35 {
+            background-color: #74b9ff;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(116, 185, 255, 0.4);
+        }
+
+        .btn-level-36 {
+            background-color: #a29bfe;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(162, 155, 254, 0.4);
+        }
+
+        .btn-level-37 {
+            background-color: #55efc4;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(85, 239, 196, 0.4);
+        }
+
+        .btn-level-38 {
+            background-color: #d63031;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(214, 48, 49, 0.4);
+        }
+
+        .btn-level-39 {
+            background-color: #0984e3;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(9, 132, 227, 0.4);
+        }
+
+        .btn-level-40 {
+            background-color: #e84393;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(232, 67, 147, 0.4);
+        }
+
+        .btn-level-41 {
+            background-color: #00cec9;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(0, 206, 201, 0.4);
+        }
+
+        .btn-level-42 {
+            background-color: #fd79a8;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(253, 121, 168, 0.4);
+        }
+
+        .btn-level-43 {
+            background-color: #636e72;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(99, 110, 114, 0.4);
+        }
+
+        .btn-level-44 {
+            background-color: #badc58;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(186, 220, 88, 0.4);
+        }
+
+        .btn-level-45 {
+            background-color: #f9ca24;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(249, 202, 36, 0.4);
+        }
+
+        .btn-level-46 {
+            background-color: #6ab04c;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(106, 176, 76, 0.4);
+        }
+
+        .btn-level-47 {
+            background-color: #eb4d4b;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(235, 77, 75, 0.4);
+        }
+
+        .btn-level-48 {
+            background-color: #7ed6df;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(126, 214, 223, 0.4);
+        }
+
+        .btn-level-49 {
+            background-color: #e056fd;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(224, 86, 253, 0.4);
+        }
+
+        .btn-level-50 {
+            background-color: #f0932b;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(240, 147, 43, 0.4);
+        }
+
+        .btn-level-51 {
+            background-color: #6ab04c;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(106, 176, 76, 0.4);
+        }
+
+        .btn-level-52 {
+            background-color: #c7ecee;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(199, 236, 238, 0.4);
+        }
+
+        .btn-level-53 {
+            background-color: #be2edd;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(190, 46, 221, 0.4);
+        }
+
+        .btn-level-54 {
+            background-color: #f9ca24;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(249, 202, 36, 0.4);
+        }
+
+        .btn-level-55 {
+            background-color: #0652dd;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(6, 82, 221, 0.4);
+        }
+
+        .btn-level-56 {
+            background-color: #ff9f43;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(255, 159, 67, 0.4);
+        }
+
+        .btn-level-57 {
+            background-color: #ee5a24;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(238, 90, 36, 0.4);
+        }
+
+        .btn-level-58 {
+            background-color: #009432;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(0, 148, 50, 0.4);
+        }
+
+        .btn-level-59 {
+            background-color: #833471;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(131, 52, 113, 0.4);
+        }
+
+        .btn-level-60 {
+            background-color: #1289a7;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(18, 137, 167, 0.4);
+        }
+
+        /* Individual Level Colors */
+        .challenge-level-1 {
+            background-color: #ff7675;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(255, 118, 117, 0.4);
+        }
+
+        .challenge-level-2 {
+            background-color: #74b9ff;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(116, 185, 255, 0.4);
+        }
+
+        .challenge-level-3 {
+            background-color: #55efc4;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(85, 239, 196, 0.4);
+        }
+
+        .challenge-level-4 {
+            background-color: #ffeaa7;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(255, 234, 167, 0.4);
+        }
+
+        .challenge-level-5 {
+            background-color: #a29bfe;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(162, 155, 254, 0.4);
+        }
+
+        .challenge-level-6 {
+            background-color: #fab1a0;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(250, 177, 160, 0.4);
+        }
+
+        .challenge-level-7 {
+            background-color: #fdcb6e;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(253, 203, 110, 0.4);
+        }
+
+        .challenge-level-8 {
+            background-color: #e84393;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(232, 67, 147, 0.4);
+        }
+
+        .challenge-level-9 {
+            background-color: #00cec9;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(0, 206, 201, 0.4);
+        }
+
+        .challenge-level-10 {
+            background-color: #6c5ce7;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(108, 92, 231, 0.4);
+        }
+
+        .challenge-level-11 {
+            background-color: #00b894;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(0, 184, 148, 0.4);
+        }
+
+        .challenge-level-12 {
+            background-color: #fd79a8;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(253, 121, 168, 0.4);
+        }
+
+        .challenge-level-13 {
+            background-color: #0984e3;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(9, 132, 227, 0.4);
+        }
+
+        .challenge-level-14 {
+            background-color: #d63031;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(214, 48, 49, 0.4);
+        }
+
+        .challenge-level-15 {
+            background-color: #b2bec3;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(178, 190, 195, 0.4);
+        }
+
+        .challenge-level-16 {
+            background-color: #2d3436;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(45, 52, 54, 0.4);
+        }
+
+        .challenge-level-17 {
+            background-color: #e17055;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(225, 112, 85, 0.4);
+        }
+
+        .challenge-level-18 {
+            background-color: #81ecec;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(129, 236, 236, 0.4);
+        }
+
+        .challenge-level-19 {
+            background-color: #feca57;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(254, 202, 87, 0.4);
+        }
+
+        .challenge-level-20 {
+            background-color: #ff9ff3;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(255, 159, 243, 0.4);
+        }
+
+        .challenge-level-21 {
+            background-color: #ff6b6b;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(255, 107, 107, 0.4);
+        }
+
+        .challenge-level-22 {
+            background-color: #48dbfb;
+            color: #1e1e1e;
+            box-shadow: 0 0 5px rgba(72, 219, 251, 0.4);
+        }
+
+        .challenge-level-23 {
+            background-color: #1dd1a1;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(29, 209, 161, 0.4);
+        }
+
+        .challenge-level-24 {
+            background-color: #f368e0;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(243, 104, 224, 0.4);
+        }
+
+        .challenge-level-25 {
+            background-color: #ff9f43;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(255, 159, 67, 0.4);
+        }
+
+        .challenge-level-26 {
+            background-color: #5f27cd;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(95, 39, 205, 0.4);
+        }
+
+        .challenge-level-27 {
+            background-color: #00d2d3;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(0, 210, 211, 0.4);
+        }
+
+        .challenge-level-28 {
+            background-color: #222f3e;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(34, 47, 62, 0.4);
+        }
+
+        .challenge-level-29 {
+            background-color: #10ac84;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(16, 172, 132, 0.4);
+        }
+
+        .challenge-level-30 {
+            background-color: #ee5253;
+            color: #fff;
+            box-shadow: 0 0 5px rgba(238, 82, 83, 0.4);
+        }
+
+        .btn-hard {
+            background-color: #8b2c2c;
+            width: 100%;
+            flex: 1;
+            height: 50px;
+            font-size: 0.8rem;
+            border: 2px solid #f44336;
+            color: white;
+            margin: 0;
+        }
+
+        .btn-exam {
+            background-color: var(--accent-gold);
+            color: #1e1e1e;
+            width: 90%;
+            height: 50px;
+            font-size: 1.1rem;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            border: 2px solid #fff;
+            margin-top: 10px;
+        }
+
+        .bottom-controls {
+            width: 100%;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: #1e1e1e;
+            border-top: 1px solid #333;
+        }
+
+        .btn-help {
+            background-color: var(--accent-blue);
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50%;
+        }
+
+        .btn-report {
+            background-color: #444;
+            width: 200px;
+            height: 50px;
+            font-size: 1rem;
+            border: 1px solid #666;
+        }
+
+        .btn-close {
+            background-color: #444;
+            margin-top: 20px;
+            width: 150px;
+            height: 50px;
+        }
+
+        .sub-text {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            font-weight: normal;
+            display: block;
+        }
+
+        h1 {
+            color: var(--accent-blue);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        p {
+            color: #aaa;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.4;
+            margin: 8px 0;
+        }
+
+        .info-box {
+            background: #333;
+            border-left: 5px solid;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .info-syntax {
+            border-color: #d16969;
+        }
+
+        .info-logic {
+            border-color: #4ec9b0;
+        }
+
+        .info-comment {
+            border-color: #569cd6;
+        }
+
+        .info-multi {
+            border-color: var(--accent-yellow);
+        }
+
+        .info-step {
+            border-color: var(--accent-dark-purple);
+        }
+
+        .info-var {
+            border-color: var(--accent-teal);
+        }
+
+        .example-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .ex-label {
+            color: #888;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        .ex-code {
+            background: #111;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #d4d4d4;
+            flex-grow: 1;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .err-mark {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        #load-level-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #load-level-modal.active {
+            display: flex;
+        }
+
+        #level-url-input {
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            border: 2px solid var(--accent-blue);
+            background: #222;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        #level-url-input {
+            border-color: var(--accent-green);
+            font-size: 1rem;
+        }
+
+        #exam-screen,
+        #exam-results-screen {
+            background-color: #1e1e1e;
+            z-index: 150;
+        }
+
+        .exam-header {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            border-bottom: 1px solid #444;
+            width: 100%;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+
+        .exam-question-box {
+            background: #252526;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+
+        .exam-code {
+            font-family: 'Consolas', monospace;
+            background: #111;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            color: #d4d4d4;
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        .exam-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .exam-textarea {
+            width: 100%;
+            height: 150px;
+            background: #111;
+            color: #d4d4d4;
+            border: 1px solid #444;
+            padding: 10px;
+            font-family: 'Consolas', monospace;
+            resize: none;
+            border-radius: 5px;
+        }
+
+        .result-item {
+            background: #252526;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+            width: 90%;
+            max-width: 600px;
+            border-left: 5px solid #444;
+        }
+
+        .result-item.correct {
+            border-left-color: var(--accent-green);
+        }
+
+        .result-item.wrong {
+            border-left-color: var(--accent-red);
+        }
+
+        .exam-options .btn-option {
+            white-space: pre;
+            font-family: monospace;
+            text-align: left;
+        }
+
+        #python-interpreter-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 900;
+        }
+
+        #python-interpreter-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 901;
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            width: 95vw;
+            height: 95vh;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #python-interpreter-modal.active,
+        #python-interpreter-overlay.active {
+            display: flex;
+        }
+
+        #python-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #2d2d2d;
+            border-bottom: 1px solid #444;
+            font-family: monospace;
+            font-weight: bold;
+            color: #4ec9b0;
+            font-size: 0.95rem;
+        }
+
+        #python-editor-wrapper {
+            flex: 1;
+            min-height: 180px;
+            max-height: 40vh;
+        }
+
+        #python-input {
+            width: 100%;
+            height: 100%;
+            min-height: 180px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: none;
+            border-bottom: 1px solid #444;
+            padding: 12px;
+            resize: vertical;
+            outline: none;
+            box-sizing: border-box;
+            tab-size: 4;
+        }
+
+        #python-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #252526;
+            border-bottom: 1px solid #333;
+        }
+
+        #python-output-label {
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: #666;
+            background: #1e1e1e;
+            letter-spacing: 1px;
+        }
+
+        #python-output {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            background: #111;
+            color: #ccc;
+            padding: 10px 12px;
+            min-height: 80px;
+            height: 40vh;
+            max-height: 40vh;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        #python-output .py-error { color: #f44747; }
+        #python-output .py-success { color: #4ec9b0; }
+
+        /* Tab key support indicator */
+        #python-input:focus {
+            background: #1e1e2e;
+        }
+
+        @media (max-width: 768px) {
+            #menu-container {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+
+            #test-panel {
+                width: 100%;
+                min-height: 150px;
+                flex-shrink: 0;
+                margin-bottom: 10px;
+            }
+
+            #main-menu-grid {
+                overflow: visible;
+            }
+        }
+
+        @media (max-height: 600px) {
+            #controls {
+                min-height: 110px;
+            }
+
+            .btn-game {
+                font-size: 0.9rem;
+            }
+
+            .btn-level {
+                height: 50px;
+                width: 110px;
+                font-size: 0.8rem;
+            }
+
+            .btn-hard {
+                height: 50px;
+                width: 50px;
+                font-size: 0.7rem;
+            }
+
+            .btn-help,
+            .btn-report,
+            .btn-exam {
+                height: 40px;
+                font-size: 0.9rem;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            #logic-notice {
+                top: 10px;
+                font-size: 0.8rem;
+                padding: 5px;
+            }
+
+            #top-bar {
+                height: 60px;
+                padding: 0 10px;
+            }
+
+            .hud-value {
+                font-size: 1rem;
+            }
+
+            .btn-option {
+                font-size: 0.8rem;
+                padding: 2px 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+      // Bloomsbury Computing identity bridge: when embedded in the main
+      // site, the parent posts the signed-in user's display name here
+      // instead of this game asking for one itself.
+      window.__bcPlayerName = null;
+      window.addEventListener('message', function (event) {
+        var data = event.data;
+        if (data && data.type === 'BC_IDENTITY' && data.name) {
+          window.__bcPlayerName = data.name;
+          var el = document.getElementById('bc-player-name');
+          if (el) el.textContent = '👤 ' + data.name;
+        }
+      });
+
+      // Report progress up to the parent (which persists it to the
+      // Progress sheet) so students never have to manually export
+      // anything; a teacher sees it live in the admin dashboard instead.
+      window.postToParent = function (payload) {
+        if (window.parent !== window) {
+          window.parent.postMessage(payload, '*');
+        }
+      };
+    </script>
+
+    <div id="top-bar">
+        <div class="hud-group">
+            <div>SCORE</div>
+            <div id="score" class="hud-value">0</div>
+        </div>
+        <div class="hud-group">
+            <div>LEVEL</div>
+            <div id="level" class="hud-value">1</div>
+        </div>
+        <div class="hud-group">
+            <div>STAGE</div>
+            <div id="stage" class="hud-value">1</div>
+        </div>
+        <div class="hud-group">
+            <div>STREAK</div>
+            <div id="streak" class="hud-value">0</div>
+        </div>
+        <button class="btn-home" onclick="resetGame()">&#8962;</button>
+    </div>
+
+    <div id="console-bar">
+        <div id="console-history"></div>
+        <div id="console-input-wrapper">
+            <span id="console-prompt">&gt;</span>
+            <input type="text" id="console-real-input" autocomplete="off" autocorrect="off" autocapitalize="off"
+                spellcheck="false">
+        </div>
+    </div>
+
+    <div id="game-area">
+        <div id="ceiling"></div>
+        <div id="danger-overlay"></div>
+        <div id="logic-notice"></div>
+        <div id="well-done-msg">WELL DONE!</div>
+
+        <!-- Powerups panel -->
+        <div id="powerups-panel">
+            <button id="powerups-toggle" onclick="togglePowerups()">&#9654;</button>
+            <div id="powerups-content">
+                <div class="powerup-header">POWER UPS</div>
+                <div class="powerup-item" data-type="bomb" onclick="activatePowerup('bomb')">
+                    <img src="assets/bomb_static_icon.svg" class="powerup-icon" alt="Bomb" draggable="false" />
+                    <span class="powerup-count">0</span>
+                </div>
+                <div class="powerup-item" data-type="ice" onclick="activatePowerup('ice')">
+                    <img src="assets/ice_static_icon.svg" class="powerup-icon" alt="Ice" draggable="false" />
+                    <span class="powerup-count">0</span>
+                </div>
+                <div class="powerup-item" data-type="hammer" onclick="activatePowerup('hammer')">
+                    <img src="assets/hammer_static_icon.svg" class="powerup-icon" alt="Hammer" draggable="false" />
+                    <span class="powerup-count">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-screen" class="screen active">
+        <h1>PYTHON DEFENSE</h1>
+        <div id="bc-player-name" style="color:#9d84e8; font-size:0.85rem; margin-bottom:8px;">👤 Player</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:20px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="color:#aaa; font-size:0.9rem;">HARD MODE</span>
+                <div id="hard-mode-toggle" onclick="toggleHardMode()"
+                    style="width:48px; height:26px; background:#444; border:1px solid #666; border-radius:13px; cursor:pointer; position:relative; transition:background 0.2s;">
+                    <div id="hard-mode-knob"
+                        style="width:20px; height:20px; background:#aaa; border-radius:50%; position:absolute; top:3px; left:3px; transition:left 0.2s;">
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="color:#aaa; font-size:0.9rem;">HINT MODE</span>
+                <div id="hint-mode-toggle" onclick="toggleHintMode()"
+                    style="width:48px; height:26px; background:#444; border:1px solid #666; border-radius:13px; cursor:pointer; position:relative; transition:background 0.2s;">
+                    <div id="hint-mode-knob"
+                        style="width:20px; height:20px; background:#aaa; border-radius:50%; position:absolute; top:3px; left:3px; transition:left 0.2s;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="menu-container">
+            <!-- Left: Test Panel -->
+            <div id="test-panel" class="quadrant">
+                <div class="quadrant-header" style="background:#2d2d2d; border-bottom:2px dashed #444; color:#aaa;">DEV
+                    LAB</div>
+                <div class="quadrant-content">
+                    <button class="btn btn-level"
+                        style="background:#444; box-shadow:none; border:1px solid #666; font-size:0.8rem;"
+                        onclick="openLoadLevelModal('level')">Load Level JSON</button>
+                    <button class="btn btn-level"
+                        style="background:#444; box-shadow:none; border:1px solid #666; font-size:0.8rem;"
+                        onclick="openLoadLevelModal('exam')">Load Exam JSON</button>
+                    <button class="btn btn-level"
+                        style="background:#444; box-shadow:none; border:1px solid #666; font-size:0.8rem;"
+                        onclick="window.open('https://jquinney-hue.github.io/PythonGameAnalyser/', '_blank')">Class
+                        Analyser</button>
+                </div>
+            </div>
+
+            <!-- Right: Page switcher + grids -->
+            <div style="display:flex; flex-direction:column; flex-grow:1; overflow:hidden;">
+
+                <!-- Page switch buttons -->
+                <div style="display:flex; gap:8px; justify-content:center; margin-bottom:10px; flex-shrink:0;">
+                    <button id="menu-btn-1" class="btn btn-level" onclick="setMenuPage(1)"
+                        style="background:var(--accent-green);">PAGE 1</button>
+                    <button id="menu-btn-2" class="btn btn-level" onclick="setMenuPage(2)" style="background:#444;">PAGE
+                        2</button>
+                    <button id="menu-btn-3" class="btn btn-level" onclick="setMenuPage(3)" style="background:#444;">GCSE
+                        Exam Questions</button>
+                </div>
+
+                <!-- Page 1 -->
+                <div id="menu-page-1"
+                    style="display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:10px; flex-grow:1; overflow:hidden;">
+                    <!-- Q1: Stage 1 -->
+                    <div class="quadrant">
+                        <div class="quadrant-header">Stage 1: Errors, print & comments</div>
+                        <div class="quadrant-content">
+                            <div class="level-row"><button class="btn btn-level btn-level-1"
+                                    onclick="startGame(1, hardMode, this)">LEVEL 1<span class="sub-text">Spot the
+                                        Error</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-2"
+                                    onclick="startGame(2, hardMode, this)">LEVEL 2<span class="sub-text">Fix the
+                                        Error</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-3"
+                                    onclick="startGame(3, hardMode, this)">LEVEL 3<span class="sub-text">Match
+                                        Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-4"
+                                    onclick="startGame(4, hardMode, this)">LEVEL 4<span class="sub-text">Write
+                                        Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-5"
+                                    onclick="startGame(5, hardMode, this)">LEVEL 5<span class="sub-text">Comment &
+                                        Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-6"
+                                    onclick="startGame(6, hardMode, this)">LEVEL 6<span class="sub-text">2 Comments &
+                                        Prints</span></button></div>
+                            <button class="btn btn-exam" onclick="startExam(1, this)">TAKE EXAM 1</button>
+                        </div>
+                    </div>
+                    <!-- Q2: Stage 2 -->
+                    <div class="quadrant">
+                        <div class="quadrant-header">Stage 2: Variables</div>
+                        <div class="quadrant-content">
+                            <div class="level-row"><button class="btn btn-level btn-level-7"
+                                    onclick="startGame(7, hardMode, this)">LEVEL 7<span class="sub-text">Match
+                                        Variable</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-8"
+                                    onclick="startGame(8, hardMode, this)">LEVEL 8<span class="sub-text">Write
+                                        Variable</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-9"
+                                    onclick="startGame(9, hardMode, this)">LEVEL 9<span class="sub-text">Comment &
+                                        Assign</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-10"
+                                    onclick="startGame(10, hardMode, this)">LEVEL 10<span class="sub-text">Assign &
+                                        Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-11"
+                                    onclick="startGame(11, hardMode, this)">LEVEL 11<span class="sub-text">Match
+                                        Output</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-12"
+                                    onclick="startGame(12, hardMode, this)">LEVEL 12<span class="sub-text">Write & Print
+                                        Var</span></button></div>
+                            <button class="btn btn-exam" onclick="startExam(2, this)">TAKE EXAM 2</button>
+                        </div>
+                    </div>
+                    <!-- Q3: Stage 3 -->
+                    <div class="quadrant">
+                        <div class="quadrant-header">Stage 3: Input</div>
+                        <div class="quadrant-content">
+                            <div class="level-row"><button class="btn btn-level btn-level-13"
+                                    onclick="startGame(13, hardMode, this)">LEVEL 13<span class="sub-text">Match
+                                        Input</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-14"
+                                    onclick="startGame(14, hardMode, this)">LEVEL 14<span class="sub-text">Write
+                                        Input</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-15"
+                                    onclick="startGame(15, hardMode, this)">LEVEL 15<span class="sub-text">Comment &
+                                        Input</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-16"
+                                    onclick="startGame(16, hardMode, this)">LEVEL 16<span class="sub-text">Skip Level
+                                        For Now (Broken)</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-17"
+                                    onclick="startGame(17, hardMode, this)">LEVEL 17<span class="sub-text">Spot Data
+                                        Type</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-18"
+                                    onclick="startGame(18, hardMode, this)">LEVEL 18<span class="sub-text">Cast Data
+                                        Type</span></button></div>
+                            <button class="btn btn-exam" onclick="startExam(3, this)">TAKE EXAM 3</button>
+                        </div>
+                    </div>
+                    <!-- Q4: Stage 4 -->
+                    <div class="quadrant">
+                        <div class="quadrant-header">Stage 4: Selection</div>
+                        <div class="quadrant-content">
+                            <div class="level-row"><button class="btn btn-level btn-level-19"
+                                    onclick="startGame(19, hardMode, this)">LEVEL 19<span class="sub-text">Match
+                                        Operator</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-20"
+                                    onclick="startGame(20, hardMode, this)">LEVEL 20<span class="sub-text">Write
+                                        Operator</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-21"
+                                    onclick="startGame(21, hardMode, this)">LEVEL 21<span class="sub-text">Match If
+                                        Statement</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-22"
+                                    onclick="startGame(22, hardMode, this)">LEVEL 22<span class="sub-text">Write If
+                                        Statement</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-23"
+                                    onclick="startGame(23, hardMode, this)">LEVEL 23<span class="sub-text">Match Logic
+                                        Operators</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-24"
+                                    onclick="startGame(24, hardMode, this)">LEVEL 24<span class="sub-text">Write Logic
+                                        Operators</span></button></div>
+                            <button class="btn btn-exam" onclick="startExam(4, this)">TAKE EXAM 4</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 2 -->
+                <div id="menu-page-2"
+                    style="display:none; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:10px; flex-grow:1; overflow:hidden;">
+                    <div class="quadrant">
+                        <div class="quadrant-header">Stage 5: Selection Part 2</div>
+                        <div class="quadrant-content">
+                            <div class="level-row"><button class="btn btn-level btn-level-25"
+                                    onclick="startGame(25, hardMode, this)">LEVEL 25<span class="sub-text">Match If With
+                                        Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-26"
+                                    onclick="startGame(26, hardMode, this)">LEVEL 26<span class="sub-text">Write If With
+                                        Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-27"
+                                    onclick="startGame(27, hardMode, this)">LEVEL 27<span class="sub-text">Match If Else
+                                        With Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-28"
+                                    onclick="startGame(28, hardMode, this)">LEVEL 28<span class="sub-text">Write If Else
+                                        With Print</span></button></div>
+                            <button class="btn btn-exam" onclick="startExam(5, this)">TAKE EXAM 5</button>
+                        </div>
+                    </div>
+                    <div class="quadrant">
+                        <div class="quadrant-header">Stage 6: Iteration (For Loops)</div>
+                        <div class="quadrant-content">
+                            <div class="level-row"><button class="btn btn-level btn-level-29"
+                                    onclick="startGame(29, hardMode, this)">LEVEL 29<span class="sub-text">Match
+                                        Range</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-30"
+                                    onclick="startGame(30, hardMode, this)">LEVEL 30<span class="sub-text">Write the
+                                        Range</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-31"
+                                    onclick="startGame(31, hardMode, this)">LEVEL 31<span class="sub-text">Match For
+                                        Loop</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-32"
+                                    onclick="startGame(32, hardMode, this)">LEVEL 32<span class="sub-text">Write the For
+                                        Loop</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-33"
+                                    onclick="startGame(33, hardMode, this)">LEVEL 33<span class="sub-text">Match For
+                                        Loop Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-34"
+                                    onclick="startGame(34, hardMode, this)">LEVEL 34<span class="sub-text">Write For
+                                        Loop Print</span></button></div>
+                            <button class="btn btn-exam" onclick="startExam(6, this)">TAKE EXAM 6</button>
+                        </div>
+                    </div>
+                    <div class="quadrant">
+                        <div class="quadrant-header">Stage 6: Iteration (While Loops)</div>
+                        <div class="quadrant-content">
+                            <div class="level-row"><button class="btn btn-level btn-level-35"
+                                    onclick="startGame(35, hardMode, this)">LEVEL 35<span class="sub-text">Match While
+                                        Loop</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-36"
+                                    onclick="startGame(36, hardMode, this)">LEVEL 36<span class="sub-text">Write While
+                                        Loop</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-37"
+                                    onclick="startGame(37, hardMode, this)">LEVEL 37<span class="sub-text">Match
+                                        Increment</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-38"
+                                    onclick="startGame(38, hardMode, this)">LEVEL 38<span class="sub-text">Write
+                                        Increment</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-39"
+                                    onclick="startGame(39, hardMode, this)">LEVEL 39<span class="sub-text">Match While
+                                        with Increment</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-40"
+                                    onclick="startGame(40, hardMode, this)">LEVEL 40<span class="sub-text">Write While
+                                        with Increment</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-41"
+                                    onclick="startGame(41, hardMode, this)">LEVEL 41<span class="sub-text">Match While
+                                        with Print</span></button></div>
+                            <div class="level-row"><button class="btn btn-level btn-level-42"
+                                    onclick="startGame(42, hardMode, this)">LEVEL 42<span class="sub-text">Write While
+                                        with Print</span></button></div>
+                            <button class="btn btn-exam" onclick="startExam(7, this)">TAKE EXAM 7</button>
+                        </div>
+                    </div>
+                    <div class="quadrant">
+                        <div class="quadrant">
+                            <div class="quadrant-header">Stage 8: Lists (GCSE Level)</div>
+                            <div class="quadrant-content">
+                                <div class="level-row"><button class="btn btn-level btn-level-43"
+                                        onclick="startGame(43, hardMode, this)">LEVEL 43<span class="sub-text">Match List
+                                            Creation</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-44"
+                                        onclick="startGame(44, hardMode, this)">LEVEL 44<span class="sub-text">Write List
+                                            Creation</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-45"
+                                        onclick="startGame(45, hardMode, this)">LEVEL 45<span class="sub-text">Match List
+                                            Index</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-46"
+                                        onclick="startGame(46, hardMode, this)">LEVEL 46<span class="sub-text">Write List
+                                            Index</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-47"
+                                        onclick="startGame(47, hardMode, this)">LEVEL 47<span class="sub-text">Match List
+                                            Length</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-48"
+                                        onclick="startGame(48, hardMode, this)">LEVEL 48<span class="sub-text">Write List
+                                            Length</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-49"
+                                        onclick="startGame(49, hardMode, this)">LEVEL 49<span class="sub-text">Match len()
+                                            Code</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-50"
+                                        onclick="startGame(50, hardMode, this)">LEVEL 50<span class="sub-text">Write len()
+                                            Code</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-51"
+                                        onclick="startGame(51, hardMode, this)">LEVEL 51<span class="sub-text">Match Loop
+                                            Through List</span></button></div>
+                                <div class="level-row"><button class="btn btn-level btn-level-52"
+                                        onclick="startGame(52, hardMode, this)">LEVEL 52<span class="sub-text">Write Loop
+                                            Through List</span></button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="menu-page-3"
+                    style="display:none; grid-template-columns:1fr; grid-template-rows:1fr; gap:10px; flex-grow:1; overflow:hidden;">
+                    <div class="quadrant">
+                        <div class="quadrant-header">Questions</div>
+                        <div class="quadrant-content">
+                            <div class="level-row"><button class="btn btn-level challenge-level-1"
+                                    onclick="startGCSEExam(1, this)">GCSE CHALLENGE 1<span class="sub-text">Items Sold
+                                        Algorithm</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-2"
+                                    onclick="startGCSEExam(2, this)">GCSE CHALLENGE 2<span class="sub-text">Total
+                                        Rainfall</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-3"
+                                    onclick="startGCSEExam(3, this)">GCSE CHALLENGE 3<span class="sub-text">Student Pass
+                                        Count</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-4"
+                                    onclick="startGCSEExam(4, this)">GCSE CHALLENGE 4<span class="sub-text">Total
+                                        Cost</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-5"
+                                    onclick="startGCSEExam(5, this)">GCSE CHALLENGE 5<span class="sub-text">Highest
+                                        Temperature</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-6"
+                                    onclick="startGCSEExam(6, this)">GCSE CHALLENGE 6<span class="sub-text">Sentinel
+                                        Value Total</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-7"
+                                    onclick="startGCSEExam(7, this)">GCSE CHALLENGE 7<span class="sub-text">Count Until
+                                        Zero</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-8"
+                                    onclick="startGCSEExam(8, this)">GCSE CHALLENGE 8<span class="sub-text">Password
+                                        Validation</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-9"
+                                    onclick="startGCSEExam(9, this)">GCSE CHALLENGE 9<span
+                                        class="sub-text">Countdown</span></button></div>
+                            <div class="level-row"><button class="btn btn-level challenge-level-10"
+                                    onclick="startGCSEExam(10, this)">GCSE CHALLENGE 10<span class="sub-text">Running
+                                        Total to 100</span></button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-controls">
+            <button class="btn btn-report" onclick="openPythonInterpreter()">WRITE PYTHON</button>
+            <button class="btn btn-help" onclick="showHelp()">?</button>
+        </div>
+    </div>
+
+    <div id="exam-screen" class="screen">
+        <div class="exam-header" id="exam-title">FINAL EXAM</div>
+        <div style="color:#aaa; margin-bottom:10px;">Question <span id="exam-q-num">1</span> of <span
+                id="exam-q-total">10</span></div>
+        <div id="exam-container" class="exam-question-box"></div>
+        <button class="btn btn-fix" id="exam-submit-btn" onclick="submitExamAnswer()">NEXT</button>
+    </div>
+
+    <div id="exam-results-screen" class="screen">
+        <div class="exam-header">EXAM RESULTS</div>
+        <h2 style="font-size:3rem; color:var(--accent-gold); margin:10px 0;"><span id="exam-final-score">0</span></h2>
+        <div class="screen-content" id="exam-feedback-list" style="width:100%;"></div>
+        <button class="btn btn-close" onclick="resetGame()">MENU</button>
+    </div>
+
+    <div id="load-level-modal">
+        <h2 style="color:var(--accent-green)">LOAD CUSTOM LEVEL</h2>
+
+        <!-- Tab switcher -->
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <button class="btn btn-level" onclick="setLoadTab('url')" id="tab-url">URL</button>
+            <button class="btn btn-level" onclick="setLoadTab('json')" id="tab-json">RAW JSON</button>
+        </div>
+
+        <!-- URL tab -->
+        <div id="load-tab-url">
+            <p>Paste the direct URL to the level JSON file.</p>
+            <input type="text" id="level-url-input" placeholder="https://example.com/level.json">
+        </div>
+
+        <!-- Raw JSON tab -->
+        <div id="load-tab-json" style="display:none;">
+            <p>Paste raw JSON directly.</p>
+            <textarea id="level-json-input" rows="8" style="width:100%; font-family:monospace; font-size:0.8rem;"
+                placeholder='{"questions": [...]}'></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button class="btn btn-level" onclick="submitCustomLevelAuto()">LOAD</button>
+            <button class="btn btn-close" onclick="closeLoadLevelModal()">CANCEL</button>
+        </div>
+    </div>
+
+    <div id="python-interpreter-modal">
+        <div id="python-modal-header">
+            <span>PYTHON INTERPRETER</span>
+            <button class="btn btn-close" onclick="closePythonInterpreter()">✕</button>
+        </div>
+        <div id="python-editor-wrapper">
+            <textarea id="python-input" spellcheck="false" autocomplete="off" placeholder="# Write Python here...
+    print('Hello, World!')"></textarea>
+        </div>
+        <div id="python-toolbar">
+            <button class="btn btn-fix" onclick="runPython()">▶ RUN</button>
+            <button class="btn btn-level" onclick="savePython()">SAVE</button>
+            <button class="btn btn-level" onclick="loadPython()">LOAD</button>
+            <button class="btn btn-level" onclick="clearPythonOutput()">CLEAR</button>
+        </div>
+        <div id="python-output-label">OUTPUT</div>
+        <div id="python-output"></div>
+    </div>
+    <div id="python-interpreter-overlay" onclick="closePythonInterpreter()"></div>
+
+    <div id="help-screen" class="screen">
+        <div class="screen-content">
+            <h1>HOW TO PLAY</h1>
+            <div class="info-box info-syntax">
+                <h3 style="color:#d16969">SYNTAX ERROR</h3>
+                <p style="color:#ccc">Code crashes (grammar).</p>
+            </div>
+            <div class="info-box info-logic">
+                <h3 style="color:#4ec9b0">LOGIC ERROR</h3>
+                <p style="color:#ccc">Wrong output (typo).</p>
+            </div>
+            <div class="info-box info-comment">
+                <h3 style="color:#569cd6">COMMENTS</h3>
+                <p style="color:#ccc">Match # comment to code.</p>
+            </div>
+            <div class="info-box info-multi">
+                <h3 style="color:var(--accent-yellow)">MULTI-LINE</h3>
+                <p style="color:#ccc">Write comment AND code.</p>
+            </div>
+            <div class="info-box info-step">
+                <h3 style="color:var(--accent-dark-purple)">MULTI-STEP</h3>
+                <p style="color:#ccc">Multiple instruction pairs.</p>
+            </div>
+            <div class="info-box info-var">
+                <h3 style="color:var(--accent-teal)">VARIABLES</h3>
+                <p style="color:#ccc">Create variables (e.g. name="Bob")</p>
+            </div>
+            <button class="btn btn-close" onclick="closeHelp()">GOT IT</button>
+        </div>
+    </div>
+
+    <div id="game-over-screen" class="screen">
+        <h1 style="color:var(--accent-red)">GAME OVER</h1>
+        <p>The bugs reached the ceiling!</p>
+        <h2 style="margin:20px 0;">Final Score: <span id="final-score">0</span></h2>
+        <button class="btn btn-close" onclick="resetGame()">MAIN MENU</button>
+    </div>
+
+    <div id="controls">
+        <div id="controls-text" class="control-panel">
+            <div id="input-label" style="color:#aaa; font-size:0.9rem;">Tap a block, then type corrected code:</div>
+            <div class="input-group">
+                <input type="text" id="code-input" placeholder="Type code..." autocomplete="off" autocorrect="off"
+    autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitTextAnswer()">
+                <button class="btn btn-fix" onclick="submitTextAnswer()">FIX</button>
+            </div>
+        </div>
+        <div id="controls-mcq" class="control-panel">
+            <button class="btn btn-option" id="opt-0" onclick="submitMCQAnswer(0)"></button>
+            <button class="btn btn-option" id="opt-1" onclick="submitMCQAnswer(1)"></button>
+            <button class="btn btn-option" id="opt-2" onclick="submitMCQAnswer(2)"></button>
+            <button class="btn btn-option" id="opt-3" onclick="submitMCQAnswer(3)"></button>
+        </div>
+        <div id="controls-multi" class="control-panel">
+            <div id="input-label-multi" style="color:#aaa; font-size:0.8rem; margin-bottom:2px;">Type comment & code
+                (Enter for new line):</div>
+            <div class="input-group" style="height:100%;">
+                <textarea id="code-input-area" placeholder="" spellcheck="false" autocomplete="off"></textarea>
+                <button class="btn btn-fix" onclick="submitMultiAnswer()">SUBMIT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Stats (Persistent & Dated)
+        const STATS_KEY = 'pythonDefenseHistory';
+        let globalHistory = {};
+        let gameStats = getFreshStats();
+
+        var NUM_LEVELS = 52;
+        var NUM_EXAMS = 7;
+        var NUM_GCSE_EXAMS = 10; // increment as you add them
+        const BASE = "https://raw.githubusercontent.com/jquinney-hue/pythongamejsons/refs/heads/main/";
+
+        const LEVEL_URLS = Object.fromEntries(
+            Array.from({ length: NUM_LEVELS }, (_, i) => [i + 1, `${BASE}testlevel${i + 1}.json`])
+        );
+
+        const EXAM_URLS = Object.fromEntries(
+            Array.from({ length: NUM_EXAMS }, (_, i) => [i + 1, `${BASE}stage${i + 1}exam.json`])
+        );
+
+        const GCSE_EXAM_URLS = Object.fromEntries(
+            Array.from({ length: NUM_GCSE_EXAMS }, (_, i) => [i + 1, `${BASE}gcseexam${i + 1}.json`])
+        );
+
+        function savePython() {
+            const code = pythonEditor.getValue();
+            const name = promptFilename('save');
+            if (!name) return;
+
+            const blob = new Blob([code], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = name;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        function loadPython() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.py';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    pythonEditor.setValue(e.target.result);
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function promptFilename(action) {
+            const raw = prompt(`Enter filename:`, 'untitled.py');
+            if (raw === null) return null;
+            const name = raw.trim();
+            if (!name) return null;
+            return name.endsWith('.py') ? name : name + '.py';
+        }
+
+        let hardMode = false;
+
+        // --- STREAK SYSTEM ---
+        const STREAK_REWARDS = [
+            { streak: 10, type: 'bomb' },
+            { streak: 20, type: 'ice' },
+            { streak: 30, type: 'hammer' },
+        ];
+
+        function incrementStreak() {
+            state.streak = (state.streak || 0) + 1;
+            checkStreakRewards(state.streak);
+            updateStreakDisplay();
+        }
+
+        function resetStreak() {
+            state.streak = 0;
+            updateStreakDisplay();
+        }
+
+        function checkStreakRewards(streak) {
+            const maxMilestone = Math.max(...STREAK_REWARDS.map(r => r.streak));
+
+            const normalizedStreak = streak > maxMilestone
+                ? ((streak - 1) % maxMilestone) + 1
+                : streak;
+
+            STREAK_REWARDS.forEach(({ streak: threshold, type }) => {
+                if (normalizedStreak === threshold) {
+                    awardPowerup(type);
+                }
+            });
+        }
+
+        function awardPowerup(type) {
+            powerupState.counts[type]++;
+            updatePowerupCounts();
+            flashPowerupIcon(type);
+        }
+
+        function flashPowerupIcon(type) {
+            const item = document.querySelector(`.powerup-item[data-type="${type}"]`);
+            if (!item) return;
+            item.classList.add('powerup-earned');
+            setTimeout(() => item.classList.remove('powerup-earned'), 2000);
+        }
+
+        function updateStreakDisplay() {
+            const el = document.getElementById('streak');
+            if (!el) return;
+            el.textContent = state.streak || 0;
+        }
+
+        // --- POWERUP STATE ---
+        const powerupState = {
+            counts: { bomb: 0, ice: 0, hammer: 0 },
+            active: null,
+            hammerHits: 0,
+            hammerFollower: null,
+            iceFrozen: false,
+            iceTimeout: null,
+            iceFollower: null,
+            bombFollower: null,
+            streak: 0,
+        };
+
+        function updatePowerupCounts() {
+            const items = document.querySelectorAll('.powerup-item');
+            items[0].querySelector('.powerup-count').innerText = powerupState.counts.bomb;
+            items[1].querySelector('.powerup-count').innerText = powerupState.counts.ice;
+            items[2].querySelector('.powerup-count').innerText = powerupState.counts.hammer;
+        }
+
+        function activatePowerup(type) {
+            if (!state.isPlaying) return;
+            if (!devMode && powerupState.counts[type] <= 0) return;
+            if (powerupState.active) cancelPowerup();
+
+            powerupState.active = type;
+            document.querySelectorAll('.powerup-item').forEach(el => el.classList.remove('powerup-active'));
+            document.querySelector(`.powerup-item[data-type="${type}"]`).classList.add('powerup-active');
+
+            if (type === 'bomb') activateBomb();
+            if (type === 'ice') activateIce();
+            if (type === 'hammer') activateHammer();
+        }
+
+        function cancelPowerup() {
+            if (powerupState.active === 'bomb' && powerupState.bombFollower) {
+                powerupState.bombFollower.remove();
+                powerupState.bombFollower = null;
+                els.gameArea.removeEventListener('mousemove', bombFollowMouse);
+                els.gameArea.removeEventListener('click', placeBomb);
+            }
+            if (powerupState.active === 'ice' && powerupState.iceFollower) {
+                powerupState.iceFollower.remove();
+                powerupState.iceFollower = null;
+                els.gameArea.removeEventListener('mousemove', iceFollowMouse);
+                els.gameArea.removeEventListener('click', placeIce);
+            }
+            if (powerupState.active === 'hammer') {
+                document.body.style.cursor = '';
+                document.removeEventListener('mousemove', hammerFollowMouse);
+                if (powerupState.hammerFollower) {
+                    powerupState.hammerFollower.remove();
+                    powerupState.hammerFollower = null;
+                    cancelHammer();
+                }
+                state.blocks.forEach(b => b.el.removeEventListener('click', hammerClickBlock));
+            }
+            powerupState.active = null;
+            powerupState.hammerHits = 0;
+            document.querySelectorAll('.powerup-item').forEach(el => el.classList.remove('powerup-active'));
+        }
+
+        function cleanupPowerups() {
+            cancelPowerup();
+
+            // Clear ice freeze
+            if (powerupState.iceTimeout) {
+                clearTimeout(powerupState.iceTimeout);
+                powerupState.iceTimeout = null;
+            }
+            powerupState.iceFrozen = false;
+            state.gameSpeed = state.levelBaseSpeed;
+
+            // Remove ice indicator if present
+            const indicator = document.getElementById('ice-indicator');
+            if (indicator) indicator.remove();
+
+            // Remove any placed bomb/ice containers
+            document.querySelectorAll('#bomb-follower, #ice-follower').forEach(el => el.remove());
+
+            // Reset cursor
+            document.body.style.cursor = '';
+        }
+
+        // --- BOMB ---
+        function activateBomb() {
+            const follower = document.createElement('div');
+            follower.id = 'bomb-follower';
+            follower.style.cssText = `
+        position: absolute; width: 60px; height: 66px;
+        pointer-events: none; z-index: 200;
+        transform: translate(-50%, -50%);
+    `;
+            const img = document.createElement('img');
+            img.src = 'assets/bomb_static_icon.svg';
+            img.style.cssText = 'width:100%; height:100%; pointer-events:none; user-select:none;';
+            follower.appendChild(img);
+            els.gameArea.appendChild(follower);
+            powerupState.bombFollower = follower;
+
+            els.gameArea.addEventListener('mousemove', bombFollowMouse);
+
+            // Delay attaching the placement click so the activating click doesn't immediately place it
+            setTimeout(() => {
+                els.gameArea.addEventListener('click', placeBomb);
+            }, 200);
+        }
+
+        function bombFollowMouse(e) {
+            const rect = els.gameArea.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            powerupState.bombFollower.style.left = x + 'px';
+            powerupState.bombFollower.style.top = y + 'px';
+        }
+
+        function placeBomb(e) {
+            const rect = els.gameArea.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Remove follower and listeners
+            els.gameArea.removeEventListener('mousemove', bombFollowMouse);
+            els.gameArea.removeEventListener('click', placeBomb);
+            powerupState.bombFollower.remove();
+            powerupState.bombFollower = null;
+            powerupState.active = null;
+            document.querySelectorAll('.powerup-item').forEach(el => el.classList.remove('powerup-active'));
+
+            if (!devMode) { powerupState.counts.bomb--; updatePowerupCounts(); }
+            updatePowerupCounts();
+
+            // Place animated bomb iframe
+            const container = document.createElement('div');
+            container.style.cssText = `
+                position: absolute; width: 44px; height: 48px;
+                left: ${x - 22}px; top: ${y - 24}px;
+                pointer-events: none; z-index: 200;
+                overflow: hidden;
+            `;
+            const iframe = document.createElement('iframe');
+            iframe.src = 'assets/bomb_active.html';
+            iframe.style.cssText = `
+                width: 200px; height: 220px; border: none; background: transparent;
+                transform: scale(${44 / 200});
+                transform-origin: top left;
+            `;
+            iframe.setAttribute('scrolling', 'no');
+            container.appendChild(iframe);
+            els.gameArea.appendChild(container);
+
+            // After animation (2.3s) explode
+            setTimeout(() => {
+                container.remove();
+                bombExplode(x, y, 150);
+            }, 2300);
+        }
+
+        function bombExplode(cx, cy, radius) {
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position:absolute; border-radius:50%;
+                width:${radius * 2}px; height:${radius * 2}px;
+                left:${cx - radius}px; top:${cy - radius}px;
+                background: radial-gradient(circle, rgba(255,200,50,0.7), rgba(255,80,0,0.3), transparent);
+                pointer-events:none; z-index:190;
+                animation: bombFlash 0.5s ease-out forwards;
+            `;
+            els.gameArea.appendChild(flash);
+            setTimeout(() => flash.remove(), 500);
+
+            const areaRect = els.gameArea.getBoundingClientRect();
+
+            const toDestroy = state.blocks.filter(block => {
+                const blockRect = block.el.getBoundingClientRect();
+
+                const left = blockRect.left - areaRect.left;
+                const top = blockRect.top - areaRect.top;
+                const right = blockRect.right - areaRect.left;
+                const bottom = blockRect.bottom - areaRect.top;
+
+                const nearestX = Math.max(left, Math.min(cx, right));
+                const nearestY = Math.max(top, Math.min(cy, bottom));
+
+                const dist = Math.sqrt((nearestX - cx) ** 2 + (nearestY - cy) ** 2);
+                return dist <= radius;
+            });
+            toDestroy.forEach(block => handleSuccess(block, true));
+        }
+
+        // --- ICE ---
+        function activateIce() {
+            if (powerupState.iceFrozen) return;
+
+            const follower = document.createElement('div');
+            follower.id = 'ice-follower';
+            follower.style.cssText = `
+        position: absolute; width: 44px; height: 48px;
+        pointer-events: none; z-index: 200;
+        transform: translate(-50%, -50%);
+    `;
+            const img = document.createElement('img');
+            img.src = 'assets/ice_static_icon.svg';
+            img.style.cssText = 'width:100%; height:100%; pointer-events:none; user-select:none;';
+            follower.appendChild(img);
+            els.gameArea.appendChild(follower);
+            powerupState.iceFollower = follower;
+
+            els.gameArea.addEventListener('mousemove', iceFollowMouse);
+
+            setTimeout(() => {
+                els.gameArea.addEventListener('click', placeIce);
+            }, 200);
+        }
+
+        function iceFollowMouse(e) {
+            const rect = els.gameArea.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            powerupState.iceFollower.style.left = x + 'px';
+            powerupState.iceFollower.style.top = y + 'px';
+        }
+
+        function placeIce(e) {
+            const rect = els.gameArea.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            els.gameArea.removeEventListener('mousemove', iceFollowMouse);
+            els.gameArea.removeEventListener('click', placeIce);
+            powerupState.iceFollower.remove();
+            powerupState.iceFollower = null;
+            powerupState.active = null;
+            document.querySelectorAll('.powerup-item').forEach(el => el.classList.remove('powerup-active'));
+
+            if (!devMode) { powerupState.counts.ice--; updatePowerupCounts(); }
+
+            const container = document.createElement('div');
+            container.style.cssText = `
+        position: absolute; width: 44px; height: 48px;
+        left: ${x - 22}px; top: ${y - 24}px;
+        pointer-events: none; z-index: 200;
+        overflow: hidden;
+    `;
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('scrolling', 'no');
+            iframe.style.cssText = `
+        width: 200px; height: 220px; border: none; background: transparent;
+        transform: scale(${44 / 200});
+        transform-origin: top left;
+        overflow: hidden;
+        display: block;
+    `;
+            container.appendChild(iframe);
+            els.gameArea.appendChild(container);
+
+            iframe.onload = () => {
+                setTimeout(() => {
+                    container.remove();
+                    triggerFreeze();
+                }, 3000);
+            };
+
+            // Set src after onload is attached
+            iframe.src = 'assets/ice_active.html';
+        }
+
+        function triggerFreeze() {
+            if (powerupState.iceFrozen) return;
+            powerupState.iceFrozen = true;
+            const savedSpeed = state.gameSpeed;
+            state.gameSpeed = 0;
+
+            const indicator = document.createElement('div');
+            indicator.id = 'ice-indicator';
+            indicator.style.cssText = `
+        position:absolute; top:30px; left:50%; transform:translateX(-50%);
+        background:rgba(70,200,255,0.85); color:#1e1e1e; padding:4px 14px;
+        border-radius:6px; font-size:0.8rem; font-weight:bold;
+        z-index:80; pointer-events:none;
+    `;
+            indicator.innerText = '❄ FROZEN — 30s';
+            els.gameArea.appendChild(indicator);
+
+            let remaining = 30;
+            const interval = setInterval(() => {
+                remaining--;
+                if (indicator.parentNode) indicator.innerText = `❄ FROZEN — ${remaining}s`;
+                if (remaining <= 0) clearInterval(interval);
+            }, 1000);
+
+            powerupState.iceTimeout = setTimeout(() => {
+                state.gameSpeed = savedSpeed;
+                powerupState.iceFrozen = false;
+                if (indicator.parentNode) indicator.remove();
+            }, 30000);
+        }
+
+        // --- HAMMER ---
+        function activateHammer() {
+            powerupState.hammerHits = 0;
+
+            const follower = document.createElement('div');
+            follower.id = 'hammer-follower';
+            follower.style.cssText = `
+        position: fixed; width: 44px; height: 48px;
+        pointer-events: none; z-index: 9999;
+        transform: translate(-8px, -8px);
+    `;
+            const iframe = document.createElement('iframe');
+            iframe.src = 'assets/hammer_active.html';
+            iframe.setAttribute('scrolling', 'no');
+            iframe.style.cssText = `
+        width: 200px; height: 220px; border: none; background: transparent;
+        transform: scale(${44 / 200});
+        transform-origin: top left;
+        overflow: hidden;
+        display: block;
+        pointer-events: none;
+    `;
+            follower.appendChild(iframe);
+            document.body.appendChild(follower);
+            powerupState.hammerFollower = follower;
+
+            document.addEventListener('mousemove', hammerFollowMouse);
+            document.body.classList.add('hammer-active');
+
+            // Click anywhere in game area to swing
+            els.gameArea.addEventListener('click', hammerSwingClick, true);
+        }
+
+        function hammerFollowMouse(e) {
+            if (!powerupState.hammerFollower) return;
+            powerupState.hammerFollower.style.left = e.clientX + 'px';
+            powerupState.hammerFollower.style.top = (e.clientY * 1.25) + 'px';
+        }
+
+        function hammerSwingClick(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            // Trigger swing animation in iframe
+            const iframe = powerupState.hammerFollower?.querySelector('iframe');
+            if (iframe?.contentWindow) {
+                try { iframe.contentWindow.triggerSwing(); } catch (err) { }
+            }
+
+            // Find which block was clicked
+            const block = state.blocks.find(b => b.el === e.target || b.el.contains(e.target));
+            if (block) {
+                handleSuccess(block, true);
+                powerupState.hammerHits++;
+
+                if (powerupState.hammerHits >= 10) {
+                    if (!devMode) { powerupState.counts.hammer--; updatePowerupCounts(); }
+                    cancelPowerup();
+                    return;
+                }
+            }
+        }
+
+        function cancelHammer() {
+            if (powerupState.hammerFollower) {
+                powerupState.hammerFollower.remove();
+                powerupState.hammerFollower = null;
+            }
+            document.removeEventListener('mousemove', hammerFollowMouse);
+            els.gameArea.removeEventListener('click', hammerSwingClick, true);
+            document.body.classList.remove('hammer-active');
+        }
+
+        function hammerFollowMouse(e) {
+            if (!powerupState.hammerFollower) return;
+            powerupState.hammerFollower.style.left = e.clientX + 'px';
+            powerupState.hammerFollower.style.top = e.clientY + 'px';
+        }
+
+        function playHammerAnimation(x, y) {
+            const container = document.createElement('div');
+            container.style.cssText = `
+        position: fixed; width: 44px; height: 48px;
+        left: ${x - 22}px; top: ${y - 24}px;
+        pointer-events: none; z-index: 9998;
+        overflow: hidden;
+    `;
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('scrolling', 'no');
+            iframe.style.cssText = `
+        width: 200px; height: 220px; border: none; background: transparent;
+        transform: scale(${44 / 200});
+        transform-origin: top left;
+        overflow: hidden;
+        display: block;
+    `;
+            container.appendChild(iframe);
+            document.body.appendChild(container);
+            iframe.src = 'assets/hammer_active.html';
+            setTimeout(() => container.remove(), 500);
+        }
+
+        function hammerClickBlock(e) {
+            e.stopPropagation();
+            const block = state.blocks.find(b => b.el === this);
+            if (!block) return;
+
+            playHammerAnimation(e.clientX, e.clientY);
+            handleSuccess(block, true);
+            powerupState.hammerHits++;
+
+            state.blocks.forEach(b => {
+                b.el.removeEventListener('click', hammerClickBlock);
+                b.el.addEventListener('click', hammerClickBlock);
+            });
+
+            if (powerupState.hammerHits >= 10) {
+                if (!devMode) { powerupState.counts.hammer--; updatePowerupCounts(); }
+                cancelPowerup();
+            }
+        }
+
+        function togglePowerups() {
+            const panel = document.getElementById('powerups-panel');
+            const toggle = document.getElementById('powerups-toggle');
+            panel.classList.toggle('hidden');
+            toggle.innerHTML = panel.classList.contains('hidden') ? '&#9664;' : '&#9654;';
+        }
+
+        function toggleHardMode() {
+            hardMode = !hardMode;
+            const toggle = document.getElementById('hard-mode-toggle');
+            const knob = document.getElementById('hard-mode-knob');
+            toggle.style.background = hardMode ? 'var(--accent-green)' : '#444';
+            knob.style.left = hardMode ? '25px' : '3px';
+            knob.style.background = hardMode ? '#fff' : '#aaa';
+        }
+
+        let hintMode = false;
+
+        function toggleHintMode() {
+            hintMode = !hintMode;
+            const toggle = document.getElementById('hint-mode-toggle');
+            const knob = document.getElementById('hint-mode-knob');
+            toggle.style.background = hintMode ? 'var(--accent-green)' : '#444';
+            knob.style.left = hintMode ? '25px' : '3px';
+            knob.style.background = hintMode ? '#fff' : '#aaa';
+        }
+
+        let menuPage = 1;
+
+        function setMenuPage(pageNum) {
+            // Hide all pages
+            document.getElementById('menu-page-1').style.display = 'none';
+            document.getElementById('menu-page-2').style.display = 'none';
+            document.getElementById('menu-page-3').style.display = 'none';
+
+            // Show selected page
+            document.getElementById('menu-page-' + pageNum).style.display = 'grid';
+
+            // Reset button colors (example logic)
+            for (let i = 1; i <= 3; i++) {
+                const btn = document.getElementById('menu-btn-' + i);
+                btn.style.background = (i === pageNum) ? 'var(--accent-green)' : '#444';
+            }
+        }
+
+        function getFreshStats() {
+            let s = {
+                totalTimePlayed: 0,
+                levels: {},
+                exams: {
+                    1: { attempts: 0, bestScore: 0, lastScore: 0 },
+                    2: { attempts: 0, bestScore: 0, lastScore: 0 }
+                }
+            };
+            for (let i = 1; i <= NUM_LEVELS; i++) {
+                s.levels[i] = { highScore: 0, timePlayed: 0, correct: 0, incorrect: 0 };
+            }
+            return s;
+        }
+
+        function getTodayKey() {
+            return new Date().toLocaleDateString('en-CA'); // Returns YYYY-MM-DD
+        }
+
+        function loadStats() {
+            const stored = localStorage.getItem(STATS_KEY);
+            const today = getTodayKey();
+
+            if (stored) {
+                try {
+                    globalHistory = JSON.parse(stored);
+                } catch (e) {
+                    console.error("Save file corrupted, resetting.");
+                    globalHistory = {};
+                }
+            }
+            if (!globalHistory[today]) { globalHistory[today] = getFreshStats(); }
+            gameStats = globalHistory[today];
+
+            if (!gameStats.levels) gameStats.levels = {};
+            for (let i = 1; i <= NUM_LEVELS; i++) {
+                if (!gameStats.levels[i]) gameStats.levels[i] = { highScore: 0, timePlayed: 0, correct: 0, incorrect: 0 };
+            }
+            if (!gameStats.exams) gameStats.exams = {};
+            for (let i = 1; i <= NUM_EXAMS; i++) {
+                if (!gameStats.exams[i]) gameStats.exams[i] = { attempts: 0, bestScore: 0, lastScore: 0, improvement: 0, lastAnswers: [] };
+            }
+            for (let i = 1; i <= NUM_GCSE_EXAMS; i++) {
+                const key = `gcse_${i}`;
+                if (!gameStats.exams[key]) gameStats.exams[key] = { attempts: 0, bestScore: 0, lastScore: 0, improvement: 0, lastAnswers: [] };
+            }
+        }
+
+        function saveStats() {
+            const today = getTodayKey();
+            globalHistory[today] = gameStats;
+            localStorage.setItem(STATS_KEY, JSON.stringify(globalHistory));
+        }
+
+        function startSession() {
+            state.sessionStartTime = Date.now();
+            state.sessionCorrect = 0;
+            state.sessionIncorrect = 0;
+        }
+
+        function endSession() {
+            if (!state.sessionStartTime || state.inExam) return;
+            const durationSec = Math.floor((Date.now() - state.sessionStartTime) / 1000);
+            const lvl = state.level;
+            if (state.level === 'custom') return;
+
+            if (!gameStats.levels[lvl]) gameStats.levels[lvl] = { highScore: 0, timePlayed: 0, correct: 0, incorrect: 0 };
+            gameStats.levels[lvl].timePlayed += durationSec;
+            gameStats.levels[lvl].correct += state.sessionCorrect;
+            gameStats.levels[lvl].incorrect += state.sessionIncorrect;
+            if (state.score > gameStats.levels[lvl].highScore) gameStats.levels[lvl].highScore = state.score;
+            gameStats.totalTimePlayed += durationSec;
+            saveStats();
+
+            // Push this session up to the parent so it lands in the
+            // Progress sheet instead of staying local-only in this
+            // browser's localStorage.
+            postToParent({
+                type: 'PG_PROGRESS', kind: 'level', level: lvl, score: state.score,
+                duration: durationSec * 1000, correct: state.sessionCorrect, wrong: state.sessionIncorrect
+            });
+            state.sessionStartTime = 0;
+        }
+        loadStats();
+
+        const CONFIG = { spawnRate: 2500, baseSpeed: 0.1, ceilingDrop: 50, dangerThreshold: 150 };
+        let state = {
+            isPlaying: false, level: 1, stage: 1, isHard: false, score: 0, blocks: [], selectedBlockId: null,
+            lastSpawnTime: 0, ceilingY: 0, gameSpeed: 0, levelBaseSpeed: 0, wellDoneTimeout: null, animationFrameId: null,
+            currentOptions: [], sessionStartTime: 0, sessionCorrect: 0, sessionIncorrect: 0,
+            inExam: false, activeExamId: 1, examStartTime: 0, examQuestions: [], currentExamIndex: 0, examAnswers: [],
+            waitingForInput: false, inputBlockId: null,
+            customLevelData: null, customExamData: null, loadingType: 'level'
+        };
+
+        const els = {
+            menuScreen: document.getElementById('menu-screen'), helpScreen: document.getElementById('help-screen'), gameOverScreen: document.getElementById('game-over-screen'),
+            examScreen: document.getElementById('exam-screen'), examResultsScreen: document.getElementById('exam-results-screen'),
+            gameArea: document.getElementById('game-area'), ceiling: document.getElementById('ceiling'), dangerOverlay: document.getElementById('danger-overlay'), logicNotice: document.getElementById('logic-notice'), wellDoneMsg: document.getElementById('well-done-msg'),
+            score: document.getElementById('score'), level: document.getElementById('level'), stage: document.getElementById('stage'), finalScore: document.getElementById('final-score'),
+            controlsText: document.getElementById('controls-text'), controlsMCQ: document.getElementById('controls-mcq'), controlsMulti: document.getElementById('controls-multi'),
+            inputLabel: document.getElementById('input-label'), inputLabelMulti: document.getElementById('input-label-multi'),
+            codeInput: document.getElementById('code-input'), codeArea: document.getElementById('code-input-area'),
+            optBtns: [document.getElementById('opt-0'), document.getElementById('opt-1'), document.getElementById('opt-2'), document.getElementById('opt-3')],
+            examContainer: document.getElementById('exam-container'), examQNum: document.getElementById('exam-q-num'), examFeedbackList: document.getElementById('exam-feedback-list'), examFinalScore: document.getElementById('exam-final-score'),
+            examTitle: document.getElementById('exam-title'), examQTotal: document.getElementById('exam-q-total'),
+            consoleBar: document.getElementById('console-bar'), consoleHistory: document.getElementById('console-history'), consoleInputWrapper: document.getElementById('console-input-wrapper'), consoleRealInput: document.getElementById('console-real-input')
+        };
+
+        // --- JSON LOADER ---
+        function openLoadLevelModal(type) {
+            state.loadingType = type;
+            const title = type === 'exam' ? "LOAD CUSTOM EXAM" : "LOAD CUSTOM LEVEL";
+            document.querySelector('#load-level-modal h2').innerText = title;
+            setLoadTab('url');
+            document.getElementById('load-level-modal').classList.add('active');
+            document.getElementById('level-url-input').focus();
+        }
+        function closeLoadLevelModal() { document.getElementById('load-level-modal').classList.remove('active'); }
+
+        async function submitCustomLevel(rawJson = null) {
+            let data;
+
+            if (rawJson) {
+                try {
+                    data = JSON.parse(rawJson);
+                } catch (e) {
+                    alert("Error loading JSON: " + e.message);
+                    return;
+                }
+            } else {
+                const url = document.getElementById('level-url-input').value.trim();
+                if (!url) return;
+
+                const btn = document.querySelector('#load-level-modal .btn-level');
+                const originalText = btn.innerText;
+                btn.innerText = "LOADING..."; btn.disabled = true;
+
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error("Fetch failed: " + res.status);
+                    data = await res.json();
+                } catch (e) {
+                    alert("Error loading JSON: " + e.message);
+                    return;
+                } finally {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            }
+
+            try {
+                if (state.loadingType === 'exam') {
+                    if (!data.questions) throw new Error("Invalid Exam JSON: Missing 'questions'");
+                } else {
+                    if (!data.questions || !Array.isArray(data.questions) || data.questions.length === 0) {
+                        throw new Error("Invalid Level JSON: Must contain 'questions' array.");
+                    }
+                }
+
+                closeLoadLevelModal();
+
+                if (state.loadingType === 'exam') {
+                    state.customExamData = data;
+                    startExam('custom', null);
+                } else {
+                    state.customLevelData = data;
+                    startGame('custom', false, null);
+                }
+            } catch (e) {
+                alert("Error loading JSON: " + e.message);
+            }
+        }
+
+        let currentLoadTab = 'url';
+
+        function setLoadTab(tab) {
+            currentLoadTab = tab;
+            document.getElementById('load-tab-url').style.display = tab === 'url' ? '' : 'none';
+            document.getElementById('load-tab-json').style.display = tab === 'json' ? '' : 'none';
+        }
+
+        function submitCustomLevelAuto() {
+            if (currentLoadTab === 'json') {
+                const raw = document.getElementById('level-json-input').value.trim();
+                if (!raw) return;
+                submitCustomLevel(raw);
+            } else {
+                submitCustomLevel();
+            }
+        }
+
+        function logToConsole(msg) {
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.innerText = msg;
+            line.classList.add('new');
+            els.consoleHistory.appendChild(line);
+            els.consoleBar.scrollTop = els.consoleBar.scrollHeight;
+        }
+
+        function generateBlockData(level) {
+            const id = Date.now() + Math.random().toString();
+            let data = { id: id, y: 0, x: 30 + Math.random() * 40, level: level };
+            const sourceData = state.customLevelData;
+            if (sourceData && sourceData.questions) {
+                const q = sourceData.questions[Math.floor(Math.random() * sourceData.questions.length)];
+                data = { ...data, ...q, id: id, y: 0, x: data.x };
+                if (!data.html) data.html = `<span style="font-size:0.9rem">Question</span>`;
+                if (!data.correctCode) data.correctCode = "pass";
+            }
+            return data;
+        }
+
+        function updateCeilingVisual() { els.ceiling.style.top = `${state.ceilingY}px`; }
+        function showFloatingText(x, y, text, color) {
+            const el = document.createElement('div'); el.className = 'float-text'; el.innerText = text; el.style.color = color;
+            el.style.left = x + 'px'; el.style.top = y + 'px'; els.gameArea.appendChild(el); setTimeout(() => el.remove(), 1000);
+        }
+
+        function gameLoop(timestamp) {
+            if (!state.isPlaying) return;
+            const deltaTime = timestamp - state.lastSpawnTime;
+            if (!powerupState.iceFrozen && deltaTime > CONFIG.spawnRate / Math.max(0.1, state.gameSpeed * 2)) {
+                if (spawnBlock()) state.lastSpawnTime = timestamp;
+            }
+            const areaHeight = els.gameArea.clientHeight;
+            const ceilingLimit = state.ceilingY;
+            let highestBlockTop = areaHeight;
+            state.blocks.forEach(block => {
+                if (!powerupState.iceFrozen) {
+                    block.y += state.gameSpeed;
+                }
+                const topPos = areaHeight - block.y - block.el.clientHeight;
+                block.el.style.top = `${topPos}px`;
+                if (topPos < highestBlockTop) highestBlockTop = topPos;
+                if (topPos <= ceilingLimit + els.ceiling.clientHeight) gameOver();
+            });
+            const distanceToCeiling = highestBlockTop - ceilingLimit;
+            if (distanceToCeiling < CONFIG.dangerThreshold) els.dangerOverlay.classList.add('flashing');
+            else els.dangerOverlay.classList.remove('flashing');
+            state.animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        function calculateStage(score) {
+            if (score < 20) return 1; if (score < 35) return 2; if (score < 55) return 3;
+            let currentStage = 3; let threshold = 55; let gap = 25;
+            while (score >= threshold) { currentStage++; threshold += gap; gap += 5; }
+            return currentStage;
+        }
+
+        function handleSuccess(block, fromPowerup = false) {
+            if (!block) return;
+            const x = block.el.offsetLeft; const y = block.el.offsetTop;
+            block.el.remove(); state.blocks = state.blocks.filter(b => b.id !== block.id);
+            const points = state.isHard ? 2.5 : 1; state.score += points; els.score.innerText = state.score;
+            state.stage = calculateStage(state.score); els.stage.innerText = state.stage;
+            const steps = Math.floor(state.score / 5);
+            let multiplier = 0.10 + (steps * 0.10);
+            const maxMultiplier = state.isHard ? 7.5 : 4.5;
+            if (multiplier > maxMultiplier) multiplier = maxMultiplier;
+            state.gameSpeed = state.levelBaseSpeed * multiplier;
+            showFloatingText(x, y, "+" + points, "#6a9955");
+
+            if (!fromPowerup) {
+                incrementStreak();
+            }
+
+            if (state.blocks.length === 0) { showWellDone(); spawnBlock(); state.lastSpawnTime = performance.now(); }
+            if (state.blocks.length > 0) {
+                const nextBlock = state.blocks.reduce((prev, current) => (prev.y > current.y) ? prev : current);
+                selectBlock(null, nextBlock.id);
+            } else {
+                state.selectedBlockId = null;
+                updateButtons();
+                if (els.controlsText.classList.contains('active-flex')) els.codeInput.blur();
+                if (els.controlsMulti.classList.contains('active-flex')) els.codeArea.blur();
+            }
+        }
+
+        function handleFailure(block) {
+            resetStreak()
+            state.ceilingY += CONFIG.ceilingDrop; updateCeilingVisual();
+            block.el.style.borderColor = "var(--accent-red)"; setTimeout(() => block.el.style.borderColor = block.el.classList.contains('selected') ? "#fff" : "#444", 500);
+            showFloatingText(block.el.offsetLeft, block.el.offsetTop, "WRONG!", "#f44336");
+            els.gameArea.style.transform = "translateX(5px)"; setTimeout(() => els.gameArea.style.transform = "translateX(-5px)", 50); setTimeout(() => els.gameArea.style.transform = "none", 100);
+        }
+
+        function processResult(isCorrect, output = null) {
+            if (!state.waitingForInput) hideLogicNotice();
+            if (isCorrect) {
+                state.sessionCorrect++;
+                if (output !== null) logToConsole(output);
+                handleSuccess(state.blocks.find(b => b.id === state.selectedBlockId));
+            }
+            else {
+                state.sessionIncorrect++;
+                handleFailure(state.blocks.find(b => b.id === state.selectedBlockId));
+                updateButtons();
+            }
+        }
+
+        async function startGame(levelNum, hardMode = false, btnElement) {
+            cleanupPowerups();
+
+            const btn = btnElement;
+            let originalText = "";
+            if (btn) { originalText = btn.innerHTML; btn.innerText = "LOADING..."; }
+
+            state.isPlaying = true; state.level = levelNum; state.stage = 1; state.isHard = hardMode; state.score = 0; state.blocks = []; state.selectedBlockId = null; state.ceilingY = 0;
+            state.waitingForInput = false; state.inputBlockId = null;
+
+            try {
+                if (levelNum !== 'custom') {
+                    const url = LEVEL_URLS[levelNum];
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error("Failed to load level " + levelNum);
+                    state.customLevelData = await res.json();
+                }
+                startSession();
+                let base = CONFIG.baseSpeed;
+                if (hardMode) base = base * 2.5;
+                state.levelBaseSpeed = base; state.gameSpeed = state.levelBaseSpeed * 0.10;
+
+                const allPanels = document.querySelectorAll('.control-panel');
+                allPanels.forEach(p => { p.classList.remove('active-flex', 'active-grid'); p.style.display = ''; });
+                els.consoleBar.innerHTML = '<div id="console-history"></div><div id="console-input-wrapper"><span id="console-prompt">&gt;</span><input type="text" id="console-real-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>';
+                els.consoleHistory = document.getElementById('console-history');
+                els.consoleInputWrapper = document.getElementById('console-input-wrapper');
+                els.consoleRealInput = document.getElementById('console-real-input');
+                els.consoleBar.classList.remove('console-flash');
+
+                els.consoleRealInput.addEventListener("keypress", function (event) { if (event.key === "Enter") handleConsoleInput(); });
+                els.consoleBar.addEventListener("click", function () { if (state.waitingForInput) els.consoleRealInput.focus(); });
+
+                const type = state.customLevelData.type || 'text';
+                if (type === 'mcq') { els.controlsMCQ.classList.add('active-grid'); }
+                else if (type === 'multiline' || type === 'multistep' || type === 'var_print') {
+                    els.controlsMulti.classList.add('active-flex');
+                    els.inputLabelMulti.innerText = state.customLevelData.inputLabel || "Type code:";
+                    els.codeArea.placeholder = ""; els.codeArea.value = "";
+                } else {
+                    els.controlsText.classList.add('active-flex');
+                    els.inputLabel.innerText = state.customLevelData.inputLabel || "Type the code:";
+                    els.codeInput.value = "";
+                }
+
+                els.menuScreen.classList.remove('active'); els.helpScreen.classList.remove('active'); els.gameOverScreen.classList.remove('active'); els.examScreen.classList.remove('active');
+                hideLogicNotice(); document.querySelectorAll('.code-block').forEach(b => b.remove());
+                els.score.innerText = "0"; els.stage.innerText = "1"; els.level.innerText = (state.level === 'custom' ? 'Custom' : state.level) + (state.isHard ? " (H)" : "");
+                els.dangerOverlay.classList.remove('flashing'); updateCeilingVisual(); updateButtons();
+                state.lastSpawnTime = performance.now(); state.animationFrameId = requestAnimationFrame(gameLoop);
+                spawnBlock();
+            } catch (e) { console.error(e); alert("Error starting game: " + e.message); state.isPlaying = false; }
+            finally { if (btn) btn.innerHTML = originalText; }
+        }
+
+        function gameOver() {
+            if (!state.isPlaying) return;
+            endSession(); state.isPlaying = false; cancelAnimationFrame(state.animationFrameId);
+            els.finalScore.innerText = state.score; els.gameOverScreen.classList.add('active');
+            hideLogicNotice(); els.codeInput.blur(); els.codeArea.blur();
+            state.waitingForInput = false; els.consoleBar.classList.remove('console-flash');
+        }
+
+        function spawnBlock() {
+            if (state.waitingForInput) return false;
+            const data = generateBlockData(state.level);
+            const el = document.createElement('div'); el.className = 'code-block'; el.innerHTML = data.html;
+            el.style.left = `${data.x}%`;
+            el.addEventListener('mousedown', (e) => selectBlock(e, data.id));
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); selectBlock(e, data.id); });
+            els.gameArea.appendChild(el);
+            const height = el.clientHeight; el.style.top = (els.gameArea.clientHeight - height) + 'px';
+            const rect = el.getBoundingClientRect(); let overlap = false;
+            for (const block of state.blocks) {
+                const otherRect = block.el.getBoundingClientRect();
+                if (!(rect.right < otherRect.left || rect.left > otherRect.right || rect.bottom < otherRect.top || rect.top > otherRect.bottom)) { overlap = true; break; }
+            }
+            if (overlap) { el.remove(); return false; }
+            state.blocks.push({ id: data.id, el: el, data: data, y: 0 });
+            if (state.blocks.length === 1) selectBlock(null, data.id);
+            return true;
+        }
+
+        function selectBlock(e, id) {
+            if (!state.isPlaying) return;
+            if (state.waitingForInput) return;
+
+            if (state.selectedBlockId === id) {
+                const type = state.customLevelData.type || 'text';
+                if (type !== 'mcq' && type !== 'multiline' && type !== 'multistep' && type !== 'var_print') els.codeInput.focus();
+                if (type === 'multiline' || type === 'multistep' || type === 'var_print') els.codeArea.focus();
+                return;
+            }
+            if (state.selectedBlockId) {
+                const prev = state.blocks.find(b => b.id === state.selectedBlockId);
+                if (prev) prev.el.classList.remove('selected');
+            }
+            state.selectedBlockId = id;
+            const curr = state.blocks.find(b => b.id === id);
+            if (curr) {
+                curr.el.classList.add('selected');
+                const type = state.customLevelData.type || 'text';
+
+                if (type === 'mcq') {
+                    updateLevel3Buttons(curr);
+                } else if (type === 'multiline' || type === 'multistep' || type === 'var_print') {
+                    els.codeArea.value = ""; setTimeout(() => els.codeArea.focus(), 10);
+                    handleCustomHints(curr);
+                } else {
+                    els.codeInput.value = ""; setTimeout(() => els.codeInput.focus(), 10);
+                    handleCustomHints(curr);
+                }
+            }
+            updateButtons();
+        }
+
+        function handleCustomHints(block) {
+            if (!hintMode) {
+                hideLogicNotice();
+                return;
+            }
+            if (block.data.notice) {
+                showLogicNotice(block.data.notice);
+            } else if (block.data.typoWord && block.data.originalWord) {
+                showLogicNotice(`"${block.data.typoWord}" is spelled wrong, the correct spelling is "${block.data.originalWord}"`);
+            } else {
+                hideLogicNotice();
+            }
+        }
+
+        function updateLevel3Buttons(block) {
+            let opts = block.data.optionsRaw ? [...block.data.optionsRaw] : ["?", "?", "?", "?"];
+            for (let i = opts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[opts[i], opts[j]] = [opts[j], opts[i]]; }
+            state.currentOptions = opts;
+            for (let i = 0; i < 4; i++) if (els.optBtns[i]) els.optBtns[i].innerText = opts[i] || "";
+        }
+
+        function showLogicNotice(text) { els.logicNotice.innerHTML = text; els.logicNotice.classList.add('active'); }
+        function hideLogicNotice() { els.logicNotice.classList.remove('active'); }
+        function showWellDone() {
+            clearTimeout(state.wellDoneTimeout); els.wellDoneMsg.classList.add('active');
+            state.wellDoneTimeout = setTimeout(() => { els.wellDoneMsg.classList.remove('active'); }, 2000);
+        }
+
+        function updateButtons() {
+            const hasSelection = state.selectedBlockId !== null;
+            if (hasSelection) { /* Styles handle focus */ }
+            const type = state.customLevelData ? state.customLevelData.type : '';
+            if (type === 'mcq') {
+                const op = hasSelection ? "1" : "0.5";
+                els.optBtns.forEach(b => b.style.opacity = op);
+            }
+        }
+
+        function buildRegex(pattern) {
+            const anchored = pattern.startsWith('^') || pattern.endsWith('$');
+            return new RegExp(anchored ? pattern : '^' + pattern + '$');
+        }
+
+        function submitTextAnswer() {
+            if (!state.selectedBlockId) return;
+            const block = state.blocks.find(b => b.id === state.selectedBlockId);
+            const input = els.codeInput.value.trim();
+
+            const isMatch = block.data.useRegex
+                ? buildRegex(block.data.correctCode).test(input)
+                : input === block.data.correctCode;
+
+            if (!isMatch) { processResult(false); els.codeInput.value = ""; return; }
+
+            const codeToRun = block.data.useRegex ? input : block.data.correctCode;
+            const match = codeToRun.match(/input\s*\(\s*["'](.+?)["']\s*\)/);
+
+            if (match) {
+                block._runnableCode = codeToRun;
+                triggerConsoleInput(block, match[1]);
+                els.codeInput.value = "";
+                return;
+            }
+
+            runRealPython(codeToRun, [], block).then(({ output }) => {
+                output.forEach(line => logToConsole(line));
+                processResult(true);
+            }).catch(e => {
+                logToConsole("Error: " + e);
+                processResult(false);
+            });
+
+            els.codeInput.value = "";
+        }
+
+        function submitMCQAnswer(i) {
+            if (!state.selectedBlockId) return;
+            const block = state.blocks.find(b => b.id === state.selectedBlockId);
+            const ans = state.currentOptions[i];
+            const isCorrect = ans === block.data.correctCode;
+
+            if (!isCorrect) { processResult(false); return; }
+
+            const match = ans.match(/input\s*\(\s*["'](.+?)["']\s*\)/);
+            if (match) {
+                block._runnableCode = ans;
+                triggerConsoleInput(block, match[1]);
+                return;
+            }
+
+            runRealPython(ans, [], block).then(({ output }) => {
+                output.forEach(line => logToConsole(line));
+                processResult(true);
+            }).catch(e => {
+                logToConsole("Error: " + e);
+                processResult(false);
+            });
+        }
+
+        function triggerConsoleInput(block, customPrompt = null) {
+            state.waitingForInput = true; state.inputBlockId = block.id;
+            els.consoleBar.classList.add('console-flash'); showLogicNotice(`Type answer in console and press Enter`);
+            let promptText = "> ";
+            if (customPrompt !== null) { promptText = customPrompt + " "; }
+            else if (block && block.data.correctCode) {
+                const match = block.data.correctCode.match(/input\s*\(\s*["'](.+?)["']\s*\)/);
+                if (match) promptText = match[1] + " ";
+            }
+            const promptSpan = document.getElementById('console-prompt');
+            if (promptSpan) promptSpan.innerText = promptText;
+            els.consoleInputWrapper.style.display = 'flex'; els.consoleRealInput.value = "";
+            els.consoleBar.scrollTop = els.consoleBar.scrollHeight; els.consoleRealInput.focus();
+        }
+
+        // No changes needed to triggerConsoleInput - it already handles prompts correctly
+// The key change: handleConsoleInput now runs real Python instead of faking output
+
+        async function handleConsoleInput() {
+            if (!state.waitingForInput) return;
+
+            const val = els.consoleRealInput.value;
+            const promptSpan = document.getElementById('console-prompt');
+            const promptText = promptSpan ? promptSpan.innerText : "> ";
+
+            logToConsole(promptText + val);
+
+            if (!state.collectedInputs) state.collectedInputs = [];
+            state.collectedInputs.push(val);
+
+            const block = state.blocks.find(b => b.id === state.inputBlockId);
+
+            if (!block || (!block.data.correctCode && !block._runnableCode)) {
+                els.consoleInputWrapper.style.display = 'none';
+                els.consoleBar.classList.remove('console-flash');
+                hideLogicNotice();
+                state.waitingForInput = false;
+                state.inputBlockId = null;
+                state.collectedInputs = [];
+                processResult(false);
+                return;
+            }
+
+            const codeToRun = block._runnableCode || block.data.correctCode;
+            const inputCallCount = (codeToRun.match(/\binput\s*\(/g) || []).length;
+
+            if (state.collectedInputs.length < inputCallCount) {
+                const allPrompts = [...codeToRun.matchAll(/input\s*\(\s*["'](.+?)["']\s*\)/g)];
+                const nextPrompt = allPrompts[state.collectedInputs.length];
+                triggerConsoleInput(block, nextPrompt ? nextPrompt[1] : null);
+                return;
+            }
+
+            els.consoleInputWrapper.style.display = 'none';
+            els.consoleBar.classList.remove('console-flash');
+            hideLogicNotice();
+            state.waitingForInput = false;
+            state.inputBlockId = null;
+
+            const inputs = state.collectedInputs;
+            state.collectedInputs = [];
+            block._runnableCode = null;
+
+            try {
+                const { output } = await runRealPython(codeToRun, inputs, block);
+                output.forEach(line => logToConsole(line));
+                processResult(true);
+            } catch (e) {
+                logToConsole("Error: " + e);
+                processResult(false);
+            }
+        }
+
+        function submitMultiAnswer() {
+            if (!state.selectedBlockId) return;
+            const block = state.blocks.find(b => b.id === state.selectedBlockId);
+            if (!block) return;
+            console.log('RAW:', JSON.stringify(els.codeArea.value));
+            const lines = els.codeArea.value.trim().split('\n').filter(l => l !== "");
+            console.log('LINES:', lines);
+            const type = state.customLevelData.type;
+
+            if (type === 'multistep') submitCustomMultiStep(block, lines);
+            else if (type === 'var_print') submitCustomVarPrint(block, els.codeArea.value.trim());
+            else if (block.data.triggerConsole) submitCustomMultiLineConsole(block, lines);
+            else submitCustomMultiLine(block, lines);
+            els.codeArea.value = "";
+        }
+
+        function submitCustomMultiLineConsole(block, lines) {
+            if (lines.length < 2) { processResult(false); return; }
+
+            const hasComment = block.data.keywords && Array.isArray(block.data.keywords);
+
+            let commentValid = true;
+            if (hasComment) {
+                const commentLine = lines[0].toLowerCase();
+                if (!commentLine.startsWith("#")) commentValid = false;
+                block.data.keywords.forEach(k => {
+                    if (!commentLine.includes(k.toLowerCase())) commentValid = false;
+                });
+            }
+
+            const codeLines = hasComment ? lines.slice(1) : lines;
+            const joined = codeLines.join('\n').trimEnd();
+            let codeValid = false;
+            if (block.data.useRegex) {
+                codeValid = buildRegex(block.data.correctCode).test(joined);
+            } else {
+                codeValid = joined === block.data.correctCode;
+            }
+
+            if (commentValid && codeValid) {
+                const codeToRun = block.data.useRegex ? joined : block.data.correctCode;
+                const match = codeToRun.match(/input\s*\(\s*["'](.+?)["']\s*\)/);
+                if (match) {
+                    block._runnableCode = codeToRun;
+                    triggerConsoleInput(block, match[1]);
+                } else {
+                    runRealPython(codeToRun, [], block).then(({ output }) => {
+                        output.forEach(line => logToConsole(line));
+                        processResult(true);
+                    }).catch(e => {
+                        logToConsole("Error: " + e);
+                        processResult(false);
+                    });
+                }
+            } else {
+                processResult(false);
+            }
+        }
+
+        function submitCustomVarPrint(block, rawInput) {
+            const isMatch = block.data.useRegex
+                ? buildRegex(block.data.correctCode).test(rawInput)
+                : rawInput === block.data.correctCode;
+
+            if (isMatch) {
+                const codeToRun = block.data.useRegex ? rawInput : block.data.correctCode;
+                runRealPython(codeToRun, [], block).then(({ output }) => {
+                    output.forEach(line => logToConsole(line));
+                    processResult(true);
+                }).catch(e => {
+                    logToConsole("Error: " + e);
+                    processResult(false);
+                });
+            } else {
+                processResult(false);
+            }
+        }
+
+        function submitCustomMultiStep(block, lines) {
+            const tasks = block.data.tasks;
+            if (!tasks || lines.length < tasks.length * 2) { processResult(false); return; }
+            let allCorrect = true;
+            for (let i = 0; i < tasks.length; i++) {
+                const task = tasks[i];
+                const commentLine = lines[i * 2].toLowerCase();
+                const codeLine = lines[i * 2 + 1];
+
+                if (!commentLine.startsWith("#")) { allCorrect = false; break; }
+                if (task.verb && !commentLine.includes(task.verb.toLowerCase())) { allCorrect = false; break; }
+                if (task.noun && !commentLine.includes(task.noun.toLowerCase())) { allCorrect = false; break; }
+                if (!codeLine.startsWith("print") || !codeLine.trim().endsWith(")")) { allCorrect = false; break; }
+                const content = codeLine.substring(codeLine.indexOf('(') + 1, codeLine.lastIndexOf(')')).trim();
+                if (task.validation === 'string') {
+                    if (!/^["'].+["']$/.test(content)) { allCorrect = false; break; }
+                } else if (task.validation === 'number') {
+                    if (/^["'].+["']$/.test(content)) {
+                        const unquoted = content.substring(1, content.length - 1);
+                        if (isNaN(parseInt(unquoted))) { allCorrect = false; break; }
+                    } else {
+                        const num = parseInt(content);
+                        if (isNaN(num)) { allCorrect = false; break; }
+                        if (task.min !== undefined && (num < task.min || num > task.max)) { allCorrect = false; break; }
+                    }
+                }
+            }
+
+            if (allCorrect) {
+                const codeToRun = lines.filter((_, i) => i % 2 !== 0).join('\n');
+                runRealPython(codeToRun, [], block).then(({ output }) => {
+                    output.forEach(line => logToConsole(line));
+                    processResult(true);
+                }).catch(e => {
+                    logToConsole("Error: " + e);
+                    processResult(false);
+                });
+            } else {
+                processResult(false);
+            }
+        }
+
+        function submitCustomMultiLine(block, lines) {
+            if (lines.length < 1) { processResult(false); return; }
+
+            const hasComment = block.data.keywords && Array.isArray(block.data.keywords);
+
+            let commentValid = true;
+            if (hasComment) {
+                if (lines.length < 2) { processResult(false); return; }
+                const commentLine = lines[0].toLowerCase();
+                if (!commentLine.startsWith("#")) commentValid = false;
+                block.data.keywords.forEach(k => {
+                    if (!commentLine.includes(k.toLowerCase())) commentValid = false;
+                });
+            }
+
+            const codeLines = hasComment ? lines.slice(1) : lines;
+            const joined = codeLines.join('\n').trimEnd();
+            let codeValid = false;
+            if (block.data.useRegex) {
+                codeValid = buildRegex(block.data.correctCode).test(joined);
+            } else {
+                const userClean = joined.replace(/'/g, '"');
+                const correctClean = block.data.correctCode.replace(/'/g, '"');
+                codeValid = userClean === correctClean;
+            }
+
+            if (commentValid && codeValid) {
+                const codeToRun = block.data.useRegex ? joined : block.data.correctCode;
+                const match = codeToRun.match(/input\s*\(\s*["'](.+?)["']\s*\)/);
+                if (match) {
+                    block._runnableCode = codeToRun;
+                    triggerConsoleInput(block, match[1]);
+                } else {
+                    runRealPython(codeToRun, [], block).then(({ output }) => {
+                        output.forEach(line => logToConsole(line));
+                        processResult(true);
+                    }).catch(e => {
+                        logToConsole("Error: " + e);
+                        processResult(false);
+                    });
+                }
+            } else {
+                processResult(false);
+            }
+        }
+
+        async function startGCSEExam(id, btnElement) {
+            id = String(id);
+
+            const btn = btnElement;
+            let originalText = "";
+            if (btn) { originalText = btn.innerHTML; btn.innerText = "LOADING..."; }
+
+            state.inExam = true; state.activeExamId = `gcse_${id}`; state.examStartTime = Date.now();
+            try {
+                const url = id.startsWith('http') ? id : GCSE_EXAM_URLS[id];
+                const res = await fetch(url);
+                if (!res.ok) throw new Error("Failed to load GCSE exam");
+                const data = await res.json();
+                state.examQuestions = data.questions;
+                state.currentExamIndex = 0; state.examAnswers = [];
+                els.menuScreen.classList.remove('active'); els.examScreen.classList.add('active'); renderExamQuestion();
+
+                document.getElementById('exam-title').innerText = data.title || 'FINAL EXAM';
+                document.getElementById('exam-q-total').innerText = data.questions.length;
+
+            } catch (e) { console.error(e); alert("Error: " + e.message); state.inExam = false; }
+            finally { if (btn) btn.innerHTML = originalText; }
+        }
+
+        async function startExam(id, btnElement) {
+            id = String(id);
+
+            const btn = btnElement;
+            let originalText = "";
+            if (btn) { originalText = btn.innerHTML; btn.innerText = "LOADING..."; }
+
+            state.inExam = true; state.activeExamId = id; state.examStartTime = Date.now();
+            try {
+                let data = null;
+                if (id === 'custom') {
+                    data = state.customExamData;
+                } else {
+                    const url = id.startsWith('http') ? id : EXAM_URLS[id];
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error("Failed to load exam");
+                    data = await res.json();
+                }
+
+                document.getElementById('exam-title').innerText = data.title || 'FINAL EXAM';
+                document.getElementById('exam-q-total').innerText = data.questions.length;
+
+                state.examQuestions = data.questions;
+                state.currentExamIndex = 0; state.examAnswers = [];
+                els.menuScreen.classList.remove('active'); els.examScreen.classList.add('active'); renderExamQuestion();
+            } catch (e) { console.error(e); alert("Error: " + e.message); state.inExam = false; }
+            finally { if (btn && id !== 'custom') btn.innerHTML = originalText; }
+        }
+
+        function renderExamQuestion() {
+            const q = state.examQuestions[state.currentExamIndex]; els.examQNum.innerText = state.currentExamIndex + 1; const container = els.examContainer; container.innerHTML = '';
+            const p = document.createElement('p'); p.innerHTML = q.prompt; p.style.color = "#fff"; container.appendChild(p);
+            if (q.codeHtml) { const c = document.createElement('div'); c.className = 'exam-code'; c.innerHTML = q.codeHtml; container.appendChild(c); }
+            if (q.type === 'ident' || q.type === 'mcq') {
+                const optsDiv = document.createElement('div'); optsDiv.className = 'exam-options';
+                let opts = [...q.options || q.optionsRaw].sort(() => Math.random() - 0.5);
+                opts.forEach(opt => {
+                    const btn = document.createElement('button'); btn.className = 'btn btn-option'; btn.innerText = opt;
+                    btn.onclick = () => { Array.from(optsDiv.children).forEach(b => b.style.borderColor = '#555'); btn.style.borderColor = '#fff'; btn.setAttribute('data-selected', 'true'); };
+                    optsDiv.appendChild(btn);
+                });
+                container.appendChild(optsDiv);
+            } else {
+                const area = document.createElement('textarea'); area.className = 'exam-textarea'; area.id = 'exam-input';
+                area.placeholder = "";
+                container.appendChild(area);
+            }
+        }
+
+        function submitExamAnswer() {
+            const q = state.examQuestions[state.currentExamIndex]; let userAnswer = null; let isCorrect = false;
+            if (q.type === 'ident' || q.type === 'mcq') {
+                const selectedBtn = els.examContainer.querySelector('button[data-selected="true"]'); if (!selectedBtn) return;
+                userAnswer = selectedBtn.innerText; isCorrect = userAnswer === q.correct;
+            } else {
+                const val = document.getElementById('exam-input').value.trim(); userAnswer = val;
+                if (q.type === 'text') {
+                    const lines = val.split('\n').filter(l => l.trim() !== '');
+                    if (lines.length >= 2) {
+                        const cLine = lines[0].toLowerCase(); const codeLine = lines[1].replace(/'/g, '"');
+                        const k1 = q.keywords[0].toLowerCase(); const k2 = q.keywords[1].toLowerCase();
+                        isCorrect = cLine.startsWith('#') && cLine.includes(k1) && cLine.includes(k2) && codeLine === q.correctCode.replace(/'/g, '"');
+                    }
+
+                } else if (q.type === 'text_simple') {
+                    const answer = val.trim();
+                    if (q.useRegex) {
+                        isCorrect = new RegExp(q.correctCode).test(answer);
+                    } else {
+                        isCorrect = answer === q.correctCode;
+                    }
+                }
+                else if (q.type === 'extended') {
+                    const lines = val.split('\n').map(l => l.trim()).filter(l => l !== '');
+                    if (lines.length >= q.tasks.length * 2) {
+                        let all = true;
+                        for (let i = 0; i < q.tasks.length; i++) {
+                            const task = q.tasks[i]; const cLower = (lines[i * 2] || "").toLowerCase(); const code = lines[i * 2 + 1] || "";
+                            if (!cLower.startsWith('#') || !cLower.includes(task.noun)) all = false;
+                            if (!code.startsWith('print(')) all = false;
+                            const content = code.substring(code.indexOf('(') + 1, code.lastIndexOf(')')).trim();
+                            if (content.length === 0) { all = false; break; }
+                            if (!/^["'].+["']$/.test(content)) { if (task.noun === 'age' || task.noun === 'number') { if (isNaN(parseInt(content))) { all = false; break; } } else { all = false; break; } }
+                        }
+                        isCorrect = all;
+                    }
+                } else if (q.type === 'text_var') { isCorrect = checkVarAssign(val, q.targetVar, q.isString); }
+                else if (q.type === 'text_var_com') {
+                    const lines = val.split('\n').filter(l => l.trim() !== '');
+                    if (lines.length >= 2) {
+                        const cLine = lines[0].toLowerCase();
+                        let kw = true; q.keywords.forEach(k => { if (!cLine.includes(k)) kw = false; });
+                        if (kw) isCorrect = checkVarAssign(lines[1], q.targetVar, q.isString);
+                    }
+                } else if (q.type === 'text_var_print') {
+                    const lines = val.split('\n').filter(l => !l.trim().startsWith("#") && l.trim() !== "");
+                    if (lines.length >= 2) {
+                        if (checkVarAssign(lines[0], q.targetVar, q.isString)) {
+                            const p = lines[1].trim(); if (p === `print(${q.targetVar})`) isCorrect = true;
+                        }
+                    }
+                } else if (q.type === 'text_var_print_multi') {
+                    const lines = val.split('\n').filter(l => !l.trim().startsWith("#") && l.trim() !== "");
+                    if (lines.length >= 2) {
+                        if (checkVarAssign(lines[0], q.targetVar, q.isString)) {
+                            const p = lines[1].trim();
+                            if (p.startsWith('print(') && p.endsWith(')') && p.includes(',') && p.includes(q.targetVar)) isCorrect = true;
+                        }
+                    }
+                } else if (q.type === 'extended_run') {
+                    const inputs = state.extendedRunInputs || [];
+                    validateExtendedRun(q, val, inputs).then(result => {
+                        isCorrect = result;
+                        state.examAnswers.push({ q, user: userAnswer, correct: isCorrect });
+                        state.currentExamIndex++;
+                        if (state.currentExamIndex < state.examQuestions.length) {
+                            renderExamQuestion();
+                        } else {
+                            finishExam();
+                        }
+                    });
+                    return; // Exit early — async handles the rest
+                }
+            }
+            state.examAnswers.push({ q: q, user: userAnswer, correct: isCorrect });
+            state.currentExamIndex++; if (state.currentExamIndex < state.examQuestions.length) { renderExamQuestion(); } else { finishExam(); }
+        }
+
+        function checkVarAssign(line, name, isString) {
+            const parts = line.split('=');
+            // Accept bare conversion expression e.g. float(score), int(score)
+            if (parts.length === 1) {
+                const expr = line.trim();
+                if (!isString && /^(int|float)\s*\(\s*\w+\s*\)$/.test(expr)) return true;
+                if (isString && /^str\s*\(\s*\w+\s*\)$/.test(expr)) return true;
+                return false;
+            }
+            if (parts[0].trim() !== name) return false;
+            const v = parts.slice(1).join('=').trim();
+            // Literal values
+            if (isString && /^["'].+["']$/.test(v)) return true;
+            if (!isString && !isNaN(Number(v))) return true;
+            // String input
+            if (isString && /^input\s*\(.*\)$/.test(v)) return true;
+            // Number input with int() or float() casting
+            if (!isString && /^(int|float)\s*\(\s*input\s*\(.*\)\s*\)$/.test(v)) return true;
+            // Conversion expression assigned e.g. score = float(score)
+            if (!isString && /^(int|float)\s*\(\s*\w+\s*\)$/.test(v)) return true;
+            if (isString && /^str\s*\(\s*\w+\s*\)$/.test(v)) return true;
+            return false;
+        }
+
+        function finishExam() {
+            const score = state.examAnswers.filter(a => a.correct).length;
+            if (!gameStats.exams[state.activeExamId]) gameStats.exams[state.activeExamId] = { attempts: 0, bestScore: 0, lastScore: 0, improvement: 0, lastAnswers: [] };
+            const st = gameStats.exams[state.activeExamId];
+            const prevScore = st.lastScore;
+            st.attempts++;
+            st.lastScore = score;
+            st.total = state.examQuestions.length;
+            if (score > st.bestScore) st.bestScore = score;
+            st.improvement = score - prevScore;
+
+            // Store per-question breakdown
+            st.lastAnswers = state.examAnswers.map((a, i) => ({
+                q: i + 1,
+                prompt: a.q.prompt,
+                type: a.q.type,
+                correct: a.correct,
+                user: a.user || null
+            }));
+
+            saveStats();
+
+            const examDurationMs = state.examStartTime ? (Date.now() - state.examStartTime) : 0;
+            postToParent({
+                type: 'PG_PROGRESS', kind: 'exam', examId: state.activeExamId,
+                score, total: state.examQuestions.length, duration: examDurationMs
+            });
+
+            els.examScreen.classList.remove('active');
+            els.examResultsScreen.classList.add('active');
+            els.examFinalScore.innerText = `${score}/${state.examQuestions.length}`;
+
+            const list = els.examFeedbackList;
+            list.innerHTML = '';
+            state.examAnswers.forEach((a, i) => {
+                const item = document.createElement('div');
+                item.className = `result-item ${a.correct ? 'correct' : 'wrong'}`;
+                item.innerHTML = `<div style="font-weight:bold; margin-bottom:5px;">Q${i + 1}: ${a.q.prompt}</div><div style="font-size:0.9rem; color:#aaa;">Your Answer: ${a.user || "Nothing"}</div>${!a.correct ? `<div style="font-size:0.9rem; color:var(--accent-green);">Fix: ${a.q.explanation}</div>` : ''}`;
+                list.appendChild(item);
+            });
+        }
+
+        let pythonEditor = null;
+
+        function openPythonInterpreter() {
+            document.getElementById('python-interpreter-modal').classList.add('active');
+            document.getElementById('python-interpreter-overlay').classList.add('active');
+
+            if (!pythonEditor) {
+                pythonEditor = CodeMirror.fromTextArea(document.getElementById('python-input'), {
+                    mode: 'python',
+                    theme: 'dracula',
+                    lineNumbers: true,
+                    indentWithTabs: true,
+                    tabSize: 4,
+                    autofocus: true,
+                    lineWrapping: true,
+                    extraKeys: {
+                        'Ctrl-Enter': runPython,
+                        'Cmd-Enter': runPython,
+                    }
+                });
+            } else {
+                pythonEditor.refresh();
+                pythonEditor.focus();
+            }
+        }
+
+        function closePythonInterpreter() {
+            document.getElementById('python-interpreter-modal').classList.remove('active');
+            document.getElementById('python-interpreter-overlay').classList.remove('active');
+        }
+
+        function clearPythonOutput() {
+            document.getElementById('python-output').innerHTML = '';
+        }
+
+        function runPython() {
+            const code = pythonEditor.getValue();
+            const outputEl = document.getElementById('python-output');
+            outputEl.innerHTML = '';
+
+            let outputText = '';
+
+            Sk.configure({
+                output: (text) => { outputText += text; },
+                read: (filename) => {
+                    if (Sk.builtinFiles?.files[filename] === undefined)
+                        throw new Error("File not found: '" + filename + "'");
+                    return Sk.builtinFiles.files[filename];
+                },
+                execLimit: 5000, // 5s timeout
+            });
+
+            Sk.misceval.asyncToPromise(() =>
+                Sk.importMainWithBody('<stdin>', false, code, true)
+            ).then(() => {
+                outputEl.innerHTML = outputText
+                    ? `<span class="py-success">${escapeHtml(outputText)}</span>`
+                    : `<span style="color:#666">(no output)</span>`;
+            }).catch((err) => {
+                outputEl.innerHTML = `<span class="py-error">${escapeHtml(err.toString())}</span>`;
+            });
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        // Tab key inserts spaces instead of changing focus
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('python-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    document.execCommand('insertText', false, '\t');
+                }
+                // Ctrl+Enter or Cmd+Enter to run
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    runPython();
+                }
+            });
+        });
+
+        function shouldExecute(block) {
+            // Check question-level flag
+            if (block.data.execute === false) return false;
+            // Check level-level flag
+            if (state.customLevelData.execute === false) return false;
+            return isRunnableCode(block.data.correctCode);
+        }
+
+        function isRunnableCode(code) {
+            const trimmed = code.trim();
+
+            // Plain text answers like "Syntax Error", "Logic Error"
+            if (/^[A-Z][a-z]+ [A-Z][a-z]+$/.test(trimmed)) return false;
+
+            // Single-line incomplete statements — while/for/if with no body
+            if (/^(while|for|if|elif|else|def|class)\b/.test(trimmed) && !trimmed.includes('\n')) return false;
+
+            // Code that uses list indexing (var[i]) but never defines the list
+            if (/\w+\s*\[\s*\w+\s*\]/.test(trimmed)) {
+                const hasAssignment = /^[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*\[/m.test(trimmed);
+                if (!hasAssignment) return false;
+            }
+
+            // Code that uses len() on a variable but never defines it as a list
+            if (/len\s*\(\s*\w+\s*\)/.test(trimmed)) {
+                const hasListAssignment = /^[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*\[/m.test(trimmed);
+                if (!hasListAssignment) return false;
+            }
+
+            // No parentheses or assignment — just an expression or snippet
+            if (!/[\(\=]/.test(trimmed)) return false;
+
+            return true;
+        }
+
+        function injectDefaultVars(code) {
+            const assigned = new Set();
+            const used = {};
+
+            const keywords = new Set([
+                'if','else','elif','while','for','in','and','or','not',
+                'print','input','int','str','float','len','range','True','False','None',
+                'return','def','class','import','from','try','except','pass','break','continue'
+            ]);
+
+            // Strip comments before analysis
+            const codeNoComments = code.split('\n').filter(l => !l.trim().startsWith('#')).join('\n');
+
+            // Find ALL assignments — varName = (not ==, !=, <=, >=)
+            for (const m of codeNoComments.matchAll(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=[^=><!]/gm)) {
+                assigned.add(m[1]);
+            }
+
+            // Find variables used in conditions with a numeric comparison
+            for (const m of codeNoComments.matchAll(/\b([a-zA-Z_][a-zA-Z0-9_]*)\s*([><=!]+)\s*(-?\d+)/g)) {
+                const varName = m[1]; const op = m[2]; const val = parseInt(m[3]);
+                if (!assigned.has(varName) && !keywords.has(varName)) {
+                    used[varName] = { op, val };
+                }
+            }
+
+            // With this:
+            const codeNoStrings = codeNoComments
+                .replace(/"[^"]*"/g, '""')   // remove double-quoted strings
+                .replace(/'[^']*'/g, "''");  // remove single-quoted strings
+
+            // Find any other bare variable names not yet accounted for
+            for (const m of codeNoStrings.matchAll(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g)) {
+                const name = m[1];
+                if (!keywords.has(name) && !assigned.has(name) && !used[name] && !/^\d/.test(name)) {
+                    used[name] = { op: '==', val: 0 };
+                }
+            }
+
+            const injections = [];
+            for (const [varName, { op, val }] of Object.entries(used)) {
+                let defaultVal;
+                if      (op === '>')  defaultVal = val + 1;
+                else if (op === '>=') defaultVal = val;
+                else if (op === '<')  defaultVal = val - 1;
+                else if (op === '<=') defaultVal = val;
+                else if (op === '==') defaultVal = val;
+                else if (op === '!=') defaultVal = val + 1;
+                else                  defaultVal = 0;
+                injections.push(`${varName} = ${defaultVal}`);
+            }
+
+            if (injections.length === 0) return code;
+            return injections.join('\n') + '\n' + code;
+        }
+
+        function runRealPython(code, inputValues, block = null) {
+            // Level-wide flag
+            if (state.customLevelData?.execute === false) return Promise.resolve({ output: [], vars: {} });
+            // Per-question flag
+            if (block?.data?.execute === false) return Promise.resolve({ output: [], vars: {} });
+
+            // Decode HTML entities
+            code = code
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                .replace(/&apos;/g, "'")  // add this
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>');
+
+            // Strip comment lines
+            code = code.split('\n').filter(l => !l.trim().startsWith('#')).join('\n').trim();
+
+            // Skip non-runnable snippets silently
+            if (!isRunnableCode(code)) {
+                return Promise.resolve({ output: [], vars: {} });
+            }
+
+            // Inject default variable values
+            code = injectDefaultVars(code);
+
+            return new Promise((resolve, reject) => {
+                const output = [];
+                let inputIndex = 0;
+
+                Sk.configure({
+                    output: (text) => {
+                        const trimmed = text.replace(/\n$/, '');
+                        if (trimmed !== '') output.push(trimmed);
+                    },
+                    inputfun: (prompt) => {
+                        return Promise.resolve(String(inputValues[inputIndex++] ?? ''));
+                    },
+                    inputfunTakesPrompt: true,
+                    __future__: Sk.python3
+                });
+
+                Sk.misceval.asyncToPromise(() =>
+                    Sk.importMainWithBody('<stdin>', false, code, true)
+                ).then(() => {
+                    const vars = {};
+                    try {
+                        const mod = Sk.globals;
+                        for (const key of Object.keys(mod)) {
+                            if (key.startsWith('__')) continue;
+                            try {
+                                const js = Sk.ffi.remapToJs(mod[key]);
+                                if (js !== undefined && js !== null) vars[key] = js;
+                            } catch (e) { }
+                        }
+                    } catch (e) { }
+                    resolve({ output, vars });
+                }).catch(e => {
+                    reject(e.toString());
+                });
+            });
+        }
+
+        function runPythonLike(code, inputs) {
+            const lines = code.split('\n');
+            const output = [];
+            const vars = {};
+            let inputIndex = 0;
+            let i = 0;
+
+            function getValue(expr) {
+                expr = expr.trim();
+                // String literal
+                if (/^["'].*["']$/.test(expr)) return expr.slice(1, -1);
+                // Number literal
+                if (!isNaN(Number(expr))) return Number(expr);
+                // Variable
+                if (vars[expr] !== undefined) return vars[expr];
+                // Concatenation / comma separated (basic)
+                return expr;
+            }
+
+            function evalExpr(expr) {
+                expr = expr.trim();
+                // String literal
+                if (/^["'].*["']$/.test(expr)) return expr.slice(1, -1);
+                // Number
+                if (!isNaN(Number(expr))) return Number(expr);
+                // input()
+                const inputMatch = expr.match(/^input\s*\(\s*(["'].*["'])?\s*\)$/);
+                if (inputMatch) return inputs[inputIndex++] ?? '';
+                // int() / str() / float() casting
+                const intMatch = expr.match(/^int\s*\((.+)\)$/);
+                if (intMatch) return parseInt(evalExpr(intMatch[1]));
+                const floatMatch = expr.match(/^float\s*\((.+)\)$/);
+                if (floatMatch) return parseFloat(evalExpr(floatMatch[1]));
+                const strMatch = expr.match(/^str\s*\((.+)\)$/);
+                if (strMatch) return String(evalExpr(strMatch[1]));
+                // Variable
+                if (vars[expr] !== undefined) return vars[expr];
+                // f-string (basic)
+                if (/^f["']/.test(expr)) {
+                    return expr.slice(2, -1).replace(/\{(\w+)\}/g, (_, v) => vars[v] ?? '');
+                }
+                // String + number concatenation with +
+                if (expr.includes('+')) {
+                    const parts = expr.split('+').map(p => evalExpr(p.trim()));
+                    return parts.every(p => typeof p === 'number') ? parts.reduce((a, b) => a + b, 0) : parts.join('');
+                }
+                return expr;
+            }
+
+            function evalCondition(cond) {
+                cond = cond.trim();
+                const ops = ['>=', '<=', '!=', '==', '>', '<'];
+                for (const op of ops) {
+                    const idx = cond.indexOf(op);
+                    if (idx !== -1) {
+                        const left = evalExpr(cond.slice(0, idx).trim());
+                        const right = evalExpr(cond.slice(idx + op.length).trim());
+                        switch (op) {
+                            case '==': return left == right;
+                            case '!=': return left != right;
+                            case '>=': return left >= right;
+                            case '<=': return left <= right;
+                            case '>': return left > right;
+                            case '<': return left < right;
+                        }
+                    }
+                }
+                return !!evalExpr(cond);
+            }
+
+            function getIndent(line) {
+                return line.match(/^(\s*)/)[1].length;
+            }
+
+            function getBlock(startIndex, baseIndent) {
+                const block = [];
+                let j = startIndex;
+                while (j < lines.length) {
+                    const line = lines[j];
+                    if (line.trim() === '') { j++; continue; }
+                    if (getIndent(line) <= baseIndent) break;
+                    block.push(line);
+                    j++;
+                }
+                return { block, end: j };
+            }
+
+            function execLines(linesToRun) {
+                let j = 0;
+                while (j < linesToRun.length) {
+                    const raw = linesToRun[j];
+                    if (raw.trim() === '' || raw.trim().startsWith('#')) { j++; continue; }
+                    const line = raw.trim();
+                    const indent = getIndent(raw);
+
+                    // print()
+                    if (/^print\s*\(/.test(line)) {
+                        const inner = line.slice(line.indexOf('(') + 1, line.lastIndexOf(')'));
+                        const parts = splitArgs(inner).map(a => evalExpr(a.trim()));
+                        output.push(parts.join(' '));
+                        j++; continue;
+                    }
+
+                    // if/else
+                    if (/^if\s+/.test(line) && line.endsWith(':')) {
+                        const cond = line.slice(3, -1).trim();
+                        const condResult = evalCondition(cond);
+                        j++;
+                        const ifBlock = [];
+                        while (j < linesToRun.length && linesToRun[j].trim() !== '' && getIndent(linesToRun[j]) > indent) {
+                            ifBlock.push(linesToRun[j]); j++;
+                        }
+                        const elseBlock = [];
+                        if (j < linesToRun.length && linesToRun[j]?.trim() === 'else:') {
+                            j++;
+                            while (j < linesToRun.length && linesToRun[j].trim() !== '' && getIndent(linesToRun[j]) > indent) {
+                                elseBlock.push(linesToRun[j]); j++;
+                            }
+                        }
+                        if (condResult) execLines(ifBlock);
+                        else if (elseBlock.length) execLines(elseBlock);
+                        continue;
+                    }
+
+                    // for loop
+                    const forMatch = line.match(/^for\s+(\w+)\s+in\s+range\s*\((.+)\)\s*:$/);
+                    if (forMatch) {
+                        const loopVar = forMatch[1];
+                        const rangeArgs = splitArgs(forMatch[2]).map(a => Number(evalExpr(a.trim())));
+                        let start = 0, end = 0, step = 1;
+                        if (rangeArgs.length === 1) { end = rangeArgs[0]; }
+                        else if (rangeArgs.length === 2) { [start, end] = rangeArgs; }
+                        else { [start, end, step] = rangeArgs; }
+                        j++;
+                        const loopBlock = [];
+                        while (j < linesToRun.length && linesToRun[j].trim() !== '' && getIndent(linesToRun[j]) > indent) {
+                            loopBlock.push(linesToRun[j]); j++;
+                        }
+                        for (let k = start; k < end; k += step) {
+                            vars[loopVar] = k;
+                            execLines(loopBlock);
+                        }
+                        continue;
+                    }
+
+                    // while loop
+                    const whileMatch = line.match(/^while\s+(.+)\s*:$/);
+                    if (whileMatch) {
+                        j++;
+                        const loopBlock = [];
+                        while (j < linesToRun.length && linesToRun[j].trim() !== '' && getIndent(linesToRun[j]) > indent) {
+                            loopBlock.push(linesToRun[j]); j++;
+                        }
+                        let safety = 0;
+                        while (evalCondition(whileMatch[1]) && safety++ < 1000) {
+                            execLines(loopBlock);
+                        }
+                        continue;
+                    }
+
+                    // assignment
+                    if (line.includes('=') && !line.includes('==')) {
+                        const eqIdx = line.indexOf('=');
+                        const varName = line.slice(0, eqIdx).trim();
+                        const expr = line.slice(eqIdx + 1).trim();
+                        if (/^\w+$/.test(varName)) vars[varName] = evalExpr(expr);
+                        j++; continue;
+                    }
+
+                    j++;
+                }
+            }
+
+            function splitArgs(str) {
+                const args = [];
+                let depth = 0, current = '';
+                for (const ch of str) {
+                    if (ch === '(' || ch === '[') depth++;
+                    else if (ch === ')' || ch === ']') depth--;
+                    else if (ch === ',' && depth === 0) { args.push(current); current = ''; continue; }
+                    current += ch;
+                }
+                if (current.trim()) args.push(current);
+                return args;
+            }
+
+            execLines(lines);
+            return { output, vars };
+        }
+
+        async function validateExtendedRun(q, code, inputs) {
+
+            // --- New test case system ---
+            if (q.testCases && q.testCases.length) {
+                for (const tc of q.testCases) {
+                    let run;
+                    try {
+                        run = await runRealPython(code, tc.inputs.map(String));
+                    } catch (e) {
+                        return false;
+                    }
+                    // If anyOutput is true, just check that something was printed
+                    if (tc.anyOutput) {
+                        if (run.output.length === 0) return false;
+                        continue;
+                    }
+                    for (const expected of tc.expectedOutput) {
+                        const found = run.output.some(line =>
+                            line.toLowerCase().replace(/\s+/g, ' ').trim()
+                                .includes(expected.toLowerCase().trim())
+                        );
+                        if (!found) return false;
+                    }
+                }
+                return true;
+            }
+
+            // --- Legacy system (expectedVars / testValues / expectedOutput) ---
+            const testInputs = (q.testValues && q.testValues.length)
+                ? q.testValues.map(tv => tv.value)
+                : inputs;
+
+            let firstRun;
+            try {
+                firstRun = await runRealPython(code, inputs);
+            } catch (e) {
+                return false;
+            }
+
+            if (q.expectedVars) {
+                for (const ev of q.expectedVars) {
+                    let val = firstRun.vars[ev.name];
+                    if (val === undefined && ev.aliases) {
+                        for (const alias of ev.aliases) {
+                            if (firstRun.vars[alias] !== undefined) {
+                                val = firstRun.vars[alias];
+                                break;
+                            }
+                        }
+                    }
+                    if (val === undefined) return false;
+                    if (ev.expectedString && typeof val !== 'string') return false;
+                    if (ev.expectedInt && !Number.isInteger(Number(val))) return false;
+                    if (ev.expectedFloat && (isNaN(parseFloat(val)) || !isFinite(val))) return false;
+                    if (ev.strict && ev.value !== undefined && String(val) !== String(ev.value)) return false;
+                }
+            }
+
+            let secondRun;
+            if (q.testValues && q.testValues.length && q.expectedOutput && q.expectedOutput.length) {
+                try {
+                    secondRun = await runRealPython(code, testInputs);
+                } catch (e) {
+                    return false;
+                }
+            } else {
+                secondRun = firstRun;
+            }
+
+            if (q.expectedOutput) {
+                for (const eo of q.expectedOutput) {
+                    const match = secondRun.output.some(line => {
+                        const lower = line.toLowerCase().replace(/\s+/g, ' ').trim();
+                        if (eo.containsVar !== undefined) {
+                            const varVal = String(secondRun.vars[eo.containsVar] ?? '').toLowerCase();
+                            if (!lower.includes(varVal)) return false;
+                            if (eo.hasMessage) {
+                                const withoutVar = lower.replace(varVal, '').trim();
+                                if (withoutVar.length === 0) return false;
+                            }
+                        }
+                        if (eo.containsStr !== undefined) {
+                            if (!lower.includes(eo.containsStr.toLowerCase())) return false;
+                        }
+                        return true;
+                    });
+                    if (!match) return false;
+                }
+            }
+
+            return true;
+        }
+
+        function showHelp() { els.menuScreen.classList.remove('active'); els.helpScreen.classList.add('active'); }
+        function closeHelp() { els.helpScreen.classList.remove('active'); els.menuScreen.classList.add('active'); }
+
+        function resetGame() {
+            state.isPlaying = false; state.inExam = false;
+            cancelAnimationFrame(state.animationFrameId);
+            els.gameOverScreen.classList.remove('active');
+            els.examScreen.classList.remove('active');
+            els.examResultsScreen.classList.remove('active');
+            els.menuScreen.classList.add('active');
+            if (state.sessionStartTime) endSession();
+            hideLogicNotice(); els.codeInput.blur(); els.codeArea.blur(); els.consoleBar.innerHTML = "";
+        }
+
+        let devMode = false;
+
+        // Dev Mode Trigger
+        let devKeyBuffer = [];
+        document.addEventListener('keydown', (e) => {
+            if (!els.menuScreen.classList.contains('active')) return;
+
+            if (!e.shiftKey) {
+                devKeyBuffer = [];
+                return;
+            }
+
+            if (e.key === 'Shift') return;
+
+            devKeyBuffer.push(e.key.toLowerCase());
+            if (devKeyBuffer.length > 3) devKeyBuffer.shift();
+
+            if (devKeyBuffer.join('') === 'dev') {
+                const panel = document.getElementById('test-panel');
+                panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
+                devMode = panel.style.display === 'flex';
+                devKeyBuffer = [];
+            }
+        });
+    </script>
+</body>
+
+</html>

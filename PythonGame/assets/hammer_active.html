@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { margin: 0; background: transparent; display: flex; align-items: center; justify-content: center; min-height: 220px; }
+
+  @keyframes swing {
+    0%   { transform: rotate(0deg); }
+    30%  { transform: rotate(-45deg); }
+    55%  { transform: rotate(15deg); }
+    70%  { transform: rotate(-8deg); }
+    85%  { transform: rotate(4deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  .hammer-group {
+    transform-origin: 158px 168px;
+    transform: rotate(0deg);
+  }
+  .hammer-group.swinging {
+    animation: swing 0.4s ease-out forwards;
+  }
+
+  svg { cursor: pointer; display: block; }
+</style>
+</head>
+<body>
+<svg id="hammer-svg" viewBox="0 0 200 220" width="200" height="220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#aaa"/>
+      <stop offset="50%" stop-color="#777"/>
+      <stop offset="100%" stop-color="#444"/>
+    </linearGradient>
+    <linearGradient id="handlegrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c8832a"/>
+      <stop offset="50%" stop-color="#e8a84a"/>
+      <stop offset="100%" stop-color="#b06820"/>
+    </linearGradient>
+  </defs>
+
+  <!-- pivot point is bottom-right of handle (158,168) — simulates holding at base -->
+  <g class="hammer-group" id="hammer-group">
+    <!-- Handle -->
+    <rect x="90" y="90" width="16" height="90" rx="5" fill="url(#handlegrad)" stroke="#8B5e1a" stroke-width="1.5"/>
+    <!-- Handle grip wrap lines -->
+    <line x1="90" y1="130" x2="106" y2="130" stroke="#8B5e1a" stroke-width="1.5" opacity="0.5"/>
+    <line x1="90" y1="142" x2="106" y2="142" stroke="#8B5e1a" stroke-width="1.5" opacity="0.5"/>
+    <line x1="90" y1="154" x2="106" y2="154" stroke="#8B5e1a" stroke-width="1.5" opacity="0.5"/>
+
+    <!-- Head body -->
+    <rect x="54" y="54" width="90" height="48" rx="5" fill="url(#headgrad)" stroke="#333" stroke-width="2"/>
+    <!-- Head top face highlight -->
+    <rect x="54" y="54" width="90" height="10" rx="4" fill="#bbb" opacity="0.5"/>
+    <!-- Head left face (striking face) -->
+    <rect x="54" y="54" width="16" height="48" rx="3" fill="#999" stroke="#333" stroke-width="1"/>
+    <!-- Head right face -->
+    <rect x="128" y="54" width="16" height="48" rx="3" fill="#666" stroke="#333" stroke-width="1"/>
+    <!-- Neck join -->
+    <rect x="88" y="96" width="20" height="10" rx="2" fill="#555" stroke="#333" stroke-width="1"/>
+    <!-- Shine on head -->
+    <ellipse cx="90" cy="66" rx="18" ry="6" fill="#ffffff" opacity="0.15" transform="rotate(-10,90,66)"/>
+  </g>
+</svg>
+
+<script>
+  const group = document.getElementById('hammer-group');
+  document.getElementById('hammer-svg').addEventListener('click', () => {
+    group.classList.remove('swinging');
+    void group.offsetWidth;
+    group.classList.add('swinging');
+    group.addEventListener('animationend', () => group.classList.remove('swinging'), { once: true });
+  });
+
+  // Add inside hammer_active.html <script>:
+window.triggerSwing = function() {
+    group.classList.remove('swinging');
+    void group.offsetWidth;
+    group.classList.add('swinging');
+    group.addEventListener('animationend', () => group.classList.remove('swinging'), { once: true });
+};
+</script>
+</body>
+</html>
