@@ -4593,11 +4593,52 @@
   // ── Tutorial progress & snapshot persistence ─────────────────
   function _tutProgressKey(tutIdx) { return 'pyscratch:tut:' + tutIdx + ':progress'; }
   function _tutSnapshotKey(tutIdx) { return 'pyscratch:tut:' + tutIdx + ':snapshot'; }
+  function _tutCompletedKey(tutIdx) { return 'pyscratch:tut:' + tutIdx + ':completed'; }
 
   function saveTutProgress() {
     var at = S.activeTut;
     if (!at) return;
     try { localStorage.setItem(_tutProgressKey(at.tutIdx), JSON.stringify({ stepIdx: at.stepIdx })); } catch(e) {}
+  }
+
+  // Completion is tracked separately from progress: finishing a tutorial
+  // clears the resume-position record (clearTutProgress), so without this
+  // a finished tutorial and a never-started one would be indistinguishable.
+  // Kept locally for the picker's own use, and also reported up to the
+  // parent frame (see reportTutorialCompletion) so a teacher can see it.
+  function loadTutCompletion(tutIdx) {
+    try {
+      var raw = localStorage.getItem(_tutCompletedKey(tutIdx));
+      return raw ? JSON.parse(raw) : null;
+    } catch(e) { return null; }
+  }
+
+  function markTutCompleted(tutIdx) {
+    var now = new Date().toISOString();
+    var existing = loadTutCompletion(tutIdx);
+    var record = {
+      firstCompletedAt: (existing && existing.firstCompletedAt) || now,
+      lastCompletedAt: now,
+      attempts: ((existing && existing.attempts) || 0) + 1
+    };
+    try { localStorage.setItem(_tutCompletedKey(tutIdx), JSON.stringify(record)); } catch(e) {}
+    return record;
+  }
+
+  // Tells the parent frame (the Bloomsbury Computing shell, if this is
+  // running embedded there) that a tutorial was just completed, so it can
+  // be recorded against the signed-in student and shown to their teacher.
+  // No-op when run standalone (window.parent === window) or outside an
+  // iframe entirely — matches the guard used by emitState() below.
+  function reportTutorialCompletion(tut) {
+    try {
+      if (!window.parent || window.parent === window) return;
+      window.parent.postMessage({
+        type: 'PS_TUTORIAL_COMPLETE',
+        tutorialId: tut.id,
+        tutorialTitle: tut.title
+      }, '*');
+    } catch(e) {}
   }
 
   function loadTutProgress(tutIdx) {
@@ -5732,6 +5773,11 @@
     var tutIdx  = at.tutIdx;
     var tut     = TUTORIALS[tutIdx];
     var hasSnap = hasTutSnapshot(tutIdx);
+
+    if (isFinished) {
+      markTutCompleted(tutIdx);
+      reportTutorialCompletion(tut);
+    }
 
     if (!hasSnap) {
       // No snapshot means nothing to restore — just exit
