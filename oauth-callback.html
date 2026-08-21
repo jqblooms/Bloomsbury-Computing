@@ -13,9 +13,9 @@
 <script>
 // Google's OAuth 2.0 implicit-flow popup lands here with the access token
 // in the URL fragment (never sent to any server, per the implicit-flow
-// spec). We hand it back to whichever window opened this popup — the
+// spec). We hand it back to whichever window opened this popup, the
 // Bloomsbury Computing admin page, running inside Apps Script's sandboxed
-// HtmlService iframe — and close.
+// HtmlService iframe, and close.
 //
 // window.opener may be that iframe rather than a top-level window, and its
 // exact origin (a per-script googleusercontent.com sandbox domain) isn't
