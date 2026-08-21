@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trace Tables Practice</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- jsPDF for Report Generation -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <style>
   :root {
     /* Light theme, Bloomsbury blue accent */
@@ -18,7 +15,6 @@
     --accent: #1479be; /* Bloomsbury blue */
     --accent-gold: #ffc107; /* Highlight accent */
     --accent-gold-dark: #e0a800;
-    --accent-report: #0ea5e9; 
     --text: #0f172a; /* Very dark slate for readability */
     --text-dim: #475569;
     --text-dimmer: #94a3b8;
@@ -128,10 +124,6 @@
   /* Primary Button (Gold + Navy Text) */
   .btn-primary { background: var(--accent-gold); color: var(--accent); border: none; font-weight: 700; }
   .btn-primary:hover { background: var(--accent-gold-dark); color: var(--accent); }
-  
-  /* Report Button */
-  .btn-report { background: var(--accent-report); color: #fff; border: none; font-weight: 700;}
-  .btn-report:hover { background: #0284c7; }
 
   .controls { display: flex; gap: 0.8rem; flex-wrap: wrap; }
   .controls-spaced { justify-content: space-between; align-items: center; }
@@ -228,38 +220,7 @@
   .info-list li { margin-bottom: 0.8rem; color: var(--text-dim); }
   .info-list strong { color: var(--accent); }
 
-  /* Modal Styles */
-  .modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(19, 30, 54, 0.6); /* Navy transparent background */
-    backdrop-filter: blur(4px);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 9999;
-    opacity: 0; pointer-events: none; transition: opacity 0.2s ease-in-out;
-  }
-  .modal-overlay.show { opacity: 1; pointer-events: auto; }
-  
-  .modal-content {
-    background: var(--surface); padding: 2.5rem; border-radius: 12px;
-    width: 90%; max-width: 450px; border: 1px solid var(--border);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    transform: translateY(-20px); transition: transform 0.3s ease-in-out;
-  }
-  .modal-overlay.show .modal-content { transform: translateY(0); }
-  .modal-content h3 { margin-top: 0; color: var(--accent); font-size: 1.6rem; margin-bottom: 0.5rem; }
-  .modal-content p { margin-bottom: 1.5rem; color: var(--text-dim); }
-  
-  .input-group { margin-bottom: 1.2rem; }
-  .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--accent); }
-  .input-group input { 
-    width: 100%; padding: 0.8rem; border: 1px solid var(--border); 
-    border-radius: 6px; font-family: var(--sans); font-size: 1rem;
-    box-sizing: border-box; transition: 0.2s; background: var(--bg); color: var(--text);
-  }
-  .input-group input:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(255,193,7,0.3); }
-  
-  .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
-  .error-msg { color: var(--wrong); font-size: 0.9rem; margin-top: 0.5rem; display: none; font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -272,7 +233,6 @@
         <h1>Trace Tables</h1>
       </div>
     </div>
-    <button class="btn btn-report" onclick="openReportModal()">📄 Generate Report</button>
   </header>
 
   <!-- Navigation Tabs -->
@@ -431,31 +391,6 @@
     </div>
   </div>
 
-</div>
-
-<!-- Custom Report Modal -->
-<div id="report-modal" class="modal-overlay">
-  <div class="modal-content">
-    <h3>Student Details</h3>
-    <p>Please enter your full name to generate the report.</p>
-    
-    <div class="input-group">
-      <label for="student-fname">First Name</label>
-      <input type="text" id="student-fname" placeholder="e.g. Jane">
-    </div>
-    
-    <div class="input-group">
-      <label for="student-lname">Last Name</label>
-      <input type="text" id="student-lname" placeholder="e.g. Doe">
-    </div>
-    
-    <div id="modal-error" class="error-msg">Both First Name and Last Name are required.</div>
-    
-    <div class="modal-actions">
-      <button class="btn" onclick="closeReportModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="submitReportModal()">Generate PDF</button>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -766,6 +701,7 @@ function checkPractice(idx) {
 
   const isCorrect = (correct === total);
   recordAttempt(`prac${idx}`, `Practice ${idx + 1}`, isCorrect, extractTableData(prefix, data.cols, totalRows), data.code);
+  reportPracticeProgress(`prac${idx}`, `Practice ${idx + 1}`, isCorrect);
 
   const badge = document.getElementById(`${prefix}-result`);
   badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
@@ -1089,6 +1025,7 @@ function checkGeneratedPractice() {
   }
   saveProgress();
   updateStatsUI();
+  reportGeneratorProgress();
 
   const badge = document.getElementById('gen-result');
   badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
@@ -1096,106 +1033,24 @@ function checkGeneratedPractice() {
 }
 
 // ======================================================
-// MODAL & PDF GENERATION LOGIC
+// PROGRESS REPORTING (to the Bloomsbury Computing admin panel)
 // ======================================================
-
-function openReportModal() {
-  document.getElementById('report-modal').classList.add('show');
-  document.getElementById('modal-error').style.display = 'none';
-  document.getElementById('student-fname').value = '';
-  document.getElementById('student-lname').value = '';
-  setTimeout(() => document.getElementById('student-fname').focus(), 100);
-}
-
-function closeReportModal() { document.getElementById('report-modal').classList.remove('show'); }
-
-function submitReportModal() {
-  const fname = document.getElementById('student-fname').value.trim();
-  const lname = document.getElementById('student-lname').value.trim();
-  if (!fname || !lname) { document.getElementById('modal-error').style.display = 'block'; return; }
-  closeReportModal();
-  generatePDFReport(fname, lname);
-}
-
-function generatePDFReport(firstName, lastName) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const todayDate = new Date().toLocaleDateString();
-  
-  doc.setFontSize(18);
-  doc.text("Trace Tables Practice Report", 14, 22);
-  doc.setFontSize(12);
-  doc.text(`Student: ${firstName} ${lastName}`, 14, 30);
-  doc.text(`Date: ${todayDate}`, 14, 38);
-  doc.text(`Generator Stats: Score: ${genStats.score} | Max Streak: ${genStats.maxStreak}`, 14, 46);
-  
-  const summaryBody = progressData.map(p => {
-    let status = "Not Attempted";
-    if (p.attempts > 0) status = p.correct ? "Correct" : "Incorrect";
-    return [p.title, status, p.attempts.toString()];
-  });
-  
-  doc.autoTable({
-    startY: 55,
-    head: [['Question', 'Status', 'Attempts']],
-    body: summaryBody,
-    theme: 'grid',
-    headStyles: { fillColor: [255, 193, 7], textColor: [11, 18, 33] } 
-  });
-  
-  const attemptedQuestions = progressData.filter(p => p.attempts > 0 && p.tableData);
-  
-  if (attemptedQuestions.length > 0) {
-    attemptedQuestions.forEach((q) => {
-      doc.addPage();
-      
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      
-      if (q.correct) doc.setTextColor(39, 174, 96); 
-      else doc.setTextColor(179, 26, 28); 
-      
-      doc.text(`${q.title} (${q.correct ? 'Correct' : 'Incorrect'})`, 14, 22);
-      doc.setTextColor(0, 0, 0); 
-      
-      let currentY = 32;
-
-      if (q.codeSnippet && q.codeSnippet.length > 0) {
-        doc.setFontSize(11);
-        doc.setFont('helvetica', 'bold');
-        doc.text("Algorithm Code:", 14, currentY);
-        currentY += 6;
-
-        doc.setFont('courier', 'normal');
-        doc.setFontSize(10);
-        
-        q.codeSnippet.forEach((line, idx) => {
-           let lineNum = (idx + 1).toString().padStart(2, ' ');
-           doc.text(`${lineNum} | ${line}`, 14, currentY);
-           currentY += 5; 
-        });
-        currentY += 8; 
-      }
-
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text("Student Trace Table:", 14, currentY);
-      currentY += 4;
-      
-      doc.setFont('helvetica', 'normal');
-      doc.autoTable({
-        startY: currentY,
-        head: [q.tableData.headers],
-        body: q.tableData.rows,
-        theme: 'grid',
-        headStyles: { fillColor: [255, 193, 7], textColor: [11, 18, 33] },
-        styles: { font: 'courier', halign: 'center' }, 
-        margin: { bottom: 20 }
-      });
-    });
+// Reports progress up to the parent, which persists it to the Progress
+// sheet, so a teacher sees it live in the admin dashboard instead of a
+// student having to generate and hand in a PDF. Same postToParent pattern
+// as Binary Blitz / Python Game.
+function postToParent(payload) {
+  if (window.parent !== window) {
+    window.parent.postMessage(payload, '*');
   }
-  
-  doc.save(`Trace_Tables_Report_${firstName}_${lastName}_${todayDate.replace(/\//g, '-')}.pdf`);
+}
+
+function reportPracticeProgress(id, title, isCorrect) {
+  postToParent({ type: 'TT_PROGRESS', kind: 'practice', practiceId: id, title: title, correct: isCorrect });
+}
+
+function reportGeneratorProgress() {
+  postToParent({ type: 'TT_PROGRESS', kind: 'generator', score: genStats.score, maxStreak: genStats.maxStreak });
 }
 
 // ======================================================
