@@ -270,7 +270,6 @@
       <div class="logo" aria-hidden="true">B</div>
       <div>
         <h1>Trace Tables</h1>
-        <p>Master algorithm tracing for your Computer Science exams</p>
       </div>
     </div>
     <button class="btn btn-report" onclick="openReportModal()">📄 Generate Report</button>
@@ -278,27 +277,13 @@
 
   <!-- Navigation Tabs -->
   <div class="tabs">
-    <button id="tab-intro" class="tab-btn active" onclick="showPage('intro', this)">Introduction</button>
-    <button id="tab-walk" class="tab-btn" onclick="showPage('walk', this)">Walkthrough</button>
+    <button id="tab-walk" class="tab-btn active" onclick="showPage('walk', this)">Walkthrough</button>
     <button id="tab-prac" class="tab-btn" onclick="showPage('prac', this)">Practice</button>
     <button id="tab-gen" class="tab-btn" onclick="showPage('gen', this)">Auto-Generator</button>
   </div>
 
-  <!-- Page 1: Intro -->
-  <div id="page-intro" class="page active">
-    <h2>Welcome to Trace Tables</h2>
-    <p>A trace table is a reliable technique used to dry-run (test) algorithms manually. It helps ensure no logical errors occur while the program processes data.</p>
-    <ul class="info-list">
-      <li><strong>OCR J277 Compliant Code:</strong> All code generated on this tool explicitly matches the <em>OCR Exam Reference Language</em> to prepare you for your real exam format.</li>
-      <li><strong>OCR J277 Marking Rule:</strong> In OCR exams, you <strong>only</strong> add a new row to your trace table when a variable changes/is assigned, or if there is an output. </li>
-      <li><strong>Ignore the Fluff:</strong> Do not include lines for condition checks (like <code>while x > 5</code>, <code>until x == -1</code>, or <code>if x == 2</code>) or loop markers (like <code>next i</code> or <code>endwhile</code>) unless a variable state is updated on that exact line.</li>
-      <li><strong>Variable Tracking:</strong> Only write down a variable's value when it changes. If it stays the same, leave the cell blank.</li>
-    </ul>
-    <button class="btn btn-primary mt-4" onclick="showPage('walk', document.getElementById('tab-walk'))">Start Interactive Walkthrough</button>
-  </div>
-
   <!-- Page 2: Walkthrough -->
-  <div id="page-walk" class="page">
+  <div id="page-walk" class="page active">
     <h2>Interactive Walkthrough</h2>
     <p>Click "Step Forward" to execute the code line by line. Notice how rows are <strong>only added</strong> when a variable updates or an output occurs.</p>
     <div class="controls mb-4">
@@ -418,7 +403,7 @@
   <!-- Page 4: Generator -->
   <div id="page-gen" class="page">
     <h2>Infinite Practice Generator</h2>
-    <p>Procedurally generates code traces to practice. Increases in complexity with Master difficulty scaling to your score.</p>
+    <p>Procedurally generates code traces to practice. Master difficulty scales in complexity with your score.</p>
     
     <div class="controls controls-spaced mb-4">
       <div class="controls-group">
@@ -475,18 +460,17 @@
 
 <script>
 // ======================================================
-// CONSTANTS & DATA (OCR STRICT RULES APPLIED)
+// CONSTANTS & DATA (Python)
 // ======================================================
 const EXTRA_ROWS = 2;
 
 // Algorithm 0: For Loop Accumulator
 const algo0Context = "The user ran the program and typed <strong>3</strong> when prompted for the limit.";
 const algo0Lines = [
-  "limit = input(\"Enter limit:\")",
+  "limit = int(input(\"Enter limit:\"))",
   "total = 0",
-  "for i = 1 to limit",
-  "  total = total + i",
-  "next i",
+  "for i in range(1, limit + 1):",
+  "    total = total + i",
   "print(total)"
 ];
 const algo0Cols = ['Line', 'limit', 'total', 'i', 'Output'];
@@ -499,17 +483,16 @@ const algo0Answers = [
   {Line: '4', limit: '', total: '3', i: '', Output: ''},
   {Line: '3', limit: '', total: '', i: '3', Output: ''},
   {Line: '4', limit: '', total: '6', i: '', Output: ''},
-  {Line: '6', limit: '', total: '', i: '', Output: '6'}
+  {Line: '5', limit: '', total: '', i: '', Output: '6'}
 ];
 
 // Algorithm 1: While Loop Countdown
 const algo1Context = "The program asks the user for a starting number, and they type <strong>10</strong>.";
 const algo1Lines = [
-  "x = input(\"Enter start number:\")",
-  "while x > 5",
-  "  print(x)",
-  "  x = x - 2",
-  "endwhile",
+  "x = int(input(\"Enter start number:\"))",
+  "while x > 5:",
+  "    print(x)",
+  "    x = x - 2",
   "print(\"Done\")"
 ];
 const algo1Cols = ['Line', 'x', 'Output'];
@@ -521,18 +504,16 @@ const algo1Answers = [
   {Line: '4', x: '6', Output: ''},
   {Line: '3', x: '', Output: '6'},
   {Line: '4', x: '4', Output: ''},
-  {Line: '6', x: '', Output: 'Done'}
+  {Line: '5', x: '', Output: 'Done'}
 ];
 
 // Algorithm 2: Conditional Inside Loop
 const algo2Context = "When prompted for a base value, the user enters <strong>5</strong>.";
 const algo2Lines = [
-  "x = input(\"Enter base value:\")",
-  "for i = 1 to 3",
-  "  if i > 1 then",
-  "    x = x + i",
-  "  endif",
-  "next i",
+  "x = int(input(\"Enter base value:\"))",
+  "for i in range(1, 4):",
+  "    if i > 1:",
+  "        x = x + i",
   "print(x)"
 ];
 const algo2Cols = ['Line', 'x', 'i', 'Output'];
@@ -543,17 +524,18 @@ const algo2Answers = [
   {Line: '4', x: '7', i: '', Output: ''},
   {Line: '2', x: '', i: '3', Output: ''},
   {Line: '4', x: '10', i: '', Output: ''},
-  {Line: '7', x: '', i: '', Output: '10'}
+  {Line: '5', x: '', i: '', Output: '10'}
 ];
 
-// Algorithm 3: Do...Until Loop
+// Algorithm 3: Do...Until Loop (Python has no do-until, written as while True: with a break)
 const algo3Context = "The user ran the program and entered <strong>3</strong> when prompted for a start number.";
 const algo3Lines = [
-  "start = input(\"Enter start:\")",
-  "do",
-  "  print(start)",
-  "  start = start - 1",
-  "until start == -1",
+  "start = int(input(\"Enter start:\"))",
+  "while True:",
+  "    print(start)",
+  "    start = start - 1",
+  "    if start == -1:",
+  "        break",
   "print(\"Finished\")"
 ];
 const algo3Cols = ['Line', 'start', 'Output'];
@@ -567,16 +549,15 @@ const algo3Answers = [
   {Line: '4', start: '0', Output: ''},
   {Line: '3', start: '', Output: '0'},
   {Line: '4', start: '-1', Output: ''},
-  {Line: '6', start: '', Output: 'Finished'}
+  {Line: '7', start: '', Output: 'Finished'}
 ];
 
 // Algorithm 4: Arrays
 const algo4Context = "The program processes an array pre-defined as: <strong>actNumbers = [4, 7, 2]</strong>.";
 const algo4Lines = [
   "count = 0",
-  "for x = 0 to 2",
-  "  count = count + actNumbers[x]",
-  "next x",
+  "for x in range(0, 3):",
+  "    count = count + actNumbers[x]",
   "print(count)"
 ];
 const algo4Cols = ['Line', 'count', 'x', 'Output'];
@@ -588,7 +569,7 @@ const algo4Answers = [
   {Line: '3', count: '11', x: '', Output: ''},
   {Line: '2', count: '', x: '2', Output: ''},
   {Line: '3', count: '13', x: '', Output: ''},
-  {Line: '5', count: '', x: '', Output: '13'}
+  {Line: '4', count: '', x: '', Output: '13'}
 ];
 
 const pracData = [
@@ -849,9 +830,8 @@ function generateArrayAlgorithm(contextData, diff) {
     let currentAcc = 0;
 
     if (loopType === 'for') {
-        lines.push(`for ${loopVar} = 0 to ${arrLen - 1}`);
-        lines.push(`  ${accName} = ${accName} + ${arrName}[${loopVar}]`);
-        lines.push(`next ${loopVar}`);
+        lines.push(`for ${loopVar} in range(0, ${arrLen}):`);
+        lines.push(`    ${accName} = ${accName} + ${arrName}[${loopVar}]`);
         lines.push(`print(${accName})`);
 
         for (let i = 0; i < arrLen; i++) {
@@ -859,13 +839,12 @@ function generateArrayAlgorithm(contextData, diff) {
             currentAcc += arrVals[i];
             answers.push({ Line: '3', [accName]: currentAcc.toString(), [loopVar]: '', Output: '' });
         }
-        answers.push({ Line: '5', [accName]: '', [loopVar]: '', Output: currentAcc.toString() });
+        answers.push({ Line: '4', [accName]: '', [loopVar]: '', Output: currentAcc.toString() });
     } else {
         lines.push(`${loopVar} = 0`);
-        lines.push(`while ${loopVar} < ${arrLen}`);
-        lines.push(`  ${accName} = ${accName} + ${arrName}[${loopVar}]`);
-        lines.push(`  ${loopVar} = ${loopVar} + 1`);
-        lines.push(`endwhile`);
+        lines.push(`while ${loopVar} < ${arrLen}:`);
+        lines.push(`    ${accName} = ${accName} + ${arrName}[${loopVar}]`);
+        lines.push(`    ${loopVar} = ${loopVar} + 1`);
         lines.push(`print(${accName})`);
 
         answers.push({ Line: '2', [accName]: '', [loopVar]: '0', Output: '' });
@@ -874,7 +853,7 @@ function generateArrayAlgorithm(contextData, diff) {
             answers.push({ Line: '4', [accName]: currentAcc.toString(), [loopVar]: '', Output: '' });
             answers.push({ Line: '5', [accName]: '', [loopVar]: (i + 1).toString(), Output: '' });
         }
-        answers.push({ Line: '7', [accName]: '', [loopVar]: '', Output: currentAcc.toString() });
+        answers.push({ Line: '6', [accName]: '', [loopVar]: '', Output: currentAcc.toString() });
     }
 
     return { context, code: lines, cols, answers, solved: false, failedAttempt: false };
@@ -921,7 +900,7 @@ function generateStandardAlgorithm(contextData, diff) {
     // Initialise Variables
     for (let i=0; i<numVars; i++) {
        if (i < numInputs) {
-           lines.push(`${VAR_NAMES[i]} = input("Enter ${VAR_NAMES[i]}:")`);
+           lines.push(`${VAR_NAMES[i]} = int(input("Enter ${VAR_NAMES[i]}:"))`);
            contextParts.push(`<strong>${VAR_NAMES[i]} = ${startVals[i]}</strong>`);
        } else {
            lines.push(`${VAR_NAMES[i]} = ${startVals[i]}`);
@@ -950,15 +929,14 @@ function generateStandardAlgorithm(contextData, diff) {
 
     // Build the Loop Blocks
     if (loopType === 'for') {
-        lines.push(`for i = 1 to ${targetIterations}`);
-        lines.push(`  print(${VAR_NAMES[0]})`);
-        
+        lines.push(`for i in range(1, ${targetIterations + 1}):`);
+        lines.push(`    print(${VAR_NAMES[0]})`);
+
         let updateCommands = [];
         for(let i=0; i<numVars-1; i++) {
             updateCommands.push({ lineNum: lines.length + 1, varIdx: i, addsIdx: i+1 });
-            lines.push(`  ${VAR_NAMES[i]} = ${VAR_NAMES[i]} + ${VAR_NAMES[i+1]}`);
+            lines.push(`    ${VAR_NAMES[i]} = ${VAR_NAMES[i]} + ${VAR_NAMES[i+1]}`);
         }
-        lines.push(`next i`);
 
         for(let iter=1; iter<=targetIterations; iter++) {
             let rowI = { Line: loopStartLine.toString(), Output: '' };
@@ -981,16 +959,15 @@ function generateStandardAlgorithm(contextData, diff) {
 
     } else if (loopType === 'while') {
         let op = isCountdown ? '>' : '<';
-        lines.push(`while ${VAR_NAMES[0]} ${op} ${limit}`);
-        lines.push(`  print(${VAR_NAMES[0]})`);
-        
+        lines.push(`while ${VAR_NAMES[0]} ${op} ${limit}:`);
+        lines.push(`    print(${VAR_NAMES[0]})`);
+
         let updateCommands = [];
         for(let i=0; i<numVars-1; i++) {
             updateCommands.push({ lineNum: lines.length + 1, varIdx: i, addsIdx: i+1 });
             let mathOp = isCountdown ? '-' : '+';
-            lines.push(`  ${VAR_NAMES[i]} = ${VAR_NAMES[i]} ${mathOp} ${VAR_NAMES[i+1]}`);
+            lines.push(`    ${VAR_NAMES[i]} = ${VAR_NAMES[i]} ${mathOp} ${VAR_NAMES[i+1]}`);
         }
-        lines.push(`endwhile`);
         lines.push(`print("Finished")`);
 
         while(true) {
@@ -1015,16 +992,19 @@ function generateStandardAlgorithm(contextData, diff) {
         answers.push(rowFin);
 
     } else if (loopType === 'do-until') {
-        lines.push(`do`);
-        lines.push(`  print(${VAR_NAMES[0]})`);
-        
+        // Python has no do-until construct, so this is written as
+        // while True: with a break once the exit condition is met.
+        lines.push(`while True:`);
+        lines.push(`    print(${VAR_NAMES[0]})`);
+
         let updateCommands = [];
         for(let i=0; i<numVars-1; i++) {
             updateCommands.push({ lineNum: lines.length + 1, varIdx: i, addsIdx: i+1 });
             let mathOp = isCountdown ? '-' : '+';
-            lines.push(`  ${VAR_NAMES[i]} = ${VAR_NAMES[i]} ${mathOp} ${VAR_NAMES[i+1]}`);
+            lines.push(`    ${VAR_NAMES[i]} = ${VAR_NAMES[i]} ${mathOp} ${VAR_NAMES[i+1]}`);
         }
-        lines.push(`until ${VAR_NAMES[0]} == ${limit}`);
+        lines.push(`    if ${VAR_NAMES[0]} == ${limit}:`);
+        lines.push(`        break`);
         lines.push(`print("Finished")`);
 
         while(true) {
