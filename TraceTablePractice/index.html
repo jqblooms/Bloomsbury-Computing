@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trace Tables Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- jsPDF for Report Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<style>
+  :root {
+    /* Light theme, Bloomsbury blue accent */
+    --bg: #f4f6f9; /* Light grey-blue background */
+    --surface: #dddddd; /* White containers */
+    --surface2: #e2e8f0; /* Light grey for buttons/tabs */
+    --border: #cbd5e1;
+    --accent: #1479be; /* Bloomsbury blue */
+    --accent-gold: #ffc107; /* Highlight accent */
+    --accent-gold-dark: #e0a800;
+    --accent-report: #0ea5e9; 
+    --text: #0f172a; /* Very dark slate for readability */
+    --text-dim: #475569;
+    --text-dimmer: #94a3b8;
+    --highlight-active: rgba(255, 193, 7, 0.25); /* Gold highlight for code lines */
+    --correct: #059669; /* Clear green for light mode */
+    --wrong: #dc2626; /* Clear red for light mode */
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    margin: 0;
+    padding: 2rem;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .logo {
+    height: 64px;
+    width: 64px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.8rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  h1 { margin: 0; font-size: 2.2rem; color: var(--accent); }
+  h2 { margin-top: 0; color: var(--accent); font-weight: 700;}
+  p { margin: 0; color: var(--text-dim); }
+
+  /* Navigation Tabs */
+  .tabs { 
+    display: flex; 
+    gap: 1rem; 
+    margin-bottom: 2rem; 
+    border-bottom: 2px solid var(--border); 
+    padding-bottom: 1rem; 
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: transparent; border: none; color: var(--text-dim);
+    font-size: 1.1rem; font-family: var(--sans); cursor: pointer;
+    padding: 0.6rem 1.2rem; border-radius: 8px; transition: 0.2s;
+    white-space: nowrap; font-weight: 500;
+  }
+  .tab-btn:hover { background: var(--surface2); color: var(--accent); }
+  .tab-btn.active { 
+    background: var(--surface2); 
+    color: var(--accent); 
+    font-weight: 700; 
+    box-shadow: 0 4px 0 var(--accent-gold); 
+  }
+
+  .page { display: none; animation: fadeIn 0.3s; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Buttons */
+  .btn {
+    background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+    padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-family: var(--sans);
+    font-weight: 600; transition: 0.2s; font-size: 1rem;
+  }
+  select.btn { padding-right: 2rem; }
+  .btn:hover { background: var(--border); color: var(--accent); }
+  .btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  
+  /* Primary Button (Gold + Navy Text) */
+  .btn-primary { background: var(--accent-gold); color: var(--accent); border: none; font-weight: 700; }
+  .btn-primary:hover { background: var(--accent-gold-dark); color: var(--accent); }
+  
+  /* Report Button */
+  .btn-report { background: var(--accent-report); color: #fff; border: none; font-weight: 700;}
+  .btn-report:hover { background: #0284c7; }
+
+  .controls { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+  .controls-spaced { justify-content: space-between; align-items: center; }
+  .controls-group { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;}
+  
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
+  @media (max-width: 850px) { .grid { grid-template-columns: 1fr; } }
+
+  .mt-4 { margin-top: 1rem; }
+  .mb-4 { margin-bottom: 1rem; }
+
+  /* Stats Badge */
+  .stat-badge {
+    background: var(--surface2);
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-weight: bold;
+    font-family: var(--mono);
+    font-size: 0.95rem;
+  }
+
+  /* Context Boxes */
+  .context-box {
+    background: var(--surface2);
+    border-left: 4px solid var(--accent-gold);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    color: var(--text);
+    font-style: italic;
+  }
+  .context-box strong { color: var(--accent); font-weight: 700; }
+
+  /* Code Blocks */
+  .code-container {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 0;
+    font-family: var(--mono);
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+  .code-line { display: flex; gap: 1rem; padding: 0.15rem 1rem; border-left: 3px solid transparent; }
+  .code-line.active { background: var(--highlight-active); border-left: 3px solid var(--accent-gold); }
+  .line-num { color: var(--text-dimmer); user-select: none; width: 25px; text-align: right; }
+  .line-code { color: var(--accent); white-space: pre; font-weight: 700;}
+
+  /* Trace Tables */
+  table.trace-table {
+    width: 100%; border-collapse: collapse;
+    font-family: var(--mono);
+    background: var(--surface);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+  .trace-table th { 
+    background: var(--accent); 
+    color: var(--accent-gold); 
+    padding: 0.8rem; 
+    border: 1px solid var(--accent); 
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .trace-table td { border: 1px solid var(--border); text-align: center; height: 3rem;}
+  .trace-table input {
+    width: 100%; height: 100%; box-sizing: border-box; background: transparent;
+    border: none; color: var(--text); text-align: center;
+    font-family: var(--mono); font-size: 1.1rem; outline: none; font-weight: 700;
+  }
+  .trace-table input:focus { background: rgba(255, 193, 7, 0.15); }
+  
+  /* Validation Styles */
+  .trace-table td.correct { background: rgba(5, 150, 105, 0.15); box-shadow: inset 0 0 0 2px var(--correct); }
+  .trace-table td.wrong { background: rgba(220, 38, 38, 0.15); box-shadow: inset 0 0 0 2px var(--wrong); }
+
+  .prac-area { display: none; }
+  .prac-area.active { display: block; }
+
+  .result-badge {
+    padding: 1rem; border-radius: 8px; margin-top: 1rem; font-weight: bold; display: none; font-size: 1.1rem;
+  }
+  .result-badge.show { display: block; animation: fadeIn 0.3s; }
+  .result-badge.pass { background: rgba(5, 150, 105, 0.1); color: var(--correct); border: 1px solid var(--correct); }
+  .result-badge.fail { background: rgba(220, 38, 38, 0.1); color: var(--wrong); border: 1px solid var(--wrong); }
+
+  /* Informational Lists */
+  .info-list { margin-top: 1rem; padding-left: 1.5rem; }
+  .info-list li { margin-bottom: 0.8rem; color: var(--text-dim); }
+  .info-list strong { color: var(--accent); }
+
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(19, 30, 54, 0.6); /* Navy transparent background */
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s ease-in-out;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  
+  .modal-content {
+    background: var(--surface); padding: 2.5rem; border-radius: 12px;
+    width: 90%; max-width: 450px; border: 1px solid var(--border);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    transform: translateY(-20px); transition: transform 0.3s ease-in-out;
+  }
+  .modal-overlay.show .modal-content { transform: translateY(0); }
+  .modal-content h3 { margin-top: 0; color: var(--accent); font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .modal-content p { margin-bottom: 1.5rem; color: var(--text-dim); }
+  
+  .input-group { margin-bottom: 1.2rem; }
+  .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--accent); }
+  .input-group input { 
+    width: 100%; padding: 0.8rem; border: 1px solid var(--border); 
+    border-radius: 6px; font-family: var(--sans); font-size: 1rem;
+    box-sizing: border-box; transition: 0.2s; background: var(--bg); color: var(--text);
+  }
+  .input-group input:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(255,193,7,0.3); }
+  
+  .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+  .error-msg { color: var(--wrong); font-size: 0.9rem; margin-top: 0.5rem; display: none; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="site-header">
+    <div class="header-left">
+      <div class="logo" aria-hidden="true">B</div>
+      <div>
+        <h1>Trace Tables</h1>
+        <p>Master algorithm tracing for your Computer Science exams</p>
+      </div>
+    </div>
+    <button class="btn btn-report" onclick="openReportModal()">📄 Generate Report</button>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs">
+    <button id="tab-intro" class="tab-btn active" onclick="showPage('intro', this)">Introduction</button>
+    <button id="tab-walk" class="tab-btn" onclick="showPage('walk', this)">Walkthrough</button>
+    <button id="tab-prac" class="tab-btn" onclick="showPage('prac', this)">Practice</button>
+    <button id="tab-gen" class="tab-btn" onclick="showPage('gen', this)">Auto-Generator</button>
+  </div>
+
+  <!-- Page 1: Intro -->
+  <div id="page-intro" class="page active">
+    <h2>Welcome to Trace Tables</h2>
+    <p>A trace table is a reliable technique used to dry-run (test) algorithms manually. It helps ensure no logical errors occur while the program processes data.</p>
+    <ul class="info-list">
+      <li><strong>OCR J277 Compliant Code:</strong> All code generated on this tool explicitly matches the <em>OCR Exam Reference Language</em> to prepare you for your real exam format.</li>
+      <li><strong>OCR J277 Marking Rule:</strong> In OCR exams, you <strong>only</strong> add a new row to your trace table when a variable changes/is assigned, or if there is an output. </li>
+      <li><strong>Ignore the Fluff:</strong> Do not include lines for condition checks (like <code>while x > 5</code>, <code>until x == -1</code>, or <code>if x == 2</code>) or loop markers (like <code>next i</code> or <code>endwhile</code>) unless a variable state is updated on that exact line.</li>
+      <li><strong>Variable Tracking:</strong> Only write down a variable's value when it changes. If it stays the same, leave the cell blank.</li>
+    </ul>
+    <button class="btn btn-primary mt-4" onclick="showPage('walk', document.getElementById('tab-walk'))">Start Interactive Walkthrough</button>
+  </div>
+
+  <!-- Page 2: Walkthrough -->
+  <div id="page-walk" class="page">
+    <h2>Interactive Walkthrough</h2>
+    <p>Click "Step Forward" to execute the code line by line. Notice how rows are <strong>only added</strong> when a variable updates or an output occurs.</p>
+    <div class="controls mb-4">
+      <button class="btn active" onclick="selectWalkAlgo(0, this)">For Loop</button>
+      <button class="btn" onclick="selectWalkAlgo(1, this)">While Loop</button>
+      <button class="btn" onclick="selectWalkAlgo(2, this)">Conditionals</button>
+      <button class="btn" onclick="selectWalkAlgo(3, this)">Do...Until Loop</button>
+      <button class="btn" onclick="selectWalkAlgo(4, this)">Array Iteration</button>
+    </div>
+    <div class="grid">
+      <div>
+        <div id="walk-context" class="context-box"></div>
+        <div id="walk-code" class="code-container"></div>
+        <div class="controls mt-4">
+          <button class="btn btn-primary" onclick="stepWalk()">Step Forward</button>
+          <button class="btn" onclick="resetWalk()">Restart Trace</button>
+        </div>
+      </div>
+      <div>
+        <table class="trace-table">
+           <thead id="walk-thead"></thead>
+           <tbody id="walk-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page 3: Practice -->
+  <div id="page-prac" class="page">
+    <h2>Practice Tracing</h2>
+    <p>Fill in the tables below. Leave cells blank if the variable doesn't change on that specific line. Progress is automatically saved.</p>
+    
+    <div class="controls mb-4">
+       <button class="btn active" onclick="showPrac(0, this)">Practice 1 (For)</button>
+       <button class="btn" onclick="showPrac(1, this)">Practice 2 (While)</button>
+       <button class="btn" onclick="showPrac(2, this)">Practice 3 (If/Else)</button>
+       <button class="btn" onclick="showPrac(3, this)">Practice 4 (Until)</button>
+       <button class="btn" onclick="showPrac(4, this)">Practice 5 (Arrays)</button>
+    </div>
+
+    <!-- Sub-page: Practice 0 -->
+    <div id="prac0-area" class="prac-area active">
+      <div class="grid">
+        <div>
+          <div id="prac0-context" class="context-box"></div>
+          <div id="prac0-code" class="code-container"></div>
+        </div>
+        <div>
+          <div id="prac0-table-wrap"></div>
+          <button class="btn btn-primary mt-4" onclick="checkPractice(0)">Check Answers</button>
+          <div id="prac0-result" class="result-badge"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sub-page: Practice 1 -->
+    <div id="prac1-area" class="prac-area">
+      <div class="grid">
+        <div>
+          <div id="prac1-context" class="context-box"></div>
+          <div id="prac1-code" class="code-container"></div>
+        </div>
+        <div>
+          <div id="prac1-table-wrap"></div>
+          <button class="btn btn-primary mt-4" onclick="checkPractice(1)">Check Answers</button>
+          <div id="prac1-result" class="result-badge"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-page: Practice 2 -->
+    <div id="prac2-area" class="prac-area">
+      <div class="grid">
+        <div>
+          <div id="prac2-context" class="context-box"></div>
+          <div id="prac2-code" class="code-container"></div>
+        </div>
+        <div>
+          <div id="prac2-table-wrap"></div>
+          <button class="btn btn-primary mt-4" onclick="checkPractice(2)">Check Answers</button>
+          <div id="prac2-result" class="result-badge"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sub-page: Practice 3 (Do...Until) -->
+    <div id="prac3-area" class="prac-area">
+      <div class="grid">
+        <div>
+          <div id="prac3-context" class="context-box"></div>
+          <div id="prac3-code" class="code-container"></div>
+        </div>
+        <div>
+          <div id="prac3-table-wrap"></div>
+          <button class="btn btn-primary mt-4" onclick="checkPractice(3)">Check Answers</button>
+          <div id="prac3-result" class="result-badge"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sub-page: Practice 4 (Arrays) -->
+    <div id="prac4-area" class="prac-area">
+      <div class="grid">
+        <div>
+          <div id="prac4-context" class="context-box"></div>
+          <div id="prac4-code" class="code-container"></div>
+        </div>
+        <div>
+          <div id="prac4-table-wrap"></div>
+          <button class="btn btn-primary mt-4" onclick="checkPractice(4)">Check Answers</button>
+          <div id="prac4-result" class="result-badge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page 4: Generator -->
+  <div id="page-gen" class="page">
+    <h2>Infinite Practice Generator</h2>
+    <p>Procedurally generates code traces to practice. Increases in complexity with Master difficulty scaling to your score.</p>
+    
+    <div class="controls controls-spaced mb-4">
+      <div class="controls-group">
+        <select id="gen-difficulty" class="btn" onchange="resetGeneratedPractice()">
+          <option value="easy">Easy (0 Inputs)</option>
+          <option value="medium">Medium (1 Input)</option>
+          <option value="hard">Hard (Arrays & Inputs)</option>
+          <option value="master">Master (Dynamic & Complex)</option>
+        </select>
+        <button class="btn btn-primary" onclick="resetGeneratedPractice()">Generate New Question</button>
+      </div>
+      <div id="gen-stats-display" class="stat-badge">Score: 0 | Streak: 0 | Max Streak: 0</div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div id="gen-context" class="context-box"></div>
+        <div id="gen-code" class="code-container"></div>
+        <button class="btn btn-primary mt-4" onclick="checkGeneratedPractice()">Check Answers</button>
+      </div>
+      <div>
+        <div id="gen-table-wrap"></div>
+        <div id="gen-result" class="result-badge"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Custom Report Modal -->
+<div id="report-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Student Details</h3>
+    <p>Please enter your full name to generate the report.</p>
+    
+    <div class="input-group">
+      <label for="student-fname">First Name</label>
+      <input type="text" id="student-fname" placeholder="e.g. Jane">
+    </div>
+    
+    <div class="input-group">
+      <label for="student-lname">Last Name</label>
+      <input type="text" id="student-lname" placeholder="e.g. Doe">
+    </div>
+    
+    <div id="modal-error" class="error-msg">Both First Name and Last Name are required.</div>
+    
+    <div class="modal-actions">
+      <button class="btn" onclick="closeReportModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitReportModal()">Generate PDF</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======================================================
+// CONSTANTS & DATA (OCR STRICT RULES APPLIED)
+// ======================================================
+const EXTRA_ROWS = 2;
+
+// Algorithm 0: For Loop Accumulator
+const algo0Context = "The user ran the program and typed <strong>3</strong> when prompted for the limit.";
+const algo0Lines = [
+  "limit = input(\"Enter limit:\")",
+  "total = 0",
+  "for i = 1 to limit",
+  "  total = total + i",
+  "next i",
+  "print(total)"
+];
+const algo0Cols = ['Line', 'limit', 'total', 'i', 'Output'];
+const algo0Answers = [
+  {Line: '1', limit: '3', total: '', i: '', Output: ''},
+  {Line: '2', limit: '', total: '0', i: '', Output: ''},
+  {Line: '3', limit: '', total: '', i: '1', Output: ''},
+  {Line: '4', limit: '', total: '1', i: '', Output: ''},
+  {Line: '3', limit: '', total: '', i: '2', Output: ''},
+  {Line: '4', limit: '', total: '3', i: '', Output: ''},
+  {Line: '3', limit: '', total: '', i: '3', Output: ''},
+  {Line: '4', limit: '', total: '6', i: '', Output: ''},
+  {Line: '6', limit: '', total: '', i: '', Output: '6'}
+];
+
+// Algorithm 1: While Loop Countdown
+const algo1Context = "The program asks the user for a starting number, and they type <strong>10</strong>.";
+const algo1Lines = [
+  "x = input(\"Enter start number:\")",
+  "while x > 5",
+  "  print(x)",
+  "  x = x - 2",
+  "endwhile",
+  "print(\"Done\")"
+];
+const algo1Cols = ['Line', 'x', 'Output'];
+const algo1Answers = [
+  {Line: '1', x: '10', Output: ''},
+  {Line: '3', x: '', Output: '10'},
+  {Line: '4', x: '8', Output: ''},
+  {Line: '3', x: '', Output: '8'},
+  {Line: '4', x: '6', Output: ''},
+  {Line: '3', x: '', Output: '6'},
+  {Line: '4', x: '4', Output: ''},
+  {Line: '6', x: '', Output: 'Done'}
+];
+
+// Algorithm 2: Conditional Inside Loop
+const algo2Context = "When prompted for a base value, the user enters <strong>5</strong>.";
+const algo2Lines = [
+  "x = input(\"Enter base value:\")",
+  "for i = 1 to 3",
+  "  if i > 1 then",
+  "    x = x + i",
+  "  endif",
+  "next i",
+  "print(x)"
+];
+const algo2Cols = ['Line', 'x', 'i', 'Output'];
+const algo2Answers = [
+  {Line: '1', x: '5', i: '', Output: ''},
+  {Line: '2', x: '', i: '1', Output: ''},
+  {Line: '2', x: '', i: '2', Output: ''},
+  {Line: '4', x: '7', i: '', Output: ''},
+  {Line: '2', x: '', i: '3', Output: ''},
+  {Line: '4', x: '10', i: '', Output: ''},
+  {Line: '7', x: '', i: '', Output: '10'}
+];
+
+// Algorithm 3: Do...Until Loop
+const algo3Context = "The user ran the program and entered <strong>3</strong> when prompted for a start number.";
+const algo3Lines = [
+  "start = input(\"Enter start:\")",
+  "do",
+  "  print(start)",
+  "  start = start - 1",
+  "until start == -1",
+  "print(\"Finished\")"
+];
+const algo3Cols = ['Line', 'start', 'Output'];
+const algo3Answers = [
+  {Line: '1', start: '3', Output: ''},
+  {Line: '3', start: '', Output: '3'},
+  {Line: '4', start: '2', Output: ''},
+  {Line: '3', start: '', Output: '2'},
+  {Line: '4', start: '1', Output: ''},
+  {Line: '3', start: '', Output: '1'},
+  {Line: '4', start: '0', Output: ''},
+  {Line: '3', start: '', Output: '0'},
+  {Line: '4', start: '-1', Output: ''},
+  {Line: '6', start: '', Output: 'Finished'}
+];
+
+// Algorithm 4: Arrays
+const algo4Context = "The program processes an array pre-defined as: <strong>actNumbers = [4, 7, 2]</strong>.";
+const algo4Lines = [
+  "count = 0",
+  "for x = 0 to 2",
+  "  count = count + actNumbers[x]",
+  "next x",
+  "print(count)"
+];
+const algo4Cols = ['Line', 'count', 'x', 'Output'];
+const algo4Answers = [
+  {Line: '1', count: '0', x: '', Output: ''},
+  {Line: '2', count: '', x: '0', Output: ''},
+  {Line: '3', count: '4', x: '', Output: ''},
+  {Line: '2', count: '', x: '1', Output: ''},
+  {Line: '3', count: '11', x: '', Output: ''},
+  {Line: '2', count: '', x: '2', Output: ''},
+  {Line: '3', count: '13', x: '', Output: ''},
+  {Line: '5', count: '', x: '', Output: '13'}
+];
+
+const pracData = [
+  { context: algo0Context, code: algo0Lines, cols: algo0Cols, answers: algo0Answers },
+  { context: algo1Context, code: algo1Lines, cols: algo1Cols, answers: algo1Answers },
+  { context: algo2Context, code: algo2Lines, cols: algo2Cols, answers: algo2Answers },
+  { context: algo3Context, code: algo3Lines, cols: algo3Cols, answers: algo3Answers },
+  { context: algo4Context, code: algo4Lines, cols: algo4Cols, answers: algo4Answers }
+];
+
+// ======================================================
+// LOCAL STORAGE & PROGRESS TRACKING
+// ======================================================
+const TODAY_KEY = 'traceTableProgress_v10_light_' + new Date().toISOString().split('T')[0];
+let progressData = [];
+let genStats = { score: 0, streak: 0, maxStreak: 0 };
+let genQuestionIdCounter = 0;
+
+function initProgress() {
+  const stored = localStorage.getItem(TODAY_KEY);
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    progressData = parsed.questions || [];
+    genStats = parsed.stats || { score: 0, streak: 0, maxStreak: 0 };
+    
+    let maxGen = 0;
+    progressData.forEach(p => {
+      if (p.id && p.id.startsWith('gen')) {
+        let num = parseInt(p.id.replace('gen', ''));
+        if (!isNaN(num) && num > maxGen) maxGen = num;
+      }
+    });
+    genQuestionIdCounter = maxGen; 
+  } else {
+    progressData = [
+      { id: 'prac0', title: 'Practice 1', attempts: 0, correct: false, tableData: null, codeSnippet: null },
+      { id: 'prac1', title: 'Practice 2', attempts: 0, correct: false, tableData: null, codeSnippet: null },
+      { id: 'prac2', title: 'Practice 3', attempts: 0, correct: false, tableData: null, codeSnippet: null },
+      { id: 'prac3', title: 'Practice 4', attempts: 0, correct: false, tableData: null, codeSnippet: null },
+      { id: 'prac4', title: 'Practice 5', attempts: 0, correct: false, tableData: null, codeSnippet: null }
+    ];
+    saveProgress();
+  }
+  updateStatsUI();
+}
+
+function saveProgress() {
+  localStorage.setItem(TODAY_KEY, JSON.stringify({
+    questions: progressData,
+    stats: genStats
+  }));
+}
+
+function recordAttempt(id, title, isCorrect, tableData, codeSnippet) {
+  let q = progressData.find(p => p.id === id);
+  if (!q) {
+    q = { id, title, attempts: 0, correct: false, tableData: null, codeSnippet: null };
+    progressData.push(q);
+  }
+  q.attempts += 1;
+  q.correct = isCorrect; 
+  q.tableData = tableData;
+  q.codeSnippet = codeSnippet; 
+  saveProgress();
+}
+
+function updateStatsUI() {
+  const badge = document.getElementById('gen-stats-display');
+  badge.textContent = `Score: ${genStats.score} | Streak: ${genStats.streak} | Max Streak: ${genStats.maxStreak}`;
+}
+
+function extractTableData(prefix, cols, totalRows) {
+  let data = [];
+  for(let r = 0; r < totalRows; r++) {
+    let rowData = [];
+    cols.forEach(c => {
+      let td = document.getElementById(`${prefix}-r${r}-${c}`);
+      rowData.push(td && td.querySelector('input') ? td.querySelector('input').value : '');
+    });
+    data.push(rowData);
+  }
+  return { headers: cols, rows: data };
+}
+
+function restoreTableState(prefix, tableData) {
+  if (!tableData || !tableData.rows) return;
+  for (let r = 0; r < tableData.rows.length; r++) {
+    for (let c = 0; c < tableData.headers.length; c++) {
+      let td = document.getElementById(`${prefix}-r${r}-${tableData.headers[c]}`);
+      if (td && td.querySelector('input')) td.querySelector('input').value = tableData.rows[r][c] || '';
+    }
+  }
+}
+
+// ======================================================
+// NAVIGATION / UI LOGIC
+// ======================================================
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+function showPrac(idx, btn) {
+  document.querySelectorAll('#page-prac .prac-area').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#page-prac .controls .btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`prac${idx}-area`).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+function renderPracticeCode(containerId, lines) {
+  document.getElementById(containerId).innerHTML = lines.map((ln, i) => `
+    <div class="code-line"><span class="line-num">${i + 1}</span><span class="line-code">${ln}</span></div>`).join('');
+}
+
+function buildStudentTableHtml(containerId, prefix, cols, answers) {
+  const totalRows = answers.length + EXTRA_ROWS;
+  let html = `<table class="trace-table"><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+  for(let r = 0; r < totalRows; r++) {
+     html += `<tr>${cols.map(c => `<td id="${prefix}-r${r}-${c}"><input type="text" autocomplete="off"></td>`).join('')}</tr>`;
+  }
+  html += `</tbody></table>`;
+  document.getElementById(containerId).innerHTML = html;
+}
+
+// ======================================================
+// WALKTHROUGH LOGIC
+// ======================================================
+let currentWalkIdx = 0;
+let walkStep = 0;
+
+function selectWalkAlgo(idx, btn) {
+   currentWalkIdx = idx;
+   document.querySelectorAll('#page-walk .controls .btn').forEach(b => b.classList.remove('active'));
+   if(btn) btn.classList.add('active');
+   resetWalk();
+}
+
+function resetWalk() {
+   walkStep = 0;
+   const algo = pracData[currentWalkIdx];
+   document.getElementById('walk-context').innerHTML = algo.context;
+   renderPracticeCode('walk-code', algo.code);
+   document.getElementById('walk-thead').innerHTML = `<tr>${algo.cols.map(c => `<th>${c}</th>`).join('')}</tr>`;
+   document.getElementById('walk-tbody').innerHTML = '';
+}
+
+function stepWalk() {
+   const algo = pracData[currentWalkIdx];
+   if(walkStep >= algo.answers.length) return; 
+   const stepData = algo.answers[walkStep];
+   
+   const lines = document.querySelectorAll('#walk-code .code-line');
+   lines.forEach(l => l.classList.remove('active'));
+   if(lines[parseInt(stepData.Line) - 1]) lines[parseInt(stepData.Line) - 1].classList.add('active');
+   
+   const tr = document.createElement('tr');
+   algo.cols.forEach(c => {
+     const td = document.createElement('td');
+     td.textContent = stepData[c];
+     if (stepData[c] !== '') td.style.color = 'var(--correct)'; 
+     tr.appendChild(td);
+   });
+   document.getElementById('walk-tbody').appendChild(tr);
+   tr.scrollIntoView({ behavior: 'smooth', block: 'end' });
+   walkStep++;
+}
+
+// ======================================================
+// STATIC PRACTICE LOGIC
+// ======================================================
+function checkPractice(idx) {
+  const data = pracData[idx];
+  const prefix = `prac${idx}`;
+  const totalRows = data.answers.length + EXTRA_ROWS;
+  let correct = 0; let total = 0;
+
+  for(let r = 0; r < totalRows; r++) {
+    const row = data.answers[r] || {}; 
+    data.cols.forEach(k => {
+       const td = document.getElementById(`${prefix}-r${r}-${k}`);
+       if(!td) return;
+       const expected = (row[k] || '').toString().trim().toLowerCase().replace(/\s+/g,' ');
+       const given = td.querySelector('input').value.trim().toLowerCase().replace(/\s+/g,' ');
+       td.className = ''; 
+       if(given === expected) {
+         if(given !== '') td.classList.add('correct');
+         correct++;
+       } else td.classList.add('wrong');
+       total++;
+    });
+  }
+
+  const isCorrect = (correct === total);
+  recordAttempt(`prac${idx}`, `Practice ${idx + 1}`, isCorrect, extractTableData(prefix, data.cols, totalRows), data.code);
+
+  const badge = document.getElementById(`${prefix}-result`);
+  badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
+  badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} correct.` : `✗ ${correct}/${total} correct. Please review the highlighted red cells.`;
+}
+
+// ======================================================
+// PROCEDURAL GENERATOR LOGIC (EASY/MED/HARD/MASTER)
+// ======================================================
+let genQuestion = null;
+
+const CONTEXT_BANK = [
+  { theme: "an athletics tournament", vars: ["throws", "dist", "wind", "foul", "bonus", "score"] },
+  { theme: "a football season", vars: ["matches", "goals", "assists", "fouls", "cards", "points"] },
+  { theme: "an esports match", vars: ["round", "kills", "deaths", "assists", "gold", "xp"] },
+  { theme: "a retail store", vars: ["stock", "sold", "price", "tax", "discount", "profit"] },
+  { theme: "student grading", vars: ["students", "score", "bonus", "penalty", "absences", "total"] },
+  { theme: "a racing game", vars: ["laps", "speed", "fuel", "damage", "boost", "time"] },
+  { theme: "a fitness tracker", vars: ["days", "steps", "cals", "water", "sleep", "weight"] },
+  { theme: "a social media post", vars: ["posts", "likes", "shares", "comments", "views", "followers"] },
+  { theme: "a bakery inventory", vars: ["batches", "flour", "sugar", "eggs", "butter", "milk"] },
+  { theme: "a spaceship dashboard", vars: ["orbits", "fuel", "oxygen", "speed", "shield", "power"] }
+];
+
+function generateProceduralAlgorithm() {
+  const diff = document.getElementById('gen-difficulty').value;
+  
+  // Decide if this question will feature an array structure (only allowed on Hard/Master)
+  const allowArrays = (diff === 'hard' || diff === 'master');
+  const useArray = allowArrays && Math.random() < 0.35; // 35% chance for arrays
+
+  const selectedContext = CONTEXT_BANK[Math.floor(Math.random() * CONTEXT_BANK.length)];
+
+  if (useArray) {
+      return generateArrayAlgorithm(selectedContext, diff);
+  } else {
+      return generateStandardAlgorithm(selectedContext, diff);
+  }
+}
+
+function generateArrayAlgorithm(contextData, diff) {
+    const arrName = contextData.vars[0] + "Data"; // e.g., throwsData
+    const accName = contextData.vars[1]; // e.g., dist
+    const loopVar = "x";
+
+    let arrLen = diff === 'master' ? 4 : 3;
+    let arrVals = [];
+    for(let i=0; i<arrLen; i++) arrVals.push(Math.floor(Math.random() * 5) + 1);
+
+    let lines = [];
+    let context = `The program processes an array of ${contextData.theme}. The array is pre-defined as: <strong>${arrName} = [${arrVals.join(', ')}]</strong>.`;
+
+    lines.push(`${accName} = 0`);
+
+    // Array iteration using either For or While loop
+    const loopType = Math.random() < 0.5 ? 'for' : 'while';
+
+    let cols = ['Line', accName, loopVar, 'Output'];
+    let answers = [];
+
+    answers.push({ Line: '1', [accName]: '0', [loopVar]: '', Output: '' });
+    let currentAcc = 0;
+
+    if (loopType === 'for') {
+        lines.push(`for ${loopVar} = 0 to ${arrLen - 1}`);
+        lines.push(`  ${accName} = ${accName} + ${arrName}[${loopVar}]`);
+        lines.push(`next ${loopVar}`);
+        lines.push(`print(${accName})`);
+
+        for (let i = 0; i < arrLen; i++) {
+            answers.push({ Line: '2', [accName]: '', [loopVar]: i.toString(), Output: '' });
+            currentAcc += arrVals[i];
+            answers.push({ Line: '3', [accName]: currentAcc.toString(), [loopVar]: '', Output: '' });
+        }
+        answers.push({ Line: '5', [accName]: '', [loopVar]: '', Output: currentAcc.toString() });
+    } else {
+        lines.push(`${loopVar} = 0`);
+        lines.push(`while ${loopVar} < ${arrLen}`);
+        lines.push(`  ${accName} = ${accName} + ${arrName}[${loopVar}]`);
+        lines.push(`  ${loopVar} = ${loopVar} + 1`);
+        lines.push(`endwhile`);
+        lines.push(`print(${accName})`);
+
+        answers.push({ Line: '2', [accName]: '', [loopVar]: '0', Output: '' });
+        for (let i = 0; i < arrLen; i++) {
+            currentAcc += arrVals[i];
+            answers.push({ Line: '4', [accName]: currentAcc.toString(), [loopVar]: '', Output: '' });
+            answers.push({ Line: '5', [accName]: '', [loopVar]: (i + 1).toString(), Output: '' });
+        }
+        answers.push({ Line: '7', [accName]: '', [loopVar]: '', Output: currentAcc.toString() });
+    }
+
+    return { context, code: lines, cols, answers, solved: false, failedAttempt: false };
+}
+
+function generateStandardAlgorithm(contextData, diff) {
+    let numVars = 2, numInputs = 0;
+    if (diff === 'easy') { numVars = 2; numInputs = 0; }
+    else if (diff === 'medium') { numVars = 2; numInputs = 1; }
+    else if (diff === 'hard') { numVars = 2; numInputs = 2; }
+    else if (diff === 'master') { 
+        numVars = Math.min(4, 2 + Math.floor(genStats.score / 5)); // Capped at 4 vars to prevent massive scrolling
+        numInputs = numVars - 1; 
+    }
+
+    const VAR_NAMES = contextData.vars;
+    let startVals = [];
+    for(let i=0; i<numVars; i++) startVals.push(Math.floor(Math.random() * 3) + 1);
+
+    let loopTypes = ['for', 'while', 'do-until'];
+    let loopType = loopTypes[Math.floor(Math.random() * loopTypes.length)];
+
+    let isCountdown = loopType !== 'for' && Math.random() < 0.5; // Do-Until and While can count downwards
+    
+    if (isCountdown) {
+        startVals[0] = Math.floor(Math.random() * 10) + 15; // Set a high starting point to subtract from
+    }
+
+    let targetIterations = 3 + Math.floor(Math.random() * 2); // 3-4 loops
+
+    // Precisely simulate loop math to find target limit without logical errors
+    let simVals = [...startVals];
+    for(let iter=0; iter<targetIterations; iter++) {
+        for(let j=0; j<numVars-1; j++) {
+            if (isCountdown) simVals[j] -= simVals[j+1];
+            else simVals[j] += simVals[j+1];
+        }
+    }
+    let limit = simVals[0]; 
+
+    let contextParts = [];
+    let lines = [];
+    
+    // Initialise Variables
+    for (let i=0; i<numVars; i++) {
+       if (i < numInputs) {
+           lines.push(`${VAR_NAMES[i]} = input("Enter ${VAR_NAMES[i]}:")`);
+           contextParts.push(`<strong>${VAR_NAMES[i]} = ${startVals[i]}</strong>`);
+       } else {
+           lines.push(`${VAR_NAMES[i]} = ${startVals[i]}`);
+       }
+    }
+
+    let activeVars = VAR_NAMES.slice(0, numVars);
+    if (loopType === 'for') activeVars.push('i'); 
+
+    let cols = ['Line', ...activeVars, 'Output'];
+    let answers = [];
+    let currentVals = [...startVals];
+
+    for(let i=0; i<numVars; i++) {
+        let row = { Line: (i+1).toString(), Output: '' };
+        activeVars.forEach(v => row[v] = '');
+        row[VAR_NAMES[i]] = currentVals[i].toString();
+        answers.push(row);
+    }
+
+    let context = diff === 'easy' 
+        ? `Trace this algorithm which calculates abstract stats for ${contextData.theme}.`
+        : `A program calculates abstract stats for ${contextData.theme}. The user entered the following starting values: ${contextParts.join(', ')}.`;
+
+    let loopStartLine = lines.length + 1;
+
+    // Build the Loop Blocks
+    if (loopType === 'for') {
+        lines.push(`for i = 1 to ${targetIterations}`);
+        lines.push(`  print(${VAR_NAMES[0]})`);
+        
+        let updateCommands = [];
+        for(let i=0; i<numVars-1; i++) {
+            updateCommands.push({ lineNum: lines.length + 1, varIdx: i, addsIdx: i+1 });
+            lines.push(`  ${VAR_NAMES[i]} = ${VAR_NAMES[i]} + ${VAR_NAMES[i+1]}`);
+        }
+        lines.push(`next i`);
+
+        for(let iter=1; iter<=targetIterations; iter++) {
+            let rowI = { Line: loopStartLine.toString(), Output: '' };
+            activeVars.forEach(v => rowI[v] = '');
+            rowI['i'] = iter.toString();
+            answers.push(rowI);
+
+            let rowPrint = { Line: (loopStartLine + 1).toString(), Output: currentVals[0].toString() };
+            activeVars.forEach(v => rowPrint[v] = '');
+            answers.push(rowPrint);
+            
+            for(let u of updateCommands) {
+                currentVals[u.varIdx] += currentVals[u.addsIdx];
+                let rowUp = { Line: u.lineNum.toString(), Output: '' };
+                activeVars.forEach(v => rowUp[v] = '');
+                rowUp[VAR_NAMES[u.varIdx]] = currentVals[u.varIdx].toString();
+                answers.push(rowUp);
+            }
+        }
+
+    } else if (loopType === 'while') {
+        let op = isCountdown ? '>' : '<';
+        lines.push(`while ${VAR_NAMES[0]} ${op} ${limit}`);
+        lines.push(`  print(${VAR_NAMES[0]})`);
+        
+        let updateCommands = [];
+        for(let i=0; i<numVars-1; i++) {
+            updateCommands.push({ lineNum: lines.length + 1, varIdx: i, addsIdx: i+1 });
+            let mathOp = isCountdown ? '-' : '+';
+            lines.push(`  ${VAR_NAMES[i]} = ${VAR_NAMES[i]} ${mathOp} ${VAR_NAMES[i+1]}`);
+        }
+        lines.push(`endwhile`);
+        lines.push(`print("Finished")`);
+
+        while(true) {
+            if (isCountdown ? currentVals[0] <= limit : currentVals[0] >= limit) break;
+            
+            let rowPrint = { Line: (loopStartLine + 1).toString(), Output: currentVals[0].toString() };
+            activeVars.forEach(v => rowPrint[v] = '');
+            answers.push(rowPrint);
+            
+            for(let u of updateCommands) {
+                if(isCountdown) currentVals[u.varIdx] -= currentVals[u.addsIdx];
+                else currentVals[u.varIdx] += currentVals[u.addsIdx];
+                
+                let rowUp = { Line: u.lineNum.toString(), Output: '' };
+                activeVars.forEach(v => rowUp[v] = '');
+                rowUp[VAR_NAMES[u.varIdx]] = currentVals[u.varIdx].toString();
+                answers.push(rowUp);
+            }
+        }
+        let rowFin = { Line: lines.length.toString(), Output: 'Finished' };
+        activeVars.forEach(v => rowFin[v] = '');
+        answers.push(rowFin);
+
+    } else if (loopType === 'do-until') {
+        lines.push(`do`);
+        lines.push(`  print(${VAR_NAMES[0]})`);
+        
+        let updateCommands = [];
+        for(let i=0; i<numVars-1; i++) {
+            updateCommands.push({ lineNum: lines.length + 1, varIdx: i, addsIdx: i+1 });
+            let mathOp = isCountdown ? '-' : '+';
+            lines.push(`  ${VAR_NAMES[i]} = ${VAR_NAMES[i]} ${mathOp} ${VAR_NAMES[i+1]}`);
+        }
+        lines.push(`until ${VAR_NAMES[0]} == ${limit}`);
+        lines.push(`print("Finished")`);
+
+        while(true) {
+            let rowPrint = { Line: (loopStartLine + 1).toString(), Output: currentVals[0].toString() };
+            activeVars.forEach(v => rowPrint[v] = '');
+            answers.push(rowPrint);
+            
+            for(let u of updateCommands) {
+                if (isCountdown) currentVals[u.varIdx] -= currentVals[u.addsIdx];
+                else currentVals[u.varIdx] += currentVals[u.addsIdx];
+                
+                let rowUp = { Line: u.lineNum.toString(), Output: '' };
+                activeVars.forEach(v => rowUp[v] = '');
+                rowUp[VAR_NAMES[u.varIdx]] = currentVals[u.varIdx].toString();
+                answers.push(rowUp);
+            }
+            if (currentVals[0] === limit) break; // Check exit condition
+        }
+        let rowFin = { Line: lines.length.toString(), Output: 'Finished' };
+        activeVars.forEach(v => rowFin[v] = '');
+        answers.push(rowFin);
+    }
+
+    return { context, code: lines, cols, answers, solved: false, failedAttempt: false };
+}
+
+function resetGeneratedPractice() {
+   genQuestionIdCounter++;
+   
+   genQuestion = generateProceduralAlgorithm();
+   genQuestion.id = 'gen' + genQuestionIdCounter;
+   genQuestion.title = 'Generated Question ' + genQuestionIdCounter;
+   
+   document.getElementById('gen-context').innerHTML = genQuestion.context;
+   renderPracticeCode('gen-code', genQuestion.code);
+   buildStudentTableHtml('gen-table-wrap', 'gen', genQuestion.cols, genQuestion.answers);
+   
+   const badge = document.getElementById('gen-result');
+   badge.className = 'result-badge';
+   badge.innerHTML = '';
+}
+
+function checkGeneratedPractice() {
+  if(!genQuestion) return;
+  const prefix = 'gen';
+  const totalRows = genQuestion.answers.length + EXTRA_ROWS; 
+  let correct = 0; let total = 0;
+
+  for(let r = 0; r < totalRows; r++) {
+    const row = genQuestion.answers[r] || {}; 
+    genQuestion.cols.forEach(k => {
+       const td = document.getElementById(`${prefix}-r${r}-${k}`);
+       if(!td) return;
+       const expected = (row[k] || '').toString().trim().toLowerCase().replace(/\s+/g,' ');
+       const given = td.querySelector('input').value.trim().toLowerCase().replace(/\s+/g,' ');
+       td.className = '';
+       if(given === expected) {
+         if(given !== '') td.classList.add('correct');
+         correct++;
+       } else td.classList.add('wrong');
+       total++;
+    });
+  }
+  
+  const isCorrect = (correct === total);
+  recordAttempt(genQuestion.id, genQuestion.title, isCorrect, extractTableData(prefix, genQuestion.cols, totalRows), genQuestion.code);
+
+  if (isCorrect) {
+     if (!genQuestion.solved) {
+         genStats.score++;
+         if (!genQuestion.failedAttempt) {
+             genStats.streak++;
+             if(genStats.streak > genStats.maxStreak) genStats.maxStreak = genStats.streak;
+         }
+         genQuestion.solved = true;
+     }
+  } else {
+     if (!genQuestion.solved) {
+         genQuestion.failedAttempt = true;
+         genStats.streak = 0;
+     }
+  }
+  saveProgress();
+  updateStatsUI();
+
+  const badge = document.getElementById('gen-result');
+  badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
+  badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} correct.` : `✗ ${correct}/${total} correct. Check the red cells.`;
+}
+
+// ======================================================
+// MODAL & PDF GENERATION LOGIC
+// ======================================================
+
+function openReportModal() {
+  document.getElementById('report-modal').classList.add('show');
+  document.getElementById('modal-error').style.display = 'none';
+  document.getElementById('student-fname').value = '';
+  document.getElementById('student-lname').value = '';
+  setTimeout(() => document.getElementById('student-fname').focus(), 100);
+}
+
+function closeReportModal() { document.getElementById('report-modal').classList.remove('show'); }
+
+function submitReportModal() {
+  const fname = document.getElementById('student-fname').value.trim();
+  const lname = document.getElementById('student-lname').value.trim();
+  if (!fname || !lname) { document.getElementById('modal-error').style.display = 'block'; return; }
+  closeReportModal();
+  generatePDFReport(fname, lname);
+}
+
+function generatePDFReport(firstName, lastName) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const todayDate = new Date().toLocaleDateString();
+  
+  doc.setFontSize(18);
+  doc.text("Trace Tables Practice Report", 14, 22);
+  doc.setFontSize(12);
+  doc.text(`Student: ${firstName} ${lastName}`, 14, 30);
+  doc.text(`Date: ${todayDate}`, 14, 38);
+  doc.text(`Generator Stats: Score: ${genStats.score} | Max Streak: ${genStats.maxStreak}`, 14, 46);
+  
+  const summaryBody = progressData.map(p => {
+    let status = "Not Attempted";
+    if (p.attempts > 0) status = p.correct ? "Correct" : "Incorrect";
+    return [p.title, status, p.attempts.toString()];
+  });
+  
+  doc.autoTable({
+    startY: 55,
+    head: [['Question', 'Status', 'Attempts']],
+    body: summaryBody,
+    theme: 'grid',
+    headStyles: { fillColor: [255, 193, 7], textColor: [11, 18, 33] } 
+  });
+  
+  const attemptedQuestions = progressData.filter(p => p.attempts > 0 && p.tableData);
+  
+  if (attemptedQuestions.length > 0) {
+    attemptedQuestions.forEach((q) => {
+      doc.addPage();
+      
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      
+      if (q.correct) doc.setTextColor(39, 174, 96); 
+      else doc.setTextColor(179, 26, 28); 
+      
+      doc.text(`${q.title} (${q.correct ? 'Correct' : 'Incorrect'})`, 14, 22);
+      doc.setTextColor(0, 0, 0); 
+      
+      let currentY = 32;
+
+      if (q.codeSnippet && q.codeSnippet.length > 0) {
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.text("Algorithm Code:", 14, currentY);
+        currentY += 6;
+
+        doc.setFont('courier', 'normal');
+        doc.setFontSize(10);
+        
+        q.codeSnippet.forEach((line, idx) => {
+           let lineNum = (idx + 1).toString().padStart(2, ' ');
+           doc.text(`${lineNum} | ${line}`, 14, currentY);
+           currentY += 5; 
+        });
+        currentY += 8; 
+      }
+
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text("Student Trace Table:", 14, currentY);
+      currentY += 4;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.autoTable({
+        startY: currentY,
+        head: [q.tableData.headers],
+        body: q.tableData.rows,
+        theme: 'grid',
+        headStyles: { fillColor: [255, 193, 7], textColor: [11, 18, 33] },
+        styles: { font: 'courier', halign: 'center' }, 
+        margin: { bottom: 20 }
+      });
+    });
+  }
+  
+  doc.save(`Trace_Tables_Report_${firstName}_${lastName}_${todayDate.replace(/\//g, '-')}.pdf`);
+}
+
+// ======================================================
+// HIDDEN DEVELOPER AUTO-FILL (SHIFT + DEV)
+// ======================================================
+let devCodeBuffer = "";
+window.addEventListener('keydown', (e) => {
+  if (e.shiftKey && e.key.length === 1) {
+      devCodeBuffer += e.key.toUpperCase();
+      if (devCodeBuffer.endsWith("DEV")) {
+          executeDevAutoFill();
+          devCodeBuffer = ""; 
+      }
+  } else if (!e.shiftKey) {
+      devCodeBuffer = ""; 
+  }
+});
+
+function executeDevAutoFill() {
+  if (document.getElementById('page-prac').classList.contains('active')) {
+      for (let i = 0; i <= 4; i++) {
+          if (document.getElementById(`prac${i}-area`).classList.contains('active')) {
+              devFillTable(`prac${i}`, pracData[i].cols, pracData[i].answers);
+              checkPractice(i); 
+              return;
+          }
+      }
+  }
+  else if (document.getElementById('page-gen').classList.contains('active') && genQuestion) {
+      devFillTable('gen', genQuestion.cols, genQuestion.answers);
+      checkGeneratedPractice(); 
+  }
+}
+
+function devFillTable(prefix, cols, answers) {
+  const totalRows = answers.length + EXTRA_ROWS;
+  for(let r = 0; r < totalRows; r++) {
+      const row = answers[r] || {}; 
+      cols.forEach(k => {
+          const td = document.getElementById(`${prefix}-r${r}-${k}`);
+          if (td && td.querySelector('input')) {
+              td.querySelector('input').value = row[k] !== undefined ? row[k] : '';
+          }
+      });
+  }
+}
+
+// ======================================================
+// INITIALIZATION
+// ======================================================
+window.addEventListener('DOMContentLoaded', () => {
+  initProgress();
+
+  pracData.forEach((data, i) => {
+     document.getElementById(`prac${i}-context`).innerHTML = data.context;
+     renderPracticeCode(`prac${i}-code`, data.code);
+     buildStudentTableHtml(`prac${i}-table-wrap`, `prac${i}`, data.cols, data.answers);
+     
+     let p = progressData.find(x => x.id === `prac${i}`);
+     if (p && p.tableData) restoreTableState(`prac${i}`, p.tableData);
+  });
+
+  resetGeneratedPractice();
+  resetWalk();
+});
+</script>
+</body>
+</html>
