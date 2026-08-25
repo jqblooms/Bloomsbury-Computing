@@ -825,52 +825,140 @@ function generateProceduralAlgorithm() {
 }
 
 function generateSequenceAlgorithm(contextData, diff) {
-    const firstVar = contextData.vars[0];
-    const secondVar = contextData.vars[1];
-    const startValue = Math.floor(Math.random() * 6) + 2;
-    const secondValue = Math.floor(Math.random() * 4) + 2;
-    const amount = Math.floor(Math.random() * 5) + 2;
-    const multiplier = Math.floor(Math.random() * 3) + 2;
-    const useInput = diff !== 'easy';
-    const useSecondVar = diff === 'hard' || diff === 'master';
+    const [firstVar, secondVar, thirdVar] = contextData.vars;
+    const templatePools = {
+        easy: ['add-multiply', 'multiply-subtract', 'multiple-outputs'],
+        medium: ['add-multiply', 'multiply-subtract', 'multiple-outputs', 'derived-value', 'combine-values'],
+        hard: ['derived-value', 'combine-values', 'swap-values', 'three-stage'],
+        master: ['combine-values', 'swap-values', 'three-stage', 'multiple-outputs']
+    };
+    const pool = templatePools[diff];
+    const template = pool[Math.floor(Math.random() * pool.length)];
+    const templateVars = {
+        'add-multiply': [firstVar],
+        'multiply-subtract': [firstVar],
+        'multiple-outputs': [firstVar],
+        'derived-value': [firstVar, secondVar],
+        'combine-values': [firstVar, secondVar],
+        'swap-values': [firstVar, secondVar, 'temp'],
+        'three-stage': [firstVar, secondVar, thirdVar]
+    };
+    const activeVars = templateVars[template];
+    const cols = ['Line', ...activeVars, 'Output'];
     const lines = [];
     const answers = [];
-    const activeVars = useSecondVar ? [firstVar, secondVar] : [firstVar];
-    const cols = ['Line', ...activeVars, 'Output'];
+    const inputParts = [];
+    const startValue = Math.floor(Math.random() * 6) + 3;
+    const secondValue = Math.floor(Math.random() * 5) + 2;
+    const amount = Math.floor(Math.random() * 5) + 2;
+    const multiplier = Math.floor(Math.random() * 3) + 2;
+    const useInputs = diff !== 'easy';
+    const useSecondInput = diff === 'hard' || diff === 'master';
 
-    lines.push(useInput
-        ? `${firstVar} = int(input("Enter ${firstVar}:"))`
-        : `${firstVar} = ${startValue}`);
-    answers.push({ Line: '1', [firstVar]: startValue.toString(), ...(useSecondVar ? { [secondVar]: '' } : {}), Output: '' });
-
-    let currentValue = startValue;
-    if (useSecondVar) {
-        lines.push(`${secondVar} = ${secondValue}`);
-        answers.push({ Line: '2', [firstVar]: '', [secondVar]: secondValue.toString(), Output: '' });
-        lines.push(`${firstVar} = ${firstVar} + ${secondVar}`);
-        currentValue += secondValue;
-        answers.push({ Line: '3', [firstVar]: currentValue.toString(), [secondVar]: '', Output: '' });
-    } else {
-        lines.push(`${firstVar} = ${firstVar} + ${amount}`);
-        currentValue += amount;
-        answers.push({ Line: '2', [firstVar]: currentValue.toString(), Output: '' });
+    function addRow(changes, output) {
+        const row = { Line: lines.length.toString(), Output: output === undefined ? '' : output.toString() };
+        activeVars.forEach(name => row[name] = '');
+        Object.entries(changes || {}).forEach(([name, value]) => row[name] = value.toString());
+        answers.push(row);
     }
 
-    const multiplyLine = lines.length + 1;
-    lines.push(`${firstVar} = ${firstVar} * ${multiplier}`);
-    currentValue *= multiplier;
-    const multiplyRow = { Line: multiplyLine.toString(), [firstVar]: currentValue.toString(), Output: '' };
-    if (useSecondVar) multiplyRow[secondVar] = '';
-    answers.push(multiplyRow);
+    function initialise(name, value, asInput) {
+        if (asInput) {
+            lines.push(`${name} = int(input("Enter ${name}:"))`);
+            inputParts.push(`<strong>${name} = ${value}</strong>`);
+        } else {
+            lines.push(`${name} = ${value}`);
+        }
+        addRow({ [name]: value });
+    }
 
-    const printLine = lines.length + 1;
-    lines.push(`print(${firstVar})`);
-    const printRow = { Line: printLine.toString(), [firstVar]: '', Output: currentValue.toString() };
-    if (useSecondVar) printRow[secondVar] = '';
-    answers.push(printRow);
+    function assign(name, expression, value) {
+        lines.push(`${name} = ${expression}`);
+        addRow({ [name]: value });
+    }
 
-    const context = useInput
-        ? `This sequence processes information for ${contextData.theme}. The user entered <strong>${firstVar} = ${startValue}</strong>.`
+    function output(name, value) {
+        lines.push(`print(${name})`);
+        addRow({}, value);
+    }
+
+    if (template === 'add-multiply') {
+        let value = startValue;
+        initialise(firstVar, value, useInputs);
+        value += amount;
+        assign(firstVar, `${firstVar} + ${amount}`, value);
+        value *= multiplier;
+        assign(firstVar, `${firstVar} * ${multiplier}`, value);
+        output(firstVar, value);
+    } else if (template === 'multiply-subtract') {
+        let value = startValue;
+        initialise(firstVar, value, useInputs);
+        value *= multiplier;
+        assign(firstVar, `${firstVar} * ${multiplier}`, value);
+        value -= amount;
+        assign(firstVar, `${firstVar} - ${amount}`, value);
+        output(firstVar, value);
+    } else if (template === 'multiple-outputs') {
+        let value = startValue;
+        initialise(firstVar, value, useInputs);
+        output(firstVar, value);
+        value += amount;
+        assign(firstVar, `${firstVar} + ${amount}`, value);
+        output(firstVar, value);
+        value *= multiplier;
+        assign(firstVar, `${firstVar} * ${multiplier}`, value);
+        output(firstVar, value);
+    } else if (template === 'derived-value') {
+        let first = startValue;
+        initialise(firstVar, first, useInputs);
+        let second = first + amount;
+        assign(secondVar, `${firstVar} + ${amount}`, second);
+        output(secondVar, second);
+        first = second * multiplier;
+        assign(firstVar, `${secondVar} * ${multiplier}`, first);
+        output(firstVar, first);
+    } else if (template === 'combine-values') {
+        let first = startValue;
+        let second = secondValue;
+        initialise(firstVar, first, useInputs);
+        initialise(secondVar, second, useSecondInput);
+        first *= multiplier;
+        assign(firstVar, `${firstVar} * ${multiplier}`, first);
+        second += amount;
+        assign(secondVar, `${secondVar} + ${amount}`, second);
+        first += second;
+        assign(firstVar, `${firstVar} + ${secondVar}`, first);
+        output(firstVar, first);
+    } else if (template === 'swap-values') {
+        let first = startValue;
+        let second = secondValue;
+        initialise(firstVar, first, useInputs);
+        initialise(secondVar, second, useSecondInput);
+        const temp = first;
+        assign('temp', firstVar, temp);
+        first = second;
+        assign(firstVar, secondVar, first);
+        second = temp;
+        assign(secondVar, 'temp', second);
+        output(firstVar, first);
+        output(secondVar, second);
+    } else {
+        let first = startValue;
+        let second = secondValue;
+        initialise(firstVar, first, useInputs);
+        initialise(secondVar, second, useSecondInput);
+        let third = first + second;
+        assign(thirdVar, `${firstVar} + ${secondVar}`, third);
+        output(thirdVar, third);
+        first = third - amount;
+        assign(firstVar, `${thirdVar} - ${amount}`, first);
+        second = first * multiplier;
+        assign(secondVar, `${firstVar} * ${multiplier}`, second);
+        output(secondVar, second);
+    }
+
+    const context = inputParts.length
+        ? `This sequence processes information for ${contextData.theme}. The user entered ${inputParts.join(' and ')}.`
         : `Trace this sequence for ${contextData.theme}. Follow each instruction in order.`;
     return { context, code: lines, cols, answers, solved: false, failedAttempt: false, questionType: 'Sequence' };
 }
