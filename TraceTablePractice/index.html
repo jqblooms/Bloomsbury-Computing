@@ -247,7 +247,8 @@
     <h2>Interactive Walkthrough</h2>
     <p>Click "Step Forward" to execute the code line by line. Notice how rows are <strong>only added</strong> when a variable updates or an output occurs.</p>
     <div class="controls mb-4">
-      <button class="btn active" onclick="selectWalkAlgo(0, this)">For Loop</button>
+      <button class="btn active" onclick="selectWalkAlgo(5, this)">Sequence</button>
+      <button class="btn" onclick="selectWalkAlgo(0, this)">For Loop</button>
       <button class="btn" onclick="selectWalkAlgo(1, this)">While Loop</button>
       <button class="btn" onclick="selectWalkAlgo(2, this)">Conditionals</button>
       <button class="btn" onclick="selectWalkAlgo(3, this)">Do...Until Loop</button>
@@ -277,15 +278,31 @@
     <p>Fill in the tables below. Leave cells blank if the variable doesn't change on that specific line. Progress is automatically saved.</p>
     
     <div class="controls mb-4">
-       <button class="btn active" onclick="showPrac(0, this)">Practice 1 (For)</button>
+       <button class="btn active" onclick="showPrac(5, this)">Sequence</button>
+       <button class="btn" onclick="showPrac(0, this)">Practice 1 (For)</button>
        <button class="btn" onclick="showPrac(1, this)">Practice 2 (While)</button>
        <button class="btn" onclick="showPrac(2, this)">Practice 3 (If/Else)</button>
        <button class="btn" onclick="showPrac(3, this)">Practice 4 (Until)</button>
        <button class="btn" onclick="showPrac(4, this)">Practice 5 (Arrays)</button>
     </div>
 
+    <!-- Sub-page: Sequence foundations -->
+    <div id="prac5-area" class="prac-area active">
+      <div class="grid">
+        <div>
+          <div id="prac5-context" class="context-box"></div>
+          <div id="prac5-code" class="code-container"></div>
+        </div>
+        <div>
+          <div id="prac5-table-wrap"></div>
+          <button class="btn btn-primary mt-4" onclick="checkPractice(5)">Check Answers</button>
+          <div id="prac5-result" class="result-badge"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Sub-page: Practice 0 -->
-    <div id="prac0-area" class="prac-area active">
+    <div id="prac0-area" class="prac-area">
       <div class="grid">
         <div>
           <div id="prac0-context" class="context-box"></div>
@@ -507,13 +524,54 @@ const algo4Answers = [
   {Line: '4', count: '', x: '', Output: '13'}
 ];
 
+// Algorithm 5: Sequence foundations. The walkthrough and independent
+// practice use different values so students must follow each update.
+const sequenceWalkData = {
+  context: 'The user enters <strong>4</strong>. Follow each instruction in order and record the new value only when it changes.',
+  code: [
+    'number = int(input("Enter a number:"))',
+    'number = number + 3',
+    'number = number * 2',
+    'print(number)'
+  ],
+  cols: ['Line', 'number', 'Output'],
+  answers: [
+    {Line: '1', number: '4', Output: ''},
+    {Line: '2', number: '7', Output: ''},
+    {Line: '3', number: '14', Output: ''},
+    {Line: '4', number: '', Output: '14'}
+  ]
+};
+
+const sequencePracticeData = {
+  title: 'Sequence Foundations',
+  context: 'The user enters <strong>6</strong>. Complete the table by following the instructions from top to bottom.',
+  code: [
+    'number = int(input("Enter a number:"))',
+    'number = number - 2',
+    'number = number * 3',
+    'print(number)'
+  ],
+  cols: ['Line', 'number', 'Output'],
+  answers: [
+    {Line: '1', number: '6', Output: ''},
+    {Line: '2', number: '4', Output: ''},
+    {Line: '3', number: '12', Output: ''},
+    {Line: '4', number: '', Output: '12'}
+  ]
+};
+
 const pracData = [
   { context: algo0Context, code: algo0Lines, cols: algo0Cols, answers: algo0Answers },
   { context: algo1Context, code: algo1Lines, cols: algo1Cols, answers: algo1Answers },
   { context: algo2Context, code: algo2Lines, cols: algo2Cols, answers: algo2Answers },
   { context: algo3Context, code: algo3Lines, cols: algo3Cols, answers: algo3Answers },
-  { context: algo4Context, code: algo4Lines, cols: algo4Cols, answers: algo4Answers }
+  { context: algo4Context, code: algo4Lines, cols: algo4Cols, answers: algo4Answers },
+  sequencePracticeData
 ];
+
+const walkData = pracData.slice();
+walkData[5] = sequenceWalkData;
 
 // ======================================================
 // LOCAL STORAGE & PROGRESS TRACKING
@@ -544,7 +602,8 @@ function initProgress() {
       { id: 'prac1', title: 'Practice 2', attempts: 0, correct: false, tableData: null, codeSnippet: null },
       { id: 'prac2', title: 'Practice 3', attempts: 0, correct: false, tableData: null, codeSnippet: null },
       { id: 'prac3', title: 'Practice 4', attempts: 0, correct: false, tableData: null, codeSnippet: null },
-      { id: 'prac4', title: 'Practice 5', attempts: 0, correct: false, tableData: null, codeSnippet: null }
+      { id: 'prac4', title: 'Practice 5', attempts: 0, correct: false, tableData: null, codeSnippet: null },
+      { id: 'prac5', title: 'Sequence Foundations', attempts: 0, correct: false, tableData: null, codeSnippet: null }
     ];
     saveProgress();
   }
@@ -634,7 +693,7 @@ function buildStudentTableHtml(containerId, prefix, cols, answers) {
 // ======================================================
 // WALKTHROUGH LOGIC
 // ======================================================
-let currentWalkIdx = 0;
+let currentWalkIdx = 5;
 let walkStep = 0;
 
 function selectWalkAlgo(idx, btn) {
@@ -646,7 +705,7 @@ function selectWalkAlgo(idx, btn) {
 
 function resetWalk() {
    walkStep = 0;
-   const algo = pracData[currentWalkIdx];
+   const algo = walkData[currentWalkIdx];
    document.getElementById('walk-context').innerHTML = algo.context;
    renderPracticeCode('walk-code', algo.code);
    document.getElementById('walk-thead').innerHTML = `<tr>${algo.cols.map(c => `<th>${c}</th>`).join('')}</tr>`;
@@ -654,7 +713,7 @@ function resetWalk() {
 }
 
 function stepWalk() {
-   const algo = pracData[currentWalkIdx];
+   const algo = walkData[currentWalkIdx];
    if(walkStep >= algo.answers.length) return; 
    const stepData = algo.answers[walkStep];
    
@@ -700,8 +759,9 @@ function checkPractice(idx) {
   }
 
   const isCorrect = (correct === total);
-  recordAttempt(`prac${idx}`, `Practice ${idx + 1}`, isCorrect, extractTableData(prefix, data.cols, totalRows), data.code);
-  reportPracticeProgress(`prac${idx}`, `Practice ${idx + 1}`, isCorrect);
+  const practiceTitle = data.title || `Practice ${idx + 1}`;
+  recordAttempt(`prac${idx}`, practiceTitle, isCorrect, extractTableData(prefix, data.cols, totalRows), data.code);
+  reportPracticeProgress(`prac${idx}`, practiceTitle, isCorrect);
 
   const badge = document.getElementById(`${prefix}-result`);
   badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
@@ -1071,7 +1131,7 @@ window.addEventListener('keydown', (e) => {
 
 function executeDevAutoFill() {
   if (document.getElementById('page-prac').classList.contains('active')) {
-      for (let i = 0; i <= 4; i++) {
+      for (let i = 0; i <= 5; i++) {
           if (document.getElementById(`prac${i}-area`).classList.contains('active')) {
               devFillTable(`prac${i}`, pracData[i].cols, pracData[i].answers);
               checkPractice(i); 
