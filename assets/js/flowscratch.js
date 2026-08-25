@@ -48,22 +48,40 @@
     answer: '',
     pressedKeys: {},
     mouse: { x: 0, y: 0 },
+    slowMode: false, slowDelayMs: 500,
     activeSprite: null, activeSpriteId: null
   };
 
-  var TYPES = {
-    start:        { shape: 'oval',      title: 'Start',           data: {} },
-    end:          { shape: 'oval',      title: 'End',             data: {} },
-    move_steps:   { shape: 'process',   title: 'Move steps',      data: { steps: 10 } },
-    turn_right:   { shape: 'process',   title: 'Turn right',      data: { degrees: 15 } },
-    turn_left:    { shape: 'process',   title: 'Turn left',       data: { degrees: 15 } },
-    point_towards:{ shape: 'process',   title: 'Point towards',   data: { target: 'mouse_pointer' } },
-    next_costume: { shape: 'process',   title: 'Next costume',    data: {} },
-    change_color: { shape: 'process',   title: 'Change colour',   data: { value: 25 } },
-    say:          { shape: 'io',        title: 'Say',             data: { text: 'Hello!' } },
-    ask:          { shape: 'io',        title: 'Ask',             data: { text: 'What is your name?' } },
-    selection:    { shape: 'selection', title: 'Selection',       data: { negate: 'is', condition: 'key', value: 'Space' } }
+  // Colours match Scratch's own real block-category colours exactly, so a
+  // student who's used Scratch before recognises the categories on sight.
+  // 'flow' (Start/End) has no direct Scratch equivalent category; it uses
+  // Events' gold since Start plays the same role as a green-flag hat block.
+  var CATEGORIES = {
+    flow:      { label: 'Flow',      color: '#FFBF00' },
+    motion:    { label: 'Motion',    color: '#4C97FF' },
+    looks:     { label: 'Looks',     color: '#9966FF' },
+    sensing:   { label: 'Sensing',   color: '#5CB1D6' },
+    variables: { label: 'Variables', color: '#FF8C1A' },
+    control:   { label: 'Control',   color: '#FFAB19' }
   };
+
+  var TYPES = {
+    start:              { shape: 'oval',      title: 'Start',              data: {},                             category: 'flow' },
+    end:                { shape: 'oval',      title: 'End',                data: {},                             category: 'flow' },
+    move_steps:         { shape: 'process',   title: 'Move steps',         data: { steps: 10 },                  category: 'motion' },
+    turn_right:         { shape: 'process',   title: 'Turn right',         data: { degrees: 15 },                category: 'motion' },
+    turn_left:          { shape: 'process',   title: 'Turn left',          data: { degrees: 15 },                category: 'motion' },
+    point_in_direction: { shape: 'process',   title: 'Point in direction', data: { degrees: 90 },                category: 'motion' },
+    point_towards:      { shape: 'process',   title: 'Point towards',      data: { target: 'mouse_pointer' },    category: 'motion' },
+    next_costume:       { shape: 'process',   title: 'Next costume',       data: {},                             category: 'looks' },
+    change_color:       { shape: 'process',   title: 'Change colour',      data: { value: 25 },                  category: 'looks' },
+    say:                { shape: 'io',        title: 'Say',                data: { text: 'Hello!' },             category: 'looks' },
+    ask:                { shape: 'io',        title: 'Ask',                data: { text: 'What is your name?' }, category: 'sensing' },
+    set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
+    change_variable:    { shape: 'process',   title: 'Change variable',    data: { varName: '', value: 1 },      category: 'variables' },
+    selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' }
+  };
+  var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sensing', 'variables', 'control'];
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   // Looks up a block's display title defensively: a graph saved before a
   // block type was renamed or removed (e.g. the old 'move'/'colour'
@@ -99,6 +117,90 @@
     return null;
   }
   function activeTarget() { return FS.activeSprite ? getTargetByName(FS.activeSprite) : null; }
+
+  // ── Variables ────────────────────────────────────────────────────────
+  // Real Scratch VM variables (created on the stage target, so they're
+  // global to every sprite, matching Scratch's own "For all sprites"
+  // default), not a separate FlowScratch-only store. This means they
+  // behave like genuine Scratch variables: they serialize with the
+  // project normally (no flowscratch-specific save/load code needed for
+  // them) and would show up in the regular Scratch blocks editor too if
+  // a student switched over.
+  function getGlobalVariables() {
+    try {
+      var stage = FS.vm.runtime.getTargetForStage();
+      return Object.keys(stage.variables)
+        .map(function (id) { return stage.variables[id]; })
+        .filter(function (v) { return v.type === ''; })
+        .sort(function (a, b) { return a.name.localeCompare(b.name); });
+    } catch (e) { return []; }
+  }
+  function findGlobalVariable(name) {
+    var v = getGlobalVariables().filter(function (v) { return v.name === name; })[0];
+    return v || null;
+  }
+  // On-stage value monitors, the checkbox Scratch itself shows next to
+  // every variable ("Show on stage"). requestShowMonitor/requestHideMonitor
+  // only toggle an EXISTING monitor record; they don't create one, so a
+  // variable that's never been shown needs requestAddMonitor first (a
+  // plain object works in this scratch-vm build, verified live, no
+  // MonitorRecord/Immutable class needed).
+  function hasVariableMonitor(id) {
+    try { return FS.vm.runtime.getMonitorState().has(id); } catch (e) { return false; }
+  }
+  function isVariableMonitorVisible(id) {
+    try {
+      var m = FS.vm.runtime.getMonitorState().get(id);
+      return !!(m && m.visible);
+    } catch (e) { return false; }
+  }
+  function addVariableMonitor(v, visible) {
+    try {
+      var stackedCount = FS.vm.runtime.getMonitorState().size;
+      FS.vm.runtime.requestAddMonitor({
+        id: v.id, mode: 'default', opcode: 'data_variable',
+        params: { VARIABLE: v.name }, spriteName: null, value: v.value,
+        width: 0, height: 0, x: 5, y: 5 + stackedCount * 26,
+        visible: visible !== false, sliderMin: 0, sliderMax: 100, isDiscrete: true
+      });
+    } catch (e) {}
+  }
+  function setVariableMonitorVisible(v, visible) {
+    try {
+      if (!hasVariableMonitor(v.id)) { addVariableMonitor(v, visible); return; }
+      if (visible) FS.vm.runtime.requestShowMonitor(v.id);
+      else FS.vm.runtime.requestHideMonitor(v.id);
+    } catch (e) {}
+  }
+  function createGlobalVariable(name) {
+    name = (name || '').trim();
+    if (!name) return;
+    try {
+      var stage = FS.vm.runtime.getTargetForStage();
+      if (stage.lookupVariableByNameAndType(name, '')) {
+        notify('A variable called "' + name + '" already exists.', 'error');
+        return;
+      }
+      var id = 'flowscratch_var_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+      stage.createVariable(id, name, '');
+      // Visible by default, same as a newly made Scratch variable.
+      addVariableMonitor(stage.lookupVariableByNameAndType(name, ''), true);
+      renderSidebar();
+      renderAll();
+    } catch (e) {}
+  }
+  function deleteGlobalVariable(name) {
+    try {
+      var stage = FS.vm.runtime.getTargetForStage();
+      var v = stage.lookupVariableByNameAndType(name, '');
+      if (!v) return;
+      if (!confirm('Delete the variable "' + name + '"? Any blocks using it will need a different variable chosen.')) return;
+      try { FS.vm.runtime.requestRemoveMonitor(v.id); } catch (e) {}
+      delete stage.variables[v.id];
+      renderSidebar();
+      renderAll();
+    } catch (e) {}
+  }
 
   // Scratch's colour graphic effect is a 0-200 hue-rotation dial, not an
   // arbitrary hex fill (sprites are costume bitmaps, not solid shapes with
@@ -231,28 +333,53 @@
   // ── DOM refs (created in buildUI) ───────────────────────────────────
   var els = {};
 
+  function variableSelectHtml(fieldName, selectedName) {
+    var vars = getGlobalVariables();
+    if (!vars.length) return '<select data-field="' + fieldName + '"><option value="">(no variables yet)</option></select>';
+    return '<select data-field="' + fieldName + '">' + vars.map(function (v) {
+      return '<option value="' + esc(v.name) + '"' + (selectedName === v.name ? ' selected' : '') + '>' + esc(v.name) + '</option>';
+    }).join('') + '</select>';
+  }
   function nodeMarkup(n) {
     var sub = '';
     if (n.type === 'move_steps') sub = '<span class="fs-node-subtitle">' + n.data.steps + ' steps</span>';
-    if (n.type === 'turn_right' || n.type === 'turn_left') sub = '<span class="fs-node-subtitle">' + n.data.degrees + ' degrees</span>';
+    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') sub = '<span class="fs-node-subtitle">' + n.data.degrees + ' degrees</span>';
     if (n.type === 'point_towards') sub = '<select data-field="target"><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option><option value="random"' + (n.data.target === 'random' ? ' selected' : '') + '>random direction</option></select>';
     if (n.type === 'change_color') sub = '<span class="fs-node-subtitle">by ' + n.data.value + '</span>';
     if (n.type === 'say' || n.type === 'ask') sub = '<span class="fs-node-subtitle">' + esc(n.data.text) + '</span>';
+    if (n.type === 'set_variable' || n.type === 'change_variable') {
+      sub = variableSelectHtml('varName', n.data.varName) +
+        '<input type="number" class="fs-inline-num" data-field="value" value="' + n.data.value + '">';
+    }
     var content;
     if (n.type === 'selection') {
-      var choices = n.data.condition === 'key'
-        ? [['Space', 'space'], ['ArrowRight', 'right arrow'], ['ArrowLeft', 'left arrow'], ['ArrowUp', 'up arrow'], ['ArrowDown', 'down arrow']]
-        : n.data.condition === 'edge'
-          ? [['any', 'any edge'], ['left', 'left edge'], ['right', 'right edge'], ['top', 'top edge'], ['bottom', 'bottom edge']]
-          : [['any', 'any answer']];
+      var condition = n.data.condition;
+      var tail;
+      if (condition === 'variable') {
+        tail = variableSelectHtml('varName', n.data.varName) +
+          '<select data-field="operator">' +
+          '<option value="eq"' + (n.data.operator === 'eq' ? ' selected' : '') + '>=</option>' +
+          '<option value="gt"' + (n.data.operator === 'gt' ? ' selected' : '') + '>&gt;</option>' +
+          '<option value="lt"' + (n.data.operator === 'lt' ? ' selected' : '') + '>&lt;</option>' +
+          '</select>' +
+          '<input type="number" class="fs-inline-num" data-field="varValue" value="' + (n.data.varValue != null ? n.data.varValue : 0) + '">';
+      } else {
+        var choices = condition === 'key'
+          ? [['Space', 'space'], ['ArrowRight', 'right arrow'], ['ArrowLeft', 'left arrow'], ['ArrowUp', 'up arrow'], ['ArrowDown', 'down arrow']]
+          : condition === 'edge'
+            ? [['any', 'any edge'], ['left', 'left edge'], ['right', 'right edge'], ['top', 'top edge'], ['bottom', 'bottom edge']]
+            : [['any', 'any answer']];
+        tail = '<select data-field="value">' + choices.map(function (c) { return '<option value="' + c[0] + '"' + (n.data.value === c[0] ? ' selected' : '') + '>' + c[1] + '</option>'; }).join('') + '</select>';
+      }
       content = '<div class="fs-node-content"><div class="fs-node-title">If</div>' +
         '<select data-field="negate"><option value="is"' + (n.data.negate === 'is' ? ' selected' : '') + '>is</option><option value="not"' + (n.data.negate === 'not' ? ' selected' : '') + '>not</option></select>' +
-        '<select data-field="condition"><option value="key"' + (n.data.condition === 'key' ? ' selected' : '') + '>key pressed</option><option value="edge"' + (n.data.condition === 'edge' ? ' selected' : '') + '>touching edge</option><option value="answer"' + (n.data.condition === 'answer' ? ' selected' : '') + '>answer exists</option></select>' +
-        '<select data-field="value">' + choices.map(function (c) { return '<option value="' + c[0] + '"' + (n.data.value === c[0] ? ' selected' : '') + '>' + c[1] + '</option>'; }).join('') + '</select></div>';
+        '<select data-field="condition"><option value="key"' + (condition === 'key' ? ' selected' : '') + '>key pressed</option><option value="edge"' + (condition === 'edge' ? ' selected' : '') + '>touching edge</option><option value="answer"' + (condition === 'answer' ? ' selected' : '') + '>answer exists</option><option value="variable"' + (condition === 'variable' ? ' selected' : '') + '>variable</option></select>' +
+        tail + '</div>';
     } else {
       content = '<div class="fs-node-title">' + typeTitle(n) + '</div>' + sub;
     }
-    return '<div class="fs-node ' + n.shape + (FS.selected === n.id ? ' selected' : '') + '" data-id="' + n.id + '" style="left:' + n.x + 'px;top:' + n.y + 'px"><div class="fs-node-body">' + content + '</div></div>';
+    var catColor = (TYPES[n.type] && CATEGORIES[TYPES[n.type].category]) ? CATEGORIES[TYPES[n.type].category].color : '#4d515a';
+    return '<div class="fs-node ' + n.shape + (FS.selected === n.id ? ' selected' : '') + '" data-id="' + n.id + '" style="left:' + n.x + 'px;top:' + n.y + 'px;--fs-cat-color:' + catColor + '"><div class="fs-node-body">' + content + '</div></div>';
   }
 
   function renderAll() { els.nodes.innerHTML = FS.nodes.map(nodeMarkup).join(''); bindNodes(); renderWires(); renderInspector(); }
@@ -283,8 +410,17 @@
       Array.prototype.forEach.call(el.querySelectorAll('[data-field]'), function (c) {
         c.addEventListener('change', function (e) {
           var n = getNode(el.dataset.id), field = e.target.dataset.field;
-          n.data[field] = e.target.value;
-          if (field === 'condition') n.data.value = e.target.value === 'key' ? 'Space' : 'any';
+          n.data[field] = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
+          if (field === 'condition') {
+            if (e.target.value === 'variable') {
+              var firstVar = getGlobalVariables()[0];
+              n.data.varName = firstVar ? firstVar.name : '';
+              n.data.operator = n.data.operator || 'eq';
+              n.data.varValue = n.data.varValue != null ? n.data.varValue : 0;
+            } else {
+              n.data.value = e.target.value === 'key' ? 'Space' : 'any';
+            }
+          }
           renderAll(); saveGraph(FS.activeSprite);
         });
       });
@@ -294,17 +430,36 @@
   function select(id) { FS.selected = id; FS.selectedEdgeId = null; renderAll(); }
   function selectEdge(id) { FS.selectedEdgeId = id; FS.selected = null; renderAll(); }
 
+  // Actual on-screen size of a node, converted back to world units
+  // (dividing out the canvas's own pan/zoom scale), rather than a
+  // hardcoded 150x66/112 guess. Nodes with more inline fields (a
+  // variable select plus a value input, say) can genuinely need more
+  // room than that guess assumed and grow taller, which twice already
+  // broke wire-anchor alignment when the guess and the real rendered box
+  // disagreed (see the CSS width limits on .fs-node.process select and
+  // .fs-inline-num, which exist to keep that from happening, plus this,
+  // which makes the geometry correct even if a future block still ends
+  // up wider than expected). Falls back to the old guess only for a node
+  // that hasn't been rendered into the DOM yet.
+  function nodeDims(n) {
+    try {
+      var el = els.nodes && els.nodes.querySelector('.fs-node[data-id="' + n.id + '"]');
+      if (el) {
+        var r = el.getBoundingClientRect();
+        if (r.width && r.height) return { w: r.width / FS.scale, h: r.height / FS.scale };
+      }
+    } catch (e) {}
+    return { w: 150, h: n.shape === 'selection' ? 112 : 66 };
+  }
   // An edge's anchor (fromA/toA) is a continuous {x, y} point in the
-  // node's own local space (0..150 wide, 0..66 or 112 tall, matching
-  // .fs-node's actual CSS dimensions), picked by hovering anywhere along
-  // the node's edge rather than snapping to one of 8 fixed compass points.
-  // Old saved graphs from before this change stored a named direction
-  // string instead ('N'/'NE'/...); the fallback branch below still
-  // understands those so nothing already saved breaks.
+  // node's own local space, picked by hovering anywhere along the node's
+  // edge rather than snapping to one of 8 fixed compass points. Old saved
+  // graphs from before this change stored a named direction string
+  // instead ('N'/'NE'/...); the fallback branch below still understands
+  // those so nothing already saved breaks.
   function center(n, a) {
-    var h = n.shape === 'selection' ? 112 : 66;
     if (a && typeof a === 'object') return { x: n.x + a.x, y: n.y + a.y };
-    var w = 150;
+    var d = nodeDims(n), w = d.w, h = d.h;
     var legacy = { N: [w / 2, 0], NE: [w * .86, 8], E: [w, h / 2], SE: [w * .86, h - 8], S: [w / 2, h], SW: [w * .14, h - 8], W: [0, h / 2], NW: [w * .14, 8] };
     var p = legacy[a] || legacy.E;
     return { x: n.x + p[0], y: n.y + p[1] };
@@ -325,15 +480,15 @@
     return { x: cx, y: cy };
   }
   function anchorPointOnNode(n, towardWorldX, towardWorldY) {
-    var h = n.shape === 'selection' ? 112 : 66;
-    return nearestPerimeterPoint(150, h, towardWorldX - n.x, towardWorldY - n.y);
+    var d = nodeDims(n);
+    return nearestPerimeterPoint(d.w, d.h, towardWorldX - n.x, towardWorldY - n.y);
   }
   // Anchor's local (x,y) regardless of stored format (new continuous
   // {x,y} point, or a legacy named direction from a saved-before-this-
   // change graph).
   function anchorLocalPoint(n, a) {
-    var h = n.shape === 'selection' ? 112 : 66, w = 150;
     if (a && typeof a === 'object') return { x: a.x, y: a.y };
+    var d = nodeDims(n), w = d.w, h = d.h;
     var legacy = { N: [w / 2, 0], NE: [w * .86, 8], E: [w, h / 2], SE: [w * .86, h - 8], S: [w / 2, h], SW: [w * .14, h - 8], W: [0, h / 2], NW: [w * .14, 8] };
     var p = legacy[a] || legacy.E;
     return { x: p[0], y: p[1] };
@@ -342,7 +497,7 @@
   // unit vector, used to route the connector straight out of the block
   // before turning rather than diving in at an angle.
   function anchorDirection(n, a) {
-    var h = n.shape === 'selection' ? 112 : 66, w = 150;
+    var d = nodeDims(n), w = d.w, h = d.h;
     var p = anchorLocalPoint(n, a);
     var dl = p.x, dr = w - p.x, dt = p.y, db = h - p.y, m = Math.min(dl, dr, dt, db);
     if (m === dl) return { x: -1, y: 0 };
@@ -420,10 +575,10 @@
     host.className = '';
     var f = '';
     if (n.type === 'move_steps') f = field('Distance (steps)', 'number', 'steps', n.data.steps);
-    if (n.type === 'turn_right' || n.type === 'turn_left') f = field('Degrees', 'number', 'degrees', n.data.degrees);
+    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') f = field('Degrees', 'number', 'degrees', n.data.degrees);
     if (n.type === 'change_color') f = field('Change by', 'number', 'value', n.data.value);
     if (n.type === 'say' || n.type === 'ask') f = field(n.type === 'say' ? 'Message' : 'Question', 'text', 'text', n.data.text);
-    if (n.type === 'point_towards') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
+    if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Its first outgoing connector is True; its second is False.</p>';
     host.innerHTML = '<b>' + typeTitle(n) + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
     Array.prototype.forEach.call(host.querySelectorAll('[data-inspect]'), function (i) {
@@ -509,6 +664,8 @@
       // case a graph saved before that enforcement existed gets loaded:
       // Run must never execute a flowchart with an ambiguous branch.
       if (n.type !== 'selection' && n.type !== 'end' && out(n.id).length > 1) errors.push(typeTitle(n) + ' has more than one outgoing connection, only a Selection block can branch.');
+      if ((n.type === 'set_variable' || n.type === 'change_variable') && !n.data.varName) errors.push(typeTitle(n) + ' has no variable selected.');
+      if (n.type === 'selection' && n.data.condition === 'variable' && !n.data.varName) errors.push('Selection has no variable selected.');
     });
     if (starts.length === 1) {
       var seen = {};
@@ -526,21 +683,38 @@
   }
 
   // ── Runtime: drive the real, currently-selected TurboWarp sprite ───────
+  // Every case here does its work synchronously and returns nothing to
+  // await, EXCEPT say (its bubble needs to actually be visible for a
+  // moment) and ask (genuinely waits on the student). Pacing between
+  // steps is handled centrally in run(), not per-block, so slow mode can
+  // control it uniformly instead of fighting a per-block wait baked in
+  // here.
   function runBlock(n) {
     var target = activeTarget();
-    if (!target) return Promise.resolve();
+    if (n.type === 'set_variable' || n.type === 'change_variable') {
+      var v = findGlobalVariable(n.data.varName);
+      if (v) {
+        if (n.type === 'set_variable') v.value = Number(n.data.value || 0);
+        else v.value = (Number(v.value) || 0) + Number(n.data.value || 0);
+      }
+      return;
+    }
+    if (!target) return;
     switch (n.type) {
       case 'move_steps': {
         var rad = d2r(target.direction);
         target.setXY(target.x + Number(n.data.steps || 0) * Math.cos(rad), target.y + Number(n.data.steps || 0) * Math.sin(rad));
-        return wait(60);
+        return;
       }
       case 'turn_right':
         target.setDirection(target.direction + Number(n.data.degrees || 0));
-        return wait(60);
+        return;
       case 'turn_left':
         target.setDirection(target.direction - Number(n.data.degrees || 0));
-        return wait(60);
+        return;
+      case 'point_in_direction':
+        target.setDirection(Number(n.data.degrees || 0));
+        return;
       case 'point_towards':
         if (n.data.target === 'random') {
           target.setDirection((Math.random() * 360) - 180);
@@ -548,10 +722,10 @@
           var dx = FS.mouse.x - target.x, dy = FS.mouse.y - target.y;
           target.setDirection(90 - Math.atan2(dy, dx) * 180 / Math.PI);
         }
-        return wait(60);
+        return;
       case 'next_costume':
         try { target.setCostume((target.currentCostume + 1) % target.sprite.costumes.length); } catch (e) {}
-        return wait(60);
+        return;
       case 'change_color':
         try { target.changeEffect('color', Number(n.data.value || 0)); } catch (e) {
           try {
@@ -559,7 +733,7 @@
             target.setEffect('color', cur + Number(n.data.value || 0));
           } catch (e2) {}
         }
-        return wait(60);
+        return;
       case 'say':
         try { target.runtime.emit('SAY', target, 'say', n.data.text == null ? '' : String(n.data.text)); } catch (e) {}
         return wait(850).then(function () {
@@ -571,7 +745,7 @@
           els.answerValue.textContent = FS.answer || String.fromCharCode(8709);
         });
       default:
-        return wait(60);
+        return;
     }
   }
   function evaluateCondition(n) {
@@ -585,6 +759,19 @@
       };
       v = n.data.value === 'any' ? (edges.left || edges.right || edges.top || edges.bottom) : !!edges[n.data.value];
     } else if (n.data.condition === 'answer') v = !!FS.answer;
+    else if (n.data.condition === 'variable') {
+      var vv = findGlobalVariable(n.data.varName);
+      if (vv) {
+        var a = Number(vv.value), b = Number(n.data.varValue);
+        if (!isNaN(a) && !isNaN(b)) {
+          if (n.data.operator === 'gt') v = a > b;
+          else if (n.data.operator === 'lt') v = a < b;
+          else v = a === b;
+        } else {
+          v = String(vv.value) === String(n.data.varValue);
+        }
+      }
+    }
     return n.data.negate === 'not' ? !v : v;
   }
   function showAskBox(text) {
@@ -613,21 +800,23 @@
     var start = FS.nodes.find(function (n) { return n.type === 'start'; });
     var current = start, steps = 0;
     // A "forever" flowchart loop is just a wire connected back to an
-    // earlier block, a normal cycle, not a special block type. Every pass
-    // through this loop already awaits a real pause inside runBlock (at
-    // least a short wait() even for instant blocks), so it always yields
-    // back to the browser and can't lock up the tab, unlike a true
-    // synchronous busy-loop. STEP_CAP is a generous last-resort safety net
-    // only, not the intended way to stop a deliberate loop, that's what
-    // the stop button (wired to TurboWarp's own) is for.
+    // earlier block, a normal cycle, not a special block type. The pacing
+    // wait() below every step (zero when slow mode is off, still a real
+    // await so control always yields back to the browser) is what stops
+    // this from ever locking up the tab like a true synchronous busy-loop
+    // could. STEP_CAP is a generous last-resort safety net only, not the
+    // intended way to stop a deliberate loop, that's what the stop button
+    // (wired to TurboWarp's own) is for.
     var STEP_CAP = 200000;
     (async function loop() {
       while (FS.running && FS.gen === myGen && current && steps++ < STEP_CAP) {
-        setRunStatus(TYPES[current.type].title);
+        setRunStatus(typeTitle(current));
         var outs = FS.edges.filter(function (e) { return e.from === current.id; });
         renderWires(outs[0] && outs[0].id);
         if (current.type === 'end') break;
         await runBlock(current);
+        if (FS.gen !== myGen) return;
+        await wait(FS.slowMode ? FS.slowDelayMs : 0);
         if (FS.gen !== myGen) return;
         if (current.type === 'selection') {
           var truth = evaluateCondition(current);
@@ -678,10 +867,30 @@
       '#fs-topbar .fs-spacer{flex:1}',
       '#fs-zoom-readout{min-width:38px;text-align:center;color:#c7c9ce;font-variant-numeric:tabular-nums;font-size:11px}',
       '#fs-body{flex:1;display:flex;min-height:0}',
-      '#fs-sidebar{width:150px;flex-shrink:0;background:#fff;border-right:1px solid #d8d9dd;padding:10px 8px;overflow:auto}',
-      '#fs-sidebar h2{font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin:8px 0 6px;color:#666970}',
-      '.fs-palette-item{display:flex;align-items:center;gap:6px;min-height:34px;padding:6px 7px;border:1px solid #d8d9dd;border-radius:8px;background:#fff;cursor:grab;user-select:none;margin-bottom:6px;font-size:11px}',
-      '.fs-palette-item:hover{border-color:#9ea1aa;box-shadow:0 3px 10px rgba(0,0,0,.08)}',
+      '#fs-sidebar{width:150px;flex-shrink:0;background:#fff;border-right:1px solid #d8d9dd;display:flex;flex-direction:column;min-height:0}',
+      // Sticky strip of coloured category chips, always visible above the
+      // scrolling palette; clicking one jumps that category's <h2> into
+      // view, the same "click a category to jump to it" behaviour
+      // Scratch's own category bar gives you.
+      '#fs-cat-jump{display:flex;flex-wrap:wrap;gap:5px;padding:8px;border-bottom:1px solid #d8d9dd;flex-shrink:0}',
+      '.fs-cat-chip{width:16px;height:16px;border-radius:5px;border:1px solid rgba(0,0,0,.15);background:var(--fs-cat-color);cursor:pointer;padding:0}',
+      '.fs-cat-chip:hover{box-shadow:0 0 0 2px rgba(0,0,0,.12)}',
+      '#fs-palette-scroll{flex:1;overflow:auto;padding:8px}',
+      // Category colours match Scratch's own real block-category colours
+      // (see CATEGORIES) so a returning Scratch user recognises them.
+      '#fs-sidebar h2{font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 6px;padding:3px 6px;border-radius:5px;color:#fff;background:var(--fs-cat-color);cursor:pointer;scroll-margin-top:4px}',
+      '#fs-sidebar h2:first-child{margin-top:0}',
+      '.fs-palette-item{display:flex;align-items:center;gap:6px;min-height:34px;padding:6px 7px;border:1px solid #d8d9dd;border-left:4px solid var(--fs-cat-color);border-radius:6px;background:#fff;cursor:grab;user-select:none;margin-bottom:6px;font-size:11px}',
+      '.fs-palette-item:hover{border-color:#9ea1aa;border-left-color:var(--fs-cat-color);box-shadow:0 3px 10px rgba(0,0,0,.08)}',
+      '.fs-new-var-btn{width:100%;margin-bottom:6px;border:1px solid #d8d9dd;background:#f6f6f7;border-radius:6px;padding:6px;font-size:11px;cursor:pointer}',
+      '.fs-new-var-btn:hover{background:#eceded}',
+      '.fs-var-row{display:flex;align-items:center;justify-content:space-between;gap:4px;padding:3px 2px;font-size:11px}',
+      '.fs-var-check{display:flex;align-items:center;gap:5px;cursor:pointer;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.fs-var-del{border:none;background:none;color:#b43030;cursor:pointer;font-size:13px;line-height:1;padding:0 4px}',
+      '.fs-slow-toggle{display:flex;align-items:center;gap:4px;font-size:12px;color:#c7c9ce;cursor:pointer;white-space:nowrap}',
+      '#fsSlowSlider{width:80px}',
+      '#fsSlowReadout{font-size:11px;color:#aeb1b8;min-width:44px}',
+      '.fs-inline-num{width:36px;font-size:9px;padding:1px 2px}',
       '#fs-canvas-wrap{position:relative;overflow:hidden;flex:1;min-width:0;background:#ededee;touch-action:none;cursor:grab}',
       '#fs-canvas-wrap.panning{cursor:grabbing}#fs-canvas-wrap.connecting,#fs-canvas-wrap.fs-anchor-hover{cursor:crosshair}',
       '#fs-world{position:absolute;left:0;top:0;width:2200px;height:1400px;transform-origin:0 0;background-color:#fafafa;background-image:radial-gradient(#c9cbd0 1px,transparent 1px);background-size:22px 22px;box-shadow:0 0 0 1px #d3d4d7}',
@@ -690,7 +899,12 @@
       '.fs-wire-hit{fill:none;stroke:transparent;stroke-width:13;pointer-events:stroke;cursor:pointer}.fs-wire-hit:hover+.fs-wire{stroke:#d84c4c}',
       '.fs-wire-label{font-size:10px;font-weight:750;fill:#454850;paint-order:stroke;stroke:#fafafa;stroke-width:5px;stroke-linejoin:round}',
       '.fs-node{position:absolute;width:150px;min-height:66px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 4px 6px rgba(0,0,0,.12));user-select:none}',
-      '.fs-node-body{position:relative;width:100%;min-height:66px;padding:9px 12px;background:#fff;border:2px solid #4d515a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;font-size:11px}',
+      // Border colour matches the block's own category colour (set as
+      // --fs-cat-color on .fs-node in nodeMarkup); width stays 2px like
+      // before so this can't disturb the anchor-alignment fix, which
+      // depends on the node's actual box-model dimensions staying exactly
+      // what center() assumes.
+      '.fs-node-body{position:relative;width:100%;min-height:66px;padding:9px 12px;background:#fff;border:2px solid var(--fs-cat-color, #4d515a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;font-size:11px}',
       '.fs-node.selected .fs-node-body{border-color:#4b66e8;box-shadow:0 0 0 3px rgba(75,102,232,.17)}',
       '.fs-node.oval .fs-node-body{border-radius:50%}',
       '.fs-node.io .fs-node-body{clip-path:polygon(12% 0,100% 0,88% 100%,0 100%);padding-left:20px;padding-right:20px}',
@@ -698,7 +912,11 @@
       '.fs-node.selection{width:150px;height:112px}',
       '.fs-node.selection .fs-node-content{transform:rotate(-45deg);width:106px}',
       '.fs-node.selection select{max-width:90px;font-size:9px;padding:1px}',
-      '.fs-node.process select{font-size:10px;padding:2px 3px;max-width:120px}',
+      // Kept narrow enough that a variable-name select plus its value
+      // input fit on one row without wrapping: a wrap makes the node
+      // grow taller than center() assumes, which is exactly the bug that
+      // broke wire-anchor alignment before (see center()'s own comment).
+      '.fs-node.process select{font-size:9px;padding:1px 2px;max-width:64px}',
       '.fs-node-title{font-size:11px;font-weight:750}',
       '.fs-node-subtitle{font-size:10px;color:#686b73;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
       // Single hover-following anchor dot (replaces the previous 8 fixed
@@ -727,6 +945,57 @@
     document.head.appendChild(style);
   }
 
+  // Palette markup is generated from TYPES/CATEGORIES rather than hand-
+  // listed, so a category's colour and membership only need to be
+  // declared once, in TYPES itself.
+  function paletteItemHtml(typeKey) {
+    var t = TYPES[typeKey];
+    var label = typeKey === 'selection' ? 'Condition' : t.title;
+    return '<div class="fs-palette-item" data-type="' + typeKey + '" style="--fs-cat-color:' + CATEGORIES[t.category].color + '"><b>' + esc(label) + '</b></div>';
+  }
+  function categorySectionHtml(catKey) {
+    var cat = CATEGORIES[catKey];
+    var keys = Object.keys(TYPES).filter(function (k) { return TYPES[k].category === catKey; });
+    var itemsHtml = keys.map(paletteItemHtml).join('');
+    // Variables gets a live list of existing variables plus a "+ New
+    // variable" control above its draggable blocks, matching Scratch's
+    // own Variables category layout (Make a Variable, then the blocks).
+    if (catKey === 'variables') {
+      itemsHtml = '<div id="fs-var-list"></div>' +
+        '<button type="button" id="fsNewVarBtn" class="fs-new-var-btn">+ New variable</button>' +
+        itemsHtml;
+    }
+    return '<h2 data-cat="' + catKey + '" style="--fs-cat-color:' + cat.color + '">' + esc(cat.label) + '</h2>' + itemsHtml;
+  }
+  function paletteSidebarHtml() {
+    // A slim sticky strip of coloured chips, one per category, always
+    // visible above the scrollable palette list, the same jump-to-
+    // category behaviour Scratch's own category bar gives you.
+    var chips = PALETTE_ORDER.map(function (k) {
+      return '<button type="button" class="fs-cat-chip" data-jump="' + k + '" style="--fs-cat-color:' + CATEGORIES[k].color + '" title="' + esc(CATEGORIES[k].label) + '"></button>';
+    }).join('');
+    var sections = PALETTE_ORDER.map(categorySectionHtml).join('');
+    return '<div id="fs-cat-jump">' + chips + '</div><div id="fs-palette-scroll">' + sections + '</div>';
+  }
+  function renderSidebar() {
+    if (!els.varList) return;
+    var vars = getGlobalVariables();
+    els.varList.innerHTML = vars.length
+      ? vars.map(function (v) {
+          return '<div class="fs-var-row"><label class="fs-var-check" title="Show on stage"><input type="checkbox" class="fs-var-monitor" data-var="' + esc(v.name) + '"' + (isVariableMonitorVisible(v.id) ? ' checked' : '') + '> ' + esc(v.name) + '</label><button type="button" class="fs-var-del" data-var="' + esc(v.name) + '">&times;</button></div>';
+        }).join('')
+      : '<div class="fs-empty" style="padding:2px 0 6px">No variables yet.</div>';
+    Array.prototype.forEach.call(els.varList.querySelectorAll('.fs-var-del'), function (btn) {
+      btn.addEventListener('click', function () { deleteGlobalVariable(btn.dataset.var); });
+    });
+    Array.prototype.forEach.call(els.varList.querySelectorAll('.fs-var-monitor'), function (cb) {
+      cb.addEventListener('change', function () {
+        var v = findGlobalVariable(cb.dataset.var);
+        if (v) setVariableMonitorVisible(v, cb.checked);
+      });
+    });
+  }
+
   function buildUI() {
     injectStyle();
     var root = document.createElement('div');
@@ -735,29 +1004,15 @@
       '<div id="fs-topbar">' +
         '<button id="fsValidateBtn">Check flow</button>' +
         '<button id="fsClearBtn">Clear</button>' +
+        '<label class="fs-slow-toggle"><input type="checkbox" id="fsSlowModeToggle"> Slow mode</label>' +
+        '<input type="range" id="fsSlowSlider" min="0" max="2000" step="50" value="500" style="display:none">' +
+        '<span id="fsSlowReadout" style="display:none">500ms</span>' +
         '<span class="fs-hint">Use the green flag / stop button above the stage to run</span>' +
         '<div class="fs-spacer"></div>' +
         '<button id="fsZoomOut">&minus;</button><span id="fs-zoom-readout">100%</span><button id="fsZoomIn">+</button><button id="fsFitBtn">Fit</button>' +
       '</div>' +
       '<div id="fs-body">' +
-        '<aside id="fs-sidebar">' +
-          '<h2>Flow</h2>' +
-          '<div class="fs-palette-item" data-type="start"><b>Start</b></div>' +
-          '<div class="fs-palette-item" data-type="end"><b>End</b></div>' +
-          '<h2>Motion</h2>' +
-          '<div class="fs-palette-item" data-type="move_steps"><b>Move steps</b></div>' +
-          '<div class="fs-palette-item" data-type="turn_right"><b>Turn right</b></div>' +
-          '<div class="fs-palette-item" data-type="turn_left"><b>Turn left</b></div>' +
-          '<div class="fs-palette-item" data-type="point_towards"><b>Point towards</b></div>' +
-          '<h2>Looks</h2>' +
-          '<div class="fs-palette-item" data-type="next_costume"><b>Next costume</b></div>' +
-          '<div class="fs-palette-item" data-type="change_color"><b>Change colour</b></div>' +
-          '<h2>Input / output</h2>' +
-          '<div class="fs-palette-item" data-type="say"><b>Say</b></div>' +
-          '<div class="fs-palette-item" data-type="ask"><b>Ask</b></div>' +
-          '<h2>Selection</h2>' +
-          '<div class="fs-palette-item" data-type="selection"><b>Condition</b></div>' +
-        '</aside>' +
+        '<aside id="fs-sidebar">' + paletteSidebarHtml() + '</aside>' +
         '<section id="fs-canvas-wrap">' +
           '<div id="fs-toast"></div>' +
           '<div id="fs-world"><svg id="fs-wires"><defs><marker id="fsArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#646873"/></marker></defs><g id="fs-wire-layer"></g><path id="fs-draft-wire" class="fs-wire active" style="display:none"/></svg><div id="fs-nodes"></div><div id="fs-hover-anchor" class="fs-anchor"></div></div>' +
@@ -784,12 +1039,14 @@
       askForm: root.querySelector('#fs-ask-form'),
       askLabel: root.querySelector('#fs-ask-label'),
       askInput: root.querySelector('#fs-ask-input'),
-      hoverAnchorEl: root.querySelector('#fs-hover-anchor')
+      hoverAnchorEl: root.querySelector('#fs-hover-anchor'),
+      varList: root.querySelector('#fs-var-list')
     };
 
     bindGlobalPointer();
     bindPalette();
     bindCanvas();
+    renderSidebar();
 
     root.querySelector('#fsValidateBtn').onclick = function () {
       var e = validate();
@@ -800,6 +1057,28 @@
         FS.nodes = []; FS.edges = []; FS.selected = null; FS.selectedEdgeId = null; renderAll(); saveGraph(FS.activeSprite);
       }
     };
+    root.querySelector('#fsNewVarBtn').onclick = function () {
+      var name = prompt('New variable name:');
+      if (name) createGlobalVariable(name);
+    };
+    var slowToggle = root.querySelector('#fsSlowModeToggle');
+    var slowSlider = root.querySelector('#fsSlowSlider');
+    var slowReadout = root.querySelector('#fsSlowReadout');
+    slowToggle.onchange = function () {
+      FS.slowMode = slowToggle.checked;
+      slowSlider.style.display = FS.slowMode ? 'inline-block' : 'none';
+      slowReadout.style.display = FS.slowMode ? 'inline' : 'none';
+    };
+    slowSlider.oninput = function () {
+      FS.slowDelayMs = Number(slowSlider.value);
+      slowReadout.textContent = FS.slowDelayMs + 'ms';
+    };
+    Array.prototype.forEach.call(root.querySelectorAll('.fs-cat-chip'), function (chip) {
+      chip.addEventListener('click', function () {
+        var target = root.querySelector('h2[data-cat="' + chip.dataset.jump + '"]');
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
     root.querySelector('#fsZoomIn').onclick = function () { zoom(1.15); };
     root.querySelector('#fsZoomOut').onclick = function () { zoom(.87); };
     root.querySelector('#fsFitBtn').onclick = fitToScreen;
@@ -810,8 +1089,8 @@
     if (!FS.nodes.length) return;
     var minX = Math.min.apply(null, FS.nodes.map(function (n) { return n.x; }));
     var minY = Math.min.apply(null, FS.nodes.map(function (n) { return n.y; }));
-    var maxX = Math.max.apply(null, FS.nodes.map(function (n) { return n.x + 150; }));
-    var maxY = Math.max.apply(null, FS.nodes.map(function (n) { return n.y + (n.shape === 'selection' ? 112 : 66); }));
+    var maxX = Math.max.apply(null, FS.nodes.map(function (n) { return n.x + nodeDims(n).w; }));
+    var maxY = Math.max.apply(null, FS.nodes.map(function (n) { return n.y + nodeDims(n).h; }));
     var r = els.canvasWrap.getBoundingClientRect();
     FS.scale = Math.min(1.2, Math.max(.35, Math.min((r.width - 60) / (maxX - minX), (r.height - 60) / (maxY - minY))));
     FS.panX = 30 - minX * FS.scale; FS.panY = 30 - minY * FS.scale;
@@ -894,8 +1173,9 @@
     var fromNode = getNode(edge.from), toNode = getNode(edge.to);
     if (!fromNode || !toNode) return;
     FS.edges = FS.edges.filter(function (e) { return e.id !== edge.id; });
-    var fromCenter = { x: fromNode.x + 75, y: fromNode.y + (fromNode.shape === 'selection' ? 56 : 33) };
-    var toCenter = { x: toNode.x + 75, y: toNode.y + (toNode.shape === 'selection' ? 56 : 33) };
+    var fromDims = nodeDims(fromNode), toDims = nodeDims(toNode);
+    var fromCenter = { x: fromNode.x + fromDims.w / 2, y: fromNode.y + fromDims.h / 2 };
+    var toCenter = { x: toNode.x + toDims.w / 2, y: toNode.y + toDims.h / 2 };
     addEdge(fromNode.id, n.id, edge.fromA, anchorPointOnNode(n, fromCenter.x, fromCenter.y));
     addEdge(n.id, toNode.id, anchorPointOnNode(n, toCenter.x, toCenter.y), edge.toA);
   }
@@ -911,10 +1191,10 @@
     var threshold = HOVER_ANCHOR_SCREEN_PX / FS.scale;
     var best = null;
     FS.nodes.forEach(function (n) {
-      var h = n.shape === 'selection' ? 112 : 66;
+      var d = nodeDims(n), w = d.w, h = d.h;
       var lx = wp.x - n.x, ly = wp.y - n.y;
-      if (lx < -threshold || lx > 150 + threshold || ly < -threshold || ly > h + threshold) return;
-      var pt = nearestPerimeterPoint(150, h, lx, ly);
+      if (lx < -threshold || lx > w + threshold || ly < -threshold || ly > h + threshold) return;
+      var pt = nearestPerimeterPoint(w, h, lx, ly);
       var dist = Math.hypot(lx - pt.x, ly - pt.y);
       if (dist <= threshold && (!best || dist < best.dist)) best = { nodeId: n.id, x: pt.x, y: pt.y, dist: dist };
     });
