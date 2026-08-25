@@ -596,38 +596,40 @@ const sequencePracticeData = {
   ]
 };
 
-// Selection foundations begin with a value supplied in the question.
-// The code itself contains only the decision, its branches and the output.
 const selectionWalkData = {
-  context: '<strong>score = 8</strong> before the code begins. Test the condition, then follow only the branch that runs.',
+  context: 'When prompted for a score, the user enters <strong>8</strong>. Record the input, test the condition, then follow only the branch that runs.',
   code: [
+    'score = int(input("Enter score:"))',
     'if score >= 5:',
     '    result = 1',
     'else:',
     '    result = 0',
     'print(result)'
   ],
-  cols: ['Line', 'result', 'Output'],
+  cols: ['Line', 'score', 'result', 'Output'],
   answers: [
-    {Line: '2', result: '1', Output: ''},
-    {Line: '5', result: '', Output: '1'}
+    {Line: '1', score: '8', result: '', Output: ''},
+    {Line: '3', score: '', result: '1', Output: ''},
+    {Line: '6', score: '', result: '', Output: '1'}
   ]
 };
 
 const selectionPracticeData = {
   title: 'Selection Foundations',
-  context: '<strong>score = 3</strong> before the code begins. Test the condition, then trace only the branch that runs.',
+  context: 'When prompted for a score, the user enters <strong>3</strong>. Record the input, test the condition, then trace only the branch that runs.',
   code: [
+    'score = int(input("Enter score:"))',
     'if score >= 5:',
     '    result = 1',
     'else:',
     '    result = 0',
     'print(result)'
   ],
-  cols: ['Line', 'result', 'Output'],
+  cols: ['Line', 'score', 'result', 'Output'],
   answers: [
-    {Line: '4', result: '0', Output: ''},
-    {Line: '5', result: '', Output: '0'}
+    {Line: '1', score: '3', result: '', Output: ''},
+    {Line: '5', score: '', result: '0', Output: ''},
+    {Line: '6', score: '', result: '', Output: '0'}
   ]
 };
 
@@ -1023,7 +1025,7 @@ function generateConditionalAlgorithm(contextData, diff) {
     const value = Math.floor(Math.random() * 12) + 1;
     const increase = Math.floor(Math.random() * 4) + 2;
     const decrease = Math.min(value, Math.floor(Math.random() * 3) + 1);
-    const cols = ['Line', resultName, 'Output'];
+    const cols = ['Line', valueName, resultName, 'Output'];
     let lines;
     let result;
     let executedLine;
@@ -1031,6 +1033,7 @@ function generateConditionalAlgorithm(contextData, diff) {
     if (diff === 'easy') {
         const threshold = Math.floor(Math.random() * 5) + 5;
         lines = [
+            `${valueName} = int(input("Enter ${valueName}:"))`,
             `if ${valueName} >= ${threshold}:`,
             `    ${resultName} = 1`,
             `else:`,
@@ -1038,10 +1041,11 @@ function generateConditionalAlgorithm(contextData, diff) {
             `print(${resultName})`
         ];
         result = value >= threshold ? 1 : 0;
-        executedLine = value >= threshold ? '2' : '4';
+        executedLine = value >= threshold ? '3' : '5';
     } else if (diff === 'medium') {
         const threshold = Math.floor(Math.random() * 5) + 5;
         lines = [
+            `${valueName} = int(input("Enter ${valueName}:"))`,
             `if ${valueName} >= ${threshold}:`,
             `    ${resultName} = ${valueName} + ${increase}`,
             `else:`,
@@ -1049,11 +1053,12 @@ function generateConditionalAlgorithm(contextData, diff) {
             `print(${resultName})`
         ];
         result = value >= threshold ? value + increase : value - decrease;
-        executedLine = value >= threshold ? '2' : '4';
+        executedLine = value >= threshold ? '3' : '5';
     } else {
         const low = Math.floor(Math.random() * 3) + 4;
         const high = low + Math.floor(Math.random() * 3) + 3;
         lines = [
+            `${valueName} = int(input("Enter ${valueName}:"))`,
             `if ${valueName} >= ${high}:`,
             `    ${resultName} = ${valueName} + ${increase}`,
             `elif ${valueName} >= ${low}:`,
@@ -1064,22 +1069,23 @@ function generateConditionalAlgorithm(contextData, diff) {
         ];
         if (value >= high) {
             result = value + increase;
-            executedLine = '2';
+            executedLine = '3';
         } else if (value >= low) {
             result = value;
-            executedLine = '4';
+            executedLine = '5';
         } else {
             result = value - decrease;
-            executedLine = '6';
+            executedLine = '7';
         }
     }
 
     const printLine = lines.length.toString();
     const answers = [
-        { Line: executedLine, [resultName]: result.toString(), Output: '' },
-        { Line: printLine, [resultName]: '', Output: result.toString() }
+        { Line: '1', [valueName]: value.toString(), [resultName]: '', Output: '' },
+        { Line: executedLine, [valueName]: '', [resultName]: result.toString(), Output: '' },
+        { Line: printLine, [valueName]: '', [resultName]: '', Output: result.toString() }
     ];
-    const context = `<strong>${valueName} = ${value}</strong> before the code begins. Test the conditions in order and follow only the branch that runs.`;
+    const context = `When prompted for ${valueName}, the user enters <strong>${value}</strong>. Record the input, test the conditions in order and follow only the branch that runs.`;
     return { context, code: lines, cols, answers, solved: false, failedAttempt: false, questionType: 'Selection' };
 }
 
