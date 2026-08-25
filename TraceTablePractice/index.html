@@ -260,7 +260,7 @@
       <button class="btn active" onclick="selectWalkAlgo(5, this)">Sequence</button>
       <button class="btn" onclick="selectWalkAlgo(0, this)">For Loop</button>
       <button class="btn" onclick="selectWalkAlgo(1, this)">While Loop</button>
-      <button class="btn" onclick="selectWalkAlgo(2, this)">Conditionals</button>
+      <button class="btn" onclick="selectWalkAlgo(2, this)">Selection</button>
       <button class="btn" onclick="selectWalkAlgo(3, this)">Do...Until Loop</button>
       <button class="btn" onclick="selectWalkAlgo(4, this)">Array Iteration</button>
     </div>
@@ -289,9 +289,10 @@
     
     <div class="controls mb-4">
        <button class="btn active" onclick="showPrac(5, this)">Sequence</button>
+       <button class="btn" onclick="showPrac(6, this)">Selection Foundations</button>
        <button class="btn" onclick="showPrac(0, this)">Practice 1 (For)</button>
        <button class="btn" onclick="showPrac(1, this)">Practice 2 (While)</button>
-       <button class="btn" onclick="showPrac(2, this)">Practice 3 (If/Else)</button>
+       <button class="btn" onclick="showPrac(2, this)">Practice 3 (If in Loop)</button>
        <button class="btn" onclick="showPrac(3, this)">Practice 4 (Until)</button>
        <button class="btn" onclick="showPrac(4, this)">Practice 5 (Arrays)</button>
     </div>
@@ -385,6 +386,21 @@
         </div>
       </div>
     </div>
+
+    <!-- Sub-page: Selection foundations -->
+    <div id="prac6-area" class="prac-area">
+      <div class="grid">
+        <div>
+          <div id="prac6-context" class="context-box"></div>
+          <div id="prac6-code" class="code-container"></div>
+        </div>
+        <div>
+          <div id="prac6-table-wrap"></div>
+          <button class="btn btn-primary mt-4" onclick="checkPractice(6)">Check Answers</button>
+          <div id="prac6-result" class="result-badge"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Page 4: Generator -->
@@ -399,7 +415,7 @@
           <option value="sequence">Sequence</option>
           <option value="for">For Loops</option>
           <option value="while">While Loops</option>
-          <option value="conditional">Conditionals</option>
+          <option value="conditional">Selection</option>
           <option value="do-until">Do Until Loops</option>
           <option value="array">Arrays</option>
         </select>
@@ -580,17 +596,54 @@ const sequencePracticeData = {
   ]
 };
 
+// Selection foundations begin with a value supplied in the question.
+// The code itself contains only the decision, its branches and the output.
+const selectionWalkData = {
+  context: '<strong>score = 8</strong> before the code begins. Test the condition, then follow only the branch that runs.',
+  code: [
+    'if score >= 5:',
+    '    result = 1',
+    'else:',
+    '    result = 0',
+    'print(result)'
+  ],
+  cols: ['Line', 'result', 'Output'],
+  answers: [
+    {Line: '2', result: '1', Output: ''},
+    {Line: '5', result: '', Output: '1'}
+  ]
+};
+
+const selectionPracticeData = {
+  title: 'Selection Foundations',
+  context: '<strong>score = 3</strong> before the code begins. Test the condition, then trace only the branch that runs.',
+  code: [
+    'if score >= 5:',
+    '    result = 1',
+    'else:',
+    '    result = 0',
+    'print(result)'
+  ],
+  cols: ['Line', 'result', 'Output'],
+  answers: [
+    {Line: '4', result: '0', Output: ''},
+    {Line: '5', result: '', Output: '0'}
+  ]
+};
+
 const pracData = [
   { context: algo0Context, code: algo0Lines, cols: algo0Cols, answers: algo0Answers },
   { context: algo1Context, code: algo1Lines, cols: algo1Cols, answers: algo1Answers },
   { context: algo2Context, code: algo2Lines, cols: algo2Cols, answers: algo2Answers },
   { context: algo3Context, code: algo3Lines, cols: algo3Cols, answers: algo3Answers },
   { context: algo4Context, code: algo4Lines, cols: algo4Cols, answers: algo4Answers },
-  sequencePracticeData
+  sequencePracticeData,
+  selectionPracticeData
 ];
 
 const walkData = pracData.slice();
 walkData[5] = sequenceWalkData;
+walkData[2] = selectionWalkData;
 
 // ======================================================
 // LOCAL STORAGE & PROGRESS TRACKING
@@ -622,7 +675,8 @@ function initProgress() {
       { id: 'prac2', title: 'Practice 3', attempts: 0, correct: false, tableData: null, codeSnippet: null },
       { id: 'prac3', title: 'Practice 4', attempts: 0, correct: false, tableData: null, codeSnippet: null },
       { id: 'prac4', title: 'Practice 5', attempts: 0, correct: false, tableData: null, codeSnippet: null },
-      { id: 'prac5', title: 'Sequence Foundations', attempts: 0, correct: false, tableData: null, codeSnippet: null }
+      { id: 'prac5', title: 'Sequence Foundations', attempts: 0, correct: false, tableData: null, codeSnippet: null },
+      { id: 'prac6', title: 'Selection Foundations', attempts: 0, correct: false, tableData: null, codeSnippet: null }
     ];
     saveProgress();
   }
@@ -966,31 +1020,67 @@ function generateSequenceAlgorithm(contextData, diff) {
 function generateConditionalAlgorithm(contextData, diff) {
     const valueName = contextData.vars[0];
     const resultName = contextData.vars[1];
-    const threshold = Math.floor(Math.random() * 5) + 5;
-    const value = Math.floor(Math.random() * 10) + 2;
+    const value = Math.floor(Math.random() * 12) + 1;
     const increase = Math.floor(Math.random() * 4) + 2;
     const decrease = Math.min(value, Math.floor(Math.random() * 3) + 1);
-    const useInput = diff !== 'easy';
-    const lines = [
-        useInput ? `${valueName} = int(input("Enter ${valueName}:"))` : `${valueName} = ${value}`,
-        `if ${valueName} >= ${threshold}:`,
-        `    ${resultName} = ${valueName} + ${increase}`,
-        `else:`,
-        `    ${resultName} = ${valueName} - ${decrease}`,
-        `print(${resultName})`
-    ];
-    const result = value >= threshold ? value + increase : value - decrease;
-    const executedLine = value >= threshold ? '3' : '5';
-    const cols = ['Line', valueName, resultName, 'Output'];
+    const cols = ['Line', resultName, 'Output'];
+    let lines;
+    let result;
+    let executedLine;
+
+    if (diff === 'easy') {
+        const threshold = Math.floor(Math.random() * 5) + 5;
+        lines = [
+            `if ${valueName} >= ${threshold}:`,
+            `    ${resultName} = 1`,
+            `else:`,
+            `    ${resultName} = 0`,
+            `print(${resultName})`
+        ];
+        result = value >= threshold ? 1 : 0;
+        executedLine = value >= threshold ? '2' : '4';
+    } else if (diff === 'medium') {
+        const threshold = Math.floor(Math.random() * 5) + 5;
+        lines = [
+            `if ${valueName} >= ${threshold}:`,
+            `    ${resultName} = ${valueName} + ${increase}`,
+            `else:`,
+            `    ${resultName} = ${valueName} - ${decrease}`,
+            `print(${resultName})`
+        ];
+        result = value >= threshold ? value + increase : value - decrease;
+        executedLine = value >= threshold ? '2' : '4';
+    } else {
+        const low = Math.floor(Math.random() * 3) + 4;
+        const high = low + Math.floor(Math.random() * 3) + 3;
+        lines = [
+            `if ${valueName} >= ${high}:`,
+            `    ${resultName} = ${valueName} + ${increase}`,
+            `elif ${valueName} >= ${low}:`,
+            `    ${resultName} = ${valueName}`,
+            `else:`,
+            `    ${resultName} = ${valueName} - ${decrease}`,
+            `print(${resultName})`
+        ];
+        if (value >= high) {
+            result = value + increase;
+            executedLine = '2';
+        } else if (value >= low) {
+            result = value;
+            executedLine = '4';
+        } else {
+            result = value - decrease;
+            executedLine = '6';
+        }
+    }
+
+    const printLine = lines.length.toString();
     const answers = [
-        { Line: '1', [valueName]: value.toString(), [resultName]: '', Output: '' },
-        { Line: executedLine, [valueName]: '', [resultName]: result.toString(), Output: '' },
-        { Line: '6', [valueName]: '', [resultName]: '', Output: result.toString() }
+        { Line: executedLine, [resultName]: result.toString(), Output: '' },
+        { Line: printLine, [resultName]: '', Output: result.toString() }
     ];
-    const context = useInput
-        ? `This selection processes information for ${contextData.theme}. The user entered <strong>${valueName} = ${value}</strong>.`
-        : `Trace this selection for ${contextData.theme}. Only one branch of the IF statement will run.`;
-    return { context, code: lines, cols, answers, solved: false, failedAttempt: false, questionType: 'Conditionals' };
+    const context = `<strong>${valueName} = ${value}</strong> before the code begins. Test the conditions in order and follow only the branch that runs.`;
+    return { context, code: lines, cols, answers, solved: false, failedAttempt: false, questionType: 'Selection' };
 }
 
 function generateArrayAlgorithm(contextData, diff) {
@@ -1326,7 +1416,7 @@ window.addEventListener('keydown', (e) => {
 
 function executeDevAutoFill() {
   if (document.getElementById('page-prac').classList.contains('active')) {
-      for (let i = 0; i <= 5; i++) {
+      for (let i = 0; i <= 6; i++) {
           if (document.getElementById(`prac${i}-area`).classList.contains('active')) {
               devFillTable(`prac${i}`, pracData[i].cols, pracData[i].answers);
               checkPractice(i); 
