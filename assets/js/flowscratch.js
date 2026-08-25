@@ -289,7 +289,7 @@
   // block in its anchor's own direction, then at most one more bend to
   // reach the other stub, so every segment is horizontal or vertical.
   function orthogonalPath(p1, dir1, p2, dir2) {
-    var STUB = 20;
+    var STUB = 30;
     var s1 = { x: p1.x + dir1.x * STUB, y: p1.y + dir1.y * STUB };
     var s2 = { x: p2.x + dir2.x * STUB, y: p2.y + dir2.y * STUB };
     var pts = [p1, s1];
@@ -302,7 +302,7 @@
     return 'M' + pts.map(function (p) { return p.x + ',' + p.y; }).join(' L ');
   }
   function draftOrthogonalPath(p1, dir1, mouse) {
-    var STUB = 20;
+    var STUB = 30;
     var s1 = { x: p1.x + dir1.x * STUB, y: p1.y + dir1.y * STUB };
     var pts = [p1, s1];
     pts.push(dir1.x !== 0 ? { x: mouse.x, y: s1.y } : { x: s1.x, y: mouse.y });
@@ -402,14 +402,38 @@
     renderAll(); saveGraph(FS.activeSprite);
   }
 
+  // True if any node reachable from startId can eventually reach itself
+  // again, i.e. the graph has a loop (standard directed-cycle detection:
+  // DFS tracking the current recursion stack, not just visited nodes).
+  function hasCycleFrom(startId, out) {
+    var visited = {}, onStack = {};
+    function dfs(id) {
+      visited[id] = true; onStack[id] = true;
+      var found = out(id).some(function (next) {
+        if (onStack[next]) return true;
+        if (visited[next]) return false;
+        return dfs(next);
+      });
+      onStack[id] = false;
+      return found;
+    }
+    return dfs(startId);
+  }
   function validate() {
     var errors = [];
     var starts = FS.nodes.filter(function (n) { return n.type === 'start'; });
     var ends = FS.nodes.filter(function (n) { return n.type === 'end'; });
     if (starts.length !== 1) errors.push('Flow needs exactly one Start block (found ' + starts.length + ').');
-    if (!ends.length) errors.push('Flow needs at least one End block.');
     var out = function (id) { return FS.edges.filter(function (e) { return e.from === id; }).map(function (e) { return e.to; }); };
     var inc = function (id) { return FS.edges.filter(function (e) { return e.to === id; }).map(function (e) { return e.from; }); };
+    // A flowchart doesn't have to end: a "forever" loop (a game's main
+    // loop, say) is just a wire connected back to an earlier block, a
+    // cycle, with no End block at all, same as Scratch's own forever
+    // block never finishes on its own either. So an End block is only
+    // required when there's no loop to keep the flow running instead.
+    if (!ends.length && starts.length === 1 && !hasCycleFrom(starts[0].id, out)) {
+      errors.push('Flow needs an End block, or a connection looping back to an earlier block to keep it running.');
+    }
     FS.nodes.forEach(function (n) {
       if (n.type !== 'end' && !out(n.id).length) errors.push(TYPES[n.type].title + ' has no outgoing connection.');
       if (n.type !== 'start' && !inc(n.id).length) errors.push(TYPES[n.type].title + ' has no incoming connection.');
@@ -497,8 +521,17 @@
     FS.answer = ''; els.answerValue.textContent = String.fromCharCode(8709);
     var start = FS.nodes.find(function (n) { return n.type === 'start'; });
     var current = start, steps = 0;
+    // A "forever" flowchart loop is just a wire connected back to an
+    // earlier block, a normal cycle, not a special block type. Every pass
+    // through this loop already awaits a real pause inside runBlock (at
+    // least a short wait() even for instant blocks), so it always yields
+    // back to the browser and can't lock up the tab, unlike a true
+    // synchronous busy-loop. STEP_CAP is a generous last-resort safety net
+    // only, not the intended way to stop a deliberate loop, that's what
+    // the stop button (wired to TurboWarp's own) is for.
+    var STEP_CAP = 200000;
     (async function loop() {
-      while (FS.running && FS.gen === myGen && current && steps++ < 400) {
+      while (FS.running && FS.gen === myGen && current && steps++ < STEP_CAP) {
         setRunStatus(TYPES[current.type].title);
         var outs = FS.edges.filter(function (e) { return e.from === current.id; });
         renderWires(outs[0] && outs[0].id);
@@ -512,7 +545,7 @@
           current = getNode(outs[0] ? outs[0].to : undefined);
         }
       }
-      if (steps >= 400) notify('Stopped: possible infinite loop.', 'error');
+      if (steps >= STEP_CAP) notify('Stopped after a very long run, in case something is stuck. Use the stop button to end a deliberate loop instead.', 'error');
       finishRun(myGen);
     })();
   }
@@ -664,7 +697,7 @@
 
     root.querySelector('#fsValidateBtn').onclick = function () {
       var e = validate();
-      notify(e.length ? e.join(' ') : 'Flow is valid and every path reaches an End.', e.length ? 'error' : 'ok');
+      notify(e.length ? e.join(' ') : 'Flow is valid.', e.length ? 'error' : 'ok');
     };
     root.querySelector('#fsClearBtn').onclick = function () {
       if (confirm('Clear every block and connector for this sprite?')) {
