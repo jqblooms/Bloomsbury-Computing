@@ -407,6 +407,7 @@
     var style = document.createElement('style');
     style.textContent = [
       '#fs-overlay{position:fixed;left:0;top:92px;right:60%;bottom:0;z-index:45;display:flex;flex-direction:column;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#18191b;background:#e9e9eb;border-right:2px solid #151619;box-shadow:4px 0 20px rgba(0,0,0,.35)}',
+      '#fs-overlay.fs-suppressed{display:none}',
       '.blocklyDiv,.blocklyToolboxDiv,.blocklyFlyout,.blocklyWidgetDiv{display:none !important}',
       '#fs-topbar{display:flex;align-items:center;gap:8px;padding:0 10px;height:42px;flex-shrink:0;background:#151619;color:#fff;border-bottom:1px solid #000}',
       '#fs-topbar button{font:inherit;cursor:pointer;border:1px solid #3d3f45;background:#24262a;color:#fff;border-radius:7px;padding:5px 9px;font-size:12px}',
@@ -653,6 +654,69 @@
     });
   }
 
+  // ── Overlay suppression: only cover the Code tab ─────────────────────
+  // The flowchart canvas replaces the blocks workspace, which only exists
+  // under TurboWarp's own "Code" tab. Left permanently visible, the
+  // overlay also blanks out the Costumes and Sounds tabs (and anything
+  // TurboWarp opens as a real modal, e.g. the costume library), which have
+  // nothing to do with the flowchart and must stay reachable. Same
+  // approach pyscratch.js already uses for the same reason, reimplemented
+  // independently rather than shared (see the top-of-file note on why).
+  function isCodeTabActive() {
+    var tabs = document.querySelectorAll('[role="tab"], button, li');
+    for (var i = 0; i < tabs.length; i++) {
+      var el = tabs[i];
+      if ((el.textContent || '').trim() !== 'Code') continue;
+      var cls = typeof el.className === 'string' ? el.className : '';
+      if (el.getAttribute('aria-selected') === 'true') return true;
+      if (cls.indexOf('selected') !== -1 || cls.indexOf('--selected') !== -1) return true;
+    }
+    return false;
+  }
+  function isVisibleOverlayElement(el) {
+    if (!el || el.id === 'fs-overlay' || el.closest('#fs-overlay')) return false;
+    var cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') return false;
+    var rect = el.getBoundingClientRect();
+    return rect.width > 36 && rect.height > 18 && rect.bottom > 0 && rect.right > 0 &&
+      rect.top < window.innerHeight && rect.left < window.innerWidth;
+  }
+  function hasTurboWarpBlockingOverlayOpen() {
+    var nodes = document.body ? document.body.querySelectorAll('body *') : [];
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (!isVisibleOverlayElement(el)) continue;
+      var cls = typeof el.className === 'string' ? el.className : '';
+      var role = el.getAttribute && el.getAttribute('role');
+      var modal = el.getAttribute && el.getAttribute('aria-modal');
+      var looksLikeTwOverlay = cls.indexOf('modal_') !== -1 || cls.indexOf('library_') !== -1 ||
+        cls.indexOf('ReactModal') !== -1 || role === 'dialog' || modal === 'true';
+      if (!looksLikeTwOverlay) continue;
+      var rect = el.getBoundingClientRect();
+      if (role === 'dialog' || modal === 'true') return true;
+      if (rect.width > window.innerWidth * 0.45 && rect.height > window.innerHeight * 0.35) return true;
+    }
+    return false;
+  }
+  function updateOverlaySuppression() {
+    if (!els.overlay) return;
+    var suppressed = !isCodeTabActive() || hasTurboWarpBlockingOverlayOpen();
+    els.overlay.classList.toggle('fs-suppressed', suppressed);
+    if (suppressed && FS.running) stop();
+  }
+  function watchTurboWarpTabsAndModals() {
+    if (!window.MutationObserver || !document.body) return;
+    var pending = false;
+    function schedule() {
+      if (pending) return;
+      pending = true;
+      setTimeout(function () { pending = false; updateOverlaySuppression(); adjustOverlay(); }, 50);
+    }
+    var observer = new MutationObserver(schedule);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style', 'aria-modal', 'role'] });
+    schedule();
+  }
+
   // ── Overlay sizing: mirror the visible stage canvas exactly ─────────
   function adjustOverlay() {
     var canvas = document.querySelector('canvas');
@@ -700,6 +764,7 @@
     setTimeout(adjustOverlay, 1200);
     window.addEventListener('resize', adjustOverlay);
     try { vm.runtime.on('TARGETS_UPDATE', adjustOverlay); } catch (e) {}
+    watchTurboWarpTabsAndModals();
 
     // Hook TurboWarp's green flag -> run the active sprite's flowchart.
     try { vm.runtime.on('PROJECT_START', function () { setTimeout(run, 0); }); } catch (e) {}
