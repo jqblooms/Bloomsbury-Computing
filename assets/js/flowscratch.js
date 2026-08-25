@@ -210,7 +210,15 @@
   function select(id) { FS.selected = id; renderAll(); }
 
   function center(n, a) {
-    var w = 174, h = n.shape === 'selection' ? 130 : 78;
+    // Must match .fs-node's actual CSS dimensions (150 wide; 66 tall, or
+    // 112 for the diamond-shaped selection block), not the original
+    // Flowbox Playground prototype's 174x78/130, which this was ported
+    // from without updating these numbers to the smaller overlay size.
+    // A mismatch here doesn't error, it just makes wires terminate
+    // somewhere other than the anchor dot, which looked like crossing/
+    // misconnected wires: caught from a screenshot, verified by comparing
+    // this function's output against the anchors' real getBoundingClientRect().
+    var w = 150, h = n.shape === 'selection' ? 112 : 66;
     var points = { N: [w / 2, 0], NE: [w * .86, 8], E: [w, h / 2], SE: [w * .86, h - 8], S: [w / 2, h], SW: [w * .14, h - 8], W: [0, h / 2], NW: [w * .14, 8] };
     var p = points[a] || points.E;
     return { x: n.x + p[0], y: n.y + p[1] };
@@ -406,6 +414,12 @@
   function injectStyle() {
     var style = document.createElement('style');
     style.textContent = [
+      // border-box so the padding/border on .fs-node-body don't add on top
+      // of its declared min-height, keeping the actual rendered box the
+      // same size center() assumes below (content-box was silently
+      // inflating nodes to ~87px/66px, which is what threw wire endpoints
+      // off their anchor dots).
+      '#fs-overlay,#fs-overlay *{box-sizing:border-box}',
       '#fs-overlay{position:fixed;left:0;top:92px;right:60%;bottom:0;z-index:45;display:flex;flex-direction:column;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#18191b;background:#e9e9eb;border-right:2px solid #151619;box-shadow:4px 0 20px rgba(0,0,0,.35)}',
       '#fs-overlay.fs-suppressed{display:none}',
       '.blocklyDiv,.blocklyToolboxDiv,.blocklyFlyout,.blocklyWidgetDiv{display:none !important}',
