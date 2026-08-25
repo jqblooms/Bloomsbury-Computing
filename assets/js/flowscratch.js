@@ -20,17 +20,17 @@
  * its Skulpt/Python bridge (generation tokens, suspensions, thread
  * management) in a 7500-line file that's already proven in production.
  * Rather than risk that file to extract a shared core, FlowScratch carries
- * its own small copy of just the vm-driving calls the 7 flowchart blocks
+ * its own small copy of just the vm-driving calls the flowchart blocks
  * need (see runBlock/evaluateCondition below). If a future change is meant
  * to apply to both apps' stage-driving code, make that call explicitly,
  * don't assume the two should be merged just because they look similar.
  *
- * Known limitation (v1): flowcharts are cached in localStorage per sprite
- * (same technique as PyScratch's own thread storage) but are NOT yet
- * embedded into the saved .sb3 project file the way PyScratch code is, so
- * a flowchart doesn't travel with a project export/share, only with this
- * browser's local storage. Add that the same way pyscratch.js patches
- * vm.toJSON/vm.loadProject if that's needed later.
+ * Each sprite has its own independent flowchart, cached in localStorage
+ * keyed by that sprite's stable target id (same technique as PyScratch's
+ * own thread storage) and also embedded into the saved .sb3 project file
+ * (vm.toJSON/vm.loadProject patches, same field-per-target approach
+ * pyscratch.js uses for Python), so a flowchart travels with a project
+ * export/share too, not just this browser's local storage.
  */
 (function () {
   'use strict';
@@ -47,19 +47,29 @@
     running: false, gen: 0,
     answer: '',
     pressedKeys: {},
+    mouse: { x: 0, y: 0 },
     activeSprite: null, activeSpriteId: null
   };
 
   var TYPES = {
-    start:     { shape: 'oval',    title: 'Start',      data: {} },
-    end:       { shape: 'oval',    title: 'End',        data: {} },
-    colour:    { shape: 'process', title: 'Set colour',  data: { colour: '#ff5566' } },
-    move:      { shape: 'process', title: 'Move right',  data: { amount: 60 } },
-    say:       { shape: 'io',      title: 'Say',         data: { text: 'Hello!' } },
-    ask:       { shape: 'io',      title: 'Ask',         data: { text: 'What is your name?' } },
-    selection: { shape: 'selection', title: 'Selection', data: { negate: 'is', condition: 'key', value: 'Space' } }
+    start:        { shape: 'oval',      title: 'Start',           data: {} },
+    end:          { shape: 'oval',      title: 'End',             data: {} },
+    move_steps:   { shape: 'process',   title: 'Move steps',      data: { steps: 10 } },
+    turn_right:   { shape: 'process',   title: 'Turn right',      data: { degrees: 15 } },
+    turn_left:    { shape: 'process',   title: 'Turn left',       data: { degrees: 15 } },
+    point_towards:{ shape: 'process',   title: 'Point towards',   data: { target: 'mouse_pointer' } },
+    next_costume: { shape: 'process',   title: 'Next costume',    data: {} },
+    change_color: { shape: 'process',   title: 'Change colour',   data: { value: 25 } },
+    say:          { shape: 'io',        title: 'Say',             data: { text: 'Hello!' } },
+    ask:          { shape: 'io',        title: 'Ask',             data: { text: 'What is your name?' } },
+    selection:    { shape: 'selection', title: 'Selection',       data: { negate: 'is', condition: 'key', value: 'Space' } }
   };
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  // Looks up a block's display title defensively: a graph saved before a
+  // block type was renamed or removed (e.g. the old 'move'/'colour'
+  // blocks) would otherwise throw here and break the whole editor for
+  // that sprite instead of just showing an unrecognised block.
+  function typeTitle(n) { return (TYPES[n.type] && TYPES[n.type].title) || 'Unknown block'; }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function waitFor(test) {
     return new Promise(function (resolve) {
@@ -97,19 +107,72 @@
   // colour. On a mostly-white/grey costume this reads as a genuine recolour;
   // on a highly coloured costume it shifts hue rather than replacing it,
   // same as Scratch's own colour effect always has.
-  function hexToScratchColourEffect(hex) {
-    var m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
-    if (!m) return 0;
-    var r = parseInt(m[1].slice(0, 2), 16) / 255, g = parseInt(m[1].slice(2, 4), 16) / 255, b = parseInt(m[1].slice(4, 6), 16) / 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b), h = 0;
-    if (max !== min) {
-      var d = max - min;
-      if (max === r) h = ((g - b) / d) % 6;
-      else if (max === g) h = (b - r) / d + 2;
-      else h = (r - g) / d + 4;
-      h *= 60; if (h < 0) h += 360;
-    }
-    return (h / 360) * 200;
+  // Scratch's own direction convention: 0 = up, clockwise positive, so
+  // converting to a standard math angle (0 = right, counterclockwise
+  // positive) needs this flip. Same formula pyscratch.js uses.
+  function d2r(deg) { return ((90 - deg) * Math.PI) / 180; }
+
+  // ── Project save/load: embed flowcharts inside project.json ────────────
+  // Own copy of pyscratch.js's own zip-handling pattern (see the top-of-
+  // file note on why this file doesn't share code with pyscratch.js).
+  function ensureJSZip() {
+    return new Promise(function (resolve, reject) {
+      if (window.JSZip) { resolve(window.JSZip); return; }
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+      s.onload = function () { resolve(window.JSZip); };
+      s.onerror = function () { reject(new Error('Could not load JSZip')); };
+      document.head.appendChild(s);
+    });
+  }
+  function toArrayBuffer(input) {
+    if (input instanceof ArrayBuffer) return Promise.resolve(input);
+    if (input instanceof Uint8Array) return Promise.resolve(input.buffer.slice(input.byteOffset, input.byteOffset + input.byteLength));
+    if (typeof input.arrayBuffer === 'function') return input.arrayBuffer();
+    return new Promise(function (resolve, reject) {
+      var fr = new FileReader();
+      fr.onload = function (e) { resolve(e.target.result); };
+      fr.onerror = reject;
+      fr.readAsArrayBuffer(input);
+    });
+  }
+  // Reads a loaded .sb3's per-target "flowscratch" fields out before
+  // TurboWarp's own loader sees them (unknown target fields are normally
+  // harmless to leave in, but stripped anyway for the same belt-and-
+  // braces reason pyscratch.js strips its own field). Returns the
+  // possibly-cleaned buffer plus { spriteName: {nodes, edges} } for
+  // whatever this project actually shipped with, or extracted:null if
+  // this wasn't a binary project (e.g. a fresh blank project) at all.
+  function extractFlowScratchData(input) {
+    var isBinary = (input instanceof ArrayBuffer) || (input instanceof Uint8Array) ||
+      (typeof Blob !== 'undefined' && input instanceof Blob);
+    if (!isBinary) return Promise.resolve({ buffer: input, extracted: null });
+    return ensureJSZip().then(function (JSZip) {
+      return toArrayBuffer(input).then(function (buf) {
+        return JSZip.loadAsync(buf.slice(0)).then(function (zip) {
+          var projFile = zip.file('project.json');
+          if (!projFile) return { buffer: buf, extracted: null };
+          return projFile.async('string').then(function (raw) {
+            var proj;
+            try { proj = JSON.parse(raw); } catch (e) { return { buffer: buf, extracted: null }; }
+            if (!proj || !Array.isArray(proj.targets)) return { buffer: buf, extracted: null };
+            var extracted = {}, found = false;
+            proj.targets.forEach(function (t) {
+              if (t.flowscratch) { extracted[t.name] = t.flowscratch; delete t.flowscratch; found = true; }
+            });
+            if (!found) return { buffer: buf, extracted: null };
+            zip.file('project.json', JSON.stringify(proj));
+            return zip.generateAsync({ type: 'arraybuffer' }).then(function (clean) {
+              return { buffer: clean, extracted: extracted };
+            });
+          });
+        }).catch(function () {
+          return toArrayBuffer(input).then(function (buf2) { return { buffer: buf2, extracted: null }; });
+        });
+      });
+    }).catch(function () {
+      return { buffer: input, extracted: null };
+    });
   }
 
   // ── Per-sprite flowchart storage (localStorage, keyed by stable target id) ─
@@ -170,8 +233,10 @@
 
   function nodeMarkup(n) {
     var sub = '';
-    if (n.type === 'colour') sub = '<input type="color" data-field="colour" value="' + n.data.colour + '">';
-    if (n.type === 'move') sub = '<span class="fs-node-subtitle">' + n.data.amount + ' pixels</span>';
+    if (n.type === 'move_steps') sub = '<span class="fs-node-subtitle">' + n.data.steps + ' steps</span>';
+    if (n.type === 'turn_right' || n.type === 'turn_left') sub = '<span class="fs-node-subtitle">' + n.data.degrees + ' degrees</span>';
+    if (n.type === 'point_towards') sub = '<select data-field="target"><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option><option value="random"' + (n.data.target === 'random' ? ' selected' : '') + '>random direction</option></select>';
+    if (n.type === 'change_color') sub = '<span class="fs-node-subtitle">by ' + n.data.value + '</span>';
     if (n.type === 'say' || n.type === 'ask') sub = '<span class="fs-node-subtitle">' + esc(n.data.text) + '</span>';
     var content;
     if (n.type === 'selection') {
@@ -185,7 +250,7 @@
         '<select data-field="condition"><option value="key"' + (n.data.condition === 'key' ? ' selected' : '') + '>key pressed</option><option value="edge"' + (n.data.condition === 'edge' ? ' selected' : '') + '>touching edge</option><option value="answer"' + (n.data.condition === 'answer' ? ' selected' : '') + '>answer exists</option></select>' +
         '<select data-field="value">' + choices.map(function (c) { return '<option value="' + c[0] + '"' + (n.data.value === c[0] ? ' selected' : '') + '>' + c[1] + '</option>'; }).join('') + '</select></div>';
     } else {
-      content = '<div class="fs-node-title">' + TYPES[n.type].title + '</div>' + sub;
+      content = '<div class="fs-node-title">' + typeTitle(n) + '</div>' + sub;
     }
     return '<div class="fs-node ' + n.shape + (FS.selected === n.id ? ' selected' : '') + '" data-id="' + n.id + '" style="left:' + n.x + 'px;top:' + n.y + 'px"><div class="fs-node-body">' + content + '</div></div>';
   }
@@ -214,7 +279,7 @@
         FS.drag = { kind: 'node', id: n.id, startX: e.clientX, startY: e.clientY, x: n.x, y: n.y };
         el.setPointerCapture(e.pointerId);
       });
-      el.addEventListener('click', function (e) { select(el.dataset.id); });
+      el.addEventListener('click', function (e) { if (!e.target.matches('select,input')) select(el.dataset.id); });
       Array.prototype.forEach.call(el.querySelectorAll('[data-field]'), function (c) {
         c.addEventListener('change', function (e) {
           var n = getNode(el.dataset.id), field = e.target.dataset.field;
@@ -354,11 +419,13 @@
     if (!n) { host.className = 'fs-empty'; host.innerHTML = 'Select a block or connector to edit it.'; return; }
     host.className = '';
     var f = '';
-    if (n.type === 'move') f = field('Distance (pixels)', 'number', 'amount', n.data.amount);
+    if (n.type === 'move_steps') f = field('Distance (steps)', 'number', 'steps', n.data.steps);
+    if (n.type === 'turn_right' || n.type === 'turn_left') f = field('Degrees', 'number', 'degrees', n.data.degrees);
+    if (n.type === 'change_color') f = field('Change by', 'number', 'value', n.data.value);
     if (n.type === 'say' || n.type === 'ask') f = field(n.type === 'say' ? 'Message' : 'Question', 'text', 'text', n.data.text);
-    if (n.type === 'colour') f = field('Sprite colour', 'color', 'colour', n.data.colour);
+    if (n.type === 'point_towards') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Its first outgoing connector is True; its second is False.</p>';
-    host.innerHTML = '<b>' + TYPES[n.type].title + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
+    host.innerHTML = '<b>' + typeTitle(n) + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
     Array.prototype.forEach.call(host.querySelectorAll('[data-inspect]'), function (i) {
       i.addEventListener('input', function () {
         n.data[i.dataset.inspect] = i.type === 'number' ? Number(i.value) : i.value;
@@ -435,18 +502,18 @@
       errors.push('Flow needs an End block, or a connection looping back to an earlier block to keep it running.');
     }
     FS.nodes.forEach(function (n) {
-      if (n.type !== 'end' && !out(n.id).length) errors.push(TYPES[n.type].title + ' has no outgoing connection.');
-      if (n.type !== 'start' && !inc(n.id).length) errors.push(TYPES[n.type].title + ' has no incoming connection.');
+      if (n.type !== 'end' && !out(n.id).length) errors.push(typeTitle(n) + ' has no outgoing connection.');
+      if (n.type !== 'start' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
       if (n.type === 'selection' && out(n.id).length !== 2) errors.push('Each Selection must have exactly two outgoing connections (True first, False second).');
       // addEdge() already refuses to create this, but defends here too in
       // case a graph saved before that enforcement existed gets loaded:
       // Run must never execute a flowchart with an ambiguous branch.
-      if (n.type !== 'selection' && n.type !== 'end' && out(n.id).length > 1) errors.push(TYPES[n.type].title + ' has more than one outgoing connection, only a Selection block can branch.');
+      if (n.type !== 'selection' && n.type !== 'end' && out(n.id).length > 1) errors.push(typeTitle(n) + ' has more than one outgoing connection, only a Selection block can branch.');
     });
     if (starts.length === 1) {
       var seen = {};
       (function walk(id) { if (seen[id]) return; seen[id] = true; out(id).forEach(walk); })(starts[0].id);
-      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(TYPES[n.type].title + ' is not reachable from Start.'); });
+      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Start.'); });
     }
     return errors.filter(function (e, i, a) { return a.indexOf(e) === i; });
   }
@@ -463,12 +530,36 @@
     var target = activeTarget();
     if (!target) return Promise.resolve();
     switch (n.type) {
-      case 'colour':
-        try { target.setEffect('color', hexToScratchColourEffect(n.data.colour)); } catch (e) {}
-        return wait(120);
-      case 'move':
-        target.setXY(target.x + Number(n.data.amount || 0), target.y);
-        return wait(120);
+      case 'move_steps': {
+        var rad = d2r(target.direction);
+        target.setXY(target.x + Number(n.data.steps || 0) * Math.cos(rad), target.y + Number(n.data.steps || 0) * Math.sin(rad));
+        return wait(60);
+      }
+      case 'turn_right':
+        target.setDirection(target.direction + Number(n.data.degrees || 0));
+        return wait(60);
+      case 'turn_left':
+        target.setDirection(target.direction - Number(n.data.degrees || 0));
+        return wait(60);
+      case 'point_towards':
+        if (n.data.target === 'random') {
+          target.setDirection((Math.random() * 360) - 180);
+        } else {
+          var dx = FS.mouse.x - target.x, dy = FS.mouse.y - target.y;
+          target.setDirection(90 - Math.atan2(dy, dx) * 180 / Math.PI);
+        }
+        return wait(60);
+      case 'next_costume':
+        try { target.setCostume((target.currentCostume + 1) % target.sprite.costumes.length); } catch (e) {}
+        return wait(60);
+      case 'change_color':
+        try { target.changeEffect('color', Number(n.data.value || 0)); } catch (e) {
+          try {
+            var cur = (target.effects && target.effects.color) || 0;
+            target.setEffect('color', cur + Number(n.data.value || 0));
+          } catch (e2) {}
+        }
+        return wait(60);
       case 'say':
         try { target.runtime.emit('SAY', target, 'say', n.data.text == null ? '' : String(n.data.text)); } catch (e) {}
         return wait(850).then(function () {
@@ -607,9 +698,9 @@
       '.fs-node.selection{width:150px;height:112px}',
       '.fs-node.selection .fs-node-content{transform:rotate(-45deg);width:106px}',
       '.fs-node.selection select{max-width:90px;font-size:9px;padding:1px}',
+      '.fs-node.process select{font-size:10px;padding:2px 3px;max-width:120px}',
       '.fs-node-title{font-size:11px;font-weight:750}',
       '.fs-node-subtitle{font-size:10px;color:#686b73;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.fs-node input[type=color]{width:38px;height:19px;padding:1px;border:1px solid #bbb;border-radius:4px}',
       // Single hover-following anchor dot (replaces the previous 8 fixed
       // compass-point dots): positioned in #fs-world's own coordinate
       // space (left/top in world pixels), so it automatically tracks the
@@ -653,9 +744,14 @@
           '<h2>Flow</h2>' +
           '<div class="fs-palette-item" data-type="start"><b>Start</b></div>' +
           '<div class="fs-palette-item" data-type="end"><b>End</b></div>' +
-          '<h2>Process</h2>' +
-          '<div class="fs-palette-item" data-type="colour"><b>Set colour</b></div>' +
-          '<div class="fs-palette-item" data-type="move"><b>Move right</b></div>' +
+          '<h2>Motion</h2>' +
+          '<div class="fs-palette-item" data-type="move_steps"><b>Move steps</b></div>' +
+          '<div class="fs-palette-item" data-type="turn_right"><b>Turn right</b></div>' +
+          '<div class="fs-palette-item" data-type="turn_left"><b>Turn left</b></div>' +
+          '<div class="fs-palette-item" data-type="point_towards"><b>Point towards</b></div>' +
+          '<h2>Looks</h2>' +
+          '<div class="fs-palette-item" data-type="next_costume"><b>Next costume</b></div>' +
+          '<div class="fs-palette-item" data-type="change_color"><b>Change colour</b></div>' +
           '<h2>Input / output</h2>' +
           '<div class="fs-palette-item" data-type="say"><b>Say</b></div>' +
           '<div class="fs-palette-item" data-type="ask"><b>Ask</b></div>' +
@@ -760,6 +856,17 @@
       FS.panY = e.clientY - r.top - before.y * FS.scale;
       updateTransform();
     }, { passive: false });
+    // Mouse position in Scratch stage coordinates (centre 0,0, Y-up), for
+    // Point towards's mouse-pointer option. Same conversion pyscratch.js
+    // uses, tracked independently since FlowScratch doesn't share state
+    // with it.
+    window.addEventListener('mousemove', function (e) {
+      var canvas = document.querySelector('canvas');
+      if (!canvas) return;
+      var r = canvas.getBoundingClientRect();
+      FS.mouse.x = ((e.clientX - r.left) / r.width) * 480 - 240;
+      FS.mouse.y = -(((e.clientY - r.top) / r.height) * 360 - 180);
+    });
     window.addEventListener('keydown', function (e) {
       if (!els.overlay || els.overlay.style.display === 'none') { FS.pressedKeys[normKey(e.code)] = true; return; }
       FS.pressedKeys[normKey(e.code)] = true;
@@ -1003,6 +1110,66 @@
       var origRtStop = vm.runtime.stopAll.bind(vm.runtime);
       vm.runtime.stopAll = function () { stop(); return origRtStop(); };
     } catch (e) {}
+
+    // ── Project save: embed flowcharts inside project.json ───────────
+    // Patch vm.toJSON, called by every TurboWarp save path (File > Save,
+    // Ctrl+S, restore points). A flowchart is added as a "flowscratch"
+    // field on each non-stage target, same field-per-target approach
+    // pyscratch.js uses for Python. Every sprite's flowchart is embedded,
+    // not just the currently-open one, pulling from localStorage for any
+    // sprite that isn't the active one right now.
+    try {
+      var origToJSON = vm.toJSON.bind(vm);
+      vm.toJSON = function (optTargetId, serializationOptions) {
+        saveGraph(FS.activeSprite);
+        var jsonStr = origToJSON(optTargetId, serializationOptions);
+        try {
+          var proj = JSON.parse(jsonStr);
+          (proj.targets || []).forEach(function (t) {
+            if (t.isStage) return;
+            var graph = (t.name === FS.activeSprite) ? { nodes: FS.nodes, edges: FS.edges } : loadGraph(t.name);
+            if (graph.nodes.length || graph.edges.length) t.flowscratch = graph;
+          });
+          return JSON.stringify(proj);
+        } catch (e) {
+          return jsonStr;
+        }
+      };
+    } catch (e) {
+      console.warn('[FlowScratch] Could not patch vm.toJSON:', e);
+    }
+
+    // ── Project load: pull flowcharts back out ────────────────────────
+    // A freshly loaded project assigns brand new target ids, so the
+    // localStorage cache (keyed by id) can't be relied on to survive a
+    // save/reload round trip on its own, same reason pyscratch.js embeds
+    // its own data rather than only caching it. Extracted data is applied
+    // into localStorage under each sprite's fresh id once loading
+    // finishes, so the normal load path picks it up exactly as if it had
+    // always been there for this session.
+    try {
+      var origLoadProject = vm.loadProject.bind(vm);
+      vm.loadProject = function (input) {
+        return extractFlowScratchData(input).then(function (result) {
+          return origLoadProject(result.buffer).then(function (r) {
+            if (result.extracted) {
+              Object.keys(result.extracted).forEach(function (name) {
+                var t = getTargetByName(name);
+                if (!t) return;
+                try { localStorage.setItem('flowscratch:' + t.id, JSON.stringify(result.extracted[name])); } catch (e) {}
+              });
+              // Force the currently-active sprite to reload its graph from
+              // what was just restored, rather than keeping whatever was
+              // on the canvas from before this project loaded.
+              if (FS.activeSprite) { FS.activeSprite = null; syncSelectedSprite(); }
+            }
+            return r;
+          });
+        });
+      };
+    } catch (e) {
+      console.warn('[FlowScratch] Could not patch vm.loadProject:', e);
+    }
 
     console.log('[FlowScratch] Ready. vm=', vm);
   });
