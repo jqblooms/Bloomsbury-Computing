@@ -200,6 +200,16 @@
     font-family: var(--mono); font-size: 1.1rem; outline: none; font-weight: 700;
   }
   .trace-table input:focus { background: rgba(255, 193, 7, 0.15); }
+  .walk-table-scroll {
+    max-height: 65vh;
+    overflow: auto;
+    border-radius: 8px;
+  }
+  .walk-table-scroll .trace-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
   
   /* Validation Styles */
   .trace-table td.correct { background: rgba(5, 150, 105, 0.15); box-shadow: inset 0 0 0 2px var(--correct); }
@@ -263,7 +273,7 @@
           <button class="btn" onclick="resetWalk()">Restart Trace</button>
         </div>
       </div>
-      <div>
+      <div id="walk-table-scroll" class="walk-table-scroll">
         <table class="trace-table">
            <thead id="walk-thead"></thead>
            <tbody id="walk-tbody"></tbody>
@@ -384,11 +394,20 @@
     
     <div class="controls controls-spaced mb-4">
       <div class="controls-group">
-        <select id="gen-difficulty" class="btn" onchange="resetGeneratedPractice()">
-          <option value="easy">Easy (0 Inputs)</option>
-          <option value="medium">Medium (1 Input)</option>
-          <option value="hard">Hard (Arrays & Inputs)</option>
-          <option value="master">Master (Dynamic & Complex)</option>
+        <select id="gen-type" class="btn" aria-label="Question type" onchange="resetGeneratedPractice()">
+          <option value="mixed">Mixed Questions</option>
+          <option value="sequence">Sequence</option>
+          <option value="for">For Loops</option>
+          <option value="while">While Loops</option>
+          <option value="conditional">Conditionals</option>
+          <option value="do-until">Do Until Loops</option>
+          <option value="array">Arrays</option>
+        </select>
+        <select id="gen-difficulty" class="btn" aria-label="Difficulty" onchange="resetGeneratedPractice()">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+          <option value="master">Master</option>
         </select>
         <button class="btn btn-primary" onclick="resetGeneratedPractice()">Generate New Question</button>
       </div>
@@ -729,7 +748,8 @@ function stepWalk() {
      tr.appendChild(td);
    });
    document.getElementById('walk-tbody').appendChild(tr);
-   tr.scrollIntoView({ behavior: 'smooth', block: 'end' });
+   const tableScroll = document.getElementById('walk-table-scroll');
+   tableScroll.scrollTop = tableScroll.scrollHeight;
    walkStep++;
 }
 
@@ -788,18 +808,101 @@ const CONTEXT_BANK = [
 
 function generateProceduralAlgorithm() {
   const diff = document.getElementById('gen-difficulty').value;
-  
-  // Decide if this question will feature an array structure (only allowed on Hard/Master)
-  const allowArrays = (diff === 'hard' || diff === 'master');
-  const useArray = allowArrays && Math.random() < 0.35; // 35% chance for arrays
-
+  const selectedType = document.getElementById('gen-type').value;
   const selectedContext = CONTEXT_BANK[Math.floor(Math.random() * CONTEXT_BANK.length)];
 
-  if (useArray) {
-      return generateArrayAlgorithm(selectedContext, diff);
-  } else {
-      return generateStandardAlgorithm(selectedContext, diff);
+  let questionType = selectedType;
+  if (questionType === 'mixed') {
+      const mixedTypes = ['sequence', 'for', 'while', 'conditional', 'do-until'];
+      if (diff === 'hard' || diff === 'master') mixedTypes.push('array');
+      questionType = mixedTypes[Math.floor(Math.random() * mixedTypes.length)];
   }
+
+  if (questionType === 'sequence') return generateSequenceAlgorithm(selectedContext, diff);
+  if (questionType === 'conditional') return generateConditionalAlgorithm(selectedContext, diff);
+  if (questionType === 'array') return generateArrayAlgorithm(selectedContext, diff);
+  return generateStandardAlgorithm(selectedContext, diff, questionType);
+}
+
+function generateSequenceAlgorithm(contextData, diff) {
+    const firstVar = contextData.vars[0];
+    const secondVar = contextData.vars[1];
+    const startValue = Math.floor(Math.random() * 6) + 2;
+    const secondValue = Math.floor(Math.random() * 4) + 2;
+    const amount = Math.floor(Math.random() * 5) + 2;
+    const multiplier = Math.floor(Math.random() * 3) + 2;
+    const useInput = diff !== 'easy';
+    const useSecondVar = diff === 'hard' || diff === 'master';
+    const lines = [];
+    const answers = [];
+    const activeVars = useSecondVar ? [firstVar, secondVar] : [firstVar];
+    const cols = ['Line', ...activeVars, 'Output'];
+
+    lines.push(useInput
+        ? `${firstVar} = int(input("Enter ${firstVar}:"))`
+        : `${firstVar} = ${startValue}`);
+    answers.push({ Line: '1', [firstVar]: startValue.toString(), ...(useSecondVar ? { [secondVar]: '' } : {}), Output: '' });
+
+    let currentValue = startValue;
+    if (useSecondVar) {
+        lines.push(`${secondVar} = ${secondValue}`);
+        answers.push({ Line: '2', [firstVar]: '', [secondVar]: secondValue.toString(), Output: '' });
+        lines.push(`${firstVar} = ${firstVar} + ${secondVar}`);
+        currentValue += secondValue;
+        answers.push({ Line: '3', [firstVar]: currentValue.toString(), [secondVar]: '', Output: '' });
+    } else {
+        lines.push(`${firstVar} = ${firstVar} + ${amount}`);
+        currentValue += amount;
+        answers.push({ Line: '2', [firstVar]: currentValue.toString(), Output: '' });
+    }
+
+    const multiplyLine = lines.length + 1;
+    lines.push(`${firstVar} = ${firstVar} * ${multiplier}`);
+    currentValue *= multiplier;
+    const multiplyRow = { Line: multiplyLine.toString(), [firstVar]: currentValue.toString(), Output: '' };
+    if (useSecondVar) multiplyRow[secondVar] = '';
+    answers.push(multiplyRow);
+
+    const printLine = lines.length + 1;
+    lines.push(`print(${firstVar})`);
+    const printRow = { Line: printLine.toString(), [firstVar]: '', Output: currentValue.toString() };
+    if (useSecondVar) printRow[secondVar] = '';
+    answers.push(printRow);
+
+    const context = useInput
+        ? `This sequence processes information for ${contextData.theme}. The user entered <strong>${firstVar} = ${startValue}</strong>.`
+        : `Trace this sequence for ${contextData.theme}. Follow each instruction in order.`;
+    return { context, code: lines, cols, answers, solved: false, failedAttempt: false, questionType: 'Sequence' };
+}
+
+function generateConditionalAlgorithm(contextData, diff) {
+    const valueName = contextData.vars[0];
+    const resultName = contextData.vars[1];
+    const threshold = Math.floor(Math.random() * 5) + 5;
+    const value = Math.floor(Math.random() * 10) + 2;
+    const increase = Math.floor(Math.random() * 4) + 2;
+    const decrease = Math.min(value, Math.floor(Math.random() * 3) + 1);
+    const useInput = diff !== 'easy';
+    const lines = [
+        useInput ? `${valueName} = int(input("Enter ${valueName}:"))` : `${valueName} = ${value}`,
+        `if ${valueName} >= ${threshold}:`,
+        `    ${resultName} = ${valueName} + ${increase}`,
+        `else:`,
+        `    ${resultName} = ${valueName} - ${decrease}`,
+        `print(${resultName})`
+    ];
+    const result = value >= threshold ? value + increase : value - decrease;
+    const executedLine = value >= threshold ? '3' : '5';
+    const cols = ['Line', valueName, resultName, 'Output'];
+    const answers = [
+        { Line: '1', [valueName]: value.toString(), [resultName]: '', Output: '' },
+        { Line: executedLine, [valueName]: '', [resultName]: result.toString(), Output: '' },
+        { Line: '6', [valueName]: '', [resultName]: '', Output: result.toString() }
+    ];
+    const context = useInput
+        ? `This selection processes information for ${contextData.theme}. The user entered <strong>${valueName} = ${value}</strong>.`
+        : `Trace this selection for ${contextData.theme}. Only one branch of the IF statement will run.`;
+    return { context, code: lines, cols, answers, solved: false, failedAttempt: false, questionType: 'Conditionals' };
 }
 
 function generateArrayAlgorithm(contextData, diff) {
@@ -807,7 +910,10 @@ function generateArrayAlgorithm(contextData, diff) {
     const accName = contextData.vars[1]; // e.g., dist
     const loopVar = "x";
 
-    let arrLen = diff === 'master' ? 4 : 3;
+    const arrayLengths = { easy: 3, medium: 4, hard: 5 };
+    let arrLen = diff === 'master'
+        ? Math.min(7, 5 + Math.floor(genStats.score / 10))
+        : arrayLengths[diff];
     let arrVals = [];
     for(let i=0; i<arrLen; i++) arrVals.push(Math.floor(Math.random() * 5) + 1);
 
@@ -852,10 +958,10 @@ function generateArrayAlgorithm(contextData, diff) {
         answers.push({ Line: '6', [accName]: '', [loopVar]: '', Output: currentAcc.toString() });
     }
 
-    return { context, code: lines, cols, answers, solved: false, failedAttempt: false };
+    return { context, code: lines, cols, answers, solved: false, failedAttempt: false, questionType: 'Arrays' };
 }
 
-function generateStandardAlgorithm(contextData, diff) {
+function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
     let numVars = 2, numInputs = 0;
     if (diff === 'easy') { numVars = 2; numInputs = 0; }
     else if (diff === 'medium') { numVars = 2; numInputs = 1; }
@@ -870,7 +976,7 @@ function generateStandardAlgorithm(contextData, diff) {
     for(let i=0; i<numVars; i++) startVals.push(Math.floor(Math.random() * 3) + 1);
 
     let loopTypes = ['for', 'while', 'do-until'];
-    let loopType = loopTypes[Math.floor(Math.random() * loopTypes.length)];
+    let loopType = forcedLoopType || loopTypes[Math.floor(Math.random() * loopTypes.length)];
 
     let isCountdown = loopType !== 'for' && Math.random() < 0.5; // Do-Until and While can count downwards
     
@@ -1024,7 +1130,8 @@ function generateStandardAlgorithm(contextData, diff) {
         answers.push(rowFin);
     }
 
-    return { context, code: lines, cols, answers, solved: false, failedAttempt: false };
+    const typeLabels = { for: 'For Loops', while: 'While Loops', 'do-until': 'Do Until Loops' };
+    return { context, code: lines, cols, answers, solved: false, failedAttempt: false, questionType: typeLabels[loopType] };
 }
 
 function resetGeneratedPractice() {
@@ -1032,7 +1139,7 @@ function resetGeneratedPractice() {
    
    genQuestion = generateProceduralAlgorithm();
    genQuestion.id = 'gen' + genQuestionIdCounter;
-   genQuestion.title = 'Generated Question ' + genQuestionIdCounter;
+   genQuestion.title = `${genQuestion.questionType || 'Generated'} Question ${genQuestionIdCounter}`;
    
    document.getElementById('gen-context').innerHTML = genQuestion.context;
    renderPracticeCode('gen-code', genQuestion.code);
