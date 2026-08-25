@@ -41,7 +41,7 @@
 
   var FS = {
     vm: null,
-    nodes: [], edges: [], selected: null,
+    nodes: [], edges: [], selected: null, selectedEdgeId: null, hoverAnchor: null,
     scale: 1, panX: 20, panY: 20, id: 0, edgeId: 0,
     drag: null, connect: null, palette: null,
     running: false, gen: 0,
@@ -59,8 +59,6 @@
     ask:       { shape: 'io',      title: 'Ask',         data: { text: 'What is your name?' } },
     selection: { shape: 'selection', title: 'Selection', data: { negate: 'is', condition: 'key', value: 'Space' } }
   };
-  var ANCHOR_NAMES = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function waitFor(test) {
@@ -141,10 +139,30 @@
     return n;
   }
   function getNode(id) { return FS.nodes.find(function (n) { return n.id === id; }); }
+  // A standard flowchart block has exactly one exit path; only a
+  // Selection (decision) block branches, and only ever two ways (True and
+  // False). Unconditional fan-out from an ordinary block is not valid
+  // flowchart behaviour and was already implicitly assumed by validate(),
+  // but nothing stopped the editor itself from creating it, which is what
+  // let two edges quietly pile up on the same block and cross visually.
+  // Enforced here instead: connecting a new wire from a non-Selection
+  // block replaces its existing outgoing wire; a Selection block is
+  // capped at two and a third attempt is refused with an explanation.
   function addEdge(from, to, fromA, toA) {
-    if (from === to || FS.edges.some(function (e) { return e.from === from && e.to === to; })) return;
-    FS.edges.push({ id: 'e' + (++FS.edgeId), from: from, to: to, fromA: fromA || 'E', toA: toA || 'W' });
+    if (from === to || FS.edges.some(function (e) { return e.from === from && e.to === to; })) return false;
+    var fromNode = getNode(from);
+    var existingOut = FS.edges.filter(function (e) { return e.from === from; });
+    if (fromNode && fromNode.type === 'selection') {
+      if (existingOut.length >= 2) {
+        notify('Selection blocks can only have two outgoing connections (True and False). Delete one first.', 'error');
+        return false;
+      }
+    } else if (existingOut.length >= 1) {
+      FS.edges = FS.edges.filter(function (e) { return e.from !== from; });
+    }
+    FS.edges.push({ id: 'e' + (++FS.edgeId), from: from, to: to, fromA: fromA || 'E', toA: toA || 'W', lineType: 'orthogonal' });
     renderWires();
+    return true;
   }
 
   // ── DOM refs (created in buildUI) ───────────────────────────────────
@@ -169,8 +187,7 @@
     } else {
       content = '<div class="fs-node-title">' + TYPES[n.type].title + '</div>' + sub;
     }
-    return '<div class="fs-node ' + n.shape + (FS.selected === n.id ? ' selected' : '') + '" data-id="' + n.id + '" style="left:' + n.x + 'px;top:' + n.y + 'px"><div class="fs-node-body">' + content + '</div>' +
-      ANCHOR_NAMES.map(function (a) { return '<span class="fs-anchor" data-a="' + a + '"></span>'; }).join('') + '</div>';
+    return '<div class="fs-node ' + n.shape + (FS.selected === n.id ? ' selected' : '') + '" data-id="' + n.id + '" style="left:' + n.x + 'px;top:' + n.y + 'px"><div class="fs-node-body">' + content + '</div></div>';
   }
 
   function renderAll() { els.nodes.innerHTML = FS.nodes.map(nodeMarkup).join(''); bindNodes(); renderWires(); renderInspector(); }
@@ -178,24 +195,26 @@
   function bindNodes() {
     Array.prototype.forEach.call(els.nodes.querySelectorAll('.fs-node'), function (el) {
       el.addEventListener('pointerdown', function (e) {
-        if (e.target.matches('.fs-anchor,select,input')) return;
+        if (e.target.matches('select,input')) return;
+        // Hovering near this node's edge shows the single green anchor dot
+        // (updateHoverAnchor, tracked continuously on pointermove); pressing
+        // down while it's showing starts a connection from that exact point
+        // instead of selecting/dragging the block.
+        if (FS.hoverAnchor && FS.hoverAnchor.nodeId === el.dataset.id) {
+          FS.connect = { from: el.dataset.id, fromA: { x: FS.hoverAnchor.x, y: FS.hoverAnchor.y } };
+          els.canvasWrap.classList.add('connecting');
+          els.draft.style.display = 'block';
+          updateDraft(e.clientX, e.clientY);
+          el.setPointerCapture(e.pointerId);
+          e.stopPropagation();
+          return;
+        }
         select(el.dataset.id);
         var n = getNode(el.dataset.id);
         FS.drag = { kind: 'node', id: n.id, startX: e.clientX, startY: e.clientY, x: n.x, y: n.y };
         el.setPointerCapture(e.pointerId);
       });
-      el.addEventListener('click', function (e) { if (!e.target.matches('.fs-anchor')) select(el.dataset.id); });
-      Array.prototype.forEach.call(el.querySelectorAll('.fs-anchor'), function (a) {
-        a.addEventListener('pointerdown', function (e) {
-          e.stopPropagation();
-          var n = getNode(el.dataset.id);
-          FS.connect = { from: n.id, fromA: a.dataset.a };
-          els.canvasWrap.classList.add('connecting');
-          els.draft.style.display = 'block';
-          updateDraft(e.clientX, e.clientY);
-          a.setPointerCapture(e.pointerId);
-        });
-      });
+      el.addEventListener('click', function (e) { select(el.dataset.id); });
       Array.prototype.forEach.call(el.querySelectorAll('[data-field]'), function (c) {
         c.addEventListener('change', function (e) {
           var n = getNode(el.dataset.id), field = e.target.dataset.field;
@@ -207,41 +226,109 @@
     });
   }
 
-  function select(id) { FS.selected = id; renderAll(); }
+  function select(id) { FS.selected = id; FS.selectedEdgeId = null; renderAll(); }
+  function selectEdge(id) { FS.selectedEdgeId = id; FS.selected = null; renderAll(); }
 
+  // An edge's anchor (fromA/toA) is a continuous {x, y} point in the
+  // node's own local space (0..150 wide, 0..66 or 112 tall, matching
+  // .fs-node's actual CSS dimensions), picked by hovering anywhere along
+  // the node's edge rather than snapping to one of 8 fixed compass points.
+  // Old saved graphs from before this change stored a named direction
+  // string instead ('N'/'NE'/...); the fallback branch below still
+  // understands those so nothing already saved breaks.
   function center(n, a) {
-    // Must match .fs-node's actual CSS dimensions (150 wide; 66 tall, or
-    // 112 for the diamond-shaped selection block), not the original
-    // Flowbox Playground prototype's 174x78/130, which this was ported
-    // from without updating these numbers to the smaller overlay size.
-    // A mismatch here doesn't error, it just makes wires terminate
-    // somewhere other than the anchor dot, which looked like crossing/
-    // misconnected wires: caught from a screenshot, verified by comparing
-    // this function's output against the anchors' real getBoundingClientRect().
-    var w = 150, h = n.shape === 'selection' ? 112 : 66;
-    var points = { N: [w / 2, 0], NE: [w * .86, 8], E: [w, h / 2], SE: [w * .86, h - 8], S: [w / 2, h], SW: [w * .14, h - 8], W: [0, h / 2], NW: [w * .14, 8] };
-    var p = points[a] || points.E;
+    var h = n.shape === 'selection' ? 112 : 66;
+    if (a && typeof a === 'object') return { x: n.x + a.x, y: n.y + a.y };
+    var w = 150;
+    var legacy = { N: [w / 2, 0], NE: [w * .86, 8], E: [w, h / 2], SE: [w * .86, h - 8], S: [w / 2, h], SW: [w * .14, h - 8], W: [0, h / 2], NW: [w * .14, 8] };
+    var p = legacy[a] || legacy.E;
     return { x: n.x + p[0], y: n.y + p[1] };
   }
-  function curve(p1, p2) {
-    var dx = Math.max(55, Math.abs(p2.x - p1.x) * .45);
-    return 'M' + p1.x + ',' + p1.y + ' C' + (p1.x + dx) + ',' + p1.y + ' ' + (p2.x - dx) + ',' + p2.y + ' ' + p2.x + ',' + p2.y;
+  // Nearest point on a w x h rectangle's own perimeter to a local point
+  // (px, py), used both for the live hover-anchor and for picking a
+  // sensible anchor point automatically (connecting to a node by dropping
+  // near it, or splicing a node into an existing wire).
+  function nearestPerimeterPoint(w, h, px, py) {
+    var cx = Math.max(0, Math.min(w, px)), cy = Math.max(0, Math.min(h, py));
+    if (px > 0 && px < w && py > 0 && py < h) {
+      var dl = px, dr = w - px, dt = py, db = h - py, m = Math.min(dl, dr, dt, db);
+      if (m === dl) return { x: 0, y: cy };
+      if (m === dr) return { x: w, y: cy };
+      if (m === dt) return { x: cx, y: 0 };
+      return { x: cx, y: h };
+    }
+    return { x: cx, y: cy };
+  }
+  function anchorPointOnNode(n, towardWorldX, towardWorldY) {
+    var h = n.shape === 'selection' ? 112 : 66;
+    return nearestPerimeterPoint(150, h, towardWorldX - n.x, towardWorldY - n.y);
+  }
+  // Anchor's local (x,y) regardless of stored format (new continuous
+  // {x,y} point, or a legacy named direction from a saved-before-this-
+  // change graph).
+  function anchorLocalPoint(n, a) {
+    var h = n.shape === 'selection' ? 112 : 66, w = 150;
+    if (a && typeof a === 'object') return { x: a.x, y: a.y };
+    var legacy = { N: [w / 2, 0], NE: [w * .86, 8], E: [w, h / 2], SE: [w * .86, h - 8], S: [w / 2, h], SW: [w * .14, h - 8], W: [0, h / 2], NW: [w * .14, 8] };
+    var p = legacy[a] || legacy.E;
+    return { x: p[0], y: p[1] };
+  }
+  // Which side of the node's rectangle the anchor sits on, as an outward
+  // unit vector, used to route the connector straight out of the block
+  // before turning rather than diving in at an angle.
+  function anchorDirection(n, a) {
+    var h = n.shape === 'selection' ? 112 : 66, w = 150;
+    var p = anchorLocalPoint(n, a);
+    var dl = p.x, dr = w - p.x, dt = p.y, db = h - p.y, m = Math.min(dl, dr, dt, db);
+    if (m === dl) return { x: -1, y: 0 };
+    if (m === dr) return { x: 1, y: 0 };
+    if (m === dt) return { x: 0, y: -1 };
+    return { x: 0, y: 1 };
+  }
+  // Right-angle (elbow) connector: a short stub straight out of each
+  // block in its anchor's own direction, then at most one more bend to
+  // reach the other stub, so every segment is horizontal or vertical.
+  function orthogonalPath(p1, dir1, p2, dir2) {
+    var STUB = 20;
+    var s1 = { x: p1.x + dir1.x * STUB, y: p1.y + dir1.y * STUB };
+    var s2 = { x: p2.x + dir2.x * STUB, y: p2.y + dir2.y * STUB };
+    var pts = [p1, s1];
+    var h1 = dir1.x !== 0, h2 = dir2.x !== 0;
+    if (h1 && h2) { var midX = (s1.x + s2.x) / 2; pts.push({ x: midX, y: s1.y }, { x: midX, y: s2.y }); }
+    else if (!h1 && !h2) { var midY = (s1.y + s2.y) / 2; pts.push({ x: s1.x, y: midY }, { x: s2.x, y: midY }); }
+    else if (h1 && !h2) { pts.push({ x: s2.x, y: s1.y }); }
+    else { pts.push({ x: s1.x, y: s2.y }); }
+    pts.push(s2, p2);
+    return 'M' + pts.map(function (p) { return p.x + ',' + p.y; }).join(' L ');
+  }
+  function draftOrthogonalPath(p1, dir1, mouse) {
+    var STUB = 20;
+    var s1 = { x: p1.x + dir1.x * STUB, y: p1.y + dir1.y * STUB };
+    var pts = [p1, s1];
+    pts.push(dir1.x !== 0 ? { x: mouse.x, y: s1.y } : { x: s1.x, y: mouse.y });
+    pts.push(mouse);
+    return 'M' + pts.map(function (p) { return p.x + ',' + p.y; }).join(' L ');
+  }
+  // A student can pick a plain straight line instead of the default
+  // right-angle routing per connector, via the inspector (edge.lineType).
+  function edgePath(edge, p1, dir1, p2, dir2) {
+    if (edge.lineType === 'straight') return 'M' + p1.x + ',' + p1.y + ' L' + p2.x + ',' + p2.y;
+    return orthogonalPath(p1, dir1, p2, dir2);
   }
   function renderWires(activeId) {
     els.wireLayer.innerHTML = FS.edges.map(function (e) {
       var a = getNode(e.from), b = getNode(e.to);
       if (!a || !b) return '';
-      var p1 = center(a, e.fromA), p2 = center(b, e.toA), d = curve(p1, p2);
+      var p1 = center(a, e.fromA), p2 = center(b, e.toA);
+      var d = edgePath(e, p1, anchorDirection(a, e.fromA), p2, anchorDirection(b, e.toA));
       var branch = a.type === 'selection' ? FS.edges.filter(function (x) { return x.from === a.id; }).indexOf(e) : -1;
       var label = branch === 0 ? 'True' : branch === 1 ? 'False' : '';
-      return '<g data-edge="' + e.id + '"><path class="fs-wire-hit" d="' + d + '"/><path class="fs-wire ' + (activeId === e.id ? 'active' : '') + '" d="' + d + '" marker-end="url(#fsArrow)"/>' +
+      var cls = (activeId === e.id ? 'active' : '') + (FS.selectedEdgeId === e.id ? ' selected' : '');
+      return '<g data-edge="' + e.id + '"><path class="fs-wire-hit" d="' + d + '"/><path class="fs-wire ' + cls + '" d="' + d + '" marker-end="url(#fsArrow)"/>' +
         (label ? '<text class="fs-wire-label" x="' + (p1.x + p2.x) / 2 + '" y="' + ((p1.y + p2.y) / 2 - 7) + '">' + label + '</text>' : '') + '</g>';
     }).join('');
     Array.prototype.forEach.call(els.wireLayer.querySelectorAll('.fs-wire-hit'), function (p) {
-      p.addEventListener('click', function () {
-        FS.edges = FS.edges.filter(function (e) { return e.id !== p.parentNode.dataset.edge; });
-        renderWires(); saveGraph(FS.activeSprite);
-      });
+      p.addEventListener('click', function () { selectEdge(p.parentNode.dataset.edge); });
     });
   }
 
@@ -255,13 +342,16 @@
   }
   function updateDraft(x, y) {
     if (!FS.connect) return;
-    var p1 = center(getNode(FS.connect.from), FS.connect.fromA), p2 = screenToWorld(x, y);
-    els.draft.setAttribute('d', curve(p1, p2));
+    var fromNode = getNode(FS.connect.from);
+    var p1 = center(fromNode, FS.connect.fromA), p2 = screenToWorld(x, y);
+    els.draft.setAttribute('d', draftOrthogonalPath(p1, anchorDirection(fromNode, FS.connect.fromA), p2));
   }
 
   function renderInspector() {
-    var host = els.inspector, n = getNode(FS.selected);
-    if (!n) { host.className = 'fs-empty'; host.innerHTML = 'Select a block to edit it.'; return; }
+    var host = els.inspector;
+    if (FS.selectedEdgeId) { renderEdgeInspector(host); return; }
+    var n = getNode(FS.selected);
+    if (!n) { host.className = 'fs-empty'; host.innerHTML = 'Select a block or connector to edit it.'; return; }
     host.className = '';
     var f = '';
     if (n.type === 'move') f = field('Distance (pixels)', 'number', 'amount', n.data.amount);
@@ -280,6 +370,29 @@
   }
   function field(label, type, key, value) {
     return '<div class="fs-field"><label>' + label + '</label><input data-inspect="' + key + '" type="' + type + '" value="' + esc(value) + '"></div>';
+  }
+  function renderEdgeInspector(host) {
+    var edge = FS.edges.find(function (e) { return e.id === FS.selectedEdgeId; });
+    if (!edge) { FS.selectedEdgeId = null; host.className = 'fs-empty'; host.innerHTML = 'Select a block or connector to edit it.'; return; }
+    host.className = '';
+    var fromNode = getNode(edge.from), branchNote = '';
+    if (fromNode && fromNode.type === 'selection') {
+      var siblings = FS.edges.filter(function (e) { return e.from === edge.from; });
+      branchNote = '<p class="fs-empty">' + (siblings.indexOf(edge) === 0 ? 'This is the True branch.' : 'This is the False branch.') + '</p>';
+    }
+    host.innerHTML = '<b>Connector</b>' + branchNote +
+      '<div class="fs-field"><label>Line type</label><select id="fsEdgeLineType">' +
+      '<option value="orthogonal"' + (edge.lineType !== 'straight' ? ' selected' : '') + '>Right-angle</option>' +
+      '<option value="straight"' + (edge.lineType === 'straight' ? ' selected' : '') + '>Straight</option>' +
+      '</select></div>' +
+      '<button class="fs-danger" id="fsDeleteEdge">Delete connection</button>';
+    host.querySelector('#fsEdgeLineType').addEventListener('change', function (e) {
+      edge.lineType = e.target.value; renderWires(); saveGraph(FS.activeSprite);
+    });
+    host.querySelector('#fsDeleteEdge').onclick = function () {
+      FS.edges = FS.edges.filter(function (e) { return e.id !== edge.id; });
+      FS.selectedEdgeId = null; renderAll(); saveGraph(FS.activeSprite);
+    };
   }
   function removeSelected() {
     if (!FS.selected) return;
@@ -301,6 +414,10 @@
       if (n.type !== 'end' && !out(n.id).length) errors.push(TYPES[n.type].title + ' has no outgoing connection.');
       if (n.type !== 'start' && !inc(n.id).length) errors.push(TYPES[n.type].title + ' has no incoming connection.');
       if (n.type === 'selection' && out(n.id).length !== 2) errors.push('Each Selection must have exactly two outgoing connections (True first, False second).');
+      // addEdge() already refuses to create this, but defends here too in
+      // case a graph saved before that enforcement existed gets loaded:
+      // Run must never execute a flowchart with an ambiguous branch.
+      if (n.type !== 'selection' && n.type !== 'end' && out(n.id).length > 1) errors.push(TYPES[n.type].title + ' has more than one outgoing connection, only a Selection block can branch.');
     });
     if (starts.length === 1) {
       var seen = {};
@@ -377,7 +494,6 @@
     if (errors.length) { notify(errors[0] + (errors.length > 1 ? ' (+' + (errors.length - 1) + ' more)' : ''), 'error'); return; }
     FS.running = true;
     var myGen = ++FS.gen;
-    els.runBtn.style.display = 'none'; els.stopBtn.style.display = 'inline-block';
     FS.answer = ''; els.answerValue.textContent = String.fromCharCode(8709);
     var start = FS.nodes.find(function (n) { return n.type === 'start'; });
     var current = start, steps = 0;
@@ -403,7 +519,6 @@
   function finishRun(myGen) {
     if (myGen !== undefined && myGen !== FS.gen) return;
     FS.running = false;
-    els.runBtn.style.display = 'inline-block'; els.stopBtn.style.display = 'none';
     setRunStatus('Ready');
     els.askWrap.classList.remove('active');
     renderWires();
@@ -420,14 +535,22 @@
       // inflating nodes to ~87px/66px, which is what threw wire endpoints
       // off their anchor dots).
       '#fs-overlay,#fs-overlay *{box-sizing:border-box}',
+      // Force light mode regardless of TurboWarp's own dark theme setting.
+      // color-scheme is inherited, so without this, native <select>/<input>
+      // controls inside the overlay render with the OS's dark-mode chrome
+      // (dark background, light text) even though every element around
+      // them still has its own explicit light background here, making
+      // dropdown text unreadable. Belt-and-braces: also pin background/
+      // color directly on the controls themselves.
+      '#fs-overlay{color-scheme:light}',
+      '#fs-overlay select,#fs-overlay input{background:#fff;color:#18191b}',
       '#fs-overlay{position:fixed;left:0;top:92px;right:60%;bottom:0;z-index:45;display:flex;flex-direction:column;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#18191b;background:#e9e9eb;border-right:2px solid #151619;box-shadow:4px 0 20px rgba(0,0,0,.35)}',
       '#fs-overlay.fs-suppressed{display:none}',
       '.blocklyDiv,.blocklyToolboxDiv,.blocklyFlyout,.blocklyWidgetDiv{display:none !important}',
       '#fs-topbar{display:flex;align-items:center;gap:8px;padding:0 10px;height:42px;flex-shrink:0;background:#151619;color:#fff;border-bottom:1px solid #000}',
       '#fs-topbar button{font:inherit;cursor:pointer;border:1px solid #3d3f45;background:#24262a;color:#fff;border-radius:7px;padding:5px 9px;font-size:12px}',
       '#fs-topbar button:hover{background:#32343a}',
-      '#fs-topbar .fs-run{border-color:#32c87d;background:#1d9d5d;font-weight:700}#fs-topbar .fs-run:hover{background:#22ad66}',
-      '#fs-topbar .fs-stop{display:none}',
+      '#fs-topbar .fs-hint{font-size:11px;color:#aeb1b8}',
       '#fs-topbar .fs-spacer{flex:1}',
       '#fs-zoom-readout{min-width:38px;text-align:center;color:#c7c9ce;font-variant-numeric:tabular-nums;font-size:11px}',
       '#fs-body{flex:1;display:flex;min-height:0}',
@@ -436,10 +559,10 @@
       '.fs-palette-item{display:flex;align-items:center;gap:6px;min-height:34px;padding:6px 7px;border:1px solid #d8d9dd;border-radius:8px;background:#fff;cursor:grab;user-select:none;margin-bottom:6px;font-size:11px}',
       '.fs-palette-item:hover{border-color:#9ea1aa;box-shadow:0 3px 10px rgba(0,0,0,.08)}',
       '#fs-canvas-wrap{position:relative;overflow:hidden;flex:1;min-width:0;background:#ededee;touch-action:none;cursor:grab}',
-      '#fs-canvas-wrap.panning{cursor:grabbing}#fs-canvas-wrap.connecting{cursor:crosshair}',
+      '#fs-canvas-wrap.panning{cursor:grabbing}#fs-canvas-wrap.connecting,#fs-canvas-wrap.fs-anchor-hover{cursor:crosshair}',
       '#fs-world{position:absolute;left:0;top:0;width:2200px;height:1400px;transform-origin:0 0;background-color:#fafafa;background-image:radial-gradient(#c9cbd0 1px,transparent 1px);background-size:22px 22px;box-shadow:0 0 0 1px #d3d4d7}',
       '#fs-wires{position:absolute;inset:0;width:2200px;height:1400px;overflow:visible;pointer-events:none}',
-      '.fs-wire{fill:none;stroke:#646873;stroke-width:2.2}.fs-wire.active{stroke:#22b36b;stroke-width:3.6}',
+      '.fs-wire{fill:none;stroke:#646873;stroke-width:2.2}.fs-wire.active{stroke:#22b36b;stroke-width:3.6}.fs-wire.selected{stroke:#4b66e8;stroke-width:3.2}',
       '.fs-wire-hit{fill:none;stroke:transparent;stroke-width:13;pointer-events:stroke;cursor:pointer}.fs-wire-hit:hover+.fs-wire{stroke:#d84c4c}',
       '.fs-wire-label{font-size:10px;font-weight:750;fill:#454850;paint-order:stroke;stroke:#fafafa;stroke-width:5px;stroke-linejoin:round}',
       '.fs-node{position:absolute;width:150px;min-height:66px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 4px 6px rgba(0,0,0,.12));user-select:none}',
@@ -454,9 +577,11 @@
       '.fs-node-title{font-size:11px;font-weight:750}',
       '.fs-node-subtitle{font-size:10px;color:#686b73;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
       '.fs-node input[type=color]{width:38px;height:19px;padding:1px;border:1px solid #bbb;border-radius:4px}',
-      '.fs-anchor{position:absolute;width:10px;height:10px;border-radius:50%;background:#24bc70;border:2px solid #fff;box-shadow:0 0 0 1px #16864f;z-index:5;cursor:crosshair;opacity:.7}',
-      '.fs-node:hover .fs-anchor,.fs-node.selected .fs-anchor{opacity:1}',
-      '.fs-anchor[data-a=N]{left:50%;top:-5px;transform:translateX(-50%)}.fs-anchor[data-a=NE]{right:14%;top:2px}.fs-anchor[data-a=E]{right:-5px;top:50%;transform:translateY(-50%)}.fs-anchor[data-a=SE]{right:14%;bottom:2px}.fs-anchor[data-a=S]{left:50%;bottom:-5px;transform:translateX(-50%)}.fs-anchor[data-a=SW]{left:14%;bottom:2px}.fs-anchor[data-a=W]{left:-5px;top:50%;transform:translateY(-50%)}.fs-anchor[data-a=NW]{left:14%;top:2px}',
+      // Single hover-following anchor dot (replaces the previous 8 fixed
+      // compass-point dots): positioned in #fs-world's own coordinate
+      // space (left/top in world pixels), so it automatically tracks the
+      // canvas's pan/zoom without any extra transform math.
+      '.fs-anchor{position:absolute;width:12px;height:12px;border-radius:50%;background:#24bc70;border:2px solid #fff;box-shadow:0 0 0 1px #16864f;transform:translate(-50%,-50%);z-index:6;pointer-events:none;display:none}',
       '#fs-toast{display:none;position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:30;max-width:90%;padding:8px 12px;border-radius:8px;color:#fff;background:#202226;font-size:12px;box-shadow:0 8px 22px rgba(0,0,0,.3)}',
       '#fs-toast.show{display:block}#fs-toast.error{background:#ad3535}#fs-toast.ok{background:#168653}',
       '#fs-status-bar{flex-shrink:0;display:flex;justify-content:space-between;padding:6px 10px;background:#fff;border-top:1px solid #d8d9dd;color:#686b73;font-size:11px}',
@@ -484,10 +609,9 @@
     root.id = 'fs-overlay';
     root.innerHTML =
       '<div id="fs-topbar">' +
-        '<button id="fsRunBtn" class="fs-run">&#9654; Run</button>' +
-        '<button id="fsStopBtn" class="fs-stop">&#9632; Stop</button>' +
         '<button id="fsValidateBtn">Check flow</button>' +
         '<button id="fsClearBtn">Clear</button>' +
+        '<span class="fs-hint">Use the green flag / stop button above the stage to run</span>' +
         '<div class="fs-spacer"></div>' +
         '<button id="fsZoomOut">&minus;</button><span id="fs-zoom-readout">100%</span><button id="fsZoomIn">+</button><button id="fsFitBtn">Fit</button>' +
       '</div>' +
@@ -507,7 +631,7 @@
         '</aside>' +
         '<section id="fs-canvas-wrap">' +
           '<div id="fs-toast"></div>' +
-          '<div id="fs-world"><svg id="fs-wires"><defs><marker id="fsArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#646873"/></marker></defs><g id="fs-wire-layer"></g><path id="fs-draft-wire" class="fs-wire active" style="display:none"/></svg><div id="fs-nodes"></div></div>' +
+          '<div id="fs-world"><svg id="fs-wires"><defs><marker id="fsArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#646873"/></marker></defs><g id="fs-wire-layer"></g><path id="fs-draft-wire" class="fs-wire active" style="display:none"/></svg><div id="fs-nodes"></div><div id="fs-hover-anchor" class="fs-anchor"></div></div>' +
         '</section>' +
         '<aside id="fs-inspector"><h2>Selected block</h2><div id="fs-inspector-body" class="fs-empty">Select a block to edit it.</div></aside>' +
       '</div>' +
@@ -525,29 +649,26 @@
       toast: root.querySelector('#fs-toast'),
       inspector: root.querySelector('#fs-inspector-body'),
       zoomReadout: root.querySelector('#fs-zoom-readout'),
-      runBtn: root.querySelector('#fsRunBtn'),
-      stopBtn: root.querySelector('#fsStopBtn'),
       runStatus: root.querySelector('#fs-run-status'),
       answerValue: root.querySelector('#fs-answer-value'),
       askWrap: root.querySelector('#fs-ask-wrap'),
       askForm: root.querySelector('#fs-ask-form'),
       askLabel: root.querySelector('#fs-ask-label'),
-      askInput: root.querySelector('#fs-ask-input')
+      askInput: root.querySelector('#fs-ask-input'),
+      hoverAnchorEl: root.querySelector('#fs-hover-anchor')
     };
 
     bindGlobalPointer();
     bindPalette();
     bindCanvas();
 
-    els.runBtn.onclick = run;
-    els.stopBtn.onclick = stop;
-    els.runBtn.parentElement.querySelector('#fsValidateBtn').onclick = function () {
+    root.querySelector('#fsValidateBtn').onclick = function () {
       var e = validate();
       notify(e.length ? e.join(' ') : 'Flow is valid and every path reaches an End.', e.length ? 'error' : 'ok');
     };
     root.querySelector('#fsClearBtn').onclick = function () {
       if (confirm('Clear every block and connector for this sprite?')) {
-        FS.nodes = []; FS.edges = []; FS.selected = null; renderAll(); saveGraph(FS.activeSprite);
+        FS.nodes = []; FS.edges = []; FS.selected = null; FS.selectedEdgeId = null; renderAll(); saveGraph(FS.activeSprite);
       }
     };
     root.querySelector('#fsZoomIn').onclick = function () { zoom(1.15); };
@@ -586,10 +707,11 @@
 
   function bindCanvas() {
     var space = false;
+    els.canvasWrap.addEventListener('pointerleave', hideHoverAnchor);
     els.canvasWrap.addEventListener('pointerdown', function (e) {
       var blank = e.target === els.world || e.target === els.canvasWrap;
       if (!FS.connect && ((blank && e.button === 0) || space || e.button === 1)) {
-        FS.selected = null; renderAll();
+        FS.selected = null; FS.selectedEdgeId = null; renderAll();
         FS.drag = { kind: 'pan', startX: e.clientX, startY: e.clientY, x: FS.panX, y: FS.panY };
         els.canvasWrap.classList.add('panning');
         els.canvasWrap.setPointerCapture(e.pointerId);
@@ -609,13 +731,65 @@
       if (!els.overlay || els.overlay.style.display === 'none') { FS.pressedKeys[normKey(e.code)] = true; return; }
       FS.pressedKeys[normKey(e.code)] = true;
       if (e.code === 'Space' && !/INPUT|SELECT/.test(e.target.tagName)) { space = true; e.preventDefault(); }
-      if ((e.key === 'Delete' || e.key === 'Backspace') && FS.selected && !/INPUT|SELECT/.test(e.target.tagName) && els.overlay.contains(document.activeElement) === false) removeSelected();
+      if ((e.key === 'Delete' || e.key === 'Backspace') && !/INPUT|SELECT/.test(e.target.tagName) && els.overlay.contains(document.activeElement) === false) {
+        if (FS.selected) removeSelected();
+        else if (FS.selectedEdgeId) {
+          FS.edges = FS.edges.filter(function (e2) { return e2.id !== FS.selectedEdgeId; });
+          FS.selectedEdgeId = null; renderAll(); saveGraph(FS.activeSprite);
+        }
+      }
     });
     window.addEventListener('keyup', function (e) { FS.pressedKeys[normKey(e.code)] = false; if (e.code === 'Space') space = false; });
   }
   function normKey(code) {
     var map = { ArrowRight: 'ArrowRight', ArrowLeft: 'ArrowLeft', ArrowUp: 'ArrowUp', ArrowDown: 'ArrowDown', Space: 'Space' };
     return map[code] || code;
+  }
+
+  // Splices a freshly-dropped node into the middle of an existing edge:
+  // removes that edge and reconnects fromNode -> n -> toNode, keeping the
+  // two original nodes' own anchor points (fromA/toA) and picking the
+  // point on the new node's own edge nearest to each neighbour.
+  function spliceNodeIntoEdge(n, edge) {
+    var fromNode = getNode(edge.from), toNode = getNode(edge.to);
+    if (!fromNode || !toNode) return;
+    FS.edges = FS.edges.filter(function (e) { return e.id !== edge.id; });
+    var fromCenter = { x: fromNode.x + 75, y: fromNode.y + (fromNode.shape === 'selection' ? 56 : 33) };
+    var toCenter = { x: toNode.x + 75, y: toNode.y + (toNode.shape === 'selection' ? 56 : 33) };
+    addEdge(fromNode.id, n.id, edge.fromA, anchorPointOnNode(n, fromCenter.x, fromCenter.y));
+    addEdge(n.id, toNode.id, anchorPointOnNode(n, toCenter.x, toCenter.y), edge.toA);
+  }
+
+  // ── Hover anchor: a single green dot that follows the cursor along
+  // whichever node's edge it's nearest to, replacing the previous 8 fixed
+  // compass-point dots. Pressing down while it's showing (handled in
+  // bindNodes above) starts a connection from that exact spot.
+  var HOVER_ANCHOR_SCREEN_PX = 14; // how close the cursor must be, in screen pixels
+  function updateHoverAnchor(clientX, clientY) {
+    if (FS.drag || FS.connect || FS.palette || !els.hoverAnchorEl) { hideHoverAnchor(); return; }
+    var wp = screenToWorld(clientX, clientY);
+    var threshold = HOVER_ANCHOR_SCREEN_PX / FS.scale;
+    var best = null;
+    FS.nodes.forEach(function (n) {
+      var h = n.shape === 'selection' ? 112 : 66;
+      var lx = wp.x - n.x, ly = wp.y - n.y;
+      if (lx < -threshold || lx > 150 + threshold || ly < -threshold || ly > h + threshold) return;
+      var pt = nearestPerimeterPoint(150, h, lx, ly);
+      var dist = Math.hypot(lx - pt.x, ly - pt.y);
+      if (dist <= threshold && (!best || dist < best.dist)) best = { nodeId: n.id, x: pt.x, y: pt.y, dist: dist };
+    });
+    if (!best) { hideHoverAnchor(); return; }
+    FS.hoverAnchor = best;
+    var node = getNode(best.nodeId);
+    els.hoverAnchorEl.style.left = (node.x + best.x) + 'px';
+    els.hoverAnchorEl.style.top = (node.y + best.y) + 'px';
+    els.hoverAnchorEl.style.display = 'block';
+    els.canvasWrap.classList.add('fs-anchor-hover');
+  }
+  function hideHoverAnchor() {
+    FS.hoverAnchor = null;
+    if (els.hoverAnchorEl) els.hoverAnchorEl.style.display = 'none';
+    if (els.canvasWrap) els.canvasWrap.classList.remove('fs-anchor-hover');
   }
 
   function bindGlobalPointer() {
@@ -637,13 +811,21 @@
         updateTransform();
       }
       if (FS.connect) updateDraft(e.clientX, e.clientY);
+      if (!FS.drag && !FS.connect && !FS.palette) updateHoverAnchor(e.clientX, e.clientY);
     });
     window.addEventListener('pointerup', function (e) {
       if (FS.palette) {
         var p = FS.palette, r = els.canvasWrap.getBoundingClientRect();
         if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
+          // Dropping directly on an existing wire splices the new block
+          // into that connection instead of leaving it disconnected.
+          var hitEl = document.elementFromPoint(e.clientX, e.clientY);
+          var wireHit = hitEl && hitEl.closest ? hitEl.closest('.fs-wire-hit') : null;
+          var targetEdge = wireHit ? FS.edges.find(function (ed) { return ed.id === wireHit.parentNode.dataset.edge; }) : null;
           var wp = screenToWorld(e.clientX, e.clientY);
-          var n = addNode(p.type, Math.max(0, wp.x - 75), Math.max(0, wp.y - 33));
+          var n = addNode(p.type, Math.max(0, wp.x - 75), Math.max(0, wp.y - 33), false);
+          if (targetEdge) spliceNodeIntoEdge(n, targetEdge);
+          renderAll();
           select(n.id); saveGraph(FS.activeSprite);
         }
         p.ghost.remove(); FS.palette = null;
@@ -654,14 +836,11 @@
         if (target && target.dataset.id !== FS.connect.from) {
           var wp2 = screenToWorld(e.clientX, e.clientY);
           var n2 = getNode(target.dataset.id);
-          var cx = n2.x + 75, cy = n2.y + (n2.shape === 'selection' ? 56 : 33);
-          var ang = Math.atan2(wp2.y - cy, wp2.x - cx);
-          var dirs = ['E', 'SE', 'S', 'SW', 'W', 'NW', 'N', 'NE'];
-          var idx = Math.round(((ang + Math.PI * 2) % (Math.PI * 2)) / (Math.PI / 4)) % 8;
-          addEdge(FS.connect.from, n2.id, FS.connect.fromA, dirs[idx]);
+          addEdge(FS.connect.from, n2.id, FS.connect.fromA, anchorPointOnNode(n2, wp2.x, wp2.y));
           saveGraph(FS.activeSprite);
         }
         FS.connect = null; els.draft.style.display = 'none'; els.canvasWrap.classList.remove('connecting');
+        hideHoverAnchor();
       }
       if (FS.drag && FS.drag.kind === 'node') saveGraph(FS.activeSprite);
       FS.drag = null; els.canvasWrap.classList.remove('panning');
@@ -760,10 +939,9 @@
     FS.nodes = g.nodes; FS.edges = g.edges; FS.selected = null;
     FS.id = FS.nodes.reduce(function (m, n) { return Math.max(m, parseInt(n.id.slice(1), 10) || 0); }, 0);
     FS.edgeId = FS.edges.reduce(function (m, e) { return Math.max(m, parseInt(e.id.slice(1), 10) || 0); }, 0);
-    if (!FS.nodes.length) {
-      var a = addNode('start', 60, 90, false), b = addNode('end', 380, 90, false);
-      addEdge(a.id, b.id);
-    }
+    // No default Start/End pair: a new sprite starts with an empty canvas,
+    // Check Flow/Run already explain what's missing if the student tries
+    // to run before adding a Start block.
     renderAll();
   }
 
