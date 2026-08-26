@@ -25,6 +25,7 @@ canvas.physics-cables{position:absolute;inset:0;width:100%;height:100%;pointer-e
 .hm-bug .bug-core{position:relative;z-index:2}.hm-bug .bug-health{position:absolute;left:-3px;right:-3px;bottom:-10px;height:5px;background:#17333e;border:1px solid #d9c99b}.hm-bug .bug-health span{display:block;height:100%;background:#dca94b}
 .hm-bug.hit{animation:bugHit .16s steps(2,end) 1}.hm-bug.armoured{background:#5c3446;box-shadow:-2px -2px 0 #201620,3px 3px 0 #d98544}
 .machine-health{height:9px;margin-top:8px;background:#9aadb1;border:2px solid #d9c99b;box-shadow:1px 1px 0 #244e5b}.machine-health span{display:block;height:100%;background:#1d6848}
+.machine-sell{width:100%;margin-top:8px;padding:5px 6px;border:4px solid #d9c99b;background:#a9343e;color:#fff;box-shadow:2px 2px 0 #6d1f25;font:900 .68rem ui-monospace,monospace;cursor:pointer}.machine-sell:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #6d1f25}
 .machine.damaged{border-color:#f2b04c}.machine.offline{filter:grayscale(.7);opacity:.82}
 .bug-banner{z-index:92;display:none;align-items:start;justify-content:center;padding-top:16px}.bug-banner.show{display:flex}.bug-banner .bug-message{border:6px solid #d9c99b;background:#a9343e;color:#fff;box-shadow:5px 5px 0 #6d1f25;padding:9px 13px;font:900 .9rem ui-monospace,monospace;text-align:center;max-width:min(460px,80vw)}
 .workspace.bug-raid{animation:raidFlash .68s steps(2,end) infinite}
@@ -317,6 +318,19 @@ function buyMachine(value){
   saveLocalNow();
   syncLeaderboard();
 }
+function sellValue(value){return machineCost(value)/2}
+function sellMachine(id){
+  const m=state.machines.find(x=>x.id===id);
+  if(!m)return;
+  if(state.merge&&(state.merge.a===m||state.merge.b===m))return;
+  state.money+=sellValue(m.value);
+  state.machines=state.machines.filter(x=>x!==m);
+  setMainframeMoney(state.money);
+  renderMachines();
+  renderShop();
+  saveLocalNow();
+  syncLeaderboard();
+}
 function renderShop(){
   const list=document.getElementById('shopList');
   if(!list)return;
@@ -340,7 +354,7 @@ function machineRate(m){normaliseMachine(m);return m.value*Math.max(.12,m.hp/MAC
 function machineHealthMarkup(m){const pct=Math.max(0,Math.min(100,Math.round(normaliseMachine(m).hp)));return `<div class="machine-health" title="Machine health"><span style="width:${pct}%"></span></div>`}
 function addMachine(value,x,y){state.machines.push({id:state.nextId++,value,x,y,hp:MACHINE_HP});renderMachines()}
 function totalRate(){return state.machines.reduce((s,m)=>s+machineRate(m),0)}
-function renderMachines(){ws.querySelectorAll('.machine').forEach(e=>e.remove());clearRopes();for(const m of state.machines){normaliseMachine(m);const el=document.createElement('article');el.className='machine'+(m.hp<MACHINE_HP*.98?' damaged':'')+(m.hp<=1?' offline':'');el.dataset.id=m.id;el.style.left=m.x+'px';el.style.top=m.y+'px';el.innerHTML=`<div class="machine-head"><span class="machine-name">${glyphMarkup(m.value,'machine-glyph')}</span><span class="machine-level">0x${hex(m.value)}</span></div><div class="machine-body"><div class="machine-rate"><span>${money(machineRate(m))}</span> / second</div><div class="machine-note">${m.hp<MACHINE_HP*.98?'Damaged by bugs':'Connected to central mainframe'}</div>${machineHealthMarkup(m)}</div><div class="port power-port side-right"></div><div class="port merge-port" title="Drag to another machine"></div>`;world.appendChild(el);bindMachine(el,m);createRope(m)} resizeCableCanvas();syncRopeAnchors();document.getElementById('rate').textContent=money(totalRate())+' / second'}
+function renderMachines(){ws.querySelectorAll('.machine').forEach(e=>e.remove());clearRopes();for(const m of state.machines){normaliseMachine(m);const el=document.createElement('article');el.className='machine'+(m.hp<MACHINE_HP*.98?' damaged':'')+(m.hp<=1?' offline':'');el.dataset.id=m.id;el.style.left=m.x+'px';el.style.top=m.y+'px';el.innerHTML=`<div class="machine-head"><span class="machine-name">${glyphMarkup(m.value,'machine-glyph')}</span><span class="machine-level">0x${hex(m.value)}</span></div><div class="machine-body"><div class="machine-rate"><span>${money(machineRate(m))}</span> / second</div><div class="machine-note">${m.hp<MACHINE_HP*.98?'Damaged by bugs':'Connected to central mainframe'}</div>${machineHealthMarkup(m)}<button type="button" class="machine-sell" data-sell="${m.id}" title="Sell this machine for half its buy price">SELL · ${money(sellValue(m.value))}</button></div><div class="port power-port side-right"></div><div class="port merge-port" title="Drag to another machine"></div>`;world.appendChild(el);bindMachine(el,m);el.querySelector('.machine-sell').addEventListener('click',e=>{e.stopPropagation();sellMachine(m.id)});createRope(m)} resizeCableCanvas();syncRopeAnchors();document.getElementById('rate').textContent=money(totalRate())+' / second'}
 function resizeCableCanvas(){
   const r=ws.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
   for(const [canvas,ctx] of [[cableCanvas,cableCtx],[amberCanvas,amberCtx]]){
