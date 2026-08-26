@@ -268,6 +268,30 @@
   .info-list li { margin-bottom: 0.8rem; color: var(--text-dim); }
   .info-list strong { color: var(--accent); }
 
+  /* Operator hints (used in "write the code" practice mode) */
+  .code-hints {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .code-hints-title {
+    font-family: var(--sans);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.4rem;
+  }
+  .code-hint-row { display: flex; gap: 0.7rem; padding: 0.1rem 0; }
+  .code-hint-line { color: var(--text-dimmer); width: 1.4rem; text-align: right; flex: 0 0 auto; }
+  .code-hint-ops { color: var(--accent); font-weight: 700; }
+  .code-hint-ops.empty { color: var(--text-dimmer); font-weight: 400; font-style: italic; }
+
   /* Code Editor (used in "write the code" practice mode) */
   .code-editor {
     display: flex;
@@ -1041,7 +1065,7 @@ function renderPracEntry(prefix, data) {
   document.getElementById(`${prefix}-context`).innerHTML = view.context;
   if (currentPracticeMode === 'code') {
     buildReadOnlyTableHtml(`${prefix}-code`, data.cols, view.answers);
-    buildCodeEditorHtml(`${prefix}-table-wrap`, prefix, codeAnswers[prefix] || '');
+    buildCodeEditorHtml(`${prefix}-table-wrap`, prefix, codeAnswers[prefix] || '', view.code, currentCodeLanguage);
   } else {
     renderPracticeCode(`${prefix}-code`, view.code);
     buildStudentTableHtml(`${prefix}-table-wrap`, prefix, data.cols, view.answers);
@@ -1121,11 +1145,45 @@ function buildReadOnlyTableHtml(containerId, cols, answers) {
   document.getElementById(containerId).innerHTML = html;
 }
 
+// Symbols/keywords counted as "the operator" on a line, matched directly
+// against the line text (not whitespace-split, since generated Python has no
+// spaces around things like "range(1,limit+1):"). Multi-character operators
+// are listed before the single-character class so e.g. "<-" and "==" aren't
+// swallowed a character at a time by it.
+const CAMBRIDGE_HINT_RE = /\b(FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|IF|THEN|ELSE|ENDIF|INPUT|OUTPUT|BREAK|MOD|DIV|AND|OR|NOT|TRUE|FALSE)\b|<-|<>|<=|>=|[=<>+\-*/]/gi;
+const PYTHON_HINT_RE = /\b(for|in|range|while|if|elif|else|break|print|input|int|and|or|not|True|False)\b|==|!=|<=|>=|\/\/|[=<>+\-*/%]/g;
+
+// Which operator(s)/keyword(s) a line needs, without giving away the
+// variable names or values around them - e.g. "total = total + i" hints
+// "= +", "if score >= 5:" hints "if >=".
+function lineOperatorHint(line, language) {
+  const re = language === 'cambridge' ? CAMBRIDGE_HINT_RE : PYTHON_HINT_RE;
+  re.lastIndex = 0;
+  const found = [];
+  let match;
+  while ((match = re.exec(line)) !== null) {
+    found.push(language === 'cambridge' ? match[0].toUpperCase() : match[0]);
+  }
+  return found.join(' ');
+}
+
+function buildCodeHintsHtml(expectedLines, language) {
+  const rows = expectedLines.map((line, i) => {
+    const hint = lineOperatorHint(line, language);
+    const opsClass = hint ? '' : ' empty';
+    return `<div class="code-hint-row"><span class="code-hint-line">${i + 1}</span><span class="code-hint-ops${opsClass}">${hint ? escapeHtml(hint) : 'no operator'}</span></div>`;
+  }).join('');
+  return `<div class="code-hints"><div class="code-hints-title">Operators needed per line</div>${rows}</div>`;
+}
+
 // A lightweight line-numbered code editor: a gutter of line-number divs kept
 // in sync with a plain <textarea>, since a full editor library is overkill
-// for regex line-matching against a known-good answer.
-function buildCodeEditorHtml(containerId, prefix, savedText) {
-  document.getElementById(containerId).innerHTML = `
+// for regex line-matching against a known-good answer. A fixed operator-hint
+// panel sits above it (fixed to the answer's own line count, unlike the
+// gutter which grows with what the student has actually typed).
+function buildCodeEditorHtml(containerId, prefix, savedText, expectedLines, language) {
+  document.getElementById(containerId).innerHTML =
+    buildCodeHintsHtml(expectedLines, language) + `
     <div class="code-editor">
       <div class="code-editor-gutter" id="${prefix}-gutter"></div>
       <textarea class="code-editor-textarea" id="${prefix}-textarea" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off"></textarea>
