@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary Mine</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --panel: #111a2c;
+    --border: #24314d;
+    --accent: #38bdf8;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+  }
+  header h1 {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    color: var(--accent);
+  }
+  .intro-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-size: 0.9rem;
+    max-width: 900px;
+  }
+  .intro-grid div span:first-child {
+    display: block;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+  }
+  .intro-grid div span:last-child {
+    color: var(--text);
+  }
+  #bmg-root {
+    min-height: calc(100vh - 110px);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Binary Mine</h1>
+  <div class="intro-grid">
+    <div><span>Mine</span><span>Left-click a block</span></div>
+    <div><span>Build</span><span>Right-click the sky</span></div>
+    <div><span>Combine</span><span>0110 + 1100 = 10010</span></div>
+    <div><span>Goal</span><span>Discover the highest element</span></div>
+  </div>
+</header>
+
+<div id="bmg-root"></div>
+
+<script src="binary-mining-module.js"></script>
+<script>
+  if (window.initBinaryMiningGame) {
+    initBinaryMiningGame('bmg-root');
+  } else {
+    document.getElementById('bmg-root').innerHTML = '<p style="color:#f87171;padding:20px">Game could not load. Please refresh the page.</p>';
+  }
+</script>
+
+</body>
+</html>
