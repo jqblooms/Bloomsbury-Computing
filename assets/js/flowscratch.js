@@ -397,14 +397,14 @@
           els.canvasWrap.classList.add('connecting');
           els.draft.style.display = 'block';
           updateDraft(e.clientX, e.clientY);
-          el.setPointerCapture(e.pointerId);
+          try { el.setPointerCapture(e.pointerId); } catch (_err) {}
           e.stopPropagation();
           return;
         }
         select(el.dataset.id);
         var n = getNode(el.dataset.id);
         FS.drag = { kind: 'node', id: n.id, startX: e.clientX, startY: e.clientY, x: n.x, y: n.y };
-        el.setPointerCapture(e.pointerId);
+        try { el.setPointerCapture(e.pointerId); } catch (_err) {}
       });
       el.addEventListener('click', function (e) { if (!e.target.matches('select,input')) select(el.dataset.id); });
       Array.prototype.forEach.call(el.querySelectorAll('[data-field]'), function (c) {
@@ -505,25 +505,218 @@
     if (m === dt) return { x: 0, y: -1 };
     return { x: 0, y: 1 };
   }
-  // Right-angle (elbow) connector: a short stub straight out of each
-  // block in its anchor's own direction, then at most one more bend to
-  // reach the other stub, so every segment is horizontal or vertical.
-  function orthogonalPath(p1, dir1, p2, dir2) {
-    var STUB = 30;
-    var s1 = { x: p1.x + dir1.x * STUB, y: p1.y + dir1.y * STUB };
-    var s2 = { x: p2.x + dir2.x * STUB, y: p2.y + dir2.y * STUB };
-    var pts = [p1, s1];
-    var h1 = dir1.x !== 0, h2 = dir2.x !== 0;
-    if (h1 && h2) { var midX = (s1.x + s2.x) / 2; pts.push({ x: midX, y: s1.y }, { x: midX, y: s2.y }); }
-    else if (!h1 && !h2) { var midY = (s1.y + s2.y) / 2; pts.push({ x: s1.x, y: midY }, { x: s2.x, y: midY }); }
-    else if (h1 && !h2) { pts.push({ x: s2.x, y: s1.y }); }
-    else { pts.push({ x: s1.x, y: s2.y }); }
-    pts.push(s2, p2);
-    return 'M' + pts.map(function (p) { return p.x + ',' + p.y; }).join(' L ');
+  function routeClearance(p1, p2) {
+    var distance = Math.abs(p2.x - p1.x) + Math.abs(p2.y - p1.y);
+    return Math.max(14, Math.min(30, 10 + distance * .035));
+  }
+  function routeRects(padding) {
+    return FS.nodes.map(function (n) {
+      var d = nodeDims(n);
+      return { id: n.id, left: n.x - padding, right: n.x + d.w + padding, top: n.y - padding, bottom: n.y + d.h + padding };
+    });
+  }
+  function forwardNodeGap(p, dir, ignoreId) {
+    var best = Infinity, e = .01;
+    routeRects(0).forEach(function (r) {
+      if (r.id === ignoreId) return;
+      if (dir.x > 0 && p.y > r.top + e && p.y < r.bottom - e && r.left >= p.x - e) best = Math.min(best, r.left - p.x);
+      if (dir.x < 0 && p.y > r.top + e && p.y < r.bottom - e && r.right <= p.x + e) best = Math.min(best, p.x - r.right);
+      if (dir.y > 0 && p.x > r.left + e && p.x < r.right - e && r.top >= p.y - e) best = Math.min(best, r.top - p.y);
+      if (dir.y < 0 && p.x > r.left + e && p.x < r.right - e && r.bottom <= p.y + e) best = Math.min(best, p.y - r.bottom);
+    });
+    return best;
+  }
+  function pointInsideRouteRect(p, r) {
+    var e = .01;
+    return p.x > r.left + e && p.x < r.right - e && p.y > r.top + e && p.y < r.bottom - e;
+  }
+  function routeSegmentBlocked(a, b, rects) {
+    var e = .01, min, max;
+    if (Math.abs(a.y - b.y) < e) {
+      min = Math.min(a.x, b.x); max = Math.max(a.x, b.x);
+      return rects.some(function (r) {
+        return a.y > r.top + e && a.y < r.bottom - e && max > r.left + e && min < r.right - e;
+      });
+    }
+    if (Math.abs(a.x - b.x) < e) {
+      min = Math.min(a.y, b.y); max = Math.max(a.y, b.y);
+      return rects.some(function (r) {
+        return a.x > r.left + e && a.x < r.right - e && max > r.top + e && min < r.bottom - e;
+      });
+    }
+    return true;
+  }
+  function routeWirePenalty(a, b, occupied) {
+    var penalty = 0, e = .01;
+    (occupied || []).forEach(function (s) {
+      var aH = Math.abs(a.y - b.y) < e, sH = Math.abs(s.a.y - s.b.y) < e;
+      if (aH && sH && Math.abs(a.y - s.a.y) < e) {
+        var overlapX = Math.min(Math.max(a.x, b.x), Math.max(s.a.x, s.b.x)) - Math.max(Math.min(a.x, b.x), Math.min(s.a.x, s.b.x));
+        if (overlapX > e) penalty += 160 + overlapX;
+      } else if (!aH && !sH && Math.abs(a.x - s.a.x) < e) {
+        var overlapY = Math.min(Math.max(a.y, b.y), Math.max(s.a.y, s.b.y)) - Math.max(Math.min(a.y, b.y), Math.min(s.a.y, s.b.y));
+        if (overlapY > e) penalty += 160 + overlapY;
+      } else if (aH !== sH) {
+        var h = aH ? { a: a, b: b } : s;
+        var v = aH ? s : { a: a, b: b };
+        var ix = v.a.x, iy = h.a.y;
+        if (ix > Math.min(h.a.x, h.b.x) + e && ix < Math.max(h.a.x, h.b.x) - e &&
+            iy > Math.min(v.a.y, v.b.y) + e && iy < Math.max(v.a.y, v.b.y) - e) penalty += 70;
+      }
+    });
+    return penalty;
+  }
+  function compactRoutePoints(points) {
+    var out = [];
+    points.forEach(function (p) {
+      var last = out[out.length - 1];
+      if (last && Math.abs(last.x - p.x) < .01 && Math.abs(last.y - p.y) < .01) return;
+      if (out.length > 1) {
+        var before = out[out.length - 2];
+        if ((Math.abs(before.x - last.x) < .01 && Math.abs(last.x - p.x) < .01) ||
+            (Math.abs(before.y - last.y) < .01 && Math.abs(last.y - p.y) < .01)) out.pop();
+      }
+      out.push(p);
+    });
+    return out;
+  }
+  function simpleOrthogonalRoute(s1, s2, rects, occupied) {
+    var candidates = [
+      [s1, { x: s2.x, y: s1.y }, s2],
+      [s1, { x: s1.x, y: s2.y }, s2]
+    ];
+    var dx = Math.abs(s2.x - s1.x), dy = Math.abs(s2.y - s1.y);
+    if (dx > 1) {
+      var mx = (s1.x + s2.x) / 2;
+      candidates.push([s1, { x: mx, y: s1.y }, { x: mx, y: s2.y }, s2]);
+    }
+    if (dy > 1) {
+      var my = (s1.y + s2.y) / 2;
+      candidates.push([s1, { x: s1.x, y: my }, { x: s2.x, y: my }, s2]);
+    }
+    var best = null;
+    candidates.forEach(function (candidate) {
+      candidate = compactRoutePoints(candidate);
+      var blocked = false, cost = 0;
+      for (var i = 1; i < candidate.length; i++) {
+        if (routeSegmentBlocked(candidate[i - 1], candidate[i], rects)) { blocked = true; break; }
+        cost += Math.abs(candidate[i].x - candidate[i - 1].x) + Math.abs(candidate[i].y - candidate[i - 1].y);
+        cost += routeWirePenalty(candidate[i - 1], candidate[i], occupied);
+      }
+      cost += Math.max(0, candidate.length - 2) * 22;
+      if (!blocked && (!best || cost < best.cost)) best = { points: candidate, cost: cost };
+    });
+    return best && best.points;
+  }
+  function heapPush(heap, item) {
+    heap.push(item);
+    var i = heap.length - 1;
+    while (i > 0) {
+      var p = Math.floor((i - 1) / 2);
+      if (heap[p].cost <= item.cost) break;
+      heap[i] = heap[p]; i = p;
+    }
+    heap[i] = item;
+  }
+  function heapPop(heap) {
+    if (!heap.length) return null;
+    var root = heap[0], last = heap.pop();
+    if (!heap.length) return root;
+    var i = 0;
+    while (true) {
+      var left = i * 2 + 1, right = left + 1;
+      if (left >= heap.length) break;
+      var child = right < heap.length && heap[right].cost < heap[left].cost ? right : left;
+      if (heap[child].cost >= last.cost) break;
+      heap[i] = heap[child]; i = child;
+    }
+    heap[i] = last;
+    return root;
+  }
+  function smartGridRoute(s1, s2, rects, occupied) {
+    var xs = [s1.x, s2.x], ys = [s1.y, s2.y];
+    rects.forEach(function (r) { xs.push(r.left, r.right); ys.push(r.top, r.bottom); });
+    function uniqueSorted(values) {
+      values.sort(function (a, b) { return a - b; });
+      return values.filter(function (v, i) { return !i || Math.abs(v - values[i - 1]) > .01; });
+    }
+    xs = uniqueSorted(xs); ys = uniqueSorted(ys);
+    var nodes = [], at = {};
+    xs.forEach(function (x, ix) {
+      ys.forEach(function (y, iy) {
+        var p = { x: x, y: y, ix: ix, iy: iy };
+        if (rects.some(function (r) { return pointInsideRouteRect(p, r); })) return;
+        at[ix + ',' + iy] = nodes.length; nodes.push(p);
+      });
+    });
+    function coordIndex(values, value) {
+      for (var i = 0; i < values.length; i++) if (Math.abs(values[i] - value) < .01) return i;
+      return -1;
+    }
+    var start = at[coordIndex(xs, s1.x) + ',' + coordIndex(ys, s1.y)];
+    var goal = at[coordIndex(xs, s2.x) + ',' + coordIndex(ys, s2.y)];
+    if (start == null || goal == null) return null;
+    var heap = [], distances = {}, previous = {};
+    heapPush(heap, { node: start, dir: 'N', cost: 0 });
+    distances[start + '|N'] = 0;
+    var finishKey = null;
+    while (heap.length) {
+      var current = heapPop(heap), currentKey = current.node + '|' + current.dir;
+      if (current.cost !== distances[currentKey]) continue;
+      if (current.node === goal) { finishKey = currentKey; break; }
+      var p = nodes[current.node];
+      [[-1, 0, 'H'], [1, 0, 'H'], [0, -1, 'V'], [0, 1, 'V']].forEach(function (move) {
+        var ix = p.ix + move[0], iy = p.iy + move[1], next = null;
+        while (ix >= 0 && ix < xs.length && iy >= 0 && iy < ys.length) {
+          var candidate = at[ix + ',' + iy];
+          if (candidate != null) { next = candidate; break; }
+          ix += move[0]; iy += move[1];
+        }
+        if (next == null || routeSegmentBlocked(p, nodes[next], rects)) return;
+        var length = Math.abs(nodes[next].x - p.x) + Math.abs(nodes[next].y - p.y);
+        var bend = current.dir !== 'N' && current.dir !== move[2] ? 22 : 0;
+        var nextCost = current.cost + length + bend + routeWirePenalty(p, nodes[next], occupied);
+        var nextKey = next + '|' + move[2];
+        if (distances[nextKey] == null || nextCost < distances[nextKey]) {
+          distances[nextKey] = nextCost;
+          previous[nextKey] = currentKey;
+          heapPush(heap, { node: next, dir: move[2], cost: nextCost });
+        }
+      });
+    }
+    if (!finishKey) return null;
+    var route = [];
+    while (finishKey) {
+      route.push(nodes[parseInt(finishKey.split('|')[0], 10)]);
+      finishKey = previous[finishKey];
+    }
+    route.reverse();
+    return compactRoutePoints(route);
+  }
+  // Orthogonal connectors use a clearance based on the distance between
+  // their anchors, try the clean one- and two-bend routes first, then use
+  // a Manhattan visibility grid when blocks are in the way.
+  function orthogonalRoute(p1, dir1, p2, dir2, occupied, fromId, toId) {
+    var clearance = routeClearance(p1, p2);
+    var startGap = forwardNodeGap(p1, dir1, fromId), endGap = forwardNodeGap(p2, dir2, toId);
+    if (isFinite(startGap)) clearance = Math.min(clearance, Math.max(4, startGap / 2 - 1));
+    if (isFinite(endGap)) clearance = Math.min(clearance, Math.max(4, endGap / 2 - 1));
+    var escape = clearance + 1;
+    var s1 = { x: p1.x + dir1.x * escape, y: p1.y + dir1.y * escape };
+    var s2 = { x: p2.x + dir2.x * escape, y: p2.y + dir2.y * escape };
+    var rects = routeRects(clearance);
+    var middle = simpleOrthogonalRoute(s1, s2, rects, occupied) || smartGridRoute(s1, s2, rects, occupied);
+    if (!middle) {
+      var fallback = dir1.x !== 0
+        ? [s1, { x: s2.x, y: s1.y }, s2]
+        : [s1, { x: s1.x, y: s2.y }, s2];
+      middle = compactRoutePoints(fallback);
+    }
+    return compactRoutePoints([p1].concat(middle, [p2]));
   }
   function draftOrthogonalPath(p1, dir1, mouse) {
-    var STUB = 30;
-    var s1 = { x: p1.x + dir1.x * STUB, y: p1.y + dir1.y * STUB };
+    var stub = routeClearance(p1, mouse) + 2;
+    var s1 = { x: p1.x + dir1.x * stub, y: p1.y + dir1.y * stub };
     var pts = [p1, s1];
     pts.push(dir1.x !== 0 ? { x: mouse.x, y: s1.y } : { x: s1.x, y: mouse.y });
     pts.push(mouse);
@@ -531,21 +724,37 @@
   }
   // A student can pick a plain straight line instead of the default
   // right-angle routing per connector, via the inspector (edge.lineType).
-  function edgePath(edge, p1, dir1, p2, dir2) {
-    if (edge.lineType === 'straight') return 'M' + p1.x + ',' + p1.y + ' L' + p2.x + ',' + p2.y;
-    return orthogonalPath(p1, dir1, p2, dir2);
+  function routePath(points) {
+    return 'M' + points.map(function (p) { return p.x + ',' + p.y; }).join(' L ');
+  }
+  function edgeRoute(edge, p1, dir1, p2, dir2, occupied) {
+    if (edge.lineType === 'straight') return [p1, p2];
+    return orthogonalRoute(p1, dir1, p2, dir2, occupied, edge.from, edge.to);
+  }
+  function branchLabelPoint(p, dir) {
+    if (dir.x > 0) return { x: p.x + 10, y: p.y - 8, anchor: 'start' };
+    if (dir.x < 0) return { x: p.x - 10, y: p.y - 8, anchor: 'end' };
+    if (dir.y > 0) return { x: p.x + 8, y: p.y + 18, anchor: 'start' };
+    return { x: p.x + 8, y: p.y - 8, anchor: 'start' };
   }
   function renderWires(activeId) {
+    var occupied = [];
     els.wireLayer.innerHTML = FS.edges.map(function (e) {
       var a = getNode(e.from), b = getNode(e.to);
       if (!a || !b) return '';
       var p1 = center(a, e.fromA), p2 = center(b, e.toA);
-      var d = edgePath(e, p1, anchorDirection(a, e.fromA), p2, anchorDirection(b, e.toA));
+      var dir1 = anchorDirection(a, e.fromA), dir2 = anchorDirection(b, e.toA);
+      var points = edgeRoute(e, p1, dir1, p2, dir2, occupied);
+      var d = routePath(points);
+      if (e.lineType !== 'straight') {
+        for (var i = 1; i < points.length; i++) occupied.push({ a: points[i - 1], b: points[i] });
+      }
       var branch = a.type === 'selection' ? FS.edges.filter(function (x) { return x.from === a.id; }).indexOf(e) : -1;
       var label = branch === 0 ? 'True' : branch === 1 ? 'False' : '';
+      var labelPoint = branchLabelPoint(p1, dir1);
       var cls = (activeId === e.id ? 'active' : '') + (FS.selectedEdgeId === e.id ? ' selected' : '');
       return '<g data-edge="' + e.id + '"><path class="fs-wire-hit" d="' + d + '"/><path class="fs-wire ' + cls + '" d="' + d + '" marker-end="url(#fsArrow)"/>' +
-        (label ? '<text class="fs-wire-label" x="' + (p1.x + p2.x) / 2 + '" y="' + ((p1.y + p2.y) / 2 - 7) + '">' + label + '</text>' : '') + '</g>';
+        (label ? '<text class="fs-wire-label" text-anchor="' + labelPoint.anchor + '" x="' + labelPoint.x + '" y="' + labelPoint.y + '">' + label + '</text>' : '') + '</g>';
     }).join('');
     Array.prototype.forEach.call(els.wireLayer.querySelectorAll('.fs-wire-hit'), function (p) {
       p.addEventListener('click', function () { selectEdge(p.parentNode.dataset.edge); });
@@ -1108,7 +1317,7 @@
         document.body.appendChild(ghost);
         ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
         FS.palette = { type: p.dataset.type, ghost: ghost };
-        p.setPointerCapture(e.pointerId);
+        try { p.setPointerCapture(e.pointerId); } catch (_err) {}
       });
     });
   }
@@ -1122,7 +1331,7 @@
         FS.selected = null; FS.selectedEdgeId = null; renderAll();
         FS.drag = { kind: 'pan', startX: e.clientX, startY: e.clientY, x: FS.panX, y: FS.panY };
         els.canvasWrap.classList.add('panning');
-        els.canvasWrap.setPointerCapture(e.pointerId);
+        try { els.canvasWrap.setPointerCapture(e.pointerId); } catch (_err) {}
         e.preventDefault();
       }
     });
