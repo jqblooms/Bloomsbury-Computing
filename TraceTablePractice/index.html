@@ -1241,12 +1241,43 @@ function buildLineRegex(expectedLine, language) {
   return new RegExp(pattern, language === 'cambridge' ? 'i' : '');
 }
 
+// Operators where swapping the two operands doesn't change the result
+// (Price * Quantity is the same value as Quantity * Price). Only applied
+// when the line has exactly one such operator with a single token on each
+// side, so a chained or compound expression is left alone rather than risk
+// swapping the wrong pair.
+const COMMUTATIVE_TOKENS = { cambridge: ['+', '*', 'AND', 'OR'], python: ['+', '*', 'and', 'or'] };
+
+function commutativeLineVariant(line, language) {
+  const tokens = line.trim().split(/\s+/).filter(Boolean);
+  const targets = COMMUTATIVE_TOKENS[language] || [];
+  const opIndexes = [];
+  tokens.forEach((t, i) => {
+    const compare = language === 'cambridge' ? t.toUpperCase() : t;
+    if (targets.indexOf(compare) !== -1 && i > 0 && i < tokens.length - 1) opIndexes.push(i);
+  });
+  if (opIndexes.length !== 1) return null;
+  const i = opIndexes[0];
+  const swapped = tokens.slice();
+  [swapped[i - 1], swapped[i + 1]] = [swapped[i + 1], swapped[i - 1]];
+  return swapped.join(' ');
+}
+
+// A typed line is accepted if it matches the expected line as written, or
+// (when applicable) with the operands of a single commutative operator
+// swapped.
+function lineMatchesExpected(typed, expected, language) {
+  if (buildLineRegex(expected, language).test(typed)) return true;
+  const swapped = commutativeLineVariant(expected, language);
+  return swapped !== null && buildLineRegex(swapped, language).test(typed);
+}
+
 function checkCodeLines(prefix, expectedLines, language) {
   const textarea = document.getElementById(`${prefix}-textarea`);
   const typedLines = textarea ? textarea.value.replace(/\r\n/g, '\n').split('\n') : [];
   const lineResults = expectedLines.map((expected, i) => {
     const typed = typedLines[i] !== undefined ? typedLines[i] : '';
-    return expected.trim() === '' ? typed.trim() === '' : buildLineRegex(expected, language).test(typed);
+    return expected.trim() === '' ? typed.trim() === '' : lineMatchesExpected(typed, expected, language);
   });
   const gutter = document.getElementById(`${prefix}-gutter`);
   if (gutter) {
