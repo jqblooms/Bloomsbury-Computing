@@ -313,8 +313,16 @@
   // Enforced here instead: connecting a new wire from a non-Selection
   // block replaces its existing outgoing wire; a Selection block is
   // capped at two and a third attempt is refused with an explanation.
-  function addEdge(from, to, fromA, toA) {
-    if (from === to || FS.edges.some(function (e) { return e.from === from && e.to === to; })) return false;
+  function edgeBranch(edge) {
+    if (!edge) return '';
+    if (edge.branch === 'true' || edge.branch === 'false') return edge.branch;
+    var fromNode = getNode(edge.from);
+    if (!fromNode || fromNode.type !== 'selection') return '';
+    var siblings = FS.edges.filter(function (e) { return e.from === edge.from; });
+    return siblings.indexOf(edge) === 0 ? 'true' : 'false';
+  }
+  function addEdge(from, to, fromA, toA, options) {
+    if ((from === to && !(options && options.joinEdgeId)) || FS.edges.some(function (e) { return e.from === from && e.to === to; })) return false;
     var fromNode = getNode(from);
     var existingOut = FS.edges.filter(function (e) { return e.from === from; });
     if (fromNode && fromNode.type === 'selection') {
@@ -325,7 +333,15 @@
     } else if (existingOut.length >= 1) {
       FS.edges = FS.edges.filter(function (e) { return e.from !== from; });
     }
-    FS.edges.push({ id: 'e' + (++FS.edgeId), from: from, to: to, fromA: fromA || 'E', toA: toA || 'W', lineType: 'orthogonal' });
+    var edge = { id: 'e' + (++FS.edgeId), from: from, to: to, fromA: fromA || 'E', toA: toA || 'W', lineType: 'orthogonal' };
+    if (fromNode && fromNode.type === 'selection') {
+      edge.branch = existingOut.some(function (e) { return edgeBranch(e) === 'true'; }) ? 'false' : 'true';
+    }
+    if (options && options.joinEdgeId) {
+      edge.joinEdgeId = options.joinEdgeId;
+      edge.joinAt = options.joinAt;
+    }
+    FS.edges.push(edge);
     renderWires();
     return true;
   }
@@ -737,23 +753,48 @@
     if (dir.y > 0) return { x: p.x + 8, y: p.y + 18, anchor: 'start' };
     return { x: p.x + 8, y: p.y - 8, anchor: 'start' };
   }
+  function nearestPointOnRoute(points, toward) {
+    var best = null;
+    for (var i = 1; i < points.length; i++) {
+      var a = points[i - 1], b = points[i], p;
+      if (Math.abs(a.y - b.y) < .01) {
+        p = { x: Math.max(Math.min(a.x, b.x), Math.min(Math.max(a.x, b.x), toward.x)), y: a.y, horizontal: true };
+      } else {
+        p = { x: a.x, y: Math.max(Math.min(a.y, b.y), Math.min(Math.max(a.y, b.y), toward.y)), horizontal: false };
+      }
+      var distance = Math.hypot(p.x - toward.x, p.y - toward.y);
+      if (!best || distance < best.distance) { p.distance = distance; best = p; }
+    }
+    return best;
+  }
   function renderWires(activeId) {
-    var occupied = [];
+    var occupied = [], renderedRoutes = {};
     els.wireLayer.innerHTML = FS.edges.map(function (e) {
       var a = getNode(e.from), b = getNode(e.to);
       if (!a || !b) return '';
       var p1 = center(a, e.fromA), p2 = center(b, e.toA);
       var dir1 = anchorDirection(a, e.fromA), dir2 = anchorDirection(b, e.toA);
+      var joinedRoute = e.joinEdgeId && renderedRoutes[e.joinEdgeId];
+      if (joinedRoute) {
+        var join = nearestPointOnRoute(joinedRoute, e.joinAt || p2);
+        if (join) {
+          p2 = { x: join.x, y: join.y };
+          dir2 = join.horizontal
+            ? { x: 0, y: p1.y < p2.y ? -1 : 1 }
+            : { x: p1.x < p2.x ? -1 : 1, y: 0 };
+        }
+      }
       var points = edgeRoute(e, p1, dir1, p2, dir2, occupied);
+      renderedRoutes[e.id] = points;
       var d = routePath(points);
       if (e.lineType !== 'straight') {
         for (var i = 1; i < points.length; i++) occupied.push({ a: points[i - 1], b: points[i] });
       }
-      var branch = a.type === 'selection' ? FS.edges.filter(function (x) { return x.from === a.id; }).indexOf(e) : -1;
-      var label = branch === 0 ? 'True' : branch === 1 ? 'False' : '';
+      var branch = a.type === 'selection' ? edgeBranch(e) : '';
+      var label = branch === 'true' ? 'True' : branch === 'false' ? 'False' : '';
       var labelPoint = branchLabelPoint(p1, dir1);
       var cls = (activeId === e.id ? 'active' : '') + (FS.selectedEdgeId === e.id ? ' selected' : '');
-      return '<g data-edge="' + e.id + '"><path class="fs-wire-hit" d="' + d + '"/><path class="fs-wire ' + cls + '" d="' + d + '" marker-end="url(#fsArrow)"/>' +
+      return '<g data-edge="' + e.id + '"><path class="fs-wire-hit" d="' + d + '"/><path class="fs-wire ' + cls + '" d="' + d + '"' + (joinedRoute ? '' : ' marker-end="url(#fsArrow)"') + '/>' +
         (label ? '<text class="fs-wire-label" text-anchor="' + labelPoint.anchor + '" x="' + labelPoint.x + '" y="' + labelPoint.y + '">' + label + '</text>' : '') + '</g>';
     }).join('');
     Array.prototype.forEach.call(els.wireLayer.querySelectorAll('.fs-wire-hit'), function (p) {
@@ -788,7 +829,7 @@
     if (n.type === 'change_color') f = field('Change by', 'number', 'value', n.data.value);
     if (n.type === 'say' || n.type === 'ask') f = field(n.type === 'say' ? 'Message' : 'Question', 'text', 'text', n.data.text);
     if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
-    if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Its first outgoing connector is True; its second is False.</p>';
+    if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Select either outgoing connector to set it as True or False.</p>';
     host.innerHTML = '<b>' + typeTitle(n) + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
     Array.prototype.forEach.call(host.querySelectorAll('[data-inspect]'), function (i) {
       i.addEventListener('input', function () {
@@ -806,12 +847,15 @@
     var edge = FS.edges.find(function (e) { return e.id === FS.selectedEdgeId; });
     if (!edge) { FS.selectedEdgeId = null; host.className = 'fs-empty'; host.innerHTML = 'Select a block or connector to edit it.'; return; }
     host.className = '';
-    var fromNode = getNode(edge.from), branchNote = '';
+    var fromNode = getNode(edge.from), branchField = '';
     if (fromNode && fromNode.type === 'selection') {
-      var siblings = FS.edges.filter(function (e) { return e.from === edge.from; });
-      branchNote = '<p class="fs-empty">' + (siblings.indexOf(edge) === 0 ? 'This is the True branch.' : 'This is the False branch.') + '</p>';
+      var currentBranch = edgeBranch(edge);
+      branchField = '<div class="fs-field"><label>Decision branch</label><select id="fsEdgeBranch">' +
+        '<option value="true"' + (currentBranch === 'true' ? ' selected' : '') + '>True</option>' +
+        '<option value="false"' + (currentBranch === 'false' ? ' selected' : '') + '>False</option>' +
+        '</select></div>';
     }
-    host.innerHTML = '<b>Connector</b>' + branchNote +
+    host.innerHTML = '<b>Connector</b>' + branchField +
       '<div class="fs-field"><label>Line type</label><select id="fsEdgeLineType">' +
       '<option value="orthogonal"' + (edge.lineType !== 'straight' ? ' selected' : '') + '>Right-angle</option>' +
       '<option value="straight"' + (edge.lineType === 'straight' ? ' selected' : '') + '>Straight</option>' +
@@ -819,6 +863,16 @@
       '<button class="fs-danger" id="fsDeleteEdge">Delete connection</button>';
     host.querySelector('#fsEdgeLineType').addEventListener('change', function (e) {
       edge.lineType = e.target.value; renderWires(); saveGraph(FS.activeSprite);
+    });
+    var branchSelect = host.querySelector('#fsEdgeBranch');
+    if (branchSelect) branchSelect.addEventListener('change', function (event) {
+      var requested = event.target.value;
+      var sibling = FS.edges.find(function (other) {
+        return other.id !== edge.id && other.from === edge.from && edgeBranch(other) === requested;
+      });
+      edge.branch = requested;
+      if (sibling) sibling.branch = requested === 'true' ? 'false' : 'true';
+      renderAll(); selectEdge(edge.id); saveGraph(FS.activeSprite);
     });
     host.querySelector('#fsDeleteEdge').onclick = function () {
       FS.edges = FS.edges.filter(function (e) { return e.id !== edge.id; });
@@ -868,7 +922,7 @@
     FS.nodes.forEach(function (n) {
       if (n.type !== 'end' && !out(n.id).length) errors.push(typeTitle(n) + ' has no outgoing connection.');
       if (n.type !== 'start' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
-      if (n.type === 'selection' && out(n.id).length !== 2) errors.push('Each Selection must have exactly two outgoing connections (True first, False second).');
+      if (n.type === 'selection' && out(n.id).length !== 2) errors.push('Each Selection must have exactly two outgoing connections, one True and one False.');
       // addEdge() already refuses to create this, but defends here too in
       // case a graph saved before that enforcement existed gets loaded:
       // Run must never execute a flowchart with an ambiguous branch.
@@ -1029,7 +1083,8 @@
         if (FS.gen !== myGen) return;
         if (current.type === 'selection') {
           var truth = evaluateCondition(current);
-          current = getNode(outs[truth ? 0 : 1] ? outs[truth ? 0 : 1].to : undefined);
+          var chosen = outs.find(function (edge) { return edgeBranch(edge) === (truth ? 'true' : 'false'); });
+          current = getNode(chosen ? chosen.to : undefined);
         } else {
           current = getNode(outs[0] ? outs[0].to : undefined);
         }
@@ -1104,6 +1159,7 @@
       '#fs-canvas-wrap.panning{cursor:grabbing}#fs-canvas-wrap.connecting,#fs-canvas-wrap.fs-anchor-hover{cursor:crosshair}',
       '#fs-world{position:absolute;left:0;top:0;width:2200px;height:1400px;transform-origin:0 0;background-color:#fafafa;background-image:radial-gradient(#c9cbd0 1px,transparent 1px);background-size:22px 22px;box-shadow:0 0 0 1px #d3d4d7}',
       '#fs-wires{position:absolute;inset:0;width:2200px;height:1400px;overflow:visible;pointer-events:none}',
+      '#fs-draft-wire{pointer-events:none}',
       '.fs-wire{fill:none;stroke:#646873;stroke-width:2.2}.fs-wire.active{stroke:#22b36b;stroke-width:3.6}.fs-wire.selected{stroke:#4b66e8;stroke-width:3.2}',
       '.fs-wire-hit{fill:none;stroke:transparent;stroke-width:13;pointer-events:stroke;cursor:pointer}.fs-wire-hit:hover+.fs-wire{stroke:#d84c4c}',
       '.fs-wire-label{font-size:10px;font-weight:750;fill:#454850;paint-order:stroke;stroke:#fafafa;stroke-width:5px;stroke-linejoin:round}',
@@ -1460,9 +1516,18 @@
         p.ghost.remove(); FS.palette = null;
       }
       if (FS.connect) {
-        var target = document.elementFromPoint(e.clientX, e.clientY);
-        target = target && target.closest ? target.closest('.fs-node') : null;
-        if (target && target.dataset.id !== FS.connect.from) {
+        var dropTarget = document.elementFromPoint(e.clientX, e.clientY);
+        var targetWire = dropTarget && dropTarget.closest ? dropTarget.closest('.fs-wire-hit') : null;
+        var joinedEdge = targetWire ? FS.edges.find(function (ed) { return ed.id === targetWire.parentNode.dataset.edge; }) : null;
+        var target = dropTarget && dropTarget.closest ? dropTarget.closest('.fs-node') : null;
+        if (joinedEdge && joinedEdge.from !== FS.connect.from) {
+          var joinPoint = screenToWorld(e.clientX, e.clientY);
+          addEdge(FS.connect.from, joinedEdge.to, FS.connect.fromA, joinedEdge.toA, {
+            joinEdgeId: joinedEdge.id,
+            joinAt: { x: joinPoint.x, y: joinPoint.y }
+          });
+          saveGraph(FS.activeSprite);
+        } else if (target && target.dataset.id !== FS.connect.from) {
           var wp2 = screenToWorld(e.clientX, e.clientY);
           var n2 = getNode(target.dataset.id);
           addEdge(FS.connect.from, n2.id, FS.connect.fromA, anchorPointOnNode(n2, wp2.x, wp2.y));
