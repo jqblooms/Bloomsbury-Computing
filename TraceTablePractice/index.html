@@ -1097,7 +1097,11 @@ function setPracticeMode(mode) {
   });
 
   pracData.forEach((data, index) => renderPracEntry(`prac${index}`, data));
-  if (genQuestion) renderPracEntry('gen', genQuestion);
+  // Re-rendering the same generated question in the other mode would just
+  // reveal its answer (the table the student was just filling in becomes
+  // the read-only "given" once you flip to write-the-code, or vice versa),
+  // so switching modes rolls a fresh question instead of redisplaying it.
+  if (genQuestion) resetGeneratedPractice();
 
   clearLanguageValidation();
   saveProgress();
