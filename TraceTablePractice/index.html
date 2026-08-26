@@ -268,6 +268,45 @@
   .info-list li { margin-bottom: 0.8rem; color: var(--text-dim); }
   .info-list strong { color: var(--accent); }
 
+  /* Code Editor (used in "write the code" practice mode) */
+  .code-editor {
+    display: flex;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: var(--mono);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .code-editor-gutter {
+    background: var(--surface2);
+    color: var(--text-dimmer);
+    text-align: right;
+    padding: 1rem 0.6rem;
+    user-select: none;
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+  .gutter-line { padding: 0 0.2rem; white-space: pre; }
+  .gutter-line.correct { color: var(--correct); font-weight: 700; }
+  .gutter-line.wrong { color: var(--wrong); font-weight: 700; }
+  .code-editor-textarea {
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: vertical;
+    background: transparent;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.6;
+    padding: 1rem;
+    min-height: 10rem;
+    white-space: pre;
+    overflow: auto;
+  }
 
 </style>
 </head>
@@ -285,6 +324,11 @@
       <span class="language-picker-label">Code</span>
       <button type="button" class="language-btn" data-code-language="cambridge" onclick="setCodeLanguage('cambridge')">Cambridge pseudocode</button>
       <button type="button" class="language-btn" data-code-language="python" onclick="setCodeLanguage('python')">Python</button>
+    </div>
+    <div class="language-picker" role="group" aria-label="Practice mode">
+      <span class="language-picker-label">Mode</span>
+      <button type="button" class="language-btn" data-practice-mode="trace" onclick="setPracticeMode('trace')">Fill the table</button>
+      <button type="button" class="language-btn" data-practice-mode="code" onclick="setPracticeMode('code')">Write the code</button>
     </div>
   </header>
 
@@ -349,7 +393,7 @@
         </div>
         <div>
           <div id="prac5-table-wrap"></div>
-          <button class="btn btn-primary mt-4" onclick="checkPractice(5)">Check Answers</button>
+          <button class="btn btn-primary mt-4 check-btn" onclick="checkPractice(5)">Check Answers</button>
           <div id="prac5-result" class="result-badge"></div>
         </div>
       </div>
@@ -364,7 +408,7 @@
         </div>
         <div>
           <div id="prac0-table-wrap"></div>
-          <button class="btn btn-primary mt-4" onclick="checkPractice(0)">Check Answers</button>
+          <button class="btn btn-primary mt-4 check-btn" onclick="checkPractice(0)">Check Answers</button>
           <div id="prac0-result" class="result-badge"></div>
         </div>
       </div>
@@ -379,7 +423,7 @@
         </div>
         <div>
           <div id="prac1-table-wrap"></div>
-          <button class="btn btn-primary mt-4" onclick="checkPractice(1)">Check Answers</button>
+          <button class="btn btn-primary mt-4 check-btn" onclick="checkPractice(1)">Check Answers</button>
           <div id="prac1-result" class="result-badge"></div>
         </div>
       </div>
@@ -394,7 +438,7 @@
         </div>
         <div>
           <div id="prac2-table-wrap"></div>
-          <button class="btn btn-primary mt-4" onclick="checkPractice(2)">Check Answers</button>
+          <button class="btn btn-primary mt-4 check-btn" onclick="checkPractice(2)">Check Answers</button>
           <div id="prac2-result" class="result-badge"></div>
         </div>
       </div>
@@ -409,7 +453,7 @@
         </div>
         <div>
           <div id="prac3-table-wrap"></div>
-          <button class="btn btn-primary mt-4" onclick="checkPractice(3)">Check Answers</button>
+          <button class="btn btn-primary mt-4 check-btn" onclick="checkPractice(3)">Check Answers</button>
           <div id="prac3-result" class="result-badge"></div>
         </div>
       </div>
@@ -424,7 +468,7 @@
         </div>
         <div>
           <div id="prac4-table-wrap"></div>
-          <button class="btn btn-primary mt-4" onclick="checkPractice(4)">Check Answers</button>
+          <button class="btn btn-primary mt-4 check-btn" onclick="checkPractice(4)">Check Answers</button>
           <div id="prac4-result" class="result-badge"></div>
         </div>
       </div>
@@ -439,7 +483,7 @@
         </div>
         <div>
           <div id="prac6-table-wrap"></div>
-          <button class="btn btn-primary mt-4" onclick="checkPractice(6)">Check Answers</button>
+          <button class="btn btn-primary mt-4 check-btn" onclick="checkPractice(6)">Check Answers</button>
           <div id="prac6-result" class="result-badge"></div>
         </div>
       </div>
@@ -477,7 +521,7 @@
       <div>
         <div id="gen-context" class="context-box"></div>
         <div id="gen-code" class="code-container"></div>
-        <button class="btn btn-primary mt-4" onclick="checkGeneratedPractice()">Check Answers</button>
+        <button class="btn btn-primary mt-4 check-btn" onclick="checkGeneratedPractice()">Check Answers</button>
       </div>
       <div>
         <div id="gen-table-wrap"></div>
@@ -495,6 +539,19 @@
 const EXTRA_ROWS = 2;
 const CODE_LANGUAGE_KEY = 'traceTableCodeLanguage_v1';
 let currentCodeLanguage = localStorage.getItem(CODE_LANGUAGE_KEY) === 'cambridge' ? 'cambridge' : 'python';
+
+// "trace" (default): code is shown, student fills in the trace table.
+// "code": the trace table is shown (read-only, already correct), student
+// writes the pseudocode/Python that produces it in a line-numbered editor.
+const PRACTICE_MODE_KEY = 'traceTablePracticeMode_v1';
+let currentPracticeMode = localStorage.getItem(PRACTICE_MODE_KEY) === 'code' ? 'code' : 'trace';
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 
 // Algorithm 0: For Loop Accumulator
 const algo0Context = "The user ran the program and typed <strong>3</strong> when prompted for the limit.";
@@ -706,7 +763,8 @@ function initProgress() {
     const parsed = JSON.parse(stored);
     progressData = parsed.questions || [];
     genStats = parsed.stats || { score: 0, streak: 0, maxStreak: 0 };
-    
+    codeAnswers = parsed.codeAnswers || {};
+
     let maxGen = 0;
     progressData.forEach(p => {
       if (p.id && p.id.startsWith('gen')) {
@@ -733,7 +791,8 @@ function initProgress() {
 function saveProgress() {
   localStorage.setItem(TODAY_KEY, JSON.stringify({
     questions: progressData,
-    stats: genStats
+    stats: genStats,
+    codeAnswers: codeAnswers
   }));
 }
 
@@ -940,26 +999,73 @@ function clearLanguageValidation() {
   document.querySelectorAll('.trace-table td.correct, .trace-table td.wrong').forEach(cell => {
     cell.classList.remove('correct', 'wrong');
   });
+  document.querySelectorAll('.gutter-line.correct, .gutter-line.wrong').forEach(line => {
+    line.classList.remove('correct', 'wrong');
+  });
   document.querySelectorAll('.result-badge').forEach(badge => {
     badge.className = 'result-badge';
     badge.innerHTML = '';
   });
 }
 
-function setCodeLanguage(language) {
-  if (language !== 'cambridge' && language !== 'python') return;
-  const previousLanguage = currentCodeLanguage;
-
+// Reads whatever is currently on screen for each trace-table entry back into
+// progressData before a language/mode switch rebuilds the DOM, so an
+// unchecked in-progress answer is never silently lost. Code-mode edits don't
+// need this: the editor's input listener already saves on every keystroke.
+function captureLiveTableEdits() {
+  if (currentPracticeMode !== 'trace') return;
   pracData.forEach((data, index) => {
-    remapEnteredLineValues(`prac${index}`, data, previousLanguage, language);
-    const saved = progressData.find(item => item.id === `prac${index}`);
-    if (saved && saved.tableData) {
-      saved.tableData = extractTableData(`prac${index}`, data.cols, data.answers.length + EXTRA_ROWS);
-      saved.codeLanguage = language;
+    const prefix = `prac${index}`;
+    const saved = progressData.find(item => item.id === prefix);
+    if (saved) {
+      saved.tableData = extractTableData(prefix, data.cols, codeView(data).answers.length + EXTRA_ROWS);
+      saved.codeLanguage = currentCodeLanguage;
     }
   });
-  if (genQuestion) remapEnteredLineValues('gen', genQuestion, previousLanguage, language);
+  // The generator's in-progress (unchecked) table isn't persisted under the
+  // question's own id, so give it a stable scratch slot to round-trip
+  // through instead of losing it on a language/mode rebuild.
+  if (genQuestion) {
+    let liveGen = progressData.find(item => item.id === '__gen_live__');
+    if (!liveGen) { liveGen = { id: '__gen_live__' }; progressData.push(liveGen); }
+    liveGen.tableData = extractTableData('gen', genQuestion.cols, codeView(genQuestion).answers.length + EXTRA_ROWS);
+    liveGen.codeLanguage = currentCodeLanguage;
+  }
+}
 
+// Renders one practice entry (a prac0..prac6 slot, or the generator's "gen"
+// slot) into its existing context/code/table-wrap containers, according to
+// the current language and practice mode.
+function renderPracEntry(prefix, data) {
+  const view = codeView(data);
+  document.getElementById(`${prefix}-context`).innerHTML = view.context;
+  if (currentPracticeMode === 'code') {
+    buildReadOnlyTableHtml(`${prefix}-code`, data.cols, view.answers);
+    buildCodeEditorHtml(`${prefix}-table-wrap`, prefix, codeAnswers[prefix] || '');
+  } else {
+    renderPracticeCode(`${prefix}-code`, view.code);
+    buildStudentTableHtml(`${prefix}-table-wrap`, prefix, data.cols, view.answers);
+    const savedId = prefix === 'gen' ? '__gen_live__' : prefix;
+    const saved = progressData.find(item => item.id === savedId);
+    if (saved && saved.tableData) {
+      restoreTableState(prefix, saved.tableData);
+      if (saved.codeLanguage && saved.codeLanguage !== currentCodeLanguage) {
+        remapEnteredLineValues(prefix, data, saved.codeLanguage, currentCodeLanguage);
+      }
+      saved.tableData = extractTableData(prefix, data.cols, view.answers.length + EXTRA_ROWS);
+      saved.codeLanguage = currentCodeLanguage;
+    }
+  }
+}
+
+function setCodeLanguage(language) {
+  if (language !== 'cambridge' && language !== 'python') return;
+  captureLiveTableEdits();
+  // Typed code is specific to one language; carrying it across a language
+  // switch would just leave the student staring at code that can never pass
+  // the new language's check. The trace-table values, by contrast, get
+  // meaningfully remapped above, so those are left alone.
+  if (currentPracticeMode === 'code') codeAnswers = {};
   currentCodeLanguage = language;
   localStorage.setItem(CODE_LANGUAGE_KEY, language);
   document.querySelectorAll('[data-code-language]').forEach(button => {
@@ -968,28 +1074,126 @@ function setCodeLanguage(language) {
     button.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
 
-  pracData.forEach((data, index) => {
-    const view = codeView(data);
-    document.getElementById(`prac${index}-context`).innerHTML = view.context;
-    renderPracticeCode(`prac${index}-code`, view.code);
-  });
-  if (genQuestion) {
-    const view = codeView(genQuestion);
-    document.getElementById('gen-context').innerHTML = view.context;
-    renderPracticeCode('gen-code', view.code);
-  }
+  pracData.forEach((data, index) => renderPracEntry(`prac${index}`, data));
+  if (genQuestion) renderPracEntry('gen', genQuestion);
+
   clearLanguageValidation();
   saveProgress();
   resetWalk();
 }
 
+function setPracticeMode(mode) {
+  if (mode !== 'trace' && mode !== 'code') return;
+  captureLiveTableEdits();
+  currentPracticeMode = mode;
+  localStorage.setItem(PRACTICE_MODE_KEY, mode);
+  document.querySelectorAll('[data-practice-mode]').forEach(button => {
+    const active = button.dataset.practiceMode === mode;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+  document.querySelectorAll('.check-btn').forEach(button => {
+    button.textContent = mode === 'code' ? 'Check Code' : 'Check Answers';
+  });
+
+  pracData.forEach((data, index) => renderPracEntry(`prac${index}`, data));
+  if (genQuestion) renderPracEntry('gen', genQuestion);
+
+  clearLanguageValidation();
+  saveProgress();
+}
+
 function renderPracticeCode(containerId, lines) {
-  const safe = value => String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
   document.getElementById(containerId).innerHTML = lines.map((ln, i) => `
-    <div class="code-line"><span class="line-num">${i + 1}</span><span class="line-code">${safe(ln)}</span></div>`).join('');
+    <div class="code-line"><span class="line-num">${i + 1}</span><span class="line-code">${escapeHtml(ln)}</span></div>`).join('');
+}
+
+function buildReadOnlyTableHtml(containerId, cols, answers) {
+  let html = `<table class="trace-table"><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+  answers.forEach(row => {
+    html += `<tr>${cols.map(c => `<td>${row[c] ? escapeHtml(row[c]) : ''}</td>`).join('')}</tr>`;
+  });
+  html += `</tbody></table>`;
+  document.getElementById(containerId).innerHTML = html;
+}
+
+// A lightweight line-numbered code editor: a gutter of line-number divs kept
+// in sync with a plain <textarea>, since a full editor library is overkill
+// for regex line-matching against a known-good answer.
+function buildCodeEditorHtml(containerId, prefix, savedText) {
+  document.getElementById(containerId).innerHTML = `
+    <div class="code-editor">
+      <div class="code-editor-gutter" id="${prefix}-gutter"></div>
+      <textarea class="code-editor-textarea" id="${prefix}-textarea" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off"></textarea>
+    </div>`;
+  const textarea = document.getElementById(`${prefix}-textarea`);
+  textarea.value = savedText || '';
+  textarea.addEventListener('input', () => {
+    syncEditorGutter(prefix);
+    saveCodeAnswer(prefix, textarea.value);
+  });
+  textarea.addEventListener('scroll', () => syncEditorScroll(prefix));
+  syncEditorGutter(prefix);
+}
+
+function syncEditorGutter(prefix) {
+  const textarea = document.getElementById(`${prefix}-textarea`);
+  const gutter = document.getElementById(`${prefix}-gutter`);
+  if (!textarea || !gutter) return;
+  const lineCount = textarea.value.split('\n').length;
+  while (gutter.children.length < lineCount) {
+    const div = document.createElement('div');
+    div.className = 'gutter-line';
+    div.textContent = gutter.children.length + 1;
+    gutter.appendChild(div);
+  }
+  while (gutter.children.length > lineCount) {
+    gutter.removeChild(gutter.lastChild);
+  }
+  gutter.scrollTop = textarea.scrollTop;
+}
+
+function syncEditorScroll(prefix) {
+  const textarea = document.getElementById(`${prefix}-textarea`);
+  const gutter = document.getElementById(`${prefix}-gutter`);
+  if (textarea && gutter) gutter.scrollTop = textarea.scrollTop;
+}
+
+let codeAnswers = {};
+
+function saveCodeAnswer(prefix, text) {
+  codeAnswers[prefix] = text;
+  saveProgress();
+}
+
+// Builds a forgiving regex from a known-good code line: exact tokens
+// (keywords, variable names, operators, punctuation) in order, but any
+// amount of whitespace between and around them. Cambridge pseudocode is
+// matched case-insensitively since keyword casing is a style habit, not the
+// logic being tested; Python stays case-sensitive since case is syntax there.
+function buildLineRegex(expectedLine, language) {
+  const tokens = expectedLine.trim().split(/\s+/).filter(Boolean);
+  if (!tokens.length) return /^\s*$/;
+  const escaped = tokens.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const pattern = '^\\s*' + escaped.join('\\s+') + '\\s*$';
+  return new RegExp(pattern, language === 'cambridge' ? 'i' : '');
+}
+
+function checkCodeLines(prefix, expectedLines, language) {
+  const textarea = document.getElementById(`${prefix}-textarea`);
+  const typedLines = textarea ? textarea.value.replace(/\r\n/g, '\n').split('\n') : [];
+  const lineResults = expectedLines.map((expected, i) => {
+    const typed = typedLines[i] !== undefined ? typedLines[i] : '';
+    return expected.trim() === '' ? typed.trim() === '' : buildLineRegex(expected, language).test(typed);
+  });
+  const gutter = document.getElementById(`${prefix}-gutter`);
+  if (gutter) {
+    Array.from(gutter.children).forEach((row, i) => {
+      row.classList.remove('correct', 'wrong');
+      if (i < lineResults.length) row.classList.add(lineResults[i] ? 'correct' : 'wrong');
+    });
+  }
+  return { correct: lineResults.filter(Boolean).length, total: expectedLines.length };
 }
 
 function buildStudentTableHtml(containerId, prefix, cols, answers) {
@@ -1052,6 +1256,7 @@ function stepWalk() {
 // STATIC PRACTICE LOGIC
 // ======================================================
 function checkPractice(idx) {
+  if (currentPracticeMode === 'code') return checkPracticeCode(idx);
   const data = pracData[idx];
   const view = codeView(data);
   const prefix = `prac${idx}`;
@@ -1082,6 +1287,21 @@ function checkPractice(idx) {
   const badge = document.getElementById(`${prefix}-result`);
   badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
   badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} correct.` : `✗ ${correct}/${total} correct. Please review the highlighted red cells.`;
+}
+
+function checkPracticeCode(idx) {
+  const data = pracData[idx];
+  const view = codeView(data);
+  const prefix = `prac${idx}`;
+  const { correct, total } = checkCodeLines(prefix, view.code, currentCodeLanguage);
+  const isCorrect = correct === total;
+  const practiceTitle = data.title || `Practice ${idx + 1}`;
+  recordAttempt(prefix, practiceTitle, isCorrect, null, view.code);
+  reportPracticeProgress(prefix, practiceTitle, isCorrect);
+
+  const badge = document.getElementById(`${prefix}-result`);
+  badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
+  badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} lines correct.` : `✗ ${correct}/${total} lines correct. Check the red line numbers.`;
 }
 
 // ======================================================
@@ -1560,16 +1780,18 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
 
 function resetGeneratedPractice() {
    genQuestionIdCounter++;
-   
+
    genQuestion = generateProceduralAlgorithm();
    genQuestion.id = 'gen' + genQuestionIdCounter;
    genQuestion.title = `${genQuestion.questionType || 'Generated'} Question ${genQuestionIdCounter}`;
-   
-   const view = codeView(genQuestion);
-   document.getElementById('gen-context').innerHTML = view.context;
-   renderPracticeCode('gen-code', view.code);
-   buildStudentTableHtml('gen-table-wrap', 'gen', genQuestion.cols, view.answers);
-   
+
+   // The "gen" DOM slot and editor are reused across questions (only the
+   // data changes), so drop any leftover typed code/table entries from the
+   // last question rather than letting them bleed into the new one.
+   delete codeAnswers.gen;
+   progressData = progressData.filter(item => item.id !== '__gen_live__');
+   renderPracEntry('gen', genQuestion);
+
    const badge = document.getElementById('gen-result');
    badge.className = 'result-badge';
    badge.innerHTML = '';
@@ -1577,6 +1799,7 @@ function resetGeneratedPractice() {
 
 function checkGeneratedPractice() {
   if(!genQuestion) return;
+  if (currentPracticeMode === 'code') return checkGeneratedPracticeCode();
   const view = codeView(genQuestion);
   const prefix = 'gen';
   const totalRows = view.answers.length + EXTRA_ROWS;
@@ -1625,6 +1848,36 @@ function checkGeneratedPractice() {
   badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} correct.` : `✗ ${correct}/${total} correct. Check the red cells.`;
 }
 
+function checkGeneratedPracticeCode() {
+  const view = codeView(genQuestion);
+  const { correct, total } = checkCodeLines('gen', view.code, currentCodeLanguage);
+  const isCorrect = correct === total;
+  recordAttempt(genQuestion.id, genQuestion.title, isCorrect, null, view.code);
+
+  if (isCorrect) {
+     if (!genQuestion.solved) {
+         genStats.score++;
+         if (!genQuestion.failedAttempt) {
+             genStats.streak++;
+             if(genStats.streak > genStats.maxStreak) genStats.maxStreak = genStats.streak;
+         }
+         genQuestion.solved = true;
+     }
+  } else {
+     if (!genQuestion.solved) {
+         genQuestion.failedAttempt = true;
+         genStats.streak = 0;
+     }
+  }
+  saveProgress();
+  updateStatsUI();
+  reportGeneratorProgress();
+
+  const badge = document.getElementById('gen-result');
+  badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
+  badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} lines correct.` : `✗ ${correct}/${total} lines correct. Check the red line numbers.`;
+}
+
 // ======================================================
 // PROGRESS REPORTING (to the Bloomsbury Computing admin panel)
 // ======================================================
@@ -1666,22 +1919,36 @@ function executeDevAutoFill() {
   if (document.getElementById('page-prac').classList.contains('active')) {
       for (let i = 0; i <= 6; i++) {
           if (document.getElementById(`prac${i}-area`).classList.contains('active')) {
-              devFillTable(`prac${i}`, pracData[i].cols, codeView(pracData[i]).answers);
-              checkPractice(i); 
+              devFillEntry(`prac${i}`, pracData[i]);
+              checkPractice(i);
               return;
           }
       }
   }
   else if (document.getElementById('page-gen').classList.contains('active') && genQuestion) {
-      devFillTable('gen', genQuestion.cols, codeView(genQuestion).answers);
-      checkGeneratedPractice(); 
+      devFillEntry('gen', genQuestion);
+      checkGeneratedPractice();
+  }
+}
+
+function devFillEntry(prefix, data) {
+  const view = codeView(data);
+  if (currentPracticeMode === 'code') {
+    const textarea = document.getElementById(`${prefix}-textarea`);
+    if (textarea) {
+      textarea.value = view.code.join('\n');
+      syncEditorGutter(prefix);
+      saveCodeAnswer(prefix, textarea.value);
+    }
+  } else {
+    devFillTable(prefix, data.cols, view.answers);
   }
 }
 
 function devFillTable(prefix, cols, answers) {
   const totalRows = answers.length + EXTRA_ROWS;
   for(let r = 0; r < totalRows; r++) {
-      const row = answers[r] || {}; 
+      const row = answers[r] || {};
       cols.forEach(k => {
           const td = document.getElementById(`${prefix}-r${r}-${k}`);
           if (td && td.querySelector('input')) {
@@ -1701,21 +1968,16 @@ window.addEventListener('DOMContentLoaded', () => {
      button.classList.toggle('active', active);
      button.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
-
-  pracData.forEach((data, i) => {
-     const view = codeView(data);
-     document.getElementById(`prac${i}-context`).innerHTML = view.context;
-     renderPracticeCode(`prac${i}-code`, view.code);
-     buildStudentTableHtml(`prac${i}-table-wrap`, `prac${i}`, data.cols, view.answers);
-     
-     let p = progressData.find(x => x.id === `prac${i}`);
-     if (p && p.tableData) {
-       restoreTableState(`prac${i}`, p.tableData);
-       remapEnteredLineValues(`prac${i}`, data, p.codeLanguage || 'python', currentCodeLanguage);
-       p.tableData = extractTableData(`prac${i}`, data.cols, view.answers.length + EXTRA_ROWS);
-       p.codeLanguage = currentCodeLanguage;
-     }
+  document.querySelectorAll('[data-practice-mode]').forEach(button => {
+     const active = button.dataset.practiceMode === currentPracticeMode;
+     button.classList.toggle('active', active);
+     button.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
+  document.querySelectorAll('.check-btn').forEach(button => {
+     button.textContent = currentPracticeMode === 'code' ? 'Check Code' : 'Check Answers';
+  });
+
+  pracData.forEach((data, i) => renderPracEntry(`prac${i}`, data));
 
   saveProgress();
 
