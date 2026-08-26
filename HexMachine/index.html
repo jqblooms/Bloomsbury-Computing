@@ -167,7 +167,7 @@ html{color-scheme:light}body{background:linear-gradient(135deg,#7f989f 0,#617d86
 </style>
 </head>
 <body>
-<div id="game"><header class="hud"><div class="brand"><small>Hex Systems Lab</small></div><div class="platform-controls"><button class="hm-btn" id="hm-save">Save</button><button class="hm-btn" id="hm-load">Load</button><button class="hm-btn" id="hm-leaderboard">Leaderboard</button><button class="hm-btn" id="hm-defence">Defence</button><button class="hm-btn" id="hm-reset-view">Reset View</button><button class="hm-btn" id="hm-fullscreen">Fullscreen</button></div><div class="help">Drag machines anywhere.<br>Drag one amber merge port onto another.</div></header><aside class="shop-panel" id="shopPanel"><div class="shop-head"><b>MACHINE STORE</b><small>Merged tiers unlock here</small></div><div class="shop-list" id="shopList"></div></aside><main class="workspace" id="workspace"><div class="world-layer" id="worldLayer"><canvas class="physics-cables" id="physicsCables"></canvas><svg class="cables" id="cables"></svg><canvas class="amber-physics-cable" id="amberCableCanvas" aria-hidden="true"></canvas><div class="defence-layer" id="defenceLayer"></div><div class="bug-vfx" id="bugVfx"></div><div class="bug-layer" id="bugLayer"></div><section class="mainframe" id="mainframe"><div class="title">CENTRAL MAINFRAME</div><div class="screen"><div><small>AVAILABLE FUNDS</small><div class="money" id="money">£0</div></div></div><div class="rate" id="rate">£0 / second</div></section></div><div class="tip">Drag the amber socket from one machine onto another to merge them.</div><div class="bug-banner" id="bugBanner"><div class="bug-message" id="bugMessage"></div></div></main></div>
+<div id="game"><header class="hud"><div class="brand"><small>Hex Systems Lab</small></div><div class="platform-controls"><button class="hm-btn" id="hm-save">Save</button><button class="hm-btn" id="hm-load">Load</button><button class="hm-btn" id="hm-leaderboard">Leaderboard</button><button class="hm-btn" id="hm-defence">Defence</button><button class="hm-btn" id="hm-reset-view">Reset View</button><button class="hm-btn" id="hm-reset-game">Reset Game</button><button class="hm-btn" id="hm-fullscreen">Fullscreen</button></div><div class="help">Drag machines anywhere.<br>Drag one amber merge port onto another.</div></header><aside class="shop-panel" id="shopPanel"><div class="shop-head"><b>MACHINE STORE</b><small>Merged tiers unlock here</small></div><div class="shop-list" id="shopList"></div></aside><main class="workspace" id="workspace"><div class="world-layer" id="worldLayer"><canvas class="physics-cables" id="physicsCables"></canvas><svg class="cables" id="cables"></svg><canvas class="amber-physics-cable" id="amberCableCanvas" aria-hidden="true"></canvas><div class="defence-layer" id="defenceLayer"></div><div class="bug-vfx" id="bugVfx"></div><div class="bug-layer" id="bugLayer"></div><section class="mainframe" id="mainframe"><div class="title">CENTRAL MAINFRAME</div><div class="screen"><div><small>AVAILABLE FUNDS</small><div class="money" id="money">£0</div></div></div><div class="rate" id="rate">£0 / second</div></section></div><div class="tip">Drag the amber socket from one machine onto another to merge them.</div><div class="bug-banner" id="bugBanner"><div class="bug-message" id="bugMessage"></div></div></main></div>
 <div class="hm-modal" id="hm-platform-modal"><section class="hm-card"><div class="hm-card-head"><div class="hm-card-title" id="hm-modal-title">Hex Machine</div><button class="hm-btn" id="hm-modal-close">Close</button></div><div id="hm-modal-body"></div></section></div>
 <div class="overlay" id="overlay"><section class="console"><header class="console-head"><div><small style="color:var(--cyan);font-weight:900;letter-spacing:.14em">MERGE CONSOLE</small><h2 id="mergeTitle">Merge machines</h2><p>Convert both machines, add them in binary, then compress the result back to hex.</p></div><button class="close" id="close">Close</button></header><div class="flow" id="flow"></div><div class="legend" id="legend"></div></section></div>
 <script>
@@ -1194,12 +1194,41 @@ function setupCameraControls(){
 }
 function setupPlatformControls(){
   H('hm-modal-close').onclick=closeModal;H('hm-platform-modal').addEventListener('click',e=>{if(e.target===H('hm-platform-modal'))closeModal()});
-  H('hm-save').onclick=()=>driveSaveOrLoad('save');H('hm-load').onclick=()=>driveSaveOrLoad('load');H('hm-leaderboard').onclick=showLeaderboard;H('hm-defence').onclick=showDefenceMenu;H('hm-reset-view').onclick=resetCamera;H('hm-fullscreen').onclick=toggleFullscreen;setupCameraControls();
+  H('hm-save').onclick=()=>driveSaveOrLoad('save');H('hm-load').onclick=()=>driveSaveOrLoad('load');H('hm-leaderboard').onclick=showLeaderboard;H('hm-defence').onclick=showDefenceMenu;H('hm-reset-view').onclick=resetCamera;H('hm-reset-game').onclick=resetGame;H('hm-fullscreen').onclick=toggleFullscreen;setupCameraControls();
   ws.addEventListener('pointerdown',e=>{if(!state.placingLaser)return;if(placePendingLaser(e)){e.preventDefault();e.stopPropagation()}},true);
   window.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.placingLaser){state.placingLaser=null;showTemporaryBanner('Laser placement cancelled.',2200);updateBugBanner(performance.now())}});
   fullscreenDocument().addEventListener('fullscreenchange',()=>{const b=H('hm-fullscreen');if(b)b.textContent=fullscreenDocument().fullscreenElement?'Exit Fullscreen':'Fullscreen';scheduleWorkspaceResize()});
 }
 function seed(){const r=ws.getBoundingClientRect();state.unlocked.clear();state.purchaseCounts.clear();state.machines=[];state.lasers=[];state.bugs=[];state.nextId=1;state.nextLaserId=1;state.nextBugId=1;state.bugAttack.wave=0;state.bugAttack.kills=0;const y=Math.max(50,r.height/2-63);addMachine(1,Math.max(24,r.width*.18-95),y);addMachine(1,Math.min(r.width-214,r.width*.82-95),y);renderLasers();renderBugs();renderShop();scheduleBugAttack(randomBugDelay());saveLocalNow();syncLeaderboard()}
+// Reset Game, distinct from Reset View (which only recentres the camera).
+// seed() rebuilds the machines/lasers/bugs/shop and reschedules the next
+// bug wave, but it never touches money or the rest of bugAttack (phase/
+// nextAt/activeUntil/lastSpawnAt), since normal play never wants those
+// wiped mid-session. A full reset needs all of that cleared explicitly
+// first, the same merge/drag cleanup applySnapshot() does before loading a
+// save is reused here too, so a reset mid-merge or mid-drag can't leave a
+// stray rope or merge station behind.
+//
+// Confirmation reuses the existing platform modal (openModal/closeModal)
+// rather than window.confirm(): a native dialog would be blocked outright
+// in a sandboxed iframe with no allow-modals, and even where it works it
+// looks nothing like the rest of this page.
+function resetGame(){
+  openModal('Reset Game','<div class="hm-status">This clears your saved progress, money and machines. This cannot be undone.</div><div style="display:flex;gap:8px;margin-top:10px"><button type="button" class="hm-btn" id="hm-reset-confirm">Yes, reset</button><button type="button" class="hm-btn" id="hm-reset-cancel">Cancel</button></div>');
+  const cancelBtn=H('hm-reset-cancel');if(cancelBtn)cancelBtn.onclick=closeModal;
+  const confirmBtn=H('hm-reset-confirm');
+  if(confirmBtn)confirmBtn.onclick=()=>{
+    closeModal();
+    removeAmberDragRope();removeStationCables();document.getElementById('mergeStation')?.remove();
+    state.merge=null;state.phase=0;state.solved={};state.dragCable=null;state.placingLaser=null;
+    state.money=0;
+    state.bugAttack={phase:'idle',nextAt:0,activeUntil:0,lastSpawnAt:0,wave:0,kills:0};
+    try{localStorage.removeItem(LOCAL_SAVE_KEY)}catch(_e){}
+    seed();
+    resetCamera();
+    setMainframeMoney(state.money);
+  };
+}
 function bootHexMachine(){setupPlatformControls();document.getElementById('legend').innerHTML=Array.from({length:16},(_,i)=>'<div><b>'+HEX[i]+'</b>'+bin(i,4)+'</div>').join('');window.addEventListener('resize',()=>{scheduleWorkspaceResize();fitMainframeMoney()});resizeCableCanvas();workspaceSize={width:ws.clientWidth,height:ws.clientHeight};requestAnimationFrame(cableLoop);requestAnimationFrame(()=>{if(!loadLocal())seed();ensureBugSchedule();syncLeaderboard()});let shopTick=0;setInterval(()=>{const now=performance.now();state.money+=totalRate()/10;updateBugSystem(now);setMainframeMoney(state.money);shopTick++;if(shopTick%5===0)renderShop();if(shopTick%20===0){saveLocalNow();syncLeaderboard()}},100)}
 bootHexMachine();
 (function stationCableAnimation(){
