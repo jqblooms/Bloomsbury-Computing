@@ -330,6 +330,39 @@ function sellMachine(id){
   renderShop();
   saveLocalNow();
   syncLeaderboard();
+  checkGameOver();
+}
+// True once there is no way left to reach two machines: with one machine,
+// buying the single cheapest unlocked tier would do it; with zero, two
+// purchases are needed (merging never accepts a machine and itself, so
+// one machine alone can never merge no matter how much money piles up).
+// An empty `unlocked` set (no merge has ever completed) means nothing is
+// even purchasable, so that alone is game over whenever machines drop
+// below two, regardless of money.
+function isGameOverState(){
+  if(state.machines.length>=2)return false;
+  const tiers=[...state.unlocked];
+  if(!tiers.length)return true;
+  const cheapest=Math.min(...tiers.map(machineCost));
+  const needed=state.machines.length===0?cheapest*2:cheapest;
+  return state.money+1e-9<needed;
+}
+let gameOverDismissed=false;
+function checkGameOver(){
+  if(isGameOverState()){
+    if(!gameOverDismissed&&!H('hm-platform-modal').classList.contains('show'))showGameOverModal();
+  }else{
+    gameOverDismissed=false;
+  }
+}
+function showGameOverModal(){
+  const count=state.machines.length;
+  openModal('Game Over',
+    '<div class="hm-status">You have '+count+' machine'+(count===1?'':'s')+' and not enough funds to buy your way back to two. '+
+    'Merging needs two machines, so there is no way to progress from here.</div>'+
+    '<div style="display:flex;gap:8px;margin-top:10px"><button type="button" class="hm-btn" id="hm-gameover-reset">Reset Game</button><button type="button" class="hm-btn" id="hm-gameover-view">View my game</button></div>');
+  const resetBtn=H('hm-gameover-reset');if(resetBtn)resetBtn.onclick=()=>{closeModal();resetGame()};
+  const viewBtn=H('hm-gameover-view');if(viewBtn)viewBtn.onclick=()=>{gameOverDismissed=true;closeModal()};
 }
 function renderShop(){
   const list=document.getElementById('shopList');
@@ -1229,7 +1262,7 @@ function resetGame(){
     setMainframeMoney(state.money);
   };
 }
-function bootHexMachine(){setupPlatformControls();document.getElementById('legend').innerHTML=Array.from({length:16},(_,i)=>'<div><b>'+HEX[i]+'</b>'+bin(i,4)+'</div>').join('');window.addEventListener('resize',()=>{scheduleWorkspaceResize();fitMainframeMoney()});resizeCableCanvas();workspaceSize={width:ws.clientWidth,height:ws.clientHeight};requestAnimationFrame(cableLoop);requestAnimationFrame(()=>{if(!loadLocal())seed();ensureBugSchedule();syncLeaderboard()});let shopTick=0;setInterval(()=>{const now=performance.now();state.money+=totalRate()/10;updateBugSystem(now);setMainframeMoney(state.money);shopTick++;if(shopTick%5===0)renderShop();if(shopTick%20===0){saveLocalNow();syncLeaderboard()}},100)}
+function bootHexMachine(){setupPlatformControls();document.getElementById('legend').innerHTML=Array.from({length:16},(_,i)=>'<div><b>'+HEX[i]+'</b>'+bin(i,4)+'</div>').join('');window.addEventListener('resize',()=>{scheduleWorkspaceResize();fitMainframeMoney()});resizeCableCanvas();workspaceSize={width:ws.clientWidth,height:ws.clientHeight};requestAnimationFrame(cableLoop);requestAnimationFrame(()=>{if(!loadLocal())seed();ensureBugSchedule();syncLeaderboard();checkGameOver()});let shopTick=0;setInterval(()=>{const now=performance.now();state.money+=totalRate()/10;updateBugSystem(now);setMainframeMoney(state.money);shopTick++;if(shopTick%5===0)renderShop();if(shopTick%20===0){saveLocalNow();syncLeaderboard()}if(shopTick%10===0)checkGameOver()},100)}
 bootHexMachine();
 (function stationCableAnimation(){
   updateStationCables();
