@@ -34,7 +34,7 @@ canvas.physics-cables{position:absolute;inset:0;width:100%;height:100%;pointer-e
 @keyframes raidFlash{50%{box-shadow:inset 0 0 0 9px #a40e0e}}@keyframes bugHit{50%{filter:brightness(2);transform:translateZ(0) scale(1.12)}}
 .overlay{position:fixed;inset:0;z-index:50;display:none;place-items:center;padding:18px;background:#02060bcc;backdrop-filter:blur(12px)}.overlay.show{display:grid}.console{width:min(940px,100%);max-height:94vh;overflow:auto;border:1px solid #385d7c;border-radius:26px;background:linear-gradient(145deg,#10243a,#081421);box-shadow:0 30px 100px #000;padding:20px}.console-head{display:flex;justify-content:space-between;align-items:start;gap:14px}.console-head h2{margin:2px 0;font-size:1.45rem}.console-head p{margin:0;color:var(--muted)}.close{border:0;border-radius:10px;background:#20364c;color:white;padding:8px 11px;cursor:pointer}.flow{display:grid;gap:10px;margin-top:18px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stage{border:1px solid #2f4d69;border-radius:18px;background:#0b1929;overflow:hidden;transition:.45s}.stage.done{border-color:#2d7252;transform:scale(.985);opacity:.86}.stage-head{padding:10px 13px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #28435d}.badge{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#203650;color:var(--cyan);font-weight:900}.done .badge{background:var(--green);color:#05271a}.stage-title{font-weight:900}.stage-body{padding:13px}.stage.done .stage-body{display:none}.prompt{text-align:center;color:#c9d8e8;margin:0 0 9px}.table-wrap{display:flex;justify-content:center;overflow-x:auto}.number-table{border-collapse:separate;border-spacing:5px;font-family:ui-monospace,monospace}.number-table th{color:var(--muted);font-size:.66rem}.number-table td{width:var(--cell);height:var(--cell);border:1px solid #3c5c7a;background:#071425;border-radius:9px;text-align:center;font-weight:900;font-size:1.28rem}.number-table .label{width:auto;border:0;background:transparent;color:var(--muted);font-size:.72rem;padding-right:8px}.number-table .hex{color:var(--cyan)}.number-table .rule td:not(.label){height:3px;border:0;background:var(--cyan)}.bit{width:100%;height:100%;border:0;border-radius:8px;background:#102943;color:#9fb2c6;font:900 1.2rem ui-monospace,monospace;cursor:pointer}.bit[data-bit="1"]{background:#103d58;color:var(--cyan);box-shadow:inset 0 0 0 1px #59d8ff66}.bit.bad{background:#421a25;color:#ffd7de;animation:shake .25s}.hex-input{width:100%;height:100%;border:0;border-radius:8px;background:#102943;color:white;text-align:center;text-transform:uppercase;font:900 1.25rem ui-monospace,monospace;outline:2px solid transparent}.hex-input:focus{outline-color:var(--cyan)}.hex-input.bad{background:#421a25}.actions{display:flex;justify-content:center;gap:8px;margin-top:10px}.primary,.secondary{border:0;border-radius:11px;padding:9px 14px;font-weight:900;cursor:pointer}.primary{background:var(--cyan);color:#042438}.secondary{background:#20364c;color:white}.feedback{text-align:center;min-height:22px;margin-top:7px;font-weight:800}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}.down{text-align:center;color:var(--cyan);height:20px}.result{display:none;text-align:center;padding:24px;border:1px solid #2d7252;border-radius:18px;background:#0c281c}.result.show{display:block}.result .new{font:950 3.8rem/1 ui-monospace,monospace;color:var(--green);margin:8px}.result p{color:#b6d7c5}.legend{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;margin-top:14px}.legend div{text-align:center;padding:6px 3px;border:1px solid #28445e;border-radius:8px;background:#071425;font:.7rem ui-monospace,monospace;color:var(--muted)}.legend b{display:block;color:var(--cyan);font-size:.85rem}@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
-.machine.merge-active{width:300px;min-height:250px;cursor:default;border-color:var(--amber);z-index:12;box-shadow:0 20px 60px #000b,0 0 0 2px #ffd16622}.machine.merge-solved{width:230px;min-height:150px;border-color:var(--green)}.machine.merge-active .machine-body{padding:10px}.machine-inline{display:grid;gap:8px}.machine-inline .prompt{font-size:.78rem;margin:0;color:var(--muted)}.mini-table{border-collapse:separate;border-spacing:4px;margin:auto;font-family:ui-monospace,monospace}.mini-table td{width:30px;height:30px;border:1px solid #3c5c7a;background:#071425;border-radius:7px;text-align:center;font-weight:900}.mini-table .label{width:auto;border:0;background:transparent;color:var(--muted);font-size:.66rem;padding-right:4px}.mini-table .hex{color:var(--cyan)}.mini-table .bit{font-size:1rem;border-radius:6px}.machine-inline .actions{margin-top:2px}.machine-inline .primary{padding:7px 10px;font-size:.78rem}.machine-inline .feedback{font-size:.75rem;min-height:18px;margin-top:0}.machine-summary{display:grid;place-items:center;min-height:72px;color:var(--green);font:900 .9rem ui-monospace,monospace}.mainframe.merge-mode{width:min(680px,72vw);height:auto;min-height:270px;z-index:15;transition:width .4s,height .4s}.mainframe.merge-mode .screen{height:auto;min-height:180px;margin:24px 20px 14px;padding:14px;display:block;overflow-x:auto}.mainframe.merge-mode .rate{display:none}.mainframe-console{display:grid;gap:10px}.mainframe-console h3{margin:0;color:var(--amber)}.mainframe-console .number-table{margin:auto}.mainframe-console .feedback{font-size:.82rem}.mainframe-console .hex-input{min-width:42px}.merge-status{color:var(--muted);font-size:.8rem}.machine.merge-source-a{outline:2px solid #59d8ff33}.machine.merge-source-b,.machine.merge-source-c,.machine.merge-source-d,.machine.merge-source-e,.machine.merge-source-f,.machine.merge-source-g{outline:2px solid #ffd16633}.power-port.chain-active{box-shadow:0 0 0 5px #c9852255,-3px -3px 0 #17333e,3px 3px 0 #6b8790;animation:chainPulse 1s ease-in-out infinite}@keyframes chainPulse{50%{filter:brightness(1.4)}}.merge-cancel{position:absolute;right:12px;top:8px;border:0;background:#20364c;color:white;border-radius:8px;padding:5px 8px;font-size:.72rem;cursor:pointer}.machine.merge-active .merge-port{display:none}.machine.merge-active .power-port{opacity:.7}
+.machine.merge-active{width:300px;min-height:250px;cursor:default;border-color:var(--amber);z-index:12;box-shadow:0 20px 60px #000b,0 0 0 2px #ffd16622}.machine.merge-solved{width:230px;min-height:150px;border-color:var(--green)}.machine.merge-active .machine-body{padding:10px}.machine-inline{display:grid;gap:8px}.machine-inline .prompt{font-size:.78rem;margin:0;color:var(--muted)}.mini-table{border-collapse:separate;border-spacing:4px;margin:auto;font-family:ui-monospace,monospace}.mini-table td{width:30px;height:30px;border:1px solid #3c5c7a;background:#071425;border-radius:7px;text-align:center;font-weight:900}.mini-table .label{width:auto;border:0;background:transparent;color:var(--muted);font-size:.66rem;padding-right:4px}.mini-table .hex{color:var(--cyan)}.mini-table .bit{font-size:1rem;border-radius:6px}.machine-inline .actions{margin-top:2px}.machine-inline .primary{padding:7px 10px;font-size:.78rem}.machine-inline .feedback{font-size:.75rem;min-height:18px;margin-top:0}.machine-summary{display:grid;place-items:center;min-height:72px;color:var(--green);font:900 .9rem ui-monospace,monospace}.mainframe.merge-mode{width:min(680px,72vw);height:auto;min-height:270px;z-index:15;transition:width .4s,height .4s}.mainframe.merge-mode .screen{height:auto;min-height:180px;margin:24px 20px 14px;padding:14px;display:block;overflow-x:auto}.mainframe.merge-mode .rate{display:none}.mainframe-console{display:grid;gap:10px}.mainframe-console h3{margin:0;color:var(--amber)}.mainframe-console .number-table{margin:auto}.mainframe-console .feedback{font-size:.82rem}.mainframe-console .hex-input{min-width:42px}.merge-status{color:var(--muted);font-size:.8rem}.machine.merge-source-a{outline:2px solid #59d8ff33}.machine.merge-source-b,.machine.merge-source-c,.machine.merge-source-d,.machine.merge-source-e,.machine.merge-source-f,.machine.merge-source-g{outline:2px solid #ffd16633}.merge-port.chain-active{box-shadow:0 0 0 5px #c9852255,-3px -3px 0 #17333e,3px 3px 0 #6b8790;animation:chainPulse 1s ease-in-out infinite}@keyframes chainPulse{50%{filter:brightness(1.4)}}.merge-cancel{position:absolute;right:12px;top:8px;border:0;background:#20364c;color:white;border-radius:8px;padding:5px 8px;font-size:.72rem;cursor:pointer}.machine.merge-active .merge-port{display:none}.machine.merge-active .power-port{opacity:.7}
 @media(max-width:720px){.help{display:none}.machine{width:160px}.mainframe{width:230px;height:190px}.pair{grid-template-columns:1fr}.console{padding:12px}.legend{grid-template-columns:repeat(8,1fr)}:root{--cell:36px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
@@ -418,7 +418,7 @@ function buyChainTier(){
 function showChainExplainerModal(){
   openModal('Multi-Chain Unlocked',
     '<div class="hm-status">You can now merge up to '+chainMaxLen()+' machines in one go, instead of only two at a time.</div>'+
-    '<div class="hm-status">Drag the cyan power port of one machine onto another machine to start a chain. Keep dragging from the newest machine\'s power port to add more machines. Click that same port again, without dragging, to finish the chain early once at least two machines are linked. Reaching '+chainMaxLen()+' machines finishes it automatically.</div>'+
+    '<div class="hm-status">Press and hold a machine\'s amber connection port, then drag across other machines\' amber ports to link them all in one motion, laying a cable behind you as you go. Release the mouse to finish the chain once at least two machines are linked. Reaching '+chainMaxLen()+' machines finishes it automatically.</div>'+
     '<div style="display:flex;margin-top:10px"><button type="button" class="hm-btn" id="hm-chain-explainer-close">Got it</button></div>');
   const btn=H('hm-chain-explainer-close');if(btn)btn.onclick=closeModal;
 }
@@ -721,7 +721,7 @@ function updateBugBanner(now){
   }else if(state.placingLaser){
     text='Click an empty space in the workspace to place the laser. Press Escape to cancel.';
   }else if(state.chainBuild){
-    text='Chain in progress: '+state.chainBuild.chain.length+' of '+chainMaxLen()+' machines. Drag the highlighted cyan port to add another, or click it again to finish (Escape cancels).';
+    text='Chain in progress: '+state.chainBuild.chain.length+' of '+chainMaxLen()+' machines. Keep dragging across amber ports to add more, or release the mouse to finish (Escape cancels).';
   }else if(state.tempBanner&&state.tempBanner.until>now){
     text=state.tempBanner.text;
   }
@@ -825,7 +825,7 @@ function drawRopes(){
 }
 let lastPhysics=performance.now();
 function cableLoop(now){
-  const dt=Math.min(33,now-lastPhysics||16.7);lastPhysics=now;syncRopeAnchors();syncAmberDragRope();Engine.update(cableEngine,dt);drawRopes();drawAmberDragRope();requestAnimationFrame(cableLoop)
+  const dt=Math.min(33,now-lastPhysics||16.7);lastPhysics=now;syncRopeAnchors();syncAmberDragRope();Engine.update(cableEngine,dt);drawRopes();drawAmberDragRope();updateChainLinkCables();requestAnimationFrame(cableLoop)
 }
 function bindMachine(el,m){
   let start,ox,oy,moving=false;
@@ -853,23 +853,13 @@ function bindMachine(el,m){
   port.addEventListener('pointerdown',e=>{
     e.preventDefault();e.stopPropagation();
     if(state.merge||state.chainBuild)return;
-    state.dragCable={from:m,sourcePort:port,pointerId:e.pointerId,start:pointForElement(port),target:null,mode:'merge'};
-    port.setPointerCapture?.(e.pointerId);
-    createAmberDragRope(state.dragCable.start,screenToWorld(e.clientX,e.clientY));
-    updateMergeDrag(e.clientX,e.clientY);
-  });
-  // Multi-Chain (once purchased): the cyan power port doubles as a chain
-  // anchor. Dragging it onto another machine's power port extends an
-  // in-progress chain; a plain click (down/up with no real movement) on
-  // the newest machine's power port finishes the chain early.
-  const powerPort=el.querySelector('.power-port');
-  powerPort.addEventListener('pointerdown',e=>{
-    if(!state.chainTier||state.merge)return;
-    if(state.chainBuild&&state.chainBuild.chain.at(-1)!==m)return;
-    e.preventDefault();e.stopPropagation();
-    if(!state.chainBuild)state.chainBuild={chain:[m]};
-    state.dragCable={from:m,sourcePort:powerPort,pointerId:e.pointerId,start:pointForElement(powerPort),target:null,mode:'chain',downPoint:{x:e.clientX,y:e.clientY}};
-    try{powerPort.setPointerCapture?.(e.pointerId)}catch(_e){}
+    // Every merge starts as a chain of one machine. Without Multi-Chain,
+    // chainMaxLen() is 2, so the very first link snaps the chain shut and
+    // starts the merge immediately, exactly the old two-machine behaviour,
+    // no separate code path needed for the un-upgraded case.
+    state.chainBuild={chain:[m]};
+    state.dragCable={from:m,sourcePort:port,pointerId:e.pointerId,start:pointForElement(port)};
+    try{port.setPointerCapture?.(e.pointerId)}catch(_e){}
     createAmberDragRope(state.dragCable.start,screenToWorld(e.clientX,e.clientY));
     updateMergeDrag(e.clientX,e.clientY);
     highlightChainAnchor();
@@ -928,66 +918,107 @@ function drawAmberDragRope(){
   amberCtx.save();amberCtx.lineCap='round';amberCtx.lineJoin='round';amberCtx.shadowColor='#0009';amberCtx.shadowBlur=5;amberCtx.shadowOffsetY=4;trace();amberCtx.strokeStyle='#5c4613';amberCtx.lineWidth=11;amberCtx.stroke();
   amberCtx.shadowColor='transparent';trace();amberCtx.strokeStyle='#d59a19';amberCtx.lineWidth=7;amberCtx.stroke();trace();amberCtx.strokeStyle='#f2c75b';amberCtx.lineWidth=2;amberCtx.stroke();amberCtx.restore();
 }
-function nearestMergePort(clientX,clientY,sourcePort){let best=null,bestDist=Infinity;document.querySelectorAll('.merge-port').forEach(port=>{if(port===sourcePort)return;const r=port.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,d=Math.hypot(clientX-x,clientY-y);if(d<bestDist){bestDist=d;best=port}});return bestDist<=42?best:null}
-function nearestPowerPort(clientX,clientY,excludeIds){let best=null,bestDist=Infinity;document.querySelectorAll('.power-port').forEach(port=>{const machineEl=port.closest('.machine');if(!machineEl)return;if(excludeIds.has(Number(machineEl.dataset.id)))return;const r=port.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,d=Math.hypot(clientX-x,clientY-y);if(d<bestDist){bestDist=d;best=port}});return bestDist<=42?best:null}
+function nearestMergePort(clientX,clientY,excludeIds){
+  let best=null,bestDist=Infinity;
+  document.querySelectorAll('.merge-port').forEach(port=>{
+    const machineEl=port.closest('.machine');if(!machineEl)return;
+    if(excludeIds.has(Number(machineEl.dataset.id)))return;
+    const r=port.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,d=Math.hypot(clientX-x,clientY-y);
+    if(d<bestDist){bestDist=d;best=port}
+  });
+  return bestDist<=42?best:null;
+}
+// One continuous press-drag-release gesture builds the whole chain: as the
+// drag path passes within range of another machine's amber merge port, that
+// machine is linked in immediately (no need to release and re-press), a
+// permanent cable is drawn for the link just made, and the temporary
+// mouse-following cable keeps going from the new machine. Releasing the
+// mouse finishes whatever chain was built (2+ machines) or cancels (only
+// ever touched the starting machine). Reaching the tier's cap finishes the
+// chain automatically without waiting for release.
 function updateMergeDrag(clientX,clientY){
-  const drag=state.dragCable;if(!drag)return;
+  const drag=state.dragCable;if(!drag||!state.chainBuild)return;
   const end=screenToWorld(clientX,clientY);
   if(!amberDragRope)createAmberDragRope(pointForElement(drag.sourcePort),end);else amberDragRope.end=end;
-  document.querySelectorAll('.merge-port.hot,.power-port.hot').forEach(p=>p.classList.remove('hot'));
-  if(drag.mode==='chain'){
-    const excluded=new Set(state.chainBuild.chain.map(x=>x.id));
-    drag.target=nearestPowerPort(clientX,clientY,excluded);
-  }else{
-    drag.target=nearestMergePort(clientX,clientY,drag.sourcePort);
+  const excluded=new Set(state.chainBuild.chain.map(x=>x.id));
+  const target=nearestMergePort(clientX,clientY,excluded);
+  if(!target)return;
+  const machineEl=target.closest('.machine'),other=state.machines.find(x=>x.id===Number(machineEl.dataset.id));
+  if(!other)return;
+  state.chainBuild.chain.push(other);
+  updateChainLinkCables();
+  if(state.chainBuild.chain.length>=chainMaxLen()){
+    try{drag.sourcePort.releasePointerCapture?.(drag.pointerId)}catch(_e){}
+    finishChainBuild();
+    return;
   }
-  if(drag.target)drag.target.classList.add('hot');
+  drag.sourcePort=target;
+  createAmberDragRope(pointForElement(target),end);
+  highlightChainAnchor();
 }
 function finishMergeDrag(clientX,clientY){
   const drag=state.dragCable;if(!drag)return;
   updateMergeDrag(clientX,clientY);
-  const target=drag.target;
+  if(!state.dragCable)return; // already finished (chain hit its cap mid-drag)
+  const chainLen=state.chainBuild?state.chainBuild.chain.length:0;
   removeAmberDragRope();
-  document.querySelectorAll('.merge-port.hot,.power-port.hot').forEach(p=>p.classList.remove('hot'));
   state.dragCable=null;
-  if(drag.mode==='chain'){
-    if(!state.chainBuild)return;
-    if(target){
-      const machineEl=target.closest('.machine'),other=state.machines.find(x=>x.id===Number(machineEl.dataset.id));
-      if(other&&!state.chainBuild.chain.includes(other)){
-        state.chainBuild.chain.push(other);
-        if(state.chainBuild.chain.length>=chainMaxLen())finishChainBuild();
-        else highlightChainAnchor();
-      }
-      return;
-    }
-    const moved=drag.downPoint?Math.hypot(clientX-drag.downPoint.x,clientY-drag.downPoint.y):999;
-    if(moved<10&&state.chainBuild.chain.length>=2)finishChainBuild();
-    return;
-  }
-  if(target){const machineEl=target.closest('.machine'),other=state.machines.find(x=>x.id===Number(machineEl.dataset.id));if(other&&other!==drag.from)startMerge([drag.from,other])}
+  if(chainLen>=2)finishChainBuild();
+  else cancelChainBuild();
 }
 function highlightChainAnchor(){
-  document.querySelectorAll('.power-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
+  document.querySelectorAll('.merge-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
   if(!state.chainBuild)return;
   const last=state.chainBuild.chain.at(-1);
-  const el=ws.querySelector(`.machine[data-id="${last.id}"] .power-port`);
+  const el=ws.querySelector(`.machine[data-id="${last.id}"] .merge-port`);
   if(el)el.classList.add('chain-active');
+}
+function chainLinkCableId(i){return 'chainLink'+i}
+function ensureChainLinkCables(need){
+  const svgEl=document.getElementById('cables');
+  document.querySelectorAll('[data-chain-link]').forEach(el=>{if(Number(el.dataset.chainLink)>=need)el.remove()});
+  for(let i=0;i<need;i++){
+    if(!document.getElementById(chainLinkCableId(i))){
+      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.id=chainLinkCableId(i);path.setAttribute('class','merge-cable');path.setAttribute('data-chain-link',i);
+      svgEl.appendChild(path);
+    }
+  }
+}
+function updateChainLinkCables(){
+  if(!state.chainBuild||state.chainBuild.chain.length<2){removeChainLinkCables();return}
+  const chain=state.chainBuild.chain;
+  ensureChainLinkCables(chain.length-1);
+  for(let i=0;i<chain.length-1;i++){
+    const a=ws.querySelector(`.machine[data-id="${chain[i].id}"] .merge-port`);
+    const b=ws.querySelector(`.machine[data-id="${chain[i+1].id}"] .merge-port`);
+    const el=document.getElementById(chainLinkCableId(i));
+    if(!a||!b||!el)continue;
+    const d=cablePath(pointInWorkspace(a),pointInWorkspace(b));
+    el.setAttribute('d',d);el.setAttribute('vector-effect','non-scaling-stroke');
+  }
+}
+function removeChainLinkCables(){
+  document.querySelectorAll('[data-chain-link]').forEach(el=>el.remove());
 }
 function finishChainBuild(){
   const chain=state.chainBuild?state.chainBuild.chain:[];
-  state.chainBuild=null;
-  document.querySelectorAll('.power-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
+  removeAmberDragRope();
+  removeChainLinkCables();
+  document.querySelectorAll('.merge-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
+  state.chainBuild=null;state.dragCable=null;
   if(chain.length<2)return;
   startMerge(chain);
 }
 function cancelChainBuild(){
+  removeAmberDragRope();
+  removeChainLinkCables();
   state.chainBuild=null;
-  document.querySelectorAll('.power-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
+  document.querySelectorAll('.merge-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
 }
 document.addEventListener('pointermove',e=>{if(state.dragCable)updateMergeDrag(e.clientX,e.clientY)});
 document.addEventListener('pointerup',e=>{if(state.dragCable)finishMergeDrag(e.clientX,e.clientY)});
-document.addEventListener('pointercancel',()=>{if(!state.dragCable)return;removeAmberDragRope();document.querySelectorAll('.merge-port.hot,.power-port.hot').forEach(p=>p.classList.remove('hot'));state.dragCable=null});
+document.addEventListener('pointercancel',()=>{if(!state.dragCable)return;state.dragCable=null;cancelChainBuild()});
 
 function startMerge(machines){
   if(state.merge||machines.length<2)return;
