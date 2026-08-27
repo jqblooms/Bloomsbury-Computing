@@ -34,7 +34,7 @@ canvas.physics-cables{position:absolute;inset:0;width:100%;height:100%;pointer-e
 @keyframes raidFlash{50%{box-shadow:inset 0 0 0 9px #a40e0e}}@keyframes bugHit{50%{filter:brightness(2);transform:translateZ(0) scale(1.12)}}
 .overlay{position:fixed;inset:0;z-index:50;display:none;place-items:center;padding:18px;background:#02060bcc;backdrop-filter:blur(12px)}.overlay.show{display:grid}.console{width:min(940px,100%);max-height:94vh;overflow:auto;border:1px solid #385d7c;border-radius:26px;background:linear-gradient(145deg,#10243a,#081421);box-shadow:0 30px 100px #000;padding:20px}.console-head{display:flex;justify-content:space-between;align-items:start;gap:14px}.console-head h2{margin:2px 0;font-size:1.45rem}.console-head p{margin:0;color:var(--muted)}.close{border:0;border-radius:10px;background:#20364c;color:white;padding:8px 11px;cursor:pointer}.flow{display:grid;gap:10px;margin-top:18px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stage{border:1px solid #2f4d69;border-radius:18px;background:#0b1929;overflow:hidden;transition:.45s}.stage.done{border-color:#2d7252;transform:scale(.985);opacity:.86}.stage-head{padding:10px 13px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #28435d}.badge{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#203650;color:var(--cyan);font-weight:900}.done .badge{background:var(--green);color:#05271a}.stage-title{font-weight:900}.stage-body{padding:13px}.stage.done .stage-body{display:none}.prompt{text-align:center;color:#c9d8e8;margin:0 0 9px}.table-wrap{display:flex;justify-content:center;overflow-x:auto}.number-table{border-collapse:separate;border-spacing:5px;font-family:ui-monospace,monospace}.number-table th{color:var(--muted);font-size:.66rem}.number-table td{width:var(--cell);height:var(--cell);border:1px solid #3c5c7a;background:#071425;border-radius:9px;text-align:center;font-weight:900;font-size:1.28rem}.number-table .label{width:auto;border:0;background:transparent;color:var(--muted);font-size:.72rem;padding-right:8px}.number-table .hex{color:var(--cyan)}.number-table .rule td:not(.label){height:3px;border:0;background:var(--cyan)}.bit{width:100%;height:100%;border:0;border-radius:8px;background:#102943;color:#9fb2c6;font:900 1.2rem ui-monospace,monospace;cursor:pointer}.bit[data-bit="1"]{background:#103d58;color:var(--cyan);box-shadow:inset 0 0 0 1px #59d8ff66}.bit.bad{background:#421a25;color:#ffd7de;animation:shake .25s}.hex-input{width:100%;height:100%;border:0;border-radius:8px;background:#102943;color:white;text-align:center;text-transform:uppercase;font:900 1.25rem ui-monospace,monospace;outline:2px solid transparent}.hex-input:focus{outline-color:var(--cyan)}.hex-input.bad{background:#421a25}.actions{display:flex;justify-content:center;gap:8px;margin-top:10px}.primary,.secondary{border:0;border-radius:11px;padding:9px 14px;font-weight:900;cursor:pointer}.primary{background:var(--cyan);color:#042438}.secondary{background:#20364c;color:white}.feedback{text-align:center;min-height:22px;margin-top:7px;font-weight:800}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}.down{text-align:center;color:var(--cyan);height:20px}.result{display:none;text-align:center;padding:24px;border:1px solid #2d7252;border-radius:18px;background:#0c281c}.result.show{display:block}.result .new{font:950 3.8rem/1 ui-monospace,monospace;color:var(--green);margin:8px}.result p{color:#b6d7c5}.legend{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;margin-top:14px}.legend div{text-align:center;padding:6px 3px;border:1px solid #28445e;border-radius:8px;background:#071425;font:.7rem ui-monospace,monospace;color:var(--muted)}.legend b{display:block;color:var(--cyan);font-size:.85rem}@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
-.machine.merge-active{width:300px;min-height:250px;cursor:default;border-color:var(--amber);z-index:12;box-shadow:0 20px 60px #000b,0 0 0 2px #ffd16622}.machine.merge-solved{width:230px;min-height:150px;border-color:var(--green)}.machine.merge-active .machine-body{padding:10px}.machine-inline{display:grid;gap:8px}.machine-inline .prompt{font-size:.78rem;margin:0;color:var(--muted)}.mini-table{border-collapse:separate;border-spacing:4px;margin:auto;font-family:ui-monospace,monospace}.mini-table td{width:30px;height:30px;border:1px solid #3c5c7a;background:#071425;border-radius:7px;text-align:center;font-weight:900}.mini-table .label{width:auto;border:0;background:transparent;color:var(--muted);font-size:.66rem;padding-right:4px}.mini-table .hex{color:var(--cyan)}.mini-table .bit{font-size:1rem;border-radius:6px}.machine-inline .actions{margin-top:2px}.machine-inline .primary{padding:7px 10px;font-size:.78rem}.machine-inline .feedback{font-size:.75rem;min-height:18px;margin-top:0}.machine-summary{display:grid;place-items:center;min-height:72px;color:var(--green);font:900 .9rem ui-monospace,monospace}.mainframe.merge-mode{width:min(680px,72vw);height:auto;min-height:270px;z-index:15;transition:width .4s,height .4s}.mainframe.merge-mode .screen{height:auto;min-height:180px;margin:24px 20px 14px;padding:14px;display:block;overflow-x:auto}.mainframe.merge-mode .rate{display:none}.mainframe-console{display:grid;gap:10px}.mainframe-console h3{margin:0;color:var(--amber)}.mainframe-console .number-table{margin:auto}.mainframe-console .feedback{font-size:.82rem}.mainframe-console .hex-input{min-width:42px}.merge-status{color:var(--muted);font-size:.8rem}.machine.merge-source-a{outline:2px solid #59d8ff33}.machine.merge-source-b{outline:2px solid #ffd16633}.merge-cancel{position:absolute;right:12px;top:8px;border:0;background:#20364c;color:white;border-radius:8px;padding:5px 8px;font-size:.72rem;cursor:pointer}.machine.merge-active .merge-port{display:none}.machine.merge-active .power-port{opacity:.7}
+.machine.merge-active{width:300px;min-height:250px;cursor:default;border-color:var(--amber);z-index:12;box-shadow:0 20px 60px #000b,0 0 0 2px #ffd16622}.machine.merge-solved{width:230px;min-height:150px;border-color:var(--green)}.machine.merge-active .machine-body{padding:10px}.machine-inline{display:grid;gap:8px}.machine-inline .prompt{font-size:.78rem;margin:0;color:var(--muted)}.mini-table{border-collapse:separate;border-spacing:4px;margin:auto;font-family:ui-monospace,monospace}.mini-table td{width:30px;height:30px;border:1px solid #3c5c7a;background:#071425;border-radius:7px;text-align:center;font-weight:900}.mini-table .label{width:auto;border:0;background:transparent;color:var(--muted);font-size:.66rem;padding-right:4px}.mini-table .hex{color:var(--cyan)}.mini-table .bit{font-size:1rem;border-radius:6px}.machine-inline .actions{margin-top:2px}.machine-inline .primary{padding:7px 10px;font-size:.78rem}.machine-inline .feedback{font-size:.75rem;min-height:18px;margin-top:0}.machine-summary{display:grid;place-items:center;min-height:72px;color:var(--green);font:900 .9rem ui-monospace,monospace}.mainframe.merge-mode{width:min(680px,72vw);height:auto;min-height:270px;z-index:15;transition:width .4s,height .4s}.mainframe.merge-mode .screen{height:auto;min-height:180px;margin:24px 20px 14px;padding:14px;display:block;overflow-x:auto}.mainframe.merge-mode .rate{display:none}.mainframe-console{display:grid;gap:10px}.mainframe-console h3{margin:0;color:var(--amber)}.mainframe-console .number-table{margin:auto}.mainframe-console .feedback{font-size:.82rem}.mainframe-console .hex-input{min-width:42px}.merge-status{color:var(--muted);font-size:.8rem}.machine.merge-source-a{outline:2px solid #59d8ff33}.machine.merge-source-b,.machine.merge-source-c,.machine.merge-source-d,.machine.merge-source-e,.machine.merge-source-f,.machine.merge-source-g{outline:2px solid #ffd16633}.power-port.chain-active{box-shadow:0 0 0 5px #c9852255,-3px -3px 0 #17333e,3px 3px 0 #6b8790;animation:chainPulse 1s ease-in-out infinite}@keyframes chainPulse{50%{filter:brightness(1.4)}}.merge-cancel{position:absolute;right:12px;top:8px;border:0;background:#20364c;color:white;border-radius:8px;padding:5px 8px;font-size:.72rem;cursor:pointer}.machine.merge-active .merge-port{display:none}.machine.merge-active .power-port{opacity:.7}
 @media(max-width:720px){.help{display:none}.machine{width:160px}.mainframe{width:230px;height:190px}.pair{grid-template-columns:1fr}.console{padding:12px}.legend{grid-template-columns:repeat(8,1fr)}:root{--cell:36px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
@@ -58,7 +58,7 @@ html{color-scheme:light}body{background:linear-gradient(135deg,#7f989f 0,#617d86
 
 .merge-station-head{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:5px solid #d9c99b;padding:6px 7px;background:#1f4b58;color:#eadfbd}.merge-station-title{font:900 .72rem ui-monospace,monospace;letter-spacing:.08em}.merge-station-sub{display:block;font:.58rem ui-monospace,monospace;letter-spacing:.02em;margin-top:1px;color:#bad4d7}.merge-station-close{width:30px;height:30px;border:4px solid #d9c99b;background:#a9343e;color:#fff;box-shadow:2px 2px 0 #6d1f25;font:900 1rem/1 ui-monospace,monospace;cursor:pointer;flex:0 0 auto}.merge-station-close:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #6d1f25}
 .merge-station-screen{margin:8px;background:#10252e;border:5px solid #d9c99b;box-shadow:-3px -3px 0 #17333e;min-height:0;padding:8px;overflow:visible;color:#e6eeee}.merge-station-screen .mainframe-console{display:grid;gap:6px}.merge-station-screen .mainframe-console h3{margin:0;color:#eadfbd;text-align:left;letter-spacing:.08em;font:900 .78rem ui-monospace,monospace}.merge-station-screen .feedback{color:#fff}.merge-station-screen .number-table th,.merge-station-screen .number-table .label{color:#c7dedf}.merge-station .number-table{margin:auto;border-spacing:3px}.merge-station .number-table td{width:32px;height:32px;border-radius:0;font-size:1rem}.merge-station .number-table th{font-size:.55rem}.merge-station .number-table .label{font-size:.58rem;padding-right:4px}.merge-station .bit{border-radius:0;font-size:.95rem}.merge-station .hex-input{border-radius:0;font-size:1rem}.merge-station .actions{margin-top:2px}.merge-station .primary{border-radius:0;padding:6px 9px;font-size:.68rem}.merge-station .feedback{font-size:.65rem;min-height:14px;margin-top:0}
-.station-port{position:absolute;top:50%;box-sizing:border-box;width:28px;height:28px;border-radius:50%;border:4px solid #d9c99b;background:#1e5261;box-shadow:-2px -2px 0 #17333e,2px 2px 0 #6b8790;transform:translateY(-50%);z-index:24}.station-port:after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--amber)}.station-port-a{left:-14px}.station-port-b{right:-14px}
+.station-port{position:absolute;left:-14px;box-sizing:border-box;width:28px;height:28px;border-radius:50%;border:4px solid #d9c99b;background:#1e5261;box-shadow:-2px -2px 0 #17333e,2px 2px 0 #6b8790;transform:translateY(-50%);z-index:24}.station-port:after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--amber)}.station-port-a{left:-14px}.station-port-b{right:-14px}
 .station-flow-labels{display:flex;justify-content:space-between;padding:0 10px 6px;font:900 .55rem ui-monospace,monospace;color:#42565d}.machine.merge-solved{width:230px}.machine.merge-solved.station-linked .merge-port{display:grid!important}.machine.merge-solved.station-linked{outline:4px solid #c9852245}.station-cable{fill:none;stroke:#9d6516;stroke-width:9;stroke-linecap:round;filter:drop-shadow(2px 2px 0 #70470c)}.station-cable-flow{fill:none;stroke:#dca94b;stroke-width:3;stroke-linecap:round;stroke-dasharray:10 16;animation:stationFlow 1.05s linear infinite;filter:drop-shadow(0 0 5px #c98522)}@keyframes stationFlow{to{stroke-dashoffset:-26}}
 .merge-build-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:0 8px 7px}.merge-build-segment{height:8px;background:#9aadb1;border:2px solid #d9c99b;box-shadow:1px 1px 0 #244e5b;transition:background .22s,box-shadow .22s}.merge-station.build-stage-1 .merge-build-segment:nth-child(1),.merge-station.build-stage-2 .merge-build-segment:nth-child(-n+2),.merge-station.build-stage-3 .merge-build-segment{background:#c98522;box-shadow:0 0 9px #c98522,1px 1px 0 #244e5b}.merge-station.build-complete{animation:stationComplete .42s ease-out both}@keyframes stationComplete{0%,100%{filter:none}45%{filter:brightness(1.25) drop-shadow(0 0 16px #dca94b)}}
 
@@ -167,7 +167,7 @@ html{color-scheme:light}body{background:linear-gradient(135deg,#7f989f 0,#617d86
 </style>
 </head>
 <body>
-<div id="game"><header class="hud"><div class="brand"><small>Hex Systems Lab</small></div><div class="platform-controls"><button class="hm-btn" id="hm-save">Save</button><button class="hm-btn" id="hm-load">Load</button><button class="hm-btn" id="hm-leaderboard">Leaderboard</button><button class="hm-btn" id="hm-defence">Defence</button><button class="hm-btn" id="hm-reset-view">Reset View</button><button class="hm-btn" id="hm-reset-game">Reset Game</button><button class="hm-btn" id="hm-fullscreen">Fullscreen</button></div><div class="help">Drag machines anywhere.<br>Drag one amber merge port onto another.</div></header><aside class="shop-panel" id="shopPanel"><div class="shop-head"><b>MACHINE STORE</b><small>Merged tiers unlock here</small></div><div class="shop-list" id="shopList"></div></aside><main class="workspace" id="workspace"><div class="world-layer" id="worldLayer"><canvas class="physics-cables" id="physicsCables"></canvas><svg class="cables" id="cables"></svg><canvas class="amber-physics-cable" id="amberCableCanvas" aria-hidden="true"></canvas><div class="defence-layer" id="defenceLayer"></div><div class="bug-vfx" id="bugVfx"></div><div class="bug-layer" id="bugLayer"></div><section class="mainframe" id="mainframe"><div class="title">CENTRAL MAINFRAME</div><div class="screen"><div><small>AVAILABLE FUNDS</small><div class="money" id="money">£0</div></div></div><div class="rate" id="rate">£0 / second</div></section></div><div class="tip">Drag the amber socket from one machine onto another to merge them.</div><div class="bug-banner" id="bugBanner"><div class="bug-message" id="bugMessage"></div></div></main></div>
+<div id="game"><header class="hud"><div class="brand"><small>Hex Systems Lab</small></div><div class="platform-controls"><button class="hm-btn" id="hm-save">Save</button><button class="hm-btn" id="hm-load">Load</button><button class="hm-btn" id="hm-leaderboard">Leaderboard</button><button class="hm-btn" id="hm-defence">Defence</button><button class="hm-btn" id="hm-reset-view">Reset View</button><button class="hm-btn" id="hm-reset-game">Reset Game</button><button class="hm-btn" id="hm-fullscreen">Fullscreen</button></div><div class="help">Drag machines anywhere.<br>Drag one amber merge port onto another.</div></header><aside class="shop-panel" id="shopPanel"><div class="shop-head"><b>MACHINE STORE</b><small>Merged tiers unlock here</small></div><div class="shop-list" id="shopList"></div><div class="shop-head" style="border-top:7px solid #d9c99b"><b>CABLING</b><small>Multi-chain merges</small></div><div class="shop-list" id="chainShop"></div></aside><main class="workspace" id="workspace"><div class="world-layer" id="worldLayer"><canvas class="physics-cables" id="physicsCables"></canvas><svg class="cables" id="cables"></svg><canvas class="amber-physics-cable" id="amberCableCanvas" aria-hidden="true"></canvas><div class="defence-layer" id="defenceLayer"></div><div class="bug-vfx" id="bugVfx"></div><div class="bug-layer" id="bugLayer"></div><section class="mainframe" id="mainframe"><div class="title">CENTRAL MAINFRAME</div><div class="screen"><div><small>AVAILABLE FUNDS</small><div class="money" id="money">£0</div></div></div><div class="rate" id="rate">£0 / second</div></section></div><div class="tip">Drag the amber socket from one machine onto another to merge them.</div><div class="bug-banner" id="bugBanner"><div class="bug-message" id="bugMessage"></div></div></main></div>
 <div class="hm-modal" id="hm-platform-modal"><section class="hm-card"><div class="hm-card-head"><div class="hm-card-title" id="hm-modal-title">Hex Machine</div><button class="hm-btn" id="hm-modal-close">Close</button></div><div id="hm-modal-body"></div></section></div>
 <div class="overlay" id="overlay"><section class="console"><header class="console-head"><div><small style="color:var(--cyan);font-weight:900;letter-spacing:.14em">MERGE CONSOLE</small><h2 id="mergeTitle">Merge machines</h2><p>Convert both machines, add them in binary, then compress the result back to hex.</p></div><button class="close" id="close">Close</button></header><div class="flow" id="flow"></div><div class="legend" id="legend"></div></section></div>
 <script>
@@ -185,7 +185,8 @@ const LASER_TYPES=[
   {id:'beam',name:'Beam Laser',tier:3,cost:1200,range:220,damage:3,cooldown:620},
   {id:'prism',name:'Prism Laser',tier:4,cost:5000,range:255,damage:5,cooldown:520}
 ];
-const state={money:0,machines:[],nextId:1,merge:null,phase:0,solved:{},dragCable:null,unlocked:new Set(),purchaseCounts:new Map(),lasers:[],nextLaserId:1,placingLaser:null,bugs:[],nextBugId:1,bugAttack:{phase:'idle',nextAt:0,activeUntil:0,lastSpawnAt:0,wave:0,kills:0}};
+const state={money:0,machines:[],nextId:1,merge:null,phase:0,solved:{},dragCable:null,unlocked:new Set(),purchaseCounts:new Map(),lasers:[],nextLaserId:1,placingLaser:null,bugs:[],nextBugId:1,bugAttack:{phase:'idle',nextAt:0,activeUntil:0,lastSpawnAt:0,wave:0,kills:0},chainTier:0,chainBuild:null};
+const OWNER_LETTERS='ABCDEFG';
 const PAN_MARGIN=260;
 const camera={x:0,y:0,zoom:1,min:.7,max:2.1,panning:null};
 function viewportRect(){return ws.getBoundingClientRect()}
@@ -322,7 +323,8 @@ function sellValue(value){return machineCost(value)/2}
 function sellMachine(id){
   const m=state.machines.find(x=>x.id===id);
   if(!m)return;
-  if(state.merge&&(state.merge.a===m||state.merge.b===m))return;
+  if(state.merge&&state.merge.machines.includes(m))return;
+  if(state.chainBuild&&state.chainBuild.chain.includes(m))return;
   state.money+=sellValue(m.value);
   state.machines=state.machines.filter(x=>x!==m);
   setMainframeMoney(state.money);
@@ -378,6 +380,47 @@ function renderShop(){
   list.querySelectorAll('[data-buy]').forEach(button=>{
     button.onclick=()=>buyMachine(Number(button.dataset.buy));
   });
+  renderChainShop();
+}
+// Multi-Chain: an expensive shop upgrade (5 tiers, cost roughly x7 per
+// tier) that raises how many machines a single drag-to-merge connection
+// can gather before it resolves. Tier 0 (never purchased) behaves exactly
+// like the original two-machine merge, so nothing here changes the base
+// game unless a student buys in.
+function chainTierCost(tier){return Math.round(400*Math.pow(7,tier-1))}
+function chainMaxLen(){return(state.chainTier||0)+2}
+function renderChainShop(){
+  const list=document.getElementById('chainShop');
+  if(!list)return;
+  const tier=state.chainTier||0;
+  if(tier>=5){
+    list.innerHTML='<div class="shop-empty">Multi-Chain maxed out: up to '+chainMaxLen()+' machines per merge.</div>';
+    return;
+  }
+  const nextCost=chainTierCost(tier+1),can=state.money>=nextCost;
+  list.innerHTML=`<div class="shop-item"><div class="shop-icon">${tier+1}</div><div class="shop-info"><div class="shop-tier"><span>Multi-Chain Tier ${tier+1}</span></div><div class="shop-rate">Merge up to ${tier+3} machines at once &middot; ${money(nextCost)}</div><button class="shop-buy" id="buyChainTier" ${can?'':'disabled'}>UPGRADE</button></div></div>`;
+  const btn=document.getElementById('buyChainTier');
+  if(btn)btn.onclick=buyChainTier;
+}
+function buyChainTier(){
+  const tier=state.chainTier||0;
+  if(tier>=5)return;
+  const cost=chainTierCost(tier+1);
+  if(state.money+1e-9<cost)return;
+  state.money-=cost;
+  state.chainTier=tier+1;
+  setMainframeMoney(state.money);
+  renderChainShop();
+  saveLocalNow();
+  syncLeaderboard();
+  showChainExplainerModal();
+}
+function showChainExplainerModal(){
+  openModal('Multi-Chain Unlocked',
+    '<div class="hm-status">You can now merge up to '+chainMaxLen()+' machines in one go, instead of only two at a time.</div>'+
+    '<div class="hm-status">Drag the cyan power port of one machine onto another machine to start a chain. Keep dragging from the newest machine\'s power port to add more machines. Click that same port again, without dragging, to finish the chain early once at least two machines are linked. Reaching '+chainMaxLen()+' machines finishes it automatically.</div>'+
+    '<div style="display:flex;margin-top:10px"><button type="button" class="hm-btn" id="hm-chain-explainer-close">Got it</button></div>');
+  const btn=H('hm-chain-explainer-close');if(btn)btn.onclick=closeModal;
 }
 function bitButtons(owner,w){return Array.from({length:w},()=>`<td><button class="bit" type="button" data-owner="${owner}" data-bit="0">0</button></td>`).join('')}
 function normaliseMachine(m){m.hp=Math.max(0,Math.min(MACHINE_HP,Number.isFinite(Number(m.hp))?Number(m.hp):MACHINE_HP));return m}
@@ -385,7 +428,7 @@ function machineRate(m){normaliseMachine(m);return m.value*Math.max(.12,m.hp/MAC
 function machineHealthMarkup(m){const pct=Math.max(0,Math.min(100,Math.round(normaliseMachine(m).hp)));return `<div class="machine-health" title="Machine health"><span style="width:${pct}%"></span></div>`}
 function addMachine(value,x,y){state.machines.push({id:state.nextId++,value,x,y,hp:MACHINE_HP});renderMachines()}
 function totalRate(){return state.machines.reduce((s,m)=>s+machineRate(m),0)}
-function renderMachines(){ws.querySelectorAll('.machine').forEach(e=>e.remove());clearRopes();for(const m of state.machines){normaliseMachine(m);const el=document.createElement('article');el.className='machine'+(m.hp<MACHINE_HP*.98?' damaged':'')+(m.hp<=1?' offline':'');el.dataset.id=m.id;el.style.left=m.x+'px';el.style.top=m.y+'px';el.innerHTML=`<div class="machine-head"><span class="machine-name">${glyphMarkup(m.value,'machine-glyph')}</span><span class="machine-level">0x${hex(m.value)}</span></div><div class="machine-body"><div class="machine-rate"><span>${money(machineRate(m))}</span> / second</div><div class="machine-note">${m.hp<MACHINE_HP*.98?'Damaged by bugs':'Connected to central mainframe'}</div>${machineHealthMarkup(m)}<button type="button" class="machine-sell" data-sell="${m.id}" title="Sell this machine for half its buy price">SELL · ${money(sellValue(m.value))}</button></div><div class="port power-port side-right"></div><div class="port merge-port" title="Drag to another machine"></div>`;world.appendChild(el);bindMachine(el,m);el.querySelector('.machine-sell').addEventListener('click',e=>{e.stopPropagation();sellMachine(m.id)});createRope(m)} resizeCableCanvas();syncRopeAnchors();document.getElementById('rate').textContent=money(totalRate())+' / second'}
+function renderMachines(){ws.querySelectorAll('.machine').forEach(e=>e.remove());clearRopes();for(const m of state.machines){normaliseMachine(m);const el=document.createElement('article');el.className='machine'+(m.hp<MACHINE_HP*.98?' damaged':'')+(m.hp<=1?' offline':'');el.dataset.id=m.id;el.style.left=m.x+'px';el.style.top=m.y+'px';el.innerHTML=`<div class="machine-head"><span class="machine-name">${glyphMarkup(m.value,'machine-glyph')}</span><span class="machine-level">0x${hex(m.value)}</span></div><div class="machine-body"><div class="machine-rate"><span>${money(machineRate(m))}</span> / second</div><div class="machine-note">${m.hp<MACHINE_HP*.98?'Damaged by bugs':'Connected to central mainframe'}</div>${machineHealthMarkup(m)}<button type="button" class="machine-sell" data-sell="${m.id}" title="Sell this machine for half its buy price">SELL · ${money(sellValue(m.value))}</button></div><div class="port power-port side-right"></div><div class="port merge-port" title="Drag to another machine"></div>`;world.appendChild(el);bindMachine(el,m);el.querySelector('.machine-sell').addEventListener('click',e=>{e.stopPropagation();sellMachine(m.id)});createRope(m)} resizeCableCanvas();syncRopeAnchors();document.getElementById('rate').textContent=money(totalRate())+' / second';highlightChainAnchor()}
 function resizeCableCanvas(){
   const r=ws.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
   for(const [canvas,ctx] of [[cableCanvas,cableCtx],[amberCanvas,amberCtx]]){
@@ -470,7 +513,7 @@ function handleWorkspaceResize(){
   rebuildRopes();
   renderLasers();
   if(state.merge){
-    for(const m of [state.merge.a,state.merge.b]){
+    for(const m of state.merge.machines){
       const el=ws.querySelector(`.machine[data-id="${m.id}"]`);
       if(el&&el.classList.contains('merge-active')){
         const layout=conversionLayout(m.value);
@@ -677,6 +720,8 @@ function updateBugBanner(now){
     text='Bug attack! Click bugs to destroy them. Lasers fire automatically.';
   }else if(state.placingLaser){
     text='Click an empty space in the workspace to place the laser. Press Escape to cancel.';
+  }else if(state.chainBuild){
+    text='Chain in progress: '+state.chainBuild.chain.length+' of '+chainMaxLen()+' machines. Drag the highlighted cyan port to add another, or click it again to finish (Escape cancels).';
   }else if(state.tempBanner&&state.tempBanner.until>now){
     text=state.tempBanner.text;
   }
@@ -807,11 +852,27 @@ function bindMachine(el,m){
   const port=el.querySelector('.merge-port');
   port.addEventListener('pointerdown',e=>{
     e.preventDefault();e.stopPropagation();
-    if(state.merge)return;
-    state.dragCable={from:m,sourcePort:port,pointerId:e.pointerId,start:pointForElement(port),target:null};
+    if(state.merge||state.chainBuild)return;
+    state.dragCable={from:m,sourcePort:port,pointerId:e.pointerId,start:pointForElement(port),target:null,mode:'merge'};
     port.setPointerCapture?.(e.pointerId);
     createAmberDragRope(state.dragCable.start,screenToWorld(e.clientX,e.clientY));
     updateMergeDrag(e.clientX,e.clientY);
+  });
+  // Multi-Chain (once purchased): the cyan power port doubles as a chain
+  // anchor. Dragging it onto another machine's power port extends an
+  // in-progress chain; a plain click (down/up with no real movement) on
+  // the newest machine's power port finishes the chain early.
+  const powerPort=el.querySelector('.power-port');
+  powerPort.addEventListener('pointerdown',e=>{
+    if(!state.chainTier||state.merge)return;
+    if(state.chainBuild&&state.chainBuild.chain.at(-1)!==m)return;
+    e.preventDefault();e.stopPropagation();
+    if(!state.chainBuild)state.chainBuild={chain:[m]};
+    state.dragCable={from:m,sourcePort:powerPort,pointerId:e.pointerId,start:pointForElement(powerPort),target:null,mode:'chain',downPoint:{x:e.clientX,y:e.clientY}};
+    try{powerPort.setPointerCapture?.(e.pointerId)}catch(_e){}
+    createAmberDragRope(state.dragCable.start,screenToWorld(e.clientX,e.clientY));
+    updateMergeDrag(e.clientX,e.clientY);
+    highlightChainAnchor();
   });
 }
 
@@ -868,18 +929,73 @@ function drawAmberDragRope(){
   amberCtx.shadowColor='transparent';trace();amberCtx.strokeStyle='#d59a19';amberCtx.lineWidth=7;amberCtx.stroke();trace();amberCtx.strokeStyle='#f2c75b';amberCtx.lineWidth=2;amberCtx.stroke();amberCtx.restore();
 }
 function nearestMergePort(clientX,clientY,sourcePort){let best=null,bestDist=Infinity;document.querySelectorAll('.merge-port').forEach(port=>{if(port===sourcePort)return;const r=port.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,d=Math.hypot(clientX-x,clientY-y);if(d<bestDist){bestDist=d;best=port}});return bestDist<=42?best:null}
-function updateMergeDrag(clientX,clientY){const drag=state.dragCable;if(!drag)return;const end=screenToWorld(clientX,clientY);if(!amberDragRope)createAmberDragRope(pointForElement(drag.sourcePort),end);else amberDragRope.end=end;document.querySelectorAll('.merge-port').forEach(p=>p.classList.remove('hot'));drag.target=nearestMergePort(clientX,clientY,drag.sourcePort);if(drag.target)drag.target.classList.add('hot')}
-function finishMergeDrag(clientX,clientY){const drag=state.dragCable;if(!drag)return;updateMergeDrag(clientX,clientY);const target=drag.target;removeAmberDragRope();document.querySelectorAll('.merge-port').forEach(p=>p.classList.remove('hot'));state.dragCable=null;if(target){const machineEl=target.closest('.machine'),other=state.machines.find(x=>x.id===Number(machineEl.dataset.id));if(other&&other!==drag.from)startMerge(drag.from,other)}}
+function nearestPowerPort(clientX,clientY,excludeIds){let best=null,bestDist=Infinity;document.querySelectorAll('.power-port').forEach(port=>{const machineEl=port.closest('.machine');if(!machineEl)return;if(excludeIds.has(Number(machineEl.dataset.id)))return;const r=port.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,d=Math.hypot(clientX-x,clientY-y);if(d<bestDist){bestDist=d;best=port}});return bestDist<=42?best:null}
+function updateMergeDrag(clientX,clientY){
+  const drag=state.dragCable;if(!drag)return;
+  const end=screenToWorld(clientX,clientY);
+  if(!amberDragRope)createAmberDragRope(pointForElement(drag.sourcePort),end);else amberDragRope.end=end;
+  document.querySelectorAll('.merge-port.hot,.power-port.hot').forEach(p=>p.classList.remove('hot'));
+  if(drag.mode==='chain'){
+    const excluded=new Set(state.chainBuild.chain.map(x=>x.id));
+    drag.target=nearestPowerPort(clientX,clientY,excluded);
+  }else{
+    drag.target=nearestMergePort(clientX,clientY,drag.sourcePort);
+  }
+  if(drag.target)drag.target.classList.add('hot');
+}
+function finishMergeDrag(clientX,clientY){
+  const drag=state.dragCable;if(!drag)return;
+  updateMergeDrag(clientX,clientY);
+  const target=drag.target;
+  removeAmberDragRope();
+  document.querySelectorAll('.merge-port.hot,.power-port.hot').forEach(p=>p.classList.remove('hot'));
+  state.dragCable=null;
+  if(drag.mode==='chain'){
+    if(!state.chainBuild)return;
+    if(target){
+      const machineEl=target.closest('.machine'),other=state.machines.find(x=>x.id===Number(machineEl.dataset.id));
+      if(other&&!state.chainBuild.chain.includes(other)){
+        state.chainBuild.chain.push(other);
+        if(state.chainBuild.chain.length>=chainMaxLen())finishChainBuild();
+        else highlightChainAnchor();
+      }
+      return;
+    }
+    const moved=drag.downPoint?Math.hypot(clientX-drag.downPoint.x,clientY-drag.downPoint.y):999;
+    if(moved<10&&state.chainBuild.chain.length>=2)finishChainBuild();
+    return;
+  }
+  if(target){const machineEl=target.closest('.machine'),other=state.machines.find(x=>x.id===Number(machineEl.dataset.id));if(other&&other!==drag.from)startMerge([drag.from,other])}
+}
+function highlightChainAnchor(){
+  document.querySelectorAll('.power-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
+  if(!state.chainBuild)return;
+  const last=state.chainBuild.chain.at(-1);
+  const el=ws.querySelector(`.machine[data-id="${last.id}"] .power-port`);
+  if(el)el.classList.add('chain-active');
+}
+function finishChainBuild(){
+  const chain=state.chainBuild?state.chainBuild.chain:[];
+  state.chainBuild=null;
+  document.querySelectorAll('.power-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
+  if(chain.length<2)return;
+  startMerge(chain);
+}
+function cancelChainBuild(){
+  state.chainBuild=null;
+  document.querySelectorAll('.power-port.chain-active').forEach(p=>p.classList.remove('chain-active'));
+}
 document.addEventListener('pointermove',e=>{if(state.dragCable)updateMergeDrag(e.clientX,e.clientY)});
 document.addEventListener('pointerup',e=>{if(state.dragCable)finishMergeDrag(e.clientX,e.clientY)});
-document.addEventListener('pointercancel',()=>{if(!state.dragCable)return;removeAmberDragRope();document.querySelectorAll('.merge-port').forEach(p=>p.classList.remove('hot'));state.dragCable=null});
+document.addEventListener('pointercancel',()=>{if(!state.dragCable)return;removeAmberDragRope();document.querySelectorAll('.merge-port.hot,.power-port.hot').forEach(p=>p.classList.remove('hot'));state.dragCable=null});
 
-function startMerge(a,b){
-  if(state.merge)return;
-  state.merge={a,b,station:null};state.phase=0;state.solved={A:false,B:false};
+function startMerge(machines){
+  if(state.merge||machines.length<2)return;
+  state.merge={machines:[...machines],station:null};state.phase=0;
+  state.solved={};machines.forEach((m,i)=>{state.solved[OWNER_LETTERS[i]]=false});
   mountInlineMerge();
 }
-function mergeOwner(m){return state.merge&&m===state.merge.a?'A':state.merge&&m===state.merge.b?'B':null}
+function mergeOwner(m){if(!state.merge)return null;const idx=state.merge.machines.indexOf(m);return idx===-1?null:OWNER_LETTERS[idx]}
 function conversionLayout(value){
   const bitCount=Math.ceil(bits(value)/4)*4;
   // Show at most four hexadecimal digits (16 bits) at once. Larger values
@@ -903,9 +1019,9 @@ function inlineMachineMarkup(owner,m){
   return `<div class="machine-inline" data-owner="${owner}"><p class="prompt">Convert this machine to binary.</p><div class="table-wrap"><table class="mini-table"><tr><td class="label">HEX</td>${hs.map(x=>`<td class="hex" colspan="4">${x}</td>`).join('')}</tr><tr><td class="label">BIN</td>${bitButtons(owner,w)}</tr></table></div><div class="actions"><button class="primary inline-check" data-owner="${owner}">Lock machine</button></div><div class="feedback"></div></div>`;
 }
 function mountInlineMerge(){
-  const {a,b}=state.merge;
-  for(const [owner,m] of [['A',a],['B',b]]){
-    const el=ws.querySelector(`.machine[data-id="${m.id}"]`);if(!el)continue;
+  state.merge.machines.forEach((m,i)=>{
+    const owner=OWNER_LETTERS[i];
+    const el=ws.querySelector(`.machine[data-id="${m.id}"]`);if(!el)return;
     const layout=conversionLayout(m.value);
     el.style.setProperty('--merge-machine-width',layout.width+'px');
     el.style.setProperty('--mini-cell',layout.cell+'px');
@@ -913,7 +1029,7 @@ function mountInlineMerge(){
     el.querySelector('.machine-body').innerHTML=inlineMachineMarkup(owner,m);
     el.querySelector('.mini-table')?.style.setProperty('--mini-cell',layout.cell+'px');
     requestAnimationFrame(()=>{fitMachineToWorkspace(m,el);syncRopeAnchors();updateStationCables()});
-  }
+  });
   bindInlineControls();
 }
 function bindInlineControls(){
@@ -927,24 +1043,27 @@ function flashWrongAttempt(elements){
   setTimeout(()=>items.forEach(item=>item.classList.remove('bad')),480);
 }
 function checkInlineMachine(owner){
-  const m=owner==='A'?state.merge.a:state.merge.b;
+  const m=state.merge.machines[OWNER_LETTERS.indexOf(owner)];
   const els=[...ws.querySelectorAll(`.machine-inline .bit[data-owner="${owner}"]`)];
   const want=bin(m.value,els.length),got=els.map(x=>x.dataset.bit).join('');
   if(got!==want){flashWrongAttempt(els);inlineFeedback(owner,'Not quite. Recheck each hex digit as a group of four bits, then try again.','bad');return}
   state.solved[owner]=true;
   const el=ws.querySelector(`.machine[data-id="${m.id}"]`);el.classList.add('merge-solved');el.querySelector('.machine-body').innerHTML=inlineMachineMarkup(owner,m);
-  if(state.solved.A&&state.solved.B){state.phase=1;createMergeStation()}
+  if(Object.values(state.solved).every(Boolean)){state.phase=1;createMergeStation()}
 }
 function stationPosition(){
-  const {a,b}=state.merge,r=ws.getBoundingClientRect();
-  const ae=ws.querySelector(`.machine[data-id="${a.id}"]`),be=ws.querySelector(`.machine[data-id="${b.id}"]`);
-  const ax=a.x+(ae?.offsetWidth||190)/2,ay=a.y+(ae?.offsetHeight||126)/2;
-  const bx=b.x+(be?.offsetWidth||190)/2,by=b.y+(be?.offsetHeight||126)/2;
-  return{x:Math.max(150,Math.min(r.width-150,(ax+bx)/2)),y:Math.max(120,Math.min(r.height-120,(ay+by)/2))};
+  const machines=state.merge.machines,r=ws.getBoundingClientRect();
+  let sx=0,sy=0;
+  machines.forEach(m=>{
+    const el=ws.querySelector(`.machine[data-id="${m.id}"]`);
+    sx+=m.x+(el?.offsetWidth||190)/2;sy+=m.y+(el?.offsetHeight||126)/2;
+  });
+  return{x:Math.max(150,Math.min(r.width-150,sx/machines.length)),y:Math.max(120,Math.min(r.height-120,sy/machines.length))};
 }
 function stationLayout(requestedBits=0){
-  const {a,b}=state.merge;
-  const bitCount=Math.max(requestedBits,Math.max(bits(a.value),bits(b.value))+1);
+  const machines=state.merge.machines;
+  const sum=machines.reduce((s,m)=>s+m.value,0);
+  const bitCount=Math.max(requestedBits,bits(sum));
   const maxWidth=Math.max(300,Math.min(820,ws.clientWidth-28));
   const gap=3,label=42,padding=52;
   const cell=Math.max(18,Math.min(32,Math.floor((maxWidth-label-padding-gap*bitCount)/bitCount)));
@@ -961,35 +1080,41 @@ function clampMergeStation(){
 }
 function createMergeStation(){
   if(!state.merge||state.merge.station)return;
+  const machines=state.merge.machines,n=machines.length;
   const pos=stationPosition(),el=document.createElement('section');
   el.className='merge-station build-stage-1';el.id='mergeStation';el.style.left=pos.x+'px';el.style.top=pos.y+'px';
-  el.innerHTML=`<div class="station-port station-port-a" aria-hidden="true"></div><div class="station-port station-port-b" aria-hidden="true"></div><div class="merge-station-head"><div><div class="merge-station-title">MERGE UNIT</div><span class="merge-station-sub">0x${hex(state.merge.a.value)} + 0x${hex(state.merge.b.value)} → 0x${hex(state.merge.a.value+state.merge.b.value)}</span></div><button class="merge-station-close" id="cancelMergeStation" title="Cancel merge">✕</button></div><div class="merge-station-screen"><div class="merge-station-body"></div></div><div class="merge-build-strip" aria-label="Construction progress"><span class="merge-build-segment"></span><span class="merge-build-segment"></span><span class="merge-build-segment"></span></div><div class="station-flow-labels"><span>A IN</span><span>B IN</span></div>`;
+  const sum=machines.reduce((s,m)=>s+m.value,0);
+  const expr=machines.map(m=>'0x'+hex(m.value)).join(' + ')+' &rarr; 0x'+hex(sum);
+  const ports=machines.map((m,i)=>{
+    const pct=n===1?50:(i/(n-1))*84+8;
+    return `<div class="station-port" data-station-port="${i}" style="top:${pct}%" aria-hidden="true"></div>`;
+  }).join('');
+  const labels=machines.map((m,i)=>`<span>${OWNER_LETTERS[i]} IN</span>`).join('');
+  el.innerHTML=`${ports}<div class="merge-station-head"><div><div class="merge-station-title">MERGE UNIT</div><span class="merge-station-sub">${expr}</span></div><button class="merge-station-close" id="cancelMergeStation" title="Cancel merge">✕</button></div><div class="merge-station-screen"><div class="merge-station-body"></div></div><div class="merge-build-strip" aria-label="Construction progress"><span class="merge-build-segment"></span><span class="merge-build-segment"></span><span class="merge-build-segment"></span></div><div class="station-flow-labels">${labels}</div>`;
   const layout=stationLayout();
   el.style.setProperty('--station-width',layout.width+'px');
   el.style.setProperty('--station-cell',layout.cell+'px');
   world.appendChild(el);state.merge.station=el;
-  ws.querySelector(`.machine[data-id="${state.merge.a.id}"]`)?.classList.add('station-linked');
-  ws.querySelector(`.machine[data-id="${state.merge.b.id}"]`)?.classList.add('station-linked');
+  machines.forEach(m=>ws.querySelector(`.machine[data-id="${m.id}"]`)?.classList.add('station-linked'));
   ensureStationCables();
   document.getElementById('cancelMergeStation').onclick=cancelInlineMerge;
   renderMergeStation();requestAnimationFrame(clampMergeStation);updateStationCables();
 }
 function ensureStationCables(){
   const svg=document.getElementById('cables');
-  for(const id of ['stationCableA','stationCableB']){
+  const n=state.merge.machines.length;
+  for(let i=0;i<n;i++){
+    const id='stationCable'+i;
     if(!document.getElementById(id)){
       const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.id=id;path.setAttribute('class','station-cable');svg.appendChild(path);
+      path.id=id;path.setAttribute('class','station-cable');path.setAttribute('data-station-cable','1');svg.appendChild(path);
       const flow=document.createElementNS('http://www.w3.org/2000/svg','path');
-      flow.id=id+'Flow';flow.setAttribute('class','station-cable-flow');svg.appendChild(flow);
+      flow.id=id+'Flow';flow.setAttribute('class','station-cable-flow');flow.setAttribute('data-station-cable','1');svg.appendChild(flow);
     }
   }
 }
 function removeStationCables(){
-  document.getElementById('stationCableA')?.remove();
-  document.getElementById('stationCableAFlow')?.remove();
-  document.getElementById('stationCableB')?.remove();
-  document.getElementById('stationCableBFlow')?.remove();
+  document.querySelectorAll('[data-station-cable]').forEach(el=>el.remove());
 }
 function pointInWorkspace(el){
   const r=el.getBoundingClientRect();
@@ -997,14 +1122,13 @@ function pointInWorkspace(el){
 }
 function updateStationCables(){
   if(!state.merge?.station)return;
+  const machines=state.merge.machines;
+  const sourceEls=machines.map(m=>ws.querySelector(`.machine[data-id="${m.id}"]`));
+  if(sourceEls.some(e=>!e))return;
+  const stationPorts=[...state.merge.station.querySelectorAll('[data-station-port]')];
+  if(stationPorts.length!==machines.length)return;
 
-  const sourceA=ws.querySelector(`.machine[data-id="${state.merge.a.id}"]`);
-  const sourceB=ws.querySelector(`.machine[data-id="${state.merge.b.id}"]`);
-  const leftSocket=state.merge.station.querySelector('.station-port-a');
-  const rightSocket=state.merge.station.querySelector('.station-port-b');
-  if(!sourceA||!sourceB||!leftSocket||!rightSocket)return;
-
-  const sources=[sourceA,sourceB]
+  const sources=sourceEls
     .map(machine=>({
       machine,
       port:machine.querySelector('.merge-port'),
@@ -1012,36 +1136,33 @@ function updateStationCables(){
     }))
     .filter(item=>item.port)
     .sort((one,two)=>one.centre.x-two.centre.x);
-  if(sources.length!==2)return;
+  if(sources.length!==machines.length)return;
 
   // The physical rope endpoints are reassigned every frame. This prevents
-  // stale A/B ownership from making the ropes cross when the machines move.
-  const pairs=[
-    [sources[0].port,leftSocket,'stationCableA'],
-    [sources[1].port,rightSocket,'stationCableB']
-  ];
-
-  for(const [from,to,id] of pairs){
-    const p1=pointInWorkspace(from),p2=pointInWorkspace(to);
+  // stale ownership from making the ropes cross when the machines move.
+  sources.forEach((source,i)=>{
+    const to=stationPorts[i],id='stationCable'+i;
+    const p1=pointInWorkspace(source.port),p2=pointInWorkspace(to);
     const d=cablePath(p1,p2);
     const base=document.getElementById(id),flow=document.getElementById(id+'Flow');
     if(base){base.setAttribute('d',d);base.setAttribute('vector-effect','non-scaling-stroke')}
     if(flow){flow.setAttribute('d',d);flow.setAttribute('vector-effect','non-scaling-stroke')}
-  }
+  });
 }
 function renderMergeStation(){
   const station=state.merge?.station;if(!station)return;
-  const body=station.querySelector('.merge-station-body'),{a,b}=state.merge;
+  const body=station.querySelector('.merge-station-body'),machines=state.merge.machines;
   if(state.phase===1){
-    const w=Math.max(bits(a.value),bits(b.value))+1;
+    const sum=machines.reduce((s,m)=>s+m.value,0),w=bits(sum);
     const layout=stationLayout(w);station.style.setProperty('--station-width',layout.width+'px');station.style.setProperty('--station-cell',layout.cell+'px');
-    body.innerHTML=`<div class="mainframe-console" data-owner="SUM"><h3>ADD BINARY</h3><div class="table-wrap"><table class="number-table"><tr><th></th>${Array.from({length:w},(_,i)=>`<th>2^${w-1-i}</th>`).join('')}</tr><tr><td class="label">A</td>${bin(a.value,w).split('').map(x=>`<td>${x}</td>`).join('')}</tr><tr><td class="label">+</td>${bin(b.value,w).split('').map(x=>`<td>${x}</td>`).join('')}</tr><tr class="rule"><td class="label"></td>${Array(w).fill('<td></td>').join('')}</tr><tr><td class="label">SUM</td>${bitButtons('SUM',w)}</tr></table></div><div class="actions"><button class="primary" id="checkSum">CHECK</button></div><div class="feedback"></div></div>`;
+    const rows=machines.map((m,i)=>`<tr><td class="label">${i===0?OWNER_LETTERS[i]:'+'+OWNER_LETTERS[i]}</td>${bin(m.value,w).split('').map(x=>`<td>${x}</td>`).join('')}</tr>`).join('');
+    body.innerHTML=`<div class="mainframe-console" data-owner="SUM"><h3>ADD BINARY</h3><div class="table-wrap"><table class="number-table"><tr><th></th>${Array.from({length:w},(_,i)=>`<th>2^${w-1-i}</th>`).join('')}</tr>${rows}<tr class="rule"><td class="label"></td>${Array(w).fill('<td></td>').join('')}</tr><tr><td class="label">SUM</td>${bitButtons('SUM',w)}</tr></table></div><div class="actions"><button class="primary" id="checkSum">CHECK</button></div><div class="feedback"></div></div>`;
     body.querySelector('.number-table')?.style.setProperty('--station-cell',layout.cell+'px');
     body.querySelectorAll('.bit').forEach(b=>b.onclick=()=>{b.dataset.bit=b.dataset.bit==='1'?'0':'1';b.textContent=b.dataset.bit;b.classList.remove('bad')});
     body.querySelector('#checkSum').onclick=checkInlineSum;requestAnimationFrame(clampMergeStation);return;
   }
   if(state.phase===2){
-    const sum=a.value+b.value,w=Math.ceil(bits(sum)/4)*4,h=hex(sum).padStart(w/4,'0');
+    const sum=machines.reduce((s,m)=>s+m.value,0),w=Math.ceil(bits(sum)/4)*4,h=hex(sum).padStart(w/4,'0');
     const layout=stationLayout(w);station.style.setProperty('--station-width',layout.width+'px');station.style.setProperty('--station-cell',layout.cell+'px');
     body.innerHTML=`<div class="mainframe-console" data-owner="HEX"><h3>TO HEX</h3><div class="table-wrap"><table class="number-table"><tr><td class="label">BIN</td>${bin(sum,w).split('').map(x=>`<td>${x}</td>`).join('')}</tr><tr><td class="label">HEX</td>${Array.from({length:h.length},(_,i)=>`<td colspan="4"><input class="hex-input" maxlength="1" data-i="${i}"></td>`).join('')}</tr></table></div><div class="actions"><button class="primary" id="createMerged">BUILD</button></div><div class="feedback"></div></div>`;
     body.querySelector('.number-table')?.style.setProperty('--station-cell',layout.cell+'px');
@@ -1051,12 +1172,12 @@ function renderMergeStation(){
 }
 function stationFeedback(msg,type){const e=document.querySelector('#mergeStation .feedback');if(e){e.textContent=msg;e.className='feedback '+type}}
 function checkInlineSum(){
-  const {a,b}=state.merge,els=[...document.querySelectorAll('#mergeStation .bit[data-owner="SUM"]')],want=bin(a.value+b.value,els.length),got=els.map(x=>x.dataset.bit).join('');
+  const sum=state.merge.machines.reduce((s,m)=>s+m.value,0),els=[...document.querySelectorAll('#mergeStation .bit[data-owner="SUM"]')],want=bin(sum,els.length),got=els.map(x=>x.dataset.bit).join('');
   if(got!==want){flashWrongAttempt(els);stationFeedback('Not quite. Work from the right-hand side and remember any carry before trying again.','bad');return}
   state.phase=2;state.merge.station?.classList.remove('build-stage-1');state.merge.station?.classList.add('build-stage-2');renderMergeStation();
 }
 function checkInlineHex(){
-  const {a,b}=state.merge,inputs=[...document.querySelectorAll('#mergeStation .hex-input')],want=hex(a.value+b.value).padStart(inputs.length,'0'),got=inputs.map(x=>x.value).join('');
+  const sum=state.merge.machines.reduce((s,m)=>s+m.value,0),inputs=[...document.querySelectorAll('#mergeStation .hex-input')],want=hex(sum).padStart(inputs.length,'0'),got=inputs.map(x=>x.value).join('');
   if(got!==want){flashWrongAttempt(inputs);stationFeedback('Not quite. Split the binary into groups of four, then convert each group to one hex digit.','bad');return}
   const station=state.merge?.station;
   station?.classList.remove('build-stage-2');station?.classList.add('build-stage-3','build-complete');
@@ -1070,12 +1191,13 @@ function cancelInlineMerge(){
   renderMachines();
 }
 function finishMerge(){
-  const {a,b}=state.merge,sum=a.value+b.value,x=(a.x+b.x)/2,y=(a.y+b.y)/2;
+  const machines=state.merge.machines,sum=machines.reduce((s,m)=>s+m.value,0);
+  let sx=0,sy=0;machines.forEach(m=>{sx+=m.x;sy+=m.y});
+  const x=sx/machines.length,y=sy/machines.length;
   removeStationCables();
   document.getElementById('mergeStation')?.remove();
-  state.machines=state.machines.filter(m=>m!==a&&m!==b);state.merge=null;state.phase=0;state.solved={};
-  unlockMachine(a.value,true);
-  unlockMachine(b.value,a.value!==b.value);
+  state.machines=state.machines.filter(m=>!machines.includes(m));state.merge=null;state.phase=0;state.solved={};
+  machines.forEach((m,i)=>unlockMachine(m.value,!machines.slice(0,i).some(p=>p.value===m.value)));
   addMachine(sum,x,y);
   saveLocalNow();
   syncLeaderboard();
@@ -1095,11 +1217,13 @@ function htmlEscape(value){return String(value==null?'':value).replace(/[&<>"']/
 function isStaffUser(){const ps=parentState();return !!(ps&&(ps.isAdmin||ps.isTeacher))}
 function studentCode(){const ps=parentState();return ps&&ps.uid?String(ps.uid):''}
 function bestValue(){return Math.max(1,...state.machines.map(m=>Number(m.value)||0),...[...state.unlocked].map(v=>Number(v)||0))}
-function snapshotState(){return{money:Math.max(0,Number(state.money)||0),machines:state.machines.map(m=>{const hpNumber=Number(m.hp);return{id:Number(m.id)||0,value:Math.max(1,Math.floor(Number(m.value)||1)),x:Math.round(Number(m.x)||0),y:Math.round(Number(m.y)||0),hp:Math.max(0,Math.min(MACHINE_HP,Number.isFinite(hpNumber)?hpNumber:MACHINE_HP))}}),nextId:Math.max(1,Math.floor(Number(state.nextId)||1)),unlocked:[...state.unlocked].map(v=>Math.max(1,Math.floor(Number(v)||1))).filter(Boolean),purchaseCounts:[...state.purchaseCounts.entries()].map(([k,v])=>[Math.max(1,Math.floor(Number(k)||1)),Math.max(0,Math.floor(Number(v)||0))]),lasers:state.lasers.map(l=>({id:Number(l.id)||0,typeId:String(l.typeId||'basic'),x:Math.round(Number(l.x)||0),y:Math.round(Number(l.y)||0)})),nextLaserId:Math.max(1,Math.floor(Number(state.nextLaserId)||1)),bugStats:{wave:Math.max(0,Math.floor(Number(state.bugAttack.wave)||0)),kills:Math.max(0,Math.floor(Number(state.bugAttack.kills)||0))}}}
+function snapshotState(){return{money:Math.max(0,Number(state.money)||0),machines:state.machines.map(m=>{const hpNumber=Number(m.hp);return{id:Number(m.id)||0,value:Math.max(1,Math.floor(Number(m.value)||1)),x:Math.round(Number(m.x)||0),y:Math.round(Number(m.y)||0),hp:Math.max(0,Math.min(MACHINE_HP,Number.isFinite(hpNumber)?hpNumber:MACHINE_HP))}}),nextId:Math.max(1,Math.floor(Number(state.nextId)||1)),unlocked:[...state.unlocked].map(v=>Math.max(1,Math.floor(Number(v)||1))).filter(Boolean),purchaseCounts:[...state.purchaseCounts.entries()].map(([k,v])=>[Math.max(1,Math.floor(Number(k)||1)),Math.max(0,Math.floor(Number(v)||0))]),lasers:state.lasers.map(l=>({id:Number(l.id)||0,typeId:String(l.typeId||'basic'),x:Math.round(Number(l.x)||0),y:Math.round(Number(l.y)||0)})),nextLaserId:Math.max(1,Math.floor(Number(state.nextLaserId)||1)),bugStats:{wave:Math.max(0,Math.floor(Number(state.bugAttack.wave)||0)),kills:Math.max(0,Math.floor(Number(state.bugAttack.kills)||0))},chainTier:Math.max(0,Math.min(5,Math.floor(Number(state.chainTier)||0)))}}
 function applySnapshot(raw){
   if(!raw||typeof raw!=='object')throw new Error('Save file is empty.');
   removeAmberDragRope();removeStationCables();document.getElementById('mergeStation')?.remove();
   state.merge=null;state.phase=0;state.solved={};state.dragCable=null;state.placingLaser=null;state.bugs=[];state.nextBugId=1;
+  cancelChainBuild();
+  state.chainTier=Math.max(0,Math.min(5,Math.floor(Number(raw.chainTier)||0)));
   state.money=Math.max(0,Number(raw.money)||0);
   state.nextId=Math.max(1,Math.floor(Number(raw.nextId)||1));
   state.nextLaserId=Math.max(1,Math.floor(Number(raw.nextLaserId)||1));
@@ -1227,7 +1351,10 @@ function setupPlatformControls(){
   H('hm-modal-close').onclick=closeModal;H('hm-platform-modal').addEventListener('click',e=>{if(e.target===H('hm-platform-modal'))closeModal()});
   H('hm-save').onclick=()=>driveSaveOrLoad('save');H('hm-load').onclick=()=>driveSaveOrLoad('load');H('hm-leaderboard').onclick=showLeaderboard;H('hm-defence').onclick=showDefenceMenu;H('hm-reset-view').onclick=resetCamera;H('hm-reset-game').onclick=resetGame;H('hm-fullscreen').onclick=toggleFullscreen;setupCameraControls();
   ws.addEventListener('pointerdown',e=>{if(!state.placingLaser)return;if(placePendingLaser(e)){e.preventDefault();e.stopPropagation()}},true);
-  window.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.placingLaser){state.placingLaser=null;showTemporaryBanner('Laser placement cancelled.',2200);updateBugBanner(performance.now())}});
+  window.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&state.placingLaser){state.placingLaser=null;showTemporaryBanner('Laser placement cancelled.',2200);updateBugBanner(performance.now())}
+    if(e.key==='Escape'&&state.chainBuild){cancelChainBuild();showTemporaryBanner('Chain cancelled.',2200);updateBugBanner(performance.now())}
+  });
   fullscreenDocument().addEventListener('fullscreenchange',()=>{const b=H('hm-fullscreen');if(b)b.textContent=fullscreenDocument().fullscreenElement?'Exit Fullscreen':'Fullscreen';scheduleWorkspaceResize()});
 }
 function seed(){const r=ws.getBoundingClientRect();state.unlocked.clear();state.purchaseCounts.clear();state.machines=[];state.lasers=[];state.bugs=[];state.nextId=1;state.nextLaserId=1;state.nextBugId=1;state.bugAttack.wave=0;state.bugAttack.kills=0;const y=Math.max(50,r.height/2-63);addMachine(1,Math.max(24,r.width*.18-95),y);addMachine(1,Math.min(r.width-214,r.width*.82-95),y);renderLasers();renderBugs();renderShop();scheduleBugAttack(randomBugDelay());saveLocalNow();syncLeaderboard()}
@@ -1252,6 +1379,7 @@ function resetGame(){
     closeModal();
     removeAmberDragRope();removeStationCables();document.getElementById('mergeStation')?.remove();
     state.merge=null;state.phase=0;state.solved={};state.dragCable=null;state.placingLaser=null;
+    cancelChainBuild();state.chainTier=0;
     state.money=0;
     state.bugAttack={phase:'idle',nextAt:0,activeUntil:0,lastSpawnAt:0,wave:0,kills:0};
     try{localStorage.removeItem(LOCAL_SAVE_KEY)}catch(_e){}
