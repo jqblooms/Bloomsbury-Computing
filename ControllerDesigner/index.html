@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Controller Designer</title>
+<style>
+  :root {
+    --brand: #2296e3;
+    --brand-dark: #1976b8;
+    --ink: #16233a;
+    --muted: #58677f;
+    --line: #d9e2ef;
+    --surface: #ffffff;
+    --bg: #f2f6fb;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    touch-action: none;
+  }
+  header {
+    padding: 10px 16px;
+    background: var(--brand);
+    color: #fff;
+    flex-shrink: 0;
+  }
+  header h1 { margin: 0; font-size: 17px; }
+  header p { margin: 3px 0 0; font-size: 12px; opacity: .92; }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .tool-group { display: flex; align-items: center; gap: 6px; }
+  .tool-btn {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 650;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .tool-btn:hover { background: #f4f8fc; }
+  .tool-btn.is-active { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .tool-btn.is-danger.is-armed { background: #fdf3f3; border-color: #d64545; color: #b23a3a; }
+
+  .swatch-row { display: flex; gap: 5px; }
+  .swatch {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px var(--line);
+    cursor: pointer;
+    padding: 0;
+  }
+  .swatch.is-active { box-shadow: 0 0 0 2px var(--brand); }
+  #customColor { width: 30px; height: 26px; border: 1px solid var(--line); border-radius: 6px; padding: 0; cursor: pointer; background: none; }
+
+  .size-label { font-size: 12px; color: var(--muted); font-weight: 650; white-space: nowrap; }
+  #brushSize { width: 90px; }
+
+  .canvas-wrap {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    min-height: 0;
+  }
+  #board {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(16, 40, 70, .1);
+    max-width: 100%;
+    max-height: 100%;
+    touch-action: none;
+    cursor: crosshair;
+  }
+  .text-input-overlay {
+    position: absolute;
+    font: 600 20px -apple-system, sans-serif;
+    border: 1px dashed var(--brand);
+    background: rgba(255,255,255,.92);
+    padding: 2px 4px;
+    outline: none;
+    min-width: 60px;
+    z-index: 5;
+  }
+  .status-note {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--muted);
+    background: rgba(255,255,255,.85);
+    padding: 3px 10px;
+    border-radius: 20px;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Controller Designer</h1>
+  <p>Design a controller for a games console that doesn't exist yet. Draw it, then use the text tool to label the parts.</p>
+</header>
+<div class="toolbar">
+  <div class="tool-group">
+    <button type="button" class="tool-btn is-active" id="toolPen">Pen</button>
+    <button type="button" class="tool-btn" id="toolEraser">Eraser</button>
+    <button type="button" class="tool-btn" id="toolText">Text</button>
+  </div>
+  <div class="tool-group swatch-row" id="swatchRow"></div>
+  <div class="tool-group">
+    <input type="color" id="customColor" value="#16233a" title="Custom colour">
+  </div>
+  <div class="tool-group">
+    <span class="size-label">Size</span>
+    <input type="range" id="brushSize" min="2" max="30" value="6">
+  </div>
+  <div class="tool-group">
+    <button type="button" class="tool-btn" id="btnUndo">Undo</button>
+    <button type="button" class="tool-btn is-danger" id="btnClear">Clear Canvas</button>
+    <button type="button" class="tool-btn" id="btnSave">Save as PNG</button>
+  </div>
+</div>
+<div class="canvas-wrap">
+  <canvas id="board" width="900" height="600"></canvas>
+  <div class="status-note" id="statusNote">Draws automatically save to this browser.</div>
+</div>
+
+<script>
+(function () {
+  var canvas = document.getElementById('board');
+  var ctx = canvas.getContext('2d');
+  var AUTOSAVE_KEY = 'controllerDesigner_autosave_v1';
+
+  var state = {
+    tool: 'pen',
+    color: '#16233a',
+    size: 6,
+    drawing: false,
+    lastX: 0,
+    lastY: 0,
+    undoStack: []
+  };
+
+  var PALETTE = ['#16233a', '#d64545', '#2296e3', '#2f9e58', '#f2a52c', '#8a4fd1', '#ffffff'];
+
+  function fillWhiteBackground() {
+    ctx.save();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+  }
+
+  function loadAutosave() {
+    var saved;
+    try { saved = localStorage.getItem(AUTOSAVE_KEY); } catch (_e) { saved = null; }
+    if (!saved) { fillWhiteBackground(); return; }
+    var img = new Image();
+    img.onload = function () {
+      fillWhiteBackground();
+      ctx.drawImage(img, 0, 0);
+    };
+    img.onerror = function () { fillWhiteBackground(); };
+    img.src = saved;
+  }
+
+  function autosave() {
+    try { localStorage.setItem(AUTOSAVE_KEY, canvas.toDataURL('image/png')); } catch (_e) { /* storage full or unavailable, not critical */ }
+  }
+
+  function pushUndoSnapshot() {
+    try {
+      state.undoStack.push(canvas.toDataURL('image/png'));
+      if (state.undoStack.length > 25) state.undoStack.shift();
+    } catch (_e) { /* ignore */ }
+  }
+
+  function undo() {
+    if (!state.undoStack.length) return;
+    var last = state.undoStack.pop();
+    var img = new Image();
+    img.onload = function () {
+      fillWhiteBackground();
+      ctx.drawImage(img, 0, 0);
+      autosave();
+    };
+    img.src = last;
+  }
+
+  // ── Toolbar wiring ──────────────────────────────────────────────
+  function setTool(tool) {
+    state.tool = tool;
+    ['toolPen', 'toolEraser', 'toolText'].forEach(function (id) {
+      document.getElementById(id).classList.remove('is-active');
+    });
+    var map = { pen: 'toolPen', eraser: 'toolEraser', text: 'toolText' };
+    document.getElementById(map[tool]).classList.add('is-active');
+    canvas.style.cursor = tool === 'text' ? 'text' : 'crosshair';
+  }
+  document.getElementById('toolPen').addEventListener('click', function () { setTool('pen'); });
+  document.getElementById('toolEraser').addEventListener('click', function () { setTool('eraser'); });
+  document.getElementById('toolText').addEventListener('click', function () { setTool('text'); });
+
+  var swatchRow = document.getElementById('swatchRow');
+  PALETTE.forEach(function (color) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'swatch';
+    btn.style.background = color;
+    if (color === '#ffffff') btn.style.boxShadow = '0 0 0 1px var(--line), inset 0 0 0 1px #ccd6e4';
+    btn.title = color;
+    btn.addEventListener('click', function () {
+      state.color = color;
+      document.getElementById('customColor').value = color;
+      Array.prototype.forEach.call(swatchRow.querySelectorAll('.swatch'), function (s) { s.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+    });
+    swatchRow.appendChild(btn);
+    if (color === state.color) btn.classList.add('is-active');
+  });
+
+  document.getElementById('customColor').addEventListener('input', function (e) {
+    state.color = e.target.value;
+    Array.prototype.forEach.call(swatchRow.querySelectorAll('.swatch'), function (s) { s.classList.remove('is-active'); });
+  });
+
+  document.getElementById('brushSize').addEventListener('input', function (e) {
+    state.size = Number(e.target.value);
+  });
+
+  document.getElementById('btnUndo').addEventListener('click', undo);
+
+  // Two-click confirm instead of window.confirm(): a native dialog can be
+  // silently blocked in a sandboxed iframe with no allow-modals, same
+  // lesson learned building Hex Machine's Reset Game button.
+  var clearBtn = document.getElementById('btnClear');
+  var clearArmed = false, clearTimer = null;
+  clearBtn.addEventListener('click', function () {
+    if (!clearArmed) {
+      clearArmed = true;
+      clearBtn.classList.add('is-armed');
+      clearBtn.textContent = 'Click again to clear';
+      clearTimer = setTimeout(function () {
+        clearArmed = false;
+        clearBtn.classList.remove('is-armed');
+        clearBtn.textContent = 'Clear Canvas';
+      }, 3000);
+      return;
+    }
+    clearTimeout(clearTimer);
+    clearArmed = false;
+    clearBtn.classList.remove('is-armed');
+    clearBtn.textContent = 'Clear Canvas';
+    pushUndoSnapshot();
+    fillWhiteBackground();
+    autosave();
+  });
+
+  document.getElementById('btnSave').addEventListener('click', function () {
+    var link = document.createElement('a');
+    link.download = 'my-controller-design.png';
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  // ── Drawing (pen / eraser) ──────────────────────────────────────
+  function canvasPoint(clientX, clientY) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: (clientX - rect.left) * (canvas.width / rect.width),
+      y: (clientY - rect.top) * (canvas.height / rect.height)
+    };
+  }
+
+  function strokeTo(x, y) {
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = state.tool === 'eraser' ? state.size * 3 : state.size;
+    ctx.strokeStyle = state.tool === 'eraser' ? '#ffffff' : state.color;
+    ctx.beginPath();
+    ctx.moveTo(state.lastX, state.lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    state.lastX = x;
+    state.lastY = y;
+  }
+
+  function startTextInput(x, y, clientX, clientY) {
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'text-input-overlay';
+    var wrapRect = canvas.parentElement.getBoundingClientRect();
+    input.style.left = (clientX - wrapRect.left) + 'px';
+    input.style.top = (clientY - wrapRect.top - 14) + 'px';
+    input.style.color = state.color;
+    canvas.parentElement.appendChild(input);
+    input.focus();
+
+    function commit() {
+      var text = input.value;
+      if (text) {
+        ctx.fillStyle = state.color;
+        ctx.font = '600 ' + Math.max(14, state.size * 3) + 'px -apple-system, sans-serif';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, x, y);
+        pushUndoSnapshot();
+        autosave();
+      }
+      if (input.parentElement) input.parentElement.removeChild(input);
+    }
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      if (e.key === 'Escape') { e.preventDefault(); if (input.parentElement) input.parentElement.removeChild(input); }
+    });
+    input.addEventListener('blur', commit);
+  }
+
+  canvas.addEventListener('pointerdown', function (e) {
+    var p = canvasPoint(e.clientX, e.clientY);
+    if (state.tool === 'text') {
+      startTextInput(p.x, p.y, e.clientX, e.clientY);
+      return;
+    }
+    pushUndoSnapshot();
+    state.drawing = true;
+    state.lastX = p.x;
+    state.lastY = p.y;
+    // A single click/tap with no drag should still leave a dot.
+    strokeTo(p.x + 0.01, p.y + 0.01);
+    try { canvas.setPointerCapture(e.pointerId); } catch (_e) { /* pointer id not active, harmless */ }
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!state.drawing) return;
+    var p = canvasPoint(e.clientX, e.clientY);
+    strokeTo(p.x, p.y);
+  });
+  function endStroke() {
+    if (!state.drawing) return;
+    state.drawing = false;
+    autosave();
+  }
+  canvas.addEventListener('pointerup', endStroke);
+  canvas.addEventListener('pointercancel', endStroke);
+  canvas.addEventListener('pointerleave', function () { if (state.drawing) endStroke(); });
+
+  loadAutosave();
+})();
+</script>
+</body>
+</html>
