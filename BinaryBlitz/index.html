@@ -81,7 +81,8 @@ const LEVELS = {
     9: { title: "Hexadecimal to Binary", color: "yellow", desc: "Match hex nibbles." },
     10: { title: "Two's Complement: Binary to Denary", color: "indigo", desc: "Signed binary to denary." },
     11: { title: "Two's Complement: Denary to Binary", color: "fuchsia", desc: "Signed denary to binary." },
-    12: { title: "Final Exam", color: "rose", desc: "15 Questions. No Timer." }
+    12: { title: "Final Exam", color: "rose", desc: "15 Questions. No Timer." },
+    13: { title: "Logical Shifts", color: "lime", desc: "Shift left or right, direction and amount are random." }
 };
 
 // Longer, explicit level names (see above) don't fit a fixed font size in
@@ -131,6 +132,16 @@ const generateQuestion = (level, isHardMode) => {
         const binB = valB.toString(2).padStart(bitsCount, '0').split('').map(Number);
         const binResult = total.toString(2).padStart(bitsCount + 1, '0').split('').map(Number);
         return { binA, binB, binResult, bitsCount, missingIndices: [] };
+    }
+    if (level === 13) {
+        // 1 to 3 places, matching the range every real past-paper shift
+        // question the Year 10 lesson uses actually covers.
+        const direction = Math.random() < 0.5 ? 'left' : 'right';
+        const places = Math.floor(Math.random() * 3) + 1;
+        const shiftedBits = direction === 'left'
+            ? bits.slice(places).concat(new Array(places).fill(0))
+            : new Array(places).fill(0).concat(bits.slice(0, 8 - places));
+        return { decimal, bits, direction, places, correctBits: shiftedBits, missingIndices: [], missingValues: [] };
     }
     if (level === 10 || level === 11) {
         // Always 8-bit two's complement, range -128..127. Using the raw
@@ -279,7 +290,8 @@ const HelpModal = ({ levelId, onClose }) => {
         9: { title: "Hexadecimal to Binary", body: "Convert each hex digit into its 4-bit binary equivalent using the 8-4-2-1 columns." },
         10: { title: "Two's Complement: Binary to Denary", body: "Convert an 8-bit two's complement number to denary (decimal).\nThe leftmost bit is worth -128 instead of +128.\nType the total, using the ± button for negative answers." },
         11: { title: "Two's Complement: Denary to Binary", body: "Toggle bits to match the signed denary (decimal) target.\nThe leftmost bit is worth -128.\nRange: -128 to 127." },
-        12: { title: "Final Exam", body: "15 questions mixed from all levels.\nNo time limit for Game Over, but time is tracked.\nTry to beat your previous score!" }
+        12: { title: "Final Exam", body: "15 questions mixed from all levels.\nNo time limit for Game Over, but time is tracked.\nTry to beat your previous score!" },
+        13: { title: "Logical Shifts", body: "Shift every bit the same number of places in the given direction.\nShifting LEFT moves bits toward the 128 column. Any bit pushed off the left is lost, and empty columns on the right fill with 0.\nShifting RIGHT moves bits toward the 1 column. Any bit pushed off the right is lost, and empty columns on the left fill with 0." }
     };
     const data = content[levelId] || { title: "Help", body: "Good luck!" };
     return (
@@ -385,15 +397,16 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
         const q = generateQuestion(level, isHardMode);
         setQuestion(q); setInput("");
         if (level===5) { setUserBits(Array(q.bitsCount+1).fill(0)); setCarryBits(Array(q.bitsCount+1).fill(0)); }
-        if (level===9||level===11) setUserBits(Array(8).fill(0));
+        if (level===9||level===11||level===13) setUserBits(Array(8).fill(0));
         resetRound(isHardMode ? Math.floor(points*2.5) : points);
     };
     const handleToggleBit = (idx) => {
-        if (![5,9,11].includes(level)) return;
+        if (![5,9,11,13].includes(level)) return;
         const newBits = [...userBits]; newBits[idx] = newBits[idx]===0 ? 1 : 0; setUserBits(newBits);
         if (level===5) { const currentVal=parseInt(newBits.join(''),2); const targetVal=parseInt(question.binResult.join(''),2); if(currentVal===targetVal){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
         if (level===9) { const val=newBits.reduce((a,b,i)=>a+(b*POWERS[i]),0); if(val===question.decimal){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
         if (level===11) { const val=newBits.reduce((a,b,i)=>a+(b*SIGNED_POWERS[i]),0); if(val===question.decimal){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
+        if (level===13) { if(newBits.join('')===question.correctBits.join('')){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
     };
     const handleToggleCarry = (idx) => { const newCarries=[...carryBits]; newCarries[idx]=newCarries[idx]===0?1:0; setCarryBits(newCarries); };
     if (!question) return null;
@@ -417,6 +430,7 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
     if (level===9) { const currentVal=userBits.reduce((a,b,i)=>a+(b*POWERS[i]),0); const currentHex=currentVal.toString(16).toUpperCase().padStart(2,'0'); return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L9: Hexadecimal to Binary" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">MATCH THIS HEXADECIMAL</div><div className="text-6xl font-bold font-mono text-yellow-400">{question.hexString}</div></div><div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 w-full max-w-4xl mb-4"><div className="flex justify-between items-center gap-1">{POWERS.map((_,i)=>(<div key={i} className={`flex flex-col items-center flex-1 ${i===4?'ml-6':''}`}>{!isHardMode&&<div className="text-[10px] text-cyan-400 font-bold mb-1">{NIBBLE_POWERS[i]}</div>}<button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-12 rounded font-bold text-xl transition-all ${userBits[i]?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>))}</div></div>{!isHardMode&&(<div className="text-center"><span className="text-sm text-slate-400">Current: </span><span className={`font-mono font-bold text-2xl ${currentHex===question.hexString?'text-green-400':'text-slate-200'}`}>{currentHex}</span></div>)}</GameLayout>; }
     if (level===10) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L10: Two's Complement: Binary to Denary" isHardMode={isHardMode}><div className="mb-6 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false} signed={true}/></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><button type="button" onClick={handleToggleSign} className="mb-3 px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-bold text-white touch-manipulation">±</button><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
     if (level===11) { const currentVal=userBits.reduce((a,b,i)=>a+(b*SIGNED_POWERS[i]),0); return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L11: Two's Complement: Denary to Binary" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm">TARGET</div><div className="text-6xl font-bold font-mono text-white">{question.decimal}</div></div><div className="bg-slate-800/50 p-4 rounded-xl w-full max-w-4xl mb-8 overflow-x-auto"><div className="flex gap-1 min-w-[600px]">{SIGNED_POWERS.map((p,i)=><div key={i} className="flex-1 flex flex-col items-center gap-2"><div className={`w-full h-14 rounded bg-slate-900/30 flex items-center justify-center font-bold ${i===0?'text-red-400':'text-slate-500'}`}>{p}</div><button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-16 rounded font-bold text-2xl ${userBits[i]?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>)}</div></div><div className="flex items-center gap-4 text-slate-300"><span>SUM:</span><span className="text-3xl font-bold font-mono">{isHardMode?'???':currentVal}</span></div></GameLayout>; }
+    if (level===13) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L13: Logical Shifts" isHardMode={isHardMode}><div className="text-center mb-4"><div className="text-slate-400 text-sm mb-2">SHIFT {question.direction.toUpperCase()} BY {question.places}</div></div><div className="mb-4 w-full max-w-lg"><div className="text-xs text-slate-500 mb-1 text-center uppercase tracking-widest">Starting Value</div><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false}/></div><div className="bg-slate-800/50 p-4 rounded-xl w-full max-w-4xl mb-4 overflow-x-auto"><div className="text-xs text-slate-500 mb-2 text-center uppercase tracking-widest">Your Answer</div><div className="flex gap-1 min-w-[400px]">{POWERS.map((p,i)=>(<div key={i} className="flex-1 flex flex-col items-center gap-2">{!isHardMode&&<div className="w-full h-8 rounded bg-slate-900/30 text-slate-500 flex items-center justify-center text-xs font-bold">{p}</div>}<button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-16 rounded font-bold text-2xl ${userBits[i]?'bg-lime-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>))}</div></div></GameLayout>;
     return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L4: Binary to Denary" isHardMode={isHardMode}><div className="mb-6 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false}/></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
 };
 
@@ -513,7 +527,7 @@ const MainMenu = ({ onStart, isHardMode, setHardMode, playerName }) => {
             {helpLevel && <HelpModal levelId={helpLevel} onClose={() => setHelpLevel(null)} />}
             <div className="text-center mb-4 mt-6">
                 <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 mb-1">BINARY BLITZ</h1>
-                <p className="text-slate-400 text-sm">12 Levels.</p>
+                <p className="text-slate-400 text-sm">13 Levels.</p>
                 <p className="text-violet-400 text-xs mt-1 font-mono">👤 {playerName}</p>
             </div>
             <div className="flex gap-3 mb-5 flex-wrap justify-center items-center">
