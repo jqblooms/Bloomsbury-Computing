@@ -95,16 +95,41 @@
     touch-action: none;
     cursor: crosshair;
   }
-  .text-input-overlay {
+  .text-editor-overlay {
     position: absolute;
-    font: 600 20px -apple-system, sans-serif;
-    border: 1px dashed var(--brand);
-    background: rgba(255,255,255,.92);
-    padding: 2px 4px;
-    outline: none;
-    min-width: 60px;
-    z-index: 5;
+    display: flex;
+    align-items: stretch;
+    gap: 5px;
+    z-index: 10;
+    padding: 5px;
+    border: 2px solid var(--brand);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(16, 40, 70, .22);
+    touch-action: manipulation;
   }
+  .text-input-overlay {
+    width: 220px;
+    min-width: 100px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 5px 7px;
+    outline: none;
+    font: 600 18px "Segoe UI", Arial, sans-serif;
+  }
+  .text-input-overlay:focus { border-color: var(--brand); box-shadow: 0 0 0 2px rgba(34,150,227,.16); }
+  .text-editor-action {
+    appearance: none;
+    border: 0;
+    border-radius: 5px;
+    padding: 4px 9px;
+    font: 700 12px "Segoe UI", Arial, sans-serif;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .text-editor-add { background: var(--brand); color: #fff; }
+  .text-editor-cancel { background: #edf2f8; color: var(--ink); }
+  .text-editor-action:focus-visible { outline: 2px solid var(--brand-dark); outline-offset: 2px; }
   .status-note {
     position: absolute;
     bottom: 8px;
@@ -162,7 +187,8 @@
     drawing: false,
     lastX: 0,
     lastY: 0,
-    undoStack: []
+    undoStack: [],
+    textEditor: null
   };
 
   var PALETTE = ['#16233a', '#d64545', '#2296e3', '#2f9e58', '#f2a52c', '#8a4fd1', '#ffffff'];
@@ -212,6 +238,7 @@
 
   // ── Toolbar wiring ──────────────────────────────────────────────
   function setTool(tool) {
+    closeTextEditor(false);
     state.tool = tool;
     ['toolPen', 'toolEraser', 'toolText'].forEach(function (id) {
       document.getElementById(id).classList.remove('is-active');
@@ -219,6 +246,9 @@
     var map = { pen: 'toolPen', eraser: 'toolEraser', text: 'toolText' };
     document.getElementById(map[tool]).classList.add('is-active');
     canvas.style.cursor = tool === 'text' ? 'text' : 'crosshair';
+    document.getElementById('statusNote').textContent = tool === 'text'
+      ? 'Click the canvas, type a label, then press Enter or Add text.'
+      : 'Draws automatically save to this browser.';
   }
   document.getElementById('toolPen').addEventListener('click', function () { setTool('pen'); });
   document.getElementById('toolEraser').addEventListener('click', function () { setTool('eraser'); });
@@ -310,39 +340,91 @@
     state.lastY = y;
   }
 
+  function closeTextEditor(commitText) {
+    var editor = state.textEditor;
+    if (!editor) return;
+    state.textEditor = null;
+
+    if (commitText) {
+      var text = editor.input.value.trim();
+      if (text) {
+        pushUndoSnapshot();
+        ctx.save();
+        ctx.fillStyle = editor.color;
+        ctx.font = '600 ' + editor.fontSize + 'px "Segoe UI", Arial, sans-serif';
+        ctx.textBaseline = 'top';
+        ctx.fillText(text, editor.canvasX, editor.canvasY);
+        ctx.restore();
+        autosave();
+      }
+    }
+    if (editor.element.parentElement) editor.element.parentElement.removeChild(editor.element);
+  }
+
   function startTextInput(x, y, clientX, clientY) {
+    closeTextEditor(false);
+
+    var editor = document.createElement('div');
+    editor.className = 'text-editor-overlay';
     var input = document.createElement('input');
     input.type = 'text';
     input.className = 'text-input-overlay';
-    var wrapRect = canvas.parentElement.getBoundingClientRect();
-    input.style.left = (clientX - wrapRect.left) + 'px';
-    input.style.top = (clientY - wrapRect.top - 14) + 'px';
+    input.placeholder = 'Type a label';
+    input.setAttribute('aria-label', 'Controller label text');
+    input.autocomplete = 'off';
+    input.spellcheck = true;
     input.style.color = state.color;
-    canvas.parentElement.appendChild(input);
-    input.focus();
 
-    function commit() {
-      var text = input.value;
-      if (text) {
-        ctx.fillStyle = state.color;
-        ctx.font = '600 ' + Math.max(14, state.size * 3) + 'px -apple-system, sans-serif';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(text, x, y);
-        pushUndoSnapshot();
-        autosave();
-      }
-      if (input.parentElement) input.parentElement.removeChild(input);
-    }
+    var addButton = document.createElement('button');
+    addButton.type = 'button';
+    addButton.className = 'text-editor-action text-editor-add';
+    addButton.textContent = 'Add text';
+
+    var cancelButton = document.createElement('button');
+    cancelButton.type = 'button';
+    cancelButton.className = 'text-editor-action text-editor-cancel';
+    cancelButton.textContent = 'Cancel';
+
+    editor.appendChild(input);
+    editor.appendChild(addButton);
+    editor.appendChild(cancelButton);
+    canvas.parentElement.appendChild(editor);
+
+    var wrapRect = canvas.parentElement.getBoundingClientRect();
+    var left = clientX - wrapRect.left;
+    var top = clientY - wrapRect.top;
+    var maxLeft = Math.max(4, wrapRect.width - editor.offsetWidth - 4);
+    var maxTop = Math.max(4, wrapRect.height - editor.offsetHeight - 4);
+    editor.style.left = Math.max(4, Math.min(left, maxLeft)) + 'px';
+    editor.style.top = Math.max(4, Math.min(top, maxTop)) + 'px';
+
+    state.textEditor = {
+      element: editor,
+      input: input,
+      canvasX: x,
+      canvasY: y,
+      color: state.color,
+      fontSize: Math.max(14, state.size * 3)
+    };
+
+    addButton.addEventListener('click', function () { closeTextEditor(true); });
+    cancelButton.addEventListener('click', function () { closeTextEditor(false); });
     input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { e.preventDefault(); commit(); }
-      if (e.key === 'Escape') { e.preventDefault(); if (input.parentElement) input.parentElement.removeChild(input); }
+      if (e.key === 'Enter') { e.preventDefault(); closeTextEditor(true); }
+      if (e.key === 'Escape') { e.preventDefault(); closeTextEditor(false); }
     });
-    input.addEventListener('blur', commit);
+
+    // Wait until the pointer event that created the editor has finished before
+    // focusing it. This is reliable in both a normal tab and the lesson iframe.
+    setTimeout(function () {
+      if (state.textEditor && state.textEditor.input === input) input.focus();
+    }, 0);
   }
 
   canvas.addEventListener('pointerdown', function (e) {
     var p = canvasPoint(e.clientX, e.clientY);
     if (state.tool === 'text') {
+      e.preventDefault();
       startTextInput(p.x, p.y, e.clientX, e.clientY);
       return;
     }
