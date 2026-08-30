@@ -1432,7 +1432,7 @@ function checkPractice(idx) {
 
   const badge = document.getElementById(`${prefix}-result`);
   badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
-  badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} correct.` : `✗ ${correct}/${total} correct. Please review the highlighted red cells.`;
+  badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} correct.` : `✗ ${correct}/${total} correct. A red cell is wrong; a blank cell might still need a value, review the whole table.`;
 }
 
 function checkPracticeCode(idx) {
@@ -1999,7 +1999,7 @@ function checkGeneratedPractice() {
 
   const badge = document.getElementById('gen-result');
   badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
-  badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} correct.` : `✗ ${correct}/${total} correct. Check the red cells.`;
+  badge.innerHTML = isCorrect ? `✓ Perfect! ${correct}/${total} correct.` : `✗ ${correct}/${total} correct. A red cell is wrong; a blank cell might still need a value, review the whole table.`;
 }
 
 function checkGeneratedPracticeCode() {
