@@ -1412,7 +1412,15 @@ function checkPractice(idx) {
        if(given === expected) {
          if(given !== '') td.classList.add('correct');
          correct++;
-       } else td.classList.add('wrong');
+       } else if(given !== '') td.classList.add('wrong');
+       // A cell left blank never gets a red box here, even when it should
+       // have held a value (still counted wrong below, just not shown
+       // that way) — a red box only where blank is genuinely blank vs.
+       // needs a value would draw the exact shape of the answer key
+       // across the table, telling a student which cells to fill before
+       // they have worked that out themselves, the one thing this
+       // exercise is meant to test. A cell they actually typed something
+       // into still gets marked right or wrong as normal.
        total++;
     });
   }
@@ -1954,7 +1962,15 @@ function checkGeneratedPractice() {
        if(given === expected) {
          if(given !== '') td.classList.add('correct');
          correct++;
-       } else td.classList.add('wrong');
+       } else if(given !== '') td.classList.add('wrong');
+       // A cell left blank never gets a red box here, even when it should
+       // have held a value (still counted wrong below, just not shown
+       // that way) — a red box only where blank is genuinely blank vs.
+       // needs a value would draw the exact shape of the answer key
+       // across the table, telling a student which cells to fill before
+       // they have worked that out themselves, the one thing this
+       // exercise is meant to test. A cell they actually typed something
+       // into still gets marked right or wrong as normal.
        total++;
     });
   }
