@@ -350,13 +350,16 @@
     border: none;
     background: transparent;
   }
-  /* Keep both picker rows (code language, practice mode) visible and
-     usable in embed mode — the code-language default is set explicitly
-     via the `lang` embed param below, but a student can still switch it,
-     the same as in the full app. Only the redundant brand/logo and the
-     page-level tabs/algorithm-picker (the lesson already picked one) are
-     hidden. */
-  body.tt-embed .header-left,
+  /* An embed exists to do one specific thing the lesson chose (trace this
+     one algorithm, in this one language, in this one mode) — every
+     picker/tab that would let a student wander into a different task is
+     hidden, not just the brand header. This also sidesteps a real bug
+     found live: the "Write the code" mode's editor did not finish
+     initialising the first time a step landed in that mode, only
+     appearing after a manual mode switch triggered a re-render — with
+     the toggle gone and trace mode forced (see initEmbed() below), that
+     broken path is simply unreachable rather than patched around. */
+  body.tt-embed .site-header,
   body.tt-embed .tabs,
   body.tt-embed .page .controls.mb-4 {
     display: none;
@@ -2131,13 +2134,72 @@ function ensurePracArea(idx) {
   page.appendChild(area);
 }
 
+// The lesson iframe is a fixed CSS height that this page cannot see or set
+// itself, so instead of guessing one height for every algorithm (a 3-row
+// sequence and a 13-row practice table need very different amounts), this
+// reports the real content height once and the parent resizes the iframe
+// to match.
+//
+// Deliberately measured ONCE per algorithm, not kept live with an ongoing
+// observer: a lesson slide must not visibly change size while a student is
+// using it (see measureFinalWalkHeight/measureFinalPracHeight below,
+// which measure against the *finished* state of the widget, not whatever
+// happens to be on screen the instant this runs), so nothing here ever
+// reports again after that single measurement — not stepping through a
+// walkthrough, not pressing Check Answers, nothing. The embed's own
+// language/mode toggles are hidden (see `.header-left`/`.language-picker`
+// in the CSS above) specifically so nothing a student can do inside the
+// embed could change its height after this point either.
+function reportEmbedHeight() {
+  if (window.parent === window) return;
+  window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: document.body.scrollHeight }, '*');
+}
+
+// Walkthrough tables build up one row at a time as the student presses
+// Step Forward — measuring right now would report whatever's on screen
+// at this instant (often nothing yet), not the full size the table will
+// reach once fully stepped through. Fills every row in temporarily, off
+// the back of the same synchronous call, measures, then puts the empty
+// table back exactly as resetWalk() left it, so the walkthrough still
+// starts empty for the student.
+function measureFinalWalkHeight(idx) {
+  const algo = walkData[idx];
+  const view = codeView(algo);
+  const tbody = document.getElementById('walk-tbody');
+  if (!tbody) { reportEmbedHeight(); return; }
+  const saved = tbody.innerHTML;
+  tbody.innerHTML = view.answers.map(row =>
+    `<tr>${algo.cols.map(c => `<td>${row[c] || ''}</td>`).join('')}</tr>`
+  ).join('');
+  reportEmbedHeight();
+  tbody.innerHTML = saved;
+}
+
+// Practice mode's table is already full-size the moment it renders
+// (EXTRA_ROWS included) — the only part not yet on screen is the Check
+// Answers result badge, so this reserves room for that too, the same
+// "measure the finished state" idea as the walkthrough version above.
+function measureFinalPracHeight(idx) {
+  const badge = document.getElementById(`prac${idx}-result`);
+  if (!badge) { reportEmbedHeight(); return; }
+  const savedClass = badge.className;
+  const savedText = badge.textContent;
+  badge.className = 'result-badge show pass';
+  badge.textContent = '✓ Perfect! 0/0 correct.';
+  reportEmbedHeight();
+  badge.className = savedClass;
+  badge.textContent = savedText;
+}
+
 function selectBuiltInEmbed(view, idx) {
   if (view === 'practice') {
     showPage('prac', document.getElementById('tab-prac'));
     showPrac(idx, null);
+    measureFinalPracHeight(idx);
   } else {
     showPage('walk', document.getElementById('tab-walk'));
     selectWalkAlgo(idx, null);
+    measureFinalWalkHeight(idx);
   }
 }
 
@@ -2162,10 +2224,12 @@ function loadCustomAlgorithm(payload) {
     renderPracEntry(`prac${CUSTOM_PRAC_IDX}`, entry);
     showPage('prac', document.getElementById('tab-prac'));
     showPrac(CUSTOM_PRAC_IDX, null);
+    measureFinalPracHeight(CUSTOM_PRAC_IDX);
   } else {
     walkData[CUSTOM_WALK_IDX] = entry;
     showPage('walk', document.getElementById('tab-walk'));
     selectWalkAlgo(CUSTOM_WALK_IDX, null);
+    measureFinalWalkHeight(CUSTOM_WALK_IDX);
   }
 }
 
@@ -2178,10 +2242,20 @@ function initEmbed() {
   // across the whole site (or Python, the very first time) — wrong for a
   // lesson written entirely in Cambridge pseudocode, so the embedding
   // lesson sets it explicitly instead of inheriting stale/default state.
-  // The toggle stays visible (see the `.header-left`-only CSS rule above)
-  // so a student can still switch it, this only sets the starting point.
   const lang = params.get('lang');
   if (lang === 'cambridge' || lang === 'python') setCodeLanguage(lang);
+
+  // Force trace mode regardless of this browser's last-used state: every
+  // embed is built around one specific task (trace a table), and the
+  // "Write the code" mode is a different exercise with its own editor UI
+  // that (found live, from a real Y11 lesson) does not finish
+  // initialising correctly the first time a step lands in that mode
+  // without a language/mode switch happening afterwards to trigger a
+  // re-render. Simplest real fix: an embed never starts in that mode, and
+  // — since the toggle is hidden (see `.header-left`/`.language-picker`
+  // in the CSS above) — a student can never switch into it either, so the
+  // broken path is simply unreachable here rather than patched around.
+  setPracticeMode('trace');
 
   const view = params.get('view') === 'practice' ? 'practice' : 'walkthrough';
   const idxParam = params.get('idx');
@@ -2191,22 +2265,6 @@ function initEmbed() {
     const msg = e.data || {};
     if (msg.type === 'TT_LOAD_ALGORITHM') loadCustomAlgorithm(msg.data || {});
   });
-
-  // The lesson iframe is a fixed CSS height that this page cannot see or
-  // set itself, so instead of guessing one height for every algorithm
-  // (a 3-row sequence and a 13-row practice table need very different
-  // amounts), report the real content height and let the parent resize
-  // the iframe to match. Fires on load and again whenever the content
-  // changes height (stepping through a walkthrough, switching language,
-  // loading a custom algorithm, a Check Answers result badge appearing).
-  function reportEmbedHeight() {
-    if (window.parent === window) return;
-    window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: document.body.scrollHeight }, '*');
-  }
-  reportEmbedHeight();
-  if (window.ResizeObserver) {
-    new ResizeObserver(() => reportEmbedHeight()).observe(document.body);
-  }
 }
 
 // ======================================================
