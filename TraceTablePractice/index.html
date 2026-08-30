@@ -2155,24 +2155,57 @@ function reportEmbedHeight() {
   window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: document.body.scrollHeight }, '*');
 }
 
+// Space Mono/DM Sans (this page's whole font stack) load from Google
+// Fonts and can still be downloading the instant a step first selects
+// its algorithm. Measuring before they finish reports a height based on
+// the browser's fallback font, not the real one — found live: a real
+// lesson slide with content cut off, the monospace code lines had
+// re-wrapped taller once the real font swapped in, well after the
+// (deliberately one-shot, see reportEmbedHeight's own comment above)
+// height report had already fired and nothing was watching any more to
+// catch it.
+//
+// document.fonts.ready alone was not enough — confirmed live, still
+// growing a second later even after waiting on it. The Google Fonts
+// <link> above uses `display=swap`, and .ready only knows to wait for
+// @font-face rules the CSSOM has already discovered; if that stylesheet
+// itself is still loading (its own network request, separate from the
+// font files) when .ready is checked, there is nothing registered yet
+// for it to wait for, so it resolves as a same-tick no-op instead of
+// actually waiting. Two attempts: the fast path (fonts.ready + two
+// animation frames, usually enough on its own) and an unconditional
+// safety-net re-run ~900ms later that catches a slower download. Both
+// only ever run in the first second or so after an algorithm is first
+// selected, before a student could plausibly have started interacting
+// with the widget, so this doesn't reopen the door to resizing mid-use.
+function afterFontsSettle(fn) {
+  var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  ready.then(function () {
+    requestAnimationFrame(function () { requestAnimationFrame(fn); });
+  });
+  setTimeout(fn, 900);
+}
+
 // Walkthrough tables build up one row at a time as the student presses
 // Step Forward — measuring right now would report whatever's on screen
 // at this instant (often nothing yet), not the full size the table will
 // reach once fully stepped through. Fills every row in temporarily, off
-// the back of the same synchronous call, measures, then puts the empty
-// table back exactly as resetWalk() left it, so the walkthrough still
-// starts empty for the student.
+// the back of the same call, measures, then puts the empty table back
+// exactly as resetWalk() left it, so the walkthrough still starts empty
+// for the student.
 function measureFinalWalkHeight(idx) {
-  const algo = walkData[idx];
-  const view = codeView(algo);
-  const tbody = document.getElementById('walk-tbody');
-  if (!tbody) { reportEmbedHeight(); return; }
-  const saved = tbody.innerHTML;
-  tbody.innerHTML = view.answers.map(row =>
-    `<tr>${algo.cols.map(c => `<td>${row[c] || ''}</td>`).join('')}</tr>`
-  ).join('');
-  reportEmbedHeight();
-  tbody.innerHTML = saved;
+  afterFontsSettle(function () {
+    const algo = walkData[idx];
+    const view = codeView(algo);
+    const tbody = document.getElementById('walk-tbody');
+    if (!tbody) { reportEmbedHeight(); return; }
+    const saved = tbody.innerHTML;
+    tbody.innerHTML = view.answers.map(row =>
+      `<tr>${algo.cols.map(c => `<td>${row[c] || ''}</td>`).join('')}</tr>`
+    ).join('');
+    reportEmbedHeight();
+    tbody.innerHTML = saved;
+  });
 }
 
 // Practice mode's table is already full-size the moment it renders
@@ -2180,15 +2213,17 @@ function measureFinalWalkHeight(idx) {
 // Answers result badge, so this reserves room for that too, the same
 // "measure the finished state" idea as the walkthrough version above.
 function measureFinalPracHeight(idx) {
-  const badge = document.getElementById(`prac${idx}-result`);
-  if (!badge) { reportEmbedHeight(); return; }
-  const savedClass = badge.className;
-  const savedText = badge.textContent;
-  badge.className = 'result-badge show pass';
-  badge.textContent = '✓ Perfect! 0/0 correct.';
-  reportEmbedHeight();
-  badge.className = savedClass;
-  badge.textContent = savedText;
+  afterFontsSettle(function () {
+    const badge = document.getElementById(`prac${idx}-result`);
+    if (!badge) { reportEmbedHeight(); return; }
+    const savedClass = badge.className;
+    const savedText = badge.textContent;
+    badge.className = 'result-badge show pass';
+    badge.textContent = '✓ Perfect! 0/0 correct.';
+    reportEmbedHeight();
+    badge.className = savedClass;
+    badge.textContent = savedText;
+  });
 }
 
 function selectBuiltInEmbed(view, idx) {
