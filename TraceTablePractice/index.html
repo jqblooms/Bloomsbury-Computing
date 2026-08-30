@@ -1201,6 +1201,16 @@ const PYTHON_HINT_RE = /\b(for|in|range|while|if|elif|else|break|print|input|int
 // Which operator(s)/keyword(s) a line needs, without giving away the
 // variable names or values around them - e.g. "total = total + i" hints
 // "= +", "if score >= 5:" hints "if >=".
+// A condition line (IF/WHILE/UNTIL/elif) can't be reconstructed from its
+// operators alone the way every other kind of line can: the reference
+// table alongside this editor proves a condition was true or false for
+// the one input shown, never the exact boundary value — "Score >= 50"
+// and "Score >= 49" both look identical from a single passing example.
+// Every other line's own values are already fully derivable by working
+// through the reference table's arithmetic by hand, so this is the one
+// place a number needs to be given directly rather than worked out.
+const CONDITION_LINE_RE = /\b(if|while|until|elif)\b/i;
+
 function lineOperatorHint(line, language) {
   const re = language === 'cambridge' ? CAMBRIDGE_HINT_RE : PYTHON_HINT_RE;
   re.lastIndex = 0;
@@ -1208,6 +1218,10 @@ function lineOperatorHint(line, language) {
   let match;
   while ((match = re.exec(line)) !== null) {
     found.push(language === 'cambridge' ? match[0].toUpperCase() : match[0]);
+  }
+  if (CONDITION_LINE_RE.test(line)) {
+    const numbers = line.match(/-?\d+(\.\d+)?/g);
+    if (numbers) found.push.apply(found, numbers);
   }
   return found.join(' ');
 }
