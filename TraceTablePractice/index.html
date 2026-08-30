@@ -332,6 +332,36 @@
     overflow: auto;
   }
 
+  /* Embed mode: this page loaded inside a lesson step's own iframe,
+     showing one pre-selected algorithm rather than the full app. Strips
+     the chrome the lesson page already provides its own version of
+     (brand header, page tabs, algorithm picker), leaving just the
+     context/code/table panel. See "EMBED API" in the script below. */
+  body.tt-embed {
+    padding: 0.75rem;
+    background: var(--bg);
+  }
+  body.tt-embed .container {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+  }
+  /* Keep both picker rows (code language, practice mode) visible and
+     usable in embed mode — the code-language default is set explicitly
+     via the `lang` embed param below, but a student can still switch it,
+     the same as in the full app. Only the redundant brand/logo and the
+     page-level tabs/algorithm-picker (the lesson already picked one) are
+     hidden. */
+  body.tt-embed .header-left,
+  body.tt-embed .tabs,
+  body.tt-embed .page .controls.mb-4 {
+    display: none;
+  }
+
 </style>
 </head>
 <body>
@@ -2052,6 +2082,106 @@ function devFillTable(prefix, cols, answers) {
 }
 
 // ======================================================
+// EMBED API (for embedding a single algorithm inside a Bloomsbury
+// Computing lesson step, instead of the whole app). Two ways to select
+// what shows: a built-in algorithm by view+index (`?embed=1&view=
+// walkthrough&idx=0`, same indices the Walkthrough/Practice picker
+// buttons use), or a fully custom algorithm posted from the parent lesson
+// after the iframe loads. Same postMessage-bridge shape as PyBot's own
+// embed API (`initEmbedListener()` in pybot.html) — kept deliberately
+// similar so a lesson author already familiar with one recognises the
+// other.
+// ======================================================
+const CUSTOM_WALK_IDX = 100;
+const CUSTOM_PRAC_IDX = 100;
+
+// The Practice tab has one hand-authored `<div id="pracN-area">` per
+// built-in algorithm (see the HTML above); a custom algorithm has no such
+// markup to reuse, so this builds one on demand, in the exact shape
+// `renderPracEntry`/`checkPractice` already expect. Only ever runs once
+// per page load (a second custom algorithm on the same embed reuses the
+// same slot and DOM), so this never grows unbounded.
+function ensurePracArea(idx) {
+  if (document.getElementById(`prac${idx}-area`)) return;
+  const page = document.getElementById('page-prac');
+  const area = document.createElement('div');
+  area.id = `prac${idx}-area`;
+  area.className = 'prac-area';
+  area.innerHTML =
+    `<div class="grid"><div>` +
+    `<div id="prac${idx}-context" class="context-box"></div>` +
+    `<div id="prac${idx}-code" class="code-container"></div>` +
+    `</div><div>` +
+    `<div id="prac${idx}-table-wrap"></div>` +
+    `<button class="btn btn-primary mt-4 check-btn" onclick="checkPractice(${idx})">Check Answers</button>` +
+    `<div id="prac${idx}-result" class="result-badge"></div>` +
+    `</div></div>`;
+  page.appendChild(area);
+}
+
+function selectBuiltInEmbed(view, idx) {
+  if (view === 'practice') {
+    showPage('prac', document.getElementById('tab-prac'));
+    showPrac(idx, null);
+  } else {
+    showPage('walk', document.getElementById('tab-walk'));
+    selectWalkAlgo(idx, null);
+  }
+}
+
+// `algorithm` matches the same {context, code, cols, answers} shape every
+// built-in algorithm above already uses (see e.g. `algo0Cols`/
+// `algo0Answers`) — there is no code interpreter here deriving a trace
+// automatically, so the parent lesson supplies the fully worked-out
+// answer key, not just the code.
+function loadCustomAlgorithm(payload) {
+  const algorithm = payload && payload.algorithm;
+  if (!algorithm || !Array.isArray(algorithm.code) || !Array.isArray(algorithm.cols) || !Array.isArray(algorithm.answers)) return;
+  const entry = {
+    context: algorithm.context || '',
+    code: algorithm.code,
+    cols: algorithm.cols,
+    answers: algorithm.answers,
+    title: algorithm.title || 'Custom algorithm'
+  };
+  if (payload.view === 'practice') {
+    pracData[CUSTOM_PRAC_IDX] = entry;
+    ensurePracArea(CUSTOM_PRAC_IDX);
+    renderPracEntry(`prac${CUSTOM_PRAC_IDX}`, entry);
+    showPage('prac', document.getElementById('tab-prac'));
+    showPrac(CUSTOM_PRAC_IDX, null);
+  } else {
+    walkData[CUSTOM_WALK_IDX] = entry;
+    showPage('walk', document.getElementById('tab-walk'));
+    selectWalkAlgo(CUSTOM_WALK_IDX, null);
+  }
+}
+
+function initEmbed() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('embed') !== '1') return;
+  document.body.classList.add('tt-embed');
+
+  // Default code language is otherwise whatever this browser last used
+  // across the whole site (or Python, the very first time) — wrong for a
+  // lesson written entirely in Cambridge pseudocode, so the embedding
+  // lesson sets it explicitly instead of inheriting stale/default state.
+  // The toggle stays visible (see the `.header-left`-only CSS rule above)
+  // so a student can still switch it, this only sets the starting point.
+  const lang = params.get('lang');
+  if (lang === 'cambridge' || lang === 'python') setCodeLanguage(lang);
+
+  const view = params.get('view') === 'practice' ? 'practice' : 'walkthrough';
+  const idxParam = params.get('idx');
+  if (idxParam !== null) selectBuiltInEmbed(view, parseInt(idxParam, 10));
+
+  window.addEventListener('message', (e) => {
+    const msg = e.data || {};
+    if (msg.type === 'TT_LOAD_ALGORITHM') loadCustomAlgorithm(msg.data || {});
+  });
+}
+
+// ======================================================
 // INITIALIZATION
 // ======================================================
 window.addEventListener('DOMContentLoaded', () => {
@@ -2076,6 +2206,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   resetGeneratedPractice();
   resetWalk();
+  initEmbed();
 });
 </script>
 </body>
