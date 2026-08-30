@@ -361,6 +361,18 @@
   body.tt-embed .page .controls.mb-4 {
     display: none;
   }
+  /* The lesson iframe this loads into is almost always narrower than the
+     850px breakpoint below, which would otherwise stack the code and
+     table into a single column, roughly doubling the content height and
+     forcing an internal scrollbar (the iframe has a fixed CSS height, it
+     does not grow to fit its content, and the host lesson page has no way
+     to know how tall this page wants to be). Keeping two columns instead
+     uses the embed's width, which is rarely in short supply, rather than
+     its height, which is. */
+  body.tt-embed .grid {
+    grid-template-columns: minmax(200px, 1fr) minmax(240px, 1.15fr);
+    gap: 1rem;
+  }
 
 </style>
 </head>
@@ -2179,6 +2191,22 @@ function initEmbed() {
     const msg = e.data || {};
     if (msg.type === 'TT_LOAD_ALGORITHM') loadCustomAlgorithm(msg.data || {});
   });
+
+  // The lesson iframe is a fixed CSS height that this page cannot see or
+  // set itself, so instead of guessing one height for every algorithm
+  // (a 3-row sequence and a 13-row practice table need very different
+  // amounts), report the real content height and let the parent resize
+  // the iframe to match. Fires on load and again whenever the content
+  // changes height (stepping through a walkthrough, switching language,
+  // loading a custom algorithm, a Check Answers result badge appearing).
+  function reportEmbedHeight() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: document.body.scrollHeight }, '*');
+  }
+  reportEmbedHeight();
+  if (window.ResizeObserver) {
+    new ResizeObserver(() => reportEmbedHeight()).observe(document.body);
+  }
 }
 
 // ======================================================
