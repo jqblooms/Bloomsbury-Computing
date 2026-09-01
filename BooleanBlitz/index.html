@@ -275,13 +275,16 @@ const Toggle = ({ checked, onChange, label }) => (
     </div>
 );
 
-// A single 0/1 input box. Not editable by keyboard on purpose - every
-// answer in this game is a click, matching the "students clicking
-// boxes" brief, no numpad needed anywhere.
-const BitBox = ({ value, onClick, label, disabled }) => (
+// A single 0/1 display box for a question's given input (A, B, C). Not
+// clickable: these are values the question sets, not something the
+// student answers - only the 0/1 RESULT buttons below them are ever
+// the actual answer. An earlier version made these boxes toggle on
+// click, which silently let a student change the very inputs their
+// answer was being checked against.
+const BitBox = ({ value, label }) => (
     <div className="flex flex-col items-center gap-2">
         {label && <div className="text-xs text-slate-400 font-bold">{label}</div>}
-        <button type="button" onClick={onClick} disabled={disabled} className={`w-16 h-16 rounded-lg font-bold text-3xl transition-all active:scale-95 ${disabled ? 'opacity-30 cursor-not-allowed bg-slate-800 text-slate-600' : value ? 'bg-violet-600 text-white' : 'bg-slate-700 text-slate-400'}`}>{value}</button>
+        <div className="w-16 h-16 rounded-lg font-bold text-3xl flex items-center justify-center bg-violet-600 text-white">{value}</div>
     </div>
 );
 
@@ -350,15 +353,12 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
     const handleExit = () => onExit(level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
     const { stress, score, resetRound, addStress, gameSpeed } = useGameLoop(true, handleGameEnd, isHardMode);
     const [question, setQuestion] = useState(null);
-    const [inputs, setInputs] = useState({});
     const [shake, setShake] = useState(false);
     useEffect(() => { nextQuestion(); }, [level]);
     const nextQuestion = (points = 0) => {
         setQuestion(generateQuestion(level, isHardMode));
-        setInputs({});
         resetRound(isHardMode ? Math.floor(points * 2.5) : points);
     };
-    const toggleInput = (key) => setInputs(prev => ({ ...prev, [key]: prev[key] ? 0 : 1 }));
     const submit = (value) => {
         if (!question) return;
         const correct = value === question.result;
@@ -374,15 +374,13 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
     if (!question) return null;
 
     if (level === 1) {
-        const a = inputs.a !== undefined ? inputs.a : question.a;
-        const b = inputs.b !== undefined ? inputs.b : question.b;
         const gateLabel = gateDisplay(question.gate, isPythonMode, isHardMode);
         return (
             <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L1: AND, OR, NOT" isHardMode={isHardMode}>
                 <div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">GATE</div><div className="text-6xl font-bold font-mono text-violet-300">{gateLabel}</div></div>
                 <div className={`flex gap-6 mb-10 ${shake ? 'shake' : ''}`}>
-                    <BitBox value={a} label="A" onClick={() => toggleInput('a')} />
-                    {question.gate !== 'NOT' && <BitBox value={b} label="B" onClick={() => toggleInput('b')} />}
+                    <BitBox value={question.a} label="A" />
+                    {question.gate !== 'NOT' && <BitBox value={question.b} label="B" />}
                 </div>
                 <div className="text-slate-400 text-sm mb-3">RESULT</div>
                 <div className="flex gap-6">
@@ -404,16 +402,13 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
         );
     }
     if (level === 4) {
-        const a = inputs.a !== undefined ? inputs.a : question.a;
-        const b = inputs.b !== undefined ? inputs.b : question.b;
-        const c = inputs.c !== undefined ? inputs.c : question.c;
         return (
             <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L4: Compound Conditions" isHardMode={isHardMode}>
                 <div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">EXPRESSION</div><div className="text-3xl md:text-4xl font-bold font-mono text-purple-300">{question.template.text((name) => gateDisplay(name, isPythonMode, false))}</div></div>
                 <div className={`flex gap-6 mb-10 ${shake ? 'shake' : ''}`}>
-                    <BitBox value={a} label="A" onClick={() => toggleInput('a')} />
-                    <BitBox value={b} label="B" onClick={() => toggleInput('b')} />
-                    <BitBox value={c} label="C" onClick={() => toggleInput('c')} />
+                    <BitBox value={question.a} label="A" />
+                    <BitBox value={question.b} label="B" />
+                    <BitBox value={question.c} label="C" />
                 </div>
                 <div className="text-slate-400 text-sm mb-3">RESULT</div>
                 <div className="flex gap-6">
@@ -424,15 +419,13 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
         );
     }
     // level 5: NAND, NOR, XOR - same shape as level 1
-    const a5 = inputs.a !== undefined ? inputs.a : question.a;
-    const b5 = inputs.b !== undefined ? inputs.b : question.b;
     const gateLabel5 = gateDisplay(question.gate, isPythonMode, isHardMode);
     return (
         <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L5: NAND, NOR, XOR" isHardMode={isHardMode}>
             <div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">GATE</div><div className="text-6xl font-bold font-mono text-pink-300">{gateLabel5}</div></div>
             <div className={`flex gap-6 mb-10 ${shake ? 'shake' : ''}`}>
-                <BitBox value={a5} label="A" onClick={() => toggleInput('a')} />
-                <BitBox value={b5} label="B" onClick={() => toggleInput('b')} />
+                <BitBox value={question.a} label="A" />
+                <BitBox value={question.b} label="B" />
             </div>
             <div className="text-slate-400 text-sm mb-3">RESULT</div>
             <div className="flex gap-6">
@@ -543,7 +536,6 @@ const ExamLevel = ({ onExit, onFinish, isHardMode, isPythonMode }) => {
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [correctCount, setCorrectCount] = useState(0);
     const [questions, setQuestions] = useState([]);
-    const [inputs, setInputs] = useState({});
     useEffect(() => {
         const qs = [];
         for (let i = 0; i < 15; i++) {
@@ -556,7 +548,7 @@ const ExamLevel = ({ onExit, onFinish, isHardMode, isPythonMode }) => {
     }, [isHardMode]);
     const handleAnswer = (isCorrect) => {
         if (isCorrect) setCorrectCount(prev => prev + 1);
-        if (currentQIndex < 14) { setCurrentQIndex(prev => prev + 1); setInputs({}); }
+        if (currentQIndex < 14) { setCurrentQIndex(prev => prev + 1); }
         else {
             const duration = Date.now() - startTimeRef.current;
             onFinish(correctCount + (isCorrect ? 1 : 0), 15, duration);
@@ -564,18 +556,15 @@ const ExamLevel = ({ onExit, onFinish, isHardMode, isPythonMode }) => {
     };
     if (questions.length === 0) return <div>Loading Exam...</div>;
     const q = questions[currentQIndex];
-    const toggleInput = (key) => setInputs(prev => ({ ...prev, [key]: prev[key] ? 0 : 1 }));
     const renderContent = () => {
         if (q.levelType === 1 || q.levelType === 5) {
-            const a = inputs.a !== undefined ? inputs.a : q.a;
-            const b = inputs.b !== undefined ? inputs.b : q.b;
             return (
                 <div className="flex flex-col items-center">
                     <div className="text-slate-400 text-sm mb-2">GATE</div>
                     <div className="text-5xl font-bold font-mono text-violet-300 mb-6">{gateDisplay(q.gate, isPythonMode, isHardMode)}</div>
                     <div className="flex gap-6 mb-8">
-                        <BitBox value={a} label="A" onClick={() => toggleInput('a')} />
-                        {q.gate !== 'NOT' && <BitBox value={b} label="B" onClick={() => toggleInput('b')} />}
+                        <BitBox value={q.a} label="A" />
+                        {q.gate !== 'NOT' && <BitBox value={q.b} label="B" />}
                     </div>
                     <div className="flex gap-6">
                         <button type="button" onClick={() => handleAnswer(0 === q.result)} className="w-16 h-16 rounded-lg font-bold text-2xl bg-slate-700 hover:bg-slate-600 text-white">0</button>
@@ -597,17 +586,14 @@ const ExamLevel = ({ onExit, onFinish, isHardMode, isPythonMode }) => {
             );
         }
         if (q.levelType === 4) {
-            const a = inputs.a !== undefined ? inputs.a : q.a;
-            const b = inputs.b !== undefined ? inputs.b : q.b;
-            const c = inputs.c !== undefined ? inputs.c : q.c;
             return (
                 <div className="flex flex-col items-center">
                     <div className="text-slate-400 text-sm mb-2">EXPRESSION</div>
                     <div className="text-2xl font-bold font-mono text-purple-300 mb-6">{q.template.text((name) => gateDisplay(name, isPythonMode, false))}</div>
                     <div className="flex gap-4 mb-8">
-                        <BitBox value={a} label="A" onClick={() => toggleInput('a')} />
-                        <BitBox value={b} label="B" onClick={() => toggleInput('b')} />
-                        <BitBox value={c} label="C" onClick={() => toggleInput('c')} />
+                        <BitBox value={q.a} label="A" />
+                        <BitBox value={q.b} label="B" />
+                        <BitBox value={q.c} label="C" />
                     </div>
                     <div className="flex gap-6">
                         <button type="button" onClick={() => handleAnswer(0 === q.result)} className="w-16 h-16 rounded-lg font-bold text-2xl bg-slate-700 hover:bg-slate-600 text-white">0</button>
