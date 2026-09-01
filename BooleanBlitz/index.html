@@ -85,10 +85,16 @@ const GATE_DESCRIPTIONS = {
 // swap case with the Python toggle just like everywhere else - g is
 // supplied at render time, not stored, so a mid-question toggle flip
 // updates the text immediately without regenerating the question.
+// Every template always uses all three of A, B and C (an earlier version
+// had one that only used A and B, leaving C on screen but irrelevant to
+// the question - confusing on its own, on top of which the un-bracketed
+// "A AND B, OR C" comma format read ambiguously everywhere it appeared).
+// Every template is fully bracketed now, so the grouping is never left
+// to be inferred.
 const COMPOUND_TEMPLATES = [
-    { text: (g) => `A ${g('AND')} B, ${g('OR')} C`, calc: (a, b, c) => (a && b) || c },
-    { text: (g) => `A ${g('OR')} B, ${g('AND')} C`, calc: (a, b, c) => (a || b) && c },
-    { text: (g) => `${g('NOT')} A, ${g('AND')} B`, calc: (a, b, c) => (!a) && b },
+    { text: (g) => `(A ${g('AND')} B) ${g('OR')} C`, calc: (a, b, c) => (a && b) || c },
+    { text: (g) => `(A ${g('OR')} B) ${g('AND')} C`, calc: (a, b, c) => (a || b) && c },
+    { text: (g) => `(${g('NOT')} A ${g('AND')} B) ${g('OR')} C`, calc: (a, b, c) => ((!a) && b) || c },
     { text: (g) => `A ${g('AND')} (B ${g('OR')} C)`, calc: (a, b, c) => a && (b || c) },
     { text: (g) => `A ${g('OR')} (B ${g('AND')} C)`, calc: (a, b, c) => a || (b && c) }
 ];
