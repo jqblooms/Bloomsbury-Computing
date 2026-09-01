@@ -442,11 +442,14 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
     );
 };
 
-// Level 2: Truth Table Fill. A/B columns are fixed, some Result cells are
-// hidden - click a hidden cell to toggle it, the whole table checks
-// itself once every hidden cell is correct (same "click to toggle,
-// auto-completes when correct" pattern Binary Blitz uses for its own
-// bit-toggle levels).
+// Level 2: Truth Table Fill. A/B columns are fixed, some Result cells
+// are hidden - click a hidden cell to toggle it between 0 and 1, then
+// press Submit to check the whole table at once. Cells never reveal
+// correctness live and a wrong submission never says which cell is
+// wrong, only that something is - an earlier version colored each cell
+// green the instant its value matched the true answer and auto-advanced
+// once every cell matched, which let a student win by blindly toggling
+// cells until they all turned green, no understanding required.
 const Level2Comp = ({ onExit, onGameOver, isHardMode, isPythonMode, onHelp }) => {
     const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
     const handleGameEnd = useCallback((s) => onGameOver(s, 2, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver]);
@@ -454,23 +457,39 @@ const Level2Comp = ({ onExit, onGameOver, isHardMode, isPythonMode, onHelp }) =>
     const { stress, score, resetRound, addStress, gameSpeed } = useGameLoop(true, handleGameEnd, isHardMode);
     const [question, setQuestion] = useState(null);
     const [filled, setFilled] = useState({});
+    const [shake, setShake] = useState(false);
+    const [justRight, setJustRight] = useState(false);
     useEffect(() => { next(); }, []);
     const next = (points = 0) => {
         setQuestion(generateQuestion(2, isHardMode));
         setFilled({});
+        setJustRight(false);
         resetRound(isHardMode ? Math.floor(points * 2.5) : points);
     };
     const toggleCell = (rowIdx) => {
-        const newFilled = { ...filled, [rowIdx]: filled[rowIdx] === undefined ? 1 : (filled[rowIdx] ? 0 : 1) };
-        setFilled(newFilled);
-        const allCorrect = question.hiddenIndices.every(i => newFilled[i] === question.rows[i].result);
-        if (allCorrect) { correctRef.current += 1; setTimeout(() => next(75 + question.hiddenIndices.length * 15), 200); }
+        if (justRight) return;
+        setFilled(prev => ({ ...prev, [rowIdx]: prev[rowIdx] === undefined ? 1 : (prev[rowIdx] ? 0 : 1) }));
+    };
+    const allFilled = question && question.hiddenIndices.every(i => filled[i] !== undefined);
+    const submit = () => {
+        if (!allFilled || justRight) return;
+        const allCorrect = question.hiddenIndices.every(i => filled[i] === question.rows[i].result);
+        if (allCorrect) {
+            correctRef.current += 1;
+            setJustRight(true);
+            setTimeout(() => next(75 + question.hiddenIndices.length * 15), 500);
+        } else {
+            wrongRef.current += 1;
+            setShake(true);
+            addStress(0.15);
+            setTimeout(() => setShake(false), 500);
+        }
     };
     if (!question) return null;
     return (
         <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L2: Truth Table Fill" isHardMode={isHardMode}>
             <div className="text-center mb-6"><div className="text-slate-400 text-sm mb-2">GATE</div><div className="text-4xl font-bold font-mono text-red-300">{gateDisplay(question.gate, isPythonMode, false)}</div></div>
-            <table className="border-collapse mb-6">
+            <table className={`border-collapse mb-6 ${shake ? 'shake' : ''}`}>
                 <thead><tr>
                     <th className="px-4 py-2 text-slate-400 text-sm border-b border-slate-700">A</th>
                     {question.gate !== 'NOT' && <th className="px-4 py-2 text-slate-400 text-sm border-b border-slate-700">B</th>}
@@ -480,14 +499,20 @@ const Level2Comp = ({ onExit, onGameOver, isHardMode, isPythonMode, onHelp }) =>
                     {question.rows.map((row, i) => {
                         const isHidden = question.hiddenIndices.includes(i);
                         const value = isHidden ? (filled[i] !== undefined ? filled[i] : '?') : row.result;
-                        const isCorrect = isHidden && filled[i] === row.result;
+                        const cellState = !isHidden ? 'fixed' : justRight ? 'correct' : filled[i] !== undefined ? 'chosen' : 'empty';
+                        const cellClass = {
+                            fixed: '',
+                            correct: 'bg-emerald-600 text-white',
+                            chosen: 'bg-slate-600 text-white hover:bg-slate-500',
+                            empty: 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                        }[cellState];
                         return (
                             <tr key={i}>
                                 <td className="px-4 py-2 text-center font-mono text-lg text-slate-300 border-b border-slate-800">{row.a}</td>
                                 {question.gate !== 'NOT' && <td className="px-4 py-2 text-center font-mono text-lg text-slate-300 border-b border-slate-800">{row.b}</td>}
                                 <td className="px-4 py-2 text-center border-b border-slate-800">
                                     {isHidden
-                                        ? <button type="button" onClick={() => toggleCell(i)} className={`w-10 h-10 rounded font-bold font-mono text-lg ${isCorrect ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{value}</button>
+                                        ? <button type="button" onClick={() => toggleCell(i)} className={`w-10 h-10 rounded font-bold font-mono text-lg ${cellClass}`}>{value}</button>
                                         : <span className="font-mono text-lg text-slate-500">{value}</span>}
                                 </td>
                             </tr>
@@ -495,7 +520,8 @@ const Level2Comp = ({ onExit, onGameOver, isHardMode, isPythonMode, onHelp }) =>
                     })}
                 </tbody>
             </table>
-            <div className="text-xs text-slate-500 uppercase tracking-widest">Click a highlighted box to toggle it between 0 and 1</div>
+            <div className="text-xs text-slate-500 uppercase tracking-widest mb-4">Click a highlighted box to toggle it between 0 and 1</div>
+            <Button onClick={submit} disabled={!allFilled || justRight} variant={justRight ? 'success' : 'primary'} className="w-40">{justRight ? 'Correct!' : 'Submit'}</Button>
         </GameLayout>
     );
 };
