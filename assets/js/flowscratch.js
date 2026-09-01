@@ -37,6 +37,35 @@
 
   if (!/[?&]flowscratch/.test(location.search)) return; // no-op for normal TurboWarp / PyScratch
 
+  // Mermaid: "View as diagram" renders the actual FS.nodes/FS.edges graph
+  // as a clean read-only flowchart, alongside the interactive canvas, not
+  // instead of it - Mermaid has no drag/connect/run model of its own, so
+  // it can't replace the hand-rolled editor below, only add a second view
+  // onto the same data. Loaded from a local copy (assets/js/mermaid.min.js,
+  // same file this project's lesson pages already vendor), not a CDN -
+  // this script is injected only in FlowScratch mode (this early-return
+  // guard already establishes that), so it never adds weight to a normal
+  // TurboWarp/PyBot embed.
+  var mermaidReady = new Promise(function (resolve) {
+    var s = document.createElement('script');
+    s.src = '../assets/js/mermaid.min.js';
+    s.onload = function () {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        themeVariables: {
+          primaryColor: '#ffffff',
+          primaryBorderColor: '#52647a',
+          primaryTextColor: '#172033',
+          lineColor: '#52647a',
+          fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif'
+        }
+      });
+      resolve();
+    };
+    document.head.appendChild(s);
+  });
+
   var STAGE_HALF_W = 240, STAGE_HALF_H = 180; // Scratch's native 480x360 stage, centered on 0,0
 
   var FS = {
@@ -344,6 +373,90 @@
     FS.edges.push(edge);
     renderWires();
     return true;
+  }
+
+  // ── Mermaid diagram export ("View as diagram") ──────────────────────
+  // Plain-text description of a block, for the diagram label - the actual
+  // editable node markup (nodeMarkup, above) embeds live <select>/<input>
+  // controls, which makes no sense as SVG text, so this is a deliberately
+  // separate function rather than trying to strip HTML out of that one.
+  function nodeSummaryText(n) {
+    var d = n.data || {};
+    if (n.type === 'move_steps') return 'Move ' + d.steps + ' steps';
+    if (n.type === 'turn_right') return 'Turn right ' + d.degrees + ' degrees';
+    if (n.type === 'turn_left') return 'Turn left ' + d.degrees + ' degrees';
+    if (n.type === 'point_in_direction') return 'Point in direction ' + d.degrees + ' degrees';
+    if (n.type === 'point_towards') return 'Point towards ' + (d.target === 'mouse_pointer' ? 'mouse pointer' : 'random direction');
+    if (n.type === 'next_costume') return 'Next costume';
+    if (n.type === 'change_color') return 'Change colour by ' + d.value;
+    if (n.type === 'say') return 'Say "' + d.text + '"';
+    if (n.type === 'ask') return 'Ask "' + d.text + '"';
+    if (n.type === 'set_variable') return 'Set ' + (d.varName || 'variable') + ' to ' + d.value;
+    if (n.type === 'change_variable') return 'Change ' + (d.varName || 'variable') + ' by ' + d.value;
+    if (n.type === 'selection') {
+      var desc;
+      if (d.condition === 'key') {
+        var keyLabels = { Space: 'space', ArrowRight: 'right arrow', ArrowLeft: 'left arrow', ArrowUp: 'up arrow', ArrowDown: 'down arrow' };
+        desc = (keyLabels[d.value] || d.value) + ' key pressed';
+      } else if (d.condition === 'edge') {
+        desc = d.value === 'any' ? 'touching any edge' : 'touching ' + d.value + ' edge';
+      } else if (d.condition === 'answer') {
+        desc = 'answer exists';
+      } else if (d.condition === 'variable') {
+        var opSym = d.operator === 'gt' ? '>' : d.operator === 'lt' ? '<' : '=';
+        desc = (d.varName || 'variable') + ' ' + opSym + ' ' + (d.varValue != null ? d.varValue : 0);
+      } else {
+        desc = 'condition';
+      }
+      return 'Is ' + (d.negate === 'not' ? 'not ' : '') + desc + '?';
+    }
+    return typeTitle(n);
+  }
+  // Converts the live FS.nodes/FS.edges graph (arbitrary directed graph,
+  // may include loops back to an earlier block via a join connector - see
+  // addEdge's own joinEdgeId handling) into Mermaid flowchart syntax.
+  // Shapes mirror the editor's own (.fs-node.oval/io/selection CSS,
+  // TYPES[...].shape above): stadium for Start/End, parallelogram for
+  // input/output, diamond for a decision, rectangle for everything else.
+  // True/False branch colouring matches the lesson pages' own Mermaid
+  // diagrams (green/red via linkStyle) for a consistent look across the
+  // whole site, not just this editor.
+  function graphToMermaidDefinition() {
+    var lines = ['graph TD'];
+    var linkStyles = [];
+    var idFor = {};
+    FS.nodes.forEach(function (n) { idFor[n.id] = 'n' + String(n.id).replace(/[^a-zA-Z0-9]/g, ''); });
+    FS.nodes.forEach(function (n) {
+      var shape = (TYPES[n.type] && TYPES[n.type].shape) || 'process';
+      var label = '"' + nodeSummaryText(n).replace(/"/g, '#quot;') + '"';
+      var wrap = shape === 'oval' ? ['([', '])'] : shape === 'io' ? ['[/', '/]'] : shape === 'selection' ? ['{', '}'] : ['[', ']'];
+      lines.push('  ' + idFor[n.id] + wrap[0] + label + wrap[1]);
+    });
+    var edgeIndex = 0;
+    FS.edges.forEach(function (e) {
+      var fromId = idFor[e.from], toId = idFor[e.to];
+      if (!fromId || !toId) return;
+      var branch = edgeBranch(e);
+      var labelPart = branch === 'true' ? '|True|' : branch === 'false' ? '|False|' : '';
+      lines.push('  ' + fromId + ' -->' + labelPart + ' ' + toId);
+      if (branch === 'true') linkStyles.push('  linkStyle ' + edgeIndex + ' stroke:#2f9e58,stroke-width:2px');
+      else if (branch === 'false') linkStyles.push('  linkStyle ' + edgeIndex + ' stroke:#d64545,stroke-width:2px');
+      edgeIndex++;
+    });
+    return lines.concat(linkStyles).join('\n');
+  }
+  function showDiagramModal() {
+    if (!FS.nodes.length) { notify('Add some blocks first, there is nothing to diagram yet.', 'error'); return; }
+    els.diagramModal.classList.add('show');
+    els.diagramBody.innerHTML = '<p class="fs-diagram-loading">Drawing diagram&hellip;</p>';
+    mermaidReady.then(function () {
+      var definition = graphToMermaidDefinition();
+      return mermaid.render('fs-mermaid-render', definition);
+    }).then(function (result) {
+      els.diagramBody.innerHTML = result.svg;
+    }).catch(function () {
+      els.diagramBody.innerHTML = '<p class="fs-diagram-loading">Could not draw this flowchart. Check every block is connected and try again.</p>';
+    });
   }
 
   // ── DOM refs (created in buildUI) ───────────────────────────────────
@@ -1205,7 +1318,21 @@
       '#fs-ask-row{display:flex;gap:6px}',
       '#fs-ask-row input{min-width:0;flex:1;border:1px solid #bbb;border-radius:6px;padding:6px}',
       '#fs-ask-row button{border:0;border-radius:6px;background:#4b66e8;color:#fff;padding:6px 10px;cursor:pointer}',
-      '#fs-palette-ghost{position:fixed;z-index:100;pointer-events:none;padding:8px 10px;border:1px solid #8b8f98;border-radius:8px;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.13);font-weight:700;font-size:11px;opacity:.9;transform:translate(-50%,-50%) rotate(-2deg)}'
+      '#fs-palette-ghost{position:fixed;z-index:100;pointer-events:none;padding:8px 10px;border:1px solid #8b8f98;border-radius:8px;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.13);font-weight:700;font-size:11px;opacity:.9;transform:translate(-50%,-50%) rotate(-2deg)}',
+      // "View as diagram" modal: a read-only Mermaid render of the current
+      // graph, layered above everything else in the overlay (z-index
+      // higher than #fs-ask-wrap's 10010, since a student could in theory
+      // open the diagram while an Ask block is waiting for input).
+      '#fs-diagram-modal{display:none;position:fixed;inset:0;z-index:10020;background:rgba(15,23,42,.55);align-items:center;justify-content:center;padding:24px}',
+      '#fs-diagram-modal.show{display:flex}',
+      '#fs-diagram-card{background:#fff;border-radius:12px;max-width:min(900px,100%);max-height:100%;width:100%;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}',
+      '#fs-diagram-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e2e3e7}',
+      '#fs-diagram-head h2{font-size:14px;margin:0}',
+      '#fsDiagramCloseBtn{border:none;background:none;font-size:20px;line-height:1;cursor:pointer;color:#686b73;padding:2px 6px}',
+      '#fsDiagramCloseBtn:hover{color:#18191b}',
+      '#fs-diagram-body{padding:20px;overflow:auto;text-align:center}',
+      '#fs-diagram-body svg{max-width:100%;height:auto}',
+      '.fs-diagram-loading{color:#686b73;font-size:13px;margin:20px 0}'
     ].join('\n');
     document.head.appendChild(style);
   }
@@ -1269,6 +1396,7 @@
       '<div id="fs-topbar">' +
         '<button id="fsValidateBtn">Check flow</button>' +
         '<button id="fsClearBtn">Clear</button>' +
+        '<button id="fsDiagramBtn">View as diagram</button>' +
         '<label class="fs-slow-toggle"><input type="checkbox" id="fsSlowModeToggle"> Slow mode</label>' +
         '<input type="range" id="fsSlowSlider" min="0" max="2000" step="50" value="500" style="display:none">' +
         '<span id="fsSlowReadout" style="display:none">500ms</span>' +
@@ -1285,7 +1413,8 @@
         '<aside id="fs-inspector"><h2>Selected block</h2><div id="fs-inspector-body" class="fs-empty">Select a block to edit it.</div></aside>' +
       '</div>' +
       '<div id="fs-status-bar"><span id="fs-run-status">Ready</span><span>answer: <span id="fs-answer-value">&empty;</span></span></div>' +
-      '<div id="fs-ask-wrap"><form id="fs-ask-form"><div id="fs-ask-box"><label id="fs-ask-label"></label><div id="fs-ask-row"><input id="fs-ask-input" autocomplete="off"><button>Answer</button></div></div></form></div>';
+      '<div id="fs-ask-wrap"><form id="fs-ask-form"><div id="fs-ask-box"><label id="fs-ask-label"></label><div id="fs-ask-row"><input id="fs-ask-input" autocomplete="off"><button>Answer</button></div></div></form></div>' +
+      '<div id="fs-diagram-modal"><div id="fs-diagram-card"><div id="fs-diagram-head"><h2>Flowchart diagram</h2><button id="fsDiagramCloseBtn" aria-label="Close">&times;</button></div><div id="fs-diagram-body"></div></div></div>';
     document.body.appendChild(root);
 
     els = {
@@ -1305,7 +1434,9 @@
       askLabel: root.querySelector('#fs-ask-label'),
       askInput: root.querySelector('#fs-ask-input'),
       hoverAnchorEl: root.querySelector('#fs-hover-anchor'),
-      varList: root.querySelector('#fs-var-list')
+      varList: root.querySelector('#fs-var-list'),
+      diagramModal: root.querySelector('#fs-diagram-modal'),
+      diagramBody: root.querySelector('#fs-diagram-body')
     };
 
     bindGlobalPointer();
@@ -1322,6 +1453,11 @@
         FS.nodes = []; FS.edges = []; FS.selected = null; FS.selectedEdgeId = null; renderAll(); saveGraph(FS.activeSprite);
       }
     };
+    root.querySelector('#fsDiagramBtn').onclick = showDiagramModal;
+    root.querySelector('#fsDiagramCloseBtn').onclick = function () { els.diagramModal.classList.remove('show'); };
+    els.diagramModal.addEventListener('click', function (event) {
+      if (event.target === els.diagramModal) els.diagramModal.classList.remove('show');
+    });
     root.querySelector('#fsNewVarBtn').onclick = function () {
       var name = prompt('New variable name:');
       if (name) createGlobalVariable(name);
