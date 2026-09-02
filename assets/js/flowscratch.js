@@ -108,7 +108,9 @@
     ask:                { shape: 'io',        title: 'Ask',                data: { text: 'What is your name?' }, category: 'sensing' },
     set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
     change_variable:    { shape: 'process',   title: 'Change variable',    data: { varName: '', value: 1 },      category: 'variables' },
-    selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' }
+    selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' },
+    subroutine_start:   { shape: 'oval',      title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
+    call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' }
   };
   var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sensing', 'variables', 'control'];
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -382,6 +384,8 @@
   // separate function rather than trying to strip HTML out of that one.
   function nodeSummaryText(n) {
     var d = n.data || {};
+    if (n.type === 'subroutine_start') return 'Sub-routine: ' + (d.name || 'unnamed');
+    if (n.type === 'call_subroutine') return 'CALL ' + (d.name || 'unnamed');
     if (n.type === 'move_steps') return 'Move ' + d.steps + ' steps';
     if (n.type === 'turn_right') return 'Turn right ' + d.degrees + ' degrees';
     if (n.type === 'turn_left') return 'Turn left ' + d.degrees + ' degrees';
@@ -429,7 +433,7 @@
     FS.nodes.forEach(function (n) {
       var shape = (TYPES[n.type] && TYPES[n.type].shape) || 'process';
       var label = '"' + nodeSummaryText(n).replace(/"/g, '#quot;') + '"';
-      var wrap = shape === 'oval' ? ['([', '])'] : shape === 'io' ? ['[/', '/]'] : shape === 'selection' ? ['{', '}'] : ['[', ']'];
+      var wrap = shape === 'oval' ? ['([', '])'] : shape === 'io' ? ['[/', '/]'] : shape === 'selection' ? ['{', '}'] : shape === 'subroutine' ? ['[[', ']]'] : ['[', ']'];
       lines.push('  ' + idFor[n.id] + wrap[0] + label + wrap[1]);
     });
     var edgeIndex = 0;
@@ -441,6 +445,17 @@
       lines.push('  ' + fromId + ' -->' + labelPart + ' ' + toId);
       if (branch === 'true') linkStyles.push('  linkStyle ' + edgeIndex + ' stroke:#2f9e58,stroke-width:2px');
       else if (branch === 'false') linkStyles.push('  linkStyle ' + edgeIndex + ' stroke:#d64545,stroke-width:2px');
+      edgeIndex++;
+    });
+    // CALL keeps its normal outgoing connector because that is where
+    // execution returns. A dotted link also shows which separate named
+    // flowchart is entered while the call is running.
+    FS.nodes.filter(function (n) { return n.type === 'call_subroutine'; }).forEach(function (callNode) {
+      var target = FS.nodes.find(function (n) {
+        return n.type === 'subroutine_start' && String(n.data.name || '').trim() === String(callNode.data.name || '').trim();
+      });
+      if (!target) return;
+      lines.push('  ' + idFor[callNode.id] + ' -.-> ' + idFor[target.id]);
       edgeIndex++;
     });
     return lines.concat(linkStyles).join('\n');
@@ -469,8 +484,20 @@
       return '<option value="' + esc(v.name) + '"' + (selectedName === v.name ? ' selected' : '') + '>' + esc(v.name) + '</option>';
     }).join('') + '</select>';
   }
+  function subroutineSelectHtml(fieldName, selectedName) {
+    var names = FS.nodes.filter(function (n) { return n.type === 'subroutine_start'; })
+      .map(function (n) { return String(n.data.name || '').trim(); })
+      .filter(function (name, i, all) { return name && all.indexOf(name) === i; });
+    if (selectedName && names.indexOf(selectedName) === -1) names.push(selectedName);
+    if (!names.length) return '<select data-field="' + fieldName + '"><option value="">(add a sub-routine first)</option></select>';
+    return '<select data-field="' + fieldName + '">' + names.map(function (name) {
+      return '<option value="' + esc(name) + '"' + (selectedName === name ? ' selected' : '') + '>' + esc(name) + '</option>';
+    }).join('') + '</select>';
+  }
   function nodeMarkup(n) {
     var sub = '';
+    if (n.type === 'subroutine_start') sub = '<input type="text" class="fs-inline-name" data-field="name" value="' + esc(n.data.name || '') + '" aria-label="Sub-routine name">';
+    if (n.type === 'call_subroutine') sub = subroutineSelectHtml('name', n.data.name || '');
     if (n.type === 'move_steps') sub = '<span class="fs-node-subtitle">' + n.data.steps + ' steps</span>';
     if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') sub = '<span class="fs-node-subtitle">' + n.data.degrees + ' degrees</span>';
     if (n.type === 'point_towards') sub = '<select data-field="target"><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option><option value="random"' + (n.data.target === 'random' ? ' selected' : '') + '>random direction</option></select>';
@@ -557,7 +584,13 @@
       Array.prototype.forEach.call(el.querySelectorAll('[data-field]'), function (c) {
         c.addEventListener('change', function (e) {
           var n = getNode(el.dataset.id), field = e.target.dataset.field;
+          var oldValue = n.data[field];
           n.data[field] = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
+          if (n.type === 'subroutine_start' && field === 'name' && oldValue !== n.data.name) {
+            FS.nodes.forEach(function (other) {
+              if (other.type === 'call_subroutine' && other.data.name === oldValue) other.data.name = n.data.name;
+            });
+          }
           if (field === 'condition') {
             if (e.target.value === 'variable') {
               var firstVar = getGlobalVariables()[0];
@@ -976,6 +1009,8 @@
     if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') f = field('Degrees', 'number', 'degrees', n.data.degrees);
     if (n.type === 'change_color') f = field('Change by', 'number', 'value', n.data.value);
     if (n.type === 'say' || n.type === 'ask') f = field(n.type === 'say' ? 'Message' : 'Question', 'text', 'text', n.data.text);
+    if (n.type === 'subroutine_start') f = '<p class="fs-empty">Give this sub-routine a unique name inside the block.</p>';
+    if (n.type === 'call_subroutine') f = '<p class="fs-empty">Choose the named sub-routine to run inside the block.</p>';
     if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Select either outgoing connector to set it as True or False.</p>';
     host.innerHTML = '<b>' + typeTitle(n) + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
@@ -1055,21 +1090,41 @@
   function validate() {
     var errors = [];
     var starts = FS.nodes.filter(function (n) { return n.type === 'start'; });
+    var routineStarts = FS.nodes.filter(function (n) { return n.type === 'subroutine_start'; });
     var ends = FS.nodes.filter(function (n) { return n.type === 'end'; });
     if (starts.length !== 1) errors.push('Flow needs exactly one Start block (found ' + starts.length + ').');
     var out = function (id) { return FS.edges.filter(function (e) { return e.from === id; }).map(function (e) { return e.to; }); };
     var inc = function (id) { return FS.edges.filter(function (e) { return e.to === id; }).map(function (e) { return e.from; }); };
+    function reachableFrom(startId) {
+      var seen = {};
+      (function walk(id) { if (seen[id]) return; seen[id] = true; out(id).forEach(walk); })(startId);
+      return seen;
+    }
     // A flowchart doesn't have to end: a "forever" loop (a game's main
     // loop, say) is just a wire connected back to an earlier block, a
     // cycle, with no End block at all, same as Scratch's own forever
     // block never finishes on its own either. So an End block is only
     // required when there's no loop to keep the flow running instead.
-    if (!ends.length && starts.length === 1 && !hasCycleFrom(starts[0].id, out)) {
+    var mainSeen = starts.length === 1 ? reachableFrom(starts[0].id) : {};
+    var mainHasEnd = ends.some(function (n) { return mainSeen[n.id]; });
+    if (starts.length === 1 && !mainHasEnd && !hasCycleFrom(starts[0].id, out)) {
       errors.push('Flow needs an End block, or a connection looping back to an earlier block to keep it running.');
     }
+    var routineNames = {};
+    routineStarts.forEach(function (n) {
+      var name = String(n.data.name || '').trim();
+      if (!name) errors.push('Each sub-routine needs a name.');
+      else if (routineNames[name]) errors.push('Each sub-routine needs a unique name. "' + name + '" is used more than once.');
+      else routineNames[name] = n;
+      if (inc(n.id).length) errors.push('Sub-routine "' + (name || 'unnamed') + '" must begin at its own Start block, with no incoming connector.');
+      var routineSeen = reachableFrom(n.id);
+      if (!ends.some(function (endNode) { return routineSeen[endNode.id]; })) {
+        errors.push('Sub-routine "' + (name || 'unnamed') + '" needs a path to an End block so it can return after CALL.');
+      }
+    });
     FS.nodes.forEach(function (n) {
       if (n.type !== 'end' && !out(n.id).length) errors.push(typeTitle(n) + ' has no outgoing connection.');
-      if (n.type !== 'start' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
+      if (n.type !== 'start' && n.type !== 'subroutine_start' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
       if (n.type === 'selection' && out(n.id).length !== 2) errors.push('Each Selection must have exactly two outgoing connections, one True and one False.');
       // addEdge() already refuses to create this, but defends here too in
       // case a graph saved before that enforcement existed gets loaded:
@@ -1077,11 +1132,19 @@
       if (n.type !== 'selection' && n.type !== 'end' && out(n.id).length > 1) errors.push(typeTitle(n) + ' has more than one outgoing connection, only a Selection block can branch.');
       if ((n.type === 'set_variable' || n.type === 'change_variable') && !n.data.varName) errors.push(typeTitle(n) + ' has no variable selected.');
       if (n.type === 'selection' && n.data.condition === 'variable' && !n.data.varName) errors.push('Selection has no variable selected.');
+      if (n.type === 'call_subroutine') {
+        var callName = String(n.data.name || '').trim();
+        if (!callName) errors.push('Each CALL block must name a sub-routine.');
+        else if (!routineNames[callName]) errors.push('CALL ' + callName + ' cannot run because that sub-routine has not been created.');
+      }
     });
-    if (starts.length === 1) {
+    if (starts.length === 1 || routineStarts.length) {
       var seen = {};
-      (function walk(id) { if (seen[id]) return; seen[id] = true; out(id).forEach(walk); })(starts[0].id);
-      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Start.'); });
+      [starts[0]].concat(routineStarts).filter(Boolean).forEach(function (root) {
+        var rootSeen = reachableFrom(root.id);
+        Object.keys(rootSeen).forEach(function (id) { seen[id] = true; });
+      });
+      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Main or a sub-routine Start.'); });
     }
     return errors.filter(function (e, i, a) { return a.indexOf(e) === i; });
   }
@@ -1209,7 +1272,7 @@
     var myGen = ++FS.gen;
     FS.answer = ''; els.answerValue.textContent = String.fromCharCode(8709);
     var start = FS.nodes.find(function (n) { return n.type === 'start'; });
-    var current = start, steps = 0;
+    var current = start, steps = 0, callStack = [];
     // A "forever" flowchart loop is just a wire connected back to an
     // earlier block, a normal cycle, not a special block type. The pacing
     // wait() below every step (zero when slow mode is off, still a real
@@ -1223,9 +1286,23 @@
       while (FS.running && FS.gen === myGen && current && steps++ < STEP_CAP) {
         setRunStatus(typeTitle(current));
         var outs = FS.edges.filter(function (e) { return e.from === current.id; });
-        renderWires(outs[0] && outs[0].id);
+        renderWires(current.type === 'call_subroutine' ? null : (outs[0] && outs[0].id));
         setActiveNode(current.id);
-        if (current.type === 'end') break;
+        if (current.type === 'end') {
+          if (!callStack.length) break;
+          current = callStack.pop();
+          await wait(FS.slowMode ? FS.slowDelayMs : 0);
+          continue;
+        }
+        if (current.type === 'call_subroutine') {
+          var routine = FS.nodes.find(function (n) {
+            return n.type === 'subroutine_start' && String(n.data.name || '').trim() === String(current.data.name || '').trim();
+          });
+          callStack.push(getNode(outs[0] ? outs[0].to : undefined));
+          await wait(FS.slowMode ? FS.slowDelayMs : 0);
+          current = routine;
+          continue;
+        }
         await runBlock(current);
         if (FS.gen !== myGen) return;
         await wait(FS.slowMode ? FS.slowDelayMs : 0);
@@ -1305,6 +1382,7 @@
       '#fsSlowSlider{width:80px}',
       '#fsSlowReadout{font-size:11px;color:#aeb1b8;min-width:44px}',
       '.fs-inline-num{width:36px;font-size:9px;padding:1px 2px}',
+      '.fs-inline-name{width:112px;font-size:10px;padding:2px 4px;border:1px solid #c8c9ce;border-radius:4px;text-align:center}',
       '#fs-canvas-wrap{position:relative;overflow:hidden;flex:1;min-width:0;background:#ededee;touch-action:none;cursor:grab}',
       '#fs-canvas-wrap.panning{cursor:grabbing}#fs-canvas-wrap.connecting,#fs-canvas-wrap.fs-anchor-hover{cursor:crosshair}',
       '#fs-world{position:absolute;left:0;top:0;width:2200px;height:1400px;transform-origin:0 0;background-color:#fafafa;background-image:radial-gradient(#c9cbd0 1px,transparent 1px);background-size:22px 22px;box-shadow:0 0 0 1px #d3d4d7}',
@@ -1333,6 +1411,7 @@
       // even with slow mode off and its delay at 0.
       '.fs-node.active .fs-node-body{border-color:#22b36b;box-shadow:0 0 0 4px rgba(34,179,107,.25);background:#eafbf2}',
       '.fs-node.oval .fs-node-body{border-radius:50%}',
+      '.fs-node.subroutine .fs-node-body{border-style:double;border-width:4px}',
       '.fs-node.io .fs-node-body{clip-path:polygon(12% 0,100% 0,88% 100%,0 100%);padding-left:20px;padding-right:20px}',
       '.fs-node.selection .fs-node-body{width:96px;height:96px;min-height:96px;padding:14px;transform:rotate(45deg)}',
       '.fs-node.selection{width:150px;height:112px}',
@@ -1342,7 +1421,7 @@
       // input fit on one row without wrapping: a wrap makes the node
       // grow taller than center() assumes, which is exactly the bug that
       // broke wire-anchor alignment before (see center()'s own comment).
-      '.fs-node.process select{font-size:9px;padding:1px 2px;max-width:64px}',
+      '.fs-node.process select,.fs-node.subroutine select{font-size:9px;padding:1px 2px;max-width:112px}',
       '.fs-node-title{font-size:11px;font-weight:750}',
       '.fs-node-subtitle{font-size:10px;color:#686b73;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
       // Single hover-following anchor dot (replaces the previous 8 fixed
