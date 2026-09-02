@@ -109,7 +109,7 @@
     set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
     change_variable:    { shape: 'process',   title: 'Change variable',    data: { varName: '', value: 1 },      category: 'variables' },
     selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' },
-    subroutine_start:   { shape: 'oval',      title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
+    subroutine_start:   { shape: 'subroutine', title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
     call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' }
   };
   var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sensing', 'variables', 'control'];
@@ -1411,7 +1411,10 @@
       // even with slow mode off and its delay at 0.
       '.fs-node.active .fs-node-body{border-color:#22b36b;box-shadow:0 0 0 4px rgba(34,179,107,.25);background:#eafbf2}',
       '.fs-node.oval .fs-node-body{border-radius:50%}',
-      '.fs-node.subroutine .fs-node-body{border-style:double;border-width:4px}',
+      '.fs-node.subroutine .fs-node-body{border-style:solid;border-width:2px;padding-left:18px;padding-right:18px}',
+      '.fs-node.subroutine .fs-node-body::before,.fs-node.subroutine .fs-node-body::after{content:"";position:absolute;top:7px;bottom:7px;width:2px;background:var(--fs-cat-color, #4d515a)}',
+      '.fs-node.subroutine .fs-node-body::before{left:8px}',
+      '.fs-node.subroutine .fs-node-body::after{right:8px}',
       '.fs-node.io .fs-node-body{clip-path:polygon(12% 0,100% 0,88% 100%,0 100%);padding-left:20px;padding-right:20px}',
       '.fs-node.selection .fs-node-body{width:96px;height:96px;min-height:96px;padding:14px;transform:rotate(45deg)}',
       '.fs-node.selection{width:150px;height:112px}',
