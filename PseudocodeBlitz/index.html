@@ -111,28 +111,25 @@ const checkAnswer = (studentText, expectedLines) => {
 };
 
 // --- SUPPORT MODE: a live-updating, progressively-fading answer hint ---
-// A placeholder blank for a token that's been redacted rather than
-// revealed. Repeated (one per hidden token) so a masked line still shows
-// its true length/shape, not just a single vague blank.
-const HINT_MASK_TOKEN = '▢▢▢';
 // Splits a hint line into its still-revealed prefix (real text, live
 // colour-compared character by character against what the student has
-// typed) and its redacted suffix (a fixed placeholder per hidden token,
-// never colour-compared - there's no real text there yet to compare
-// against). Reveal is always a shrinking prefix of the tokens, never
-// scattered, so the hint reads as fading out from the end rather than
-// swiss cheese. Returns null when the fraction has reached zero, meaning
-// the whole line should be hidden.
+// typed) and its redacted suffix, returned as one entry per hidden
+// token (each token's own character length, not a joined string) so
+// each can be rendered as its own distinct fill-in-the-blank box rather
+// than a run of placeholder text a student could mistake for real
+// characters, or copy. Reveal is always a shrinking prefix of the
+// tokens, never scattered, so the hint reads as fading out from the end
+// rather than swiss cheese. Returns null when the fraction has reached
+// zero, meaning the whole line should be hidden.
 const revealedLineInfo = (originalLine, revealFraction) => {
     const tokens = tokenize(originalLine);
-    if (!tokens.length) return { revealedText: originalLine, maskedSuffix: '' };
-    if (revealFraction >= 1) return { revealedText: originalLine, maskedSuffix: '' };
+    if (!tokens.length) return { revealedText: originalLine, maskedTokens: [] };
+    if (revealFraction >= 1) return { revealedText: originalLine, maskedTokens: [] };
     if (revealFraction <= 0) return null;
     const revealCount = Math.max(1, Math.round(tokens.length * revealFraction));
     const revealedText = tokens.slice(0, revealCount).join(' ');
-    const maskedCount = tokens.length - revealCount;
-    const maskedSuffix = maskedCount > 0 ? ' ' + Array(maskedCount).fill(HINT_MASK_TOKEN).join(' ') : '';
-    return { revealedText, maskedSuffix };
+    const maskedTokens = tokens.slice(revealCount).map((tok) => tok.length);
+    return { revealedText, maskedTokens };
 };
 // Marks which characters of `text` fall inside a "..." string literal,
 // so those positions compare case-SENSITIVELY (matching checkAnswer's
@@ -502,20 +499,37 @@ const TypedLevel = ({ level, onExit, onGameOver, isHardMode, isSupportMode, onHe
                 />
             )}
             {isSupportMode && (
-                <div className="w-full max-w-lg bg-slate-900/70 border border-slate-700 rounded-lg p-3 mb-4 font-mono text-sm text-left">
+                <div
+                    className="w-full max-w-lg bg-slate-900/70 border border-slate-700 rounded-lg p-3 mb-4 font-mono text-sm text-left select-none"
+                    style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
+                    onCopy={(e) => e.preventDefault()}
+                    onCut={(e) => e.preventDefault()}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
+                >
+                    <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-2">Hint &middot; blanks are hidden, type them yourself</div>
                     {question.expected.map((expectedLine, i) => {
                         const info = revealedLineInfo(expectedLine, revealFraction);
                         if (info === null) return null;
                         const studentLine = studentLines[i] || '';
                         const charStatuses = hintLineCharStatuses(info.revealedText, studentLine);
                         return (
-                            <div key={i} style={{ whiteSpace: 'pre' }}>
-                                {info.revealedText.split('').map((ch, ci) => {
-                                    const st = charStatuses[ci];
-                                    const cls = st === 'match' ? 'text-emerald-400' : st === 'mismatch' ? 'text-red-400' : 'text-slate-500';
-                                    return <span key={ci} className={cls}>{ch}</span>;
-                                })}
-                                {info.maskedSuffix && <span className="text-slate-600">{info.maskedSuffix}</span>}
+                            <div key={i} className="flex flex-wrap items-center gap-x-1 leading-relaxed">
+                                <span style={{ whiteSpace: 'pre' }}>
+                                    {info.revealedText.split('').map((ch, ci) => {
+                                        const st = charStatuses[ci];
+                                        const cls = st === 'match' ? 'text-emerald-400' : st === 'mismatch' ? 'text-red-400' : 'text-slate-500';
+                                        return <span key={ci} className={cls}>{ch}</span>;
+                                    })}
+                                </span>
+                                {info.maskedTokens.map((len, ti) => (
+                                    <span
+                                        key={ti}
+                                        aria-hidden="true"
+                                        className="inline-block h-4 border-b-2 border-dotted border-slate-500 align-middle"
+                                        style={{ width: Math.max(1, len) + 'ch' }}
+                                    />
+                                ))}
                             </div>
                         );
                     })}
