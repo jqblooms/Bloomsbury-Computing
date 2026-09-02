@@ -1325,8 +1325,13 @@
       // whole path - block and arrow together - reads as one highlighted
       // trail during a run/step walkthrough, not just the arrows between
       // otherwise-unmarked blocks.
-      '.fs-node.active .fs-node-body{border-color:#22b36b;box-shadow:0 0 0 4px rgba(34,179,107,.25);background:#eafbf2;animation:fsActivePulse 1s ease-in-out infinite}',
-      '@keyframes fsActivePulse{0%,100%{box-shadow:0 0 0 4px rgba(34,179,107,.25)}50%{box-shadow:0 0 0 7px rgba(34,179,107,.12)}}',
+      // Static, not animated: an infinite box-shadow pulse forces a
+      // continuous main-thread repaint (box-shadow isn't compositable
+      // the way transform/opacity are), which competes with the run
+      // loop's own per-step work - renderWires() already rebuilds the
+      // whole wire SVG every step - and made every run feel sluggish
+      // even with slow mode off and its delay at 0.
+      '.fs-node.active .fs-node-body{border-color:#22b36b;box-shadow:0 0 0 4px rgba(34,179,107,.25);background:#eafbf2}',
       '.fs-node.oval .fs-node-body{border-radius:50%}',
       '.fs-node.io .fs-node-body{clip-path:polygon(12% 0,100% 0,88% 100%,0 100%);padding-left:20px;padding-right:20px}',
       '.fs-node.selection .fs-node-body{width:96px;height:96px;min-height:96px;padding:14px;transform:rotate(45deg)}',
