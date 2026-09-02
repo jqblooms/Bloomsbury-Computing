@@ -109,7 +109,7 @@
     set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
     change_variable:    { shape: 'process',   title: 'Change variable',    data: { varName: '', value: 1 },      category: 'variables' },
     selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' },
-    subroutine_start:   { shape: 'subroutine', title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
+    subroutine_start:   { shape: 'oval',      title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
     call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' }
   };
   var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sensing', 'variables', 'control'];
