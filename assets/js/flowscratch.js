@@ -513,6 +513,28 @@
 
   function renderAll() { els.nodes.innerHTML = FS.nodes.map(nodeMarkup).join(''); bindNodes(); renderWires(); renderInspector(); }
 
+  // Starts a connection drag from wherever the green hover-anchor dot
+  // currently is, regardless of what element the pointerdown actually
+  // landed on. The dot is shown by proximity (HOVER_ANCHOR_SCREEN_PX,
+  // below) rather than "cursor literally over the node", so without this
+  // shared check a press just outside the node's own DOM box - close
+  // enough that the dot is visible and inviting a drag, but not close
+  // enough to hit the node element itself - fell through to canvasWrap's
+  // blank-space handler and started a pan instead of a connection. Used
+  // both from a node's own pointerdown (the common case: cursor is over
+  // the node) and from canvasWrap's (the anchor is showing but the
+  // cursor is just outside the node).
+  function startConnectFromHoverAnchor(e) {
+    if (!FS.hoverAnchor) return false;
+    var el = els.nodes.querySelector('.fs-node[data-id="' + FS.hoverAnchor.nodeId + '"]');
+    FS.connect = { from: FS.hoverAnchor.nodeId, fromA: { x: FS.hoverAnchor.x, y: FS.hoverAnchor.y } };
+    els.canvasWrap.classList.add('connecting');
+    els.draft.style.display = 'block';
+    updateDraft(e.clientX, e.clientY);
+    try { (el || els.canvasWrap).setPointerCapture(e.pointerId); } catch (_err) {}
+    return true;
+  }
+
   function bindNodes() {
     Array.prototype.forEach.call(els.nodes.querySelectorAll('.fs-node'), function (el) {
       el.addEventListener('pointerdown', function (e) {
@@ -522,11 +544,7 @@
         // down while it's showing starts a connection from that exact point
         // instead of selecting/dragging the block.
         if (FS.hoverAnchor && FS.hoverAnchor.nodeId === el.dataset.id) {
-          FS.connect = { from: el.dataset.id, fromA: { x: FS.hoverAnchor.x, y: FS.hoverAnchor.y } };
-          els.canvasWrap.classList.add('connecting');
-          els.draft.style.display = 'block';
-          updateDraft(e.clientX, e.clientY);
-          try { el.setPointerCapture(e.pointerId); } catch (_err) {}
+          startConnectFromHoverAnchor(e);
           e.stopPropagation();
           return;
         }
@@ -915,6 +933,23 @@
     });
   }
 
+  // Marks the block currently being executed, alongside renderWires'
+  // active outgoing arrow, so a run/step lights up the whole path -
+  // symbol and wire together - instead of just the arrows between them,
+  // which was hard for students to actually trace during a walkthrough.
+  // Toggles a class directly on the existing DOM node rather than going
+  // through renderAll(), so it doesn't disturb whatever the student has
+  // focused (e.g. mid-edit in an inline select/input).
+  function setActiveNode(id) {
+    if (!els.nodes) return;
+    var current = els.nodes.querySelector('.fs-node.active');
+    if (current && current.dataset.id !== id) current.classList.remove('active');
+    if (id) {
+      var next = els.nodes.querySelector('.fs-node[data-id="' + id + '"]');
+      if (next) next.classList.add('active');
+    }
+  }
+
   function screenToWorld(x, y) {
     var r = els.canvasWrap.getBoundingClientRect();
     return { x: (x - r.left - FS.panX) / FS.scale, y: (y - r.top - FS.panY) / FS.scale };
@@ -1189,6 +1224,7 @@
         setRunStatus(typeTitle(current));
         var outs = FS.edges.filter(function (e) { return e.from === current.id; });
         renderWires(outs[0] && outs[0].id);
+        setActiveNode(current.id);
         if (current.type === 'end') break;
         await runBlock(current);
         if (FS.gen !== myGen) return;
@@ -1212,6 +1248,7 @@
     setRunStatus('Ready');
     els.askWrap.classList.remove('active');
     renderWires();
+    setActiveNode(null);
   }
   function stop() { FS.gen++; finishRun(FS.gen); }
 
@@ -1284,6 +1321,12 @@
       // what center() assumes.
       '.fs-node-body{position:relative;width:100%;min-height:66px;padding:9px 12px;background:#fff;border:2px solid var(--fs-cat-color, #4d515a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;font-size:11px}',
       '.fs-node.selected .fs-node-body{border-color:#4b66e8;box-shadow:0 0 0 3px rgba(75,102,232,.17)}',
+      // Same green as the active wire (.fs-wire.active above), so the
+      // whole path - block and arrow together - reads as one highlighted
+      // trail during a run/step walkthrough, not just the arrows between
+      // otherwise-unmarked blocks.
+      '.fs-node.active .fs-node-body{border-color:#22b36b;box-shadow:0 0 0 4px rgba(34,179,107,.25);background:#eafbf2;animation:fsActivePulse 1s ease-in-out infinite}',
+      '@keyframes fsActivePulse{0%,100%{box-shadow:0 0 0 4px rgba(34,179,107,.25)}50%{box-shadow:0 0 0 7px rgba(34,179,107,.12)}}',
       '.fs-node.oval .fs-node-body{border-radius:50%}',
       '.fs-node.io .fs-node-body{clip-path:polygon(12% 0,100% 0,88% 100%,0 100%);padding-left:20px;padding-right:20px}',
       '.fs-node.selection .fs-node-body{width:96px;height:96px;min-height:96px;padding:14px;transform:rotate(45deg)}',
@@ -1318,7 +1361,13 @@
       '#fs-ask-row{display:flex;gap:6px}',
       '#fs-ask-row input{min-width:0;flex:1;border:1px solid #bbb;border-radius:6px;padding:6px}',
       '#fs-ask-row button{border:0;border-radius:6px;background:#4b66e8;color:#fff;padding:6px 10px;cursor:pointer}',
-      '#fs-palette-ghost{position:fixed;z-index:100;pointer-events:none;padding:8px 10px;border:1px solid #8b8f98;border-radius:8px;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.13);font-weight:700;font-size:11px;opacity:.9;transform:translate(-50%,-50%) rotate(-2deg)}',
+      // Wraps a real nodeMarkup() render (see bindPalette) rather than a
+      // plain text label, so what a student sees held under the cursor
+      // while dragging from the palette is the actual block - its shape
+      // (oval/io/diamond/process), category colour and content - not a
+      // generic rounded rectangle unrelated to what gets dropped.
+      '#fs-palette-ghost{position:fixed;z-index:100;pointer-events:none;box-shadow:0 10px 28px rgba(0,0,0,.18);opacity:.92;transform:translate(-50%,-50%) rotate(-2deg)}',
+      '#fs-palette-ghost .fs-node{position:static;filter:none}',
       // "View as diagram" modal: a read-only Mermaid render of the current
       // graph, layered above everything else in the overlay (z-index
       // higher than #fs-ask-wrap's 10010, since a student could in theory
@@ -1505,7 +1554,13 @@
         e.preventDefault();
         var ghost = document.createElement('div');
         ghost.id = 'fs-palette-ghost';
-        ghost.textContent = TYPES[p.dataset.type].title;
+        // A real block preview: same nodeMarkup() every actual node on the
+        // canvas uses, fed a throwaway node with that type's default data,
+        // so the shape/colour/content match exactly what will be dropped.
+        // Selects/inputs inside render but aren't wired up - harmless,
+        // since the ghost has pointer-events:none anyway.
+        var t = TYPES[p.dataset.type];
+        ghost.innerHTML = nodeMarkup({ id: 'fs-ghost-preview', type: p.dataset.type, shape: t.shape, x: 0, y: 0, data: clone(t.data) });
         document.body.appendChild(ghost);
         ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
         FS.palette = { type: p.dataset.type, ghost: ghost };
@@ -1519,6 +1574,13 @@
     els.canvasWrap.addEventListener('pointerleave', hideHoverAnchor);
     els.canvasWrap.addEventListener('pointerdown', function (e) {
       var blank = e.target === els.world || e.target === els.canvasWrap;
+      // The anchor dot can be showing (cursor within HOVER_ANCHOR_SCREEN_PX
+      // of a node's edge) even when the pointerdown target is blank canvas,
+      // not the node itself - e.g. the cursor is just outside the node's
+      // own box. Starting the connection here too, before falling through
+      // to pan, means the drag a student sees invited (the green dot) is
+      // the drag they actually get, instead of silently panning the canvas.
+      if (blank && e.button === 0 && startConnectFromHoverAnchor(e)) { e.preventDefault(); return; }
       if (!FS.connect && ((blank && e.button === 0) || space || e.button === 1)) {
         FS.selected = null; FS.selectedEdgeId = null; renderAll();
         FS.drag = { kind: 'pan', startX: e.clientX, startY: e.clientY, x: FS.panX, y: FS.panY };
