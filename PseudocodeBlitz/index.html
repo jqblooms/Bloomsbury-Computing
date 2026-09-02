@@ -110,6 +110,62 @@ const checkAnswer = (studentText, expectedLines) => {
     return studentLines.every((line, i) => tokensEqual(tokenize(line), tokenize(expectedLines[i])));
 };
 
+// --- SUPPORT MODE: a live-updating, progressively-fading answer hint ---
+// A placeholder blank for a token that's been redacted rather than
+// revealed. Repeated (one per hidden token) so a masked line still shows
+// its true length/shape, not just a single vague blank.
+const HINT_MASK_TOKEN = '▢▢▢';
+// Splits a hint line into its still-revealed prefix (real text, live
+// colour-compared character by character against what the student has
+// typed) and its redacted suffix (a fixed placeholder per hidden token,
+// never colour-compared - there's no real text there yet to compare
+// against). Reveal is always a shrinking prefix of the tokens, never
+// scattered, so the hint reads as fading out from the end rather than
+// swiss cheese. Returns null when the fraction has reached zero, meaning
+// the whole line should be hidden.
+const revealedLineInfo = (originalLine, revealFraction) => {
+    const tokens = tokenize(originalLine);
+    if (!tokens.length) return { revealedText: originalLine, maskedSuffix: '' };
+    if (revealFraction >= 1) return { revealedText: originalLine, maskedSuffix: '' };
+    if (revealFraction <= 0) return null;
+    const revealCount = Math.max(1, Math.round(tokens.length * revealFraction));
+    const revealedText = tokens.slice(0, revealCount).join(' ');
+    const maskedCount = tokens.length - revealCount;
+    const maskedSuffix = maskedCount > 0 ? ' ' + Array(maskedCount).fill(HINT_MASK_TOKEN).join(' ') : '';
+    return { revealedText, maskedSuffix };
+};
+// Marks which characters of `text` fall inside a "..." string literal,
+// so those positions compare case-SENSITIVELY (matching checkAnswer's
+// own string-literal handling) while everything else - keywords,
+// identifiers, numbers, punctuation - compares case-insensitively.
+const stringLiteralMask = (text) => {
+    const mask = new Array(text.length).fill(false);
+    let inString = false;
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] === '"') { inString = !inString; mask[i] = true; }
+        else mask[i] = inString;
+    }
+    return mask;
+};
+// Per-character live diff of the still-revealed portion of a hint line
+// against what the student has actually typed on that line, so far.
+// Characters the student hasn't reached yet stay neutral - typing "Num"
+// against a hint of "Number <- 5" colours only the "Num" green, the rest
+// of the line stays grey, not falsely "correct" ahead of what was
+// actually typed. Comparison keeps going character by character past a
+// mismatch rather than stopping at the first wrong one, so "Nbm" against
+// "Number" colours N and m green and b red.
+const hintLineCharStatuses = (revealedText, studentLine) => {
+    const caseSensitive = stringLiteralMask(revealedText);
+    const student = String(studentLine || '');
+    return revealedText.split('').map((ch, i) => {
+        if (i >= student.length) return 'pending';
+        const typed = student[i];
+        const match = caseSensitive[i] ? typed === ch : typed.toUpperCase() === ch.toUpperCase();
+        return match ? 'match' : 'mismatch';
+    });
+};
+
 // --- WORD BANKS ---
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -356,7 +412,7 @@ const ExamLayout = ({ currentQ, totalQ, onExit, children }) => (
 // submission never says which line or token is wrong, only that
 // something is - the same "don't leak the answer through feedback"
 // principle Boolean Blitz's own Level 2 fix established this session.
-const TypedLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
+const TypedLevel = ({ level, onExit, onGameOver, isHardMode, isSupportMode, onHelp }) => {
     const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
     const handleGameEnd = useCallback((s) => onGameOver(s, level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver, level]);
     const handleExit = () => onExit(level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
@@ -365,6 +421,14 @@ const TypedLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
     const [answer, setAnswer] = useState('');
     const [shake, setShake] = useState(false);
     const [justRight, setJustRight] = useState(false);
+    // Support Mode: a per-line hint that stays visible while the student
+    // types (it only ever changes colour, never disappears from typing
+    // alone) and gets progressively redacted as they answer correctly
+    // more times in a row with support on - every SUPPORT_STAGE_EVERY
+    // correct answers, the reveal fraction steps down by a third.
+    const SUPPORT_STAGE_EVERY = 3;
+    const supportStreakRef = useRef(0);
+    const [revealFraction, setRevealFraction] = useState(1);
     useEffect(() => { next(); }, [level]);
     const next = (points = 0) => {
         setQuestion(generateQuestion(level));
@@ -379,6 +443,10 @@ const TypedLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
         if (correct) {
             correctRef.current += 1;
             setJustRight(true);
+            if (isSupportMode) {
+                supportStreakRef.current += 1;
+                setRevealFraction(Math.max(0, 1 - Math.floor(supportStreakRef.current / SUPPORT_STAGE_EVERY) * (1 / 3)));
+            }
             setTimeout(() => next(70 + question.expected.length * 20), 500);
         } else {
             wrongRef.current += 1;
@@ -387,6 +455,7 @@ const TypedLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
             setTimeout(() => setShake(false), 500);
         }
     };
+    const studentLines = answer.split('\n');
     const handleKeyDown = (e) => {
         if (!isMultiLine && e.key === 'Enter') { e.preventDefault(); submit(); }
         else if (isMultiLine && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(); }
@@ -431,6 +500,26 @@ const TypedLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
                     className={`w-full max-w-lg bg-slate-800 border-2 rounded-lg p-3 font-mono text-base text-white mb-4 text-center focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-violet-500'}`}
                     placeholder="Type your pseudocode here..."
                 />
+            )}
+            {isSupportMode && (
+                <div className="w-full max-w-lg bg-slate-900/70 border border-slate-700 rounded-lg p-3 mb-4 font-mono text-sm text-left">
+                    {question.expected.map((expectedLine, i) => {
+                        const info = revealedLineInfo(expectedLine, revealFraction);
+                        if (info === null) return null;
+                        const studentLine = studentLines[i] || '';
+                        const charStatuses = hintLineCharStatuses(info.revealedText, studentLine);
+                        return (
+                            <div key={i} style={{ whiteSpace: 'pre' }}>
+                                {info.revealedText.split('').map((ch, ci) => {
+                                    const st = charStatuses[ci];
+                                    const cls = st === 'match' ? 'text-emerald-400' : st === 'mismatch' ? 'text-red-400' : 'text-slate-500';
+                                    return <span key={ci} className={cls}>{ch}</span>;
+                                })}
+                                {info.maskedSuffix && <span className="text-slate-600">{info.maskedSuffix}</span>}
+                            </div>
+                        );
+                    })}
+                </div>
             )}
             <div className="text-xs text-slate-500 uppercase tracking-widest mb-4">{isMultiLine ? 'One instruction per line' : 'Press Enter or Check'}</div>
             <Button onClick={submit} disabled={justRight || !answer.trim()} variant={justRight ? 'success' : 'primary'} className="w-40">{justRight ? 'Correct!' : 'Check'}</Button>
@@ -510,7 +599,7 @@ const ExamLevel = ({ onExit, onFinish }) => {
 // ============================================================
 // MAIN MENU
 // ============================================================
-const MainMenu = ({ onStart, isHardMode, setHardMode, playerName }) => {
+const MainMenu = ({ onStart, isHardMode, setHardMode, isSupportMode, setSupportMode, playerName }) => {
     const [helpLevel, setHelpLevel] = useState(null);
     return (
         <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar relative">
@@ -522,6 +611,7 @@ const MainMenu = ({ onStart, isHardMode, setHardMode, playerName }) => {
             </div>
             <div className="flex gap-3 mb-5 flex-wrap justify-center items-center">
                 <Toggle checked={isHardMode} onChange={setHardMode} label="HARD MODE" />
+                <Toggle checked={isSupportMode} onChange={setSupportMode} label="SUPPORT MODE" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl pb-24">
                 {Object.entries(LEVELS).map(([id, data]) => {
@@ -600,6 +690,7 @@ const App = () => {
     const [lastScore, setLastScore] = useState(0);
     const [lastExamStats, setLastExamStats] = useState(null);
     const [isHardMode, setHardMode] = useState(false);
+    const [isSupportMode, setSupportMode] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
 
     const handleGameOver = (score, level, duration, correct, wrong) => {
@@ -632,12 +723,14 @@ const App = () => {
                     onStart={(lvl) => { setActiveLevel(lvl); setView(lvl === 7 ? 'exam' : 'game'); }}
                     isHardMode={isHardMode}
                     setHardMode={setHardMode}
+                    isSupportMode={isSupportMode}
+                    setSupportMode={setSupportMode}
                     playerName={playerName}
                 />
             )}
 
             {view === 'game' && (
-                <TypedLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)} />
+                <TypedLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} isSupportMode={isSupportMode} onHelp={() => setShowHelp(true)} />
             )}
 
             {view === 'exam' && <ExamLevel onExit={(l, d) => handleExit(l, d, 0, 0, 0)} onFinish={handleExamFinish} />}
