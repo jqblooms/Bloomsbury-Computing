@@ -113,8 +113,15 @@ const checkAnswer = (studentText, expectedLines) => {
 // --- WORD BANKS ---
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const VAR_NAMES = ['Age', 'Score', 'Total', 'Count', 'Price', 'Height', 'Weight', 'Number', 'Result', 'Amount', 'Length', 'Width'];
-const ARRAY_NAMES = ['Numbers', 'Scores', 'Names', 'Items', 'Prices', 'Ages', 'Words', 'Marks'];
+// Two separate name banks, one per data type, deliberately never mixed -
+// an earlier version picked any name for any value (a real bug a user
+// caught live: "Store the text Red in a variable called Age"), which
+// reads as nonsense regardless of whether the syntax is right. A name
+// bank only ever pairs with the value type it actually makes sense for.
+const NUMERIC_VAR_NAMES = ['Age', 'Score', 'Total', 'Count', 'Price', 'Height', 'Weight', 'Number', 'Amount', 'Length', 'Width'];
+const STRING_VAR_NAMES = ['Name', 'Colour', 'Message', 'Word', 'Team', 'Pet', 'City', 'Day'];
+const NUMERIC_ARRAY_NAMES = ['Numbers', 'Scores', 'Prices', 'Ages', 'Marks', 'Heights'];
+const STRING_ARRAY_NAMES = ['Names', 'Words', 'Colours', 'Pets', 'Teams'];
 const LOOP_VAR_NAMES = ['Index', 'Count', 'Number', 'Position'];
 const STRING_VALUES = ['Dog', 'Cat', 'Red', 'Blue', 'Yes', 'No', 'Pass', 'Fail', 'Hello', 'Start', 'Gold', 'Silver'];
 const RELATIONS = [
@@ -133,19 +140,20 @@ const MESSAGE_PAIRS = [['Pass', 'Fail'], ['High', 'Low'], ['Winner', 'Loser'], [
 // tokenizes the student's own answer, so there is exactly one place
 // that decides what counts as equivalent syntax.
 const genLevel1 = () => {
-    const name = pick(VAR_NAMES);
     if (Math.random() < 0.5) {
+        const name = pick(STRING_VAR_NAMES);
         const val = pick(STRING_VALUES);
         return { prompt: `Store the text "${val}" in a variable called ${name}.`, expected: [`${name} <- "${val}"`] };
     }
+    const name = pick(NUMERIC_VAR_NAMES);
     const val = randInt(1, 100);
     return { prompt: `Store the number ${val} in a variable called ${name}.`, expected: [`${name} <- ${val}`] };
 };
 const genLevel2 = () => {
-    const name = pick(ARRAY_NAMES);
+    const isString = Math.random() < 0.6;
+    const name = pick(isString ? STRING_ARRAY_NAMES : NUMERIC_ARRAY_NAMES);
     const size = randInt(3, 6);
     const pos = randInt(1, size);
-    const isString = Math.random() < 0.6;
     const type = isString ? 'STRING' : 'INTEGER';
     const val = isString ? pick(STRING_VALUES) : randInt(1, 50);
     const displayVal = isString ? `"${val}"` : val;
@@ -155,20 +163,23 @@ const genLevel2 = () => {
     };
 };
 const genLevel3 = () => {
-    const name = pick(VAR_NAMES);
+    // No value or type appears in an INPUT/OUTPUT prompt, so any variable
+    // name reads sensibly here - drawing from both banks together just
+    // gives more variety, not a semantic risk like levels 1/2/4/5.
+    const name = pick(NUMERIC_VAR_NAMES.concat(STRING_VAR_NAMES));
     const mode = pick(['input', 'output', 'both']);
     if (mode === 'input') return { prompt: `Ask the user to enter a value for ${name}.`, expected: [`INPUT ${name}`] };
     if (mode === 'output') return { prompt: `Display the value stored in ${name}.`, expected: [`OUTPUT ${name}`] };
     return { prompt: `Ask the user to enter a value for ${name}, then display it.`, expected: [`INPUT ${name}`, `OUTPUT ${name}`] };
 };
 const genLevel4 = () => {
-    const name = pick(VAR_NAMES);
+    const name = pick(NUMERIC_VAR_NAMES);
     const rel = pick(RELATIONS);
     const val = randInt(1, 100);
     return { prompt: `Write the condition that checks whether ${name} is ${rel.text} ${val}.`, expected: [`${name} ${rel.op} ${val}`] };
 };
 const genLevel5 = () => {
-    const name = pick(VAR_NAMES);
+    const name = pick(NUMERIC_VAR_NAMES);
     const rel = pick(RELATIONS);
     const val = randInt(1, 100);
     const [msgTrue, msgFalse] = pick(MESSAGE_PAIRS);
