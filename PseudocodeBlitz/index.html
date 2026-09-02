@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pseudocode Blitz</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+        body { font-family: 'JetBrains Mono', monospace; overflow: hidden; touch-action: manipulation; background-color: #0f172a; }
+        #root { height: 100%; width: 100%; }
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)} }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .custom-scrollbar { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.3) rgba(255,255,255,.1); }
+        .custom-scrollbar::-webkit-scrollbar{width:6px}
+        .custom-scrollbar::-webkit-scrollbar-track{background:rgba(255,255,255,.1)}
+        .custom-scrollbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:3px}
+        .no-select{user-select:none;-webkit-user-select:none}
+        .backdrop-blur-md{backdrop-filter:blur(12px)}
+    </style>
+</head>
+<body class="text-white h-screen w-screen overflow-hidden">
+<div id="root"></div>
+
+<script>
+// Bloomsbury Computing identity bridge - same contract as Binary Blitz
+// and Boolean Blitz's own bridge, and every other embedded app's.
+window.__bcPlayerName = null;
+window.addEventListener('message', function (event) {
+  var data = event.data;
+  if (data && data.type === 'BC_IDENTITY' && data.name) {
+    window.__bcPlayerName = data.name;
+  }
+});
+
+// Report progress up to the parent, same shape as BB_PROGRESS/BLB_PROGRESS,
+// PSB_PROGRESS (Pseudocode bLitz) is this game's own type string so the
+// parent can tell all three games apart.
+window.postToParent = function (payload) {
+  if (window.parent !== window) {
+    window.parent.postMessage(payload, '*');
+  }
+};
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// --- CONSTANTS ---
+// Higher base duration than Binary/Boolean Blitz's 30000: typing a line
+// of pseudocode is inherently slower than clicking a bit or a True/False
+// button, so the pacing has to be more generous or the timer would be
+// punishing students for typing speed rather than testing the actual
+// skill. LEVEL_TIME_MULTIPLIER further scales this per level, since a
+// five-line Selection answer genuinely needs more time than a one-line
+// Variables answer.
+const BASE_DURATION_REF = 45000;
+const LEVEL_TIME_MULTIPLIER = { 1: 1.3, 2: 1.9, 3: 1.5, 4: 1.2, 5: 2.4, 6: 2.1 };
+
+const LEVELS = {
+    1: { title: "Variables", color: "blue", desc: "Store a value in a variable." },
+    2: { title: "Arrays", color: "red", desc: "Declare an array and place a value." },
+    3: { title: "Input & Output", color: "emerald", desc: "Ask for a value, then display it." },
+    4: { title: "Comparisons", color: "purple", desc: "Write the condition." },
+    5: { title: "Selection", color: "pink", desc: "Write an IF statement." },
+    6: { title: "FOR Loops", color: "orange", desc: "Write a counting loop." },
+    7: { title: "Final Exam", color: "rose", desc: "15 Questions. No Timer." }
+};
+
+const levelTitleSizeClass = (title) => {
+    if (title.length > 24) return 'text-base';
+    return 'text-lg';
+};
+
+// --- VALIDATION ENGINE ---
+// Tokenize rather than regex-substitute-and-compare: a string literal is
+// captured whole (so its case and internal spacing are never touched by
+// normalisation), then every other token is compared case-insensitively
+// with whitespace between tokens completely ignored, since tokenizing
+// throws it away by construction. This is deliberately different from
+// (and fixes a real bug in) the main site's own normalisePseudocodeLine,
+// which uppercases a whole line including string contents - fine for a
+// supporting lesson-page check, wrong here since this app's entire point
+// is precise syntax, and "Dog" must not equal "dog".
+const TOKEN_RE = /"[^"]*"|<-|<=|>=|<>|[A-Za-z_][A-Za-z0-9_]*|\d+(?:\.\d+)?|[\[\]():,+\-*/=<>]/g;
+const tokenize = (line) => (String(line || '').match(TOKEN_RE) || []);
+const isStringToken = (tok) => tok.length >= 2 && tok[0] === '"' && tok[tok.length - 1] === '"';
+const tokensEqual = (a, b) => {
+    if (a.length !== b.length) return false;
+    return a.every((tok, i) => {
+        const other = b[i];
+        if (isStringToken(tok) || isStringToken(other)) return tok === other;
+        return tok.toUpperCase() === other.toUpperCase();
+    });
+};
+// Compares the student's answer (raw multi-line text) against the
+// expected canonical lines (also raw text - tokenized the same way, so
+// neither side needs hand-built token arrays). Blank lines are dropped
+// before comparing, so trailing newlines/blank padding never cost a
+// line-count mismatch. Line count must match exactly: an extra or
+// missing line is a real difference, not cosmetic.
+const checkAnswer = (studentText, expectedLines) => {
+    const studentLines = String(studentText || '').split('\n').map((l) => l.trim()).filter((l) => l.length > 0);
+    if (studentLines.length !== expectedLines.length) return false;
+    return studentLines.every((line, i) => tokensEqual(tokenize(line), tokenize(expectedLines[i])));
+};
+
+// --- WORD BANKS ---
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const VAR_NAMES = ['Age', 'Score', 'Total', 'Count', 'Price', 'Height', 'Weight', 'Number', 'Result', 'Amount', 'Length', 'Width'];
+const ARRAY_NAMES = ['Numbers', 'Scores', 'Names', 'Items', 'Prices', 'Ages', 'Words', 'Marks'];
+const LOOP_VAR_NAMES = ['Index', 'Count', 'Number', 'Position'];
+const STRING_VALUES = ['Dog', 'Cat', 'Red', 'Blue', 'Yes', 'No', 'Pass', 'Fail', 'Hello', 'Start', 'Gold', 'Silver'];
+const RELATIONS = [
+    { text: 'more than or equal to', op: '>=' },
+    { text: 'greater than', op: '>' },
+    { text: 'less than', op: '<' },
+    { text: 'less than or equal to', op: '<=' },
+    { text: 'equal to', op: '=' },
+    { text: 'not equal to', op: '<>' }
+];
+const MESSAGE_PAIRS = [['Pass', 'Fail'], ['High', 'Low'], ['Winner', 'Loser'], ['Yes', 'No'], ['Open', 'Closed']];
+
+// --- QUESTION GENERATORS ---
+// Each returns { prompt, expected }. `expected` is the canonical answer
+// as plain-text lines - checkAnswer tokenizes these the same way it
+// tokenizes the student's own answer, so there is exactly one place
+// that decides what counts as equivalent syntax.
+const genLevel1 = () => {
+    const name = pick(VAR_NAMES);
+    if (Math.random() < 0.5) {
+        const val = pick(STRING_VALUES);
+        return { prompt: `Store the text "${val}" in a variable called ${name}.`, expected: [`${name} <- "${val}"`] };
+    }
+    const val = randInt(1, 100);
+    return { prompt: `Store the number ${val} in a variable called ${name}.`, expected: [`${name} <- ${val}`] };
+};
+const genLevel2 = () => {
+    const name = pick(ARRAY_NAMES);
+    const size = randInt(3, 6);
+    const pos = randInt(1, size);
+    const isString = Math.random() < 0.6;
+    const type = isString ? 'STRING' : 'INTEGER';
+    const val = isString ? pick(STRING_VALUES) : randInt(1, 50);
+    const displayVal = isString ? `"${val}"` : val;
+    return {
+        prompt: `Create an array called ${name} with ${size} positions, storing ${type.toLowerCase()}s. Then place ${displayVal} in position ${pos}.`,
+        expected: [`DECLARE ${name} : ARRAY[1:${size}] OF ${type}`, `${name}[${pos}] <- ${displayVal}`]
+    };
+};
+const genLevel3 = () => {
+    const name = pick(VAR_NAMES);
+    const mode = pick(['input', 'output', 'both']);
+    if (mode === 'input') return { prompt: `Ask the user to enter a value for ${name}.`, expected: [`INPUT ${name}`] };
+    if (mode === 'output') return { prompt: `Display the value stored in ${name}.`, expected: [`OUTPUT ${name}`] };
+    return { prompt: `Ask the user to enter a value for ${name}, then display it.`, expected: [`INPUT ${name}`, `OUTPUT ${name}`] };
+};
+const genLevel4 = () => {
+    const name = pick(VAR_NAMES);
+    const rel = pick(RELATIONS);
+    const val = randInt(1, 100);
+    return { prompt: `Write the condition that checks whether ${name} is ${rel.text} ${val}.`, expected: [`${name} ${rel.op} ${val}`] };
+};
+const genLevel5 = () => {
+    const name = pick(VAR_NAMES);
+    const rel = pick(RELATIONS);
+    const val = randInt(1, 100);
+    const [msgTrue, msgFalse] = pick(MESSAGE_PAIRS);
+    return {
+        prompt: `If ${name} is ${rel.text} ${val}, output "${msgTrue}". Otherwise, output "${msgFalse}".`,
+        expected: [`IF ${name} ${rel.op} ${val} THEN`, `OUTPUT "${msgTrue}"`, `ELSE`, `OUTPUT "${msgFalse}"`, `ENDIF`]
+    };
+};
+const genLevel6 = () => {
+    const name = pick(LOOP_VAR_NAMES);
+    const start = randInt(1, 5);
+    const end = start + randInt(3, 8);
+    return {
+        prompt: `Write a loop that counts from ${start} to ${end} and outputs each number.`,
+        expected: [`FOR ${name} <- ${start} TO ${end}`, `OUTPUT ${name}`, `NEXT ${name}`]
+    };
+};
+const GENERATORS = { 1: genLevel1, 2: genLevel2, 3: genLevel3, 4: genLevel4, 5: genLevel5, 6: genLevel6 };
+const generateQuestion = (level) => (GENERATORS[level] ? GENERATORS[level]() : null);
+
+const saveScore = (score, level) => {
+    const key = `pseudocodeBlitz_scores_lvl${level}`;
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    stored.push({ score, date: new Date().toISOString() });
+    stored.sort((a, b) => b.score - a.score);
+    localStorage.setItem(key, JSON.stringify(stored.slice(0, 5)));
+};
+const saveExamResult = (score, total, time) => {
+    const key = 'pseudocodeBlitz_exam_history';
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    stored.push({ score, total, time, date: new Date().toISOString() });
+    if (stored.length > 10) stored.shift();
+    localStorage.setItem(key, JSON.stringify(stored));
+};
+const getScores = (level) => JSON.parse(localStorage.getItem(`pseudocodeBlitz_scores_lvl${level}`) || '[]');
+const getExamHistory = () => JSON.parse(localStorage.getItem('pseudocodeBlitz_exam_history') || '[]');
+const formatTime = (ms) => {
+    const seconds = Math.floor(ms / 1000);
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}m ${s}s`;
+};
+
+const calculateMaxTime = (currentScore, isHardMode, multiplier = 1) => {
+    const steps = Math.floor(currentScore / 250);
+    const speedPercent = Math.min(120, 10 + (steps * 10));
+    let duration = (BASE_DURATION_REF * 100) / speedPercent;
+    if (isHardMode) duration = duration / 2;
+    return duration * multiplier;
+};
+
+// --- GAME LOOP (identical mechanic to Binary/Boolean Blitz) ---
+const useGameLoop = (active, onGameOver, isHardMode, timeMultiplier = 1) => {
+    const [stress, setStress] = useState(0);
+    const [score, setScore] = useState(0);
+    const [gameSpeed, setGameSpeed] = useState(10);
+    const stressRef = useRef(0);
+    const scoreRef = useRef(0);
+    const maxTimeRef = useRef(calculateMaxTime(0, isHardMode, timeMultiplier));
+    const lastTimeRef = useRef(Date.now());
+    const frameRef = useRef();
+    const resetRound = useCallback((pointsToAdd = 0) => {
+        const newScore = scoreRef.current + pointsToAdd;
+        scoreRef.current = newScore;
+        setScore(newScore);
+        const newStress = Math.max(0, stressRef.current - 0.3);
+        stressRef.current = newStress;
+        setStress(newStress);
+        maxTimeRef.current = calculateMaxTime(newScore, isHardMode, timeMultiplier);
+        const steps = Math.floor(newScore / 250);
+        setGameSpeed(Math.min(120, 10 + (steps * 10)));
+    }, [isHardMode, timeMultiplier]);
+    useEffect(() => {
+        if (!active) { cancelAnimationFrame(frameRef.current); return; }
+        lastTimeRef.current = Date.now();
+        const loop = () => {
+            const now = Date.now();
+            const delta = now - lastTimeRef.current;
+            lastTimeRef.current = now;
+            const increase = delta / maxTimeRef.current;
+            stressRef.current += increase;
+            if (stressRef.current >= 1) {
+                stressRef.current = 1; setStress(1); cancelAnimationFrame(frameRef.current); onGameOver(scoreRef.current); return;
+            }
+            setStress(stressRef.current);
+            frameRef.current = requestAnimationFrame(loop);
+        };
+        frameRef.current = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(frameRef.current);
+    }, [active, onGameOver]);
+    const addStress = useCallback((amount) => { stressRef.current = Math.min(0.99, stressRef.current + amount); setStress(stressRef.current); }, []);
+    return { stress, score, resetRound, addStress, gameSpeed };
+};
+
+// --- SHARED COMPONENTS ---
+const Button = ({ onClick, children, className = "", disabled = false, variant = "primary" }) => {
+    const base = "font-bold py-3 px-6 rounded-lg shadow-lg transform transition-all active:scale-95 no-select flex items-center justify-center";
+    const variants = { primary: "bg-violet-600 hover:bg-violet-500 text-white shadow-violet-900/50", secondary: "bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600", success: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/50", danger: "bg-red-600 hover:bg-red-500 text-white shadow-red-900/50" };
+    return <button type="button" onClick={onClick} disabled={disabled} className={`${base} ${variants[variant]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>{children}</button>;
+};
+
+const Toggle = ({ checked, onChange, label }) => (
+    <div className="flex items-center justify-center mb-6 cursor-pointer" onClick={() => onChange(!checked)}>
+        <span className={`mr-3 font-bold text-sm ${checked ? 'text-red-400' : 'text-slate-400'}`}>{label}</span>
+        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+            <div className={`w-12 h-6 rounded-full shadow-inner transition-colors duration-200 ${checked ? 'bg-red-900' : 'bg-slate-700'}`}></div>
+            <div className={`absolute w-6 h-6 rounded-full shadow inset-y-0 left-0 transition-transform duration-200 ease-in-out ${checked ? 'translate-x-6 bg-red-500' : 'translate-x-0 bg-slate-400'}`}></div>
+        </div>
+    </div>
+);
+
+const HelpModal = ({ levelId, onClose }) => {
+    const content = {
+        1: { title: "Variables", body: "Type the line of Cambridge pseudocode that stores the given value in the named variable.\nUse the <- arrow to assign a value.\nText values need double quotes, numbers do not.\nExtra spaces never matter, but the arrow, quotes and spelling do." },
+        2: { title: "Arrays", body: "Write two lines: DECLARE the array with its size and type, then assign a value into one position.\nDECLARE Name : ARRAY[1:Size] OF TYPE\nName[Position] <- Value" },
+        3: { title: "Input & Output", body: "INPUT reads a value from the user into a variable.\nOUTPUT displays a value.\nWrite one instruction per line, in the order asked for." },
+        4: { title: "Comparisons", body: "Write the condition using a comparison operator: >, <, >=, <=, = or <>.\nCambridge pseudocode uses = for equals and <> for not equals, not == or !=." },
+        5: { title: "Selection", body: "Write a complete IF statement, one instruction per line:\nIF condition THEN\nOUTPUT \"...\"\nELSE\nOUTPUT \"...\"\nENDIF\nIndentation is ignored, only the words and symbols on each line matter." },
+        6: { title: "FOR Loops", body: "Write a complete counting loop, one instruction per line:\nFOR Variable <- Start TO End\nOUTPUT Variable\nNEXT Variable" },
+        7: { title: "Final Exam", body: "15 questions mixed from every level above.\nNo time limit for Game Over, but time is tracked.\nSpacing never matters, but keywords, operators, capitalisation inside quotes and syntax must be exactly right." }
+    };
+    const data = content[levelId] || { title: "Help", body: "Good luck!" };
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 fade-in" onClick={onClose}>
+            <div className="bg-slate-800 border border-slate-600 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative" onClick={e => e.stopPropagation()}>
+                <h2 className="text-2xl font-bold text-white mb-4 leading-tight">{data.title}</h2>
+                <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">{data.body}</p>
+                <Button onClick={onClose} className="w-full mt-6">Close</Button>
+            </div>
+        </div>
+    );
+};
+
+const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children, isHardMode }) => {
+    const bgOpacity = Math.min(0.7, stress);
+    const barWidth = Math.max(0, (1 - stress) * 100);
+    return (
+        <div className={`h-full flex flex-col p-4 relative transition-colors duration-100 ${stress > 0.85 ? 'shake' : ''}`} style={{ backgroundColor: `rgba(76, 29, 149, ${bgOpacity})` }}>
+            <div className="flex justify-between items-center mb-4 z-10 shrink-0">
+                <button onClick={onExit} className="p-2 bg-slate-900/50 hover:bg-slate-800 rounded-full text-white backdrop-blur-sm"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg></button>
+                <div className="flex flex-col items-center">
+                    <span className={`text-xs font-bold tracking-widest uppercase mb-1 text-center leading-tight max-w-[38vw] ${isHardMode ? 'text-red-400' : 'text-slate-300'}`}>{levelName} {isHardMode && '★'}</span>
+                    <div className={`bg-slate-900/90 px-6 py-1 rounded-full border shadow-lg ${isHardMode ? 'border-red-500/50' : 'border-violet-500/30'}`}><span className="text-xl font-mono text-white font-bold">{score}</span></div>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">SPEED</span>
+                    <span className={`text-xl font-bold font-mono ${gameSpeed > 100 || isHardMode ? 'text-red-400 animate-pulse' : 'text-violet-400'}`}>{gameSpeed}%</span>
+                    <button onClick={onHelp} className="mt-1 text-xs bg-slate-700 hover:bg-white hover:text-black rounded-full w-6 h-6 flex items-center justify-center font-bold transition-colors" title="Level Help">?</button>
+                </div>
+            </div>
+            <div className="w-full h-2 bg-slate-900/50 rounded-full mb-4 overflow-hidden z-10 shrink-0"><div className={`h-full transition-all duration-100 ${stress > 0.7 ? 'bg-red-500' : 'bg-violet-500'}`} style={{ width: `${barWidth}%` }}></div></div>
+            <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
+        </div>
+    );
+};
+
+const ExamLayout = ({ currentQ, totalQ, onExit, children }) => (
+    <div className="h-full flex flex-col p-4 bg-slate-900 relative">
+        <div className="flex justify-between items-center mb-6 z-10 shrink-0">
+            <button onClick={onExit} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full text-white"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg></button>
+            <div className="text-xl font-bold text-rose-400 tracking-widest">FINAL EXAM</div>
+            <div className="bg-slate-800 px-4 py-1 rounded-full border border-rose-500/30"><span className="text-white font-mono">Q: {currentQ} / {totalQ}</span></div>
+        </div>
+        <div className="w-full h-2 bg-slate-800 rounded-full mb-8 overflow-hidden"><div className="h-full bg-rose-500 transition-all duration-300" style={{ width: `${(currentQ / totalQ) * 100}%` }}></div></div>
+        <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
+    </div>
+);
+
+// --- TYPED LEVEL: handles all six practice levels (all share one shape,
+// unlike Binary/Boolean Blitz's several distinct level components - a
+// prompt, a free-text answer, one Check button). Correctness is
+// all-or-nothing per question (not the lesson site's own per-line
+// partial credit), matching this game's fast-arcade pace. A wrong
+// submission never says which line or token is wrong, only that
+// something is - the same "don't leak the answer through feedback"
+// principle Boolean Blitz's own Level 2 fix established this session.
+const TypedLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
+    const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
+    const handleGameEnd = useCallback((s) => onGameOver(s, level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver, level]);
+    const handleExit = () => onExit(level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
+    const { stress, score, resetRound, addStress, gameSpeed } = useGameLoop(true, handleGameEnd, isHardMode, LEVEL_TIME_MULTIPLIER[level] || 1.5);
+    const [question, setQuestion] = useState(null);
+    const [answer, setAnswer] = useState('');
+    const [shake, setShake] = useState(false);
+    const [justRight, setJustRight] = useState(false);
+    useEffect(() => { next(); }, [level]);
+    const next = (points = 0) => {
+        setQuestion(generateQuestion(level));
+        setAnswer('');
+        setJustRight(false);
+        resetRound(isHardMode ? Math.floor(points * 2) : points);
+    };
+    const isMultiLine = question && question.expected.length > 1;
+    const submit = () => {
+        if (!question || justRight || !answer.trim()) return;
+        const correct = checkAnswer(answer, question.expected);
+        if (correct) {
+            correctRef.current += 1;
+            setJustRight(true);
+            setTimeout(() => next(70 + question.expected.length * 20), 500);
+        } else {
+            wrongRef.current += 1;
+            setShake(true);
+            addStress(0.15);
+            setTimeout(() => setShake(false), 500);
+        }
+    };
+    const handleKeyDown = (e) => {
+        if (!isMultiLine && e.key === 'Enter') { e.preventDefault(); submit(); }
+        else if (isMultiLine && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(); }
+    };
+    if (!question) return null;
+    return (
+        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName={`L${level}: ${LEVELS[level].title}`} isHardMode={isHardMode}>
+            <div className={`text-center mb-6 max-w-xl ${shake ? 'shake' : ''}`}>
+                <div className="text-slate-400 text-sm mb-2">WRITE THE PSEUDOCODE</div>
+                <div className="text-lg md:text-xl font-bold text-violet-200 leading-snug">{question.prompt}</div>
+            </div>
+            {isMultiLine ? (
+                <textarea
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    disabled={justRight}
+                    spellCheck={false}
+                    autoFocus
+                    rows={question.expected.length + 1}
+                    className={`w-full max-w-lg bg-slate-800 border-2 rounded-lg p-3 font-mono text-sm text-white mb-4 focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-violet-500'}`}
+                    placeholder="Type your pseudocode here..."
+                />
+            ) : (
+                <input
+                    type="text"
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    disabled={justRight}
+                    spellCheck={false}
+                    autoFocus
+                    className={`w-full max-w-lg bg-slate-800 border-2 rounded-lg p-3 font-mono text-base text-white mb-4 text-center focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-violet-500'}`}
+                    placeholder="Type your pseudocode here..."
+                />
+            )}
+            <div className="text-xs text-slate-500 uppercase tracking-widest mb-4">{isMultiLine ? 'One instruction per line' : 'Press Enter or Check'}</div>
+            <Button onClick={submit} disabled={justRight || !answer.trim()} variant={justRight ? 'success' : 'primary'} className="w-40">{justRight ? 'Correct!' : 'Check'}</Button>
+        </GameLayout>
+    );
+};
+
+// --- FINAL EXAM: 15 mixed questions from all six levels, no stress
+// meter (matching Binary/Boolean Blitz's own exam), time only tracked. ---
+const EXAM_POOL = [1, 2, 3, 4, 5, 6];
+
+const ExamLevel = ({ onExit, onFinish }) => {
+    const startTimeRef = useRef(Date.now());
+    const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [correctCount, setCorrectCount] = useState(0);
+    const [questions, setQuestions] = useState([]);
+    const [answer, setAnswer] = useState('');
+    const [shake, setShake] = useState(false);
+    useEffect(() => {
+        const qs = [];
+        for (let i = 0; i < 15; i++) {
+            const lvl = EXAM_POOL[Math.floor(Math.random() * EXAM_POOL.length)];
+            const q = generateQuestion(lvl);
+            q.levelType = lvl;
+            qs.push(q);
+        }
+        setQuestions(qs);
+    }, []);
+    const submit = () => {
+        if (!answer.trim()) return;
+        const q = questions[currentQIndex];
+        const isCorrect = checkAnswer(answer, q.expected);
+        if (isCorrect) setCorrectCount((prev) => prev + 1);
+        else { setShake(true); setTimeout(() => setShake(false), 500); }
+        setAnswer('');
+        if (currentQIndex < 14) {
+            setCurrentQIndex((prev) => prev + 1);
+        } else {
+            const duration = Date.now() - startTimeRef.current;
+            onFinish(correctCount + (isCorrect ? 1 : 0), 15, duration);
+        }
+    };
+    const handleKeyDown = (e, isMultiLine) => {
+        if (!isMultiLine && e.key === 'Enter') { e.preventDefault(); submit(); }
+        else if (isMultiLine && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(); }
+    };
+    if (questions.length === 0) return <div>Loading Exam...</div>;
+    const q = questions[currentQIndex];
+    const isMultiLine = q.expected.length > 1;
+    return (
+        <ExamLayout currentQ={currentQIndex + 1} totalQ={15} onExit={() => onExit(7, 0, 0, 0, 0)}>
+            <div className="w-full max-w-2xl mx-auto pt-4 flex flex-col items-center">
+                <div className={`text-center mb-6 max-w-xl ${shake ? 'shake' : ''}`}>
+                    <div className="text-slate-400 text-sm mb-2">WRITE THE PSEUDOCODE</div>
+                    <div className="text-lg md:text-xl font-bold text-rose-200 leading-snug">{q.prompt}</div>
+                </div>
+                {isMultiLine ? (
+                    <textarea value={answer} onChange={(e) => setAnswer(e.target.value)} onKeyDown={(e) => handleKeyDown(e, true)} spellCheck={false} autoFocus rows={q.expected.length + 1}
+                        className="w-full max-w-lg bg-slate-800 border-2 border-slate-600 focus:border-rose-500 rounded-lg p-3 font-mono text-sm text-white mb-4 focus:outline-none" placeholder="Type your pseudocode here..." />
+                ) : (
+                    <input type="text" value={answer} onChange={(e) => setAnswer(e.target.value)} onKeyDown={(e) => handleKeyDown(e, false)} spellCheck={false} autoFocus
+                        className="w-full max-w-lg bg-slate-800 border-2 border-slate-600 focus:border-rose-500 rounded-lg p-3 font-mono text-base text-white mb-4 text-center focus:outline-none" placeholder="Type your pseudocode here..." />
+                )}
+                <Button onClick={submit} disabled={!answer.trim()} className="w-40">Submit</Button>
+            </div>
+        </ExamLayout>
+    );
+};
+
+// ============================================================
+// MAIN MENU
+// ============================================================
+const MainMenu = ({ onStart, isHardMode, setHardMode, playerName }) => {
+    const [helpLevel, setHelpLevel] = useState(null);
+    return (
+        <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar relative">
+            {helpLevel && <HelpModal levelId={helpLevel} onClose={() => setHelpLevel(null)} />}
+            <div className="text-center mb-4 mt-6">
+                <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-300 mb-1">PSEUDOCODE BLITZ</h1>
+                <p className="text-slate-400 text-sm">7 Levels. Cambridge pseudocode syntax.</p>
+                <p className="text-violet-400 text-xs mt-1 font-mono">{playerName}</p>
+            </div>
+            <div className="flex gap-3 mb-5 flex-wrap justify-center items-center">
+                <Toggle checked={isHardMode} onChange={setHardMode} label="HARD MODE" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl pb-24">
+                {Object.entries(LEVELS).map(([id, data]) => {
+                    const scores = getScores(id);
+                    const topScore = scores.length > 0 ? scores[0].score : '-';
+                    const isExam = id === '7';
+                    return (
+                        <div key={id} className={`bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-${data.color}-500 transition-all flex flex-col relative group`}>
+                            <div className="flex justify-between items-start mb-2">
+                                <h2 className={`${levelTitleSizeClass(data.title)} font-bold leading-tight text-${data.color}-400`}>{data.title}</h2>
+                                <button onClick={() => setHelpLevel(id)} className="text-slate-500 hover:text-white bg-slate-700 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold transition-colors">?</button>
+                            </div>
+                            <p className="text-xs text-slate-400 mb-4">{data.desc}</p>
+                            <div className="flex-1"></div>
+                            <div className="flex justify-between items-end mt-4">
+                                {isExam ? (
+                                    <div className="text-xs text-slate-500">Last: <span className="text-white font-mono">{getExamHistory().length > 0 ? getExamHistory().slice(-1)[0].score + '/15' : '-'}</span></div>
+                                ) : (
+                                    <div className="text-xs text-slate-500">Best: <span className="text-white font-mono">{topScore}</span></div>
+                                )}
+                                <button onClick={() => onStart(parseInt(id))} className={`px-4 py-2 rounded-lg bg-${data.color}-600 hover:bg-${data.color}-500 text-white font-bold text-sm shadow-lg`}>{isExam ? 'START' : 'PLAY'}</button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const GameOver = ({ score, level, onRestart, onHome }) => (
+    <div className="flex flex-col items-center justify-center h-full p-4 fade-in space-y-8 text-center bg-slate-900/95 z-50 absolute inset-0">
+        <h2 className="text-6xl font-bold text-red-500 shake">GAME OVER</h2>
+        <div className="bg-slate-800 p-8 rounded-2xl border-2 border-slate-700 shadow-2xl w-full max-w-sm">
+            <p className="text-slate-400 uppercase tracking-widest text-sm mb-2">Level {level} Score</p>
+            <p className="text-7xl font-mono font-bold text-white">{score}</p>
+        </div>
+        <div className="flex flex-col space-y-3 w-full max-w-xs">
+            <Button onClick={onRestart} className="w-full text-lg">Try Again</Button>
+            <Button onClick={onHome} variant="secondary" className="w-full">Back to Menu</Button>
+        </div>
+    </div>
+);
+
+const ExamResults = ({ score, total, duration, onHome }) => (
+    <div className="flex flex-col items-center justify-center h-full p-4 fade-in space-y-8 text-center bg-slate-900 z-50 absolute inset-0">
+        <h2 className="text-5xl font-bold text-white mb-4">Exam Complete</h2>
+        <div className="bg-slate-800 p-8 rounded-2xl border-2 border-slate-700 shadow-2xl w-full max-w-md">
+            <div className="text-slate-400 uppercase tracking-widest text-sm mb-2">Score</div>
+            <div className="text-6xl font-mono font-bold text-rose-400 mb-6">{score} <span className="text-2xl text-slate-500">/ {total}</span></div>
+            <div className="flex justify-between text-sm border-t border-slate-700 pt-4">
+                <span className="text-slate-400">Time Taken:</span>
+                <span className="text-white font-mono">{formatTime(duration)}</span>
+            </div>
+        </div>
+        <Button onClick={onHome} variant="primary" className="w-full max-w-xs">Return to Menu</Button>
+    </div>
+);
+
+// ============================================================
+// APP ROOT
+// ============================================================
+const App = () => {
+    const [playerName, setPlayerName] = useState(() => window.__bcPlayerName || 'Player');
+    useEffect(() => {
+        if (window.__bcPlayerName) { setPlayerName(window.__bcPlayerName); return; }
+        const handler = (event) => {
+            const data = event.data;
+            if (data && data.type === 'BC_IDENTITY' && data.name) setPlayerName(data.name);
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    }, []);
+    const [view, setView] = useState('menu');
+    const [activeLevel, setActiveLevel] = useState(1);
+    const [lastScore, setLastScore] = useState(0);
+    const [lastExamStats, setLastExamStats] = useState(null);
+    const [isHardMode, setHardMode] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
+
+    const handleGameOver = (score, level, duration, correct, wrong) => {
+        saveScore(score, level);
+        postToParent({ type: 'PSB_PROGRESS', kind: 'level', level, score, duration, correct, wrong });
+        setLastScore(score); setActiveLevel(level); setView('gameover');
+    };
+
+    const handleExit = (level, duration, correct, wrong, score) => {
+        if (level !== 7) {
+            saveScore(score, level);
+            postToParent({ type: 'PSB_PROGRESS', kind: 'level', level, score, duration, correct, wrong });
+        }
+        setView('menu');
+    };
+
+    const handleExamFinish = (score, total, duration) => {
+        saveExamResult(score, total, duration);
+        postToParent({ type: 'PSB_PROGRESS', kind: 'exam', score, total, duration });
+        setLastExamStats({ score, total, duration });
+        setView('exam_results');
+    };
+
+    return (
+        <div className="w-full h-full relative">
+            {showHelp && <HelpModal levelId={activeLevel} onClose={() => setShowHelp(false)} />}
+
+            {view === 'menu' && (
+                <MainMenu
+                    onStart={(lvl) => { setActiveLevel(lvl); setView(lvl === 7 ? 'exam' : 'game'); }}
+                    isHardMode={isHardMode}
+                    setHardMode={setHardMode}
+                    playerName={playerName}
+                />
+            )}
+
+            {view === 'game' && (
+                <TypedLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)} />
+            )}
+
+            {view === 'exam' && <ExamLevel onExit={(l, d) => handleExit(l, d, 0, 0, 0)} onFinish={handleExamFinish} />}
+            {view === 'gameover' && <GameOver score={lastScore} level={activeLevel} onRestart={() => setView('game')} onHome={() => setView('menu')} />}
+            {view === 'exam_results' && <ExamResults {...lastExamStats} onHome={() => setView('menu')} />}
+        </div>
+    );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
