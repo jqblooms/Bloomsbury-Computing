@@ -391,6 +391,15 @@ const TypedLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
         if (!isMultiLine && e.key === 'Enter') { e.preventDefault(); submit(); }
         else if (isMultiLine && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(); }
     };
+    // autoFocus only fires on mount - the input/textarea never unmounts
+    // between questions (same element, just a new `question` prop), so
+    // without this a student has to click back into the box every single
+    // round. Re-focusing whenever `question` changes covers every new
+    // question, not just the very first one.
+    const fieldRef = useRef(null);
+    useEffect(() => {
+        if (fieldRef.current) fieldRef.current.focus();
+    }, [question]);
     if (!question) return null;
     return (
         <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName={`L${level}: ${LEVELS[level].title}`} isHardMode={isHardMode}>
@@ -400,25 +409,25 @@ const TypedLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
             </div>
             {isMultiLine ? (
                 <textarea
+                    ref={fieldRef}
                     value={answer}
                     onChange={(e) => setAnswer(e.target.value)}
                     onKeyDown={handleKeyDown}
                     disabled={justRight}
                     spellCheck={false}
-                    autoFocus
                     rows={question.expected.length + 1}
                     className={`w-full max-w-lg bg-slate-800 border-2 rounded-lg p-3 font-mono text-sm text-white mb-4 focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-violet-500'}`}
                     placeholder="Type your pseudocode here..."
                 />
             ) : (
                 <input
+                    ref={fieldRef}
                     type="text"
                     value={answer}
                     onChange={(e) => setAnswer(e.target.value)}
                     onKeyDown={handleKeyDown}
                     disabled={justRight}
                     spellCheck={false}
-                    autoFocus
                     className={`w-full max-w-lg bg-slate-800 border-2 rounded-lg p-3 font-mono text-base text-white mb-4 text-center focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-violet-500'}`}
                     placeholder="Type your pseudocode here..."
                 />
@@ -468,6 +477,13 @@ const ExamLevel = ({ onExit, onFinish }) => {
         if (!isMultiLine && e.key === 'Enter') { e.preventDefault(); submit(); }
         else if (isMultiLine && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(); }
     };
+    // Same re-focus-on-every-question fix as TypedLevel: autoFocus alone
+    // only fires once, on mount, so without this a student has to click
+    // back into the box for every one of the 15 exam questions.
+    const fieldRef = useRef(null);
+    useEffect(() => {
+        if (fieldRef.current) fieldRef.current.focus();
+    }, [currentQIndex, questions]);
     if (questions.length === 0) return <div>Loading Exam...</div>;
     const q = questions[currentQIndex];
     const isMultiLine = q.expected.length > 1;
@@ -479,10 +495,10 @@ const ExamLevel = ({ onExit, onFinish }) => {
                     <div className="text-lg md:text-xl font-bold text-rose-200 leading-snug">{q.prompt}</div>
                 </div>
                 {isMultiLine ? (
-                    <textarea value={answer} onChange={(e) => setAnswer(e.target.value)} onKeyDown={(e) => handleKeyDown(e, true)} spellCheck={false} autoFocus rows={q.expected.length + 1}
+                    <textarea ref={fieldRef} value={answer} onChange={(e) => setAnswer(e.target.value)} onKeyDown={(e) => handleKeyDown(e, true)} spellCheck={false} rows={q.expected.length + 1}
                         className="w-full max-w-lg bg-slate-800 border-2 border-slate-600 focus:border-rose-500 rounded-lg p-3 font-mono text-sm text-white mb-4 focus:outline-none" placeholder="Type your pseudocode here..." />
                 ) : (
-                    <input type="text" value={answer} onChange={(e) => setAnswer(e.target.value)} onKeyDown={(e) => handleKeyDown(e, false)} spellCheck={false} autoFocus
+                    <input ref={fieldRef} type="text" value={answer} onChange={(e) => setAnswer(e.target.value)} onKeyDown={(e) => handleKeyDown(e, false)} spellCheck={false}
                         className="w-full max-w-lg bg-slate-800 border-2 border-slate-600 focus:border-rose-500 rounded-lg p-3 font-mono text-base text-white mb-4 text-center focus:outline-none" placeholder="Type your pseudocode here..." />
                 )}
                 <Button onClick={submit} disabled={!answer.trim()} className="w-40">Submit</Button>
