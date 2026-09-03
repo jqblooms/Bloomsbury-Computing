@@ -59,6 +59,7 @@
   }
   .stat-pill .icon { font-size: 1.1rem; }
   #money-pill { color: #1d6b2e; }
+  #earned-pill { color: #9a5b0a; }
   #hud .hint { color: #ffe6b8; font-size: .78rem; font-weight: 600; max-width: 260px; text-align: right; display: none; }
   @media (min-width: 980px) { #hud .hint { display: block; } }
 
@@ -111,6 +112,18 @@
   .shop-item button:disabled { background: #b7c9b6; box-shadow: none; cursor: not-allowed; }
   .shop-item button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
   .shop-item .have { grid-column: 1 / -1; font-size: .72rem; color: var(--muted); font-weight: 700; }
+  .shop-item .price.hot { color: #b45309; }
+  .shop-item.locked { background: #f1ece0; opacity: .82; }
+  .shop-item.locked img { filter: grayscale(1) brightness(0.6); }
+  .shop-item .locked-msg { grid-column: 1 / -1; font-size: .7rem; color: var(--muted); font-weight: 700; }
+
+  #machine-tiers { display: flex; gap: 6px; margin-top: 6px; }
+  .machine-tier-btn {
+    flex: 1; border: 2px solid #3d6fc4; border-radius: 8px; padding: 6px 4px; background: #eaf2ff;
+    color: #04214f; font-weight: 800; font-size: .68rem; cursor: pointer; text-align: center; line-height: 1.35;
+  }
+  .machine-tier-btn.active { background: #6ea8fe; box-shadow: inset 0 0 0 2px #fff; }
+  .machine-tier-btn:disabled { opacity: .5; cursor: not-allowed; }
 
   #code-panel { flex: 1; display: flex; flex-direction: column; min-height: 260px; }
   #code-input {
@@ -168,6 +181,7 @@
     </div>
     <div id="stats">
       <div class="stat-pill" id="money-pill"><span class="icon">🪙</span><span id="money-value">0</span></div>
+      <div class="stat-pill" id="earned-pill" title="Total coins ever earned - unlocks new vegetables, spending it back down doesn't undo that"><span class="icon">📈</span><span id="earned-value">0</span></div>
     </div>
     <div class="hint">Click a tile to move there. Write pseudocode to plant, buy and automate!</div>
   </header>
@@ -192,6 +206,7 @@
           <button type="button" id="run-btn">▶ Run</button>
           <button type="button" id="machine-btn">🤖 Place Machine</button>
         </div>
+        <div id="machine-tiers"></div>
         <div id="console-output"></div>
       </section>
 
@@ -200,7 +215,7 @@
           <summary>📖 Pseudocode cheat sheet</summary>
           <table>
             <tr><td><code>Plant("Carrot")</code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
-            <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, if you have enough money.</td></tr>
+            <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet. Buying the same vegetable a lot in a row makes its price climb - it cools back down if you leave it alone for a bit, so it's worth growing more than one kind at once.</td></tr>
             <tr><td><code>Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing.</td></tr>
             <tr><td><code>Move_up()</code></td><td class="desc">Moves your cursor one tile up the field.</td></tr>
             <tr><td><code>Move_down()</code></td><td class="desc">Moves your cursor one tile down the field.</td></tr>
@@ -214,6 +229,8 @@
             <tr><td><code>FOR Index &lt;- 1 TO 5<br>&nbsp;&nbsp;...<br>NEXT Index</code></td><td class="desc">Repeats the lines in between, 5 times.</td></tr>
           </table>
           <p class="desc" style="margin:8px 0 0">A little white dot on your cursor (or a machine's blue diamond) shows which way it's facing.</p>
+          <p class="desc" style="margin:6px 0 0">New vegetables unlock as your <b>total coins earned</b> (top right, not your current balance) goes up, and after you've sold a few of the vegetable before them. Spending money doesn't undo that progress.</p>
+          <p class="desc" style="margin:6px 0 0">Place Machine costs money too - pick Basic, Quick or Turbo underneath it first. A faster machine reruns its saved code more often.</p>
         </details>
       </section>
     </aside>
@@ -232,18 +249,86 @@ var GRID_SIZE = 8;
 var TILE_SIZE = 1;
 var HALF = (GRID_SIZE - 1) / 2;
 
-// Vegetable catalogue. `emoji` is a Twemoji (CC-BY 4.0) codepoint - loaded
-// once per veggie and rasterised onto a small canvas so it works as a
-// three.js texture regardless of the source SVG's own width/height quirks.
+// ============================================================
+// VEGETABLE CATALOGUE - progression design
+// ============================================================
+// This shape is deliberate, not just "9 vegetables with numbers on them" -
+// see the comments on each piece for why. In short, it borrows the two
+// ideas that make Cookie-Clicker-style economies hold up over a long
+// session instead of collapsing into "buy the best thing forever":
+//
+// 1. Tiers get exponentially more expensive AND exponentially slower to
+//    grow (seedCost x1.75 and growSeconds x1.28 per tier). A cheap early
+//    vegetable is still the best coins-per-second option for topping up
+//    cash between bigger harvests - it never becomes worthless, it just
+//    stops being where you put ALL your land.
+// 2. Buying the same vegetable over and over gets more expensive on its
+//    OWN (currentSeedPrice below), Cookie Clicker's classic per-building
+//    cost curve (their buildings use x1.15 per purchase; this uses a
+//    slightly steeper x1.13 so the effect is visible inside one lesson,
+//    not over hours). That price also cools back down if you leave that
+//    vegetable alone for a while. The result: spamming one vegetable
+//    forever stops being the cheapest option after a handful of
+//    purchases, and a farm growing several different vegetables at once
+//    is genuinely the strategically better one, not just a "nicer"
+//    playstyle - which was the whole point of this rework.
+// 3. Every tier past Carrot is locked behind *lifetime* coins earned
+//    (totalEarned - see GAME STATE below), not current spendable money,
+//    plus having actually sold a few of the tier before it. Money you
+//    are handed or have saved up cannot skip this - only real selling
+//    (which only happens by writing and running Sell()) advances it.
+//
+// `emoji` is a Twemoji (CC-BY 4.0) codepoint - loaded once per veggie and
+// rasterised onto a small canvas so it works as a three.js texture
+// regardless of the source SVG's own width/height quirks.
 // https://github.com/twitter/twemoji
-var VEGGIES = {
-  Carrot:   { emoji: '1f955', seedCost: 5,  sellPrice: 9,  growSeconds: 12 },
-  Potato:   { emoji: '1f954', seedCost: 6,  sellPrice: 11, growSeconds: 14 },
-  Tomato:   { emoji: '1f345', seedCost: 8,  sellPrice: 15, growSeconds: 16 },
-  Corn:     { emoji: '1f33d', seedCost: 10, sellPrice: 19, growSeconds: 20 },
-  Broccoli: { emoji: '1f966', seedCost: 12, sellPrice: 23, growSeconds: 24 }
-};
-var VEGGIE_NAMES = Object.keys(VEGGIES);
+var VEGGIE_TIERS = [
+  { name: 'Carrot',   emoji: '1f955' },
+  { name: 'Potato',   emoji: '1f954' },
+  { name: 'Tomato',   emoji: '1f345' },
+  { name: 'Corn',     emoji: '1f33d' },
+  { name: 'Broccoli', emoji: '1f966' },
+  { name: 'Chili Pepper', emoji: '1f336' },
+  { name: 'Eggplant', emoji: '1f346' },
+  { name: 'Watermelon', emoji: '1f349' },
+  { name: 'Golden Pineapple', emoji: '1f34d', tint: 0xffd863 }
+];
+
+var TIER_SEED_COST_BASE = 5;
+var TIER_SEED_COST_GROWTH = 1.75;   // cost jump from one tier to the next
+var TIER_SELL_MARGIN_BASE = 1.8;    // sellPrice = seedCost * margin
+var TIER_SELL_MARGIN_STEP = 0.08;   // margin improves slightly per tier
+var TIER_GROW_SECONDS_BASE = 10;
+var TIER_GROW_SECONDS_GROWTH = 1.28;
+var TIER_UNLOCK_EARNED_MULTIPLE = 8; // unlock i once totalEarned >= seedCost(i-1) * this
+var TIER_UNLOCK_SOLD_REQUIRED = 3;   // ...and you've sold at least this many of tier i-1
+
+var VEGGIES = {};
+VEGGIE_TIERS.forEach(function (t, i) {
+  var seedCost = Math.round(TIER_SEED_COST_BASE * Math.pow(TIER_SEED_COST_GROWTH, i));
+  var margin = TIER_SELL_MARGIN_BASE + i * TIER_SELL_MARGIN_STEP;
+  var growSeconds = Math.round(TIER_GROW_SECONDS_BASE * Math.pow(TIER_GROW_SECONDS_GROWTH, i));
+  VEGGIES[t.name] = {
+    tier: i,
+    emoji: t.emoji,
+    tint: t.tint || null,
+    seedCost: seedCost,
+    sellPrice: Math.round(seedCost * margin),
+    growSeconds: growSeconds,
+    unlockEarned: i === 0 ? 0 : Math.round(VEGGIES[VEGGIE_TIERS[i - 1].name].seedCost * TIER_UNLOCK_EARNED_MULTIPLE),
+    unlockPrevName: i === 0 ? null : VEGGIE_TIERS[i - 1].name
+  };
+});
+var VEGGIE_NAMES = VEGGIE_TIERS.map(function (t) { return t.name; });
+
+// Same-vegetable cost escalation ("heat"): every purchase of a vegetable
+// adds 1 to its heat, and price = seedCost * SEED_HEAT_GROWTH^heat. Heat
+// cools back down on its own at SEED_HEAT_DECAY_PER_SEC per second of not
+// buying that vegetable, computed lazily (see decaySeedHeat) rather than
+// ticked every frame, since it only ever needs to be current at the
+// moment someone looks at or acts on a price.
+var SEED_HEAT_GROWTH = 1.13;
+var SEED_HEAT_DECAY_PER_SEC = 1 / 20; // 1 purchase's worth of heat cools off every 20s
 
 function twemojiUrl(codepoint) {
   return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/' + codepoint + '.svg';
@@ -259,7 +344,13 @@ var FACING_VECTORS = [ { dx: 0, dz: -1 }, { dx: 1, dz: 0 }, { dx: 0, dz: 1 }, { 
 // GAME STATE
 // ============================================================
 var money = 40;
+var totalEarned = 0; // lifetime coins earned from selling - never goes down, gates vegetable unlocks
 var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
+var soldCount = {};  // { Carrot: 5, ... } lifetime sales per vegetable - the other unlock gate
+var seedHeat = {};        // { Carrot: 2.4, ... } current cost-escalation heat per vegetable
+var seedHeatUpdated = {}; // { Carrot: <timestamp>, ... } last time that heat was brought up to date
+var unlockedState = {};   // { Carrot: true, ... } cached from the last refreshUnlocks() call, so
+                           // sellAt() can tell what just changed rather than only what's true now
 var tiles = [];      // tiles[x][z] = { mesh, plant: null | PlantRecord, hasMachine: bool }
 // Every cursor (the player's own, and each machine's) is shaped the same:
 // {x, z} is its current tile, `facing` drives Move_forward/Turn_left/
@@ -272,6 +363,63 @@ var nextMachineId = 1;
 var isRunning = false; // true while the player's own program is executing
 
 function invCount(name) { return inventory[name] || 0; }
+
+// ============================================================
+// ECONOMY: unlocks and dynamic seed pricing
+// ============================================================
+function isUnlocked(name) {
+  var veg = VEGGIES[name];
+  if (!veg || veg.tier === 0) return true;
+  return totalEarned >= veg.unlockEarned && (soldCount[veg.unlockPrevName] || 0) >= TIER_UNLOCK_SOLD_REQUIRED;
+}
+
+// -oes, not just +s, for the two irregular plurals in the current list.
+var IRREGULAR_PLURALS = { Potato: 'Potatoes', Tomato: 'Tomatoes' };
+function pluralizeVeggie(name, count) {
+  if (count === 1) return name;
+  return IRREGULAR_PLURALS[name] || (name + 's');
+}
+
+// How much more (in coins earned, or sales of the previous vegetable)
+// is needed before this one unlocks - used to show shop rows a helpful
+// "you need X more" message instead of just hiding them.
+function unlockProgressMessage(name) {
+  var veg = VEGGIES[name];
+  var earnedLeft = Math.max(0, veg.unlockEarned - totalEarned);
+  var soldLeft = Math.max(0, TIER_UNLOCK_SOLD_REQUIRED - (soldCount[veg.unlockPrevName] || 0));
+  var prevPlural = pluralizeVeggie(veg.unlockPrevName, soldLeft);
+  if (earnedLeft > 0 && soldLeft > 0) {
+    return 'Earn ' + earnedLeft + ' more coins total and sell ' + soldLeft + ' more ' + prevPlural + '.';
+  }
+  if (earnedLeft > 0) return 'Earn ' + earnedLeft + ' more coins total (lifetime, not current balance).';
+  return 'Sell ' + soldLeft + ' more ' + prevPlural + '.';
+}
+
+// Brings a vegetable's heat up to date for "now", applying however much
+// cooldown has happened since it was last touched, then returns it. Doing
+// this lazily (only when a price is actually needed) avoids a per-frame
+// update for every vegetable, most of which nobody is buying most of the
+// time.
+function decaySeedHeat(name) {
+  var now = performance.now();
+  var last = seedHeatUpdated[name] || now;
+  var heat = seedHeat[name] || 0;
+  var elapsedSec = (now - last) / 1000;
+  heat = Math.max(0, heat - elapsedSec * SEED_HEAT_DECAY_PER_SEC);
+  seedHeat[name] = heat;
+  seedHeatUpdated[name] = now;
+  return heat;
+}
+
+// The price of the NEXT seed packet of this vegetable - its tier base
+// price, multiplied up by how "hot" (recently over-bought) it currently
+// is. Buying several different vegetables instead of one repeatedly keeps
+// every price close to base; buying only one repeatedly does not.
+function currentSeedPrice(name) {
+  var veg = VEGGIES[name];
+  var heat = decaySeedHeat(name);
+  return Math.round(veg.seedCost * Math.pow(SEED_HEAT_GROWTH, heat));
+}
 
 // ============================================================
 // THREE.JS SCENE SETUP
@@ -495,7 +643,7 @@ VEGGIE_NAMES.forEach(loadVeggieTexture); // warm the cache before anyone plants
 // ============================================================
 function plantAt(cursor, vegName) {
   if (!VEGGIES[vegName]) {
-    return { ok: false, message: 'There is no vegetable called "' + vegName + '". Try Carrot, Potato, Tomato, Corn or Broccoli.' };
+    return { ok: false, message: 'There is no vegetable called "' + vegName + '". Look at the shop for the names you can use.' };
   }
   var tile = tiles[cursor.x][cursor.z];
   if (tile.plant) {
@@ -509,7 +657,9 @@ function plantAt(cursor, vegName) {
   }
   inventory[vegName]--;
   var veg = VEGGIES[vegName];
-  var sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: loadVeggieTexture(vegName), transparent: true }));
+  var material = new THREE.SpriteMaterial({ map: loadVeggieTexture(vegName), transparent: true });
+  if (veg.tint) material.color.setHex(veg.tint);
+  var sprite = new THREE.Sprite(material);
   sprite.center.set(0.5, 0);
   sprite.scale.set(0.001, 0.001, 0.001);
   sprite.position.set(tileWorldX(cursor.x), 0.02, tileWorldZ(cursor.z));
@@ -531,27 +681,50 @@ function sellAt(cursor) {
   if (!tile.plant.ready) return { ok: false, message: 'That plant is not fully grown yet.' };
   var veg = VEGGIES[tile.plant.type];
   money += veg.sellPrice;
+  totalEarned += veg.sellPrice;
+  soldCount[tile.plant.type] = (soldCount[tile.plant.type] || 0) + 1;
   scene.remove(tile.plant.sprite);
   spawnFloatingText(cursor.x, cursor.z, '+' + veg.sellPrice + 'c', '#2e6b30');
   var soldName = tile.plant.type;
   tile.plant = null;
+  var justUnlocked = refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
-  return { ok: true, message: 'Sold the ' + soldName + ' for ' + veg.sellPrice + ' coins!' };
+  var message = 'Sold the ' + soldName + ' for ' + veg.sellPrice + ' coins!';
+  if (justUnlocked.length) message += ' New in the shop: ' + justUnlocked.join(', ') + '!';
+  return { ok: true, message: message };
+}
+
+// Re-checks every vegetable's unlock state after something that could
+// have changed it (selling something). Returns the names that flipped
+// from locked to unlocked just now, so the caller can tell the player.
+function refreshUnlocks() {
+  var justUnlocked = [];
+  VEGGIE_NAMES.forEach(function (name) {
+    var wasUnlocked = unlockedState[name];
+    var nowUnlocked = isUnlocked(name);
+    if (nowUnlocked && !wasUnlocked) justUnlocked.push(name);
+    unlockedState[name] = nowUnlocked;
+  });
+  return justUnlocked;
 }
 
 function buySeed(vegName) {
   if (!VEGGIES[vegName]) {
-    return { ok: false, message: 'There is no vegetable called "' + vegName + '". Try Carrot, Potato, Tomato, Corn or Broccoli.' };
+    return { ok: false, message: 'There is no vegetable called "' + vegName + '". Look at the shop for the names you can use.' };
   }
-  var veg = VEGGIES[vegName];
-  if (money < veg.seedCost) {
-    return { ok: false, message: 'You need ' + veg.seedCost + ' coins for ' + vegName + ' seeds, but you only have ' + money + '.' };
+  if (!isUnlocked(vegName)) {
+    return { ok: false, message: vegName + ' is not unlocked yet. ' + unlockProgressMessage(vegName) };
   }
-  money -= veg.seedCost;
+  var price = currentSeedPrice(vegName);
+  if (money < price) {
+    return { ok: false, message: 'You need ' + price + ' coins for ' + vegName + ' seeds right now, but you only have ' + money + '.' };
+  }
+  money -= price;
   inventory[vegName] = invCount(vegName) + 1;
+  seedHeat[vegName] = decaySeedHeat(vegName) + 1; // this purchase makes the NEXT one a little pricier
   updateHUD();
-  return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + veg.seedCost + ' coins.' };
+  return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + price + ' coins.' };
 }
 
 // Buy() in code takes the shop's exact label, e.g. "Carrot Seeds" - this
@@ -881,6 +1054,18 @@ machineBtn.addEventListener('click', function () {
 // ============================================================
 // MACHINES
 // ============================================================
+// "Better machines = faster intervals", paid for in money rather than
+// gated by totalEarned - unlike vegetables, a fast machine doesn't skip
+// any of the writing-pseudocode learning, it just makes an already-
+// written program tick over more often, so gating it the same way as a
+// vegetable tier isn't needed for the same reason.
+var MACHINE_TIERS = [
+  { name: 'Basic',  cost: 30,  intervalMs: 10000, color: 0x6ea8fe },
+  { name: 'Quick',  cost: 150, intervalMs: 6000,  color: 0x4fd1c5 },
+  { name: 'Turbo',  cost: 500, intervalMs: 3000,  color: 0xffa94d }
+];
+var selectedMachineTierIndex = 0;
+
 var MACHINE_CURSOR_COLOR = 0x2f6fe0;          // default, unselected
 var MACHINE_CURSOR_SELECTED_COLOR = 0xff5fc1; // clearly different from both
                                                // the default blue and the
@@ -906,12 +1091,12 @@ function escapeHtmlLocal(value) {
   return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function createMachineMarkerGroup() {
+function createMachineMarkerGroup(bodyColor) {
   var group = new THREE.Group();
 
   var body = new THREE.Mesh(
     new THREE.CylinderGeometry(0.22, 0.26, 0.4, 8),
-    new THREE.MeshStandardMaterial({ color: 0x6ea8fe, metalness: 0.2, roughness: 0.4 })
+    new THREE.MeshStandardMaterial({ color: bodyColor || 0x6ea8fe, metalness: 0.2, roughness: 0.4 })
   );
   body.position.y = 0.3;
   body.castShadow = true;
@@ -954,12 +1139,19 @@ function placeMachine(code) {
     logConsole('Cannot place machine: ' + e.message, true);
     return;
   }
+  var tier = MACHINE_TIERS[selectedMachineTierIndex];
+  if (money < tier.cost) {
+    logConsole('A ' + tier.name + ' Machine costs ' + tier.cost + ' coins, but you only have ' + money + '.', true);
+    return;
+  }
   var x = playerCursor.x, z = playerCursor.z;
   var tile = tiles[x][z];
   if (tile.hasMachine) { logConsole('There is already a machine on this tile.', true); return; }
   if (tile.plant) { logConsole('Clear the plant on this tile before placing a machine here.', true); return; }
 
-  var built = createMachineMarkerGroup();
+  money -= tier.cost;
+
+  var built = createMachineMarkerGroup(tier.color);
   built.group.position.set(tileWorldX(x), 0, tileWorldZ(z));
   scene.add(built.group);
   scene.add(built.cursorMesh);
@@ -968,7 +1160,8 @@ function placeMachine(code) {
     id: nextMachineId++,
     homeX: x, homeZ: z,
     code: code,
-    intervalMs: 10000, // one tier for this MVP - see cheat sheet note below
+    tierName: tier.name,
+    intervalMs: tier.intervalMs,
     // The machine's own home tile is (0, 0) for its Set_position calls -
     // see setPositionRelative().
     cursor: { x: x, z: z, facing: 0, homeX: x, homeZ: z },
@@ -986,8 +1179,31 @@ function placeMachine(code) {
   positionMachineCursorMarker(machine);
   updateFacingIndicator(machine.facingIndicator, machine.cursor.facing);
   scheduleMachine(machine);
-  logConsole('Machine placed! It will run its program every ' + (machine.intervalMs / 1000) + ' seconds.');
+  updateHUD();
+  logConsole(tier.name + ' Machine placed for ' + tier.cost + ' coins! It will run its program every ' + (machine.intervalMs / 1000) + ' seconds.');
 }
+
+function buildMachineTierPicker() {
+  var container = document.getElementById('machine-tiers');
+  container.innerHTML = MACHINE_TIERS.map(function (tier, i) {
+    return '<button type="button" class="machine-tier-btn" data-tier="' + i + '">' + tier.name + '<br>' + tier.cost + 'c &middot; ' + (tier.intervalMs / 1000) + 's</button>';
+  }).join('');
+  Array.prototype.forEach.call(container.querySelectorAll('.machine-tier-btn'), function (btn, i) {
+    btn.addEventListener('click', function () {
+      selectedMachineTierIndex = i;
+      refreshMachineTierPicker();
+    });
+  });
+  refreshMachineTierPicker();
+}
+function refreshMachineTierPicker() {
+  var container = document.getElementById('machine-tiers');
+  Array.prototype.forEach.call(container.querySelectorAll('.machine-tier-btn'), function (btn, i) {
+    btn.classList.toggle('active', i === selectedMachineTierIndex);
+    btn.disabled = money < MACHINE_TIERS[i].cost;
+  });
+}
+buildMachineTierPicker();
 
 function scheduleMachine(machine) {
   machine.timer = setInterval(function () {
@@ -1010,13 +1226,29 @@ var moneyValueEl = document.getElementById('money-value');
 var shopListEl = document.getElementById('shop-list');
 var tileInfoEl = document.getElementById('tile-info');
 
+var earnedValueEl = document.getElementById('earned-value');
+
 function updateHUD() {
   moneyValueEl.textContent = money;
+  earnedValueEl.textContent = totalEarned;
+  refreshMachineTierPicker();
   VEGGIE_NAMES.forEach(function (name) {
     var row = shopListEl.querySelector('[data-veg="' + name + '"]');
     if (!row) return;
+    var unlocked = isUnlocked(name);
+    row.classList.toggle('locked', !unlocked);
+    if (!unlocked) {
+      row.querySelector('.locked-msg').textContent = '🔒 ' + unlockProgressMessage(name);
+      row.querySelector('.buy-btn').disabled = true;
+      return;
+    }
+    row.querySelector('.locked-msg').textContent = '';
+    var price = currentSeedPrice(name);
     var veg = VEGGIES[name];
-    row.querySelector('.buy-btn').disabled = money < veg.seedCost;
+    var priceEl = row.querySelector('.price');
+    priceEl.textContent = price + ' coins · sells for ' + veg.sellPrice;
+    priceEl.classList.toggle('hot', price > veg.seedCost * 1.2);
+    row.querySelector('.buy-btn').disabled = money < price;
     row.querySelector('.have').textContent = 'You have ' + invCount(name) + ' seed' + (invCount(name) === 1 ? '' : 's') + '.';
   });
 }
@@ -1029,18 +1261,25 @@ function buildShop() {
     row.setAttribute('data-veg', name);
     row.innerHTML =
       '<img src="' + twemojiUrl(veg.emoji) + '" alt="' + name + '">' +
-      '<div><div class="name">' + name + ' Seeds</div><div class="price">' + veg.seedCost + ' coins &middot; sells for ' + veg.sellPrice + '</div></div>' +
+      '<div><div class="name">' + name + ' Seeds</div><div class="price"></div></div>' +
       '<button type="button" class="buy-btn">Buy</button>' +
-      '<div class="have"></div>';
+      '<div class="have"></div>' +
+      '<div class="locked-msg"></div>';
     row.querySelector('.buy-btn').addEventListener('click', function () {
       var result = buySeed(name);
       logConsole(result.message, !result.ok);
+      updateHUD();
     });
     shopListEl.appendChild(row);
   });
 }
 buildShop();
+refreshUnlocks();
 updateHUD();
+// Seed prices cool down over real time even with nobody clicking anything,
+// and later tiers should visibly unlock the moment they're earned - both
+// need the shop to refresh on its own, not only after a Buy/Sell click.
+setInterval(function () { refreshUnlocks(); updateHUD(); }, 1000);
 
 function updateTileInfoPanel() {
   if (selectedMachineId) {
