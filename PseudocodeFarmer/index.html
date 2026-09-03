@@ -206,9 +206,14 @@
             <tr><td><code>Move_down()</code></td><td class="desc">Moves your cursor one tile down the field.</td></tr>
             <tr><td><code>Move_left()</code></td><td class="desc">Moves your cursor one tile left.</td></tr>
             <tr><td><code>Move_right()</code></td><td class="desc">Moves your cursor one tile right.</td></tr>
+            <tr><td><code>Move_forward()</code></td><td class="desc">Moves one tile in the direction your cursor is currently facing.</td></tr>
+            <tr><td><code>Turn_left()</code></td><td class="desc">Turns your cursor 90&deg; left, without moving it.</td></tr>
+            <tr><td><code>Turn_right()</code></td><td class="desc">Turns your cursor 90&deg; right, without moving it.</td></tr>
+            <tr><td><code>Set_position(2, -1)</code></td><td class="desc">Jumps straight to a tile, counted from home: 2 right, 1 up. Home is (0,0) - the tile you were on when you pressed Run, or the tile a machine was placed on.</td></tr>
             <tr><td><code>OUTPUT "hi"</code></td><td class="desc">Prints a message to the console below.</td></tr>
             <tr><td><code>FOR Index &lt;- 1 TO 5<br>&nbsp;&nbsp;...<br>NEXT Index</code></td><td class="desc">Repeats the lines in between, 5 times.</td></tr>
           </table>
+          <p class="desc" style="margin:8px 0 0">A little white dot on your cursor (or a machine's blue diamond) shows which way it's facing.</p>
         </details>
       </section>
     </aside>
@@ -244,13 +249,24 @@ function twemojiUrl(codepoint) {
   return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/' + codepoint + '.svg';
 }
 
+// Turtle-style facing, index into this array: 0 = up (north), 1 = right
+// (east), 2 = down (south), 3 = left (west) - "up" here means the same
+// direction Move_up already moves in, so Move_forward with facing 0
+// behaves exactly like the original Move_up did.
+var FACING_VECTORS = [ { dx: 0, dz: -1 }, { dx: 1, dz: 0 }, { dx: 0, dz: 1 }, { dx: -1, dz: 0 } ];
+
 // ============================================================
 // GAME STATE
 // ============================================================
 var money = 40;
 var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
 var tiles = [];      // tiles[x][z] = { mesh, plant: null | PlantRecord, hasMachine: bool }
-var playerCursor = { x: Math.floor(GRID_SIZE / 2), z: Math.floor(GRID_SIZE / 2) };
+// Every cursor (the player's own, and each machine's) is shaped the same:
+// {x, z} is its current tile, `facing` drives Move_forward/Turn_left/
+// Turn_right, and {homeX, homeZ} is the origin Set_position(x, z) counts
+// from - (0, 0) for the player, a machine's own placement tile for a
+// machine, so "the machine itself is 0,0" as asked for.
+var playerCursor = { x: Math.floor(GRID_SIZE / 2), z: Math.floor(GRID_SIZE / 2), facing: 0, homeX: 0, homeZ: 0 };
 var machines = [];
 var nextMachineId = 1;
 var isRunning = false; // true while the player's own program is executing
@@ -334,6 +350,27 @@ arrowMesh.castShadow = true;
 cursorGroup.add(arrowMesh);
 scene.add(cursorGroup);
 
+// A small glowing "nose" that sits off to whichever side the cursor is
+// currently facing - the cone/diamond markers are round, so this is the
+// only thing that actually shows Turn_left/Turn_right doing anything.
+// Every facing is one of 4 grid-aligned directions (never diagonal), so
+// this only ever needs a position offset, no rotation - simpler and
+// nothing to get backwards.
+function makeFacingIndicator(color) {
+  var mesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.09, 10, 10),
+    new THREE.MeshStandardMaterial({ color: color, emissive: color, emissiveIntensity: 0.7 })
+  );
+  return mesh;
+}
+function updateFacingIndicator(indicatorMesh, facing) {
+  var v = FACING_VECTORS[((facing % 4) + 4) % 4];
+  indicatorMesh.position.set(v.dx * 0.34, 0.02, v.dz * 0.34);
+}
+var playerFacingIndicator = makeFacingIndicator(0xffffff);
+cursorGroup.add(playerFacingIndicator);
+updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
+
 function tileWorldX(x) { return x - HALF; }
 function tileWorldZ(z) { return z - HALF; }
 
@@ -401,12 +438,27 @@ function handleTileClick(clientX, clientY) {
   ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
   ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(ndc, camera);
+
+  // Clicking directly on a machine's little robot body selects it (a
+  // distinct pink cursor colour, its code shown in the info panel)
+  // instead of moving the player there - useful once more than one
+  // machine is on the field and they need telling apart.
+  var machineHitObjects = [];
+  machines.forEach(function (m) { m.group.traverse(function (o) { if (o.isMesh) machineHitObjects.push(o); }); });
+  var machineHits = machineHitObjects.length ? raycaster.intersectObjects(machineHitObjects) : [];
+  if (machineHits.length) {
+    var hitId = machineHits[0].object.userData.machineId;
+    var hitMachine = machines.filter(function (m) { return m.id === hitId; })[0];
+    if (hitMachine) { selectMachine(hitMachine); return; }
+  }
+
   var hits = raycaster.intersectObjects(tileGroup.children);
   if (!hits.length) return;
   var hit = hits[0].object;
   playerCursor.x = hit.userData.gridX;
   playerCursor.z = hit.userData.gridZ;
   updatePlayerCursorPosition();
+  selectMachine(null); // clicking open ground clears any machine selection
   updateTileInfoPanel();
 }
 
@@ -514,12 +566,33 @@ function buySeedByLabel(label) {
   return buySeed(match);
 }
 
+function clampToGrid(v) { return Math.min(GRID_SIZE - 1, Math.max(0, v)); }
+
 function moveCursor(cursor, dx, dz) {
-  var nx = Math.min(GRID_SIZE - 1, Math.max(0, cursor.x + dx));
-  var nz = Math.min(GRID_SIZE - 1, Math.max(0, cursor.z + dz));
+  var nx = clampToGrid(cursor.x + dx);
+  var nz = clampToGrid(cursor.z + dz);
   var moved = nx !== cursor.x || nz !== cursor.z;
   cursor.x = nx; cursor.z = nz;
   return moved;
+}
+
+// Turtle-style movement: steps one tile in whichever direction the cursor
+// is currently facing (see FACING_VECTORS above).
+function moveForward(cursor) {
+  var v = FACING_VECTORS[((cursor.facing % 4) + 4) % 4];
+  return moveCursor(cursor, v.dx, v.dz);
+}
+
+function turnCursor(cursor, delta) {
+  cursor.facing = ((cursor.facing + delta) % 4 + 4) % 4;
+}
+
+// Set_position(x, z) is relative to the cursor's own home tile - (0, 0)
+// for the player, a machine's own placement tile for a machine - so "the
+// machine itself is 0,0", as asked for.
+function setPositionRelative(cursor, dx, dz) {
+  cursor.x = clampToGrid(cursor.homeX + Math.round(dx));
+  cursor.z = clampToGrid(cursor.homeZ + Math.round(dz));
 }
 
 // ============================================================
@@ -649,7 +722,11 @@ function compile(source) {
   return instructions;
 }
 
-var VALID_COMMANDS = ['Plant', 'Buy', 'Sell', 'Move_up', 'Move_down', 'Move_left', 'Move_right'];
+var VALID_COMMANDS = [
+  'Plant', 'Buy', 'Sell',
+  'Move_up', 'Move_down', 'Move_left', 'Move_right',
+  'Move_forward', 'Turn_left', 'Turn_right', 'Set_position'
+];
 
 function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
 
@@ -723,6 +800,18 @@ async function runCommand(name, args, cursor, log, line) {
     case 'Move_down': moveCursor(cursor, 0, 1); onCursorMoved(cursor); break;
     case 'Move_left': moveCursor(cursor, -1, 0); onCursorMoved(cursor); break;
     case 'Move_right': moveCursor(cursor, 1, 0); onCursorMoved(cursor); break;
+    case 'Move_forward': moveForward(cursor); onCursorMoved(cursor); break;
+    case 'Turn_left': turnCursor(cursor, -1); onCursorMoved(cursor); break;
+    case 'Turn_right': turnCursor(cursor, 1); onCursorMoved(cursor); break;
+    case 'Set_position': {
+      var dx = args[0], dz = args[1];
+      if (typeof dx !== 'number' || typeof dz !== 'number') {
+        throw new PseudocodeError('Set_position needs two numbers, e.g. Set_position(2, 0)', line);
+      }
+      setPositionRelative(cursor, dx, dz);
+      onCursorMoved(cursor);
+      break;
+    }
     case 'Plant': log(plantAt(cursor, args[0]).message); break;
     case 'Buy': log(buySeedByLabel(args[0]).message); break;
     case 'Sell': log(sellAt(cursor).message); break;
@@ -733,12 +822,21 @@ async function runCommand(name, args, cursor, log, line) {
   }
 }
 
-// Called after every Move_* so both the player's arrow and a machine's own
-// marker visually follow their cursor mid-program, not just at the end.
+// Called after every Move_*/Turn_*/Set_position so both the player's arrow
+// and a machine's own marker visually follow their cursor's position and
+// facing mid-program, not just at the end.
 function onCursorMoved(cursor) {
-  if (cursor === playerCursor) { updatePlayerCursorPosition(); updateTileInfoPanel(); return; }
+  if (cursor === playerCursor) {
+    updatePlayerCursorPosition();
+    updateFacingIndicator(playerFacingIndicator, cursor.facing);
+    updateTileInfoPanel();
+    return;
+  }
   var machine = machines.filter(function (m) { return m.cursor === cursor; })[0];
-  if (machine) positionMachineCursorMarker(machine);
+  if (machine) {
+    positionMachineCursorMarker(machine);
+    updateFacingIndicator(machine.facingIndicator, cursor.facing);
+  }
 }
 
 // ============================================================
@@ -783,6 +881,31 @@ machineBtn.addEventListener('click', function () {
 // ============================================================
 // MACHINES
 // ============================================================
+var MACHINE_CURSOR_COLOR = 0x2f6fe0;          // default, unselected
+var MACHINE_CURSOR_SELECTED_COLOR = 0xff5fc1; // clearly different from both
+                                               // the default blue and the
+                                               // player's own gold arrow
+var selectedMachineId = null;
+
+// Clicking a machine's body (see handleTileClick) calls this with that
+// machine, or with null to clear the selection (clicking open ground).
+// The selected machine's own roaming cursor turns pink so it stands out
+// from every other machine's default blue one - useful as soon as there
+// is more than one machine on the field at once.
+function selectMachine(machine) {
+  selectedMachineId = machine ? machine.id : null;
+  machines.forEach(function (m) {
+    var color = m.id === selectedMachineId ? MACHINE_CURSOR_SELECTED_COLOR : MACHINE_CURSOR_COLOR;
+    m.diamond.material.color.setHex(color);
+    m.diamond.material.emissive.setHex(color);
+  });
+  updateTileInfoPanel();
+}
+
+function escapeHtmlLocal(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function createMachineMarkerGroup() {
   var group = new THREE.Group();
 
@@ -803,14 +926,20 @@ function createMachineMarkerGroup() {
 
   // The machine's own roaming cursor - visually distinct (blue diamond,
   // floats higher) from the player's gold arrow, so a machine mid-program
-  // never reads as "the player moved".
-  var cursorMesh = new THREE.Mesh(
+  // never reads as "the player moved". It's a small group, not a single
+  // mesh, so it can carry its own facing indicator the same way the
+  // player's cursorGroup does.
+  var cursorMesh = new THREE.Group();
+  var diamond = new THREE.Mesh(
     new THREE.OctahedronGeometry(0.15, 0),
-    new THREE.MeshStandardMaterial({ color: 0x2f6fe0, emissive: 0x123a8a, emissiveIntensity: 0.4 })
+    new THREE.MeshStandardMaterial({ color: MACHINE_CURSOR_COLOR, emissive: 0x123a8a, emissiveIntensity: 0.4 })
   );
-  cursorMesh.castShadow = true;
+  diamond.castShadow = true;
+  cursorMesh.add(diamond);
+  var facingIndicator = makeFacingIndicator(0xbfe0ff);
+  cursorMesh.add(facingIndicator);
 
-  return { group: group, cursorMesh: cursorMesh };
+  return { group: group, cursorMesh: cursorMesh, facingIndicator: facingIndicator, diamond: diamond };
 }
 
 function positionMachineCursorMarker(machine) {
@@ -840,14 +969,22 @@ function placeMachine(code) {
     homeX: x, homeZ: z,
     code: code,
     intervalMs: 10000, // one tier for this MVP - see cheat sheet note below
-    cursor: { x: x, z: z },
+    // The machine's own home tile is (0, 0) for its Set_position calls -
+    // see setPositionRelative().
+    cursor: { x: x, z: z, facing: 0, homeX: x, homeZ: z },
     group: built.group,
     cursorMesh: built.cursorMesh,
+    facingIndicator: built.facingIndicator,
+    diamond: built.diamond,
     running: false
   };
+  // Tag every mesh in the machine's visible body so a raycast hit on any
+  // part of it (see handleTileClick) resolves back to this machine.
+  built.group.traverse(function (o) { if (o.isMesh) o.userData.machineId = machine.id; });
   tile.hasMachine = true;
   machines.push(machine);
   positionMachineCursorMarker(machine);
+  updateFacingIndicator(machine.facingIndicator, machine.cursor.facing);
   scheduleMachine(machine);
   logConsole('Machine placed! It will run its program every ' + (machine.intervalMs / 1000) + ' seconds.');
 }
@@ -906,6 +1043,17 @@ buildShop();
 updateHUD();
 
 function updateTileInfoPanel() {
+  if (selectedMachineId) {
+    var selected = machines.filter(function (m) { return m.id === selectedMachineId; })[0];
+    if (selected) {
+      tileInfoEl.className = 'show';
+      tileInfoEl.innerHTML = '<b>Machine #' + selected.id + '</b> selected (pink cursor) &middot; runs every ' +
+        (selected.intervalMs / 1000) + 's &middot; cursor at (' + selected.cursor.x + ', ' + selected.cursor.z + ')' +
+        '<pre style="white-space:pre-wrap;margin:6px 0 0;font-size:.7rem;background:#12190f;color:#b9e6b0;padding:6px;border-radius:6px;max-height:90px;overflow:auto">' +
+        escapeHtmlLocal(selected.code) + '</pre>';
+      return;
+    }
+  }
   var tile = tiles[playerCursor.x][playerCursor.z];
   if (tile.plant && tile.plant.ready) {
     tileInfoEl.className = 'show';
