@@ -100,8 +100,18 @@
     move_steps:         { shape: 'process',   title: 'Move steps',         data: { steps: 10 },                  category: 'motion' },
     turn_right:         { shape: 'process',   title: 'Turn right',         data: { degrees: 15 },                category: 'motion' },
     turn_left:          { shape: 'process',   title: 'Turn left',          data: { degrees: 15 },                category: 'motion' },
+    go_to:              { shape: 'process',   title: 'Go to',              data: { target: 'random_position' },  category: 'motion' },
+    go_to_xy:           { shape: 'process',   title: 'Go to x y',          data: { x: 0, y: 0 },                 category: 'motion' },
+    glide_to:           { shape: 'process',   title: 'Glide to',           data: { seconds: 1, target: 'random_position' }, category: 'motion' },
+    glide_to_xy:        { shape: 'process',   title: 'Glide to x y',       data: { seconds: 1, x: 0, y: 0 },     category: 'motion' },
     point_in_direction: { shape: 'process',   title: 'Point in direction', data: { degrees: 90 },                category: 'motion' },
     point_towards:      { shape: 'process',   title: 'Point towards',      data: { target: 'mouse_pointer' },    category: 'motion' },
+    change_x_by:        { shape: 'process',   title: 'Change x by',        data: { x: 10 },                      category: 'motion' },
+    set_x_to:           { shape: 'process',   title: 'Set x to',           data: { x: 0 },                       category: 'motion' },
+    change_y_by:        { shape: 'process',   title: 'Change y by',        data: { y: 10 },                      category: 'motion' },
+    set_y_to:           { shape: 'process',   title: 'Set y to',           data: { y: 0 },                       category: 'motion' },
+    if_on_edge_bounce:  { shape: 'process',   title: 'If on edge, bounce', data: {},                             category: 'motion' },
+    set_rotation_style: { shape: 'process',   title: 'Set rotation style', data: { style: 'all around' },        category: 'motion' },
     next_costume:       { shape: 'process',   title: 'Next costume',       data: {},                             category: 'looks' },
     change_color:       { shape: 'process',   title: 'Change colour',      data: { value: 25 },                  category: 'looks' },
     say:                { shape: 'io',        title: 'Say',                data: { text: 'Hello!' },             category: 'looks' },
@@ -391,6 +401,16 @@
     if (n.type === 'turn_left') return 'Turn left ' + d.degrees + ' degrees';
     if (n.type === 'point_in_direction') return 'Point in direction ' + d.degrees + ' degrees';
     if (n.type === 'point_towards') return 'Point towards ' + (d.target === 'mouse_pointer' ? 'mouse pointer' : 'random direction');
+    if (n.type === 'go_to') return 'Go to ' + (d.target === 'mouse_pointer' ? 'mouse pointer' : 'random position');
+    if (n.type === 'go_to_xy') return 'Go to x ' + d.x + ', y ' + d.y;
+    if (n.type === 'glide_to') return 'Glide ' + d.seconds + ' secs to ' + (d.target === 'mouse_pointer' ? 'mouse pointer' : 'random position');
+    if (n.type === 'glide_to_xy') return 'Glide ' + d.seconds + ' secs to x ' + d.x + ', y ' + d.y;
+    if (n.type === 'change_x_by') return 'Change x by ' + d.x;
+    if (n.type === 'set_x_to') return 'Set x to ' + d.x;
+    if (n.type === 'change_y_by') return 'Change y by ' + d.y;
+    if (n.type === 'set_y_to') return 'Set y to ' + d.y;
+    if (n.type === 'if_on_edge_bounce') return 'If on edge, bounce';
+    if (n.type === 'set_rotation_style') return 'Set rotation style to ' + (d.style || 'all around');
     if (n.type === 'next_costume') return 'Next costume';
     if (n.type === 'change_color') return 'Change colour by ' + d.value;
     if (n.type === 'say') return 'Say "' + d.text + '"';
@@ -501,6 +521,15 @@
     if (n.type === 'move_steps') sub = '<span class="fs-node-subtitle">' + n.data.steps + ' steps</span>';
     if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') sub = '<span class="fs-node-subtitle">' + n.data.degrees + ' degrees</span>';
     if (n.type === 'point_towards') sub = '<select data-field="target"><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option><option value="random"' + (n.data.target === 'random' ? ' selected' : '') + '>random direction</option></select>';
+    if (n.type === 'go_to') sub = '<select data-field="target"><option value="random_position"' + (n.data.target === 'random_position' ? ' selected' : '') + '>random position</option><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option></select>';
+    if (n.type === 'glide_to') sub = '<span class="fs-node-subtitle">' + n.data.seconds + 's</span><select data-field="target"><option value="random_position"' + (n.data.target === 'random_position' ? ' selected' : '') + '>random position</option><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option></select>';
+    if (n.type === 'go_to_xy') sub = '<span class="fs-node-subtitle">x ' + n.data.x + ', y ' + n.data.y + '</span>';
+    if (n.type === 'glide_to_xy') sub = '<span class="fs-node-subtitle">' + n.data.seconds + 's to x ' + n.data.x + ', y ' + n.data.y + '</span>';
+    if (n.type === 'change_x_by') sub = '<span class="fs-node-subtitle">by ' + n.data.x + '</span>';
+    if (n.type === 'set_x_to') sub = '<span class="fs-node-subtitle">to ' + n.data.x + '</span>';
+    if (n.type === 'change_y_by') sub = '<span class="fs-node-subtitle">by ' + n.data.y + '</span>';
+    if (n.type === 'set_y_to') sub = '<span class="fs-node-subtitle">to ' + n.data.y + '</span>';
+    if (n.type === 'set_rotation_style') sub = '<select data-field="style"><option value="all around"' + (n.data.style === 'all around' ? ' selected' : '') + '>all around</option><option value="left-right"' + (n.data.style === 'left-right' ? ' selected' : '') + '>left-right</option><option value="don\'t rotate"' + (n.data.style === 'don\'t rotate' ? ' selected' : '') + '>don\'t rotate</option></select>';
     if (n.type === 'change_color') sub = '<span class="fs-node-subtitle">by ' + n.data.value + '</span>';
     if (n.type === 'say' || n.type === 'ask') sub = '<span class="fs-node-subtitle">' + esc(n.data.text) + '</span>';
     if (n.type === 'set_variable' || n.type === 'change_variable') {
@@ -1007,11 +1036,18 @@
     var f = '';
     if (n.type === 'move_steps') f = field('Distance (steps)', 'number', 'steps', n.data.steps);
     if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') f = field('Degrees', 'number', 'degrees', n.data.degrees);
+    if (n.type === 'change_x_by') f = field('Change x by', 'number', 'x', n.data.x);
+    if (n.type === 'set_x_to') f = field('Set x to', 'number', 'x', n.data.x);
+    if (n.type === 'change_y_by') f = field('Change y by', 'number', 'y', n.data.y);
+    if (n.type === 'set_y_to') f = field('Set y to', 'number', 'y', n.data.y);
+    if (n.type === 'go_to_xy') f = field('X', 'number', 'x', n.data.x) + field('Y', 'number', 'y', n.data.y);
+    if (n.type === 'glide_to_xy') f = field('Seconds', 'number', 'seconds', n.data.seconds) + field('X', 'number', 'x', n.data.x) + field('Y', 'number', 'y', n.data.y);
+    if (n.type === 'glide_to') f = field('Seconds', 'number', 'seconds', n.data.seconds) + '<p class="fs-empty">Choose the destination with the dropdown inside this block.</p>';
     if (n.type === 'change_color') f = field('Change by', 'number', 'value', n.data.value);
     if (n.type === 'say' || n.type === 'ask') f = field(n.type === 'say' ? 'Message' : 'Question', 'text', 'text', n.data.text);
     if (n.type === 'subroutine_start') f = '<p class="fs-empty">Give this sub-routine a unique name inside the block.</p>';
     if (n.type === 'call_subroutine') f = '<p class="fs-empty">Choose the named sub-routine to run inside the block.</p>';
-    if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
+    if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'go_to' || n.type === 'set_rotation_style') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Select either outgoing connector to set it as True or False.</p>';
     host.innerHTML = '<b>' + typeTitle(n) + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
     Array.prototype.forEach.call(host.querySelectorAll('[data-inspect]'), function (i) {
@@ -1159,10 +1195,55 @@
   // ── Runtime: drive the real, currently-selected TurboWarp sprite ───────
   // Every case here does its work synchronously and returns nothing to
   // await, EXCEPT say (its bubble needs to actually be visible for a
-  // moment) and ask (genuinely waits on the student). Pacing between
-  // steps is handled centrally in run(), not per-block, so slow mode can
-  // control it uniformly instead of fighting a per-block wait baked in
-  // here.
+  // moment), ask (genuinely waits on the student), and the glide blocks
+  // (which animate over time). Pacing between steps is handled centrally
+  // in run(), not per-block, so slow mode can control it uniformly instead
+  // of fighting a per-block wait baked in here.
+  function randomStagePosition() {
+    return { x: (Math.random() - 0.5) * (STAGE_HALF_W * 2), y: (Math.random() - 0.5) * (STAGE_HALF_H * 2) };
+  }
+  function resolvePositionTarget(value) {
+    if (value === 'mouse_pointer') return { x: FS.mouse.x, y: FS.mouse.y };
+    return randomStagePosition();
+  }
+  // Glide: move the sprite in a straight line from where it is to (ex, ey)
+  // over `seconds` real seconds, linear interpolation, no easing (matching
+  // Scratch's own glide). Returns a promise the run loop awaits, so slow
+  // mode's per-step pacing delay still applies after the glide, not instead
+  // of it. Checks FS.running each frame so hitting TurboWarp's stop button
+  // mid-glide aborts the rest of the animation instead of coasting on.
+  function glideTo(target, ex, ey, seconds) {
+    var ms = (seconds == null ? 1 : Number(seconds) || 0) * 1000;
+    var sx = target.x, sy = target.y;
+    var start = Date.now();
+    return (function tick() {
+      if (!FS.running) return Promise.resolve();
+      var elapsed = Date.now() - start;
+      if (elapsed >= ms) { target.setXY(ex, ey); return Promise.resolve(); }
+      var p = elapsed / ms;
+      target.setXY(sx + (ex - sx) * p, sy + (ey - sy) * p);
+      return wait(1000 / 60).then(tick);
+    })();
+  }
+  function normalizeRotationStyle(style) {
+    var s = String(style || '').toLowerCase().replace(/[_-]+/g, ' ').trim();
+    if (s === 'left right' || s === 'leftright') return 'left-right';
+    if (s === 'do not rotate' || s === "don't rotate" || s === 'dont rotate' || s === 'none') return "don't rotate";
+    return 'all around';
+  }
+  // "If on edge, bounce": if the sprite's centre has crossed a stage edge
+  // while moving further out, reflect its direction across that axis
+  // (horizontal bounce flips the direction sign, vertical bounce mirrors
+  // around 90), the same centre-based test the Selection block's "touching
+  // edge" condition already uses, so the two stay consistent.
+  function bounceOffEdges(target) {
+    var dir = target.direction;
+    var vx = Math.sin(dir * Math.PI / 180);
+    var vy = Math.cos(dir * Math.PI / 180);
+    if ((target.x <= -STAGE_HALF_W && vx < 0) || (target.x >= STAGE_HALF_W && vx > 0)) dir = -dir;
+    if ((target.y >= STAGE_HALF_H && vy > 0) || (target.y <= -STAGE_HALF_H && vy < 0)) dir = 180 - dir;
+    target.setDirection(dir);
+  }
   function runBlock(n) {
     var target = activeTarget();
     if (n.type === 'set_variable' || n.type === 'change_variable') {
@@ -1197,6 +1278,45 @@
           target.setDirection(90 - Math.atan2(dy, dx) * 180 / Math.PI);
         }
         return;
+      case 'go_to': {
+        var pos = resolvePositionTarget(n.data.target);
+        target.setXY(pos.x, pos.y);
+        return;
+      }
+      case 'go_to_xy':
+        target.setXY(Number(n.data.x || 0), Number(n.data.y || 0));
+        return;
+      case 'glide_to': {
+        var gpos = resolvePositionTarget(n.data.target);
+        return glideTo(target, gpos.x, gpos.y, n.data.seconds);
+      }
+      case 'glide_to_xy':
+        return glideTo(target, Number(n.data.x || 0), Number(n.data.y || 0), n.data.seconds);
+      case 'change_x_by':
+        target.setXY(target.x + Number(n.data.x || 0), target.y);
+        return;
+      case 'set_x_to':
+        target.setXY(Number(n.data.x || 0), target.y);
+        return;
+      case 'change_y_by':
+        target.setXY(target.x, target.y + Number(n.data.y || 0));
+        return;
+      case 'set_y_to':
+        target.setXY(target.x, Number(n.data.y || 0));
+        return;
+      case 'if_on_edge_bounce':
+        bounceOffEdges(target);
+        return;
+      case 'set_rotation_style': {
+        var style = normalizeRotationStyle(n.data.style);
+        try {
+          if (typeof target.setRotationStyle === 'function') target.setRotationStyle(style);
+          else target.rotationStyle = style;
+        } catch (e) {}
+        try { target.setDirection(target.direction); } catch (e) {}
+        try { target.runtime.emit('TARGET_INFO_CHANGED', target); } catch (e) {}
+        return;
+      }
       case 'next_costume':
         try { target.setCostume((target.currentCostume + 1) % target.sprite.costumes.length); } catch (e) {}
         return;
