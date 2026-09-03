@@ -1719,8 +1719,11 @@
       // them still has its own explicit light background here, making
       // dropdown text unreadable. Belt-and-braces: also pin background/
       // color directly on the controls themselves.
-      '#fs-overlay{color-scheme:light}',
-      '#fs-overlay select,#fs-overlay input{background:#fff;color:#18191b}',
+      '#fs-overlay{color-scheme:light;user-select:none;-webkit-user-select:none}',
+      // Re-enable text selection only inside editable fields, so dragging a
+      // block or panning the canvas never starts a highlight-selection of
+      // the inspector/status text around it.
+      '#fs-overlay select,#fs-overlay input,#fs-overlay textarea{background:#fff;color:#18191b;user-select:auto;-webkit-user-select:auto}',
       '#fs-overlay{position:fixed;left:0;top:92px;right:60%;bottom:0;z-index:45;display:flex;flex-direction:column;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#18191b;background:#e9e9eb;border-right:2px solid #151619;box-shadow:4px 0 20px rgba(0,0,0,.35)}',
       '#fs-overlay.fs-suppressed{display:none}',
       '.blocklyDiv,.blocklyToolboxDiv,.blocklyFlyout,.blocklyWidgetDiv{display:none !important}',
