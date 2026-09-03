@@ -886,6 +886,12 @@ function splitArgs(raw) {
 // numbers, variables and TRUE/FALSE with + - * / and brackets. Arithmetic
 // is what makes WHILE actually useful - the loop variable has to change, so
 // "N <- N + 1" needs it. Precedence is * / before + -, and brackets group.
+// Word processors and smart keyboards often produce a Unicode minus sign
+// (U+2212) or a dash where a hyphen-minus was meant - fold those into "-"
+// so "N <- N + 1" or "Set_position(0, -i)" pasted from a doc still works.
+function normalizeDashes(s) {
+  return String(s).replace(/[\u2212\u2013\u2014]/g, '-');
+}
 function tokenizeExpr(raw, line) {
   var tokens = [];
   var re = /(\d+(?:\.\d+)?|[A-Za-z_]\w*|[+\-*/()])/g;
@@ -904,7 +910,7 @@ function tokenizeExpr(raw, line) {
 }
 
 function evalExpr(raw, vars, line) {
-  var t = raw.trim();
+  var t = normalizeDashes(raw).trim();
   if (/^".*"$/.test(t)) return t.slice(1, -1);
   var tokens = tokenizeExpr(t, line);
   var pos = 0;
@@ -980,6 +986,7 @@ function tokenizeCondition(raw, line) {
 function evalCondition(raw, vars, line) {
   // Friendly rejection of Python/JS operators before tokenising, with the
   // Cambridge spelling named so the student can fix it in one go.
+  raw = normalizeDashes(raw);
   if (/==|!=|&&|\|\|/.test(raw)) {
     throw new PseudocodeError('Cambridge pseudocode uses "=" and "<>" for comparisons (not "==" or "!=") and AND/OR (not && or ||).', line);
   }
@@ -1080,7 +1087,7 @@ function compile(source) {
   for (var i = 0; i < lines.length; i++) {
     var lineNo = i + 1;
     var raw = lines[i];
-    var line = raw.replace(/\/\/.*$/, '').trim();
+    var line = normalizeDashes(raw).replace(/\/\/.*$/, '').trim();
     if (!line) continue;
 
     var m;
