@@ -761,8 +761,7 @@
         }
         select(el.dataset.id);
         var n = getNode(el.dataset.id);
-        snapshotForUndo();
-        FS.drag = { kind: 'node', id: n.id, startX: e.clientX, startY: e.clientY, x: n.x, y: n.y };
+        FS.drag = { kind: 'node', id: n.id, startX: e.clientX, startY: e.clientY, x: n.x, y: n.y, moved: false };
         try { el.setPointerCapture(e.pointerId); } catch (_err) {}
       });
       el.addEventListener('click', function (e) { if (!e.target.matches('select,input')) select(el.dataset.id); });
@@ -1275,13 +1274,17 @@
       FS.selectedEdgeId = null; renderAll(); saveGraph(FS.activeSprite);
     };
   }
+  function deleteNode(id, skipSnapshot) {
+    if (!id) return;
+    if (!skipSnapshot) snapshotForUndo();
+    FS.nodes = FS.nodes.filter(function (n) { return n.id !== id; });
+    FS.edges = FS.edges.filter(function (e) { return e.from !== id && e.to !== id; });
+    if (FS.selected === id) FS.selected = null;
+    renderAll(); saveGraph(FS.activeSprite);
+  }
   function removeSelected() {
     if (!FS.selected) return;
-    snapshotForUndo();
-    FS.nodes = FS.nodes.filter(function (n) { return n.id !== FS.selected; });
-    FS.edges = FS.edges.filter(function (e) { return e.from !== FS.selected && e.to !== FS.selected; });
-    FS.selected = null;
-    renderAll(); saveGraph(FS.activeSprite);
+    deleteNode(FS.selected);
   }
 
   // True if any node reachable from startId can eventually reach itself
@@ -2159,6 +2162,7 @@
       }
       if (FS.drag && FS.drag.kind === 'node') {
         var n = getNode(FS.drag.id);
+        if (!FS.drag.moved) { FS.drag.moved = true; snapshotForUndo(); }
         n.x = Math.max(0, FS.drag.x + (e.clientX - FS.drag.startX) / FS.scale);
         n.y = Math.max(0, FS.drag.y + (e.clientY - FS.drag.startY) / FS.scale);
         var el = els.nodes.querySelector('[data-id="' + n.id + '"]');
@@ -2214,7 +2218,23 @@
         FS.connect = null; els.draft.style.display = 'none'; els.canvasWrap.classList.remove('connecting');
         hideHoverAnchor();
       }
-      if (FS.drag && FS.drag.kind === 'node') saveGraph(FS.activeSprite);
+      if (FS.drag && FS.drag.kind === 'node') {
+        // Dragging a block back onto the palette (the sidebar it came from)
+        // deletes it, same as the delete key. If the block was moved on the
+        // way there the pre-move snapshot is already on the undo stack, so
+        // skip an extra snapshot; a block already sitting over the sidebar
+        // (moved:false) still gets one so it can be undone.
+        var sidebar = els.overlay.querySelector('#fs-sidebar');
+        if (sidebar) {
+          var sr = sidebar.getBoundingClientRect();
+          if (e.clientX >= sr.left && e.clientX <= sr.right && e.clientY >= sr.top && e.clientY <= sr.bottom) {
+            deleteNode(FS.drag.id, FS.drag.moved);
+            FS.drag = null; els.canvasWrap.classList.remove('panning');
+            return;
+          }
+        }
+        saveGraph(FS.activeSprite);
+      }
       FS.drag = null; els.canvasWrap.classList.remove('panning');
     });
   }
