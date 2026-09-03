@@ -438,6 +438,40 @@
     return true;
   }
 
+  // ── Undo / redo ───────────────────────────────────────────────────────
+  // The graph (nodes + edges) is snapshotted as JSON before each mutating
+  // action, so Ctrl+Z / Ctrl+Y (or Ctrl+Shift+Z) step back and forth
+  // through recent edits. snapshotForUndo() is called from the handful of
+  // mutation sites below (add/drop, delete, connect, drag, field edits);
+  // any fresh action clears the redo stack.
+  var undoStack = [], redoStack = [], UNDO_LIMIT = 50;
+  function graphSnapshot() { return JSON.stringify({ nodes: FS.nodes, edges: FS.edges }); }
+  function snapshotForUndo() {
+    undoStack.push(graphSnapshot());
+    if (undoStack.length > UNDO_LIMIT) undoStack.shift();
+    redoStack.length = 0;
+  }
+  function restoreGraph(snap) {
+    var g = JSON.parse(snap);
+    FS.nodes = g.nodes; FS.edges = g.edges;
+    FS.selected = null; FS.selectedEdgeId = null;
+    // Recompute the id counters so a newly added node/edge after an undo
+    // never reuses a stale id and collides.
+    FS.id = FS.nodes.reduce(function (m, n) { return Math.max(m, parseInt(String(n.id).slice(1), 10) || 0); }, 0);
+    FS.edgeId = FS.edges.reduce(function (m, e) { return Math.max(m, parseInt(String(e.id).slice(1), 10) || 0); }, 0);
+    renderAll(); saveGraph(FS.activeSprite);
+  }
+  function undo() {
+    if (!undoStack.length) return;
+    redoStack.push(graphSnapshot());
+    restoreGraph(undoStack.pop());
+  }
+  function redo() {
+    if (!redoStack.length) return;
+    undoStack.push(graphSnapshot());
+    restoreGraph(redoStack.pop());
+  }
+
   // ── Mermaid diagram export ("View as diagram") ──────────────────────
   // Plain-text description of a block, for the diagram label - the actual
   // editable node markup (nodeMarkup, above) embeds live <select>/<input>
@@ -605,38 +639,53 @@
       return '<option value="' + e + '"' + (selected === e ? ' selected' : '') + '>' + e + '</option>';
     }).join('') + '</select>';
   }
+  // Inline value editor, shown directly on the block instead of the right-
+  // hand inspector: a number input for a literal value, or a read-only
+  // label when a reporter is chosen (the source is switched in the
+  // inspector). The number input is wired by the generic data-field change
+  // handler in bindNodes, so no separate inspector wiring is needed.
+  function inlineValueHtml(data, field) {
+    var src = valueSrc(data, field);
+    if (src !== 'num') {
+      var r = reporterById(src);
+      return '<span class="fs-inline-reporter">' + (r ? r.label : src) + '</span>';
+    }
+    return '<input type="number" class="fs-inline-num" data-field="' + field + '" value="' + esc(data[field]) + '">';
+  }
+  function inlineTextHtml(data, field) {
+    return '<input type="text" class="fs-inline-text" data-field="' + field + '" value="' + esc(data[field]) + '" spellcheck="false">';
+  }
   function nodeMarkup(n) {
     var sub = '';
     if (n.type === 'subroutine_start') sub = '<input type="text" class="fs-inline-name" data-field="name" value="' + esc(n.data.name || '') + '" aria-label="Sub-routine name">';
     if (n.type === 'call_subroutine') sub = subroutineSelectHtml('name', n.data.name || '');
-    if (n.type === 'move_steps') sub = '<span class="fs-node-subtitle">' + valueDisplay(n.data, 'steps', 'steps') + '</span>';
-    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') sub = '<span class="fs-node-subtitle">' + valueDisplay(n.data, 'degrees', 'degrees') + '</span>';
+    if (n.type === 'move_steps') sub = inlineValueHtml(n.data, 'steps');
+    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') sub = inlineValueHtml(n.data, 'degrees');
     if (n.type === 'point_towards') sub = '<select data-field="target"><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option><option value="random"' + (n.data.target === 'random' ? ' selected' : '') + '>random direction</option></select>';
     if (n.type === 'go_to') sub = '<select data-field="target"><option value="random_position"' + (n.data.target === 'random_position' ? ' selected' : '') + '>random position</option><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option></select>';
-    if (n.type === 'glide_to') sub = '<span class="fs-node-subtitle">' + valueDisplay(n.data, 'seconds', 'secs') + '</span><select data-field="target"><option value="random_position"' + (n.data.target === 'random_position' ? ' selected' : '') + '>random position</option><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option></select>';
-    if (n.type === 'go_to_xy') sub = '<span class="fs-node-subtitle">x ' + valueDisplay(n.data, 'x') + ', y ' + valueDisplay(n.data, 'y') + '</span>';
-    if (n.type === 'glide_to_xy') sub = '<span class="fs-node-subtitle">' + valueDisplay(n.data, 'seconds', 'secs') + ' to x ' + valueDisplay(n.data, 'x') + ', y ' + valueDisplay(n.data, 'y') + '</span>';
-    if (n.type === 'change_x_by') sub = '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'x') + '</span>';
-    if (n.type === 'set_x_to') sub = '<span class="fs-node-subtitle">to ' + valueDisplay(n.data, 'x') + '</span>';
-    if (n.type === 'change_y_by') sub = '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'y') + '</span>';
-    if (n.type === 'set_y_to') sub = '<span class="fs-node-subtitle">to ' + valueDisplay(n.data, 'y') + '</span>';
+    if (n.type === 'glide_to') sub = '<span class="fs-inline-label">secs</span>' + inlineValueHtml(n.data, 'seconds') + '<select data-field="target"><option value="random_position"' + (n.data.target === 'random_position' ? ' selected' : '') + '>random position</option><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option></select>';
+    if (n.type === 'go_to_xy') sub = '<span class="fs-inline-label">x</span>' + inlineValueHtml(n.data, 'x') + '<span class="fs-inline-label">y</span>' + inlineValueHtml(n.data, 'y');
+    if (n.type === 'glide_to_xy') sub = '<span class="fs-inline-label">secs</span>' + inlineValueHtml(n.data, 'seconds') + '<span class="fs-inline-label">x</span>' + inlineValueHtml(n.data, 'x') + '<span class="fs-inline-label">y</span>' + inlineValueHtml(n.data, 'y');
+    if (n.type === 'change_x_by') sub = inlineValueHtml(n.data, 'x');
+    if (n.type === 'set_x_to') sub = inlineValueHtml(n.data, 'x');
+    if (n.type === 'change_y_by') sub = inlineValueHtml(n.data, 'y');
+    if (n.type === 'set_y_to') sub = inlineValueHtml(n.data, 'y');
     if (n.type === 'set_rotation_style') sub = '<select data-field="style"><option value="all around"' + (n.data.style === 'all around' ? ' selected' : '') + '>all around</option><option value="left-right"' + (n.data.style === 'left-right' ? ' selected' : '') + '>left-right</option><option value="don\'t rotate"' + (n.data.style === 'don\'t rotate' ? ' selected' : '') + '>don\'t rotate</option></select>';
-    if (n.type === 'change_color') sub = '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'value') + '</span>';
-    if (n.type === 'say' || n.type === 'ask') sub = '<span class="fs-node-subtitle">' + esc(n.data.text) + '</span>';
-    if (n.type === 'say_for') sub = '<span class="fs-node-subtitle">"' + esc(n.data.text) + '" for ' + valueDisplay(n.data, 'seconds', 'secs') + '</span>';
-    if (n.type === 'think') sub = '<span class="fs-node-subtitle">"' + esc(n.data.text) + '"</span>';
-    if (n.type === 'think_for') sub = '<span class="fs-node-subtitle">"' + esc(n.data.text) + '" for ' + valueDisplay(n.data, 'seconds', 'secs') + '</span>';
+    if (n.type === 'change_color') sub = inlineValueHtml(n.data, 'value');
+    if (n.type === 'say' || n.type === 'ask') sub = inlineTextHtml(n.data, 'text');
+    if (n.type === 'say_for') sub = inlineTextHtml(n.data, 'text') + '<span class="fs-inline-label">for</span>' + inlineValueHtml(n.data, 'seconds') + '<span class="fs-inline-label">secs</span>';
+    if (n.type === 'think') sub = inlineTextHtml(n.data, 'text');
+    if (n.type === 'think_for') sub = inlineTextHtml(n.data, 'text') + '<span class="fs-inline-label">for</span>' + inlineValueHtml(n.data, 'seconds') + '<span class="fs-inline-label">secs</span>';
     if (n.type === 'switch_costume_to') sub = costumeSelectHtml('costume', n.data.costume || '');
-    if (n.type === 'change_size_by') sub = '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'size') + '</span>';
-    if (n.type === 'set_size_to') sub = '<span class="fs-node-subtitle">to ' + valueDisplay(n.data, 'size') + '</span>';
-    if (n.type === 'change_effect') sub = effectSelectHtml('effect', n.data.effect || 'color') + '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'value') + '</span>';
-    if (n.type === 'set_effect') sub = effectSelectHtml('effect', n.data.effect || 'color') + '<span class="fs-node-subtitle">to ' + valueDisplay(n.data, 'value') + '</span>';
+    if (n.type === 'change_size_by') sub = inlineValueHtml(n.data, 'size');
+    if (n.type === 'set_size_to') sub = inlineValueHtml(n.data, 'size');
+    if (n.type === 'change_effect') sub = effectSelectHtml('effect', n.data.effect || 'color') + inlineValueHtml(n.data, 'value');
+    if (n.type === 'set_effect') sub = effectSelectHtml('effect', n.data.effect || 'color') + inlineValueHtml(n.data, 'value');
     if (n.type === 'go_to_layer') sub = '<select data-field="layer"><option value="front"' + (n.data.layer !== 'back' ? ' selected' : '') + '>front</option><option value="back"' + (n.data.layer === 'back' ? ' selected' : '') + '>back</option></select>';
-    if (n.type === 'change_layer') sub = '<select data-field="direction"><option value="forward"' + (n.data.direction !== 'backward' ? ' selected' : '') + '>forward</option><option value="backward"' + (n.data.direction === 'backward' ? ' selected' : '') + '>backward</option></select><span class="fs-node-subtitle">' + valueDisplay(n.data, 'layers', 'layers') + '</span>';
+    if (n.type === 'change_layer') sub = '<select data-field="direction"><option value="forward"' + (n.data.direction !== 'backward' ? ' selected' : '') + '>forward</option><option value="backward"' + (n.data.direction === 'backward' ? ' selected' : '') + '>backward</option></select><span class="fs-inline-label">layers</span>' + inlineValueHtml(n.data, 'layers');
     if (n.type === 'set_drag_mode') sub = '<select data-field="mode"><option value="draggable"' + (n.data.mode !== 'not_draggable' ? ' selected' : '') + '>draggable</option><option value="not_draggable"' + (n.data.mode === 'not_draggable' ? ' selected' : '') + '>not draggable</option></select>';
     if (n.type === 'set_variable' || n.type === 'change_variable') {
-      sub = variableSelectHtml('varName', n.data.varName) +
-        '<input type="number" class="fs-inline-num" data-field="value" value="' + n.data.value + '">';
+      sub = variableSelectHtml('varName', n.data.varName) + inlineValueHtml(n.data, 'value');
     }
     var content;
     if (n.type === 'selection') {
@@ -712,6 +761,7 @@
         }
         select(el.dataset.id);
         var n = getNode(el.dataset.id);
+        snapshotForUndo();
         FS.drag = { kind: 'node', id: n.id, startX: e.clientX, startY: e.clientY, x: n.x, y: n.y };
         try { el.setPointerCapture(e.pointerId); } catch (_err) {}
       });
@@ -720,6 +770,7 @@
         c.addEventListener('change', function (e) {
           var n = getNode(el.dataset.id), field = e.target.dataset.field;
           var oldValue = n.data[field];
+          snapshotForUndo();
           n.data[field] = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
           if (n.type === 'subroutine_start' && field === 'name' && oldValue !== n.data.name) {
             FS.nodes.forEach(function (other) {
@@ -1144,35 +1195,27 @@
     if (!n) { host.className = 'fs-empty'; host.innerHTML = 'Select a block or connector to edit it.'; return; }
     host.className = '';
     var f = '';
-    if (n.type === 'move_steps') f = valueField('Distance (steps)', 'steps', n.data);
-    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') f = valueField('Degrees', 'degrees', n.data);
-    if (n.type === 'change_x_by') f = valueField('Change x by', 'x', n.data);
-    if (n.type === 'set_x_to') f = valueField('Set x to', 'x', n.data);
-    if (n.type === 'change_y_by') f = valueField('Change y by', 'y', n.data);
-    if (n.type === 'set_y_to') f = valueField('Set y to', 'y', n.data);
-    if (n.type === 'go_to_xy') f = valueField('X', 'x', n.data) + valueField('Y', 'y', n.data);
-    if (n.type === 'glide_to_xy') f = valueField('Seconds', 'seconds', n.data) + valueField('X', 'x', n.data) + valueField('Y', 'y', n.data);
-    if (n.type === 'glide_to') f = valueField('Seconds', 'seconds', n.data) + '<p class="fs-empty">Choose the destination with the dropdown inside this block.</p>';
-    if (n.type === 'change_color') f = valueField('Change by', 'value', n.data);
-    if (n.type === 'change_size_by') f = valueField('Change size by', 'size', n.data);
-    if (n.type === 'set_size_to') f = valueField('Set size to', 'size', n.data);
-    if (n.type === 'change_effect') f = valueField('Change by', 'value', n.data) + '<p class="fs-empty">Choose the effect with the dropdown inside this block.</p>';
-    if (n.type === 'set_effect') f = valueField('Set to', 'value', n.data) + '<p class="fs-empty">Choose the effect with the dropdown inside this block.</p>';
-    if (n.type === 'change_layer') f = valueField('Layers', 'layers', n.data) + '<p class="fs-empty">Choose forward or backward with the dropdown inside this block.</p>';
-    if (n.type === 'say' || n.type === 'ask') f = field(n.type === 'say' ? 'Message' : 'Question', 'text', 'text', n.data.text);
-    if (n.type === 'say_for' || n.type === 'think_for') f = field('Message', 'text', 'text', n.data.text) + valueField('Seconds', 'seconds', n.data);
-    if (n.type === 'think') f = field('Message', 'text', 'text', n.data.text);
+    if (n.type === 'move_steps') f = sourceField('Distance (steps)', 'steps', n.data);
+    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') f = sourceField('Degrees', 'degrees', n.data);
+    if (n.type === 'change_x_by') f = sourceField('Change x by', 'x', n.data);
+    if (n.type === 'set_x_to') f = sourceField('Set x to', 'x', n.data);
+    if (n.type === 'change_y_by') f = sourceField('Change y by', 'y', n.data);
+    if (n.type === 'set_y_to') f = sourceField('Set y to', 'y', n.data);
+    if (n.type === 'go_to_xy') f = sourceField('X', 'x', n.data) + sourceField('Y', 'y', n.data);
+    if (n.type === 'glide_to_xy') f = sourceField('Seconds', 'seconds', n.data) + sourceField('X', 'x', n.data) + sourceField('Y', 'y', n.data);
+    if (n.type === 'glide_to') f = sourceField('Seconds', 'seconds', n.data) + '<p class="fs-empty">Choose the destination with the dropdown inside this block.</p>';
+    if (n.type === 'change_color') f = sourceField('Change by', 'value', n.data);
+    if (n.type === 'change_size_by') f = sourceField('Change size by', 'size', n.data);
+    if (n.type === 'set_size_to') f = sourceField('Set size to', 'size', n.data);
+    if (n.type === 'change_effect') f = sourceField('Change by', 'value', n.data) + '<p class="fs-empty">Choose the effect with the dropdown inside this block.</p>';
+    if (n.type === 'set_effect') f = sourceField('Set to', 'value', n.data) + '<p class="fs-empty">Choose the effect with the dropdown inside this block.</p>';
+    if (n.type === 'change_layer') f = sourceField('Layers', 'layers', n.data) + '<p class="fs-empty">Choose forward or backward with the dropdown inside this block.</p>';
+    if (n.type === 'say_for' || n.type === 'think_for') f = sourceField('Seconds', 'seconds', n.data);
     if (n.type === 'subroutine_start') f = '<p class="fs-empty">Give this sub-routine a unique name inside the block.</p>';
     if (n.type === 'call_subroutine') f = '<p class="fs-empty">Choose the named sub-routine to run inside the block.</p>';
     if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'go_to' || n.type === 'set_rotation_style' || n.type === 'switch_costume_to' || n.type === 'go_to_layer' || n.type === 'set_drag_mode') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Select either outgoing connector to set it as True or False.</p>';
     host.innerHTML = '<b>' + typeTitle(n) + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
-    Array.prototype.forEach.call(host.querySelectorAll('[data-inspect]'), function (i) {
-      i.addEventListener('input', function () {
-        n.data[i.dataset.inspect] = i.type === 'number' ? Number(i.value) : i.value;
-        renderAll(); select(n.id); saveGraph(FS.activeSprite);
-      });
-    });
     Array.prototype.forEach.call(host.querySelectorAll('[data-inspect-src]'), function (s) {
       s.addEventListener('change', function () {
         var key = s.dataset.inspectSrc;
@@ -1184,22 +1227,16 @@
     var del = host.querySelector('#fsDeleteNode');
     if (del) del.onclick = removeSelected;
   }
-  function field(label, type, key, value) {
-    return '<div class="fs-field"><label>' + label + '</label><input data-inspect="' + key + '" type="' + type + '" value="' + esc(value) + '"></div>';
-  }
-  // A numeric value field that can be a literal number or one of the
-  // reporters (REPORTERS). The dropdown sets a companion "<key>Src" field;
-  // choosing a reporter hides the number input. Wired up in renderInspector
-  // via the data-inspect-src attribute.
-  function valueField(label, key, data) {
+  // A value field's source: literal number (typed on the block itself) or
+  // one of the reporters (REPORTERS). The dropdown sets a companion
+  // "<key>Src" field; the number itself is edited inline on the block.
+  function sourceField(label, key, data) {
     var src = valueSrc(data, key);
     return '<div class="fs-field"><label>' + label + '</label>' +
       '<select data-inspect-src="' + key + '">' +
         '<option value="num"' + (src === 'num' ? ' selected' : '') + '>number</option>' +
         REPORTERS.map(function (r) { return '<option value="' + r.id + '"' + (src === r.id ? ' selected' : '') + '>' + esc(r.label) + '</option>'; }).join('') +
-      '</select>' +
-      '<input data-inspect="' + key + '" type="number" value="' + esc(data[key]) + '"' + (src !== 'num' ? ' style="display:none"' : '') + '>' +
-    '</div>';
+      '</select></div>';
   }
   function renderEdgeInspector(host) {
     var edge = FS.edges.find(function (e) { return e.id === FS.selectedEdgeId; });
@@ -1233,12 +1270,14 @@
       renderAll(); selectEdge(edge.id); saveGraph(FS.activeSprite);
     });
     host.querySelector('#fsDeleteEdge').onclick = function () {
+      snapshotForUndo();
       FS.edges = FS.edges.filter(function (e) { return e.id !== edge.id; });
       FS.selectedEdgeId = null; renderAll(); saveGraph(FS.activeSprite);
     };
   }
   function removeSelected() {
     if (!FS.selected) return;
+    snapshotForUndo();
     FS.nodes = FS.nodes.filter(function (n) { return n.id !== FS.selected; });
     FS.edges = FS.edges.filter(function (e) { return e.from !== FS.selected && e.to !== FS.selected; });
     FS.selected = null;
@@ -1714,6 +1753,9 @@
       '#fsSlowReadout{font-size:11px;color:#aeb1b8;min-width:44px}',
       '.fs-inline-num{width:36px;font-size:9px;padding:1px 2px}',
       '.fs-inline-name{width:112px;font-size:10px;padding:2px 4px;border:1px solid #c8c9ce;border-radius:4px;text-align:center}',
+      '.fs-inline-text{width:112px;max-width:100%;font-size:10px;padding:2px 4px;border:1px solid #c8c9ce;border-radius:4px}',
+      '.fs-inline-reporter{font-size:10px;font-weight:600;color:#1479be;background:#eef5fb;border-radius:4px;padding:1px 5px;max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.fs-inline-label{font-size:9px;color:#686b73}',
       '#fs-canvas-wrap{position:relative;overflow:hidden;flex:1;min-width:0;background:#ededee;touch-action:none;cursor:grab}',
       '#fs-canvas-wrap.panning{cursor:grabbing}#fs-canvas-wrap.connecting,#fs-canvas-wrap.fs-anchor-hover{cursor:crosshair}',
       '#fs-world{position:absolute;left:0;top:0;width:2200px;height:1400px;transform-origin:0 0;background-color:#fafafa;background-image:radial-gradient(#c9cbd0 1px,transparent 1px);background-size:22px 22px;box-shadow:0 0 0 1px #d3d4d7}',
@@ -2033,10 +2075,24 @@
     window.addEventListener('keydown', function (e) {
       if (!els.overlay || els.overlay.style.display === 'none') { FS.pressedKeys[normKey(e.code)] = true; return; }
       FS.pressedKeys[normKey(e.code)] = true;
-      if (e.code === 'Space' && !/INPUT|SELECT/.test(e.target.tagName)) { space = true; e.preventDefault(); }
-      if ((e.key === 'Delete' || e.key === 'Backspace') && !/INPUT|SELECT/.test(e.target.tagName) && els.overlay.contains(document.activeElement) === false) {
+      var editingText = /INPUT|SELECT|TEXTAREA/.test(document.activeElement && document.activeElement.tagName);
+      // Undo / redo. Leave Ctrl+Z to the browser's own text undo while the
+      // focus is inside an input/select; otherwise step the graph history.
+      if ((e.ctrlKey || e.metaKey) && (e.code === 'KeyZ' || e.code === 'KeyY')) {
+        if (editingText) return;
+        e.preventDefault();
+        if (e.code === 'KeyZ') { if (e.shiftKey) redo(); else undo(); }
+        else redo();
+        return;
+      }
+      if (e.code === 'Space' && !editingText) { space = true; e.preventDefault(); }
+      // Delete / Backspace removes the selected block or connector, unless
+      // the user is currently editing a value on the block itself.
+      if ((e.code === 'Delete' || e.code === 'Backspace') && !editingText) {
+        e.preventDefault();
         if (FS.selected) removeSelected();
         else if (FS.selectedEdgeId) {
+          snapshotForUndo();
           FS.edges = FS.edges.filter(function (e2) { return e2.id !== FS.selectedEdgeId; });
           FS.selectedEdgeId = null; renderAll(); saveGraph(FS.activeSprite);
         }
@@ -2127,6 +2183,7 @@
           var wireHit = hitEl && hitEl.closest ? hitEl.closest('.fs-wire-hit') : null;
           var targetEdge = wireHit ? FS.edges.find(function (ed) { return ed.id === wireHit.parentNode.dataset.edge; }) : null;
           var wp = screenToWorld(e.clientX, e.clientY);
+          snapshotForUndo();
           var n = addNode(p.type, Math.max(0, wp.x - 75), Math.max(0, wp.y - 33), false);
           if (targetEdge) spliceNodeIntoEdge(n, targetEdge);
           renderAll();
@@ -2141,6 +2198,7 @@
         var target = dropTarget && dropTarget.closest ? dropTarget.closest('.fs-node') : null;
         if (joinedEdge && joinedEdge.from !== FS.connect.from) {
           var joinPoint = screenToWorld(e.clientX, e.clientY);
+          snapshotForUndo();
           addEdge(FS.connect.from, joinedEdge.to, FS.connect.fromA, joinedEdge.toA, {
             joinEdgeId: joinedEdge.id,
             joinAt: { x: joinPoint.x, y: joinPoint.y }
@@ -2149,6 +2207,7 @@
         } else if (target && target.dataset.id !== FS.connect.from) {
           var wp2 = screenToWorld(e.clientX, e.clientY);
           var n2 = getNode(target.dataset.id);
+          snapshotForUndo();
           addEdge(FS.connect.from, n2.id, FS.connect.fromA, anchorPointOnNode(n2, wp2.x, wp2.y));
           saveGraph(FS.activeSprite);
         }
@@ -2245,6 +2304,10 @@
     if (!selectedName || selectedName === FS.activeSprite) return;
     if (FS.running) stop();
     if (FS.activeSprite) saveGraph(FS.activeSprite);
+    // Undo/redo history is per-sprite (it snapshots that sprite's graph);
+    // a different sprite's snapshots would otherwise be restored onto this
+    // one's canvas, so drop the history on every sprite switch.
+    undoStack.length = 0; redoStack.length = 0;
     FS.activeSprite = selectedName;
     var t = getTargetByName(selectedName);
     FS.activeSpriteId = t ? t.id : null;
