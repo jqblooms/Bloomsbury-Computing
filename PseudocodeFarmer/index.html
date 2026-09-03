@@ -60,6 +60,14 @@
   .stat-pill .icon { font-size: 1.1rem; }
   #money-pill { color: #1d6b2e; }
   #earned-pill { color: #9a5b0a; }
+  .reset-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: #d9534f; border: 3px solid var(--wood-dark); border-radius: 999px;
+    padding: 6px 14px; font-weight: 800; color: #fff; cursor: pointer;
+    box-shadow: 0 3px 0 #9c3d3a; white-space: nowrap; font-family: inherit; font-size: .82rem;
+  }
+  .reset-btn:active { transform: translateY(2px); box-shadow: none; }
+  .reset-btn.armed { background: #ff8a85; color: #4a1010; }
   #hud .hint { color: #ffe6b8; font-size: .78rem; font-weight: 600; max-width: 260px; text-align: right; display: none; }
   @media (min-width: 980px) { #hud .hint { display: block; } }
 
@@ -137,12 +145,25 @@
   .machine-tier-btn:disabled { opacity: .5; cursor: not-allowed; }
 
   #code-panel { flex: 1; display: flex; flex-direction: column; min-height: 260px; }
+  .code-editor { flex: 1; min-height: 140px; position: relative; background: #1f2b22; border: 2px solid #e6d5b3; border-radius: 10px; overflow: hidden; }
+  .code-editor:focus-within { border-color: var(--leaf); }
+  .code-editor.has-error { border-color: #d9534f; }
   #code-input {
-    width: 100%; flex: 1; min-height: 140px; resize: vertical;
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    margin: 0; padding: 10px; resize: none;
     font-family: "Courier New", ui-monospace, monospace; font-size: .86rem; line-height: 1.5;
-    border: 2px solid #e6d5b3; border-radius: 10px; padding: 10px; background: #1f2b22; color: #d9f2d2;
+    background: transparent; color: transparent; caret-color: #d9f2d2;
+    white-space: pre-wrap; overflow-wrap: break-word; tab-size: 4;
+    border: 0; outline: none;
   }
-  #code-input:focus { outline: none; border-color: var(--leaf); }
+  #code-backdrop {
+    position: absolute; inset: 0; margin: 0; padding: 10px;
+    overflow: hidden;
+    font-family: "Courier New", ui-monospace, monospace; font-size: .86rem; line-height: 1.5;
+    color: #d9f2d2; white-space: pre-wrap; overflow-wrap: break-word; tab-size: 4;
+    pointer-events: none;
+  }
+  #code-backdrop .code-line.error { background: rgba(217, 83, 79, 0.45); border-radius: 3px; }
   .code-actions { display: flex; gap: 8px; margin-top: 8px; }
   .code-actions button {
     flex: 1; border: 0; border-radius: 10px; padding: 10px 8px; font-weight: 800; cursor: pointer;
@@ -193,6 +214,7 @@
     <div id="stats">
       <div class="stat-pill" id="money-pill"><span class="icon">🪙</span><span id="money-value">0</span></div>
       <div class="stat-pill" id="earned-pill" title="Total coins ever earned - unlocks new vegetables, spending it back down doesn't undo that"><span class="icon">📈</span><span id="earned-value">0</span></div>
+      <button type="button" class="reset-btn" id="reset-btn" title="Start the whole game over from scratch">🔁 Reset Game</button>
     </div>
     <div class="hint">Click a tile to move there. Write pseudocode to plant, buy and automate!</div>
   </header>
@@ -212,7 +234,10 @@
 
       <section class="panel-section" id="code-panel">
         <h2>💻 Code Box</h2>
-        <textarea id="code-input" spellcheck="false" autocomplete="off"></textarea>
+        <div class="code-editor">
+          <div id="code-backdrop" aria-hidden="true"></div>
+          <textarea id="code-input" spellcheck="false" autocomplete="off"></textarea>
+        </div>
         <div class="code-actions">
           <button type="button" id="run-btn">▶ Run</button>
           <button type="button" id="machine-btn">🤖 Place Machine</button>
@@ -364,6 +389,8 @@ var FACING_VECTORS = [ { dx: 0, dz: -1 }, { dx: 1, dz: 0 }, { dx: 0, dz: 1 }, { 
 // ============================================================
 // GAME STATE
 // ============================================================
+var SAVE_KEY = 'pseudocodeFarmerSave';
+var SAVE_VERSION = 1;
 var money = 40;
 var totalEarned = 0; // lifetime coins earned from selling - never goes down, gates vegetable unlocks
 var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
@@ -382,6 +409,7 @@ var playerCursor = { x: Math.floor(GRID_SIZE / 2), z: Math.floor(GRID_SIZE / 2),
 var machines = [];
 var nextMachineId = 1;
 var isRunning = false; // true while the player's own program is executing
+var runEpoch = 0;      // bumped by Reset Game so any in-flight program aborts cleanly
 
 function invCount(name) { return inventory[name] || 0; }
 
@@ -422,7 +450,7 @@ function unlockProgressMessage(name) {
 // update for every vegetable, most of which nobody is buying most of the
 // time.
 function decaySeedHeat(name) {
-  var now = performance.now();
+  var now = Date.now(); // wall-clock, so seed heat survives a page reload
   var last = seedHeatUpdated[name] || now;
   var heat = seedHeat[name] || 0;
   var elapsedSec = (now - last) / 1000;
@@ -690,7 +718,7 @@ function plantAt(cursor, vegName) {
   scene.add(sprite);
   tile.plant = {
     type: vegName,
-    plantedAt: performance.now(),
+    plantedAt: Date.now(), // wall-clock, so growth survives a page reload
     growMs: veg.growSeconds * 1000,
     sprite: sprite,
     ready: false
@@ -833,6 +861,7 @@ function updateFloatingTexts(now) {
 function PseudocodeError(message, line) {
   this.message = line ? ('Line ' + line + ': ' + message) : message;
   this.name = 'PseudocodeError';
+  this.line = line || 0; // the 1-based source line, for highlighting the code box
 }
 PseudocodeError.prototype = Object.create(Error.prototype);
 
@@ -939,11 +968,12 @@ function runProgram(source, cursor, log, stepDelayMs) {
   var pc = 0;
   var steps = 0;
   var MAX_STEPS = 400;
+  var myEpoch = runEpoch; // if Reset Game bumps runEpoch, this run stops itself
 
   function step() {
     return new Promise(function (resolve, reject) {
       (async function () {
-        while (pc < instructions.length) {
+        while (pc < instructions.length && runEpoch === myEpoch) {
           if (++steps > MAX_STEPS) {
             log('Stopped after ' + MAX_STEPS + ' steps - check your FOR loop isn\'t counting forever.', true);
             break;
@@ -1041,6 +1071,8 @@ function onCursorMoved(cursor) {
 // PLAYER CODE BOX WIRING
 // ============================================================
 var codeInput = document.getElementById('code-input');
+var codeBackdrop = document.getElementById('code-backdrop');
+var codeEditorEl = document.querySelector('.code-editor');
 var runBtn = document.getElementById('run-btn');
 var machineBtn = document.getElementById('machine-btn');
 var consoleOutput = document.getElementById('console-output');
@@ -1055,6 +1087,41 @@ var consoleOutput = document.getElementById('console-output');
 // a solution can't be lifted from (or dropped into) it.
 ['copy', 'cut', 'paste', 'contextmenu'].forEach(function (evt) {
   codeInput.addEventListener(evt, function (e) { e.preventDefault(); });
+});
+
+// The textarea's text is transparent - the code is actually rendered by
+// the backdrop <div> behind it, so an error line can be tinted red. Both
+// layers share the same font/padding/line-height, so they stay in line;
+// renderCodeBackdrop re-syncs the backdrop whenever the text changes.
+var errorLine = 0; // 1-based line currently flagged as wrong; 0 = none
+
+function renderCodeBackdrop() {
+  var lines = codeInput.value.split('\n');
+  codeBackdrop.innerHTML = lines.map(function (line, i) {
+    var cls = (errorLine > 0 && i + 1 === errorLine) ? ' class="code-line error"' : ' class="code-line"';
+    return '<div' + cls + '>' + (line ? escapeHtmlLocal(line) : '&nbsp;') + '</div>';
+  }).join('');
+}
+
+function setCodeError(lineNo) {
+  errorLine = lineNo || 0;
+  renderCodeBackdrop();
+  codeEditorEl.classList.add('has-error');
+  var lh = parseFloat(getComputedStyle(codeInput).lineHeight) || 18;
+  codeInput.scrollTop = Math.max(0, (errorLine - 1) * lh - codeInput.clientHeight / 2);
+  codeBackdrop.scrollTop = codeInput.scrollTop;
+}
+
+function clearCodeError() {
+  errorLine = 0;
+  renderCodeBackdrop();
+  codeEditorEl.classList.remove('has-error');
+}
+
+codeInput.addEventListener('input', function () { clearCodeError(); }); // typing invalidates the flagged line
+codeInput.addEventListener('scroll', function () {
+  codeBackdrop.scrollTop = codeInput.scrollTop;
+  codeBackdrop.scrollLeft = codeInput.scrollLeft;
 });
 
 function logConsole(message, isError, isMachine) {
@@ -1075,19 +1142,37 @@ function setRunningUI(running) {
 
 runBtn.addEventListener('click', function () {
   if (isRunning) return;
-  if (!codeInput.value.trim()) { logConsole('Write some code first.', true); return; }
   var source = codeInput.value;
-  codeInput.value = ''; // submitted and gone - a machine is the only way to keep code running
+  if (!source.trim()) { logConsole('Write some code first.', true); return; }
+  try {
+    compile(source); // catch syntax errors before the box is cleared
+  } catch (e) {
+    setCodeError(e.line || 1);
+    logConsole(e.message || String(e), true);
+    return;
+  }
+  clearCodeError();
   setRunningUI(true);
   runProgram(source, playerCursor, function (msg, isErr) { logConsole(msg, isErr); }, 350)
-    .catch(function (err) { logConsole(err.message || String(err), true); })
-    .then(function () { setRunningUI(false); });
+    .then(function () {
+      codeInput.value = '';
+      renderCodeBackdrop();
+      setRunningUI(false);
+    })
+    .catch(function (err) {
+      setCodeError(err.line || 1);
+      logConsole(err.message || String(err), true);
+      setRunningUI(false);
+    });
 });
 
 machineBtn.addEventListener('click', function () {
   if (isRunning) return;
   var source = codeInput.value;
-  if (placeMachine(source)) codeInput.value = ''; // handed off to the machine, not lost
+  if (placeMachine(source)) {
+    codeInput.value = ''; // handed off to the machine, not lost
+    renderCodeBackdrop();
+  }
 });
 
 // ============================================================
@@ -1188,9 +1273,11 @@ function placeMachine(code) {
   try {
     compile(code); // catch syntax errors before the machine is committed to the field
   } catch (e) {
+    setCodeError(e.line || 1);
     logConsole('Cannot place machine: ' + e.message, true);
     return false;
   }
+  clearCodeError();
   var tier = MACHINE_TIERS[selectedMachineTierIndex];
   if (money < tier.cost) {
     logConsole('A ' + tier.name + ' Machine costs ' + tier.cost + ' coins, but you only have ' + money + '.', true);
@@ -1342,6 +1429,8 @@ function saveMachineCode(machine) {
   try {
     compile(newCode);
   } catch (e) {
+    var ta = document.getElementById('machine-code-edit');
+    if (ta) ta.style.borderColor = '#d9534f';
     logConsole('Cannot save machine code: ' + e.message, true);
     return;
   }
@@ -1355,6 +1444,171 @@ function cancelEditMachine() {
   editingMachineCodeId = null;
   updateTileInfoPanel();
 }
+
+// ============================================================
+// SAVE / LOAD (localStorage) - so a page refresh keeps the farm
+// ============================================================
+function makePlantSprite(vegName, x, z) {
+  var veg = VEGGIES[vegName];
+  var material = new THREE.SpriteMaterial({ map: loadVeggieTexture(vegName), transparent: true });
+  if (veg.tint) material.color.setHex(veg.tint);
+  var sprite = new THREE.Sprite(material);
+  sprite.center.set(0.5, 0);
+  sprite.scale.set(0.001, 0.001, 0.001);
+  sprite.position.set(tileWorldX(x), 0.02, tileWorldZ(z));
+  scene.add(sprite);
+  return sprite;
+}
+
+function saveGame() {
+  var s = {
+    v: SAVE_VERSION,
+    money: money,
+    totalEarned: totalEarned,
+    inventory: inventory,
+    soldCount: soldCount,
+    seedHeat: seedHeat,
+    seedHeatUpdated: seedHeatUpdated,
+    playerCursor: { x: playerCursor.x, z: playerCursor.z, facing: playerCursor.facing },
+    plants: [],
+    machines: [],
+    nextMachineId: nextMachineId
+  };
+  for (var x = 0; x < GRID_SIZE; x++) {
+    for (var z = 0; z < GRID_SIZE; z++) {
+      var plant = tiles[x][z].plant;
+      if (plant) s.plants.push({ x: x, z: z, type: plant.type, plantedAt: plant.plantedAt, growMs: plant.growMs });
+    }
+  }
+  machines.forEach(function (m) {
+    s.machines.push({
+      id: m.id, homeX: m.homeX, homeZ: m.homeZ, code: m.code, tierName: m.tierName,
+      cost: m.cost, intervalMs: m.intervalMs,
+      cursorX: m.cursor.x, cursorZ: m.cursor.z, cursorFacing: m.cursor.facing
+    });
+  });
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) {}
+}
+
+function restoreMachine(s) {
+  var tier = MACHINE_TIERS.filter(function (t) { return t.name === s.tierName; })[0] || MACHINE_TIERS[0];
+  var built = createMachineMarkerGroup(tier.color);
+  built.group.position.set(tileWorldX(s.homeX), 0, tileWorldZ(s.homeZ));
+  scene.add(built.group);
+  scene.add(built.cursorMesh);
+  var machine = {
+    id: s.id, homeX: s.homeX, homeZ: s.homeZ,
+    code: s.code, tierName: tier.name, cost: s.cost, intervalMs: s.intervalMs,
+    cursor: { x: s.cursorX, z: s.cursorZ, facing: s.cursorFacing || 0, homeX: s.homeX, homeZ: s.homeZ },
+    group: built.group, cursorMesh: built.cursorMesh, facingIndicator: built.facingIndicator,
+    diamond: built.diamond, body: built.body, running: false
+  };
+  built.group.traverse(function (o) { if (o.isMesh) o.userData.machineId = machine.id; });
+  tiles[s.homeX][s.homeZ].hasMachine = true;
+  machines.push(machine);
+  positionMachineCursorMarker(machine);
+  updateFacingIndicator(machine.facingIndicator, machine.cursor.facing);
+  scheduleMachine(machine);
+}
+
+// Restores the whole game from localStorage. Returns true if there was a
+// save to restore; called once at boot, before the first HUD paint.
+function loadGame() {
+  var raw;
+  try { raw = localStorage.getItem(SAVE_KEY); } catch (e) { raw = null; }
+  if (!raw) return false;
+  var s;
+  try { s = JSON.parse(raw); } catch (e) { return false; }
+  if (!s || s.v !== SAVE_VERSION) return false;
+  money = s.money;
+  totalEarned = s.totalEarned;
+  inventory = s.inventory || {};
+  soldCount = s.soldCount || {};
+  seedHeat = s.seedHeat || {};
+  seedHeatUpdated = s.seedHeatUpdated || {};
+  playerCursor.x = s.playerCursor.x; playerCursor.z = s.playerCursor.z; playerCursor.facing = s.playerCursor.facing || 0;
+  updatePlayerCursorPosition();
+  updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
+  (s.plants || []).forEach(function (p) {
+    if (!VEGGIES[p.type] || !tiles[p.x] || !tiles[p.x][p.z]) return;
+    if (tiles[p.x][p.z].plant) return;
+    tiles[p.x][p.z].plant = {
+      type: p.type, plantedAt: p.plantedAt, growMs: p.growMs,
+      sprite: makePlantSprite(p.type, p.x, p.z), ready: false
+    };
+  });
+  (s.machines || []).forEach(function (m) {
+    if (!tiles[m.homeX] || !tiles[m.homeX][m.homeZ]) return;
+    if (tiles[m.homeX][m.homeZ].hasMachine) return;
+    restoreMachine(m);
+  });
+  nextMachineId = s.nextMachineId || 1;
+  return true;
+}
+
+// ============================================================
+// RESET GAME (top-bar button, two-click confirm)
+// ============================================================
+function resetGame() {
+  runEpoch++; // abort any in-flight program (its loop checks the epoch)
+  setRunningUI(false);
+  machines.forEach(function (m) { clearInterval(m.timer); scene.remove(m.group); scene.remove(m.cursorMesh); });
+  machines = [];
+  nextMachineId = 1;
+  for (var x = 0; x < GRID_SIZE; x++) {
+    for (var z = 0; z < GRID_SIZE; z++) {
+      if (tiles[x][z].plant) scene.remove(tiles[x][z].plant.sprite);
+      tiles[x][z].plant = null;
+      tiles[x][z].hasMachine = false;
+    }
+  }
+  money = 40;
+  totalEarned = 0;
+  inventory = {};
+  soldCount = {};
+  seedHeat = {};
+  seedHeatUpdated = {};
+  unlockedState = {};
+  selectedMachineId = null;
+  editingMachineCodeId = null;
+  selectedMachineTierIndex = 0;
+  playerCursor.x = Math.floor(GRID_SIZE / 2);
+  playerCursor.z = Math.floor(GRID_SIZE / 2);
+  playerCursor.facing = 0;
+  updatePlayerCursorPosition();
+  updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
+  codeInput.value = '';
+  clearCodeError();
+  consoleOutput.innerHTML = '';
+  try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+  refreshUnlocks();
+  updateHUD();
+  updateTileInfoPanel();
+  logConsole('Game reset. Good luck!');
+}
+
+var resetBtn = document.getElementById('reset-btn');
+var resetArmed = false;
+var resetArmTimer = null;
+resetBtn.addEventListener('click', function () {
+  if (!resetArmed) {
+    resetArmed = true;
+    resetBtn.textContent = '⚠️ Click again to confirm';
+    resetBtn.classList.add('armed');
+    clearTimeout(resetArmTimer);
+    resetArmTimer = setTimeout(function () {
+      resetArmed = false;
+      resetBtn.textContent = '🔁 Reset Game';
+      resetBtn.classList.remove('armed');
+    }, 3000);
+  } else {
+    clearTimeout(resetArmTimer);
+    resetArmed = false;
+    resetBtn.textContent = '🔁 Reset Game';
+    resetBtn.classList.remove('armed');
+    resetGame();
+  }
+});
 
 // ============================================================
 // HUD / SHOP RENDERING
@@ -1411,12 +1665,16 @@ function buildShop() {
   });
 }
 buildShop();
+var restored = loadGame(); // restore any saved farm before the first HUD paint
 refreshUnlocks();
 updateHUD();
 // Seed prices cool down over real time even with nobody clicking anything,
 // and later tiers should visibly unlock the moment they're earned - both
 // need the shop to refresh on its own, not only after a Buy/Sell click.
-setInterval(function () { refreshUnlocks(); updateHUD(); }, 1000);
+// This also double-duties as the autosave tick (at most a second of
+// progress can be lost to a crash or a hard close).
+setInterval(function () { refreshUnlocks(); updateHUD(); saveGame(); }, 1000);
+window.addEventListener('pagehide', saveGame);
 
 function updateTileInfoPanel() {
   if (editingMachineCodeId) return; // the inline editor owns the panel while it is open
@@ -1459,7 +1717,7 @@ function updateTileInfoPanel() {
       logConsole(result.message, !result.ok);
     });
   } else if (tile.plant) {
-    var pct = Math.min(100, Math.round(((performance.now() - tile.plant.plantedAt) / tile.plant.growMs) * 100));
+    var pct = Math.min(100, Math.round(((Date.now() - tile.plant.plantedAt) / tile.plant.growMs) * 100));
     tileInfoEl.className = 'show';
     tileInfoEl.innerHTML = 'A <b>' + tile.plant.type + '</b> is growing here (' + pct + '%).';
   } else if (tile.hasMachine) {
@@ -1487,7 +1745,8 @@ var clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
   var elapsed = clock.getElapsedTime();
-  var now = performance.now();
+  var perfNow = performance.now(); // transient animations (floating text)
+  var wallNow = Date.now();        // persisted timing (plant growth)
 
   // Bob the player's arrow and every machine cursor gently so the scene
   // never looks totally static, even between actions.
@@ -1504,7 +1763,7 @@ function animate() {
     for (var gz = 0; gz < GRID_SIZE; gz++) {
       var plant = tiles[gx][gz].plant;
       if (!plant) continue;
-      var t = Math.min(1, (now - plant.plantedAt) / plant.growMs);
+      var t = Math.min(1, (wallNow - plant.plantedAt) / plant.growMs);
       var eased = 1 - Math.pow(1 - t, 2);
       var scale = 0.12 + eased * 0.78;
       plant.sprite.scale.set(scale, scale, scale);
@@ -1518,7 +1777,7 @@ function animate() {
   }
   if (anyGrowthChanged) { /* nothing extra needed - tile info refreshes itself when relevant */ }
 
-  updateFloatingTexts(now);
+  updateFloatingTexts(perfNow);
   renderer.render(scene, camera);
 }
 animate();
@@ -1527,7 +1786,7 @@ animate();
 // else changed, without re-rendering the whole panel every animation frame.
 setInterval(updateTileInfoPanel, 500);
 
-logConsole('Welcome to Pseudocode Farmer! Write pseudocode to buy, plant and sell - code beats the buttons (Buy() is cheaper, Sell() pays more).');
+logConsole(restored ? 'Welcome back! Your farm was restored.' : 'Welcome to Pseudocode Farmer! Write pseudocode to buy, plant and sell - code beats the buttons (Buy() is cheaper, Sell() pays more).');
 </script>
 </body>
 </html>
