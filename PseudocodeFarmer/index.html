@@ -1020,7 +1020,17 @@ var runBtn = document.getElementById('run-btn');
 var machineBtn = document.getElementById('machine-btn');
 var consoleOutput = document.getElementById('console-output');
 
-codeInput.value = '// Try me! Click Run.\nBuy("Carrot Seeds")\nPlant("Carrot")';
+// The code box is scratch space for a one-time task, not a saved script -
+// Run executes whatever is in it and empties it straight away, exactly
+// like handing in a single piece of work. A machine is the only place
+// code actually keeps running: Place Machine also empties the box, but
+// because the code has gone to live inside the machine (see placeMachine
+// below), not because it's been thrown away. Typing is still normal;
+// only copying/cutting/pasting text in or out of the box is blocked, so
+// a solution can't be lifted from (or dropped into) it.
+['copy', 'cut', 'paste', 'contextmenu'].forEach(function (evt) {
+  codeInput.addEventListener(evt, function (e) { e.preventDefault(); });
+});
 
 function logConsole(message, isError, isMachine) {
   var row = document.createElement('div');
@@ -1040,15 +1050,19 @@ function setRunningUI(running) {
 
 runBtn.addEventListener('click', function () {
   if (isRunning) return;
+  if (!codeInput.value.trim()) { logConsole('Write some code first.', true); return; }
+  var source = codeInput.value;
+  codeInput.value = ''; // submitted and gone - a machine is the only way to keep code running
   setRunningUI(true);
-  runProgram(codeInput.value, playerCursor, function (msg, isErr) { logConsole(msg, isErr); }, 350)
+  runProgram(source, playerCursor, function (msg, isErr) { logConsole(msg, isErr); }, 350)
     .catch(function (err) { logConsole(err.message || String(err), true); })
     .then(function () { setRunningUI(false); });
 });
 
 machineBtn.addEventListener('click', function () {
   if (isRunning) return;
-  placeMachine(codeInput.value);
+  var source = codeInput.value;
+  if (placeMachine(source)) codeInput.value = ''; // handed off to the machine, not lost
 });
 
 // ============================================================
@@ -1131,23 +1145,28 @@ function positionMachineCursorMarker(machine) {
   machine.cursorMesh.position.set(tileWorldX(machine.cursor.x), 1.0, tileWorldZ(machine.cursor.z));
 }
 
+// Returns true only once the machine has actually been placed - the
+// caller (machineBtn's click handler) uses this to decide whether the
+// code box's contents were genuinely handed off (clear it) or the
+// placement failed for some reason (leave the student's typing alone,
+// nothing was lost).
 function placeMachine(code) {
-  if (!code.trim()) { logConsole('Write some code first, then place a machine.', true); return; }
+  if (!code.trim()) { logConsole('Write some code first, then place a machine.', true); return false; }
   try {
     compile(code); // catch syntax errors before the machine is committed to the field
   } catch (e) {
     logConsole('Cannot place machine: ' + e.message, true);
-    return;
+    return false;
   }
   var tier = MACHINE_TIERS[selectedMachineTierIndex];
   if (money < tier.cost) {
     logConsole('A ' + tier.name + ' Machine costs ' + tier.cost + ' coins, but you only have ' + money + '.', true);
-    return;
+    return false;
   }
   var x = playerCursor.x, z = playerCursor.z;
   var tile = tiles[x][z];
-  if (tile.hasMachine) { logConsole('There is already a machine on this tile.', true); return; }
-  if (tile.plant) { logConsole('Clear the plant on this tile before placing a machine here.', true); return; }
+  if (tile.hasMachine) { logConsole('There is already a machine on this tile.', true); return false; }
+  if (tile.plant) { logConsole('Clear the plant on this tile before placing a machine here.', true); return false; }
 
   money -= tier.cost;
 
@@ -1181,6 +1200,7 @@ function placeMachine(code) {
   scheduleMachine(machine);
   updateHUD();
   logConsole(tier.name + ' Machine placed for ' + tier.cost + ' coins! It will run its program every ' + (machine.intervalMs / 1000) + ' seconds.');
+  return true;
 }
 
 function buildMachineTierPicker() {
