@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Storage Blitz</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+        body { font-family: 'JetBrains Mono', monospace; overflow: hidden; touch-action: manipulation; background-color: #0f172a; }
+        #root { height: 100%; width: 100%; }
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)} }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .custom-scrollbar { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.3) rgba(255,255,255,.1); }
+        .custom-scrollbar::-webkit-scrollbar{width:6px}
+        .custom-scrollbar::-webkit-scrollbar-track{background:rgba(255,255,255,.1)}
+        .custom-scrollbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:3px}
+        .no-select{user-select:none;-webkit-user-select:none}
+        .backdrop-blur-md{backdrop-filter:blur(12px)}
+        /* Number entry answer box - typing/pasting is the whole point of
+           this level shape, so nothing here blocks paste the way
+           Pseudocode Farmer's code box deliberately does elsewhere. */
+        input[type="text"]::-webkit-outer-spin-button, input[type="text"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="text-white h-screen w-screen overflow-hidden">
+<div id="root"></div>
+
+<script>
+// Bloomsbury Computing identity bridge: when embedded in the main site,
+// the parent posts the signed-in user's display name here instead of
+// this game asking for one itself. Same contract as every other
+// embedded app's own bridge (see e.g. Boolean Blitz).
+window.__bcPlayerName = null;
+window.addEventListener('message', function (event) {
+  var data = event.data;
+  if (data && data.type === 'BC_IDENTITY' && data.name) {
+    window.__bcPlayerName = data.name;
+  }
+});
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// --- CONSTANTS ---
+const BASE_DURATION_REF = 30000;
+
+const LEVELS = {
+    1: { title: "File Size Units", color: "cyan", desc: "Convert between bits, nibbles, bytes, KiB, MiB and GiB." },
+    2: { title: "Text & Character Sets", color: "blue", desc: "Character set capacity, and the bits needed to store it." },
+    3: { title: "Images", color: "fuchsia", desc: "Resolution x colour depth = file size." },
+    4: { title: "Sound", color: "emerald", desc: "Sample rate x sample resolution x duration = file size." },
+    5: { title: "Video", color: "orange", desc: "Frame rate x duration x frame size = file size." },
+    6: { title: "Storage & Compression", color: "amber", desc: "Match each term to its description." },
+    7: { title: "Final Exam", color: "rose", desc: "15 Questions. No Timer." }
+};
+
+// Support Mode (mirrors Pseudocode Blitz / Trace Table Practice's own
+// scaffolding exactly): a streak of SUPPORT_STAGE_EVERY correct answers
+// in a row advances an integer stage 0..SUPPORT_MAX_STAGE - never a
+// repeatedly-decremented float, which never lands on exactly the floor
+// value. Stage controls how many digits of the answer are pre-revealed
+// as a hint, and a wrong answer resets the streak (and the hint) back
+// to nothing.
+const SUPPORT_STAGE_EVERY = 3;
+const SUPPORT_MAX_STAGE = 3;
+
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+const levelTitleSizeClass = (title) => title.length > 24 ? 'text-base' : 'text-lg';
+
+const calculateMaxTime = (currentScore, isHardMode, multiplier = 1) => {
+    const steps = Math.floor(currentScore / 250);
+    const speedPercent = Math.min(120, 10 + (steps * 10));
+    let duration = (BASE_DURATION_REF * 100) / speedPercent;
+    if (isHardMode) duration = duration / 2.5;
+    return duration * multiplier;
+};
+
+// --- QUESTION GENERATORS (one per level, all pure functions of
+// (isHardMode) -> a question object - see generateQuestion's own
+// dispatch below for the exact shape each level expects) ---
+
+// Level 1: unit conversion, using the real CIE 0478 (2023+) binary-prefix
+// units - kibibyte/mebibyte/gibibyte/tebibyte (KiB/MiB/GiB/TiB), not the
+// decimal KB/MB/GB some older material uses - plus the nibble (half a
+// byte), confirmed against real exam papers (June 2025 P11 Q1, March
+// 2026 P12 Q1). Always adjacent units so there's only ever one
+// conversion factor to apply, not a chain of them. The direction that
+// would produce a fraction (smaller unit -> larger unit) is built
+// backwards - the ANSWER is generated first, then the question's own
+// starting value is derived from it - so every question has a
+// guaranteed whole-number answer, never a rounding judgement call.
+const UNIT_STEPS = [
+    { smaller: 'bit', larger: 'byte', factor: 8 },
+    { smaller: 'nibble', larger: 'byte', factor: 2 },
+    { smaller: 'byte', larger: 'KiB', factor: 1024 },
+    { smaller: 'KiB', larger: 'MiB', factor: 1024 },
+    { smaller: 'MiB', larger: 'GiB', factor: 1024 },
+    { smaller: 'GiB', larger: 'TiB', factor: 1024 }
+];
+// Full-word units (bit/byte/nibble) pluralise with a trailing "s";
+// abbreviations (KiB/MiB/...) don't, matching how they're written on
+// the real exam papers ("5 KiB", never "5 KiBs").
+const PLURALIZABLE_UNITS = new Set(['bit', 'byte', 'nibble']);
+const plural = (n, unit) => PLURALIZABLE_UNITS.has(unit) ? `${n} ${unit}${n === 1 ? '' : 's'}` : `${n} ${unit}`;
+function genUnitQuestion(isHardMode) {
+    const pool = isHardMode ? UNIT_STEPS.length : 4;
+    const step = UNIT_STEPS[randInt(0, pool - 1)];
+    const cap = isHardMode ? 80 : 20;
+    if (Math.random() < 0.5) {
+        // larger -> smaller: multiply, no fraction risk either way
+        const largerValue = randInt(1, cap);
+        return { prompt: `Convert ${plural(largerValue, step.larger)} to ${step.smaller}s.`, answer: largerValue * step.factor };
+    }
+    const answer = randInt(1, cap);
+    const smallerValue = answer * step.factor;
+    return { prompt: `Convert ${plural(smallerValue, step.smaller)} to ${step.larger}s.`, answer };
+}
+
+// Level 2: character set capacity, both directions. The reverse
+// direction (bits needed for N characters) uses an exact power of two
+// in normal mode (so the answer is unambiguous), and a value strictly
+// between two powers of two in hard mode (so "why round UP, not down"
+// is the actual thing being tested).
+function genTextQuestion(isHardMode) {
+    if (Math.random() < 0.5) {
+        const bits = randInt(1, isHardMode ? 12 : 8);
+        return { prompt: `A character set uses ${bits} bits to store each character. How many different characters can it represent?`, answer: Math.pow(2, bits) };
+    }
+    if (!isHardMode) {
+        const bits = randInt(1, 8);
+        return { prompt: `A character set must be able to represent ${Math.pow(2, bits)} different characters. What is the minimum number of bits needed to store each character?`, answer: bits };
+    }
+    const bits = randInt(3, 10);
+    const chars = randInt(Math.pow(2, bits - 1) + 1, Math.pow(2, bits) - 1);
+    return { prompt: `A character set must be able to represent ${chars} different characters. What is the minimum number of bits needed to store each character?`, answer: bits };
+}
+
+// Level 3: bitmap images - resolution x colour depth = pixel data size,
+// or colour depth alone -> possible colours (2^depth). Resolution is
+// phrased "H pixels high x W pixels wide" and, in hard mode, colour
+// depth is sometimes given in bytes rather than bits - both match real
+// exam wording (March 2026 P12 Q1(b): "resolution of 1024 pixels high x
+// 1024 pixels wide. The colour depth is two bytes").
+function genImageQuestion(isHardMode) {
+    if (Math.random() < 0.5) {
+        const w = randInt(2, isHardMode ? 30 : 12);
+        const h = randInt(2, isHardMode ? 30 : 12);
+        const depths = isHardMode ? [1, 2, 4, 8, 16, 24] : [1, 2, 4, 8];
+        const depthBits = depths[randInt(0, depths.length - 1)];
+        const useBytes = isHardMode && depthBits % 8 === 0 && Math.random() < 0.4;
+        const depthLabel = useBytes ? plural(depthBits / 8, 'byte') : `${depthBits} bits`;
+        return { prompt: `An image is ${h} pixels high and ${w} pixels wide, with a colour depth of ${depthLabel}. Calculate the size of the image data, in bits.`, answer: w * h * depthBits };
+    }
+    const d = randInt(1, isHardMode ? 10 : 6);
+    return { prompt: `An image uses a colour depth of ${d} bits. How many different colours can each pixel show?`, answer: Math.pow(2, d) };
+}
+
+// Level 4: sound - sample rate x sample resolution x duration. Small,
+// friendly numbers throughout (not real sample rates like 44100 Hz) so
+// this stays quick mental arithmetic at arcade pace, not a calculator
+// exercise - the Final Exam and classroom material are where the
+// realistic figures belong.
+function genSoundQuestion(isHardMode) {
+    const rate = randInt(2, isHardMode ? 60 : 20);
+    const duration = randInt(1, isHardMode ? 12 : 8);
+    const depths = isHardMode ? [4, 8, 16, 24] : [4, 8, 16];
+    const depth = depths[randInt(0, depths.length - 1)];
+    return { prompt: `A sound is recorded at a sample rate of ${rate} samples per second, using a sample resolution of ${depth} bits, for ${duration} seconds. Calculate the size of the sound data, in bits.`, answer: rate * duration * depth };
+}
+
+// Level 5: video - frame rate x duration x (a given) frame size. Frame
+// size is handed over directly rather than computed from a nested
+// width x height x depth calculation - that chaining is real and worth
+// teaching, but as its own harder question, not folded silently into
+// this one.
+function genVideoQuestion(isHardMode) {
+    const frameRate = randInt(2, isHardMode ? 30 : 10);
+    const duration = randInt(1, isHardMode ? 12 : 8);
+    const frameSize = randInt(10, isHardMode ? 900 : 300);
+    return { prompt: `A video plays at ${frameRate} frames per second, for ${duration} seconds. Each frame is stored using ${frameSize} bits. Calculate the total size of the video data, in bits.`, answer: frameRate * duration * frameSize };
+}
+
+// Level 6: match a storage/compression term to its own description.
+const STORAGE_TERMS = [
+    { term: 'Nibble', description: 'A unit of data equal to 4 bits - half a byte.' },
+    { term: 'Lossy compression', description: 'Permanently removes some data to reduce file size - the original cannot be exactly restored afterwards.' },
+    { term: 'Lossless compression', description: 'Reduces file size without permanently losing any data - the original can be exactly restored afterwards.' },
+    { term: 'Sample rate', description: 'The number of samples taken per second when recording sound.' },
+    { term: 'Sample resolution', description: 'The number of bits used to store each individual sound sample.' },
+    { term: 'Resolution', description: 'The number of pixels that make up an image, usually given as width x height.' },
+    { term: 'Colour depth', description: 'The number of bits used to represent the colour of a single pixel.' },
+    { term: 'Frame rate', description: 'The number of image frames displayed per second in a video.' },
+    { term: 'Metadata', description: 'Data stored about a file, such as its width, height or colour depth, needed to correctly read the rest of the file back.' }
+];
+function genConceptQuestion() {
+    const correct = STORAGE_TERMS[randInt(0, STORAGE_TERMS.length - 1)];
+    const distractors = STORAGE_TERMS.filter(t => t.term !== correct.term).sort(() => 0.5 - Math.random()).slice(0, 3);
+    const options = [correct, ...distractors].sort(() => 0.5 - Math.random()).map(t => t.term);
+    return { description: correct.description, term: correct.term, options };
+}
+
+const generateQuestion = (level, isHardMode) => {
+    if (level === 1) return genUnitQuestion(isHardMode);
+    if (level === 2) return genTextQuestion(isHardMode);
+    if (level === 3) return genImageQuestion(isHardMode);
+    if (level === 4) return genSoundQuestion(isHardMode);
+    if (level === 5) return genVideoQuestion(isHardMode);
+    if (level === 6) return genConceptQuestion();
+    return null;
+};
+
+const saveScore = (score, level) => {
+    const key = `storageBlitz_scores_lvl${level}`;
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    stored.push({ score, date: new Date().toISOString() });
+    stored.sort((a, b) => b.score - a.score);
+    localStorage.setItem(key, JSON.stringify(stored.slice(0, 5)));
+};
+const saveExamResult = (score, total, time) => {
+    const key = 'storageBlitz_exam_history';
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    stored.push({ score, total, time, date: new Date().toISOString() });
+    if (stored.length > 10) stored.shift();
+    localStorage.setItem(key, JSON.stringify(stored));
+};
+const getScores = (level) => JSON.parse(localStorage.getItem(`storageBlitz_scores_lvl${level}`) || '[]');
+const getExamHistory = () => JSON.parse(localStorage.getItem('storageBlitz_exam_history') || '[]');
+const formatTime = (ms) => {
+    const seconds = Math.floor(ms / 1000);
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}m ${s}s`;
+};
+
+// --- GAME LOOP (identical arcade mechanic to every other Blitz app:
+// score drives speed, speed drives how fast the stress bar fills, hard
+// mode halves the time available on top of that) ---
+const useGameLoop = (active, onGameOver, isHardMode, timeMultiplier = 1) => {
+    const [stress, setStress] = useState(0);
+    const [score, setScore] = useState(0);
+    const [gameSpeed, setGameSpeed] = useState(10);
+    const stressRef = useRef(0);
+    const scoreRef = useRef(0);
+    const maxTimeRef = useRef(calculateMaxTime(0, isHardMode, timeMultiplier));
+    const lastTimeRef = useRef(Date.now());
+    const frameRef = useRef();
+    const resetRound = useCallback((pointsToAdd = 0) => {
+        const newScore = scoreRef.current + pointsToAdd;
+        scoreRef.current = newScore;
+        setScore(newScore);
+        const newStress = Math.max(0, stressRef.current - 0.3);
+        stressRef.current = newStress;
+        setStress(newStress);
+        maxTimeRef.current = calculateMaxTime(newScore, isHardMode, timeMultiplier);
+        const steps = Math.floor(newScore / 250);
+        setGameSpeed(Math.min(120, 10 + (steps * 10)));
+    }, [isHardMode, timeMultiplier]);
+    useEffect(() => {
+        if (!active) { cancelAnimationFrame(frameRef.current); return; }
+        lastTimeRef.current = Date.now();
+        const loop = () => {
+            const now = Date.now();
+            const delta = now - lastTimeRef.current;
+            lastTimeRef.current = now;
+            const increase = delta / maxTimeRef.current;
+            stressRef.current += increase;
+            if (stressRef.current >= 1) {
+                stressRef.current = 1; setStress(1); cancelAnimationFrame(frameRef.current); onGameOver(scoreRef.current); return;
+            }
+            setStress(stressRef.current);
+            frameRef.current = requestAnimationFrame(loop);
+        };
+        frameRef.current = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(frameRef.current);
+    }, [active, onGameOver]);
+    const addStress = useCallback((amount) => { stressRef.current = Math.min(0.99, stressRef.current + amount); setStress(stressRef.current); }, []);
+    return { stress, score, resetRound, addStress, gameSpeed };
+};
+
+// --- SHARED COMPONENTS ---
+const Button = ({ onClick, children, className = "", disabled = false, variant = "primary" }) => {
+    const base = "font-bold py-3 px-6 rounded-lg shadow-lg transform transition-all active:scale-95 no-select flex items-center justify-center";
+    const variants = { primary: "bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-900/50", secondary: "bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600", success: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/50", danger: "bg-red-600 hover:bg-red-500 text-white shadow-red-900/50" };
+    return <button type="button" onClick={onClick} disabled={disabled} className={`${base} ${variants[variant]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>{children}</button>;
+};
+
+const Toggle = ({ checked, onChange, label, activeColor = 'red' }) => (
+    <div className="flex items-center justify-center mb-6 cursor-pointer" onClick={() => onChange(!checked)}>
+        <span className={`mr-3 font-bold text-sm ${checked ? `text-${activeColor}-400` : 'text-slate-400'}`}>{label}</span>
+        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+            <div className={`w-12 h-6 rounded-full shadow-inner transition-colors duration-200 ${checked ? `bg-${activeColor}-900` : 'bg-slate-700'}`}></div>
+            <div className={`absolute w-6 h-6 rounded-full shadow inset-y-0 left-0 transition-transform duration-200 ease-in-out ${checked ? `translate-x-6 bg-${activeColor}-500` : 'translate-x-0 bg-slate-400'}`}></div>
+        </div>
+    </div>
+);
+
+// A typed-number answer box, shared by every calculation level (1-5).
+// Digits only (regex-filtered on every keystroke, not just on submit),
+// Enter submits same as the button, refocuses itself on every new
+// question so a student never has to reach for the mouse between
+// questions.
+// Support Mode adapts Pseudocode Blitz's own scaffolding to a numeric
+// answer, digit by digit rather than character by character: a hint row
+// pre-reveals a growing prefix of the answer's digits as supportStage
+// climbs, and a live feedback row colours each digit the student has
+// actually typed so far - green where it matches the answer at that
+// position, red where it doesn't - continuing past a mismatch rather
+// than stopping, and never colouring ahead of what's been typed.
+const NumberEntry = ({ prompt, onSubmit, shake, accentColor, isSupportMode, supportStage, answer }) => {
+    const [value, setValue] = useState('');
+    const inputRef = useRef(null);
+    useEffect(() => { if (inputRef.current) inputRef.current.focus(); }, [prompt]);
+    const submit = () => {
+        if (value.trim() === '') return;
+        onSubmit(Number(value));
+        setValue('');
+    };
+    const answerStr = isSupportMode && answer != null ? String(answer) : '';
+    const revealCount = answerStr ? Math.round((supportStage / SUPPORT_MAX_STAGE) * answerStr.length) : 0;
+    return (
+        <div className={`flex flex-col items-center w-full ${shake ? 'shake' : ''}`}>
+            <div className="text-slate-400 text-sm mb-2 uppercase tracking-widest">Calculate</div>
+            <div className="text-xl md:text-2xl font-bold text-center text-white mb-6 max-w-xl leading-relaxed">{prompt}</div>
+            {isSupportMode && answerStr && (
+                <div className="text-slate-500 text-lg font-mono tracking-[0.3em] mb-4" aria-hidden="true">
+                    {answerStr.split('').map((d, i) => i < revealCount ? d : '•').join(' ')}
+                </div>
+            )}
+            <div className="flex gap-3">
+                <input
+                    ref={inputRef}
+                    type="text"
+                    inputMode="numeric"
+                    value={value}
+                    onChange={e => setValue(e.target.value.replace(/[^0-9]/g, ''))}
+                    onKeyDown={e => { if (e.key === 'Enter') submit(); }}
+                    className={`w-40 h-16 text-center text-3xl font-mono font-bold rounded-lg bg-slate-800 border-2 border-${accentColor}-500 text-white focus:outline-none focus:ring-2 focus:ring-${accentColor}-400`}
+                    autoComplete="off"
+                    aria-label="Your answer"
+                />
+                <Button onClick={submit} className="h-16 px-6 text-lg">Enter</Button>
+            </div>
+            {isSupportMode && value.length > 0 && (
+                <div className="flex gap-1 mt-3">
+                    {value.split('').map((ch, i) => {
+                        const match = answerStr[i] === ch;
+                        return <span key={i} className={`w-7 h-9 flex items-center justify-center rounded font-mono font-bold text-lg ${match ? 'bg-emerald-700 text-emerald-100' : 'bg-red-700 text-red-100'}`}>{ch}</span>;
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const HelpModal = ({ levelId, onClose }) => {
+    const content = {
+        1: { title: "File Size Units", body: "1 byte = 8 bits. 1 byte = 2 nibbles (a nibble is 4 bits).\nAbove that, every step up is x1024: 1 KiB = 1024 bytes, 1 MiB = 1024 KiB, 1 GiB = 1024 MiB, 1 TiB = 1024 GiB.\nGoing from a bigger unit to a smaller one? Multiply.\nGoing from a smaller unit to a bigger one? Divide." },
+        2: { title: "Text & Character Sets", body: "A character set with N bits per character can represent 2^N different characters.\nGoing the other way: to fit M different characters, you need enough bits that 2^bits is at least M - round UP to the next whole number of bits." },
+        3: { title: "Images", body: "Size of the image data (in bits) = width x height x colour depth.\nColour depth alone tells you how many colours are possible: 2^depth." },
+        4: { title: "Sound", body: "Size of the sound data (in bits) = sample rate x sample resolution x duration (in seconds)." },
+        5: { title: "Video", body: "Size of the video data (in bits) = frame rate x duration (in seconds) x the size of a single frame (in bits)." },
+        6: { title: "Storage & Compression", body: "Read the description, then click the term it describes." },
+        7: { title: "Final Exam", body: "15 questions mixed from every level above.\nNo time limit for Game Over, but time is tracked.\nTry to beat your previous score!" }
+    };
+    const data = content[levelId] || { title: "Help", body: "Good luck!" };
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 fade-in" onClick={onClose}>
+            <div className="bg-slate-800 border border-slate-600 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative" onClick={e => e.stopPropagation()}>
+                <h2 className="text-2xl font-bold text-white mb-4 leading-tight">{data.title}</h2>
+                <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">{data.body}</p>
+                <Button onClick={onClose} className="w-full mt-6">Close</Button>
+            </div>
+        </div>
+    );
+};
+
+const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children, isHardMode }) => {
+    const bgOpacity = Math.min(0.7, stress);
+    const barWidth = Math.max(0, (1 - stress) * 100);
+    return (
+        <div className={`h-full flex flex-col p-4 relative transition-colors duration-100 ${stress > 0.85 ? 'shake' : ''}`} style={{ backgroundColor: `rgba(8, 74, 86, ${bgOpacity})` }}>
+            <div className="flex justify-between items-center mb-4 z-10 shrink-0">
+                <button onClick={onExit} className="p-2 bg-slate-900/50 hover:bg-slate-800 rounded-full text-white backdrop-blur-sm"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg></button>
+                <div className="flex flex-col items-center">
+                    <span className={`text-xs font-bold tracking-widest uppercase mb-1 text-center leading-tight max-w-[38vw] ${isHardMode ? 'text-red-400' : 'text-slate-300'}`}>{levelName} {isHardMode && '★'}</span>
+                    <div className={`bg-slate-900/90 px-6 py-1 rounded-full border shadow-lg ${isHardMode ? 'border-red-500/50' : 'border-cyan-500/30'}`}><span className="text-xl font-mono text-white font-bold">{score}</span></div>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">SPEED</span>
+                    <span className={`text-xl font-bold font-mono ${gameSpeed > 100 || isHardMode ? 'text-red-400 animate-pulse' : 'text-cyan-400'}`}>{gameSpeed}%</span>
+                    <button onClick={onHelp} className="mt-1 text-xs bg-slate-700 hover:bg-white hover:text-black rounded-full w-6 h-6 flex items-center justify-center font-bold transition-colors" title="Level Help">?</button>
+                </div>
+            </div>
+            <div className="w-full h-2 bg-slate-900/50 rounded-full mb-4 overflow-hidden z-10 shrink-0"><div className={`h-full transition-all duration-100 ${stress > 0.7 ? 'bg-red-500' : 'bg-cyan-500'}`} style={{ width: `${barWidth}%` }}></div></div>
+            <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
+        </div>
+    );
+};
+
+const ExamLayout = ({ currentQ, totalQ, onExit, children }) => (
+    <div className="h-full flex flex-col p-4 bg-slate-900 relative">
+        <div className="flex justify-between items-center mb-6 z-10 shrink-0">
+            <button onClick={onExit} className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full text-white"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg></button>
+            <div className="text-xl font-bold text-rose-400 tracking-widest">FINAL EXAM</div>
+            <div className="bg-slate-800 px-4 py-1 rounded-full border border-rose-500/30"><span className="text-white font-mono">Q: {currentQ} / {totalQ}</span></div>
+        </div>
+        <div className="w-full h-2 bg-slate-800 rounded-full mb-8 overflow-hidden"><div className="h-full bg-rose-500 transition-all duration-300" style={{ width: `${(currentQ / totalQ) * 100}%` }}></div></div>
+        <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
+    </div>
+);
+
+// --- CALCULATION LEVELS (1-5 share one shape: a generated question with
+// a single numeric answer, entered via NumberEntry) ---
+const CALC_LEVEL_META = {
+    1: { name: "L1: File Size Units", accent: "cyan" },
+    2: { name: "L2: Text & Character Sets", accent: "blue" },
+    3: { name: "L3: Images", accent: "fuchsia" },
+    4: { name: "L4: Sound", accent: "emerald" },
+    5: { name: "L5: Video", accent: "orange" }
+};
+
+const CalcLevel = ({ level, onExit, onGameOver, isHardMode, isSupportMode, onHelp }) => {
+    const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
+    const handleGameEnd = useCallback((s) => onGameOver(s, level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver, level]);
+    const handleExit = () => onExit(level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
+    const { stress, score, resetRound, addStress, gameSpeed } = useGameLoop(true, handleGameEnd, isHardMode);
+    const [question, setQuestion] = useState(null);
+    const [shake, setShake] = useState(false);
+    const [supportStreak, setSupportStreak] = useState(0);
+    const [supportStage, setSupportStage] = useState(0);
+    useEffect(() => { nextQuestion(); }, [level]);
+    const nextQuestion = (points = 0) => {
+        setQuestion(generateQuestion(level, isHardMode));
+        resetRound(isHardMode ? Math.floor(points * 2.5) : points);
+    };
+    const submit = (value) => {
+        if (!question) return;
+        const correct = value === question.answer;
+        if (correct) {
+            correctRef.current += 1;
+            if (isSupportMode) {
+                const newStreak = supportStreak + 1;
+                setSupportStreak(newStreak);
+                setSupportStage(Math.min(SUPPORT_MAX_STAGE, Math.floor(newStreak / SUPPORT_STAGE_EVERY)));
+            }
+            nextQuestion(100);
+        } else {
+            wrongRef.current += 1;
+            if (isSupportMode) { setSupportStreak(0); setSupportStage(0); }
+            setShake(true); setTimeout(() => setShake(false), 500); addStress(0.2);
+        }
+    };
+    if (!question) return null;
+    const meta = CALC_LEVEL_META[level];
+    return (
+        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName={meta.name} isHardMode={isHardMode}>
+            <NumberEntry prompt={question.prompt} onSubmit={submit} shake={shake} accentColor={meta.accent} isSupportMode={isSupportMode} supportStage={supportStage} answer={question.answer} />
+        </GameLayout>
+    );
+};
+
+// Level 6: Storage & Compression - match the description to its term.
+const ConceptLevel = ({ onExit, onGameOver, isHardMode, onHelp }) => {
+    const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
+    const handleGameEnd = useCallback((s) => onGameOver(s, 6, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver]);
+    const handleExit = () => onExit(6, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
+    const { stress, score, resetRound, addStress, gameSpeed } = useGameLoop(true, handleGameEnd, isHardMode);
+    const [question, setQuestion] = useState(null);
+    const [shake, setShake] = useState(false);
+    useEffect(() => { next(); }, []);
+    const next = (points = 0) => {
+        setQuestion(generateQuestion(6, isHardMode));
+        resetRound(isHardMode ? Math.floor(points * 2.5) : points);
+    };
+    const pick = (term) => {
+        const correct = term === question.term;
+        if (correct) { correctRef.current += 1; next(100); }
+        else { wrongRef.current += 1; setShake(true); setTimeout(() => setShake(false), 500); addStress(0.2); }
+    };
+    if (!question) return null;
+    return (
+        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L6: Storage & Compression" isHardMode={isHardMode}>
+            <div className={`text-center mb-10 max-w-lg ${shake ? 'shake' : ''}`}><div className="text-slate-400 text-sm mb-2">WHICH TERM?</div><div className="text-xl md:text-2xl font-bold text-amber-300 leading-relaxed">{question.description}</div></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
+                {question.options.map(term => (
+                    <button type="button" key={term} onClick={() => pick(term)} className="h-16 px-4 rounded-lg font-bold text-base bg-slate-700 hover:bg-slate-600 text-white active:scale-95">{term}</button>
+                ))}
+            </div>
+        </GameLayout>
+    );
+};
+
+// --- FINAL EXAM: 15 mixed questions from every level ---
+const EXAM_POOL = [1, 2, 3, 4, 5, 6];
+
+const ExamLevel = ({ onExit, onFinish, isHardMode }) => {
+    const startTimeRef = useRef(Date.now());
+    const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [correctCount, setCorrectCount] = useState(0);
+    const [questions, setQuestions] = useState([]);
+    useEffect(() => {
+        const qs = [];
+        for (let i = 0; i < 15; i++) {
+            const lvl = EXAM_POOL[Math.floor(Math.random() * EXAM_POOL.length)];
+            const q = generateQuestion(lvl, isHardMode);
+            q.levelType = lvl;
+            qs.push(q);
+        }
+        setQuestions(qs);
+    }, [isHardMode]);
+    const handleAnswer = (isCorrect) => {
+        if (isCorrect) setCorrectCount(prev => prev + 1);
+        if (currentQIndex < 14) { setCurrentQIndex(prev => prev + 1); }
+        else {
+            const duration = Date.now() - startTimeRef.current;
+            onFinish(correctCount + (isCorrect ? 1 : 0), 15, duration);
+        }
+    };
+    if (questions.length === 0) return <div>Loading Exam...</div>;
+    const q = questions[currentQIndex];
+    const renderContent = () => {
+        if (q.levelType === 6) {
+            return (
+                <div className="flex flex-col items-center max-w-lg">
+                    <div className="text-slate-400 text-sm mb-2">WHICH TERM?</div>
+                    <div className="text-lg font-bold text-amber-300 mb-8 text-center leading-relaxed">{q.description}</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
+                        {q.options.map(term => (
+                            <button type="button" key={term} onClick={() => handleAnswer(term === q.term)} className="h-14 px-4 rounded-lg font-bold text-sm bg-slate-700 hover:bg-slate-600 text-white">{term}</button>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+        return (
+            <div className="flex flex-col items-center w-full">
+                <NumberEntry prompt={q.prompt} onSubmit={(v) => handleAnswer(v === q.answer)} shake={false} accentColor="rose" />
+            </div>
+        );
+    };
+    return (<ExamLayout currentQ={currentQIndex + 1} totalQ={15} onExit={() => onExit(7, 0, 0, 0, 0)}><div className="w-full max-w-3xl mx-auto pt-8">{renderContent()}</div></ExamLayout>);
+};
+
+// ============================================================
+// MAIN MENU
+// ============================================================
+const MainMenu = ({ onStart, isHardMode, setHardMode, isSupportMode, setSupportMode, playerName }) => {
+    const [helpLevel, setHelpLevel] = useState(null);
+    return (
+        <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar relative">
+            {helpLevel && <HelpModal levelId={helpLevel} onClose={() => setHelpLevel(null)} />}
+            <div className="text-center mb-4 mt-6">
+                <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-300 mb-1">STORAGE BLITZ</h1>
+                <p className="text-slate-400 text-sm">File Storage, Text, Images, Sound &amp; Video &middot; 7 Levels.</p>
+                <p className="text-cyan-400 text-xs mt-1 font-mono">{playerName}</p>
+            </div>
+            <div className="flex gap-3 mb-5 flex-wrap justify-center items-center">
+                <Toggle checked={isSupportMode} onChange={setSupportMode} label="SUPPORT MODE" activeColor="emerald" />
+                <Toggle checked={isHardMode} onChange={setHardMode} label="HARD MODE" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl pb-24">
+                {Object.entries(LEVELS).map(([id, data]) => {
+                    const scores = getScores(id);
+                    const topScore = scores.length > 0 ? scores[0].score : '-';
+                    const isExam = id === '7';
+                    return (
+                        <div key={id} className={`bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-${data.color}-500 transition-all flex flex-col relative group`}>
+                            <div className="flex justify-between items-start mb-2">
+                                <h2 className={`${levelTitleSizeClass(data.title)} font-bold leading-tight text-${data.color}-400`}>{data.title}</h2>
+                                <button onClick={() => setHelpLevel(id)} className="text-slate-500 hover:text-white bg-slate-700 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold transition-colors">?</button>
+                            </div>
+                            <p className="text-xs text-slate-400 mb-4">{data.desc}</p>
+                            <div className="flex-1"></div>
+                            <div className="flex justify-between items-end mt-4">
+                                {isExam ? (
+                                    <div className="text-xs text-slate-500">Last: <span className="text-white font-mono">{getExamHistory().length > 0 ? getExamHistory().slice(-1)[0].score + '/15' : '-'}</span></div>
+                                ) : (
+                                    <div className="text-xs text-slate-500">Best: <span className="text-white font-mono">{topScore}</span></div>
+                                )}
+                                <button onClick={() => onStart(parseInt(id))} className={`px-4 py-2 rounded-lg bg-${data.color}-600 hover:bg-${data.color}-500 text-white font-bold text-sm shadow-lg`}>{isExam ? 'START' : 'PLAY'}</button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const GameOver = ({ score, level, onRestart, onHome }) => (
+    <div className="flex flex-col items-center justify-center h-full p-4 fade-in space-y-8 text-center bg-slate-900/95 z-50 absolute inset-0">
+        <h2 className="text-6xl font-bold text-red-500 shake">GAME OVER</h2>
+        <div className="bg-slate-800 p-8 rounded-2xl border-2 border-slate-700 shadow-2xl w-full max-w-sm">
+            <p className="text-slate-400 uppercase tracking-widest text-sm mb-2">Level {level} Score</p>
+            <p className="text-7xl font-mono font-bold text-white">{score}</p>
+        </div>
+        <div className="flex flex-col space-y-3 w-full max-w-xs">
+            <Button onClick={onRestart} className="w-full text-lg">Try Again</Button>
+            <Button onClick={onHome} variant="secondary" className="w-full">Back to Menu</Button>
+        </div>
+    </div>
+);
+
+const ExamResults = ({ score, total, duration, onHome }) => (
+    <div className="flex flex-col items-center justify-center h-full p-4 fade-in space-y-8 text-center bg-slate-900 z-50 absolute inset-0">
+        <h2 className="text-5xl font-bold text-white mb-4">Exam Complete</h2>
+        <div className="bg-slate-800 p-8 rounded-2xl border-2 border-slate-700 shadow-2xl w-full max-w-md">
+            <div className="text-slate-400 uppercase tracking-widest text-sm mb-2">Score</div>
+            <div className="text-6xl font-mono font-bold text-rose-400 mb-6">{score} <span className="text-2xl text-slate-500">/ {total}</span></div>
+            <div className="flex justify-between text-sm border-t border-slate-700 pt-4">
+                <span className="text-slate-400">Time Taken:</span>
+                <span className="text-white font-mono">{formatTime(duration)}</span>
+            </div>
+        </div>
+        <Button onClick={onHome} variant="primary" className="w-full max-w-xs">Return to Menu</Button>
+    </div>
+);
+
+// ============================================================
+// APP ROOT
+// ============================================================
+const App = () => {
+    const [playerName, setPlayerName] = useState(() => window.__bcPlayerName || 'Player');
+    useEffect(() => {
+        if (window.__bcPlayerName) { setPlayerName(window.__bcPlayerName); return; }
+        const handler = (event) => {
+            const data = event.data;
+            if (data && data.type === 'BC_IDENTITY' && data.name) setPlayerName(data.name);
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    }, []);
+    const [view, setView] = useState('menu');
+    const [activeLevel, setActiveLevel] = useState(1);
+    const [lastScore, setLastScore] = useState(0);
+    const [lastExamStats, setLastExamStats] = useState(null);
+    const [isHardMode, setHardMode] = useState(false);
+    const [isSupportMode, setSupportMode] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
+
+    const handleGameOver = (score, level, duration, correct, wrong) => {
+        saveScore(score, level);
+        setLastScore(score); setActiveLevel(level); setView('gameover');
+    };
+
+    const handleExit = (level, duration, correct, wrong, score) => {
+        if (level !== 7) saveScore(score, level);
+        setView('menu');
+    };
+
+    const handleExamFinish = (score, total, duration) => {
+        saveExamResult(score, total, duration);
+        setLastExamStats({ score, total, duration });
+        setView('exam_results');
+    };
+
+    return (
+        <div className="w-full h-full relative">
+            {showHelp && <HelpModal levelId={activeLevel} onClose={() => setShowHelp(false)} />}
+
+            {view === 'menu' && (
+                <MainMenu
+                    onStart={(lvl) => { setActiveLevel(lvl); setView(lvl === 7 ? 'exam' : 'game'); }}
+                    isHardMode={isHardMode}
+                    setHardMode={setHardMode}
+                    isSupportMode={isSupportMode}
+                    setSupportMode={setSupportMode}
+                    playerName={playerName}
+                />
+            )}
+
+            {view === 'game' && (
+                activeLevel === 6
+                    ? <ConceptLevel onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)} />
+                    : <CalcLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} isSupportMode={isSupportMode} onHelp={() => setShowHelp(true)} />
+            )}
+
+            {view === 'exam' && <ExamLevel onExit={(l, d) => handleExit(l, d, 0, 0, 0)} onFinish={handleExamFinish} isHardMode={isHardMode} />}
+            {view === 'gameover' && <GameOver score={lastScore} level={activeLevel} onRestart={() => setView('game')} onHome={() => setView('menu')} />}
+            {view === 'exam_results' && <ExamResults {...lastExamStats} onHome={() => setView('menu')} />}
+        </div>
+    );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
