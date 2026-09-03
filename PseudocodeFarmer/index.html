@@ -263,7 +263,7 @@
             <tr><td><code>Set_position(2, -1)</code></td><td class="desc">Jumps straight to a tile, counted from home: 2 right, 1 up. Home is (0,0) - the tile you were on when you pressed Run, or the tile a machine was placed on.</td></tr>
             <tr><td><code>OUTPUT "hi"</code></td><td class="desc">Prints a message to the console below.</td></tr>
             <tr><td><code>FOR Index &lt;- 1 TO 5<br>&nbsp;&nbsp;...<br>NEXT Index</code></td><td class="desc">Repeats the lines in between, 5 times. No "DO" on a FOR line.</td></tr>
-            <tr><td><code>WHILE X &lt; 10 DO<br>&nbsp;&nbsp;...<br>ENDWHILE</code></td><td class="desc">Repeats while the condition is true. Compare with =, &lt;&gt;, &lt;, &gt;, &lt;=, &gt;= and combine with AND, OR, NOT. (Write &lt;- not = for assignment, and = not == for comparison.)</td></tr>
+            <tr><td><code>WHILE X &lt; 10 DO<br>&nbsp;&nbsp;...<br>ENDWHILE</code></td><td class="desc">Repeats while the condition is true. Compare with =, &lt;&gt;, &lt;, &gt;, &lt;=, &gt;= and combine with AND, OR, NOT. Either side can be maths too, e.g. WHILE N &lt; Total + 1 DO.</td></tr>
             <tr><td><code>X &lt;- X + 1</code></td><td class="desc">Math uses +, -, * and /, with brackets to group. You need this to change a variable inside a WHILE loop, or it runs forever.</td></tr>
           </table>
           <p class="desc" style="margin:8px 0 0">A little white dot on your cursor (or a machine's blue diamond) shows which way it's facing.</p>
@@ -955,21 +955,24 @@ function evalExpr(raw, vars, line) {
 // ============================================================
 // CONDITIONS (for WHILE) - Cambridge pseudocode operators
 // ============================================================
-// Cambridge pseudocode compares with =, <>, <, >, <=, >= (NOT ==, !=) and
-// combines with AND / OR / NOT (NOT binds tightest, then AND, then OR).
+// Cambridge pseudocode compares with =, <>, <, >, <=, >= (NOT ==, !=),
+// combines with AND / OR / NOT (NOT binds tightest, then AND, then OR), and
+// lets either side of a comparison be a full arithmetic expression - so
+// "WHILE N < Total + 1 DO" is valid. Brackets group either a boolean or a
+// piece of arithmetic.
 function tokenizeCondition(raw, line) {
   var tokens = [];
-  var re = /(<=|>=|<>|[=<>()]|"[^"]*"|-?\d+(?:\.\d+)?|[A-Za-z_]\w*)/g;
+  var re = /(<=|>=|<>|[=<>+\-*/()]|"[^"]*"|\d+(?:\.\d+)?|[A-Za-z_]\w*)/g;
   var m, last = 0;
   while ((m = re.exec(raw)) !== null) {
     if (!/^\s*$/.test(raw.slice(last, m.index))) {
-      throw new PseudocodeError('I can\'t understand "' + raw.slice(last, m.index).trim() + '" in the condition. Use =, <>, <, >, <=, >=, AND, OR and NOT.', line);
+      throw new PseudocodeError('I can\'t understand "' + raw.slice(last, m.index).trim() + '" in the condition. Use =, <>, <, >, <=, >=, +, -, *, /, AND, OR and NOT.', line);
     }
     tokens.push(m[0]);
     last = re.lastIndex;
   }
   if (!/^\s*$/.test(raw.slice(last))) {
-    throw new PseudocodeError('I can\'t understand "' + raw.slice(last).trim() + '" in the condition. Use =, <>, <, >, <=, >=, AND, OR and NOT.', line);
+    throw new PseudocodeError('I can\'t understand "' + raw.slice(last).trim() + '" in the condition. Use =, <>, <, >, <=, >=, +, -, *, /, AND, OR and NOT.', line);
   }
   return tokens;
 }
@@ -988,58 +991,68 @@ function evalCondition(raw, vars, line) {
 
   function parseOr() {
     var v = parseAnd();
-    while (isWord(peek(), 'OR')) {
-      take();
-      var right = parseAnd(); // always parse, even when v is already true
-      v = v || right;
-    }
+    while (isWord(peek(), 'OR')) { take(); var r = parseAnd(); v = v || r; }
     return v;
   }
   function parseAnd() {
     var v = parseNot();
-    while (isWord(peek(), 'AND')) {
-      take();
-      var right = parseNot(); // always parse, even when v is already false
-      v = v && right;
-    }
+    while (isWord(peek(), 'AND')) { take(); var r = parseNot(); v = v && r; }
     return v;
   }
   function parseNot() {
     if (isWord(peek(), 'NOT')) { take(); return !parseNot(); }
     return parseComparison();
   }
+  // A comparison is an arithmetic expression, optionally compared to a
+  // second one. With no comparison operator it's a bare value (e.g.
+  // "WHILE Found DO"), coerced to a boolean at the top.
   function parseComparison() {
-    var left = parseOperand();
+    var left = parseArith();
     var op = peek();
     if (op === '=' || op === '<>' || op === '<' || op === '>' || op === '<=' || op === '>=') {
       take();
-      var right = parseOperand();
+      var right = parseArith();
       return compareConditionValues(left, right, op, line);
     }
-    return toConditionBool(left, line);
+    return left;
   }
-  function parseOperand() {
-    var t = take();
-    if (t === undefined) throw new PseudocodeError('The condition is missing a value.', line);
-    if (t === '(') {
-      var v = parseOr();
-      if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" in the condition.', line);
+  // Arithmetic layer (mirrors evalExpr): * / bind tighter than + -, and
+  // brackets group.
+  function parseArith() {
+    var v = parseTerm();
+    while (peek() === '+' || peek() === '-') { var op = take(); var r = parseTerm(); v = (op === '+') ? (v + r) : (v - r); }
+    return v;
+  }
+  function parseTerm() {
+    var v = parseUnary();
+    while (peek() === '*' || peek() === '/') { var op = take(); var r = parseUnary(); v = (op === '*') ? (v * r) : (v / r); }
+    return v;
+  }
+  function parseUnary() {
+    if (peek() === '-') { take(); return -parseUnary(); }
+    return parseFactor();
+  }
+  function parseFactor() {
+    if (peek() === '(') {
+      take();
+      var v = parseOr(); // brackets group a boolean, or arithmetic inside a comparison
+      if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" .', line);
       take();
       return v;
     }
-    return evalExpr(t, vars, line);
+    var tok = take();
+    if (tok === undefined) throw new PseudocodeError('The condition is missing a value.', line);
+    if (/^\d+(\.\d+)?$/.test(tok)) return Number(tok);
+    if (/^".*"$/.test(tok)) return tok.slice(1, -1);
+    if (/^true$/i.test(tok)) return true;
+    if (/^false$/i.test(tok)) return false;
+    if (Object.prototype.hasOwnProperty.call(vars, tok)) return vars[tok];
+    throw new PseudocodeError('I don\'t understand "' + tok + '".', line);
   }
 
   var result = parseOr();
   if (pos < tokens.length) throw new PseudocodeError('I can\'t understand "' + tokens[pos] + '" in the condition.', line);
-  return result;
-}
-
-function toConditionBool(v, line) {
-  if (typeof v === 'boolean') return v;
-  if (typeof v === 'number') return v !== 0;
-  if (typeof v === 'string') return v !== '';
-  throw new PseudocodeError('A condition needs a comparison (e.g. X < 10) or a TRUE/FALSE value.', line);
+  return !!result;
 }
 
 function compareConditionValues(a, b, op, line) {
