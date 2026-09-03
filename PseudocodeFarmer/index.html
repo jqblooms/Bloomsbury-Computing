@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pseudocode Farmer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<style>
+  :root {
+    --bg: #cdeeff;
+    --panel: #fff8ec;
+    --panel-dark: #6b4a2b;
+    --wood: #8a5a34;
+    --wood-dark: #5e3b1f;
+    --leaf: #4c9a4a;
+    --leaf-dark: #2e6b30;
+    --ink: #33241a;
+    --muted: #7a6650;
+    --gold: #f2b53c;
+    --red: #d9534f;
+    --sky-top: #8ecae6;
+    --sky-bottom: #ffe9b3;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: "Baloo 2", "Comic Sans MS", "Segoe UI", system-ui, sans-serif;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+    color: var(--ink);
+    overflow: hidden;
+    user-select: none;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap');
+
+  #app { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+
+  /* ---------- HUD ---------- */
+  #hud {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 10px 16px;
+    background: linear-gradient(180deg, #7a4b26, var(--wood-dark));
+    border-bottom: 5px solid var(--wood-dark);
+    box-shadow: 0 4px 0 #4a2f18;
+    z-index: 5;
+  }
+  #hud .brand { display: flex; align-items: center; gap: 10px; color: #fff; }
+  #hud .brand .logo {
+    width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center;
+    background: var(--leaf); font-size: 22px; box-shadow: inset 0 -3px 0 var(--leaf-dark);
+  }
+  #hud .brand b { font-size: 1.25rem; letter-spacing: .02em; text-shadow: 0 2px 0 #3a2210; }
+  #hud .brand small { display: block; color: #ffe6b8; font-weight: 700; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+  #stats { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .stat-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: #fff8ec; border: 3px solid var(--wood-dark); border-radius: 999px;
+    padding: 6px 14px; font-weight: 800; color: var(--ink); box-shadow: 0 3px 0 #c99a5f;
+    white-space: nowrap;
+  }
+  .stat-pill .icon { font-size: 1.1rem; }
+  #money-pill { color: #1d6b2e; }
+  #hud .hint { color: #ffe6b8; font-size: .78rem; font-weight: 600; max-width: 260px; text-align: right; display: none; }
+  @media (min-width: 980px) { #hud .hint { display: block; } }
+
+  /* ---------- Layout ---------- */
+  #main { display: grid; grid-template-columns: minmax(0,1fr) 360px; min-height: 0; }
+  #canvas-wrap { position: relative; min-width: 0; }
+  #three-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+  #three-canvas:active { cursor: grabbing; }
+  #canvas-hint {
+    position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
+    background: #00000066; color: #fff; padding: 6px 14px; border-radius: 999px;
+    font-size: .78rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(3px);
+  }
+  #tile-info {
+    position: absolute; top: 12px; left: 12px; background: #ffffffee; border: 3px solid var(--wood);
+    border-radius: 12px; padding: 8px 12px; font-weight: 700; font-size: .82rem; box-shadow: 0 3px 0 #c99a5f;
+    max-width: 240px; display: none;
+  }
+  #tile-info.show { display: block; }
+  #tile-info .sell-btn {
+    margin-top: 6px; width: 100%; border: 0; border-radius: 8px; padding: 6px 8px;
+    background: var(--gold); color: #4a2f00; font-weight: 800; cursor: pointer;
+  }
+  #tile-info .sell-btn:active { transform: translateY(1px); }
+
+  /* ---------- Sidebar ---------- */
+  #sidebar {
+    display: flex; flex-direction: column; min-height: 0;
+    background: var(--panel); border-left: 5px solid var(--wood-dark);
+    overflow-y: auto;
+  }
+  .panel-section { border-bottom: 3px dashed #d8c19a; padding: 12px 14px; }
+  .panel-section h2 {
+    margin: 0 0 8px; font-size: .95rem; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--panel-dark); display: flex; align-items: center; gap: 6px;
+  }
+
+  #shop-list { display: grid; gap: 8px; }
+  .shop-item {
+    display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 8px;
+    background: #fff; border: 2px solid #e6d5b3; border-radius: 10px; padding: 6px 8px;
+  }
+  .shop-item img { width: 30px; height: 30px; }
+  .shop-item .name { font-weight: 800; font-size: .84rem; }
+  .shop-item .price { color: var(--muted); font-size: .74rem; font-weight: 700; }
+  .shop-item button {
+    border: 0; border-radius: 8px; padding: 7px 10px; background: var(--leaf); color: #fff;
+    font-weight: 800; cursor: pointer; font-size: .78rem; box-shadow: 0 2px 0 var(--leaf-dark);
+  }
+  .shop-item button:disabled { background: #b7c9b6; box-shadow: none; cursor: not-allowed; }
+  .shop-item button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+  .shop-item .have { grid-column: 1 / -1; font-size: .72rem; color: var(--muted); font-weight: 700; }
+
+  #code-panel { flex: 1; display: flex; flex-direction: column; min-height: 260px; }
+  #code-input {
+    width: 100%; flex: 1; min-height: 140px; resize: vertical;
+    font-family: "Courier New", ui-monospace, monospace; font-size: .86rem; line-height: 1.5;
+    border: 2px solid #e6d5b3; border-radius: 10px; padding: 10px; background: #1f2b22; color: #d9f2d2;
+  }
+  #code-input:focus { outline: none; border-color: var(--leaf); }
+  .code-actions { display: flex; gap: 8px; margin-top: 8px; }
+  .code-actions button {
+    flex: 1; border: 0; border-radius: 10px; padding: 10px 8px; font-weight: 800; cursor: pointer;
+    font-size: .84rem;
+  }
+  #run-btn { background: var(--gold); color: #4a2f00; box-shadow: 0 3px 0 #c68f1f; }
+  #run-btn:active { transform: translateY(2px); box-shadow: none; }
+  #run-btn:disabled { background: #e2d3ab; color: #9c8a63; box-shadow: none; cursor: not-allowed; }
+  #machine-btn { background: #6ea8fe; color: #04214f; box-shadow: 0 3px 0 #3d6fc4; }
+  #machine-btn:active { transform: translateY(2px); box-shadow: none; }
+  #machine-btn:disabled { background: #cfe0fb; color: #7391b8; box-shadow: none; cursor: not-allowed; }
+
+  #console-output {
+    margin-top: 8px; height: 110px; overflow-y: auto; background: #12190f; color: #b9e6b0;
+    border-radius: 10px; padding: 8px 10px; font-family: "Courier New", ui-monospace, monospace;
+    font-size: .78rem; line-height: 1.5;
+  }
+  #console-output .err { color: #ff9a8a; }
+  #console-output .machine-line { color: #9ec8ff; }
+  #console-output div { white-space: pre-wrap; word-break: break-word; }
+
+  details.cheat-sheet { font-size: .8rem; }
+  details.cheat-sheet summary { cursor: pointer; font-weight: 800; color: var(--panel-dark); margin-bottom: 6px; }
+  details.cheat-sheet table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  details.cheat-sheet td { padding: 4px 4px; border-bottom: 1px dashed #e0d0ac; vertical-align: top; }
+  details.cheat-sheet code { background: #eee0c4; border-radius: 5px; padding: 1px 5px; font-size: .78rem; white-space: nowrap; }
+  details.cheat-sheet .desc { color: var(--muted); }
+
+  #toast-layer { position: fixed; inset: 0; pointer-events: none; z-index: 40; }
+
+  @media (max-width: 880px) {
+    #main { grid-template-columns: 1fr; grid-template-rows: minmax(280px,1fr) auto; }
+    #sidebar { border-left: 0; border-top: 5px solid var(--wood-dark); max-height: 46vh; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header id="hud">
+    <div class="brand">
+      <div class="logo">🌱</div>
+      <div>
+        <b>Pseudocode Farmer</b>
+        <small>Cambridge Pseudocode &middot; Year 8</small>
+      </div>
+    </div>
+    <div id="stats">
+      <div class="stat-pill" id="money-pill"><span class="icon">🪙</span><span id="money-value">0</span></div>
+    </div>
+    <div class="hint">Click a tile to move there. Write pseudocode to plant, buy and automate!</div>
+  </header>
+
+  <div id="main">
+    <div id="canvas-wrap">
+      <canvas id="three-canvas"></canvas>
+      <div id="tile-info"></div>
+      <div id="canvas-hint">Drag to look around &middot; Scroll to zoom &middot; Click a tile to move there</div>
+    </div>
+
+    <aside id="sidebar">
+      <section class="panel-section">
+        <h2>🛒 Seed Shop</h2>
+        <div id="shop-list"></div>
+      </section>
+
+      <section class="panel-section" id="code-panel">
+        <h2>💻 Code Box</h2>
+        <textarea id="code-input" spellcheck="false" autocomplete="off"></textarea>
+        <div class="code-actions">
+          <button type="button" id="run-btn">▶ Run</button>
+          <button type="button" id="machine-btn">🤖 Place Machine</button>
+        </div>
+        <div id="console-output"></div>
+      </section>
+
+      <section class="panel-section">
+        <details class="cheat-sheet">
+          <summary>📖 Pseudocode cheat sheet</summary>
+          <table>
+            <tr><td><code>Plant("Carrot")</code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
+            <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, if you have enough money.</td></tr>
+            <tr><td><code>Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing.</td></tr>
+            <tr><td><code>Move_up()</code></td><td class="desc">Moves your cursor one tile up the field.</td></tr>
+            <tr><td><code>Move_down()</code></td><td class="desc">Moves your cursor one tile down the field.</td></tr>
+            <tr><td><code>Move_left()</code></td><td class="desc">Moves your cursor one tile left.</td></tr>
+            <tr><td><code>Move_right()</code></td><td class="desc">Moves your cursor one tile right.</td></tr>
+            <tr><td><code>OUTPUT "hi"</code></td><td class="desc">Prints a message to the console below.</td></tr>
+            <tr><td><code>FOR Index &lt;- 1 TO 5<br>&nbsp;&nbsp;...<br>NEXT Index</code></td><td class="desc">Repeats the lines in between, 5 times.</td></tr>
+          </table>
+        </details>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<div id="toast-layer"></div>
+
+<script>
+'use strict';
+
+// ============================================================
+// CONSTANTS
+// ============================================================
+var GRID_SIZE = 8;
+var TILE_SIZE = 1;
+var HALF = (GRID_SIZE - 1) / 2;
+
+// Vegetable catalogue. `emoji` is a Twemoji (CC-BY 4.0) codepoint - loaded
+// once per veggie and rasterised onto a small canvas so it works as a
+// three.js texture regardless of the source SVG's own width/height quirks.
+// https://github.com/twitter/twemoji
+var VEGGIES = {
+  Carrot:   { emoji: '1f955', seedCost: 5,  sellPrice: 9,  growSeconds: 12 },
+  Potato:   { emoji: '1f954', seedCost: 6,  sellPrice: 11, growSeconds: 14 },
+  Tomato:   { emoji: '1f345', seedCost: 8,  sellPrice: 15, growSeconds: 16 },
+  Corn:     { emoji: '1f33d', seedCost: 10, sellPrice: 19, growSeconds: 20 },
+  Broccoli: { emoji: '1f966', seedCost: 12, sellPrice: 23, growSeconds: 24 }
+};
+var VEGGIE_NAMES = Object.keys(VEGGIES);
+
+function twemojiUrl(codepoint) {
+  return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/' + codepoint + '.svg';
+}
+
+// ============================================================
+// GAME STATE
+// ============================================================
+var money = 40;
+var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
+var tiles = [];      // tiles[x][z] = { mesh, plant: null | PlantRecord, hasMachine: bool }
+var playerCursor = { x: Math.floor(GRID_SIZE / 2), z: Math.floor(GRID_SIZE / 2) };
+var machines = [];
+var nextMachineId = 1;
+var isRunning = false; // true while the player's own program is executing
+
+function invCount(name) { return inventory[name] || 0; }
+
+// ============================================================
+// THREE.JS SCENE SETUP
+// ============================================================
+var canvas = document.getElementById('three-canvas');
+var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+var scene = new THREE.Scene();
+scene.background = new THREE.Color(0x8ecae6);
+scene.fog = new THREE.Fog(0x8ecae6, 14, 30);
+
+var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+
+var ambient = new THREE.AmbientLight(0xfff2d8, 0.75);
+scene.add(ambient);
+var sun = new THREE.DirectionalLight(0xfff6e0, 1.05);
+sun.position.set(6, 10, 4);
+sun.castShadow = true;
+sun.shadow.mapSize.set(1024, 1024);
+sun.shadow.camera.left = -10; sun.shadow.camera.right = 10;
+sun.shadow.camera.top = 10; sun.shadow.camera.bottom = -10;
+scene.add(sun);
+scene.add(sun.target);
+
+// A soft ring of fill light so the underside of plants/machines isn't pitch black
+var fill = new THREE.HemisphereLight(0xcfe8ff, 0x6b8f4a, 0.4);
+scene.add(fill);
+
+// ---------- Ground tiles ----------
+var tileGroup = new THREE.Group();
+scene.add(tileGroup);
+var tileGeometry = new THREE.BoxGeometry(TILE_SIZE * 0.94, 0.22, TILE_SIZE * 0.94);
+
+function makeTileMaterial() {
+  // Gentle per-tile colour jitter so the field doesn't look like a single
+  // flat-shaded slab - still cheap (one material per tile, no textures).
+  var hue = 0.27 + (Math.random() - 0.5) * 0.03;
+  var sat = 0.35 + Math.random() * 0.08;
+  var light = 0.30 + Math.random() * 0.05;
+  var color = new THREE.Color().setHSL(hue, sat, light);
+  return new THREE.MeshStandardMaterial({ color: color, roughness: 0.95 });
+}
+
+for (var x = 0; x < GRID_SIZE; x++) {
+  tiles[x] = [];
+  for (var z = 0; z < GRID_SIZE; z++) {
+    var mesh = new THREE.Mesh(tileGeometry, makeTileMaterial());
+    mesh.position.set(x - HALF, -0.11, z - HALF);
+    mesh.receiveShadow = true;
+    mesh.userData.gridX = x;
+    mesh.userData.gridZ = z;
+    tileGroup.add(mesh);
+    tiles[x][z] = { mesh: mesh, plant: null, hasMachine: false };
+  }
+}
+
+// A slightly larger, darker slab underneath so tile gaps read as soil, not void
+var base = new THREE.Mesh(
+  new THREE.BoxGeometry(GRID_SIZE + 0.4, 0.18, GRID_SIZE + 0.4),
+  new THREE.MeshStandardMaterial({ color: 0x6b4a2b, roughness: 1 })
+);
+base.position.y = -0.3;
+base.receiveShadow = true;
+scene.add(base);
+
+// ---------- Player cursor arrow ----------
+var cursorGroup = new THREE.Group();
+var arrowGeom = new THREE.ConeGeometry(0.16, 0.34, 4);
+var arrowMat = new THREE.MeshStandardMaterial({ color: 0xf2b53c, emissive: 0x5a3c00, emissiveIntensity: 0.3 });
+var arrowMesh = new THREE.Mesh(arrowGeom, arrowMat);
+arrowMesh.rotation.x = Math.PI; // point downward
+arrowMesh.castShadow = true;
+cursorGroup.add(arrowMesh);
+scene.add(cursorGroup);
+
+function tileWorldX(x) { return x - HALF; }
+function tileWorldZ(z) { return z - HALF; }
+
+function updatePlayerCursorPosition() {
+  cursorGroup.position.set(tileWorldX(playerCursor.x), 0.85, tileWorldZ(playerCursor.z));
+}
+updatePlayerCursorPosition();
+
+// ============================================================
+// CAMERA CONTROLS (a small hand-rolled orbit/zoom, so the whole app has no
+// extra dependency beyond three.js itself - no examples/jsm build needed)
+// ============================================================
+var camState = { radius: 11, theta: Math.PI / 4, phi: 1.0, target: new THREE.Vector3(0, 0, 0) };
+var pointer = { down: false, moved: false, lastX: 0, lastY: 0, downX: 0, downY: 0, id: null };
+
+function applyCameraState() {
+  var r = camState.radius;
+  var phi = camState.phi;
+  var theta = camState.theta;
+  camera.position.set(
+    camState.target.x + r * Math.sin(phi) * Math.sin(theta),
+    camState.target.y + r * Math.cos(phi),
+    camState.target.z + r * Math.sin(phi) * Math.cos(theta)
+  );
+  camera.lookAt(camState.target);
+}
+applyCameraState();
+
+canvas.addEventListener('pointerdown', function (e) {
+  pointer.down = true; pointer.moved = false;
+  pointer.lastX = pointer.downX = e.clientX;
+  pointer.lastY = pointer.downY = e.clientY;
+  pointer.id = e.pointerId;
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', function (e) {
+  if (!pointer.down || e.pointerId !== pointer.id) return;
+  var dx = e.clientX - pointer.lastX;
+  var dy = e.clientY - pointer.lastY;
+  if (Math.abs(e.clientX - pointer.downX) > 4 || Math.abs(e.clientY - pointer.downY) > 4) pointer.moved = true;
+  pointer.lastX = e.clientX; pointer.lastY = e.clientY;
+  camState.theta -= dx * 0.008;
+  camState.phi = Math.min(1.45, Math.max(0.35, camState.phi - dy * 0.008));
+  applyCameraState();
+});
+canvas.addEventListener('pointerup', function (e) {
+  if (e.pointerId !== pointer.id) return;
+  pointer.down = false;
+  if (!pointer.moved) handleTileClick(e.clientX, e.clientY);
+});
+canvas.addEventListener('wheel', function (e) {
+  e.preventDefault();
+  camState.radius = Math.min(20, Math.max(5, camState.radius + e.deltaY * 0.01));
+  applyCameraState();
+}, { passive: false });
+
+// ============================================================
+// TILE SELECTION (raycasting)
+// ============================================================
+var raycaster = new THREE.Raycaster();
+var ndc = new THREE.Vector2();
+
+function handleTileClick(clientX, clientY) {
+  var rect = canvas.getBoundingClientRect();
+  ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(ndc, camera);
+  var hits = raycaster.intersectObjects(tileGroup.children);
+  if (!hits.length) return;
+  var hit = hits[0].object;
+  playerCursor.x = hit.userData.gridX;
+  playerCursor.z = hit.userData.gridZ;
+  updatePlayerCursorPosition();
+  updateTileInfoPanel();
+}
+
+// ============================================================
+// PLANT TEXTURES (loaded once, cached, shared by every sprite of that veg)
+// ============================================================
+var textureCache = {};
+function loadVeggieTexture(name) {
+  if (textureCache[name]) return textureCache[name];
+  var veg = VEGGIES[name];
+  var tex = new THREE.Texture();
+  var img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function () {
+    var size = 128;
+    var c = document.createElement('canvas');
+    c.width = size; c.height = size;
+    var ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0, size, size);
+    tex.image = c;
+    tex.needsUpdate = true;
+  };
+  img.onerror = function () {
+    console.warn('Could not load texture for', name);
+  };
+  img.src = twemojiUrl(veg.emoji);
+  textureCache[name] = tex;
+  return tex;
+}
+VEGGIE_NAMES.forEach(loadVeggieTexture); // warm the cache before anyone plants
+
+// ============================================================
+// PLANTING / GROWING / SELLING
+// ============================================================
+function plantAt(cursor, vegName) {
+  if (!VEGGIES[vegName]) {
+    return { ok: false, message: 'There is no vegetable called "' + vegName + '". Try Carrot, Potato, Tomato, Corn or Broccoli.' };
+  }
+  var tile = tiles[cursor.x][cursor.z];
+  if (tile.plant) {
+    return { ok: false, message: 'That tile already has a plant growing on it.' };
+  }
+  if (tile.hasMachine) {
+    return { ok: false, message: 'There is a machine standing on that tile.' };
+  }
+  if (invCount(vegName) <= 0) {
+    return { ok: false, message: 'You do not have any ' + vegName + ' seeds. Buy some first with Buy("' + vegName + ' Seeds").' };
+  }
+  inventory[vegName]--;
+  var veg = VEGGIES[vegName];
+  var sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: loadVeggieTexture(vegName), transparent: true }));
+  sprite.center.set(0.5, 0);
+  sprite.scale.set(0.001, 0.001, 0.001);
+  sprite.position.set(tileWorldX(cursor.x), 0.02, tileWorldZ(cursor.z));
+  scene.add(sprite);
+  tile.plant = {
+    type: vegName,
+    plantedAt: performance.now(),
+    growMs: veg.growSeconds * 1000,
+    sprite: sprite,
+    ready: false
+  };
+  updateHUD();
+  return { ok: true, message: 'Planted a ' + vegName + '! It will be ready to sell in ' + veg.growSeconds + ' seconds.' };
+}
+
+function sellAt(cursor) {
+  var tile = tiles[cursor.x][cursor.z];
+  if (!tile.plant) return { ok: false, message: 'There is nothing planted here.' };
+  if (!tile.plant.ready) return { ok: false, message: 'That plant is not fully grown yet.' };
+  var veg = VEGGIES[tile.plant.type];
+  money += veg.sellPrice;
+  scene.remove(tile.plant.sprite);
+  spawnFloatingText(cursor.x, cursor.z, '+' + veg.sellPrice + 'c', '#2e6b30');
+  var soldName = tile.plant.type;
+  tile.plant = null;
+  updateHUD();
+  updateTileInfoPanel();
+  return { ok: true, message: 'Sold the ' + soldName + ' for ' + veg.sellPrice + ' coins!' };
+}
+
+function buySeed(vegName) {
+  if (!VEGGIES[vegName]) {
+    return { ok: false, message: 'There is no vegetable called "' + vegName + '". Try Carrot, Potato, Tomato, Corn or Broccoli.' };
+  }
+  var veg = VEGGIES[vegName];
+  if (money < veg.seedCost) {
+    return { ok: false, message: 'You need ' + veg.seedCost + ' coins for ' + vegName + ' seeds, but you only have ' + money + '.' };
+  }
+  money -= veg.seedCost;
+  inventory[vegName] = invCount(vegName) + 1;
+  updateHUD();
+  return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + veg.seedCost + ' coins.' };
+}
+
+// Buy() in code takes the shop's exact label, e.g. "Carrot Seeds" - this
+// peels off the " Seeds" suffix so students can type the same phrase the
+// shop panel shows them, matching what they already read on screen.
+function buySeedByLabel(label) {
+  var name = String(label || '').replace(/\s*seeds?\s*$/i, '').trim();
+  var match = VEGGIE_NAMES.filter(function (n) { return n.toLowerCase() === name.toLowerCase(); })[0];
+  if (!match) {
+    return { ok: false, message: '"' + label + '" is not something the shop sells. Try Buy("Carrot Seeds").' };
+  }
+  return buySeed(match);
+}
+
+function moveCursor(cursor, dx, dz) {
+  var nx = Math.min(GRID_SIZE - 1, Math.max(0, cursor.x + dx));
+  var nz = Math.min(GRID_SIZE - 1, Math.max(0, cursor.z + dz));
+  var moved = nx !== cursor.x || nz !== cursor.z;
+  cursor.x = nx; cursor.z = nz;
+  return moved;
+}
+
+// ============================================================
+// FLOATING TEXT (a little "+9c" popup that rises and fades)
+// ============================================================
+var floatingTexts = [];
+function spawnFloatingText(gx, gz, text, color) {
+  var c = document.createElement('canvas');
+  c.width = 256; c.height = 96;
+  var ctx = c.getContext('2d');
+  ctx.font = '800 54px "Baloo 2", sans-serif';
+  ctx.fillStyle = color || '#2e6b30';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = '#ffffff';
+  ctx.strokeText(text, 128, 48);
+  ctx.fillText(text, 128, 48);
+  var tex = new THREE.CanvasTexture(c);
+  var sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+  sprite.scale.set(1.1, 0.42, 1);
+  sprite.position.set(tileWorldX(gx), 1.1, tileWorldZ(gz));
+  sprite.renderOrder = 10;
+  scene.add(sprite);
+  floatingTexts.push({ sprite: sprite, born: performance.now() });
+}
+function updateFloatingTexts(now) {
+  for (var i = floatingTexts.length - 1; i >= 0; i--) {
+    var f = floatingTexts[i];
+    var t = (now - f.born) / 900;
+    if (t >= 1) { scene.remove(f.sprite); floatingTexts.splice(i, 1); continue; }
+    f.sprite.position.y = 1.1 + t * 0.8;
+    f.sprite.material.opacity = 1 - t;
+  }
+}
+
+// ============================================================
+// MINI PSEUDOCODE INTERPRETER
+// ============================================================
+function PseudocodeError(message, line) {
+  this.message = line ? ('Line ' + line + ': ' + message) : message;
+  this.name = 'PseudocodeError';
+}
+PseudocodeError.prototype = Object.create(Error.prototype);
+
+// Splits a call's argument text on commas that are outside quotes - good
+// enough for the 0-or-1-argument calls this game's commands actually take.
+function splitArgs(raw) {
+  if (!raw.trim()) return [];
+  var parts = []; var cur = ''; var inQuotes = false;
+  for (var i = 0; i < raw.length; i++) {
+    var ch = raw[i];
+    if (ch === '"') inQuotes = !inQuotes;
+    if (ch === ',' && !inQuotes) { parts.push(cur); cur = ''; continue; }
+    cur += ch;
+  }
+  parts.push(cur);
+  return parts.map(function (p) { return p.trim(); });
+}
+
+// Deliberately small: a quoted string, a number, TRUE/FALSE, or a variable
+// already assigned earlier in this program. No arithmetic operators yet -
+// that is out of scope for this MVP (see the cheat sheet for what IS
+// supported) but would slot in here later without disturbing anything else.
+function evalExpr(raw, vars, line) {
+  var t = raw.trim();
+  if (/^".*"$/.test(t)) return t.slice(1, -1);
+  if (/^-?\d+(\.\d+)?$/.test(t)) return Number(t);
+  if (/^true$/i.test(t)) return true;
+  if (/^false$/i.test(t)) return false;
+  if (Object.prototype.hasOwnProperty.call(vars, t)) return vars[t];
+  throw new PseudocodeError('I don\'t understand "' + t + '".', line);
+}
+
+// Compiles pseudocode source into a flat instruction list. FOR/NEXT pairs
+// are matched here (not at run time) via a simple bracket-matching stack,
+// so nested loops "just work" and a mismatched FOR/NEXT is caught before
+// anything on screen moves.
+function compile(source) {
+  var lines = source.split('\n');
+  var instructions = [];
+  var forStack = [];
+
+  for (var i = 0; i < lines.length; i++) {
+    var lineNo = i + 1;
+    var raw = lines[i];
+    var line = raw.replace(/\/\/.*$/, '').trim();
+    if (!line) continue;
+
+    var m;
+    if ((m = line.match(/^FOR\s+([A-Za-z_]\w*)\s*(?:<-|←)\s*(.+?)\s+TO\s+(.+)$/i))) {
+      instructions.push({ type: 'FOR', var: m[1], startExpr: m[2], endExpr: m[3], line: lineNo });
+      forStack.push(instructions.length - 1);
+      continue;
+    }
+    if ((m = line.match(/^NEXT\s+([A-Za-z_]\w*)$/i))) {
+      if (!forStack.length) throw new PseudocodeError('NEXT ' + m[1] + ' has no matching FOR.', lineNo);
+      var forIndex = forStack.pop();
+      var forInstr = instructions[forIndex];
+      if (forInstr.var.toLowerCase() !== m[1].toLowerCase()) {
+        throw new PseudocodeError('NEXT ' + m[1] + ' does not match FOR ' + forInstr.var + ' (line ' + forInstr.line + ').', lineNo);
+      }
+      var nextIndex = instructions.length;
+      instructions.push({ type: 'NEXT', var: m[1], pairedForIndex: forIndex, line: lineNo });
+      forInstr.pairedNextIndex = nextIndex;
+      continue;
+    }
+    if ((m = line.match(/^OUTPUT\s+(.+)$/i))) {
+      instructions.push({ type: 'OUTPUT', expr: m[1], line: lineNo });
+      continue;
+    }
+    if ((m = line.match(/^([A-Za-z_]\w*)\s*\(\s*(.*?)\s*\)$/))) {
+      instructions.push({ type: 'CALL', name: m[1], argsRaw: m[2], line: lineNo });
+      continue;
+    }
+    if ((m = line.match(/^([A-Za-z_]\w*)\s*(?:<-|←)\s*(.+)$/))) {
+      instructions.push({ type: 'ASSIGN', var: m[1], expr: m[2], line: lineNo });
+      continue;
+    }
+    throw new PseudocodeError('I can\'t understand this line: "' + line + '"', lineNo);
+  }
+
+  if (forStack.length) {
+    var unclosed = instructions[forStack[0]];
+    throw new PseudocodeError('FOR ' + unclosed.var + ' is missing its NEXT ' + unclosed.var + '.', unclosed.line);
+  }
+  return instructions;
+}
+
+var VALID_COMMANDS = ['Plant', 'Buy', 'Sell', 'Move_up', 'Move_down', 'Move_left', 'Move_right'];
+
+function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
+
+// `cursor` is either the player's own cursor, or a machine's own roaming
+// cursor - whichever one this run's Move_*/Plant/Sell calls should act on.
+// `stepDelayMs` slows action commands down enough to watch when a human is
+// driving (the player's Run button); machines run at full speed since
+// nobody is watching a single tick fire.
+function runProgram(source, cursor, log, stepDelayMs) {
+  var instructions = compile(source); // throws before anything executes
+  var vars = {};
+  var pc = 0;
+  var steps = 0;
+  var MAX_STEPS = 400;
+
+  function step() {
+    return new Promise(function (resolve, reject) {
+      (async function () {
+        while (pc < instructions.length) {
+          if (++steps > MAX_STEPS) {
+            log('Stopped after ' + MAX_STEPS + ' steps - check your FOR loop isn\'t counting forever.', true);
+            break;
+          }
+          var instr = instructions[pc];
+          if (instr.type === 'FOR') {
+            var startVal = evalExpr(instr.startExpr, vars, instr.line);
+            var endVal = evalExpr(instr.endExpr, vars, instr.line);
+            if (typeof startVal !== 'number' || typeof endVal !== 'number') {
+              throw new PseudocodeError('FOR needs numbers, e.g. FOR ' + instr.var + ' <- 1 TO 5', instr.line);
+            }
+            vars[instr.var] = startVal;
+            instr.currentEnd = endVal;
+            pc = startVal > endVal ? instr.pairedNextIndex + 1 : pc + 1;
+            continue;
+          }
+          if (instr.type === 'NEXT') {
+            var forInstr2 = instructions[instr.pairedForIndex];
+            vars[forInstr2.var]++;
+            pc = vars[forInstr2.var] <= forInstr2.currentEnd ? instr.pairedForIndex + 1 : pc + 1;
+            continue;
+          }
+          if (instr.type === 'OUTPUT') {
+            log(String(evalExpr(instr.expr, vars, instr.line)));
+            pc++;
+            continue;
+          }
+          if (instr.type === 'ASSIGN') {
+            vars[instr.var] = evalExpr(instr.expr, vars, instr.line);
+            pc++;
+            continue;
+          }
+          if (instr.type === 'CALL') {
+            var args = splitArgs(instr.argsRaw).map(function (a) { return evalExpr(a, vars, instr.line); });
+            await runCommand(instr.name, args, cursor, log, instr.line);
+            if (stepDelayMs) await sleep(stepDelayMs);
+            pc++;
+            continue;
+          }
+          pc++;
+        }
+        resolve();
+      })().catch(reject);
+    });
+  }
+  return step();
+}
+
+async function runCommand(name, args, cursor, log, line) {
+  switch (name) {
+    case 'Move_up': moveCursor(cursor, 0, -1); onCursorMoved(cursor); break;
+    case 'Move_down': moveCursor(cursor, 0, 1); onCursorMoved(cursor); break;
+    case 'Move_left': moveCursor(cursor, -1, 0); onCursorMoved(cursor); break;
+    case 'Move_right': moveCursor(cursor, 1, 0); onCursorMoved(cursor); break;
+    case 'Plant': log(plantAt(cursor, args[0]).message); break;
+    case 'Buy': log(buySeedByLabel(args[0]).message); break;
+    case 'Sell': log(sellAt(cursor).message); break;
+    default:
+      if (VALID_COMMANDS.indexOf(name) === -1) {
+        throw new PseudocodeError('"' + name + '" is not a command I know. Try ' + VALID_COMMANDS.join(', ') + '.', line);
+      }
+  }
+}
+
+// Called after every Move_* so both the player's arrow and a machine's own
+// marker visually follow their cursor mid-program, not just at the end.
+function onCursorMoved(cursor) {
+  if (cursor === playerCursor) { updatePlayerCursorPosition(); updateTileInfoPanel(); return; }
+  var machine = machines.filter(function (m) { return m.cursor === cursor; })[0];
+  if (machine) positionMachineCursorMarker(machine);
+}
+
+// ============================================================
+// PLAYER CODE BOX WIRING
+// ============================================================
+var codeInput = document.getElementById('code-input');
+var runBtn = document.getElementById('run-btn');
+var machineBtn = document.getElementById('machine-btn');
+var consoleOutput = document.getElementById('console-output');
+
+codeInput.value = '// Try me! Click Run.\nBuy("Carrot Seeds")\nPlant("Carrot")';
+
+function logConsole(message, isError, isMachine) {
+  var row = document.createElement('div');
+  if (isError) row.className = 'err';
+  else if (isMachine) row.className = 'machine-line';
+  row.textContent = message;
+  consoleOutput.appendChild(row);
+  consoleOutput.scrollTop = consoleOutput.scrollHeight;
+  while (consoleOutput.children.length > 60) consoleOutput.removeChild(consoleOutput.firstChild);
+}
+
+function setRunningUI(running) {
+  isRunning = running;
+  runBtn.disabled = running;
+  runBtn.textContent = running ? '⏳ Running...' : '▶ Run';
+}
+
+runBtn.addEventListener('click', function () {
+  if (isRunning) return;
+  setRunningUI(true);
+  runProgram(codeInput.value, playerCursor, function (msg, isErr) { logConsole(msg, isErr); }, 350)
+    .catch(function (err) { logConsole(err.message || String(err), true); })
+    .then(function () { setRunningUI(false); });
+});
+
+machineBtn.addEventListener('click', function () {
+  if (isRunning) return;
+  placeMachine(codeInput.value);
+});
+
+// ============================================================
+// MACHINES
+// ============================================================
+function createMachineMarkerGroup() {
+  var group = new THREE.Group();
+
+  var body = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.22, 0.26, 0.4, 8),
+    new THREE.MeshStandardMaterial({ color: 0x6ea8fe, metalness: 0.2, roughness: 0.4 })
+  );
+  body.position.y = 0.3;
+  body.castShadow = true;
+  group.add(body);
+
+  var eye = new THREE.Mesh(
+    new THREE.SphereGeometry(0.08, 10, 10),
+    new THREE.MeshStandardMaterial({ color: 0x0b1b3a, emissive: 0x274a8a, emissiveIntensity: 0.6 })
+  );
+  eye.position.set(0, 0.42, 0.2);
+  group.add(eye);
+
+  // The machine's own roaming cursor - visually distinct (blue diamond,
+  // floats higher) from the player's gold arrow, so a machine mid-program
+  // never reads as "the player moved".
+  var cursorMesh = new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.15, 0),
+    new THREE.MeshStandardMaterial({ color: 0x2f6fe0, emissive: 0x123a8a, emissiveIntensity: 0.4 })
+  );
+  cursorMesh.castShadow = true;
+
+  return { group: group, cursorMesh: cursorMesh };
+}
+
+function positionMachineCursorMarker(machine) {
+  machine.cursorMesh.position.set(tileWorldX(machine.cursor.x), 1.0, tileWorldZ(machine.cursor.z));
+}
+
+function placeMachine(code) {
+  if (!code.trim()) { logConsole('Write some code first, then place a machine.', true); return; }
+  try {
+    compile(code); // catch syntax errors before the machine is committed to the field
+  } catch (e) {
+    logConsole('Cannot place machine: ' + e.message, true);
+    return;
+  }
+  var x = playerCursor.x, z = playerCursor.z;
+  var tile = tiles[x][z];
+  if (tile.hasMachine) { logConsole('There is already a machine on this tile.', true); return; }
+  if (tile.plant) { logConsole('Clear the plant on this tile before placing a machine here.', true); return; }
+
+  var built = createMachineMarkerGroup();
+  built.group.position.set(tileWorldX(x), 0, tileWorldZ(z));
+  scene.add(built.group);
+  scene.add(built.cursorMesh);
+
+  var machine = {
+    id: nextMachineId++,
+    homeX: x, homeZ: z,
+    code: code,
+    intervalMs: 10000, // one tier for this MVP - see cheat sheet note below
+    cursor: { x: x, z: z },
+    group: built.group,
+    cursorMesh: built.cursorMesh,
+    running: false
+  };
+  tile.hasMachine = true;
+  machines.push(machine);
+  positionMachineCursorMarker(machine);
+  scheduleMachine(machine);
+  logConsole('Machine placed! It will run its program every ' + (machine.intervalMs / 1000) + ' seconds.');
+}
+
+function scheduleMachine(machine) {
+  machine.timer = setInterval(function () {
+    if (machine.running) return; // never overlap two runs of the same machine
+    machine.running = true;
+    runProgram(machine.code, machine.cursor, function (msg, isErr) {
+      logConsole('[Machine #' + machine.id + '] ' + msg, isErr, true);
+    }, 0)
+      .catch(function (err) {
+        logConsole('[Machine #' + machine.id + '] Error: ' + (err.message || err), true, true);
+      })
+      .then(function () { machine.running = false; });
+  }, machine.intervalMs);
+}
+
+// ============================================================
+// HUD / SHOP RENDERING
+// ============================================================
+var moneyValueEl = document.getElementById('money-value');
+var shopListEl = document.getElementById('shop-list');
+var tileInfoEl = document.getElementById('tile-info');
+
+function updateHUD() {
+  moneyValueEl.textContent = money;
+  VEGGIE_NAMES.forEach(function (name) {
+    var row = shopListEl.querySelector('[data-veg="' + name + '"]');
+    if (!row) return;
+    var veg = VEGGIES[name];
+    row.querySelector('.buy-btn').disabled = money < veg.seedCost;
+    row.querySelector('.have').textContent = 'You have ' + invCount(name) + ' seed' + (invCount(name) === 1 ? '' : 's') + '.';
+  });
+}
+
+function buildShop() {
+  VEGGIE_NAMES.forEach(function (name) {
+    var veg = VEGGIES[name];
+    var row = document.createElement('div');
+    row.className = 'shop-item';
+    row.setAttribute('data-veg', name);
+    row.innerHTML =
+      '<img src="' + twemojiUrl(veg.emoji) + '" alt="' + name + '">' +
+      '<div><div class="name">' + name + ' Seeds</div><div class="price">' + veg.seedCost + ' coins &middot; sells for ' + veg.sellPrice + '</div></div>' +
+      '<button type="button" class="buy-btn">Buy</button>' +
+      '<div class="have"></div>';
+    row.querySelector('.buy-btn').addEventListener('click', function () {
+      var result = buySeed(name);
+      logConsole(result.message, !result.ok);
+    });
+    shopListEl.appendChild(row);
+  });
+}
+buildShop();
+updateHUD();
+
+function updateTileInfoPanel() {
+  var tile = tiles[playerCursor.x][playerCursor.z];
+  if (tile.plant && tile.plant.ready) {
+    tileInfoEl.className = 'show';
+    tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
+      '<br><button type="button" class="sell-btn">Sell for ' + VEGGIES[tile.plant.type].sellPrice + ' coins</button>';
+    tileInfoEl.querySelector('.sell-btn').addEventListener('click', function () {
+      var result = sellAt(playerCursor);
+      logConsole(result.message, !result.ok);
+    });
+  } else if (tile.plant) {
+    var pct = Math.min(100, Math.round(((performance.now() - tile.plant.plantedAt) / tile.plant.growMs) * 100));
+    tileInfoEl.className = 'show';
+    tileInfoEl.innerHTML = 'A <b>' + tile.plant.type + '</b> is growing here (' + pct + '%).';
+  } else if (tile.hasMachine) {
+    tileInfoEl.className = 'show';
+    tileInfoEl.innerHTML = 'A machine is standing here.';
+  } else {
+    tileInfoEl.className = '';
+    tileInfoEl.innerHTML = '';
+  }
+}
+
+// ============================================================
+// ANIMATION LOOP
+// ============================================================
+function resize() {
+  var rect = canvas.parentElement.getBoundingClientRect();
+  renderer.setSize(rect.width, rect.height, false);
+  camera.aspect = rect.width / Math.max(1, rect.height);
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+resize();
+
+var clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  var elapsed = clock.getElapsedTime();
+  var now = performance.now();
+
+  // Bob the player's arrow and every machine cursor gently so the scene
+  // never looks totally static, even between actions.
+  cursorGroup.position.y = 0.75 + Math.sin(elapsed * 3) * 0.06;
+  cursorGroup.rotation.y = elapsed * 1.2;
+  machines.forEach(function (m) {
+    m.cursorMesh.position.y = 1.0 + Math.sin(elapsed * 3 + m.id) * 0.06;
+    m.cursorMesh.rotation.y = elapsed * 1.6;
+  });
+
+  // Grow every planted sprite towards full size, and flag it ready once done.
+  var anyGrowthChanged = false;
+  for (var gx = 0; gx < GRID_SIZE; gx++) {
+    for (var gz = 0; gz < GRID_SIZE; gz++) {
+      var plant = tiles[gx][gz].plant;
+      if (!plant) continue;
+      var t = Math.min(1, (now - plant.plantedAt) / plant.growMs);
+      var eased = 1 - Math.pow(1 - t, 2);
+      var scale = 0.12 + eased * 0.78;
+      plant.sprite.scale.set(scale, scale, scale);
+      plant.sprite.position.y = 0.02 + scale * 0.05;
+      if (t >= 1 && !plant.ready) {
+        plant.ready = true;
+        anyGrowthChanged = true;
+        if (gx === playerCursor.x && gz === playerCursor.z) updateTileInfoPanel();
+      }
+    }
+  }
+  if (anyGrowthChanged) { /* nothing extra needed - tile info refreshes itself when relevant */ }
+
+  updateFloatingTexts(now);
+  renderer.render(scene, camera);
+}
+animate();
+
+// Keep the tile info panel's growth percentage fresh even when nothing
+// else changed, without re-rendering the whole panel every animation frame.
+setInterval(updateTileInfoPanel, 500);
+
+logConsole('Welcome to Pseudocode Farmer! Buy some seeds, then Plant() them to get started.');
+</script>
+</body>
+</html>
