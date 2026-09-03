@@ -84,6 +84,17 @@
     background: var(--gold); color: #4a2f00; font-weight: 800; cursor: pointer;
   }
   #tile-info .sell-btn:active { transform: translateY(1px); }
+  #tile-info .machine-actions { display: grid; gap: 6px; margin-top: 6px; }
+  #tile-info .machine-action-btn {
+    width: 100%; border: 0; border-radius: 8px; padding: 6px 8px;
+    font-weight: 800; cursor: pointer; font-size: .78rem;
+  }
+  #tile-info .machine-action-btn:active { transform: translateY(1px); }
+  #tile-info #machine-code-edit {
+    width: 100%; height: 130px; margin-top: 6px; resize: vertical;
+    font-family: "Courier New", ui-monospace, monospace; font-size: .72rem; line-height: 1.4;
+    background: #12190f; color: #b9e6b0; border: 2px solid #6ea8fe; border-radius: 8px; padding: 6px;
+  }
 
   /* ---------- Sidebar ---------- */
   #sidebar {
@@ -215,8 +226,8 @@
           <summary>📖 Pseudocode cheat sheet</summary>
           <table>
             <tr><td><code>Plant("Carrot")</code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
-            <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet. Buying the same vegetable a lot in a row makes its price climb - it cools back down if you leave it alone for a bit, so it's worth growing more than one kind at once.</td></tr>
-            <tr><td><code>Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing.</td></tr>
+            <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, 20% cheaper than the shop button. Buying the same vegetable a lot in a row makes its price climb - it cools back down if you leave it alone for a bit, so it's worth growing more than one kind at once.</td></tr>
+            <tr><td><code>Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
             <tr><td><code>Move_up()</code></td><td class="desc">Moves your cursor one tile up the field.</td></tr>
             <tr><td><code>Move_down()</code></td><td class="desc">Moves your cursor one tile down the field.</td></tr>
             <tr><td><code>Move_left()</code></td><td class="desc">Moves your cursor one tile left.</td></tr>
@@ -231,6 +242,7 @@
           <p class="desc" style="margin:8px 0 0">A little white dot on your cursor (or a machine's blue diamond) shows which way it's facing.</p>
           <p class="desc" style="margin:6px 0 0">New vegetables unlock as your <b>total coins earned</b> (top right, not your current balance) goes up, and after you've sold a few of the vegetable before them. Spending money doesn't undo that progress.</p>
           <p class="desc" style="margin:6px 0 0">Place Machine costs money too - pick Basic, Quick or Turbo underneath it first. A faster machine reruns its saved code more often.</p>
+          <p class="desc" style="margin:6px 0 0">Click a placed machine to select it (its cursor turns pink and grows). From there you can edit its code, upgrade it to a faster tier, or sell it back for half its cost.</p>
         </details>
       </section>
     </aside>
@@ -329,6 +341,15 @@ var VEGGIE_NAMES = VEGGIE_TIERS.map(function (t) { return t.name; });
 // moment someone looks at or acts on a price.
 var SEED_HEAT_GROWTH = 1.13;
 var SEED_HEAT_DECAY_PER_SEC = 1 / 20; // 1 purchase's worth of heat cools off every 20s
+
+// Writing pseudocode should always beat reaching for a button - that is
+// the whole point of the game. Code Buy("...") costs less than the shop
+// button, and code Sell() pays more than the on-tile sell button, so the
+// fastest way to progress is always to type the command instead of
+// clicking the UI. Both constants are here (not buried in the command
+// handlers) so they can be tuned for balance without hunting for them.
+var CODE_BUY_DISCOUNT = 0.8;   // code Buy("...") pays 80% of the shop button price
+var CODE_SELL_BONUS = 1.5;     // code Sell() pays 150% of the tile sell button
 
 function twemojiUrl(codepoint) {
   return 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/' + codepoint + '.svg';
@@ -582,6 +603,9 @@ var raycaster = new THREE.Raycaster();
 var ndc = new THREE.Vector2();
 
 function handleTileClick(clientX, clientY) {
+  // Clicking anywhere on the field leaves an in-progress machine code edit
+  // (its changes are discarded, same as pressing Cancel).
+  editingMachineCodeId = null;
   var rect = canvas.getBoundingClientRect();
   ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
   ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
@@ -675,22 +699,23 @@ function plantAt(cursor, vegName) {
   return { ok: true, message: 'Planted a ' + vegName + '! It will be ready to sell in ' + veg.growSeconds + ' seconds.' };
 }
 
-function sellAt(cursor) {
+function sellAt(cursor, viaCode) {
   var tile = tiles[cursor.x][cursor.z];
   if (!tile.plant) return { ok: false, message: 'There is nothing planted here.' };
   if (!tile.plant.ready) return { ok: false, message: 'That plant is not fully grown yet.' };
   var veg = VEGGIES[tile.plant.type];
-  money += veg.sellPrice;
-  totalEarned += veg.sellPrice;
+  var price = Math.round(veg.sellPrice * (viaCode ? CODE_SELL_BONUS : 1));
+  money += price;
+  totalEarned += price;
   soldCount[tile.plant.type] = (soldCount[tile.plant.type] || 0) + 1;
   scene.remove(tile.plant.sprite);
-  spawnFloatingText(cursor.x, cursor.z, '+' + veg.sellPrice + 'c', '#2e6b30');
+  spawnFloatingText(cursor.x, cursor.z, '+' + price + 'c', viaCode ? '#9a5b0a' : '#2e6b30');
   var soldName = tile.plant.type;
   tile.plant = null;
   var justUnlocked = refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
-  var message = 'Sold the ' + soldName + ' for ' + veg.sellPrice + ' coins!';
+  var message = 'Sold the ' + soldName + ' for ' + price + ' coins' + (viaCode ? ' (code bonus!)' : '') + '!';
   if (justUnlocked.length) message += ' New in the shop: ' + justUnlocked.join(', ') + '!';
   return { ok: true, message: message };
 }
@@ -709,14 +734,14 @@ function refreshUnlocks() {
   return justUnlocked;
 }
 
-function buySeed(vegName) {
+function buySeed(vegName, viaCode) {
   if (!VEGGIES[vegName]) {
     return { ok: false, message: 'There is no vegetable called "' + vegName + '". Look at the shop for the names you can use.' };
   }
   if (!isUnlocked(vegName)) {
     return { ok: false, message: vegName + ' is not unlocked yet. ' + unlockProgressMessage(vegName) };
   }
-  var price = currentSeedPrice(vegName);
+  var price = viaCode ? Math.round(currentSeedPrice(vegName) * CODE_BUY_DISCOUNT) : currentSeedPrice(vegName);
   if (money < price) {
     return { ok: false, message: 'You need ' + price + ' coins for ' + vegName + ' seeds right now, but you only have ' + money + '.' };
   }
@@ -724,19 +749,19 @@ function buySeed(vegName) {
   inventory[vegName] = invCount(vegName) + 1;
   seedHeat[vegName] = decaySeedHeat(vegName) + 1; // this purchase makes the NEXT one a little pricier
   updateHUD();
-  return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + price + ' coins.' };
+  return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + price + ' coins' + (viaCode ? ' (code discount!)' : '') + '.' };
 }
 
 // Buy() in code takes the shop's exact label, e.g. "Carrot Seeds" - this
 // peels off the " Seeds" suffix so students can type the same phrase the
 // shop panel shows them, matching what they already read on screen.
-function buySeedByLabel(label) {
+function buySeedByLabel(label, viaCode) {
   var name = String(label || '').replace(/\s*seeds?\s*$/i, '').trim();
   var match = VEGGIE_NAMES.filter(function (n) { return n.toLowerCase() === name.toLowerCase(); })[0];
   if (!match) {
     return { ok: false, message: '"' + label + '" is not something the shop sells. Try Buy("Carrot Seeds").' };
   }
-  return buySeed(match);
+  return buySeed(match, viaCode);
 }
 
 function clampToGrid(v) { return Math.min(GRID_SIZE - 1, Math.max(0, v)); }
@@ -986,8 +1011,8 @@ async function runCommand(name, args, cursor, log, line) {
       break;
     }
     case 'Plant': log(plantAt(cursor, args[0]).message); break;
-    case 'Buy': log(buySeedByLabel(args[0]).message); break;
-    case 'Sell': log(sellAt(cursor).message); break;
+    case 'Buy': log(buySeedByLabel(args[0], true).message); break;
+    case 'Sell': log(sellAt(cursor, true).message); break;
     default:
       if (VALID_COMMANDS.indexOf(name) === -1) {
         throw new PseudocodeError('"' + name + '" is not a command I know. Try ' + VALID_COMMANDS.join(', ') + '.', line);
@@ -1078,6 +1103,7 @@ var MACHINE_TIERS = [
   { name: 'Quick',  cost: 150, intervalMs: 6000,  color: 0x4fd1c5 },
   { name: 'Turbo',  cost: 500, intervalMs: 3000,  color: 0xffa94d }
 ];
+var MACHINE_SELL_REFUND = 0.5; // selling a machine back refunds half its cost
 var selectedMachineTierIndex = 0;
 
 var MACHINE_CURSOR_COLOR = 0x2f6fe0;          // default, unselected
@@ -1085,6 +1111,7 @@ var MACHINE_CURSOR_SELECTED_COLOR = 0xff5fc1; // clearly different from both
                                                // the default blue and the
                                                // player's own gold arrow
 var selectedMachineId = null;
+var editingMachineCodeId = null; // set while the tile-info panel is showing the inline code editor
 
 // Clicking a machine's body (see handleTileClick) calls this with that
 // machine, or with null to clear the selection (clicking open ground).
@@ -1094,9 +1121,15 @@ var selectedMachineId = null;
 function selectMachine(machine) {
   selectedMachineId = machine ? machine.id : null;
   machines.forEach(function (m) {
-    var color = m.id === selectedMachineId ? MACHINE_CURSOR_SELECTED_COLOR : MACHINE_CURSOR_COLOR;
+    var isSel = m.id === selectedMachineId;
+    var color = isSel ? MACHINE_CURSOR_SELECTED_COLOR : MACHINE_CURSOR_COLOR;
     m.diamond.material.color.setHex(color);
     m.diamond.material.emissive.setHex(color);
+    // The selected machine's own roaming cursor grows, so it stays easy to
+    // pick out even when it is sitting on the machine's home tile right
+    // next to the body (which is exactly where it starts).
+    var s = isSel ? 1.7 : 1.0;
+    m.diamond.scale.set(s, s, s);
   });
   updateTileInfoPanel();
 }
@@ -1138,7 +1171,7 @@ function createMachineMarkerGroup(bodyColor) {
   var facingIndicator = makeFacingIndicator(0xbfe0ff);
   cursorMesh.add(facingIndicator);
 
-  return { group: group, cursorMesh: cursorMesh, facingIndicator: facingIndicator, diamond: diamond };
+  return { group: group, cursorMesh: cursorMesh, facingIndicator: facingIndicator, diamond: diamond, body: body };
 }
 
 function positionMachineCursorMarker(machine) {
@@ -1180,6 +1213,7 @@ function placeMachine(code) {
     homeX: x, homeZ: z,
     code: code,
     tierName: tier.name,
+    cost: tier.cost,
     intervalMs: tier.intervalMs,
     // The machine's own home tile is (0, 0) for its Set_position calls -
     // see setPositionRelative().
@@ -1188,6 +1222,7 @@ function placeMachine(code) {
     cursorMesh: built.cursorMesh,
     facingIndicator: built.facingIndicator,
     diamond: built.diamond,
+    body: built.body,
     running: false
   };
   // Tag every mesh in the machine's visible body so a raycast hit on any
@@ -1237,6 +1272,88 @@ function scheduleMachine(machine) {
       })
       .then(function () { machine.running = false; });
   }, machine.intervalMs);
+}
+
+function machineTierIndex(machine) {
+  for (var i = 0; i < MACHINE_TIERS.length; i++) {
+    if (MACHINE_TIERS[i].name === machine.tierName) return i;
+  }
+  return -1;
+}
+
+// Sell a machine back: refunds half its cost and frees its home tile. The
+// machine's cursor may have roamed during a run, but the machine itself
+// still stands on its home tile, so that is the tile that gets cleared.
+function sellMachine(machine) {
+  var refund = Math.floor(machine.cost * MACHINE_SELL_REFUND);
+  money += refund;
+  clearInterval(machine.timer);
+  tiles[machine.homeX][machine.homeZ].hasMachine = false;
+  scene.remove(machine.group);
+  scene.remove(machine.cursorMesh);
+  machines = machines.filter(function (m) { return m.id !== machine.id; });
+  if (selectedMachineId === machine.id) selectedMachineId = null;
+  if (editingMachineCodeId === machine.id) editingMachineCodeId = null;
+  updateHUD();
+  updateTileInfoPanel();
+  logConsole('Sold Machine #' + machine.id + ' for ' + refund + ' coins.');
+}
+
+// Upgrade a machine to the next speed tier by paying the difference, so a
+// student can speed up a working machine without having to sell and re-buy
+// it (and re-type its code) from scratch.
+function upgradeMachine(machine) {
+  var idx = machineTierIndex(machine);
+  if (idx < 0 || idx >= MACHINE_TIERS.length - 1) return;
+  var nextTier = MACHINE_TIERS[idx + 1];
+  var cost = nextTier.cost - machine.cost;
+  if (money < cost) {
+    logConsole('Upgrading Machine #' + machine.id + ' to ' + nextTier.name + ' costs ' + cost + ' coins, but you only have ' + money + '.', true);
+    return;
+  }
+  money -= cost;
+  machine.cost = nextTier.cost;
+  machine.tierName = nextTier.name;
+  machine.intervalMs = nextTier.intervalMs;
+  if (machine.body) machine.body.material.color.setHex(nextTier.color);
+  clearInterval(machine.timer);
+  scheduleMachine(machine);
+  updateHUD();
+  updateTileInfoPanel();
+  logConsole('Machine #' + machine.id + ' upgraded to ' + nextTier.name + ' - it now runs every ' + (nextTier.intervalMs / 1000) + 's.');
+}
+
+function startEditingMachine(machine) {
+  editingMachineCodeId = machine.id;
+  tileInfoEl.className = 'show';
+  tileInfoEl.innerHTML = '<b>Editing Machine #' + machine.id + ' code</b>' +
+    '<textarea id="machine-code-edit" spellcheck="false" autocomplete="off"></textarea>' +
+    '<div class="machine-actions">' +
+      '<button type="button" class="machine-action-btn" id="machine-save-btn" style="background:#4c9a4a;color:#fff">Save code</button>' +
+      '<button type="button" class="machine-action-btn" id="machine-cancel-btn" style="background:#8a5a34;color:#fff">Cancel</button>' +
+    '</div>';
+  document.getElementById('machine-code-edit').value = machine.code;
+  document.getElementById('machine-save-btn').addEventListener('click', function () { saveMachineCode(machine); });
+  document.getElementById('machine-cancel-btn').addEventListener('click', function () { cancelEditMachine(); });
+}
+
+function saveMachineCode(machine) {
+  var newCode = document.getElementById('machine-code-edit').value;
+  try {
+    compile(newCode);
+  } catch (e) {
+    logConsole('Cannot save machine code: ' + e.message, true);
+    return;
+  }
+  machine.code = newCode;
+  editingMachineCodeId = null;
+  updateTileInfoPanel();
+  logConsole('Machine #' + machine.id + ' code updated.');
+}
+
+function cancelEditMachine() {
+  editingMachineCodeId = null;
+  updateTileInfoPanel();
 }
 
 // ============================================================
@@ -1302,14 +1419,32 @@ updateHUD();
 setInterval(function () { refreshUnlocks(); updateHUD(); }, 1000);
 
 function updateTileInfoPanel() {
+  if (editingMachineCodeId) return; // the inline editor owns the panel while it is open
   if (selectedMachineId) {
     var selected = machines.filter(function (m) { return m.id === selectedMachineId; })[0];
     if (selected) {
+      var refund = Math.floor(selected.cost * MACHINE_SELL_REFUND);
+      var upgradeHtml = '';
+      var idx = machineTierIndex(selected);
+      if (idx >= 0 && idx < MACHINE_TIERS.length - 1) {
+        var nextTier = MACHINE_TIERS[idx + 1];
+        var upgradeCost = nextTier.cost - selected.cost;
+        upgradeHtml = '<button type="button" class="machine-action-btn" id="machine-upgrade-btn" style="background:#6ea8fe;color:#04214f">Upgrade to ' + nextTier.name + ' (' + upgradeCost + 'c)</button>';
+      }
       tileInfoEl.className = 'show';
-      tileInfoEl.innerHTML = '<b>Machine #' + selected.id + '</b> selected (pink cursor) &middot; runs every ' +
+      tileInfoEl.innerHTML = '<b>Machine #' + selected.id + '</b> (pink cursor) &middot; runs every ' +
         (selected.intervalMs / 1000) + 's &middot; cursor at (' + selected.cursor.x + ', ' + selected.cursor.z + ')' +
-        '<pre style="white-space:pre-wrap;margin:6px 0 0;font-size:.7rem;background:#12190f;color:#b9e6b0;padding:6px;border-radius:6px;max-height:90px;overflow:auto">' +
-        escapeHtmlLocal(selected.code) + '</pre>';
+        '<pre style="white-space:pre-wrap;margin:6px 0 0;font-size:.7rem;background:#12190f;color:#b9e6b0;padding:6px;border-radius:6px;max-height:80px;overflow:auto">' +
+        escapeHtmlLocal(selected.code) + '</pre>' +
+        '<div class="machine-actions">' +
+          '<button type="button" class="machine-action-btn" id="machine-edit-btn" style="background:#6ea8fe;color:#04214f">Edit code</button>' +
+          upgradeHtml +
+          '<button type="button" class="machine-action-btn" id="machine-sell-btn" style="background:#d9534f;color:#fff">Sell for ' + refund + 'c</button>' +
+        '</div>';
+      tileInfoEl.querySelector('#machine-edit-btn').addEventListener('click', function () { startEditingMachine(selected); });
+      var upBtn = tileInfoEl.querySelector('#machine-upgrade-btn');
+      if (upBtn) upBtn.addEventListener('click', function () { upgradeMachine(selected); });
+      tileInfoEl.querySelector('#machine-sell-btn').addEventListener('click', function () { sellMachine(selected); });
       return;
     }
   }
@@ -1317,7 +1452,8 @@ function updateTileInfoPanel() {
   if (tile.plant && tile.plant.ready) {
     tileInfoEl.className = 'show';
     tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
-      '<br><button type="button" class="sell-btn">Sell for ' + VEGGIES[tile.plant.type].sellPrice + ' coins</button>';
+      '<br><button type="button" class="sell-btn">Sell for ' + VEGGIES[tile.plant.type].sellPrice + ' coins</button>' +
+      '<br><span style="font-size:.68rem;color:#7a6650">Tip: code Sell() pays ' + Math.round(VEGGIES[tile.plant.type].sellPrice * CODE_SELL_BONUS) + ' coins.</span>';
     tileInfoEl.querySelector('.sell-btn').addEventListener('click', function () {
       var result = sellAt(playerCursor);
       logConsole(result.message, !result.ok);
@@ -1391,7 +1527,7 @@ animate();
 // else changed, without re-rendering the whole panel every animation frame.
 setInterval(updateTileInfoPanel, 500);
 
-logConsole('Welcome to Pseudocode Farmer! Buy some seeds, then Plant() them to get started.');
+logConsole('Welcome to Pseudocode Farmer! Write pseudocode to buy, plant and sell - code beats the buttons (Buy() is cheaper, Sell() pays more).');
 </script>
 </body>
 </html>
