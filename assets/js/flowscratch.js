@@ -76,7 +76,7 @@
     running: false, gen: 0,
     answer: '',
     pressedKeys: {},
-    mouse: { x: 0, y: 0 },
+    mouse: { x: 0, y: 0, down: false },
     slowMode: false, slowDelayMs: 500,
     activeSprite: null, activeSpriteId: null
   };
@@ -115,7 +115,21 @@
     next_costume:       { shape: 'process',   title: 'Next costume',       data: {},                             category: 'looks' },
     change_color:       { shape: 'process',   title: 'Change colour',      data: { value: 25 },                  category: 'looks' },
     say:                { shape: 'io',        title: 'Say',                data: { text: 'Hello!' },             category: 'looks' },
+    say_for:            { shape: 'process',   title: 'Say for secs',       data: { text: 'Hello!', seconds: 2 }, category: 'looks' },
+    think:              { shape: 'io',        title: 'Think',              data: { text: 'Hmm...' },             category: 'looks' },
+    think_for:          { shape: 'process',   title: 'Think for secs',     data: { text: 'Hmm...', seconds: 2 }, category: 'looks' },
+    switch_costume_to:  { shape: 'process',   title: 'Switch costume to',  data: { costume: '' },                category: 'looks' },
+    change_size_by:     { shape: 'process',   title: 'Change size by',     data: { size: 10 },                   category: 'looks' },
+    set_size_to:        { shape: 'process',   title: 'Set size to',        data: { size: 100 },                  category: 'looks' },
+    change_effect:      { shape: 'process',   title: 'Change effect',      data: { effect: 'color', value: 25 }, category: 'looks' },
+    set_effect:         { shape: 'process',   title: 'Set effect',         data: { effect: 'color', value: 0 },  category: 'looks' },
+    clear_effects:      { shape: 'process',   title: 'Clear graphic effects', data: {},                         category: 'looks' },
+    show:               { shape: 'process',   title: 'Show',               data: {},                             category: 'looks' },
+    hide:               { shape: 'process',   title: 'Hide',               data: {},                             category: 'looks' },
+    go_to_layer:        { shape: 'process',   title: 'Go to layer',        data: { layer: 'front' },             category: 'looks' },
+    change_layer:       { shape: 'process',   title: 'Change layer',       data: { direction: 'forward', layers: 1 }, category: 'looks' },
     ask:                { shape: 'io',        title: 'Ask',                data: { text: 'What is your name?' }, category: 'sensing' },
+    set_drag_mode:      { shape: 'process',   title: 'Set drag mode',      data: { mode: 'draggable' },          category: 'sensing' },
     set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
     change_variable:    { shape: 'process',   title: 'Change variable',    data: { varName: '', value: 1 },      category: 'variables' },
     selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' },
@@ -123,6 +137,43 @@
     call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' }
   };
   var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sensing', 'variables', 'control'];
+
+  // Reporters (sensing values) that can be plugged into any numeric value
+  // field, the same idea as Scratch's rounded reporter blocks. Each one
+  // reads a live value off the active sprite (or the mouse/answer) at run
+  // time instead of a fixed number.
+  var REPORTERS = [
+    { id: 'x_position', label: 'x position', read: function (t) { return t ? t.x : 0; } },
+    { id: 'y_position', label: 'y position', read: function (t) { return t ? t.y : 0; } },
+    { id: 'direction',  label: 'direction',  read: function (t) { return t ? t.direction : 0; } },
+    { id: 'size',       label: 'size',       read: function (t) { return t ? t.size : 0; } },
+    { id: 'answer',     label: 'answer',     read: function () { return Number(FS.answer) || 0; } },
+    { id: 'mouse_x',    label: 'mouse x',    read: function () { return FS.mouse.x; } },
+    { id: 'mouse_y',    label: 'mouse y',    read: function () { return FS.mouse.y; } }
+  ];
+  function reporterById(id) {
+    for (var i = 0; i < REPORTERS.length; i++) if (REPORTERS[i].id === id) return REPORTERS[i];
+    return null;
+  }
+  // A value field can hold a literal number or a reporter. The choice is
+  // stored as a companion "<field>Src" key on the block's data ('num' or a
+  // reporter id), so graphs saved before reporters existed (a plain number
+  // and no Src key) keep working unchanged.
+  function valueSrc(data, field) { return (data && data[field + 'Src']) || 'num'; }
+  function readValue(target, data, field) {
+    var src = valueSrc(data, field);
+    if (src !== 'num') { var r = reporterById(src); if (r) return r.read(target); }
+    return Number(data[field] || 0);
+  }
+  // Short display string for a value field, used in node subtitles and the
+  // Mermaid diagram: the literal number (with an optional unit) or the
+  // reporter's label.
+  function valueDisplay(data, field, unit) {
+    var src = valueSrc(data, field);
+    if (src !== 'num') { var r = reporterById(src); return r ? r.label : src; }
+    return unit ? String(data[field]) + ' ' + unit : String(data[field]);
+  }
+
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   // Looks up a block's display title defensively: a graph saved before a
   // block type was renamed or removed (e.g. the old 'move'/'colour'
@@ -396,25 +447,39 @@
     var d = n.data || {};
     if (n.type === 'subroutine_start') return 'Sub-routine: ' + (d.name || 'unnamed');
     if (n.type === 'call_subroutine') return 'CALL ' + (d.name || 'unnamed');
-    if (n.type === 'move_steps') return 'Move ' + d.steps + ' steps';
-    if (n.type === 'turn_right') return 'Turn right ' + d.degrees + ' degrees';
-    if (n.type === 'turn_left') return 'Turn left ' + d.degrees + ' degrees';
-    if (n.type === 'point_in_direction') return 'Point in direction ' + d.degrees + ' degrees';
+    if (n.type === 'move_steps') return 'Move ' + valueDisplay(d, 'steps', 'steps');
+    if (n.type === 'turn_right') return 'Turn right ' + valueDisplay(d, 'degrees', 'degrees');
+    if (n.type === 'turn_left') return 'Turn left ' + valueDisplay(d, 'degrees', 'degrees');
+    if (n.type === 'point_in_direction') return 'Point in direction ' + valueDisplay(d, 'degrees', 'degrees');
     if (n.type === 'point_towards') return 'Point towards ' + (d.target === 'mouse_pointer' ? 'mouse pointer' : 'random direction');
     if (n.type === 'go_to') return 'Go to ' + (d.target === 'mouse_pointer' ? 'mouse pointer' : 'random position');
-    if (n.type === 'go_to_xy') return 'Go to x ' + d.x + ', y ' + d.y;
-    if (n.type === 'glide_to') return 'Glide ' + d.seconds + ' secs to ' + (d.target === 'mouse_pointer' ? 'mouse pointer' : 'random position');
-    if (n.type === 'glide_to_xy') return 'Glide ' + d.seconds + ' secs to x ' + d.x + ', y ' + d.y;
-    if (n.type === 'change_x_by') return 'Change x by ' + d.x;
-    if (n.type === 'set_x_to') return 'Set x to ' + d.x;
-    if (n.type === 'change_y_by') return 'Change y by ' + d.y;
-    if (n.type === 'set_y_to') return 'Set y to ' + d.y;
+    if (n.type === 'go_to_xy') return 'Go to x ' + valueDisplay(d, 'x') + ', y ' + valueDisplay(d, 'y');
+    if (n.type === 'glide_to') return 'Glide ' + valueDisplay(d, 'seconds', 'secs') + ' to ' + (d.target === 'mouse_pointer' ? 'mouse pointer' : 'random position');
+    if (n.type === 'glide_to_xy') return 'Glide ' + valueDisplay(d, 'seconds', 'secs') + ' to x ' + valueDisplay(d, 'x') + ', y ' + valueDisplay(d, 'y');
+    if (n.type === 'change_x_by') return 'Change x by ' + valueDisplay(d, 'x');
+    if (n.type === 'set_x_to') return 'Set x to ' + valueDisplay(d, 'x');
+    if (n.type === 'change_y_by') return 'Change y by ' + valueDisplay(d, 'y');
+    if (n.type === 'set_y_to') return 'Set y to ' + valueDisplay(d, 'y');
     if (n.type === 'if_on_edge_bounce') return 'If on edge, bounce';
     if (n.type === 'set_rotation_style') return 'Set rotation style to ' + (d.style || 'all around');
     if (n.type === 'next_costume') return 'Next costume';
-    if (n.type === 'change_color') return 'Change colour by ' + d.value;
+    if (n.type === 'change_color') return 'Change colour by ' + valueDisplay(d, 'value');
     if (n.type === 'say') return 'Say "' + d.text + '"';
+    if (n.type === 'say_for') return 'Say "' + d.text + '" for ' + valueDisplay(d, 'seconds', 'secs');
+    if (n.type === 'think') return 'Think "' + d.text + '"';
+    if (n.type === 'think_for') return 'Think "' + d.text + '" for ' + valueDisplay(d, 'seconds', 'secs');
+    if (n.type === 'switch_costume_to') return 'Switch costume to ' + (d.costume || '...');
+    if (n.type === 'change_size_by') return 'Change size by ' + valueDisplay(d, 'size');
+    if (n.type === 'set_size_to') return 'Set size to ' + valueDisplay(d, 'size');
+    if (n.type === 'change_effect') return 'Change ' + (d.effect || 'color') + ' effect by ' + valueDisplay(d, 'value');
+    if (n.type === 'set_effect') return 'Set ' + (d.effect || 'color') + ' effect to ' + valueDisplay(d, 'value');
+    if (n.type === 'clear_effects') return 'Clear graphic effects';
+    if (n.type === 'show') return 'Show';
+    if (n.type === 'hide') return 'Hide';
+    if (n.type === 'go_to_layer') return 'Go to ' + (d.layer === 'back' ? 'back' : 'front') + ' layer';
+    if (n.type === 'change_layer') return 'Go ' + (d.direction || 'forward') + ' ' + valueDisplay(d, 'layers', 'layers');
     if (n.type === 'ask') return 'Ask "' + d.text + '"';
+    if (n.type === 'set_drag_mode') return 'Set drag mode ' + (d.mode === 'not_draggable' ? 'not draggable' : 'draggable');
     if (n.type === 'set_variable') return 'Set ' + (d.varName || 'variable') + ' to ' + d.value;
     if (n.type === 'change_variable') return 'Change ' + (d.varName || 'variable') + ' by ' + d.value;
     if (n.type === 'selection') {
@@ -426,6 +491,10 @@
         desc = d.value === 'any' ? 'touching any edge' : 'touching ' + d.value + ' edge';
       } else if (d.condition === 'answer') {
         desc = 'answer exists';
+      } else if (d.condition === 'touching') {
+        desc = 'touching mouse pointer';
+      } else if (d.condition === 'mouse_down') {
+        desc = 'mouse down';
       } else if (d.condition === 'variable') {
         var opSym = d.operator === 'gt' ? '>' : d.operator === 'lt' ? '<' : '=';
         desc = (d.varName || 'variable') + ' ' + opSym + ' ' + (d.varValue != null ? d.varValue : 0);
@@ -514,24 +583,57 @@
       return '<option value="' + esc(name) + '"' + (selectedName === name ? ' selected' : '') + '>' + esc(name) + '</option>';
     }).join('') + '</select>';
   }
+  // Costume names are per-sprite and live on the active sprite, so this is
+  // built at render time from whatever costumes that sprite currently has.
+  // A saved graph's costume name is kept even if it's not in the current
+  // list, so a rename/removal degrades gracefully rather than dropping the
+  // choice.
+  function costumeSelectHtml(fieldName, selectedName) {
+    var target = activeTarget();
+    var costumes = (target && target.sprite && target.sprite.costumes) ? target.sprite.costumes.slice() : [];
+    if (selectedName && !costumes.some(function (c) { return c.name === selectedName; })) {
+      costumes.push({ name: selectedName });
+    }
+    if (!costumes.length) return '<select data-field="' + fieldName + '"><option value="">(no costumes)</option></select>';
+    return '<select data-field="' + fieldName + '">' + costumes.map(function (c) {
+      return '<option value="' + esc(c.name) + '"' + (selectedName === c.name ? ' selected' : '') + '>' + esc(c.name) + '</option>';
+    }).join('') + '</select>';
+  }
+  function effectSelectHtml(fieldName, selected) {
+    var effects = ['color', 'fisheye', 'whirl', 'pixelate', 'mosaic', 'brightness', 'ghost'];
+    return '<select data-field="' + fieldName + '">' + effects.map(function (e) {
+      return '<option value="' + e + '"' + (selected === e ? ' selected' : '') + '>' + e + '</option>';
+    }).join('') + '</select>';
+  }
   function nodeMarkup(n) {
     var sub = '';
     if (n.type === 'subroutine_start') sub = '<input type="text" class="fs-inline-name" data-field="name" value="' + esc(n.data.name || '') + '" aria-label="Sub-routine name">';
     if (n.type === 'call_subroutine') sub = subroutineSelectHtml('name', n.data.name || '');
-    if (n.type === 'move_steps') sub = '<span class="fs-node-subtitle">' + n.data.steps + ' steps</span>';
-    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') sub = '<span class="fs-node-subtitle">' + n.data.degrees + ' degrees</span>';
+    if (n.type === 'move_steps') sub = '<span class="fs-node-subtitle">' + valueDisplay(n.data, 'steps', 'steps') + '</span>';
+    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') sub = '<span class="fs-node-subtitle">' + valueDisplay(n.data, 'degrees', 'degrees') + '</span>';
     if (n.type === 'point_towards') sub = '<select data-field="target"><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option><option value="random"' + (n.data.target === 'random' ? ' selected' : '') + '>random direction</option></select>';
     if (n.type === 'go_to') sub = '<select data-field="target"><option value="random_position"' + (n.data.target === 'random_position' ? ' selected' : '') + '>random position</option><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option></select>';
-    if (n.type === 'glide_to') sub = '<span class="fs-node-subtitle">' + n.data.seconds + 's</span><select data-field="target"><option value="random_position"' + (n.data.target === 'random_position' ? ' selected' : '') + '>random position</option><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option></select>';
-    if (n.type === 'go_to_xy') sub = '<span class="fs-node-subtitle">x ' + n.data.x + ', y ' + n.data.y + '</span>';
-    if (n.type === 'glide_to_xy') sub = '<span class="fs-node-subtitle">' + n.data.seconds + 's to x ' + n.data.x + ', y ' + n.data.y + '</span>';
-    if (n.type === 'change_x_by') sub = '<span class="fs-node-subtitle">by ' + n.data.x + '</span>';
-    if (n.type === 'set_x_to') sub = '<span class="fs-node-subtitle">to ' + n.data.x + '</span>';
-    if (n.type === 'change_y_by') sub = '<span class="fs-node-subtitle">by ' + n.data.y + '</span>';
-    if (n.type === 'set_y_to') sub = '<span class="fs-node-subtitle">to ' + n.data.y + '</span>';
+    if (n.type === 'glide_to') sub = '<span class="fs-node-subtitle">' + valueDisplay(n.data, 'seconds', 'secs') + '</span><select data-field="target"><option value="random_position"' + (n.data.target === 'random_position' ? ' selected' : '') + '>random position</option><option value="mouse_pointer"' + (n.data.target === 'mouse_pointer' ? ' selected' : '') + '>mouse pointer</option></select>';
+    if (n.type === 'go_to_xy') sub = '<span class="fs-node-subtitle">x ' + valueDisplay(n.data, 'x') + ', y ' + valueDisplay(n.data, 'y') + '</span>';
+    if (n.type === 'glide_to_xy') sub = '<span class="fs-node-subtitle">' + valueDisplay(n.data, 'seconds', 'secs') + ' to x ' + valueDisplay(n.data, 'x') + ', y ' + valueDisplay(n.data, 'y') + '</span>';
+    if (n.type === 'change_x_by') sub = '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'x') + '</span>';
+    if (n.type === 'set_x_to') sub = '<span class="fs-node-subtitle">to ' + valueDisplay(n.data, 'x') + '</span>';
+    if (n.type === 'change_y_by') sub = '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'y') + '</span>';
+    if (n.type === 'set_y_to') sub = '<span class="fs-node-subtitle">to ' + valueDisplay(n.data, 'y') + '</span>';
     if (n.type === 'set_rotation_style') sub = '<select data-field="style"><option value="all around"' + (n.data.style === 'all around' ? ' selected' : '') + '>all around</option><option value="left-right"' + (n.data.style === 'left-right' ? ' selected' : '') + '>left-right</option><option value="don\'t rotate"' + (n.data.style === 'don\'t rotate' ? ' selected' : '') + '>don\'t rotate</option></select>';
-    if (n.type === 'change_color') sub = '<span class="fs-node-subtitle">by ' + n.data.value + '</span>';
+    if (n.type === 'change_color') sub = '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'value') + '</span>';
     if (n.type === 'say' || n.type === 'ask') sub = '<span class="fs-node-subtitle">' + esc(n.data.text) + '</span>';
+    if (n.type === 'say_for') sub = '<span class="fs-node-subtitle">"' + esc(n.data.text) + '" for ' + valueDisplay(n.data, 'seconds', 'secs') + '</span>';
+    if (n.type === 'think') sub = '<span class="fs-node-subtitle">"' + esc(n.data.text) + '"</span>';
+    if (n.type === 'think_for') sub = '<span class="fs-node-subtitle">"' + esc(n.data.text) + '" for ' + valueDisplay(n.data, 'seconds', 'secs') + '</span>';
+    if (n.type === 'switch_costume_to') sub = costumeSelectHtml('costume', n.data.costume || '');
+    if (n.type === 'change_size_by') sub = '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'size') + '</span>';
+    if (n.type === 'set_size_to') sub = '<span class="fs-node-subtitle">to ' + valueDisplay(n.data, 'size') + '</span>';
+    if (n.type === 'change_effect') sub = effectSelectHtml('effect', n.data.effect || 'color') + '<span class="fs-node-subtitle">by ' + valueDisplay(n.data, 'value') + '</span>';
+    if (n.type === 'set_effect') sub = effectSelectHtml('effect', n.data.effect || 'color') + '<span class="fs-node-subtitle">to ' + valueDisplay(n.data, 'value') + '</span>';
+    if (n.type === 'go_to_layer') sub = '<select data-field="layer"><option value="front"' + (n.data.layer !== 'back' ? ' selected' : '') + '>front</option><option value="back"' + (n.data.layer === 'back' ? ' selected' : '') + '>back</option></select>';
+    if (n.type === 'change_layer') sub = '<select data-field="direction"><option value="forward"' + (n.data.direction !== 'backward' ? ' selected' : '') + '>forward</option><option value="backward"' + (n.data.direction === 'backward' ? ' selected' : '') + '>backward</option></select><span class="fs-node-subtitle">' + valueDisplay(n.data, 'layers', 'layers') + '</span>';
+    if (n.type === 'set_drag_mode') sub = '<select data-field="mode"><option value="draggable"' + (n.data.mode !== 'not_draggable' ? ' selected' : '') + '>draggable</option><option value="not_draggable"' + (n.data.mode === 'not_draggable' ? ' selected' : '') + '>not draggable</option></select>';
     if (n.type === 'set_variable' || n.type === 'change_variable') {
       sub = variableSelectHtml('varName', n.data.varName) +
         '<input type="number" class="fs-inline-num" data-field="value" value="' + n.data.value + '">';
@@ -548,6 +650,10 @@
           '<option value="lt"' + (n.data.operator === 'lt' ? ' selected' : '') + '>&lt;</option>' +
           '</select>' +
           '<input type="number" class="fs-inline-num" data-field="varValue" value="' + (n.data.varValue != null ? n.data.varValue : 0) + '">';
+      } else if (condition === 'touching') {
+        tail = '<select data-field="value"><option value="mouse"' + (n.data.value === 'mouse' ? ' selected' : '') + '>mouse pointer</option></select>';
+      } else if (condition === 'mouse_down') {
+        tail = '';
       } else {
         var choices = condition === 'key'
           ? [['Space', 'space'], ['ArrowRight', 'right arrow'], ['ArrowLeft', 'left arrow'], ['ArrowUp', 'up arrow'], ['ArrowDown', 'down arrow']]
@@ -558,7 +664,7 @@
       }
       content = '<div class="fs-node-content"><div class="fs-node-title">If</div>' +
         '<select data-field="negate"><option value="is"' + (n.data.negate === 'is' ? ' selected' : '') + '>is</option><option value="not"' + (n.data.negate === 'not' ? ' selected' : '') + '>not</option></select>' +
-        '<select data-field="condition"><option value="key"' + (condition === 'key' ? ' selected' : '') + '>key pressed</option><option value="edge"' + (condition === 'edge' ? ' selected' : '') + '>touching edge</option><option value="answer"' + (condition === 'answer' ? ' selected' : '') + '>answer exists</option><option value="variable"' + (condition === 'variable' ? ' selected' : '') + '>variable</option></select>' +
+        '<select data-field="condition"><option value="key"' + (condition === 'key' ? ' selected' : '') + '>key pressed</option><option value="edge"' + (condition === 'edge' ? ' selected' : '') + '>touching edge</option><option value="touching"' + (condition === 'touching' ? ' selected' : '') + '>touching</option><option value="mouse_down"' + (condition === 'mouse_down' ? ' selected' : '') + '>mouse down</option><option value="answer"' + (condition === 'answer' ? ' selected' : '') + '>answer exists</option><option value="variable"' + (condition === 'variable' ? ' selected' : '') + '>variable</option></select>' +
         tail + '</div>';
     } else {
       content = '<div class="fs-node-title">' + typeTitle(n) + '</div>' + sub;
@@ -626,6 +732,10 @@
               n.data.varName = firstVar ? firstVar.name : '';
               n.data.operator = n.data.operator || 'eq';
               n.data.varValue = n.data.varValue != null ? n.data.varValue : 0;
+            } else if (e.target.value === 'touching') {
+              n.data.value = 'mouse';
+            } else if (e.target.value === 'mouse_down') {
+              n.data.value = '';
             } else {
               n.data.value = e.target.value === 'key' ? 'Space' : 'any';
             }
@@ -1034,20 +1144,27 @@
     if (!n) { host.className = 'fs-empty'; host.innerHTML = 'Select a block or connector to edit it.'; return; }
     host.className = '';
     var f = '';
-    if (n.type === 'move_steps') f = field('Distance (steps)', 'number', 'steps', n.data.steps);
-    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') f = field('Degrees', 'number', 'degrees', n.data.degrees);
-    if (n.type === 'change_x_by') f = field('Change x by', 'number', 'x', n.data.x);
-    if (n.type === 'set_x_to') f = field('Set x to', 'number', 'x', n.data.x);
-    if (n.type === 'change_y_by') f = field('Change y by', 'number', 'y', n.data.y);
-    if (n.type === 'set_y_to') f = field('Set y to', 'number', 'y', n.data.y);
-    if (n.type === 'go_to_xy') f = field('X', 'number', 'x', n.data.x) + field('Y', 'number', 'y', n.data.y);
-    if (n.type === 'glide_to_xy') f = field('Seconds', 'number', 'seconds', n.data.seconds) + field('X', 'number', 'x', n.data.x) + field('Y', 'number', 'y', n.data.y);
-    if (n.type === 'glide_to') f = field('Seconds', 'number', 'seconds', n.data.seconds) + '<p class="fs-empty">Choose the destination with the dropdown inside this block.</p>';
-    if (n.type === 'change_color') f = field('Change by', 'number', 'value', n.data.value);
+    if (n.type === 'move_steps') f = valueField('Distance (steps)', 'steps', n.data);
+    if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') f = valueField('Degrees', 'degrees', n.data);
+    if (n.type === 'change_x_by') f = valueField('Change x by', 'x', n.data);
+    if (n.type === 'set_x_to') f = valueField('Set x to', 'x', n.data);
+    if (n.type === 'change_y_by') f = valueField('Change y by', 'y', n.data);
+    if (n.type === 'set_y_to') f = valueField('Set y to', 'y', n.data);
+    if (n.type === 'go_to_xy') f = valueField('X', 'x', n.data) + valueField('Y', 'y', n.data);
+    if (n.type === 'glide_to_xy') f = valueField('Seconds', 'seconds', n.data) + valueField('X', 'x', n.data) + valueField('Y', 'y', n.data);
+    if (n.type === 'glide_to') f = valueField('Seconds', 'seconds', n.data) + '<p class="fs-empty">Choose the destination with the dropdown inside this block.</p>';
+    if (n.type === 'change_color') f = valueField('Change by', 'value', n.data);
+    if (n.type === 'change_size_by') f = valueField('Change size by', 'size', n.data);
+    if (n.type === 'set_size_to') f = valueField('Set size to', 'size', n.data);
+    if (n.type === 'change_effect') f = valueField('Change by', 'value', n.data) + '<p class="fs-empty">Choose the effect with the dropdown inside this block.</p>';
+    if (n.type === 'set_effect') f = valueField('Set to', 'value', n.data) + '<p class="fs-empty">Choose the effect with the dropdown inside this block.</p>';
+    if (n.type === 'change_layer') f = valueField('Layers', 'layers', n.data) + '<p class="fs-empty">Choose forward or backward with the dropdown inside this block.</p>';
     if (n.type === 'say' || n.type === 'ask') f = field(n.type === 'say' ? 'Message' : 'Question', 'text', 'text', n.data.text);
+    if (n.type === 'say_for' || n.type === 'think_for') f = field('Message', 'text', 'text', n.data.text) + valueField('Seconds', 'seconds', n.data);
+    if (n.type === 'think') f = field('Message', 'text', 'text', n.data.text);
     if (n.type === 'subroutine_start') f = '<p class="fs-empty">Give this sub-routine a unique name inside the block.</p>';
     if (n.type === 'call_subroutine') f = '<p class="fs-empty">Choose the named sub-routine to run inside the block.</p>';
-    if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'go_to' || n.type === 'set_rotation_style') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
+    if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'go_to' || n.type === 'set_rotation_style' || n.type === 'switch_costume_to' || n.type === 'go_to_layer' || n.type === 'set_drag_mode') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Select either outgoing connector to set it as True or False.</p>';
     host.innerHTML = '<b>' + typeTitle(n) + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
     Array.prototype.forEach.call(host.querySelectorAll('[data-inspect]'), function (i) {
@@ -1056,11 +1173,33 @@
         renderAll(); select(n.id); saveGraph(FS.activeSprite);
       });
     });
+    Array.prototype.forEach.call(host.querySelectorAll('[data-inspect-src]'), function (s) {
+      s.addEventListener('change', function () {
+        var key = s.dataset.inspectSrc;
+        if (s.value === 'num') delete n.data[key + 'Src'];
+        else n.data[key + 'Src'] = s.value;
+        renderAll(); select(n.id); saveGraph(FS.activeSprite);
+      });
+    });
     var del = host.querySelector('#fsDeleteNode');
     if (del) del.onclick = removeSelected;
   }
   function field(label, type, key, value) {
     return '<div class="fs-field"><label>' + label + '</label><input data-inspect="' + key + '" type="' + type + '" value="' + esc(value) + '"></div>';
+  }
+  // A numeric value field that can be a literal number or one of the
+  // reporters (REPORTERS). The dropdown sets a companion "<key>Src" field;
+  // choosing a reporter hides the number input. Wired up in renderInspector
+  // via the data-inspect-src attribute.
+  function valueField(label, key, data) {
+    var src = valueSrc(data, key);
+    return '<div class="fs-field"><label>' + label + '</label>' +
+      '<select data-inspect-src="' + key + '">' +
+        '<option value="num"' + (src === 'num' ? ' selected' : '') + '>number</option>' +
+        REPORTERS.map(function (r) { return '<option value="' + r.id + '"' + (src === r.id ? ' selected' : '') + '>' + esc(r.label) + '</option>'; }).join('') +
+      '</select>' +
+      '<input data-inspect="' + key + '" type="number" value="' + esc(data[key]) + '"' + (src !== 'num' ? ' style="display:none"' : '') + '>' +
+    '</div>';
   }
   function renderEdgeInspector(host) {
     var edge = FS.edges.find(function (e) { return e.id === FS.selectedEdgeId; });
@@ -1244,13 +1383,22 @@
     if ((target.y >= STAGE_HALF_H && vy > 0) || (target.y <= -STAGE_HALF_H && vy < 0)) dir = 180 - dir;
     target.setDirection(dir);
   }
+  // Show a say/think bubble for `ms` milliseconds, then clear it. Returns
+  // a promise the run loop awaits, same as say/ask, so the flow pauses
+  // while the bubble is visible.
+  function bubbleFor(target, text, type, ms) {
+    try { target.runtime.emit('SAY', target, type, text == null ? '' : String(text)); } catch (e) {}
+    return wait(ms).then(function () {
+      try { target.runtime.emit('SAY', target, type, ''); } catch (e) {}
+    });
+  }
   function runBlock(n) {
     var target = activeTarget();
     if (n.type === 'set_variable' || n.type === 'change_variable') {
       var v = findGlobalVariable(n.data.varName);
       if (v) {
-        if (n.type === 'set_variable') v.value = Number(n.data.value || 0);
-        else v.value = (Number(v.value) || 0) + Number(n.data.value || 0);
+        if (n.type === 'set_variable') v.value = readValue(target, n.data, 'value');
+        else v.value = (Number(v.value) || 0) + readValue(target, n.data, 'value');
       }
       return;
     }
@@ -1258,17 +1406,18 @@
     switch (n.type) {
       case 'move_steps': {
         var rad = d2r(target.direction);
-        target.setXY(target.x + Number(n.data.steps || 0) * Math.cos(rad), target.y + Number(n.data.steps || 0) * Math.sin(rad));
+        var dist = readValue(target, n.data, 'steps');
+        target.setXY(target.x + dist * Math.cos(rad), target.y + dist * Math.sin(rad));
         return;
       }
       case 'turn_right':
-        target.setDirection(target.direction + Number(n.data.degrees || 0));
+        target.setDirection(target.direction + readValue(target, n.data, 'degrees'));
         return;
       case 'turn_left':
-        target.setDirection(target.direction - Number(n.data.degrees || 0));
+        target.setDirection(target.direction - readValue(target, n.data, 'degrees'));
         return;
       case 'point_in_direction':
-        target.setDirection(Number(n.data.degrees || 0));
+        target.setDirection(readValue(target, n.data, 'degrees'));
         return;
       case 'point_towards':
         if (n.data.target === 'random') {
@@ -1284,25 +1433,25 @@
         return;
       }
       case 'go_to_xy':
-        target.setXY(Number(n.data.x || 0), Number(n.data.y || 0));
+        target.setXY(readValue(target, n.data, 'x'), readValue(target, n.data, 'y'));
         return;
       case 'glide_to': {
         var gpos = resolvePositionTarget(n.data.target);
-        return glideTo(target, gpos.x, gpos.y, n.data.seconds);
+        return glideTo(target, gpos.x, gpos.y, readValue(target, n.data, 'seconds'));
       }
       case 'glide_to_xy':
-        return glideTo(target, Number(n.data.x || 0), Number(n.data.y || 0), n.data.seconds);
+        return glideTo(target, readValue(target, n.data, 'x'), readValue(target, n.data, 'y'), readValue(target, n.data, 'seconds'));
       case 'change_x_by':
-        target.setXY(target.x + Number(n.data.x || 0), target.y);
+        target.setXY(target.x + readValue(target, n.data, 'x'), target.y);
         return;
       case 'set_x_to':
-        target.setXY(Number(n.data.x || 0), target.y);
+        target.setXY(readValue(target, n.data, 'x'), target.y);
         return;
       case 'change_y_by':
-        target.setXY(target.x, target.y + Number(n.data.y || 0));
+        target.setXY(target.x, target.y + readValue(target, n.data, 'y'));
         return;
       case 'set_y_to':
-        target.setXY(target.x, Number(n.data.y || 0));
+        target.setXY(target.x, readValue(target, n.data, 'y'));
         return;
       case 'if_on_edge_bounce':
         bounceOffEdges(target);
@@ -1321,18 +1470,74 @@
         try { target.setCostume((target.currentCostume + 1) % target.sprite.costumes.length); } catch (e) {}
         return;
       case 'change_color':
-        try { target.changeEffect('color', Number(n.data.value || 0)); } catch (e) {
+        try { target.changeEffect('color', readValue(target, n.data, 'value')); } catch (e) {
           try {
             var cur = (target.effects && target.effects.color) || 0;
-            target.setEffect('color', cur + Number(n.data.value || 0));
+            target.setEffect('color', cur + readValue(target, n.data, 'value'));
           } catch (e2) {}
         }
         return;
       case 'say':
-        try { target.runtime.emit('SAY', target, 'say', n.data.text == null ? '' : String(n.data.text)); } catch (e) {}
-        return wait(850).then(function () {
-          try { target.runtime.emit('SAY', target, 'say', ''); } catch (e) {}
-        });
+        return bubbleFor(target, n.data.text, 'say', 850);
+      case 'say_for':
+        return bubbleFor(target, n.data.text, 'say', Math.max(0, readValue(target, n.data, 'seconds')) * 1000);
+      case 'think':
+        return bubbleFor(target, n.data.text, 'think', 850);
+      case 'think_for':
+        return bubbleFor(target, n.data.text, 'think', Math.max(0, readValue(target, n.data, 'seconds')) * 1000);
+      case 'switch_costume_to': {
+        var cname = String(n.data.costume || '');
+        if (cname) {
+          try {
+            var idx = target.sprite.costumes.findIndex(function (c) { return c.name === cname; });
+            if (idx >= 0) target.setCostume(idx);
+          } catch (e) {}
+        }
+        return;
+      }
+      case 'change_size_by':
+        try { target.setSize(target.size + readValue(target, n.data, 'size')); } catch (e) {}
+        return;
+      case 'set_size_to':
+        try { target.setSize(readValue(target, n.data, 'size')); } catch (e) {}
+        return;
+      case 'change_effect':
+        try { target.changeEffect(n.data.effect || 'color', readValue(target, n.data, 'value')); } catch (e) {
+          try {
+            var cce = (target.effects && target.effects[n.data.effect]) || 0;
+            target.setEffect(n.data.effect || 'color', cce + readValue(target, n.data, 'value'));
+          } catch (e2) {}
+        }
+        return;
+      case 'set_effect':
+        try { target.setEffect(n.data.effect || 'color', readValue(target, n.data, 'value')); } catch (e) {
+          try { if (target.effects) target.effects[n.data.effect || 'color'] = readValue(target, n.data, 'value'); } catch (e2) {}
+        }
+        return;
+      case 'clear_effects':
+        try { target.clearEffects(); } catch (e) {}
+        return;
+      case 'show':
+        try { target.setVisible(true); } catch (e) {}
+        return;
+      case 'hide':
+        try { target.setVisible(false); } catch (e) {}
+        return;
+      case 'go_to_layer':
+        try { if (n.data.layer === 'back') target.goToBack(); else target.goToFront(); } catch (e) {}
+        return;
+      case 'change_layer':
+        try {
+          if (n.data.direction === 'backward') target.goBackwardLayers(Math.max(0, readValue(target, n.data, 'layers')));
+          else target.goForwardLayers(Math.max(0, readValue(target, n.data, 'layers')));
+        } catch (e) {}
+        return;
+      case 'set_drag_mode':
+        try {
+          if (typeof target.setDraggable === 'function') target.setDraggable(n.data.mode !== 'not_draggable');
+          else target.draggable = (n.data.mode !== 'not_draggable');
+        } catch (e) {}
+        return;
       case 'ask':
         return showAskBox(n.data.text).then(function (answer) {
           FS.answer = answer || '';
@@ -1353,6 +1558,12 @@
       };
       v = n.data.value === 'any' ? (edges.left || edges.right || edges.top || edges.bottom) : !!edges[n.data.value];
     } else if (n.data.condition === 'answer') v = !!FS.answer;
+    else if (n.data.condition === 'touching' && target) {
+      try {
+        v = !!(FS.vm.runtime.renderer &&
+          FS.vm.runtime.renderer.isTouchingDrawable(target.drawableID, FS.mouse.x, FS.mouse.y));
+      } catch (e) { v = false; }
+    } else if (n.data.condition === 'mouse_down') v = !!FS.mouse.down;
     else if (n.data.condition === 'variable') {
       var vv = findGlobalVariable(n.data.varName);
       if (vv) {
@@ -1559,7 +1770,7 @@
       '#fs-inspector{width:170px;flex-shrink:0;background:#fff;border-left:1px solid #d8d9dd;padding:10px 9px;overflow:auto;font-size:11px}',
       '#fs-inspector h2{font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;color:#666970}',
       '.fs-empty{color:#686b73;font-size:11px}',
-      '.fs-field{display:grid;gap:4px;margin:8px 0}.fs-field label{font-size:10px;color:#686b73}.fs-field input{width:100%;border:1px solid #c8c9ce;border-radius:6px;padding:5px;background:#fff;font-size:11px}',
+      '.fs-field{display:grid;gap:4px;margin:8px 0}.fs-field label{font-size:10px;color:#686b73}.fs-field input{width:100%;border:1px solid #c8c9ce;border-radius:6px;padding:5px;background:#fff;font-size:11px}.fs-field select{width:100%;border:1px solid #c8c9ce;border-radius:6px;padding:5px;background:#fff;font-size:11px}',
       '.fs-danger{width:100%;margin-top:8px;border:1px solid #e2b3b3;color:#b43030;background:#fff;border-radius:6px;padding:5px;cursor:pointer;font-size:11px}',
       '#fs-ask-wrap{position:fixed;bottom:14px;left:14px;width:280px;z-index:10010;pointer-events:none;display:none}',
       '#fs-ask-wrap.active{display:block;pointer-events:auto}',
@@ -1816,6 +2027,9 @@
       FS.mouse.x = ((e.clientX - r.left) / r.width) * 480 - 240;
       FS.mouse.y = -(((e.clientY - r.top) / r.height) * 360 - 180);
     });
+    // Left-button state, for the "mouse down" Selection condition.
+    window.addEventListener('mousedown', function (e) { if (e.button === 0) FS.mouse.down = true; });
+    window.addEventListener('mouseup', function (e) { if (e.button === 0) FS.mouse.down = false; });
     window.addEventListener('keydown', function (e) {
       if (!els.overlay || els.overlay.style.display === 'none') { FS.pressedKeys[normKey(e.code)] = true; return; }
       FS.pressedKeys[normKey(e.code)] = true;
