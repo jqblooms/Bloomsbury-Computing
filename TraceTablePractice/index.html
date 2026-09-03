@@ -253,6 +253,39 @@
   .trace-table td.correct { background: rgba(5, 150, 105, 0.15); box-shadow: inset 0 0 0 2px var(--correct); }
   .trace-table td.wrong { background: rgba(220, 38, 38, 0.15); box-shadow: inset 0 0 0 2px var(--wrong); }
 
+  /* Support Mode (Fill the Table only): a greyed-out hint of the correct
+     answer sits under each cell's input, colored per-character against
+     what's actually been typed. See the "SUPPORT MODE" script section for
+     the full mechanic - modelled on PseudocodeBlitz's own Support Mode. */
+  .trace-table.support-mode td { height: auto; padding: 0.35rem 0.25rem; }
+  .trace-table.support-mode input { height: 1.9rem; }
+  .tt-hint {
+    margin-top: 0.2rem;
+    min-height: 1.1em;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    user-select: none;
+    -webkit-user-select: none;
+    white-space: nowrap;
+  }
+  .tt-hint-char { color: var(--text-dimmer); }
+  .tt-hint-char.tt-hint-ok { color: var(--correct); font-weight: 700; }
+  .tt-hint-char.tt-hint-bad { color: var(--wrong); font-weight: 700; text-decoration: line-through; }
+  /* A masked (not-yet-revealed) character never renders as blank space -
+     that would look identical to "nothing needed here", the one thing
+     Support Mode must never claim. A small dotted-underline box makes it
+     visibly a hidden blank the student still has to fill in themselves. */
+  .tt-hint-blank {
+    display: inline-block;
+    width: 0.85ch;
+    height: 0.9em;
+    margin: 0 0.06em;
+    border-bottom: 2px dotted var(--text-dimmer);
+    vertical-align: -0.05em;
+  }
+
   .prac-area { display: none; }
   .prac-area.active { display: block; }
 
@@ -398,6 +431,10 @@
       <span class="language-picker-label">Mode</span>
       <button type="button" class="language-btn" data-practice-mode="trace" onclick="setPracticeMode('trace')">Fill the table</button>
       <button type="button" class="language-btn" data-practice-mode="code" onclick="setPracticeMode('code')">Write the code</button>
+    </div>
+    <div class="language-picker" role="group" aria-label="Support mode">
+      <span class="language-picker-label">Support</span>
+      <button type="button" class="language-btn" id="support-mode-btn" onclick="toggleSupportMode()">Off</button>
     </div>
   </header>
 
@@ -620,6 +657,10 @@ function escapeHtml(value) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/"/g, '&quot;');
 }
 
 // Algorithm 0: For Loop Accumulator
@@ -1350,12 +1391,131 @@ function checkCodeLines(prefix, expectedLines, language) {
 
 function buildStudentTableHtml(containerId, prefix, cols, answers) {
   const totalRows = answers.length + EXTRA_ROWS;
-  let html = `<table class="trace-table"><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+  const tableClass = isSupportMode ? ' support-mode' : '';
+  let html = `<table class="trace-table${tableClass}"><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>`;
   for(let r = 0; r < totalRows; r++) {
-     html += `<tr>${cols.map(c => `<td id="${prefix}-r${r}-${c}"><input type="text" autocomplete="off"></td>`).join('')}</tr>`;
+     html += `<tr>${cols.map(c => {
+       const expected = (answers[r] && answers[r][c]) ? String(answers[r][c]) : '';
+       const expectedAttr = isSupportMode && expected ? ` data-expected="${escapeAttr(expected)}"` : '';
+       const hint = isSupportMode
+         ? `<div class="tt-hint" aria-hidden="true" oncopy="return false" oncut="return false" oncontextmenu="return false" ondragstart="return false"></div>`
+         : '';
+       return `<td id="${prefix}-r${r}-${c}"${expectedAttr}><input type="text" autocomplete="off" oninput="onSupportCellInput(this)">${hint}</td>`;
+     }).join('')}</tr>`;
   }
   html += `</tbody></table>`;
   document.getElementById(containerId).innerHTML = html;
+  if (isSupportMode) {
+    document.querySelectorAll(`#${containerId} .trace-table td[data-expected]`).forEach(renderCellHint);
+  }
+}
+
+// ======================================================
+// SUPPORT MODE (Fill the Table only)
+// ======================================================
+// Mirrors PseudocodeBlitz's own Support Mode: a greyed-out hint of the
+// correct answer sits under each cell, colored per-character against
+// what the student has actually typed (green = matches, red = doesn't,
+// grey = not typed yet - never colored ahead of what's really there,
+// same fix that PseudocodeBlitz's own hint highlighter needed live). As
+// a student strings together correct Check Answers presses, less of the
+// remaining hints are shown, fading the scaffolding out rather than
+// pulling it away all at once. "Write the code" mode is deliberately
+// left alone - it already has its own operator-hint panel
+// (buildCodeHintsHtml above), a different kind of scaffold for a
+// different exercise.
+const SUPPORT_MODE_KEY = 'traceTableSupportMode_v1';
+let isSupportMode = localStorage.getItem(SUPPORT_MODE_KEY) === '1';
+const SUPPORT_STAGE_EVERY = 3;
+const SUPPORT_MAX_STAGE = 3;
+let supportStreak = 0;
+// How many times the hint has been stepped down (0 = full hint, 3 = none
+// left). Tracked as an integer stage rather than repeatedly subtracting
+// 1/3 from a fraction, which never lands on exactly 0 due to float drift.
+let supportStage = 0;
+
+function toggleSupportMode() {
+  isSupportMode = !isSupportMode;
+  localStorage.setItem(SUPPORT_MODE_KEY, isSupportMode ? '1' : '0');
+  syncSupportModeButton();
+  if (currentPracticeMode === 'trace') {
+    pracData.forEach((data, index) => renderPracEntry(`prac${index}`, data));
+    if (genQuestion) renderPracEntry('gen', genQuestion);
+  }
+}
+
+function syncSupportModeButton() {
+  const btn = document.getElementById('support-mode-btn');
+  if (!btn) return;
+  btn.textContent = isSupportMode ? 'On' : 'Off';
+  btn.classList.toggle('active', isSupportMode);
+  btn.setAttribute('aria-pressed', isSupportMode ? 'true' : 'false');
+}
+
+// How much of one cell's correct answer to reveal, as a prefix - shrinks
+// as the streak below grows, reaching '' (no hint at all) once the
+// fraction bottoms out at 0.
+function revealedCellText(expected) {
+  const fraction = Math.max(0, 1 - supportStage / SUPPORT_MAX_STAGE);
+  if (!expected || fraction <= 0) return '';
+  const len = Math.max(1, Math.round(expected.length * fraction));
+  return expected.slice(0, Math.min(expected.length, len));
+}
+
+function cellHintHtml(expected, typed) {
+  const revealed = revealedCellText(expected);
+  const typedLower = typed.toLowerCase();
+  const revealedLower = revealed.toLowerCase();
+  let html = '';
+  for (let i = 0; i < revealed.length; i++) {
+    if (i < typed.length) {
+      const ok = typedLower[i] === revealedLower[i];
+      html += `<span class="tt-hint-char ${ok ? 'tt-hint-ok' : 'tt-hint-bad'}">${escapeHtml(revealed[i])}</span>`;
+    } else {
+      html += `<span class="tt-hint-char">${escapeHtml(revealed[i])}</span>`;
+    }
+  }
+  for (let i = revealed.length; i < expected.length; i++) {
+    html += `<span class="tt-hint-blank" aria-hidden="true"></span>`;
+  }
+  return html;
+}
+
+function renderCellHint(td) {
+  const hint = td.querySelector('.tt-hint');
+  if (!hint) return;
+  const expected = td.dataset.expected || '';
+  if (!expected) { hint.innerHTML = ''; return; }
+  const input = td.querySelector('input');
+  hint.innerHTML = cellHintHtml(expected, input ? input.value : '');
+}
+
+function onSupportCellInput(input) {
+  if (!isSupportMode) return;
+  const td = input.closest('td');
+  if (td) renderCellHint(td);
+}
+
+function refreshSupportHints() {
+  document.querySelectorAll('.trace-table td[data-expected]').forEach(renderCellHint);
+}
+
+// Called once per Check Answers press in trace mode (see checkPractice /
+// checkGeneratedPractice below). A fully-correct table advances the
+// streak and, every SUPPORT_STAGE_EVERY in a row, fades the hints down
+// another stage; anything else resets the streak without pulling the
+// fade back the other way.
+function recordSupportOutcome(isCorrect) {
+  if (!isSupportMode) return;
+  if (isCorrect) {
+    supportStreak++;
+    if (supportStreak % SUPPORT_STAGE_EVERY === 0 && supportStage < SUPPORT_MAX_STAGE) {
+      supportStage++;
+    }
+  } else {
+    supportStreak = 0;
+  }
+  refreshSupportHints();
 }
 
 // ======================================================
@@ -1443,6 +1603,7 @@ function checkPractice(idx) {
   const practiceTitle = data.title || `Practice ${idx + 1}`;
   recordAttempt(`prac${idx}`, practiceTitle, isCorrect, extractTableData(prefix, data.cols, totalRows), view.code);
   reportPracticeProgress(`prac${idx}`, practiceTitle, isCorrect);
+  recordSupportOutcome(isCorrect);
 
   const badge = document.getElementById(`${prefix}-result`);
   badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
@@ -2010,6 +2171,7 @@ function checkGeneratedPractice() {
   saveProgress();
   updateStatsUI();
   reportGeneratorProgress();
+  recordSupportOutcome(isCorrect);
 
   const badge = document.getElementById('gen-result');
   badge.className = `result-badge show ${isCorrect ? 'pass' : 'fail'}`;
@@ -2310,6 +2472,14 @@ function initEmbed() {
   const lang = params.get('lang');
   if (lang === 'cambridge' || lang === 'python') setCodeLanguage(lang);
 
+  // A lesson step opts a specific embed into Support Mode by adding
+  // `support=1` to its embedQuery - there's no toggle to find inside an
+  // embed (the whole header, this button included, is hidden by
+  // body.tt-embed above), so this is the only way in. Set before
+  // selectBuiltInEmbed/loadCustomAlgorithm render anything below, since
+  // buildStudentTableHtml reads isSupportMode at render time.
+  if (params.get('support') === '1') isSupportMode = true;
+
   // Force trace mode regardless of this browser's last-used state: every
   // embed is built around one specific task (trace a table), and the
   // "Write the code" mode is a different exercise with its own editor UI
@@ -2350,6 +2520,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.check-btn').forEach(button => {
      button.textContent = currentPracticeMode === 'code' ? 'Check Code' : 'Check Answers';
   });
+  syncSupportModeButton();
 
   pracData.forEach((data, i) => renderPracEntry(`prac${i}`, data));
 
