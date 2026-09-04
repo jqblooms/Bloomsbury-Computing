@@ -171,13 +171,10 @@
   .shop-item.locked img { filter: grayscale(1) brightness(0.6); }
   .shop-item .locked-msg { grid-column: 1 / -1; font-size: .7rem; color: var(--muted); font-weight: 700; }
 
-  #machine-tiers { display: flex; gap: 6px; margin-top: 6px; }
-  .machine-tier-btn {
-    flex: 1; border: 2px solid #3d6fc4; border-radius: 8px; padding: 6px 4px; background: #eaf2ff;
-    color: #04214f; font-weight: 800; font-size: .68rem; cursor: pointer; text-align: center; line-height: 1.35;
+  #machine-tiers {
+    margin-top: 6px; padding: 6px 8px; border: 2px solid #b8cff3; border-radius: 8px;
+    background: #eaf2ff; color: #244774; font-weight: 800; font-size: .7rem; text-align: center;
   }
-  .machine-tier-btn.active { background: #6ea8fe; box-shadow: inset 0 0 0 2px #fff; }
-  .machine-tier-btn:disabled { opacity: .5; cursor: not-allowed; }
 
   #code-panel { flex: 1 0 auto; display: flex; flex-direction: column; min-height: 260px; }
   .code-editor { flex: 1; min-height: 140px; position: relative; background: #1f2b22; border: 2px solid #e6d5b3; border-radius: 10px; overflow: hidden; }
@@ -301,7 +298,7 @@
             <tr><td><code>Plant("Carrot")</code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
             <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, plant and sell the same vegetable forever.</td></tr>
             <tr><td><code>Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
-            <tr><td><code>Has_Crop()</code></td><td class="desc">TRUE if the square your cursor is on has a crop growing, FALSE if it's empty. Use it in IF/WHILE: IF Has_Crop() THEN ...</td></tr>
+            <tr><td><code>Has_Crop("Carrot")</code></td><td class="desc">TRUE if the square has that crop growing. Leave the crop name out to check whether any crop is growing there.</td></tr>
             <tr><td><code>Crop_On_Tile()</code></td><td class="desc">Which crop is on the square your cursor is on ("Carrot"), or "None" if it's empty. E.g. IF Crop_On_Tile() = "Carrot" THEN ...</td></tr>
             <tr><td><code>Money()</code></td><td class="desc">How many coins you have right now. E.g. WHILE Money() &lt; 50 DO.</td></tr>
             <tr><td><code>Seed_Count("Carrot")</code></td><td class="desc">How many packets of that seed you own. E.g. IF Seed_Count("Potato") = 0 THEN Buy("Potato Seeds").</td></tr>
@@ -315,13 +312,15 @@
             <tr><td><code>Set_position(2, -1)</code></td><td class="desc">Jumps straight to a tile, counted from home: 2 right, 1 up. Home is (0,0) - the tile you were on when you pressed Run, or the tile a machine was placed on.</td></tr>
             <tr><td><code>OUTPUT "hi"</code></td><td class="desc">Prints a message to the console below.</td></tr>
             <tr><td><code>FOR Index &lt;- 1 TO 5<br>&nbsp;&nbsp;...<br>NEXT Index</code></td><td class="desc">Repeats the lines in between, 5 times. No "DO" on a FOR line.</td></tr>
+            <tr><td><code>IF X = 1 THEN<br>&nbsp;&nbsp;...<br>ELSEIF X = 2 THEN<br>&nbsp;&nbsp;...<br>ELSE<br>&nbsp;&nbsp;...<br>ENDIF</code></td><td class="desc">Runs the first branch with a true condition. ELSE runs if no earlier condition is true.</td></tr>
             <tr><td><code>WHILE X &lt; 10 DO<br>&nbsp;&nbsp;...<br>ENDWHILE</code></td><td class="desc">Repeats while the condition is true. Compare with =, &lt;&gt;, &lt;, &gt;, &lt;=, &gt;= and combine with AND, OR, NOT. Either side can be maths too, e.g. WHILE N &lt; Total + 1 DO.</td></tr>
-            <tr><td><code>X &lt;- X + 1</code></td><td class="desc">Math uses +, -, * and /, with brackets to group. You need this to change a variable inside a WHILE loop, or it runs forever.</td></tr>
+            <tr><td><code>X &lt;- X + 1</code></td><td class="desc">Math uses +, -, *, /, DIV and MOD, with brackets to group. You need this to change a variable inside a WHILE loop, or it runs forever.</td></tr>
           </table>
           <p class="desc" style="margin:8px 0 0">A little white dot on your cursor (or a machine's blue diamond) shows which way it's facing.</p>
           <p class="desc" style="margin:6px 0 0">New vegetables unlock as your <b>total coins earned</b> (top right, not your current balance) goes up. Prices rise fast, so keep selling to afford the next one. Spending money doesn't undo that progress.</p>
-          <p class="desc" style="margin:6px 0 0">Place Machine costs money too - pick Basic, Quick or Turbo underneath it first. Machines follow one line at a time. Basic runs 1 instruction per second, Quick runs 2 and Turbo runs 3.</p>
-          <p class="desc" style="margin:6px 0 0">Click a placed machine to select it (its cursor turns pink and grows). From there you can edit its code, upgrade it to a faster tier, or sell it back for half its cost.</p>
+          <p class="desc" style="margin:6px 0 0">Every machine starts at Level 1 and performs one working instruction per second. Upgrade it through Levels 2 to 9 for the matching number of instructions per second. Level 10 performs 15 instructions per second.</p>
+          <p class="desc" style="margin:6px 0 0">IF, ELSEIF, ELSE, ENDIF, FOR, NEXT, WHILE and ENDWHILE control which instruction runs. These control lines do not use an instruction slot.</p>
+          <p class="desc" style="margin:6px 0 0">Click a placed machine to select it. Its cursor turns pink and grows. From there you can edit its code, upgrade it, or sell it back for half the total amount spent on it.</p>
           <p class="desc" style="margin:6px 0 0">Out of room? Hover over a dim tile at the edge of your garden and click it to <b>buy more land</b>. Each extra tile costs more than the last, and crops take longer to grow the more expensive they are.</p>
         </details>
       </section>
@@ -1103,7 +1102,10 @@ function callFunction(name, args, cursor, line) {
   if (name === 'Money') return money; // coins in your wallet right now
   if (name === 'Has_Crop') {
     var tile = cursor ? tileAt(cursor.x, cursor.z) : null;
-    return !!(tile && tile.plant);
+    if (!args.length) return !!(tile && tile.plant);
+    var requestedCrop = matchSeedName(String(args[0]));
+    if (!requestedCrop) throw new PseudocodeError('"' + args[0] + '" is not a crop name. Try Has_Crop("Carrot").', line);
+    return !!(tile && tile.plant && tile.plant.type === requestedCrop);
   }
   if (name === 'Crop_On_Tile') {
     var tile2 = cursor ? tileAt(cursor.x, cursor.z) : null;
@@ -1224,11 +1226,11 @@ function splitArgs(raw) {
 }
 
 // Evaluates an expression: a quoted string, or an arithmetic expression of
-// numbers, variables and TRUE/FALSE with + - * / and brackets, plus "&" for
+// numbers, variables and TRUE/FALSE with + - * / DIV MOD and brackets, plus "&" for
 // string concatenation (Cambridge pseudocode's concatenation operator, not
 // "+"). Arithmetic is what makes WHILE actually useful - the loop variable
 // has to change, so "N <- N + 1" needs it. Precedence is & (loosest), then
-// + -, then * /, and brackets group.
+// + -, then * / DIV MOD, and brackets group.
 // Word processors and smart keyboards often produce a Unicode minus sign
 // (U+2212) or a dash where a hyphen-minus was meant - fold those into "-"
 // so "N <- N + 1" or "Set_position(0, -i)" pasted from a doc still works.
@@ -1294,10 +1296,13 @@ function evalExpr(raw, vars, line, cursor) {
   }
   function parseProduct() {
     var v = parseUnary();
-    while (peek() === '*' || peek() === '/') {
+    while (peek() === '*' || peek() === '/' || /^DIV$/i.test(peek() || '') || /^MOD$/i.test(peek() || '')) {
       var op = take();
       var r = parseUnary();
-      v = (op === '*') ? (v * r) : (v / r);
+      if (op === '*') v *= r;
+      else if (op === '/') v /= r;
+      else if (/^DIV$/i.test(op)) v = Math.trunc(v / r);
+      else v %= r;
     }
     return v;
   }
@@ -1340,13 +1345,13 @@ function tokenizeCondition(raw, line) {
   var m, last = 0;
   while ((m = re.exec(raw)) !== null) {
     if (!/^\s*$/.test(raw.slice(last, m.index))) {
-      throw new PseudocodeError('I can\'t understand "' + raw.slice(last, m.index).trim() + '" in the condition. Use =, <>, <, >, <=, >=, +, -, *, /, AND, OR and NOT.', line);
+      throw new PseudocodeError('I can\'t understand "' + raw.slice(last, m.index).trim() + '" in the condition. Use =, <>, <, >, <=, >=, +, -, *, /, DIV, MOD, AND, OR and NOT.', line);
     }
     tokens.push(m[0]);
     last = re.lastIndex;
   }
   if (!/^\s*$/.test(raw.slice(last))) {
-    throw new PseudocodeError('I can\'t understand "' + raw.slice(last).trim() + '" in the condition. Use =, <>, <, >, <=, >=, +, -, *, /, AND, OR and NOT.', line);
+    throw new PseudocodeError('I can\'t understand "' + raw.slice(last).trim() + '" in the condition. Use =, <>, <, >, <=, >=, +, -, *, /, DIV, MOD, AND, OR and NOT.', line);
   }
   return tokens;
 }
@@ -1406,7 +1411,7 @@ function evalCondition(raw, vars, line, cursor) {
     }
     return left;
   }
-  // Arithmetic layer (mirrors evalExpr): * / bind tighter than + -, and
+  // Arithmetic layer (mirrors evalExpr): * / DIV MOD bind tighter than + -, and
   // brackets group.
   function parseArith() {
     var v = parseTerm();
@@ -1415,7 +1420,13 @@ function evalCondition(raw, vars, line, cursor) {
   }
   function parseTerm() {
     var v = parseUnary();
-    while (peek() === '*' || peek() === '/') { var op = take(); var r = parseUnary(); v = (op === '*') ? (v * r) : (v / r); }
+    while (peek() === '*' || peek() === '/' || isWord(peek(), 'DIV') || isWord(peek(), 'MOD')) {
+      var op = take(); var r = parseUnary();
+      if (op === '*') v *= r;
+      else if (op === '/') v /= r;
+      else if (isWord(op, 'DIV')) v = Math.trunc(v / r);
+      else v %= r;
+    }
     return v;
   }
   function parseUnary() {
@@ -1459,14 +1470,13 @@ function compareConditionValues(a, b, op, line) {
   return false;
 }
 
-// Compiles pseudocode source into a flat instruction list. FOR/NEXT and
-// WHILE/ENDWHILE pairs are matched here (not at run time) via a single
-// bracket-matching stack, so nested loops "just work" and a mismatched or
-// crossed FOR/WHILE is caught before anything on screen moves.
+// Compiles pseudocode source into a flat instruction list. Selection and
+// loop boundaries are matched here via one stack, so all supported Cambridge
+// blocks can be nested and crossed endings are caught before the program runs.
 function compile(source) {
   var lines = source.split('\n');
   var instructions = [];
-  var blockStack = []; // open FOR / WHILE blocks, innermost last
+  var blockStack = []; // open IF / FOR / WHILE blocks, innermost last
 
   for (var i = 0; i < lines.length; i++) {
     var lineNo = i + 1;
@@ -1475,6 +1485,58 @@ function compile(source) {
     if (!line) continue;
 
     var m;
+    if ((m = line.match(/^IF\s+(.+?)\s+THEN\s*$/i))) {
+      var ifIndex = instructions.length;
+      instructions.push({ type: 'IF', condition: m[1], rootIndex: ifIndex, line: lineNo });
+      blockStack.push({ type: 'IF', rootIndex: ifIndex, branchIndex: ifIndex, branchIndices: [ifIndex], hasElse: false, line: lineNo });
+      continue;
+    }
+    if (/^IF\b/i.test(line)) {
+      throw new PseudocodeError('IF needs a condition and "THEN" at the end, e.g. IF Has_Crop() THEN', lineNo);
+    }
+    if ((m = line.match(/^ELSE\s*IF\s+(.+?)\s+THEN\s*$/i))) {
+      var ifBlock = blockStack[blockStack.length - 1];
+      if (!ifBlock || ifBlock.type !== 'IF') throw new PseudocodeError('ELSEIF has no matching IF.', lineNo);
+      if (ifBlock.hasElse) throw new PseudocodeError('ELSEIF cannot come after ELSE.', lineNo);
+      var elseIfIndex = instructions.length;
+      instructions[ifBlock.branchIndex].falseIndex = elseIfIndex;
+      instructions.push({ type: 'ELSEIF', condition: m[1], rootIndex: ifBlock.rootIndex, line: lineNo });
+      ifBlock.branchIndex = elseIfIndex;
+      ifBlock.branchIndices.push(elseIfIndex);
+      continue;
+    }
+    if (/^ELSE\s*IF\b/i.test(line)) {
+      throw new PseudocodeError('ELSEIF needs a condition and "THEN" at the end.', lineNo);
+    }
+    if (/^ELSE$/i.test(line)) {
+      var elseBlock = blockStack[blockStack.length - 1];
+      if (!elseBlock || elseBlock.type !== 'IF') throw new PseudocodeError('ELSE has no matching IF.', lineNo);
+      if (elseBlock.hasElse) throw new PseudocodeError('An IF block can only have one ELSE.', lineNo);
+      var elseIndex = instructions.length;
+      instructions[elseBlock.branchIndex].falseIndex = elseIndex;
+      instructions.push({ type: 'ELSE', rootIndex: elseBlock.rootIndex, line: lineNo });
+      elseBlock.branchIndex = elseIndex;
+      elseBlock.branchIndices.push(elseIndex);
+      elseBlock.hasElse = true;
+      continue;
+    }
+    if (/^ELSE\b/i.test(line)) {
+      throw new PseudocodeError('Use ELSE on its own, or ELSEIF Condition THEN.', lineNo);
+    }
+    if (/^ENDIF$/i.test(line)) {
+      var endIfBlock = blockStack[blockStack.length - 1];
+      if (!endIfBlock || endIfBlock.type !== 'IF') throw new PseudocodeError('ENDIF has no matching IF.', lineNo);
+      blockStack.pop();
+      var endIfIndex = instructions.length;
+      var finalBranch = instructions[endIfBlock.branchIndex];
+      if (finalBranch.type !== 'ELSE') finalBranch.falseIndex = endIfIndex;
+      instructions.push({ type: 'ENDIF', rootIndex: endIfBlock.rootIndex, line: lineNo });
+      endIfBlock.branchIndices.forEach(function (index) { instructions[index].endIndex = endIfIndex; });
+      continue;
+    }
+    if (/^END\s*IF\s*$/i.test(line)) {
+      throw new PseudocodeError('Use "ENDIF" (one word) to close an IF block.', lineNo);
+    }
     if ((m = line.match(/^FOR\s+([A-Za-z_]\w*)\s*(?:<-|←)\s*(.+?)\s+TO\s+(.+)$/i))) {
       instructions.push({ type: 'FOR', var: m[1], startExpr: m[2], endExpr: m[3], line: lineNo });
       blockStack.push({ type: 'FOR', index: instructions.length - 1, var: m[1], line: lineNo });
@@ -1540,6 +1602,9 @@ function compile(source) {
 
   if (blockStack.length) {
     var unclosed = blockStack[0];
+    if (unclosed.type === 'IF') {
+      throw new PseudocodeError('IF is missing its ENDIF.', unclosed.line);
+    }
     if (unclosed.type === 'FOR') {
       throw new PseudocodeError('FOR ' + unclosed.var + ' is missing its NEXT ' + unclosed.var + '.', unclosed.line);
     }
@@ -1564,6 +1629,7 @@ function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve,
 function runProgram(source, cursor, log, stepDelayMs) {
   var instructions = compile(source); // throws before anything executes
   var vars = {};
+  var ifTaken = {};
   var pc = 0;
   var steps = 0;
   var MAX_STEPS = 400;        // hard stop for a runaway loop, so it can never freeze the tab
@@ -1579,6 +1645,36 @@ function runProgram(source, cursor, log, stepDelayMs) {
             break;
           }
           var instr = instructions[pc];
+          if (instr.type === 'IF') {
+            ifTaken[instr.rootIndex] = evalCondition(instr.condition, vars, instr.line, cursor);
+            pc = ifTaken[instr.rootIndex] ? pc + 1 : instr.falseIndex;
+            continue;
+          }
+          if (instr.type === 'ELSEIF') {
+            if (ifTaken[instr.rootIndex]) {
+              delete ifTaken[instr.rootIndex];
+              pc = instr.endIndex + 1;
+            } else {
+              ifTaken[instr.rootIndex] = evalCondition(instr.condition, vars, instr.line, cursor);
+              pc = ifTaken[instr.rootIndex] ? pc + 1 : instr.falseIndex;
+            }
+            continue;
+          }
+          if (instr.type === 'ELSE') {
+            if (ifTaken[instr.rootIndex]) {
+              delete ifTaken[instr.rootIndex];
+              pc = instr.endIndex + 1;
+            } else {
+              ifTaken[instr.rootIndex] = true;
+              pc++;
+            }
+            continue;
+          }
+          if (instr.type === 'ENDIF') {
+            delete ifTaken[instr.rootIndex];
+            pc++;
+            continue;
+          }
           if (instr.type === 'FOR') {
             var startVal = evalExpr(instr.startExpr, vars, instr.line, cursor);
             var endVal = evalExpr(instr.endExpr, vars, instr.line, cursor);
@@ -1672,7 +1768,7 @@ function onCursorMoved(cursor) {
     updateTileInfoPanel();
     return;
   }
-  var machine = machines.filter(function (m) { return m.cursor === cursor; })[0];
+  var machine = cursor.machine;
   if (machine) {
     positionMachineCursorMarker(machine);
     updateFacingIndicator(machine.facingIndicator, cursor.facing);
@@ -1790,18 +1886,22 @@ machineBtn.addEventListener('click', function () {
 // ============================================================
 // MACHINES
 // ============================================================
-// Better machines execute more instructions each second, paid for in money rather than
-// gated by totalEarned - unlike vegetables, a fast machine doesn't skip
-// any of the writing-pseudocode learning, it just makes an already-
-// written program advance more quickly, so gating it the same way as a
-// vegetable tier isn't needed for the same reason.
-var MACHINE_TIERS = [
-  { name: 'Basic', cost: 30, instructionsPerSecond: 1, color: 0x6ea8fe },
-  { name: 'Quick', cost: 150, instructionsPerSecond: 2, color: 0x4fd1c5 },
-  { name: 'Turbo', cost: 500, instructionsPerSecond: 3, color: 0xffa94d }
+// Every machine is bought at Level 1. Each later level is an upgrade with
+// its own increasing price. Levels 1 to 9 match their instruction rate;
+// Level 10 is the final 15-instruction-per-second upgrade.
+var MACHINE_LEVELS = [
+  { level: 1, price: 30, instructionsPerSecond: 1, color: 0x6ea8fe },
+  { level: 2, price: 50, instructionsPerSecond: 2, color: 0x62b7ed },
+  { level: 3, price: 80, instructionsPerSecond: 3, color: 0x56c4d5 },
+  { level: 4, price: 120, instructionsPerSecond: 4, color: 0x4fd1c5 },
+  { level: 5, price: 180, instructionsPerSecond: 5, color: 0x69c879 },
+  { level: 6, price: 260, instructionsPerSecond: 6, color: 0x8fc45b },
+  { level: 7, price: 380, instructionsPerSecond: 7, color: 0xb8bd4f },
+  { level: 8, price: 550, instructionsPerSecond: 8, color: 0xdfae49 },
+  { level: 9, price: 800, instructionsPerSecond: 9, color: 0xff9347 },
+  { level: 10, price: 1500, instructionsPerSecond: 15, color: 0xffd24d }
 ];
-var MACHINE_SELL_REFUND = 0.5; // selling a machine back refunds half its cost
-var selectedMachineTierIndex = 0;
+var MACHINE_SELL_REFUND = 0.5; // refunds half the machine's total purchase and upgrade spend
 
 var MACHINE_CURSOR_COLOR = 0x2f6fe0;          // default, unselected
 var MACHINE_CURSOR_SELECTED_COLOR = 0xff5fc1; // clearly different from both
@@ -1891,9 +1991,9 @@ function placeMachine(code) {
     return false;
   }
   clearCodeError();
-  var tier = MACHINE_TIERS[selectedMachineTierIndex];
-  if (money < tier.cost) {
-    logConsole('A ' + tier.name + ' Machine costs ' + tier.cost + ' coins, but you only have ' + money + '.', true);
+  var levelConfig = MACHINE_LEVELS[0];
+  if (money < levelConfig.price) {
+    logConsole('A Level 1 Machine costs ' + levelConfig.price + ' coins, but you only have ' + money + '.', true);
     return false;
   }
   var x = playerCursor.x, z = playerCursor.z;
@@ -1902,9 +2002,9 @@ function placeMachine(code) {
   if (tile.hasMachine) { logConsole('There is already a machine on this tile.', true); return false; }
   if (tile.plant) { logConsole('Clear the plant on this tile before placing a machine here.', true); return false; }
 
-  money -= tier.cost;
+  money -= levelConfig.price;
 
-  var built = createMachineMarkerGroup(tier.color);
+  var built = createMachineMarkerGroup(levelConfig.color);
   built.group.position.set(tileWorldX(x), 0, tileWorldZ(z));
   scene.add(built.group);
   scene.add(built.cursorMesh);
@@ -1913,12 +2013,12 @@ function placeMachine(code) {
     id: nextMachineId++,
     homeX: x, homeZ: z,
     code: code,
-    tierName: tier.name,
-    cost: tier.cost,
-    instructionsPerSecond: tier.instructionsPerSecond,
-    intervalMs: Math.round(1000 / tier.instructionsPerSecond),
+    level: levelConfig.level,
+    cost: levelConfig.price,
+    instructionsPerSecond: levelConfig.instructionsPerSecond,
+    intervalMs: Math.round(1000 / levelConfig.instructionsPerSecond),
     program: compiledProgram,
-    runtime: { vars: {}, forEnds: {}, pc: 0, steps: 0 },
+    runtime: { vars: {}, forEnds: {}, ifTaken: {}, pc: 0, steps: 0 },
     // The machine's own home tile is (0, 0) for its Set_position calls -
     // see setPositionRelative().
     cursor: { x: x, z: z, facing: 0, homeX: x, homeZ: z },
@@ -1929,6 +2029,7 @@ function placeMachine(code) {
     body: built.body,
     running: false
   };
+  machine.cursor.machine = machine;
   // Tag every mesh in the machine's visible body so a raycast hit on any
   // part of it (see handleTileClick) resolves back to this machine.
   built.group.traverse(function (o) { if (o.isMesh) o.userData.machineId = machine.id; });
@@ -1938,31 +2039,15 @@ function placeMachine(code) {
   updateFacingIndicator(machine.facingIndicator, machine.cursor.facing);
   scheduleMachine(machine);
   updateHUD();
-  logConsole(tier.name + ' Machine placed for ' + tier.cost + ' coins! It runs ' + machineRateLabel(machine) + '.');
+  logConsole('Level 1 Machine placed for ' + levelConfig.price + ' coins. It runs ' + machineRateLabel(machine) + '.');
   return true;
 }
 
-function buildMachineTierPicker() {
+function buildMachineLevelNotice() {
   var container = document.getElementById('machine-tiers');
-  container.innerHTML = MACHINE_TIERS.map(function (tier, i) {
-    return '<button type="button" class="machine-tier-btn" data-tier="' + i + '">' + tier.name + '<br>' + tier.cost + 'c &middot; ' + tier.instructionsPerSecond + ' instr/s</button>';
-  }).join('');
-  Array.prototype.forEach.call(container.querySelectorAll('.machine-tier-btn'), function (btn, i) {
-    btn.addEventListener('click', function () {
-      selectedMachineTierIndex = i;
-      refreshMachineTierPicker();
-    });
-  });
-  refreshMachineTierPicker();
+  container.innerHTML = 'All machines start at Level 1 &middot; 30c &middot; 1 instruction/s';
 }
-function refreshMachineTierPicker() {
-  var container = document.getElementById('machine-tiers');
-  Array.prototype.forEach.call(container.querySelectorAll('.machine-tier-btn'), function (btn, i) {
-    btn.classList.toggle('active', i === selectedMachineTierIndex);
-    btn.disabled = money < MACHINE_TIERS[i].cost;
-  });
-}
-buildMachineTierPicker();
+buildMachineLevelNotice();
 
 function machineRateLabel(machine) {
   var rate = machine.instructionsPerSecond || 1;
@@ -1970,21 +2055,51 @@ function machineRateLabel(machine) {
 }
 
 function resetMachineRuntime(machine) {
-  machine.runtime = { vars: {}, forEnds: {}, pc: 0, steps: 0 };
+  machine.runtime = { vars: {}, forEnds: {}, ifTaken: {}, pc: 0, steps: 0 };
 }
 
 async function runMachineInstruction(machine) {
   var instructions = machine.program;
-  if (!instructions || !instructions.length) return;
+  if (!instructions || !instructions.length) return true;
   if (!machine.runtime || machine.runtime.pc >= instructions.length) resetMachineRuntime(machine);
   var runtime = machine.runtime;
   if (++runtime.steps > 400) {
     logConsole('[Machine #' + machine.id + '] Stopped after 400 steps - check your FOR or WHILE loop isn\'t counting forever.', true, true);
     resetMachineRuntime(machine);
-    return;
+    return true;
   }
 
   var instr = instructions[runtime.pc];
+  if (instr.type === 'IF') {
+    runtime.ifTaken[instr.rootIndex] = evalCondition(instr.condition, runtime.vars, instr.line, machine.cursor);
+    runtime.pc = runtime.ifTaken[instr.rootIndex] ? runtime.pc + 1 : instr.falseIndex;
+    return false;
+  }
+  if (instr.type === 'ELSEIF') {
+    if (runtime.ifTaken[instr.rootIndex]) {
+      delete runtime.ifTaken[instr.rootIndex];
+      runtime.pc = instr.endIndex + 1;
+    } else {
+      runtime.ifTaken[instr.rootIndex] = evalCondition(instr.condition, runtime.vars, instr.line, machine.cursor);
+      runtime.pc = runtime.ifTaken[instr.rootIndex] ? runtime.pc + 1 : instr.falseIndex;
+    }
+    return false;
+  }
+  if (instr.type === 'ELSE') {
+    if (runtime.ifTaken[instr.rootIndex]) {
+      delete runtime.ifTaken[instr.rootIndex];
+      runtime.pc = instr.endIndex + 1;
+    } else {
+      runtime.ifTaken[instr.rootIndex] = true;
+      runtime.pc++;
+    }
+    return false;
+  }
+  if (instr.type === 'ENDIF') {
+    delete runtime.ifTaken[instr.rootIndex];
+    runtime.pc++;
+    return false;
+  }
   if (instr.type === 'FOR') {
     var startVal = evalExpr(instr.startExpr, runtime.vars, instr.line, machine.cursor);
     var endVal = evalExpr(instr.endExpr, runtime.vars, instr.line, machine.cursor);
@@ -1994,33 +2109,33 @@ async function runMachineInstruction(machine) {
     runtime.vars[instr.var] = startVal;
     runtime.forEnds[runtime.pc] = endVal;
     runtime.pc = startVal > endVal ? instr.pairedNextIndex + 1 : runtime.pc + 1;
-    return;
+    return false;
   }
   if (instr.type === 'NEXT') {
     var forInstr = instructions[instr.pairedForIndex];
     runtime.vars[forInstr.var]++;
     runtime.pc = runtime.vars[forInstr.var] <= runtime.forEnds[instr.pairedForIndex] ? instr.pairedForIndex + 1 : runtime.pc + 1;
-    return;
+    return false;
   }
   if (instr.type === 'WHILE') {
     runtime.pc = evalCondition(instr.condition, runtime.vars, instr.line, machine.cursor)
       ? runtime.pc + 1
       : instr.pairedEndIndex + 1;
-    return;
+    return false;
   }
   if (instr.type === 'ENDWHILE') {
     runtime.pc = instr.pairedWhileIndex;
-    return;
+    return false;
   }
   if (instr.type === 'OUTPUT') {
     logConsole('[Machine #' + machine.id + '] ' + String(evalExpr(instr.expr, runtime.vars, instr.line, machine.cursor)), false, true);
     runtime.pc++;
-    return;
+    return true;
   }
   if (instr.type === 'ASSIGN') {
     runtime.vars[instr.var] = evalExpr(instr.expr, runtime.vars, instr.line, machine.cursor);
     runtime.pc++;
-    return;
+    return true;
   }
   if (instr.type === 'CALL') {
     var args = splitArgs(instr.argsRaw).map(function (arg) {
@@ -2030,29 +2145,50 @@ async function runMachineInstruction(machine) {
       logConsole('[Machine #' + machine.id + '] ' + message, isError, true);
     }, instr.line);
     runtime.pc++;
-    return;
+    return true;
   }
   runtime.pc++;
+  return true;
+}
+
+async function runMachineAction(machine) {
+  // Selection and loop boundaries are evaluated immediately. One scheduled
+  // machine tick is consumed only when an instruction performs work.
+  while (!(await runMachineInstruction(machine))) {}
 }
 
 function scheduleMachine(machine) {
-  machine.timer = setInterval(function () {
-    if (machine.running) return; // never overlap two instructions from the same machine
+  machine.nextInstructionAt = performance.now() + machine.intervalMs;
+}
+
+// All machines share the animation clock. This avoids a collection of
+// independent intervals waking the main thread together every few seconds.
+// A machine can catch up by one action per frame after a slow frame, without
+// creating a burst of work in a single frame.
+function updateMachineScheduler(now) {
+  machines.forEach(function (machine) {
+    if (!machine.nextInstructionAt) {
+      machine.nextInstructionAt = now + machine.intervalMs;
+      return;
+    }
+    if (machine.running || now < machine.nextInstructionAt) return;
+    machine.nextInstructionAt += machine.intervalMs;
+    if (machine.nextInstructionAt < now - machine.intervalMs) {
+      machine.nextInstructionAt = now + machine.intervalMs;
+    }
     machine.running = true;
-    runMachineInstruction(machine)
+    runMachineAction(machine)
       .catch(function (err) {
         logConsole('[Machine #' + machine.id + '] Error: ' + (err.message || err), true, true);
         resetMachineRuntime(machine);
       })
       .then(function () { machine.running = false; });
-  }, machine.intervalMs);
+  });
 }
 
-function machineTierIndex(machine) {
-  for (var i = 0; i < MACHINE_TIERS.length; i++) {
-    if (MACHINE_TIERS[i].name === machine.tierName) return i;
-  }
-  return -1;
+function machineLevelConfig(machine) {
+  var index = Math.max(0, Math.min(MACHINE_LEVELS.length - 1, (Number(machine.level) || 1) - 1));
+  return MACHINE_LEVELS[index];
 }
 
 // Sell a machine back: refunds half its cost and frees its home tile. The
@@ -2061,7 +2197,6 @@ function machineTierIndex(machine) {
 function sellMachine(machine) {
   var refund = Math.floor(machine.cost * MACHINE_SELL_REFUND);
   money += refund;
-  clearInterval(machine.timer);
   var homeTile = tileAt(machine.homeX, machine.homeZ);
   if (homeTile) homeTile.hasMachine = false;
   scene.remove(machine.group);
@@ -2076,29 +2211,26 @@ function sellMachine(machine) {
   logConsole('Sold Machine #' + machine.id + ' for ' + refund + ' coins.');
 }
 
-// Upgrade a machine to the next speed tier by paying the difference, so a
-// student can speed up a working machine without having to sell and re-buy
-// it (and re-type its code) from scratch.
+// Upgrade a machine one level without changing its code or current state.
 function upgradeMachine(machine) {
-  var idx = machineTierIndex(machine);
-  if (idx < 0 || idx >= MACHINE_TIERS.length - 1) return;
-  var nextTier = MACHINE_TIERS[idx + 1];
-  var cost = nextTier.cost - machine.cost;
+  var idx = machineLevelConfig(machine).level - 1;
+  if (idx >= MACHINE_LEVELS.length - 1) return;
+  var nextLevel = MACHINE_LEVELS[idx + 1];
+  var cost = nextLevel.price;
   if (money < cost) {
-    logConsole('Upgrading Machine #' + machine.id + ' to ' + nextTier.name + ' costs ' + cost + ' coins, but you only have ' + money + '.', true);
+    logConsole('Upgrading Machine #' + machine.id + ' to Level ' + nextLevel.level + ' costs ' + cost + ' coins, but you only have ' + money + '.', true);
     return;
   }
   money -= cost;
-  machine.cost = nextTier.cost;
-  machine.tierName = nextTier.name;
-  machine.instructionsPerSecond = nextTier.instructionsPerSecond;
-  machine.intervalMs = Math.round(1000 / nextTier.instructionsPerSecond);
-  if (machine.body) machine.body.material.color.setHex(nextTier.color);
-  clearInterval(machine.timer);
+  machine.cost += cost;
+  machine.level = nextLevel.level;
+  machine.instructionsPerSecond = nextLevel.instructionsPerSecond;
+  machine.intervalMs = Math.round(1000 / nextLevel.instructionsPerSecond);
+  if (machine.body) machine.body.material.color.setHex(nextLevel.color);
   scheduleMachine(machine);
   updateHUD();
   updateTileInfoPanel();
-  logConsole('Machine #' + machine.id + ' upgraded to ' + nextTier.name + ' - it now runs ' + machineRateLabel(machine) + '.');
+  logConsole('Machine #' + machine.id + ' upgraded to Level ' + nextLevel.level + '. It now runs ' + machineRateLabel(machine) + '.');
 }
 
 function startEditingMachine(machine) {
@@ -2230,12 +2362,13 @@ function saveGame(force) {
   });
   machines.forEach(function (m) {
     s.machines.push({
-      id: m.id, homeX: m.homeX, homeZ: m.homeZ, code: m.code, tierName: m.tierName,
+      id: m.id, homeX: m.homeX, homeZ: m.homeZ, code: m.code, level: m.level,
       cost: m.cost, intervalMs: m.intervalMs, instructionsPerSecond: m.instructionsPerSecond,
       cursorX: m.cursor.x, cursorZ: m.cursor.z, cursorFacing: m.cursor.facing,
       runtimePc: m.runtime ? m.runtime.pc : 0,
       runtimeVars: m.runtime ? m.runtime.vars : {},
       runtimeForEnds: m.runtime ? m.runtime.forEnds : {},
+      runtimeIfTaken: m.runtime ? m.runtime.ifTaken : {},
       runtimeSteps: m.runtime ? m.runtime.steps : 0
     });
   });
@@ -2248,22 +2381,26 @@ function saveGame(force) {
 }
 
 function restoreMachine(s) {
-  var tier = MACHINE_TIERS.filter(function (t) { return t.name === s.tierName; })[0] || MACHINE_TIERS[0];
+  var legacyLevels = { Basic: 1, Quick: 2, Turbo: 3 };
+  var savedLevel = Number(s.level) || legacyLevels[s.tierName] || 1;
+  savedLevel = Math.max(1, Math.min(MACHINE_LEVELS.length, Math.round(savedLevel)));
+  var levelConfig = MACHINE_LEVELS[savedLevel - 1];
   var compiledProgram;
   try { compiledProgram = compile(String(s.code || '')); }
   catch (e) { compiledProgram = []; }
-  var built = createMachineMarkerGroup(tier.color);
+  var built = createMachineMarkerGroup(levelConfig.color);
   built.group.position.set(tileWorldX(s.homeX), 0, tileWorldZ(s.homeZ));
   scene.add(built.group);
   scene.add(built.cursorMesh);
   var machine = {
     id: s.id, homeX: s.homeX, homeZ: s.homeZ,
-    code: s.code, program: compiledProgram, tierName: tier.name, cost: s.cost,
-    instructionsPerSecond: tier.instructionsPerSecond,
-    intervalMs: Math.round(1000 / tier.instructionsPerSecond),
+    code: s.code, program: compiledProgram, level: savedLevel, cost: Number(s.cost) || levelConfig.price,
+    instructionsPerSecond: levelConfig.instructionsPerSecond,
+    intervalMs: Math.round(1000 / levelConfig.instructionsPerSecond),
     runtime: {
       vars: s.runtimeVars && typeof s.runtimeVars === 'object' ? s.runtimeVars : {},
       forEnds: s.runtimeForEnds && typeof s.runtimeForEnds === 'object' ? s.runtimeForEnds : {},
+      ifTaken: s.runtimeIfTaken && typeof s.runtimeIfTaken === 'object' ? s.runtimeIfTaken : {},
       pc: Math.max(0, Math.min(compiledProgram.length, Number(s.runtimePc) || 0)),
       steps: Math.max(0, Number(s.runtimeSteps) || 0)
     },
@@ -2271,6 +2408,7 @@ function restoreMachine(s) {
     group: built.group, cursorMesh: built.cursorMesh, facingIndicator: built.facingIndicator,
     diamond: built.diamond, body: built.body, running: false
   };
+  machine.cursor.machine = machine;
   built.group.traverse(function (o) { if (o.isMesh) o.userData.machineId = machine.id; });
   var homeTile = tileAt(s.homeX, s.homeZ);
   if (homeTile) homeTile.hasMachine = true;
@@ -2326,7 +2464,6 @@ function resetGame() {
   runEpoch++; // abort any in-flight program (its loop checks the epoch)
   setRunningUI(false);
   machines.forEach(function (m) {
-    clearInterval(m.timer);
     scene.remove(m.group);
     scene.remove(m.cursorMesh);
     disposeObject3D(m.group);
@@ -2347,7 +2484,6 @@ function resetGame() {
   unlockedState = {};
   selectedMachineId = null;
   editingMachineCodeId = null;
-  selectedMachineTierIndex = 0;
   playerCursor.x = Math.floor(GRID_SIZE / 2);
   playerCursor.z = Math.floor(GRID_SIZE / 2);
   playerCursor.facing = 0;
@@ -2398,14 +2534,13 @@ var earnedValueEl = document.getElementById('earned-value');
 var lastHudSignature = '';
 
 function updateHUD() {
-  var signature = money + '|' + totalEarned + '|' + selectedMachineTierIndex + '|' + VEGGIE_NAMES.map(function (name) {
+  var signature = money + '|' + totalEarned + '|' + VEGGIE_NAMES.map(function (name) {
     return invCount(name) + ':' + (isUnlocked(name) ? 1 : 0);
   }).join(',');
   if (signature === lastHudSignature) return;
   lastHudSignature = signature;
   moneyValueEl.textContent = money.toLocaleString();
   earnedValueEl.textContent = totalEarned.toLocaleString();
-  refreshMachineTierPicker();
   VEGGIE_NAMES.forEach(function (name) {
     var row = shopListEl.querySelector('[data-veg="' + name + '"]');
     if (!row) return;
@@ -2467,7 +2602,8 @@ function scheduleAutosave() {
   if (window.requestIdleCallback) window.requestIdleCallback(write, { timeout: 2000 });
   else setTimeout(write, 50);
 }
-setInterval(function () { refreshUnlocks(); updateHUD(); scheduleAutosave(); }, 1000);
+setInterval(function () { refreshUnlocks(); updateHUD(); }, 1000);
+setInterval(scheduleAutosave, 5000);
 window.addEventListener('pagehide', function () { saveGame(true); });
 
 var lastTileInfoSignature = '';
@@ -2482,7 +2618,7 @@ function updateTileInfoPanel() {
     ? Math.min(100, Math.round(((Date.now() - plantForSignature.plantedAt) / plantForSignature.growMs) * 100))
     : -1;
   var signature = selectedForSignature
-    ? ['machine', selectedForSignature.id, selectedForSignature.tierName, selectedForSignature.instructionsPerSecond,
+    ? ['machine', selectedForSignature.id, selectedForSignature.level, selectedForSignature.instructionsPerSecond,
         selectedForSignature.cursor.x, selectedForSignature.cursor.z, selectedForSignature.code, money].join('|')
     : ['tile', playerCursor.x, playerCursor.z, tileForSignature && tileForSignature.hasMachine ? 1 : 0,
         plantForSignature ? plantForSignature.type : '', plantForSignature && plantForSignature.ready ? 1 : 0,
@@ -2494,14 +2630,14 @@ function updateTileInfoPanel() {
     if (selected) {
       var refund = Math.floor(selected.cost * MACHINE_SELL_REFUND);
       var upgradeHtml = '';
-      var idx = machineTierIndex(selected);
-      if (idx >= 0 && idx < MACHINE_TIERS.length - 1) {
-        var nextTier = MACHINE_TIERS[idx + 1];
-        var upgradeCost = nextTier.cost - selected.cost;
-        upgradeHtml = '<button type="button" class="machine-action-btn" id="machine-upgrade-btn" style="background:#6ea8fe;color:#04214f">Upgrade to ' + nextTier.name + ' (' + upgradeCost + 'c)</button>';
+      var levelConfig = machineLevelConfig(selected);
+      var idx = levelConfig.level - 1;
+      if (idx < MACHINE_LEVELS.length - 1) {
+        var nextLevel = MACHINE_LEVELS[idx + 1];
+        upgradeHtml = '<button type="button" class="machine-action-btn" id="machine-upgrade-btn" style="background:#6ea8fe;color:#04214f">Upgrade to Level ' + nextLevel.level + ' (' + nextLevel.price + 'c)</button>';
       }
       tileInfoEl.className = 'show';
-      tileInfoEl.innerHTML = '<b>Machine #' + selected.id + '</b> (pink cursor) &middot; ' +
+      tileInfoEl.innerHTML = '<b>Machine #' + selected.id + ' · Level ' + levelConfig.level + '</b> (pink cursor) &middot; ' +
         machineRateLabel(selected) + ' &middot; cursor at (' + selected.cursor.x + ', ' + selected.cursor.z + ')' +
         '<pre style="white-space:pre-wrap;margin:6px 0 0;font-size:.7rem;background:#12190f;color:#b9e6b0;padding:6px;border-radius:6px;max-height:80px;overflow:auto">' +
         escapeHtmlLocal(selected.code) + '</pre>' +
@@ -2596,6 +2732,8 @@ function animate() {
     m.cursorMesh.position.y = 1.0 + Math.sin(elapsed * 3 + m.id) * 0.06;
     m.cursorMesh.rotation.y = elapsed * 1.6;
   });
+
+  updateMachineScheduler(perfNow);
 
   // Grow every planted sprite towards full size, and flag it ready once done.
   var anyGrowthChanged = false;
