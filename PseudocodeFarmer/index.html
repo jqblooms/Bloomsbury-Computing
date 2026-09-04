@@ -456,6 +456,7 @@ var FACING_VECTORS = [ { dx: 0, dz: -1 }, { dx: 1, dz: 0 }, { dx: 0, dz: 1 }, { 
 // ============================================================
 var SAVE_KEY = 'pseudocodeFarmerSave';
 var SAVE_VERSION = 1;
+var lastSavedJson = '';
 var money = 40;
 var totalEarned = 0; // lifetime coins earned from selling - never goes down, gates vegetable unlocks
 var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
@@ -465,8 +466,9 @@ var unlockedState = {};   // { Carrot: true, ... } cached from the last refreshU
 // Owned tiles, keyed by "x,z" (x/z are grid coords, which can go negative
 // once the garden expands). edgeTiles holds the purchasable tiles just
 // outside the owned region, rendered dimmer and bought one at a time.
-var tiles = {};       // "x,z" -> { mesh, plant: null | PlantRecord, hasMachine: bool }
-var edgeTiles = {};   // "x,z" -> { mesh }
+var tiles = {};       // "x,z" -> { x, z, color, plant: null | PlantRecord, hasMachine: bool }
+var edgeTiles = {};   // "x,z" -> { x, z }
+var plantedTiles = []; // only occupied tiles, so animation never scans empty soil
 var ownedMinX = 0, ownedMaxX = GRID_SIZE - 1, ownedMinZ = 0, ownedMaxZ = GRID_SIZE - 1;
 var ownedTileCount = GRID_SIZE * GRID_SIZE;
 // Every cursor (the player's own, and each machine's) is shaped the same:
@@ -515,7 +517,7 @@ function currentSeedPrice(name) {
 // THREE.JS SCENE SETUP
 // ============================================================
 var canvas = document.getElementById('three-canvas');
-var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -545,15 +547,20 @@ scene.add(fill);
 var tileGroup = new THREE.Group();
 scene.add(tileGroup);
 var tileGeometry = new THREE.BoxGeometry(TILE_SIZE * 0.94, 0.22, TILE_SIZE * 0.94);
+var ownedTileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 });
+var edgeTileMaterial = new THREE.MeshStandardMaterial({ color: 0x33402c, roughness: 1, transparent: true, opacity: 0.55 });
+var ownedTileMesh = null;
+var edgeTileMesh = null;
+var tileMatrix = new THREE.Matrix4();
+var MAX_TILE_INSTANCES = Math.pow(GRID_SIZE + MAX_EXPANSION * 2, 2);
 
-function makeTileMaterial() {
-  // Gentle per-tile colour jitter so the field doesn't look like a single
-  // flat-shaded slab - still cheap (one material per tile, no textures).
+function makeTileColor() {
+  // Keep the existing per-tile colour variation while allowing every soil
+  // square to be rendered in a single instanced draw call.
   var hue = 0.27 + (Math.random() - 0.5) * 0.03;
   var sat = 0.35 + Math.random() * 0.08;
   var light = 0.30 + Math.random() * 0.05;
-  var color = new THREE.Color().setHSL(hue, sat, light);
-  return new THREE.MeshStandardMaterial({ color: color, roughness: 0.95 });
+  return new THREE.Color().setHSL(hue, sat, light);
 }
 
 // Garden tiles: owned ones are normal soil; the purchasable edge tiles are
@@ -562,26 +569,57 @@ function tileKey(x, z) { return x + ',' + z; }
 function tileAt(x, z) { return tiles[tileKey(x, z)] || null; }
 function isOwned(x, z) { return !!tiles[tileKey(x, z)]; }
 function makeOwnedTile(x, z) {
-  var mesh = new THREE.Mesh(tileGeometry, makeTileMaterial());
-  mesh.position.set(x - HALF, -0.11, z - HALF);
-  mesh.receiveShadow = true;
-  mesh.userData.gridX = x;
-  mesh.userData.gridZ = z;
-  mesh.userData.isEdge = false;
-  tileGroup.add(mesh);
-  tiles[tileKey(x, z)] = { mesh: mesh, plant: null, hasMachine: false };
-}
-function makeEdgeTileMaterial() {
-  return new THREE.MeshStandardMaterial({ color: 0x33402c, roughness: 1, transparent: true, opacity: 0.55 });
+  tiles[tileKey(x, z)] = { x: x, z: z, color: makeTileColor(), plant: null, hasMachine: false };
 }
 function makeEdgeTile(x, z) {
-  var mesh = new THREE.Mesh(tileGeometry, makeEdgeTileMaterial());
-  mesh.position.set(x - HALF, -0.11, z - HALF);
-  mesh.userData.gridX = x;
-  mesh.userData.gridZ = z;
-  mesh.userData.isEdge = true;
-  tileGroup.add(mesh);
-  edgeTiles[tileKey(x, z)] = { mesh: mesh };
+  edgeTiles[tileKey(x, z)] = { x: x, z: z };
+}
+function rebuildTileBatches() {
+  var ownedKeys = Object.keys(tiles);
+  if (!ownedTileMesh) {
+    ownedTileMesh = new THREE.InstancedMesh(tileGeometry, ownedTileMaterial, MAX_TILE_INSTANCES);
+    ownedTileMesh.receiveShadow = true;
+    ownedTileMesh.frustumCulled = false;
+    ownedTileMesh.userData.isTileBatch = true;
+    ownedTileMesh.userData.isEdge = false;
+    tileGroup.add(ownedTileMesh);
+  }
+  ownedTileMesh.count = ownedKeys.length;
+  ownedTileMesh.userData.gridByInstance = [];
+  ownedKeys.forEach(function (key, index) {
+    var tile = tiles[key];
+    tileMatrix.makeTranslation(tileWorldX(tile.x), -0.11, tileWorldZ(tile.z));
+    ownedTileMesh.setMatrixAt(index, tileMatrix);
+    ownedTileMesh.setColorAt(index, tile.color);
+    ownedTileMesh.userData.gridByInstance[index] = { gridX: tile.x, gridZ: tile.z, isEdge: false };
+  });
+  ownedTileMesh.instanceMatrix.needsUpdate = true;
+  if (ownedTileMesh.instanceColor) ownedTileMesh.instanceColor.needsUpdate = true;
+
+  var edgeKeys = Object.keys(edgeTiles);
+  if (!edgeTileMesh) {
+    edgeTileMesh = new THREE.InstancedMesh(tileGeometry, edgeTileMaterial, MAX_TILE_INSTANCES);
+    edgeTileMesh.userData.isTileBatch = true;
+    edgeTileMesh.userData.isEdge = true;
+    edgeTileMesh.frustumCulled = false;
+    tileGroup.add(edgeTileMesh);
+  }
+  edgeTileMesh.count = edgeKeys.length;
+  edgeTileMesh.userData.gridByInstance = [];
+  edgeKeys.forEach(function (key, index) {
+    var tile = edgeTiles[key];
+    tileMatrix.makeTranslation(tileWorldX(tile.x), -0.11, tileWorldZ(tile.z));
+    edgeTileMesh.setMatrixAt(index, tileMatrix);
+    edgeTileMesh.userData.gridByInstance[index] = { gridX: tile.x, gridZ: tile.z, isEdge: true };
+  });
+  edgeTileMesh.instanceMatrix.needsUpdate = true;
+}
+function tileDataFromHit(hit) {
+  if (!hit || !hit.object) return null;
+  if (hit.object.userData.isTileBatch) {
+    return hit.object.userData.gridByInstance[hit.instanceId] || null;
+  }
+  return hit.object.userData;
 }
 function inExpansionBounds(x, z) {
   return x >= -MAX_EXPANSION && x <= (GRID_SIZE - 1) + MAX_EXPANSION &&
@@ -598,11 +636,12 @@ function refreshEdgeTiles() {
     });
   }
   for (var ekey in edgeTiles) {
-    if (!needed[ekey]) { tileGroup.remove(edgeTiles[ekey].mesh); delete edgeTiles[ekey]; }
+    if (!needed[ekey]) delete edgeTiles[ekey];
   }
   for (var nkey in needed) {
     if (!edgeTiles[nkey]) { var np = nkey.split(','); makeEdgeTile(+np[0], +np[1]); }
   }
+  rebuildTileBatches();
 }
 
 // Initial GRID_SIZE x GRID_SIZE garden, then draw its purchasable border.
@@ -645,7 +684,6 @@ function buyTile(x, z) {
     return false;
   }
   money -= cost;
-  tileGroup.remove(edgeTiles[tileKey(x, z)].mesh);
   delete edgeTiles[tileKey(x, z)];
   makeOwnedTile(x, z);
   ownedTileCount++;
@@ -665,13 +703,16 @@ function rebuildGarden(ownedTilesList) {
     var tl = tiles[key];
     if (tl.plant) {
       scene.remove(tl.plant.sprite);
-      if (tl.plant.pct) scene.remove(tl.plant.pct.sprite);
+      disposeSprite(tl.plant.sprite, false);
+      if (tl.plant.pct) {
+        scene.remove(tl.plant.pct.sprite);
+        disposeSprite(tl.plant.pct.sprite, false);
+      }
     }
-    tileGroup.remove(tl.mesh);
   }
-  for (var ekey in edgeTiles) { tileGroup.remove(edgeTiles[ekey].mesh); }
   tiles = {};
   edgeTiles = {};
+  plantedTiles = [];
   ownedMinX = Infinity; ownedMaxX = -Infinity; ownedMinZ = Infinity; ownedMaxZ = -Infinity;
   ownedTileCount = 0;
   ownedTilesList.forEach(function (c) {
@@ -816,8 +857,8 @@ canvas.addEventListener('pointermove', function (e) {
 var canvasHintEl = document.getElementById('canvas-hint');
 canvas.addEventListener('pointermove', function (e) {
   if (pointer.down) return;
-  var obj = raycastTileMesh(e.clientX, e.clientY);
-  if (obj && obj.userData.isEdge) {
+  var hitData = raycastTileMesh(e.clientX, e.clientY);
+  if (hitData && hitData.isEdge) {
     canvasHintEl.textContent = '🪙 Click to buy this tile (' + nextTileCost() + ' coins)';
   } else {
     canvasHintEl.textContent = 'Drag or WASD / arrows to move · Right-drag or Q/E/R/F to rotate · Scroll to zoom · Click a tile';
@@ -883,17 +924,19 @@ function handleTileClick(clientX, clientY) {
     if (hitMachine) { selectMachine(hitMachine); return; }
   }
 
-  var hits = raycaster.intersectObjects(tileGroup.children);
+  var tileBatches = [ownedTileMesh, edgeTileMesh].filter(Boolean);
+  var hits = raycaster.intersectObjects(tileBatches);
   if (!hits.length) return;
-  var hit = hits[0].object;
+  var hit = tileDataFromHit(hits[0]);
+  if (!hit) return;
   // Clicking a dimmer edge tile buys it (garden expansion); owned tiles move
   // the cursor there.
-  if (hit.userData.isEdge) {
-    buyTile(hit.userData.gridX, hit.userData.gridZ);
+  if (hit.isEdge) {
+    buyTile(hit.gridX, hit.gridZ);
     return;
   }
-  playerCursor.x = hit.userData.gridX;
-  playerCursor.z = hit.userData.gridZ;
+  playerCursor.x = hit.gridX;
+  playerCursor.z = hit.gridZ;
   updatePlayerCursorPosition();
   selectMachine(null); // clicking open ground clears any machine selection
   updateTileInfoPanel();
@@ -904,8 +947,9 @@ function raycastTileMesh(clientX, clientY) {
   ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
   ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(ndc, camera);
-  var hits = raycaster.intersectObjects(tileGroup.children);
-  return hits.length ? hits[0].object : null;
+  var tileBatches = [ownedTileMesh, edgeTileMesh].filter(Boolean);
+  var hits = raycaster.intersectObjects(tileBatches);
+  return hits.length ? tileDataFromHit(hits[0]) : null;
 }
 
 // ============================================================
@@ -970,6 +1014,7 @@ function plantAt(cursor, vegName) {
     pct: makePlantLabel(cursor.x, cursor.z),
     ready: false
   };
+  plantedTiles.push(tile);
   updateHUD();
   return { ok: true, message: 'Planted a ' + vegName + '! It will be ready to sell in ' + veg.growSeconds + ' seconds.' };
 }
@@ -984,10 +1029,15 @@ function sellAt(cursor, viaCode) {
   totalEarned += price;
   soldCount[tile.plant.type] = (soldCount[tile.plant.type] || 0) + 1;
   scene.remove(tile.plant.sprite);
-  if (tile.plant.pct) scene.remove(tile.plant.pct.sprite);
+  disposeSprite(tile.plant.sprite, false);
+  if (tile.plant.pct) {
+    scene.remove(tile.plant.pct.sprite);
+    disposeSprite(tile.plant.pct.sprite, false);
+  }
   spawnFloatingText(cursor.x, cursor.z, '+' + price + 'c', viaCode ? '#9a5b0a' : '#2e6b30');
   var soldName = tile.plant.type;
   tile.plant = null;
+  plantedTiles = plantedTiles.filter(function (plantedTile) { return plantedTile !== tile; });
   var justUnlocked = refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
@@ -1099,6 +1149,20 @@ function setPositionRelative(cursor, dx, dz) {
 // FLOATING TEXT (a little "+9c" popup that rises and fades)
 // ============================================================
 var floatingTexts = [];
+function disposeSprite(sprite, disposeMap) {
+  if (!sprite || !sprite.material) return;
+  if (disposeMap && sprite.material.map) sprite.material.map.dispose();
+  sprite.material.dispose();
+}
+function disposeObject3D(object) {
+  if (!object) return;
+  object.traverse(function (child) {
+    if (!child.isMesh) return;
+    if (child.geometry) child.geometry.dispose();
+    if (Array.isArray(child.material)) child.material.forEach(function (material) { material.dispose(); });
+    else if (child.material) child.material.dispose();
+  });
+}
 function spawnFloatingText(gx, gz, text, color) {
   var c = document.createElement('canvas');
   c.width = 256; c.height = 96;
@@ -1123,7 +1187,12 @@ function updateFloatingTexts(now) {
   for (var i = floatingTexts.length - 1; i >= 0; i--) {
     var f = floatingTexts[i];
     var t = (now - f.born) / 900;
-    if (t >= 1) { scene.remove(f.sprite); floatingTexts.splice(i, 1); continue; }
+    if (t >= 1) {
+      scene.remove(f.sprite);
+      disposeSprite(f.sprite, true);
+      floatingTexts.splice(i, 1);
+      continue;
+    }
     f.sprite.position.y = 1.1 + t * 0.8;
     f.sprite.material.opacity = 1 - t;
   }
@@ -1923,6 +1992,8 @@ function sellMachine(machine) {
   if (homeTile) homeTile.hasMachine = false;
   scene.remove(machine.group);
   scene.remove(machine.cursorMesh);
+  disposeObject3D(machine.group);
+  disposeObject3D(machine.cursorMesh);
   machines = machines.filter(function (m) { return m.id !== machine.id; });
   if (selectedMachineId === machine.id) selectedMachineId = null;
   if (editingMachineCodeId === machine.id) editingMachineCodeId = null;
@@ -1957,6 +2028,7 @@ function upgradeMachine(machine) {
 
 function startEditingMachine(machine) {
   editingMachineCodeId = machine.id;
+  lastTileInfoSignature = '';
   tileInfoEl.className = 'show';
   tileInfoEl.innerHTML = '<b>Editing Machine #' + machine.id + ' code</b>' +
     '<textarea id="machine-code-edit" spellcheck="false" autocomplete="off"></textarea>' +
@@ -1981,12 +2053,14 @@ function saveMachineCode(machine) {
   }
   machine.code = newCode;
   editingMachineCodeId = null;
+  lastTileInfoSignature = '';
   updateTileInfoPanel();
   logConsole('Machine #' + machine.id + ' code updated.');
 }
 
 function cancelEditMachine() {
   editingMachineCodeId = null;
+  lastTileInfoSignature = '';
   updateTileInfoPanel();
 }
 
@@ -2017,8 +2091,13 @@ function roundedRect(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
 }
-function drawPctLabel(label, pct) {
-  var ctx = label.ctx, w = label.canvas.width, h = label.canvas.height;
+var pctTextureCache = {};
+function getPctTexture(pct) {
+  pct = Math.max(0, Math.min(100, Math.round(pct)));
+  if (pctTextureCache[pct]) return pctTextureCache[pct];
+  var canvas = document.createElement('canvas');
+  canvas.width = 72; canvas.height = 26;
+  var ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height;
   ctx.clearRect(0, 0, w, h);
   var txt = pct + '%';
   ctx.font = '800 17px "Baloo 2", system-ui, sans-serif';
@@ -2034,25 +2113,27 @@ function drawPctLabel(label, pct) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(txt, w / 2, h / 2);
-  label.tex.needsUpdate = true;
+  var texture = new THREE.CanvasTexture(canvas);
+  pctTextureCache[pct] = texture;
+  return texture;
+}
+function drawPctLabel(label, pct) {
+  label.sprite.material.map = getPctTexture(pct);
+  label.sprite.material.needsUpdate = true;
 }
 function makePlantLabel(x, z) {
-  var canvas = document.createElement('canvas');
-  canvas.width = 72; canvas.height = 26;
-  var ctx = canvas.getContext('2d');
-  var tex = new THREE.CanvasTexture(canvas);
-  var sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+  var sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: getPctTexture(0), transparent: true, depthTest: false }));
   sprite.center.set(0.5, 0);
   sprite.scale.set(0.7, 0.26, 1);
   sprite.position.set(tileWorldX(x), 1.0, tileWorldZ(z));
   sprite.renderOrder = 20;
   scene.add(sprite);
-  var label = { sprite: sprite, canvas: canvas, ctx: ctx, tex: tex, lastPct: -1 };
+  var label = { sprite: sprite, lastPct: -1 };
   drawPctLabel(label, 0);
   return label;
 }
 
-function saveGame() {
+function saveGame(force) {
   var s = {
     v: SAVE_VERSION,
     money: money,
@@ -2062,14 +2143,13 @@ function saveGame() {
     playerCursor: { x: playerCursor.x, z: playerCursor.z, facing: playerCursor.facing },
     plants: [],
     machines: [],
-    ownedTiles: Object.keys(tiles).map(function (key) { var p = key.split(','); return [+p[0], +p[1]]; }),
+    ownedTiles: Object.keys(tiles).map(function (key) { return [tiles[key].x, tiles[key].z]; }),
     nextMachineId: nextMachineId
   };
-  for (var key in tiles) {
-    var p = key.split(',');
-    var plant = tiles[key].plant;
-    if (plant) s.plants.push({ x: +p[0], z: +p[1], type: plant.type, plantedAt: plant.plantedAt, growMs: plant.growMs });
-  }
+  plantedTiles.forEach(function (tile) {
+    var plant = tile.plant;
+    if (plant) s.plants.push({ x: tile.x, z: tile.z, type: plant.type, plantedAt: plant.plantedAt, growMs: plant.growMs });
+  });
   machines.forEach(function (m) {
     s.machines.push({
       id: m.id, homeX: m.homeX, homeZ: m.homeZ, code: m.code, tierName: m.tierName,
@@ -2077,7 +2157,12 @@ function saveGame() {
       cursorX: m.cursor.x, cursorZ: m.cursor.z, cursorFacing: m.cursor.facing
     });
   });
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) {}
+  var json = JSON.stringify(s);
+  if (!force && json === lastSavedJson) return;
+  try {
+    localStorage.setItem(SAVE_KEY, json);
+    lastSavedJson = json;
+  } catch (e) {}
 }
 
 function restoreMachine(s) {
@@ -2111,6 +2196,7 @@ function loadGame() {
   var s;
   try { s = JSON.parse(raw); } catch (e) { return false; }
   if (!s || s.v !== SAVE_VERSION) return false;
+  lastSavedJson = raw;
   money = s.money;
   totalEarned = s.totalEarned;
   inventory = s.inventory || {};
@@ -2129,6 +2215,7 @@ function loadGame() {
       type: p.type, plantedAt: p.plantedAt, growMs: p.growMs,
       sprite: makePlantSprite(p.type, p.x, p.z), pct: makePlantLabel(p.x, p.z), ready: false
     };
+    plantedTiles.push(pt);
   });
   (s.machines || []).forEach(function (m) {
     var mt = tileAt(m.homeX, m.homeZ);
@@ -2145,8 +2232,19 @@ function loadGame() {
 function resetGame() {
   runEpoch++; // abort any in-flight program (its loop checks the epoch)
   setRunningUI(false);
-  machines.forEach(function (m) { clearInterval(m.timer); scene.remove(m.group); scene.remove(m.cursorMesh); });
+  machines.forEach(function (m) {
+    clearInterval(m.timer);
+    scene.remove(m.group);
+    scene.remove(m.cursorMesh);
+    disposeObject3D(m.group);
+    disposeObject3D(m.cursorMesh);
+  });
   machines = [];
+  floatingTexts.forEach(function (floating) {
+    scene.remove(floating.sprite);
+    disposeSprite(floating.sprite, true);
+  });
+  floatingTexts = [];
   nextMachineId = 1;
   rebuildGarden(initialTileList());
   money = 40;
@@ -2166,6 +2264,7 @@ function resetGame() {
   clearCodeError();
   consoleOutput.innerHTML = '';
   try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+  lastSavedJson = '';
   refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
@@ -2203,8 +2302,14 @@ var shopListEl = document.getElementById('shop-list');
 var tileInfoEl = document.getElementById('tile-info');
 
 var earnedValueEl = document.getElementById('earned-value');
+var lastHudSignature = '';
 
 function updateHUD() {
+  var signature = money + '|' + totalEarned + '|' + selectedMachineTierIndex + '|' + VEGGIE_NAMES.map(function (name) {
+    return invCount(name) + ':' + (isUnlocked(name) ? 1 : 0);
+  }).join(',');
+  if (signature === lastHudSignature) return;
+  lastHudSignature = signature;
   moneyValueEl.textContent = money.toLocaleString();
   earnedValueEl.textContent = totalEarned.toLocaleString();
   refreshMachineTierPicker();
@@ -2257,11 +2362,28 @@ updateHUD();
 // need the shop to refresh on its own, not only after a Buy/Sell click.
 // This also double-duties as the autosave tick (at most a second of
 // progress can be lost to a crash or a hard close).
-setInterval(function () { refreshUnlocks(); updateHUD(); saveGame(); }, 1000);
-window.addEventListener('pagehide', saveGame);
+setInterval(function () { refreshUnlocks(); updateHUD(); saveGame(false); }, 1000);
+window.addEventListener('pagehide', function () { saveGame(true); });
 
+var lastTileInfoSignature = '';
 function updateTileInfoPanel() {
   if (editingMachineCodeId) return; // the inline editor owns the panel while it is open
+  var selectedForSignature = selectedMachineId
+    ? machines.filter(function (m) { return m.id === selectedMachineId; })[0]
+    : null;
+  var tileForSignature = tileAt(playerCursor.x, playerCursor.z);
+  var plantForSignature = tileForSignature && tileForSignature.plant;
+  var plantPctForSignature = plantForSignature
+    ? Math.min(100, Math.round(((Date.now() - plantForSignature.plantedAt) / plantForSignature.growMs) * 100))
+    : -1;
+  var signature = selectedForSignature
+    ? ['machine', selectedForSignature.id, selectedForSignature.tierName, selectedForSignature.intervalMs,
+        selectedForSignature.cursor.x, selectedForSignature.cursor.z, selectedForSignature.code, money].join('|')
+    : ['tile', playerCursor.x, playerCursor.z, tileForSignature && tileForSignature.hasMachine ? 1 : 0,
+        plantForSignature ? plantForSignature.type : '', plantForSignature && plantForSignature.ready ? 1 : 0,
+        plantPctForSignature, money].join('|');
+  if (signature === lastTileInfoSignature) return;
+  lastTileInfoSignature = signature;
   if (selectedMachineId) {
     var selected = machines.filter(function (m) { return m.id === selectedMachineId; })[0];
     if (selected) {
@@ -2372,10 +2494,10 @@ function animate() {
 
   // Grow every planted sprite towards full size, and flag it ready once done.
   var anyGrowthChanged = false;
-  for (var key in tiles) {
-    var p = key.split(',');
-    var gx = +p[0], gz = +p[1];
-    var plant = tiles[key].plant;
+  for (var plantIndex = 0; plantIndex < plantedTiles.length; plantIndex++) {
+    var tile = plantedTiles[plantIndex];
+    var gx = tile.x, gz = tile.z;
+    var plant = tile.plant;
     if (!plant) continue;
     var t = Math.min(1, (wallNow - plant.plantedAt) / plant.growMs);
     var eased = 1 - Math.pow(1 - t, 2);
