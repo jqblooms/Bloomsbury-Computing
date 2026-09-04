@@ -131,7 +131,6 @@
   .shop-item button:disabled { background: #b7c9b6; box-shadow: none; cursor: not-allowed; }
   .shop-item button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
   .shop-item .have { grid-column: 1 / -1; font-size: .72rem; color: var(--muted); font-weight: 700; }
-  .shop-item .price.hot { color: #b45309; }
   .shop-item.locked { background: #f1ece0; opacity: .82; }
   .shop-item.locked img { filter: grayscale(1) brightness(0.6); }
   .shop-item .locked-msg { grid-column: 1 / -1; font-size: .7rem; color: var(--muted); font-weight: 700; }
@@ -251,7 +250,7 @@
           <summary>📖 Pseudocode cheat sheet</summary>
           <table>
             <tr><td><code>Plant("Carrot")</code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
-            <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, 20% cheaper than the shop button. Buying the same vegetable a lot in a row makes its price climb - it cools back down if you leave it alone for a bit, so it's worth growing more than one kind at once.</td></tr>
+            <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, plant and sell the same vegetable forever.</td></tr>
             <tr><td><code>Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
             <tr><td><code>Move_up()</code></td><td class="desc">Moves your cursor one tile up the field.</td></tr>
             <tr><td><code>Move_down()</code></td><td class="desc">Moves your cursor one tile down the field.</td></tr>
@@ -293,29 +292,24 @@ var HALF = (GRID_SIZE - 1) / 2;
 // ============================================================
 // This shape is deliberate, not just "9 vegetables with numbers on them" -
 // see the comments on each piece for why. In short, it borrows the two
-// ideas that make Cookie-Clicker-style economies hold up over a long
-// session instead of collapsing into "buy the best thing forever":
+// Cookie Clicker's actual economy (from its design docs): building base
+// costs scale ~10-15x per tier, income (CpS) scales ~5-10x per tier, and
+// the "payoff time" (cost / income) stays roughly constant so every tier
+// is worth buying. That steep, smooth curve IS the pacing. Crucially,
+// Cookie Clicker's per-building price escalation (x1.15 per owned) only
+// works because its buildings produce PASSIVELY forever - this game's
+// production is one-shot (buy seed -> plant -> sell), so a fixed seed cost
+// and a fixed sell price keep the loop profitable forever, which is what
+// lets a machine that repeatedly buys/plants/sells actually keep working.
+// (The old "heat" price escalation was removed for exactly this reason: it
+// made seeds cost more than they sold for after a few buys, so machines
+// self-destructed economically.) So:
 //
-// 1. Tiers get exponentially more expensive AND exponentially slower to
-//    grow (seedCost x1.75 and growSeconds x1.28 per tier). A cheap early
-//    vegetable is still the best coins-per-second option for topping up
-//    cash between bigger harvests - it never becomes worthless, it just
-//    stops being where you put ALL your land.
-// 2. Buying the same vegetable over and over gets more expensive on its
-//    OWN (currentSeedPrice below), Cookie Clicker's classic per-building
-//    cost curve (their buildings use x1.15 per purchase; this uses a
-//    slightly steeper x1.13 so the effect is visible inside one lesson,
-//    not over hours). That price also cools back down if you leave that
-//    vegetable alone for a while. The result: spamming one vegetable
-//    forever stops being the cheapest option after a handful of
-//    purchases, and a farm growing several different vegetables at once
-//    is genuinely the strategically better one, not just a "nicer"
-//    playstyle - which was the whole point of this rework.
-// 3. Every tier past Carrot is locked behind *lifetime* coins earned
-//    (totalEarned - see GAME STATE below), not current spendable money,
-//    plus having actually sold a few of the tier before it. Money you
-//    are handed or have saved up cannot skip this - only real selling
-//    (which only happens by writing and running Sell()) advances it.
+// 1. Tiers scale exponentially: seedCost x3 and growSeconds x1.28 per tier
+//    (Cookie Clicker's ~10x, scaled down to fit one lesson).
+// 2. Each tier unlocks once you've EARNED enough coins total (lifetime
+//    totalEarned, from any source). The exponential price curve is the
+//    real gate - you can't afford the next tier until your income grows.
 //
 // `emoji` is a Twemoji (CC-BY 4.0) codepoint - loaded once per veggie and
 // rasterised onto a small canvas so it works as a three.js texture
@@ -334,7 +328,7 @@ var VEGGIE_TIERS = [
 ];
 
 var TIER_SEED_COST_BASE = 5;
-var TIER_SEED_COST_GROWTH = 2.0;    // cost doubles per tier - Cookie-Clicker-style exponential pacing
+var TIER_SEED_COST_GROWTH = 3.0;    // cost x3 per tier - clearly exponential, so the game doesn't finish instantly
 var TIER_SELL_MARGIN_BASE = 1.8;    // sellPrice = seedCost * margin
 var TIER_SELL_MARGIN_STEP = 0.08;   // margin improves slightly per tier
 var TIER_GROW_SECONDS_BASE = 10;
@@ -357,15 +351,6 @@ VEGGIE_TIERS.forEach(function (t, i) {
   };
 });
 var VEGGIE_NAMES = VEGGIE_TIERS.map(function (t) { return t.name; });
-
-// Same-vegetable cost escalation ("heat"): every purchase of a vegetable
-// adds 1 to its heat, and price = seedCost * SEED_HEAT_GROWTH^heat. Heat
-// cools back down on its own at SEED_HEAT_DECAY_PER_SEC per second of not
-// buying that vegetable, computed lazily (see decaySeedHeat) rather than
-// ticked every frame, since it only ever needs to be current at the
-// moment someone looks at or acts on a price.
-var SEED_HEAT_GROWTH = 1.13;
-var SEED_HEAT_DECAY_PER_SEC = 1 / 20; // 1 purchase's worth of heat cools off every 20s
 
 // Writing pseudocode should always beat reaching for a button - that is
 // the whole point of the game. Code Buy("...") costs less than the shop
@@ -395,8 +380,6 @@ var money = 40;
 var totalEarned = 0; // lifetime coins earned from selling - never goes down, gates vegetable unlocks
 var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
 var soldCount = {};  // { Carrot: 5, ... } lifetime sales per vegetable (tracked, not used for unlocking)
-var seedHeat = {};        // { Carrot: 2.4, ... } current cost-escalation heat per vegetable
-var seedHeatUpdated = {}; // { Carrot: <timestamp>, ... } last time that heat was brought up to date
 var unlockedState = {};   // { Carrot: true, ... } cached from the last refreshUnlocks() call, so
                            // sellAt() can tell what just changed rather than only what's true now
 var tiles = [];      // tiles[x][z] = { mesh, plant: null | PlantRecord, hasMachine: bool }
@@ -436,30 +419,10 @@ function unlockProgressMessage(name) {
   return 'Earn ' + earnedLeft + ' more coins total (lifetime, not current balance).';
 }
 
-// Brings a vegetable's heat up to date for "now", applying however much
-// cooldown has happened since it was last touched, then returns it. Doing
-// this lazily (only when a price is actually needed) avoids a per-frame
-// update for every vegetable, most of which nobody is buying most of the
-// time.
-function decaySeedHeat(name) {
-  var now = Date.now(); // wall-clock, so seed heat survives a page reload
-  var last = seedHeatUpdated[name] || now;
-  var heat = seedHeat[name] || 0;
-  var elapsedSec = (now - last) / 1000;
-  heat = Math.max(0, heat - elapsedSec * SEED_HEAT_DECAY_PER_SEC);
-  seedHeat[name] = heat;
-  seedHeatUpdated[name] = now;
-  return heat;
-}
-
-// The price of the NEXT seed packet of this vegetable - its tier base
-// price, multiplied up by how "hot" (recently over-bought) it currently
-// is. Buying several different vegetables instead of one repeatedly keeps
-// every price close to base; buying only one repeatedly does not.
+// The price of the NEXT seed packet of this vegetable - a fixed tier price
+// (no per-purchase escalation, see the economy comment above for why).
 function currentSeedPrice(name) {
-  var veg = VEGGIES[name];
-  var heat = decaySeedHeat(name);
-  return Math.round(veg.seedCost * Math.pow(SEED_HEAT_GROWTH, heat));
+  return VEGGIES[name].seedCost;
 }
 
 // ============================================================
@@ -767,7 +730,6 @@ function buySeed(vegName, viaCode) {
   }
   money -= price;
   inventory[vegName] = invCount(vegName) + 1;
-  seedHeat[vegName] = decaySeedHeat(vegName) + 1; // this purchase makes the NEXT one a little pricier
   updateHUD();
   return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + price + ' coins' + (viaCode ? ' (code discount!)' : '') + '.' };
 }
@@ -1697,8 +1659,6 @@ function saveGame() {
     totalEarned: totalEarned,
     inventory: inventory,
     soldCount: soldCount,
-    seedHeat: seedHeat,
-    seedHeatUpdated: seedHeatUpdated,
     playerCursor: { x: playerCursor.x, z: playerCursor.z, facing: playerCursor.facing },
     plants: [],
     machines: [],
@@ -1754,8 +1714,6 @@ function loadGame() {
   totalEarned = s.totalEarned;
   inventory = s.inventory || {};
   soldCount = s.soldCount || {};
-  seedHeat = s.seedHeat || {};
-  seedHeatUpdated = s.seedHeatUpdated || {};
   playerCursor.x = s.playerCursor.x; playerCursor.z = s.playerCursor.z; playerCursor.facing = s.playerCursor.facing || 0;
   updatePlayerCursorPosition();
   updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
@@ -1796,8 +1754,6 @@ function resetGame() {
   totalEarned = 0;
   inventory = {};
   soldCount = {};
-  seedHeat = {};
-  seedHeatUpdated = {};
   unlockedState = {};
   selectedMachineId = null;
   editingMachineCodeId = null;
@@ -1868,7 +1824,6 @@ function updateHUD() {
     var veg = VEGGIES[name];
     var priceEl = row.querySelector('.price');
     priceEl.textContent = price + ' coins · sells for ' + veg.sellPrice;
-    priceEl.classList.toggle('hot', price > veg.seedCost * 1.2);
     row.querySelector('.buy-btn').disabled = money < price;
     row.querySelector('.have').textContent = 'You have ' + invCount(name) + ' seed' + (invCount(name) === 1 ? '' : 's') + '.';
   });
