@@ -267,7 +267,7 @@
             <tr><td><code>X &lt;- X + 1</code></td><td class="desc">Math uses +, -, * and /, with brackets to group. You need this to change a variable inside a WHILE loop, or it runs forever.</td></tr>
           </table>
           <p class="desc" style="margin:8px 0 0">A little white dot on your cursor (or a machine's blue diamond) shows which way it's facing.</p>
-          <p class="desc" style="margin:6px 0 0">New vegetables unlock as your <b>total coins earned</b> (top right, not your current balance) goes up, and after you've sold a few of the vegetable before them. Spending money doesn't undo that progress.</p>
+          <p class="desc" style="margin:6px 0 0">New vegetables unlock as your <b>total coins earned</b> (top right, not your current balance) goes up. Prices rise fast, so keep selling to afford the next one. Spending money doesn't undo that progress.</p>
           <p class="desc" style="margin:6px 0 0">Place Machine costs money too - pick Basic, Quick or Turbo underneath it first. A faster machine reruns its saved code more often.</p>
           <p class="desc" style="margin:6px 0 0">Click a placed machine to select it (its cursor turns pink and grows). From there you can edit its code, upgrade it to a faster tier, or sell it back for half its cost.</p>
         </details>
@@ -334,13 +334,12 @@ var VEGGIE_TIERS = [
 ];
 
 var TIER_SEED_COST_BASE = 5;
-var TIER_SEED_COST_GROWTH = 1.75;   // cost jump from one tier to the next
+var TIER_SEED_COST_GROWTH = 2.0;    // cost doubles per tier - Cookie-Clicker-style exponential pacing
 var TIER_SELL_MARGIN_BASE = 1.8;    // sellPrice = seedCost * margin
 var TIER_SELL_MARGIN_STEP = 0.08;   // margin improves slightly per tier
 var TIER_GROW_SECONDS_BASE = 10;
 var TIER_GROW_SECONDS_GROWTH = 1.28;
-var TIER_UNLOCK_EARNED_MULTIPLE = 8; // unlock i once totalEarned >= seedCost(i-1) * this
-var TIER_UNLOCK_SOLD_REQUIRED = 3;   // ...and you've sold at least this many of tier i-1
+var TIER_UNLOCK_EARNED_MULTIPLE = 8; // unlock i once totalEarned >= seedCost(i-1) * this (lifetime earnings, any source)
 
 var VEGGIES = {};
 VEGGIE_TIERS.forEach(function (t, i) {
@@ -354,8 +353,7 @@ VEGGIE_TIERS.forEach(function (t, i) {
     seedCost: seedCost,
     sellPrice: Math.round(seedCost * margin),
     growSeconds: growSeconds,
-    unlockEarned: i === 0 ? 0 : Math.round(VEGGIES[VEGGIE_TIERS[i - 1].name].seedCost * TIER_UNLOCK_EARNED_MULTIPLE),
-    unlockPrevName: i === 0 ? null : VEGGIE_TIERS[i - 1].name
+    unlockEarned: i === 0 ? 0 : Math.round(VEGGIES[VEGGIE_TIERS[i - 1].name].seedCost * TIER_UNLOCK_EARNED_MULTIPLE)
   };
 });
 var VEGGIE_NAMES = VEGGIE_TIERS.map(function (t) { return t.name; });
@@ -396,7 +394,7 @@ var SAVE_VERSION = 1;
 var money = 40;
 var totalEarned = 0; // lifetime coins earned from selling - never goes down, gates vegetable unlocks
 var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
-var soldCount = {};  // { Carrot: 5, ... } lifetime sales per vegetable - the other unlock gate
+var soldCount = {};  // { Carrot: 5, ... } lifetime sales per vegetable (tracked, not used for unlocking)
 var seedHeat = {};        // { Carrot: 2.4, ... } current cost-escalation heat per vegetable
 var seedHeatUpdated = {}; // { Carrot: <timestamp>, ... } last time that heat was brought up to date
 var unlockedState = {};   // { Carrot: true, ... } cached from the last refreshUnlocks() call, so
@@ -421,29 +419,21 @@ function invCount(name) { return inventory[name] || 0; }
 function isUnlocked(name) {
   var veg = VEGGIES[name];
   if (!veg || veg.tier === 0) return true;
-  return totalEarned >= veg.unlockEarned && (soldCount[veg.unlockPrevName] || 0) >= TIER_UNLOCK_SOLD_REQUIRED;
+  // Unlock is a single, natural gate: lifetime coins earned. There is no
+  // "sell N of the previous vegetable" requirement - money (and prices)
+  // scaling exponentially is the pacing, so a player with enough earned
+  // coins can always advance, exactly like Cookie Clicker's building
+  // unlocks follow ownership rather than a separate chore.
+  return totalEarned >= veg.unlockEarned;
 }
 
-// -oes, not just +s, for the two irregular plurals in the current list.
-var IRREGULAR_PLURALS = { Potato: 'Potatoes', Tomato: 'Tomatoes' };
-function pluralizeVeggie(name, count) {
-  if (count === 1) return name;
-  return IRREGULAR_PLURALS[name] || (name + 's');
-}
-
-// How much more (in coins earned, or sales of the previous vegetable)
-// is needed before this one unlocks - used to show shop rows a helpful
-// "you need X more" message instead of just hiding them.
+// How much more (in lifetime coins earned) is needed before this one
+// unlocks - used to show shop rows a helpful "you need X more" message
+// instead of just hiding them.
 function unlockProgressMessage(name) {
   var veg = VEGGIES[name];
   var earnedLeft = Math.max(0, veg.unlockEarned - totalEarned);
-  var soldLeft = Math.max(0, TIER_UNLOCK_SOLD_REQUIRED - (soldCount[veg.unlockPrevName] || 0));
-  var prevPlural = pluralizeVeggie(veg.unlockPrevName, soldLeft);
-  if (earnedLeft > 0 && soldLeft > 0) {
-    return 'Earn ' + earnedLeft + ' more coins total and sell ' + soldLeft + ' more ' + prevPlural + '.';
-  }
-  if (earnedLeft > 0) return 'Earn ' + earnedLeft + ' more coins total (lifetime, not current balance).';
-  return 'Sell ' + soldLeft + ' more ' + prevPlural + '.';
+  return 'Earn ' + earnedLeft + ' more coins total (lifetime, not current balance).';
 }
 
 // Brings a vegetable's heat up to date for "now", applying however much
@@ -883,9 +873,11 @@ function splitArgs(raw) {
 }
 
 // Evaluates an expression: a quoted string, or an arithmetic expression of
-// numbers, variables and TRUE/FALSE with + - * / and brackets. Arithmetic
-// is what makes WHILE actually useful - the loop variable has to change, so
-// "N <- N + 1" needs it. Precedence is * / before + -, and brackets group.
+// numbers, variables and TRUE/FALSE with + - * / and brackets, plus "&" for
+// string concatenation (Cambridge pseudocode's concatenation operator, not
+// "+"). Arithmetic is what makes WHILE actually useful - the loop variable
+// has to change, so "N <- N + 1" needs it. Precedence is & (loosest), then
+// + -, then * /, and brackets group.
 // Word processors and smart keyboards often produce a Unicode minus sign
 // (U+2212) or a dash where a hyphen-minus was meant - fold those into "-"
 // so "N <- N + 1" or "Set_position(0, -i)" pasted from a doc still works.
@@ -894,7 +886,7 @@ function normalizeDashes(s) {
 }
 function tokenizeExpr(raw, line) {
   var tokens = [];
-  var re = /(\d+(?:\.\d+)?|[A-Za-z_]\w*|[+\-*/()])/g;
+  var re = /(\d+(?:\.\d+)?|"[^"]*"|[A-Za-z_]\w*|[&+\-*/()])/g;
   var m, last = 0;
   while ((m = re.exec(raw)) !== null) {
     if (!/^\s*$/.test(raw.slice(last, m.index))) {
@@ -911,7 +903,7 @@ function tokenizeExpr(raw, line) {
 
 function evalExpr(raw, vars, line) {
   var t = normalizeDashes(raw).trim();
-  if (/^".*"$/.test(t)) return t.slice(1, -1);
+  if (/^"[^"]*"$/.test(t)) return t.slice(1, -1);
   var tokens = tokenizeExpr(t, line);
   var pos = 0;
   function peek() { return tokens[pos]; }
@@ -923,6 +915,15 @@ function evalExpr(raw, vars, line) {
       var op = take();
       var r = parseProduct();
       v = (op === '+') ? (v + r) : (v - r);
+    }
+    return v;
+  }
+  function parseConcat() {
+    var v = parseSum();
+    while (peek() === '&') {
+      take();
+      var r = parseSum();
+      v = String(v) + String(r); // Cambridge's concatenation operator
     }
     return v;
   }
@@ -939,7 +940,7 @@ function evalExpr(raw, vars, line) {
     if (peek() === '-') { take(); return -parseUnary(); }
     if (peek() === '(') {
       take();
-      var v = parseSum();
+      var v = parseConcat();
       if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" .', line);
       take();
       return v;
@@ -947,13 +948,14 @@ function evalExpr(raw, vars, line) {
     var tok = take();
     if (tok === undefined) throw new PseudocodeError('Missing a value.', line);
     if (/^\d+(\.\d+)?$/.test(tok)) return Number(tok);
+    if (/^".*"$/.test(tok)) return tok.slice(1, -1);
     if (/^true$/i.test(tok)) return true;
     if (/^false$/i.test(tok)) return false;
     if (Object.prototype.hasOwnProperty.call(vars, tok)) return vars[tok];
     throw new PseudocodeError('I don\'t understand "' + tok + '".', line);
   }
 
-  var result = parseSum();
+  var result = parseConcat();
   if (pos < tokens.length) throw new PseudocodeError('I don\'t understand "' + tokens[pos] + '".', line);
   return result;
 }
