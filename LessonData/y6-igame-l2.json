@@ -120,14 +120,14 @@
   ],
   "validators": {
     "y6l2_do_now": [
-      {"suffix": "a", "pattern": {"__regex": true, "source": "^\\s*(an?\\s+)?input\\s*$", "flags": "i"}, "feedback": "Moving the mouse sends information into the game."},
-      {"suffix": "b", "pattern": {"__regex": true, "source": "^\\s*(an?\\s+)?output\\s*$", "flags": "i"}, "feedback": "The score is information shown by the computer."},
-      {"suffix": "c", "pattern": {"__regex": true, "source": "\\b(mouse|keyboard|controller|gamepad|joystick|touch\\s*screen|touchscreen|motion\\s*controller)\\b", "flags": "i"}, "feedback": "Examples include a mouse, keyboard, controller, joystick, or touch screen."}
+      {"suffix": "a", "pattern": {"__regex": true, "source": "^\\s*(an?\\s+)?input\\s*$", "flags": "i"}, "feedback": "Look back at the definition above: which direction is the information travelling, into the game or out of it?"},
+      {"suffix": "b", "pattern": {"__regex": true, "source": "^\\s*(an?\\s+)?output\\s*$", "flags": "i"}, "feedback": "Look back at the definition above: is the game sending this information out, or receiving it?"},
+      {"suffix": "c", "pattern": {"__regex": true, "source": "\\b(mouse|keyboard|controller|gamepad|joystick|touch\\s*screen|touchscreen|motion\\s*controller)\\b", "flags": "i"}, "feedback": "Think of a physical device the player touches or moves to control the game, not something the screen shows them."}
     ],
     "y6l2_plenary": [
-      {"suffix": "a", "pattern": {"__regex": true, "source": "\\b(if|condition|conditional|decision)\\b", "flags": "i"}, "feedback": "An if block tests the touching Paddle condition."},
-      {"suffix": "b", "pattern": {"__regex": true, "source": "\\b(keep|keeps|continually|continuously|repeat|repeats|again|all\\s+the\\s+time|throughout)\\b.*\\b(check|checking|test|testing|run|running)\\b|\\b(check|checking|test|testing)\\b.*\\b(keep|continually|continuously|repeat|again|all\\s+the\\s+time|throughout)\\b", "flags": "i"}, "feedback": "Forever makes the program keep checking for contact throughout the game."},
-      {"suffix": "c", "pattern": {"__regex": true, "source": "^\\s*3\\s*$", "flags": "i"}, "feedback": "Each hit adds 1, so three hits produce a score of 3."}
+      {"suffix": "a", "pattern": {"__regex": true, "source": "\\b(if|condition|conditional|decision)\\b", "flags": "i"}, "feedback": "Think about which block type makes a decision by checking whether something is true or false."},
+      {"suffix": "b", "pattern": {"__regex": true, "source": "\\b(keep|keeps|continually|continuously|repeat|repeats|again|all\\s+the\\s+time|throughout)\\b.*\\b(check|checking|test|testing|run|running)\\b|\\b(check|checking|test|testing)\\b.*\\b(keep|continually|continuously|repeat|again|all\\s+the\\s+time|throughout)\\b", "flags": "i"}, "feedback": "Think about how many times the game needs to check for contact while it's running - just once, or the whole time?"},
+      {"suffix": "c", "pattern": {"__regex": true, "source": "^\\s*3\\s*$", "flags": "i"}, "feedback": "Work out how much the score changes for a single hit, then apply that to three hits."}
     ]
   },
   "pseudocodeValidators": {}
