@@ -222,7 +222,7 @@
     <div id="canvas-wrap">
       <canvas id="three-canvas"></canvas>
       <div id="tile-info"></div>
-      <div id="canvas-hint">Drag to look around &middot; Scroll to zoom &middot; Click a tile to move there</div>
+      <div id="canvas-hint">Drag or use WASD / arrow keys to move around &middot; Scroll to zoom &middot; Click a tile to move there</div>
     </div>
 
     <aside id="sidebar">
@@ -643,11 +643,26 @@ function updatePlayerCursorPosition() {
 updatePlayerCursorPosition();
 
 // ============================================================
-// CAMERA CONTROLS (a small hand-rolled orbit/zoom, so the whole app has no
-// extra dependency beyond three.js itself - no examples/jsm build needed)
+// CAMERA CONTROLS (hand-rolled pan + zoom, so the whole app has no extra
+// dependency beyond three.js itself - no examples/jsm build needed). The
+// garden expands now, so the view slides around the field on the ground
+// plane instead of orbiting it.
 // ============================================================
 var camState = { radius: 11, theta: Math.PI / 4, phi: 1.0, target: new THREE.Vector3(0, 0, 0) };
 var pointer = { down: false, moved: false, lastX: 0, lastY: 0, downX: 0, downY: 0, id: null };
+var heldKeys = {};
+var lastFrameMs = 0;
+
+// Screen-right and screen-"away" directions flattened onto the ground (X/Z)
+// plane. Panning always uses these, so the camera can only slide sideways
+// and never changes height.
+function cameraHorizontalVectors() {
+  var theta = camState.theta;
+  return {
+    right: new THREE.Vector3(Math.cos(theta), 0, -Math.sin(theta)),
+    forward: new THREE.Vector3(-Math.sin(theta), 0, -Math.cos(theta))
+  };
+}
 
 function applyCameraState() {
   var r = camState.radius;
@@ -675,8 +690,13 @@ canvas.addEventListener('pointermove', function (e) {
   var dy = e.clientY - pointer.lastY;
   if (Math.abs(e.clientX - pointer.downX) > 4 || Math.abs(e.clientY - pointer.downY) > 4) pointer.moved = true;
   pointer.lastX = e.clientX; pointer.lastY = e.clientY;
-  camState.theta -= dx * 0.008;
-  camState.phi = Math.min(1.45, Math.max(0.35, camState.phi - dy * 0.008));
+  // Grab-and-pan: the ground follows the cursor, so dragging right slides
+  // the view left and dragging down slides it towards you. The movement
+  // stays on the ground plane (X/Z) - never up or down.
+  var v = cameraHorizontalVectors();
+  var k = camState.radius * 0.0016; // perspective-correct pan speed
+  camState.target.addScaledVector(v.right, -dx * k);
+  camState.target.addScaledVector(v.forward, dy * k);
   applyCameraState();
 });
 // Hovering over a purchasable edge tile swaps the bottom hint for a "buy"
@@ -688,7 +708,7 @@ canvas.addEventListener('pointermove', function (e) {
   if (obj && obj.userData.isEdge) {
     canvasHintEl.textContent = '🪙 Click to buy this tile (' + nextTileCost() + ' coins)';
   } else {
-    canvasHintEl.textContent = 'Drag to look around · Scroll to zoom · Click a tile to move there';
+    canvasHintEl.textContent = 'Drag or use WASD / arrow keys to move around · Scroll to zoom · Click a tile to move there';
   }
 });
 canvas.addEventListener('pointerup', function (e) {
@@ -701,6 +721,23 @@ canvas.addEventListener('wheel', function (e) {
   camState.radius = Math.min(20, Math.max(5, camState.radius + e.deltaY * 0.01));
   applyCameraState();
 }, { passive: false });
+
+// WASD / arrow keys slide the camera around the field while held. Only the
+// ground-plane axes are used, so the view never tilts or changes height.
+// Keys are ignored while the player is typing in a text box.
+var PAN_KEYS = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+function keyName(e) { return e.key.length === 1 ? e.key.toLowerCase() : e.key; }
+window.addEventListener('keydown', function (e) {
+  var tag = (e.target && e.target.tagName) || '';
+  if (tag === 'TEXTAREA' || tag === 'INPUT' || (e.target && e.target.isContentEditable)) return;
+  var k = keyName(e);
+  heldKeys[k] = true;
+  if (PAN_KEYS.indexOf(k) !== -1) e.preventDefault();
+});
+window.addEventListener('keyup', function (e) {
+  heldKeys[keyName(e)] = false;
+});
+window.addEventListener('blur', function () { heldKeys = {}; });
 
 // ============================================================
 // TILE SELECTION (raycasting)
@@ -2070,6 +2107,24 @@ function animate() {
   var elapsed = clock.getElapsedTime();
   var perfNow = performance.now(); // transient animations (floating text)
   var wallNow = Date.now();        // persisted timing (plant growth)
+
+  // WASD / arrow camera pan, scaled by delta time so speed is framerate-
+  // independent and by zoom so it feels the same close up and far away.
+  var dt = lastFrameMs ? Math.min(0.05, (perfNow - lastFrameMs) / 1000) : 0;
+  lastFrameMs = perfNow;
+  if (dt > 0) {
+    var hv = cameraHorizontalVectors();
+    var panX = 0, panZ = 0;
+    if (heldKeys['w'] || heldKeys['ArrowUp']) panZ += 1;
+    if (heldKeys['s'] || heldKeys['ArrowDown']) panZ -= 1;
+    if (heldKeys['a'] || heldKeys['ArrowLeft']) panX -= 1;
+    if (heldKeys['d'] || heldKeys['ArrowRight']) panX += 1;
+    if (panX !== 0 || panZ !== 0) {
+      camState.target.addScaledVector(hv.right, panX * camState.radius * 1.5 * dt);
+      camState.target.addScaledVector(hv.forward, panZ * camState.radius * 1.5 * dt);
+      applyCameraState();
+    }
+  }
 
   // Bob the player's arrow and every machine cursor gently so the scene
   // never looks totally static, even between actions.
