@@ -222,7 +222,7 @@
     <div id="canvas-wrap">
       <canvas id="three-canvas"></canvas>
       <div id="tile-info"></div>
-      <div id="canvas-hint">Drag or use WASD / arrow keys to move around &middot; Scroll to zoom &middot; Click a tile to move there</div>
+      <div id="canvas-hint">Drag or WASD / arrows to move &middot; Right-drag or Q/E/R/F to rotate &middot; Scroll to zoom &middot; Click a tile</div>
     </div>
 
     <aside id="sidebar">
@@ -674,7 +674,7 @@ updatePlayerCursorPosition();
 // plane instead of orbiting it.
 // ============================================================
 var camState = { radius: 11, theta: Math.PI / 4, phi: 1.0, target: new THREE.Vector3(0, 0, 0) };
-var pointer = { down: false, moved: false, lastX: 0, lastY: 0, downX: 0, downY: 0, id: null };
+var pointer = { down: false, moved: false, lastX: 0, lastY: 0, downX: 0, downY: 0, id: null, button: 0 };
 var heldKeys = {};
 var lastFrameMs = 0;
 
@@ -704,6 +704,7 @@ applyCameraState();
 
 canvas.addEventListener('pointerdown', function (e) {
   pointer.down = true; pointer.moved = false;
+  pointer.button = e.button;
   pointer.lastX = pointer.downX = e.clientX;
   pointer.lastY = pointer.downY = e.clientY;
   pointer.id = e.pointerId;
@@ -715,9 +716,17 @@ canvas.addEventListener('pointermove', function (e) {
   var dy = e.clientY - pointer.lastY;
   if (Math.abs(e.clientX - pointer.downX) > 4 || Math.abs(e.clientY - pointer.downY) > 4) pointer.moved = true;
   pointer.lastX = e.clientX; pointer.lastY = e.clientY;
-  // Grab-and-pan: the ground follows the cursor, so dragging right slides
-  // the view left and dragging down slides it towards you. The movement
-  // stays on the ground plane (X/Z) - never up or down.
+  // Right-button drag orbits the camera around the point you're looking at,
+  // changing both the azimuth (dx) and the tilt (dy).
+  if (pointer.button === 2) {
+    camState.theta -= dx * 0.008;
+    camState.phi = Math.min(1.45, Math.max(0.35, camState.phi - dy * 0.008));
+    applyCameraState();
+    return;
+  }
+  // Grab-and-pan (left button): the ground follows the cursor, so dragging
+  // right slides the view left and dragging down slides it towards you. The
+  // movement stays on the ground plane (X/Z) - never up or down.
   var v = cameraHorizontalVectors();
   var k = camState.radius * 0.0016; // perspective-correct pan speed
   camState.target.addScaledVector(v.right, -dx * k);
@@ -733,31 +742,35 @@ canvas.addEventListener('pointermove', function (e) {
   if (obj && obj.userData.isEdge) {
     canvasHintEl.textContent = '🪙 Click to buy this tile (' + nextTileCost() + ' coins)';
   } else {
-    canvasHintEl.textContent = 'Drag or use WASD / arrow keys to move around · Scroll to zoom · Click a tile to move there';
+    canvasHintEl.textContent = 'Drag or WASD / arrows to move · Right-drag or Q/E/R/F to rotate · Scroll to zoom · Click a tile';
   }
 });
 canvas.addEventListener('pointerup', function (e) {
   if (e.pointerId !== pointer.id) return;
   pointer.down = false;
+  if (pointer.button === 2) { pointer.button = 0; return; } // right-drag orbits, never a tile click
+  pointer.button = 0;
   if (!pointer.moved) handleTileClick(e.clientX, e.clientY);
 });
+canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 canvas.addEventListener('wheel', function (e) {
   e.preventDefault();
   camState.radius = Math.min(20, Math.max(5, camState.radius + e.deltaY * 0.01));
   applyCameraState();
 }, { passive: false });
 
-// WASD / arrow keys slide the camera around the field while held. Only the
-// ground-plane axes are used, so the view never tilts or changes height.
-// Keys are ignored while the player is typing in a text box.
-var PAN_KEYS = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+// WASD / arrow keys slide the camera around the field while held; Q/E rotate
+// it left/right and R/F tilt it up/down. Only the ground plane is used for
+// panning, so the view never changes height. Keys are ignored while the
+// player is typing in a text box.
+var CAM_KEYS = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'q', 'e', 'r', 'f'];
 function keyName(e) { return e.key.length === 1 ? e.key.toLowerCase() : e.key; }
 window.addEventListener('keydown', function (e) {
   var tag = (e.target && e.target.tagName) || '';
   if (tag === 'TEXTAREA' || tag === 'INPUT' || (e.target && e.target.isContentEditable)) return;
   var k = keyName(e);
   heldKeys[k] = true;
-  if (PAN_KEYS.indexOf(k) !== -1) e.preventDefault();
+  if (CAM_KEYS.indexOf(k) !== -1) e.preventDefault();
 });
 window.addEventListener('keyup', function (e) {
   heldKeys[keyName(e)] = false;
@@ -2133,8 +2146,9 @@ function animate() {
   var perfNow = performance.now(); // transient animations (floating text)
   var wallNow = Date.now();        // persisted timing (plant growth)
 
-  // WASD / arrow camera pan, scaled by delta time so speed is framerate-
-  // independent and by zoom so it feels the same close up and far away.
+  // WASD / arrow camera pan and Q/E/R/F rotation, scaled by delta time so
+  // speed is framerate-independent and by zoom so pan feels the same close
+  // up and far away.
   var dt = lastFrameMs ? Math.min(0.05, (perfNow - lastFrameMs) / 1000) : 0;
   lastFrameMs = perfNow;
   if (dt > 0) {
@@ -2144,11 +2158,20 @@ function animate() {
     if (heldKeys['s'] || heldKeys['ArrowDown']) panZ -= 1;
     if (heldKeys['a'] || heldKeys['ArrowLeft']) panX -= 1;
     if (heldKeys['d'] || heldKeys['ArrowRight']) panX += 1;
+    var rotX = 0, rotY = 0;
+    if (heldKeys['q']) rotX += 1;
+    if (heldKeys['e']) rotX -= 1;
+    if (heldKeys['r']) rotY += 1;
+    if (heldKeys['f']) rotY -= 1;
+    var camChanged = false;
     if (panX !== 0 || panZ !== 0) {
       camState.target.addScaledVector(hv.right, panX * camState.radius * 1.5 * dt);
       camState.target.addScaledVector(hv.forward, panZ * camState.radius * 1.5 * dt);
-      applyCameraState();
+      camChanged = true;
     }
+    if (rotX !== 0) { camState.theta += rotX * 1.6 * dt; camChanged = true; }
+    if (rotY !== 0) { camState.phi = Math.min(1.45, Math.max(0.35, camState.phi + rotY * 0.9 * dt)); camChanged = true; }
+    if (camChanged) applyCameraState();
   }
 
   // Bob the player's arrow and every machine cursor gently so the scene
