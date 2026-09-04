@@ -320,7 +320,7 @@
           </table>
           <p class="desc" style="margin:8px 0 0">A little white dot on your cursor (or a machine's blue diamond) shows which way it's facing.</p>
           <p class="desc" style="margin:6px 0 0">New vegetables unlock as your <b>total coins earned</b> (top right, not your current balance) goes up. Prices rise fast, so keep selling to afford the next one. Spending money doesn't undo that progress.</p>
-          <p class="desc" style="margin:6px 0 0">Place Machine costs money too - pick Basic, Quick or Turbo underneath it first. A faster machine reruns its saved code more often.</p>
+          <p class="desc" style="margin:6px 0 0">Place Machine costs money too - pick Basic, Quick or Turbo underneath it first. Machines follow one line at a time. Basic runs 1 instruction per second, Quick runs 2 and Turbo runs 3.</p>
           <p class="desc" style="margin:6px 0 0">Click a placed machine to select it (its cursor turns pink and grows). From there you can edit its code, upgrade it to a faster tier, or sell it back for half its cost.</p>
           <p class="desc" style="margin:6px 0 0">Out of room? Hover over a dim tile at the edge of your garden and click it to <b>buy more land</b>. Each extra tile costs more than the last, and crops take longer to grow the more expensive they are.</p>
         </details>
@@ -1790,15 +1790,15 @@ machineBtn.addEventListener('click', function () {
 // ============================================================
 // MACHINES
 // ============================================================
-// "Better machines = faster intervals", paid for in money rather than
+// Better machines execute more instructions each second, paid for in money rather than
 // gated by totalEarned - unlike vegetables, a fast machine doesn't skip
 // any of the writing-pseudocode learning, it just makes an already-
-// written program tick over more often, so gating it the same way as a
+// written program advance more quickly, so gating it the same way as a
 // vegetable tier isn't needed for the same reason.
 var MACHINE_TIERS = [
-  { name: 'Basic',  cost: 30,  intervalMs: 10000, color: 0x6ea8fe },
-  { name: 'Quick',  cost: 150, intervalMs: 6000,  color: 0x4fd1c5 },
-  { name: 'Turbo',  cost: 500, intervalMs: 3000,  color: 0xffa94d }
+  { name: 'Basic', cost: 30, instructionsPerSecond: 1, color: 0x6ea8fe },
+  { name: 'Quick', cost: 150, instructionsPerSecond: 2, color: 0x4fd1c5 },
+  { name: 'Turbo', cost: 500, instructionsPerSecond: 3, color: 0xffa94d }
 ];
 var MACHINE_SELL_REFUND = 0.5; // selling a machine back refunds half its cost
 var selectedMachineTierIndex = 0;
@@ -1882,8 +1882,9 @@ function positionMachineCursorMarker(machine) {
 // nothing was lost).
 function placeMachine(code) {
   if (!code.trim()) { logConsole('Write some code first, then place a machine.', true); return false; }
+  var compiledProgram;
   try {
-    compile(code); // catch syntax errors before the machine is committed to the field
+    compiledProgram = compile(code); // validate once, then reuse on every machine tick
   } catch (e) {
     setCodeError(e.line || 1);
     logConsole('Cannot place machine: ' + e.message, true);
@@ -1914,7 +1915,10 @@ function placeMachine(code) {
     code: code,
     tierName: tier.name,
     cost: tier.cost,
-    intervalMs: tier.intervalMs,
+    instructionsPerSecond: tier.instructionsPerSecond,
+    intervalMs: Math.round(1000 / tier.instructionsPerSecond),
+    program: compiledProgram,
+    runtime: { vars: {}, forEnds: {}, pc: 0, steps: 0 },
     // The machine's own home tile is (0, 0) for its Set_position calls -
     // see setPositionRelative().
     cursor: { x: x, z: z, facing: 0, homeX: x, homeZ: z },
@@ -1934,14 +1938,14 @@ function placeMachine(code) {
   updateFacingIndicator(machine.facingIndicator, machine.cursor.facing);
   scheduleMachine(machine);
   updateHUD();
-  logConsole(tier.name + ' Machine placed for ' + tier.cost + ' coins! It will run its program every ' + (machine.intervalMs / 1000) + ' seconds.');
+  logConsole(tier.name + ' Machine placed for ' + tier.cost + ' coins! It runs ' + machineRateLabel(machine) + '.');
   return true;
 }
 
 function buildMachineTierPicker() {
   var container = document.getElementById('machine-tiers');
   container.innerHTML = MACHINE_TIERS.map(function (tier, i) {
-    return '<button type="button" class="machine-tier-btn" data-tier="' + i + '">' + tier.name + '<br>' + tier.cost + 'c &middot; ' + (tier.intervalMs / 1000) + 's</button>';
+    return '<button type="button" class="machine-tier-btn" data-tier="' + i + '">' + tier.name + '<br>' + tier.cost + 'c &middot; ' + tier.instructionsPerSecond + ' instr/s</button>';
   }).join('');
   Array.prototype.forEach.call(container.querySelectorAll('.machine-tier-btn'), function (btn, i) {
     btn.addEventListener('click', function () {
@@ -1960,15 +1964,85 @@ function refreshMachineTierPicker() {
 }
 buildMachineTierPicker();
 
+function machineRateLabel(machine) {
+  var rate = machine.instructionsPerSecond || 1;
+  return rate + ' instruction' + (rate === 1 ? '' : 's') + ' per second';
+}
+
+function resetMachineRuntime(machine) {
+  machine.runtime = { vars: {}, forEnds: {}, pc: 0, steps: 0 };
+}
+
+async function runMachineInstruction(machine) {
+  var instructions = machine.program;
+  if (!instructions || !instructions.length) return;
+  if (!machine.runtime || machine.runtime.pc >= instructions.length) resetMachineRuntime(machine);
+  var runtime = machine.runtime;
+  if (++runtime.steps > 400) {
+    logConsole('[Machine #' + machine.id + '] Stopped after 400 steps - check your FOR or WHILE loop isn\'t counting forever.', true, true);
+    resetMachineRuntime(machine);
+    return;
+  }
+
+  var instr = instructions[runtime.pc];
+  if (instr.type === 'FOR') {
+    var startVal = evalExpr(instr.startExpr, runtime.vars, instr.line, machine.cursor);
+    var endVal = evalExpr(instr.endExpr, runtime.vars, instr.line, machine.cursor);
+    if (typeof startVal !== 'number' || typeof endVal !== 'number') {
+      throw new PseudocodeError('FOR needs numbers, e.g. FOR ' + instr.var + ' <- 1 TO 5', instr.line);
+    }
+    runtime.vars[instr.var] = startVal;
+    runtime.forEnds[runtime.pc] = endVal;
+    runtime.pc = startVal > endVal ? instr.pairedNextIndex + 1 : runtime.pc + 1;
+    return;
+  }
+  if (instr.type === 'NEXT') {
+    var forInstr = instructions[instr.pairedForIndex];
+    runtime.vars[forInstr.var]++;
+    runtime.pc = runtime.vars[forInstr.var] <= runtime.forEnds[instr.pairedForIndex] ? instr.pairedForIndex + 1 : runtime.pc + 1;
+    return;
+  }
+  if (instr.type === 'WHILE') {
+    runtime.pc = evalCondition(instr.condition, runtime.vars, instr.line, machine.cursor)
+      ? runtime.pc + 1
+      : instr.pairedEndIndex + 1;
+    return;
+  }
+  if (instr.type === 'ENDWHILE') {
+    runtime.pc = instr.pairedWhileIndex;
+    return;
+  }
+  if (instr.type === 'OUTPUT') {
+    logConsole('[Machine #' + machine.id + '] ' + String(evalExpr(instr.expr, runtime.vars, instr.line, machine.cursor)), false, true);
+    runtime.pc++;
+    return;
+  }
+  if (instr.type === 'ASSIGN') {
+    runtime.vars[instr.var] = evalExpr(instr.expr, runtime.vars, instr.line, machine.cursor);
+    runtime.pc++;
+    return;
+  }
+  if (instr.type === 'CALL') {
+    var args = splitArgs(instr.argsRaw).map(function (arg) {
+      return evalExpr(arg, runtime.vars, instr.line, machine.cursor);
+    });
+    await runCommand(instr.name, args, machine.cursor, function (message, isError) {
+      logConsole('[Machine #' + machine.id + '] ' + message, isError, true);
+    }, instr.line);
+    runtime.pc++;
+    return;
+  }
+  runtime.pc++;
+}
+
 function scheduleMachine(machine) {
   machine.timer = setInterval(function () {
-    if (machine.running) return; // never overlap two runs of the same machine
+    if (machine.running) return; // never overlap two instructions from the same machine
     machine.running = true;
-    runProgram(machine.code, machine.cursor, function (msg, isErr) {
-      logConsole('[Machine #' + machine.id + '] ' + msg, isErr, true);
-    }, 0)
+    runMachineInstruction(machine)
       .catch(function (err) {
         logConsole('[Machine #' + machine.id + '] Error: ' + (err.message || err), true, true);
+        resetMachineRuntime(machine);
       })
       .then(function () { machine.running = false; });
   }, machine.intervalMs);
@@ -2017,13 +2091,14 @@ function upgradeMachine(machine) {
   money -= cost;
   machine.cost = nextTier.cost;
   machine.tierName = nextTier.name;
-  machine.intervalMs = nextTier.intervalMs;
+  machine.instructionsPerSecond = nextTier.instructionsPerSecond;
+  machine.intervalMs = Math.round(1000 / nextTier.instructionsPerSecond);
   if (machine.body) machine.body.material.color.setHex(nextTier.color);
   clearInterval(machine.timer);
   scheduleMachine(machine);
   updateHUD();
   updateTileInfoPanel();
-  logConsole('Machine #' + machine.id + ' upgraded to ' + nextTier.name + ' - it now runs every ' + (nextTier.intervalMs / 1000) + 's.');
+  logConsole('Machine #' + machine.id + ' upgraded to ' + nextTier.name + ' - it now runs ' + machineRateLabel(machine) + '.');
 }
 
 function startEditingMachine(machine) {
@@ -2043,8 +2118,9 @@ function startEditingMachine(machine) {
 
 function saveMachineCode(machine) {
   var newCode = document.getElementById('machine-code-edit').value;
+  var compiledProgram;
   try {
-    compile(newCode);
+    compiledProgram = compile(newCode);
   } catch (e) {
     var ta = document.getElementById('machine-code-edit');
     if (ta) ta.style.borderColor = '#d9534f';
@@ -2052,6 +2128,8 @@ function saveMachineCode(machine) {
     return;
   }
   machine.code = newCode;
+  machine.program = compiledProgram;
+  resetMachineRuntime(machine);
   editingMachineCodeId = null;
   lastTileInfoSignature = '';
   updateTileInfoPanel();
@@ -2153,8 +2231,12 @@ function saveGame(force) {
   machines.forEach(function (m) {
     s.machines.push({
       id: m.id, homeX: m.homeX, homeZ: m.homeZ, code: m.code, tierName: m.tierName,
-      cost: m.cost, intervalMs: m.intervalMs,
-      cursorX: m.cursor.x, cursorZ: m.cursor.z, cursorFacing: m.cursor.facing
+      cost: m.cost, intervalMs: m.intervalMs, instructionsPerSecond: m.instructionsPerSecond,
+      cursorX: m.cursor.x, cursorZ: m.cursor.z, cursorFacing: m.cursor.facing,
+      runtimePc: m.runtime ? m.runtime.pc : 0,
+      runtimeVars: m.runtime ? m.runtime.vars : {},
+      runtimeForEnds: m.runtime ? m.runtime.forEnds : {},
+      runtimeSteps: m.runtime ? m.runtime.steps : 0
     });
   });
   var json = JSON.stringify(s);
@@ -2167,13 +2249,24 @@ function saveGame(force) {
 
 function restoreMachine(s) {
   var tier = MACHINE_TIERS.filter(function (t) { return t.name === s.tierName; })[0] || MACHINE_TIERS[0];
+  var compiledProgram;
+  try { compiledProgram = compile(String(s.code || '')); }
+  catch (e) { compiledProgram = []; }
   var built = createMachineMarkerGroup(tier.color);
   built.group.position.set(tileWorldX(s.homeX), 0, tileWorldZ(s.homeZ));
   scene.add(built.group);
   scene.add(built.cursorMesh);
   var machine = {
     id: s.id, homeX: s.homeX, homeZ: s.homeZ,
-    code: s.code, tierName: tier.name, cost: s.cost, intervalMs: s.intervalMs,
+    code: s.code, program: compiledProgram, tierName: tier.name, cost: s.cost,
+    instructionsPerSecond: tier.instructionsPerSecond,
+    intervalMs: Math.round(1000 / tier.instructionsPerSecond),
+    runtime: {
+      vars: s.runtimeVars && typeof s.runtimeVars === 'object' ? s.runtimeVars : {},
+      forEnds: s.runtimeForEnds && typeof s.runtimeForEnds === 'object' ? s.runtimeForEnds : {},
+      pc: Math.max(0, Math.min(compiledProgram.length, Number(s.runtimePc) || 0)),
+      steps: Math.max(0, Number(s.runtimeSteps) || 0)
+    },
     cursor: { x: s.cursorX, z: s.cursorZ, facing: s.cursorFacing || 0, homeX: s.homeX, homeZ: s.homeZ },
     group: built.group, cursorMesh: built.cursorMesh, facingIndicator: built.facingIndicator,
     diamond: built.diamond, body: built.body, running: false
@@ -2360,9 +2453,21 @@ updateHUD();
 // Seed prices cool down over real time even with nobody clicking anything,
 // and later tiers should visibly unlock the moment they're earned - both
 // need the shop to refresh on its own, not only after a Buy/Sell click.
-// This also double-duties as the autosave tick (at most a second of
-// progress can be lost to a crash or a hard close).
-setInterval(function () { refreshUnlocks(); updateHUD(); saveGame(false); }, 1000);
+// This also requests an autosave once per second. The serialisation and
+// synchronous localStorage write run during browser idle time, while
+// pagehide still forces the latest state to disk before navigation.
+var autosavePending = false;
+function scheduleAutosave() {
+  if (autosavePending) return;
+  autosavePending = true;
+  var write = function () {
+    autosavePending = false;
+    saveGame(false);
+  };
+  if (window.requestIdleCallback) window.requestIdleCallback(write, { timeout: 2000 });
+  else setTimeout(write, 50);
+}
+setInterval(function () { refreshUnlocks(); updateHUD(); scheduleAutosave(); }, 1000);
 window.addEventListener('pagehide', function () { saveGame(true); });
 
 var lastTileInfoSignature = '';
@@ -2377,7 +2482,7 @@ function updateTileInfoPanel() {
     ? Math.min(100, Math.round(((Date.now() - plantForSignature.plantedAt) / plantForSignature.growMs) * 100))
     : -1;
   var signature = selectedForSignature
-    ? ['machine', selectedForSignature.id, selectedForSignature.tierName, selectedForSignature.intervalMs,
+    ? ['machine', selectedForSignature.id, selectedForSignature.tierName, selectedForSignature.instructionsPerSecond,
         selectedForSignature.cursor.x, selectedForSignature.cursor.z, selectedForSignature.code, money].join('|')
     : ['tile', playerCursor.x, playerCursor.z, tileForSignature && tileForSignature.hasMachine ? 1 : 0,
         plantForSignature ? plantForSignature.type : '', plantForSignature && plantForSignature.ready ? 1 : 0,
@@ -2396,8 +2501,8 @@ function updateTileInfoPanel() {
         upgradeHtml = '<button type="button" class="machine-action-btn" id="machine-upgrade-btn" style="background:#6ea8fe;color:#04214f">Upgrade to ' + nextTier.name + ' (' + upgradeCost + 'c)</button>';
       }
       tileInfoEl.className = 'show';
-      tileInfoEl.innerHTML = '<b>Machine #' + selected.id + '</b> (pink cursor) &middot; runs every ' +
-        (selected.intervalMs / 1000) + 's &middot; cursor at (' + selected.cursor.x + ', ' + selected.cursor.z + ')' +
+      tileInfoEl.innerHTML = '<b>Machine #' + selected.id + '</b> (pink cursor) &middot; ' +
+        machineRateLabel(selected) + ' &middot; cursor at (' + selected.cursor.x + ', ' + selected.cursor.z + ')' +
         '<pre style="white-space:pre-wrap;margin:6px 0 0;font-size:.7rem;background:#12190f;color:#b9e6b0;padding:6px;border-radius:6px;max-height:80px;overflow:auto">' +
         escapeHtmlLocal(selected.code) + '</pre>' +
         '<div class="machine-actions">' +
