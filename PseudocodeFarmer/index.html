@@ -299,6 +299,7 @@
             <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, plant and sell the same vegetable forever.</td></tr>
             <tr><td><code>Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
             <tr><td><code>Has_Crop()</code></td><td class="desc">TRUE if the square your cursor is on has a crop growing, FALSE if it's empty. Use it in IF/WHILE: IF Has_Crop() THEN ...</td></tr>
+            <tr><td><code>Crop_On_Tile()</code></td><td class="desc">Which crop is on the square your cursor is on ("Carrot"), or "None" if it's empty. E.g. IF Crop_On_Tile() = "Carrot" THEN ...</td></tr>
             <tr><td><code>Money()</code></td><td class="desc">How many coins you have right now. E.g. WHILE Money() &lt; 50 DO.</td></tr>
             <tr><td><code>Seed_Count("Carrot")</code></td><td class="desc">How many packets of that seed you own. E.g. IF Seed_Count("Potato") = 0 THEN Buy("Potato Seeds").</td></tr>
             <tr><td><code>Move_up()</code></td><td class="desc">Moves your cursor one tile up the field.</td></tr>
@@ -1044,12 +1045,16 @@ function buySeedByLabel(label, viaCode) {
 // Read-only pseudo-functions a program can call inside expressions (WHILE /
 // IF conditions, OUTPUT, or an assignment). They return values rather than
 // acting, so a machine can reason about the world instead of blindly looping.
-var FUNCTIONS = ['Has_Crop', 'Money', 'Seed_Count'];
+var FUNCTIONS = ['Has_Crop', 'Crop_On_Tile', 'Money', 'Seed_Count'];
 function callFunction(name, args, cursor, line) {
   if (name === 'Money') return money; // coins in your wallet right now
   if (name === 'Has_Crop') {
     var tile = cursor ? tileAt(cursor.x, cursor.z) : null;
     return !!(tile && tile.plant);
+  }
+  if (name === 'Crop_On_Tile') {
+    var tile2 = cursor ? tileAt(cursor.x, cursor.z) : null;
+    return (tile2 && tile2.plant) ? tile2.plant.type : 'None';
   }
   if (name === 'Seed_Count') {
     if (args[0] === undefined) throw new PseudocodeError('Seed_Count needs a seed name, e.g. Seed_Count("Carrot").', line);
