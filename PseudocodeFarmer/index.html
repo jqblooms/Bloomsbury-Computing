@@ -295,21 +295,21 @@
         <details class="cheat-sheet">
           <summary>📖 Pseudocode cheat sheet</summary>
           <table>
-            <tr><td><code>Plant("Carrot")</code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
-            <tr><td><code>Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, plant and sell the same vegetable forever.</td></tr>
-            <tr><td><code>Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
-            <tr><td><code>Has_Crop("Carrot")</code></td><td class="desc">TRUE if the square has that crop growing. Leave the crop name out to check whether any crop is growing there.</td></tr>
-            <tr><td><code>Crop_On_Tile()</code></td><td class="desc">Which crop is on the square your cursor is on ("Carrot"), or "None" if it's empty. E.g. IF Crop_On_Tile() = "Carrot" THEN ...</td></tr>
+            <tr><td><code>CALL Plant("Carrot")</code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
+            <tr><td><code>CALL Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, plant and sell the same vegetable forever.</td></tr>
+            <tr><td><code>CALL Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
+            <tr><td><code>HasCrop("Carrot")</code></td><td class="desc">TRUE if the square has that crop growing. Leave the crop name out to check whether any crop is growing there.</td></tr>
+            <tr><td><code>CropOnTile()</code></td><td class="desc">Which crop is on the square your cursor is on ("Carrot"), or "None" if it's empty. E.g. IF CropOnTile() = "Carrot" THEN ...</td></tr>
             <tr><td><code>Money()</code></td><td class="desc">How many coins you have right now. E.g. WHILE Money() &lt; 50 DO.</td></tr>
-            <tr><td><code>Seed_Count("Carrot")</code></td><td class="desc">How many packets of that seed you own. E.g. IF Seed_Count("Potato") = 0 THEN Buy("Potato Seeds").</td></tr>
-            <tr><td><code>Move_up()</code></td><td class="desc">Moves your cursor one tile up the field.</td></tr>
-            <tr><td><code>Move_down()</code></td><td class="desc">Moves your cursor one tile down the field.</td></tr>
-            <tr><td><code>Move_left()</code></td><td class="desc">Moves your cursor one tile left.</td></tr>
-            <tr><td><code>Move_right()</code></td><td class="desc">Moves your cursor one tile right.</td></tr>
-            <tr><td><code>Move_forward()</code></td><td class="desc">Moves one tile in the direction your cursor is currently facing.</td></tr>
-            <tr><td><code>Turn_left()</code></td><td class="desc">Turns your cursor 90&deg; left, without moving it.</td></tr>
-            <tr><td><code>Turn_right()</code></td><td class="desc">Turns your cursor 90&deg; right, without moving it.</td></tr>
-            <tr><td><code>Set_position(2, -1)</code></td><td class="desc">Jumps straight to a tile, counted from home: 2 right, 1 up. Home is (0,0) - the tile you were on when you pressed Run, or the tile a machine was placed on.</td></tr>
+            <tr><td><code>SeedCount("Carrot")</code></td><td class="desc">How many packets of that seed you own. E.g. IF SeedCount("Potato") = 0 THEN CALL Buy("Potato Seeds").</td></tr>
+            <tr><td><code>CALL MoveUp()</code></td><td class="desc">Moves your cursor one tile up the field.</td></tr>
+            <tr><td><code>CALL MoveDown()</code></td><td class="desc">Moves your cursor one tile down the field.</td></tr>
+            <tr><td><code>CALL MoveLeft()</code></td><td class="desc">Moves your cursor one tile left.</td></tr>
+            <tr><td><code>CALL MoveRight()</code></td><td class="desc">Moves your cursor one tile right.</td></tr>
+            <tr><td><code>CALL MoveForward()</code></td><td class="desc">Moves one tile in the direction your cursor is currently facing.</td></tr>
+            <tr><td><code>CALL TurnLeft()</code></td><td class="desc">Turns your cursor 90&deg; left, without moving it.</td></tr>
+            <tr><td><code>CALL TurnRight()</code></td><td class="desc">Turns your cursor 90&deg; right, without moving it.</td></tr>
+            <tr><td><code>CALL SetPosition(2, -1)</code></td><td class="desc">Jumps straight to a tile, counted from home: 2 right, 1 up. Home is (0,0) - the tile you were on when you pressed Run, or the tile a machine was placed on.</td></tr>
             <tr><td><code>OUTPUT "hi"</code></td><td class="desc">Prints a message to the console below.</td></tr>
             <tr><td><code>FOR Index &lt;- 1 TO 5<br>&nbsp;&nbsp;...<br>NEXT Index</code></td><td class="desc">Repeats the lines in between, 5 times. No "DO" on a FOR line.</td></tr>
             <tr><td><code>IF X = 1 THEN<br>&nbsp;&nbsp;...<br>ELSEIF X = 2 THEN<br>&nbsp;&nbsp;...<br>ELSE<br>&nbsp;&nbsp;...<br>ENDIF</code></td><td class="desc">Runs the first branch with a true condition. ELSE runs if no earlier condition is true.</td></tr>
@@ -446,8 +446,8 @@ function twemojiUrl(codepoint) {
 
 // Turtle-style facing, index into this array: 0 = up (north), 1 = right
 // (east), 2 = down (south), 3 = left (west) - "up" here means the same
-// direction Move_up already moves in, so Move_forward with facing 0
-// behaves exactly like the original Move_up did.
+// direction MoveUp already moves in, so MoveForward with facing 0
+// behaves exactly like the original MoveUp did.
 var FACING_VECTORS = [ { dx: 0, dz: -1 }, { dx: 1, dz: 0 }, { dx: 0, dz: 1 }, { dx: -1, dz: 0 } ];
 
 // ============================================================
@@ -492,8 +492,8 @@ function removePlantedTile(tile) {
 var ownedMinX = 0, ownedMaxX = GRID_SIZE - 1, ownedMinZ = 0, ownedMaxZ = GRID_SIZE - 1;
 var ownedTileCount = GRID_SIZE * GRID_SIZE;
 // Every cursor (the player's own, and each machine's) is shaped the same:
-// {x, z} is its current tile, `facing` drives Move_forward/Turn_left/
-// Turn_right, and {homeX, homeZ} is the origin Set_position(x, z) counts
+// {x, z} is its current tile, `facing` drives MoveForward/TurnLeft/
+// TurnRight, and {homeX, homeZ} is the origin SetPosition(x, z) counts
 // from - (0, 0) for the player, a machine's own placement tile for a
 // machine, so "the machine itself is 0,0" as asked for.
 var playerCursor = { x: Math.floor(GRID_SIZE / 2), z: Math.floor(GRID_SIZE / 2), facing: 0, homeX: 0, homeZ: 0 };
@@ -762,7 +762,7 @@ scene.add(cursorGroup);
 
 // A small glowing "nose" that sits off to whichever side the cursor is
 // currently facing - the cone/diamond markers are round, so this is the
-// only thing that actually shows Turn_left/Turn_right doing anything.
+// only thing that actually shows TurnLeft/TurnRight doing anything.
 // Every facing is one of 4 grid-aligned directions (never diagonal), so
 // this only ever needs a position offset, no rotation - simpler and
 // nothing to get backwards.
@@ -1017,7 +1017,7 @@ function plantAt(cursor, vegName) {
     return { ok: false, message: 'There is a machine standing on that tile.' };
   }
   if (invCount(vegName) <= 0) {
-    return { ok: false, message: 'You do not have any ' + vegName + ' seeds. Buy some first with Buy("' + vegName + ' Seeds").' };
+    return { ok: false, message: 'You do not have any ' + vegName + ' seeds. Buy some first with CALL Buy("' + vegName + ' Seeds").' };
   }
   inventory[vegName]--;
   var veg = VEGGIES[vegName];
@@ -1106,7 +1106,7 @@ function buySeed(vegName, viaCode) {
 // peels off the " Seeds" suffix so students can type the same phrase the
 // shop panel shows them, matching what they already read on screen.
 // Turns a shop label ("Carrot Seeds") into its canonical crop name ("Carrot"),
-// so both Buy("...") and the Seed_Count(...) query accept the same wording the
+// so both Buy("...") and the SeedCount(...) query accept the same wording the
 // shop panel shows. Returns null if it isn't a crop the game knows.
 function matchSeedName(label) {
   var name = String(label || '').replace(/\s*seeds?\s*$/i, '').trim();
@@ -1115,7 +1115,7 @@ function matchSeedName(label) {
 function buySeedByLabel(label, viaCode) {
   var match = matchSeedName(label);
   if (!match) {
-    return { ok: false, message: '"' + label + '" is not something the shop sells. Try Buy("Carrot Seeds").' };
+    return { ok: false, message: '"' + label + '" is not something the shop sells. Try CALL Buy("Carrot Seeds").' };
   }
   return buySeed(match, viaCode);
 }
@@ -1123,24 +1123,36 @@ function buySeedByLabel(label, viaCode) {
 // Read-only pseudo-functions a program can call inside expressions (WHILE /
 // IF conditions, OUTPUT, or an assignment). They return values rather than
 // acting, so a machine can reason about the world instead of blindly looping.
-var FUNCTIONS = ['Has_Crop', 'Crop_On_Tile', 'Money', 'Seed_Count'];
+// Cambridge identifiers use mixed case with a capital at the start of each
+// word. Legacy spellings with underscores remain accepted so saved machines
+// continue to run, but all newly compiled calls use these canonical names.
+var FUNCTIONS = ['HasCrop', 'CropOnTile', 'Money', 'SeedCount'];
+function identifierKey(name) { return String(name || '').replace(/_/g, '').toLowerCase(); }
+function canonicalFunctionName(name) {
+  var key = identifierKey(name);
+  for (var i = 0; i < FUNCTIONS.length; i++) {
+    if (identifierKey(FUNCTIONS[i]) === key) return FUNCTIONS[i];
+  }
+  return null;
+}
 function callFunction(name, args, cursor, line) {
+  name = canonicalFunctionName(name) || name;
   if (name === 'Money') return money; // coins in your wallet right now
-  if (name === 'Has_Crop') {
+  if (name === 'HasCrop') {
     var tile = cursor ? tileAt(cursor.x, cursor.z) : null;
     if (!args.length) return !!(tile && tile.plant);
     var requestedCrop = matchSeedName(String(args[0]));
-    if (!requestedCrop) throw new PseudocodeError('"' + args[0] + '" is not a crop name. Try Has_Crop("Carrot").', line);
+    if (!requestedCrop) throw new PseudocodeError('"' + args[0] + '" is not a crop name. Try HasCrop("Carrot").', line);
     return !!(tile && tile.plant && tile.plant.type === requestedCrop);
   }
-  if (name === 'Crop_On_Tile') {
+  if (name === 'CropOnTile') {
     var tile2 = cursor ? tileAt(cursor.x, cursor.z) : null;
     return (tile2 && tile2.plant) ? tile2.plant.type : 'None';
   }
-  if (name === 'Seed_Count') {
-    if (args[0] === undefined) throw new PseudocodeError('Seed_Count needs a seed name, e.g. Seed_Count("Carrot").', line);
+  if (name === 'SeedCount') {
+    if (args[0] === undefined) throw new PseudocodeError('SeedCount needs a seed name, e.g. SeedCount("Carrot").', line);
     var veg = matchSeedName(String(args[0]));
-    if (!veg) throw new PseudocodeError('"' + args[0] + '" is not a seed name. Try Seed_Count("Carrot Seeds").', line);
+    if (!veg) throw new PseudocodeError('"' + args[0] + '" is not a seed name. Try SeedCount("Carrot Seeds").', line);
     return invCount(veg);
   }
   throw new PseudocodeError('"' + name + '" is not a function I know. Try ' + FUNCTIONS.join(', ') + '.', line);
@@ -1165,7 +1177,7 @@ function turnCursor(cursor, delta) {
   cursor.facing = ((cursor.facing + delta) % 4 + 4) % 4;
 }
 
-// Set_position(x, z) is relative to the cursor's own home tile - (0, 0)
+// SetPosition(x, z) is relative to the cursor's own home tile - (0, 0)
 // for the player, a machine's own placement tile for a machine - so "the
 // machine itself is 0,0", as asked for.
 function setPositionRelative(cursor, dx, dz) {
@@ -1268,7 +1280,7 @@ function splitArgs(raw) {
 // + -, then * / DIV MOD, and brackets group.
 // Word processors and smart keyboards often produce a Unicode minus sign
 // (U+2212) or a dash where a hyphen-minus was meant - fold those into "-"
-// so "N <- N + 1" or "Set_position(0, -i)" pasted from a doc still works.
+// so "N <- N + 1" or "SetPosition(0, -i)" pasted from a doc still works.
 function normalizeDashes(s) {
   return String(s).replace(/[\u2212\u2013\u2014]/g, '-');
 }
@@ -1303,7 +1315,8 @@ function compileExpression(raw, line) {
   function binary(op, left, right) { return [EX_BINARY, op, left, right]; }
 
   function parseCall(name) {
-    if (FUNCTIONS.indexOf(name) === -1) {
+    var canonicalName = canonicalFunctionName(name);
+    if (!canonicalName) {
       throw new PseudocodeError('"' + name + '" is not a function I know. Try ' + FUNCTIONS.join(', ') + '.', line);
     }
     take();
@@ -1314,7 +1327,7 @@ function compileExpression(raw, line) {
     }
     if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" after ' + name + '.', line);
     take();
-    return [EX_CALL, name, args];
+    return [EX_CALL, canonicalName, args];
   }
   function parseConcat() {
     var node = parseSum();
@@ -1396,7 +1409,8 @@ function compileCondition(raw, line) {
   function binary(op, left, right) { return [EX_BINARY, op, left, right]; }
 
   function parseCall(name) {
-    if (FUNCTIONS.indexOf(name) === -1) {
+    var canonicalName = canonicalFunctionName(name);
+    if (!canonicalName) {
       throw new PseudocodeError('"' + name + '" is not a function I know. Try ' + FUNCTIONS.join(', ') + '.', line);
     }
     take();
@@ -1407,7 +1421,7 @@ function compileCondition(raw, line) {
     }
     if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" after ' + name + '.', line);
     take();
-    return [EX_CALL, name, args];
+    return [EX_CALL, canonicalName, args];
   }
   function parseOr() {
     var node = parseAnd();
@@ -1564,7 +1578,7 @@ function compile(source) {
       continue;
     }
     if (/^IF\b/i.test(line)) {
-      throw new PseudocodeError('IF needs a condition and "THEN" at the end, e.g. IF Has_Crop() THEN', lineNo);
+      throw new PseudocodeError('IF needs a condition and "THEN" at the end, e.g. IF HasCrop() THEN', lineNo);
     }
     if ((m = line.match(/^ELSE\s*IF\s+(.+?)\s+THEN\s*$/i))) {
       var ifBlock = blockStack[blockStack.length - 1];
@@ -1658,16 +1672,20 @@ function compile(source) {
       instructions.push({ type: 'OUTPUT', exprCode: compileExpression(m[1], lineNo), line: lineNo });
       continue;
     }
-    if ((m = line.match(/^([A-Za-z_]\w*)\s*\(\s*(.*?)\s*\)$/))) {
-      if (VALID_COMMANDS.indexOf(m[1]) === -1) {
+    if ((m = line.match(/^(?:CALL\s+)?([A-Za-z_]\w*)\s*\(\s*(.*?)\s*\)$/i))) {
+      var commandName = canonicalCommandName(m[1]);
+      if (!commandName) {
         throw new PseudocodeError('"' + m[1] + '" is not a command I know. Try ' + VALID_COMMANDS.join(', ') + '.', lineNo);
       }
       instructions.push({
-        type: 'CALL', name: m[1],
+        type: 'CALL', name: commandName,
         argsCode: splitArgs(m[2]).map(function (arg) { return compileExpression(arg, lineNo); }),
         line: lineNo
       });
       continue;
+    }
+    if (/^CALL\b/i.test(line)) {
+      throw new PseudocodeError('CALL needs a procedure name and brackets, e.g. CALL SetPosition(2, 0)', lineNo);
     }
     if ((m = line.match(/^([A-Za-z_]\w*)\s*(?:<-|←)\s*(.+)$/))) {
       instructions.push({ type: 'ASSIGN', var: m[1], exprCode: compileExpression(m[2], lineNo), line: lineNo });
@@ -1694,9 +1712,16 @@ function compile(source) {
 
 var VALID_COMMANDS = [
   'Plant', 'Buy', 'Sell',
-  'Move_up', 'Move_down', 'Move_left', 'Move_right',
-  'Move_forward', 'Turn_left', 'Turn_right', 'Set_position'
+  'MoveUp', 'MoveDown', 'MoveLeft', 'MoveRight',
+  'MoveForward', 'TurnLeft', 'TurnRight', 'SetPosition'
 ];
+function canonicalCommandName(name) {
+  var key = identifierKey(name);
+  for (var i = 0; i < VALID_COMMANDS.length; i++) {
+    if (identifierKey(VALID_COMMANDS[i]) === key) return VALID_COMMANDS[i];
+  }
+  return null;
+}
 
 function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
 
@@ -1710,8 +1735,10 @@ function runProgram(sourceOrInstructions, cursor, log, stepDelayMs) {
   var vars = {};
   var ifTaken = {};
   var pc = 0;
-  var steps = 0;
-  var MAX_STEPS = 400;        // hard stop for a runaway loop, so it can never freeze the tab
+  var actionSteps = 0;
+  var controlHops = 0;
+  var MAX_ACTIONS = 400;
+  var MAX_CONTROL_HOPS = 1000;
   var WATCH_DELAY_STEPS = 40; // animate only the first ~40 steps, then run fast
   var myEpoch = runEpoch; // if Reset Game bumps runEpoch, this run stops itself
 
@@ -1719,11 +1746,21 @@ function runProgram(sourceOrInstructions, cursor, log, stepDelayMs) {
     return new Promise(function (resolve, reject) {
       (async function () {
         while (pc < instructions.length && runEpoch === myEpoch) {
-          if (++steps > MAX_STEPS) {
-            log('Stopped after ' + MAX_STEPS + ' steps - check your FOR or WHILE loop isn\'t counting forever.', true);
-            break;
-          }
           var instr = instructions[pc];
+          var isControl = instr.type === 'IF' || instr.type === 'ELSEIF' || instr.type === 'ELSE' || instr.type === 'ENDIF' ||
+            instr.type === 'FOR' || instr.type === 'NEXT' || instr.type === 'WHILE' || instr.type === 'ENDWHILE';
+          if (isControl) {
+            if (++controlHops > MAX_CONTROL_HOPS) {
+              log('Stopped because the program passed through too many control lines without reaching an action.', true);
+              break;
+            }
+          } else {
+            controlHops = 0;
+            if (++actionSteps > MAX_ACTIONS) {
+              log('Stopped after ' + MAX_ACTIONS + ' actions. Use a machine for programs that need to keep running.', true);
+              break;
+            }
+          }
           if (instr.type === 'IF') {
             ifTaken[instr.rootIndex] = !!evaluateExpression(instr.conditionCode, vars, cursor, instr.line);
             pc = ifTaken[instr.rootIndex] ? pc + 1 : instr.falseIndex;
@@ -1796,7 +1833,7 @@ function runProgram(sourceOrInstructions, cursor, log, stepDelayMs) {
           if (instr.type === 'CALL') {
             var args = instr.argsCode.map(function (code) { return evaluateExpression(code, vars, cursor, instr.line); });
             runCommand(instr.name, args, cursor, log, instr.line);
-            if (stepDelayMs && steps <= WATCH_DELAY_STEPS) await sleep(stepDelayMs);
+            if (stepDelayMs && actionSteps <= WATCH_DELAY_STEPS) await sleep(stepDelayMs);
             pc++;
             continue;
           }
@@ -1810,18 +1847,19 @@ function runProgram(sourceOrInstructions, cursor, log, stepDelayMs) {
 }
 
 function runCommand(name, args, cursor, log, line) {
+  name = canonicalCommandName(name) || name;
   switch (name) {
-    case 'Move_up': moveCursor(cursor, 0, -1); onCursorMoved(cursor); break;
-    case 'Move_down': moveCursor(cursor, 0, 1); onCursorMoved(cursor); break;
-    case 'Move_left': moveCursor(cursor, -1, 0); onCursorMoved(cursor); break;
-    case 'Move_right': moveCursor(cursor, 1, 0); onCursorMoved(cursor); break;
-    case 'Move_forward': moveForward(cursor); onCursorMoved(cursor); break;
-    case 'Turn_left': turnCursor(cursor, -1); onCursorMoved(cursor); break;
-    case 'Turn_right': turnCursor(cursor, 1); onCursorMoved(cursor); break;
-    case 'Set_position': {
+    case 'MoveUp': moveCursor(cursor, 0, -1); onCursorMoved(cursor); break;
+    case 'MoveDown': moveCursor(cursor, 0, 1); onCursorMoved(cursor); break;
+    case 'MoveLeft': moveCursor(cursor, -1, 0); onCursorMoved(cursor); break;
+    case 'MoveRight': moveCursor(cursor, 1, 0); onCursorMoved(cursor); break;
+    case 'MoveForward': moveForward(cursor); onCursorMoved(cursor); break;
+    case 'TurnLeft': turnCursor(cursor, -1); onCursorMoved(cursor); break;
+    case 'TurnRight': turnCursor(cursor, 1); onCursorMoved(cursor); break;
+    case 'SetPosition': {
       var dx = args[0], dz = args[1];
       if (typeof dx !== 'number' || typeof dz !== 'number') {
-        throw new PseudocodeError('Set_position needs two numbers, e.g. Set_position(2, 0)', line);
+        throw new PseudocodeError('SetPosition needs two numbers, e.g. CALL SetPosition(2, 0)', line);
       }
       setPositionRelative(cursor, dx, dz);
       onCursorMoved(cursor);
@@ -1838,7 +1876,7 @@ function runCommand(name, args, cursor, log, line) {
   markGameDirty();
 }
 
-// Called after every Move_*/Turn_*/Set_position so both the player's arrow
+// Called after every movement, turn or SetPosition call so both the player's arrow
 // and a machine's own marker visually follow their cursor's position and
 // facing mid-program, not just at the end.
 function onCursorMoved(cursor) {
@@ -2134,8 +2172,8 @@ function placeMachine(code) {
     instructionsPerSecond: levelConfig.instructionsPerSecond,
     intervalMs: Math.round(1000 / levelConfig.instructionsPerSecond),
     program: compiledProgram,
-    runtime: { vars: {}, forEnds: {}, ifTaken: {}, pc: 0, steps: 0 },
-    // The machine's own home tile is (0, 0) for its Set_position calls -
+    runtime: { vars: {}, forEnds: {}, ifTaken: {}, pc: 0 },
+    // The machine's own home tile is (0, 0) for its SetPosition calls -
     // see setPositionRelative().
     cursor: { x: x, z: z, facing: 0, homeX: x, homeZ: z },
     group: built.group,
@@ -2172,7 +2210,7 @@ function machineRateLabel(machine) {
 }
 
 function resetMachineRuntime(machine) {
-  machine.runtime = { vars: {}, forEnds: {}, ifTaken: {}, pc: 0, steps: 0 };
+  machine.runtime = { vars: {}, forEnds: {}, ifTaken: {}, pc: 0 };
 }
 
 function runMachineInstruction(machine) {
@@ -2180,11 +2218,6 @@ function runMachineInstruction(machine) {
   if (!instructions || !instructions.length) return true;
   if (!machine.runtime || machine.runtime.pc >= instructions.length) resetMachineRuntime(machine);
   var runtime = machine.runtime;
-  if (++runtime.steps > 400) {
-    logConsole('[Machine #' + machine.id + '] Stopped after 400 steps - check your FOR or WHILE loop isn\'t counting forever.', true, true);
-    resetMachineRuntime(machine);
-    return true;
-  }
 
   var instr = instructions[runtime.pc];
   if (instr.type === 'IF') {
@@ -2271,7 +2304,14 @@ function runMachineInstruction(machine) {
 function runMachineAction(machine) {
   // Selection and loop boundaries are evaluated immediately. One scheduled
   // machine tick is consumed only when an instruction performs work.
-  while (!runMachineInstruction(machine)) {}
+  var controlHops = 0;
+  while (!runMachineInstruction(machine)) {
+    if (++controlHops > 1000) {
+      logConsole('[Machine #' + machine.id + '] No action was reached. Check for a loop containing only control lines.', true, true);
+      resetMachineRuntime(machine);
+      return;
+    }
+  }
 }
 
 function scheduleMachine(machine) {
@@ -2492,7 +2532,7 @@ function saveGame(force) {
       runtimeVars: m.runtime ? m.runtime.vars : {},
       runtimeForEnds: m.runtime ? m.runtime.forEnds : {},
       runtimeIfTaken: m.runtime ? m.runtime.ifTaken : {},
-      runtimeSteps: m.runtime ? m.runtime.steps : 0
+      runtimeVersion: 2
     });
   });
   var json = JSON.stringify(s);
@@ -2525,8 +2565,7 @@ function restoreMachine(s) {
       vars: s.runtimeVars && typeof s.runtimeVars === 'object' ? s.runtimeVars : {},
       forEnds: s.runtimeForEnds && typeof s.runtimeForEnds === 'object' ? s.runtimeForEnds : {},
       ifTaken: s.runtimeIfTaken && typeof s.runtimeIfTaken === 'object' ? s.runtimeIfTaken : {},
-      pc: Math.max(0, Math.min(compiledProgram.length, Number(s.runtimePc) || 0)),
-      steps: Math.max(0, Number(s.runtimeSteps) || 0)
+      pc: Math.max(0, Math.min(compiledProgram.length, Number(s.runtimePc) || 0))
     },
     cursor: { x: s.cursorX, z: s.cursorZ, facing: s.cursorFacing || 0, homeX: s.homeX, homeZ: s.homeZ },
     group: built.group, cursorMesh: built.cursorMesh, facingIndicator: built.facingIndicator,
@@ -2788,7 +2827,7 @@ function updateTileInfoPanel() {
     tileInfoEl.className = 'show';
     tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
       '<br><button type="button" class="sell-btn">Sell for ' + VEGGIES[tile.plant.type].sellPrice.toLocaleString() + ' coins</button>' +
-      '<br><span style="font-size:.68rem;color:#7a6650">Tip: code Sell() pays ' + Math.round(VEGGIES[tile.plant.type].sellPrice * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>';
+      '<br><span style="font-size:.68rem;color:#7a6650">Tip: CALL Sell() pays ' + Math.round(VEGGIES[tile.plant.type].sellPrice * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>';
     tileInfoEl.querySelector('.sell-btn').addEventListener('click', function () {
       var result = sellAt(playerCursor);
       logConsole(result.message, !result.ok);
@@ -2901,7 +2940,7 @@ animate();
 // else changed, without re-rendering the whole panel every animation frame.
 setInterval(updateTileInfoPanel, 500);
 
-logConsole(restored ? 'Welcome back! Your farm was restored.' : 'Welcome to Pseudocode Farmer! Write pseudocode to buy, plant and sell - code beats the buttons (Buy() is cheaper, Sell() pays more).');
+logConsole(restored ? 'Welcome back! Your farm was restored.' : 'Welcome to Pseudocode Farmer! Write pseudocode to buy, plant and sell - code beats the buttons (CALL Buy() is cheaper, CALL Sell() pays more).');
 </script>
 </body>
 </html>
