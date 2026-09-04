@@ -456,6 +456,12 @@ var FACING_VECTORS = [ { dx: 0, dz: -1 }, { dx: 1, dz: 0 }, { dx: 0, dz: 1 }, { 
 var SAVE_KEY = 'pseudocodeFarmerSave';
 var SAVE_VERSION = 1;
 var lastSavedJson = '';
+var gameStateDirty = false;
+var hudDirty = false;
+var tileInfoDirty = false;
+function markGameDirty() { gameStateDirty = true; }
+function requestHUDUpdate() { hudDirty = true; }
+function requestTileInfoUpdate() { tileInfoDirty = true; }
 var money = 40;
 var totalEarned = 0; // lifetime coins earned from selling - never goes down, gates vegetable unlocks
 var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
@@ -468,6 +474,21 @@ var unlockedState = {};   // { Carrot: true, ... } cached from the last refreshU
 var tiles = {};       // "x,z" -> { x, z, color, plant: null | PlantRecord, hasMachine: bool }
 var edgeTiles = {};   // "x,z" -> { x, z }
 var plantedTiles = []; // only occupied tiles, so animation never scans empty soil
+function addPlantedTile(tile) {
+  tile.plantedIndex = plantedTiles.length;
+  plantedTiles.push(tile);
+}
+function removePlantedTile(tile) {
+  var index = tile.plantedIndex;
+  if (index === undefined || plantedTiles[index] !== tile) index = plantedTiles.indexOf(tile);
+  if (index < 0) return;
+  var last = plantedTiles.pop();
+  if (last !== tile) {
+    plantedTiles[index] = last;
+    last.plantedIndex = index;
+  }
+  tile.plantedIndex = -1;
+}
 var ownedMinX = 0, ownedMaxX = GRID_SIZE - 1, ownedMinZ = 0, ownedMaxZ = GRID_SIZE - 1;
 var ownedTileCount = GRID_SIZE * GRID_SIZE;
 // Every cursor (the player's own, and each machine's) is shaped the same:
@@ -689,8 +710,9 @@ function buyTile(x, z) {
   ownedMinX = Math.min(ownedMinX, x); ownedMaxX = Math.max(ownedMaxX, x);
   ownedMinZ = Math.min(ownedMinZ, z); ownedMaxZ = Math.max(ownedMaxZ, z);
   refreshEdgeTiles();
-  updateHUD();
-  updateTileInfoPanel();
+  markGameDirty();
+  requestHUDUpdate();
+  requestTileInfoUpdate();
   logConsole('Bought a new garden tile for ' + cost + ' coins!');
   return true;
 }
@@ -936,6 +958,7 @@ function handleTileClick(clientX, clientY) {
   }
   playerCursor.x = hit.gridX;
   playerCursor.z = hit.gridZ;
+  markGameDirty();
   updatePlayerCursorPosition();
   selectMachine(null); // clicking open ground clears any machine selection
   updateTileInfoPanel();
@@ -1013,8 +1036,9 @@ function plantAt(cursor, vegName) {
     pct: makePlantLabel(cursor.x, cursor.z),
     ready: false
   };
-  plantedTiles.push(tile);
-  updateHUD();
+  addPlantedTile(tile);
+  markGameDirty();
+  requestHUDUpdate();
   return { ok: true, message: 'Planted a ' + vegName + '! It will be ready to sell in ' + veg.growSeconds + ' seconds.' };
 }
 
@@ -1036,10 +1060,11 @@ function sellAt(cursor, viaCode) {
   spawnFloatingText(cursor.x, cursor.z, '+' + price + 'c', viaCode ? '#9a5b0a' : '#2e6b30');
   var soldName = tile.plant.type;
   tile.plant = null;
-  plantedTiles = plantedTiles.filter(function (plantedTile) { return plantedTile !== tile; });
+  removePlantedTile(tile);
   var justUnlocked = refreshUnlocks();
-  updateHUD();
-  updateTileInfoPanel();
+  markGameDirty();
+  requestHUDUpdate();
+  requestTileInfoUpdate();
   var message = 'Sold the ' + soldName + ' for ' + price.toLocaleString() + ' coins' + (viaCode ? ' (code bonus!)' : '') + '!';
   if (justUnlocked.length) message += ' New in the shop: ' + justUnlocked.join(', ') + '!';
   return { ok: true, message: message };
@@ -1072,7 +1097,8 @@ function buySeed(vegName, viaCode) {
   }
   money -= price;
   inventory[vegName] = invCount(vegName) + 1;
-  updateHUD();
+  markGameDirty();
+  requestHUDUpdate();
   return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + price.toLocaleString() + ' coins' + (viaCode ? ' (code discount!)' : '') + '.' };
 }
 
@@ -1151,6 +1177,7 @@ function setPositionRelative(cursor, dx, dz) {
 // FLOATING TEXT (a little "+9c" popup that rises and fades)
 // ============================================================
 var floatingTexts = [];
+var floatingTextTextureCache = {};
 function disposeSprite(sprite, disposeMap) {
   if (!sprite || !sprite.material) return;
   if (disposeMap && sprite.material.map) sprite.material.map.dispose();
@@ -1165,7 +1192,9 @@ function disposeObject3D(object) {
     else if (child.material) child.material.dispose();
   });
 }
-function spawnFloatingText(gx, gz, text, color) {
+function getFloatingTextTexture(text, color) {
+  var key = (color || '#2e6b30') + '|' + text;
+  if (floatingTextTextureCache[key]) return floatingTextTextureCache[key];
   var c = document.createElement('canvas');
   c.width = 256; c.height = 96;
   var ctx = c.getContext('2d');
@@ -1178,6 +1207,11 @@ function spawnFloatingText(gx, gz, text, color) {
   ctx.strokeText(text, 128, 48);
   ctx.fillText(text, 128, 48);
   var tex = new THREE.CanvasTexture(c);
+  floatingTextTextureCache[key] = tex;
+  return tex;
+}
+function spawnFloatingText(gx, gz, text, color) {
+  var tex = getFloatingTextTexture(text, color);
   var sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
   sprite.scale.set(1.1, 0.42, 1);
   sprite.position.set(tileWorldX(gx), 1.1, tileWorldZ(gz));
@@ -1191,7 +1225,7 @@ function updateFloatingTexts(now) {
     var t = (now - f.born) / 900;
     if (t >= 1) {
       scene.remove(f.sprite);
-      disposeSprite(f.sprite, true);
+      disposeSprite(f.sprite, false);
       floatingTexts.splice(i, 1);
       continue;
     }
@@ -1210,15 +1244,16 @@ function PseudocodeError(message, line) {
 }
 PseudocodeError.prototype = Object.create(Error.prototype);
 
-// Splits a call's argument text on commas that are outside quotes - good
-// enough for the 0-or-1-argument calls this game's commands actually take.
+// Splits call arguments on commas outside quotes and nested brackets.
 function splitArgs(raw) {
   if (!raw.trim()) return [];
-  var parts = []; var cur = ''; var inQuotes = false;
+  var parts = []; var cur = ''; var inQuotes = false; var depth = 0;
   for (var i = 0; i < raw.length; i++) {
     var ch = raw[i];
     if (ch === '"') inQuotes = !inQuotes;
-    if (ch === ',' && !inQuotes) { parts.push(cur); cur = ''; continue; }
+    if (!inQuotes && ch === '(') depth++;
+    if (!inQuotes && ch === ')') depth--;
+    if (ch === ',' && !inQuotes && depth === 0) { parts.push(cur); cur = ''; continue; }
     cur += ch;
   }
   parts.push(cur);
@@ -1239,7 +1274,7 @@ function normalizeDashes(s) {
 }
 function tokenizeExpr(raw, line) {
   var tokens = [];
-  var re = /(\d+(?:\.\d+)?|"[^"]*"|[A-Za-z_]\w*|[&+\-*/()])/g;
+  var re = /(\d+(?:\.\d+)?|"[^"]*"|[A-Za-z_]\w*|[,&+\-*/()])/g;
   var m, last = 0;
   while ((m = re.exec(raw)) !== null) {
     if (!/^\s*$/.test(raw.slice(last, m.index))) {
@@ -1254,81 +1289,73 @@ function tokenizeExpr(raw, line) {
   return tokens;
 }
 
-function evalExpr(raw, vars, line, cursor) {
-  var t = normalizeDashes(raw).trim();
-  if (/^"[^"]*"$/.test(t)) return t.slice(1, -1);
-  var tokens = tokenizeExpr(t, line);
+// Expressions are tokenised and parsed once, then turned into specialised
+// evaluator functions. Machines never repeat regular-expression tokenising,
+// parsing or operator dispatch while they are running.
+var EX_CONST = 0, EX_VAR = 1, EX_UNARY = 2, EX_BINARY = 3, EX_CALL = 4;
+
+function compileExpression(raw, line) {
+  var tokens = tokenizeExpr(normalizeDashes(raw).trim(), line);
   var pos = 0;
   function peek() { return tokens[pos]; }
   function take() { return tokens[pos++]; }
+  function isWord(token, word) { return typeof token === 'string' && token.toUpperCase() === word; }
+  function binary(op, left, right) { return [EX_BINARY, op, left, right]; }
 
-  function parseFunctionCall(name, vars2, cursor2, line2) {
+  function parseCall(name) {
     if (FUNCTIONS.indexOf(name) === -1) {
-      throw new PseudocodeError('"' + name + '" is not a function I know. Try ' + FUNCTIONS.join(', ') + '.', line2);
+      throw new PseudocodeError('"' + name + '" is not a function I know. Try ' + FUNCTIONS.join(', ') + '.', line);
     }
-    take(); // consume '('
+    take();
     var args = [];
     if (peek() !== ')') {
       args.push(parseConcat());
       while (peek() === ',') { take(); args.push(parseConcat()); }
     }
-    if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" after ' + name + '.', line2);
+    if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" after ' + name + '.', line);
     take();
-    return callFunction(name, args, cursor2, line2);
-  }
-  function parseSum() {
-    var v = parseProduct();
-    while (peek() === '+' || peek() === '-') {
-      var op = take();
-      var r = parseProduct();
-      v = (op === '+') ? (v + r) : (v - r);
-    }
-    return v;
+    return [EX_CALL, name, args];
   }
   function parseConcat() {
-    var v = parseSum();
-    while (peek() === '&') {
-      take();
-      var r = parseSum();
-      v = String(v) + String(r); // Cambridge's concatenation operator
-    }
-    return v;
+    var node = parseSum();
+    while (peek() === '&') { take(); node = binary('&', node, parseSum()); }
+    return node;
+  }
+  function parseSum() {
+    var node = parseProduct();
+    while (peek() === '+' || peek() === '-') { var op = take(); node = binary(op, node, parseProduct()); }
+    return node;
   }
   function parseProduct() {
-    var v = parseUnary();
-    while (peek() === '*' || peek() === '/' || /^DIV$/i.test(peek() || '') || /^MOD$/i.test(peek() || '')) {
-      var op = take();
-      var r = parseUnary();
-      if (op === '*') v *= r;
-      else if (op === '/') v /= r;
-      else if (/^DIV$/i.test(op)) v = Math.trunc(v / r);
-      else v %= r;
+    var node = parseUnary();
+    while (peek() === '*' || peek() === '/' || isWord(peek(), 'DIV') || isWord(peek(), 'MOD')) {
+      var op = take().toUpperCase();
+      node = binary(op, node, parseUnary());
     }
-    return v;
+    return node;
   }
   function parseUnary() {
-    if (peek() === '-') { take(); return -parseUnary(); }
+    if (peek() === '-') { take(); return [EX_UNARY, '-', parseUnary()]; }
     if (peek() === '(') {
       take();
-      var v = parseConcat();
-      if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" .', line);
+      var grouped = parseConcat();
+      if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")".', line);
       take();
-      return v;
+      return grouped;
     }
-    var tok = take();
-    if (tok === undefined) throw new PseudocodeError('Missing a value.', line);
-    if (/^\d+(\.\d+)?$/.test(tok)) return Number(tok);
-    if (/^".*"$/.test(tok)) return tok.slice(1, -1);
-    if (/^true$/i.test(tok)) return true;
-    if (/^false$/i.test(tok)) return false;
-    if (peek() === '(') return parseFunctionCall(tok, vars, cursor, line);
-    if (Object.prototype.hasOwnProperty.call(vars, tok)) return vars[tok];
-    throw new PseudocodeError('I don\'t understand "' + tok + '".', line);
+    var token = take();
+    if (token === undefined) throw new PseudocodeError('Missing a value.', line);
+    if (/^\d+(?:\.\d+)?$/.test(token)) return [EX_CONST, Number(token)];
+    if (/^".*"$/.test(token)) return [EX_CONST, token.slice(1, -1)];
+    if (/^true$/i.test(token)) return [EX_CONST, true];
+    if (/^false$/i.test(token)) return [EX_CONST, false];
+    if (peek() === '(') return parseCall(token);
+    return [EX_VAR, token];
   }
 
-  var result = parseConcat();
+  var code = parseConcat();
   if (pos < tokens.length) throw new PseudocodeError('I don\'t understand "' + tokens[pos] + '".', line);
-  return result;
+  return buildExpressionEvaluator(code);
 }
 
 // ============================================================
@@ -1341,7 +1368,7 @@ function evalExpr(raw, vars, line, cursor) {
 // piece of arithmetic.
 function tokenizeCondition(raw, line) {
   var tokens = [];
-  var re = /(<=|>=|<>|[=<>+\-*/()]|"[^"]*"|\d+(?:\.\d+)?|[A-Za-z_]\w*)/g;
+  var re = /(<=|>=|<>|[=<>+,\-*/()]|"[^"]*"|\d+(?:\.\d+)?|[A-Za-z_]\w*)/g;
   var m, last = 0;
   while ((m = re.exec(raw)) !== null) {
     if (!/^\s*$/.test(raw.slice(last, m.index))) {
@@ -1356,9 +1383,7 @@ function tokenizeCondition(raw, line) {
   return tokens;
 }
 
-function evalCondition(raw, vars, line, cursor) {
-  // Friendly rejection of Python/JS operators before tokenising, with the
-  // Cambridge spelling named so the student can fix it in one go.
+function compileCondition(raw, line) {
   raw = normalizeDashes(raw);
   if (/==|!=|&&|\|\|/.test(raw)) {
     throw new PseudocodeError('Cambridge pseudocode uses "=" and "<>" for comparisons (not "==" or "!=") and AND/OR (not && or ||).', line);
@@ -1367,94 +1392,141 @@ function evalCondition(raw, vars, line, cursor) {
   var pos = 0;
   function peek() { return tokens[pos]; }
   function take() { return tokens[pos++]; }
-  function isWord(t, w) { return typeof t === 'string' && t.toUpperCase() === w; }
+  function isWord(token, word) { return typeof token === 'string' && token.toUpperCase() === word; }
+  function binary(op, left, right) { return [EX_BINARY, op, left, right]; }
 
-  function parseCallExpr(name, vars2, cursor2, line2) {
+  function parseCall(name) {
     if (FUNCTIONS.indexOf(name) === -1) {
-      throw new PseudocodeError('"' + name + '" is not a function I know. Try ' + FUNCTIONS.join(', ') + '.', line2);
+      throw new PseudocodeError('"' + name + '" is not a function I know. Try ' + FUNCTIONS.join(', ') + '.', line);
     }
-    take(); // consume '('
+    take();
     var args = [];
     if (peek() !== ')') {
       args.push(parseArith());
       while (peek() === ',') { take(); args.push(parseArith()); }
     }
-    if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" after ' + name + '.', line2);
+    if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" after ' + name + '.', line);
     take();
-    return callFunction(name, args, cursor2, line2);
+    return [EX_CALL, name, args];
   }
-
   function parseOr() {
-    var v = parseAnd();
-    while (isWord(peek(), 'OR')) { take(); var r = parseAnd(); v = v || r; }
-    return v;
+    var node = parseAnd();
+    while (isWord(peek(), 'OR')) { take(); node = binary('OR', node, parseAnd()); }
+    return node;
   }
   function parseAnd() {
-    var v = parseNot();
-    while (isWord(peek(), 'AND')) { take(); var r = parseNot(); v = v && r; }
-    return v;
+    var node = parseNot();
+    while (isWord(peek(), 'AND')) { take(); node = binary('AND', node, parseNot()); }
+    return node;
   }
   function parseNot() {
-    if (isWord(peek(), 'NOT')) { take(); return !parseNot(); }
+    if (isWord(peek(), 'NOT')) { take(); return [EX_UNARY, 'NOT', parseNot()]; }
     return parseComparison();
   }
-  // A comparison is an arithmetic expression, optionally compared to a
-  // second one. With no comparison operator it's a bare value (e.g.
-  // "WHILE Found DO"), coerced to a boolean at the top.
   function parseComparison() {
-    var left = parseArith();
+    var node = parseArith();
     var op = peek();
     if (op === '=' || op === '<>' || op === '<' || op === '>' || op === '<=' || op === '>=') {
       take();
-      var right = parseArith();
-      return compareConditionValues(left, right, op, line);
+      node = binary(op, node, parseArith());
     }
-    return left;
+    return node;
   }
-  // Arithmetic layer (mirrors evalExpr): * / DIV MOD bind tighter than + -, and
-  // brackets group.
   function parseArith() {
-    var v = parseTerm();
-    while (peek() === '+' || peek() === '-') { var op = take(); var r = parseTerm(); v = (op === '+') ? (v + r) : (v - r); }
-    return v;
+    var node = parseTerm();
+    while (peek() === '+' || peek() === '-') { var op = take(); node = binary(op, node, parseTerm()); }
+    return node;
   }
   function parseTerm() {
-    var v = parseUnary();
+    var node = parseUnary();
     while (peek() === '*' || peek() === '/' || isWord(peek(), 'DIV') || isWord(peek(), 'MOD')) {
-      var op = take(); var r = parseUnary();
-      if (op === '*') v *= r;
-      else if (op === '/') v /= r;
-      else if (isWord(op, 'DIV')) v = Math.trunc(v / r);
-      else v %= r;
+      var op = take().toUpperCase();
+      node = binary(op, node, parseUnary());
     }
-    return v;
+    return node;
   }
   function parseUnary() {
-    if (peek() === '-') { take(); return -parseUnary(); }
+    if (peek() === '-') { take(); return [EX_UNARY, '-', parseUnary()]; }
     return parseFactor();
   }
   function parseFactor() {
     if (peek() === '(') {
       take();
-      var v = parseOr(); // brackets group a boolean, or arithmetic inside a comparison
-      if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")" .', line);
+      var grouped = parseOr();
+      if (peek() !== ')') throw new PseudocodeError('Missing closing bracket ")".', line);
       take();
-      return v;
+      return grouped;
     }
-    var tok = take();
-    if (tok === undefined) throw new PseudocodeError('The condition is missing a value.', line);
-    if (/^\d+(\.\d+)?$/.test(tok)) return Number(tok);
-    if (/^".*"$/.test(tok)) return tok.slice(1, -1);
-    if (/^true$/i.test(tok)) return true;
-    if (/^false$/i.test(tok)) return false;
-    if (peek() === '(') return parseCallExpr(tok, vars, cursor, line);
-    if (Object.prototype.hasOwnProperty.call(vars, tok)) return vars[tok];
-    throw new PseudocodeError('I don\'t understand "' + tok + '".', line);
+    var token = take();
+    if (token === undefined) throw new PseudocodeError('The condition is missing a value.', line);
+    if (/^\d+(?:\.\d+)?$/.test(token)) return [EX_CONST, Number(token)];
+    if (/^".*"$/.test(token)) return [EX_CONST, token.slice(1, -1)];
+    if (/^true$/i.test(token)) return [EX_CONST, true];
+    if (/^false$/i.test(token)) return [EX_CONST, false];
+    if (peek() === '(') return parseCall(token);
+    return [EX_VAR, token];
   }
 
-  var result = parseOr();
+  var code = parseOr();
   if (pos < tokens.length) throw new PseudocodeError('I can\'t understand "' + tokens[pos] + '" in the condition.', line);
-  return !!result;
+  return buildExpressionEvaluator(code);
+}
+
+function buildExpressionEvaluator(node) {
+  var kind = node[0];
+  if (kind === EX_CONST) {
+    var constantValue = node[1];
+    return function () { return constantValue; };
+  }
+  if (kind === EX_VAR) {
+    var variableName = node[1];
+    return function (vars, cursor, line) {
+      if (Object.prototype.hasOwnProperty.call(vars, variableName)) return vars[variableName];
+      throw new PseudocodeError('I don\'t understand "' + variableName + '".', line);
+    };
+  }
+  if (kind === EX_CALL) {
+    var functionName = node[1];
+    var argumentEvaluators = node[2].map(buildExpressionEvaluator);
+    return function (vars, cursor, line) {
+      var values = new Array(argumentEvaluators.length);
+      for (var i = 0; i < argumentEvaluators.length; i++) values[i] = argumentEvaluators[i](vars, cursor, line);
+      return callFunction(functionName, values, cursor, line);
+    };
+  }
+  if (kind === EX_UNARY) {
+    var unary = buildExpressionEvaluator(node[2]);
+    if (node[1] === 'NOT') return function (vars, cursor, line) { return !unary(vars, cursor, line); };
+    return function (vars, cursor, line) { return -unary(vars, cursor, line); };
+  }
+  var left = buildExpressionEvaluator(node[2]);
+  var right = buildExpressionEvaluator(node[3]);
+  var op = node[1];
+  if (op === '+') return function (v, c, l) { return left(v, c, l) + right(v, c, l); };
+  if (op === '-') return function (v, c, l) { return left(v, c, l) - right(v, c, l); };
+  if (op === '*') return function (v, c, l) { return left(v, c, l) * right(v, c, l); };
+  if (op === '/') return function (v, c, l) { return left(v, c, l) / right(v, c, l); };
+  if (op === 'DIV') return function (v, c, l) { return Math.trunc(left(v, c, l) / right(v, c, l)); };
+  if (op === 'MOD') return function (v, c, l) { return left(v, c, l) % right(v, c, l); };
+  if (op === '&') return function (v, c, l) { return String(left(v, c, l)) + String(right(v, c, l)); };
+  if (op === 'AND') return function (v, c, l) { return !!left(v, c, l) && !!right(v, c, l); };
+  if (op === 'OR') return function (v, c, l) { return !!left(v, c, l) || !!right(v, c, l); };
+  if (op === '=') return function (v, c, l) { return left(v, c, l) === right(v, c, l); };
+  if (op === '<>') return function (v, c, l) { return left(v, c, l) !== right(v, c, l); };
+  return function (v, c, l) { return compareConditionValues(left(v, c, l), right(v, c, l), op, l); };
+}
+
+function evaluateExpression(evaluator, vars, cursor, line) {
+  return evaluator(vars, cursor, line);
+}
+
+// These wrappers remain useful to tests and one-off callers. Compiled
+// programs use their stored nodes directly and do not call the parser again.
+function evalExpr(raw, vars, line, cursor) {
+  return evaluateExpression(compileExpression(raw, line), vars, cursor, line);
+}
+function evalCondition(raw, vars, line, cursor) {
+  return !!evaluateExpression(compileCondition(raw, line), vars, cursor, line);
 }
 
 function compareConditionValues(a, b, op, line) {
@@ -1487,7 +1559,7 @@ function compile(source) {
     var m;
     if ((m = line.match(/^IF\s+(.+?)\s+THEN\s*$/i))) {
       var ifIndex = instructions.length;
-      instructions.push({ type: 'IF', condition: m[1], rootIndex: ifIndex, line: lineNo });
+      instructions.push({ type: 'IF', conditionCode: compileCondition(m[1], lineNo), rootIndex: ifIndex, line: lineNo });
       blockStack.push({ type: 'IF', rootIndex: ifIndex, branchIndex: ifIndex, branchIndices: [ifIndex], hasElse: false, line: lineNo });
       continue;
     }
@@ -1500,7 +1572,7 @@ function compile(source) {
       if (ifBlock.hasElse) throw new PseudocodeError('ELSEIF cannot come after ELSE.', lineNo);
       var elseIfIndex = instructions.length;
       instructions[ifBlock.branchIndex].falseIndex = elseIfIndex;
-      instructions.push({ type: 'ELSEIF', condition: m[1], rootIndex: ifBlock.rootIndex, line: lineNo });
+      instructions.push({ type: 'ELSEIF', conditionCode: compileCondition(m[1], lineNo), rootIndex: ifBlock.rootIndex, line: lineNo });
       ifBlock.branchIndex = elseIfIndex;
       ifBlock.branchIndices.push(elseIfIndex);
       continue;
@@ -1538,7 +1610,7 @@ function compile(source) {
       throw new PseudocodeError('Use "ENDIF" (one word) to close an IF block.', lineNo);
     }
     if ((m = line.match(/^FOR\s+([A-Za-z_]\w*)\s*(?:<-|←)\s*(.+?)\s+TO\s+(.+)$/i))) {
-      instructions.push({ type: 'FOR', var: m[1], startExpr: m[2], endExpr: m[3], line: lineNo });
+      instructions.push({ type: 'FOR', var: m[1], startCode: compileExpression(m[2], lineNo), endCode: compileExpression(m[3], lineNo), line: lineNo });
       blockStack.push({ type: 'FOR', index: instructions.length - 1, var: m[1], line: lineNo });
       continue;
     }
@@ -1546,7 +1618,7 @@ function compile(source) {
       throw new PseudocodeError('FOR needs a loop variable and TO, e.g. FOR Index <- 1 TO 5', lineNo);
     }
     if ((m = line.match(/^WHILE\s+(.+?)\s+DO\s*$/i))) {
-      instructions.push({ type: 'WHILE', condition: m[1], line: lineNo });
+      instructions.push({ type: 'WHILE', conditionCode: compileCondition(m[1], lineNo), line: lineNo });
       blockStack.push({ type: 'WHILE', index: instructions.length - 1, line: lineNo });
       continue;
     }
@@ -1583,15 +1655,22 @@ function compile(source) {
       throw new PseudocodeError('Use "ENDWHILE" (one word) to close a WHILE loop.', lineNo);
     }
     if ((m = line.match(/^OUTPUT\s+(.+)$/i))) {
-      instructions.push({ type: 'OUTPUT', expr: m[1], line: lineNo });
+      instructions.push({ type: 'OUTPUT', exprCode: compileExpression(m[1], lineNo), line: lineNo });
       continue;
     }
     if ((m = line.match(/^([A-Za-z_]\w*)\s*\(\s*(.*?)\s*\)$/))) {
-      instructions.push({ type: 'CALL', name: m[1], argsRaw: m[2], line: lineNo });
+      if (VALID_COMMANDS.indexOf(m[1]) === -1) {
+        throw new PseudocodeError('"' + m[1] + '" is not a command I know. Try ' + VALID_COMMANDS.join(', ') + '.', lineNo);
+      }
+      instructions.push({
+        type: 'CALL', name: m[1],
+        argsCode: splitArgs(m[2]).map(function (arg) { return compileExpression(arg, lineNo); }),
+        line: lineNo
+      });
       continue;
     }
     if ((m = line.match(/^([A-Za-z_]\w*)\s*(?:<-|←)\s*(.+)$/))) {
-      instructions.push({ type: 'ASSIGN', var: m[1], expr: m[2], line: lineNo });
+      instructions.push({ type: 'ASSIGN', var: m[1], exprCode: compileExpression(m[2], lineNo), line: lineNo });
       continue;
     }
     if ((m = line.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/))) {
@@ -1626,8 +1705,8 @@ function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve,
 // `stepDelayMs` slows action commands down enough to watch when a human is
 // driving (the player's Run button); machines run at full speed since
 // nobody is watching a single tick fire.
-function runProgram(source, cursor, log, stepDelayMs) {
-  var instructions = compile(source); // throws before anything executes
+function runProgram(sourceOrInstructions, cursor, log, stepDelayMs) {
+  var instructions = Array.isArray(sourceOrInstructions) ? sourceOrInstructions : compile(sourceOrInstructions);
   var vars = {};
   var ifTaken = {};
   var pc = 0;
@@ -1646,7 +1725,7 @@ function runProgram(source, cursor, log, stepDelayMs) {
           }
           var instr = instructions[pc];
           if (instr.type === 'IF') {
-            ifTaken[instr.rootIndex] = evalCondition(instr.condition, vars, instr.line, cursor);
+            ifTaken[instr.rootIndex] = !!evaluateExpression(instr.conditionCode, vars, cursor, instr.line);
             pc = ifTaken[instr.rootIndex] ? pc + 1 : instr.falseIndex;
             continue;
           }
@@ -1655,7 +1734,7 @@ function runProgram(source, cursor, log, stepDelayMs) {
               delete ifTaken[instr.rootIndex];
               pc = instr.endIndex + 1;
             } else {
-              ifTaken[instr.rootIndex] = evalCondition(instr.condition, vars, instr.line, cursor);
+              ifTaken[instr.rootIndex] = !!evaluateExpression(instr.conditionCode, vars, cursor, instr.line);
               pc = ifTaken[instr.rootIndex] ? pc + 1 : instr.falseIndex;
             }
             continue;
@@ -1676,8 +1755,8 @@ function runProgram(source, cursor, log, stepDelayMs) {
             continue;
           }
           if (instr.type === 'FOR') {
-            var startVal = evalExpr(instr.startExpr, vars, instr.line, cursor);
-            var endVal = evalExpr(instr.endExpr, vars, instr.line, cursor);
+            var startVal = evaluateExpression(instr.startCode, vars, cursor, instr.line);
+            var endVal = evaluateExpression(instr.endCode, vars, cursor, instr.line);
             if (typeof startVal !== 'number' || typeof endVal !== 'number') {
               throw new PseudocodeError('FOR needs numbers, e.g. FOR ' + instr.var + ' <- 1 TO 5', instr.line);
             }
@@ -1693,7 +1772,7 @@ function runProgram(source, cursor, log, stepDelayMs) {
             continue;
           }
           if (instr.type === 'WHILE') {
-            if (evalCondition(instr.condition, vars, instr.line, cursor)) {
+            if (evaluateExpression(instr.conditionCode, vars, cursor, instr.line)) {
               pc++; // condition true: step into the body
             } else {
               pc = instr.pairedEndIndex + 1; // condition false: skip past ENDWHILE
@@ -1705,18 +1784,18 @@ function runProgram(source, cursor, log, stepDelayMs) {
             continue;
           }
           if (instr.type === 'OUTPUT') {
-            log(String(evalExpr(instr.expr, vars, instr.line, cursor)));
+            log(String(evaluateExpression(instr.exprCode, vars, cursor, instr.line)));
             pc++;
             continue;
           }
           if (instr.type === 'ASSIGN') {
-            vars[instr.var] = evalExpr(instr.expr, vars, instr.line, cursor);
+            vars[instr.var] = evaluateExpression(instr.exprCode, vars, cursor, instr.line);
             pc++;
             continue;
           }
           if (instr.type === 'CALL') {
-            var args = splitArgs(instr.argsRaw).map(function (a) { return evalExpr(a, vars, instr.line, cursor); });
-            await runCommand(instr.name, args, cursor, log, instr.line);
+            var args = instr.argsCode.map(function (code) { return evaluateExpression(code, vars, cursor, instr.line); });
+            runCommand(instr.name, args, cursor, log, instr.line);
             if (stepDelayMs && steps <= WATCH_DELAY_STEPS) await sleep(stepDelayMs);
             pc++;
             continue;
@@ -1730,7 +1809,7 @@ function runProgram(source, cursor, log, stepDelayMs) {
   return step();
 }
 
-async function runCommand(name, args, cursor, log, line) {
+function runCommand(name, args, cursor, log, line) {
   switch (name) {
     case 'Move_up': moveCursor(cursor, 0, -1); onCursorMoved(cursor); break;
     case 'Move_down': moveCursor(cursor, 0, 1); onCursorMoved(cursor); break;
@@ -1756,6 +1835,7 @@ async function runCommand(name, args, cursor, log, line) {
         throw new PseudocodeError('"' + name + '" is not a command I know. Try ' + VALID_COMMANDS.join(', ') + '.', line);
       }
   }
+  markGameDirty();
 }
 
 // Called after every Move_*/Turn_*/Set_position so both the player's arrow
@@ -1832,14 +1912,49 @@ codeInput.addEventListener('scroll', function () {
   codeBackdrop.scrollLeft = codeInput.scrollLeft;
 });
 
-function logConsole(message, isError, isMachine) {
+var machineLogQueue = [];
+var machineLogByKey = {};
+var lastMachineLogFlush = 0;
+
+function appendConsoleRow(message, isError, isMachine, count, fragment) {
   var row = document.createElement('div');
   if (isError) row.className = 'err';
   else if (isMachine) row.className = 'machine-line';
-  row.textContent = message;
-  consoleOutput.appendChild(row);
+  row.textContent = message + (count > 1 ? ' (x' + count + ')' : '');
+  (fragment || consoleOutput).appendChild(row);
+}
+
+function logConsole(message, isError, isMachine) {
+  if (isMachine) {
+    var key = (isError ? '1|' : '0|') + message;
+    var pending = machineLogByKey[key];
+    if (pending) {
+      pending.count++;
+    } else if (machineLogQueue.length < 200) {
+      pending = { message: message, isError: !!isError, count: 1 };
+      machineLogByKey[key] = pending;
+      machineLogQueue.push(pending);
+    }
+    return;
+  }
+  appendConsoleRow(message, isError, false, 1);
   consoleOutput.scrollTop = consoleOutput.scrollHeight;
   while (consoleOutput.children.length > 60) consoleOutput.removeChild(consoleOutput.firstChild);
+}
+
+function flushMachineConsole(now, force) {
+  if (!machineLogQueue.length || (!force && now - lastMachineLogFlush < 250)) return;
+  lastMachineLogFlush = now;
+  var queue = machineLogQueue;
+  machineLogQueue = [];
+  machineLogByKey = {};
+  var fragment = document.createDocumentFragment();
+  queue.forEach(function (entry) {
+    appendConsoleRow(entry.message, entry.isError, true, entry.count, fragment);
+  });
+  consoleOutput.appendChild(fragment);
+  while (consoleOutput.children.length > 60) consoleOutput.removeChild(consoleOutput.firstChild);
+  consoleOutput.scrollTop = consoleOutput.scrollHeight;
 }
 
 function setRunningUI(running) {
@@ -1852,8 +1967,9 @@ runBtn.addEventListener('click', function () {
   if (isRunning) return;
   var source = codeInput.value;
   if (!source.trim()) { logConsole('Write some code first.', true); return; }
+  var compiledProgram;
   try {
-    compile(source); // catch syntax errors before the box is cleared
+    compiledProgram = compile(source); // tokenise and validate once before execution
   } catch (e) {
     setCodeError(e.line || 1);
     logConsole(e.message || String(e), true);
@@ -1861,7 +1977,7 @@ runBtn.addEventListener('click', function () {
   }
   clearCodeError();
   setRunningUI(true);
-  runProgram(source, playerCursor, function (msg, isErr) { logConsole(msg, isErr); }, 350)
+  runProgram(compiledProgram, playerCursor, function (msg, isErr) { logConsole(msg, isErr); }, 350)
     .then(function () {
       codeInput.value = '';
       renderCodeBackdrop();
@@ -2035,6 +2151,7 @@ function placeMachine(code) {
   built.group.traverse(function (o) { if (o.isMesh) o.userData.machineId = machine.id; });
   tile.hasMachine = true;
   machines.push(machine);
+  markGameDirty();
   positionMachineCursorMarker(machine);
   updateFacingIndicator(machine.facingIndicator, machine.cursor.facing);
   scheduleMachine(machine);
@@ -2058,7 +2175,7 @@ function resetMachineRuntime(machine) {
   machine.runtime = { vars: {}, forEnds: {}, ifTaken: {}, pc: 0, steps: 0 };
 }
 
-async function runMachineInstruction(machine) {
+function runMachineInstruction(machine) {
   var instructions = machine.program;
   if (!instructions || !instructions.length) return true;
   if (!machine.runtime || machine.runtime.pc >= instructions.length) resetMachineRuntime(machine);
@@ -2071,7 +2188,7 @@ async function runMachineInstruction(machine) {
 
   var instr = instructions[runtime.pc];
   if (instr.type === 'IF') {
-    runtime.ifTaken[instr.rootIndex] = evalCondition(instr.condition, runtime.vars, instr.line, machine.cursor);
+    runtime.ifTaken[instr.rootIndex] = !!evaluateExpression(instr.conditionCode, runtime.vars, machine.cursor, instr.line);
     runtime.pc = runtime.ifTaken[instr.rootIndex] ? runtime.pc + 1 : instr.falseIndex;
     return false;
   }
@@ -2080,7 +2197,7 @@ async function runMachineInstruction(machine) {
       delete runtime.ifTaken[instr.rootIndex];
       runtime.pc = instr.endIndex + 1;
     } else {
-      runtime.ifTaken[instr.rootIndex] = evalCondition(instr.condition, runtime.vars, instr.line, machine.cursor);
+      runtime.ifTaken[instr.rootIndex] = !!evaluateExpression(instr.conditionCode, runtime.vars, machine.cursor, instr.line);
       runtime.pc = runtime.ifTaken[instr.rootIndex] ? runtime.pc + 1 : instr.falseIndex;
     }
     return false;
@@ -2101,8 +2218,8 @@ async function runMachineInstruction(machine) {
     return false;
   }
   if (instr.type === 'FOR') {
-    var startVal = evalExpr(instr.startExpr, runtime.vars, instr.line, machine.cursor);
-    var endVal = evalExpr(instr.endExpr, runtime.vars, instr.line, machine.cursor);
+    var startVal = evaluateExpression(instr.startCode, runtime.vars, machine.cursor, instr.line);
+    var endVal = evaluateExpression(instr.endCode, runtime.vars, machine.cursor, instr.line);
     if (typeof startVal !== 'number' || typeof endVal !== 'number') {
       throw new PseudocodeError('FOR needs numbers, e.g. FOR ' + instr.var + ' <- 1 TO 5', instr.line);
     }
@@ -2118,7 +2235,7 @@ async function runMachineInstruction(machine) {
     return false;
   }
   if (instr.type === 'WHILE') {
-    runtime.pc = evalCondition(instr.condition, runtime.vars, instr.line, machine.cursor)
+    runtime.pc = evaluateExpression(instr.conditionCode, runtime.vars, machine.cursor, instr.line)
       ? runtime.pc + 1
       : instr.pairedEndIndex + 1;
     return false;
@@ -2128,20 +2245,20 @@ async function runMachineInstruction(machine) {
     return false;
   }
   if (instr.type === 'OUTPUT') {
-    logConsole('[Machine #' + machine.id + '] ' + String(evalExpr(instr.expr, runtime.vars, instr.line, machine.cursor)), false, true);
+    logConsole('[Machine #' + machine.id + '] ' + String(evaluateExpression(instr.exprCode, runtime.vars, machine.cursor, instr.line)), false, true);
     runtime.pc++;
     return true;
   }
   if (instr.type === 'ASSIGN') {
-    runtime.vars[instr.var] = evalExpr(instr.expr, runtime.vars, instr.line, machine.cursor);
+    runtime.vars[instr.var] = evaluateExpression(instr.exprCode, runtime.vars, machine.cursor, instr.line);
     runtime.pc++;
     return true;
   }
   if (instr.type === 'CALL') {
-    var args = splitArgs(instr.argsRaw).map(function (arg) {
-      return evalExpr(arg, runtime.vars, instr.line, machine.cursor);
+    var args = instr.argsCode.map(function (code) {
+      return evaluateExpression(code, runtime.vars, machine.cursor, instr.line);
     });
-    await runCommand(instr.name, args, machine.cursor, function (message, isError) {
+    runCommand(instr.name, args, machine.cursor, function (message, isError) {
       logConsole('[Machine #' + machine.id + '] ' + message, isError, true);
     }, instr.line);
     runtime.pc++;
@@ -2151,10 +2268,10 @@ async function runMachineInstruction(machine) {
   return true;
 }
 
-async function runMachineAction(machine) {
+function runMachineAction(machine) {
   // Selection and loop boundaries are evaluated immediately. One scheduled
   // machine tick is consumed only when an instruction performs work.
-  while (!(await runMachineInstruction(machine))) {}
+  while (!runMachineInstruction(machine)) {}
 }
 
 function scheduleMachine(machine) {
@@ -2177,12 +2294,14 @@ function updateMachineScheduler(now) {
       machine.nextInstructionAt = now + machine.intervalMs;
     }
     machine.running = true;
-    runMachineAction(machine)
-      .catch(function (err) {
-        logConsole('[Machine #' + machine.id + '] Error: ' + (err.message || err), true, true);
-        resetMachineRuntime(machine);
-      })
-      .then(function () { machine.running = false; });
+    try {
+      runMachineAction(machine);
+      markGameDirty();
+    } catch (err) {
+      logConsole('[Machine #' + machine.id + '] Error: ' + (err.message || err), true, true);
+      resetMachineRuntime(machine);
+    }
+    machine.running = false;
   });
 }
 
@@ -2204,6 +2323,7 @@ function sellMachine(machine) {
   disposeObject3D(machine.group);
   disposeObject3D(machine.cursorMesh);
   machines = machines.filter(function (m) { return m.id !== machine.id; });
+  markGameDirty();
   if (selectedMachineId === machine.id) selectedMachineId = null;
   if (editingMachineCodeId === machine.id) editingMachineCodeId = null;
   updateHUD();
@@ -2228,6 +2348,7 @@ function upgradeMachine(machine) {
   machine.intervalMs = Math.round(1000 / nextLevel.instructionsPerSecond);
   if (machine.body) machine.body.material.color.setHex(nextLevel.color);
   scheduleMachine(machine);
+  markGameDirty();
   updateHUD();
   updateTileInfoPanel();
   logConsole('Machine #' + machine.id + ' upgraded to Level ' + nextLevel.level + '. It now runs ' + machineRateLabel(machine) + '.');
@@ -2262,6 +2383,7 @@ function saveMachineCode(machine) {
   machine.code = newCode;
   machine.program = compiledProgram;
   resetMachineRuntime(machine);
+  markGameDirty();
   editingMachineCodeId = null;
   lastTileInfoSignature = '';
   updateTileInfoPanel();
@@ -2344,6 +2466,7 @@ function makePlantLabel(x, z) {
 }
 
 function saveGame(force) {
+  if (!force && !gameStateDirty) return;
   var s = {
     v: SAVE_VERSION,
     money: money,
@@ -2373,10 +2496,11 @@ function saveGame(force) {
     });
   });
   var json = JSON.stringify(s);
-  if (!force && json === lastSavedJson) return;
+  if (!force && json === lastSavedJson) { gameStateDirty = false; return; }
   try {
     localStorage.setItem(SAVE_KEY, json);
     lastSavedJson = json;
+    gameStateDirty = false;
   } catch (e) {}
 }
 
@@ -2446,7 +2570,7 @@ function loadGame() {
       type: p.type, plantedAt: p.plantedAt, growMs: p.growMs,
       sprite: makePlantSprite(p.type, p.x, p.z), pct: makePlantLabel(p.x, p.z), ready: false
     };
-    plantedTiles.push(pt);
+    addPlantedTile(pt);
   });
   (s.machines || []).forEach(function (m) {
     var mt = tileAt(m.homeX, m.homeZ);
@@ -2472,7 +2596,7 @@ function resetGame() {
   machines = [];
   floatingTexts.forEach(function (floating) {
     scene.remove(floating.sprite);
-    disposeSprite(floating.sprite, true);
+    disposeSprite(floating.sprite, false);
   });
   floatingTexts = [];
   nextMachineId = 1;
@@ -2492,8 +2616,11 @@ function resetGame() {
   codeInput.value = '';
   clearCodeError();
   consoleOutput.innerHTML = '';
+  machineLogQueue = [];
+  machineLogByKey = {};
   try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
   lastSavedJson = '';
+  gameStateDirty = true;
   refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
@@ -2534,6 +2661,7 @@ var earnedValueEl = document.getElementById('earned-value');
 var lastHudSignature = '';
 
 function updateHUD() {
+  hudDirty = false;
   var signature = money + '|' + totalEarned + '|' + VEGGIE_NAMES.map(function (name) {
     return invCount(name) + ':' + (isUnlocked(name) ? 1 : 0);
   }).join(',');
@@ -2608,6 +2736,7 @@ window.addEventListener('pagehide', function () { saveGame(true); });
 
 var lastTileInfoSignature = '';
 function updateTileInfoPanel() {
+  tileInfoDirty = false;
   if (editingMachineCodeId) return; // the inline editor owns the panel while it is open
   var selectedForSignature = selectedMachineId
     ? machines.filter(function (m) { return m.id === selectedMachineId; })[0]
@@ -2734,6 +2863,9 @@ function animate() {
   });
 
   updateMachineScheduler(perfNow);
+  flushMachineConsole(perfNow, false);
+  if (hudDirty) { hudDirty = false; updateHUD(); }
+  if (tileInfoDirty) { tileInfoDirty = false; updateTileInfoPanel(); }
 
   // Grow every planted sprite towards full size, and flag it ready once done.
   var anyGrowthChanged = false;
