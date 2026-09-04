@@ -307,7 +307,7 @@ var HALF = (GRID_SIZE - 1) / 2;
 // made seeds cost more than they sold for after a few buys, so machines
 // self-destructed economically.) So:
 //
-// 1. Tiers scale exponentially: seedCost x3 and growSeconds x1.28 per tier
+// 1. Tiers scale exponentially: seedCost x3 and growSeconds x1.5 per tier
 //    (Cookie Clicker's ~10x, scaled down to fit one lesson).
 // 2. Each tier unlocks once you've EARNED enough coins total (lifetime
 //    totalEarned, from any source). The exponential price curve is the
@@ -326,7 +326,31 @@ var VEGGIE_TIERS = [
   { name: 'Chili Pepper', emoji: '1f336' },
   { name: 'Eggplant', emoji: '1f346' },
   { name: 'Watermelon', emoji: '1f349' },
-  { name: 'Golden Pineapple', emoji: '1f34d', tint: 0xffd863 }
+  { name: 'Golden Pineapple', emoji: '1f34d', tint: 0xffd863 },
+  { name: 'Red Apple',   emoji: '1f34e' },
+  { name: 'Green Apple', emoji: '1f34f' },
+  { name: 'Pear',        emoji: '1f350' },
+  { name: 'Tangerine',   emoji: '1f34a' },
+  { name: 'Lemon',       emoji: '1f34b' },
+  { name: 'Banana',      emoji: '1f34c' },
+  { name: 'Strawberry',  emoji: '1f353' },
+  { name: 'Grapes',      emoji: '1f347' },
+  { name: 'Blueberries', emoji: '1fad0' },
+  { name: 'Cherries',    emoji: '1f352' },
+  { name: 'Peach',       emoji: '1f351' },
+  { name: 'Melon',       emoji: '1f348' },
+  { name: 'Mango',       emoji: '1f96d' },
+  { name: 'Coconut',     emoji: '1f965' },
+  { name: 'Kiwi',        emoji: '1f95d' },
+  { name: 'Avocado',     emoji: '1f951' },
+  { name: 'Cucumber',    emoji: '1f952' },
+  { name: 'Leafy Green', emoji: '1f96c' },
+  { name: 'Onion',       emoji: '1f9c5' },
+  { name: 'Garlic',      emoji: '1f9c4' },
+  { name: 'Sweet Potato', emoji: '1f360' },
+  { name: 'Beans',       emoji: '1fad8' },
+  { name: 'Peanut',      emoji: '1f95c' },
+  { name: 'Mushroom',    emoji: '1f344' }
 ];
 
 var TIER_SEED_COST_BASE = 5;
@@ -424,7 +448,7 @@ function isUnlocked(name) {
 function unlockProgressMessage(name) {
   var veg = VEGGIES[name];
   var earnedLeft = Math.max(0, veg.unlockEarned - totalEarned);
-  return 'Earn ' + earnedLeft + ' more coins total (lifetime, not current balance).';
+  return 'Earn ' + earnedLeft.toLocaleString() + ' more coins total (lifetime, not current balance).';
 }
 
 // The price of the NEXT seed packet of this vegetable - a fixed tier price
@@ -873,7 +897,7 @@ function sellAt(cursor, viaCode) {
   var justUnlocked = refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
-  var message = 'Sold the ' + soldName + ' for ' + price + ' coins' + (viaCode ? ' (code bonus!)' : '') + '!';
+  var message = 'Sold the ' + soldName + ' for ' + price.toLocaleString() + ' coins' + (viaCode ? ' (code bonus!)' : '') + '!';
   if (justUnlocked.length) message += ' New in the shop: ' + justUnlocked.join(', ') + '!';
   return { ok: true, message: message };
 }
@@ -906,7 +930,7 @@ function buySeed(vegName, viaCode) {
   money -= price;
   inventory[vegName] = invCount(vegName) + 1;
   updateHUD();
-  return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + price + ' coins' + (viaCode ? ' (code discount!)' : '') + '.' };
+  return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + price.toLocaleString() + ' coins' + (viaCode ? ' (code discount!)' : '') + '.' };
 }
 
 // Buy() in code takes the shop's exact label, e.g. "Carrot Seeds" - this
@@ -1980,8 +2004,8 @@ var tileInfoEl = document.getElementById('tile-info');
 var earnedValueEl = document.getElementById('earned-value');
 
 function updateHUD() {
-  moneyValueEl.textContent = money;
-  earnedValueEl.textContent = totalEarned;
+  moneyValueEl.textContent = money.toLocaleString();
+  earnedValueEl.textContent = totalEarned.toLocaleString();
   refreshMachineTierPicker();
   VEGGIE_NAMES.forEach(function (name) {
     var row = shopListEl.querySelector('[data-veg="' + name + '"]');
@@ -1997,7 +2021,7 @@ function updateHUD() {
     var price = currentSeedPrice(name);
     var veg = VEGGIES[name];
     var priceEl = row.querySelector('.price');
-    priceEl.textContent = price + ' coins · sells for ' + veg.sellPrice;
+    priceEl.textContent = price.toLocaleString() + ' coins · sells for ' + veg.sellPrice.toLocaleString();
     row.querySelector('.buy-btn').disabled = money < price;
     row.querySelector('.have').textContent = 'You have ' + invCount(name) + ' seed' + (invCount(name) === 1 ? '' : 's') + '.';
   });
@@ -2070,8 +2094,8 @@ function updateTileInfoPanel() {
   if (tile.plant && tile.plant.ready) {
     tileInfoEl.className = 'show';
     tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
-      '<br><button type="button" class="sell-btn">Sell for ' + VEGGIES[tile.plant.type].sellPrice + ' coins</button>' +
-      '<br><span style="font-size:.68rem;color:#7a6650">Tip: code Sell() pays ' + Math.round(VEGGIES[tile.plant.type].sellPrice * CODE_SELL_BONUS) + ' coins.</span>';
+      '<br><button type="button" class="sell-btn">Sell for ' + VEGGIES[tile.plant.type].sellPrice.toLocaleString() + ' coins</button>' +
+      '<br><span style="font-size:.68rem;color:#7a6650">Tip: code Sell() pays ' + Math.round(VEGGIES[tile.plant.type].sellPrice * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>';
     tileInfoEl.querySelector('.sell-btn').addEventListener('click', function () {
       var result = sellAt(playerCursor);
       logConsole(result.message, !result.ok);
