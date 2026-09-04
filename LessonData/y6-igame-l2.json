@@ -1,0 +1,134 @@
+{
+  "id": "y6-igame-l2",
+  "label": "6.2.2: Build a Pong Game",
+  "companionAppId": "turbowarp",
+  "steps": [
+    {
+      "id": "do-now",
+      "label": "Do Now: Input and Output",
+      "type": "short-answer-validation",
+      "validatorId": "y6-l2-do-now",
+      "validatorKey": "y6l2_do_now",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Input and Output</h2><p class=\"lesson-lead\">An <strong>input</strong> sends information into a computer. An <strong>output</strong> is information the computer sends back.</p><div class=\"lesson-exam-card\"><h3>Complete the questions</h3><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6-l2-dna-a\">(a) A player moves a mouse. Is this an input or an output?</label><input id=\"y6-l2-dna-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"dna-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-l2-dna-b\">(b) A game shows a score on the screen. Is this an input or an output?</label><input id=\"y6-l2-dna-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"dna-b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-l2-dna-c\">(c) Name one input device used to control a game.</label><input id=\"y6-l2-dna-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"dna-c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6-l2-do-now-check\">Check answers</button></div><div id=\"y6-l2-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    },
+    {
+      "id": "title",
+      "label": "Build a Pong Game",
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">iProgram</p><h2 class=\"lesson-h2\">Build a Pong Game</h2><p>Year 6, Lesson 2</p></div>"
+    },
+    {
+      "id": "objectives",
+      "label": "Today\u2019s Task",
+      "content": "<h2 class=\"lesson-h2\">Today\u2019s Task</h2><div class=\"igame-two-col\"><div><p class=\"lesson-lead\">You will build a Pong-style game in TurboWarp.</p><ul class=\"lesson-facts\"><li>The mouse controls a paddle.</li><li>A ball moves and bounces around the stage.</li><li>The game checks whether the ball touches the paddle.</li><li>Each successful hit increases the score and speed.</li></ul></div><img class=\"igame-photo igame-photo-large\" src=\"https://jqblooms.github.io/Bloomsbury-Computing/LessonAssets/y6-igame-l2/pong-controller.jpg\" alt=\"A player controlling the original Pong game\"></div><div class=\"lesson-flow-task\"><h3>Finished when</h3><p>Your paddle follows the mouse, the ball bounces, the score changes after a hit, and the game stops when the ball reaches the floor.</p></div>"
+    },
+    {
+      "id": "control-cycle",
+      "label": "Input, Process and Output",
+      "content": "<h2 class=\"lesson-h2\">Input, Process and Output</h2><p class=\"lesson-lead\">A game repeatedly receives an input, processes it, and produces an output.</p><div class=\"igame-cycle\"><div><strong>Input</strong><span>The player moves the mouse.</span></div><div><strong>Process</strong><span>The program reads the mouse position.</span></div><div><strong>Output</strong><span>The paddle moves on the screen.</span></div></div><div class=\"lesson-flow-task\"><h3>Control</h3><p>Control means directing what happens. In this game, the player controls the paddle while the program controls the ball, score, and rules.</p></div>"
+    },
+    {
+      "id": "game-inputs",
+      "label": "How Players Control Games",
+      "content": "<h2 class=\"lesson-h2\">How Players Control Games</h2><p class=\"lesson-lead\">Different games receive different inputs. Identify the action the player performs in each example.</p><div class=\"igame-photo-grid\"><figure class=\"igame-photo-card\"><img src=\"https://jqblooms.github.io/Bloomsbury-Computing/LessonAssets/y6-igame-l2/etch-a-sketch-input.jpg\" alt=\"A player turning the knobs on an Etch A Sketch\"><figcaption><strong>Etch A Sketch:</strong> turning the two knobs controls the line.</figcaption></figure><figure class=\"igame-photo-card\"><img src=\"https://jqblooms.github.io/Bloomsbury-Computing/LessonAssets/y6-igame-l2/pong-controller.jpg\" alt=\"A player turning a Pong controller\"><figcaption><strong>Pong:</strong> turning the controller moves the paddle.</figcaption></figure><figure class=\"igame-photo-card\"><img src=\"https://jqblooms.github.io/Bloomsbury-Computing/LessonAssets/y6-igame-l2/angry-birds-input.jpg\" alt=\"A player touching the screen in Angry Birds\"><figcaption><strong>Angry Birds:</strong> touching and dragging aims the bird.</figcaption></figure></div><div class=\"lesson-flow-task\"><p>Your Pong game will use mouse movement as its input.</p></div>"
+    },
+    {
+      "id": "conditions",
+      "label": "Conditions and Decisions",
+      "content": "<h2 class=\"lesson-h2\">Conditions and Decisions</h2><p class=\"lesson-lead\">A <strong>condition</strong> is a question with a true or false answer. An <strong>if block</strong> runs its instructions only when its condition is true.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Condition</h3><p>Is the ball touching the paddle?</p><p><strong>True:</strong> bounce and add one point.</p><p><strong>False:</strong> keep moving.</p></div><div class=\"scratchblocks-card\"><pre class=\"blocks\">if &lt;touching [Paddle v] ?&gt; then\nchange [score v] by (1)\nend</pre></div></div><p class=\"lesson-lead\">The forever block makes the program check the condition again and again while the game runs.</p>"
+    },
+    {
+      "id": "open-turbowarp",
+      "label": "Open TurboWarp",
+      "type": "app-link",
+      "buttonId": "y6-l2-open-turbowarp",
+      "appId": "turbowarp",
+      "content": "<h2 class=\"lesson-h2\">Open TurboWarp</h2><div class=\"igame-two-col\"><div><ol class=\"igame-steps\"><li>Open TurboWarp using the button.</li><li>Choose <strong>File</strong>, then <strong>New</strong> if another project appears.</li><li>Delete the cat sprite.</li><li>Save your project with the name <strong>Pong</strong>.</li></ol><div class=\"lesson-app-link\"><button type=\"button\" class=\"donow-btn\" id=\"y6-l2-open-turbowarp\">Open TurboWarp</button><p>The Slides and TurboWarp switcher will stay at the top right. Use it whenever you need the next instruction.</p></div></div><div class=\"lesson-flow-task\"><h3>Before moving on</h3><p>You should have an empty project called Pong.</p></div></div>"
+    },
+    {
+      "id": "build-stage",
+      "label": "Build the Stage",
+      "content": "<h2 class=\"lesson-h2\">Build the Stage</h2><div class=\"igame-two-col\"><ol class=\"igame-steps\"><li>Select the <strong>Stage</strong>.</li><li>Choose <strong>Backdrops</strong>, then use <strong>Paint</strong>.</li><li>Fill the backdrop with a dark colour.</li><li>Draw a thick red line across the stage near the bottom edge.</li><li>Add a few small stars if there is time.</li></ol><div class=\"lesson-flow-task\"><h3>Why the red line?</h3><p>The ball will use the red line as the game-over area. Keep enough space above it for the paddle.</p></div></div><div class=\"igame-test\"><strong>Check</strong><span>The stage has a dark background and a clearly visible red floor.</span></div>"
+    },
+    {
+      "id": "build-paddle",
+      "label": "Create the Paddle",
+      "content": "<h2 class=\"lesson-h2\">Create the Paddle</h2><div class=\"igame-two-col\"><ol class=\"igame-steps\"><li>Choose <strong>Paint</strong> from the Add Sprite button.</li><li>Draw a wide, short rectangle.</li><li>Use the centre tool so the cross is in the middle of the paddle.</li><li>Name the sprite <strong>Paddle</strong>.</li><li>Set its y position to <strong>-135</strong>.</li></ol><div class=\"lesson-flow-task\"><h3>Position</h3><p>The y position controls height. A negative y value places the paddle below the centre of the stage.</p></div></div><div class=\"igame-test\"><strong>Check</strong><span>The Paddle sits above the red floor and has room to move left and right.</span></div>"
+    },
+    {
+      "id": "code-paddle",
+      "label": "Code the Paddle",
+      "content": "<h2 class=\"lesson-h2\">Code the Paddle</h2><p class=\"lesson-lead\">Select the Paddle sprite. Build this script from Events, Control, Motion, and Sensing.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when green flag clicked\nset y to (-135)\nforever\nset x to (mouse x)\nend</pre></div><div class=\"lesson-flow-task\"><h3>How it works</h3><p><strong>mouse x</strong> reports how far left or right the mouse is.</p><p><strong>set x</strong> moves the paddle to the same horizontal position.</p><p><strong>forever</strong> keeps updating the position.</p></div></div><div class=\"igame-test\"><strong>Test</strong><span>Press the green flag and move the mouse. The paddle should follow from left to right.</span></div>"
+    },
+    {
+      "id": "build-ball",
+      "label": "Create the Ball",
+      "content": "<h2 class=\"lesson-h2\">Create the Ball</h2><div class=\"igame-two-col\"><ol class=\"igame-steps\"><li>Choose <strong>Paint</strong> from the Add Sprite button.</li><li>Hold Shift while drawing a small circle.</li><li>Place the centre cross in the middle.</li><li>Name the sprite <strong>Ball</strong>.</li><li>Set the size to about <strong>25</strong>.</li></ol><div class=\"lesson-flow-task\"><h3>Important</h3><p>Click the Ball in the sprite list before adding the next scripts. The blue outline shows which sprite you are coding.</p></div></div><div class=\"igame-test\"><strong>Check</strong><span>The sprite list contains Paddle and Ball.</span></div>"
+    },
+    {
+      "id": "variables",
+      "label": "Create Score and Speed",
+      "content": "<h2 class=\"lesson-h2\">Create Score and Speed</h2><p class=\"lesson-lead\">A <strong>variable</strong> is a named place where a program stores a value that can change.</p><div class=\"igame-two-col\"><ol class=\"igame-steps\"><li>Open <strong>Variables</strong>.</li><li>Choose <strong>Make a Variable</strong>.</li><li>Create <strong>score</strong> for all sprites.</li><li>Create <strong>speed</strong> for all sprites.</li><li>Leave score visible. Untick speed to hide its display.</li></ol><div class=\"scratchblocks-card\"><pre class=\"blocks\">set [score v] to (0)\nset [speed v] to (5)</pre></div></div><div class=\"lesson-flow-task\"><p><strong>score</strong> stores successful paddle hits. <strong>speed</strong> stores how many steps the ball moves each time around the loop.</p></div>"
+    },
+    {
+      "id": "start-ball",
+      "label": "Start the Ball",
+      "content": "<h2 class=\"lesson-h2\">Start the Ball</h2><p class=\"lesson-lead\">Keep the Ball selected. This script resets the game and gives the ball a starting position and direction.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when green flag clicked\nset [score v] to (0)\nset [speed v] to (5)\ngo to x: (0) y: (130)\npoint in direction (135)</pre></div><div class=\"lesson-flow-task\"><h3>Starting values</h3><p>The ball starts near the top centre. Direction 135 points down and right. Every new game starts with score 0 and speed 5.</p></div></div><div class=\"igame-test\"><strong>Test</strong><span>Move the Ball elsewhere, press the green flag, and check that it returns to the top.</span></div>"
+    },
+    {
+      "id": "move-ball",
+      "label": "Move and Bounce",
+      "content": "<h2 class=\"lesson-h2\">Move and Bounce</h2><p class=\"lesson-lead\">Add a second script to the Ball. The variable speed goes inside the move block.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when green flag clicked\nforever\nif on edge, bounce\nmove (speed) steps\nend</pre></div><div class=\"lesson-flow-task\"><h3>Sequence inside the loop</h3><p>First the ball checks the edge. It then moves by the value stored in speed. The forever block repeats both instructions.</p></div></div><div class=\"igame-test\"><strong>Test</strong><span>The ball should move continuously and bounce from the top and side edges.</span></div>"
+    },
+    {
+      "id": "stop-game",
+      "label": "Stop at the Floor",
+      "content": "<h2 class=\"lesson-h2\">Stop at the Floor</h2><p class=\"lesson-lead\">Add this third script to the Ball. Click the colour square in the sensing block and use the colour picker to select your red floor.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when green flag clicked\nwait until &lt;touching color [#d62020] ?&gt;\nstop [all v]</pre></div><div class=\"lesson-flow-task\"><h3>Wait until</h3><p>The program pauses at this block while the condition is false. As soon as the Ball touches the chosen colour, the condition becomes true and stop all ends the game.</p></div></div><div class=\"igame-test\"><strong>Test</strong><span>Move the paddle away. The game should stop when the ball reaches the red floor.</span></div>"
+    },
+    {
+      "id": "paddle-bounce",
+      "label": "Bounce from the Paddle",
+      "content": "<h2 class=\"lesson-h2\">Bounce from the Paddle</h2><p class=\"lesson-lead\">Add this fourth script to the Ball. Choose Paddle from the touching block menu.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when green flag clicked\nforever\nif &lt;touching [Paddle v] ?&gt; then\npoint in direction ((180) - (direction))\nmove (5) steps\nend\nend</pre></div><div class=\"lesson-flow-task\"><h3>The decision</h3><p>The if block checks whether Ball touches Paddle. The subtraction points the ball upwards in the opposite vertical direction. Moving 5 steps separates the sprites so one hit is counted once.</p></div></div><div class=\"igame-test\"><strong>Test</strong><span>Catch the ball with the paddle. It should travel upwards after contact.</span></div>"
+    },
+    {
+      "id": "score-speed",
+      "label": "Add Score and Speed",
+      "content": "<h2 class=\"lesson-h2\">Add Score and Speed</h2><p class=\"lesson-lead\">Place two variable blocks inside the if block, before the direction block.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when green flag clicked\nforever\nif &lt;touching [Paddle v] ?&gt; then\nchange [score v] by (1)\nchange [speed v] by (0.25)\npoint in direction ((180) - (direction))\nmove (5) steps\nend\nend</pre></div><div class=\"lesson-flow-task\"><h3>What changes?</h3><p>Each paddle hit adds 1 to score. Adding 0.25 to speed makes every later move slightly larger, so the game becomes harder.</p></div></div><div class=\"igame-test\"><strong>Test</strong><span>Catch the ball several times. The score should rise by one and the ball should gradually move faster.</span></div>"
+    },
+    {
+      "id": "full-test",
+      "label": "Test the Complete Game",
+      "content": "<h2 class=\"lesson-h2\">Test the Complete Game</h2><p class=\"lesson-lead\">Test one requirement at a time. Fix each problem before moving to the next line.</p><div class=\"igame-checklist\"><label><input type=\"checkbox\"> The green flag sets score to 0 and speed to 5.</label><label><input type=\"checkbox\"> The paddle follows the mouse from left to right.</label><label><input type=\"checkbox\"> The ball starts near the top and moves by itself.</label><label><input type=\"checkbox\"> The ball bounces from the top and side edges.</label><label><input type=\"checkbox\"> The ball bounces upwards after touching Paddle.</label><label><input type=\"checkbox\"> Each paddle hit adds one point and increases speed.</label><label><input type=\"checkbox\"> Touching the red floor stops the game.</label></div><div class=\"lesson-flow-task\"><h3>Save</h3><p>Save the project after all seven checks work.</p></div>"
+    },
+    {
+      "id": "debug",
+      "label": "Debugging Guide",
+      "content": "<h2 class=\"lesson-h2\">Debugging Guide</h2><div class=\"igame-debug-grid\"><div><strong>Paddle does not move</strong><span>Check that its script uses mouse x inside set x and sits inside forever.</span></div><div><strong>Ball code moves the paddle</strong><span>Select Ball in the sprite list before building the ball scripts.</span></div><div><strong>Ball sticks to the paddle</strong><span>Keep move 5 steps after the direction block.</span></div><div><strong>Score rises too quickly</strong><span>Check that change score by 1 is inside the touching Paddle if block.</span></div><div><strong>Game ends too early</strong><span>Use the colour picker again and select only the red floor colour.</span></div><div><strong>Ball does not get faster</strong><span>Put the speed variable inside move and change speed by 0.25 after each hit.</span></div></div>"
+    },
+    {
+      "id": "extension",
+      "label": "Extension: Less Predictable Bounces",
+      "content": "<h2 class=\"lesson-h2\">Extension: Less Predictable Bounces</h2><p class=\"lesson-lead\">Make each paddle bounce slightly different by adding a random turn.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">if &lt;touching [Paddle v] ?&gt; then\nchange [score v] by (1)\nchange [speed v] by (0.25)\npoint in direction ((180) - (direction))\nturn cw (pick random (-20) to (20)) degrees\nmove (5) steps\nend</pre></div><div class=\"lesson-flow-task\"><h3>Experiment</h3><p>Try a smaller range such as -10 to 10, then a larger range such as -40 to 40. Choose values that keep the game playable.</p></div></div><div class=\"igame-test\"><strong>Extra</strong><span>Add the Pen extension and make the Ball leave a short trail while it moves.</span></div>"
+    },
+    {
+      "id": "plenary",
+      "label": "Plenary",
+      "type": "short-answer-validation",
+      "validatorId": "y6-l2-plenary",
+      "validatorKey": "y6l2_plenary",
+      "content": "<h2 class=\"lesson-h2\">Plenary</h2><div class=\"lesson-exam-card\"><h3>Answer without using the instructions</h3><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6-l2-plenary-a\">(a) What type of block checks whether the Ball is touching the Paddle?</label><input id=\"y6-l2-plenary-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plenary-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-l2-plenary-b\">(b) Why does the game check for contact inside a forever block?</label><input id=\"y6-l2-plenary-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plenary-b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-l2-plenary-c\">(c) The score begins at 0. What will it store after the Ball hits the Paddle three times?</label><input id=\"y6-l2-plenary-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plenary-c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6-l2-plenary-check\">Check answers</button></div><div id=\"y6-l2-plenary-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    }
+  ],
+  "validators": {
+    "y6l2_do_now": [
+      {"suffix": "a", "pattern": {"__regex": true, "source": "^\\s*(an?\\s+)?input\\s*$", "flags": "i"}, "feedback": "Moving the mouse sends information into the game."},
+      {"suffix": "b", "pattern": {"__regex": true, "source": "^\\s*(an?\\s+)?output\\s*$", "flags": "i"}, "feedback": "The score is information shown by the computer."},
+      {"suffix": "c", "pattern": {"__regex": true, "source": "\\b(mouse|keyboard|controller|gamepad|joystick|touch\\s*screen|touchscreen|motion\\s*controller)\\b", "flags": "i"}, "feedback": "Examples include a mouse, keyboard, controller, joystick, or touch screen."}
+    ],
+    "y6l2_plenary": [
+      {"suffix": "a", "pattern": {"__regex": true, "source": "\\b(if|condition|conditional|decision)\\b", "flags": "i"}, "feedback": "An if block tests the touching Paddle condition."},
+      {"suffix": "b", "pattern": {"__regex": true, "source": "\\b(keep|keeps|continually|continuously|repeat|repeats|again|all\\s+the\\s+time|throughout)\\b.*\\b(check|checking|test|testing|run|running)\\b|\\b(check|checking|test|testing)\\b.*\\b(keep|continually|continuously|repeat|again|all\\s+the\\s+time|throughout)\\b", "flags": "i"}, "feedback": "Forever makes the program keep checking for contact throughout the game."},
+      {"suffix": "c", "pattern": {"__regex": true, "source": "^\\s*3\\s*$", "flags": "i"}, "feedback": "Each hit adds 1, so three hits produce a score of 3."}
+    ]
+  },
+  "pseudocodeValidators": {}
+}
