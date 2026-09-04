@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>File Forge</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+        body { font-family: 'JetBrains Mono', monospace; overflow: hidden; touch-action: manipulation; background-color: #0f172a; }
+        #root { height: 100%; width: 100%; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .flash-green { animation: flashGreen 0.6s ease-out; }
+        @keyframes flashGreen { 0%{box-shadow:0 0 0 4px rgba(16,185,129,.6)} 100%{box-shadow:0 0 0 0 rgba(16,185,129,0)} }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-3px,0,0)} 40%,60%{transform:translate3d(3px,0,0)} }
+        .custom-scrollbar { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.3) rgba(255,255,255,.1); }
+        .custom-scrollbar::-webkit-scrollbar{width:6px}
+        .custom-scrollbar::-webkit-scrollbar-track{background:rgba(255,255,255,.1)}
+        .custom-scrollbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:3px}
+        .no-select{user-select:none;-webkit-user-select:none}
+        canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+        input[type="range"] { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px; background: #334155; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #22d3ee; cursor: pointer; border: 2px solid #0f172a; }
+        input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #22d3ee; cursor: pointer; border: 2px solid #0f172a; }
+    </style>
+</head>
+<body class="text-white h-screen w-screen overflow-hidden">
+<div id="root"></div>
+
+<script>
+// Bloomsbury Computing identity bridge - same contract every embedded
+// app uses (see e.g. Storage Blitz).
+window.__bcPlayerName = null;
+window.addEventListener('message', function (event) {
+  var data = event.data;
+  if (data && data.type === 'BC_IDENTITY' && data.name) {
+    window.__bcPlayerName = data.name;
+  }
+});
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+// ============================================================
+// DATA-REPRESENTATION CORE (ported verbatim from Index.html's Year 10
+// Pixel Lab / Bit Lab widgets - same quantisation rule, same 1-bit
+// luminance-threshold special case, so an image looks identical here to
+// how it looks in those lessons at the same colour depth)
+// ============================================================
+const DEPTH_STEPS = [1, 2, 4, 8, 16, 24]; // bits per pixel, image colour depth
+const SOUND_RES_STEPS = [4, 8, 16, 24]; // bits per sample, sound resolution
+
+function channelBitsForDepth(depth) {
+  var bits = [0, 0, 0]; // r, g, b
+  for (var i = 0; i < depth; i++) bits[i % 3]++;
+  return bits;
+}
+function quantiseChannel(value, levels) {
+  if (levels <= 1) return 128;
+  var step = 255 / (levels - 1);
+  return Math.round(Math.round(value / step) * step);
+}
+function quantiseRGB(r, g, b, depth) {
+  if (depth <= 1) {
+    var lum = 0.299 * r + 0.587 * g + 0.114 * b;
+    var v = lum >= 128 ? 255 : 0;
+    return [v, v, v];
+  }
+  var bits = channelBitsForDepth(depth);
+  var levels = bits.map(function (n) { return Math.pow(2, n); });
+  return [quantiseChannel(r, levels[0]), quantiseChannel(g, levels[1]), quantiseChannel(b, levels[2])];
+}
+
+// Procedural "gem" source image: a true-colour (24-bit) pattern sampled
+// fresh at whatever width x height the student has set, then quantised
+// down to the chosen colour depth. Deterministic and blocky by design -
+// looks good boosted, and gives run-length compression real repeated
+// runs to work with later, rather than a photo (which wouldn't compress
+// meaningfully with a simple RLE demo).
+// Deliberately few, wide bands (not a smooth gradient) - at the small
+// resolutions this game starts at, a smoother/more-detailed pattern
+// left barely any two adjacent pixels sharing a colour, which made the
+// later RLE "Compress" feature actively INFLATE the file instead of
+// shrinking it (caught by Node verification, not by eye). Four bands
+// keeps that from happening at any reachable width/height/depth - see
+// compressionWouldHelp() below, which is the actual safety net.
+const GEM_PALETTE = [[8, 47, 73], [8, 145, 178], [103, 232, 249], [255, 255, 255]];
+function gemSourceColour(x, y, w, h) {
+  var dx = (x + 0.5) / w - 0.5;
+  var dy = (y + 0.5) / h - 0.5;
+  var dist = Math.sqrt(dx * dx + dy * dy) * 1.5;
+  var band = Math.min(GEM_PALETTE.length - 1, Math.floor(dist * GEM_PALETTE.length));
+  return GEM_PALETTE[GEM_PALETTE.length - 1 - band];
+}
+function buildImagePixels(w, h, depth) {
+  var pixels = new Array(w * h);
+  for (var y = 0; y < h; y++) {
+    for (var x = 0; x < w; x++) {
+      var src = gemSourceColour(x, y, w, h);
+      pixels[y * w + x] = quantiseRGB(src[0], src[1], src[2], depth);
+    }
+  }
+  return pixels;
+}
+function imageFileSizeBits(w, h, depth) { return w * h * depth; }
+
+// Simple run-length encoding over the quantised pixel array - a real
+// compression pass, not a staged number. Each run is (colour, count);
+// count is capped at 255 and split into multiple runs if a longer run
+// occurs, matching how a real simple RLE codec behaves.
+function runLengthEncode(pixels) {
+  var runs = [];
+  var i = 0;
+  while (i < pixels.length) {
+    var colour = pixels[i];
+    var count = 1;
+    while (i + count < pixels.length && count < 255 &&
+      pixels[i + count][0] === colour[0] && pixels[i + count][1] === colour[1] && pixels[i + count][2] === colour[2]) {
+      count++;
+    }
+    runs.push({ colour: colour, count: count });
+    i += count;
+  }
+  return runs;
+}
+function compressedSizeBits(pixels, depth) {
+  // Each run costs: one pixel's worth of colour bits + 8 bits for the
+  // run-length byte (0-255).
+  var runs = runLengthEncode(pixels);
+  return runs.length * (depth + 8);
+}
+// Whether RLE would actually shrink the image at these EXACT current
+// settings - the real safety net for the "Compress" task (see
+// GEM_PALETTE's own comment). Checked before ever offering that task,
+// so a student is never handed something that can't be completed.
+function compressionWouldHelp(controls) {
+  var pixels = buildImagePixels(controls.width, controls.height, controls.depth);
+  return compressedSizeBits(pixels, controls.depth) < imageFileSizeBits(controls.width, controls.height, controls.depth);
+}
+
+function samplePoints(rate, resBits, durationSeconds) {
+  var count = Math.max(2, Math.round(rate * durationSeconds));
+  var levels = Math.pow(2, resBits);
+  var out = new Array(count);
+  for (var i = 0; i < count; i++) {
+    var t = i / rate;
+    var raw = Math.sin(t * 2 * Math.PI * 1.3) * 0.85 + Math.sin(t * 2 * Math.PI * 0.4) * 0.15;
+    var amp = (raw + 1) / 2; // 0..1
+    var q = levels <= 1 ? 0.5 : Math.round(amp * (levels - 1)) / (levels - 1);
+    out[i] = q;
+  }
+  return out;
+}
+function soundFileSizeBits(rate, resBits, durationSeconds) { return Math.round(rate * durationSeconds) * resBits; }
+
+const ASCII_MIN = 33, ASCII_MAX = 126; // printable, excludes space (ambiguous to "read")
+function randomAsciiChar() {
+  var code = randInt(ASCII_MIN, ASCII_MAX);
+  return { code: code, char: String.fromCharCode(code) };
+}
+
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const pick = (arr) => arr[randInt(0, arr.length - 1)];
+const formatBits = (bits) => {
+  if (bits < 8) return bits + ' bit' + (bits === 1 ? '' : 's');
+  var bytes = bits / 8;
+  if (bytes < 1024) return Math.round(bytes) + ' bytes';
+  var kib = bytes / 1024;
+  if (kib < 1024) return kib.toFixed(1) + ' KiB';
+  return (kib / 1024).toFixed(2) + ' MiB';
+};
+
+// ============================================================
+// TASK GENERATORS - one per workshop mode. Every task is the SAME
+// maths Storage Blitz already asks (bits-for-N-colours, resolution x
+// depth = size, bits-for-N-characters, sample rate/resolution x
+// duration = size) but inverted: a target is given and the student
+// must find the control setting that reaches it, not type the number.
+// check() reads the workshop's live control state, not a typed answer.
+// ============================================================
+// `current` (the workshop's live controls when this task was generated)
+// is used to make sure the target is never something already true - a
+// student should never see a task that awards itself for free just
+// because it happens to describe the state they were already in.
+function taskImageDepth(tierLevel, current) {
+  var pool = tierLevel < 2 ? DEPTH_STEPS.slice(0, 3) : DEPTH_STEPS;
+  var useBytes = tierLevel >= 2 && Math.random() < 0.4;
+  var candidates = useBytes ? pool.filter(function (d) { return d % 8 === 0; }) : pool;
+  if (!candidates.length) candidates = pool;
+  if (current) {
+    var withoutCurrent = candidates.filter(function (d) { return d !== current.depth; });
+    if (withoutCurrent.length) candidates = withoutCurrent;
+  }
+  var depth = pick(candidates);
+  if (useBytes) {
+    return {
+      kind: 'image-depth', desc: 'Set the colour depth to ' + (depth / 8) + ' byte' + (depth === 8 ? '' : 's') + '.',
+      check: function (c) { return c.depth === depth; }
+    };
+  }
+  return {
+    kind: 'image-depth', desc: 'Increase the colour depth so there are ' + Math.pow(2, depth).toLocaleString() + ' possible colours.',
+    check: function (c) { return c.depth === depth; }
+  };
+}
+function taskImageResolution(tierLevel, current) {
+  var max = tierLevel < 2 ? 32 : 64;
+  var w, h;
+  for (var tries = 0; tries < 10; tries++) {
+    w = randInt(1, max / 4) * 4;
+    h = randInt(1, max / 4) * 4;
+    if (!current || w !== current.width || h !== current.height) break;
+  }
+  return {
+    kind: 'image-resolution', desc: 'Set the resolution to ' + w + ' x ' + h + ' pixels.',
+    check: function (c) { return c.width === w && c.height === h; }
+  };
+}
+function taskImageCap(tierLevel, current) {
+  // A cap task is a threshold, not an exact-match target, so it can't
+  // just be re-rolled away from a single forbidden value the way
+  // depth/resolution tasks are - it has to actively check whether the
+  // CURRENT file already fits under whatever cap got picked (which
+  // happens often by chance) and keep re-rolling until it genuinely
+  // requires an adjustment. Without this, a cap task could silently
+  // complete itself the instant it's generated, with no interaction at
+  // all - caught live, not by reasoning about the code.
+  var currentBits = current ? imageFileSizeBits(current.width, current.height, current.depth) : -1;
+  var depth, w, h, maxBits;
+  var found = false;
+  for (var tries = 0; tries < 20; tries++) {
+    depth = pick(DEPTH_STEPS.slice(0, tierLevel < 3 ? 4 : 6));
+    w = randInt(2, tierLevel < 3 ? 8 : 16) * 4;
+    h = randInt(2, tierLevel < 3 ? 8 : 16) * 4;
+    maxBits = imageFileSizeBits(w, h, depth);
+    if (maxBits < currentBits) { found = true; break; }
+  }
+  // If the student's current file is already at (or near) the smallest
+  // size this pool can produce, no random roll can land below it purely
+  // by chance, and forcing one isn't actually possible either - the
+  // slider goes down to 4x4, below this pool's own 8x8 floor, so a
+  // student already at 4x4@1-bit is already at the true global minimum
+  // and there is no smaller cap to genuinely require. Hand back a
+  // resolution task instead (already guaranteed non-trivial - see its
+  // own comment) rather than a cap that would complete itself unearned.
+  if (!found && current) return taskImageResolution(tierLevel, current);
+  return {
+    kind: 'image-cap', desc: 'Keep the file at or under ' + formatBits(maxBits) + ' - adjust colour depth and resolution (bigger than 1 pixel).',
+    check: function (c) { return imageFileSizeBits(c.width, c.height, c.depth) <= maxBits && c.width * c.height > 1; }
+  };
+}
+function taskImageCompress() {
+  return {
+    kind: 'image-compress', desc: 'Use compression to make this file smaller without changing the resolution or colour depth.',
+    check: function (c, extra) { return !!(extra && extra.compressed); }
+  };
+}
+
+function taskTextBits(tierLevel, current) {
+  var bits;
+  for (var tries = 0; tries < 10; tries++) {
+    bits = randInt(1, tierLevel < 2 ? 6 : 10);
+    if (!current || bits !== current.bits) break;
+  }
+  var exact = tierLevel < 3;
+  var chars = exact ? Math.pow(2, bits) : randInt(Math.pow(2, bits - 1) + 1, Math.pow(2, bits) - 1);
+  return {
+    kind: 'text-bits', desc: 'This character set must represent ' + chars.toLocaleString() + ' different characters. Set the minimum bits per character.',
+    check: function (c) { return c.bits === bits; }
+  };
+}
+function taskTextDecode() {
+  var a = randomAsciiChar();
+  return {
+    kind: 'text-decode', desc: 'Decode this ASCII code: ' + a.code + ' (denary). Type the character.',
+    answer: a.char,
+    check: function (c, extra) { return String(extra && extra.textAnswer || '') === a.char; }
+  };
+}
+function taskTextEncode() {
+  var a = randomAsciiChar();
+  return {
+    kind: 'text-encode', desc: 'Encode this character as its ASCII denary code: "' + a.char + '"',
+    answer: String(a.code),
+    check: function (c, extra) { return String(extra && extra.textAnswer || '').trim() === String(a.code); }
+  };
+}
+
+function taskSoundRate(tierLevel, current) {
+  var rate;
+  for (var tries = 0; tries < 10; tries++) {
+    rate = randInt(2, tierLevel < 2 ? 20 : 60);
+    if (!current || rate !== current.rate) break;
+  }
+  return {
+    kind: 'sound-rate', desc: 'Set the sample rate to ' + rate + ' samples per second.',
+    check: function (c) { return c.rate === rate; }
+  };
+}
+function taskSoundResolution(tierLevel, current) {
+  var pool = tierLevel < 2 ? SOUND_RES_STEPS.slice(0, 2) : SOUND_RES_STEPS;
+  if (current) {
+    var withoutCurrent = pool.filter(function (r) { return r !== current.resBits; });
+    if (withoutCurrent.length) pool = withoutCurrent;
+  }
+  var res = pick(pool);
+  return {
+    kind: 'sound-resolution', desc: 'Set the sample resolution to ' + res + ' bits.',
+    check: function (c) { return c.resBits === res; }
+  };
+}
+function taskSoundCap(tierLevel, duration, current) {
+  // Same re-roll-until-genuinely-required guard as taskImageCap - see
+  // its own comment for why this is necessary, not just cautious.
+  var currentBits = current ? soundFileSizeBits(current.rate, current.resBits, duration) : -1;
+  var rate, res, maxBits;
+  var found = false;
+  for (var tries = 0; tries < 20; tries++) {
+    rate = randInt(2, tierLevel < 3 ? 20 : 50);
+    res = pick(SOUND_RES_STEPS.slice(0, tierLevel < 3 ? 3 : 4));
+    maxBits = soundFileSizeBits(rate, res, duration);
+    if (maxBits < currentBits) { found = true; break; }
+  }
+  // Same "already at the true global minimum" impossibility as
+  // taskImageCap - if the student is already at rate=2/resBits=4 (this
+  // pool's own floor too, for sound), no cap can be genuinely stricter.
+  // Fall back to a resolution-analog task instead.
+  if (!found && current) return taskSoundResolution(tierLevel, current);
+  return {
+    kind: 'sound-cap', desc: 'Keep this ' + duration + 's clip at or under ' + formatBits(maxBits) + ' - adjust both sliders.',
+    check: function (c) { return soundFileSizeBits(c.rate, c.resBits, duration) <= maxBits; }
+  };
+}
+
+// ============================================================
+// WORKSHOP DEFINITIONS: each tier says which control(s) are visible
+// and which task-generator pool to draw from. Tier 3 in every workshop
+// is "endless" - it keeps generating harder mixed tasks forever rather
+// than ever unlocking a new tier, which is where the cookie-clicker-
+// style unbounded progression lives.
+// ============================================================
+const WORKSHOPS = {
+  image: {
+    label: 'Image Lab', accent: 'cyan',
+    defaultControls: { depth: 1, width: 4, height: 4 },
+    tiers: [
+      { controls: ['depth'], gen: function (t, ctx) { return taskImageDepth(t, ctx.controls); }, streakNeeded: 3 },
+      { controls: ['depth', 'width', 'height'], gen: function (t, ctx) { return taskImageResolution(t, ctx.controls); }, streakNeeded: 3 },
+      { controls: ['depth', 'width', 'height'], gen: function (t, ctx) { return taskImageCap(t, ctx.controls); }, streakNeeded: 3 },
+      {
+        controls: ['depth', 'width', 'height'], streakNeeded: 3, endless: true,
+        gen: function (t, ctx) {
+          var pool = [
+            function (tt) { return taskImageDepth(tt, ctx.controls); },
+            function (tt) { return taskImageResolution(tt, ctx.controls); },
+            function (tt) { return taskImageCap(tt, ctx.controls); }
+          ];
+          if (ctx.compressionUnlocked && ctx.controls && compressionWouldHelp(ctx.controls)) pool.push(taskImageCompress);
+          return pick(pool)(t);
+        }
+      }
+    ]
+  },
+  text: {
+    label: 'Text Lab', accent: 'blue',
+    defaultControls: { bits: 1 },
+    tiers: [
+      { controls: ['bits'], gen: function (t, ctx) { return taskTextBits(t, ctx.controls); }, streakNeeded: 3 },
+      { controls: ['bits'], gen: function () { return taskTextDecode(); }, streakNeeded: 3 },
+      { controls: ['bits'], gen: function () { return taskTextEncode(); }, streakNeeded: 3 },
+      {
+        controls: ['bits'], streakNeeded: 3, endless: true,
+        gen: function (t, ctx) {
+          return pick([function (tt) { return taskTextBits(tt, ctx.controls); }, taskTextDecode, taskTextEncode])(t);
+        }
+      }
+    ]
+  },
+  sound: {
+    label: 'Sound Lab', accent: 'emerald',
+    defaultControls: { rate: 2, resBits: 4 },
+    duration: 2,
+    tiers: [
+      { controls: ['rate'], gen: function (t, ctx) { return taskSoundRate(t, ctx.controls); }, streakNeeded: 3 },
+      { controls: ['rate', 'resBits'], gen: function (t, ctx) { return taskSoundResolution(t, ctx.controls); }, streakNeeded: 3 },
+      { controls: ['rate', 'resBits'], gen: function (t, ctx) { return taskSoundCap(t, ctx.duration, ctx.controls); }, streakNeeded: 3 },
+      {
+        controls: ['rate', 'resBits'], streakNeeded: 3, endless: true,
+        gen: function (t, ctx) {
+          return pick([
+            function (tt) { return taskSoundRate(tt, ctx.controls); },
+            function (tt) { return taskSoundResolution(tt, ctx.controls); },
+            function (tt) { return taskSoundCap(tt, ctx.duration, ctx.controls); }
+          ])(t);
+        }
+      }
+    ]
+  }
+};
+const WORKSHOP_ORDER = ['image', 'text', 'sound'];
+const UNLOCK_REQUIREMENTS = {
+  text: { currency: 150, workshop: 'image', tierAtLeast: 1 },
+  sound: { currency: 400, workshop: 'text', tierAtLeast: 1 }
+};
+const COMPRESSION_UNLOCK_TIER = 3; // image tier at which "Compress" starts appearing (tier index, 0-based - tier 3 is the endless tier)
+
+function rewardForTier(tier) { return 10 * (tier + 1); }
+
+// Shared by every workshop below: after a correct answer, wait briefly
+// so the success flash is actually visible before swapping in the next
+// task. But if that same success also pushed the streak over its tier's
+// threshold, the tier-change effect (`useEffect(() => nextTask(),
+// [state.tier])`) fires first and has *already* generated the right
+// task for the new tier - this guard stops the delayed call from then
+// clobbering it with one built from the OLD tier's closure, which is a
+// real race, not a hypothetical one (state.tier updates well within the
+// delay below).
+function useGuardedAdvance(tier, nextTask) {
+  const tierRef = useRef(tier);
+  useEffect(() => { tierRef.current = tier; }, [tier]);
+  return useCallback((delay) => {
+    const tierAtSchedule = tier;
+    setTimeout(() => {
+      if (tierRef.current !== tierAtSchedule) return;
+      nextTask();
+    }, delay);
+  }, [tier, nextTask]);
+}
+
+// ============================================================
+// SHARED COMPONENTS
+// ============================================================
+const Button = ({ onClick, children, className = "", disabled = false, variant = "primary" }) => {
+  const base = "font-bold py-2.5 px-5 rounded-lg shadow-lg transform transition-all active:scale-95 no-select flex items-center justify-center";
+  const variants = { primary: "bg-cyan-600 hover:bg-cyan-500 text-white", secondary: "bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600", success: "bg-emerald-600 hover:bg-emerald-500 text-white" };
+  return <button type="button" onClick={onClick} disabled={disabled} className={`${base} ${variants[variant]} ${className} ${disabled ? 'opacity-40 cursor-not-allowed' : ''}`}>{children}</button>;
+};
+
+const Stepper = ({ label, value, options, onChange, format }) => {
+  const idx = options.indexOf(value);
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <span className="text-[11px] uppercase tracking-widest text-slate-400">{label}</span>
+      <div className="flex items-center gap-2">
+        <button type="button" disabled={idx <= 0} onClick={() => onChange(options[Math.max(0, idx - 1)])}
+          className="w-8 h-8 rounded-lg bg-slate-700 hover:bg-slate-600 disabled:opacity-30 font-bold">-</button>
+        <div className="w-24 text-center font-mono font-bold text-lg bg-slate-800 rounded-lg py-1.5 border border-slate-600">{format ? format(value) : value}</div>
+        <button type="button" disabled={idx >= options.length - 1} onClick={() => onChange(options[Math.min(options.length - 1, idx + 1)])}
+          className="w-8 h-8 rounded-lg bg-slate-700 hover:bg-slate-600 disabled:opacity-30 font-bold">+</button>
+      </div>
+    </div>
+  );
+};
+
+const SliderControl = ({ label, value, min, max, step, onChange, format }) => (
+  <div className="flex flex-col items-center gap-1 w-full max-w-[220px]">
+    <span className="text-[11px] uppercase tracking-widest text-slate-400">{label}: <span className="text-white font-bold">{format ? format(value) : value}</span></span>
+    <input type="range" min={min} max={max} step={step} value={value} onChange={e => onChange(Number(e.target.value))} className="w-full" />
+  </div>
+);
+
+// Task banner shared by every workshop: shows the current target,
+// accepts either an auto-check (controls satisfy check() live) or an
+// explicit typed-answer submit (decode/encode/compress tasks).
+const TaskBanner = ({ task, accent, satisfied, onSubmitText, textAnswer, setTextAnswer, feedback }) => {
+  const needsText = task.kind === 'text-decode' || task.kind === 'text-encode';
+  return (
+    <div className={`w-full max-w-xl rounded-xl border-2 p-4 mb-4 transition-all ${satisfied ? 'border-emerald-500 bg-emerald-900/20 flash-green' : `border-${accent}-500/50 bg-slate-800/80`}`}>
+      <div className="text-[11px] uppercase tracking-widest text-slate-400 mb-1">Task</div>
+      <div className="text-base font-bold text-white leading-snug mb-2">{task.desc}</div>
+      {needsText && (
+        <div className="flex gap-2 items-center mt-2">
+          <input
+            type="text" value={textAnswer} maxLength={task.kind === 'text-decode' ? 1 : 6}
+            onChange={e => setTextAnswer(task.kind === 'text-encode' ? e.target.value.replace(/[^0-9]/g, '') : e.target.value.replace(/[^A-Za-z0-9!-~ ]/g, ''))}
+            className="w-24 h-10 text-center text-lg font-mono font-bold rounded-lg bg-slate-900 border-2 border-slate-600 text-white focus:outline-none focus:border-cyan-400"
+            autoComplete="off" aria-label="Your answer"
+          />
+          <Button onClick={onSubmitText} className="h-10 px-4">Submit</Button>
+        </div>
+      )}
+      {task.kind === 'image-compress' && (
+        <div className="text-xs text-slate-400 mt-1">Use the Compress button below the file.</div>
+      )}
+      {!needsText && task.kind !== 'image-compress' && (
+        <div className="text-xs text-slate-400 mt-1">{satisfied ? 'Looks right - locking it in…' : 'Adjust the controls below until this is true.'}</div>
+      )}
+      {feedback && <div className="text-sm mt-2 text-red-300">{feedback}</div>}
+    </div>
+  );
+};
+
+const TierBar = ({ tier, streak, streakNeeded, endless, endlessRound }) => (
+  <div className="flex items-center gap-2 text-xs text-slate-400 mb-3">
+    <span className="font-bold text-white">Tier {tier + 1}{endless ? ' · Level ' + ((endlessRound || 0) + 1) : ''}</span>
+    <div className="flex gap-1">
+      {Array.from({ length: streakNeeded }).map((_, i) => (
+        <span key={i} className={`w-3 h-3 rounded-full ${i < streak ? 'bg-emerald-400' : 'bg-slate-700'}`}></span>
+      ))}
+    </div>
+    <span>{streak}/{streakNeeded} to {endless ? 'next level' : 'next tier'}</span>
+  </div>
+);
+
+// ============================================================
+// IMAGE LAB
+// ============================================================
+const ImageLab = ({ state, onEarn, onProgress }) => {
+  const canvasRef = useRef(null);
+  const [controls, setControls] = useState(state.controls);
+  const [task, setTask] = useState(null);
+  const [satisfied, setSatisfied] = useState(false);
+  const [compressed, setCompressed] = useState(false);
+  const [flash, setFlash] = useState(false);
+
+  const tierDef = WORKSHOPS.image.tiers[Math.min(state.tier, WORKSHOPS.image.tiers.length - 1)];
+  // The tier index is capped once endless mode is reached (it has to
+  // be - it's what selects which tierDef/controls apply) but difficulty
+  // and reward must keep climbing forever from there, so everything
+  // that scales with "how hard should this be" reads effectiveTier
+  // (tier index + the uncapped endlessRound counter) instead of the
+  // raw, eventually-frozen state.tier.
+  const effectiveTier = state.tier + (state.endlessRound || 0);
+  // Guards a single task against being rewarded twice - the satisfied
+  // effect below re-runs on every controls change, so if a student
+  // nudges a slider again during the brief post-success delay while the
+  // task is still technically satisfied, it would otherwise fire again.
+  const handledRef = useRef(false);
+  // nextTask (below) needs the CURRENT controls to decide whether a
+  // Compress task is even feasible right now, but it's a useCallback
+  // keyed on effectiveTier, not controls - a ref sidesteps that closure
+  // going stale without also having to rebuild nextTask (and everything
+  // that depends on its identity) on every slider tweak.
+  const controlsRef = useRef(controls);
+  useEffect(() => { controlsRef.current = controls; }, [controls]);
+
+  const nextTask = useCallback(() => {
+    setCompressed(false);
+    handledRef.current = false;
+    setTask(tierDef.gen(effectiveTier, { compressionUnlocked: state.tier >= COMPRESSION_UNLOCK_TIER, controls: controlsRef.current }));
+  }, [effectiveTier]);
+  const advance = useGuardedAdvance(effectiveTier, nextTask);
+
+  useEffect(() => { nextTask(); }, [effectiveTier]);
+
+  const pixels = useMemo(() => buildImagePixels(controls.width, controls.height, controls.depth), [controls.width, controls.height, controls.depth]);
+  const rawBits = imageFileSizeBits(controls.width, controls.height, controls.depth);
+  const shownBits = compressed ? compressedSizeBits(pixels, controls.depth) : rawBits;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const cell = Math.floor(Math.min(canvas.width / controls.width, canvas.height / controls.height));
+    ctx.fillStyle = '#020617';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const offX = (canvas.width - cell * controls.width) / 2;
+    const offY = (canvas.height - cell * controls.height) / 2;
+    for (let y = 0; y < controls.height; y++) {
+      for (let x = 0; x < controls.width; x++) {
+        const [r, g, b] = pixels[y * controls.width + x];
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(offX + x * cell, offY + y * cell, cell, cell);
+      }
+    }
+    // `task` is also a dependency here, not just the pixel data: this
+    // component returns null (rendering no canvas at all) until the
+    // first task exists, so canvasRef.current is still null the first
+    // time this effect runs. Without `task` in the array, that first
+    // run exits via the guard above and - since pixels/width/height
+    // haven't changed since - never runs again until a control is
+    // touched, leaving the canvas blank on first paint. Caught live in
+    // an isolated harness (a pristine, untouched mount), not by reading
+    // the code - which is exactly why it stayed hidden through every
+    // earlier interactive test, all of which happened to touch a
+    // control before checking the canvas.
+  }, [pixels, controls.width, controls.height, task]);
+
+  useEffect(() => {
+    if (!task || task.kind === 'image-compress') { setSatisfied(false); return; }
+    const ok = task.check(controls);
+    setSatisfied(ok);
+    if (ok && !handledRef.current) {
+      handledRef.current = true;
+      const reward = rewardForTier(effectiveTier);
+      setFlash(true);
+      setTimeout(() => setFlash(false), 500);
+      onEarn(reward);
+      onProgress(true);
+      advance(550);
+    }
+    // eslint-disable-next-line
+  }, [controls, task]);
+
+  const doCompress = () => {
+    setCompressed(true);
+    if (task && task.kind === 'image-compress' && !handledRef.current) {
+      const ok = task.check(controls, { compressed: true });
+      if (ok) {
+        handledRef.current = true;
+        onEarn(rewardForTier(effectiveTier));
+        onProgress(true);
+        advance(700);
+      }
+    }
+  };
+
+  // Computed outside the setState updater deliberately: calling
+  // onProgress (which calls setWorkshops in the parent) from inside a
+  // setControls updater function is "setState while rendering a
+  // different component" - React warns about it, and it's not
+  // guaranteed safe. Both setState calls happen directly in this event
+  // handler instead.
+  const setControl = (key, value) => {
+    const next = Object.assign({}, controlsRef.current, { [key]: value });
+    setControls(next);
+    onProgress(null, next);
+  };
+
+  if (!task) return null;
+  const visible = tierDef.controls;
+
+  return (
+    <div className="flex flex-col items-center w-full">
+      <TierBar tier={state.tier} streak={state.streak} streakNeeded={tierDef.streakNeeded} endless={!!tierDef.endless} endlessRound={state.endlessRound} />
+      <TaskBanner task={task} accent="cyan" satisfied={satisfied} />
+      <div className={`rounded-xl border-2 border-slate-700 p-3 bg-slate-900/60 ${flash ? 'flash-green' : ''}`}>
+        <canvas ref={canvasRef} width={260} height={260} className="rounded-lg"></canvas>
+      </div>
+      <div className="text-sm text-slate-300 font-mono mt-2">
+        File size: <span className="text-cyan-300 font-bold">{formatBits(shownBits)}</span>
+        {compressed && <span className="text-emerald-400 ml-2">(was {formatBits(rawBits)} uncompressed)</span>}
+      </div>
+      <div className="flex flex-wrap gap-6 justify-center items-end mt-4">
+        {visible.includes('depth') && (
+          <Stepper label="Colour depth" value={controls.depth} options={DEPTH_STEPS} onChange={v => setControl('depth', v)}
+            format={v => v + '-bit'} />
+        )}
+        {visible.includes('width') && (
+          <SliderControl label="Width" value={controls.width} min={4} max={64} step={4} onChange={v => setControl('width', v)} format={v => v + 'px'} />
+        )}
+        {visible.includes('height') && (
+          <SliderControl label="Height" value={controls.height} min={4} max={64} step={4} onChange={v => setControl('height', v)} format={v => v + 'px'} />
+        )}
+      </div>
+      {task.kind === 'image-compress' && (
+        <Button onClick={doCompress} variant="success" className="mt-4" disabled={compressed}>{compressed ? 'Compressed ✓' : 'Compress'}</Button>
+      )}
+    </div>
+  );
+};
+
+// ============================================================
+// TEXT LAB
+// ============================================================
+const TextLab = ({ state, onEarn, onProgress }) => {
+  const [controls, setControls] = useState(state.controls);
+  const [task, setTask] = useState(null);
+  const [satisfied, setSatisfied] = useState(false);
+  const [textAnswer, setTextAnswer] = useState('');
+  const [feedback, setFeedback] = useState('');
+
+  const tierDef = WORKSHOPS.text.tiers[Math.min(state.tier, WORKSHOPS.text.tiers.length - 1)];
+  const effectiveTier = state.tier + (state.endlessRound || 0);
+  const handledRef = useRef(false);
+  const controlsRef = useRef(controls);
+  useEffect(() => { controlsRef.current = controls; }, [controls]);
+  const nextTask = useCallback(() => {
+    setTextAnswer(''); setFeedback('');
+    handledRef.current = false;
+    setTask(tierDef.gen(effectiveTier, { controls: controlsRef.current }));
+  }, [effectiveTier]);
+  const advance = useGuardedAdvance(effectiveTier, nextTask);
+  useEffect(() => { nextTask(); }, [effectiveTier]);
+
+  useEffect(() => {
+    if (!task || task.kind === 'text-decode' || task.kind === 'text-encode') { setSatisfied(false); return; }
+    const ok = task.check(controls);
+    setSatisfied(ok);
+    if (ok && !handledRef.current) {
+      handledRef.current = true;
+      onEarn(rewardForTier(effectiveTier));
+      onProgress(true);
+      advance(550);
+    }
+    // eslint-disable-next-line
+  }, [controls, task]);
+
+  const submitText = () => {
+    if (!task || handledRef.current) return;
+    const ok = task.check(controls, { textAnswer });
+    if (ok) {
+      handledRef.current = true;
+      setFeedback('');
+      onEarn(rewardForTier(effectiveTier));
+      onProgress(true);
+      advance(500);
+    } else {
+      setFeedback('Not quite - try again.');
+      onProgress(false);
+    }
+  };
+
+  // See ImageLab's own setControl for why this must not call onProgress
+  // from inside the setControls updater function.
+  const setControl = (key, value) => {
+    const next = Object.assign({}, controlsRef.current, { [key]: value });
+    setControls(next);
+    onProgress(null, next);
+  };
+
+  if (!task) return null;
+  return (
+    <div className="flex flex-col items-center w-full">
+      <TierBar tier={state.tier} streak={state.streak} streakNeeded={tierDef.streakNeeded} endless={!!tierDef.endless} endlessRound={state.endlessRound} />
+      <TaskBanner task={task} accent="blue" satisfied={satisfied} onSubmitText={submitText} textAnswer={textAnswer} setTextAnswer={setTextAnswer} feedback={feedback} />
+      <div className="rounded-xl border-2 border-slate-700 p-6 bg-slate-900/60 flex flex-col items-center gap-4">
+        <Stepper label="Bits per character" value={controls.bits} options={Array.from({ length: 12 }, (_, i) => i + 1)} onChange={v => setControl('bits', v)} format={v => v + ' bit' + (v === 1 ? '' : 's')} />
+        <div className="text-sm text-slate-300 font-mono">That's <span className="text-blue-300 font-bold">{Math.pow(2, controls.bits).toLocaleString()}</span> possible characters.</div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// SOUND LAB
+// ============================================================
+const SoundLab = ({ state, onEarn, onProgress }) => {
+  const canvasRef = useRef(null);
+  const [controls, setControls] = useState(state.controls);
+  const [task, setTask] = useState(null);
+  const [satisfied, setSatisfied] = useState(false);
+  const duration = WORKSHOPS.sound.duration;
+
+  const tierDef = WORKSHOPS.sound.tiers[Math.min(state.tier, WORKSHOPS.sound.tiers.length - 1)];
+  const effectiveTier = state.tier + (state.endlessRound || 0);
+  const handledRef = useRef(false);
+  const controlsRef = useRef(controls);
+  useEffect(() => { controlsRef.current = controls; }, [controls]);
+  const nextTask = useCallback(() => {
+    handledRef.current = false;
+    setTask(tierDef.gen(effectiveTier, { duration: duration, controls: controlsRef.current }));
+  }, [effectiveTier]);
+  const advance = useGuardedAdvance(effectiveTier, nextTask);
+  useEffect(() => { nextTask(); }, [effectiveTier]);
+
+  const samples = useMemo(() => samplePoints(controls.rate, controls.resBits, duration), [controls.rate, controls.resBits]);
+  const bits = soundFileSizeBits(controls.rate, controls.resBits, duration);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#020617';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.beginPath(); ctx.moveTo(0, canvas.height / 2); ctx.lineTo(canvas.width, canvas.height / 2); ctx.stroke();
+    const barW = canvas.width / samples.length;
+    ctx.fillStyle = '#34d399';
+    samples.forEach((v, i) => {
+      const h = v * (canvas.height - 10);
+      ctx.fillRect(i * barW, canvas.height - h, Math.max(1, barW - 1), h);
+    });
+    // `task` is also a dependency here - see ImageLab's own identical
+    // canvas effect for why (this component returns null, no canvas at
+    // all, until the first task exists, so the first run of this effect
+    // always finds canvasRef.current still null).
+  }, [samples, task]);
+
+  useEffect(() => {
+    if (!task) return;
+    const ok = task.check(controls);
+    setSatisfied(ok);
+    if (ok && !handledRef.current) {
+      handledRef.current = true;
+      onEarn(rewardForTier(effectiveTier));
+      onProgress(true);
+      advance(550);
+    }
+    // eslint-disable-next-line
+  }, [controls, task]);
+
+  // See ImageLab's own setControl for why this must not call onProgress
+  // from inside the setControls updater function.
+  const setControl = (key, value) => {
+    const next = Object.assign({}, controlsRef.current, { [key]: value });
+    setControls(next);
+    onProgress(null, next);
+  };
+
+  if (!task) return null;
+  const visible = tierDef.controls;
+  return (
+    <div className="flex flex-col items-center w-full">
+      <TierBar tier={state.tier} streak={state.streak} streakNeeded={tierDef.streakNeeded} endless={!!tierDef.endless} endlessRound={state.endlessRound} />
+      <TaskBanner task={task} accent="emerald" satisfied={satisfied} />
+      <div className="rounded-xl border-2 border-slate-700 p-3 bg-slate-900/60 w-full max-w-xl">
+        <canvas ref={canvasRef} width={520} height={140} className="rounded-lg w-full"></canvas>
+      </div>
+      <div className="text-sm text-slate-300 font-mono mt-2">
+        {duration}s clip size: <span className="text-emerald-300 font-bold">{formatBits(bits)}</span>
+      </div>
+      <div className="flex flex-wrap gap-6 justify-center items-end mt-4">
+        {visible.includes('rate') && (
+          <SliderControl label="Sample rate" value={controls.rate} min={2} max={60} step={1} onChange={v => setControl('rate', v)} format={v => v + '/s'} />
+        )}
+        {visible.includes('resBits') && (
+          <Stepper label="Sample resolution" value={controls.resBits} options={SOUND_RES_STEPS} onChange={v => setControl('resBits', v)} format={v => v + '-bit'} />
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// MAIN MENU / SHELL
+// ============================================================
+const WorkshopCard = ({ id, def, state, unlocked, unlockInfo, onOpen, onUnlock }) => (
+  <div className={`bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-${def.accent}-500 transition-all flex flex-col relative`}>
+    <h2 className={`text-lg font-bold text-${def.accent}-400 mb-1`}>{def.label}</h2>
+    {unlocked ? (
+      <React.Fragment>
+        <p className="text-xs text-slate-400 mb-4">Tier {state.tier + 1}{state.tier >= def.tiers.length - 1 ? ' · Level ' + ((state.endlessRound || 0) + 1) : ''}</p>
+        <Button onClick={() => onOpen(id)} className={`bg-${def.accent}-600 hover:bg-${def.accent}-500`}>Open</Button>
+      </React.Fragment>
+    ) : (
+      <React.Fragment>
+        <p className="text-xs text-slate-400 mb-4">
+          Locked - needs {unlockInfo.currency} 🪙 and Tier {unlockInfo.tierAtLeast + 1} in {WORKSHOPS[unlockInfo.workshop].label}.
+        </p>
+        <Button onClick={() => onUnlock(id)} variant="secondary" disabled={!unlockInfo.canAfford}>Unlock</Button>
+      </React.Fragment>
+    )}
+  </div>
+);
+
+const App = () => {
+  const [playerName, setPlayerName] = useState(() => window.__bcPlayerName || 'Player');
+  useEffect(() => {
+    if (window.__bcPlayerName) { setPlayerName(window.__bcPlayerName); return; }
+    const handler = (event) => {
+      const data = event.data;
+      if (data && data.type === 'BC_IDENTITY' && data.name) setPlayerName(data.name);
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const [currency, setCurrency] = useState(0);
+  const [view, setView] = useState('menu');
+  const [workshops, setWorkshops] = useState(() => {
+    const initial = {};
+    WORKSHOP_ORDER.forEach(id => {
+      initial[id] = { unlocked: id === 'image', tier: 0, streak: 0, endlessRound: 0, controls: Object.assign({}, WORKSHOPS[id].defaultControls) };
+    });
+    return initial;
+  });
+
+  const earn = (id, amount) => {
+    setCurrency(c => c + amount);
+  };
+  const progress = (id, success, liveControls) => {
+    setWorkshops(w => {
+      const cur = w[id];
+      const next = Object.assign({}, cur);
+      if (liveControls) next.controls = liveControls;
+      if (success === true) {
+        const lastTierIdx = WORKSHOPS[id].tiers.length - 1;
+        const tierDef = WORKSHOPS[id].tiers[Math.min(cur.tier, lastTierIdx)];
+        const newStreak = cur.streak + 1;
+        if (newStreak >= tierDef.streakNeeded) {
+          if (tierDef.endless) {
+            // The tier index itself is already capped at the last tier -
+            // endlessRound is the uncapped counter that keeps difficulty
+            // and reward escalating forever from here, cookie-clicker
+            // style, instead of flatlining once the tier index can't
+            // climb any further.
+            next.endlessRound = (cur.endlessRound || 0) + 1;
+          } else {
+            next.tier = Math.min(cur.tier + 1, lastTierIdx);
+          }
+          next.streak = 0;
+        } else {
+          next.streak = newStreak;
+        }
+      } else if (success === false) {
+        next.streak = 0;
+      }
+      return Object.assign({}, w, { [id]: next });
+    });
+  };
+
+  const unlockInfoFor = (id) => {
+    const req = UNLOCK_REQUIREMENTS[id];
+    if (!req) return null;
+    const source = workshops[req.workshop];
+    return { currency: req.currency, tierAtLeast: req.tierAtLeast, workshop: req.workshop,
+      eligible: source.tier >= req.tierAtLeast, canAfford: currency >= req.currency && source.tier >= req.tierAtLeast };
+  };
+
+  const doUnlock = (id) => {
+    const info = unlockInfoFor(id);
+    if (!info || !info.canAfford) return;
+    setCurrency(c => c - info.currency);
+    setWorkshops(w => Object.assign({}, w, { [id]: Object.assign({}, w[id], { unlocked: true }) }));
+  };
+
+  return (
+    <div className="w-full h-full relative">
+      {view === 'menu' && (
+        <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar">
+          <div className="text-center mb-4 mt-6">
+            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-300 mb-1">FILE FORGE</h1>
+            <p className="text-slate-400 text-sm">Boost real files by proving you understand how they're stored.</p>
+            <p className="text-cyan-400 text-xs mt-1 font-mono">{playerName}</p>
+          </div>
+          <div className="bg-slate-900/70 border border-slate-700 rounded-full px-6 py-2 mb-6">
+            <span className="text-2xl font-mono font-bold text-amber-300">{currency}</span> <span className="text-slate-400 text-sm">🪙</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl pb-10">
+            {WORKSHOP_ORDER.map(id => (
+              <WorkshopCard key={id} id={id} def={WORKSHOPS[id]} state={workshops[id]} unlocked={workshops[id].unlocked}
+                unlockInfo={unlockInfoFor(id)} onOpen={setView} onUnlock={doUnlock} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {view !== 'menu' && workshops[view] && (
+        <div className="h-full flex flex-col p-4 overflow-y-auto custom-scrollbar">
+          <div className="flex justify-between items-center mb-4 shrink-0">
+            <button onClick={() => setView('menu')} className="p-2 bg-slate-900/50 hover:bg-slate-800 rounded-full text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            </button>
+            <span className={`text-lg font-bold text-${WORKSHOPS[view].accent}-400`}>{WORKSHOPS[view].label}</span>
+            <div className="bg-slate-900/70 border border-slate-700 rounded-full px-4 py-1"><span className="font-mono font-bold text-amber-300">{currency}</span> 🪙</div>
+          </div>
+          <div className="flex-1 flex flex-col items-center">
+            {view === 'image' && <ImageLab state={workshops.image} onEarn={(a) => earn('image', a)} onProgress={(s, lc) => progress('image', s, lc)} />}
+            {view === 'text' && <TextLab state={workshops.text} onEarn={(a) => earn('text', a)} onProgress={(s, lc) => progress('text', s, lc)} />}
+            {view === 'sound' && <SoundLab state={workshops.sound} onEarn={(a) => earn('sound', a)} onProgress={(s, lc) => progress('sound', s, lc)} />}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
