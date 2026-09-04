@@ -489,7 +489,7 @@ const TaskBanner = ({ task, accent, satisfied, onSubmitText, textAnswer, setText
         <div className="text-xs text-slate-400 mt-1">Use the Compress button below the file.</div>
       )}
       {!needsText && task.kind !== 'image-compress' && (
-        <div className="text-xs text-slate-400 mt-1">{satisfied ? 'Looks right - locking it in…' : 'Adjust the controls below until this is true.'}</div>
+        <div className="text-xs text-slate-400 mt-1">{satisfied ? 'Correct - locking it in…' : 'Adjust the controls below, then press Submit.'}</div>
       )}
       {feedback && <div className="text-sm mt-2 text-red-300">{feedback}</div>}
     </div>
@@ -518,6 +518,8 @@ const ImageLab = ({ state, onEarn, onProgress }) => {
   const [satisfied, setSatisfied] = useState(false);
   const [compressed, setCompressed] = useState(false);
   const [flash, setFlash] = useState(false);
+  const [shake, setShake] = useState(false);
+  const [feedback, setFeedback] = useState('');
 
   const tierDef = WORKSHOPS.image.tiers[Math.min(state.tier, WORKSHOPS.image.tiers.length - 1)];
   // The tier index is capped once endless mode is reached (it has to
@@ -542,6 +544,8 @@ const ImageLab = ({ state, onEarn, onProgress }) => {
 
   const nextTask = useCallback(() => {
     setCompressed(false);
+    setSatisfied(false);
+    setFeedback('');
     handledRef.current = false;
     setTask(tierDef.gen(effectiveTier, { compressionUnlocked: state.tier >= COMPRESSION_UNLOCK_TIER, controls: controlsRef.current }));
   }, [effectiveTier]);
@@ -582,21 +586,34 @@ const ImageLab = ({ state, onEarn, onProgress }) => {
     // control before checking the canvas.
   }, [pixels, controls.width, controls.height, task]);
 
-  useEffect(() => {
-    if (!task || task.kind === 'image-compress') { setSatisfied(false); return; }
+  // Deliberately NOT a live check-on-every-controls-change effect - that
+  // let a student nudge a slider/stepper one step at a time and watch
+  // for the "correct" flash, which is really just an oracle for
+  // guess-and-check with no need to work out the answer first. Checking
+  // only happens when the student explicitly presses Submit below, and
+  // getting it wrong resets this tier's whole streak (onProgress(false)
+  // - same mechanism a wrong decode/encode answer already used), so
+  // guessing costs real progress instead of being free.
+  const submitControl = () => {
+    if (!task || handledRef.current || task.kind === 'image-compress') return;
     const ok = task.check(controls);
-    setSatisfied(ok);
-    if (ok && !handledRef.current) {
+    if (ok) {
       handledRef.current = true;
       const reward = rewardForTier(effectiveTier);
+      setSatisfied(true);
+      setFeedback('');
       setFlash(true);
       setTimeout(() => setFlash(false), 500);
       onEarn(reward);
       onProgress(true);
       advance(550);
+    } else {
+      setFeedback('Not quite - check your working and try again.');
+      setShake(true);
+      setTimeout(() => setShake(false), 400);
+      onProgress(false);
     }
-    // eslint-disable-next-line
-  }, [controls, task]);
+  };
 
   const doCompress = () => {
     setCompressed(true);
@@ -621,6 +638,7 @@ const ImageLab = ({ state, onEarn, onProgress }) => {
     const next = Object.assign({}, controlsRef.current, { [key]: value });
     setControls(next);
     onProgress(null, next);
+    if (feedback) setFeedback('');
   };
 
   if (!task) return null;
@@ -629,8 +647,8 @@ const ImageLab = ({ state, onEarn, onProgress }) => {
   return (
     <div className="flex flex-col items-center w-full">
       <TierBar tier={state.tier} streak={state.streak} streakNeeded={tierDef.streakNeeded} endless={!!tierDef.endless} endlessRound={state.endlessRound} />
-      <TaskBanner task={task} accent="cyan" satisfied={satisfied} />
-      <div className={`rounded-xl border-2 border-slate-700 p-3 bg-slate-900/60 ${flash ? 'flash-green' : ''}`}>
+      <TaskBanner task={task} accent="cyan" satisfied={satisfied} feedback={feedback} />
+      <div className={`rounded-xl border-2 border-slate-700 p-3 bg-slate-900/60 ${flash ? 'flash-green' : ''} ${shake ? 'shake' : ''}`}>
         <canvas ref={canvasRef} width={260} height={260} className="rounded-lg"></canvas>
       </div>
       <div className="text-sm text-slate-300 font-mono mt-2">
@@ -649,8 +667,10 @@ const ImageLab = ({ state, onEarn, onProgress }) => {
           <SliderControl label="Height" value={controls.height} min={4} max={64} step={4} onChange={v => setControl('height', v)} format={v => v + 'px'} />
         )}
       </div>
-      {task.kind === 'image-compress' && (
+      {task.kind === 'image-compress' ? (
         <Button onClick={doCompress} variant="success" className="mt-4" disabled={compressed}>{compressed ? 'Compressed ✓' : 'Compress'}</Button>
+      ) : (
+        <Button onClick={submitControl} className="mt-4">Submit</Button>
       )}
     </div>
   );
@@ -665,6 +685,7 @@ const TextLab = ({ state, onEarn, onProgress }) => {
   const [satisfied, setSatisfied] = useState(false);
   const [textAnswer, setTextAnswer] = useState('');
   const [feedback, setFeedback] = useState('');
+  const [shake, setShake] = useState(false);
 
   const tierDef = WORKSHOPS.text.tiers[Math.min(state.tier, WORKSHOPS.text.tiers.length - 1)];
   const effectiveTier = state.tier + (state.endlessRound || 0);
@@ -672,25 +693,34 @@ const TextLab = ({ state, onEarn, onProgress }) => {
   const controlsRef = useRef(controls);
   useEffect(() => { controlsRef.current = controls; }, [controls]);
   const nextTask = useCallback(() => {
-    setTextAnswer(''); setFeedback('');
+    setTextAnswer(''); setFeedback(''); setSatisfied(false);
     handledRef.current = false;
     setTask(tierDef.gen(effectiveTier, { controls: controlsRef.current }));
   }, [effectiveTier]);
   const advance = useGuardedAdvance(effectiveTier, nextTask);
   useEffect(() => { nextTask(); }, [effectiveTier]);
 
-  useEffect(() => {
-    if (!task || task.kind === 'text-decode' || task.kind === 'text-encode') { setSatisfied(false); return; }
+  // Deliberately not a live check-on-every-controls-change effect - see
+  // ImageLab's own submitControl for why. Checking only happens when
+  // the student presses Submit; getting it wrong resets this tier's
+  // whole streak.
+  const submitControl = () => {
+    if (!task || handledRef.current || task.kind === 'text-decode' || task.kind === 'text-encode') return;
     const ok = task.check(controls);
-    setSatisfied(ok);
-    if (ok && !handledRef.current) {
+    if (ok) {
       handledRef.current = true;
+      setSatisfied(true);
+      setFeedback('');
       onEarn(rewardForTier(effectiveTier));
       onProgress(true);
       advance(550);
+    } else {
+      setFeedback('Not quite - check your working and try again.');
+      setShake(true);
+      setTimeout(() => setShake(false), 400);
+      onProgress(false);
     }
-    // eslint-disable-next-line
-  }, [controls, task]);
+  };
 
   const submitText = () => {
     if (!task || handledRef.current) return;
@@ -703,6 +733,8 @@ const TextLab = ({ state, onEarn, onProgress }) => {
       advance(500);
     } else {
       setFeedback('Not quite - try again.');
+      setShake(true);
+      setTimeout(() => setShake(false), 400);
       onProgress(false);
     }
   };
@@ -713,17 +745,20 @@ const TextLab = ({ state, onEarn, onProgress }) => {
     const next = Object.assign({}, controlsRef.current, { [key]: value });
     setControls(next);
     onProgress(null, next);
+    if (feedback) setFeedback('');
   };
 
   if (!task) return null;
+  const needsText = task.kind === 'text-decode' || task.kind === 'text-encode';
   return (
     <div className="flex flex-col items-center w-full">
       <TierBar tier={state.tier} streak={state.streak} streakNeeded={tierDef.streakNeeded} endless={!!tierDef.endless} endlessRound={state.endlessRound} />
       <TaskBanner task={task} accent="blue" satisfied={satisfied} onSubmitText={submitText} textAnswer={textAnswer} setTextAnswer={setTextAnswer} feedback={feedback} />
-      <div className="rounded-xl border-2 border-slate-700 p-6 bg-slate-900/60 flex flex-col items-center gap-4">
+      <div className={`rounded-xl border-2 border-slate-700 p-6 bg-slate-900/60 flex flex-col items-center gap-4 ${shake ? 'shake' : ''}`}>
         <Stepper label="Bits per character" value={controls.bits} options={Array.from({ length: 12 }, (_, i) => i + 1)} onChange={v => setControl('bits', v)} format={v => v + ' bit' + (v === 1 ? '' : 's')} />
         <div className="text-sm text-slate-300 font-mono">That's <span className="text-blue-300 font-bold">{Math.pow(2, controls.bits).toLocaleString()}</span> possible characters.</div>
       </div>
+      {!needsText && <Button onClick={submitControl} className="mt-4">Submit</Button>}
     </div>
   );
 };
@@ -736,6 +771,8 @@ const SoundLab = ({ state, onEarn, onProgress }) => {
   const [controls, setControls] = useState(state.controls);
   const [task, setTask] = useState(null);
   const [satisfied, setSatisfied] = useState(false);
+  const [feedback, setFeedback] = useState('');
+  const [shake, setShake] = useState(false);
   const duration = WORKSHOPS.sound.duration;
 
   const tierDef = WORKSHOPS.sound.tiers[Math.min(state.tier, WORKSHOPS.sound.tiers.length - 1)];
@@ -744,6 +781,7 @@ const SoundLab = ({ state, onEarn, onProgress }) => {
   const controlsRef = useRef(controls);
   useEffect(() => { controlsRef.current = controls; }, [controls]);
   const nextTask = useCallback(() => {
+    setFeedback(''); setSatisfied(false);
     handledRef.current = false;
     setTask(tierDef.gen(effectiveTier, { duration: duration, controls: controlsRef.current }));
   }, [effectiveTier]);
@@ -773,18 +811,27 @@ const SoundLab = ({ state, onEarn, onProgress }) => {
     // always finds canvasRef.current still null).
   }, [samples, task]);
 
-  useEffect(() => {
-    if (!task) return;
+  // Deliberately not a live check-on-every-controls-change effect - see
+  // ImageLab's own submitControl for why. Checking only happens when
+  // the student presses Submit; getting it wrong resets this tier's
+  // whole streak.
+  const submitControl = () => {
+    if (!task || handledRef.current) return;
     const ok = task.check(controls);
-    setSatisfied(ok);
-    if (ok && !handledRef.current) {
+    if (ok) {
       handledRef.current = true;
+      setSatisfied(true);
+      setFeedback('');
       onEarn(rewardForTier(effectiveTier));
       onProgress(true);
       advance(550);
+    } else {
+      setFeedback('Not quite - check your working and try again.');
+      setShake(true);
+      setTimeout(() => setShake(false), 400);
+      onProgress(false);
     }
-    // eslint-disable-next-line
-  }, [controls, task]);
+  };
 
   // See ImageLab's own setControl for why this must not call onProgress
   // from inside the setControls updater function.
@@ -792,6 +839,7 @@ const SoundLab = ({ state, onEarn, onProgress }) => {
     const next = Object.assign({}, controlsRef.current, { [key]: value });
     setControls(next);
     onProgress(null, next);
+    if (feedback) setFeedback('');
   };
 
   if (!task) return null;
@@ -799,8 +847,8 @@ const SoundLab = ({ state, onEarn, onProgress }) => {
   return (
     <div className="flex flex-col items-center w-full">
       <TierBar tier={state.tier} streak={state.streak} streakNeeded={tierDef.streakNeeded} endless={!!tierDef.endless} endlessRound={state.endlessRound} />
-      <TaskBanner task={task} accent="emerald" satisfied={satisfied} />
-      <div className="rounded-xl border-2 border-slate-700 p-3 bg-slate-900/60 w-full max-w-xl">
+      <TaskBanner task={task} accent="emerald" satisfied={satisfied} feedback={feedback} />
+      <div className={`rounded-xl border-2 border-slate-700 p-3 bg-slate-900/60 w-full max-w-xl ${shake ? 'shake' : ''}`}>
         <canvas ref={canvasRef} width={520} height={140} className="rounded-lg w-full"></canvas>
       </div>
       <div className="text-sm text-slate-300 font-mono mt-2">
@@ -814,6 +862,7 @@ const SoundLab = ({ state, onEarn, onProgress }) => {
           <Stepper label="Sample resolution" value={controls.resBits} options={SOUND_RES_STEPS} onChange={v => setControl('resBits', v)} format={v => v + '-bit'} />
         )}
       </div>
+      <Button onClick={submitControl} className="mt-4">Submit</Button>
     </div>
   );
 };
