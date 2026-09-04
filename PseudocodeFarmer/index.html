@@ -711,7 +711,7 @@ updatePlayerCursorPosition();
 // garden expands now, so the view slides around the field on the ground
 // plane instead of orbiting it.
 // ============================================================
-var camState = { radius: 11, theta: Math.PI / 4, phi: 1.0, target: new THREE.Vector3(0, 0, 0) };
+var camState = { radius: 11, theta: 0, phi: 1.0, target: new THREE.Vector3(0, 0, 0) };
 var pointer = { down: false, moved: false, lastX: 0, lastY: 0, downX: 0, downY: 0, id: null, button: 0 };
 var heldKeys = {};
 var lastFrameMs = 0;
