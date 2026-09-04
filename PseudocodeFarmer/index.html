@@ -146,7 +146,7 @@
     background: var(--panel); border-left: 5px solid var(--wood-dark);
     overflow-y: auto;
   }
-  .panel-section { border-bottom: 3px dashed #d8c19a; padding: 12px 14px; }
+  .panel-section { flex-shrink: 0; border-bottom: 3px dashed #d8c19a; padding: 12px 14px; }
   .panel-section h2 {
     margin: 0 0 8px; font-size: .95rem; text-transform: uppercase; letter-spacing: .05em;
     color: var(--panel-dark); display: flex; align-items: center; gap: 6px;
@@ -179,7 +179,7 @@
   .machine-tier-btn.active { background: #6ea8fe; box-shadow: inset 0 0 0 2px #fff; }
   .machine-tier-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-  #code-panel { flex: 1; display: flex; flex-direction: column; min-height: 260px; }
+  #code-panel { flex: 1 0 auto; display: flex; flex-direction: column; min-height: 260px; }
   .code-editor { flex: 1; min-height: 140px; position: relative; background: #1f2b22; border: 2px solid #e6d5b3; border-radius: 10px; overflow: hidden; }
   .code-editor:focus-within { border-color: var(--leaf); }
   .code-editor.has-error { border-color: #d9534f; }
@@ -221,7 +221,10 @@
   #console-output div { white-space: pre-wrap; word-break: break-word; }
 
   details.cheat-sheet { font-size: .8rem; }
-  details.cheat-sheet summary { cursor: pointer; font-weight: 800; color: var(--panel-dark); margin-bottom: 6px; }
+  details.cheat-sheet summary {
+    cursor: pointer; font-weight: 800; color: var(--panel-dark); margin-bottom: 6px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
   details.cheat-sheet table { width: 100%; border-collapse: collapse; margin-top: 6px; }
   details.cheat-sheet td { padding: 4px 4px; border-bottom: 1px dashed #e0d0ac; vertical-align: top; }
   details.cheat-sheet code { background: #eee0c4; border-radius: 5px; padding: 1px 5px; font-size: .78rem; white-space: nowrap; }
