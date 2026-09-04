@@ -269,6 +269,7 @@
           <p class="desc" style="margin:6px 0 0">New vegetables unlock as your <b>total coins earned</b> (top right, not your current balance) goes up. Prices rise fast, so keep selling to afford the next one. Spending money doesn't undo that progress.</p>
           <p class="desc" style="margin:6px 0 0">Place Machine costs money too - pick Basic, Quick or Turbo underneath it first. A faster machine reruns its saved code more often.</p>
           <p class="desc" style="margin:6px 0 0">Click a placed machine to select it (its cursor turns pink and grows). From there you can edit its code, upgrade it to a faster tier, or sell it back for half its cost.</p>
+          <p class="desc" style="margin:6px 0 0">Out of room? Hover over a dim tile at the edge of your garden and click it to <b>buy more land</b>. Each extra tile costs more than the last, and crops take longer to grow the more expensive they are.</p>
         </details>
       </section>
     </aside>
@@ -283,7 +284,8 @@
 // ============================================================
 // CONSTANTS
 // ============================================================
-var GRID_SIZE = 8;
+var GRID_SIZE = 8;      // starting owned garden is GRID_SIZE x GRID_SIZE
+var MAX_EXPANSION = 12; // garden can grow this many tiles beyond its start, in each direction
 var TILE_SIZE = 1;
 var HALF = (GRID_SIZE - 1) / 2;
 
@@ -332,7 +334,7 @@ var TIER_SEED_COST_GROWTH = 3.0;    // cost x3 per tier - clearly exponential, s
 var TIER_SELL_MARGIN_BASE = 1.8;    // sellPrice = seedCost * margin
 var TIER_SELL_MARGIN_STEP = 0.08;   // margin improves slightly per tier
 var TIER_GROW_SECONDS_BASE = 10;
-var TIER_GROW_SECONDS_GROWTH = 1.28;
+var TIER_GROW_SECONDS_GROWTH = 1.5;   // grow time x1.5 per tier, so pricier seeds take much longer to grow
 var TIER_UNLOCK_EARNED_MULTIPLE = 8; // unlock i once totalEarned >= seedCost(i-1) * this (lifetime earnings, any source)
 
 var VEGGIES = {};
@@ -382,7 +384,13 @@ var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
 var soldCount = {};  // { Carrot: 5, ... } lifetime sales per vegetable (tracked, not used for unlocking)
 var unlockedState = {};   // { Carrot: true, ... } cached from the last refreshUnlocks() call, so
                            // sellAt() can tell what just changed rather than only what's true now
-var tiles = [];      // tiles[x][z] = { mesh, plant: null | PlantRecord, hasMachine: bool }
+// Owned tiles, keyed by "x,z" (x/z are grid coords, which can go negative
+// once the garden expands). edgeTiles holds the purchasable tiles just
+// outside the owned region, rendered dimmer and bought one at a time.
+var tiles = {};       // "x,z" -> { mesh, plant: null | PlantRecord, hasMachine: bool }
+var edgeTiles = {};   // "x,z" -> { mesh }
+var ownedMinX = 0, ownedMaxX = GRID_SIZE - 1, ownedMinZ = 0, ownedMaxZ = GRID_SIZE - 1;
+var ownedTileCount = GRID_SIZE * GRID_SIZE;
 // Every cursor (the player's own, and each machine's) is shaped the same:
 // {x, z} is its current tile, `facing` drives Move_forward/Turn_left/
 // Turn_right, and {homeX, homeZ} is the origin Set_position(x, z) counts
@@ -470,27 +478,130 @@ function makeTileMaterial() {
   return new THREE.MeshStandardMaterial({ color: color, roughness: 0.95 });
 }
 
-for (var x = 0; x < GRID_SIZE; x++) {
-  tiles[x] = [];
-  for (var z = 0; z < GRID_SIZE; z++) {
-    var mesh = new THREE.Mesh(tileGeometry, makeTileMaterial());
-    mesh.position.set(x - HALF, -0.11, z - HALF);
-    mesh.receiveShadow = true;
-    mesh.userData.gridX = x;
-    mesh.userData.gridZ = z;
-    tileGroup.add(mesh);
-    tiles[x][z] = { mesh: mesh, plant: null, hasMachine: false };
+// Garden tiles: owned ones are normal soil; the purchasable edge tiles are
+// rendered dimmer so students can see where they can expand.
+function tileKey(x, z) { return x + ',' + z; }
+function tileAt(x, z) { return tiles[tileKey(x, z)] || null; }
+function isOwned(x, z) { return !!tiles[tileKey(x, z)]; }
+function makeOwnedTile(x, z) {
+  var mesh = new THREE.Mesh(tileGeometry, makeTileMaterial());
+  mesh.position.set(x - HALF, -0.11, z - HALF);
+  mesh.receiveShadow = true;
+  mesh.userData.gridX = x;
+  mesh.userData.gridZ = z;
+  mesh.userData.isEdge = false;
+  tileGroup.add(mesh);
+  tiles[tileKey(x, z)] = { mesh: mesh, plant: null, hasMachine: false };
+}
+function makeEdgeTileMaterial() {
+  return new THREE.MeshStandardMaterial({ color: 0x33402c, roughness: 1, transparent: true, opacity: 0.55 });
+}
+function makeEdgeTile(x, z) {
+  var mesh = new THREE.Mesh(tileGeometry, makeEdgeTileMaterial());
+  mesh.position.set(x - HALF, -0.11, z - HALF);
+  mesh.userData.gridX = x;
+  mesh.userData.gridZ = z;
+  mesh.userData.isEdge = true;
+  tileGroup.add(mesh);
+  edgeTiles[tileKey(x, z)] = { mesh: mesh };
+}
+function inExpansionBounds(x, z) {
+  return x >= -MAX_EXPANSION && x <= (GRID_SIZE - 1) + MAX_EXPANSION &&
+         z >= -MAX_EXPANSION && z <= (GRID_SIZE - 1) + MAX_EXPANSION;
+}
+// Recompute which locked tiles border the owned region.
+function refreshEdgeTiles() {
+  var needed = {};
+  for (var key in tiles) {
+    var p = key.split(','); var x = +p[0], z = +p[1];
+    [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) {
+      var nx = x + d[0], nz = z + d[1];
+      if (inExpansionBounds(nx, nz) && !isOwned(nx, nz)) needed[tileKey(nx, nz)] = true;
+    });
+  }
+  for (var ekey in edgeTiles) {
+    if (!needed[ekey]) { tileGroup.remove(edgeTiles[ekey].mesh); delete edgeTiles[ekey]; }
+  }
+  for (var nkey in needed) {
+    if (!edgeTiles[nkey]) { var np = nkey.split(','); makeEdgeTile(+np[0], +np[1]); }
   }
 }
 
-// A slightly larger, darker slab underneath so tile gaps read as soil, not void
+// Initial GRID_SIZE x GRID_SIZE garden, then draw its purchasable border.
+for (var x = 0; x < GRID_SIZE; x++) {
+  for (var z = 0; z < GRID_SIZE; z++) {
+    makeOwnedTile(x, z);
+  }
+}
+refreshEdgeTiles();
+
+// A slightly larger, darker slab underneath so tile gaps read as soil, not
+// void. Sized for the maximum expansion so it never needs to grow later.
 var base = new THREE.Mesh(
-  new THREE.BoxGeometry(GRID_SIZE + 0.4, 0.18, GRID_SIZE + 0.4),
+  new THREE.BoxGeometry((GRID_SIZE + MAX_EXPANSION * 2) + 0.4, 0.18, (GRID_SIZE + MAX_EXPANSION * 2) + 0.4),
   new THREE.MeshStandardMaterial({ color: 0x6b4a2b, roughness: 1 })
 );
 base.position.y = -0.3;
 base.receiveShadow = true;
 scene.add(base);
+
+// ============================================================
+// GARDEN EXPANSION (buy one tile at a time)
+// ============================================================
+// Tiles are one-time purchases, so an escalating per-tile cost works here
+// (Cookie Clicker's 1.15^owned for buildings), unlike the seed "heat" idea
+// which broke the recurring buy-sell loop. The cost rises with how many
+// tiles you've bought beyond the starting GRID_SIZE x GRID_SIZE.
+var TILE_COST_BASE = 20;
+var TILE_COST_GROWTH = 1.15;
+function nextTileCost() {
+  var extra = ownedTileCount - GRID_SIZE * GRID_SIZE;
+  return Math.round(TILE_COST_BASE * Math.pow(TILE_COST_GROWTH, extra));
+}
+function buyTile(x, z) {
+  if (isOwned(x, z)) return false;
+  if (!edgeTiles[tileKey(x, z)]) return false;
+  var cost = nextTileCost();
+  if (money < cost) {
+    logConsole('This tile costs ' + cost + ' coins, but you only have ' + money + '.', true);
+    return false;
+  }
+  money -= cost;
+  tileGroup.remove(edgeTiles[tileKey(x, z)].mesh);
+  delete edgeTiles[tileKey(x, z)];
+  makeOwnedTile(x, z);
+  ownedTileCount++;
+  ownedMinX = Math.min(ownedMinX, x); ownedMaxX = Math.max(ownedMaxX, x);
+  ownedMinZ = Math.min(ownedMinZ, z); ownedMaxZ = Math.max(ownedMaxZ, z);
+  refreshEdgeTiles();
+  updateHUD();
+  updateTileInfoPanel();
+  logConsole('Bought a new garden tile for ' + cost + ' coins!');
+  return true;
+}
+// Clear every owned + edge tile mesh and rebuild the garden from a list of
+// [x, z] coordinates. Used by loadGame (restore the saved expansion) and
+// resetGame (back to the starting GRID_SIZE x GRID_SIZE).
+function rebuildGarden(ownedTilesList) {
+  for (var key in tiles) { tileGroup.remove(tiles[key].mesh); }
+  for (var ekey in edgeTiles) { tileGroup.remove(edgeTiles[ekey].mesh); }
+  tiles = {};
+  edgeTiles = {};
+  ownedMinX = Infinity; ownedMaxX = -Infinity; ownedMinZ = Infinity; ownedMaxZ = -Infinity;
+  ownedTileCount = 0;
+  ownedTilesList.forEach(function (c) {
+    makeOwnedTile(c[0], c[1]);
+    ownedMinX = Math.min(ownedMinX, c[0]); ownedMaxX = Math.max(ownedMaxX, c[0]);
+    ownedMinZ = Math.min(ownedMinZ, c[1]); ownedMaxZ = Math.max(ownedMaxZ, c[1]);
+    ownedTileCount++;
+  });
+  refreshEdgeTiles();
+}
+function initialTileList() {
+  var list = [];
+  for (var x = 0; x < GRID_SIZE; x++) for (var z = 0; z < GRID_SIZE; z++) list.push([x, z]);
+  return list;
+}
 
 // ---------- Player cursor arrow ----------
 var cursorGroup = new THREE.Group();
@@ -568,6 +679,18 @@ canvas.addEventListener('pointermove', function (e) {
   camState.phi = Math.min(1.45, Math.max(0.35, camState.phi - dy * 0.008));
   applyCameraState();
 });
+// Hovering over a purchasable edge tile swaps the bottom hint for a "buy"
+// prompt, so students can see the expansion cost before committing.
+var canvasHintEl = document.getElementById('canvas-hint');
+canvas.addEventListener('pointermove', function (e) {
+  if (pointer.down) return;
+  var obj = raycastTileMesh(e.clientX, e.clientY);
+  if (obj && obj.userData.isEdge) {
+    canvasHintEl.textContent = '🪙 Click to buy this tile (' + nextTileCost() + ' coins)';
+  } else {
+    canvasHintEl.textContent = 'Drag to look around · Scroll to zoom · Click a tile to move there';
+  }
+});
 canvas.addEventListener('pointerup', function (e) {
   if (e.pointerId !== pointer.id) return;
   pointer.down = false;
@@ -610,11 +733,26 @@ function handleTileClick(clientX, clientY) {
   var hits = raycaster.intersectObjects(tileGroup.children);
   if (!hits.length) return;
   var hit = hits[0].object;
+  // Clicking a dimmer edge tile buys it (garden expansion); owned tiles move
+  // the cursor there.
+  if (hit.userData.isEdge) {
+    buyTile(hit.userData.gridX, hit.userData.gridZ);
+    return;
+  }
   playerCursor.x = hit.userData.gridX;
   playerCursor.z = hit.userData.gridZ;
   updatePlayerCursorPosition();
   selectMachine(null); // clicking open ground clears any machine selection
   updateTileInfoPanel();
+}
+
+function raycastTileMesh(clientX, clientY) {
+  var rect = canvas.getBoundingClientRect();
+  ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(ndc, camera);
+  var hits = raycaster.intersectObjects(tileGroup.children);
+  return hits.length ? hits[0].object : null;
 }
 
 // ============================================================
@@ -652,7 +790,7 @@ function plantAt(cursor, vegName) {
   if (!VEGGIES[vegName]) {
     return { ok: false, message: 'There is no vegetable called "' + vegName + '". Look at the shop for the names you can use.' };
   }
-  var tile = tiles[cursor.x][cursor.z];
+  var tile = tileAt(cursor.x, cursor.z);
   if (tile.plant) {
     return { ok: false, message: 'That tile already has a plant growing on it.' };
   }
@@ -683,7 +821,7 @@ function plantAt(cursor, vegName) {
 }
 
 function sellAt(cursor, viaCode) {
-  var tile = tiles[cursor.x][cursor.z];
+  var tile = tileAt(cursor.x, cursor.z);
   if (!tile.plant) return { ok: false, message: 'There is nothing planted here.' };
   if (!tile.plant.ready) return { ok: false, message: 'That plant is not fully grown yet.' };
   var veg = VEGGIES[tile.plant.type];
@@ -746,11 +884,9 @@ function buySeedByLabel(label, viaCode) {
   return buySeed(match, viaCode);
 }
 
-function clampToGrid(v) { return Math.min(GRID_SIZE - 1, Math.max(0, v)); }
-
 function moveCursor(cursor, dx, dz) {
-  var nx = clampToGrid(cursor.x + dx);
-  var nz = clampToGrid(cursor.z + dz);
+  var nx = Math.min(ownedMaxX, Math.max(ownedMinX, cursor.x + dx));
+  var nz = Math.min(ownedMaxZ, Math.max(ownedMinZ, cursor.z + dz));
   var moved = nx !== cursor.x || nz !== cursor.z;
   cursor.x = nx; cursor.z = nz;
   return moved;
@@ -771,8 +907,8 @@ function turnCursor(cursor, delta) {
 // for the player, a machine's own placement tile for a machine - so "the
 // machine itself is 0,0", as asked for.
 function setPositionRelative(cursor, dx, dz) {
-  cursor.x = clampToGrid(cursor.homeX + Math.round(dx));
-  cursor.z = clampToGrid(cursor.homeZ + Math.round(dz));
+  cursor.x = Math.min(ownedMaxX, Math.max(ownedMinX, cursor.homeX + Math.round(dx)));
+  cursor.z = Math.min(ownedMaxZ, Math.max(ownedMinZ, cursor.homeZ + Math.round(dz)));
 }
 
 // ============================================================
@@ -1476,7 +1612,8 @@ function placeMachine(code) {
     return false;
   }
   var x = playerCursor.x, z = playerCursor.z;
-  var tile = tiles[x][z];
+  var tile = tileAt(x, z);
+  if (!tile) { logConsole('There is no garden tile there.', true); return false; }
   if (tile.hasMachine) { logConsole('There is already a machine on this tile.', true); return false; }
   if (tile.plant) { logConsole('Clear the plant on this tile before placing a machine here.', true); return false; }
 
@@ -1567,7 +1704,8 @@ function sellMachine(machine) {
   var refund = Math.floor(machine.cost * MACHINE_SELL_REFUND);
   money += refund;
   clearInterval(machine.timer);
-  tiles[machine.homeX][machine.homeZ].hasMachine = false;
+  var homeTile = tileAt(machine.homeX, machine.homeZ);
+  if (homeTile) homeTile.hasMachine = false;
   scene.remove(machine.group);
   scene.remove(machine.cursorMesh);
   machines = machines.filter(function (m) { return m.id !== machine.id; });
@@ -1662,13 +1800,13 @@ function saveGame() {
     playerCursor: { x: playerCursor.x, z: playerCursor.z, facing: playerCursor.facing },
     plants: [],
     machines: [],
+    ownedTiles: Object.keys(tiles).map(function (key) { var p = key.split(','); return [+p[0], +p[1]]; }),
     nextMachineId: nextMachineId
   };
-  for (var x = 0; x < GRID_SIZE; x++) {
-    for (var z = 0; z < GRID_SIZE; z++) {
-      var plant = tiles[x][z].plant;
-      if (plant) s.plants.push({ x: x, z: z, type: plant.type, plantedAt: plant.plantedAt, growMs: plant.growMs });
-    }
+  for (var key in tiles) {
+    var p = key.split(',');
+    var plant = tiles[key].plant;
+    if (plant) s.plants.push({ x: +p[0], z: +p[1], type: plant.type, plantedAt: plant.plantedAt, growMs: plant.growMs });
   }
   machines.forEach(function (m) {
     s.machines.push({
@@ -1694,7 +1832,8 @@ function restoreMachine(s) {
     diamond: built.diamond, body: built.body, running: false
   };
   built.group.traverse(function (o) { if (o.isMesh) o.userData.machineId = machine.id; });
-  tiles[s.homeX][s.homeZ].hasMachine = true;
+  var homeTile = tileAt(s.homeX, s.homeZ);
+  if (homeTile) homeTile.hasMachine = true;
   machines.push(machine);
   positionMachineCursorMarker(machine);
   updateFacingIndicator(machine.facingIndicator, machine.cursor.facing);
@@ -1715,19 +1854,23 @@ function loadGame() {
   inventory = s.inventory || {};
   soldCount = s.soldCount || {};
   playerCursor.x = s.playerCursor.x; playerCursor.z = s.playerCursor.z; playerCursor.facing = s.playerCursor.facing || 0;
+  // Restore the garden expansion if this save recorded one (older saves just
+  // keep the starting GRID_SIZE x GRID_SIZE).
+  if (Array.isArray(s.ownedTiles) && s.ownedTiles.length) rebuildGarden(s.ownedTiles);
   updatePlayerCursorPosition();
   updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
   (s.plants || []).forEach(function (p) {
-    if (!VEGGIES[p.type] || !tiles[p.x] || !tiles[p.x][p.z]) return;
-    if (tiles[p.x][p.z].plant) return;
-    tiles[p.x][p.z].plant = {
+    if (!VEGGIES[p.type]) return;
+    var pt = tileAt(p.x, p.z);
+    if (!pt || pt.plant) return;
+    pt.plant = {
       type: p.type, plantedAt: p.plantedAt, growMs: p.growMs,
       sprite: makePlantSprite(p.type, p.x, p.z), ready: false
     };
   });
   (s.machines || []).forEach(function (m) {
-    if (!tiles[m.homeX] || !tiles[m.homeX][m.homeZ]) return;
-    if (tiles[m.homeX][m.homeZ].hasMachine) return;
+    var mt = tileAt(m.homeX, m.homeZ);
+    if (!mt || mt.hasMachine) return;
     restoreMachine(m);
   });
   nextMachineId = s.nextMachineId || 1;
@@ -1743,13 +1886,7 @@ function resetGame() {
   machines.forEach(function (m) { clearInterval(m.timer); scene.remove(m.group); scene.remove(m.cursorMesh); });
   machines = [];
   nextMachineId = 1;
-  for (var x = 0; x < GRID_SIZE; x++) {
-    for (var z = 0; z < GRID_SIZE; z++) {
-      if (tiles[x][z].plant) scene.remove(tiles[x][z].plant.sprite);
-      tiles[x][z].plant = null;
-      tiles[x][z].hasMachine = false;
-    }
-  }
+  rebuildGarden(initialTileList());
   money = 40;
   totalEarned = 0;
   inventory = {};
@@ -1891,7 +2028,8 @@ function updateTileInfoPanel() {
       return;
     }
   }
-  var tile = tiles[playerCursor.x][playerCursor.z];
+  var tile = tileAt(playerCursor.x, playerCursor.z);
+  if (!tile) { tileInfoEl.className = ''; tileInfoEl.innerHTML = ''; return; }
   if (tile.plant && tile.plant.ready) {
     tileInfoEl.className = 'show';
     tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
@@ -1944,20 +2082,20 @@ function animate() {
 
   // Grow every planted sprite towards full size, and flag it ready once done.
   var anyGrowthChanged = false;
-  for (var gx = 0; gx < GRID_SIZE; gx++) {
-    for (var gz = 0; gz < GRID_SIZE; gz++) {
-      var plant = tiles[gx][gz].plant;
-      if (!plant) continue;
-      var t = Math.min(1, (wallNow - plant.plantedAt) / plant.growMs);
-      var eased = 1 - Math.pow(1 - t, 2);
-      var scale = 0.12 + eased * 0.78;
-      plant.sprite.scale.set(scale, scale, scale);
-      plant.sprite.position.y = 0.02 + scale * 0.05;
-      if (t >= 1 && !plant.ready) {
-        plant.ready = true;
-        anyGrowthChanged = true;
-        if (gx === playerCursor.x && gz === playerCursor.z) updateTileInfoPanel();
-      }
+  for (var key in tiles) {
+    var p = key.split(',');
+    var gx = +p[0], gz = +p[1];
+    var plant = tiles[key].plant;
+    if (!plant) continue;
+    var t = Math.min(1, (wallNow - plant.plantedAt) / plant.growMs);
+    var eased = 1 - Math.pow(1 - t, 2);
+    var scale = 0.12 + eased * 0.78;
+    plant.sprite.scale.set(scale, scale, scale);
+    plant.sprite.position.y = 0.02 + scale * 0.05;
+    if (t >= 1 && !plant.ready) {
+      plant.ready = true;
+      anyGrowthChanged = true;
+      if (gx === playerCursor.x && gz === playerCursor.z) updateTileInfoPanel();
     }
   }
   if (anyGrowthChanged) { /* nothing extra needed - tile info refreshes itself when relevant */ }
