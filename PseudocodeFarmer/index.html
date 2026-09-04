@@ -307,8 +307,9 @@ var HALF = (GRID_SIZE - 1) / 2;
 // made seeds cost more than they sold for after a few buys, so machines
 // self-destructed economically.) So:
 //
-// 1. Tiers scale exponentially: seedCost x3 and growSeconds x1.5 per tier
-//    (Cookie Clicker's ~10x, scaled down to fit one lesson).
+// 1. Tiers scale exponentially: seedCost x3 and growSeconds x1.13 per tier
+//    (Cookie Clicker's ~10x, scaled down to fit one lesson) - the cost curve
+//    is the pacing gate, grow time just makes automation worthwhile.
 // 2. Each tier unlocks once you've EARNED enough coins total (lifetime
 //    totalEarned, from any source). The exponential price curve is the
 //    real gate - you can't afford the next tier until your income grows.
@@ -358,7 +359,7 @@ var TIER_SEED_COST_GROWTH = 3.0;    // cost x3 per tier - clearly exponential, s
 var TIER_SELL_MARGIN_BASE = 1.8;    // sellPrice = seedCost * margin
 var TIER_SELL_MARGIN_STEP = 0.08;   // margin improves slightly per tier
 var TIER_GROW_SECONDS_BASE = 10;
-var TIER_GROW_SECONDS_GROWTH = 1.5;   // grow time x1.5 per tier, so pricier seeds take much longer to grow
+var TIER_GROW_SECONDS_GROWTH = 1.13;   // grow time x1.13 per tier, so pricier seeds get meaningfully slower across 33 crops
 var TIER_UNLOCK_EARNED_MULTIPLE = 8; // unlock i once totalEarned >= seedCost(i-1) * this (lifetime earnings, any source)
 
 var VEGGIES = {};
