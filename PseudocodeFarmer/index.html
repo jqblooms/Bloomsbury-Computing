@@ -313,7 +313,8 @@
   #tutorial-picker-list { display: grid; gap: 10px; padding: 16px 20px; overflow-y: auto; }
   .tut-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; background: #f0faf3; border: 1px solid #bfe6cf; cursor: pointer; text-align: left; font-family: inherit; }
   .tut-card:hover { background: #e2f5e8; border-color: #8fd4ac; }
-  .tut-card-emoji { font-size: 1.6rem; flex-shrink: 0; }
+  .tut-card-badge { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center;
+    justify-content: center; color: #fff; font-weight: 800; font-size: .95rem; }
   .tut-card-body { flex: 1; min-width: 0; }
   .tut-card-title { font-weight: 800; color: #1f4d38; font-size: .9rem; }
   .tut-card-desc { font-size: .76rem; color: #4d6b5b; line-height: 1.35; margin-top: 2px; }
@@ -347,7 +348,8 @@
   #tutorial-bar-checks { margin-top: 8px; font-size: .74rem; font-family: ui-monospace, monospace; }
   .tb-check { display: flex; align-items: center; gap: 6px; padding: 2px 0; color: #7a8f83; }
   .tb-check.tb-ok { color: #1f8a5a; font-weight: 700; }
-  .tb-check-icon { width: 14px; text-align: center; }
+  .tb-check-icon { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #b9d6c4; flex-shrink: 0; display: inline-block; }
+  .tb-check.tb-ok .tb-check-icon { background: #2e8b57; border-color: #2e8b57; }
   #tutorial-bar-action-hint { margin-top: 8px; padding: 7px 9px; border-radius: 7px; background: #fff; border: 1px solid #bfe6cf; font-size: .74rem; font-weight: 700; color: #1f6e4f; }
   #tutorial-bar-action-hint:empty { display: none; }
   #tutorial-bar-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
@@ -409,7 +411,7 @@
     <aside id="sidebar">
       <section class="panel-section" id="shop-panel">
         <h2>🛒 Seed Shop</h2>
-        <div id="shop-tutorial-note">✏️ Tutorial in progress — Buy is off. Use <code>CALL Buy("...")</code> in the Code Box instead.</div>
+        <div id="shop-tutorial-note">Tutorial in progress - Buy is off. Use <code>CALL Buy("...")</code> in the Code Box instead.</div>
         <div id="shop-list"></div>
       </section>
 
@@ -434,14 +436,14 @@
            script for the full explanation. Hidden during a lesson mission (body.lesson-mission-mode)
            so the two systems are never both trying to guide the student at once. -->
       <section class="panel-section" id="tutorial-picker-panel">
-        <h2>🎓 Machine Tutorials</h2>
-        <button type="button" id="tutorial-picker-open">📚 Browse Tutorials</button>
+        <h2>Machine Tutorials</h2>
+        <button type="button" id="tutorial-picker-open">Browse Tutorials</button>
         <div id="tutorial-picker-summary"></div>
       </section>
 
       <section class="panel-section" id="tutorial-bar-panel">
         <h2 id="tutorial-bar-toggle" role="button" tabindex="0" aria-expanded="true">
-          <span id="tutorial-bar-name">🎓 Tutorial</span>
+          <span id="tutorial-bar-name">Tutorial</span>
           <span id="tutorial-bar-stepcount"></span>
           <span id="tutorial-bar-chevron" aria-hidden="true">▾</span>
         </h2>
@@ -476,8 +478,8 @@
           <div id="lesson-mission-commands-label">Commands you'll need:</div>
           <table id="lesson-mission-commands"></table>
           <div id="lesson-mission-status"></div>
-          <div id="lesson-mission-stuck-warning" hidden>⚠️ You don't have the seeds or money to finish this from here, and nothing is growing that could be sold. Click <strong>Reset Mission</strong> below to start fresh with your original money and seeds.</div>
-          <div id="lesson-mission-next">👇 Write your code in the Code Box below, then press <strong>▶ Run</strong>.</div>
+          <div id="lesson-mission-stuck-warning" hidden>You don't have the seeds or money to finish this from here, and nothing is growing that could be sold. Click <strong>Reset Mission</strong> below to start fresh with your original money and seeds.</div>
+          <div id="lesson-mission-next">Write your code in the Code Box below, then press <strong>▶ Run</strong>.</div>
           <button type="button" id="lesson-mission-reset">Reset Mission</button>
         </div>
       </section>
@@ -522,7 +524,7 @@
 <div id="tutorial-modal-overlay">
   <div id="tutorial-modal">
     <div id="tutorial-modal-head">
-      <h2>🎓 Machine Tutorials</h2>
+      <h2>Machine Tutorials</h2>
       <button type="button" id="tutorial-modal-close" title="Close">✕</button>
     </div>
     <div id="tutorial-picker-list"></div>
@@ -3347,7 +3349,7 @@ var TUTORIALS = [
   {
     id: 'first-machine',
     title: 'Your First Machine',
-    emoji: '🤖',
+    color: '#4c8bf5',
     desc: 'Learn CALL syntax by writing a short sequence, then turn it into an automated machine.',
     steps: [
       {
@@ -3371,23 +3373,23 @@ var TUTORIALS = [
         newLines: ['CALL Plant("Carrot")'],
         requires: [{ name: 'Buy' }, { name: 'SetPosition' }, { name: 'Plant' }],
         action: 'run',
-        actionHint: '👇 All three lines are there - press ▶ Run below to try your sequence for real.'
+        actionHint: 'All three lines are there - press Run below to try your sequence for real.'
       },
       {
         title: 'Turn it into a machine',
-        text: 'Your sequence works once. A <strong>machine</strong> repeats it forever, automatically - but it needs an empty tile to stand on, and you\'re currently standing right on the Carrot you just planted. <strong>Drag the field (or press an arrow key) to move off that tile first.</strong> Then type the same three lines again and press <strong>🤖 Place Machine</strong> instead of Run:',
+        text: 'Your sequence works once. A <strong>machine</strong> repeats it forever, automatically - but it needs an empty tile to stand on, and you\'re currently standing right on the Carrot you just planted. <strong>Drag the field (or press an arrow key) to move off that tile first.</strong> Then type the same three lines again and press <strong>Place Machine</strong> instead of Run:',
         target: 'CALL Buy("Carrot")\nCALL SetPosition(1, 0)\nCALL Plant("Carrot")',
         newLines: ['CALL Buy("Carrot")', 'CALL SetPosition(1, 0)', 'CALL Plant("Carrot")'],
         requires: [{ name: 'Buy' }, { name: 'SetPosition' }, { name: 'Plant' }],
         action: 'machine',
-        actionHint: '👇 Move off the Carrot\'s tile, then press 🤖 Place Machine below - not Run this time.'
+        actionHint: 'Move off the Carrot\'s tile, then press Place Machine below - not Run this time.'
       }
     ]
   },
   {
     id: 'if-statements',
     title: 'IF Statements',
-    emoji: '❓',
+    color: '#d9534f',
     desc: 'Only do something when a condition is true - and choose between two things with ELSE.',
     steps: [
       {
@@ -3404,7 +3406,7 @@ var TUTORIALS = [
         newLines: ['IF SeedCount("Carrot") > 0 THEN', '    CALL Plant("Carrot")', 'ELSE', '    CALL Buy("Carrot")', 'ENDIF'],
         requires: [{ type: 'IF' }, { type: 'ELSE' }, { name: 'Plant' }, { name: 'Buy' }],
         action: 'run',
-        actionHint: '👇 You don\'t own a Carrot seed yet, so this should take the ELSE branch and buy one - press ▶ Run to check.'
+        actionHint: 'You don\'t own a Carrot seed yet, so this should take the ELSE branch and buy one - press Run to check.'
       },
       {
         title: 'A machine with a brain',
@@ -3413,14 +3415,14 @@ var TUTORIALS = [
         newLines: ['CALL SetPosition(1, 0)', 'IF SeedCount("Carrot") > 0 AND NOT HasCrop() THEN', '    CALL Plant("Carrot")', 'ELSE', '    CALL Buy("Carrot")', 'ENDIF'],
         requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Plant' }, { name: 'Buy' }],
         action: 'machine',
-        actionHint: '👇 Press 🤖 Place Machine below - not Run this time.'
+        actionHint: 'Press Place Machine below - not Run this time.'
       }
     ]
   },
   {
     id: 'while-loops',
     title: 'WHILE Loops',
-    emoji: '🔁',
+    color: '#2e8b57',
     desc: 'Repeat instructions automatically for as long as a condition stays true.',
     steps: [
       {
@@ -3430,12 +3432,69 @@ var TUTORIALS = [
         newLines: ['WHILE Money() >= 5 DO', '    CALL Buy("Carrot")', 'ENDWHILE'],
         requires: [{ type: 'WHILE' }, { name: 'Buy' }],
         action: 'run',
-        actionHint: '👇 Press ▶ Run - watch the console log several purchases in a row, not just one.'
+        actionHint: 'Press Run - watch the console log several purchases in a row, not just one.'
       },
       {
-        title: '✅ Try it!',
+        title: 'Try it',
         text: 'A machine already re-runs its whole program every tick on its own, so it doesn\'t need a WHILE loop wrapped around a single CALL to repeat things - the loop\'s real value is inside <strong>one</strong> run or tick, when you don\'t know in advance how many times you\'ll need to repeat something.<br><br><strong>Challenge:</strong> try changing the condition to <code>WHILE Money() >= 5 AND SeedCount("Carrot") &lt; 3 DO</code> - now it stops early on its own once you own 3 seeds, even if you can still afford more.',
         starter: null, target: null, newLines: [], requires: []
+      }
+    ]
+  },
+  {
+    id: 'for-loops',
+    title: 'FOR Loops',
+    color: '#a3711f',
+    desc: 'Repeat something a fixed, known number of times, using a loop variable that counts for you.',
+    steps: [
+      {
+        title: 'Your first FOR',
+        text: 'A <strong>FOR</strong> loop repeats a known number of times - use it instead of WHILE when you already know the count. No colon, no "DO", and it ends with <code>NEXT</code> followed by the same variable name, not <code>ENDFOR</code>. <code>Step</code> counts 1, 2, 3 in turn as the loop runs:',
+        target: 'FOR Step <- 1 TO 3\n    CALL Buy("Carrot")\nNEXT Step',
+        newLines: ['FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', 'NEXT Step'],
+        requires: [{ type: 'FOR' }, { name: 'Buy' }],
+        action: 'run',
+        actionHint: 'Press Run - check the console for three separate purchase messages, not one.'
+      },
+      {
+        title: 'Plant a whole row',
+        text: 'The loop variable is a real number you can use anywhere - including inside <code>SetPosition</code>. Rewrite it to plant three Carrots in a row in one go, one tile further along each time:',
+        target: 'FOR Step <- 0 TO 2\n    CALL SetPosition(Step, 0)\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT Step',
+        newLines: ['FOR Step <- 0 TO 2', '    CALL SetPosition(Step, 0)', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT Step'],
+        requires: [{ type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        action: 'run',
+        actionHint: 'Press Run - three Carrots should appear across three tiles, not just one.'
+      },
+      {
+        title: 'Try it',
+        text: 'Same lesson as WHILE: a machine re-runs its whole program every tick anyway, so FOR doesn\'t help it repeat faster - its value is doing many things in a single Run or a single tick, like planting a whole row at once instead of writing the same three lines three times.<br><br><strong>Challenge:</strong> change <code>TO 2</code> to <code>TO 4</code> to plant five Carrots in a row instead of three.',
+        starter: null, target: null, newLines: [], requires: []
+      }
+    ]
+  },
+  {
+    id: 'variables',
+    title: 'Variables',
+    color: '#7c5fcf',
+    desc: 'Store a value and update it over time - useful for keeping a running total.',
+    steps: [
+      {
+        title: 'Store a value',
+        text: 'A <strong>variable</strong> stores a value under a name you choose. Cambridge Pseudocode assigns with <code>&lt;-</code>, never <code>=</code>. <code>OUTPUT</code> prints a value to the console below, so you can see what\'s stored:',
+        target: 'Total <- 0\nOUTPUT Total',
+        newLines: ['Total <- 0', 'OUTPUT Total'],
+        requires: [{ type: 'ASSIGN' }, { type: 'OUTPUT' }],
+        action: 'run',
+        actionHint: 'Press Run - the console should print 0.'
+      },
+      {
+        title: 'Update it inside a loop',
+        text: 'A variable keeps its value until you change it, even across several lines or loop repeats. Keep a running total of how much you\'ve spent, updating it once per loop:',
+        target: 'Total <- 0\nFOR Step <- 1 TO 3\n    CALL Buy("Carrot")\n    Total <- Total + 5\nNEXT Step\nOUTPUT Total',
+        newLines: ['Total <- 0', 'FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', '    Total <- Total + 5', 'NEXT Step', 'OUTPUT Total'],
+        requires: [{ type: 'ASSIGN' }, { type: 'FOR' }, { name: 'Buy' }, { type: 'OUTPUT' }],
+        action: 'run',
+        actionHint: 'Press Run - the console should print 15 (3 loops of 5), not 0 or 5.'
       }
     ]
   }
@@ -3476,6 +3535,8 @@ function tutorialRequirementLabel(req) {
   if (req.type === 'ELSE') return 'ELSE';
   if (req.type === 'WHILE') return 'WHILE ... DO';
   if (req.type === 'FOR') return 'FOR ... TO ... NEXT';
+  if (req.type === 'ASSIGN') return 'a variable, e.g. Total <- 0';
+  if (req.type === 'OUTPUT') return 'OUTPUT ...';
   return 'CALL ' + req.name + '(...)';
 }
 function tutorialRequiresMet(program, requires) {
@@ -3493,10 +3554,10 @@ function renderTutorialPicker() {
   list.innerHTML = TUTORIALS.map(function (tut, i) {
     var prog = tutState[tut.id];
     var status = '';
-    if (prog && prog.completed) status = '<span class="tut-card-status">✓ Done</span>';
+    if (prog && prog.completed) status = '<span class="tut-card-status">Done</span>';
     else if (prog && prog.stepIdx > 0) status = '<span class="tut-card-status tut-inprogress">Step ' + (prog.stepIdx + 1) + '/' + tut.steps.length + '</span>';
     return '<button type="button" class="tut-card" data-tut="' + i + '">' +
-      '<span class="tut-card-emoji">' + tut.emoji + '</span>' +
+      '<span class="tut-card-badge" style="background:' + tut.color + '">' + escapeHtmlLocal(tut.title.charAt(0)) + '</span>' +
       '<span class="tut-card-body"><span class="tut-card-title">' + escapeHtmlLocal(tut.title) + '</span>' +
       '<span class="tut-card-desc">' + escapeHtmlLocal(tut.desc) + '</span></span>' + status + '</button>';
   }).join('');
@@ -3557,7 +3618,7 @@ function renderTutorialStep() {
   if (!activeTutorial) return;
   var tut = TUTORIALS[activeTutorial.tutIdx];
   var step = tut.steps[activeTutorial.stepIdx];
-  document.getElementById('tutorial-bar-name').textContent = tut.emoji + ' ' + tut.title;
+  document.getElementById('tutorial-bar-name').textContent = tut.title;
   document.getElementById('tutorial-bar-stepcount').textContent = 'Step ' + (activeTutorial.stepIdx + 1) + '/' + tut.steps.length;
   document.getElementById('tutorial-bar-title').textContent = step.title;
   document.getElementById('tutorial-bar-text').innerHTML = step.text;
@@ -3585,7 +3646,7 @@ function renderTutorialChecklist() {
   lastTutorialReqsOk = reqsOk;
   document.getElementById('tutorial-bar-checks').innerHTML = (step.requires || []).map(function (req) {
     var ok = !!(program && tutorialRequirementMet(program, req));
-    return '<div class="tb-check ' + (ok ? 'tb-ok' : '') + '"><span class="tb-check-icon">' + (ok ? '✓' : '⏳') + '</span><span>' + tutorialRequirementLabel(req) + '</span></div>';
+    return '<div class="tb-check ' + (ok ? 'tb-ok' : '') + '"><span class="tb-check-icon"></span><span>' + tutorialRequirementLabel(req) + '</span></div>';
   }).join('');
   document.querySelectorAll('#tutorial-bar-code .tb-line.new').forEach(function (el) {
     el.classList.toggle('typed', codeInput.value.indexOf(el.dataset.line) !== -1);
@@ -3630,7 +3691,7 @@ function completeTutorial() {
   tutState[tut.id] = { stepIdx: tut.steps.length - 1, completed: true };
   saveTutorialProgress();
   document.getElementById('tutorial-bar-dots').innerHTML = tut.steps.map(function () { return '<span class="tb-dot tb-done"></span>'; }).join('');
-  document.getElementById('tutorial-bar-title').textContent = '🎉 Tutorial complete!';
+  document.getElementById('tutorial-bar-title').textContent = 'Tutorial complete';
   document.getElementById('tutorial-bar-text').innerHTML = 'You wrote a real sequence and turned it into an automated machine. Watch it work on your farm, or pick another tutorial from the list below.';
   document.getElementById('tutorial-bar-code').innerHTML = '';
   document.getElementById('tutorial-bar-checks').innerHTML = '';
