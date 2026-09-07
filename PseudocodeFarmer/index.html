@@ -291,6 +291,10 @@
      ============================================================ */
   body.lesson-mission-mode #tutorial-picker-panel,
   body.lesson-mission-mode #tutorial-bar-panel { display: none; }
+  /* Pinned above the Shop and Code Box (order:-2) so it's the first thing a student sees,
+     not a section buried below ~30 shop rows - exactly the discoverability problem the
+     Lesson Mission panel had before it got the same fix. */
+  #tutorial-picker-panel { order: -2; }
   #tutorial-picker-panel h2 { color: #1f6e4f; }
   #tutorial-picker-list { display: grid; gap: 8px; }
   .tut-card { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: #f0faf3; border: 1px solid #bfe6cf; cursor: pointer; text-align: left; font-family: inherit; }
@@ -303,7 +307,7 @@
   .tut-card-status.tut-inprogress { color: #a3711f; }
 
   #tutorial-bar-panel { display: none; background: #eefaf2; border-bottom: 3px solid #6cc499; }
-  #tutorial-bar-panel.active { display: block; order: -1; }
+  #tutorial-bar-panel.active { display: block; order: -3; }
   #tutorial-bar-panel.just-started { animation: tutorialPop 1.6s ease-out; }
   @keyframes tutorialPop { 0%,100% { box-shadow: none; } 15%,45% { box-shadow: inset 0 0 0 3px #4fbf87; } 30% { box-shadow: none; } }
   #tutorial-bar-toggle { cursor: pointer; margin: 0 0 8px; user-select: none; color: #1f6e4f; }
