@@ -605,13 +605,13 @@
         <details class="cheat-sheet" id="cheat-sheet-details">
           <summary id="cheat-sheet-summary">📖 Pseudocode cheat sheet</summary>
           <table>
-            <tr><td><code>CALL Plant("Carrot")</code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
-            <tr><td><code>CALL Buy("Carrot Seeds")</code></td><td class="desc">Buys one seed packet, 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, plant and sell the same vegetable forever.</td></tr>
+            <tr><td><code id="cheat-ex-plant"></code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
+            <tr><td><code id="cheat-ex-buy"></code></td><td class="desc" id="cheat-ex-buy-desc"></td></tr>
             <tr><td><code>CALL Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
-            <tr><td><code>HasCrop("Carrot")</code></td><td class="desc">TRUE if the square has that crop growing. Leave the crop name out to check whether anything is growing there. Also callable as <code>HasPlant(...)</code> - same thing, worded more generally.</td></tr>
-            <tr><td><code>CropOnTile()</code></td><td class="desc">What's on the square your cursor is on ("Carrot"), or "None" if it's empty. E.g. IF CropOnTile() = "Carrot" THEN ... Also callable as <code>PlantOnTile()</code>.</td></tr>
+            <tr><td><code id="cheat-ex-hascrop"></code></td><td class="desc">TRUE if the square has that crop growing. Leave the crop name out to check whether anything is growing there. Also callable as <code>HasPlant(...)</code> - same thing, worded more generally.</td></tr>
+            <tr><td><code>CropOnTile()</code></td><td class="desc" id="cheat-ex-cropontile-desc"></td></tr>
             <tr><td><code>Money()</code></td><td class="desc">How many coins you have right now. E.g. WHILE Money() &lt; 50 DO.</td></tr>
-            <tr><td><code>SeedCount("Carrot")</code></td><td class="desc">How many packets of that seed you own. E.g. IF SeedCount("Potato") = 0 THEN CALL Buy("Potato Seeds"). Also callable as <code>ItemCount(...)</code>.</td></tr>
+            <tr><td><code id="cheat-ex-seedcount"></code></td><td class="desc" id="cheat-ex-seedcount-desc"></td></tr>
             <tr><td><code>CALL MoveUp()</code></td><td class="desc">Moves your cursor one tile up the field.</td></tr>
             <tr><td><code>CALL MoveDown()</code></td><td class="desc">Moves your cursor one tile down the field.</td></tr>
             <tr><td><code>CALL MoveLeft()</code></td><td class="desc">Moves your cursor one tile left.</td></tr>
@@ -912,25 +912,25 @@ var FARM_TYPES = {
   crops: {
     id: 'crops', title: 'Crop Farm', kind: 'crop', items: VEGGIES, itemNames: VEGGIE_NAMES,
     unitLabel: 'seed', unitLabelPlural: 'seeds', nameSuffix: ' Seeds', badgeColor: '#4c8bf5',
-    shopTitle: '🛒 Seed Shop', unlockNoun: 'vegetables', growNoun: 'crops', growVerb: 'grow',
+    shopTitle: '🛒 Seed Shop', unlockNoun: 'vegetables', growNoun: 'crops', growVerb: 'grow', kindNounSingular: 'vegetable',
     desc: 'Grow and sell vegetables, tier by tier.'
   },
   solar: {
     id: 'solar', title: 'Solar Farm', kind: 'battery', items: BATTERIES, itemNames: BATTERY_NAMES,
     unitLabel: 'battery', unitLabelPlural: 'batteries', nameSuffix: '', badgeColor: '#e0a53f',
-    shopTitle: '🛒 Battery Shop', unlockNoun: 'batteries', growNoun: 'batteries', growVerb: 'charge',
+    shopTitle: '🛒 Battery Shop', unlockNoun: 'batteries', growNoun: 'batteries', growVerb: 'charge', kindNounSingular: 'battery',
     desc: 'Charge batteries instead of growing crops. The longer you leave one past full charge, the more it earns - up to a point. Forget about it too long and it starts losing value, so timing the sell matters here in a way it never did on the crop farm.'
   },
   aquarium: {
     id: 'aquarium', title: 'Aquarium', kind: 'fish', items: FISH, itemNames: FISH_NAMES,
     unitLabel: 'fish', unitLabelPlural: 'fish', nameSuffix: '', badgeColor: '#1e8fa8',
-    shopTitle: '🛒 Fish Shop', unlockNoun: 'fish', growNoun: 'fish', growVerb: 'grow',
+    shopTitle: '🛒 Fish Shop', unlockNoun: 'fish', growNoun: 'fish', growVerb: 'grow', kindNounSingular: 'fish',
     desc: 'Raise fish in watery tiles instead of growing crops. A fish is never "wasted value" for waiting - it just keeps growing worth, forever, though more and more slowly the longer you leave it. There is no downside to patience here, unlike the Solar Farm.'
   },
   rocket: {
     id: 'rocket', title: 'Rocket Yard', kind: 'fuel', items: FUEL, itemNames: FUEL_NAMES,
     unitLabel: 'canister', unitLabelPlural: 'canisters', nameSuffix: '', badgeColor: '#6b4fa0',
-    shopTitle: '🛒 Fuel Depot', unlockNoun: 'fuel types', growNoun: 'fuel', growVerb: 'mine',
+    shopTitle: '🛒 Fuel Depot', unlockNoun: 'fuel types', growNoun: 'fuel', growVerb: 'mine', kindNounSingular: 'type of fuel',
     desc: 'Mine and sell fuel instead of growing crops - then spend the coins building a real rocket. Once every part is bought and the tank is full, launch it: the flight itself takes real hours, counting down whether you\'re watching or not.'
   }
 };
@@ -3796,6 +3796,26 @@ function buildShop() {
   var expansionNoteEl = document.getElementById('cheat-sheet-expansion-note');
   if (expansionNoteEl) {
     expansionNoteEl.innerHTML = 'Out of room? Hover over a dim tile at the edge of your garden and click it to <b>buy more land</b>. Each extra tile costs more than the last, and each pricier tier of ' + ft.growNoun + ' takes longer to ' + ft.growVerb + '.';
+  }
+  // Every code example in the cheat sheet uses the active farm type's own first two item
+  // tiers (always unlocked, so the example is never one a brand new player can't try) instead
+  // of a hardcoded "Carrot" - so a student on the Solar Farm sees CALL Buy("AA Battery"),
+  // not a vegetable example that doesn't even exist in their shop right now.
+  if (document.getElementById('cheat-ex-plant')) {
+    var exItem1 = activeItemNames()[0];
+    var exItem2 = activeItemNames()[1] || exItem1;
+    var exBuyLabel1 = exItem1 + ft.nameSuffix;
+    var exBuyLabel2 = exItem2 + ft.nameSuffix;
+    document.getElementById('cheat-ex-plant').textContent = 'CALL Plant("' + exItem1 + '")';
+    document.getElementById('cheat-ex-buy').textContent = 'CALL Buy("' + exBuyLabel1 + '")';
+    document.getElementById('cheat-ex-buy-desc').textContent =
+      'Buys one ' + ft.unitLabel + ', 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, plant and sell the same ' + ft.kindNounSingular + ' forever.';
+    document.getElementById('cheat-ex-hascrop').textContent = 'HasCrop("' + exItem1 + '")';
+    document.getElementById('cheat-ex-cropontile-desc').innerHTML =
+      'What\'s on the square your cursor is on ("' + escapeHtmlLocal(exItem1) + '"), or "None" if it\'s empty. E.g. IF CropOnTile() = "' + escapeHtmlLocal(exItem1) + '" THEN ... Also callable as <code>PlantOnTile()</code>.';
+    document.getElementById('cheat-ex-seedcount').textContent = 'SeedCount("' + exItem1 + '")';
+    document.getElementById('cheat-ex-seedcount-desc').innerHTML =
+      'How many ' + ft.unitLabelPlural + ' of that kind you own. E.g. IF SeedCount("' + escapeHtmlLocal(exItem2) + '") = 0 THEN CALL Buy("' + escapeHtmlLocal(exBuyLabel2) + '"). Also callable as <code>ItemCount(...)</code>.';
   }
   activeItemNames().forEach(function (name) {
     var item = ft.items[name];
