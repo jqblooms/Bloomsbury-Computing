@@ -320,6 +320,9 @@
   .tut-card-desc { display: block; font-size: .76rem; color: #4d6b5b; line-height: 1.4; }
   .tut-card-status { font-size: .68rem; font-weight: 800; color: #2e8b57; white-space: nowrap; flex-shrink: 0; }
   .tut-card-status.tut-inprogress { color: #a3711f; }
+  .tut-card.tut-blocked { cursor: not-allowed; opacity: .82; background: #fdf6ec; border-color: #eecf9a; }
+  .tut-card.tut-blocked:hover { background: #fdf6ec; }
+  .tut-card-blocked { display: block; margin-top: 4px; font-size: .72rem; font-weight: 700; color: #a3711f; }
 
   #tutorial-bar-panel { display: none; background: #eefaf2; border-bottom: 3px solid #6cc499; }
   #tutorial-bar-panel.active { display: block; order: -3; }
@@ -3352,6 +3355,7 @@ var TUTORIALS = [
     id: 'basic-auto-farm',
     title: 'Basic Auto-Farm',
     color: '#4c8bf5',
+    minMoney: 35, // a seed (~4c) plus a Level 1 machine (30c)
     desc: 'Build a machine that buys and plants a seed on its own, forever - no clicking required.',
     steps: [
       {
@@ -3392,6 +3396,7 @@ var TUTORIALS = [
     id: 'strip-farm',
     title: 'Strip Farm',
     color: '#a3711f',
+    minMoney: 25, // up to 6 seeds worst-case across both steps, ~4c each
     desc: 'Plant a whole row of Carrots in one go, instead of typing the same three lines over and over.',
     steps: [
       {
@@ -3423,6 +3428,7 @@ var TUTORIALS = [
     id: 'grid-farm',
     title: 'Grid Farm',
     color: '#0e8a8a',
+    minMoney: 25, // 6 seeds at ~4c each
     desc: 'Plant a whole rectangle of Carrots at once - rows and columns, not just a single strip.',
     steps: [
       {
@@ -3445,6 +3451,7 @@ var TUTORIALS = [
     id: 'stock-up-run',
     title: 'Stock-Up Run',
     color: '#2e8b57',
+    minMoney: 5, // just enough for the loop to actually buy at least once
     desc: 'Buy as many seeds as you can afford in one go, instead of clicking Buy over and over.',
     steps: [
       {
@@ -3467,6 +3474,7 @@ var TUTORIALS = [
     id: 'farm-planner',
     title: 'Farm Planner',
     color: '#7c5fcf',
+    minMoney: 15, // step 2 buys 3 seeds, ~4c each
     desc: 'Work out costs and totals before you commit real coins - a running tally that updates as you go.',
     steps: [
       {
@@ -3493,6 +3501,7 @@ var TUTORIALS = [
     id: 'smart-auto-farm',
     title: 'Smart Auto-Farm',
     color: '#d9534f',
+    minMoney: 40, // up to two seed purchases plus a Level 1 machine, worst case
     desc: 'A machine that thinks before it acts - plants if it has a seed, buys one if it doesn\'t.',
     steps: [
       {
@@ -3526,6 +3535,7 @@ var TUTORIALS = [
     id: 'full-cycle-farm',
     title: 'Full-Cycle Farm',
     color: '#c2185b',
+    minMoney: 35, // a Level 1 machine (30c) plus its first seed (~4c)
     desc: 'The complete loop: sells when ready, plants when empty, buys when out of seeds - fully self-sustaining.',
     steps: [
       {
@@ -3600,6 +3610,34 @@ function currentTutorialStep() {
   return TUTORIALS[activeTutorial.tutIdx].steps[activeTutorial.stepIdx];
 }
 
+// A tutorial "needs a clear home tile" if any of its steps places a machine - the machine
+// is always placed at wherever the player currently stands, so a tile already occupied
+// (typically by a machine an earlier tutorial in the same session left behind) blocks it
+// immediately, before a single line of code is even relevant.
+function tutorialNeedsMachinePlacement(tut) {
+  return tut.steps.some(function (s) { return s.action === 'machine'; });
+}
+// Checked BEFORE a tutorial is allowed to start, not just reacted to afterwards (see the
+// tutorial-bar-attempt-warning flow for the in-tutorial version of this same idea) - a
+// student shouldn't be able to open a tutorial that's already guaranteed to fail on its
+// final step from state a previous tutorial left behind. minMoney is a hand-set, worst-case
+// estimate per tutorial (see each entry in TUTORIALS) rather than something simulated from
+// the pseudocode itself, since real cost depends on runtime branching and existing
+// inventory - being a little conservative here is safer than being exact and wrong.
+function tutorialFeasibility(tut) {
+  var reasons = [];
+  if (typeof tut.minMoney === 'number' && money < tut.minMoney) {
+    reasons.push('You need at least ' + tut.minMoney + ' coins (you have ' + Math.floor(money) + ').');
+  }
+  if (tutorialNeedsMachinePlacement(tut)) {
+    var homeTile = tileAt(playerCursor.x, playerCursor.z);
+    if (homeTile && homeTile.hasMachine) {
+      reasons.push('You\'re standing on an existing machine - move to open ground first.');
+    }
+  }
+  return { ok: reasons.length === 0, reasons: reasons };
+}
+
 function renderTutorialPicker() {
   var list = document.getElementById('tutorial-picker-list');
   if (!list) return;
@@ -3608,13 +3646,23 @@ function renderTutorialPicker() {
     var status = '';
     if (prog && prog.completed) status = '<span class="tut-card-status">Done</span>';
     else if (prog && prog.stepIdx > 0) status = '<span class="tut-card-status tut-inprogress">Step ' + (prog.stepIdx + 1) + '/' + tut.steps.length + '</span>';
-    return '<button type="button" class="tut-card" data-tut="' + i + '">' +
+    var feas = tutorialFeasibility(tut);
+    var blockedNote = feas.ok ? '' : '<span class="tut-card-blocked">' + feas.reasons.map(escapeHtmlLocal).join(' ') + '</span>';
+    return '<button type="button" class="tut-card' + (feas.ok ? '' : ' tut-blocked') + '" data-tut="' + i + '">' +
       '<span class="tut-card-badge" style="background:' + tut.color + '">' + escapeHtmlLocal(tut.title.charAt(0)) + '</span>' +
       '<span class="tut-card-body"><span class="tut-card-title">' + escapeHtmlLocal(tut.title) + '</span>' +
-      '<span class="tut-card-desc">' + escapeHtmlLocal(tut.desc) + '</span></span>' + status + '</button>';
+      '<span class="tut-card-desc">' + escapeHtmlLocal(tut.desc) + '</span>' + blockedNote + '</span>' + status + '</button>';
   }).join('');
   list.querySelectorAll('.tut-card').forEach(function (card) {
-    card.addEventListener('click', function () { startTutorial(parseInt(card.dataset.tut, 10)); closeTutorialModal(); });
+    card.addEventListener('click', function () {
+      var tutIdx = parseInt(card.dataset.tut, 10);
+      // Re-checked here, not just trusted from the render pass - the player can act on the
+      // game behind the open modal (drag the field, wait for a machine tick) between the
+      // picker rendering and the click, so state may have changed either way since then.
+      if (!tutorialFeasibility(TUTORIALS[tutIdx]).ok) { renderTutorialPicker(); return; }
+      startTutorial(tutIdx);
+      closeTutorialModal();
+    });
   });
   var doneCount = TUTORIALS.filter(function (t) { return tutState[t.id] && tutState[t.id].completed; }).length;
   var summary = document.getElementById('tutorial-picker-summary');
@@ -3638,6 +3686,13 @@ document.getElementById('tutorial-modal-overlay').addEventListener('click', func
 window.addEventListener('keydown', function (e) {
   if (e.key === 'Escape' && document.getElementById('tutorial-modal-overlay').classList.contains('open')) closeTutorialModal();
 });
+// A "blocked" reason (not enough coins, tile occupied) can resolve on its own while the
+// modal just sits open - a machine keeps earning, the player might drag the field - so
+// re-render periodically rather than only on the next click, matching the spirit of
+// pointing out the fix rather than making the student re-discover it themselves.
+setInterval(function () {
+  if (document.getElementById('tutorial-modal-overlay').classList.contains('open')) renderTutorialPicker();
+}, 2000);
 
 function startTutorial(tutIdx) {
   var tut = TUTORIALS[tutIdx];
