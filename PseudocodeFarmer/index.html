@@ -278,9 +278,14 @@
      a student sidestep the pseudocode entirely by clicking it. Missions
      supply money/inventory directly, and CALL Buy() is the only way in. */
   body.lesson-mission-mode #shop-panel,
+  body.lesson-mission-mode #sell-farm-panel,
   body.lesson-mission-mode #reset-btn,
   body.lesson-mission-mode #machine-btn,
   body.lesson-mission-mode #machine-tiers { display: none; }
+  /* Sell the Farm is a free-play prestige mechanic - it makes no sense mid-tutorial (the
+     sandbox's tiny fixed economy could never legitimately reach the milestone, and even if
+     it somehow did, liquidating a throwaway practice world isn't a real choice worth making). */
+  body.tutorial-active #sell-farm-panel { display: none; }
 
   /* ============================================================
      MACHINE TUTORIALS - self-contained, independent of the Lesson Mission
@@ -399,6 +404,24 @@
   body.tutorial-active #shop-panel { order: 5; }
   #shop-tutorial-note { display: none; margin-bottom: 8px; padding: 6px 8px; border-radius: 6px; background: #eefaf2; border: 1px solid #bfe6cf; color: #1f6e4f; font-size: .72rem; font-weight: 700; }
   body.tutorial-active #shop-tutorial-note { display: block; }
+
+  /* "Sell the Farm" - a rare, exciting prestige unlock, so it gets its own distinct gold
+     accent rather than the game's usual green, and stays completely hidden (not just
+     disabled) until genuinely reachable - see sellFarmUnlocked() for the milestone. */
+  #sell-farm-panel { display: none; background: #fff8e6; border: 2px solid #e0b93f; }
+  #sell-farm-panel.unlocked { display: block; }
+  #sell-farm-panel h2 { color: #8a6416; }
+  #sell-farm-desc { font-size: .78rem; color: #6b5320; line-height: 1.4; margin: 0 0 8px; }
+  .sell-farm-option { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; margin-bottom: 6px;
+    border-radius: 8px; border: 1px solid #e0b93f; background: #fffefb; cursor: pointer; text-align: left; font: inherit; }
+  .sell-farm-option:hover { background: #fef3d6; }
+  .sell-farm-option .sfo-badge { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; flex-shrink: 0; font-size: .95rem; }
+  .sell-farm-option .sfo-body { flex: 1; min-width: 0; }
+  .sell-farm-option .sfo-title { display: block; font-weight: 800; color: #6b4a10; font-size: .86rem; }
+  .sell-farm-option .sfo-desc { display: block; font-size: .72rem; color: #7a6438; line-height: 1.35; }
+  .sell-farm-option.armed { border-color: #d9534f; background: #fdecec; }
+  .sell-farm-option.armed .sfo-title { color: #a3271f; }
 </style>
 </head>
 <body>
@@ -438,8 +461,13 @@
     </div>
 
     <aside id="sidebar">
+      <section class="panel-section" id="sell-farm-panel">
+        <h2>Sell the Farm</h2>
+        <p id="sell-farm-desc"></p>
+        <div id="sell-farm-options"></div>
+      </section>
       <section class="panel-section" id="shop-panel">
-        <h2>🛒 Seed Shop</h2>
+        <h2 id="shop-title">🛒 Seed Shop</h2>
         <div id="shop-tutorial-note">Tutorial in progress - Buy is off. Use <code>CALL Buy("...")</code> in the Code Box instead.</div>
         <div id="shop-list"></div>
       </section>
@@ -675,6 +703,120 @@ VEGGIE_TIERS.forEach(function (t, i) {
 });
 var VEGGIE_NAMES = VEGGIE_TIERS.map(function (t) { return t.name; });
 
+// ============================================================
+// FARM TYPES - "Sell the Farm" prestige unlock (see sellFarmUnlocked() below)
+// ============================================================
+// Once a player's best single sale is big enough that their lifetime earnings could only
+// have come from a LOT of selling (100x that one sale), "Sell the Farm" appears: liquidate
+// everything on the current farm for its normal value, keep the cash, and start a new farm
+// type from scratch with that money as capital. Solar Farm reuses the exact same
+// plant/grow/sell pipeline as crops (activeItems()/activeItemNames() below select which
+// table is "live", same emoji-texture and shop code) - the genuinely different mechanic
+// comes from one well-contained tweak in currentSellValue()/sellAt(): a battery's value
+// keeps climbing for a while after it first finishes charging (patience pays off, unlike a
+// crop which is always worth the same the moment it's grown), then decays if left forgotten
+// far past that peak (so leaving one running forever is a real mistake, unlike a crop which
+// never punishes being left alone).
+var BATTERY_TIERS = [
+  { name: 'AA Battery',     emoji: '1f50b' },
+  { name: 'Power Bank',     emoji: '1f50c' },
+  { name: 'Light Cell',     emoji: '1f4a1' },
+  { name: 'Solar Cell',     emoji: '1f31e' },
+  { name: 'Lightning Core', emoji: '26a1' },
+  { name: 'Fusion Core',    emoji: '1f525' }
+];
+var BATTERY_TIER_SEED_COST_BASE = 40;
+var BATTERY_TIER_SEED_COST_GROWTH = 3.2;
+var BATTERY_TIER_SELL_MARGIN_BASE = 1.8;
+var BATTERY_TIER_SELL_MARGIN_STEP = 0.1;
+var BATTERY_TIER_GROW_SECONDS_BASE = 8;
+var BATTERY_TIER_GROW_SECONDS_GROWTH = 1.2;
+var BATTERY_TIER_UNLOCK_EARNED_MULTIPLE = 8;
+// How a battery's live sell value moves over time, all expressed as multiples of its own
+// charge time so the pacing scales with tier the same way growSeconds already does: value
+// climbs from sellPrice up to a +50% peak by 1.5x charge time, holds there, then decays back
+// down (never below a 20% floor) once left past 3x charge time.
+var BATTERY_PEAK_BONUS = 0.5;
+var BATTERY_PEAK_AT_MULTIPLE = 1.5;
+var BATTERY_DECAY_STARTS_AT_MULTIPLE = 3;
+var BATTERY_DECAY_FLOOR = 0.2;
+
+var BATTERIES = {};
+BATTERY_TIERS.forEach(function (t, i) {
+  var seedCost = Math.round(BATTERY_TIER_SEED_COST_BASE * Math.pow(BATTERY_TIER_SEED_COST_GROWTH, i));
+  var margin = BATTERY_TIER_SELL_MARGIN_BASE + i * BATTERY_TIER_SELL_MARGIN_STEP;
+  var growSeconds = Math.round(BATTERY_TIER_GROW_SECONDS_BASE * Math.pow(BATTERY_TIER_GROW_SECONDS_GROWTH, i));
+  BATTERIES[t.name] = {
+    tier: i,
+    emoji: t.emoji,
+    tint: t.tint || null,
+    seedCost: seedCost,
+    sellPrice: Math.round(seedCost * margin),
+    growSeconds: growSeconds,
+    unlockEarned: i === 0 ? 0 : Math.round(BATTERIES[BATTERY_TIERS[i - 1].name].seedCost * BATTERY_TIER_UNLOCK_EARNED_MULTIPLE)
+  };
+});
+var BATTERY_NAMES = BATTERY_TIERS.map(function (t) { return t.name; });
+
+// Registry of every farm type - 'crops' wraps the existing VEGGIES table so all behaviour is
+// completely unchanged while it's active. currentFarmType selects which table
+// activeItems()/activeItemNames() return; every function that used to reach for
+// VEGGIES/VEGGIE_NAMES directly now goes through those two instead (see the git history of
+// this section), so the exact same plant/grow/sell/shop/save code serves any farm type
+// without duplicating it. lookupItem() resolves a name regardless of which type is
+// currently active - needed for anything working from already-saved data (a planted tile, a
+// save file) rather than "what's buyable right now".
+var FARM_TYPES = {
+  crops: {
+    id: 'crops', title: 'Crop Farm', kind: 'crop', items: VEGGIES, itemNames: VEGGIE_NAMES,
+    unitLabel: 'seed', unitLabelPlural: 'seeds', nameSuffix: ' Seeds',
+    desc: 'Grow and sell vegetables, tier by tier.'
+  },
+  solar: {
+    id: 'solar', title: 'Solar Farm', kind: 'battery', items: BATTERIES, itemNames: BATTERY_NAMES,
+    unitLabel: 'battery', unitLabelPlural: 'batteries', nameSuffix: '',
+    desc: 'Charge batteries instead of growing crops. The longer you leave one past full charge, the more it earns - up to a point. Forget about it too long and it starts losing value, so timing the sell matters here in a way it never did on the crop farm.'
+  }
+};
+var currentFarmType = 'crops';
+function activeItems() { return FARM_TYPES[currentFarmType].items; }
+function activeItemNames() { return FARM_TYPES[currentFarmType].itemNames; }
+function activeFarmType() { return FARM_TYPES[currentFarmType]; }
+function lookupItem(name) { return VEGGIES[name] || BATTERIES[name] || null; }
+
+// The milestone: a player's SINGLE best sale, multiplied by 100, compared against lifetime
+// earnings. Using the best single sale (not e.g. current money on hand) means it can't be
+// dodged by simply never spending, and can't flicker unlocked/locked as money is spent -
+// both bestSaleValue and totalEarned only ever move upward, so once true this stays true.
+var SELL_FARM_MULTIPLE = 100;
+var bestSaleValue = 0;
+function sellFarmUnlocked() {
+  return bestSaleValue > 0 && totalEarned >= bestSaleValue * SELL_FARM_MULTIPLE;
+}
+// The value a plant/battery would sell for RIGHT NOW. Crops are flat once ready (grown is
+// grown, unchanged from before this feature). A battery's value is time-dependent even
+// after it's ready - see the FARM TYPES comment above for the shape of the curve.
+function currentSellValue(plant) {
+  var item = lookupItem(plant.type);
+  if (!item) return 0;
+  if (!BATTERIES[plant.type]) return item.sellPrice;
+  var elapsedMs = Date.now() - plant.plantedAt;
+  var growMs = plant.growMs;
+  var peakAt = growMs * BATTERY_PEAK_AT_MULTIPLE;
+  var decayAt = growMs * BATTERY_DECAY_STARTS_AT_MULTIPLE;
+  var peakValue = item.sellPrice * (1 + BATTERY_PEAK_BONUS);
+  if (elapsedMs <= growMs) return item.sellPrice;
+  if (elapsedMs <= peakAt) {
+    var climbFrac = (elapsedMs - growMs) / (peakAt - growMs);
+    return Math.round(item.sellPrice + (peakValue - item.sellPrice) * climbFrac);
+  }
+  if (elapsedMs <= decayAt) return Math.round(peakValue);
+  var decaySpan = Math.max(1, decayAt - peakAt);
+  var decayFrac = Math.min(1, (elapsedMs - decayAt) / decaySpan);
+  var floorValue = item.sellPrice * BATTERY_DECAY_FLOOR;
+  return Math.round(peakValue - (peakValue - floorValue) * decayFrac);
+}
+
 // Writing pseudocode should always beat reaching for a button - that is
 // the whole point of the game. Code Buy("...") costs less than the shop
 // button, and code Sell() pays more than the on-tile sell button, so the
@@ -773,29 +915,29 @@ function invCount(name) { return inventory[name] || 0; }
 // ECONOMY: unlocks and dynamic seed pricing
 // ============================================================
 function isUnlocked(name) {
-  var veg = VEGGIES[name];
-  if (!veg || veg.tier === 0) return true;
+  var item = activeItems()[name];
+  if (!item || item.tier === 0) return true;
   // Unlock is a single, natural gate: lifetime coins earned. There is no
   // "sell N of the previous vegetable" requirement - money (and prices)
   // scaling exponentially is the pacing, so a player with enough earned
   // coins can always advance, exactly like Cookie Clicker's building
   // unlocks follow ownership rather than a separate chore.
-  return totalEarned >= veg.unlockEarned;
+  return totalEarned >= item.unlockEarned;
 }
 
 // How much more (in lifetime coins earned) is needed before this one
 // unlocks - used to show shop rows a helpful "you need X more" message
 // instead of just hiding them.
 function unlockProgressMessage(name) {
-  var veg = VEGGIES[name];
-  var earnedLeft = Math.max(0, veg.unlockEarned - totalEarned);
+  var item = activeItems()[name];
+  var earnedLeft = Math.max(0, item.unlockEarned - totalEarned);
   return 'Earn ' + earnedLeft.toLocaleString() + ' more coins total (lifetime, not current balance).';
 }
 
-// The price of the NEXT seed packet of this vegetable - a fixed tier price
+// The price of the NEXT seed/battery packet of this item - a fixed tier price
 // (no per-purchase escalation, see the economy comment above for why).
 function currentSeedPrice(name) {
-  return VEGGIES[name].seedCost;
+  return activeItems()[name].seedCost;
 }
 
 // ============================================================
@@ -1245,7 +1387,7 @@ function raycastTileMesh(clientX, clientY) {
 var textureCache = {};
 function loadVeggieTexture(name) {
   if (textureCache[name]) return textureCache[name];
-  var veg = VEGGIES[name];
+  var veg = lookupItem(name);
   var tex = new THREE.Texture();
   var img = new Image();
   img.crossOrigin = 'anonymous';
@@ -1266,26 +1408,28 @@ function loadVeggieTexture(name) {
   return tex;
 }
 VEGGIE_NAMES.forEach(loadVeggieTexture); // warm the cache before anyone plants
+BATTERY_NAMES.forEach(loadVeggieTexture); // same warm-up for Solar Farm, so switching to it never has a texture-load delay
 
 // ============================================================
 // PLANTING / GROWING / SELLING
 // ============================================================
 function plantAt(cursor, vegName) {
-  if (!VEGGIES[vegName]) {
-    return { ok: false, message: 'There is no vegetable called "' + vegName + '". Look at the shop for the names you can use.' };
+  var ft = activeFarmType();
+  if (!activeItems()[vegName]) {
+    return { ok: false, message: 'There is no ' + ft.unitLabel + ' called "' + vegName + '". Look at the shop for the names you can use.' };
   }
   var tile = tileAt(cursor.x, cursor.z);
   if (tile.plant) {
-    return { ok: false, message: 'That tile already has a plant growing on it.' };
+    return { ok: false, message: 'That tile already has something growing on it.' };
   }
   if (tile.hasMachine) {
     return { ok: false, message: 'There is a machine standing on that tile.' };
   }
   if (invCount(vegName) <= 0) {
-    return { ok: false, message: 'You do not have any ' + vegName + ' seeds. Buy some first with CALL Buy("' + vegName + ' Seeds").' };
+    return { ok: false, message: 'You do not have any ' + vegName + ' ' + ft.unitLabelPlural + '. Buy some first with CALL Buy("' + vegName + ft.nameSuffix + '").' };
   }
   inventory[vegName]--;
-  var veg = VEGGIES[vegName];
+  var veg = activeItems()[vegName];
   var material = new THREE.SpriteMaterial({ map: loadVeggieTexture(vegName), transparent: true });
   if (veg.tint) material.color.setHex(veg.tint);
   var sprite = new THREE.Sprite(material);
@@ -1310,11 +1454,13 @@ function plantAt(cursor, vegName) {
 function sellAt(cursor, viaCode) {
   var tile = tileAt(cursor.x, cursor.z);
   if (!tile.plant) return { ok: false, message: 'There is nothing planted here.' };
-  if (!tile.plant.ready) return { ok: false, message: 'That plant is not fully grown yet.' };
-  var veg = VEGGIES[tile.plant.type];
-  var price = Math.round(veg.sellPrice * (viaCode ? CODE_SELL_BONUS : 1));
+  if (!tile.plant.ready) return { ok: false, message: 'That is not ready to sell yet.' };
+  var wasSellFarmUnlocked = sellFarmUnlocked();
+  var baseValue = currentSellValue(tile.plant); // flat for crops; time-dependent for batteries
+  var price = Math.round(baseValue * (viaCode ? CODE_SELL_BONUS : 1));
   money += price;
   totalEarned += price;
+  if (price > bestSaleValue) bestSaleValue = price;
   soldCount[tile.plant.type] = (soldCount[tile.plant.type] || 0) + 1;
   scene.remove(tile.plant.sprite);
   disposeSprite(tile.plant.sprite, false);
@@ -1332,6 +1478,7 @@ function sellAt(cursor, viaCode) {
   requestTileInfoUpdate();
   var message = 'Sold the ' + soldName + ' for ' + price.toLocaleString() + ' coins' + (viaCode ? ' (code bonus!)' : '') + '!';
   if (justUnlocked.length) message += ' New in the shop: ' + justUnlocked.join(', ') + '!';
+  if (!wasSellFarmUnlocked && sellFarmUnlocked()) message += ' You can now Sell the Farm and try a new kind of farm!';
   return { ok: true, message: message };
 }
 
@@ -1340,7 +1487,7 @@ function sellAt(cursor, viaCode) {
 // from locked to unlocked just now, so the caller can tell the player.
 function refreshUnlocks() {
   var justUnlocked = [];
-  VEGGIE_NAMES.forEach(function (name) {
+  activeItemNames().forEach(function (name) {
     var wasUnlocked = unlockedState[name];
     var nowUnlocked = isUnlocked(name);
     if (nowUnlocked && !wasUnlocked) justUnlocked.push(name);
@@ -1350,37 +1497,38 @@ function refreshUnlocks() {
 }
 
 function buySeed(vegName, viaCode) {
-  if (!VEGGIES[vegName]) {
-    return { ok: false, message: 'There is no vegetable called "' + vegName + '". Look at the shop for the names you can use.' };
+  if (!activeItems()[vegName]) {
+    return { ok: false, message: 'There is no ' + activeFarmType().unitLabel + ' called "' + vegName + '". Look at the shop for the names you can use.' };
   }
   if (!isUnlocked(vegName)) {
     return { ok: false, message: vegName + ' is not unlocked yet. ' + unlockProgressMessage(vegName) };
   }
+  var ft = activeFarmType();
   var price = viaCode ? Math.round(currentSeedPrice(vegName) * CODE_BUY_DISCOUNT) : currentSeedPrice(vegName);
   if (money < price) {
-    return { ok: false, message: 'You need ' + price + ' coins for ' + vegName + ' seeds right now, but you only have ' + money + '.' };
+    return { ok: false, message: 'You need ' + price + ' coins for ' + vegName + ' ' + ft.unitLabelPlural + ' right now, but you only have ' + money + '.' };
   }
   money -= price;
   inventory[vegName] = invCount(vegName) + 1;
   markGameDirty();
   requestHUDUpdate();
-  return { ok: true, message: 'Bought 1 packet of ' + vegName + ' seeds for ' + price.toLocaleString() + ' coins' + (viaCode ? ' (code discount!)' : '') + '.' };
+  return { ok: true, message: 'Bought 1 ' + ft.unitLabel + ' of ' + vegName + ' for ' + price.toLocaleString() + ' coins' + (viaCode ? ' (code discount!)' : '') + '.' };
 }
 
-// Buy() in code takes the shop's exact label, e.g. "Carrot Seeds" - this
-// peels off the " Seeds" suffix so students can type the same phrase the
-// shop panel shows them, matching what they already read on screen.
-// Turns a shop label ("Carrot Seeds") into its canonical crop name ("Carrot"),
-// so both Buy("...") and the SeedCount(...) query accept the same wording the
-// shop panel shows. Returns null if it isn't a crop the game knows.
+// Buy() in code takes the shop's exact label, e.g. "Carrot Seeds" - this peels off the
+// " Seeds" suffix (harmless to try even on the Solar Farm, whose battery names never end in
+// "seed(s)") so students can type the same phrase the shop panel shows them. Turns a shop
+// label into its canonical item name for the CURRENTLY active farm type, so both Buy("...")
+// and SeedCount(...) accept the same wording the shop panel shows. Returns null if it isn't
+// something the active farm type's shop knows.
 function matchSeedName(label) {
   var name = String(label || '').replace(/\s*seeds?\s*$/i, '').trim();
-  return VEGGIE_NAMES.filter(function (n) { return n.toLowerCase() === name.toLowerCase(); })[0] || null;
+  return activeItemNames().filter(function (n) { return n.toLowerCase() === name.toLowerCase(); })[0] || null;
 }
 function buySeedByLabel(label, viaCode) {
   var match = matchSeedName(label);
   if (!match) {
-    return { ok: false, message: '"' + label + '" is not something the shop sells. Try CALL Buy("Carrot Seeds").' };
+    return { ok: false, message: '"' + label + '" is not something the shop sells right now.' };
   }
   return buySeed(match, viaCode);
 }
@@ -2769,7 +2917,7 @@ function cancelEditMachine() {
 // SAVE / LOAD (localStorage) - so a page refresh keeps the farm
 // ============================================================
 function makePlantSprite(vegName, x, z) {
-  var veg = VEGGIES[vegName];
+  var veg = lookupItem(vegName);
   var material = new THREE.SpriteMaterial({ map: loadVeggieTexture(vegName), transparent: true });
   if (veg.tint) material.color.setHex(veg.tint);
   var sprite = new THREE.Sprite(material);
@@ -2843,6 +2991,8 @@ function serializeGameState() {
     v: SAVE_VERSION,
     money: money,
     totalEarned: totalEarned,
+    bestSaleValue: bestSaleValue,
+    currentFarmType: currentFarmType,
     inventory: inventory,
     soldCount: soldCount,
     playerCursor: { x: playerCursor.x, z: playerCursor.z, facing: playerCursor.facing },
@@ -2929,6 +3079,8 @@ function restoreMachine(s) {
 function applyGameState(s) {
   money = s.money;
   totalEarned = s.totalEarned;
+  bestSaleValue = s.bestSaleValue || 0; // absent on old saves - fine, it just starts at 0 again
+  currentFarmType = FARM_TYPES[s.currentFarmType] ? s.currentFarmType : 'crops';
   inventory = s.inventory || {};
   soldCount = s.soldCount || {};
   playerCursor.x = s.playerCursor.x; playerCursor.z = s.playerCursor.z; playerCursor.facing = s.playerCursor.facing || 0;
@@ -2938,7 +3090,7 @@ function applyGameState(s) {
   updatePlayerCursorPosition();
   updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
   (s.plants || []).forEach(function (p) {
-    if (!VEGGIES[p.type]) return;
+    if (!lookupItem(p.type)) return;
     var pt = tileAt(p.x, p.z);
     if (!pt || pt.plant) return;
     pt.plant = {
@@ -2953,6 +3105,9 @@ function applyGameState(s) {
     restoreMachine(m);
   });
   nextMachineId = s.nextMachineId || 1;
+  buildShop(); // rebuild shop rows for whichever farm type this state belongs to - cheap, and
+               // means every applyGameState() caller gets a correct shop for free rather than
+               // each one having to remember to do it themselves
 }
 
 // Restores the whole game from localStorage. Returns true if there was a
@@ -3013,6 +3168,8 @@ function resetGame() {
   rebuildGarden(initialTileList());
   money = 40;
   totalEarned = 0;
+  bestSaleValue = 0;
+  currentFarmType = 'crops'; // a full reset starts the whole game over, including which farm
   inventory = {};
   soldCount = {};
   unlockedState = {};
@@ -3031,10 +3188,108 @@ function resetGame() {
   try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
   lastSavedJson = '';
   gameStateDirty = true;
+  buildShop();
   refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
   logConsole('Game reset. Good luck!');
+}
+
+// ============================================================
+// SELL THE FARM - a prestige-style unlock (see sellFarmUnlocked() in the FARM TYPES section)
+// ============================================================
+// Liquidates everything currently on the farm (every ready plant at full value, every
+// machine at its usual half-cost refund, anything still growing at a small partial credit
+// rather than nothing) and keeps every coin - then wipes the board and starts a different
+// farm type fresh with that money as capital. Reuses sellAt()/sellMachine() for the payout
+// maths, so there is exactly one place in the whole game that decides what any single thing
+// is worth, and clearWorldObjects()/rebuildGarden() (the same primitives resetGame() and the
+// tutorial sandbox already use) to wipe the board.
+function liquidateFarm() {
+  var startMoney = money;
+  plantedTiles.slice().forEach(function (tile) {
+    if (!tile.plant) return;
+    if (tile.plant.ready) {
+      sellAt({ x: tile.x, z: tile.z }, false);
+      return;
+    }
+    var item = lookupItem(tile.plant.type);
+    if (item) money += Math.round(item.seedCost * 0.5); // still growing - a partial credit, not the full sale
+    scene.remove(tile.plant.sprite);
+    disposeSprite(tile.plant.sprite, false);
+    if (tile.plant.pct) { scene.remove(tile.plant.pct.sprite); disposeSprite(tile.plant.pct.sprite, false); }
+    tile.plant = null;
+    removePlantedTile(tile);
+  });
+  machines.slice().forEach(function (m) { sellMachine(m); });
+  return money - startMoney;
+}
+
+// The actual transition: liquidate, wipe, switch. Money (and bestSaleValue/totalEarned, the
+// milestone's own inputs) are untouched beyond what liquidation adds - carrying your fortune
+// into the new farm type is the whole point ("sell your farm, keep the cash").
+function sellTheFarm(targetTypeId) {
+  if (!sellFarmUnlocked() || !FARM_TYPES[targetTypeId] || targetTypeId === currentFarmType) return false;
+  var liquidated = liquidateFarm();
+  clearWorldObjects();
+  rebuildGarden(initialTileList());
+  inventory = {};
+  soldCount = {};
+  unlockedState = {};
+  selectedMachineId = null;
+  editingMachineCodeId = null;
+  playerCursor.x = Math.floor(GRID_SIZE / 2);
+  playerCursor.z = Math.floor(GRID_SIZE / 2);
+  playerCursor.facing = 0;
+  updatePlayerCursorPosition();
+  updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
+  codeInput.value = '';
+  clearCodeError();
+  currentFarmType = targetTypeId;
+  buildShop();
+  refreshUnlocks();
+  markGameDirty();
+  saveGame(true);
+  lastHudSignature = '';
+  lastTileInfoSignature = '';
+  updateHUD();
+  updateTileInfoPanel();
+  logConsole('Sold the farm for ' + liquidated.toLocaleString() + ' coins and moved to the ' + FARM_TYPES[targetTypeId].title + '!');
+  return true;
+}
+
+// Renders the sell-farm panel: hidden entirely until sellFarmUnlocked(), then one option per
+// OTHER farm type (never the one you're currently on). Each option needs a second click to
+// confirm - same two-click-arm pattern as the top-bar Reset Game button, since this is
+// genuinely destructive to the current farm.
+var sellFarmArmedId = null;
+function updateSellFarmUI() {
+  var panel = document.getElementById('sell-farm-panel');
+  var unlocked = sellFarmUnlocked();
+  panel.classList.toggle('unlocked', unlocked);
+  if (!unlocked) { sellFarmArmedId = null; return; }
+  document.getElementById('sell-farm-desc').textContent =
+    'Your best sale (' + bestSaleValue.toLocaleString() + 'c) times ' + SELL_FARM_MULTIPLE + ' is ' +
+    (bestSaleValue * SELL_FARM_MULTIPLE).toLocaleString() + 'c - you\'ve earned ' + Math.floor(totalEarned).toLocaleString() +
+    ' lifetime, so it\'s unlocked. Liquidating sells everything here for its normal value and keeps every coin.';
+  var optionsEl = document.getElementById('sell-farm-options');
+  var targets = Object.keys(FARM_TYPES).filter(function (id) { return id !== currentFarmType; });
+  optionsEl.innerHTML = targets.map(function (id) {
+    var ft = FARM_TYPES[id];
+    var armed = sellFarmArmedId === id;
+    return '<button type="button" class="sell-farm-option' + (armed ? ' armed' : '') + '" data-target="' + id + '">' +
+      '<span class="sfo-badge" style="background:' + (id === 'solar' ? '#e0a53f' : '#4c8bf5') + '">' + escapeHtmlLocal(ft.title.charAt(0)) + '</span>' +
+      '<span class="sfo-body"><span class="sfo-title">' + (armed ? 'Click again to confirm' : ft.title) + '</span>' +
+      '<span class="sfo-desc">' + escapeHtmlLocal(ft.desc) + '</span></span></button>';
+  }).join('');
+  optionsEl.querySelectorAll('.sell-farm-option').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.dataset.target;
+      if (sellFarmArmedId !== id) { sellFarmArmedId = id; updateSellFarmUI(); return; }
+      sellFarmArmedId = null;
+      sellTheFarm(id);
+    });
+  });
 }
 
 var resetBtn = document.getElementById('reset-btn');
@@ -3072,14 +3327,15 @@ var lastHudSignature = '';
 
 function updateHUD() {
   hudDirty = false;
-  var signature = money + '|' + totalEarned + '|' + VEGGIE_NAMES.map(function (name) {
+  var ft = activeFarmType();
+  var signature = currentFarmType + '|' + money + '|' + totalEarned + '|' + sellFarmUnlocked() + '|' + activeItemNames().map(function (name) {
     return invCount(name) + ':' + (isUnlocked(name) ? 1 : 0);
   }).join(',');
   if (signature === lastHudSignature) return;
   lastHudSignature = signature;
   moneyValueEl.textContent = money.toLocaleString();
   earnedValueEl.textContent = totalEarned.toLocaleString();
-  VEGGIE_NAMES.forEach(function (name) {
+  activeItemNames().forEach(function (name) {
     var row = shopListEl.querySelector('[data-veg="' + name + '"]');
     if (!row) return;
     var unlocked = isUnlocked(name);
@@ -3091,23 +3347,31 @@ function updateHUD() {
     }
     row.querySelector('.locked-msg').textContent = '';
     var price = currentSeedPrice(name);
-    var veg = VEGGIES[name];
+    var item = ft.items[name];
     var priceEl = row.querySelector('.price');
-    priceEl.textContent = price.toLocaleString() + ' coins · sells for ' + veg.sellPrice.toLocaleString();
+    priceEl.textContent = price.toLocaleString() + ' coins · sells for ' + item.sellPrice.toLocaleString();
     row.querySelector('.buy-btn').disabled = money < price;
-    row.querySelector('.have').textContent = 'You have ' + invCount(name) + ' seed' + (invCount(name) === 1 ? '' : 's') + '.';
+    row.querySelector('.have').textContent = 'You have ' + invCount(name) + ' ' + (invCount(name) === 1 ? ft.unitLabel : ft.unitLabelPlural) + '.';
   });
+  updateSellFarmUI();
 }
 
+// Rebuilds the shop's rows from scratch for whichever farm type is currently active -
+// callable more than once (unlike the old crops-only version), since switching farm type
+// needs a genuinely different set of rows, not just different values in the same ones.
 function buildShop() {
-  VEGGIE_NAMES.forEach(function (name) {
-    var veg = VEGGIES[name];
+  shopListEl.innerHTML = '';
+  var ft = activeFarmType();
+  var shopTitleEl = document.getElementById('shop-title');
+  if (shopTitleEl) shopTitleEl.textContent = ft.kind === 'battery' ? '🛒 Battery Shop' : '🛒 Seed Shop';
+  activeItemNames().forEach(function (name) {
+    var item = ft.items[name];
     var row = document.createElement('div');
     row.className = 'shop-item';
     row.setAttribute('data-veg', name);
     row.innerHTML =
-      '<img src="' + twemojiUrl(veg.emoji) + '" alt="' + name + '">' +
-      '<div><div class="name">' + name + ' Seeds</div><div class="price"></div></div>' +
+      '<img src="' + twemojiUrl(item.emoji) + '" alt="' + name + '">' +
+      '<div><div class="name">' + name + ft.nameSuffix + '</div><div class="price"></div></div>' +
       '<button type="button" class="buy-btn">Buy</button>' +
       '<div class="have"></div>' +
       '<div class="locked-msg"></div>';
@@ -3118,6 +3382,7 @@ function buildShop() {
     });
     shopListEl.appendChild(row);
   });
+  lastHudSignature = ''; // force the next updateHUD() to repaint these freshly-built rows
 }
 buildShop();
 var missionParam = new URLSearchParams(window.location.search).get('lessonMission');
@@ -3141,7 +3406,7 @@ function scheduleAutosave() {
   if (window.requestIdleCallback) window.requestIdleCallback(write, { timeout: 2000 });
   else setTimeout(write, 50);
 }
-setInterval(function () { refreshUnlocks(); updateHUD(); }, 1000);
+setInterval(function () { refreshUnlocks(); updateHUD(); updateTileInfoPanel(); }, 1000);
 setInterval(scheduleAutosave, 5000);
 window.addEventListener('pagehide', function () { saveGame(true); });
 
@@ -3154,15 +3419,20 @@ function updateTileInfoPanel() {
     : null;
   var tileForSignature = tileAt(playerCursor.x, playerCursor.z);
   var plantForSignature = tileForSignature && tileForSignature.plant;
+  // Before "ready", the growth percentage is enough to know when to repaint. Once ready, a
+  // crop's value never changes again - but a battery's does, continuously (see FARM TYPES) -
+  // so the panel needs its own live sell value in the signature too, or it would freeze on
+  // whatever number happened to be showing the instant it first became ready.
   var plantPctForSignature = plantForSignature
     ? Math.min(100, Math.round(((Date.now() - plantForSignature.plantedAt) / plantForSignature.growMs) * 100))
     : -1;
+  var plantValueForSignature = (plantForSignature && plantForSignature.ready) ? currentSellValue(plantForSignature) : -1;
   var signature = selectedForSignature
     ? ['machine', selectedForSignature.id, selectedForSignature.level, selectedForSignature.instructionsPerSecond,
         selectedForSignature.cursor.x, selectedForSignature.cursor.z, selectedForSignature.code, money].join('|')
     : ['tile', playerCursor.x, playerCursor.z, tileForSignature && tileForSignature.hasMachine ? 1 : 0,
         plantForSignature ? plantForSignature.type : '', plantForSignature && plantForSignature.ready ? 1 : 0,
-        plantPctForSignature, money].join('|');
+        plantPctForSignature, plantValueForSignature, money].join('|');
   if (signature === lastTileInfoSignature) return;
   lastTileInfoSignature = signature;
   if (selectedMachineId) {
@@ -3197,9 +3467,12 @@ function updateTileInfoPanel() {
   if (!tile) { tileInfoEl.className = ''; tileInfoEl.innerHTML = ''; return; }
   if (tile.plant && tile.plant.ready) {
     tileInfoEl.className = 'show';
+    // currentSellValue() is flat for crops (unchanged) but genuinely live for a battery -
+    // its value keeps moving over time even after "ready", see the FARM TYPES comment.
+    var liveValue = currentSellValue(tile.plant);
     tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
-      '<br><button type="button" class="sell-btn">Sell for ' + VEGGIES[tile.plant.type].sellPrice.toLocaleString() + ' coins</button>' +
-      '<br><span style="font-size:.68rem;color:#7a6650">Tip: CALL Sell() pays ' + Math.round(VEGGIES[tile.plant.type].sellPrice * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>';
+      '<br><button type="button" class="sell-btn">Sell for ' + liveValue.toLocaleString() + ' coins</button>' +
+      '<br><span style="font-size:.68rem;color:#7a6650">Tip: CALL Sell() pays ' + Math.round(liveValue * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>';
     tileInfoEl.querySelector('.sell-btn').addEventListener('click', function () {
       var result = sellAt(playerCursor);
       logConsole(result.message, !result.ok);
@@ -3802,6 +4075,11 @@ function resetTutorialWorld(tut) {
   rebuildGarden(initialTileList());
   money = typeof tut.minMoney === 'number' ? tut.minMoney : 40;
   totalEarned = 0;
+  // Every tutorial is written in Cambridge Pseudocode against Carrots specifically - force
+  // the crop farm regardless of which farm type the student's real save was on, the same way
+  // everything else here is reset to a known-good baseline rather than inherited.
+  currentFarmType = 'crops';
+  buildShop();
   inventory = {};
   soldCount = {};
   unlockedState = {};
