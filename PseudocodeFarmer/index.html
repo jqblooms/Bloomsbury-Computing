@@ -279,13 +279,14 @@
      supply money/inventory directly, and CALL Buy() is the only way in. */
   body.lesson-mission-mode #shop-panel,
   body.lesson-mission-mode #sell-farm-panel,
+  body.lesson-mission-mode #rocket-panel,
   body.lesson-mission-mode #reset-btn,
   body.lesson-mission-mode #machine-btn,
   body.lesson-mission-mode #machine-tiers { display: none; }
   /* Sell the Farm is a free-play prestige mechanic - it makes no sense mid-tutorial (the
      sandbox's tiny fixed economy could never legitimately reach the milestone, and even if
      it somehow did, liquidating a throwaway practice world isn't a real choice worth making). */
-  body.tutorial-active #sell-farm-panel { display: none; }
+  body.tutorial-active #sell-farm-panel, body.tutorial-active #rocket-panel { display: none; }
 
   /* ============================================================
      MACHINE TUTORIALS - self-contained, independent of the Lesson Mission
@@ -428,6 +429,48 @@
   .sell-farm-option .sfo-desc { display: block; font-size: .72rem; color: #7a6438; line-height: 1.35; }
   .sell-farm-option.armed { border-color: #d9534f; background: #fdecec; }
   .sell-farm-option.armed .sfo-title { color: #a3271f; }
+
+  /* Rocket Yard - only ever visible while actually on that farm type, so the sidebar stays
+     uncluttered for every other player. Deep indigo/night-sky palette, distinct from every
+     other panel's colour, matching "this one ends in outer space". */
+  #rocket-panel { display: none; background: #241b3d; border: 2px solid #6b4fa0; color: #e6def7; }
+  #rocket-panel.shown { display: block; }
+  #rocket-panel h2 { color: #d8c6ff; }
+  .rocket-part-row { display: flex; align-items: center; gap: 8px; width: 100%; padding: 7px 9px; margin-bottom: 5px;
+    border-radius: 8px; border: 1px solid #4a3874; background: #2e2451; font-size: .78rem; }
+  .rocket-part-row.owned { border-color: #4fbf87; background: #24382e; }
+  .rocket-part-row.locked { opacity: .55; }
+  .rocket-part-name { flex: 1; font-weight: 800; }
+  .rocket-part-cost { font-size: .72rem; color: #b6a6de; }
+  .rocket-part-check { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 2px solid #6b4fa0; }
+  .rocket-part-row.owned .rocket-part-check { background: #4fbf87; border-color: #4fbf87; }
+  .rocket-action-btn { width: 100%; padding: 9px; margin-top: 6px; border: 0; border-radius: 8px; font: inherit; font-weight: 800;
+    font-size: .84rem; cursor: pointer; background: #6b4fa0; color: #fff; }
+  .rocket-action-btn:disabled { background: #443666; color: #a094c2; cursor: not-allowed; }
+  .rocket-action-btn.armed { background: #d9534f; }
+  #rocket-flight { text-align: center; }
+  .rocket-flight-track { position: relative; height: 130px; width: 34px; margin: 6px auto 10px; border-radius: 17px;
+    background: linear-gradient(#0a0620, #1c1240); border: 1px solid #4a3874; overflow: hidden; }
+  .rocket-flight-track .stars { position: absolute; inset: 0; background-image:
+    radial-gradient(1px 1px at 20% 15%, #fff, transparent), radial-gradient(1px 1px at 70% 35%, #fff, transparent),
+    radial-gradient(1px 1px at 40% 65%, #fff, transparent), radial-gradient(1px 1px at 85% 80%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 90%, #fff, transparent); opacity: .7; }
+  .rocket-flight-track .rocket-icon { position: absolute; left: 50%; bottom: 4px; font-size: 20px; line-height: 1;
+    transform: translate(-50%, 0); transition: bottom 1s linear; }
+  #rocket-flight-pct { font-weight: 800; font-size: 1rem; color: #d8c6ff; }
+  #rocket-flight-eta { font-size: .74rem; color: #b6a6de; margin-top: 2px; }
+  #rocket-arrived { display: none; text-align: center; }
+  #rocket-arrived.shown { display: block; }
+  #rocket-arrived .arrived-title { font-weight: 800; font-size: 1rem; color: #d8c6ff; margin: 4px 0; }
+  #rocket-arrived .arrived-anim { font-size: 30px; display: inline-block; animation: rocketLiftoff 2.4s ease-in forwards; }
+  @keyframes rocketLiftoff {
+    0%   { transform: translateY(40px) scale(0.9); opacity: 0; }
+    15%  { transform: translateY(40px) scale(1); opacity: 1; }
+    70%  { transform: translateY(-60px) scale(1.05); opacity: 1; }
+    100% { transform: translateY(-140px) scale(0.6); opacity: 0; }
+  }
+  #rocket-reset-btn { margin-top: 8px; padding: 7px 12px; border: 1px solid #6b4fa0; border-radius: 7px;
+    background: transparent; color: #d8c6ff; font: inherit; font-weight: 700; font-size: .76rem; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -472,6 +515,12 @@
         <h2>Sell the Farm</h2>
         <p id="sell-farm-desc"></p>
         <div id="sell-farm-options"></div>
+      </section>
+      <section class="panel-section" id="rocket-panel">
+        <h2>🚀 Rocket Yard</h2>
+        <div id="rocket-build"></div>
+        <div id="rocket-flight"></div>
+        <div id="rocket-arrived"></div>
       </section>
       <section class="panel-section" id="shop-panel">
         <h2 id="shop-title">🛒 Seed Shop</h2>
@@ -812,6 +861,45 @@ FISH_TIERS.forEach(function (t, i) {
 });
 var FISH_NAMES = FISH_TIERS.map(function (t) { return t.name; });
 
+// Rocket Yard: the fourth and final farm type. Mining is mechanically identical to growing a
+// crop (flat sell value, no new curve needed - see currentSellValue()'s fallthrough) - the
+// genuinely new thing isn't the economy, it's what the coins fund: a one-time capstone build
+// (ROCKET_PARTS below) culminating in a real-time launch that keeps counting down whether or
+// not the student has the page open, exactly like a plant's own growMs timer already does,
+// just measured in hours instead of seconds. See the ROCKET BUILD section further down.
+var FUEL_TIERS = [
+  { name: 'Rock',       emoji: '1faa8' },
+  { name: 'Crystal',    emoji: '1f48e' },
+  { name: 'Uranium',    emoji: '1f9ea' },
+  { name: 'Plasma',     emoji: '1f320' },
+  { name: 'Antimatter', emoji: '1f30c' },
+  { name: 'Star Fuel',  emoji: '1f680' }
+];
+var FUEL_TIER_SEED_COST_BASE = 45;
+var FUEL_TIER_SEED_COST_GROWTH = 3.3;
+var FUEL_TIER_SELL_MARGIN_BASE = 1.8;
+var FUEL_TIER_SELL_MARGIN_STEP = 0.1;
+var FUEL_TIER_GROW_SECONDS_BASE = 7;
+var FUEL_TIER_GROW_SECONDS_GROWTH = 1.2;
+var FUEL_TIER_UNLOCK_EARNED_MULTIPLE = 8;
+
+var FUEL = {};
+FUEL_TIERS.forEach(function (t, i) {
+  var seedCost = Math.round(FUEL_TIER_SEED_COST_BASE * Math.pow(FUEL_TIER_SEED_COST_GROWTH, i));
+  var margin = FUEL_TIER_SELL_MARGIN_BASE + i * FUEL_TIER_SELL_MARGIN_STEP;
+  var growSeconds = Math.round(FUEL_TIER_GROW_SECONDS_BASE * Math.pow(FUEL_TIER_GROW_SECONDS_GROWTH, i));
+  FUEL[t.name] = {
+    tier: i,
+    emoji: t.emoji,
+    tint: t.tint || null,
+    seedCost: seedCost,
+    sellPrice: Math.round(seedCost * margin),
+    growSeconds: growSeconds,
+    unlockEarned: i === 0 ? 0 : Math.round(FUEL[FUEL_TIERS[i - 1].name].seedCost * FUEL_TIER_UNLOCK_EARNED_MULTIPLE)
+  };
+});
+var FUEL_NAMES = FUEL_TIERS.map(function (t) { return t.name; });
+
 // Registry of every farm type - 'crops' wraps the existing VEGGIES table so all behaviour is
 // completely unchanged while it's active. currentFarmType selects which table
 // activeItems()/activeItemNames() return; every function that used to reach for
@@ -838,13 +926,19 @@ var FARM_TYPES = {
     unitLabel: 'fish', unitLabelPlural: 'fish', nameSuffix: '', badgeColor: '#1e8fa8',
     shopTitle: '🛒 Fish Shop',
     desc: 'Raise fish in watery tiles instead of growing crops. A fish is never "wasted value" for waiting - it just keeps growing worth, forever, though more and more slowly the longer you leave it. There is no downside to patience here, unlike the Solar Farm.'
+  },
+  rocket: {
+    id: 'rocket', title: 'Rocket Yard', kind: 'fuel', items: FUEL, itemNames: FUEL_NAMES,
+    unitLabel: 'canister', unitLabelPlural: 'canisters', nameSuffix: '', badgeColor: '#6b4fa0',
+    shopTitle: '🛒 Fuel Depot',
+    desc: 'Mine and sell fuel instead of growing crops - then spend the coins building a real rocket. Once every part is bought and the tank is full, launch it: the flight itself takes real hours, counting down whether you\'re watching or not.'
   }
 };
 var currentFarmType = 'crops';
 function activeItems() { return FARM_TYPES[currentFarmType].items; }
 function activeItemNames() { return FARM_TYPES[currentFarmType].itemNames; }
 function activeFarmType() { return FARM_TYPES[currentFarmType]; }
-function lookupItem(name) { return VEGGIES[name] || BATTERIES[name] || FISH[name] || null; }
+function lookupItem(name) { return VEGGIES[name] || BATTERIES[name] || FISH[name] || FUEL[name] || null; }
 
 // The milestone: a player's SINGLE best sale, multiplied by 100, compared against lifetime
 // earnings. Using the best single sale (not e.g. current money on hand) means it can't be
@@ -1073,16 +1167,18 @@ var tileMatrix = new THREE.Matrix4();
 var MAX_TILE_INSTANCES = Math.pow(GRID_SIZE + MAX_EXPANSION * 2, 2);
 
 function makeTileColor() {
-  // Keep the existing per-tile colour variation while allowing every soil/water square to be
-  // rendered in a single instanced draw call. Aquarium tiles use a watery blue hue instead
-  // of soil green - a real visual difference, matching "tiles that are actually blobs of
-  // water" rather than dirt. currentFarmType must already be set to its NEW value by the
-  // time this runs (every caller that switches farm type sets it before calling
-  // rebuildGarden(), never after) or new tiles would pick up the previous type's colour.
-  var isWater = currentFarmType === 'aquarium';
-  var hue = isWater ? (0.56 + (Math.random() - 0.5) * 0.04) : (0.27 + (Math.random() - 0.5) * 0.03);
-  var sat = isWater ? (0.45 + Math.random() * 0.10) : (0.35 + Math.random() * 0.08);
-  var light = isWater ? (0.38 + Math.random() * 0.06) : (0.30 + Math.random() * 0.05);
+  // Keep the existing per-tile colour variation while allowing every soil/water/rock square
+  // to be rendered in a single instanced draw call. Each non-crop farm type gets a genuinely
+  // different hue, not just different words - watery blue for Aquarium, dusty grey rock for
+  // Rocket Yard. currentFarmType must already be set to its NEW value by the time this runs
+  // (every caller that switches farm type sets it before calling rebuildGarden(), never
+  // after) or new tiles would pick up the previous type's colour.
+  var hue = 0.27 + (Math.random() - 0.5) * 0.03, sat = 0.35 + Math.random() * 0.08, light = 0.30 + Math.random() * 0.05;
+  if (currentFarmType === 'aquarium') {
+    hue = 0.56 + (Math.random() - 0.5) * 0.04; sat = 0.45 + Math.random() * 0.10; light = 0.38 + Math.random() * 0.06;
+  } else if (currentFarmType === 'rocket') {
+    hue = 0.07 + (Math.random() - 0.5) * 0.03; sat = 0.08 + Math.random() * 0.05; light = 0.34 + Math.random() * 0.08;
+  }
   return new THREE.Color().setHSL(hue, sat, light);
 }
 
@@ -1506,6 +1602,7 @@ function loadVeggieTexture(name) {
 VEGGIE_NAMES.forEach(loadVeggieTexture); // warm the cache before anyone plants
 BATTERY_NAMES.forEach(loadVeggieTexture); // same warm-up for Solar Farm, so switching to it never has a texture-load delay
 FISH_NAMES.forEach(loadVeggieTexture); // same warm-up for Aquarium
+FUEL_NAMES.forEach(loadVeggieTexture); // same warm-up for Rocket Yard
 
 // ============================================================
 // PLANTING / GROWING / SELLING
@@ -3104,6 +3201,8 @@ function serializeGameState() {
     totalEarned: totalEarned,
     bestSaleValue: bestSaleValue,
     currentFarmType: currentFarmType,
+    rocketPartsOwned: rocketPartsOwned,
+    rocketLaunchAt: rocketLaunchAt,
     inventory: inventory,
     soldCount: soldCount,
     playerCursor: { x: playerCursor.x, z: playerCursor.z, facing: playerCursor.facing },
@@ -3192,6 +3291,8 @@ function applyGameState(s) {
   totalEarned = s.totalEarned;
   bestSaleValue = s.bestSaleValue || 0; // absent on old saves - fine, it just starts at 0 again
   currentFarmType = FARM_TYPES[s.currentFarmType] ? s.currentFarmType : 'crops';
+  rocketPartsOwned = Math.max(0, Math.min(ROCKET_PARTS.length, Number(s.rocketPartsOwned) || 0));
+  rocketLaunchAt = Number(s.rocketLaunchAt) || null; // absent on an old/pre-rocket save - null is "not launched", same as a fresh start
   inventory = s.inventory || {};
   soldCount = s.soldCount || {};
   playerCursor.x = s.playerCursor.x; playerCursor.z = s.playerCursor.z; playerCursor.facing = s.playerCursor.facing || 0;
@@ -3281,6 +3382,8 @@ function resetGame() {
   money = 40;
   totalEarned = 0;
   bestSaleValue = 0; // a full reset starts the whole game over, including which farm
+  rocketPartsOwned = 0;
+  rocketLaunchAt = null;
   inventory = {};
   soldCount = {};
   unlockedState = {};
@@ -3303,6 +3406,7 @@ function resetGame() {
   refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
+  updateRocketUI();
   logConsole('Game reset. Good luck!');
 }
 
@@ -3370,6 +3474,7 @@ function sellTheFarm(targetTypeId) {
   lastTileInfoSignature = '';
   updateHUD();
   updateTileInfoPanel();
+  updateRocketUI();
   logConsole('Sold the farm for ' + liquidated.toLocaleString() + ' coins and moved to the ' + FARM_TYPES[targetTypeId].title + '!');
   return true;
 }
@@ -3423,6 +3528,149 @@ function updateSellFarmUI() {
       sellTheFarm(id);
     });
   });
+}
+
+// ============================================================
+// ROCKET YARD - the capstone build/launch, only reachable once on the 'rocket' farm type
+// ============================================================
+// Mining fuel is mechanically identical to growing a crop (see the FARM TYPES comment where
+// FUEL is defined) - what's actually new here is a one-time, five-part build funded by those
+// coins, then a launch whose flight time is real wall-clock hours, counted from
+// rocketLaunchAt the same way a plant's own growMs already counts from plantedAt, just at a
+// much bigger scale. It ticks on regardless of whether the tab is open, and survives a
+// farm-type switch or a page reload (see its two new save/load fields) - a student can start
+// a launch, go do something else, and come back later to find it arrived (or still climbing).
+var ROCKET_PARTS = [
+  { name: 'Fuselage', cost: 500 },
+  { name: 'Engine', cost: 2000 },
+  { name: 'Fuel Tank', cost: 6000 },
+  { name: 'Heat Shield', cost: 15000 },
+  { name: 'Boosters', cost: 35000 }
+];
+var ROCKET_LAUNCH_DURATION_MS = 4 * 60 * 60 * 1000; // 4 real hours - "takes hours to reach"
+var rocketPartsOwned = 0;     // 0..ROCKET_PARTS.length, bought strictly in order
+var rocketLaunchAt = null;    // ms epoch once launched (Date.now()), null before liftoff
+
+function rocketReadyToLaunch() { return rocketPartsOwned >= ROCKET_PARTS.length; }
+function rocketLaunched() { return !!rocketLaunchAt; }
+function rocketProgress() {
+  if (!rocketLaunchAt) return 0;
+  return Math.min(1, (Date.now() - rocketLaunchAt) / ROCKET_LAUNCH_DURATION_MS);
+}
+function rocketArrived() { return rocketLaunched() && rocketProgress() >= 1; }
+
+function buyRocketPart() {
+  if (rocketReadyToLaunch()) return { ok: false, message: 'Every part is already bought - press Launch!' };
+  var part = ROCKET_PARTS[rocketPartsOwned];
+  if (money < part.cost) {
+    return { ok: false, message: 'You need ' + part.cost.toLocaleString() + ' coins for the ' + part.name + ', but you only have ' + Math.floor(money).toLocaleString() + '.' };
+  }
+  money -= part.cost;
+  rocketPartsOwned++;
+  markGameDirty();
+  requestHUDUpdate();
+  updateRocketUI();
+  return { ok: true, message: 'Bought the ' + part.name + ' for ' + part.cost.toLocaleString() + ' coins!' };
+}
+function launchRocket() {
+  if (!rocketReadyToLaunch() || rocketLaunched()) return false;
+  rocketLaunchAt = Date.now();
+  markGameDirty();
+  saveGame(true); // never let a real launch be lost to an autosave that hasn't fired yet
+  updateRocketUI();
+  logConsole('Liftoff! Your rocket is on its way to space - the flight takes real hours, so check back later.');
+  return true;
+}
+// Only reachable once the flight has actually arrived - starts another build from scratch,
+// so the capstone can be a repeatable celebration (a class demo, a second attempt) rather
+// than a permanent one-shot end state.
+function resetRocket() {
+  if (!rocketArrived()) return;
+  rocketPartsOwned = 0;
+  rocketLaunchAt = null;
+  markGameDirty();
+  updateRocketUI();
+}
+
+var rocketLaunchArmed = false;
+var rocketLaunchArmTimer = null;
+function updateRocketUI() {
+  var panel = document.getElementById('rocket-panel');
+  var onRocketYard = currentFarmType === 'rocket';
+  panel.classList.toggle('shown', onRocketYard);
+  if (!onRocketYard) return;
+
+  var buildEl = document.getElementById('rocket-build');
+  var flightEl = document.getElementById('rocket-flight');
+  var arrivedEl = document.getElementById('rocket-arrived');
+
+  if (rocketArrived()) {
+    buildEl.innerHTML = ''; flightEl.innerHTML = '';
+    arrivedEl.classList.add('shown');
+    arrivedEl.innerHTML = '<span class="arrived-anim">🚀</span>' +
+      '<div class="arrived-title">You reached space!</div>' +
+      '<div style="font-size:.76rem;color:#b6a6de">Every part built, every hour of the flight real - your rocket made it.</div>' +
+      '<button type="button" id="rocket-reset-btn">Build Another Rocket</button>';
+    document.getElementById('rocket-reset-btn').addEventListener('click', resetRocket);
+    return;
+  }
+  arrivedEl.classList.remove('shown'); arrivedEl.innerHTML = '';
+
+  if (rocketLaunched()) {
+    buildEl.innerHTML = '';
+    var pct = Math.floor(rocketProgress() * 100);
+    var remainingMs = Math.max(0, ROCKET_LAUNCH_DURATION_MS - (Date.now() - rocketLaunchAt));
+    var remainingH = Math.floor(remainingMs / 3600000);
+    var remainingM = Math.floor((remainingMs % 3600000) / 60000);
+    flightEl.innerHTML =
+      '<div class="rocket-flight-track"><span class="stars"></span><span class="rocket-icon" style="bottom:' + (4 + pct * 1.1) + 'px">🚀</span></div>' +
+      '<div id="rocket-flight-pct">' + pct + '% there</div>' +
+      '<div id="rocket-flight-eta">' + (remainingMs > 0 ? (remainingH + 'h ' + remainingM + 'm remaining - it keeps flying whether or not you\'re watching, come back later') : 'Arriving...') + '</div>';
+    return;
+  }
+
+  flightEl.innerHTML = '';
+  buildEl.innerHTML = ROCKET_PARTS.map(function (part, i) {
+    var owned = i < rocketPartsOwned;
+    var isNext = i === rocketPartsOwned;
+    var cls = owned ? 'owned' : (isNext ? '' : 'locked');
+    return '<div class="rocket-part-row ' + cls + '"><span class="rocket-part-check"></span>' +
+      '<span class="rocket-part-name">' + escapeHtmlLocal(part.name) + '</span>' +
+      '<span class="rocket-part-cost">' + (owned ? 'Owned' : part.cost.toLocaleString() + 'c') + '</span></div>';
+  }).join('');
+  var launchBtn = document.createElement('button');
+  launchBtn.type = 'button';
+  launchBtn.className = 'rocket-action-btn';
+  var ready = rocketReadyToLaunch();
+  launchBtn.disabled = !ready;
+  launchBtn.textContent = ready ? (rocketLaunchArmed ? 'Click again to confirm liftoff' : 'Launch!') : 'Buy every part to unlock Launch';
+  launchBtn.classList.toggle('armed', rocketLaunchArmed);
+  launchBtn.addEventListener('click', function () {
+    if (!rocketLaunchArmed) {
+      rocketLaunchArmed = true;
+      updateRocketUI();
+      clearTimeout(rocketLaunchArmTimer);
+      rocketLaunchArmTimer = setTimeout(function () { rocketLaunchArmed = false; updateRocketUI(); }, 3000);
+      return;
+    }
+    clearTimeout(rocketLaunchArmTimer);
+    rocketLaunchArmed = false;
+    launchRocket();
+  });
+  buildEl.appendChild(launchBtn);
+  if (!ready) {
+    var buyBtn = document.createElement('button');
+    buyBtn.type = 'button';
+    buyBtn.className = 'rocket-action-btn';
+    buyBtn.style.background = '#4a3874';
+    buyBtn.textContent = 'Buy ' + ROCKET_PARTS[rocketPartsOwned].name + ' (' + ROCKET_PARTS[rocketPartsOwned].cost.toLocaleString() + 'c)';
+    buyBtn.disabled = money < ROCKET_PARTS[rocketPartsOwned].cost;
+    buyBtn.addEventListener('click', function () {
+      var result = buyRocketPart();
+      logConsole(result.message, !result.ok);
+    });
+    buildEl.appendChild(buyBtn);
+  }
 }
 
 var resetBtn = document.getElementById('reset-btn');
@@ -3530,6 +3778,7 @@ var missionParam = new URLSearchParams(window.location.search).get('lessonMissio
 var restored = missionParam && lessonMissionConfig(missionParam) ? false : loadGame(); // lesson missions never load free-play state
 refreshUnlocks();
 updateHUD();
+updateRocketUI();
 // Seed prices cool down over real time even with nobody clicking anything,
 // and later tiers should visibly unlock the moment they're earned - both
 // need the shop to refresh on its own, not only after a Buy/Sell click.
@@ -3547,7 +3796,13 @@ function scheduleAutosave() {
   if (window.requestIdleCallback) window.requestIdleCallback(write, { timeout: 2000 });
   else setTimeout(write, 50);
 }
-setInterval(function () { refreshUnlocks(); updateHUD(); updateTileInfoPanel(); }, 1000);
+setInterval(function () {
+  refreshUnlocks(); updateHUD(); updateTileInfoPanel();
+  // Not folded into updateHUD() - its flight progress moves purely from elapsed real time,
+  // so it needs its own tick even on a second where nothing else (money, inventory) changed
+  // and updateHUD() would otherwise short-circuit on an unchanged signature.
+  updateRocketUI();
+}, 1000);
 setInterval(scheduleAutosave, 5000);
 window.addEventListener('pagehide', function () { saveGame(true); });
 
