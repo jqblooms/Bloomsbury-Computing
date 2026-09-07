@@ -352,6 +352,7 @@
   .tb-check.tb-ok .tb-check-icon { background: #2e8b57; border-color: #2e8b57; }
   #tutorial-bar-action-hint { margin-top: 8px; padding: 7px 9px; border-radius: 7px; background: #fff; border: 1px solid #bfe6cf; font-size: .74rem; font-weight: 700; color: #1f6e4f; }
   #tutorial-bar-action-hint:empty { display: none; }
+  #tutorial-bar-attempt-warning { margin-top: 8px; padding: 7px 9px; border-radius: 7px; background: #fdecec; border: 1px solid #e0968f; font-size: .74rem; font-weight: 700; color: #7a2a20; }
   #tutorial-bar-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
   .tb-spacer { flex: 1; }
   #tutorial-bar-exit { background: transparent; border: 1px solid #bfe6cf; color: #4d6b5b; border-radius: 7px; padding: 6px 9px; font-weight: 700; cursor: pointer; font: inherit; font-size: .74rem; }
@@ -456,6 +457,7 @@
           </div>
           <div id="tutorial-bar-checks"></div>
           <div id="tutorial-bar-action-hint"></div>
+          <div id="tutorial-bar-attempt-warning" hidden></div>
           <div id="tutorial-bar-foot">
             <button type="button" id="tutorial-bar-exit">Exit Tutorial</button>
             <span class="tb-spacer"></span>
@@ -3516,7 +3518,7 @@ var TUTORIALS = [
         newLines: ['CALL SetPosition(1, 0)', 'IF SeedCount("Carrot") > 0 AND NOT HasCrop() THEN', '    CALL Plant("Carrot")', 'ELSE', '    CALL Buy("Carrot")', 'ENDIF'],
         requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Plant' }, { name: 'Buy' }],
         action: 'machine',
-        actionHint: 'Press Place Machine below - not Run this time.'
+        actionHint: 'Press Place Machine below - not Run this time. Done another tutorial already? If it says the tile is taken or too expensive, move to open ground (or wait for more coins) and try again.'
       }
     ]
   },
@@ -3533,7 +3535,7 @@ var TUTORIALS = [
         newLines: ['CALL SetPosition(1, 0)', 'IF HasCrop() THEN', '    CALL Sell()', 'ELSE', '    IF SeedCount("Carrot") > 0 THEN', '        CALL Plant("Carrot")', '    ELSE', '        CALL Buy("Carrot")', '    ENDIF', 'ENDIF'],
         requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Sell' }, { name: 'Plant' }, { name: 'Buy' }],
         action: 'machine',
-        actionHint: 'Press Place Machine below - watch it buy, then plant, then wait, then finally sell once the Carrot is ready.'
+        actionHint: 'Press Place Machine below - watch it buy, then plant, then wait, then finally sell once the Carrot is ready. If placement fails, move to open ground and try again.'
       },
       {
         title: 'Try it',
@@ -3560,6 +3562,12 @@ var activeTutorial = null; // { tutIdx, stepIdx }
 // codeInput.value at that point would always fail. This cached flag is the last known-good
 // answer from while the student was still typing.
 var lastTutorialReqsOk = false;
+// Baseline machine count captured the moment an action:'machine' step is first shown (see
+// renderTutorialStep). Comparing against THIS, not a fixed 0, is what makes placement
+// detection correct once a student has done more than one tutorial in the same session -
+// a previous tutorial's machine is already sitting on the field, so "machines.length > 0"
+// alone can never tell a genuinely new placement apart from one that already existed.
+var tutorialMachineBaseline = 0;
 
 function tutorialCompileQuiet(source) {
   try { return compile(source || ''); } catch (e) { return null; }
@@ -3664,6 +3672,8 @@ function renderTutorialStep() {
   var step = tut.steps[activeTutorial.stepIdx];
   document.getElementById('tutorial-bar-name').textContent = tut.title;
   document.getElementById('tutorial-bar-stepcount').textContent = 'Step ' + (activeTutorial.stepIdx + 1) + '/' + tut.steps.length;
+  if (step.action === 'machine') tutorialMachineBaseline = machines.length;
+  document.getElementById('tutorial-bar-attempt-warning').hidden = true;
   document.getElementById('tutorial-bar-title').textContent = step.title;
   document.getElementById('tutorial-bar-text').innerHTML = step.text;
   document.getElementById('tutorial-bar-dots').innerHTML = tut.steps.map(function (s, i) {
@@ -3758,29 +3768,55 @@ document.getElementById('tutorial-bar-toggle').addEventListener('click', functio
 });
 codeInput.addEventListener('input', function () { if (activeTutorial) renderTutorialChecklist(); });
 
+function showTutorialAttemptWarning(message) {
+  var el = document.getElementById('tutorial-bar-attempt-warning');
+  el.textContent = message;
+  el.hidden = false;
+}
+function clearTutorialAttemptWarning() {
+  document.getElementById('tutorial-bar-attempt-warning').hidden = true;
+}
+
 // Piggyback on the real Run button exactly the way the lesson-mission watcher already
 // does above - a separate, later-registered listener, never touching runBtn's own
 // click handler. Waits for isRunning to actually flip back to false (the real async
-// run finishing) before advancing, so "press Run" always means the code really ran.
+// run finishing) before checking the outcome.
 runBtn.addEventListener('click', function () {
   if (!activeTutorial) return;
   var step = currentTutorialStep();
   if (!step || step.action !== 'run') return;
   if (!lastTutorialReqsOk) return;
   var waitForRun = setInterval(function () {
-    if (!isRunning) { clearInterval(waitForRun); advanceOrComplete(); }
+    if (isRunning) return;
+    clearInterval(waitForRun);
+    // The real Run handler only clears codeInput.value on its .then() success path - a
+    // genuine PseudocodeError (its .catch() path) leaves the code in the box untouched.
+    // Checking this catches real execution errors; it can't see a run that completed
+    // without error but didn't achieve much (e.g. not enough money to buy anything) -
+    // same limit every other step in this engine already accepts.
+    if (codeInput.value.trim() !== '') {
+      showTutorialAttemptWarning('That run hit an error - check the message below the Code Box, fix it, and press Run again.');
+      return;
+    }
+    clearTutorialAttemptWarning();
+    advanceOrComplete();
   }, 100);
 });
 // placeMachine() (called by the real machineBtn handler above) is synchronous, so by the
-// time this later-registered listener runs, the machine already exists - checking
-// machines.length actually grew confirms placement genuinely succeeded (a full field
-// could make it fail) rather than assuming the click alone means it worked.
+// time this later-registered listener runs, placement has already succeeded or failed.
+// Comparing against tutorialMachineBaseline (captured when this step first rendered, not
+// a fixed 0) is what makes this correct once earlier tutorials have already left their
+// own machines on the field - machines.length being non-zero on its own proves nothing.
 machineBtn.addEventListener('click', function () {
   if (!activeTutorial) return;
   var step = currentTutorialStep();
   if (!step || step.action !== 'machine') return;
   if (!lastTutorialReqsOk) return;
-  if (machines.length === 0) return;
+  if (machines.length <= tutorialMachineBaseline) {
+    showTutorialAttemptWarning('That didn\'t place a machine - check the message below the Code Box (not enough coins? tile already occupied?), sort it out, and try again.');
+    return;
+  }
+  clearTutorialAttemptWarning();
   advanceOrComplete();
 });
 
