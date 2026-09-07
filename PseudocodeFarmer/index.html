@@ -346,8 +346,14 @@
   #tutorial-bar-code, #tutorial-code-modal-body { background: #10241a; color: #eaf7ee; border-radius: 6px; padding: 8px 10px; font: 700 .74rem/1.5 ui-monospace, "Roboto Mono", monospace; overflow-x: auto; user-select: none; margin: 0; white-space: pre; }
   #tutorial-bar-code .tb-line, #tutorial-code-modal-body .tb-line { display: block; }
   #tutorial-bar-code .tb-line.old, #tutorial-code-modal-body .tb-line.old { color: #7fa896; font-style: italic; font-weight: 400; }
+  /* New lines are diffed character-by-character against whatever the student has typed so
+     far at that position (see tutorialLineCharStatuses) - not just "typed at all" - so
+     progress shows live as they type, and a genuine mistake shows red instead of staying
+     the same amber as an untouched character. */
   #tutorial-bar-code .tb-line.new, #tutorial-code-modal-body .tb-line.new { color: #ffd166; }
-  #tutorial-bar-code .tb-line.new.typed, #tutorial-code-modal-body .tb-line.new.typed { color: #6cf0a0; }
+  #tutorial-bar-code .tc-pending, #tutorial-code-modal-body .tc-pending { color: #ffd166; }
+  #tutorial-bar-code .tc-match, #tutorial-code-modal-body .tc-match { color: #6cf0a0; }
+  #tutorial-bar-code .tc-mismatch, #tutorial-code-modal-body .tc-mismatch { color: #ff6b6b; text-decoration: underline wavy #ff6b6b; text-underline-offset: 2px; }
   /* Pop-out button: same idea as PyScratch's own draggable code window - a 1:1 live copy of
      the current step's reference code that can float wherever the student wants it, instead
      of only living inside the (often narrow) sidebar tutorial bar. */
@@ -3910,6 +3916,57 @@ function setTutorialCollapsed(collapsed) {
   toggle.setAttribute('aria-expanded', String(!collapsed));
 }
 
+// --- Live per-character diff for a tutorial's "new" reference lines, ported from
+// Pseudocode Blitz's Support Mode hint system (its hintLineCharStatuses/stringLiteralMask).
+// Replaces the old all-or-nothing check (a line stayed flat amber until an exact copy of
+// its full text appeared anywhere in codeInput.value, and could never show a mistake) with
+// a per-character comparison against the student's line at the same position: matched
+// characters turn green as they're typed, a genuine wrong character turns red, anything
+// not reached yet stays amber.
+function tutorialStringLiteralMask(text) {
+  var mask = new Array(text.length).fill(false);
+  var inString = false;
+  for (var i = 0; i < text.length; i++) {
+    if (text[i] === '"') { inString = !inString; mask[i] = true; }
+    else mask[i] = inString;
+  }
+  return mask;
+}
+function tutorialLineCharStatuses(targetLine, studentLine) {
+  var caseSensitive = tutorialStringLiteralMask(targetLine);
+  var student = String(studentLine || '');
+  return targetLine.split('').map(function (ch, i) {
+    if (i >= student.length) return 'pending';
+    var typed = student[i];
+    var match = caseSensitive[i] ? typed === ch : typed.toUpperCase() === ch.toUpperCase();
+    return match ? 'match' : 'mismatch';
+  });
+}
+function tutorialNewLineHtml(targetLine, studentLine) {
+  var statuses = tutorialLineCharStatuses(targetLine, studentLine);
+  return targetLine.split('').map(function (ch, i) {
+    var cls = statuses[i] === 'match' ? 'tc-match' : statuses[i] === 'mismatch' ? 'tc-mismatch' : 'tc-pending';
+    return '<span class="' + cls + '">' + escapeHtmlLocal(ch) + '</span>';
+  }).join('');
+}
+// Builds the full reference-code block for the current step. Student lines are matched to
+// target lines by position among non-blank lines only (mirroring compile(), which skips
+// blank lines outright) - so a stray blank line the student adds doesn't throw every later
+// line's diff out of alignment.
+function tutorialCodeHtml(step) {
+  if (!step.target) return '';
+  var newSet = {};
+  (step.newLines || []).forEach(function (l) { newSet[l] = true; });
+  var studentLines = codeInput.value.split('\n').filter(function (l) { return l.trim() !== ''; });
+  var studentIdx = 0;
+  return step.target.split('\n').map(function (line) {
+    var isNew = !!newSet[line];
+    var html = isNew ? tutorialNewLineHtml(line, studentLines[studentIdx]) : escapeHtmlLocal(line);
+    if (line.trim() !== '') studentIdx++;
+    return '<span class="tb-line ' + (isNew ? 'new' : 'old') + '" data-line="' + escapeHtmlLocal(line) + '">' + html + '</span>';
+  }).join('');
+}
+
 function renderTutorialStep() {
   if (!activeTutorial) return;
   var tut = TUTORIALS[activeTutorial.tutIdx];
@@ -3924,13 +3981,8 @@ function renderTutorialStep() {
     var cls = i < activeTutorial.stepIdx ? 'tb-done' : (i === activeTutorial.stepIdx ? 'tb-cur' : '');
     return '<span class="tb-dot ' + cls + '"></span>';
   }).join('');
-  var newSet = {};
-  (step.newLines || []).forEach(function (l) { newSet[l] = true; });
   document.getElementById('tutorial-bar-code-wrap').classList.toggle('tb-no-target', !step.target);
-  document.getElementById('tutorial-bar-code').innerHTML = step.target ? step.target.split('\n').map(function (line) {
-    var cls = newSet[line] ? 'new' : 'old';
-    return '<span class="tb-line ' + cls + '" data-line="' + escapeHtmlLocal(line) + '">' + escapeHtmlLocal(line) + '</span>';
-  }).join('') : '';
+  document.getElementById('tutorial-bar-code').innerHTML = tutorialCodeHtml(step);
   document.getElementById('tutorial-bar-action-hint').textContent = step.actionHint || '';
   document.getElementById('tutorial-bar-back').disabled = activeTutorial.stepIdx === 0;
   renderTutorialChecklist();
@@ -3946,9 +3998,7 @@ function renderTutorialChecklist() {
     var ok = !!(program && tutorialRequirementMet(program, req));
     return '<div class="tb-check ' + (ok ? 'tb-ok' : '') + '"><span class="tb-check-icon"></span><span>' + tutorialRequirementLabel(req) + '</span></div>';
   }).join('');
-  document.querySelectorAll('#tutorial-bar-code .tb-line.new').forEach(function (el) {
-    el.classList.toggle('typed', codeInput.value.indexOf(el.dataset.line) !== -1);
-  });
+  document.getElementById('tutorial-bar-code').innerHTML = tutorialCodeHtml(step);
   updateTutorialNextButton(reqsOk);
   syncTutorialCodeModal(); // covers both a step change (renderTutorialStep calls this at the
                            // end) and every keystroke (codeInput's own input listener calls
