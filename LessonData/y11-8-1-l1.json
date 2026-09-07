@@ -1,0 +1,163 @@
+{
+  "id": "y11-8-1-l1",
+  "label": "8.1 L1: Variables, Data Types, Input and Output",
+  "steps": [
+    {
+      "id": "do-now",
+      "label": "Do Now: Assignment",
+      "type": "short-answer-validation",
+      "validatorId": "y11-8-1-do-now",
+      "validatorKey": "y11_8_1_do_now",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Assignment</h2><p class=\"lesson-lead\">Answer from memory. Use Cambridge pseudocode notation.</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">Score &lt;- 6</div><div class=\"lesson-code-line\">Score &lt;- Score + 4</div></div><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-do-now-a\">(a) What is the value of Score after line 1?</label><input id=\"y11-8-1-do-now-a\" class=\"lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"y11-8-1-do-now-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-do-now-b\">(b) What is the value of Score after line 2?</label><input id=\"y11-8-1-do-now-b\" class=\"lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"y11-8-1-do-now-b\" autocomplete=\"off\"></div></div><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-do-now-check\">Check answers</button><div id=\"y11-8-1-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div>"
+    },
+    {
+      "id": "do-now-2",
+      "label": "Do Now: Trace the Input",
+      "type": "short-answer-validation",
+      "validatorId": "y11-8-1-do-now-2",
+      "validatorKey": "y11_8_1_do_now_2",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Trace the Input</h2><p class=\"lesson-lead\">The user enters 7.</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;INPUT Number</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Number &lt;- Number * 2</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;OUTPUT Number</div></div><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-do-now-2-a\">(a) What value is stored after line 1?</label><input id=\"y11-8-1-do-now-2-a\" class=\"lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"y11-8-1-do-now-2-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-do-now-2-b\">(b) What value is output?</label><input id=\"y11-8-1-do-now-2-b\" class=\"lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"y11-8-1-do-now-2-b\" autocomplete=\"off\"></div></div><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-do-now-2-check\">Check answers</button><div id=\"y11-8-1-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div>"
+    },
+    {
+      "id": "do-now-3",
+      "label": "Do Now: Choose a Type",
+      "type": "short-answer-validation",
+      "validatorId": "y11-8-1-do-now-3",
+      "validatorKey": "y11_8_1_do_now_3",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Choose a Type</h2><p class=\"lesson-lead\">Choose a suitable data type for each value.</p><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-do-now-3-a\">(a) 42</label><input id=\"y11-8-1-do-now-3-a\" class=\"lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"y11-8-1-do-now-3-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-do-now-3-b\">(b) \"Blue\"</label><input id=\"y11-8-1-do-now-3-b\" class=\"lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"y11-8-1-do-now-3-b\" autocomplete=\"off\"></div></div><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-do-now-3-check\">Check answers</button><div id=\"y11-8-1-do-now-3-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div>"
+    },
+    {
+      "id": "title",
+      "label": "Variables, Data Types, Input and Output",
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Programming Concepts</p><h2 class=\"lesson-h2\">Variables, Data Types, Input and Output</h2><p>Year 11, Unit 8.1 Lesson 1</p></div>"
+    },
+    {
+      "id": "variables",
+      "label": "Variables and Constants",
+      "content": "<h2 class=\"lesson-h2\">Variables and Constants</h2><p class=\"lesson-lead\">A variable is a named place that stores a value. Its value can change while a program runs.</p><ul class=\"lesson-facts\"><li>Choose a name that describes the value.</li><li>Assignment stores the value on the right in the name on the left.</li><li>A constant stores a value that should not change while the program runs.</li><li>Use the name again whenever the program needs the stored value.</li></ul><div class=\"lesson-code\"><div class=\"lesson-code-line\">Attempts &lt;- 0</div><div class=\"lesson-code-line\">Attempts &lt;- Attempts + 1</div></div>"
+    },
+    {
+      "id": "types",
+      "label": "Basic Data Types",
+      "content": "<h2 class=\"lesson-h2\">Basic Data Types</h2><p class=\"lesson-lead\">A data type tells the computer what kind of value is stored.</p><table class=\"donow-table\"><thead><tr><th>Type</th><th>Stores</th><th>Example</th></tr></thead><tbody><tr><td>INTEGER</td><td>whole numbers</td><td>42</td></tr><tr><td>REAL</td><td>numbers with a fractional part</td><td>3.5</td></tr><tr><td>CHAR</td><td>one character</td><td>'A'</td></tr><tr><td>STRING</td><td>text</td><td>\"Blue\"</td></tr><tr><td>BOOLEAN</td><td>TRUE or FALSE</td><td>TRUE</td></tr></tbody></table><p class=\"lesson-note\">Check the current Cambridge guide if a question uses a type not shown here.</p>"
+    },
+    {
+      "id": "types-check",
+      "label": "Check: Select the Type",
+      "type": "short-answer-validation",
+      "validatorId": "y11-8-1-types",
+      "validatorKey": "y11_8_1_types",
+      "content": "<h2 class=\"lesson-h2\">Check: Select the Type</h2><p class=\"lesson-lead\">Write the most suitable Cambridge type for each value.</p><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-types-a\">(a) 17</label><input id=\"y11-8-1-types-a\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-types-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-types-b\">(b) 17.25</label><input id=\"y11-8-1-types-b\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-types-b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-types-c\">(c) \"Cambridge\"</label><input id=\"y11-8-1-types-c\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-types-c\" autocomplete=\"off\"></div></div><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-types-check\">Check answers</button><div id=\"y11-8-1-types-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div>"
+    },
+    {
+      "id": "declarations",
+      "label": "Declare and Assign",
+      "content": "<h2 class=\"lesson-h2\">Declare and Assign</h2><p class=\"lesson-lead\">Declare a variable before using it when the algorithm needs an explicitly typed variable.</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">Score &lt;- 0</div><div class=\"lesson-code-line\">DECLARE PlayerName : STRING</div><div class=\"lesson-code-line\">PlayerName &lt;- \"Mina\"</div></div><ul class=\"lesson-facts\"><li>The name appears between DECLARE and the colon.</li><li>The type appears after the colon.</li><li>Assignment gives the declared variable a value.</li><li>Do not put quotation marks around a variable name.</li></ul>"
+    },
+    {
+      "id": "input-output",
+      "label": "Input and Output",
+      "content": "<h2 class=\"lesson-h2\">Input and Output</h2><p class=\"lesson-lead\"><strong>INPUT</strong> receives a value from the user. <strong>OUTPUT</strong> sends a value from the computer to the user.</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Name : STRING</div><div class=\"lesson-code-line\">INPUT Name</div><div class=\"lesson-code-line\">OUTPUT Name</div></div><p class=\"lesson-note\">The input must happen before the program can use the value that the user provides.</p>"
+    },
+    {
+      "id": "worked-trace",
+      "label": "Worked Trace: Input to Output",
+      "type": "stepper",
+      "stepperId": "y11-8-1-worked-trace",
+      "stepperKey": "cambridge_sequence_trace",
+      "content": "<h2 class=\"lesson-h2\">Worked Trace: Input to Output</h2><p class=\"lesson-lead\">Step through the algorithm one line at a time. The user enters 5.</p><div id=\"y11-8-1-worked-trace\" class=\"lesson-stepper\"></div>"
+    },
+    {
+      "id": "guided-check",
+      "label": "Guided Check",
+      "type": "short-answer-validation",
+      "validatorId": "y11-8-1-guided",
+      "validatorKey": "y11_8_1_guided",
+      "content": "<h2 class=\"lesson-h2\">Guided Check</h2><p class=\"lesson-lead\">The user enters 8. Follow the order of the instructions.</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Points : INTEGER</div><div class=\"lesson-code-line\">INPUT Points</div><div class=\"lesson-code-line\">Points &lt;- Points + 2</div><div class=\"lesson-code-line\">OUTPUT Points</div></div><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-guided-a\">(a) What value is stored after line 2?</label><input id=\"y11-8-1-guided-a\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-guided-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-guided-b\">(b) What value is output?</label><input id=\"y11-8-1-guided-b\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-guided-b\" autocomplete=\"off\"></div></div><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-guided-check\">Check answers</button><div id=\"y11-8-1-guided-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div>"
+    },
+    {
+      "id": "write-practice",
+      "label": "Write a Short Program",
+      "type": "pseudocode-validation",
+      "validatorId": "y11-8-1-write",
+      "validatorKey": "y11_8_1_write",
+      "content": "<h2 class=\"lesson-h2\">Write a Short Program</h2><p class=\"lesson-lead\">Write Cambridge pseudocode for an algorithm that declares <strong>Quantity</strong> as an INTEGER, inputs Quantity and outputs Quantity.</p><div class=\"pseudocode-check\"><label for=\"y11-8-1-write-code\"><strong>Your pseudocode</strong></label><textarea id=\"y11-8-1-write-code\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-write-code\" spellcheck=\"false\"></textarea><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-write-check\">Check my answer</button><div id=\"y11-8-1-write-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    },
+    {
+      "id": "practice",
+      "label": "Practice: Type and Output",
+      "type": "short-answer-validation",
+      "validatorId": "y11-8-1-practice",
+      "validatorKey": "y11_8_1_practice",
+      "content": "<h2 class=\"lesson-h2\">Practice: Type and Output</h2><p class=\"lesson-lead\">A program stores a temperature of 21.5 in a variable called Temperature and outputs it.</p><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-practice-a\">(a) Which type should Temperature use?</label><input id=\"y11-8-1-practice-a\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-practice-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-practice-b\">(b) What value is output?</label><input id=\"y11-8-1-practice-b\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-practice-b\" autocomplete=\"off\"></div></div><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-practice-check\">Check answers</button><div id=\"y11-8-1-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div>"
+    },
+    {
+      "id": "formative",
+      "label": "Check Your Understanding",
+      "content": "<h2 class=\"lesson-h2\">Check Your Understanding</h2><p class=\"lesson-lead\">Ask and answer these questions before the final task.</p><ul class=\"lesson-facts\"><li>Why does a variable need a useful name?</li><li>How is a variable different from a constant?</li><li>When would INTEGER be unsuitable for a value?</li><li>Which instruction receives a value from the user?</li><li>Why must INPUT happen before a calculation uses that value?</li></ul>"
+    },
+    {
+      "id": "plenary",
+      "label": "Plenary: Data Type and Trace",
+      "type": "short-answer-validation",
+      "validatorId": "y11-8-1-plenary",
+      "validatorKey": "y11_8_1_plenary",
+      "content": "<h2 class=\"lesson-h2\">Plenary: Data Type and Trace</h2><p class=\"lesson-lead\">Work without the earlier prompts. The user enters 12.5.</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Distance : REAL</div><div class=\"lesson-code-line\">INPUT Distance</div><div class=\"lesson-code-line\">Distance &lt;- Distance * 2</div><div class=\"lesson-code-line\">OUTPUT Distance</div></div><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-plenary-a\">(a) Why is REAL suitable for Distance?</label><input id=\"y11-8-1-plenary-a\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-plenary-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-8-1-plenary-b\">(b) What value is output?</label><input id=\"y11-8-1-plenary-b\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-plenary-b\" autocomplete=\"off\"></div></div><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-plenary-check\">Check answers</button><div id=\"y11-8-1-plenary-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div>"
+    },
+    {
+      "id": "plenary-2",
+      "label": "Plenary: Write Pseudocode",
+      "type": "pseudocode-validation",
+      "validatorId": "y11-8-1-plenary-2",
+      "validatorKey": "y11_8_1_plenary_2",
+      "content": "<h2 class=\"lesson-h2\">Plenary: Write Pseudocode</h2><p class=\"lesson-lead\">Write a complete algorithm that declares <strong>Message</strong> as a STRING, inputs Message and outputs Message.</p><div class=\"pseudocode-check\"><label for=\"y11-8-1-plenary-2-code\"><strong>Your pseudocode</strong></label><textarea id=\"y11-8-1-plenary-2-code\" class=\"lesson-exam-answer\" data-answer-id=\"y11-8-1-plenary-2-code\" spellcheck=\"false\"></textarea><button type=\"button\" class=\"donow-btn\" id=\"y11-8-1-plenary-2-check\">Check my answer</button><div id=\"y11-8-1-plenary-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    }
+  ],
+  "validators": {
+    "y11_8_1_do_now": [
+      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*6\\s*$","flags":""},"feedback":"Use the value assigned on the first line."},
+      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*10\\s*$","flags":""},"feedback":"Use the current Score on the right side, then apply the assignment."}
+    ],
+    "y11_8_1_do_now_2": [
+      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*7\\s*$","flags":""},"feedback":"INPUT stores the value entered by the user."},
+      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*14\\s*$","flags":""},"feedback":"Follow line 2 before reading the OUTPUT line."}
+    ],
+    "y11_8_1_do_now_3": [
+      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*integer\\s*$","flags":"i"},"feedback":"This value has no fractional part."},
+      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*string\\s*$","flags":"i"},"feedback":"Quotation marks show that this value is text."}
+    ],
+    "y11_8_1_types": [
+      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*integer\\s*$","flags":"i"},"feedback":"This is a whole number."},
+      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*real\\s*$","flags":"i"},"feedback":"This value includes a fractional part."},
+      {"suffix":"c","pattern":{"__regex":true,"source":"^\\s*string\\s*$","flags":"i"},"feedback":"Quotation marks show that this is text."}
+    ],
+    "y11_8_1_guided": [
+      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*8\\s*$","flags":""},"feedback":"INPUT stores 8 in Points before line 3 runs."},
+      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*10\\s*$","flags":""},"feedback":"Line 3 adds 2 to the value entered."}
+    ],
+    "y11_8_1_practice": [
+      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*real\\s*$","flags":"i"},"feedback":"The value includes a decimal part."},
+      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*21\\.?5\\s*$","flags":""},"feedback":"OUTPUT shows the current value stored in Temperature."}
+    ],
+    "y11_8_1_plenary": [
+      {"suffix":"a","pattern":{"__regex":true,"source":"(?=.*(?:decimal|fraction|fractional|point|real)).*","flags":"i"},"feedback":"Consider whether the input could include a fractional part."},
+      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*25\\s*$","flags":""},"feedback":"Double 12.5 before reading the output."}
+    ]
+  },
+  "pseudocodeValidators": {
+    "y11_8_1_write": {
+      "lines": [
+        {"code":"DECLARE QUANTITY : INTEGER","feedback":"Declare Quantity as an INTEGER before using it."},
+        {"code":"INPUT QUANTITY","feedback":"Receive the value in Quantity with INPUT."},
+        {"code":"OUTPUT QUANTITY","feedback":"Output the value stored in Quantity."}
+      ]
+    },
+    "y11_8_1_plenary_2": {
+      "lines": [
+        {"code":"DECLARE MESSAGE : STRING","feedback":"Declare Message as a STRING."},
+        {"code":"INPUT MESSAGE","feedback":"Use INPUT to receive Message."},
+        {"code":"OUTPUT MESSAGE","feedback":"Use OUTPUT to display Message."}
+      ]
+    }
+  }
+}
