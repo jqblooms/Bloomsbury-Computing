@@ -316,8 +316,8 @@
   .tut-card-badge { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center;
     justify-content: center; color: #fff; font-weight: 800; font-size: .95rem; }
   .tut-card-body { flex: 1; min-width: 0; }
-  .tut-card-title { font-weight: 800; color: #1f4d38; font-size: .9rem; }
-  .tut-card-desc { font-size: .76rem; color: #4d6b5b; line-height: 1.35; margin-top: 2px; }
+  .tut-card-title { display: block; font-weight: 800; color: #1f4d38; font-size: .9rem; margin-bottom: 3px; }
+  .tut-card-desc { display: block; font-size: .76rem; color: #4d6b5b; line-height: 1.4; }
   .tut-card-status { font-size: .68rem; font-weight: 800; color: #2e8b57; white-space: nowrap; flex-shrink: 0; }
   .tut-card-status.tut-inprogress { color: #a3711f; }
 
@@ -3347,14 +3347,14 @@ function watchLessonRun() {
 // the first-machine tutorial specifically.
 var TUTORIALS = [
   {
-    id: 'first-machine',
-    title: 'Your First Machine',
+    id: 'basic-auto-farm',
+    title: 'Basic Auto-Farm',
     color: '#4c8bf5',
-    desc: 'Learn CALL syntax by writing a short sequence, then turn it into an automated machine.',
+    desc: 'Build a machine that buys and plants a seed on its own, forever - no clicking required.',
     steps: [
       {
-        title: 'CALL a procedure',
-        text: 'In Cambridge Pseudocode, running a built-in action is called a <strong>procedure call</strong>, written <code>CALL Name(...)</code>. Type this in the Code Box to buy a Carrot seed:',
+        title: 'Buy a seed',
+        text: 'Let\'s build a machine that plants Carrots for you automatically. First, get it a seed to plant - running a built-in action is called a <strong>procedure call</strong>, written <code>CALL Name(...)</code>. Type this in the Code Box:',
         target: 'CALL Buy("Carrot")',
         newLines: ['CALL Buy("Carrot")'],
         requires: [{ name: 'Buy' }]
@@ -3387,21 +3387,122 @@ var TUTORIALS = [
     ]
   },
   {
-    id: 'if-statements',
-    title: 'IF Statements',
-    color: '#d9534f',
-    desc: 'Only do something when a condition is true - and choose between two things with ELSE.',
+    id: 'strip-farm',
+    title: 'Strip Farm',
+    color: '#a3711f',
+    desc: 'Plant a whole row of Carrots in one go, instead of typing the same three lines over and over.',
     steps: [
       {
-        title: 'Your first IF',
-        text: 'An <strong>IF</strong> block runs its lines only when the condition is true. Cambridge Pseudocode has no colon and no "DO" on an IF - it ends with <code>ENDIF</code>. <code>Money()</code> is a <strong>function</strong> (it gives back a value), so unlike <code>CALL</code>, it\'s never written with CALL in front. Type this:',
+        title: 'Buy a stack of seeds',
+        text: 'To plant a whole strip of tiles, you\'ll need several seeds at once. A <strong>FOR</strong> loop repeats a known number of times - use it instead of WHILE when you already know the count. No colon, no "DO", and it ends with <code>NEXT</code> followed by the same variable name, not <code>ENDFOR</code>. <code>Step</code> counts 1, 2, 3 in turn as the loop runs:',
+        target: 'FOR Step <- 1 TO 3\n    CALL Buy("Carrot")\nNEXT Step',
+        newLines: ['FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', 'NEXT Step'],
+        requires: [{ type: 'FOR' }, { name: 'Buy' }],
+        action: 'run',
+        actionHint: 'Press Run - check the console for three separate purchase messages, not one.'
+      },
+      {
+        title: 'Plant the whole strip',
+        text: 'The loop variable is a real number you can use anywhere - including inside <code>SetPosition</code>. Rewrite it to plant three Carrots in a row in one go, one tile further along each time:',
+        target: 'FOR Step <- 0 TO 2\n    CALL SetPosition(Step, 0)\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT Step',
+        newLines: ['FOR Step <- 0 TO 2', '    CALL SetPosition(Step, 0)', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT Step'],
+        requires: [{ type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        action: 'run',
+        actionHint: 'Press Run - three Carrots should appear across three tiles, not just one.'
+      },
+      {
+        title: 'Try it',
+        text: 'A machine re-runs its whole program every tick anyway, so FOR doesn\'t help it repeat faster - its value is doing many things in a single Run, like planting a whole row at once instead of writing the same three lines three times.<br><br><strong>Challenge:</strong> change <code>TO 2</code> to <code>TO 4</code> to plant five Carrots in a row instead of three.',
+        starter: null, target: null, newLines: [], requires: []
+      }
+    ]
+  },
+  {
+    id: 'grid-farm',
+    title: 'Grid Farm',
+    color: '#0e8a8a',
+    desc: 'Plant a whole rectangle of Carrots at once - rows and columns, not just a single strip.',
+    steps: [
+      {
+        title: 'A loop inside a loop',
+        text: 'A Strip Farm plants one row. A Grid Farm plants several rows at once, by putting one FOR loop <strong>inside</strong> another. The inner loop (<code>Col</code>) runs all the way through for every single step of the outer loop (<code>Row</code>) - so for 2 rows of 3, the inner loop runs 3 times, twice over, planting 6 Carrots in total. Indent the inner loop one level further so it\'s clearly nested:',
+        target: 'FOR Row <- 0 TO 1\n    FOR Col <- 0 TO 2\n        CALL SetPosition(Col, Row)\n        CALL Buy("Carrot")\n        CALL Plant("Carrot")\n    NEXT Col\nNEXT Row',
+        newLines: ['FOR Row <- 0 TO 1', '    FOR Col <- 0 TO 2', '        CALL SetPosition(Col, Row)', '        CALL Buy("Carrot")', '        CALL Plant("Carrot")', '    NEXT Col', 'NEXT Row'],
+        requires: [{ type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        action: 'run',
+        actionHint: 'Press Run - six Carrots should appear in a 3-wide, 2-deep block, not just a single row.'
+      },
+      {
+        title: 'Try it',
+        text: 'Nesting works for any two loops, not just two FOR loops - the same idea lets you combine any of the building blocks you\'ve learned so far.<br><br><strong>Challenge:</strong> change the outer loop to <code>FOR Row &lt;- 0 TO 2</code> to plant a 3x3 grid of nine Carrots instead of six.',
+        starter: null, target: null, newLines: [], requires: []
+      }
+    ]
+  },
+  {
+    id: 'stock-up-run',
+    title: 'Stock-Up Run',
+    color: '#2e8b57',
+    desc: 'Buy as many seeds as you can afford in one go, instead of clicking Buy over and over.',
+    steps: [
+      {
+        title: 'Buy until you\'re out of money',
+        text: 'Before a big planting session, it\'s handy to stock up on seeds in one move. A <strong>WHILE</strong> loop repeats its lines for as long as the condition stays true - useful when you don\'t know in advance how many times you\'ll need to repeat. It ends with <code>ENDWHILE</code>. Type this to keep buying Carrots for as long as you can afford one:',
+        target: 'WHILE Money() >= 5 DO\n    CALL Buy("Carrot")\nENDWHILE',
+        newLines: ['WHILE Money() >= 5 DO', '    CALL Buy("Carrot")', 'ENDWHILE'],
+        requires: [{ type: 'WHILE' }, { name: 'Buy' }],
+        action: 'run',
+        actionHint: 'Press Run - watch the console log several purchases in a row, not just one.'
+      },
+      {
+        title: 'Try it',
+        text: 'A machine already re-runs its whole program every tick on its own, so it doesn\'t need a WHILE loop wrapped around a single CALL to repeat things - the loop\'s real value is inside <strong>one</strong> run or tick, when you don\'t know in advance how many times you\'ll need to repeat something.<br><br><strong>Challenge:</strong> try changing the condition to <code>WHILE Money() >= 5 AND SeedCount("Carrot") &lt; 3 DO</code> - now it stops early on its own once you own 3 seeds, even if you can still afford more.',
+        starter: null, target: null, newLines: [], requires: []
+      }
+    ]
+  },
+  {
+    id: 'farm-planner',
+    title: 'Farm Planner',
+    color: '#7c5fcf',
+    desc: 'Work out costs and totals before you commit real coins - a running tally that updates as you go.',
+    steps: [
+      {
+        title: 'Keep a running number',
+        text: 'Before spending real coins, it helps to work out costs on paper first. A <strong>variable</strong> stores a value under a name you choose. Cambridge Pseudocode assigns with <code>&lt;-</code>, never <code>=</code>. <code>OUTPUT</code> prints a value to the console below, so you can see what\'s stored:',
+        target: 'Total <- 0\nOUTPUT Total',
+        newLines: ['Total <- 0', 'OUTPUT Total'],
+        requires: [{ type: 'ASSIGN' }, { type: 'OUTPUT' }],
+        action: 'run',
+        actionHint: 'Press Run - the console should print 0.'
+      },
+      {
+        title: 'Total up a whole strip farm\'s cost',
+        text: 'A variable keeps its value until you change it, even across several lines or loop repeats. Work out the total cost of a 3-seed Strip Farm before you build one, updating the running total once per loop:',
+        target: 'Total <- 0\nFOR Step <- 1 TO 3\n    CALL Buy("Carrot")\n    Total <- Total + 5\nNEXT Step\nOUTPUT Total',
+        newLines: ['Total <- 0', 'FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', '    Total <- Total + 5', 'NEXT Step', 'OUTPUT Total'],
+        requires: [{ type: 'ASSIGN' }, { type: 'FOR' }, { name: 'Buy' }, { type: 'OUTPUT' }],
+        action: 'run',
+        actionHint: 'Press Run - the console should print 15 (3 loops of 5), not 0 or 5.'
+      }
+    ]
+  },
+  {
+    id: 'smart-auto-farm',
+    title: 'Smart Auto-Farm',
+    color: '#d9534f',
+    desc: 'A machine that thinks before it acts - plants if it has a seed, buys one if it doesn\'t.',
+    steps: [
+      {
+        title: 'Only buy if you can afford it',
+        text: 'A basic auto-farm always tries to buy, even with no money. Let\'s make it check first. An <strong>IF</strong> block runs its lines only when the condition is true. Cambridge Pseudocode has no colon and no "DO" on an IF - it ends with <code>ENDIF</code>. <code>Money()</code> is a <strong>function</strong> (it gives back a value), so unlike <code>CALL</code>, it\'s never written with CALL in front. Type this:',
         target: 'IF Money() >= 5 THEN\n    CALL Buy("Carrot")\nENDIF',
         newLines: ['IF Money() >= 5 THEN', '    CALL Buy("Carrot")', 'ENDIF'],
         requires: [{ type: 'IF' }, { name: 'Buy' }]
       },
       {
-        title: 'Add ELSE',
-        text: 'An <strong>ELSE</strong> branch runs instead, when the condition is false. Rewrite it to plant a Carrot if you already own a seed, or buy one if you don\'t - <code>SeedCount("Carrot")</code> is another function, so no CALL:',
+        title: 'Plant if you can, buy if you can\'t',
+        text: 'Now make it choose between two actions instead of just skipping one. An <strong>ELSE</strong> branch runs instead, when the condition is false. Rewrite it to plant a Carrot if you already own a seed, or buy one if you don\'t - <code>SeedCount("Carrot")</code> is another function, so no CALL:',
         target: 'IF SeedCount("Carrot") > 0 THEN\n    CALL Plant("Carrot")\nELSE\n    CALL Buy("Carrot")\nENDIF',
         newLines: ['IF SeedCount("Carrot") > 0 THEN', '    CALL Plant("Carrot")', 'ELSE', '    CALL Buy("Carrot")', 'ENDIF'],
         requires: [{ type: 'IF' }, { type: 'ELSE' }, { name: 'Plant' }, { name: 'Buy' }],
@@ -3420,81 +3521,24 @@ var TUTORIALS = [
     ]
   },
   {
-    id: 'while-loops',
-    title: 'WHILE Loops',
-    color: '#2e8b57',
-    desc: 'Repeat instructions automatically for as long as a condition stays true.',
+    id: 'full-cycle-farm',
+    title: 'Full-Cycle Farm',
+    color: '#c2185b',
+    desc: 'The complete loop: sells when ready, plants when empty, buys when out of seeds - fully self-sustaining.',
     steps: [
       {
-        title: 'Your first WHILE',
-        text: 'A <strong>WHILE</strong> loop repeats its lines for as long as the condition stays true - useful when you don\'t know in advance how many times you\'ll need to repeat. It ends with <code>ENDWHILE</code>. Type this to keep buying Carrots for as long as you can afford one:',
-        target: 'WHILE Money() >= 5 DO\n    CALL Buy("Carrot")\nENDWHILE',
-        newLines: ['WHILE Money() >= 5 DO', '    CALL Buy("Carrot")', 'ENDWHILE'],
-        requires: [{ type: 'WHILE' }, { name: 'Buy' }],
-        action: 'run',
-        actionHint: 'Press Run - watch the console log several purchases in a row, not just one.'
+        title: 'Sell, plant, or buy - all in one machine',
+        text: 'Your Smart Auto-Farm plants and buys, but never sells - crops just pile up. A Full-Cycle Farm checks three things in order: is there something ready to harvest? If so, sell it. If not, do you own a seed? Plant it. Otherwise, buy one. Nest an IF inside an ELSE to check a third possibility - <code>HasCrop()</code> is true the moment anything is planted there, ready or not, so <code>CALL Sell()</code> simply does nothing yet if it\'s still growing:',
+        target: 'CALL SetPosition(1, 0)\nIF HasCrop() THEN\n    CALL Sell()\nELSE\n    IF SeedCount("Carrot") > 0 THEN\n        CALL Plant("Carrot")\n    ELSE\n        CALL Buy("Carrot")\n    ENDIF\nENDIF',
+        newLines: ['CALL SetPosition(1, 0)', 'IF HasCrop() THEN', '    CALL Sell()', 'ELSE', '    IF SeedCount("Carrot") > 0 THEN', '        CALL Plant("Carrot")', '    ELSE', '        CALL Buy("Carrot")', '    ENDIF', 'ENDIF'],
+        requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Sell' }, { name: 'Plant' }, { name: 'Buy' }],
+        action: 'machine',
+        actionHint: 'Press Place Machine below - watch it buy, then plant, then wait, then finally sell once the Carrot is ready.'
       },
       {
         title: 'Try it',
-        text: 'A machine already re-runs its whole program every tick on its own, so it doesn\'t need a WHILE loop wrapped around a single CALL to repeat things - the loop\'s real value is inside <strong>one</strong> run or tick, when you don\'t know in advance how many times you\'ll need to repeat something.<br><br><strong>Challenge:</strong> try changing the condition to <code>WHILE Money() >= 5 AND SeedCount("Carrot") &lt; 3 DO</code> - now it stops early on its own once you own 3 seeds, even if you can still afford more.',
+        text: 'This machine never runs out of seeds and never leaves a harvest unsold - buy, plant, wait, sell, repeat, entirely on its own.<br><br><strong>Challenge:</strong> place a second one at a different tile, so two Full-Cycle Farms run side by side.',
         starter: null, target: null, newLines: [], requires: []
-      }
-    ]
-  },
-  {
-    id: 'for-loops',
-    title: 'FOR Loops',
-    color: '#a3711f',
-    desc: 'Repeat something a fixed, known number of times, using a loop variable that counts for you.',
-    steps: [
-      {
-        title: 'Your first FOR',
-        text: 'A <strong>FOR</strong> loop repeats a known number of times - use it instead of WHILE when you already know the count. No colon, no "DO", and it ends with <code>NEXT</code> followed by the same variable name, not <code>ENDFOR</code>. <code>Step</code> counts 1, 2, 3 in turn as the loop runs:',
-        target: 'FOR Step <- 1 TO 3\n    CALL Buy("Carrot")\nNEXT Step',
-        newLines: ['FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', 'NEXT Step'],
-        requires: [{ type: 'FOR' }, { name: 'Buy' }],
-        action: 'run',
-        actionHint: 'Press Run - check the console for three separate purchase messages, not one.'
-      },
-      {
-        title: 'Plant a whole row',
-        text: 'The loop variable is a real number you can use anywhere - including inside <code>SetPosition</code>. Rewrite it to plant three Carrots in a row in one go, one tile further along each time:',
-        target: 'FOR Step <- 0 TO 2\n    CALL SetPosition(Step, 0)\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT Step',
-        newLines: ['FOR Step <- 0 TO 2', '    CALL SetPosition(Step, 0)', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT Step'],
-        requires: [{ type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
-        action: 'run',
-        actionHint: 'Press Run - three Carrots should appear across three tiles, not just one.'
-      },
-      {
-        title: 'Try it',
-        text: 'Same lesson as WHILE: a machine re-runs its whole program every tick anyway, so FOR doesn\'t help it repeat faster - its value is doing many things in a single Run or a single tick, like planting a whole row at once instead of writing the same three lines three times.<br><br><strong>Challenge:</strong> change <code>TO 2</code> to <code>TO 4</code> to plant five Carrots in a row instead of three.',
-        starter: null, target: null, newLines: [], requires: []
-      }
-    ]
-  },
-  {
-    id: 'variables',
-    title: 'Variables',
-    color: '#7c5fcf',
-    desc: 'Store a value and update it over time - useful for keeping a running total.',
-    steps: [
-      {
-        title: 'Store a value',
-        text: 'A <strong>variable</strong> stores a value under a name you choose. Cambridge Pseudocode assigns with <code>&lt;-</code>, never <code>=</code>. <code>OUTPUT</code> prints a value to the console below, so you can see what\'s stored:',
-        target: 'Total <- 0\nOUTPUT Total',
-        newLines: ['Total <- 0', 'OUTPUT Total'],
-        requires: [{ type: 'ASSIGN' }, { type: 'OUTPUT' }],
-        action: 'run',
-        actionHint: 'Press Run - the console should print 0.'
-      },
-      {
-        title: 'Update it inside a loop',
-        text: 'A variable keeps its value until you change it, even across several lines or loop repeats. Keep a running total of how much you\'ve spent, updating it once per loop:',
-        target: 'Total <- 0\nFOR Step <- 1 TO 3\n    CALL Buy("Carrot")\n    Total <- Total + 5\nNEXT Step\nOUTPUT Total',
-        newLines: ['Total <- 0', 'FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', '    Total <- Total + 5', 'NEXT Step', 'OUTPUT Total'],
-        requires: [{ type: 'ASSIGN' }, { type: 'FOR' }, { name: 'Buy' }, { type: 'OUTPUT' }],
-        action: 'run',
-        actionHint: 'Press Run - the console should print 15 (3 loops of 5), not 0 or 5.'
       }
     ]
   }
