@@ -89,6 +89,7 @@
     flow:      { label: 'Flow',      color: '#FFBF00' },
     motion:    { label: 'Motion',    color: '#4C97FF' },
     looks:     { label: 'Looks',     color: '#9966FF' },
+    sound:     { label: 'Sound',     color: '#CF63CF' },
     sensing:   { label: 'Sensing',   color: '#5CB1D6' },
     variables: { label: 'Variables', color: '#FF8C1A' },
     control:   { label: 'Control',   color: '#FFAB19' }
@@ -128,6 +129,11 @@
     hide:               { shape: 'process',   title: 'Hide',               data: {},                             category: 'looks' },
     go_to_layer:        { shape: 'process',   title: 'Go to layer',        data: { layer: 'front' },             category: 'looks' },
     change_layer:       { shape: 'process',   title: 'Change layer',       data: { direction: 'forward', layers: 1 }, category: 'looks' },
+    play_sound:            { shape: 'process', title: 'Play sound',         data: { sound: '' },                  category: 'sound' },
+    play_sound_until_done: { shape: 'process', title: 'Play sound until done', data: { sound: '' },                category: 'sound' },
+    stop_all_sounds:       { shape: 'process', title: 'Stop all sounds',    data: {},                             category: 'sound' },
+    change_volume_by:      { shape: 'process', title: 'Change volume by',   data: { volume: 10 },                 category: 'sound' },
+    set_volume_to:         { shape: 'process', title: 'Set volume to',      data: { volume: 100 },                category: 'sound' },
     ask:                { shape: 'io',        title: 'Ask',                data: { text: 'What is your name?' }, category: 'sensing' },
     set_drag_mode:      { shape: 'process',   title: 'Set drag mode',      data: { mode: 'draggable' },          category: 'sensing' },
     set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
@@ -136,7 +142,7 @@
     subroutine_start:   { shape: 'oval',      title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
     call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' }
   };
-  var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sensing', 'variables', 'control'];
+  var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sound', 'sensing', 'variables', 'control'];
 
   // Reporters (sensing values) that can be plugged into any numeric value
   // field, the same idea as Scratch's rounded reporter blocks. Each one
@@ -209,6 +215,21 @@
     return null;
   }
   function activeTarget() { return FS.activeSprite ? getTargetByName(FS.activeSprite) : null; }
+  // Resolves a sound by exact name (falling back to 1-based index, matching Scratch's own
+  // number-or-name argument convention) - same lookup pyscratch.js's own findSound() already
+  // uses in production, kept as an independent copy for the reason given in this file's own
+  // header comment (no shared module between the two apps).
+  function findSound(target, name) {
+    if (!target || !target.sprite || !target.sprite.sounds) return null;
+    var sounds = target.sprite.sounds;
+    if (!sounds.length) return null;
+    var s = sounds.filter(function (snd) { return snd.name === String(name); })[0];
+    if (!s) {
+      var n = parseInt(name, 10);
+      if (!isNaN(n)) s = sounds[n - 1];
+    }
+    return s || null;
+  }
 
   // ── Variables ────────────────────────────────────────────────────────
   // Real Scratch VM variables (created on the stage target, so they're
@@ -512,6 +533,11 @@
     if (n.type === 'hide') return 'Hide';
     if (n.type === 'go_to_layer') return 'Go to ' + (d.layer === 'back' ? 'back' : 'front') + ' layer';
     if (n.type === 'change_layer') return 'Go ' + (d.direction || 'forward') + ' ' + valueDisplay(d, 'layers', 'layers');
+    if (n.type === 'play_sound') return 'Play sound ' + (d.sound || '...');
+    if (n.type === 'play_sound_until_done') return 'Play sound ' + (d.sound || '...') + ' until done';
+    if (n.type === 'stop_all_sounds') return 'Stop all sounds';
+    if (n.type === 'change_volume_by') return 'Change volume by ' + valueDisplay(d, 'volume');
+    if (n.type === 'set_volume_to') return 'Set volume to ' + valueDisplay(d, 'volume');
     if (n.type === 'ask') return 'Ask "' + d.text + '"';
     if (n.type === 'set_drag_mode') return 'Set drag mode ' + (d.mode === 'not_draggable' ? 'not draggable' : 'draggable');
     if (n.type === 'set_variable') return 'Set ' + (d.varName || 'variable') + ' to ' + d.value;
@@ -633,6 +659,17 @@
       return '<option value="' + esc(c.name) + '"' + (selectedName === c.name ? ' selected' : '') + '>' + esc(c.name) + '</option>';
     }).join('') + '</select>';
   }
+  function soundSelectHtml(fieldName, selectedName) {
+    var target = activeTarget();
+    var sounds = (target && target.sprite && target.sprite.sounds) ? target.sprite.sounds.slice() : [];
+    if (selectedName && !sounds.some(function (s) { return s.name === selectedName; })) {
+      sounds.push({ name: selectedName });
+    }
+    if (!sounds.length) return '<select data-field="' + fieldName + '"><option value="">(no sounds)</option></select>';
+    return '<select data-field="' + fieldName + '">' + sounds.map(function (s) {
+      return '<option value="' + esc(s.name) + '"' + (selectedName === s.name ? ' selected' : '') + '>' + esc(s.name) + '</option>';
+    }).join('') + '</select>';
+  }
   function effectSelectHtml(fieldName, selected) {
     var effects = ['color', 'fisheye', 'whirl', 'pixelate', 'mosaic', 'brightness', 'ghost'];
     return '<select data-field="' + fieldName + '">' + effects.map(function (e) {
@@ -684,6 +721,9 @@
     if (n.type === 'go_to_layer') sub = '<select data-field="layer"><option value="front"' + (n.data.layer !== 'back' ? ' selected' : '') + '>front</option><option value="back"' + (n.data.layer === 'back' ? ' selected' : '') + '>back</option></select>';
     if (n.type === 'change_layer') sub = '<select data-field="direction"><option value="forward"' + (n.data.direction !== 'backward' ? ' selected' : '') + '>forward</option><option value="backward"' + (n.data.direction === 'backward' ? ' selected' : '') + '>backward</option></select><span class="fs-inline-label">layers</span>' + inlineValueHtml(n.data, 'layers');
     if (n.type === 'set_drag_mode') sub = '<select data-field="mode"><option value="draggable"' + (n.data.mode !== 'not_draggable' ? ' selected' : '') + '>draggable</option><option value="not_draggable"' + (n.data.mode === 'not_draggable' ? ' selected' : '') + '>not draggable</option></select>';
+    if (n.type === 'play_sound' || n.type === 'play_sound_until_done') sub = soundSelectHtml('sound', n.data.sound || '');
+    if (n.type === 'change_volume_by') sub = inlineValueHtml(n.data, 'volume');
+    if (n.type === 'set_volume_to') sub = inlineValueHtml(n.data, 'volume');
     if (n.type === 'set_variable' || n.type === 'change_variable') {
       sub = variableSelectHtml('varName', n.data.varName) + inlineValueHtml(n.data, 'value');
     }
@@ -833,24 +873,55 @@
     var p = legacy[a] || legacy.E;
     return { x: n.x + p[0], y: n.y + p[1] };
   }
-  // Nearest point on a w x h rectangle's own perimeter to a local point
-  // (px, py), used both for the live hover-anchor and for picking a
-  // sensible anchor point automatically (connecting to a node by dropping
-  // near it, or splicing a node into an existing wire).
-  function nearestPerimeterPoint(w, h, px, py) {
-    var cx = Math.max(0, Math.min(w, px)), cy = Math.max(0, Math.min(h, py));
+  // The rotated square inside .fs-node.selection .fs-node-body (CSS below) - kept as a named
+  // constant, not just a CSS number, because the diamond hitbox math a few lines down derives
+  // its true on-screen shape from this value. Change the CSS width/height together with this.
+  var SELECTION_BODY_SIZE = 96;
+  // Nearest point on a node's own VISUAL perimeter to a local point (px, py) - used both for
+  // the live hover-anchor and for picking a sensible anchor point automatically (connecting
+  // to a node by dropping near it, or splicing a node into an existing wire). This used to
+  // always treat the node as a plain w x h rectangle, which is exactly right for
+  // process/io/subroutine but wrong for oval and selection: their visible border is a
+  // curve/diamond genuinely inset from (oval) or overflowing (selection - the rotated square
+  // is taller than its own 150x112 box, see the CSS) the rectangle nodeDims() measures, so
+  // the old rectangle-only math put the connectable hitbox visibly outside the drawn border
+  // in the corners (oval) or short of the drawn tip (selection, top/bottom). Both branches
+  // below use the same idea: project outward from the shape's centre, along the direction of
+  // (px, py), until hitting that shape's own true boundary - the standard technique for
+  // snapping a connector to a convex shape's edge.
+  function nearestPerimeterPoint(n, px, py) {
+    var d = nodeDims(n), w = d.w, h = d.h;
+    var cx = w / 2, cy = h / 2, dx = px - cx, dy = py - cy;
+    if (n.shape === 'oval') {
+      if (!dx && !dy) return { x: w, y: cy }; // exact centre has no defined direction - default to due east
+      var a = w / 2, b = h / 2;
+      var ot = 1 / Math.sqrt((dx / a) * (dx / a) + (dy / b) * (dy / b));
+      return { x: cx + dx * ot, y: cy + dy * ot };
+    }
+    if (n.shape === 'selection') {
+      if (!dx && !dy) return { x: w, y: cy };
+      // Rotating a square 45 degrees turns it into a diamond whose vertices sit on the axes
+      // at the square's own half-diagonal (side / sqrt(2)) from centre - independent of the
+      // outer 150x112 box's own w/h, which is why this doesn't use nodeDims() here at all.
+      var half = SELECTION_BODY_SIZE / Math.SQRT2;
+      var manhattan = Math.abs(dx) + Math.abs(dy);
+      var st = half / manhattan;
+      return { x: cx + dx * st, y: cy + dy * st };
+    }
+    // Rectangle (process, io, subroutine, and anything else): clamp inside the box, then
+    // project to whichever edge is nearest.
+    var ccx = Math.max(0, Math.min(w, px)), ccy = Math.max(0, Math.min(h, py));
     if (px > 0 && px < w && py > 0 && py < h) {
       var dl = px, dr = w - px, dt = py, db = h - py, m = Math.min(dl, dr, dt, db);
-      if (m === dl) return { x: 0, y: cy };
-      if (m === dr) return { x: w, y: cy };
-      if (m === dt) return { x: cx, y: 0 };
-      return { x: cx, y: h };
+      if (m === dl) return { x: 0, y: ccy };
+      if (m === dr) return { x: w, y: ccy };
+      if (m === dt) return { x: ccx, y: 0 };
+      return { x: ccx, y: h };
     }
-    return { x: cx, y: cy };
+    return { x: ccx, y: ccy };
   }
   function anchorPointOnNode(n, towardWorldX, towardWorldY) {
-    var d = nodeDims(n);
-    return nearestPerimeterPoint(d.w, d.h, towardWorldX - n.x, towardWorldY - n.y);
+    return nearestPerimeterPoint(n, towardWorldX - n.x, towardWorldY - n.y);
   }
   // Anchor's local (x,y) regardless of stored format (new continuous
   // {x,y} point, or a legacy named direction from a saved-before-this-
@@ -1212,7 +1283,9 @@
     if (n.type === 'say_for' || n.type === 'think_for') f = sourceField('Seconds', 'seconds', n.data);
     if (n.type === 'subroutine_start') f = '<p class="fs-empty">Give this sub-routine a unique name inside the block.</p>';
     if (n.type === 'call_subroutine') f = '<p class="fs-empty">Choose the named sub-routine to run inside the block.</p>';
-    if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'go_to' || n.type === 'set_rotation_style' || n.type === 'switch_costume_to' || n.type === 'go_to_layer' || n.type === 'set_drag_mode') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
+    if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'go_to' || n.type === 'set_rotation_style' || n.type === 'switch_costume_to' || n.type === 'go_to_layer' || n.type === 'set_drag_mode' || n.type === 'play_sound' || n.type === 'play_sound_until_done') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
+    if (n.type === 'change_volume_by') f = sourceField('Change volume by', 'volume', n.data);
+    if (n.type === 'set_volume_to') f = sourceField('Set volume to', 'volume', n.data);
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Select either outgoing connector to set it as True or False.</p>';
     host.innerHTML = '<b>' + typeTitle(n) + '</b>' + f + '<button class="fs-danger" id="fsDeleteNode">Delete block</button>';
     Array.prototype.forEach.call(host.querySelectorAll('[data-inspect-src]'), function (s) {
@@ -1579,6 +1652,42 @@
           if (typeof target.setDraggable === 'function') target.setDraggable(n.data.mode !== 'not_draggable');
           else target.draggable = (n.data.mode !== 'not_draggable');
         } catch (e) {}
+        return;
+      // ── Sound (same target.sprite.soundBank / target.setVolume calls pyscratch.js's own
+      // production-proven findSound()/play/volume handling already uses - see this file's
+      // header comment on why that's a small independent copy, not a shared import) ──
+      case 'play_sound': {
+        var playSnd = findSound(target, n.data.sound);
+        if (playSnd) { try { target.sprite.soundBank.playSound(target, playSnd.soundId); } catch (e) {} }
+        return; // non-blocking, matches Scratch's own "play sound" (not "...until done")
+      }
+      case 'play_sound_until_done': {
+        var waitSnd = findSound(target, n.data.sound);
+        if (waitSnd) {
+          try {
+            var soundPromise = target.sprite.soundBank.playSound(target, waitSnd.soundId);
+            if (soundPromise && typeof soundPromise.then === 'function') return soundPromise;
+          } catch (e) {}
+        }
+        return;
+      }
+      case 'stop_all_sounds':
+        try { target.sprite.soundBank.stopAllSounds(); } catch (e) {
+          try { FS.vm.runtime.audioEngine.stopAll(); } catch (e2) {}
+        }
+        return;
+      case 'change_volume_by':
+        try {
+          // Scratch's own default volume is 100, not 0 - a straight `|| 100` (the pattern
+          // pyscratch.js's own change_volume uses) would misfire if a student had genuinely
+          // set volume to exactly 0 already, silently jumping it back to 100 instead of
+          // changing from 0. An explicit undefined check avoids that.
+          var curVol = target.volume !== undefined ? target.volume : 100;
+          target.setVolume(Math.max(0, Math.min(100, curVol + readValue(target, n.data, 'volume'))));
+        } catch (e) {}
+        return;
+      case 'set_volume_to':
+        try { target.setVolume(Math.max(0, Math.min(100, readValue(target, n.data, 'volume')))); } catch (e) {}
         return;
       case 'ask':
         return showAskBox(n.data.text).then(function (answer) {
@@ -2139,8 +2248,12 @@
     FS.nodes.forEach(function (n) {
       var d = nodeDims(n), w = d.w, h = d.h;
       var lx = wp.x - n.x, ly = wp.y - n.y;
-      if (lx < -threshold || lx > w + threshold || ly < -threshold || ly > h + threshold) return;
-      var pt = nearestPerimeterPoint(w, h, lx, ly);
+      // Selection's true diamond tip can sit outside its own 150x112 box (see
+      // nearestPerimeterPoint's comment) - widen this quick-reject box a little for it so a
+      // hover right at the tip isn't thrown out before the real shape-aware check below runs.
+      var reject = n.shape === 'selection' ? threshold + (SELECTION_BODY_SIZE / Math.SQRT2 - h / 2) : threshold;
+      if (lx < -threshold || lx > w + threshold || ly < -reject || ly > h + reject) return;
+      var pt = nearestPerimeterPoint(n, lx, ly);
       var dist = Math.hypot(lx - pt.x, ly - pt.y);
       if (dist <= threshold && (!best || dist < best.dist)) best = { nodeId: n.id, x: pt.x, y: pt.y, dist: dist };
     });
