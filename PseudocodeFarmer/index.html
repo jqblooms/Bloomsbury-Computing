@@ -2951,6 +2951,12 @@ function updateTileInfoPanel() {
 function lessonMissionConfig(id) { return LESSON_MISSIONS[id] || null; }
 
 function clearMissionWorld() {
+  // This function only makes sense with a mission config to rebuild from - it reads
+  // lessonMissionMode.tiles/targets/money/inventory/start below. Guarding here, not just at
+  // each call site, means it can never be invoked into a crash (or a half-run, partially
+  // reset state) no matter what calls it or how the UI around it changes later - the "Reset
+  // Mission" button and resetGame()'s mission branch both stay correct by construction.
+  if (!lessonMissionMode) return;
   runEpoch++;
   setRunningUI(false);
   machines.forEach(function (m) { scene.remove(m.group); scene.remove(m.cursorMesh); disposeObject3D(m.group); disposeObject3D(m.cursorMesh); });
@@ -3150,7 +3156,21 @@ function startLessonMission(id) {
   if (cheatSummary) cheatSummary.textContent = '📖 Need a command not listed above? Full cheat sheet';
   clearMissionWorld();
   var reset = document.getElementById('lesson-mission-reset');
-  if (reset && !reset.dataset.bound) { reset.dataset.bound = '1'; reset.addEventListener('click', function () { clearMissionWorld(); var s = document.getElementById('lesson-mission-status'); if (s) { s.className = ''; s.textContent = 'Mission reset. Write your code, then press Run.'; } }); }
+  if (reset && !reset.dataset.bound) { reset.dataset.bound = '1'; reset.addEventListener('click', handleMissionResetClick); }
+}
+
+// Bound once, ever (see the dataset.bound guard above) - reads lessonMissionMode fresh on
+// every click rather than closing over the mission that happened to be active when the
+// listener was first attached, so it always resets *whichever* mission is current.
+function handleMissionResetClick() {
+  // Explicit, self-documenting guard: this button (and the panel it lives in) should only
+  // ever be visible while lessonMissionMode is set, but checking here too - not just relying
+  // on clearMissionWorld()'s own guard - means a click can never touch mission-only UI state
+  // (the status text below) when there is no mission to reset.
+  if (!lessonMissionMode) return;
+  clearMissionWorld();
+  var status = document.getElementById('lesson-mission-status');
+  if (status) { status.className = ''; status.textContent = 'Mission reset. Write your code, then press Run.'; }
 }
 
 function watchLessonRun() {
