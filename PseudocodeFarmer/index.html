@@ -241,6 +241,9 @@
   #lesson-mission-status { margin-top: 7px; padding: 6px 8px; border-radius: 7px; background: #fff; border: 1px solid #e1c77f; font-size: .74rem; font-weight: 800; color: #6d541e; }
   #lesson-mission-status.complete { background: #e6f7e6; border-color: #80bd80; color: #216b2b; }
   #lesson-mission-reset { margin-top: 7px; border: 0; border-radius: 7px; padding: 6px 9px; background: #8a5a34; color: #fff; font-weight: 800; cursor: pointer; }
+  body.lesson-mission-mode #reset-btn,
+  body.lesson-mission-mode #machine-btn,
+  body.lesson-mission-mode #machine-tiers { display: none; }
 </style>
 </head>
 <body>
@@ -519,6 +522,14 @@ var machines = [];
 var lessonMissionMode = null;
 var lessonMissionPendingSource = '';
 var lessonMissionAttempt = 0;
+// Defined with the rest of the game state because boot-time save selection
+// needs to know whether this URL is a mission before it decides whether to
+// load the student's free-play farm.
+var LESSON_MISSIONS = {
+  'sequence-01': { title: 'Sequence 1: Plant one crop', objective: 'Run one action and plant the starter Carrot on tile (0, 0).', money: 0, inventory: { Carrot: 1 }, tiles: [[0, 0]], start: { x: 0, z: 0 }, targets: [{ x: 0, z: 0, type: 'Carrot' }], required: ['Plant'], forbidden: ['IF', 'FOR', 'WHILE'] },
+  'sequence-02': { title: 'Sequence 2: Buy, move, plant', objective: 'Write a sequence that buys a Carrot, moves to (1, 0), then plants it.', money: 10, inventory: {}, tiles: [[0, 0], [1, 0]], start: { x: 0, z: 0 }, targets: [{ x: 1, z: 0, type: 'Carrot' }], required: ['Buy', 'SetPosition', 'Plant'], forbidden: ['IF', 'FOR', 'WHILE'] },
+  'sequence-03': { title: 'Sequence 3: Two squares', objective: 'Write explicit instructions to plant Carrots on (2, 0) and (3, 0).', money: 0, inventory: { Carrot: 2 }, tiles: [[0, 0], [1, 0], [2, 0], [3, 0]], start: { x: 0, z: 0 }, targets: [{ x: 2, z: 0, type: 'Carrot' }, { x: 3, z: 0, type: 'Carrot' }], required: ['SetPosition', 'Plant'], forbidden: ['IF', 'FOR', 'WHILE'] }
+};
 var nextMachineId = 1;
 var isRunning = false; // true while the player's own program is executing
 var runEpoch = 0;      // bumped by Reset Game so any in-flight program aborts cleanly
@@ -2654,6 +2665,14 @@ function loadGame() {
 // RESET GAME (top-bar button, two-click confirm)
 // ============================================================
 function resetGame() {
+  // The top-bar reset belongs to free play. Mission mode has its own reset
+  // and must never remove the student's normal farm save.
+  if (lessonMissionMode) {
+    clearMissionWorld();
+    var missionStatus = document.getElementById('lesson-mission-status');
+    if (missionStatus) { missionStatus.className = ''; missionStatus.textContent = 'Mission reset. Write your code, then press Run.'; }
+    return;
+  }
   runEpoch++; // abort any in-flight program (its loop checks the epoch)
   setRunningUI(false);
   machines.forEach(function (m) {
@@ -2881,12 +2900,6 @@ function updateTileInfoPanel() {
 // ============================================================
 // Missions are deliberately small, deterministic sandboxes for lessons. They
 // never touch the normal free-play localStorage save.
-var LESSON_MISSIONS = {
-  'sequence-01': { title: 'Sequence 1: Plant one crop', objective: 'Run one action and plant the starter Carrot on the home tile.', money: 0, inventory: { Carrot: 1 }, targets: [{ x: 4, z: 4, type: 'Carrot' }], required: ['Plant'], forbidden: ['IF', 'FOR', 'WHILE'] },
-  'sequence-02': { title: 'Sequence 2: Buy, move, plant', objective: 'Write a sequence that buys a Carrot, moves to (1, 0), then plants it.', money: 40, inventory: {}, targets: [{ x: 1, z: 0, type: 'Carrot' }], required: ['Buy', 'SetPosition', 'Plant'], forbidden: ['IF', 'FOR', 'WHILE'] },
-  'sequence-03': { title: 'Sequence 3: Two squares', objective: 'Write explicit instructions to plant Carrots on (2, 0) and (3, 0).', money: 40, inventory: { Carrot: 2 }, targets: [{ x: 2, z: 0, type: 'Carrot' }, { x: 3, z: 0, type: 'Carrot' }], required: ['SetPosition', 'Plant'], forbidden: ['IF', 'FOR', 'WHILE'] }
-};
-
 function lessonMissionConfig(id) { return LESSON_MISSIONS[id] || null; }
 
 function clearMissionWorld() {
@@ -2897,7 +2910,15 @@ function clearMissionWorld() {
   floatingTexts.forEach(function (floating) { scene.remove(floating.sprite); disposeSprite(floating.sprite, false); });
   floatingTexts = [];
   nextMachineId = 1;
-  rebuildGarden(initialTileList());
+  rebuildGarden(lessonMissionMode.tiles || initialTileList());
+  // Lesson worlds are fixed teaching spaces. Remove expansion tiles so the
+  // only visible squares are the ones needed for the current task.
+  edgeTiles = {};
+  (lessonMissionMode.targets || []).forEach(function (target) {
+    var targetTile = tileAt(target.x, target.z);
+    if (targetTile) targetTile.color = new THREE.Color(0xb88345);
+  });
+  rebuildTileBatches();
   money = Number(lessonMissionMode.money) || 0;
   totalEarned = 0;
   inventory = {};
@@ -2906,9 +2927,22 @@ function clearMissionWorld() {
   unlockedState = {};
   selectedMachineId = null;
   editingMachineCodeId = null;
-  playerCursor.x = 4; playerCursor.z = 4; playerCursor.homeX = 0; playerCursor.homeZ = 0; playerCursor.facing = 0;
+  var start = lessonMissionMode.start || { x: 0, z: 0 };
+  playerCursor.x = start.x; playerCursor.z = start.z; playerCursor.homeX = start.x; playerCursor.homeZ = start.z; playerCursor.facing = 0;
   updatePlayerCursorPosition();
   updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
+  var missionTiles = lessonMissionMode.tiles || [[start.x, start.z]];
+  var centreX = missionTiles.reduce(function (sum, tile) { return sum + tile[0]; }, 0) / missionTiles.length;
+  var centreZ = missionTiles.reduce(function (sum, tile) { return sum + tile[1]; }, 0) / missionTiles.length;
+  var xs = missionTiles.map(function (tile) { return tile[0]; });
+  var zs = missionTiles.map(function (tile) { return tile[1]; });
+  var baseFullSize = GRID_SIZE + MAX_EXPANSION * 2 + 0.4;
+  base.scale.set((Math.max.apply(null, xs) - Math.min.apply(null, xs) + 1.4) / baseFullSize, 1, (Math.max.apply(null, zs) - Math.min.apply(null, zs) + 1.4) / baseFullSize);
+  base.position.x = tileWorldX(centreX);
+  base.position.z = tileWorldZ(centreZ);
+  camState.target.set(tileWorldX(centreX), 0, tileWorldZ(centreZ));
+  camState.radius = Math.max(5, 4.5 + missionTiles.length * 0.45);
+  applyCameraState();
   codeInput.value = '';
   clearCodeError();
   consoleOutput.innerHTML = '';
@@ -2950,6 +2984,7 @@ function startLessonMission(id) {
   var cfg = lessonMissionConfig(id);
   if (!cfg) return;
   lessonMissionMode = Object.assign({ id: id }, cfg);
+  document.body.classList.add('lesson-mission-mode');
   var panel = document.getElementById('lesson-mission-panel');
   if (panel) panel.classList.add('active');
   var title = document.getElementById('lesson-mission-title');
@@ -2978,11 +3013,21 @@ function watchLessonRun() {
 // ============================================================
 function resize() {
   var rect = canvas.parentElement.getBoundingClientRect();
+  if (rect.width < 2 || rect.height < 2) return;
   renderer.setSize(rect.width, rect.height, false);
   camera.aspect = rect.width / Math.max(1, rect.height);
   camera.updateProjectionMatrix();
 }
 window.addEventListener('resize', resize);
+// App pages are created while hidden by the parent site. ResizeObserver
+// catches the moment this iframe becomes visible; a window resize event does
+// not reliably fire for that display:none -> visible transition.
+if (window.ResizeObserver) {
+  new ResizeObserver(function () { resize(); }).observe(canvas.parentElement);
+}
+document.addEventListener('visibilitychange', function () {
+  if (!document.hidden) requestAnimationFrame(resize);
+});
 resize();
 
 var clock = new THREE.Clock();
