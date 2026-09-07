@@ -758,6 +758,53 @@ BATTERY_TIERS.forEach(function (t, i) {
 });
 var BATTERY_NAMES = BATTERY_TIERS.map(function (t) { return t.name; });
 
+// Aquarium: fish grown in tiled "tanks" (reusing the same tile grid - see AQUARIUM_TILE_TINT
+// in the tile-rendering section for the watery colour swap), the third farm type. Its own
+// distinct mechanic - see currentSellValue() below - is patience with NO downside: a fish's
+// value keeps climbing the whole time it's left in the tank, approaching a cap and slowing
+// down but never decaying, unlike a battery. Between crops (flat), batteries (climbs then
+// punishes neglect) and fish (climbs forever, never punishes), all three "what does time do
+// to a grown thing's value" answers a Cambridge pseudocode student could reasonably design
+// are now each their own farm type.
+var FISH_TIERS = [
+  { name: 'Goldfish',      emoji: '1f41f' },
+  { name: 'Blowfish',      emoji: '1f421' },
+  { name: 'Tropical Fish', emoji: '1f420' },
+  { name: 'Squid',         emoji: '1f991' },
+  { name: 'Octopus',       emoji: '1f419' },
+  { name: 'Shark',         emoji: '1f988' }
+];
+var FISH_TIER_SEED_COST_BASE = 35;
+var FISH_TIER_SEED_COST_GROWTH = 3.1;
+var FISH_TIER_SELL_MARGIN_BASE = 1.8;
+var FISH_TIER_SELL_MARGIN_STEP = 0.1;
+var FISH_TIER_GROW_SECONDS_BASE = 9;
+var FISH_TIER_GROW_SECONDS_GROWTH = 1.2;
+var FISH_TIER_UNLOCK_EARNED_MULTIPLE = 8;
+// A fish's value approaches a cap of sellPrice x (1 + FISH_CAP_BONUS) but never quite
+// reaches it - each FISH_GROWTH_HALFLIFE_MULTIPLE x growMs of extra time closes half the
+// remaining gap to the cap, so it's always worth a LITTLE more to wait, with steeply
+// diminishing returns rather than a hard "stop waiting now" line like a battery has.
+var FISH_CAP_BONUS = 1.5;
+var FISH_GROWTH_HALFLIFE_MULTIPLE = 2;
+
+var FISH = {};
+FISH_TIERS.forEach(function (t, i) {
+  var seedCost = Math.round(FISH_TIER_SEED_COST_BASE * Math.pow(FISH_TIER_SEED_COST_GROWTH, i));
+  var margin = FISH_TIER_SELL_MARGIN_BASE + i * FISH_TIER_SELL_MARGIN_STEP;
+  var growSeconds = Math.round(FISH_TIER_GROW_SECONDS_BASE * Math.pow(FISH_TIER_GROW_SECONDS_GROWTH, i));
+  FISH[t.name] = {
+    tier: i,
+    emoji: t.emoji,
+    tint: t.tint || null,
+    seedCost: seedCost,
+    sellPrice: Math.round(seedCost * margin),
+    growSeconds: growSeconds,
+    unlockEarned: i === 0 ? 0 : Math.round(FISH[FISH_TIERS[i - 1].name].seedCost * FISH_TIER_UNLOCK_EARNED_MULTIPLE)
+  };
+});
+var FISH_NAMES = FISH_TIERS.map(function (t) { return t.name; });
+
 // Registry of every farm type - 'crops' wraps the existing VEGGIES table so all behaviour is
 // completely unchanged while it's active. currentFarmType selects which table
 // activeItems()/activeItemNames() return; every function that used to reach for
@@ -769,20 +816,28 @@ var BATTERY_NAMES = BATTERY_TIERS.map(function (t) { return t.name; });
 var FARM_TYPES = {
   crops: {
     id: 'crops', title: 'Crop Farm', kind: 'crop', items: VEGGIES, itemNames: VEGGIE_NAMES,
-    unitLabel: 'seed', unitLabelPlural: 'seeds', nameSuffix: ' Seeds',
+    unitLabel: 'seed', unitLabelPlural: 'seeds', nameSuffix: ' Seeds', badgeColor: '#4c8bf5',
+    shopTitle: '🛒 Seed Shop',
     desc: 'Grow and sell vegetables, tier by tier.'
   },
   solar: {
     id: 'solar', title: 'Solar Farm', kind: 'battery', items: BATTERIES, itemNames: BATTERY_NAMES,
-    unitLabel: 'battery', unitLabelPlural: 'batteries', nameSuffix: '',
+    unitLabel: 'battery', unitLabelPlural: 'batteries', nameSuffix: '', badgeColor: '#e0a53f',
+    shopTitle: '🛒 Battery Shop',
     desc: 'Charge batteries instead of growing crops. The longer you leave one past full charge, the more it earns - up to a point. Forget about it too long and it starts losing value, so timing the sell matters here in a way it never did on the crop farm.'
+  },
+  aquarium: {
+    id: 'aquarium', title: 'Aquarium', kind: 'fish', items: FISH, itemNames: FISH_NAMES,
+    unitLabel: 'fish', unitLabelPlural: 'fish', nameSuffix: '', badgeColor: '#1e8fa8',
+    shopTitle: '🛒 Fish Shop',
+    desc: 'Raise fish in watery tiles instead of growing crops. A fish is never "wasted value" for waiting - it just keeps growing worth, forever, though more and more slowly the longer you leave it. There is no downside to patience here, unlike the Solar Farm.'
   }
 };
 var currentFarmType = 'crops';
 function activeItems() { return FARM_TYPES[currentFarmType].items; }
 function activeItemNames() { return FARM_TYPES[currentFarmType].itemNames; }
 function activeFarmType() { return FARM_TYPES[currentFarmType]; }
-function lookupItem(name) { return VEGGIES[name] || BATTERIES[name] || null; }
+function lookupItem(name) { return VEGGIES[name] || BATTERIES[name] || FISH[name] || null; }
 
 // The milestone: a player's SINGLE best sale, multiplied by 100, compared against lifetime
 // earnings. Using the best single sale (not e.g. current money on hand) means it can't be
@@ -793,28 +848,39 @@ var bestSaleValue = 0;
 function sellFarmUnlocked() {
   return bestSaleValue > 0 && totalEarned >= bestSaleValue * SELL_FARM_MULTIPLE;
 }
-// The value a plant/battery would sell for RIGHT NOW. Crops are flat once ready (grown is
-// grown, unchanged from before this feature). A battery's value is time-dependent even
-// after it's ready - see the FARM TYPES comment above for the shape of the curve.
+// The value a plant/battery/fish would sell for RIGHT NOW. Crops are flat once ready (grown
+// is grown, unchanged from before this feature). A battery's value is time-dependent even
+// after it's ready, and so is a fish's - see the FARM TYPES comment above for the shape of
+// each curve.
 function currentSellValue(plant) {
   var item = lookupItem(plant.type);
   if (!item) return 0;
-  if (!BATTERIES[plant.type]) return item.sellPrice;
   var elapsedMs = Date.now() - plant.plantedAt;
   var growMs = plant.growMs;
-  var peakAt = growMs * BATTERY_PEAK_AT_MULTIPLE;
-  var decayAt = growMs * BATTERY_DECAY_STARTS_AT_MULTIPLE;
-  var peakValue = item.sellPrice * (1 + BATTERY_PEAK_BONUS);
-  if (elapsedMs <= growMs) return item.sellPrice;
-  if (elapsedMs <= peakAt) {
-    var climbFrac = (elapsedMs - growMs) / (peakAt - growMs);
-    return Math.round(item.sellPrice + (peakValue - item.sellPrice) * climbFrac);
+  if (elapsedMs <= growMs) return item.sellPrice; // not ready - callers already block selling this
+  if (BATTERIES[plant.type]) {
+    var peakAt = growMs * BATTERY_PEAK_AT_MULTIPLE;
+    var decayAt = growMs * BATTERY_DECAY_STARTS_AT_MULTIPLE;
+    var peakValue = item.sellPrice * (1 + BATTERY_PEAK_BONUS);
+    if (elapsedMs <= peakAt) {
+      var climbFrac = (elapsedMs - growMs) / (peakAt - growMs);
+      return Math.round(item.sellPrice + (peakValue - item.sellPrice) * climbFrac);
+    }
+    if (elapsedMs <= decayAt) return Math.round(peakValue);
+    var decaySpan = Math.max(1, decayAt - peakAt);
+    var decayFrac = Math.min(1, (elapsedMs - decayAt) / decaySpan);
+    var floorValue = item.sellPrice * BATTERY_DECAY_FLOOR;
+    return Math.round(peakValue - (peakValue - floorValue) * decayFrac);
   }
-  if (elapsedMs <= decayAt) return Math.round(peakValue);
-  var decaySpan = Math.max(1, decayAt - peakAt);
-  var decayFrac = Math.min(1, (elapsedMs - decayAt) / decaySpan);
-  var floorValue = item.sellPrice * BATTERY_DECAY_FLOOR;
-  return Math.round(peakValue - (peakValue - floorValue) * decayFrac);
+  if (FISH[plant.type]) {
+    // Approaches (but never quite reaches) a cap: every FISH_GROWTH_HALFLIFE_MULTIPLE x
+    // growMs of extra time closes half the remaining gap to the cap. No decay, ever.
+    var capValue = item.sellPrice * (1 + FISH_CAP_BONUS);
+    var halfLifeMs = growMs * FISH_GROWTH_HALFLIFE_MULTIPLE;
+    var agingFrac = 1 - Math.pow(0.5, (elapsedMs - growMs) / halfLifeMs);
+    return Math.round(item.sellPrice + (capValue - item.sellPrice) * agingFrac);
+  }
+  return item.sellPrice;
 }
 
 // Writing pseudocode should always beat reaching for a button - that is
@@ -982,11 +1048,16 @@ var tileMatrix = new THREE.Matrix4();
 var MAX_TILE_INSTANCES = Math.pow(GRID_SIZE + MAX_EXPANSION * 2, 2);
 
 function makeTileColor() {
-  // Keep the existing per-tile colour variation while allowing every soil
-  // square to be rendered in a single instanced draw call.
-  var hue = 0.27 + (Math.random() - 0.5) * 0.03;
-  var sat = 0.35 + Math.random() * 0.08;
-  var light = 0.30 + Math.random() * 0.05;
+  // Keep the existing per-tile colour variation while allowing every soil/water square to be
+  // rendered in a single instanced draw call. Aquarium tiles use a watery blue hue instead
+  // of soil green - a real visual difference, matching "tiles that are actually blobs of
+  // water" rather than dirt. currentFarmType must already be set to its NEW value by the
+  // time this runs (every caller that switches farm type sets it before calling
+  // rebuildGarden(), never after) or new tiles would pick up the previous type's colour.
+  var isWater = currentFarmType === 'aquarium';
+  var hue = isWater ? (0.56 + (Math.random() - 0.5) * 0.04) : (0.27 + (Math.random() - 0.5) * 0.03);
+  var sat = isWater ? (0.45 + Math.random() * 0.10) : (0.35 + Math.random() * 0.08);
+  var light = isWater ? (0.38 + Math.random() * 0.06) : (0.30 + Math.random() * 0.05);
   return new THREE.Color().setHSL(hue, sat, light);
 }
 
@@ -1409,6 +1480,7 @@ function loadVeggieTexture(name) {
 }
 VEGGIE_NAMES.forEach(loadVeggieTexture); // warm the cache before anyone plants
 BATTERY_NAMES.forEach(loadVeggieTexture); // same warm-up for Solar Farm, so switching to it never has a texture-load delay
+FISH_NAMES.forEach(loadVeggieTexture); // same warm-up for Aquarium
 
 // ============================================================
 // PLANTING / GROWING / SELLING
@@ -2940,10 +3012,15 @@ function roundedRect(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y, x + w, y, r);
   ctx.closePath();
 }
+// pct is 0-100 while growing (unclamped above 100 once ready, for a battery/fish plant
+// whose live sell value has climbed past its base price - see the render loop below).
+// `warn` swaps the pill to a red tint - a battery whose value has decayed under its base
+// price. Cache key includes both so growth and live-value pills never collide.
 var pctTextureCache = {};
-function getPctTexture(pct) {
-  pct = Math.max(0, Math.min(100, Math.round(pct)));
-  if (pctTextureCache[pct]) return pctTextureCache[pct];
+function getPctTexture(pct, warn) {
+  pct = Math.max(0, Math.round(pct));
+  var key = pct + (warn ? 'w' : '');
+  if (pctTextureCache[key]) return pctTextureCache[key];
   var canvas = document.createElement('canvas');
   canvas.width = 72; canvas.height = 26;
   var ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height;
@@ -2955,7 +3032,7 @@ function getPctTexture(pct) {
   var bw = Math.max(24, tw + pad * 2);
   var bh = h - 4;
   var bx = (w - bw) / 2, by = (h - bh) / 2;
-  ctx.fillStyle = 'rgba(18,26,18,0.60)';
+  ctx.fillStyle = warn ? 'rgba(122,42,32,0.75)' : 'rgba(18,26,18,0.60)';
   roundedRect(ctx, bx, by, bw, bh, 6);
   ctx.fill();
   ctx.fillStyle = '#ffffff';
@@ -2963,11 +3040,11 @@ function getPctTexture(pct) {
   ctx.textBaseline = 'middle';
   ctx.fillText(txt, w / 2, h / 2);
   var texture = new THREE.CanvasTexture(canvas);
-  pctTextureCache[pct] = texture;
+  pctTextureCache[key] = texture;
   return texture;
 }
-function drawPctLabel(label, pct) {
-  label.sprite.material.map = getPctTexture(pct);
+function drawPctLabel(label, pct, warn) {
+  label.sprite.material.map = getPctTexture(pct, warn);
   label.sprite.material.needsUpdate = true;
 }
 function makePlantLabel(x, z) {
@@ -2977,8 +3054,8 @@ function makePlantLabel(x, z) {
   sprite.position.set(tileWorldX(x), 1.0, tileWorldZ(z));
   sprite.renderOrder = 20;
   scene.add(sprite);
-  var label = { sprite: sprite, lastPct: -1 };
-  drawPctLabel(label, 0);
+  var label = { sprite: sprite, lastPct: -1, lastWarn: false };
+  drawPctLabel(label, 0, false);
   return label;
 }
 
@@ -3164,12 +3241,12 @@ function resetGame() {
     resetTutorialWorld(TUTORIALS[activeTutorial.tutIdx]);
     return;
   }
+  currentFarmType = 'crops'; // set before rebuildGarden() below, so fresh tiles get the right colour
   clearWorldObjects();
   rebuildGarden(initialTileList());
   money = 40;
   totalEarned = 0;
-  bestSaleValue = 0;
-  currentFarmType = 'crops'; // a full reset starts the whole game over, including which farm
+  bestSaleValue = 0; // a full reset starts the whole game over, including which farm
   inventory = {};
   soldCount = {};
   unlockedState = {};
@@ -3230,7 +3307,8 @@ function liquidateFarm() {
 // into the new farm type is the whole point ("sell your farm, keep the cash").
 function sellTheFarm(targetTypeId) {
   if (!sellFarmUnlocked() || !FARM_TYPES[targetTypeId] || targetTypeId === currentFarmType) return false;
-  var liquidated = liquidateFarm();
+  var liquidated = liquidateFarm(); // reads the OLD currentFarmType - must run before switching
+  currentFarmType = targetTypeId; // set before rebuildGarden() below, so fresh tiles get the right colour
   clearWorldObjects();
   rebuildGarden(initialTileList());
   inventory = {};
@@ -3245,7 +3323,6 @@ function sellTheFarm(targetTypeId) {
   updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
   codeInput.value = '';
   clearCodeError();
-  currentFarmType = targetTypeId;
   buildShop();
   refreshUnlocks();
   markGameDirty();
@@ -3278,7 +3355,7 @@ function updateSellFarmUI() {
     var ft = FARM_TYPES[id];
     var armed = sellFarmArmedId === id;
     return '<button type="button" class="sell-farm-option' + (armed ? ' armed' : '') + '" data-target="' + id + '">' +
-      '<span class="sfo-badge" style="background:' + (id === 'solar' ? '#e0a53f' : '#4c8bf5') + '">' + escapeHtmlLocal(ft.title.charAt(0)) + '</span>' +
+      '<span class="sfo-badge" style="background:' + ft.badgeColor + '">' + escapeHtmlLocal(ft.title.charAt(0)) + '</span>' +
       '<span class="sfo-body"><span class="sfo-title">' + (armed ? 'Click again to confirm' : ft.title) + '</span>' +
       '<span class="sfo-desc">' + escapeHtmlLocal(ft.desc) + '</span></span></button>';
   }).join('');
@@ -3363,7 +3440,7 @@ function buildShop() {
   shopListEl.innerHTML = '';
   var ft = activeFarmType();
   var shopTitleEl = document.getElementById('shop-title');
-  if (shopTitleEl) shopTitleEl.textContent = ft.kind === 'battery' ? '🛒 Battery Shop' : '🛒 Seed Shop';
+  if (shopTitleEl) shopTitleEl.textContent = ft.shopTitle;
   activeItemNames().forEach(function (name) {
     var item = ft.items[name];
     var row = document.createElement('div');
@@ -3504,6 +3581,11 @@ function clearMissionWorld() {
   // reset state) no matter what calls it or how the UI around it changes later - the "Reset
   // Mission" button and resetGame()'s mission branch both stay correct by construction.
   if (!lessonMissionMode) return;
+  // Missions are always written in Cambridge Pseudocode against Carrots, same as tutorials -
+  // force the crop farm regardless of currentFarmType, so activeItems()/currentSeedPrice()
+  // resolve mission crop names correctly no matter what farm type happened to be active.
+  // Set before rebuildGarden() below, so fresh tiles get the right colour too.
+  currentFarmType = 'crops';
   clearWorldObjects();
   rebuildGarden(lessonMissionMode.tiles || initialTileList());
   // Lesson worlds are fixed teaching spaces. Remove expansion tiles so the
@@ -4071,14 +4153,15 @@ function currentTutorialStep() {
 // student's real farm is snapshotted once (enterTutorialSandbox) and restored byte-for-byte
 // (exitTutorialSandbox) - it is never visible or mutable while any tutorial is active.
 function resetTutorialWorld(tut) {
+  // Every tutorial is written in Cambridge Pseudocode against Carrots specifically - force
+  // the crop farm regardless of which farm type the student's real save was on, the same way
+  // everything else here is reset to a known-good baseline rather than inherited. Set before
+  // rebuildGarden() below, so fresh tiles get the right colour.
+  currentFarmType = 'crops';
   clearWorldObjects();
   rebuildGarden(initialTileList());
   money = typeof tut.minMoney === 'number' ? tut.minMoney : 40;
   totalEarned = 0;
-  // Every tutorial is written in Cambridge Pseudocode against Carrots specifically - force
-  // the crop farm regardless of which farm type the student's real save was on, the same way
-  // everything else here is reset to a known-good baseline rather than inherited.
-  currentFarmType = 'crops';
   buildShop();
   inventory = {};
   soldCount = {};
@@ -4576,8 +4659,24 @@ function animate() {
     plant.sprite.position.y = 0.02 + scale * 0.05;
     if (plant.pct && plant.pct.sprite) {
       plant.pct.sprite.position.y = plant.sprite.position.y + scale + 0.14;
-      var showPct = Math.round(t * 100);
-      if (showPct !== plant.pct.lastPct) { drawPctLabel(plant.pct, showPct); plant.pct.lastPct = showPct; }
+      // Crops freeze at 100% once grown (unchanged) - a battery or fish's value keeps
+      // moving after that, so its pill switches to showing that live value as a percentage
+      // of its base price instead: >100 while climbing (or growing for a fish, which never
+      // stops), a red-tinted <100 once a battery has decayed past its base price.
+      var showPct, showWarn;
+      if (t >= 1 && (BATTERIES[plant.type] || FISH[plant.type])) {
+        var timedItem = lookupItem(plant.type);
+        showPct = timedItem ? Math.round((currentSellValue(plant) / timedItem.sellPrice) * 100) : 100;
+        showWarn = showPct < 100;
+      } else {
+        showPct = Math.round(t * 100);
+        showWarn = false;
+      }
+      if (showPct !== plant.pct.lastPct || showWarn !== plant.pct.lastWarn) {
+        drawPctLabel(plant.pct, showPct, showWarn);
+        plant.pct.lastPct = showPct;
+        plant.pct.lastWarn = showWarn;
+      }
     }
     if (t >= 1 && !plant.ready) {
       plant.ready = true;
