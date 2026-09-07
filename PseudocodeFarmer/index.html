@@ -405,6 +405,12 @@
   #shop-tutorial-note { display: none; margin-bottom: 8px; padding: 6px 8px; border-radius: 6px; background: #eefaf2; border: 1px solid #bfe6cf; color: #1f6e4f; font-size: .72rem; font-weight: 700; }
   body.tutorial-active #shop-tutorial-note { display: block; }
 
+  /* Only shown once "Sell the Farm" has actually been used - crops is the default everyone
+     starts on, so labelling it explicitly would just be noise on every single load. */
+  #farm-type-badge { display: none; padding: 3px 9px; border-radius: 999px;
+    font-size: .68rem; font-weight: 800; color: #fff; vertical-align: middle; white-space: nowrap; }
+  #farm-type-badge.shown { display: inline-block; }
+
   /* "Sell the Farm" - a rare, exciting prestige unlock, so it gets its own distinct gold
      accent rather than the game's usual green, and stays completely hidden (not just
      disabled) until genuinely reachable - see sellFarmUnlocked() for the milestone. */
@@ -434,6 +440,7 @@
         <b>Pseudocode Farmer</b>
         <small>Cambridge Pseudocode</small>
       </div>
+      <span id="farm-type-badge" title="Sell the Farm to switch which one you're on"></span>
     </div>
     <div id="stats">
       <div class="stat-pill" id="money-pill"><span class="icon">🪙</span><span id="money-value">0</span></div>
@@ -3340,11 +3347,19 @@ function sellTheFarm(targetTypeId) {
 // confirm - same two-click-arm pattern as the top-bar Reset Game button, since this is
 // genuinely destructive to the current farm.
 var sellFarmArmedId = null;
+var sellFarmArmTimer = null;
+function disarmSellFarm() {
+  clearTimeout(sellFarmArmTimer);
+  sellFarmArmTimer = null;
+  if (sellFarmArmedId === null) return;
+  sellFarmArmedId = null;
+  updateSellFarmUI();
+}
 function updateSellFarmUI() {
   var panel = document.getElementById('sell-farm-panel');
   var unlocked = sellFarmUnlocked();
   panel.classList.toggle('unlocked', unlocked);
-  if (!unlocked) { sellFarmArmedId = null; return; }
+  if (!unlocked) { sellFarmArmedId = null; clearTimeout(sellFarmArmTimer); return; }
   document.getElementById('sell-farm-desc').textContent =
     'Your best sale (' + bestSaleValue.toLocaleString() + 'c) times ' + SELL_FARM_MULTIPLE + ' is ' +
     (bestSaleValue * SELL_FARM_MULTIPLE).toLocaleString() + 'c - you\'ve earned ' + Math.floor(totalEarned).toLocaleString() +
@@ -3362,7 +3377,16 @@ function updateSellFarmUI() {
   optionsEl.querySelectorAll('.sell-farm-option').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var id = btn.dataset.target;
-      if (sellFarmArmedId !== id) { sellFarmArmedId = id; updateSellFarmUI(); return; }
+      if (sellFarmArmedId !== id) {
+        // Same two-click-then-auto-forget pattern as the top-bar Reset Game button - a
+        // liquidation is just as destructive to the current farm, so it gets the same safety.
+        sellFarmArmedId = id;
+        updateSellFarmUI();
+        clearTimeout(sellFarmArmTimer);
+        sellFarmArmTimer = setTimeout(disarmSellFarm, 3000);
+        return;
+      }
+      clearTimeout(sellFarmArmTimer);
       sellFarmArmedId = null;
       sellTheFarm(id);
     });
@@ -3441,6 +3465,14 @@ function buildShop() {
   var ft = activeFarmType();
   var shopTitleEl = document.getElementById('shop-title');
   if (shopTitleEl) shopTitleEl.textContent = ft.shopTitle;
+  var badgeEl = document.getElementById('farm-type-badge');
+  if (badgeEl) {
+    // Crops is the default everyone starts on - labelling it explicitly would just be noise
+    // on every single load, so the badge only ever appears once you're on something else.
+    badgeEl.classList.toggle('shown', currentFarmType !== 'crops');
+    badgeEl.textContent = ft.title;
+    badgeEl.style.background = ft.badgeColor;
+  }
   activeItemNames().forEach(function (name) {
     var item = ft.items[name];
     var row = document.createElement('div');
@@ -3544,12 +3576,25 @@ function updateTileInfoPanel() {
   if (!tile) { tileInfoEl.className = ''; tileInfoEl.innerHTML = ''; return; }
   if (tile.plant && tile.plant.ready) {
     tileInfoEl.className = 'show';
-    // currentSellValue() is flat for crops (unchanged) but genuinely live for a battery -
-    // its value keeps moving over time even after "ready", see the FARM TYPES comment.
+    // currentSellValue() is flat for crops (unchanged) but genuinely live for a battery or
+    // fish - its value keeps moving over time even after "ready", see the FARM TYPES comment.
     var liveValue = currentSellValue(tile.plant);
+    var baseItem = lookupItem(tile.plant.type);
+    var baseValue = baseItem ? baseItem.sellPrice : liveValue;
+    var valueHint = '';
+    if (BATTERIES[tile.plant.type]) {
+      if (liveValue < baseValue) {
+        valueHint = '<br><span style="font-size:.68rem;color:#a3271f;font-weight:700">This has been sitting too long and lost value - sell it now.</span>';
+      } else if (liveValue > baseValue) {
+        valueHint = '<br><span style="font-size:.68rem;color:#1f6e4f">Still worth more than base price - wait a little longer for even more, or sell now to lock it in.</span>';
+      }
+    } else if (FISH[tile.plant.type]) {
+      valueHint = '<br><span style="font-size:.68rem;color:#1f6e4f">Its value only ever grows the longer it stays here - no rush to sell.</span>';
+    }
     tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
       '<br><button type="button" class="sell-btn">Sell for ' + liveValue.toLocaleString() + ' coins</button>' +
-      '<br><span style="font-size:.68rem;color:#7a6650">Tip: CALL Sell() pays ' + Math.round(liveValue * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>';
+      '<br><span style="font-size:.68rem;color:#7a6650">Tip: CALL Sell() pays ' + Math.round(liveValue * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>' +
+      valueHint;
     tileInfoEl.querySelector('.sell-btn').addEventListener('click', function () {
       var result = sellAt(playerCursor);
       logConsole(result.message, !result.ok);
