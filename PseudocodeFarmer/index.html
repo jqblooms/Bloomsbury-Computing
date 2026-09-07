@@ -320,9 +320,6 @@
   .tut-card-desc { display: block; font-size: .76rem; color: #4d6b5b; line-height: 1.4; }
   .tut-card-status { font-size: .68rem; font-weight: 800; color: #2e8b57; white-space: nowrap; flex-shrink: 0; }
   .tut-card-status.tut-inprogress { color: #a3711f; }
-  .tut-card.tut-blocked { cursor: not-allowed; opacity: .82; background: #fdf6ec; border-color: #eecf9a; }
-  .tut-card.tut-blocked:hover { background: #fdf6ec; }
-  .tut-card-blocked { display: block; margin-top: 4px; font-size: .72rem; font-weight: 700; color: #a3711f; }
 
   #tutorial-bar-panel { display: none; background: #eefaf2; border-bottom: 3px solid #6cc499; }
   #tutorial-bar-panel.active { display: block; order: -3; }
@@ -462,11 +459,13 @@
       </section>
 
       <!-- Machine Tutorials: a self-contained, opt-in "learn Cambridge Pseudocode by building
-           a machine" system, independent of the Lesson Mission panel above/below. It runs in
-           the student's own real farm (not a constructed sandbox) and shares no state or code
-           path with lessonMissionMode - see the "Machine Tutorials engine" section of the
-           script for the full explanation. Hidden during a lesson mission (body.lesson-mission-mode)
-           so the two systems are never both trying to guide the student at once. -->
+           a machine" system, independent of the Lesson Mission panel above/below. Each tutorial
+           runs in its own disposable practice world (fresh money/inventory/tiles, guaranteed to
+           match what that tutorial needs) rather than the student's real free-play farm, so a
+           tutorial's requirements can never clash with whatever state an earlier tutorial or
+           free play left behind - see the "Machine Tutorials engine" section of the script for
+           the full explanation. Hidden during a lesson mission (body.lesson-mission-mode) so the
+           two systems are never both trying to guide the student at once. -->
       <section class="panel-section" id="tutorial-picker-panel">
         <h2>Machine Tutorials</h2>
         <button type="button" id="tutorial-picker-open">Browse Tutorials</button>
@@ -748,6 +747,14 @@ var machines = [];
 var lessonMissionMode = null;
 var lessonMissionPendingSource = '';
 var lessonMissionAttempt = 0;
+// Machine Tutorials get their own disposable practice world, the same idea as a lesson
+// mission's deterministic sandbox but swapped in/out of the SAME farm view rather than a
+// separate URL mode - see the "Machine Tutorials engine" section for enterTutorialSandbox /
+// exitTutorialSandbox. tutorialSavedRealState is a full snapshot of the student's real
+// free-play state, taken once when the first tutorial of a session starts and restored the
+// moment they leave tutorial mode; it is never itself written to localStorage.
+var tutorialMode = false;
+var tutorialSavedRealState = null;
 // Defined with the rest of the game state because boot-time save selection
 // needs to know whether this URL is a mission before it decides whether to
 // load the student's free-play farm.
@@ -2827,9 +2834,11 @@ function makePlantLabel(x, z) {
   return label;
 }
 
-function saveGame(force) {
-  if (lessonMissionMode) return;
-  if (!force && !gameStateDirty) return;
+// Captures the live game into the same plain-object shape saveGame() writes to
+// localStorage - factored out so a tutorial sandbox snapshot (kept only in memory, see
+// enterTutorialSandbox below) and the real localStorage save both go through exactly one
+// place that knows how to describe "the current game state".
+function serializeGameState() {
   var s = {
     v: SAVE_VERSION,
     money: money,
@@ -2858,6 +2867,15 @@ function saveGame(force) {
       runtimeVersion: 2
     });
   });
+  return s;
+}
+
+function saveGame(force) {
+  // Neither a lesson mission nor a tutorial's practice world is ever the student's real
+  // farm - saving here would silently overwrite their actual save with throwaway state.
+  if (lessonMissionMode || tutorialMode) return;
+  if (!force && !gameStateDirty) return;
+  var s = serializeGameState();
   var json = JSON.stringify(s);
   if (!force && json === lastSavedJson) { gameStateDirty = false; return; }
   try {
@@ -2904,16 +2922,11 @@ function restoreMachine(s) {
   scheduleMachine(machine);
 }
 
-// Restores the whole game from localStorage. Returns true if there was a
-// save to restore; called once at boot, before the first HUD paint.
-function loadGame() {
-  var raw;
-  try { raw = localStorage.getItem(SAVE_KEY); } catch (e) { raw = null; }
-  if (!raw) return false;
-  var s;
-  try { s = JSON.parse(raw); } catch (e) { return false; }
-  if (!s || s.v !== SAVE_VERSION) return false;
-  lastSavedJson = raw;
+// Restores the live game world from a serializeGameState()-shaped object - the mirror image
+// of that function, and shared the same way: loadGame() applies one parsed from
+// localStorage, exitTutorialSandbox() applies one kept only in memory. Assumes the world is
+// already blank (see clearWorldObjects) - it only ever creates things, never removes them.
+function applyGameState(s) {
   money = s.money;
   totalEarned = s.totalEarned;
   inventory = s.inventory || {};
@@ -2940,21 +2953,32 @@ function loadGame() {
     restoreMachine(m);
   });
   nextMachineId = s.nextMachineId || 1;
+}
+
+// Restores the whole game from localStorage. Returns true if there was a
+// save to restore; called once at boot, before the first HUD paint.
+function loadGame() {
+  var raw;
+  try { raw = localStorage.getItem(SAVE_KEY); } catch (e) { raw = null; }
+  if (!raw) return false;
+  var s;
+  try { s = JSON.parse(raw); } catch (e) { return false; }
+  if (!s || s.v !== SAVE_VERSION) return false;
+  lastSavedJson = raw;
+  applyGameState(s);
   return true;
 }
 
 // ============================================================
 // RESET GAME (top-bar button, two-click confirm)
 // ============================================================
-function resetGame() {
-  // The top-bar reset belongs to free play. Mission mode has its own reset
-  // and must never remove the student's normal farm save.
-  if (lessonMissionMode) {
-    clearMissionWorld();
-    var missionStatus = document.getElementById('lesson-mission-status');
-    if (missionStatus) { missionStatus.className = ''; missionStatus.textContent = 'Mission reset. Write your code, then press Run.'; }
-    return;
-  }
+// Tears down every machine and floating text currently in the scene (aborting any in-flight
+// program first) and resets the machine id counter - the part of "wipe the world" that's
+// identical whether we're about to rebuild a fresh grid (resetGame, enterTutorialSandbox) or
+// apply a saved/snapshotted state on top (loadGame's caller pattern via applyGameState,
+// exitTutorialSandbox). Never touches tiles/plants itself - callers follow up with either
+// rebuildGarden(list) or applyGameState(s), which does its own rebuildGarden.
+function clearWorldObjects() {
   runEpoch++; // abort any in-flight program (its loop checks the epoch)
   setRunningUI(false);
   machines.forEach(function (m) {
@@ -2970,6 +2994,22 @@ function resetGame() {
   });
   floatingTexts = [];
   nextMachineId = 1;
+}
+
+function resetGame() {
+  // The top-bar reset belongs to free play. Mission mode and tutorial mode both have their
+  // own reset and must never remove (or overwrite) the student's normal farm save.
+  if (lessonMissionMode) {
+    clearMissionWorld();
+    var missionStatus = document.getElementById('lesson-mission-status');
+    if (missionStatus) { missionStatus.className = ''; missionStatus.textContent = 'Mission reset. Write your code, then press Run.'; }
+    return;
+  }
+  if (tutorialMode) {
+    resetTutorialWorld(TUTORIALS[activeTutorial.tutIdx]);
+    return;
+  }
+  clearWorldObjects();
   rebuildGarden(initialTileList());
   money = 40;
   totalEarned = 0;
@@ -3191,13 +3231,7 @@ function clearMissionWorld() {
   // reset state) no matter what calls it or how the UI around it changes later - the "Reset
   // Mission" button and resetGame()'s mission branch both stay correct by construction.
   if (!lessonMissionMode) return;
-  runEpoch++;
-  setRunningUI(false);
-  machines.forEach(function (m) { scene.remove(m.group); scene.remove(m.cursorMesh); disposeObject3D(m.group); disposeObject3D(m.cursorMesh); });
-  machines = [];
-  floatingTexts.forEach(function (floating) { scene.remove(floating.sprite); disposeSprite(floating.sprite, false); });
-  floatingTexts = [];
-  nextMachineId = 1;
+  clearWorldObjects();
   rebuildGarden(lessonMissionMode.tiles || initialTileList());
   // Lesson worlds are fixed teaching spaces. Remove expansion tiles so the
   // only visible squares are the ones needed for the current task.
@@ -3420,10 +3454,13 @@ function watchLessonRun() {
 // ============================================================
 // MACHINE TUTORIALS - self-contained, independent of Lesson Missions
 // ============================================================
-// Teaches real Cambridge Pseudocode syntax by having the student build an
-// actual automated machine in their own free-play farm - never a
-// constructed sandbox, and it shares no state, functions, or storage key
-// with lessonMissionMode above. Modeled on PyScratch's own tutorial mode
+// Teaches real Cambridge Pseudocode syntax by having the student build an actual automated
+// machine. Each tutorial runs in its own fresh, disposable practice world (see the TUTORIAL
+// SANDBOX section below: enterTutorialSandbox/exitTutorialSandbox) sized exactly for what
+// that tutorial needs, rather than the student's real free-play farm - so a tutorial's
+// requirements can never clash with state an earlier tutorial or free play left behind. It
+// shares no state, functions, or storage key with lessonMissionMode above. Modeled on
+// PyScratch's own tutorial mode
 // (assets/js/pyscratch.js: TUTORIALS array, inline tutorial bar, per-step
 // requires checklist, resumable progress) but adapted to this game's real
 // compiled-instruction model instead of raw text matching - a step's
@@ -3744,32 +3781,87 @@ function currentTutorialStep() {
   return TUTORIALS[activeTutorial.tutIdx].steps[activeTutorial.stepIdx];
 }
 
-// A tutorial "needs a clear home tile" if any of its steps places a machine - the machine
-// is always placed at wherever the player currently stands, so a tile already occupied
-// (typically by a machine an earlier tutorial in the same session left behind) blocks it
-// immediately, before a single line of code is even relevant.
-function tutorialNeedsMachinePlacement(tut) {
-  return tut.steps.some(function (s) { return s.action === 'machine'; });
+// ============================================================
+// TUTORIAL SANDBOX - each tutorial gets its own fresh, disposable practice world
+// ============================================================
+// Fixes a real problem: tutorials used to run directly in the student's own free-play farm,
+// so a tutorial's requirements (enough coins, a clear home tile, no seed already in
+// inventory before an IF/ELSE step that assumes there isn't one) routinely clashed with
+// whatever state an earlier tutorial - or ordinary free play - had left behind. Now every
+// tutorial starts from a small, deterministic world sized exactly for what it needs
+// (tut.minMoney as a real starting balance, not just a worst-case threshold to clear before
+// starting; empty inventory; an untouched tile grid), so it is always completable regardless
+// of what the student has been doing. The world is a genuine practice sandbox - see the
+// AskUserQuestion decision this was built against: what's built during a tutorial (a placed
+// machine, planted crops) stays in the sandbox and does not carry over when the student
+// leaves it, exactly the way a lesson mission never touches the free-play save either. The
+// student's real farm is snapshotted once (enterTutorialSandbox) and restored byte-for-byte
+// (exitTutorialSandbox) - it is never visible or mutable while any tutorial is active.
+function resetTutorialWorld(tut) {
+  clearWorldObjects();
+  rebuildGarden(initialTileList());
+  money = typeof tut.minMoney === 'number' ? tut.minMoney : 40;
+  totalEarned = 0;
+  inventory = {};
+  soldCount = {};
+  unlockedState = {};
+  selectedMachineId = null;
+  editingMachineCodeId = null;
+  // Player "home" - the origin SetPosition(x, z) counts from - is always the fixed (0, 0)
+  // corner in free play (see the playerCursor comment near its declaration), so leaving
+  // homeX/homeZ untouched here keeps every tutorial's SetPosition offsets meaning exactly
+  // what their instructions say, same as they always have.
+  playerCursor.x = Math.floor(GRID_SIZE / 2);
+  playerCursor.z = Math.floor(GRID_SIZE / 2);
+  playerCursor.facing = 0;
+  updatePlayerCursorPosition();
+  updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
+  codeInput.value = '';
+  clearCodeError();
+  consoleOutput.innerHTML = '';
+  machineLogQueue = [];
+  machineLogByKey = {};
+  gameStateDirty = false; // the sandbox never persists - see saveGame()'s tutorialMode guard
+  lastHudSignature = '';
+  lastTileInfoSignature = '';
+  refreshUnlocks();
+  updateHUD();
+  updateTileInfoPanel();
 }
-// Checked BEFORE a tutorial is allowed to start, not just reacted to afterwards (see the
-// tutorial-bar-attempt-warning flow for the in-tutorial version of this same idea) - a
-// student shouldn't be able to open a tutorial that's already guaranteed to fail on its
-// final step from state a previous tutorial left behind. minMoney is a hand-set, worst-case
-// estimate per tutorial (see each entry in TUTORIALS) rather than something simulated from
-// the pseudocode itself, since real cost depends on runtime branching and existing
-// inventory - being a little conservative here is safer than being exact and wrong.
-function tutorialFeasibility(tut) {
-  var reasons = [];
-  if (typeof tut.minMoney === 'number' && money < tut.minMoney) {
-    reasons.push('You need at least ' + tut.minMoney + ' coins (you have ' + Math.floor(money) + ').');
+// Enters tutorial mode if not already in it (snapshotting the real farm exactly once - a
+// student can move straight from one tutorial to another via "Browse Tutorials" without ever
+// returning to free play in between, and that must never re-snapshot an already-sandboxed
+// world over the real one), then builds tut's fresh world.
+function enterTutorialSandbox(tut) {
+  if (!tutorialMode) {
+    saveGame(true); // make sure the real save on disk is current before we leave it behind
+    tutorialSavedRealState = serializeGameState();
+    tutorialMode = true;
   }
-  if (tutorialNeedsMachinePlacement(tut)) {
-    var homeTile = tileAt(playerCursor.x, playerCursor.z);
-    if (homeTile && homeTile.hasMachine) {
-      reasons.push('You\'re standing on an existing machine - move to open ground first.');
-    }
-  }
-  return { ok: reasons.length === 0, reasons: reasons };
+  resetTutorialWorld(tut);
+}
+// Restores the student's real farm exactly as it was before any tutorial this session
+// touched it. Safe to call even if a snapshot was somehow never taken (defensive - should
+// never happen given enterTutorialSandbox always takes one first).
+function exitTutorialSandbox() {
+  if (!tutorialMode) return;
+  var saved = tutorialSavedRealState;
+  tutorialMode = false;
+  tutorialSavedRealState = null;
+  clearWorldObjects();
+  if (saved) applyGameState(saved);
+  else rebuildGarden(initialTileList());
+  codeInput.value = '';
+  clearCodeError();
+  consoleOutput.innerHTML = '';
+  machineLogQueue = [];
+  machineLogByKey = {};
+  gameStateDirty = false;
+  lastHudSignature = '';
+  lastTileInfoSignature = '';
+  refreshUnlocks();
+  updateHUD();
+  updateTileInfoPanel();
 }
 
 function renderTutorialPicker() {
@@ -3780,20 +3872,14 @@ function renderTutorialPicker() {
     var status = '';
     if (prog && prog.completed) status = '<span class="tut-card-status">Done</span>';
     else if (prog && prog.stepIdx > 0) status = '<span class="tut-card-status tut-inprogress">Step ' + (prog.stepIdx + 1) + '/' + tut.steps.length + '</span>';
-    var feas = tutorialFeasibility(tut);
-    var blockedNote = feas.ok ? '' : '<span class="tut-card-blocked">' + feas.reasons.map(escapeHtmlLocal).join(' ') + '</span>';
-    return '<button type="button" class="tut-card' + (feas.ok ? '' : ' tut-blocked') + '" data-tut="' + i + '">' +
+    return '<button type="button" class="tut-card" data-tut="' + i + '">' +
       '<span class="tut-card-badge" style="background:' + tut.color + '">' + escapeHtmlLocal(tut.title.charAt(0)) + '</span>' +
       '<span class="tut-card-body"><span class="tut-card-title">' + escapeHtmlLocal(tut.title) + '</span>' +
-      '<span class="tut-card-desc">' + escapeHtmlLocal(tut.desc) + '</span>' + blockedNote + '</span>' + status + '</button>';
+      '<span class="tut-card-desc">' + escapeHtmlLocal(tut.desc) + '</span></span>' + status + '</button>';
   }).join('');
   list.querySelectorAll('.tut-card').forEach(function (card) {
     card.addEventListener('click', function () {
       var tutIdx = parseInt(card.dataset.tut, 10);
-      // Re-checked here, not just trusted from the render pass - the player can act on the
-      // game behind the open modal (drag the field, wait for a machine tick) between the
-      // picker rendering and the click, so state may have changed either way since then.
-      if (!tutorialFeasibility(TUTORIALS[tutIdx]).ok) { renderTutorialPicker(); return; }
       startTutorial(tutIdx);
       closeTutorialModal();
     });
@@ -3880,13 +3966,6 @@ document.getElementById('tutorial-modal-overlay').addEventListener('click', func
 window.addEventListener('keydown', function (e) {
   if (e.key === 'Escape' && document.getElementById('tutorial-modal-overlay').classList.contains('open')) closeTutorialModal();
 });
-// A "blocked" reason (not enough coins, tile occupied) can resolve on its own while the
-// modal just sits open - a machine keeps earning, the player might drag the field - so
-// re-render periodically rather than only on the next click, matching the spirit of
-// pointing out the fix rather than making the student re-discover it themselves.
-setInterval(function () {
-  if (document.getElementById('tutorial-modal-overlay').classList.contains('open')) renderTutorialPicker();
-}, 2000);
 
 function startTutorial(tutIdx) {
   var tut = TUTORIALS[tutIdx];
@@ -3894,6 +3973,7 @@ function startTutorial(tutIdx) {
   var saved = tutState[tut.id];
   var stepIdx = (saved && !saved.completed) ? Math.min(saved.stepIdx, tut.steps.length - 1) : 0;
   activeTutorial = { tutIdx: tutIdx, stepIdx: stepIdx };
+  enterTutorialSandbox(tut); // swaps in this tutorial's own fresh, guaranteed-workable world
   document.body.classList.add('tutorial-active'); // disables the shop Buy / ground Sell shortcuts
   var panel = document.getElementById('tutorial-bar-panel');
   panel.classList.add('active');
@@ -3904,6 +3984,7 @@ function startTutorial(tutIdx) {
 }
 function exitTutorial() {
   activeTutorial = null;
+  exitTutorialSandbox(); // hands the student's real farm back exactly as they left it
   document.body.classList.remove('tutorial-active');
   document.getElementById('tutorial-bar-panel').classList.remove('active');
   closeTutorialCodeModal(); // no current step left for it to be a copy of
@@ -4043,7 +4124,7 @@ function completeTutorial() {
   saveTutorialProgress();
   document.getElementById('tutorial-bar-dots').innerHTML = tut.steps.map(function () { return '<span class="tb-dot tb-done"></span>'; }).join('');
   document.getElementById('tutorial-bar-title').textContent = 'Tutorial complete';
-  document.getElementById('tutorial-bar-text').innerHTML = 'You wrote a real sequence and turned it into an automated machine. Watch it work on your farm, or pick another tutorial from the list below.';
+  document.getElementById('tutorial-bar-text').innerHTML = 'Nice work - that was a practice run in its own sandbox, so it never touched your real farm. Exit the tutorial to get back to it, or pick another tutorial from the list below.';
   document.getElementById('tutorial-bar-code').innerHTML = '';
   document.getElementById('tutorial-bar-checks').innerHTML = '';
   document.getElementById('tutorial-bar-action-hint').textContent = '';
@@ -4122,22 +4203,14 @@ if (!missionParam) renderTutorialPicker(); // hidden anyway in mission mode, but
 
 // Deep-link a specific tutorial from a lesson, the same way ?lessonMission= deep-links a
 // mission - e.g. a Year 9 Sequence lesson links straight to ?tutorial=basic-auto-farm rather
-// than sending the student to the picker to find it themselves. Unlike a mission, a tutorial
-// runs in the student's own real free-play farm (by design - see the MACHINE TUTORIALS
-// comment header), so this never touches loadGame()/the save - it just opens whichever
-// tutorial the lesson asked for once the page (and its normal save) has finished loading.
+// than sending the student to the picker to find it themselves. loadGame() (the student's
+// normal free-play save) still runs first, same as ever - startTutorial() below snapshots
+// whatever that restored and swaps in the tutorial's own fresh sandbox on top of it, so a
+// deep-linked tutorial is always startable regardless of that save's state.
 var tutorialParam = new URLSearchParams(window.location.search).get('tutorial');
 if (tutorialParam && !missionParam) {
   var tutorialParamIdx = TUTORIALS.findIndex(function (t) { return t.id === tutorialParam; });
-  if (tutorialParamIdx !== -1) {
-    if (tutorialFeasibility(TUTORIALS[tutorialParamIdx]).ok) {
-      startTutorial(tutorialParamIdx);
-    } else {
-      // Can't jump straight in - open the picker so the (already-rendered) blocked reason
-      // is what the student actually sees, instead of nothing happening.
-      openTutorialModal();
-    }
-  }
+  if (tutorialParamIdx !== -1) startTutorial(tutorialParamIdx);
 }
 
 // ============================================================
