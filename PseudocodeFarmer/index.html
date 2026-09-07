@@ -248,12 +248,21 @@
   #lesson-mission-panel.collapsed #lesson-mission-title-collapsed { display: inline; }
   #lesson-mission-panel.collapsed #lesson-mission-body { display: none; }
   #lesson-mission-panel h2 { color: #7a4d05; }
-  #lesson-mission-title { font-weight: 800; color: #4a3517; margin-bottom: 5px; }
-  #lesson-mission-objective { font-size: .76rem; line-height: 1.35; color: #5d4a2d; }
-  #lesson-mission-status { margin-top: 7px; padding: 6px 8px; border-radius: 7px; background: #fff; border: 1px solid #e1c77f; font-size: .74rem; font-weight: 800; color: #6d541e; }
+  #lesson-mission-title { font-weight: 800; color: #4a3517; margin-bottom: 8px; font-size: .95rem; }
+  /* The objective is the actual instruction a student has to act on - the title above it is
+     just a name for the sequence. It was previously the same small, quiet body text as
+     everything else and got skipped; it's now the single most visually weighted thing in the
+     card besides the title, styled like a real task callout rather than a caption. */
+  #lesson-mission-objective-label { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #a3711f; }
+  #lesson-mission-objective { font-size: .92rem; line-height: 1.4; color: #3d2c10; font-weight: 700; background: #fff; border: 2px solid #eab952; border-radius: 8px; padding: 10px 12px; margin: 3px 0 4px; }
+  #lesson-mission-status { margin-top: 9px; padding: 6px 8px; border-radius: 7px; background: #fff; border: 1px solid #e1c77f; font-size: .74rem; font-weight: 800; color: #6d541e; }
   #lesson-mission-status.complete { background: #e6f7e6; border-color: #80bd80; color: #216b2b; }
   #lesson-mission-next { margin-top: 8px; font-size: .74rem; font-weight: 700; color: #7a4d05; }
   #lesson-mission-status.complete ~ #lesson-mission-next { display: none; }
+  /* Stuck-mission failsafe: shown only when the student has genuinely no way forward
+     (no seeds, no money, nothing growing anywhere to eventually sell) - see
+     missionIsDeadEnd(). A clear, distinct warning rather than a silent soft-lock. */
+  #lesson-mission-stuck-warning { margin-top: 9px; padding: 8px 10px; border-radius: 7px; background: #fdecec; border: 1px solid #e0968f; font-size: .76rem; font-weight: 700; color: #7a2a20; line-height: 1.35; }
   /* Mission-specific mini cheat sheet: only the exact commands this task needs, in the
      syntax the checker actually accepts - a beginner shouldn't have to search a 30-row
      general reference for the 1-3 lines a given mission uses. */
@@ -338,10 +347,12 @@
         </h2>
         <div id="lesson-mission-body">
           <div id="lesson-mission-title"></div>
+          <div id="lesson-mission-objective-label">Your task</div>
           <div id="lesson-mission-objective"></div>
           <div id="lesson-mission-commands-label">Commands you'll need:</div>
           <table id="lesson-mission-commands"></table>
           <div id="lesson-mission-status"></div>
+          <div id="lesson-mission-stuck-warning" hidden>⚠️ You don't have the seeds or money to finish this from here, and nothing is growing that could be sold. Click <strong>Reset Mission</strong> below to start fresh with your original money and seeds.</div>
           <div id="lesson-mission-next">👇 Write your code in the Code Box below, then press <strong>▶ Run</strong>.</div>
           <button type="button" id="lesson-mission-reset">Reset Mission</button>
         </div>
@@ -2991,15 +3002,59 @@ function clearMissionWorld() {
   refreshUnlocks();
   updateHUD();
   updateTileInfoPanel();
+  updateMissionStuckWarning(); // fresh state should never be a dead end, but re-check for real
 }
 
 function missionCodeHas(program, names) {
   return names.some(function (name) { return program.some(function (instr) { return instr.name === name; }); });
 }
 
+// Softlock failsafe: a mission gives a fixed, small amount of starting money and seeds
+// (GDD-style "deliberately small, deterministic sandbox"), so a student who spends it all on
+// the wrong crop - e.g. buying two of the wrong vegetable for a "buy two things" mission -
+// can end up with no seeds of what they need and no money to buy more. Reset Mission always
+// fixes this (it fully re-seeds money/inventory/tiles from the mission config), but a student
+// who doesn't realise they're stuck can sit there confused. This detects the *unambiguous*
+// dead end - no seeds of any crop still needed, no money to buy one, and nothing planted
+// anywhere (growing or ready) that could ever be sold for cash - and points at the fix.
+// Deliberately conservative: it only fires when there is truly no way forward, never on a
+// "just wait for it to grow" state, so it's never wrong when it does fire.
+function missionNeededCrops(cfg) {
+  var needed = [];
+  cfg.targets.forEach(function (target) {
+    var tile = tileAt(target.x, target.z);
+    var satisfied = !!(tile && tile.plant && tile.plant.type === target.type);
+    if (!satisfied && needed.indexOf(target.type) === -1) needed.push(target.type);
+  });
+  return needed;
+}
+function missionIsDeadEnd(cfg) {
+  if (!cfg) return false;
+  var needed = missionNeededCrops(cfg);
+  if (!needed.length) return false; // nothing left to get - mission is complete or trivially fine
+  var canObtainAny = needed.some(function (type) {
+    if (invCount(type) > 0) return true; // already own a seed for it
+    if (!isUnlocked(type)) return false; // can't buy what isn't unlocked yet
+    return money >= Math.round(currentSeedPrice(type) * CODE_BUY_DISCOUNT);
+  });
+  if (canObtainAny) return false;
+  // Can't get a needed seed right now - but if anything anywhere is planted (growing or
+  // ready), selling it later could still raise the cash, so this isn't a dead end yet.
+  return plantedTiles.length === 0;
+}
+function updateMissionStuckWarning() {
+  var cfg = lessonMissionMode;
+  var warning = document.getElementById('lesson-mission-stuck-warning');
+  if (!warning) return;
+  var status = document.getElementById('lesson-mission-status');
+  var complete = status && status.classList.contains('complete');
+  warning.hidden = !cfg || complete || !missionIsDeadEnd(cfg);
+}
+
 function checkLessonMission(source) {
   var cfg = lessonMissionMode;
   if (!cfg) return;
+  updateMissionStuckWarning(); // world state is already settled by now, win or lose this run
   var program;
   try { program = compile(source || ''); } catch (e) { return; }
   if (cfg.required.some(function (name) { return !missionCodeHas(program, [name]); })) return;
@@ -3014,6 +3069,7 @@ function checkLessonMission(source) {
     status.classList.add('complete');
     status.textContent = 'Mission complete. Your solution worked.';
   }
+  updateMissionStuckWarning(); // hides itself once the mission is actually solved
   try { window.parent.postMessage({ type: 'pseudocodeFarmerLessonProgress', missionId: lessonMissionMode.id, status: 'complete', attempts: lessonMissionAttempt, code: source }, '*'); } catch (e) {}
 }
 
