@@ -3877,6 +3877,26 @@ machineBtn.addEventListener('click', function () {
 
 if (!missionParam) renderTutorialPicker(); // hidden anyway in mission mode, but skip the work too
 
+// Deep-link a specific tutorial from a lesson, the same way ?lessonMission= deep-links a
+// mission - e.g. a Year 9 Sequence lesson links straight to ?tutorial=basic-auto-farm rather
+// than sending the student to the picker to find it themselves. Unlike a mission, a tutorial
+// runs in the student's own real free-play farm (by design - see the MACHINE TUTORIALS
+// comment header), so this never touches loadGame()/the save - it just opens whichever
+// tutorial the lesson asked for once the page (and its normal save) has finished loading.
+var tutorialParam = new URLSearchParams(window.location.search).get('tutorial');
+if (tutorialParam && !missionParam) {
+  var tutorialParamIdx = TUTORIALS.findIndex(function (t) { return t.id === tutorialParam; });
+  if (tutorialParamIdx !== -1) {
+    if (tutorialFeasibility(TUTORIALS[tutorialParamIdx]).ok) {
+      startTutorial(tutorialParamIdx);
+    } else {
+      // Can't jump straight in - open the picker so the (already-rendered) blocked reason
+      // is what the student actually sees, instead of nothing happening.
+      openTutorialModal();
+    }
+  }
+}
+
 // ============================================================
 // ANIMATION LOOP
 // ============================================================
