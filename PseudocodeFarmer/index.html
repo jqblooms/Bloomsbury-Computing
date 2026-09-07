@@ -889,6 +889,24 @@ function currentSellValue(plant) {
   }
   return item.sellPrice;
 }
+// Which part of its value curve a ready plant is currently in - lets UI text be precise
+// instead of just comparing the live value to the base price, which would wrongly tell a
+// battery sitting exactly at its peak plateau to "wait for more" when waiting longer does
+// nothing until decay eventually starts. 'flat' for crops (always). A battery is 'climbing'
+// (still short of its peak), 'peak' (at its best value - decay hasn't started yet), or
+// 'decaying' (already past its best). A fish is always 'climbing' once ready - it has no
+// peak/decay phase of its own, see currentSellValue().
+function sellValuePhase(plant) {
+  if (FISH[plant.type]) return 'climbing';
+  if (!BATTERIES[plant.type]) return 'flat';
+  var elapsedMs = Date.now() - plant.plantedAt;
+  var growMs = plant.growMs;
+  var peakAt = growMs * BATTERY_PEAK_AT_MULTIPLE;
+  var decayAt = growMs * BATTERY_DECAY_STARTS_AT_MULTIPLE;
+  if (elapsedMs <= peakAt) return 'climbing';
+  if (elapsedMs <= decayAt) return 'peak';
+  return 'decaying';
+}
 
 // Writing pseudocode should always beat reaching for a button - that is
 // the whole point of the game. Code Buy("...") costs less than the shop
@@ -1619,11 +1637,20 @@ function buySeedByLabel(label, viaCode) {
 // word. Legacy spellings with underscores remain accepted so saved machines
 // continue to run, but all newly compiled calls use these canonical names.
 var FUNCTIONS = ['HasCrop', 'CropOnTile', 'Money', 'SeedCount'];
+// These names predate Solar Farm/Aquarium and stay the primary, documented ones everywhere
+// (tutorials, the cheat sheet, error messages) - but "HasCrop" reads oddly for a battery or
+// a fish. FUNCTION_ALIASES gives each a farm-type-neutral synonym that resolves to the exact
+// same canonical name and behaviour, the same "legacy spelling accepted" idea already used
+// for underscored names, just for a different reason.
+var FUNCTION_ALIASES = { HasPlant: 'HasCrop', PlantOnTile: 'CropOnTile', ItemCount: 'SeedCount' };
 function identifierKey(name) { return String(name || '').replace(/_/g, '').toLowerCase(); }
 function canonicalFunctionName(name) {
   var key = identifierKey(name);
   for (var i = 0; i < FUNCTIONS.length; i++) {
     if (identifierKey(FUNCTIONS[i]) === key) return FUNCTIONS[i];
+  }
+  for (var alias in FUNCTION_ALIASES) {
+    if (identifierKey(alias) === key) return FUNCTION_ALIASES[alias];
   }
   return null;
 }
@@ -3315,9 +3342,14 @@ function liquidateFarm() {
 function sellTheFarm(targetTypeId) {
   if (!sellFarmUnlocked() || !FARM_TYPES[targetTypeId] || targetTypeId === currentFarmType) return false;
   var liquidated = liquidateFarm(); // reads the OLD currentFarmType - must run before switching
+  // "Sell the Farm" liquidates what's GROWING on the land, not the land itself - any tiles
+  // bought expanding the garden (real coins, on an escalating cost curve) carry over into the
+  // new farm type rather than silently vanishing back to the starting 8x8 grid. Captured
+  // before clearWorldObjects() wipes the live `tiles` object.
+  var keepTiles = Object.keys(tiles).map(function (key) { return [tiles[key].x, tiles[key].z]; });
   currentFarmType = targetTypeId; // set before rebuildGarden() below, so fresh tiles get the right colour
   clearWorldObjects();
-  rebuildGarden(initialTileList());
+  rebuildGarden(keepTiles.length ? keepTiles : initialTileList());
   inventory = {};
   soldCount = {};
   unlockedState = {};
@@ -3579,16 +3611,15 @@ function updateTileInfoPanel() {
     // currentSellValue() is flat for crops (unchanged) but genuinely live for a battery or
     // fish - its value keeps moving over time even after "ready", see the FARM TYPES comment.
     var liveValue = currentSellValue(tile.plant);
-    var baseItem = lookupItem(tile.plant.type);
-    var baseValue = baseItem ? baseItem.sellPrice : liveValue;
     var valueHint = '';
-    if (BATTERIES[tile.plant.type]) {
-      if (liveValue < baseValue) {
-        valueHint = '<br><span style="font-size:.68rem;color:#a3271f;font-weight:700">This has been sitting too long and lost value - sell it now.</span>';
-      } else if (liveValue > baseValue) {
-        valueHint = '<br><span style="font-size:.68rem;color:#1f6e4f">Still worth more than base price - wait a little longer for even more, or sell now to lock it in.</span>';
-      }
-    } else if (FISH[tile.plant.type]) {
+    var phase = sellValuePhase(tile.plant);
+    if (phase === 'decaying') {
+      valueHint = '<br><span style="font-size:.68rem;color:#a3271f;font-weight:700">This has been sitting too long and lost value - sell it now.</span>';
+    } else if (phase === 'peak') {
+      valueHint = '<br><span style="font-size:.68rem;color:#8a6416;font-weight:700">At its best value right now - sell before it starts losing value.</span>';
+    } else if (phase === 'climbing' && BATTERIES[tile.plant.type]) {
+      valueHint = '<br><span style="font-size:.68rem;color:#1f6e4f">Still climbing towards its best value - wait a little longer for more, or sell now.</span>';
+    } else if (phase === 'climbing' && FISH[tile.plant.type]) {
       valueHint = '<br><span style="font-size:.68rem;color:#1f6e4f">Its value only ever grows the longer it stays here - no rush to sell.</span>';
     }
     tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
