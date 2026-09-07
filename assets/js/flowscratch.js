@@ -138,6 +138,7 @@
     set_drag_mode:      { shape: 'process',   title: 'Set drag mode',      data: { mode: 'draggable' },          category: 'sensing' },
     set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
     change_variable:    { shape: 'process',   title: 'Change variable',    data: { varName: '', value: 1 },      category: 'variables' },
+    wait_seconds:       { shape: 'process',   title: 'Wait seconds',       data: { seconds: 1 },                 category: 'control' },
     selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' },
     subroutine_start:   { shape: 'oval',      title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
     call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' }
@@ -500,6 +501,7 @@
   // separate function rather than trying to strip HTML out of that one.
   function nodeSummaryText(n) {
     var d = n.data || {};
+    if (n.type === 'wait_seconds') return 'Wait ' + valueDisplay(d, 'seconds', 'secs');
     if (n.type === 'subroutine_start') return 'Sub-routine: ' + (d.name || 'unnamed');
     if (n.type === 'call_subroutine') return 'CALL ' + (d.name || 'unnamed');
     if (n.type === 'move_steps') return 'Move ' + valueDisplay(d, 'steps', 'steps');
@@ -694,6 +696,7 @@
   }
   function nodeMarkup(n) {
     var sub = '';
+    if (n.type === 'wait_seconds') sub = '<span class="fs-inline-label">wait</span>' + inlineValueHtml(n.data, 'seconds') + '<span class="fs-inline-label">secs</span>';
     if (n.type === 'subroutine_start') sub = '<input type="text" class="fs-inline-name" data-field="name" value="' + esc(n.data.name || '') + '" aria-label="Sub-routine name">';
     if (n.type === 'call_subroutine') sub = subroutineSelectHtml('name', n.data.name || '');
     if (n.type === 'move_steps') sub = inlineValueHtml(n.data, 'steps');
@@ -1242,6 +1245,26 @@
       if (next) next.classList.add('active');
     }
   }
+  // Same idea as setActiveNode, for the outgoing wire: toggles the
+  // 'active' class on the existing <path>, it does not rebuild the SVG.
+  // Used every step during a run instead of calling the full renderWires()
+  // (which recomputes every edge's route and rebuilds the whole wire
+  // layer's innerHTML, including reattaching a click listener to every
+  // wire) - the graph's edges don't change while a flowchart is actually
+  // running, only which one is lit up, so a full rebuild every single
+  // step was by far the biggest cost in the run loop (measured live: over
+  // two thirds of total run time), not the step-pacing delay it was
+  // originally mistaken for.
+  function setActiveWire(edgeId) {
+    if (!els.wireLayer) return;
+    var current = els.wireLayer.querySelector('.fs-wire.active');
+    if (current) current.classList.remove('active');
+    if (edgeId) {
+      var g = els.wireLayer.querySelector('g[data-edge="' + edgeId + '"]');
+      var wire = g && g.querySelector('.fs-wire');
+      if (wire) wire.classList.add('active');
+    }
+  }
 
   function screenToWorld(x, y) {
     var r = els.canvasWrap.getBoundingClientRect();
@@ -1281,6 +1304,7 @@
     if (n.type === 'set_effect') f = sourceField('Set to', 'value', n.data) + '<p class="fs-empty">Choose the effect with the dropdown inside this block.</p>';
     if (n.type === 'change_layer') f = sourceField('Layers', 'layers', n.data) + '<p class="fs-empty">Choose forward or backward with the dropdown inside this block.</p>';
     if (n.type === 'say_for' || n.type === 'think_for') f = sourceField('Seconds', 'seconds', n.data);
+    if (n.type === 'wait_seconds') f = sourceField('Seconds', 'seconds', n.data);
     if (n.type === 'subroutine_start') f = '<p class="fs-empty">Give this sub-routine a unique name inside the block.</p>';
     if (n.type === 'call_subroutine') f = '<p class="fs-empty">Choose the named sub-routine to run inside the block.</p>';
     if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'go_to' || n.type === 'set_rotation_style' || n.type === 'switch_costume_to' || n.type === 'go_to_layer' || n.type === 'set_drag_mode' || n.type === 'play_sound' || n.type === 'play_sound_until_done') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
@@ -1449,9 +1473,11 @@
   // ── Runtime: drive the real, currently-selected TurboWarp sprite ───────
   // Every case here does its work synchronously and returns nothing to
   // await, EXCEPT say (its bubble needs to actually be visible for a
-  // moment), ask (genuinely waits on the student), and the glide blocks
-  // (which animate over time). Pacing between steps is handled centrally
-  // in run(), not per-block, so slow mode can control it uniformly instead
+  // moment), ask (genuinely waits on the student), the glide blocks
+  // (which animate over time), and wait_seconds (a deliberate, student-
+  // placed pause - the general-purpose Control block, distinct from the
+  // pacing delay below). Pacing between steps is handled centrally in
+  // run(), not per-block, so slow mode can control it uniformly instead
   // of fighting a per-block wait baked in here.
   function randomStagePosition() {
     return { x: (Math.random() - 0.5) * (STAGE_HALF_W * 2), y: (Math.random() - 0.5) * (STAGE_HALF_H * 2) };
@@ -1689,6 +1715,8 @@
       case 'set_volume_to':
         try { target.setVolume(Math.max(0, Math.min(100, readValue(target, n.data, 'volume')))); } catch (e) {}
         return;
+      case 'wait_seconds':
+        return wait(Math.max(0, readValue(target, n.data, 'seconds')) * 1000);
       case 'ask':
         return showAskBox(n.data.text).then(function (answer) {
           FS.answer = answer || '';
@@ -1756,24 +1784,45 @@
     var start = FS.nodes.find(function (n) { return n.type === 'start'; });
     var current = start, steps = 0, callStack = [];
     // A "forever" flowchart loop is just a wire connected back to an
-    // earlier block, a normal cycle, not a special block type. The pacing
-    // wait() below every step (zero when slow mode is off, still a real
-    // await so control always yields back to the browser) is what stops
-    // this from ever locking up the tab like a true synchronous busy-loop
-    // could. STEP_CAP is a generous last-resort safety net only, not the
-    // intended way to stop a deliberate loop, that's what the stop button
-    // (wired to TurboWarp's own) is for.
+    // earlier block, a normal cycle, not a special block type. Some pacing
+    // yield is needed every so often so this can't lock up the tab like a
+    // true synchronous busy-loop could, and so the stop button stays
+    // responsive. STEP_CAP is a generous last-resort safety net only, not
+    // the intended way to stop a deliberate loop, that's what the stop
+    // button (wired to TurboWarp's own) is for.
+    //
+    // pace() used to be an unconditional `await wait(FS.slowMode ?
+    // FS.slowDelayMs : 0)` on every single step. That looked right (0ms
+    // delay when slow mode is off) but a real `setTimeout(fn, 0)` is not
+    // actually 0ms in a browser: after a handful of nested zero-delay
+    // timeouts in the same chain, browsers clamp them to a ~4ms floor
+    // (measured live: ~224 iterations/sec, not thousands). Every flowchart
+    // was silently throttled to that floor on every step regardless of the
+    // slow mode toggle - invisible on a short flow (a few steps finishes
+    // in well under a frame either way) but very obvious on any loop,
+    // which is exactly when a flowchart is likely to have many steps.
+    // Fixed by only actually awaiting a real timer when slow mode is on,
+    // or once every PACE_EVERY steps as a periodic yield back to the
+    // browser - most steps with slow mode off now run at essentially
+    // native speed instead of being capped by the timer floor.
+    var PACE_EVERY = 20;
+    function pace(stepNum) {
+      if (FS.slowMode) return wait(FS.slowDelayMs);
+      if (stepNum % PACE_EVERY === 0) return wait(0);
+      return Promise.resolve();
+    }
     var STEP_CAP = 200000;
+    renderWires();
     (async function loop() {
       while (FS.running && FS.gen === myGen && current && steps++ < STEP_CAP) {
         setRunStatus(typeTitle(current));
         var outs = FS.edges.filter(function (e) { return e.from === current.id; });
-        renderWires(current.type === 'call_subroutine' ? null : (outs[0] && outs[0].id));
+        setActiveWire(current.type === 'call_subroutine' ? null : (outs[0] && outs[0].id));
         setActiveNode(current.id);
         if (current.type === 'end') {
           if (!callStack.length) break;
           current = callStack.pop();
-          await wait(FS.slowMode ? FS.slowDelayMs : 0);
+          await pace(steps);
           continue;
         }
         if (current.type === 'call_subroutine') {
@@ -1781,13 +1830,13 @@
             return n.type === 'subroutine_start' && String(n.data.name || '').trim() === String(current.data.name || '').trim();
           });
           callStack.push(getNode(outs[0] ? outs[0].to : undefined));
-          await wait(FS.slowMode ? FS.slowDelayMs : 0);
+          await pace(steps);
           current = routine;
           continue;
         }
         await runBlock(current);
         if (FS.gen !== myGen) return;
-        await wait(FS.slowMode ? FS.slowDelayMs : 0);
+        await pace(steps);
         if (FS.gen !== myGen) return;
         if (current.type === 'selection') {
           var truth = evaluateCondition(current);
@@ -2774,6 +2823,12 @@
   // ── Boot ──────────────────────────────────────────────────────────────
   waitFor(function () { return (window.vm && window.vm.runtime) ? window.vm : null; }).then(function (vm) {
     FS.vm = vm;
+    // Opt-in only (add ?fsdebug to the URL): exposes the closure state and
+    // a few mutators that are otherwise unreachable from outside this IIFE,
+    // for driving/inspecting a real run from the console instead of only
+    // through simulated clicks - how the two run-loop bugs fixed alongside
+    // this were actually found and measured. No effect unless requested.
+    if (/fsdebug/.test(location.search)) { window.__FS = FS; window.__addNode = addNode; window.__addEdge = addEdge; window.__renderAll = renderAll; window.__run = run; }
     buildUI();
     buildTutorialUI();
     updateTransform();
