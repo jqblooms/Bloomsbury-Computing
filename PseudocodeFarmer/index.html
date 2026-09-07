@@ -2943,7 +2943,7 @@ function checkLessonMission(source) {
     status.classList.add('complete');
     status.textContent = 'Mission complete. Your solution worked.';
   }
-  try { window.parent.postMessage({ type: 'pseudocodeFarmerLessonProgress', missionId: lessonMissionMode.id, status: 'complete', attempts: lessonMissionAttempt }, '*'); } catch (e) {}
+  try { window.parent.postMessage({ type: 'pseudocodeFarmerLessonProgress', missionId: lessonMissionMode.id, status: 'complete', attempts: lessonMissionAttempt, code: source }, '*'); } catch (e) {}
 }
 
 function startLessonMission(id) {
