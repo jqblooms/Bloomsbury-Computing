@@ -295,15 +295,29 @@
      not a section buried below ~30 shop rows - exactly the discoverability problem the
      Lesson Mission panel had before it got the same fix. */
   #tutorial-picker-panel { order: -2; }
-  #tutorial-picker-panel h2 { color: #1f6e4f; }
-  #tutorial-picker-list { display: grid; gap: 8px; }
-  .tut-card { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: #f0faf3; border: 1px solid #bfe6cf; cursor: pointer; text-align: left; font-family: inherit; }
-  .tut-card:hover { background: #e2f5e8; }
-  .tut-card-emoji { font-size: 1.3rem; flex-shrink: 0; }
+  #tutorial-picker-panel h2 { color: #1f6e4f; margin: 0; }
+  #tutorial-picker-open { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 12px; border-radius: 8px;
+    background: #2e8b57; color: #fff; border: 0; font: inherit; font-weight: 800; font-size: .82rem; cursor: pointer; }
+  #tutorial-picker-open:hover { background: #257048; }
+  #tutorial-picker-summary { font-size: .68rem; font-weight: 700; color: #4d8a6c; margin-top: 6px; }
+
+  /* Tutorial picker modal - same "browse all tutorials" pattern as PyScratch's own tutorial
+     pick modal (assets/js/pyscratch.js), rather than a permanently-expanded sidebar list. */
+  #tutorial-modal-overlay { position: fixed; inset: 0; background: rgba(51,36,26,.55); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+  #tutorial-modal-overlay.open { display: flex; }
+  #tutorial-modal { background: #fbfff9; border-radius: 14px; max-width: 560px; width: 100%; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+  #tutorial-modal-head { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 2px solid #d9f0e2; }
+  #tutorial-modal-head h2 { margin: 0; flex: 1; color: #1f6e4f; font-size: 1.05rem; }
+  #tutorial-modal-close { background: none; border: none; font-size: 1.2rem; color: #4d6b5b; cursor: pointer; line-height: 1; padding: 4px; }
+  #tutorial-modal-close:hover { color: #1f4d38; }
+  #tutorial-picker-list { display: grid; gap: 10px; padding: 16px 20px; overflow-y: auto; }
+  .tut-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; background: #f0faf3; border: 1px solid #bfe6cf; cursor: pointer; text-align: left; font-family: inherit; }
+  .tut-card:hover { background: #e2f5e8; border-color: #8fd4ac; }
+  .tut-card-emoji { font-size: 1.6rem; flex-shrink: 0; }
   .tut-card-body { flex: 1; min-width: 0; }
-  .tut-card-title { font-weight: 800; color: #1f4d38; font-size: .84rem; }
-  .tut-card-desc { font-size: .72rem; color: #4d6b5b; line-height: 1.3; }
-  .tut-card-status { font-size: .66rem; font-weight: 800; color: #2e8b57; white-space: nowrap; flex-shrink: 0; }
+  .tut-card-title { font-weight: 800; color: #1f4d38; font-size: .9rem; }
+  .tut-card-desc { font-size: .76rem; color: #4d6b5b; line-height: 1.35; margin-top: 2px; }
+  .tut-card-status { font-size: .68rem; font-weight: 800; color: #2e8b57; white-space: nowrap; flex-shrink: 0; }
   .tut-card-status.tut-inprogress { color: #a3711f; }
 
   #tutorial-bar-panel { display: none; background: #eefaf2; border-bottom: 3px solid #6cc499; }
@@ -324,6 +338,7 @@
   #tutorial-bar-text { font-size: .78rem; line-height: 1.4; color: #33241a; }
   #tutorial-bar-text code { background: #dff2e6; border-radius: 3px; padding: 1px 4px; font-weight: 700; color: #1f6e4f; }
   .tb-code-wrap { margin: 8px 0; }
+  .tb-code-wrap.tb-no-target { display: none; }
   #tutorial-bar-code { background: #10241a; color: #eaf7ee; border-radius: 6px; padding: 8px 10px; font: 700 .74rem/1.5 ui-monospace, "Roboto Mono", monospace; overflow-x: auto; user-select: none; margin: 0; white-space: pre; }
   #tutorial-bar-code .tb-line { display: block; }
   #tutorial-bar-code .tb-line.old { color: #7fa896; font-style: italic; font-weight: 400; }
@@ -420,7 +435,8 @@
            so the two systems are never both trying to guide the student at once. -->
       <section class="panel-section" id="tutorial-picker-panel">
         <h2>🎓 Machine Tutorials</h2>
-        <div id="tutorial-picker-list"></div>
+        <button type="button" id="tutorial-picker-open">📚 Browse Tutorials</button>
+        <div id="tutorial-picker-summary"></div>
       </section>
 
       <section class="panel-section" id="tutorial-bar-panel">
@@ -500,6 +516,16 @@
         </details>
       </section>
     </aside>
+  </div>
+</div>
+
+<div id="tutorial-modal-overlay">
+  <div id="tutorial-modal">
+    <div id="tutorial-modal-head">
+      <h2>🎓 Machine Tutorials</h2>
+      <button type="button" id="tutorial-modal-close" title="Close">✕</button>
+    </div>
+    <div id="tutorial-picker-list"></div>
   </div>
 </div>
 
@@ -3357,6 +3383,61 @@ var TUTORIALS = [
         actionHint: '👇 Move off the Carrot\'s tile, then press 🤖 Place Machine below - not Run this time.'
       }
     ]
+  },
+  {
+    id: 'if-statements',
+    title: 'IF Statements',
+    emoji: '❓',
+    desc: 'Only do something when a condition is true - and choose between two things with ELSE.',
+    steps: [
+      {
+        title: 'Your first IF',
+        text: 'An <strong>IF</strong> block runs its lines only when the condition is true. Cambridge Pseudocode has no colon and no "DO" on an IF - it ends with <code>ENDIF</code>. <code>Money()</code> is a <strong>function</strong> (it gives back a value), so unlike <code>CALL</code>, it\'s never written with CALL in front. Type this:',
+        target: 'IF Money() >= 5 THEN\n    CALL Buy("Carrot")\nENDIF',
+        newLines: ['IF Money() >= 5 THEN', '    CALL Buy("Carrot")', 'ENDIF'],
+        requires: [{ type: 'IF' }, { name: 'Buy' }]
+      },
+      {
+        title: 'Add ELSE',
+        text: 'An <strong>ELSE</strong> branch runs instead, when the condition is false. Rewrite it to plant a Carrot if you already own a seed, or buy one if you don\'t - <code>SeedCount("Carrot")</code> is another function, so no CALL:',
+        target: 'IF SeedCount("Carrot") > 0 THEN\n    CALL Plant("Carrot")\nELSE\n    CALL Buy("Carrot")\nENDIF',
+        newLines: ['IF SeedCount("Carrot") > 0 THEN', '    CALL Plant("Carrot")', 'ELSE', '    CALL Buy("Carrot")', 'ENDIF'],
+        requires: [{ type: 'IF' }, { type: 'ELSE' }, { name: 'Plant' }, { name: 'Buy' }],
+        action: 'run',
+        actionHint: '👇 You don\'t own a Carrot seed yet, so this should take the ELSE branch and buy one - press ▶ Run to check.'
+      },
+      {
+        title: 'A machine with a brain',
+        text: 'Two changes before this becomes a machine. First: a machine\'s own home tile always has "a machine standing on it" (itself!), so it can never plant there - add <code>CALL SetPosition(1, 0)</code> to step off home first. Second: once it plants a Carrot, that tile stays occupied while it grows - so also check the tile is empty with <code>AND NOT HasCrop()</code>, or it\'ll keep trying to replant the same spot every tick. Combine two conditions with <code>AND</code> like this:',
+        target: 'CALL SetPosition(1, 0)\nIF SeedCount("Carrot") > 0 AND NOT HasCrop() THEN\n    CALL Plant("Carrot")\nELSE\n    CALL Buy("Carrot")\nENDIF',
+        newLines: ['CALL SetPosition(1, 0)', 'IF SeedCount("Carrot") > 0 AND NOT HasCrop() THEN', '    CALL Plant("Carrot")', 'ELSE', '    CALL Buy("Carrot")', 'ENDIF'],
+        requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Plant' }, { name: 'Buy' }],
+        action: 'machine',
+        actionHint: '👇 Press 🤖 Place Machine below - not Run this time.'
+      }
+    ]
+  },
+  {
+    id: 'while-loops',
+    title: 'WHILE Loops',
+    emoji: '🔁',
+    desc: 'Repeat instructions automatically for as long as a condition stays true.',
+    steps: [
+      {
+        title: 'Your first WHILE',
+        text: 'A <strong>WHILE</strong> loop repeats its lines for as long as the condition stays true - useful when you don\'t know in advance how many times you\'ll need to repeat. It ends with <code>ENDWHILE</code>. Type this to keep buying Carrots for as long as you can afford one:',
+        target: 'WHILE Money() >= 5 DO\n    CALL Buy("Carrot")\nENDWHILE',
+        newLines: ['WHILE Money() >= 5 DO', '    CALL Buy("Carrot")', 'ENDWHILE'],
+        requires: [{ type: 'WHILE' }, { name: 'Buy' }],
+        action: 'run',
+        actionHint: '👇 Press ▶ Run - watch the console log several purchases in a row, not just one.'
+      },
+      {
+        title: '✅ Try it!',
+        text: 'A machine already re-runs its whole program every tick on its own, so it doesn\'t need a WHILE loop wrapped around a single CALL to repeat things - the loop\'s real value is inside <strong>one</strong> run or tick, when you don\'t know in advance how many times you\'ll need to repeat something.<br><br><strong>Challenge:</strong> try changing the condition to <code>WHILE Money() >= 5 AND SeedCount("Carrot") &lt; 3 DO</code> - now it stops early on its own once you own 3 seeds, even if you can still afford more.',
+        starter: null, target: null, newLines: [], requires: []
+      }
+    ]
   }
 ];
 
@@ -3380,11 +3461,26 @@ var lastTutorialReqsOk = false;
 function tutorialCompileQuiet(source) {
   try { return compile(source || ''); } catch (e) { return null; }
 }
+// A requirement is either { name: 'Buy' } (a real CALL Buy(...) exists anywhere in the
+// compiled program) or { type: 'IF' | 'ELSE' | 'WHILE' | 'FOR' } (that control-flow
+// instruction exists anywhere). Deliberately NOT scoped to "is the CALL inside the right
+// IF block" (unlike PyScratch's own block-context check) - a real structural fact either
+// way, just a coarser one; tightening this to proper nesting is future work, not needed
+// for these tutorials to correctly teach the syntax.
+function tutorialRequirementMet(program, req) {
+  if (req.type) return program.some(function (instr) { return instr.type === req.type; });
+  return program.some(function (instr) { return instr.type === 'CALL' && instr.name === req.name; });
+}
+function tutorialRequirementLabel(req) {
+  if (req.type === 'IF') return 'IF ... THEN';
+  if (req.type === 'ELSE') return 'ELSE';
+  if (req.type === 'WHILE') return 'WHILE ... DO';
+  if (req.type === 'FOR') return 'FOR ... TO ... NEXT';
+  return 'CALL ' + req.name + '(...)';
+}
 function tutorialRequiresMet(program, requires) {
   if (!program) return false;
-  return (requires || []).every(function (req) {
-    return program.some(function (instr) { return instr.type === 'CALL' && instr.name === req.name; });
-  });
+  return (requires || []).every(function (req) { return tutorialRequirementMet(program, req); });
 }
 function currentTutorialStep() {
   if (!activeTutorial) return null;
@@ -3405,9 +3501,30 @@ function renderTutorialPicker() {
       '<span class="tut-card-desc">' + escapeHtmlLocal(tut.desc) + '</span></span>' + status + '</button>';
   }).join('');
   list.querySelectorAll('.tut-card').forEach(function (card) {
-    card.addEventListener('click', function () { startTutorial(parseInt(card.dataset.tut, 10)); });
+    card.addEventListener('click', function () { startTutorial(parseInt(card.dataset.tut, 10)); closeTutorialModal(); });
   });
+  var doneCount = TUTORIALS.filter(function (t) { return tutState[t.id] && tutState[t.id].completed; }).length;
+  var summary = document.getElementById('tutorial-picker-summary');
+  if (summary) summary.textContent = TUTORIALS.length + ' tutorial' + (TUTORIALS.length === 1 ? '' : 's') + ' · ' + doneCount + ' completed';
 }
+
+// Modal (same "browse all tutorials" pattern as PyScratch's own tutorial pick modal in
+// assets/js/pyscratch.js) rather than a permanently-expanded sidebar list.
+function openTutorialModal() {
+  renderTutorialPicker();
+  document.getElementById('tutorial-modal-overlay').classList.add('open');
+}
+function closeTutorialModal() {
+  document.getElementById('tutorial-modal-overlay').classList.remove('open');
+}
+document.getElementById('tutorial-picker-open').addEventListener('click', openTutorialModal);
+document.getElementById('tutorial-modal-close').addEventListener('click', closeTutorialModal);
+document.getElementById('tutorial-modal-overlay').addEventListener('click', function (e) {
+  if (e.target === this) closeTutorialModal(); // click on the dark backdrop, not the card itself
+});
+window.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && document.getElementById('tutorial-modal-overlay').classList.contains('open')) closeTutorialModal();
+});
 
 function startTutorial(tutIdx) {
   var tut = TUTORIALS[tutIdx];
@@ -3450,10 +3567,11 @@ function renderTutorialStep() {
   }).join('');
   var newSet = {};
   (step.newLines || []).forEach(function (l) { newSet[l] = true; });
-  document.getElementById('tutorial-bar-code').innerHTML = (step.target || '').split('\n').map(function (line) {
+  document.getElementById('tutorial-bar-code-wrap').classList.toggle('tb-no-target', !step.target);
+  document.getElementById('tutorial-bar-code').innerHTML = step.target ? step.target.split('\n').map(function (line) {
     var cls = newSet[line] ? 'new' : 'old';
     return '<span class="tb-line ' + cls + '" data-line="' + escapeHtmlLocal(line) + '">' + escapeHtmlLocal(line) + '</span>';
-  }).join('');
+  }).join('') : '';
   document.getElementById('tutorial-bar-action-hint').textContent = step.actionHint || '';
   document.getElementById('tutorial-bar-back').disabled = activeTutorial.stepIdx === 0;
   renderTutorialChecklist();
@@ -3466,8 +3584,8 @@ function renderTutorialChecklist() {
   var reqsOk = tutorialRequiresMet(program, step.requires || []);
   lastTutorialReqsOk = reqsOk;
   document.getElementById('tutorial-bar-checks').innerHTML = (step.requires || []).map(function (req) {
-    var ok = !!(program && program.some(function (instr) { return instr.type === 'CALL' && instr.name === req.name; }));
-    return '<div class="tb-check ' + (ok ? 'tb-ok' : '') + '"><span class="tb-check-icon">' + (ok ? '✓' : '⏳') + '</span><span>CALL ' + req.name + '(...)</span></div>';
+    var ok = !!(program && tutorialRequirementMet(program, req));
+    return '<div class="tb-check ' + (ok ? 'tb-ok' : '') + '"><span class="tb-check-icon">' + (ok ? '✓' : '⏳') + '</span><span>' + tutorialRequirementLabel(req) + '</span></div>';
   }).join('');
   document.querySelectorAll('#tutorial-bar-code .tb-line.new').forEach(function (el) {
     el.classList.toggle('typed', codeInput.value.indexOf(el.dataset.line) !== -1);
