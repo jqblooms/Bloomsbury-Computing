@@ -1962,8 +1962,17 @@
       // while a tutorial is actually in progress - see buildTutorialUI) ──
       '#fsTutorialsBtn{background:#2e8b57;color:#fff;border:0;border-radius:6px;padding:6px 10px;font:inherit;font-weight:700;cursor:pointer}',
       '#fsTutorialsBtn:hover{background:#257048}',
-      '#fs-tutorial-bar{display:none;flex-direction:column;gap:6px;padding:10px 12px;background:#eefaf2;border-bottom:3px solid #6cc499;flex-shrink:0;max-height:44vh;overflow:auto}',
+      // Back/Next must never scroll out of reach on a short window - the tutorial bar was
+      // originally one single overflow:auto block, and on a constrained-height screen that
+      // put the primary action buttons below the fold along with everything else, exactly
+      // the same "found the bug by actually using it, not just reading the code" class of
+      // issue as the anchor/hitbox fix earlier in this file. #fs-tut-scroll is now the ONLY
+      // thing that scrolls; #fs-tut-foot sits outside it, pinned to the bottom of a
+      // fixed-max-height bar, always visible regardless of how long the step text or
+      // checklist gets.
+      '#fs-tutorial-bar{display:none;flex-direction:column;background:#eefaf2;border-bottom:3px solid #6cc499;flex-shrink:0;max-height:min(46vh,320px)}',
       '#fs-overlay.fs-tutorial-active #fs-tutorial-bar{display:flex}',
+      '#fs-tut-scroll{overflow:auto;display:flex;flex-direction:column;gap:6px;padding:10px 12px}',
       '#fs-tut-head{display:flex;align-items:center;gap:8px}',
       '#fs-tut-titlewrap{flex:1;display:flex;align-items:baseline;gap:6px;min-width:0}',
       '#fs-tut-name{font-weight:800;color:#1f4d38;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
@@ -1982,7 +1991,7 @@
       '.fs-tut-check.ok{color:#1f8a5a;font-weight:700}',
       '.fs-tut-check-icon{width:11px;height:11px;border-radius:50%;border:2px solid #b9d6c4;flex-shrink:0;display:inline-block}',
       '.fs-tut-check.ok .fs-tut-check-icon{background:#2e8b57;border-color:#2e8b57}',
-      '#fs-tut-foot{display:flex;gap:8px;margin-top:2px}',
+      '#fs-tut-foot{display:flex;gap:8px;padding:8px 12px;flex-shrink:0;border-top:1px solid #bfe6cf;background:#e3f5e9}',
       '#fs-tut-back,#fs-tut-next{border:0;border-radius:6px;padding:6px 10px;font-weight:800;cursor:pointer;font:inherit;font-size:11.5px}',
       '#fs-tut-back{background:#dff2e6;color:#1f6e4f}',
       '#fs-tut-back:disabled{opacity:.4;cursor:not-allowed}',
@@ -2379,6 +2388,11 @@
         }
         FS.connect = null; els.draft.style.display = 'none'; els.canvasWrap.classList.remove('connecting');
         hideHoverAnchor();
+        // Connecting a wire updates FS.edges but (unlike dropping a new
+        // block) never runs through renderAll(), so the tutorial checklist
+        // - which only recomputes there - was going stale on every connect.
+        // Found by actually wiring up a tutorial's "connect them" step live.
+        updateFsTutorialChecklist();
       }
       if (FS.drag && FS.drag.kind === 'node') {
         // Dragging a block back onto the palette (the sidebar it came from)
@@ -2715,14 +2729,16 @@
     var bar = document.createElement('div');
     bar.id = 'fs-tutorial-bar';
     bar.innerHTML =
-      '<div id="fs-tut-head">' +
-        '<div id="fs-tut-titlewrap"><span id="fs-tut-name"></span><span id="fs-tut-stepcount"></span></div>' +
-        '<button type="button" id="fs-tut-exit" title="Exit tutorial">&times;</button>' +
+      '<div id="fs-tut-scroll">' +
+        '<div id="fs-tut-head">' +
+          '<div id="fs-tut-titlewrap"><span id="fs-tut-name"></span><span id="fs-tut-stepcount"></span></div>' +
+          '<button type="button" id="fs-tut-exit" title="Exit tutorial">&times;</button>' +
+        '</div>' +
+        '<div id="fs-tut-dots"></div>' +
+        '<div id="fs-tut-title"></div>' +
+        '<div id="fs-tut-text"></div>' +
+        '<div id="fs-tut-checklist"></div>' +
       '</div>' +
-      '<div id="fs-tut-dots"></div>' +
-      '<div id="fs-tut-title"></div>' +
-      '<div id="fs-tut-text"></div>' +
-      '<div id="fs-tut-checklist"></div>' +
       '<div id="fs-tut-foot"><button type="button" id="fs-tut-back">&laquo; Back</button><button type="button" id="fs-tut-next">Next</button></div>';
     var topbar = els.overlay.querySelector('#fs-topbar');
     if (topbar && topbar.nextSibling) topbar.parentNode.insertBefore(bar, topbar.nextSibling);
