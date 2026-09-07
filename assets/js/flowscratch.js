@@ -762,7 +762,7 @@
     return '<div class="fs-node ' + n.shape + (FS.selected === n.id ? ' selected' : '') + '" data-id="' + n.id + '" style="left:' + n.x + 'px;top:' + n.y + 'px;--fs-cat-color:' + catColor + '"><div class="fs-node-body">' + content + '</div></div>';
   }
 
-  function renderAll() { els.nodes.innerHTML = FS.nodes.map(nodeMarkup).join(''); bindNodes(); renderWires(); renderInspector(); }
+  function renderAll() { els.nodes.innerHTML = FS.nodes.map(nodeMarkup).join(''); bindNodes(); renderWires(); renderInspector(); updateFsTutorialChecklist(); }
 
   // Starts a connection drag from wherever the green hover-anchor dot
   // currently is, regardless of what element the pointerdown actually
@@ -1956,7 +1956,53 @@
       '#fsDiagramCloseBtn:hover{color:#18191b}',
       '#fs-diagram-body{padding:20px;overflow:auto;text-align:center}',
       '#fs-diagram-body svg{max-width:100%;height:auto}',
-      '.fs-diagram-loading{color:#686b73;font-size:13px;margin:20px 0}'
+      '.fs-diagram-loading{color:#686b73;font-size:13px;margin:20px 0}',
+
+      // ── Tutorials (PyScratch-style: a docked bar, never a blocking modal
+      // while a tutorial is actually in progress - see buildTutorialUI) ──
+      '#fsTutorialsBtn{background:#2e8b57;color:#fff;border:0;border-radius:6px;padding:6px 10px;font:inherit;font-weight:700;cursor:pointer}',
+      '#fsTutorialsBtn:hover{background:#257048}',
+      '#fs-tutorial-bar{display:none;flex-direction:column;gap:6px;padding:10px 12px;background:#eefaf2;border-bottom:3px solid #6cc499;flex-shrink:0;max-height:44vh;overflow:auto}',
+      '#fs-overlay.fs-tutorial-active #fs-tutorial-bar{display:flex}',
+      '#fs-tut-head{display:flex;align-items:center;gap:8px}',
+      '#fs-tut-titlewrap{flex:1;display:flex;align-items:baseline;gap:6px;min-width:0}',
+      '#fs-tut-name{font-weight:800;color:#1f4d38;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '#fs-tut-stepcount{font-size:10px;font-weight:700;color:#4d8a6c;flex-shrink:0}',
+      '#fs-tut-exit{background:transparent;border:0;color:#4d6b5b;font-size:16px;line-height:1;cursor:pointer;padding:2px 4px;flex-shrink:0}',
+      '#fs-tut-exit:hover{color:#1f4d38}',
+      '#fs-tut-dots{display:flex;gap:5px}',
+      '.fs-tut-dot{width:7px;height:7px;border-radius:50%;background:#cfe9da}',
+      '.fs-tut-dot.done{background:#4fbf87}',
+      '.fs-tut-dot.cur{background:#1f8a5a;transform:scale(1.3)}',
+      '#fs-tut-title{font-weight:800;color:#1f4d38;font-size:12.5px}',
+      '#fs-tut-text{font-size:11.5px;line-height:1.4;color:#33241a}',
+      '#fs-tut-text code{background:#dff2e6;border-radius:3px;padding:1px 4px;font-weight:700;color:#1f6e4f}',
+      '#fs-tut-checklist{font-size:11px;font-family:inherit}',
+      '.fs-tut-check{display:flex;align-items:center;gap:6px;padding:2px 0;color:#7a8f83}',
+      '.fs-tut-check.ok{color:#1f8a5a;font-weight:700}',
+      '.fs-tut-check-icon{width:11px;height:11px;border-radius:50%;border:2px solid #b9d6c4;flex-shrink:0;display:inline-block}',
+      '.fs-tut-check.ok .fs-tut-check-icon{background:#2e8b57;border-color:#2e8b57}',
+      '#fs-tut-foot{display:flex;gap:8px;margin-top:2px}',
+      '#fs-tut-back,#fs-tut-next{border:0;border-radius:6px;padding:6px 10px;font-weight:800;cursor:pointer;font:inherit;font-size:11.5px}',
+      '#fs-tut-back{background:#dff2e6;color:#1f6e4f}',
+      '#fs-tut-back:disabled{opacity:.4;cursor:not-allowed}',
+      '#fs-tut-next{background:#2e8b57;color:#fff;flex:1}',
+      '#fs-tut-next:disabled{opacity:.45;cursor:not-allowed;background:#9cc9ac}',
+      '#fs-tut-picker-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}',
+      '#fs-tut-picker-modal.show{display:flex}',
+      '#fs-tut-picker-card{background:#fff;border-radius:12px;max-width:420px;width:92%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.35)}',
+      '#fs-tut-picker-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #e3e3e6}',
+      '#fs-tut-picker-head h2{margin:0;font-size:15px;color:#1f4d38}',
+      '#fs-tut-picker-close{background:none;border:none;font-size:18px;line-height:1;cursor:pointer;color:#4d6b5b}',
+      '#fs-tut-picker-list{padding:12px 16px;overflow:auto;display:flex;flex-direction:column;gap:8px}',
+      '.fs-tut-card{display:flex;align-items:center;gap:10px;width:100%;padding:10px;border-radius:9px;border:1px solid #d9e6dd;background:#fbfff9;cursor:pointer;text-align:left;font:inherit}',
+      '.fs-tut-card:hover{background:#eefaf2}',
+      '.fs-tut-card-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0}',
+      '.fs-tut-card-body{flex:1;min-width:0}',
+      '.fs-tut-card-title{display:block;font-weight:800;color:#1f4d38;font-size:13px}',
+      '.fs-tut-card-desc{display:block;font-size:11px;color:#4d6b5b;line-height:1.35}',
+      '.fs-tut-card-status{font-size:10px;font-weight:800;color:#2e8b57;white-space:nowrap;flex-shrink:0}',
+      '.fs-tut-card-status.prog{color:#a3711f}'
     ].join('\n');
     document.head.appendChild(style);
   }
@@ -2457,10 +2503,263 @@
     renderAll();
   }
 
+  // ============================================================
+  // TUTORIALS - PyScratch-style: a docked bar (never a blocking modal
+  // while a tutorial is actually in progress), a per-step checklist, and
+  // resumable progress. Modeled directly on pyscratch.js's own TUTORIALS
+  // system (and Pseudocode Farmer's later adaptation of the same idea) but
+  // adapted to THIS app's model: there's no typed code to require literal
+  // lines from, so a step's `requires` are checked against the live
+  // FS.nodes/FS.edges graph structurally - "does a Start block exist",
+  // "is there a connected path from Start to End" - the same "a real
+  // structural fact, not a fragile text guess" principle Farmer's own
+  // tutorial engine already uses for its compiled-instruction checks.
+  //
+  // Extending this: add another entry to FS_TUTORIALS with its own
+  // `steps` array. Two requirement shapes are supported so far -
+  // { node: 'start' } (at least one/`count` nodes of that TYPES key
+  // exist) and { path: true } (some Start reaches some End via edges) -
+  // add more to tutorialRequirementMet/tutorialRequirementLabel as later
+  // tutorials need them, the same incremental way Farmer's own
+  // tutorialRequirementMet grew past its first couple of req shapes.
+  // ============================================================
+  var FS_TUTORIALS = [
+    {
+      id: 'first-flowchart',
+      title: 'Your First Flowchart',
+      color: '#FFBF00',
+      desc: 'Every flowchart starts with Start and ends with End - build the simplest one and run it for real.',
+      steps: [
+        {
+          title: 'Add a Start block',
+          text: 'Every flowchart begins with exactly one <b>Start</b> block, at the top of the <b>Flow</b> category in the palette on the left. Drag one onto the canvas.',
+          requires: [{ node: 'start' }]
+        },
+        {
+          title: 'Add a Move steps block',
+          text: 'Open the <b>Motion</b> category and drag a <b>Move steps</b> block onto the canvas too.',
+          requires: [{ node: 'start' }, { node: 'move_steps' }]
+        },
+        {
+          title: 'Add an End block',
+          text: 'Back in <b>Flow</b>, drag out an <b>End</b> block.',
+          requires: [{ node: 'start' }, { node: 'move_steps' }, { node: 'end' }]
+        },
+        {
+          title: 'Connect them in order',
+          text: 'Hover near a block\'s edge until the green dot appears, then press and drag to the next block: <b>Start &rarr; Move steps &rarr; End</b>.',
+          requires: [{ node: 'start' }, { node: 'move_steps' }, { node: 'end' }, { path: true }]
+        },
+        {
+          title: 'Try it!',
+          text: 'Use the green flag above the stage to run your flowchart - the sprite should move.<br><br><b>Challenge:</b> add a Turn right block between Move steps and End, and watch it face a new direction every run.',
+          requires: []
+        }
+      ]
+    }
+  ];
+  var FS_TUT_STORAGE_KEY = 'flowscratchTutorialProgress_v1';
+  var fsTutState = (function () {
+    try { return JSON.parse(localStorage.getItem(FS_TUT_STORAGE_KEY) || '{}'); } catch (e) { return {}; }
+  })();
+  function saveFsTutorialProgress() {
+    try { localStorage.setItem(FS_TUT_STORAGE_KEY, JSON.stringify(fsTutState)); } catch (e) {}
+  }
+  var activeFsTutorial = null; // { tutIdx, stepIdx }
+  function currentFsTutorialStep() {
+    if (!activeFsTutorial) return null;
+    return FS_TUTORIALS[activeFsTutorial.tutIdx].steps[activeFsTutorial.stepIdx];
+  }
+  function fsTutorialOutEdges(id) { return FS.edges.filter(function (e) { return e.from === id; }); }
+  function fsTutorialReachableFrom(startId) {
+    var seen = {};
+    (function walk(id) { if (seen[id]) return; seen[id] = true; fsTutorialOutEdges(id).forEach(function (e) { walk(e.to); }); })(startId);
+    return seen;
+  }
+  function tutorialRequirementMet(req) {
+    if (req.node) return FS.nodes.filter(function (n) { return n.type === req.node; }).length >= (req.count || 1);
+    if (req.path) {
+      var starts = FS.nodes.filter(function (n) { return n.type === 'start'; });
+      var ends = FS.nodes.filter(function (n) { return n.type === 'end'; });
+      return starts.some(function (s) {
+        var seen = fsTutorialReachableFrom(s.id);
+        return ends.some(function (e) { return seen[e.id]; });
+      });
+    }
+    return false;
+  }
+  function tutorialRequirementLabel(req) {
+    if (req.node) {
+      var label = (TYPES[req.node] && TYPES[req.node].title) || req.node;
+      return req.count > 1 ? label + ' ×' + req.count : label;
+    }
+    if (req.path) return 'Connected: Start → … → End';
+    return 'Unknown requirement';
+  }
+  function fsTutorialRequiresMet(requires) { return (requires || []).every(tutorialRequirementMet); }
+
+  function renderFsTutorialStep() {
+    if (!activeFsTutorial) return;
+    var bar = document.getElementById('fs-tutorial-bar');
+    if (!bar) return;
+    var tut = FS_TUTORIALS[activeFsTutorial.tutIdx];
+    var step = tut.steps[activeFsTutorial.stepIdx];
+    bar.querySelector('#fs-tut-name').textContent = tut.title;
+    bar.querySelector('#fs-tut-stepcount').textContent = 'Step ' + (activeFsTutorial.stepIdx + 1) + '/' + tut.steps.length;
+    bar.querySelector('#fs-tut-title').textContent = step.title;
+    bar.querySelector('#fs-tut-text').innerHTML = step.text;
+    bar.querySelector('#fs-tut-dots').innerHTML = tut.steps.map(function (s, i) {
+      var cls = i < activeFsTutorial.stepIdx ? 'done' : (i === activeFsTutorial.stepIdx ? 'cur' : '');
+      return '<span class="fs-tut-dot ' + cls + '"></span>';
+    }).join('');
+    bar.querySelector('#fs-tut-back').disabled = activeFsTutorial.stepIdx === 0;
+    updateFsTutorialChecklist();
+  }
+  // Called from renderAll() on every graph change (a block dropped, a wire
+  // connected/removed) so the checklist and Next button react live, the
+  // same "recheck on every relevant change, not just on demand" approach
+  // Farmer's own renderTutorialChecklist() already uses. No-ops instantly
+  // whenever no tutorial is active, which is the common case.
+  function updateFsTutorialChecklist() {
+    if (!activeFsTutorial) return;
+    var bar = document.getElementById('fs-tutorial-bar');
+    if (!bar) return;
+    var step = currentFsTutorialStep();
+    if (!step) return;
+    bar.querySelector('#fs-tut-checklist').innerHTML = (step.requires || []).map(function (req) {
+      var ok = tutorialRequirementMet(req);
+      return '<div class="fs-tut-check' + (ok ? ' ok' : '') + '"><span class="fs-tut-check-icon"></span>' + esc(tutorialRequirementLabel(req)) + '</div>';
+    }).join('');
+    var tut = FS_TUTORIALS[activeFsTutorial.tutIdx];
+    var isLast = activeFsTutorial.stepIdx === tut.steps.length - 1;
+    var nextBtn = bar.querySelector('#fs-tut-next');
+    nextBtn.disabled = !fsTutorialRequiresMet(step.requires);
+    nextBtn.textContent = isLast ? 'Finish ✓' : 'Next ▶';
+  }
+  function goToFsTutorialStep(delta) {
+    if (!activeFsTutorial) return;
+    var tut = FS_TUTORIALS[activeFsTutorial.tutIdx];
+    var next = activeFsTutorial.stepIdx + delta;
+    if (next < 0 || next >= tut.steps.length) return;
+    activeFsTutorial.stepIdx = next;
+    fsTutState[tut.id] = { stepIdx: next, completed: false };
+    saveFsTutorialProgress();
+    renderFsTutorialStep();
+  }
+  function completeFsTutorial() {
+    var tut = FS_TUTORIALS[activeFsTutorial.tutIdx];
+    fsTutState[tut.id] = { stepIdx: tut.steps.length - 1, completed: true };
+    saveFsTutorialProgress();
+    var bar = document.getElementById('fs-tutorial-bar');
+    if (!bar) return;
+    bar.querySelector('#fs-tut-dots').innerHTML = tut.steps.map(function () { return '<span class="fs-tut-dot done"></span>'; }).join('');
+    bar.querySelector('#fs-tut-title').textContent = 'Tutorial complete!';
+    bar.querySelector('#fs-tut-text').innerHTML = 'Nice work - pick another tutorial from the list, or keep building on your own.';
+    bar.querySelector('#fs-tut-checklist').innerHTML = '';
+    bar.querySelector('#fs-tut-back').disabled = true;
+    var nextBtn = bar.querySelector('#fs-tut-next');
+    nextBtn.disabled = true;
+    nextBtn.textContent = 'Finished ✓';
+  }
+  function advanceOrCompleteFsTutorial() {
+    var tut = FS_TUTORIALS[activeFsTutorial.tutIdx];
+    if (activeFsTutorial.stepIdx === tut.steps.length - 1) completeFsTutorial();
+    else goToFsTutorialStep(1);
+  }
+  function startFsTutorial(tutIdx) {
+    var tut = FS_TUTORIALS[tutIdx];
+    if (!tut || !els.overlay) return;
+    var saved = fsTutState[tut.id];
+    var stepIdx = (saved && !saved.completed) ? Math.min(saved.stepIdx, tut.steps.length - 1) : 0;
+    activeFsTutorial = { tutIdx: tutIdx, stepIdx: stepIdx };
+    els.overlay.classList.add('fs-tutorial-active');
+    renderFsTutorialStep();
+    closeTutorialPicker();
+  }
+  function exitFsTutorial() {
+    activeFsTutorial = null;
+    if (els.overlay) els.overlay.classList.remove('fs-tutorial-active');
+  }
+  function renderTutorialPicker() {
+    var list = document.getElementById('fs-tut-picker-list');
+    if (!list) return;
+    list.innerHTML = FS_TUTORIALS.map(function (tut, i) {
+      var prog = fsTutState[tut.id];
+      var status = '';
+      if (prog && prog.completed) status = '<span class="fs-tut-card-status">Done</span>';
+      else if (prog && prog.stepIdx > 0) status = '<span class="fs-tut-card-status prog">Step ' + (prog.stepIdx + 1) + '/' + tut.steps.length + '</span>';
+      return '<button type="button" class="fs-tut-card" data-tut="' + i + '">' +
+        '<span class="fs-tut-card-badge" style="background:' + tut.color + '">' + esc(tut.title.charAt(0)) + '</span>' +
+        '<span class="fs-tut-card-body"><span class="fs-tut-card-title">' + esc(tut.title) + '</span>' +
+        '<span class="fs-tut-card-desc">' + esc(tut.desc) + '</span></span>' + status + '</button>';
+    }).join('');
+    Array.prototype.forEach.call(list.querySelectorAll('.fs-tut-card'), function (card) {
+      card.addEventListener('click', function () { startFsTutorial(parseInt(card.dataset.tut, 10)); });
+    });
+  }
+  function openTutorialPicker() {
+    renderTutorialPicker();
+    var modal = document.getElementById('fs-tut-picker-modal');
+    if (modal) modal.classList.add('show');
+  }
+  function closeTutorialPicker() {
+    var modal = document.getElementById('fs-tut-picker-modal');
+    if (modal) modal.classList.remove('show');
+  }
+  // Builds the tutorial bar + picker modal as their own DOM subtree,
+  // appended after buildUI() rather than spliced into its own already-
+  // large innerHTML literal - keeps this whole feature a self-contained,
+  // independently reviewable addition.
+  function buildTutorialUI() {
+    if (!els.overlay || document.getElementById('fs-tutorial-bar')) return;
+    var bar = document.createElement('div');
+    bar.id = 'fs-tutorial-bar';
+    bar.innerHTML =
+      '<div id="fs-tut-head">' +
+        '<div id="fs-tut-titlewrap"><span id="fs-tut-name"></span><span id="fs-tut-stepcount"></span></div>' +
+        '<button type="button" id="fs-tut-exit" title="Exit tutorial">&times;</button>' +
+      '</div>' +
+      '<div id="fs-tut-dots"></div>' +
+      '<div id="fs-tut-title"></div>' +
+      '<div id="fs-tut-text"></div>' +
+      '<div id="fs-tut-checklist"></div>' +
+      '<div id="fs-tut-foot"><button type="button" id="fs-tut-back">&laquo; Back</button><button type="button" id="fs-tut-next">Next</button></div>';
+    var topbar = els.overlay.querySelector('#fs-topbar');
+    if (topbar && topbar.nextSibling) topbar.parentNode.insertBefore(bar, topbar.nextSibling);
+    else els.overlay.appendChild(bar);
+
+    var modal = document.createElement('div');
+    modal.id = 'fs-tut-picker-modal';
+    modal.innerHTML =
+      '<div id="fs-tut-picker-card">' +
+        '<div id="fs-tut-picker-head"><h2>Tutorials</h2><button type="button" id="fs-tut-picker-close" aria-label="Close">&times;</button></div>' +
+        '<div id="fs-tut-picker-list"></div>' +
+      '</div>';
+    els.overlay.appendChild(modal);
+
+    var tutBtn = document.createElement('button');
+    tutBtn.id = 'fsTutorialsBtn';
+    tutBtn.type = 'button';
+    tutBtn.textContent = 'Tutorials';
+    var diagramBtn = els.overlay.querySelector('#fsDiagramBtn');
+    if (diagramBtn && diagramBtn.parentNode) diagramBtn.parentNode.insertBefore(tutBtn, diagramBtn.nextSibling);
+
+    tutBtn.addEventListener('click', openTutorialPicker);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeTutorialPicker(); });
+    modal.querySelector('#fs-tut-picker-close').addEventListener('click', closeTutorialPicker);
+    bar.querySelector('#fs-tut-exit').addEventListener('click', exitFsTutorial);
+    bar.querySelector('#fs-tut-back').addEventListener('click', function () { goToFsTutorialStep(-1); });
+    bar.querySelector('#fs-tut-next').addEventListener('click', function () {
+      var step = currentFsTutorialStep();
+      if (step && fsTutorialRequiresMet(step.requires)) advanceOrCompleteFsTutorial();
+    });
+  }
+
   // ── Boot ──────────────────────────────────────────────────────────────
   waitFor(function () { return (window.vm && window.vm.runtime) ? window.vm : null; }).then(function (vm) {
     FS.vm = vm;
     buildUI();
+    buildTutorialUI();
     updateTransform();
     syncSelectedSprite();
     setInterval(syncSelectedSprite, 500);
