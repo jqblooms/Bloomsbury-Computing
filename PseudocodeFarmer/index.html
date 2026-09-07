@@ -372,6 +372,11 @@
      unaffected the moment no tutorial is running. */
   body.tutorial-active #shop-list .buy-btn,
   body.tutorial-active #tile-info .sell-btn { pointer-events: none; opacity: .35; cursor: not-allowed; }
+  /* The shop is ~30 items tall - left in normal document order it sits between the tutorial
+     bar/picker (pinned to the top) and the Code Box, forcing constant scrolling to get from
+     the instructions to where you actually type. Sink it below the Code Box while a tutorial
+     is active instead of hiding it outright, since its prices are still useful reference. */
+  body.tutorial-active #shop-panel { order: 5; }
   #shop-tutorial-note { display: none; margin-bottom: 8px; padding: 6px 8px; border-radius: 6px; background: #eefaf2; border: 1px solid #bfe6cf; color: #1f6e4f; font-size: .72rem; font-weight: 700; }
   body.tutorial-active #shop-tutorial-note { display: block; }
 </style>
