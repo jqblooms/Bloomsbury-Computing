@@ -1512,7 +1512,7 @@ function normalizeDashes(s) {
 }
 function tokenizeExpr(raw, line) {
   var tokens = [];
-  var re = /(\d+(?:\.\d+)?|"[^"]*"|[A-Za-z_]\w*|[,&+\-*/()])/g;
+  var re = /(\d+(?:\.\d+)?|"[^"]*"|[A-Za-z_]\w*|[,&+\-*/()\[\]])/g;
   var m, last = 0;
   while ((m = re.exec(raw)) !== null) {
     if (!/^\s*$/.test(raw.slice(last, m.index))) {
@@ -1530,7 +1530,7 @@ function tokenizeExpr(raw, line) {
 // Expressions are tokenised and parsed once, then turned into specialised
 // evaluator functions. Machines never repeat regular-expression tokenising,
 // parsing or operator dispatch while they are running.
-var EX_CONST = 0, EX_VAR = 1, EX_UNARY = 2, EX_BINARY = 3, EX_CALL = 4;
+var EX_CONST = 0, EX_VAR = 1, EX_UNARY = 2, EX_BINARY = 3, EX_CALL = 4, EX_INDEX = 5;
 
 function compileExpression(raw, line) {
   var tokens = tokenizeExpr(normalizeDashes(raw).trim(), line);
@@ -1589,6 +1589,13 @@ function compileExpression(raw, line) {
     if (/^true$/i.test(token)) return [EX_CONST, true];
     if (/^false$/i.test(token)) return [EX_CONST, false];
     if (peek() === '(') return parseCall(token);
+    if (peek() === '[') {
+      take();
+      var indexNode = parseConcat();
+      if (peek() !== ']') throw new PseudocodeError('Missing closing bracket "]" after ' + token + '[...', line);
+      take();
+      return [EX_INDEX, token, indexNode];
+    }
     return [EX_VAR, token];
   }
 
@@ -1607,7 +1614,7 @@ function compileExpression(raw, line) {
 // piece of arithmetic.
 function tokenizeCondition(raw, line) {
   var tokens = [];
-  var re = /(<=|>=|<>|[=<>+,\-*/()]|"[^"]*"|\d+(?:\.\d+)?|[A-Za-z_]\w*)/g;
+  var re = /(<=|>=|<>|[=<>+,\-*/()\[\]]|"[^"]*"|\d+(?:\.\d+)?|[A-Za-z_]\w*)/g;
   var m, last = 0;
   while ((m = re.exec(raw)) !== null) {
     if (!/^\s*$/.test(raw.slice(last, m.index))) {
@@ -1704,6 +1711,13 @@ function compileCondition(raw, line) {
     if (/^true$/i.test(token)) return [EX_CONST, true];
     if (/^false$/i.test(token)) return [EX_CONST, false];
     if (peek() === '(') return parseCall(token);
+    if (peek() === '[') {
+      take();
+      var indexNode = parseArith();
+      if (peek() !== ']') throw new PseudocodeError('Missing closing bracket "]" after ' + token + '[...', line);
+      take();
+      return [EX_INDEX, token, indexNode];
+    }
     return [EX_VAR, token];
   }
 
@@ -1723,6 +1737,19 @@ function buildExpressionEvaluator(node) {
     return function (vars, cursor, line) {
       if (Object.prototype.hasOwnProperty.call(vars, variableName)) return vars[variableName];
       throw new PseudocodeError('I don\'t understand "' + variableName + '".', line);
+    };
+  }
+  if (kind === EX_INDEX) {
+    var arrayName = node[1];
+    var indexEvaluator = buildExpressionEvaluator(node[2]);
+    return function (vars, cursor, line) {
+      var arr = vars[arrayName];
+      if (!Array.isArray(arr)) throw new PseudocodeError('"' + arrayName + '" is not an array yet - assign to ' + arrayName + '[1] first.', line);
+      var idx = indexEvaluator(vars, cursor, line);
+      if (typeof idx !== 'number' || !Number.isInteger(idx) || idx < 1 || idx > arr.length) {
+        throw new PseudocodeError('Index ' + idx + ' is out of range for ' + arrayName + ' (1 to ' + arr.length + ').', line);
+      }
+      return arr[idx - 1];
     };
   }
   if (kind === EX_CALL) {
@@ -1913,6 +1940,15 @@ function compile(source) {
     if (/^CALL\b/i.test(line)) {
       throw new PseudocodeError('CALL needs a procedure name and brackets, e.g. CALL SetPosition(2, 0)', lineNo);
     }
+    if ((m = line.match(/^([A-Za-z_]\w*)\s*\[\s*(.+?)\s*\]\s*(?:<-|←)\s*(.+)$/))) {
+      instructions.push({
+        type: 'ASSIGN_INDEX', var: m[1],
+        indexCode: compileExpression(m[2], lineNo),
+        exprCode: compileExpression(m[3], lineNo),
+        line: lineNo
+      });
+      continue;
+    }
     if ((m = line.match(/^([A-Za-z_]\w*)\s*(?:<-|←)\s*(.+)$/))) {
       instructions.push({ type: 'ASSIGN', var: m[1], exprCode: compileExpression(m[2], lineNo), line: lineNo });
       continue;
@@ -2048,6 +2084,16 @@ function runProgram(sourceOrInstructions, cursor, log, stepDelayMs) {
           }
           if (instr.type === 'OUTPUT') {
             log(String(evaluateExpression(instr.exprCode, vars, cursor, instr.line)));
+            pc++;
+            continue;
+          }
+          if (instr.type === 'ASSIGN_INDEX') {
+            var indexValue = evaluateExpression(instr.indexCode, vars, cursor, instr.line);
+            if (typeof indexValue !== 'number' || !Number.isInteger(indexValue) || indexValue < 1) {
+              throw new PseudocodeError('Array index must be a whole number of 1 or more.', instr.line);
+            }
+            if (!Array.isArray(vars[instr.var])) vars[instr.var] = [];
+            vars[instr.var][indexValue - 1] = evaluateExpression(instr.exprCode, vars, cursor, instr.line);
             pc++;
             continue;
           }
@@ -2513,6 +2559,16 @@ function runMachineInstruction(machine) {
   }
   if (instr.type === 'OUTPUT') {
     logConsole('[Machine #' + machine.id + '] ' + String(evaluateExpression(instr.exprCode, runtime.vars, machine.cursor, instr.line)), false, true);
+    runtime.pc++;
+    return true;
+  }
+  if (instr.type === 'ASSIGN_INDEX') {
+    var machineIndexValue = evaluateExpression(instr.indexCode, runtime.vars, machine.cursor, instr.line);
+    if (typeof machineIndexValue !== 'number' || !Number.isInteger(machineIndexValue) || machineIndexValue < 1) {
+      throw new PseudocodeError('Array index must be a whole number of 1 or more.', instr.line);
+    }
+    if (!Array.isArray(runtime.vars[instr.var])) runtime.vars[instr.var] = [];
+    runtime.vars[instr.var][machineIndexValue - 1] = evaluateExpression(instr.exprCode, runtime.vars, machine.cursor, instr.line);
     runtime.pc++;
     return true;
   }
@@ -3558,6 +3614,46 @@ var TUTORIALS = [
         starter: null, target: null, newLines: [], requires: []
       }
     ]
+  },
+  {
+    id: 'array-farm',
+    title: 'Array Farm',
+    color: '#e07b39',
+    minMoney: 40, // this step's 2 seeds (~8) + the machine (30), with a small buffer - kept tight
+                  // on purpose so the tutorial completes from a genuinely fresh 40-coin start
+    desc: 'Store a list of exact spots to farm, then visit every one of them with a single loop.',
+    steps: [
+      {
+        title: 'Store a list of spots',
+        text: 'A Strip Farm and a Grid Farm both farm a fixed, computed pattern - every tile in a line or a rectangle. An <strong>array</strong> stores a whole list of values under one name, so you can farm any set of spots you choose instead. Store two chosen spots\' coordinates, one number per array using an index in square brackets, starting at 1:',
+        target: 'Xs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0',
+        newLines: ['Xs[1] <- 0', 'Xs[2] <- 2', 'Zs[1] <- 1', 'Zs[2] <- 0'],
+        requires: [{ type: 'ASSIGN_INDEX' }]
+      },
+      {
+        title: 'Visit every spot with one loop',
+        text: 'Read a value back out of an array the same way - name, then the index in brackets. Loop over both arrays at once with <code>i</code> as the shared index, so one small loop visits every spot you stored, however many there are:',
+        target: 'Xs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0\nFOR i <- 1 TO 2\n    CALL SetPosition(Xs[i], Zs[i])\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT i',
+        newLines: ['FOR i <- 1 TO 2', '    CALL SetPosition(Xs[i], Zs[i])', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT i'],
+        requires: [{ type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        action: 'run',
+        actionHint: 'Press Run - two Carrots should appear at the two stored spots, not a computed line or block.'
+      },
+      {
+        title: 'A machine with a list',
+        text: 'Place the same code as a machine. Every tick it re-reads the same two arrays and visits the same chosen spots, forever - a genuinely custom farm shape, not a fixed strip or grid. Move off your own tile first if it\'s still holding a Carrot from the last step:',
+        target: 'Xs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0\nFOR i <- 1 TO 2\n    CALL SetPosition(Xs[i], Zs[i])\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT i',
+        newLines: [],
+        requires: [{ type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        action: 'machine',
+        actionHint: 'Press Place Machine below - not Run this time. If it fails, move to open ground (or wait for more coins) and try again.'
+      },
+      {
+        title: 'Try it',
+        text: 'Arrays plus a loop can visit any set of spots you choose, in one go - the shape lives entirely in the numbers you store, not in the code.<br><br><strong>Challenge:</strong> add a third spot to both arrays and change TO 2 to TO 3.',
+        starter: null, target: null, newLines: [], requires: []
+      }
+    ]
   }
 ];
 
@@ -3603,6 +3699,7 @@ function tutorialRequirementLabel(req) {
   if (req.type === 'WHILE') return 'WHILE ... DO';
   if (req.type === 'FOR') return 'FOR ... TO ... NEXT';
   if (req.type === 'ASSIGN') return 'a variable, e.g. Total <- 0';
+  if (req.type === 'ASSIGN_INDEX') return 'an array, e.g. Xs[1] <- 0';
   if (req.type === 'OUTPUT') return 'OUTPUT ...';
   return 'CALL ' + req.name + '(...)';
 }
