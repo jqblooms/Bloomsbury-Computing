@@ -233,6 +233,14 @@
     #main { grid-template-columns: 1fr; grid-template-rows: minmax(280px,1fr) auto; }
     #sidebar { border-left: 0; border-top: 5px solid var(--wood-dark); max-height: 46vh; }
   }
+  #lesson-mission-panel { display: none; background: #fff8df; border-bottom-color: #d6a53e; }
+  #lesson-mission-panel.active { display: block; }
+  #lesson-mission-panel h2 { color: #7a4d05; }
+  #lesson-mission-title { font-weight: 800; color: #4a3517; margin-bottom: 5px; }
+  #lesson-mission-objective { font-size: .76rem; line-height: 1.35; color: #5d4a2d; }
+  #lesson-mission-status { margin-top: 7px; padding: 6px 8px; border-radius: 7px; background: #fff; border: 1px solid #e1c77f; font-size: .74rem; font-weight: 800; color: #6d541e; }
+  #lesson-mission-status.complete { background: #e6f7e6; border-color: #80bd80; color: #216b2b; }
+  #lesson-mission-reset { margin-top: 7px; border: 0; border-radius: 7px; padding: 6px 9px; background: #8a5a34; color: #fff; font-weight: 800; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -289,6 +297,14 @@
         </div>
         <div id="machine-tiers"></div>
         <div id="console-output"></div>
+      </section>
+
+      <section class="panel-section" id="lesson-mission-panel" aria-live="polite">
+        <h2>🎯 Lesson Mission</h2>
+        <div id="lesson-mission-title"></div>
+        <div id="lesson-mission-objective"></div>
+        <div id="lesson-mission-status"></div>
+        <button type="button" id="lesson-mission-reset">Reset Mission</button>
       </section>
 
       <section class="panel-section">
@@ -498,6 +514,11 @@ var ownedTileCount = GRID_SIZE * GRID_SIZE;
 // machine, so "the machine itself is 0,0" as asked for.
 var playerCursor = { x: Math.floor(GRID_SIZE / 2), z: Math.floor(GRID_SIZE / 2), facing: 0, homeX: 0, homeZ: 0 };
 var machines = [];
+// Lesson missions are an additive classroom layer. They use a deterministic
+// temporary world and never write to the normal free-play save.
+var lessonMissionMode = null;
+var lessonMissionPendingSource = '';
+var lessonMissionAttempt = 0;
 var nextMachineId = 1;
 var isRunning = false; // true while the player's own program is executing
 var runEpoch = 0;      // bumped by Reset Game so any in-flight program aborts cleanly
@@ -2037,6 +2058,14 @@ machineBtn.addEventListener('click', function () {
   }
 });
 
+// Capture lesson code before the normal Run handler clears the editor. The
+// mission watcher checks the resulting garden after the run finishes.
+runBtn.addEventListener('click', function () {
+  if (!lessonMissionMode || !codeInput.value.trim()) return;
+  lessonMissionPendingSource = codeInput.value;
+  setTimeout(watchLessonRun, 0);
+});
+
 // ============================================================
 // MACHINES
 // ============================================================
@@ -2506,6 +2535,7 @@ function makePlantLabel(x, z) {
 }
 
 function saveGame(force) {
+  if (lessonMissionMode) return;
   if (!force && !gameStateDirty) return;
   var s = {
     v: SAVE_VERSION,
@@ -2749,7 +2779,8 @@ function buildShop() {
   });
 }
 buildShop();
-var restored = loadGame(); // restore any saved farm before the first HUD paint
+var missionParam = new URLSearchParams(window.location.search).get('lessonMission');
+var restored = missionParam && lessonMissionConfig(missionParam) ? false : loadGame(); // lesson missions never load free-play state
 refreshUnlocks();
 updateHUD();
 // Seed prices cool down over real time even with nobody clicking anything,
@@ -2843,6 +2874,103 @@ function updateTileInfoPanel() {
     tileInfoEl.className = '';
     tileInfoEl.innerHTML = '';
   }
+}
+
+// ============================================================
+// LESSON MISSION MODE
+// ============================================================
+// Missions are deliberately small, deterministic sandboxes for lessons. They
+// never touch the normal free-play localStorage save.
+var LESSON_MISSIONS = {
+  'sequence-01': { title: 'Sequence 1: Plant one crop', objective: 'Run one action and plant the starter Carrot on the home tile.', money: 0, inventory: { Carrot: 1 }, targets: [{ x: 4, z: 4, type: 'Carrot' }], required: ['Plant'], forbidden: ['IF', 'FOR', 'WHILE'] },
+  'sequence-02': { title: 'Sequence 2: Buy, move, plant', objective: 'Write a sequence that buys a Carrot, moves to (1, 0), then plants it.', money: 40, inventory: {}, targets: [{ x: 1, z: 0, type: 'Carrot' }], required: ['Buy', 'SetPosition', 'Plant'], forbidden: ['IF', 'FOR', 'WHILE'] },
+  'sequence-03': { title: 'Sequence 3: Two squares', objective: 'Write explicit instructions to plant Carrots on (2, 0) and (3, 0).', money: 40, inventory: { Carrot: 2 }, targets: [{ x: 2, z: 0, type: 'Carrot' }, { x: 3, z: 0, type: 'Carrot' }], required: ['SetPosition', 'Plant'], forbidden: ['IF', 'FOR', 'WHILE'] }
+};
+
+function lessonMissionConfig(id) { return LESSON_MISSIONS[id] || null; }
+
+function clearMissionWorld() {
+  runEpoch++;
+  setRunningUI(false);
+  machines.forEach(function (m) { scene.remove(m.group); scene.remove(m.cursorMesh); disposeObject3D(m.group); disposeObject3D(m.cursorMesh); });
+  machines = [];
+  floatingTexts.forEach(function (floating) { scene.remove(floating.sprite); disposeSprite(floating.sprite, false); });
+  floatingTexts = [];
+  nextMachineId = 1;
+  rebuildGarden(initialTileList());
+  money = Number(lessonMissionMode.money) || 0;
+  totalEarned = 0;
+  inventory = {};
+  Object.keys(lessonMissionMode.inventory || {}).forEach(function (name) { inventory[name] = lessonMissionMode.inventory[name]; });
+  soldCount = {};
+  unlockedState = {};
+  selectedMachineId = null;
+  editingMachineCodeId = null;
+  playerCursor.x = 4; playerCursor.z = 4; playerCursor.homeX = 0; playerCursor.homeZ = 0; playerCursor.facing = 0;
+  updatePlayerCursorPosition();
+  updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
+  codeInput.value = '';
+  clearCodeError();
+  consoleOutput.innerHTML = '';
+  machineLogQueue = [];
+  machineLogByKey = {};
+  gameStateDirty = false;
+  lastHudSignature = '';
+  lastTileInfoSignature = '';
+  refreshUnlocks();
+  updateHUD();
+  updateTileInfoPanel();
+}
+
+function missionCodeHas(program, names) {
+  return names.some(function (name) { return program.some(function (instr) { return instr.name === name; }); });
+}
+
+function checkLessonMission(source) {
+  var cfg = lessonMissionMode;
+  if (!cfg) return;
+  var program;
+  try { program = compile(source || ''); } catch (e) { return; }
+  if (cfg.required.some(function (name) { return !missionCodeHas(program, [name]); })) return;
+  if (cfg.forbidden.some(function (name) { return program.some(function (instr) { return instr.type === name; }); })) return;
+  var complete = cfg.targets.every(function (target) {
+    var tile = tileAt(target.x, target.z);
+    return !!(tile && tile.plant && tile.plant.type === target.type);
+  });
+  if (!complete) return;
+  var status = document.getElementById('lesson-mission-status');
+  if (status && !status.classList.contains('complete')) {
+    status.classList.add('complete');
+    status.textContent = 'Mission complete. Your solution worked.';
+  }
+  try { window.parent.postMessage({ type: 'pseudocodeFarmerLessonProgress', missionId: lessonMissionMode.id, status: 'complete', attempts: lessonMissionAttempt }, '*'); } catch (e) {}
+}
+
+function startLessonMission(id) {
+  var cfg = lessonMissionConfig(id);
+  if (!cfg) return;
+  lessonMissionMode = Object.assign({ id: id }, cfg);
+  var panel = document.getElementById('lesson-mission-panel');
+  if (panel) panel.classList.add('active');
+  var title = document.getElementById('lesson-mission-title');
+  var objective = document.getElementById('lesson-mission-objective');
+  var status = document.getElementById('lesson-mission-status');
+  if (title) title.textContent = cfg.title;
+  if (objective) objective.textContent = cfg.objective;
+  if (status) { status.className = ''; status.textContent = 'Write your code, then press Run.'; }
+  clearMissionWorld();
+  var reset = document.getElementById('lesson-mission-reset');
+  if (reset && !reset.dataset.bound) { reset.dataset.bound = '1'; reset.addEventListener('click', function () { clearMissionWorld(); var s = document.getElementById('lesson-mission-status'); if (s) { s.className = ''; s.textContent = 'Mission reset. Write your code, then press Run.'; } }); }
+}
+
+function watchLessonRun() {
+  if (!lessonMissionMode || !lessonMissionPendingSource) return;
+  lessonMissionAttempt++;
+  var source = lessonMissionPendingSource;
+  lessonMissionPendingSource = '';
+  var timer = setInterval(function () {
+    if (!isRunning) { clearInterval(timer); checkLessonMission(source); }
+  }, 100);
 }
 
 // ============================================================
@@ -2941,6 +3069,7 @@ animate();
 setInterval(updateTileInfoPanel, 500);
 
 logConsole(restored ? 'Welcome back! Your farm was restored.' : 'Welcome to Pseudocode Farmer! Write pseudocode to buy, plant and sell - code beats the buttons (CALL Buy() is cheaper, CALL Sell() pays more).');
+if (missionParam && lessonMissionConfig(missionParam)) startLessonMission(missionParam);
 </script>
 </body>
 </html>
