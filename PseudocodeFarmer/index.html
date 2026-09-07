@@ -3551,6 +3551,78 @@ setInterval(function () { refreshUnlocks(); updateHUD(); updateTileInfoPanel(); 
 setInterval(scheduleAutosave, 5000);
 window.addEventListener('pagehide', function () { saveGame(true); });
 
+// ============================================================
+// CLOUD SAVE - opt-in, additive on top of the localStorage save above
+// ============================================================
+// This page is embedded as a GitHub Pages iframe inside the Apps Script shell, which has no
+// way to run server code of its own and never handles student identity (same trust boundary
+// the lesson-mission progress messages already use) - so instead of talking to a backend
+// directly, it asks its PARENT window to do it: postMessage a request, the shell relays it to
+// Progress.gs's farmerSync()/farmerLoad() using its own authenticated session, and posts the
+// plain result back. Opened directly (not embedded, e.g. this file's own GitHub Pages URL, or
+// a local dev server) this whole section is inert - window.parent === window, every function
+// here becomes a no-op, and the game behaves exactly as it always has, local-save-only.
+//
+// The cloud save is treated as authoritative once it arrives: a signed-in student's cloud
+// save (if any) replaces whatever localStorage/loadGame() already put on screen the moment
+// the round trip resolves. Lesson missions and the tutorial sandbox both already have their
+// own state and never touch the free-play save - a cloud response is simply ignored while
+// either is active, the same guard saveGame() itself already uses.
+var isEmbeddedInShell = window.parent !== window;
+var lastCloudPushJson = '';
+var lastCloudPushAt = 0;
+var CLOUD_PUSH_MIN_INTERVAL_MS = 20000; // separate, slower cadence than the 5s local autosave - a Sheets write is a real network round trip, not a synchronous local write
+var cloudSaveTooLargeWarned = false;
+
+function requestCloudLoad() {
+  if (!isEmbeddedInShell) return;
+  try { window.parent.postMessage({ type: 'pseudocodeFarmerCloudLoadRequest' }, '*'); } catch (e) {}
+}
+function pushCloudSave(force) {
+  if (!isEmbeddedInShell || lessonMissionMode || tutorialMode) return;
+  var json = JSON.stringify(serializeGameState());
+  if (!force && json === lastCloudPushJson) return; // nothing's changed since the last push
+  if (!force && Date.now() - lastCloudPushAt < CLOUD_PUSH_MIN_INTERVAL_MS) return;
+  lastCloudPushAt = Date.now();
+  lastCloudPushJson = json;
+  try { window.parent.postMessage({ type: 'pseudocodeFarmerCloudSaveRequest', saveJson: json }, '*'); } catch (e) {}
+}
+window.addEventListener('message', function (event) {
+  // Only ever trust postMessages that genuinely came from the parent frame that embedded
+  // this page - not any other origin, and not a sibling iframe (there is no reliable single
+  // origin string to allowlist here, since the Apps Script shell's own URL varies by
+  // deployment/domain; requiring the exact source window is simpler and just as sound).
+  if (event.source !== window.parent) return;
+  var data = event.data;
+  if (!data) return;
+  if (data.type === 'pseudocodeFarmerCloudLoadResult') {
+    if (!data.ok || !data.signedIn || !data.saveJson) return;
+    if (lessonMissionMode || tutorialMode) return; // neither ever touches the free-play save
+    var s;
+    try { s = JSON.parse(data.saveJson); } catch (e) { return; }
+    if (!s || s.v !== SAVE_VERSION) return;
+    clearWorldObjects();
+    applyGameState(s);
+    lastSavedJson = data.saveJson; // so the very next local autosave tick doesn't immediately re-write an unchanged save
+    lastCloudPushJson = data.saveJson;
+    refreshUnlocks();
+    updateHUD();
+    updateTileInfoPanel();
+    logConsole('Loaded your saved farm from the cloud.');
+    return;
+  }
+  if (data.type === 'pseudocodeFarmerCloudSaveResult') {
+    if (!data.ok && !cloudSaveTooLargeWarned) {
+      cloudSaveTooLargeWarned = true;
+      console.warn('Pseudocode Farmer: cloud save failed - ' + (data.error || 'unknown error') + '. Your local save is unaffected.');
+    }
+    return;
+  }
+});
+requestCloudLoad();
+setInterval(function () { pushCloudSave(false); }, CLOUD_PUSH_MIN_INTERVAL_MS);
+window.addEventListener('pagehide', function () { pushCloudSave(true); });
+
 var lastTileInfoSignature = '';
 function updateTileInfoPanel() {
   tileInfoDirty = false;
