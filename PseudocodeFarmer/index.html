@@ -341,13 +341,30 @@
   #tutorial-bar-title { font-weight: 800; color: #1f4d38; margin-bottom: 5px; font-size: .88rem; }
   #tutorial-bar-text { font-size: .78rem; line-height: 1.4; color: #33241a; }
   #tutorial-bar-text code { background: #dff2e6; border-radius: 3px; padding: 1px 4px; font-weight: 700; color: #1f6e4f; }
-  .tb-code-wrap { margin: 8px 0; }
+  .tb-code-wrap { margin: 8px 0; position: relative; }
   .tb-code-wrap.tb-no-target { display: none; }
-  #tutorial-bar-code { background: #10241a; color: #eaf7ee; border-radius: 6px; padding: 8px 10px; font: 700 .74rem/1.5 ui-monospace, "Roboto Mono", monospace; overflow-x: auto; user-select: none; margin: 0; white-space: pre; }
-  #tutorial-bar-code .tb-line { display: block; }
-  #tutorial-bar-code .tb-line.old { color: #7fa896; font-style: italic; font-weight: 400; }
-  #tutorial-bar-code .tb-line.new { color: #ffd166; }
-  #tutorial-bar-code .tb-line.new.typed { color: #6cf0a0; }
+  #tutorial-bar-code, #tutorial-code-modal-body { background: #10241a; color: #eaf7ee; border-radius: 6px; padding: 8px 10px; font: 700 .74rem/1.5 ui-monospace, "Roboto Mono", monospace; overflow-x: auto; user-select: none; margin: 0; white-space: pre; }
+  #tutorial-bar-code .tb-line, #tutorial-code-modal-body .tb-line { display: block; }
+  #tutorial-bar-code .tb-line.old, #tutorial-code-modal-body .tb-line.old { color: #7fa896; font-style: italic; font-weight: 400; }
+  #tutorial-bar-code .tb-line.new, #tutorial-code-modal-body .tb-line.new { color: #ffd166; }
+  #tutorial-bar-code .tb-line.new.typed, #tutorial-code-modal-body .tb-line.new.typed { color: #6cf0a0; }
+  /* Pop-out button: same idea as PyScratch's own draggable code window - a 1:1 live copy of
+     the current step's reference code that can float wherever the student wants it, instead
+     of only living inside the (often narrow) sidebar tutorial bar. */
+  #tutorial-code-expand { position: absolute; top: 4px; right: 4px; background: #0a1a12; border: 1px solid #2f4c3d;
+    border-radius: 4px; color: #8fbfa8; cursor: pointer; font-size: .8rem; line-height: 1; padding: 2px 5px; z-index: 1; }
+  #tutorial-code-expand:hover { color: #eaf7ee; border-color: #4d8a6c; }
+  #tutorial-code-modal { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); width: 380px; max-width: 90vw;
+    background: #fbfff9; border: 2px solid #6cc499; border-radius: 10px; z-index: 300; display: none; flex-direction: column;
+    box-shadow: 0 10px 32px rgba(0,0,0,.35); max-height: 70vh; }
+  #tutorial-code-modal.open { display: flex; }
+  #tutorial-code-modal-head { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #eefaf2; border-bottom: 1px solid #bfe6cf;
+    border-radius: 8px 8px 0 0; cursor: grab; user-select: none; flex-shrink: 0; }
+  #tutorial-code-modal-head:active { cursor: grabbing; }
+  #tutorial-code-modal-title { flex: 1; font-size: .78rem; font-weight: 800; color: #1f6e4f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #tutorial-code-modal-close { background: none; border: none; color: #4d6b5b; cursor: pointer; font-size: .95rem; line-height: 1; padding: 2px 4px; flex-shrink: 0; }
+  #tutorial-code-modal-close:hover { color: #1f4d38; }
+  #tutorial-code-modal-body { border-radius: 0 0 8px 8px; overflow: auto; }
   #tutorial-bar-checks { margin-top: 8px; font-size: .74rem; font-family: ui-monospace, monospace; }
   .tb-check { display: flex; align-items: center; gap: 6px; padding: 2px 0; color: #7a8f83; }
   .tb-check.tb-ok { color: #1f8a5a; font-weight: 700; }
@@ -461,6 +478,7 @@
           <div id="tutorial-bar-title"></div>
           <div id="tutorial-bar-text"></div>
           <div class="tb-code-wrap" id="tutorial-bar-code-wrap">
+            <button type="button" id="tutorial-code-expand" title="Pop out this code into a floating window">&#x2922;</button>
             <pre id="tutorial-bar-code"></pre>
           </div>
           <div id="tutorial-bar-checks"></div>
@@ -539,6 +557,14 @@
     </div>
     <div id="tutorial-picker-list"></div>
   </div>
+</div>
+
+<div id="tutorial-code-modal">
+  <div id="tutorial-code-modal-head">
+    <span id="tutorial-code-modal-title">Code</span>
+    <button type="button" id="tutorial-code-modal-close" title="Close">✕</button>
+  </div>
+  <pre id="tutorial-code-modal-body"></pre>
 </div>
 
 <div id="toast-layer"></div>
@@ -3780,6 +3806,66 @@ function openTutorialModal() {
 function closeTutorialModal() {
   document.getElementById('tutorial-modal-overlay').classList.remove('open');
 }
+
+// Pop-out code window - a 1:1 live copy of the current tutorial step's reference code
+// (same diff colouring: grey/old, amber/new, green/typed) that floats free of the sidebar
+// and can be dragged anywhere, the same idea as PyScratch's own draggable code window. It
+// never has its own state - openTutorialCodeModal() and every place that already updates
+// #tutorial-bar-code's content (renderTutorialStep, renderTutorialChecklist) also mirror
+// that same innerHTML in here, so the two are never out of sync.
+function syncTutorialCodeModal() {
+  var modal = document.getElementById('tutorial-code-modal');
+  if (!modal.classList.contains('open')) return;
+  document.getElementById('tutorial-code-modal-body').innerHTML = document.getElementById('tutorial-bar-code').innerHTML;
+}
+function openTutorialCodeModal() {
+  var step = currentTutorialStep();
+  var tut = activeTutorial ? TUTORIALS[activeTutorial.tutIdx] : null;
+  document.getElementById('tutorial-code-modal-title').textContent = (tut ? tut.title + ' - ' : '') + (step ? step.title : 'Code');
+  document.getElementById('tutorial-code-modal').classList.add('open'); // before sync - sync no-ops while not open
+  syncTutorialCodeModal();
+}
+function closeTutorialCodeModal() {
+  document.getElementById('tutorial-code-modal').classList.remove('open');
+}
+document.getElementById('tutorial-code-expand').addEventListener('click', openTutorialCodeModal);
+document.getElementById('tutorial-code-modal-close').addEventListener('click', closeTutorialCodeModal);
+
+// Dragging: same pointerdown/pointermove/pointerup + pointer-capture pattern already used
+// elsewhere in this file for camera panning. Once dragged even once, position switches from
+// the initial centred transform to an explicit left/top so it stays exactly where dropped.
+(function setupTutorialCodeModalDrag() {
+  var modal = document.getElementById('tutorial-code-modal');
+  var head = document.getElementById('tutorial-code-modal-head');
+  var dragState = null;
+  head.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('#tutorial-code-modal-close')) return;
+    var rect = modal.getBoundingClientRect();
+    dragState = { id: e.pointerId, startX: e.clientX, startY: e.clientY, left: rect.left, top: rect.top };
+    modal.style.left = rect.left + 'px';
+    modal.style.top = rect.top + 'px';
+    modal.style.transform = 'none';
+    head.setPointerCapture && head.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  head.addEventListener('pointermove', function (e) {
+    if (!dragState || dragState.id !== e.pointerId) return;
+    var nextLeft = dragState.left + (e.clientX - dragState.startX);
+    var nextTop = dragState.top + (e.clientY - dragState.startY);
+    // Keep at least a corner of the header on-screen so it can never be dragged somewhere unreachable.
+    nextLeft = Math.max(-modal.offsetWidth + 60, Math.min(window.innerWidth - 60, nextLeft));
+    nextTop = Math.max(0, Math.min(window.innerHeight - 40, nextTop));
+    modal.style.left = nextLeft + 'px';
+    modal.style.top = nextTop + 'px';
+  });
+  function endDrag(e) {
+    if (!dragState || dragState.id !== e.pointerId) return;
+    dragState = null;
+  }
+  head.addEventListener('pointerup', endDrag);
+  head.addEventListener('pointercancel', endDrag);
+})();
+
 document.getElementById('tutorial-picker-open').addEventListener('click', openTutorialModal);
 document.getElementById('tutorial-modal-close').addEventListener('click', closeTutorialModal);
 document.getElementById('tutorial-modal-overlay').addEventListener('click', function (e) {
@@ -3814,6 +3900,7 @@ function exitTutorial() {
   activeTutorial = null;
   document.body.classList.remove('tutorial-active');
   document.getElementById('tutorial-bar-panel').classList.remove('active');
+  closeTutorialCodeModal(); // no current step left for it to be a copy of
   renderTutorialPicker();
 }
 function setTutorialCollapsed(collapsed) {
@@ -3863,6 +3950,9 @@ function renderTutorialChecklist() {
     el.classList.toggle('typed', codeInput.value.indexOf(el.dataset.line) !== -1);
   });
   updateTutorialNextButton(reqsOk);
+  syncTutorialCodeModal(); // covers both a step change (renderTutorialStep calls this at the
+                           // end) and every keystroke (codeInput's own input listener calls
+                           // this directly) - the pop-out never needs its own separate sync calls.
   return reqsOk;
 }
 
@@ -3911,6 +4001,7 @@ function completeTutorial() {
   var nextBtn = document.getElementById('tutorial-bar-next');
   nextBtn.disabled = true;
   nextBtn.textContent = 'Finished ✓';
+  closeTutorialCodeModal(); // no current step left for it to be a copy of
 }
 
 document.getElementById('tutorial-bar-next').addEventListener('click', function () {
