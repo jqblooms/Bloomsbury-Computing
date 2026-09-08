@@ -152,7 +152,10 @@
     call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' },
     broadcast:          { shape: 'process',   title: 'Broadcast',         data: { message: 'message1' },        category: 'control' },
     when_i_receive:     { shape: 'oval',      title: 'When I receive',    data: { message: 'message1' },        category: 'control' },
-    when_clicked:       { shape: 'oval',      title: 'When this sprite is clicked', data: {},                   category: 'control' }
+    when_clicked:       { shape: 'oval',      title: 'When this sprite is clicked', data: {},                   category: 'control' },
+    create_clone:       { shape: 'process',   title: 'Create clone of myself', data: {},                        category: 'control' },
+    when_i_start_as_clone: { shape: 'oval',   title: 'When I start as a clone', data: {},                       category: 'control' },
+    delete_this_clone:  { shape: 'process',   title: 'Delete this clone', data: {},                             category: 'control' }
   };
   var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sound', 'sensing', 'variables', 'control'];
 
@@ -226,8 +229,19 @@
       return FS.vm.runtime.targets.find(function (t) { return t.sprite && t.sprite.name === name; }) || null;
     } catch (e) { return null; }
   }
+  // Excludes clones (isOriginal === false), not just the stage - every
+  // caller here (the sprite dropdowns, and the three "once per other
+  // sprite" loops below: green-flag start, broadcast fan-out, click
+  // detection) means "each distinct sprite", not "each live target".
+  // Clones share their original's sprite.name, so without this a running
+  // clone would show up as a duplicate entry in dropdowns, and the
+  // "every other sprite" loops would re-fire that sprite's script once
+  // per clone instead of once total. A clone still gets its own "When I
+  // start as a clone" script and its own click hit-test - see
+  // fireSpriteClicks and runBlock's create_clone case, which target
+  // specific clone instances directly rather than going through here.
   function getSprites() {
-    try { return FS.vm.runtime.targets.filter(function (t) { return !t.isStage; }); } catch (e) { return []; }
+    try { return FS.vm.runtime.targets.filter(function (t) { return !t.isStage && t.isOriginal !== false; }); } catch (e) { return []; }
   }
   // Every sprite name except the one currently being edited - used by the
   // Selection block's "touching" dropdown, since touching yourself isn't a
@@ -622,6 +636,9 @@
     if (n.type === 'broadcast') return 'Broadcast "' + (d.message || '') + '"';
     if (n.type === 'when_i_receive') return 'When I receive "' + (d.message || '') + '"';
     if (n.type === 'when_clicked') return 'When this sprite is clicked';
+    if (n.type === 'create_clone') return 'Create clone of myself';
+    if (n.type === 'when_i_start_as_clone') return 'When I start as a clone';
+    if (n.type === 'delete_this_clone') return 'Delete this clone';
     if (n.type === 'move_steps') return 'Move ' + valueDisplay(d, 'steps', 'steps');
     if (n.type === 'turn_right') return 'Turn right ' + valueDisplay(d, 'degrees', 'degrees');
     if (n.type === 'turn_left') return 'Turn left ' + valueDisplay(d, 'degrees', 'degrees');
@@ -1622,7 +1639,7 @@
     });
     FS.nodes.forEach(function (n) {
       if (n.type !== 'end' && !out(n.id).length) errors.push(typeTitle(n) + ' has no outgoing connection.');
-      if (n.type !== 'start' && n.type !== 'subroutine_start' && n.type !== 'when_i_receive' && n.type !== 'when_clicked' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
+      if (n.type !== 'start' && n.type !== 'subroutine_start' && n.type !== 'when_i_receive' && n.type !== 'when_clicked' && n.type !== 'when_i_start_as_clone' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
       if (n.type === 'selection' && out(n.id).length !== 2) errors.push('Each Selection must have exactly two outgoing connections, one True and one False.');
       // addEdge() already refuses to create this, but defends here too in
       // case a graph saved before that enforcement existed gets loaded:
@@ -1637,6 +1654,7 @@
       }
       if (n.type === 'broadcast' && !String(n.data.message || '').trim()) errors.push('A Broadcast block needs a message name.');
       if (n.type === 'when_clicked' && inc(n.id).length) errors.push('"When this sprite is clicked" must have no incoming connector - it starts its own script, the same way Start does.');
+      if (n.type === 'when_i_start_as_clone' && inc(n.id).length) errors.push('"When I start as a clone" must have no incoming connector - it starts its own script, the same way Start does.');
       if (n.type === 'call_subroutine') {
         var callName = String(n.data.name || '').trim();
         if (!callName) errors.push('Each CALL block must name a sub-routine.');
@@ -1647,14 +1665,14 @@
     // sub-routine Start - reachable from a broadcast, not from Main, so
     // they need to count as valid roots here too or every node downstream
     // of one gets wrongly flagged as unreachable.
-    var receiveStarts = FS.nodes.filter(function (n) { return n.type === 'when_i_receive' || n.type === 'when_clicked'; });
+    var receiveStarts = FS.nodes.filter(function (n) { return n.type === 'when_i_receive' || n.type === 'when_clicked' || n.type === 'when_i_start_as_clone'; });
     if (starts.length === 1 || routineStarts.length || receiveStarts.length) {
       var seen = {};
       [starts[0]].concat(routineStarts).concat(receiveStarts).filter(Boolean).forEach(function (root) {
         var rootSeen = reachableFrom(root.id);
         Object.keys(rootSeen).forEach(function (id) { seen[id] = true; });
       });
-      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Main, a sub-routine Start, a "When I receive" block, or a "When this sprite is clicked" block.'); });
+      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Main, a sub-routine Start, a "When I receive" block, a "When this sprite is clicked" block, or a "When I start as a clone" block.'); });
     }
     return errors.filter(function (e, i, a) { return a.indexOf(e) === i; });
   }
@@ -1733,8 +1751,15 @@
   // runBackgroundFlow) drive ITS target directly, instead of whatever
   // sprite happens to be open in the editor (activeTarget()) - the active
   // sprite's own run() still calls this with no override, unchanged.
-  function runBlock(n, targetOverride) {
+  // nodesOverride/edgesOverride are the graph the CURRENT script is
+  // actually running from - needed only by create_clone below, which has
+  // to hand its new clone target the same "When I start as a clone" graph
+  // its creator is running (the active sprite's foreground run() defaults
+  // these to FS.nodes/FS.edges; a background flow passes its own captured
+  // nodes/edges, same as it already does for runBlock's target).
+  function runBlock(n, targetOverride, nodesOverride, edgesOverride) {
     var target = targetOverride || activeTarget();
+    var srcNodes = nodesOverride || FS.nodes, srcEdges = edgesOverride || FS.edges;
     if (n.type === 'set_variable' || n.type === 'change_variable') {
       var v = findGlobalVariable(n.data.varName);
       if (v) {
@@ -1972,6 +1997,46 @@
           FS.answer = answer || '';
           els.answerValue.textContent = FS.answer || String.fromCharCode(8709);
         });
+      // Clones: a lightweight copy of this target (position, costume,
+      // variables, everything) that runs its OWN "When I start as a
+      // clone" script concurrently, the same graph its creator is
+      // running from (srcNodes/srcEdges above) but driven against the
+      // new clone target instead. makeClone() already enforces Scratch's
+      // real 300-clone-total limit internally and returns nothing if hit,
+      // so no separate cap is needed here. goBehindOther matches real
+      // Scratch's own clone layering (new clone appears just behind its
+      // creator, not on top of it).
+      case 'create_clone': {
+        try {
+          var newClone = target.makeClone && target.makeClone();
+          if (newClone) {
+            FS.vm.runtime.addTarget(newClone);
+            newClone.goBehindOther(target);
+            var cloneStart = srcNodes.find(function (nn) { return nn.type === 'when_i_start_as_clone'; });
+            if (cloneStart) runBackgroundFlow(target.sprite.name, srcNodes, srcEdges, cloneStart, newClone);
+          }
+        } catch (e) {}
+        return;
+      }
+      // Only ever removes a clone, never the original sprite (matching
+      // real Scratch - "delete this clone" on the original does nothing).
+      // Also stops any of THIS clone's own background flows (its "When I
+      // start as a clone" script, and any "When I receive"/click handlers
+      // it happened to be running) so nothing keeps a reference to a
+      // disposed target alive - see the bgRuns key comment above
+      // runBackgroundFlow, keyed by target.id so this only ever touches
+      // scripts belonging to this exact clone, not its original or
+      // siblings.
+      case 'delete_this_clone': {
+        try {
+          if (target.isOriginal === false) {
+            Object.keys(FS.bgRuns).forEach(function (k) { if (k.indexOf(target.id + ':') === 0) FS.bgRuns[k]++; });
+            FS.vm.runtime.stopForTarget(target);
+            FS.vm.runtime.disposeTarget(target);
+          }
+        } catch (e) {}
+        return;
+      }
       default:
         return;
     }
@@ -2087,9 +2152,16 @@
   // green-flag-triggered flow, or a "When I receive" node for a broadcast
   // handler (see fireBroadcast below). Falls back to hunting for a Start
   // node when omitted, so existing green-flag call sites don't need to
-  // change.
-  function runBackgroundFlow(spriteName, nodes, edges, startNode) {
-    var target = getTargetByName(spriteName);
+  // change. targetOverride drives a SPECIFIC live target directly instead
+  // of looking one up by sprite name - needed for clones, since
+  // getTargetByName(spriteName) always resolves to the original (clones
+  // share their original's sprite.name) and a clone's own "When I start
+  // as a clone" script, or a click landing on one specific clone, must
+  // run against that exact clone, not the original or some other clone
+  // of the same sprite. The key below is target.id-based either way, so
+  // each clone's background flow already gets its own independent slot.
+  function runBackgroundFlow(spriteName, nodes, edges, startNode, targetOverride) {
+    var target = targetOverride || getTargetByName(spriteName);
     if (!target) return;
     var start = startNode || nodes.find(function (n) { return n.type === 'start'; });
     if (!start) return;
@@ -2121,7 +2193,7 @@
           current = routine;
           continue;
         }
-        await runBlock(current, target);
+        await runBlock(current, target, nodes, edges);
         if (FS.bgRuns[key] !== myGen) return;
         await pace(steps);
         if (FS.bgRuns[key] !== myGen) return;
@@ -2172,21 +2244,42 @@
       startReceivers(name, g.nodes, g.edges);
     });
   }
+  // Every live target sharing one sprite's name - the original plus
+  // however many of its clones currently exist. Clones share their
+  // original's sprite.name (only their target identity differs), so this
+  // is the one place that actually needs every instance, not just the
+  // original getSprites() returns.
+  function getAllLiveTargetsForSprite(name) {
+    try { return FS.vm.runtime.targets.filter(function (t) { return !t.isStage && t.sprite && t.sprite.name === name; }); } catch (e) { return []; }
+  }
   // A real click (mousedown), not FS.mouse.down's held-state poll - fires
   // "When this sprite is clicked" only for sprites the click actually
   // landed on, checked the same pixel-accurate way the "touching mouse
   // pointer" Selection condition already does. Same active/background
   // split as fireBroadcast above, and for the same reason.
+  //
+  // Checks every clone of a sprite too, not just the original - a
+  // Whack-a-Mole-style game clones one sprite many times over, and
+  // clicking a specific mole clone must whack THAT mole, not the
+  // original or some other clone standing somewhere else on stage.
+  // pick() is handed every live instance's drawable ID at once and
+  // returns whichever one the click actually landed on (topmost, same as
+  // a real click would resolve between overlapping copies), so the
+  // matched target - original or a particular clone - is exactly the one
+  // the script runs against.
   function fireSpriteClicks() {
     function checkAndFire(spriteName, nodes, edges) {
       var whenClicked = nodes.filter(function (n) { return n.type === 'when_clicked'; });
       if (!whenClicked.length) return;
-      var target = getTargetByName(spriteName);
-      if (!target) return;
-      var hit = false;
-      try { hit = !!(FS.vm.runtime.renderer && FS.vm.runtime.renderer.pick(FS.mouse.canvasX, FS.mouse.canvasY, 0, 0, [target.drawableID]) !== -1); } catch (e) {}
-      if (!hit) return;
-      whenClicked.forEach(function (n) { runBackgroundFlow(spriteName, nodes, edges, n); });
+      var instances = getAllLiveTargetsForSprite(spriteName);
+      if (!instances.length) return;
+      var ids = instances.map(function (t) { return t.drawableID; });
+      var hitId = -1;
+      try { hitId = (FS.vm.runtime.renderer && FS.vm.runtime.renderer.pick(FS.mouse.canvasX, FS.mouse.canvasY, 0, 0, ids)); } catch (e) { hitId = -1; }
+      if (hitId === -1 || hitId == null) return;
+      var hitTarget = instances.find(function (t) { return t.drawableID === hitId; });
+      if (!hitTarget) return;
+      whenClicked.forEach(function (n) { runBackgroundFlow(spriteName, nodes, edges, n, hitTarget); });
     }
     if (FS.activeSprite) checkAndFire(FS.activeSprite, FS.nodes, FS.edges);
     getSprites().forEach(function (t) {
@@ -3765,6 +3858,65 @@
         {
           title: 'Try it!',
           text: 'Click the <b>green flag</b>, then click the duck as fast as you can! Each hit scores a point and sends the duck to a new spot at a new speed.<br><br><b>Challenge:</b> add a <b>Set rotation style</b> block (left-right) and a Selection checking the variable <code>vx &gt; 0</code> to make the duck face the direction it\'s flying.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
+    },
+    // First tutorial to need clones - a genuinely new FlowScratch
+    // capability, added alongside this one: Create clone of myself, When
+    // I start as a clone (a script root, like Start/When I receive/When
+    // this sprite is clicked, just for a specific clone instance instead
+    // of the original), and Delete this clone. Whack-a-Mole is the
+    // simplest real use of them: one sprite, cloned repeatedly, each
+    // clone living a short independent life on its own copy of the
+    // sprite's graph.
+    //
+    // Three separate scripts share this one sprite: the spawner (Start),
+    // a clone's own lifetime (When I start as a clone), and the whack
+    // itself (When this sprite is clicked) - clicking a clone runs THAT
+    // exact clone's copy of the click script, not the original or some
+    // other still-alive clone, the same pixel-accurate hit-test Duck
+    // Hunt's click detection already uses, now checked against every
+    // live clone at once so the topmost one under the cursor is the one
+    // that gets whacked.
+    //
+    // Simplified from PyScratch's own version: only "clone of myself" is
+    // offered (no dropdown to clone a named other sprite) - the far more
+    // common case, and the only one every PyScratch clone tutorial
+    // actually uses.
+    {
+      id: 'whack-a-mole',
+      title: 'Whack-a-Mole',
+      color: '#9966FF',
+      category: 'Games',
+      desc: 'A sprite spawns clones of itself at random spots - click one before it ducks back down to score a point.',
+      steps: [
+        {
+          title: 'Set up the spawner',
+          text: 'Add a <b>Start</b>, <b>Hide</b> (the original stays off-screen - only its clones will ever show), <b>Set variable Score</b> to 0, <b>Set variable to random number</b> (<b>SpawnDelay</b>, 0.5 to 1.5), a <b>Wait seconds</b> sourced from <b>SpawnDelay</b>, then <b>Create clone of myself</b>. Loop the last block\'s output back to the <b>Set variable to random number</b> block, so it keeps spawning moles forever.',
+          requires: [{ node: 'start' }, { node: 'hide' }, { node: 'set_variable' }, { node: 'set_var_to_random' }, { node: 'wait_seconds' }, { node: 'create_clone' }, { loop: true }],
+          highlight: 'palette-create-clone',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Bring each mole to life',
+          text: 'Add a <b>separate</b> script: <b>When I start as a clone</b>, <b>Show</b>, <b>Go to</b> set to random position, <b>Wait seconds</b> (1), <b>Hide</b>, <b>Delete this clone</b>, then an <b>End</b> - a mole that\'s never clicked ducks back down on its own after a second.',
+          requires: [{ node: 'when_i_start_as_clone' }, { node: 'show' }, { node: 'go_to' }, { node: 'wait_seconds', count: 2 }, { node: 'hide', count: 2 }, { node: 'delete_this_clone' }, { node: 'end' }],
+          highlight: 'palette-when-i-start-as-clone',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Whack it on click',
+          text: 'Add a <b>third</b> script: <b>When this sprite is clicked</b>, <b>Change variable Score</b> by 1, <b>Hide</b>, <b>Delete this clone</b>, then an <b>End</b> - clicking a mole scores instantly and removes that exact mole, not the original or any other one still up.',
+          requires: [{ node: 'when_clicked' }, { node: 'change_variable' }, { node: 'hide', count: 3 }, { node: 'delete_this_clone', count: 2 }, { node: 'end', count: 2 }],
+          highlight: 'palette-when-clicked',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b> and whack moles as they pop up! Each one only stays visible for a second, so you have to be quick.<br><br><b>Challenge:</b> make it harder over time by changing <b>SpawnDelay</b>\'s random range to shrink (e.g. 0.3-0.8) every 10 points scored.',
           requires: [],
           highlight: 'green-flag',
           highlightLabel: 'Click to run'
