@@ -3600,6 +3600,78 @@
           highlightLabel: 'Click to run'
         }
       ]
+    },
+    // Three sprites (Player, Platform, Death), no clones needed. One
+    // simplification from PyScratch's own version: its platform-bounce
+    // check is `touching("Platform") and vy < 0` (compound AND) - a
+    // Selection only ever checks one condition, so this checks touching
+    // alone, meaning (unlike PyScratch) bouncing off a platform works
+    // even while still rising into it from below. A minor gameplay
+    // difference, not a functional gap worth blocking on.
+    {
+      id: 'doodle-jump',
+      title: 'Doodle Jump',
+      color: '#9966FF',
+      category: 'Games',
+      desc: 'A character that bounces automatically, wraps around the screen edges, and lands on falling platforms - or falls to a death barrier below.',
+      steps: [
+        {
+          title: 'Set up bouncing',
+          text: 'Add a <b>Set variable</b> (<b>vy</b> to 8), a <b>Change variable</b> (<b>vy</b> by -0.4), and a <b>Change y by</b> sourced from <b>vy</b>. Then a Selection checking <b>touching edge: bottom</b> - True: <b>Set y to</b> -180, then <b>Set variable vy</b> to 8 (relaunches it upward instead of just stopping).',
+          requires: [{ node: 'start' }, { node: 'set_variable', count: 2 }, { node: 'change_variable' }, { node: 'change_y_by' }, { node: 'selection' }, { node: 'set_y_to' },
+            { nodeWhere: { type: 'selection', field: 'value', value: 'bottom' }, label: 'A Selection checks the bottom edge' }],
+          highlight: 'palette-change-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Move left and right',
+          text: 'Chain on two more Selections: key <b>Right Arrow</b> (True: <b>Change x by</b> 4) and key <b>Left Arrow</b> (True: <b>Change x by</b> -4).',
+          requires: [{ node: 'start' }, { node: 'selection', count: 3 }, { node: 'change_x_by', count: 2 }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Wrap around the screen',
+          text: 'Chain on two final Selections: <b>touching edge: right</b> (True: <b>Set x to</b> -230) and <b>touching edge: left</b> (True: <b>Set x to</b> 230). Loop the last one\'s False output back to <b>Change variable vy</b>, closing the whole thing.<br><br>Use -230/230, not the exact edge value (-240/240) - landing exactly on the edge would immediately re-trigger the <em>other</em> wrap check too, and the sprite would flicker back and forth instead of actually wrapping across.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 5 }, { node: 'set_x_to', count: 2 }, { loop: true }]
+        },
+        {
+          title: 'Add the Platform sprite',
+          text: 'Click the highlighted button to add a second sprite - a flat wide costume works well. Name it something like <b>Platform</b>.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 5 }],
+          highlight: 'add-sprite-btn',
+          highlightLabel: 'Add a sprite here'
+        },
+        {
+          title: 'Platform: fall and reset',
+          text: 'With <b>Platform</b> selected: <b>Set variable to random number</b> (name it <b>platX</b>, -150 to 150), a <b>Go to x y</b> at y <b>0</b> sourced from <b>platX</b> for x, and a <b>Change y by</b> of -2. Add a Selection checking <b>touching edge: bottom</b> - True: set <b>platX</b> to a new random number, then a second <b>Go to x y</b> at y <b>180</b> sourced from <b>platX</b>. Loop both paths back to <b>Change y by</b>.',
+          requires: [{ node: 'start' }, { node: 'set_var_to_random', count: 2 }, { node: 'go_to_xy', count: 2 }, { node: 'change_y_by' }, { node: 'selection' }, { loop: true }],
+          highlight: 'palette-set-var-to-random',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Add the Death sprite',
+          text: 'Click the highlighted button again to add a third sprite - a wide flat costume spanning the stage works well. Name it something like <b>Death</b>, and position it at the very bottom of the stage.',
+          requires: [{ node: 'start' }, { node: 'set_var_to_random', count: 2 }],
+          highlight: 'add-sprite-btn',
+          highlightLabel: 'Add a sprite here'
+        },
+        {
+          title: 'Bounce on the platform, and game over',
+          text: 'Switch back to your <b>player</b> sprite. Chain on a Selection checking <b>touching</b> your Platform sprite\'s name - True: <b>Set variable vy</b> to 8. Chain on one more Selection checking <b>touching</b> your Death sprite\'s name - True: a <b>Say</b> block ("Game Over!") then an <b>End</b>. Its False loops back into your existing loop.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 7 }, { node: 'say' }, { node: 'end' },
+            { nodeWhere: { type: 'selection', field: 'condition', value: 'touching' }, label: 'A Selection checks touching' }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b>. Bounce on the platform to stay alive - fall into the death zone and it\'s game over.<br><br><b>Challenge:</b> add 2-3 more Platform sprites at different starting heights so there\'s always something to land on.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
     }
   ];
   // Categories are display-only grouping in the tutorial picker, the same
