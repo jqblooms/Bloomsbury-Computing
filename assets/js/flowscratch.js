@@ -226,6 +226,14 @@
   function getSprites() {
     try { return FS.vm.runtime.targets.filter(function (t) { return !t.isStage; }); } catch (e) { return []; }
   }
+  // Every sprite name except the one currently being edited - used by the
+  // Selection block's "touching" dropdown, since touching yourself isn't a
+  // meaningful check the way touching mouse pointer or another sprite is.
+  function otherSpriteNames() {
+    return getSprites()
+      .filter(function (t) { return t.sprite && t.sprite.name !== FS.activeSprite; })
+      .map(function (t) { return t.sprite.name; });
+  }
   function nativeSelectedSpriteName() {
     try {
       var target = FS.vm && FS.vm.editingTarget;
@@ -666,7 +674,7 @@
       } else if (d.condition === 'answer') {
         desc = 'answer exists';
       } else if (d.condition === 'touching') {
-        desc = 'touching mouse pointer';
+        desc = (!d.value || d.value === 'mouse') ? 'touching mouse pointer' : 'touching ' + d.value;
       } else if (d.condition === 'mouse_down') {
         desc = 'mouse down';
       } else if (d.condition === 'variable') {
@@ -874,7 +882,10 @@
           '</select>' +
           '<input type="number" class="fs-inline-num" data-field="varValue" value="' + (n.data.varValue != null ? n.data.varValue : 0) + '">';
       } else if (condition === 'touching') {
-        tail = '<select data-field="value"><option value="mouse"' + (n.data.value === 'mouse' ? ' selected' : '') + '>mouse pointer</option></select>';
+        tail = '<select data-field="value"><option value="mouse"' + (n.data.value === 'mouse' || !n.data.value ? ' selected' : '') + '>mouse pointer</option>' +
+          otherSpriteNames().map(function (name) {
+            return '<option value="' + esc(name) + '"' + (n.data.value === name ? ' selected' : '') + '>' + esc(name) + '</option>';
+          }).join('') + '</select>';
       } else if (condition === 'mouse_down') {
         tail = '';
       } else if (condition === 'list_contains') {
@@ -1943,10 +1954,31 @@
       v = n.data.value === 'any' ? (edges.left || edges.right || edges.top || edges.bottom) : !!edges[n.data.value];
     } else if (n.data.condition === 'answer') v = !!FS.answer;
     else if (n.data.condition === 'touching' && target) {
-      try {
-        v = !!(FS.vm.runtime.renderer &&
-          FS.vm.runtime.renderer.isTouchingDrawable(target.drawableID, FS.mouse.x, FS.mouse.y));
-      } catch (e) { v = false; }
+      // "mouse pointer" checks real pixel collision against the cursor
+      // position; anything else names another sprite and checks real
+      // pixel collision against ITS drawable - isTouchingDrawables (not
+      // the singular isTouchingDrawable, which is mouse-position-only)
+      // takes an array of candidate drawables, same technique
+      // pyscratch.js's own touching() already uses in production, kept
+      // independent per this file's header comment. Falls back to a
+      // rough bounding-box distance check if the renderer call itself
+      // throws, so a collision check never just silently does nothing.
+      if (!n.data.value || n.data.value === 'mouse') {
+        try {
+          v = !!(FS.vm.runtime.renderer &&
+            FS.vm.runtime.renderer.isTouchingDrawable(target.drawableID, FS.mouse.x, FS.mouse.y));
+        } catch (e) { v = false; }
+      } else {
+        var otherTouch = getTargetByName(n.data.value);
+        if (otherTouch) {
+          try {
+            v = !!(FS.vm.runtime.renderer &&
+              FS.vm.runtime.renderer.isTouchingDrawables(target.drawableID, [otherTouch.drawableID]));
+          } catch (e) {
+            v = Math.abs(target.x - otherTouch.x) < 30 && Math.abs(target.y - otherTouch.y) < 30;
+          }
+        }
+      }
     } else if (n.data.condition === 'mouse_down') v = !!FS.mouse.down;
     else if (n.data.condition === 'variable') {
       var vv = findGlobalVariable(n.data.varName);
@@ -3346,6 +3378,70 @@
           highlightLabel: 'Click to run'
         }
       ]
+    },
+    // First of the PyScratch "Applied Games" tutorials to be ported - the
+    // simplest of that set, chosen deliberately to prove the two-sprite
+    // shape (movement sprite + falling sprite, coordinated only through
+    // touching/variables, no clones or broadcasts needed) before
+    // attempting the more involved ones (Flappy Bird, Duck Hunt, Tower
+    // Defense, ...), each a separate future session's worth of work.
+    // Simplified from PyScratch's own version in one place: the apple
+    // resets to a fixed top position rather than a random x each time
+    // (pick_random(-200, 200)) - FlowScratch has no "random number"
+    // reporter yet (a real gap, worth adding before porting the tutorials
+    // that lean on real randomness, like Flappy Bird's pipe gaps).
+    {
+      id: 'apple-catcher',
+      title: 'Apple Catcher',
+      color: '#4C97FF',
+      category: 'Games',
+      desc: 'Catch a falling apple with a basket sprite you steer - two sprites working together through touching and shared variables.',
+      steps: [
+        {
+          title: 'Build the basket\'s movement',
+          text: 'On your first sprite (the basket), build the same left/right movement shape as <b>Making Choices</b>: Start, two Selections (Right Arrow / Left Arrow), two Change x by blocks (5 / -5), all chained together so both Selections keep checking forever.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }, { node: 'change_x_by', count: 2 }, { loop: true }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Add score and lives',
+          text: 'Add two <b>Set variable</b> blocks between Start and the movement chain: <b>Score</b> set to 0, and <b>Lives</b> set to 3.',
+          requires: [{ node: 'start' }, { node: 'set_variable', count: 2 }],
+          highlight: 'palette-set-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Add the Apple sprite',
+          text: 'Click the highlighted button to add a second sprite. Give it a small round costume and a name like <b>Apple</b> - you\'ll pick it by name from a dropdown shortly.',
+          requires: [{ node: 'start' }, { node: 'set_variable', count: 2 }],
+          highlight: 'add-sprite-btn',
+          highlightLabel: 'Add a sprite here'
+        },
+        {
+          title: 'Apple: fall from the top',
+          text: 'With the <b>Apple</b> sprite selected, build: <b>Start &rarr; Go to x y (0, 160) &rarr; Change y by (-4)</b>, looping Change y by back to itself is not allowed - you\'ll connect the rest (and close the loop) in the next step.',
+          requires: [{ node: 'start' }, { node: 'go_to_xy' }, { node: 'change_y_by' }],
+          highlight: 'palette-go-to-xy',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Catch or miss',
+          text: 'Add a Selection checking <b>touching</b> your basket sprite\'s name. True: <b>Change variable Score by 1</b>, then back to <b>Go to x y</b> (resets position and continues falling). False: add a second Selection checking <b>touching edge: bottom</b>. Its True: <b>Change variable Lives by -1</b>, then also back to <b>Go to x y</b>. Its False: back to <b>Change y by</b>, closing the falling loop.',
+          requires: [{ node: 'start' }, { node: 'go_to_xy' }, { node: 'change_y_by' }, { node: 'selection', count: 2 }, { node: 'change_variable', count: 2 },
+            { nodeWhere: { type: 'selection', field: 'condition', value: 'touching' }, label: 'A Selection checks touching' },
+            { nodeWhere: { type: 'selection', field: 'condition', value: 'edge' }, label: 'A Selection checks touching an edge' }],
+          highlight: 'palette-change-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b>. The apple should fall, and catching it with your basket scores a point while missing it costs a life.<br><br><b>Challenge:</b> add a Selection on the basket that checks <code>Lives</code> &lt;= 0 and ends the game with a Say block. Try changing Change y by\'s amount to speed the apple up over time.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
     }
   ];
   // Categories are display-only grouping in the tutorial picker, the same
@@ -3353,7 +3449,7 @@
   // an explicit `category` on the tutorial wins; anything without one falls
   // into a single default bucket so a new tutorial never has to remember to
   // set this before it'll show up somewhere.
-  var FS_TUTORIAL_CATEGORY_ORDER = ['Flowchart Basics', 'Branching & Loops', 'Movement & Animation', 'Code Organisation'];
+  var FS_TUTORIAL_CATEGORY_ORDER = ['Flowchart Basics', 'Branching & Loops', 'Movement & Animation', 'Code Organisation', 'Games'];
   function fsTutorialCategory(t) { return t.category || 'Flowchart Basics'; }
   function compareFsTutorialCategories(a, b) {
     var ai = FS_TUTORIAL_CATEGORY_ORDER.indexOf(a), bi = FS_TUTORIAL_CATEGORY_ORDER.indexOf(b);
@@ -3374,7 +3470,11 @@
     // pyscratch.js's own HIGHLIGHT_PRESETS uses, since this file deliberately
     // keeps no shared module with that one (see this file's header comment).
     'green-flag':         '[class*="green-flag_"],[class*="greenFlag"],[aria-label*="Green Flag"],[title*="Green Flag"]',
-    'stop':               '[class*="stop-all_"],[class*="stopAll"],[aria-label*="Stop All"],[title*="Stop"]'
+    'stop':               '[class*="stop-all_"],[class*="stopAll"],[aria-label*="Stop All"],[title*="Stop"]',
+    // TurboWarp's own sprite-panel "add a sprite" action menu button -
+    // same best-effort selector pyscratch.js's own preset of the same
+    // name uses, for the same reason as green-flag/stop above.
+    'add-sprite-btn':     '[class*="action-menu_"],[class*="actionMenu_"]'
   };
   // 'palette-<type>' (dashes for underscores, e.g. 'palette-change-x-by')
   // resolves automatically to that TYPES key's own palette item, so a new
