@@ -138,6 +138,12 @@
     set_drag_mode:      { shape: 'process',   title: 'Set drag mode',      data: { mode: 'draggable' },          category: 'sensing' },
     set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
     change_variable:    { shape: 'process',   title: 'Change variable',    data: { varName: '', value: 1 },      category: 'variables' },
+    list_add:           { shape: 'process',   title: 'Add to list',        data: { listName: '', item: 'thing' }, category: 'variables' },
+    list_delete:        { shape: 'process',   title: 'Delete item of list', data: { listName: '', index: 1 },    category: 'variables' },
+    list_delete_all:    { shape: 'process',   title: 'Delete all of list', data: { listName: '' },               category: 'variables' },
+    list_insert:        { shape: 'process',   title: 'Insert at list',     data: { listName: '', index: 1, item: 'thing' }, category: 'variables' },
+    list_replace:       { shape: 'process',   title: 'Replace item of list', data: { listName: '', index: 1, item: 'thing' }, category: 'variables' },
+    list_item_to_var:   { shape: 'process',   title: 'Set var to item of list', data: { varName: '', listName: '', index: 1 }, category: 'variables' },
     wait_seconds:       { shape: 'process',   title: 'Wait seconds',       data: { seconds: 1 },                 category: 'control' },
     selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' },
     subroutine_start:   { shape: 'oval',      title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
@@ -176,15 +182,20 @@
       var v = findGlobalVariable(src.slice(4));
       return v ? Number(v.value) || 0 : 0;
     }
+    if (src.indexOf('listlen:') === 0) {
+      var lst = findGlobalList(src.slice(8));
+      return (lst && Array.isArray(lst.value)) ? lst.value.length : 0;
+    }
     if (src !== 'num') { var r = reporterById(src); if (r) return r.read(target); }
     return Number(data[field] || 0);
   }
   // Short display string for a value field, used in node subtitles and the
   // Mermaid diagram: the literal number (with an optional unit), the
-  // reporter's label, or the variable's own name.
+  // reporter's label, or the variable's/list's own name.
   function valueDisplay(data, field, unit) {
     var src = valueSrc(data, field);
     if (src.indexOf('var:') === 0) return src.slice(4);
+    if (src.indexOf('listlen:') === 0) return 'length of ' + src.slice(8);
     if (src !== 'num') { var r = reporterById(src); return r ? r.label : src; }
     return unit ? String(data[field]) + ' ' + unit : String(data[field]);
   }
@@ -317,6 +328,76 @@
       var v = stage.lookupVariableByNameAndType(name, '');
       if (!v) return;
       if (!confirm('Delete the variable "' + name + '"? Any blocks using it will need a different variable chosen.')) return;
+      try { FS.vm.runtime.requestRemoveMonitor(v.id); } catch (e) {}
+      delete stage.variables[v.id];
+      renderSidebar();
+      renderAll();
+    } catch (e) {}
+  }
+
+  // ── Lists ────────────────────────────────────────────────────────────
+  // Same real-Scratch-VM-variable approach as scalar variables above (see
+  // that block's own comment) - a list is just a stage variable whose
+  // `type` is 'list' and whose `value` is a genuine array, so it
+  // serializes and shows an on-stage monitor the normal Scratch way.
+  function getGlobalLists() {
+    try {
+      var stage = FS.vm.runtime.getTargetForStage();
+      return Object.keys(stage.variables)
+        .map(function (id) { return stage.variables[id]; })
+        .filter(function (v) { return v.type === 'list'; })
+        .sort(function (a, b) { return a.name.localeCompare(b.name); });
+    } catch (e) { return []; }
+  }
+  function findGlobalList(name) {
+    var v = getGlobalLists().filter(function (v) { return v.name === name; })[0];
+    return v || null;
+  }
+  // A list monitor is its own opcode/shape (data_listcontents, a resizable
+  // box) rather than data_variable's single-line readout - otherwise the
+  // same requestAddMonitor/show/hide dance as addVariableMonitor above.
+  function addListMonitor(v, visible) {
+    try {
+      var stackedCount = FS.vm.runtime.getMonitorState().size;
+      FS.vm.runtime.requestAddMonitor({
+        id: v.id, mode: 'list', opcode: 'data_listcontents',
+        params: { LIST: v.name }, spriteName: null, value: v.value,
+        width: 100, height: 120, x: 5, y: 5 + stackedCount * 26,
+        visible: visible !== false
+      });
+    } catch (e) {}
+  }
+  function setListMonitorVisible(v, visible) {
+    try {
+      if (!hasVariableMonitor(v.id)) { addListMonitor(v, visible); return; }
+      if (visible) FS.vm.runtime.requestShowMonitor(v.id);
+      else FS.vm.runtime.requestHideMonitor(v.id);
+    } catch (e) {}
+  }
+  function createGlobalList(name) {
+    name = (name || '').trim();
+    if (!name) return;
+    try {
+      var stage = FS.vm.runtime.getTargetForStage();
+      if (stage.lookupVariableByNameAndType(name, 'list')) {
+        notify('A list called "' + name + '" already exists.', 'error');
+        return;
+      }
+      var id = 'flowscratch_list_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+      stage.createVariable(id, name, 'list');
+      var v = stage.lookupVariableByNameAndType(name, 'list');
+      if (v && !Array.isArray(v.value)) v.value = []; // defensive - scratch-vm's own Variable already defaults list values to []
+      addListMonitor(v, true);
+      renderSidebar();
+      renderAll();
+    } catch (e) {}
+  }
+  function deleteGlobalList(name) {
+    try {
+      var stage = FS.vm.runtime.getTargetForStage();
+      var v = stage.lookupVariableByNameAndType(name, 'list');
+      if (!v) return;
+      if (!confirm('Delete the list "' + name + '"? Any blocks using it will need a different list chosen.')) return;
       try { FS.vm.runtime.requestRemoveMonitor(v.id); } catch (e) {}
       delete stage.variables[v.id];
       renderSidebar();
@@ -555,6 +636,12 @@
     if (n.type === 'set_drag_mode') return 'Set drag mode ' + (d.mode === 'not_draggable' ? 'not draggable' : 'draggable');
     if (n.type === 'set_variable') return 'Set ' + (d.varName || 'variable') + ' to ' + d.value;
     if (n.type === 'change_variable') return 'Change ' + (d.varName || 'variable') + ' by ' + d.value;
+    if (n.type === 'list_add') return 'Add "' + d.item + '" to ' + (d.listName || 'list');
+    if (n.type === 'list_delete') return 'Delete item ' + d.index + ' of ' + (d.listName || 'list');
+    if (n.type === 'list_delete_all') return 'Delete all of ' + (d.listName || 'list');
+    if (n.type === 'list_insert') return 'Insert "' + d.item + '" at ' + d.index + ' of ' + (d.listName || 'list');
+    if (n.type === 'list_replace') return 'Replace item ' + d.index + ' of ' + (d.listName || 'list') + ' with "' + d.item + '"';
+    if (n.type === 'list_item_to_var') return 'Set ' + (d.varName || 'variable') + ' to item ' + d.index + ' of ' + (d.listName || 'list');
     if (n.type === 'selection') {
       var desc;
       if (d.condition === 'key') {
@@ -571,6 +658,8 @@
       } else if (d.condition === 'variable') {
         var opSym = d.operator === 'gt' ? '>' : d.operator === 'lt' ? '<' : '=';
         desc = (d.varName || 'variable') + ' ' + opSym + ' ' + (d.varValue != null ? d.varValue : 0);
+      } else if (d.condition === 'list_contains') {
+        desc = (d.listName || 'list') + ' contains "' + (d.value || '') + '"';
       } else {
         desc = 'condition';
       }
@@ -646,6 +735,13 @@
       return '<option value="' + esc(v.name) + '"' + (selectedName === v.name ? ' selected' : '') + '>' + esc(v.name) + '</option>';
     }).join('') + '</select>';
   }
+  function listSelectHtml(fieldName, selectedName) {
+    var lists = getGlobalLists();
+    if (!lists.length) return '<select data-field="' + fieldName + '"><option value="">(no lists yet)</option></select>';
+    return '<select data-field="' + fieldName + '">' + lists.map(function (l) {
+      return '<option value="' + esc(l.name) + '"' + (selectedName === l.name ? ' selected' : '') + '>' + esc(l.name) + '</option>';
+    }).join('') + '</select>';
+  }
   function subroutineSelectHtml(fieldName, selectedName) {
     var names = FS.nodes.filter(function (n) { return n.type === 'subroutine_start'; })
       .map(function (n) { return String(n.data.name || '').trim(); })
@@ -697,7 +793,9 @@
   function inlineValueHtml(data, field) {
     var src = valueSrc(data, field);
     if (src !== 'num') {
-      var label = src.indexOf('var:') === 0 ? src.slice(4) : ((reporterById(src) || {}).label || src);
+      var label = src.indexOf('var:') === 0 ? src.slice(4)
+        : src.indexOf('listlen:') === 0 ? 'length of ' + src.slice(8)
+        : ((reporterById(src) || {}).label || src);
       return '<span class="fs-inline-reporter">' + esc(label) + '</span>';
     }
     return '<input type="number" class="fs-inline-num" data-field="' + field + '" value="' + esc(data[field]) + '">';
@@ -741,6 +839,12 @@
     if (n.type === 'set_variable' || n.type === 'change_variable') {
       sub = variableSelectHtml('varName', n.data.varName) + inlineValueHtml(n.data, 'value');
     }
+    if (n.type === 'list_add') sub = inlineTextHtml(n.data, 'item') + '<span class="fs-inline-label">to</span>' + listSelectHtml('listName', n.data.listName);
+    if (n.type === 'list_delete') sub = '<span class="fs-inline-label">item</span>' + inlineValueHtml(n.data, 'index') + '<span class="fs-inline-label">of</span>' + listSelectHtml('listName', n.data.listName);
+    if (n.type === 'list_delete_all') sub = listSelectHtml('listName', n.data.listName);
+    if (n.type === 'list_insert') sub = inlineTextHtml(n.data, 'item') + '<span class="fs-inline-label">at</span>' + inlineValueHtml(n.data, 'index') + '<span class="fs-inline-label">of</span>' + listSelectHtml('listName', n.data.listName);
+    if (n.type === 'list_replace') sub = '<span class="fs-inline-label">item</span>' + inlineValueHtml(n.data, 'index') + '<span class="fs-inline-label">of</span>' + listSelectHtml('listName', n.data.listName) + '<span class="fs-inline-label">with</span>' + inlineTextHtml(n.data, 'item');
+    if (n.type === 'list_item_to_var') sub = variableSelectHtml('varName', n.data.varName) + '<span class="fs-inline-label">to item</span>' + inlineValueHtml(n.data, 'index') + '<span class="fs-inline-label">of</span>' + listSelectHtml('listName', n.data.listName);
     var content;
     if (n.type === 'selection') {
       var condition = n.data.condition;
@@ -757,6 +861,8 @@
         tail = '<select data-field="value"><option value="mouse"' + (n.data.value === 'mouse' ? ' selected' : '') + '>mouse pointer</option></select>';
       } else if (condition === 'mouse_down') {
         tail = '';
+      } else if (condition === 'list_contains') {
+        tail = listSelectHtml('listName', n.data.listName) + inlineTextHtml(n.data, 'value');
       } else {
         var choices = condition === 'key'
           ? [['Space', 'space'], ['ArrowRight', 'right arrow'], ['ArrowLeft', 'left arrow'], ['ArrowUp', 'up arrow'], ['ArrowDown', 'down arrow']]
@@ -767,7 +873,7 @@
       }
       content = '<div class="fs-node-content"><div class="fs-node-title">If</div>' +
         '<select data-field="negate"><option value="is"' + (n.data.negate === 'is' ? ' selected' : '') + '>is</option><option value="not"' + (n.data.negate === 'not' ? ' selected' : '') + '>not</option></select>' +
-        '<select data-field="condition"><option value="key"' + (condition === 'key' ? ' selected' : '') + '>key pressed</option><option value="edge"' + (condition === 'edge' ? ' selected' : '') + '>touching edge</option><option value="touching"' + (condition === 'touching' ? ' selected' : '') + '>touching</option><option value="mouse_down"' + (condition === 'mouse_down' ? ' selected' : '') + '>mouse down</option><option value="answer"' + (condition === 'answer' ? ' selected' : '') + '>answer exists</option><option value="variable"' + (condition === 'variable' ? ' selected' : '') + '>variable</option></select>' +
+        '<select data-field="condition"><option value="key"' + (condition === 'key' ? ' selected' : '') + '>key pressed</option><option value="edge"' + (condition === 'edge' ? ' selected' : '') + '>touching edge</option><option value="touching"' + (condition === 'touching' ? ' selected' : '') + '>touching</option><option value="mouse_down"' + (condition === 'mouse_down' ? ' selected' : '') + '>mouse down</option><option value="answer"' + (condition === 'answer' ? ' selected' : '') + '>answer exists</option><option value="variable"' + (condition === 'variable' ? ' selected' : '') + '>variable</option><option value="list_contains"' + (condition === 'list_contains' ? ' selected' : '') + '>list contains</option></select>' +
         tail + '</div>';
     } else {
       content = '<div class="fs-node-title">' + typeTitle(n) + '</div>' + sub;
@@ -1318,7 +1424,13 @@
     if (n.type === 'wait_seconds') f = sourceField('Seconds', 'seconds', n.data);
     if (n.type === 'subroutine_start') f = '<p class="fs-empty">Give this sub-routine a unique name inside the block.</p>';
     if (n.type === 'call_subroutine') f = '<p class="fs-empty">Choose the named sub-routine to run inside the block.</p>';
-    if (n.type === 'point_towards' || n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'go_to' || n.type === 'set_rotation_style' || n.type === 'switch_costume_to' || n.type === 'go_to_layer' || n.type === 'set_drag_mode' || n.type === 'play_sound' || n.type === 'play_sound_until_done') f = '<p class="fs-empty">Use the dropdown inside this block.</p>';
+    if (n.type === 'point_towards' || n.type === 'go_to' || n.type === 'set_rotation_style' || n.type === 'switch_costume_to' || n.type === 'go_to_layer' || n.type === 'set_drag_mode' || n.type === 'play_sound' || n.type === 'play_sound_until_done' ||
+        n.type === 'list_add' || n.type === 'list_delete' || n.type === 'list_delete_all' || n.type === 'list_insert' || n.type === 'list_replace' || n.type === 'list_item_to_var') f = '<p class="fs-empty">Use the fields inside this block.</p>';
+    // set_variable/change_variable's own value field can source a
+    // reporter/variable/list-length too - e.g. "Set count to length of
+    // points" - the same sourceField() every other numeric field already
+    // gets, not the generic "use the fields inside this block" placeholder.
+    if (n.type === 'set_variable' || n.type === 'change_variable') f = sourceField('Value', 'value', n.data);
     if (n.type === 'change_volume_by') f = sourceField('Change volume by', 'volume', n.data);
     if (n.type === 'set_volume_to') f = sourceField('Set volume to', 'volume', n.data);
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Select either outgoing connector to set it as True or False.</p>';
@@ -1345,6 +1457,7 @@
   function sourceField(label, key, data) {
     var src = valueSrc(data, key);
     var vars = getGlobalVariables();
+    var lists = getGlobalLists();
     return '<div class="fs-field"><label>' + label + '</label>' +
       '<select data-inspect-src="' + key + '">' +
         '<option value="num"' + (src === 'num' ? ' selected' : '') + '>number</option>' +
@@ -1353,6 +1466,12 @@
           ? '<optgroup label="Variables">' + vars.map(function (v) {
               var srcId = 'var:' + v.name;
               return '<option value="' + esc(srcId) + '"' + (src === srcId ? ' selected' : '') + '>' + esc(v.name) + '</option>';
+            }).join('') + '</optgroup>'
+          : '') +
+        (lists.length
+          ? '<optgroup label="List lengths">' + lists.map(function (l) {
+              var srcId = 'listlen:' + l.name;
+              return '<option value="' + esc(srcId) + '"' + (src === srcId ? ' selected' : '') + '>length of ' + esc(l.name) + '</option>';
             }).join('') + '</optgroup>'
           : '') +
       '</select></div>';
@@ -1469,6 +1588,7 @@
       if (n.type !== 'selection' && n.type !== 'end' && out(n.id).length > 1) errors.push(typeTitle(n) + ' has more than one outgoing connection, only a Selection block can branch.');
       if ((n.type === 'set_variable' || n.type === 'change_variable') && !n.data.varName) errors.push(typeTitle(n) + ' has no variable selected.');
       if (n.type === 'selection' && n.data.condition === 'variable' && !n.data.varName) errors.push('Selection has no variable selected.');
+      if (n.type === 'selection' && n.data.condition === 'list_contains' && !n.data.listName) errors.push('Selection has no list selected.');
       if (n.type === 'call_subroutine') {
         var callName = String(n.data.name || '').trim();
         if (!callName) errors.push('Each CALL block must name a sub-routine.');
@@ -1563,6 +1683,32 @@
       if (v) {
         if (n.type === 'set_variable') v.value = readValue(target, n.data, 'value');
         else v.value = (Number(v.value) || 0) + readValue(target, n.data, 'value');
+      }
+      return;
+    }
+    // Lists, like variables above, are stage-level state - no sprite
+    // target needed, so these are handled here too, before the `!target`
+    // guard that every other (sprite-driving) block case needs.
+    if (n.type === 'list_add' || n.type === 'list_delete' || n.type === 'list_delete_all' ||
+        n.type === 'list_insert' || n.type === 'list_replace' || n.type === 'list_item_to_var') {
+      var list = findGlobalList(n.data.listName);
+      if (list && Array.isArray(list.value)) {
+        if (n.type === 'list_add') list.value.push(n.data.item != null ? String(n.data.item) : '');
+        else if (n.type === 'list_delete_all') list.value.length = 0;
+        else if (n.type === 'list_delete') {
+          var delIdx = Math.round(readValue(target, n.data, 'index')) - 1;
+          if (delIdx >= 0 && delIdx < list.value.length) list.value.splice(delIdx, 1);
+        } else if (n.type === 'list_insert') {
+          var insIdx = Math.max(0, Math.min(list.value.length, Math.round(readValue(target, n.data, 'index')) - 1));
+          list.value.splice(insIdx, 0, n.data.item != null ? String(n.data.item) : '');
+        } else if (n.type === 'list_replace') {
+          var repIdx = Math.round(readValue(target, n.data, 'index')) - 1;
+          if (repIdx >= 0 && repIdx < list.value.length) list.value[repIdx] = n.data.item != null ? String(n.data.item) : '';
+        } else if (n.type === 'list_item_to_var') {
+          var destVar = findGlobalVariable(n.data.varName);
+          var itemIdx = Math.round(readValue(target, n.data, 'index')) - 1;
+          if (destVar) destVar.value = (itemIdx >= 0 && itemIdx < list.value.length) ? list.value[itemIdx] : '';
+        }
       }
       return;
     }
@@ -1777,6 +1923,11 @@
         } else {
           v = String(vv.value) === String(n.data.varValue);
         }
+      }
+    } else if (n.data.condition === 'list_contains') {
+      var lst = findGlobalList(n.data.listName);
+      if (lst && Array.isArray(lst.value)) {
+        v = lst.value.some(function (item) { return String(item) === String(n.data.value); });
       }
     }
     return n.data.negate === 'not' ? !v : v;
@@ -2145,6 +2296,8 @@
     if (catKey === 'variables') {
       itemsHtml = '<div id="fs-var-list"></div>' +
         '<button type="button" id="fsNewVarBtn" class="fs-new-var-btn">+ New variable</button>' +
+        '<div id="fs-list-list"></div>' +
+        '<button type="button" id="fsNewListBtn" class="fs-new-var-btn">+ New list</button>' +
         itemsHtml;
     }
     return '<h2 data-cat="' + catKey + '" style="--fs-cat-color:' + cat.color + '">' + esc(cat.label) + '</h2>' + itemsHtml;
@@ -2174,6 +2327,22 @@
       cb.addEventListener('change', function () {
         var v = findGlobalVariable(cb.dataset.var);
         if (v) setVariableMonitorVisible(v, cb.checked);
+      });
+    });
+    if (!els.listList) return;
+    var lists = getGlobalLists();
+    els.listList.innerHTML = lists.length
+      ? lists.map(function (l) {
+          return '<div class="fs-var-row"><label class="fs-var-check" title="Show on stage"><input type="checkbox" class="fs-var-monitor" data-list="' + esc(l.name) + '"' + (isVariableMonitorVisible(l.id) ? ' checked' : '') + '> ' + esc(l.name) + '</label><button type="button" class="fs-var-del" data-list="' + esc(l.name) + '">&times;</button></div>';
+        }).join('')
+      : '<div class="fs-empty" style="padding:2px 0 6px">No lists yet.</div>';
+    Array.prototype.forEach.call(els.listList.querySelectorAll('.fs-var-del'), function (btn) {
+      btn.addEventListener('click', function () { deleteGlobalList(btn.dataset.list); });
+    });
+    Array.prototype.forEach.call(els.listList.querySelectorAll('.fs-var-monitor'), function (cb) {
+      cb.addEventListener('change', function () {
+        var l = findGlobalList(cb.dataset.list);
+        if (l) setListMonitorVisible(l, cb.checked);
       });
     });
   }
@@ -2225,6 +2394,7 @@
       askInput: root.querySelector('#fs-ask-input'),
       hoverAnchorEl: root.querySelector('#fs-hover-anchor'),
       varList: root.querySelector('#fs-var-list'),
+      listList: root.querySelector('#fs-list-list'),
       diagramModal: root.querySelector('#fs-diagram-modal'),
       diagramBody: root.querySelector('#fs-diagram-body')
     };
@@ -2251,6 +2421,10 @@
     root.querySelector('#fsNewVarBtn').onclick = function () {
       var name = prompt('New variable name:');
       if (name) createGlobalVariable(name);
+    };
+    root.querySelector('#fsNewListBtn').onclick = function () {
+      var name = prompt('New list name:');
+      if (name) createGlobalList(name);
     };
     var slowToggle = root.querySelector('#fsSlowModeToggle');
     var slowSlider = root.querySelector('#fsSlowSlider');
@@ -2935,6 +3109,55 @@
           highlightLabel: 'Click to run'
         }
       ]
+    },
+    {
+      id: 'working-with-lists',
+      title: 'Working with Lists',
+      color: '#FF8C1A',
+      category: 'Code Organisation',
+      desc: 'Store many values in one list, grow it while the flow runs, and read them back one at a time.',
+      steps: [
+        {
+          title: 'Make a list',
+          text: 'Click <b>+ New list</b> in the Variables category and create one called exactly <b>points</b>. Drag a <b>Start</b> block, then three <b>Add to list</b> blocks to add <b>-150</b>, <b>0</b>, and <b>150</b> to it.',
+          requires: [{ node: 'start' }, { node: 'list_add', count: 3 }],
+          highlight: 'palette-list-add',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Read an item back',
+          text: 'Drag a <b>Set var to item of list</b> block. Create a variable called exactly <b>current</b>, and read item <b>1</b> of <b>points</b> into it.',
+          requires: [{ node: 'start' }, { node: 'set_variable' }, { node: 'list_item_to_var' }],
+          highlight: 'palette-list-item-to-var',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Move there and loop',
+          text: 'Add a <b>Set x to</b> block - click it, and in the panel on the right set its source to the <b>current</b> variable. Add a <b>Wait seconds</b> block, then loop back so the flow keeps patrolling.',
+          requires: [{ node: 'start' }, { node: 'set_x_to' }, { loop: true },
+            { nodeWhere: { type: 'set_x_to', field: 'xSrc', value: 'var:current' }, label: 'Set x to uses the current variable' }],
+          highlight: 'palette-set-x-to',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Grow the list',
+          text: 'Lists can change size while the flow runs. Add one more <b>Add to list</b> block (a fourth stop) before the loop starts.',
+          requires: [{ node: 'start' }, { node: 'list_add', count: 4 }]
+        },
+        {
+          title: 'How long is the list?',
+          text: 'Add a <b>Set variable</b> block, name a variable <b>count</b>, and in the panel on the right set its source to <b>length of points</b>.',
+          requires: [{ node: 'start' }, { node: 'set_variable' },
+            { nodeWhere: { type: 'set_variable', field: 'valueSrc', value: 'listlen:points' }, label: 'Set variable uses the length of points' }]
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b> - the sprite should patrol between the stops in your list forever.<br><br><b>Challenge:</b> change which item you read each time through the loop (using another variable as the index) so it actually visits every stop in order, not just the first.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
     }
   ];
   // Categories are display-only grouping in the tutorial picker, the same
@@ -2942,7 +3165,7 @@
   // an explicit `category` on the tutorial wins; anything without one falls
   // into a single default bucket so a new tutorial never has to remember to
   // set this before it'll show up somewhere.
-  var FS_TUTORIAL_CATEGORY_ORDER = ['Flowchart Basics', 'Branching & Loops', 'Movement & Animation'];
+  var FS_TUTORIAL_CATEGORY_ORDER = ['Flowchart Basics', 'Branching & Loops', 'Movement & Animation', 'Code Organisation'];
   function fsTutorialCategory(t) { return t.category || 'Flowchart Basics'; }
   function compareFsTutorialCategories(a, b) {
     var ai = FS_TUTORIAL_CATEGORY_ORDER.indexOf(a), bi = FS_TUTORIAL_CATEGORY_ORDER.indexOf(b);
