@@ -137,6 +137,8 @@
     ask:                { shape: 'io',        title: 'Ask',                data: { text: 'What is your name?' }, category: 'sensing' },
     set_drag_mode:      { shape: 'process',   title: 'Set drag mode',      data: { mode: 'draggable' },          category: 'sensing' },
     set_variable:       { shape: 'process',   title: 'Set variable',       data: { varName: '', value: 0 },      category: 'variables' },
+    set_var_to_random:  { shape: 'process',   title: 'Set variable to random number', data: { varName: '', min: 1, max: 10 }, category: 'variables' },
+    multiply_variable:  { shape: 'process',   title: 'Multiply variable by',  data: { varName: '', value: -1 }, category: 'variables' },
     change_variable:    { shape: 'process',   title: 'Change variable',    data: { varName: '', value: 1 },      category: 'variables' },
     list_add:           { shape: 'process',   title: 'Add to list',        data: { listName: '', item: 'thing' }, category: 'variables' },
     list_delete:        { shape: 'process',   title: 'Delete item of list', data: { listName: '', index: 1 },    category: 'variables' },
@@ -658,6 +660,8 @@
     if (n.type === 'set_drag_mode') return 'Set drag mode ' + (d.mode === 'not_draggable' ? 'not draggable' : 'draggable');
     if (n.type === 'set_variable') return 'Set ' + (d.varName || 'variable') + ' to ' + d.value;
     if (n.type === 'change_variable') return 'Change ' + (d.varName || 'variable') + ' by ' + d.value;
+    if (n.type === 'set_var_to_random') return 'Set ' + (d.varName || 'variable') + ' to random ' + d.min + '-' + d.max;
+    if (n.type === 'multiply_variable') return 'Multiply ' + (d.varName || 'variable') + ' by ' + d.value;
     if (n.type === 'list_add') return 'Add "' + d.item + '" to ' + (d.listName || 'list');
     if (n.type === 'list_delete') return 'Delete item ' + d.index + ' of ' + (d.listName || 'list');
     if (n.type === 'list_delete_all') return 'Delete all of ' + (d.listName || 'list');
@@ -862,6 +866,12 @@
     if (n.type === 'set_volume_to') sub = inlineValueHtml(n.data, 'volume');
     if (n.type === 'set_variable' || n.type === 'change_variable') {
       sub = variableSelectHtml('varName', n.data.varName) + inlineValueHtml(n.data, 'value');
+    }
+    if (n.type === 'set_var_to_random') {
+      sub = variableSelectHtml('varName', n.data.varName) + '<span class="fs-inline-label">random</span>' + inlineValueHtml(n.data, 'min') + '<span class="fs-inline-label">to</span>' + inlineValueHtml(n.data, 'max');
+    }
+    if (n.type === 'multiply_variable') {
+      sub = variableSelectHtml('varName', n.data.varName) + '<span class="fs-inline-label">&times;</span>' + inlineValueHtml(n.data, 'value');
     }
     if (n.type === 'list_add') sub = inlineTextHtml(n.data, 'item') + '<span class="fs-inline-label">to</span>' + listSelectHtml('listName', n.data.listName);
     if (n.type === 'list_delete') sub = '<span class="fs-inline-label">item</span>' + inlineValueHtml(n.data, 'index') + '<span class="fs-inline-label">of</span>' + listSelectHtml('listName', n.data.listName);
@@ -1459,6 +1469,8 @@
     // points" - the same sourceField() every other numeric field already
     // gets, not the generic "use the fields inside this block" placeholder.
     if (n.type === 'set_variable' || n.type === 'change_variable') f = sourceField('Value', 'value', n.data);
+    if (n.type === 'set_var_to_random') f = sourceField('Min', 'min', n.data) + sourceField('Max', 'max', n.data);
+    if (n.type === 'multiply_variable') f = sourceField('Multiply by', 'value', n.data);
     if (n.type === 'change_volume_by') f = sourceField('Change volume by', 'volume', n.data);
     if (n.type === 'set_volume_to') f = sourceField('Set volume to', 'volume', n.data);
     if (n.type === 'selection') f = '<p class="fs-empty">Use the dropdowns inside this block. Select either outgoing connector to set it as True or False.</p>';
@@ -1614,7 +1626,7 @@
       // case a graph saved before that enforcement existed gets loaded:
       // Run must never execute a flowchart with an ambiguous branch.
       if (n.type !== 'selection' && n.type !== 'end' && out(n.id).length > 1) errors.push(typeTitle(n) + ' has more than one outgoing connection, only a Selection block can branch.');
-      if ((n.type === 'set_variable' || n.type === 'change_variable') && !n.data.varName) errors.push(typeTitle(n) + ' has no variable selected.');
+      if ((n.type === 'set_variable' || n.type === 'change_variable' || n.type === 'set_var_to_random' || n.type === 'multiply_variable') && !n.data.varName) errors.push(typeTitle(n) + ' has no variable selected.');
       if (n.type === 'selection' && n.data.condition === 'variable' && !n.data.varName) errors.push('Selection has no variable selected.');
       if (n.type === 'selection' && n.data.condition === 'list_contains' && !n.data.listName) errors.push('Selection has no list selected.');
       if (n.type === 'when_i_receive') {
@@ -1726,6 +1738,25 @@
         if (n.type === 'set_variable') v.value = readValue(target, n.data, 'value');
         else v.value = (Number(v.value) || 0) + readValue(target, n.data, 'value');
       }
+      return;
+    }
+    if (n.type === 'set_var_to_random') {
+      var vr = findGlobalVariable(n.data.varName);
+      if (vr) {
+        var lo = Math.round(readValue(target, n.data, 'min')), hi = Math.round(readValue(target, n.data, 'max'));
+        if (lo > hi) { var tmp = lo; lo = hi; hi = tmp; }
+        vr.value = lo + Math.floor(Math.random() * (hi - lo + 1));
+      }
+      return;
+    }
+    // The one thing change_variable (add-only) can't express: flipping a
+    // velocity's sign on a bounce (vx = vx * -1) - the standard technique
+    // Pong/Breakout-style games need for wall bounces, since there's no
+    // "if on edge, bounce" equivalent for a single axis with a custom
+    // touch condition.
+    if (n.type === 'multiply_variable') {
+      var vmul = findGlobalVariable(n.data.varName);
+      if (vmul) vmul.value = (Number(vmul.value) || 0) * readValue(target, n.data, 'value');
       return;
     }
     // Lists, like variables above, are stage-level state - no sprite
@@ -3437,6 +3468,70 @@
         {
           title: 'Try it!',
           text: 'Click the <b>green flag</b>. The apple should fall, and catching it with your basket scores a point while missing it costs a life.<br><br><b>Challenge:</b> add a Selection on the basket that checks <code>Lives</code> &lt;= 0 and ends the game with a Say block. Try changing Change y by\'s amount to speed the apple up over time.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
+    },
+    // Pong needed one more capability first: change_variable only adds,
+    // so nothing could express PyScratch's `vx = vx * -1` sign-flip on a
+    // wall bounce - added Multiply variable by alongside this tutorial.
+    // Simplified from PyScratch's own version by dropping the paddle's
+    // own edge-clamping (x_position() > 200: set_x(200)) - a nice-to-have
+    // left as a Challenge, not essential to the bounce/score mechanic.
+    {
+      id: 'pong',
+      title: 'Pong',
+      color: '#4C97FF',
+      category: 'Games',
+      desc: 'One-player Pong - bounce a ball off the walls and your paddle using velocity variables and Multiply variable by.',
+      steps: [
+        {
+          title: 'Build the paddle',
+          text: 'On your first sprite (the paddle), add a <b>Go to x y</b> block set to <b>(0, -150)</b>, then the same left/right movement chain as <b>Making Choices</b> (two Selections, two Change x by blocks, both wired into a loop).',
+          requires: [{ node: 'start' }, { node: 'go_to_xy' }, { node: 'selection', count: 2 }, { node: 'change_x_by', count: 2 }, { loop: true }],
+          highlight: 'palette-go-to-xy',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Add the Ball sprite',
+          text: 'Click the highlighted button to add a second sprite. Give it a small round costume and a name like <b>Ball</b>.',
+          requires: [{ node: 'start' }, { node: 'go_to_xy' }, { node: 'selection', count: 2 }],
+          highlight: 'add-sprite-btn',
+          highlightLabel: 'Add a sprite here'
+        },
+        {
+          title: 'Ball: set up velocity and score',
+          text: 'With the <b>Ball</b> sprite selected: three <b>Set variable</b> blocks - <b>vx</b> to 4, <b>vy</b> to 3, <b>Score</b> to 0 - then a <b>Go to x y</b> set to <b>(0, 50)</b>.',
+          requires: [{ node: 'start' }, { node: 'set_variable', count: 3 }, { node: 'go_to_xy' }],
+          highlight: 'palette-set-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Ball: move and bounce off the side walls',
+          text: 'Add a <b>Change x by</b> sourced from <b>vx</b> and a <b>Change y by</b> sourced from <b>vy</b>. Then a Selection checking <b>touching edge: left</b> - True: <b>Multiply variable vx by -1</b> - and a Selection checking <b>touching edge: right</b> - True: <b>Multiply variable vx by -1</b> too. Chain them: each False output leads to the next Selection.',
+          requires: [{ node: 'start' }, { node: 'change_x_by' }, { node: 'change_y_by' }, { node: 'selection', count: 2 }, { node: 'multiply_variable' },
+            { nodeWhere: { type: 'selection', field: 'value', value: 'left' }, label: 'A Selection checks the left edge' }],
+          highlight: 'palette-multiply-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Ball: bounce off the top and the paddle',
+          text: 'Chain on two more Selections: <b>touching edge: top</b> (True: <b>Multiply vy by -1</b>), then <b>touching</b> your paddle sprite\'s name (True: <b>Multiply vy by -1</b> and <b>Change variable Score by 1</b>). Keep chaining False onward.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 4 }, { node: 'multiply_variable', count: 3 }, { node: 'change_variable' },
+            { nodeWhere: { type: 'selection', field: 'condition', value: 'touching' }, label: 'A Selection checks touching' }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Game over',
+          text: 'Add one final Selection: <b>touching edge: bottom</b>. True: a <b>Say</b> block ("Game Over!") then an <b>End</b>. False: back to <b>Change x by</b>, closing the whole loop.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 5 }, { node: 'say' }, { node: 'end' }, { loop: true }]
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b>. Keep the ball alive with your paddle - each bounce off it scores a point.<br><br><b>Challenge:</b> add the edge-clamping from Making Choices so the paddle can\'t slide off screen. Try speeding the ball up over time with a second Multiply variable block on <code>vy</code> (a number just over 1, like 1.05) each time it hits the paddle.',
           requires: [],
           highlight: 'green-flag',
           highlightLabel: 'Click to run'
