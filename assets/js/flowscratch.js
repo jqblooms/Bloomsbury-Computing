@@ -2060,7 +2060,46 @@
       '.fs-tut-card-title{display:block;font-weight:800;color:#1f4d38;font-size:13px}',
       '.fs-tut-card-desc{display:block;font-size:11px;color:#4d6b5b;line-height:1.35}',
       '.fs-tut-card-status{font-size:10px;font-weight:800;color:#2e8b57;white-space:nowrap;flex-shrink:0}',
-      '.fs-tut-card-status.prog{color:#a3711f}'
+      '.fs-tut-card-status.prog{color:#a3711f}',
+      '.fs-tut-card-wrap{position:relative}',
+      '.fs-tut-card-reset{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;border:1px solid #d9e6dd;background:#fff;color:#4d6b5b;font-size:12px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}',
+      '.fs-tut-card-reset:hover{background:#f2fbf5;color:#1f4d38}',
+      // Category grouping in the picker - a single open <details> today,
+      // matching pyscratch.js's own buildTutorialGroupsHTML markup shape
+      // so a second/third tutorial category needs no new CSS to slot in.
+      '.fs-tut-cat{border:1px solid #e3e3e6;border-radius:9px;overflow:hidden}',
+      '.fs-tut-cat+.fs-tut-cat{margin-top:2px}',
+      '.fs-tut-cat-summary{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f5f8f6;font-weight:800;font-size:12px;color:#1f4d38;cursor:pointer;list-style:none}',
+      '.fs-tut-cat-summary::-webkit-details-marker{display:none}',
+      '.fs-tut-cat-chevron{transition:transform .12s;display:inline-block}',
+      '.fs-tut-cat[open] .fs-tut-cat-chevron{transform:rotate(90deg)}',
+      '.fs-tut-cat-count{margin-left:auto;font-size:10px;color:#7a8f83;background:#e3f5e9;border-radius:99px;padding:1px 7px}',
+      '.fs-tut-cat-list{display:flex;flex-direction:column;gap:8px;padding:10px}',
+
+      // ── Highlighting a real page element (see showFsHighlight) - same
+      // pulsing-box technique as pyscratch.js's #ps-hl, colours matched to
+      // FlowScratch's own green tutorial palette instead of PyScratch's.
+      '@keyframes fs-hl-pulse{0%,100%{border-color:#ffbf00;box-shadow:0 0 0 3px #ffbf00,0 0 16px 5px rgba(255,191,0,.7)}50%{border-color:#2e8b57;box-shadow:0 0 0 3px #2e8b57,0 0 16px 5px rgba(46,139,87,.7)}}',
+      '@keyframes fs-hl-label-pulse{0%,100%{background:#ffbf00;color:#3a2c00}50%{background:#2e8b57;color:#eafbf2}}',
+      '#fs-hl{position:fixed;pointer-events:none;z-index:99999;border:3px solid #ffbf00;border-radius:7px;animation:fs-hl-pulse 1.2s ease-in-out infinite;display:none;box-sizing:border-box;transition:left .12s,top .12s,width .12s,height .12s}',
+      '#fs-hl-label{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#ffbf00;color:#3a2c00;font-size:11px;font-weight:700;font-family:inherit;padding:3px 10px;border-radius:99px;white-space:nowrap;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.35);animation:fs-hl-label-pulse 1.2s ease-in-out infinite}',
+
+      // ── Resume-or-restart / keep-or-restore dialog (see showFsTutDialog) -
+      // same role as pyscratch.js's #ps-tut-dialog, styled to match.
+      '#fs-tut-dialog{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:center;justify-content:center}',
+      '#fs-tut-dialog.show{display:flex}',
+      '#fs-td-card{background:#fff;border-radius:14px;max-width:360px;width:90%;padding:22px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}',
+      '#fs-td-icon{font-size:34px;line-height:1;margin-bottom:8px}',
+      '#fs-td-title{font-weight:800;font-size:15px;color:#1f4d38;margin-bottom:8px}',
+      '#fs-td-body{font-size:12.5px;color:#41463f;line-height:1.5;margin-bottom:16px}',
+      '#fs-td-btns{display:flex;flex-direction:column;gap:8px}',
+      '.fs-td-btn{border:0;border-radius:8px;padding:10px 14px;font:inherit;font-weight:800;font-size:12.5px;cursor:pointer}',
+      '.fs-td-primary{background:#2e8b57;color:#fff}',
+      '.fs-td-primary:hover{background:#257048}',
+      '.fs-td-secondary{background:#eefaf2;color:#1f4d38}',
+      '.fs-td-secondary:hover{background:#dff2e6}',
+      '.fs-td-danger{background:#fdecec;color:#a3241f}',
+      '.fs-td-danger:hover{background:#fbd9d9}'
     ].join('\n');
     document.head.appendChild(style);
   }
@@ -2591,22 +2630,29 @@
       id: 'first-flowchart',
       title: 'Your First Flowchart',
       color: '#FFBF00',
+      category: 'Flowchart Basics',
       desc: 'Every flowchart starts with Start and ends with End - build the simplest one and run it for real.',
       steps: [
         {
           title: 'Add a Start block',
           text: 'Every flowchart begins with exactly one <b>Start</b> block, at the top of the <b>Flow</b> category in the palette on the left. Drag one onto the canvas.',
-          requires: [{ node: 'start' }]
+          requires: [{ node: 'start' }],
+          highlight: 'palette-start',
+          highlightLabel: 'Drag this onto the canvas'
         },
         {
           title: 'Add a Move steps block',
           text: 'Open the <b>Motion</b> category and drag a <b>Move steps</b> block onto the canvas too.',
-          requires: [{ node: 'start' }, { node: 'move_steps' }]
+          requires: [{ node: 'start' }, { node: 'move_steps' }],
+          highlight: 'palette-move-steps',
+          highlightLabel: 'Drag this onto the canvas'
         },
         {
           title: 'Add an End block',
           text: 'Back in <b>Flow</b>, drag out an <b>End</b> block.',
-          requires: [{ node: 'start' }, { node: 'move_steps' }, { node: 'end' }]
+          requires: [{ node: 'start' }, { node: 'move_steps' }, { node: 'end' }],
+          highlight: 'palette-end',
+          highlightLabel: 'Drag this onto the canvas'
         },
         {
           title: 'Connect them in order',
@@ -2616,11 +2662,134 @@
         {
           title: 'Try it!',
           text: 'Use the green flag above the stage to run your flowchart - the sprite should move.<br><br><b>Challenge:</b> add a Turn right block between Move steps and End, and watch it face a new direction every run.',
-          requires: []
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
         }
       ]
     }
   ];
+  // Categories are display-only grouping in the tutorial picker, the same
+  // way PyScratch's own tutorialCategory() groups its (much larger) list -
+  // an explicit `category` on the tutorial wins; anything without one falls
+  // into a single default bucket so a new tutorial never has to remember to
+  // set this before it'll show up somewhere.
+  var FS_TUTORIAL_CATEGORY_ORDER = ['Flowchart Basics', 'Branching & Loops', 'Sound & Variables'];
+  function fsTutorialCategory(t) { return t.category || 'Flowchart Basics'; }
+  function compareFsTutorialCategories(a, b) {
+    var ai = FS_TUTORIAL_CATEGORY_ORDER.indexOf(a), bi = FS_TUTORIAL_CATEGORY_ORDER.indexOf(b);
+    if (ai !== -1 || bi !== -1) { if (ai === -1) return 1; if (bi === -1) return -1; return ai - bi; }
+    return a.localeCompare(b);
+  }
+  // ── Highlighting a real page element ─────────────────────────────────
+  // Same technique pyscratch.js's own showHighlight/clearHighlight use: a
+  // fixed-position pulsing box tracked onto a live element's
+  // getBoundingClientRect() every frame, so it stays put through scrolling,
+  // resizing, or the block panel re-rendering. Named presets (rather than
+  // steps embedding raw selectors) keep the tutorial data readable and
+  // give future tutorials a stable name to highlight instead of a stable
+  // selector - TurboWarp's own class names are hashed and can change.
+  var FS_HIGHLIGHT_PRESETS = {
+    'palette-start':      '.fs-palette-item[data-type="start"]',
+    'palette-move-steps': '.fs-palette-item[data-type="move_steps"]',
+    'palette-end':        '.fs-palette-item[data-type="end"]',
+    'tutorials-btn':      '#fsTutorialsBtn',
+    // TurboWarp's own green flag / stop buttons - same best-effort selector
+    // pyscratch.js's own HIGHLIGHT_PRESETS uses, since this file deliberately
+    // keeps no shared module with that one (see this file's header comment).
+    'green-flag':         '[class*="green-flag_"],[class*="greenFlag"],[aria-label*="Green Flag"],[title*="Green Flag"]',
+    'stop':               '[class*="stop-all_"],[class*="stopAll"],[aria-label*="Stop All"],[title*="Stop"]'
+  };
+  var _fsHlBox = null, _fsHlRafId = null, _fsHlTargetEl = null;
+  function _fsEnsureHighlightBox() {
+    if (_fsHlBox) return;
+    _fsHlBox = document.createElement('div');
+    _fsHlBox.id = 'fs-hl';
+    _fsHlBox.innerHTML = '<span id="fs-hl-label"></span>';
+    document.body.appendChild(_fsHlBox);
+  }
+  function _fsPositionHighlight() {
+    if (!_fsHlBox || !_fsHlTargetEl) return;
+    var r = _fsHlTargetEl.getBoundingClientRect();
+    if (!r.width && !r.height) return;
+    var P = 5;
+    _fsHlBox.style.left = (r.left - P) + 'px';
+    _fsHlBox.style.top = (r.top - P) + 'px';
+    _fsHlBox.style.width = (r.width + P * 2) + 'px';
+    _fsHlBox.style.height = (r.height + P * 2) + 'px';
+  }
+  function showFsHighlight(targetOrSelector, label) {
+    _fsEnsureHighlightBox();
+    clearFsHighlight();
+    var sel = FS_HIGHLIGHT_PRESETS[targetOrSelector] || targetOrSelector;
+    var el = null;
+    try { el = sel ? document.querySelector(sel) : null; } catch (e) {}
+    if (!el) return;
+    _fsHlTargetEl = el;
+    var labelEl = document.getElementById('fs-hl-label');
+    if (labelEl) { labelEl.textContent = label || ''; labelEl.style.display = label ? '' : 'none'; }
+    _fsPositionHighlight();
+    _fsHlBox.style.display = 'block';
+    (function track() { _fsPositionHighlight(); _fsHlRafId = requestAnimationFrame(track); })();
+  }
+  function clearFsHighlight() {
+    if (_fsHlRafId) { cancelAnimationFrame(_fsHlRafId); _fsHlRafId = null; }
+    if (_fsHlBox) _fsHlBox.style.display = 'none';
+    _fsHlTargetEl = null;
+  }
+
+  // ── Before/after snapshots for the resume-or-restart and finish-or-exit
+  // dialogs ─────────────────────────────────────────────────────────────
+  // FlowScratch's graph is always a small, well-formed nodes/edges object
+  // (unlike PyScratch's freely-typed code, which can be left mid-edit or
+  // syntactically broken), so a plain localStorage JSON blob via the same
+  // graphSnapshot()/restoreGraph() the undo stack already uses is enough -
+  // no need for PyScratch's heavier IndexedDB SB3-blob snapshot mechanism.
+  function _fsTutSnapshotKey(tutId) { return 'flowscratchTutSnapshot_v1:' + tutId; }
+  function saveFsTutSnapshot(tutId) {
+    try { localStorage.setItem(_fsTutSnapshotKey(tutId), graphSnapshot()); } catch (e) {}
+  }
+  function hasFsTutSnapshot(tutId) {
+    try { return !!localStorage.getItem(_fsTutSnapshotKey(tutId)); } catch (e) { return false; }
+  }
+  function restoreFsTutSnapshot(tutId) {
+    try {
+      var snap = localStorage.getItem(_fsTutSnapshotKey(tutId));
+      if (snap) restoreGraph(snap);
+    } catch (e) {}
+  }
+  function clearFsTutSnapshot(tutId) {
+    try { localStorage.removeItem(_fsTutSnapshotKey(tutId)); } catch (e) {}
+  }
+
+  // ── Small modal dialog, reused for both the resume-or-start-fresh choice
+  // (opening a tutorial with saved progress) and the keep-or-restore choice
+  // (finishing or exiting one) - same shape as pyscratch.js's own
+  // showTutDialog(), an icon/title/body plus a row of caller-supplied
+  // buttons, styled to match FlowScratch's own green tutorial palette
+  // instead of copying PyScratch's colours wholesale.
+  function showFsTutDialog(icon, title, bodyHtml, buttons) {
+    var dlg = document.getElementById('fs-tut-dialog');
+    if (!dlg) return;
+    dlg.querySelector('#fs-td-icon').textContent = icon || '📚';
+    dlg.querySelector('#fs-td-title').textContent = title;
+    dlg.querySelector('#fs-td-body').innerHTML = bodyHtml;
+    var btnsEl = dlg.querySelector('#fs-td-btns');
+    btnsEl.innerHTML = '';
+    buttons.forEach(function (b) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'fs-td-btn ' + (b.cls || 'fs-td-secondary');
+      btn.textContent = b.label;
+      btn.addEventListener('click', function () { dlg.classList.remove('show'); if (b.cb) b.cb(); });
+      btnsEl.appendChild(btn);
+    });
+    dlg.classList.add('show');
+    dlg.onclick = function (e) {
+      if (e.target === dlg) { dlg.classList.remove('show'); if (buttons[0] && buttons[0].cb) buttons[0].cb(); }
+    };
+  }
+
   var FS_TUT_STORAGE_KEY = 'flowscratchTutorialProgress_v1';
   var fsTutState = (function () {
     try { return JSON.parse(localStorage.getItem(FS_TUT_STORAGE_KEY) || '{}'); } catch (e) { return {}; }
@@ -2677,6 +2846,11 @@
     }).join('');
     bar.querySelector('#fs-tut-back').disabled = activeFsTutorial.stepIdx === 0;
     updateFsTutorialChecklist();
+    // Highlight a palette item / TurboWarp control if this step asks for
+    // one, same as pyscratch.js's applyTutBar does for its own steps -
+    // cleared automatically on the next step render or on exit.
+    if (step.highlight) showFsHighlight(step.highlight, step.highlightLabel || '');
+    else clearFsHighlight();
   }
   // Called from renderAll() on every graph change (a block dropped, a wire
   // connected/removed) so the checklist and Next button react live, the
@@ -2709,55 +2883,144 @@
     saveFsTutorialProgress();
     renderFsTutorialStep();
   }
-  function completeFsTutorial() {
-    var tut = FS_TUTORIALS[activeFsTutorial.tutIdx];
-    fsTutState[tut.id] = { stepIdx: tut.steps.length - 1, completed: true };
-    saveFsTutorialProgress();
-    var bar = document.getElementById('fs-tutorial-bar');
-    if (!bar) return;
-    bar.querySelector('#fs-tut-dots').innerHTML = tut.steps.map(function () { return '<span class="fs-tut-dot done"></span>'; }).join('');
-    bar.querySelector('#fs-tut-title').textContent = 'Tutorial complete!';
-    bar.querySelector('#fs-tut-text').innerHTML = 'Nice work - pick another tutorial from the list, or keep building on your own.';
-    bar.querySelector('#fs-tut-checklist').innerHTML = '';
-    bar.querySelector('#fs-tut-back').disabled = true;
-    var nextBtn = bar.querySelector('#fs-tut-next');
-    nextBtn.disabled = true;
-    nextBtn.textContent = 'Finished ✓';
+  // Tells the parent frame (the Bloomsbury Computing shell, if embedded
+  // there) that a tutorial was just completed, so it can be recorded
+  // against the signed-in student and shown to their teacher - same
+  // protocol shape as pyscratch.js's own reportTutorialCompletion(), just
+  // a different message type so the two apps' completions are told apart
+  // server-side. No-op standalone or outside an iframe.
+  function reportFsTutorialCompletion(tut) {
+    try {
+      if (!window.parent || window.parent === window) return;
+      window.parent.postMessage({ type: 'FS_TUTORIAL_COMPLETE', tutorialId: tut.id, tutorialTitle: tut.title }, '*');
+    } catch (e) {}
   }
   function advanceOrCompleteFsTutorial() {
     var tut = FS_TUTORIALS[activeFsTutorial.tutIdx];
-    if (activeFsTutorial.stepIdx === tut.steps.length - 1) completeFsTutorial();
+    if (activeFsTutorial.stepIdx === tut.steps.length - 1) exitFsTutorial(true);
     else goToFsTutorialStep(1);
   }
+  // Opening a tutorial: fresh start snapshots the current graph as a
+  // "before" baseline (so exiting/finishing can offer to restore it, same
+  // pairing as pyscratch.js's saveTutSnapshot()+exitTutorial() dialogs),
+  // while resuming leaves the graph exactly as the student left it -
+  // FlowScratch's graph is always well-formed, unlike arbitrary typed
+  // code, so unlike PyScratch's own resume there is nothing to fix up.
   function startFsTutorial(tutIdx) {
     var tut = FS_TUTORIALS[tutIdx];
     if (!tut || !els.overlay) return;
     var saved = fsTutState[tut.id];
-    var stepIdx = (saved && !saved.completed) ? Math.min(saved.stepIdx, tut.steps.length - 1) : 0;
-    activeFsTutorial = { tutIdx: tutIdx, stepIdx: stepIdx };
-    els.overlay.classList.add('fs-tutorial-active');
-    renderFsTutorialStep();
+    if (saved && !saved.completed && saved.stepIdx > 0) {
+      showFsTutDialog('📚', tut.title,
+        'You left off at <b>Step ' + (saved.stepIdx + 1) + ' of ' + tut.steps.length + '</b>. Want to pick up where you left off?',
+        [
+          { label: 'Resume →', cls: 'fs-td-primary', cb: function () { _doStartFsTutorial(tutIdx, Math.min(saved.stepIdx, tut.steps.length - 1)); } },
+          { label: 'Start Fresh', cls: 'fs-td-secondary', cb: function () {
+              fsTutState[tut.id] = { stepIdx: 0, completed: false };
+              saveFsTutorialProgress();
+              saveFsTutSnapshot(tut.id); // new baseline: today's messy state, not the very first one
+              _doStartFsTutorial(tutIdx, 0);
+          }}
+        ]);
+    } else {
+      saveFsTutSnapshot(tut.id);
+      _doStartFsTutorial(tutIdx, 0);
+    }
     closeTutorialPicker();
   }
-  function exitFsTutorial() {
+  function _doStartFsTutorial(tutIdx, stepIdx) {
+    activeFsTutorial = { tutIdx: tutIdx, stepIdx: stepIdx };
+    els.overlay.classList.add('fs-tutorial-active');
+    fsTutState[FS_TUTORIALS[tutIdx].id] = { stepIdx: stepIdx, completed: false };
+    saveFsTutorialProgress();
+    renderFsTutorialStep();
+  }
+  function _doExitFsTutorial() {
     activeFsTutorial = null;
+    clearFsHighlight();
     if (els.overlay) els.overlay.classList.remove('fs-tutorial-active');
   }
+  // Public exit - offers to keep or restore the graph, same as
+  // pyscratch.js's own exitTutorial(isFinished): a Keep/Restore choice on
+  // manual exit, and a congratulations dialog with the same choice on
+  // finishing (which is why the "Next" button on the last step routes
+  // here via advanceOrCompleteFsTutorial() instead of finishing in place).
+  function exitFsTutorial(isFinished) {
+    if (!activeFsTutorial) { _doExitFsTutorial(); return; }
+    var tutIdx = activeFsTutorial.tutIdx;
+    var tut = FS_TUTORIALS[tutIdx];
+    var hasSnap = hasFsTutSnapshot(tut.id);
+    if (isFinished) {
+      fsTutState[tut.id] = { stepIdx: tut.steps.length - 1, completed: true };
+      saveFsTutorialProgress();
+      reportFsTutorialCompletion(tut);
+    }
+    if (!hasSnap) { _doExitFsTutorial(); return; }
+    var icon = isFinished ? '🎉' : '📚';
+    var title = isFinished ? 'Tutorial complete!' : 'Exit tutorial';
+    var body = isFinished
+      ? 'Great work finishing <b>' + esc(tut.title) + '</b>! What would you like to do with the flowchart you built?'
+      : 'What would you like to do with the changes you made during <b>' + esc(tut.title) + '</b>?';
+    showFsTutDialog(icon, title, body, [
+      { label: 'Keep My Flowchart', cls: 'fs-td-primary', cb: function () { clearFsTutSnapshot(tut.id); _doExitFsTutorial(); } },
+      { label: 'Restore Original', cls: 'fs-td-danger', cb: function () {
+          restoreFsTutSnapshot(tut.id);
+          clearFsTutSnapshot(tut.id);
+          _doExitFsTutorial();
+      }}
+    ]);
+  }
+  function fsTutorialCardHtml(tut, i) {
+    var prog = fsTutState[tut.id];
+    var status = '';
+    var resetBtn = '';
+    if (prog && prog.completed) status = '<span class="fs-tut-card-status">Done</span>';
+    else if (prog && prog.stepIdx > 0) status = '<span class="fs-tut-card-status prog">Step ' + (prog.stepIdx + 1) + '/' + tut.steps.length + '</span>';
+    if (prog && (prog.completed || prog.stepIdx > 0)) {
+      resetBtn = '<button type="button" class="fs-tut-card-reset" data-tut="' + i + '" title="Clear saved progress">&#8634;</button>';
+    }
+    return '<div class="fs-tut-card-wrap">' +
+      '<button type="button" class="fs-tut-card" data-tut="' + i + '">' +
+        '<span class="fs-tut-card-badge" style="background:' + tut.color + '">' + esc(tut.title.charAt(0)) + '</span>' +
+        '<span class="fs-tut-card-body"><span class="fs-tut-card-title">' + esc(tut.title) + '</span>' +
+        '<span class="fs-tut-card-desc">' + esc(tut.desc) + '</span></span>' + status +
+      '</button>' + resetBtn +
+    '</div>';
+  }
+  // Grouped under collapsible categories the same way pyscratch.js's own
+  // buildTutorialGroupsHTML does - with only one tutorial today this is a
+  // single open group, but it means a second and third tutorial slot
+  // straight into the picker without this view needing to change again.
   function renderTutorialPicker() {
     var list = document.getElementById('fs-tut-picker-list');
     if (!list) return;
-    list.innerHTML = FS_TUTORIALS.map(function (tut, i) {
-      var prog = fsTutState[tut.id];
-      var status = '';
-      if (prog && prog.completed) status = '<span class="fs-tut-card-status">Done</span>';
-      else if (prog && prog.stepIdx > 0) status = '<span class="fs-tut-card-status prog">Step ' + (prog.stepIdx + 1) + '/' + tut.steps.length + '</span>';
-      return '<button type="button" class="fs-tut-card" data-tut="' + i + '">' +
-        '<span class="fs-tut-card-badge" style="background:' + tut.color + '">' + esc(tut.title.charAt(0)) + '</span>' +
-        '<span class="fs-tut-card-body"><span class="fs-tut-card-title">' + esc(tut.title) + '</span>' +
-        '<span class="fs-tut-card-desc">' + esc(tut.desc) + '</span></span>' + status + '</button>';
+    var groups = {};
+    FS_TUTORIALS.forEach(function (tut, i) {
+      var cat = fsTutorialCategory(tut);
+      (groups[cat] = groups[cat] || []).push({ tut: tut, i: i });
+    });
+    var catKeys = Object.keys(groups).sort(compareFsTutorialCategories);
+    list.innerHTML = catKeys.map(function (cat, catIdx) {
+      var cards = groups[cat].map(function (entry) { return fsTutorialCardHtml(entry.tut, entry.i); }).join('');
+      return '<details class="fs-tut-cat"' + (catIdx === 0 ? ' open' : '') + '>' +
+        '<summary class="fs-tut-cat-summary"><span class="fs-tut-cat-chevron">&#8250;</span><span>' + esc(cat) + '</span>' +
+        '<span class="fs-tut-cat-count">' + groups[cat].length + '</span></summary>' +
+        '<div class="fs-tut-cat-list">' + cards + '</div>' +
+      '</details>';
     }).join('');
     Array.prototype.forEach.call(list.querySelectorAll('.fs-tut-card'), function (card) {
       card.addEventListener('click', function () { startFsTutorial(parseInt(card.dataset.tut, 10)); });
+    });
+    Array.prototype.forEach.call(list.querySelectorAll('.fs-tut-card-reset'), function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var tut = FS_TUTORIALS[parseInt(btn.dataset.tut, 10)];
+        if (!tut) return;
+        delete fsTutState[tut.id];
+        saveFsTutorialProgress();
+        clearFsTutSnapshot(tut.id);
+        renderTutorialPicker();
+      });
     });
   }
   function openTutorialPicker() {
@@ -2802,6 +3065,17 @@
       '</div>';
     els.overlay.appendChild(modal);
 
+    var dlg = document.createElement('div');
+    dlg.id = 'fs-tut-dialog';
+    dlg.innerHTML =
+      '<div id="fs-td-card">' +
+        '<div id="fs-td-icon"></div>' +
+        '<div id="fs-td-title"></div>' +
+        '<div id="fs-td-body"></div>' +
+        '<div id="fs-td-btns"></div>' +
+      '</div>';
+    els.overlay.appendChild(dlg);
+
     var tutBtn = document.createElement('button');
     tutBtn.id = 'fsTutorialsBtn';
     tutBtn.type = 'button';
@@ -2812,7 +3086,9 @@
     tutBtn.addEventListener('click', openTutorialPicker);
     modal.addEventListener('click', function (e) { if (e.target === modal) closeTutorialPicker(); });
     modal.querySelector('#fs-tut-picker-close').addEventListener('click', closeTutorialPicker);
-    bar.querySelector('#fs-tut-exit').addEventListener('click', exitFsTutorial);
+    // Wrapped, not passed directly - exitFsTutorial(isFinished) must not
+    // receive the click Event object itself as a truthy "isFinished".
+    bar.querySelector('#fs-tut-exit').addEventListener('click', function () { exitFsTutorial(false); });
     bar.querySelector('#fs-tut-back').addEventListener('click', function () { goToFsTutorialStep(-1); });
     bar.querySelector('#fs-tut-next').addEventListener('click', function () {
       var step = currentFsTutorialStep();
