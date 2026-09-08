@@ -447,7 +447,10 @@
     } else if (existingOut.length >= 1) {
       FS.edges = FS.edges.filter(function (e) { return e.from !== from; });
     }
-    var edge = { id: 'e' + (++FS.edgeId), from: from, to: to, fromA: fromA || 'E', toA: toA || 'W', lineType: 'orthogonal' };
+    // Straight by default - a new wire reads as "A connects to B" at a
+    // glance; right-angle routing is opt-in per edge via the inspector for
+    // the cases where a straight line would cross other blocks awkwardly.
+    var edge = { id: 'e' + (++FS.edgeId), from: from, to: to, fromA: fromA || 'E', toA: toA || 'W', lineType: 'straight' };
     if (fromNode && fromNode.type === 'selection') {
       edge.branch = existingOut.some(function (e) { return edgeBranch(e) === 'true'; }) ? 'false' : 'true';
     }
