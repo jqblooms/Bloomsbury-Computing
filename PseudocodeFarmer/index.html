@@ -953,11 +953,23 @@ function nextFarmTypeInSequence(id) {
 }
 var farmTypesDiscovered = ['crops'];
 
-// The milestone: a player's SINGLE best sale, multiplied by 100, compared against lifetime
-// earnings. Using the best single sale (not e.g. current money on hand) means it can't be
-// dodged by simply never spending, and can't flicker unlocked/locked as money is spent -
-// both bestSaleValue and totalEarned only ever move upward, so once true this stays true.
-var SELL_FARM_MULTIPLE = 100;
+// The milestone: a player's SINGLE best sale, multiplied by SELL_FARM_MULTIPLE, compared
+// against lifetime earnings. Using the best single sale (not e.g. current money on hand)
+// means it can't be dodged by simply never spending, and can't flicker unlocked/locked as
+// money is spent - both bestSaleValue and totalEarned only ever move upward, so once true
+// this stays true.
+//
+// James: unlocked at only 3.4M total earned - nowhere near the quintillion-scale milestone
+// this is meant to be. The bug: at x100, grinding cheap early-tier crops for a while (which
+// racks up totalEarned fast) crosses "100x my best sale so far" almost immediately, long
+// before ever reaching the exponentially-gated higher tiers - a mid-tier ~35,000c sale (tier
+// ~7 of 33) only needs 3.5M lifetime earned to "count" as 100 sales' worth, which any player
+// selling steadily for a few minutes will blow past. x100,000 means that same tier-7 sale
+// needs 3.5B earned instead (impractical to reach by grinding cheap crops alone), while a
+// genuinely late-tier sale (tier ~26+, sale prices already in the tens of trillions per the
+// x3-per-tier crop curve) lands the milestone in the quintillions - reachable, but only via
+// real progression through the tiers, which is the actual intent.
+var SELL_FARM_MULTIPLE = 100000;
 var bestSaleValue = 0;
 function sellFarmUnlocked() {
   return bestSaleValue > 0 && totalEarned >= bestSaleValue * SELL_FARM_MULTIPLE;
