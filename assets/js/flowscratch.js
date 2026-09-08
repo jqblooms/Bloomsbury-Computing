@@ -147,7 +147,9 @@
     wait_seconds:       { shape: 'process',   title: 'Wait seconds',       data: { seconds: 1 },                 category: 'control' },
     selection:          { shape: 'selection', title: 'Selection',          data: { negate: 'is', condition: 'key', value: 'Space' }, category: 'control' },
     subroutine_start:   { shape: 'oval',      title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
-    call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' }
+    call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' },
+    broadcast:          { shape: 'process',   title: 'Broadcast',         data: { message: 'message1' },        category: 'control' },
+    when_i_receive:     { shape: 'oval',      title: 'When I receive',    data: { message: 'message1' },        category: 'control' }
   };
   var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sound', 'sensing', 'variables', 'control'];
 
@@ -606,6 +608,8 @@
     if (n.type === 'wait_seconds') return 'Wait ' + valueDisplay(d, 'seconds', 'secs');
     if (n.type === 'subroutine_start') return 'Sub-routine: ' + (d.name || 'unnamed');
     if (n.type === 'call_subroutine') return 'CALL ' + (d.name || 'unnamed');
+    if (n.type === 'broadcast') return 'Broadcast "' + (d.message || '') + '"';
+    if (n.type === 'when_i_receive') return 'When I receive "' + (d.message || '') + '"';
     if (n.type === 'move_steps') return 'Move ' + valueDisplay(d, 'steps', 'steps');
     if (n.type === 'turn_right') return 'Turn right ' + valueDisplay(d, 'degrees', 'degrees');
     if (n.type === 'turn_left') return 'Turn left ' + valueDisplay(d, 'degrees', 'degrees');
@@ -817,6 +821,8 @@
     var sub = '';
     if (n.type === 'wait_seconds') sub = '<span class="fs-inline-label">wait</span>' + inlineValueHtml(n.data, 'seconds') + '<span class="fs-inline-label">secs</span>';
     if (n.type === 'subroutine_start') sub = '<input type="text" class="fs-inline-name" data-field="name" value="' + esc(n.data.name || '') + '" aria-label="Sub-routine name">';
+    if (n.type === 'when_i_receive') sub = '<input type="text" class="fs-inline-name" data-field="message" value="' + esc(n.data.message || '') + '" aria-label="Message name">';
+    if (n.type === 'broadcast') sub = inlineTextHtml(n.data, 'message');
     if (n.type === 'call_subroutine') sub = subroutineSelectHtml('name', n.data.name || '');
     if (n.type === 'move_steps') sub = inlineValueHtml(n.data, 'steps');
     if (n.type === 'turn_right' || n.type === 'turn_left' || n.type === 'point_in_direction') sub = inlineValueHtml(n.data, 'degrees');
@@ -1434,6 +1440,7 @@
     if (n.type === 'wait_seconds') f = sourceField('Seconds', 'seconds', n.data);
     if (n.type === 'subroutine_start') f = '<p class="fs-empty">Give this sub-routine a unique name inside the block.</p>';
     if (n.type === 'call_subroutine') f = '<p class="fs-empty">Choose the named sub-routine to run inside the block.</p>';
+    if (n.type === 'broadcast' || n.type === 'when_i_receive') f = '<p class="fs-empty">Type the message name inside the block - any "When I receive" block (on any sprite) with the same exact name will run when this fires.</p>';
     if (n.type === 'point_towards' || n.type === 'go_to' || n.type === 'set_rotation_style' || n.type === 'switch_costume_to' || n.type === 'go_to_layer' || n.type === 'set_drag_mode' || n.type === 'play_sound' || n.type === 'play_sound_until_done' ||
         n.type === 'list_add' || n.type === 'list_delete' || n.type === 'list_delete_all' || n.type === 'list_insert' || n.type === 'list_replace' || n.type === 'list_item_to_var') f = '<p class="fs-empty">Use the fields inside this block.</p>';
     // set_variable/change_variable's own value field can source a
@@ -1590,7 +1597,7 @@
     });
     FS.nodes.forEach(function (n) {
       if (n.type !== 'end' && !out(n.id).length) errors.push(typeTitle(n) + ' has no outgoing connection.');
-      if (n.type !== 'start' && n.type !== 'subroutine_start' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
+      if (n.type !== 'start' && n.type !== 'subroutine_start' && n.type !== 'when_i_receive' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
       if (n.type === 'selection' && out(n.id).length !== 2) errors.push('Each Selection must have exactly two outgoing connections, one True and one False.');
       // addEdge() already refuses to create this, but defends here too in
       // case a graph saved before that enforcement existed gets loaded:
@@ -1599,19 +1606,29 @@
       if ((n.type === 'set_variable' || n.type === 'change_variable') && !n.data.varName) errors.push(typeTitle(n) + ' has no variable selected.');
       if (n.type === 'selection' && n.data.condition === 'variable' && !n.data.varName) errors.push('Selection has no variable selected.');
       if (n.type === 'selection' && n.data.condition === 'list_contains' && !n.data.listName) errors.push('Selection has no list selected.');
+      if (n.type === 'when_i_receive') {
+        if (!String(n.data.message || '').trim()) errors.push('A "When I receive" block needs a message name.');
+        if (inc(n.id).length) errors.push('"When I receive" must have no incoming connector - it starts its own script, the same way Start does.');
+      }
+      if (n.type === 'broadcast' && !String(n.data.message || '').trim()) errors.push('A Broadcast block needs a message name.');
       if (n.type === 'call_subroutine') {
         var callName = String(n.data.name || '').trim();
         if (!callName) errors.push('Each CALL block must name a sub-routine.');
         else if (!routineNames[callName]) errors.push('CALL ' + callName + ' cannot run because that sub-routine has not been created.');
       }
     });
-    if (starts.length === 1 || routineStarts.length) {
+    // "When I receive" blocks are their own script roots, same idea as a
+    // sub-routine Start - reachable from a broadcast, not from Main, so
+    // they need to count as valid roots here too or every node downstream
+    // of one gets wrongly flagged as unreachable.
+    var receiveStarts = FS.nodes.filter(function (n) { return n.type === 'when_i_receive'; });
+    if (starts.length === 1 || routineStarts.length || receiveStarts.length) {
       var seen = {};
-      [starts[0]].concat(routineStarts).filter(Boolean).forEach(function (root) {
+      [starts[0]].concat(routineStarts).concat(receiveStarts).filter(Boolean).forEach(function (root) {
         var rootSeen = reachableFrom(root.id);
         Object.keys(rootSeen).forEach(function (id) { seen[id] = true; });
       });
-      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Main or a sub-routine Start.'); });
+      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Main, a sub-routine Start, or a "When I receive" block.'); });
     }
     return errors.filter(function (e, i, a) { return a.indexOf(e) === i; });
   }
@@ -1726,6 +1743,11 @@
       }
       return;
     }
+    // Broadcasting, like variables/lists above, is a stage-wide effect -
+    // no sprite target of its own needed. Reaches every sprite's "When I
+    // receive" handlers, including this one's, via fireBroadcast (see its
+    // own comment for the active/background split).
+    if (n.type === 'broadcast') { fireBroadcast(n.data.message); return; }
     if (!target) return;
     switch (n.type) {
       case 'move_steps': {
@@ -1978,16 +2000,28 @@
   // editor UI (no wires/highlighting/status text) since it isn't the
   // graph on screen - that's still exactly what the active sprite's own
   // run() below does.
-  FS.bgRuns = {}; // target id -> generation counter; bumping it stops that flow
+  // Keyed by "<targetId>:<rootNodeId>", not just target id - a sprite can
+  // have more than one script running at once (its own green-flag Start
+  // loop AND a broadcast-triggered "When I receive" handler, same as real
+  // Scratch), and each needs its own independent gen counter so firing one
+  // doesn't cancel the other. Bumping a key's counter stops just that one
+  // script; stopAllBackgroundFlows() bumps every key.
+  FS.bgRuns = {};
   function stopAllBackgroundFlows() {
-    Object.keys(FS.bgRuns).forEach(function (id) { FS.bgRuns[id]++; });
+    Object.keys(FS.bgRuns).forEach(function (key) { FS.bgRuns[key]++; });
   }
-  function runBackgroundFlow(spriteName, nodes, edges) {
+  // startNode is the script's own entry point - the Start node for a
+  // green-flag-triggered flow, or a "When I receive" node for a broadcast
+  // handler (see fireBroadcast below). Falls back to hunting for a Start
+  // node when omitted, so existing green-flag call sites don't need to
+  // change.
+  function runBackgroundFlow(spriteName, nodes, edges, startNode) {
     var target = getTargetByName(spriteName);
     if (!target) return;
-    var start = nodes.find(function (n) { return n.type === 'start'; });
+    var start = startNode || nodes.find(function (n) { return n.type === 'start'; });
     if (!start) return;
-    var myGen = (FS.bgRuns[target.id] = (FS.bgRuns[target.id] || 0) + 1);
+    var key = target.id + ':' + start.id;
+    var myGen = (FS.bgRuns[key] = (FS.bgRuns[key] || 0) + 1);
     var current = start, steps = 0, callStack = [];
     var PACE_EVERY = 20;
     function pace(stepNum) {
@@ -1997,7 +2031,7 @@
     }
     var STEP_CAP = 200000;
     (async function loop() {
-      while (FS.bgRuns[target.id] === myGen && current && steps++ < STEP_CAP) {
+      while (FS.bgRuns[key] === myGen && current && steps++ < STEP_CAP) {
         var outs = edges.filter(function (e) { return e.from === current.id; });
         if (current.type === 'end') {
           if (!callStack.length) break;
@@ -2015,9 +2049,9 @@
           continue;
         }
         await runBlock(current, target);
-        if (FS.bgRuns[target.id] !== myGen) return;
+        if (FS.bgRuns[key] !== myGen) return;
         await pace(steps);
-        if (FS.bgRuns[target.id] !== myGen) return;
+        if (FS.bgRuns[key] !== myGen) return;
         if (current.type === 'selection') {
           var truth = evaluateCondition(current, target);
           var chosen = outs.find(function (edge) { return edgeBranch(edge, nodes, edges) === (truth ? 'true' : 'false'); });
@@ -2039,6 +2073,30 @@
       if (!name || name === FS.activeSprite) return;
       var g = loadGraph(name);
       if (g.nodes.some(function (n) { return n.type === 'start'; })) runBackgroundFlow(name, g.nodes, g.edges);
+    });
+  }
+  // A broadcast reaches every sprite (matching real Scratch), not just the
+  // one that sent it. The active sprite is checked against its live,
+  // in-editor graph (FS.nodes/FS.edges); every other sprite against its
+  // own saved graph (loadGraph) - same split runAllOtherSpritesFlowcharts()
+  // already uses. A "When I receive" handler always runs as a background
+  // flow (headless, no wire/node highlighting) even on the active sprite,
+  // since it's a second concurrent script alongside whatever the visible
+  // run() is doing and there is no sane way to highlight two scripts on
+  // one canvas at once - a known, accepted simplification.
+  function fireBroadcast(message) {
+    message = String(message || '').trim();
+    if (!message) return;
+    function startReceivers(spriteName, nodes, edges) {
+      nodes.filter(function (n) { return n.type === 'when_i_receive' && String(n.data.message || '').trim() === message; })
+        .forEach(function (recv) { runBackgroundFlow(spriteName, nodes, edges, recv); });
+    }
+    if (FS.activeSprite) startReceivers(FS.activeSprite, FS.nodes, FS.edges);
+    getSprites().forEach(function (t) {
+      var name = t.sprite && t.sprite.name;
+      if (!name || name === FS.activeSprite) return;
+      var g = loadGraph(name);
+      startReceivers(name, g.nodes, g.edges);
     });
   }
 
@@ -3000,21 +3058,22 @@
             { nodeWhere: { type: 'selection', field: 'condition', value: 'key' }, label: 'Selection is set to check a key' }]
         },
         {
-          title: 'Move on the True branch',
-          text: 'Drag a <b>Change x by</b> block from Motion. Connect <b>Start &rarr; Selection</b>, then connect the Selection\'s <b>True</b> output to it. Set its amount to 5.',
-          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' },
-            { path: 'change_x_by', label: 'Connected: Start → … → Change x by' }],
+          title: 'Add a second Selection',
+          text: 'A Selection\'s False output can\'t point back to itself, so checking a key "every frame" always needs a second thing for False to reach. Add a <b>second</b> Selection block (condition: key, <b>Left Arrow</b>) - you\'ll wire the two into a loop together next.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Move on the True branches',
+          text: 'Drag two <b>Change x by</b> blocks from Motion - one set to <b>5</b>, one to <b>-5</b>. Connect <b>Start</b> to the first (right-key) Selection. Connect each Selection\'s <b>True</b> output to its own Change x by block.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }, { node: 'change_x_by', count: 2 }],
           highlight: 'palette-change-x-by',
           highlightLabel: 'Drag this onto the canvas'
         },
         {
-          title: 'Loop it back',
-          text: 'Connect <b>Change x by</b>\'s output back to the Selection block, so it keeps checking the key every frame instead of only once.',
-          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' }, { loop: true }]
-        },
-        {
-          title: 'Do the same for the left key',
-          text: 'Add a second Selection (condition: key, <b>Left Arrow</b>) and a second Change x by (amount <b>-5</b>), wired into the loop the same way.',
+          title: 'Wire the loop',
+          text: 'Now connect everything so both Selections keep checking forever: <b>right Change x by &rarr; left Selection</b>, and the right Selection\'s <b>False</b> output <b>also &rarr; left Selection</b> (both paths converge there). Then the same in reverse: <b>left Change x by &rarr; right Selection</b>, and the left Selection\'s <b>False</b> output <b>also &rarr; right Selection</b>. Every Selection now has exactly two outgoing wires, and the whole thing loops.',
           requires: [{ node: 'start' }, { node: 'selection', count: 2 }, { node: 'change_x_by', count: 2 }, { loop: true }]
         },
         {
@@ -3085,35 +3144,28 @@
       steps: [
         {
           title: 'Set up movement',
-          text: 'Build a <b>Start &rarr; Selection (key: Right Arrow) &rarr; Change x by (5)</b> flow that loops back to the Selection - the same shape as Making Choices.<br><br>⚠️ Make sure your sprite has <b>at least 2 costumes</b> before continuing.',
-          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' }, { loop: true }],
+          text: 'Add a <b>Start</b>, a <b>Selection</b> (key: Right Arrow), a <b>Change x by</b> (5), and a <b>Wait seconds</b> block. Wire <b>Start &rarr; Selection</b>; the Selection\'s <b>True</b> output <b>&rarr; Change x by &rarr; Wait seconds</b>; the Selection\'s <b>False</b> output <b>also &rarr; Wait seconds</b> (both paths converge there); then <b>Wait seconds</b> back to the Selection, closing the loop.<br><br>⚠️ Make sure your sprite has <b>at least 2 costumes</b> before continuing.',
+          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' }, { node: 'wait_seconds' }, { loop: true }],
           highlight: 'palette-selection',
           highlightLabel: 'Drag this onto the canvas'
         },
         {
           title: 'Animate while moving',
-          text: 'Add a <b>Next costume</b> block on the True branch, after Change x by.',
-          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' }, { node: 'next_costume' }, { loop: true }],
+          text: 'Add a <b>Next costume</b> block between <b>Change x by</b> and <b>Wait seconds</b>, on the True path only.',
+          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' }, { node: 'next_costume' }, { node: 'wait_seconds' }, { loop: true }],
           highlight: 'palette-next-costume',
           highlightLabel: 'Drag this onto the canvas'
         },
         {
-          title: 'Snap to an idle pose when still',
-          text: 'Add a variable called <b>moving</b>. Set it on the True branch, and add a second Selection that checks it - when it\'s <b>not</b> moving, connect to a <b>Switch costume to</b> block set to your first costume.',
-          requires: [{ node: 'start' }, { node: 'set_variable' }, { node: 'switch_costume_to' }],
+          title: 'Rest when still',
+          text: 'Add a <b>Switch costume to</b> block set to your first costume, and drop it directly onto the <b>False</b> wire between the Selection and Wait seconds - it splices straight into that connection, so the sprite resets to its resting pose whenever the key isn\'t held.',
+          requires: [{ node: 'start' }, { node: 'switch_costume_to' }],
           highlight: 'palette-switch-costume-to',
           highlightLabel: 'Drag this onto the canvas'
         },
         {
-          title: 'Control animation speed',
-          text: 'Add a <b>Wait seconds</b> block (try 0.1) in the loop, so costumes don\'t flicker faster than the eye can follow.',
-          requires: [{ node: 'start' }, { node: 'wait_seconds' }],
-          highlight: 'palette-wait-seconds',
-          highlightLabel: 'Drag this onto the canvas'
-        },
-        {
           title: 'Try it!',
-          text: 'Click the <b>green flag</b> and walk left and right - your sprite should animate while moving and rest when still.<br><br><b>Challenge:</b> try a shorter wait for a sprint, or a longer one for a slow walk.',
+          text: 'Click the <b>green flag</b> and walk left and right - your sprite should animate while moving and rest when still.<br><br><b>Challenge:</b> try a shorter Wait for a sprint, or a longer one for a slow walk. Add the same shape again for the left arrow key.',
           requires: [],
           highlight: 'green-flag',
           highlightLabel: 'Click to run'
@@ -3247,6 +3299,48 @@
         {
           title: 'Try it!',
           text: 'Click the <b>green flag</b> - the sprite should patrol between the stops in your list forever.<br><br><b>Challenge:</b> change which item you read each time through the loop (using another variable as the index) so it actually visits every stop in order, not just the first.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
+    },
+    {
+      id: 'messages-events',
+      title: 'Messages & Events',
+      color: '#FFAB19',
+      category: 'Code Organisation',
+      desc: 'Split a trigger from its reaction - one part of your flow broadcasts a message, a separate script reacts.',
+      steps: [
+        {
+          title: 'Two checks, chained',
+          text: 'Add a <b>Start</b> block and <b>two</b> Selection blocks - one checking key <b>Space</b>, one checking key <b>Up Arrow</b>. A Selection\'s False output can never point back to itself, so two checks that both loop into each other is the standard way to keep checking several keys forever. Connect <b>Start</b> to the first Selection.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Broadcast on each True branch',
+          text: 'Add two <b>Broadcast</b> blocks - one set to <b>cheer</b>, one set to <b>vanish</b>. Connect the Space Selection\'s <b>True</b> output to the cheer Broadcast, and the Up Arrow Selection\'s <b>True</b> output to the vanish Broadcast.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }, { node: 'broadcast', count: 2 }],
+          highlight: 'palette-broadcast',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Wire the loop',
+          text: 'Connect <b>cheer Broadcast &rarr; Up Arrow Selection</b>, and the Space Selection\'s <b>False</b> output <b>also &rarr; Up Arrow Selection</b> (both paths converge there). Then the same in reverse: <b>vanish Broadcast &rarr; Space Selection</b>, and the Up Arrow Selection\'s <b>False</b> output <b>also &rarr; Space Selection</b>. Every Selection now has exactly two outgoing wires, and the whole thing loops forever.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }, { node: 'broadcast', count: 2 }, { loop: true }]
+        },
+        {
+          title: 'React to the messages',
+          text: 'Add two <b>separate</b> scripts, each starting with its own <b>When I receive</b> block (no incoming wire): one set to <b>cheer</b> connected to a <b>Say</b> block, one set to <b>vanish</b> connected to a <b>Hide</b> block. Finish each with an <b>End</b> block - you can connect both Say and Hide to the <em>same</em> End. Your main flow never calls these directly - it just broadcasts, and they react on their own.',
+          requires: [{ node: 'start' }, { node: 'when_i_receive', count: 2 }, { node: 'say' }, { node: 'hide' }, { node: 'end' }],
+          highlight: 'palette-when-i-receive',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b>. Press <b>space</b> to cheer and <b>up</b> to vanish - the reactions live in totally separate scripts from the key checks.<br><br><b>Challenge:</b> give a <em>second sprite</em> its own <b>When I receive: cheer</b> block too - one broadcast, many sprites responding. That is how whole games are coordinated.',
           requires: [],
           highlight: 'green-flag',
           highlightLabel: 'Click to run'
