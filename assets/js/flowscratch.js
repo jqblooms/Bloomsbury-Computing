@@ -3537,6 +3537,69 @@
           highlightLabel: 'Click to run'
         }
       ]
+    },
+    // Simplified from PyScratch's own version in one place: PyScratch's
+    // flap uses when_key_pressed, a genuine tap-only (edge-triggered)
+    // event - FlowScratch's Selection only ever polls "is this key held
+    // right now", so holding Space here keeps giving upward lift every
+    // frame, rather than one impulse per tap. A real gap (an edge-
+    // triggered key event, distinct from the held-key poll Selection
+    // already does) worth adding later; noted in the tutorial text
+    // rather than hidden. The bird's tilt-with-velocity is left as a
+    // Challenge, not a required step, to keep the base flow's Selection
+    // chain from growing past what's still easy to follow on screen.
+    {
+      id: 'flappy-bird',
+      title: 'Flappy Bird',
+      color: '#9966FF',
+      category: 'Games',
+      desc: 'Gravity, a floor and ceiling, flap-to-rise, and a pipe that loops across the screen at a random height.',
+      steps: [
+        {
+          title: 'Gravity',
+          text: 'Add a <b>Set variable</b> block (<b>vy</b> to 0), a <b>Change variable</b> block (<b>vy</b> by -0.3), and a <b>Change y by</b> block sourced from <b>vy</b>. Wire them in that order after Start - you\'ll close the loop in a later step.',
+          requires: [{ node: 'start' }, { node: 'set_variable' }, { node: 'change_variable' }, { node: 'change_y_by' },
+            { nodeWhere: { type: 'change_y_by', field: 'ySrc', value: 'var:vy' }, label: 'Change y by uses the vy variable' }],
+          highlight: 'palette-change-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Floor and ceiling',
+          text: 'Add a Selection checking <b>touching edge: bottom</b> - True: <b>Set y to</b> -180, then <b>Set variable vy</b> to 0. Add a second Selection checking <b>touching edge: top</b> - True: <b>Set y to</b> 180, then <b>Set variable vy</b> to 0. Chain False onward through both.<br><br>The reset position has to match the edge exactly (-180/180, the real edge of the stage) - resetting to a value the edge check itself wouldn\'t also flag as "touching" (like -150) would let the bird fall further before the next check catches it.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }, { node: 'set_y_to', count: 2 }, { node: 'set_variable', count: 3 }],
+          highlight: 'palette-set-y-to',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Flap',
+          text: 'Add one more Selection checking key <b>Space</b> - True: <b>Set variable vy</b> to 5. Connect its False output, and its True output after Set variable, both back to the very first <b>Change variable vy</b> block - closing the loop.<br><br>⚠️ Since Selection only checks "is this key held right now" (not a single tap), the bird rises the whole time Space is held rather than flapping once per press.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 3 }, { loop: true }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Add the Pipe sprite',
+          text: 'Click the highlighted button to add a second sprite - anything to dodge. Then click it in the sprite panel to switch to its code.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 3 }],
+          highlight: 'add-sprite-btn',
+          highlightLabel: 'Add a sprite here'
+        },
+        {
+          title: 'Pipe: move and loop at a random height',
+          text: 'With the <b>Pipe</b> sprite selected: <b>Set variable to random number</b> (name it <b>pipeY</b>, -100 to 100), a <b>Go to x y</b> at x <b>240</b> sourced from <b>pipeY</b> for y, and a <b>Change x by</b> of -3. Add a Selection checking <b>touching edge: left</b> - True: set <b>pipeY</b> to a new random number again, then another <b>Go to x y</b> at x <b>260</b> sourced from <b>pipeY</b>. Loop both the True and False paths back to <b>Change x by</b>.',
+          requires: [{ node: 'start' }, { node: 'set_var_to_random', count: 2 }, { node: 'go_to_xy', count: 2 }, { node: 'change_x_by' }, { node: 'selection' }, { loop: true },
+            { nodeWhere: { type: 'go_to_xy', field: 'ySrc', value: 'var:pipeY' }, label: 'Go to x y uses the pipeY variable' }],
+          highlight: 'palette-set-var-to-random',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b> and hold <b>Space</b> to rise. The bird should fall with gravity and stay between the floor and ceiling, while the pipe scrolls across at a random height on a loop.<br><br><b>Challenge:</b> add a <b>Set rotation style</b> block (all around) and tilt the bird based on <code>vy</code> - point in direction 20 while falling, -20 while rising, using a Selection with condition Variable.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
     }
   ];
   // Categories are display-only grouping in the tutorial picker, the same
