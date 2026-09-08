@@ -222,6 +222,41 @@
   }
   var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
 
+  // Matches pyscratch.js's own FRAME_MS (see its injectFrameYields, which
+  // injects a wait(0) - defaulting to this same 1000/60 - at the top of
+  // every `while True:` body) so a FlowScratch game and a PyScratch one
+  // built the same way run at the same real-world speed. Before this,
+  // FlowScratch paced itself by a fixed step COUNT (every 20 steps,
+  // regardless of loop shape) rather than by real elapsed time per
+  // iteration - a loop with 4 blocks in it yielded 5x more often than one
+  // with 20, so different flowcharts ran at wildly different, "weird"
+  // speeds that had nothing to do with matching real Scratch/PyScratch.
+  var FRAME_MS = 1000 / 60;
+  // Paces a run so it yields exactly once per LOOP ITERATION, the same
+  // moment Scratch's own forever/repeat blocks yield - not once per fixed
+  // step count. An arbitrary flowchart graph has no explicit "this is a
+  // loop" marker, so an iteration boundary is detected the only way it
+  // can be here: the flow is about to revisit a node it's already passed
+  // through since the last yield. That's exactly a loop closing (a
+  // Selection's two branches can each reach a shared node once per pass,
+  // never twice, so this never misfires on an ordinary branch-and-merge).
+  // Straight-line, non-looping steps - most of a typical script - run
+  // back-to-back with no artificial delay at all, same as Scratch
+  // executes an ordinary block sequence within a single frame. Slow mode
+  // is unrelated to any of this - it's a deliberate, student-facing
+  // step-by-step visualisation, so it still delays after every single
+  // step regardless of loop position, exactly as before.
+  function createLoopPacer() {
+    var visited = Object.create(null);
+    return function paceTo(nextId) {
+      if (FS.slowMode) return wait(FS.slowDelayMs);
+      if (!nextId) return Promise.resolve();
+      if (visited[nextId]) { visited = Object.create(null); visited[nextId] = true; return wait(FRAME_MS); }
+      visited[nextId] = true;
+      return Promise.resolve();
+    };
+  }
+
   // ── vm target helpers (independent of pyscratch.js's own copy) ─────────
   function getTargetByName(name) {
     try {
@@ -2168,20 +2203,16 @@
     var key = target.id + ':' + start.id;
     var myGen = (FS.bgRuns[key] = (FS.bgRuns[key] || 0) + 1);
     var current = start, steps = 0, callStack = [];
-    var PACE_EVERY = 20;
-    function pace(stepNum) {
-      if (FS.slowMode) return wait(FS.slowDelayMs);
-      if (stepNum % PACE_EVERY === 0) return wait(0);
-      return Promise.resolve();
-    }
+    var paceTo = createLoopPacer();
     var STEP_CAP = 200000;
     (async function loop() {
       while (FS.bgRuns[key] === myGen && current && steps++ < STEP_CAP) {
         var outs = edges.filter(function (e) { return e.from === current.id; });
         if (current.type === 'end') {
           if (!callStack.length) break;
-          current = callStack.pop();
-          await pace(steps);
+          var nextEnd = callStack.pop();
+          await paceTo(nextEnd && nextEnd.id);
+          current = nextEnd;
           continue;
         }
         if (current.type === 'call_subroutine') {
@@ -2189,21 +2220,23 @@
             return n.type === 'subroutine_start' && String(n.data.name || '').trim() === String(current.data.name || '').trim();
           });
           callStack.push(getNode(outs[0] ? outs[0].to : undefined, nodes));
-          await pace(steps);
+          await paceTo(routine && routine.id);
           current = routine;
           continue;
         }
         await runBlock(current, target, nodes, edges);
         if (FS.bgRuns[key] !== myGen) return;
-        await pace(steps);
-        if (FS.bgRuns[key] !== myGen) return;
+        var nextNode;
         if (current.type === 'selection') {
           var truth = evaluateCondition(current, target);
           var chosen = outs.find(function (edge) { return edgeBranch(edge, nodes, edges) === (truth ? 'true' : 'false'); });
-          current = getNode(chosen ? chosen.to : undefined, nodes);
+          nextNode = getNode(chosen ? chosen.to : undefined, nodes);
         } else {
-          current = getNode(outs[0] ? outs[0].to : undefined, nodes);
+          nextNode = getNode(outs[0] ? outs[0].to : undefined, nodes);
         }
+        await paceTo(nextNode && nextNode.id);
+        if (FS.bgRuns[key] !== myGen) return;
+        current = nextNode;
       }
     })();
   }
@@ -2300,33 +2333,21 @@
     var start = FS.nodes.find(function (n) { return n.type === 'start'; });
     var current = start, steps = 0, callStack = [];
     // A "forever" flowchart loop is just a wire connected back to an
-    // earlier block, a normal cycle, not a special block type. Some pacing
-    // yield is needed every so often so this can't lock up the tab like a
-    // true synchronous busy-loop could, and so the stop button stays
-    // responsive. STEP_CAP is a generous last-resort safety net only, not
-    // the intended way to stop a deliberate loop, that's what the stop
-    // button (wired to TurboWarp's own) is for.
+    // earlier block, a normal cycle, not a special block type. STEP_CAP is
+    // a generous last-resort safety net only, not the intended way to stop
+    // a deliberate loop, that's what the stop button (wired to TurboWarp's
+    // own) is for.
     //
-    // pace() used to be an unconditional `await wait(FS.slowMode ?
-    // FS.slowDelayMs : 0)` on every single step. That looked right (0ms
-    // delay when slow mode is off) but a real `setTimeout(fn, 0)` is not
-    // actually 0ms in a browser: after a handful of nested zero-delay
-    // timeouts in the same chain, browsers clamp them to a ~4ms floor
-    // (measured live: ~224 iterations/sec, not thousands). Every flowchart
-    // was silently throttled to that floor on every step regardless of the
-    // slow mode toggle - invisible on a short flow (a few steps finishes
-    // in well under a frame either way) but very obvious on any loop,
-    // which is exactly when a flowchart is likely to have many steps.
-    // Fixed by only actually awaiting a real timer when slow mode is on,
-    // or once every PACE_EVERY steps as a periodic yield back to the
-    // browser - most steps with slow mode off now run at essentially
-    // native speed instead of being capped by the timer floor.
-    var PACE_EVERY = 20;
-    function pace(stepNum) {
-      if (FS.slowMode) return wait(FS.slowDelayMs);
-      if (stepNum % PACE_EVERY === 0) return wait(0);
-      return Promise.resolve();
-    }
+    // Pacing is handled by createLoopPacer() (see its own comment) - it
+    // yields once per loop ITERATION at FRAME_MS, matching pyscratch.js's
+    // own per-iteration yield, instead of the old fixed-step-count
+    // approach (every 20 steps via a real `wait(0)`, which a browser
+    // silently clamps to a ~4ms floor after a few nested zero-delay
+    // timeouts - measured live at ~224 iterations/sec). That made
+    // FlowScratch's actual speed depend on how many blocks happened to be
+    // in a given loop rather than real elapsed time, and run far faster
+    // than real Scratch/PyScratch besides.
+    var paceTo = createLoopPacer();
     var STEP_CAP = 200000;
     renderWires();
     (async function loop() {
@@ -2337,8 +2358,9 @@
         setActiveNode(current.id);
         if (current.type === 'end') {
           if (!callStack.length) break;
-          current = callStack.pop();
-          await pace(steps);
+          var nextEnd = callStack.pop();
+          await paceTo(nextEnd && nextEnd.id);
+          current = nextEnd;
           continue;
         }
         if (current.type === 'call_subroutine') {
@@ -2346,21 +2368,23 @@
             return n.type === 'subroutine_start' && String(n.data.name || '').trim() === String(current.data.name || '').trim();
           });
           callStack.push(getNode(outs[0] ? outs[0].to : undefined));
-          await pace(steps);
+          await paceTo(routine && routine.id);
           current = routine;
           continue;
         }
         await runBlock(current);
         if (FS.gen !== myGen) return;
-        await pace(steps);
-        if (FS.gen !== myGen) return;
+        var nextNode;
         if (current.type === 'selection') {
           var truth = evaluateCondition(current);
           var chosen = outs.find(function (edge) { return edgeBranch(edge) === (truth ? 'true' : 'false'); });
-          current = getNode(chosen ? chosen.to : undefined);
+          nextNode = getNode(chosen ? chosen.to : undefined);
         } else {
-          current = getNode(outs[0] ? outs[0].to : undefined);
+          nextNode = getNode(outs[0] ? outs[0].to : undefined);
         }
+        await paceTo(nextNode && nextNode.id);
+        if (FS.gen !== myGen) return;
+        current = nextNode;
       }
       if (steps >= STEP_CAP) notify('Stopped after a very long run, in case something is stuck. Use the stop button to end a deliberate loop instead.', 'error');
       finishRun(myGen);
