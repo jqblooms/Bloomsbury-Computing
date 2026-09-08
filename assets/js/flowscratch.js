@@ -506,7 +506,13 @@
     if (render !== false) renderAll();
     return n;
   }
-  function getNode(id) { return FS.nodes.find(function (n) { return n.id === id; }); }
+  // `nodesArr` defaults to the active editor buffer (FS.nodes) - the vast
+  // majority of call sites are editor code, which only ever means "the
+  // graph currently open." A background sprite's own run loop (see
+  // runBackgroundFlow) passes its own captured nodes array explicitly
+  // instead, so it never touches - or is disturbed by - whatever the
+  // student switches to look at in the editor meanwhile.
+  function getNode(id, nodesArr) { return (nodesArr || FS.nodes).find(function (n) { return n.id === id; }); }
   // A standard flowchart block has exactly one exit path; only a
   // Selection (decision) block branches, and only ever two ways (True and
   // False). Unconditional fan-out from an ordinary block is not valid
@@ -516,12 +522,16 @@
   // Enforced here instead: connecting a new wire from a non-Selection
   // block replaces its existing outgoing wire; a Selection block is
   // capped at two and a third attempt is refused with an explanation.
-  function edgeBranch(edge) {
+  function edgeBranch(edge, nodesArr, edgesArr) {
     if (!edge) return '';
     if (edge.branch === 'true' || edge.branch === 'false') return edge.branch;
-    var fromNode = getNode(edge.from);
+    // Only reached for a graph saved before edge.branch existed - every
+    // edge created since carries its own branch, so a background sprite's
+    // run loop hits the fast path above without ever needing its own
+    // nodes/edges arrays; they're only for this legacy fallback.
+    var fromNode = getNode(edge.from, nodesArr);
     if (!fromNode || fromNode.type !== 'selection') return '';
-    var siblings = FS.edges.filter(function (e) { return e.from === edge.from; });
+    var siblings = (edgesArr || FS.edges).filter(function (e) { return e.from === edge.from; });
     return siblings.indexOf(edge) === 0 ? 'true' : 'false';
   }
   function addEdge(from, to, fromA, toA, options) {
@@ -1676,8 +1686,12 @@
       try { target.runtime.emit('SAY', target, type, ''); } catch (e) {}
     });
   }
-  function runBlock(n) {
-    var target = activeTarget();
+  // targetOverride lets a background sprite's own run loop (see
+  // runBackgroundFlow) drive ITS target directly, instead of whatever
+  // sprite happens to be open in the editor (activeTarget()) - the active
+  // sprite's own run() still calls this with no override, unchanged.
+  function runBlock(n, targetOverride) {
+    var target = targetOverride || activeTarget();
     if (n.type === 'set_variable' || n.type === 'change_variable') {
       var v = findGlobalVariable(n.data.varName);
       if (v) {
@@ -1895,8 +1909,8 @@
         return;
     }
   }
-  function evaluateCondition(n) {
-    var target = activeTarget();
+  function evaluateCondition(n, targetOverride) {
+    var target = targetOverride || activeTarget();
     var v = false;
     if (n.data.condition === 'key') v = !!FS.pressedKeys[n.data.value];
     else if (n.data.condition === 'edge' && target) {
@@ -1947,6 +1961,86 @@
   }
 
   function setRunStatus(text) { if (els.runStatus) els.runStatus.textContent = text; }
+
+  // ── Background flows: other sprites' flowcharts, running concurrently ──
+  // Real Scratch runs every sprite's own scripts at once on green flag;
+  // FlowScratch previously only ran whichever ONE sprite happened to be
+  // open in the editor (vm.runtime.on('PROJECT_START', ...) called run()
+  // just once), which made any multi-sprite project - a pipe alongside a
+  // bird, an enemy alongside a tower - silently do nothing for every
+  // sprite except the one on screen. Each background flow captures its
+  // own sprite's nodes/edges ONCE at start (loadGraph(name), not FS.nodes)
+  // and drives its own target directly via the targetOverride parameters
+  // runBlock()/evaluateCondition() and the nodes/edges-array overrides
+  // getNode()/edgeBranch() already accept - so switching which sprite is
+  // open in the editor, or editing that sprite's own graph, can never
+  // disturb an already-running background flow. It updates nothing in the
+  // editor UI (no wires/highlighting/status text) since it isn't the
+  // graph on screen - that's still exactly what the active sprite's own
+  // run() below does.
+  FS.bgRuns = {}; // target id -> generation counter; bumping it stops that flow
+  function stopAllBackgroundFlows() {
+    Object.keys(FS.bgRuns).forEach(function (id) { FS.bgRuns[id]++; });
+  }
+  function runBackgroundFlow(spriteName, nodes, edges) {
+    var target = getTargetByName(spriteName);
+    if (!target) return;
+    var start = nodes.find(function (n) { return n.type === 'start'; });
+    if (!start) return;
+    var myGen = (FS.bgRuns[target.id] = (FS.bgRuns[target.id] || 0) + 1);
+    var current = start, steps = 0, callStack = [];
+    var PACE_EVERY = 20;
+    function pace(stepNum) {
+      if (FS.slowMode) return wait(FS.slowDelayMs);
+      if (stepNum % PACE_EVERY === 0) return wait(0);
+      return Promise.resolve();
+    }
+    var STEP_CAP = 200000;
+    (async function loop() {
+      while (FS.bgRuns[target.id] === myGen && current && steps++ < STEP_CAP) {
+        var outs = edges.filter(function (e) { return e.from === current.id; });
+        if (current.type === 'end') {
+          if (!callStack.length) break;
+          current = callStack.pop();
+          await pace(steps);
+          continue;
+        }
+        if (current.type === 'call_subroutine') {
+          var routine = nodes.find(function (n) {
+            return n.type === 'subroutine_start' && String(n.data.name || '').trim() === String(current.data.name || '').trim();
+          });
+          callStack.push(getNode(outs[0] ? outs[0].to : undefined, nodes));
+          await pace(steps);
+          current = routine;
+          continue;
+        }
+        await runBlock(current, target);
+        if (FS.bgRuns[target.id] !== myGen) return;
+        await pace(steps);
+        if (FS.bgRuns[target.id] !== myGen) return;
+        if (current.type === 'selection') {
+          var truth = evaluateCondition(current, target);
+          var chosen = outs.find(function (edge) { return edgeBranch(edge, nodes, edges) === (truth ? 'true' : 'false'); });
+          current = getNode(chosen ? chosen.to : undefined, nodes);
+        } else {
+          current = getNode(outs[0] ? outs[0].to : undefined, nodes);
+        }
+      }
+    })();
+  }
+  // Starts every OTHER sprite's saved flowchart as a background flow -
+  // called alongside run() (which still handles the active sprite) on
+  // green flag. Reads straight from each sprite's own localStorage-saved
+  // graph (loadGraph), not FS.nodes, so it never depends on that sprite
+  // ever having been opened in the editor this session.
+  function runAllOtherSpritesFlowcharts() {
+    getSprites().forEach(function (t) {
+      var name = t.sprite && t.sprite.name;
+      if (!name || name === FS.activeSprite) return;
+      var g = loadGraph(name);
+      if (g.nodes.some(function (n) { return n.type === 'start'; })) runBackgroundFlow(name, g.nodes, g.edges);
+    });
+  }
 
   function run() {
     if (FS.running) return;
@@ -3650,17 +3744,26 @@
     try { vm.runtime.on('TARGETS_UPDATE', adjustOverlay); } catch (e) {}
     watchTurboWarpTabsAndModals();
 
-    // Hook TurboWarp's green flag -> run the active sprite's flowchart.
-    try { vm.runtime.on('PROJECT_START', function () { setTimeout(run, 0); }); } catch (e) {}
+    // Hook TurboWarp's green flag -> run the active sprite's flowchart
+    // (run(), driving the visible canvas) AND every other sprite's own
+    // saved flowchart concurrently in the background - real Scratch runs
+    // every sprite's scripts at once, not just whichever one you have
+    // open for editing.
+    try {
+      vm.runtime.on('PROJECT_START', function () {
+        setTimeout(function () { run(); runAllOtherSpritesFlowcharts(); }, 0);
+      });
+    } catch (e) {}
 
-    // Hook TurboWarp's stop button -> stop the flowchart too.
+    // Hook TurboWarp's stop button -> stop the active sprite's flowchart
+    // and every background one too.
     try {
       var origStop = vm.stopAll.bind(vm);
-      vm.stopAll = function () { stop(); return origStop(); };
+      vm.stopAll = function () { stop(); stopAllBackgroundFlows(); return origStop(); };
     } catch (e) {}
     try {
       var origRtStop = vm.runtime.stopAll.bind(vm.runtime);
-      vm.runtime.stopAll = function () { stop(); return origRtStop(); };
+      vm.runtime.stopAll = function () { stop(); stopAllBackgroundFlows(); return origRtStop(); };
     } catch (e) {}
 
     // ── Project save: embed flowcharts inside project.json ───────────
