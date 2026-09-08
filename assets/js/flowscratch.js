@@ -162,21 +162,29 @@
     for (var i = 0; i < REPORTERS.length; i++) if (REPORTERS[i].id === id) return REPORTERS[i];
     return null;
   }
-  // A value field can hold a literal number or a reporter. The choice is
-  // stored as a companion "<field>Src" key on the block's data ('num' or a
-  // reporter id), so graphs saved before reporters existed (a plain number
-  // and no Src key) keep working unchanged.
+  // A value field can hold a literal number, a built-in reporter, or a
+  // variable's own live value ('var:<name>' - a global variable, plugged
+  // into a movement/looks field the same way a Scratch script would drop
+  // the round variable reporter into a block's number slot). The choice is
+  // stored as a companion "<field>Src" key on the block's data ('num', a
+  // reporter id, or 'var:<name>'), so graphs saved before reporters
+  // existed (a plain number and no Src key) keep working unchanged.
   function valueSrc(data, field) { return (data && data[field + 'Src']) || 'num'; }
   function readValue(target, data, field) {
     var src = valueSrc(data, field);
+    if (src.indexOf('var:') === 0) {
+      var v = findGlobalVariable(src.slice(4));
+      return v ? Number(v.value) || 0 : 0;
+    }
     if (src !== 'num') { var r = reporterById(src); if (r) return r.read(target); }
     return Number(data[field] || 0);
   }
   // Short display string for a value field, used in node subtitles and the
-  // Mermaid diagram: the literal number (with an optional unit) or the
-  // reporter's label.
+  // Mermaid diagram: the literal number (with an optional unit), the
+  // reporter's label, or the variable's own name.
   function valueDisplay(data, field, unit) {
     var src = valueSrc(data, field);
+    if (src.indexOf('var:') === 0) return src.slice(4);
     if (src !== 'num') { var r = reporterById(src); return r ? r.label : src; }
     return unit ? String(data[field]) + ' ' + unit : String(data[field]);
   }
@@ -689,8 +697,8 @@
   function inlineValueHtml(data, field) {
     var src = valueSrc(data, field);
     if (src !== 'num') {
-      var r = reporterById(src);
-      return '<span class="fs-inline-reporter">' + (r ? r.label : src) + '</span>';
+      var label = src.indexOf('var:') === 0 ? src.slice(4) : ((reporterById(src) || {}).label || src);
+      return '<span class="fs-inline-reporter">' + esc(label) + '</span>';
     }
     return '<input type="number" class="fs-inline-num" data-field="' + field + '" value="' + esc(data[field]) + '">';
   }
@@ -1326,15 +1334,27 @@
     var del = host.querySelector('#fsDeleteNode');
     if (del) del.onclick = removeSelected;
   }
-  // A value field's source: literal number (typed on the block itself) or
-  // one of the reporters (REPORTERS). The dropdown sets a companion
-  // "<key>Src" field; the number itself is edited inline on the block.
+  // A value field's source: literal number (typed on the block itself),
+  // one of the reporters (REPORTERS), or a variable's own live value -
+  // the flowchart equivalent of dropping a round variable reporter into a
+  // Scratch block's number slot (e.g. "Change y by (vy)" for gravity, or
+  // "Change x by (vx)" for a bouncing ball). The dropdown sets a
+  // companion "<key>Src" field; the number itself is edited inline on the
+  // block, and stays there unused (but harmless) while a reporter/variable
+  // source is selected.
   function sourceField(label, key, data) {
     var src = valueSrc(data, key);
+    var vars = getGlobalVariables();
     return '<div class="fs-field"><label>' + label + '</label>' +
       '<select data-inspect-src="' + key + '">' +
         '<option value="num"' + (src === 'num' ? ' selected' : '') + '>number</option>' +
         REPORTERS.map(function (r) { return '<option value="' + r.id + '"' + (src === r.id ? ' selected' : '') + '>' + esc(r.label) + '</option>'; }).join('') +
+        (vars.length
+          ? '<optgroup label="Variables">' + vars.map(function (v) {
+              var srcId = 'var:' + v.name;
+              return '<option value="' + esc(srcId) + '"' + (src === srcId ? ' selected' : '') + '>' + esc(v.name) + '</option>';
+            }).join('') + '</optgroup>'
+          : '') +
       '</select></div>';
   }
   function renderEdgeInspector(host) {
@@ -2670,6 +2690,251 @@
           highlightLabel: 'Click to run'
         }
       ]
+    },
+    // ── The rest of this library mirrors pyscratch.js's own tutorial list,
+    // one FlowScratch-native step arc per PyScratch concept - not a literal
+    // line-for-line port, since PyScratch teaches typed Python and these
+    // teach the block equivalent. Two adaptations worth flagging:
+    // - PyScratch's "If Statements" and "Left & Right Movement" tutorials
+    //   teach the same if/key_pressed/change_x idea twice with more polish
+    //   the second time; merged here into one "Making Choices" tutorial
+    //   rather than build two near-duplicates.
+    // - "Bouncing Ball" doesn't port the hand-written vx/vy sign-flipping
+    //   PyScratch needs, because there's no "multiply a variable by -1"
+    //   block to flip it with - and If on edge, bounce already does the
+    //   whole mechanic in one existing block. Taught as itself instead,
+    //   with the text calling out why.
+    {
+      id: 'making-choices',
+      title: 'Making Choices',
+      color: '#FFAB19',
+      category: 'Branching & Loops',
+      desc: 'Use a Selection block to branch your flowchart - move the sprite only while an arrow key is held.',
+      steps: [
+        {
+          title: 'Add a Start block',
+          text: 'Every flowchart begins with a <b>Start</b> block. Drag one onto the canvas.',
+          requires: [{ node: 'start' }],
+          highlight: 'palette-start',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Add a Selection block',
+          text: 'A <b>Selection</b> block is a diamond that checks a condition and branches into <b>True</b> and <b>False</b> paths - the flowchart equivalent of an "if". Open <b>Control</b> and drag one onto the canvas.',
+          requires: [{ node: 'start' }, { node: 'selection' }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Set the condition to a key',
+          text: 'Click the Selection block. Set its first dropdown to <b>Key</b>, then choose <b>Right Arrow</b>.',
+          requires: [{ node: 'start' }, { node: 'selection' },
+            { nodeWhere: { type: 'selection', field: 'condition', value: 'key' }, label: 'Selection is set to check a key' }]
+        },
+        {
+          title: 'Move on the True branch',
+          text: 'Drag a <b>Change x by</b> block from Motion. Connect <b>Start &rarr; Selection</b>, then connect the Selection\'s <b>True</b> output to it. Set its amount to 5.',
+          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' },
+            { path: 'change_x_by', label: 'Connected: Start → … → Change x by' }],
+          highlight: 'palette-change-x-by',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Loop it back',
+          text: 'Connect <b>Change x by</b>\'s output back to the Selection block, so it keeps checking the key every frame instead of only once.',
+          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' }, { loop: true }]
+        },
+        {
+          title: 'Do the same for the left key',
+          text: 'Add a second Selection (condition: key, <b>Left Arrow</b>) and a second Change x by (amount <b>-5</b>), wired into the loop the same way.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }, { node: 'change_x_by', count: 2 }, { loop: true }]
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b> and hold the arrow keys - your sprite should move left and right.<br><br><b>Challenge:</b> add <b>Point in direction</b> blocks (90 for right, -90 for left) so the sprite turns to face the way it\'s moving - try a <b>Set rotation style</b> block set to left-right first.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
+    },
+    {
+      id: 'loops-that-repeat',
+      title: 'Loops That Repeat',
+      color: '#FFAB19',
+      category: 'Branching & Loops',
+      desc: 'Use a variable and a Selection block to repeat part of your flowchart a fixed number of times, then carry on.',
+      steps: [
+        {
+          title: 'Add a Start block',
+          text: 'Drag a <b>Start</b> block onto the canvas.',
+          requires: [{ node: 'start' }],
+          highlight: 'palette-start',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Create a counter variable',
+          text: 'Drag a <b>Set variable</b> block from Variables. Create a new variable called exactly <b>count</b> and set it to 0.',
+          requires: [{ node: 'start' }, { node: 'set_variable' }],
+          highlight: 'palette-set-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Add a Selection that checks the count',
+          text: 'Drag a Selection block. Set its condition to <b>Variable</b>, choose <b>count</b>, operator <b>&lt;</b>, value <b>5</b>.',
+          requires: [{ node: 'start' }, { node: 'set_variable' }, { node: 'selection' },
+            { nodeWhere: { type: 'selection', field: 'condition', value: 'variable' }, label: 'Selection is set to check a variable' }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Repeat and count up',
+          text: 'On the <b>True</b> branch, add a block that does something (try Move steps), then a <b>Change variable</b> block that adds 1 to count. Connect it back to the Selection block to keep checking.',
+          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_variable' }, { loop: true }],
+          highlight: 'palette-change-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Do something once the loop ends',
+          text: 'On the <b>False</b> branch (once count reaches 5), connect to a <b>Say</b> block, then an <b>End</b> block.',
+          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'say' }, { node: 'end' }]
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b>. Your flowchart should repeat 5 times, then say something and stop.<br><br><b>Challenge:</b> change the 5 to 10, or count down from 10 to 0 instead.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
+    },
+    {
+      id: 'costume-animation',
+      title: 'Costume Animation',
+      color: '#9966FF',
+      category: 'Movement & Animation',
+      desc: 'Animate your sprite through its costumes while it moves, and snap back to a resting pose when it stops.',
+      steps: [
+        {
+          title: 'Set up movement',
+          text: 'Build a <b>Start &rarr; Selection (key: Right Arrow) &rarr; Change x by (5)</b> flow that loops back to the Selection - the same shape as Making Choices.<br><br>⚠️ Make sure your sprite has <b>at least 2 costumes</b> before continuing.',
+          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' }, { loop: true }],
+          highlight: 'palette-selection',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Animate while moving',
+          text: 'Add a <b>Next costume</b> block on the True branch, after Change x by.',
+          requires: [{ node: 'start' }, { node: 'selection' }, { node: 'change_x_by' }, { node: 'next_costume' }, { loop: true }],
+          highlight: 'palette-next-costume',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Snap to an idle pose when still',
+          text: 'Add a variable called <b>moving</b>. Set it on the True branch, and add a second Selection that checks it - when it\'s <b>not</b> moving, connect to a <b>Switch costume to</b> block set to your first costume.',
+          requires: [{ node: 'start' }, { node: 'set_variable' }, { node: 'switch_costume_to' }],
+          highlight: 'palette-switch-costume-to',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Control animation speed',
+          text: 'Add a <b>Wait seconds</b> block (try 0.1) in the loop, so costumes don\'t flicker faster than the eye can follow.',
+          requires: [{ node: 'start' }, { node: 'wait_seconds' }],
+          highlight: 'palette-wait-seconds',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b> and walk left and right - your sprite should animate while moving and rest when still.<br><br><b>Challenge:</b> try a shorter wait for a sprint, or a longer one for a slow walk.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
+    },
+    {
+      id: 'gravity-jumping',
+      title: 'Gravity & Jumping',
+      color: '#9966FF',
+      category: 'Movement & Animation',
+      desc: 'Give your sprite a velocity variable, pull it down every frame with gravity, and let it jump when it touches the ground.',
+      steps: [
+        {
+          title: 'Create the velocity variable',
+          text: 'Drag a <b>Start</b> block, then a <b>Set variable</b> block. Create a variable called exactly <b>vy</b> (vertical velocity) and set it to 0.',
+          requires: [{ node: 'start' }, { node: 'set_variable' }],
+          highlight: 'palette-set-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Apply gravity every frame',
+          text: 'Add a <b>Change variable</b> block that changes <b>vy</b> by <b>-0.5</b>, then a <b>Change y by</b> block. Click Change y by, and in the panel on the right set its source to the <b>vy</b> variable instead of a plain number.',
+          requires: [{ node: 'start' }, { node: 'change_variable' }, { node: 'change_y_by' },
+            { nodeWhere: { type: 'change_y_by', field: 'ySrc', value: 'var:vy' }, label: 'Change y by uses the vy variable' }],
+          highlight: 'palette-change-y-by',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Add a loop and land on the floor',
+          text: 'Wire Start through the gravity blocks, looping back so gravity applies every frame. Add a Selection that checks <b>touching edge: bottom</b> - on <b>True</b>, use Set variable to set <b>vy</b> back to 0.',
+          requires: [{ node: 'start' }, { loop: true }, { node: 'selection' },
+            { nodeWhere: { type: 'selection', field: 'condition', value: 'edge' }, label: 'Selection checks for touching an edge' }]
+        },
+        {
+          title: 'Jumping',
+          text: 'Add a second Selection that checks the <b>Up Arrow</b> key. On <b>True</b>, use Set variable to set <b>vy</b> to <b>8</b> - gravity pulls it back down automatically.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 2 }]
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b> and press the up arrow to jump. The sprite should fall, land, and jump on command.<br><br><b>Challenge:</b> add left/right movement with two more Selection blocks and Change x by.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
+    },
+    {
+      id: 'bouncing-ball',
+      title: 'Bouncing Ball',
+      color: '#9966FF',
+      category: 'Movement & Animation',
+      desc: 'Make a sprite bounce around the stage forever using a loop and the If on edge, bounce block.',
+      steps: [
+        {
+          title: 'Add a Start block',
+          text: 'Drag a <b>Start</b> block onto the canvas.',
+          requires: [{ node: 'start' }],
+          highlight: 'palette-start',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Move every frame',
+          text: 'Add a <b>Move steps</b> block (try 8 steps) and connect it to Start.',
+          requires: [{ node: 'start' }, { node: 'move_steps' }],
+          highlight: 'palette-move-steps',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Bounce off the edges',
+          text: 'Add an <b>If on edge, bounce</b> block after Move steps and connect it. This one block does what would otherwise need its own vx/vy variables and manual sign-flipping to write by hand.',
+          requires: [{ node: 'start' }, { node: 'move_steps' }, { node: 'if_on_edge_bounce' }],
+          highlight: 'palette-if-on-edge-bounce',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Loop it forever',
+          text: 'Connect <b>If on edge, bounce</b> back to <b>Move steps</b> so this repeats every frame.',
+          requires: [{ node: 'start' }, { node: 'move_steps' }, { node: 'if_on_edge_bounce' }, { loop: true }]
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b> - the ball should bounce around the stage forever.<br><br><b>Challenge:</b> increase Move steps for a faster ball, or add a Turn right block before bouncing for a less predictable path.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
     }
   ];
   // Categories are display-only grouping in the tutorial picker, the same
@@ -2677,7 +2942,7 @@
   // an explicit `category` on the tutorial wins; anything without one falls
   // into a single default bucket so a new tutorial never has to remember to
   // set this before it'll show up somewhere.
-  var FS_TUTORIAL_CATEGORY_ORDER = ['Flowchart Basics', 'Branching & Loops', 'Sound & Variables'];
+  var FS_TUTORIAL_CATEGORY_ORDER = ['Flowchart Basics', 'Branching & Loops', 'Movement & Animation'];
   function fsTutorialCategory(t) { return t.category || 'Flowchart Basics'; }
   function compareFsTutorialCategories(a, b) {
     var ai = FS_TUTORIAL_CATEGORY_ORDER.indexOf(a), bi = FS_TUTORIAL_CATEGORY_ORDER.indexOf(b);
@@ -2693,9 +2958,6 @@
   // give future tutorials a stable name to highlight instead of a stable
   // selector - TurboWarp's own class names are hashed and can change.
   var FS_HIGHLIGHT_PRESETS = {
-    'palette-start':      '.fs-palette-item[data-type="start"]',
-    'palette-move-steps': '.fs-palette-item[data-type="move_steps"]',
-    'palette-end':        '.fs-palette-item[data-type="end"]',
     'tutorials-btn':      '#fsTutorialsBtn',
     // TurboWarp's own green flag / stop buttons - same best-effort selector
     // pyscratch.js's own HIGHLIGHT_PRESETS uses, since this file deliberately
@@ -2703,6 +2965,18 @@
     'green-flag':         '[class*="green-flag_"],[class*="greenFlag"],[aria-label*="Green Flag"],[title*="Green Flag"]',
     'stop':               '[class*="stop-all_"],[class*="stopAll"],[aria-label*="Stop All"],[title*="Stop"]'
   };
+  // 'palette-<type>' (dashes for underscores, e.g. 'palette-change-x-by')
+  // resolves automatically to that TYPES key's own palette item, so a new
+  // tutorial step never needs a hand-added preset entry just to point at
+  // an existing block in the palette.
+  function fsHighlightSelector(name) {
+    if (FS_HIGHLIGHT_PRESETS[name]) return FS_HIGHLIGHT_PRESETS[name];
+    if (name.indexOf('palette-') === 0) {
+      var typeKey = name.slice('palette-'.length).replace(/-/g, '_');
+      if (TYPES[typeKey]) return '.fs-palette-item[data-type="' + typeKey + '"]';
+    }
+    return name;
+  }
   var _fsHlBox = null, _fsHlRafId = null, _fsHlTargetEl = null;
   function _fsEnsureHighlightBox() {
     if (_fsHlBox) return;
@@ -2724,7 +2998,7 @@
   function showFsHighlight(targetOrSelector, label) {
     _fsEnsureHighlightBox();
     clearFsHighlight();
-    var sel = FS_HIGHLIGHT_PRESETS[targetOrSelector] || targetOrSelector;
+    var sel = fsHighlightSelector(targetOrSelector);
     var el = null;
     try { el = sel ? document.querySelector(sel) : null; } catch (e) {}
     if (!el) return;
@@ -2813,22 +3087,56 @@
   }
   function tutorialRequirementMet(req) {
     if (req.node) return FS.nodes.filter(function (n) { return n.type === req.node; }).length >= (req.count || 1);
+    // { path: true } keeps its original meaning (Start reaches an End);
+    // { path: 'sometype' } generalises it to "Start reaches a node of that
+    // TYPES key" - e.g. { path: 'move_steps' } for a tutorial that doesn't
+    // use an End block at all (a "forever" loop), grown the same
+    // incremental way this whole requirement checker already has.
     if (req.path) {
       var starts = FS.nodes.filter(function (n) { return n.type === 'start'; });
-      var ends = FS.nodes.filter(function (n) { return n.type === 'end'; });
+      var targetType = req.path === true ? 'end' : req.path;
+      var targets = FS.nodes.filter(function (n) { return n.type === targetType; });
       return starts.some(function (s) {
         var seen = fsTutorialReachableFrom(s.id);
-        return ends.some(function (e) { return seen[e.id]; });
+        return targets.some(function (t) { return seen[t.id]; });
       });
+    }
+    // { nodeWhere: { type, field, value, count } } - a node of that type
+    // exists whose data[field] matches value, e.g. a Selection block whose
+    // condition is actually set to 'key'. Coarser than PyScratch's own
+    // literal-line matching would be for the same idea, but the same
+    // "a real structural fact" principle applied to a single field instead
+    // of a whole node's existence.
+    if (req.nodeWhere) {
+      var w = req.nodeWhere;
+      return FS.nodes.filter(function (n) {
+        return n.type === w.type && n.data && String(n.data[w.field]) === String(w.value);
+      }).length >= (w.count || 1);
+    }
+    // A "forever"/counted loop is a wire connected back to an earlier
+    // block - the same directed-cycle check validate() already uses to
+    // decide whether a flow without an End block is still valid (its own
+    // hasCycleFrom() helper, reused here rather than duplicated).
+    if (req.loop) {
+      var loopStarts = FS.nodes.filter(function (n) { return n.type === 'start'; });
+      var out = function (id) { return fsTutorialOutEdges(id).map(function (e) { return e.to; }); };
+      return loopStarts.some(function (s) { return hasCycleFrom(s.id, out); });
     }
     return false;
   }
   function tutorialRequirementLabel(req) {
+    // An explicit label always wins - lets a step spell out what a plain
+    // node/path/loop check can't say on its own (e.g. *which* key a
+    // Selection block should be checking), without inventing a stricter,
+    // more fragile requirement shape just to render better checklist text.
+    if (req.label) return req.label;
     if (req.node) {
       var label = (TYPES[req.node] && TYPES[req.node].title) || req.node;
       return req.count > 1 ? label + ' ×' + req.count : label;
     }
-    if (req.path) return 'Connected: Start → … → End';
+    if (req.path) return 'Connected: Start → … → ' + ((TYPES[req.path === true ? 'end' : req.path] || {}).title || 'End');
+    if (req.loop) return 'A connection looping back to an earlier block';
+    if (req.nodeWhere) return (TYPES[req.nodeWhere.type] && TYPES[req.nodeWhere.type].title) || req.nodeWhere.type;
     return 'Unknown requirement';
   }
   function fsTutorialRequiresMet(requires) { return (requires || []).every(tutorialRequirementMet); }
