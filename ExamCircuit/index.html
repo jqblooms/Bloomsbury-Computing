@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exam Circuit</title>
+<style>
+:root{
+  --board-base:#0b3d2e;      /* soldermask green - unbuilt region background */
+  --copper:#c98a4a;          /* live traces/pads (built) */
+  --copper-dim:#3a2d1e;      /* unbuilt but attemptable */
+  --silkscreen:#f2f2ea;      /* labels - never used for state */
+  --gold:#ffd166;            /* Signal collector + flowing current */
+  --fault:#e05a4e;           /* reserved for the Noise/interference layer (not in this slice) */
+  --bg:#050b08;
+  --panel:#0d1f17;
+  --line:#1c4a37;
+  --text:#eef7ef;
+  --muted:#8fbfa8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/1.4 ui-monospace,'Cascadia Code',monospace;overflow:hidden}
+#hud{position:fixed;top:0;left:0;right:0;height:56px;background:var(--panel);border-bottom:2px solid var(--line);display:flex;align-items:center;gap:24px;padding:0 18px;z-index:30}
+#hud .signal-total{font-size:1.3rem;font-weight:900;color:var(--gold)}
+#hud .signal-rate{color:var(--muted);font-size:.85rem}
+#hud .region-label{margin-left:auto;color:var(--muted);font-size:.8rem}
+#hud button{background:var(--copper-dim);color:var(--silkscreen);border:1px solid var(--line);padding:6px 12px;font:inherit;cursor:pointer;border-radius:3px}
+#hud button:hover{background:var(--line)}
+#ws{position:absolute;top:56px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab;background:
+  radial-gradient(circle at 20% 20%, #0d2a1f 0%, var(--bg) 60%);}
+#ws.panning{cursor:grabbing}
+#world{position:absolute;top:0;left:0;transform-origin:0 0;width:2400px;height:1600px}
+.region{position:absolute;background:var(--board-base);border:2px solid var(--line);border-radius:6px;padding:14px}
+.region-title{color:var(--silkscreen);font-weight:900;letter-spacing:.03em;margin-bottom:10px;font-size:.9rem}
+.pad{width:96px;min-height:64px;border:2px solid var(--copper-dim);border-radius:4px;display:inline-flex;
+  flex-direction:column;align-items:center;justify-content:center;margin:6px;cursor:pointer;
+  padding:6px 0;background:rgba(255,255,255,.02);position:relative;vertical-align:top;transition:border-color .2s,box-shadow .2s}
+.pad .pad-label{font-size:.62rem;color:var(--muted);text-align:center;padding:0 4px}
+.pad.attemptable{border-color:var(--copper-dim);animation:pulse 2.2s ease-in-out infinite}
+.pad.built{border-color:var(--copper);background:rgba(201,138,74,.12);box-shadow:0 0 10px rgba(201,138,74,.35)}
+.pad.built .pad-label{color:var(--copper)}
+.pad.built::after{content:'';position:absolute;right:-22px;top:50%;width:20px;height:2px;background:var(--copper);
+  box-shadow:0 0 6px var(--copper)}
+.buy-row{display:none;align-items:center;gap:5px;margin-top:4px}
+.buy-row .owned-count{font-size:.62rem;color:var(--gold);font-weight:700}
+.buy-row .buy-btn{font:inherit;font-size:.6rem;padding:2px 6px;border-radius:3px;border:1px solid var(--copper);
+  background:rgba(201,138,74,.18);color:var(--copper);cursor:pointer}
+.buy-row .buy-btn:hover:not(:disabled){background:rgba(201,138,74,.32)}
+.buy-row .buy-btn:disabled{opacity:.35;cursor:not-allowed;border-color:var(--copper-dim);color:var(--muted)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(201,138,74,0)}50%{box-shadow:0 0 8px rgba(201,138,74,.35)}}
+/* locked region (GDD Section 3.6 state 1: outline only, no legend, no click target) */
+.region.locked{opacity:.38;pointer-events:none}
+.region.locked .pad{border-color:var(--copper-dim);animation:none;background:transparent}
+.region.locked .pad .pad-label{visibility:hidden}
+.region.just-unlocked{animation:unlockFade .6s ease-out}
+@keyframes unlockFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.region-sub{color:var(--muted);font-size:.68rem;margin-bottom:8px;opacity:.85}
+/* bridge trace between a region and its prerequisite */
+.bridge{position:absolute;height:3px;background:var(--copper-dim);z-index:1}
+.bridge.live{background:var(--copper);box-shadow:0 0 6px var(--copper)}
+#unlockBanner{position:fixed;top:66px;left:50%;transform:translateX(-50%);background:var(--gold);color:#221507;
+  padding:8px 16px;border-radius:4px;font-weight:700;font-size:.85rem;z-index:40;display:none;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+#unlockBanner.show{display:block;animation:bannerPop 2.4s ease-out forwards}
+@keyframes bannerPop{0%{opacity:0;transform:translateX(-50%) translateY(-6px)}12%{opacity:1;transform:translateX(-50%) translateY(0)}82%{opacity:1}100%{opacity:0}}
+/* proof modal */
+#modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+#modalOverlay.open{display:flex}
+#modal{background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:22px;max-width:440px;width:92%}
+#modal .prompt{font-size:1.02rem;margin-bottom:14px}
+#modal input{width:100%;padding:10px;font:inherit;background:#08130e;border:1px solid var(--line);color:var(--text);border-radius:4px}
+#modal .feedback{margin-top:10px;min-height:1.4em;font-size:.88rem}
+#modal .feedback.wrong{color:#ff9d8f}
+#modal .feedback.right{color:#8fe3b0}
+#modal .actions{display:flex;gap:10px;margin-top:14px}
+#modal button{flex:1;padding:9px;font:inherit;border:1px solid var(--line);border-radius:4px;cursor:pointer}
+#modal .submit{background:var(--copper);color:#221507;font-weight:700}
+#modal .close{background:transparent;color:var(--muted)}
+#modal .based-on{margin-top:12px;font-size:.68rem;color:var(--muted);opacity:.75}
+</style>
+</head>
+<body>
+<div id="hud">
+  <div><div class="signal-total"><span id="signalTotal">0</span> Signal</div>
+  <div class="signal-rate">+<span id="signalRate">0</span>/s</div></div>
+  <button id="resetView">Reset view</button>
+  <div class="region-label">Exam Circuit — prototype slice: Topics 1.1–1.2 (0478)</div>
+</div>
+<div id="ws">
+  <div id="world"></div>
+</div>
+<div id="unlockBanner"></div>
+
+<div id="modalOverlay">
+  <div id="modal">
+    <div class="prompt" id="modalPrompt"></div>
+    <input id="modalInput" type="text" autocomplete="off" placeholder="Your answer">
+    <div class="feedback" id="modalFeedback"></div>
+    <div class="actions">
+      <button class="close" id="modalClose">Close</button>
+      <button class="submit" id="modalSubmit">Check</button>
+    </div>
+    <div class="based-on" id="modalBasedOn"></div>
+  </div>
+</div>
+
+<script src="proof-generators.js"></script>
+<script>
+'use strict';
+/*
+ * Exam Circuit — first playable vertical slice.
+ * Scope of this slice (see GDD.md for the full design):
+ *   - Two regions, IGCSE (0478) board: Topic 1.1 Number Systems (open from the start) and
+ *     Topic 1.2 Data Representation (locked until 2 components are built in 1.1, per
+ *     GDD Section 3.3's prerequisite-region gate).
+ *   - Two proof types built (resistor = scaffolded numeric, ic = short structured);
+ *     microcontroller/code-writing proofs are out of scope (GDD Section 4, Open Q4).
+ *   - Signal economy (passive income per built pad) is real; buy/sell and the
+ *     Noise/interference pressure layer are NOT built yet — this slice now proves the core
+ *     "generator -> proof -> built pad -> passive income -> region unlock" loop end to end.
+ *   - Admin reporting (GDD Section 4, Open Q5) is stubbed: every attempt is recorded to
+ *     localStorage in the exact shape the future Progress.gs sheet needs, with a single
+ *     reportAttempt() function marking where the real google.script.run call goes.
+ */
+
+var STORAGE_KEY = 'examCircuitState_v1';
+var ATTEMPTS_KEY = 'examCircuitAttempts_v1';
+
+var state = loadState();
+
+// ---------- persistence ----------
+function loadState(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw){
+      var parsed = JSON.parse(raw);
+      if (!parsed.owned) parsed.owned = {}; // upgrade older saves from before buy/sell existed
+      return parsed;
+    }
+  }catch(e){}
+  return { built: {}, owned: {}, signalTotal: 0 };
+}
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+// ---------- reporting (stub - see GDD.md Section 4, Open Question 5) ----------
+// TODO (real deploy): replace this with a google.script.run call into a new Progress.gs
+// function that appends one row to an EXAM_CIRCUIT_ATTEMPT_HEADERS sheet:
+//   Email, Board, RegionId, SlotId, ProofType, GeneratorSeed, Params, Answer, Correct, AttemptedAt
+// exactly mirroring the existing LESSON_ANSWER_HEADERS pattern in Progress.gs. Left as a
+// localStorage-backed stub here so the prototype can be tested standalone on GitHub Pages,
+// which has no Apps Script backend to call.
+function reportAttempt(record){
+  try{
+    var log = JSON.parse(localStorage.getItem(ATTEMPTS_KEY) || '[]');
+    log.push(record);
+    localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(log));
+  }catch(e){}
+  console.log('[ExamCircuit attempt]', record);
+}
+
+// ---------- camera (pan/zoom/clamp, same model as HexMachine/index.html) ----------
+var ws = document.getElementById('ws');
+var world = document.getElementById('world');
+var PAN_MARGIN = 260;
+var camera = { x: 40, y: 20, zoom: 1, min: .5, max: 2, panning: null };
+function viewportRect(){ return ws.getBoundingClientRect(); }
+function clampCamera(){
+  var r = viewportRect(), scaledW = r.width*camera.zoom, scaledH = r.height*camera.zoom;
+  camera.x = Math.min(PAN_MARGIN, Math.max(r.width - scaledW - PAN_MARGIN, camera.x));
+  camera.y = Math.min(PAN_MARGIN, Math.max(r.height - scaledH - PAN_MARGIN, camera.y));
+}
+function applyCamera(){
+  clampCamera();
+  world.style.transform = 'translate(' + camera.x + 'px,' + camera.y + 'px) scale(' + camera.zoom + ')';
+}
+function resetCamera(){ camera.zoom = 1; camera.x = 40; camera.y = 20; applyCamera(); }
+function zoomCameraAt(clientX, clientY, factor){
+  var r = viewportRect();
+  var before = { x: (clientX - r.left - camera.x)/camera.zoom, y: (clientY - r.top - camera.y)/camera.zoom };
+  var next = Math.max(camera.min, Math.min(camera.max, camera.zoom*factor));
+  if (Math.abs(next - camera.zoom) < .001) return;
+  camera.zoom = next;
+  camera.x = clientX - r.left - before.x*camera.zoom;
+  camera.y = clientY - r.top - before.y*camera.zoom;
+  applyCamera();
+}
+function setupCameraControls(){
+  ws.addEventListener('wheel', function(e){
+    if (e.target.closest('#modal')) return;
+    e.preventDefault();
+    zoomCameraAt(e.clientX, e.clientY, Math.exp(-e.deltaY*.0012));
+  }, {passive:false});
+  ws.addEventListener('pointerdown', function(e){
+    if (e.button !== 0 || e.target.closest('.pad')) return;
+    camera.panning = { id: e.pointerId, startX: e.clientX, startY: e.clientY, cameraX: camera.x, cameraY: camera.y };
+    ws.classList.add('panning');
+    ws.setPointerCapture && ws.setPointerCapture(e.pointerId);
+  });
+  ws.addEventListener('pointermove', function(e){
+    var pan = camera.panning;
+    if (!pan || pan.id !== e.pointerId) return;
+    camera.x = pan.cameraX + e.clientX - pan.startX;
+    camera.y = pan.cameraY + e.clientY - pan.startY;
+    applyCamera();
+  });
+  function endPan(e){
+    if (!camera.panning || camera.panning.id !== e.pointerId) return;
+    camera.panning = null;
+    ws.classList.remove('panning');
+  }
+  ws.addEventListener('pointerup', endPan);
+  ws.addEventListener('pointercancel', endPan);
+}
+
+// ---------- board layout + region-unlock gating ----------
+// GDD.md Section 3.3: "a region only becomes buildable once its prerequisite region has enough
+// built components in it" - unlockThreshold is that "enough" (here: at least this many built
+// pads in the prereq region), mirroring Farmer's lifetime-earned gate / Hex Machine's
+// merge-before-buy rule (Section 2).
+var REGIONS = [
+  { id: '1.1', title: '1.1 NUMBER SYSTEMS', x: 60, y: 60, prereq: null, unlockThreshold: 0 },
+  { id: '1.2', title: '1.2 DATA REPRESENTATION', x: 560, y: 60, prereq: '1.1', unlockThreshold: 2 },
+];
+var regionEls = {}; // regionId -> element
+
+function builtCountInRegion(regionId){
+  var gens = window.ExamCircuitGenerators.byRegion(regionId);
+  var n = 0;
+  gens.forEach(function(g){ if (state.built[g.id]) n++; });
+  return n;
+}
+function regionUnlocked(region){
+  if (!region.prereq) return true;
+  return builtCountInRegion(region.prereq) >= region.unlockThreshold;
+}
+
+function buildRegionEl(region){
+  var gens = window.ExamCircuitGenerators.byRegion(region.id);
+  var el = document.createElement('div');
+  el.className = 'region' + (region.prereq ? ' locked' : '');
+  el.style.left = region.x + 'px';
+  el.style.top = region.y + 'px';
+  var title = document.createElement('div');
+  title.className = 'region-title';
+  title.textContent = region.title;
+  el.appendChild(title);
+  if (region.prereq){
+    var sub = document.createElement('div');
+    sub.className = 'region-sub';
+    sub.textContent = 'Unlocks after ' + region.unlockThreshold + ' component(s) built in ' + region.prereq;
+    el.appendChild(sub);
+  }
+  gens.forEach(function(gen){
+    var pad = document.createElement('div');
+    pad.className = 'pad';
+    pad.dataset.genId = gen.id;
+    var label = document.createElement('div');
+    label.className = 'pad-label';
+    label.textContent = gen.label;
+    pad.appendChild(label);
+    var buyRow = document.createElement('div');
+    buyRow.className = 'buy-row';
+    pad.appendChild(buyRow);
+    pad.addEventListener('click', function(e){
+      if (el.classList.contains('locked')) return;
+      // A built pad's own click still opens nothing - buying has its own button (buyRow) so
+      // "prove it again" and "buy another copy" can never be confused for the same action.
+      if (state.built[gen.id]) return;
+      openProof(gen.id);
+    });
+    el.appendChild(pad);
+  });
+  world.appendChild(el);
+  regionEls[region.id] = el;
+}
+function buildAllRegions(){
+  REGIONS.forEach(buildRegionEl);
+  drawBridges();
+}
+function drawBridges(){
+  REGIONS.forEach(function(region){
+    if (!region.prereq) return;
+    var from = regionEls[region.prereq], to = regionEls[region.id];
+    if (!from || !to) return;
+    var bridge = document.querySelector('.bridge[data-to="' + region.id + '"]');
+    if (!bridge){
+      bridge = document.createElement('div');
+      bridge.className = 'bridge';
+      bridge.dataset.to = region.id;
+      world.appendChild(bridge);
+    }
+    var fromRight = region.prereq ? (REGIONS.find(function(r){return r.id===region.prereq}).x + from.offsetWidth) : 0;
+    var y = region.y + 30;
+    bridge.style.left = fromRight + 'px';
+    bridge.style.top = y + 'px';
+    bridge.style.width = Math.max(0, region.x - fromRight) + 'px';
+    bridge.classList.toggle('live', regionUnlocked(region));
+  });
+}
+function showUnlockBanner(region){
+  var banner = document.getElementById('unlockBanner');
+  banner.textContent = 'Region unlocked: ' + region.title;
+  banner.classList.remove('show');
+  void banner.offsetWidth; // restart animation
+  banner.classList.add('show');
+}
+var isFirstRefresh = true;
+function refreshPadStates(){
+  REGIONS.forEach(function(region){
+    var el = regionEls[region.id];
+    var unlocked = regionUnlocked(region);
+    var wasLocked = el.classList.contains('locked');
+    el.classList.toggle('locked', !unlocked);
+    // Suppress the unlock fanfare on the very first render (e.g. a returning student whose
+    // save already had this region unlocked) - only celebrate a transition that happens live.
+    if (unlocked && wasLocked && !isFirstRefresh){
+      el.classList.add('just-unlocked');
+      setTimeout(function(){ el.classList.remove('just-unlocked'); }, 700);
+      showUnlockBanner(region);
+    }
+    var pads = el.querySelectorAll('.pad');
+    pads.forEach(function(pad){
+      var id = pad.dataset.genId;
+      var built = !!state.built[id];
+      pad.classList.toggle('built', built);
+      pad.classList.toggle('attemptable', unlocked && !built);
+      renderBuyRow(pad, id, built);
+    });
+  });
+  drawBridges();
+  isFirstRefresh = false;
+}
+
+// ---------- Signal economy ----------
+// Per-unit output: every owned copy of a proven component produces the same passive trickle,
+// regardless of proof type - a real build would vary this by difficulty (GDD Section 3.4),
+// not needed to prove the buy/sell loop itself.
+var UNIT_RATE = 0.5;
+// Buy cost for the (n+1)th copy of an already-proven component, where n is the number
+// currently owned (the first copy is free - it's the proof itself, per GDD Section 3.5's
+// "Region unlocking"/"Buying a machine" mechanic: prove it once, then buy more outright).
+// Exponential curve, same shape as Hex Machine's `18 x value^1.1` / Farmer's `x 1.15 per
+// tile` cost curves (Section 1.5) - deliberately gentler since this is a flat-rate unit,
+// not a value-scaled one.
+function buyCost(ownedCount){
+  return Math.round(6 * Math.pow(1.6, ownedCount));
+}
+function totalOwned(){
+  return Object.keys(state.owned || {}).reduce(function(sum, id){ return sum + state.owned[id]; }, 0);
+}
+function signalRate(){
+  return totalOwned() * UNIT_RATE;
+}
+function buyUnit(genId){
+  var owned = (state.owned[genId] || 0);
+  var cost = buyCost(owned);
+  if (state.signalTotal < cost) return;
+  state.signalTotal -= cost;
+  state.owned[genId] = owned + 1;
+  saveState();
+  refreshPadStates();
+}
+function renderBuyRow(pad, genId, built){
+  var row = pad.querySelector('.buy-row');
+  if (!built){ row.style.display = 'none'; row.onclick = null; return; }
+  var owned = state.owned[genId] || 1;
+  var cost = buyCost(owned);
+  var afford = state.signalTotal >= cost;
+  row.style.display = 'flex';
+  row.innerHTML = '<span class="owned-count">x' + owned + '</span>' +
+    '<button class="buy-btn" ' + (afford ? '' : 'disabled') + '>+1 (' + cost + ')</button>';
+  row.querySelector('.buy-btn').addEventListener('click', function(e){
+    e.stopPropagation();
+    buyUnit(genId);
+  });
+}
+function tickEconomy(){
+  state.signalTotal += signalRate() / 10; // 10 ticks/sec
+  document.getElementById('signalTotal').textContent = Math.floor(state.signalTotal);
+  document.getElementById('signalRate').textContent = signalRate().toFixed(1);
+  // Buy-button afford state depends on the live Signal total, so it needs to refresh on every
+  // tick too, not only when something is built/bought - otherwise a button can sit disabled
+  // after the player has actually saved up enough while idle.
+  refreshBuyAffordability();
+}
+function refreshBuyAffordability(){
+  document.querySelectorAll('.pad.built .buy-btn').forEach(function(btn){
+    var row = btn.closest('.buy-row');
+    var pad = btn.closest('.pad');
+    var genId = pad.dataset.genId;
+    var owned = state.owned[genId] || 1;
+    var cost = buyCost(owned);
+    btn.disabled = state.signalTotal < cost;
+  });
+}
+setInterval(tickEconomy, 100);
+
+// ---------- proof modal ----------
+var currentAttempt = null;
+var overlay = document.getElementById('modalOverlay');
+var promptEl = document.getElementById('modalPrompt');
+var inputEl = document.getElementById('modalInput');
+var feedbackEl = document.getElementById('modalFeedback');
+var basedOnEl = document.getElementById('modalBasedOn');
+
+function openProof(genId){
+  currentAttempt = window.ExamCircuitGenerators.attempt(genId);
+  promptEl.textContent = currentAttempt.prompt;
+  feedbackEl.textContent = '';
+  feedbackEl.className = 'feedback';
+  inputEl.value = '';
+  basedOnEl.textContent = 'Based on: ' + currentAttempt.basedOn;
+  overlay.classList.add('open');
+  inputEl.focus();
+}
+function closeProof(){
+  overlay.classList.remove('open');
+  currentAttempt = null;
+}
+function submitProof(){
+  if (!currentAttempt) return;
+  var raw = inputEl.value;
+  var result = window.ExamCircuitGenerators.check(currentAttempt.generatorId, currentAttempt.params, raw);
+
+  reportAttempt({
+    board: 'igcse',
+    regionId: currentAttempt.regionId,
+    slotId: currentAttempt.generatorId,
+    proofType: currentAttempt.componentType,
+    generatorSeed: currentAttempt.seed,
+    params: currentAttempt.params,
+    answer: raw,
+    correct: result.correct,
+    attemptedAt: new Date().toISOString(),
+  });
+
+  if (result.correct){
+    feedbackEl.textContent = 'Correct - component built.';
+    feedbackEl.className = 'feedback right';
+    state.built[currentAttempt.generatorId] = true;
+    // The proof itself is the first copy - matches GDD Section 3.5's "prove it once, then buy
+    // more outright" rule, so the pad's buy row shows "x1" immediately rather than "x0".
+    if (!state.owned[currentAttempt.generatorId]) state.owned[currentAttempt.generatorId] = 1;
+    saveState();
+    refreshPadStates();
+    setTimeout(closeProof, 700);
+  } else {
+    // Hint only, never the literal answer - matches the project-wide feedback rule.
+    feedbackEl.textContent = currentAttempt.hint;
+    feedbackEl.className = 'feedback wrong';
+  }
+}
+
+document.getElementById('modalSubmit').addEventListener('click', submitProof);
+document.getElementById('modalClose').addEventListener('click', closeProof);
+inputEl.addEventListener('keydown', function(e){ if (e.key === 'Enter') submitProof(); });
+overlay.addEventListener('click', function(e){ if (e.target === overlay) closeProof(); });
+document.getElementById('resetView').addEventListener('click', resetCamera);
+
+// ---------- init ----------
+buildAllRegions();
+refreshPadStates();
+setupCameraControls();
+applyCamera();
+</script>
+</body>
+</html>

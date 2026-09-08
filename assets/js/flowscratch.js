@@ -76,7 +76,7 @@
     running: false, gen: 0,
     answer: '',
     pressedKeys: {},
-    mouse: { x: 0, y: 0, down: false },
+    mouse: { x: 0, y: 0, canvasX: 0, canvasY: 0, down: false },
     slowMode: false, slowDelayMs: 500,
     activeSprite: null, activeSpriteId: null
   };
@@ -151,7 +151,8 @@
     subroutine_start:   { shape: 'oval',      title: 'Sub-routine start',  data: { name: 'DrawSquare' },         category: 'control' },
     call_subroutine:    { shape: 'subroutine', title: 'Call sub-routine',  data: { name: 'DrawSquare' },         category: 'control' },
     broadcast:          { shape: 'process',   title: 'Broadcast',         data: { message: 'message1' },        category: 'control' },
-    when_i_receive:     { shape: 'oval',      title: 'When I receive',    data: { message: 'message1' },        category: 'control' }
+    when_i_receive:     { shape: 'oval',      title: 'When I receive',    data: { message: 'message1' },        category: 'control' },
+    when_clicked:       { shape: 'oval',      title: 'When this sprite is clicked', data: {},                   category: 'control' }
   };
   var PALETTE_ORDER = ['flow', 'motion', 'looks', 'sound', 'sensing', 'variables', 'control'];
 
@@ -620,6 +621,7 @@
     if (n.type === 'call_subroutine') return 'CALL ' + (d.name || 'unnamed');
     if (n.type === 'broadcast') return 'Broadcast "' + (d.message || '') + '"';
     if (n.type === 'when_i_receive') return 'When I receive "' + (d.message || '') + '"';
+    if (n.type === 'when_clicked') return 'When this sprite is clicked';
     if (n.type === 'move_steps') return 'Move ' + valueDisplay(d, 'steps', 'steps');
     if (n.type === 'turn_right') return 'Turn right ' + valueDisplay(d, 'degrees', 'degrees');
     if (n.type === 'turn_left') return 'Turn left ' + valueDisplay(d, 'degrees', 'degrees');
@@ -1620,7 +1622,7 @@
     });
     FS.nodes.forEach(function (n) {
       if (n.type !== 'end' && !out(n.id).length) errors.push(typeTitle(n) + ' has no outgoing connection.');
-      if (n.type !== 'start' && n.type !== 'subroutine_start' && n.type !== 'when_i_receive' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
+      if (n.type !== 'start' && n.type !== 'subroutine_start' && n.type !== 'when_i_receive' && n.type !== 'when_clicked' && !inc(n.id).length) errors.push(typeTitle(n) + ' has no incoming connection.');
       if (n.type === 'selection' && out(n.id).length !== 2) errors.push('Each Selection must have exactly two outgoing connections, one True and one False.');
       // addEdge() already refuses to create this, but defends here too in
       // case a graph saved before that enforcement existed gets loaded:
@@ -1634,6 +1636,7 @@
         if (inc(n.id).length) errors.push('"When I receive" must have no incoming connector - it starts its own script, the same way Start does.');
       }
       if (n.type === 'broadcast' && !String(n.data.message || '').trim()) errors.push('A Broadcast block needs a message name.');
+      if (n.type === 'when_clicked' && inc(n.id).length) errors.push('"When this sprite is clicked" must have no incoming connector - it starts its own script, the same way Start does.');
       if (n.type === 'call_subroutine') {
         var callName = String(n.data.name || '').trim();
         if (!callName) errors.push('Each CALL block must name a sub-routine.');
@@ -1644,14 +1647,14 @@
     // sub-routine Start - reachable from a broadcast, not from Main, so
     // they need to count as valid roots here too or every node downstream
     // of one gets wrongly flagged as unreachable.
-    var receiveStarts = FS.nodes.filter(function (n) { return n.type === 'when_i_receive'; });
+    var receiveStarts = FS.nodes.filter(function (n) { return n.type === 'when_i_receive' || n.type === 'when_clicked'; });
     if (starts.length === 1 || routineStarts.length || receiveStarts.length) {
       var seen = {};
       [starts[0]].concat(routineStarts).concat(receiveStarts).filter(Boolean).forEach(function (root) {
         var rootSeen = reachableFrom(root.id);
         Object.keys(rootSeen).forEach(function (id) { seen[id] = true; });
       });
-      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Main, a sub-routine Start, or a "When I receive" block.'); });
+      FS.nodes.forEach(function (n) { if (!seen[n.id]) errors.push(typeTitle(n) + ' is not reachable from Main, a sub-routine Start, a "When I receive" block, or a "When this sprite is clicked" block.'); });
     }
     return errors.filter(function (e, i, a) { return a.indexOf(e) === i; });
   }
@@ -1995,9 +1998,16 @@
       // rough bounding-box distance check if the renderer call itself
       // throws, so a collision check never just silently does nothing.
       if (!n.data.value || n.data.value === 'mouse') {
+        // isTouchingDrawable (singular) isn't a real renderer method - only
+        // isTouchingDrawables (plural, sprite-vs-sprite) and pick() (point
+        // hit-testing) exist. This call always threw, silently caught, so
+        // "touching mouse pointer" has always evaluated false - a real,
+        // pre-existing bug found while wiring up sprite-click detection
+        // below (which needs the exact same point hit-test). pick() takes
+        // canvas-relative CSS pixel coordinates, not Scratch stage ones.
         try {
           v = !!(FS.vm.runtime.renderer &&
-            FS.vm.runtime.renderer.isTouchingDrawable(target.drawableID, FS.mouse.x, FS.mouse.y));
+            FS.vm.runtime.renderer.pick(FS.mouse.canvasX, FS.mouse.canvasY, 0, 0, [target.drawableID]) !== -1);
         } catch (e) { v = false; }
       } else {
         var otherTouch = getTargetByName(n.data.value);
@@ -2160,6 +2170,30 @@
       if (!name || name === FS.activeSprite) return;
       var g = loadGraph(name);
       startReceivers(name, g.nodes, g.edges);
+    });
+  }
+  // A real click (mousedown), not FS.mouse.down's held-state poll - fires
+  // "When this sprite is clicked" only for sprites the click actually
+  // landed on, checked the same pixel-accurate way the "touching mouse
+  // pointer" Selection condition already does. Same active/background
+  // split as fireBroadcast above, and for the same reason.
+  function fireSpriteClicks() {
+    function checkAndFire(spriteName, nodes, edges) {
+      var whenClicked = nodes.filter(function (n) { return n.type === 'when_clicked'; });
+      if (!whenClicked.length) return;
+      var target = getTargetByName(spriteName);
+      if (!target) return;
+      var hit = false;
+      try { hit = !!(FS.vm.runtime.renderer && FS.vm.runtime.renderer.pick(FS.mouse.canvasX, FS.mouse.canvasY, 0, 0, [target.drawableID]) !== -1); } catch (e) {}
+      if (!hit) return;
+      whenClicked.forEach(function (n) { runBackgroundFlow(spriteName, nodes, edges, n); });
+    }
+    if (FS.activeSprite) checkAndFire(FS.activeSprite, FS.nodes, FS.edges);
+    getSprites().forEach(function (t) {
+      var name = t.sprite && t.sprite.name;
+      if (!name || name === FS.activeSprite) return;
+      var g = loadGraph(name);
+      checkAndFire(name, g.nodes, g.edges);
     });
   }
 
@@ -2738,9 +2772,17 @@
       var r = canvas.getBoundingClientRect();
       FS.mouse.x = ((e.clientX - r.left) / r.width) * 480 - 240;
       FS.mouse.y = -(((e.clientY - r.top) / r.height) * 360 - 180);
+      // Canvas-relative CSS pixel coordinates, separate from the Scratch-
+      // stage x/y above - renderer.pick() (real pixel hit-testing, used
+      // for "touching mouse pointer" and sprite-click detection below)
+      // takes canvas-relative pixels, not Scratch stage coordinates.
+      FS.mouse.canvasX = e.clientX - r.left;
+      FS.mouse.canvasY = e.clientY - r.top;
     });
-    // Left-button state, for the "mouse down" Selection condition.
-    window.addEventListener('mousedown', function (e) { if (e.button === 0) FS.mouse.down = true; });
+    // Left-button state, for the "mouse down" Selection condition, and
+    // the trigger point for "When this sprite is clicked" scripts (see
+    // fireSpriteClicks below) - a real click, not a held-down poll.
+    window.addEventListener('mousedown', function (e) { if (e.button === 0) { FS.mouse.down = true; fireSpriteClicks(); } });
     window.addEventListener('mouseup', function (e) { if (e.button === 0) FS.mouse.down = false; });
     window.addEventListener('keydown', function (e) {
       if (!els.overlay || els.overlay.style.display === 'none') { FS.pressedKeys[normKey(e.code)] = true; return; }
@@ -3667,6 +3709,62 @@
         {
           title: 'Try it!',
           text: 'Click the <b>green flag</b>. Bounce on the platform to stay alive - fall into the death zone and it\'s game over.<br><br><b>Challenge:</b> add 2-3 more Platform sprites at different starting heights so there\'s always something to land on.',
+          requires: [],
+          highlight: 'green-flag',
+          highlightLabel: 'Click to run'
+        }
+      ]
+    },
+    // One sprite, no clones. Needed a real new capability first: a click-
+    // triggered entry point ("When this sprite is clicked") - the only
+    // trigger FlowScratch had before this was the green flag (Start) and
+    // a matching broadcast (When I receive), neither of which fires on a
+    // genuine click. Added as a second background-flow root exactly like
+    // When I receive, just triggered by a real mousedown hit-testing that
+    // sprite's own drawable instead of a message name. Building it also
+    // surfaced a real pre-existing bug: the "touching mouse pointer"
+    // Selection condition called a renderer method
+    // (isTouchingDrawable, singular) that doesn't exist on this build's
+    // renderer at all - it always threw, silently caught, so that
+    // condition has quietly evaluated false since it was written. Fixed
+    // alongside this using the same real pixel hit-test (renderer.pick())
+    // the click detection itself needed.
+    //
+    // Simplified from PyScratch's own version by dropping the facing-
+    // direction flourish (point_in_direction after each bounce) - cosmetic,
+    // not core to the mechanic, left as a Challenge instead.
+    {
+      id: 'duck-hunt',
+      title: 'Duck Hunt',
+      color: '#4C97FF',
+      category: 'Games',
+      desc: 'A duck bounces around the screen off every edge - click it to score and send it to a new random spot at a new random speed.',
+      steps: [
+        {
+          title: 'Set up flying',
+          text: 'Add a <b>Start</b>, three <b>Set variable</b> blocks (<b>vx</b> to 3, <b>vy</b> to 2, <b>Score</b> to 0), and a <b>Go to x y</b> at (0, 50). Then a <b>Change x by</b> sourced from <b>vx</b> and a <b>Change y by</b> sourced from <b>vy</b> - you\'ll close the loop in the next step.',
+          requires: [{ node: 'start' }, { node: 'set_variable', count: 3 }, { node: 'go_to_xy' }, { node: 'change_x_by' }, { node: 'change_y_by' },
+            { nodeWhere: { type: 'change_x_by', field: 'xSrc', value: 'var:vx' }, label: 'Change x by uses the vx variable' }],
+          highlight: 'palette-set-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Bounce off every edge',
+          text: 'Chain on four Selections, one per edge - <b>right</b>, <b>left</b>, <b>top</b>, <b>bottom</b> - each True: <b>Multiply variable</b> (<b>vx</b> by -1 for right/left, <b>vy</b> by -1 for top/bottom). Loop the last one\'s False output back to <b>Change x by</b>, closing the whole thing.',
+          requires: [{ node: 'start' }, { node: 'selection', count: 4 }, { node: 'multiply_variable', count: 4 }, { loop: true }],
+          highlight: 'palette-multiply-variable',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Shoot the duck on click',
+          text: 'Add a <b>separate</b> script: a <b>When this sprite is clicked</b> block, connected to <b>Change variable Score</b> by 1, <b>Hide</b>, <b>Wait seconds</b> (0.8), a <b>Go to</b> block set to random position, two <b>Set variable to random number</b> blocks (<b>vx</b> 3 to 6, <b>vy</b> 2 to 4), <b>Show</b>, then an <b>End</b>.',
+          requires: [{ node: 'start' }, { node: 'when_clicked' }, { node: 'change_variable' }, { node: 'hide' }, { node: 'wait_seconds' }, { node: 'go_to' }, { node: 'set_var_to_random', count: 2 }, { node: 'show' }, { node: 'end' }],
+          highlight: 'palette-when-clicked',
+          highlightLabel: 'Drag this onto the canvas'
+        },
+        {
+          title: 'Try it!',
+          text: 'Click the <b>green flag</b>, then click the duck as fast as you can! Each hit scores a point and sends the duck to a new spot at a new speed.<br><br><b>Challenge:</b> add a <b>Set rotation style</b> block (left-right) and a Selection checking the variable <code>vx &gt; 0</code> to make the duck face the direction it\'s flying.',
           requires: [],
           highlight: 'green-flag',
           highlightLabel: 'Click to run'

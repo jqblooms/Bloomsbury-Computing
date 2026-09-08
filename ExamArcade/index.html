@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Arcade</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --panel: #111a2c;
+    --panel2: #16223a;
+    --border: #24314d;
+    --accent: #38bdf8;
+    --accent-dark: #0e7bab;
+    --green: #4ade80;
+    --red: #fb7185;
+    --amber: #fbbf24;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: radial-gradient(circle at 50% 20%, #142642 0%, #070c16 55%, #030509 100%);
+    color: var(--text);
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  }
+  button { font: inherit; cursor: pointer; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 22px 18px 60px; }
+
+  header.top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px; flex-wrap: wrap; gap: 8px; }
+  header.top h1 { margin: 0; font-size: 1.5rem; color: var(--accent); letter-spacing: .02em; }
+  header.top .sub { color: var(--text-dim); font-size: .82rem; }
+
+  /* ---------- Level select ---------- */
+  .level-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+  .level-tile {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; text-align: left; color: var(--text); transition: transform .12s ease, border-color .12s ease;
+    display: flex; flex-direction: column; gap: 6px; min-height: 118px;
+  }
+  .level-tile:not(.locked):hover { transform: translateY(-3px); border-color: var(--accent); }
+  .level-tile .code { font-size: .72rem; letter-spacing: .1em; color: var(--accent); font-weight: 700; }
+  .level-tile .name { font-size: 1rem; font-weight: 700; }
+  .level-tile .theme { font-size: .78rem; color: var(--text-dim); flex: 1; }
+  .level-tile .best { font-size: .72rem; color: var(--green); }
+  .level-tile.locked { opacity: .45; cursor: default; }
+  .level-tile.locked .code { color: var(--text-dim); }
+  .level-tile .lock-note { font-size: .72rem; color: var(--text-dim); font-style: italic; }
+
+  /* ---------- Play screen ---------- */
+  .hud { display: flex; align-items: center; gap: 18px; margin-bottom: 16px; flex-wrap: wrap; }
+  .hud .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: .82rem; }
+  .hud .stat b { color: var(--accent); font-size: 1rem; }
+  .hud .lives { color: var(--red); letter-spacing: 2px; }
+  .progress-bar { height: 6px; background: var(--panel); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
+  .progress-bar .fill { height: 100%; background: var(--accent); transition: width .2s ease; }
+  .timer-bar { height: 4px; background: var(--panel); border-radius: 4px; overflow: hidden; margin-bottom: 14px; }
+  .timer-bar .fill { height: 100%; background: var(--amber); transition: width .1s linear; }
+
+  .question-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 26px; }
+  .question-card .q-meta { font-size: .72rem; color: var(--text-dim); margin-bottom: 8px; letter-spacing: .06em; text-transform: uppercase; }
+  .question-card .q-prompt { font-size: 1.05rem; line-height: 1.5; margin-bottom: 20px; }
+  .question-card .q-prompt strong { color: var(--accent); }
+
+  .answer-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .answer-row input[type=text] {
+    flex: 1; min-width: 160px; background: #0a1220; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 12px 14px; color: var(--text); font-size: 1rem;
+  }
+  .answer-row input[type=text]:focus { outline: none; border-color: var(--accent); }
+  .answer-row button.submit {
+    background: var(--accent); color: #06121e; border: none; border-radius: 8px; padding: 12px 20px;
+    font-weight: 700;
+  }
+  .answer-row button.submit:disabled { opacity: .5; cursor: default; }
+
+  .mcq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .mcq-grid button {
+    background: #0a1220; border: 1.5px solid var(--border); border-radius: 8px; padding: 12px 14px;
+    color: var(--text); text-align: left; font-size: .92rem;
+  }
+  .mcq-grid button:hover { border-color: var(--accent); }
+  .mcq-grid button.is-correct { border-color: var(--green); background: #0f2a1c; }
+  .mcq-grid button.is-wrong { border-color: var(--red); background: #2a0f16; }
+  .mcq-grid button:disabled { pointer-events: none; }
+
+  .feedback { margin-top: 16px; padding: 12px 14px; border-radius: 8px; font-size: .88rem; display: none; }
+  .feedback.show { display: block; }
+  .feedback.is-correct { background: #0f2a1c; color: var(--green); border: 1px solid #1f5a3a; }
+  .feedback.is-wrong { background: #2a0f16; color: var(--red); border: 1px solid #5a1f2c; }
+  .feedback .next-btn { margin-top: 10px; background: var(--accent); color: #06121e; border: none; border-radius: 8px; padding: 8px 16px; font-weight: 700; }
+
+  /* ---------- Results ---------- */
+  .results-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 30px; text-align: center; }
+  .results-card .big-score { font-size: 2.4rem; color: var(--accent); font-weight: 800; }
+  .results-card .grade { font-size: 1.1rem; color: var(--amber); margin: 6px 0 18px; }
+  .results-card .stats-row { display: flex; justify-content: center; gap: 26px; margin-bottom: 22px; flex-wrap: wrap; }
+  .results-card .stats-row div { font-size: .82rem; color: var(--text-dim); }
+  .results-card .stats-row div b { display: block; color: var(--text); font-size: 1.15rem; }
+  .results-card .actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .results-card .actions button {
+    background: var(--panel2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 18px;
+    color: var(--text); font-weight: 700;
+  }
+  .results-card .actions button.primary { background: var(--accent); color: #06121e; border: none; }
+
+  .back-link { background: none; border: none; color: var(--text-dim); font-size: .8rem; padding: 0; margin-bottom: 14px; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>&#9889; Exam Arcade</h1>
+    <div class="sub">Cambridge IGCSE 0478 &middot; real exam questions, one topic at a time</div>
+  </header>
+  <div id="root"></div>
+</div>
+
+<script>
+(function () {
+
+  // ---------------------------------------------------------------
+  // Question banks - drawn from real Cambridge IGCSE 0478 Paper 1
+  // past papers (values and phrasing taken directly from live papers,
+  // same convention as the LessonData exam-do-now steps elsewhere on
+  // the site). Each level = one syllabus topic.
+  // ---------------------------------------------------------------
+  function text(prompt, kind, answer, hint, source) {
+    return { type: 'text', prompt: prompt, kind: kind, answer: answer, hint: hint, source: source };
+  }
+  function mcq(prompt, options, correct, explain, source) {
+    return { type: 'mcq', prompt: prompt, options: options, correct: correct, explain: explain, source: source };
+  }
+
+  var LEVELS = [
+    {
+      id: '1.1', name: 'Number Systems', theme: 'Binary, hexadecimal and two’s complement',
+      questions: [
+        text('Convert the denary number <strong>19</strong> to an 8-bit binary number.', 'binary', 19, 'Work out which powers of 2 (128, 64, 32, 16, 8, 4, 2, 1) add up to 19.', '0478/12 Jun 2025'),
+        text('Convert the denary number <strong>230</strong> to an 8-bit binary number.', 'binary', 230, 'Start from the largest power of 2 that fits, then work down.', '0478/12 Jun 2025'),
+        text('Convert the hexadecimal number <strong>35</strong> to an 8-bit binary number.', 'binary', 0x35, 'Convert each hex digit to its own 4-bit binary group, then join them.', '0478/12 Jun 2025'),
+        mcq('A computer has 12-bit registers. What is the largest denary number that can be stored?', ['255', '511', '4095', '4096'], 2, '2^12 - 1 = 4095 - twelve bits, all set to 1.', '0478/12 Nov 2025'),
+        text('Give the largest hexadecimal number that can be stored in a 12-bit register.', 'hex', 0xFFF, 'Twelve bits is exactly three hex digits, each at its maximum value.', '0478/12 Nov 2025'),
+        mcq('The hexadecimal number system is base...', ['2', '10', '16', '256'], 2, 'Hexadecimal uses 16 digits (0-9 then A-F), so it is base 16.', '0478/12 Mar 2025'),
+        text('Give the two’s complement 8-bit binary integer for the denary number <strong>&minus;22</strong>.', 'binary', -22, 'Write 22 in binary, invert every bit, then add 1 - don’t forget this represents a negative number.', '0478/12 Jun 2025')
+      ]
+    },
+    {
+      id: '1.2', name: 'Data Representation', theme: 'Text, sound and images',
+      questions: [
+        text('The character &lsquo;A&rsquo; has the denary ASCII code <strong>65</strong>. Convert 65 to binary.', 'binary', 65, 'Same method as any denary-to-binary conversion - add up the place values.', '0478/11 Nov 2024'),
+        text('The character &lsquo;m&rsquo; has the denary ASCII code <strong>109</strong>. Convert 109 to binary.', 'binary', 109, 'Add up the place values for each 1 in the byte.', '0478/11 Nov 2024'),
+        text('The binary ASCII number <strong>01111001</strong> represents a character. Convert it to denary.', 'number', 121, 'Add up the place values wherever there is a 1.', '0478/11 Nov 2024'),
+        text('An image file is <strong>3072 bytes</strong>. Give its size in kibibytes (KiB).', 'number', 3, '1 KiB = 1024 bytes.', '0478/12 Jun 2025'),
+        text('An image has a resolution of <strong>1024 &times; 1024</strong> pixels and a colour depth of <strong>2 bytes</strong>. Calculate the file size in MiB.', 'number', 2, 'Pixels &times; bytes per pixel gives bytes; then convert bytes to MiB (&divide; 1024 twice).', '0478/12 Mar 2026'),
+        mcq('Increasing an image’s colour depth mainly gives you...', ['A smaller file, with fewer colours', 'A larger file, with more possible colours', 'A larger image, with the same colours'], 1, 'More bits per pixel means more possible colour values (2^depth), at the cost of a larger file.', 'Bloomsbury Pixel Lab'),
+        text('A sound recording measures the height of the wave at regular time intervals. Give the term for one of these individual measurements.', 'word', 'sample', 'This is the single measurement itself, not how often it’s taken and not how it’s stored.', '0478/13 Jun 2025')
+      ]
+    },
+    { id: '1.3', name: 'Data Storage & Compression', theme: 'Coming soon', locked: true },
+    { id: '2.1', name: 'Data Transmission', theme: 'Coming soon', locked: true },
+    { id: '2.2', name: 'Error Detection', theme: 'Coming soon', locked: true },
+    { id: '2.3', name: 'Encryption', theme: 'Coming soon', locked: true },
+    { id: '3.x', name: 'Hardware', theme: 'Coming soon', locked: true },
+    { id: '4.x', name: 'Software', theme: 'Coming soon', locked: true }
+  ];
+
+  // ---------------------------------------------------------------
+  // Answer checking - one small dispatcher per question kind, all
+  // tolerant of leading zeros / case / stray spaces the way a real
+  // student would type them.
+  // ---------------------------------------------------------------
+  function toBinaryString(n, bits) {
+    bits = bits || 8;
+    var v = n < 0 ? (Math.pow(2, bits) + n) : n;
+    var s = v.toString(2);
+    while (s.length < bits) s = '0' + s;
+    return s;
+  }
+  function checkText(q, raw) {
+    var input = String(raw || '').trim();
+    if (!input) return false;
+    if (q.kind === 'binary') {
+      var cleaned = input.replace(/\s+/g, '');
+      if (!/^[01]+$/.test(cleaned)) return false;
+      return parseInt(cleaned, 2) === (q.answer < 0 ? parseInt(toBinaryString(q.answer), 2) : q.answer);
+    }
+    if (q.kind === 'hex') {
+      var h = input.replace(/^0x/i, '').replace(/\s+/g, '');
+      return /^[0-9a-f]+$/i.test(h) && parseInt(h, 16) === q.answer;
+    }
+    if (q.kind === 'number') {
+      return parseFloat(input.replace(/[^\d.-]/g, '')) === q.answer;
+    }
+    if (q.kind === 'word') {
+      return new RegExp('^' + q.answer + 's?$', 'i').test(input);
+    }
+    return false;
+  }
+  function canonicalAnswer(q) {
+    if (q.kind === 'binary') return toBinaryString(q.answer);
+    if (q.kind === 'hex') return q.answer.toString(16).toUpperCase();
+    return String(q.answer);
+  }
+
+  // ---------------------------------------------------------------
+  // Game state + rendering
+  // ---------------------------------------------------------------
+  var root = document.getElementById('root');
+  var progressKey = 'examArcadeUnlocked';
+  function getUnlocked() {
+    try { return JSON.parse(localStorage.getItem(progressKey)) || ['1.1']; }
+    catch (e) { return ['1.1']; }
+  }
+  function unlock(id) {
+    var u = getUnlocked();
+    if (u.indexOf(id) === -1) { u.push(id); try { localStorage.setItem(progressKey, JSON.stringify(u)); } catch (e) {} }
+  }
+
+  function renderLevelSelect() {
+    var unlocked = getUnlocked();
+    var html = '<div class="level-grid">';
+    LEVELS.forEach(function (lvl) {
+      var isUnlocked = !lvl.locked && unlocked.indexOf(lvl.id) !== -1;
+      var cls = 'level-tile' + (isUnlocked ? '' : ' locked');
+      html += '<button type="button" class="' + cls + '" data-level="' + lvl.id + '"' + (isUnlocked ? '' : ' disabled') + '>' +
+        '<span class="code">' + lvl.id + '</span>' +
+        '<span class="name">' + lvl.name + '</span>' +
+        '<span class="theme">' + lvl.theme + '</span>' +
+        (isUnlocked ? '' : '<span class="lock-note">' + (lvl.locked ? 'Coming soon' : 'Finish an earlier topic to unlock') + '</span>') +
+        '</button>';
+    });
+    html += '</div>';
+    root.innerHTML = html;
+    Array.prototype.forEach.call(root.querySelectorAll('.level-tile:not(.locked):not([disabled])'), function (btn) {
+      btn.addEventListener('click', function () { startLevel(btn.dataset.level); });
+    });
+  }
+
+  function startLevel(levelId) {
+    var level = LEVELS.filter(function (l) { return l.id === levelId; })[0];
+    if (!level || level.locked) return;
+    var state = {
+      level: level, qIndex: 0, score: 0, lives: 3, streak: 0, bestStreak: 0, correctCount: 0,
+      timer: null, timeLeft: 20
+    };
+    renderPlay(state);
+  }
+
+  function renderPlay(state) {
+    var level = state.level;
+    var q = level.questions[state.qIndex];
+    if (!q || state.lives <= 0) { renderResults(state); return; }
+
+    var html = '<button type="button" class="back-link" id="ea-quit">&larr; Quit to level select</button>';
+    html += '<div class="hud">' +
+      '<div class="stat">Score <b>' + state.score + '</b></div>' +
+      '<div class="stat">Streak <b>' + state.streak + '</b></div>' +
+      '<div class="stat lives">' + '&#9829;'.repeat(state.lives) + '</div>' +
+      '</div>';
+    html += '<div class="progress-bar"><div class="fill" style="width:' + Math.round((state.qIndex / level.questions.length) * 100) + '%"></div></div>';
+    html += '<div class="timer-bar"><div class="fill" id="ea-timer-fill" style="width:100%"></div></div>';
+    html += '<div class="question-card"><div class="q-meta">' + level.id + ' &middot; ' + level.name + ' &middot; Question ' + (state.qIndex + 1) + ' of ' + level.questions.length + ' &middot; ' + (q.source || '') + '</div>';
+    html += '<div class="q-prompt">' + q.prompt + '</div>';
+
+    if (q.type === 'mcq') {
+      html += '<div class="mcq-grid" id="ea-mcq">';
+      q.options.forEach(function (opt, i) {
+        html += '<button type="button" data-i="' + i + '">' + opt + '</button>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="answer-row"><input type="text" id="ea-answer" autocomplete="off" placeholder="Type your answer"><button type="button" class="submit" id="ea-submit">Submit</button></div>';
+    }
+    html += '<div class="feedback" id="ea-feedback"></div>';
+    html += '</div>';
+    root.innerHTML = html;
+
+    document.getElementById('ea-quit').addEventListener('click', function () { stopTimer(state); renderLevelSelect(); });
+
+    function finishQuestion(correct) {
+      stopTimer(state);
+      var fb = document.getElementById('ea-feedback');
+      if (correct) {
+        state.streak++; state.bestStreak = Math.max(state.bestStreak, state.streak); state.correctCount++;
+        state.score += 10 * (1 + Math.floor(state.streak / 3));
+        fb.className = 'feedback show is-correct';
+        fb.innerHTML = '<strong>Correct!</strong> ' + (q.explain || q.hint || '') + '<br><button type="button" class="next-btn" id="ea-next">Next &rarr;</button>';
+      } else {
+        state.streak = 0; state.lives--;
+        fb.className = 'feedback show is-wrong';
+        fb.innerHTML = '<strong>Not quite.</strong> ' + (q.hint || q.explain || '') +
+          (q.type === 'text' ? '<br>The answer was <strong>' + canonicalAnswer(q) + '</strong>.' : '') +
+          '<br><button type="button" class="next-btn" id="ea-next">' + (state.lives > 0 ? 'Next &rarr;' : 'See results') + '</button>';
+      }
+      if (q.type === 'mcq') {
+        Array.prototype.forEach.call(document.querySelectorAll('#ea-mcq button'), function (b, i) {
+          b.disabled = true;
+          if (i === q.correct) b.classList.add('is-correct');
+          else if (Number(b.dataset.i) === lastPickedIndex && !correct) b.classList.add('is-wrong');
+        });
+      } else {
+        document.getElementById('ea-answer').disabled = true;
+        document.getElementById('ea-submit').disabled = true;
+      }
+      document.getElementById('ea-next').addEventListener('click', function () {
+        state.qIndex++;
+        renderPlay(state);
+      });
+    }
+
+    var lastPickedIndex = -1;
+    if (q.type === 'mcq') {
+      Array.prototype.forEach.call(document.querySelectorAll('#ea-mcq button'), function (btn) {
+        btn.addEventListener('click', function () {
+          lastPickedIndex = Number(btn.dataset.i);
+          finishQuestion(lastPickedIndex === q.correct);
+        });
+      });
+    } else {
+      var input = document.getElementById('ea-answer');
+      var submit = document.getElementById('ea-submit');
+      function submitAnswer() { finishQuestion(checkText(q, input.value)); }
+      submit.addEventListener('click', submitAnswer);
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submitAnswer(); });
+      input.focus();
+    }
+
+    startTimer(state, function () { finishQuestion(false); });
+  }
+
+  function startTimer(state, onExpire) {
+    state.timeLeft = 20;
+    var fill = document.getElementById('ea-timer-fill');
+    state.timer = setInterval(function () {
+      state.timeLeft -= 0.1;
+      if (fill) fill.style.width = Math.max(0, (state.timeLeft / 20) * 100) + '%';
+      if (state.timeLeft <= 0) { clearInterval(state.timer); onExpire(); }
+    }, 100);
+  }
+  function stopTimer(state) { if (state.timer) { clearInterval(state.timer); state.timer = null; } }
+
+  function renderResults(state) {
+    var level = state.level;
+    var total = level.questions.length;
+    var pct = Math.round((state.correctCount / total) * 100);
+    var grade = pct >= 90 ? 'A* Recall' : pct >= 75 ? 'Strong Grasp' : pct >= 50 ? 'Getting There' : 'Needs Revision';
+    if (state.correctCount > 0) {
+      var idx = LEVELS.findIndex(function (l) { return l.id === level.id; });
+      if (idx !== -1 && idx + 1 < LEVELS.length && !LEVELS[idx + 1].locked) unlock(LEVELS[idx + 1].id);
+    }
+    root.innerHTML =
+      '<div class="results-card">' +
+      '<div class="q-meta">' + level.id + ' &middot; ' + level.name + '</div>' +
+      '<div class="big-score">' + state.score + '</div>' +
+      '<div class="grade">' + grade + '</div>' +
+      '<div class="stats-row">' +
+      '<div>Correct<b>' + state.correctCount + ' / ' + total + '</b></div>' +
+      '<div>Accuracy<b>' + pct + '%</b></div>' +
+      '<div>Best streak<b>' + state.bestStreak + '</b></div>' +
+      '</div>' +
+      '<div class="actions">' +
+      '<button type="button" class="primary" id="ea-retry">Play Again</button>' +
+      '<button type="button" id="ea-back">Back to Levels</button>' +
+      '</div></div>';
+    document.getElementById('ea-retry').addEventListener('click', function () { startLevel(level.id); });
+    document.getElementById('ea-back').addEventListener('click', renderLevelSelect);
+  }
+
+  renderLevelSelect();
+})();
+</script>
+</body>
+</html>
