@@ -1725,10 +1725,18 @@ FUEL_NAMES.forEach(loadVeggieTexture); // same warm-up for Rocket Yard
 // ============================================================
 // PLANTING / GROWING / SELLING
 // ============================================================
-function plantAt(cursor, vegName) {
+// vegNameRaw goes through matchSeedName first - the same lenient "Carrot" OR
+// "Carrot Seeds" matching Buy()/SeedCount()/HasCrop() already give, via the
+// exact same function. Before this, Plant() alone required the bare crop
+// name and silently rejected the shop's own displayed label ("Carrot
+// Seeds") with "no seed called that" - a real asymmetry a student could hit
+// by typing the exact name shown on screen, even though every other
+// command already accepted it fine.
+function plantAt(cursor, vegNameRaw) {
   var ft = activeFarmType();
-  if (!activeItems()[vegName]) {
-    return { ok: false, message: 'There is no ' + ft.unitLabel + ' called "' + vegName + '". Look at the shop for the names you can use.' };
+  var vegName = matchSeedName(vegNameRaw);
+  if (!vegName) {
+    return { ok: false, message: 'There is no ' + ft.unitLabel + ' called "' + vegNameRaw + '". Look at the shop for the names you can use.' };
   }
   var tile = tileAt(cursor.x, cursor.z);
   if (tile.plant) {
