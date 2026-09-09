@@ -2340,7 +2340,15 @@ function compile(source) {
       instructions.push({ type: 'OUTPUT', exprCode: compileExpression(m[1], lineNo), line: lineNo });
       continue;
     }
-    if ((m = line.match(/^(?:CALL\s+)?([A-Za-z_]\w*)\s*\(\s*(.*?)\s*\)$/i))) {
+    // CALL is mandatory in front of a procedure, matching real Cambridge
+    // pseudocode - "CALL" was previously optional here ((?:CALL\s+)?), so
+    // Sell() and CALL Sell() were silently treated as the same statement.
+    // That let students skip the exact syntax every tutorial and mark
+    // scheme is trying to teach. The bare-Name(...) case right below
+    // exists only to catch that mistake with a specific, helpful error
+    // instead of falling through to the generic "can't understand this
+    // line" message.
+    if ((m = line.match(/^CALL\s+([A-Za-z_]\w*)\s*\(\s*(.*?)\s*\)$/i))) {
       var commandName = canonicalCommandName(m[1]);
       if (!commandName) {
         throw new PseudocodeError('"' + m[1] + '" is not a command I know. Try ' + VALID_COMMANDS.join(', ') + '.', lineNo);
@@ -2354,6 +2362,9 @@ function compile(source) {
     }
     if (/^CALL\b/i.test(line)) {
       throw new PseudocodeError('CALL needs a procedure name and brackets, e.g. CALL SetPosition(2, 0)', lineNo);
+    }
+    if ((m = line.match(/^([A-Za-z_]\w*)\s*\(\s*(.*?)\s*\)$/i)) && canonicalCommandName(m[1])) {
+      throw new PseudocodeError('Procedures need CALL in front: CALL ' + canonicalCommandName(m[1]) + '(' + m[2] + ')', lineNo);
     }
     if ((m = line.match(/^([A-Za-z_]\w*)\s*\[\s*(.+?)\s*\]\s*(?:<-|←)\s*(.+)$/))) {
       instructions.push({
@@ -4319,7 +4330,22 @@ var TUTORIALS = [
     id: 'basic-auto-farm',
     title: 'Basic Auto-Farm',
     color: '#4c8bf5',
-    minMoney: 35, // a seed (~4c) plus a Level 1 machine (30c)
+    // A CALL Buy(...) pays CODE_BUY_DISCOUNT (80%) of the 5c shop price -
+    // 4c a seed, not the shop's sticker price. Money carries over between
+    // steps within a tutorial (the sandbox only resets once, on entering
+    // the whole tutorial - see resetTutorialWorld), so step 3's real CALL
+    // Buy already spends one seed's worth before step 4 even starts: 35 -
+    // 4 (step 3's Buy) - 30 (the machine itself) left exactly 1c, not
+    // enough for the freshly placed machine's own first-tick CALL Buy (4c)
+    // - it never got to plant automatically even once, defeating the
+    // entire point of the tutorial. This machine always targets the exact
+    // same tile (SetPosition(1, 0), no HasCrop check), so once it plants
+    // there successfully that tile stays occupied forever and extra money
+    // beyond one more buy-plant cycle doesn't buy it anything further -
+    // 50 just needs to comfortably clear 4 (step 3) + 30 (machine) + 4
+    // (the machine's own first buy) with real margin, not chase cycles
+    // that can't happen anyway.
+    minMoney: 50,
     desc: 'Build a machine that buys and plants a seed on its own, forever - no clicking required.',
     steps: [
       {
@@ -4352,7 +4378,7 @@ var TUTORIALS = [
         newLines: ['CALL Buy("Carrot")', 'CALL SetPosition(1, 0)', 'CALL Plant("Carrot")'],
         requires: [{ name: 'Buy' }, { name: 'SetPosition' }, { name: 'Plant' }],
         action: 'machine',
-        actionHint: 'Move off the Carrot\'s tile, then press Place Machine below - not Run this time.'
+        actionHint: 'Move off the Carrot\'s tile, then press Place Machine below - not Run this time. Leave at least one open tile to your right too - SetPosition(1, 0) needs a real tile there, not the edge of the field.'
       }
     ]
   },
@@ -4360,7 +4386,14 @@ var TUTORIALS = [
     id: 'strip-farm',
     title: 'Strip Farm',
     color: '#a3711f',
-    minMoney: 25, // up to 6 seeds worst-case across both steps, ~4c each
+    // Both steps are real Runs and money carries over between them (the
+    // sandbox resets only once, at tutorial start) - step 1 buys 3 seeds
+    // and step 2 buys 3 more, 6 real CALL Buys at the actual 4c
+    // code-discount rate = 24c minimum. The original 25 technically
+    // covered that (with exactly 1c to spare - no room for the "Try it"
+    // TO 4 challenge, or any margin for error), so 30 gives a genuine
+    // safety buffer instead of a razor-thin one.
+    minMoney: 30,
     desc: 'Plant a whole row of Carrots in one go, instead of typing the same three lines over and over.',
     steps: [
       {
@@ -4392,7 +4425,11 @@ var TUTORIALS = [
     id: 'grid-farm',
     title: 'Grid Farm',
     color: '#0e8a8a',
-    minMoney: 25, // 6 seeds at ~4c each
+    // Step 1's real Run buys 6 seeds (2 rows x 3 cols) at the actual 4c
+    // code-discount rate = 24c minimum. The original 25 technically
+    // covered that (with exactly 1c to spare), so 30 gives a genuine
+    // safety buffer instead of a razor-thin one.
+    minMoney: 30,
     desc: 'Plant a whole rectangle of Carrots at once - rows and columns, not just a single strip.',
     steps: [
       {
@@ -4415,7 +4452,13 @@ var TUTORIALS = [
     id: 'stock-up-run',
     title: 'Stock-Up Run',
     color: '#2e8b57',
-    minMoney: 5, // just enough for the loop to actually buy at least once
+    // WHILE Money() >= 5 DO checks the shop's 5c sticker price, but a CALL
+    // Buy only actually spends 4c (the code discount) each time round. At
+    // 5 starting coins the loop can only ever fire once (5 -> 1, then 1 >=
+    // 5 is false) - but this step's own actionHint promises "several
+    // purchases... not just one." 20 buys 4 times in a row (20 -> 16 -> 12
+    // -> 8 -> 4, then 4 >= 5 stops it), a real "several" to watch.
+    minMoney: 20,
     desc: 'Buy as many seeds as you can afford in one go, instead of clicking Buy over and over.',
     steps: [
       {
@@ -4491,7 +4534,7 @@ var TUTORIALS = [
         newLines: ['CALL SetPosition(1, 0)', 'IF SeedCount("Carrot") > 0 AND NOT HasCrop() THEN', '    CALL Plant("Carrot")', 'ELSE', '    CALL Buy("Carrot")', 'ENDIF'],
         requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Plant' }, { name: 'Buy' }],
         action: 'machine',
-        actionHint: 'Press Place Machine below - not Run this time. Done another tutorial already? If it says the tile is taken or too expensive, move to open ground (or wait for more coins) and try again.'
+        actionHint: 'Press Place Machine below - not Run this time. Leave at least one open tile to your right for SetPosition(1, 0) to land on. Done another tutorial already? If it says the tile is taken or too expensive, move to open ground (or wait for more coins) and try again.'
       }
     ]
   },
@@ -4509,7 +4552,7 @@ var TUTORIALS = [
         newLines: ['CALL SetPosition(1, 0)', 'IF HasCrop() THEN', '    CALL Sell()', 'ELSE', '    IF SeedCount("Carrot") > 0 THEN', '        CALL Plant("Carrot")', '    ELSE', '        CALL Buy("Carrot")', '    ENDIF', 'ENDIF'],
         requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Sell' }, { name: 'Plant' }, { name: 'Buy' }],
         action: 'machine',
-        actionHint: 'Press Place Machine below - watch it buy, then plant, then wait, then finally sell once the Carrot is ready. If placement fails, move to open ground and try again.'
+        actionHint: 'Press Place Machine below - watch it buy, then plant, then wait, then finally sell once the Carrot is ready. Leave at least one open tile to your right for SetPosition(1, 0). If placement fails, move to open ground and try again.'
       },
       {
         title: 'Try it',
@@ -4522,8 +4565,18 @@ var TUTORIALS = [
     id: 'array-farm',
     title: 'Array Farm',
     color: '#e07b39',
-    minMoney: 40, // this step's 2 seeds (~8) + the machine (30), with a small buffer - kept tight
-                  // on purpose so the tutorial completes from a genuinely fresh 40-coin start
+    // Step 2's real Run buys 2 seeds at the actual 4c code-discount rate
+    // (8c), then step 3 places a 30c machine - 40 - 8 - 30 left exactly
+    // 2c, not enough for the freshly placed machine's own first-tick CALL
+    // Buy (4c) for either array spot, and this machine (unlike
+    // Smart/Full-Cycle Farm) has no IF check to skip a buy it can't
+    // afford - it just fails loudly forever, never planting either spot
+    // even once. It also always targets the same two array spots with no
+    // HasCrop check, so once both are planted they stay occupied and
+    // further money doesn't buy more successful cycles - 60 just needs
+    // real margin over 8 (step 2) + 30 (machine) + 8 (the machine's own
+    // first full pass), not to fund cycles that can't happen anyway.
+    minMoney: 60,
     desc: 'Store a list of exact spots to farm, then visit every one of them with a single loop.',
     steps: [
       {
@@ -4549,7 +4602,7 @@ var TUTORIALS = [
         newLines: [],
         requires: [{ type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
         action: 'machine',
-        actionHint: 'Press Place Machine below - not Run this time. If it fails, move to open ground (or wait for more coins) and try again.'
+        actionHint: 'Press Place Machine below - not Run this time. This machine\'s spots are 2 tiles to the right and 1 tile up from wherever you place it, so leave that much open field in both directions. If it fails, move to open ground (or wait for more coins) and try again.'
       },
       {
         title: 'Try it',
