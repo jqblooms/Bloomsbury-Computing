@@ -374,6 +374,37 @@
   #tutorial-code-modal-close { background: none; border: none; color: #4d6b5b; cursor: pointer; font-size: .95rem; line-height: 1; padding: 2px 4px; flex-shrink: 0; }
   #tutorial-code-modal-close:hover { color: #1f4d38; }
   #tutorial-code-modal-body { border-radius: 0 0 8px 8px; overflow: auto; }
+
+  /* Pop-out Code Box - same floating/draggable shape as tutorial-code-modal above,
+     sized a bit larger since it holds a real editable textarea, not a read-only quote. */
+  #code-expand { position: absolute; top: 4px; right: 4px; background: rgba(10,26,18,.55); border: 1px solid #3a4a3e;
+    border-radius: 4px; color: #d9f2d2; cursor: pointer; font-size: .8rem; line-height: 1; padding: 2px 5px; z-index: 1; }
+  #code-expand:hover { color: #fff; border-color: #6cc499; }
+  #code-modal { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); width: 440px; max-width: 92vw;
+    background: #fbfff9; border: 2px solid #6cc499; border-radius: 10px; z-index: 300; display: none; flex-direction: column;
+    box-shadow: 0 10px 32px rgba(0,0,0,.35); height: 340px; max-height: 82vh; }
+  #code-modal.open { display: flex; }
+  #code-modal-head { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #eefaf2; border-bottom: 1px solid #bfe6cf;
+    border-radius: 8px 8px 0 0; cursor: grab; user-select: none; flex-shrink: 0; }
+  #code-modal-head:active { cursor: grabbing; }
+  #code-modal-title { flex: 1; font-size: .78rem; font-weight: 800; color: #1f6e4f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #code-modal-close { background: none; border: none; color: #4d6b5b; cursor: pointer; font-size: .95rem; line-height: 1; padding: 2px 4px; flex-shrink: 0; }
+  #code-modal-close:hover { color: #1f4d38; }
+  #code-modal-body { flex: 1; min-height: 0; display: flex; padding: 8px; }
+  /* .code-editor normally relies on #code-panel's flex sizing for its height - once
+     popped out it needs to fill the modal body's own flex box instead. */
+  #code-modal-body .code-editor { flex: 1; min-height: 0; }
+
+  /* Code box glow: while a tutorial is running, a slow, continuous pulse around the
+     whole Code Box - not just a one-off flash on entry (that's tutorial-bar-panel's
+     own .just-started/tutorialPop) - so a student glancing back at the field always
+     has an obvious, ongoing "your code goes here" cue, not just a moment they might
+     have missed. Matches the tutorial system's own green accent (#4fbf87). */
+  body.tutorial-active #code-panel { animation: codeBoxGlow 2.4s ease-in-out infinite; border-radius: 10px; }
+  @keyframes codeBoxGlow {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(79,191,135,.25), 0 0 6px 1px rgba(79,191,135,.15); }
+    50% { box-shadow: 0 0 0 2px rgba(79,191,135,.65), 0 0 16px 5px rgba(79,191,135,.45); }
+  }
   #tutorial-bar-checks { margin-top: 8px; font-size: .74rem; font-family: ui-monospace, monospace; }
   .tb-check { display: flex; align-items: center; gap: 6px; padding: 2px 0; color: #7a8f83; }
   .tb-check.tb-ok { color: #1f8a5a; font-weight: 700; }
@@ -531,6 +562,7 @@
       <section class="panel-section" id="code-panel">
         <h2>💻 Code Box</h2>
         <div class="code-editor">
+          <button type="button" id="code-expand" title="Pop out the code box into a floating window">&#x2922;</button>
           <div id="code-backdrop" aria-hidden="true"></div>
           <textarea id="code-input" spellcheck="false" autocomplete="off"></textarea>
         </div>
@@ -654,6 +686,19 @@
     <button type="button" id="tutorial-code-modal-close" title="Close">✕</button>
   </div>
   <pre id="tutorial-code-modal-body"></pre>
+</div>
+
+<!-- Pop-out Code Box: unlike tutorial-code-modal above (a read-only 1:1 COPY of the
+     reference code), this one holds the REAL .code-editor node - moved here, not
+     cloned - so typing, Run and Place Machine all keep working on the exact same
+     element regardless of which parent it currently sits inside. See
+     openCodeModal/closeCodeModal. -->
+<div id="code-modal">
+  <div id="code-modal-head">
+    <span id="code-modal-title">💻 Code Box</span>
+    <button type="button" id="code-modal-close" title="Close">✕</button>
+  </div>
+  <div id="code-modal-body"></div>
 </div>
 
 <div id="toast-layer"></div>
@@ -1408,6 +1453,53 @@ updateFacingIndicator(playerFacingIndicator, playerCursor.facing);
 function tileWorldX(x) { return x - HALF; }
 function tileWorldZ(z) { return z - HALF; }
 
+// ── Tutorial tile highlights: a pulsing ring on the ground marking exactly
+// which tile(s) a tutorial step wants the student standing on, clicking, or
+// placing a machine on. Independent freestanding meshes (same idea as the
+// player/machine cursor markers above), not part of the tile grid's own
+// instanced mesh - that instancing shares one material across every tile,
+// so it can't highlight a single one on its own. Cleared and rebuilt
+// whenever the active tutorial step changes (renderTutorialStep) and on
+// every exit/finish, so nothing lingers once the reason for it is gone.
+var tutorialHighlightMeshes = [];
+function makeTutorialHighlightRing() {
+  var mesh = new THREE.Mesh(
+    new THREE.RingGeometry(0.34, 0.47, 32),
+    new THREE.MeshBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false })
+  );
+  mesh.rotation.x = -Math.PI / 2; // lie flat on the ground, not stand up like a wall
+  mesh.renderOrder = 5;
+  return mesh;
+}
+function clearTutorialHighlights() {
+  tutorialHighlightMeshes.forEach(function (m) { scene.remove(m); disposeObject3D(m); });
+  tutorialHighlightMeshes = [];
+}
+// tilesXZ: array of {x, z} in absolute grid coordinates (a tutorial step
+// resolves its own home-relative offsets to absolute tiles before calling
+// this - see resolveTutorialHighlightTiles).
+function setTutorialHighlights(tilesXZ) {
+  clearTutorialHighlights();
+  (tilesXZ || []).forEach(function (t) {
+    var mesh = makeTutorialHighlightRing();
+    mesh.position.set(tileWorldX(t.x), 0.14, tileWorldZ(t.z));
+    scene.add(mesh);
+    tutorialHighlightMeshes.push(mesh);
+  });
+}
+// Animated once per frame from animate() below - a slow opacity/scale pulse,
+// not a static ring, so it reads as "look here" rather than blending into
+// the rest of the field's fixed decoration.
+function updateTutorialHighlightPulse(elapsed) {
+  if (!tutorialHighlightMeshes.length) return;
+  var pulse = 0.55 + Math.sin(elapsed * 3.2) * 0.35;
+  var scale = 1 + Math.sin(elapsed * 3.2) * 0.14;
+  tutorialHighlightMeshes.forEach(function (m) {
+    m.material.opacity = pulse;
+    m.scale.set(scale, 1, scale);
+  });
+}
+
 var coordsEl = document.getElementById('coords');
 function updateCoordReadout() {
   if (!coordsEl) return;
@@ -1584,6 +1676,7 @@ function handleTileClick(clientX, clientY) {
   playerCursor.z = hit.gridZ;
   markGameDirty();
   updatePlayerCursorPosition();
+  if (activeTutorial) refreshTutorialHighlight(); // a click-to-move, same as any other player move - see onCursorMoved's own call
   selectMachine(null); // clicking open ground clears any machine selection
   updateTileInfoPanel();
 }
@@ -2016,7 +2109,15 @@ function compileExpression(raw, line) {
 
   var code = parseConcat();
   if (pos < tokens.length) throw new PseudocodeError('I don\'t understand "' + tokens[pos] + '".', line);
-  return buildExpressionEvaluator(code);
+  var evaluator = buildExpressionEvaluator(code);
+  // Stashed for static analysis (machineWouldBeStuckAtHome's literal-argument
+  // check) without a second parse - the evaluator itself is a closure with no
+  // way to ask "were you actually just a plain number", so the raw AST node
+  // it was built from is exposed right on the function instead. Never read
+  // by evaluateExpression itself - purely an inspection hook for code that
+  // already has an argsCode entry in hand and wants to know its shape.
+  evaluator.astNode = code;
+  return evaluator;
 }
 
 // ============================================================
@@ -2582,6 +2683,11 @@ function onCursorMoved(cursor) {
     updatePlayerCursorPosition();
     updateFacingIndicator(playerFacingIndicator, cursor.facing);
     updateTileInfoPanel();
+    // A tutorial step's highlight can be relative to wherever the player is
+    // CURRENTLY standing (e.g. "here's where a machine placed right here
+    // would act"), not just a fixed tile - keep it live as the player moves,
+    // not just redrawn once when the step first appeared.
+    if (activeTutorial) refreshTutorialHighlight();
     return;
   }
   var machine = cursor.machine;
@@ -2840,6 +2946,51 @@ function positionMachineCursorMarker(machine) {
 // code box's contents were genuinely handed off (clear it) or the
 // placement failed for some reason (leave the student's typing alone,
 // nothing was lost).
+// Movement/turn commands whose *literal*, constant-argument calls can be
+// checked ahead of a machine's placement, without running the whole
+// program for real: reuses runCommand() - the exact same dispatcher a live
+// machine tick already uses - against a disposable scratch cursor, calling
+// it only for movement/turn commands (never Plant/Buy/Sell - no economy
+// side effects here, and onCursorMoved() is a safe no-op for a cursor that
+// isn't the player's and has no .machine, so nothing visual updates either).
+// Only literal numeric arguments (SetPosition(1, 0), not
+// SetPosition(Xs[i], Zs[i])) can be checked this way without a full
+// expression evaluator plus a simulated economy - a program using
+// variables or array values for its offsets is silently skipped instead of
+// guessed at, exactly as if this check didn't exist for it.
+var MOVEMENT_COMMANDS = { MoveUp: 1, MoveDown: 1, MoveLeft: 1, MoveRight: 1, MoveForward: 1, TurnLeft: 1, TurnRight: 1, SetPosition: 1 };
+// argsCode entries are compiled evaluator FUNCTIONS (see compileExpression),
+// not the raw parse tree - astNode is the one property that still exposes
+// it, stashed there for exactly this kind of static check.
+function isLiteralConstArg(exprCode) {
+  return typeof exprCode === 'function' && Array.isArray(exprCode.astNode) && exprCode.astNode[0] === EX_CONST;
+}
+function noopLog() {}
+// True if every literal-argument movement/turn CALL in this program, run in
+// sequence from a candidate machine home tile, never actually leaves it -
+// almost always because the machine was placed too close to the field's
+// edge and its own SetPosition/Move calls keep clamping right back onto
+// itself. A machine stuck like that can never plant anywhere but its own
+// tile, which always "has a machine standing on it" (itself) - so it can
+// never plant at all, for a reason that isn't obvious just from reading
+// the code, since the code itself is perfectly correct.
+function machineWouldBeStuckAtHome(program, homeX, homeZ) {
+  var sim = { x: homeX, z: homeZ, facing: 0, homeX: homeX, homeZ: homeZ };
+  var sawCheckableMovement = false;
+  for (var i = 0; i < program.length; i++) {
+    var instr = program[i];
+    if (instr.type !== 'CALL' || !MOVEMENT_COMMANDS[instr.name]) continue;
+    if (!instr.argsCode.every(isLiteralConstArg)) continue;
+    sawCheckableMovement = true;
+    // Safe to evaluate right now with no real vars/cursor - isLiteralConstArg
+    // already confirmed each one is a bare constant, so it can't actually
+    // read either.
+    var args = instr.argsCode.map(function (a) { return evaluateExpression(a, {}, sim, instr.line); });
+    runCommand(instr.name, args, sim, noopLog, instr.line);
+  }
+  return sawCheckableMovement && sim.x === homeX && sim.z === homeZ;
+}
+
 function placeMachine(code) {
   if (!code.trim()) { logConsole('Write some code first, then place a machine.', true); return false; }
   var compiledProgram;
@@ -2861,6 +3012,19 @@ function placeMachine(code) {
   if (!tile) { logConsole('There is no garden tile there.', true); return false; }
   if (tile.hasMachine) { logConsole('There is already a machine on this tile.', true); return false; }
   if (tile.plant) { logConsole('Clear the plant on this tile before placing a machine here.', true); return false; }
+  // Tutorial-only lockout: refuse a placement that would leave the machine
+  // permanently unable to do anything but fail (see
+  // machineWouldBeStuckAtHome's own comment). Free play doesn't get this
+  // block - an experienced player deliberately building an odd machine
+  // shouldn't be second-guessed by a static check that can't see their
+  // actual plan - but a tutorial's whole job is to guarantee this exact
+  // step can be completed successfully, so here it's a hard stop with a
+  // specific, actionable reason instead of a silent dead end discovered
+  // only after the fact.
+  if (tutorialMode && machineWouldBeStuckAtHome(compiledProgram, x, z)) {
+    logConsole('Placing the machine here would trap it - its own movement clamps right back onto its own tile, so it could never plant anything. Move to a tile with more open space around it and try again.', true);
+    return false;
+  }
 
   money -= levelConfig.price;
 
@@ -4357,10 +4521,11 @@ var TUTORIALS = [
       },
       {
         title: 'Move with SetPosition',
-        text: 'Add a second CALL to jump to tile (1, 0) - counted from home: first number right/left, second number up/down.',
+        text: 'Add a second CALL to jump to tile (1, 0) - counted from home: first number right/left, second number up/down. The glowing ring on the field shows exactly which tile that is.',
         target: 'CALL Buy("Carrot")\nCALL SetPosition(1, 0)',
         newLines: ['CALL SetPosition(1, 0)'],
-        requires: [{ name: 'Buy' }, { name: 'SetPosition' }]
+        requires: [{ name: 'Buy' }, { name: 'SetPosition' }],
+        highlightTiles: function () { return [{ x: playerCursor.homeX + 1, z: playerCursor.homeZ }]; }
       },
       {
         title: 'Plant it, then Run',
@@ -4369,16 +4534,18 @@ var TUTORIALS = [
         newLines: ['CALL Plant("Carrot")'],
         requires: [{ name: 'Buy' }, { name: 'SetPosition' }, { name: 'Plant' }],
         action: 'run',
-        actionHint: 'All three lines are there - press Run below to try your sequence for real.'
+        actionHint: 'All three lines are there - press Run below to try your sequence for real.',
+        highlightTiles: function () { return [{ x: playerCursor.homeX + 1, z: playerCursor.homeZ }]; }
       },
       {
         title: 'Turn it into a machine',
-        text: 'Your sequence works once. A <strong>machine</strong> repeats it forever, automatically - but it needs an empty tile to stand on, and you\'re currently standing right on the Carrot you just planted. <strong>Drag the field (or press an arrow key) to move off that tile first.</strong> Then type the same three lines again and press <strong>Place Machine</strong> instead of Run:',
+        text: 'Your sequence works once. A <strong>machine</strong> repeats it forever, automatically - but it needs an empty tile to stand on, and you\'re currently standing right on the Carrot you just planted. <strong>Click the glowing tile</strong> to walk there - it\'s clear of the Carrot and has open space of its own to the right. Then type the same three lines again and press <strong>Place Machine</strong> instead of Run:',
         target: 'CALL Buy("Carrot")\nCALL SetPosition(1, 0)\nCALL Plant("Carrot")',
         newLines: ['CALL Buy("Carrot")', 'CALL SetPosition(1, 0)', 'CALL Plant("Carrot")'],
         requires: [{ name: 'Buy' }, { name: 'SetPosition' }, { name: 'Plant' }],
         action: 'machine',
-        actionHint: 'Move off the Carrot\'s tile, then press Place Machine below - not Run this time. Leave at least one open tile to your right too - SetPosition(1, 0) needs a real tile there, not the edge of the field.'
+        actionHint: 'Move off the Carrot\'s tile onto the glowing one, then press Place Machine below - not Run this time.',
+        highlightTiles: function () { return [{ x: playerCursor.homeX - 2, z: playerCursor.homeZ }]; }
       }
     ]
   },
@@ -4534,7 +4701,8 @@ var TUTORIALS = [
         newLines: ['CALL SetPosition(1, 0)', 'IF SeedCount("Carrot") > 0 AND NOT HasCrop() THEN', '    CALL Plant("Carrot")', 'ELSE', '    CALL Buy("Carrot")', 'ENDIF'],
         requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Plant' }, { name: 'Buy' }],
         action: 'machine',
-        actionHint: 'Press Place Machine below - not Run this time. Leave at least one open tile to your right for SetPosition(1, 0) to land on. Done another tutorial already? If it says the tile is taken or too expensive, move to open ground (or wait for more coins) and try again.'
+        actionHint: 'Press Place Machine below - not Run this time. Leave at least one open tile to your right for SetPosition(1, 0) to land on (the glowing ring shows where that\'ll be once you place). Done another tutorial already? If it says the tile is taken or too expensive, move to open ground (or wait for more coins) and try again.',
+        highlightTiles: function () { return [{ x: playerCursor.x + 1, z: playerCursor.z }]; }
       }
     ]
   },
@@ -4552,7 +4720,8 @@ var TUTORIALS = [
         newLines: ['CALL SetPosition(1, 0)', 'IF HasCrop() THEN', '    CALL Sell()', 'ELSE', '    IF SeedCount("Carrot") > 0 THEN', '        CALL Plant("Carrot")', '    ELSE', '        CALL Buy("Carrot")', '    ENDIF', 'ENDIF'],
         requires: [{ name: 'SetPosition' }, { type: 'IF' }, { type: 'ELSE' }, { name: 'Sell' }, { name: 'Plant' }, { name: 'Buy' }],
         action: 'machine',
-        actionHint: 'Press Place Machine below - watch it buy, then plant, then wait, then finally sell once the Carrot is ready. Leave at least one open tile to your right for SetPosition(1, 0). If placement fails, move to open ground and try again.'
+        actionHint: 'Press Place Machine below - watch it buy, then plant, then wait, then finally sell once the Carrot is ready. Leave at least one open tile to your right for SetPosition(1, 0) - the glowing ring shows where that\'ll be. If placement fails, move to open ground and try again.',
+        highlightTiles: function () { return [{ x: playerCursor.x + 1, z: playerCursor.z }]; }
       },
       {
         title: 'Try it',
@@ -4593,16 +4762,18 @@ var TUTORIALS = [
         newLines: ['FOR i <- 1 TO 2', '    CALL SetPosition(Xs[i], Zs[i])', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT i'],
         requires: [{ type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
         action: 'run',
-        actionHint: 'Press Run - two Carrots should appear at the two stored spots, not a computed line or block.'
+        actionHint: 'Press Run - two Carrots should appear at the two stored spots (glowing) - not a computed line or block.',
+        highlightTiles: function () { return [{ x: playerCursor.homeX, z: playerCursor.homeZ + 1 }, { x: playerCursor.homeX + 2, z: playerCursor.homeZ }]; }
       },
       {
         title: 'A machine with a list',
-        text: 'Place the same code as a machine. Every tick it re-reads the same two arrays and visits the same chosen spots, forever - a genuinely custom farm shape, not a fixed strip or grid. Move off your own tile first if it\'s still holding a Carrot from the last step:',
+        text: 'Place the same code as a machine. Every tick it re-reads the same two arrays and visits the same chosen spots, forever - a genuinely custom farm shape, not a fixed strip or grid. Click the glowing tile to move there first - it\'s clear of the two Carrots from the last step, with open field in the direction this machine\'s own spots are measured:',
         target: 'Xs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0\nFOR i <- 1 TO 2\n    CALL SetPosition(Xs[i], Zs[i])\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT i',
         newLines: [],
         requires: [{ type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
         action: 'machine',
-        actionHint: 'Press Place Machine below - not Run this time. This machine\'s spots are 2 tiles to the right and 1 tile up from wherever you place it, so leave that much open field in both directions. If it fails, move to open ground (or wait for more coins) and try again.'
+        actionHint: 'Move to the glowing tile, then press Place Machine below - not Run this time. This machine\'s spots are 2 tiles to the right and 1 tile up from wherever you place it, so it needs that much open field. If it fails, move to open ground (or wait for more coins) and try again.',
+        highlightTiles: function () { return [{ x: playerCursor.homeX - 3, z: playerCursor.homeZ - 2 }]; }
       },
       {
         title: 'Try it',
@@ -4666,6 +4837,18 @@ function tutorialRequiresMet(program, requires) {
 function currentTutorialStep() {
   if (!activeTutorial) return null;
   return TUTORIALS[activeTutorial.tutIdx].steps[activeTutorial.stepIdx];
+}
+// Re-evaluates the current step's highlightTiles() (if it has one) and
+// redraws the glowing ring(s) to match. Called on every step change
+// (renderTutorialStep) AND every time the player cursor moves
+// (onCursorMoved) - some steps highlight a tile relative to wherever the
+// student is CURRENTLY standing (e.g. "here's where a machine placed right
+// here would act"), not a fixed spot, so those need to track live movement,
+// not just redraw once when the step first appears.
+function refreshTutorialHighlight() {
+  var step = currentTutorialStep();
+  if (step && typeof step.highlightTiles === 'function') setTutorialHighlights(step.highlightTiles());
+  else clearTutorialHighlights();
 }
 
 // ============================================================
@@ -4851,6 +5034,69 @@ document.getElementById('tutorial-code-modal-close').addEventListener('click', c
   head.addEventListener('pointercancel', endDrag);
 })();
 
+// ── Pop-out Code Box ─────────────────────────────────────────────────
+// Unlike the tutorial reference code's pop-out above (a read-only 1:1 COPY,
+// re-synced on every change), this one relocates the REAL .code-editor node
+// - the live #code-backdrop/#code-input pair - into the floating window and
+// back again, never a clone. Every existing bit of wiring (typing, scroll
+// sync, error-line highlighting, and the Run/Place Machine buttons, which
+// only ever read codeInput.value) already works on that exact element
+// regardless of which parent currently contains it, so none of it needs to
+// know or care that the box moved. codeEditorHomeParent/NextSibling
+// remembers exactly where it came from so closing puts it back in the same
+// spot, not just "somewhere in #code-panel".
+var codeModal = document.getElementById('code-modal');
+var codeModalBody = document.getElementById('code-modal-body');
+var codeEditorHomeParent = codeEditorEl.parentNode;
+var codeEditorHomeNextSibling = codeEditorEl.nextSibling;
+function openCodeModal() {
+  codeModalBody.appendChild(codeEditorEl);
+  codeModal.classList.add('open');
+  codeInput.focus();
+}
+function closeCodeModal() {
+  if (codeEditorHomeNextSibling && codeEditorHomeNextSibling.parentNode === codeEditorHomeParent) {
+    codeEditorHomeParent.insertBefore(codeEditorEl, codeEditorHomeNextSibling);
+  } else {
+    codeEditorHomeParent.appendChild(codeEditorEl);
+  }
+  codeModal.classList.remove('open');
+}
+document.getElementById('code-expand').addEventListener('click', function () {
+  if (codeModal.classList.contains('open')) closeCodeModal(); else openCodeModal();
+});
+document.getElementById('code-modal-close').addEventListener('click', closeCodeModal);
+(function setupCodeModalDrag() {
+  var modal = codeModal;
+  var head = document.getElementById('code-modal-head');
+  var dragState = null;
+  head.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('#code-modal-close')) return;
+    var rect = modal.getBoundingClientRect();
+    dragState = { id: e.pointerId, startX: e.clientX, startY: e.clientY, left: rect.left, top: rect.top };
+    modal.style.left = rect.left + 'px';
+    modal.style.top = rect.top + 'px';
+    modal.style.transform = 'none';
+    head.setPointerCapture && head.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  head.addEventListener('pointermove', function (e) {
+    if (!dragState || dragState.id !== e.pointerId) return;
+    var nextLeft = dragState.left + (e.clientX - dragState.startX);
+    var nextTop = dragState.top + (e.clientY - dragState.startY);
+    nextLeft = Math.max(-modal.offsetWidth + 60, Math.min(window.innerWidth - 60, nextLeft));
+    nextTop = Math.max(0, Math.min(window.innerHeight - 40, nextTop));
+    modal.style.left = nextLeft + 'px';
+    modal.style.top = nextTop + 'px';
+  });
+  function endDrag(e) {
+    if (!dragState || dragState.id !== e.pointerId) return;
+    dragState = null;
+  }
+  head.addEventListener('pointerup', endDrag);
+  head.addEventListener('pointercancel', endDrag);
+})();
+
 document.getElementById('tutorial-picker-open').addEventListener('click', openTutorialModal);
 document.getElementById('tutorial-modal-close').addEventListener('click', closeTutorialModal);
 document.getElementById('tutorial-modal-overlay').addEventListener('click', function (e) {
@@ -4881,6 +5127,7 @@ function exitTutorial() {
   document.body.classList.remove('tutorial-active');
   document.getElementById('tutorial-bar-panel').classList.remove('active');
   closeTutorialCodeModal(); // no current step left for it to be a copy of
+  clearTutorialHighlights(); // no current step left for a highlight ring to belong to either
   renderTutorialPicker();
 }
 function setTutorialCollapsed(collapsed) {
@@ -4959,6 +5206,7 @@ function renderTutorialStep() {
   document.getElementById('tutorial-bar-code').innerHTML = tutorialCodeHtml(step);
   document.getElementById('tutorial-bar-action-hint').textContent = step.actionHint || '';
   document.getElementById('tutorial-bar-back').disabled = activeTutorial.stepIdx === 0;
+  refreshTutorialHighlight();
   renderTutorialChecklist();
 }
 
@@ -5219,6 +5467,7 @@ function animate() {
   if (anyGrowthChanged) { /* nothing extra needed - tile info refreshes itself when relevant */ }
 
   updateFloatingTexts(perfNow);
+  updateTutorialHighlightPulse(elapsed);
   renderer.render(scene, camera);
 }
 animate();
