@@ -1022,20 +1022,25 @@ function nextFarmTypeInSequence(id) {
 }
 var farmTypesDiscovered = ['crops'];
 
-// The milestone: every item on the current farm type is unlocked, AND lifetime earnings are
-// at least SELL_FARM_EARN_MULTIPLE times what unlocking that final item cost. A fixed anchor
-// (the final tier's own unlock threshold is already enormous on the x3-per-tier curve), so it
-// still needs real progression through the tiers, can't be cheesed by grinding cheap early
-// crops, can't be dodged by never spending (it's lifetime earned, not money on hand), and
-// can't flicker - totalEarned only ever moves up and the threshold is constant per farm type.
+// The milestone: every item on the current farm type is unlocked, AND coins earned ON THIS
+// FARM (farmEarned, reset to 0 every time you Sell the Farm) are at least
+// SELL_FARM_EARN_MULTIPLE times what unlocking that final item cost. A fixed anchor (the
+// final tier's own unlock threshold is already enormous on the x3-per-tier curve), so it
+// still needs real progression through the tiers and can't be cheesed by grinding cheap
+// early items - and, crucially, it uses farm-scoped earnings, not lifetime, so arriving on a
+// new farm type with an inherited fortune does NOT instantly re-satisfy it. It can't flicker
+// (farmEarned only moves up between resets) and can't be dodged by never spending.
 //
-// James (screenshot: ~2.4 quintillion coins, ~2.76 quintillion earned, all 33 crops
-// unlocked, still shown "0% revealed"): the previous gate multiplied a player's single BEST
-// sale by 100,000. The comment that picked 100,000 assumed a top-tier sale was "tens of
-// trillions" - it is actually ~4e16 (tier 32's sell price on the x3-per-tier curve), so the
-// real target landed near 4e21, roughly 1,500x out of reach for a player who had already
-// finished the entire crop tree. Anchoring to the final item's unlock cost keeps the "needs
-// real progression" intent without a target that scales itself out of reach.
+// James, twice:
+//  1. (~2.76 quintillion lifetime earned, all 33 crops unlocked, still "0% revealed") the
+//     original gate was bestSale * 100,000. The comment that picked 100,000 assumed a
+//     top-tier sale was "tens of trillions"; it's actually ~4e16 (tier 32 on the x3 curve),
+//     so the real target landed near 4e21 - ~1,500x out of reach for a finished crop tree.
+//  2. (game-breaking) switching to the lifetime-earned anchor then meant a rich player
+//     arriving on Solar/Aquarium already cleared that farm's (smaller) threshold from
+//     inherited earnings alone, so Sell the Farm was immediately available again and again -
+//     click through every farm type in seconds. farmEarned fixes exactly this: it starts at
+//     0 on each new farm and you have to actually build the place up before selling it.
 var SELL_FARM_EARN_MULTIPLE = 10;
 var bestSaleValue = 0; // still tracked (saved, shown in a few places) but no longer gates the unlock
 function sellFarmUnlocked() {
@@ -1043,7 +1048,7 @@ function sellFarmUnlocked() {
   var lastName = names[names.length - 1];
   var lastItem = lastName && activeItems()[lastName];
   if (!lastItem || !isUnlocked(lastName)) return false;
-  return totalEarned >= lastItem.unlockEarned * SELL_FARM_EARN_MULTIPLE;
+  return farmEarned >= lastItem.unlockEarned * SELL_FARM_EARN_MULTIPLE;
 }
 // The value a plant/battery/fish would sell for RIGHT NOW. Crops are flat once ready (grown
 // is grown, unchanged from before this feature). A battery's value is time-dependent even
@@ -1131,6 +1136,9 @@ function requestHUDUpdate() { hudDirty = true; }
 function requestTileInfoUpdate() { tileInfoDirty = true; }
 var money = 40;
 var totalEarned = 0; // lifetime coins earned from selling - never goes down, gates vegetable unlocks
+var farmEarned = 0;  // coins earned on the CURRENT farm type since arriving on it - reset to 0 by
+                     // sellTheFarm(). Gates Sell the Farm, so each farm has to be genuinely
+                     // developed before it can be sold, not just parked on with an inherited fortune.
 var inventory = {}; // { Carrot: 2, ... } seed packets owned but not yet planted
 var soldCount = {};  // { Carrot: 5, ... } lifetime sales per vegetable (tracked, not used for unlocking)
 var unlockedState = {};   // { Carrot: true, ... } cached from the last refreshUnlocks() call, so
@@ -1806,6 +1814,7 @@ function sellAt(cursor, viaCode) {
   var price = Math.round(baseValue * (viaCode ? CODE_SELL_BONUS : 1));
   money += price;
   totalEarned += price;
+  farmEarned += price;
   if (price > bestSaleValue) bestSaleValue = price;
   soldCount[tile.plant.type] = (soldCount[tile.plant.type] || 0) + 1;
   scene.remove(tile.plant.sprite);
@@ -3433,6 +3442,7 @@ function serializeGameState() {
     v: SAVE_VERSION,
     money: money,
     totalEarned: totalEarned,
+    farmEarned: farmEarned,
     bestSaleValue: bestSaleValue,
     currentFarmType: currentFarmType,
     farmTypesDiscovered: farmTypesDiscovered,
@@ -3524,6 +3534,9 @@ function restoreMachine(s) {
 function applyGameState(s) {
   money = s.money;
   totalEarned = s.totalEarned;
+  // Absent on saves from before farm-scoped earnings: assume everything earned so far was on
+  // the current farm (true for anyone who hasn't prestiged; harmlessly generous otherwise).
+  farmEarned = (typeof s.farmEarned === 'number') ? s.farmEarned : (s.totalEarned || 0);
   bestSaleValue = s.bestSaleValue || 0; // absent on old saves - fine, it just starts at 0 again
   currentFarmType = FARM_TYPES[s.currentFarmType] ? s.currentFarmType : 'crops';
   // Backward compat: a save from before this field existed already had currentFarmType set
@@ -3624,6 +3637,7 @@ function resetGame() {
   rebuildGarden(initialTileList());
   money = 40;
   totalEarned = 0;
+  farmEarned = 0;
   bestSaleValue = 0; // a full reset starts the whole game over, including which farm
   farmTypesDiscovered = ['crops'];
   rocketPartsOwned = 0;
@@ -3704,6 +3718,7 @@ function sellTheFarm(targetTypeId) {
   if (farmTypesDiscovered.indexOf(targetTypeId) === -1) farmTypesDiscovered.push(targetTypeId);
   clearWorldObjects();
   rebuildGarden(keepTiles.length ? keepTiles : initialTileList());
+  farmEarned = 0; // the new farm starts undeveloped - you have to build it up before you can sell it too
   inventory = {};
   soldCount = {};
   unlockedState = {};
@@ -3748,8 +3763,8 @@ function updateSellFarmUI() {
   panel.classList.toggle('unlocked', unlocked);
   if (!unlocked) { sellFarmArmedId = null; clearTimeout(sellFarmArmTimer); return; }
   document.getElementById('sell-farm-desc').textContent =
-    'You\'ve unlocked everything on this farm and earned ' + Math.floor(totalEarned).toLocaleString() +
-    'c lifetime - enough to move on. Liquidating sells everything here for its normal value and keeps every coin.';
+    'You\'ve unlocked everything on this farm and earned ' + Math.floor(farmEarned).toLocaleString() +
+    'c here - enough to move on. Liquidating sells everything here for its normal value and keeps every coin.';
   var optionsEl = document.getElementById('sell-farm-options');
   // Already-discovered types (revisitable, nothing new to spoil) plus exactly one step ahead
   // in the fixed sequence if that hasn't been reached yet - never anything further than that.
@@ -4115,7 +4130,10 @@ function updateMysteryRow() {
   var itemNames = activeItemNames();
   var lastName = itemNames[itemNames.length - 1];
   var lastUnlocked = lastName && isUnlocked(lastName);
-  if (!next || !lastUnlocked) { row.style.display = 'none'; return; }
+  // Also require some earnings ON THIS FARM - so straight after a prestige the row doesn't
+  // pop back up at 0% on a farm the player hasn't actually started yet (it reappears after
+  // their first sale here, which is the right "there's a path forward here too" moment).
+  if (!next || !lastUnlocked || farmEarned <= 0) { row.style.display = 'none'; return; }
   row.style.display = '';
   var unlocked = sellFarmUnlocked();
   row.classList.toggle('revealed', unlocked);
@@ -4126,13 +4144,10 @@ function updateMysteryRow() {
     nameEl.textContent = '???';
     btnEl.disabled = true;
     btnEl.textContent = 'Buy';
-    // The row only shows at all once lastName is unlocked, so totalEarned is already at
-    // least lastItem.unlockEarned here - the bar therefore starts at 1/SELL_FARM_EARN_MULTIPLE
-    // of the way, never 0%, and each further top-tier sale visibly moves it.
     var lastItem = activeItems()[lastName];
     var target = lastItem.unlockEarned * SELL_FARM_EARN_MULTIPLE;
-    var pct = Math.max(0, Math.min(100, Math.floor((totalEarned / target) * 100)));
-    msgEl.textContent = '🔒 ' + pct + '% revealed. Keep earning to unlock it.';
+    var pct = Math.max(1, Math.min(100, Math.floor((farmEarned / target) * 100)));
+    msgEl.textContent = '🔒 ' + pct + '% revealed. Keep earning on this farm to unlock it.';
     return;
   }
   nameEl.textContent = mysteryArmed ? 'Click again to confirm' : 'Sell the Farm!';
@@ -4368,6 +4383,7 @@ function clearMissionWorld() {
   rebuildTileBatches();
   money = Number(lessonMissionMode.money) || 0;
   totalEarned = 0;
+  farmEarned = 0;
   inventory = {};
   Object.keys(lessonMissionMode.inventory || {}).forEach(function (name) { inventory[name] = lessonMissionMode.inventory[name]; });
   soldCount = {};
@@ -4993,6 +5009,7 @@ function resetTutorialWorld(tut) {
   rebuildGarden(initialTileList());
   money = typeof tut.minMoney === 'number' ? tut.minMoney : 40;
   totalEarned = 0;
+  farmEarned = 0;
   buildShop();
   inventory = {};
   soldCount = {};
