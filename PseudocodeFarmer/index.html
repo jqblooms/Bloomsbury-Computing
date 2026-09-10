@@ -661,10 +661,10 @@
         <details class="cheat-sheet" id="cheat-sheet-details">
           <summary id="cheat-sheet-summary">📖 Pseudocode cheat sheet</summary>
           <table>
-            <tr><td><code id="cheat-ex-plant"></code></td><td class="desc">Plants a seed you own where your cursor is standing.</td></tr>
+            <tr><td><code id="cheat-ex-plant"></code></td><td class="desc" id="cheat-ex-plant-desc">Plants a seed you own where your cursor is standing.</td></tr>
             <tr><td><code id="cheat-ex-buy"></code></td><td class="desc" id="cheat-ex-buy-desc"></td></tr>
-            <tr><td><code>CALL Sell()</code></td><td class="desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
-            <tr><td><code id="cheat-ex-hascrop"></code></td><td class="desc">TRUE if the square has that crop growing. Leave the crop name out to check whether anything is growing there. Also callable as <code>HasPlant(...)</code> - same thing, worded more generally.</td></tr>
+            <tr><td><code>CALL Sell()</code></td><td class="desc" id="cheat-ex-sell-desc">Sells a fully grown plant where your cursor is standing, for 1.5&times; what the on-screen Sell button pays.</td></tr>
+            <tr><td><code id="cheat-ex-hascrop"></code></td><td class="desc" id="cheat-ex-hascrop-desc">TRUE if the square has that crop growing. Leave the crop name out to check whether anything is growing there. Also callable as <code>HasPlant(...)</code> - same thing, worded more generally.</td></tr>
             <tr><td><code>CropOnTile()</code></td><td class="desc" id="cheat-ex-cropontile-desc"></td></tr>
             <tr><td><code>Money()</code></td><td class="desc">How many coins you have right now. E.g. WHILE Money() &lt; 50 DO.</td></tr>
             <tr><td><code id="cheat-ex-seedcount"></code></td><td class="desc" id="cheat-ex-seedcount-desc"></td></tr>
@@ -982,24 +982,28 @@ var FARM_TYPES = {
     id: 'crops', title: 'Crop Farm', kind: 'crop', items: VEGGIES, itemNames: VEGGIE_NAMES,
     unitLabel: 'seed', unitLabelPlural: 'seeds', nameSuffix: ' Seeds', badgeColor: '#4c8bf5',
     shopTitle: '🛒 Seed Shop', unlockNoun: 'vegetables', growNoun: 'crops', growVerb: 'grow', kindNounSingular: 'vegetable',
+    plantVerb: 'Plant', placedNoun: 'crop', onTileVerb: 'growing',
     desc: 'Grow and sell vegetables, tier by tier.'
   },
   solar: {
     id: 'solar', title: 'Solar Farm', kind: 'battery', items: BATTERIES, itemNames: BATTERY_NAMES,
     unitLabel: 'battery', unitLabelPlural: 'batteries', nameSuffix: '', badgeColor: '#e0a53f',
     shopTitle: '🛒 Battery Shop', unlockNoun: 'batteries', growNoun: 'batteries', growVerb: 'charge', kindNounSingular: 'battery',
+    plantVerb: 'Place', placedNoun: 'battery', onTileVerb: 'charging',
     desc: 'Charge batteries instead of growing crops. The longer you leave one past full charge, the more it earns - up to a point. Forget about it too long and it starts losing value, so timing the sell matters here in a way it never did on the crop farm.'
   },
   aquarium: {
     id: 'aquarium', title: 'Aquarium', kind: 'fish', items: FISH, itemNames: FISH_NAMES,
     unitLabel: 'fish', unitLabelPlural: 'fish', nameSuffix: '', badgeColor: '#1e8fa8',
     shopTitle: '🛒 Fish Shop', unlockNoun: 'fish', growNoun: 'fish', growVerb: 'grow', kindNounSingular: 'fish',
+    plantVerb: 'Place', placedNoun: 'fish', onTileVerb: 'swimming',
     desc: 'Raise fish in watery tiles instead of growing crops. A fish is never "wasted value" for waiting - it just keeps growing worth, forever, though more and more slowly the longer you leave it. There is no downside to patience here, unlike the Solar Farm.'
   },
   rocket: {
     id: 'rocket', title: 'Rocket Yard', kind: 'fuel', items: FUEL, itemNames: FUEL_NAMES,
     unitLabel: 'canister', unitLabelPlural: 'canisters', nameSuffix: '', badgeColor: '#6b4fa0',
     shopTitle: '🛒 Fuel Depot', unlockNoun: 'fuel types', growNoun: 'fuel', growVerb: 'mine', kindNounSingular: 'type of fuel',
+    plantVerb: 'Place', placedNoun: 'canister', onTileVerb: 'mining',
     desc: 'Mine and sell fuel instead of growing crops - then spend the coins building a real rocket. Once every part is bought and the tank is full, launch it: the flight itself takes real hours, counting down whether you\'re watching or not.'
   }
 };
@@ -1802,12 +1806,13 @@ function plantAt(cursor, vegNameRaw) {
   addPlantedTile(tile);
   markGameDirty();
   requestHUDUpdate();
-  return { ok: true, message: 'Planted a ' + vegName + '! It will be ready to sell in ' + veg.growSeconds + ' seconds.' };
+  var placedVerbPast = ft.plantVerb === 'Plant' ? 'Planted' : 'Placed';
+  return { ok: true, message: placedVerbPast + ' a ' + vegName + '! It will be ready to sell in ' + veg.growSeconds + ' seconds.' };
 }
 
 function sellAt(cursor, viaCode) {
   var tile = tileAt(cursor.x, cursor.z);
-  if (!tile.plant) return { ok: false, message: 'There is nothing planted here.' };
+  if (!tile.plant) return { ok: false, message: 'There is nothing ' + (activeFarmType().plantVerb === 'Plant' ? 'planted' : 'placed') + ' here.' };
   if (!tile.plant.ready) return { ok: false, message: 'That is not ready to sell yet.' };
   var wasSellFarmUnlocked = sellFarmUnlocked();
   var baseValue = currentSellValue(tile.plant); // flat for crops; time-dependent for batteries
@@ -2495,7 +2500,7 @@ function compile(source) {
     if ((m = line.match(/^CALL\s+([A-Za-z_]\w*)\s*\(\s*(.*?)\s*\)$/i))) {
       var commandName = canonicalCommandName(m[1]);
       if (!commandName) {
-        throw new PseudocodeError('"' + m[1] + '" is not a command I know. Try ' + VALID_COMMANDS.join(', ') + '.', lineNo);
+        throw new PseudocodeError('"' + m[1] + '" is not a command I know. Try ' + validCommandsForDisplay().join(', ') + '.', lineNo);
       }
       instructions.push({
         type: 'CALL', name: commandName,
@@ -2552,7 +2557,23 @@ function canonicalCommandName(name) {
   for (var i = 0; i < VALID_COMMANDS.length; i++) {
     if (identifierKey(VALID_COMMANDS[i]) === key) return VALID_COMMANDS[i];
   }
+  // Each farm type names the "put an item on this tile" action to fit what it is - Plant a
+  // crop, but Place a battery / fish / canister. They all run the exact same plantAt(), so
+  // the fitting verb is just an alias for Plant that resolves against whichever farm is
+  // active. Plant itself still works everywhere, so nothing a student already learned breaks.
+  var ft = FARM_TYPES[currentFarmType];
+  if (ft && ft.plantVerb && identifierKey(ft.plantVerb) === key) return 'Plant';
   return null;
+}
+// The action verb a student should actually type on the current farm type (Plant / Place).
+function activePlantVerb() {
+  var ft = FARM_TYPES[currentFarmType];
+  return (ft && ft.plantVerb) || 'Plant';
+}
+// VALID_COMMANDS with Plant shown as the farm-appropriate verb, for error-message lists.
+function validCommandsForDisplay() {
+  var verb = activePlantVerb();
+  return VALID_COMMANDS.map(function (c) { return c === 'Plant' ? verb : c; });
 }
 
 function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
@@ -2712,7 +2733,7 @@ function runCommand(name, args, cursor, log, line) {
     case 'Sell': log(sellAt(cursor, true).message); break;
     default:
       if (VALID_COMMANDS.indexOf(name) === -1) {
-        throw new PseudocodeError('"' + name + '" is not a command I know. Try ' + VALID_COMMANDS.join(', ') + '.', line);
+        throw new PseudocodeError('"' + name + '" is not a command I know. Try ' + validCommandsForDisplay().join(', ') + '.', line);
       }
   }
   markGameDirty();
@@ -4042,11 +4063,17 @@ function buildShop() {
     var exItem2 = activeItemNames()[1] || exItem1;
     var exBuyLabel1 = exItem1 + ft.nameSuffix;
     var exBuyLabel2 = exItem2 + ft.nameSuffix;
-    document.getElementById('cheat-ex-plant').textContent = 'CALL Plant("' + exItem1 + '")';
+    document.getElementById('cheat-ex-plant').textContent = 'CALL ' + ft.plantVerb + '("' + exItem1 + '")';
+    document.getElementById('cheat-ex-plant-desc').textContent =
+      (ft.plantVerb === 'Plant' ? 'Plants a seed' : 'Places a ' + ft.unitLabel) + ' you own on the tile where your cursor is standing.';
     document.getElementById('cheat-ex-buy').textContent = 'CALL Buy("' + exBuyLabel1 + '")';
     document.getElementById('cheat-ex-buy-desc').textContent =
-      'Buys one ' + ft.unitLabel + ', 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, plant and sell the same ' + ft.kindNounSingular + ' forever.';
+      'Buys one ' + ft.unitLabel + ', 20% cheaper than the shop button. The price never goes up from buying, so a machine can buy, ' + ft.plantVerb.toLowerCase() + ' and sell the same ' + ft.kindNounSingular + ' forever.';
+    document.getElementById('cheat-ex-sell-desc').textContent =
+      'Sells a fully grown ' + ft.placedNoun + ' where your cursor is standing, for 1.5x what the on-screen Sell button pays.';
     document.getElementById('cheat-ex-hascrop').textContent = 'HasCrop("' + exItem1 + '")';
+    document.getElementById('cheat-ex-hascrop-desc').innerHTML =
+      'TRUE if the square has that ' + ft.placedNoun + ' ' + ft.onTileVerb + '. Leave the name out to check whether anything is there. Also callable as <code>HasPlant(...)</code> - same thing, worded more generally.';
     document.getElementById('cheat-ex-cropontile-desc').innerHTML =
       'What\'s on the square your cursor is on ("' + escapeHtmlLocal(exItem1) + '"), or "None" if it\'s empty. E.g. IF CropOnTile() = "' + escapeHtmlLocal(exItem1) + '" THEN ... Also callable as <code>PlantOnTile()</code>.';
     document.getElementById('cheat-ex-seedcount').textContent = 'SeedCount("' + exItem1 + '")';
