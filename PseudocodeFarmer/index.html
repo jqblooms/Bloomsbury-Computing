@@ -171,6 +171,30 @@
   .shop-item.locked img { filter: grayscale(1) brightness(0.6); }
   .shop-item .locked-msg { grid-column: 1 / -1; font-size: .7rem; color: var(--muted); font-weight: 700; }
 
+  /* Mystery shop row - appears once the active farm type's last tier is unlocked, so a
+     player who just bought Mushroom (or any farm type's final item) sees there is still
+     something ahead instead of assuming the shop - and the game - is finished. Deliberately
+     doesn't say "Sell the Farm" anywhere while locked; see handleMysteryRowClick/
+     updateMysteryRow. Gold accent, matching #sell-farm-panel's own "rare unlock" colour. */
+  .shop-item.mystery { border-color: #e0b93f; background: #fffaf0; }
+  .shop-item.mystery img { display: none; }
+  .shop-item.mystery .mystery-icon {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    background: #e6d5b3; color: #8a6416; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1rem;
+  }
+  .shop-item.mystery .name { color: #8a6416; }
+  .shop-item.mystery .buy-btn { background: #e0b93f; box-shadow: 0 2px 0 #b8952a; }
+  .shop-item.mystery .buy-btn:disabled { background: #e8d9ad; box-shadow: none; }
+  .shop-item.mystery .locked-msg { color: #8a6416; }
+  /* A gentle pulse once it's genuinely revealed - draws the eye back to a row a player may
+     have stopped checking while it sat locked for a while. */
+  .shop-item.mystery.revealed { animation: mysteryRowPulse 1.8s ease-in-out infinite; }
+  @keyframes mysteryRowPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(224,185,63,.45); }
+    50% { box-shadow: 0 0 0 6px rgba(224,185,63,0); }
+  }
+
   #machine-tiers {
     margin-top: 6px; padding: 6px 8px; border: 2px solid #b8cff3; border-radius: 8px;
     background: #eaf2ff; color: #244774; font-weight: 800; font-size: .7rem; text-align: center;
@@ -3937,6 +3961,7 @@ var lastHudSignature = '';
 function updateHUD() {
   hudDirty = false;
   var ft = activeFarmType();
+  updateMysteryRow(); // not folded into the signature check below - the arm/confirm timer needs to repaint even when nothing else changed
   var signature = currentFarmType + '|' + money + '|' + totalEarned + '|' + sellFarmUnlocked() + '|' + activeItemNames().map(function (name) {
     return invCount(name) + ':' + (isUnlocked(name) ? 1 : 0);
   }).join(',');
@@ -4030,7 +4055,89 @@ function buildShop() {
     });
     shopListEl.appendChild(row);
   });
+  shopListEl.appendChild(buildMysteryRow());
   lastHudSignature = ''; // force the next updateHUD() to repaint these freshly-built rows
+}
+
+// ============================================================
+// MYSTERY SHOP ROW - see the CSS comment above .shop-item.mystery for why this exists.
+// A fixed "?" row appears below the active farm type's final item once that item unlocks,
+// well before sellFarmUnlocked() is actually true (see the FARM TYPES comment on how much
+// lower that unlock threshold is than a genuine milestone sale). It never names "Sell the
+// Farm" while locked - just a progress readout, same "Earn X more" spirit as a locked crop's
+// own message - so a player who just bought the last vegetable sees proof there's more
+// ahead, instead of assuming the shop (and the game) is finished. Once genuinely unlocked it
+// reveals what it is and, on click, performs the actual liquidation - reusing the same
+// two-click arm/confirm safety updateSellFarmUI() already uses for its own options, just
+// aimed at the single "next" farm type in the fixed sequence (the common case for a player
+// seeing this for the first time).
+var mysteryArmed = false;
+var mysteryArmTimer = null;
+function buildMysteryRow() {
+  var row = document.createElement('div');
+  row.className = 'shop-item mystery';
+  row.id = 'mystery-shop-row';
+  row.innerHTML =
+    '<div class="mystery-icon">?</div>' +
+    '<div><div class="name">???</div><div class="price"></div></div>' +
+    '<button type="button" class="buy-btn">Buy</button>' +
+    '<div class="locked-msg"></div>';
+  row.querySelector('.buy-btn').addEventListener('click', handleMysteryRowClick);
+  return row;
+}
+function disarmMysteryRow() {
+  clearTimeout(mysteryArmTimer);
+  mysteryArmTimer = null;
+  if (!mysteryArmed) return;
+  mysteryArmed = false;
+  updateMysteryRow();
+}
+function handleMysteryRowClick() {
+  if (!sellFarmUnlocked()) return; // button is disabled while locked - defence in depth only
+  var next = nextFarmTypeInSequence(currentFarmType);
+  if (!next) return;
+  if (!mysteryArmed) {
+    mysteryArmed = true;
+    updateMysteryRow();
+    clearTimeout(mysteryArmTimer);
+    mysteryArmTimer = setTimeout(disarmMysteryRow, 3000);
+    return;
+  }
+  clearTimeout(mysteryArmTimer);
+  mysteryArmed = false;
+  sellTheFarm(next);
+}
+function updateMysteryRow() {
+  var row = document.getElementById('mystery-shop-row');
+  if (!row) return;
+  var next = nextFarmTypeInSequence(currentFarmType);
+  var itemNames = activeItemNames();
+  var lastName = itemNames[itemNames.length - 1];
+  var lastUnlocked = lastName && isUnlocked(lastName);
+  if (!next || !lastUnlocked) { row.style.display = 'none'; return; }
+  row.style.display = '';
+  var unlocked = sellFarmUnlocked();
+  row.classList.toggle('revealed', unlocked);
+  var nameEl = row.querySelector('.name');
+  var btnEl = row.querySelector('.buy-btn');
+  var msgEl = row.querySelector('.locked-msg');
+  if (!unlocked) {
+    nameEl.textContent = '???';
+    btnEl.disabled = true;
+    btnEl.textContent = 'Buy';
+    if (bestSaleValue <= 0) {
+      msgEl.textContent = '🔒 Sell something first to start revealing this.';
+    } else {
+      var target = bestSaleValue * SELL_FARM_MULTIPLE;
+      var pct = Math.max(0, Math.min(100, Math.floor((totalEarned / target) * 100)));
+      msgEl.textContent = '🔒 ' + pct + '% revealed. Keep earning and selling your best crops.';
+    }
+    return;
+  }
+  nameEl.textContent = mysteryArmed ? 'Click again to confirm' : 'Sell the Farm!';
+  btnEl.disabled = false;
+  btnEl.textContent = mysteryArmed ? 'Confirm' : 'Buy';
+  msgEl.textContent = '🎉 Unlocked! This sells everything here for its normal value and moves you on to something new.';
 }
 buildShop();
 var missionParam = new URLSearchParams(window.location.search).get('lessonMission');
