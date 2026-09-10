@@ -835,10 +835,10 @@ var VEGGIE_NAMES = VEGGIE_TIERS.map(function (t) { return t.name; });
 // ============================================================
 // FARM TYPES - "Sell the Farm" prestige unlock (see sellFarmUnlocked() below)
 // ============================================================
-// Once a player's best single sale is big enough that their lifetime earnings could only
-// have come from a LOT of selling (100x that one sale), "Sell the Farm" appears: liquidate
-// everything on the current farm for its normal value, keep the cash, and start a new farm
-// type from scratch with that money as capital. Solar Farm reuses the exact same
+// Once a farm type is fully built up (every tier unlocked and enough earned ON THAT FARM -
+// see sellFarmUnlocked()), "Sell the Farm" appears: clear the current farm and start a new
+// farm type completely from scratch (40 coins, tier 1 only), with a genuinely different
+// mechanic as the reward rather than a carried-over fortune. Solar Farm reuses the exact same
 // plant/grow/sell pipeline as crops (activeItems()/activeItemNames() below select which
 // table is "live", same emoji-texture and shop code) - the genuinely different mechanic
 // comes from one well-contained tweak in currentSellValue()/sellAt(): a battery's value
@@ -3706,13 +3706,12 @@ function resetGame() {
 // ============================================================
 // SELL THE FARM - a prestige-style unlock (see sellFarmUnlocked() in the FARM TYPES section)
 // ============================================================
-// Liquidates everything currently on the farm (every ready plant at full value, every
-// machine at its usual half-cost refund, anything still growing at a small partial credit
-// rather than nothing) and keeps every coin - then wipes the board and starts a different
-// farm type fresh with that money as capital. Reuses sellAt()/sellMachine() for the payout
-// maths, so there is exactly one place in the whole game that decides what any single thing
-// is worth, and clearWorldObjects()/rebuildGarden() (the same primitives resetGame() and the
-// tutorial sandbox already use) to wipe the board.
+// Clears everything currently on the farm off the board (ready plants, machines, anything
+// still growing) - it still routes through sellAt()/sellMachine() so those stay the single
+// source of truth for what a thing is worth and so soldCount/etc stay consistent, but
+// sellTheFarm() then resets money to the fresh-game baseline, so the proceeds are not kept.
+// Uses clearWorldObjects()/rebuildGarden() (the same primitives resetGame() and the tutorial
+// sandbox use) to wipe the board.
 function liquidateFarm() {
   var startMoney = money;
   plantedTiles.slice().forEach(function (tile) {
@@ -3733,9 +3732,13 @@ function liquidateFarm() {
   return money - startMoney;
 }
 
-// The actual transition: liquidate, wipe, switch. Money and totalEarned (the milestone's
-// input) are untouched beyond what liquidation adds - carrying your fortune into the new
-// farm type is the whole point ("sell your farm, keep the cash").
+// The actual transition: liquidate the old farm, wipe the board, switch farm type, and start
+// the new one from scratch - money, totalEarned and bestSaleValue all reset to a fresh-game
+// baseline. James: carrying a fortune forward broke every farm after the first - with
+// millions in the bank a student could buy the top tier of Solar/Aquarium immediately and
+// skip all of its progression. Sell the Farm is now a genuine new beginning with a different
+// mechanic (battery timing, fish patience, the rocket build), not a head start. Expanded
+// tiles still carry over (they were bought with real coins on an escalating curve).
 function sellTheFarm(targetTypeId) {
   if (!sellFarmUnlocked() || !FARM_TYPES[targetTypeId] || targetTypeId === currentFarmType) return false;
   // Defence in depth alongside updateSellFarmUI() only ever rendering these same two kinds of
@@ -3743,7 +3746,8 @@ function sellTheFarm(targetTypeId) {
   // yet discovered and more than one step ahead in the sequence.
   var alreadyDiscovered = farmTypesDiscovered.indexOf(targetTypeId) !== -1;
   if (!alreadyDiscovered && targetTypeId !== nextFarmTypeInSequence(currentFarmType)) return false;
-  var liquidated = liquidateFarm(); // reads the OLD currentFarmType - must run before switching
+  var fromTitle = activeFarmType().title;
+  liquidateFarm(); // clears plants/machines off the board; its proceeds are wiped by the reset below
   // "Sell the Farm" liquidates what's GROWING on the land, not the land itself - any tiles
   // bought expanding the garden (real coins, on an escalating cost curve) carry over into the
   // new farm type rather than silently vanishing back to the starting 8x8 grid. Captured
@@ -3753,7 +3757,12 @@ function sellTheFarm(targetTypeId) {
   if (farmTypesDiscovered.indexOf(targetTypeId) === -1) farmTypesDiscovered.push(targetTypeId);
   clearWorldObjects();
   rebuildGarden(keepTiles.length ? keepTiles : initialTileList());
-  farmEarned = 0; // the new farm starts undeveloped - you have to build it up before you can sell it too
+  // Fresh start on the new farm type - same baseline as a brand-new game, so its tiers
+  // re-lock and have to be unlocked through real play again.
+  money = 40;
+  totalEarned = 0;
+  farmEarned = 0;
+  bestSaleValue = 0;
   inventory = {};
   soldCount = {};
   unlockedState = {};
@@ -3775,7 +3784,7 @@ function sellTheFarm(targetTypeId) {
   updateHUD();
   updateTileInfoPanel();
   updateRocketUI();
-  logConsole('Sold the farm for ' + liquidated.toLocaleString() + ' coins and moved to the ' + FARM_TYPES[targetTypeId].title + '!');
+  logConsole('Sold the ' + fromTitle + ' and made a fresh start on the ' + FARM_TYPES[targetTypeId].title + ' - back to 40 coins, tier 1 only. A whole new way to farm!');
   return true;
 }
 
@@ -3799,7 +3808,7 @@ function updateSellFarmUI() {
   if (!unlocked) { sellFarmArmedId = null; clearTimeout(sellFarmArmTimer); return; }
   document.getElementById('sell-farm-desc').textContent =
     'You\'ve unlocked everything on this farm and earned ' + Math.floor(farmEarned).toLocaleString() +
-    'c here - enough to move on. Liquidating sells everything here for its normal value and keeps every coin.';
+    'c here - enough to move on. Selling clears this farm and starts the next one from scratch: back to 40 coins and tier 1, with a whole new way to farm. Your expanded land carries over.';
   var optionsEl = document.getElementById('sell-farm-options');
   // Already-discovered types (revisitable, nothing new to spoil) plus exactly one step ahead
   // in the fixed sequence if that hasn't been reached yet - never anything further than that.
@@ -4194,7 +4203,7 @@ function updateMysteryRow() {
   nameEl.textContent = mysteryArmed ? 'Click again to confirm' : 'Sell the Farm!';
   btnEl.disabled = false;
   btnEl.textContent = mysteryArmed ? 'Confirm' : 'Buy';
-  msgEl.textContent = '🎉 Unlocked! This sells everything here for its normal value and moves you on to something new.';
+  msgEl.textContent = '🎉 Unlocked! This clears the farm and starts a brand-new kind of farm from scratch - 40 coins, tier 1, a whole new mechanic.';
 }
 buildShop();
 var missionParam = new URLSearchParams(window.location.search).get('lessonMission');
