@@ -729,7 +729,12 @@
     var wr = run.wrong[cardId] || 0;
     var total = drill.cards.length;
     var everCount = Object.keys(everMastered).length;
-    var summary = "Quiz · streak " + s + "/" + MASTERY_STREAK +
+    // "Category: <label> ·" is a stable, parseable prefix - the admin tab
+    // (which only ever sees this summary string plus the questionId/label,
+    // never the drill's own content object) reads it back out to group
+    // attempts/mastery by topic. Keep the exact "Category: X ·" shape if
+    // this ever changes.
+    var summary = "Category: " + categoryLabel(card.category) + " · Quiz · streak " + s + "/" + MASTERY_STREAK +
       " · " + att + " attempt" + (att === 1 ? "" : "s") + " (" + (att - wr) + " right, " + wr + " wrong)" +
       " · mastered this run: " + (masteredRun ? "yes" : "no") +
       " · ever mastered: " + (ever ? "YES" : "no") +
@@ -742,6 +747,8 @@
         drillLabel: drill.title,
         cardId: cardId,
         cardPrompt: card.prompt,
+        category: card.category || null,
+        categoryLabel: categoryLabel(card.category),
         streak: s,
         masteredThisRun: masteredRun,
         everMastered: ever,
