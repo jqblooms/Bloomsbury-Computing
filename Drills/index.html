@@ -20,6 +20,21 @@
   header.drill-head h1 { font-size: 1.15rem; margin: 0; }
   header.drill-head .sub { color: var(--muted); font-size: .82rem; }
 
+  .setup-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 14px 0; }
+  .setup-lead { margin: 0 0 14px; color: var(--muted); font-size: .88rem; }
+  .setup-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .setup-row + .setup-row { margin-top: 14px; }
+  .setup-field { display: flex; flex-direction: column; gap: 6px; font-size: .82rem; font-weight: 700; color: var(--ink); flex: 1; min-width: 200px; }
+  .setup-field select {
+    padding: 10px 12px; border: 2px solid var(--line); border-radius: 9px; font: inherit; font-weight: 600;
+    background: #fff; color: var(--ink);
+  }
+  .setup-actions { align-items: center; }
+
+  .scopebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin: 10px 0; }
+  .scopebar #scope-label { font-weight: 700; color: var(--muted); font-size: .85rem; }
+  .btn.small { padding: 6px 12px; font-size: .78rem; }
+
   .modebar { display: flex; gap: 8px; margin: 12px 0; }
   .modebar button {
     flex: 1; padding: 10px 12px; border: 2px solid var(--line); border-radius: 10px;
@@ -88,20 +103,43 @@
     <span class="sub" id="drill-sub"></span>
   </header>
 
-  <div class="modebar">
-    <button type="button" id="mode-learn">Learn mode</button>
-    <button type="button" id="mode-quiz">Quiz mode</button>
+  <div class="setup-card" id="setup-card">
+    <p class="setup-lead">Choose a topic and how many cards to work on, then start. Master a few at a time, or take on the whole set at once.</p>
+    <div class="setup-row">
+      <label class="setup-field">Topic
+        <select id="setup-category"></select>
+      </label>
+      <label class="setup-field">How many cards this run?
+        <select id="setup-count"></select>
+      </label>
+    </div>
+    <div class="setup-row setup-actions">
+      <button type="button" class="btn" id="setup-start-learn">Start in Learn mode</button>
+      <button type="button" class="btn ghost" id="setup-start-quiz">Start in Quiz mode</button>
+    </div>
   </div>
 
-  <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. The answer is never shown unless you ask - press <strong>I need help</strong> to flash it for a second.</div>
-  <div class="notice quiz" id="notice-quiz" style="display:none">Quiz mode &middot; answer a card correctly <strong>three times in a row</strong> to master it for this run. A wrong answer sends its streak back to zero. Master every card for <strong>true mastery</strong>.</div>
+  <div id="run-area" style="display:none">
+    <div class="scopebar">
+      <span id="scope-label"></span>
+      <button type="button" class="btn ghost small" id="change-selection-btn">Change topic / cards</button>
+    </div>
 
-  <div class="progress" id="progress" style="display:none">
-    <span id="progress-label">0 / 0 mastered</span>
-    <span class="bar"><span id="progress-fill"></span></span>
+    <div class="modebar">
+      <button type="button" id="mode-learn">Learn mode</button>
+      <button type="button" id="mode-quiz">Quiz mode</button>
+    </div>
+
+    <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. The answer is never shown unless you ask - press <strong>I need help</strong> to flash it for a second.</div>
+    <div class="notice quiz" id="notice-quiz" style="display:none">Quiz mode &middot; answer a card correctly <strong>three times in a row</strong> to master it for this run. A wrong answer sends its streak back to zero. Master every card in this run for completion.</div>
+
+    <div class="progress" id="progress" style="display:none">
+      <span id="progress-label">0 / 0 mastered</span>
+      <span class="bar"><span id="progress-fill"></span></span>
+    </div>
+
+    <div id="stage"></div>
   </div>
-
-  <div id="stage"></div>
 </div>
 
 <script>
@@ -126,7 +164,7 @@
       subtitle: "Cambridge IGCSE Computer Science 0478",
       cards: [
         {
-          id: "why-binary",
+          id: "why-binary", category: "bases",
           prompt: "Why do computers use binary?",
           answers: ["Electronic components in a computer have two states, often represented as 0 and 1"],
           distractors: [
@@ -139,50 +177,50 @@
           ]
         },
         {
-          id: "base-denary",
+          id: "base-denary", category: "bases",
           prompt: "What base is the denary number system?",
           answers: ["Base 10"],
           distractors: ["Base 2", "Base 16", "Base 8", "Base 12", "Base 1", "Base 100"]
         },
         {
-          id: "base-binary",
+          id: "base-binary", category: "bases",
           prompt: "What base is the binary number system?",
           answers: ["Base 2"],
           distractors: ["Base 10", "Base 16", "Base 8", "Base 1", "Base 4", "Base 0"]
         },
         {
-          id: "base-hex",
+          id: "base-hex", category: "bases",
           prompt: "What base is the hexadecimal number system?",
           answers: ["Base 16"],
           distractors: ["Base 10", "Base 2", "Base 8", "Base 6", "Base 32", "Base 15"]
         },
         {
-          id: "symbols-binary",
+          id: "symbols-binary", category: "bases",
           prompt: "What symbols does the binary number system use?",
           answers: ["0 and 1"],
           distractors: ["0, 1 and 2", "1 and 2", "0 to 9", "0 to 7", "−1 and 1", "0, 1, 2 and 3"]
         },
         {
-          id: "symbols-denary",
+          id: "symbols-denary", category: "bases",
           prompt: "What symbols does the denary number system use?",
           answers: ["0 to 9"],
           distractors: ["0 to 10", "1 to 9", "1 to 10", "0 and 1", "0 to 9 and A to F", "0 to 15"]
         },
         {
-          id: "symbols-hex",
+          id: "symbols-hex", category: "bases",
           prompt: "What symbols does the hexadecimal number system use?",
           answers: ["0 to 9 and A to F"],
           distractors: ["0 to 9 and A to Z", "0 to 15", "A to F only", "0 to 9 and A to E", "0 to 9 and A to G", "1 to 9 and A to F"]
         },
         {
-          id: "uses-hex",
+          id: "uses-hex", category: "hex",
           type: "multi", show: 6,
           prompt: "Which of these are real uses of hexadecimal in computer science? (Pick every one shown that is correct.)",
           answers: ["HTML colour codes", "MAC addresses", "IPv6 addresses", "Memory addresses", "Assembly / machine code values"],
           distractors: ["IPv4 addresses", "Denary temperature readings", "Wi‑Fi passwords", "Spreadsheet cell references", "Screen sizes in centimetres", "File names"]
         },
         {
-          id: "why-hex-not-binary",
+          id: "why-hex-not-binary", category: "hex",
           prompt: "Why represent data in hexadecimal instead of binary?",
           answers: ["Hexadecimal represents the same binary data using fewer digits, so it is easier to read and less error‑prone"],
           distractors: [
@@ -195,285 +233,285 @@
           ]
         },
         {
-          id: "add-0-0",
+          id: "add-0-0", category: "addition",
           prompt: "In binary addition, what is 0 + 0?",
           answers: ["0"],
           distractors: ["1", "10", "0 carry 1", "1 carry 1", "2", "0 carry 0"]
         },
         {
-          id: "add-0-1",
+          id: "add-0-1", category: "addition",
           prompt: "In binary addition, what is 0 + 1?",
           answers: ["1"],
           distractors: ["0", "10", "1 carry 1", "0 carry 1", "2", "11"]
         },
         {
-          id: "add-1-0",
+          id: "add-1-0", category: "addition",
           prompt: "In binary addition, what is 1 + 0?",
           answers: ["1"],
           distractors: ["0", "10", "1 carry 1", "0 carry 1", "2", "11"]
         },
         {
-          id: "add-1-1",
+          id: "add-1-1", category: "addition",
           prompt: "In binary addition, what is 1 + 1?",
           answers: ["0 carry 1"],
           distractors: ["1 carry 1", "1", "0", "1 carry 0", "0 carry 0", "11"],
           note: "The column result is 0 and a 1 is carried into the next column (1 + 1 = binary 10)."
         },
         {
-          id: "add-1-1-1",
+          id: "add-1-1-1", category: "addition",
           prompt: "In binary addition, what is 1 + 1 + 1?",
           answers: ["1 carry 1"],
           distractors: ["0 carry 1", "1", "1 carry 0", "0 carry 0", "11", "3"],
           note: "The column result is 1 and a 1 is carried (1 + 1 + 1 = binary 11)."
         },
         {
-          id: "overflow",
+          id: "overflow", category: "addition",
           prompt: "What is it called when there is not enough space to store the result of a binary addition?",
           answers: ["Overflow"],
           distractors: ["Underflow", "Carry error", "Rounding error", "Truncation", "Buffer overrun", "Wraparound"],
           note: "Overflow happens when the result needs more bits than the register can hold; the extra carry bit is lost."
         },
         {
-          id: "shift-left-1",
+          id: "shift-left-1", category: "shifts",
           prompt: "What is the effect of a logical LEFT shift of 1 place on an unsigned binary number?",
           answers: ["Multiplies the number by 2"],
           distractors: ["Divides the number by 2", "Multiplies the number by 4", "Multiplies the number by 10", "Adds 1 to the number", "Divides the number by 10", "Leaves the number unchanged"],
           note: "Each place a number shifts left multiplies it by 2 (2¹)."
         },
         {
-          id: "shift-left-2",
+          id: "shift-left-2", category: "shifts",
           prompt: "What is the effect of a logical LEFT shift of 2 places?",
           answers: ["Multiplies the number by 4"],
           distractors: ["Multiplies the number by 2", "Multiplies the number by 8", "Divides the number by 4", "Multiplies the number by 16", "Adds 2 to the number", "Multiplies the number by 3"],
           note: "2 places left = × 2² = × 4."
         },
         {
-          id: "shift-left-3",
+          id: "shift-left-3", category: "shifts",
           prompt: "What is the effect of a logical LEFT shift of 3 places?",
           answers: ["Multiplies the number by 8"],
           distractors: ["Multiplies the number by 4", "Multiplies the number by 16", "Multiplies the number by 6", "Divides the number by 8", "Multiplies the number by 3", "Adds 3 to the number"],
           note: "3 places left = × 2³ = × 8."
         },
         {
-          id: "shift-right-1",
+          id: "shift-right-1", category: "shifts",
           prompt: "What is the effect of a logical RIGHT shift of 1 place on an unsigned binary number?",
           answers: ["Divides the number by 2 (rounding down)"],
           distractors: ["Multiplies the number by 2", "Divides the number by 4", "Divides the number by 10", "Subtracts 1 from the number", "Divides the number by 1", "Leaves the number unchanged"],
           note: "Each place right = ÷ 2. Any bit shifted off the end is lost, so odd numbers round down."
         },
         {
-          id: "shift-right-2",
+          id: "shift-right-2", category: "shifts",
           prompt: "What is the effect of a logical RIGHT shift of 2 places?",
           answers: ["Divides the number by 4 (rounding down)"],
           distractors: ["Divides the number by 2", "Divides the number by 8", "Multiplies the number by 4", "Divides the number by 16", "Subtracts 2 from the number", "Divides the number by 3"],
           note: "2 places right = ÷ 2² = ÷ 4."
         },
         {
-          id: "shift-loss",
+          id: "shift-loss", category: "shifts",
           prompt: "What happens to bits that are shifted out of the end of a register during a logical shift?",
           answers: ["They are lost, so data (precision) can be lost"],
           distractors: ["Nothing is ever lost", "Only leading zeros are removed", "They move to the other end (they rotate round)", "They are stored in the carry flag forever", "The whole number becomes zero", "Only the sign of the number changes"]
         },
         {
-          id: "twos-purpose",
+          id: "twos-purpose", category: "twos",
           prompt: "Two's complement lets a fixed number of bits represent what?",
           answers: ["Both positive and negative whole numbers"],
           distractors: ["Numbers larger than 255", "Fractions and decimal points", "Hexadecimal digits directly", "Text characters", "Only positive numbers, but faster", "Numbers written in base 10"],
           note: "In two's complement the most significant bit has a negative place value, which is how negative numbers are stored."
         },
         {
-          id: "twos-msb-value",
+          id: "twos-msb-value", category: "twos",
           prompt: "In an 8‑bit two's complement number, what is the place value of the most significant (leftmost) bit?",
           answers: ["−128"],
           distractors: ["128", "−1", "−256", "255", "−127", "64"]
         },
         {
-          id: "twos-negate",
+          id: "twos-negate", category: "twos",
           prompt: "How do you find the two's complement (the negative) of a positive binary number?",
           answers: ["Invert every bit, then add 1"],
           distractors: ["Invert every bit", "Add 1, then invert every bit", "Invert every bit, then subtract 1", "Swap the first and last bits", "Reverse the order of all the bits", "Add 1 to the number"]
         },
         {
-          id: "twos-is-negative",
+          id: "twos-is-negative", category: "twos",
           prompt: "In two's complement, how can you tell a number is negative?",
           answers: ["The most significant bit is 1"],
           distractors: ["The least significant bit is 1", "The most significant bit is 0", "It contains more 1s than 0s", "The last two bits are both 1", "There is a carry out of the top bit", "It is written with a minus sign in front"]
         },
         {
-          id: "twos-range-8bit",
+          id: "twos-range-8bit", category: "twos",
           prompt: "What is the denary range of an 8‑bit two's complement number?",
           answers: ["−128 to 127"],
           distractors: ["0 to 255", "−127 to 128", "−128 to 128", "−255 to 255", "0 to 127", "−256 to 255"]
         },
         {
-          id: "term-bit",
+          id: "term-bit", category: "units",
           prompt: "What is the name for the smallest unit of data, which holds a single 0 or 1?",
           answers: ["Bit"],
           distractors: ["Byte", "Nibble", "Character", "Digit", "Kibibyte", "Word"]
         },
         {
-          id: "term-nibble",
+          id: "term-nibble", category: "units",
           prompt: "What is the name for a group of 4 bits?",
           answers: ["Nibble"],
           distractors: ["Byte", "Word", "Bit", "Kibibyte", "Octet", "Half‑word"]
         },
         {
-          id: "term-byte",
+          id: "term-byte", category: "units",
           prompt: "What is the name for a group of 8 bits?",
           answers: ["Byte"],
           distractors: ["Nibble", "Word", "Kibibyte", "Bit", "Kilobit", "Double nibble"]
         },
         {
-          id: "bits-in-nibble",
+          id: "bits-in-nibble", category: "units",
           prompt: "How many bits are there in a nibble?",
           answers: ["4"],
           distractors: ["8", "2", "1", "16", "0.5", "3"]
         },
         {
-          id: "bits-in-byte",
+          id: "bits-in-byte", category: "units",
           prompt: "How many bits are there in a byte?",
           answers: ["8"],
           distractors: ["4", "16", "1", "1024", "2", "10"]
         },
         {
-          id: "nibbles-in-byte",
+          id: "nibbles-in-byte", category: "units",
           prompt: "How many nibbles are there in a byte?",
           answers: ["2"],
           distractors: ["4", "8", "1", "16", "0.5", "3"]
         },
         {
-          id: "kibibyte-bytes",
+          id: "kibibyte-bytes", category: "units",
           prompt: "In the Cambridge IGCSE 0478 course, how many bytes are there in 1 kibibyte (KiB)?",
           answers: ["1024"],
           distractors: ["1000", "1", "8", "512", "2048", "100"],
           note: "0478 uses the IEC binary prefixes: 1 KiB = 1024 bytes. (The SI unit 1 kilobyte, kB, is 1000 bytes.)"
         },
         {
-          id: "kibi-vs-kilo",
+          id: "kibi-vs-kilo", category: "units",
           prompt: "Which unit does Cambridge IGCSE 0478 use for a multiple of 1024 bytes?",
           answers: ["Kibibyte (KiB)"],
           distractors: ["Kilobyte (kB)", "Kilobit (Kb)", "Megabyte (MB)", "K‑byte", "Binary byte", "Kilo (K)"],
           note: "KiB, MiB, GiB, TiB, PiB, EiB are each 1024 times the one below. Kilobyte (kB) means exactly 1000 bytes."
         },
         {
-          id: "mebibyte-kibibytes",
+          id: "mebibyte-kibibytes", category: "units",
           prompt: "How many kibibytes (KiB) are there in 1 mebibyte (MiB)?",
           answers: ["1024"],
           distractors: ["1000", "1", "8", "1048576", "512", "100"]
         },
         {
-          id: "unit-order-largest",
+          id: "unit-order-largest", category: "units",
           prompt: "Which of these units is the largest?",
           answers: ["Kibibyte (KiB)"],
           distractors: ["Bit", "Nibble", "Byte", "Two nibbles", "Half a byte"]
         },
         {
-          id: "unit-order-smallest",
+          id: "unit-order-smallest", category: "units",
           prompt: "Which of these units is the smallest?",
           answers: ["Bit"],
           distractors: ["Nibble", "Byte", "Kibibyte (KiB)", "Two bits", "Half a nibble"]
         },
         {
-          id: "msb-meaning",
+          id: "msb-meaning", category: "lsbmsb",
           prompt: "What does MSB stand for?",
           answers: ["Most Significant Bit"],
           distractors: ["Most Significant Byte", "Maximum Signed Byte", "Main System Bit", "Middle Significant Bit", "Master Sign Bit", "Most Simple Bit"]
         },
         {
-          id: "lsb-meaning",
+          id: "lsb-meaning", category: "lsbmsb",
           prompt: "What does LSB stand for?",
           answers: ["Least Significant Bit"],
           distractors: ["Least Significant Byte", "Lowest Stored Bit", "Last Sent Bit", "Low Speed Bus", "Left Side Bit", "Least Simple Bit"]
         },
         {
-          id: "msb-which-bit",
+          id: "msb-which-bit", category: "lsbmsb",
           prompt: "In the 8‑bit binary number 10000000, which bit is the most significant bit?",
           answers: ["The leftmost bit (the 1)"],
           distractors: ["The rightmost bit", "The middle bit", "The last 0 on the right", "There is no most significant bit", "Every bit is equally significant", "The second bit from the left"]
         },
         {
-          id: "msb-place-value-unsigned",
+          id: "msb-place-value-unsigned", category: "lsbmsb",
           prompt: "In an 8‑bit UNSIGNED binary number, what is the place value of the most significant bit?",
           answers: ["128"],
           distractors: ["256", "64", "1", "255", "127", "−128"]
         },
         {
-          id: "lsb-place-value",
+          id: "lsb-place-value", category: "lsbmsb",
           prompt: "What is the place value of the least significant bit in any binary number?",
           answers: ["1"],
           distractors: ["0", "2", "8", "−1", "10", "128"]
         },
         {
-          id: "pv-bit0",
+          id: "pv-bit0", category: "placevalues",
           prompt: "What is the place value of bit position 0 (the rightmost bit) in binary?",
           answers: ["1"],
           distractors: ["0", "2", "10", "8", "−1"],
           note: "2⁰ = 1."
         },
         {
-          id: "pv-bit1",
+          id: "pv-bit1", category: "placevalues",
           prompt: "What is the place value of bit position 1 in binary?",
           answers: ["2"],
           distractors: ["1", "4", "3", "10", "8"],
           note: "2¹ = 2."
         },
         {
-          id: "pv-bit2",
+          id: "pv-bit2", category: "placevalues",
           prompt: "What is the place value of bit position 2 in binary?",
           answers: ["4"],
           distractors: ["2", "8", "6", "3", "16"],
           note: "2² = 4."
         },
         {
-          id: "pv-bit3",
+          id: "pv-bit3", category: "placevalues",
           prompt: "What is the place value of bit position 3 in binary?",
           answers: ["8"],
           distractors: ["4", "16", "6", "10", "12"],
           note: "2³ = 8."
         },
         {
-          id: "pv-bit4",
+          id: "pv-bit4", category: "placevalues",
           prompt: "What is the place value of bit position 4 in binary?",
           answers: ["16"],
           distractors: ["8", "32", "12", "20", "4"],
           note: "2⁴ = 16."
         },
         {
-          id: "pv-bit5",
+          id: "pv-bit5", category: "placevalues",
           prompt: "What is the place value of bit position 5 in binary?",
           answers: ["32"],
           distractors: ["16", "64", "24", "30", "8"],
           note: "2⁵ = 32."
         },
         {
-          id: "pv-bit6",
+          id: "pv-bit6", category: "placevalues",
           prompt: "What is the place value of bit position 6 in binary?",
           answers: ["64"],
           distractors: ["32", "128", "48", "60", "16"],
           note: "2⁶ = 64."
         },
         {
-          id: "pv-bit7",
+          id: "pv-bit7", category: "placevalues",
           prompt: "What is the place value of bit position 7 (the leftmost bit of a byte) in binary?",
           answers: ["128"],
           distractors: ["64", "256", "100", "127", "32"],
           note: "2⁷ = 128."
         },
         {
-          id: "two-pow-8",
+          id: "two-pow-8", category: "placevalues",
           prompt: "What is 2⁸?",
           answers: ["256"],
           distractors: ["128", "512", "255", "64", "16"]
         },
         {
-          id: "values-in-8-bits",
+          id: "values-in-8-bits", category: "placevalues",
           prompt: "How many different values can be represented using 8 bits?",
           answers: ["256"],
           distractors: ["255", "128", "512", "8", "64"],
           note: "8 bits give 2⁸ = 256 different patterns (0 to 255 for an unsigned byte)."
         },
         {
-          id: "byte-place-values",
+          id: "byte-place-values", category: "placevalues",
           prompt: "What are the 8 place values of a byte, written from left to right?",
           answers: ["128, 64, 32, 16, 8, 4, 2, 1"],
           distractors: [
@@ -485,7 +523,7 @@
           ]
         },
         {
-          id: "bin-to-den",
+          id: "bin-to-den", category: "converting",
           prompt: "How do you convert a binary number to denary?",
           answers: ["Add together the place values in every column that contains a 1"],
           distractors: [
@@ -498,7 +536,7 @@
           ]
         },
         {
-          id: "den-to-bin",
+          id: "den-to-bin", category: "converting",
           prompt: "How can you convert a denary number to binary?",
           answers: ["Subtract the largest place value that fits, write a 1, and repeat with what is left; write 0 where a place value does not fit"],
           distractors: [
@@ -511,7 +549,7 @@
           ]
         },
         {
-          id: "bin-to-hex",
+          id: "bin-to-hex", category: "hex",
           prompt: "How do you convert a binary number to hexadecimal?",
           answers: ["Split it into groups of 4 bits (from the right) and convert each group to one hex digit"],
           distractors: [
@@ -525,19 +563,19 @@
           note: "One nibble (4 bits) is exactly one hexadecimal digit."
         },
         {
-          id: "hex-digit-bits",
+          id: "hex-digit-bits", category: "hex",
           prompt: "How many bits does one hexadecimal digit represent?",
           answers: ["4"],
           distractors: ["1", "2", "8", "16", "3"]
         },
         {
-          id: "hex-F",
+          id: "hex-F", category: "hex",
           prompt: "The hexadecimal digit F represents which denary value?",
           answers: ["15"],
           distractors: ["16", "14", "10", "6", "255", "12"]
         },
         {
-          id: "hex-A",
+          id: "hex-A", category: "hex",
           prompt: "The hexadecimal digit A represents which denary value?",
           answers: ["10"],
           distractors: ["1", "11", "15", "14", "16", "0"]
@@ -545,6 +583,22 @@
       ]
     }
   };
+
+  // Display order and labels for each drill's `category` values. A category
+  // id not listed here still works (falls back to the id itself) - this is
+  // just presentation, so a new drill can add categories freely.
+  var CATEGORY_LABELS = {
+    bases: "Number Bases & Symbols",
+    hex: "Hexadecimal",
+    addition: "Binary Addition",
+    shifts: "Binary Shifts",
+    twos: "Two's Complement",
+    units: "Units & Terminology",
+    lsbmsb: "LSB & MSB",
+    placevalues: "Place Values",
+    converting: "Converting Between Systems"
+  };
+  var CATEGORY_ORDER = ["bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting"];
 
   // ============================================================
   // ENGINE
@@ -562,6 +616,14 @@
   var els = {
     title: document.getElementById("drill-title"),
     sub: document.getElementById("drill-sub"),
+    setupCard: document.getElementById("setup-card"),
+    setupCategory: document.getElementById("setup-category"),
+    setupCount: document.getElementById("setup-count"),
+    setupStartLearn: document.getElementById("setup-start-learn"),
+    setupStartQuiz: document.getElementById("setup-start-quiz"),
+    runArea: document.getElementById("run-area"),
+    scopeLabel: document.getElementById("scope-label"),
+    changeSelectionBtn: document.getElementById("change-selection-btn"),
     modeLearn: document.getElementById("mode-learn"),
     modeQuiz: document.getElementById("mode-quiz"),
     noticeLearn: document.getElementById("notice-learn"),
@@ -586,12 +648,37 @@
   }
   var everMastered = loadEver(); // { cardId: true }
 
-  // run state - reset whenever the mode is switched
+  // ---- topic (category) + how-many-cards picker ----
+  // A student can drill one topic at a time and a chosen number of cards,
+  // so mastery can be built a few cards at a time rather than always facing
+  // the whole set. `category: "all"` means every card in the drill.
+  function categoryCardIds(category) {
+    if (!category || category === "all") return drill.cards.map(function (c) { return c.id; });
+    return drill.cards.filter(function (c) { return c.category === category; }).map(function (c) { return c.id; });
+  }
+  function categoryLabel(category) {
+    if (!category || category === "all") return "All topics";
+    return CATEGORY_LABELS[category] || category;
+  }
+  // Round-number choices up to the pool size, plus the exact pool size
+  // itself (as "All") if it isn't already one of them.
+  function countChoicesFor(poolSize) {
+    var steps = [5, 10, 15, 20, 25, 30, 40, 50].filter(function (n) { return n < poolSize; });
+    steps.push(poolSize);
+    return steps;
+  }
+
+  // run state - reset whenever the mode, topic or card count changes
   var run = null;
-  function freshRun(mode) {
+  function freshRun(mode, category, count) {
+    var pool = categoryCardIds(category);
+    var size = (count && count < pool.length) ? count : pool.length;
+    var queue = (count && count < pool.length) ? sample(pool, size) : shuffle(pool);
     return {
       mode: mode,
-      queue: shuffle(drill.cards.map(function (c) { return c.id; })),
+      category: category || "all",
+      count: size,
+      queue: queue,
       streak: {},            // cardId -> consecutive correct this run
       masteredThisRun: {},   // cardId -> true
       seenInLearn: {},       // cardId -> true (met at least once this run, in Learn mode)
@@ -605,7 +692,13 @@
   function loadRun() {
     try {
       var r = JSON.parse(localStorage.getItem(RUN_KEY) || "null");
-      if (r && r.mode && Array.isArray(r.queue)) return r;
+      if (r && r.mode && Array.isArray(r.queue)) {
+        // Saves from before the topic/card-count picker existed had no
+        // category/count - they were always the whole drill.
+        if (!r.category) r.category = "all";
+        if (!r.count) r.count = drill.cards.length;
+        return r;
+      }
     } catch (e) {}
     return null;
   }
@@ -683,20 +776,34 @@
   // ============================================================
   var current = null; // { cardId, set, checked, helpTimer }
 
-  function setMode(mode, opts) {
-    opts = opts || {};
-    var switching = run && run.mode !== mode;
-    if (switching || !run) {
-      run = freshRun(mode);
-      persistRun();
-    }
+  // Switching Learn<->Quiz keeps the current topic/card-count selection but
+  // always starts a fresh run (see freshRun) - the anti-cheat rule James
+  // asked for. Choosing a new topic or count from the setup panel (see
+  // startRun below) also always starts fresh, for the same reason.
+  function applyModeUI(mode) {
     els.modeLearn.classList.toggle("is-active", mode === "learn");
     els.modeQuiz.classList.toggle("is-active", mode === "quiz");
     els.noticeLearn.style.display = mode === "learn" ? "" : "none";
     els.noticeQuiz.style.display = mode === "quiz" ? "" : "none";
     els.progress.style.display = mode === "quiz" ? "flex" : "none";
+  }
+
+  function setMode(mode, opts) {
+    opts = opts || {};
+    var switching = run && run.mode !== mode;
+    if (switching || !run) {
+      run = freshRun(mode, run ? run.category : "all", run ? run.count : null);
+      persistRun();
+    }
+    applyModeUI(mode);
+    updateScopeLabel();
     if (switching && !opts.silent) toast("Run reset — switching modes clears this run. Your overall mastery is kept.");
     nextCard();
+  }
+
+  function updateScopeLabel() {
+    if (!run) return;
+    els.scopeLabel.textContent = categoryLabel(run.category) + " · " + run.count + " card" + (run.count === 1 ? "" : "s") + " this run";
   }
 
   function toast(msg) {
@@ -709,7 +816,7 @@
   }
 
   function updateProgress() {
-    var total = drill.cards.length;
+    var total = run.count;
     var mastered = Object.keys(run.masteredThisRun).length;
     els.progressLabel.textContent = mastered + " / " + total + " mastered this run";
     els.progressFill.style.width = (total ? Math.round(mastered / total * 100) : 0) + "%";
@@ -895,45 +1002,107 @@
   }
 
   function renderDone() {
-    var total = drill.cards.length;
+    // "True mastery" (the whole drill, all topics) is a different thing
+    // from just finishing the run's own chosen subset - a student who
+    // picked 10 cards from one topic has completed THIS RUN, not
+    // necessarily every card in the drill. Both get reported; only the
+    // whole-drill case is called "true mastery".
+    var drillTotal = drill.cards.length;
     var everCount = Object.keys(everMastered).length;
+    var wholeDrill = run.category === "all" && run.count >= drillTotal;
+    var trueMastery = everCount >= drillTotal;
     els.stage.innerHTML =
       '<div class="done">' +
       '<div class="big">🎉</div>' +
-      "<h2>True mastery!</h2>" +
-      "<p>You mastered every card in <strong>" + escapeHtml(drill.title) + "</strong> this run.</p>" +
-      "<p>Overall you have mastered " + everCount + " of " + total + " cards.</p>" +
+      (trueMastery ? "<h2>True mastery!</h2>" : "<h2>Run complete!</h2>") +
+      "<p>You mastered every card in <strong>" + escapeHtml(categoryLabel(run.category)) + "</strong> (" + run.count + " card" + (run.count === 1 ? "" : "s") + ") this run.</p>" +
+      "<p>Overall you have mastered " + everCount + " of " + drillTotal + " cards in " + escapeHtml(drill.title) + (trueMastery ? " — every card, TRUE MASTERY." : ".") + "</p>" +
       '<div class="actions" style="justify-content:center">' +
       '<button type="button" class="btn" id="again-btn">Run it again</button>' +
+      '<button type="button" class="btn ghost" id="done-change-btn">Choose a different topic</button>' +
       "</div></div>";
     els.stage.querySelector("#again-btn").addEventListener("click", function () {
-      run = freshRun("quiz");
+      run = freshRun("quiz", run.category, run.count);
       persistRun();
+      updateScopeLabel();
       nextCard();
     });
+    els.stage.querySelector("#done-change-btn").addEventListener("click", openSetup);
     try {
       window.parent.postMessage({
         type: "BC_DRILL_PROGRESS", drillId: drillId, drillLabel: drill.title,
         cardId: "__run_complete__", cardPrompt: "Run complete",
-        streak: MASTERY_STREAK, masteredThisRun: true, everMastered: everCount === total,
-        attempts: 0, wrong: 0, everCount: everCount, total: total, trueMastery: everCount === total,
-        summary: "Completed a full quiz run — every card mastered this run. Overall " + everCount + "/" + total + " cards ever mastered" + (everCount === total ? " · TRUE MASTERY ACHIEVED" : "") + "."
+        streak: MASTERY_STREAK, masteredThisRun: true, everMastered: trueMastery,
+        attempts: 0, wrong: 0, everCount: everCount, total: drillTotal, trueMastery: trueMastery,
+        summary: "Completed a run (" + categoryLabel(run.category) + ", " + run.count + " cards) — every card in this run mastered. Overall " + everCount + "/" + drillTotal + " cards ever mastered" + (trueMastery ? " · TRUE MASTERY ACHIEVED" : "") + "."
       }, "*");
     } catch (e) {}
   }
 
   // ============================================================
+  // SETUP PANEL - pick a topic and how many cards, then start
+  // ============================================================
+  function populateCategorySelect(selected) {
+    var options = ['<option value="all">All topics (' + drill.cards.length + ")</option>"];
+    CATEGORY_ORDER.forEach(function (cat) {
+      var n = categoryCardIds(cat).length;
+      if (!n) return;
+      options.push('<option value="' + cat + '">' + escapeHtml(CATEGORY_LABELS[cat] || cat) + " (" + n + ")</option>");
+    });
+    els.setupCategory.innerHTML = options.join("");
+    els.setupCategory.value = selected || "all";
+    if (els.setupCategory.selectedIndex === -1) els.setupCategory.value = "all";
+  }
+  function populateCountSelect(category, selectedCount) {
+    var poolSize = categoryCardIds(category).length;
+    var choices = countChoicesFor(poolSize);
+    els.setupCount.innerHTML = choices.map(function (n) {
+      var label = n >= poolSize ? "All (" + poolSize + ")" : n + " cards";
+      return '<option value="' + n + '">' + label + "</option>";
+    }).join("");
+    var wanted = selectedCount && choices.indexOf(selectedCount) !== -1 ? selectedCount : poolSize;
+    els.setupCount.value = wanted;
+  }
+  function openSetup() {
+    els.runArea.style.display = "none";
+    els.setupCard.style.display = "";
+    populateCategorySelect(run ? run.category : "all");
+    populateCountSelect(run ? run.category : "all", run ? run.count : null);
+  }
+  function startRun(mode) {
+    var category = els.setupCategory.value;
+    var count = Number(els.setupCount.value) || null;
+    run = freshRun(mode, category, count);
+    persistRun();
+    els.setupCard.style.display = "none";
+    els.runArea.style.display = "";
+    applyModeUI(mode);
+    updateScopeLabel();
+    nextCard();
+  }
+
+  // ============================================================
   // BOOT
   // ============================================================
+  els.setupCategory.addEventListener("change", function () {
+    populateCountSelect(els.setupCategory.value, null);
+  });
+  els.setupStartLearn.addEventListener("click", function () { startRun("learn"); });
+  els.setupStartQuiz.addEventListener("click", function () { startRun("quiz"); });
+  els.changeSelectionBtn.addEventListener("click", openSetup);
   els.modeLearn.addEventListener("click", function () { setMode("learn"); });
   els.modeQuiz.addEventListener("click", function () { setMode("quiz"); });
 
   var restored = loadRun();
   if (restored) {
     run = restored;
-    setMode(run.mode, { silent: true });
+    els.setupCard.style.display = "none";
+    els.runArea.style.display = "";
+    applyModeUI(run.mode);
+    updateScopeLabel();
+    nextCard();
   } else {
-    setMode("learn", { silent: true });
+    openSetup();
   }
 })();
 </script>
