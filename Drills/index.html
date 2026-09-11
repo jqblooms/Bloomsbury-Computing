@@ -160,7 +160,7 @@
   // ============================================================
   var DRILLS = {
     "y10-1-1-numbers": {
-      title: "Year 10 — 1.1 Number Systems",
+      title: "Year 10, 1.1 Number Systems",
       subtitle: "Cambridge IGCSE Computer Science 0478",
       cards: [
         {
@@ -222,14 +222,14 @@
         {
           id: "why-hex-not-binary", category: "hex",
           prompt: "Why represent data in hexadecimal instead of binary?",
-          answers: ["Hexadecimal represents the same binary data using fewer digits, so it is easier to read and less error‑prone"],
+          answers: ["It represents the same binary data using far fewer digits, so it is easier to read"],
           distractors: [
-            "Hexadecimal can store larger numbers than binary can",
-            "A processor can only understand hexadecimal, not binary",
-            "Hexadecimal removes the need for the letters A to F",
-            "Hexadecimal values never need converting back to binary",
-            "A computer processes hexadecimal faster than binary",
-            "Hexadecimal takes up less memory than the binary it represents"
+            "It is able to store much larger numbers than binary ever could",
+            "A processor is only able to understand hexadecimal, never binary",
+            "It removes the need for a computer to use the letters A to F",
+            "Hexadecimal values never have to be converted back into binary",
+            "A computer is able to process hexadecimal faster than binary",
+            "It takes up less memory than the binary data that it represents"
           ]
         },
         {
@@ -295,28 +295,56 @@
         {
           id: "shift-right-1", category: "shifts",
           prompt: "What is the effect of a logical RIGHT shift of 1 place on an unsigned binary number?",
-          answers: ["Divides the number by 2 (rounding down)"],
-          distractors: ["Multiplies the number by 2", "Divides the number by 4", "Divides the number by 10", "Subtracts 1 from the number", "Divides the number by 1", "Leaves the number unchanged"],
+          answers: ["Divides the number by 2, rounding down if needed"],
+          distractors: [
+            "Multiplies the number by 2, rounding down if needed",
+            "Divides the number by 4, rounding down if needed",
+            "Divides the number by 10, rounding down if needed",
+            "Subtracts 1 from the number, every single time",
+            "Leaves the number completely unchanged either way",
+            "Divides the number by 1, rounding down if needed"
+          ],
           note: "Each place right = ÷ 2. Any bit shifted off the end is lost, so odd numbers round down."
         },
         {
           id: "shift-right-2", category: "shifts",
           prompt: "What is the effect of a logical RIGHT shift of 2 places?",
-          answers: ["Divides the number by 4 (rounding down)"],
-          distractors: ["Divides the number by 2", "Divides the number by 8", "Multiplies the number by 4", "Divides the number by 16", "Subtracts 2 from the number", "Divides the number by 3"],
+          answers: ["Divides the number by 4, rounding down if needed"],
+          distractors: [
+            "Divides the number by 2, rounding down if needed",
+            "Divides the number by 8, rounding down if needed",
+            "Multiplies the number by 4, rounding down if needed",
+            "Divides the number by 16, rounding down if needed",
+            "Subtracts 2 from the number, every single time",
+            "Divides the number by 3, rounding down if needed"
+          ],
           note: "2 places right = ÷ 2² = ÷ 4."
         },
         {
           id: "shift-loss", category: "shifts",
           prompt: "What happens to bits that are shifted out of the end of a register during a logical shift?",
-          answers: ["They are lost, so data (precision) can be lost"],
-          distractors: ["Nothing is ever lost", "Only leading zeros are removed", "They move to the other end (they rotate round)", "They are stored in the carry flag forever", "The whole number becomes zero", "Only the sign of the number changes"]
+          answers: ["They are simply lost, so data or precision can be lost"],
+          distractors: [
+            "Nothing is ever lost during a logical shift at all",
+            "Only the leading zeros are ever removed by a shift",
+            "They move around to the other end of the register",
+            "They get stored inside the carry flag permanently",
+            "The whole number simply becomes zero afterwards",
+            "Only the sign of the number changes, nothing else"
+          ]
         },
         {
           id: "twos-purpose", category: "twos",
           prompt: "Two's complement lets a fixed number of bits represent what?",
-          answers: ["Both positive and negative whole numbers"],
-          distractors: ["Numbers larger than 255", "Fractions and decimal points", "Hexadecimal digits directly", "Text characters", "Only positive numbers, but faster", "Numbers written in base 10"],
+          answers: ["Both positive and negative whole numbers together"],
+          distractors: [
+            "Only numbers larger than 255, nothing smaller",
+            "Fractions and numbers with decimal points",
+            "Hexadecimal digits, without converting them",
+            "Text characters, in place of numbers",
+            "Only positive numbers, just processed faster",
+            "Numbers written only in base 10 form"
+          ],
           note: "In two's complement the most significant bit has a negative place value, which is how negative numbers are stored."
         },
         {
@@ -390,7 +418,7 @@
           id: "kibi-vs-kilo", category: "units",
           prompt: "Which unit does Cambridge IGCSE 0478 use for a multiple of 1024 bytes?",
           answers: ["Kibibyte (KiB)"],
-          distractors: ["Kilobyte (kB)", "Kilobit (Kb)", "Megabyte (MB)", "K‑byte", "Binary byte", "Kilo (K)"],
+          distractors: ["Kilobyte (kB)", "Kilobit (Kb)", "Megabyte (MB)", "Binary byte (Bb)", "Kibbyte (KB)", "Kilo unit (K)"],
           note: "KiB, MiB, GiB, TiB, PiB, EiB are each 1024 times the one below. Kilobyte (kB) means exactly 1000 bytes."
         },
         {
@@ -403,7 +431,7 @@
           id: "unit-order-largest", category: "units",
           prompt: "Which of these units is the largest?",
           answers: ["Kibibyte (KiB)"],
-          distractors: ["Bit", "Nibble", "Byte", "Two nibbles", "Half a byte"]
+          distractors: ["Single bit", "One nibble", "Single byte", "Two nibbles", "Half a byte"]
         },
         {
           id: "unit-order-smallest", category: "units",
@@ -527,38 +555,38 @@
           prompt: "How do you convert a binary number to denary?",
           answers: ["Add together the place values in every column that contains a 1"],
           distractors: [
-            "Add together all of the place values",
-            "Count how many 1s there are",
+            "Add together every single place value in the whole number",
+            "Simply count up how many 1s appear in the number",
             "Multiply the place values in every column that contains a 1",
-            "Add 1 for each digit in the number",
+            "Add 1 onto the total for every digit in the number",
             "Add together the place values in every column that contains a 0",
-            "Multiply the number of 1s by 2"
+            "Multiply the total number of 1s in the number by 2"
           ]
         },
         {
           id: "den-to-bin", category: "converting",
           prompt: "How can you convert a denary number to binary?",
-          answers: ["Subtract the largest place value that fits, write a 1, and repeat with what is left; write 0 where a place value does not fit"],
+          answers: ["Subtract the largest place value that fits, write a 1, and repeat with what is left"],
           distractors: [
-            "Divide the number by 10 repeatedly",
-            "Multiply the number by 2 repeatedly",
-            "Add the denary digits together",
-            "Write the denary digits in reverse order",
-            "Count up in twos until you reach the number",
-            "Convert it to hexadecimal first, then read it off"
+            "Divide the whole number by 10, over and over again, until it reaches zero",
+            "Multiply the whole number by 2, over and over again, a fixed number of times",
+            "Add every one of the denary digits together, then convert that total",
+            "Write the denary digits out in reverse order, then read them as binary",
+            "Count upward in twos, starting from zero, until you reach the number",
+            "Convert the number to hexadecimal first, then simply read that off"
           ]
         },
         {
           id: "bin-to-hex", category: "hex",
           prompt: "How do you convert a binary number to hexadecimal?",
-          answers: ["Split it into groups of 4 bits (from the right) and convert each group to one hex digit"],
+          answers: ["Split it into groups of 4 bits and convert each group to one hex digit"],
           distractors: [
-            "Split it into groups of 3 bits and convert each group",
-            "Split it into groups of 8 bits and convert each group",
-            "Convert it to denary first, then divide by 16",
-            "Convert each single bit to a hex digit",
-            "Group it into pairs of bits",
-            "Reverse the bits, then read them off in fours"
+            "Split it into groups of 3 bits and convert each group to a digit",
+            "Split it into groups of 8 bits and convert each group to a digit",
+            "Convert the whole number to denary first, then divide it by 16",
+            "Convert every single individual bit into its own hex digit",
+            "Group the bits into pairs, then convert each pair separately",
+            "Reverse the order of the bits, then read them off in fours"
           ],
           note: "One nibble (4 bits) is exactly one hexadecimal digit."
         },
@@ -581,6 +609,549 @@
           distractors: ["1", "11", "15", "14", "16", "0"]
         }
       ]
+    },
+    "y10-1-2-representation": {
+      title: "Year 10, 1.2 Text, Sound & Image Representation",
+      subtitle: "Cambridge IGCSE Computer Science 0478",
+      cards: [
+        {
+                id: "why-text-binary",
+                category: "text",
+                prompt: "Why must text be converted into binary?",
+                answers: [
+                        "Electronic components can only reliably represent two states, 0 and 1"
+                ],
+                distractors: [
+                        "Text characters are physically too large to store in memory chips",
+                        "Denary digits cannot be sent electronically between components",
+                        "Binary was the very first number system to ever be invented",
+                        "A keyboard can only send two-digit codes to a computer",
+                        "Converting to binary lets text be read directly by a human",
+                        "Letters need converting because screens can only show numbers"
+                ]
+        },
+        {
+                id: "character-set-def",
+                category: "text",
+                prompt: "What is a character set?",
+                answers: [
+                        "A list of characters, each given a unique binary code"
+                ],
+                distractors: [
+                        "A collection of fonts that a computer is able to display",
+                        "The complete set of keys found on a keyboard layout",
+                        "A list of every symbol a printer is able to print",
+                        "A group of characters reserved only for passwords",
+                        "The fixed order that letters appear in the alphabet",
+                        "A set of characters that only programmers are allowed to use"
+                ]
+        },
+        {
+                id: "standard-charset-why",
+                category: "text",
+                prompt: "Why is it important that computers use a standard character set?",
+                answers: [
+                        "So every device reads the same binary code as the same character"
+                ],
+                distractors: [
+                        "So text files always take up less space than image files",
+                        "So keyboards can be manufactured more cheaply worldwide",
+                        "So a document can only ever be opened by one person",
+                        "So text always displays using exactly the same font",
+                        "So printers are able to print in more colours",
+                        "So passwords become much harder for anyone to guess"
+                ]
+        },
+        {
+                id: "ascii-def",
+                category: "text",
+                prompt: "What is ASCII?",
+                answers: [
+                        "A character set giving each character a unique code, mainly for English"
+                ],
+                distractors: [
+                        "A programming language used to build interactive websites",
+                        "A type of image file format used for storing photographs",
+                        "A method used to compress text files before sending them",
+                        "A network protocol used specifically for sending emails",
+                        "A unit used to measure how large a file is in bytes",
+                        "A type of check used to detect errors during data transfer"
+                ]
+        },
+        {
+                id: "ascii-bits",
+                category: "text",
+                prompt: "How many bits does standard ASCII use to represent one character?",
+                answers: [
+                        "7 bits"
+                ],
+                distractors: [
+                        "8 bits",
+                        "4 bits",
+                        "16 bits",
+                        "1 byte",
+                        "2 bits",
+                        "32 bits"
+                ],
+                note: "Standard ASCII uses 7 bits (128 characters); extended ASCII uses 8 bits (256 characters)."
+        },
+        {
+                id: "ascii-max-chars",
+                category: "text",
+                prompt: "How many different characters can standard 7-bit ASCII represent?",
+                answers: [
+                        "128"
+                ],
+                distractors: [
+                        "256",
+                        "127",
+                        "64",
+                        "16",
+                        "512",
+                        "100"
+                ]
+        },
+        {
+                id: "unicode-def",
+                category: "text",
+                prompt: "What is Unicode?",
+                answers: [
+                        "A character set covering characters from every language, plus symbols and emojis"
+                ],
+                distractors: [
+                        "A character set used only for scientific and mathematical symbols",
+                        "A newer, faster version of the ASCII programming language",
+                        "A file compression standard designed only for text documents",
+                        "A character set covering European languages, but no others",
+                        "A method used to encrypt text so nobody else can read it",
+                        "A style of font commonly used for headings in web design"
+                ]
+        },
+        {
+                id: "ascii-vs-unicode",
+                category: "text",
+                prompt: "What is the main difference between ASCII and Unicode?",
+                answers: [
+                        "ASCII covers basic English only; Unicode covers almost every language and symbol"
+                ],
+                distractors: [
+                        "ASCII represents images, while Unicode represents text instead",
+                        "ASCII can be processed by computers, but Unicode cannot be",
+                        "Unicode can only store numbers, never any letters at all",
+                        "ASCII was invented several decades after Unicode was created",
+                        "Unicode is unable to represent the standard English alphabet",
+                        "ASCII stores every character as denary, never as binary"
+                ]
+        },
+        {
+                id: "why-unicode-more-chars",
+                category: "text",
+                prompt: "Why can Unicode represent far more characters than ASCII?",
+                answers: [
+                        "It uses more bits per character, giving far more possible codes"
+                ],
+                distractors: [
+                        "It stores every character as a tiny compressed image file",
+                        "It runs on a completely different type of computer memory",
+                        "Every character is compressed before it gets stored anywhere",
+                        "It reuses the same ASCII code for several different characters",
+                        "It stores each character in hexadecimal instead of in binary",
+                        "It ignores the normal rules that binary numbers follow"
+                ]
+        },
+        {
+                id: "why-unicode-more-bits",
+                category: "text",
+                prompt: "Why does Unicode generally need more bits per character than ASCII?",
+                answers: [
+                        "It needs a unique code for far more characters, languages and symbols"
+                ],
+                distractors: [
+                        "Extra bits are needed to record the character's on-screen colour",
+                        "Unicode characters are designed to display larger on a screen",
+                        "Every single Unicode character includes a built-in error check",
+                        "Unicode stores two identical copies of each character, as backup",
+                        "The extra bits simply record which font the character is shown in",
+                        "Unicode characters need the extra bits purely so they can be printed"
+                ]
+        },
+        {
+                id: "bits-to-chars-power",
+                category: "text",
+                prompt: "If a character set uses n bits per character, how many different characters can it represent?",
+                answers: [
+                        "2 to the power of n"
+                ],
+                distractors: [
+                        "n multiplied by 2",
+                        "n squared",
+                        "10 to the power of n",
+                        "n multiplied by 8",
+                        "2 multiplied by n",
+                        "n divided by 2"
+                ],
+                note: "Same idea as binary place values - n bits give 2^n possible patterns."
+        },
+        {
+                id: "unicode-can-represent",
+                category: "text",
+                type: "multi",
+                show: 6,
+                prompt: "Which of these can Unicode represent that standard ASCII cannot? (Pick every one shown that is correct.)",
+                answers: [
+                        "Chinese and Arabic characters",
+                        "Emojis",
+                        "Accented letters like é and ñ",
+                        "Extra currency and maths symbols"
+                ],
+                distractors: [
+                        "Capital English letters",
+                        "The digits 0 to 9",
+                        "Basic punctuation marks",
+                        "Lower-case English letters"
+                ]
+        },
+        {
+                id: "analogue-vs-digital",
+                category: "sound",
+                prompt: "What is the difference between an analogue signal and a digital signal?",
+                answers: [
+                        "Analogue varies continuously; digital only has fixed, discrete values"
+                ],
+                distractors: [
+                        "Analogue signals are always louder than digital signals are",
+                        "A digital signal can only ever be heard by a computer",
+                        "An analogue signal is only able to travel through a wire",
+                        "A digital signal never involves the use of numbers at all",
+                        "An analogue signal is never able to be recorded at all",
+                        "Digital signals are always higher quality, without exception"
+                ]
+        },
+        {
+                id: "sound-to-binary",
+                category: "sound",
+                prompt: "How is analogue sound converted into binary?",
+                answers: [
+                        "By sampling the wave's amplitude at intervals and storing each as binary"
+                ],
+                distractors: [
+                        "By recording the exact shape of the wave as a continuous line",
+                        "By converting the sound directly into a hexadecimal number",
+                        "By compressing the sound file before it is ever played back",
+                        "By measuring the frequency of the whole recording just once",
+                        "By saving a picture of the waveform instead of any numbers",
+                        "By counting how many speakers will eventually play the sound"
+                ]
+        },
+        {
+                id: "sampling-def",
+                category: "sound",
+                prompt: "What is sampling, in the context of digital audio?",
+                answers: [
+                        "Measuring a sound wave's amplitude at regular time intervals"
+                ],
+                distractors: [
+                        "Playing a short clip of a song before you decide to buy it",
+                        "Cutting a long recording down to make it shorter overall",
+                        "Copying a sound recording from one file into another file",
+                        "Removing unwanted background noise from a live recording",
+                        "Converting an existing sound file into a different format",
+                        "Recording the same sound using more than one microphone"
+                ]
+        },
+        {
+                id: "sample-rate-def-12",
+                category: "sound",
+                prompt: "What is sample rate?",
+                answers: [
+                        "The number of samples taken every second, measured in Hz"
+                ],
+                distractors: [
+                        "The number of bits used to store each individual sample",
+                        "The total length of a recording, measured in seconds",
+                        "How loud a recording sounds when it is played back",
+                        "The number of speakers a recording is played through",
+                        "The particular file format used to save a recording",
+                        "The number of times a recording has already been played"
+                ]
+        },
+        {
+                id: "sample-resolution-def-12",
+                category: "sound",
+                prompt: "What is sample resolution?",
+                answers: [
+                        "The number of bits used to store each individual sample"
+                ],
+                distractors: [
+                        "The number of samples that are taken every single second",
+                        "The number of distinct sounds that appear in a recording",
+                        "How clear a recording sounds to an ordinary human ear",
+                        "The overall length of the recording, measured in seconds",
+                        "The number of microphones that were used to record it",
+                        "The speed at which the recording is played back to you"
+                ]
+        },
+        {
+                id: "effect-rate-quality",
+                category: "sound",
+                prompt: "What is the effect of increasing the sample rate on how closely a recording matches the original sound?",
+                answers: [
+                        "More accurate, since fast wave changes are less likely to be missed"
+                ],
+                distractors: [
+                        "Less accurate, since fewer of the wave's changes can be captured",
+                        "No more accurate, since accuracy only ever depends on resolution",
+                        "Less accurate, since each individual sample gets rounded more",
+                        "No effect on accuracy, since rate only ever changes file size",
+                        "More accurate only if resolution is increased at the same time",
+                        "Less accurate, since more samples means more rounding mistakes"
+                ]
+        },
+        {
+                id: "effect-rate-filesize",
+                category: "sound",
+                prompt: "What is the effect of increasing the sample rate on file size?",
+                answers: [
+                        "Increases the file size, since more samples are stored per second"
+                ],
+                distractors: [
+                        "Decreases the file size, since each sample stores less detail",
+                        "No effect on file size, since rate only affects the sound quality",
+                        "Only changes the file size for recordings that use one channel",
+                        "Decreases the file size, since fewer bits are needed per sample",
+                        "Doubles the file size no matter how large the rate increase is",
+                        "Changes the file's format, but never actually changes its size"
+                ]
+        },
+        {
+                id: "effect-resolution-quality",
+                category: "sound",
+                prompt: "What is the effect of increasing sample resolution on the accuracy of a recording?",
+                answers: [
+                        "More accurate, since each sample can store more amplitude values"
+                ],
+                distractors: [
+                        "Less accurate, since each sample can now store fewer values",
+                        "No effect on accuracy, since resolution only changes file size",
+                        "Only affects how long the recording is, not its accuracy",
+                        "Makes the recording play back faster than it was recorded",
+                        "Accuracy only ever depends on the sample rate that was used",
+                        "Reduces background noise, but changes nothing else about it"
+                ]
+        },
+        {
+                id: "effect-resolution-filesize",
+                category: "sound",
+                prompt: "What is the effect of increasing sample resolution on file size?",
+                answers: [
+                        "Increases the file size, since more bits are stored for every sample"
+                ],
+                distractors: [
+                        "Decreases the file size, since each sample needs fewer numbers",
+                        "No effect on file size, since resolution only affects quality",
+                        "File size only ever depends on the sample rate, not resolution",
+                        "Only affects file size if the sample rate is also increased",
+                        "Changes the file's format, but never actually changes its size",
+                        "Halves the file size, no matter how much the resolution rises"
+                ]
+        },
+        {
+                id: "sound-quality-and-filesize-multi",
+                category: "sound",
+                type: "multi",
+                show: 6,
+                prompt: "Which of these increase both a recording's accuracy AND its file size? (Pick every one shown that is correct.)",
+                answers: [
+                        "Increasing the sample rate",
+                        "Increasing the sample resolution"
+                ],
+                distractors: [
+                        "Increasing the volume level",
+                        "Shortening the recording length",
+                        "Renaming the sound file",
+                        "Playing it through better speakers"
+                ]
+        },
+        {
+                id: "bitmap-image-def",
+                category: "image",
+                prompt: "What is the name for an image made up of a grid of individual pixels?",
+                answers: [
+                        "A bitmap image"
+                ],
+                distractors: [
+                        "A vector image",
+                        "A raster font",
+                        "A pixel map file",
+                        "A binary graphic",
+                        "A compressed image",
+                        "A resolution file"
+                ],
+                note: "'Bitmap' is the exam term for a pixel-based image, as opposed to a vector image."
+        },
+        {
+                id: "pixels-def",
+                category: "image",
+                prompt: "How are images represented using pixels?",
+                answers: [
+                        "A grid of tiny individual dots (pixels), each holding one colour"
+                ],
+                distractors: [
+                        "One single colour value that covers the whole picture at once",
+                        "A set of lines and curves defined using mathematical points",
+                        "A stored list of shapes, rather than a grid of individual dots",
+                        "A sequence of characters, in the same way as a line of text",
+                        "One extremely long binary number that has no real structure",
+                        "A set of sound samples that have been converted into colour"
+                ]
+        },
+        {
+                id: "pixel-to-binary",
+                category: "image",
+                prompt: "How is pixel data converted into binary?",
+                answers: [
+                        "Each pixel's colour is stored as binary, using bits set by the colour depth"
+                ],
+                distractors: [
+                        "Each pixel is converted into a character taken from a text set",
+                        "Each pixel is stored only as a denary number, never as binary",
+                        "Every single pixel in the image shares one shared binary value",
+                        "Only each pixel's position is stored, but never its own colour",
+                        "Every pixel is converted straight into hexadecimal, not binary",
+                        "Each pixel is compressed first, before it is given any value"
+                ]
+        },
+        {
+                id: "image-resolution-def",
+                category: "image",
+                prompt: "What is image resolution?",
+                answers: [
+                        "The number of pixels that make up the image (width x height)"
+                ],
+                distractors: [
+                        "The total number of colours available within the image",
+                        "The size of the image once it has been printed out",
+                        "The number of bits used to store each individual pixel",
+                        "How compressed the image file happens to currently be",
+                        "The overall brightness level shown across the image",
+                        "The particular file format that the image is saved in"
+                ]
+        },
+        {
+                id: "colour-depth-def",
+                category: "image",
+                prompt: "What is colour depth?",
+                answers: [
+                        "The number of bits used to store each pixel's colour"
+                ],
+                distractors: [
+                        "The total number of pixels that make up the whole image",
+                        "The number of separate images that are stored in one file",
+                        "How dark or how light the overall image appears to be",
+                        "The distance between the camera and the subject it shot",
+                        "The maximum number of colours a printer is able to use",
+                        "The overall size of the image file, measured in bytes"
+                ]
+        },
+        {
+                id: "bit-depth-synonym",
+                category: "image",
+                prompt: "Which other term means exactly the same thing as colour depth?",
+                answers: [
+                        "Bit depth"
+                ],
+                distractors: [
+                        "Pixel depth",
+                        "Frame depth",
+                        "Resolution depth",
+                        "Image depth",
+                        "Byte depth",
+                        "Sample depth"
+                ],
+                note: "Colour depth and bit depth are the same thing: the number of bits used per pixel."
+        },
+        {
+                id: "effect-resolution-quality-img",
+                category: "image",
+                prompt: "What is the effect of increasing an image's resolution on its quality?",
+                answers: [
+                        "Captures more detail, so the finished image looks sharper overall"
+                ],
+                distractors: [
+                        "Captures less detail, so the finished image looks blurrier overall",
+                        "Has no effect on quality, since resolution only affects file size",
+                        "Only changes the colours used, without changing any real detail",
+                        "Reduces the total number of colours the image is able to show",
+                        "Quality only ever depends on colour depth, not on resolution",
+                        "Converts the whole image into black and white automatically"
+                ]
+        },
+        {
+                id: "effect-resolution-filesize-img",
+                category: "image",
+                prompt: "What is the effect of increasing an image's resolution on its file size?",
+                answers: [
+                        "Increases the file size, since there are now more pixels to store"
+                ],
+                distractors: [
+                        "Decreases the file size, since each pixel needs fewer bits stored",
+                        "Has no effect on file size, since resolution only affects quality",
+                        "File size only ever depends on colour depth, not on resolution",
+                        "Only affects the file size if the image is also compressed",
+                        "Changes the file's format, but never actually changes its size",
+                        "Halves the file size, no matter how much the resolution rises"
+                ]
+        },
+        {
+                id: "effect-colourdepth-quality",
+                category: "image",
+                prompt: "What is the effect of increasing colour depth on image quality?",
+                answers: [
+                        "More colours become possible, giving a more realistic final image"
+                ],
+                distractors: [
+                        "Fewer colours become possible, giving a less realistic final image",
+                        "Has no effect on the colours the image is able to show at all",
+                        "Only affects the image's resolution, not its available colours",
+                        "Makes every single pixel in the image turn out the same colour",
+                        "Quality only ever depends on resolution, not on colour depth",
+                        "Automatically converts the whole image into greyscale instead"
+                ]
+        },
+        {
+                id: "effect-colourdepth-filesize",
+                category: "image",
+                prompt: "What is the effect of increasing colour depth on file size?",
+                answers: [
+                        "Increases the file size, since more bits are stored for every pixel"
+                ],
+                distractors: [
+                        "Decreases the file size, since each pixel needs fewer bits stored",
+                        "Has no effect on file size, since colour depth only affects quality",
+                        "File size only ever depends on resolution, not on colour depth",
+                        "Only affects the file size if the resolution is also increased",
+                        "Changes the file's format, but never actually changes its size",
+                        "Halves the file size, no matter how much the colour depth rises"
+                ]
+        },
+        {
+                id: "image-filesize-factors",
+                category: "image",
+                type: "multi",
+                show: 6,
+                prompt: "Which of these affect an image's file size? (Pick every one shown that is correct.)",
+                answers: [
+                        "Resolution",
+                        "Colour depth"
+                ],
+                distractors: [
+                        "The image's file name",
+                        "The screen's brightness setting",
+                        "The name of its folder",
+                        "The monitor's refresh rate"
+                ]
+        }
+]
     }
   };
 
@@ -596,9 +1167,12 @@
     units: "Units & Terminology",
     lsbmsb: "LSB & MSB",
     placevalues: "Place Values",
-    converting: "Converting Between Systems"
+    converting: "Converting Between Systems",
+    text: "Text Representation",
+    sound: "Sound Representation",
+    image: "Image Representation"
   };
-  var CATEGORY_ORDER = ["bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting"];
+  var CATEGORY_ORDER = ["bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image"];
 
   // ============================================================
   // ENGINE
@@ -606,6 +1180,7 @@
   var DEFAULT_SHOW = 6;
   var MASTERY_STREAK = 3;
   var HELP_MS = 1000;
+  var ADVANCE_MS = 1000; // auto-advance delay after a card is marked, either mode
 
   var params = new URLSearchParams(location.search);
   var drillId = params.get("drill") || "y10-1-1-numbers";
@@ -635,7 +1210,7 @@
   };
   els.title.textContent = drill.title;
   els.sub.textContent = drill.subtitle || "";
-  document.title = "Drill — " + drill.title;
+  document.title = "Drill: " + drill.title;
 
   var RUN_KEY = "bc_drill_" + drillId + "_run";
   var EVER_KEY = "bc_drill_" + drillId + "_ever";
@@ -804,7 +1379,7 @@
     }
     applyModeUI(mode);
     updateScopeLabel();
-    if (switching && !opts.silent) toast("Run reset — switching modes clears this run. Your overall mastery is kept.");
+    if (switching && !opts.silent) toast("Run reset - switching modes clears this run. Your overall mastery is kept.");
     nextCard();
   }
 
@@ -830,6 +1405,7 @@
   }
 
   function nextCard() {
+    if (current && current.advanceTimer) clearTimeout(current.advanceTimer);
     persistRun();
     if (run.mode === "quiz") {
       updateProgress();
@@ -850,7 +1426,7 @@
     var set = current.set;
     var learn = run.mode === "learn";
 
-    var kind = set.multi ? "Pick every correct answer shown" : "Pick one answer";
+    var kind = set.multi ? "Pick every correct answer, then submit" : "Pick an answer";
     var streakHtml = "";
     if (run.mode === "quiz") {
       var s = run.streak[current.cardId] || 0;
@@ -868,6 +1444,13 @@
         "<span>" + escapeHtml(opt) + "</span></label>";
     }).join("");
 
+    // A single-answer card marks itself the instant an option is clicked -
+    // there is nothing to "submit" when there is only one thing to pick, so
+    // no Check button for these at all (James: "students should not have to
+    // submit a single answer"). A multi-answer card still needs an explicit
+    // Submit, since the student has to finish picking several options
+    // first. Either way, once marked, it moves on by itself - no "click
+    // Next" step either.
     els.stage.innerHTML =
       '<div class="card">' +
       '<p class="prompt">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
@@ -875,7 +1458,7 @@
       '<div class="options">' + optsHtml + "</div>" +
       '<div class="feedback" id="fb"></div>' +
       '<div class="actions">' +
-      '<button type="button" class="btn" id="check-btn">Check</button>' +
+      (set.multi ? '<button type="button" class="btn" id="submit-btn">Submit</button>' : "") +
       (learn ? '<button type="button" class="btn ghost" id="help-btn">I need help</button>' : "") +
       '<span class="spacer"></span>' +
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
@@ -887,21 +1470,22 @@
         if (current.checked) return;
         var input = el.querySelector("input");
         if (!set.multi) {
-          Array.prototype.forEach.call(optionEls, function (o) { o.classList.remove("is-picked"); });
-          Array.prototype.forEach.call(els.stage.querySelectorAll("input"), function (i) { i.checked = false; });
           input.checked = true;
           el.classList.add("is-picked");
+          submitAnswer(); // single answer: picking it IS submitting it
         } else {
           setTimeout(function () { el.classList.toggle("is-picked", input.checked); }, 0);
         }
       });
     });
 
-    els.stage.querySelector("#check-btn").addEventListener("click", onCheck);
+    var submitBtn = els.stage.querySelector("#submit-btn");
+    if (submitBtn) submitBtn.addEventListener("click", submitAnswer);
     var helpBtn = els.stage.querySelector("#help-btn");
     if (helpBtn) helpBtn.addEventListener("click", onHelp);
     els.stage.querySelector("#restart-btn").addEventListener("click", function () {
-      run = freshRun(run.mode);
+      if (current.advanceTimer) clearTimeout(current.advanceTimer);
+      run = freshRun(run.mode, run.category, run.count);
       persistRun();
       toast("Run restarted.");
       nextCard();
@@ -929,8 +1513,8 @@
     }, HELP_MS);
   }
 
-  function onCheck() {
-    if (current.checked) { advance(); return; }
+  function submitAnswer() {
+    if (current.checked) return;
     var set = current.set;
     var card = cardsById[current.cardId];
     var picked = [];
@@ -939,8 +1523,8 @@
     });
     if (!picked.length) { toast("Pick an answer first."); return; }
 
-    var correctSet = set.correct.slice().sort().join("");
-    var pickedSet = picked.slice().sort().join("");
+    var correctSet = set.correct.slice().sort().join("");
+    var pickedSet = picked.slice().sort().join("");
     var right = correctSet === pickedSet;
 
     current.checked = true;
@@ -960,10 +1544,13 @@
 
     var fb = els.stage.querySelector("#fb");
     fb.className = "feedback show " + (right ? "ok" : "no");
-    fb.innerHTML = (right ? "Correct." : "Not quite — the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
+    fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
       (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
 
-    els.stage.querySelector("#check-btn").textContent = "Next";
+    var submitBtn = els.stage.querySelector("#submit-btn");
+    if (submitBtn) submitBtn.disabled = true;
+    var helpBtn = els.stage.querySelector("#help-btn");
+    if (helpBtn) helpBtn.disabled = true;
 
     // ---- scoring ----
     if (run.mode === "quiz") {
@@ -973,7 +1560,7 @@
         if (run.streak[current.cardId] >= MASTERY_STREAK) {
           run.masteredThisRun[current.cardId] = true;
           if (!everMastered[current.cardId]) { everMastered[current.cardId] = true; saveEver(everMastered); }
-          fb.innerHTML = "Mastered — three in a row! This card is done for this run." +
+          fb.innerHTML = "Mastered! Three in a row - this card is done for this run." +
             (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
         }
       } else {
@@ -984,6 +1571,10 @@
       persistRun();
       updateProgress();
     }
+
+    // Moves on by itself a second later - no extra click needed either way.
+    if (current.advanceTimer) clearTimeout(current.advanceTimer);
+    current.advanceTimer = setTimeout(advance, ADVANCE_MS);
   }
 
   function advance() {
@@ -1023,7 +1614,7 @@
       '<div class="big">🎉</div>' +
       (trueMastery ? "<h2>True mastery!</h2>" : "<h2>Run complete!</h2>") +
       "<p>You mastered every card in <strong>" + escapeHtml(categoryLabel(run.category)) + "</strong> (" + run.count + " card" + (run.count === 1 ? "" : "s") + ") this run.</p>" +
-      "<p>Overall you have mastered " + everCount + " of " + drillTotal + " cards in " + escapeHtml(drill.title) + (trueMastery ? " — every card, TRUE MASTERY." : ".") + "</p>" +
+      "<p>Overall you have mastered " + everCount + " of " + drillTotal + " cards in " + escapeHtml(drill.title) + (trueMastery ? " - every card, TRUE MASTERY." : ".") + "</p>" +
       '<div class="actions" style="justify-content:center">' +
       '<button type="button" class="btn" id="again-btn">Run it again</button>' +
       '<button type="button" class="btn ghost" id="done-change-btn">Choose a different topic</button>' +
@@ -1041,7 +1632,7 @@
         cardId: "__run_complete__", cardPrompt: "Run complete",
         streak: MASTERY_STREAK, masteredThisRun: true, everMastered: trueMastery,
         attempts: 0, wrong: 0, everCount: everCount, total: drillTotal, trueMastery: trueMastery,
-        summary: "Completed a run (" + categoryLabel(run.category) + ", " + run.count + " cards) — every card in this run mastered. Overall " + everCount + "/" + drillTotal + " cards ever mastered" + (trueMastery ? " · TRUE MASTERY ACHIEVED" : "") + "."
+        summary: "Completed a run (" + categoryLabel(run.category) + ", " + run.count + " cards) - every card in this run mastered. Overall " + everCount + "/" + drillTotal + " cards ever mastered" + (trueMastery ? " · TRUE MASTERY ACHIEVED" : "") + "."
       }, "*");
     } catch (e) {}
   }
