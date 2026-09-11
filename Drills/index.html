@@ -93,7 +93,7 @@
     <button type="button" id="mode-quiz">Quiz mode</button>
   </div>
 
-  <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. The answer is shown the first time you meet a card; use <strong>I need help</strong> any time you are stuck.</div>
+  <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. The answer is never shown unless you ask - press <strong>I need help</strong> to flash it for a second.</div>
   <div class="notice quiz" id="notice-quiz" style="display:none">Quiz mode &middot; answer a card correctly <strong>three times in a row</strong> to master it for this run. A wrong answer sends its streak back to zero. Master every card for <strong>true mastery</strong>.</div>
 
   <div class="progress" id="progress" style="display:none">
@@ -551,7 +551,7 @@
   // ============================================================
   var DEFAULT_SHOW = 6;
   var MASTERY_STREAK = 3;
-  var HELP_MS = 2500;
+  var HELP_MS = 1000;
 
   var params = new URLSearchParams(location.search);
   var drillId = params.get("drill") || "y10-1-1-numbers";
@@ -594,7 +594,7 @@
       queue: shuffle(drill.cards.map(function (c) { return c.id; })),
       streak: {},            // cardId -> consecutive correct this run
       masteredThisRun: {},   // cardId -> true
-      seenInLearn: {},       // cardId -> true (highlight only the first time)
+      seenInLearn: {},       // cardId -> true (met at least once this run, in Learn mode)
       attempts: {},          // cardId -> total answers this run
       wrong: {}              // cardId -> wrong answers this run
     };
@@ -735,7 +735,6 @@
     var card = cardsById[current.cardId];
     var set = current.set;
     var learn = run.mode === "learn";
-    var firstLearn = learn && !run.seenInLearn[current.cardId];
 
     var kind = set.multi ? "Pick every correct answer shown" : "Pick one answer";
     var streakHtml = "";
@@ -746,9 +745,11 @@
       streakHtml = '<span class="streakdots" title="Streak toward mastery">' + dots + "</span>";
     }
 
+    // The answer is never shown up front, in either mode - learn mode's
+    // only reveal is the "I need help" flash (see onHelp), so a student
+    // has to actually try before seeing anything.
     var optsHtml = set.options.map(function (opt, idx) {
-      var isAnswer = firstLearn && set.correct.indexOf(opt) !== -1;
-      return '<label class="opt' + (isAnswer ? " is-answer" : "") + '" data-opt="' + idx + '">' +
+      return '<label class="opt" data-opt="' + idx + '">' +
         '<input type="' + (set.multi ? "checkbox" : "radio") + '" name="opt" value="' + idx + '">' +
         "<span>" + escapeHtml(opt) + "</span></label>";
     }).join("");
@@ -756,7 +757,7 @@
     els.stage.innerHTML =
       '<div class="card">' +
       '<p class="prompt">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
-      '<div class="hint-kind">' + kind + (firstLearn ? " · the answer is highlighted this time" : "") + "</div>" +
+      '<div class="hint-kind">' + kind + "</div>" +
       '<div class="options">' + optsHtml + "</div>" +
       '<div class="feedback" id="fb"></div>' +
       '<div class="actions">' +
@@ -794,10 +795,12 @@
   }
 
   function onHelp() {
-    // learn mode only - flash the correct option(s) for a couple of seconds,
-    // and record that help was used (so this card is not treated as "learned
-    // without support" - but learn mode records nothing to the server anyway).
-    run.usedHelpRecently = true;
+    // Learn mode's ONLY reveal, anywhere: flash the correct option(s) for a
+    // second, then hide them again completely - the answer is never shown
+    // otherwise, not even on a card's first appearance. Recorded on the
+    // current card so advance() can bring it back round sooner for a quick
+    // second look, rather than losing it in the full deck for a while.
+    current.usedHelp = true;
     var set = current.set;
     var optionEls = els.stage.querySelectorAll(".opt");
     Array.prototype.forEach.call(optionEls, function (el, idx) {
@@ -806,9 +809,8 @@
     if (current.helpTimer) clearTimeout(current.helpTimer);
     current.helpTimer = setTimeout(function () {
       if (current.checked) return;
-      Array.prototype.forEach.call(els.stage.querySelectorAll(".opt"), function (el, idx) {
-        var isFirstLearnAnswer = run.mode === "learn" && !run.seenInLearn[current.cardId] && set.correct.indexOf(set.options[idx]) !== -1;
-        if (!isFirstLearnAnswer) el.classList.remove("is-answer");
+      Array.prototype.forEach.call(els.stage.querySelectorAll(".opt"), function (el) {
+        el.classList.remove("is-answer");
       });
     }, HELP_MS);
   }
@@ -873,17 +875,11 @@
   function advance() {
     var learn = run.mode === "learn";
     if (learn) {
-      // First sighting had the answer highlighted. Re-queue it just one
-      // card ahead so it comes straight back, this time without the
-      // highlight - exactly one intervening question, as asked for. Every
-      // exposure AFTER that first one just rejoins the back of the queue
-      // like a normal card, or the deck would never move past the first
-      // two or three cards - they would keep getting bumped back to the
-      // front forever.
-      var wasFirst = !run.seenInLearn[current.cardId];
       run.seenInLearn[current.cardId] = true;
-      run.usedHelpRecently = false;
-      if (wasFirst) {
+      if (current.usedHelp) {
+        // Used help on this one - bring it back after just one more
+        // question for a quick second look, instead of losing it
+        // somewhere in the full deck for a while.
         var pos = Math.min(1, run.queue.length);
         run.queue.splice(pos, 0, current.cardId);
       } else {
