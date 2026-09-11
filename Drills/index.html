@@ -1847,6 +1847,19 @@
     }
     return out;
   }
+  // A very light plural stemmer - "components" must match a card answer
+  // written as "component", and vice versa, or a fair paraphrase gets
+  // marked wrong for a difference that has nothing to do with the answer
+  // being right. Deliberately crude (strip a trailing "s") rather than a
+  // full stemming library - this is short exam vocabulary, not prose, and
+  // numbers are left untouched so "128"/"neg128" are never touched by it.
+  function stem(tok) {
+    if (/^[a-z]+[0-9]+$/.test(tok) || /^[0-9]+$/.test(tok)) return tok;
+    if (tok.length > 4 && /ies$/.test(tok)) return tok.slice(0, -3) + "y"; // carries -> carry
+    if (tok.length > 5 && /(ch|sh|x|s|z)es$/.test(tok)) return tok.slice(0, -2); // switches -> switch
+    if (tok.length > 4 && /[a-z]s$/.test(tok) && !/ss$/.test(tok)) return tok.slice(0, -1); // components -> component
+    return tok;
+  }
   function tokenize(text) {
     var s = String(text == null ? "" : text).toLowerCase();
     s = s.replace(/\u2212/g, "-"); // the real minus sign used in card text, vs the ASCII hyphen a student types
@@ -1854,7 +1867,7 @@
     s = s.replace(/-\s*(\d+)/g, " neg$1 ");
     s = s.replace(/\bneg\s+(\d+)/g, " neg$1 ");
     var raw = s.match(/[a-z0-9]+/g) || [];
-    return collapseNumberWords(raw);
+    return collapseNumberWords(raw).map(stem);
   }
   // Cards can carry an explicit `keywords` field describing exactly what
   // counts as a correct typed answer:
@@ -1865,8 +1878,9 @@
   // whole words from one of its `answers` strings - safe (still whole-word,
   // still neg-number aware) even before keywords are written. A short
   // answer (1-2 keywords) still needs all of them, but a longer explanatory
-  // answer only needs most of its keywords (a majority), not every single
-  // one typed back verbatim - a fair paraphrase should still pass. An
+  // answer only needs a handful of its keywords (half, capped at 4), not
+  // every single one typed back verbatim - a fair, compressed paraphrase
+  // of a long answer should still pass. An
   // answer like "Kibibyte (KiB)" splits into two separate alternatives
   // (the full word, or just the abbreviation) rather than requiring both -
   // a student who types either one has clearly given the right answer.
@@ -1879,7 +1893,7 @@
       phrases.forEach(function (phrase) {
         var toks = tokenize(phrase).filter(function (t) { return !TEXT_FILLER[t]; });
         if (!toks.length) return;
-        var need = toks.length <= 2 ? toks.length : Math.max(2, Math.ceil(toks.length * 0.6));
+        var need = toks.length <= 2 ? toks.length : Math.min(4, Math.max(2, Math.ceil(toks.length * 0.5)));
         alts.push({ tokens: toks, need: need });
       });
     });
