@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drills</title>
+<style>
+  :root {
+    --bg: #f4f6fb; --card: #ffffff; --ink: #1f2733; --muted: #667085;
+    --line: #d7dced; --brand: #2f5bd7; --brand-dark: #23459f; --brand-soft: #e5ecff;
+    --good: #1f8a5a; --good-soft: #e7f6ee; --bad: #c0392b; --bad-soft: #fdeceb;
+    --answer: #b8860b; --answer-soft: #fff6e0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 18px 16px 60px; }
+
+  header.drill-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 6px; }
+  header.drill-head h1 { font-size: 1.15rem; margin: 0; }
+  header.drill-head .sub { color: var(--muted); font-size: .82rem; }
+
+  .modebar { display: flex; gap: 8px; margin: 12px 0; }
+  .modebar button {
+    flex: 1; padding: 10px 12px; border: 2px solid var(--line); border-radius: 10px;
+    background: var(--card); color: var(--ink); font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .modebar button.is-active { border-color: var(--brand); background: var(--brand-soft); color: var(--brand-dark); }
+  .modebar button:hover:not(.is-active) { border-color: var(--brand); }
+
+  .notice { font-size: .82rem; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; }
+  .notice.learn { background: var(--answer-soft); color: #7a5c05; border: 1px solid #e8cf93; }
+  .notice.quiz  { background: var(--brand-soft); color: var(--brand-dark); border: 1px solid #b9c9f5; }
+
+  .progress { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: .82rem; color: var(--muted); font-weight: 600; }
+  .progress .bar { flex: 1; height: 8px; border-radius: 999px; background: #e3e7f2; overflow: hidden; }
+  .progress .bar span { display: block; height: 100%; background: var(--good); width: 0%; transition: width .3s; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px; box-shadow: 0 1px 2px rgba(20,30,60,.04); }
+  .card .prompt { font-size: 1.06rem; font-weight: 700; margin: 0 0 4px; }
+  .card .hint-kind { font-size: .76rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 12px; }
+  .options { display: grid; gap: 8px; margin: 6px 0 4px; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 2px solid var(--line);
+    border-radius: 10px; cursor: pointer; background: #fff; font-weight: 600;
+  }
+  .opt:hover { border-color: var(--brand); }
+  .opt input { margin-top: 3px; flex-shrink: 0; }
+  .opt.is-picked { border-color: var(--brand); background: var(--brand-soft); }
+  .opt.is-answer { border-color: var(--answer); background: var(--answer-soft); }
+  .opt.is-correct { border-color: var(--good); background: var(--good-soft); }
+  .opt.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .opt.is-locked { cursor: default; }
+  .opt.is-locked:hover { border-color: var(--line); }
+  .opt.is-locked.is-answer:hover { border-color: var(--answer); }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .btn {
+    padding: 9px 16px; border: 0; border-radius: 9px; background: var(--brand); color: #fff;
+    font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .btn:hover { background: var(--brand-dark); }
+  .btn.ghost { background: #eef1f8; color: var(--ink); }
+  .btn.ghost:hover { background: #e2e7f3; }
+  .btn:disabled { background: #cfd6e6; cursor: not-allowed; }
+  .spacer { flex: 1; }
+
+  .feedback { margin-top: 12px; padding: 10px 12px; border-radius: 9px; font-weight: 600; font-size: .9rem; display: none; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--good-soft); color: var(--good); border: 1px solid #b6e2c9; }
+  .feedback.no { background: var(--bad-soft); color: var(--bad); border: 1px solid #efc2bc; }
+  .feedback .note { display: block; margin-top: 4px; color: var(--ink); font-weight: 500; }
+
+  .streakdots { display: inline-flex; gap: 4px; vertical-align: middle; margin-left: 6px; }
+  .streakdots i { width: 8px; height: 8px; border-radius: 50%; background: #d7dced; display: inline-block; }
+  .streakdots i.on { background: var(--good); }
+
+  .done { text-align: center; padding: 40px 16px; }
+  .done .big { font-size: 2.4rem; }
+  .done h2 { margin: 10px 0 6px; }
+  .done p { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="drill-head">
+    <h1 id="drill-title">Drill</h1>
+    <span class="sub" id="drill-sub"></span>
+  </header>
+
+  <div class="modebar">
+    <button type="button" id="mode-learn">Learn mode</button>
+    <button type="button" id="mode-quiz">Quiz mode</button>
+  </div>
+
+  <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. The answer is shown the first time you meet a card; use <strong>I need help</strong> any time you are stuck.</div>
+  <div class="notice quiz" id="notice-quiz" style="display:none">Quiz mode &middot; answer a card correctly <strong>three times in a row</strong> to master it for this run. A wrong answer sends its streak back to zero. Master every card for <strong>true mastery</strong>.</div>
+
+  <div class="progress" id="progress" style="display:none">
+    <span id="progress-label">0 / 0 mastered</span>
+    <span class="bar"><span id="progress-fill"></span></span>
+  </div>
+
+  <div id="stage"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ============================================================
+  // DRILL CONTENT
+  // ------------------------------------------------------------
+  // Every card is multiple choice. `answers` is the pool of correct
+  // options, `distractors` the pool of wrong ones. On each appearance a
+  // fresh selection is drawn and shuffled, so the position of the right
+  // answer never gives it away and single-answer cards still look
+  // different each time. `type:'multi'` cards show a random subset of the
+  // correct pool (at least one) plus distractors, and the student must
+  // tick exactly the correct ones shown.
+  // `show` = how many options to render (default 6).
+  // ============================================================
+  var DRILLS = {
+    "y10-1-1-numbers": {
+      title: "Year 10 — 1.1 Number Systems",
+      subtitle: "Cambridge IGCSE Computer Science 0478",
+      cards: [
+        {
+          id: "why-binary",
+          prompt: "Why do computers use binary?",
+          answers: ["Electronic components in a computer have two states, often represented as 0 and 1"],
+          distractors: [
+            "Binary is the only number system a human can read without a calculator",
+            "Electronic components can hold ten separate voltage levels, one for each denary digit",
+            "Binary numbers are always shorter than the denary number they represent",
+            "Binary uses less electricity because each digit is smaller than a denary digit",
+            "Computers were built before other number systems had been invented",
+            "It lets a computer store negative numbers without any extra circuits"
+          ]
+        },
+        {
+          id: "base-denary",
+          prompt: "What base is the denary number system?",
+          answers: ["Base 10"],
+          distractors: ["Base 2", "Base 16", "Base 8", "Base 12", "Base 1", "Base 100"]
+        },
+        {
+          id: "base-binary",
+          prompt: "What base is the binary number system?",
+          answers: ["Base 2"],
+          distractors: ["Base 10", "Base 16", "Base 8", "Base 1", "Base 4", "Base 0"]
+        },
+        {
+          id: "base-hex",
+          prompt: "What base is the hexadecimal number system?",
+          answers: ["Base 16"],
+          distractors: ["Base 10", "Base 2", "Base 8", "Base 6", "Base 32", "Base 15"]
+        },
+        {
+          id: "symbols-binary",
+          prompt: "What symbols does the binary number system use?",
+          answers: ["0 and 1"],
+          distractors: ["0, 1 and 2", "1 and 2", "0 to 9", "0 to 7", "−1 and 1", "0, 1, 2 and 3"]
+        },
+        {
+          id: "symbols-denary",
+          prompt: "What symbols does the denary number system use?",
+          answers: ["0 to 9"],
+          distractors: ["0 to 10", "1 to 9", "1 to 10", "0 and 1", "0 to 9 and A to F", "0 to 15"]
+        },
+        {
+          id: "symbols-hex",
+          prompt: "What symbols does the hexadecimal number system use?",
+          answers: ["0 to 9 and A to F"],
+          distractors: ["0 to 9 and A to Z", "0 to 15", "A to F only", "0 to 9 and A to E", "0 to 9 and A to G", "1 to 9 and A to F"]
+        },
+        {
+          id: "uses-hex",
+          type: "multi", show: 6,
+          prompt: "Which of these are real uses of hexadecimal in computer science? (Pick every one shown that is correct.)",
+          answers: ["HTML colour codes", "MAC addresses", "IPv6 addresses", "Memory addresses", "Assembly / machine code values"],
+          distractors: ["IPv4 addresses", "Denary temperature readings", "Wi‑Fi passwords", "Spreadsheet cell references", "Screen sizes in centimetres", "File names"]
+        },
+        {
+          id: "why-hex-not-binary",
+          prompt: "Why represent data in hexadecimal instead of binary?",
+          answers: ["Hexadecimal represents the same binary data using fewer digits, so it is easier to read and less error‑prone"],
+          distractors: [
+            "Hexadecimal can store larger numbers than binary can",
+            "A processor can only understand hexadecimal, not binary",
+            "Hexadecimal removes the need for the letters A to F",
+            "Hexadecimal values never need converting back to binary",
+            "A computer processes hexadecimal faster than binary",
+            "Hexadecimal takes up less memory than the binary it represents"
+          ]
+        },
+        {
+          id: "add-0-0",
+          prompt: "In binary addition, what is 0 + 0?",
+          answers: ["0"],
+          distractors: ["1", "10", "0 carry 1", "1 carry 1", "2", "0 carry 0"]
+        },
+        {
+          id: "add-0-1",
+          prompt: "In binary addition, what is 0 + 1?",
+          answers: ["1"],
+          distractors: ["0", "10", "1 carry 1", "0 carry 1", "2", "11"]
+        },
+        {
+          id: "add-1-0",
+          prompt: "In binary addition, what is 1 + 0?",
+          answers: ["1"],
+          distractors: ["0", "10", "1 carry 1", "0 carry 1", "2", "11"]
+        },
+        {
+          id: "add-1-1",
+          prompt: "In binary addition, what is 1 + 1?",
+          answers: ["0 carry 1"],
+          distractors: ["1 carry 1", "1", "0", "1 carry 0", "0 carry 0", "11"],
+          note: "The column result is 0 and a 1 is carried into the next column (1 + 1 = binary 10)."
+        },
+        {
+          id: "add-1-1-1",
+          prompt: "In binary addition, what is 1 + 1 + 1?",
+          answers: ["1 carry 1"],
+          distractors: ["0 carry 1", "1", "1 carry 0", "0 carry 0", "11", "3"],
+          note: "The column result is 1 and a 1 is carried (1 + 1 + 1 = binary 11)."
+        },
+        {
+          id: "overflow",
+          prompt: "What is it called when there is not enough space to store the result of a binary addition?",
+          answers: ["Overflow"],
+          distractors: ["Underflow", "Carry error", "Rounding error", "Truncation", "Buffer overrun", "Wraparound"],
+          note: "Overflow happens when the result needs more bits than the register can hold; the extra carry bit is lost."
+        },
+        {
+          id: "shift-left-1",
+          prompt: "What is the effect of a logical LEFT shift of 1 place on an unsigned binary number?",
+          answers: ["Multiplies the number by 2"],
+          distractors: ["Divides the number by 2", "Multiplies the number by 4", "Multiplies the number by 10", "Adds 1 to the number", "Divides the number by 10", "Leaves the number unchanged"],
+          note: "Each place a number shifts left multiplies it by 2 (2¹)."
+        },
+        {
+          id: "shift-left-2",
+          prompt: "What is the effect of a logical LEFT shift of 2 places?",
+          answers: ["Multiplies the number by 4"],
+          distractors: ["Multiplies the number by 2", "Multiplies the number by 8", "Divides the number by 4", "Multiplies the number by 16", "Adds 2 to the number", "Multiplies the number by 3"],
+          note: "2 places left = × 2² = × 4."
+        },
+        {
+          id: "shift-left-3",
+          prompt: "What is the effect of a logical LEFT shift of 3 places?",
+          answers: ["Multiplies the number by 8"],
+          distractors: ["Multiplies the number by 4", "Multiplies the number by 16", "Multiplies the number by 6", "Divides the number by 8", "Multiplies the number by 3", "Adds 3 to the number"],
+          note: "3 places left = × 2³ = × 8."
+        },
+        {
+          id: "shift-right-1",
+          prompt: "What is the effect of a logical RIGHT shift of 1 place on an unsigned binary number?",
+          answers: ["Divides the number by 2 (rounding down)"],
+          distractors: ["Multiplies the number by 2", "Divides the number by 4", "Divides the number by 10", "Subtracts 1 from the number", "Divides the number by 1", "Leaves the number unchanged"],
+          note: "Each place right = ÷ 2. Any bit shifted off the end is lost, so odd numbers round down."
+        },
+        {
+          id: "shift-right-2",
+          prompt: "What is the effect of a logical RIGHT shift of 2 places?",
+          answers: ["Divides the number by 4 (rounding down)"],
+          distractors: ["Divides the number by 2", "Divides the number by 8", "Multiplies the number by 4", "Divides the number by 16", "Subtracts 2 from the number", "Divides the number by 3"],
+          note: "2 places right = ÷ 2² = ÷ 4."
+        },
+        {
+          id: "shift-loss",
+          prompt: "What happens to bits that are shifted out of the end of a register during a logical shift?",
+          answers: ["They are lost, so data (precision) can be lost"],
+          distractors: ["Nothing is ever lost", "Only leading zeros are removed", "They move to the other end (they rotate round)", "They are stored in the carry flag forever", "The whole number becomes zero", "Only the sign of the number changes"]
+        },
+        {
+          id: "twos-purpose",
+          prompt: "Two's complement lets a fixed number of bits represent what?",
+          answers: ["Both positive and negative whole numbers"],
+          distractors: ["Numbers larger than 255", "Fractions and decimal points", "Hexadecimal digits directly", "Text characters", "Only positive numbers, but faster", "Numbers written in base 10"],
+          note: "In two's complement the most significant bit has a negative place value, which is how negative numbers are stored."
+        },
+        {
+          id: "twos-msb-value",
+          prompt: "In an 8‑bit two's complement number, what is the place value of the most significant (leftmost) bit?",
+          answers: ["−128"],
+          distractors: ["128", "−1", "−256", "255", "−127", "64"]
+        },
+        {
+          id: "twos-negate",
+          prompt: "How do you find the two's complement (the negative) of a positive binary number?",
+          answers: ["Invert every bit, then add 1"],
+          distractors: ["Invert every bit", "Add 1, then invert every bit", "Invert every bit, then subtract 1", "Swap the first and last bits", "Reverse the order of all the bits", "Add 1 to the number"]
+        },
+        {
+          id: "twos-is-negative",
+          prompt: "In two's complement, how can you tell a number is negative?",
+          answers: ["The most significant bit is 1"],
+          distractors: ["The least significant bit is 1", "The most significant bit is 0", "It contains more 1s than 0s", "The last two bits are both 1", "There is a carry out of the top bit", "It is written with a minus sign in front"]
+        },
+        {
+          id: "twos-range-8bit",
+          prompt: "What is the denary range of an 8‑bit two's complement number?",
+          answers: ["−128 to 127"],
+          distractors: ["0 to 255", "−127 to 128", "−128 to 128", "−255 to 255", "0 to 127", "−256 to 255"]
+        },
+        {
+          id: "term-bit",
+          prompt: "What is the name for the smallest unit of data, which holds a single 0 or 1?",
+          answers: ["Bit"],
+          distractors: ["Byte", "Nibble", "Character", "Digit", "Kibibyte", "Word"]
+        },
+        {
+          id: "term-nibble",
+          prompt: "What is the name for a group of 4 bits?",
+          answers: ["Nibble"],
+          distractors: ["Byte", "Word", "Bit", "Kibibyte", "Octet", "Half‑word"]
+        },
+        {
+          id: "term-byte",
+          prompt: "What is the name for a group of 8 bits?",
+          answers: ["Byte"],
+          distractors: ["Nibble", "Word", "Kibibyte", "Bit", "Kilobit", "Double nibble"]
+        },
+        {
+          id: "bits-in-nibble",
+          prompt: "How many bits are there in a nibble?",
+          answers: ["4"],
+          distractors: ["8", "2", "1", "16", "0.5", "3"]
+        },
+        {
+          id: "bits-in-byte",
+          prompt: "How many bits are there in a byte?",
+          answers: ["8"],
+          distractors: ["4", "16", "1", "1024", "2", "10"]
+        },
+        {
+          id: "nibbles-in-byte",
+          prompt: "How many nibbles are there in a byte?",
+          answers: ["2"],
+          distractors: ["4", "8", "1", "16", "0.5", "3"]
+        },
+        {
+          id: "kibibyte-bytes",
+          prompt: "In the Cambridge IGCSE 0478 course, how many bytes are there in 1 kibibyte (KiB)?",
+          answers: ["1024"],
+          distractors: ["1000", "1", "8", "512", "2048", "100"],
+          note: "0478 uses the IEC binary prefixes: 1 KiB = 1024 bytes. (The SI unit 1 kilobyte, kB, is 1000 bytes.)"
+        },
+        {
+          id: "kibi-vs-kilo",
+          prompt: "Which unit does Cambridge IGCSE 0478 use for a multiple of 1024 bytes?",
+          answers: ["Kibibyte (KiB)"],
+          distractors: ["Kilobyte (kB)", "Kilobit (Kb)", "Megabyte (MB)", "K‑byte", "Binary byte", "Kilo (K)"],
+          note: "KiB, MiB, GiB, TiB, PiB, EiB are each 1024 times the one below. Kilobyte (kB) means exactly 1000 bytes."
+        },
+        {
+          id: "mebibyte-kibibytes",
+          prompt: "How many kibibytes (KiB) are there in 1 mebibyte (MiB)?",
+          answers: ["1024"],
+          distractors: ["1000", "1", "8", "1048576", "512", "100"]
+        },
+        {
+          id: "unit-order-largest",
+          prompt: "Which of these units is the largest?",
+          answers: ["Kibibyte (KiB)"],
+          distractors: ["Bit", "Nibble", "Byte", "Two nibbles", "Half a byte"]
+        },
+        {
+          id: "unit-order-smallest",
+          prompt: "Which of these units is the smallest?",
+          answers: ["Bit"],
+          distractors: ["Nibble", "Byte", "Kibibyte (KiB)", "Two bits", "Half a nibble"]
+        },
+        {
+          id: "msb-meaning",
+          prompt: "What does MSB stand for?",
+          answers: ["Most Significant Bit"],
+          distractors: ["Most Significant Byte", "Maximum Signed Byte", "Main System Bit", "Middle Significant Bit", "Master Sign Bit", "Most Simple Bit"]
+        },
+        {
+          id: "lsb-meaning",
+          prompt: "What does LSB stand for?",
+          answers: ["Least Significant Bit"],
+          distractors: ["Least Significant Byte", "Lowest Stored Bit", "Last Sent Bit", "Low Speed Bus", "Left Side Bit", "Least Simple Bit"]
+        },
+        {
+          id: "msb-which-bit",
+          prompt: "In the 8‑bit binary number 10000000, which bit is the most significant bit?",
+          answers: ["The leftmost bit (the 1)"],
+          distractors: ["The rightmost bit", "The middle bit", "The last 0 on the right", "There is no most significant bit", "Every bit is equally significant", "The second bit from the left"]
+        },
+        {
+          id: "msb-place-value-unsigned",
+          prompt: "In an 8‑bit UNSIGNED binary number, what is the place value of the most significant bit?",
+          answers: ["128"],
+          distractors: ["256", "64", "1", "255", "127", "−128"]
+        },
+        {
+          id: "lsb-place-value",
+          prompt: "What is the place value of the least significant bit in any binary number?",
+          answers: ["1"],
+          distractors: ["0", "2", "8", "−1", "10", "128"]
+        },
+        {
+          id: "pv-bit0",
+          prompt: "What is the place value of bit position 0 (the rightmost bit) in binary?",
+          answers: ["1"],
+          distractors: ["0", "2", "10", "8", "−1"],
+          note: "2⁰ = 1."
+        },
+        {
+          id: "pv-bit1",
+          prompt: "What is the place value of bit position 1 in binary?",
+          answers: ["2"],
+          distractors: ["1", "4", "3", "10", "8"],
+          note: "2¹ = 2."
+        },
+        {
+          id: "pv-bit2",
+          prompt: "What is the place value of bit position 2 in binary?",
+          answers: ["4"],
+          distractors: ["2", "8", "6", "3", "16"],
+          note: "2² = 4."
+        },
+        {
+          id: "pv-bit3",
+          prompt: "What is the place value of bit position 3 in binary?",
+          answers: ["8"],
+          distractors: ["4", "16", "6", "10", "12"],
+          note: "2³ = 8."
+        },
+        {
+          id: "pv-bit4",
+          prompt: "What is the place value of bit position 4 in binary?",
+          answers: ["16"],
+          distractors: ["8", "32", "12", "20", "4"],
+          note: "2⁴ = 16."
+        },
+        {
+          id: "pv-bit5",
+          prompt: "What is the place value of bit position 5 in binary?",
+          answers: ["32"],
+          distractors: ["16", "64", "24", "30", "8"],
+          note: "2⁵ = 32."
+        },
+        {
+          id: "pv-bit6",
+          prompt: "What is the place value of bit position 6 in binary?",
+          answers: ["64"],
+          distractors: ["32", "128", "48", "60", "16"],
+          note: "2⁶ = 64."
+        },
+        {
+          id: "pv-bit7",
+          prompt: "What is the place value of bit position 7 (the leftmost bit of a byte) in binary?",
+          answers: ["128"],
+          distractors: ["64", "256", "100", "127", "32"],
+          note: "2⁷ = 128."
+        },
+        {
+          id: "two-pow-8",
+          prompt: "What is 2⁸?",
+          answers: ["256"],
+          distractors: ["128", "512", "255", "64", "16"]
+        },
+        {
+          id: "values-in-8-bits",
+          prompt: "How many different values can be represented using 8 bits?",
+          answers: ["256"],
+          distractors: ["255", "128", "512", "8", "64"],
+          note: "8 bits give 2⁸ = 256 different patterns (0 to 255 for an unsigned byte)."
+        },
+        {
+          id: "byte-place-values",
+          prompt: "What are the 8 place values of a byte, written from left to right?",
+          answers: ["128, 64, 32, 16, 8, 4, 2, 1"],
+          distractors: [
+            "1, 2, 4, 8, 16, 32, 64, 128",
+            "256, 128, 64, 32, 16, 8, 4, 2",
+            "128, 64, 32, 16, 8, 4, 2, 0",
+            "100, 90, 80, 70, 60, 50, 40, 30",
+            "128, 64, 16, 8, 4, 2, 1, 0"
+          ]
+        },
+        {
+          id: "bin-to-den",
+          prompt: "How do you convert a binary number to denary?",
+          answers: ["Add together the place values in every column that contains a 1"],
+          distractors: [
+            "Add together all of the place values",
+            "Count how many 1s there are",
+            "Multiply the place values in every column that contains a 1",
+            "Add 1 for each digit in the number",
+            "Add together the place values in every column that contains a 0",
+            "Multiply the number of 1s by 2"
+          ]
+        },
+        {
+          id: "den-to-bin",
+          prompt: "How can you convert a denary number to binary?",
+          answers: ["Subtract the largest place value that fits, write a 1, and repeat with what is left; write 0 where a place value does not fit"],
+          distractors: [
+            "Divide the number by 10 repeatedly",
+            "Multiply the number by 2 repeatedly",
+            "Add the denary digits together",
+            "Write the denary digits in reverse order",
+            "Count up in twos until you reach the number",
+            "Convert it to hexadecimal first, then read it off"
+          ]
+        },
+        {
+          id: "bin-to-hex",
+          prompt: "How do you convert a binary number to hexadecimal?",
+          answers: ["Split it into groups of 4 bits (from the right) and convert each group to one hex digit"],
+          distractors: [
+            "Split it into groups of 3 bits and convert each group",
+            "Split it into groups of 8 bits and convert each group",
+            "Convert it to denary first, then divide by 16",
+            "Convert each single bit to a hex digit",
+            "Group it into pairs of bits",
+            "Reverse the bits, then read them off in fours"
+          ],
+          note: "One nibble (4 bits) is exactly one hexadecimal digit."
+        },
+        {
+          id: "hex-digit-bits",
+          prompt: "How many bits does one hexadecimal digit represent?",
+          answers: ["4"],
+          distractors: ["1", "2", "8", "16", "3"]
+        },
+        {
+          id: "hex-F",
+          prompt: "The hexadecimal digit F represents which denary value?",
+          answers: ["15"],
+          distractors: ["16", "14", "10", "6", "255", "12"]
+        },
+        {
+          id: "hex-A",
+          prompt: "The hexadecimal digit A represents which denary value?",
+          answers: ["10"],
+          distractors: ["1", "11", "15", "14", "16", "0"]
+        }
+      ]
+    }
+  };
+
+  // ============================================================
+  // ENGINE
+  // ============================================================
+  var DEFAULT_SHOW = 6;
+  var MASTERY_STREAK = 3;
+  var HELP_MS = 2500;
+
+  var params = new URLSearchParams(location.search);
+  var drillId = params.get("drill") || "y10-1-1-numbers";
+  var drill = DRILLS[drillId] || DRILLS["y10-1-1-numbers"];
+  var cardsById = {};
+  drill.cards.forEach(function (c) { cardsById[c.id] = c; });
+
+  var els = {
+    title: document.getElementById("drill-title"),
+    sub: document.getElementById("drill-sub"),
+    modeLearn: document.getElementById("mode-learn"),
+    modeQuiz: document.getElementById("mode-quiz"),
+    noticeLearn: document.getElementById("notice-learn"),
+    noticeQuiz: document.getElementById("notice-quiz"),
+    progress: document.getElementById("progress"),
+    progressLabel: document.getElementById("progress-label"),
+    progressFill: document.getElementById("progress-fill"),
+    stage: document.getElementById("stage")
+  };
+  els.title.textContent = drill.title;
+  els.sub.textContent = drill.subtitle || "";
+  document.title = "Drill — " + drill.title;
+
+  var RUN_KEY = "bc_drill_" + drillId + "_run";
+  var EVER_KEY = "bc_drill_" + drillId + "_ever";
+
+  function loadEver() {
+    try { return JSON.parse(localStorage.getItem(EVER_KEY) || "{}") || {}; } catch (e) { return {}; }
+  }
+  function saveEver(obj) {
+    try { localStorage.setItem(EVER_KEY, JSON.stringify(obj)); } catch (e) {}
+  }
+  var everMastered = loadEver(); // { cardId: true }
+
+  // run state - reset whenever the mode is switched
+  var run = null;
+  function freshRun(mode) {
+    return {
+      mode: mode,
+      queue: shuffle(drill.cards.map(function (c) { return c.id; })),
+      streak: {},            // cardId -> consecutive correct this run
+      masteredThisRun: {},   // cardId -> true
+      seenInLearn: {},       // cardId -> true (highlight only the first time)
+      attempts: {},          // cardId -> total answers this run
+      wrong: {}              // cardId -> wrong answers this run
+    };
+  }
+  function persistRun() {
+    try { localStorage.setItem(RUN_KEY, JSON.stringify(run)); } catch (e) {}
+  }
+  function loadRun() {
+    try {
+      var r = JSON.parse(localStorage.getItem(RUN_KEY) || "null");
+      if (r && r.mode && Array.isArray(r.queue)) return r;
+    } catch (e) {}
+    return null;
+  }
+
+  function shuffle(arr) {
+    arr = arr.slice();
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+  function sample(arr, n) { return shuffle(arr).slice(0, Math.max(0, n)); }
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  // ---- progress reporting to the shell (quiz mode only) ----
+  function report(cardId) {
+    var card = cardsById[cardId];
+    if (!card) return;
+    var s = run.streak[cardId] || 0;
+    var masteredRun = !!run.masteredThisRun[cardId];
+    var ever = !!everMastered[cardId];
+    var att = run.attempts[cardId] || 0;
+    var wr = run.wrong[cardId] || 0;
+    var total = drill.cards.length;
+    var everCount = Object.keys(everMastered).length;
+    var summary = "Quiz · streak " + s + "/" + MASTERY_STREAK +
+      " · " + att + " attempt" + (att === 1 ? "" : "s") + " (" + (att - wr) + " right, " + wr + " wrong)" +
+      " · mastered this run: " + (masteredRun ? "yes" : "no") +
+      " · ever mastered: " + (ever ? "YES" : "no") +
+      " · overall " + everCount + "/" + total + " cards ever mastered" +
+      (everCount === total ? " · TRUE MASTERY ACHIEVED" : "");
+    try {
+      window.parent.postMessage({
+        type: "BC_DRILL_PROGRESS",
+        drillId: drillId,
+        drillLabel: drill.title,
+        cardId: cardId,
+        cardPrompt: card.prompt,
+        streak: s,
+        masteredThisRun: masteredRun,
+        everMastered: ever,
+        attempts: att,
+        wrong: wr,
+        everCount: everCount,
+        total: total,
+        trueMastery: everCount === total,
+        summary: summary
+      }, "*");
+    } catch (e) {}
+  }
+
+  // ---- option set for one appearance of a card ----
+  function buildOptionSet(card) {
+    var show = card.show || DEFAULT_SHOW;
+    var correct, pool;
+    if (card.type === "multi") {
+      var maxCorrect = Math.min(card.answers.length, show - 2);
+      var k = 1 + Math.floor(Math.random() * Math.max(1, maxCorrect));
+      correct = sample(card.answers, k);
+      pool = correct.concat(sample(card.distractors, show - correct.length));
+    } else {
+      correct = sample(card.answers, 1);
+      pool = correct.concat(sample(card.distractors, show - 1));
+    }
+    return { options: shuffle(pool), correct: correct, multi: card.type === "multi" };
+  }
+
+  // ============================================================
+  // RENDER
+  // ============================================================
+  var current = null; // { cardId, set, checked, helpTimer }
+
+  function setMode(mode, opts) {
+    opts = opts || {};
+    var switching = run && run.mode !== mode;
+    if (switching || !run) {
+      run = freshRun(mode);
+      persistRun();
+    }
+    els.modeLearn.classList.toggle("is-active", mode === "learn");
+    els.modeQuiz.classList.toggle("is-active", mode === "quiz");
+    els.noticeLearn.style.display = mode === "learn" ? "" : "none";
+    els.noticeQuiz.style.display = mode === "quiz" ? "" : "none";
+    els.progress.style.display = mode === "quiz" ? "flex" : "none";
+    if (switching && !opts.silent) toast("Run reset — switching modes clears this run. Your overall mastery is kept.");
+    nextCard();
+  }
+
+  function toast(msg) {
+    var t = document.createElement("div");
+    t.textContent = msg;
+    t.style.cssText = "position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#1f2733;color:#fff;padding:10px 16px;border-radius:10px;font-weight:600;font-size:.85rem;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:90%;text-align:center";
+    document.body.appendChild(t);
+    setTimeout(function () { t.style.transition = "opacity .4s"; t.style.opacity = "0"; }, 2600);
+    setTimeout(function () { t.remove(); }, 3100);
+  }
+
+  function updateProgress() {
+    var total = drill.cards.length;
+    var mastered = Object.keys(run.masteredThisRun).length;
+    els.progressLabel.textContent = mastered + " / " + total + " mastered this run";
+    els.progressFill.style.width = (total ? Math.round(mastered / total * 100) : 0) + "%";
+  }
+
+  function nextCard() {
+    persistRun();
+    if (run.mode === "quiz") {
+      updateProgress();
+      if (!run.queue.length) return renderDone();
+    }
+    if (!run.queue.length) { // learn mode ran dry - reshuffle everything
+      run.queue = shuffle(drill.cards.map(function (c) { return c.id; }));
+    }
+    var cardId = run.queue.shift();
+    var card = cardsById[cardId];
+    var set = buildOptionSet(card);
+    current = { cardId: cardId, set: set, checked: false, helpTimer: null };
+    renderCard();
+  }
+
+  function renderCard() {
+    var card = cardsById[current.cardId];
+    var set = current.set;
+    var learn = run.mode === "learn";
+    var firstLearn = learn && !run.seenInLearn[current.cardId];
+
+    var kind = set.multi ? "Pick every correct answer shown" : "Pick one answer";
+    var streakHtml = "";
+    if (run.mode === "quiz") {
+      var s = run.streak[current.cardId] || 0;
+      var dots = "";
+      for (var i = 0; i < MASTERY_STREAK; i++) dots += '<i class="' + (i < s ? "on" : "") + '"></i>';
+      streakHtml = '<span class="streakdots" title="Streak toward mastery">' + dots + "</span>";
+    }
+
+    var optsHtml = set.options.map(function (opt, idx) {
+      var isAnswer = firstLearn && set.correct.indexOf(opt) !== -1;
+      return '<label class="opt' + (isAnswer ? " is-answer" : "") + '" data-opt="' + idx + '">' +
+        '<input type="' + (set.multi ? "checkbox" : "radio") + '" name="opt" value="' + idx + '">' +
+        "<span>" + escapeHtml(opt) + "</span></label>";
+    }).join("");
+
+    els.stage.innerHTML =
+      '<div class="card">' +
+      '<p class="prompt">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
+      '<div class="hint-kind">' + kind + (firstLearn ? " · the answer is highlighted this time" : "") + "</div>" +
+      '<div class="options">' + optsHtml + "</div>" +
+      '<div class="feedback" id="fb"></div>' +
+      '<div class="actions">' +
+      '<button type="button" class="btn" id="check-btn">Check</button>' +
+      (learn ? '<button type="button" class="btn ghost" id="help-btn">I need help</button>' : "") +
+      '<span class="spacer"></span>' +
+      '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
+      "</div></div>";
+
+    var optionEls = els.stage.querySelectorAll(".opt");
+    Array.prototype.forEach.call(optionEls, function (el) {
+      el.addEventListener("click", function () {
+        if (current.checked) return;
+        var input = el.querySelector("input");
+        if (!set.multi) {
+          Array.prototype.forEach.call(optionEls, function (o) { o.classList.remove("is-picked"); });
+          Array.prototype.forEach.call(els.stage.querySelectorAll("input"), function (i) { i.checked = false; });
+          input.checked = true;
+          el.classList.add("is-picked");
+        } else {
+          setTimeout(function () { el.classList.toggle("is-picked", input.checked); }, 0);
+        }
+      });
+    });
+
+    els.stage.querySelector("#check-btn").addEventListener("click", onCheck);
+    var helpBtn = els.stage.querySelector("#help-btn");
+    if (helpBtn) helpBtn.addEventListener("click", onHelp);
+    els.stage.querySelector("#restart-btn").addEventListener("click", function () {
+      run = freshRun(run.mode);
+      persistRun();
+      toast("Run restarted.");
+      nextCard();
+    });
+  }
+
+  function onHelp() {
+    // learn mode only - flash the correct option(s) for a couple of seconds,
+    // and record that help was used (so this card is not treated as "learned
+    // without support" - but learn mode records nothing to the server anyway).
+    run.usedHelpRecently = true;
+    var set = current.set;
+    var optionEls = els.stage.querySelectorAll(".opt");
+    Array.prototype.forEach.call(optionEls, function (el, idx) {
+      if (set.correct.indexOf(set.options[idx]) !== -1) el.classList.add("is-answer");
+    });
+    if (current.helpTimer) clearTimeout(current.helpTimer);
+    current.helpTimer = setTimeout(function () {
+      if (current.checked) return;
+      Array.prototype.forEach.call(els.stage.querySelectorAll(".opt"), function (el, idx) {
+        var isFirstLearnAnswer = run.mode === "learn" && !run.seenInLearn[current.cardId] && set.correct.indexOf(set.options[idx]) !== -1;
+        if (!isFirstLearnAnswer) el.classList.remove("is-answer");
+      });
+    }, HELP_MS);
+  }
+
+  function onCheck() {
+    if (current.checked) { advance(); return; }
+    var set = current.set;
+    var card = cardsById[current.cardId];
+    var picked = [];
+    Array.prototype.forEach.call(els.stage.querySelectorAll("input"), function (input, idx) {
+      if (input.checked) picked.push(set.options[idx]);
+    });
+    if (!picked.length) { toast("Pick an answer first."); return; }
+
+    var correctSet = set.correct.slice().sort().join("");
+    var pickedSet = picked.slice().sort().join("");
+    var right = correctSet === pickedSet;
+
+    current.checked = true;
+    if (current.helpTimer) clearTimeout(current.helpTimer);
+
+    var optionEls = els.stage.querySelectorAll(".opt");
+    Array.prototype.forEach.call(optionEls, function (el, idx) {
+      el.classList.add("is-locked");
+      el.classList.remove("is-picked", "is-answer");
+      el.querySelector("input").disabled = true;
+      var opt = set.options[idx];
+      var isCorrect = set.correct.indexOf(opt) !== -1;
+      var wasPicked = picked.indexOf(opt) !== -1;
+      if (isCorrect) el.classList.add("is-correct");
+      else if (wasPicked) el.classList.add("is-wrong");
+    });
+
+    var fb = els.stage.querySelector("#fb");
+    fb.className = "feedback show " + (right ? "ok" : "no");
+    fb.innerHTML = (right ? "Correct." : "Not quite — the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
+      (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+
+    els.stage.querySelector("#check-btn").textContent = "Next";
+
+    // ---- scoring ----
+    if (run.mode === "quiz") {
+      run.attempts[current.cardId] = (run.attempts[current.cardId] || 0) + 1;
+      if (right) {
+        run.streak[current.cardId] = (run.streak[current.cardId] || 0) + 1;
+        if (run.streak[current.cardId] >= MASTERY_STREAK) {
+          run.masteredThisRun[current.cardId] = true;
+          if (!everMastered[current.cardId]) { everMastered[current.cardId] = true; saveEver(everMastered); }
+          fb.innerHTML = "Mastered — three in a row! This card is done for this run." +
+            (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+        }
+      } else {
+        run.wrong[current.cardId] = (run.wrong[current.cardId] || 0) + 1;
+        run.streak[current.cardId] = 0;
+      }
+      report(current.cardId);
+      persistRun();
+      updateProgress();
+    }
+  }
+
+  function advance() {
+    var learn = run.mode === "learn";
+    if (learn) {
+      // First sighting had the answer highlighted. Re-queue it just one
+      // card ahead so it comes straight back, this time without the
+      // highlight - exactly one intervening question, as asked for. Every
+      // exposure AFTER that first one just rejoins the back of the queue
+      // like a normal card, or the deck would never move past the first
+      // two or three cards - they would keep getting bumped back to the
+      // front forever.
+      var wasFirst = !run.seenInLearn[current.cardId];
+      run.seenInLearn[current.cardId] = true;
+      run.usedHelpRecently = false;
+      if (wasFirst) {
+        var pos = Math.min(1, run.queue.length);
+        run.queue.splice(pos, 0, current.cardId);
+      } else {
+        run.queue.push(current.cardId);
+      }
+    } else {
+      if (!run.masteredThisRun[current.cardId]) {
+        // not mastered yet - send it to the back of the queue
+        run.queue.push(current.cardId);
+      }
+    }
+    nextCard();
+  }
+
+  function renderDone() {
+    var total = drill.cards.length;
+    var everCount = Object.keys(everMastered).length;
+    els.stage.innerHTML =
+      '<div class="done">' +
+      '<div class="big">🎉</div>' +
+      "<h2>True mastery!</h2>" +
+      "<p>You mastered every card in <strong>" + escapeHtml(drill.title) + "</strong> this run.</p>" +
+      "<p>Overall you have mastered " + everCount + " of " + total + " cards.</p>" +
+      '<div class="actions" style="justify-content:center">' +
+      '<button type="button" class="btn" id="again-btn">Run it again</button>' +
+      "</div></div>";
+    els.stage.querySelector("#again-btn").addEventListener("click", function () {
+      run = freshRun("quiz");
+      persistRun();
+      nextCard();
+    });
+    try {
+      window.parent.postMessage({
+        type: "BC_DRILL_PROGRESS", drillId: drillId, drillLabel: drill.title,
+        cardId: "__run_complete__", cardPrompt: "Run complete",
+        streak: MASTERY_STREAK, masteredThisRun: true, everMastered: everCount === total,
+        attempts: 0, wrong: 0, everCount: everCount, total: total, trueMastery: everCount === total,
+        summary: "Completed a full quiz run — every card mastered this run. Overall " + everCount + "/" + total + " cards ever mastered" + (everCount === total ? " · TRUE MASTERY ACHIEVED" : "") + "."
+      }, "*");
+    } catch (e) {}
+  }
+
+  // ============================================================
+  // BOOT
+  // ============================================================
+  els.modeLearn.addEventListener("click", function () { setMode("learn"); });
+  els.modeQuiz.addEventListener("click", function () { setMode("quiz"); });
+
+  var restored = loadRun();
+  if (restored) {
+    run = restored;
+    setMode(run.mode, { silent: true });
+  } else {
+    setMode("learn", { silent: true });
+  }
+})();
+</script>
+</body>
+</html>
