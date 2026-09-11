@@ -94,6 +94,17 @@
   .done .big { font-size: 2.4rem; }
   .done h2 { margin: 10px 0 6px; }
   .done p { color: var(--muted); }
+  .text-answer-input {
+    display: block; width: 100%; padding: 12px 14px; font: inherit; font-size: 1rem;
+    border: 2px solid var(--line); border-radius: 10px; margin: 4px 0 6px;
+  }
+  .text-answer-input:focus { outline: none; border-color: var(--brand); }
+  .text-answer-input:disabled { background: #f1f3f8; color: var(--ink); }
+  .help-box {
+    display: none; margin: 8px 0; padding: 10px 12px; border-radius: 9px;
+    background: var(--answer-soft); border: 1px solid #e8cf93; color: #7a5c05; font-weight: 600;
+  }
+  .help-box.show { display: block; }
 </style>
 </head>
 <body>
@@ -111,6 +122,12 @@
       </label>
       <label class="setup-field">How many cards this run?
         <select id="setup-count"></select>
+      </label>
+      <label class="setup-field">How do you want to answer?
+        <select id="setup-answermode">
+          <option value="mc">Multiple choice</option>
+          <option value="text">Type the answer</option>
+        </select>
       </label>
     </div>
     <div class="setup-row setup-actions">
@@ -1181,6 +1198,8 @@
   var MASTERY_STREAK = 3;
   var HELP_MS = 1000;
   var ADVANCE_MS = 1000; // auto-advance delay after a card is marked, either mode
+  var TEXT_HELP_MS = 2500; // text mode help reveal has no options to flash, so it gets a bit longer
+  var TEXT_WRONG_ADVANCE_MS = 3500; // text mode: linger longer on a wrong answer so it can be memorised
 
   var params = new URLSearchParams(location.search);
   var drillId = params.get("drill") || "y10-1-1-numbers";
@@ -1194,6 +1213,7 @@
     setupCard: document.getElementById("setup-card"),
     setupCategory: document.getElementById("setup-category"),
     setupCount: document.getElementById("setup-count"),
+    setupAnswerMode: document.getElementById("setup-answermode"),
     setupStartLearn: document.getElementById("setup-start-learn"),
     setupStartQuiz: document.getElementById("setup-start-quiz"),
     runArea: document.getElementById("run-area"),
@@ -1245,7 +1265,7 @@
 
   // run state - reset whenever the mode, topic or card count changes
   var run = null;
-  function freshRun(mode, category, count) {
+  function freshRun(mode, category, count, answerMode) {
     var pool = categoryCardIds(category);
     var size = (count && count < pool.length) ? count : pool.length;
     var queue = (count && count < pool.length) ? sample(pool, size) : shuffle(pool);
@@ -1253,6 +1273,7 @@
       mode: mode,
       category: category || "all",
       count: size,
+      answerMode: answerMode === "text" ? "text" : "mc",
       queue: queue,
       streak: {},            // cardId -> consecutive correct this run
       masteredThisRun: {},   // cardId -> true
@@ -1272,6 +1293,7 @@
         // category/count - they were always the whole drill.
         if (!r.category) r.category = "all";
         if (!r.count) r.count = drill.cards.length;
+        if (r.answerMode !== "text") r.answerMode = "mc";
         return r;
       }
     } catch (e) {}
@@ -1290,6 +1312,57 @@
   function escapeHtml(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  // ---- text-mode grading: whole-word keyword matching, never substring ----
+  // "byte" must not match inside "kibibyte", and "2" must not match inside
+  // "12" - so we tokenize into whole [a-z0-9]+ runs, never do indexOf on raw
+  // strings. A leading minus before a number (as in "-128") is folded into
+  // its own token ("neg128") before tokenizing, so "128" (unsigned) and
+  // "-128"/"negative 128"/"minus 128" (signed) are never confused.
+  var TEXT_FILLER = { a: 1, an: 1, the: 1, is: 1, are: 1, of: 1, to: 1, in: 1, on: 1, for: 1, and: 1, or: 1, it: 1, its: 1, this: 1, that: 1, by: 1, be: 1, as: 1, so: 1, than: 1, then: 1 };
+  function tokenize(text) {
+    var s = String(text == null ? "" : text).toLowerCase();
+    s = s.replace(/\u2212/g, "-"); // the real minus sign used in card text, vs the ASCII hyphen a student types
+    s = s.replace(/\bnegative\b/g, " neg ").replace(/\bminus\b/g, " neg ");
+    s = s.replace(/-\s*(\d+)/g, " neg$1 ");
+    s = s.replace(/\bneg\s+(\d+)/g, " neg$1 ");
+    var raw = s.match(/[a-z0-9]+/g) || [];
+    return raw;
+  }
+  // Cards can carry an explicit `keywords` field describing exactly what
+  // counts as a correct typed answer:
+  //   keywords: [ altPhrasing, altPhrasing, ... ]           (OR - any one alt is enough)
+  //   altPhrasing: [ requirement, requirement, ... ]        (AND - every requirement needed)
+  //   requirement: [ token, token, ... ]                    (OR - any one synonym token)
+  // If a card has no `keywords` yet, fall back to requiring every
+  // non-filler whole word from one of its `answers` strings - safe (still
+  // whole-word, still neg-number aware) even before keywords are written.
+  // An answer like "Kibibyte (KiB)" splits into two separate alternatives
+  // (the full word, or just the abbreviation) rather than requiring both -
+  // a student who types either one has clearly given the right answer.
+  function keywordsForCard(card) {
+    if (card.keywords) return card.keywords;
+    var alts = [];
+    (card.answers || []).forEach(function (ans) {
+      var m = /^(.*?)\(([^)]+)\)\s*$/.exec(ans);
+      var phrases = m ? [m[1], m[2]] : [ans];
+      phrases.forEach(function (phrase) {
+        var toks = tokenize(phrase).filter(function (t) { return !TEXT_FILLER[t]; });
+        if (toks.length) alts.push(toks.map(function (t) { return [t]; }));
+      });
+    });
+    return alts;
+  }
+  function matchAnswer(card, rawInput) {
+    var have = {};
+    tokenize(rawInput).forEach(function (t) { have[t] = true; });
+    var alts = keywordsForCard(card);
+    return alts.some(function (requirements) {
+      return requirements.every(function (synonyms) {
+        return synonyms.some(function (tok) { return !!have[tok]; });
+      });
     });
   }
 
@@ -1374,7 +1447,7 @@
     opts = opts || {};
     var switching = run && run.mode !== mode;
     if (switching || !run) {
-      run = freshRun(mode, run ? run.category : "all", run ? run.count : null);
+      run = freshRun(mode, run ? run.category : "all", run ? run.count : null, run ? run.answerMode : "mc");
       persistRun();
     }
     applyModeUI(mode);
@@ -1425,8 +1498,12 @@
     var card = cardsById[current.cardId];
     var set = current.set;
     var learn = run.mode === "learn";
+    // Multi-answer cards always stay multiple choice, even in text mode -
+    // grading several free-typed answers reliably is a much harder problem
+    // than grading one, so only single-answer cards get the text input.
+    var textMode = run.answerMode === "text" && !set.multi;
 
-    var kind = set.multi ? "Pick every correct answer, then submit" : "Pick an answer";
+    var kind = set.multi ? "Pick every correct answer, then submit" : (textMode ? "Type your answer" : "Pick an answer");
     var streakHtml = "";
     if (run.mode === "quiz") {
       var s = run.streak[current.cardId] || 0;
@@ -1443,6 +1520,10 @@
         '<input type="' + (set.multi ? "checkbox" : "radio") + '" name="opt" value="' + idx + '">' +
         "<span>" + escapeHtml(opt) + "</span></label>";
     }).join("");
+    var bodyHtml = textMode ?
+      ('<input type="text" class="text-answer-input" id="text-answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer...">' +
+        (learn ? '<div class="help-box" id="help-box"></div>' : "")) :
+      ('<div class="options">' + optsHtml + "</div>");
 
     // A single-answer card marks itself the instant an option is clicked -
     // there is nothing to "submit" when there is only one thing to pick, so
@@ -1455,29 +1536,37 @@
       '<div class="card">' +
       '<p class="prompt">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
       '<div class="hint-kind">' + kind + "</div>" +
-      '<div class="options">' + optsHtml + "</div>" +
+      bodyHtml +
       '<div class="feedback" id="fb"></div>' +
       '<div class="actions">' +
-      (set.multi ? '<button type="button" class="btn" id="submit-btn">Submit</button>' : "") +
+      (textMode ? '<button type="button" class="btn" id="submit-btn">Check</button>' : (set.multi ? '<button type="button" class="btn" id="submit-btn">Submit</button>' : "")) +
       (learn ? '<button type="button" class="btn ghost" id="help-btn">I need help</button>' : "") +
       '<span class="spacer"></span>' +
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
       "</div></div>";
 
-    var optionEls = els.stage.querySelectorAll(".opt");
-    Array.prototype.forEach.call(optionEls, function (el) {
-      el.addEventListener("click", function () {
-        if (current.checked) return;
-        var input = el.querySelector("input");
-        if (!set.multi) {
-          input.checked = true;
-          el.classList.add("is-picked");
-          submitAnswer(); // single answer: picking it IS submitting it
-        } else {
-          setTimeout(function () { el.classList.toggle("is-picked", input.checked); }, 0);
-        }
+    if (textMode) {
+      var textInput = els.stage.querySelector("#text-answer");
+      textInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); submitAnswer(); }
       });
-    });
+      textInput.focus();
+    } else {
+      var optionEls = els.stage.querySelectorAll(".opt");
+      Array.prototype.forEach.call(optionEls, function (el) {
+        el.addEventListener("click", function () {
+          if (current.checked) return;
+          var input = el.querySelector("input");
+          if (!set.multi) {
+            input.checked = true;
+            el.classList.add("is-picked");
+            submitAnswer(); // single answer: picking it IS submitting it
+          } else {
+            setTimeout(function () { el.classList.toggle("is-picked", input.checked); }, 0);
+          }
+        });
+      });
+    }
 
     var submitBtn = els.stage.querySelector("#submit-btn");
     if (submitBtn) submitBtn.addEventListener("click", submitAnswer);
@@ -1485,7 +1574,7 @@
     if (helpBtn) helpBtn.addEventListener("click", onHelp);
     els.stage.querySelector("#restart-btn").addEventListener("click", function () {
       if (current.advanceTimer) clearTimeout(current.advanceTimer);
-      run = freshRun(run.mode, run.category, run.count);
+      run = freshRun(run.mode, run.category, run.count, run.answerMode);
       persistRun();
       toast("Run restarted.");
       nextCard();
@@ -1493,13 +1582,27 @@
   }
 
   function onHelp() {
-    // Learn mode's ONLY reveal, anywhere: flash the correct option(s) for a
-    // second, then hide them again completely - the answer is never shown
+    // Learn mode's ONLY reveal, anywhere: flash the correct answer for a
+    // bit, then hide it again completely - the answer is never shown
     // otherwise, not even on a card's first appearance. Recorded on the
     // current card so advance() can bring it back round sooner for a quick
     // second look, rather than losing it in the full deck for a while.
     current.usedHelp = true;
     var set = current.set;
+    var card = cardsById[current.cardId];
+    var textMode = run.answerMode === "text" && !set.multi;
+    if (textMode) {
+      var box = els.stage.querySelector("#help-box");
+      if (!box) return;
+      box.textContent = set.correct.join(" / ");
+      box.classList.add("show");
+      if (current.helpTimer) clearTimeout(current.helpTimer);
+      current.helpTimer = setTimeout(function () {
+        if (current.checked) return;
+        box.classList.remove("show");
+      }, TEXT_HELP_MS);
+      return;
+    }
     var optionEls = els.stage.querySelectorAll(".opt");
     Array.prototype.forEach.call(optionEls, function (el, idx) {
       if (set.correct.indexOf(set.options[idx]) !== -1) el.classList.add("is-answer");
@@ -1510,6 +1613,10 @@
       Array.prototype.forEach.call(els.stage.querySelectorAll(".opt"), function (el) {
         el.classList.remove("is-answer");
       });
+      // Shuffle the visible order once the flash is gone, so a student
+      // cannot just remember "3rd from the top" without reading any text.
+      set.options = shuffle(set.options);
+      renderCard();
     }, HELP_MS);
   }
 
@@ -1517,35 +1624,55 @@
     if (current.checked) return;
     var set = current.set;
     var card = cardsById[current.cardId];
-    var picked = [];
-    Array.prototype.forEach.call(els.stage.querySelectorAll("input"), function (input, idx) {
-      if (input.checked) picked.push(set.options[idx]);
-    });
-    if (!picked.length) { toast("Pick an answer first."); return; }
+    var textMode = run.answerMode === "text" && !set.multi;
+    var right;
+    var fb;
 
-    var correctSet = set.correct.slice().sort().join("");
-    var pickedSet = picked.slice().sort().join("");
-    var right = correctSet === pickedSet;
+    if (textMode) {
+      var input = els.stage.querySelector("#text-answer");
+      var value = input.value;
+      if (!value.trim()) { toast("Type an answer first."); return; }
+      right = matchAnswer(card, value);
+      current.checked = true;
+      if (current.helpTimer) clearTimeout(current.helpTimer);
+      input.disabled = true;
+      var box = els.stage.querySelector("#help-box");
+      if (box) box.classList.remove("show");
+      fb = els.stage.querySelector("#fb");
+      fb.className = "feedback show " + (right ? "ok" : "no");
+      fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer is: " + escapeHtml(set.correct[0])) +
+        (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+    } else {
+      var picked = [];
+      Array.prototype.forEach.call(els.stage.querySelectorAll("input"), function (inp, idx) {
+        if (inp.checked) picked.push(set.options[idx]);
+      });
+      if (!picked.length) { toast("Pick an answer first."); return; }
 
-    current.checked = true;
-    if (current.helpTimer) clearTimeout(current.helpTimer);
+      var correctSet = set.correct.slice().sort().join("");
+      var pickedSet = picked.slice().sort().join("");
+      right = correctSet === pickedSet;
 
-    var optionEls = els.stage.querySelectorAll(".opt");
-    Array.prototype.forEach.call(optionEls, function (el, idx) {
-      el.classList.add("is-locked");
-      el.classList.remove("is-picked", "is-answer");
-      el.querySelector("input").disabled = true;
-      var opt = set.options[idx];
-      var isCorrect = set.correct.indexOf(opt) !== -1;
-      var wasPicked = picked.indexOf(opt) !== -1;
-      if (isCorrect) el.classList.add("is-correct");
-      else if (wasPicked) el.classList.add("is-wrong");
-    });
+      current.checked = true;
+      if (current.helpTimer) clearTimeout(current.helpTimer);
 
-    var fb = els.stage.querySelector("#fb");
-    fb.className = "feedback show " + (right ? "ok" : "no");
-    fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
-      (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+      var optionEls = els.stage.querySelectorAll(".opt");
+      Array.prototype.forEach.call(optionEls, function (el, idx) {
+        el.classList.add("is-locked");
+        el.classList.remove("is-picked", "is-answer");
+        el.querySelector("input").disabled = true;
+        var opt = set.options[idx];
+        var isCorrect = set.correct.indexOf(opt) !== -1;
+        var wasPicked = picked.indexOf(opt) !== -1;
+        if (isCorrect) el.classList.add("is-correct");
+        else if (wasPicked) el.classList.add("is-wrong");
+      });
+
+      fb = els.stage.querySelector("#fb");
+      fb.className = "feedback show " + (right ? "ok" : "no");
+      fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
+        (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+    }
 
     var submitBtn = els.stage.querySelector("#submit-btn");
     if (submitBtn) submitBtn.disabled = true;
@@ -1572,9 +1699,11 @@
       updateProgress();
     }
 
-    // Moves on by itself a second later - no extra click needed either way.
+    // Moves on by itself - a bit later for a text-mode wrong answer so it
+    // has time to actually be memorised, otherwise the usual short delay.
     if (current.advanceTimer) clearTimeout(current.advanceTimer);
-    current.advanceTimer = setTimeout(advance, ADVANCE_MS);
+    var delay = (textMode && !right) ? TEXT_WRONG_ADVANCE_MS : ADVANCE_MS;
+    current.advanceTimer = setTimeout(advance, delay);
   }
 
   function advance() {
@@ -1620,7 +1749,7 @@
       '<button type="button" class="btn ghost" id="done-change-btn">Choose a different topic</button>' +
       "</div></div>";
     els.stage.querySelector("#again-btn").addEventListener("click", function () {
-      run = freshRun("quiz", run.category, run.count);
+      run = freshRun("quiz", run.category, run.count, run.answerMode);
       persistRun();
       updateScopeLabel();
       nextCard();
@@ -1666,11 +1795,14 @@
     els.setupCard.style.display = "";
     populateCategorySelect(run ? run.category : "all");
     populateCountSelect(run ? run.category : "all", run ? run.count : null);
+    els.setupAnswerMode.value = run ? run.answerMode : "mc";
+    if (els.setupAnswerMode.selectedIndex === -1) els.setupAnswerMode.value = "mc";
   }
   function startRun(mode) {
     var category = els.setupCategory.value;
     var count = Number(els.setupCount.value) || null;
-    run = freshRun(mode, category, count);
+    var answerMode = els.setupAnswerMode.value;
+    run = freshRun(mode, category, count, answerMode);
     persistRun();
     els.setupCard.style.display = "none";
     els.runArea.style.display = "";
