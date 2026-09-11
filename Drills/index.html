@@ -1322,6 +1322,49 @@
   // its own token ("neg128") before tokenizing, so "128" (unsigned) and
   // "-128"/"negative 128"/"minus 128" (signed) are never confused.
   var TEXT_FILLER = { a: 1, an: 1, the: 1, is: 1, are: 1, of: 1, to: 1, in: 1, on: 1, for: 1, and: 1, or: 1, it: 1, its: 1, this: 1, that: 1, by: 1, be: 1, as: 1, so: 1, than: 1, then: 1 };
+  // A student typing "two" instead of "2" (or vice versa) is giving the
+  // same answer, so number words fold to the same digit token as their
+  // numeral form - both sides of a match run through this, so a card
+  // answer written either way still lines up with either way of typing it.
+  var NUM_WORDS = { zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+  var NUM_SCALES = { hundred: 100, thousand: 1000 };
+  function collapseNumberWords(tokens) {
+    var out = [];
+    var i = 0;
+    while (i < tokens.length) {
+      var t = tokens[i];
+      if (NUM_WORDS.hasOwnProperty(t) || NUM_SCALES.hasOwnProperty(t)) {
+        var total = 0, current = 0, j = i;
+        while (j < tokens.length) {
+          var w = tokens[j];
+          if (NUM_WORDS.hasOwnProperty(w)) {
+            current += NUM_WORDS[w];
+            j++;
+          } else if (NUM_SCALES.hasOwnProperty(w)) {
+            current = (current || 1) * NUM_SCALES[w];
+            if (w === "thousand") { total += current; current = 0; }
+            j++;
+          } else if (w === "and" && j + 1 < tokens.length && (NUM_WORDS.hasOwnProperty(tokens[j + 1]) || NUM_SCALES.hasOwnProperty(tokens[j + 1]))) {
+            j++;
+          } else {
+            break;
+          }
+        }
+        total += current;
+        if (out.length && out[out.length - 1] === "neg") {
+          out.pop();
+          out.push("neg" + total);
+        } else {
+          out.push(String(total));
+        }
+        i = j;
+      } else {
+        out.push(t);
+        i++;
+      }
+    }
+    return out;
+  }
   function tokenize(text) {
     var s = String(text == null ? "" : text).toLowerCase();
     s = s.replace(/\u2212/g, "-"); // the real minus sign used in card text, vs the ASCII hyphen a student types
@@ -1329,17 +1372,20 @@
     s = s.replace(/-\s*(\d+)/g, " neg$1 ");
     s = s.replace(/\bneg\s+(\d+)/g, " neg$1 ");
     var raw = s.match(/[a-z0-9]+/g) || [];
-    return raw;
+    return collapseNumberWords(raw);
   }
   // Cards can carry an explicit `keywords` field describing exactly what
   // counts as a correct typed answer:
   //   keywords: [ altPhrasing, altPhrasing, ... ]           (OR - any one alt is enough)
   //   altPhrasing: [ requirement, requirement, ... ]        (AND - every requirement needed)
   //   requirement: [ token, token, ... ]                    (OR - any one synonym token)
-  // If a card has no `keywords` yet, fall back to requiring every
-  // non-filler whole word from one of its `answers` strings - safe (still
-  // whole-word, still neg-number aware) even before keywords are written.
-  // An answer like "Kibibyte (KiB)" splits into two separate alternatives
+  // If a card has no `keywords` yet, fall back to requiring the non-filler
+  // whole words from one of its `answers` strings - safe (still whole-word,
+  // still neg-number aware) even before keywords are written. A short
+  // answer (1-2 keywords) still needs all of them, but a longer explanatory
+  // answer only needs most of its keywords (a majority), not every single
+  // one typed back verbatim - a fair paraphrase should still pass. An
+  // answer like "Kibibyte (KiB)" splits into two separate alternatives
   // (the full word, or just the abbreviation) rather than requiring both -
   // a student who types either one has clearly given the right answer.
   function keywordsForCard(card) {
@@ -1350,7 +1396,9 @@
       var phrases = m ? [m[1], m[2]] : [ans];
       phrases.forEach(function (phrase) {
         var toks = tokenize(phrase).filter(function (t) { return !TEXT_FILLER[t]; });
-        if (toks.length) alts.push(toks.map(function (t) { return [t]; }));
+        if (!toks.length) return;
+        var need = toks.length <= 2 ? toks.length : Math.max(2, Math.ceil(toks.length * 0.6));
+        alts.push({ tokens: toks, need: need });
       });
     });
     return alts;
@@ -1359,10 +1407,18 @@
     var have = {};
     tokenize(rawInput).forEach(function (t) { have[t] = true; });
     var alts = keywordsForCard(card);
-    return alts.some(function (requirements) {
-      return requirements.every(function (synonyms) {
-        return synonyms.some(function (tok) { return !!have[tok]; });
-      });
+    return alts.some(function (alt) {
+      // Explicit `keywords` (card.keywords, when present) stay an exact
+      // OR-of-AND-of-OR-synonyms match - every requirement must be met.
+      if (Array.isArray(alt)) {
+        return alt.every(function (synonyms) {
+          return synonyms.some(function (tok) { return !!have[tok]; });
+        });
+      }
+      // Fallback alternatives are threshold-based: enough of the keywords,
+      // not literally every one.
+      var count = alt.tokens.filter(function (t) { return have[t]; }).length;
+      return count >= alt.need;
     });
   }
 
@@ -1641,7 +1697,7 @@
       fb = els.stage.querySelector("#fb");
       fb.className = "feedback show " + (right ? "ok" : "no");
       fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer is: " + escapeHtml(set.correct[0])) +
-        (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+        (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
     } else {
       var picked = [];
       Array.prototype.forEach.call(els.stage.querySelectorAll("input"), function (inp, idx) {
@@ -1671,7 +1727,7 @@
       fb = els.stage.querySelector("#fb");
       fb.className = "feedback show " + (right ? "ok" : "no");
       fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
-        (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+        (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
     }
 
     var submitBtn = els.stage.querySelector("#submit-btn");
@@ -1688,7 +1744,7 @@
           run.masteredThisRun[current.cardId] = true;
           if (!everMastered[current.cardId]) { everMastered[current.cardId] = true; saveEver(everMastered); }
           fb.innerHTML = "Mastered! Three in a row - this card is done for this run." +
-            (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+            (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
         }
       } else {
         run.wrong[current.cardId] = (run.wrong[current.cardId] || 0) + 1;
