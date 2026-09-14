@@ -133,6 +133,15 @@
   .code-result.ok { background: var(--good-soft); border-color: #b6e2c9; color: var(--good); }
   .code-result.no { background: var(--bad-soft); border-color: #efc2bc; color: var(--bad); }
   .code-result pre { margin: 4px 0 0; font: 600 .85rem/1.4 "SFMono-Regular", Consolas, monospace; white-space: pre-wrap; color: inherit; }
+  .code-help-box {
+    display: none; margin: 8px 0; padding: 10px 12px; border-radius: 9px;
+    background: var(--answer-soft); border: 1px solid #e8cf93; color: #7a5c05;
+  }
+  .code-help-box.show { display: block; }
+  .code-help-box pre {
+    margin: 4px 0 0; font: 600 .85rem/1.4 "SFMono-Regular", Consolas, monospace;
+    white-space: pre-wrap; color: inherit;
+  }
 
   /* Per-topic mastery overview on the setup screen - always shows the
      percentage AND the exact fraction together (never one without the
@@ -1960,6 +1969,7 @@
   drill.cards.forEach(function (c) { cardsById[c.id] = c; });
   var isCodeDrill = !!drill.codeDrill;
   var CODE_MASTERY_STREAK = 3;
+  var CODE_HELP_MS = 4000; // a whole reference program takes longer to read than one flashed MC option
 
   var els = {
     title: document.getElementById("drill-title"),
@@ -2779,16 +2789,18 @@
     populateCountSelect(run ? run.category : "all", run ? run.count : null);
     renderMasteryOverview();
     if (isCodeDrill) {
-      // No MC/Text choice (there is only one way to answer a code card),
+      // No MC/Text choice (there is only one way to answer a code card) and
       // no card-count limit (mastery needs every variant of a type
-      // available, see startCodeRun), and no Learn mode (there is nothing
-      // to "flash" for a card whose answer is a whole program) - one
-      // Start action into the single type-mastery loop. Code runs are
-      // never persisted (see startCodeRun), so there is nothing to resume.
+      // available, see startCodeRun) - but Learn mode DOES apply here now:
+      // "I need help" reveals the reference pseudocode for a few seconds,
+      // same idea as the MC/text engine's own help flash, just with nothing
+      // to click since there's no fixed option set. Code runs are never
+      // persisted (see startCodeRun), so there is nothing to resume.
       els.setupAnswerModeField.style.display = "none";
       els.setupCountField.style.display = "none";
-      els.setupStartLearn.style.display = "none";
-      els.setupStartQuiz.textContent = "Start";
+      els.setupStartLearn.style.display = "";
+      els.setupStartLearn.textContent = "Start in Learn mode";
+      els.setupStartQuiz.textContent = "Start in Quiz mode";
       if (els.setupContinue) els.setupContinue.style.display = "none";
       if (els.setupResumeNote) els.setupResumeNote.style.display = "none";
       return;
@@ -2816,7 +2828,7 @@
   function startRun(mode) {
     var category = els.setupCategory.value;
     var count = Number(els.setupCount.value) || null;
-    if (isCodeDrill) { startCodeRun(category); return; }
+    if (isCodeDrill) { startCodeRun(category, mode); return; }
     var answerMode = els.setupAnswerMode.value;
     run = freshRun(mode, category, count, answerMode);
     persistRun();
@@ -2841,30 +2853,40 @@
   // Never persisted across reloads (unlike the MC/text runs above) -
   // writing code is a one-sitting activity, not something to resume days
   // later, so there is no localStorage save here at all.
-  function startCodeRun(category) {
+  function startCodeRun(category, mode) {
     // Deliberately ignores the card-count picker (hidden for code drills
     // anyway): a type can only be mastered if every one of its authored
     // variants is available to draw from, so the run always includes the
     // FULL set of cards in the chosen topic, never a trimmed sample.
+    // Learn mode never touches categoryStreak/masteredCategories at all
+    // (see submitCodeAnswer) - nextCodeCard()'s existing "skip mastered
+    // categories" filter then naturally becomes "every category stays in
+    // rotation forever", which is exactly Learn mode's unlimited-practice
+    // behaviour, with no extra branching needed there.
+    mode = mode === "learn" ? "learn" : "quiz";
     var pool = categoryCardIds(category);
     run = {
       codeDrill: true,
+      mode: mode,
       category: category || "all",
       count: pool.length,
       pool: pool,
-      categoryStreak: {},     // category -> consecutive correct
-      masteredCategories: {}, // category -> true once it reaches CODE_MASTERY_STREAK
+      categoryStreak: {},     // category -> consecutive correct (quiz mode only)
+      masteredCategories: {}, // category -> true once it reaches CODE_MASTERY_STREAK (quiz mode only)
       lastCardId: null
     };
     els.setupCard.style.display = "none";
     els.runArea.style.display = "";
     els.modebar.style.display = "none";
-    els.noticeLearn.style.display = "none";
+    // Reuses the regular engine's own Learn-mode notice ("nothing is
+    // recorded here... press I need help") - it's generic enough to apply
+    // here too, so no code-specific Learn copy was needed.
+    els.noticeLearn.style.display = mode === "learn" ? "" : "none";
     els.noticeQuiz.style.display = "none";
-    els.noticeCode.style.display = "";
-    els.progress.style.display = "flex";
+    els.noticeCode.style.display = mode === "quiz" ? "" : "none";
+    els.progress.style.display = mode === "quiz" ? "flex" : "none";
     updateScopeLabel();
-    updateCodeProgress();
+    if (mode === "quiz") updateCodeProgress();
     nextCodeCard();
   }
 
@@ -2936,10 +2958,17 @@
 
   function renderCodeCard() {
     var card = cardsById[current.cardId];
-    var s = run.categoryStreak[card.category] || 0;
-    var dots = "";
-    for (var i = 0; i < CODE_MASTERY_STREAK; i++) dots += '<i class="' + (i < s ? "on" : "") + '"></i>';
-    var streakHtml = '<span class="streakdots" title="Streak toward mastering this type of question">' + dots + "</span>";
+    var learn = run.mode === "learn";
+    // Streak dots track progress toward MASTERY, which only ever happens
+    // in Quiz mode (see submitCodeAnswer) - showing them in Learn mode
+    // would just be a permanent, meaningless "0/3".
+    var streakHtml = "";
+    if (!learn) {
+      var s = run.categoryStreak[card.category] || 0;
+      var dots = "";
+      for (var i = 0; i < CODE_MASTERY_STREAK; i++) dots += '<i class="' + (i < s ? "on" : "") + '"></i>';
+      streakHtml = '<span class="streakdots" title="Streak toward mastering this type of question">' + dots + "</span>";
+    }
     var given = codeGivenHtml(current.setup);
 
     els.stage.innerHTML =
@@ -2947,9 +2976,11 @@
       '<p class="prompt">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
       (given ? '<div class="code-given">' + escapeHtml(given) + "</div>" : "") +
       '<textarea class="code-textarea" id="code-input" spellcheck="false" autocomplete="off" placeholder="Type your pseudocode here..."></textarea>' +
+      (learn ? '<div class="code-help-box" id="code-help-box"></div>' : "") +
       '<div id="code-result"></div>' +
       '<div class="actions">' +
       '<button type="button" class="btn" id="code-check-btn">Run and check</button>' +
+      (learn ? '<button type="button" class="btn ghost" id="code-help-btn">I need help</button>' : "") +
       '<span class="spacer"></span>' +
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
       "</div></div>";
@@ -2957,10 +2988,30 @@
     var input = document.getElementById("code-input");
     input.focus();
     document.getElementById("code-check-btn").addEventListener("click", submitCodeAnswer);
+    var helpBtn = document.getElementById("code-help-btn");
+    if (helpBtn) helpBtn.addEventListener("click", onCodeHelp);
     els.stage.querySelector("#restart-btn").addEventListener("click", function () {
-      startCodeRun(run.category);
+      startCodeRun(run.category, run.mode);
       toast("Run restarted.");
     });
+  }
+
+  function onCodeHelp() {
+    // Learn mode's only reveal, same rule as everywhere else in Drills -
+    // the answer is never shown unless a student explicitly asks for it,
+    // and it hides itself again rather than staying up. Shows the
+    // reference PSEUDOCODE, not just its result, since seeing the actual
+    // working is the point of asking for help on a code card.
+    var card = cardsById[current.cardId];
+    var box = document.getElementById("code-help-box");
+    if (!box) return;
+    box.innerHTML = "<pre>" + escapeHtml(card.reference) + "</pre>";
+    box.classList.add("show");
+    if (current.helpTimer) clearTimeout(current.helpTimer);
+    current.helpTimer = setTimeout(function () {
+      if (current.checked) return;
+      box.classList.remove("show");
+    }, CODE_HELP_MS);
   }
 
   function formatVarsForDisplay(vars, names) {
@@ -3045,21 +3096,31 @@
     current.checked = true;
     input.disabled = true;
     document.getElementById("code-check-btn").disabled = true;
+    if (current.helpTimer) clearTimeout(current.helpTimer);
+    var helpBoxEl = document.getElementById("code-help-box");
+    if (helpBoxEl) helpBoxEl.classList.remove("show");
+    var helpBtnEl = document.getElementById("code-help-btn");
+    if (helpBtnEl) helpBtnEl.disabled = true;
     resultEl.className = "code-result " + (right ? "ok" : "no");
     resultEl.innerHTML = escapeHtml(message);
 
+    // Mastery, admin reporting, and the progress bar are all a Quiz-mode
+    // concept, exactly like the regular MC/text engine - Learn mode here
+    // "records nothing" too, same rule stated in noticeLearn's own text.
     var cat = card.category;
-    if (right) {
-      run.categoryStreak[cat] = (run.categoryStreak[cat] || 0) + 1;
-      if (run.categoryStreak[cat] >= CODE_MASTERY_STREAK) {
-        run.masteredCategories[cat] = true;
-        resultEl.innerHTML = "Correct! " + escapeHtml(categoryLabel(cat)) + " mastered for this run - three right in a row.";
+    if (run.mode === "quiz") {
+      if (right) {
+        run.categoryStreak[cat] = (run.categoryStreak[cat] || 0) + 1;
+        if (run.categoryStreak[cat] >= CODE_MASTERY_STREAK) {
+          run.masteredCategories[cat] = true;
+          resultEl.innerHTML = "Correct! " + escapeHtml(categoryLabel(cat)) + " mastered for this run - three right in a row.";
+        }
+      } else {
+        run.categoryStreak[cat] = 0;
       }
-    } else {
-      run.categoryStreak[cat] = 0;
+      reportCode(card, right);
+      updateCodeProgress();
     }
-    reportCode(card, right);
-    updateCodeProgress();
 
     var nextBtn = document.createElement("button");
     nextBtn.type = "button";
@@ -3079,7 +3140,7 @@
       '<button type="button" class="btn" id="code-again-btn">Run it again</button>' +
       '<button type="button" class="btn ghost" id="code-change-btn">Choose a different topic</button>' +
       "</div></div>";
-    document.getElementById("code-again-btn").addEventListener("click", function () { startCodeRun(run.category); });
+    document.getElementById("code-again-btn").addEventListener("click", function () { startCodeRun(run.category, run.mode); });
     document.getElementById("code-change-btn").addEventListener("click", openSetup);
   }
 
