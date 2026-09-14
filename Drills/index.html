@@ -131,6 +131,25 @@
   .code-result.ok { background: var(--good-soft); border-color: #b6e2c9; color: var(--good); }
   .code-result.no { background: var(--bad-soft); border-color: #efc2bc; color: var(--bad); }
   .code-result pre { margin: 4px 0 0; font: 600 .85rem/1.4 "SFMono-Regular", Consolas, monospace; white-space: pre-wrap; color: inherit; }
+
+  /* Per-topic mastery overview on the setup screen - always shows the
+     percentage AND the exact fraction together (never one without the
+     other), since this is used for homework tracking and a bare percentage
+     alone can be ambiguous (rounding, small denominators). Reflects
+     "ever mastered" (the same persisted state that gets synced to the
+     server/admin, not this run's own temporary streaks), so what a
+     student sees here should always match what a teacher sees for them. */
+  .mastery-overview { margin: 14px 0; }
+  .mastery-overview-title { font-weight: 700; font-size: .95rem; margin: 0 0 2px; }
+  .mastery-overview-note { color: var(--muted); font-size: .78rem; margin: 0 0 10px; }
+  .mastery-row { margin: 0 0 10px; }
+  .mastery-row-top { display: flex; justify-content: space-between; gap: 10px; font-size: .88rem; margin-bottom: 3px; }
+  .mastery-label { font-weight: 600; }
+  .mastery-pct { font-weight: 700; color: var(--brand-dark); flex: none; }
+  .mastery-bar { height: 8px; border-radius: 5px; background: #e7ebf5; overflow: hidden; }
+  .mastery-bar-fill { height: 100%; background: var(--brand); border-radius: 5px 0 0 5px; }
+  .mastery-bar-fill.is-complete { background: var(--good, #1f8a5a); border-radius: 5px; }
+  .mastery-sub { font-size: .76rem; color: var(--muted); margin-top: 2px; }
 </style>
 </head>
 <body>
@@ -151,8 +170,8 @@
       </label>
       <label class="setup-field" id="setup-answermode-field">How do you want to answer?
         <select id="setup-answermode">
-          <option value="mc">Multiple choice</option>
           <option value="text">Type the answer</option>
+          <option value="mc">Multiple choice</option>
         </select>
       </label>
     </div>
@@ -160,6 +179,7 @@
       <button type="button" class="btn" id="setup-start-learn">Start in Learn mode</button>
       <button type="button" class="btn ghost" id="setup-start-quiz">Start in Quiz mode</button>
     </div>
+    <div class="mastery-overview" id="mastery-overview"></div>
   </div>
 
   <div id="run-area" style="display:none">
@@ -1868,7 +1888,8 @@
     progress: document.getElementById("progress"),
     progressLabel: document.getElementById("progress-label"),
     progressFill: document.getElementById("progress-fill"),
-    stage: document.getElementById("stage")
+    stage: document.getElementById("stage"),
+    masteryOverview: document.getElementById("mastery-overview")
   };
   els.title.textContent = drill.title;
   els.sub.textContent = drill.subtitle || "";
@@ -2503,11 +2524,44 @@
     var wanted = selectedCount && choices.indexOf(selectedCount) !== -1 ? selectedCount : poolSize;
     els.setupCount.value = wanted;
   }
+
+  // A per-topic mastery summary shown right on the setup screen, so a
+  // student can see where they actually stand before picking what to work
+  // on next - "5/9 mastered (59%)" for every topic in this drill, using
+  // the exact same persisted `everMastered` state (localStorage, synced to
+  // the server the moment a card is mastered) that the admin dashboard's
+  // own per-student view is built from, so what a student sees here and
+  // what a teacher sees for them should always agree. Not shown for code
+  // drills - those don't persist mastery across visits at all (see
+  // startCodeRun), so there is nothing durable to summarise here yet.
+  function renderMasteryOverview() {
+    if (!els.masteryOverview) return;
+    if (isCodeDrill) { els.masteryOverview.innerHTML = ""; return; }
+    var rowsHtml = CATEGORY_ORDER.filter(function (cat) { return categoryCardIds(cat).length; }).map(function (cat) {
+      var ids = categoryCardIds(cat);
+      var total = ids.length;
+      var masteredCount = ids.filter(function (id) { return everMastered[id]; }).length;
+      var pct = total ? Math.round(masteredCount / total * 100) : 0;
+      var complete = total > 0 && masteredCount >= total;
+      return '<div class="mastery-row">' +
+        '<div class="mastery-row-top"><span class="mastery-label">' + escapeHtml(categoryLabel(cat)) + '</span>' +
+        '<span class="mastery-pct">' + pct + '%</span></div>' +
+        '<div class="mastery-bar"><div class="mastery-bar-fill' + (complete ? ' is-complete' : '') + '" style="width:' + pct + '%"></div></div>' +
+        '<div class="mastery-sub">' + masteredCount + ' / ' + total + ' mastered' + (complete ? ' - complete!' : '') + '</div>' +
+        '</div>';
+    }).join("");
+    els.masteryOverview.innerHTML = rowsHtml
+      ? '<div class="mastery-overview-title">Your mastery so far</div>' +
+        '<p class="mastery-overview-note">From Quiz mode only - 3 correct in a row, no help. Learn mode never counts here.</p>' +
+        rowsHtml
+      : "";
+  }
   function openSetup() {
     els.runArea.style.display = "none";
     els.setupCard.style.display = "";
     populateCategorySelect(run ? run.category : "all");
     populateCountSelect(run ? run.category : "all", run ? run.count : null);
+    renderMasteryOverview();
     if (isCodeDrill) {
       // No MC/Text choice (there is only one way to answer a code card),
       // no card-count limit (mastery needs every variant of a type
@@ -2520,8 +2574,12 @@
       els.setupStartQuiz.textContent = "Start";
       return;
     }
-    els.setupAnswerMode.value = run ? run.answerMode : "mc";
-    if (els.setupAnswerMode.selectedIndex === -1) els.setupAnswerMode.value = "mc";
+    // "Type the answer" is the default for a student who has never chosen
+    // before - James: make text mode the default over multiple choice.
+    // A student who already picked one explicitly (run.answerMode set)
+    // still gets their own last choice remembered, same as before.
+    els.setupAnswerMode.value = run ? run.answerMode : "text";
+    if (els.setupAnswerMode.selectedIndex === -1) els.setupAnswerMode.value = "text";
   }
   function startRun(mode) {
     var category = els.setupCategory.value;
