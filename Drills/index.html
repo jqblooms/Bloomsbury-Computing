@@ -95,6 +95,7 @@
   .done .big { font-size: 2.4rem; }
   .done h2 { margin: 10px 0 6px; }
   .done p { color: var(--muted); }
+  .done-partial-note { background: #fff4e0; color: #8a5a10; border-radius: 10px; padding: 10px 14px; margin: 14px auto 0; max-width: 480px; font-weight: 600; font-size: .85rem; }
   .text-answer-input {
     display: block; width: 100%; padding: 12px 14px; font: inherit; font-size: 1rem;
     border: 2px solid var(--line); border-radius: 10px; margin: 4px 0 6px;
@@ -322,6 +323,10 @@
           id: "add-1-1", category: "addition",
           prompt: "In binary addition, what is 1 + 1?",
           answers: ["0 carry 1"],
+          // "0 carry 1" and "1 carry 1" (add-1-1-1's answer) are the exact
+          // same words with the first digit swapped - a bag-of-words check
+          // can't tell them apart, so this checks digit order directly.
+          keywords: [/0\D*carry\D*1/i],
           distractors: ["1 carry 1", "1", "0", "1 carry 0", "0 carry 0", "11"],
           note: "The column result is 0 and a 1 is carried into the next column (1 + 1 = binary 10)."
         },
@@ -329,6 +334,7 @@
           id: "add-1-1-1", category: "addition",
           prompt: "In binary addition, what is 1 + 1 + 1?",
           answers: ["1 carry 1"],
+          keywords: [/1\D*carry\D*1/i],
           distractors: ["0 carry 1", "1", "1 carry 0", "0 carry 0", "11", "3"],
           note: "The column result is 1 and a 1 is carried (1 + 1 + 1 = binary 11)."
         },
@@ -343,6 +349,10 @@
           id: "shift-left-1", category: "shifts",
           prompt: "What is the effect of a logical LEFT shift of 1 place on an unsigned binary number?",
           answers: ["Multiplies the number by 2"],
+          // "Multiply" plus the specific multiplier - a sibling distractor
+          // for this exact card just swaps in "4"/"10", and "divides" (a
+          // different distractor) must not accidentally satisfy this either.
+          keywords: [{ required: [["multiply"], ["2"]] }],
           distractors: ["Divides the number by 2", "Multiplies the number by 4", "Multiplies the number by 10", "Adds 1 to the number", "Divides the number by 10", "Leaves the number unchanged"],
           note: "Each place a number shifts left multiplies it by 2 (2¹)."
         },
@@ -350,6 +360,7 @@
           id: "shift-left-2", category: "shifts",
           prompt: "What is the effect of a logical LEFT shift of 2 places?",
           answers: ["Multiplies the number by 4"],
+          keywords: [{ required: [["multiply"], ["4"]] }],
           distractors: ["Multiplies the number by 2", "Multiplies the number by 8", "Divides the number by 4", "Multiplies the number by 16", "Adds 2 to the number", "Multiplies the number by 3"],
           note: "2 places left = × 2² = × 4."
         },
@@ -357,6 +368,7 @@
           id: "shift-left-3", category: "shifts",
           prompt: "What is the effect of a logical LEFT shift of 3 places?",
           answers: ["Multiplies the number by 8"],
+          keywords: [{ required: [["multiply"], ["8"]] }],
           distractors: ["Multiplies the number by 4", "Multiplies the number by 16", "Multiplies the number by 6", "Divides the number by 8", "Multiplies the number by 3", "Adds 3 to the number"],
           note: "3 places left = × 2³ = × 8."
         },
@@ -364,6 +376,15 @@
           id: "shift-right-1", category: "shifts",
           prompt: "What is the effect of a logical RIGHT shift of 1 place on an unsigned binary number?",
           answers: ["Divides the number by 2, rounding down if needed"],
+          // The auto-derived fallback needed 4 of {divide, number, 2,
+          // rounding, down, if, needed}, so a real, correct short answer
+          // like "divides by 2" (without spelling out "rounding down")
+          // failed. "Divide" and the specific number are both essential -
+          // a distractor for this exact card just swaps in "4"/"10"/"1" or
+          // "multiplies" - but "rounding down" is safe to make optional.
+          keywords: [
+            { required: [["divide"], ["2"]], optional: ["round", "rounding", "down"] }
+          ],
           distractors: [
             "Multiplies the number by 2, rounding down if needed",
             "Divides the number by 4, rounding down if needed",
@@ -378,6 +399,12 @@
           id: "shift-right-2", category: "shifts",
           prompt: "What is the effect of a logical RIGHT shift of 2 places?",
           answers: ["Divides the number by 4, rounding down if needed"],
+          // Same fix as shift-right-1 - "divide" plus the specific number
+          // are essential (a sibling distractor for this exact card just
+          // swaps in "2"/"8"/"16"/"3"), "rounding down" is optional detail.
+          keywords: [
+            { required: [["divide"], ["4"]], optional: ["round", "rounding", "down"] }
+          ],
           distractors: [
             "Divides the number by 2, rounding down if needed",
             "Divides the number by 8, rounding down if needed",
@@ -392,6 +419,19 @@
           id: "shift-loss", category: "shifts",
           prompt: "What happens to bits that are shifted out of the end of a register during a logical shift?",
           answers: ["They are simply lost, so data or precision can be lost"],
+          // The auto-derived fallback required 4 of {they, simply, lost,
+          // data, precision, can} - so even "the bits are lost" failed.
+          // "Lost" (or an equivalent word) IS the whole answer; explicit
+          // keywords with no optional requirement fix that (James: this
+          // should be acceptable). `excluded` guards against the "Nothing
+          // is ever lost..." distractor, which also contains "lost" but
+          // means the opposite.
+          keywords: [
+            {
+              required: [["lost", "discarded", "gone", "dropped", "disappear", "disappears"]],
+              excluded: ["nothing", "never", "not"]
+            }
+          ],
           distractors: [
             "Nothing is ever lost during a logical shift at all",
             "Only the leading zeros are ever removed by a shift",
@@ -721,6 +761,18 @@
                 answers: [
                         "So every device reads the same binary code as the same character"
                 ],
+                // Core concept is agreement/consistency between devices about
+                // what a code means - the auto-derived fallback needed 4 of
+                // {every, device, read, same, binary, code, character}, which
+                // a fair paraphrase like "so all devices agree on characters"
+                // couldn't reach even though it clearly says the right thing.
+                keywords: [
+                        {
+                                required: [["same", "consistent", "consistency", "agree", "agreement", "standard", "standardised", "standardized"]],
+                                optional: ["device", "computer", "character", "code", "binary", "read"],
+                                need: 1
+                        }
+                ],
                 distractors: [
                         "So text files always take up less space than image files",
                         "So keyboards can be manufactured more cheaply worldwide",
@@ -785,6 +837,26 @@
                 prompt: "What is Unicode?",
                 answers: [
                         "A character set covering characters from every language, plus symbols and emojis"
+                ],
+                // "Covers many/every language" (vs ASCII's English-only) IS
+                // the distinguishing concept - the auto-derived fallback
+                // needed 4 of 9 words, which "covers all languages and
+                // emoji" (a genuinely correct paraphrase) couldn't reach.
+                // A bare "language" requirement would also match the wrong
+                // "faster version of the ASCII programming language"
+                // distractor (it contains "language" too) - the optional
+                // gate rules that out, since a wrong "programming language"
+                // answer never also says "cover"/"every"/"symbol"/"emoji".
+                // Note: optional/required tokens here are the STEMMED forms
+                // tokenize() actually produces (e.g. "covers" -> "cover",
+                // "emojis" -> "emoji") - the plural spellings themselves
+                // never appear in `have`, so only the stemmed form matters.
+                keywords: [
+                        {
+                                required: [["language"]],
+                                optional: ["cover", "covering", "every", "all", "many", "character", "set", "symbol", "emoji"],
+                                need: 1
+                        }
                 ],
                 distractors: [
                         "A character set used only for scientific and mathematical symbols",
@@ -997,6 +1069,19 @@
                 prompt: "What is the effect of increasing sample resolution on the accuracy of a recording?",
                 answers: [
                         "More accurate, since each sample can store more amplitude values"
+                ],
+                // "More accurate" IS the answer to an "effect on accuracy"
+                // question - the auto-derived fallback needed 4 of 9 words
+                // (including "since" and "can", not central to the concept),
+                // which "more accurate sound" alone couldn't reach. Excludes
+                // "less"/"fewer"/"no" - the wrong-direction distractors
+                // ("Less accurate...", "No effect on accuracy...") also
+                // contain "accurate"/"accuracy", but mean the opposite.
+                keywords: [
+                        {
+                                required: [["accurate", "accuracy", "precise", "precision"]],
+                                excluded: ["less", "fewer", "lower", "worse", "decrease", "no", "not", "none"]
+                        }
                 ],
                 distractors: [
                         "Less accurate, since each sample can now store fewer values",
@@ -1440,6 +1525,11 @@
           id: "y9-add-rule-00", category: "addition",
           prompt: "In binary addition, what do you write for a column total of 0 + 0?",
           answers: ["Write 0, carry 0"],
+          // These four cards' answers are all "Write X, carry Y" with X/Y
+          // swapped between them - identical word sets, so only checking
+          // digit order (not just presence) tells them apart. "Write" is
+          // left out of the pattern since a student may reasonably drop it.
+          keywords: [/0\D*carry\D*0/i],
           distractors: [
             "Write 1, carry 0",
             "Write 0, carry 1",
@@ -1452,6 +1542,7 @@
           id: "y9-add-rule-01", category: "addition",
           prompt: "In binary addition, what do you write for a column total of 0 + 1?",
           answers: ["Write 1, carry 0"],
+          keywords: [/1\D*carry\D*0/i],
           distractors: [
             "Write 0, carry 0",
             "Write 0, carry 1",
@@ -1464,6 +1555,7 @@
           id: "y9-add-rule-11", category: "addition",
           prompt: "In binary addition, what do you write for a column total of 1 + 1?",
           answers: ["Write 0, carry 1"],
+          keywords: [/0\D*carry\D*1/i],
           distractors: [
             "Write 1, carry 0",
             "Write 0, carry 0",
@@ -1476,6 +1568,7 @@
           id: "y9-add-rule-111", category: "addition",
           prompt: "In binary addition, what do you write for a column total of 1 + 1 + 1?",
           answers: ["Write 1, carry 1"],
+          keywords: [/1\D*carry\D*1/i],
           distractors: [
             "Write 0, carry 1",
             "Write 1, carry 0",
@@ -2056,10 +2149,37 @@
     return collapseNumberWords(raw).map(stem);
   }
   // Cards can carry an explicit `keywords` field describing exactly what
-  // counts as a correct typed answer:
-  //   keywords: [ altPhrasing, altPhrasing, ... ]           (OR - any one alt is enough)
+  // counts as a correct typed answer. Each alternative can be either:
   //   altPhrasing: [ requirement, requirement, ... ]        (AND - every requirement needed)
   //   requirement: [ token, token, ... ]                    (OR - any one synonym token)
+  // ...or, when some words genuinely matter more than others (not every
+  // word in a card's answer is equally essential - a hedge like "simply"
+  // or a supporting clause like "so data or precision can be lost" is not
+  // the same as the core word "lost"):
+  //   { required: [ requirement, ... ], optional: [ token, ... ], need: N,
+  //     excluded: [ token, ... ] }
+  //   - every `required` requirement (same OR-of-synonyms shape as above)
+  //     must be met - these are the words that actually carry the answer.
+  //   - `optional` is a supporting pool; only `need` of them (default 0)
+  //     have to also show up, so this can even be omitted/empty for a
+  //     single-concept answer where the required word(s) ARE the answer.
+  //     Also useful to disambiguate a required word from an unrelated
+  //     distractor that happens to share it (e.g. "language" alone matches
+  //     a wrong "it's a programming language" answer too - requiring one
+  //     supporting word like "cover"/"every"/"symbol" rules that out).
+  //   - `excluded` (optional) fails the alt outright if any of its tokens
+  //     is present, however well `required`/`optional` matched - a wrong,
+  //     negated answer often still contains the required word ("less
+  //     accurate" still contains "accurate"; "nothing is ever lost" still
+  //     contains "lost").
+  //   ...or a plain RegExp, tested against the raw typed answer directly -
+  //   the one thing none of the bag-of-words shapes above can express,
+  //   since they only check whether a word is present, never its position.
+  //   Needed when two cards' correct answers use exactly the same words in
+  //   a different order/pairing ("Write 1, carry 0" vs "Write 0, carry 1" -
+  //   any keyword-presence check accepts either for both, since the word
+  //   SET is identical either way).
+  //   keywords: [ altPhrasing, altPhrasing, ... ]           (OR - any one alt is enough)
   // If a card has no `keywords` yet, fall back to requiring the non-filler
   // whole words from one of its `answers` strings - safe (still whole-word,
   // still neg-number aware) even before keywords are written. A short
@@ -2077,7 +2197,15 @@
       var m = /^(.*?)\(([^)]+)\)\s*$/.exec(ans);
       var phrases = m ? [m[1], m[2]] : [ans];
       phrases.forEach(function (phrase) {
-        var toks = tokenize(phrase).filter(function (t) { return !TEXT_FILLER[t]; });
+        // Deduplicated - a word the answer happens to say twice (e.g. "...
+        // lost, so data or precision can be lost") is one concept, not two,
+        // and should not inflate how many DIFFERENT keywords are required.
+        var seen = {};
+        var toks = tokenize(phrase).filter(function (t) {
+          if (TEXT_FILLER[t] || seen[t]) return false;
+          seen[t] = true;
+          return true;
+        });
         if (!toks.length) return;
         var need = toks.length <= 2 ? toks.length : Math.min(4, Math.max(2, Math.ceil(toks.length * 0.5)));
         alts.push({ tokens: toks, need: need });
@@ -2090,6 +2218,14 @@
     tokenize(rawInput).forEach(function (t) { have[t] = true; });
     var alts = keywordsForCard(card);
     return alts.some(function (alt) {
+      // A plain RegExp alternative tests the raw typed answer directly, in
+      // order - the one case none of the bag-of-words shapes above can
+      // handle. "Write 1, carry 0" and "Write 0, carry 1" contain exactly
+      // the same words, just swapped, so no amount of required/optional
+      // keyword presence can tell them apart - only checking that the
+      // right digit comes before "carry" and the right digit comes after
+      // actually can.
+      if (alt instanceof RegExp) return alt.test(rawInput);
       // Explicit `keywords` (card.keywords, when present) stay an exact
       // OR-of-AND-of-OR-synonyms match - every requirement must be met.
       if (Array.isArray(alt)) {
@@ -2097,8 +2233,28 @@
           return synonyms.some(function (tok) { return !!have[tok]; });
         });
       }
-      // Fallback alternatives are threshold-based: enough of the keywords,
-      // not literally every one.
+      // Required + weighted-optional alternative - some words really are
+      // the answer (every `required` entry must be met, same OR-of-
+      // synonyms shape as above) while the rest are just supporting detail
+      // (only `need` of `optional` has to also show up, default 0). Lets a
+      // card say "the word 'lost' really is the whole answer" instead of
+      // the auto-derived fallback's everything-counts-equally threshold.
+      // `excluded` (optional) is the other direction - a required word can
+      // also show up inside a wrong, negated answer ("less accurate" still
+      // contains "accurate"; "nothing is ever lost" still contains "lost"),
+      // so any excluded token present fails the whole alt regardless of
+      // what else matched.
+      if (alt.required || alt.optional || alt.excluded) {
+        if ((alt.excluded || []).some(function (t) { return !!have[t]; })) return false;
+        var reqMet = (alt.required || []).every(function (synonyms) {
+          return synonyms.some(function (tok) { return !!have[tok]; });
+        });
+        if (!reqMet) return false;
+        var optCount = (alt.optional || []).filter(function (t) { return have[t]; }).length;
+        return optCount >= (alt.need || 0);
+      }
+      // Auto-derived fallback alternatives are threshold-based: enough of
+      // the keywords, not literally every one.
       var count = alt.tokens.filter(function (t) { return have[t]; }).length;
       return count >= alt.need;
     });
@@ -2477,12 +2633,28 @@
     var everCount = Object.keys(everMastered).length;
     var wholeDrill = run.category === "all" && run.count >= drillTotal;
     var trueMastery = everCount >= drillTotal;
+    // A run over a smaller "how many cards this run?" pick than the whole
+    // topic finishes just as cheerfully as a full one - but any card left
+    // outside that pick can never count until a later run actually draws
+    // it, so the topic's own mastery bar can look permanently "stuck"
+    // below 100% for a reason that has nothing to do with getting anything
+    // wrong. Spell that out here rather than leaving it to look like a bug
+    // (James: a student's completed run left their topic mastery bar
+    // reading 83%, which looked broken until this was traced to exactly
+    // this - the run only ever covered 5 of the topic's 6 cards).
+    var topicTotal = categoryCardIds(run.category).length;
+    var topicPartial = run.category !== "all" && run.count < topicTotal;
     els.stage.innerHTML =
       '<div class="done">' +
       '<div class="big">🎉</div>' +
       (trueMastery ? "<h2>True mastery!</h2>" : "<h2>Run complete!</h2>") +
       "<p>You mastered every card in <strong>" + escapeHtml(categoryLabel(run.category)) + "</strong> (" + run.count + " card" + (run.count === 1 ? "" : "s") + ") this run.</p>" +
       "<p>Overall you have mastered " + everCount + " of " + drillTotal + " cards in " + escapeHtml(drill.title) + (trueMastery ? " - every card, TRUE MASTERY." : ".") + "</p>" +
+      (topicPartial
+        ? '<p class="done-partial-note">This run only covered ' + run.count + " of the " + topicTotal + " cards in " +
+          escapeHtml(categoryLabel(run.category)) + " - the mastery bar for this topic will stay below 100% until another run (pick \"All (" +
+          topicTotal + ")\") reaches the rest.</p>"
+        : "") +
       '<div class="actions" style="justify-content:center">' +
       '<button type="button" class="btn" id="again-btn">Run it again</button>' +
       '<button type="button" class="btn ghost" id="done-change-btn">Choose a different topic</button>' +
