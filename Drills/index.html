@@ -3394,14 +3394,26 @@
       updateCodeProgress();
     }
 
+    // Moves on by itself, same as every other card type in this app - no
+    // manual click needed (James: this used to require clicking "Next
+    // question" every time). A wrong answer lingers longer since its
+    // message has more to read (what the student's code actually left
+    // behind), same idea as TEXT_WRONG_ADVANCE_MS elsewhere. The button
+    // stays only as a "don't want to wait" skip, not a requirement.
     var nextBtn = document.createElement("button");
     nextBtn.type = "button";
     nextBtn.className = "btn";
     nextBtn.textContent = "Next question";
     nextBtn.style.marginTop = "10px";
-    nextBtn.addEventListener("click", nextCodeCard);
+    nextBtn.addEventListener("click", function () {
+      if (current.advanceTimer) clearTimeout(current.advanceTimer);
+      nextCodeCard();
+    });
     resultEl.appendChild(document.createElement("br"));
     resultEl.appendChild(nextBtn);
+
+    if (current.advanceTimer) clearTimeout(current.advanceTimer);
+    current.advanceTimer = setTimeout(nextCodeCard, right ? ADVANCE_MS : TEXT_WRONG_ADVANCE_MS);
   }
 
   function renderCodeDone() {
