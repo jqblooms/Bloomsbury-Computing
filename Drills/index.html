@@ -30,6 +30,7 @@
     background: #fff; color: var(--ink);
   }
   .setup-actions { align-items: center; }
+  .setup-resume-note { margin: 10px 0 0; color: var(--muted); font-size: .82rem; }
 
   .scopebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin: 10px 0; }
   .scopebar #scope-label { font-weight: 700; color: var(--muted); font-size: .85rem; }
@@ -176,9 +177,11 @@
       </label>
     </div>
     <div class="setup-row setup-actions">
+      <button type="button" class="btn" id="setup-continue" style="display:none">Continue</button>
       <button type="button" class="btn" id="setup-start-learn">Start in Learn mode</button>
       <button type="button" class="btn ghost" id="setup-start-quiz">Start in Quiz mode</button>
     </div>
+    <p class="setup-resume-note" id="setup-resume-note" style="display:none"></p>
     <div class="mastery-overview" id="mastery-overview"></div>
   </div>
 
@@ -1876,6 +1879,8 @@
     setupAnswerModeField: document.getElementById("setup-answermode-field"),
     setupStartLearn: document.getElementById("setup-start-learn"),
     setupStartQuiz: document.getElementById("setup-start-quiz"),
+    setupContinue: document.getElementById("setup-continue"),
+    setupResumeNote: document.getElementById("setup-resume-note"),
     runArea: document.getElementById("run-area"),
     scopeLabel: document.getElementById("scope-label"),
     changeSelectionBtn: document.getElementById("change-selection-btn"),
@@ -2556,6 +2561,45 @@
         rowsHtml
       : "";
   }
+  // Whether `r` is a saved run actually worth resuming - i.e. the student
+  // has answered at least one card in it. A run that was only ever loaded
+  // (never answered) is indistinguishable from starting fresh, so there is
+  // nothing to offer a Continue button for.
+  function runHasProgress(r) {
+    if (!r || r.codeDrill) return false;
+    var att = r.attempts || {};
+    return Object.keys(att).some(function (id) { return att[id] > 0; });
+  }
+  // Shows/hides the Continue button and resume note, and relabels the
+  // Start buttons to "Restart" whenever there is a matching in-progress
+  // run - so a student who comes back to setup (e.g. via "Change topic /
+  // cards") gets an explicit choice between Continue and Restart instead
+  // of "Start" silently wiping their streaks the way it used to (James:
+  // progress on binary addition was lost this way - a student needs
+  // Continue or Restart, never just Start, whenever there is something to
+  // lose). Only offered when the dropdowns still match the saved run's own
+  // topic/count - changing either means "Start" should mean starting that
+  // new selection fresh, not secretly resuming the old one.
+  function refreshResumeUI() {
+    if (isCodeDrill) return;
+    var resumable = runHasProgress(run) &&
+      run.category === els.setupCategory.value &&
+      String(run.count) === String(els.setupCount.value);
+    if (els.setupContinue) els.setupContinue.style.display = resumable ? "" : "none";
+    els.setupStartLearn.textContent = resumable ? "Restart in Learn mode" : "Start in Learn mode";
+    els.setupStartQuiz.textContent = resumable ? "Restart in Quiz mode" : "Start in Quiz mode";
+    if (els.setupResumeNote) {
+      if (resumable) {
+        var doneCount = Object.keys(run.masteredThisRun || {}).length;
+        els.setupResumeNote.style.display = "";
+        els.setupResumeNote.textContent = "You have an unfinished " + (run.mode === "learn" ? "Learn" : "Quiz") +
+          " run in progress (" + doneCount + " / " + run.count + " mastered this run so far). " +
+          "Continue to pick up where you left off, or Restart to wipe it and begin again.";
+      } else {
+        els.setupResumeNote.style.display = "none";
+      }
+    }
+  }
   function openSetup() {
     els.runArea.style.display = "none";
     els.setupCard.style.display = "";
@@ -2567,11 +2611,14 @@
       // no card-count limit (mastery needs every variant of a type
       // available, see startCodeRun), and no Learn mode (there is nothing
       // to "flash" for a card whose answer is a whole program) - one
-      // Start action into the single type-mastery loop.
+      // Start action into the single type-mastery loop. Code runs are
+      // never persisted (see startCodeRun), so there is nothing to resume.
       els.setupAnswerModeField.style.display = "none";
       els.setupCountField.style.display = "none";
       els.setupStartLearn.style.display = "none";
       els.setupStartQuiz.textContent = "Start";
+      if (els.setupContinue) els.setupContinue.style.display = "none";
+      if (els.setupResumeNote) els.setupResumeNote.style.display = "none";
       return;
     }
     // "Type the answer" is the default for a student who has never chosen
@@ -2580,6 +2627,19 @@
     // still gets their own last choice remembered, same as before.
     els.setupAnswerMode.value = run ? run.answerMode : "text";
     if (els.setupAnswerMode.selectedIndex === -1) els.setupAnswerMode.value = "text";
+    refreshResumeUI();
+  }
+  // Resumes the saved run exactly as it was left - same queue position,
+  // streaks, and mastered-this-run state - never rebuilding it via
+  // freshRun(). Used both by the Continue button and at boot when a saved
+  // run is found.
+  function resumeRun() {
+    if (!run) { openSetup(); return; }
+    els.setupCard.style.display = "none";
+    els.runArea.style.display = "";
+    applyModeUI(run.mode);
+    updateScopeLabel();
+    nextCard();
   }
   function startRun(mode) {
     var category = els.setupCategory.value;
@@ -2830,9 +2890,12 @@
   // ============================================================
   els.setupCategory.addEventListener("change", function () {
     populateCountSelect(els.setupCategory.value, null);
+    refreshResumeUI();
   });
+  if (els.setupCount) els.setupCount.addEventListener("change", refreshResumeUI);
   els.setupStartLearn.addEventListener("click", function () { startRun("learn"); });
   els.setupStartQuiz.addEventListener("click", function () { startRun("quiz"); });
+  if (els.setupContinue) els.setupContinue.addEventListener("click", resumeRun);
   els.changeSelectionBtn.addEventListener("click", openSetup);
   els.modeLearn.addEventListener("click", function () { setMode("learn"); });
   els.modeQuiz.addEventListener("click", function () { setMode("quiz"); });
@@ -2840,11 +2903,7 @@
   var restored = loadRun();
   if (restored) {
     run = restored;
-    els.setupCard.style.display = "none";
-    els.runArea.style.display = "";
-    applyModeUI(run.mode);
-    updateScopeLabel();
-    nextCard();
+    resumeRun();
   } else {
     openSetup();
   }
