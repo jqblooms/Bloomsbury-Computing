@@ -105,6 +105,32 @@
     background: var(--answer-soft); border: 1px solid #e8cf93; color: #7a5c05; font-weight: 600;
   }
   .help-box.show { display: block; }
+
+  /* Code-writing cards (type: 'code') - a monospace "given" values block,
+     a real textarea for the student's own pseudocode, and a result panel
+     that shows what THEIR code actually produced (never the reference
+     solution's source) so a wrong attempt is still informative without
+     just handing over the answer. */
+  .code-given {
+    font: 600 .92rem/1.5 "SFMono-Regular", Consolas, monospace;
+    background: #f6f8fb; border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; margin: 4px 0 10px; white-space: pre-wrap;
+  }
+  .code-textarea {
+    display: block; width: 100%; min-height: 130px; padding: 12px 14px;
+    font: 500 .95rem/1.5 "SFMono-Regular", Consolas, monospace;
+    border: 2px solid var(--line); border-radius: 10px; margin: 4px 0 6px;
+    resize: vertical; tab-size: 2;
+  }
+  .code-textarea:focus { outline: none; border-color: var(--brand); }
+  .code-textarea:disabled { background: #f1f3f8; color: var(--ink); }
+  .code-result {
+    margin: 8px 0; padding: 10px 12px; border-radius: 8px; font-size: .92rem;
+    background: #f6f8fb; border: 1px solid var(--line);
+  }
+  .code-result.ok { background: var(--good-soft); border-color: #b6e2c9; color: var(--good); }
+  .code-result.no { background: var(--bad-soft); border-color: #efc2bc; color: var(--bad); }
+  .code-result pre { margin: 4px 0 0; font: 600 .85rem/1.4 "SFMono-Regular", Consolas, monospace; white-space: pre-wrap; color: inherit; }
 </style>
 </head>
 <body>
@@ -120,10 +146,10 @@
       <label class="setup-field">Topic
         <select id="setup-category"></select>
       </label>
-      <label class="setup-field">How many cards this run?
+      <label class="setup-field" id="setup-count-field">How many cards this run?
         <select id="setup-count"></select>
       </label>
-      <label class="setup-field">How do you want to answer?
+      <label class="setup-field" id="setup-answermode-field">How do you want to answer?
         <select id="setup-answermode">
           <option value="mc">Multiple choice</option>
           <option value="text">Type the answer</option>
@@ -142,13 +168,14 @@
       <button type="button" class="btn ghost small" id="change-selection-btn">Change topic / cards</button>
     </div>
 
-    <div class="modebar">
+    <div class="modebar" id="modebar">
       <button type="button" id="mode-learn">Learn mode</button>
       <button type="button" id="mode-quiz">Quiz mode</button>
     </div>
 
     <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. The answer is never shown unless you ask - press <strong>I need help</strong> to flash it for a second.</div>
     <div class="notice quiz" id="notice-quiz" style="display:none">Quiz mode &middot; answer a card correctly <strong>three times in a row</strong> to master it for this run. A wrong answer sends its streak back to zero. Master every card in this run for completion.</div>
+    <div class="notice quiz" id="notice-code" style="display:none">Write real pseudocode for each question &middot; answer <strong>three questions of the same type</strong> correctly in a row to master that type, not the same exact question three times. A wrong or broken answer sends that type's streak back to zero.</div>
 
     <div class="progress" id="progress" style="display:none">
       <span id="progress-label">0 / 0 mastered</span>
@@ -159,6 +186,7 @@
   </div>
 </div>
 
+<script src="../shared/pseudocode-engine.js"></script>
 <script>
 (function () {
   "use strict";
@@ -1651,6 +1679,128 @@
           ]
         }
       ]
+    },
+    "y11-7-l1-code": {
+      title: "Year 11, Unit 7 L1: Write the Code",
+      subtitle: "Cambridge IGCSE Computer Science 0478",
+      codeDrill: true,
+      cards: [
+        {
+          id: "code-assign-1", category: "code-assign",
+          prompt: "Write one line that stores A + B in a variable called Total.",
+          setup: {"A":4,"B":3},
+          reference: "Total <- A + B",
+          checkVars: ["Total"]
+        },
+        {
+          id: "code-assign-2", category: "code-assign",
+          prompt: "Write one line that stores Price minus Discount in a variable called Final.",
+          setup: {"Price":10,"Discount":2},
+          reference: "Final <- Price - Discount",
+          checkVars: ["Final"]
+        },
+        {
+          id: "code-assign-3", category: "code-assign",
+          prompt: "Write one line that stores Length times Width in a variable called Area.",
+          setup: {"Length":5,"Width":4},
+          reference: "Area <- Length * Width",
+          checkVars: ["Area"]
+        },
+        {
+          id: "code-assign-4", category: "code-assign",
+          prompt: "Write one line that stores Total divided by Count in a variable called Average.",
+          setup: {"Total":20,"Count":4},
+          reference: "Average <- Total / Count",
+          checkVars: ["Average"]
+        },
+        {
+          id: "code-reassign-1", category: "code-reassign",
+          prompt: "Write one line that adds 4 to Number, storing the result back in Number.",
+          setup: {"Number":6},
+          reference: "Number <- Number + 4",
+          checkVars: ["Number"]
+        },
+        {
+          id: "code-reassign-2", category: "code-reassign",
+          prompt: "Write one line that doubles Score, storing the result back in Score.",
+          setup: {"Score":10},
+          reference: "Score <- Score * 2",
+          checkVars: ["Score"]
+        },
+        {
+          id: "code-reassign-3", category: "code-reassign",
+          prompt: "Write one line that subtracts 3 from Count, storing the result back in Count.",
+          setup: {"Count":9},
+          reference: "Count <- Count - 3",
+          checkVars: ["Count"]
+        },
+        {
+          id: "code-reassign-4", category: "code-reassign",
+          prompt: "Write one line that halves Value, storing the result back in Value.",
+          setup: {"Value":8},
+          reference: "Value <- Value / 2",
+          checkVars: ["Value"]
+        },
+        {
+          id: "code-twovar-1", category: "code-twovar",
+          prompt: "Write one line that adds First and Second together, storing the result back in First.",
+          setup: {"First":8,"Second":3},
+          reference: "First <- First + Second",
+          checkVars: ["First"]
+        },
+        {
+          id: "code-twovar-2", category: "code-twovar",
+          prompt: "Write one line that stores A multiplied by B in a variable called Product.",
+          setup: {"A":5,"B":2},
+          reference: "Product <- A * B",
+          checkVars: ["Product"]
+        },
+        {
+          id: "code-twovar-3", category: "code-twovar",
+          prompt: "Write two lines: first store Width times Height in Area, then add 10 to Area.",
+          setup: {"Width":6,"Height":2},
+          reference: "Area <- Width * Height\nArea <- Area + 10",
+          checkVars: ["Area"]
+        },
+        {
+          id: "code-twovar-4", category: "code-twovar",
+          prompt: "Write two lines: first store X minus Y in Result, then double Result.",
+          setup: {"X":10,"Y":4},
+          reference: "Result <- X - Y\nResult <- Result * 2",
+          checkVars: ["Result"]
+        },
+        {
+          id: "code-output-1", category: "code-output",
+          prompt: "Write one line that outputs the value of Total.",
+          setup: {"Total":15},
+          reference: "OUTPUT Total",
+          checkOutput: true
+        },
+        {
+          id: "code-output-2", category: "code-output",
+          prompt: "Store A + B in Sum, then write a second line that outputs Sum.",
+          setup: {"A":3,"B":4},
+          reference: "Sum <- A + B\nOUTPUT Sum",
+          checkVars: ["Sum"],
+          checkOutput: true
+        },
+        {
+          id: "code-output-3", category: "code-output",
+          prompt: "Halve X and store it in Half, then output Half.",
+          setup: {"X":20},
+          reference: "Half <- X / 2\nOUTPUT Half",
+          checkVars: ["Half"],
+          checkOutput: true
+        },
+        {
+          id: "code-output-4", category: "code-output",
+          prompt: "Store P times Q in Total, then output Total.",
+          setup: {"P":6,"Q":2},
+          reference: "Total <- P * Q\nOUTPUT Total",
+          checkVars: ["Total"],
+          checkOutput: true
+        }
+      ]
     }
   };
 
@@ -1669,9 +1819,13 @@
     converting: "Converting Between Systems",
     text: "Text Representation",
     sound: "Sound Representation",
-    image: "Image Representation"
+    image: "Image Representation",
+    "code-assign": "Writing an Assignment",
+    "code-reassign": "Updating the Same Variable",
+    "code-twovar": "Using Two Variables Together",
+    "code-output": "Producing Output"
   };
-  var CATEGORY_ORDER = ["bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image"];
+  var CATEGORY_ORDER = ["bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output"];
 
   // ============================================================
   // ENGINE
@@ -1688,6 +1842,8 @@
   var drill = DRILLS[drillId] || DRILLS["y10-1-1-numbers"];
   var cardsById = {};
   drill.cards.forEach(function (c) { cardsById[c.id] = c; });
+  var isCodeDrill = !!drill.codeDrill;
+  var CODE_MASTERY_STREAK = 3;
 
   var els = {
     title: document.getElementById("drill-title"),
@@ -1695,16 +1851,20 @@
     setupCard: document.getElementById("setup-card"),
     setupCategory: document.getElementById("setup-category"),
     setupCount: document.getElementById("setup-count"),
+    setupCountField: document.getElementById("setup-count-field"),
     setupAnswerMode: document.getElementById("setup-answermode"),
+    setupAnswerModeField: document.getElementById("setup-answermode-field"),
     setupStartLearn: document.getElementById("setup-start-learn"),
     setupStartQuiz: document.getElementById("setup-start-quiz"),
     runArea: document.getElementById("run-area"),
     scopeLabel: document.getElementById("scope-label"),
     changeSelectionBtn: document.getElementById("change-selection-btn"),
+    modebar: document.getElementById("modebar"),
     modeLearn: document.getElementById("mode-learn"),
     modeQuiz: document.getElementById("mode-quiz"),
     noticeLearn: document.getElementById("notice-learn"),
     noticeQuiz: document.getElementById("notice-quiz"),
+    noticeCode: document.getElementById("notice-code"),
     progress: document.getElementById("progress"),
     progressLabel: document.getElementById("progress-label"),
     progressFill: document.getElementById("progress-fill"),
@@ -2030,6 +2190,7 @@
   }
 
   function nextCard() {
+    if (isCodeDrill) { nextCodeCard(); return; }
     if (current && current.advanceTimer) clearTimeout(current.advanceTimer);
     persistRun();
     if (run.mode === "quiz") {
@@ -2347,12 +2508,25 @@
     els.setupCard.style.display = "";
     populateCategorySelect(run ? run.category : "all");
     populateCountSelect(run ? run.category : "all", run ? run.count : null);
+    if (isCodeDrill) {
+      // No MC/Text choice (there is only one way to answer a code card),
+      // no card-count limit (mastery needs every variant of a type
+      // available, see startCodeRun), and no Learn mode (there is nothing
+      // to "flash" for a card whose answer is a whole program) - one
+      // Start action into the single type-mastery loop.
+      els.setupAnswerModeField.style.display = "none";
+      els.setupCountField.style.display = "none";
+      els.setupStartLearn.style.display = "none";
+      els.setupStartQuiz.textContent = "Start";
+      return;
+    }
     els.setupAnswerMode.value = run ? run.answerMode : "mc";
     if (els.setupAnswerMode.selectedIndex === -1) els.setupAnswerMode.value = "mc";
   }
   function startRun(mode) {
     var category = els.setupCategory.value;
     var count = Number(els.setupCount.value) || null;
+    if (isCodeDrill) { startCodeRun(category); return; }
     var answerMode = els.setupAnswerMode.value;
     run = freshRun(mode, category, count, answerMode);
     persistRun();
@@ -2361,6 +2535,236 @@
     applyModeUI(mode);
     updateScopeLabel();
     nextCard();
+  }
+
+  // ============================================================
+  // CODE DRILL (type: 'code' cards only) - James: "Code and regular
+  // drills should be separate options" and "mastery should be based on
+  // types of questions... three of the same TYPE of question correct,
+  // rather than three of the exact same question." So this whole section
+  // is a parallel, self-contained run loop next to the MC/text one above,
+  // not a branch inside it - it tracks a streak per CATEGORY (a "type" of
+  // question, e.g. "Writing an Assignment") instead of per card, and each
+  // turn draws a random card from whichever categories still need work,
+  // so getting three DIFFERENT instances of the same type right in a row
+  // masters that type, never the same literal question three times.
+  // Never persisted across reloads (unlike the MC/text runs above) -
+  // writing code is a one-sitting activity, not something to resume days
+  // later, so there is no localStorage save here at all.
+  function startCodeRun(category) {
+    // Deliberately ignores the card-count picker (hidden for code drills
+    // anyway): a type can only be mastered if every one of its authored
+    // variants is available to draw from, so the run always includes the
+    // FULL set of cards in the chosen topic, never a trimmed sample.
+    var pool = categoryCardIds(category);
+    run = {
+      codeDrill: true,
+      category: category || "all",
+      count: pool.length,
+      pool: pool,
+      categoryStreak: {},     // category -> consecutive correct
+      masteredCategories: {}, // category -> true once it reaches CODE_MASTERY_STREAK
+      lastCardId: null
+    };
+    els.setupCard.style.display = "none";
+    els.runArea.style.display = "";
+    els.modebar.style.display = "none";
+    els.noticeLearn.style.display = "none";
+    els.noticeQuiz.style.display = "none";
+    els.noticeCode.style.display = "";
+    els.progress.style.display = "flex";
+    updateScopeLabel();
+    updateCodeProgress();
+    nextCodeCard();
+  }
+
+  // All distinct categories actually present in this run's pool, so the
+  // "types mastered" count only ever counts types that exist here.
+  function codeRunCategories() {
+    var seen = {};
+    run.pool.forEach(function (id) { seen[cardsById[id].category] = true; });
+    return Object.keys(seen);
+  }
+
+  function updateCodeProgress() {
+    var cats = codeRunCategories();
+    var masteredCount = cats.filter(function (c) { return run.masteredCategories[c]; }).length;
+    els.progressLabel.textContent = masteredCount + " / " + cats.length + " types mastered";
+    els.progressFill.style.width = (cats.length ? Math.round(masteredCount / cats.length * 100) : 0) + "%";
+  }
+
+  function nextCodeCard() {
+    if (current && current.advanceTimer) clearTimeout(current.advanceTimer);
+    var byCategory = {};
+    run.pool.forEach(function (id) {
+      var cat = cardsById[id].category;
+      if (run.masteredCategories[cat]) return;
+      (byCategory[cat] = byCategory[cat] || []).push(id);
+    });
+    var cats = Object.keys(byCategory);
+    if (!cats.length) { renderCodeDone(); return; }
+    var cat = cats[Math.floor(Math.random() * cats.length)];
+    var candidates = byCategory[cat];
+    var pick = candidates[Math.floor(Math.random() * candidates.length)];
+    // A category with more than one card avoids showing the exact same
+    // one twice running, for variety - not a correctness requirement,
+    // just a nicer feel.
+    if (candidates.length > 1 && pick === run.lastCardId) {
+      pick = candidates[Math.floor(Math.random() * candidates.length)];
+    }
+    run.lastCardId = pick;
+    current = { cardId: pick, checked: false };
+    renderCodeCard();
+  }
+
+  function codeGivenHtml(card) {
+    var vars = card.setup || {};
+    var parts = Object.keys(vars).map(function (k) { return k + " ← " + JSON.stringify(vars[k]).replace(/"/g, ""); });
+    return parts.length ? "Given: " + parts.join(", ") : "";
+  }
+
+  function renderCodeCard() {
+    var card = cardsById[current.cardId];
+    var s = run.categoryStreak[card.category] || 0;
+    var dots = "";
+    for (var i = 0; i < CODE_MASTERY_STREAK; i++) dots += '<i class="' + (i < s ? "on" : "") + '"></i>';
+    var streakHtml = '<span class="streakdots" title="Streak toward mastering this type of question">' + dots + "</span>";
+    var given = codeGivenHtml(card);
+
+    els.stage.innerHTML =
+      '<div class="card">' +
+      '<p class="prompt">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
+      (given ? '<div class="code-given">' + escapeHtml(given) + "</div>" : "") +
+      '<textarea class="code-textarea" id="code-input" spellcheck="false" autocomplete="off" placeholder="Type your pseudocode here..."></textarea>' +
+      '<div id="code-result"></div>' +
+      '<div class="actions">' +
+      '<button type="button" class="btn" id="code-check-btn">Run and check</button>' +
+      '<span class="spacer"></span>' +
+      '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
+      "</div></div>";
+
+    var input = document.getElementById("code-input");
+    input.focus();
+    document.getElementById("code-check-btn").addEventListener("click", submitCodeAnswer);
+    els.stage.querySelector("#restart-btn").addEventListener("click", function () {
+      startCodeRun(run.category);
+      toast("Run restarted.");
+    });
+  }
+
+  function formatVarsForDisplay(vars, names) {
+    return names.map(function (n) { return n + " = " + JSON.stringify(vars[n]); }).join(", ");
+  }
+
+  // Rides the exact same BC_DRILL_PROGRESS -> queueLessonAnswer bridge the
+  // regular MC/text drills already use for admin visibility (see report()
+  // above) - `correct` here means "this TYPE of question is mastered for
+  // this run" rather than "this exact card", matching the category-based
+  // mastery model above, but the shell-side handler only ever reads
+  // drillId/cardId (both present) plus this summary text, so no server or
+  // admin-side change was needed to make this show up there too.
+  function reportCode(card, right) {
+    var cat = card.category;
+    var streak = run.categoryStreak[cat] || 0;
+    var mastered = !!run.masteredCategories[cat];
+    var catsTotal = codeRunCategories().length;
+    var catsMastered = codeRunCategories().filter(function (c) { return run.masteredCategories[c]; }).length;
+    var summary = "Category: " + categoryLabel(cat) + " · Code · streak " + streak + "/" + CODE_MASTERY_STREAK +
+      " · this attempt: " + (right ? "correct" : "wrong") +
+      " · type mastered this run: " + (mastered ? "yes" : "no") +
+      " · overall " + catsMastered + "/" + catsTotal + " types mastered this run" +
+      (catsMastered === catsTotal ? " · ALL TYPES MASTERED" : "");
+    try {
+      window.parent.postMessage({
+        type: "BC_DRILL_PROGRESS",
+        drillId: drillId,
+        drillLabel: drill.title,
+        cardId: card.id,
+        cardPrompt: card.prompt,
+        category: cat,
+        categoryLabel: categoryLabel(cat),
+        streak: streak,
+        masteredThisRun: mastered,
+        everMastered: mastered,
+        attempts: 1,
+        wrong: right ? 0 : 1,
+        everCount: catsMastered,
+        total: catsTotal,
+        trueMastery: catsMastered === catsTotal,
+        summary: summary
+      }, "*");
+    } catch (e) {}
+  }
+
+  function submitCodeAnswer() {
+    if (current.checked) return;
+    var card = cardsById[current.cardId];
+    var input = document.getElementById("code-input");
+    var code = input.value;
+    if (!code.trim()) { toast("Write some pseudocode first."); return; }
+
+    var studentResult = PseudocodeEngine.runPseudocode(code, card.setup || {});
+    var resultEl = document.getElementById("code-result");
+    var right = false;
+    var message = "";
+
+    if (studentResult.error) {
+      message = "Line " + studentResult.error.line + ": " + studentResult.error.message;
+    } else {
+      var referenceResult = PseudocodeEngine.runPseudocode(card.reference, card.setup || {});
+      var checkVars = card.checkVars || [];
+      var varsMatch = checkVars.every(function (v) { return studentResult.vars[v] === referenceResult.vars[v]; });
+      var outputsMatch = !card.checkOutput || JSON.stringify(studentResult.outputs) === JSON.stringify(referenceResult.outputs);
+      right = varsMatch && outputsMatch;
+      if (right) {
+        message = "Correct.";
+      } else {
+        var bits = [];
+        if (checkVars.length) bits.push("Your code left " + formatVarsForDisplay(studentResult.vars, checkVars) + ".");
+        if (card.checkOutput) bits.push("Your OUTPUT was " + JSON.stringify(studentResult.outputs) + ".");
+        message = "Not quite. " + bits.join(" ") + " Check your working and try again.";
+      }
+    }
+
+    current.checked = true;
+    input.disabled = true;
+    document.getElementById("code-check-btn").disabled = true;
+    resultEl.className = "code-result " + (right ? "ok" : "no");
+    resultEl.innerHTML = escapeHtml(message);
+
+    var cat = card.category;
+    if (right) {
+      run.categoryStreak[cat] = (run.categoryStreak[cat] || 0) + 1;
+      if (run.categoryStreak[cat] >= CODE_MASTERY_STREAK) {
+        run.masteredCategories[cat] = true;
+        resultEl.innerHTML = "Correct! " + escapeHtml(categoryLabel(cat)) + " mastered for this run - three right in a row.";
+      }
+    } else {
+      run.categoryStreak[cat] = 0;
+    }
+    reportCode(card, right);
+    updateCodeProgress();
+
+    var nextBtn = document.createElement("button");
+    nextBtn.type = "button";
+    nextBtn.className = "btn";
+    nextBtn.textContent = "Next question";
+    nextBtn.style.marginTop = "10px";
+    nextBtn.addEventListener("click", nextCodeCard);
+    resultEl.appendChild(document.createElement("br"));
+    resultEl.appendChild(nextBtn);
+  }
+
+  function renderCodeDone() {
+    els.stage.innerHTML =
+      '<div class="done"><div class="big">🎉</div><h2>Every type mastered!</h2>' +
+      "<p>You wrote correct code for every type of question, three times in a row, for " + escapeHtml(categoryLabel(run.category)) + ".</p>" +
+      '<div class="actions" style="justify-content:center">' +
+      '<button type="button" class="btn" id="code-again-btn">Run it again</button>' +
+      '<button type="button" class="btn ghost" id="code-change-btn">Choose a different topic</button>' +
+      "</div></div>";
+    document.getElementById("code-again-btn").addEventListener("click", function () { startCodeRun(run.category); });
+    document.getElementById("code-change-btn").addEventListener("click", openSetup);
   }
 
   // ============================================================
