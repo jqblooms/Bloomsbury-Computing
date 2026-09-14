@@ -2883,6 +2883,27 @@
     els.progressFill.style.width = (cats.length ? Math.round(masteredCount / cats.length * 100) : 0) + "%";
   }
 
+  // A card's `setup` is regenerated on every draw so a student cannot just
+  // memorise/hardcode the one known right-hand number instead of writing
+  // real logic that actually uses the given variables - confirmed as a
+  // real gaming risk before this existed (e.g. "Total <- 7" alone, using
+  // neither A nor B, always graded correct for code-assign-1's fixed
+  // setup). Stays in the same rough range as the card's own authored
+  // example and is always at least 1, never 0 - the only setup value ever
+  // used as a divisor (Count, in code-assign-4) is safe under that same
+  // floor, so no card-specific handling is needed.
+  function randomizeSetup(card) {
+    var base = card.setup || {};
+    var out = {};
+    Object.keys(base).forEach(function (k) {
+      var orig = base[k];
+      if (typeof orig !== "number") { out[k] = orig; return; }
+      var ceiling = Math.max(orig * 2, 10);
+      out[k] = 1 + Math.floor(Math.random() * ceiling);
+    });
+    return out;
+  }
+
   function nextCodeCard() {
     if (current && current.advanceTimer) clearTimeout(current.advanceTimer);
     var byCategory = {};
@@ -2903,12 +2924,12 @@
       pick = candidates[Math.floor(Math.random() * candidates.length)];
     }
     run.lastCardId = pick;
-    current = { cardId: pick, checked: false };
+    current = { cardId: pick, checked: false, setup: randomizeSetup(cardsById[pick]) };
     renderCodeCard();
   }
 
-  function codeGivenHtml(card) {
-    var vars = card.setup || {};
+  function codeGivenHtml(vars) {
+    vars = vars || {};
     var parts = Object.keys(vars).map(function (k) { return k + " ← " + JSON.stringify(vars[k]).replace(/"/g, ""); });
     return parts.length ? "Given: " + parts.join(", ") : "";
   }
@@ -2919,7 +2940,7 @@
     var dots = "";
     for (var i = 0; i < CODE_MASTERY_STREAK; i++) dots += '<i class="' + (i < s ? "on" : "") + '"></i>';
     var streakHtml = '<span class="streakdots" title="Streak toward mastering this type of question">' + dots + "</span>";
-    var given = codeGivenHtml(card);
+    var given = codeGivenHtml(current.setup);
 
     els.stage.innerHTML =
       '<div class="card">' +
@@ -2993,7 +3014,12 @@
     var code = input.value;
     if (!code.trim()) { toast("Write some pseudocode first."); return; }
 
-    var studentResult = PseudocodeEngine.runPseudocode(code, card.setup || {});
+    // Uses THIS DRAW's randomised setup (current.setup), not the card's own
+    // fixed template - see randomizeSetup(). Grading student code and the
+    // reference solution against the same freshly-drawn values each time
+    // is what makes hardcoding the answer stop working.
+    var setupVars = current.setup || card.setup || {};
+    var studentResult = PseudocodeEngine.runPseudocode(code, setupVars);
     var resultEl = document.getElementById("code-result");
     var right = false;
     var message = "";
@@ -3001,7 +3027,7 @@
     if (studentResult.error) {
       message = "Line " + studentResult.error.line + ": " + studentResult.error.message;
     } else {
-      var referenceResult = PseudocodeEngine.runPseudocode(card.reference, card.setup || {});
+      var referenceResult = PseudocodeEngine.runPseudocode(card.reference, setupVars);
       var checkVars = card.checkVars || [];
       var varsMatch = checkVars.every(function (v) { return studentResult.vars[v] === referenceResult.vars[v]; });
       var outputsMatch = !card.checkOutput || JSON.stringify(studentResult.outputs) === JSON.stringify(referenceResult.outputs);
