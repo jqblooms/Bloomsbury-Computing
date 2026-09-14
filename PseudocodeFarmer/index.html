@@ -5404,6 +5404,15 @@ function renderTutorialChecklist() {
     return '<div class="tb-check ' + (ok ? 'tb-ok' : '') + '"><span class="tb-check-icon"></span><span>' + tutorialRequirementLabel(req) + '</span></div>';
   }).join('');
   document.getElementById('tutorial-bar-code').innerHTML = tutorialCodeHtml(step);
+  // The reference panel is only a guide. Keep the action prompt honest about the
+  // student's real Code Box, which may still be empty when a step first appears.
+  if (step.action === 'run' && !reqsOk) {
+    document.getElementById('tutorial-bar-action-hint').textContent = 'Type all three lines into the Code Box, then press Run.';
+  } else if (step.action === 'run') {
+    document.getElementById('tutorial-bar-action-hint').textContent = 'All three lines are in your Code Box - press Run to try the sequence.';
+  } else if (step.actionHint) {
+    document.getElementById('tutorial-bar-action-hint').textContent = step.actionHint;
+  }
   updateTutorialNextButton(reqsOk);
   syncTutorialCodeModal(); // covers both a step change (renderTutorialStep calls this at the
                            // end) and every keystroke (codeInput's own input listener calls
