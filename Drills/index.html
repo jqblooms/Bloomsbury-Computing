@@ -2286,6 +2286,25 @@
   }
   var everMastered = loadEver(); // { cardId: true }
 
+  // Code drills master a question TYPE rather than each authored card.
+  // Store those durable mastery units alongside ordinary card mastery, but
+  // under a namespaced key so the two models can never collide.
+  function codeMasteryKey(category) { return "code-category:" + category; }
+  function codeCategoryEverMastered(category) { return !!everMastered[codeMasteryKey(category)]; }
+  function allCodeCategories() {
+    var seen = {};
+    drill.cards.forEach(function (card) { if (card.category) seen[card.category] = true; });
+    return CATEGORY_ORDER.filter(function (cat) { return !!seen[cat]; });
+  }
+  var CODE_STATS_KEY = "bc_drill_" + drillId + "_code_stats";
+  function loadCodeStats() {
+    try { return JSON.parse(localStorage.getItem(CODE_STATS_KEY) || "{}") || {}; } catch (e) { return {}; }
+  }
+  function saveCodeStats() {
+    try { localStorage.setItem(CODE_STATS_KEY, JSON.stringify(codeStats)); } catch (e) {}
+  }
+  var codeStats = loadCodeStats();
+
   // ---- topic (category) + how-many-cards picker ----
   // A student can drill one topic at a time and a chosen number of cards,
   // so mastery can be built a few cards at a time rather than always facing
@@ -2990,23 +3009,24 @@
   // the exact same persisted `everMastered` state (localStorage, synced to
   // the server the moment a card is mastered) that the admin dashboard's
   // own per-student view is built from, so what a student sees here and
-  // what a teacher sees for them should always agree. Not shown for code
-  // drills - those don't persist mastery across visits at all (see
-  // startCodeRun), so there is nothing durable to summarise here yet.
+  // what a teacher sees for them should always agree. Code drills persist
+  // one mastery unit per question type because three varied correct answers
+  // master the type, rather than one specific authored card.
   function renderMasteryOverview() {
     if (!els.masteryOverview) return;
-    if (isCodeDrill) { els.masteryOverview.innerHTML = ""; return; }
     var rowsHtml = CATEGORY_ORDER.filter(function (cat) { return categoryCardIds(cat).length; }).map(function (cat) {
       var ids = categoryCardIds(cat);
-      var total = ids.length;
-      var masteredCount = ids.filter(function (id) { return everMastered[id]; }).length;
+      var total = isCodeDrill ? 1 : ids.length;
+      var masteredCount = isCodeDrill
+        ? (codeCategoryEverMastered(cat) ? 1 : 0)
+        : ids.filter(function (id) { return everMastered[id]; }).length;
       var pct = total ? Math.round(masteredCount / total * 100) : 0;
       var complete = total > 0 && masteredCount >= total;
       return '<div class="mastery-row">' +
         '<div class="mastery-row-top"><span class="mastery-label">' + escapeHtml(categoryLabel(cat)) + '</span>' +
         '<span class="mastery-pct">' + pct + '%</span></div>' +
         '<div class="mastery-bar"><div class="mastery-bar-fill' + (complete ? ' is-complete' : '') + '" style="width:' + pct + '%"></div></div>' +
-        '<div class="mastery-sub">' + masteredCount + ' / ' + total + ' mastered' + (complete ? ' - complete!' : '') + '</div>' +
+        '<div class="mastery-sub">' + masteredCount + ' / ' + total + (isCodeDrill ? ' type mastered' : ' mastered') + (complete ? ' - complete!' : '') + '</div>' +
         '</div>';
     }).join("");
     els.masteryOverview.innerHTML = rowsHtml
@@ -3290,38 +3310,38 @@
     return names.map(function (n) { return n + " = " + JSON.stringify(vars[n]); }).join(", ");
   }
 
-  // Rides the exact same BC_DRILL_PROGRESS -> queueLessonAnswer bridge the
-  // regular MC/text drills already use for admin visibility (see report()
-  // above) - `correct` here means "this TYPE of question is mastered for
-  // this run" rather than "this exact card", matching the category-based
-  // mastery model above, but the shell-side handler only ever reads
-  // drillId/cardId (both present) plus this summary text, so no server or
-  // admin-side change was needed to make this show up there too.
+  // Reports one stable record per question type. This keeps the student bars
+  // and teacher dashboard on the same four mastery units instead of treating
+  // the sixteen authored variants as sixteen separately mastered questions.
   function reportCode(card, right) {
     var cat = card.category;
     var streak = run.categoryStreak[cat] || 0;
-    var mastered = !!run.masteredCategories[cat];
-    var catsTotal = codeRunCategories().length;
-    var catsMastered = codeRunCategories().filter(function (c) { return run.masteredCategories[c]; }).length;
+    var masteredThisRun = !!run.masteredCategories[cat];
+    var masteredEver = codeCategoryEverMastered(cat);
+    var allCats = allCodeCategories();
+    var catsTotal = allCats.length;
+    var catsMastered = allCats.filter(codeCategoryEverMastered).length;
+    var stat = codeStats[cat] || { attempts: 0, wrong: 0 };
     var summary = "Category: " + categoryLabel(cat) + " · Code · streak " + streak + "/" + CODE_MASTERY_STREAK +
-      " · this attempt: " + (right ? "correct" : "wrong") +
-      " · type mastered this run: " + (mastered ? "yes" : "no") +
-      " · overall " + catsMastered + "/" + catsTotal + " types mastered this run" +
-      (catsMastered === catsTotal ? " · ALL TYPES MASTERED" : "");
+      " · " + stat.attempts + " attempt" + (stat.attempts === 1 ? "" : "s") + " (" + (stat.attempts - stat.wrong) + " right, " + stat.wrong + " wrong)" +
+      " · type mastered this run: " + (masteredThisRun ? "yes" : "no") +
+      " · ever mastered: " + (masteredEver ? "YES" : "no") +
+      " · overall " + catsMastered + "/" + catsTotal + " types ever mastered" +
+      (catsMastered === catsTotal ? " · TRUE MASTERY ACHIEVED" : "");
     try {
       window.parent.postMessage({
         type: "BC_DRILL_PROGRESS",
         drillId: drillId,
         drillLabel: drill.title,
-        cardId: card.id,
-        cardPrompt: card.prompt,
+        cardId: "__code_category__" + cat,
+        cardPrompt: categoryLabel(cat),
         category: cat,
         categoryLabel: categoryLabel(cat),
         streak: streak,
-        masteredThisRun: mastered,
-        everMastered: mastered,
-        attempts: 1,
-        wrong: right ? 0 : 1,
+        masteredThisRun: masteredThisRun,
+        everMastered: masteredEver,
+        attempts: stat.attempts,
+        wrong: stat.wrong,
         everCount: catsMastered,
         total: catsTotal,
         trueMastery: catsMastered === catsTotal,
@@ -3381,15 +3401,22 @@
     // "records nothing" too, same rule stated in noticeLearn's own text.
     var cat = card.category;
     if (run.mode === "quiz") {
+      var stat = codeStats[cat] || { attempts: 0, wrong: 0 };
+      stat.attempts++;
+      if (!right) stat.wrong++;
+      codeStats[cat] = stat;
       if (right) {
         run.categoryStreak[cat] = (run.categoryStreak[cat] || 0) + 1;
         if (run.categoryStreak[cat] >= CODE_MASTERY_STREAK) {
           run.masteredCategories[cat] = true;
+          everMastered[codeMasteryKey(cat)] = true;
+          saveEver(everMastered);
           resultEl.innerHTML = "Correct! " + escapeHtml(categoryLabel(cat)) + " mastered for this run - three right in a row.";
         }
       } else {
         run.categoryStreak[cat] = 0;
       }
+      saveCodeStats();
       reportCode(card, right);
       updateCodeProgress();
     }
