@@ -681,7 +681,8 @@
             <tr><td><code>CALL TurnRight()</code></td><td class="desc">Turns your cursor 90&deg; right, without moving it.</td></tr>
             <tr><td><code>CALL SetPosition(2, -1)</code></td><td class="desc">Jumps straight to a tile, counted from home: 2 right, 1 up. Home is (0,0) - the tile you were on when you pressed Run, or the tile a machine was placed on.</td></tr>
             <tr><td><code>OUTPUT "hi"</code></td><td class="desc">Prints a message to the console below.</td></tr>
-            <tr><td><code>FOR Index &lt;- 1 TO 5<br>&nbsp;&nbsp;...<br>NEXT Index</code></td><td class="desc">Repeats the lines in between, 5 times. No "DO" on a FOR line.</td></tr>
+            <tr><td><code>DECLARE Total : INTEGER</code></td><td class="desc">Every variable must be declared with its type before it is used, including a FOR loop's counter. Types: INTEGER, REAL, STRING, CHAR, BOOLEAN, or ARRAY[1:5] OF INTEGER for a list.</td></tr>
+            <tr><td><code>FOR Index &lt;- 1 TO 5<br>&nbsp;&nbsp;...<br>NEXT Index</code></td><td class="desc">Repeats the lines in between, 5 times. No "DO" on a FOR line. Declare Index first.</td></tr>
             <tr><td><code>IF X = 1 THEN<br>&nbsp;&nbsp;...<br>ELSEIF X = 2 THEN<br>&nbsp;&nbsp;...<br>ELSE<br>&nbsp;&nbsp;...<br>ENDIF</code></td><td class="desc">Runs the first branch with a true condition. ELSE runs if no earlier condition is true.</td></tr>
             <tr><td><code>WHILE X &lt; 10 DO<br>&nbsp;&nbsp;...<br>ENDWHILE</code></td><td class="desc">Repeats while the condition is true. Compare with =, &lt;&gt;, &lt;, &gt;, &lt;=, &gt;= and combine with AND, OR, NOT. Either side can be maths too, e.g. WHILE N &lt; Total + 1 DO.</td></tr>
             <tr><td><code>X &lt;- X + 1</code></td><td class="desc">Math uses +, -, *, /, DIV and MOD, with brackets to group. You need this to change a variable inside a WHILE loop, or it runs forever.</td></tr>
@@ -2035,6 +2036,109 @@ function updateFloatingTexts(now) {
 // ============================================================
 // MINI PSEUDOCODE INTERPRETER
 // ============================================================
+// ---- Cambridge declarations (James, 2026-09-15): every variable must be
+// DECLAREd with a type before it is assigned or read, and only holds values
+// of that type. Types live on a hidden, non-enumerable property of the vars
+// object so the rest of the engine can keep treating vars as a plain map.
+var SIMPLE_TYPES = { INTEGER: 0, REAL: 0, STRING: '', CHAR: ' ', BOOLEAN: false };
+
+function typesOf(vars) {
+  if (!Object.prototype.hasOwnProperty.call(vars, '__types')) {
+    Object.defineProperty(vars, '__types', { value: {}, enumerable: false, writable: true });
+  }
+  return vars.__types;
+}
+
+function undeclaredMessage(name, exampleType) {
+  return name + ' has not been declared. Add a line such as: DECLARE ' + name + ' : ' + exampleType;
+}
+
+function parseTypeSpec(raw, line) {
+  var text = raw.trim();
+  var upper = text.toUpperCase();
+  if (SIMPLE_TYPES.hasOwnProperty(upper)) return { kind: upper };
+  var m = text.match(/^ARRAY\s*\[\s*(.+?)\s*:\s*(.+?)\s*\]\s*OF\s+([A-Za-z]+)\s*$/i);
+  if (m) {
+    var element = m[3].toUpperCase();
+    if (!SIMPLE_TYPES.hasOwnProperty(element)) throw new PseudocodeError('An array must be OF a simple type such as INTEGER or STRING, not ' + m[3] + '.', line);
+    return { kind: 'ARRAY', lowerCode: compileExpression(m[1], line), upperCode: compileExpression(m[2], line), element: element };
+  }
+  throw new PseudocodeError('"' + text + '" is not a data type. Use INTEGER, REAL, STRING, CHAR, BOOLEAN or ARRAY[1:10] OF INTEGER.', line);
+}
+
+function describeValue(v) {
+  if (typeof v === 'number') return Number.isInteger(v) ? 'an INTEGER' : 'a REAL';
+  if (typeof v === 'string') return v.length === 1 ? 'a CHAR' : 'a STRING';
+  if (typeof v === 'boolean') return 'a BOOLEAN';
+  if (Array.isArray(v)) return 'an array';
+  return 'nothing';
+}
+
+// A REAL with no fractional part is accepted by an INTEGER so that 10 / 2
+// can be stored in a whole-number variable; anything else that does not fit
+// the declared type is an error, as in the syllabus.
+function coerceToType(value, kind, name, line) {
+  if (kind === 'INTEGER') {
+    if (typeof value === 'number' && Number.isInteger(value)) return value;
+    if (typeof value === 'number') throw new PseudocodeError(name + ' is an INTEGER and cannot hold ' + value + '. Declare it as REAL, or use DIV for whole-number division.', line);
+  } else if (kind === 'REAL') {
+    if (typeof value === 'number') return value;
+  } else if (kind === 'STRING') {
+    if (typeof value === 'string') return value;
+  } else if (kind === 'CHAR') {
+    if (typeof value === 'string' && value.length === 1) return value;
+  } else if (kind === 'BOOLEAN') {
+    if (typeof value === 'boolean') return value;
+  } else {
+    return value;
+  }
+  throw new PseudocodeError(name + ' is declared as ' + kind + ' but you tried to store ' + describeValue(value) + ' (' + JSON.stringify(value) + ') in it.', line);
+}
+
+function declareVariables(vars, instr, cursor) {
+  var types = typesOf(vars);
+  for (var d = 0; d < instr.names.length; d++) {
+    var name = instr.names[d];
+    if (Object.prototype.hasOwnProperty.call(vars, name)) throw new PseudocodeError(name + ' has already been declared.', instr.line);
+    if (instr.spec.kind === 'ARRAY') {
+      var lo = evaluateExpression(instr.spec.lowerCode, vars, cursor, instr.line);
+      var hi = evaluateExpression(instr.spec.upperCode, vars, cursor, instr.line);
+      if (typeof lo !== 'number' || typeof hi !== 'number' || !Number.isInteger(lo) || !Number.isInteger(hi)) throw new PseudocodeError('Array bounds must be whole numbers.', instr.line);
+      if (hi < lo) throw new PseudocodeError('Array upper bound ' + hi + ' is below the lower bound ' + lo + '.', instr.line);
+      if (hi - lo + 1 > 100000) throw new PseudocodeError('That array is too large.', instr.line);
+      var arr = [];
+      for (var i = 0; i <= hi - lo; i++) arr.push(SIMPLE_TYPES[instr.spec.element]);
+      arr.lower = lo;
+      vars[name] = arr;
+      types[name] = instr.spec.element;
+    } else {
+      vars[name] = SIMPLE_TYPES[instr.spec.kind];
+      types[name] = instr.spec.kind;
+    }
+  }
+}
+
+function storeVariable(vars, name, value, line) {
+  if (!Object.prototype.hasOwnProperty.call(vars, name)) throw new PseudocodeError(undeclaredMessage(name, 'INTEGER'), line);
+  var kind = typesOf(vars)[name];
+  vars[name] = kind ? coerceToType(value, kind, name, line) : value;
+}
+
+function arrayOffset(arr, idx, name, line) {
+  var lower = typeof arr.lower === 'number' ? arr.lower : 1;
+  if (typeof idx !== 'number' || !Number.isInteger(idx)) throw new PseudocodeError('An array index must be a whole number.', line);
+  if (idx < lower || idx > lower + arr.length - 1) throw new PseudocodeError('Index ' + idx + ' is outside the bounds of ' + name + ' (' + lower + ' to ' + (lower + arr.length - 1) + ').', line);
+  return idx - lower;
+}
+
+function storeArrayElement(vars, name, idx, value, line) {
+  if (!Object.prototype.hasOwnProperty.call(vars, name)) throw new PseudocodeError(undeclaredMessage(name, 'ARRAY[1:5] OF INTEGER'), line);
+  var arr = vars[name];
+  if (!Array.isArray(arr)) throw new PseudocodeError('"' + name + '" is not an array. Declare it with DECLARE ' + name + ' : ARRAY[1:5] OF INTEGER', line);
+  var kind = typesOf(vars)[name];
+  arr[arrayOffset(arr, idx, name, line)] = kind ? coerceToType(value, kind, name + '[...]', line) : value;
+}
+
 function PseudocodeError(message, line) {
   this.message = line ? ('Line ' + line + ': ' + message) : message;
   this.name = 'PseudocodeError';
@@ -2304,20 +2408,18 @@ function buildExpressionEvaluator(node) {
     var variableName = node[1];
     return function (vars, cursor, line) {
       if (Object.prototype.hasOwnProperty.call(vars, variableName)) return vars[variableName];
-      throw new PseudocodeError('I don\'t understand "' + variableName + '".', line);
+      throw new PseudocodeError(undeclaredMessage(variableName, 'INTEGER'), line);
     };
   }
   if (kind === EX_INDEX) {
     var arrayName = node[1];
     var indexEvaluator = buildExpressionEvaluator(node[2]);
     return function (vars, cursor, line) {
+      if (!Object.prototype.hasOwnProperty.call(vars, arrayName)) throw new PseudocodeError(undeclaredMessage(arrayName, 'ARRAY[1:5] OF INTEGER'), line);
       var arr = vars[arrayName];
-      if (!Array.isArray(arr)) throw new PseudocodeError('"' + arrayName + '" is not an array yet - assign to ' + arrayName + '[1] first.', line);
+      if (!Array.isArray(arr)) throw new PseudocodeError('"' + arrayName + '" is not an array. Declare it with DECLARE ' + arrayName + ' : ARRAY[1:5] OF INTEGER', line);
       var idx = indexEvaluator(vars, cursor, line);
-      if (typeof idx !== 'number' || !Number.isInteger(idx) || idx < 1 || idx > arr.length) {
-        throw new PseudocodeError('Index ' + idx + ' is out of range for ' + arrayName + ' (1 to ' + arr.length + ').', line);
-      }
-      return arr[idx - 1];
+      return arr[arrayOffset(arr, idx, arrayName, line)];
     };
   }
   if (kind === EX_CALL) {
@@ -2443,6 +2545,18 @@ function compile(source) {
     }
     if (/^END\s*IF\s*$/i.test(line)) {
       throw new PseudocodeError('Use "ENDIF" (one word) to close an IF block.', lineNo);
+    }
+    if ((m = line.match(/^DECLARE\s+([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)\s*:\s*(.+)$/i))) {
+      instructions.push({
+        type: 'DECLARE',
+        names: m[1].split(',').map(function (s) { return s.trim(); }),
+        spec: parseTypeSpec(m[2], lineNo),
+        line: lineNo
+      });
+      continue;
+    }
+    if (/^DECLARE\b/i.test(line)) {
+      throw new PseudocodeError('DECLARE needs a name, a colon and a type, e.g. DECLARE Total : INTEGER', lineNo);
     }
     if ((m = line.match(/^FOR\s+([A-Za-z_]\w*)\s*(?:<-|←)\s*(.+?)\s+TO\s+(.+)$/i))) {
       instructions.push({ type: 'FOR', var: m[1], startCode: compileExpression(m[2], lineNo), endCode: compileExpression(m[3], lineNo), line: lineNo });
@@ -2654,9 +2768,14 @@ function runProgram(sourceOrInstructions, cursor, log, stepDelayMs) {
             if (typeof startVal !== 'number' || typeof endVal !== 'number') {
               throw new PseudocodeError('FOR needs numbers, e.g. FOR ' + instr.var + ' <- 1 TO 5', instr.line);
             }
-            vars[instr.var] = startVal;
+            storeVariable(vars, instr.var, startVal, instr.line);
             instr.currentEnd = endVal;
             pc = startVal > endVal ? instr.pairedNextIndex + 1 : pc + 1;
+            continue;
+          }
+          if (instr.type === 'DECLARE') {
+            declareVariables(vars, instr, cursor);
+            pc++;
             continue;
           }
           if (instr.type === 'NEXT') {
@@ -2684,16 +2803,12 @@ function runProgram(sourceOrInstructions, cursor, log, stepDelayMs) {
           }
           if (instr.type === 'ASSIGN_INDEX') {
             var indexValue = evaluateExpression(instr.indexCode, vars, cursor, instr.line);
-            if (typeof indexValue !== 'number' || !Number.isInteger(indexValue) || indexValue < 1) {
-              throw new PseudocodeError('Array index must be a whole number of 1 or more.', instr.line);
-            }
-            if (!Array.isArray(vars[instr.var])) vars[instr.var] = [];
-            vars[instr.var][indexValue - 1] = evaluateExpression(instr.exprCode, vars, cursor, instr.line);
+            storeArrayElement(vars, instr.var, indexValue, evaluateExpression(instr.exprCode, vars, cursor, instr.line), instr.line);
             pc++;
             continue;
           }
           if (instr.type === 'ASSIGN') {
-            vars[instr.var] = evaluateExpression(instr.exprCode, vars, cursor, instr.line);
+            storeVariable(vars, instr.var, evaluateExpression(instr.exprCode, vars, cursor, instr.line), instr.line);
             pc++;
             continue;
           }
@@ -3204,9 +3319,14 @@ function runMachineInstruction(machine) {
     if (typeof startVal !== 'number' || typeof endVal !== 'number') {
       throw new PseudocodeError('FOR needs numbers, e.g. FOR ' + instr.var + ' <- 1 TO 5', instr.line);
     }
-    runtime.vars[instr.var] = startVal;
+    storeVariable(runtime.vars, instr.var, startVal, instr.line);
     runtime.forEnds[runtime.pc] = endVal;
     runtime.pc = startVal > endVal ? instr.pairedNextIndex + 1 : runtime.pc + 1;
+    return false;
+  }
+  if (instr.type === 'DECLARE') {
+    declareVariables(runtime.vars, instr, machine.cursor);
+    runtime.pc++;
     return false;
   }
   if (instr.type === 'NEXT') {
@@ -3232,16 +3352,12 @@ function runMachineInstruction(machine) {
   }
   if (instr.type === 'ASSIGN_INDEX') {
     var machineIndexValue = evaluateExpression(instr.indexCode, runtime.vars, machine.cursor, instr.line);
-    if (typeof machineIndexValue !== 'number' || !Number.isInteger(machineIndexValue) || machineIndexValue < 1) {
-      throw new PseudocodeError('Array index must be a whole number of 1 or more.', instr.line);
-    }
-    if (!Array.isArray(runtime.vars[instr.var])) runtime.vars[instr.var] = [];
-    runtime.vars[instr.var][machineIndexValue - 1] = evaluateExpression(instr.exprCode, runtime.vars, machine.cursor, instr.line);
+    storeArrayElement(runtime.vars, instr.var, machineIndexValue, evaluateExpression(instr.exprCode, runtime.vars, machine.cursor, instr.line), instr.line);
     runtime.pc++;
     return true;
   }
   if (instr.type === 'ASSIGN') {
-    runtime.vars[instr.var] = evaluateExpression(instr.exprCode, runtime.vars, machine.cursor, instr.line);
+    storeVariable(runtime.vars, instr.var, evaluateExpression(instr.exprCode, runtime.vars, machine.cursor, instr.line), instr.line);
     runtime.pc++;
     return true;
   }
@@ -4747,19 +4863,19 @@ var TUTORIALS = [
     steps: [
       {
         title: 'Buy a stack of seeds',
-        text: 'To plant a whole strip of tiles, you\'ll need several seeds at once. A <strong>FOR</strong> loop repeats a known number of times - use it instead of WHILE when you already know the count. No colon, no "DO", and it ends with <code>NEXT</code> followed by the same variable name, not <code>ENDFOR</code>. <code>Step</code> counts 1, 2, 3 in turn as the loop runs:',
-        target: 'FOR Step <- 1 TO 3\n    CALL Buy("Carrot")\nNEXT Step',
-        newLines: ['FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', 'NEXT Step'],
-        requires: [{ type: 'FOR' }, { name: 'Buy' }],
+        text: 'To plant a whole strip of tiles, you\'ll need several seeds at once. A <strong>FOR</strong> loop repeats a known number of times - use it instead of WHILE when you already know the count. No colon, no "DO", and it ends with <code>NEXT</code> followed by the same variable name, not <code>ENDFOR</code>. <code>Step</code> counts 1, 2, 3 in turn as the loop runs. Cambridge pseudocode <strong>declares</strong> every variable before using it, so the counter gets a <code>DECLARE</code> line first:',
+        target: 'DECLARE Step : INTEGER\nFOR Step <- 1 TO 3\n    CALL Buy("Carrot")\nNEXT Step',
+        newLines: ['DECLARE Step : INTEGER', 'FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', 'NEXT Step'],
+        requires: [{ type: 'DECLARE' }, { type: 'FOR' }, { name: 'Buy' }],
         action: 'run',
         actionHint: 'Press Run - check the console for three separate purchase messages, not one.'
       },
       {
         title: 'Plant the whole strip',
         text: 'The loop variable is a real number you can use anywhere - including inside <code>SetPosition</code>. Rewrite it to plant three Carrots in a row in one go, one tile further along each time:',
-        target: 'FOR Step <- 0 TO 2\n    CALL SetPosition(Step, 0)\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT Step',
-        newLines: ['FOR Step <- 0 TO 2', '    CALL SetPosition(Step, 0)', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT Step'],
-        requires: [{ type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        target: 'DECLARE Step : INTEGER\nFOR Step <- 0 TO 2\n    CALL SetPosition(Step, 0)\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT Step',
+        newLines: ['DECLARE Step : INTEGER', 'FOR Step <- 0 TO 2', '    CALL SetPosition(Step, 0)', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT Step'],
+        requires: [{ type: 'DECLARE' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
         action: 'run',
         actionHint: 'Press Run - three Carrots should appear across three tiles, not just one.'
       },
@@ -4784,9 +4900,9 @@ var TUTORIALS = [
       {
         title: 'A loop inside a loop',
         text: 'A Strip Farm plants one row. A Grid Farm plants several rows at once, by putting one FOR loop <strong>inside</strong> another. The inner loop (<code>Col</code>) runs all the way through for every single step of the outer loop (<code>Row</code>) - so for 2 rows of 3, the inner loop runs 3 times, twice over, planting 6 Carrots in total. Indent the inner loop one level further so it\'s clearly nested:',
-        target: 'FOR Row <- 0 TO 1\n    FOR Col <- 0 TO 2\n        CALL SetPosition(Col, Row)\n        CALL Buy("Carrot")\n        CALL Plant("Carrot")\n    NEXT Col\nNEXT Row',
-        newLines: ['FOR Row <- 0 TO 1', '    FOR Col <- 0 TO 2', '        CALL SetPosition(Col, Row)', '        CALL Buy("Carrot")', '        CALL Plant("Carrot")', '    NEXT Col', 'NEXT Row'],
-        requires: [{ type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        target: 'DECLARE Row : INTEGER\nDECLARE Col : INTEGER\nFOR Row <- 0 TO 1\n    FOR Col <- 0 TO 2\n        CALL SetPosition(Col, Row)\n        CALL Buy("Carrot")\n        CALL Plant("Carrot")\n    NEXT Col\nNEXT Row',
+        newLines: ['DECLARE Row : INTEGER', 'DECLARE Col : INTEGER', 'FOR Row <- 0 TO 1', '    FOR Col <- 0 TO 2', '        CALL SetPosition(Col, Row)', '        CALL Buy("Carrot")', '        CALL Plant("Carrot")', '    NEXT Col', 'NEXT Row'],
+        requires: [{ type: 'DECLARE' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
         action: 'run',
         actionHint: 'Press Run - six Carrots should appear in a 3-wide, 2-deep block, not just a single row.'
       },
@@ -4835,19 +4951,19 @@ var TUTORIALS = [
     steps: [
       {
         title: 'Keep a running number',
-        text: 'Before spending real coins, it helps to work out costs on paper first. A <strong>variable</strong> stores a value under a name you choose. Cambridge Pseudocode assigns with <code>&lt;-</code>, never <code>=</code>. <code>OUTPUT</code> prints a value to the console below, so you can see what\'s stored:',
-        target: 'Total <- 0\nOUTPUT Total',
-        newLines: ['Total <- 0', 'OUTPUT Total'],
-        requires: [{ type: 'ASSIGN' }, { type: 'OUTPUT' }],
+        text: 'Before spending real coins, it helps to work out costs on paper first. A <strong>variable</strong> stores a value under a name you choose. Cambridge Pseudocode <strong>declares</strong> a variable with its data type before using it (<code>DECLARE Total : INTEGER</code>), assigns with <code>&lt;-</code>, never <code>=</code>, and <code>OUTPUT</code> prints a value to the console below, so you can see what\'s stored:',
+        target: 'DECLARE Total : INTEGER\nTotal <- 0\nOUTPUT Total',
+        newLines: ['DECLARE Total : INTEGER', 'Total <- 0', 'OUTPUT Total'],
+        requires: [{ type: 'DECLARE' }, { type: 'ASSIGN' }, { type: 'OUTPUT' }],
         action: 'run',
         actionHint: 'Press Run - the console should print 0.'
       },
       {
         title: 'Total up a whole strip farm\'s cost',
         text: 'A variable keeps its value until you change it, even across several lines or loop repeats. Work out the total cost of a 3-seed Strip Farm before you build one, updating the running total once per loop:',
-        target: 'Total <- 0\nFOR Step <- 1 TO 3\n    CALL Buy("Carrot")\n    Total <- Total + 5\nNEXT Step\nOUTPUT Total',
-        newLines: ['Total <- 0', 'FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', '    Total <- Total + 5', 'NEXT Step', 'OUTPUT Total'],
-        requires: [{ type: 'ASSIGN' }, { type: 'FOR' }, { name: 'Buy' }, { type: 'OUTPUT' }],
+        target: 'DECLARE Total : INTEGER\nDECLARE Step : INTEGER\nTotal <- 0\nFOR Step <- 1 TO 3\n    CALL Buy("Carrot")\n    Total <- Total + 5\nNEXT Step\nOUTPUT Total',
+        newLines: ['DECLARE Total : INTEGER', 'DECLARE Step : INTEGER', 'Total <- 0', 'FOR Step <- 1 TO 3', '    CALL Buy("Carrot")', '    Total <- Total + 5', 'NEXT Step', 'OUTPUT Total'],
+        requires: [{ type: 'DECLARE' }, { type: 'ASSIGN' }, { type: 'FOR' }, { name: 'Buy' }, { type: 'OUTPUT' }],
         action: 'run',
         actionHint: 'Press Run - the console should print 15 (3 loops of 5), not 0 or 5.'
       }
@@ -4932,17 +5048,17 @@ var TUTORIALS = [
     steps: [
       {
         title: 'Store a list of spots',
-        text: 'A Strip Farm and a Grid Farm both farm a fixed, computed pattern - every tile in a line or a rectangle. An <strong>array</strong> stores a whole list of values under one name, so you can farm any set of spots you choose instead. Store two chosen spots\' coordinates, one number per array using an index in square brackets, starting at 1:',
-        target: 'Xs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0',
-        newLines: ['Xs[1] <- 0', 'Xs[2] <- 2', 'Zs[1] <- 1', 'Zs[2] <- 0'],
-        requires: [{ type: 'ASSIGN_INDEX' }]
+        text: 'A Strip Farm and a Grid Farm both farm a fixed, computed pattern - every tile in a line or a rectangle. An <strong>array</strong> stores a whole list of values under one name, so you can farm any set of spots you choose instead. Declare each array with its size (<code>ARRAY[1:2]</code> means positions 1 to 2) and the type of thing it holds, then store two chosen spots\' coordinates, one number per array using an index in square brackets, starting at 1:',
+        target: 'DECLARE Xs : ARRAY[1:2] OF INTEGER\nDECLARE Zs : ARRAY[1:2] OF INTEGER\nXs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0',
+        newLines: ['DECLARE Xs : ARRAY[1:2] OF INTEGER', 'DECLARE Zs : ARRAY[1:2] OF INTEGER', 'Xs[1] <- 0', 'Xs[2] <- 2', 'Zs[1] <- 1', 'Zs[2] <- 0'],
+        requires: [{ type: 'DECLARE' }, { type: 'ASSIGN_INDEX' }]
       },
       {
         title: 'Visit every spot with one loop',
         text: 'Read a value back out of an array the same way - name, then the index in brackets. Loop over both arrays at once with <code>i</code> as the shared index, so one small loop visits every spot you stored, however many there are:',
-        target: 'Xs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0\nFOR i <- 1 TO 2\n    CALL SetPosition(Xs[i], Zs[i])\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT i',
-        newLines: ['FOR i <- 1 TO 2', '    CALL SetPosition(Xs[i], Zs[i])', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT i'],
-        requires: [{ type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        target: 'DECLARE Xs : ARRAY[1:2] OF INTEGER\nDECLARE Zs : ARRAY[1:2] OF INTEGER\nDECLARE i : INTEGER\nXs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0\nFOR i <- 1 TO 2\n    CALL SetPosition(Xs[i], Zs[i])\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT i',
+        newLines: ['DECLARE i : INTEGER', 'FOR i <- 1 TO 2', '    CALL SetPosition(Xs[i], Zs[i])', '    CALL Buy("Carrot")', '    CALL Plant("Carrot")', 'NEXT i'],
+        requires: [{ type: 'DECLARE' }, { type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
         action: 'run',
         actionHint: 'Press Run - two Carrots should appear at the two stored spots (glowing) - not a computed line or block.',
         highlightTiles: function () { return [{ x: playerCursor.homeX, z: playerCursor.homeZ + 1 }, { x: playerCursor.homeX + 2, z: playerCursor.homeZ }]; }
@@ -4950,16 +5066,16 @@ var TUTORIALS = [
       {
         title: 'A machine with a list',
         text: 'Place the same code as a machine. Every tick it re-reads the same two arrays and visits the same chosen spots, forever - a genuinely custom farm shape, not a fixed strip or grid. Click the glowing tile to move there first - it\'s clear of the two Carrots from the last step, with open field in the direction this machine\'s own spots are measured:',
-        target: 'Xs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0\nFOR i <- 1 TO 2\n    CALL SetPosition(Xs[i], Zs[i])\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT i',
+        target: 'DECLARE Xs : ARRAY[1:2] OF INTEGER\nDECLARE Zs : ARRAY[1:2] OF INTEGER\nDECLARE i : INTEGER\nXs[1] <- 0\nXs[2] <- 2\nZs[1] <- 1\nZs[2] <- 0\nFOR i <- 1 TO 2\n    CALL SetPosition(Xs[i], Zs[i])\n    CALL Buy("Carrot")\n    CALL Plant("Carrot")\nNEXT i',
         newLines: [],
-        requires: [{ type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
+        requires: [{ type: 'DECLARE' }, { type: 'ASSIGN_INDEX' }, { type: 'FOR' }, { name: 'SetPosition' }, { name: 'Buy' }, { name: 'Plant' }],
         action: 'machine',
         actionHint: 'Move to the glowing tile, then press Place Machine below - not Run this time. This machine\'s spots are 2 tiles to the right and 1 tile up from wherever you place it, so it needs that much open field. If it fails, move to open ground (or wait for more coins) and try again.',
         highlightTiles: function () { return [{ x: playerCursor.homeX - 3, z: playerCursor.homeZ - 2 }]; }
       },
       {
         title: 'Try it',
-        text: 'Arrays plus a loop can visit any set of spots you choose, in one go - the shape lives entirely in the numbers you store, not in the code.<br><br><strong>Challenge:</strong> add a third spot to both arrays and change TO 2 to TO 3.',
+        text: 'Arrays plus a loop can visit any set of spots you choose, in one go - the shape lives entirely in the numbers you store, not in the code.<br><br><strong>Challenge:</strong> add a third spot to both arrays - make them <code>ARRAY[1:3]</code>, store a third pair of coordinates, and change TO 2 to TO 3.',
         starter: null, target: null, newLines: [], requires: []
       }
     ]
@@ -5007,6 +5123,7 @@ function tutorialRequirementLabel(req) {
   if (req.type === 'ELSE') return 'ELSE';
   if (req.type === 'WHILE') return 'WHILE ... DO';
   if (req.type === 'FOR') return 'FOR ... TO ... NEXT';
+  if (req.type === 'DECLARE') return 'DECLARE ... : INTEGER';
   if (req.type === 'ASSIGN') return 'a variable, e.g. Total <- 0';
   if (req.type === 'ASSIGN_INDEX') return 'an array, e.g. Xs[1] <- 0';
   if (req.type === 'OUTPUT') return 'OUTPUT ...';

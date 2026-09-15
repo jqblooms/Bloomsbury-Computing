@@ -226,7 +226,10 @@
   </div>
 </div>
 
-<script src="../shared/pseudocode-engine.js"></script>
+<!-- Bump the ?v= whenever the shared engine changes: this page is opened with a
+     cache-busting bcv on its own URL, but that never reached this sub-resource,
+     so a stale engine could sit under fresh cards (found 2026-09-15 with DECLARE). -->
+<script src="../shared/pseudocode-engine.js?v=20260915declare"></script>
 <script>
 (function () {
   "use strict";
@@ -2001,30 +2004,30 @@
       cards: [
         {
           id: "code-assign-1", category: "code-assign",
-          prompt: "Write one line that stores A + B in a variable called Total.",
+          prompt: "Declare Total (INTEGER) first, then write code that stores A + B in a variable called Total.",
           setup: {"A":4,"B":3},
-          reference: "Total <- A + B",
+          reference: "DECLARE Total : INTEGER\nTotal <- A + B",
           checkVars: ["Total"]
         },
         {
           id: "code-assign-2", category: "code-assign",
-          prompt: "Write one line that stores Price minus Discount in a variable called Final.",
+          prompt: "Declare Final (INTEGER) first, then write code that stores Price minus Discount in a variable called Final.",
           setup: {"Price":10,"Discount":2},
-          reference: "Final <- Price - Discount",
+          reference: "DECLARE Final : INTEGER\nFinal <- Price - Discount",
           checkVars: ["Final"]
         },
         {
           id: "code-assign-3", category: "code-assign",
-          prompt: "Write one line that stores Length times Width in a variable called Area.",
+          prompt: "Declare Area (INTEGER) first, then write code that stores Length times Width in a variable called Area.",
           setup: {"Length":5,"Width":4},
-          reference: "Area <- Length * Width",
+          reference: "DECLARE Area : INTEGER\nArea <- Length * Width",
           checkVars: ["Area"]
         },
         {
           id: "code-assign-4", category: "code-assign",
-          prompt: "Write one line that stores Total divided by Count in a variable called Average.",
+          prompt: "Declare Average (REAL) first, then write code that stores Total divided by Count in a variable called Average.",
           setup: {"Total":20,"Count":4},
-          reference: "Average <- Total / Count",
+          reference: "DECLARE Average : REAL\nAverage <- Total / Count",
           checkVars: ["Average"]
         },
         {
@@ -2064,23 +2067,23 @@
         },
         {
           id: "code-twovar-2", category: "code-twovar",
-          prompt: "Write one line that stores A multiplied by B in a variable called Product.",
+          prompt: "Declare Product (INTEGER) first, then write code that stores A multiplied by B in a variable called Product.",
           setup: {"A":5,"B":2},
-          reference: "Product <- A * B",
+          reference: "DECLARE Product : INTEGER\nProduct <- A * B",
           checkVars: ["Product"]
         },
         {
           id: "code-twovar-3", category: "code-twovar",
-          prompt: "Write two lines: first store Width times Height in Area, then add 10 to Area.",
+          prompt: "Declare Area (INTEGER) first, then write code that first store Width times Height in Area, then add 10 to Area.",
           setup: {"Width":6,"Height":2},
-          reference: "Area <- Width * Height\nArea <- Area + 10",
+          reference: "DECLARE Area : INTEGER\nArea <- Width * Height\nArea <- Area + 10",
           checkVars: ["Area"]
         },
         {
           id: "code-twovar-4", category: "code-twovar",
-          prompt: "Write two lines: first store X minus Y in Result, then double Result.",
+          prompt: "Declare Result (INTEGER) first, then write code that first store X minus Y in Result, then double Result.",
           setup: {"X":10,"Y":4},
-          reference: "Result <- X - Y\nResult <- Result * 2",
+          reference: "DECLARE Result : INTEGER\nResult <- X - Y\nResult <- Result * 2",
           checkVars: ["Result"]
         },
         {
@@ -2092,25 +2095,25 @@
         },
         {
           id: "code-output-2", category: "code-output",
-          prompt: "Store A + B in Sum, then write a second line that outputs Sum.",
+          prompt: "Declare Sum (INTEGER) first. Store A + B in Sum, then write a second line that outputs Sum.",
           setup: {"A":3,"B":4},
-          reference: "Sum <- A + B\nOUTPUT Sum",
+          reference: "DECLARE Sum : INTEGER\nSum <- A + B\nOUTPUT Sum",
           checkVars: ["Sum"],
           checkOutput: true
         },
         {
           id: "code-output-3", category: "code-output",
-          prompt: "Halve X and store it in Half, then output Half.",
+          prompt: "Declare Half (REAL) first. Halve X and store it in Half, then output Half.",
           setup: {"X":20},
-          reference: "Half <- X / 2\nOUTPUT Half",
+          reference: "DECLARE Half : REAL\nHalf <- X / 2\nOUTPUT Half",
           checkVars: ["Half"],
           checkOutput: true
         },
         {
           id: "code-output-4", category: "code-output",
-          prompt: "Store P times Q in Total, then output Total.",
+          prompt: "Declare Total (INTEGER) first. Store P times Q in Total, then output Total.",
           setup: {"P":6,"Q":2},
-          reference: "Total <- P * Q\nOUTPUT Total",
+          reference: "DECLARE Total : INTEGER\nTotal <- P * Q\nOUTPUT Total",
           checkVars: ["Total"],
           checkOutput: true
         }
@@ -2130,114 +2133,114 @@
       cards: [
         {
           id: "code-if-else-1", category: "code-if-else",
-          prompt: "Write an IF/ELSE that stores \"Hot\" in Status if Temp is more than 25, otherwise stores \"Mild\".",
+          prompt: "Declare Status (STRING) first, then write an IF/ELSE that stores \"Hot\" in Status if Temp is more than 25, otherwise stores \"Mild\".",
           setup: {"Temp":30},
-          reference: "IF Temp > 25 THEN\nStatus <- \"Hot\"\nELSE\nStatus <- \"Mild\"\nENDIF",
+          reference: "DECLARE Status : STRING\nIF Temp > 25 THEN\nStatus <- \"Hot\"\nELSE\nStatus <- \"Mild\"\nENDIF",
           checkVars: ["Status"]
         },
         {
           id: "code-if-else-2", category: "code-if-else",
-          prompt: "Write an IF/ELSE that stores \"Pass\" in Result if Score is 50 or more, otherwise stores \"Fail\".",
+          prompt: "Declare Result (STRING) first, then write an IF/ELSE that stores \"Pass\" in Result if Score is 50 or more, otherwise stores \"Fail\".",
           setup: {"Score":65},
-          reference: "IF Score >= 50 THEN\nResult <- \"Pass\"\nELSE\nResult <- \"Fail\"\nENDIF",
+          reference: "DECLARE Result : STRING\nIF Score >= 50 THEN\nResult <- \"Pass\"\nELSE\nResult <- \"Fail\"\nENDIF",
           checkVars: ["Result"]
         },
         {
           id: "code-if-else-3", category: "code-if-else",
-          prompt: "Write an IF/ELSE that stores 20 in Fee if Weight is more than 50, otherwise stores 0.",
+          prompt: "Declare Fee (INTEGER) first, then write an IF/ELSE that stores 20 in Fee if Weight is more than 50, otherwise stores 0.",
           setup: {"Weight":55},
-          reference: "IF Weight > 50 THEN\nFee <- 20\nELSE\nFee <- 0\nENDIF",
+          reference: "DECLARE Fee : INTEGER\nIF Weight > 50 THEN\nFee <- 20\nELSE\nFee <- 0\nENDIF",
           checkVars: ["Fee"]
         },
         {
           id: "code-if-else-4", category: "code-if-else",
-          prompt: "Write an IF/ELSE that stores 3 in Fee if Age is less than 16, otherwise stores 5.",
+          prompt: "Declare Fee (INTEGER) first, then write an IF/ELSE that stores 3 in Fee if Age is less than 16, otherwise stores 5.",
           setup: {"Age":12},
-          reference: "IF Age < 16 THEN\nFee <- 3\nELSE\nFee <- 5\nENDIF",
+          reference: "DECLARE Fee : INTEGER\nIF Age < 16 THEN\nFee <- 3\nELSE\nFee <- 5\nENDIF",
           checkVars: ["Fee"]
         },
         {
           id: "code-if-nested-1", category: "code-if-nested",
-          prompt: "Write nested IF/ELSE statements that store \"Distinction\" in Grade if Marks is 80 or more, \"Merit\" if Marks is 60 or more (but under 80), otherwise \"Pass\".",
+          prompt: "Declare Grade (STRING) first, then write nested IF/ELSE statements that store \"Distinction\" in Grade if Marks is 80 or more, \"Merit\" if Marks is 60 or more (but under 80), otherwise \"Pass\".",
           setup: {"Marks":65},
-          reference: "IF Marks >= 80 THEN\nGrade <- \"Distinction\"\nELSE\nIF Marks >= 60 THEN\nGrade <- \"Merit\"\nELSE\nGrade <- \"Pass\"\nENDIF\nENDIF",
+          reference: "DECLARE Grade : STRING\nIF Marks >= 80 THEN\nGrade <- \"Distinction\"\nELSE\nIF Marks >= 60 THEN\nGrade <- \"Merit\"\nELSE\nGrade <- \"Pass\"\nENDIF\nENDIF",
           checkVars: ["Grade"]
         },
         {
           id: "code-if-nested-2", category: "code-if-nested",
-          prompt: "Write nested IF/ELSE statements that store \"A\" in Grade if Score is 70 or more, \"C\" if Score is 50 or more (but under 70), otherwise \"F\".",
+          prompt: "Declare Grade (STRING) first, then write nested IF/ELSE statements that store \"A\" in Grade if Score is 70 or more, \"C\" if Score is 50 or more (but under 70), otherwise \"F\".",
           setup: {"Score":72},
-          reference: "IF Score >= 70 THEN\nGrade <- \"A\"\nELSE\nIF Score >= 50 THEN\nGrade <- \"C\"\nELSE\nGrade <- \"F\"\nENDIF\nENDIF",
+          reference: "DECLARE Grade : STRING\nIF Score >= 70 THEN\nGrade <- \"A\"\nELSE\nIF Score >= 50 THEN\nGrade <- \"C\"\nELSE\nGrade <- \"F\"\nENDIF\nENDIF",
           checkVars: ["Grade"]
         },
         {
           id: "code-if-nested-3", category: "code-if-nested",
-          prompt: "Write nested IF/ELSE statements that store \"Cold\" in Status if Temp is less than 10, \"Mild\" if Temp is less than 25 (but at least 10), otherwise \"Hot\".",
+          prompt: "Declare Status (STRING) first, then write nested IF/ELSE statements that store \"Cold\" in Status if Temp is less than 10, \"Mild\" if Temp is less than 25 (but at least 10), otherwise \"Hot\".",
           setup: {"Temp":15},
-          reference: "IF Temp < 10 THEN\nStatus <- \"Cold\"\nELSE\nIF Temp < 25 THEN\nStatus <- \"Mild\"\nELSE\nStatus <- \"Hot\"\nENDIF\nENDIF",
+          reference: "DECLARE Status : STRING\nIF Temp < 10 THEN\nStatus <- \"Cold\"\nELSE\nIF Temp < 25 THEN\nStatus <- \"Mild\"\nELSE\nStatus <- \"Hot\"\nENDIF\nENDIF",
           checkVars: ["Status"]
         },
         {
           id: "code-if-nested-4", category: "code-if-nested",
-          prompt: "Write nested IF/ELSE statements that store 0 in Fee if Weight is 50 or less, 20 if Weight is 100 or less (but over 50), otherwise 40.",
+          prompt: "Declare Fee (INTEGER) first, then write nested IF/ELSE statements that store 0 in Fee if Weight is 50 or less, 20 if Weight is 100 or less (but over 50), otherwise 40.",
           setup: {"Weight":75},
-          reference: "IF Weight <= 50 THEN\nFee <- 0\nELSE\nIF Weight <= 100 THEN\nFee <- 20\nELSE\nFee <- 40\nENDIF\nENDIF",
+          reference: "DECLARE Fee : INTEGER\nIF Weight <= 50 THEN\nFee <- 0\nELSE\nIF Weight <= 100 THEN\nFee <- 20\nELSE\nFee <- 40\nENDIF\nENDIF",
           checkVars: ["Fee"]
         },
         {
           id: "code-if-operator-1", category: "code-if-operator",
-          prompt: "A club charges Fee 5 if Age is under 16, otherwise Fee 10. Write the IF/ELSE - get the comparison exactly right.",
+          prompt: "Declare Fee (INTEGER) first. A club charges Fee 5 if Age is under 16, otherwise Fee 10. Write the IF/ELSE - get the comparison exactly right.",
           setup: {"Age":20},
-          reference: "IF Age < 16 THEN\nFee <- 5\nELSE\nFee <- 10\nENDIF",
+          reference: "DECLARE Fee : INTEGER\nIF Age < 16 THEN\nFee <- 5\nELSE\nFee <- 10\nENDIF",
           checkVars: ["Fee"]
         },
         {
           id: "code-if-operator-2", category: "code-if-operator",
-          prompt: "A delivery company charges Fee 5 if Weight is 10 or more, otherwise Fee 0. Write the IF/ELSE - get the comparison exactly right.",
+          prompt: "Declare Fee (INTEGER) first. A delivery company charges Fee 5 if Weight is 10 or more, otherwise Fee 0. Write the IF/ELSE - get the comparison exactly right.",
           setup: {"Weight":12},
-          reference: "IF Weight >= 10 THEN\nFee <- 5\nELSE\nFee <- 0\nENDIF",
+          reference: "DECLARE Fee : INTEGER\nIF Weight >= 10 THEN\nFee <- 5\nELSE\nFee <- 0\nENDIF",
           checkVars: ["Fee"]
         },
         {
           id: "code-if-operator-3", category: "code-if-operator",
-          prompt: "A distinction bonus of 10 is given if Marks is more than 80, otherwise Bonus is 0. Write the IF/ELSE - get the comparison exactly right.",
+          prompt: "Declare Bonus (INTEGER) first. A distinction bonus of 10 is given if Marks is more than 80, otherwise Bonus is 0. Write the IF/ELSE - get the comparison exactly right.",
           setup: {"Marks":85},
-          reference: "IF Marks > 80 THEN\nBonus <- 10\nELSE\nBonus <- 0\nENDIF",
+          reference: "DECLARE Bonus : INTEGER\nIF Marks > 80 THEN\nBonus <- 10\nELSE\nBonus <- 0\nENDIF",
           checkVars: ["Bonus"]
         },
         {
           id: "code-if-operator-4", category: "code-if-operator",
-          prompt: "A range check needs Value to be no more than 100. Write an IF/ELSE that stores \"Yes\" in ValidHigh if Value is 100 or less, otherwise \"No\".",
+          prompt: "Declare ValidHigh (STRING) first. A range check needs Value to be no more than 100. Write an IF/ELSE that stores \"Yes\" in ValidHigh if Value is 100 or less, otherwise \"No\".",
           setup: {"Value":75},
-          reference: "IF Value <= 100 THEN\nValidHigh <- \"Yes\"\nELSE\nValidHigh <- \"No\"\nENDIF",
+          reference: "DECLARE ValidHigh : STRING\nIF Value <= 100 THEN\nValidHigh <- \"Yes\"\nELSE\nValidHigh <- \"No\"\nENDIF",
           checkVars: ["ValidHigh"]
         },
         {
           id: "code-if-compound-1", category: "code-if-compound",
-          prompt: "Write an IF/ELSE that stores \"Accept\" in Result if Value is 50 or more AND Value is 100 or less, otherwise stores \"Reject\".",
+          prompt: "Declare Result (STRING) first, then write an IF/ELSE that stores \"Accept\" in Result if Value is 50 or more AND Value is 100 or less, otherwise stores \"Reject\".",
           setup: {"Value":75},
-          reference: "IF Value >= 50 AND Value <= 100 THEN\nResult <- \"Accept\"\nELSE\nResult <- \"Reject\"\nENDIF",
+          reference: "DECLARE Result : STRING\nIF Value >= 50 AND Value <= 100 THEN\nResult <- \"Accept\"\nELSE\nResult <- \"Reject\"\nENDIF",
           checkVars: ["Result"]
         },
         {
           id: "code-if-compound-2", category: "code-if-compound",
-          prompt: "Write an IF/ELSE that stores \"Extreme\" in Level if Diff1 is less than 1 OR Diff2 is less than 1, otherwise stores \"Normal\".",
+          prompt: "Declare Level (STRING) first, then write an IF/ELSE that stores \"Extreme\" in Level if Diff1 is less than 1 OR Diff2 is less than 1, otherwise stores \"Normal\".",
           setup: {"Diff1":5,"Diff2":3},
-          reference: "IF Diff1 < 1 OR Diff2 < 1 THEN\nLevel <- \"Extreme\"\nELSE\nLevel <- \"Normal\"\nENDIF",
+          reference: "DECLARE Level : STRING\nIF Diff1 < 1 OR Diff2 < 1 THEN\nLevel <- \"Extreme\"\nELSE\nLevel <- \"Normal\"\nENDIF",
           checkVars: ["Level"]
         },
         {
           id: "code-if-compound-3", category: "code-if-compound",
-          prompt: "Write an IF/ELSE that stores \"InRange\" in Status if Marks is 40 or more AND Marks is 80 or less, otherwise stores \"OutOfRange\".",
+          prompt: "Declare Status (STRING) first, then write an IF/ELSE that stores \"InRange\" in Status if Marks is 40 or more AND Marks is 80 or less, otherwise stores \"OutOfRange\".",
           setup: {"Marks":60},
-          reference: "IF Marks >= 40 AND Marks <= 80 THEN\nStatus <- \"InRange\"\nELSE\nStatus <- \"OutOfRange\"\nENDIF",
+          reference: "DECLARE Status : STRING\nIF Marks >= 40 AND Marks <= 80 THEN\nStatus <- \"InRange\"\nELSE\nStatus <- \"OutOfRange\"\nENDIF",
           checkVars: ["Status"]
         },
         {
           id: "code-if-compound-4", category: "code-if-compound",
-          prompt: "Write an IF/ELSE that stores \"OutOfBounds\" in Check if Value is less than 50 OR Value is more than 100, otherwise stores \"InBounds\".",
+          prompt: "Declare Check (STRING) first, then write an IF/ELSE that stores \"OutOfBounds\" in Check if Value is less than 50 OR Value is more than 100, otherwise stores \"InBounds\".",
           setup: {"Value":30},
-          reference: "IF Value < 50 OR Value > 100 THEN\nCheck <- \"OutOfBounds\"\nELSE\nCheck <- \"InBounds\"\nENDIF",
+          reference: "DECLARE Check : STRING\nIF Value < 50 OR Value > 100 THEN\nCheck <- \"OutOfBounds\"\nELSE\nCheck <- \"InBounds\"\nENDIF",
           checkVars: ["Check"]
         }
       ]
@@ -2259,122 +2262,122 @@
       cards: [
         {
           id: "code-for-output-1", category: "code-for-output",
-          prompt: "Write a FOR loop that outputs every whole number from 1 to Limit, using Count as the loop variable.",
+          prompt: "Declare Count (INTEGER) first, then write a FOR loop that outputs every whole number from 1 to Limit, using Count as the loop variable.",
           setup: {"Limit":3},
-          reference: "FOR Count <- 1 TO Limit\nOUTPUT Count\nNEXT Count",
+          reference: "DECLARE Count : INTEGER\nFOR Count <- 1 TO Limit\nOUTPUT Count\nNEXT Count",
           checkOutput: true
         },
         {
           id: "code-for-output-2", category: "code-for-output",
-          prompt: "Write a FOR loop that outputs every whole number from Start to End, using X as the loop variable.",
+          prompt: "Declare X (INTEGER) first, then write a FOR loop that outputs every whole number from Start to End, using X as the loop variable.",
           setup: {"Start":2,"End":5},
-          reference: "FOR X <- Start TO End\nOUTPUT X\nNEXT X",
+          reference: "DECLARE X : INTEGER\nFOR X <- Start TO End\nOUTPUT X\nNEXT X",
           checkOutput: true
         },
         {
           id: "code-for-output-3", category: "code-for-output",
-          prompt: "Write a FOR loop that outputs every whole number from 1 to Max, using Number as the loop variable.",
+          prompt: "Declare Number (INTEGER) first, then write a FOR loop that outputs every whole number from 1 to Max, using Number as the loop variable.",
           setup: {"Max":4},
-          reference: "FOR Number <- 1 TO Max\nOUTPUT Number\nNEXT Number",
+          reference: "DECLARE Number : INTEGER\nFOR Number <- 1 TO Max\nOUTPUT Number\nNEXT Number",
           checkOutput: true
         },
         {
           id: "code-for-output-4", category: "code-for-output",
-          prompt: "Write a FOR loop that outputs every whole number from Low to High, using Item as the loop variable.",
+          prompt: "Declare Item (INTEGER) first, then write a FOR loop that outputs every whole number from Low to High, using Item as the loop variable.",
           setup: {"Low":3,"High":6},
-          reference: "FOR Item <- Low TO High\nOUTPUT Item\nNEXT Item",
+          reference: "DECLARE Item : INTEGER\nFOR Item <- Low TO High\nOUTPUT Item\nNEXT Item",
           checkOutput: true
         },
         {
           id: "code-for-total-1", category: "code-for-total",
-          prompt: "Write code that adds up every whole number from 1 to Limit (the accumulator pattern: start Total at 0, add Count on every pass), then outputs Total.",
+          prompt: "Declare Total (INTEGER) and Count (INTEGER) first, then write code that adds up every whole number from 1 to Limit (the accumulator pattern: start Total at 0, add Count on every pass), then outputs Total.",
           setup: {"Limit":3},
-          reference: "Total <- 0\nFOR Count <- 1 TO Limit\nTotal <- Total + Count\nNEXT Count\nOUTPUT Total",
+          reference: "DECLARE Total : INTEGER\nDECLARE Count : INTEGER\nTotal <- 0\nFOR Count <- 1 TO Limit\nTotal <- Total + Count\nNEXT Count\nOUTPUT Total",
           checkVars: ["Total"],
           checkOutput: true
         },
         {
           id: "code-for-total-2", category: "code-for-total",
-          prompt: "Write code that adds up every whole number from 1 to Limit using Number as the loop variable, storing the result in Total, then outputs Total.",
+          prompt: "Declare Total (INTEGER) and Number (INTEGER) first, then write code that adds up every whole number from 1 to Limit using Number as the loop variable, storing the result in Total, then outputs Total.",
           setup: {"Limit":4},
-          reference: "Total <- 0\nFOR Number <- 1 TO Limit\nTotal <- Total + Number\nNEXT Number\nOUTPUT Total",
+          reference: "DECLARE Total : INTEGER\nDECLARE Number : INTEGER\nTotal <- 0\nFOR Number <- 1 TO Limit\nTotal <- Total + Number\nNEXT Number\nOUTPUT Total",
           checkVars: ["Total"],
           checkOutput: true
         },
         {
           id: "code-for-total-3", category: "code-for-total",
-          prompt: "Write code that adds up every whole number from Start to End, storing the result in Total, then outputs Total.",
+          prompt: "Declare Total (INTEGER) and X (INTEGER) first, then write code that adds up every whole number from Start to End, storing the result in Total, then outputs Total.",
           setup: {"Start":2,"End":5},
-          reference: "Total <- 0\nFOR X <- Start TO End\nTotal <- Total + X\nNEXT X\nOUTPUT Total",
+          reference: "DECLARE Total : INTEGER\nDECLARE X : INTEGER\nTotal <- 0\nFOR X <- Start TO End\nTotal <- Total + X\nNEXT X\nOUTPUT Total",
           checkVars: ["Total"],
           checkOutput: true
         },
         {
           id: "code-for-total-4", category: "code-for-total",
-          prompt: "Write code that adds up every whole number from 1 to Max, storing the result in Sum, then outputs Sum.",
+          prompt: "Declare Sum (INTEGER) and Item (INTEGER) first, then write code that adds up every whole number from 1 to Max, storing the result in Sum, then outputs Sum.",
           setup: {"Max":5},
-          reference: "Sum <- 0\nFOR Item <- 1 TO Max\nSum <- Sum + Item\nNEXT Item\nOUTPUT Sum",
+          reference: "DECLARE Sum : INTEGER\nDECLARE Item : INTEGER\nSum <- 0\nFOR Item <- 1 TO Max\nSum <- Sum + Item\nNEXT Item\nOUTPUT Sum",
           checkVars: ["Sum"],
           checkOutput: true
         },
         {
           id: "code-for-bounds-1", category: "code-for-bounds",
-          prompt: "Write a FOR loop that runs exactly Times times, starting at 1, outputting the loop counter each time.",
+          prompt: "Declare Count (INTEGER) first, then write a FOR loop that runs exactly Times times, starting at 1, outputting the loop counter each time.",
           setup: {"Times":4},
-          reference: "FOR Count <- 1 TO Times\nOUTPUT Count\nNEXT Count",
+          reference: "DECLARE Count : INTEGER\nFOR Count <- 1 TO Times\nOUTPUT Count\nNEXT Count",
           checkOutput: true
         },
         {
           id: "code-for-bounds-2", category: "code-for-bounds",
-          prompt: "Write a FOR loop that runs exactly Times times, starting at 0, outputting the loop counter each time - get the end bound exactly right.",
+          prompt: "Declare Count (INTEGER) first, then write a FOR loop that runs exactly Times times, starting at 0, outputting the loop counter each time - get the end bound exactly right.",
           setup: {"Times":4},
-          reference: "FOR Count <- 0 TO Times - 1\nOUTPUT Count\nNEXT Count",
+          reference: "DECLARE Count : INTEGER\nFOR Count <- 0 TO Times - 1\nOUTPUT Count\nNEXT Count",
           checkOutput: true
         },
         {
           id: "code-for-bounds-3", category: "code-for-bounds",
-          prompt: "A loop must output the numbers from From up to (but not including) Stop. Write the FOR loop - get the end bound exactly right.",
+          prompt: "Declare Count (INTEGER) first. A loop must output the numbers from From up to (but not including) Stop. Write the FOR loop - get the end bound exactly right.",
           setup: {"From":2,"Stop":6},
-          reference: "FOR Count <- From TO Stop - 1\nOUTPUT Count\nNEXT Count",
+          reference: "DECLARE Count : INTEGER\nFOR Count <- From TO Stop - 1\nOUTPUT Count\nNEXT Count",
           checkOutput: true
         },
         {
           id: "code-for-bounds-4", category: "code-for-bounds",
-          prompt: "A loop must add up exactly Times numbers starting from 0. Write the code that stores the total in Total and outputs it - get the end bound exactly right.",
+          prompt: "Declare Total (INTEGER) and Count (INTEGER) first. A loop must add up exactly Times numbers starting from 0. Write the code that stores the total in Total and outputs it - get the end bound exactly right.",
           setup: {"Times":5},
-          reference: "Total <- 0\nFOR Count <- 0 TO Times - 1\nTotal <- Total + Count\nNEXT Count\nOUTPUT Total",
+          reference: "DECLARE Total : INTEGER\nDECLARE Count : INTEGER\nTotal <- 0\nFOR Count <- 0 TO Times - 1\nTotal <- Total + Count\nNEXT Count\nOUTPUT Total",
           checkVars: ["Total"],
           checkOutput: true
         },
         {
           id: "code-for-count-1", category: "code-for-count",
-          prompt: "Write code that counts how many whole numbers there are from Start to End (inclusive), storing the count in Total, then outputs Total.",
+          prompt: "Declare Total (INTEGER) and Number (INTEGER) first, then write code that counts how many whole numbers there are from Start to End (inclusive), storing the count in Total, then outputs Total.",
           setup: {"Start":3,"End":7},
-          reference: "Total <- 0\nFOR Number <- Start TO End\nTotal <- Total + 1\nNEXT Number\nOUTPUT Total",
+          reference: "DECLARE Total : INTEGER\nDECLARE Number : INTEGER\nTotal <- 0\nFOR Number <- Start TO End\nTotal <- Total + 1\nNEXT Number\nOUTPUT Total",
           checkVars: ["Total"],
           checkOutput: true
         },
         {
           id: "code-for-count-2", category: "code-for-count",
-          prompt: "Write code that counts how many whole numbers there are from 1 to Limit, storing the count in Tally, then outputs Tally.",
+          prompt: "Declare Tally (INTEGER) and Count (INTEGER) first, then write code that counts how many whole numbers there are from 1 to Limit, storing the count in Tally, then outputs Tally.",
           setup: {"Limit":6},
-          reference: "Tally <- 0\nFOR Count <- 1 TO Limit\nTally <- Tally + 1\nNEXT Count\nOUTPUT Tally",
+          reference: "DECLARE Tally : INTEGER\nDECLARE Count : INTEGER\nTally <- 0\nFOR Count <- 1 TO Limit\nTally <- Tally + 1\nNEXT Count\nOUTPUT Tally",
           checkVars: ["Tally"],
           checkOutput: true
         },
         {
           id: "code-for-count-3", category: "code-for-count",
-          prompt: "Write code that counts how many whole numbers there are from Low to High (inclusive), storing the count in Amount, then outputs Amount.",
+          prompt: "Declare Amount (INTEGER) and Item (INTEGER) first, then write code that counts how many whole numbers there are from Low to High (inclusive), storing the count in Amount, then outputs Amount.",
           setup: {"Low":2,"High":9},
-          reference: "Amount <- 0\nFOR Item <- Low TO High\nAmount <- Amount + 1\nNEXT Item\nOUTPUT Amount",
+          reference: "DECLARE Amount : INTEGER\nDECLARE Item : INTEGER\nAmount <- 0\nFOR Item <- Low TO High\nAmount <- Amount + 1\nNEXT Item\nOUTPUT Amount",
           checkVars: ["Amount"],
           checkOutput: true
         },
         {
           id: "code-for-count-4", category: "code-for-count",
-          prompt: "Write code that counts how many whole numbers there are from 0 to Max (inclusive), storing the count in Total, then outputs Total.",
+          prompt: "Declare Total (INTEGER) and Number (INTEGER) first, then write code that counts how many whole numbers there are from 0 to Max (inclusive), storing the count in Total, then outputs Total.",
           setup: {"Max":5},
-          reference: "Total <- 0\nFOR Number <- 0 TO Max\nTotal <- Total + 1\nNEXT Number\nOUTPUT Total",
+          reference: "DECLARE Total : INTEGER\nDECLARE Number : INTEGER\nTotal <- 0\nFOR Number <- 0 TO Max\nTotal <- Total + 1\nNEXT Number\nOUTPUT Total",
           checkVars: ["Total"],
           checkOutput: true
         }

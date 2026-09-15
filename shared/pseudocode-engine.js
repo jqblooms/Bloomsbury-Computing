@@ -4,9 +4,14 @@
 // Farmer's own engine is tightly coupled to its animated, async, farm-command
 // game loop, and touching a live, working game to extract from it under time
 // pressure was a worse risk than writing a smaller, purpose-built interpreter
-// with the same grammar (assignment <-, IF/ELSEIF/ELSE/ENDIF, FOR/NEXT,
-// WHILE/ENDWHILE, OUTPUT, array indexing). No CALL/farm-command support here -
-// drill content never needs it, and leaving it out keeps this file small.
+// with the same grammar (DECLARE, assignment <-, IF/ELSEIF/ELSE/ENDIF,
+// FOR/NEXT, WHILE/ENDWHILE, OUTPUT, array indexing). No CALL/farm-command
+// support here - drill content never needs it, and leaving it out keeps this
+// file small.
+//
+// Cambridge rule (James, 2026-09-15): every variable must be DECLAREd with a
+// type before it is assigned or read, and it only holds values of that type.
+// The values in initialVars are the exception - they are the card's givens.
 //
 // Public API:
 //   PseudocodeError(message, line)
@@ -162,14 +167,14 @@
           var indexEval = parseExpr();
           expectOp(']');
           return function (vars) {
+            if (!(name in vars)) throw new PseudocodeError(undeclaredMessage(name, 'ARRAY[1:10] OF INTEGER'), line);
             if (!Array.isArray(vars[name])) throw new PseudocodeError(name + ' is not an array.', line);
             var idx = indexEval(vars);
-            if (typeof idx !== 'number') throw new PseudocodeError('An array index must be a number.', line);
-            return vars[name][idx];
+            return vars[name][arrayOffset(vars[name], idx, name, line)];
           };
         }
         return function (vars) {
-          if (!(name in vars)) throw new PseudocodeError(name + ' has not been given a value yet.', line);
+          if (!(name in vars)) throw new PseudocodeError(undeclaredMessage(name, 'INTEGER'), line);
           return vars[name];
         };
       }
@@ -266,6 +271,65 @@
     };
   }
 
+  // ---- Cambridge declarations: every variable is DECLAREd before use ----
+  // The syllabus requires DECLARE Name : TYPE before a variable is assigned
+  // or read. Variables handed in by the caller (a drill card's setup values)
+  // count as already declared, since the pupil is told they exist.
+  var SIMPLE_TYPES = { INTEGER: 0, REAL: 0, STRING: '', CHAR: ' ', BOOLEAN: false };
+
+  function undeclaredMessage(name, exampleType) {
+    return name + ' has not been declared. Add a line such as: DECLARE ' + name + ' : ' + exampleType;
+  }
+
+  function parseTypeSpec(raw, line) {
+    var text = raw.trim();
+    var upper = text.toUpperCase();
+    if (SIMPLE_TYPES.hasOwnProperty(upper)) return { kind: upper };
+    var m = text.match(/^ARRAY\s*\[\s*(.+?)\s*:\s*(.+?)\s*\]\s*OF\s+([A-Za-z]+)\s*$/i);
+    if (m) {
+      var element = m[3].toUpperCase();
+      if (!SIMPLE_TYPES.hasOwnProperty(element)) throw new PseudocodeError('An array must be OF a simple type such as INTEGER or STRING, not ' + m[3] + '.', line);
+      return { kind: 'ARRAY', lowerCode: compileExpression(m[1], line), upperCode: compileExpression(m[2], line), element: element };
+    }
+    throw new PseudocodeError('"' + text + '" is not a data type. Use INTEGER, REAL, STRING, CHAR, BOOLEAN or ARRAY[1:10] OF INTEGER.', line);
+  }
+
+  function describeValue(v) {
+    if (typeof v === 'number') return Number.isInteger(v) ? 'an INTEGER' : 'a REAL';
+    if (typeof v === 'string') return v.length === 1 ? 'a CHAR' : 'a STRING';
+    if (typeof v === 'boolean') return 'a BOOLEAN';
+    if (Array.isArray(v)) return 'an array';
+    return 'nothing';
+  }
+
+  // Checks a value against a declared type. A REAL with no fractional part
+  // is accepted by an INTEGER so that 10 / 2 can be stored in a whole-number
+  // variable; anything else that does not fit is an error, as in the syllabus.
+  function coerce(value, kind, name, line) {
+    if (kind === 'INTEGER') {
+      if (typeof value === 'number' && Number.isInteger(value)) return value;
+      if (typeof value === 'number') throw new PseudocodeError(name + ' is an INTEGER and cannot hold ' + value + '. Declare it as REAL, or use DIV for whole-number division.', line);
+    } else if (kind === 'REAL') {
+      if (typeof value === 'number') return value;
+    } else if (kind === 'STRING') {
+      if (typeof value === 'string') return value;
+    } else if (kind === 'CHAR') {
+      if (typeof value === 'string' && value.length === 1) return value;
+    } else if (kind === 'BOOLEAN') {
+      if (typeof value === 'boolean') return value;
+    } else {
+      return value;
+    }
+    throw new PseudocodeError(name + ' is declared as ' + kind + ' but you tried to store ' + describeValue(value) + ' (' + JSON.stringify(value) + ') in it.', line);
+  }
+
+  function arrayOffset(arr, idx, name, line) {
+    var lower = typeof arr.lower === 'number' ? arr.lower : 1;
+    if (typeof idx !== 'number' || !Number.isInteger(idx)) throw new PseudocodeError('An array index must be a whole number.', line);
+    if (idx < lower || idx > lower + arr.length - 1) throw new PseudocodeError('Index ' + idx + ' is outside the bounds of ' + name + ' (' + lower + ' to ' + (lower + arr.length - 1) + ').', line);
+    return idx - lower;
+  }
+
   function compileExpression(raw, line) {
     return makeParser(lex(raw, line), line).parseExpr();
   }
@@ -285,6 +349,17 @@
       if (!line) continue;
 
       var m;
+      if ((m = line.match(/^DECLARE\s+([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)\s*:\s*(.+)$/i))) {
+        instructions.push({
+          type: 'DECLARE',
+          names: m[1].split(',').map(function (s) { return s.trim(); }),
+          spec: parseTypeSpec(m[2], lineNo),
+          line: lineNo
+        });
+        continue;
+      }
+      if (/^DECLARE\b/i.test(line)) throw new PseudocodeError('DECLARE needs a name, a colon and a type, e.g. DECLARE Total : INTEGER', lineNo);
+
       if ((m = line.match(/^IF\s+(.+?)\s+THEN\s*$/i))) {
         var ifIndex = instructions.length;
         instructions.push({ type: 'IF', conditionCode: compileCondition(m[1], lineNo), rootIndex: ifIndex, line: lineNo });
@@ -397,8 +472,21 @@
   function runPseudocode(source, initialVars, maxSteps) {
     maxSteps = maxSteps || 5000;
     var vars = {};
-    Object.keys(initialVars || {}).forEach(function (k) { vars[k] = initialVars[k]; });
+    // Type of every declared variable; null for a value the caller handed
+    // in (it exists but is untyped, so anything may be stored in it).
+    var types = {};
+    Object.keys(initialVars || {}).forEach(function (k) { vars[k] = initialVars[k]; types[k] = null; });
+    var given = Object.keys(types);
     var outputs = [];
+
+    function requireDeclared(name, line, exampleType) {
+      if (!(name in vars)) throw new PseudocodeError(undeclaredMessage(name, exampleType || 'INTEGER'), line);
+    }
+    function store(name, value, line) {
+      requireDeclared(name, line);
+      var kind = types[name];
+      vars[name] = kind ? coerce(value, kind, name, line) : value;
+    }
 
     var instructions;
     try {
@@ -416,10 +504,38 @@
           throw new PseudocodeError('This looks like it might run forever - check your loop condition.', instructions[pc].line);
         }
         var instr = instructions[pc];
-        if (instr.type === 'ASSIGN') { vars[instr.var] = instr.exprCode(vars); pc++; continue; }
+        if (instr.type === 'DECLARE') {
+          for (var d = 0; d < instr.names.length; d++) {
+            var dn = instr.names[d];
+            // Re-declaring a value the card handed in is allowed (the pupil
+            // cannot see that it already exists); declaring your own twice is not.
+            if (given.indexOf(dn) !== -1) continue;
+            if (dn in vars) throw new PseudocodeError(dn + ' has already been declared.', instr.line);
+            if (instr.spec.kind === 'ARRAY') {
+              var lo = instr.spec.lowerCode(vars), hi = instr.spec.upperCode(vars);
+              if (typeof lo !== 'number' || typeof hi !== 'number' || !Number.isInteger(lo) || !Number.isInteger(hi)) throw new PseudocodeError('Array bounds must be whole numbers.', instr.line);
+              if (hi < lo) throw new PseudocodeError('Array upper bound ' + hi + ' is below the lower bound ' + lo + '.', instr.line);
+              if (hi - lo + 1 > 100000) throw new PseudocodeError('That array is too large.', instr.line);
+              var arr = [];
+              for (var ai = 0; ai <= hi - lo; ai++) arr.push(SIMPLE_TYPES[instr.spec.element]);
+              arr.lower = lo;
+              vars[dn] = arr;
+              types[dn] = instr.spec.element;
+            } else {
+              vars[dn] = SIMPLE_TYPES[instr.spec.kind];
+              types[dn] = instr.spec.kind;
+            }
+          }
+          pc++; continue;
+        }
+        if (instr.type === 'ASSIGN') { store(instr.var, instr.exprCode(vars), instr.line); pc++; continue; }
         if (instr.type === 'ASSIGN_INDEX') {
+          requireDeclared(instr.var, instr.line, 'ARRAY[1:10] OF INTEGER');
           if (!Array.isArray(vars[instr.var])) throw new PseudocodeError(instr.var + ' is not an array.', instr.line);
-          vars[instr.var][instr.indexCode(vars)] = instr.exprCode(vars);
+          var target = vars[instr.var];
+          var off = arrayOffset(target, instr.indexCode(vars), instr.var, instr.line);
+          var element = instr.exprCode(vars);
+          target[off] = types[instr.var] ? coerce(element, types[instr.var], instr.var + '[...]', instr.line) : element;
           pc++; continue;
         }
         if (instr.type === 'IF') {
@@ -441,14 +557,14 @@
         if (instr.type === 'FOR') {
           var startVal = instr.startCode(vars), endVal = instr.endCode(vars);
           if (typeof startVal !== 'number' || typeof endVal !== 'number') throw new PseudocodeError('FOR needs numbers.', instr.line);
-          vars[instr.var] = startVal;
+          store(instr.var, startVal, instr.line);
           instr.currentEnd = endVal;
           pc = startVal > endVal ? instr.pairedNextIndex + 1 : pc + 1;
           continue;
         }
         if (instr.type === 'NEXT') {
           var forInstr = instructions[instr.pairedForIndex];
-          vars[forInstr.var]++;
+          vars[forInstr.var] = vars[forInstr.var] + 1;
           pc = vars[forInstr.var] <= forInstr.currentEnd ? instr.pairedForIndex + 1 : pc + 1;
           continue;
         }
