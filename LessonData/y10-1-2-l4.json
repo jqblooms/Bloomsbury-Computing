@@ -202,55 +202,10 @@
     {
       "id": "plenary",
       "label": "Plenary: File Size",
-      "type": "mastery-quiz",
-      "containerId": "y10l4-plenary-mq",
-      "content": "<h2 class=\"lesson-h2\">Plenary: File Size</h2><p class=\"lesson-lead\">Answer from memory - no notes, no going back to the challenges. Type each answer. A question is mastered once you get it right three times in a row; a wrong answer sends it back into the pile.</p><div id=\"y10l4-plenary-mq\"></div>",
-      "questions": [
-        {
-          "id": "fs-kib",
-          "kind": "text",
-          "prompt": "What is a kibibyte (KiB)? Give the number of bytes.",
-          "pattern": {
-            "__regex": true,
-            "source": "^\\s*1[\\s,]?024\\s*(bytes?|b)?\\s*$",
-            "flags": "i"
-          },
-          "feedback": "Not quite - 1 KiB = 1024 bytes. Every step of the data storage ladder is x1024."
-        },
-        {
-          "id": "fs-byte",
-          "kind": "text",
-          "prompt": "How many bits are there in 1 byte?",
-          "pattern": {
-            "__regex": true,
-            "source": "^\\s*8\\s*(bits?)?\\s*$",
-            "flags": "i"
-          },
-          "feedback": "Not quite - 1 byte = 8 bits. A nibble is 4 bits."
-        },
-        {
-          "id": "fs-why",
-          "kind": "text",
-          "prompt": "Why does a text file with more characters have a larger file size?",
-          "pattern": {
-            "__regex": true,
-            "source": "(?=[\\s\\S]*\\b(bits?|bytes?)\\b)(?=[\\s\\S]*\\b(each|per|every|character|characters|char)\\b)[\\s\\S]*",
-            "flags": "i"
-          },
-          "feedback": "Not quite - each character is stored using a fixed number of bits, so more characters means more bits in total."
-        },
-        {
-          "id": "fs-calc",
-          "kind": "text",
-          "prompt": "Calculate the file size, in bytes, of a 20-character message stored using 16-bit Unicode.",
-          "pattern": {
-            "__regex": true,
-            "source": "^\\s*40\\s*(bytes?|b)?\\s*$",
-            "flags": "i"
-          },
-          "feedback": "Not quite - 20 x 16 = 320 bits, and 320 / 8 = 40 bytes."
-        }
-      ]
+      "type": "embedded-app",
+      "appId": "drill-y10-1-2-l4-filesize",
+      "embedContainerId": "y10l4-plenary-drill",
+      "content": "<h2 class=\"lesson-h2\">Plenary: File Size</h2><div id=\"y10l4-plenary-drill\"></div>"
     }
   ],
   "validators": {

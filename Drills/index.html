@@ -15,6 +15,10 @@
   html, body { margin: 0; }
   body { background: var(--bg); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   .wrap { max-width: 760px; margin: 0 auto; padding: 18px 16px 60px; }
+  /* Embedded inside a lesson slide (?embed=1): the slide has its own title,
+     and the iframe is sized to the content, so no header and less padding. */
+  body.is-embed .wrap { max-width: none; padding: 4px 6px 12px; }
+  body.is-embed header.drill-head { display: none; }
 
   header.drill-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 6px; }
   header.drill-head h1 { font-size: 1.15rem; margin: 0; }
@@ -175,6 +179,9 @@
     <div class="setup-row">
       <label class="setup-field">Topic
         <select id="setup-category"></select>
+      </label>
+      <label class="setup-field" id="setup-pool-field">Which cards?
+        <select id="setup-pool"></select>
       </label>
       <label class="setup-field" id="setup-count-field">How many cards this run?
         <select id="setup-count"></select>
@@ -1315,6 +1322,188 @@
         }
 ]
     },
+    // Year 10, 1.2 L4 File Size - the lesson's Plenary embeds this drill
+    // (James: drill-based, type-your-answer plenaries with persisted
+    // mastery, batches of 5, attempts/accuracy visible to the teacher -
+    // all of which this app already does). Every number is lifted from the
+    // lesson's own concept slide, exam questions and checked practice
+    // (LessonData/y10-1-2-l4.json): the x1024 ladder, characters x bits,
+    // width x height x colour depth, rate x resolution x seconds. Numeric
+    // answers are graded by regex so the unit is optional ("640", "640
+    // bits" and "640bits" all pass; "80" does not).
+    "y10-1-2-l4-filesize": {
+      title: "Year 10, 1.2 L4: File Size",
+      subtitle: "Cambridge IGCSE Computer Science 0478",
+      cards: [
+        {
+          id: "fsu-nibble", category: "fsunits",
+          prompt: "How many bits are there in 1 nibble?",
+          answers: ["4 bits"],
+          keywords: [/^\s*4\s*(bits?)?\s*$/i],
+          distractors: ["8 bits", "2 bits", "16 bits", "1 bit", "1024 bits", "6 bits"],
+          note: "A nibble is half a byte: 4 bits."
+        },
+        {
+          id: "fsu-byte", category: "fsunits",
+          prompt: "How many bits are there in 1 byte?",
+          answers: ["8 bits"],
+          keywords: [/^\s*8\s*(bits?)?\s*$/i],
+          distractors: ["4 bits", "16 bits", "1024 bits", "2 bits", "10 bits", "1000 bits"],
+          note: "1 byte = 8 bits = 2 nibbles."
+        },
+        {
+          id: "fsu-kib-bytes", category: "fsunits",
+          prompt: "How many bytes are there in 1 kibibyte (KiB)?",
+          answers: ["1024 bytes"],
+          keywords: [/^\s*1[\s,]?024\s*(bytes?|b)?\s*$/i],
+          distractors: ["1000 bytes", "1024 bits", "8 bytes", "512 bytes", "2048 bytes", "100 bytes"],
+          note: "Every step of the ladder is x1024: 1 KiB = 1024 bytes."
+        },
+        {
+          id: "fsu-kib-bits", category: "fsunits",
+          prompt: "How many bits are there in 1 kibibyte (KiB)?",
+          answers: ["8192 bits"],
+          keywords: [/^\s*8[\s,]?192\s*(bits?)?\s*$/i],
+          distractors: ["1024 bits", "1000 bits", "8000 bits", "4096 bits", "128 bits", "16384 bits"],
+          note: "1 KiB = 1024 bytes, and each byte is 8 bits: 1024 x 8 = 8192 bits."
+        },
+        {
+          id: "fsu-bytes-nibbles", category: "fsunits",
+          prompt: "8 bytes = how many nibbles?",
+          answers: ["16 nibbles"],
+          keywords: [/^\s*16\s*(nibbles?)?\s*$/i],
+          distractors: ["4 nibbles", "32 nibbles", "2 nibbles", "64 nibbles", "8 nibbles", "1 nibble"],
+          note: "1 byte is 2 nibbles, so multiply the byte count by 2."
+        },
+        {
+          id: "fsu-kib-mib", category: "fsunits",
+          prompt: "512 kibibytes (KiB) = how many mebibytes (MiB)?",
+          answers: ["0.5 MiB"],
+          keywords: [/^\s*0?\.5\s*(mib|mebibytes?)?\s*$/i, /^\s*(a\s+)?half(\s+(a\s+)?(mib|mebibyte))?\s*$/i],
+          distractors: ["2 MiB", "512 MiB", "5 MiB", "0.05 MiB", "1 MiB", "51.2 MiB"],
+          note: "Divide by 1024 to move up one step of the ladder: 512 / 1024 = 0.5."
+        },
+        {
+          id: "fsu-gib-mib", category: "fsunits",
+          prompt: "4 gibibytes (GiB) = how many mebibytes (MiB)?",
+          answers: ["4096 MiB"],
+          keywords: [/^\s*4[\s,]?096\s*(mib|mebibytes?)?\s*$/i],
+          distractors: ["4000 MiB", "1024 MiB", "400 MiB", "2048 MiB", "40 MiB", "8192 MiB"],
+          note: "Multiply by 1024 to move down one step of the ladder: 4 x 1024 = 4096."
+        },
+        {
+          id: "fsu-eib-pib", category: "fsunits",
+          prompt: "1 exbibyte (EiB) = how many pebibytes (PiB)?",
+          answers: ["1024 PiB"],
+          keywords: [/^\s*1[\s,]?024\s*(pib|pebibytes?)?\s*$/i],
+          distractors: ["1000 PiB", "8 PiB", "512 PiB", "2048 PiB", "100 PiB", "1 PiB"],
+          note: "Every step of the ladder is the same x1024 jump, all the way up to exbibytes."
+        },
+        {
+          id: "fst-25x8", category: "fstext",
+          prompt: "Calculate the number of bits needed to store a text file of 25 characters using 8-bit extended ASCII.",
+          answers: ["200 bits"],
+          keywords: [/^\s*200\s*(bits?)?\s*$/i],
+          distractors: ["25 bits", "33 bits", "400 bits", "2000 bits", "100 bits", "800 bits"],
+          note: "Multiply the character count by the bits used for each character: 25 x 8 = 200."
+        },
+        {
+          id: "fst-20x16-bytes", category: "fstext",
+          prompt: "Calculate the file size, in bytes, of a 20-character message stored using 16-bit Unicode.",
+          answers: ["40 bytes"],
+          keywords: [/^\s*40\s*(bytes?|b)?\s*$/i],
+          distractors: ["320 bytes", "20 bytes", "16 bytes", "80 bytes", "160 bytes", "10 bytes"],
+          note: "20 x 16 = 320 bits, and 320 / 8 = 40 bytes."
+        },
+        {
+          id: "fst-60x8-bytes", category: "fstext",
+          prompt: "A text file has 60 characters, each stored in 8 bits. Calculate its file size in bytes.",
+          answers: ["60 bytes"],
+          keywords: [/^\s*60\s*(bytes?|b)?\s*$/i],
+          distractors: ["480 bytes", "8 bytes", "120 bytes", "30 bytes", "600 bytes", "68 bytes"],
+          note: "60 x 8 = 480 bits, and 480 / 8 = 60 bytes - with 8 bits per character, bytes equals the character count."
+        },
+        {
+          id: "fst-rule", category: "fstext",
+          prompt: "Describe how to calculate the file size, in bits, of a text file.",
+          answers: ["Multiply the number of characters by the bits used per character"],
+          keywords: [{ required: [["character", "characters", "char"], ["bit", "bits", "byte", "bytes"]], optional: ["multiply", "multiplied", "times", "x", "each", "per", "every"], need: 1 }],
+          distractors: [
+            "Multiply the number of words by the bits used per character",
+            "Add the number of characters to the bits used per character",
+            "Multiply the number of characters by the number of lines",
+            "Divide the number of characters by the bits used per character",
+            "Multiply the number of characters by the colour depth",
+            "Count the characters and divide by 8 to get bits"
+          ],
+          note: "File size in bits = number of characters x bits per character. Divide by 8 for bytes."
+        },
+        {
+          id: "fsi-512-16", category: "fsimage",
+          prompt: "A 16-bit colour image is 512 pixels wide by 512 pixels high. Calculate its file size in kibibytes (KiB).",
+          answers: ["512 KiB"],
+          keywords: [/^\s*512\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["4096 KiB", "256 KiB", "0.5 KiB", "1024 KiB", "16 KiB", "64 KiB"],
+          note: "512 x 512 x 16 = 4,194,304 bits. Divide by 8 for bytes (524,288), then by 1024 for KiB = 512."
+        },
+        {
+          id: "fsi-1024-2b", category: "fsimage",
+          prompt: "An image is 1024 pixels high by 1024 pixels wide with a colour depth of two bytes. Calculate its file size in MiB.",
+          answers: ["2 MiB"],
+          keywords: [/^\s*2\s*(mib|mebibytes?)?\s*$/i],
+          distractors: ["1 MiB", "16 MiB", "4 MiB", "1024 MiB", "8 MiB", "0.5 MiB"],
+          note: "1024 x 1024 = 1,048,576 pixels, x 2 bytes = 2,097,152 bytes. Divide by 1024 twice (KiB, then MiB) = 2 MiB."
+        },
+        {
+          id: "fsi-100-8", category: "fsimage",
+          prompt: "An image is 100 pixels wide by 100 pixels high with an 8-bit colour depth. Calculate its file size in bits.",
+          answers: ["80000 bits"],
+          keywords: [/^\s*80[\s,]?000\s*(bits?)?\s*$/i],
+          distractors: ["10000 bits", "800 bits", "8000 bits", "1600 bits", "100000 bits", "10 bits"],
+          note: "Width x height x colour depth: 100 x 100 x 8 = 80,000 bits."
+        },
+        {
+          id: "fsi-256-1b", category: "fsimage",
+          prompt: "An image is 256 pixels wide by 256 pixels high, storing 1 byte per pixel. Calculate its file size in kibibytes (KiB).",
+          answers: ["64 KiB"],
+          keywords: [/^\s*64\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["256 KiB", "65536 KiB", "8 KiB", "32 KiB", "512 KiB", "128 KiB"],
+          note: "256 x 256 = 65,536 bytes. Divide by 1024 = 64 KiB."
+        },
+        {
+          id: "fss-4-20-8-bits", category: "fssound",
+          prompt: "A recording lasts 4 seconds, sampled at 20 samples per second with an 8-bit sample resolution. Calculate the number of bits in the whole recording.",
+          answers: ["640 bits"],
+          keywords: [/^\s*640\s*(bits?)?\s*$/i],
+          distractors: ["160 bits", "80 bits", "32 bits", "320 bits", "128 bits", "6400 bits"],
+          note: "Bits per second first (rate x resolution = 20 x 8 = 160), then multiply by the duration: 160 x 4 = 640."
+        },
+        {
+          id: "fss-4-20-8-bytes", category: "fssound",
+          prompt: "A recording lasts 4 seconds, sampled at 20 samples per second with an 8-bit sample resolution. Calculate its file size in bytes.",
+          answers: ["80 bytes"],
+          keywords: [/^\s*80\s*(bytes?|b)?\s*$/i],
+          distractors: ["640 bytes", "160 bytes", "20 bytes", "8 bytes", "40 bytes", "800 bytes"],
+          note: "640 bits in total, and 640 / 8 = 80 bytes."
+        },
+        {
+          id: "fss-3-10-8-bytes", category: "fssound",
+          prompt: "A sound recording lasts 3 seconds, sampled at 10 samples per second with an 8-bit sample resolution. Calculate its file size in bytes.",
+          answers: ["30 bytes"],
+          keywords: [/^\s*30\s*(bytes?|b)?\s*$/i],
+          distractors: ["240 bytes", "80 bytes", "24 bytes", "3 bytes", "10 bytes", "300 bytes"],
+          note: "10 x 8 = 80 bits per second, x 3 seconds = 240 bits, / 8 = 30 bytes."
+        },
+        {
+          id: "fss-2-50-4-bits", category: "fssound",
+          prompt: "A recording lasts 2 seconds, sampled at 50 samples per second with a 4-bit sample resolution. Calculate the number of bits in the whole recording.",
+          answers: ["400 bits"],
+          keywords: [/^\s*400\s*(bits?)?\s*$/i],
+          distractors: ["100 bits", "200 bits", "50 bits", "800 bits", "56 bits", "4000 bits"],
+          note: "50 x 4 = 200 bits per second, x 2 seconds = 400 bits."
+        }
+      ]
+    },
     "y9-numbers": {
       title: "Year 9, Number Systems",
       subtitle: "Binary, Denary and Hexadecimal",
@@ -2220,9 +2409,13 @@
     "code-for-output": "Outputting Values from a FOR Loop",
     "code-for-total": "Building a Running Total",
     "code-for-bounds": "Choosing the Right Loop Bounds",
-    "code-for-count": "Counting with a Loop"
+    "code-for-count": "Counting with a Loop",
+    fsunits: "Units and the x1024 Ladder",
+    fstext: "Text File Size",
+    fsimage: "Image File Size",
+    fssound: "Sound File Size"
   };
-  var CATEGORY_ORDER = ["bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count"];
+  var CATEGORY_ORDER = ["bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound"];
 
   // ============================================================
   // ENGINE
@@ -2236,6 +2429,13 @@
 
   var params = new URLSearchParams(location.search);
   var drillId = params.get("drill") || "y10-1-1-numbers";
+  // embed=1: this drill is sitting inside a lesson slide (a Plenary step of
+  // type 'embedded-app' in the main site), not on its own page. The slide
+  // already shows the lesson title, so the drill's own header is hidden,
+  // and the page reports its height to the parent (see the boot section)
+  // so the lesson can size the iframe instead of guessing.
+  var isEmbedded = params.get("embed") === "1";
+  if (isEmbedded) document.body.classList.add("is-embed");
   var drill = DRILLS[drillId] || DRILLS["y10-1-1-numbers"];
   var cardsById = {};
   drill.cards.forEach(function (c) { cardsById[c.id] = c; });
@@ -2250,6 +2450,8 @@
     setupCategory: document.getElementById("setup-category"),
     setupCount: document.getElementById("setup-count"),
     setupCountField: document.getElementById("setup-count-field"),
+    setupPool: document.getElementById("setup-pool"),
+    setupPoolField: document.getElementById("setup-pool-field"),
     setupAnswerMode: document.getElementById("setup-answermode"),
     setupAnswerModeField: document.getElementById("setup-answermode-field"),
     setupStartLearn: document.getElementById("setup-start-learn"),
@@ -2325,15 +2527,36 @@
     return steps;
   }
 
+  // The "Which cards?" pool (James): a run draws only from cards the
+  // student has NOT yet mastered by default, so already-mastered cards are
+  // left alone until everything is done; a student can instead choose the
+  // already-mastered pool to revise, or everything. "Mastered" here is the
+  // persisted everMastered state - the same one the mastery bars and the
+  // teacher's dashboard read - not this run's own streaks. An empty pool
+  // (nothing mastered yet, or everything mastered) falls back to all cards
+  // rather than starting a run with nothing in it.
+  function poolCardIds(category, pool) {
+    var ids = categoryCardIds(category);
+    if (pool === "mastered") ids = ids.filter(function (id) { return everMastered[id]; });
+    else if (pool === "unmastered") ids = ids.filter(function (id) { return !everMastered[id]; });
+    return ids.length ? ids : categoryCardIds(category);
+  }
+  function poolLabel(pool) {
+    if (pool === "mastered") return "already mastered";
+    if (pool === "unmastered") return "not yet mastered";
+    return "all cards";
+  }
+
   // run state - reset whenever the mode, topic or card count changes
   var run = null;
-  function freshRun(mode, category, count, answerMode) {
-    var pool = categoryCardIds(category);
+  function freshRun(mode, category, count, answerMode, poolChoice) {
+    var pool = poolCardIds(category, poolChoice);
     var size = (count && count < pool.length) ? count : pool.length;
     var queue = (count && count < pool.length) ? sample(pool, size) : shuffle(pool);
     return {
       mode: mode,
       category: category || "all",
+      pool: poolChoice || "all",
       count: size,
       answerMode: answerMode === "text" ? "text" : "mc",
       queue: queue,
@@ -2356,6 +2579,8 @@
         if (!r.category) r.category = "all";
         if (!r.count) r.count = drill.cards.length;
         if (r.answerMode !== "text") r.answerMode = "mc";
+        // Saves from before the "Which cards?" pool picker drew from every card.
+        if (r.pool !== "mastered" && r.pool !== "unmastered") r.pool = "all";
         return r;
       }
     } catch (e) {}
@@ -2653,7 +2878,8 @@
 
   function updateScopeLabel() {
     if (!run) return;
-    els.scopeLabel.textContent = categoryLabel(run.category) + " · " + run.count + " card" + (run.count === 1 ? "" : "s") + " this run";
+    var poolNote = run.pool && run.pool !== "all" ? " (" + poolLabel(run.pool) + ")" : "";
+    els.scopeLabel.textContent = categoryLabel(run.category) + " · " + run.count + " card" + (run.count === 1 ? "" : "s") + " this run" + poolNote;
   }
 
   function toast(msg) {
@@ -2992,8 +3218,8 @@
     els.setupCategory.value = selected || "all";
     if (els.setupCategory.selectedIndex === -1) els.setupCategory.value = "all";
   }
-  function populateCountSelect(category, selectedCount) {
-    var poolSize = categoryCardIds(category).length;
+  function populateCountSelect(category, selectedCount, pool) {
+    var poolSize = poolCardIds(category, pool).length;
     var choices = countChoicesFor(poolSize);
     els.setupCount.innerHTML = choices.map(function (n) {
       var label = n >= poolSize ? "All (" + poolSize + ")" : n + " cards";
@@ -3001,6 +3227,26 @@
     }).join("");
     var wanted = selectedCount && choices.indexOf(selectedCount) !== -1 ? selectedCount : poolSize;
     els.setupCount.value = wanted;
+  }
+  // "Which cards?" - counts shown live so a student can see how many are
+  // left. Defaults to the not-yet-mastered pool while any remain (James:
+  // ignore already-mastered questions until they are all done), and to
+  // everything once the whole topic is mastered. A pool with nothing in it
+  // is disabled rather than hidden, so the reason it can't be picked is
+  // visible ("Already mastered (0)").
+  function populatePoolSelect(category, selected) {
+    if (!els.setupPool) return;
+    var ids = categoryCardIds(category);
+    var mastered = ids.filter(function (id) { return everMastered[id]; }).length;
+    var unmastered = ids.length - mastered;
+    els.setupPool.innerHTML =
+      '<option value="unmastered"' + (unmastered ? "" : " disabled") + ">Not yet mastered (" + unmastered + ")</option>" +
+      '<option value="mastered"' + (mastered ? "" : " disabled") + ">Already mastered (" + mastered + ")</option>" +
+      '<option value="all">All cards (' + ids.length + ")</option>";
+    var wanted = selected || (unmastered ? "unmastered" : "all");
+    if (wanted === "unmastered" && !unmastered) wanted = "all";
+    if (wanted === "mastered" && !mastered) wanted = "all";
+    els.setupPool.value = wanted;
   }
 
   // A per-topic mastery summary shown right on the setup screen, so a
@@ -3058,6 +3304,7 @@
     if (isCodeDrill) return;
     var resumable = runHasProgress(run) &&
       run.category === els.setupCategory.value &&
+      (!els.setupPool || (run.pool || "all") === els.setupPool.value) &&
       String(run.count) === String(els.setupCount.value);
     if (els.setupContinue) els.setupContinue.style.display = resumable ? "" : "none";
     els.setupStartLearn.textContent = resumable ? "Restart in Learn mode" : "Start in Learn mode";
@@ -3078,7 +3325,8 @@
     els.runArea.style.display = "none";
     els.setupCard.style.display = "";
     populateCategorySelect(run ? run.category : "all");
-    populateCountSelect(run ? run.category : "all", run ? run.count : null);
+    populatePoolSelect(run ? run.category : "all", run ? run.pool : null);
+    populateCountSelect(run ? run.category : "all", run ? run.count : null, els.setupPool ? els.setupPool.value : "all");
     renderMasteryOverview();
     if (isCodeDrill) {
       // No MC/Text choice (there is only one way to answer a code card) and
@@ -3090,6 +3338,9 @@
       // persisted (see startCodeRun), so there is nothing to resume.
       els.setupAnswerModeField.style.display = "none";
       els.setupCountField.style.display = "none";
+      // Code drills persist mastery per question TYPE, not per card, so a
+      // per-card mastered/unmastered pool has nothing to filter on.
+      if (els.setupPoolField) els.setupPoolField.style.display = "none";
       els.setupStartLearn.style.display = "";
       els.setupStartLearn.textContent = "Start in Learn mode";
       els.setupStartQuiz.textContent = "Start in Quiz mode";
@@ -3122,7 +3373,8 @@
     var count = Number(els.setupCount.value) || null;
     if (isCodeDrill) { startCodeRun(category, mode); return; }
     var answerMode = els.setupAnswerMode.value;
-    run = freshRun(mode, category, count, answerMode);
+    var poolChoice = els.setupPool ? els.setupPool.value : "all";
+    run = freshRun(mode, category, count, answerMode, poolChoice);
     persistRun();
     els.setupCard.style.display = "none";
     els.runArea.style.display = "";
@@ -3459,7 +3711,12 @@
   // BOOT
   // ============================================================
   els.setupCategory.addEventListener("change", function () {
-    populateCountSelect(els.setupCategory.value, null);
+    populatePoolSelect(els.setupCategory.value, els.setupPool ? els.setupPool.value : null);
+    populateCountSelect(els.setupCategory.value, null, els.setupPool ? els.setupPool.value : "all");
+    refreshResumeUI();
+  });
+  if (els.setupPool) els.setupPool.addEventListener("change", function () {
+    populateCountSelect(els.setupCategory.value, null, els.setupPool.value);
     refreshResumeUI();
   });
   if (els.setupCount) els.setupCount.addEventListener("change", refreshResumeUI);
@@ -3469,6 +3726,32 @@
   els.changeSelectionBtn.addEventListener("click", openSetup);
   els.modeLearn.addEventListener("click", function () { setMode("learn"); });
   els.modeQuiz.addEventListener("click", function () { setMode("quiz"); });
+
+  // When embedded in a lesson slide, tell the parent how tall the page is
+  // whenever that changes (setup screen -> card -> feedback -> done screen
+  // are all different heights). Same TT_CONTENT_HEIGHT message shape the
+  // lesson's initEmbeddedAppStep already listens for from Trace Tables, so
+  // nothing new is needed on the lesson side to size this iframe.
+  if (isEmbedded) {
+    var lastEmbedHeight = 0;
+    var embedWrap = document.querySelector(".wrap") || document.body;
+    var postEmbedHeight = function () {
+      // Measure the content container, not the document: both
+      // documentElement.scrollHeight and (in Chrome) body.scrollHeight are
+      // clamped to the viewport when the content is shorter than it, so
+      // they never changed between the setup screen and a card and every
+      // post after the first was suppressed by the "same as last" check.
+      var rect = embedWrap.getBoundingClientRect();
+      var h = Math.ceil(rect.height + rect.top + window.scrollY);
+      if (h === lastEmbedHeight) return;
+      lastEmbedHeight = h;
+      try { window.parent.postMessage({ type: "TT_CONTENT_HEIGHT", height: h }, "*"); } catch (e) {}
+    };
+    if (window.ResizeObserver) new ResizeObserver(postEmbedHeight).observe(embedWrap);
+    else setInterval(postEmbedHeight, 500);
+    window.addEventListener("load", postEmbedHeight);
+    postEmbedHeight();
+  }
 
   var restored = loadRun();
   if (restored) {
