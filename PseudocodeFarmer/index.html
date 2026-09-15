@@ -307,14 +307,16 @@
      supply money/inventory directly, and CALL Buy() is the only way in. */
   body.lesson-mission-mode #shop-panel,
   body.lesson-mission-mode #sell-farm-panel,
+  body.lesson-mission-mode #revert-farm-panel,
   body.lesson-mission-mode #rocket-panel,
   body.lesson-mission-mode #reset-btn,
   body.lesson-mission-mode #machine-btn,
   body.lesson-mission-mode #machine-tiers { display: none; }
   /* Sell the Farm is a free-play prestige mechanic - it makes no sense mid-tutorial (the
      sandbox's tiny fixed economy could never legitimately reach the milestone, and even if
-     it somehow did, liquidating a throwaway practice world isn't a real choice worth making). */
-  body.tutorial-active #sell-farm-panel, body.tutorial-active #rocket-panel { display: none; }
+     it somehow did, liquidating a throwaway practice world isn't a real choice worth making).
+     Same for the revert panel below it - a tutorial has no farm types to revert between. */
+  body.tutorial-active #sell-farm-panel, body.tutorial-active #revert-farm-panel, body.tutorial-active #rocket-panel { display: none; }
 
   /* ============================================================
      MACHINE TUTORIALS - self-contained, independent of the Lesson Mission
@@ -489,6 +491,28 @@
   .sell-farm-option.armed { border-color: #d9534f; background: #fdecec; }
   .sell-farm-option.armed .sfo-title { color: #a3271f; }
 
+  /* "Stuck? Switch Back" (James, 2026-09-15): a student who has spent everything on a later
+     stage (Solar/Aquarium/Rocket) had no way back except the top-bar Reset Game button, which
+     wipes every discovered farm type, not just the current one. This panel is the recovery
+     path - a fresh start (40 coins, tier 1) on any ALREADY-discovered earlier stage, with no
+     earnings gate (unlike Sell the Farm, which is a reward for mastering the current farm, not
+     a rescue for being broke on it). Calmer blue, "help is here" rather than "you earned
+     this", and only ever shown once there IS another discovered stage to go back to. */
+  #revert-farm-panel { display: none; background: #eaf3fb; border: 2px solid #6ba3d6; }
+  #revert-farm-panel.shown { display: block; }
+  #revert-farm-panel h2 { color: #1f5c8a; }
+  #revert-farm-desc { font-size: .78rem; color: #2c5876; line-height: 1.4; margin: 0 0 8px; }
+  .revert-farm-option { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; margin-bottom: 6px;
+    border-radius: 8px; border: 1px solid #6ba3d6; background: #fbfdff; cursor: pointer; text-align: left; font: inherit; }
+  .revert-farm-option:hover { background: #ddeeff; }
+  .revert-farm-option .rfo-badge { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; flex-shrink: 0; font-size: .95rem; }
+  .revert-farm-option .rfo-body { flex: 1; min-width: 0; }
+  .revert-farm-option .rfo-title { display: block; font-weight: 800; color: #1f5c8a; font-size: .86rem; }
+  .revert-farm-option .rfo-desc { display: block; font-size: .72rem; color: #3d6684; line-height: 1.35; }
+  .revert-farm-option.armed { border-color: #d9534f; background: #fdecec; }
+  .revert-farm-option.armed .rfo-title { color: #a3271f; }
+
   /* Rocket Yard - only ever visible while actually on that farm type, so the sidebar stays
      uncluttered for every other player. Deep indigo/night-sky palette, distinct from every
      other panel's colour, matching "this one ends in outer space". */
@@ -574,6 +598,11 @@
         <h2>Sell the Farm</h2>
         <p id="sell-farm-desc"></p>
         <div id="sell-farm-options"></div>
+      </section>
+      <section class="panel-section" id="revert-farm-panel">
+        <h2>🔄 Stuck? Switch Back</h2>
+        <p id="revert-farm-desc">Out of coins here and nothing left to sell? Switch back to an earlier stage you've already discovered - fresh start, 40 coins, tier 1 - without losing it or resetting the whole game.</p>
+        <div id="revert-farm-options"></div>
       </section>
       <section class="panel-section" id="rocket-panel">
         <h2>🚀 Rocket Yard</h2>
@@ -3855,25 +3884,27 @@ function liquidateFarm() {
 // skip all of its progression. Sell the Farm is now a genuine new beginning with a different
 // mechanic (battery timing, fish patience, the rocket build), not a head start. Expanded
 // tiles still carry over (they were bought with real coins on an escalating curve).
-function sellTheFarm(targetTypeId) {
-  if (!sellFarmUnlocked() || !FARM_TYPES[targetTypeId] || targetTypeId === currentFarmType) return false;
-  // Defence in depth alongside updateSellFarmUI() only ever rendering these same two kinds of
-  // option - never let a caller (a bug, a stray console call) skip straight to something not
-  // yet discovered and more than one step ahead in the sequence.
-  var alreadyDiscovered = farmTypesDiscovered.indexOf(targetTypeId) !== -1;
-  if (!alreadyDiscovered && targetTypeId !== nextFarmTypeInSequence(currentFarmType)) return false;
+// The actual mechanics of moving to a fresh start on a different farm type - shared by
+// sellTheFarm() (progression: current farm mastered, move to a NEW or already-discovered
+// type) and revertToFarmType() (recovery, James 2026-09-15: a student stuck with no money on
+// a later stage jumps BACK to an already-discovered earlier one). Both end up in the exact
+// same state: 40 coins, tier 1, board cleared, expanded tiles carried over. Callers do their
+// own validation and their own logConsole message; this just performs the switch and hands
+// back the outgoing farm's title, since currentFarmType has already moved on by the time a
+// caller would otherwise read it.
+function performFarmTypeSwitch(targetTypeId) {
   var fromTitle = activeFarmType().title;
   liquidateFarm(); // clears plants/machines off the board; its proceeds are wiped by the reset below
-  // "Sell the Farm" liquidates what's GROWING on the land, not the land itself - any tiles
-  // bought expanding the garden (real coins, on an escalating cost curve) carry over into the
-  // new farm type rather than silently vanishing back to the starting 8x8 grid. Captured
-  // before clearWorldObjects() wipes the live `tiles` object.
+  // Liquidates what's GROWING on the land, not the land itself - any tiles bought expanding
+  // the garden (real coins, on an escalating cost curve) carry over into the new farm type
+  // rather than silently vanishing back to the starting 8x8 grid. Captured before
+  // clearWorldObjects() wipes the live `tiles` object.
   var keepTiles = Object.keys(tiles).map(function (key) { return [tiles[key].x, tiles[key].z]; });
   currentFarmType = targetTypeId; // set before rebuildGarden() below, so fresh tiles get the right colour
   if (farmTypesDiscovered.indexOf(targetTypeId) === -1) farmTypesDiscovered.push(targetTypeId);
   clearWorldObjects();
   rebuildGarden(keepTiles.length ? keepTiles : initialTileList());
-  // Fresh start on the new farm type - same baseline as a brand-new game, so its tiers
+  // Fresh start on the target farm type - same baseline as a brand-new game, so its tiers
   // re-lock and have to be unlocked through real play again.
   money = 40;
   totalEarned = 0;
@@ -3900,7 +3931,33 @@ function sellTheFarm(targetTypeId) {
   updateHUD();
   updateTileInfoPanel();
   updateRocketUI();
+  return fromTitle;
+}
+
+function sellTheFarm(targetTypeId) {
+  if (!sellFarmUnlocked() || !FARM_TYPES[targetTypeId] || targetTypeId === currentFarmType) return false;
+  // Defence in depth alongside updateSellFarmUI() only ever rendering these same two kinds of
+  // option - never let a caller (a bug, a stray console call) skip straight to something not
+  // yet discovered and more than one step ahead in the sequence.
+  var alreadyDiscovered = farmTypesDiscovered.indexOf(targetTypeId) !== -1;
+  if (!alreadyDiscovered && targetTypeId !== nextFarmTypeInSequence(currentFarmType)) return false;
+  var fromTitle = performFarmTypeSwitch(targetTypeId);
   logConsole('Sold the ' + fromTitle + ' and made a fresh start on the ' + FARM_TYPES[targetTypeId].title + ' - back to 40 coins, tier 1 only. A whole new way to farm!');
+  return true;
+}
+
+// Recovery path, not progression: James, 2026-09-15 - "if a student spends all of their
+// money but is on a later stage... give them the option of which stage to revert to (only
+// show stages they have unlocked)". No earnings gate at all (a broke student has nothing
+// left to earn with, which is exactly the problem), and it only ever offers an
+// ALREADY-discovered stage (farmTypesDiscovered) - never a step ahead into something new the
+// way sellTheFarm()'s mystery-row shortcut can, since this is meant to get someone unstuck,
+// not to skip content. See updateRevertFarmUI() for the picker this drives.
+function revertToFarmType(targetTypeId) {
+  if (!FARM_TYPES[targetTypeId] || targetTypeId === currentFarmType) return false;
+  if (farmTypesDiscovered.indexOf(targetTypeId) === -1) return false;
+  var fromTitle = performFarmTypeSwitch(targetTypeId);
+  logConsole('Switched back from the ' + fromTitle + ' to the ' + FARM_TYPES[targetTypeId].title + ' - back to 40 coins, tier 1 only, so you can build back up without losing what you had already discovered.');
   return true;
 }
 
@@ -3954,6 +4011,53 @@ function updateSellFarmUI() {
       clearTimeout(sellFarmArmTimer);
       sellFarmArmedId = null;
       sellTheFarm(id);
+    });
+  });
+}
+
+// Renders the "Stuck? Switch Back" panel: one option per OTHER already-discovered farm type,
+// never the current one and never anything not yet discovered. Hidden entirely once there is
+// nothing to revert to (a player who has only ever played 'crops'). Same two-click-arm-then-
+// confirm safety as Sell the Farm and the top-bar Reset Game button, since this discards
+// whatever is currently growing/built - just as destructive, only recoverable in the other
+// direction.
+var revertFarmArmedId = null;
+var revertFarmArmTimer = null;
+function disarmRevertFarm() {
+  clearTimeout(revertFarmArmTimer);
+  revertFarmArmTimer = null;
+  if (revertFarmArmedId === null) return;
+  revertFarmArmedId = null;
+  updateRevertFarmUI();
+}
+function updateRevertFarmUI() {
+  var panel = document.getElementById('revert-farm-panel');
+  if (!panel) return;
+  var targets = farmTypesDiscovered.filter(function (id) { return id !== currentFarmType; });
+  panel.classList.toggle('shown', targets.length > 0);
+  if (!targets.length) { revertFarmArmedId = null; clearTimeout(revertFarmArmTimer); return; }
+  var optionsEl = document.getElementById('revert-farm-options');
+  optionsEl.innerHTML = targets.map(function (id) {
+    var ft = FARM_TYPES[id];
+    var armed = revertFarmArmedId === id;
+    return '<button type="button" class="revert-farm-option' + (armed ? ' armed' : '') + '" data-target="' + id + '">' +
+      '<span class="rfo-badge" style="background:' + ft.badgeColor + '">' + escapeHtmlLocal(ft.title.charAt(0)) + '</span>' +
+      '<span class="rfo-body"><span class="rfo-title">' + (armed ? 'Click again to confirm' : ft.title) + '</span>' +
+      '<span class="rfo-desc">Fresh start: 40 coins, tier 1</span></span></button>';
+  }).join('');
+  optionsEl.querySelectorAll('.revert-farm-option').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.dataset.target;
+      if (revertFarmArmedId !== id) {
+        revertFarmArmedId = id;
+        updateRevertFarmUI();
+        clearTimeout(revertFarmArmTimer);
+        revertFarmArmTimer = setTimeout(disarmRevertFarm, 3000);
+        return;
+      }
+      clearTimeout(revertFarmArmTimer);
+      revertFarmArmedId = null;
+      revertToFarmType(id);
     });
   });
 }
@@ -4164,6 +4268,7 @@ function updateHUD() {
     row.querySelector('.have').textContent = 'You have ' + invCount(name) + ' ' + (invCount(name) === 1 ? ft.unitLabel : ft.unitLabelPlural) + '.';
   });
   updateSellFarmUI();
+  updateRevertFarmUI();
 }
 
 // Rebuilds the shop's rows from scratch for whichever farm type is currently active -
