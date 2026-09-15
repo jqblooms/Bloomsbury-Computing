@@ -60,15 +60,20 @@ const { useState, useEffect, useRef, useCallback } = React;
 // five-line Selection answer genuinely needs more time than a one-line
 // Variables answer.
 const BASE_DURATION_REF = 45000;
-const LEVEL_TIME_MULTIPLIER = { 1: 1.3, 2: 1.9, 3: 1.5, 4: 1.2, 5: 2.4, 6: 2.1 };
+// Levels 1, 3 and 6 gained a DECLARE line (James, 2026-09-15) - bumped up
+// from their old one-fewer-line values to give time for the extra typing,
+// each landing near the level with the closest new line count (1 now
+// matches Arrays' old 2-line pace, 3 sits a little above it for its
+// occasional 3-line "both" mode, 6 keeps its lead over 5 for the extra line).
+const LEVEL_TIME_MULTIPLIER = { 1: 1.9, 2: 1.9, 3: 2.1, 4: 1.2, 5: 2.4, 6: 2.5 };
 
 const LEVELS = {
-    1: { title: "Variables", color: "blue", desc: "Store a value in a variable." },
+    1: { title: "Variables", color: "blue", desc: "Declare a variable and store a value." },
     2: { title: "Arrays", color: "red", desc: "Declare an array and place a value." },
-    3: { title: "Input & Output", color: "emerald", desc: "Ask for a value, then display it." },
+    3: { title: "Input & Output", color: "emerald", desc: "Declare a variable, then ask for or display a value." },
     4: { title: "Comparisons", color: "purple", desc: "Write the condition." },
     5: { title: "Selection", color: "pink", desc: "Write an IF statement." },
-    6: { title: "FOR Loops", color: "orange", desc: "Write a counting loop." },
+    6: { title: "FOR Loops", color: "orange", desc: "Declare the counter, then write a loop." },
     7: { title: "Final Exam", color: "rose", desc: "15 Questions. No Timer." }
 };
 
@@ -192,15 +197,19 @@ const MESSAGE_PAIRS = [['Pass', 'Fail'], ['High', 'Low'], ['Winner', 'Loser'], [
 // as plain-text lines - checkAnswer tokenizes these the same way it
 // tokenizes the student's own answer, so there is exactly one place
 // that decides what counts as equivalent syntax.
+// Cambridge rule (James, 2026-09-15): every variable must be DECLAREd with its
+// type before it is set or used - this level's whole task is creating a brand
+// new variable from nothing, so the DECLARE line is always the required first
+// line, matching how Arrays (level 2) already required it.
 const genLevel1 = () => {
     if (Math.random() < 0.5) {
         const name = pick(STRING_VAR_NAMES);
         const val = pick(STRING_VALUES);
-        return { prompt: `Store the text "${val}" in a variable called ${name}.`, expected: [`${name} <- "${val}"`] };
+        return { prompt: `Store the text "${val}" in a variable called ${name}.`, expected: [`DECLARE ${name} : STRING`, `${name} <- "${val}"`] };
     }
     const name = pick(NUMERIC_VAR_NAMES);
     const val = randInt(1, 100);
-    return { prompt: `Store the number ${val} in a variable called ${name}.`, expected: [`${name} <- ${val}`] };
+    return { prompt: `Store the number ${val} in a variable called ${name}.`, expected: [`DECLARE ${name} : INTEGER`, `${name} <- ${val}`] };
 };
 const genLevel2 = () => {
     const isString = Math.random() < 0.6;
@@ -216,15 +225,26 @@ const genLevel2 = () => {
     };
 };
 const genLevel3 = () => {
-    // No value or type appears in an INPUT/OUTPUT prompt, so any variable
-    // name reads sensibly here - drawing from both banks together just
-    // gives more variety, not a semantic risk like levels 1/2/4/5.
-    const name = pick(NUMERIC_VAR_NAMES.concat(STRING_VAR_NAMES));
+    // Cambridge DECLARE rule: INPUT/OUTPUT both use a variable, so it must be
+    // declared first - unlike the old version, the name can no longer be
+    // drawn from both banks combined, since DECLARE now needs one real type
+    // to go with it (a name picked to sound numeric now gets INTEGER, one
+    // picked to sound textual gets STRING - matching level 1's own split).
+    const isString = Math.random() < 0.5;
+    const name = pick(isString ? STRING_VAR_NAMES : NUMERIC_VAR_NAMES);
+    const declareLine = `DECLARE ${name} : ${isString ? 'STRING' : 'INTEGER'}`;
     const mode = pick(['input', 'output', 'both']);
-    if (mode === 'input') return { prompt: `Ask the user to enter a value for ${name}.`, expected: [`INPUT ${name}`] };
-    if (mode === 'output') return { prompt: `Display the value stored in ${name}.`, expected: [`OUTPUT ${name}`] };
-    return { prompt: `Ask the user to enter a value for ${name}, then display it.`, expected: [`INPUT ${name}`, `OUTPUT ${name}`] };
+    if (mode === 'input') return { prompt: `Ask the user to enter a value for ${name}.`, expected: [declareLine, `INPUT ${name}`] };
+    if (mode === 'output') return { prompt: `Display the value stored in ${name}.`, expected: [declareLine, `OUTPUT ${name}`] };
+    return { prompt: `Ask the user to enter a value for ${name}, then display it.`, expected: [declareLine, `INPUT ${name}`, `OUTPUT ${name}`] };
 };
+// Levels 4 and 5 deliberately do NOT require a DECLARE line, unlike 1/2/3/6.
+// Their prompts ("Write the condition that checks whether Age is...", "If
+// Age is greater than 50, output...") read as a fragment about a variable
+// that already exists - the same way a real exam question tests condition
+// or IF-statement syntax on its own, without also asking for the variable's
+// origin - not as "create Age from nothing", which is what levels 1/3/6
+// actually ask for. Revisit if this reads as inconsistent in practice.
 const genLevel4 = () => {
     const name = pick(NUMERIC_VAR_NAMES);
     const rel = pick(RELATIONS);
@@ -247,7 +267,7 @@ const genLevel6 = () => {
     const end = start + randInt(3, 8);
     return {
         prompt: `Write a loop that counts from ${start} to ${end} and outputs each number.`,
-        expected: [`FOR ${name} <- ${start} TO ${end}`, `OUTPUT ${name}`, `NEXT ${name}`]
+        expected: [`DECLARE ${name} : INTEGER`, `FOR ${name} <- ${start} TO ${end}`, `OUTPUT ${name}`, `NEXT ${name}`]
     };
 };
 const GENERATORS = { 1: genLevel1, 2: genLevel2, 3: genLevel3, 4: genLevel4, 5: genLevel5, 6: genLevel6 };
@@ -346,12 +366,12 @@ const Toggle = ({ checked, onChange, label }) => (
 
 const HelpModal = ({ levelId, onClose }) => {
     const content = {
-        1: { title: "Variables", body: "Type the line of Cambridge pseudocode that stores the given value in the named variable.\nUse the <- arrow to assign a value.\nText values need double quotes, numbers do not.\nExtra spaces never matter, but the arrow, quotes and spelling do." },
+        1: { title: "Variables", body: "Write two lines: DECLARE the variable with its type, then store the value.\nDECLARE Name : TYPE\nName <- Value\nUse the <- arrow to assign a value.\nText values need double quotes, numbers do not.\nExtra spaces never matter, but the arrow, quotes and spelling do." },
         2: { title: "Arrays", body: "Write two lines: DECLARE the array with its size and type, then assign a value into one position.\nDECLARE Name : ARRAY[1:Size] OF TYPE\nName[Position] <- Value" },
-        3: { title: "Input & Output", body: "INPUT reads a value from the user into a variable.\nOUTPUT displays a value.\nWrite one instruction per line, in the order asked for." },
+        3: { title: "Input & Output", body: "DECLARE the variable with its type first, then INPUT reads a value from the user into it, or OUTPUT displays it.\nDECLARE Name : TYPE\nOne instruction per line, in the order asked for." },
         4: { title: "Comparisons", body: "Write the condition using a comparison operator: >, <, >=, <=, = or <>.\nCambridge pseudocode uses = for equals and <> for not equals, not == or !=." },
         5: { title: "Selection", body: "Write a complete IF statement, one instruction per line:\nIF condition THEN\nOUTPUT \"...\"\nELSE\nOUTPUT \"...\"\nENDIF\nIndentation is ignored, only the words and symbols on each line matter." },
-        6: { title: "FOR Loops", body: "Write a complete counting loop, one instruction per line:\nFOR Variable <- Start TO End\nOUTPUT Variable\nNEXT Variable" },
+        6: { title: "FOR Loops", body: "DECLARE the loop counter first, then write a complete counting loop, one instruction per line:\nDECLARE Variable : INTEGER\nFOR Variable <- Start TO End\nOUTPUT Variable\nNEXT Variable" },
         7: { title: "Final Exam", body: "15 questions mixed from every level above.\nNo time limit for Game Over, but time is tracked.\nSpacing never matters, but keywords, operators, capitalisation inside quotes and syntax must be exactly right." }
     };
     const data = content[levelId] || { title: "Help", body: "Good luck!" };
