@@ -200,64 +200,55 @@
       "content": "<h2 class=\"lesson-h2\">Checked Practice</h2><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10l4-practice-a\">(a) Calculate the number of bits needed to store a text file of 25 characters using 8-bit extended ASCII. [1]</label><input id=\"y10l4-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10l4-practice-b\">(b) State the number of bits in 1 nibble. [1]</label><input id=\"y10l4-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10l4-practice-c\">(c) A sound recording lasts 3 seconds, sampled at 10 samples/sec with an 8-bit sample resolution. Calculate the file size of the recording in bytes. [2]</label><input id=\"y10l4-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10l4-practice-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10l4-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
     },
     {
-      "id": "plenary-1",
-      "label": "Plenary: File Size (1 of 2)",
-      "type": "multiple-choice",
-      "containerId": "y10l4-plenary-mcq-1",
-      "content": "<h2 class=\"lesson-h2\">Plenary: File Size</h2><p class=\"lesson-lead\">Answer from memory - no notes, no going back to the challenges.</p><div id=\"y10l4-plenary-mcq-1\"></div>",
-      "items": [
+      "id": "plenary",
+      "label": "Plenary: File Size",
+      "type": "mastery-quiz",
+      "containerId": "y10l4-plenary-mq",
+      "content": "<h2 class=\"lesson-h2\">Plenary: File Size</h2><p class=\"lesson-lead\">Answer from memory - no notes, no going back to the challenges. Type each answer. A question is mastered once you get it right three times in a row; a wrong answer sends it back into the pile.</p><div id=\"y10l4-plenary-mq\"></div>",
+      "questions": [
         {
-          "prompt": "What is a kibibyte (KiB)?",
-          "options": [
-            "1024 bytes",
-            "1000 bytes",
-            "1024 bits",
-            "8 bytes"
-          ],
-          "correct": 0,
-          "explain": "Every step of the data storage ladder is x1024, so 1 KiB = 1024 bytes."
+          "id": "fs-kib",
+          "kind": "text",
+          "prompt": "What is a kibibyte (KiB)? Give the number of bytes.",
+          "pattern": {
+            "__regex": true,
+            "source": "^\\s*1[\\s,]?024\\s*(bytes?|b)?\\s*$",
+            "flags": "i"
+          },
+          "feedback": "Not quite - 1 KiB = 1024 bytes. Every step of the data storage ladder is x1024."
         },
         {
+          "id": "fs-byte",
+          "kind": "text",
           "prompt": "How many bits are there in 1 byte?",
-          "options": [
-            "8",
-            "4",
-            "16",
-            "1024"
-          ],
-          "correct": 0,
-          "explain": "1 byte = 8 bits. A nibble is 4 bits."
-        }
-      ]
-    },
-    {
-      "id": "plenary-2",
-      "label": "Plenary: File Size (2 of 2)",
-      "type": "multiple-choice",
-      "containerId": "y10l4-plenary-mcq-2",
-      "content": "<h2 class=\"lesson-h2\">Plenary: File Size</h2><p class=\"lesson-lead\">Continued - two more questions.</p><div id=\"y10l4-plenary-mcq-2\"></div>",
-      "items": [
-        {
-          "prompt": "Why does a text file with more characters have a larger file size?",
-          "options": [
-            "Each character is stored using a fixed number of bits, so more characters means more bits",
-            "More characters need a higher colour depth",
-            "The file adds one byte of metadata per character",
-            "Longer files are always compressed less"
-          ],
-          "correct": 0,
-          "explain": "File size = number of characters x bits per character, so the total grows with the character count."
+          "pattern": {
+            "__regex": true,
+            "source": "^\\s*8\\s*(bits?)?\\s*$",
+            "flags": "i"
+          },
+          "feedback": "Not quite - 1 byte = 8 bits. A nibble is 4 bits."
         },
         {
+          "id": "fs-why",
+          "kind": "text",
+          "prompt": "Why does a text file with more characters have a larger file size?",
+          "pattern": {
+            "__regex": true,
+            "source": "(?=[\\s\\S]*\\b(bits?|bytes?)\\b)(?=[\\s\\S]*\\b(each|per|every|character|characters|char)\\b)[\\s\\S]*",
+            "flags": "i"
+          },
+          "feedback": "Not quite - each character is stored using a fixed number of bits, so more characters means more bits in total."
+        },
+        {
+          "id": "fs-calc",
+          "kind": "text",
           "prompt": "Calculate the file size, in bytes, of a 20-character message stored using 16-bit Unicode.",
-          "options": [
-            "40 bytes",
-            "320 bytes",
-            "20 bytes",
-            "16 bytes"
-          ],
-          "correct": 0,
-          "explain": "20 x 16 = 320 bits, and 320 / 8 = 40 bytes."
+          "pattern": {
+            "__regex": true,
+            "source": "^\\s*40\\s*(bytes?|b)?\\s*$",
+            "flags": "i"
+          },
+          "feedback": "Not quite - 20 x 16 = 320 bits, and 320 / 8 = 40 bytes."
         }
       ]
     }
