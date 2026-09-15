@@ -12,23 +12,23 @@
         {
           "prompt": "What is meant by the sample rate of a sound recording?",
           "options": [
-            "The number of samples (measurements) taken per second",
             "The number of bits used to store each sample",
+            "The number of samples (measurements) taken per second",
             "The total number of samples in the whole recording",
             "How loudly the recording is played back"
           ],
-          "correct": 0,
+          "correct": 1,
           "explain": "Sample rate counts how many measurements are taken each second - a separate setting from how each one is stored."
         },
         {
           "prompt": "What is meant by the sample resolution of a sound recording?",
           "options": [
-            "The number of bits used to store each sample",
             "The number of samples taken per second",
             "The length of the recording in seconds",
-            "The number of separate audio channels"
+            "The number of separate audio channels",
+            "The number of bits used to store each sample"
           ],
-          "correct": 0,
+          "correct": 3,
           "explain": "Sample resolution is the number of bits per sample - more bits means each measurement is rounded less."
         }
       ]
@@ -43,12 +43,12 @@
         {
           "prompt": "What is the term for one individual measurement of the sound wave taken during sampling?",
           "options": [
-            "A sample",
             "A bit",
             "The sample rate",
+            "A sample",
             "The amplitude"
           ],
-          "correct": 0,
+          "correct": 2,
           "explain": "Each single measurement is a sample. Sound Lab used the same word for one point on the reconstruction line."
         },
         {
@@ -100,23 +100,23 @@
         {
           "prompt": "(a) Give the name of the data storage measurement equal to 8 bits.",
           "options": [
-            "Byte",
             "Nibble",
             "Kibibyte",
-            "Word"
+            "Word",
+            "Byte"
           ],
-          "correct": 0,
+          "correct": 3,
           "explain": "8 bits = 1 byte. A nibble is 4 bits (half a byte)."
         },
         {
           "prompt": "(b) How many bits are there in a kibibyte (KiB)?",
           "options": [
-            "8192 bits",
             "1024 bits",
+            "8192 bits",
             "1000 bits",
             "8000 bits"
           ],
-          "correct": 0,
+          "correct": 1,
           "explain": "1 KiB = 1024 bytes, and each byte is 8 bits, so 1024 x 8 = 8192 bits."
         }
       ]
@@ -131,12 +131,12 @@
         {
           "prompt": "(c) Give the name of the data storage measurement equal to 1024 gibibytes (GiB).",
           "options": [
-            "Tebibyte (TiB)",
             "Mebibyte (MiB)",
             "Pebibyte (PiB)",
+            "Tebibyte (TiB)",
             "Exbibyte (EiB)"
           ],
-          "correct": 0,
+          "correct": 2,
           "explain": "The ladder goes byte, KiB, MiB, GiB, TiB - each x1024. 1024 GiB = 1 TiB."
         },
         {
@@ -162,23 +162,23 @@
         {
           "prompt": "(a) Which statement is correct?",
           "options": [
-            "One exbibyte (EiB) equals 1024 x 1024 tebibytes (TiB)",
             "One bit equals four nibbles",
+            "One exbibyte (EiB) equals 1024 x 1024 tebibytes (TiB)",
             "One byte equals 16 bits",
             "One mebibyte (MiB) equals 1024 x 1024 gibibytes (GiB)"
           ],
-          "correct": 0,
+          "correct": 1,
           "explain": "Each step of the ladder is x1024, so two steps (TiB to EiB, via PiB) is 1024 x 1024. The other three break the ladder."
         },
         {
           "prompt": "(b) An image is 1024 pixels high x 1024 pixels wide with a colour depth of two bytes. Calculate the file size in MiB.",
           "options": [
-            "2 MiB",
             "1 MiB",
             "16 MiB",
-            "4 MiB"
+            "4 MiB",
+            "2 MiB"
           ],
-          "correct": 0,
+          "correct": 3,
           "explain": "1024 x 1024 = 1,048,576 pixels, x 2 bytes = 2,097,152 bytes. Divide by 1024 twice (to KiB then MiB) = 2 MiB."
         }
       ]
