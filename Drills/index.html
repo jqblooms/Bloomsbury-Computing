@@ -289,6 +289,10 @@
   // that question too." A card with no `randomize` is unaffected -
   // resolveCard() passes it straight through.
   function randInt(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
+  // Lowercase, drop punctuation, collapse whitespace - used only to accept
+  // a student typing a card's own `hint` text back verbatim (or near
+  // enough), never for grading against `answers`/`keywords` generally.
+  function normalizeLoose(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim(); }
   function randInts(n, min, max) { var out = []; for (var i = 0; i < n; i++) out.push(randInt(min, max)); return out; }
   // A random linear-search draw: an n-element array plus a search value that
   // matches an existing position about 60% of the time (foundAt = 1-based
@@ -5025,7 +5029,14 @@
       var input = els.stage.querySelector("#text-answer");
       var value = input.value;
       if (!value.trim()) { toast("Type an answer first."); return; }
-      right = matchAnswer(card, value);
+      // A student who reads the "I need help" flash naturally types the
+      // hint text back - James, 2026-09-16: "short hints from 'i need
+      // help' are not recognised as correct answers when typed." The
+      // hint is a paraphrase, not guaranteed to satisfy the card's own
+      // keyword regex (built against `answers`), so it needs its own
+      // explicit, loose (punctuation/case/whitespace-insensitive) check
+      // rather than editing every affected regex by hand.
+      right = matchAnswer(card, value) || (!!card.hint && normalizeLoose(value) === normalizeLoose(card.hint));
       current.checked = true;
       if (current.helpTimer) clearTimeout(current.helpTimer);
       input.disabled = true;
