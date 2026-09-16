@@ -141,7 +141,15 @@
     var url = 'http://' + ip + ':' + PORT + '/lobby.html';
     joinEls.addressText.value = url;
     joinEls.box.classList.add('show');
-    try { window.location.href = url; } catch (e) { /* the address box above is always there regardless of whether this throws or is silently blocked */ }
+    // MUST be window.open (a NEW tab), never window.location.href here -
+    // the old version navigated THIS tab away, so the moment Local
+    // Network Access blocked it, the browser's own blocked-connection
+    // screen replaced launch.html entirely, taking the address box above
+    // down with it before the student ever saw it (the exact bug James
+    // reported: "sent me to the same error page"). Opening a new tab
+    // keeps this page - and the fallback - on screen no matter what
+    // happens in the other tab.
+    try { window.open(url, '_blank', 'noopener'); } catch (e) { /* the address box above is always there regardless */ }
   }
   joinEls.btn.addEventListener('click', doJoin);
   joinEls.input.addEventListener('keydown', function (e) { if (e.key === 'Enter') doJoin(); });
