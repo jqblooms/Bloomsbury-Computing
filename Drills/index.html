@@ -243,6 +243,124 @@
   "use strict";
 
   // ============================================================
+  // RANDOMISED CARD INSTANCES ("trace" cards - Y8 algorithms drills)
+  // ------------------------------------------------------------
+  // A card can define `randomize()` instead of (or alongside) static
+  // prompt/answers/keywords/distractors: called fresh on every single
+  // draw (see nextCard()/resolveCard() above) so a card that traces or
+  // predicts the output of real code shows different numbers - and
+  // sometimes a different scenario entirely - every time, the same
+  // anti-memorisation guarantee randomizeSetup() already gives type:'code'
+  // cards. James, 2026-09-16: "students are memorising answers for
+  // code-based questions... make sure numbers are randomised... if there
+  // is text-based output make sure there are multiple possible types of
+  // that question too." A card with no `randomize` is unaffected -
+  // resolveCard() passes it straight through.
+  function randInt(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
+  function randInts(n, min, max) { var out = []; for (var i = 0; i < n; i++) out.push(randInt(min, max)); return out; }
+  // A random linear-search draw: an n-element array plus a search value that
+  // matches an existing position about 60% of the time (foundAt = 1-based
+  // index) and is guaranteed absent otherwise (foundAt = -1) - so a search
+  // card genuinely varies between Found and Not Found across draws instead
+  // of a fixed card always being one or the other, on top of the array
+  // itself being different every time.
+  function randomSearchArray(n, min, max) {
+    var arr = randInts(n, min, max);
+    var found = Math.random() < 0.6;
+    var searchValue, foundAt;
+    if (found) {
+      foundAt = randInt(1, n);
+      searchValue = arr[foundAt - 1];
+    } else {
+      foundAt = -1;
+      do { searchValue = randInt(min - 5, max + 5); } while (arr.indexOf(searchValue) !== -1);
+    }
+    return { arr: arr, searchValue: searchValue, foundAt: foundAt, found: found };
+  }
+  var NAME_POOL = ["Ivy", "Omar", "Zara", "Leo", "Mia", "Kofi", "Priya", "Ben", "Sofia", "Noah", "Aisha", "Theo"];
+  var COLOUR_POOL = ["Red", "Green", "Blue", "Yellow", "Purple", "Orange", "Pink", "Teal"];
+  // Same idea as randomSearchArray but for a pool of text values (names or
+  // colours) instead of numbers - sample() (already used elsewhere for MC
+  // option pools) picks n distinct values without repeats.
+  function randomSearchWords(pool, n) {
+    var arr = sample(pool, n);
+    var found = Math.random() < 0.6;
+    var searchValue, foundAt;
+    if (found) {
+      foundAt = randInt(1, n);
+      searchValue = arr[foundAt - 1];
+    } else {
+      foundAt = -1;
+      var remaining = pool.filter(function (w) { return arr.indexOf(w) === -1; });
+      searchValue = remaining.length ? remaining[randInt(0, remaining.length - 1)] : "Nobody";
+    }
+    return { arr: arr, searchValue: searchValue, foundAt: foundAt, found: found };
+  }
+  // Filters out anything equal to the correct answer (a randomised
+  // distractor can otherwise collide with the randomised answer, e.g. sum
+  // and product both landing on 4), then tops back up to 4 using `filler`
+  // (called with 1, 2, 3... until enough unique values exist) if the
+  // dedupe left fewer than that.
+  function dedupeDistractors(correct, list, filler) {
+    var seen = {}; seen[String(correct)] = true;
+    var out = [];
+    list.forEach(function (d) {
+      d = String(d);
+      if (!seen[d]) { seen[d] = true; out.push(d); }
+    });
+    var i = 1;
+    while (out.length < 4 && filler) {
+      var f = filler(i++);
+      if (f == null) break;
+      f = String(f);
+      if (!seen[f]) { seen[f] = true; out.push(f); }
+      if (i > 40) break; // filler ran out of genuinely new values - stop rather than loop forever
+    }
+    return out;
+  }
+  // A shared pool of IF/ELSE scenarios (different variable, different pair
+  // of output labels, different comparison) that every Y8 Selection-style
+  // "what does this output" card draws from - so the SAME card slot can
+  // come up as a Score/Pass-Fail question one time and a Height/Tall-Short
+  // question the next, not just the same scenario with different numbers.
+  // Every scenario's thresholdRange/valueRange is wide enough that both
+  // branches are genuinely reachable, so a card cannot settle into always
+  // producing the same label.
+  var SELECTION_SCENARIOS = [
+    { varName: "Score", op: ">=", trueLabel: "Pass", falseLabel: "Fail", thresholdRange: [40, 70], valueRange: [0, 100] },
+    { varName: "Temperature", op: ">=", trueLabel: "Warm", falseLabel: "Cool", thresholdRange: [15, 25], valueRange: [-5, 35] },
+    { varName: "Age", op: "<", trueLabel: "Junior", falseLabel: "Senior", thresholdRange: [10, 16], valueRange: [1, 25] },
+    { varName: "Height", op: ">=", trueLabel: "Tall", falseLabel: "Short", thresholdRange: [140, 160], valueRange: [100, 190] }
+  ];
+  function evalSelectionOp(op, value, threshold) {
+    if (op === ">=") return value >= threshold;
+    if (op === "<") return value < threshold;
+    if (op === "<=") return value <= threshold;
+    return value > threshold;
+  }
+  // English phrasing of a scenario's condition, for cards that describe the
+  // algorithm in words (write-practice style) rather than showing the
+  // literal IF/ELSE code.
+  function selectionOpPhrase(op, threshold) {
+    if (op === ">=") return threshold + " or more";
+    if (op === "<") return "under " + threshold;
+    if (op === "<=") return threshold + " or less";
+    return "more than " + threshold;
+  }
+  // Picks one random scenario + threshold + test value (spanning the whole
+  // valueRange, so either branch can come up) and returns everything a
+  // card needs: the IF/ELSE code itself, which label is correct, and the
+  // other label as a ready-made distractor.
+  function randomSelectionCase() {
+    var s = SELECTION_SCENARIOS[randInt(0, SELECTION_SCENARIOS.length - 1)];
+    var threshold = randInt(s.thresholdRange[0], s.thresholdRange[1]);
+    var value = randInt(s.valueRange[0], s.valueRange[1]);
+    var isTrue = evalSelectionOp(s.op, value, threshold);
+    var code = "IF " + s.varName + " " + s.op + " " + threshold + " THEN\n    OUTPUT \"" + s.trueLabel + "\"\nELSE\n    OUTPUT \"" + s.falseLabel + "\"\nENDIF";
+    return { scenario: s, threshold: threshold, value: value, isTrue: isTrue, code: code, label: isTrue ? s.trueLabel : s.falseLabel, otherLabel: isTrue ? s.falseLabel : s.trueLabel };
+  }
+
+  // ============================================================
   // DRILL CONTENT
   // ------------------------------------------------------------
   // Every card is multiple choice. `answers` is the pool of correct
@@ -2401,7 +2519,16 @@
           answers: ["8"],
           keywords: [/^\s*8\s*$/],
           distractors: ["5","3","35","53"],
-          note: "5 + 3 = 8."
+          note: "5 + 3 = 8.",
+          randomize: function () {
+            var a = randInt(2, 20), b = randInt(2, 20), sum = a + b;
+            return {
+              prompt: "Number <- " + a + "\nNumber <- Number + " + b + "\nOUTPUT Number\n\nWhat does this output?",
+              answers: [String(sum)], keywords: [new RegExp("^\\s*" + sum + "\\s*$")],
+              distractors: dedupeDistractors(sum, [a, b, a * b], function (i) { return sum + i; }),
+              note: a + " + " + b + " = " + sum + "."
+            };
+          }
         },
         {
           id: "l1-trace-2", category: "seqtrace",
@@ -2409,7 +2536,16 @@
           answers: ["6"],
           keywords: [/^\s*6\s*$/],
           distractors: ["10","4","14","-6"],
-          note: "10 - 4 = 6."
+          note: "10 - 4 = 6.",
+          randomize: function () {
+            var a = randInt(10, 40), b = randInt(1, a - 1), diff = a - b;
+            return {
+              prompt: "Number <- " + a + "\nNumber <- Number - " + b + "\nOUTPUT Number\n\nWhat does this output?",
+              answers: [String(diff)], keywords: [new RegExp("^\\s*" + diff + "\\s*$")],
+              distractors: dedupeDistractors(diff, [a, b, a + b], function (i) { return diff + i; }),
+              note: a + " - " + b + " = " + diff + "."
+            };
+          }
         },
         {
           id: "l1-trace-3", category: "seqtrace",
@@ -2417,7 +2553,16 @@
           answers: ["7"],
           keywords: [/^\s*7\s*$/],
           distractors: ["2","5","10","25"],
-          note: "A becomes 2 + 5 = 7. B itself never changes."
+          note: "A becomes 2 + 5 = 7. B itself never changes.",
+          randomize: function () {
+            var a = randInt(1, 20), b = randInt(1, 20), sum = a + b;
+            return {
+              prompt: "A <- " + a + "\nB <- " + b + "\nA <- A + B\nOUTPUT A\n\nWhat does this output?",
+              answers: [String(sum)], keywords: [new RegExp("^\\s*" + sum + "\\s*$")],
+              distractors: dedupeDistractors(sum, [a, b, a * b], function (i) { return sum + i; }),
+              note: "A becomes " + a + " + " + b + " = " + sum + ". B itself never changes."
+            };
+          }
         },
         {
           id: "l1-trace-4", category: "seqtrace",
@@ -2425,7 +2570,16 @@
           answers: ["13"],
           keywords: [/^\s*13\s*$/],
           distractors: ["12","15","4","43"],
-          note: "4 * 3 = 12, then 12 + 1 = 13. Each line uses the value Number holds at that moment."
+          note: "4 * 3 = 12, then 12 + 1 = 13. Each line uses the value Number holds at that moment.",
+          randomize: function () {
+            var a = randInt(2, 10), b = randInt(2, 6), c = randInt(1, 10), product = a * b, total = product + c;
+            return {
+              prompt: "Number <- " + a + "\nNumber <- Number * " + b + "\nNumber <- Number + " + c + "\nOUTPUT Number\n\nWhat does this output?",
+              answers: [String(total)], keywords: [new RegExp("^\\s*" + total + "\\s*$")],
+              distractors: dedupeDistractors(total, [product, a, c], function (i) { return total + i; }),
+              note: a + " * " + b + " = " + product + ", then " + product + " + " + c + " = " + total + ". Each line uses the value Number holds at that moment."
+            };
+          }
         },
         {
           id: "l1-trace-5", category: "seqtrace",
@@ -2433,7 +2587,16 @@
           answers: ["13"],
           keywords: [/^\s*13\s*$/],
           distractors: ["12","6","2","8"],
-          note: "A becomes 6 * 2 = 12 first, then B becomes 12 + 1 = 13 - B uses the NEW value of A."
+          note: "A becomes 6 * 2 = 12 first, then B becomes 12 + 1 = 13 - B uses the NEW value of A.",
+          randomize: function () {
+            var a = randInt(2, 10), b = randInt(2, 10), aTimesB = a * b, total = aTimesB + 1;
+            return {
+              prompt: "A <- " + a + "\nB <- " + b + "\nA <- A * B\nB <- A + 1\nOUTPUT B\n\nWhat does this output?",
+              answers: [String(total)], keywords: [new RegExp("^\\s*" + total + "\\s*$")],
+              distractors: dedupeDistractors(total, [aTimesB, a, b], function (i) { return total + i; }),
+              note: "A becomes " + a + " * " + b + " = " + aTimesB + " first, then B becomes " + aTimesB + " + 1 = " + total + " - B uses the NEW value of A."
+            };
+          }
         },
         {
           id: "l1-syntax-arrow", category: "seqsyntax",
@@ -2489,7 +2652,16 @@
           answers: ["7"],
           keywords: [/^\s*7\s*$/],
           distractors: ["3","4","34","12"],
-          note: "3 + 4 = 7."
+          note: "3 + 4 = 7.",
+          randomize: function () {
+            var a = randInt(2, 20), b = randInt(2, 20), sum = a + b;
+            return {
+              prompt: "Number <- " + a + "\nNumber <- Number + " + b + "\nWhat single value does OUTPUT Number display if a third line, OUTPUT Number, is added right after line 2?",
+              answers: [String(sum)], keywords: [new RegExp("^\\s*" + sum + "\\s*$")],
+              distractors: dedupeDistractors(sum, [a, b, a * b], function (i) { return sum + i; }),
+              note: a + " + " + b + " = " + sum + "."
+            };
+          }
         },
         {
           id: "l1-write-3", category: "seqwrite",
@@ -2497,7 +2669,16 @@
           answers: ["21"],
           keywords: [/^\s*21\s*$/],
           distractors: ["10","3","7","73"],
-          note: "3 * 7 = 21 - Total <- Price * Quantity."
+          note: "3 * 7 = 21 - Total <- Price * Quantity.",
+          randomize: function () {
+            var price = randInt(2, 12), qty = randInt(2, 9), total = price * qty;
+            return {
+              prompt: "An algorithm asks for a Price and a Quantity, then works out and displays the Total. If Price is " + price + " and Quantity is " + qty + ", what should it display?",
+              answers: [String(total)], keywords: [new RegExp("^\\s*" + total + "\\s*$")],
+              distractors: dedupeDistractors(total, [price, qty, price + qty], function (i) { return total + i; }),
+              note: price + " * " + qty + " = " + total + " - Total <- Price * Quantity."
+            };
+          }
         },
         {
           id: "l1-write-4", category: "seqwrite",
@@ -2505,7 +2686,16 @@
           answers: ["24"],
           keywords: [/^\s*24\s*$/],
           distractors: ["10","4","6","46"],
-          note: "4 * 6 = 24 - Cost <- Tickets * PricePerTicket."
+          note: "4 * 6 = 24 - Cost <- Tickets * PricePerTicket.",
+          randomize: function () {
+            var tickets = randInt(2, 9), price = randInt(2, 15), cost = tickets * price;
+            return {
+              prompt: "An algorithm asks for the number of Tickets and the PricePerTicket, then works out and displays the Cost. If Tickets is " + tickets + " and PricePerTicket is " + price + ", what should it display?",
+              answers: [String(cost)], keywords: [new RegExp("^\\s*" + cost + "\\s*$")],
+              distractors: dedupeDistractors(cost, [tickets, price, tickets + price], function (i) { return cost + i; }),
+              note: tickets + " * " + price + " = " + cost + " - Cost <- Tickets * PricePerTicket."
+            };
+          }
         },
         {
           id: "l1-write-5", category: "seqwrite",
@@ -2553,7 +2743,16 @@
           answers: ["13"],
           keywords: [/^\s*13\s*$/],
           distractors: ["12","1","112","121"],
-          note: "Age is reassigned: 12 + 1 = 13. The old value of 12 is overwritten."
+          note: "Age is reassigned: 12 + 1 = 13. The old value of 12 is overwritten.",
+          randomize: function () {
+            var start = randInt(5, 30), inc = randInt(1, 10), total = start + inc;
+            return {
+              prompt: "Age <- " + start + "\nAge <- Age + " + inc + "\nOUTPUT Age\n\nWhat does this output?",
+              answers: [String(total)], keywords: [new RegExp("^\\s*" + total + "\\s*$")],
+              distractors: dedupeDistractors(total, [start, inc], function (i) { return total + i; }),
+              note: "Age is reassigned: " + start + " + " + inc + " = " + total + ". The old value of " + start + " is overwritten."
+            };
+          }
         }
       ]
     },
@@ -2567,7 +2766,16 @@
           answers: ["Fail"],
           keywords: [/fail/i],
           distractors: ["Pass","45","60","True"],
-          note: "45 >= 60 is false, so the ELSE branch runs and outputs \"Fail\"."
+          note: "45 >= 60 is false, so the ELSE branch runs and outputs \"Fail\".",
+          randomize: function () {
+            var c = randomSelectionCase();
+            return {
+              prompt: c.code + "\n\n" + c.scenario.varName + " is " + c.value + ". What is the output?",
+              answers: [c.label], keywords: [new RegExp("^\\s*" + c.label + "\\s*$", "i")],
+              distractors: dedupeDistractors(c.label, [c.otherLabel, String(c.value), String(c.threshold), "True"]),
+              note: c.value + " " + c.scenario.op + " " + c.threshold + " is " + c.isTrue + ", so " + (c.isTrue ? "the IF" : "the ELSE") + " branch runs and outputs \"" + c.label + "\"."
+            };
+          }
         },
         {
           id: "l2-trace-2", category: "seltrace",
@@ -2575,7 +2783,16 @@
           answers: ["Pass"],
           keywords: [/pass/i],
           distractors: ["Fail","72","60","True"],
-          note: "72 >= 60 is true, so the IF branch runs and outputs \"Pass\"."
+          note: "72 >= 60 is true, so the IF branch runs and outputs \"Pass\".",
+          randomize: function () {
+            var c = randomSelectionCase();
+            return {
+              prompt: c.code + "\n\n" + c.scenario.varName + " is " + c.value + ". What is the output?",
+              answers: [c.label], keywords: [new RegExp("^\\s*" + c.label + "\\s*$", "i")],
+              distractors: dedupeDistractors(c.label, [c.otherLabel, String(c.value), String(c.threshold), "False"]),
+              note: c.value + " " + c.scenario.op + " " + c.threshold + " is " + c.isTrue + ", so " + (c.isTrue ? "the IF" : "the ELSE") + " branch runs and outputs \"" + c.label + "\"."
+            };
+          }
         },
         {
           id: "l2-trace-3", category: "seltrace",
@@ -2583,7 +2800,16 @@
           answers: ["Warm"],
           keywords: [/warm/i],
           distractors: ["Cool","20","True","False"],
-          note: "20 >= 20 is true (>= includes equal), so it outputs \"Warm\"."
+          note: "20 >= 20 is true (>= includes equal), so it outputs \"Warm\".",
+          randomize: function () {
+            var c = randomSelectionCase();
+            return {
+              prompt: c.code + "\n\n" + c.scenario.varName + " is " + c.value + ". What is the output?",
+              answers: [c.label], keywords: [new RegExp("^\\s*" + c.label + "\\s*$", "i")],
+              distractors: dedupeDistractors(c.label, [c.otherLabel, String(c.value), String(c.threshold)]),
+              note: c.value + " " + c.scenario.op + " " + c.threshold + " is " + c.isTrue + ", so it outputs \"" + c.label + "\"."
+            };
+          }
         },
         {
           id: "l2-trace-4", category: "seltrace",
@@ -2591,7 +2817,16 @@
           answers: ["Senior"],
           keywords: [/senior/i],
           distractors: ["Junior","13","True","False"],
-          note: "13 < 13 is false (13 is not less than 13), so the ELSE branch runs."
+          note: "13 < 13 is false (13 is not less than 13), so the ELSE branch runs.",
+          randomize: function () {
+            var c = randomSelectionCase();
+            return {
+              prompt: c.code + "\n\n" + c.scenario.varName + " is " + c.value + ". What is the output?",
+              answers: [c.label], keywords: [new RegExp("^\\s*" + c.label + "\\s*$", "i")],
+              distractors: dedupeDistractors(c.label, [c.otherLabel, String(c.value), String(c.threshold)]),
+              note: c.value + " " + c.scenario.op + " " + c.threshold + " is " + c.isTrue + ", so " + (c.isTrue ? "the IF" : "the ELSE") + " branch runs."
+            };
+          }
         },
         {
           id: "l2-trace-5", category: "seltrace",
@@ -2599,7 +2834,18 @@
           answers: ["ELSE"],
           keywords: [/else/i],
           distractors: ["IF","Both","Neither"],
-          note: "149 >= 150 is false, so exactly one branch runs - the ELSE branch."
+          note: "149 >= 150 is false, so exactly one branch runs - the ELSE branch.",
+          randomize: function () {
+            var c = randomSelectionCase();
+            var branch = c.isTrue ? "IF" : "ELSE";
+            var otherBranch = c.isTrue ? "ELSE" : "IF";
+            return {
+              prompt: c.code + "\n\n" + c.scenario.varName + " is " + c.value + ". Which branch runs, IF or ELSE?",
+              answers: [branch], keywords: [new RegExp("^\\s*" + branch + "\\s*$", "i")],
+              distractors: [otherBranch, "Both", "Neither"],
+              note: c.value + " " + c.scenario.op + " " + c.threshold + " is " + c.isTrue + ", so exactly one branch runs - the " + branch + " branch."
+            };
+          }
         },
         {
           id: "l2-syntax-endif", category: "selsyntax",
@@ -2687,7 +2933,16 @@
           answers: ["Fail"],
           keywords: [/fail/i],
           distractors: ["Pass","42","50","True"],
-          note: "42 >= 50 is false, so it outputs \"Fail\"."
+          note: "42 >= 50 is false, so it outputs \"Fail\".",
+          randomize: function () {
+            var c = randomSelectionCase();
+            return {
+              prompt: "Write pseudocode that asks for a " + c.scenario.varName + ", outputs \"" + c.scenario.trueLabel + "\" if " + c.scenario.varName + " is " + selectionOpPhrase(c.scenario.op, c.threshold) + ", otherwise outputs \"" + c.scenario.falseLabel + "\". If " + c.scenario.varName + " is " + c.value + ", what does it display?",
+              answers: [c.label], keywords: [new RegExp("^\\s*" + c.label + "\\s*$", "i")],
+              distractors: dedupeDistractors(c.label, [c.otherLabel, String(c.value), String(c.threshold), "True"]),
+              note: c.value + " " + c.scenario.op + " " + c.threshold + " is " + c.isTrue + ", so it outputs \"" + c.label + "\"."
+            };
+          }
         },
         {
           id: "l2-write-2", category: "selwrite",
@@ -2695,7 +2950,16 @@
           answers: ["Junior"],
           keywords: [/junior/i],
           distractors: ["Senior","10","13","True"],
-          note: "10 < 13 is true, so it outputs \"Junior\"."
+          note: "10 < 13 is true, so it outputs \"Junior\".",
+          randomize: function () {
+            var c = randomSelectionCase();
+            return {
+              prompt: "Write pseudocode that asks for a " + c.scenario.varName + ", outputs \"" + c.scenario.trueLabel + "\" if " + c.scenario.varName + " is " + selectionOpPhrase(c.scenario.op, c.threshold) + ", otherwise outputs \"" + c.scenario.falseLabel + "\". If " + c.scenario.varName + " is " + c.value + ", what does it display?",
+              answers: [c.label], keywords: [new RegExp("^\\s*" + c.label + "\\s*$", "i")],
+              distractors: dedupeDistractors(c.label, [c.otherLabel, String(c.value), String(c.threshold), "True"]),
+              note: c.value + " " + c.scenario.op + " " + c.threshold + " is " + c.isTrue + ", so it outputs \"" + c.label + "\"."
+            };
+          }
         },
         {
           id: "l2-write-3", category: "selwrite",
@@ -2703,7 +2967,16 @@
           answers: ["Tall"],
           keywords: [/tall/i],
           distractors: ["Short","160","150","True"],
-          note: "160 >= 150 is true, so it outputs \"Tall\"."
+          note: "160 >= 150 is true, so it outputs \"Tall\".",
+          randomize: function () {
+            var c = randomSelectionCase();
+            return {
+              prompt: "Write pseudocode that asks for a " + c.scenario.varName + ", outputs \"" + c.scenario.trueLabel + "\" if " + c.scenario.varName + " is " + selectionOpPhrase(c.scenario.op, c.threshold) + ", otherwise outputs \"" + c.scenario.falseLabel + "\". If " + c.scenario.varName + " is " + c.value + ", what does it display?",
+              answers: [c.label], keywords: [new RegExp("^\\s*" + c.label + "\\s*$", "i")],
+              distractors: dedupeDistractors(c.label, [c.otherLabel, String(c.value), String(c.threshold), "True"]),
+              note: c.value + " " + c.scenario.op + " " + c.threshold + " is " + c.isTrue + ", so it outputs \"" + c.label + "\"."
+            };
+          }
         },
         {
           id: "l2-write-4", category: "selwrite",
@@ -2711,7 +2984,19 @@
           answers: ["Free Delivery"],
           keywords: [/free delivery/i],
           distractors: ["Delivery Charge Applies","60","16","50"],
-          note: "Total = 10 * 6 = 60, and 60 >= 50 is true, so it outputs \"Free Delivery\"."
+          note: "Total = 10 * 6 = 60, and 60 >= 50 is true, so it outputs \"Free Delivery\".",
+          randomize: function () {
+            var price = randInt(2, 15), qty = randInt(2, 9), total = price * qty, threshold = 50;
+            var isTrue = total >= threshold;
+            var label = isTrue ? "Free Delivery" : "Delivery Charge Applies";
+            var otherLabel = isTrue ? "Delivery Charge Applies" : "Free Delivery";
+            return {
+              prompt: "An algorithm asks for Price and Quantity, works out the Total, then outputs \"Free Delivery\" if Total is 50 or more, otherwise \"Delivery Charge Applies\". If Price is " + price + " and Quantity is " + qty + ", what does it display?",
+              answers: [label], keywords: [new RegExp("^\\s*" + label + "\\s*$", "i")],
+              distractors: dedupeDistractors(label, [otherLabel, String(total), String(price + qty)]),
+              note: "Total = " + price + " * " + qty + " = " + total + ", and " + total + " >= 50 is " + isTrue + ", so it outputs \"" + label + "\"."
+            };
+          }
         },
         {
           id: "l2-write-5", category: "selwrite",
@@ -2719,7 +3004,19 @@
           answers: ["Low"],
           keywords: [/low/i],
           distractors: ["High","75","100","20"],
-          note: "Total = 20 + 25 + 30 = 75, and 75 >= 100 is false, so it outputs \"Low\"."
+          note: "Total = 20 + 25 + 30 = 75, and 75 >= 100 is false, so it outputs \"Low\".",
+          randomize: function () {
+            var a = randInt(10, 60), b = randInt(10, 60), c2 = randInt(10, 60), total = a + b + c2, threshold = 100;
+            var isTrue = total >= threshold;
+            var label = isTrue ? "High" : "Low";
+            var otherLabel = isTrue ? "Low" : "High";
+            return {
+              prompt: "An algorithm asks for NumA, NumB and NumC, adds all three into a Total, then outputs \"High\" if Total is 100 or more, otherwise \"Low\". If NumA is " + a + ", NumB is " + b + " and NumC is " + c2 + ", what does it display?",
+              answers: [label], keywords: [new RegExp("^\\s*" + label + "\\s*$", "i")],
+              distractors: dedupeDistractors(label, [otherLabel, String(total), String(a)]),
+              note: "Total = " + a + " + " + b + " + " + c2 + " = " + total + ", and " + total + " >= 100 is " + isTrue + ", so it outputs \"" + label + "\"."
+            };
+          }
         }
       ]
     },
@@ -2749,7 +3046,18 @@
           answers: ["19"],
           keywords: [/^\s*19\s*$/],
           distractors: ["7","3","12","Numbers[3] does not exist"],
-          note: "Position 3 is the third value: 12 (pos 1), 7 (pos 2), 19 (pos 3)."
+          note: "Position 3 is the third value: 12 (pos 1), 7 (pos 2), 19 (pos 3).",
+          randomize: function () {
+            var arr = randInts(4, 2, 40);
+            var pos = randInt(1, 4);
+            var value = arr[pos - 1];
+            return {
+              prompt: "Numbers = [" + arr.join(", ") + "]\n\nWhat value is stored at Numbers[" + pos + "]?",
+              answers: [String(value)], keywords: [new RegExp("^\\s*" + value + "\\s*$")],
+              distractors: dedupeDistractors(value, arr.filter(function (v, i) { return i !== pos - 1; }).concat(["Numbers[" + pos + "] does not exist"])),
+              note: "Position " + pos + " is the " + ["first", "second", "third", "fourth"][pos - 1] + " value: " + arr.map(function (v, i) { return v + " (pos " + (i + 1) + ")"; }).join(", ") + "."
+            };
+          }
         },
         {
           id: "l3-basics-fixed", category: "arraybasics",
@@ -2773,7 +3081,17 @@
           answers: ["397"],
           keywords: [/^\s*397\s*$/],
           distractors: ["142","3","120","277"],
-          note: "120 + 135 + 142 = 397."
+          note: "120 + 135 + 142 = 397.",
+          randomize: function () {
+            var arr = randInts(3, 5, 60);
+            var total = arr[0] + arr[1] + arr[2];
+            return {
+              prompt: "Heights = [" + arr.join(", ") + "]\nTotal <- 0\nFOR Index <- 1 TO 3\n    Total <- Total + Heights[Index]\nNEXT Index\nOUTPUT Total\n\nWhat does this output?",
+              answers: [String(total)], keywords: [new RegExp("^\\s*" + total + "\\s*$")],
+              distractors: dedupeDistractors(total, [arr[2], 3, arr[0]], function (i) { return total + i * 5; }),
+              note: arr.join(" + ") + " = " + total + "."
+            };
+          }
         },
         {
           id: "l3-trace-2", category: "arraytrace",
@@ -2781,7 +3099,17 @@
           answers: ["85"],
           keywords: [/^\s*85\s*$/],
           distractors: ["4","30","55","75"],
-          note: "18 + 25 + 12 + 30 = 85."
+          note: "18 + 25 + 12 + 30 = 85.",
+          randomize: function () {
+            var arr = randInts(4, 5, 40);
+            var total = arr[0] + arr[1] + arr[2] + arr[3];
+            return {
+              prompt: "Marks = [" + arr.join(", ") + "]\nTotal <- 0\nFOR Index <- 1 TO 4\n    Total <- Total + Marks[Index]\nNEXT Index\nOUTPUT Total\n\nWhat does this output?",
+              answers: [String(total)], keywords: [new RegExp("^\\s*" + total + "\\s*$")],
+              distractors: dedupeDistractors(total, [4, arr[3], arr[0] + arr[1]], function (i) { return total + i * 5; }),
+              note: arr.join(" + ") + " = " + total + "."
+            };
+          }
         },
         {
           id: "l3-trace-3", category: "arraytrace",
@@ -2789,7 +3117,17 @@
           answers: ["13"],
           keywords: [/^\s*13\s*$/],
           distractors: ["4","9","22","2"],
-          note: "First pass: Total = 0 + 4 = 4. Second pass: Total = 4 + 9 = 13."
+          note: "First pass: Total = 0 + 4 = 4. Second pass: Total = 4 + 9 = 13.",
+          randomize: function () {
+            var arr = randInts(4, 2, 20);
+            var afterFirst = arr[0], afterSecond = arr[0] + arr[1];
+            return {
+              prompt: "Prices = [" + arr.join(", ") + "]\nTotal <- 0\nFOR Index <- 1 TO 4\n    Total <- Total + Prices[Index]\nNEXT Index\nOUTPUT Total\n\nAfter the SECOND pass of the loop (Index = 2), what is the value of Total?",
+              answers: [String(afterSecond)], keywords: [new RegExp("^\\s*" + afterSecond + "\\s*$")],
+              distractors: dedupeDistractors(afterSecond, [arr[0], arr[1], arr[0] + arr[1] + arr[2]], function (i) { return afterSecond + i; }),
+              note: "First pass: Total = 0 + " + arr[0] + " = " + afterFirst + ". Second pass: Total = " + afterFirst + " + " + arr[1] + " = " + afterSecond + "."
+            };
+          }
         },
         {
           id: "l3-trace-4", category: "arraytrace",
@@ -2797,7 +3135,18 @@
           answers: ["3"],
           keywords: [/^\s*3\s*$/],
           distractors: ["2","4","6","55"],
-          note: "12, 20 and 15 are each greater than 10 - three values in total."
+          note: "12, 20 and 15 are each greater than 10 - three values in total.",
+          randomize: function () {
+            var arr = randInts(6, 1, 25);
+            var over = arr.filter(function (v) { return v > 10; });
+            var count = over.length;
+            return {
+              prompt: "Numbers = [" + arr.join(", ") + "]\nCount <- 0\nFOR Index <- 1 TO 6\n    IF Numbers[Index] > 10 THEN\n        Count <- Count + 1\n    ENDIF\nNEXT Index\nOUTPUT Count\n\nWhat does this output?",
+              answers: [String(count)], keywords: [new RegExp("^\\s*" + count + "\\s*$")],
+              distractors: dedupeDistractors(count, [6], function (i) { return count + i; }),
+              note: (over.length ? over.join(", ") + (over.length > 1 ? " are each" : " is") : "None are") + " greater than 10 - " + count + " value" + (count === 1 ? "" : "s") + " in total."
+            };
+          }
         },
         {
           id: "l3-trace-5", category: "arraytrace",
@@ -2805,7 +3154,18 @@
           answers: ["2"],
           keywords: [/^\s*2\s*$/],
           distractors: ["1","3","4","155"],
-          note: "55 and 62 are each 50 or more - two values."
+          note: "55 and 62 are each 50 or more - two values.",
+          randomize: function () {
+            var arr = randInts(4, 30, 75);
+            var over = arr.filter(function (v) { return v >= 50; });
+            var count = over.length;
+            return {
+              prompt: "Scores = [" + arr.join(", ") + "]\nCount <- 0\nFOR Index <- 1 TO 4\n    IF Scores[Index] >= 50 THEN\n        Count <- Count + 1\n    ENDIF\nNEXT Index\nOUTPUT Count\n\nWhat does this output?",
+              answers: [String(count)], keywords: [new RegExp("^\\s*" + count + "\\s*$")],
+              distractors: dedupeDistractors(count, [4], function (i) { return count + i; }),
+              note: (over.length ? over.join(" and ") + " " + (over.length > 1 ? "are each" : "is") : "None are") + " 50 or more - " + count + " value" + (count === 1 ? "" : "s") + "."
+            };
+          }
         },
         {
           id: "l3-write-1", category: "arraywrite",
@@ -2813,7 +3173,17 @@
           answers: ["675"],
           keywords: [/^\s*675\s*$/],
           distractors: ["5","150","120","575"],
-          note: "120 + 135 + 142 + 128 + 150 = 675."
+          note: "120 + 135 + 142 + 128 + 150 = 675.",
+          randomize: function () {
+            var arr = randInts(5, 100, 160);
+            var total = arr.reduce(function (a, b) { return a + b; }, 0);
+            return {
+              prompt: "The array Heights = [" + arr.join(", ") + "] is stored, five values. Write pseudocode that adds up every value and outputs the total. What is the total?",
+              answers: [String(total)], keywords: [new RegExp("^\\s*" + total + "\\s*$")],
+              distractors: dedupeDistractors(total, [5, arr[4], arr[0]], function (i) { return total + i * 10; }),
+              note: arr.join(" + ") + " = " + total + "."
+            };
+          }
         },
         {
           id: "l3-write-2", category: "arraywrite",
@@ -2837,7 +3207,18 @@
           answers: ["3"],
           keywords: [/^\s*3\s*$/],
           distractors: ["2","4","5","62"],
-          note: "14, 22 and 11 are each greater than 10 - three values."
+          note: "14, 22 and 11 are each greater than 10 - three values.",
+          randomize: function () {
+            var arr = randInts(5, 1, 25);
+            var over = arr.filter(function (v) { return v > 10; });
+            var count = over.length;
+            return {
+              prompt: "The array Numbers = [" + arr.join(", ") + "] is stored, five values. Write pseudocode that counts how many values are greater than 10, then outputs the count. What is the count?",
+              answers: [String(count)], keywords: [new RegExp("^\\s*" + count + "\\s*$")],
+              distractors: dedupeDistractors(count, [5], function (i) { return count + i; }),
+              note: (over.length ? over.join(", ") + (over.length > 1 ? " are each" : " is") : "None are") + " greater than 10 - " + count + " value" + (count === 1 ? "" : "s") + "."
+            };
+          }
         },
         {
           id: "l3-write-5", category: "arraywrite",
@@ -2939,7 +3320,19 @@
           answers: ["TRUE"],
           keywords: [/true/i],
           distractors: ["FALSE","19","3"],
-          note: "Numbers[3] is 19, which matches SearchValue, so Found becomes TRUE and stays TRUE."
+          note: "Numbers[3] is 19, which matches SearchValue, so Found becomes TRUE and stays TRUE.",
+          randomize: function () {
+            var d = randomSearchArray(5, 1, 40);
+            var result = d.found ? "TRUE" : "FALSE";
+            return {
+              prompt: "Numbers = [" + d.arr.join(", ") + "]\nSearchValue is " + d.searchValue + ".\nFound <- FALSE\nFOR Index <- 1 TO 5\n    IF Numbers[Index] = SearchValue THEN\n        Found <- TRUE\n    ENDIF\nNEXT Index\n\nWhat is the value of Found after the loop ends?",
+              answers: [result], keywords: [new RegExp("^\\s*" + result + "\\s*$", "i")],
+              distractors: dedupeDistractors(result, [d.found ? "FALSE" : "TRUE", String(d.searchValue), String(d.arr[0])]),
+              note: d.found
+                ? "Numbers[" + d.foundAt + "] is " + d.searchValue + ", which matches SearchValue, so Found becomes TRUE and stays TRUE."
+                : "None of " + d.arr.join(", ") + " equal " + d.searchValue + ", so Found stays FALSE."
+            };
+          }
         },
         {
           id: "l4-trace-2", category: "searchtrace",
@@ -2947,7 +3340,19 @@
           answers: ["Not Found"],
           keywords: [/not found/i],
           distractors: ["Found","50","TRUE"],
-          note: "None of 12, 7, 19, 3 or 25 equal 50, so Found stays FALSE and the ELSE branch outputs \"Not Found\"."
+          note: "None of 12, 7, 19, 3 or 25 equal 50, so Found stays FALSE and the ELSE branch outputs \"Not Found\".",
+          randomize: function () {
+            var d = randomSearchArray(5, 1, 40);
+            var result = d.found ? "Found" : "Not Found";
+            return {
+              prompt: "Numbers = [" + d.arr.join(", ") + "]\nSearchValue is " + d.searchValue + ".\nFound <- FALSE\nFOR Index <- 1 TO 5\n    IF Numbers[Index] = SearchValue THEN\n        Found <- TRUE\n    ENDIF\nNEXT Index\nIF Found = TRUE THEN\n    OUTPUT \"Found\"\nELSE\n    OUTPUT \"Not Found\"\nENDIF\n\nWhat is the output?",
+              answers: [result], keywords: [new RegExp("^\\s*" + result + "\\s*$", "i")],
+              distractors: dedupeDistractors(result, [d.found ? "Not Found" : "Found", String(d.searchValue), "TRUE"]),
+              note: d.found
+                ? "Numbers[" + d.foundAt + "] is " + d.searchValue + ", so Found becomes TRUE and the IF branch outputs \"Found\"."
+                : "None of " + d.arr.join(", ") + " equal " + d.searchValue + ", so Found stays FALSE and the ELSE branch outputs \"Not Found\"."
+            };
+          }
         },
         {
           id: "l4-trace-3", category: "searchtrace",
@@ -2955,7 +3360,17 @@
           answers: ["5"],
           keywords: [/^\s*5\s*$/],
           distractors: ["1","3","4","8"],
-          note: "The FOR loop always runs once for every position, from 1 to 5, regardless of when the match is found."
+          note: "The FOR loop always runs once for every position, from 1 to 5, regardless of when the match is found.",
+          randomize: function () {
+            var n = randInt(4, 7);
+            var d = randomSearchArray(n, 1, 40);
+            return {
+              prompt: "Ages = [" + d.arr.join(", ") + "]\nSearchAge is " + d.searchValue + ".\nHow many times does the comparison IF Ages[Index] = SearchAge THEN run in total?",
+              answers: [String(n)], keywords: [new RegExp("^\\s*" + n + "\\s*$")],
+              distractors: dedupeDistractors(n, [1, Math.max(1, d.foundAt), d.searchValue], function (i) { return n + i; }),
+              note: "The FOR loop always runs once for every position, from 1 to " + n + ", regardless of when the match is found."
+            };
+          }
         },
         {
           id: "l4-trace-4", category: "searchtrace",
@@ -2963,7 +3378,19 @@
           answers: ["FALSE"],
           keywords: [/false/i],
           distractors: ["TRUE","Purple","Red"],
-          note: "\"Purple\" does not match any of the four stored colours, so Found is never set to TRUE."
+          note: "\"Purple\" does not match any of the four stored colours, so Found is never set to TRUE.",
+          randomize: function () {
+            var d = randomSearchWords(COLOUR_POOL, 4);
+            var result = d.found ? "TRUE" : "FALSE";
+            return {
+              prompt: "Colours = [\"" + d.arr.join("\", \"") + "\"]\nSearchColour is \"" + d.searchValue + "\".\nWhat will Found equal after the loop ends?",
+              answers: [result], keywords: [new RegExp("^\\s*" + result + "\\s*$", "i")],
+              distractors: dedupeDistractors(result, [d.found ? "FALSE" : "TRUE", d.searchValue, d.arr[0]]),
+              note: d.found
+                ? "\"" + d.searchValue + "\" is Colours[" + d.foundAt + "], so Found becomes TRUE."
+                : "\"" + d.searchValue + "\" does not match any of the four stored colours, so Found is never set to TRUE."
+            };
+          }
         },
         {
           id: "l4-trace-5", category: "searchtrace",
@@ -2971,7 +3398,20 @@
           answers: ["6"],
           keywords: [/^\s*6\s*$/],
           distractors: ["1","5","4","It never matches"],
-          note: "\"Kofi\" is the sixth and last name in the array."
+          note: "\"Kofi\" is the sixth and last name in the array.",
+          randomize: function () {
+            var n = randInt(4, 6);
+            var arr = sample(NAME_POOL, n);
+            var pos = randInt(1, n);
+            var name = arr[pos - 1];
+            var ordinal = ["first", "second", "third", "fourth", "fifth", "sixth"][pos - 1];
+            return {
+              prompt: "Names = [\"" + arr.join("\", \"") + "\"]\nSearchName is \"" + name + "\".\nAt which position (Index) does the match happen?",
+              answers: [String(pos)], keywords: [new RegExp("^\\s*" + pos + "\\s*$")],
+              distractors: dedupeDistractors(pos, [1, n, "It never matches"], function (i) { return pos + i; }),
+              note: "\"" + name + "\" is the " + ordinal + " name in the array."
+            };
+          }
         },
         {
           id: "l4-flag-init", category: "searchflag",
@@ -3019,7 +3459,17 @@
           answers: ["Found"],
           keywords: [/^\s*found\s*\.?\s*$/i],
           distractors: ["Not Found","8","15"],
-          note: "8 is the third value in Ages, so it is found."
+          note: "8 is the third value in Ages, so it is found.",
+          randomize: function () {
+            var d = randomSearchArray(5, 1, 40);
+            var result = d.found ? "Found" : "Not Found";
+            return {
+              prompt: "The array Ages = [" + d.arr.join(", ") + "] is stored. An algorithm searches for SearchAge and outputs \"Found\" or \"Not Found\". If SearchAge is " + d.searchValue + ", what should it display?",
+              answers: [result], keywords: [d.found ? /^\s*found\s*\.?\s*$/i : /not found/i],
+              distractors: dedupeDistractors(result, [d.found ? "Not Found" : "Found", String(d.searchValue), String(d.arr[0])]),
+              note: d.found ? d.searchValue + " is the " + ["first", "second", "third", "fourth", "fifth"][d.foundAt - 1] + " value in Ages, so it is found." : d.searchValue + " does not appear in Ages, so it is not found."
+            };
+          }
         },
         {
           id: "l4-write-2", category: "searchwrite",
@@ -3027,7 +3477,17 @@
           answers: ["Not Found"],
           keywords: [/not found/i],
           distractors: ["Found","Purple","Red"],
-          note: "\"Purple\" is not one of the four stored colours."
+          note: "\"Purple\" is not one of the four stored colours.",
+          randomize: function () {
+            var d = randomSearchWords(COLOUR_POOL, 4);
+            var result = d.found ? "Found" : "Not Found";
+            return {
+              prompt: "The array Colours = [\"" + d.arr.join("\", \"") + "\"] is stored. An algorithm searches for SearchColour. If SearchColour is \"" + d.searchValue + "\", what should it display?",
+              answers: [result], keywords: [new RegExp("^\\s*" + result + "\\s*$", "i")],
+              distractors: dedupeDistractors(result, [d.found ? "Not Found" : "Found", d.searchValue, d.arr[0]]),
+              note: d.found ? "\"" + d.searchValue + "\" is one of the stored colours." : "\"" + d.searchValue + "\" is not one of the stored colours."
+            };
+          }
         },
         {
           id: "l4-write-3", category: "searchwrite",
@@ -3035,7 +3495,17 @@
           answers: ["1 TO 6"],
           keywords: [/1\s*(to|-)\s*6/i],
           distractors: ["0 TO 6","1 TO 5","0 TO 5","1 TO 7"],
-          note: "Cambridge pseudocode arrays start at 1, so all 6 positions need FOR Index <- 1 TO 6."
+          note: "Cambridge pseudocode arrays start at 1, so all 6 positions need FOR Index <- 1 TO 6.",
+          randomize: function () {
+            var n = randInt(4, 9);
+            var answer = "1 TO " + n;
+            return {
+              prompt: "An array of " + n + " names is stored. What must the FOR loop's range be to check every position?",
+              answers: [answer], keywords: [new RegExp("^\\s*1\\s*(to|-)\\s*" + n + "\\s*$", "i")],
+              distractors: dedupeDistractors(answer, ["0 TO " + n, "1 TO " + (n - 1), "0 TO " + (n - 1), "1 TO " + (n + 1)]),
+              note: "Cambridge pseudocode arrays start at 1, so all " + n + " positions need FOR Index <- 1 TO " + n + "."
+            };
+          }
         },
         {
           id: "l4-write-4", category: "searchwrite",
@@ -3051,7 +3521,17 @@
           answers: ["4"],
           keywords: [/^\s*4\s*$/],
           distractors: ["1","3","2","8"],
-          note: "The loop always checks every position from 1 to 4, regardless of where the match is."
+          note: "The loop always checks every position from 1 to 4, regardless of where the match is.",
+          randomize: function () {
+            var n = randInt(3, 7);
+            var d = randomSearchArray(n, 1, 40);
+            return {
+              prompt: "The array Values = [" + d.arr.join(", ") + "] is stored. If SearchValue is " + d.searchValue + ", how many times does line 4 (the comparison IF) run in total?",
+              answers: [String(n)], keywords: [new RegExp("^\\s*" + n + "\\s*$")],
+              distractors: dedupeDistractors(n, [1, Math.max(1, d.foundAt), d.searchValue], function (i) { return n + i; }),
+              note: "The loop always checks every position from 1 to " + n + ", regardless of where the match is."
+            };
+          }
         }
       ]
     },
@@ -3169,7 +3649,17 @@
           answers: ["10"],
           keywords: [/^\s*10\s*$/],
           distractors: ["4", "6", "16", "1234", "24"],
-          note: "1 + 2 + 3 + 4 = 10."
+          note: "1 + 2 + 3 + 4 = 10.",
+          randomize: function () {
+            var n = randInt(3, 7);
+            var total = n * (n + 1) / 2;
+            return {
+              prompt: "DECLARE Total : INTEGER\nDECLARE Count : INTEGER\nTotal <- 0\nFOR Count <- 1 TO " + n + "\n    Total <- Total + Count\nNEXT Count\nOUTPUT Total\n\nWhat does this output?",
+              answers: [String(total)], keywords: [new RegExp("^\\s*" + total + "\\s*$")],
+              distractors: dedupeDistractors(total, [n, n * n], function (i) { return total + i; }),
+              note: "1 + 2 + ... + " + n + " = " + total + "."
+            };
+          }
         },
         {
           id: "iter-while-trace-count", category: "iteration",
@@ -3177,7 +3667,17 @@
           answers: ["3 times"],
           keywords: [/^\s*3\s*(times?)?\s*$/i],
           distractors: ["2 times", "4 times", "0 times", "Forever", "1 time"],
-          note: "Count goes 0, 1, 2 - the condition Count < 3 is true for all three, then false when Count = 3."
+          note: "Count goes 0, 1, 2 - the condition Count < 3 is true for all three, then false when Count = 3.",
+          randomize: function () {
+            var n = randInt(2, 6);
+            var answer = n + " times";
+            return {
+              prompt: "DECLARE Count : INTEGER\nCount <- 0\nWHILE Count < " + n + "\n    OUTPUT \"Go\"\n    Count <- Count + 1\nENDWHILE\n\nHow many times is \"Go\" output?",
+              answers: [answer], keywords: [new RegExp("^\\s*" + n + "\\s*(times?)?\\s*$", "i")],
+              distractors: dedupeDistractors(answer, [(n - 1) + " times", (n + 1) + " times", "0 times", "Forever"]),
+              note: "Count goes 0, 1, ... up to " + (n - 1) + " - the condition Count < " + n + " is true for all " + n + " of those, then false when Count = " + n + "."
+            };
+          }
         },
         {
           id: "synth-for-if-order", category: "synthesis",
@@ -3185,7 +3685,24 @@
           answers: ["Fail, Pass, Pass"],
           keywords: [/fail.*pass.*pass/i],
           distractors: ["Pass, Fail, Pass", "Pass, Pass, Pass", "Fail, Fail, Pass", "Pass, Fail, Fail"],
-          note: "40 < 50 (Fail), 60 >= 50 (Pass), 55 >= 50 (Pass) - one decision made per pass of the loop."
+          note: "40 < 50 (Fail), 60 >= 50 (Pass), 55 >= 50 (Pass) - one decision made per pass of the loop.",
+          randomize: function () {
+            var marks = randInts(3, 0, 100);
+            var labels = marks.map(function (m) { return m >= 50 ? "Pass" : "Fail"; });
+            var answer = labels.join(", ");
+            var wrongPerms = shuffle([
+              [labels[1], labels[0], labels[2]].join(", "),
+              [labels[0], labels[2], labels[1]].join(", "),
+              labels.map(function () { return "Pass"; }).join(", "),
+              labels.map(function () { return "Fail"; }).join(", ")
+            ]);
+            return {
+              prompt: "FOR Count <- 1 TO 3\n    INPUT Mark\n    IF Mark >= 50 THEN\n        OUTPUT \"Pass\"\n    ELSE\n        OUTPUT \"Fail\"\n    ENDIF\nNEXT Count\n\nThe three Marks entered are " + marks.join(", ") + ". What are the three outputs, in order?",
+              answers: [answer], keywords: [new RegExp("^\\s*" + answer.replace(/, /g, "\\s*,\\s*") + "\\s*$", "i")],
+              distractors: dedupeDistractors(answer, wrongPerms),
+              note: marks.map(function (m, i) { return m + " " + (m >= 50 ? ">= 50 (Pass)" : "< 50 (Fail)"); }).join(", ") + " - one decision made per pass of the loop."
+            };
+          }
         },
         {
           id: "synth-for-if-order-2", category: "synthesis",
@@ -3193,7 +3710,24 @@
           answers: ["Warm, Cool, Cool"],
           keywords: [/warm.*cool.*cool/i],
           distractors: ["Cool, Warm, Warm", "Warm, Warm, Cool", "Cool, Cool, Warm", "Warm, Warm, Warm"],
-          note: "25 >= 20 (Warm), 12 < 20 (Cool), 18 < 20 (Cool)."
+          note: "25 >= 20 (Warm), 12 < 20 (Cool), 18 < 20 (Cool).",
+          randomize: function () {
+            var temps = randInts(3, -5, 35);
+            var labels = temps.map(function (t) { return t >= 20 ? "Warm" : "Cool"; });
+            var answer = labels.join(", ");
+            var wrongPerms = shuffle([
+              [labels[1], labels[0], labels[2]].join(", "),
+              [labels[0], labels[2], labels[1]].join(", "),
+              labels.map(function () { return "Warm"; }).join(", "),
+              labels.map(function () { return "Cool"; }).join(", ")
+            ]);
+            return {
+              prompt: "FOR Count <- 1 TO 3\n    INPUT Temperature\n    IF Temperature >= 20 THEN\n        OUTPUT \"Warm\"\n    ELSE\n        OUTPUT \"Cool\"\n    ENDIF\nNEXT Count\n\nThe three Temperatures entered are " + temps.join(", ") + ". What are the three outputs, in order?",
+              answers: [answer], keywords: [new RegExp("^\\s*" + answer.replace(/, /g, "\\s*,\\s*") + "\\s*$", "i")],
+              distractors: dedupeDistractors(answer, wrongPerms),
+              note: temps.map(function (t) { return t + " " + (t >= 20 ? ">= 20 (Warm)" : "< 20 (Cool)"); }).join(", ") + "."
+            };
+          }
         },
         {
           id: "synth-name-constructs", category: "synthesis",
@@ -3209,7 +3743,31 @@
           answers: ["Last one!"],
           keywords: [/last one/i],
           distractors: ["In stock", "3", "0", "Out of stock"],
-          note: "The final pass runs while Stock = 1, so the IF is true and outputs \"Last one!\"."
+          note: "The final pass runs while Stock = 1, so the IF is true and outputs \"Last one!\".",
+          // Two different question TYPES on the same randomised scenario, not
+          // just different numbers - "what does the last pass output" has
+          // the same answer regardless of the starting Stock, so on its own
+          // it would still be memorisable; asking how many times "In stock"
+          // is output instead genuinely depends on the random value.
+          randomize: function () {
+            var stock = randInt(2, 8);
+            var code = "DECLARE Stock : INTEGER\nStock <- " + stock + "\nWHILE Stock > 0\n    IF Stock = 1 THEN\n        OUTPUT \"Last one!\"\n    ELSE\n        OUTPUT \"In stock\"\n    ENDIF\n    Stock <- Stock - 1\nENDWHILE";
+            if (Math.random() < 0.5) {
+              return {
+                prompt: code + "\n\nWhat is output on the very last pass?",
+                answers: ["Last one!"], keywords: [/last one/i],
+                distractors: ["In stock", String(stock), "0", "Out of stock"],
+                note: "The final pass runs while Stock = 1 (whatever Stock started at), so the IF is true and outputs \"Last one!\"."
+              };
+            }
+            var inStockCount = stock - 1;
+            return {
+              prompt: code + "\n\nHow many times is \"In stock\" output in total?",
+              answers: [String(inStockCount)], keywords: [new RegExp("^\\s*" + inStockCount + "\\s*$")],
+              distractors: dedupeDistractors(inStockCount, [stock], function (i) { return inStockCount + i; }),
+              note: "Every pass except the last one (Stock = 1) outputs \"In stock\" - that's " + inStockCount + " passes out of " + stock + "."
+            };
+          }
         },
         {
           id: "synth-for-vs-while-choice", category: "synthesis",
@@ -3651,6 +4209,11 @@
   function report(cardId) {
     var card = cardsById[cardId];
     if (!card) return;
+    // Report the exact instance the student actually just answered (its real
+    // randomised prompt), not the card's static template - `current` is
+    // always the card this report() call is about, since it only ever fires
+    // right after that same card was checked.
+    var liveCard = current && current.cardId === cardId ? resolveCard(card, current.instance) : card;
     var s = run.streak[cardId] || 0;
     var masteredRun = !!run.masteredThisRun[cardId];
     var ever = !!everMastered[cardId];
@@ -3675,7 +4238,7 @@
         drillId: drillId,
         drillLabel: drill.title,
         cardId: cardId,
-        cardPrompt: card.prompt,
+        cardPrompt: liveCard.prompt,
         category: card.category || null,
         categoryLabel: categoryLabel(card.category),
         streak: s,
@@ -3771,14 +4334,44 @@
       run.queue = shuffle(drill.cards.map(function (c) { return c.id; }));
     }
     var cardId = run.queue.shift();
-    var card = cardsById[cardId];
+    // A card with a `randomize` function gets a fresh instance (new numbers,
+    // sometimes a whole new scenario) on every single draw - see
+    // resolveCard() just below. Anti-cheat, the same problem
+    // randomizeSetup() already solves for type:'code' cards: without this,
+    // a card's prompt/answer never changes, so a class shares the one right
+    // answer instead of the underlying reasoning (James, 2026-09-16:
+    // "students are memorising answers for code-based questions").
+    var instance = cardsById[cardId].randomize ? cardsById[cardId].randomize() : null;
+    var card = resolveCard(cardsById[cardId], instance);
     var set = buildOptionSet(card);
-    current = { cardId: cardId, set: set, checked: false, helpTimer: null };
+    current = { cardId: cardId, instance: instance, set: set, checked: false, helpTimer: null };
     renderCard();
   }
 
+  // Merges one freshly-generated instance (prompt/answers/keywords/
+  // distractors/note for THIS draw) over a randomized card's static base -
+  // every other plain-mode function reads through this instead of
+  // `cardsById[current.cardId]` directly, so buildOptionSet/matchAnswer/
+  // renderCard/onHelp/submitAnswer all automatically grade and display the
+  // SAME draw's values with no further changes needed anywhere else. A
+  // card with no `randomize` function passes through completely unchanged.
+  function resolveCard(card, instance) {
+    if (!instance) return card;
+    return {
+      id: card.id,
+      category: card.category,
+      type: card.type,
+      show: card.show,
+      prompt: instance.prompt,
+      answers: instance.answers,
+      keywords: instance.keywords,
+      distractors: instance.distractors,
+      note: instance.note != null ? instance.note : card.note
+    };
+  }
+
   function renderCard() {
-    var card = cardsById[current.cardId];
+    var card = resolveCard(cardsById[current.cardId], current.instance);
     var set = current.set;
     var learn = run.mode === "learn";
     // Multi-answer cards always stay multiple choice, even in text mode -
@@ -3873,7 +4466,7 @@
     // second look, rather than losing it in the full deck for a while.
     current.usedHelp = true;
     var set = current.set;
-    var card = cardsById[current.cardId];
+    var card = resolveCard(cardsById[current.cardId], current.instance);
     var textMode = run.answerMode === "text" && !set.multi;
     if (textMode) {
       var box = els.stage.querySelector("#help-box");
@@ -3907,7 +4500,7 @@
   function submitAnswer() {
     if (current.checked) return;
     var set = current.set;
-    var card = cardsById[current.cardId];
+    var card = resolveCard(cardsById[current.cardId], current.instance);
     var textMode = run.answerMode === "text" && !set.multi;
     var right;
     var fb;
