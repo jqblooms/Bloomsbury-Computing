@@ -486,18 +486,24 @@
           id: "symbols-binary", category: "bases",
           prompt: "What symbols does the binary number system use?",
           answers: ["0 and 1"],
+          // A bag-of-words check alone lets "0, 1 and 2" pass since 0 and 1
+          // are both present - excluded rules out every distractor that adds
+          // a digit binary doesn't use.
+          keywords: [{ required: [["0"], ["1"]], excluded: ["2", "3", "7", "9"] }],
           distractors: ["0, 1 and 2", "1 and 2", "0 to 9", "0 to 7", "−1 and 1", "0, 1, 2 and 3"]
         },
         {
           id: "symbols-denary", category: "bases",
           prompt: "What symbols does the denary number system use?",
           answers: ["0 to 9"],
+          keywords: [{ required: [["0"], ["9"]], excluded: ["10", "15", "a", "f"] }],
           distractors: ["0 to 10", "1 to 9", "1 to 10", "0 and 1", "0 to 9 and A to F", "0 to 15"]
         },
         {
           id: "symbols-hex", category: "bases",
           prompt: "What symbols does the hexadecimal number system use?",
           answers: ["0 to 9 and A to F"],
+          keywords: [{ required: [["0"], ["9"], ["a"], ["f"]], excluded: ["z", "e", "g", "15"] }],
           distractors: ["0 to 9 and A to Z", "0 to 15", "A to F only", "0 to 9 and A to E", "0 to 9 and A to G", "1 to 9 and A to F"]
         },
         {
@@ -524,18 +530,24 @@
           id: "add-0-0", category: "addition",
           prompt: "In binary addition, what is 0 + 0?",
           answers: ["0"],
+          // A bare "0" answer needs an exact match, not just "0 present
+          // somewhere" - otherwise "0 carry 1" (a different card's answer)
+          // would also pass here.
+          keywords: [{ required: [["0"]], excluded: ["carry", "1"] }],
           distractors: ["1", "10", "0 carry 1", "1 carry 1", "2", "0 carry 0"]
         },
         {
           id: "add-0-1", category: "addition",
           prompt: "In binary addition, what is 0 + 1?",
           answers: ["1"],
+          keywords: [{ required: [["1"]], excluded: ["carry", "0"] }],
           distractors: ["0", "10", "1 carry 1", "0 carry 1", "2", "11"]
         },
         {
           id: "add-1-0", category: "addition",
           prompt: "In binary addition, what is 1 + 0?",
           answers: ["1"],
+          keywords: [{ required: [["1"]], excluded: ["carry", "0"] }],
           distractors: ["0", "10", "1 carry 1", "0 carry 1", "2", "11"]
         },
         {
@@ -684,12 +696,18 @@
           id: "twos-negate", category: "twos",
           prompt: "How do you find the two's complement (the negative) of a positive binary number?",
           answers: ["Invert every bit, then add 1"],
+          // Bag-of-words alone lets "Invert every bit" (missing the add-1
+          // step), "Add 1, then invert" (right words, wrong order) and
+          // "...then subtract 1" (wrong verb) all pass - a regex enforces
+          // both the invert-before-add ORDER and the correct verb.
+          keywords: [/(invert|flip).*add\D*1/i],
           distractors: ["Invert every bit", "Add 1, then invert every bit", "Invert every bit, then subtract 1", "Swap the first and last bits", "Reverse the order of all the bits", "Add 1 to the number"]
         },
         {
           id: "twos-is-negative", category: "twos",
           prompt: "In two's complement, how can you tell a number is negative?",
           answers: ["The most significant bit is 1"],
+          keywords: [/most\s+significant\s+bit\s+is\s+1\b/i],
           distractors: ["The least significant bit is 1", "The most significant bit is 0", "It contains more 1s than 0s", "The last two bits are both 1", "There is a carry out of the top bit", "It is written with a minus sign in front"]
         },
         {
@@ -770,12 +788,16 @@
           id: "msb-meaning", category: "lsbmsb",
           prompt: "What does MSB stand for?",
           answers: ["Most Significant Bit"],
+          // The exact phrase, not just "most" and "bit" both present - every
+          // distractor here shares two of the three words with the answer.
+          keywords: [/most\s+significant\s+bit\b/i],
           distractors: ["Most Significant Byte", "Maximum Signed Byte", "Main System Bit", "Middle Significant Bit", "Master Sign Bit", "Most Simple Bit"]
         },
         {
           id: "lsb-meaning", category: "lsbmsb",
           prompt: "What does LSB stand for?",
           answers: ["Least Significant Bit"],
+          keywords: [/least\s+significant\s+bit\b/i],
           distractors: ["Least Significant Byte", "Lowest Stored Bit", "Last Sent Bit", "Low Speed Bus", "Left Side Bit", "Least Simple Bit"]
         },
         {
@@ -869,6 +891,10 @@
           id: "byte-place-values", category: "placevalues",
           prompt: "What are the 8 place values of a byte, written from left to right?",
           answers: ["128, 64, 32, 16, 8, 4, 2, 1"],
+          // An ordered list needs the exact sequence, not just "most of the
+          // same numbers present" - every distractor here shares 6+ of the
+          // 8 numbers with the real answer, just reordered/altered.
+          keywords: [/128\D+64\D+32\D+16\D+8\D+4\D+2\D+1\b/],
           distractors: [
             "1, 2, 4, 8, 16, 32, 64, 128",
             "256, 128, 64, 32, 16, 8, 4, 2",
@@ -881,6 +907,10 @@
           id: "bin-to-den", category: "converting",
           prompt: "How do you convert a binary number to denary?",
           answers: ["Add together the place values in every column that contains a 1"],
+          // Requires "add" to actually be paired with "column...1", not just
+          // present anywhere - a distractor that says "add" but multiplies,
+          // or says "column" but means the 0 columns, must still fail.
+          keywords: [/add.*column.*contains?.*\b1\b/i],
           distractors: [
             "Add together every single place value in the whole number",
             "Simply count up how many 1s appear in the number",
@@ -907,6 +937,9 @@
           id: "bin-to-hex", category: "hex",
           prompt: "How do you convert a binary number to hexadecimal?",
           answers: ["Split it into groups of 4 bits and convert each group to one hex digit"],
+          // Requires the literal "4" between "group" and "bit" - a groups-
+          // of-3/groups-of-8 distractor otherwise passes on word overlap.
+          keywords: [/group.*\b4\b.*bit/i],
           distractors: [
             "Split it into groups of 3 bits and convert each group to a digit",
             "Split it into groups of 8 bits and convert each group to a digit",
@@ -1074,7 +1107,13 @@
                         {
                                 required: [["language"]],
                                 optional: ["cover", "covering", "every", "all", "many", "character", "set", "symbol", "emoji"],
-                                need: 1
+                                need: 1,
+                                // "A character set covering European languages, but no
+                                // others" also hits "language"+"covering"+"character"+
+                                // "set", passing the gate above - it names a SPECIFIC
+                                // restricted region rather than "every"/"all"/"many",
+                                // so it needs its own exclusion.
+                                excluded: ["european", "only"]
                         }
                 ],
                 distractors: [
@@ -1141,6 +1180,9 @@
                 answers: [
                         "2 to the power of n"
                 ],
+                // "n multiplied by 2" and "2 multiplied by n" both contain
+                // "2" and "n" too - only a real exponent phrasing should pass.
+                keywords: [/2.*(power|\^|exponent).*n\b|n.*(power|\^|exponent).*2/i],
                 distractors: [
                         "n multiplied by 2",
                         "n squared",
@@ -1257,6 +1299,17 @@
                 answers: [
                         "More accurate, since fast wave changes are less likely to be missed"
                 ],
+                // "accurate" alone isn't enough since several distractors also
+                // say "accurate" while arguing the opposite direction or
+                // denying rate has any effect at all. A plain excluded:
+                // ["less",...] would also reject the REAL answer here (it
+                // legitimately says "less likely to be missed") - so this
+                // needs the phrase "more accurate" itself, not just the
+                // presence/absence of individual direction words, with "no"/
+                // "only" ruled out so "No more accurate..." and "...only if
+                // resolution is increased too" don't slip through on the
+                // same substring.
+                keywords: [/^(?!.*\bno\b)(?!.*\bonly\b).*\bmore\s+accurate\b/i],
                 distractors: [
                         "Less accurate, since fewer of the wave's changes can be captured",
                         "No more accurate, since accuracy only ever depends on resolution",
@@ -1272,6 +1325,14 @@
                 prompt: "What is the effect of increasing the sample rate on file size?",
                 answers: [
                         "Increases the file size, since more samples are stored per second"
+                ],
+                // "Decreases"/"no effect" distractors also say "file size" -
+                // require the actual direction word and exclude the opposite.
+                keywords: [
+                        {
+                                required: [["increase", "increases", "bigger", "larger", "more"]],
+                                excluded: ["decrease", "decreases", "smaller", "less", "no", "fewer", "never"]
+                        }
                 ],
                 distractors: [
                         "Decreases the file size, since each sample stores less detail",
@@ -1299,7 +1360,10 @@
                 keywords: [
                         {
                                 required: [["accurate", "accuracy", "precise", "precision"]],
-                                excluded: ["less", "fewer", "lower", "worse", "decrease", "no", "not", "none"]
+                                // "Accuracy only ever depends on the sample rate that was
+                                // used" contains "accuracy" too but denies resolution has
+                                // any effect at all - "rate" and "only" catch it.
+                                excluded: ["less", "fewer", "lower", "worse", "decrease", "no", "not", "none", "rate", "only"]
                         }
                 ],
                 distractors: [
@@ -1317,6 +1381,12 @@
                 prompt: "What is the effect of increasing sample resolution on file size?",
                 answers: [
                         "Increases the file size, since more bits are stored for every sample"
+                ],
+                keywords: [
+                        {
+                                required: [["increase", "increases", "bigger", "larger", "more"]],
+                                excluded: ["decrease", "decreases", "smaller", "less", "no", "fewer", "never", "halve", "halves", "rate"]
+                        }
                 ],
                 distractors: [
                         "Decreases the file size, since each sample needs fewer numbers",
@@ -1384,6 +1454,11 @@
                 answers: [
                         "Each pixel's colour is stored as binary, using bits set by the colour depth"
                 ],
+                // "Only each pixel's position is stored, but never its own
+                // colour" also has "pixel"+"stored"+"colour" (as a negated
+                // word) - require "colour" AND "depth"/"bit" together, which
+                // that distractor and the others never both have.
+                keywords: [/colou?r.*(depth|bits?)|(depth|bits?).*colou?r/i],
                 distractors: [
                         "Each pixel is converted into a character taken from a text set",
                         "Each pixel is stored only as a denary number, never as binary",
@@ -1449,6 +1524,12 @@
                 answers: [
                         "Captures more detail, so the finished image looks sharper overall"
                 ],
+                keywords: [
+                        {
+                                required: [["detail", "sharp", "sharper", "clear", "clearer"]],
+                                excluded: ["less", "blur", "blurry", "blurrier", "no", "only", "colour", "color"]
+                        }
+                ],
                 distractors: [
                         "Captures less detail, so the finished image looks blurrier overall",
                         "Has no effect on quality, since resolution only affects file size",
@@ -1464,6 +1545,12 @@
                 prompt: "What is the effect of increasing an image's resolution on its file size?",
                 answers: [
                         "Increases the file size, since there are now more pixels to store"
+                ],
+                keywords: [
+                        {
+                                required: [["increase", "increases", "bigger", "larger", "more"]],
+                                excluded: ["decrease", "decreases", "smaller", "less", "no", "fewer", "never", "halve", "halves"]
+                        }
                 ],
                 distractors: [
                         "Decreases the file size, since each pixel needs fewer bits stored",
@@ -1481,6 +1568,12 @@
                 answers: [
                         "More colours become possible, giving a more realistic final image"
                 ],
+                keywords: [
+                        {
+                                required: [["more"]],
+                                excluded: ["fewer", "less", "no", "only", "same"]
+                        }
+                ],
                 distractors: [
                         "Fewer colours become possible, giving a less realistic final image",
                         "Has no effect on the colours the image is able to show at all",
@@ -1496,6 +1589,12 @@
                 prompt: "What is the effect of increasing colour depth on file size?",
                 answers: [
                         "Increases the file size, since more bits are stored for every pixel"
+                ],
+                keywords: [
+                        {
+                                required: [["increase", "increases", "bigger", "larger", "more"]],
+                                excluded: ["decrease", "decreases", "smaller", "less", "no", "fewer", "never", "halve", "halves"]
+                        }
                 ],
                 distractors: [
                         "Decreases the file size, since each pixel needs fewer bits stored",
@@ -1630,7 +1729,16 @@
           id: "fst-rule", category: "fstext",
           prompt: "Describe how to calculate the file size, in bits, of a text file.",
           answers: ["Multiply the number of characters by the bits used per character"],
-          keywords: [{ required: [["character", "characters", "char"], ["bit", "bits", "byte", "bytes"]], optional: ["multiply", "multiplied", "times", "x", "each", "per", "every"], need: 1 }],
+          // The optional/need shape let "add"/"divide the number of
+          // characters..." through (the required words alone don't say
+          // MULTIPLY), let "...number of WORDS..." through (it still says
+          // "per character" at the end), and let "...by the number of
+          // lines"/"...by the colour depth" through (both still say
+          // "number of characters" and share several other words) - a
+          // regex anchors "multiply", "number of character(s)" AND
+          // "bits...per character" as one ordered chain, which none of
+          // those distractors have all three of.
+          keywords: [/multiply.*number\s+of\s+characters?.*bits?.*per\s*character/i],
           distractors: [
             "Multiply the number of words by the bits used per character",
             "Add the number of characters to the bits used per character",
@@ -1715,6 +1823,11 @@
           id: "y9-why-binary", category: "bases",
           prompt: "Why do computers store data using binary?",
           answers: ["Every component inside a computer is a switch that is either electrically on or off"],
+          // "Every component...can hold ten separate voltage levels..." also
+          // shares "every"/"component"/"computer"/"one"/"each" with the real
+          // answer - "switch" and "on"/"off" are the actual distinguishing
+          // concept.
+          keywords: [{ required: [["switch"], ["on", "off"]] }],
           distractors: [
             "Every component inside a computer can hold ten separate voltage levels at once, one for each denary digit",
             "Binary numbers always take up less space on a page than denary numbers",
@@ -1767,6 +1880,7 @@
           id: "y9-binary-columns-list", category: "placevalues",
           prompt: "What are the 8 place values of a byte, written from left to right?",
           answers: ["128, 64, 32, 16, 8, 4, 2, 1"],
+          keywords: [/128\D+64\D+32\D+16\D+8\D+4\D+2\D+1\b/],
           distractors: [
             "256, 128, 64, 32, 16, 8, 4, 2",
             "128, 64, 32, 16, 8, 4, 2, 0",
@@ -1828,6 +1942,7 @@
           id: "y9-conv-bin-to-den-method", category: "converting",
           prompt: "How do you convert a binary number to denary?",
           answers: ["Add together the place values of every column that has a 1 in it"],
+          keywords: [/add.*column.*has.*\b1\b/i],
           distractors: [
             "Add together the place values of every column that has a 0 in it",
             "Multiply every column's place value by 2, whether it is a 1 or a 0",
@@ -1877,6 +1992,7 @@
           id: "y9-conv-hex-to-den-method", category: "converting",
           prompt: "How do you convert a 2-digit hex number to denary?",
           answers: ["Multiply the left digit by 16, then add the right digit"],
+          keywords: [/multiply\D*(the\s+)?left\D*16.*add\D*(the\s+)?right/i],
           distractors: [
             "Multiply the right digit by 16, then add the left digit",
             "Add the left digit to the right digit, then multiply the total by 16",
@@ -1889,6 +2005,7 @@
           id: "y9-conv-den-to-hex-method", category: "converting",
           prompt: "How do you convert a denary number to a 2-digit hex number?",
           answers: ["Divide by 16 for the left digit, then use the remainder as the right digit"],
+          keywords: [/divide\D*16.*left.*remainder.*right/i],
           distractors: [
             "Divide by 10 for the left digit, then use the remainder as the right digit",
             "Multiply by 16 for the left digit, then subtract for the right digit",
@@ -1982,6 +2099,9 @@
           id: "y9-add-direction", category: "addition",
           prompt: "Which direction do you work when adding two binary numbers?",
           answers: ["Right to left, like denary addition"],
+          // "Right to left, but only for the first four columns" has the
+          // right phrase but wrongly narrows it to just some columns.
+          keywords: [/^(?!.*\bonly\b).*right\s+to\s+left/i],
           distractors: [
             "Left to right, the opposite of denary addition",
             "Whichever direction has fewer 1s first",
@@ -1994,6 +2114,7 @@
           id: "y9-add-carry-move", category: "addition",
           prompt: "What do you do with a carry that comes out of a column?",
           answers: ["Add it into the next column to the left"],
+          keywords: [{ required: [["left"]], excluded: ["right"] }],
           distractors: [
             "Add it into the next column to the right",
             "Ignore it unless the final answer is wrong",
@@ -2019,6 +2140,7 @@
           id: "y9-carry-chain-stop", category: "addition",
           prompt: "What makes a carry chain stop?",
           answers: ["Landing on a column where both bits are 0"],
+          keywords: [{ required: [["0"]], excluded: ["1"] }],
           distractors: [
             "Landing on a column where both bits are 1",
             "Reaching the leftmost column of the number",
@@ -2044,6 +2166,7 @@
           id: "y9-what-is-hex", category: "hex",
           prompt: "What is hexadecimal?",
           answers: ["A number system with 16 possible digits, using 0-9 then A-F"],
+          keywords: [{ required: [["16"], ["9"], ["f"]], excluded: ["8", "10", "p"] }],
           distractors: [
             "A number system with 8 possible digits, using 0-7 only",
             "A number system with 16 possible digits, using only the letters A-P",
@@ -2056,6 +2179,7 @@
           id: "y9-why-hex", category: "hex",
           prompt: "Why is hexadecimal used instead of binary?",
           answers: ["One hex digit represents exactly 4 bits, so a byte fits in just 2 hex digits"],
+          keywords: [/represents?\D*4\D*bits?.*\b2\b.*hex\s*digit/i],
           distractors: [
             "One hex digit represents exactly 2 bits, so a whole byte needs 4 hex digits instead of 2",
             "Hexadecimal uses less electricity to store than binary does",
@@ -2621,14 +2745,20 @@
           legend: "io",
           prompt: "What belongs inside the sloping input or output symbol?",
           answers: ["Information entering or leaving the program"],
-          keywords: [new RegExp("^(?=.*\\b(input|entering|received|output|leaving|displayed|said)\\b).*$", "i")],
+          // Includes "going" so the card's own hint ("Information going in
+          // or out") is itself accepted, not just the answers[] wording -
+          // a student who reads the hint and types a close paraphrase of
+          // IT, not the full formal answer, should still pass.
+          keywords: [new RegExp("^(?=.*\\b(input|entering|received|output|leaving|displayed|said|going)\\b).*$", "i")],
           distractors: ["Only movement instructions","Only comparison operators","The end of the algorithm","A connector with no label"],
           hint: "Information going in or out",
           note: "The input or output symbol is used when information enters the program or when the program communicates a result. Ask and Say are examples." },
         { id: "y7f1-06", category: "y7-reading",
           prompt: "What do the arrows in a flowchart tell the reader?",
           answers: ["The order and direction in which the instructions run"],
-          keywords: [new RegExp("^(?=.*\\b(order|direction|next|sequence)\\b)(?=.*\\b(instruction|instructions|step|steps|run|flow)\\b).*$", "i")],
+          // Second group includes "execution"/"execute" so the card's own
+          // hint ("Order and direction of execution") is itself accepted.
+          keywords: [new RegExp("^(?=.*\\b(order|direction|next|sequence)\\b)(?=.*\\b(instruction|instructions|step|steps|run|flow|execution|execute)\\b).*$", "i")],
           distractors: ["The distance the sprite moves","The value stored in a variable","The colour of each symbol","The final answer only"],
           hint: "Order and direction of execution",
           note: "Follow the arrows from Start one at a time. Each arrow tells you which symbol is reached next, including when a path loops back." },
@@ -2740,7 +2870,13 @@
         { id: "y7f2-01", category: "y7-inputs",
           prompt: "What is an input?",
           answers: ["Information sent into a computer or program"],
-          keywords: [new RegExp("^(?=.*\\binformation|data|signal|key\\b)(?=.*\\binto|enter|entered|sent|received\\b).*$", "i")],
+          // Was missing the grouping parens around each alternation (a real
+          // bug in its own right - "\binformation|data|signal|key\b" only
+          // ever anchored the FIRST and LAST alternatives, not "data"/
+          // "signal" in the middle), and neither lookahead recognised
+          // "going", so the card's own hint ("Information going in") failed
+          // its own check.
+          keywords: [new RegExp("^(?=.*\\b(information|data|signal|key)\\b)(?=.*\\b(into|enter|entered|sent|received|going)\\b).*$", "i")],
           distractors: ["Information produced by a computer","The final instruction only","A repeated process","A line joining two shapes"],
           hint: "Information going in",
           note: "An input is information that enters a computer or program. Pressing a keyboard key is an input because the program receives the key state." },
@@ -2993,7 +3129,10 @@
         { id: "y7f3-19", category: "y7-complete",
           prompt: "Does a CALL block contain all of the sub-routine instructions itself? Explain briefly.",
           answers: ["No, it names the sub-routine and hands control to its separate flowchart"],
-          keywords: [new RegExp("^(?=.*\\b(no|does not|doesn.t)\\b)(?=.*\\b(name|named|jump|jumps|control|separate)\\b).*$", "i")],
+          // "names" (present-tense verb, as in the card's own hint "it just
+          // names it") was missing - only "name"/"named" matched as whole
+          // words, so the hint's own wording failed this check.
+          keywords: [new RegExp("^(?=.*\\b(no|does not|doesn.t)\\b)(?=.*\\b(name|names|named|jump|jumps|control|separate)\\b).*$", "i")],
           distractors: ["Yes, it copies every instruction","Yes, but only for loops","No, it ends the whole program","No, it deletes the sub-routine"],
           hint: "No - it just names it",
           note: "The CALL block is a reference to the named reusable flowchart. The actual instructions remain in the sub-routine definition." },
@@ -4597,7 +4736,15 @@
     var s = String(text == null ? "" : text).toLowerCase();
     s = s.replace(/\u2212/g, "-"); // the real minus sign used in card text, vs the ASCII hyphen a student types
     s = s.replace(/\bnegative\b/g, " neg ").replace(/\bminus\b/g, " neg ");
-    s = s.replace(/-\s*(\d+)/g, " neg$1 ");
+    // A hyphen immediately after a digit is a RANGE separator ("0-9",
+    // "0-15", "1-9 and A-F"), not a minus sign - only a hyphen at the start
+    // of the string or after whitespace/another operator is really negating
+    // the number that follows. Without the "not preceded by a digit" guard
+    // here, "0-9" tokenized as "0" + "neg9" instead of "0" + "9", silently
+    // breaking matchAnswer for every card whose answer names a digit range
+    // (a real, confirmed bug - found via a Node harness auditing every
+    // card's own answers against matchAnswer, not a hypothetical).
+    s = s.replace(/(^|[^0-9])-\s*(\d+)/g, "$1 neg$2 ");
     s = s.replace(/\bneg\s+(\d+)/g, " neg$1 ");
     var raw = s.match(/[a-z0-9]+/g) || [];
     return collapseNumberWords(raw).map(stem);
