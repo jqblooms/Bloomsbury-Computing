@@ -57,7 +57,15 @@
   .progress .bar span { display: block; height: 100%; background: var(--good); width: 0%; transition: width .3s; }
 
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px; box-shadow: 0 1px 2px rgba(20,30,60,.04); }
-  .card .prompt { font-size: 1.06rem; font-weight: 700; margin: 0 0 4px; }
+  .card .prompt { font-size: 1.06rem; font-weight: 700; margin: 0 0 4px; white-space: pre-wrap; }
+  /* A prompt with embedded pseudocode (a real newline in card.prompt, e.g. the
+     Y8 algorithms drills' trace/output questions) gets the same monospace
+     treatment as a type:'code' card's .code-given block, so indentation and
+     line breaks are both visible and read as code, not as run-together
+     prose. Added via JS in renderCard() as a class, not baked into the
+     plain .prompt rule above, so a normal one-line question keeps its
+     usual proportional font. */
+  .card .prompt.has-code { font: 600 .95rem/1.5 "SFMono-Regular", Consolas, monospace; }
   .card .hint-kind { font-size: .76rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 12px; }
   .options { display: grid; gap: 8px; margin: 6px 0 4px; }
   .opt {
@@ -3807,9 +3815,10 @@
     // Submit, since the student has to finish picking several options
     // first. Either way, once marked, it moves on by itself - no "click
     // Next" step either.
+    var promptHasCode = card.prompt.indexOf("\n") !== -1;
     els.stage.innerHTML =
       '<div class="card">' +
-      '<p class="prompt">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
+      '<p class="prompt' + (promptHasCode ? " has-code" : "") + '">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
       '<div class="hint-kind">' + kind + "</div>" +
       bodyHtml +
       '<div class="feedback" id="fb"></div>' +
@@ -4367,10 +4376,11 @@
       streakHtml = '<span class="streakdots" title="Streak toward mastering this type of question">' + dots + "</span>";
     }
     var given = codeGivenHtml(current.setup);
+    var promptHasCode = card.prompt.indexOf("\n") !== -1;
 
     els.stage.innerHTML =
       '<div class="card">' +
-      '<p class="prompt">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
+      '<p class="prompt' + (promptHasCode ? " has-code" : "") + '">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
       (given ? '<div class="code-given">' + escapeHtml(given) + "</div>" : "") +
       '<textarea class="code-textarea" id="code-input" spellcheck="false" autocomplete="off" placeholder="Type your pseudocode here..."></textarea>' +
       (learn ? '<div class="code-help-box" id="code-help-box"></div>' : "") +
