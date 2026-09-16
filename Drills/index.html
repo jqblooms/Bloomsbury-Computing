@@ -2383,6 +2383,670 @@
         }
       ]
     },
+    "y8-algorithms-l1": {
+      title: "Year 8, L1: Writing Cambridge Pseudocode",
+      subtitle: "Cambridge Pseudocode",
+      cards: [
+        {
+          id: "l1-trace-1", category: "seqtrace",
+          prompt: "Number <- 5\nNumber <- Number + 3\nOUTPUT Number\n\nWhat does this output?",
+          answers: ["8"],
+          keywords: [/^\s*8\s*$/],
+          distractors: ["5","3","35","53"],
+          note: "5 + 3 = 8."
+        },
+        {
+          id: "l1-trace-2", category: "seqtrace",
+          prompt: "Number <- 10\nNumber <- Number - 4\nOUTPUT Number\n\nWhat does this output?",
+          answers: ["6"],
+          keywords: [/^\s*6\s*$/],
+          distractors: ["10","4","14","-6"],
+          note: "10 - 4 = 6."
+        },
+        {
+          id: "l1-trace-3", category: "seqtrace",
+          prompt: "A <- 2\nB <- 5\nA <- A + B\nOUTPUT A\n\nWhat does this output?",
+          answers: ["7"],
+          keywords: [/^\s*7\s*$/],
+          distractors: ["2","5","10","25"],
+          note: "A becomes 2 + 5 = 7. B itself never changes."
+        },
+        {
+          id: "l1-trace-4", category: "seqtrace",
+          prompt: "Number <- 4\nNumber <- Number * 3\nNumber <- Number + 1\nOUTPUT Number\n\nWhat does this output?",
+          answers: ["13"],
+          keywords: [/^\s*13\s*$/],
+          distractors: ["12","15","4","43"],
+          note: "4 * 3 = 12, then 12 + 1 = 13. Each line uses the value Number holds at that moment."
+        },
+        {
+          id: "l1-trace-5", category: "seqtrace",
+          prompt: "A <- 6\nB <- 2\nA <- A * B\nB <- A + 1\nOUTPUT B\n\nWhat does this output?",
+          answers: ["13"],
+          keywords: [/^\s*13\s*$/],
+          distractors: ["12","6","2","8"],
+          note: "A becomes 6 * 2 = 12 first, then B becomes 12 + 1 = 13 - B uses the NEW value of A."
+        },
+        {
+          id: "l1-syntax-arrow", category: "seqsyntax",
+          prompt: "Which symbol stores the value on the right in the variable on the left?",
+          answers: ["<-"],
+          keywords: [/^\s*<-\s*$|^\s*(assignment )?arrow\s*$/i],
+          distractors: ["=","->","==",":"],
+          note: "Cambridge pseudocode uses <-, never a plain =, for assignment."
+        },
+        {
+          id: "l1-syntax-output", category: "seqsyntax",
+          prompt: "Which keyword displays a value to the user?",
+          answers: ["OUTPUT"],
+          keywords: [/^\s*output\s*$/i],
+          distractors: ["INPUT","DISPLAY","PRINT","SHOW"],
+          note: "OUTPUT is the Cambridge pseudocode keyword for displaying a value - not DISPLAY, PRINT or SHOW."
+        },
+        {
+          id: "l1-syntax-input", category: "seqsyntax",
+          prompt: "Which keyword receives a value typed in by the user?",
+          answers: ["INPUT"],
+          keywords: [/^\s*input\s*$/i],
+          distractors: ["OUTPUT","READ","GET","ASK"],
+          note: "INPUT is the Cambridge pseudocode keyword for receiving a value - not READ, GET or ASK."
+        },
+        {
+          id: "l1-syntax-order", category: "seqsyntax",
+          prompt: "In a sequence, what order do the instructions run in?",
+          answers: ["Top to bottom, one line at a time"],
+          keywords: [/top.*(to|down).*bottom|first.*to.*last/i],
+          distractors: ["Whichever order finishes fastest","Bottom to top","All at the same time","In a random order"],
+          note: "A sequence is an ordered set of instructions - every line runs once, in the order it is written, top before bottom."
+        },
+        {
+          id: "l1-syntax-fix", category: "seqsyntax",
+          prompt: "A student writes: Total = Price * Quantity\n\nWhat is wrong with this line?",
+          answers: ["It should use <- instead of ="],
+          keywords: [/(?=.*(<-|arrow))(?=.*(instead|not|should|wrong))/i],
+          distractors: ["Nothing is wrong with it","It should use OUTPUT instead of Total","Price and Quantity should be swapped","It needs an INPUT line first"],
+          note: "Cambridge pseudocode assigns with <-, never a plain =."
+        },
+        {
+          id: "l1-write-1", category: "seqwrite",
+          prompt: "Write pseudocode that asks for a Length and a Width, works out the Area, then displays the Area.",
+          answers: ["INPUT Length, INPUT Width, Area <- Length * Width, OUTPUT Area"],
+          keywords: [/(?=.*input\s+length)(?=.*input\s+width)(?=.*area\s*<-\s*length\s*\*\s*width)(?=.*output\s+area)/i],
+          distractors: ["Area <- Length * Width only, with no INPUT or OUTPUT","OUTPUT Length * Width with no variable","INPUT Area","PRINT Area <- Length * Width"],
+          note: "Four lines: two INPUTs, one calculation with <-, one OUTPUT."
+        },
+        {
+          id: "l1-write-2", category: "seqwrite",
+          prompt: "Number <- 3\nNumber <- Number + 4\nWhat single value does OUTPUT Number display if a third line, OUTPUT Number, is added right after line 2?",
+          answers: ["7"],
+          keywords: [/^\s*7\s*$/],
+          distractors: ["3","4","34","12"],
+          note: "3 + 4 = 7."
+        },
+        {
+          id: "l1-write-3", category: "seqwrite",
+          prompt: "An algorithm asks for a Price and a Quantity, then works out and displays the Total. If Price is 3 and Quantity is 7, what should it display?",
+          answers: ["21"],
+          keywords: [/^\s*21\s*$/],
+          distractors: ["10","3","7","73"],
+          note: "3 * 7 = 21 - Total <- Price * Quantity."
+        },
+        {
+          id: "l1-write-4", category: "seqwrite",
+          prompt: "An algorithm asks for the number of Tickets and the PricePerTicket, then works out and displays the Cost. If Tickets is 4 and PricePerTicket is 6, what should it display?",
+          answers: ["24"],
+          keywords: [/^\s*24\s*$/],
+          distractors: ["10","4","6","46"],
+          note: "4 * 6 = 24 - Cost <- Tickets * PricePerTicket."
+        },
+        {
+          id: "l1-write-5", category: "seqwrite",
+          prompt: "Which line must come LAST in a sequence that inputs a value, calculates a result, then shows it?",
+          answers: ["The OUTPUT line"],
+          keywords: [/output/i],
+          distractors: ["The INPUT line","The calculation line","Any line, order does not matter","A DECLARE line"],
+          note: "The result must be worked out before it can be displayed, so OUTPUT comes after the calculation."
+        },
+        {
+          id: "l1-var-text", category: "variables",
+          prompt: "How do you store the text Amina in a variable called Name?",
+          answers: ["Name <- \"Amina\""],
+          keywords: [/name\s*<-\s*"amina"/i],
+          distractors: ["Name <- Amina","Name = \"Amina\"","\"Name\" <- Amina","Name <- Amina;"],
+          note: "Text values are written inside quotation marks: Name <- \"Amina\"."
+        },
+        {
+          id: "l1-var-number", category: "variables",
+          prompt: "How do you store the number 12 in a variable called Age?",
+          answers: ["Age <- 12"],
+          keywords: [/age\s*<-\s*12\s*$/i],
+          distractors: ["Age <- \"12\"","Age = 12","12 <- Age","Age <- 12;"],
+          note: "A number is stored with no quotation marks - quotes are only for text."
+        },
+        {
+          id: "l1-var-quotes", category: "variables",
+          prompt: "A student writes Hobby <- Football (no quotation marks). What is wrong?",
+          answers: ["Football is text, so it needs quotation marks"],
+          keywords: [/(?=.*(text|word|string))(?=.*(quot))/i],
+          distractors: ["Nothing is wrong with it","Hobby should be a number instead","It should use OUTPUT instead of <-","Football should be written in capitals"],
+          note: "Text values always need quotation marks: Hobby <- \"Football\"."
+        },
+        {
+          id: "l1-var-name", category: "variables",
+          prompt: "A program stores a value under a name it chooses, so it can be used again later. What is this called?",
+          answers: ["A variable"],
+          keywords: [/variable/i],
+          distractors: ["A sequence","A function","An output","A loop"],
+          note: "A variable is a named place where a program stores a value."
+        },
+        {
+          id: "l1-var-reassign", category: "variables",
+          prompt: "Age <- 12\nAge <- Age + 1\nOUTPUT Age\n\nWhat does this output?",
+          answers: ["13"],
+          keywords: [/^\s*13\s*$/],
+          distractors: ["12","1","112","121"],
+          note: "Age is reassigned: 12 + 1 = 13. The old value of 12 is overwritten."
+        }
+      ]
+    },
+    "y8-algorithms-l2": {
+      title: "Year 8, L2: Selection in Cambridge Pseudocode",
+      subtitle: "Cambridge Pseudocode",
+      cards: [
+        {
+          id: "l2-trace-1", category: "seltrace",
+          prompt: "IF Score >= 60 THEN\n    OUTPUT \"Pass\"\nELSE\n    OUTPUT \"Fail\"\nENDIF\n\nScore is 45. What is the output?",
+          answers: ["Fail"],
+          keywords: [/fail/i],
+          distractors: ["Pass","45","60","True"],
+          note: "45 >= 60 is false, so the ELSE branch runs and outputs \"Fail\"."
+        },
+        {
+          id: "l2-trace-2", category: "seltrace",
+          prompt: "IF Score >= 60 THEN\n    OUTPUT \"Pass\"\nELSE\n    OUTPUT \"Fail\"\nENDIF\n\nScore is 72. What is the output?",
+          answers: ["Pass"],
+          keywords: [/pass/i],
+          distractors: ["Fail","72","60","True"],
+          note: "72 >= 60 is true, so the IF branch runs and outputs \"Pass\"."
+        },
+        {
+          id: "l2-trace-3", category: "seltrace",
+          prompt: "IF Temperature >= 20 THEN\n    OUTPUT \"Warm\"\nELSE\n    OUTPUT \"Cool\"\nENDIF\n\nTemperature is 20. What is the output?",
+          answers: ["Warm"],
+          keywords: [/warm/i],
+          distractors: ["Cool","20","True","False"],
+          note: "20 >= 20 is true (>= includes equal), so it outputs \"Warm\"."
+        },
+        {
+          id: "l2-trace-4", category: "seltrace",
+          prompt: "IF Age < 13 THEN\n    OUTPUT \"Junior\"\nELSE\n    OUTPUT \"Senior\"\nENDIF\n\nAge is 13. What is the output?",
+          answers: ["Senior"],
+          keywords: [/senior/i],
+          distractors: ["Junior","13","True","False"],
+          note: "13 < 13 is false (13 is not less than 13), so the ELSE branch runs."
+        },
+        {
+          id: "l2-trace-5", category: "seltrace",
+          prompt: "IF Height >= 150 THEN\n    OUTPUT \"Tall\"\nELSE\n    OUTPUT \"Short\"\nENDIF\n\nHeight is 149. Which branch runs, IF or ELSE?",
+          answers: ["ELSE"],
+          keywords: [/else/i],
+          distractors: ["IF","Both","Neither"],
+          note: "149 >= 150 is false, so exactly one branch runs - the ELSE branch."
+        },
+        {
+          id: "l2-syntax-endif", category: "selsyntax",
+          prompt: "Which keyword closes an IF block in Cambridge pseudocode?",
+          answers: ["ENDIF"],
+          keywords: [/^\s*endif\s*$/i],
+          distractors: ["ENDFOR","STOP","CLOSE","END"],
+          note: "ENDIF closes an IF block - not ENDFOR (that closes a loop) or a plain END."
+        },
+        {
+          id: "l2-syntax-then", category: "selsyntax",
+          prompt: "What keyword must appear at the end of an IF line, after the condition?",
+          answers: ["THEN"],
+          keywords: [/^\s*then\s*$/i],
+          distractors: ["DO","GO","START",":"],
+          note: "Cambridge pseudocode IF lines end in THEN, with no colon and no \"DO\"."
+        },
+        {
+          id: "l2-syntax-else", category: "selsyntax",
+          prompt: "Does the ELSE line have its own condition?",
+          answers: ["No, ELSE has no condition of its own"],
+          keywords: [/no/i],
+          distractors: ["Yes, the same condition as IF","Yes, the opposite of IF written out","Only if the IF condition is true"],
+          note: "ELSE just means \"otherwise\" - it never repeats or negates the IF condition itself."
+        },
+        {
+          id: "l2-syntax-structure", category: "selsyntax",
+          prompt: "Put these in the correct order: ENDIF, IF ... THEN, ELSE, the two branches' instructions.",
+          answers: ["IF ... THEN, then its instructions, ELSE, then its instructions, ENDIF"],
+          keywords: [/if.*then.*else.*endif/i],
+          distractors: ["ENDIF, IF ... THEN, ELSE","ELSE, IF ... THEN, ENDIF","IF ... THEN, ENDIF, ELSE"],
+          note: "IF...THEN starts the block, ELSE marks the other branch, ENDIF closes it - always in that order."
+        },
+        {
+          id: "l2-syntax-nocolon", category: "selsyntax",
+          prompt: "A student writes: IF Score >= 50: \n\nWhat is wrong with this line?",
+          answers: ["It should end in THEN, not a colon"],
+          keywords: [/then/i],
+          distractors: ["Nothing is wrong with it","It should end in DO","Score should be in quotation marks","It needs ENDIF at the end of the same line"],
+          note: "Cambridge pseudocode has no colon on an IF line - it ends with THEN."
+        },
+        {
+          id: "l2-op-gte", category: "seloperators",
+          prompt: "Which comparison operator means \"50 or more\"?",
+          answers: [">="],
+          keywords: [/^\s*>=\s*$|greater than or equal/i],
+          distractors: [">","<","<=","="],
+          note: ">= means greater than OR equal to."
+        },
+        {
+          id: "l2-op-lt", category: "seloperators",
+          prompt: "Which comparison operator means \"under 13\" (strictly less than)?",
+          answers: ["<"],
+          keywords: [/^\s*<\s*$|less than(?! or equal)/i],
+          distractors: ["<=",">",">=","="],
+          note: "A plain < excludes 13 itself - \"under 13\" means strictly less than."
+        },
+        {
+          id: "l2-op-lte", category: "seloperators",
+          prompt: "Which comparison operator means \"150 or less\"?",
+          answers: ["<="],
+          keywords: [/^\s*<=\s*$|less than or equal/i],
+          distractors: ["<",">",">=","="],
+          note: "<= means less than OR equal to."
+        },
+        {
+          id: "l2-op-eq", category: "seloperators",
+          prompt: "Which operator checks whether two values are exactly equal?",
+          answers: ["="],
+          keywords: [/^\s*=\s*$/],
+          distractors: ["<-","==","<=>","<>"],
+          note: "Cambridge pseudocode compares equality with a single =, reserving <- for assignment."
+        },
+        {
+          id: "l2-op-choose", category: "seloperators",
+          prompt: "A rule says \"Free Delivery if the Total is 50 or more\". Which operator goes in IF Total ___ 50 THEN?",
+          answers: [">="],
+          keywords: [/^\s*>=\s*$/],
+          distractors: [">","<","<=","="],
+          note: "\"50 or more\" includes exactly 50, so it needs >=, not a plain >."
+        },
+        {
+          id: "l2-write-1", category: "selwrite",
+          prompt: "Write pseudocode that asks for a Score, outputs \"Pass\" if Score is 50 or more, otherwise outputs \"Fail\". If Score is 42, what does it display?",
+          answers: ["Fail"],
+          keywords: [/fail/i],
+          distractors: ["Pass","42","50","True"],
+          note: "42 >= 50 is false, so it outputs \"Fail\"."
+        },
+        {
+          id: "l2-write-2", category: "selwrite",
+          prompt: "Write pseudocode that asks for an Age, outputs \"Junior\" if Age is under 13, otherwise outputs \"Senior\". If Age is 10, what does it display?",
+          answers: ["Junior"],
+          keywords: [/junior/i],
+          distractors: ["Senior","10","13","True"],
+          note: "10 < 13 is true, so it outputs \"Junior\"."
+        },
+        {
+          id: "l2-write-3", category: "selwrite",
+          prompt: "Write pseudocode that asks for a Height, outputs \"Tall\" if Height is 150 or more, otherwise outputs \"Short\". If Height is 160, what does it display?",
+          answers: ["Tall"],
+          keywords: [/tall/i],
+          distractors: ["Short","160","150","True"],
+          note: "160 >= 150 is true, so it outputs \"Tall\"."
+        },
+        {
+          id: "l2-write-4", category: "selwrite",
+          prompt: "An algorithm asks for Price and Quantity, works out the Total, then outputs \"Free Delivery\" if Total is 50 or more, otherwise \"Delivery Charge Applies\". If Price is 10 and Quantity is 6, what does it display?",
+          answers: ["Free Delivery"],
+          keywords: [/free delivery/i],
+          distractors: ["Delivery Charge Applies","60","16","50"],
+          note: "Total = 10 * 6 = 60, and 60 >= 50 is true, so it outputs \"Free Delivery\"."
+        },
+        {
+          id: "l2-write-5", category: "selwrite",
+          prompt: "An algorithm asks for NumA, NumB and NumC, adds all three into a Total, then outputs \"High\" if Total is 100 or more, otherwise \"Low\". If NumA is 20, NumB is 25 and NumC is 30, what does it display?",
+          answers: ["Low"],
+          keywords: [/low/i],
+          distractors: ["High","75","100","20"],
+          note: "Total = 20 + 25 + 30 = 75, and 75 >= 100 is false, so it outputs \"Low\"."
+        }
+      ]
+    },
+    "y8-algorithms-l3": {
+      title: "Year 8, L3: Arrays",
+      subtitle: "Cambridge Pseudocode",
+      cards: [
+        {
+          id: "l3-basics-declare", category: "arraybasics",
+          prompt: "Write the DECLARE line for an array called Scores that holds 4 integers, positions 1 to 4.",
+          answers: ["DECLARE Scores : ARRAY[1:4] OF INTEGER"],
+          keywords: [/declare\s+scores\s*:\s*array\[1:4\]\s*of\s*integer/i],
+          distractors: ["DECLARE Scores : ARRAY[0:4] OF INTEGER","Scores <- ARRAY[1:4]","DECLARE Scores : ARRAY[1:3] OF INTEGER","ARRAY Scores : DECLARE[1:4]"],
+          note: "ARRAY[1:4] OF INTEGER gives exactly 4 positions, numbered 1 to 4."
+        },
+        {
+          id: "l3-basics-start", category: "arraybasics",
+          prompt: "What position does a Cambridge pseudocode array start counting from?",
+          answers: ["1"],
+          keywords: [/^\s*1\s*$/],
+          distractors: ["0","-1","It depends on the array"],
+          note: "Cambridge pseudocode arrays start at position 1, not 0."
+        },
+        {
+          id: "l3-basics-index", category: "arraybasics",
+          prompt: "Numbers = [12, 7, 19, 3]\n\nWhat value is stored at Numbers[3]?",
+          answers: ["19"],
+          keywords: [/^\s*19\s*$/],
+          distractors: ["7","3","12","Numbers[3] does not exist"],
+          note: "Position 3 is the third value: 12 (pos 1), 7 (pos 2), 19 (pos 3)."
+        },
+        {
+          id: "l3-basics-fixed", category: "arraybasics",
+          prompt: "An array is declared as ARRAY[1:5] OF INTEGER. How many values can it store?",
+          answers: ["5"],
+          keywords: [/^\s*5\s*$/],
+          distractors: ["4","6","As many as needed","1"],
+          note: "The array holds a FIXED number of values - from the lower bound to the upper bound inclusive: 5 - 1 + 1 = 5."
+        },
+        {
+          id: "l3-basics-assign", category: "arraybasics",
+          prompt: "How do you store the value 8 in position 2 of an array called Prices?",
+          answers: ["Prices[2] <- 8"],
+          keywords: [/prices\[2\]\s*<-\s*8/i],
+          distractors: ["Prices <- 8[2]","Prices(2) <- 8","2 <- Prices[8]","Prices[2] = 8"],
+          note: "Square brackets choose the position, then <- assigns the value: Prices[2] <- 8."
+        },
+        {
+          id: "l3-trace-1", category: "arraytrace",
+          prompt: "Heights = [120, 135, 142]\nTotal <- 0\nFOR Index <- 1 TO 3\n    Total <- Total + Heights[Index]\nNEXT Index\nOUTPUT Total\n\nWhat does this output?",
+          answers: ["397"],
+          keywords: [/^\s*397\s*$/],
+          distractors: ["142","3","120","277"],
+          note: "120 + 135 + 142 = 397."
+        },
+        {
+          id: "l3-trace-2", category: "arraytrace",
+          prompt: "Marks = [18, 25, 12, 30]\nTotal <- 0\nFOR Index <- 1 TO 4\n    Total <- Total + Marks[Index]\nNEXT Index\nOUTPUT Total\n\nWhat does this output?",
+          answers: ["85"],
+          keywords: [/^\s*85\s*$/],
+          distractors: ["4","30","55","75"],
+          note: "18 + 25 + 12 + 30 = 85."
+        },
+        {
+          id: "l3-trace-3", category: "arraytrace",
+          prompt: "Prices = [4, 9, 2, 7]\nTotal <- 0\nFOR Index <- 1 TO 4\n    Total <- Total + Prices[Index]\nNEXT Index\nOUTPUT Total\n\nAfter the SECOND pass of the loop (Index = 2), what is the value of Total?",
+          answers: ["13"],
+          keywords: [/^\s*13\s*$/],
+          distractors: ["4","9","22","2"],
+          note: "First pass: Total = 0 + 4 = 4. Second pass: Total = 4 + 9 = 13."
+        },
+        {
+          id: "l3-trace-4", category: "arraytrace",
+          prompt: "Numbers = [5, 12, 8, 20, 3, 15]\nCount <- 0\nFOR Index <- 1 TO 6\n    IF Numbers[Index] > 10 THEN\n        Count <- Count + 1\n    ENDIF\nNEXT Index\nOUTPUT Count\n\nWhat does this output?",
+          answers: ["3"],
+          keywords: [/^\s*3\s*$/],
+          distractors: ["2","4","6","55"],
+          note: "12, 20 and 15 are each greater than 10 - three values in total."
+        },
+        {
+          id: "l3-trace-5", category: "arraytrace",
+          prompt: "Scores = [40, 55, 62, 48]\nCount <- 0\nFOR Index <- 1 TO 4\n    IF Scores[Index] >= 50 THEN\n        Count <- Count + 1\n    ENDIF\nNEXT Index\nOUTPUT Count\n\nWhat does this output?",
+          answers: ["2"],
+          keywords: [/^\s*2\s*$/],
+          distractors: ["1","3","4","155"],
+          note: "55 and 62 are each 50 or more - two values."
+        },
+        {
+          id: "l3-write-1", category: "arraywrite",
+          prompt: "The array Heights = [120, 135, 142, 128, 150] is stored, five values. Write pseudocode that adds up every value and outputs the total. What is the total?",
+          answers: ["675"],
+          keywords: [/^\s*675\s*$/],
+          distractors: ["5","150","120","575"],
+          note: "120 + 135 + 142 + 128 + 150 = 675."
+        },
+        {
+          id: "l3-write-2", category: "arraywrite",
+          prompt: "A FOR loop totalling an array called Marks with four values must count from what to what?",
+          answers: ["1 to 4"],
+          keywords: [/1\s*(to|-)\s*4/i],
+          distractors: ["0 to 4","1 to 3","0 to 3","1 to 5"],
+          note: "Cambridge pseudocode arrays start at 1, so a 4-value array is visited with FOR Index <- 1 TO 4."
+        },
+        {
+          id: "l3-write-3", category: "arraywrite",
+          prompt: "Where must Total <- 0 be written when totalling an array with a loop?",
+          answers: ["Before the loop begins"],
+          keywords: [/before/i],
+          distractors: ["Inside the loop, every pass","After the loop ends","It does not matter where"],
+          note: "Setting Total to 0 before the loop means it starts fresh - if it were reset every pass, only the last value would ever be added."
+        },
+        {
+          id: "l3-write-4", category: "arraywrite",
+          prompt: "The array Numbers = [6, 14, 9, 22, 11] is stored, five values. Write pseudocode that counts how many values are greater than 10, then outputs the count. What is the count?",
+          answers: ["3"],
+          keywords: [/^\s*3\s*$/],
+          distractors: ["2","4","5","62"],
+          note: "14, 22 and 11 are each greater than 10 - three values."
+        },
+        {
+          id: "l3-write-5", category: "arraywrite",
+          prompt: "Inside a loop that counts matching values, what must happen ONLY when the IF condition is true?",
+          answers: ["Count <- Count + 1"],
+          keywords: [/count\s*<-\s*count\s*\+\s*1/i],
+          distractors: ["Count <- 0","OUTPUT Count","NEXT Index","Total <- Total + Numbers[Index]"],
+          note: "Only add 1 to Count when the IF test passes - adding it unconditionally would count every position, not just the matching ones."
+        },
+        {
+          id: "l3-concept-why", category: "arrayconcepts",
+          prompt: "Why use an array instead of five separate variables to store five scores?",
+          answers: ["An array stores them all under one name, so a loop can visit every one"],
+          keywords: [/(?=.*(one|single)\s+name)(?!.*no\s+loop)(?!.*could\s+n?o?t?\s*visit)/i],
+          distractors: ["Arrays run faster than variables","Arrays can only ever store text","Five variables would need five DECLARE lines and no loop could visit them all together","There is no real difference"],
+          note: "An array groups related values under one name, which is exactly what lets a single loop visit every one of them."
+        },
+        {
+          id: "l3-concept-loop", category: "arrayconcepts",
+          prompt: "Why is a loop the natural way to work through an array?",
+          answers: ["It can visit every position with the same instructions, without repeating code for each one"],
+          keywords: [/(?=.*(every|each|all))(?=.*(position|item|value))/i],
+          distractors: ["Loops are required by DECLARE","An array cannot be read without a loop of exactly 10 passes","Loops make an array bigger","Arrays can only be read backwards"],
+          note: "The same instruction, Total <- Total + Numbers[Index], works for every position just by changing Index."
+        },
+        {
+          id: "l3-concept-next", category: "arrayconcepts",
+          prompt: "What does NEXT Index do at the end of each pass through the loop?",
+          answers: ["Increases Index by 1 and sends control back to FOR"],
+          keywords: [/(?=.*(increas|add|next|move))(?=.*(index|1))/i],
+          distractors: ["Resets Index back to 1","Ends the whole program","Deletes the current array position","Skips the next position"],
+          note: "NEXT moves the loop counter on by one and loops back to the FOR line to test whether to continue."
+        },
+        {
+          id: "l3-concept-declare", category: "arrayconcepts",
+          prompt: "What does DECLARE create when used with an array?",
+          answers: ["A new array with a fixed size"],
+          keywords: [/(?=.*(array))(?=.*(fixed|size|new))/i],
+          distractors: ["A single variable with no size","A loop","An IF statement","An output value"],
+          note: "DECLARE Numbers : ARRAY[1:5] OF INTEGER creates an array with exactly 5 fixed positions."
+        },
+        {
+          id: "l3-concept-perposition", category: "arrayconcepts",
+          prompt: "What does each position in an array have, that lets a program pick out one specific value?",
+          answers: ["An index"],
+          keywords: [/index/i],
+          distractors: ["A password","A separate DECLARE line","A random name"],
+          note: "Every position has its own index, e.g. Numbers[3], used to read or change just that one value."
+        }
+      ]
+    },
+    "y8-algorithms-l4": {
+      title: "Year 8, L4: Linear Search",
+      subtitle: "Cambridge Pseudocode",
+      cards: [
+        {
+          id: "l4-concept-start", category: "searchconcept",
+          prompt: "Where does a linear search start checking from?",
+          answers: ["The first position"],
+          keywords: [/first/i],
+          distractors: ["The last position","The middle position","A random position"],
+          note: "A linear search checks one item at a time, starting from the first position."
+        },
+        {
+          id: "l4-concept-compare", category: "searchconcept",
+          prompt: "What does a linear search do at each position?",
+          answers: ["Compares the item with the value being searched for"],
+          keywords: [/compar/i],
+          distractors: ["Deletes the item","Sorts the item","Doubles the item"],
+          note: "It compares each item in turn with the target value."
+        },
+        {
+          id: "l4-concept-sorted", category: "searchconcept",
+          prompt: "Does a linear search require the list to be sorted first?",
+          answers: ["No"],
+          keywords: [/no/i],
+          distractors: ["Yes, always","Only for text values","Only for numbers"],
+          note: "A linear search works on any list, sorted or not - unlike some faster search methods."
+        },
+        {
+          id: "l4-concept-flag", category: "searchconcept",
+          prompt: "What can a Boolean variable like Found store?",
+          answers: ["TRUE or FALSE, and nothing else"],
+          keywords: [/(?=.*true)(?=.*false)/i],
+          distractors: ["Any number","Any piece of text","A whole array"],
+          note: "A Boolean variable can only ever hold TRUE or FALSE."
+        },
+        {
+          id: "l4-concept-stop", category: "searchconcept",
+          prompt: "In the search algorithm taught this lesson, does the loop stop as soon as a match is found?",
+          answers: ["No, it keeps checking every position anyway"],
+          keywords: [/no/i],
+          distractors: ["Yes, it stops immediately","Only if Found is FALSE","Only on the last position"],
+          note: "The FOR loop always runs the full range - Found simply remembers whether a match happened anywhere along the way."
+        },
+        {
+          id: "l4-trace-1", category: "searchtrace",
+          prompt: "Numbers = [12, 7, 19, 3, 25]\nSearchValue is 19.\nFound <- FALSE\nFOR Index <- 1 TO 5\n    IF Numbers[Index] = SearchValue THEN\n        Found <- TRUE\n    ENDIF\nNEXT Index\n\nWhat is the value of Found after the loop ends?",
+          answers: ["TRUE"],
+          keywords: [/true/i],
+          distractors: ["FALSE","19","3"],
+          note: "Numbers[3] is 19, which matches SearchValue, so Found becomes TRUE and stays TRUE."
+        },
+        {
+          id: "l4-trace-2", category: "searchtrace",
+          prompt: "Numbers = [12, 7, 19, 3, 25]\nSearchValue is 50.\nFound <- FALSE\nFOR Index <- 1 TO 5\n    IF Numbers[Index] = SearchValue THEN\n        Found <- TRUE\n    ENDIF\nNEXT Index\nIF Found = TRUE THEN\n    OUTPUT \"Found\"\nELSE\n    OUTPUT \"Not Found\"\nENDIF\n\nWhat is the output?",
+          answers: ["Not Found"],
+          keywords: [/not found/i],
+          distractors: ["Found","50","TRUE"],
+          note: "None of 12, 7, 19, 3 or 25 equal 50, so Found stays FALSE and the ELSE branch outputs \"Not Found\"."
+        },
+        {
+          id: "l4-trace-3", category: "searchtrace",
+          prompt: "Ages = [15, 22, 8, 34, 19]\nSearchAge is 8.\nHow many times does the comparison IF Ages[Index] = SearchAge THEN run in total?",
+          answers: ["5"],
+          keywords: [/^\s*5\s*$/],
+          distractors: ["1","3","4","8"],
+          note: "The FOR loop always runs once for every position, from 1 to 5, regardless of when the match is found."
+        },
+        {
+          id: "l4-trace-4", category: "searchtrace",
+          prompt: "Colours = [\"Red\", \"Green\", \"Blue\", \"Yellow\"]\nSearchColour is \"Purple\".\nWhat will Found equal after the loop ends?",
+          answers: ["FALSE"],
+          keywords: [/false/i],
+          distractors: ["TRUE","Purple","Red"],
+          note: "\"Purple\" does not match any of the four stored colours, so Found is never set to TRUE."
+        },
+        {
+          id: "l4-trace-5", category: "searchtrace",
+          prompt: "Names = [\"Ivy\", \"Omar\", \"Zara\", \"Leo\", \"Mia\", \"Kofi\"]\nSearchName is \"Kofi\".\nAt which position (Index) does the match happen?",
+          answers: ["6"],
+          keywords: [/^\s*6\s*$/],
+          distractors: ["1","5","4","It never matches"],
+          note: "\"Kofi\" is the sixth and last name in the array."
+        },
+        {
+          id: "l4-flag-init", category: "searchflag",
+          prompt: "Why must Found <- FALSE be written BEFORE the search loop begins?",
+          answers: ["So Found starts fresh for every new search, not carrying over an old value"],
+          keywords: [/(?=.*(fresh|new|start|before))(?=.*(search|loop|old|carry))/i],
+          distractors: ["So the loop runs faster","So the array can be declared","It does not matter where it is written","So Found can never become TRUE"],
+          note: "Without resetting it first, Found could still hold TRUE from an earlier search."
+        },
+        {
+          id: "l4-flag-onlytrue", category: "searchflag",
+          prompt: "Inside the loop, does the IF ever set Found back to FALSE?",
+          answers: ["No, it only ever sets Found to TRUE"],
+          keywords: [/^\s*no\b/i],
+          distractors: ["Yes, every time there is no match","Yes, but only on the last position","Yes, at the start of every pass"],
+          note: "The IF only ever changes Found to TRUE. If it also reset Found to FALSE on a non-match, an earlier real match could be lost."
+        },
+        {
+          id: "l4-flag-secondif", category: "searchflag",
+          prompt: "Why is Found tested in a SECOND IF, written AFTER NEXT Index?",
+          answers: ["So the result is reported only once the whole array has been checked"],
+          keywords: [/\b(after|once|whole|finish)\b/i],
+          distractors: ["So it can be tested before the loop starts","So the loop can be skipped entirely","Because ENDIF requires it","So Found can be reset to FALSE again"],
+          note: "Testing Found only makes sense once every position has actually been checked."
+        },
+        {
+          id: "l4-flag-boolean", category: "searchflag",
+          prompt: "What data type is used to DECLARE a variable like Found?",
+          answers: ["BOOLEAN"],
+          keywords: [/boolean/i],
+          distractors: ["INTEGER","STRING","REAL","CHAR"],
+          note: "Found only ever stores TRUE or FALSE, so its type is BOOLEAN."
+        },
+        {
+          id: "l4-flag-output", category: "searchflag",
+          prompt: "IF Found = TRUE THEN\n    OUTPUT \"Found\"\nELSE\n    OUTPUT \"Not Found\"\nENDIF\n\nWhat determines which line runs here?",
+          answers: ["The value stored in Found after the loop finished"],
+          keywords: [/(?=.*found)(?=.*(value|after|loop|finish))/i],
+          distractors: ["The value of Index","The size of the array","Whichever line comes first"],
+          note: "This second IF only checks the Found flag's final value, not the array or the loop counter directly."
+        },
+        {
+          id: "l4-write-1", category: "searchwrite",
+          prompt: "The array Ages = [15, 22, 8, 34, 19] is stored. An algorithm searches for SearchAge and outputs \"Found\" or \"Not Found\". If SearchAge is 8, what should it display?",
+          answers: ["Found"],
+          keywords: [/^\s*found\s*\.?\s*$/i],
+          distractors: ["Not Found","8","15"],
+          note: "8 is the third value in Ages, so it is found."
+        },
+        {
+          id: "l4-write-2", category: "searchwrite",
+          prompt: "The array Colours = [\"Red\", \"Green\", \"Blue\", \"Yellow\"] is stored. An algorithm searches for SearchColour. If SearchColour is \"Purple\", what should it display?",
+          answers: ["Not Found"],
+          keywords: [/not found/i],
+          distractors: ["Found","Purple","Red"],
+          note: "\"Purple\" is not one of the four stored colours."
+        },
+        {
+          id: "l4-write-3", category: "searchwrite",
+          prompt: "An array of 6 names is stored. What must the FOR loop's range be to check every position?",
+          answers: ["1 TO 6"],
+          keywords: [/1\s*(to|-)\s*6/i],
+          distractors: ["0 TO 6","1 TO 5","0 TO 5","1 TO 7"],
+          note: "Cambridge pseudocode arrays start at 1, so all 6 positions need FOR Index <- 1 TO 6."
+        },
+        {
+          id: "l4-write-4", category: "searchwrite",
+          prompt: "What line must come immediately after NEXT Index in a linear search algorithm, before reporting the result?",
+          answers: ["IF Found = TRUE THEN"],
+          keywords: [/if\s*found\s*=\s*true\s*then/i],
+          distractors: ["FOR Index <- 1 TO n","Found <- FALSE","INPUT SearchValue","ENDIF"],
+          note: "The second IF, testing Found, comes right after the loop ends."
+        },
+        {
+          id: "l4-write-5", category: "searchwrite",
+          prompt: "The array Values = [8, 15, 3, 21] is stored. If SearchValue is 3, how many times does line 4 (the comparison IF) run in total?",
+          answers: ["4"],
+          keywords: [/^\s*4\s*$/],
+          distractors: ["1","3","2","8"],
+          note: "The loop always checks every position from 1 to 4, regardless of where the match is."
+        }
+      ]
+    },
     "y8-algorithms-l5": {
       title: "Year 8, L5: Sequence, Selection and Iteration",
       subtitle: "Cambridge Pseudocode",
@@ -2555,6 +3219,22 @@
   // id not listed here still works (falls back to the id itself) - this is
   // just presentation, so a new drill can add categories freely.
   var CATEGORY_LABELS = {
+    seqtrace: "Tracing a Sequence",
+    seqsyntax: "Pseudocode Syntax",
+    seqwrite: "Writing a Sequence",
+    variables: "Variables and Values",
+    seltrace: "Tracing Selection",
+    selsyntax: "IF/ELSE Syntax",
+    seloperators: "Comparison Operators",
+    selwrite: "Writing IF/ELSE",
+    arraybasics: "Declaring and Indexing Arrays",
+    arraytrace: "Tracing an Array Loop",
+    arraywrite: "Writing an Array Total or Count",
+    arrayconcepts: "Why Arrays and Loops",
+    searchconcept: "What a Linear Search Does",
+    searchtrace: "Tracing a Search",
+    searchflag: "The Found Flag",
+    searchwrite: "Writing a Linear Search",
     ctvocab: "Computational Thinking Vocabulary",
     declare: "Declaring Variables",
     iteration: "Iteration: FOR and WHILE",
@@ -2588,7 +3268,7 @@
     fsimage: "Image File Size",
     fssound: "Sound File Size"
   };
-  var CATEGORY_ORDER = ["ctvocab", "declare", "iteration", "synthesis", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound"];
+  var CATEGORY_ORDER = ["seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound"];
 
   // ============================================================
   // ENGINE
