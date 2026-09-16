@@ -20,10 +20,20 @@
   .btn.ghost { background: #eef1f8; color: #1f2733; }
   .btn.ghost:hover { background: #e2e7f3; }
   .btn + .btn { margin-top: 8px; }
+  .btn:disabled { background: #d7dced; color: #94a0c4; cursor: not-allowed; }
   .error { color: #c0392b; font-size: .85rem; margin-top: 6px; min-height: 1em; }
   .teacher-badge { display: inline-block; background: #e5ecff; color: #23459f; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; padding: 3px 9px; border-radius: 999px; margin-bottom: 10px; }
   .steps { margin: 0; padding-left: 18px; color: #667085; font-size: .85rem; }
   .steps li { margin-bottom: 4px; }
+  /* The manual-address fallback - see the big comment near copyToClipboard()
+     for why this exists and has to be the PRIMARY path, not an error state. */
+  .address-box { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #eef1f8; }
+  .address-box.show { display: block; }
+  .address-box .hint { font-size: .82rem; color: #667085; margin: 0 0 8px; }
+  .address-row { display: flex; gap: 8px; }
+  .address-row input { flex: 1; margin-bottom: 0; font-size: .95rem; letter-spacing: normal; text-transform: none; text-align: left; }
+  .address-row button { flex: 0 0 auto; width: auto; padding: 0 16px; }
+  .copied-note { color: #1f8a5a; font-size: .78rem; margin-top: 4px; min-height: 1em; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -38,19 +48,34 @@
     <input type="text" id="code-input" placeholder="CODE" maxlength="8" autocomplete="off" autocapitalize="off" spellcheck="false">
     <button type="button" class="btn" id="join-btn">Join</button>
     <div class="error" id="join-error"></div>
+    <div class="address-box" id="join-address-box">
+      <p class="hint"><strong>If nothing happened</strong> (some browsers block a page from jumping to a local address automatically) - copy this and paste it into a <strong>new tab's address bar</strong> yourself:</p>
+      <div class="address-row">
+        <input type="text" id="join-address-text" readonly>
+        <button type="button" class="btn ghost" id="join-copy-btn">Copy</button>
+      </div>
+      <div class="copied-note" id="join-copied-note"></div>
+    </div>
   </div>
 
   <div class="card" id="host-card" hidden>
     <span class="teacher-badge">Teacher</span>
     <h2>Host a game</h2>
     <p>Runs entirely on this laptop - no account, no internet dependency once it's downloaded.</p>
-    <a class="btn" id="open-host-btn" href="http://127.0.0.1:5327/" target="_blank" rel="noopener">Open host dashboard</a>
+    <button type="button" class="btn" id="open-host-btn">Open host dashboard</button>
     <a class="btn ghost" id="download-btn" href="host-download/LiveGameHost.zip" download>Download Byte Brawlers Host</a>
-    <div class="error" id="host-error"></div>
+    <div class="address-box show" id="host-address-box">
+      <p class="hint">If the button above does nothing (browsers can block a page from jumping to a local address automatically) - copy this and paste it into a <strong>new tab's address bar</strong> yourself:</p>
+      <div class="address-row">
+        <input type="text" id="host-address-text" value="http://127.0.0.1:5327/" readonly>
+        <button type="button" class="btn ghost" id="host-copy-btn">Copy</button>
+      </div>
+      <div class="copied-note" id="host-copied-note"></div>
+    </div>
     <ol class="steps" style="margin-top:14px">
       <li>Download and unzip it (once - reuse it every time after).</li>
       <li>Double-click LiveGameHost.exe. A black window opens with a join code.</li>
-      <li>Click "Open host dashboard" above (or the address the black window prints).</li>
+      <li>Open the dashboard using the button above (or the address it prints).</li>
       <li>Read the join code out to your class - they join right here on this page.</li>
     </ol>
   </div>
@@ -75,22 +100,59 @@
     return [(value >>> 24) & 255, (value >>> 16) & 255, (value >>> 8) & 255, value & 255].join('.');
   }
 
-  var joinEls = { input: document.getElementById('code-input'), btn: document.getElementById('join-btn'), error: document.getElementById('join-error') };
+  // James reported a real, live block: Chrome's Local Network Access
+  // policy (a separate, stricter mechanism from classic mixed-content)
+  // shows "The connection is blocked because it was initiated by a
+  // public page to connect to devices or servers on your local network"
+  // - and unlike classic mixed-content, it blocks a SCRIPT-DRIVEN
+  // top-level navigation too (window.location.href / window.open), not
+  // just fetch/iframe. The one thing it does NOT block: the user
+  // themselves typing or pasting a URL into the browser's own address
+  // bar, because that navigation is initiated by browser chrome, not by
+  // any page's script. So the reliable path is copy-paste, not a click -
+  // still attempt the one-click version first (it works in Firefox/
+  // Safari, and in Chrome builds/policies that don't enforce this), but
+  // the address box below is always shown too, not hidden behind an
+  // error state, since there is no reliable way to detect the block
+  // itself (the navigation just silently does nothing, or the new tab
+  // shows Chrome's own error page - nothing this page's JS can catch).
+  function copyToClipboard(text, noteEl) {
+    var done = function (ok) {
+      noteEl.textContent = ok ? 'Copied!' : 'Could not copy - select and copy the address manually.';
+      if (ok) setTimeout(function () { noteEl.textContent = ''; }, 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+    } else {
+      done(false);
+    }
+  }
+
+  var joinEls = {
+    input: document.getElementById('code-input'), btn: document.getElementById('join-btn'), error: document.getElementById('join-error'),
+    box: document.getElementById('join-address-box'), addressText: document.getElementById('join-address-text'),
+    copyBtn: document.getElementById('join-copy-btn'), copiedNote: document.getElementById('join-copied-note')
+  };
   function doJoin() {
     var code = joinEls.input.value.trim();
     if (!code) { joinEls.error.textContent = 'Type the join code first.'; return; }
     var ip = decodeIPv4(code);
     if (!ip) { joinEls.error.textContent = "That code has a character that doesn't belong in a join code - check it and try again."; return; }
-    // A genuine top-level navigation, not a fetch/iframe - Bloomsbury
-    // Computing is HTTPS and a secure page cannot load insecure
-    // subresources, but navigating AWAY from it isn't blocked. This
-    // leaves the site entirely; the browser will show "Not Secure" for
-    // the host's LAN page, which is expected (plain HTTP, on-network
-    // only, never fetched as a subresource of the secure site).
-    window.location.href = 'http://' + ip + ':' + PORT + '/lobby.html';
+    var url = 'http://' + ip + ':' + PORT + '/lobby.html';
+    joinEls.addressText.value = url;
+    joinEls.box.classList.add('show');
+    try { window.location.href = url; } catch (e) { /* the address box above is always there regardless of whether this throws or is silently blocked */ }
   }
   joinEls.btn.addEventListener('click', doJoin);
   joinEls.input.addEventListener('keydown', function (e) { if (e.key === 'Enter') doJoin(); });
+  joinEls.copyBtn.addEventListener('click', function () { copyToClipboard(joinEls.addressText.value, joinEls.copiedNote); });
+
+  var hostAddressText = document.getElementById('host-address-text');
+  var hostCopiedNote = document.getElementById('host-copied-note');
+  document.getElementById('open-host-btn').addEventListener('click', function () {
+    try { window.open(hostAddressText.value, '_blank', 'noopener'); } catch (e) { /* address box below is always visible already */ }
+  });
+  document.getElementById('host-copy-btn').addEventListener('click', function () { copyToClipboard(hostAddressText.value, hostCopiedNote); });
 
   // Teacher-only host card. isTeacher rides the same BC_IDENTITY
   // postMessage every postIdentity:true app already gets from the shell
@@ -103,12 +165,11 @@
 
   // Can't detect from here whether the host app is already running -
   // Bloomsbury Computing is HTTPS and a fetch() to a plain-http LAN
-  // address is blocked as mixed content even for 127.0.0.1 (only a
-  // top-level navigation is exempt, which is what the buttons above
-  // already do). So "Open host dashboard" is a plain link: if the app is
-  // running it opens straight to the dashboard, and if not, the new tab's
-  // own "can't reach this page" is the signal to download and run it -
-  // self-explanatory without needing a working detection check.
+  // address is blocked as mixed content even for 127.0.0.1. "Open host
+  // dashboard" just tries to open it: if the app is running it opens
+  // straight to the dashboard, and if not (or if Local Network Access
+  // blocks the attempt, see above), the address box's copy-paste path
+  // always works as the fallback.
 </script>
 </body>
 </html>
