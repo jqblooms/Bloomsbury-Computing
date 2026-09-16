@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Byte Brawlers</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f4f6fb; color: #1f2733; font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 24px 18px 60px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .sub { color: #667085; font-size: .88rem; margin: 0 0 22px; }
+  .card { background: #fff; border: 1px solid #d7dced; border-radius: 14px; padding: 20px; margin-bottom: 18px; }
+  .card h2 { font-size: 1.02rem; margin: 0 0 4px; }
+  .card p { color: #667085; font-size: .88rem; margin: 0 0 14px; }
+  input { width: 100%; padding: 13px 14px; font: inherit; font-size: 1.2rem; text-align: center; letter-spacing: .08em; text-transform: uppercase; border-radius: 10px; border: 2px solid #d7dced; margin-bottom: 10px; box-sizing: border-box; font-family: "SFMono-Regular", Consolas, monospace; }
+  input:focus { outline: none; border-color: #2f5bd7; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 12px; border: 0; border-radius: 10px; background: #2f5bd7; color: #fff; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; }
+  .btn:hover { background: #23459f; }
+  .btn.ghost { background: #eef1f8; color: #1f2733; }
+  .btn.ghost:hover { background: #e2e7f3; }
+  .btn + .btn { margin-top: 8px; }
+  .error { color: #c0392b; font-size: .85rem; margin-top: 6px; min-height: 1em; }
+  .teacher-badge { display: inline-block; background: #e5ecff; color: #23459f; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; padding: 3px 9px; border-radius: 999px; margin-bottom: 10px; }
+  .steps { margin: 0; padding-left: 18px; color: #667085; font-size: .85rem; }
+  .steps li { margin-bottom: 4px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Byte Brawlers</h1>
+  <p class="sub">A live, whole-class T-shirt design contest - everything runs on the host's own laptop for this session only, nothing is saved anywhere else.</p>
+
+  <div class="card" id="join-card">
+    <h2>Join a game</h2>
+    <p>Type the code your teacher read out.</p>
+    <input type="text" id="code-input" placeholder="CODE" maxlength="8" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button type="button" class="btn" id="join-btn">Join</button>
+    <div class="error" id="join-error"></div>
+  </div>
+
+  <div class="card" id="host-card" hidden>
+    <span class="teacher-badge">Teacher</span>
+    <h2>Host a game</h2>
+    <p>Runs entirely on this laptop - no account, no internet dependency once it's downloaded.</p>
+    <a class="btn" id="open-host-btn" href="http://127.0.0.1:5327/" target="_blank" rel="noopener">Open host dashboard</a>
+    <a class="btn ghost" id="download-btn" href="host-download/LiveGameHost.zip" download>Download Byte Brawlers Host</a>
+    <div class="error" id="host-error"></div>
+    <ol class="steps" style="margin-top:14px">
+      <li>Download and unzip it (once - reuse it every time after).</li>
+      <li>Double-click LiveGameHost.exe. A black window opens with a join code.</li>
+      <li>Click "Open host dashboard" above (or the address the black window prints).</li>
+      <li>Read the join code out to your class - they join right here on this page.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+  // Must stay in sync with the host app's Base62.cs alphabet and Port
+  // constant - see that project's own comments for why (the join code
+  // only ever carries the IP, never the port, so both sides have to agree
+  // on the port out of band).
+  var ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  var PORT = 5327;
+
+  function decodeIPv4(code) {
+    var value = 0;
+    for (var i = 0; i < code.length; i++) {
+      var digit = ALPHABET.indexOf(code[i]);
+      if (digit === -1) return null;
+      value = value * 62 + digit;
+    }
+    value = value >>> 0;
+    return [(value >>> 24) & 255, (value >>> 16) & 255, (value >>> 8) & 255, value & 255].join('.');
+  }
+
+  var joinEls = { input: document.getElementById('code-input'), btn: document.getElementById('join-btn'), error: document.getElementById('join-error') };
+  function doJoin() {
+    var code = joinEls.input.value.trim();
+    if (!code) { joinEls.error.textContent = 'Type the join code first.'; return; }
+    var ip = decodeIPv4(code);
+    if (!ip) { joinEls.error.textContent = "That code has a character that doesn't belong in a join code - check it and try again."; return; }
+    // A genuine top-level navigation, not a fetch/iframe - Bloomsbury
+    // Computing is HTTPS and a secure page cannot load insecure
+    // subresources, but navigating AWAY from it isn't blocked. This
+    // leaves the site entirely; the browser will show "Not Secure" for
+    // the host's LAN page, which is expected (plain HTTP, on-network
+    // only, never fetched as a subresource of the secure site).
+    window.location.href = 'http://' + ip + ':' + PORT + '/lobby.html';
+  }
+  joinEls.btn.addEventListener('click', doJoin);
+  joinEls.input.addEventListener('keydown', function (e) { if (e.key === 'Enter') doJoin(); });
+
+  // Teacher-only host card. isTeacher rides the same BC_IDENTITY
+  // postMessage every postIdentity:true app already gets from the shell
+  // (Index.html's sendIdentity) - trust it exactly as much as the shell
+  // already vouches for it, same as every other app on this platform.
+  window.addEventListener('message', function (e) {
+    if (!e.data || e.data.type !== 'BC_IDENTITY') return;
+    document.getElementById('host-card').hidden = !e.data.isTeacher;
+  });
+
+  // Can't detect from here whether the host app is already running -
+  // Bloomsbury Computing is HTTPS and a fetch() to a plain-http LAN
+  // address is blocked as mixed content even for 127.0.0.1 (only a
+  // top-level navigation is exempt, which is what the buttons above
+  // already do). So "Open host dashboard" is a plain link: if the app is
+  // running it opens straight to the dashboard, and if not, the new tab's
+  // own "can't reach this page" is the signal to download and run it -
+  // self-explanatory without needing a working detection check.
+</script>
+</body>
+</html>
