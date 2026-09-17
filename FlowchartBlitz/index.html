@@ -124,7 +124,7 @@ const { useState, useEffect, useRef, useCallback } = React;
 const BASE_DURATION_REF = 55000; // more generous than Pseudocode Blitz's 45000 - this is a translation skill being met for the first time
 const LEVELS = {
     1: { title: "Flowchart to Pseudocode", color: "sky", desc: "Read the flowchart, write the matching Cambridge Pseudocode." },
-    2: { title: "Pseudocode to Flowchart", color: "emerald", desc: "Read the Pseudocode, drag the right blocks into the flowchart." }
+    2: { title: "Pseudocode to Flowchart", color: "emerald", desc: "Read the Pseudocode, reject the distractors and build the complete flowchart." }
 };
 
 // --- WORD BANKS (same shape as Pseudocode Blitz, kept separate so a
@@ -228,12 +228,15 @@ const genSelection = () => {
     const rel = pick(RELATIONS);
     const val = randInt(1, 100);
     const [msgTrue, msgFalse] = pick(MESSAGE_PAIRS);
+    const decisionText = `Is ${name} ${rel.text} ${val}?`;
     return {
         family: 'selection',
         pre: [{ shape: 'io', text: `Ask the user to enter ${name}`, id: nextBlockId() }],
-        decisionText: `Is ${name} ${rel.text} ${val}?`,
+        decision: { shape: 'decision', text: decisionText, id: nextBlockId() },
+        decisionText,
         yes: [{ shape: 'io', text: `Display "${msgTrue}"`, id: nextBlockId() }],
         no: [{ shape: 'io', text: `Display "${msgFalse}"`, id: nextBlockId() }],
+        selectionMeta: { name, val },
         expected: [`DECLARE ${name} : INTEGER`, `INPUT ${name}`, `IF ${name} ${rel.op} ${val} THEN`, `OUTPUT "${msgTrue}"`, `ELSE`, `OUTPUT "${msgFalse}"`, `ENDIF`]
     };
 };
@@ -246,9 +249,30 @@ const generateQuestion = () => (Math.random() < 0.5 ? genSequence() : genSelecti
 const questionSlots = (q) => {
     if (q.family === 'sequence') return q.nodes.map((n, i) => ({ ...n, group: 'nodes', index: i }));
     const pre = q.pre.map((n, i) => ({ ...n, group: 'pre', index: i }));
+    const decision = [{ ...q.decision, group: 'decision', index: 0 }];
     const yes = q.yes.map((n, i) => ({ ...n, group: 'yes', index: i }));
     const no = q.no.map((n, i) => ({ ...n, group: 'no', index: i }));
-    return [...pre, ...yes, ...no];
+    return [...pre, ...decision, ...yes, ...no];
+};
+
+const questionDistractors = (q) => {
+    const candidates = q.family === 'selection'
+        ? [
+            { shape: 'process', text: `Store ${q.selectionMeta.val} in ${q.selectionMeta.name}` },
+            { shape: 'decision', text: `Is ${q.selectionMeta.name} equal to ${q.selectionMeta.val + 1}?` },
+            { shape: 'io', text: 'Display "Error"' }
+        ]
+        : [
+            { shape: 'decision', text: 'Is the value equal to 0?' },
+            { shape: 'process', text: 'Store 0 in Temporary' }
+        ];
+    return candidates.map((block, index) => ({
+        ...block,
+        id: nextBlockId(),
+        group: 'distractor',
+        index,
+        key: `distractor-${index}`
+    }));
 };
 
 const saveScore = (score, level) => {
@@ -318,7 +342,7 @@ const Button = ({ onClick, children, className = "", disabled = false, variant =
 const HelpModal = ({ levelId, onClose }) => {
     const content = {
         1: { title: "Flowchart to Pseudocode", body: "Read the flowchart from Start to End. Write one Cambridge Pseudocode instruction for each shape you meet, in order.\nA rounded shape (input/output) reading \"Ask the user to enter...\" is an INPUT line. Reading \"Display...\" is an OUTPUT line.\nA rectangle is an assignment: Name <- Value.\nA diamond is a condition: write IF ... THEN, the Yes branch, then ELSE, the No branch, then ENDIF.\nEvery new variable needs its own DECLARE line first, even though the flowchart itself never shows one." },
-        2: { title: "Pseudocode to Flowchart", body: "Read the Cambridge Pseudocode on the left. DECLARE lines have no shape of their own - skip them.\nDrag each remaining block into the matching empty slot, in the same order the pseudocode runs.\nAn IF line's two OUTPUT/INPUT lines go into the Yes and No branches, not the main line." }
+        2: { title: "Pseudocode to Flowchart", body: "Read the Cambridge Pseudocode on the left. DECLARE lines have no shape of their own - skip them.\nChoose the correct blocks from the palette. Some blocks are distractors and must not be used.\nPlace the INPUT, process or decision blocks in the main path. The instructions after THEN and ELSE belong on the Yes and No branches." }
     };
     const data = content[levelId] || { title: "Help", body: "Good luck!" };
     return (
@@ -429,7 +453,7 @@ const buildMermaidSource = (q, slots, checkState) => {
             previous = id;
         });
 
-        lines.push(fcNodeLine('decisionNode', 'decision', q.decisionText));
+        addActionNode(q.decision, 'decision-0', 'decisionNode');
         lines.push(`  ${previous} --> decisionNode`);
 
         q.yes.forEach((node, index) => addActionNode(node, `yes-${index}`, `yes_${index}`));
@@ -631,7 +655,8 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
         setPicked(null);
         setCheckState(null);
         setJustRight(false);
-        setPalette(flat.map((n) => ({ ...n, key: `${n.group}-${n.index}` })).sort(() => Math.random() - 0.5));
+        const correctBlocks = flat.map((n) => ({ ...n, key: `${n.group}-${n.index}` }));
+        setPalette([...correctBlocks, ...questionDistractors(q)].sort(() => Math.random() - 0.5));
         resetRound(points);
     };
     useEffect(() => { next(); }, []);
@@ -728,7 +753,7 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
                     />
                 </div>
             </div>
-            <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Drag a block into a slot, or tap a block then tap a slot</div>
+            <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Choose carefully: some blocks are distractors. Drag a block into a slot, or tap both.</div>
             <div className="fc-palette mb-4">
                 {palette.map((b) => (
                     <div
