@@ -182,6 +182,30 @@
     background: var(--answer-soft); border: 1px solid #e8cf93; color: #7a5c05;
   }
   .code-help-box.show { display: block; }
+
+  /* Exam Questions (drill.isExamSet cards): a real multi-mark exam
+     question split into one box per distinct marking point. */
+  .exam-progress { font-size: .82rem; color: var(--muted); margin: 0 0 6px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+  .exam-parts { display: flex; flex-direction: column; gap: 12px; margin: 12px 0; }
+  .exam-part { padding: 10px 12px; border: 2px solid var(--line); border-radius: 10px; }
+  .exam-part.is-correct { border-color: #b6e2c9; background: var(--good-soft); }
+  .exam-part.is-wrong { border-color: #efc2bc; background: var(--bad-soft); }
+  .exam-part-label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
+  .exam-part-input {
+    display: block; width: 100%; max-width: 260px; padding: 8px 10px;
+    font: 500 .95rem/1.4 "SFMono-Regular", Consolas, monospace;
+    border: 2px solid var(--line); border-radius: 8px;
+  }
+  .exam-part-input:focus { outline: none; border-color: var(--brand); }
+  .exam-part-input:disabled { background: #f1f3f8; color: var(--ink); }
+  .exam-part-feedback { margin-top: 6px; font-size: .85rem; font-weight: 600; }
+  .exam-part.is-correct .exam-part-feedback { color: var(--good); }
+  .exam-part.is-wrong .exam-part-feedback { color: var(--bad); }
+  .exam-source { font-size: .82rem; color: var(--muted); font-style: italic; margin: 4px 0 0; }
+  .exam-card-summary { margin-top: 10px; }
+  .exam-card-score { font-weight: 700; font-size: .98rem; }
+  .exam-final-score { font-size: 1.4rem; font-weight: 800; margin: 6px 0 16px; }
+
   .code-help-box pre {
     margin: 4px 0 0; font: 600 .85rem/1.4 "SFMono-Regular", Consolas, monospace;
     white-space: pre-wrap; color: inherit;
@@ -256,6 +280,7 @@
     <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. The answer is never shown unless you ask - press <strong>I need help</strong> to flash it for a second.</div>
     <div class="notice quiz" id="notice-quiz" style="display:none">Quiz mode &middot; answer a card correctly <strong>three times in a row</strong> to master it for this run. A wrong answer sends its streak back to zero. Master every card in this run for completion.</div>
     <div class="notice quiz" id="notice-code" style="display:none">Write real pseudocode for each question &middot; answer <strong>three questions of the same type</strong> correctly in a row to master that type, not the same exact question three times. A wrong or broken answer sends that type's streak back to zero.</div>
+    <div class="notice quiz" id="notice-exam" style="display:none">Real exam question &middot; every part is <strong>checked and marked</strong> the moment you submit, showing the correct answer for anything wrong. Your score for this run is shown at the end.</div>
 
     <div class="progress" id="progress" style="display:none">
       <span id="progress-label">0 / 0 mastered</span>
@@ -4941,6 +4966,390 @@
           note: "DECLARE has no flowchart symbol of its own, so a correct flowchart never shows one."
         }
       ]
+    },
+    "examqs-y10-1-1": {
+      title: "Year 10, 1.1 Number Systems - Exam Questions",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - real past-paper questions",
+      isExamSet: true,
+      cards: [
+        {
+          id: "y10-1-1-l2", category: "l2",
+          source: "Cambridge IGCSE 0478, June 2022 Paper 11, Question 4(b)",
+          marks: 3,
+          stem: "The denary values 64, 101 and 242 are converted to 8-bit binary values. Give the 8-bit binary value for each denary value.",
+          parts: [
+            { label: "Convert 64 to 8-bit binary.", correctAnswer: "01000000" },
+            { label: "Convert 101 to 8-bit binary.", correctAnswer: "01100101" },
+            { label: "Convert 242 to 8-bit binary.", correctAnswer: "11110010" }
+          ]
+        },
+        {
+          id: "y10-1-1-l2-2", category: "l2",
+          source: "Cambridge IGCSE 0478, June 2021 Paper 11, Question 1(a)",
+          marks: 2,
+          stem: "Benedict has a computer that is assigned an Internet Protocol (IP) address. The IP address is: 198.167.214.0. Convert the denary values 167 and 214 from the IP address to 8-bit binary.",
+          parts: [
+            { label: "Convert 167 to 8-bit binary.", correctAnswer: "10100111" },
+            { label: "Convert 214 to 8-bit binary.", correctAnswer: "11010110" }
+          ]
+        },
+        {
+          id: "y10-1-1-l2-3", category: "l2",
+          source: "Practice question in the Cambridge IGCSE 0478 exam style.",
+          marks: 3,
+          stem: "The binary values 01011010, 11001011 and 00101101 are converted to denary values. Give the denary value for each binary value.",
+          parts: [
+            { label: "Convert 01011010 to denary.", correctAnswer: "90" },
+            { label: "Convert 11001011 to denary.", correctAnswer: "203" },
+            { label: "Convert 00101101 to denary.", correctAnswer: "45" }
+          ]
+        },
+        {
+          id: "y10-1-1-l2-4", category: "l2",
+          source: "Practice question in the Cambridge IGCSE 0478 exam style.",
+          marks: 2,
+          stem: "The binary values 01001101 and 10011100 are converted to denary values. Give the denary value for each binary value.",
+          parts: [
+            { label: "Convert 01001101 to denary.", correctAnswer: "77" },
+            { label: "Convert 10011100 to denary.", correctAnswer: "156" }
+          ]
+        },
+        {
+          id: "y10-1-1-l2-plenary", category: "l2-plenary",
+          source: "Cambridge IGCSE 0478, February/March 2026 Paper 12, Question 6(e)",
+          marks: 3,
+          stem: "Add the two binary integers using binary addition and give your answer in binary. Show all your working.",
+          parts: [
+            { label: "Add 00011010 + 01101110 (binary):", correctAnswer: "10001000" }
+          ]
+        },
+        {
+          id: "y10-1-1-l2-plenary-2", category: "l2-plenary",
+          source: "Cambridge IGCSE 0478, October/November 2024 Paper 11, Question 3(d)",
+          marks: 3,
+          stem: "The character 'T' is represented by the binary ASCII number 01010100. The character 't' is represented by the binary ASCII number 01110100. Add the two binary numbers using binary addition. Give your answer in binary. Show all your working.",
+          parts: [
+            { label: "Add 01010100 + 01110100 (binary):", correctAnswer: "11001000" }
+          ]
+        },
+        {
+          id: "y10-1-1-l2-plenary-3", category: "l2-plenary",
+          source: "Cambridge IGCSE 0478, February/March 2025 Paper 12, Question 1(b)",
+          marks: 3,
+          stem: "Add the two 8-bit binary numbers using binary addition. Give your answer in binary. Show all your working.",
+          parts: [
+            { label: "Add 10011011 + 00010011 (binary):", correctAnswer: "10101110" }
+          ]
+        },
+        {
+          id: "y10-1-1-l2-plenary-4", category: "l2-plenary",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 12, Question 1(e)",
+          marks: 3,
+          stem: "The 8-bit binary numbers 01100101 and 01110000 are stored in RAM and added together. Add the two binary numbers using binary addition. Give your answer in binary. You must show all your working.",
+          parts: [
+            { label: "Add 01100101 + 01110000 (binary):", correctAnswer: "11010101" }
+          ]
+        },
+        {
+          id: "y10-1-1-l2-plenary-5", category: "l2-plenary",
+          source: "Cambridge IGCSE 0478, October/November 2025 Paper 12, Question 2(a)",
+          marks: 4,
+          stem: "Add the two binary numbers using binary addition. Give your answer in binary. Show all of your working.",
+          parts: [
+            { label: "Add 11110101 + 00111001 (binary):", correctAnswer: "00101110" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3", category: "l3",
+          source: "Cambridge IGCSE 0478, October/November 2024 Paper 11, Question 3(b)(i)",
+          marks: 2,
+          stem: "The character 'A' is represented by the denary ASCII number 65. The character 'm' is represented by the denary ASCII number 109. Convert the two denary ASCII numbers to 8-bit binary.",
+          parts: [
+            { label: "Convert 65 to 8-bit binary.", correctAnswer: "01000001" },
+            { label: "Convert 109 to 8-bit binary.", correctAnswer: "01101101" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3-2", category: "l3",
+          source: "Cambridge IGCSE 0478, October/November 2024 Paper 11, Question 3(c)(i)",
+          marks: 1,
+          stem: "The character 'y' is represented by the binary ASCII number 01111001. Convert the binary ASCII number to denary.",
+          parts: [
+            { label: "Convert 01111001 to denary.", correctAnswer: "121" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3-3", category: "l3",
+          source: "Practice question in the Cambridge IGCSE 0478 exam style.",
+          marks: 3,
+          stem: "Add the two binary integers using binary addition and give your answer in binary. Show all your working.",
+          parts: [
+            { label: "Add 00011111 + 00000001 (binary):", correctAnswer: "00100000" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3-4", category: "l3",
+          source: "Practice question in the Cambridge IGCSE 0478 exam style.",
+          marks: 2,
+          stem: "The binary values 10110100 and 01001011 are converted to denary values. Give the denary value for each binary value.",
+          parts: [
+            { label: "Convert 10110100 to denary.", correctAnswer: "180" },
+            { label: "Convert 01001011 to denary.", correctAnswer: "75" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3-plenary", category: "l3-plenary",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 11, Question 2(c)(i)",
+          marks: 2,
+          stem: "A ticket number is stored as 02C. Another ticket number is stored as 10B. Convert the two ticket numbers from hexadecimal to denary.",
+          parts: [
+            { label: "Convert 02C to denary.", correctAnswer: "44" },
+            { label: "Convert 10B to denary.", correctAnswer: "267" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3-plenary-2", category: "l3-plenary",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 11, Question 2(c)(ii)",
+          marks: 2,
+          stem: "Convert the two denary ticket numbers into hexadecimal.",
+          parts: [
+            { label: "Convert 109 to hexadecimal.", correctAnswer: "6D" },
+            { label: "Convert 415 to hexadecimal.", correctAnswer: "19F" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3-plenary-3", category: "l3-plenary",
+          source: "Cambridge IGCSE 0478, October/November 2025 Paper 12, Question 1(c)",
+          marks: 2,
+          stem: "A toy store gives each toy a 3-digit hexadecimal code, stored in a 12-bit register. Two toys have the hexadecimal codes 429 and 1A3. Convert the two hexadecimal codes to 12-bit binary numbers.",
+          parts: [
+            { label: "Convert 429 to binary.", correctAnswer: "010000101001" },
+            { label: "Convert 1A3 to binary.", correctAnswer: "000110100011" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3-plenary-4", category: "l3-plenary",
+          source: "Cambridge IGCSE 0478, October/November 2025 Paper 12, Question 1(d)",
+          marks: 2,
+          stem: "Two binary numbers stored in the 12-bit registers are 100010100001 and 011100001011. Convert the two binary numbers to hexadecimal numbers.",
+          parts: [
+            { label: "Convert 100010100001 to hexadecimal.", correctAnswer: "8A1" },
+            { label: "Convert 011100001011 to hexadecimal.", correctAnswer: "70B" }
+          ]
+        },
+        {
+          id: "y10-1-1-l3-plenary-5", category: "l3-plenary",
+          source: "Cambridge IGCSE 0478, February/March 2026 Paper 12, Question 6(b)",
+          marks: 1,
+          stem: "Convert the hexadecimal number F08 into a 12-bit binary number.",
+          parts: [
+            { label: "Convert F08 to binary.", correctAnswer: "111100001000" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4", category: "l4",
+          source: "Cambridge IGCSE 0478, May/June 2026 Paper 11, Question 3(b)",
+          marks: 1,
+          stem: "Convert the hexadecimal number 2A to an 8-bit binary number.",
+          parts: [
+            { label: "Convert 2A to binary.", correctAnswer: "00101010" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4-2", category: "l4",
+          source: "Cambridge IGCSE 0478, May/June 2026 Paper 11, Question 3(c)",
+          marks: 1,
+          stem: "Convert the hexadecimal number 101 to a 12-bit binary number.",
+          parts: [
+            { label: "Convert 101 to binary.", correctAnswer: "000100000001" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4-3", category: "l4",
+          source: "Cambridge IGCSE 0478, May/June 2026 Paper 11, Question 3(d)",
+          marks: 1,
+          stem: "Convert the binary number 01110001 to a hexadecimal number.",
+          parts: [
+            { label: "Convert 01110001 to hexadecimal.", correctAnswer: "71" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4-4", category: "l4",
+          source: "Cambridge IGCSE 0478, May/June 2026 Paper 11, Question 3(e)",
+          marks: 1,
+          stem: "Convert the binary number 001011011000 to a hexadecimal number.",
+          parts: [
+            { label: "Convert 001011011000 to hexadecimal.", correctAnswer: "2D8" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4-plenary", category: "l4-plenary",
+          source: "Cambridge IGCSE 0478, February/March 2026 Paper 12, Question 6(c)",
+          marks: 1,
+          stem: "Give the 8-bit binary value after a logical binary shift left of two places is performed on the binary number 00110101.",
+          parts: [
+            { label: "Shift 00110101 left (result): ", correctAnswer: "11010100" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4-plenary-2", category: "l4-plenary",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 13, Question 1(c)(iii)",
+          marks: 1,
+          stem: "A logical right shift of two places is performed on the binary number 10100100. Give the binary number that would be stored after the logical shift has taken place.",
+          parts: [
+            { label: "Shift 10100100 right (result): ", correctAnswer: "00101001" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4-plenary-3", category: "l4-plenary",
+          source: "Cambridge IGCSE 0478, October/November 2025 Paper 12, Question 2(b)",
+          marks: 3,
+          stem: "A logic right shift of three places is performed on the binary number 11110101. Give the denary number for the binary number that would be stored after the logical shift of three places has occurred.",
+          parts: [
+            { label: "Shift 11110101 right (result): ", correctAnswer: "30" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4-plenary-4", category: "l4-plenary",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 12, Question 1(g)",
+          marks: 2,
+          stem: "The negative denary number -22 is stored in RAM. Negative denary numbers can be represented as binary using two's complement. Give the two's complement 8-bit binary integer that would be stored for the denary number -22.",
+          parts: [
+            { label: "Convert -22 to 8-bit two's complement.", correctAnswer: "11101010" }
+          ]
+        },
+        {
+          id: "y10-1-1-l4-plenary-5", category: "l4-plenary",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 13, Question 1(d)",
+          marks: 2,
+          stem: "The two's complement 8-bit binary integer 11001001 is stored in a register. Convert the two's complement 8-bit binary integer to denary.",
+          parts: [
+            { label: "Convert the two's complement value 11001001 to denary.", correctAnswer: "-55" }
+          ]
+        }
+      ]
+    },
+    "examqs-y10-1-2": {
+      title: "Year 10, 1.2 Text, Sound and Images - Exam Questions",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - real past-paper questions",
+      isExamSet: true,
+      cards: [
+        {
+          id: "y10-1-2-l1", category: "l1",
+          source: "Cambridge IGCSE 0478, February/March 2026 Paper 12, Question 6(a)",
+          marks: 1,
+          stem: "Convert the denary number 150 into an 8-bit binary number.",
+          parts: [
+            { label: "Convert 150 to 8-bit binary.", correctAnswer: "10010110" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-2", category: "l1",
+          source: "Adapted from Cambridge IGCSE 0478, October/November 2024 Paper 11, Question 3(c)(i) (the original names the byte as an ASCII character; that framing is dropped here since this Do Now is a pure number systems review)",
+          marks: 1,
+          stem: "Convert the binary number 01111001 to a denary number.",
+          parts: [
+            { label: "Convert 01111001 to denary.", correctAnswer: "121" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-3", category: "l1",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 11, Question 2(c)(ii)",
+          marks: 2,
+          stem: "Convert the two denary numbers into hexadecimal.",
+          parts: [
+            { label: "Convert 109 to hexadecimal.", correctAnswer: "6D" },
+            { label: "Convert 415 to hexadecimal.", correctAnswer: "19F" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-4", category: "l1",
+          source: "Cambridge IGCSE 0478, October/November 2025 Paper 12, Question 2(a)",
+          marks: 4,
+          stem: "Add the two binary numbers using binary addition. Give your answer in binary. Show all your working.",
+          parts: [
+            { label: "Add 11110101 + 00111001 (binary):", correctAnswer: "00101110" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-5", category: "l1",
+          source: "Adapted from Cambridge IGCSE 0478, October/November 2024 Paper 11, Question 3(c)(iii) (ASCII framing dropped, as above)",
+          marks: 1,
+          stem: "A logical right shift of two places is performed on the binary number 01111001. Give the binary number after the logical right shift of two places is performed.",
+          parts: [
+            { label: "Shift 01111001 right (result): ", correctAnswer: "00011110" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-6", category: "l1",
+          source: "Cambridge IGCSE 0478, February/March 2026 Paper 12, Question 6(d)",
+          marks: 1,
+          stem: "Convert the two's complement binary integer 01110101 into denary.",
+          parts: [
+            { label: "Convert the two's complement value 01110101 to denary.", correctAnswer: "117" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-plenary", category: "l1-plenary",
+          source: "Practice question in the Cambridge IGCSE 0478 exam style.",
+          marks: 1,
+          stem: "The character 'Y' is represented by the binary ASCII number 01011001. Convert the binary ASCII number to denary.",
+          parts: [
+            { label: "Convert 01011001 to denary.", correctAnswer: "89" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-plenary-2", category: "l1-plenary",
+          source: "Practice question in the Cambridge IGCSE 0478 exam style.",
+          marks: 1,
+          stem: "The character 'T' is represented by the denary ASCII number 84. Convert the denary ASCII number to an 8-bit binary number.",
+          parts: [
+            { label: "Convert 84 to 8-bit binary.", correctAnswer: "01010100" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-plenary-3", category: "l1-plenary",
+          source: "Practice question in the Cambridge IGCSE 0478 exam style.",
+          marks: 1,
+          stem: "The character 'M' is represented by the denary ASCII number 77. Convert the denary ASCII number to hexadecimal.",
+          parts: [
+            { label: "Convert 77 to hexadecimal.", correctAnswer: "4D" }
+          ]
+        },
+        {
+          id: "y10-1-2-l1-plenary-4", category: "l1-plenary",
+          source: "Practice question in the Cambridge IGCSE 0478 exam style.",
+          marks: 1,
+          stem: "The character 'a' is represented by the binary ASCII number 01100001. State the denary ASCII number.",
+          parts: [
+            { label: "Convert 01100001 to denary.", correctAnswer: "97" }
+          ]
+        },
+        {
+          id: "y10-1-2-l3-exambinary", category: "l3-exambinary",
+          source: "Cambridge IGCSE 0478/13, June 2025, Question 1 (adapted)",
+          marks: 4,
+          stem: "A student records a song; two bytes stored from the recording are 00011001 and 10110100. A third value, the two's complement 8-bit integer 11001001, is also stored.",
+          parts: [
+            { label: "Convert 00011001 to denary.", correctAnswer: "25" },
+            { label: "Convert 10110100 to denary.", correctAnswer: "180" },
+            { label: "Convert 10110100 to hexadecimal.", correctAnswer: "B4" },
+            { label: "Convert the two's complement integer 11001001 to denary.", correctAnswer: "-55" }
+          ]
+        },
+        {
+          id: "y10-1-2-l4-examunits", category: "l4-examunits",
+          source: "Cambridge IGCSE 0478/12, March 2023, Question 3(a)",
+          marks: 4,
+          stem: "Complete this table of data storage conversions.",
+          parts: [
+            { label: "8 bytes = ? nibbles", correctAnswer: "16" },
+            { label: "512 kibibytes (KiB) = ? mebibytes (MiB)", correctAnswer: "0.5" },
+            { label: "4 gibibytes (GiB) = ? mebibytes (MiB)", correctAnswer: "4096" },
+            { label: "1 exbibyte (EiB) = ? pebibytes (PiB)", correctAnswer: "1024" }
+          ]
+        }
+      ]
     }
   };
 
@@ -5014,9 +5423,19 @@
     "fc-symbols": "Naming the Symbols",
     "fc-shapemap": "Shape to Pseudocode",
     "fc-toCode": "Flowchart to Pseudocode",
-    "fc-toFlow": "Pseudocode to Flowchart"
+    "fc-toFlow": "Pseudocode to Flowchart",
+    "l2": "L2: Binary Addition (Do Now)",
+    "l2-plenary": "L2: Binary Addition (Plenary)",
+    "l3": "L3: Hexadecimal (Do Now)",
+    "l3-plenary": "L3: Hexadecimal (Plenary)",
+    "l4": "L4: Bit Shifts and Two's Complement (Do Now)",
+    "l4-plenary": "L4: Bit Shifts and Two's Complement (Plenary)",
+    "l1": "L1: Character Sets (Do Now)",
+    "l1-plenary": "L1: Character Sets (Plenary)",
+    "l3-exambinary": "L3: Sound - Exam Question",
+    "l4-examunits": "L4: File Size - Exam Question"
   };
-  var CATEGORY_ORDER = ["y7-symbols", "y7-reading", "y7-debugging", "y7-sequence", "y7-inputs", "y7-movement", "y7-loops", "y7-logic", "y7-sub-purpose", "y7-call-trace", "y7-call-effects", "y7-complete", "seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "fc-symbols", "fc-shapemap", "fc-toCode", "fc-toFlow", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound", "fscomp-concept", "fscomp-rle", "fscomp-choose"];
+  var CATEGORY_ORDER = ["y7-symbols", "y7-reading", "y7-debugging", "y7-sequence", "y7-inputs", "y7-movement", "y7-loops", "y7-logic", "y7-sub-purpose", "y7-call-trace", "y7-call-effects", "y7-complete", "seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "fc-symbols", "fc-shapemap", "fc-toCode", "fc-toFlow", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound", "fscomp-concept", "fscomp-rle", "fscomp-choose", "l2", "l2-plenary", "l3", "l3-plenary", "l4", "l4-plenary", "l1", "l1-plenary", "l3-exambinary", "l4-examunits"];
 
   // ============================================================
   // ENGINE
@@ -5041,6 +5460,7 @@
   var cardsById = {};
   drill.cards.forEach(function (c) { cardsById[c.id] = c; });
   var isCodeDrill = !!drill.codeDrill;
+  var isExamSet = !!drill.isExamSet;
   var CODE_MASTERY_STREAK = 3;
   var CODE_HELP_MS = 4000; // a whole reference program takes longer to read than one flashed MC option
 
@@ -5068,6 +5488,7 @@
     noticeLearn: document.getElementById("notice-learn"),
     noticeQuiz: document.getElementById("notice-quiz"),
     noticeCode: document.getElementById("notice-code"),
+    noticeExam: document.getElementById("notice-exam"),
     progress: document.getElementById("progress"),
     progressLabel: document.getElementById("progress-label"),
     progressFill: document.getElementById("progress-fill"),
@@ -5514,6 +5935,7 @@
 
   function nextCard() {
     if (isCodeDrill) { nextCodeCard(); return; }
+    if (isExamSet) { nextExamCard(); return; }
     if (current && current.advanceTimer) clearTimeout(current.advanceTimer);
     persistRun();
     if (run.mode === "quiz") {
@@ -5964,7 +6386,7 @@
   // topic/count - changing either means "Start" should mean starting that
   // new selection fresh, not secretly resuming the old one.
   function refreshResumeUI() {
-    if (isCodeDrill) return;
+    if (isCodeDrill || isExamSet) return;
     var resumable = runHasProgress(run) &&
       run.category === els.setupCategory.value &&
       (!els.setupPool || (run.pool || "all") === els.setupPool.value) &&
@@ -5991,6 +6413,25 @@
     populatePoolSelect(run ? run.category : "all", run ? run.pool : null);
     populateCountSelect(run ? run.category : "all", run ? run.count : null, els.setupPool ? els.setupPool.value : "all");
     renderMasteryOverview();
+    if (isExamSet) {
+      // A real exam question is a one-shot attempt, not something to
+      // master via repetition - no MC/Text choice, no pool picker, no
+      // resume (same reasoning as code drills: this is a one-sitting
+      // activity). Learn/Quiz are both real here, but mean something
+      // different: Quiz hides nothing, Learn is identical except it also
+      // never disables a wrong box before its own per-part feedback
+      // shows the correct value straight away (there is no putative
+      // "help" to withhold for a real exam question - the point is
+      // practising the actual paper, not memorising towards mastery).
+      els.setupAnswerModeField.style.display = "none";
+      if (els.setupPoolField) els.setupPoolField.style.display = "none";
+      els.setupStartLearn.style.display = "none";
+      els.setupStartQuiz.textContent = "Start";
+      if (els.setupContinue) els.setupContinue.style.display = "none";
+      if (els.setupResumeNote) els.setupResumeNote.style.display = "none";
+      if (els.masteryOverview) els.masteryOverview.style.display = "none";
+      return;
+    }
     if (isCodeDrill) {
       // No MC/Text choice (there is only one way to answer a code card) and
       // no card-count limit (mastery needs every variant of a type
@@ -6035,6 +6476,20 @@
     var category = els.setupCategory.value;
     var count = Number(els.setupCount.value) || null;
     if (isCodeDrill) { startCodeRun(category, mode); return; }
+    if (isExamSet) {
+      startExamRun(category, count);
+      els.setupCard.style.display = "none";
+      els.runArea.style.display = "";
+      els.noticeLearn.style.display = "none";
+      els.noticeQuiz.style.display = "none";
+      if (els.noticeCode) els.noticeCode.style.display = "none";
+      els.noticeExam.style.display = "";
+      els.progress.style.display = "none";
+      els.modeLearn.style.display = "none";
+      els.modeQuiz.style.display = "none";
+      nextExamCard();
+      return;
+    }
     var answerMode = els.setupAnswerMode.value;
     var poolChoice = els.setupPool ? els.setupPool.value : "all";
     run = freshRun(mode, category, count, answerMode, poolChoice);
@@ -6370,6 +6825,152 @@
       "</div></div>";
     document.getElementById("code-again-btn").addEventListener("click", function () { startCodeRun(run.category, run.mode); });
     document.getElementById("code-change-btn").addEventListener("click", openSetup);
+  }
+
+
+  // ============================================================
+  // EXAM QUESTIONS (drill.isExamSet cards only) - James: "an Exam
+  // Questions tab next to the Drills tab, drill-style attempts of real
+  // exam questions, multi-mark questions split into separate answer
+  // boxes marked individually, never multiple marks for the same
+  // point." A parallel, self-contained run loop next to the MC/text and
+  // code-drill ones above, for the same reason code drills got their
+  // own loop: the shape of a card (one real question, several DISTINCT
+  // marking points, each its own box) doesn't fit the flashcard
+  // MC/text engine, and "mastery via 3-in-a-row" doesn't make sense for
+  // a one-shot real exam question either - a real paper question is
+  // attempted once per sitting, not drilled to a streak. Never
+  // persisted across reloads, same "one-sitting activity" reasoning as
+  // code drills.
+  //
+  // Card shape: { id, category, source, marks, stem, parts: [{ label,
+  // correctAnswer }] } - every part is its OWN distinct fact from the
+  // real question (never the same point asked twice), each worth 1
+  // mark unless the card's own `marks` and part count genuinely imply
+  // otherwise (all real cards shipped with this feature are 1 mark per
+  // part, matching how they're actually marked in the original exam).
+  function startExamRun(category, count) {
+    var ids = shuffle(categoryCardIds(category).slice());
+    if (count && count < ids.length) ids = ids.slice(0, count);
+    run = {
+      examSet: true,
+      category: category,
+      queue: ids,
+      totalCards: ids.length,
+      cardIndex: 0,
+      scoreMarks: 0,
+      totalMarks: 0
+    };
+  }
+
+  function examNormalize(v) {
+    return String(v == null ? "" : v).trim().toUpperCase();
+  }
+
+  function nextExamCard() {
+    if (current && current.advanceTimer) clearTimeout(current.advanceTimer);
+    if (!run.queue.length) { renderExamDone(); return; }
+    var cardId = run.queue.shift();
+    run.cardIndex++;
+    current = { cardId: cardId, checked: false };
+    renderExamCard();
+  }
+
+  function examPartHtml(part, idx) {
+    return '<div class="exam-part" data-part-idx="' + idx + '">' +
+      '<label class="exam-part-label" for="exam-part-input-' + idx + '">' + escapeHtml(part.label) + "</label>" +
+      '<input type="text" class="exam-part-input" id="exam-part-input-' + idx + '" autocomplete="off" spellcheck="false">' +
+      '<div class="exam-part-feedback"></div>' +
+      "</div>";
+  }
+
+  function renderExamCard() {
+    var card = cardsById[current.cardId];
+    els.stage.innerHTML =
+      '<div class="card exam-card">' +
+      '<p class="exam-progress">Question ' + run.cardIndex + " of " + run.totalCards + "</p>" +
+      '<p class="prompt">' + escapeHtml(card.stem) + "</p>" +
+      '<div class="exam-parts">' + card.parts.map(examPartHtml).join("") + "</div>" +
+      '<p class="exam-source">' + escapeHtml(card.source) + "</p>" +
+      '<div id="exam-summary" class="exam-card-summary"></div>' +
+      '<div class="actions">' +
+      '<button type="button" class="btn" id="exam-check-btn">Check answers</button>' +
+      '<span class="spacer"></span>' +
+      '<button type="button" class="btn ghost" id="exam-restart-btn" title="Wipe this run and start it again">Restart run</button>' +
+      "</div></div>";
+    var firstInput = els.stage.querySelector(".exam-part-input");
+    if (firstInput) firstInput.focus();
+    document.getElementById("exam-check-btn").addEventListener("click", submitExamCard);
+    els.stage.querySelector("#exam-restart-btn").addEventListener("click", function () {
+      startExamRun(run.category, run.totalCards);
+      nextExamCard();
+      toast("Run restarted.");
+    });
+  }
+
+  function reportExamCard(card, marksEarned, marksTotal) {
+    var summary = "Category: " + categoryLabel(card.category) + " · Exam question · " +
+      marksEarned + " / " + marksTotal + " marks · " + card.source;
+    try {
+      window.parent.postMessage({
+        type: "BC_DRILL_PROGRESS",
+        drillId: drillId,
+        drillLabel: drill.title,
+        cardId: card.id,
+        cardPrompt: card.stem,
+        category: card.category,
+        categoryLabel: categoryLabel(card.category),
+        correct: marksEarned === marksTotal,
+        marksEarned: marksEarned,
+        marksTotal: marksTotal,
+        summary: summary
+      }, "*");
+    } catch (e) {}
+  }
+
+  function submitExamCard() {
+    if (current.checked) return;
+    var card = cardsById[current.cardId];
+    var allOk = true;
+    var marksEarned = 0;
+    card.parts.forEach(function (part, idx) {
+      var input = document.getElementById("exam-part-input-" + idx);
+      var raw = input ? input.value : "";
+      var ok = examNormalize(raw) === examNormalize(part.correctAnswer);
+      if (ok) marksEarned++; else allOk = false;
+      var partEl = els.stage.querySelector('.exam-part[data-part-idx="' + idx + '"]');
+      partEl.classList.toggle("is-correct", ok);
+      partEl.classList.toggle("is-wrong", !ok);
+      if (input) input.disabled = true;
+      var fb = partEl.querySelector(".exam-part-feedback");
+      fb.textContent = ok ? "Correct." : "Correct answer: " + part.correctAnswer;
+    });
+    current.checked = true;
+    run.scoreMarks += marksEarned;
+    run.totalMarks += card.parts.length;
+    reportExamCard(card, marksEarned, card.parts.length);
+    var summaryEl = document.getElementById("exam-summary");
+    summaryEl.innerHTML = '<p class="exam-card-score">' + marksEarned + " / " + card.parts.length + " marks" +
+      (allOk ? " - full marks." : "") + "</p>";
+    document.getElementById("exam-check-btn").style.display = "none";
+    current.advanceTimer = setTimeout(nextExamCard, allOk ? 1200 : 3200);
+  }
+
+  function renderExamDone() {
+    var pct = run.totalMarks ? Math.round((run.scoreMarks / run.totalMarks) * 100) : 0;
+    els.stage.innerHTML =
+      '<div class="card">' +
+      '<p class="prompt">Run complete</p>' +
+      '<p class="exam-final-score">' + run.scoreMarks + " / " + run.totalMarks + " marks (" + pct + "%)</p>" +
+      '<div class="actions">' +
+      '<button type="button" class="btn" id="exam-again-btn">Do it again</button>' +
+      '<button type="button" class="btn ghost" id="exam-change-btn">Choose a different topic</button>' +
+      "</div></div>";
+    document.getElementById("exam-again-btn").addEventListener("click", function () {
+      startExamRun(run.category, run.totalCards);
+      nextExamCard();
+    });
+    document.getElementById("exam-change-btn").addEventListener("click", openSetup);
   }
 
   // ============================================================
