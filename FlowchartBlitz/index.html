@@ -666,27 +666,28 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
         if (justRight) return;
         const fromPalette = palette.find((b) => b.id === blockId || b.key === blockId);
         if (!fromPalette) return;
-        setSlots((prev) => {
-            const next = { ...prev };
-            // Bump anything already sitting in this slot back to the palette.
-            if (next[slotKey]) setPalette((p) => [...p, next[slotKey]]);
-            next[slotKey] = fromPalette;
+        const displaced = slots[slotKey] || null;
+        setSlots((prev) => ({ ...prev, [slotKey]: fromPalette }));
+        setPalette((prev) => {
+            const next = prev.filter((block) => block.key !== fromPalette.key);
+            if (displaced && !next.some((block) => block.key === displaced.key)) next.push(displaced);
             return next;
         });
-        setPalette((p) => p.filter((b) => b !== fromPalette));
+        setCheckState(null);
         setPicked(null);
     };
 
     const returnToPalette = (slotKey) => {
         if (justRight) return;
+        const block = slots[slotKey];
+        if (!block) return;
         setSlots((prev) => {
-            const block = prev[slotKey];
-            if (!block) return prev;
-            setPalette((p) => [...p, block]);
             const next = { ...prev };
             delete next[slotKey];
             return next;
         });
+        setPalette((prev) => prev.some((item) => item.key === block.key) ? prev : [...prev, block]);
+        setCheckState(null);
     };
 
     const handleSlotAction = (slotKey, draggedKey) => {
@@ -721,15 +722,19 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
                 setShake(false);
                 // Send only the wrong ones back to the palette, so a
                 // student keeps their correct placements.
-                setSlots((prev) => {
-                    const kept = {};
-                    const returned = [];
-                    Object.keys(prev).forEach((key) => {
-                        if (result[key] === 'correct') kept[key] = prev[key];
-                        else returned.push(prev[key]);
+                const kept = {};
+                const returned = [];
+                Object.keys(slots).forEach((key) => {
+                    if (result[key] === 'correct') kept[key] = slots[key];
+                    else returned.push(slots[key]);
+                });
+                setSlots(kept);
+                setPalette((prev) => {
+                    const next = prev.slice();
+                    returned.forEach((block) => {
+                        if (!next.some((item) => item.key === block.key)) next.push(block);
                     });
-                    if (returned.length) setPalette((p) => [...p, ...returned]);
-                    return kept;
+                    return next;
                 });
                 setCheckState(null);
             }, 900);
