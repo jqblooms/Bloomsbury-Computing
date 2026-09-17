@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flowchart Blitz</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+        body { font-family: 'JetBrains Mono', monospace; overflow: hidden; touch-action: manipulation; background-color: #0f172a; }
+        #root { height: 100%; width: 100%; }
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)} }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        .custom-scrollbar { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.3) rgba(255,255,255,.1); }
+        .custom-scrollbar::-webkit-scrollbar{width:6px}
+        .custom-scrollbar::-webkit-scrollbar-track{background:rgba(255,255,255,.1)}
+        .custom-scrollbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:3px}
+        .no-select{user-select:none;-webkit-user-select:none}
+        .backdrop-blur-md{backdrop-filter:blur(12px)}
+
+        /* Flowchart shapes - same visual language as the main site's
+           .lesson-flow-node (terminal/process/io/decision), redrawn here
+           since this app ships standalone and can't rely on the parent
+           frame's stylesheet. */
+        .fc-node { min-width: 150px; max-width: 260px; padding: 8px 14px; border: 2px solid #64748b; background: #f8fafc; color: #0f172a; font-size: 12.5px; font-weight: 650; line-height: 1.3; text-align: center; }
+        .fc-node.terminal { border-radius: 999px; }
+        .fc-node.process { border-radius: 5px; }
+        .fc-node.io { border-radius: 5px; transform: skew(-10deg); }
+        .fc-node.io > span { display: block; transform: skew(10deg); }
+        .fc-node.decision { min-width: 170px; padding: 18px 26px; border: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: #64748b; }
+        .fc-node.decision > span { display: block; margin: -14px -22px; padding: 14px 22px; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: #f8fafc; }
+        .fc-arrow { color: #38bdf8; font-size: 18px; font-weight: 800; line-height: 1; }
+        .fc-branch-row { display: flex; gap: 28px; align-items: flex-start; justify-content: center; }
+        .fc-branch-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .fc-branch-label { color: #38bdf8; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+
+        /* Drag/drop slots + palette (Level 2: pseudocode -> flowchart) */
+        .fc-slot { min-width: 150px; max-width: 260px; min-height: 40px; padding: 8px 14px; border: 2px dashed #475569; border-radius: 8px; background: rgba(15,23,42,0.4); color: #64748b; font-size: 12px; font-weight: 700; text-align: center; display: flex; align-items: center; justify-content: center; }
+        .fc-slot.is-filled { border-style: solid; padding: 0; background: transparent; }
+        .fc-slot.is-correct .fc-node { border-color: #22c55e; }
+        .fc-slot.is-wrong .fc-node { border-color: #ef4444; }
+        .fc-slot.is-target { outline: 2px solid #38bdf8; outline-offset: 2px; }
+        .fc-block { cursor: grab; }
+        .fc-block.is-picked { outline: 3px solid #facc15; outline-offset: 2px; }
+        .fc-palette { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .fc-code { text-align: left; background: #0b1224; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 16px; font-size: 13px; line-height: 1.7; color: #e2e8f0; white-space: pre; }
+    </style>
+</head>
+<body class="text-white h-screen w-screen overflow-hidden">
+<div id="root"></div>
+
+<script>
+// Bloomsbury Computing identity bridge - same contract as every other
+// embedded arcade app (Binary/Boolean/Pseudocode Blitz).
+window.__bcPlayerName = null;
+window.addEventListener('message', function (event) {
+  var data = event.data;
+  if (data && data.type === 'BC_IDENTITY' && data.name) {
+    window.__bcPlayerName = data.name;
+  }
+});
+window.postToParent = function (payload) {
+  if (window.parent !== window) {
+    window.parent.postMessage(payload, '*');
+  }
+};
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// --- CONSTANTS ---
+const BASE_DURATION_REF = 55000; // more generous than Pseudocode Blitz's 45000 - this is a translation skill being met for the first time
+const LEVELS = {
+    1: { title: "Flowchart to Pseudocode", color: "sky", desc: "Read the flowchart, write the matching Cambridge Pseudocode." },
+    2: { title: "Pseudocode to Flowchart", color: "emerald", desc: "Read the Pseudocode, drag the right blocks into the flowchart." }
+};
+
+// --- WORD BANKS (same shape as Pseudocode Blitz, kept separate so a
+// future change to one app's flavour text doesn't silently affect the
+// other) ---
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const NUMERIC_VAR_NAMES = ['Age', 'Score', 'Total', 'Count', 'Price', 'Height', 'Number', 'Amount'];
+const STRING_VAR_NAMES = ['Name', 'Colour', 'Message', 'Word', 'Team', 'Pet', 'City', 'Result'];
+const STRING_VALUES = ['Dog', 'Cat', 'Red', 'Blue', 'Pass', 'Fail', 'Hello', 'Gold'];
+const RELATIONS = [
+    { text: 'more than or equal to', op: '>=' },
+    { text: 'greater than', op: '>' },
+    { text: 'less than', op: '<' },
+    { text: 'less than or equal to', op: '<=' },
+    { text: 'equal to', op: '=' }
+];
+const MESSAGE_PAIRS = [['Pass', 'Fail'], ['High', 'Low'], ['Winner', 'Loser'], ['Yes', 'No'], ['Open', 'Closed']];
+
+// --- VALIDATION ENGINE (identical shape to Pseudocode Blitz's own -
+// tokenize, then compare token-for-token, string literals kept
+// case-sensitive, everything else case-insensitive) ---
+const TOKEN_RE = /"[^"]*"|<-|<=|>=|<>|[A-Za-z_][A-Za-z0-9_]*|\d+(?:\.\d+)?|[\[\]():,+\-*/=<>]/g;
+const tokenize = (line) => (String(line || '').match(TOKEN_RE) || []);
+const isStringToken = (tok) => tok.length >= 2 && tok[0] === '"' && tok[tok.length - 1] === '"';
+const tokensEqual = (a, b) => {
+    if (a.length !== b.length) return false;
+    return a.every((tok, i) => {
+        const other = b[i];
+        if (isStringToken(tok) || isStringToken(other)) return tok === other;
+        return tok.toUpperCase() === other.toUpperCase();
+    });
+};
+const checkAnswer = (studentText, expectedLines) => {
+    const studentLines = String(studentText || '').split('\n').map((l) => l.trim()).filter((l) => l.length > 0);
+    if (studentLines.length !== expectedLines.length) return false;
+    return studentLines.every((line, i) => tokensEqual(tokenize(line), tokenize(expectedLines[i])));
+};
+
+// --- QUESTION GENERATORS ---
+// Deliberately sequence + selection only, no loops or arrays - this app
+// exists for one lesson (Y8 Algorithms L6) whose whole scope is reading
+// and writing flowchart <-> pseudocode for the two simplest constructs.
+// Each generator returns a `shape` describing the flowchart (either a
+// straight `nodes` list, or `pre`/`decisionText`/`yes`/`no` for a
+// selection that branches then merges) plus `expected`, the canonical
+// Cambridge Pseudocode lines (DECLARE included, since every new variable
+// needs one under the site-wide Cambridge DECLARE rule - the flowchart
+// itself never shows DECLARE, since a flowchart has no symbol for it;
+// that gap is a deliberate, named teaching point in the lesson, not an
+// oversight here).
+let blockIdSeed = 0;
+const nextBlockId = () => 'b' + (blockIdSeed++);
+
+const genSequence = () => {
+    const pattern = pick(['S1', 'S2', 'S3']);
+    if (pattern === 'S1') {
+        const name = pick(NUMERIC_VAR_NAMES);
+        return {
+            family: 'sequence',
+            nodes: [
+                { shape: 'io', text: `Ask the user to enter ${name}`, id: nextBlockId() },
+                { shape: 'io', text: `Display the value of ${name}`, id: nextBlockId() }
+            ],
+            expected: [`DECLARE ${name} : INTEGER`, `INPUT ${name}`, `OUTPUT ${name}`]
+        };
+    }
+    if (pattern === 'S2') {
+        const isString = Math.random() < 0.5;
+        const name = pick(isString ? STRING_VAR_NAMES : NUMERIC_VAR_NAMES);
+        const val = isString ? pick(STRING_VALUES) : randInt(1, 100);
+        const type = isString ? 'STRING' : 'INTEGER';
+        const displayVal = isString ? `"${val}"` : val;
+        return {
+            family: 'sequence',
+            nodes: [
+                { shape: 'process', text: `Store ${displayVal} in ${name}`, id: nextBlockId() },
+                { shape: 'io', text: `Display the value of ${name}`, id: nextBlockId() }
+            ],
+            expected: [`DECLARE ${name} : ${type}`, `${name} <- ${displayVal}`, `OUTPUT ${name}`]
+        };
+    }
+    // S3 - two independent variables, so "sequence" tests order of separate
+    // steps rather than one value carried through the whole chart.
+    const inName = pick(NUMERIC_VAR_NAMES);
+    const resName = pick(STRING_VAR_NAMES);
+    const msg = pick(STRING_VALUES);
+    return {
+        family: 'sequence',
+        nodes: [
+            { shape: 'io', text: `Ask the user to enter ${inName}`, id: nextBlockId() },
+            { shape: 'process', text: `Store "${msg}" in ${resName}`, id: nextBlockId() },
+            { shape: 'io', text: `Display the value of ${resName}`, id: nextBlockId() }
+        ],
+        expected: [`DECLARE ${inName} : INTEGER`, `INPUT ${inName}`, `DECLARE ${resName} : STRING`, `${resName} <- "${msg}"`, `OUTPUT ${resName}`]
+    };
+};
+
+const genSelection = () => {
+    const name = pick(NUMERIC_VAR_NAMES);
+    const rel = pick(RELATIONS);
+    const val = randInt(1, 100);
+    const [msgTrue, msgFalse] = pick(MESSAGE_PAIRS);
+    return {
+        family: 'selection',
+        pre: [{ shape: 'io', text: `Ask the user to enter ${name}`, id: nextBlockId() }],
+        decisionText: `Is ${name} ${rel.text} ${val}?`,
+        yes: [{ shape: 'io', text: `Display "${msgTrue}"`, id: nextBlockId() }],
+        no: [{ shape: 'io', text: `Display "${msgFalse}"`, id: nextBlockId() }],
+        expected: [`DECLARE ${name} : INTEGER`, `INPUT ${name}`, `IF ${name} ${rel.op} ${val} THEN`, `OUTPUT "${msgTrue}"`, `ELSE`, `OUTPUT "${msgFalse}"`, `ENDIF`]
+    };
+};
+
+const generateQuestion = () => (Math.random() < 0.5 ? genSequence() : genSelection());
+
+// Flattens a question's node list into the ordered slot list Level 2
+// needs (group + index tags let the drop targets and the answer-check
+// line back up to the same node deterministically).
+const questionSlots = (q) => {
+    if (q.family === 'sequence') return q.nodes.map((n, i) => ({ ...n, group: 'nodes', index: i }));
+    const pre = q.pre.map((n, i) => ({ ...n, group: 'pre', index: i }));
+    const yes = q.yes.map((n, i) => ({ ...n, group: 'yes', index: i }));
+    const no = q.no.map((n, i) => ({ ...n, group: 'no', index: i }));
+    return [...pre, ...yes, ...no];
+};
+
+const saveScore = (score, level) => {
+    const key = `flowchartBlitz_scores_lvl${level}`;
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    stored.push({ score, date: new Date().toISOString() });
+    stored.sort((a, b) => b.score - a.score);
+    localStorage.setItem(key, JSON.stringify(stored.slice(0, 5)));
+};
+const getScores = (level) => JSON.parse(localStorage.getItem(`flowchartBlitz_scores_lvl${level}`) || '[]');
+
+const calculateMaxTime = (currentScore, multiplier = 1) => {
+    const steps = Math.floor(currentScore / 250);
+    const speedPercent = Math.min(120, 10 + (steps * 10));
+    return (BASE_DURATION_REF * 100) / speedPercent * multiplier;
+};
+
+// --- GAME LOOP (same mechanic as Binary/Boolean/Pseudocode Blitz) ---
+const useGameLoop = (active, onGameOver, timeMultiplier = 1) => {
+    const [stress, setStress] = useState(0);
+    const [score, setScore] = useState(0);
+    const [gameSpeed, setGameSpeed] = useState(10);
+    const stressRef = useRef(0);
+    const scoreRef = useRef(0);
+    const maxTimeRef = useRef(calculateMaxTime(0, timeMultiplier));
+    const lastTimeRef = useRef(Date.now());
+    const frameRef = useRef();
+    const resetRound = useCallback((pointsToAdd = 0) => {
+        const newScore = scoreRef.current + pointsToAdd;
+        scoreRef.current = newScore;
+        setScore(newScore);
+        const newStress = Math.max(0, stressRef.current - 0.3);
+        stressRef.current = newStress;
+        setStress(newStress);
+        maxTimeRef.current = calculateMaxTime(newScore, timeMultiplier);
+        const steps = Math.floor(newScore / 250);
+        setGameSpeed(Math.min(120, 10 + (steps * 10)));
+    }, [timeMultiplier]);
+    useEffect(() => {
+        if (!active) { cancelAnimationFrame(frameRef.current); return; }
+        lastTimeRef.current = Date.now();
+        const loop = () => {
+            const now = Date.now();
+            const delta = now - lastTimeRef.current;
+            lastTimeRef.current = now;
+            stressRef.current += delta / maxTimeRef.current;
+            if (stressRef.current >= 1) {
+                stressRef.current = 1; setStress(1); cancelAnimationFrame(frameRef.current); onGameOver(scoreRef.current); return;
+            }
+            setStress(stressRef.current);
+            frameRef.current = requestAnimationFrame(loop);
+        };
+        frameRef.current = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(frameRef.current);
+    }, [active, onGameOver]);
+    const addStress = useCallback((amount) => { stressRef.current = Math.min(0.99, stressRef.current + amount); setStress(stressRef.current); }, []);
+    return { stress, score, resetRound, addStress, gameSpeed };
+};
+
+// --- SHARED COMPONENTS ---
+const Button = ({ onClick, children, className = "", disabled = false, variant = "primary" }) => {
+    const base = "font-bold py-3 px-6 rounded-lg shadow-lg transform transition-all active:scale-95 no-select flex items-center justify-center";
+    const variants = { primary: "bg-sky-600 hover:bg-sky-500 text-white shadow-sky-900/50", secondary: "bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600", success: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/50" };
+    return <button type="button" onClick={onClick} disabled={disabled} className={`${base} ${variants[variant]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>{children}</button>;
+};
+
+const HelpModal = ({ levelId, onClose }) => {
+    const content = {
+        1: { title: "Flowchart to Pseudocode", body: "Read the flowchart from Start to End. Write one Cambridge Pseudocode instruction for each shape you meet, in order.\nA rounded shape (input/output) reading \"Ask the user to enter...\" is an INPUT line. Reading \"Display...\" is an OUTPUT line.\nA rectangle is an assignment: Name <- Value.\nA diamond is a condition: write IF ... THEN, the Yes branch, then ELSE, the No branch, then ENDIF.\nEvery new variable needs its own DECLARE line first, even though the flowchart itself never shows one." },
+        2: { title: "Pseudocode to Flowchart", body: "Read the Cambridge Pseudocode on the left. DECLARE lines have no shape of their own - skip them.\nDrag each remaining block into the matching empty slot, in the same order the pseudocode runs.\nAn IF line's two OUTPUT/INPUT lines go into the Yes and No branches, not the main line." }
+    };
+    const data = content[levelId] || { title: "Help", body: "Good luck!" };
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 fade-in" onClick={onClose}>
+            <div className="bg-slate-800 border border-slate-600 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative" onClick={e => e.stopPropagation()}>
+                <h2 className="text-2xl font-bold text-white mb-4 leading-tight">{data.title}</h2>
+                <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">{data.body}</p>
+                <Button onClick={onClose} className="w-full mt-6">Close</Button>
+            </div>
+        </div>
+    );
+};
+
+const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children }) => {
+    const bgOpacity = Math.min(0.7, stress);
+    const barWidth = Math.max(0, (1 - stress) * 100);
+    return (
+        <div className={`h-full flex flex-col p-4 relative transition-colors duration-100 ${stress > 0.85 ? 'shake' : ''}`} style={{ backgroundColor: `rgba(8, 47, 73, ${bgOpacity})` }}>
+            <div className="flex justify-between items-center mb-4 z-10 shrink-0">
+                <button onClick={onExit} className="p-2 bg-slate-900/50 hover:bg-slate-800 rounded-full text-white backdrop-blur-sm"><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg></button>
+                <div className="flex flex-col items-center">
+                    <span className="text-xs font-bold tracking-widest uppercase mb-1 text-center leading-tight max-w-[38vw] text-slate-300">{levelName}</span>
+                    <div className="bg-slate-900/90 px-6 py-1 rounded-full border border-sky-500/30 shadow-lg"><span className="text-xl font-mono text-white font-bold">{score}</span></div>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">SPEED</span>
+                    <span className={`text-xl font-bold font-mono ${gameSpeed > 100 ? 'text-red-400 animate-pulse' : 'text-sky-400'}`}>{gameSpeed}%</span>
+                    <button onClick={onHelp} className="mt-1 text-xs bg-slate-700 hover:bg-white hover:text-black rounded-full w-6 h-6 flex items-center justify-center font-bold transition-colors" title="Level Help">?</button>
+                </div>
+            </div>
+            <div className="w-full h-2 bg-slate-900/50 rounded-full mb-4 overflow-hidden z-10 shrink-0"><div className={`h-full transition-all duration-100 ${stress > 0.7 ? 'bg-red-500' : 'bg-sky-500'}`} style={{ width: `${barWidth}%` }}></div></div>
+            <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
+        </div>
+    );
+};
+
+// --- FLOWCHART RENDERER (shared by both levels: Level 1 shows it fully
+// filled in as the given diagram; Level 2 shows it with empty/target
+// slots standing in for every node except the fixed Start/decision/End
+// shapes) ---
+const FlowNode = ({ shape, text }) => (
+    <div className={`fc-node ${shape}`}><span>{text}</span></div>
+);
+
+const FlowchartDiagram = ({ q, slotState, onSlotClick, checkState }) => {
+    const renderNode = (node, groupIndexKey) => {
+        if (!slotState) return <FlowNode shape={node.shape} text={node.text} />;
+        const occupant = slotState[groupIndexKey];
+        const status = checkState ? checkState[groupIndexKey] : null;
+        return (
+            <div
+                className={`fc-slot ${occupant ? 'is-filled' : ''} ${status === 'correct' ? 'is-correct' : ''} ${status === 'wrong' ? 'is-wrong' : ''}`}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => { e.preventDefault(); onSlotClick(groupIndexKey, e.dataTransfer.getData('text/plain')); }}
+                onClick={() => onSlotClick(groupIndexKey, null)}
+            >
+                {occupant ? <FlowNode shape={occupant.shape} text={occupant.text} /> : 'Drop here'}
+            </div>
+        );
+    };
+    if (q.family === 'sequence') {
+        return (
+            <div className="flex flex-col items-center gap-2">
+                <FlowNode shape="terminal" text="Start" />
+                {q.nodes.map((n, i) => (
+                    <React.Fragment key={n.id}>
+                        <div className="fc-arrow">&#8595;</div>
+                        {renderNode(n, `nodes-${i}`)}
+                    </React.Fragment>
+                ))}
+                <div className="fc-arrow">&#8595;</div>
+                <FlowNode shape="terminal" text="End" />
+            </div>
+        );
+    }
+    return (
+        <div className="flex flex-col items-center gap-2">
+            <FlowNode shape="terminal" text="Start" />
+            {q.pre.map((n, i) => (
+                <React.Fragment key={n.id}>
+                    <div className="fc-arrow">&#8595;</div>
+                    {renderNode(n, `pre-${i}`)}
+                </React.Fragment>
+            ))}
+            <div className="fc-arrow">&#8595;</div>
+            <FlowNode shape="decision" text={q.decisionText} />
+            <div className="fc-branch-row">
+                <div className="fc-branch-col">
+                    <span className="fc-branch-label">Yes</span>
+                    {q.yes.map((n, i) => (
+                        <React.Fragment key={n.id}>
+                            <div className="fc-arrow">&#8595;</div>
+                            {renderNode(n, `yes-${i}`)}
+                        </React.Fragment>
+                    ))}
+                </div>
+                <div className="fc-branch-col">
+                    <span className="fc-branch-label">No</span>
+                    {q.no.map((n, i) => (
+                        <React.Fragment key={n.id}>
+                            <div className="fc-arrow">&#8595;</div>
+                            {renderNode(n, `no-${i}`)}
+                        </React.Fragment>
+                    ))}
+                </div>
+            </div>
+            <div className="fc-arrow">&#8595;</div>
+            <FlowNode shape="terminal" text="End" />
+        </div>
+    );
+};
+
+// --- LEVEL 1: Flowchart -> Pseudocode (typed answer) ---
+const FlowToCodeLevel = ({ onExit, onGameOver, onHelp }) => {
+    const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
+    const handleGameEnd = useCallback((s) => onGameOver(s, 1, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver]);
+    const handleExit = () => onExit(1, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
+    const { stress, score, resetRound, addStress, gameSpeed } = useGameLoop(true, handleGameEnd, 2.6);
+    const [question, setQuestion] = useState(null);
+    const [answer, setAnswer] = useState('');
+    const [shake, setShake] = useState(false);
+    const [justRight, setJustRight] = useState(false);
+    const fieldRef = useRef(null);
+    useEffect(() => { next(); }, []);
+    const next = (points = 0) => {
+        setQuestion(generateQuestion());
+        setAnswer('');
+        setJustRight(false);
+        resetRound(points);
+    };
+    useEffect(() => { if (fieldRef.current) fieldRef.current.focus(); }, [question]);
+    if (!question) return null;
+    const submit = () => {
+        if (justRight || !answer.trim()) return;
+        const correct = checkAnswer(answer, question.expected);
+        if (correct) {
+            correctRef.current += 1;
+            setJustRight(true);
+            setTimeout(() => next(70 + question.expected.length * 20), 500);
+        } else {
+            wrongRef.current += 1;
+            setShake(true);
+            addStress(0.15);
+            setTimeout(() => setShake(false), 500);
+        }
+    };
+    const handleKeyDown = (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(); } };
+    return (
+        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L1: Flowchart to Pseudocode">
+            <div className={`mb-4 ${shake ? 'shake' : ''}`}><FlowchartDiagram q={question} /></div>
+            <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Write the matching Cambridge Pseudocode</div>
+            <textarea
+                ref={fieldRef}
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={justRight}
+                spellCheck={false}
+                rows={question.expected.length + 1}
+                className={`w-full max-w-lg bg-slate-800 border-2 rounded-lg p-3 font-mono text-sm text-white mb-4 focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-sky-500'}`}
+                placeholder="Type your pseudocode here, one instruction per line..."
+            />
+            <div className="text-xs text-slate-500 uppercase tracking-widest mb-4">One instruction per line - remember DECLARE for every new variable</div>
+            <Button onClick={submit} disabled={justRight || !answer.trim()} variant={justRight ? 'success' : 'primary'} className="w-40">{justRight ? 'Correct!' : 'Check'}</Button>
+        </GameLayout>
+    );
+};
+
+// --- LEVEL 2: Pseudocode -> Flowchart (drag/drop, tap-to-place fallback
+// for touch devices - both paths call placeBlock so there is exactly one
+// place that decides what a placement means) ---
+const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
+    const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
+    const handleGameEnd = useCallback((s) => onGameOver(s, 2, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver]);
+    const handleExit = () => onExit(2, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
+    const { stress, score, resetRound, addStress, gameSpeed } = useGameLoop(true, handleGameEnd, 3.2);
+    const [question, setQuestion] = useState(null);
+    const [palette, setPalette] = useState([]);
+    const [slots, setSlots] = useState({});
+    const [picked, setPicked] = useState(null);
+    const [checkState, setCheckState] = useState(null);
+    const [justRight, setJustRight] = useState(false);
+    const [shake, setShake] = useState(false);
+
+    const next = (points = 0) => {
+        const q = generateQuestion();
+        const flat = questionSlots(q);
+        setQuestion(q);
+        setSlots({});
+        setPicked(null);
+        setCheckState(null);
+        setJustRight(false);
+        setPalette(flat.map((n) => ({ ...n, key: `${n.group}-${n.index}` })).sort(() => Math.random() - 0.5));
+        resetRound(points);
+    };
+    useEffect(() => { next(); }, []);
+    if (!question) return null;
+
+    const placeBlock = (slotKey, blockId) => {
+        if (justRight) return;
+        const fromPalette = palette.find((b) => b.id === blockId || b.key === blockId);
+        if (!fromPalette) return;
+        setSlots((prev) => {
+            const next = { ...prev };
+            // Bump anything already sitting in this slot back to the palette.
+            if (next[slotKey]) setPalette((p) => [...p, next[slotKey]]);
+            next[slotKey] = fromPalette;
+            return next;
+        });
+        setPalette((p) => p.filter((b) => b !== fromPalette));
+        setPicked(null);
+    };
+
+    const returnToPalette = (slotKey) => {
+        if (justRight) return;
+        setSlots((prev) => {
+            const block = prev[slotKey];
+            if (!block) return prev;
+            setPalette((p) => [...p, block]);
+            const next = { ...prev };
+            delete next[slotKey];
+            return next;
+        });
+    };
+
+    const handleSlotAction = (slotKey, draggedKey) => {
+        if (draggedKey) { placeBlock(slotKey, draggedKey); return; }
+        if (picked) { placeBlock(slotKey, picked); return; }
+        if (slots[slotKey]) returnToPalette(slotKey);
+    };
+
+    const flat = questionSlots(question);
+    const allFilled = flat.every((n) => slots[`${n.group}-${n.index}`]);
+
+    const submit = () => {
+        if (!allFilled || justRight) return;
+        const result = {};
+        let allCorrect = true;
+        flat.forEach((n) => {
+            const key = `${n.group}-${n.index}`;
+            const ok = slots[key] && slots[key].id === n.id;
+            result[key] = ok ? 'correct' : 'wrong';
+            if (!ok) allCorrect = false;
+        });
+        setCheckState(result);
+        if (allCorrect) {
+            correctRef.current += 1;
+            setJustRight(true);
+            setTimeout(() => next(70 + flat.length * 20), 700);
+        } else {
+            wrongRef.current += 1;
+            setShake(true);
+            addStress(0.15);
+            setTimeout(() => {
+                setShake(false);
+                // Send only the wrong ones back to the palette, so a
+                // student keeps their correct placements.
+                setSlots((prev) => {
+                    const kept = {};
+                    const returned = [];
+                    Object.keys(prev).forEach((key) => {
+                        if (result[key] === 'correct') kept[key] = prev[key];
+                        else returned.push(prev[key]);
+                    });
+                    if (returned.length) setPalette((p) => [...p, ...returned]);
+                    return kept;
+                });
+                setCheckState(null);
+            }, 900);
+        }
+    };
+
+    return (
+        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L2: Pseudocode to Flowchart">
+            <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Cambridge Pseudocode</div>
+            <div className="fc-code mb-5 max-w-md">{question.expected.join('\n')}</div>
+            <div className={`mb-5 ${shake ? 'shake' : ''}`}>
+                <FlowchartDiagram
+                    q={question}
+                    slotState={Object.fromEntries(Object.entries(slots).map(([k, v]) => [k, v]))}
+                    checkState={checkState}
+                    onSlotClick={handleSlotAction}
+                />
+            </div>
+            <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Drag a block into a slot, or tap a block then tap a slot</div>
+            <div className="fc-palette mb-4">
+                {palette.map((b) => (
+                    <div
+                        key={b.key}
+                        className={`fc-block ${picked === b.key ? 'is-picked' : ''}`}
+                        draggable
+                        onDragStart={(e) => e.dataTransfer.setData('text/plain', b.key)}
+                        onClick={() => setPicked(picked === b.key ? null : b.key)}
+                    >
+                        <FlowNode shape={b.shape} text={b.text} />
+                    </div>
+                ))}
+            </div>
+            <Button onClick={submit} disabled={!allFilled || justRight} variant={justRight ? 'success' : 'primary'} className="w-40">{justRight ? 'Correct!' : 'Check'}</Button>
+        </GameLayout>
+    );
+};
+
+// ============================================================
+// MAIN MENU
+// ============================================================
+const MainMenu = ({ onStart, playerName }) => {
+    const [helpLevel, setHelpLevel] = useState(null);
+    return (
+        <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar relative">
+            {helpLevel && <HelpModal levelId={helpLevel} onClose={() => setHelpLevel(null)} />}
+            <div className="text-center mb-4 mt-6">
+                <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-300 mb-1">FLOWCHART BLITZ</h1>
+                <p className="text-slate-400 text-sm">Sequence and Selection. Flowcharts and Cambridge Pseudocode, both directions.</p>
+                <p className="text-sky-400 text-xs mt-1 font-mono">{playerName}</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl pb-24">
+                {Object.entries(LEVELS).map(([id, data]) => {
+                    const scores = getScores(id);
+                    const topScore = scores.length > 0 ? scores[0].score : '-';
+                    return (
+                        <div key={id} className={`bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-${data.color}-500 transition-all flex flex-col relative group`}>
+                            <div className="flex justify-between items-start mb-2">
+                                <h2 className={`text-lg font-bold leading-tight text-${data.color}-400`}>{data.title}</h2>
+                                <button onClick={() => setHelpLevel(id)} className="text-slate-500 hover:text-white bg-slate-700 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold transition-colors">?</button>
+                            </div>
+                            <p className="text-xs text-slate-400 mb-4">{data.desc}</p>
+                            <div className="flex-1"></div>
+                            <div className="flex justify-between items-end mt-4">
+                                <div className="text-xs text-slate-500">Best: <span className="text-white font-mono">{topScore}</span></div>
+                                <button onClick={() => onStart(parseInt(id))} className={`px-4 py-2 rounded-lg bg-${data.color}-600 hover:bg-${data.color}-500 text-white font-bold text-sm shadow-lg`}>PLAY</button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const GameOver = ({ score, level, onRestart, onHome }) => (
+    <div className="flex flex-col items-center justify-center h-full p-4 fade-in space-y-8 text-center bg-slate-900/95 z-50 absolute inset-0">
+        <h2 className="text-6xl font-bold text-red-500 shake">GAME OVER</h2>
+        <div className="bg-slate-800 p-8 rounded-2xl border-2 border-slate-700 shadow-2xl w-full max-w-sm">
+            <p className="text-slate-400 uppercase tracking-widest text-sm mb-2">Level {level} Score</p>
+            <p className="text-7xl font-mono font-bold text-white">{score}</p>
+        </div>
+        <div className="flex flex-col space-y-3 w-full max-w-xs">
+            <Button onClick={onRestart} className="w-full text-lg">Try Again</Button>
+            <Button onClick={onHome} variant="secondary" className="w-full">Back to Menu</Button>
+        </div>
+    </div>
+);
+
+// ============================================================
+// APP ROOT
+// ============================================================
+const App = () => {
+    const [playerName, setPlayerName] = useState(() => window.__bcPlayerName || 'Player');
+    useEffect(() => {
+        if (window.__bcPlayerName) { setPlayerName(window.__bcPlayerName); return; }
+        const handler = (event) => {
+            const data = event.data;
+            if (data && data.type === 'BC_IDENTITY' && data.name) setPlayerName(data.name);
+        };
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
+    }, []);
+    const [view, setView] = useState('menu');
+    const [activeLevel, setActiveLevel] = useState(1);
+    const [lastScore, setLastScore] = useState(0);
+    const [showHelp, setShowHelp] = useState(false);
+
+    const handleGameOver = (score, level, duration, correct, wrong) => {
+        saveScore(score, level);
+        postToParent({ type: 'FCB_PROGRESS', kind: 'level', level, score, duration, correct, wrong });
+        setLastScore(score); setActiveLevel(level); setView('gameover');
+    };
+    const handleExit = (level, duration, correct, wrong, score) => {
+        saveScore(score, level);
+        postToParent({ type: 'FCB_PROGRESS', kind: 'level', level, score, duration, correct, wrong });
+        setView('menu');
+    };
+
+    return (
+        <div className="w-full h-full relative">
+            {showHelp && <HelpModal levelId={activeLevel} onClose={() => setShowHelp(false)} />}
+            {view === 'menu' && (
+                <MainMenu onStart={(lvl) => { setActiveLevel(lvl); setView(lvl === 1 ? 'game1' : 'game2'); }} playerName={playerName} />
+            )}
+            {view === 'game1' && <FlowToCodeLevel onExit={handleExit} onGameOver={handleGameOver} onHelp={() => setShowHelp(true)} />}
+            {view === 'game2' && <CodeToFlowLevel onExit={handleExit} onGameOver={handleGameOver} onHelp={() => setShowHelp(true)} />}
+            {view === 'gameover' && <GameOver score={lastScore} level={activeLevel} onRestart={() => setView(activeLevel === 1 ? 'game1' : 'game2')} onHome={() => setView('menu')} />}
+        </div>
+    );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
