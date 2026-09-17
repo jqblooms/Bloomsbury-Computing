@@ -39,6 +39,15 @@
         .fc-branch-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
         .fc-branch-label { color: #38bdf8; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
 
+        /* Left/right layout for the flowchart next to its pseudocode
+           (James: stacking them top/bottom left too little room for
+           either, especially the typed-answer textarea). Wraps to a
+           single stacked column below ~760px so it still works on a
+           narrow window/phone. */
+        .fc-play-columns { display: flex; gap: 28px; align-items: flex-start; justify-content: center; width: 100%; flex-wrap: wrap; }
+        .fc-play-diagram { flex: 1 1 320px; display: flex; justify-content: center; }
+        .fc-play-panel { flex: 1 1 320px; display: flex; flex-direction: column; min-width: 280px; }
+
         /* Drag/drop slots + palette (Level 2: pseudocode -> flowchart) */
         .fc-slot { min-width: 150px; max-width: 260px; min-height: 40px; padding: 8px 14px; border: 2px dashed #475569; border-radius: 8px; background: rgba(15,23,42,0.4); color: #64748b; font-size: 12px; font-weight: 700; text-align: center; display: flex; align-items: center; justify-content: center; }
         .fc-slot.is-filled { border-style: solid; padding: 0; background: transparent; }
@@ -423,21 +432,26 @@ const FlowToCodeLevel = ({ onExit, onGameOver, onHelp }) => {
     const handleKeyDown = (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(); } };
     return (
         <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L1: Flowchart to Pseudocode">
-            <div className={`mb-4 ${shake ? 'shake' : ''}`}><FlowchartDiagram q={question} /></div>
-            <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Write the matching Cambridge Pseudocode</div>
-            <textarea
-                ref={fieldRef}
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={justRight}
-                spellCheck={false}
-                rows={question.expected.length + 1}
-                className={`w-full max-w-lg bg-slate-800 border-2 rounded-lg p-3 font-mono text-sm text-white mb-4 focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-sky-500'}`}
-                placeholder="Type your pseudocode here, one instruction per line..."
-            />
-            <div className="text-xs text-slate-500 uppercase tracking-widest mb-4">One instruction per line - remember DECLARE for every new variable</div>
-            <Button onClick={submit} disabled={justRight || !answer.trim()} variant={justRight ? 'success' : 'primary'} className="w-40">{justRight ? 'Correct!' : 'Check'}</Button>
+            <div className={`fc-play-columns ${shake ? 'shake' : ''}`}>
+                <div className="fc-play-diagram"><FlowchartDiagram q={question} /></div>
+                <div className="fc-play-panel">
+                    <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Write the matching Cambridge Pseudocode</div>
+                    <textarea
+                        ref={fieldRef}
+                        value={answer}
+                        onChange={(e) => setAnswer(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        disabled={justRight}
+                        spellCheck={false}
+                        rows={Math.max(8, question.expected.length + 2)}
+                        style={{ resize: 'vertical', minHeight: '220px' }}
+                        className={`w-full bg-slate-800 border-2 rounded-lg p-3 font-mono text-sm text-white mb-4 focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-sky-500'}`}
+                        placeholder="Type your pseudocode here, one instruction per line..."
+                    />
+                    <div className="text-xs text-slate-500 uppercase tracking-widest mb-4">One instruction per line - remember DECLARE for every new variable</div>
+                    <Button onClick={submit} disabled={justRight || !answer.trim()} variant={justRight ? 'success' : 'primary'} className="w-40">{justRight ? 'Correct!' : 'Check'}</Button>
+                </div>
+            </div>
         </GameLayout>
     );
 };
@@ -548,15 +562,19 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
 
     return (
         <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L2: Pseudocode to Flowchart">
-            <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Cambridge Pseudocode</div>
-            <div className="fc-code mb-5 max-w-md">{question.expected.join('\n')}</div>
-            <div className={`mb-5 ${shake ? 'shake' : ''}`}>
-                <FlowchartDiagram
-                    q={question}
-                    slotState={Object.fromEntries(Object.entries(slots).map(([k, v]) => [k, v]))}
-                    checkState={checkState}
-                    onSlotClick={handleSlotAction}
-                />
+            <div className={`fc-play-columns mb-5 ${shake ? 'shake' : ''}`}>
+                <div className="fc-play-panel">
+                    <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Cambridge Pseudocode</div>
+                    <div className="fc-code">{question.expected.join('\n')}</div>
+                </div>
+                <div className="fc-play-diagram">
+                    <FlowchartDiagram
+                        q={question}
+                        slotState={Object.fromEntries(Object.entries(slots).map(([k, v]) => [k, v]))}
+                        checkState={checkState}
+                        onSlotClick={handleSlotAction}
+                    />
+                </div>
             </div>
             <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Drag a block into a slot, or tap a block then tap a slot</div>
             <div className="fc-palette mb-4">
