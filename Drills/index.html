@@ -294,6 +294,7 @@
   // enough), never for grading against `answers`/`keywords` generally.
   function normalizeLoose(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim(); }
   function randInts(n, min, max) { var out = []; for (var i = 0; i < n; i++) out.push(randInt(min, max)); return out; }
+  function bin8(n) { n = ((n % 256) + 256) % 256; return n.toString(2).replace(/^/, "00000000").slice(-8); }
   // A random linear-search draw: an n-element array plus a search value that
   // matches an existing position about 60% of the time (foundAt = 1-based
   // index) and is guaranteed absent otherwise (foundAt = -1) - so a search
@@ -577,6 +578,28 @@
           note: "Overflow happens when the result needs more bits than the register can hold; the extra carry bit is lost."
         },
         {
+          id: "add-carry-chain-apply", category: "addition",
+          prompt: "Add these two 8-bit binary numbers: 00101101 + 00011011. Give your answer as an 8-bit binary number.",
+          answers: ["01001000"],
+          keywords: [/^\s*0\s*1\s*0\s*0\s*1\s*0\s*0\s*0\s*$/],
+          distractors: ["01001001", "01000111", "00110110", "01011000"],
+          note: "Work from the right, carrying into the next column whenever a column totals 2 or 3: 00101101 + 00011011 = 01001000 (45 + 27 = 72).",
+          randomize: function () {
+            var a = randInt(1, 120), b = randInt(1, 120);
+            var sum = a + b;
+            var bitsA = bin8(a), bitsB = bin8(b), bitsSum = bin8(sum);
+            var noCarry = bin8(a ^ b);
+            return {
+              prompt: "Add these two 8-bit binary numbers: " + bitsA + " + " + bitsB + ". Give your answer as an 8-bit binary number.",
+              answers: [bitsSum],
+              keywords: [new RegExp("^\\s*" + bitsSum.split("").join("\\s*") + "\\s*$")],
+              distractors: dedupeDistractors(bitsSum, [noCarry, bin8(sum - 1), bin8(sum + 1), bin8(sum + 8)]),
+              note: "Work from the right, carrying into the next column whenever a column totals 2 or 3: " + bitsA + " + " + bitsB + " = " + bitsSum + " (" + a + " + " + b + " = " + sum + ")."
+            };
+          }
+        },
+
+        {
           id: "shift-left-1", category: "shifts",
           prompt: "What is the effect of a logical LEFT shift of 1 place on an unsigned binary number?",
           answers: ["Multiplies the number by 2"],
@@ -673,6 +696,49 @@
           ]
         },
         {
+          id: "shift-left-apply", category: "shifts",
+          prompt: "An 8-bit register holds 00010110. What is the result of a logical shift LEFT by 2 places? (Zero-fill on the right; bits shifted off the left are lost.)",
+          answers: ["01011000"],
+          keywords: [/^\s*0\s*1\s*0\s*1\s*1\s*0\s*0\s*0\s*$/],
+          distractors: ["01011010", "00101100", "01011001", "10110000"],
+          note: "Every bit moves 2 places left, zeros fill in on the right: 00010110 -> 01011000.",
+          randomize: function () {
+            var val = randInt(1, 63);
+            var n = randInt(1, 3);
+            var result = (val << n) & 0xFF;
+            var bitsIn = bin8(val), bitsOut = bin8(result);
+            return {
+              prompt: "An 8-bit register holds " + bitsIn + ". What is the result of a logical shift LEFT by " + n + " place(s)? (Zero-fill on the right; bits shifted off the left are lost.)",
+              answers: [bitsOut],
+              keywords: [new RegExp("^\\s*" + bitsOut.split("").join("\\s*") + "\\s*$")],
+              distractors: dedupeDistractors(bitsOut, [bin8((val << (n - 1)) & 0xFF), bin8((val << (n + 1)) & 0xFF), bin8(val >>> n)]),
+              note: "Every bit moves " + n + " place(s) left, zero(s) fill in on the right: " + bitsIn + " -> " + bitsOut + "."
+            };
+          }
+        },
+        {
+          id: "shift-right-apply", category: "shifts",
+          prompt: "An 8-bit register holds 11010000. What is the result of a logical shift RIGHT by 3 places? (Zero-fill on the left; bits shifted off the right are lost.)",
+          answers: ["00011010"],
+          keywords: [/^\s*0\s*0\s*0\s*1\s*1\s*0\s*1\s*0\s*$/],
+          distractors: ["00011011", "10001101", "00011000", "00110100"],
+          note: "Every bit moves 3 places right, zeros fill in on the left: 11010000 -> 00011010.",
+          randomize: function () {
+            var val = randInt(64, 255);
+            var n = randInt(1, 3);
+            var result = val >>> n;
+            var bitsIn = bin8(val), bitsOut = bin8(result);
+            return {
+              prompt: "An 8-bit register holds " + bitsIn + ". What is the result of a logical shift RIGHT by " + n + " place(s)? (Zero-fill on the left; bits shifted off the right are lost.)",
+              answers: [bitsOut],
+              keywords: [new RegExp("^\\s*" + bitsOut.split("").join("\\s*") + "\\s*$")],
+              distractors: dedupeDistractors(bitsOut, [bin8(val >>> (n - 1)), bin8(val >>> (n + 1)), bin8((val << n) & 0xFF)]),
+              note: "Every bit moves " + n + " place(s) right, zero(s) fill in on the left: " + bitsIn + " -> " + bitsOut + "."
+            };
+          }
+        },
+
+        {
           id: "twos-purpose", category: "twos",
           prompt: "Two's complement lets a fixed number of bits represent what?",
           answers: ["Both positive and negative whole numbers together"],
@@ -716,6 +782,47 @@
           answers: ["−128 to 127"],
           distractors: ["0 to 255", "−127 to 128", "−128 to 128", "−255 to 255", "0 to 127", "−256 to 255"]
         },
+        {
+          id: "twos-denary-to-comp-apply", category: "twos",
+          prompt: "Convert the denary value -45 to 8-bit two's complement.",
+          answers: ["11010011"],
+          keywords: [/^\s*1\s*1\s*0\s*1\s*0\s*0\s*1\s*1\s*$/],
+          distractors: ["11010010", "00101101", "11010100", "10101101"],
+          note: "Write 45 in 8-bit binary (00101101), flip every bit (11010010), then add 1: 11010011.",
+          randomize: function () {
+            var n = randInt(1, 127);
+            var bitsPositive = bin8(n);
+            var bitsComp = bin8(256 - n);
+            var bitsFlipped = bin8(255 - n);
+            return {
+              prompt: "Convert the denary value -" + n + " to 8-bit two's complement.",
+              answers: [bitsComp],
+              keywords: [new RegExp("^\\s*" + bitsComp.split("").join("\\s*") + "\\s*$")],
+              distractors: dedupeDistractors(bitsComp, [bitsPositive, bitsFlipped, bin8(256 - n - 1), bin8(256 - n + 1)]),
+              note: "Write " + n + " in 8-bit binary (" + bitsPositive + "), flip every bit (" + bitsFlipped + "), then add 1: " + bitsComp + "."
+            };
+          }
+        },
+        {
+          id: "twos-comp-to-denary-apply", category: "twos",
+          prompt: "The 8-bit two's complement number 11010011 represents which denary value?",
+          answers: ["-45"],
+          keywords: [/^\s*-\s*45\s*$/],
+          distractors: ["45", "-46", "-44", "211"],
+          note: "The leading 1 means it is negative. Flip every bit (00101100), add 1 (00101101 = 45), so the value is -45.",
+          randomize: function () {
+            var n = randInt(1, 127);
+            var bitsComp = bin8(256 - n);
+            return {
+              prompt: "The 8-bit two's complement number " + bitsComp + " represents which denary value?",
+              answers: ["-" + n],
+              keywords: [new RegExp("^\\s*-\\s*" + n + "\\s*$")],
+              distractors: dedupeDistractors("-" + n, [String(n), "-" + (n - 1), "-" + (n + 1), String(256 - n)]),
+              note: "The leading 1 means it is negative. Flip every bit and add 1 to find the size: " + n + ", so the value is -" + n + "."
+            };
+          }
+        },
+
         {
           id: "term-bit", category: "units",
           prompt: "What is the name for the smallest unit of data, which holds a single 0 or 1?",
@@ -967,7 +1074,49 @@
           prompt: "The hexadecimal digit A represents which denary value?",
           answers: ["10"],
           distractors: ["1", "11", "15", "14", "16", "0"]
-        }
+        },
+        {
+          id: "hex-to-denary-apply", category: "hex",
+          prompt: "Convert the hexadecimal value 2B to denary.",
+          answers: ["43"],
+          keywords: [/^\s*43\s*$/],
+          distractors: ["23", "42", "44", "27"],
+          note: "2 x 16 = 32, plus B (11) = 43.",
+          randomize: function () {
+            var hi = randInt(1, 15), lo = randInt(0, 15);
+            var val = hi * 16 + lo;
+            var hex = hi.toString(16).toUpperCase() + lo.toString(16).toUpperCase();
+            return {
+              prompt: "Convert the hexadecimal value " + hex + " to denary.",
+              answers: [String(val)],
+              keywords: [new RegExp("^\\s*" + val + "\\s*$")],
+              distractors: dedupeDistractors(val, [val - 1, val + 1, hi + lo, lo * 16 + hi]),
+              note: hi + " x 16 = " + (hi * 16) + ", plus " + lo.toString(16).toUpperCase() + " (" + lo + ") = " + val + "."
+            };
+          }
+        },
+        {
+          id: "denary-to-hex-apply", category: "hex",
+          prompt: "Convert the denary value 172 to hexadecimal.",
+          answers: ["AC"],
+          keywords: [/^\s*AC\s*$/i],
+          distractors: ["AB", "AD", "BC", "CA"],
+          note: "172 / 16 = 10 remainder 12. 10 = A, 12 = C, so 172 = AC.",
+          randomize: function () {
+            var val = randInt(16, 255);
+            var hex = val.toString(16).toUpperCase();
+            if (hex.length < 2) hex = "0" + hex;
+            var hi = Math.floor(val / 16), lo = val % 16;
+            var wrongHex = ((hi + 1) % 16).toString(16).toUpperCase() + lo.toString(16).toUpperCase();
+            return {
+              prompt: "Convert the denary value " + val + " to hexadecimal.",
+              answers: [hex],
+              keywords: [new RegExp("^\\s*" + hex + "\\s*$", "i")],
+              distractors: dedupeDistractors(hex, [wrongHex, hex.split("").reverse().join("")]),
+              note: val + " / 16 = " + hi + " remainder " + lo + ". " + hi + " = " + hi.toString(16).toUpperCase() + ", " + lo + " = " + lo.toString(16).toUpperCase() + ", so " + val + " = " + hex + "."
+            };
+          }
+        },
       ]
     },
     "y10-1-2-representation": {
@@ -1212,6 +1361,50 @@
                         "Lower-case English letters"
                 ]
         },
+        {
+                id: "ascii-decode-apply",
+                category: "text",
+                prompt: "In ASCII, the denary code 77 represents which character?",
+                answers: ["M"],
+                keywords: [/^\s*M\s*$/],
+                distractors: ["L", "N", "13"],
+                note: "Capital letters run A=65 to Z=90, in order, so code 77 is M.",
+                randomize: function () {
+                        var pool = [["A",65],["B",66],["C",67],["G",71],["M",77],["S",83],["Z",90],["a",97],["b",98],["g",103],["m",109],["s",115],["z",122],["0",48],["5",53],["9",57]];
+                        var pick = pool[Math.floor(Math.random() * pool.length)];
+                        var ch = pick[0], code = pick[1];
+                        var caseFlip = ch === ch.toUpperCase() ? ch.toLowerCase() : ch.toUpperCase();
+                        return {
+                                prompt: "In ASCII, the denary code " + code + " represents which character?",
+                                answers: [ch],
+                                keywords: [new RegExp("^\\s*" + ch + "\\s*$")],
+                                distractors: dedupeDistractors(ch, [String.fromCharCode(code - 1), String.fromCharCode(code + 1), caseFlip]),
+                                note: "Look up the ASCII table: code " + code + " is the character '" + ch + "'."
+                        };
+                }
+        },
+        {
+                id: "ascii-encode-apply",
+                category: "text",
+                prompt: "What is the ASCII denary code for the character 'M'?",
+                answers: ["77"],
+                keywords: [/^\s*77\s*$/],
+                distractors: ["76", "78", "13"],
+                note: "Capital letters run A=65 to Z=90, in order, so M (the 13th letter) is 65+12 = 77.",
+                randomize: function () {
+                        var pool = [["A",65],["B",66],["C",67],["G",71],["M",77],["S",83],["Z",90],["a",97],["b",98],["g",103],["m",109],["s",115],["z",122],["0",48],["5",53],["9",57]];
+                        var pick = pool[Math.floor(Math.random() * pool.length)];
+                        var ch = pick[0], code = pick[1];
+                        return {
+                                prompt: "What is the ASCII denary code for the character '" + ch + "'?",
+                                answers: [String(code)],
+                                keywords: [new RegExp("^\\s*" + code + "\\s*$")],
+                                distractors: dedupeDistractors(code, [code - 1, code + 1, code + 32, code - 32]),
+                                note: "Look up the ASCII table: '" + ch + "' has denary code " + code + "."
+                        };
+                }
+        },
+
         {
                 id: "analogue-vs-digital",
                 category: "sound",
