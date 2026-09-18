@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Byte Brawlers</title>
+<title>Live Games</title>
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #f4f6fb; color: #1f2733; font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -39,12 +39,12 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Byte Brawlers</h1>
-  <p class="sub">A live, whole-class T-shirt design contest - everything runs on the host's own laptop for this session only, nothing is saved anywhere else.</p>
+  <h1>Live Games</h1>
+  <p class="sub">Byte Brawlers (T-shirt design) and Flag Brawlers (flag design) - live, whole-class drawing contests. Everything runs on the host's own laptop for this session only, nothing is saved anywhere else.</p>
 
   <div class="card" id="join-card">
     <h2>Join a game</h2>
-    <p>Type the code your teacher read out.</p>
+    <p>Type the code your teacher gave you - the same code works whether you're on the school network or joining from home (your teacher will say which one they've given you).</p>
     <input type="text" id="code-input" placeholder="CODE" maxlength="8" autocomplete="off" autocapitalize="off" spellcheck="false">
     <button type="button" class="btn" id="join-btn">Join</button>
     <div class="error" id="join-error"></div>
@@ -63,7 +63,7 @@
     <h2>Host a game</h2>
     <p>Runs entirely on this laptop - no account, no internet dependency once it's downloaded.</p>
     <button type="button" class="btn" id="open-host-btn">Open host dashboard</button>
-    <a class="btn ghost" id="download-btn" href="host-download/LiveGameHost.zip" download>Download Byte Brawlers Host</a>
+    <a class="btn ghost" id="download-btn" href="host-download/LiveGameHost.zip" download>Download Live Game Host</a>
     <div class="address-box show" id="host-address-box">
       <p class="hint">If the button above does nothing (browsers can block a page from jumping to a local address automatically) - copy this and paste it into a <strong>new tab's address bar</strong> yourself:</p>
       <div class="address-row">
@@ -76,7 +76,7 @@
       <li>Download and unzip it (once - reuse it every time after).</li>
       <li>Double-click LiveGameHost.exe. A black window opens with a join code.</li>
       <li>Open the dashboard using the button above (or the address it prints).</li>
-      <li>Read the join code out to your class - they join right here on this page.</li>
+      <li>Read out the local join code the dashboard shows (or the public one, if you've port-forwarded and have students joining from outside school) - they join right here on this page.</li>
     </ol>
   </div>
 </div>
