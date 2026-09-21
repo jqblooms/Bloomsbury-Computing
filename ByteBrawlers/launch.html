@@ -40,7 +40,7 @@
 <body>
 <div class="wrap">
   <h1>Live Games</h1>
-  <p class="sub">Byte Brawlers and Flag Brawlers (live drawing contests), Data Duel (a head-to-head Year 10 knowledge tournament), and Code Arena (a Year 9 pseudocode tournament - write real code to walk a turtle to the flag). Everything runs on the host's own laptop for this session only, nothing is saved anywhere else.</p>
+  <p class="sub">Byte Brawlers and Flag Brawlers (live drawing contests), Data Duel (a head-to-head Year 10 knowledge tournament), Code Arena (a Year 9 pseudocode tournament), and Code Sabotage (a Year 9 pseudocode game on a ship, with traitors, alarms and code to debug). Everything runs on the host's own laptop for this session only, nothing is saved anywhere else.</p>
 
   <div class="card" id="join-card">
     <h2>Join a game</h2>
@@ -160,6 +160,12 @@
   joinEls.btn.addEventListener('click', doJoin);
   joinEls.input.addEventListener('keydown', function (e) { if (e.key === 'Enter') doJoin(); });
   joinEls.copyBtn.addEventListener('click', function () { copyToClipboard(joinEls.addressText.value, joinEls.copiedNote); });
+
+  // GitHub Pages lets browsers cache the zip for 10 minutes, so a teacher who downloaded
+  // it earlier could keep getting the old build. A changing query string forces a fresh one.
+  document.getElementById('download-btn').addEventListener('click', function () {
+    this.href = 'host-download/LiveGameHost.zip?v=' + Date.now();
+  });
 
   var hostAddressText = document.getElementById('host-address-text');
   var hostCopiedNote = document.getElementById('host-copied-note');
