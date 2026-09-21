@@ -5571,6 +5571,50 @@
           ]
         }
       ]
+    },
+    "examqs-y11-algorithms": {
+      title: "Year 11 Algorithms and Pseudocode - Exam Questions",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - real past-paper questions",
+      isExamSet: true,
+      cards: [
+        {
+          id: "y11-iteration-types", category: "iteration",
+          source: "Cambridge IGCSE 0478, May/June 2026 Paper 22, Question 1",
+          marks: 1,
+          stem: "Tick one box to complete the following sentence. Two types of pseudocode statements used for iteration are: A CASE and IF; B FOR ... NEXT and IF; C FOR ... NEXT and WHILE ... DO ... ENDWHILE; D REPEAT ... UNTIL and CASE.",
+          parts: [
+            { label: "Enter A, B, C or D.", correctAnswer: "C", acceptedAnswers: ["FOR NEXT AND WHILE DO ENDWHILE", "FOR ... NEXT AND WHILE ... DO ... ENDWHILE"] }
+          ]
+        },
+        {
+          id: "y11-totalling", category: "iteration",
+          source: "Cambridge IGCSE 0478, May/June 2026 Paper 23, Question 1",
+          marks: 1,
+          stem: "Tick one box to complete this sentence. A standard method of solution used for adding together a set of values during iteration is: A counting; B searching; C sorting; D totalling.",
+          parts: [
+            { label: "Enter A, B, C or D.", correctAnswer: "D", acceptedAnswers: ["TOTALLING", "TOTALING"] }
+          ]
+        },
+        {
+          id: "y11-declarations", category: "seqsyntax",
+          source: "Cambridge IGCSE 0478, October/November 2025 Paper 21, Question 10(a)",
+          marks: 1,
+          stem: "The variables Seconds and Minutes are used in a program. Seconds holds the number of seconds as a whole number and Minutes holds the number of minutes as a whole number. Write pseudocode statements to declare the variables Seconds and Minutes.",
+          parts: [
+            { label: "Enter the declaration statement or statements.", correctAnswer: "DECLARE Seconds, Minutes : INTEGER", acceptedAnswers: ["DECLARE SECONDS, MINUTES : INTEGER", "DECLARE SECONDS : INTEGER\nDECLARE MINUTES : INTEGER", "DECLARE MINUTES : INTEGER\nDECLARE SECONDS : INTEGER"] }
+          ]
+        },
+        {
+          id: "y11-loop-examples", category: "iteration",
+          source: "Cambridge IGCSE 0478, May/June 2026 Paper 21, Question 6",
+          marks: 2,
+          stem: "Give programming examples for a count-controlled loop and a post-condition loop.",
+          parts: [
+            { label: "Give the count-controlled loop example.", correctAnswer: "FOR ... NEXT", acceptedAnswers: ["FOR NEXT", "FOR ... TO ... NEXT", "FOR TO NEXT"] },
+            { label: "Give the post-condition loop example.", correctAnswer: "REPEAT ... UNTIL", acceptedAnswers: ["REPEAT UNTIL"] }
+          ]
+        }
+      ]
     }
   };
 
@@ -7148,6 +7192,7 @@
         correct: marksEarned === marksTotal,
         marksEarned: marksEarned,
         marksTotal: marksTotal,
+        isExamSet: true,
         summary: summary
       }, "*");
     } catch (e) {}
