@@ -5113,6 +5113,1298 @@
         }
       ]
     },
+    "y11-p2-validation": {
+      title: "Year 11: Validation, Verification and Test Data",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - Paper 2",
+      cards: [
+        {
+          id: "val-purpose", category: "y11valid",
+          prompt: "What is the purpose of validation?",
+          answers: ["To check that the data entered is sensible and meets set rules"],
+          distractors: ["To check that the data entered is definitely correct", "To check that the data typed matches the original source", "To make the data encrypted before it is stored", "To sort the data into order", "To copy the data to a backup"],
+          note: "Validation is an automatic check that data is reasonable. It cannot prove data is correct: 17 passes a range check for ages 11 to 18 even if the real age is 18."
+        },
+        {
+          id: "val-verif-purpose", category: "y11valid",
+          prompt: "What is the purpose of verification?",
+          answers: ["To check that no errors have been introduced when the data was input or copied"],
+          distractors: ["To check that data falls inside a set range", "To check that data is the right data type", "To stop the user leaving a field blank", "To calculate a check digit", "To make sure the data is sensible"],
+          note: "Verification checks that the data entered matches what was intended, for example by typing it twice (double entry) or by proofreading it against the source."
+        },
+        {
+          id: "val-verif-methods", category: "y11valid",
+          type: "multi",
+          prompt: "Which of these is a verification method?",
+          answers: ["Double entry", "Visual check"],
+          distractors: ["Range check", "Length check", "Presence check", "Type check", "Format check", "Check digit"],
+          note: "Two verification methods: double entry (type it twice and compare) and a visual check (read what was typed against the source). Range, length, presence, type, format and check digit are all validation checks."
+        },
+        {
+          id: "val-why", category: "y11valid",
+          prompt: "Why are validation checks used when data is input?",
+          answers: ["To stop unsuitable data being accepted, which could cause errors or wrong results later"],
+          distractors: ["To make the program run faster", "To prove that every value entered is true", "To hide the data from other users", "To reduce the amount of storage used", "To remove the need to test the program"],
+          note: "Without validation a program might accept an age of -5 or text where a number is needed and then crash or give wrong answers. Validation is a filter, not a guarantee."
+        },
+        {
+          id: "val-password", category: "y11valid",
+          prompt: "A program asks the user to type a new password twice and compares the two. What is this?",
+          answers: ["Verification (double entry)"],
+          distractors: ["Validation (range check)", "Validation (length check)", "Validation (presence check)", "A check digit", "Test data"],
+          note: "Typing the password a second time checks it was entered as intended, which is verification. Checking it is at least 10 characters long would be a separate validation (length) check."
+        },
+        {
+          id: "val-def-range", category: "y11valid",
+          prompt: "Which validation check tests that a number is between two set values?",
+          answers: ["Range check"],
+          distractors: ["Length check", "Presence check", "Type check", "Format check", "Check digit"],
+          note: "A range check checks that a number is between two set values, for example an age from 11 to 18."
+        },
+        {
+          id: "val-def-length", category: "y11valid",
+          prompt: "Which validation check tests how many characters are in the data?",
+          answers: ["Length check"],
+          distractors: ["Range check", "Presence check", "Type check", "Format check", "Check digit"],
+          note: "A length check checks the number of characters, for example a password of at least 8 characters."
+        },
+        {
+          id: "val-def-presence", category: "y11valid",
+          prompt: "Which validation check makes sure a field has not been left empty?",
+          answers: ["Presence check"],
+          distractors: ["Range check", "Length check", "Type check", "Format check", "Check digit"],
+          note: "A presence check checks that data has been entered and not left blank."
+        },
+        {
+          id: "val-def-type", category: "y11valid",
+          prompt: "Which validation check makes sure only whole numbers can be entered?",
+          answers: ["Type check"],
+          distractors: ["Range check", "Length check", "Presence check", "Format check", "Check digit"],
+          note: "A type check checks the data is the right data type, for example whole numbers only."
+        },
+        {
+          id: "val-def-format", category: "y11valid",
+          prompt: "Which validation check tests that data follows a set pattern such as two letters followed by three numbers?",
+          answers: ["Format check"],
+          distractors: ["Range check", "Length check", "Presence check", "Type check", "Check digit"],
+          note: "A format check checks the data follows a set pattern, for example two letters then three digits."
+        },
+        {
+          id: "val-def-checkdigit", category: "y11valid",
+          prompt: "What is a value placed at the end of a sequence of numbers, calculated from all the other values before it, called?",
+          answers: ["Check digit"],
+          distractors: ["Range check", "Length check", "Presence check", "Type check", "Format check"],
+          note: "A check digit is a value calculated from the other digits and placed at the end, then recalculated to check the number was entered correctly."
+        },
+        {
+          id: "val-scen-age", category: "y11valid",
+          prompt: "A form accepts an age only if it is from 11 to 18. Which check is this?",
+          answers: ["Range check"],
+          distractors: ["Length check", "Presence check", "Type check", "Format check", "Check digit"],
+          note: "The value must lie between two limits, so it is a range check."
+        },
+        {
+          id: "val-scen-postcode", category: "y11valid",
+          prompt: "A system only accepts a code such as AB123: two letters then three digits. Which check is this?",
+          answers: ["Format check"],
+          distractors: ["Range check", "Length check", "Presence check", "Type check", "Check digit"],
+          note: "A set pattern of letters and digits is a format check."
+        },
+        {
+          id: "val-scen-surname", category: "y11valid",
+          prompt: "A form will not submit until the surname box has something in it. Which check is this?",
+          answers: ["Presence check"],
+          distractors: ["Range check", "Length check", "Type check", "Format check", "Check digit"],
+          note: "It only tests that something has been entered, so it is a presence check."
+        },
+        {
+          id: "val-scen-quantity", category: "y11valid",
+          prompt: "A shop system rejects the quantity 2.5 because it must be a whole number. Which check is this?",
+          answers: ["Type check"],
+          distractors: ["Range check", "Length check", "Presence check", "Format check", "Check digit"],
+          note: "Whole numbers only means checking the data type."
+        },
+        {
+          id: "val-scen-username", category: "y11valid",
+          prompt: "A username must be between 6 and 12 characters. Which check tests this?",
+          answers: ["Length check"],
+          distractors: ["Range check", "Presence check", "Type check", "Format check", "Check digit"],
+          note: "It counts characters, so it is a length check (note: not a range check, which tests a number's value)."
+        },
+        {
+          id: "val-scen-isbn", category: "y11valid",
+          prompt: "The last digit of a barcode number is recalculated from the other digits when it is scanned. Which check is this?",
+          answers: ["Check digit"],
+          distractors: ["Range check", "Length check", "Presence check", "Type check", "Format check"],
+          note: "A digit worked out from the others is a check digit."
+        },
+        {
+          id: "val-limits", category: "y11valid",
+          prompt: "A range check for ages accepts 11 to 18. The user types 17 but their real age is 18. What happens?",
+          answers: ["The value is accepted, because validation only checks it is sensible, not that it is correct"],
+          distractors: ["The value is rejected because it is wrong", "The value is rejected because it is a whole number", "The program crashes", "The verification check corrects it", "The check digit changes"],
+          note: "17 is inside the range so validation accepts it. Only verification (for example checking against the source) could catch that it is not the person's true age."
+        },
+        {
+          id: "val-checkdigit-calc", category: "y11valid",
+          prompt: "A check digit is the total of (each digit multiplied by its position from 1 to 5) MOD 11. What is the check digit for 12345?",
+          answers: ["0"],
+          distractors: ["1", "5", "11", "55", "4", "10"],
+          note: "1x1 + 2x2 + 3x3 + 4x4 + 5x5 = 55. 55 MOD 11 = 0 because 11 goes into 55 exactly five times with nothing left over."
+        },
+        {
+          id: "val-checkdigit-calc2", category: "y11valid",
+          prompt: "A check digit is the total of (each digit multiplied by its position from 1 to 5) MOD 11. What is the check digit for 24680?",
+          answers: ["5"],
+          distractors: ["0", "6", "60", "4", "11", "9"],
+          note: "2x1 + 4x2 + 6x3 + 8x4 + 0x5 = 2 + 8 + 18 + 32 + 0 = 60. 60 MOD 11: 11 goes into 60 five times (55), remainder 5."
+        },
+        {
+          id: "test-def-normal", category: "y11test",
+          prompt: "Which type of test data is valid data that should be accepted?",
+          answers: ["Normal data"],
+          distractors: ["Abnormal data", "Extreme data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "Normal data is valid data that should be accepted, for example 50 for a range of 1 to 100. (Extreme data is sometimes called boundary data.)"
+        },
+        {
+          id: "test-def-abnormal", category: "y11test",
+          prompt: "Which type of test data is invalid data that should be rejected?",
+          answers: ["Abnormal data"],
+          distractors: ["Normal data", "Extreme data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "Abnormal data is invalid data that should be rejected, for example 150 or the word 'ten' for a range of 1 to 100. (Extreme data is sometimes called boundary data.)"
+        },
+        {
+          id: "test-def-extreme", category: "y11test",
+          prompt: "Which type of test data is the highest or lowest value that should be accepted?",
+          answers: ["Extreme data"],
+          distractors: ["Normal data", "Abnormal data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "Extreme data is the largest or smallest value that should be accepted, for example 1 or 100 for a range of 1 to 100. (Extreme data is sometimes called boundary data.)"
+        },
+        {
+          id: "test-sc-a", category: "y11test",
+          prompt: "A program should accept whole numbers from 1 to 100. Which type of test data is 57?",
+          answers: ["Normal data"],
+          distractors: ["Abnormal data", "Extreme data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "57 is inside the range and should be accepted."
+        },
+        {
+          id: "test-sc-b", category: "y11test",
+          prompt: "A program should accept whole numbers from 1 to 100. Which type of test data is 100?",
+          answers: ["Extreme data"],
+          distractors: ["Normal data", "Abnormal data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "100 is the highest value that should still be accepted."
+        },
+        {
+          id: "test-sc-c", category: "y11test",
+          prompt: "A program should accept whole numbers from 1 to 100. Which type of test data is 101?",
+          answers: ["Abnormal data"],
+          distractors: ["Normal data", "Extreme data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "101 is just outside the range, so it should be rejected."
+        },
+        {
+          id: "test-sc-d", category: "y11test",
+          prompt: "A program should accept whole numbers from 1 to 100. Which type of test data is the word 'seven'?",
+          answers: ["Abnormal data"],
+          distractors: ["Normal data", "Extreme data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "Text where a number is needed is invalid and should be rejected."
+        },
+        {
+          id: "test-sc-e", category: "y11test",
+          prompt: "A program only accepts values between -99.99 and +99.99 inclusive. Which type of test data is -99.99?",
+          answers: ["Extreme data"],
+          distractors: ["Normal data", "Abnormal data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "It is the lowest value that is still accepted."
+        },
+        {
+          id: "test-sc-f", category: "y11test",
+          prompt: "A program only accepts values between -99.99 and +99.99 inclusive. Which type of test data is 0?",
+          answers: ["Normal data"],
+          distractors: ["Abnormal data", "Extreme data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "0 is comfortably inside the range."
+        },
+        {
+          id: "test-sc-g", category: "y11test",
+          prompt: "A program only accepts values between -99.99 and +99.99 inclusive. Which type of test data is 100.5?",
+          answers: ["Abnormal data"],
+          distractors: ["Normal data", "Extreme data", "Boundary error data", "Invalid range data", "Random data"],
+          note: "It is above the highest accepted value."
+        },
+        {
+          id: "test-purpose-ab", category: "y11test",
+          prompt: "Why is abnormal data used when testing a program with a validation check?",
+          answers: ["To check that the program rejects data it should not accept"],
+          distractors: ["To check the program accepts the highest valid value", "To check the program works with typical values", "To make the program run more slowly", "To find out how fast the program is", "To check that the program is easy to read"],
+          note: "Abnormal data should be rejected. If the program accepts it, the validation has a fault."
+        },
+        {
+          id: "test-purpose-ex", category: "y11test",
+          prompt: "Why is extreme data used when testing?",
+          answers: ["To check the program accepts the highest and lowest valid values, so the limits are correct"],
+          distractors: ["To check the program rejects invalid values", "To make sure the program does not crash on text", "To test the program with typical everyday values", "To check the layout of the screen", "To check the program can be maintained"],
+          note: "Extreme data sits on the edge of the valid range. It catches mistakes like using < when <= was needed."
+        }
+      ]
+    },
+    "y11-p2-basics": {
+      title: "Year 11: Data Types, Operators, Strings, Files and Arrays",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - Paper 2",
+      cards: [
+        {
+          id: "type-age", category: "y11types",
+          prompt: "Which data type would you use for Age, a whole number such as 16?",
+          answers: ["INTEGER"],
+          distractors: ["REAL", "BOOLEAN", "CHAR", "STRING", "ARRAY"],
+          note: "Whole numbers with no decimal part are INTEGER."
+        },
+        {
+          id: "type-price", category: "y11types",
+          prompt: "Which data type would you use for a price such as 9.99?",
+          answers: ["REAL"],
+          distractors: ["INTEGER", "BOOLEAN", "CHAR", "STRING", "ARRAY"],
+          note: "Numbers with a decimal part are REAL."
+        },
+        {
+          id: "type-pass", category: "y11types",
+          prompt: "Which data type would you use for a value that is only ever TRUE or FALSE?",
+          answers: ["BOOLEAN"],
+          distractors: ["INTEGER", "REAL", "CHAR", "STRING", "ARRAY"],
+          note: "Two possible values, TRUE or FALSE, is BOOLEAN."
+        },
+        {
+          id: "type-initial", category: "y11types",
+          prompt: "Which data type would you use for a single letter such as 'K'?",
+          answers: ["CHAR"],
+          distractors: ["INTEGER", "REAL", "BOOLEAN", "STRING", "ARRAY"],
+          note: "One single character is CHAR."
+        },
+        {
+          id: "type-name", category: "y11types",
+          prompt: "Which data type would you use for a name such as Priya?",
+          answers: ["STRING"],
+          distractors: ["INTEGER", "REAL", "BOOLEAN", "CHAR", "ARRAY"],
+          note: "Text made of several characters is STRING."
+        },
+        {
+          id: "type-mix", category: "y11types",
+          prompt: "Which data type would you use for a value made of letters and numbers, such as AB12?",
+          answers: ["STRING"],
+          distractors: ["INTEGER", "REAL", "BOOLEAN", "CHAR", "ARRAY"],
+          note: "Letters and digits together are stored as text (STRING)."
+        },
+        {
+          id: "type-phone", category: "y11types",
+          prompt: "Which data type is best for a phone number such as 07700 900123?",
+          answers: ["STRING"],
+          distractors: ["INTEGER", "REAL", "BOOLEAN", "CHAR", "ARRAY"],
+          note: "You never do arithmetic on a phone number, and an INTEGER would drop the leading 0, so it is stored as STRING."
+        },
+        {
+          id: "type-teen", category: "y11types",
+          prompt: "A variable Teenager holds TRUE if a student is aged 13 to 19. Which data type?",
+          answers: ["BOOLEAN"],
+          distractors: ["INTEGER", "REAL", "CHAR", "STRING", "ARRAY"],
+          note: "The answer to a yes/no question is BOOLEAN."
+        },
+        {
+          id: "dbtype-dist", category: "y11types",
+          prompt: "A database field Distance stores a whole number of metres, for example 1500. Which data type?",
+          answers: ["Integer"],
+          distractors: ["Text", "Character", "Boolean", "Real", "Date/Time"],
+          note: "A whole number is Integer."
+        },
+        {
+          id: "dbtype-date", category: "y11types",
+          prompt: "A database field DateReceived stores 03/03/2025. Which data type?",
+          answers: ["Date/Time"],
+          distractors: ["Text", "Character", "Boolean", "Integer", "Real"],
+          note: "Dates are stored as Date/Time."
+        },
+        {
+          id: "dbtype-stock", category: "y11types",
+          prompt: "A database field InStock stores whether a part is in stock (yes or no). Which data type?",
+          answers: ["Boolean"],
+          distractors: ["Text", "Character", "Integer", "Real", "Date/Time"],
+          note: "Yes/no is Boolean."
+        },
+        {
+          id: "dbtype-colour", category: "y11types",
+          prompt: "A database field Colour stores a single letter code such as R. Which data type?",
+          answers: ["Character"],
+          distractors: ["Text", "Boolean", "Integer", "Real", "Date/Time"],
+          note: "One letter is Character."
+        },
+        {
+          id: "dbtype-size", category: "y11types",
+          prompt: "A database field Size stores values such as 'Large' or 'one size'. Which data type?",
+          answers: ["Text"],
+          distractors: ["Character", "Boolean", "Integer", "Real", "Date/Time"],
+          note: "Several characters of text is Text."
+        },
+        {
+          id: "dbtype-price", category: "y11types",
+          prompt: "A database field Price stores values such as 12.50. Which data type?",
+          answers: ["Real"],
+          distractors: ["Text", "Character", "Boolean", "Integer", "Date/Time"],
+          note: "A number with a decimal part is Real."
+        },
+        {
+          id: "op-div1", category: "y11ops",
+          prompt: "What is 17 DIV 5?",
+          answers: ["3"],
+          distractors: ["2", "3.4", "4", "5", "12", "85"],
+          note: "DIV gives the whole number of times 5 goes into 17: 5 goes in 3 times (15), so 3."
+        },
+        {
+          id: "op-mod1", category: "y11ops",
+          prompt: "What is 17 MOD 5?",
+          answers: ["2"],
+          distractors: ["3", "3.4", "12", "0", "5", "22"],
+          note: "MOD gives the remainder: 17 - 15 = 2."
+        },
+        {
+          id: "op-div2", category: "y11ops",
+          prompt: "What is 500 DIV 60?",
+          answers: ["8"],
+          distractors: ["9", "8.33", "20", "10", "500", "60"],
+          note: "60 goes into 500 eight times (480). This is how you find whole minutes in 500 seconds."
+        },
+        {
+          id: "op-mod2", category: "y11ops",
+          prompt: "What is 500 MOD 60?",
+          answers: ["20"],
+          distractors: ["8", "8.33", "480", "40", "60", "0"],
+          note: "500 - 480 = 20 seconds left over."
+        },
+        {
+          id: "op-pow1", category: "y11ops",
+          prompt: "What is 4 ^ 2?",
+          answers: ["16"],
+          distractors: ["8", "6", "2", "42", "24", "4"],
+          note: "^ means 'to the power of': 4 x 4 = 16, not 4 x 2."
+        },
+        {
+          id: "op-pow2", category: "y11ops",
+          prompt: "What is 2 ^ 5?",
+          answers: ["32"],
+          distractors: ["10", "25", "7", "16", "64", "52"],
+          note: "2 x 2 x 2 x 2 x 2 = 32."
+        },
+        {
+          id: "op-slash", category: "y11ops",
+          prompt: "What is 10 / 4?",
+          answers: ["2.5"],
+          distractors: ["2", "3", "2.25", "1", "6", "0.4"],
+          note: "/ is ordinary division and keeps the decimal part. (10 DIV 4 would be 2.)"
+        },
+        {
+          id: "op-even", category: "y11ops",
+          prompt: "Which test is TRUE only when Number is even?",
+          answers: ["Number MOD 2 = 0"],
+          distractors: ["Number DIV 2 = 0", "Number MOD 2 = 1", "Number / 2 = 0", "Number ^ 2 = 0", "Number DIV 2 = 1"],
+          note: "An even number leaves a remainder of 0 when divided by 2, so MOD 2 = 0. Number MOD 2 = 1 would be odd numbers."
+        },
+        {
+          id: "op-time", category: "y11ops",
+          prompt: "Which expression gives the whole minutes in TotalSeconds?",
+          answers: ["TotalSeconds DIV 60"],
+          distractors: ["TotalSeconds MOD 60", "TotalSeconds / 60", "TotalSeconds * 60", "TotalSeconds ^ 60", "TotalSeconds - 60"],
+          note: "DIV 60 gives whole minutes; MOD 60 gives the seconds left over."
+        },
+        {
+          id: "op-notarith", category: "y11ops",
+          type: "multi",
+          prompt: "Which of these is NOT an arithmetic operator?",
+          answers: ["AND", ">", "NOT", "<="],
+          distractors: ["+", "*", "DIV", "MOD", "^", "-"],
+          note: "Arithmetic operators do calculations: + - * / ^ DIV MOD. > and <= are comparison operators; AND, OR and NOT are logical operators."
+        },
+        {
+          id: "op-neq", category: "y11ops",
+          prompt: "Which comparison operator means 'not equal to'?",
+          answers: ["<>"],
+          distractors: ["=", "!", "<=", ">=", "><>", "NOT"],
+          note: "In Cambridge pseudocode not equal to is <>. <= means less than or equal to and >= means greater than or equal to."
+        },
+        {
+          id: "op-atleast", category: "y11ops",
+          prompt: "Which condition is TRUE when Length is 10 or more?",
+          answers: ["Length >= 10"],
+          distractors: ["Length > 10", "Length < 10", "Length <= 10", "Length = 10", "Length <> 10"],
+          note: ">= means 'greater than or equal to'. Length > 10 would leave out 10 itself."
+        },
+        {
+          id: "op-and", category: "y11ops",
+          prompt: "What does the condition Age >= 13 AND Age <= 19 test?",
+          answers: ["That Age is from 13 to 19 inclusive"],
+          distractors: ["That Age is either 13 or 19", "That Age is less than 13 or more than 19", "That Age is exactly 13", "That Age is above 19", "That Age is below 13"],
+          note: "AND needs both parts to be TRUE. Both limits together give the range 13 to 19, including 13 and 19."
+        },
+        {
+          id: "op-or", category: "y11ops",
+          prompt: "What does the condition Answer = 'N' OR Answer = 'n' test?",
+          answers: ["That Answer is a capital or a lower case N"],
+          distractors: ["That Answer is both N and n at once", "That Answer is not N", "That Answer is any letter", "That Answer is empty", "That Answer is N and then n"],
+          note: "OR needs only one part to be TRUE. This is how a program accepts either upper or lower case."
+        },
+        {
+          id: "lib-len", category: "y11strings",
+          prompt: "Which library routine returns the number of characters in a string?",
+          answers: ["LENGTH"],
+          distractors: ["UCASE", "LCASE", "SUBSTRING", "ROUND", "RANDOM"],
+          note: "LENGTH(\"Hello\") is 5. Spaces count as characters."
+        },
+        {
+          id: "lib-ucase", category: "y11strings",
+          prompt: "Which library routine converts a string to upper case?",
+          answers: ["UCASE"],
+          distractors: ["LENGTH", "LCASE", "SUBSTRING", "ROUND", "RANDOM"],
+          note: "UCASE(\"hello\") is \"HELLO\"."
+        },
+        {
+          id: "lib-lcase", category: "y11strings",
+          prompt: "Which library routine converts a string to lower case?",
+          answers: ["LCASE"],
+          distractors: ["LENGTH", "UCASE", "SUBSTRING", "ROUND", "RANDOM"],
+          note: "LCASE(\"HELLO\") is \"hello\"."
+        },
+        {
+          id: "lib-sub", category: "y11strings",
+          prompt: "Which library routine takes part of a string?",
+          answers: ["SUBSTRING"],
+          distractors: ["LENGTH", "UCASE", "LCASE", "ROUND", "RANDOM"],
+          note: "SUBSTRING(Text, Start, Length) takes Length characters beginning at position Start (the first character is position 1)."
+        },
+        {
+          id: "lib-round", category: "y11strings",
+          prompt: "Which library routine sets a number to a given number of decimal places?",
+          answers: ["ROUND"],
+          distractors: ["LENGTH", "UCASE", "LCASE", "SUBSTRING", "RANDOM"],
+          note: "ROUND(45.849, 2) is 45.85."
+        },
+        {
+          id: "lib-rand", category: "y11strings",
+          prompt: "Which library routine produces a random number?",
+          answers: ["RANDOM"],
+          distractors: ["LENGTH", "UCASE", "LCASE", "SUBSTRING", "ROUND"],
+          note: "RANDOM() gives a random real number from 0 up to but not including 1; multiply and ROUND to get a whole number in a range."
+        },
+        {
+          id: "libval-len1", category: "y11strings",
+          prompt: "What is LENGTH(\"Hello World\")?",
+          answers: ["11"],
+          distractors: ["10", "5", "12", "2", "Hello", "0"],
+          note: "H-e-l-l-o is 5, the space is 1, W-o-r-l-d is 5: 11 characters. The space counts."
+        },
+        {
+          id: "libval-len2", category: "y11strings",
+          prompt: "What is LENGTH(\"I learnt to program in computer science\")?",
+          answers: ["39"],
+          distractors: ["38", "40", "7", "31", "41", "8"],
+          note: "Count every letter and every space: 39 characters in total."
+        },
+        {
+          id: "libval-sub1", category: "y11strings",
+          prompt: "What is SUBSTRING(\"Computer\", 1, 3)?",
+          answers: ["Com"],
+          distractors: ["Comp", "Cmp", "put", "omp", "Co", "Computer"],
+          note: "Start at position 1 and take 3 characters: C, o, m."
+        },
+        {
+          id: "libval-sub2", category: "y11strings",
+          prompt: "What is SUBSTRING(\"Computer\", 4, 2)?",
+          answers: ["pu"],
+          distractors: ["mp", "ut", "Co", "put", "om", "p"],
+          note: "Position 4 is p (C=1, o=2, m=3, p=4), then take 2 characters: p, u."
+        },
+        {
+          id: "libval-sub3", category: "y11strings",
+          prompt: "What is SUBSTRING(\"Tomlinson\", 1, 1)?",
+          answers: ["T"],
+          distractors: ["To", "Tom", "n", "o", "Tomlinson", "1"],
+          note: "One character starting at position 1 is the first letter. This is how a first initial is taken."
+        },
+        {
+          id: "libval-ucase1", category: "y11strings",
+          prompt: "A username is the first letter of the first name, then the first two letters of the last name, then the number 305, all in upper case. What is it for Sarah Tomlinson?",
+          answers: ["STO305"],
+          distractors: ["Sto305", "SAR305", "TOM305", "STOM305", "ST305", "sto305"],
+          note: "S from Sarah, TO from Tomlinson, then 305, in upper case: STO305."
+        },
+        {
+          id: "libval-round1", category: "y11strings",
+          prompt: "What is ROUND(3.14159, 2)?",
+          answers: ["3.14"],
+          distractors: ["3.1", "3.15", "3.142", "3", "3.14159", "314"],
+          note: "Two decimal places: 3.14 (the next digit, 1, means round down)."
+        },
+        {
+          id: "libval-round2", category: "y11strings",
+          prompt: "What is ROUND(45.849, 2)?",
+          answers: ["45.85"],
+          distractors: ["45.84", "45.8", "45.9", "46", "45.849", "45.86"],
+          note: "The third decimal place is 9, so round the second decimal place up: 45.85."
+        },
+        {
+          id: "file-open", category: "y11strings",
+          prompt: "Which statement opens a file called Names.txt so a program can read from it?",
+          answers: ["OPENFILE \"Names.txt\" FOR READ"],
+          distractors: ["READFILE \"Names.txt\"", "OPEN \"Names.txt\" READ", "OPENFILE \"Names.txt\" FOR WRITE", "CLOSEFILE \"Names.txt\"", "WRITEFILE \"Names.txt\"", "GETFILE \"Names.txt\""],
+          note: "A file must be opened first with OPENFILE, saying whether it is FOR READ, FOR WRITE or FOR APPEND."
+        },
+        {
+          id: "file-read", category: "y11strings",
+          prompt: "Which statement reads one line of text from an open file into the variable Line?",
+          answers: ["READFILE \"Names.txt\", Line"],
+          distractors: ["OPENFILE \"Names.txt\", Line", "INPUT Line", "WRITEFILE \"Names.txt\", Line", "CLOSEFILE \"Names.txt\", Line", "GETLINE Line"],
+          note: "READFILE takes the file name and the variable that will hold the line that is read."
+        },
+        {
+          id: "file-write", category: "y11strings",
+          prompt: "Which statement stores the value in NewUsername in an open file Username.txt?",
+          answers: ["WRITEFILE \"Username.txt\", NewUsername"],
+          distractors: ["READFILE \"Username.txt\", NewUsername", "OUTPUT NewUsername", "OPENFILE \"Username.txt\", NewUsername", "SAVEFILE \"Username.txt\", NewUsername", "CLOSEFILE \"Username.txt\""],
+          note: "WRITEFILE puts the value into the file. The file must have been opened FOR WRITE (or FOR APPEND) first."
+        },
+        {
+          id: "file-close", category: "y11strings",
+          prompt: "Why should a program use CLOSEFILE when it has finished with a file?",
+          answers: ["So the file is saved properly and is free for other programs to use"],
+          distractors: ["To delete the file", "To make the file read only", "To sort the contents of the file", "To rename the file", "To turn the file into an array"],
+          note: "Closing a file finishes any writing and releases it. Forgetting to close can lose data or lock the file."
+        },
+        {
+          id: "file-modes", category: "y11strings",
+          prompt: "Which file mode adds new lines to the end of a file without erasing what is already in it?",
+          answers: ["APPEND"],
+          distractors: ["READ", "WRITE", "INPUT", "OUTPUT", "CLOSE"],
+          note: "WRITE starts the file afresh and replaces what was there. APPEND keeps the existing lines and adds to the end."
+        },
+        {
+          id: "file-why", category: "y11strings",
+          prompt: "Give a reason to store data in a file.",
+          answers: ["So the data is kept after the program ends and can be used again"],
+          distractors: ["So the data runs faster", "So the data is validated", "So the data is never needed again", "So the program uses less code", "So the variable does not need declaring"],
+          note: "Variables are lost when the program stops. A file keeps the data for next time."
+        },
+        {
+          id: "arr-declare1", category: "y11strings",
+          prompt: "Which statement declares a 1D array Names that holds 50 strings?",
+          answers: ["DECLARE Names : ARRAY[1:50] OF STRING"],
+          distractors: ["DECLARE Names : STRING[50]", "DECLARE Names : ARRAY OF STRING", "DECLARE Names[50] : STRING", "ARRAY Names : STRING(1:50)", "DECLARE Names : STRING ARRAY[1:50]"],
+          note: "The form is DECLARE name : ARRAY[first:last] OF type. [1:50] means indexes 1 up to 50, so 50 elements."
+        },
+        {
+          id: "arr-declare2", category: "y11strings",
+          prompt: "Which statement declares a 2D array Accounts with 1000 rows and 2 columns of strings?",
+          answers: ["DECLARE Accounts : ARRAY[1:1000, 1:2] OF STRING"],
+          distractors: ["DECLARE Accounts : ARRAY[1:1000] OF STRING", "DECLARE Accounts : ARRAY[1000, 2] OF STRING", "DECLARE Accounts : ARRAY[1:2, 1:1000] OF STRING", "DECLARE Accounts : ARRAY[1:1000:2] OF STRING", "DECLARE Accounts : STRING[1:1000, 1:2]"],
+          note: "A 2D array gives two ranges, row first then column: [1:1000, 1:2] is 1000 rows and 2 columns."
+        },
+        {
+          id: "arr-size", category: "y11strings",
+          prompt: "DECLARE Runners : ARRAY[1:250] OF STRING. How many names can the array hold?",
+          answers: ["250"],
+          distractors: ["249", "251", "1", "2", "500", "25"],
+          note: "Indexes 1 to 250 are 250 elements. This array starts at index 1, not 0."
+        },
+        {
+          id: "arr-2d", category: "y11strings",
+          prompt: "In Accounts[Row, 2], which part of the 2D array do you get?",
+          answers: ["Column 2 of the row numbered Row"],
+          distractors: ["Row 2 of the column numbered Row", "The whole of column 2", "Row 2 and Row together", "The second array", "Every element"],
+          note: "The first number is the row and the second is the column. Accounts[1, 2] is row 1, column 2."
+        },
+        {
+          id: "arr-loop", category: "y11strings",
+          prompt: "Which loop visits every element of Values[1:100] in order?",
+          answers: ["FOR Index <- 1 TO 100 ... NEXT Index"],
+          distractors: ["FOR Index <- 100 ... NEXT Index", "WHILE Index <- 1 TO 100", "REPEAT Values UNTIL 100", "FOR Values <- 1 TO 100 ... NEXT Values", "IF Index = 1 TO 100 THEN"],
+          note: "A count-controlled FOR loop with the index as the loop variable is the standard way to go through an array."
+        },
+        {
+          id: "loop-total", category: "y11ops",
+          prompt: "What is 'totalling' in a loop?",
+          answers: ["Adding each value to a running total that started at 0"],
+          distractors: ["Counting how many times the loop runs", "Finding the largest value", "Sorting the values", "Searching for a value", "Stopping the loop early"],
+          note: "Totalling: Total <- Total + Number on every pass, with Total set to 0 before the loop starts."
+        },
+        {
+          id: "loop-count", category: "y11ops",
+          prompt: "What is 'counting' in a loop?",
+          answers: ["Adding 1 to a variable each time something happens"],
+          distractors: ["Adding each value to a running total", "Finding the smallest value", "Multiplying each value", "Reading from a file", "Converting to upper case"],
+          note: "Counting: Count <- Count + 1. Note the difference from totalling, which adds the value itself."
+        },
+        {
+          id: "loop-for", category: "y11ops",
+          prompt: "Which loop is best when you know exactly how many times to repeat?",
+          answers: ["FOR ... NEXT (count-controlled)"],
+          distractors: ["WHILE ... ENDWHILE (pre-condition)", "REPEAT ... UNTIL (post-condition)", "IF ... ENDIF", "CASE ... ENDCASE", "DECLARE"],
+          note: "A FOR loop is count-controlled: it runs a set number of times. WHILE and REPEAT run until a condition changes."
+        },
+        {
+          id: "loop-repeat", category: "y11ops",
+          prompt: "Which loop always runs its body at least once?",
+          answers: ["REPEAT ... UNTIL"],
+          distractors: ["WHILE ... DO ... ENDWHILE", "FOR ... NEXT with the start above the end", "IF ... THEN", "CASE OF", "None of them"],
+          note: "REPEAT tests its condition at the end (post-condition), so the body runs before the first test. A WHILE loop tests first and may never run."
+        },
+        {
+          id: "loop-ends", category: "y11ops",
+          prompt: "Which keyword ends a WHILE loop?",
+          answers: ["ENDWHILE"],
+          distractors: ["NEXT", "UNTIL", "ENDIF", "ENDLOOP", "STOP"],
+          note: "FOR ends with NEXT, REPEAT ends with UNTIL condition, and WHILE ends with ENDWHILE."
+        },
+        {
+          id: "loop-until", category: "y11ops",
+          prompt: "In a REPEAT loop, when does the loop stop?",
+          answers: ["When the condition after UNTIL becomes TRUE"],
+          distractors: ["When the condition after UNTIL becomes FALSE", "After exactly 10 times", "When the keyword ENDREPEAT is reached", "It never stops", "After one pass"],
+          note: "REPEAT ... UNTIL Number < 0 keeps going while the condition is FALSE and stops the moment it becomes TRUE."
+        }
+      ]
+    },
+    "y11-p2-reading": {
+      title: "Year 11: Finding Errors, Tracing and Functions",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - Paper 2",
+      cards: [
+        {
+          id: "err-input", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\nOUTPUT \"Enter a first name \"\nOUTPUT FirstName",
+          answers: ["The second line should be INPUT FirstName"],
+          distractors: ["The first line should be INPUT", "FirstName needs quote marks", "OUTPUT should be spelt OUTPUT:", "Nothing is wrong", "The second line should use DECLARE"],
+          note: "To collect something from the user use INPUT. OUTPUT displays a value, so the program would print an empty variable and never ask."
+        },
+        {
+          id: "err-caseof", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\nCASE OF AccountID = Accounts[Row, 1]\n   THEN\n      OUTPUT Accounts[Row, 2]\nENDIF",
+          answers: ["CASE OF should be IF"],
+          distractors: ["THEN should be ELSE", "ENDIF should be ENDWHILE", "OUTPUT should be INPUT", "Accounts should be a string", "Nothing is wrong"],
+          note: "A single condition with THEN and ENDIF is an IF statement. CASE OF is a different structure for choosing between many values."
+        },
+        {
+          id: "err-total", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\nTotal <- 0\nFOR Count <- 1 TO 10\n   INPUT Number\n   Total <- Total + 1\nNEXT Count",
+          answers: ["Total <- Total + 1 should add Number"],
+          distractors: ["Total should start at 1", "NEXT Count should be NEXT Number", "INPUT should be OUTPUT", "FOR should be WHILE", "Nothing is wrong"],
+          note: "Adding 1 each pass counts the loop; a running total must add the value: Total <- Total + Number."
+        },
+        {
+          id: "err-bound", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\n// 5-digit number, one digit at a time\nFOR Count <- 1 TO 10\n   INPUT Digit\nNEXT Count",
+          answers: ["The loop should end at 5, not 10"],
+          distractors: ["The loop should start at 0", "INPUT should be OUTPUT", "Count needs quote marks", "NEXT Count should be ENDFOR", "Nothing is wrong"],
+          note: "Five digits need five passes, so the final value must be 5."
+        },
+        {
+          id: "err-operator", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\n// check digit: each digit multiplied by its position\nTotal <- Total + (Digit / Count)",
+          answers: ["The / should be *"],
+          distractors: ["The + should be -", "Digit should be Total", "The brackets should be removed", "Count should be 10", "Nothing is wrong"],
+          note: "'Multiplied by its position' means Digit * Count. Read the description carefully and compare the operator with it."
+        },
+        {
+          id: "err-type", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\nDECLARE Average : INTEGER\nAverage <- Total / Counter",
+          answers: ["Average should be declared as REAL"],
+          distractors: ["Total should be a string", "The / should be DIV", "Average should be BOOLEAN", "There should be no DECLARE", "Nothing is wrong"],
+          note: "An average usually has a decimal part, and INTEGER cannot store one. Use REAL."
+        },
+        {
+          id: "err-nextvar", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\nFOR Row <- 1 TO 200\n   OUTPUT Names[Row, 1]\nNEXT Column",
+          answers: ["NEXT should be followed by Row"],
+          distractors: ["FOR should end at 199", "OUTPUT should be INPUT", "Names should be a string", "Column should be declared", "Nothing is wrong"],
+          note: "The variable after NEXT must be the same as the FOR loop variable."
+        },
+        {
+          id: "err-index", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\nFOR Row <- 1 TO 1000\n   IF AccountID = Accounts[Row, 1]\n      THEN\n         OUTPUT Accounts[1, 2]\n      ENDIF\nNEXT Row",
+          answers: ["Accounts[1, 2] should be Accounts[Row, 2]"],
+          distractors: ["Accounts[Row, 1] should be Accounts[1, 1]", "FOR should start at 0", "OUTPUT should be INPUT", "ENDIF should be NEXT", "Nothing is wrong"],
+          note: "The 1 is a fixed row, so the output is always the first customer's name. Using Row gives the name from the row that matched."
+        },
+        {
+          id: "err-mod", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\n// seconds left over after removing whole minutes\nSeconds <- DIV(TotalSeconds, 60)",
+          answers: ["It should use MOD, not DIV"],
+          distractors: ["It should use ROUND", "TotalSeconds should be 60", "Seconds should be REAL", "The comment is wrong", "Nothing is wrong"],
+          note: "DIV gives whole minutes. The seconds left over are the remainder, which is MOD."
+        },
+        {
+          id: "err-until", category: "y11errors",
+          prompt: "What is the error in this pseudocode?\nREPEAT\n   INPUT Guess\nNEXT Guess = 7",
+          answers: ["NEXT should be UNTIL"],
+          distractors: ["REPEAT should be WHILE", "INPUT should be OUTPUT", "7 should be a string", "Guess should be a CHAR", "Nothing is wrong"],
+          note: "A REPEAT loop is closed with UNTIL and a condition."
+        },
+        {
+          id: "trace-sum", category: "y11trace",
+          prompt: "What is output by this pseudocode?\nTotal <- 0\nFOR Count <- 1 TO 4\n   Total <- Total + Count\nNEXT Count\nOUTPUT Total",
+          answers: ["10"],
+          distractors: ["4", "6", "24", "1234", "0", "8"],
+          note: "1 + 2 + 3 + 4 = 10."
+        },
+        {
+          id: "trace-divmod", category: "y11trace",
+          prompt: "What is output by this pseudocode?\nX <- 17\nOUTPUT X DIV 5, X MOD 5",
+          answers: ["3 2"],
+          distractors: ["3.4", "2 3", "5 17", "3 5", "17 5", "0 3"],
+          note: "17 DIV 5 = 3 and 17 MOD 5 = 2."
+        },
+        {
+          id: "trace-while", category: "y11trace",
+          prompt: "What is output by this pseudocode?\nCount <- 0\nWHILE Count < 3 DO\n   Count <- Count + 1\nENDWHILE\nOUTPUT Count",
+          answers: ["3"],
+          distractors: ["0", "1", "2", "4", "5"],
+          note: "The loop adds 1 until Count is 3, then the condition is FALSE and it stops."
+        },
+        {
+          id: "trace-repeat", category: "y11trace",
+          prompt: "What is output by this pseudocode?\nN <- 10\nREPEAT\n   N <- N - 3\nUNTIL N < 0\nOUTPUT N",
+          answers: ["-2"],
+          distractors: ["1", "-3", "0", "10", "-1", "7"],
+          note: "N goes 7, 4, 1, -2. At -2 the condition N < 0 is TRUE so it stops and outputs -2."
+        },
+        {
+          id: "trace-whilenever", category: "y11trace",
+          prompt: "What is output by this pseudocode?\nN <- 10\nWHILE N < 5 DO\n   N <- N + 1\nENDWHILE\nOUTPUT N",
+          answers: ["10"],
+          distractors: ["5", "6", "0", "4", "Nothing is output"],
+          note: "The condition is FALSE the first time, so the loop never runs and N is still 10."
+        },
+        {
+          id: "trace-max", category: "y11trace",
+          prompt: "What is output by this pseudocode?\n// Values[1] = 4, Values[2] = 9, Values[3] = 2\nMax <- Values[1]\nFOR Index <- 2 TO 3\n   IF Values[Index] > Max\n      THEN\n         Max <- Values[Index]\n      ENDIF\nNEXT Index\nOUTPUT Max",
+          answers: ["9"],
+          distractors: ["4", "2", "15", "3", "1"],
+          note: "Max starts as 4, becomes 9 at index 2, and 2 is not bigger, so 9 is output."
+        },
+        {
+          id: "trace-count", category: "y11trace",
+          prompt: "What is output by this pseudocode?\n// Marks: 40, 65, 72, 30, 88\nPasses <- 0\nFOR Index <- 1 TO 5\n   IF Marks[Index] >= 50\n      THEN\n         Passes <- Passes + 1\n      ENDIF\nNEXT Index\nOUTPUT Passes",
+          answers: ["3"],
+          distractors: ["2", "4", "5", "295", "1"],
+          note: "65, 72 and 88 are 50 or more, so Passes counts 3."
+        },
+        {
+          id: "trace-string", category: "y11trace",
+          prompt: "What is output by this pseudocode?\nWord <- \"computer\"\nOUTPUT LENGTH(Word), SUBSTRING(Word, 1, 3)",
+          answers: ["8 com"],
+          distractors: ["7 com", "8 mpu", "3 com", "com 8", "8 comp", "8 put"],
+          note: "computer has 8 letters; the first three are com."
+        },
+        {
+          id: "trace-checkdigit", category: "y11trace",
+          prompt: "What is output by this pseudocode?\n// digits 1, 2, 3, 4, 5 in positions 1 to 5\nTotal <- 0\nFOR Count <- 1 TO 5\n   Total <- Total + (Digit[Count] * Count)\nNEXT Count\nOUTPUT Total MOD 11",
+          answers: ["0"],
+          distractors: ["55", "5", "1", "11", "10", "4"],
+          note: "The total is 1 + 4 + 9 + 16 + 25 = 55 and 55 MOD 11 = 0."
+        },
+        {
+          id: "trace-flag", category: "y11trace",
+          prompt: "What is output by this pseudocode?\nFound <- FALSE\nFOR Index <- 1 TO 3\n   IF Names[Index] = \"Ann\" // Names are Bo, Ann, Cy\n      THEN\n         Found <- TRUE\n      ENDIF\nNEXT Index\nOUTPUT Found",
+          answers: ["TRUE"],
+          distractors: ["FALSE", "Ann", "2", "3", "Index"],
+          note: "Ann is in the array, so Found is set to TRUE, and it stays TRUE."
+        },
+        {
+          id: "trace-bubble", category: "y11trace",
+          prompt: "What order is the array in after one pass?\n// Array holds 5, 2, 8, 1. One pass of a bubble sort (compare neighbours, swap if the left is bigger)",
+          answers: ["2, 5, 1, 8"],
+          distractors: ["1, 2, 5, 8", "2, 5, 8, 1", "5, 2, 8, 1", "8, 5, 2, 1", "2, 1, 5, 8"],
+          note: "5 and 2 swap (2, 5, 8, 1). 5 and 8 stay. 8 and 1 swap: 2, 5, 1, 8. One pass is not enough to fully sort; the biggest value has reached the end."
+        },
+        {
+          id: "trace-purpose", category: "y11trace",
+          prompt: "What is a trace table used for?",
+          answers: ["To record the value of each variable step by step as an algorithm runs"],
+          distractors: ["To store the test data", "To draw a flowchart", "To check the syntax of the code", "To speed up the program", "To list the users of the program"],
+          note: "Work through the algorithm one statement at a time and write each variable's new value in its column. It helps find logic errors."
+        },
+        {
+          id: "trace-search", category: "y11trace",
+          prompt: "A linear search looks for a name in an array. What does it do?",
+          answers: ["Checks each element in turn until it finds the value or reaches the end"],
+          distractors: ["Splits the array in half each time", "Swaps neighbours until sorted", "Adds up every element", "Counts the elements", "Only checks the first element"],
+          note: "Linear search compares each element with the value being looked for. Using a Found flag lets the program say whether it was found."
+        },
+        {
+          id: "sub-func", category: "y11dev",
+          prompt: "What is the main difference between a function and a procedure?",
+          answers: ["A function returns a value; a procedure does not"],
+          distractors: ["A procedure returns a value; a function does not", "A function cannot have parameters", "A procedure must be written first", "A function only works with strings", "There is no difference"],
+          note: "Functions end with RETURN and give a value back to be used; procedures just carry out a set of statements."
+        },
+        {
+          id: "sub-keyword", category: "y11dev",
+          prompt: "Which keyword sends a value back from a function?",
+          answers: ["RETURN"],
+          distractors: ["OUTPUT", "CALL", "ENDFUNCTION", "PROCEDURE", "PARAMETER"],
+          note: "RETURN gives the result back to the code that called the function. ENDFUNCTION only marks the end."
+        },
+        {
+          id: "sub-call", category: "y11dev",
+          prompt: "Which keyword is used to run a procedure?",
+          answers: ["CALL"],
+          distractors: ["RETURN", "RUN", "FUNCTION", "ENDPROCEDURE", "START"],
+          note: "CALL Time(500) runs the procedure Time. A function is used inside an expression, for example Value <- Power(A, B)."
+        },
+        {
+          id: "sub-param", category: "y11dev",
+          prompt: "What is a parameter?",
+          answers: ["A value passed into a procedure or function when it is called"],
+          distractors: ["A value stored in a file", "The result returned by a function", "A type of loop", "A mistake in the code", "A comment"],
+          note: "In PROCEDURE Time(TotalSeconds), TotalSeconds is a parameter. Its value is given by the call: CALL Time(500)."
+        },
+        {
+          id: "sub-trace", category: "y11dev",
+          prompt: "What is output?\nFUNCTION Double(N : INTEGER) RETURNS INTEGER\n   RETURN N * 2\nENDFUNCTION\nOUTPUT Double(6)",
+          answers: ["12"],
+          distractors: ["6", "3", "Double", "2", "8", "N * 2"],
+          note: "The parameter N is 6, so the function returns 6 * 2 = 12."
+        },
+        {
+          id: "sub-time", category: "y11dev",
+          prompt: "PROCEDURE Time(TotalSeconds) outputs the minutes and seconds. What is output by CALL Time(500)?",
+          answers: ["8 minutes 20 seconds"],
+          distractors: ["8 minutes 0 seconds", "9 minutes 20 seconds", "500 minutes 0 seconds", "20 minutes 8 seconds", "8 minutes 33 seconds"],
+          note: "Minutes are 500 DIV 60 = 8 and seconds are 500 MOD 60 = 20."
+        }
+      ]
+    },
+    "y11-p2-logic": {
+      title: "Year 11: Logic Gates and Truth Tables",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - Paper 2",
+      cards: [
+        {
+          id: "gate-and", category: "y11logic",
+          prompt: "What is the output column of A AND B for the rows A B = 00, 01, 10, 11 (in that order)?",
+          answers: ["0 0 0 1"],
+          distractors: ["0 1 0 0", "0 1 0 1", "0 1 1 1", "1 0 0 1", "1 1 0 1"],
+          note: "AND gives 1 only when both inputs are 1. Output for 00, 01, 10, 11 is 0 0 0 1."
+        },
+        {
+          id: "gate-or", category: "y11logic",
+          prompt: "What is the output column of A OR B for the rows A B = 00, 01, 10, 11 (in that order)?",
+          answers: ["0 1 1 1"],
+          distractors: ["0 0 1 0", "0 0 1 1", "0 1 0 1", "0 1 1 0", "1 1 1 1"],
+          note: "OR gives 1 when at least one input is 1. Output for 00, 01, 10, 11 is 0 1 1 1."
+        },
+        {
+          id: "gate-nand", category: "y11logic",
+          prompt: "What is the output column of A NAND B for the rows A B = 00, 01, 10, 11 (in that order)?",
+          answers: ["1 1 1 0"],
+          distractors: ["0 1 1 0", "1 0 0 0", "1 1 0 0", "1 1 0 1", "1 1 1 1"],
+          note: "NAND gives the opposite of AND: 0 only when both inputs are 1. Output for 00, 01, 10, 11 is 1 1 1 0."
+        },
+        {
+          id: "gate-nor", category: "y11logic",
+          prompt: "What is the output column of A NOR B for the rows A B = 00, 01, 10, 11 (in that order)?",
+          answers: ["1 0 0 0"],
+          distractors: ["0 0 0 0", "0 0 1 0", "0 1 0 0", "1 0 1 0", "1 1 0 0"],
+          note: "NOR gives the opposite of OR: 1 only when both inputs are 0. Output for 00, 01, 10, 11 is 1 0 0 0."
+        },
+        {
+          id: "gate-xor", category: "y11logic",
+          prompt: "What is the output column of A XOR B for the rows A B = 00, 01, 10, 11 (in that order)?",
+          answers: ["0 1 1 0"],
+          distractors: ["0 0 1 1", "0 1 1 1", "1 0 1 0", "1 1 0 0", "1 1 1 0"],
+          note: "XOR gives 1 only when the two inputs are different. Output for 00, 01, 10, 11 is 0 1 1 0."
+        },
+        {
+          id: "gate-not", category: "y11logic",
+          prompt: "What is the output column of NOT A for A = 0, 1 (in that order)?",
+          answers: ["1 0"],
+          distractors: ["0 0", "1 1", "0 1", "1 0 1", "0"],
+          note: "NOT flips the input: 0 becomes 1 and 1 becomes 0. It has only one input."
+        },
+        {
+          id: "scen-and", category: "y11logic",
+          prompt: "An alarm sounds only if the door is open AND the system is armed. Which gate?",
+          answers: ["AND"],
+          distractors: ["OR", "NOT", "NAND", "NOR", "XOR"],
+          note: "Both conditions must be 1."
+        },
+        {
+          id: "scen-or", category: "y11logic",
+          prompt: "A light turns on if either switch is on. Which gate?",
+          answers: ["OR"],
+          distractors: ["AND", "NOT", "NAND", "NOR", "XOR"],
+          note: "At least one input 1 gives 1."
+        },
+        {
+          id: "scen-xor", category: "y11logic",
+          prompt: "A staircase light turns on if exactly one of two switches is up (different positions). Which gate?",
+          answers: ["XOR"],
+          distractors: ["AND", "OR", "NOT", "NAND", "NOR"],
+          note: "Different inputs give 1."
+        },
+        {
+          id: "scen-nand", category: "y11logic",
+          prompt: "Which gate gives 0 only when both inputs are 1?",
+          answers: ["NAND"],
+          distractors: ["AND", "OR", "NOT", "NOR", "XOR"],
+          note: "It is AND followed by NOT."
+        },
+        {
+          id: "scen-nor", category: "y11logic",
+          prompt: "Which gate gives 1 only when both inputs are 0?",
+          answers: ["NOR"],
+          distractors: ["AND", "OR", "NOT", "NAND", "XOR"],
+          note: "It is OR followed by NOT."
+        },
+        {
+          id: "rows-count", category: "y11logic",
+          prompt: "How many rows does a truth table need for three inputs?",
+          answers: ["8"],
+          distractors: ["3", "6", "9", "4", "16", "12"],
+          note: "Each input doubles the rows: 2 x 2 x 2 = 8. Two inputs need 4 rows."
+        },
+        {
+          id: "rows-order", category: "y11logic",
+          prompt: "In which order are the input rows of a three-input truth table usually written?",
+          answers: ["000, 001, 010, 011, 100, 101, 110, 111"],
+          distractors: ["000, 111, 001, 110, 010, 101, 011, 100", "111, 110, 101, 100, 011, 010, 001, 000", "000, 100, 010, 001, 110, 101, 011, 111", "001, 010, 100, 011, 101, 110, 000, 111", "000, 001, 011, 010, 110, 111, 101, 100"],
+          note: "Count up in binary: 000, 001, 010, 011, 100, 101, 110, 111. It makes sure no row is missed."
+        },
+        {
+          id: "gate-inputs", category: "y11logic",
+          prompt: "In the exam a logic circuit must use gates with at most how many inputs each?",
+          answers: ["2"],
+          distractors: ["1", "3", "4", "5", "Any number", "8"],
+          note: "Draw the circuit with two-input gates, so a three-input expression is built from several gates."
+        },
+        {
+          id: "expr-e1", category: "y11logic",
+          prompt: "What is the output column for X = NOT A AND B, with input rows A B = 00, 01, 10, 11 (in that order)?",
+          answers: ["0 1 0 0"],
+          distractors: ["0 0 0 0", "0 0 0 1", "0 1 1 0", "1 0 0 0", "1 1 0 1"],
+          note: "Work out NOT A first, then AND it with B. The output column is 0 1 0 0."
+        },
+        {
+          id: "expr-e2", category: "y11logic",
+          prompt: "What is the output column for X = (A OR B) AND C, with input rows A B C = 000, 001, 010, 011, 100, 101, 110, 111 (in that order)?",
+          answers: ["0 0 0 1 0 1 0 1"],
+          distractors: ["0 0 0 0 0 1 0 1", "0 0 0 1 0 1 1 1", "0 0 0 1 1 1 1 1", "1 0 0 1 0 1 0 1", "1 0 0 1 1 1 0 1"],
+          note: "Do the brackets first: A OR B, then AND with C. The output column is 0 0 0 1 0 1 0 1."
+        },
+        {
+          id: "expr-e3", category: "y11logic",
+          prompt: "What is the output column for X = NOT (A AND B), with input rows A B = 00, 01, 10, 11 (in that order)?",
+          answers: ["1 1 1 0"],
+          distractors: ["0 1 1 0", "0 1 1 1", "1 0 1 0", "1 1 0 1", "1 1 1 1"],
+          note: "This is the same as NAND. The output column is 1 1 1 0."
+        },
+        {
+          id: "expr-e4", category: "y11logic",
+          prompt: "What is the output column for X = (A XOR B) NAND B, with input rows A B = 00, 01, 10, 11 (in that order)?",
+          answers: ["1 0 1 1"],
+          distractors: ["0 0 0 1", "0 0 1 1", "0 1 1 1", "1 1 1 0", "1 1 1 1"],
+          note: "Work out A XOR B first, then NAND that with B. The output column is 1 0 1 1."
+        },
+        {
+          id: "expr-e5", category: "y11logic",
+          prompt: "What is the output column for X = (A NAND NOT B) XOR (A NOR C), with input rows A B C = 000, 001, 010, 011, 100, 101, 110, 111 (in that order)?",
+          answers: ["0 1 0 1 0 0 1 1"],
+          distractors: ["0 0 0 1 0 0 1 1", "0 1 0 0 0 0 1 1", "0 1 0 1 0 0 0 0", "0 1 1 1 0 0 1 1", "1 1 0 1 0 0 1 1"],
+          note: "Work out each bracket in its own column, then XOR them. The output column is 0 1 0 1 0 0 1 1."
+        },
+        {
+          id: "expr-e6", category: "y11logic",
+          prompt: "What is the output column for Z = NOT (B OR NOT C) XOR (A NAND C), with input rows A B C = 000, 001, 010, 011, 100, 101, 110, 111 (in that order)?",
+          answers: ["1 0 1 1 1 1 1 0"],
+          distractors: ["0 0 0 1 1 1 1 0", "0 0 1 1 0 1 1 0", "1 0 0 1 1 0 1 0", "1 0 1 1 1 0 1 0", "1 0 1 1 1 1 1 1"],
+          note: "Work out NOT C, then B OR NOT C, then NOT that. Separately A NAND C. Then XOR the two results. The output column is 1 0 1 1 1 1 1 0."
+        },
+        {
+          id: "expr-e7", category: "y11logic",
+          prompt: "What is the output column for X = (J XOR NOT K) NAND NOT L, with input rows J K L = 000, 001, 010, 011, 100, 101, 110, 111 (in that order)?",
+          answers: ["0 1 1 1 1 1 0 1"],
+          distractors: ["0 0 0 1 1 1 0 1", "0 0 1 1 0 1 0 1", "0 0 1 1 1 1 0 1", "0 1 1 1 1 1 0 0", "1 1 0 1 1 1 0 1"],
+          note: "Here J, K, L are the first, second and third input. Work out NOT K, then J XOR that, then NOT L, then NAND. The output column is 0 1 1 1 1 1 0 1."
+        },
+        {
+          id: "expr-e8", category: "y11logic",
+          prompt: "What is the output column for X = (NOT P AND Q) XOR (Q NOR R), with input rows P Q R = 000, 001, 010, 011, 100, 101, 110, 111 (in that order)?",
+          answers: ["1 0 1 1 1 0 0 0"],
+          distractors: ["0 1 1 1 1 0 0 0", "1 0 1 1 1 0 0 1", "1 0 1 1 1 0 1 0", "1 1 1 1 1 0 1 0", "1 1 1 1 1 1 0 0"],
+          note: "Here P, Q, R are the first, second and third input. Work out each bracket in its own column, then XOR. The output column is 1 0 1 1 1 0 0 0."
+        },
+        {
+          id: "val-v10", category: "y11logic",
+          prompt: "What is X for X = (A OR B) AND C when A = 0, B = 1, C = 0?",
+          answers: ["0"],
+          distractors: ["1", "2", "Both", "Cannot tell", "-1"],
+          note: "Substitute the values into the brackets first, then apply the outer gate."
+        },
+        {
+          id: "val-v11", category: "y11logic",
+          prompt: "What is X for X = (A OR B) AND C when A = 1, B = 0, C = 1?",
+          answers: ["1"],
+          distractors: ["0", "2", "Both", "Cannot tell", "-1"],
+          note: "Substitute the values into the brackets first, then apply the outer gate."
+        },
+        {
+          id: "val-v20", category: "y11logic",
+          prompt: "What is X for X = A AND NOT B when A = 1, B = 0?",
+          answers: ["1"],
+          distractors: ["0", "2", "Both", "Cannot tell", "-1"],
+          note: "Substitute the values into the brackets first, then apply the outer gate."
+        },
+        {
+          id: "val-v21", category: "y11logic",
+          prompt: "What is X for X = A AND NOT B when A = 1, B = 1?",
+          answers: ["0"],
+          distractors: ["1", "2", "Both", "Cannot tell", "-1"],
+          note: "Substitute the values into the brackets first, then apply the outer gate."
+        },
+        {
+          id: "logic-discount", category: "y11logic",
+          prompt: "A meal discount (X = 1) is given if the person is a student (A = 1) or 65 or older (B = 1), but only if the order is $20 or more (C = 1). Which expression is right?",
+          answers: ["X = (A OR B) AND C"],
+          distractors: ["X = A OR B OR C", "X = A AND B AND C", "X = (A AND B) OR C", "X = A OR (B AND C)", "X = NOT (A OR B) AND C"],
+          note: "Either of the two people conditions is enough (OR), and the order value must also be met (AND). Brackets make sure the OR is worked out before the AND."
+        }
+      ]
+    },
+    "y11-p2-sql-dev": {
+      title: "Year 11: Databases, SQL and Program Development",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - Paper 2",
+      cards: [
+        {
+          id: "sql-kw-select", category: "y11sql",
+          prompt: "Which SQL keyword says which fields to show?",
+          answers: ["SELECT"],
+          distractors: ["FROM", "WHERE", "ORDER BY", "COUNT", "SUM"],
+          note: "SELECT lists the fields you want in the results."
+        },
+        {
+          id: "sql-kw-from", category: "y11sql",
+          prompt: "Which SQL keyword identifies the table?",
+          answers: ["FROM"],
+          distractors: ["SELECT", "WHERE", "ORDER BY", "COUNT", "SUM"],
+          note: "FROM names the database table to use."
+        },
+        {
+          id: "sql-kw-where", category: "y11sql",
+          prompt: "Which SQL keyword picks only the records that meet a condition?",
+          answers: ["WHERE"],
+          distractors: ["SELECT", "FROM", "ORDER BY", "COUNT", "SUM"],
+          note: "WHERE filters the records, for example WHERE Age > 5."
+        },
+        {
+          id: "sql-kw-order", category: "y11sql",
+          prompt: "Which SQL keyword sorts the results?",
+          answers: ["ORDER BY"],
+          distractors: ["SELECT", "FROM", "WHERE", "COUNT", "SUM"],
+          note: "ORDER BY Field sorts lowest to highest (ascending) unless you add DESC."
+        },
+        {
+          id: "sql-kw-count", category: "y11sql",
+          prompt: "Which SQL keyword returns the number of records?",
+          answers: ["COUNT"],
+          distractors: ["SELECT", "FROM", "WHERE", "ORDER BY", "SUM"],
+          note: "COUNT(Name) counts the records that match."
+        },
+        {
+          id: "sql-kw-sum", category: "y11sql",
+          prompt: "Which SQL keyword adds up the values of a field?",
+          answers: ["SUM"],
+          distractors: ["SELECT", "FROM", "WHERE", "ORDER BY", "COUNT"],
+          note: "SUM(Age) adds all the ages together."
+        },
+        {
+          id: "sql-q1", category: "y11sql",
+          prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT Name FROM PETS WHERE Type = \"Cat\";",
+          answers: ["Luna, Tia"],
+          distractors: ["Luna, Tia, Rex", "Milo, Rex", "P2, P5", "Cat, Cat", "Luna, Coco", "Tia"],
+          note: "Only records where Type is Cat are kept (P2 and P5). SELECT Name shows only the Name field."
+        },
+        {
+          id: "sql-q2", category: "y11sql",
+          prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT Name FROM PETS WHERE Age > 5;",
+          answers: ["Luna, Rex"],
+          distractors: ["Luna, Rex, Milo", "Milo, Coco, Tia", "7, 9", "Rex", "Luna", "Milo, Luna, Rex"],
+          note: "Ages above 5 are 7 (Luna) and 9 (Rex). > means strictly greater than."
+        },
+        {
+          id: "sql-q3", category: "y11sql",
+          prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT Name FROM PETS WHERE Age >= 4;",
+          answers: ["Milo, Luna, Rex"],
+          distractors: ["Luna, Rex", "Coco, Tia", "Milo, Luna, Rex, Tia", "Milo, Rex", "Coco, Tia, Milo", "4, 7, 9"],
+          note: ">= includes 4, so Milo (4) is included as well as Luna (7) and Rex (9)."
+        },
+        {
+          id: "sql-q4", category: "y11sql",
+          prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT Name FROM PETS ORDER BY Age;",
+          answers: ["Coco, Tia, Milo, Luna, Rex"],
+          distractors: ["Rex, Luna, Milo, Tia, Coco", "Milo, Luna, Rex, Coco, Tia", "Coco, Luna, Milo, Rex, Tia", "Luna, Milo, Rex, Tia, Coco", "Coco, Milo, Luna, Rex, Tia", "2, 3, 4, 7, 9"],
+          note: "Ages in ascending order are 2, 3, 4, 7, 9: Coco, Tia, Milo, Luna, Rex."
+        },
+        {
+          id: "sql-q5", category: "y11sql",
+          prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT COUNT(Name) FROM PETS WHERE Type = \"Dog\";",
+          answers: ["2"],
+          distractors: ["1", "3", "5", "Milo, Rex", "4", "9"],
+          note: "There are two dogs (Milo and Rex), and COUNT returns how many records match."
+        },
+        {
+          id: "sql-q6", category: "y11sql",
+          prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT SUM(Age) FROM PETS;",
+          answers: ["25"],
+          distractors: ["5", "9", "4", "24", "26", "2"],
+          note: "4 + 7 + 9 + 2 + 3 = 25."
+        },
+        {
+          id: "sql-q7", category: "y11sql",
+          prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT ID, Name FROM PETS WHERE Type = \"Dog\" ORDER BY Name;",
+          answers: ["P1 Milo, P3 Rex"],
+          distractors: ["P3 Rex, P1 Milo", "Milo, Rex", "P1, P3", "P2 Luna, P5 Tia", "P1 Dog, P3 Dog", "P4 Coco"],
+          note: "Both dogs are selected, showing ID and Name, sorted alphabetically: Milo comes before Rex."
+        },
+        {
+          id: "sql-q8", category: "y11sql",
+          prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT * FROM PETS WHERE Age < 3;",
+          answers: ["All the fields of Coco's record: P4 Coco Rabbit 2"],
+          distractors: ["Only the name Coco", "All the fields of Tia's record", "The number 1", "All the records in the table", "An error, because * is not allowed"],
+          note: "* means every field. Only Coco (2) is under 3."
+        },
+        {
+          id: "sql-write1", category: "y11sql",
+          prompt: "Which statement lists the names of pets aged under 4 from the table PETS?",
+          answers: ["SELECT Name FROM PETS WHERE Age < 4;"],
+          distractors: ["SELECT Age FROM PETS WHERE Name < 4;", "SELECT Name FROM PETS ORDER BY Age < 4;", "SELECT * WHERE Age < 4 FROM PETS;", "FROM PETS SELECT Name WHERE Age < 4;", "SELECT Name FROM PETS WHERE Age > 4;"],
+          note: "The order is SELECT fields, FROM table, WHERE condition, ORDER BY field. Under 4 uses <."
+        },
+        {
+          id: "sql-write2", category: "y11sql",
+          prompt: "Which statement lists the name and type of all pets, in order of name?",
+          answers: ["SELECT Name, Type FROM PETS ORDER BY Name;"],
+          distractors: ["SELECT Name, Type FROM PETS WHERE Name;", "SELECT Name Type FROM PETS ORDER Name;", "ORDER BY Name SELECT Name, Type FROM PETS;", "SELECT Name, Type ORDER BY Name FROM PETS;", "SELECT Name, Type FROM PETS SORT Name;"],
+          note: "Fields are separated by commas, and every SQL statement ends with a semicolon."
+        },
+        {
+          id: "sql-desc", category: "y11sql",
+          prompt: "What does ORDER BY Age DESC do?",
+          answers: ["Sorts the records from the highest age to the lowest"],
+          distractors: ["Sorts from lowest to highest", "Deletes the Age field", "Describes the Age field", "Only shows the oldest record", "Sorts alphabetically by Name"],
+          note: "By default ORDER BY is ascending (lowest first). DESC reverses it."
+        },
+        {
+          id: "db-field", category: "y11sql",
+          prompt: "In a database table, what is a field?",
+          answers: ["One column that stores one piece of data about each record, such as Name"],
+          distractors: ["One whole row of data", "The whole table", "A unique code for the table", "A type of query", "A database program"],
+          note: "Fields are the columns, records are the rows."
+        },
+        {
+          id: "db-record", category: "y11sql",
+          prompt: "In a database table, what is a record?",
+          answers: ["One row containing all the data about one item"],
+          distractors: ["One column of data", "A type of data", "A SQL keyword", "The name of the table", "A unique key"],
+          note: "Each record is a row: for example everything about one pet."
+        },
+        {
+          id: "db-pk", category: "y11sql",
+          prompt: "What is a primary key?",
+          answers: ["A field whose value is unique for every record"],
+          distractors: ["The first field in the table", "A field that is always a number", "A field that can be left blank", "The field with the longest data", "A key that opens the database"],
+          note: "A primary key identifies one record only, so no two records share the same value."
+        },
+        {
+          id: "db-pkchoice", category: "y11sql",
+          prompt: "Which field in PETS is the best primary key?",
+          answers: ["ID"],
+          distractors: ["Name", "Type", "Age", "Cat", "Milo"],
+          note: "Names, types and ages can be repeated (two cats, two dogs). ID is different for every record."
+        },
+        {
+          id: "db-pkwhy", category: "y11sql",
+          prompt: "Why is a field like StudentID better than a Name as a primary key?",
+          answers: ["Two students can share a name but never an ID"],
+          distractors: ["Names are too long to store", "IDs are always text", "Names can only be integers", "IDs can be left blank", "Names cannot be sorted"],
+          note: "A primary key must be unique. Names can be repeated (two students called Julie)."
+        },
+        {
+          id: "life-an", category: "y11dev",
+          prompt: "In which stage of the program development life cycle is the problem investigated and the requirements found?",
+          answers: ["Analysis"],
+          distractors: ["Design", "Coding", "Testing", "Maintenance", "Planning", "Debugging"],
+          note: "Analysis: decide exactly what the program must do, break the problem down (decomposition) and identify inputs, processes and outputs."
+        },
+        {
+          id: "life-de", category: "y11dev",
+          prompt: "In which stage are structure diagrams, flowcharts and pseudocode produced?",
+          answers: ["Design"],
+          distractors: ["Analysis", "Coding", "Testing", "Maintenance", "Planning", "Debugging"],
+          note: "Design: plan how the solution will work before writing any real code."
+        },
+        {
+          id: "life-co", category: "y11dev",
+          prompt: "In which stage is the program written in a programming language?",
+          answers: ["Coding"],
+          distractors: ["Analysis", "Design", "Testing", "Maintenance", "Planning", "Debugging"],
+          note: "Coding: turn the design into a program, and the coder also tests as they go."
+        },
+        {
+          id: "life-te", category: "y11dev",
+          prompt: "In which stage is test data used to check the program works and meets the requirements?",
+          answers: ["Testing"],
+          distractors: ["Analysis", "Design", "Coding", "Maintenance", "Planning", "Debugging"],
+          note: "Testing: run the program with normal, abnormal and extreme data and compare with the expected results."
+        },
+        {
+          id: "life-order", category: "y11dev",
+          prompt: "What is the correct order of the stages of the program development life cycle?",
+          answers: ["Analysis, Design, Coding, Testing"],
+          distractors: ["Design, Analysis, Coding, Testing", "Coding, Design, Analysis, Testing", "Analysis, Coding, Design, Testing", "Testing, Coding, Design, Analysis", "Analysis, Design, Testing, Coding"],
+          note: "Understand the problem, plan a solution, write it, then test it."
+        },
+        {
+          id: "dev-maintain", category: "y11dev",
+          prompt: "Which of these does NOT help to make a program easier to maintain?",
+          answers: ["Removing blank lines to make the code shorter"],
+          distractors: ["Using meaningful variable names", "Adding comments", "Using procedures and functions", "Using consistent indentation", "Splitting the program into sections"],
+          note: "Blank lines, indentation, comments, sensible names and subroutines make code readable. Cramming it together makes it harder to understand."
+        },
+        {
+          id: "dev-identifiers", category: "y11dev",
+          prompt: "Which identifier is the most meaningful for a variable holding the total price of an order?",
+          answers: ["TotalPrice"],
+          distractors: ["X", "Temp", "Data1", "Thing", "TP2", "A"],
+          note: "A meaningful name explains what the variable holds so anyone reading the code can follow it."
+        },
+        {
+          id: "dev-comments", category: "y11dev",
+          prompt: "Why add comments to a program?",
+          answers: ["To explain how the code works to anyone who reads it later"],
+          distractors: ["To make the program run faster", "To stop the program crashing", "To check the data is valid", "To change the output", "To declare the variables"],
+          note: "Comments start with // and are ignored by the computer. They help maintenance."
+        },
+        {
+          id: "dev-structure", category: "y11dev",
+          prompt: "What is a structure diagram used for?",
+          answers: ["To show a system broken down into smaller sub-systems"],
+          distractors: ["To record the values of variables", "To show the truth table of a circuit", "To store test data", "To list SQL keywords", "To show the order of the loops"],
+          note: "A hotel booking system might split into booking, payment and room management. Structure diagrams show top-down decomposition."
+        },
+        {
+          id: "dev-decomp", category: "y11dev",
+          prompt: "What does decomposition mean?",
+          answers: ["Breaking a problem into smaller, more manageable parts"],
+          distractors: ["Combining several programs into one", "Removing errors from code", "Hiding details that are not needed", "Finding patterns in the data", "Writing the final program"],
+          note: "Smaller parts are easier to understand, design and test."
+        },
+        {
+          id: "dev-iopo", category: "y11dev",
+          prompt: "A program asks for a number, doubles it and shows the result. Which is the process?",
+          answers: ["Doubling the number"],
+          distractors: ["Asking for the number", "Showing the result", "The number typed in", "The result shown", "The question shown on screen"],
+          note: "Input is what goes in, process is what the program does with it, output is what comes out."
+        }
+      ]
+    },
     "examqs-y10-1-1": {
       title: "Year 10, 1.1 Number Systems - Exam Questions",
       subtitle: "Cambridge IGCSE Computer Science 0478 - real past-paper questions",
