@@ -63,7 +63,7 @@
     <h2>Host a game</h2>
     <p>Runs entirely on this laptop - no account, no internet dependency once it's downloaded.</p>
     <button type="button" class="btn" id="open-host-btn">Open host dashboard</button>
-    <a class="btn ghost" id="download-btn" href="host-download/LiveGameHost.zip" download>Download Live Game Host</a>
+    <a class="btn ghost" id="download-btn" href="host-download/LiveGameHost.exe" download>Download Live Game Host for Windows</a>
     <div class="address-box show" id="host-address-box">
       <p class="hint">If the button above does nothing (browsers can block a page from jumping to a local address automatically) - copy this and paste it into a <strong>new tab's address bar</strong> yourself:</p>
       <div class="address-row">
@@ -73,7 +73,7 @@
       <div class="copied-note" id="host-copied-note"></div>
     </div>
     <ol class="steps" style="margin-top:14px">
-      <li>Download and unzip it (once - reuse it every time after).</li>
+      <li>Download it once, then double-click the file whenever you want to host.</li>
       <li>Double-click LiveGameHost.exe. A black window opens with a join code.</li>
       <li>Open the dashboard using the button above (or the address it prints).</li>
       <li>Read out the local join code the dashboard shows (or the public one, if you've port-forwarded and have students joining from outside school) - they join right here on this page.</li>
@@ -161,10 +161,10 @@
   joinEls.input.addEventListener('keydown', function (e) { if (e.key === 'Enter') doJoin(); });
   joinEls.copyBtn.addEventListener('click', function () { copyToClipboard(joinEls.addressText.value, joinEls.copiedNote); });
 
-  // GitHub Pages lets browsers cache the zip for 10 minutes, so a teacher who downloaded
+  // GitHub Pages lets browsers cache the download for 10 minutes, so a teacher who downloaded
   // it earlier could keep getting the old build. A changing query string forces a fresh one.
   document.getElementById('download-btn').addEventListener('click', function () {
-    this.href = 'host-download/LiveGameHost.zip?v=' + Date.now();
+    this.href = 'host-download/LiveGameHost.exe?v=' + Date.now();
   });
 
   var hostAddressText = document.getElementById('host-address-text');
