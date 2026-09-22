@@ -35,6 +35,13 @@
   .address-row button { flex: 0 0 auto; width: auto; padding: 0 16px; }
   .copied-note { color: #1f8a5a; font-size: .78rem; margin-top: 4px; min-height: 1em; }
   [hidden] { display: none !important; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(20, 26, 41, .55); display: flex; align-items: center; justify-content: center; padding: 18px; z-index: 50; }
+  .modal-box { background: #fff; border-radius: 14px; max-width: 420px; width: 100%; padding: 22px; }
+  .modal-box h2 { font-size: 1.05rem; margin: 0 0 10px; color: #a6350f; }
+  .modal-box p { font-size: .88rem; color: #3a4355; margin: 0 0 12px; }
+  .modal-box p strong { color: #1f2733; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .modal-actions .btn { margin-top: 0; }
 </style>
 </head>
 <body>
@@ -78,6 +85,24 @@
       <li>Open the dashboard using the button above (or the address it prints).</li>
       <li>Read out the local join code the dashboard shows (or the public one, if you've port-forwarded and have students joining from outside school) - they join right here on this page.</li>
     </ol>
+  </div>
+
+  <div class="card" id="student-download-card">
+    <h2>Host your own game</h2>
+    <p>Want to run one of these games yourself outside a lesson - with friends, at home, at a club? Download the same free host program your teacher uses.</p>
+    <button type="button" class="btn ghost" id="student-download-btn">Download Live Game Host for Windows</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="download-warning-overlay" hidden>
+  <div class="modal-box">
+    <h2>Before you download</h2>
+    <p>This program is for running a game <strong>outside a lesson</strong> - with friends, at home, or at a club.</p>
+    <p>Downloading and running it <strong>during a lesson</strong>, without your teacher telling you to, could disrupt the class and may break your school's computer use rules.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" id="download-warning-cancel">Cancel</button>
+      <a class="btn" id="download-warning-confirm" href="host-download/LiveGameHost.exe" download>I understand - download</a>
+    </div>
   </div>
 </div>
 
@@ -174,13 +199,43 @@
   });
   document.getElementById('host-copy-btn').addEventListener('click', function () { copyToClipboard(hostAddressText.value, hostCopiedNote); });
 
-  // Teacher-only host card. isTeacher rides the same BC_IDENTITY
-  // postMessage every postIdentity:true app already gets from the shell
-  // (Index.html's sendIdentity) - trust it exactly as much as the shell
-  // already vouches for it, same as every other app on this platform.
+  // Teacher-only host card, and its opposite - a plainer download-only
+  // card for students, who don't need the join-code/dashboard controls a
+  // teacher's own hosting session uses. isTeacher rides the same
+  // BC_IDENTITY postMessage every postIdentity:true app already gets from
+  // the shell (Index.html's sendIdentity) - trust it exactly as much as
+  // the shell already vouches for it, same as every other app on this
+  // platform. Visible by default (not hidden until proven a teacher) so a
+  // student still sees it even if this page is ever opened somewhere that
+  // never sends identity at all.
   window.addEventListener('message', function (e) {
     if (!e.data || e.data.type !== 'BC_IDENTITY') return;
     document.getElementById('host-card').hidden = !e.data.isTeacher;
+    document.getElementById('student-download-card').hidden = !!e.data.isTeacher;
+  });
+
+  // Students can download the exact same host program a teacher uses -
+  // James: "they get shown a warning modal telling them they shouldn't do
+  // that during lesson and they agree before they can download it." The
+  // warning has to sit BETWEEN the click and the actual file, not just be
+  // text on the page - the modal's own "I understand" link is the only
+  // thing with a real download href, and it only gets the cache-busting
+  // query string right before that click actually happens, so there's no
+  // way to reach the file without going through the warning first.
+  var dlOverlay = document.getElementById('download-warning-overlay');
+  var dlConfirm = document.getElementById('download-warning-confirm');
+  document.getElementById('student-download-btn').addEventListener('click', function () {
+    dlOverlay.hidden = false;
+  });
+  document.getElementById('download-warning-cancel').addEventListener('click', function () {
+    dlOverlay.hidden = true;
+  });
+  dlOverlay.addEventListener('click', function (e) {
+    if (e.target === dlOverlay) dlOverlay.hidden = true; // clicking the dimmed backdrop cancels, same as the Cancel button
+  });
+  dlConfirm.addEventListener('click', function () {
+    this.href = 'host-download/LiveGameHost.exe?v=' + Date.now();
+    dlOverlay.hidden = true;
   });
 
   // Can't detect from here whether the host app is already running -
