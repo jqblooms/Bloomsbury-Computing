@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CIE Pseudocode Reference</title>
+<title>Pseudocode Recap</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -13,234 +13,1057 @@
     --border: #cbd5e1;
     --accent: #1479be;
     --accent-dark: #0f5c94;
-    --accent-gold: #ffc107;
+    --accent-soft: #e3f0fa;
     --text: #0f172a;
     --text-dim: #475569;
     --text-dimmer: #94a3b8;
+    --good: #15803d;
+    --good-soft: #e7f6ec;
+    --bad: #b91c1c;
+    --bad-soft: #fdecec;
+    --warn: #7a5300;
+    --warn-soft: #fff7e6;
     --seq: #1479be;
     --sel: #b06f0a;
     --iter: #1b7f5b;
+    --arr: #7c3aed;
+    --exam: #be123c;
+    --code-bg: #0f172a;
+    --code-bg2: #1e293b;
+    --code-text: #e2e8f0;
+    --code-dim: #64748b;
     --mono: 'Space Mono', monospace;
     --sans: 'DM Sans', sans-serif;
+    --code-size: 14px;
+    --code-line: 22px;
   }
   * { box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    margin: 0;
-    padding: 1.6rem;
-    line-height: 1.55;
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); margin: 0; line-height: 1.55; }
+  button { font-family: var(--sans); }
+  code { font-family: var(--mono); font-size: .85em; background: var(--surface2); padding: 0 .3rem; border-radius: 4px; }
+
+  /* ---------- page frame ---------- */
+  .top { background: var(--surface); border-bottom: 1px solid var(--border); padding: .9rem 1.4rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .top h1 { font-size: 1.3rem; margin: 0; }
+  .top .kicker { color: var(--text-dim); font-size: .85rem; }
+  .top .prog { margin-left: auto; display: flex; align-items: center; gap: .6rem; font-size: .85rem; color: var(--text-dim); }
+  .bar { width: 140px; height: 8px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: var(--good); width: 0; transition: width .3s; }
+  .layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); max-width: 1320px; margin: 0 auto; }
+  nav.topics { padding: 1.2rem .8rem; position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; }
+  nav.topics h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-dimmer); margin: 1rem .5rem .3rem; }
+  nav.topics button { display: flex; align-items: center; gap: .55rem; width: 100%; text-align: left; border: 0; background: none; padding: .45rem .6rem; border-radius: 8px; font-size: .92rem; color: var(--text); cursor: pointer; }
+  nav.topics button:hover { background: var(--surface2); }
+  nav.topics button.active { background: var(--accent-soft); font-weight: 600; }
+  nav.topics .count { margin-left: auto; font-size: .75rem; color: var(--text-dim); font-family: var(--mono); }
+  nav.topics .count.full { color: var(--good); font-weight: 700; }
+  .tag { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; background: var(--accent); }
+  .tag.seq { background: var(--seq); } .tag.sel { background: var(--sel); } .tag.iter { background: var(--iter); }
+  .tag.arr { background: var(--arr); } .tag.exam { background: var(--exam); }
+  main { padding: 1.2rem 1.4rem 3rem; min-width: 0; }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    nav.topics { position: static; max-height: none; display: flex; gap: .3rem; overflow-x: auto; padding: .6rem 1rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+    nav.topics h3 { display: none; }
+    nav.topics button { width: auto; white-space: nowrap; flex-shrink: 0; }
+    main { padding: 1rem 1rem 3rem; }
+    .top { padding: .8rem 1rem; }
+    .top .prog { margin-left: 0; }
   }
-  .wrap { max-width: 980px; margin: 0 auto; }
-  h1 { font-size: 1.7rem; margin: 0 0 .2rem; }
-  .sub { color: var(--text-dim); margin: 0 0 1.4rem; }
-  .toc { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
-  .toc a {
-    font-family: var(--sans); font-weight: 600; font-size: .85rem;
-    color: var(--text); background: var(--surface2); border: 1px solid var(--border);
-    padding: .4rem .8rem; border-radius: 999px; text-decoration: none;
-  }
-  .toc a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-  section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem; }
-  section h2 { margin: 0 0 .3rem; font-size: 1.25rem; display: flex; align-items: center; gap: .5rem; }
-  .tag { display: inline-block; width: 10px; height: 10px; border-radius: 3px; }
-  .tag.seq { background: var(--seq); }
-  .tag.sel { background: var(--sel); }
-  .tag.iter { background: var(--iter); }
-  section > p.lead { color: var(--text-dim); margin: 0 0 1rem; }
-  .rule { display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; margin-bottom: 1.3rem; }
-  .rule:last-child { margin-bottom: 0; }
-  .rule h3 { margin: 0; font-size: .95rem; }
-  .rule-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: .7rem; }
-  @media (min-width: 720px) { .rule-body { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
-  pre {
-    background: #0f172a; color: #e2e8f0; font-family: var(--mono); font-size: .88rem;
-    padding: .8rem 1rem; border-radius: 8px; margin: 0; overflow-x: auto; line-height: 1.6;
-  }
-  pre .kw { color: #7dd3fc; }
-  pre .str { color: #fcd34d; }
-  pre .cm { color: #94a3b8; font-style: italic; }
+
+  /* ---------- generic pieces ---------- */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; }
+  .card h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
+  .lead { color: var(--text-dim); margin: .2rem 0 1rem; }
+  .topic-head h2 { margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: .55rem; }
+  .tabs { display: flex; gap: .3rem; border-bottom: 1px solid var(--border); margin: 0 0 1.1rem; overflow-x: auto; }
+  .tabs button { border: 0; background: none; padding: .6rem .9rem; font-size: .95rem; font-weight: 600; color: var(--text-dim); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .tabs button.active { color: var(--accent-dark); border-bottom-color: var(--accent); }
+  .btn { border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 8px; padding: .45rem .9rem; font-size: .9rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: .35rem; }
+  .btn:hover { background: var(--surface2); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: var(--accent-dark); }
+  .btn.good { background: var(--good); border-color: var(--good); color: #fff; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+  .rules { margin: 0; padding-left: 1.2rem; }
+  .rules li { margin-bottom: .45rem; }
+  .note { font-size: .85rem; color: var(--text-dim); }
+  .msg { border-radius: 8px; padding: .6rem .9rem; font-size: .9rem; margin: .6rem 0; }
+  .msg.err { background: var(--bad-soft); color: var(--bad); border: 1px solid #f5c2c2; }
+  .msg.ok { background: var(--good-soft); color: var(--good); border: 1px solid #b7e2c4; }
+  .msg.warn { background: var(--warn-soft); color: var(--warn); border: 1px solid #ffd98a; }
+  .msg.info { background: var(--accent-soft); color: var(--accent-dark); border: 1px solid #b9d9f0; }
+  .msg ul { margin: .3rem 0 0; padding-left: 1.1rem; }
+  .level { display: inline-block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 99px; background: var(--surface2); color: var(--text-dim); }
+  .level.l1 { background: #e3f0fa; color: #0f5c94; } .level.l2 { background: #fff1d6; color: #7a5300; } .level.l3 { background: #efe7fd; color: #5b21b6; }
+  .ext { font-size: .72rem; font-weight: 700; color: var(--exam); text-transform: uppercase; letter-spacing: .04em; }
+  details.fold { border: 1px solid var(--border); border-radius: 10px; padding: .5rem .9rem; margin: .6rem 0; background: var(--surface); }
+  details.fold summary { cursor: pointer; font-weight: 600; font-size: .92rem; }
+  details.fold[open] summary { margin-bottom: .5rem; }
+
+  /* ---------- overview ---------- */
+  .how { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .8rem; margin: .8rem 0 0; }
+  .how div { background: var(--surface2); border-radius: 10px; padding: .8rem .9rem; font-size: .9rem; }
+  .how b { display: block; margin-bottom: .2rem; }
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: .8rem; }
+  .topic-card { text-align: left; border: 1px solid var(--border); background: var(--surface); border-radius: 12px; padding: .9rem 1rem; cursor: pointer; font-size: .9rem; color: var(--text); }
+  .topic-card:hover { border-color: var(--accent); }
+  .topic-card h4 { margin: 0 0 .3rem; font-size: 1rem; display: flex; align-items: center; gap: .5rem; }
+  .topic-card p { margin: 0 0 .6rem; color: var(--text-dim); }
+  .dots { display: flex; gap: 4px; }
+  .dots i { width: 14px; height: 6px; border-radius: 3px; background: var(--surface2); border: 1px solid var(--border); }
+  .dots i.on { background: var(--good); border-color: var(--good); }
+
+  /* ---------- code views ---------- */
+  .code { background: var(--code-bg); color: var(--code-text); border-radius: 10px; font-family: var(--mono); font-size: var(--code-size); line-height: var(--code-line); overflow-x: auto; padding: .6rem 0; }
+  .code .row { display: flex; min-width: max-content; }
+  .code .gut { width: 2.6rem; flex-shrink: 0; text-align: right; padding-right: .8rem; color: var(--code-dim); user-select: none; }
+  .code .src { white-space: pre; padding-right: 1rem; }
+  .code .row.cur { background: rgba(125, 211, 252, .16); box-shadow: inset 3px 0 0 #7dd3fc; }
+  .code .row.hot { background: rgba(255, 193, 7, .14); }
+  .code .row.errline { background: rgba(248, 113, 113, .2); box-shadow: inset 3px 0 0 #f87171; }
+  .k { color: #7dd3fc; font-weight: 700; }
+  .ty { color: #c4b5fd; }
+  .fn { color: #86efac; }
+  .s { color: #fcd34d; }
+  .n { color: #fda4af; }
+  .c { color: #94a3b8; font-style: italic; }
+  .ar { color: #f9a8d4; font-weight: 700; }
+
+  .syntax-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+  @media (max-width: 760px) { .syntax-grid { grid-template-columns: minmax(0, 1fr); } }
   .annot { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .45rem; }
-  .annot li { display: flex; gap: .55rem; align-items: flex-start; font-size: .85rem; color: var(--text-dim); }
-  .pill {
-    flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff;
-    font-family: var(--mono); font-size: .72rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
-  }
-  .annot code { font-family: var(--mono); background: var(--surface2); padding: 0 .3rem; border-radius: 4px; color: var(--text); }
-  .note { font-size: .85rem; color: var(--text-dim); margin: .3rem 0 0; }
-  .warn { background: #fff7e6; border: 1px solid #ffd98a; color: #7a5300; border-radius: 8px; padding: .6rem .9rem; font-size: .85rem; margin-top: .5rem; }
+  .annot li { display: flex; gap: .55rem; align-items: flex-start; font-size: .88rem; color: var(--text-dim); border-radius: 6px; padding: .15rem .25rem; cursor: default; }
+  .annot li:hover { background: var(--surface2); }
+  .pill { flex-shrink: 0; min-width: 22px; height: 22px; padding: 0 .3rem; border-radius: 99px; background: var(--accent); color: #fff; font-family: var(--mono); font-size: .72rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+
+  /* ---------- editor ---------- */
+  .editor { position: relative; display: flex; background: var(--code-bg); border-radius: 10px; font-family: var(--mono); font-size: var(--code-size); line-height: var(--code-line); min-height: 260px; overflow: hidden; border: 2px solid transparent; }
+  .editor:focus-within { border-color: #7dd3fc; }
+  .editor .egut { width: 2.6rem; flex-shrink: 0; text-align: right; padding: .6rem .8rem .6rem 0; color: var(--code-dim); user-select: none; overflow: hidden; white-space: pre; }
+  .editor .earea { position: relative; flex: 1; min-width: 0; }
+  .editor pre, .editor textarea { margin: 0; padding: .6rem 1rem .6rem 0; font: inherit; line-height: inherit; white-space: pre; tab-size: 2; letter-spacing: 0; word-spacing: 0; }
+  .editor pre { position: absolute; inset: 0; color: var(--code-text); pointer-events: none; overflow: hidden; }
+  .editor pre .ln { min-height: var(--code-line); }
+  .editor pre .ln.errline { background: rgba(248, 113, 113, .22); }
+  .editor textarea { position: relative; display: block; width: 100%; height: 100%; min-height: 260px; resize: none; background: transparent; color: transparent; caret-color: #fff; border: 0; outline: none; overflow: auto; }
+  .editor textarea::selection { background: rgba(125, 211, 252, .35); color: transparent; }
+  .editor textarea::placeholder { color: var(--code-dim); }
+  .bank { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0; align-items: center; }
+  .bank span { font-size: .78rem; color: var(--text-dim); margin-right: .2rem; }
+  .chip { font-family: var(--mono); font-size: .78rem; border: 1px solid var(--border); background: var(--surface); padding: .15rem .5rem; border-radius: 6px; cursor: pointer; color: var(--text); }
+  .chip:hover { background: var(--accent-soft); border-color: var(--accent); }
+
+  /* fill the gaps */
+  .gap { font: inherit; background: #334155; color: #fff; border: 1px dashed #94a3b8; border-radius: 4px; padding: 0 .25rem; height: calc(var(--code-line) - 2px); min-width: 3ch; text-align: center; }
+  .gap:focus { outline: 2px solid #7dd3fc; background: #1e3a5f; }
+  .gap.right { border: 1px solid #4ade80; background: #14532d; }
+  .gap.wrong { border: 1px solid #fbbf24; background: #78350f; }
+
+  /* ---------- stepper / run output ---------- */
+  .stepper { border: 1px solid var(--border); border-radius: 12px; padding: 1rem; background: var(--surface); margin-top: .8rem; }
+  .step-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1rem; }
+  @media (max-width: 900px) { .step-grid { grid-template-columns: minmax(0, 1fr); } }
+  .explain { background: var(--accent-soft); color: var(--accent-dark); border-radius: 8px; padding: .6rem .8rem; font-size: .92rem; min-height: 3.2rem; margin-bottom: .7rem; }
+  .explain.err { background: var(--bad-soft); color: var(--bad); }
+  .explain.done { background: var(--good-soft); color: var(--good); }
+  .panel-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-dimmer); font-weight: 700; margin: .5rem 0 .3rem; }
+  table.vars, table.trace, table.tests { border-collapse: collapse; width: 100%; font-size: .85rem; }
+  table.vars td, table.vars th, table.trace td, table.trace th, table.tests td, table.tests th { border: 1px solid var(--border); padding: .25rem .5rem; text-align: left; vertical-align: top; }
+  table.vars th, table.trace th, table.tests th { background: var(--surface2); font-weight: 600; }
+  table.vars td.val, table.trace td { font-family: var(--mono); font-size: .8rem; }
+  table.vars td.type { color: var(--text-dimmer); font-size: .75rem; }
+  table.vars tr.changed td { background: #fff4c2; }
+  table.trace tr.last td { background: #fff4c2; }
+  table.trace td.ln { color: var(--text-dimmer); }
+  .scroll-x { overflow-x: auto; }
+  .console { background: var(--code-bg); color: var(--code-text); font-family: var(--mono); font-size: .82rem; border-radius: 8px; padding: .5rem .7rem; min-height: 3rem; max-height: 220px; overflow-y: auto; white-space: pre-wrap; word-break: break-word; }
+  .console .in { color: #86efac; }
+  .console .empty { color: var(--code-dim); font-style: italic; }
+  .inputs-row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin: .6rem 0; font-size: .88rem; }
+  .inputs-row input { font-family: var(--mono); font-size: .85rem; padding: .35rem .5rem; border: 1px solid var(--border); border-radius: 6px; min-width: 0; flex: 1 1 200px; }
+  .predict { display: flex; gap: .5rem; flex-direction: column; background: var(--warn-soft); border: 1px solid #ffd98a; border-radius: 10px; padding: .7rem .9rem; margin-bottom: .8rem; }
+  .predict label { font-weight: 600; font-size: .9rem; color: var(--warn); }
+  .predict textarea { font-family: var(--sans); font-size: .9rem; border: 1px solid #ffd98a; border-radius: 6px; padding: .4rem .5rem; resize: vertical; min-height: 2.4rem; }
+  .ex-picker { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .8rem; }
+  .ex-picker button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ---------- practice ---------- */
+  .task-list { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .task-pick { border: 1px solid var(--border); background: var(--surface); border-radius: 10px; padding: .45rem .7rem; cursor: pointer; text-align: left; font-size: .85rem; display: flex; gap: .5rem; align-items: center; color: var(--text); }
+  .task-pick.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+  .task-pick .tick { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); display: inline-flex; align-items: center; justify-content: center; font-size: .7rem; color: #fff; flex-shrink: 0; }
+  .task-pick .tick.on { background: var(--good); border-color: var(--good); }
+  .task-head { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-bottom: .4rem; }
+  .task-head h3 { margin: 0; font-size: 1.15rem; }
+  .must { margin: .2rem 0 .8rem; padding-left: 1.2rem; font-size: .92rem; }
+  .givens { background: var(--surface2); border-radius: 8px; padding: .5rem .8rem; font-size: .85rem; margin-bottom: .8rem; }
+  .givens div { font-family: var(--mono); font-size: .8rem; margin-top: .2rem; overflow-x: auto; white-space: nowrap; }
+  .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .6rem; font-size: .88rem; }
+  .plan-grid div { background: var(--surface2); border-radius: 8px; padding: .5rem .7rem; }
+  .plan-grid b { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-dim); margin-bottom: .2rem; }
+  .plan-grid ul { margin: 0; padding-left: 1rem; }
+  .hints ol { margin: .3rem 0 0; padding-left: 1.3rem; font-size: .92rem; }
+  .hints li { margin-bottom: .3rem; }
+  table.tests td.res { font-weight: 700; white-space: nowrap; }
+  table.tests td.res.p { color: var(--good); } table.tests td.res.f { color: var(--bad); }
+  table.tests td.io { font-family: var(--mono); font-size: .78rem; }
+  .success { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
   footer { text-align: center; color: var(--text-dimmer); font-size: .8rem; margin: 2rem 0 1rem; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  @media print {
+    nav.topics, .top .prog, .tabs, .btn-row, .stepper { display: none !important; }
+    .layout { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>CIE Pseudocode Reference</h1>
-  <p class="sub">The exact syntax used across every Bloomsbury Computing lesson and drill. Use this while writing your own pseudocode, in class or revising at home.</p>
-
-  <div class="toc">
-    <a href="#basics">Variables &amp; Sequence</a>
-    <a href="#selection">Selection</a>
-    <a href="#iteration">Iteration</a>
-    <a href="#arrays">Arrays</a>
-    <a href="#checklist">Before You Submit</a>
+<header class="top">
+  <div>
+    <h1>Pseudocode Recap</h1>
+    <div class="kicker">Year 11, Unit 7 · Cambridge IGCSE 0478 pseudocode</div>
   </div>
-
-  <section id="basics">
-    <h2><span class="tag seq"></span>Variables and Sequence</h2>
-    <p class="lead">Every variable is DECLAREd before it is used, with a type. Assignment uses the left-pointing arrow, not an equals sign.</p>
-    <div class="rule">
-      <h3>Declare, then assign</h3>
-      <div class="rule-body">
-        <pre><span class="kw">DECLARE</span> Age : <span class="kw">INTEGER</span>
-<span class="kw">DECLARE</span> Name : <span class="kw">STRING</span>
-Age <span class="kw">&lt;-</span> 16
-Name <span class="kw">&lt;-</span> <span class="str">"Aiko"</span></pre>
-        <ul class="annot">
-          <li><span class="pill">1</span><span><code>DECLARE Name : TYPE</code> fixes what kind of value a variable can hold, before it is ever assigned.</span></li>
-          <li><span class="pill">2</span><span>The type after the colon must match every value later stored in it.</span></li>
-          <li><span class="pill">3</span><span><code>&lt;-</code> is assignment. It reads as "becomes", never "equals".</span></li>
-          <li><span class="pill">4</span><span>A STRING value is always wrapped in double quotes.</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="rule">
-      <h3>Input and output</h3>
-      <div class="rule-body">
-        <pre><span class="kw">OUTPUT</span> <span class="str">"Enter your age "</span>
-<span class="kw">INPUT</span> Age
-<span class="kw">OUTPUT</span> <span class="str">"You are "</span>, Age, <span class="str">" years old"</span></pre>
-        <ul class="annot">
-          <li><span class="pill">1</span><span>Every <code>INPUT</code> should have an <code>OUTPUT</code> prompt directly before it, so the user knows what to type.</span></li>
-          <li><span class="pill">2</span><span><code>INPUT Age</code> stores whatever the user types straight into Age.</span></li>
-          <li><span class="pill">3</span><span>Commas combine several values into one OUTPUT line, mixing text and variables freely.</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="rule">
-      <h3>The main data types</h3>
-      <pre><span class="kw">INTEGER</span>   <span class="cm">// whole numbers</span>
-<span class="kw">REAL</span>      <span class="cm">// decimals</span>
-<span class="kw">CHAR</span>      <span class="cm">// one character</span>
-<span class="kw">STRING</span>    <span class="cm">// text</span>
-<span class="kw">BOOLEAN</span>   <span class="cm">// TRUE or FALSE</span></pre>
-    </div>
-  </section>
-
-  <section id="selection">
-    <h2><span class="tag sel"></span>Selection</h2>
-    <p class="lead">A decision the program makes while it runs. Always close IF with ENDIF.</p>
-    <div class="rule">
-      <h3>IF / THEN / ELSE</h3>
-      <div class="rule-body">
-        <pre><span class="kw">IF</span> Age &gt;= 18
-  <span class="kw">THEN</span>
-    <span class="kw">OUTPUT</span> <span class="str">"Adult"</span>
-  <span class="kw">ELSE</span>
-    <span class="kw">OUTPUT</span> <span class="str">"Minor"</span>
-<span class="kw">ENDIF</span></pre>
-        <ul class="annot">
-          <li><span class="pill">1</span><span>The condition after <code>IF</code> must evaluate to TRUE or FALSE.</span></li>
-          <li><span class="pill">2</span><span><code>THEN</code> starts the branch that runs when the condition is TRUE.</span></li>
-          <li><span class="pill">3</span><span><code>ELSE</code> is optional. Leave it out if there is nothing to do when the condition is FALSE.</span></li>
-          <li><span class="pill">4</span><span><code>ENDIF</code> closes the whole block. Every IF needs exactly one.</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="rule">
-      <h3>Combining conditions</h3>
-      <div class="rule-body">
-        <pre><span class="kw">IF</span> Age &gt;= 13 <span class="kw">AND</span> Age &lt;= 19
-  <span class="kw">THEN</span>
-    <span class="kw">OUTPUT</span> <span class="str">"Teenager"</span>
-<span class="kw">ENDIF</span></pre>
-        <ul class="annot">
-          <li><span class="pill">1</span><span><code>AND</code> needs both sides to be true.</span></li>
-          <li><span class="pill">2</span><span><code>OR</code> needs only one side to be true.</span></li>
-          <li><span class="pill">3</span><span><code>NOT</code> flips a condition from TRUE to FALSE or back.</span></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section id="iteration">
-    <h2><span class="tag iter"></span>Iteration</h2>
-    <p class="lead">Three loop shapes. Pick the one that matches how many times the loop should run.</p>
-    <div class="rule">
-      <h3>FOR: count-controlled, you know how many times in advance</h3>
-      <div class="rule-body">
-        <pre><span class="kw">FOR</span> Index <span class="kw">&lt;-</span> 1 <span class="kw">TO</span> 10
-  <span class="kw">OUTPUT</span> Index
-<span class="kw">NEXT</span> Index</pre>
-        <ul class="annot">
-          <li><span class="pill">1</span><span>The loop variable starts at 1 and stops after it reaches 10, inclusive.</span></li>
-          <li><span class="pill">2</span><span><code>NEXT Index</code> must name the same variable the FOR line started.</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="rule">
-      <h3>WHILE: pre-condition, checked before each pass, may run zero times</h3>
-      <div class="rule-body">
-        <pre><span class="kw">INPUT</span> Number
-<span class="kw">WHILE</span> Number &lt; 1 <span class="kw">OR</span> Number &gt; 10 <span class="kw">DO</span>
-  <span class="kw">OUTPUT</span> <span class="str">"Out of range, try again "</span>
-  <span class="kw">INPUT</span> Number
-<span class="kw">ENDWHILE</span></pre>
-        <ul class="annot">
-          <li><span class="pill">1</span><span>This is the standard validation-loop shape: input once before the loop.</span></li>
-          <li><span class="pill">2</span><span>The condition is tested BEFORE every pass, including the first.</span></li>
-          <li><span class="pill">3</span><span>Input again only happens INSIDE the loop, never before it a second time.</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="rule">
-      <h3>REPEAT: post-condition, checked after each pass, always runs at least once</h3>
-      <div class="rule-body">
-        <pre><span class="kw">REPEAT</span>
-  <span class="kw">OUTPUT</span> <span class="str">"Enter a password (at least 10 characters) "</span>
-  <span class="kw">INPUT</span> Password
-<span class="kw">UNTIL</span> LENGTH(Password) &gt;= 10</pre>
-        <ul class="annot">
-          <li><span class="pill">1</span><span>REPEAT needs no separate INPUT before it. The loop body always runs once.</span></li>
-          <li><span class="pill">2</span><span>The condition is tested AFTER the pass, at UNTIL.</span></li>
-          <li><span class="pill">3</span><span>The loop keeps going UNTIL the condition becomes TRUE, the opposite of WHILE.</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="warn">Common mix-up: read your own condition back to yourself before submitting. WHILE keeps looping while its condition is TRUE. REPEAT...UNTIL keeps looping until its condition becomes TRUE, so the wording of the two conditions usually looks opposite even for the same rule.</div>
-  </section>
-
-  <section id="arrays">
-    <h2><span class="tag seq"></span>Arrays</h2>
-    <p class="lead">A fixed collection of values of the same type, accessed by index. Bloomsbury Computing's pseudocode indexes start at 1.</p>
-    <div class="rule-body">
-      <pre><span class="kw">DECLARE</span> Scores : <span class="kw">ARRAY</span>[1:30] <span class="kw">OF</span> <span class="kw">INTEGER</span>
-Scores[1] <span class="kw">&lt;-</span> 55
-<span class="kw">FOR</span> Index <span class="kw">&lt;-</span> 1 <span class="kw">TO</span> 30
-  <span class="kw">INPUT</span> Scores[Index]
-<span class="kw">NEXT</span> Index</pre>
-      <ul class="annot">
-        <li><span class="pill">1</span><span><code>[1:30]</code> means the array holds elements at index 1 through 30, inclusive.</span></li>
-        <li><span class="pill">2</span><span>Every element must hold the same type, given after OF.</span></li>
-        <li><span class="pill">3</span><span>A FOR loop with the same range as the array is the standard way to fill or read every element.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section id="checklist">
-    <h2>Before You Submit</h2>
-    <div class="rule">
-      <ul style="margin:0;padding-left:1.2rem">
-        <li>Every variable DECLAREd before it is assigned or read.</li>
-        <li>Every IF has a matching ENDIF; every FOR has a matching NEXT; every WHILE has a matching ENDWHILE.</li>
-        <li>Every INPUT has an OUTPUT prompt just before it explaining what to type.</li>
-        <li>Read your own condition back to front. Does the loop actually stop when you think it does?</li>
-        <li>Indent the lines inside IF, FOR, WHILE and REPEAT so the structure is easy to read.</li>
-      </ul>
-    </div>
-  </section>
-
-  <footer>Bloomsbury Computing. Cambridge IGCSE 0478 house style.</footer>
+  <div class="prog"><span id="progText">0 tasks done</span><div class="bar"><span id="progBar"></span></div></div>
+</header>
+<div class="layout">
+  <nav class="topics" id="nav" aria-label="Topics"></nav>
+  <main id="main" tabindex="-1"></main>
 </div>
+<footer>Bloomsbury Computing. Cambridge IGCSE 0478 house style: DECLARE every variable, THEN on its own line, NEXT names its loop variable.</footer>
+
+<script src="../shared/cie-interpreter.js?v=20260924"></script>
+<script src="recap-content.js?v=20260924"></script>
+<script>
+(function () {
+  'use strict';
+  var TOPICS = window.RECAP_TOPICS;
+  var STORE_KEY = 'bc-pseudocode-recap-v1';
+  var LEVEL_NAMES = { 1: 'Fill the gaps', 2: 'Finish the code', 3: 'Write it yourself' };
+
+  // ---------------------------------------------------------------- storage (optional)
+  var store = { done: {}, drafts: {} };
+  try {
+    var saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+    if (saved && typeof saved === 'object') store = { done: saved.done || {}, drafts: saved.drafts || {} };
+  } catch (e) { /* storage unavailable: progress lasts for this visit only */ }
+  function persist() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) { /* ignore */ }
+  }
+
+  // ---------------------------------------------------------------- helpers
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function el(tag, attrs, html) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === 'class') e.className = attrs[k];
+      else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), attrs[k]);
+      else e.setAttribute(k, attrs[k]);
+    });
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function allTasks() {
+    var out = [];
+    TOPICS.forEach(function (t) { t.tasks.forEach(function (k) { out.push(k); }); });
+    return out;
+  }
+  function topicDone(t) { return t.tasks.filter(function (k) { return store.done[k.id]; }).length; }
+  function parseInputs(text) {
+    if (!text.trim()) return [];
+    return text.split(',').map(function (s) { return s.trim(); });
+  }
+
+  var KEYWORDS = ['DECLARE', 'CONSTANT', 'INPUT', 'OUTPUT', 'IF', 'THEN', 'ELSE', 'ENDIF', 'CASE', 'OF', 'OTHERWISE', 'ENDCASE',
+    'FOR', 'TO', 'STEP', 'NEXT', 'WHILE', 'DO', 'ENDWHILE', 'REPEAT', 'UNTIL', 'AND', 'OR', 'NOT', 'MOD', 'DIV', 'TRUE', 'FALSE', 'ARRAY'];
+  var TYPE_WORDS = ['INTEGER', 'REAL', 'CHAR', 'STRING', 'BOOLEAN'];
+  var FN_WORDS = ['LENGTH', 'UCASE', 'LCASE', 'SUBSTRING', 'ROUND', 'RANDOM', 'INT'];
+
+  function highlight(line) {
+    var out = '';
+    var re = /(\/\/.*$)|("[^"]*"?)|('[^']*'?)|(<-|←)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)|([\s\S])/g;
+    var m;
+    while ((m = re.exec(line))) {
+      if (m[1]) out += '<span class="c">' + esc(m[1]) + '</span>';
+      else if (m[2] || m[3]) out += '<span class="s">' + esc(m[2] || m[3]) + '</span>';
+      else if (m[4]) out += '<span class="ar">' + esc(m[4]) + '</span>';
+      else if (m[5]) out += '<span class="n">' + m[5] + '</span>';
+      else if (m[6]) {
+        var up = m[6];
+        if (KEYWORDS.indexOf(up) !== -1) out += '<span class="k">' + up + '</span>';
+        else if (TYPE_WORDS.indexOf(up) !== -1) out += '<span class="ty">' + up + '</span>';
+        else if (FN_WORDS.indexOf(up) !== -1) out += '<span class="fn">' + up + '</span>';
+        else out += esc(m[6]);
+      } else out += esc(m[7]);
+    }
+    return out;
+  }
+
+  // Read-only code view with line numbers.
+  function codeView(code, opts) {
+    opts = opts || {};
+    var box = el('div', { class: 'code' });
+    code.split('\n').forEach(function (line, i) {
+      var row = el('div', { class: 'row', 'data-line': i + 1 });
+      row.appendChild(el('span', { class: 'gut' }, String(i + 1)));
+      row.appendChild(el('span', { class: 'src' }, highlight(line) || ' '));
+      box.appendChild(row);
+    });
+    box.setLine = function (n, cls) {
+      Array.prototype.forEach.call(box.querySelectorAll('.row'), function (r) {
+        r.classList.remove('cur', 'errline', 'hot');
+        if (n && Number(r.getAttribute('data-line')) === n) {
+          r.classList.add(cls || 'cur');
+          if (opts.scroll !== false && box.scrollHeight > box.clientHeight) r.scrollIntoView({ block: 'nearest' });
+        }
+      });
+    };
+    box.hot = function (n, on) {
+      var r = box.querySelector('.row[data-line="' + n + '"]');
+      if (r) r.classList.toggle('hot', on);
+    };
+    return box;
+  }
+
+  // ---------------------------------------------------------------- editor
+  function createEditor(initial, onChange) {
+    var wrap = el('div', { class: 'editor' });
+    var gut = el('div', { class: 'egut', 'aria-hidden': 'true' });
+    var area = el('div', { class: 'earea' });
+    var pre = el('pre', { 'aria-hidden': 'true' });
+    var ta = el('textarea', { spellcheck: 'false', autocapitalize: 'off', autocomplete: 'off', 'aria-label': 'Pseudocode editor', placeholder: 'Write your pseudocode here...' });
+    ta.value = initial || '';
+    area.appendChild(pre);
+    area.appendChild(ta);
+    wrap.appendChild(gut);
+    wrap.appendChild(area);
+    var errLine = null;
+
+    function render() {
+      var lines = ta.value.split('\n');
+      pre.innerHTML = lines.map(function (l, i) {
+        return '<div class="ln' + (errLine === i + 1 ? ' errline' : '') + '">' + (highlight(l) || '​') + '</div>';
+      }).join('');
+      gut.textContent = lines.map(function (_, i) { return i + 1; }).join('\n');
+      var rows = Math.max(12, lines.length + 2);
+      ta.style.height = 'calc(' + rows + ' * var(--code-line) + 1.2rem)';
+      sync();
+    }
+    function sync() {
+      pre.scrollTop = ta.scrollTop;
+      pre.scrollLeft = ta.scrollLeft;
+      gut.scrollTop = ta.scrollTop;
+    }
+    function insert(text) {
+      var s = ta.selectionStart, e = ta.selectionEnd;
+      ta.setRangeText(text, s, e, 'end');
+      ta.dispatchEvent(new Event('input'));
+      ta.focus();
+    }
+    ta.addEventListener('input', function () { errLine = null; render(); if (onChange) onChange(ta.value); });
+    ta.addEventListener('scroll', sync);
+    ta.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        var s = ta.selectionStart, v = ta.value;
+        if (e.shiftKey) {
+          var ls = v.lastIndexOf('\n', s - 1) + 1;
+          if (v.substr(ls, 2) === '  ') {
+            ta.setRangeText('', ls, ls + 2, 'preserve');
+            ta.selectionStart = ta.selectionEnd = Math.max(ls, s - 2);
+            ta.dispatchEvent(new Event('input'));
+          }
+        } else insert('  ');
+      } else if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        var pos = ta.selectionStart, val = ta.value;
+        var lineStart = val.lastIndexOf('\n', pos - 1) + 1;
+        var cur = val.slice(lineStart, pos);
+        var indent = /^\s*/.exec(cur)[0];
+        var t = cur.trim().toUpperCase();
+        if (/^(THEN|ELSE|REPEAT)$/.test(t) || /^(FOR|WHILE|CASE OF)\b/.test(t) || /\bTHEN$/.test(t) || /^IF\b/.test(t) && !/\bTHEN$/.test(t)) indent += '  ';
+        insert('\n' + indent);
+      }
+    });
+    render();
+    return {
+      el: wrap,
+      get value() { return ta.value; },
+      set value(v) { ta.value = v; errLine = null; render(); },
+      insert: insert,
+      markError: function (line) { errLine = line; render(); },
+      focus: function () { ta.focus(); }
+    };
+  }
+
+  // ---------------------------------------------------------------- stepper
+  // Runs code one event at a time, showing the line, an explanation,
+  // variables, the console and a trace table.
+  function createStepper(opts) {
+    var root = el('div', { class: 'stepper' });
+    var codeHolder = el('div');
+    var explain = el('div', { class: 'explain', 'aria-live': 'polite' }, 'Press <b>Step</b> to run the first line.');
+    var varsBox = el('div');
+    var consoleBox = el('div', { class: 'console' });
+    var traceBox = el('div', { class: 'scroll-x' });
+    var inputRow = el('div', { class: 'inputs-row' });
+    var inputField = el('input', { type: 'text', 'aria-label': 'Input values, separated by commas' });
+    inputField.value = (opts.inputs || []).join(', ');
+    var runner, log, view, code, initialSnap;
+
+    var stepBtn = el('button', { class: 'btn primary', type: 'button', onclick: function () { step(); } }, 'Step ▶');
+    var runBtn = el('button', { class: 'btn', type: 'button', onclick: function () { runAll(); } }, 'Run to the end');
+    var resetBtn = el('button', { class: 'btn', type: 'button', onclick: function () { reset(); } }, 'Reset');
+    inputRow.appendChild(el('label', null, '<b>Inputs</b> <span class="note">(comma separated)</span>'));
+    inputRow.appendChild(inputField);
+    if (opts.hideInputs) inputRow.style.display = 'none';
+    var controls = el('div', { class: 'btn-row' });
+    [stepBtn, runBtn, resetBtn].forEach(function (b) { controls.appendChild(b); });
+
+    var grid = el('div', { class: 'step-grid' });
+    var left = el('div');
+    left.appendChild(codeHolder);
+    var right = el('div');
+    right.appendChild(explain);
+    right.appendChild(el('div', { class: 'panel-title' }, 'Variables'));
+    right.appendChild(varsBox);
+    right.appendChild(el('div', { class: 'panel-title' }, 'Output'));
+    right.appendChild(consoleBox);
+    grid.appendChild(left);
+    grid.appendChild(right);
+    root.appendChild(inputRow);
+    root.appendChild(controls);
+    root.appendChild(el('div', { style: 'height:.8rem' }));
+    root.appendChild(grid);
+    root.appendChild(el('div', { class: 'panel-title', style: 'margin-top:1rem' }, 'Trace table <span style="text-transform:none;letter-spacing:0;font-weight:400">(a row is added when a value changes or there is output)</span>'));
+    root.appendChild(traceBox);
+
+    function reset(newCode) {
+      if (typeof newCode === 'string') code = newCode;
+      runner = new CIE.Runner(code, { inputs: parseInputs(inputField.value), givens: opts.givens });
+      initialSnap = runner.prev ? JSON.parse(JSON.stringify(runner.prev)) : {};
+      log = [];
+      codeHolder.innerHTML = '';
+      view = codeView(code);
+      codeHolder.appendChild(view);
+      stepBtn.disabled = false;
+      runBtn.disabled = false;
+      if (runner.error) {
+        showError();
+      } else {
+        explain.className = 'explain';
+        explain.innerHTML = 'Press <b>Step</b> to run the first line' + (opts.givens ? '. The given data is already stored.' : '.');
+      }
+      render();
+    }
+    function showError() {
+      explain.className = 'explain err';
+      explain.innerHTML = '<b>Error' + (runner.error.line ? ' on line ' + runner.error.line : '') + ':</b> ' + esc(runner.error.message);
+      if (runner.error.line) view.setLine(runner.error.line, 'errline');
+      stepBtn.disabled = true;
+      runBtn.disabled = true;
+      if (opts.onError) opts.onError(runner.error);
+    }
+    function step() {
+      var e = runner.step();
+      if (e) {
+        log.push(e);
+        explain.className = 'explain';
+        explain.innerHTML = '<b>Line ' + e.line + ':</b> ' + esc(e.msg);
+        view.setLine(e.line);
+      }
+      if (runner.done) {
+        if (runner.error) showError();
+        else if (!e) finished();
+        else { stepBtn.disabled = false; }
+      }
+      render();
+      return e;
+    }
+    function finished() {
+      explain.className = 'explain done';
+      explain.innerHTML = '<b>Finished.</b> The program has run every line it needs to.';
+      view.setLine(null);
+      stepBtn.disabled = true;
+      runBtn.disabled = true;
+    }
+    function runAll() {
+      var guard = 0;
+      while (!runner.done && guard < 20000) { var e = runner.step(); if (e) log.push(e); guard++; }
+      if (runner.error) showError();
+      else finished();
+      render();
+    }
+    function render() {
+      // variables
+      var S = runner.state;
+      var cur = log.length ? log[log.length - 1] : null;
+      var changed = cur ? Object.keys(cur.changes || {}) : [];
+      var rows = S.order.map(function (key) {
+        var v = S.vars[key];
+        var val, isChanged;
+        if (v.arr) {
+          var d = v.arr.dims[0];
+          if (v.arr.dims.length === 1) {
+            var parts = [];
+            for (var i = d.lo; i <= d.hi; i++) { var x = v.arr.data[String(i)]; parts.push(x === undefined ? '_' : CIE.describe(x)); }
+            val = '[' + parts.join(', ') + ']';
+          } else val = '(2D array)';
+          isChanged = changed.some(function (c) { return c.indexOf(v.name + '[') === 0; });
+        } else {
+          val = v.value === undefined ? '<span style="color:var(--text-dimmer)">no value yet</span>' : esc(CIE.describe(v.value));
+          isChanged = changed.indexOf(v.name) !== -1;
+        }
+        return '<tr' + (isChanged ? ' class="changed"' : '') + '><td>' + esc(v.name) + '</td><td class="type">' + (v.arr ? 'ARRAY OF ' : '') + v.type + (v.constant ? ' (constant)' : '') + '</td><td class="val">' + (v.arr ? esc(val) : val) + '</td></tr>';
+      });
+      varsBox.innerHTML = rows.length ? '<table class="vars"><tr><th>Name</th><th>Type</th><th>Value</th></tr>' + rows.join('') + '</table>' : '<div class="note">No variables yet.</div>';
+      // console
+      var lines = [];
+      log.forEach(function (e) {
+        if (e.output !== undefined) lines.push(esc(e.output));
+        if (e.input !== undefined) lines.push('<span class="in">&gt; ' + esc(e.input) + '</span>');
+      });
+      consoleBox.innerHTML = lines.length ? lines.join('\n') : '<span class="empty">Nothing output yet.</span>';
+      consoleBox.scrollTop = consoleBox.scrollHeight;
+      // trace
+      var cols = Object.keys(initialSnap);
+      runner.columns.forEach(function (c) { if (cols.indexOf(c) === -1) cols.push(c); });
+      var head = '<tr><th>Line</th>' + cols.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '<th>OUTPUT</th></tr>';
+      var body = '';
+      var initKeys = Object.keys(initialSnap);
+      if (initKeys.length) {
+        body += '<tr><td class="ln">start</td>' + cols.map(function (c) { return '<td>' + (initialSnap[c] !== undefined ? esc(initialSnap[c]) : '') + '</td>'; }).join('') + '<td></td></tr>';
+      }
+      var lastIsCurrent = cur && ((Object.keys(cur.changes || {}).length) || cur.output !== undefined);
+      runner.trace.forEach(function (r, i) {
+        var last = lastIsCurrent && i === runner.trace.length - 1;
+        body += '<tr' + (last ? ' class="last"' : '') + '><td class="ln">' + r.line + '</td>' + cols.map(function (c) {
+          return '<td>' + (r.changes[c] !== undefined ? esc(r.changes[c]) : '') + '</td>';
+        }).join('') + '<td>' + (r.output !== undefined ? esc(r.output) : '') + '</td></tr>';
+      });
+      traceBox.innerHTML = (body ? '<table class="trace">' + head + body + '</table>' : '<div class="note">The trace table fills in as you step.</div>');
+    }
+
+    reset(opts.code);
+    return { el: root, reset: reset, setInputs: function (arr) { inputField.value = arr.join(', '); } };
+  }
+
+  // ---------------------------------------------------------------- navigation state
+  var current = { topic: null, tab: 'learn', example: 0, task: 0 };
+
+  function renderNav() {
+    var nav = document.getElementById('nav');
+    nav.innerHTML = '';
+    var home = el('button', { type: 'button', class: current.topic === null ? 'active' : '', onclick: function () { go(null); } }, '<span class="tag" style="background:var(--text-dimmer)"></span>Start here');
+    nav.appendChild(home);
+    var lastGroup = null;
+    TOPICS.forEach(function (t) {
+      if (t.group !== lastGroup) { nav.appendChild(el('h3', null, esc(t.group))); lastGroup = t.group; }
+      var done = topicDone(t);
+      var b = el('button', { type: 'button', class: current.topic === t.id ? 'active' : '', onclick: function () { go(t.id); } },
+        '<span class="tag ' + t.colour + '"></span>' + esc(t.title) + '<span class="count' + (done === t.tasks.length ? ' full' : '') + '">' + done + '/' + t.tasks.length + '</span>');
+      nav.appendChild(b);
+    });
+    var all = allTasks();
+    var n = all.filter(function (k) { return store.done[k.id]; }).length;
+    document.getElementById('progText').textContent = n + ' of ' + all.length + ' tasks done';
+    document.getElementById('progBar').style.width = (100 * n / all.length) + '%';
+  }
+
+  function go(topicId, tab, index) {
+    current.topic = topicId;
+    current.tab = tab || 'learn';
+    current.example = 0;
+    current.task = 0;
+    var t = topicById(topicId);
+    if (t && current.tab === 'practice') {
+      if (typeof index === 'number') current.task = index;
+      else {
+        var firstOpen = t.tasks.findIndex(function (k) { return !store.done[k.id]; });
+        current.task = firstOpen === -1 ? 0 : firstOpen;
+      }
+    }
+    var hash = topicId ? '#' + topicId + (current.tab !== 'learn' ? '/' + current.tab : '') : '#';
+    if (location.hash !== hash) history.replaceState(null, '', hash === '#' ? location.pathname + location.search : hash);
+    render();
+    window.scrollTo(0, 0);
+  }
+  function topicById(id) { return TOPICS.filter(function (t) { return t.id === id; })[0] || null; }
+
+  function render() {
+    renderNav();
+    var main = document.getElementById('main');
+    main.innerHTML = '';
+    var t = topicById(current.topic);
+    if (!t) { renderHome(main); return; }
+    var head = el('div', { class: 'topic-head' });
+    head.appendChild(el('h2', null, '<span class="tag ' + t.colour + '"></span>' + esc(t.title)));
+    head.appendChild(el('p', { class: 'lead' }, esc(t.summary)));
+    main.appendChild(head);
+    var tabs = el('div', { class: 'tabs', role: 'tablist' });
+    var list = [['learn', 'Learn the syntax']];
+    if (t.examples.length) list.push(['examples', 'Worked examples']);
+    list.push(['practice', 'Practice (' + topicDone(t) + '/' + t.tasks.length + ')']);
+    list.forEach(function (p) {
+      tabs.appendChild(el('button', { type: 'button', role: 'tab', 'aria-selected': String(current.tab === p[0]), class: current.tab === p[0] ? 'active' : '', onclick: function () { go(t.id, p[0]); } }, p[1]));
+    });
+    main.appendChild(tabs);
+    if (current.tab === 'examples' && t.examples.length) renderExamples(main, t);
+    else if (current.tab === 'practice') renderPractice(main, t);
+    else renderLearn(main, t);
+  }
+
+  // ---------------------------------------------------------------- home
+  function renderHome(main) {
+    var intro = el('div', { class: 'card' });
+    intro.innerHTML = '<h3>How to use this recap</h3>' +
+      '<p class="lead" style="margin-bottom:0">Pick a topic. Each one has three parts. Work through them in order, or jump straight to Practice if you are confident.</p>' +
+      '<div class="how">' +
+      '<div><b>1. Learn the syntax</b>The rules, and annotated templates showing exactly how Cambridge pseudocode is laid out.</div>' +
+      '<div><b>2. Worked examples</b>Run a real program one line at a time. Watch the variables, the output and the trace table change.</div>' +
+      '<div><b>3. Practice</b>Fill the gaps, then finish some code, then write it yourself. Your code is run and checked against test data.</div>' +
+      '<div><b>Stuck?</b>Use Step through to watch your own code run, take a hint, and only then look at the model answer.</div>' +
+      '</div>';
+    main.appendChild(intro);
+    var grid = el('div', { class: 'topic-grid' });
+    TOPICS.forEach(function (t) {
+      var dots = t.tasks.map(function (k) { return '<i class="' + (store.done[k.id] ? 'on' : '') + '"></i>'; }).join('');
+      grid.appendChild(el('button', { type: 'button', class: 'topic-card', onclick: function () { go(t.id); } },
+        '<h4><span class="tag ' + t.colour + '"></span>' + esc(t.title) + '</h4><p>' + esc(t.summary) + '</p><div class="dots">' + dots + '</div>'));
+    });
+    main.appendChild(grid);
+  }
+
+  // ---------------------------------------------------------------- learn
+  function renderLearn(main, t) {
+    var rules = el('div', { class: 'card' });
+    rules.innerHTML = '<h3>Key rules</h3><ul class="rules">' + t.rules.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul>';
+    main.appendChild(rules);
+    t.syntax.forEach(function (s) {
+      var card = el('div', { class: 'card' });
+      card.appendChild(el('h3', null, esc(s.title)));
+      var view = codeView(s.code, { scroll: false });
+      if (s.notes.length) {
+        var grid = el('div', { class: 'syntax-grid' });
+        grid.appendChild(view);
+        var ul = el('ul', { class: 'annot' });
+        s.notes.forEach(function (n) {
+          var li = el('li', null, '<span class="pill">' + n[0] + '</span><span>' + n[1] + '</span>');
+          li.addEventListener('mouseenter', function () { view.hot(n[0], true); });
+          li.addEventListener('mouseleave', function () { view.hot(n[0], false); });
+          ul.appendChild(li);
+        });
+        grid.appendChild(ul);
+        card.appendChild(grid);
+      } else card.appendChild(view);
+      main.appendChild(card);
+    });
+    var next = el('div', { class: 'btn-row' });
+    if (t.examples.length) next.appendChild(el('button', { class: 'btn primary', type: 'button', onclick: function () { go(t.id, 'examples'); } }, 'Next: worked examples →'));
+    else next.appendChild(el('button', { class: 'btn primary', type: 'button', onclick: function () { go(t.id, 'practice'); } }, 'Next: practice →'));
+    main.appendChild(next);
+  }
+
+  // ---------------------------------------------------------------- examples
+  function renderExamples(main, t) {
+    if (t.examples.length > 1) {
+      var picker = el('div', { class: 'ex-picker' });
+      t.examples.forEach(function (ex, i) {
+        picker.appendChild(el('button', { type: 'button', class: 'btn' + (i === current.example ? ' active' : ''), onclick: function () { current.example = i; render(); } }, (i + 1) + '. ' + esc(ex.title)));
+      });
+      main.appendChild(picker);
+    }
+    var ex = t.examples[current.example];
+    var card = el('div', { class: 'card' });
+    card.appendChild(el('h3', null, esc(ex.title)));
+    card.appendChild(el('p', { class: 'lead' }, esc(ex.scenario)));
+    if (ex.givens) card.appendChild(givensBox(ex.givens));
+    if (ex.predict) {
+      var pr = el('div', { class: 'predict' });
+      pr.appendChild(el('label', { for: 'predict-' + t.id + current.example }, 'Predict first: ' + esc(ex.predict)));
+      pr.appendChild(el('textarea', { id: 'predict-' + t.id + current.example, rows: '2', placeholder: 'Write your prediction, then step through to check it.' }));
+      card.appendChild(pr);
+    }
+    var hasInput = /\bINPUT\b/.test(ex.code);
+    var stepper = createStepper({ code: ex.code, inputs: ex.inputs, givens: ex.givens, hideInputs: !hasInput });
+    card.appendChild(stepper.el);
+    if (hasInput) card.appendChild(el('p', { class: 'note' }, 'Change the inputs and press Reset to try different data.'));
+    main.appendChild(card);
+    var next = el('div', { class: 'btn-row' });
+    if (current.example < t.examples.length - 1) {
+      next.appendChild(el('button', { class: 'btn', type: 'button', onclick: function () { current.example++; render(); window.scrollTo(0, 0); } }, 'Next example →'));
+    }
+    next.appendChild(el('button', { class: 'btn primary', type: 'button', onclick: function () { go(t.id, 'practice'); } }, 'Go to practice →'));
+    main.appendChild(next);
+  }
+
+  function givensBox(givens) {
+    var box = el('div', { class: 'givens' });
+    box.innerHTML = '<b>Given data</b> <span class="note">(already declared and filled in, do not DECLARE these again)</span>' +
+      givens.map(function (g) {
+        if (!g.values) return '<div>' + esc(g.name) + ' : ' + g.type + ' = ' + esc(CIE.describe(g.value)) + '</div>';
+        var lo = g.lo || 1;
+        return '<div>' + esc(g.name) + ' : ARRAY[' + lo + ':' + (lo + g.values.length - 1) + '] OF ' + g.type + ' = [' +
+          g.values.map(function (v) { return esc(CIE.describe(v)); }).join(', ') + ']</div>';
+      }).join('');
+    return box;
+  }
+
+  // ---------------------------------------------------------------- practice
+  var BANK = {
+    common: ['DECLARE ', ' : INTEGER', ' : REAL', ' : STRING', ' : BOOLEAN', 'OUTPUT ""', 'INPUT ', ' <- '],
+    selection: ['IF ', 'THEN', 'ELSE', 'ENDIF', ' AND ', ' OR ', '>=', '<>'],
+    for: ['FOR ', ' <- 1 TO ', 'NEXT '],
+    while: ['WHILE ', ' DO', 'ENDWHILE'],
+    repeat: ['REPEAT', 'UNTIL '],
+    arrays: ['[Index]'],
+    search: ['FALSE', 'TRUE', 'NOT '],
+    text: ['LENGTH()', ' & ']
+  };
+  var TOPIC_BANK = {
+    sequence: ['common', ' DIV ', ' MOD '],
+    selection: ['common', 'selection', 'CASE OF ', 'OTHERWISE : ', 'ENDCASE'],
+    for: ['common', 'for', 'selection'],
+    while: ['common', 'while', 'selection'],
+    repeat: ['common', 'repeat', 'selection'],
+    arrays: ['common', 'for', 'arrays', 'selection'],
+    search: ['common', 'while', 'arrays', 'search', 'selection'],
+    sort: ['common', 'repeat', 'for', 'arrays', 'search', 'selection'],
+    exam: ['common', 'selection', 'for', 'while', 'repeat', 'search', 'text']
+  };
+  function bankFor(topicId) {
+    var out = [];
+    (TOPIC_BANK[topicId] || ['common']).forEach(function (k) {
+      (BANK[k] || [k]).forEach(function (s) { if (out.indexOf(s) === -1) out.push(s); });
+    });
+    return out;
+  }
+
+  function renderPractice(main, t) {
+    var list = el('div', { class: 'task-list' });
+    t.tasks.forEach(function (k, i) {
+      list.appendChild(el('button', { type: 'button', class: 'task-pick' + (i === current.task ? ' active' : ''), onclick: function () { current.task = i; render(); } },
+        '<span class="tick' + (store.done[k.id] ? ' on' : '') + '">' + (store.done[k.id] ? '✓' : '') + '</span>' +
+        '<span><span class="level l' + k.level + '">' + (k.extension ? 'Extension' : LEVEL_NAMES[k.level]) + '</span><br>' + esc(k.title) + '</span>'));
+    });
+    main.appendChild(list);
+    main.appendChild(renderTask(t, t.tasks[current.task], current.task));
+  }
+
+  function normGap(s) { return String(s).replace(/←/g, '<-').replace(/\s+/g, '').toUpperCase(); }
+
+  function renderTask(t, k, idx) {
+    var card = el('div', { class: 'card' });
+    var head = el('div', { class: 'task-head' });
+    head.appendChild(el('span', { class: 'level l' + k.level }, 'Level ' + k.level + ': ' + LEVEL_NAMES[k.level]));
+    if (k.extension) head.appendChild(el('span', { class: 'ext' }, 'Extension'));
+    head.appendChild(el('h3', null, esc(k.title)));
+    if (store.done[k.id]) head.appendChild(el('span', { class: 'level', style: 'background:var(--good-soft);color:var(--good)' }, '✓ Done'));
+    card.appendChild(head);
+    card.appendChild(el('p', { style: 'margin:.2rem 0 .6rem' }, esc(k.brief)));
+    if (k.must) card.appendChild(el('div', null, '<b style="font-size:.9rem">Your algorithm must:</b><ul class="must">' + k.must.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul>'));
+    if (k.givens) card.appendChild(givensBox(k.givens));
+
+    var intro = {
+      1: 'Most of the program is written. Type the missing parts into the boxes, then press Check answer.',
+      2: 'The start of the program is written for you. Replace each // TODO comment with real pseudocode.',
+      3: 'Write the whole algorithm. Plan it first if you need to, and use Step through to test it.'
+    }[k.level];
+    card.appendChild(el('div', { class: 'msg info' }, intro));
+
+    // Level 3 planning scaffold
+    if (k.level === 3 && k.plan) {
+      var plan = el('details', { class: 'fold' });
+      var p = k.plan;
+      var declares = p.vars.map(function (v) { return 'DECLARE ' + v[0] + ' : ' + v[1]; }).join('\n');
+      plan.innerHTML = '<summary>Need a plan? Open the planning scaffold</summary>' +
+        '<div class="plan-grid">' +
+        '<div><b>Inputs</b><ul>' + p.inputs.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
+        '<div><b>Process</b><ul>' + p.process.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
+        '<div><b>Outputs</b><ul>' + p.outputs.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
+        '</div>' +
+        '<div class="panel-title">Suggested variables</div>' +
+        '<table class="vars"><tr><th>Name</th><th>Type</th><th>Used for</th></tr>' + p.vars.map(function (v) {
+          return '<tr><td><code>' + esc(v[0]) + '</code></td><td class="type">' + v[1] + '</td><td>' + esc(v[2]) + '</td></tr>';
+        }).join('') + '</table>';
+      var insertDecl = el('button', { class: 'btn', type: 'button', style: 'margin-top:.6rem' }, 'Insert these DECLARE lines at the top');
+      plan.appendChild(insertDecl);
+      card.appendChild(plan);
+    }
+
+    // The code area
+    var getCode, editor = null, gaps = [];
+    var draft = store.drafts[k.id];
+    if (k.level === 1) {
+      var parts = k.code.split(/\{\{(.+?)\}\}/);
+      var holder = el('div', { class: 'code' });
+      var lineNo = 1;
+      var row = null, src = null;
+      function newRow() {
+        row = el('div', { class: 'row' });
+        row.appendChild(el('span', { class: 'gut' }, String(lineNo++)));
+        src = el('span', { class: 'src' });
+        row.appendChild(src);
+        holder.appendChild(row);
+      }
+      newRow();
+      parts.forEach(function (part, i) {
+        if (i % 2 === 0) {
+          part.split('\n').forEach(function (seg, j) {
+            if (j > 0) newRow();
+            if (seg) src.appendChild(el('span', null, highlight(seg)));
+          });
+        } else {
+          var answers = part.split('|');
+          var gi = gaps.length;
+          var input = el('input', { class: 'gap', type: 'text', spellcheck: 'false', autocapitalize: 'off', autocomplete: 'off', 'aria-label': 'Gap ' + (gi + 1) });
+          var baseWidth = Math.max(answers[0].length, 3) + 2;
+          function sizeGap() { input.style.width = Math.max(baseWidth, input.value.length + 2) + 'ch'; }
+          if (draft && draft[gi] !== undefined) input.value = draft[gi];
+          sizeGap();
+          input.addEventListener('input', function () {
+            sizeGap();
+            input.classList.remove('right', 'wrong');
+            store.drafts[k.id] = gaps.map(function (g) { return g.input.value; });
+            persist();
+          });
+          input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); var nxt = gaps[gi + 1]; if (nxt) nxt.input.focus(); else checkBtn.click(); }
+          });
+          gaps.push({ input: input, answers: answers });
+          src.appendChild(input);
+        }
+      });
+      card.appendChild(holder);
+      getCode = function () {
+        var gi2 = 0;
+        return k.code.replace(/\{\{(.+?)\}\}/g, function () { return gaps[gi2++].input.value; });
+      };
+    } else {
+      var starter = k.level === 2 ? k.code : '';
+      editor = createEditor(typeof draft === 'string' ? draft : starter, function (v) { store.drafts[k.id] = v; persist(); });
+      var bank = el('div', { class: 'bank' });
+      bank.appendChild(el('span', null, 'Insert:'));
+      bankFor(t.id).forEach(function (s) {
+        bank.appendChild(el('button', { type: 'button', class: 'chip', onclick: function () { editor.insert(s); } }, esc(s.trim() || s)));
+      });
+      card.appendChild(bank);
+      card.appendChild(editor.el);
+      card.appendChild(el('p', { class: 'note', style: 'margin:.3rem 0 0' }, 'Tip: Tab indents, Shift+Tab un-indents, and Enter keeps your indentation.'));
+      getCode = function () { return editor.value; };
+      if (k.level === 3 && k.plan) {
+        insertDecl.addEventListener('click', function () {
+          var decl = k.plan.vars.map(function (v) { return 'DECLARE ' + v[0] + ' : ' + v[1]; }).join('\n');
+          var cur = editor.value.replace(/^\s+/, '');
+          editor.value = decl + '\n' + cur;
+          store.drafts[k.id] = editor.value;
+          persist();
+          editor.focus();
+        });
+      }
+    }
+
+    // Run inputs + buttons
+    var firstTest = k.tests[0];
+    var usesInput = /\bINPUT\b/.test(k.code || '') || /\bINPUT\b/.test(k.model || '') || (firstTest.inputs && firstTest.inputs.length);
+    var inputsRow = el('div', { class: 'inputs-row' });
+    var runInputs = el('input', { type: 'text', 'aria-label': 'Inputs for Run, separated by commas' });
+    runInputs.value = (firstTest.inputs || []).join(', ');
+    inputsRow.appendChild(el('label', null, '<b>Inputs for Run</b> <span class="note">(comma separated)</span>'));
+    inputsRow.appendChild(runInputs);
+    if (!usesInput) inputsRow.style.display = 'none';
+    card.appendChild(inputsRow);
+
+    var btns = el('div', { class: 'btn-row' });
+    var runBtn = el('button', { class: 'btn', type: 'button' }, '▶ Run');
+    var stepBtn = el('button', { class: 'btn', type: 'button' }, 'Step through');
+    var checkBtn = el('button', { class: 'btn primary', type: 'button' }, 'Check answer');
+    var resetBtn = el('button', { class: 'btn', type: 'button' }, 'Start again');
+    [runBtn, stepBtn, checkBtn, resetBtn].forEach(function (b) { btns.appendChild(b); });
+    card.appendChild(btns);
+
+    var results = el('div', { 'aria-live': 'polite' });
+    card.appendChild(results);
+    var stepHolder = el('div');
+    card.appendChild(stepHolder);
+
+    // Hints and model answer
+    var helpBox = el('div', { class: 'hints' });
+    var shownHints = 0;
+    var attempts = 0;
+    var hintBtn = el('button', { class: 'btn', type: 'button' }, 'Get a hint (' + k.hints.length + ' available)');
+    var modelBtn = el('button', { class: 'btn', type: 'button', disabled: 'disabled' }, 'Show model answer');
+    var hintList = el('ol');
+    var modelHolder = el('div');
+    var helpRow = el('div', { class: 'btn-row', style: 'margin-top:1rem' });
+    helpRow.appendChild(hintBtn);
+    helpRow.appendChild(modelBtn);
+    helpBox.appendChild(helpRow);
+    helpBox.appendChild(hintList);
+    helpBox.appendChild(modelHolder);
+    card.appendChild(helpBox);
+    var modelNote = el('p', { class: 'note' }, 'The model answer unlocks after you have checked your answer once, or used every hint.');
+    helpBox.appendChild(modelNote);
+    function updateHelp() {
+      hintBtn.disabled = shownHints >= k.hints.length;
+      hintBtn.textContent = shownHints >= k.hints.length ? 'No more hints' : shownHints ? 'Next hint (' + (k.hints.length - shownHints) + ' left)' : 'Get a hint (' + k.hints.length + ' available)';
+      var unlocked = attempts > 0 || shownHints >= k.hints.length || store.done[k.id];
+      if (unlocked) modelBtn.removeAttribute('disabled');
+      modelNote.style.display = unlocked ? 'none' : '';
+    }
+    hintBtn.addEventListener('click', function () {
+      if (shownHints < k.hints.length) {
+        hintList.appendChild(el('li', null, esc(k.hints[shownHints])));
+        shownHints++;
+        updateHelp();
+      }
+    });
+    modelBtn.addEventListener('click', function () {
+      modelHolder.innerHTML = '';
+      var ans = k.level === 1 ? k.code.replace(/\{\{(.+?)\}\}/g, function (m, a) { return a.split('|')[0]; }) : k.model;
+      modelHolder.appendChild(el('div', { class: 'panel-title' }, 'Model answer'));
+      modelHolder.appendChild(codeView(ans));
+      modelHolder.appendChild(el('p', { class: 'note' }, 'Other answers can be right too. Yours is correct if it passes every test. Compare the two line by line: what is different, and does it matter?'));
+      modelBtn.disabled = true;
+    });
+    updateHelp();
+
+    function showError(err) {
+      if (err && err.line && editor) editor.markError(err.line);
+    }
+    function styleNotes(code) {
+      var notes = CIE.lint(code);
+      if (!notes.length) return null;
+      return el('div', { class: 'msg warn' }, '<b>Style tips</b> (these do not stop your code working)<ul>' +
+        notes.map(function (n) { return '<li>Line ' + n.line + ': ' + esc(n.msg) + '</li>'; }).join('') + '</ul>');
+    }
+
+    runBtn.addEventListener('click', function () {
+      stepHolder.innerHTML = '';
+      results.innerHTML = '';
+      var code = getCode();
+      var runner = new CIE.Runner(code, { inputs: parseInputs(runInputs.value), givens: k.givens });
+      var lines = [];
+      var guard = 0;
+      while (!runner.done && guard < 25000) {
+        var e = runner.step();
+        if (e && e.output !== undefined) lines.push(esc(e.output));
+        if (e && e.input !== undefined) lines.push('<span class="in">&gt; ' + esc(e.input) + '</span>');
+        guard++;
+      }
+      results.appendChild(el('div', { class: 'panel-title' }, 'Output'));
+      results.appendChild(el('div', { class: 'console' }, lines.length ? lines.join('\n') : '<span class="empty">No output.</span>'));
+      if (runner.error) {
+        results.appendChild(el('div', { class: 'msg err' }, '<b>Error' + (runner.error.line ? ' on line ' + runner.error.line : '') + ':</b> ' + esc(runner.error.message)));
+        showError(runner.error);
+      } else if (runner.inputsLeft > 0) {
+        results.appendChild(el('div', { class: 'msg warn' }, 'The program finished with ' + runner.inputsLeft + ' input value' + (runner.inputsLeft === 1 ? '' : 's') + ' not used.'));
+      }
+      var sn = styleNotes(code);
+      if (sn) results.appendChild(sn);
+    });
+
+    stepBtn.addEventListener('click', function () {
+      results.innerHTML = '';
+      stepHolder.innerHTML = '';
+      var code = getCode();
+      var st = createStepper({ code: code, inputs: parseInputs(runInputs.value), givens: k.givens, hideInputs: !usesInput, onError: showError });
+      var closeRow = el('div', { class: 'btn-row', style: 'justify-content:space-between;margin-top:1rem' });
+      closeRow.appendChild(el('b', null, 'Stepping through your code'));
+      closeRow.appendChild(el('button', { class: 'btn', type: 'button', onclick: function () { stepHolder.innerHTML = ''; } }, 'Close'));
+      stepHolder.appendChild(closeRow);
+      stepHolder.appendChild(st.el);
+      st.el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    checkBtn.addEventListener('click', function () {
+      stepHolder.innerHTML = '';
+      results.innerHTML = '';
+      attempts++;
+      updateHelp();
+      var code = getCode();
+      var res = CIE.checkTask(code, k);
+      if (k.level === 1) {
+        gaps.forEach(function (g) {
+          var ok = g.answers.some(function (a) { return normGap(a) === normGap(g.input.value); });
+          g.input.classList.remove('right', 'wrong');
+          if (!res.pass) g.input.classList.add(ok ? 'right' : 'wrong');
+          else g.input.classList.add('right');
+        });
+      }
+      if (res.pass) {
+        var wasDone = store.done[k.id];
+        store.done[k.id] = true;
+        persist();
+        var ok = el('div', { class: 'msg ok success' }, '<b>All ' + res.results.length + ' tests passed.</b> ' + (wasDone ? 'Still correct.' : 'Task complete.'));
+        var nextIdx = idx + 1;
+        if (nextIdx < t.tasks.length) {
+          ok.appendChild(el('button', { class: 'btn good', type: 'button', onclick: function () { current.task = nextIdx; render(); window.scrollTo(0, 0); } }, 'Next task →'));
+        } else {
+          var ti = TOPICS.indexOf(t);
+          if (ti < TOPICS.length - 1) ok.appendChild(el('button', { class: 'btn good', type: 'button', onclick: function () { go(TOPICS[ti + 1].id); } }, 'Next topic: ' + esc(TOPICS[ti + 1].title) + ' →'));
+        }
+        results.appendChild(ok);
+        renderNav();
+      } else {
+        var firstErr = res.results.filter(function (r) { return r.error; })[0];
+        if (firstErr) {
+          results.appendChild(el('div', { class: 'msg err' }, '<b>Your code stopped with an error' + (firstErr.error.line ? ' on line ' + firstErr.error.line : '') + ':</b> ' + esc(firstErr.error.message)));
+          showError(firstErr.error);
+        } else {
+          var passed = res.results.filter(function (r) { return r.pass; }).length;
+          results.appendChild(el('div', { class: 'msg warn' }, '<b>' + passed + ' of ' + res.results.length + ' tests passed.</b> Look at the failing tests below, then use Step through with those inputs to find out why.' +
+            (k.level === 1 ? ' Gaps in orange are the ones to look at again.' : '')));
+        }
+        if (res.requireFails.length) {
+          results.appendChild(el('div', { class: 'msg warn' }, '<b>Check the task rules:</b><ul>' + res.requireFails.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul>'));
+        }
+      }
+      var table = '<table class="tests"><tr><th>Test</th><th>Inputs</th><th>Should output</th><th>Result</th></tr>';
+      res.results.forEach(function (r, i) {
+        var ins = (r.test.inputs || []).join(', ') || (r.test.givens ? 'different given data' : 'none');
+        var should = (r.test.expect || []).map(function (x) { return esc(CIE.describe(x)); }).join(', ');
+        var detail = r.pass ? '' : '<div style="font-weight:400;color:var(--text-dim);white-space:normal">' + esc(r.msg) +
+          (r.outputs.length ? '<br>Your output: <span class="io">' + r.outputs.map(esc).join(' | ') + '</span>' : '') + '</div>';
+        table += '<tr><td>' + (i + 1) + '</td><td class="io">' + esc(ins) + '</td><td class="io">' + should + '</td><td class="res ' + (r.pass ? 'p' : 'f') + '">' + (r.pass ? '✓ Pass' : '✗ Not yet') + detail + '</td></tr>';
+      });
+      table += '</table>';
+      results.appendChild(el('div', { class: 'scroll-x', style: 'margin-top:.6rem' }, table));
+      var sn = styleNotes(code);
+      if (sn) results.appendChild(sn);
+      if (!res.pass) {
+        var failing = res.results.filter(function (r) { return !r.pass; })[0];
+        if (failing && failing.test.inputs && failing.test.inputs.length) runInputs.value = failing.test.inputs.join(', ');
+      }
+    });
+
+    resetBtn.addEventListener('click', function () {
+      if (!confirm('Clear your work on this task and start again?')) return;
+      delete store.drafts[k.id];
+      persist();
+      render();
+    });
+
+    return card;
+  }
+
+  // ---------------------------------------------------------------- start
+  function fromHash() {
+    var h = decodeURIComponent(location.hash.replace(/^#/, ''));
+    var parts = h.split('/');
+    var t = topicById(parts[0]);
+    if (!t) { current.topic = null; render(); return; }
+    var tab = ['learn', 'examples', 'practice'].indexOf(parts[1]) !== -1 ? parts[1] : 'learn';
+    var idx = parts[2] ? parseInt(parts[2], 10) - 1 : undefined;
+    go(t.id, tab, isNaN(idx) ? undefined : idx);
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
+</script>
 </body>
 </html>
