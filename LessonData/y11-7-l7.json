@@ -1,0 +1,213 @@
+{
+  "id": "y11-7-l7",
+  "label": "7 L7: Recap - Sequence, Selection and Iteration",
+  "steps": [
+    {
+      "id": "do-now",
+      "label": "Do Now: Sequence and Selection",
+      "type": "short-answer-validation",
+      "validatorId": "y11l7-do-now",
+      "validatorKey": "y11l7_do_now",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Sequence and Selection</h2><p class=\"lesson-lead\">Trace these two short algorithms from earlier lessons before we recap everything together.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;Total &lt;- 5</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Total &lt;- Total + Total</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"lesson-do-now-response\"><label for=\"y11l7-do-now-a\">(a) State the value output. [1]</label><input id=\"y11l7-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now part a\" autocomplete=\"off\"></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;INPUT Age</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;IF Age &gt;= 18</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;&nbsp;&nbsp;THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Adult\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Minor\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11l7-do-now-b\">(b) The user enters 18. State the output. [1]</label><input id=\"y11l7-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11l7-do-now-c\">(c) The user enters 12. State the output. [1]</label><input id=\"y11l7-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11l7-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11l7-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "title",
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithms</p><h2 class=\"lesson-h2\">Recap: Sequence, Selection and Iteration</h2><p>Year 11, Unit 7 - getting ready to write your own pseudocode</p></div>"
+    },
+    {
+      "id": "concept",
+      "content": "<h2 class=\"lesson-h2\">Tracing an Algorithm vs Writing One</h2><ul class=\"lesson-facts\"><li>L1-L4 mostly asked you to READ an algorithm and trace what it does.</li><li>The test asks you to WRITE an algorithm from a plain-English description.</li><li>Same three building blocks every time: sequence (in order), selection (IF), iteration (a loop).</li><li>Plan in your head before you write: what is INPUT, what decision or loop is needed, what is OUTPUT.</li></ul><div class=\"lesson-flow-task\"><h3>The one habit that fixes most mistakes</h3><p>Read your own finished pseudocode back to yourself, line by line, as if you were the computer. Does the loop actually stop when you think it does? Does every IF have an ENDIF?</p></div>"
+    },
+    {
+      "id": "exam-1",
+      "label": "Exam Question: Spot the Structure",
+      "type": "short-answer-validation",
+      "validatorId": "y11l7-exam-1",
+      "validatorKey": "y11l7_exam_1",
+      "content": "<h2 class=\"lesson-h2\">Exam Question: Spot the Structure</h2><div class=\"lesson-exam-card\"><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;INPUT Mark</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;IF Mark &gt;= 50</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;THEN</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;ENDIF</div></div><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11l7-exam1-a\">(a) Name the block of code shown on lines 02-07. [1]</label><input id=\"y11l7-exam1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam1-a\" aria-label=\"Exam 1 part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11l7-exam1-b\">(b) State the pseudocode keyword that would need to be added if a second, different condition also had to be checked after Fail. [1]</label><input id=\"y11l7-exam1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam1-b\" aria-label=\"Exam 1 part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11l7-exam-1-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11l7-exam-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    },
+    {
+      "id": "activity-1",
+      "label": "Write It Yourself: Selection",
+      "type": "pseudocode-validation",
+      "validatorId": "y11l7-activity-1",
+      "validatorKey": "y11l7_activity_1",
+      "content": "<h2 class=\"lesson-h2\">Write It Yourself: Selection</h2><p class=\"lesson-lead\">A cinema charges $12 for a standard ticket. If the customer is under 12 years old, the ticket costs $7 instead.</p><div class=\"lesson-profile-columns\"><div><div class=\"lesson-flow-task\"><h3>Required structure</h3><ol><li>Input the customer's age.</li><li>Use one IF...THEN...ELSE...ENDIF.</li><li>Store the correct price in a variable called Price.</li><li>Output Price after the IF block.</li></ol></div><div class=\"lesson-flow-task\"><h3>Test data</h3><p>The user enters 9. State the final output after writing the algorithm.</p></div></div><div class=\"pseudocode-check\"><label for=\"y11l7-activity-1-code\"><strong>Your pseudocode</strong></label><textarea id=\"y11l7-activity-1-code\" class=\"lesson-exam-answer\" data-answer-id=\"activity-1-pseudocode\" aria-label=\"Cinema ticket pseudocode\" spellcheck=\"false\"></textarea><div class=\"pseudocode-output-row\"><label for=\"y11l7-activity-1-output\">Final output</label><input id=\"y11l7-activity-1-output\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"activity-1-output\" aria-label=\"Cinema ticket output\" autocomplete=\"off\"></div><button type=\"button\" class=\"donow-btn\" id=\"y11l7-activity-1-check\">Check my answer</button><div id=\"y11l7-activity-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "exam-2",
+      "label": "Exam Question: Which Loop?",
+      "type": "short-answer-validation",
+      "validatorId": "y11l7-exam-2",
+      "validatorKey": "y11l7_exam_2",
+      "content": "<h2 class=\"lesson-h2\">Exam Question: Which Loop?</h2><div class=\"lesson-exam-card\"><p>A validation loop must ask the user for a password AT LEAST once, then keep asking again only if it is too short.</p><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11l7-exam2-a\">(a) Name the loop keyword pair that fits this best: FOR...NEXT, WHILE...ENDWHILE, or REPEAT...UNTIL. [1]</label><input id=\"y11l7-exam2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam2-a\" aria-label=\"Exam 2 part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11l7-exam2-b\">(b) Give one reason WHILE...ENDWHILE would be a poor choice here. [1]</label><input id=\"y11l7-exam2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam2-b\" aria-label=\"Exam 2 part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11l7-exam-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11l7-exam-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    },
+    {
+      "id": "activity-2",
+      "label": "Write It Yourself: Iteration",
+      "type": "pseudocode-validation",
+      "validatorId": "y11l7-activity-2",
+      "validatorKey": "y11l7_activity_2",
+      "content": "<h2 class=\"lesson-h2\">Write It Yourself: Iteration</h2><p class=\"lesson-lead\">Write an algorithm that inputs a PIN. While the PIN does not contain exactly 4 characters, ask for it to be input again. Output an acceptance message after the loop.</p><div class=\"lesson-profile-columns\"><div><div class=\"lesson-flow-task\"><h3>Required structure</h3><ol><li>Input PIN before the loop.</li><li>Use one WHILE condition built from LENGTH(PIN) &lt;&gt; 4.</li><li>Input PIN again inside the loop.</li><li>Close the loop with ENDWHILE.</li><li>Output an acceptance message after the loop.</li></ol></div><div class=\"lesson-flow-task\"><h3>Test data</h3><p>The user enters 55, then 4821. State the final output after writing the algorithm.</p></div></div><div class=\"pseudocode-check\"><label for=\"y11l7-activity-2-code\"><strong>Your pseudocode</strong></label><textarea id=\"y11l7-activity-2-code\" class=\"lesson-exam-answer\" data-answer-id=\"activity-2-pseudocode\" aria-label=\"PIN validation pseudocode\" spellcheck=\"false\"></textarea><div class=\"pseudocode-output-row\"><label for=\"y11l7-activity-2-output\">Final output</label><input id=\"y11l7-activity-2-output\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"activity-2-output\" aria-label=\"PIN validation output\" autocomplete=\"off\"></div><button type=\"button\" class=\"donow-btn\" id=\"y11l7-activity-2-check\">Check my answer</button><div id=\"y11l7-activity-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "practice",
+      "label": "Checked Practice: Sequence, Selection and Iteration Together",
+      "type": "self-marked-response",
+      "containerId": "y11l7-practice-root",
+      "items": [
+        {
+          "id": "practice-shop-total",
+          "marks": 5,
+          "ariaLabel": "Shop total pseudocode",
+          "prompt": "A shop lets a customer enter 5 items' prices, one at a time, and totals them. If the total is $50 or more, apply a $5 discount before outputting the final total. Write the pseudocode.",
+          "modelAnswer": "DECLARE Price : REAL<br>DECLARE Total : REAL<br>DECLARE Count : INTEGER<br>Total &lt;- 0<br>FOR Count &lt;- 1 TO 5<br>&nbsp;&nbsp;OUTPUT &quot;Enter the price of item &quot;, Count<br>&nbsp;&nbsp;INPUT Price<br>&nbsp;&nbsp;Total &lt;- Total + Price<br>NEXT Count<br>IF Total &gt;= 50<br>&nbsp;&nbsp;THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total - 5<br>ENDIF<br>OUTPUT &quot;Final total: &quot;, Total<br><br>1 mark for the FOR loop running exactly 5 times, 1 mark for correctly totalling Price inside the loop, 1 mark for the IF testing the discount threshold, 1 mark for applying the discount only inside THEN, 1 mark for outputting the final total after the IF."
+        }
+      ],
+      "content": "<h2 class=\"lesson-h2\">Checked Practice</h2><p class=\"lesson-lead\">This one combines all three building blocks in a single algorithm - plan it before you write.</p><div id=\"y11l7-practice-root\"></div>"
+    },
+    {
+      "id": "plenary",
+      "label": "Plenary: Recap Drill",
+      "type": "embedded-app",
+      "appId": "drill-y11-7-l7",
+      "embedContainerId": "y11l7-plenary-drill",
+      "content": "<h2 class=\"lesson-h2\">Plenary: Sequence, Selection and Iteration</h2><div id=\"y11l7-plenary-drill\"></div>"
+    }
+  ],
+  "validators": {
+    "y11l7_do_now": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*10\\s*$",
+          "flags": ""
+        },
+        "feedback": "Line 2 doubles Total, so 5 + 5 = 10."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*adult\\s*$",
+          "flags": "i"
+        },
+        "feedback": "18 is greater than or equal to 18, so the THEN branch runs."
+      },
+      {
+        "suffix": "c",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*minor\\s*$",
+          "flags": "i"
+        },
+        "feedback": "12 is less than 18, so the ELSE branch runs."
+      }
+    ],
+    "y11l7_exam_1": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*selection\\s*$",
+          "flags": "i"
+        },
+        "feedback": "An IF...THEN...ELSE...ENDIF block is selection."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*elseif\\s*$",
+          "flags": "i"
+        },
+        "feedback": "ELSEIF lets you test another condition before the final ELSE."
+      }
+    ],
+    "y11l7_exam_2": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*repeat\\s*(?:\\.\\.\\.|-|to)?\\s*until\\s*$",
+          "flags": "i"
+        },
+        "feedback": "REPEAT...UNTIL always runs its body at least once, which matches \"at least once\"."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "(?=.*first|.*before)(?=.*input|.*value|.*condition)",
+          "flags": "i"
+        },
+        "feedback": "WHILE tests its condition before the first pass, so you would need an extra INPUT before the loop just to have something to test."
+      }
+    ]
+  },
+  "pseudocodeValidators": {
+    "y11l7_activity_1": {
+      "lines": [
+        {
+          "code": "INPUT AGE",
+          "feedback": "Line 1 must input the customer's age."
+        },
+        {
+          "code": "IF AGE < 12",
+          "feedback": "Line 2 must test whether Age is under 12."
+        },
+        {
+          "code": "THEN",
+          "feedback": "Line 3 must be THEN."
+        },
+        {
+          "code": "PRICE <- 7",
+          "feedback": "Line 4 must set Price to 7 for a customer under 12."
+        },
+        {
+          "code": "ELSE",
+          "feedback": "Line 5 must be ELSE."
+        },
+        {
+          "code": "PRICE <- 12",
+          "feedback": "Line 6 must set Price to 12 otherwise."
+        },
+        {
+          "code": "ENDIF",
+          "feedback": "Line 7 must close the IF block with ENDIF."
+        },
+        {
+          "code": "OUTPUT PRICE",
+          "feedback": "Line 8 must output Price after the IF block."
+        }
+      ],
+      "output": "7"
+    },
+    "y11l7_activity_2": {
+      "lines": [
+        {
+          "code": "INPUT PIN",
+          "feedback": "Line 1 must input PIN before the condition is tested."
+        },
+        {
+          "code": "WHILE LENGTH(PIN) <> 4 DO",
+          "feedback": "Line 2 must repeat while PIN is not exactly 4 characters long."
+        },
+        {
+          "code": "INPUT PIN",
+          "feedback": "Line 3 must input PIN again inside the loop."
+        },
+        {
+          "code": "ENDWHILE",
+          "feedback": "Line 4 must close the loop with ENDWHILE."
+        },
+        {
+          "code": "OUTPUT \"PIN ACCEPTED\"",
+          "feedback": "Line 5 must output the acceptance message after the loop."
+        }
+      ],
+      "output": "pin accepted"
+    }
+  }
+}

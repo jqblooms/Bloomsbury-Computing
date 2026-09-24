@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIE Pseudocode Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface2: #eef2f7;
+    --border: #cbd5e1;
+    --accent: #1479be;
+    --accent-dark: #0f5c94;
+    --accent-gold: #ffc107;
+    --text: #0f172a;
+    --text-dim: #475569;
+    --text-dimmer: #94a3b8;
+    --seq: #1479be;
+    --sel: #b06f0a;
+    --iter: #1b7f5b;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    margin: 0;
+    padding: 1.6rem;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  h1 { font-size: 1.7rem; margin: 0 0 .2rem; }
+  .sub { color: var(--text-dim); margin: 0 0 1.4rem; }
+  .toc { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
+  .toc a {
+    font-family: var(--sans); font-weight: 600; font-size: .85rem;
+    color: var(--text); background: var(--surface2); border: 1px solid var(--border);
+    padding: .4rem .8rem; border-radius: 999px; text-decoration: none;
+  }
+  .toc a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.3rem 1.5rem; margin-bottom: 1.2rem; }
+  section h2 { margin: 0 0 .3rem; font-size: 1.25rem; display: flex; align-items: center; gap: .5rem; }
+  .tag { display: inline-block; width: 10px; height: 10px; border-radius: 3px; }
+  .tag.seq { background: var(--seq); }
+  .tag.sel { background: var(--sel); }
+  .tag.iter { background: var(--iter); }
+  section > p.lead { color: var(--text-dim); margin: 0 0 1rem; }
+  .rule { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; margin-bottom: 1.1rem; }
+  .rule:last-child { margin-bottom: 0; }
+  .rule h3 { margin: 0; font-size: .95rem; }
+  pre {
+    background: #0f172a; color: #e2e8f0; font-family: var(--mono); font-size: .88rem;
+    padding: .8rem 1rem; border-radius: 8px; margin: 0; overflow-x: auto; line-height: 1.5;
+  }
+  pre .kw { color: #7dd3fc; }
+  pre .str { color: #fcd34d; }
+  pre .cm { color: #94a3b8; font-style: italic; }
+  .note { font-size: .85rem; color: var(--text-dim); margin: .3rem 0 0; }
+  .warn { background: #fff7e6; border: 1px solid #ffd98a; color: #7a5300; border-radius: 8px; padding: .6rem .9rem; font-size: .85rem; margin-top: .5rem; }
+  footer { text-align: center; color: var(--text-dimmer); font-size: .8rem; margin: 2rem 0 1rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CIE Pseudocode Reference</h1>
+  <p class="sub">The exact syntax used across every Bloomsbury Computing lesson and drill &mdash; Cambridge IGCSE 0478 house style. Use this while writing your own pseudocode, in class or revising at home.</p>
+
+  <div class="toc">
+    <a href="#basics">Variables &amp; Sequence</a>
+    <a href="#selection">Selection</a>
+    <a href="#iteration">Iteration</a>
+    <a href="#arrays">Arrays</a>
+    <a href="#checklist">Before You Submit</a>
+  </div>
+
+  <section id="basics">
+    <h2><span class="tag seq"></span>Variables and Sequence</h2>
+    <p class="lead">Every variable is DECLAREd before it is used, with a type. Assignment uses the left-pointing arrow, not an equals sign.</p>
+    <div class="rule">
+      <h3>Declare, then assign</h3>
+      <pre><span class="kw">DECLARE</span> Age : <span class="kw">INTEGER</span>
+<span class="kw">DECLARE</span> Name : <span class="kw">STRING</span>
+Age <span class="kw">&lt;-</span> 16
+Name <span class="kw">&lt;-</span> <span class="str">"Aiko"</span></pre>
+    </div>
+    <div class="rule">
+      <h3>Input and output</h3>
+      <pre><span class="kw">OUTPUT</span> <span class="str">"Enter your age "</span>
+<span class="kw">INPUT</span> Age
+<span class="kw">OUTPUT</span> <span class="str">"You are "</span>, Age, <span class="str">" years old"</span></pre>
+      <p class="note">Every INPUT step should have an OUTPUT prompt directly before it, so the user knows what to type. Combine several values in one OUTPUT with commas.</p>
+    </div>
+    <div class="rule">
+      <h3>The main data types</h3>
+      <pre><span class="kw">INTEGER</span>   <span class="cm">// whole numbers</span>
+<span class="kw">REAL</span>      <span class="cm">// decimals</span>
+<span class="kw">CHAR</span>      <span class="cm">// one character</span>
+<span class="kw">STRING</span>    <span class="cm">// text</span>
+<span class="kw">BOOLEAN</span>   <span class="cm">// TRUE or FALSE</span></pre>
+    </div>
+  </section>
+
+  <section id="selection">
+    <h2><span class="tag sel"></span>Selection</h2>
+    <p class="lead">A decision the program makes while it runs. Always close IF with ENDIF.</p>
+    <div class="rule">
+      <h3>IF / THEN / ELSE</h3>
+      <pre><span class="kw">IF</span> Age &gt;= 18
+  <span class="kw">THEN</span>
+    <span class="kw">OUTPUT</span> <span class="str">"Adult"</span>
+  <span class="kw">ELSE</span>
+    <span class="kw">OUTPUT</span> <span class="str">"Minor"</span>
+<span class="kw">ENDIF</span></pre>
+      <p class="note">ELSE is optional &mdash; leave it out if there is nothing to do when the condition is false.</p>
+    </div>
+    <div class="rule">
+      <h3>Combining conditions</h3>
+      <pre><span class="kw">IF</span> Age &gt;= 13 <span class="kw">AND</span> Age &lt;= 19
+  <span class="kw">THEN</span>
+    <span class="kw">OUTPUT</span> <span class="str">"Teenager"</span>
+<span class="kw">ENDIF</span></pre>
+      <p class="note">AND, OR and NOT work exactly as in Year 7 flowchart work &mdash; both sides of AND must be true, only one side of OR needs to be true.</p>
+    </div>
+  </section>
+
+  <section id="iteration">
+    <h2><span class="tag iter"></span>Iteration</h2>
+    <p class="lead">Three loop shapes. Pick the one that matches how many times the loop should run.</p>
+    <div class="rule">
+      <h3>FOR &mdash; count-controlled (you know how many times in advance)</h3>
+      <pre><span class="kw">FOR</span> Index <span class="kw">&lt;-</span> 1 <span class="kw">TO</span> 10
+  <span class="kw">OUTPUT</span> Index
+<span class="kw">NEXT</span> Index</pre>
+    </div>
+    <div class="rule">
+      <h3>WHILE &mdash; pre-condition (checked BEFORE each pass, may run zero times)</h3>
+      <pre><span class="kw">INPUT</span> Number
+<span class="kw">WHILE</span> Number &lt; 1 <span class="kw">OR</span> Number &gt; 10 <span class="kw">DO</span>
+  <span class="kw">OUTPUT</span> <span class="str">"Out of range, try again "</span>
+  <span class="kw">INPUT</span> Number
+<span class="kw">ENDWHILE</span></pre>
+      <p class="note">This is the standard validation-loop shape: input once before the loop, test the condition, input again only inside the loop.</p>
+    </div>
+    <div class="rule">
+      <h3>REPEAT &mdash; post-condition (checked AFTER each pass, always runs at least once)</h3>
+      <pre><span class="kw">REPEAT</span>
+  <span class="kw">OUTPUT</span> <span class="str">"Enter a password (at least 10 characters) "</span>
+  <span class="kw">INPUT</span> Password
+<span class="kw">UNTIL</span> LENGTH(Password) &gt;= 10</pre>
+      <p class="note">Notice REPEAT needs no separate INPUT before it &mdash; the loop body always runs once, so the first input happens inside the loop.</p>
+    </div>
+    <div class="warn">Common mix-up: WHILE tests its condition and STOPS the loop when the condition becomes true or false depending on how you wrote it &mdash; read your own condition back to yourself before submitting. REPEAT...UNTIL keeps going UNTIL the condition becomes TRUE.</div>
+  </section>
+
+  <section id="arrays">
+    <h2><span class="tag seq"></span>Arrays</h2>
+    <p class="lead">A fixed collection of values of the same type, accessed by index. Bloomsbury Computing's pseudocode indexes start at 1.</p>
+    <pre><span class="kw">DECLARE</span> Scores : <span class="kw">ARRAY</span>[1:30] <span class="kw">OF</span> <span class="kw">INTEGER</span>
+Scores[1] <span class="kw">&lt;-</span> 55
+<span class="kw">FOR</span> Index <span class="kw">&lt;-</span> 1 <span class="kw">TO</span> 30
+  <span class="kw">INPUT</span> Scores[Index]
+<span class="kw">NEXT</span> Index</pre>
+  </section>
+
+  <section id="checklist">
+    <h2>Before You Submit</h2>
+    <div class="rule">
+      <ul style="margin:0;padding-left:1.2rem">
+        <li>Every variable DECLAREd before it is assigned or read.</li>
+        <li>Every IF has a matching ENDIF; every FOR has a matching NEXT; every WHILE has a matching ENDWHILE.</li>
+        <li>Every INPUT has an OUTPUT prompt just before it explaining what to type.</li>
+        <li>Read your own condition back to front &mdash; does the loop actually stop when you think it does?</li>
+        <li>Indent the lines inside IF, FOR, WHILE and REPEAT so the structure is easy to read.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>Bloomsbury Computing &middot; Cambridge IGCSE 0478 house style</footer>
+</div>
+</body>
+</html>
