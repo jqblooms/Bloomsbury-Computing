@@ -6563,6 +6563,948 @@
         }
       ]
     },
+    // Year 11 Mock Test 1 revision drills: one set per test (A, B, C), for
+    // 20 minutes of revision straight before each 30-minute test. They
+    // practise the same skills as the test with different examples, so a
+    // student cannot just memorise the test's answers. Tracing and error
+    // cards randomise their numbers and scenarios on every draw.
+    "y11-mock1-a": {
+      title: "Year 11 Mock Test 1A Revision: Programming Concepts",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - operators, data types, loops and standard methods",
+      cards: (function () {
+        function exact(v) { return [new RegExp("^\\s*" + String(v).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*$", "i")]; }
+        function fill(card) { var inst = card.randomize(); Object.keys(inst).forEach(function (k) { card[k] = inst[k]; }); return card; }
+        var TYPES = ["INTEGER", "REAL", "CHAR", "STRING", "BOOLEAN"];
+        var TYPE_KEYS = { INTEGER: [["integer", "int"]], REAL: [["real"]], CHAR: [["char", "character"]], STRING: [["string", "str"]], BOOLEAN: [["boolean", "bool"]] };
+        function typeCard(id, what, type, note) {
+          return {
+            id: id, category: "m1a-types",
+            prompt: "Which data type is most appropriate for " + what + "?",
+            answers: [type],
+            keywords: [{ required: TYPE_KEYS[type], excluded: TYPES.filter(function (t) { return t !== type; }).map(function (t) { return t.toLowerCase(); }) }],
+            distractors: TYPES.filter(function (t) { return t !== type; }).concat(["ARRAY"]),
+            note: note
+          };
+        }
+        var OPS = [
+          ["=", "equal to"], ["<>", "not equal to"], ["<", "less than"], [">", "greater than"],
+          ["<=", "less than or equal to"], [">=", "greater than or equal to"], ["<-", "store (assign) a value in a variable"]
+        ];
+        return [
+          // ---------------- operators
+          {
+            id: "m1a-noteq", category: "m1a-ops",
+            prompt: "What does the <> operator mean in pseudocode?",
+            answers: ["Not equal to"],
+            keywords: [{ required: [["not"], ["equal"]] }],
+            distractors: ["Equal to", "Less than", "Greater than", "Less than or equal to", "Greater than or equal to", "Stores a value in a variable"],
+            note: "<> means 'not equal to'. IF Guess <> Secret is TRUE when the two values are different."
+          },
+          fill({
+            id: "m1a-opsymbol", category: "m1a-ops",
+            randomize: function () {
+              var pick = OPS[randInt(0, OPS.length - 1)];
+              return {
+                prompt: "Which operator is used in pseudocode to mean '" + pick[1] + "'?",
+                answers: [pick[0]],
+                keywords: exact(pick[0]),
+                distractors: OPS.filter(function (o) { return o[0] !== pick[0]; }).map(function (o) { return o[0]; }).concat(["==", "!="]),
+                note: "Comparison operators: =  <>  <  >  <=  >=. The arrow <- stores a value; == and != are used in some programming languages but not in Cambridge pseudocode."
+              };
+            }
+          }),
+          {
+            id: "m1a-notarith", category: "m1a-ops", type: "multi",
+            prompt: "Which of these are NOT arithmetic operators? Pick every one shown.",
+            answers: [">", "<=", "AND", "NOT", "<>", "OR", "="],
+            distractors: ["+", "-", "*", "/", "^", "DIV", "MOD"],
+            note: "Arithmetic operators do calculations: + - * / ^ DIV MOD. Comparison operators (= <> < > <= >=) and Boolean operators (AND OR NOT) are not arithmetic."
+          },
+          {
+            id: "m1a-arith", category: "m1a-ops", type: "multi",
+            prompt: "Which of these ARE arithmetic operators? Pick every one shown.",
+            answers: ["+", "-", "*", "/", "^", "DIV", "MOD"],
+            distractors: [">", "<", "=", "<>", "<=", ">=", "AND", "OR", "NOT"],
+            note: "Arithmetic operators: + - * / ^ DIV MOD. DIV and MOD are arithmetic even though they are words."
+          },
+          fill({
+            id: "m1a-div", category: "m1a-ops",
+            randomize: function () {
+              var b = randInt(3, 9), a = randInt(2, 11) * b + randInt(1, b - 1);
+              var d = Math.floor(a / b), m = a % b;
+              return {
+                prompt: "What is " + a + " DIV " + b + "?",
+                answers: [String(d)], keywords: exact(d),
+                distractors: dedupeDistractors(d, [m, d + 1, d - 1, (a / b).toFixed(2), b, a - b]),
+                note: "DIV gives the whole number of times " + b + " fits into " + a + ": " + a + " DIV " + b + " = " + d + " (the remainder, " + m + ", is thrown away)."
+              };
+            }
+          }),
+          fill({
+            id: "m1a-mod", category: "m1a-ops",
+            randomize: function () {
+              var b = randInt(3, 9), a = randInt(2, 11) * b + randInt(1, b - 1);
+              var d = Math.floor(a / b), m = a % b;
+              return {
+                prompt: "What is " + a + " MOD " + b + "?",
+                answers: [String(m)], keywords: exact(m),
+                distractors: dedupeDistractors(m, [d, m + 1, b - m, (a / b).toFixed(2), 0, b]),
+                note: "MOD gives the remainder: " + a + " = " + d + " x " + b + " + " + m + ", so " + a + " MOD " + b + " = " + m + "."
+              };
+            }
+          }),
+          fill({
+            id: "m1a-pow", category: "m1a-ops",
+            randomize: function () {
+              var b = randInt(2, 5), e = randInt(2, 4), p = Math.pow(b, e);
+              return {
+                prompt: "What is the result of " + b + " ^ " + e + "?",
+                answers: [String(p)], keywords: exact(p),
+                distractors: dedupeDistractors(p, [b * e, b + e, Math.pow(e, b), p * 2, String(b) + String(e)], function (i) { return p + i * b; }),
+                note: "^ means 'to the power of': " + b + " ^ " + e + " = " + Array(e + 1).join(b + " x ").slice(0, -3) + " = " + p + "."
+              };
+            }
+          }),
+          fill({
+            id: "m1a-slash", category: "m1a-ops",
+            randomize: function () {
+              var b = [2, 4, 5, 8][randInt(0, 3)], a = randInt(3, 12) * b + randInt(1, b - 1);
+              var q = a / b;
+              return {
+                prompt: "What is " + a + " / " + b + "?",
+                answers: [String(q)], keywords: exact(q),
+                distractors: dedupeDistractors(q, [Math.floor(q), a % b, Math.ceil(q), Math.floor(q) + "." + (a % b), b / a > 0.1 ? (b / a).toFixed(2) : Math.floor(q) + 2]),
+                note: "/ is normal division, so the answer can be a decimal: " + a + " / " + b + " = " + q + ". DIV would give " + Math.floor(q) + " and MOD would give " + (a % b) + "."
+              };
+            }
+          }),
+          {
+            id: "m1a-and", category: "m1a-ops",
+            prompt: "Which Boolean operator gives TRUE only when BOTH conditions are TRUE?",
+            answers: ["AND"], keywords: [/^\s*and\s*$/i],
+            distractors: ["OR", "NOT", "<>", "DIV", "MOD"],
+            note: "AND needs both sides TRUE, e.g. Age >= 13 AND Age <= 19."
+          },
+          {
+            id: "m1a-or", category: "m1a-ops",
+            prompt: "Which Boolean operator gives TRUE when AT LEAST ONE of the conditions is TRUE?",
+            answers: ["OR"], keywords: [/^\s*or\s*$/i],
+            distractors: ["AND", "NOT", "<>", "DIV", "MOD"],
+            note: "OR needs only one side TRUE, e.g. Number < 1 OR Number > 10 is TRUE for any number outside 1 to 10."
+          },
+          {
+            id: "m1a-not", category: "m1a-ops",
+            prompt: "What does NOT do to a condition?",
+            answers: ["Reverses it, so TRUE becomes FALSE and FALSE becomes TRUE"],
+            keywords: [{ required: [["reverse", "opposite", "flip", "invert", "swap"]] }, { required: [["true"], ["false"], ["become", "turn", "change"]] }],
+            distractors: ["Makes the condition always TRUE", "Checks that two conditions are both TRUE", "Joins two conditions together", "Stops the program", "Compares two values to see if they are equal"],
+            note: "NOT flips a condition. WHILE NOT Found keeps looping while Found is FALSE."
+          },
+          fill({
+            id: "m1a-evaluate", category: "m1a-ops", show: 2,
+            randomize: function () {
+              var x = randInt(1, 40), lo = randInt(5, 15), hi = lo + randInt(5, 15), useAnd = Math.random() < 0.6;
+              var val = useAnd ? (x >= lo && x <= hi) : (x < lo || x > hi);
+              var cond = useAnd ? "X >= " + lo + " AND X <= " + hi : "X < " + lo + " OR X > " + hi;
+              var ans = val ? "TRUE" : "FALSE";
+              return {
+                prompt: "X <- " + x + "\nIs this condition TRUE or FALSE?\n" + cond,
+                answers: [ans], keywords: exact(ans),
+                distractors: [val ? "FALSE" : "TRUE"],
+                note: useAnd ? "AND: both " + x + " >= " + lo + " and " + x + " <= " + hi + " must be TRUE." : "OR: TRUE if " + x + " < " + lo + " or " + x + " > " + hi + "."
+              };
+            }
+          }),
+          // ---------------- data types
+          typeCard("m1a-t-int", "the number of students in a class, e.g. 28", "INTEGER", "A whole number is an INTEGER."),
+          typeCard("m1a-t-age", "an age in whole years, e.g. 16", "INTEGER", "A whole number is an INTEGER."),
+          typeCard("m1a-t-real", "the price of a ticket, e.g. 12.50", "REAL", "A number with a decimal part is REAL."),
+          typeCard("m1a-t-temp", "a temperature, e.g. 21.5", "REAL", "A number with a decimal part is REAL."),
+          typeCard("m1a-t-str", "a person's name, e.g. Priya", "STRING", "Text of any length is a STRING."),
+          typeCard("m1a-t-mix", "a product code made of letters and numbers, e.g. AB12", "STRING", "Any combination of letters and numbers is a STRING."),
+          typeCard("m1a-t-phone", "a telephone number, e.g. +66 812345678", "STRING", "A phone number is a STRING: it can start with + or 0, can contain spaces, and is never used in calculations."),
+          typeCard("m1a-t-char", "a single letter grade, e.g. 'B'", "CHAR", "One single character (a letter, symbol or digit) is a CHAR."),
+          typeCard("m1a-t-sym", "a single symbol typed at the keyboard, e.g. #", "CHAR", "One single character (a letter, symbol or digit) is a CHAR."),
+          typeCard("m1a-t-bool", "whether a door is locked or not", "BOOLEAN", "A value that can only be TRUE or FALSE is BOOLEAN."),
+          typeCard("m1a-t-pass", "whether a student has passed, e.g. TRUE", "BOOLEAN", "A value that can only be TRUE or FALSE is BOOLEAN."),
+          {
+            id: "m1a-t-why", category: "m1a-types",
+            prompt: "Why is a telephone number such as 07700 900123 stored as a STRING, not an INTEGER?",
+            answers: ["It can start with 0 or + and contain spaces, and it is never used in calculations"],
+            keywords: [{ required: [["0", "zero", "plus", "space", "calculation", "calculate", "arithmetic", "maths", "math", "symbol"]] }],
+            distractors: ["Because phone numbers are always negative", "Because a STRING uses less memory than an INTEGER", "Because it is a whole number", "Because it can only be TRUE or FALSE", "Because it is a single character"],
+            note: "An INTEGER would lose the leading 0 and cannot hold + or spaces. You never add or multiply phone numbers."
+          },
+          // ---------------- loops
+          {
+            id: "m1a-l-count", category: "m1a-loops",
+            prompt: "Which loop is a count-controlled loop?",
+            answers: ["FOR ... NEXT"], keywords: [/\bfor\b/i, { required: [["next"]] }],
+            distractors: ["REPEAT ... UNTIL", "WHILE ... DO ... ENDWHILE", "IF ... THEN ... ENDIF", "CASE OF ... ENDCASE", "INPUT ... OUTPUT"],
+            note: "FOR Count <- 1 TO 10 ... NEXT Count repeats a set number of times."
+          },
+          {
+            id: "m1a-l-post", category: "m1a-loops",
+            prompt: "Which loop is a post-condition loop?",
+            answers: ["REPEAT ... UNTIL"], keywords: [{ required: [["repeat", "until"]] }],
+            distractors: ["FOR ... NEXT", "WHILE ... DO ... ENDWHILE", "IF ... THEN ... ENDIF", "CASE OF ... ENDCASE", "INPUT ... OUTPUT"],
+            note: "REPEAT ... UNTIL tests its condition at the END (post) of each pass."
+          },
+          {
+            id: "m1a-l-pre", category: "m1a-loops",
+            prompt: "Which loop is a pre-condition loop?",
+            answers: ["WHILE ... DO ... ENDWHILE"], keywords: [{ required: [["while", "endwhile"]] }],
+            distractors: ["FOR ... NEXT", "REPEAT ... UNTIL", "IF ... THEN ... ENDIF", "CASE OF ... ENDCASE", "INPUT ... OUTPUT"],
+            note: "WHILE ... DO ... ENDWHILE tests its condition BEFORE (pre) each pass."
+          },
+          {
+            id: "m1a-l-once", category: "m1a-loops",
+            prompt: "Which loop ALWAYS runs its body at least once?",
+            answers: ["REPEAT ... UNTIL"], keywords: [{ required: [["repeat", "until"]] }],
+            distractors: ["WHILE ... DO ... ENDWHILE", "FOR Count <- 1 TO 0 ... NEXT Count", "IF ... THEN ... ENDIF", "CASE OF ... ENDCASE", "None of them"],
+            note: "REPEAT checks at UNTIL, after the body has already run once."
+          },
+          {
+            id: "m1a-l-zero", category: "m1a-loops",
+            prompt: "Which loop might not run its body at all?",
+            answers: ["WHILE ... DO ... ENDWHILE"], keywords: [{ required: [["while", "endwhile"]] }],
+            distractors: ["REPEAT ... UNTIL", "IF ... THEN ... ELSE ... ENDIF", "CASE OF ... ENDCASE", "OUTPUT", "None of them"],
+            note: "If the WHILE condition is FALSE the first time it is tested, the body is skipped completely."
+          },
+          {
+            id: "m1a-l-desc-count", category: "m1a-loops",
+            prompt: "Describe a count-controlled loop.",
+            answers: ["It repeats a set number of times"],
+            keywords: [{ required: [["set", "fixed", "known", "certain", "specific", "exact", "given"]] }],
+            distractors: ["It repeats until a condition becomes TRUE", "It tests its condition before each pass", "It always runs at least once and tests at the end", "It runs one line at a time from top to bottom", "It chooses one of two branches"],
+            note: "A count-controlled loop (FOR) knows how many times it will run before it starts."
+          },
+          {
+            id: "m1a-l-desc-post", category: "m1a-loops",
+            prompt: "Describe a post-condition loop.",
+            answers: ["The condition is tested at the end of each pass, so the loop always runs at least once"],
+            keywords: [{ required: [["end", "least", "once", "after"]] }],
+            distractors: ["The condition is tested before each pass, so it may not run at all", "It repeats a set number of times", "It runs forever", "It chooses between several values", "It only runs if the condition is TRUE at the start"],
+            note: "Post means after: REPEAT ... UNTIL checks its condition after the body, so the body always runs at least once."
+          },
+          fill({
+            id: "m1a-l-identify", category: "m1a-loops", show: 5,
+            randomize: function () {
+              var n = randInt(3, 12), k = randInt(0, 2);
+              var code = [
+                "FOR Count <- 1 TO " + n + "\n   OUTPUT Count\nNEXT Count",
+                "Number <- 0\nWHILE Number < " + n + " DO\n   Number <- Number + 2\nENDWHILE",
+                "REPEAT\n   INPUT Guess\nUNTIL Guess = " + n
+              ][k];
+              var names = ["Count-controlled loop", "Pre-condition loop", "Post-condition loop"];
+              var keys = [[{ required: [["count"]] }], [{ required: [["pre"]] }], [{ required: [["post"]] }]];
+              return {
+                prompt: "What type of loop is this?\n" + code,
+                answers: [names[k]], keywords: keys[k],
+                distractors: names.filter(function (x, i) { return i !== k; }).concat(["Selection", "Sequence"]),
+                note: "FOR ... NEXT is count-controlled, WHILE is pre-condition (tests first), REPEAT ... UNTIL is post-condition (tests last)."
+              };
+            }
+          }),
+          fill({
+            id: "m1a-l-times", category: "m1a-loops",
+            randomize: function () {
+              var a = randInt(0, 5), b = a + randInt(3, 12), t = b - a + 1;
+              return {
+                prompt: "How many times does the body of this loop run?\nFOR Index <- " + a + " TO " + b + "\n   OUTPUT Index\nNEXT Index",
+                answers: [String(t)], keywords: exact(t),
+                distractors: dedupeDistractors(t, [b - a, b, t + 1, a, b + 1], function (i) { return t + i + 1; }),
+                note: "Count both ends: " + a + " TO " + b + " is " + b + " - " + a + " + 1 = " + t + " passes."
+              };
+            }
+          }),
+          {
+            id: "m1a-l-pairs", category: "m1a-loops",
+            prompt: "Which pair are BOTH pseudocode statements used for iteration?",
+            answers: ["FOR ... NEXT and REPEAT ... UNTIL", "WHILE ... DO ... ENDWHILE and REPEAT ... UNTIL", "FOR ... NEXT and WHILE ... DO ... ENDWHILE"],
+            keywords: [{ required: [["next", "until", "endwhile"]], optional: ["next", "until", "endwhile"], need: 2, excluded: ["if", "case", "input", "output", "declare"] }],
+            distractors: ["IF and CASE", "CASE and FOR ... NEXT", "IF and WHILE ... DO ... ENDWHILE", "INPUT and OUTPUT", "DECLARE and CONSTANT", "IF ... THEN and REPEAT ... UNTIL"],
+            note: "Iteration means loops: FOR ... NEXT, WHILE ... DO ... ENDWHILE and REPEAT ... UNTIL. IF and CASE are selection."
+          },
+          // ---------------- standard methods and bubble sort
+          {
+            id: "m1a-m-total", category: "m1a-methods",
+            prompt: "Which standard method of solution adds together a set of values during iteration?",
+            answers: ["Totalling"], keywords: [{ required: [["totalling", "total", "totaling"]] }],
+            distractors: ["Counting", "Searching", "Sorting", "Validating", "Verifying"],
+            note: "Totalling: Total <- Total + Value inside a loop."
+          },
+          {
+            id: "m1a-m-count", category: "m1a-methods",
+            prompt: "Which standard method of solution adds 1 each time something happens?",
+            answers: ["Counting"], keywords: [{ required: [["counting", "count"]] }],
+            distractors: ["Totalling", "Searching", "Sorting", "Validating", "Verifying"],
+            note: "Counting: Count <- Count + 1, usually inside an IF."
+          },
+          {
+            id: "m1a-m-search", category: "m1a-methods",
+            prompt: "Which standard method checks each item in turn until the one you want is found?",
+            answers: ["Linear search"], keywords: [{ required: [["search", "searching", "linear"]] }],
+            distractors: ["Bubble sort", "Totalling", "Counting", "Validation", "Verification"],
+            note: "A linear search checks element 1, then 2, then 3, until it finds a match or runs out of elements."
+          },
+          {
+            id: "m1a-m-sort", category: "m1a-methods",
+            prompt: "Which standard method puts the values in an array into order?",
+            answers: ["Sorting (bubble sort)"], keywords: [{ required: [["sort", "sorting", "bubble"]] }],
+            distractors: ["Linear search", "Totalling", "Counting", "Validation", "Verification"],
+            note: "Sorting puts data in order. The sort you need to know is the bubble sort."
+          },
+          {
+            id: "m1a-m-where", category: "m1a-methods",
+            prompt: "Where should the line Total <- 0 go in a totalling algorithm?",
+            answers: ["Before the loop starts"],
+            keywords: [{ required: [["before"]], excluded: ["inside", "after", "end"] }],
+            distractors: ["Inside the loop body", "After the loop ends", "At the end of the program", "It is not needed", "Inside an IF statement"],
+            note: "Inside the loop, Total would be reset to 0 on every pass and only the last value would be kept."
+          },
+          {
+            id: "m1a-m-totalline", category: "m1a-methods",
+            prompt: "Which line adds Price onto a running total?",
+            answers: ["Total <- Total + Price"], keywords: [/^\s*total\s*(<-|\u2190)\s*total\s*\+\s*price\s*$/i],
+            distractors: ["Total <- Total + 1", "Price <- Total + Price", "Total <- Price", "Total = Total + Price", "Total <- Total * Price"],
+            note: "Add the new value onto the old total and store it back in Total. Adding 1 would count instead."
+          },
+          {
+            id: "m1a-m-countline", category: "m1a-methods",
+            prompt: "Which line counts one more pass mark?",
+            answers: ["PassCount <- PassCount + 1"], keywords: [/^\s*passcount\s*(<-|\u2190)\s*passcount\s*\+\s*1\s*$/i],
+            distractors: ["PassCount <- PassCount + Mark", "PassCount <- 1", "PassCount <- Mark", "PassCount = PassCount + 1", "Mark <- Mark + 1"],
+            note: "Counting always adds exactly 1."
+          },
+          {
+            id: "m1a-b-compare", category: "m1a-methods",
+            prompt: "In a bubble sort, which values are compared?",
+            answers: ["Each pair of neighbouring (adjacent) values"],
+            keywords: [{ required: [["neighbour", "neighbor", "neighbouring", "neighboring", "adjacent", "next", "beside", "side"]], excluded: ["every", "all", "first", "largest"] }],
+            distractors: ["Every value with the first value", "The largest value with the smallest value", "Every possible pair of values", "Only the first and last values", "Each value with the value to be found"],
+            note: "Index is compared with Index + 1, all the way along the array."
+          },
+          {
+            id: "m1a-b-flag", category: "m1a-methods",
+            prompt: "In a bubble sort, what is Swap set to at the start of every pass?",
+            answers: ["FALSE"], keywords: exact("FALSE"),
+            distractors: ["TRUE", "0", "1", "Last", "Temp"],
+            note: "Swap starts FALSE. It becomes TRUE only if a swap happens during the pass."
+          },
+          {
+            id: "m1a-b-temp", category: "m1a-methods",
+            prompt: "Why does a bubble sort use a Temp variable when swapping two values?",
+            answers: ["To hold one value so it is not overwritten (lost) during the swap"],
+            keywords: [{ required: [["overwritten", "overwrite", "lost", "lose", "hold", "store", "keep", "save", "copy"]] }],
+            distractors: ["To count how many passes there have been", "To make the loop run faster", "To remember whether a swap happened", "To mark the end of the array", "To sort the array in descending order"],
+            note: "Without Temp, Names[Index] <- Names[Index + 1] would wipe out the first value before it could be moved."
+          },
+          fill({
+            id: "m1a-b-last", category: "m1a-methods",
+            randomize: function () {
+              var n = randInt(6, 60);
+              return {
+                prompt: "An array has " + n + " elements. The inner loop of a bubble sort compares Index with Index + 1. What should the loop go up to?\nFOR Index <- 1 TO ?",
+                answers: [String(n - 1)], keywords: exact(n - 1),
+                distractors: dedupeDistractors(n - 1, [n, n + 1, n - 2, Math.floor(n / 2), 1]),
+                note: "The last pair is element " + (n - 1) + " with element " + n + ", so the loop stops at " + (n - 1) + " (Last - 1)."
+              };
+            }
+          }),
+          {
+            id: "m1a-b-stop", category: "m1a-methods",
+            prompt: "When does a bubble sort with a Swap flag stop?",
+            answers: ["When a whole pass makes no swaps"],
+            keywords: [{ required: [["no", "without", "zero"], ["swap", "swapped", "swapping"]] }],
+            distractors: ["When the first swap happens", "After exactly one pass", "When Temp is empty", "When a swap is made", "After 10 passes"],
+            note: "A pass with no swaps means every neighbour is already in order, so the array is sorted: UNTIL NOT Swap."
+          },
+          {
+            id: "m1a-b-until", category: "m1a-methods",
+            prompt: "Complete the last line of a bubble sort:\nUNTIL ____ Swap OR Last = 1",
+            answers: ["NOT"], keywords: exact("NOT"),
+            distractors: ["AND", "OR", "TRUE", "FALSE", "Temp"],
+            note: "UNTIL NOT Swap stops the loop once a pass makes no swaps (Swap is still FALSE)."
+          },
+          fill({
+            id: "m1a-b-pass", category: "m1a-methods",
+            randomize: function () {
+              var a = [];
+              while (a.length < 5) { var v = randInt(1, 30); if (a.indexOf(v) === -1) a.push(v); }
+              if (a[4] === Math.max.apply(null, a)) { var t = a[4]; a[4] = a[0]; a[0] = t; }
+              var b = a.slice();
+              for (var i = 0; i < 4; i++) if (b[i] > b[i + 1]) { var x = b[i]; b[i] = b[i + 1]; b[i + 1] = x; }
+              var sorted = a.slice().sort(function (p, q) { return p - q; });
+              var oneSwap = a.slice(); for (var j = 0; j < 4; j++) if (oneSwap[j] > oneSwap[j + 1]) { var y = oneSwap[j]; oneSwap[j] = oneSwap[j + 1]; oneSwap[j + 1] = y; break; }
+              var fmt = function (arr) { return arr.join(", "); };
+              var ans = fmt(b);
+              return {
+                prompt: "An array holds " + fmt(a) + ".\nWhat does it hold after ONE pass of a bubble sort into ascending order?",
+                answers: [ans], keywords: [new RegExp("^\\D*" + b.join("\\D+") + "\\D*$")],
+                distractors: dedupeDistractors(ans, [fmt(sorted), fmt(a), fmt(oneSwap), fmt(sorted.slice().reverse())], function (i) { return i > 4 ? null : fmt(b.slice(i).concat(b.slice(0, i))); }),
+                note: "One pass compares pairs 1-2, 2-3, 3-4, 4-5 and swaps each pair that is the wrong way round. The largest value, " + Math.max.apply(null, a) + ", ends up at the end."
+              };
+            }
+          })
+        ];
+      })()
+    },
+
+    "y11-mock1-b": {
+      title: "Year 11 Mock Test 1B Revision: Tracing and Correcting Algorithms",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - trace tables, finding errors and validation loops",
+      cards: (function () {
+        function exact(v) { return [new RegExp("^\\s*" + String(v).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*$", "i")]; }
+        function fill(card) { var inst = card.randomize(); Object.keys(inst).forEach(function (k) { card[k] = inst[k]; }); return card; }
+        function pick(list) { return list[randInt(0, list.length - 1)]; }
+        return [
+          // ---------------- tracing
+          fill({
+            id: "m1b-tr-repeat", category: "m1b-trace",
+            randomize: function () {
+              var m = randInt(4, 6), extra = randInt(1, 3), vals = [];
+              for (var i = 0; i < m + extra; i++) vals.push(randInt(20, 80));
+              if (Math.random() < 0.5) vals[randInt(0, m - 1)] = 50;
+              var read = vals.slice(0, m);
+              var pass = read.filter(function (v) { return v < 50; }).length;
+              var passAll = vals.filter(function (v) { return v < 50; }).length;
+              var passEq = read.filter(function (v) { return v <= 50; }).length;
+              return {
+                prompt: "PassCount <- 0\nCount <- 0\nREPEAT\n   INPUT Size\n   IF Size < 50\n     THEN\n       PassCount <- PassCount + 1\n   ENDIF\n   Count <- Count + 1\nUNTIL Count = " + m + "\nOUTPUT PassCount\n\nInput data: " + vals.join(", ") + "\nWhat is output?",
+                answers: [String(pass)], keywords: exact(pass),
+                distractors: dedupeDistractors(pass, [passAll, m - pass, m, passEq, pass + 1, pass - 1].filter(function (x) { return x >= 0; }), function (i) { return pass + i + 1; }),
+                note: "The loop stops when Count = " + m + ", so only the first " + m + " values (" + read.join(", ") + ") are read. " + pass + " of them are below 50" + (read.indexOf(50) !== -1 ? " (50 is not below 50)." : ".")
+              };
+            }
+          }),
+          fill({
+            id: "m1b-tr-unread", category: "m1b-trace",
+            randomize: function () {
+              var m = randInt(4, 7), extra = randInt(1, 3), vals = [];
+              for (var i = 0; i < m + extra; i++) vals.push(randInt(1, 99));
+              return {
+                prompt: "Count <- 0\nREPEAT\n   INPUT Value\n   Count <- Count + 1\nUNTIL Count = " + m + "\n\nInput data: " + vals.join(", ") + "\nHow many of the input values are never read?",
+                answers: [String(extra)], keywords: exact(extra),
+                distractors: dedupeDistractors(extra, [0, m, m + extra, extra + 1, 1]),
+                note: "The loop reads exactly " + m + " values, so the last " + extra + " are never input. Look at where a loop stops before you fill in a trace table."
+              };
+            }
+          }),
+          fill({
+            id: "m1b-tr-while", category: "m1b-trace",
+            randomize: function () {
+              var step = randInt(3, 9), limit = randInt(15, 60), total = 0, count = 0;
+              while (total < limit) { total += step; count++; }
+              return {
+                prompt: "Total <- 0\nCount <- 0\nWHILE Total < " + limit + " DO\n   Total <- Total + " + step + "\n   Count <- Count + 1\nENDWHILE\nOUTPUT Count\n\nWhat is output?",
+                answers: [String(count)], keywords: exact(count),
+                distractors: dedupeDistractors(count, [count - 1, count + 1, total, Math.floor(limit / step), limit], function (i) { return count + i + 1; }),
+                note: "Total goes " + (function () { var t = 0, s = []; for (var i = 0; i < count; i++) { t += step; s.push(t); } return s.join(", "); })() + ". It stops once Total is no longer below " + limit + ", after " + count + " passes."
+              };
+            }
+          }),
+          fill({
+            id: "m1b-tr-average", category: "m1b-trace",
+            randomize: function () {
+              var vals = [randInt(2, 20), randInt(2, 20), randInt(2, 20)];
+              var total = vals[0] + vals[1] + vals[2];
+              var avg = Math.round(total / 3 * 100) / 100;
+              var wrong = Math.round(3 / total * 100) / 100;
+              return {
+                prompt: "Counter <- 0\nTotal <- 0\nINPUT Number\nWHILE Number <> -1 DO\n   Total <- Total + Number\n   Counter <- Counter + 1\n   INPUT Number\nENDWHILE\nOUTPUT ROUND(Total / Counter, 2)\n\nInput data: " + vals.join(", ") + ", -1\nWhat is output?",
+                answers: [String(avg)], keywords: exact(avg),
+                distractors: dedupeDistractors(avg, [total, wrong, Math.round(total / 4 * 100) / 100, Math.round((total - 1) / 4 * 100) / 100, Math.floor(total / 3)]),
+                note: "-1 stops the loop and is not added. Total = " + total + ", Counter = 3, so the average is " + total + " / 3 = " + avg + " to 2 decimal places."
+              };
+            }
+          }),
+          fill({
+            id: "m1b-tr-divmod", category: "m1b-trace",
+            randomize: function () {
+              var t = randInt(61, 3599), mins = Math.floor(t / 60), secs = t % 60;
+              var ans = mins + " minutes " + secs + " seconds";
+              return {
+                prompt: "RunTime <- " + t + "\nRunMins <- DIV(RunTime, 60)\nRunSecs <- MOD(RunTime, 60)\nOUTPUT RunMins, \" minutes \", RunSecs, \" seconds\"\n\nWhat is output?",
+                answers: [ans], keywords: [new RegExp("^\\D*" + mins + "\\D+" + secs + "\\D*$")],
+                distractors: dedupeDistractors(ans, [secs + " minutes " + mins + " seconds", mins + " minutes " + mins + " seconds", (t / 60).toFixed(2) + " minutes 0 seconds", (mins + 1) + " minutes " + secs + " seconds", t + " minutes " + secs + " seconds"], function (i) { return (mins + i + 1) + " minutes " + ((secs + i) % 60) + " seconds"; }),
+                note: "DIV gives the whole minutes (" + t + " DIV 60 = " + mins + ") and MOD gives the seconds left over (" + t + " MOD 60 = " + secs + ")."
+              };
+            }
+          }),
+          {
+            id: "m1b-tr-rows", category: "m1b-trace",
+            prompt: "When filling in a trace table, when do you write a new value?",
+            answers: ["When a variable changes value, or when something is output"],
+            keywords: [{ required: [["change", "changed", "new", "update", "updated"], ["output", "outputs", "printed"]] }],
+            distractors: ["For every line of the program, including lines that are skipped", "Only when there is an OUTPUT", "Only at the start of each loop", "Once for each variable, at the end", "Only when an INPUT happens"],
+            note: "Only record what actually happens: a new value when a variable changes, and anything that is output. Skipped lines add nothing."
+          },
+          // ---------------- finding errors
+          fill({
+            id: "m1b-err-cond", category: "m1b-errors",
+            randomize: function () {
+              var v = pick([
+                { p: "// keep adding numbers until -1 is input\nTotal <- 0\nINPUT Number\nWHILE Number = -1 DO\n   Total <- Total + Number\n   INPUT Number\nENDWHILE", a: "In the WHILE line, = should be <>", k: [/<>|not\s*equal/i], n: "The loop should keep going while Number is NOT -1, so the condition is Number <> -1." },
+                { p: "// keep asking while the password is shorter than 8 characters\nINPUT Password\nWHILE LENGTH(Password) > 8 DO\n   INPUT Password\nENDWHILE", a: "In the WHILE line, > should be <", k: [/(^|[^<>=-])<\s*(8)?\s*$|less\s*than|should\s*be\s*<(?![>=])/i], n: "Shorter than 8 characters means LENGTH(Password) < 8." },
+                { p: "// repeat until the user types Y\nREPEAT\n   OUTPUT \"Continue? \"\n   INPUT Answer\nUNTIL Answer <> \"Y\"", a: "In the UNTIL line, <> should be =", k: [/should\s*be\s*=|(^|[^<>])=\s*("?y"?)?\s*$|equals?\s*("?y"?)?\s*$/i], n: "The loop should stop when Answer IS \"Y\", so the condition is Answer = \"Y\"." }
+              ]);
+              return {
+                prompt: "Find the error in this pseudocode.\n" + v.p,
+                answers: [v.a], keywords: v.k,
+                distractors: ["INPUT should be OUTPUT", "The loop should be a FOR loop", "The first line should be deleted", "A variable is missing its quote marks", "Nothing is wrong"],
+                note: v.n
+              };
+            }
+          }),
+          fill({
+            id: "m1b-err-accum", category: "m1b-errors",
+            randomize: function () {
+              var v = pick([
+                { p: "// total of 10 marks\nTotal <- 0\nFOR Count <- 1 TO 10\n   INPUT Mark\n   Total <- Total + 1\nNEXT Count", a: "Total <- Total + 1 should be Total <- Total + Mark", k: [/\+\s*mark\b/i], n: "A running total adds the value (Mark). Adding 1 just counts the passes." },
+                { p: "// count how many marks are 50 or more\nPassCount <- 0\nFOR Count <- 1 TO 10\n   INPUT Mark\n   IF Mark >= 50\n     THEN\n       PassCount <- PassCount + Mark\n   ENDIF\nNEXT Count", a: "PassCount <- PassCount + Mark should add 1", k: [/\+\s*1\b|add(s|ing)?\s*(one|1)\b/i], n: "Counting adds 1 each time, not the value itself." }
+              ]);
+              return {
+                prompt: "Find the error in this pseudocode.\n" + v.p,
+                answers: [v.a], keywords: v.k,
+                distractors: ["The loop should start at 0", "INPUT should be OUTPUT", "NEXT Count should be ENDFOR", "The total should start at 1", "Nothing is wrong"],
+                note: v.n
+              };
+            }
+          }),
+          fill({
+            id: "m1b-err-type", category: "m1b-errors",
+            randomize: function () {
+              var v = pick([
+                { p: "DECLARE Mean : INTEGER\nMean <- Total / Count", a: "Mean should be declared as REAL", k: [{ required: [["real"]] }], n: "/ can give a decimal answer, which an INTEGER cannot hold." },
+                { p: "DECLARE Seconds : STRING\nINPUT Seconds\nMinutes <- DIV(Seconds, 60)", a: "Seconds should be declared as INTEGER", k: [{ required: [["integer", "int"]] }], n: "DIV only works on numbers, so Seconds must be a whole number (INTEGER), not a STRING." },
+                { p: "DECLARE StudentName : INTEGER\nOUTPUT \"Enter the student's name \"\nINPUT StudentName", a: "StudentName should be declared as STRING", k: [{ required: [["string"]] }], n: "A name is text, so it must be a STRING." }
+              ]);
+              return {
+                prompt: "Find the error in this pseudocode.\n" + v.p,
+                answers: [v.a], keywords: v.k,
+                distractors: ["The DECLARE line should come last", "INPUT should be OUTPUT", "The variable needs quote marks", "<- should be =", "Nothing is wrong"],
+                note: v.n
+              };
+            }
+          }),
+          fill({
+            id: "m1b-err-io", category: "m1b-errors",
+            randomize: function () {
+              var name = pick(["Height", "Score", "Price", "Distance"]);
+              return {
+                prompt: "Find the error in this pseudocode.\nOUTPUT \"Enter the " + name.toLowerCase() + " \"\nOUTPUT " + name + "\nTotal <- Total + " + name,
+                answers: ["The second line should be INPUT " + name],
+                keywords: [{ required: [["input"]], excluded: ["first", "third", "last"] }],
+                distractors: ["The first line should be INPUT", "The third line should be OUTPUT", name + " needs quote marks", "Total should be declared as a STRING", "Nothing is wrong"],
+                note: "OUTPUT only displays a value. To get a value from the user, use INPUT " + name + "."
+              };
+            }
+          }),
+          fill({
+            id: "m1b-err-divmod", category: "m1b-errors",
+            randomize: function () {
+              var v = pick([
+                { p: "// seconds left over after the whole minutes\nSecs <- DIV(Time, 60)", a: "DIV should be MOD", k: [/div\W+(should\s+be|to|becomes?|->|\u2192)\W*mod|^\W*(use\s+)?mod\W*$/i], n: "The remainder (the seconds left over) comes from MOD. DIV gives the whole minutes." },
+                { p: "// whole hours in Minutes\nHours <- MOD(Minutes, 60)", a: "MOD should be DIV", k: [/mod\W+(should\s+be|to|becomes?|->|\u2192)\W*div|^\W*(use\s+)?div\W*$/i], n: "Whole hours come from DIV. MOD would give the minutes left over." }
+              ]);
+              return {
+                prompt: "Find the error in this pseudocode.\n" + v.p,
+                answers: [v.a], keywords: v.k,
+                distractors: ["60 should be 100", "The brackets are not needed", "The variable on the left is wrong", "<- should be =", "Nothing is wrong"],
+                note: v.n
+              };
+            }
+          }),
+          fill({
+            id: "m1b-err-store", category: "m1b-errors",
+            randomize: function () {
+              var v = pick([
+                { p: "// store each student's name in Names[]\nFOR Index <- 1 TO 30\n   INPUT StudentName\n   INPUT Age\n   Names[Index] <- Age\nNEXT Index", a: "Names[Index] <- Age should store StudentName", k: [/studentname/i], n: "The array is for names, so it must store StudentName." },
+                { p: "// store each price in Prices[]\nFOR Index <- 1 TO 20\n   INPUT Price\n   Prices[Index] <- Index\nNEXT Index", a: "Prices[Index] <- Index should store Price", k: [/(<-|\u2190|store(s)?|be)\s*price\s*$/i], n: "Index is only the position. The value to store is Price." }
+              ]);
+              return {
+                prompt: "Find the error in this pseudocode.\n" + v.p,
+                answers: [v.a], keywords: v.k,
+                distractors: ["The FOR loop should start at 0", "NEXT Index should be NEXT Names", "INPUT should be OUTPUT", "The array needs to be declared as REAL", "Nothing is wrong"],
+                note: v.n
+              };
+            }
+          }),
+          fill({
+            id: "m1b-err-divide", category: "m1b-errors",
+            randomize: function () {
+              var v = pick([["Sum", "Items"], ["Total", "Count"], ["Points", "Games"]]);
+              return {
+                prompt: "Find the error in this pseudocode.\n// average = total divided by how many\nAverage <- " + v[1] + " / " + v[0],
+                answers: ["It should be " + v[0] + " / " + v[1]],
+                keywords: [new RegExp(v[0] + "\\s*\\/\\s*" + v[1], "i")],
+                distractors: ["/ should be DIV", "/ should be *", "Average should be an INTEGER", v[1] + " should be 1", "Nothing is wrong"],
+                note: "The average is the total divided by how many values there are: " + v[0] + " / " + v[1] + ". The division is the wrong way round."
+              };
+            }
+          }),
+          fill({
+            id: "m1b-err-bound", category: "m1b-errors",
+            randomize: function () {
+              var n = randInt(5, 25), wrong = n + pick([1, -1, 10]);
+              return {
+                prompt: "Find the error in this pseudocode.\n// input " + n + " values\nFOR Count <- 1 TO " + wrong + "\n   INPUT Values[Count]\nNEXT Count",
+                answers: ["The loop should end at " + n + ", not " + wrong],
+                keywords: [new RegExp("(^|\\D)" + n + "(\\D|$)")],
+                distractors: ["The loop should start at 0", "INPUT should be OUTPUT", "NEXT Count should be ENDFOR", "Values should not have [Count]", "Nothing is wrong"],
+                note: n + " values need exactly " + n + " passes: FOR Count <- 1 TO " + n + "."
+              };
+            }
+          }),
+          // ---------------- validation loops
+          fill({
+            id: "m1b-val-while", category: "m1b-valid",
+            randomize: function () {
+              var name = pick(["Mark", "Age", "Speed", "Score", "Time"]), lo = randInt(0, 20), hi = lo + randInt(10, 90) * 5;
+              var ans = "WHILE " + name + " < " + lo + " OR " + name + " > " + hi + " DO";
+              return {
+                prompt: "Only values from " + lo + " to " + hi + " (inclusive) are allowed. Which line starts a loop that keeps asking while " + name + " is NOT valid?",
+                answers: [ans],
+                keywords: [new RegExp("^\\s*while\\s+" + name + "\\s*<\\s*" + lo + "\\s+or\\s+" + name + "\\s*>\\s*" + hi + "(\\s+do)?\\s*$", "i")],
+                distractors: [
+                  "WHILE " + name + " < " + lo + " AND " + name + " > " + hi + " DO",
+                  "WHILE " + name + " >= " + lo + " AND " + name + " <= " + hi + " DO",
+                  "WHILE " + name + " <= " + lo + " OR " + name + " >= " + hi + " DO",
+                  "WHILE " + name + " > " + lo + " OR " + name + " < " + hi + " DO",
+                  "IF " + name + " < " + lo + " OR " + name + " > " + hi
+                ],
+                note: "Describe the INVALID values and join them with OR: too small OR too big. AND could never be TRUE, because a number cannot be below " + lo + " and above " + hi + " at the same time."
+              };
+            }
+          }),
+          fill({
+            id: "m1b-val-until", category: "m1b-valid",
+            randomize: function () {
+              var name = pick(["Mark", "Age", "Level"]), lo = randInt(1, 10), hi = lo + randInt(5, 50);
+              var ans = "UNTIL " + name + " >= " + lo + " AND " + name + " <= " + hi;
+              return {
+                prompt: "REPEAT\n   OUTPUT \"Enter a value from " + lo + " to " + hi + " \"\n   INPUT " + name + "\n????\n\nWhich line finishes this validation loop?",
+                answers: [ans],
+                keywords: [new RegExp("^\\s*until\\s+" + name + "\\s*>=\\s*" + lo + "\\s+and\\s+" + name + "\\s*<=\\s*" + hi + "\\s*$", "i")],
+                distractors: [
+                  "UNTIL " + name + " < " + lo + " OR " + name + " > " + hi,
+                  "UNTIL " + name + " >= " + lo + " OR " + name + " <= " + hi,
+                  "UNTIL " + name + " > " + lo + " AND " + name + " < " + hi,
+                  "ENDWHILE",
+                  "NEXT " + name
+                ],
+                note: "UNTIL describes the VALID value (stop once it is valid), so it is the opposite of the WHILE version: >= " + lo + " AND <= " + hi + "."
+              };
+            }
+          }),
+          fill({
+            id: "m1b-val-neg", category: "m1b-valid",
+            randomize: function () {
+              var name = pick(["Size", "Length", "Weight", "Amount"]);
+              var ans = "WHILE " + name + " < 0 DO";
+              return {
+                prompt: "Which line starts a loop that rejects negative values of " + name + "?",
+                answers: [ans], keywords: [new RegExp("^\\s*while\\s+" + name + "\\s*<\\s*0(\\s+do)?\\s*$", "i")],
+                distractors: ["WHILE " + name + " > 0 DO", "WHILE " + name + " >= 0 DO", "WHILE " + name + " = 0 DO", "IF " + name + " < 0", "UNTIL " + name + " < 0"],
+                note: "A negative number is less than 0, so keep asking WHILE " + name + " < 0."
+              };
+            }
+          }),
+          {
+            id: "m1b-val-where", category: "m1b-valid",
+            prompt: "Where should a validation loop for an input go?",
+            answers: ["Straight after the INPUT it is checking"],
+            keywords: [{ required: [["after"]], excluded: ["before", "end"] }],
+            distractors: ["Before the value is input", "At the end of the program", "Inside the IF statement that uses the value", "Once the value has been stored in the array", "Anywhere, it does not matter"],
+            note: "Check the value as soon as it has been input, before it is used or stored."
+          },
+          {
+            id: "m1b-val-inside", category: "m1b-valid",
+            prompt: "What should happen inside a validation loop?",
+            answers: ["Output an error message and input the value again"],
+            keywords: [{ required: [["input", "enter", "ask", "reinput", "re"], ["again", "reinput", "re"]] }],
+            distractors: ["Add the value to the total", "Output the value and stop the program", "Increase the counter by 1", "Sort the array", "Store the value in the array"],
+            note: "Tell the user what went wrong, then INPUT the value again, so the loop condition can change."
+          },
+          {
+            id: "m1b-val-range", category: "m1b-valid",
+            prompt: "Checking that a time is from 1 to 3600 seconds is which type of validation check?",
+            answers: ["Range check"], keywords: [{ required: [["range"]] }],
+            distractors: ["Length check", "Presence check", "Type check", "Format check", "Check digit"],
+            note: "A range check tests that a number is between two limits."
+          },
+          {
+            id: "m1b-val-problem", category: "m1b-valid",
+            prompt: "A program uses FOR Index <- 1 TO 250 to input every runner who finishes a race. What problem could this cause?",
+            answers: ["It cannot stop early if fewer than 250 runners finish"],
+            keywords: [{ required: [["fewer", "less", "early", "stop", "exactly", "always"]] }],
+            distractors: ["It will crash after 10 runners", "It can only store numbers", "The loop runs forever", "It sorts the runners into order", "It skips the first runner"],
+            note: "A count-controlled loop always runs all 250 times. A condition-controlled loop (or a way to finish early) would fix this."
+          }
+        ];
+      })()
+    },
+
+    "y11-mock1-c": {
+      title: "Year 11 Mock Test 1C Revision: Writing Algorithms and Programs",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - validation, arrays, statistics and writing a full program",
+      cards: (function () {
+        function exact(v) { return [new RegExp("^\\s*" + String(v).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*$", "i")]; }
+        function fill(card) { var inst = card.randomize(); Object.keys(inst).forEach(function (k) { card[k] = inst[k]; }); return card; }
+        function pick(list) { return list[randInt(0, list.length - 1)]; }
+        return [
+          // ---------------- validation algorithms
+          {
+            id: "m1c-v-structure", category: "m1c-valid",
+            prompt: "An algorithm must input 20 numbers, asking again for each one until it is valid. Which structure fits best?",
+            answers: ["A FOR loop, with a WHILE validation loop inside it"],
+            keywords: [/\bfor\b.*\b(while|repeat)\b/i],
+            distractors: ["A WHILE loop, with a FOR loop inside it", "One IF statement", "A single FOR loop with no other loop", "A CASE statement", "Twenty separate IF statements"],
+            note: "The FOR loop counts the 20 numbers. Inside it, a WHILE (or REPEAT) loop keeps asking until the current number is valid."
+          },
+          fill({
+            id: "m1c-v-cond", category: "m1c-valid",
+            randomize: function () {
+              var lo = randInt(1, 10), hi = lo + randInt(10, 90);
+              var v = pick([
+                { rule: "negative", a: "WHILE Number >= 0 DO", n: "A valid number is below 0, so keep asking while it is 0 or more." },
+                { rule: "positive (above 0)", a: "WHILE Number <= 0 DO", n: "A valid number is above 0, so keep asking while it is 0 or less." },
+                { rule: "from " + lo + " to " + hi, a: "WHILE Number < " + lo + " OR Number > " + hi + " DO", n: "Keep asking while it is too small OR too big." },
+                { rule: "not zero", a: "WHILE Number = 0 DO", n: "Keep asking while the number is 0." }
+              ]);
+              var all = ["WHILE Number >= 0 DO", "WHILE Number <= 0 DO", "WHILE Number < 0 DO", "WHILE Number > 0 DO", "WHILE Number = 0 DO", "WHILE Number <> 0 DO",
+                "WHILE Number < " + lo + " OR Number > " + hi + " DO", "WHILE Number < " + lo + " AND Number > " + hi + " DO"];
+              return {
+                prompt: "Each number must be " + v.rule + ". Which line starts the loop that asks for the number again until it is valid?",
+                answers: [v.a],
+                keywords: [new RegExp("^\\s*" + v.a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s*").replace(/\\s\*DO$/, "(\\s+do)?") + "\\s*$", "i")],
+                distractors: all.filter(function (x) { return x !== v.a; }),
+                note: v.n + " The WHILE condition always describes the INVALID values."
+              };
+            }
+          }),
+          fill({
+            id: "m1c-v-store", category: "m1c-valid",
+            randomize: function () {
+              var arr = pick(["NegNumbers", "Accepted", "Scores", "Readings"]), c = pick(["Count", "Index", "Position"]);
+              var ans = arr + "[" + c + "] <- Number";
+              return {
+                prompt: "Inside FOR " + c + " <- 1 TO 20, after validation, which line stores Number in the current element of " + arr + "[]?",
+                answers: [ans],
+                keywords: [new RegExp("^\\s*" + arr + "\\s*\\[\\s*" + c + "\\s*\\]\\s*(<-|\\u2190)\\s*number\\s*$", "i")],
+                distractors: [arr + " <- Number", arr + "[Number] <- " + c, "Number <- " + arr + "[" + c + "]", arr + "[1] <- Number", arr + "[20] <- Number"],
+                note: "The loop variable " + c + " is the position, so " + arr + "[" + c + "] is the current element."
+              };
+            }
+          }),
+          {
+            id: "m1c-v-message", category: "m1c-valid",
+            prompt: "Where should the message 'The check has been completed' be output?",
+            answers: ["After the loop has finished (after NEXT)"],
+            keywords: [{ required: [["after", "end", "finish", "finished"]], excluded: ["inside", "before", "each", "every"] }],
+            distractors: ["Inside the loop, after each number", "Before the loop starts", "Inside the validation loop", "After every valid number", "It does not need a message"],
+            note: "The message should appear once, when all the numbers are stored, so it goes after NEXT."
+          },
+          {
+            id: "m1c-v-prompt", category: "m1c-valid",
+            prompt: "What should come straight before every INPUT in a program?",
+            answers: ["An OUTPUT prompt telling the user what to enter"],
+            keywords: [{ required: [["prompt", "output", "message"]] }],
+            distractors: ["A DECLARE line", "An ENDIF", "A comment", "Another INPUT", "A blank line"],
+            note: "Exam questions say 'use appropriate input prompts'. OUTPUT \"Enter a negative number \" then INPUT Number."
+          },
+          // ---------------- arrays
+          fill({
+            id: "m1c-a-declare", category: "m1c-arrays",
+            randomize: function () {
+              var v = pick([
+                { what: "a rainfall reading in millimetres, e.g. 2.5, for each of 365 days", name: "Rainfall", n: 365, t: "REAL" },
+                { what: "the number of visitors, a whole number, for each of 7 days", name: "Visitors", n: 7, t: "INTEGER" },
+                { what: "a temperature, e.g. 21.5, for each of 30 days", name: "Temps", n: 30, t: "REAL" },
+                { what: "the name of each of 28 students", name: "Names", n: 28, t: "STRING" }
+              ]);
+              var other = v.t === "REAL" ? "INTEGER" : "REAL";
+              var ans = "DECLARE " + v.name + " : ARRAY[1:" + v.n + "] OF " + v.t;
+              return {
+                prompt: "Which line declares an array to store " + v.what + "?",
+                answers: [ans],
+                keywords: [new RegExp("^\\s*declare\\s+" + v.name + "\\s*:\\s*array\\s*\\[\\s*1\\s*:\\s*" + v.n + "\\s*\\]\\s*of\\s+" + v.t + "\\s*$", "i")],
+                distractors: [
+                  "DECLARE " + v.name + " : ARRAY[0:" + v.n + "] OF " + v.t,
+                  "DECLARE " + v.name + " : ARRAY[1:" + v.n + "] OF " + other,
+                  "DECLARE " + v.name + " : ARRAY[1:" + (v.n - 1) + "] OF " + v.t,
+                  "DECLARE " + v.name + " : " + v.t + "[" + v.n + "]",
+                  "DECLARE " + v.name + "[" + v.n + "] : ARRAY"
+                ],
+                note: "DECLARE Name : ARRAY[1:size] OF TYPE. Choose the element type from the example values."
+              };
+            }
+          }),
+          {
+            id: "m1c-a-init", category: "m1c-arrays",
+            prompt: "Which code sets every element of Rainfall[1:365] to zero?",
+            answers: ["FOR Day <- 1 TO 365\n   Rainfall[Day] <- 0\nNEXT Day"],
+            keywords: [/for\s+(\w+)\s*(<-|\u2190)\s*1\s+to\s+365[\s\S]*rainfall\s*\[\s*\1\s*\]\s*(<-|\u2190)\s*0/i],
+            distractors: ["Rainfall <- 0", "FOR Day <- 1 TO 365\n   Rainfall <- 0\nNEXT Day", "Rainfall[365] <- 0", "FOR Day <- 1 TO 365\n   Day <- 0\nNEXT Day", "Rainfall[Day] <- 0"],
+            note: "A loop visits every index, and each pass sets one element: Rainfall[Day] <- 0."
+          },
+          {
+            id: "m1c-a-input", category: "m1c-arrays",
+            prompt: "Inside FOR Day <- 1 TO 365, which line stores the reading for that day in the array?",
+            answers: ["INPUT Rainfall[Day]"], keywords: [/^\s*input\s+rainfall\s*\[\s*day\s*\]\s*$/i],
+            distractors: ["INPUT Rainfall", "OUTPUT Rainfall[Day]", "INPUT Day", "Rainfall[Day] <- Day", "INPUT Rainfall[365]"],
+            note: "The loop variable picks a different element each pass."
+          },
+          // ---------------- statistics
+          fill({
+            id: "m1c-s-cm", category: "m1c-stats",
+            randomize: function () {
+              var mm = randInt(1000, 9999) / 10;
+              var ans = String(Math.round(mm * 10) / 100);
+              return {
+                prompt: "The total rainfall is " + mm + " mm. 1 centimetre = 10 millimetres. What is the total in centimetres?",
+                answers: [ans], keywords: exact(ans),
+                distractors: dedupeDistractors(ans, [String(Math.round(mm * 10 * 10) / 10), String(Math.round(mm / 100 * 1000) / 1000), String(Math.round(mm / 1000 * 10000) / 10000), String(mm)]),
+                note: "Millimetres to centimetres: divide by 10. " + mm + " / 10 = " + ans + "."
+              };
+            }
+          }),
+          fill({
+            id: "m1c-s-round", category: "m1c-stats",
+            randomize: function () {
+              var p = pick([2, 4]), x = randInt(100000, 999999) / 10000 + randInt(1, 9);
+              x = Math.round(x * 100000) / 100000;
+              var r = Math.round(x * Math.pow(10, p)) / Math.pow(10, p);
+              var ans = r.toFixed(p).replace(/0+$/, "").replace(/\.$/, "");
+              var trunc = (Math.floor(x * Math.pow(10, p)) / Math.pow(10, p)).toFixed(p).replace(/0+$/, "").replace(/\.$/, "");
+              return {
+                prompt: "What is ROUND(" + x + ", " + p + ")?",
+                answers: [ans], keywords: [new RegExp("^\\s*" + ans.replace(".", "\\.") + "0*\\s*$")],
+                distractors: dedupeDistractors(ans, [trunc, x.toFixed(p === 2 ? 1 : 3), String(Math.round(x)), x.toFixed(p === 2 ? 3 : 2), String(x)].filter(function (d) { return Math.abs(parseFloat(d) - r) > 1e-9; }), function (i) { return (r + i / Math.pow(10, p)).toFixed(p); }),
+                note: "ROUND(Value, Places) rounds to that many decimal places: " + x + " to " + p + " decimal places is " + ans + "."
+              };
+            }
+          }),
+          {
+            id: "m1c-s-mean", category: "m1c-stats",
+            prompt: "Which expression gives the mean daily rainfall for a 365-day year?",
+            answers: ["Total / 365"], keywords: [/^\s*total\s*\/\s*365\s*$/i],
+            distractors: ["365 / Total", "Total DIV 365", "Total MOD 365", "Total * 365", "Total - 365"],
+            note: "Mean = total of the values / how many values. DIV would throw away the decimal part."
+          },
+          {
+            id: "m1c-s-total", category: "m1c-stats",
+            prompt: "Inside FOR Day <- 1 TO 365, which line adds that day's rainfall to the total?",
+            answers: ["Total <- Total + Rainfall[Day]"], keywords: [/^\s*total\s*(<-|\u2190)\s*total\s*\+\s*rainfall\s*\[\s*day\s*\]\s*$/i],
+            distractors: ["Total <- Total + 1", "Total <- Rainfall[Day]", "Rainfall[Day] <- Total + Rainfall[Day]", "Total <- Total + Day", "Total <- Total + Rainfall"],
+            note: "Totalling adds each element onto the running total."
+          },
+          {
+            id: "m1c-s-dry", category: "m1c-stats",
+            prompt: "Which code counts the days with no rainfall?",
+            answers: ["IF Rainfall[Day] = 0\n  THEN\n    DryDays <- DryDays + 1\nENDIF"],
+            keywords: [/rainfall\s*\[\s*day\s*\]\s*=\s*0[\s\S]*dry\w*\s*(<-|\u2190)\s*dry\w*\s*\+\s*1/i],
+            distractors: ["IF Rainfall[Day] = 0\n  THEN\n    DryDays <- DryDays + Rainfall[Day]\nENDIF", "IF Rainfall[Day] <> 0\n  THEN\n    DryDays <- DryDays + 1\nENDIF", "DryDays <- DryDays + 1", "IF Rainfall = 0\n  THEN\n    DryDays <- 1\nENDIF", "IF Rainfall[Day] > 0\n  THEN\n    DryDays <- DryDays - 1\nENDIF"],
+            note: "Counting: test the condition, then add 1."
+          },
+          fill({
+            id: "m1c-s-countzero", category: "m1c-stats",
+            randomize: function () {
+              var vals = []; for (var i = 0; i < 8; i++) vals.push(Math.random() < 0.4 ? 0 : randInt(1, 12));
+              var dry = vals.filter(function (v) { return v === 0; }).length;
+              return {
+                prompt: "Rainfall for 8 days (mm): " + vals.join(", ") + "\nHow many days had no rainfall?",
+                answers: [String(dry)], keywords: exact(dry),
+                distractors: dedupeDistractors(dry, [8 - dry, dry + 1, dry - 1, 8, 0].filter(function (x) { return x >= 0; }), function (i) { return dry + i + 1; }),
+                note: "Count the zeros: " + dry + "."
+              };
+            }
+          }),
+          // ---------------- longest run (consecutive days)
+          fill({
+            id: "m1c-r-trace", category: "m1c-runs",
+            randomize: function () {
+              var vals = []; for (var i = 0; i < 12; i++) vals.push(Math.random() < 0.55 ? 0 : randInt(1, 9));
+              var run = 0, best = 0, runs = 0, first = -1;
+              vals.forEach(function (v) {
+                if (v === 0) { run++; if (run === 1) runs++; if (run > best) best = run; }
+                else { if (first === -1 && run > 0) first = run; run = 0; }
+              });
+              if (first === -1) first = run;
+              var zeros = vals.filter(function (v) { return v === 0; }).length;
+              return {
+                prompt: "Rainfall for 12 days (mm): " + vals.join(", ") + "\nWhat is the longest number of consecutive days with no rainfall?",
+                answers: [String(best)], keywords: exact(best),
+                distractors: dedupeDistractors(best, [zeros, first, best + 1, runs, best - 1].filter(function (x) { return x >= 0; }), function (i) { return best + i + 1; }),
+                note: "Look for the longest unbroken run of zeros: " + best + ". The total number of dry days (" + zeros + ") is a different statistic."
+              };
+            }
+          }),
+          {
+            id: "m1c-r-reset", category: "m1c-runs",
+            prompt: "A program counts the current run of dry days in CurrentRun. What should happen to CurrentRun on a day when it rains?",
+            answers: ["Set it back to 0"], keywords: [{ required: [["0", "zero", "reset"]] }],
+            distractors: ["Add 1 to it", "Add the rainfall to it", "Leave it unchanged", "Set it to LongestRun", "Output it"],
+            note: "Rain breaks the run, so CurrentRun <- 0. A dry day adds 1."
+          },
+          {
+            id: "m1c-r-update", category: "m1c-runs",
+            prompt: "When should LongestRun be updated?",
+            answers: ["When CurrentRun is greater than LongestRun"],
+            keywords: [{ required: [["greater", "bigger", "more", "larger", "higher", "exceed", "longer"]] }],
+            distractors: ["On every day", "On every rainy day", "When CurrentRun is less than LongestRun", "When CurrentRun equals 0", "Only on day 1"],
+            note: "IF CurrentRun > LongestRun THEN LongestRun <- CurrentRun, the same pattern as finding the highest value."
+          },
+          {
+            id: "m1c-r-drought", category: "m1c-runs",
+            prompt: "Which line starts the check for a drought (15 or more consecutive dry days)?",
+            answers: ["IF LongestRun >= 15"], keywords: [/^\s*if\s+longestrun\s*>=\s*15(\s+then)?\s*$/i],
+            distractors: ["IF LongestRun > 15", "IF DryDays >= 15", "IF LongestRun = 15", "WHILE LongestRun >= 15 DO", "IF CurrentRun <= 15"],
+            note: "'15 or more' means >= 15. DryDays counts all dry days, not consecutive ones."
+          },
+          // ---------------- writing a full program
+          {
+            id: "m1c-p-comment", category: "m1c-program",
+            prompt: "How do you write a comment in pseudocode?",
+            answers: ["Start it with //"], keywords: [/\/\//],
+            distractors: ["Start it with #", "Put it inside quote marks", "Start it with REM", "Put it after OUTPUT", "Start it with --"],
+            note: "// Comment text. Exam questions often say 'add comments to explain how your code works'."
+          },
+          {
+            id: "m1c-p-const", category: "m1c-program",
+            prompt: "Which line declares a constant for the number of days in a year?",
+            answers: ["CONSTANT DaysInYear <- 365"], keywords: [/^\s*constant\s+\w+\s*(<-|\u2190|=)\s*365\s*$/i],
+            distractors: ["DECLARE DaysInYear : 365", "DaysInYear <- 365", "CONSTANT 365 <- DaysInYear", "DECLARE DaysInYear : CONSTANT", "INPUT DaysInYear"],
+            note: "A constant is a value that never changes while the program runs."
+          },
+          {
+            id: "m1c-p-marks", category: "m1c-program", type: "multi",
+            prompt: "A 15-mark programming question says: add comments, declare everything, and give all inputs and outputs suitable messages. Which of these help you meet those requirements? Pick every one shown.",
+            answers: ["Comments that explain each section", "A prompt before every INPUT", "A message with every output value", "A DECLARE line for every variable and array"],
+            distractors: ["Using as few lines as possible", "Writing everything on one line", "Leaving out ENDIF to save time", "Only outputting the numbers, with no messages", "Using single-letter variable names everywhere"],
+            note: "Follow every bullet in the question. Comments, declarations, prompts and output messages are all asked for."
+          },
+          {
+            id: "m1c-p-order", category: "m1c-program",
+            prompt: "What is a sensible order for the parts of the rainfall program?",
+            answers: ["Declare, initialise, input, calculate, output"],
+            keywords: [/declare[\s\S]*initiali[sz]e[\s\S]*input[\s\S]*calculat[\s\S]*output/i],
+            distractors: ["Output, calculate, input, declare, initialise", "Input, output, declare, calculate, initialise", "Calculate, declare, input, output, initialise", "Declare, output, calculate, input, initialise", "Initialise, output, declare, input, calculate"],
+            note: "You cannot use a variable before it is declared, or calculate statistics before the data has been input."
+          },
+          {
+            id: "m1c-p-plan", category: "m1c-program",
+            prompt: "Before writing a long program in an exam, what should you do first?",
+            answers: ["Plan the inputs, the processes and the outputs"],
+            keywords: [{ required: [["plan", "planning", "process", "processes"]] }],
+            distractors: ["Start writing code straight away", "Write the output lines first", "Copy the example algorithm", "Declare every variable as STRING", "Skip the question and come back later"],
+            note: "Tick off each bullet point of the question as you plan it: what is input, what is calculated and stored, and what is output."
+          }
+        ];
+      })()
+    },
+
     "examqs-y10-1-1": {
       title: "Year 10, 1.1 Number Systems - Exam Questions",
       subtitle: "Cambridge IGCSE Computer Science 0478 - real past-paper questions",
@@ -7665,6 +8607,18 @@
   // id not listed here still works (falls back to the id itself) - this is
   // just presentation, so a new drill can add categories freely.
   var CATEGORY_LABELS = {
+    "m1a-ops": "Operators (=, <>, DIV, MOD, AND, OR, NOT)",
+    "m1a-types": "Data Types",
+    "m1a-loops": "Loops and Iteration",
+    "m1a-methods": "Standard Methods and Bubble Sort",
+    "m1b-trace": "Tracing Algorithms",
+    "m1b-errors": "Finding and Correcting Errors",
+    "m1b-valid": "Validation Loops",
+    "m1c-valid": "Writing Validation Algorithms",
+    "m1c-arrays": "Declaring and Filling Arrays",
+    "m1c-stats": "Totals, Averages, Counts and Rounding",
+    "m1c-runs": "Longest Run (Consecutive Days)",
+    "m1c-program": "Writing a Full Program",
     "y11valid": "Validation and Verification",
     "y11test": "Test Data",
     "y11types": "Data Types",
@@ -7761,7 +8715,7 @@
     "l7-iteration": "Iteration",
     "l7-write": "Writing a Full Algorithm"
   };
-  var CATEGORY_ORDER = ["y11valid", "y11test", "y11types", "y11ops", "y11strings", "y11errors", "y11trace", "y11logic", "y11sql", "y11dev", "vocab", "motion", "testing", "plantocode", "y7-symbols", "y7-reading", "y7-debugging", "y7-sequence", "y7-inputs", "y7-movement", "y7-loops", "y7-logic", "y7-sub-purpose", "y7-call-trace", "y7-call-effects", "y7-complete", "seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "fc-symbols", "fc-shapemap", "fc-toCode", "fc-toFlow", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound", "fscomp-concept", "fscomp-rle", "fscomp-choose", "l2", "l2-plenary", "l3", "l3-plenary", "l4", "l4-plenary", "l1", "l1-plenary", "l3-exambinary", "l4-examunits", "l7-sequence", "l7-selection", "l7-iteration", "l7-write"];
+  var CATEGORY_ORDER = ["m1a-ops", "m1a-types", "m1a-loops", "m1a-methods", "m1b-trace", "m1b-errors", "m1b-valid", "m1c-valid", "m1c-arrays", "m1c-stats", "m1c-runs", "m1c-program", "y11valid", "y11test", "y11types", "y11ops", "y11strings", "y11errors", "y11trace", "y11logic", "y11sql", "y11dev", "vocab", "motion", "testing", "plantocode", "y7-symbols", "y7-reading", "y7-debugging", "y7-sequence", "y7-inputs", "y7-movement", "y7-loops", "y7-logic", "y7-sub-purpose", "y7-call-trace", "y7-call-effects", "y7-complete", "seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "fc-symbols", "fc-shapemap", "fc-toCode", "fc-toFlow", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound", "fscomp-concept", "fscomp-rle", "fscomp-choose", "l2", "l2-plenary", "l3", "l3-plenary", "l4", "l4-plenary", "l1", "l1-plenary", "l3-exambinary", "l4-examunits", "l7-sequence", "l7-selection", "l7-iteration", "l7-write"];
 
   // ============================================================
   // ENGINE
