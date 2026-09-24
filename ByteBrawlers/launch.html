@@ -118,6 +118,10 @@
   // match, with no way to even see the mismatch.
   var ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
   var PORT = 5327;
+  // A code of 4 characters or fewer only ever carries the last two octets
+  // of a 192.168.x.y address - see JoinCode.cs (LiveGameHost repo) for why
+  // that length and a full-address code's length never overlap.
+  var SHORT_FORM_MAX_LENGTH = 4;
 
   function decodeIPv4(code) {
     var value = 0;
@@ -128,6 +132,9 @@
       value = value * 32 + digit;
     }
     value = value >>> 0;
+    if (code.length <= SHORT_FORM_MAX_LENGTH) {
+      return [192, 168, (value >>> 8) & 255, value & 255].join('.');
+    }
     return [(value >>> 24) & 255, (value >>> 16) & 255, (value >>> 8) & 255, value & 255].join('.');
   }
 
