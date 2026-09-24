@@ -1,0 +1,255 @@
+{
+ "id": "y10-1-3-l2",
+ "label": "1.3 L2: File Size Calculations",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Unit Conversions",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l2-do-now",
+   "validatorKey": "y10_1_3_l2_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Unit Conversions</h2><p class=\"lesson-lead\">Recapping 1.3 L1. Cambridge IGCSE 0478/12, March 2023, Question 3(a): data storage is measured using binary denominations. Complete each conversion.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-do-now-a\">(a) 8 bytes = ................ nibbles</label><input id=\"y10-13l2-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Unit Conversions part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-do-now-b\">(b) 512 kibibytes (KiB) = ................ mebibytes (MiB)</label><input id=\"y10-13l2-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Unit Conversions part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-do-now-c\">(c) 4 gibibytes (GiB) = ................ mebibytes (MiB)</label><input id=\"y10-13l2-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Unit Conversions part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-do-now-d\">(d) 1 exbibyte (EiB) = ................ pebibytes (PiB)</label><input id=\"y10-13l2-do-now-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-d\" aria-label=\"Do Now: Unit Conversions part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l2-do-now-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-13l2-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: The Unit Ladder",
+   "type": "multiple-choice",
+   "containerId": "y10-13l2-do-now-2-mcq",
+   "content": "<h2 class=\"lesson-h2\">Do Now: The Unit Ladder</h2><p class=\"lesson-lead\">Recapping 1.3 L1. Based on Cambridge IGCSE 0478/12, March 2026, Question 1(a) and 0478/12, June 2024, Question 1(c).</p><div id=\"y10-13l2-do-now-2-mcq\"></div>",
+   "items": [
+    {
+     "prompt": "Which statement about data storage is correct?",
+     "options": [
+      "One bit equals four nibbles",
+      "One byte equals 16 bits",
+      "One exbibyte (EiB) equals 1024 x 1024 tebibytes (TiB)",
+      "One mebibyte (MiB) equals 1024 x 1024 gibibytes (GiB)"
+     ],
+     "correct": 2,
+     "explain": "TiB to PiB is x1024, then PiB to EiB is x1024 again. The other three have the ladder the wrong way round or the wrong numbers."
+    },
+    {
+     "prompt": "Give the name of the data storage measurement that is equal to 1024 gibibytes (GiB).",
+     "options": [
+      "Mebibyte (MiB)",
+      "Exbibyte (EiB)",
+      "Pebibyte (PiB)",
+      "Tebibyte (TiB)"
+     ],
+     "correct": 3,
+     "explain": "The ladder goes GiB, TiB, PiB, EiB. 1024 GiB is one step up: 1 TiB."
+    }
+   ]
+  },
+  {
+   "id": "title",
+   "label": "File Size Calculations",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Data Storage and Compression</p><h2 class=\"lesson-h2\">File Size Calculations</h2><p>Year 10, 1.3 L2 &middot; Image and Sound Files &middot; 30 minutes</p></div><ul class=\"lesson-facts\"><li><strong>Concept:</strong> The image and sound file size formulas, finished in the unit the question asks for.</li><li><strong>Walkthroughs:</strong> One image and one sound calculation, step by step.</li><li><strong>Challenge:</strong> Storage Blitz, the Images and Sound levels.</li><li><strong>Exam link:</strong> Two real Cambridge image calculations.</li></ul>"
+  },
+  {
+   "id": "concept-image",
+   "label": "Image File Size",
+   "content": "<h2 class=\"lesson-h2\">Image File Size</h2><p class=\"lesson-lead\">An image file stores a colour for every pixel, so its size depends on how many pixels there are and how many bits each one needs.</p><ul class=\"lesson-facts\"><li><strong>File size in bits</strong> = width &times; height &times; colour depth (bits)</li><li>Divide by 8 for bytes, then by 1024 for KiB, then by 1024 again for MiB.</li><li>If the colour depth is given in <strong>bytes</strong>, width &times; height &times; bytes already gives bytes. Do not divide by 8.</li><li>Stop at the unit the question asks for, and show your working.</li></ul>"
+  },
+  {
+   "id": "worked-image",
+   "label": "Worked Example: Image to KiB",
+   "type": "stepper",
+   "stepperId": "y10-13l2-worked-image-stepper",
+   "stepperKey": "y10_image_file_size",
+   "content": "<h2 class=\"lesson-h2\">Worked Example: Image to KiB</h2><p class=\"lesson-lead\">Step through one full image calculation, from pixels to kibibytes.</p><div id=\"y10-13l2-worked-image-stepper\" class=\"lesson-stepper\"></div>"
+  },
+  {
+   "id": "exam-image-1",
+   "label": "Exam Question: Image in Bytes",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l2-exam-image-1",
+   "validatorKey": "y10_1_3_l2_exam_image_1",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Image in Bytes</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2022, Question 5. An image is stored on a computer. The image is 16-bit colour and is 100 pixels high and 150 pixels wide.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-exam-image-1-a\">Calculate the file size of the image in bytes. [3]</label><input id=\"y10-13l2-exam-image-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-image-1-a\" aria-label=\"Exam Question: Image in Bytes part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l2-exam-image-1-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-13l2-exam-image-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-image-2",
+   "label": "Exam Question: Colour Depth in Bytes",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l2-exam-image-2",
+   "validatorKey": "y10_1_3_l2_exam_image_2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Colour Depth in Bytes</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2023, Question 4(b). One of the images has a resolution of 1000 &times; 1000 and a colour depth of 2 bytes.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-exam-image-2-a\">Calculate the file size of the image. Give your answer in bytes. [2]</label><input id=\"y10-13l2-exam-image-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-image-2-a\" aria-label=\"Exam Question: Colour Depth in Bytes part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l2-exam-image-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-13l2-exam-image-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "blitz-images",
+   "label": "Storage Blitz: Images",
+   "type": "app-link",
+   "buttonId": "y10-13l2-blitz-images-button",
+   "appId": "storageblitz",
+   "appQuery": "level=3",
+   "content": "<h2 class=\"lesson-h2\">Storage Blitz: Images</h2><p class=\"lesson-lead\">Open Storage Blitz. It goes straight to the Images level: resolution and colour depth questions against the clock.</p><div class=\"lesson-flow-task\"><h3>Complete when</h3><p>You have scored at least 1000 points (10 correct answers) on Images.</p></div><div class=\"lesson-app-link\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l2-blitz-images-button\">Open Storage Blitz</button></div>"
+  },
+  {
+   "id": "concept-sound",
+   "label": "Sound File Size",
+   "content": "<h2 class=\"lesson-h2\">Sound File Size</h2><p class=\"lesson-lead\">A sound file stores one sample for every sample taken, so its size depends on how many samples there are and how many bits each one needs.</p><ul class=\"lesson-facts\"><li><strong>File size in bits</strong> = sample rate &times; sample resolution &times; length of the track in seconds</li><li>Sample rate is samples per second, sample resolution is bits per sample.</li><li>Then use the same ladder: divide by 8 for bytes, by 1024 for KiB, by 1024 again for MiB.</li><li>A track length in minutes must be changed to seconds first.</li></ul>"
+  },
+  {
+   "id": "worked-sound",
+   "label": "Worked Example: Sound to KiB",
+   "type": "stepper",
+   "stepperId": "y10-13l2-worked-sound-stepper",
+   "stepperKey": "y10_sound_file_size",
+   "content": "<h2 class=\"lesson-h2\">Worked Example: Sound to KiB</h2><p class=\"lesson-lead\">Step through one full sound calculation, from samples to kibibytes.</p><div id=\"y10-13l2-worked-sound-stepper\" class=\"lesson-stepper\"></div>"
+  },
+  {
+   "id": "exam-sound",
+   "label": "Exam-Style Question: Sound File Size",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l2-exam-sound",
+   "validatorKey": "y10_1_3_l2_exam_sound",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Sound File Size</h2><p class=\"lesson-lead\">Adapted from the image calculation in Cambridge IGCSE 0478/12, March 2026, Question 1(b), using a sound file. None of the Paper 1 questions in this set asks for a sound file size. A sound file is recorded with a sample rate of 8192 samples per second and a sample resolution of 16 bits. The track is 64 seconds long.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-exam-sound-a\">(a) Calculate the file size of the sound file in KiB. Show your working. [2]</label><input id=\"y10-13l2-exam-sound-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-sound-a\" aria-label=\"Exam-Style Question: Sound File Size part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-exam-sound-b\">(b) Give the same file size in MiB. [1]</label><input id=\"y10-13l2-exam-sound-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-sound-b\" aria-label=\"Exam-Style Question: Sound File Size part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l2-exam-sound-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-13l2-exam-sound-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "blitz-sound",
+   "label": "Storage Blitz: Sound",
+   "type": "app-link",
+   "buttonId": "y10-13l2-blitz-sound-button",
+   "appId": "storageblitz",
+   "appQuery": "level=4",
+   "content": "<h2 class=\"lesson-h2\">Storage Blitz: Sound</h2><p class=\"lesson-lead\">Open Storage Blitz. It goes straight to the Sound level: sample rate &times; sample resolution &times; duration against the clock.</p><div class=\"lesson-flow-task\"><h3>Complete when</h3><p>You have scored at least 1000 points (10 correct answers) on Sound.</p></div><div class=\"lesson-app-link\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l2-blitz-sound-button\">Open Storage Blitz</button></div>"
+  },
+  {
+   "id": "practice",
+   "label": "Checked Practice",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l2-practice",
+   "validatorKey": "y10_1_3_l2_practice",
+   "content": "<h2 class=\"lesson-h2\">Checked Practice</h2><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-practice-a\">(a) An image is 64 pixels wide and 32 pixels high with an 8-bit colour depth. Calculate its file size in bytes. [1]</label><input id=\"y10-13l2-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Checked Practice part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-practice-b\">(b) Give the same image file size in KiB. [1]</label><input id=\"y10-13l2-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Checked Practice part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-practice-c\">(c) A sound has a sample rate of 1000 samples per second, an 8-bit sample resolution and lasts 10 seconds. Calculate its file size in bytes. [1]</label><input id=\"y10-13l2-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Checked Practice part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l2-practice-d\">(d) An image is 2048 &times; 1024 pixels with a colour depth of 3 bytes. Calculate its file size in MiB. [2]</label><input id=\"y10-13l2-practice-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-d\" aria-label=\"Checked Practice part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l2-practice-check\">Check answers</button><strong>Total: 5 marks</strong></div><div id=\"y10-13l2-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: File Size Calculations",
+   "type": "embedded-app",
+   "appId": "drill-y10-1-3-l2-filesize",
+   "embedContainerId": "y10-13l2-plenary-drill",
+   "content": "<h2 class=\"lesson-h2\">Plenary: File Size Calculations</h2><div id=\"y10-13l2-plenary-drill\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_1_3_l2_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*16(\\s*(nibbles?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "1 byte is 2 nibbles, so multiply by 2."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*0?\\.5(\\s*(mib|mebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Up one step: divide by 1024."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4[,\\s]?096(\\s*(mib|mebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Down one step: multiply by 1024."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1[,\\s]?024(\\s*(pib|pebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Every step of the ladder is 1024."
+   }
+  ],
+  "y10_1_3_l2_exam_image_1": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*30[,\\s]?000(\\s*(bytes?|b))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "100 x 150 = 15000 pixels. x 16 bits = 240000 bits. Divide by 8 for bytes."
+   }
+  ],
+  "y10_1_3_l2_exam_image_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2[,\\s]?000[,\\s]?000(\\s*(bytes?|b))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The colour depth is already in bytes: 1000 x 1000 x 2. No divide by 8."
+   }
+  ],
+  "y10_1_3_l2_exam_sound": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1[,\\s]?024(\\s*(kib|kibibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "8192 x 16 x 64 bits, divide by 8 for bytes, then by 1024 for KiB."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1(\\s*(mib|mebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Divide your KiB answer by 1024."
+   }
+  ],
+  "y10_1_3_l2_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2[,\\s]?048(\\s*(bytes?|b))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "64 x 32 x 8 bits, then divide by 8."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2(\\s*(kib|kibibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Divide the bytes by 1024."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*10[,\\s]?000(\\s*(bytes?|b))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "1000 x 8 x 10 bits, then divide by 8."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6(\\s*(mib|mebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Colour depth in bytes: 2048 x 1024 x 3 bytes, then divide by 1024 twice."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

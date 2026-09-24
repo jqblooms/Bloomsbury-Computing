@@ -1,0 +1,354 @@
+{
+ "id": "y10-1-3-l3",
+ "label": "1.3 L3: Compression",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Image File Size",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l3-do-now",
+   "validatorKey": "y10_1_3_l3_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Image File Size</h2><p class=\"lesson-lead\">Recapping 1.3 L2. Cambridge IGCSE 0478/12, June 2024, Question 1(d). A 16-bit colour image has a resolution of 512 pixels wide by 512 pixels high.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-do-now-a\">Calculate the file size of the image in kibibytes (KiB). [3]</label><input id=\"y10-13l3-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Image File Size part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l3-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-13l3-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Bits and Bytes",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l3-do-now-2",
+   "validatorKey": "y10_1_3_l3_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Bits and Bytes</h2><p class=\"lesson-lead\">Recapping 1.3 L1. Cambridge IGCSE 0478/12, June 2024, Question 1(a) and (b). Data can be measured in bits.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-do-now-2-a\">(a) Give the name of the data storage measurement that is equal to 8 bits. [1]</label><input id=\"y10-13l3-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Bits and Bytes part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-do-now-2-b\">(b) State how many bits there are in a kibibyte (KiB). [1]</label><input id=\"y10-13l3-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Bits and Bytes part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l3-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-13l3-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "title",
+   "label": "Why and How We Compress",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Data Storage and Compression</p><h2 class=\"lesson-h2\">Why and How We Compress</h2><p>Year 10, 1.3 L3 &middot; Compression &middot; 30 minutes</p></div><ul class=\"lesson-facts\"><li><strong>Concept:</strong> Why files are compressed, and what that changes.</li><li><strong>Challenges:</strong> Make an image and a sound smaller the lossy way, and see what is lost.</li><li><strong>Exam link:</strong> Seven real Cambridge compression questions.</li><li><strong>Also today:</strong> Lossless compression of text and images.</li></ul>"
+  },
+  {
+   "id": "concept-why",
+   "label": "Why Compress a File?",
+   "content": "<h2 class=\"lesson-h2\">Why Compress a File?</h2><p class=\"lesson-lead\">Compression reduces the size of a file. A smaller file has three effects:</p><ul class=\"lesson-facts\"><li><strong>Less storage space</strong> is needed to keep it.</li><li><strong>Less bandwidth</strong> is needed to send it across a network.</li><li><strong>Shorter transmission time</strong>: it uploads, downloads or emails faster.</li></ul><p class=\"lesson-lead\">There are two methods: <strong>lossy</strong> permanently removes data, <strong>lossless</strong> removes none.</p>"
+  },
+  {
+   "id": "exam-why",
+   "label": "Exam Question: Reducing File Size",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l3-exam-why",
+   "validatorKey": "y10_1_3_l3_exam_why",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Reducing File Size</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2025, Question 1(c). The size of a file needs to be reduced.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-exam-why-a\">(i) Give the name of the process that is used to reduce the size of a file. [1]</label><input id=\"y10-13l3-exam-why-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-why-a\" aria-label=\"Exam Question: Reducing File Size part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-exam-why-b\">(ii) One reason is so that it has a shorter transmission time. Give one other reason why the size of a file may need reducing. [1]</label><input id=\"y10-13l3-exam-why-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-why-b\" aria-label=\"Exam Question: Reducing File Size part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l3-exam-why-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-13l3-exam-why-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-email",
+   "label": "Exam Question: Compressing Before Emailing (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-13l3-exam-email",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Compressing Before Emailing (1 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, February/March 2022, Question 2(c). Nadia compresses the digital image file before emailing it to a friend.</p><div id=\"y10-13l3-exam-email\"></div>",
+   "items": [
+    {
+     "id": "email-ci",
+     "prompt": "(c)(i) State what is meant by data compression.",
+     "marks": 1,
+     "modelAnswer": "Reducing the size of a file."
+    }
+   ]
+  },
+  {
+   "id": "exam-email-2",
+   "label": "Exam Question: Compressing Before Emailing (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-13l3-exam-email-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Compressing Before Emailing (2 of 2)</h2><p class=\"lesson-lead\">Continued. Nadia compresses the digital image file before emailing it to a friend.</p><div id=\"y10-13l3-exam-email-2\"></div>",
+   "items": [
+    {
+     "id": "email-cii",
+     "prompt": "(c)(ii) Explain why Nadia compresses the digital image file before emailing it.",
+     "marks": 2,
+     "modelAnswer": "Any two of: the smaller file takes less time to send (and for her friend to download); it uses less bandwidth; it may be under the email service's attachment size limit, so it can be sent at all; it takes up less storage space in both mailboxes."
+    }
+   ]
+  },
+  {
+   "id": "concept-lossy",
+   "label": "Lossy: Permanently Removing Data",
+   "content": "<h2 class=\"lesson-h2\">Lossy: Permanently Removing Data</h2><p class=\"lesson-lead\">Lossy compression makes a file smaller by permanently removing data. The removed data can never be put back. It works by lowering the settings in the file size formula:</p><ul class=\"lesson-facts\"><li><strong>Images:</strong> reduce the resolution (fewer pixels) or reduce the colour depth (fewer bits per pixel).</li><li><strong>Sound:</strong> reduce the sample rate (fewer samples per second) or reduce the sample resolution (fewer bits per sample).</li><li>Halving any one setting halves the file size, because it is one of the numbers being multiplied.</li></ul>"
+  },
+  {
+   "id": "lossy-image",
+   "label": "Challenge: Compress an Image",
+   "type": "bit-depth-explorer",
+   "containerId": "y10-13l3-lossy-image",
+   "mode": "both",
+   "content": "<h2 class=\"lesson-h2\">Challenge: Compress an Image</h2><p class=\"lesson-lead\">Lower the resolution and the colour depth to shrink this image. Watch the file size readout.</p><div id=\"y10-13l3-lossy-image\"></div><p class=\"lesson-lead\" style=\"margin-top:10px\">Find the smallest file where you can still tell what the picture is. What detail has been permanently lost?</p>"
+  },
+  {
+   "id": "check-lossy",
+   "label": "Check: What Does Lossy Save?",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l3-check-lossy",
+   "validatorKey": "y10_1_3_l3_check_lossy",
+   "content": "<h2 class=\"lesson-h2\">Check: What Does Lossy Save?</h2><p class=\"lesson-lead\">The 1000 &times; 1000 image from last lesson, with a colour depth of 2 bytes, is 2,000,000 bytes.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-check-lossy-a\">(a) Its colour depth is reduced to 1 byte. Calculate the new file size in bytes. [1]</label><input id=\"y10-13l3-check-lossy-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-lossy-a\" aria-label=\"Check: What Does Lossy Save? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-check-lossy-b\">(b) Instead, its resolution is reduced to 500 &times; 500, keeping 2 bytes. Calculate the new file size in bytes. [1]</label><input id=\"y10-13l3-check-lossy-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-lossy-b\" aria-label=\"Check: What Does Lossy Save? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-check-lossy-c\">(c) A 4 MiB sound file has its sample rate halved. Give the new file size in MiB. [1]</label><input id=\"y10-13l3-check-lossy-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-lossy-c\" aria-label=\"Check: What Does Lossy Save? part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l3-check-lossy-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-13l3-check-lossy-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "lossy-sound",
+   "label": "Challenge: Compress a Sound",
+   "type": "sound-sample-explorer",
+   "containerId": "y10-13l3-lossy-sound",
+   "mode": "both",
+   "content": "<h2 class=\"lesson-h2\">Challenge: Compress a Sound</h2><p class=\"lesson-lead\">Lower the sample rate and the sample resolution, then press Play this quality.</p><div id=\"y10-13l3-lossy-sound\"></div><p class=\"lesson-lead\" style=\"margin-top:10px\">Find the lowest settings where you would still accept the sound for a phone call. Compare it with Play full quality.</p>"
+  },
+  {
+   "id": "exam-thumbnails",
+   "label": "Exam Question: Lossy Thumbnails",
+   "type": "self-marked-response",
+   "containerId": "y10-13l3-exam-thumbnails",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Lossy Thumbnails</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, February/March 2021, Question 2(a). Gurdeep takes high definition photographs. Users of her website can view thumbnails, small versions of the photographs. She compresses the photographs with lossy compression to create the thumbnails.</p><div id=\"y10-13l3-exam-thumbnails\"></div>",
+   "items": [
+    {
+     "id": "thumbnails-a",
+     "prompt": "(a) Describe how lossy compression creates the thumbnails.",
+     "marks": 3,
+     "modelAnswer": "Any three of: a compression algorithm is used; data is permanently removed from the photograph; the resolution is reduced, so there are fewer pixels; the colour depth can be reduced, so fewer bits are used for each pixel; detail that will not be noticed in a small thumbnail is removed; the file size is reduced."
+    }
+   ]
+  },
+  {
+   "id": "concept-lossless",
+   "label": "Lossless: Nothing Is Lost",
+   "content": "<h2 class=\"lesson-h2\">Lossless: Nothing Is Lost</h2><p class=\"lesson-lead\">Lossless compression reduces the file size without permanently losing any data. Decompressing it rebuilds the original exactly.</p><ul class=\"lesson-facts\"><li><strong>Run length encoding (RLE)</strong> stores each run of repeated data once, with a count: WWWWWBBB becomes 5W 3B.</li><li>It works on text as well as images: AAAABBBCC becomes 4A 3B 2C.</li><li>Other lossless methods find repeating patterns in the data and index them, so each pattern is stored only once.</li><li>Use lossless when every bit matters: text, program files, or an image that must stay exact.</li></ul>"
+  },
+  {
+   "id": "exam-types",
+   "label": "Exam Question: Which Type?",
+   "type": "multiple-choice",
+   "containerId": "y10-13l3-exam-types-mcq",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Which Type?</h2><p class=\"lesson-lead\">Based on Cambridge IGCSE 0478/11, June 2022, Question 1(a)(ii) and 0478/13, June 2022, Question 6(d).</p><div id=\"y10-13l3-exam-types-mcq\"></div>",
+   "items": [
+    {
+     "prompt": "Jack has an MP3 file stored on his computer. Is it a lossy compressed file, a lossless compressed file, or not a compressed file?",
+     "options": [
+      "Lossless compressed file",
+      "Not a compressed file",
+      "Lossy compressed file",
+      "It depends on how long the track is"
+     ],
+     "correct": 2,
+     "explain": "MP3 removes sound data a listener is unlikely to notice, so it is lossy."
+    },
+    {
+     "prompt": "Frida compresses a document. The algorithm recognises repeating patterns in the data and indexes them. No data is permanently removed. Which type of compression is this?",
+     "options": [
+      "Lossless",
+      "Lossy",
+      "Encryption",
+      "Not compression"
+     ],
+     "correct": 0,
+     "explain": "No data is permanently removed, which is exactly what lossless means."
+    }
+   ]
+  },
+  {
+   "id": "rle-practice",
+   "label": "Run Length Encoding by Hand",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l3-rle-practice",
+   "validatorKey": "y10_1_3_l3_rle",
+   "content": "<h2 class=\"lesson-h2\">Run Length Encoding by Hand</h2><p class=\"lesson-lead\">Write each run as a count, then the value: WWWWBB becomes 4W 2B.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-rle-practice-a\">(a) Encode the text AAAAABBBCCCC using RLE. [1]</label><input id=\"y10-13l3-rle-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"rle-practice-a\" aria-label=\"Run Length Encoding by Hand part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-rle-practice-b\">(b) Decode 3W 2B 4W. How many pixels does this row have? [1]</label><input id=\"y10-13l3-rle-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"rle-practice-b\" aria-label=\"Run Length Encoding by Hand part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-rle-practice-c\">(c) Encode the row BBWWWWWWBB using RLE. [1]</label><input id=\"y10-13l3-rle-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"rle-practice-c\" aria-label=\"Run Length Encoding by Hand part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l3-rle-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-13l3-rle-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-lossless",
+   "label": "Exam Question: Explain Lossless",
+   "type": "self-marked-response",
+   "containerId": "y10-13l3-exam-lossless",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Explain Lossless</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2025, Question 2(d). A student has an image file stored on their computer, with a colour depth of 32 bits. The student uses lossless compression to compress the image file.</p><div id=\"y10-13l3-exam-lossless\"></div>",
+   "items": [
+    {
+     "id": "lossless-d",
+     "prompt": "(d) Explain how the image file is compressed using lossless compression.",
+     "marks": 3,
+     "modelAnswer": "Any three of: a compression algorithm is used, such as run length encoding (RLE); it finds runs of repeated, identical pixels (colours); each run is stored once as the number of repeats and the colour; so the file size is reduced; no data is permanently removed, so the original image can be rebuilt exactly."
+    }
+   ]
+  },
+  {
+   "id": "exam-text",
+   "label": "Exam Question: Compressing a Text File",
+   "type": "self-marked-response",
+   "containerId": "y10-13l3-exam-text",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Compressing a Text File</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2026, Question 1(c)(iii). The computer uses the ASCII character set for a text file. The text file needs to be compressed.</p><div id=\"y10-13l3-exam-text\"></div>",
+   "items": [
+    {
+     "id": "text-ciii",
+     "prompt": "(c)(iii) Identify the most appropriate type of compression for the text file. Justify your choice.",
+     "marks": 4,
+     "modelAnswer": "Compression type: lossless. Justification, any three of: no data is permanently removed; the text file can be decompressed to exactly the original; if characters were removed the text would not make sense, or its meaning would change; every character is needed, so none can be lost; a method such as RLE or indexing repeated words can still reduce the file size."
+    }
+   ]
+  },
+  {
+   "id": "practice",
+   "label": "Checked Practice",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l3-practice",
+   "validatorKey": "y10_1_3_l3_practice",
+   "content": "<h2 class=\"lesson-h2\">Checked Practice</h2><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-practice-a\">(a) Name the lossless compression method that stores runs of repeated data as a count and a value. [1]</label><input id=\"y10-13l3-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Checked Practice part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-practice-b\">(b) Is reducing the resolution of an image lossy or lossless? [1]</label><input id=\"y10-13l3-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Checked Practice part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-practice-c\">(c) An image has its colour depth reduced from 24 bits to 8 bits. How many times smaller is the image data? [1]</label><input id=\"y10-13l3-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Checked Practice part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l3-practice-d\">(d) Give one effect of compression on sending a file over a network. [1]</label><input id=\"y10-13l3-practice-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-d\" aria-label=\"Checked Practice part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l3-practice-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-13l3-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Compression",
+   "type": "embedded-app",
+   "appId": "drill-y10-1-3-l3-compression",
+   "embedContainerId": "y10-13l3-plenary-drill",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Compression</h2><div id=\"y10-13l3-plenary-drill\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_1_3_l3_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*512(\\s*(kib|kibibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "512 x 512 x 16 bits, divide by 8 for bytes, then by 1024 for KiB."
+   }
+  ],
+  "y10_1_3_l3_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(a\\s+)?bytes?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "8 bits make 1 byte. A nibble is only 4."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*8[,\\s]?192(\\s*(bits?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "1 KiB is 1024 bytes, and each byte is 8 bits."
+   }
+  ],
+  "y10_1_3_l3_exam_why": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(data\\s+)?compress(ion|ing)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The process of making a file smaller has one name, used all lesson."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(time|faster|quick)).*\\b(storage|space|bandwidth|memory)\\b.*$",
+     "flags": "i"
+    },
+    "feedback": "Transmission time is already given. Think about where the file is kept, or what it uses up on a network."
+   }
+  ],
+  "y10_1_3_l3_check_lossy": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1[,\\s]?000[,\\s]?000(\\s*(bytes?|b))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Only the colour depth changed: 1000 x 1000 x 1."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*500[,\\s]?000(\\s*(bytes?|b))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "500 x 500 x 2. Halving both width and height gives a quarter of the pixels."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2(\\s*(mib|mebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Sample rate is one of the numbers multiplied, so halving it halves the file size."
+   }
+  ],
+  "y10_1_3_l3_rle": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*5\\s*A[\\s,]*3\\s*B[\\s,]*4\\s*C\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count each run in order: how many A, then B, then C."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*9(\\s*(pixels?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Add up every count."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2\\s*B[\\s,]*6\\s*W[\\s,]*2\\s*B\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Three runs: black, white, black."
+   }
+  ],
+  "y10_1_3_l3_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(rle|run[\\s-]*length[\\s-]*encoding(\\s*\\(?rle\\)?)?)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Its name describes what it counts: the length of each run."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*lossy(\\s+compression)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Pixels that are removed can never be put back."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3(\\s*(times))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The file size is proportional to the colour depth: 24 / 8."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(more|longer|slower|increas\\w*)\\b)(?=.*\\b(less|lower|reduc\\w*|shorter|faster|quicker|smaller)\\b)(?=.*\\b(bandwidth|time|transmission|upload\\w*|download\\w*|send\\w*|sent|transfer\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Think about how long it takes, or how much of the network it uses."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

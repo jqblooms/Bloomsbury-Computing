@@ -2201,6 +2201,640 @@
         }
       ]
     },
+    "y10-1-3-l1-units": {
+      title: "Year 10, 1.3 L1: Storage Units",
+      subtitle: "Cambridge IGCSE Computer Science 0478",
+      cards: [
+        {
+          id: "u13-nibble-bits", category: "u13-ladder",
+          prompt: "How many bits are in 1 nibble?",
+          answers: ["4 bits"],
+          keywords: [/^\s*4\s*(bits?)?\s*$/i],
+          distractors: ["8 bits", "2 bits", "16 bits", "1024 bits"],
+          note: "A nibble is 4 bits, half of a byte."
+        },
+        {
+          id: "u13-byte-nibbles", category: "u13-ladder",
+          prompt: "How many nibbles are in 1 byte?",
+          answers: ["2 nibbles"],
+          keywords: [/^\s*2\s*(nibbles?)?\s*$/i],
+          distractors: ["4 nibbles", "8 nibbles", "16 nibbles", "1 nibble"],
+          note: "8 bits / 4 bits = 2 nibbles. This is 0478/12 June 2025 Question 2(b)(ii)."
+        },
+        {
+          id: "u13-8-bits-name", category: "u13-ladder",
+          prompt: "Give the name of the data storage unit equal to 8 bits.",
+          answers: ["Byte"],
+          keywords: [/^\s*(a\s+|1\s+)?bytes?\s*$/i],
+          distractors: ["Nibble", "Kibibyte", "Word", "Bit"],
+          note: "8 bits = 1 byte. A nibble is only 4 bits."
+        },
+        {
+          id: "u13-smallest", category: "u13-ladder",
+          prompt: "Which is the smallest unit: byte, gibibyte, kibibyte or nibble?",
+          answers: ["Nibble"],
+          keywords: [/^\s*(a\s+)?nibbles?\s*$/i],
+          distractors: ["Byte", "Kibibyte", "Gibibyte"],
+          note: "A nibble is half a byte. From 0478/11 June 2025 Question 1(a)."
+        },
+        {
+          id: "u13-1024-gib-name", category: "u13-ladder",
+          prompt: "Give the name of the data storage unit equal to 1024 gibibytes (GiB).",
+          answers: ["Tebibyte (TiB)"],
+          keywords: [/^\s*(a\s+)?(tebibytes?|tib)(\s*\(tib\))?\s*$/i],
+          distractors: ["Mebibyte (MiB)", "Pebibyte (PiB)", "Exbibyte (EiB)", "Kibibyte (KiB)"],
+          note: "The ladder goes GiB, TiB, PiB, EiB. 1024 GiB is 1 TiB."
+        },
+        {
+          id: "u13-after-pib", category: "u13-ladder",
+          prompt: "Which unit is equal to 1024 pebibytes (PiB)?",
+          answers: ["Exbibyte (EiB)"],
+          keywords: [/^\s*(an?\s+)?(exbibytes?|eib)(\s*\(eib\))?\s*$/i],
+          distractors: ["Tebibyte (TiB)", "Gibibyte (GiB)", "Mebibyte (MiB)", "Kibibyte (KiB)"],
+          note: "1 EiB = 1024 PiB. The exbibyte is the largest unit on the syllabus."
+        },
+        {
+          id: "u13-why-1024", category: "u13-ladder",
+          prompt: "Storage calculations in the exam must use which number for each step up the ladder, 1000 or 1024?",
+          answers: ["1024"],
+          keywords: [/^\s*1024\s*$/],
+          distractors: ["1000", "8", "100", "2048"],
+          note: "Binary units go up in powers of 2, so each step is 1024. Using 1000 loses the mark."
+        },
+        {
+          id: "u13-5-mib-kib", category: "u13-convert",
+          prompt: "Convert 5 MiB to KiB.",
+          answers: ["5120 KiB"],
+          keywords: [/^\s*5[,\s]?120\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["5000 KiB", "0.005 KiB", "40 KiB", "1024 KiB", "640 KiB"],
+          note: "5 x 1024 = 5120 KiB."
+        },
+        {
+          id: "u13-2048-kib-mib", category: "u13-convert",
+          prompt: "Convert 2048 KiB to MiB.",
+          answers: ["2 MiB"],
+          keywords: [/^\s*2\s*(mib|mebibytes?)?\s*$/i],
+          distractors: ["2.048 MiB", "2097152 MiB", "256 MiB", "4 MiB", "0.5 MiB"],
+          note: "2048 / 1024 = 2 MiB."
+        },
+        {
+          id: "u13-3072-bytes-kib", category: "u13-convert",
+          prompt: "An image file is 3072 bytes. Give its size in KiB.",
+          answers: ["3 KiB"],
+          keywords: [/^\s*3\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["3.072 KiB", "384 KiB", "24 KiB", "3072 KiB", "6 KiB"],
+          note: "3072 / 1024 = 3 KiB. This is 0478/12 June 2025 Question 2(b)(i)."
+        },
+        {
+          id: "u13-2-pib-tib", category: "u13-convert",
+          prompt: "How many tebibytes (TiB) are equal to 2 pebibytes (PiB)?",
+          answers: ["2048 TiB"],
+          keywords: [/^\s*2[,\s]?048\s*(tib|tebibytes?)?\s*$/i],
+          distractors: ["2000 TiB", "1024 TiB", "4096 TiB", "0.002 TiB", "512 TiB"],
+          note: "2 x 1024 = 2048 TiB. This is 0478/11 June 2025 Question 1(b)."
+        },
+        {
+          id: "u13-3-gib-mib", category: "u13-convert",
+          prompt: "Convert 3 GiB to MiB.",
+          answers: ["3072 MiB"],
+          keywords: [/^\s*3[,\s]?072\s*(mib|mebibytes?)?\s*$/i],
+          distractors: ["3000 MiB", "3 MiB", "24 MiB", "0.003 MiB", "1024 MiB"],
+          note: "3 x 1024 = 3072 MiB."
+        },
+        {
+          id: "u13-12-nibbles-bytes", category: "u13-convert",
+          prompt: "Convert 12 nibbles to bytes.",
+          answers: ["6 bytes"],
+          keywords: [/^\s*6\s*(bytes?|b)?\s*$/i],
+          distractors: ["24 bytes", "48 bytes", "3 bytes", "96 bytes"],
+          note: "12 / 2 = 6 bytes."
+        },
+        {
+          id: "u13-8-bytes-nibbles", category: "u13-convert",
+          prompt: "8 bytes = how many nibbles?",
+          answers: ["16 nibbles"],
+          keywords: [/^\s*16\s*(nibbles?)?\s*$/i],
+          distractors: ["4 nibbles", "32 nibbles", "64 nibbles", "2 nibbles"],
+          note: "8 x 2 = 16 nibbles. From 0478/12 March 2023 Question 3(a)."
+        },
+        {
+          id: "u13-kib-bits", category: "u13-multi",
+          prompt: "How many bits are there in a kibibyte (KiB)?",
+          answers: ["8192 bits"],
+          keywords: [/^\s*8[,\s]?192\s*(bits?)?\s*$/i],
+          distractors: ["1024 bits", "8000 bits", "1000 bits", "128 bits", "2048 bits"],
+          note: "1 KiB = 1024 bytes, and 1024 x 8 = 8192 bits. From 0478/12 June 2024 Question 1(b)."
+        },
+        {
+          id: "u13-2-kib-bits", category: "u13-multi",
+          prompt: "Convert 2 KiB to bits.",
+          answers: ["16384 bits"],
+          keywords: [/^\s*16[,\s]?384\s*(bits?)?\s*$/i],
+          distractors: ["2048 bits", "16000 bits", "256 bits", "8192 bits", "4096 bits"],
+          note: "2 x 1024 = 2048 bytes, and 2048 x 8 = 16,384 bits."
+        },
+        {
+          id: "u13-24576-bits-kib", category: "u13-multi",
+          prompt: "Convert 24576 bits to KiB.",
+          answers: ["3 KiB"],
+          keywords: [/^\s*3\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["24 KiB", "3072 KiB", "24.576 KiB", "12 KiB", "6 KiB"],
+          note: "24,576 / 8 = 3072 bytes, and 3072 / 1024 = 3 KiB."
+        },
+        {
+          id: "u13-1-gib-kib", category: "u13-multi",
+          prompt: "Convert 1 GiB to KiB.",
+          answers: ["1048576 KiB"],
+          keywords: [/^\s*1[,\s]?048[,\s]?576\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["1024 KiB", "1000000 KiB", "2048 KiB", "8192 KiB", "1073741824 KiB"],
+          note: "1 GiB = 1024 MiB, and 1024 x 1024 = 1,048,576 KiB."
+        },
+        {
+          id: "u13-3-mib-bytes", category: "u13-multi",
+          prompt: "Convert 3 MiB to bytes.",
+          answers: ["3145728 bytes"],
+          keywords: [/^\s*3[,\s]?145[,\s]?728\s*(bytes?|b)?\s*$/i],
+          distractors: ["3072 bytes", "3000000 bytes", "25165824 bytes", "393216 bytes", "3145728000 bytes"],
+          note: "3 x 1024 = 3072 KiB, and 3072 x 1024 = 3,145,728 bytes."
+        },
+        {
+          id: "u13-eib-tib", category: "u13-multi",
+          prompt: "One exbibyte (EiB) equals 1024 x 1024 of which unit?",
+          answers: ["Tebibytes (TiB)"],
+          keywords: [/^\s*(tebibytes?|tib)(\s*\(tib\))?\s*$/i],
+          distractors: ["Gibibytes (GiB)", "Pebibytes (PiB)", "Mebibytes (MiB)", "Kibibytes (KiB)"],
+          note: "EiB to PiB is x1024, PiB to TiB is x1024 again. From 0478/12 March 2026 Question 1(a)."
+        }
+      ]
+    },
+    "y10-1-3-l2-filesize": {
+      title: "Year 10, 1.3 L2: File Size Calculations",
+      subtitle: "Cambridge IGCSE Computer Science 0478",
+      cards: [
+        {
+          id: "u13-image-formula", category: "u13-method",
+          prompt: "Describe how to calculate the file size of an image in bits.",
+          answers: ["Multiply the width by the height by the colour depth"],
+          keywords: [{ required: [["multiply", "multiplied", "times", "x"], ["width", "resolution"], ["colour", "color", "bit"]], excluded: ["add", "divide", "sample"] },
+                     { required: [["resolution", "pixel"], ["colour", "color"], ["depth"]], excluded: ["add", "divide", "sample"] }],
+          distractors: ["Add the width, the height and the colour depth", "Multiply the sample rate by the sample resolution", "Divide the width by the colour depth", "Multiply the width by the height only"],
+          note: "Image file size in bits = width x height x colour depth."
+        },
+        {
+          id: "u13-sound-formula", category: "u13-method",
+          prompt: "Describe how to calculate the file size of a sound file in bits.",
+          answers: ["Multiply the sample rate by the sample resolution by the length of the track in seconds"],
+          keywords: [{ required: [["rate"], ["resolution"], ["length", "second", "duration", "time"]], excluded: ["add", "divide", "colour", "color"] }],
+          distractors: ["Multiply the sample rate by the sample resolution only", "Add the sample rate to the length of the track", "Multiply the width by the height by the colour depth", "Divide the sample rate by the length of the track"],
+          note: "Sound file size in bits = sample rate x sample resolution x length in seconds."
+        },
+        {
+          id: "u13-bits-to-bytes", category: "u13-method",
+          prompt: "A file size has been worked out in bits. What do you divide by to get bytes?",
+          answers: ["8"],
+          keywords: [/^\s*(by\s+)?8\s*$/i],
+          distractors: ["1024", "4", "1000", "16"],
+          note: "There are 8 bits in a byte, so divide the bits by 8."
+        },
+        {
+          id: "u13-depth-in-bytes", category: "u13-method",
+          prompt: "An image's colour depth is given in bytes. Do you still divide by 8 to get the file size in bytes?",
+          answers: ["No"],
+          keywords: [{ required: [["no"]] }],
+          distractors: ["Yes, always divide by 8", "Yes, then divide by 1024 too", "Only if the image is black and white"],
+          note: "Width x height x colour depth in bytes already gives bytes. Dividing by 8 again would be wrong."
+        },
+        {
+          id: "u13-minutes", category: "u13-method",
+          prompt: "A track length is given in minutes. What must you do to it before using the sound formula?",
+          answers: ["Convert it to seconds (multiply by 60)"],
+          keywords: [{ required: [["second", "60"]] }],
+          distractors: ["Divide it by 8", "Multiply it by 1024", "Nothing, use the minutes directly"],
+          note: "Sample rate is samples per second, so the length must be in seconds: multiply minutes by 60."
+        },
+        {
+          id: "u13-img-100x150", category: "u13-image",
+          prompt: "An image is 16-bit colour, 100 pixels high and 150 pixels wide. Calculate its file size in bytes.",
+          answers: ["30000 bytes"],
+          keywords: [/^\s*30[,\s]?000\s*(bytes?|b)?\s*$/i],
+          distractors: ["240000 bytes", "15000 bytes", "3750 bytes", "29.3 bytes", "1875 bytes"],
+          note: "100 x 150 = 15,000 pixels, x 16 = 240,000 bits, / 8 = 30,000 bytes. 0478/11 June 2022 Question 5."
+        },
+        {
+          id: "u13-img-1000-2b", category: "u13-image",
+          prompt: "An image has a resolution of 1000 x 1000 and a colour depth of 2 bytes. Calculate its file size in bytes.",
+          answers: ["2000000 bytes"],
+          keywords: [/^\s*2[,\s]?000[,\s]?000\s*(bytes?|b)?\s*$/i],
+          distractors: ["250000 bytes", "16000000 bytes", "1000000 bytes", "2000 bytes", "1953 bytes"],
+          note: "1000 x 1000 x 2 = 2,000,000 bytes. No divide by 8. 0478/12 March 2023 Question 4(b)."
+        },
+        {
+          id: "u13-img-512-256", category: "u13-image",
+          prompt: "An image is 512 pixels wide and 256 pixels high with an 8-bit colour depth. Calculate its file size in KiB.",
+          answers: ["128 KiB"],
+          keywords: [/^\s*128\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["1024 KiB", "131072 KiB", "16 KiB", "256 KiB", "131 KiB"],
+          note: "512 x 256 x 8 = 1,048,576 bits, / 8 = 131,072 bytes, / 1024 = 128 KiB."
+        },
+        {
+          id: "u13-img-64x32", category: "u13-image",
+          prompt: "An image is 64 x 32 pixels with an 8-bit colour depth. Calculate its file size in bytes.",
+          answers: ["2048 bytes"],
+          keywords: [/^\s*2[,\s]?048\s*(bytes?|b)?\s*$/i],
+          distractors: ["16384 bytes", "256 bytes", "2 bytes", "96 bytes", "4096 bytes"],
+          note: "64 x 32 x 8 = 16,384 bits, / 8 = 2048 bytes."
+        },
+        {
+          id: "u13-img-2048x1024-3b", category: "u13-image",
+          prompt: "An image is 2048 x 1024 pixels with a colour depth of 3 bytes. Calculate its file size in MiB.",
+          answers: ["6 MiB"],
+          keywords: [/^\s*6\s*(mib|mebibytes?)?\s*$/i],
+          distractors: ["2 MiB", "48 MiB", "6144 MiB", "3 MiB", "0.75 MiB"],
+          note: "2048 x 1024 x 3 = 6,291,456 bytes, / 1024 / 1024 = 6 MiB."
+        },
+        {
+          id: "u13-img-1024-2b-mib", category: "u13-image",
+          prompt: "An image is 1024 x 1024 pixels with a colour depth of two bytes. Calculate its file size in MiB.",
+          answers: ["2 MiB"],
+          keywords: [/^\s*2\s*(mib|mebibytes?)?\s*$/i],
+          distractors: ["16 MiB", "1 MiB", "2048 MiB", "0.25 MiB", "4 MiB"],
+          note: "1024 x 1024 x 2 = 2,097,152 bytes = 2 MiB. 0478/12 March 2026 Question 1(b)."
+        },
+        {
+          id: "u13-snd-8192-8-10", category: "u13-sound",
+          prompt: "A sound has a sample rate of 8192 samples per second, an 8-bit sample resolution and lasts 10 seconds. Calculate its file size in KiB.",
+          answers: ["80 KiB"],
+          keywords: [/^\s*80\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["640 KiB", "81920 KiB", "8 KiB", "10 KiB", "655 KiB"],
+          note: "8192 x 8 x 10 = 655,360 bits, / 8 = 81,920 bytes, / 1024 = 80 KiB."
+        },
+        {
+          id: "u13-snd-8192-16-64-kib", category: "u13-sound",
+          prompt: "A sound has a sample rate of 8192 samples per second, a 16-bit sample resolution and lasts 64 seconds. Calculate its file size in KiB.",
+          answers: ["1024 KiB"],
+          keywords: [/^\s*1[,\s]?024\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["8192 KiB", "1 KiB", "128 KiB", "1048576 KiB", "2048 KiB"],
+          note: "8192 x 16 x 64 = 8,388,608 bits, / 8 = 1,048,576 bytes, / 1024 = 1024 KiB."
+        },
+        {
+          id: "u13-snd-8192-16-64-mib", category: "u13-sound",
+          prompt: "The same sound file is 1024 KiB. Give its size in MiB.",
+          answers: ["1 MiB"],
+          keywords: [/^\s*1\s*(mib|mebibytes?)?\s*$/i],
+          distractors: ["1024 MiB", "8 MiB", "0.5 MiB", "1.024 MiB"],
+          note: "1024 KiB / 1024 = 1 MiB."
+        },
+        {
+          id: "u13-snd-1000-8-10", category: "u13-sound",
+          prompt: "A sound has a sample rate of 1000 samples per second, an 8-bit sample resolution and lasts 10 seconds. Calculate its file size in bytes.",
+          answers: ["10000 bytes"],
+          keywords: [/^\s*10[,\s]?000\s*(bytes?|b)?\s*$/i],
+          distractors: ["80000 bytes", "1000 bytes", "8000 bytes", "9.8 bytes", "100000 bytes"],
+          note: "1000 x 8 x 10 = 80,000 bits, / 8 = 10,000 bytes."
+        },
+        {
+          id: "u13-snd-20-8-4", category: "u13-sound",
+          prompt: "A recording lasts 4 seconds, sampled at 20 samples per second with an 8-bit sample resolution. Calculate its file size in bytes.",
+          answers: ["80 bytes"],
+          keywords: [/^\s*80\s*(bytes?|b)?\s*$/i],
+          distractors: ["640 bytes", "160 bytes", "32 bytes", "20 bytes"],
+          note: "20 x 8 x 4 = 640 bits, / 8 = 80 bytes."
+        },
+        {
+          id: "u13-snd-minute", category: "u13-sound",
+          prompt: "A sound has a sample rate of 1024 samples per second, an 8-bit sample resolution and lasts 1 minute. Calculate its file size in KiB.",
+          answers: ["60 KiB"],
+          keywords: [/^\s*60\s*(kib|kibibytes?)?\s*$/i],
+          distractors: ["1 KiB", "480 KiB", "61440 KiB", "8 KiB", "7.5 KiB"],
+          note: "1024 x 8 x 60 = 491,520 bits, / 8 = 61,440 bytes, / 1024 = 60 KiB."
+        },
+        {
+          id: "u13-snd-bigger", category: "u13-sound",
+          prompt: "The sample resolution of a recording is doubled. What happens to its file size?",
+          answers: ["It doubles"],
+          keywords: [{ required: [["double", "doubles", "doubled", "twice", "2"]], excluded: ["half", "halve", "halves", "same"] }],
+          distractors: ["It halves", "It stays the same", "It quadruples", "It goes up by 8 bits"],
+          note: "Sample resolution is multiplied into the file size, so doubling it doubles the file size."
+        }
+      ]
+    },
+    "y10-1-3-l3-compression": {
+      title: "Year 10, 1.3 L3: Compression",
+      subtitle: "Cambridge IGCSE Computer Science 0478",
+      cards: [
+        {
+          id: "u13-compress-name", category: "u13-why",
+          prompt: "Give the name of the process used to reduce the size of a file.",
+          answers: ["Compression"],
+          keywords: [/^\s*(data\s+)?compress(ion|ing)?\s*$/i],
+          distractors: ["Encryption", "Validation", "Decompression", "Verification"],
+          note: "Compression reduces the size of a file. 0478/11 June 2025 Question 1(c)(i)."
+        },
+        {
+          id: "u13-effect-storage", category: "u13-why",
+          prompt: "A file is compressed. What effect does this have on the storage space it needs?",
+          answers: ["Less storage space is needed"],
+          keywords: [{ required: [["less", "reduce", "reduced", "reduces", "smaller", "lower", "fewer"]], excluded: ["more", "increase", "increases", "same"] }],
+          distractors: ["More storage space is needed", "The storage space stays the same", "It needs a different type of storage"],
+          note: "A smaller file takes up less storage space."
+        },
+        {
+          id: "u13-effect-bandwidth", category: "u13-why",
+          prompt: "A compressed file is sent across a network. What effect does compression have on the bandwidth needed?",
+          answers: ["Less bandwidth is needed"],
+          keywords: [{ required: [["less", "reduce", "reduced", "reduces", "lower", "smaller"]], excluded: ["more", "increase", "increases", "same"] }],
+          distractors: ["More bandwidth is needed", "The bandwidth stays the same", "The network gets faster for everyone"],
+          note: "Less data has to be sent, so less bandwidth is required."
+        },
+        {
+          id: "u13-effect-time", category: "u13-why",
+          prompt: "What effect does compressing a file have on the time taken to transmit it?",
+          answers: ["The transmission time is shorter"],
+          keywords: [{ required: [["shorter", "less", "faster", "quicker", "reduce", "reduced", "reduces", "lower"]], excluded: ["longer", "more", "slower", "increase", "increases", "same"] }],
+          distractors: ["The transmission time is longer", "The transmission time is the same", "The file cannot be transmitted"],
+          note: "A smaller file takes less time to upload, download or email."
+        },
+        {
+          id: "u13-other-reason", category: "u13-why",
+          prompt: "One reason to reduce a file's size is a shorter transmission time. Give one other reason.",
+          answers: ["Less storage space is needed", "Less bandwidth is needed"],
+          keywords: [{ required: [["storage", "space", "bandwidth", "memory"]] }],
+          distractors: ["It sends the file faster", "It makes the file more secure", "It improves the quality of the file", "It changes the file type"],
+          note: "Less storage space, or less bandwidth. 0478/11 June 2025 Question 1(c)(ii)."
+        },
+        {
+          id: "u13-lossy-def", category: "u13-lossy",
+          prompt: "How does lossy compression reduce the size of a file?",
+          answers: ["By permanently removing data"],
+          keywords: [{ required: [["remove", "removed", "removing", "delete", "deleted", "discard", "discarded", "lose", "lost"]], excluded: ["no", "nothing", "without", "not"] }],
+          distractors: ["By storing repeated data as a count and a value", "By converting it to hexadecimal", "By encrypting it", "By removing nothing at all"],
+          note: "Lossy compression permanently removes data, which can never be put back."
+        },
+        {
+          id: "u13-lossy-image-res", category: "u13-lossy",
+          prompt: "Give one way lossy compression can reduce the size of an image file.",
+          answers: ["Reduce the resolution", "Reduce the colour depth"],
+          keywords: [{ required: [["reduce", "reduced", "reducing", "lower", "lowered", "lowering", "decrease", "decreased", "decreasing", "fewer", "less"], ["resolution", "colour", "color", "depth", "pixel"]], excluded: ["increase", "increases", "more", "count", "encrypt"] }],
+          distractors: ["Store runs of pixels as a count", "Increase the resolution", "Increase the colour depth", "Encrypt the pixels"],
+          note: "Reducing the resolution (fewer pixels) or the colour depth (fewer bits per pixel) permanently removes data."
+        },
+        {
+          id: "u13-lossy-sound", category: "u13-lossy",
+          prompt: "Give one way lossy compression can reduce the size of a sound file.",
+          answers: ["Reduce the sample rate", "Reduce the sample resolution"],
+          keywords: [{ required: [["reduce", "reduced", "reducing", "lower", "lowered", "lowering", "decrease", "decreased", "decreasing", "fewer", "less"], ["rate", "resolution", "sample"]], excluded: ["increase", "increases", "more", "count", "longer"] }],
+          distractors: ["Store repeated samples as a count", "Increase the sample rate", "Make the track longer", "Convert it to text"],
+          note: "Reducing the sample rate or the sample resolution permanently removes data."
+        },
+        {
+          id: "u13-lossy-res-type", category: "u13-lossy",
+          prompt: "Is reducing the resolution of an image lossy or lossless?",
+          answers: ["Lossy"],
+          keywords: [/^\s*lossy(\s+compression)?\s*$/i],
+          distractors: ["Lossless"],
+          note: "The removed pixels are gone for good, so it is lossy."
+        },
+        {
+          id: "u13-lossy-depth-quarter", category: "u13-lossy",
+          prompt: "An image has its colour depth reduced from 24 bits to 8 bits. How many times smaller is the image data?",
+          answers: ["3 times"],
+          keywords: [/^\s*3(\s*times)?\s*$/i],
+          distractors: ["16 times", "8 times", "2 times", "24 times"],
+          note: "File size is proportional to colour depth: 24 / 8 = 3 times smaller."
+        },
+        {
+          id: "u13-lossy-halve-rate", category: "u13-lossy",
+          prompt: "A 4 MiB sound file has its sample rate halved. Give the new file size in MiB.",
+          answers: ["2 MiB"],
+          keywords: [/^\s*2\s*(mib|mebibytes?)?\s*$/i],
+          distractors: ["4 MiB", "8 MiB", "1 MiB", "3 MiB"],
+          note: "Sample rate is multiplied into the file size, so halving it halves the file: 2 MiB."
+        },
+        {
+          id: "u13-mp3", category: "u13-lossy",
+          prompt: "Is an MP3 file a lossy compressed file, a lossless compressed file, or not compressed?",
+          answers: ["Lossy compressed file"],
+          keywords: [/^\s*lossy(\s+compress(ed|ion))?(\s+file)?\s*$/i],
+          distractors: ["Lossless compressed file", "Not a compressed file"],
+          note: "MP3 is lossy. 0478/11 June 2022 Question 1(a)(ii)."
+        },
+        {
+          id: "u13-lossless-def", category: "u13-lossless",
+          prompt: "How is lossless compression different from lossy compression?",
+          answers: ["No data is permanently removed, so the original can be rebuilt exactly"],
+          keywords: [{ required: [["exact", "exactly", "original", "identical"]], excluded: ["lossy"] },
+                     { required: [["no", "nothing", "without"], ["data", "loss", "lost", "remove", "removed"]] }],
+          distractors: ["It removes data the user will not notice", "It always makes a file smaller than lossy does", "It only works on sound files", "It reduces the colour depth"],
+          note: "Lossless reduces file size without permanent loss of data. The original is rebuilt exactly."
+        },
+        {
+          id: "u13-rle-name", category: "u13-lossless",
+          prompt: "Name the lossless method that stores each run of repeated data as a count and a value.",
+          answers: ["Run length encoding (RLE)"],
+          keywords: [/^\s*(rle|run[\s-]*length[\s-]*encoding(\s*\(?rle\)?)?)\s*$/i],
+          distractors: ["Lossy compression", "Encryption", "Hexadecimal", "Parity check"],
+          note: "Run length encoding (RLE) is the lossless method named in the syllabus."
+        },
+        {
+          id: "u13-rle-text", category: "u13-lossless",
+          prompt: "Encode the text AAAAABBBCCCC using RLE.",
+          answers: ["5A 3B 4C"],
+          keywords: [/^\s*5\s*A[\s,]*3\s*B[\s,]*4\s*C\s*$/i],
+          distractors: ["A5 B3 C4", "5 3 4", "ABC", "12ABC"],
+          note: "Five A, then three B, then four C: 5A 3B 4C."
+        },
+        {
+          id: "u13-rle-row", category: "u13-lossless",
+          prompt: "Encode the pixel row BBWWWWWWBB using RLE.",
+          answers: ["2B 6W 2B"],
+          keywords: [/^\s*2\s*B[\s,]*6\s*W[\s,]*2\s*B\s*$/i],
+          distractors: ["4B 6W", "2B 6W", "B2 W6 B2", "10BW"],
+          note: "2 black, 6 white, 2 black: 2B 6W 2B."
+        },
+        {
+          id: "u13-rle-decode", category: "u13-lossless",
+          prompt: "The RLE row 3W 2B 4W is decoded. How many pixels does it have?",
+          answers: ["9 pixels"],
+          keywords: [/^\s*9\s*(pixels?)?\s*$/i],
+          distractors: ["3 pixels", "6 pixels", "24 pixels", "5 pixels"],
+          note: "3 + 2 + 4 = 9 pixels."
+        },
+        {
+          id: "u13-text-type", category: "u13-lossless",
+          prompt: "A text file needs to be compressed. Which type of compression is most appropriate?",
+          answers: ["Lossless"],
+          keywords: [/^\s*lossless(\s+compression)?\s*$/i],
+          distractors: ["Lossy"],
+          note: "Lossless: removing characters would change what the text says. 0478/13 June 2026 Question 1(c)(iii)."
+        },
+        {
+          id: "u13-patterns-indexed", category: "u13-lossless",
+          prompt: "A compression algorithm indexes repeating patterns in the data. No data is permanently removed. Which type of compression is it?",
+          answers: ["Lossless"],
+          keywords: [/^\s*lossless(\s+compression)?\s*$/i],
+          distractors: ["Lossy"],
+          note: "No permanent loss of data means lossless. 0478/13 June 2022 Question 6(d)."
+        }
+      ]
+    },
+    "examqs-y10-1-3": {
+      title: "Year 10, 1.3 Data Storage and Compression - Exam Questions",
+      subtitle: "Cambridge IGCSE Computer Science 0478 - past-paper questions and exam-style practice",
+      isExamSet: true,
+      cards: [
+        {
+          id: "y10-1-3-units-1", category: "x13-units",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 11, Question 1(a)",
+          marks: 1,
+          stem: "Which is the smallest data storage unit? A byte, B gibibyte (GiB), C kibibyte (KiB), D nibble.",
+          parts: [
+            { label: "Enter A, B, C or D.", correctAnswer: "D", acceptedAnswers: ["Nibble"] }
+          ]
+        },
+        {
+          id: "y10-1-3-units-2", category: "x13-units",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 11, Question 1(b)",
+          marks: 1,
+          stem: "State how many tebibytes (TiB) are equal to 2 pebibytes (PiB).",
+          parts: [
+            { label: "Enter the number of TiB.", correctAnswer: "2048", acceptedAnswers: ["2,048", "2048 TiB", "2048TiB"] }
+          ]
+        },
+        {
+          id: "y10-1-3-units-3", category: "x13-units",
+          source: "Cambridge IGCSE 0478, February/March 2023 Paper 12, Question 3(a)",
+          marks: 4,
+          stem: "Data storage is measured using binary denominations. Complete each conversion.",
+          parts: [
+            { label: "8 bytes = ... nibbles", correctAnswer: "16" },
+            { label: "512 kibibytes (KiB) = ... mebibytes (MiB)", correctAnswer: "0.5", acceptedAnswers: [".5", "1/2"] },
+            { label: "4 gibibytes (GiB) = ... mebibytes (MiB)", correctAnswer: "4096", acceptedAnswers: ["4,096"] },
+            { label: "1 exbibyte (EiB) = ... pebibytes (PiB)", correctAnswer: "1024", acceptedAnswers: ["1,024"] }
+          ]
+        },
+        {
+          id: "y10-1-3-units-4", category: "x13-units",
+          source: "Cambridge IGCSE 0478, May/June 2024 Paper 12, Question 1(a)-(c)",
+          marks: 3,
+          stem: "Data can be measured in bits.",
+          parts: [
+            { label: "Give the name of the data storage measurement that is equal to 8 bits.", correctAnswer: "Byte", acceptedAnswers: ["Bytes", "1 byte", "A byte"] },
+            { label: "State how many bits there are in a kibibyte (KiB).", correctAnswer: "8192", acceptedAnswers: ["8,192", "8192 bits"] },
+            { label: "Give the name of the data storage measurement that is equal to 1024 gibibytes (GiB).", correctAnswer: "Tebibyte", acceptedAnswers: ["TiB", "Tebibyte (TiB)", "Tebibytes", "1 TiB"] }
+          ]
+        },
+        {
+          id: "y10-1-3-units-5", category: "x13-units",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 12, Question 2(b)",
+          marks: 2,
+          stem: "The size of an image file is 3072 bytes.",
+          parts: [
+            { label: "Give the size of the image file in kibibytes (KiB).", correctAnswer: "3", acceptedAnswers: ["3 KiB", "3KiB"] },
+            { label: "State the number of nibbles in 1 byte.", correctAnswer: "2", acceptedAnswers: ["2 nibbles", "Two"] }
+          ]
+        },
+        {
+          id: "y10-1-3-units-6", category: "x13-units",
+          source: "Cambridge IGCSE 0478, February/March 2026 Paper 12, Question 1(a)",
+          marks: 1,
+          stem: "Which statement about data storage is correct? A One bit equals four nibbles. B One byte equals 16 bits. C One exbibyte (EiB) equals 1024 x 1024 tebibytes (TiB). D One mebibyte (MiB) equals 1024 x 1024 gibibytes (GiB).",
+          parts: [
+            { label: "Enter A, B, C or D.", correctAnswer: "C" }
+          ]
+        },
+        {
+          id: "y10-1-3-size-1", category: "x13-filesize",
+          source: "Cambridge IGCSE 0478, May/June 2024 Paper 12, Question 1(d)",
+          marks: 1,
+          stem: "A 16-bit colour image has a resolution of 512 pixels wide by 512 pixels high. Calculate the file size of the image in kibibytes (KiB).",
+          parts: [
+            { label: "Enter the file size in KiB.", correctAnswer: "512", acceptedAnswers: ["512 KiB", "512KiB"] }
+          ]
+        },
+        {
+          id: "y10-1-3-size-2", category: "x13-filesize",
+          source: "Cambridge IGCSE 0478, February/March 2026 Paper 12, Question 1(b)",
+          marks: 1,
+          stem: "An image file has a resolution of 1024 pixels high x 1024 pixels wide. The colour depth is two bytes. Calculate the file size of the image in MiB.",
+          parts: [
+            { label: "Enter the file size in MiB.", correctAnswer: "2", acceptedAnswers: ["2 MiB", "2MiB"] }
+          ]
+        },
+        {
+          id: "y10-1-3-size-3", category: "x13-filesize",
+          source: "Exam-style question, adapted from Cambridge IGCSE 0478, February/March 2026 Paper 12, Question 1(b) using a sound file",
+          marks: 2,
+          stem: "A sound file has a sample rate of 8192 samples per second and a sample resolution of 16 bits. The track is 64 seconds long.",
+          parts: [
+            { label: "Calculate the file size in KiB.", correctAnswer: "1024", acceptedAnswers: ["1,024", "1024 KiB", "1024KiB"] },
+            { label: "Give the same file size in MiB.", correctAnswer: "1", acceptedAnswers: ["1 MiB", "1MiB"] }
+          ]
+        },
+        {
+          id: "y10-1-3-size-4", category: "x13-filesize",
+          source: "Exam-style question, adapted from Cambridge IGCSE 0478, May/June 2022 Paper 11, Question 5 using a sound file",
+          marks: 1,
+          stem: "A sound file has a sample rate of 1000 samples per second and a sample resolution of 8 bits. The track is 10 seconds long. Calculate the file size of the sound file in bytes.",
+          parts: [
+            { label: "Enter the file size in bytes.", correctAnswer: "10000", acceptedAnswers: ["10,000", "10000 bytes"] }
+          ]
+        },
+        {
+          id: "y10-1-3-comp-1", category: "x13-compression",
+          source: "Cambridge IGCSE 0478, May/June 2025 Paper 11, Question 1(c)(i)",
+          marks: 1,
+          stem: "The size of a file needs to be reduced. Give the name of the process that is used to reduce the size of a file.",
+          parts: [
+            { label: "Enter the name of the process.", correctAnswer: "Compression", acceptedAnswers: ["Data compression", "Compressing"] }
+          ]
+        },
+        {
+          id: "y10-1-3-comp-2", category: "x13-compression",
+          source: "Cambridge IGCSE 0478, May/June 2022 Paper 11, Question 1(a)(ii)",
+          marks: 1,
+          stem: "Jack has an MP3 file stored on his computer. Is the MP3 file A a lossy compressed file, B a lossless compressed file or C not a compressed file?",
+          parts: [
+            { label: "Enter A, B or C.", correctAnswer: "A", acceptedAnswers: ["Lossy", "Lossy compressed file"] }
+          ]
+        },
+        {
+          id: "y10-1-3-comp-3", category: "x13-compression",
+          source: "Cambridge IGCSE 0478, May/June 2022 Paper 13, Question 6(b)",
+          marks: 1,
+          stem: "Frida has a JPEG file stored on her computer. Is the JPEG file A a lossy compressed file, B a lossless compressed file or C not a compressed file?",
+          parts: [
+            { label: "Enter A, B or C.", correctAnswer: "A", acceptedAnswers: ["Lossy", "Lossy compressed file"] }
+          ]
+        },
+        {
+          id: "y10-1-3-comp-4", category: "x13-compression",
+          source: "Cambridge IGCSE 0478, May/June 2022 Paper 13, Question 6(d)",
+          marks: 1,
+          stem: "Frida compresses a document for storage. The compression algorithm recognises repeating patterns in the data and indexes these patterns. No data is permanently removed. Identify the type of compression Frida has used.",
+          parts: [
+            { label: "Enter the type of compression.", correctAnswer: "Lossless", acceptedAnswers: ["Lossless compression"] }
+          ]
+        },
+        {
+          id: "y10-1-3-comp-5", category: "x13-compression",
+          source: "Cambridge IGCSE 0478, May/June 2026 Paper 13, Question 1(c)(iii)",
+          marks: 1,
+          stem: "A computer uses the ASCII character set for a text file. The text file needs to be compressed. Identify the most appropriate type of compression for the text file.",
+          parts: [
+            { label: "Enter the compression type.", correctAnswer: "Lossless", acceptedAnswers: ["Lossless compression"] }
+          ]
+        },
+        {
+          id: "y10-1-3-comp-6", category: "x13-compression",
+          source: "Exam-style question, based on the 1.3 syllabus example of a lossless method",
+          marks: 1,
+          stem: "Identify one lossless method of compressing an image.",
+          parts: [
+            { label: "Enter the method.", correctAnswer: "Run length encoding", acceptedAnswers: ["RLE", "Run-length encoding", "Run length encoding (RLE)", "Run-length encoding (RLE)"] }
+          ]
+        }
+      ]
+    },
     "y9-numbers": {
       title: "Year 9, Number Systems",
       subtitle: "Binary, Denary and Hexadecimal",
@@ -8696,6 +9330,18 @@
     "fscomp-concept": "Lossless vs Lossy",
     "fscomp-rle": "Run-Length Encoding",
     "fscomp-choose": "Choosing a Method",
+    "u13-ladder": "The Unit Ladder",
+    "u13-convert": "Converting One Step",
+    "u13-multi": "Converting Several Steps",
+    "u13-method": "Method and Units",
+    "u13-image": "Image File Size",
+    "u13-sound": "Sound File Size",
+    "u13-why": "Why Compress",
+    "u13-lossy": "Lossy Compression",
+    "u13-lossless": "Lossless Compression and RLE",
+    "x13-units": "Storage Units",
+    "x13-filesize": "File Size",
+    "x13-compression": "Compression",
     "fc-symbols": "Naming the Symbols",
     "fc-shapemap": "Shape to Pseudocode",
     "fc-toCode": "Flowchart to Pseudocode",
@@ -8715,7 +9361,7 @@
     "l7-iteration": "Iteration",
     "l7-write": "Writing a Full Algorithm"
   };
-  var CATEGORY_ORDER = ["m1a-ops", "m1a-types", "m1a-loops", "m1a-methods", "m1b-trace", "m1b-errors", "m1b-valid", "m1c-valid", "m1c-arrays", "m1c-stats", "m1c-runs", "m1c-program", "y11valid", "y11test", "y11types", "y11ops", "y11strings", "y11errors", "y11trace", "y11logic", "y11sql", "y11dev", "vocab", "motion", "testing", "plantocode", "y7-symbols", "y7-reading", "y7-debugging", "y7-sequence", "y7-inputs", "y7-movement", "y7-loops", "y7-logic", "y7-sub-purpose", "y7-call-trace", "y7-call-effects", "y7-complete", "seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "fc-symbols", "fc-shapemap", "fc-toCode", "fc-toFlow", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound", "fscomp-concept", "fscomp-rle", "fscomp-choose", "l2", "l2-plenary", "l3", "l3-plenary", "l4", "l4-plenary", "l1", "l1-plenary", "l3-exambinary", "l4-examunits", "l7-sequence", "l7-selection", "l7-iteration", "l7-write"];
+  var CATEGORY_ORDER = ["m1a-ops", "m1a-types", "m1a-loops", "m1a-methods", "m1b-trace", "m1b-errors", "m1b-valid", "m1c-valid", "m1c-arrays", "m1c-stats", "m1c-runs", "m1c-program", "y11valid", "y11test", "y11types", "y11ops", "y11strings", "y11errors", "y11trace", "y11logic", "y11sql", "y11dev", "vocab", "motion", "testing", "plantocode", "y7-symbols", "y7-reading", "y7-debugging", "y7-sequence", "y7-inputs", "y7-movement", "y7-loops", "y7-logic", "y7-sub-purpose", "y7-call-trace", "y7-call-effects", "y7-complete", "seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "fc-symbols", "fc-shapemap", "fc-toCode", "fc-toFlow", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound", "fscomp-concept", "fscomp-rle", "fscomp-choose", "u13-ladder", "u13-convert", "u13-multi", "u13-method", "u13-image", "u13-sound", "u13-why", "u13-lossy", "u13-lossless", "x13-units", "x13-filesize", "x13-compression", "l2", "l2-plenary", "l3", "l3-plenary", "l4", "l4-plenary", "l1", "l1-plenary", "l3-exambinary", "l4-examunits", "l7-sequence", "l7-selection", "l7-iteration", "l7-write"];
 
   // ============================================================
   // ENGINE

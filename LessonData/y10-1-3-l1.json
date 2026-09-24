@@ -1,0 +1,306 @@
+{
+ "id": "y10-1-3-l1",
+ "label": "1.3 L1: Storage Units",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Character Sets",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l1-do-now",
+   "validatorKey": "y10_1_3_l1_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Character Sets</h2><p class=\"lesson-lead\">Recapping 1.2 Character Sets. Cambridge IGCSE 0478/13, June 2026, Question 1(c)(i): a computer uses ASCII for a text file. One word from the file is &quot;cat&quot;. The ASCII denary value for the character &quot;c&quot; is 99.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-do-now-a\">(a) Give the ASCII denary value for &quot;a&quot;. [1]</label><input id=\"y10-13l1-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Character Sets part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-do-now-b\">(b) Give the ASCII denary value for &quot;t&quot;. [1]</label><input id=\"y10-13l1-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Character Sets part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l1-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-13l1-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Images and Text",
+   "type": "multiple-choice",
+   "containerId": "y10-13l1-do-now-2-mcq",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Images and Text</h2><p class=\"lesson-lead\">Recapping 1.2 Pixel Lab and Character Sets. Based on Cambridge IGCSE 0478/12, June 2025, Question 2(c)(i) and 0478/13, June 2026, Question 1(c)(ii).</p><div id=\"y10-13l1-do-now-2-mcq\"></div>",
+   "items": [
+    {
+     "prompt": "An image file has a colour depth of 32 bits. What does this mean?",
+     "options": [
+      "The image is 32 pixels wide",
+      "32 bits are used to store the colour of each pixel",
+      "The image can only use 32 colours",
+      "The whole image is stored in 32 bits"
+     ],
+     "correct": 1,
+     "explain": "Colour depth is the number of bits used for each pixel's colour. 32 bits per pixel gives 2 to the power 32 possible colours, not 32."
+    },
+    {
+     "prompt": "A computer uses ASCII for a text file. Identify one other character set it could use.",
+     "options": [
+      "Hexadecimal",
+      "Binary",
+      "Denary",
+      "Unicode"
+     ],
+     "correct": 3,
+     "explain": "Unicode is the other character set on the syllabus. It covers far more characters, such as other languages and emojis, but needs more bits per character."
+    }
+   ]
+  },
+  {
+   "id": "do-now-3",
+   "label": "Do Now: Hexadecimal",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l1-do-now-3",
+   "validatorKey": "y10_1_3_l1_do_now_3",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Hexadecimal</h2><p class=\"lesson-lead\">A question from 1.1 Number Systems. Cambridge IGCSE 0478/11, June 2025, Question 2(b)(i): two ticket numbers are 14B and 97A. Convert the two ticket numbers from hexadecimal to binary.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-do-now-3-a\">(a) 14B [1]</label><input id=\"y10-13l1-do-now-3-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-a\" aria-label=\"Do Now: Hexadecimal part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-do-now-3-b\">(b) 97A [1]</label><input id=\"y10-13l1-do-now-3-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-b\" aria-label=\"Do Now: Hexadecimal part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l1-do-now-3-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-13l1-do-now-3-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "title",
+   "label": "Storage Units",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Data Storage and Compression</p><h2 class=\"lesson-h2\">Storage Units</h2><p>Year 10, 1.3 L1 &middot; Data Storage &middot; 30 minutes</p></div><ul class=\"lesson-facts\"><li><strong>Concept:</strong> Every unit from a bit up to an exbibyte, and how many of each make the next.</li><li><strong>Walkthrough:</strong> Convert across several units in one go.</li><li><strong>Challenge:</strong> Storage Blitz, the units level.</li><li><strong>Exam link:</strong> Three real Cambridge questions on storage units.</li></ul>"
+  },
+  {
+   "id": "concept",
+   "label": "The Storage Unit Ladder",
+   "content": "<h2 class=\"lesson-h2\">The Storage Unit Ladder</h2><p class=\"lesson-lead\">Data storage is measured in binary units. Each unit is made from a fixed number of the one below it:</p><ul class=\"lesson-facts\"><li><strong>1 nibble</strong> = 4 bits &nbsp;&middot;&nbsp; <strong>1 byte</strong> = 8 bits = 2 nibbles</li><li><strong>1 kibibyte (KiB)</strong> = 1024 bytes &nbsp;&middot;&nbsp; <strong>1 mebibyte (MiB)</strong> = 1024 KiB</li><li><strong>1 gibibyte (GiB)</strong> = 1024 MiB &nbsp;&middot;&nbsp; <strong>1 tebibyte (TiB)</strong> = 1024 GiB</li><li><strong>1 pebibyte (PiB)</strong> = 1024 TiB &nbsp;&middot;&nbsp; <strong>1 exbibyte (EiB)</strong> = 1024 PiB</li></ul><p class=\"lesson-lead\">Going <strong>down</strong> to a smaller unit, multiply. Going <strong>up</strong> to a bigger unit, divide. From the byte upwards, every step is 1024.</p>"
+  },
+  {
+   "id": "exam-units",
+   "label": "Exam Question: Smallest Unit",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l1-exam-units",
+   "validatorKey": "y10_1_3_l1_exam_units",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Smallest Unit</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2025, Question 1(a) and (b). The size of a file can be measured using different data storage units.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-exam-units-a\">(a) Which is the smallest data storage unit? A byte, B gibibyte (GiB), C kibibyte (KiB), D nibble. Enter the letter. [1]</label><input id=\"y10-13l1-exam-units-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-units-a\" aria-label=\"Exam Question: Smallest Unit part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-exam-units-b\">(b) State how many tebibytes (TiB) are equal to 2 pebibytes (PiB). [1]</label><input id=\"y10-13l1-exam-units-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-units-b\" aria-label=\"Exam Question: Smallest Unit part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l1-exam-units-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-13l1-exam-units-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "concept-1024",
+   "label": "Always 1024, Never 1000",
+   "content": "<h2 class=\"lesson-h2\">Always 1024, Never 1000</h2><p class=\"lesson-lead\">Computers count in powers of 2, so each step up the ladder is 2<sup>10</sup> = 1024, not 1000.</p><ul class=\"lesson-facts\"><li>Cambridge mark schemes require 1024 in every storage calculation.</li><li>Dividing by 1000 instead gives a wrong answer, even when the method is right.</li><li>Always give the answer in the unit the question asks for.</li></ul>"
+  },
+  {
+   "id": "check-1024",
+   "label": "Check: Spot the Mistake",
+   "type": "multiple-choice",
+   "containerId": "y10-13l1-check-1024-mcq",
+   "content": "<h2 class=\"lesson-h2\">Check: Spot the Mistake</h2><p class=\"lesson-lead\">Two students made a mistake. Choose what went wrong.</p><div id=\"y10-13l1-check-1024-mcq\"></div>",
+   "items": [
+    {
+     "prompt": "A student converts 2048 bytes to KiB and writes 2.048 KiB. What went wrong?",
+     "options": [
+      "They should have multiplied by 1024",
+      "They divided by 1000 instead of 1024",
+      "They should have divided by 8 first",
+      "Nothing, 2.048 KiB is correct"
+     ],
+     "correct": 1,
+     "explain": "2048 / 1024 = 2 KiB. Dividing by 1000 is the decimal kilobyte, which the exam does not accept."
+    },
+    {
+     "prompt": "A student converts 3 MiB to KiB and writes 0.003 MiB. What went wrong?",
+     "options": [
+      "They divided when they should have multiplied by 1024",
+      "They should have multiplied by 8",
+      "They used the wrong number of nibbles",
+      "Nothing, the answer is correct"
+     ],
+     "correct": 0,
+     "explain": "Going down to a smaller unit means multiplying: 3 x 1024 = 3072 KiB."
+    }
+   ]
+  },
+  {
+   "id": "worked-conversion",
+   "label": "Convert Across Several Units",
+   "type": "stepper",
+   "stepperId": "y10-13l1-worked-conversion-stepper",
+   "stepperKey": "y10_units_multistep",
+   "content": "<h2 class=\"lesson-h2\">Convert Across Several Units</h2><p class=\"lesson-lead\">Step through one conversion that crosses four units, then try two on your own.</p><div id=\"y10-13l1-worked-conversion-stepper\" class=\"lesson-stepper\"></div>"
+  },
+  {
+   "id": "check-conversion",
+   "label": "Your Turn: Several Units",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l1-check-conversion",
+   "validatorKey": "y10_1_3_l1_check_conversion",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Several Units</h2><p class=\"lesson-lead\">Use the same method as the walkthrough, one step at a time.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-check-conversion-a\">(a) Convert 2 KiB to bits. [1]</label><input id=\"y10-13l1-check-conversion-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-conversion-a\" aria-label=\"Your Turn: Several Units part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-check-conversion-b\">(b) Convert 24576 bits to KiB. [1]</label><input id=\"y10-13l1-check-conversion-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-conversion-b\" aria-label=\"Your Turn: Several Units part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-check-conversion-c\">(c) Convert 1 GiB to KiB. [1]</label><input id=\"y10-13l1-check-conversion-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-conversion-c\" aria-label=\"Your Turn: Several Units part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l1-check-conversion-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-13l1-check-conversion-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "blitz-units",
+   "label": "Storage Blitz: File Size Units",
+   "type": "app-link",
+   "buttonId": "y10-13l1-blitz-units-button",
+   "appId": "storageblitz",
+   "appQuery": "level=1",
+   "content": "<h2 class=\"lesson-h2\">Storage Blitz: File Size Units</h2><p class=\"lesson-lead\">Open Storage Blitz. It goes straight to the File Size Units level: convert between bits, nibbles, bytes, KiB, MiB, GiB and TiB against the clock.</p><div class=\"lesson-flow-task\"><h3>Complete when</h3><p>You have scored at least 1000 points (10 correct answers) on File Size Units. Turn on Support Mode if you keep running out of time.</p></div><div class=\"lesson-app-link\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l1-blitz-units-button\">Open Storage Blitz</button></div>"
+  },
+  {
+   "id": "exam-kib",
+   "label": "Exam Question: Bytes to Kibibytes",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l1-exam-kib",
+   "validatorKey": "y10_1_3_l1_exam_kib",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Bytes to Kibibytes</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2025, Question 2(b). A student has an image file stored on their computer. The size of the image file is 3072 bytes.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-exam-kib-a\">(i) Give the size of the image file in kibibytes (KiB). [1]</label><input id=\"y10-13l1-exam-kib-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-kib-a\" aria-label=\"Exam Question: Bytes to Kibibytes part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-exam-kib-b\">(ii) State the number of nibbles in 1 byte. [1]</label><input id=\"y10-13l1-exam-kib-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-kib-b\" aria-label=\"Exam Question: Bytes to Kibibytes part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l1-exam-kib-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-13l1-exam-kib-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "practice",
+   "label": "Checked Practice",
+   "type": "short-answer-validation",
+   "validatorId": "y10-13l1-practice",
+   "validatorKey": "y10_1_3_l1_practice",
+   "content": "<h2 class=\"lesson-h2\">Checked Practice</h2><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-practice-a\">(a) Convert 5 MiB to KiB. [1]</label><input id=\"y10-13l1-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Checked Practice part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-practice-b\">(b) Convert 2048 KiB to MiB. [1]</label><input id=\"y10-13l1-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Checked Practice part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-practice-c\">(c) Convert 3 GiB to MiB. [1]</label><input id=\"y10-13l1-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Checked Practice part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-13l1-practice-d\">(d) Convert 12 nibbles to bytes. [1]</label><input id=\"y10-13l1-practice-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-d\" aria-label=\"Checked Practice part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-13l1-practice-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-13l1-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Storage Units",
+   "type": "embedded-app",
+   "appId": "drill-y10-1-3-l1-units",
+   "embedContainerId": "y10-13l1-plenary-drill",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Storage Units</h2><div id=\"y10-13l1-plenary-drill\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_1_3_l1_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*97\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count back from c: c is 99, b is 98, a is 97."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*116\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Letters are in alphabetical order: t is 17 letters after c, so 99 + 17."
+   }
+  ],
+  "y10_1_3_l1_do_now_3": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(0{0,3}1\\s?0100\\s?1011|0001\\s?0100\\s?1011)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Convert each hex digit to its own 4 bits: 1 = 0001, 4 = 0100, B = 1011."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1001\\s?0111\\s?1010\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Convert each hex digit to its own 4 bits: 9 = 1001, 7 = 0111, A = 1010."
+   }
+  ],
+  "y10_1_3_l1_exam_units": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(d|nibble)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A nibble is 4 bits, half a byte. Every other option is at least a byte."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2[,\\s]?048(\\s*(tib|tebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "1 PiB is 1024 TiB, so multiply 2 by 1024."
+   }
+  ],
+  "y10_1_3_l1_check_conversion": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*16[,\\s]?384(\\s*(bits?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "2 KiB = 2 x 1024 bytes = 2048 bytes. Then multiply by 8 for bits."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3(\\s*(kib|kibibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Divide by 8 for bytes (3072), then by 1024 for KiB."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1[,\\s]?048[,\\s]?576(\\s*(kib|kibibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "GiB to MiB is x1024, then MiB to KiB is x1024 again."
+   }
+  ],
+  "y10_1_3_l1_exam_kib": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3(\\s*(kib|kibibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Divide by 1024 to move up from bytes to KiB."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2(\\s*(nibbles?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A nibble is 4 bits and a byte is 8 bits."
+   }
+  ],
+  "y10_1_3_l1_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*5[,\\s]?120(\\s*(kib|kibibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Down one step: multiply by 1024."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2(\\s*(mib|mebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Up one step: divide by 1024."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3[,\\s]?072(\\s*(mib|mebibytes?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Down one step: multiply by 1024."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6(\\s*(bytes?|b))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "There are 2 nibbles in a byte, so divide by 2."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

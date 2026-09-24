@@ -638,8 +638,14 @@ const App = () => {
         window.addEventListener('message', handler);
         return () => window.removeEventListener('message', handler);
     }, []);
-    const [view, setView] = useState('menu');
-    const [activeLevel, setActiveLevel] = useState(1);
+    // ?level=N (from a lesson's app-link step, e.g. Year 10 1.3) opens that
+    // level straight away instead of the menu. Anything else is ignored.
+    const linkedLevel = (() => {
+        const n = parseInt(new URLSearchParams(window.location.search).get('level'), 10);
+        return n >= 1 && n <= 7 ? n : null;
+    })();
+    const [view, setView] = useState(linkedLevel === null ? 'menu' : linkedLevel === 7 ? 'exam' : 'game');
+    const [activeLevel, setActiveLevel] = useState(linkedLevel || 1);
     const [lastScore, setLastScore] = useState(0);
     const [lastExamStats, setLastExamStats] = useState(null);
     const [isHardMode, setHardMode] = useState(false);
