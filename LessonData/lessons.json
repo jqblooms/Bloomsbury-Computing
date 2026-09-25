@@ -1,0 +1,87 @@
+{
+  "years": [
+    {
+      "id": "year6",
+      "label": "Year 6",
+      "lessons": [
+        "y6-icontrol-l1",
+        "y6-igame-l2",
+        "y6-iplan-l3",
+        "y6-icode-l4",
+        "y6-idevelop-l5",
+        "y6-idebug-l6"
+      ]
+    },
+    {
+      "id": "year7",
+      "label": "Year 7",
+      "lessons": [
+        "y7-flowcharts-l1",
+        "y7-flowcharts-l2",
+        "y7-flowcharts-l3",
+        "y7-flowcharts-l4"
+      ]
+    },
+    {
+      "id": "year8",
+      "label": "Year 8",
+      "lessons": [
+        "y8-algorithms-l1",
+        "y8-algorithms-l2",
+        "y8-algorithms-l3",
+        "y8-algorithms-l4",
+        "y8-algorithms-l5",
+        "y8-algorithms-l6"
+      ]
+    },
+    {
+      "id": "year9",
+      "label": "Year 9",
+      "lessons": [
+        "y9-numbers-l1",
+        "y9-numbers-l2",
+        "y9-numbers-l3",
+        "y9-algorithms-l4",
+        "y9-algorithms-l5",
+        "y9-algorithms-l6",
+        "y9-algorithms-l7",
+        "y9-algorithms-l8",
+        "y9-algorithms-l9"
+      ]
+    },
+    {
+      "id": "year10",
+      "label": "Year 10",
+      "lessons": [
+        "y10-1-1-l1",
+        "y10-1-1-l2",
+        "y10-1-1-l3",
+        "y10-1-1-l4",
+        "y10-1-2-l1",
+        "y10-1-2-l2",
+        "y10-1-2-l3",
+        "y10-1-2-l4",
+        "y10-1-2-l5",
+        "y10-1-3-l1",
+        "y10-1-3-l2",
+        "y10-1-3-l3",
+        "y10-2-1-l1"
+      ]
+    },
+    {
+      "id": "year11",
+      "label": "Year 11",
+      "lessons": [
+        "y11-7-l1",
+        "y11-7-l2",
+        "y11-7-l3",
+        "y11-7-l4",
+        "y11-7-l5",
+        "y11-7-l6",
+        "y11-7-l7",
+        "y11-baseline",
+        "y11-8-1-l1"
+      ]
+    }
+  ]
+}
