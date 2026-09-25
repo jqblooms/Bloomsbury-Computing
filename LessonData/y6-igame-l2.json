@@ -18,7 +18,7 @@
     },
     {
       "id": "objectives",
-      "label": "Today\u2019s Task",
+      "label": "Today's Task",
       "content": "<h2 class=\"lesson-h2\">Today\u2019s Task</h2><div class=\"igame-two-col\"><div><p class=\"lesson-lead\">You will build a Pong-style game in TurboWarp.</p><ul class=\"lesson-facts\"><li>The mouse controls a paddle.</li><li>A ball moves and bounces around the stage.</li><li>The game checks whether the ball touches the paddle.</li><li>Each successful hit increases the score and speed.</li></ul></div><img class=\"igame-photo igame-photo-large\" src=\"https://jqblooms.github.io/Bloomsbury-Computing/LessonAssets/y6-igame-l2/pong-controller.jpg\" alt=\"A player controlling the original Pong game\"></div><div class=\"lesson-flow-task\"><h3>Finished when</h3><p>Your paddle follows the mouse, the ball bounces, the score changes after a hit, and the game stops when the ball reaches the floor.</p></div>"
     },
     {

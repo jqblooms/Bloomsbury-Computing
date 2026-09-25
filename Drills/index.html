@@ -4021,9 +4021,9 @@
         },
         {
           id: "l7-write-3", category: "l7-write",
-          prompt: "Declare Guess (INTEGER) and Attempts (INTEGER) first. Guess starts at StartGuess, Attempts starts at 0. Write a WHILE loop that adds Step to Guess and 1 to Attempts while Guess is not equal to Target. Output Attempts.",
+          prompt: "Declare Guess (INTEGER) and Attempts (INTEGER) first. Guess starts at StartGuess, Attempts starts at 0. Write a WHILE loop that adds Step to Guess and 1 to Attempts while Guess is less than Target. Output Attempts.",
           setup: {"StartGuess":0,"Target":12,"Step":3},
-          reference: "DECLARE Guess : INTEGER\nDECLARE Attempts : INTEGER\nGuess <- StartGuess\nAttempts <- 0\nWHILE Guess <> Target DO\nGuess <- Guess + Step\nAttempts <- Attempts + 1\nENDWHILE\nOUTPUT Attempts",
+          reference: "DECLARE Guess : INTEGER\nDECLARE Attempts : INTEGER\nGuess <- StartGuess\nAttempts <- 0\nWHILE Guess < Target DO\nGuess <- Guess + Step\nAttempts <- Attempts + 1\nENDWHILE\nOUTPUT Attempts",
           checkVars: ["Attempts"],
           checkOutput: true
         },
@@ -6779,6 +6779,7 @@
           id: "op-and", category: "y11ops",
           prompt: "What does the condition Age >= 13 AND Age <= 19 test?",
           answers: ["That Age is from 13 to 19 inclusive"],
+          keywords: [{ required: [["13"], ["19"]], optional: ["from", "to", "between", "inclusive", "range", "through", "and"], need: 1, excluded: ["either"] }, /\b13\s*-\s*19\b/],
           distractors: ["That Age is either 13 or 19", "That Age is less than 13 or more than 19", "That Age is exactly 13", "That Age is above 19", "That Age is below 13"],
           note: "AND needs both parts to be TRUE. Both limits together give the range 13 to 19, including 13 and 19."
         },
@@ -6954,6 +6955,7 @@
           id: "arr-2d", category: "y11strings",
           prompt: "In Accounts[Row, 2], which part of the 2D array do you get?",
           answers: ["Column 2 of the row numbered Row"],
+          keywords: [/^(?!.*\brow\s*2\b)(?!.*\bwhole\b)(?=.*\brow\b).*\bcol(umn)?\s*(number\s*)?2\b/i],
           distractors: ["Row 2 of the column numbered Row", "The whole of column 2", "Row 2 and Row together", "The second array", "Every element"],
           note: "The first number is the row and the second is the column. Accounts[1, 2] is row 1, column 2."
         },
@@ -7003,6 +7005,7 @@
           id: "loop-until", category: "y11ops",
           prompt: "In a REPEAT loop, when does the loop stop?",
           answers: ["When the condition after UNTIL becomes TRUE"],
+          keywords: [{ required: [["true"]], excluded: ["false", "not", "never"] }],
           distractors: ["When the condition after UNTIL becomes FALSE", "After exactly 10 times", "When the keyword ENDREPEAT is reached", "It never stops", "After one pass"],
           note: "REPEAT ... UNTIL Number < 0 keeps going while the condition is FALSE and stops the moment it becomes TRUE."
         }
@@ -7016,6 +7019,7 @@
           id: "err-input", category: "y11errors",
           prompt: "What is the error in this pseudocode?\nOUTPUT \"Enter a first name \"\nOUTPUT FirstName",
           answers: ["The second line should be INPUT FirstName"],
+          keywords: [{ required: [["input"]], optional: ["second", "2", "firstname", "last", "output"], need: 1, excluded: ["first", "declare"] }],
           distractors: ["The first line should be INPUT", "FirstName needs quote marks", "OUTPUT should be spelt OUTPUT:", "Nothing is wrong", "The second line should use DECLARE"],
           note: "To collect something from the user use INPUT. OUTPUT displays a value, so the program would print an empty variable and never ask."
         },
@@ -7030,6 +7034,7 @@
           id: "err-total", category: "y11errors",
           prompt: "What is the error in this pseudocode?\nTotal <- 0\nFOR Count <- 1 TO 10\n   INPUT Number\n   Total <- Total + 1\nNEXT Count",
           answers: ["Total <- Total + 1 should add Number"],
+          keywords: [{ required: [["number"]], optional: ["add", "total", "plus", "instead"], need: 1, excluded: ["next", "start", "while"] }],
           distractors: ["Total should start at 1", "NEXT Count should be NEXT Number", "INPUT should be OUTPUT", "FOR should be WHILE", "Nothing is wrong"],
           note: "Adding 1 each pass counts the loop; a running total must add the value: Total <- Total + Number."
         },
@@ -7044,6 +7049,7 @@
           id: "err-operator", category: "y11errors",
           prompt: "What is the error in this pseudocode?\n// check digit: each digit multiplied by its position\nTotal <- Total + (Digit / Count)",
           answers: ["The / should be *"],
+          keywords: [/\/\s*(should\s*be|to|with|by|into|becomes?|->)\s*(an?\s*)?\*/i, /\*\s*(instead\s*of|not)\s*(an?\s*)?\//i, { required: [["multiply", "multiplication", "multiplied", "time"]], excluded: ["plus", "minus", "add", "subtract", "bracket"] }],
           distractors: ["The + should be -", "Digit should be Total", "The brackets should be removed", "Count should be 10", "Nothing is wrong"],
           note: "'Multiplied by its position' means Digit * Count. Read the description carefully and compare the operator with it."
         },
@@ -7051,6 +7057,7 @@
           id: "err-type", category: "y11errors",
           prompt: "What is the error in this pseudocode?\nDECLARE Average : INTEGER\nAverage <- Total / Counter",
           answers: ["Average should be declared as REAL"],
+          keywords: [{ required: [["real"]], excluded: ["boolean", "string"] }],
           distractors: ["Total should be a string", "The / should be DIV", "Average should be BOOLEAN", "There should be no DECLARE", "Nothing is wrong"],
           note: "An average usually has a decimal part, and INTEGER cannot store one. Use REAL."
         },
@@ -7065,6 +7072,7 @@
           id: "err-index", category: "y11errors",
           prompt: "What is the error in this pseudocode?\nFOR Row <- 1 TO 1000\n   IF AccountID = Accounts[Row, 1]\n      THEN\n         OUTPUT Accounts[1, 2]\n      ENDIF\nNEXT Row",
           answers: ["Accounts[1, 2] should be Accounts[Row, 2]"],
+          keywords: [/\[\s*1\s*,\s*2\s*\][^[]*\[\s*row\s*,\s*2\s*\]/i, /\[\s*row\s*,\s*2\s*\]\s*(instead\s*of|not)\s*(accounts\s*)?\[\s*1\s*,\s*2\s*\]/i, /\b1\s*should\s*be\s*row\b/i],
           distractors: ["Accounts[Row, 1] should be Accounts[1, 1]", "FOR should start at 0", "OUTPUT should be INPUT", "ENDIF should be NEXT", "Nothing is wrong"],
           note: "The 1 is a fixed row, so the output is always the first customer's name. Using Row gives the name from the row that matched."
         },
@@ -7177,6 +7185,7 @@
           id: "sub-func", category: "y11dev",
           prompt: "What is the main difference between a function and a procedure?",
           answers: ["A function returns a value; a procedure does not"],
+          keywords: [/\bfunctions?\b(?:(?!\b(?:not|doesn'?t|never|cannot|can'?t)\b)[^;.,])*?\breturns?\b/i],
           distractors: ["A procedure returns a value; a function does not", "A function cannot have parameters", "A procedure must be written first", "A function only works with strings", "There is no difference"],
           note: "Functions end with RETURN and give a value back to be used; procedures just carry out a set of statements."
         },
@@ -7212,6 +7221,7 @@
           id: "sub-time", category: "y11dev",
           prompt: "PROCEDURE Time(TotalSeconds) outputs the minutes and seconds. What is output by CALL Time(500)?",
           answers: ["8 minutes 20 seconds"],
+          keywords: [/\b8\s*(minutes?|mins?|m)\b[^0-9]*\b20\s*(seconds?|secs?|s)\b/i, /\b8\s*:\s*20\b/],
           distractors: ["8 minutes 0 seconds", "9 minutes 20 seconds", "500 minutes 0 seconds", "20 minutes 8 seconds", "8 minutes 33 seconds"],
           note: "Minutes are 500 DIV 60 = 8 and seconds are 500 MOD 60 = 20."
         }
@@ -7511,6 +7521,7 @@
           id: "sql-q8", category: "y11sql",
           prompt: "Consider this table:\nPETS (ID, Name, Type, Age)\nP1 Milo Dog 4\nP2 Luna Cat 7\nP3 Rex Dog 9\nP4 Coco Rabbit 2\nP5 Tia Cat 3\nWhat does this SQL statement output?\nSELECT * FROM PETS WHERE Age < 3;",
           answers: ["All the fields of Coco's record: P4 Coco Rabbit 2"],
+          keywords: [{ required: [["coco"]], optional: ["p4", "rabbit", "2", "all", "field", "record"], need: 1, excluded: ["tia", "only"] }],
           distractors: ["Only the name Coco", "All the fields of Tia's record", "The number 1", "All the records in the table", "An error, because * is not allowed"],
           note: "* means every field. Only Coco (2) is under 3."
         },
@@ -7532,6 +7543,7 @@
           id: "sql-desc", category: "y11sql",
           prompt: "What does ORDER BY Age DESC do?",
           answers: ["Sorts the records from the highest age to the lowest"],
+          keywords: [/\b(highest|oldest|largest|biggest|greatest|high)\b.*\b(lowest|youngest|smallest|low)\b/i, /\bdescending\b/i, /\boldest\s*first\b/i],
           distractors: ["Sorts from lowest to highest", "Deletes the Age field", "Describes the Age field", "Only shows the oldest record", "Sorts alphabetically by Name"],
           note: "By default ORDER BY is ascending (lowest first). DESC reverses it."
         },
@@ -9824,7 +9836,7 @@
     "l7-iteration": "Iteration",
     "l7-write": "Writing a Full Algorithm"
   };
-  var CATEGORY_ORDER = ["m1a-ops", "m1a-types", "m1a-loops", "m1a-methods", "m1b-trace", "m1b-errors", "m1b-valid", "m1c-valid", "m1c-arrays", "m1c-stats", "m1c-runs", "m1c-program", "y11valid", "y11test", "y11types", "y11ops", "y11strings", "y11errors", "y11trace", "y11logic", "y11sql", "y11dev", "vocab", "motion", "testing", "plantocode", "y7-symbols", "y7-reading", "y7-debugging", "y7-sequence", "y7-inputs", "y7-movement", "y7-loops", "y7-logic", "y7-sub-purpose", "y7-call-trace", "y7-call-effects", "y7-complete", "seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "fc-symbols", "fc-shapemap", "fc-toCode", "fc-toFlow", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound", "fscomp-concept", "fscomp-rle", "fscomp-choose", "pp-units", "pp-formula", "pp-method", "u13-ladder", "u13-convert", "u13-multi", "u13-method", "u13-image", "u13-sound", "u13-why", "u13-lossy", "u13-lossless", "pk-purpose", "pk-structure", "pk-routes", "pk-order", "x13-units", "x13-filesize", "x13-compression", "l2", "l2-plenary", "l3", "l3-plenary", "l4", "l4-plenary", "l1", "l1-plenary", "l3-exambinary", "l4-examunits", "l7-sequence", "l7-selection", "l7-iteration", "l7-write"];
+  var CATEGORY_ORDER = ["m1a-ops", "m1a-types", "m1a-loops", "m1a-methods", "m1b-trace", "m1b-errors", "m1b-valid", "m1c-valid", "m1c-arrays", "m1c-stats", "m1c-runs", "m1c-program", "y11valid", "y11test", "y11types", "y11ops", "y11strings", "y11errors", "y11trace", "y11logic", "y11sql", "y11dev", "vocab", "motion", "testing", "plantocode", "y6dev-levels", "y6dev-variables", "y6debug-record", "y6debug-process", "y7-symbols", "y7-reading", "y7-debugging", "y7-sequence", "y7-inputs", "y7-movement", "y7-loops", "y7-logic", "y7-sub-purpose", "y7-call-trace", "y7-call-effects", "y7-complete", "seqtrace", "seqsyntax", "seqwrite", "variables", "seltrace", "selsyntax", "seloperators", "selwrite", "arraybasics", "arraytrace", "arraywrite", "arrayconcepts", "searchconcept", "searchtrace", "searchflag", "searchwrite", "ctvocab", "declare", "iteration", "synthesis", "fc-symbols", "fc-shapemap", "fc-toCode", "fc-toFlow", "bases", "hex", "addition", "shifts", "twos", "units", "lsbmsb", "placevalues", "converting", "text", "sound", "image", "code-assign", "code-reassign", "code-twovar", "code-output", "code-if-else", "code-if-nested", "code-if-operator", "code-if-compound", "code-for-output", "code-for-total", "code-for-bounds", "code-for-count", "fsunits", "fstext", "fsimage", "fssound", "fscomp-concept", "fscomp-rle", "fscomp-choose", "pp-units", "pp-formula", "pp-method", "u13-ladder", "u13-convert", "u13-multi", "u13-method", "u13-image", "u13-sound", "u13-why", "u13-lossy", "u13-lossless", "pk-purpose", "pk-structure", "pk-routes", "pk-order", "x13-units", "x13-filesize", "x13-compression", "l2", "l2-plenary", "l3", "l3-plenary", "l4", "l4-plenary", "l1", "l1-plenary", "l3-exambinary", "l4-examunits", "l7-sequence", "l7-selection", "l7-iteration", "l7-write"];
 
   // ============================================================
   // ENGINE
@@ -10158,10 +10170,44 @@
     });
     return alts;
   }
+  // Exact typed-answer matching for cards the word-bag fallback can't grade
+  // fairly. Case, spaces and commas don't matter, nor does a trailing full
+  // stop or semicolon, so "0 0 0 1", "0001" and "0, 0, 0, 1" are the same
+  // answer - but the order and every symbol do.
+  function strictNormalize(s, keepCase) {
+    var out = String(s == null ? "" : s).replace(/−/g, "-").replace(/[\s,]+/g, "").replace(/[.;]+$/, "");
+    return keepCase ? out : out.toLowerCase();
+  }
+  // A card with no explicit `keywords` uses the auto-derived word bag, which
+  // only checks which words are present. That can't grade an answer whose
+  // meaning is its order or its symbols: a truth-table column ("0 0 0 1"
+  // vs "0 1 0 0"), a query result list, "Age < 4" vs "Age > 4", or an
+  // answer that is only filler/symbols ("AND", "<>") and so leaves an empty
+  // bag. The card's own distractors reveal this - if the bag accepts one of
+  // them, or has nothing to match at all, the card falls back to exact
+  // matching instead. Cards the bag already grades correctly are untouched.
+  function usesStrictMatch(card) {
+    if (card.keywords) return false;
+    var alts = keywordsForCard(card);
+    if (!alts.length) return true;
+    return (card.distractors || []).some(function (d) { return bagMatch(alts, d); });
+  }
   function matchAnswer(card, rawInput) {
+    if (usesStrictMatch(card)) {
+      // Case only counts when the card itself tests it - one of its wrong
+      // options is an answer in different case ("STO305" vs "Sto305").
+      var answers = card.answers || [];
+      var keepCase = (card.distractors || []).some(function (d) {
+        return answers.some(function (a) { return a !== d && strictNormalize(a) === strictNormalize(d); });
+      });
+      var typed = strictNormalize(rawInput, keepCase);
+      return !!typed && answers.some(function (a) { return strictNormalize(a, keepCase) === typed; });
+    }
+    return bagMatch(keywordsForCard(card), rawInput);
+  }
+  function bagMatch(alts, rawInput) {
     var have = {};
     tokenize(rawInput).forEach(function (t) { have[t] = true; });
-    var alts = keywordsForCard(card);
     return alts.some(function (alt) {
       // A plain RegExp alternative tests the raw typed answer directly, in
       // order - the one case none of the bag-of-words shapes above can
