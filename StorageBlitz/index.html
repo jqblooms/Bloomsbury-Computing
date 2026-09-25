@@ -43,6 +43,14 @@ window.addEventListener('message', function (event) {
     window.__bcPlayerName = data.name;
   }
 });
+
+// Report progress up to the parent, same shape as the other Blitz games;
+// STB_PROGRESS (STorage Blitz) is this game's own type string.
+window.postToParent = function (payload) {
+  if (window.parent !== window) {
+    window.parent.postMessage(payload, '*');
+  }
+};
 </script>
 
 <script type="text/babel">
@@ -654,16 +662,21 @@ const App = () => {
 
     const handleGameOver = (score, level, duration, correct, wrong) => {
         saveScore(score, level);
+        postToParent({ type: 'STB_PROGRESS', kind: 'level', level, score, duration, correct, wrong });
         setLastScore(score); setActiveLevel(level); setView('gameover');
     };
 
     const handleExit = (level, duration, correct, wrong, score) => {
-        if (level !== 7) saveScore(score, level);
+        if (level !== 7) {
+            saveScore(score, level);
+            postToParent({ type: 'STB_PROGRESS', kind: 'level', level, score, duration, correct, wrong });
+        }
         setView('menu');
     };
 
     const handleExamFinish = (score, total, duration) => {
         saveExamResult(score, total, duration);
+        postToParent({ type: 'STB_PROGRESS', kind: 'exam', score, total, duration });
         setLastExamStats({ score, total, duration });
         setView('exam_results');
     };
