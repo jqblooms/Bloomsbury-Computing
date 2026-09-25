@@ -1,0 +1,255 @@
+{
+  "id": "y10-2-1-l1",
+  "label": "2.1 L1: Data Packets and Packet Switching",
+  "steps": [
+    {
+      "id": "do-now-1",
+      "label": "Do Now: Compression",
+      "type": "multiple-choice",
+      "containerId": "y10-21l1-do-now-1",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Compression</h2><p class=\"lesson-lead\">Recap of 1.3 L3: Compression. Cambridge IGCSE 0478/11, June 2022, Question 1(a)(ii). Jack has an MP3 file stored on his computer.</p><div id=\"y10-21l1-do-now-1\"></div>",
+      "items": [
+        {
+          "prompt": "Is the MP3 a lossy compressed file, a lossless compressed file, or not a compressed file? [1]",
+          "options": [
+            "Lossless compressed file",
+            "Not a compressed file",
+            "Lossy compressed file"
+          ],
+          "correct": 2,
+          "explain": "MP3 uses lossy compression: some sound data is permanently removed."
+        }
+      ]
+    },
+    {
+      "id": "do-now-2",
+      "label": "Do Now: Lossless Compression",
+      "type": "short-answer-validation",
+      "validatorId": "y10-21l1-do-now-2",
+      "validatorKey": "y10_2_1_l1_do_now_2",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Lossless Compression</h2><p class=\"lesson-lead\">Recap of 1.3 L3: Compression. Cambridge IGCSE 0478/13, June 2022, Question 6(d). Frida compresses a document. Repeating patterns are indexed, and no data is permanently removed.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-21l1-do-now-2-a\">Identify the type of compression Frida has used. [1]</label><input id=\"y10-21l1-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Lossless Compression, part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-21l1-do-now-2-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-21l1-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    },
+    {
+      "id": "title",
+      "label": "Data Packets and Packet Switching",
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Data Transmission</p><h2 class=\"lesson-h2\">Data Packets and Packet Switching</h2><p>Year 10, 2.1 L1 &middot; 55 minutes</p></div><ul class=\"lesson-facts\"><li>Describe why a file is divided into packets.</li><li>Label the header, payload and trailer.</li><li>Follow packets across a network and put them back in order.</li></ul>"
+    },
+    {
+      "id": "why-packets",
+      "label": "Why Split Data into Packets?",
+      "content": "<h2 class=\"lesson-h2\">Why Split Data into Packets?</h2><p class=\"lesson-lead\">To send a file across a network, the sender divides it into smaller pieces called packets.</p><ul class=\"lesson-facts\"><li>Each packet carries a <strong>part of the file</strong>.</li><li>Packets travel from the sender to the receiver.</li><li>The receiver puts the pieces together to rebuild the file.</li></ul><p class=\"lesson-lead\">A large file may need many packets.</p>"
+    },
+    {
+      "id": "check-purpose",
+      "label": "Check: Packets",
+      "type": "multiple-choice",
+      "containerId": "y10-21l1-check-purpose",
+      "content": "<h2 class=\"lesson-h2\">Check: Packets</h2><p class=\"lesson-lead\">Choose the best answer for each question.</p><div id=\"y10-21l1-check-purpose\"></div>",
+      "items": [
+        {
+          "prompt": "What does the sender do to a file before transmitting it as packets?",
+          "options": [
+            "Encrypt every character",
+            "Divide the file into smaller pieces",
+            "Store it in one packet"
+          ],
+          "correct": 1,
+          "explain": "The file is divided into smaller packets before transmission."
+        },
+        {
+          "prompt": "What does the receiver do with the packets?",
+          "options": [
+            "Rebuild the original file",
+            "Remove every header",
+            "Send the same file again"
+          ],
+          "correct": 0,
+          "explain": "The receiver combines the packet payloads in the correct order."
+        }
+      ]
+    },
+    {
+      "id": "packet-structure",
+      "label": "Inside a Packet",
+      "content": "<h2 class=\"lesson-h2\">Inside a Packet</h2><p class=\"lesson-lead\">A packet has three parts:</p><div class=\"lesson-exam-card\" style=\"display:grid;grid-template-columns:2fr 1.4fr 1fr;gap:8px;text-align:center;font-weight:700\"><div style=\"padding:12px;background:#dce9fb\">Header</div><div style=\"padding:12px;background:#e7f5e9\">Payload</div><div style=\"padding:12px;background:#fff0da\">Trailer</div></div><ul class=\"lesson-facts\"><li><strong>Header:</strong> destination address, originator address, packet number.</li><li><strong>Payload:</strong> part of the data being sent.</li><li><strong>Trailer:</strong> information used to check the packet for errors.</li></ul>"
+    },
+    {
+      "id": "exam-header",
+      "label": "Exam Question: Packet Header",
+      "type": "multiple-choice",
+      "containerId": "y10-21l1-exam-header",
+      "content": "<h2 class=\"lesson-h2\">Exam Question: Packet Header</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2025, Question 5(c)(i). A customer sends an order to a restaurant kitchen in packets.</p><div id=\"y10-21l1-exam-header\"></div>",
+      "items": [
+        {
+          "prompt": "Which item would not be included in a packet's header? [1]",
+          "options": [
+            "Destination address",
+            "Originator's address",
+            "Packet number",
+            "Payload"
+          ],
+          "correct": 3,
+          "explain": "The payload is a separate part of the packet. The three other items are in its header."
+        }
+      ]
+    },
+    {
+      "id": "build-packet",
+      "label": "Activity 1: Build a Packet",
+      "type": "embedded-app",
+      "appId": "packet-lab-parts",
+      "embedContainerId": "y10-21l1-build-packet",
+      "content": "<h2 class=\"lesson-h2\">Activity 1: Build a Packet</h2><p class=\"lesson-lead\">Work through the five fields on your own. Check your choices, then correct any mistakes.</p><div id=\"y10-21l1-build-packet\"></div>"
+    },
+    {
+      "id": "exam-packet-a",
+      "label": "Exam Question: What Is in a Header?",
+      "type": "self-marked-response",
+      "containerId": "y10-21l1-exam-packet-a",
+      "content": "<h2 class=\"lesson-h2\">Exam Question: What Is in a Header?</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2023, Question 5(a)(i). A website request is sent using packet switching.</p><div id=\"y10-21l1-exam-packet-a\"></div>",
+      "items": [
+        {
+          "id": "header-fields",
+          "prompt": "Identify two items of data contained in a packet header. [2]",
+          "marks": 2,
+          "modelAnswer": "Any two different items: destination address, originator address, packet number."
+        }
+      ]
+    },
+    {
+      "id": "exam-packet-b",
+      "label": "Exam Question: The Other Two Parts",
+      "type": "self-marked-response",
+      "containerId": "y10-21l1-exam-packet-b",
+      "content": "<h2 class=\"lesson-h2\">Exam Question: The Other Two Parts</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2023, Question 5(a)(ii). The packet header is one of three elements.</p><div id=\"y10-21l1-exam-packet-b\"></div>",
+      "items": [
+        {
+          "id": "other-parts",
+          "prompt": "Identify the two other elements of a packet. [2]",
+          "marks": 2,
+          "modelAnswer": "Payload and trailer."
+        }
+      ]
+    },
+    {
+      "id": "packet-switching",
+      "label": "How Packet Switching Works",
+      "content": "<h2 class=\"lesson-h2\">How Packet Switching Works</h2><p class=\"lesson-lead\">A file can reach the same destination through different network routes.</p><ol class=\"lesson-facts\"><li>The sender divides the file into numbered packets.</li><li>Routers choose a route for each packet.</li><li>Packets may take different routes and arrive out of order.</li><li>The receiver uses packet numbers to put them in order and rebuild the file.</li></ol>"
+    },
+    {
+      "id": "check-switching",
+      "label": "Check: Follow the Route",
+      "type": "multiple-choice",
+      "containerId": "y10-21l1-check-switching",
+      "content": "<h2 class=\"lesson-h2\">Check: Follow the Route</h2><p class=\"lesson-lead\">Check both ideas before sending packets yourself.</p><div id=\"y10-21l1-check-switching\"></div>",
+      "items": [
+        {
+          "prompt": "What decides the route a packet takes through the network?",
+          "options": [
+            "The payload",
+            "The receiving screen",
+            "A router"
+          ],
+          "correct": 2,
+          "explain": "Routers direct packets towards their destination."
+        },
+        {
+          "prompt": "Packet 3 arrives before packet 2. What should the receiver use to rebuild the file?",
+          "options": [
+            "The packet numbers",
+            "The arrival times",
+            "The originator address only"
+          ],
+          "correct": 0,
+          "explain": "Packet numbers tell the receiver the original order."
+        }
+      ]
+    },
+    {
+      "id": "route-packets",
+      "label": "Activity 2: Route and Rebuild",
+      "type": "embedded-app",
+      "appId": "packet-lab-routes",
+      "embedContainerId": "y10-21l1-route-packets",
+      "content": "<h2 class=\"lesson-h2\">Activity 2: Route and Rebuild</h2><p class=\"lesson-lead\">Send the packets. Watch the arrival order, then rebuild each message using the packet numbers.</p><div id=\"y10-21l1-route-packets\"></div>"
+    },
+    {
+      "id": "check-reorder",
+      "label": "Check: Why Reorder?",
+      "type": "multiple-choice",
+      "containerId": "y10-21l1-check-reorder",
+      "content": "<h2 class=\"lesson-h2\">Check: Why Reorder?</h2><p class=\"lesson-lead\">Use what you saw in the packet activity.</p><div id=\"y10-21l1-check-reorder\"></div>",
+      "items": [
+        {
+          "prompt": "Why might a receiver need to reorder packets?",
+          "options": [
+            "Routers can send packets by different routes, so arrival order may change",
+            "Every packet always follows the same route",
+            "The payload has no data"
+          ],
+          "correct": 0,
+          "explain": "Different routes can take different amounts of time. The receiver uses packet numbers to rebuild the original order."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "label": "Checked Practice",
+      "type": "short-answer-validation",
+      "validatorId": "y10-21l1-practice",
+      "validatorKey": "y10_2_1_l1_practice",
+      "content": "<h2 class=\"lesson-h2\">Checked Practice</h2><p class=\"lesson-lead\">Use the packet structure and route process from this lesson.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-21l1-practice-a\">Which part of a packet contains the data being sent? [1]</label><input id=\"y10-21l1-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Checked Practice, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-21l1-practice-b\">Which header item lets the receiver put packets back in their original order? [1]</label><input id=\"y10-21l1-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Checked Practice, part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-21l1-practice-c\">Which device chooses the route a packet takes? [1]</label><input id=\"y10-21l1-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Checked Practice, part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-21l1-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-21l1-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    },
+    {
+      "id": "plenary",
+      "label": "Plenary: Packets and Packet Switching",
+      "type": "embedded-app",
+      "appId": "drill-y10-2-1-l1-packets",
+      "embedContainerId": "y10-21l1-plenary",
+      "content": "<h2 class=\"lesson-h2\">Plenary: Packets and Packet Switching</h2><p class=\"lesson-lead\">Complete a five-question drill batch. Your progress is saved for your teacher.</p><div id=\"y10-21l1-plenary\"></div>"
+    }
+  ],
+  "validators": {
+    "y10_2_1_l1_do_now_2": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*lossless(\\s+compression)?\\s*$",
+          "flags": "i"
+        },
+        "feedback": "No data is permanently removed."
+      }
+    ],
+    "y10_2_1_l1_practice": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(the\\s+)?payload\\s*$",
+          "flags": "i"
+        },
+        "feedback": "The data itself is carried in the middle part."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(the\\s+)?packet\\s*(number|sequence\\s+number)\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Look for the number in the packet header."
+      },
+      {
+        "suffix": "c",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(a\\s+|the\\s+)?router\\s*$",
+          "flags": "i"
+        },
+        "feedback": "This network device directs packets towards their destination."
+      }
+    ]
+  },
+  "pseudocodeValidators": {}
+}

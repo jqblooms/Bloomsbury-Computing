@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Packet Lab</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f2f6fc; color: #14233d; font: 16px/1.35 Arial, sans-serif; }
+    main { max-width: 900px; margin: 0 auto; padding: 20px; }
+    h1 { margin: 0 0 6px; font-size: 1.7rem; }
+    p { margin: 0 0 12px; }
+    .panel { background: #fff; border: 1px solid #cad6e8; border-radius: 12px; padding: 18px; }
+    .intro { color: #465a77; }
+    .parts { display: grid; gap: 8px; margin: 14px 0; }
+    .part { display: grid; grid-template-columns: minmax(190px, 1fr) 170px; align-items: center; gap: 12px; padding: 9px 11px; border: 1px solid #d5deea; border-radius: 8px; }
+    .part.good { border-color: #28935b; background: #eefaf2; }
+    .part.bad { border-color: #ba4a39; background: #fff2ee; }
+    .part label { font-weight: 700; }
+    select, button { font: inherit; }
+    select { width: 100%; padding: 6px; border: 1px solid #9babbe; border-radius: 5px; background: #fff; }
+    button { border: 1px solid #1765ad; border-radius: 7px; background: #1976c5; color: #fff; font-weight: 700; padding: 8px 14px; cursor: pointer; }
+    button:hover { background: #155e9d; }
+    button:disabled { opacity: .48; cursor: default; }
+    button.secondary { background: #fff; color: #155e9d; }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 13px; }
+    .feedback { min-height: 24px; font-weight: 700; color: #176137; }
+    .feedback.error { color: #9b3027; }
+    .packet-key { display: flex; gap: 4px; margin: 12px 0; font-size: .9rem; font-weight: 700; text-align: center; }
+    .packet-key span { border: 2px solid #9cafca; padding: 8px; border-radius: 5px; }
+    .packet-key span:nth-child(1) { flex: 3; background: #dce9fb; }
+    .packet-key span:nth-child(2) { flex: 2; background: #e7f5e9; }
+    .packet-key span:nth-child(3) { flex: 1; background: #fff0da; }
+    .network { width: 100%; max-height: 135px; display: block; margin: 12px 0; }
+    .arrival { display: flex; flex-wrap: wrap; gap: 8px; min-height: 55px; margin: 10px 0; }
+    .arrival button { background: #fff; color: #14233d; border-color: #8da9cf; text-align: left; }
+    .arrival button.used { opacity: .45; }
+    .output { min-height: 48px; border: 2px dashed #a8b9ce; border-radius: 8px; padding: 9px; background: #f8fbff; font-weight: 700; }
+    .small { font-size: .86rem; color: #4f627d; }
+    .embed body { background: #fff; font-size: 14px; }
+    .embed main { padding: 0; }
+    .embed .panel { border: 0; border-radius: 0; padding: 6px 10px; }
+    .embed h1 { font-size: 1.35rem; margin-bottom: 4px; }
+    .embed p { margin-bottom: 7px; }
+    .embed .packet-key { margin: 7px 0; }
+    .embed .packet-key span { padding: 5px; }
+    .embed .parts { gap: 5px; margin: 7px 0; }
+    .embed .part { padding: 5px 9px; }
+    .embed select { padding: 3px; }
+    .embed button { padding: 6px 10px; }
+    .embed .actions { margin-top: 7px; }
+    .embed .network { max-height: 90px; margin: 5px 0; }
+    .embed .arrival { min-height: 44px; margin: 5px 0; }
+    .embed .output { min-height: 35px; padding: 5px; }
+    @media (max-width: 600px) { main { padding: 8px; } .panel { padding: 12px; } .part { grid-template-columns: 1fr; gap: 5px; } }
+  </style>
+</head>
+<body>
+<main>
+  <section class="panel" id="activity"></section>
+</main>
+<script>
+(function () {
+  'use strict';
+  var root = document.getElementById('activity');
+  var params = new URLSearchParams(location.search);
+  var mode = params.get('activity') === 'routes' ? 'routes' : 'parts';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+
+  function reportHeight() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: document.querySelector('main').getBoundingClientRect().height + 16 }, '*');
+  }
+  if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(document.querySelector('main'));
+  window.addEventListener('load', reportHeight);
+
+  if (mode === 'parts') {
+    var fields = [
+      { name: 'Destination address', answer: 'Header', why: 'The destination address tells the network where to deliver this packet.' },
+      { name: 'Originator address', answer: 'Header', why: 'The originator address identifies the sender.' },
+      { name: 'Packet number', answer: 'Header', why: 'The packet number lets the receiver put packets back in order.' },
+      { name: 'Part of the file being sent', answer: 'Payload', why: 'The payload carries the actual file data.' },
+      { name: 'Error-checking data', answer: 'Trailer', why: 'The trailer can hold information used to check for errors.' }
+    ];
+    root.innerHTML = '<h1>Build a data packet</h1><p class="intro">Choose where each item belongs. Check your packet when all five choices are made.</p>' +
+      '<div class="packet-key" aria-label="Packet structure"><span>Header</span><span>Payload</span><span>Trailer</span></div>' +
+      '<div class="parts">' + fields.map(function (f, i) {
+        return '<div class="part" id="field-' + i + '"><label for="choice-' + i + '">' + f.name + '</label><select id="choice-' + i + '"><option value="">Choose a part</option><option>Header</option><option>Payload</option><option>Trailer</option></select></div>';
+      }).join('') + '</div><div class="actions"><button type="button" id="check-parts">Check packet</button><span class="feedback" id="feedback" role="status"></span></div>';
+    document.getElementById('check-parts').addEventListener('click', function () {
+      var correct = 0, missing = 0, notes = [];
+      fields.forEach(function (f, i) {
+        var value = document.getElementById('choice-' + i).value;
+        var row = document.getElementById('field-' + i);
+        row.className = 'part' + (value ? (value === f.answer ? ' good' : ' bad') : '');
+        if (!value) missing++;
+        else if (value === f.answer) correct++;
+        else notes.push(f.why);
+      });
+      var feedback = document.getElementById('feedback');
+      feedback.className = 'feedback' + (correct === fields.length ? '' : ' error');
+      feedback.textContent = missing ? 'Choose a part for every item.' : correct === fields.length ? '5/5. Packet complete.' : correct + '/5. ' + notes[0];
+      reportHeight();
+    });
+    return;
+  }
+
+  var rounds = [
+    { pieces: ['DATA', ' CAN', ' TRAVEL'], arrival: [2, 3, 1], paths: ['upper', 'lower', 'upper'] },
+    { pieces: ['PACKETS', ' MAY', ' REORDER'], arrival: [3, 1, 2], paths: ['lower', 'upper', 'lower'] },
+    { pieces: ['HELLO', ' FROM', ' SCHOOL'], arrival: [2, 1, 3], paths: ['upper', 'lower', 'upper'] }
+  ];
+  var round = 0, chosen = [], delivered = false;
+  root.innerHTML = '<h1>Packet switching</h1><p class="intro">Packets can use different routes and reach the receiver in a different order. Send them, then click the arriving packets to rebuild the message.</p>' +
+    '<svg class="network" viewBox="0 0 620 130" role="img" aria-label="Sender sends packets through two router routes to a receiver">' +
+      '<path d="M95 65H195L270 23H370L445 65H530M195 65L270 108H370L445 65" fill="none" stroke="#547da8" stroke-width="4"/>' +
+      '<g fill="#e7f1ff" stroke="#4c76a5" stroke-width="2"><rect x="5" y="41" width="90" height="48" rx="8"/><rect x="195" y="42" width="60" height="46" rx="8"/><rect x="530" y="41" width="85" height="48" rx="8"/></g>' +
+      '<g fill="#14233d" font-size="15" font-weight="700" font-family="Arial" text-anchor="middle"><text x="50" y="69">Sender</text><text x="225" y="69">Router</text><text x="573" y="69">Receiver</text></g>' +
+      '<text x="326" y="19" font-size="13" fill="#3c587d" text-anchor="middle">Upper route</text><text x="326" y="126" font-size="13" fill="#3c587d" text-anchor="middle">Lower route</text></svg>' +
+    '<p id="route-note" class="small"></p><button type="button" id="send">Send packets</button>' +
+    '<div id="arrival" class="arrival" aria-label="Arriving packets"></div>' +
+    '<p class="small">Click the packets in the order the receiver should use them.</p>' +
+    '<div id="output" class="output" aria-live="polite">Rebuilt message: </div>' +
+    '<div class="actions"><button type="button" id="check-route" disabled>Check order</button><button type="button" class="secondary" id="reset-route" disabled>Clear order</button><span class="feedback" id="feedback" role="status"></span></div>';
+
+  function renderRound() {
+    var data = rounds[round]; chosen = []; delivered = false;
+    document.getElementById('arrival').innerHTML = '';
+    document.getElementById('output').textContent = 'Rebuilt message: ';
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('route-note').textContent = 'Delivery ' + (round + 1) + ' of ' + rounds.length + '. The router can choose a different route for each packet.';
+    document.getElementById('send').textContent = 'Send packets';
+    document.getElementById('send').disabled = false;
+    document.getElementById('check-route').disabled = true;
+    document.getElementById('reset-route').disabled = true;
+    reportHeight();
+  }
+  function updateSelection() {
+    var data = rounds[round];
+    document.getElementById('output').textContent = 'Rebuilt message: ' + chosen.map(function (number) { return data.pieces[number - 1]; }).join('');
+    document.getElementById('check-route').disabled = chosen.length !== data.pieces.length;
+    document.getElementById('reset-route').disabled = !chosen.length;
+    Array.prototype.forEach.call(document.querySelectorAll('#arrival button'), function (button) {
+      button.classList.toggle('used', chosen.indexOf(Number(button.dataset.packet)) !== -1);
+      button.disabled = chosen.indexOf(Number(button.dataset.packet)) !== -1;
+    });
+  }
+  document.getElementById('send').addEventListener('click', function () {
+    if (delivered) { round = (round + 1) % rounds.length; renderRound(); return; }
+    delivered = true;
+    var data = rounds[round];
+    document.getElementById('arrival').innerHTML = data.arrival.map(function (number) {
+      return '<button type="button" data-packet="' + number + '">Packet ' + number + ' <span class="small">(' + data.paths[number - 1] + ' route)</span><br>' + data.pieces[number - 1].trim() + '</button>';
+    }).join('');
+    document.getElementById('send').disabled = true;
+    Array.prototype.forEach.call(document.querySelectorAll('#arrival button'), function (button) {
+      button.addEventListener('click', function () { chosen.push(Number(button.dataset.packet)); updateSelection(); });
+    });
+    reportHeight();
+  });
+  document.getElementById('reset-route').addEventListener('click', function () {
+    chosen = []; updateSelection(); document.getElementById('feedback').textContent = '';
+  });
+  document.getElementById('check-route').addEventListener('click', function () {
+    var correct = chosen.every(function (number, i) { return number === i + 1; });
+    var feedback = document.getElementById('feedback');
+    feedback.className = 'feedback' + (correct ? '' : ' error');
+    feedback.textContent = correct ? 'Correct. Packet numbers let the receiver rebuild the message.' : 'These arrived out of order. Use the packet numbers, then try again.';
+    if (correct) {
+      document.getElementById('send').disabled = false;
+      document.getElementById('send').textContent = round === rounds.length - 1 ? 'Start again' : 'Next delivery';
+    }
+    reportHeight();
+  });
+  renderRound();
+})();
+</script>
+</body>
+</html>
