@@ -233,6 +233,65 @@
     }
   </script>
   <script src="js/vendors~addon-settings~credits~editor~embed~fullscreen~player.js"></script><script src="js/vendors~editor~embed~fullscreen~player.js"></script><script src="js/addon-settings~addons~editor~fullscreen~player.js"></script><script src="js/addon-settings~editor~embed~fullscreen~player.js"></script><script src="js/editor.js"></script>
+  <script>
+    // Rare bug James diagnosed: a block's puzzle-piece shape is sized from
+    // its label text's measured width (getComputedTextLength on the SVG
+    // <text> node) at the moment the block first renders. If that
+    // measurement happens before the page's fonts and layout have fully
+    // settled, the shape gets sized for a narrower rendering than what
+    // actually ends up painted, so the label text overflows or sits wrong
+    // inside a shape that's already too small - and nothing re-measures it
+    // afterwards, since scratch-blocks only sizes a block on its own
+    // render() call, not automatically on a later font swap.
+    // window.ScratchBlocks is set once the Blocks React component mounts
+    // (editor.js), which can happen slightly before or after this script
+    // runs, so poll for it rather than assuming order. Once fonts report
+    // ready (document.fonts.ready - resolves immediately if none are still
+    // loading, so this is a no-op on every normal load) and a couple of
+    // animation frames have let layout settle, force every existing block
+    // to re-render, which re-measures its text and resizes its shape to
+    // match - the same fix pattern used for this exact class of Blockly bug
+    // (stale shape size after a font/layout race) elsewhere.
+    (function () {
+      var findAttempts = 0;
+      function rerenderAllBlocks(workspace) {
+        try {
+          workspace.getAllBlocks(false).forEach(function (block) {
+            if (block.rendered) block.render();
+          });
+        } catch (e) {
+          // Best-effort only - never break the editor over this.
+        }
+      }
+      function findWorkspace() {
+        findAttempts++;
+        var ScratchBlocks = window.ScratchBlocks;
+        var workspace = ScratchBlocks && ScratchBlocks.getMainWorkspace && ScratchBlocks.getMainWorkspace();
+        if (!workspace) {
+          if (findAttempts < 100) setTimeout(findWorkspace, 100);
+          return;
+        }
+        var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+        fontsReady.then(function () {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              // The workspace can exist before the project actually being
+              // opened (the default project, or one a student is loading)
+              // has finished populating it with blocks - a single pass here
+              // could run before any of those blocks exist yet. Repeat a
+              // few times over the next few seconds to also catch that
+              // case; re-rendering an already-correct block is harmless.
+              rerenderAllBlocks(workspace);
+              [500, 1500, 3000].forEach(function (delay) {
+                setTimeout(function () { rerenderAllBlocks(workspace); }, delay);
+              });
+            });
+          });
+        });
+      }
+      findWorkspace();
+    })();
+  </script>
   <!-- PyScratch: Python editor overlay. No-op unless ?pyscratch is in URL. -->
   <script src="../assets/js/pyscratch.js?v=20260826b"></script>
   <!-- FlowScratch: flowchart editor overlay. No-op unless ?flowscratch is in URL. -->
