@@ -7,7 +7,7 @@
       "label": "Do Now: Compression",
       "type": "multiple-choice",
       "containerId": "y10-21l1-do-now-1",
-      "content": "<h2 class=\"lesson-h2\">Do Now: Compression</h2><p class=\"lesson-lead\">Recap of 1.3 L3: Compression. Cambridge IGCSE 0478/11, June 2022, Question 1(a)(ii). Jack has an MP3 file stored on his computer.</p><div id=\"y10-21l1-do-now-1\"></div>",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Compression</h2><p class=\"lesson-lead\">Recap of 1.3 L3: Compression. Cambridge IGCSE 0478/11, June 2022, Question 1(a)(ii). Jack has an MP3 file stored on his computer. When the file was created, some sound frequencies that most people cannot hear were permanently removed to make the file smaller.</p><div id=\"y10-21l1-do-now-1\"></div>",
       "items": [
         {
           "prompt": "Is the MP3 a lossy compressed file, a lossless compressed file, or not a compressed file? [1]",
