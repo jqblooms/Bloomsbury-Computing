@@ -206,6 +206,32 @@
     </script>
 
     <div id="app"></div>
+  <script>
+    // editor.js checks `typeof showSaveFilePicker === 'function'` (and the
+    // same for showOpenFilePicker) once, when it first evaluates its
+    // defaultProps, and uses the File System Access API for Save/Load
+    // whenever that check passes. Chrome refuses to grant that API inside a
+    // cross-origin iframe at all (a hard security restriction with no
+    // Permissions-Policy opt-in - it exists specifically to stop a framed
+    // page from being tricked into picking a sensitive local file), so the
+    // check still passes here, but every call then fails, breaking Save and
+    // Load for any framed visitor on a browser that has the API - most of
+    // them, since Firefox and Safari never had it and already use the
+    // working fallback (classic <input type=file>, and a download-Blob
+    // save) that editor.js falls back to when the check is false. Deleting
+    // both globals before editor.js loads makes it take that same working
+    // fallback here too. Guarded to framed visits only - loading this page
+    // directly, at the top level, should still get the native picker.
+    if (window.top !== window.self) {
+      try {
+        delete window.showSaveFilePicker;
+        delete window.showOpenFilePicker;
+      } catch (e) {
+        window.showSaveFilePicker = undefined;
+        window.showOpenFilePicker = undefined;
+      }
+    }
+  </script>
   <script src="js/vendors~addon-settings~credits~editor~embed~fullscreen~player.js"></script><script src="js/vendors~editor~embed~fullscreen~player.js"></script><script src="js/addon-settings~addons~editor~fullscreen~player.js"></script><script src="js/addon-settings~editor~embed~fullscreen~player.js"></script><script src="js/editor.js"></script>
   <!-- PyScratch: Python editor overlay. No-op unless ?pyscratch is in URL. -->
   <script src="../assets/js/pyscratch.js?v=20260826b"></script>
