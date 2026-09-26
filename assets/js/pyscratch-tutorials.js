@@ -23,7 +23,7 @@
     {
       id: 'if-statements',
       title: 'If Statements',
-      emoji: '❓',
+      icon: 'question',
       desc: 'Run different code based on a condition. If the condition is true, one block runs; if not, it skips.',
       steps: [
         {
@@ -70,7 +70,7 @@
           }
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong> and press the left and right arrow keys. The sprite should move - Scratch keeps it on screen automatically.<br><br><strong>Challenge:</strong> Add <code>if</code> blocks for the up and down keys using <code>change_y(5)</code> and <code>change_y(-5)</code>.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -79,7 +79,7 @@
     {
       id: 'for-loops',
       title: 'For Loops',
-      emoji: '🔁',
+      icon: 'repeat',
       desc: 'Repeat a block of code a fixed number of times using a for loop and range().',
       steps: [
         {
@@ -128,7 +128,7 @@
           }
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. The sprite should move five steps right, counting 1 to 5 as it goes, then stop.<br><br><strong>Challenge:</strong> Change to <code>range(1, 11)</code> for 10 steps. Try counting backwards with <code>range(10, 0, -1)</code>.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -137,7 +137,7 @@
     {
       id: 'while-loops',
       title: 'While Loops',
-      emoji: '🔄',
+      icon: 'cycle',
       desc: 'Repeat code for as long as a condition is true. Good for countdowns, timers and waiting for something to happen.',
       steps: [
         {
@@ -179,7 +179,7 @@
           }
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. The sprite should slide right five times, then show a speech bubble saying "Done!".<br><br><strong>Challenge:</strong> Change <code>count < 5</code> to <code>count < 10</code>. Or count backwards - start at <code>count = 10</code> and use <code>while count > 0</code>, subtracting 1 each time.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -188,7 +188,7 @@
     {
       id: 'left-right-movement',
       title: 'Left & Right Movement',
-      emoji: '🎮',
+      icon: 'gamepad',
       desc: 'Make your sprite walk left and right with the arrow keys, facing the correct direction and bouncing off the edges.',
       steps: [
         {
@@ -235,7 +235,7 @@
           }
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong> and press the arrow keys. Your sprite should move and face the right way - Scratch keeps it on screen automatically.<br><br><strong>Challenge:</strong> Add up and down movement with <code>change_y(5)</code> and <code>change_y(-5)</code>.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -244,7 +244,7 @@
     {
       id: 'costume-animation',
       title: 'Costume Animation',
-      emoji: '🎭',
+      icon: 'costume',
       desc: 'Animate your sprite through its costumes when it moves and snap back to the idle pose when still.',
       steps: [
         {
@@ -302,7 +302,7 @@
           }
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong> and walk left and right - your sprite should animate while moving and snap to idle when still.<br><br><strong>Challenge:</strong> Try <code>wait(0.2)</code> for a slow walk or <code>wait(0.04)</code> for a sprint.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -311,7 +311,7 @@
     {
       id: 'gravity',
       title: 'Gravity & Jumping',
-      emoji: '⬇️',
+      icon: 'gravity',
       desc: 'Add a velocity variable, pull the sprite down each frame, and let the player jump by pressing the up arrow.',
       steps: [
         {
@@ -379,7 +379,7 @@
           }
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong> and press the up arrow to jump. The sprite should fall with gravity, land, and jump on command.<br><br><strong>Challenge:</strong> Add left and right movement: <code>if key_pressed("right"): change_x(4)</code> and the same for left.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -388,7 +388,7 @@
     {
       id: 'bouncing-ball',
       title: 'Bouncing Ball',
-      emoji: '🎱',
+      icon: 'ball',
       desc: 'Make a sprite bounce around the stage by tracking its speed with variables and reversing direction when it hits a wall.',
       steps: [
         {
@@ -449,7 +449,7 @@
           }
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. The ball should bounce around forever without escaping.<br><br><strong>Challenge:</strong> Change <code>vx = 3</code> and <code>vy = 3</code> to different numbers so the ball takes a less predictable path. Try <code>vx = 4</code> and <code>vy = 3</code>. Can you add a second bouncing sprite?',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -458,7 +458,7 @@
     {
       id: 'flappy-bird',
       title: 'Flappy Bird',
-      emoji: '🐦',
+      icon: 'bird',
       desc: 'Build the Flappy Bird mechanic - gravity, tap-to-flap, tilting, and a pipe sprite that loops across the screen. You\'ll use two sprites: one for the bird, one for the pipe.',
       steps: [
         {
@@ -553,7 +553,7 @@
           requires: ['x_position() < -260', 'go_to_xy(260', 'pick_random(-100, 100)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong> and tap <strong>Space</strong> to flap. The bird should fall with gravity, tilt with velocity, and a pipe should scroll across from right to left on a loop.<br><br><strong>Challenge:</strong> Give the pipe sprite a tall thin costume so it actually looks like a pipe. Try <code>go_to_xy(pick_random(200, 280), pick_random(-80, 80))</code> when resetting so each pipe appears at a random height.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -562,7 +562,7 @@
     {
       id: 'doodle-jump',
       title: 'Doodle Jump',
-      emoji: '🦘',
+      icon: 'jumper',
       desc: 'Build the Doodle Jump mechanic - the character bounces upward automatically, moves left and right, and wraps around the screen edges.',
       steps: [
         {
@@ -657,14 +657,14 @@
           requires: ['touching("Death")', 'say("Game Over!")', 'break']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. Bounce on the platform to stay alive - fall into the death zone and it\'s game over.<br><br><strong>Challenge:</strong> Add 2 or 3 more Platform sprites at different starting heights so there are always several platforms to land on. Try making them fall at different speeds using different values instead of <code>-2</code>.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
     },
     {
-      emoji: '🦆',
+      icon: 'target',
       title: 'Duck Hunt',
       desc: 'A duck zigzags around the screen bouncing off every edge. Click it to shoot - score goes up and the duck reappears at a random new spot with a new speed.',
       steps: [
@@ -715,14 +715,14 @@
           requires: ['def when_clicked():', 'change_variable("Score"', 'hide()', 'wait(0.8)', 'go_to_xy(pick_random(', 'vx = pick_random(', 'show()']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>, then click the duck as fast as you can! Each hit scores a point and the duck respawns faster and in a new spot.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a <code>shots = 3</code> variable - each click costs a shot, game over at 0 (<em>hint: use <code>set_variable("Shots", shots)</code></em>)</li><li>Make the duck speed up after each shot - add a small amount to <code>vx</code> and <code>vy</code> inside <code>when_clicked</code></li><li>Add a timer: use <code>timer()</code> to display how long the player survived before missing</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
     },
     {
-      emoji: '⚔️',
+      icon: 'sword',
       title: 'RPG Survivor',
       desc: 'Enemies clone themselves and walk toward the player. Dodge with arrow keys, attack with space. Score goes up for each kill - survive as long as you can!',
       steps: [
@@ -815,7 +815,7 @@
           requires: ['def when_message_received(message):', 'message == "attack"', 'touching("Player")', 'change_variable("Score"', 'delete_clone()']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. Move with arrow keys and press <strong>space</strong> when an enemy is right next to you to kill it.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Make enemies spawn faster as Score increases - use <code>get_variable("Score")</code> to read the current score and reduce the <code>wait()</code></li><li>Make enemies move faster as the game goes on - increase <code>move_steps</code> based on Score</li><li>Add a second type of enemy with a different speed or size using another sprite and <code>create_clone_of("FastEnemy")</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -825,7 +825,7 @@
     // ── Apple Catcher ─────────────────────────────────────────────
     {
       cat: 'game',
-      emoji: '🍎',
+      icon: 'apple',
       title: 'Apple Catcher',
       desc: 'Catch falling apples with a basket. Move left and right to score - miss one and you lose a life. Two sprites, score and lives counters.',
       steps: [
@@ -878,7 +878,7 @@
           requires: ['touching("Catcher")', 'change_variable("Score", 1)', 'y_position() < -180', 'change_variable("Lives", -1)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click <strong>▶</strong>. Apples should fall at random positions - catch them with your basket!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a game-over check: <code>if get_variable("Lives") &lt;= 0: say("Game Over!") stop()</code></li><li>Add <code>wait(0.3)</code> after the reset so there\'s a brief gap before the apple reappears</li><li>Make apples speed up - use a variable for speed instead of the fixed <code>-4</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -888,7 +888,7 @@
     // ── Whack-a-Mole ──────────────────────────────────────────────
     {
       cat: 'game',
-      emoji: '🔨',
+      icon: 'hammer',
       title: 'Whack-a-Mole',
       desc: 'Moles pop up at random positions and vanish after a random time. Click them fast to score. Uses timed clone lifetimes and when_clicked on clones.',
       steps: [
@@ -930,7 +930,7 @@
           requires: ['def when_clicked():', 'change_variable("Score", 1)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click <strong>▶</strong>. Moles should pop up at random spots - click them before they vanish!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Speed up the game over time - reduce the <code>wait(1.5)</code> in <code>game_start</code> based on <code>get_variable("Score")</code></li><li>Add a 30-second time limit using <code>timer()</code> and <code>if timer() &gt; 30: say("Time\'s up!") stop()</code></li><li>Make moles shrink as your score increases using <code>set_size()</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -940,7 +940,7 @@
     // ── Space Shooter ─────────────────────────────────────────────
     {
       cat: 'game',
-      emoji: '🚀',
+      icon: 'rocket',
       title: 'Space Shooter',
       desc: 'Fly a ship left and right and press space to fire bullets upward. Bullets are clones that delete themselves on impact. Uses the broadcast → clone projectile pattern.',
       steps: [
@@ -992,7 +992,7 @@
           requires: ['vx = 3', 'def game_start():', 'global vx', 'set_variable("Score"', 'display_variable("Score"', 'go_to_xy(-200, 120)', 'change_x(vx)', 'x_position() > 220', 'vx = vx * -1']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click <strong>▶</strong>. Move with arrow keys, fire with space - hit the enemy to score!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a <code>wait(0.2)</code> after <code>broadcast("fire")</code> so bullets have a fire rate limit</li><li>Speed the enemy up as Score increases - use <code>get_variable("Score")</code> to scale <code>vx</code></li><li>Add multiple enemies using <code>create_clone_of("Enemy")</code> from the Player code</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1002,7 +1002,7 @@
     // ── Pong ──────────────────────────────────────────────────────
     {
       cat: 'game',
-      emoji: '🏓',
+      icon: 'pong',
       title: 'Pong',
       desc: 'Classic one-player Pong. Bounce the ball off the walls and your paddle - miss it and it\'s game over. Velocity-based bounce across two sprites.',
       steps: [
@@ -1054,7 +1054,7 @@
           requires: ['touching("Paddle") and vy < 0', '            vy = vy * -1', 'change_variable("Score", 1)', 'y_position() < -175', 'say("Game Over!")', 'stop()']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click <strong>▶</strong>. Keep the ball alive with your paddle - each bounce scores a point!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Speed the ball up over time - add <code>vy = vy * 1.05</code> each time you hit the paddle</li><li>Make the bounce angle depend on where the ball hits the paddle using <code>x_position() - touching("Paddle")</code> - look up how Scratch Pong angle maths works</li><li>Add a two-player mode: second paddle controlled with W/S keys, both using <code>change_y</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1064,7 +1064,7 @@
     // ── Breakout ──────────────────────────────────────────────────
     {
       cat: 'game',
-      emoji: '🧱',
+      icon: 'bricks',
       title: 'Breakout',
       desc: 'Bounce a ball off a paddle to smash rows of brick clones. Each brick deletes itself on impact. Nested loops build the grid, three-sprite collision throughout.',
       steps: [
@@ -1124,7 +1124,7 @@
           requires: ['def when_I_start_as_a_clone():', '    show()', 'while True:', 'touching("Ball")', 'delete_clone()']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click <strong>▶</strong>. Smash all the bricks - each one scores a point!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add more rows of bricks by changing <code>range(3)</code> to a larger number</li><li>Add a win condition: when Score reaches the total brick count, say "You Win!" and <code>stop()</code></li><li>Make different coloured rows worth different points using <code>set_effect("color", ...)</code> on each clone based on <code>row</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1134,7 +1134,7 @@
       id: 'functions',
       isNew: true,
       title: 'Functions',
-      emoji: '🧩',
+      icon: 'puzzle',
       desc: 'Wrap code you use again and again into a named function, then call it whenever you need it - and pass it a value to change what it does.',
       steps: [
         {
@@ -1171,7 +1171,7 @@
           requires: ['def hop(size):', 'range(size)', 'hop(10)', 'hop(20)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. Press <strong>space</strong> for a small hop and <strong>up</strong> for a big one - same function, two different jumps.<br><br><strong>Challenge:</strong> Add a second parameter so <code>hop(size, speed)</code> also controls how fast the jump plays. Then write a brand-new function <code>spin()</code> and call it too.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1181,7 +1181,7 @@
       id: 'lists',
       isNew: true,
       title: 'Lists',
-      emoji: '📋',
+      icon: 'list',
       desc: 'Store many values in one place with a list, loop through them, and grow the list while your program runs.',
       steps: [
         {
@@ -1218,7 +1218,7 @@
           requires: ['len(points)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. The sprite briefly shows how many stops there are (4), then patrols between them forever.<br><br><strong>Challenge:</strong> Read a single item by its <em>index</em> - <code>points[0]</code> is the first, <code>points[1]</code> the second. Then make a second list of y-positions and patrol in both directions.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1228,7 +1228,7 @@
       id: 'messages',
       isNew: true,
       title: 'Messages & Events',
-      emoji: '📣',
+      icon: 'megaphone',
       desc: 'Split a trigger from its reaction. One part of your code broadcasts a message; a separate handler reacts - the same way sprites and clones respond to events.',
       steps: [
         {
@@ -1257,7 +1257,7 @@
           requires: ['broadcast("vanish")', 'message == "vanish"', 'hide()', 'show()']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. Press <strong>space</strong> to cheer and <strong>up</strong> to vanish - the reactions live in a totally separate handler from the key checks.<br><br><strong>Challenge:</strong> Add a <em>second sprite</em>, give it its own <code>when_message_received(message)</code>, and make it react to <code>"cheer"</code> too. One broadcast, many sprites responding - that\'s how whole games are coordinated.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1267,7 +1267,7 @@
       id: 'debug-refactor',
       isNew: true,
       title: 'Debug & Refactor',
-      emoji: '🔧',
+      icon: 'bug',
       desc: 'Real programming is fixing code that does the wrong thing, then tidying it up. Hunt down two bugs, then refactor the repetition into one clean function.',
       steps: [
         {
@@ -1317,7 +1317,7 @@
           }
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. All four arrows work, and the logic lives in one tidy <code>move()</code> function.<br><br><strong>Challenge:</strong> Add a <code>speed</code> parameter - <code>move(dx, dy, speed)</code> - and make a "run" key that moves faster. Notice you only change the function <em>once</em>.',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1332,7 +1332,7 @@
       isNew: true,
       order: 1,
       title: 'Geometry Dash',
-      emoji: '🟦',
+      icon: 'dash',
       desc: 'Build a one-button auto-runner. Your cube runs on the spot while spikes rush past - tap space to jump. You will wrap the jump logic in its own function and call it.',
       steps: [
         {
@@ -1382,7 +1382,7 @@
           requires: ['go_to_xy(240, -100)', 'change_x(-6)', 'x_position() < -240', 'set_x(240)', 'change_variable("Score", 1)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong> and jump the spikes! The Score climbs every time one passes safely.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Make the spike faster as the Score climbs using <code>get_variable("Score")</code>.</li><li>Add a second obstacle sprite that scrolls at a different height.</li><li>Give <code>jump()</code> a <code>power</code> parameter - <code>jump(power)</code> - so a second key jumps higher.</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1394,7 +1394,7 @@
       isNew: true,
       order: 2,
       title: 'Rhythm Game',
-      emoji: '🎵',
+      icon: 'note',
       desc: 'Notes drop down the screen - hit space as each one reaches the line. Uses a list of lane positions and broadcast messages to score the hits.',
       steps: [
         {
@@ -1435,7 +1435,7 @@
           requires: ['def when_message_received(message):', 'message == "hit"', 'y_position() < -90', 'y_position() > -150', 'change_variable("Score", 1)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong> and tap <strong>space</strong> as notes reach the line!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a <code>Combo</code> variable that climbs with each hit and resets on a miss.</li><li>Draw a faint line costume at the hit zone so players can see where to aim.</li><li>Speed the song up over time by lowering the <code>wait()</code> between spawns.</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1447,7 +1447,7 @@
       isNew: true,
       order: 3,
       title: 'Tower Defense',
-      emoji: '🏰',
+      icon: 'castle',
       desc: 'Enemies march along a fixed path while your tower zaps any that come close. The path is a list of waypoints, and the tower fires with a broadcast.',
       steps: [
         {
@@ -1499,7 +1499,7 @@
           requires: ['def when_message_received(message):', 'message == "shoot"', 'distance_to("Tower") < 90', 'change_variable("Score", 1)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong>. Enemies loop the path and vanish when they pass your tower.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add more waypoints to <code>path</code> to make a longer, twistier route.</li><li>Add a game-over when <code>get_variable("Lives") &lt;= 0</code>.</li><li>Add a second Tower sprite - the enemies already listen for any <code>"shoot"</code>, so it just works.</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1511,7 +1511,7 @@
       isNew: true,
       order: 4,
       title: 'Overcooked',
-      emoji: '🍳',
+      icon: 'pan',
       desc: 'Fill kitchen orders before you fall behind. Orders come from a menu list, a function with a parameter serves each dish, and a message sends the waiter running.',
       steps: [
         {
@@ -1561,7 +1561,7 @@
           requires: ['go_to_xy(180, -130)', 'def when_message_received(message):', 'message == "served"', 'show()', 'say_for_secs("Order up!", 0.4)']
         },
         {
-          title: '✅ Try it!',
+          title: 'Try it!',
           text: 'Click the <strong>green flag ▶</strong> and cook the orders with keys <strong>1</strong>, <strong>2</strong> and <strong>3</strong>!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a fourth dish to the <code>menu</code> list and a <code>serve(3)</code> on key <strong>4</strong>.</li><li>Add a <code>Lives</code> variable and lose one for a wrong key (an <code>else</code> in <code>serve</code>).</li><li>Add a countdown using <code>timer()</code> so orders must be filled before time runs out.</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
@@ -1586,7 +1586,7 @@
   var CHALLENGES = [
     {
       id: 'arrow-mover',
-      emoji: '🕹️',
+      icon: 'arrows',
       title: 'Arrow Key Mover',
       difficulty: 1,
       goal: 'Control the sprite with all four arrow keys. Right moves the sprite right, left moves it left, up moves it up and down moves it down. The sprite should keep moving as long as the key is held.',
@@ -1616,7 +1616,7 @@
     },
     {
       id: 'click-counter',
-      emoji: '🖱️',
+      icon: 'mouse',
       title: 'Click Counter',
       difficulty: 2,
       goal: 'When the green flag is pressed, set a variable called <strong>Score</strong> to 0 and display it on screen. Each time the sprite is clicked, Score goes up by 1.',
@@ -1641,7 +1641,7 @@
     },
     {
       id: 'wall-bouncer',
-      emoji: '🏓',
+      icon: 'pong',
       title: 'Wall Bouncer',
       difficulty: 3,
       goal: 'The sprite moves automatically using a speed variable <code>vx</code>. When it reaches the right wall (x > 220) or left wall (x &lt; −220), it reverses direction by flipping <code>vx</code>. The sprite bounces back and forth forever without any key presses.',
@@ -1668,7 +1668,7 @@
     },
     {
       id: 'gravity-jumper',
-      emoji: '🚀',
+      icon: 'rocket',
       title: 'Gravity Jumper',
       difficulty: 4,
       goal: 'Build a physics game. A variable <code>vy</code> controls the sprite\'s vertical speed. Every frame, <code>vy</code> decreases by 0.5 (gravity pulls it down). Pressing space sets <code>vy</code> to 8 (a jump). If the sprite falls below y = −160, say <em>"Game Over!"</em> and <code>stop()</code>.',

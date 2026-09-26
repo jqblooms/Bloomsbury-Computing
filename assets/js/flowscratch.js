@@ -2626,7 +2626,7 @@
       '#fs-tut-dialog{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:center;justify-content:center}',
       '#fs-tut-dialog.show{display:flex}',
       '#fs-td-card{background:#171a20;border-radius:14px;max-width:360px;width:90%;padding:22px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}',
-      '#fs-td-icon{font-size:34px;line-height:1;margin-bottom:8px}',
+      '#fs-td-icon{display:flex;justify-content:center;line-height:1;margin-bottom:8px}',
       '#fs-td-title{font-weight:800;font-size:15px;color:#e8eaed;margin-bottom:8px}',
       '#fs-td-body{font-size:12.5px;color:#c9cdd4;line-height:1.5;margin-bottom:16px}',
       '#fs-td-btns{display:flex;flex-direction:column;gap:8px}',
@@ -3310,10 +3310,16 @@
   // showTutDialog(), an icon/title/body plus a row of caller-supplied
   // buttons, styled to match FlowScratch's own green tutorial palette
   // instead of copying PyScratch's colours wholesale.
+  // The dialog icon: a book, or a trophy for a finished tutorial.
+  function fsIcon(name) {
+    var P = { book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/>', trophy: '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M8 21h8M9 18h6"/>' };
+    return '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[name] || P.book) + '</svg>';
+  }
+
   function showFsTutDialog(icon, title, bodyHtml, buttons) {
     var dlg = document.getElementById('fs-tut-dialog');
     if (!dlg) return;
-    dlg.querySelector('#fs-td-icon').textContent = icon || '📚';
+    dlg.querySelector('#fs-td-icon').innerHTML = fsIcon(icon);
     dlg.querySelector('#fs-td-title').textContent = title;
     dlg.querySelector('#fs-td-body').innerHTML = bodyHtml;
     var btnsEl = dlg.querySelector('#fs-td-btns');
@@ -3487,7 +3493,7 @@
     if (!tut || !els.overlay) return;
     var saved = fsTutState[tut.id];
     if (saved && !saved.completed && saved.stepIdx > 0) {
-      showFsTutDialog('📚', tut.title,
+      showFsTutDialog('book', tut.title,
         'You left off at <b>Step ' + (saved.stepIdx + 1) + ' of ' + tut.steps.length + '</b>. Want to pick up where you left off?',
         [
           { label: 'Resume →', cls: 'fs-td-primary', cb: function () { _doStartFsTutorial(tutIdx, Math.min(saved.stepIdx, tut.steps.length - 1)); } },
@@ -3532,7 +3538,7 @@
       reportFsTutorialCompletion(tut);
     }
     if (!hasSnap) { _doExitFsTutorial(); return; }
-    var icon = isFinished ? '🎉' : '📚';
+    var icon = isFinished ? 'trophy' : 'book';
     var title = isFinished ? 'Tutorial complete!' : 'Exit tutorial';
     var body = isFinished
       ? 'Great work finishing <b>' + esc(tut.title) + '</b>! What would you like to do with the flowchart you built?'

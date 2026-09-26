@@ -2035,7 +2035,9 @@
       '.ps-tcard{background:var(--ps-panel-2,#18182a);border:1px solid var(--ps-border-strong,#3f3f5a);border-radius:8px;padding:14px 16px;cursor:default;transition:border-color .12s}',
       '.ps-tcard:hover{border-color:var(--ps-accent,#7c5fcf)}',
       '.ps-tcard-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}',
-      '.ps-tcard-emoji{font-size:22px;line-height:1}',
+      '.ps-tcard-emoji{display:inline-flex;color:var(--ps-accent,#8ab4f8);line-height:1}',
+      '.ps-icon{flex:none;vertical-align:-3px}',
+      '.ps-head-title{display:inline-flex;align-items:center;gap:6px}',
       '.ps-tcard-title{font-size:13px;font-weight:700;color:var(--ps-text-strong,#fff);min-width:0;overflow:hidden;text-overflow:ellipsis}',
       '.ps-tcard-new{margin-left:auto;background:#fbbf24;color:#1f1300;border:1px solid #fde68a;border-radius:999px;padding:2px 6px;font-size:9px;font-weight:900;letter-spacing:.05em;line-height:1;box-shadow:0 0 0 1px rgba(0,0,0,.18)}',
       '.ps-tcard-desc{font-size:12px;color:var(--ps-muted,#9090b0);line-height:1.5;margin-bottom:10px}',
@@ -2129,7 +2131,7 @@
       '#ps-tut-dialog{position:fixed;inset:0;z-index:10010;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55)}',
       '#ps-tut-dialog.ps-td-hidden{display:none}',
       '.ps-td-box{background:#1e1e2e;border:1px solid var(--ps-border-strong,#3f3f5a);border-radius:10px;padding:20px 22px 16px;max-width:360px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.6);font-size:13px;color:var(--ps-text,#cdd6f4);text-align:center}',
-      '.ps-td-icon{font-size:32px;margin-bottom:8px}',
+      '.ps-td-icon{display:flex;justify-content:center;color:var(--ps-accent,#8ab4f8);margin-bottom:8px}',
       '.ps-td-title{font-size:15px;font-weight:700;color:var(--ps-text-strong,#fff);margin-bottom:6px}',
       '.ps-td-body{font-size:12px;color:var(--ps-muted,#9090b0);line-height:1.5;margin-bottom:16px}',
       '.ps-td-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}',
@@ -2269,7 +2271,7 @@
     cmEl.id = 'ps-code-modal';
     cmEl.innerHTML = [
       '<div id="ps-cm-head">',
-        '<span id="ps-cm-icon">📋</span>',
+        '<span id="ps-cm-icon">' + psIcon('list', 16) + '</span>',
         '<span id="ps-cm-title">Code reference</span>',
         '<button id="ps-cm-close" title="Close">✕</button>',
       '</div>',
@@ -2340,7 +2342,7 @@
     // Colour picker badge - appears when cursor is inside touching_colour(...)
     var cpEl = document.createElement('div');
     cpEl.id = 'ps-colour-pick';
-    cpEl.innerHTML = '<span id="ps-cp-swatch"></span><span>🎨 Colour</span><input type="color" id="ps-cp-input">';
+    cpEl.innerHTML = '<span id="ps-cp-swatch"></span><span>Colour</span><input type="color" id="ps-cp-input">';
     document.body.appendChild(cpEl);
     (function () {
       var cpInput  = document.getElementById('ps-cp-input');
@@ -2647,13 +2649,50 @@
     );
   }
 
+  // Line icons for the tutorials, challenges and panels (24x24, stroked in
+  // the text colour). A tutorial names its icon in pyscratch-tutorials.js.
+  function psIcon(name, size) {
+    var P = {
+      "book":"<path d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z\"/><path d=\"M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5\"/>",
+      "trophy":"<path d=\"M7 4h10v5a5 5 0 0 1-10 0z\"/><path d=\"M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M8 21h8M9 18h6\"/>",
+      "question":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.8-.9 1.4v.6M12 17h.01\"/>",
+      "repeat":"<path d=\"M17 2l3 3-3 3\"/><path d=\"M4 11V9a4 4 0 0 1 4-4h12\"/><path d=\"M7 22l-3-3 3-3\"/><path d=\"M20 13v2a4 4 0 0 1-4 4H4\"/>",
+      "cycle":"<path d=\"M20 12a8 8 0 1 1-2.34-5.66\"/><path d=\"M20 4v5h-5\"/>",
+      "gamepad":"<rect x=\"2\" y=\"7\" width=\"20\" height=\"11\" rx=\"5.5\"/><path d=\"M7 10.5v3.5M5.25 12.25h3.5\"/><path d=\"M15.5 11h.01M18 13.5h.01\"/>",
+      "costume":"<path d=\"M8 3l4 2 4-2 5 4-3 3-2-1v12H8V9l-2 1-3-3z\"/>",
+      "gravity":"<path d=\"M12 3v13\"/><path d=\"m6.5 10.5 5.5 5.5 5.5-5.5\"/><path d=\"M4 21h16\"/>",
+      "ball":"<circle cx=\"15\" cy=\"7\" r=\"4\"/><path d=\"M3 21h18\"/><path d=\"M4 18c2-6 5-9 7-9\"/>",
+      "bird":"<path d=\"M3 14c3.5 0 6-2 7-6 2 3.5 5.5 5 9 4-1 4.5-4.5 8-9 8-3.5 0-6-2.5-7-6z\"/><path d=\"M19 12l3-1\"/><path d=\"M15 11h.01\"/>",
+      "jumper":"<circle cx=\"12\" cy=\"4.5\" r=\"2\"/><path d=\"M12 7v5M8.5 9.5 12 12l3.5-2.5M9.5 16l2.5-4 2.5 4\"/><path d=\"M7 21h10M9 21l1-2h4l1 2\"/>",
+      "target":"<circle cx=\"12\" cy=\"12\" r=\"8\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v4M12 18v4M2 12h4M18 12h4\"/>",
+      "sword":"<path d=\"M14.5 3.5 20.5 3 20 9 9.5 19.5l-5-5z\"/><path d=\"M4.5 14.5 2 17l5 5 2.5-2.5M7 12l5 5\"/>",
+      "apple":"<path d=\"M12 7.5c-2-1.5-7.5-1-7.5 5 0 4.5 3.5 9.5 7.5 8.5 4 1 7.5-4 7.5-8.5 0-6-5.5-6.5-7.5-5z\"/><path d=\"M12 7.5c0-2.2 1.2-4 3.5-4.5\"/>",
+      "hammer":"<path d=\"M4 20.5l9.5-9.5\"/><path d=\"M10.5 6.5 15 2l7 7-4.5 4.5-3-1-3-3z\"/>",
+      "rocket":"<path d=\"M12 2c4 3 5.2 7 4.2 12l-2 3h-4.4l-2-3C6.8 9 8 5 12 2z\"/><circle cx=\"12\" cy=\"9\" r=\"2\"/><path d=\"M7.8 14 5 17v3l3-2M16.2 14l2.8 3v3l-3-2M10.5 20.5h3\"/>",
+      "pong":"<path d=\"M4 6v8M20 10v8\"/><circle cx=\"12.5\" cy=\"11\" r=\"1.8\"/><path d=\"M8 9.5l2.5 1\"/>",
+      "bricks":"<rect x=\"3\" y=\"4\" width=\"8\" height=\"4\" rx=\"1\"/><rect x=\"13\" y=\"4\" width=\"8\" height=\"4\" rx=\"1\"/><rect x=\"8\" y=\"10\" width=\"8\" height=\"4\" rx=\"1\"/><path d=\"M4 20h7\"/><circle cx=\"16\" cy=\"18.5\" r=\"1.5\"/>",
+      "puzzle":"<path d=\"M5 8h3.5a2 2 0 1 1 4 0H16v3.5a2 2 0 1 1 0 4V19H12.5a2 2 0 1 0-4 0H5v-3.5a2 2 0 1 0 0-4z\"/>",
+      "list":"<path d=\"M9 6h11M9 12h11M9 18h11\"/><path d=\"M4.5 6h.01M4.5 12h.01M4.5 18h.01\"/>",
+      "megaphone":"<path d=\"M3 10v4h4l7 5V5l-7 5z\"/><path d=\"M17.5 9a4 4 0 0 1 0 6M7 14l1.5 6h2.5l-1-6\"/>",
+      "bug":"<rect x=\"7\" y=\"8\" width=\"10\" height=\"12\" rx=\"5\"/><path d=\"M12 8v12M9.5 5.5 11 8M14.5 5.5 13 8M3 13h4M17 13h4M4 19l3.2-2M20 19l-3.2-2M4 7.5l3.2 2M20 7.5l-3.2 2\"/>",
+      "dash":"<rect x=\"4\" y=\"10\" width=\"7\" height=\"7\" rx=\"1\"/><path d=\"M13 17l3.5-6 3.5 6z\"/><path d=\"M2 20h20\"/>",
+      "note":"<path d=\"M9 18V5l11-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"17\" cy=\"16\" r=\"3\"/>",
+      "castle":"<path d=\"M4 21V8h3v3h3V8h4v3h3V8h3v13z\"/><path d=\"M10 21v-4a2 2 0 0 1 4 0v4\"/>",
+      "pan":"<circle cx=\"10\" cy=\"14\" r=\"6\"/><path d=\"M16 14h6\"/><path d=\"M8 5c0-1 1.2-1.2 1.2-2.2M11.5 5c0-1 1.2-1.2 1.2-2.2\"/>",
+      "arrows":"<path d=\"M12 3v18M3 12h18\"/><path d=\"m9 6 3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3\"/>",
+      "mouse":"<rect x=\"6\" y=\"3\" width=\"12\" height=\"18\" rx=\"6\"/><path d=\"M12 3v6\"/>",
+      "eye":"<path d=\"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>"
+    };
+    return '<svg class="ps-icon" viewBox="0 0 24 24" width="' + (size || 20) + '" height="' + (size || 20) + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[name] || P.book) + '</svg>';
+  }
+
   function buildTutorialCardHTML(t, i) {
     var newBadge = tutorialIsNew(t)
       ? '<span class="ps-tcard-new" title="New tutorial">NEW</span>'
       : '';
     return '<div class="ps-tcard" data-idx="' + i + '">' +
       '<div class="ps-tcard-top">' +
-        '<span class="ps-tcard-emoji">' + (t.emoji || '&#128216;') + '</span>' +
+        '<span class="ps-tcard-emoji">' + psIcon(t.icon, 22) + '</span>' +
         '<span class="ps-tcard-title">' + t.title + '</span>' +
         newBadge +
       '</div>' +
@@ -2694,7 +2733,7 @@
       var hintsHTML = ch.hints.map(function (h) { return '<li>' + h + '</li>'; }).join('');
       return '<div class="ps-tcard ps-tcard-chal" data-chal-idx="' + i + '">' +
         '<div class="ps-tcard-top">' +
-          '<span class="ps-tcard-emoji">' + ch.emoji + '</span>' +
+          '<span class="ps-tcard-emoji">' + psIcon(ch.icon, 22) + '</span>' +
           '<span class="ps-tcard-title">' + ch.title + '</span>' +
           '<span class="ps-tchal-stars">' + stars + '</span>' +
         '</div>' +
@@ -2710,7 +2749,7 @@
 
   function buildTutorialHTML() {
     return '<div class="ps-tbox">' +
-      '<div class="ps-thead"><span>📚 Tutorials</span><button title="Close">&times;</button></div>' +
+      '<div class="ps-thead"><span class="ps-head-title">' + psIcon('book', 16) + ' Tutorials</span><button title="Close">&times;</button></div>' +
       '<div class="ps-ttabs">' +
         '<div class="ps-ttab ps-ttab-active" data-panel="tutorials">Tutorials</div>' +
         '<div class="ps-ttab" data-panel="challenges">Challenges</div>' +
@@ -2903,7 +2942,7 @@
     // buttons: [{label, cls, cb}]
     var dlg   = document.getElementById('ps-tut-dialog');
     if (!dlg) return;
-    document.getElementById('ps-td-icon').textContent  = icon;
+    document.getElementById('ps-td-icon').innerHTML  = psIcon(icon, 36);
     document.getElementById('ps-td-title').textContent = title;
     document.getElementById('ps-td-body').innerHTML    = body;
     var btnsEl = document.getElementById('ps-td-btns');
@@ -2947,7 +2986,7 @@
     if (saved && hasSnap) {
       // Student has unfinished progress - offer to resume
       showTutDialog(
-        tut.emoji || '📚',
+        tut.icon || 'book',
         tut.title,
         'You left off at <strong>Step ' + (saved.stepIdx + 1) + ' of ' + tut.steps.length + '</strong>. Want to pick up where you left off?',
         [
@@ -3391,7 +3430,9 @@
     bar.classList.remove('ps-tb-hidden');
 
     // Header
-    bar.querySelector('.ps-tb-tut-name').textContent = tut.emoji + '  ' + tut.title;
+    var tutNameEl = bar.querySelector('.ps-tb-tut-name');
+    tutNameEl.innerHTML = psIcon(tut.icon, 13) + ' ';
+    tutNameEl.appendChild(document.createTextNode(tut.title));
     bar.querySelector('.ps-tb-stepcount').textContent = 'Step ' + (at.stepIdx + 1) + ' of ' + tut.steps.length;
 
     // Progress dots
@@ -3998,7 +4039,7 @@
       takeProjectSnapshot(tut.title + ' - finished', 'after-tutorial');
     }
 
-    var icon  = isFinished ? '🎉' : '📚';
+    var icon  = isFinished ? 'trophy' : 'book';
     var title = isFinished ? 'Tutorial Complete!' : 'Exit Tutorial';
     var body  = isFinished
       ? 'Great work finishing <strong>' + tut.title + '</strong>! What would you like to do with the code you wrote?'
@@ -4486,7 +4527,7 @@
       { cat:'sens', title:'Sensing', items:[
         { code:'touching("SpriteName")', desc:'True if this sprite is touching another sprite.' },
         { code:'touching("mouse_pointer")', desc:'True if touching the mouse cursor.' },
-        { code:'touching_colour("#ff0000")', desc:'True if this sprite is touching a specific colour on the stage or another sprite. While typing inside the brackets a 🎨 Colour badge appears - click it to open the colour picker. Both touching_colour and touching_color are accepted.' },
+        { code:'touching_colour("#ff0000")', desc:'True if this sprite is touching a specific colour on the stage or another sprite. While typing inside the brackets a Colour badge appears - click it to open the colour picker. Both touching_colour and touching_color are accepted.' },
         { code:'distance_to("SpriteName")', desc:'Pixel distance to another sprite or "mouse_pointer".' },
         { code:'key_pressed("space")', desc:'True while a key is held. Keys: space, up, down, left, right, a-z, 0-9.' },
         { code:'mouse_x() / mouse_y()', desc:'Mouse position in Scratch coordinates (0,0 = centre).' },
@@ -4526,7 +4567,7 @@
     }).join('');
 
     return '<div class="ps-mbox">' +
-      '<div class="ps-mhead"><span>🐍 PyScratch Reference</span><button title="Close">&times;</button></div>' +
+      '<div class="ps-mhead"><span class="ps-head-title">' + psIcon('book', 16) + ' PyScratch reference</span><button title="Close">&times;</button></div>' +
       '<div class="ps-mbody">' + inner + '</div>' +
       '</div>';
   }
@@ -4687,12 +4728,13 @@
       var div = document.createElement('div');
       div.className = 'ps-snap-item';
 
-      var icon = snap.kind === 'before-tutorial' ? '📚 '
-               : snap.kind === 'after-tutorial'  ? '🎉 '
+      var icon = snap.kind === 'before-tutorial' ? 'book'
+               : snap.kind === 'after-tutorial'  ? 'trophy'
                : '';
       var lbl = document.createElement('div');
       lbl.className   = 'ps-snap-label';
-      lbl.textContent = icon + snap.label;
+      lbl.textContent = snap.label;
+      if (icon) lbl.insertAdjacentHTML('afterbegin', psIcon(icon, 14) + ' ');
 
       var ts = document.createElement('div');
       ts.className   = 'ps-snap-time';
@@ -4763,7 +4805,7 @@
       var overall = document.createElement('div');
       overall.className = 'ps-chal-overall ' + (allPassed ? 'co-pass' : 'co-fail');
       overall.textContent = allPassed
-        ? '🎉 All tests passed!'
+        ? 'All tests passed!'
         : '✗ Some tests failed - check your code and try again.';
       resultsEl.appendChild(overall);
       runBtn.disabled = false;
