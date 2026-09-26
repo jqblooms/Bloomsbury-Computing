@@ -3,11 +3,10 @@
    sky and tiles; everything around it is the site's. */
 
 :root {
-    --code-bg: #0b0d11;
-    --py-kw: #c58af9;
-    --py-fn: #8ab4f8;
-    --py-num: #fdd663;
-    --py-comment: #81c995;
+    --py-kw: var(--syn-keyword);
+    --py-fn: var(--syn-function);
+    --py-num: var(--syn-number);
+    --py-comment: var(--syn-comment);
     --medal-gold: #fdd663;
     --medal-silver: #c9cdd4;
     --medal-bronze: #fcad70;
@@ -67,7 +66,7 @@ body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 .cm-s-bc .cm-keyword { color: var(--py-kw); }
 .cm-s-bc .cm-builtin, .cm-s-bc .cm-def, .cm-s-bc .cm-variable-2 { color: var(--py-fn); }
 .cm-s-bc .cm-number { color: var(--py-num); }
-.cm-s-bc .cm-string { color: #fcad70; }
+.cm-s-bc .cm-string { color: var(--syn-string); }
 .cm-s-bc .cm-comment { color: var(--py-comment); font-style: italic; }
 .cm-s-bc .cm-operator { color: var(--ink-soft); }
 

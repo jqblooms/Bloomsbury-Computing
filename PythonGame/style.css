@@ -4,7 +4,6 @@
 :root {
     --header-height: 64px;
     --console-height: 84px;
-    --code-bg: #0b0d11;
     /* One accent per stage, from the site palette's light tones. */
     --stage-1: #8ab4f8;
     --stage-2: #81c995;
@@ -16,10 +15,10 @@
     --stage-8: #ff8bcb;
     --stage-gcse: #aecbfa;
     /* Python syntax colours in the falling blocks and exams. */
-    --py-func: #8ab4f8;
-    --py-string: #fcad70;
-    --py-num: #fdd663;
-    --py-comment: #81c995;
+    --py-func: var(--syn-function);
+    --py-string: var(--syn-string);
+    --py-num: var(--syn-number);
+    --py-comment: var(--syn-comment);
     --py-var: #e8eaed;
 }
 
@@ -267,7 +266,7 @@ body {
 .cm-s-bc .CodeMirror-cursor { border-left-color: var(--brand); }
 .cm-s-bc .CodeMirror-selected, .cm-s-bc .CodeMirror-focused .CodeMirror-selected { background: var(--brand-soft-strong); }
 .cm-s-bc .CodeMirror-activeline-background { background: var(--surface-2); }
-.cm-s-bc .cm-keyword { color: #c58af9; }
+.cm-s-bc .cm-keyword { color: var(--syn-keyword); }
 .cm-s-bc .cm-builtin { color: var(--py-func); }
 .cm-s-bc .cm-def, .cm-s-bc .cm-variable-2 { color: var(--py-func); }
 .cm-s-bc .cm-string { color: var(--py-string); }
