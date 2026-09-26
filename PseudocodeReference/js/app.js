@@ -357,6 +357,7 @@
 
   function render() {
     renderNav();
+    repaintSupport = null;
     var main = document.getElementById('main');
     main.innerHTML = '';
     var t = topicById(current.topic);
@@ -517,6 +518,62 @@
 
   function normGap(s) { return String(s).replace(/←/g, '<-').replace(/\s+/g, '').toUpperCase(); }
 
+  // ---------------------------------------------------------------- support mode
+  // One switch for the whole site (shared/bc-support.js). Level 1 shows each
+  // missing part greyed out inside its gap, carrying on from what the student
+  // has typed. Levels 2 and 3 show the model answer under the editor, coloured
+  // as they type. The help fades per level as tasks are checked correct; level
+  // 3 never shows more than the start of each line.
+  var Support = window.BCSupport || null;
+  var repaintSupport = null;
+  function supportReveal(level) {
+    if (!Support || !Support.isOn()) return 0;
+    var r = Support.fader('recap:L' + level).reveal();
+    return level === 3 ? Math.min(r, 2 / 3) : r;
+  }
+  function recordSupport(level, right) {
+    if (!Support || !Support.isOn()) return;
+    var f = Support.fader('recap:L' + level);
+    if (right) f.correct(); else f.wrong();
+  }
+  // How far into `model` the typed text reaches, ignoring spacing and case.
+  function gapProgress(model, typed) {
+    var i = 0, j = 0;
+    model = model.replace(/←/g, '<-');
+    typed = typed.replace(/←/g, '<-');
+    while (j < typed.length) {
+      if (/\s/.test(typed[j])) { j++; continue; }
+      while (i < model.length && /\s/.test(model[i])) i++;
+      if (i < model.length && model[i].toUpperCase() === typed[j].toUpperCase()) { i++; j++; }
+      else return { at: i, ok: false };
+    }
+    return { at: i, ok: true };
+  }
+  function paintGap(g) {
+    var reveal = supportReveal(1), typed = g.input.value;
+    g.input.classList.toggle('guided', reveal > 0);
+    var best = null;
+    if (reveal) g.answers.forEach(function (a) {
+      var p = gapProgress(a, typed);
+      if (!best || (p.ok && !best.p.ok)) best = { model: a, p: p };
+    });
+    g.input.classList.toggle('off', !!best && !best.p.ok);
+    if (!best || !best.p.ok) { g.ghost.innerHTML = ''; return; }
+    var model = best.model;
+    var shown = reveal >= 1 ? model.length : Math.max(1, Math.ceil(model.length * reveal));
+    var rest = model.slice(best.p.at);
+    if (/\s$/.test(typed)) rest = rest.replace(/^\s+/, '');
+    var visible = rest.slice(0, Math.max(0, shown - (model.length - rest.length)));
+    var hidden = rest.length - visible.length;
+    g.ghost.innerHTML = '<span class="gh-typed">' + esc(typed) + '</span>' + esc(visible) +
+      (hidden ? '<span class="gh-blank" style="width:' + hidden + 'ch"></span>' : '');
+  }
+  // Comment and blank lines are skipped on both sides, so a two-line TODO
+  // comment does not push the model out of line with the student's code.
+  function codeLines(text) {
+    return String(text || '').split('\n').filter(function (l) { return l.trim() && !/^\s*\/\//.test(l); });
+  }
+
   function renderTask(t, k, idx) {
     var card = el('div', { class: 'card' });
     var head = el('div', { class: 'task-head' });
@@ -557,7 +614,7 @@
     }
 
     // The code area
-    var getCode, editor = null, gaps = [];
+    var getCode, editor = null, gaps = [], lastSupportCode = null;
     var draft = store.drafts[k.id];
     if (k.level === 1) {
       var parts = k.code.split(/\{\{(.+?)\}\}/);
@@ -582,6 +639,8 @@
           var answers = part.split('|');
           var gi = gaps.length;
           var input = el('input', { class: 'gap', type: 'text', spellcheck: 'false', autocapitalize: 'off', autocomplete: 'off', 'aria-label': 'Gap ' + (gi + 1) });
+          var ghost = el('span', { class: 'gap-ghost', 'aria-hidden': 'true' });
+          var wrap = el('span', { class: 'gap-wrap' });
           var baseWidth = Math.max(answers[0].length, 3) + 2;
           function sizeGap() { input.style.width = Math.max(baseWidth, input.value.length + 2) + 'ch'; }
           if (draft && draft[gi] !== undefined) input.value = draft[gi];
@@ -591,22 +650,33 @@
             input.classList.remove('right', 'wrong');
             store.drafts[k.id] = gaps.map(function (g) { return g.input.value; });
             persist();
+            paintGap(gaps[gi]);
           });
           input.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') { e.preventDefault(); var nxt = gaps[gi + 1]; if (nxt) nxt.input.focus(); else checkBtn.click(); }
           });
-          gaps.push({ input: input, answers: answers });
-          src.appendChild(input);
+          gaps.push({ input: input, answers: answers, ghost: ghost });
+          wrap.appendChild(input);
+          wrap.appendChild(ghost);
+          src.appendChild(wrap);
         }
       });
       card.appendChild(holder);
+      repaintSupport = function () { gaps.forEach(paintGap); };
       getCode = function () {
         var gi2 = 0;
         return k.code.replace(/\{\{(.+?)\}\}/g, function () { return gaps[gi2++].input.value; });
       };
     } else {
       var starter = k.level === 2 ? k.code : '';
-      editor = createEditor(typeof draft === 'string' ? draft : starter, function (v) { store.drafts[k.id] = v; persist(); });
+      editor = createEditor(typeof draft === 'string' ? draft : starter, function (v) { store.drafts[k.id] = v; persist(); repaintSupport(); });
+      var modelHint = el('div', { hidden: 'hidden' });
+      repaintSupport = function () {
+        var reveal = supportReveal(k.level);
+        if (!reveal) { modelHint.innerHTML = ''; modelHint.hidden = true; return; }
+        Support.renderTypedHint(modelHint, codeLines(k.model), codeLines(editor.value).join('\n'), reveal,
+          reveal >= 1 ? 'Model answer: type it yourself' : 'Model answer with parts hidden: type it yourself');
+      };
       var bank = el('div', { class: 'bank' });
       bank.appendChild(el('span', null, 'Insert:'));
       bankFor(t.id).forEach(function (s) {
@@ -614,6 +684,7 @@
       });
       card.appendChild(bank);
       card.appendChild(editor.el);
+      card.appendChild(modelHint);
       card.appendChild(el('p', { class: 'note', style: 'margin:.3rem 0 0' }, 'Tip: Tab indents, Shift+Tab un-indents, and Enter keeps your indentation.'));
       getCode = function () { return editor.value; };
       if (k.level === 3 && k.plan) {
@@ -623,6 +694,7 @@
           editor.value = decl + '\n' + cur;
           store.drafts[k.id] = editor.value;
           persist();
+          repaintSupport();
           editor.focus();
         });
       }
@@ -748,6 +820,9 @@
       updateHelp();
       var code = getCode();
       var res = CIE.checkTask(code, k);
+      // Checking the same code twice counts once.
+      if (code !== lastSupportCode) { recordSupport(k.level, res.pass); lastSupportCode = code; }
+      repaintSupport();
       if (k.level === 1) {
         gaps.forEach(function (g) {
           var ok = g.answers.some(function (a) { return normGap(a) === normGap(g.input.value); });
@@ -809,6 +884,7 @@
       render();
     });
 
+    repaintSupport();
     return card;
   }
 
@@ -823,5 +899,10 @@
     go(t.id, tab, isNaN(idx) ? undefined : idx);
   }
   window.addEventListener('hashchange', fromHash);
+  if (Support) {
+    var slot = document.getElementById('supportSlot');
+    if (slot) Support.mountToggle(slot, 'Support');
+    Support.onChange(function () { if (repaintSupport) repaintSupport(); });
+  }
   fromHash();
 })();

@@ -148,6 +148,14 @@ details.fold[open] summary { margin-bottom: .5rem; }
 /* fill the gaps */
 .gap { font: inherit; background: #2e3440; color: #fff; border: 1px dashed #80868b; border-radius: 4px; padding: 0 .25rem; height: calc(var(--code-line) - 2px); min-width: 3ch; text-align: center; }
 .gap:focus { outline: 2px solid #7dd3fc; background: #1e3a5f; }
+/* support mode: the missing part greyed out inside its gap */
+.gap-wrap { position: relative; display: inline-block; }
+.gap.guided { text-align: left; }
+.gap.off { border: 1px solid #f28b82; }
+.gap-ghost { position: absolute; top: 0; bottom: 0; left: calc(1px + .25rem); display: flex; align-items: center; white-space: pre; color: var(--code-dim); pointer-events: none; }
+.gap-ghost:empty { display: none; }
+.gap-ghost .gh-typed { visibility: hidden; }
+.gap-ghost .gh-blank { display: inline-block; height: 1em; border-bottom: 2px dotted var(--code-dim); }
 .gap.right { border: 1px solid #81c995; background: rgba(129, 201, 149, .2); }
 .gap.wrong { border: 1px solid #fdd663; background: rgba(253, 214, 99, .18); }
 
@@ -203,6 +211,6 @@ table.tests td.io { font-family: var(--mono); font-size: .78rem; }
 footer { text-align: center; color: var(--text-dimmer); font-size: .8rem; margin: 2rem 0 1rem; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media print {
-  nav.topics, .top .prog, .tabs, .btn-row, .stepper { display: none !important; }
+  nav.topics, .top .prog, #supportSlot, .tabs, .btn-row, .stepper { display: none !important; }
   .layout { grid-template-columns: 1fr; }
 }

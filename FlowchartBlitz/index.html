@@ -12,6 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../shared/bc-tailwind.js?v=20260927"></script>
     <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
+    <script src="../shared/bc-support.js?v=20260927"></script>
     <!-- Real flowchart layout, not hand-placed CSS boxes and arrow glyphs -
          same Mermaid pipeline the main site uses for its own lesson
          diagrams (Index.html's initBranchDiagram), reused here since this
@@ -96,6 +97,8 @@
         .fc-slot-overlay.is-target { outline: 3px solid #facc15; outline-offset: 2px; }
         .fc-block { cursor: grab; }
         .fc-block.is-picked { outline: 3px solid #facc15; outline-offset: 2px; }
+        .fc-block.is-hint { outline: 3px dashed #8ab4f8; outline-offset: 2px; }
+        .fc-support-toggle { display: flex; justify-content: center; margin-bottom: 16px; }
         .fc-palette { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
         .fc-code { text-align: left; background: #0b1224; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 16px; font-size: 13px; line-height: 1.7; color: #e2e8f0; white-space: pre; }
     </style>
@@ -121,7 +124,7 @@ window.postToParent = function (payload) {
 </script>
 
 <script type="text/babel">
-const { useState, useEffect, useRef, useCallback } = React;
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
 // --- CONSTANTS ---
 const BASE_DURATION_REF = 55000; // more generous than Pseudocode Blitz's 45000 - this is a translation skill being met for the first time
@@ -359,7 +362,7 @@ const HelpModal = ({ levelId, onClose }) => {
     );
 };
 
-const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children }) => {
+const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children, hint }) => {
     const bgOpacity = Math.min(0.7, stress);
     const barWidth = Math.max(0, (1 - stress) * 100);
     return (
@@ -377,6 +380,7 @@ const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, child
                 </div>
             </div>
             <div className="w-full h-2 bg-slate-900/50 rounded-full mb-4 overflow-hidden z-10 shrink-0"><div className={`h-full transition-all duration-100 ${stress > 0.7 ? 'bg-red-500' : 'bg-sky-500'}`} style={{ width: `${barWidth}%` }}></div></div>
+            {hint && <div className="z-10 shrink-0 w-full max-w-xl mx-auto mb-4 px-4 py-2 rounded-lg bg-sky-500/15 text-sky-200 text-sm text-center no-select" aria-live="polite">{hint}</div>}
             <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
         </div>
     );
@@ -574,7 +578,9 @@ const MermaidFlow = ({ q, slots = null, checkState = null, onSlotAction = null, 
 };
 
 // --- LEVEL 1: Flowchart -> Pseudocode (typed answer) ---
-const FlowToCodeLevel = ({ onExit, onGameOver, onHelp }) => {
+const FlowToCodeLevel = ({ onExit, onGameOver, onHelp, isSupportMode }) => {
+    const supportFader = useMemo(() => (window.BCSupport ? window.BCSupport.fader('flowchartblitz:L1') : null), []);
+    const hintRef = useRef(null);
     const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
     const handleGameEnd = useCallback((s) => onGameOver(s, 1, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver]);
     const handleExit = () => onExit(1, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
@@ -592,10 +598,16 @@ const FlowToCodeLevel = ({ onExit, onGameOver, onHelp }) => {
         resetRound(points);
     };
     useEffect(() => { if (fieldRef.current) fieldRef.current.focus(); }, [question]);
+    useEffect(() => {
+        if (!hintRef.current) return;
+        if (isSupportMode && supportFader && question && window.BCSupport) window.BCSupport.renderTypedHint(hintRef.current, question.expected, answer, supportFader.reveal(), 'Model: type it yourself');
+        else hintRef.current.innerHTML = '';
+    }, [question, answer, isSupportMode]);
     if (!question) return null;
     const submit = () => {
         if (justRight || !answer.trim()) return;
         const correct = checkAnswer(answer, question.expected);
+        if (isSupportMode && supportFader) { if (correct) supportFader.correct(); else supportFader.wrong(); }
         if (correct) {
             correctRef.current += 1;
             setJustRight(true);
@@ -626,6 +638,7 @@ const FlowToCodeLevel = ({ onExit, onGameOver, onHelp }) => {
                         className={`w-full bg-slate-800 border-2 rounded-lg p-3 font-mono text-sm text-white mb-4 focus:outline-none ${justRight ? 'border-emerald-500' : 'border-slate-600 focus:border-sky-500'}`}
                         placeholder="Type your pseudocode here, one instruction per line..."
                     />
+                    <div ref={hintRef} className="mb-4"></div>
                     <div className="text-xs text-slate-500 uppercase tracking-widest mb-4">One instruction per line - remember DECLARE for every new variable</div>
                     <Button onClick={submit} disabled={justRight || !answer.trim()} variant={justRight ? 'success' : 'primary'} className="w-40">{justRight ? 'Correct!' : 'Check'}</Button>
                 </div>
@@ -637,7 +650,8 @@ const FlowToCodeLevel = ({ onExit, onGameOver, onHelp }) => {
 // --- LEVEL 2: Pseudocode -> Flowchart (drag/drop, tap-to-place fallback
 // for touch devices - both paths call placeBlock so there is exactly one
 // place that decides what a placement means) ---
-const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
+const CodeToFlowLevel = ({ onExit, onGameOver, onHelp, isSupportMode }) => {
+    const supportFader = useMemo(() => (window.BCSupport ? window.BCSupport.fader('flowchartblitz:L2') : null), []);
     const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
     const handleGameEnd = useCallback((s) => onGameOver(s, 2, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver]);
     const handleExit = () => onExit(2, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
@@ -705,6 +719,12 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
 
     const flat = questionSlots(question);
     const allFilled = flat.every((n) => slots[`${n.group}-${n.index}`]);
+    const reveal = isSupportMode && supportFader ? supportFader.reveal() : 0;
+    const nextSlot = flat.find((n) => !slots[`${n.group}-${n.index}`]);
+    const hintKey = reveal > 0.9 && nextSlot ? (palette.find((b) => b.id === nextSlot.id) || {}).key : null;
+    const l2Hint = reveal > 0.9 ? 'The outlined block goes in the next empty box. Check it against its line of pseudocode.'
+        : reveal > 0.5 ? 'Go through the pseudocode one line at a time: each line is one box. Distractors change a value or a symbol.'
+        : reveal > 0.1 ? 'One box for each line of pseudocode, in order.' : '';
 
     const submit = () => {
         if (!allFilled || justRight) return;
@@ -717,6 +737,7 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
             if (!ok) allCorrect = false;
         });
         setCheckState(result);
+        if (isSupportMode && supportFader) { if (allCorrect) supportFader.correct(); else supportFader.wrong(); }
         if (allCorrect) {
             correctRef.current += 1;
             setJustRight(true);
@@ -749,7 +770,7 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
     };
 
     return (
-        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L2: Pseudocode to Flowchart">
+        <GameLayout hint={l2Hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L2: Pseudocode to Flowchart">
             <div className={`fc-play-columns mb-5 ${shake ? 'shake' : ''}`}>
                 <div className="fc-play-panel">
                     <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Cambridge Pseudocode</div>
@@ -770,7 +791,7 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
                 {palette.map((b) => (
                     <div
                         key={b.key}
-                        className={`fc-block ${picked === b.key ? 'is-picked' : ''}`}
+                        className={`fc-block ${picked === b.key ? 'is-picked' : ''} ${hintKey === b.key ? 'is-hint' : ''}`}
                         draggable
                         onDragStart={(e) => e.dataTransfer.setData('text/plain', b.key)}
                         onClick={() => setPicked(picked === b.key ? null : b.key)}
@@ -788,6 +809,8 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp }) => {
 // MAIN MENU
 // ============================================================
 const MainMenu = ({ onStart, playerName }) => {
+    const supportSlot = useRef(null);
+    useEffect(() => { if (window.BCSupport && supportSlot.current && !supportSlot.current.firstChild) window.BCSupport.mountToggle(supportSlot.current, 'Support'); }, []);
     const [helpLevel, setHelpLevel] = useState(null);
     return (
         <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar relative">
@@ -797,6 +820,7 @@ const MainMenu = ({ onStart, playerName }) => {
                 <p className="text-slate-400 text-sm">Sequence and Selection. Flowcharts and Cambridge Pseudocode, both directions.</p>
                 <p className="text-sky-400 text-xs mt-1 font-mono">{playerName}</p>
             </div>
+            <div ref={supportSlot} className="fc-support-toggle"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl pb-24">
                 {Object.entries(LEVELS).map(([id, data]) => {
                     const scores = getScores(id);
@@ -853,6 +877,9 @@ const App = () => {
     const [activeLevel, setActiveLevel] = useState(1);
     const [lastScore, setLastScore] = useState(0);
     const [showHelp, setShowHelp] = useState(false);
+    // Support mode is one switch for the whole site (shared/bc-support.js).
+    const [isSupportMode, setSupportModeState] = useState(() => !!(window.BCSupport && window.BCSupport.isOn()));
+    useEffect(() => (window.BCSupport ? window.BCSupport.onChange(setSupportModeState) : undefined), []);
 
     const handleGameOver = (score, level, duration, correct, wrong) => {
         saveScore(score, level);
@@ -871,8 +898,8 @@ const App = () => {
             {view === 'menu' && (
                 <MainMenu onStart={(lvl) => { setActiveLevel(lvl); setView(lvl === 1 ? 'game1' : 'game2'); }} playerName={playerName} />
             )}
-            {view === 'game1' && <FlowToCodeLevel onExit={handleExit} onGameOver={handleGameOver} onHelp={() => setShowHelp(true)} />}
-            {view === 'game2' && <CodeToFlowLevel onExit={handleExit} onGameOver={handleGameOver} onHelp={() => setShowHelp(true)} />}
+            {view === 'game1' && <FlowToCodeLevel onExit={handleExit} onGameOver={handleGameOver} isSupportMode={isSupportMode} onHelp={() => setShowHelp(true)} />}
+            {view === 'game2' && <CodeToFlowLevel onExit={handleExit} onGameOver={handleGameOver} isSupportMode={isSupportMode} onHelp={() => setShowHelp(true)} />}
             {view === 'gameover' && <GameOver score={lastScore} level={activeLevel} onRestart={() => setView(activeLevel === 1 ? 'game1' : 'game2')} onHome={() => setView('menu')} />}
         </div>
     );

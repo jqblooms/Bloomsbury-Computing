@@ -12,6 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../shared/bc-tailwind.js?v=20260927"></script>
     <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
+    <script src="../shared/bc-support.js?v=20260927"></script>
     <style>
         body { font-family: var(--font-body); overflow: hidden; touch-action: manipulation; background-color: var(--bg); }
         #root { height: 100%; width: 100%; }
@@ -71,6 +72,71 @@ const SIGNED_POWERS = [-128, 64, 32, 16, 8, 4, 2, 1];
 const NIBBLE_POWERS = [8, 4, 2, 1, 8, 4, 2, 1];
 const HEX_POWERS = [16, 1];
 const BASE_DURATION_REF = 30000;
+
+// --- SUPPORT MODE (shared/bc-support.js) ---
+// The working for the question on screen, never the answer itself, and
+// less of it the more the student gets right: reveal is 1, 2/3, 1/3 or 0.
+const hexVal = (c) => parseInt(c, 16);
+const sumOf = (v, parts) => parts.filter(p => { if (v >= p) { v -= p; return true; } return false; });
+const supportHint = (level, q, r) => {
+    if (!r || !q) return '';
+    const ones = (powers) => q.bits.map((b, i) => (b ? powers[i] : null)).filter(v => v !== null);
+    const plural = (n, word) => n + ' ' + word + (n === 1 ? '' : 's');
+    if (level === 4) {
+        if (r > 0.9) { const t = ones(POWERS); return (t.length ? t.join(' + ') : '0') + ' = ?'; }
+        if (r > 0.5) return 'Add up the place values that have a 1 under them.';
+        return 'Each column is worth double the one on its right.';
+    }
+    if (level === 10) {
+        if (r > 0.9) { const t = ones(SIGNED_POWERS); return (t.length ? t.join(' + ') : '0') + ' = ?'; }
+        if (r > 0.5) return 'The leftmost bit is worth -128. Add the other 1s to it.';
+        return 'Leftmost bit: -128, not 128.';
+    }
+    if (level === 6) {
+        const [a, b] = q.hexChars, va = hexVal(a), vb = hexVal(b);
+        const name = (c, v) => (v > 9 ? c + ' (' + v + ')' : c);
+        if (r > 0.9) return name(a, va) + ' × 16 + ' + name(b, vb) + ' × 1 = ' + (va * 16) + ' + ' + vb + ' = ?';
+        if (r > 0.5) return 'Left digit × 16, plus the right digit.' + (va > 9 || vb > 9 ? ' A = 10, B = 11, up to F = 15.' : '');
+        return 'Hex columns are worth 16 and 1.';
+    }
+    if (level === 7) {
+        const d = q.decimal, hi = Math.floor(d / 16), lo = d % 16;
+        if (r > 0.9) return d + ' = ' + hi + ' × 16 + ' + lo + '. Now write ' + hi + ' and ' + lo + ' as hex digits.';
+        if (r > 0.5) return 'How many 16s fit in ' + d + '? What is left over?';
+        return 'Split it into 16s and 1s.';
+    }
+    if (level === 8) {
+        const nib = (bs) => { const t = bs.map((b, i) => (b ? [8, 4, 2, 1][i] : null)).filter(v => v !== null); return t.length ? t.join(' + ') + ' = ' + t.reduce((x, y) => x + y, 0) : '0'; };
+        if (r > 0.9) return 'Left nibble: ' + nib(q.bits.slice(0, 4)) + '. Right nibble: ' + nib(q.bits.slice(4)) + '. Now write each as a hex digit.';
+        if (r > 0.5) return 'Work out each group of 4 bits on its own, using 8 4 2 1.';
+        return 'One hex digit for every 4 bits.';
+    }
+    if (level === 9) {
+        const [a, b] = q.hexString.split('');
+        const parts = (c) => { const p = sumOf(hexVal(c), [8, 4, 2, 1]); return p.length ? p.join(' + ') : '0'; };
+        if (r > 0.9) return a + ' = ' + parts(a) + ' and ' + b + ' = ' + parts(b) + '. Build each in its own nibble.';
+        if (r > 0.5) return 'Turn each hex digit into 4 bits using 8 4 2 1.';
+        return 'One hex digit for every 4 bits.';
+    }
+    if (level === 11) {
+        const d = q.decimal;
+        const parts = (v) => { const p = sumOf(v, [64, 32, 16, 8, 4, 2, 1]); return p.length ? p.join(' + ') : '0'; };
+        if (r > 0.9) return d < 0 ? d + ' = -128 + ' + (d + 128) + (d + 128 > 0 ? ', and ' + (d + 128) + ' = ' + parts(d + 128) : '') : d + ' = ' + parts(d);
+        if (r > 0.5) return d < 0 ? 'Negative: switch on the -128 bit, then add back up to ' + d + '.' : 'Positive: leave the -128 bit off.';
+        return 'The leftmost bit is worth -128.';
+    }
+    if (level === 13) {
+        const n = q.places, dir = q.direction, other = dir === 'left' ? 'right' : 'left';
+        if (r > 0.9) return 'Every bit moves ' + plural(n, 'place') + ' ' + dir + '. ' + plural(n, 'bit') + ' fall off the ' + dir + ' end, and ' + plural(n, 'zero') + ' fill the ' + other + ' end.';
+        if (r > 0.5) return 'Shift ' + dir + ': bits move toward the ' + (dir === 'left' ? '128' : '1') + ' column, and zeros fill the gap.';
+        return 'Bits pushed off the end are lost.';
+    }
+    if (level === 5) {
+        if (r > 0.5) return 'Right to left: 0+0=0, 1+0=1, 1+1=10 (write 0, carry 1), 1+1+1=11 (write 1, carry 1).';
+        return 'Start at the right-hand column, and carry.';
+    }
+    return '';
+};
 
 const LEVELS = {
     1: { title: "Binary Place Values (Drag)", color: "blue", desc: "Drag values into missing places." },
@@ -324,7 +390,7 @@ const DraggableCalculator = () => {
     return (<> <button onClick={() => setIsOpen(!isOpen)} className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 rounded-full shadow-2xl flex items-center justify-center text-white z-40 hover:bg-blue-500 hover:scale-110 transition-all border-2 border-blue-400" title="Calculator"><svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg></button> {isOpen && (<div className="fixed w-64 bg-slate-800 rounded-xl shadow-2xl border border-slate-600 overflow-hidden z-50 flex flex-col" style={{ left: pos.x, top: pos.y }} onMouseDown={handleMouseDown}><div className="bg-slate-700 p-2 flex justify-between items-center cursor-move drag-handle select-none"><span className="text-xs font-bold text-slate-300 ml-2">CALCULATOR</span><button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white px-2">×</button></div><div className="bg-slate-900 p-4 text-right"><div className="text-2xl font-mono text-white truncate">{calcDisplay}</div></div><div className="grid grid-cols-4 gap-1 p-2 bg-slate-800">{['7','8','9','/','4','5','6','*','1','2','3','-','C','0','=','+'].map(btn => (<button key={btn} onClick={() => onBtnClick(btn)} className={`h-10 rounded font-bold transition-colors ${ btn === 'C' ? 'bg-red-900/50 text-red-400 hover:bg-red-900' : btn === '=' ? 'bg-blue-600 text-white hover:bg-blue-500' : ['/','*','-','+'].includes(btn) ? 'bg-slate-600 text-blue-300 hover:bg-slate-500' : 'bg-slate-700 text-white hover:bg-slate-600' }`}>{btn}</button>))}</div></div>)} </>);
 };
 
-const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children, isHardMode }) => {
+const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children, isHardMode, hint }) => {
     const bgOpacity = Math.min(0.85, stress);
     const barWidth = Math.max(0, (1 - stress) * 100);
     return (
@@ -342,6 +408,7 @@ const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, child
                 </div>
             </div>
             <div className="w-full h-2 bg-slate-900/50 rounded-full mb-4 overflow-hidden z-10 shrink-0"><div className={`h-full transition-all duration-100 ${stress > 0.7 ? 'bg-red-500' : 'bg-blue-500'}`} style={{ width: `${barWidth}%` }}></div></div>
+            {hint && <div className="z-10 shrink-0 w-full max-w-xl mx-auto mb-4 px-4 py-2 rounded-lg bg-blue-500/15 text-blue-200 text-sm text-center no-select" aria-live="polite">{hint}</div>}
             <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
         </div>
     );
@@ -360,7 +427,9 @@ const ExamLayout = ({ currentQ, totalQ, onExit, children }) => (
 );
 
 // --- GENERIC LEVEL LOGIC ---
-const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
+const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp, isSupportMode }) => {
+    const supportFader = useMemo(() => (window.BCSupport ? window.BCSupport.fader('binaryblitz:L' + level) : null), [level]);
+    const recordSupport = (right) => { if (isSupportMode && supportFader) { if (right) supportFader.correct(); else supportFader.wrong(); } };
     const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
     const handleGameEnd = useCallback((s) => { const duration = Date.now() - startTimeRef.current; onGameOver(s, level, duration, correctRef.current, wrongRef.current); }, [onGameOver, level]);
     const handleExit = () => onExit(level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
@@ -382,6 +451,7 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
         else if ((level===7||level===8) && input===question.hexString) correct=true;
         else if (level===5) { if(parseInt(userBits.join(''),2)===parseInt(question.binResult.join(''),2)) correct=true; }
         else if (level===13) { if(userBits.join('')===question.correctBits.join('')) correct=true; }
+        recordSupport(correct);
         if (correct) { correctRef.current += 1; setTimeout(() => nextQuestion(100), 200); }
         else { wrongRef.current += 1; setShake(true); setTimeout(() => setShake(false), 500); addStress(0.2); setInput(""); }
     }, [question, input, level, userBits, addStress]);
@@ -407,9 +477,9 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
     const handleToggleBit = (idx) => {
         if (![5,9,11,13].includes(level)) return;
         const newBits = [...userBits]; newBits[idx] = newBits[idx]===0 ? 1 : 0; setUserBits(newBits);
-        if (level===5) { const currentVal=parseInt(newBits.join(''),2); const targetVal=parseInt(question.binResult.join(''),2); if(currentVal===targetVal){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
-        if (level===9) { const val=newBits.reduce((a,b,i)=>a+(b*POWERS[i]),0); if(val===question.decimal){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
-        if (level===11) { const val=newBits.reduce((a,b,i)=>a+(b*SIGNED_POWERS[i]),0); if(val===question.decimal){correctRef.current+=1;setTimeout(()=>nextQuestion(100),200);} }
+        if (level===5) { const currentVal=parseInt(newBits.join(''),2); const targetVal=parseInt(question.binResult.join(''),2); if(currentVal===targetVal){correctRef.current+=1;recordSupport(true);setTimeout(()=>nextQuestion(100),200);} }
+        if (level===9) { const val=newBits.reduce((a,b,i)=>a+(b*POWERS[i]),0); if(val===question.decimal){correctRef.current+=1;recordSupport(true);setTimeout(()=>nextQuestion(100),200);} }
+        if (level===11) { const val=newBits.reduce((a,b,i)=>a+(b*SIGNED_POWERS[i]),0); if(val===question.decimal){correctRef.current+=1;recordSupport(true);setTimeout(()=>nextQuestion(100),200);} }
         // Level 13 deliberately does not auto-check on toggle, unlike 5/9/11
         // above: the student needs a moment to look at the shift direction
         // and starting value before committing, so this requires an
@@ -417,8 +487,9 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
     };
     const handleToggleCarry = (idx) => { const newCarries=[...carryBits]; newCarries[idx]=newCarries[idx]===0?1:0; setCarryBits(newCarries); };
     if (!question) return null;
+    const hint = isSupportMode && supportFader ? supportHint(level, question, supportFader.reveal()) : '';
     if (level===5) return (
-        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L5: Binary Addition" isHardMode={isHardMode}>
+        <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L5: Binary Addition" isHardMode={isHardMode}>
             <div className="w-full max-w-4xl bg-slate-800/50 p-4 rounded-xl border border-slate-700 overflow-x-auto flex justify-center">
                 <div className="grid gap-1 items-center" style={{ gridTemplateColumns: `repeat(${question.bitsCount+1}, minmax(3rem, 1fr))` }}>
                     {carryBits.map((c,i) => (<button key={`c-${i}`} onClick={()=>handleToggleCarry(i)} className={`w-8 h-8 md:w-10 md:h-10 mx-auto rounded-full text-sm font-bold border-2 transition-all ${c?'bg-orange-500 border-orange-400 text-white':'bg-slate-800 border-slate-600 text-slate-600'}`}>{c}</button>))}
@@ -431,14 +502,14 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, onHelp }) => {
             <div className="mt-4 text-center text-xs text-slate-400 uppercase tracking-widest">Top Row: Carries (Click to Toggle) <br/> Bottom Row: Answer (Click to Toggle)</div>
         </GameLayout>
     );
-    if (level===6) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L6: Hexadecimal to Denary" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">CONVERT TO DENARY</div><div className="flex justify-center gap-2">{question.hexChars.map((c,i)=>(<div key={i} className="flex flex-col items-center">{!isHardMode&&<div className="text-xs text-slate-500 mb-1">{HEX_POWERS[i]}</div>}<div className="w-16 h-20 bg-slate-700 rounded text-4xl font-mono flex items-center justify-center font-bold border-2 border-slate-600">{c}</div></div>))}</div></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
-    if (level===7) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L7: Denary to Hexadecimal" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">CONVERT TO HEXADECIMAL</div><div className="text-6xl font-bold font-mono">{question.decimal}</div></div><div className="flex justify-center gap-2 mb-6"><div className={`w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 ${shake?'border-red-500':'border-blue-500'}`}>{input[0]||'_'}</div><div className={`w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 ${shake?'border-red-500':'border-blue-500'}`}>{input[1]||'_'}</div></div><HexPad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
-    if (level===8) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L8: Binary to Hexadecimal" isHardMode={isHardMode}><div className="mb-8 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={true}/></div><div className="flex justify-center gap-2 mb-6"><div className="w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 border-blue-500">{input[0]||'_'}</div><div className="w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 border-blue-500">{input[1]||'_'}</div></div><HexPad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
-    if (level===9) { const currentVal=userBits.reduce((a,b,i)=>a+(b*POWERS[i]),0); const currentHex=currentVal.toString(16).toUpperCase().padStart(2,'0'); return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L9: Hexadecimal to Binary" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">MATCH THIS HEXADECIMAL</div><div className="text-6xl font-bold font-mono text-yellow-400">{question.hexString}</div></div><div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 w-full max-w-4xl mb-4"><div className="flex justify-between items-center gap-1">{POWERS.map((_,i)=>(<div key={i} className={`flex flex-col items-center flex-1 ${i===4?'ml-6':''}`}>{!isHardMode&&<div className="text-[10px] text-cyan-400 font-bold mb-1">{NIBBLE_POWERS[i]}</div>}<button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-12 rounded font-bold text-xl transition-all ${userBits[i]?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>))}</div></div>{!isHardMode&&(<div className="text-center"><span className="text-sm text-slate-400">Current: </span><span className={`font-mono font-bold text-2xl ${currentHex===question.hexString?'text-green-400':'text-slate-200'}`}>{currentHex}</span></div>)}</GameLayout>; }
-    if (level===10) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L10: Two's Complement: Binary to Denary" isHardMode={isHardMode}><div className="mb-6 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false} signed={true}/></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><button type="button" onClick={handleToggleSign} className="mb-3 px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-bold text-white touch-manipulation">±</button><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
-    if (level===11) { const currentVal=userBits.reduce((a,b,i)=>a+(b*SIGNED_POWERS[i]),0); return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L11: Two's Complement: Denary to Binary" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm">TARGET</div><div className="text-6xl font-bold font-mono text-white">{question.decimal}</div></div><div className="bg-slate-800/50 p-4 rounded-xl w-full max-w-4xl mb-8 overflow-x-auto"><div className="flex gap-1 min-w-[600px]">{SIGNED_POWERS.map((p,i)=><div key={i} className="flex-1 flex flex-col items-center gap-2"><div className={`w-full h-14 rounded bg-slate-900/30 flex items-center justify-center font-bold ${i===0?'text-red-400':'text-slate-500'}`}>{p}</div><button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-16 rounded font-bold text-2xl ${userBits[i]?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>)}</div></div><div className="flex items-center gap-4 text-slate-300"><span>SUM:</span><span className="text-3xl font-bold font-mono">{isHardMode?'???':currentVal}</span></div></GameLayout>; }
-    if (level===13) return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L13: Logical Shifts" isHardMode={isHardMode}><div className="text-center mb-4"><div className="text-slate-400 text-sm mb-2">SHIFT {question.direction.toUpperCase()} BY {question.places}</div></div><div className="mb-4 w-full max-w-lg"><div className="text-xs text-slate-500 mb-1 text-center uppercase tracking-widest">Starting Value</div><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false}/></div><div className={`bg-slate-800/50 p-4 rounded-xl w-full max-w-4xl mb-4 overflow-x-auto ${shake?'shake':''}`}><div className="text-xs text-slate-500 mb-2 text-center uppercase tracking-widest">Your Answer</div><div className="flex gap-1 min-w-[400px]">{POWERS.map((p,i)=>(<div key={i} className="flex-1 flex flex-col items-center gap-2">{!isHardMode&&<div className="w-full h-8 rounded bg-slate-900/30 text-slate-500 flex items-center justify-center text-xs font-bold">{p}</div>}<button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-16 rounded font-bold text-2xl ${userBits[i]?'bg-lime-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>))}</div></div><Button onClick={handleSubmit} className="w-full max-w-xs" variant="success">Submit</Button></GameLayout>;
-    return <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L4: Binary to Denary" isHardMode={isHardMode}><div className="mb-6 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false}/></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+    if (level===6) return <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L6: Hexadecimal to Denary" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">CONVERT TO DENARY</div><div className="flex justify-center gap-2">{question.hexChars.map((c,i)=>(<div key={i} className="flex flex-col items-center">{!isHardMode&&<div className="text-xs text-slate-500 mb-1">{HEX_POWERS[i]}</div>}<div className="w-16 h-20 bg-slate-700 rounded text-4xl font-mono flex items-center justify-center font-bold border-2 border-slate-600">{c}</div></div>))}</div></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+    if (level===7) return <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L7: Denary to Hexadecimal" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">CONVERT TO HEXADECIMAL</div><div className="text-6xl font-bold font-mono">{question.decimal}</div></div><div className="flex justify-center gap-2 mb-6"><div className={`w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 ${shake?'border-red-500':'border-blue-500'}`}>{input[0]||'_'}</div><div className={`w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 ${shake?'border-red-500':'border-blue-500'}`}>{input[1]||'_'}</div></div><HexPad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+    if (level===8) return <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L8: Binary to Hexadecimal" isHardMode={isHardMode}><div className="mb-8 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={true}/></div><div className="flex justify-center gap-2 mb-6"><div className="w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 border-blue-500">{input[0]||'_'}</div><div className="w-16 h-20 bg-slate-800 rounded text-4xl font-mono flex items-center justify-center border-2 border-blue-500">{input[1]||'_'}</div></div><HexPad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+    if (level===9) { const currentVal=userBits.reduce((a,b,i)=>a+(b*POWERS[i]),0); const currentHex=currentVal.toString(16).toUpperCase().padStart(2,'0'); return <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L9: Hexadecimal to Binary" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">MATCH THIS HEXADECIMAL</div><div className="text-6xl font-bold font-mono text-yellow-400">{question.hexString}</div></div><div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 w-full max-w-4xl mb-4"><div className="flex justify-between items-center gap-1">{POWERS.map((_,i)=>(<div key={i} className={`flex flex-col items-center flex-1 ${i===4?'ml-6':''}`}>{!isHardMode&&<div className="text-[10px] text-cyan-400 font-bold mb-1">{NIBBLE_POWERS[i]}</div>}<button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-12 rounded font-bold text-xl transition-all ${userBits[i]?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>))}</div></div>{!isHardMode&&(<div className="text-center"><span className="text-sm text-slate-400">Current: </span><span className={`font-mono font-bold text-2xl ${currentHex===question.hexString?'text-green-400':'text-slate-200'}`}>{currentHex}</span></div>)}</GameLayout>; }
+    if (level===10) return <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L10: Two's Complement: Binary to Denary" isHardMode={isHardMode}><div className="mb-6 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false} signed={true}/></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><button type="button" onClick={handleToggleSign} className="mb-3 px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg font-bold text-white touch-manipulation">±</button><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
+    if (level===11) { const currentVal=userBits.reduce((a,b,i)=>a+(b*SIGNED_POWERS[i]),0); return <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L11: Two's Complement: Denary to Binary" isHardMode={isHardMode}><div className="text-center mb-8"><div className="text-slate-400 text-sm">TARGET</div><div className="text-6xl font-bold font-mono text-white">{question.decimal}</div></div><div className="bg-slate-800/50 p-4 rounded-xl w-full max-w-4xl mb-8 overflow-x-auto"><div className="flex gap-1 min-w-[600px]">{SIGNED_POWERS.map((p,i)=><div key={i} className="flex-1 flex flex-col items-center gap-2"><div className={`w-full h-14 rounded bg-slate-900/30 flex items-center justify-center font-bold ${i===0?'text-red-400':'text-slate-500'}`}>{p}</div><button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-16 rounded font-bold text-2xl ${userBits[i]?'bg-blue-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>)}</div></div><div className="flex items-center gap-4 text-slate-300"><span>SUM:</span><span className="text-3xl font-bold font-mono">{isHardMode?'???':currentVal}</span></div></GameLayout>; }
+    if (level===13) return <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L13: Logical Shifts" isHardMode={isHardMode}><div className="text-center mb-4"><div className="text-slate-400 text-sm mb-2">SHIFT {question.direction.toUpperCase()} BY {question.places}</div></div><div className="mb-4 w-full max-w-lg"><div className="text-xs text-slate-500 mb-1 text-center uppercase tracking-widest">Starting Value</div><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false}/></div><div className={`bg-slate-800/50 p-4 rounded-xl w-full max-w-4xl mb-4 overflow-x-auto ${shake?'shake':''}`}><div className="text-xs text-slate-500 mb-2 text-center uppercase tracking-widest">Your Answer</div><div className="flex gap-1 min-w-[400px]">{POWERS.map((p,i)=>(<div key={i} className="flex-1 flex flex-col items-center gap-2">{!isHardMode&&<div className="w-full h-8 rounded bg-slate-900/30 text-slate-500 flex items-center justify-center text-xs font-bold">{p}</div>}<button type="button" onClick={()=>handleToggleBit(i)} className={`w-full h-16 rounded font-bold text-2xl ${userBits[i]?'bg-lime-600 text-white':'bg-slate-700 text-slate-500'}`}>{userBits[i]}</button></div>))}</div></div><Button onClick={handleSubmit} className="w-full max-w-xs" variant="success">Submit</Button></GameLayout>;
+    return <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L4: Binary to Denary" isHardMode={isHardMode}><div className="mb-6 w-full max-w-lg"><BinaryDisplay bits={question.bits} hideHeaders={isHardMode} useNibbles={false}/></div><div className="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-4 w-full max-w-xs flex justify-center"><span className="text-3xl font-mono">{input}<span className="animate-pulse">_</span></span></div><Numpad onInput={handleInput} onDelete={handleBackspace} onSubmit={handleSubmit}/></GameLayout>;
 };
 
 const Level1Comp = ({ onExit, onGameOver, isHardMode, onHelp }) => {
@@ -527,7 +598,7 @@ const ExamLevel = ({ onExit, onFinish, isHardMode }) => {
 // ============================================================
 // MAIN MENU
 // ============================================================
-const MainMenu = ({ onStart, isHardMode, setHardMode, playerName }) => {
+const MainMenu = ({ onStart, isHardMode, setHardMode, isSupportMode, setSupportMode, playerName }) => {
     const [helpLevel, setHelpLevel] = useState(null);
     return (
         <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar">
@@ -539,6 +610,7 @@ const MainMenu = ({ onStart, isHardMode, setHardMode, playerName }) => {
             </div>
             <div className="flex gap-3 mb-5 flex-wrap justify-center items-center">
                 <Toggle checked={isHardMode} onChange={setHardMode} label="HARD MODE" />
+                <Toggle checked={isSupportMode} onChange={setSupportMode} label="SUPPORT MODE" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl pb-24">
                 {Object.entries(LEVELS).map(([id, data]) => {
@@ -620,6 +692,10 @@ const App = () => {
     const [lastScore, setLastScore] = useState(0);
     const [lastExamStats, setLastExamStats] = useState(null);
     const [isHardMode, setHardMode] = useState(false);
+    // Support mode is one switch for the whole site (shared/bc-support.js).
+    const [isSupportMode, setSupportModeState] = useState(() => !!(window.BCSupport && window.BCSupport.isOn()));
+    useEffect(() => (window.BCSupport ? window.BCSupport.onChange(setSupportModeState) : undefined), []);
+    const setSupportMode = (on) => { setSupportModeState(on); if (window.BCSupport) window.BCSupport.set(on); };
     const [showHelp, setShowHelp] = useState(false);
     const sessionStart = useRef(Date.now());
     const [sessionStats, setSessionStats] = useState({});
@@ -680,6 +756,8 @@ const App = () => {
                     onStart={(lvl) => { setActiveLevel(lvl); setView(lvl === 12 ? 'exam' : 'game'); }}
                     isHardMode={isHardMode}
                     setHardMode={setHardMode}
+                    isSupportMode={isSupportMode}
+                    setSupportMode={setSupportMode}
                     playerName={playerName}
                 />
             )}
@@ -688,7 +766,7 @@ const App = () => {
                 activeLevel===1 ? <Level1Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)}/> :
                 activeLevel===2 ? <Level2Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)}/> :
                 activeLevel===3 ? <Level3Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)}/> :
-                <GenericLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} onHelp={() => setShowHelp(true)}/>
+                <GenericLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} isSupportMode={isSupportMode} onHelp={() => setShowHelp(true)}/>
             )}
 
             {view === 'exam' && <ExamLevel onExit={(l,d) => handleExit(l,d,0,0,0)} onFinish={handleExamFinish} isHardMode={isHardMode}/>}

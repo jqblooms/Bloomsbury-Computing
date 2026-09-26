@@ -12,6 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../shared/bc-tailwind.js?v=20260927"></script>
     <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
+    <script src="../shared/bc-support.js?v=20260927"></script>
     <style>
         body { font-family: var(--font-body); overflow: hidden; touch-action: manipulation; background-color: var(--bg); }
         #root { height: 100%; width: 100%; }
@@ -57,7 +58,7 @@ window.postToParent = function (payload) {
 </script>
 
 <script type="text/babel">
-const { useState, useEffect, useRef, useCallback } = React;
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
 // --- CONSTANTS ---
 const BASE_DURATION_REF = 30000;
@@ -95,12 +96,44 @@ const GATE_DESCRIPTIONS = {
 // Every template is fully bracketed now, so the grouping is never left
 // to be inferred.
 const COMPOUND_TEMPLATES = [
-    { text: (g) => `(A ${g('AND')} B) ${g('OR')} C`, calc: (a, b, c) => (a && b) || c },
-    { text: (g) => `(A ${g('OR')} B) ${g('AND')} C`, calc: (a, b, c) => (a || b) && c },
-    { text: (g) => `(${g('NOT')} A ${g('AND')} B) ${g('OR')} C`, calc: (a, b, c) => ((!a) && b) || c },
-    { text: (g) => `A ${g('AND')} (B ${g('OR')} C)`, calc: (a, b, c) => a && (b || c) },
-    { text: (g) => `A ${g('OR')} (B ${g('AND')} C)`, calc: (a, b, c) => a || (b && c) }
+    { text: (g) => `(A ${g('AND')} B) ${g('OR')} C`, calc: (a, b, c) => (a && b) || c, bracket: 'A AND B', inner: (a, b) => a && b, rest: (x) => `${x} OR C` },
+    { text: (g) => `(A ${g('OR')} B) ${g('AND')} C`, calc: (a, b, c) => (a || b) && c, bracket: 'A OR B', inner: (a, b) => a || b, rest: (x) => `${x} AND C` },
+    { text: (g) => `(${g('NOT')} A ${g('AND')} B) ${g('OR')} C`, calc: (a, b, c) => ((!a) && b) || c, bracket: 'NOT A AND B', inner: (a, b) => (!a) && b, rest: (x) => `${x} OR C` },
+    { text: (g) => `A ${g('AND')} (B ${g('OR')} C)`, calc: (a, b, c) => a && (b || c), bracket: 'B OR C', inner: (a, b, c) => b || c, rest: (x) => `A AND ${x}` },
+    { text: (g) => `A ${g('OR')} (B ${g('AND')} C)`, calc: (a, b, c) => a || (b && c), bracket: 'B AND C', inner: (a, b, c) => b && c, rest: (x) => `A OR ${x}` }
 ];
+
+// --- SUPPORT MODE (shared/bc-support.js) ---
+// The way to work each question out, never the answer: reveal is 1, 2/3,
+// 1/3 or 0, and drops as the student gets them right.
+const OP_WORDS = { '<': 'less than', '>': 'greater than', '==': 'equal to', '!=': 'not equal to' };
+const supportHint = (level, q, r) => {
+    if (!r || !q) return '';
+    if (level === 1 || level === 5) {
+        const inputs = q.gate === 'NOT' ? 'A is ' + q.a : 'A is ' + q.a + ' and B is ' + q.b;
+        if (r > 0.9) return q.gate + ': ' + GATE_DESCRIPTIONS[q.gate] + ' (1 is True). Here ' + inputs + '.';
+        if (r > 0.5) return q.gate + ': ' + GATE_DESCRIPTIONS[q.gate] + '.';
+        return 'Say the rule for this gate to yourself, then check the inputs.';
+    }
+    if (level === 2) {
+        if (r > 0.5) return q.gate + ': ' + GATE_DESCRIPTIONS[q.gate] + '. Use it on each row.';
+        return 'Use the rule for this gate on one row at a time.';
+    }
+    if (level === 3) {
+        if (r > 0.9) return 'Is ' + q.a + ' ' + OP_WORDS[q.op] + ' ' + q.b + '?';
+        if (r > 0.5) return 'Read the symbol as words: ' + (q.op === '==' ? '= or ==' : q.op === '!=' ? '<> or !=' : q.op) + ' means "' + OP_WORDS[q.op] + '".';
+        return 'Read the symbol as words.';
+    }
+    if (level === 4) {
+        const t = q.template, v = { A: q.a, B: q.b, C: q.c };
+        const fill = (text) => text.replace(/\b([ABC])\b/g, (m) => v[m]);
+        const inner = t.inner(!!q.a, !!q.b, !!q.c) ? 1 : 0;
+        if (r > 0.9) return 'Brackets first: ' + t.bracket + ' = ' + fill(t.bracket) + ' = ' + inner + '. Then ' + fill(t.rest(inner)) + '.';
+        if (r > 0.5) return 'Brackets first: ' + t.bracket + ' = ' + fill(t.bracket) + '.';
+        return 'Work out the brackets first.';
+    }
+    return '';
+};
 
 const levelTitleSizeClass = (title) => {
     if (title.length > 24) return 'text-base';
@@ -319,7 +352,7 @@ const HelpModal = ({ levelId, onClose }) => {
     );
 };
 
-const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children, isHardMode }) => {
+const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, children, isHardMode, hint }) => {
     const bgOpacity = Math.min(0.7, stress);
     const barWidth = Math.max(0, (1 - stress) * 100);
     return (
@@ -337,6 +370,7 @@ const GameLayout = ({ stress, score, gameSpeed, onExit, onHelp, levelName, child
                 </div>
             </div>
             <div className="w-full h-2 bg-slate-900/50 rounded-full mb-4 overflow-hidden z-10 shrink-0"><div className={`h-full transition-all duration-100 ${stress > 0.7 ? 'bg-red-500' : 'bg-violet-500'}`} style={{ width: `${barWidth}%` }}></div></div>
+            {hint && <div className="z-10 shrink-0 w-full max-w-xl mx-auto mb-4 px-4 py-2 rounded-lg bg-violet-500/15 text-violet-200 text-sm text-center no-select" aria-live="polite">{hint}</div>}
             <div className="flex-1 z-10 flex flex-col items-center min-h-0 w-full max-w-4xl mx-auto overflow-y-auto custom-scrollbar pb-20">{children}</div>
         </div>
     );
@@ -356,7 +390,9 @@ const ExamLayout = ({ currentQ, totalQ, onExit, children }) => (
 
 // --- GENERIC LEVEL LOGIC (levels 1, 3, 4, 5 share one shape: a question
 // object, a fixed set of click targets, one of which is correct) ---
-const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onHelp }) => {
+const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onHelp, isSupportMode }) => {
+    const supportFader = useMemo(() => (window.BCSupport ? window.BCSupport.fader('booleanblitz:L' + level) : null), [level]);
+    const recordSupport = (right) => { if (isSupportMode && supportFader) { if (right) supportFader.correct(); else supportFader.wrong(); } };
     const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
     const handleGameEnd = useCallback((s) => onGameOver(s, level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver, level]);
     const handleExit = () => onExit(level, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
@@ -371,21 +407,24 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
     const submit = (value) => {
         if (!question) return;
         const correct = value === question.result;
+        recordSupport(correct);
         if (correct) { correctRef.current += 1; setTimeout(() => nextQuestion(100), 200); }
         else { wrongRef.current += 1; setShake(true); setTimeout(() => setShake(false), 500); addStress(0.2); }
     };
     const submitBool = (bool) => {
         if (!question) return;
         const correct = bool === question.result;
+        recordSupport(correct);
         if (correct) { correctRef.current += 1; setTimeout(() => nextQuestion(100), 200); }
         else { wrongRef.current += 1; setShake(true); setTimeout(() => setShake(false), 500); addStress(0.2); }
     };
     if (!question) return null;
+    const hint = isSupportMode && supportFader ? supportHint(level, question, supportFader.reveal()) : '';
 
     if (level === 1) {
         const gateLabel = gateDisplay(question.gate, isPythonMode, isHardMode);
         return (
-            <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L1: AND, OR, NOT" isHardMode={isHardMode}>
+            <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L1: AND, OR, NOT" isHardMode={isHardMode}>
                 <div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">GATE</div><div className="text-6xl font-bold font-mono text-violet-300">{gateLabel}</div></div>
                 <div className={`flex gap-6 mb-10 ${shake ? 'shake' : ''}`}>
                     <BitBox value={question.a} label="A" />
@@ -401,7 +440,7 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
     }
     if (level === 3) {
         return (
-            <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L3: Comparisons" isHardMode={isHardMode}>
+            <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L3: Comparisons" isHardMode={isHardMode}>
                 <div className={`text-center mb-10 ${shake ? 'shake' : ''}`}><div className="text-slate-400 text-sm mb-2">TRUE OR FALSE?</div><div className="text-6xl font-bold font-mono text-emerald-300">{question.a} {opDisplay(question.op, isPythonMode)} {question.b}</div></div>
                 <div className="flex gap-6">
                     <Button onClick={() => submitBool(false)} variant="danger" className="w-32 h-16 text-xl">FALSE</Button>
@@ -412,7 +451,7 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
     }
     if (level === 4) {
         return (
-            <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L4: Compound Conditions" isHardMode={isHardMode}>
+            <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L4: Compound Conditions" isHardMode={isHardMode}>
                 <div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">EXPRESSION</div><div className="text-3xl md:text-4xl font-bold font-mono text-purple-300">{question.template.text((name) => gateDisplay(name, isPythonMode, false))}</div></div>
                 <div className={`flex gap-6 mb-10 ${shake ? 'shake' : ''}`}>
                     <BitBox value={question.a} label="A" />
@@ -430,7 +469,7 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
     // level 5: NAND, NOR, XOR - same shape as level 1
     const gateLabel5 = gateDisplay(question.gate, isPythonMode, isHardMode);
     return (
-        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L5: NAND, NOR, XOR" isHardMode={isHardMode}>
+        <GameLayout hint={hint} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L5: NAND, NOR, XOR" isHardMode={isHardMode}>
             <div className="text-center mb-8"><div className="text-slate-400 text-sm mb-2">GATE</div><div className="text-6xl font-bold font-mono text-pink-300">{gateLabel5}</div></div>
             <div className={`flex gap-6 mb-10 ${shake ? 'shake' : ''}`}>
                 <BitBox value={question.a} label="A" />
@@ -453,7 +492,8 @@ const GenericLevel = ({ level, onExit, onGameOver, isHardMode, isPythonMode, onH
 // green the instant its value matched the true answer and auto-advanced
 // once every cell matched, which let a student win by blindly toggling
 // cells until they all turned green, no understanding required.
-const Level2Comp = ({ onExit, onGameOver, isHardMode, isPythonMode, onHelp }) => {
+const Level2Comp = ({ onExit, onGameOver, isHardMode, isPythonMode, onHelp, isSupportMode }) => {
+    const supportFader = useMemo(() => (window.BCSupport ? window.BCSupport.fader('booleanblitz:L2') : null), []);
     const startTimeRef = useRef(Date.now()); const correctRef = useRef(0); const wrongRef = useRef(0);
     const handleGameEnd = useCallback((s) => onGameOver(s, 2, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current), [onGameOver]);
     const handleExit = () => onExit(2, Date.now() - startTimeRef.current, correctRef.current, wrongRef.current, score);
@@ -477,6 +517,7 @@ const Level2Comp = ({ onExit, onGameOver, isHardMode, isPythonMode, onHelp }) =>
     const submit = () => {
         if (!allFilled || justRight) return;
         const allCorrect = question.hiddenIndices.every(i => filled[i] === question.rows[i].result);
+        if (isSupportMode && supportFader) { if (allCorrect) supportFader.correct(); else supportFader.wrong(); }
         if (allCorrect) {
             correctRef.current += 1;
             setJustRight(true);
@@ -490,7 +531,7 @@ const Level2Comp = ({ onExit, onGameOver, isHardMode, isPythonMode, onHelp }) =>
     };
     if (!question) return null;
     return (
-        <GameLayout stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L2: Truth Table Fill" isHardMode={isHardMode}>
+        <GameLayout hint={isSupportMode && supportFader ? supportHint(2, question, supportFader.reveal()) : ''} stress={stress} score={score} gameSpeed={gameSpeed} onExit={handleExit} onHelp={onHelp} levelName="L2: Truth Table Fill" isHardMode={isHardMode}>
             <div className="text-center mb-6"><div className="text-slate-400 text-sm mb-2">GATE</div><div className="text-4xl font-bold font-mono text-red-300">{gateDisplay(question.gate, isPythonMode, false)}</div></div>
             <table className={`border-collapse mb-6 ${shake ? 'shake' : ''}`}>
                 <thead><tr>
@@ -656,7 +697,7 @@ const ExamLevel = ({ onExit, onFinish, isHardMode, isPythonMode }) => {
 // ============================================================
 // MAIN MENU
 // ============================================================
-const MainMenu = ({ onStart, isHardMode, setHardMode, isPythonMode, setPythonMode, playerName }) => {
+const MainMenu = ({ onStart, isHardMode, setHardMode, isPythonMode, setPythonMode, isSupportMode, setSupportMode, playerName }) => {
     const [helpLevel, setHelpLevel] = useState(null);
     return (
         <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar relative">
@@ -676,6 +717,7 @@ const MainMenu = ({ onStart, isHardMode, setHardMode, isPythonMode, setPythonMod
             </div>
             <div className="flex gap-3 mb-5 flex-wrap justify-center items-center">
                 <Toggle checked={isHardMode} onChange={setHardMode} label="HARD MODE" />
+                <Toggle checked={isSupportMode} onChange={setSupportMode} label="SUPPORT MODE" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl pb-24">
                 {Object.entries(LEVELS).map(([id, data]) => {
@@ -754,6 +796,10 @@ const App = () => {
     const [lastScore, setLastScore] = useState(0);
     const [lastExamStats, setLastExamStats] = useState(null);
     const [isHardMode, setHardMode] = useState(false);
+    // Support mode is one switch for the whole site (shared/bc-support.js).
+    const [isSupportMode, setSupportModeState] = useState(() => !!(window.BCSupport && window.BCSupport.isOn()));
+    useEffect(() => (window.BCSupport ? window.BCSupport.onChange(setSupportModeState) : undefined), []);
+    const setSupportMode = (on) => { setSupportModeState(on); if (window.BCSupport) window.BCSupport.set(on); };
     const [isPythonMode, setPythonMode] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
 
@@ -787,6 +833,8 @@ const App = () => {
                     onStart={(lvl) => { setActiveLevel(lvl); setView(lvl === 7 ? 'exam' : 'game'); }}
                     isHardMode={isHardMode}
                     setHardMode={setHardMode}
+                    isSupportMode={isSupportMode}
+                    setSupportMode={setSupportMode}
                     isPythonMode={isPythonMode}
                     setPythonMode={setPythonMode}
                     playerName={playerName}
@@ -794,9 +842,9 @@ const App = () => {
             )}
 
             {view === 'game' && (
-                activeLevel === 2 ? <Level2Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} isPythonMode={isPythonMode} onHelp={() => setShowHelp(true)} /> :
+                activeLevel === 2 ? <Level2Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} isPythonMode={isPythonMode} isSupportMode={isSupportMode} onHelp={() => setShowHelp(true)} /> :
                 activeLevel === 6 ? <Level6Comp onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} isPythonMode={isPythonMode} onHelp={() => setShowHelp(true)} /> :
-                <GenericLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} isPythonMode={isPythonMode} onHelp={() => setShowHelp(true)} />
+                <GenericLevel level={activeLevel} onExit={handleExit} onGameOver={handleGameOver} isHardMode={isHardMode} isPythonMode={isPythonMode} isSupportMode={isSupportMode} onHelp={() => setShowHelp(true)} />
             )}
 
             {view === 'exam' && <ExamLevel onExit={(l, d) => handleExit(l, d, 0, 0, 0)} onFinish={handleExamFinish} isHardMode={isHardMode} isPythonMode={isPythonMode} />}
