@@ -6,6 +6,7 @@
 <title>Logic Circuits: Learn by Building</title>
 <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <script>document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "") + '">');</script>
+<script src="../shared/bc-support.js?v=20260927"></script>
 </head>
 <body>
 
@@ -14,6 +15,7 @@
   <p>Build circuits to match the given logic expression</p>
   <button class="menu-btn menu-btn-primary" onclick="startQuiz()">Start Quiz</button>
   <button class="menu-btn menu-btn-secondary" onclick="showHelpMenu()">Help</button>
+  <div class="support-slot"></div>
 </div>
 
 <header id="app-header" style="display:none">
@@ -37,9 +39,11 @@
 <div class="main" id="app-main" style="display:none">
   <!-- PALETTE -->
   <div class="palette-col">
+    <div class="support-slot"></div>
     <div class="palette" id="palette">
       <div class="palette-label">GATES</div>
     </div>
+    <div class="build-plan" id="build-plan" aria-live="polite" hidden></div>
 
     <div class="zoom-control" id="zoom-control">
       <div class="palette-label">ZOOM</div>
@@ -85,10 +89,10 @@
 </div>
 
 <script>
-  // The app, in load order: gate drawings and canvas zoom, question generation and circuit evaluation, the palette and placing and dragging gates, wires, scoring and the teacher dev mode, the menu and start-up, then help and the worked example. Each file carries the page bcv.
+  // The app, in load order: gate drawings and canvas zoom, question generation and circuit evaluation, the palette and placing and dragging gates, wires, scoring and the teacher dev mode, support mode's build plan, the menu and start-up, then help and the worked example. Each file carries the page bcv.
   (function () {
     var v = encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "");
-    ["js/gates.js", "js/questions.js", "js/board.js", "js/wires.js", "js/scoring.js", "js/menu.js", "js/help.js"].forEach(function (file) {
+    ["js/gates.js", "js/questions.js", "js/board.js", "js/wires.js", "js/scoring.js", "js/support.js", "js/menu.js", "js/help.js"].forEach(function (file) {
       document.write('<script src="' + file + "?v=" + v + '"><\/script>');
     });
   })();

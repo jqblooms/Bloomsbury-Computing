@@ -177,6 +177,24 @@ header h1 {
   width: 100%; height: 100%;
 }
 
+/* SUPPORT MODE (js/support.js): the switch and the build plan */
+.support-slot { display: flex; justify-content: center; padding: 10px 6px 0; }
+#main-menu .support-slot { padding: 0; }
+.build-plan {
+  flex-shrink: 0;
+  padding: 10px 8px;
+  border-top: 1px solid var(--border);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+.build-plan[hidden] { display: none; }
+.build-plan ol { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+.build-plan li.is-done { color: var(--accent3); }
+.build-plan li.is-done::marker { content: '\2713  '; }
+.build-plan .plan-note { margin-top: 8px; color: var(--text-dim); }
+.build-plan .plan-check { margin-top: 8px; padding: 6px 8px; border-radius: 6px; background: rgba(242, 139, 130, .12); color: var(--accent2); }
+
 /* ZOOM CONTROL - static block pinned to the bottom of the gates panel */
 .zoom-control {
   flex-shrink: 0;

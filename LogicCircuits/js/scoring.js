@@ -5,6 +5,8 @@ function loadQuestion() {
   const q = generateQuestion(state.numInputs, difficulty);
   state.currentQuestion = q;
   document.getElementById('question-text').textContent = `Q = ${exprToString(q.expr)}`;
+  supportMismatch = '';
+  refreshSupportPlan();
 }
 
 function clearCircuit() {
@@ -12,6 +14,7 @@ function clearCircuit() {
   state.wires = [];
   document.getElementById('canvas-nodes').querySelectorAll('.placed-gate').forEach(el => el.remove());
   document.getElementById('circuit-canvas').innerHTML = '';
+  refreshSupportPlan();
 }
 
 function checkAnswer() {
@@ -19,6 +22,7 @@ function checkAnswer() {
   const { expr, inputs } = state.currentQuestion;
   const truth = getTruthTable(expr, inputs);
   const correct = evaluateCircuit(truth, inputs);
+  recordSupportSubmit(correct);
 
   if (correct) {
     state.score++;
