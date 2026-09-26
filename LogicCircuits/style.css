@@ -616,3 +616,10 @@ scrollbar-width: thin;
 .truth-table tr:nth-child(even) td { background: #171a20; }
 .truth-table .out-1 { color: #81c995; font-weight: 700; }
 .truth-table .out-0 { color: #f28b82; font-weight: 700; }
+
+/* The header's home button and the worked example's buttons */
+.lc-home { flex-shrink: 0; width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
+.lc-home:hover { background: var(--panel2); }
+.lc-home svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#we-next.is-done { background: var(--good); color: #0c2415; }
+#we-next.is-done:hover { background: #a8dab5; }

@@ -338,13 +338,11 @@ function weRenderStep() {
   });
 
   // Buttons
-  document.getElementById('we-prev').style.opacity = weCurrentStep === 0 ? '0.4' : '1';
-  document.getElementById('we-prev').style.pointerEvents = weCurrentStep === 0 ? 'none' : 'auto';
+  document.getElementById('we-prev').disabled = weCurrentStep === 0;
   var isLast = weCurrentStep === total - 1;
-  document.getElementById('we-next').textContent = isLast ? '\u2713 Done' : 'Next \u2192';
-  document.getElementById('we-next').style.background = isLast ? '#81c995' : '#8ab4f8';
-  document.getElementById('we-next').onmouseover = function(){ this.style.background = isLast ? '#a8dab5' : '#aecbfa'; };
-  document.getElementById('we-next').onmouseout  = function(){ this.style.background = isLast ? '#81c995' : '#8ab4f8'; };
+  var nextBtn = document.getElementById('we-next');
+  nextBtn.textContent = isLast ? 'Done' : 'Next';
+  nextBtn.classList.toggle('is-done', isLast);
 }
 function showHelpConnections() {
   document.getElementById('help-menu').classList.remove('active');

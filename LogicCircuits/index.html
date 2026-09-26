@@ -19,7 +19,7 @@
 </div>
 
 <header id="app-header" style="display:none">
-  <button onclick="goHome()" title="Home" style="background:none;border:2px solid #3b424e;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:2rem;line-height:1;color:#c9cdd4;flex-shrink:0;" onmouseover="this.style.borderColor='#858c95'" onmouseout="this.style.borderColor='#3b424e'">&#8962;</button>
+  <button type="button" class="lc-home" onclick="goHome()" title="Back to the menu" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5"/><path d="M6.5 10v9h11v-9"/><path d="M10 19v-5h4v5"/></svg></button>
   <h1>Logic Circuits</h1>
   <div class="question-box" id="question-display">
     <div class="q-label">BUILD THIS CIRCUIT</div>
@@ -383,9 +383,9 @@
 
         <!-- Navigation -->
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <button id="we-prev" onclick="weStep(-1)" style="font-family:Roboto,sans-serif;font-size:1rem;font-weight:700;padding:10px 24px;border:2px solid #3b424e;border-radius:6px;background:#1d2128;cursor:pointer;" onmouseover="this.style.borderColor='#858c95'" onmouseout="this.style.borderColor='#3b424e'">← Back</button>
+          <button type="button" id="we-prev" class="bc-btn is-outline" onclick="weStep(-1)">Back</button>
           <div id="we-dots" style="display:flex;gap:8px;"></div>
-          <button id="we-next" onclick="weStep(1)" style="font-family:Roboto,sans-serif;font-size:1rem;font-weight:700;padding:10px 24px;border:none;border-radius:6px;background:#8ab4f8;color:#1d2128;cursor:pointer;" onmouseover="this.style.background='#aecbfa'" onmouseout="this.style.background='#8ab4f8'">Next →</button>
+          <button type="button" id="we-next" class="bc-btn" onclick="weStep(1)">Next</button>
         </div>
 
       </div>
