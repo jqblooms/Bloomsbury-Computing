@@ -45,7 +45,7 @@
     useNativeLevels: !params.has('levelString'),
     levelString: decodeURIComponent(params.get('levelString') || '') || DEFAULT_LEVEL,
     pybotUrl: params.get('pybotUrl') ||
-      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260826b' + (params.has('levelString') ? '&hideMenu=true' : ''))
+      ('../TurboBot/pybot.html?hideNav=true&turbobot=true&pybotv=20260927p' + (params.has('levelString') ? '&hideMenu=true' : ''))
   };
 
   function loadBlockSaves() {
@@ -930,7 +930,8 @@
       showToast('Choose a PyBot level before running your blocks.');
     }
     if (event.data.type === 'LEVEL_COMPLETE') {
-      setStatus('Complete: ' + (event.data.medal || '') + ' ' + event.data.lines + ' lines');
+      var medal = String(event.data.medal || '');
+      setStatus('Complete: ' + (/^(gold|silver|bronze)$/.test(medal) ? medal.charAt(0).toUpperCase() + medal.slice(1) + ' medal, ' : '') + event.data.lines + ' lines');
       relayLevelComplete(event.data);
     }
   }

@@ -1,0 +1,135 @@
+/* PyBot (Python Lightbot 3D), on the site theme (shared/bc-theme.css
+   provides the tokens, fonts and form defaults). The 3D world keeps its
+   sky and tiles; everything around it is the site's. */
+
+:root {
+    --code-bg: #0b0d11;
+    --py-kw: #c58af9;
+    --py-fn: #8ab4f8;
+    --py-num: #fdd663;
+    --py-comment: #81c995;
+    --medal-gold: #fdd663;
+    --medal-silver: #c9cdd4;
+    --medal-bronze: #fcad70;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.hidden { display: none !important; }
+
+/* ---- Buttons ---- */
+.pb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 0 16px; border: 1px solid transparent; border-radius: 999px; background: var(--brand); color: var(--on-brand); font: 500 14px/1 var(--font-body); white-space: nowrap; cursor: pointer; }
+.pb-btn:hover { background: var(--brand-dark); }
+.pb-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pb-btn svg .fill { fill: currentColor; stroke: none; }
+.pb-btn.is-tonal { background: var(--brand-soft-strong); color: var(--brand-dark); }
+.pb-btn.is-tonal:hover { background: rgba(138, 180, 248, .32); }
+.pb-btn.is-outline { background: transparent; border-color: var(--line-strong); color: var(--ink-soft); }
+.pb-btn.is-outline:hover { background: var(--surface-2); }
+.pb-btn.is-text { background: transparent; color: var(--brand); padding: 0 12px; }
+.pb-btn.is-text:hover { background: var(--brand-soft); }
+.pb-icon-btn { width: 36px; height: 36px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--ink-soft); cursor: pointer; }
+.pb-icon-btn:hover { background: var(--surface-2); }
+.pb-icon-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+/* ---- Top bar ---- */
+#top-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 8px 14px; background: var(--surface); border-bottom: 1px solid var(--line); z-index: 10; }
+.bar-group { display: flex; align-items: center; gap: 10px; }
+#level-title { font: 700 16px var(--font-display); }
+.pb-stats { gap: 16px; color: var(--muted); font-size: 13px; }
+.pb-stats b { color: var(--ink); font: 700 15px var(--font-display); font-variant-numeric: tabular-nums; }
+.pb-speed { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+.pb-speed input { width: 90px; }
+#speed-display { min-width: 32px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* ---- Code and world ---- */
+#main-area { display: flex; flex: 1; min-height: 0; position: relative; }
+#left-pane { width: 33.33%; min-width: 250px; max-width: 70%; resize: horizontal; overflow: hidden; display: flex; flex-direction: column; background: var(--code-bg); border-right: 1px solid var(--line); }
+.editor-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--line); color: var(--ink-soft); font-size: 13px; font-weight: 500; }
+.pb-targets { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.pb-target { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: 12px; }
+.pb-target b { color: var(--ink); }
+.pb-target:nth-child(1) b { color: var(--medal-gold); }
+.pb-target:nth-child(2) b { color: var(--medal-silver); }
+.pb-target:nth-child(3) b { color: var(--medal-bronze); }
+#example-mode-badge { display: none; padding: 3px 10px; border-radius: 999px; background: var(--brand-soft-strong); color: var(--brand-dark); font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+#editor-container { flex: 1; overflow: auto; }
+#right-pane { flex: 1; position: relative; background: #87ceeb; }
+#canvas-container { width: 100%; height: 100%; display: block; }
+
+/* CodeMirror on the site's colours */
+.CodeMirror { height: 100% !important; font: 16px/1.5 var(--font-mono); }
+.cm-s-bc.CodeMirror { background: var(--code-bg); color: var(--ink); }
+.cm-s-bc .CodeMirror-gutters { background: var(--code-bg); border-right: 1px solid var(--line); }
+.cm-s-bc .CodeMirror-linenumber { color: var(--muted-2); }
+.cm-s-bc .CodeMirror-cursor { border-left-color: var(--brand); }
+.cm-s-bc .CodeMirror-selected, .cm-s-bc .CodeMirror-focused .CodeMirror-selected { background: var(--brand-soft-strong); }
+.cm-s-bc .cm-keyword { color: var(--py-kw); }
+.cm-s-bc .cm-builtin, .cm-s-bc .cm-def, .cm-s-bc .cm-variable-2 { color: var(--py-fn); }
+.cm-s-bc .cm-number { color: var(--py-num); }
+.cm-s-bc .cm-string { color: #fcad70; }
+.cm-s-bc .cm-comment { color: var(--py-comment); font-style: italic; }
+.cm-s-bc .cm-operator { color: var(--ink-soft); }
+
+/* The read-only example a lesson can show */
+#example-code-display { flex: 1; overflow: auto; padding: 16px; background: var(--code-bg); color: var(--ink); font: 15px/1.7 var(--font-mono); white-space: pre; user-select: none; -webkit-user-select: none; pointer-events: none; }
+.kw { color: var(--py-kw); }
+.fn { color: var(--py-fn); }
+.num { color: var(--py-num); }
+.cmt { color: var(--py-comment); font-style: italic; }
+
+/* ---- Menu, win and help ---- */
+.modal-overlay { position: absolute; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; background: var(--scrim); }
+.modal { position: relative; width: 100%; max-width: 640px; max-height: 90%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 28px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-3); text-align: center; }
+.modal h2 { font-size: 24px; }
+.modal p { color: var(--muted); line-height: 1.5; max-width: 52ch; }
+.level-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 10px; margin-top: 6px; }
+.level-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px 12px; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--surface-2); color: var(--ink); font: inherit; cursor: pointer; transition: background .15s, border-color .15s; }
+.level-card:hover { background: var(--surface-3); border-color: var(--brand); }
+.level-card.is-done { border-color: var(--line); }
+.level-card-name { font: 700 15px var(--font-display); }
+.level-card-lines { color: var(--muted); font-size: 12px; }
+.pb-clear { margin-top: 4px; color: var(--muted); }
+.pb-clear.is-armed { color: var(--bad); background: var(--bad-soft); }
+
+.medal { flex: none; }
+.medal-ribbon { fill: var(--surface-4); }
+.medal-gold .medal-disc { fill: var(--medal-gold); }
+.medal-silver .medal-disc { fill: var(--medal-silver); }
+.medal-bronze .medal-disc { fill: var(--medal-bronze); }
+.medal .medal-rim { fill: none; stroke: rgba(0, 0, 0, .28); stroke-width: 1.5; }
+.medal-gold .medal-ribbon { fill: #c5221f; }
+.medal-silver .medal-ribbon { fill: #1a73e8; }
+.medal-bronze .medal-ribbon { fill: #188038; }
+.medal-none circle { fill: var(--good-soft); stroke: var(--good); stroke-width: 2; }
+.medal-none path { fill: none; stroke: var(--good); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.medal-empty circle { fill: none; stroke: var(--line-strong); stroke-width: 2; stroke-dasharray: 3 3; }
+
+.win-medal { display: flex; flex-direction: column; align-items: center; gap: 6px; font: 700 18px var(--font-display); }
+.win-stats { display: flex; gap: 20px; }
+.win-stats b { color: var(--ink); }
+.win-next { color: var(--ink-soft); }
+.win-next:empty { display: none; }
+.modal-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 4px; }
+
+.modal.help { align-items: stretch; text-align: left; }
+.help-close { position: absolute; top: 12px; right: 12px; }
+.modal.help h2 { font-size: 22px; }
+.modal.help h3 { margin-top: 6px; font-size: 16px; }
+.modal.help p { max-width: none; }
+.cmd-list { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; padding: 14px 16px; border-radius: 12px; background: var(--code-bg); }
+.cmd-list dt { color: var(--py-fn); font: 14px var(--font-mono); }
+.cmd-list dd { color: var(--ink-soft); font-size: 14px; }
+pre.code { padding: 14px 16px; border-radius: 12px; background: var(--code-bg); color: var(--ink); font: 14px/1.6 var(--font-mono); }
+
+/* ---- Inside TurboBot (the blocks version): world only ---- */
+body.turbobot-embed #left-pane { display: none !important; }
+body.turbobot-embed #right-pane { width: 100% !important; max-width: none !important; flex: 1 1 auto !important; }
+body.turbobot-embed #main-area { height: 100vh !important; }
+body.turbobot-embed #canvas-container { width: 100% !important; height: 100% !important; }
+body.turbobot-embed #turbobot-levels-button { position: fixed; top: 10px; right: 10px; z-index: 80; min-height: 36px; padding: 0 16px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 14px var(--font-body); box-shadow: var(--shadow-2); cursor: pointer; }
+body.turbobot-embed #turbobot-levels-button:hover { background: var(--surface-3); }
+body.turbobot-embed #turbobot-medal-requirements { position: fixed; top: 10px; left: 10px; z-index: 80; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; max-width: calc(100vw - 120px); padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); color: var(--ink); font-size: 13px; font-weight: 700; box-shadow: var(--shadow-2); pointer-events: none; }
+body.turbobot-embed #turbobot-medal-requirements[hidden] { display: none; }
+body.turbobot-embed #turbobot-medal-requirements .medal-label { color: var(--muted); font-weight: 500; }
+body.turbobot-embed .medal-target { display: inline-flex; align-items: center; gap: 4px; }
