@@ -24,11 +24,11 @@
           startOnLoad: false,
           theme: 'base',
           themeVariables: {
-            primaryColor: '#f8fafc',
-            primaryBorderColor: '#64748b',
-            primaryTextColor: '#0f172a',
-            lineColor: '#38bdf8',
-            edgeLabelBackground: '#0f172a',
+            primaryColor: '#1d2128',
+            primaryBorderColor: '#8a94a6',
+            primaryTextColor: '#e8eaed',
+            lineColor: '#8ab4f8',
+            edgeLabelBackground: '#171a20',
             fontFamily: 'JetBrains Mono, ui-monospace, monospace'
           },
           flowchart: {
@@ -56,21 +56,21 @@
         .no-select{user-select:none;-webkit-user-select:none}
         .backdrop-blur-md{backdrop-filter:blur(12px)}
 
-        /* Flowchart shapes - same visual language as the main site's
+        /* Flowchart shapes - the same look as the main site's
            .lesson-flow-node (terminal/process/io/decision), redrawn here
            since this app ships standalone and can't rely on the parent
            frame's stylesheet. */
-        .fc-node { min-width: 150px; max-width: 260px; padding: 8px 14px; border: 2px solid #64748b; background: #f8fafc; color: #0f172a; font-size: 12.5px; font-weight: 650; line-height: 1.3; text-align: center; }
+        .fc-node { min-width: 150px; max-width: 260px; padding: 8px 14px; border: 2px solid #8a94a6; background: var(--surface-2); color: var(--ink); font-size: 12.5px; font-weight: 650; line-height: 1.3; text-align: center; }
         .fc-node.terminal { border-radius: 999px; }
         .fc-node.process { border-radius: 5px; }
         .fc-node.io { border-radius: 5px; transform: skew(-10deg); }
         .fc-node.io > span { display: block; transform: skew(10deg); }
-        .fc-node.decision { min-width: 170px; padding: 18px 26px; border: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: #64748b; }
-        .fc-node.decision > span { display: block; margin: -14px -22px; padding: 14px 22px; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: #f8fafc; }
-        .fc-arrow { color: #38bdf8; font-size: 18px; font-weight: 800; line-height: 1; }
+        .fc-node.decision { min-width: 170px; padding: 18px 26px; border: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: #8a94a6; }
+        .fc-node.decision > span { display: block; margin: -14px -22px; padding: 14px 22px; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: var(--surface-2); }
+        .fc-arrow { color: var(--brand); font-size: 18px; font-weight: 800; line-height: 1; }
         .fc-branch-row { display: flex; gap: 28px; align-items: flex-start; justify-content: center; }
         .fc-branch-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-        .fc-branch-label { color: #38bdf8; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+        .fc-branch-label { color: var(--brand); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
 
         /* Left/right layout for the flowchart next to its pseudocode
            (James: stacking them top/bottom left too little room for
@@ -89,18 +89,18 @@
         .fc-mermaid-wrap { position: relative; width: min(100%, 620px); min-height: 130px; }
         .fc-mermaid-svg { width: 100%; }
         .fc-mermaid-wrap svg { display: block; width: 100%; max-width: 100%; max-height: 455px; height: auto; margin: 0 auto; }
-        .fc-mermaid-wrap .edgeLabel { color: #e2e8f0 !important; background: #0f172a !important; font-weight: 800; }
-        .fc-mermaid-wrap .edgeLabel p { color: #e2e8f0 !important; background: #0f172a !important; padding: 2px 5px; border-radius: 4px; }
+        .fc-mermaid-wrap .edgeLabel { color: var(--ink) !important; background: var(--surface) !important; font-weight: 800; }
+        .fc-mermaid-wrap .edgeLabel p { color: var(--ink) !important; background: var(--surface) !important; padding: 2px 5px; border-radius: 4px; }
         .fc-mermaid-wrap .flowchart-link { stroke-width: 2.5px !important; }
-        .fc-mermaid-wrap marker path { fill: #38bdf8 !important; stroke: #38bdf8 !important; }
+        .fc-mermaid-wrap marker path { fill: var(--brand) !important; stroke: var(--brand) !important; }
         .fc-slot-overlay { position: absolute; cursor: pointer; border-radius: 6px; }
-        .fc-slot-overlay.is-target { outline: 3px solid #facc15; outline-offset: 2px; }
+        .fc-slot-overlay.is-target { outline: 3px solid var(--warn); outline-offset: 2px; }
         .fc-block { cursor: grab; }
-        .fc-block.is-picked { outline: 3px solid #facc15; outline-offset: 2px; }
+        .fc-block.is-picked { outline: 3px solid var(--warn); outline-offset: 2px; }
         .fc-block.is-hint { outline: 3px dashed #8ab4f8; outline-offset: 2px; }
         .fc-support-toggle { display: flex; justify-content: center; margin-bottom: 16px; }
         .fc-palette { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .fc-code { text-align: left; background: #0b1224; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 16px; font-size: 13px; line-height: 1.7; color: #e2e8f0; white-space: pre; }
+        .fc-code { text-align: left; background: #0b0d11; border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; font-size: 13px; line-height: 1.7; color: var(--ink); white-space: pre; }
     </style>
 </head>
 <body class="text-white h-screen w-screen overflow-hidden">
@@ -413,9 +413,9 @@ const fcNodeLine = (id, shape, text, className) => {
 };
 
 const FC_CLASS_DEFS = [
-    '  classDef emptySlot fill:#0f172a,stroke:#64748b,stroke-width:2px,stroke-dasharray:6 4,color:#94a3b8;',
-    '  classDef correctSlot stroke:#22c55e,stroke-width:4px;',
-    '  classDef wrongSlot stroke:#ef4444,stroke-width:4px;'
+    '  classDef emptySlot fill:#171a20,stroke:#8a94a6,stroke-width:2px,stroke-dasharray:6 4,color:#9aa0a6;',
+    '  classDef correctSlot stroke:#81c995,stroke-width:4px;',
+    '  classDef wrongSlot stroke:#f28b82,stroke-width:4px;'
 ];
 
 const fcSlotClassName = (checkState, slotKey, isEmpty) => {
