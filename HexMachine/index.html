@@ -1169,7 +1169,7 @@ function setupPlatformControls(){
   });
   fullscreenDocument().addEventListener('fullscreenchange',()=>{const b=H('hm-fullscreen');if(b)b.textContent=fullscreenDocument().fullscreenElement?'Exit Fullscreen':'Fullscreen';scheduleWorkspaceResize()});
 }
-function seed(){const r=ws.getBoundingClientRect();state.unlocked.clear();state.purchaseCounts.clear();state.machines=[];state.lasers=[];state.bugs=[];state.nextId=1;state.nextLaserId=1;state.nextBugId=1;state.bugAttack.wave=0;state.bugAttack.kills=0;const y=Math.max(50,r.height/2-63);addMachine(1,Math.max(24,r.width*.18-95),y);addMachine(1,Math.min(r.width-214,r.width*.82-95),y);renderLasers();renderBugs();renderShop();scheduleBugAttack(randomBugDelay());saveLocalNow()}
+function seed(){const box=ws.getBoundingClientRect(),r=box.width>0&&box.height>0?box:{width:900,height:600};state.unlocked.clear();state.purchaseCounts.clear();state.machines=[];state.lasers=[];state.bugs=[];state.nextId=1;state.nextLaserId=1;state.nextBugId=1;state.bugAttack.wave=0;state.bugAttack.kills=0;const y=Math.max(50,r.height/2-63);addMachine(1,Math.max(24,r.width*.18-95),y);addMachine(1,Math.min(r.width-214,r.width*.82-95),y);renderLasers();renderBugs();renderShop();scheduleBugAttack(randomBugDelay());saveLocalNow()}
 // Reset Game, distinct from Reset View (which only recentres the camera).
 // seed() rebuilds the machines/lasers/bugs/shop and reschedules the next
 // bug wave, but it never touches money or the rest of bugAttack (phase/
@@ -1200,7 +1200,15 @@ function resetGame(){
     setMainframeMoney(state.money);
   };
 }
-function bootHexMachine(){setupPlatformControls();document.getElementById('legend').innerHTML=Array.from({length:16},(_,i)=>'<div><b>'+HEX[i]+'</b>'+bin(i,4)+'</div>').join('');window.addEventListener('resize',()=>{scheduleWorkspaceResize();fitMainframeMoney()});resizeCableCanvas();workspaceSize={width:ws.clientWidth,height:ws.clientHeight};requestAnimationFrame(cableLoop);requestAnimationFrame(()=>{if(!loadLocal())seed();ensureBugSchedule();checkGameOver()});let shopTick=0;setInterval(()=>{const now=performance.now();state.money+=totalRate()/10;updateBugSystem(now);setMainframeMoney(state.money);shopTick++;if(shopTick%5===0)renderShop();if(shopTick%20===0){saveLocalNow()}if(shopTick%10===0)checkGameOver()},100)}
+function bootHexMachine(){setupPlatformControls();document.getElementById('legend').innerHTML=Array.from({length:16},(_,i)=>'<div><b>'+HEX[i]+'</b>'+bin(i,4)+'</div>').join('');window.addEventListener('resize',()=>{scheduleWorkspaceResize();fitMainframeMoney()});resizeCableCanvas();workspaceSize={width:ws.clientWidth,height:ws.clientHeight};requestAnimationFrame(cableLoop);requestAnimationFrame(bootGameState);setTimeout(bootGameState,300);let shopTick=0;setInterval(()=>{if(!gameBooted)return;const now=performance.now();state.money+=totalRate()/10;updateBugSystem(now);setMainframeMoney(state.money);shopTick++;if(shopTick%5===0)renderShop();if(shopTick%20===0){saveLocalNow()}if(shopTick%10===0)checkGameOver()},100)}
+// Loading the save (or starting a new game) must not wait for an animation
+// frame: in a hidden or background frame, as the site preloads apps, frames
+// never come, and the 2-second autosave used to store an empty game that
+// then loaded as Game Over for good. Nothing ticks or saves until this has
+// run. A save with no machines, no tiers and no money is that broken
+// state, so it starts a new game instead.
+let gameBooted=false;
+function bootGameState(){if(gameBooted)return;gameBooted=true;const loaded=loadLocal();if(!loaded||(state.machines.length===0&&state.unlocked.size===0&&state.money<1))seed();ensureBugSchedule();checkGameOver()}
 bootHexMachine();
 (function stationCableAnimation(){
   updateStationCables();
