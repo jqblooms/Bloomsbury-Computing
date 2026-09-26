@@ -2149,7 +2149,7 @@ function updateRocketUI() {
   if (rocketArrived()) {
     buildEl.innerHTML = ''; flightEl.innerHTML = '';
     arrivedEl.classList.add('shown');
-    arrivedEl.innerHTML = '<span class="arrived-anim">🚀</span>' +
+    arrivedEl.innerHTML = '<span class="arrived-anim"><svg class="rocket-svg" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M12 2c3 2.5 4.5 6 4.5 10.5L14.5 16h-5l-2-3.5C7.5 8 9 4.5 12 2z" fill="#e8eaed"/><circle cx="12" cy="9" r="2" fill="#8ab4f8"/><path d="M9.5 16 7 19l-.5-4.5L8.5 12zM14.5 16l2.5 3 .5-4.5-2-2.5z" fill="#f28b82"/><path d="M10.5 17h3l-1.5 4z" fill="#fdd663"/></svg></span>' +
       '<div class="arrived-title">You reached space!</div>' +
       '<div class="rocket-note">Every part built, every hour of the flight real - your rocket made it.</div>' +
       '<button type="button" id="rocket-reset-btn">Build Another Rocket</button>';
@@ -2165,7 +2165,7 @@ function updateRocketUI() {
     var remainingH = Math.floor(remainingMs / 3600000);
     var remainingM = Math.floor((remainingMs % 3600000) / 60000);
     flightEl.innerHTML =
-      '<div class="rocket-flight-track"><span class="stars"></span><span class="rocket-icon" style="bottom:' + (4 + pct * 1.1) + 'px">🚀</span></div>' +
+      '<div class="rocket-flight-track"><span class="stars"></span><span class="rocket-icon" style="bottom:' + (4 + pct * 1.1) + 'px"><svg class="rocket-svg" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M12 2c3 2.5 4.5 6 4.5 10.5L14.5 16h-5l-2-3.5C7.5 8 9 4.5 12 2z" fill="#e8eaed"/><circle cx="12" cy="9" r="2" fill="#8ab4f8"/><path d="M9.5 16 7 19l-.5-4.5L8.5 12zM14.5 16l2.5 3 .5-4.5-2-2.5z" fill="#f28b82"/><path d="M10.5 17h3l-1.5 4z" fill="#fdd663"/></svg></span></div>' +
       '<div id="rocket-flight-pct">' + pct + '% there</div>' +
       '<div id="rocket-flight-eta">' + (remainingMs > 0 ? (remainingH + 'h ' + remainingM + 'm remaining - it keeps flying whether or not you\'re watching, come back later') : 'Arriving...') + '</div>';
     return;

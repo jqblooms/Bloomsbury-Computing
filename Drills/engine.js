@@ -893,7 +893,7 @@
     var topicPartial = run.category !== "all" && run.count < topicTotal;
     els.stage.innerHTML =
       '<div class="done">' +
-      '<div class="big">🎉</div>' +
+      '<div class="big"><svg viewBox="0 0 48 48" width="56" height="56" aria-hidden="true"><path d="M14 8h20v10a10 10 0 0 1-20 0z" fill="#fdd663"/><path d="M14 11H8v4a7 7 0 0 0 7 7M34 11h6v4a7 7 0 0 1-7 7" fill="none" stroke="#fdd663" stroke-width="3"/><path d="M21 28h6v7h-6zM15 36h18v5H15z" fill="#fcad70"/></svg></div>' +
       (trueMastery ? "<h2>True mastery!</h2>" : "<h2>Run complete!</h2>") +
       "<p>You mastered every card in <strong>" + escapeHtml(categoryLabel(run.category)) + "</strong> (" + run.count + " card" + (run.count === 1 ? "" : "s") + ") this run.</p>" +
       "<p>Overall you have mastered " + everCount + " of " + drillTotal + " cards in " + escapeHtml(drill.title) + (trueMastery ? " - every card, TRUE MASTERY." : ".") + "</p>" +
@@ -1444,7 +1444,7 @@
 
   function renderCodeDone() {
     els.stage.innerHTML =
-      '<div class="done"><div class="big">🎉</div><h2>Every type mastered!</h2>' +
+      '<div class="done"><div class="big"><svg viewBox="0 0 48 48" width="56" height="56" aria-hidden="true"><path d="M14 8h20v10a10 10 0 0 1-20 0z" fill="#fdd663"/><path d="M14 11H8v4a7 7 0 0 0 7 7M34 11h6v4a7 7 0 0 1-7 7" fill="none" stroke="#fdd663" stroke-width="3"/><path d="M21 28h6v7h-6zM15 36h18v5H15z" fill="#fcad70"/></svg></div><h2>Every type mastered!</h2>' +
       "<p>You wrote correct code for every type of question, three times in a row, for " + escapeHtml(categoryLabel(run.category)) + ".</p>" +
       '<div class="actions" style="justify-content:center">' +
       '<button type="button" class="btn" id="code-again-btn">Run it again</button>' +
