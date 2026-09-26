@@ -3,11 +3,11 @@
     {
       "id": "year6",
       "label": "Year 6",
-      "course": "iCompute",
+      "course": "Scratch Programming",
       "units": [
         {
           "code": "6.2",
-          "title": "iProgram",
+          "title": "Programming with Scratch",
           "lessons": [
             "y6-icontrol-l1",
             "y6-igame-l2",
