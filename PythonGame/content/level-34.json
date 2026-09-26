@@ -1,0 +1,75 @@
+{
+  "type": "multiline",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 1 to 10</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*1\\s*,\\s*11\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(1, 11):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 0 to 4</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*5\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)|for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*5\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(5):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 5 to 9</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*5\\s*,\\s*10\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(5, 10):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 1 to 5</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*1\\s*,\\s*6\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(1, 6):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 0 to 9</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*10\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)|for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*10\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(10):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 3 to 8</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*3\\s*,\\s*9\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(3, 9):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 1 to 3</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*1\\s*,\\s*4\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(1, 4):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 10 to 15</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*10\\s*,\\s*16\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(10, 16):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints the numbers 0, 1 and 2</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*3\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)|for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*3\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(3):\n    print(i)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write code that <span class=\"green-keyword\">prints every number from 6 to 10</span></span>",
+      "inputLabel": "Write the for loop:",
+      "correctCode": "for\\s+i\\s+in\\s+range\\s*\\(\\s*6\\s*,\\s*11\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*i\\s*\\)",
+      "useRegex": true,
+      "notice": "for i in range(6, 11):\n    print(i)"
+    }
+  ]
+}

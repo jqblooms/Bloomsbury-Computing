@@ -1,0 +1,57 @@
+{
+  "type": "text",
+  "inputLabel": "Write Python code to convert the variable:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the code that will turn the variable <span class=\"green-keyword\">age</span> into an integer</span>",
+      "correctCode": "int\\s*\\(\\s*age\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "Use int(variable) to convert to integer"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the code that will convert <span class=\"green-keyword\">height</span> into a floating-point number</span>",
+      "correctCode": "float\\s*\\(\\s*height\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "Use float(variable) for decimal numbers"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Convert the variable <span class=\"green-keyword\">name</span> into a string</span>",
+      "correctCode": "str\\s*\\(\\s*name\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Convert the variable <span class=\"green-keyword\">present</span> into a boolean</span>",
+      "correctCode": "bool\\s*\\(\\s*present\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "Use bool(variable) for True/False values"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Turn the variable <span class=\"green-keyword\">score</span> into an integer</span>",
+      "correctCode": "int\\s*\\(\\s*score\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Convert <span class=\"green-keyword\">height_in_meters</span> to a float</span>",
+      "correctCode": "float\\s*\\(\\s*height_in_meters\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Change the variable <span class=\"green-keyword\">username</span> to a string</span>",
+      "correctCode": "str\\s*\\(\\s*username\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Convert the variable <span class=\"green-keyword\">is_active</span> into a boolean</span>",
+      "correctCode": "bool\\s*\\(\\s*is_active\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": false
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "type": "multiline",
+  "inputLabel": "Write a comment (#) then the input code:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user to <span class=\"green-keyword\">input</span> their <span class=\"green-keyword\">name</span> and store it.</span>",
+      "keywords": [
+        "input",
+        "name"
+      ],
+      "correctCode": "name\\s*=\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true,
+      "notice": "# Input name\nname = input(\"Enter name\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user to <span class=\"green-keyword\">enter</span> their <span class=\"green-keyword\">city</span>.</span>",
+      "keywords": [
+        "city"
+      ],
+      "correctCode": "city\\s*=\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Get the user's <span class=\"green-keyword\">age</span> (number) and store it.</span>",
+      "keywords": [
+        "age"
+      ],
+      "correctCode": "age\\s*=\\s*int\\s*\\(\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true,
+      "notice": "Remember int() for numbers!"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask for the user's <span class=\"green-keyword\">hobby</span>.</span>",
+      "keywords": [
+        "hobby"
+      ],
+      "correctCode": "hobby\\s*=\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user to <span class=\"green-keyword\">input</span> their <span class=\"green-keyword\">school</span>.</span>",
+      "keywords": [
+        "school"
+      ],
+      "correctCode": "school\\s*=\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Get the user's <span class=\"green-keyword\">score</span> (number).</span>",
+      "keywords": [
+        "score"
+      ],
+      "correctCode": "score\\s*=\\s*int\\s*\\(\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true
+    }
+  ]
+}

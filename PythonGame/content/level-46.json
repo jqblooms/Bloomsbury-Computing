@@ -1,0 +1,146 @@
+{
+  "type": "text",
+  "inputLabel": "What will this output? Type the answer:",
+  "questions": [
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>items</span> = [<span class='code-string'>\"Ryan\"</span>, <span class='code-string'>\"Michael\"</span>, <span class='code-string'>\"Jacob\"</span>]\n<span class='code-func'>print</span>(items[<span class='code-num'>1</span>])</pre>",
+      "correctCode": "Michael",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Michael - index 1 is the second item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>items</span> = [<span class='code-string'>\"Ryan\"</span>, <span class='code-string'>\"Michael\"</span>, <span class='code-string'>\"Jacob\"</span>]\n<span class='code-func'>print</span>(items[<span class='code-num'>0</span>])</pre>",
+      "correctCode": "Ryan",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Ryan - index 0 is always the first item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>items</span> = [<span class='code-string'>\"Ryan\"</span>, <span class='code-string'>\"Michael\"</span>, <span class='code-string'>\"Jacob\"</span>]\n<span class='code-func'>print</span>(items[<span class='code-num'>2</span>])</pre>",
+      "correctCode": "Jacob",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Jacob - index 2 is the third item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>colours</span> = [<span class='code-string'>\"red\"</span>, <span class='code-string'>\"blue\"</span>, <span class='code-string'>\"green\"</span>]\n<span class='code-func'>print</span>(colours[<span class='code-num'>0</span>])</pre>",
+      "correctCode": "red",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "red - index 0 is the first item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>colours</span> = [<span class='code-string'>\"red\"</span>, <span class='code-string'>\"blue\"</span>, <span class='code-string'>\"green\"</span>]\n<span class='code-func'>print</span>(colours[<span class='code-num'>2</span>])</pre>",
+      "correctCode": "green",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "green - index 2 is the third item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>scores</span> = [<span class='code-num'>10</span>, <span class='code-num'>20</span>, <span class='code-num'>30</span>]\n<span class='code-func'>print</span>(scores[<span class='code-num'>1</span>])</pre>",
+      "correctCode": "20",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "20 - index 1 is the second item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>scores</span> = [<span class='code-num'>10</span>, <span class='code-num'>20</span>, <span class='code-num'>30</span>]\n<span class='code-func'>print</span>(scores[<span class='code-num'>0</span>])</pre>",
+      "correctCode": "10",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "10 - index 0 is always the first item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>planets</span> = [<span class='code-string'>\"Mars\"</span>, <span class='code-string'>\"Venus\"</span>, <span class='code-string'>\"Earth\"</span>]\n<span class='code-func'>print</span>(planets[<span class='code-num'>1</span>])</pre>",
+      "correctCode": "Venus",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Venus - index 1 is the second item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>planets</span> = [<span class='code-string'>\"Mars\"</span>, <span class='code-string'>\"Venus\"</span>, <span class='code-string'>\"Earth\"</span>]\n<span class='code-func'>print</span>(planets[<span class='code-num'>2</span>])</pre>",
+      "correctCode": "Earth",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Earth - index 2 is the third item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>pets</span> = [<span class='code-string'>\"cat\"</span>, <span class='code-string'>\"dog\"</span>, <span class='code-string'>\"fish\"</span>]\n<span class='code-func'>print</span>(pets[<span class='code-num'>0</span>])</pre>",
+      "correctCode": "cat",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "cat - index 0 is the first item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>pets</span> = [<span class='code-string'>\"cat\"</span>, <span class='code-string'>\"dog\"</span>, <span class='code-string'>\"fish\"</span>]\n<span class='code-func'>print</span>(pets[<span class='code-num'>2</span>])</pre>",
+      "correctCode": "fish",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "fish - index 2 is the third item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>numbers</span> = [<span class='code-num'>5</span>, <span class='code-num'>10</span>, <span class='code-num'>15</span>, <span class='code-num'>20</span>]\n<span class='code-func'>print</span>(numbers[<span class='code-num'>3</span>])</pre>",
+      "correctCode": "20",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "20 - index 3 is the fourth item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>numbers</span> = [<span class='code-num'>5</span>, <span class='code-num'>10</span>, <span class='code-num'>15</span>, <span class='code-num'>20</span>]\n<span class='code-func'>print</span>(numbers[<span class='code-num'>2</span>])</pre>",
+      "correctCode": "15",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "15 - index 2 is the third item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>days</span> = [<span class='code-string'>\"Monday\"</span>, <span class='code-string'>\"Tuesday\"</span>, <span class='code-string'>\"Wednesday\"</span>]\n<span class='code-func'>print</span>(days[<span class='code-num'>0</span>])</pre>",
+      "correctCode": "Monday",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Monday - index 0 is always the first item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>days</span> = [<span class='code-string'>\"Monday\"</span>, <span class='code-string'>\"Tuesday\"</span>, <span class='code-string'>\"Wednesday\"</span>]\n<span class='code-func'>print</span>(days[<span class='code-num'>2</span>])</pre>",
+      "correctCode": "Wednesday",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Wednesday - index 2 is the third item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>cities</span> = [<span class='code-string'>\"London\"</span>, <span class='code-string'>\"Paris\"</span>, <span class='code-string'>\"Rome\"</span>, <span class='code-string'>\"Berlin\"</span>]\n<span class='code-func'>print</span>(cities[<span class='code-num'>1</span>])</pre>",
+      "correctCode": "Paris",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Paris - index 1 is the second item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>cities</span> = [<span class='code-string'>\"London\"</span>, <span class='code-string'>\"Paris\"</span>, <span class='code-string'>\"Rome\"</span>, <span class='code-string'>\"Berlin\"</span>]\n<span class='code-func'>print</span>(cities[<span class='code-num'>3</span>])</pre>",
+      "correctCode": "Berlin",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Berlin - index 3 is the fourth item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>ages</span> = [<span class='code-num'>15</span>, <span class='code-num'>22</span>, <span class='code-num'>37</span>]\n<span class='code-func'>print</span>(ages[<span class='code-num'>2</span>])</pre>",
+      "correctCode": "37",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "37 - index 2 is the third item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>players</span> = [<span class='code-string'>\"Alice\"</span>, <span class='code-string'>\"Bob\"</span>, <span class='code-string'>\"Charlie\"</span>, <span class='code-string'>\"Diana\"</span>]\n<span class='code-func'>print</span>(players[<span class='code-num'>0</span>])</pre>",
+      "correctCode": "Alice",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Alice - index 0 is always the first item"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>players</span> = [<span class='code-string'>\"Alice\"</span>, <span class='code-string'>\"Bob\"</span>, <span class='code-string'>\"Charlie\"</span>, <span class='code-string'>\"Diana\"</span>]\n<span class='code-func'>print</span>(players[<span class='code-num'>2</span>])</pre>",
+      "correctCode": "Charlie",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "Charlie - index 2 is the third item"
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "levelName": "Increment and Decrement",
+  "type": "mcq",
+  "questions": [
+    {
+      "html": "<b>Which code increases <code>score</code> by 5?</b>",
+      "correctCode": "score += 5",
+      "optionsRaw": [
+        "score += 5",
+        "score -= 5",
+        "score = 5",
+        "score + 5"
+      ],
+      "notice": "score += 5 is shorthand for score = score + 5"
+    },
+    {
+      "html": "<b>Which code decreases <code>lives</code> by 1?</b>",
+      "correctCode": "lives -= 1",
+      "optionsRaw": [
+        "lives -= 1",
+        "lives += 1",
+        "lives = 1",
+        "lives - 1"
+      ],
+      "notice": "lives -= 1 is shorthand for lives = lives - 1"
+    },
+    {
+      "html": "<b>Which code increases <code>total</code> by 10?</b>",
+      "correctCode": "total += 10",
+      "optionsRaw": [
+        "total += 10",
+        "total -= 10",
+        "total == 10",
+        "total + 10"
+      ],
+      "notice": "total += 10 is shorthand for total = total + 10"
+    },
+    {
+      "html": "<b>Which code decreases <code>health</code> by 25?</b>",
+      "correctCode": "health -= 25",
+      "optionsRaw": [
+        "health -= 25",
+        "health += 25",
+        "health = 25",
+        "health - 25"
+      ],
+      "notice": "health -= 25 is shorthand for health = health - 25"
+    },
+    {
+      "html": "<b>Which code increases <code>count</code> by 1?</b>",
+      "correctCode": "count += 1",
+      "optionsRaw": [
+        "count += 1",
+        "count -= 1",
+        "count = 1",
+        "count = count + 1"
+      ],
+      "notice": "count += 1 is shorthand for count = count + 1"
+    },
+    {
+      "html": "<b>Which code decreases <code>fuel</code> by 3?</b>",
+      "correctCode": "fuel -= 3",
+      "optionsRaw": [
+        "fuel -= 3",
+        "fuel += 3",
+        "fuel == 3",
+        "fuel - 3"
+      ],
+      "notice": "fuel -= 3 is shorthand for fuel = fuel - 3"
+    },
+    {
+      "html": "<b>Which code increases <code>balance</code> by 50?</b>",
+      "correctCode": "balance += 50",
+      "optionsRaw": [
+        "balance += 50",
+        "balance -= 50",
+        "balance = 50",
+        "balance =+ 50"
+      ],
+      "notice": "balance += 50 is shorthand for balance = balance + 50 - watch out for =+ which is not valid"
+    },
+    {
+      "html": "<b>Which code decreases <code>temperature</code> by 2?</b>",
+      "correctCode": "temperature -= 2",
+      "optionsRaw": [
+        "temperature -= 2",
+        "temperature += 2",
+        "temperature = -2",
+        "temperature =- 2"
+      ],
+      "notice": "temperature -= 2 is shorthand for temperature = temperature - 2"
+    },
+    {
+      "html": "<b>Which code increases <code>speed</code> by 15?</b>",
+      "correctCode": "speed += 15",
+      "optionsRaw": [
+        "speed += 15",
+        "speed -= 15",
+        "speed = 15",
+        "speed =+ 15"
+      ],
+      "notice": "speed += 15 is shorthand for speed = speed + 15"
+    },
+    {
+      "html": "<b>Which code decreases <code>attempts</code> by 1?</b>",
+      "correctCode": "attempts -= 1",
+      "optionsRaw": [
+        "attempts -= 1",
+        "attempts += 1",
+        "attempts = -1",
+        "attempts =- 1"
+      ],
+      "notice": "attempts -= 1 is shorthand for attempts = attempts - 1"
+    }
+  ]
+}

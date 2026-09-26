@@ -1,0 +1,40 @@
+{
+  "title": "GCSE Exam 7: Count Integers Until Zero",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to count how many integers are entered by the user until they enter 0.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter an integer</li><li>repeatedly take inputs until the user enters 0</li><li>count how many integers are entered (not including the final 0)</li><li>output the count in an appropriate message</li></ul>",
+      "explanation": "Format:\ncount = 0\nnum = int(input('Enter a number: '))\nwhile num != 0:\n    count += 1\n    num = int(input('Enter a number: '))\nprint('Count:', count)",
+      "testCases": [
+        {
+          "inputs": [
+            "5",
+            "3",
+            "7",
+            "0"
+          ],
+          "expectedOutput": [
+            "3"
+          ]
+        },
+        {
+          "inputs": [
+            "1",
+            "0"
+          ],
+          "expectedOutput": [
+            "1"
+          ]
+        },
+        {
+          "inputs": [
+            "0"
+          ],
+          "expectedOutput": [
+            "0"
+          ]
+        }
+      ]
+    }
+  ]
+}

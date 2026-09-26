@@ -13,7 +13,7 @@ const MENU_STAGES = [
     { page: 1, stage: 2, title: 'Variables', exam: 2, levels: [
         [7, 'Match variable'], [8, 'Write variable'], [9, 'Comment and assign'], [10, 'Assign and print'], [11, 'Match output'], [12, 'Write and print a variable']] },
     { page: 1, stage: 3, title: 'Input', exam: 3, levels: [
-        [13, 'Match input'], [14, 'Write input'], [15, 'Comment and input'], [16, 'Not ready yet', true], [17, 'Spot the data type'], [18, 'Cast the data type']] },
+        [13, 'Match input'], [14, 'Write input'], [15, 'Comment and input'], [16, 'Match input and print'], [17, 'Spot the data type'], [18, 'Cast the data type']] },
     { page: 1, stage: 4, title: 'Selection', exam: 4, levels: [
         [19, 'Match operator'], [20, 'Write operator'], [21, 'Match if statement'], [22, 'Write if statement'], [23, 'Match logic operators'], [24, 'Write logic operators']] },
     { page: 2, stage: 5, title: 'Selection part 2', exam: 5, levels: [

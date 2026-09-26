@@ -1,0 +1,130 @@
+{
+  "title": "Exam 4: Selection",
+  "questions": [
+    {
+      "type": "mcq",
+      "prompt": "Which comparison operator means 'greater than or equal to'?",
+      "codeHtml": "",
+      "correct": ">=",
+      "options": [
+        ">=",
+        ">",
+        "<=",
+        "=>"
+      ],
+      "explanation": ">= checks if the left side is greater than or equal to the right side."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which comparison operator means 'not equal to'?",
+      "codeHtml": "",
+      "correct": "!=",
+      "options": [
+        "!=",
+        "==",
+        "<>",
+        "not="
+      ],
+      "explanation": "!= checks if two values are not equal."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which logical operator returns True only if both conditions are True?",
+      "codeHtml": "",
+      "correct": "and",
+      "options": [
+        "and",
+        "or",
+        "not",
+        "&&"
+      ],
+      "explanation": "Python uses 'and' (not &&) to check if both conditions are True."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which logical operator returns True if at least one condition is True?",
+      "codeHtml": "",
+      "correct": "or",
+      "options": [
+        "or",
+        "and",
+        "not",
+        "||"
+      ],
+      "explanation": "Python uses 'or' (not ||)."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which correctly writes an if statement checking if <span class=\"green-keyword\">score</span> is greater than or equal to <span class=\"green-keyword\">50</span>?",
+      "codeHtml": "",
+      "correct": "if score >= 50:",
+      "options": [
+        "if score >= 50:",
+        "if score => 50:",
+        "if score >= 50",
+        "if score >= 50;"
+      ],
+      "explanation": "if statements need a colon at the end. => is not a valid operator."
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Type the operator that means: <span class=\"green-keyword\">less than or equal to</span>",
+      "correctCode": "<=",
+      "explanation": "Format: <="
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Type the operator that means: <span class=\"green-keyword\">equal to</span>",
+      "correctCode": "==",
+      "explanation": "Format: =="
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Type the logical operator that returns True if <span class=\"green-keyword\">either</span> condition is True",
+      "correctCode": "or",
+      "explanation": "Format: or"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Type the if statement that checks if <span class=\"green-keyword\">lives</span> is not equal to <span class=\"green-keyword\">0</span>",
+      "correctCode": "^if\\s+lives\\s*!=\\s*0\\s*:$",
+      "useRegex": true,
+      "explanation": "Format: if lives != 0:"
+    },
+    {
+      "type": "extended_run",
+      "prompt": "Write a script that stores a <b>score</b> and an <b>age</b> of your choice as numbers, then writes an if statement for each:\n- Print a message if score is greater than or equal to 50\n- Print a message if age is greater than or equal to 18",
+      "explanation": "Format:\nscore = 75\nage = 20\nif score >= 50:\n    print('Passed!')\nif age >= 18:\n    print('Adult')",
+      "expectedVars": [
+        {
+          "name": "score",
+          "type": "number",
+          "strict": false
+        },
+        {
+          "name": "age",
+          "type": "number",
+          "strict": false
+        }
+      ],
+      "testValues": [
+        {
+          "name": "score",
+          "value": 75
+        },
+        {
+          "name": "age",
+          "value": 20
+        }
+      ],
+      "expectedOutput": [
+        {
+          "containsStr": "Passed"
+        },
+        {
+          "containsStr": "Adult"
+        }
+      ]
+    }
+  ]
+}

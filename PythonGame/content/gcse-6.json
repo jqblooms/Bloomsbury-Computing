@@ -1,0 +1,42 @@
+{
+  "title": "GCSE Exam 6: Sentinel Value Total",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to calculate the total of a list of integers entered by the user until a sentinel value is entered.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter an integer</li><li>repeatedly take inputs until the user enters -1</li><li>add each integer (except -1) to a running total</li><li>output the final total in an appropriate message</li></ul>",
+      "explanation": "Format:\ntotal = 0\nnum = int(input('Enter a number: '))\nwhile num != -1:\n    total += num\n    num = int(input('Enter a number: '))\nprint('Total:', total)",
+      "testCases": [
+        {
+          "inputs": [
+            "5",
+            "10",
+            "3",
+            "-1"
+          ],
+          "expectedOutput": [
+            "18"
+          ]
+        },
+        {
+          "inputs": [
+            "1",
+            "2",
+            "3",
+            "-1"
+          ],
+          "expectedOutput": [
+            "6"
+          ]
+        },
+        {
+          "inputs": [
+            "-1"
+          ],
+          "expectedOutput": [
+            "0"
+          ]
+        }
+      ]
+    }
+  ]
+}

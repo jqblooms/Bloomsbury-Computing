@@ -1,0 +1,206 @@
+{
+  "type": "mcq",
+  "inputLabel": "Identify the Error Type",
+  "questions": [
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Hello World\"</span>)",
+      "correctCode": "No Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Helo World\"</span>)",
+      "correctCode": "Logic Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Hello World)</span>",
+      "correctCode": "Syntax Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Game Over\"</span>)",
+      "correctCode": "No Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Gmae Over\"</span>)",
+      "correctCode": "Logic Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span><span class=\"code-string\">\"Game Over\"</span>)",
+      "correctCode": "Syntax Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"High Score\"</span>)",
+      "correctCode": "No Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"High Socre\"</span>)",
+      "correctCode": "Logic Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"High Score\"</span>",
+      "correctCode": "Syntax Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">High Score\"</span>)",
+      "correctCode": "Syntax Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">Print</span>(<span class=\"code-string\">\"Level Up\"</span>)",
+      "correctCode": "Syntax Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">prnt</span>(<span class=\"code-string\">\"Level Up\"</span>)",
+      "correctCode": "Syntax Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Lvel Up\"</span>)",
+      "correctCode": "Logic Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Level Up\"</span>)",
+      "correctCode": "No Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span><span class=\"code-string\">\"Player One\"</span>",
+      "correctCode": "Syntax Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Playre One\"</span>)",
+      "correctCode": "Logic Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Player One\"</span>)",
+      "correctCode": "No Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">PRINT</span>(<span class=\"code-string\">\"Ready\"</span>)",
+      "correctCode": "Syntax Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Raedy\"</span>)",
+      "correctCode": "Logic Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Ready\"</span>)",
+      "correctCode": "No Error",
+      "optionsRaw": [
+        "Syntax Error",
+        "Logic Error",
+        "Runtime Error",
+        "No Error"
+      ]
+    }
+  ]
+}

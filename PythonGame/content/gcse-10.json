@@ -1,0 +1,42 @@
+{
+  "title": "GCSE Exam 10: Running Total to 100",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to keep adding integers entered by the user until the total reaches at least 100.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>set the running total to 0</li><li>repeat this process while the total is less than 100</li><li>inside the loop, prompt the user to enter an integer and add it to the total</li><li>output the final total in an appropriate message</li></ul>",
+      "explanation": "Format:\ntotal = 0\nwhile total < 100:\n    num = int(input('Enter a number: '))\n    total += num\nprint('Total:', total)",
+      "testCases": [
+        {
+          "inputs": [
+            "30",
+            "30",
+            "30",
+            "30"
+          ],
+          "expectedOutput": [
+            "120"
+          ]
+        },
+        {
+          "inputs": [
+            "100"
+          ],
+          "expectedOutput": [
+            "100"
+          ]
+        },
+        {
+          "inputs": [
+            "25",
+            "25",
+            "25",
+            "25"
+          ],
+          "expectedOutput": [
+            "100"
+          ]
+        }
+      ]
+    }
+  ]
+}

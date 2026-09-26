@@ -1,0 +1,45 @@
+{
+  "type": "text",
+  "inputLabel": "Write input code (e.g. name = input(\"...\")):",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">name</span> and store it</span>",
+      "correctCode": "name\\s*=\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true,
+      "notice": "name = input(\"Prompt\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">age</span> and store it</span>",
+      "correctCode": "age\\s*=\\s*int\\s*\\(\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true,
+      "notice": "Remember to cast to int:\nage = int(input(\"...\"))"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">city</span> and store it</span>",
+      "correctCode": "city\\s*=\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">score</span> (number) and store it</span>",
+      "correctCode": "score\\s*=\\s*int\\s*\\(\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true,
+      "notice": "Scores are numbers!"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">hobby</span> and store it</span>",
+      "correctCode": "hobby\\s*=\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">school</span> and store it</span>",
+      "correctCode": "school\\s*=\\s*input\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "triggerConsole": true
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "title": "GCSE Exam 3: Student Pass Count",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to count how many students pass an exam out of 20 students.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter each student's result as pass or fail</li><li>repeat this input process for 20 students</li><li>count how many students receive a result of pass</li><li>output the number of passes in an appropriate message</li></ul>",
+      "explanation": "Format:\npasses = 0\nfor i in range(20):\n    result = input('Enter result: ')\n    if result == 'pass':\n        passes += 1\nprint('Number of passes:', passes)",
+      "testCases": [
+        {
+          "inputs": [
+            "pass",
+            "pass",
+            "pass",
+            "fail",
+            "fail",
+            "pass",
+            "pass",
+            "fail",
+            "pass",
+            "pass",
+            "fail",
+            "fail",
+            "pass",
+            "pass",
+            "pass",
+            "fail",
+            "pass",
+            "pass",
+            "fail",
+            "pass"
+          ],
+          "expectedOutput": [
+            "13"
+          ]
+        },
+        {
+          "inputs": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "expectedOutput": [
+            "0"
+          ]
+        },
+        {
+          "inputs": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "expectedOutput": [
+            "20"
+          ]
+        }
+      ]
+    }
+  ]
+}

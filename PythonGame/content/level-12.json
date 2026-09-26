@@ -1,0 +1,48 @@
+{
+  "type": "var_print",
+  "inputLabel": "Define variable & print with message (e.g. print(\"Msg\", var)):",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">name</span> in a variable and <span class=\"green-keyword\">print</span> it alongside a message.</span>",
+      "correctCode": "name\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*[\\r\\n]+\\s*print\\s*\\(\\s*(?:(?:\"[^\"]*\"|'[^']*')\\s*,\\s*name|name\\s*,\\s*(?:\"[^\"]*\"|'[^']*'))\\s*\\)",
+      "useRegex": true,
+      "notice": "Syntax:\nvariable = \"value\"\nprint(\"Message\", variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">age</span> in a variable and <span class=\"green-keyword\">display</span> it with a message.</span>",
+      "correctCode": "age\\s*=\\s*\\d+\\s*[\\r\\n]+\\s*print\\s*\\(\\s*(?:(?:\"[^\"]*\"|'[^']*')\\s*,\\s*age|age\\s*,\\s*(?:\"[^\"]*\"|'[^']*'))\\s*\\)",
+      "useRegex": true,
+      "notice": "Syntax:\nvariable = number\nprint(\"Message\", variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">city</span> in a variable and <span class=\"green-keyword\">output</span> it with a message.</span>",
+      "correctCode": "city\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*[\\r\\n]+\\s*print\\s*\\(\\s*(?:(?:\"[^\"]*\"|'[^']*')\\s*,\\s*city|city\\s*,\\s*(?:\"[^\"]*\"|'[^']*'))\\s*\\)",
+      "useRegex": true,
+      "notice": "Don't forget to separate the message and variable with a comma."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">score</span> in a variable and <span class=\"green-keyword\">show</span> it alongside a message.</span>",
+      "correctCode": "score\\s*=\\s*\\d+\\s*[\\r\\n]+\\s*print\\s*\\(\\s*(?:(?:\"[^\"]*\"|'[^']*')\\s*,\\s*score|score\\s*,\\s*(?:\"[^\"]*\"|'[^']*'))\\s*\\)",
+      "useRegex": true,
+      "notice": "Syntax:\nvar = 100\nprint(\"Score:\", var)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">hobby</span> in a variable and <span class=\"green-keyword\">print</span> it with a message.</span>",
+      "correctCode": "hobby\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*[\\r\\n]+\\s*print\\s*\\(\\s*(?:(?:\"[^\"]*\"|'[^']*')\\s*,\\s*hobby|hobby\\s*,\\s*(?:\"[^\"]*\"|'[^']*'))\\s*\\)",
+      "useRegex": true,
+      "notice": "Use a comma inside the print brackets."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">school</span> in a variable and <span class=\"green-keyword\">write</span> it with a message.</span>",
+      "correctCode": "school\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*[\\r\\n]+\\s*print\\s*\\(\\s*(?:(?:\"[^\"]*\"|'[^']*')\\s*,\\s*school|school\\s*,\\s*(?:\"[^\"]*\"|'[^']*'))\\s*\\)",
+      "useRegex": true,
+      "notice": "Syntax:\nvariable = \"value\"\nprint(\"Text\", variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">superpower</span> in a variable and <span class=\"green-keyword\">display</span> it with a message.</span>",
+      "correctCode": "superpower\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*[\\r\\n]+\\s*print\\s*\\(\\s*(?:(?:\"[^\"]*\"|'[^']*')\\s*,\\s*superpower|superpower\\s*,\\s*(?:\"[^\"]*\"|'[^']*'))\\s*\\)",
+      "useRegex": true,
+      "notice": "Remember the comma!\nprint(\"My power is\", var)"
+    }
+  ]
+}

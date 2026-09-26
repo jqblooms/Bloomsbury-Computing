@@ -1,0 +1,90 @@
+{
+  "type": "text",
+  "inputLabel": "Write the list:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">names</span> with the items <span class=\"green-keyword\">Michael</span>, <span class=\"green-keyword\">Ryan</span>, <span class=\"green-keyword\">Henry</span></span>",
+      "correctCode": "^\\s*names\\s*=\\s*\\[\\s*[\"']Michael[\"']\\s*,\\s*[\"']Ryan[\"']\\s*,\\s*[\"']Henry[\"']\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "names = [\"Michael\", \"Ryan\", \"Henry\"]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">fruits</span> with the items <span class=\"green-keyword\">apple</span>, <span class=\"green-keyword\">banana</span>, <span class=\"green-keyword\">cherry</span></span>",
+      "correctCode": "^\\s*fruits\\s*=\\s*\\[\\s*[\"']apple[\"']\\s*,\\s*[\"']banana[\"']\\s*,\\s*[\"']cherry[\"']\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "fruits = [\"apple\", \"banana\", \"cherry\"]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">scores</span> with the numbers <span class=\"green-keyword\">10</span>, <span class=\"green-keyword\">20</span>, <span class=\"green-keyword\">30</span></span>",
+      "correctCode": "^\\s*scores\\s*=\\s*\\[\\s*10\\s*,\\s*20\\s*,\\s*30\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "scores = [10, 20, 30]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">colours</span> with the items <span class=\"green-keyword\">red</span>, <span class=\"green-keyword\">blue</span>, <span class=\"green-keyword\">green</span></span>",
+      "correctCode": "^\\s*colours\\s*=\\s*\\[\\s*[\"']red[\"']\\s*,\\s*[\"']blue[\"']\\s*,\\s*[\"']green[\"']\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "colours = [\"red\", \"blue\", \"green\"]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">pets</span> with the items <span class=\"green-keyword\">cat</span>, <span class=\"green-keyword\">dog</span>, <span class=\"green-keyword\">fish</span></span>",
+      "correctCode": "^\\s*pets\\s*=\\s*\\[\\s*[\"']cat[\"']\\s*,\\s*[\"']dog[\"']\\s*,\\s*[\"']fish[\"']\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "pets = [\"cat\", \"dog\", \"fish\"]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">cities</span> with the items <span class=\"green-keyword\">London</span>, <span class=\"green-keyword\">Paris</span>, <span class=\"green-keyword\">Rome</span></span>",
+      "correctCode": "^\\s*cities\\s*=\\s*\\[\\s*[\"']London[\"']\\s*,\\s*[\"']Paris[\"']\\s*,\\s*[\"']Rome[\"']\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "cities = [\"London\", \"Paris\", \"Rome\"]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">ages</span> with the numbers <span class=\"green-keyword\">15</span>, <span class=\"green-keyword\">22</span>, <span class=\"green-keyword\">37</span></span>",
+      "correctCode": "^\\s*ages\\s*=\\s*\\[\\s*15\\s*,\\s*22\\s*,\\s*37\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "ages = [15, 22, 37]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">planets</span> with the items <span class=\"green-keyword\">Mars</span>, <span class=\"green-keyword\">Venus</span>, <span class=\"green-keyword\">Earth</span></span>",
+      "correctCode": "^\\s*planets\\s*=\\s*\\[\\s*[\"']Mars[\"']\\s*,\\s*[\"']Venus[\"']\\s*,\\s*[\"']Earth[\"']\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "planets = [\"Mars\", \"Venus\", \"Earth\"]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">days</span> with the items <span class=\"green-keyword\">Monday</span>, <span class=\"green-keyword\">Tuesday</span>, <span class=\"green-keyword\">Wednesday</span></span>",
+      "correctCode": "^\\s*days\\s*=\\s*\\[\\s*[\"']Monday[\"']\\s*,\\s*[\"']Tuesday[\"']\\s*,\\s*[\"']Wednesday[\"']\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "days = [\"Monday\", \"Tuesday\", \"Wednesday\"]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">numbers</span> with the values <span class=\"green-keyword\">1</span>, <span class=\"green-keyword\">2</span>, <span class=\"green-keyword\">3</span></span>",
+      "correctCode": "^\\s*numbers\\s*=\\s*\\[\\s*1\\s*,\\s*2\\s*,\\s*3\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "numbers = [1, 2, 3]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">players</span> with the items <span class=\"green-keyword\">Alice</span>, <span class=\"green-keyword\">Bob</span>, <span class=\"green-keyword\">Charlie</span></span>",
+      "correctCode": "^\\s*players\\s*=\\s*\\[\\s*[\"']Alice[\"']\\s*,\\s*[\"']Bob[\"']\\s*,\\s*[\"']Charlie[\"']\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "players = [\"Alice\", \"Bob\", \"Charlie\"]"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create an empty list called <span class=\"green-keyword\">items</span></span>",
+      "correctCode": "^\\s*items\\s*=\\s*\\[\\s*\\]\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "items = []"
+    }
+  ]
+}

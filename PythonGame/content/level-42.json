@@ -1,0 +1,75 @@
+{
+  "type": "multiline",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">score</span> to 0, then loop while <span class=\"green-keyword\">score is less than 5</span> - printing <span class=\"green-keyword\">score</span> first, then increasing it by 1</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "score\\s*=\\s*0\\s*\\nwhile\\s+score\\s*<\\s*5\\s*:\\n\\s+print\\s*\\(\\s*score\\s*\\)\\n\\s+score\\s*\\+=\\s*1",
+      "useRegex": true,
+      "notice": "score = 0\nwhile score < 5:\n    print(score)\n    score += 1"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">lives</span> to 3, then loop while <span class=\"green-keyword\">lives is greater than 0</span> - printing <span class=\"green-keyword\">lives</span> first, then decreasing it by 1</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "lives\\s*=\\s*3\\s*\\nwhile\\s+lives\\s*>\\s*0\\s*:\\n\\s+print\\s*\\(\\s*lives\\s*\\)\\n\\s+lives\\s*-=\\s*1",
+      "useRegex": true,
+      "notice": "lives = 3\nwhile lives > 0:\n    print(lives)\n    lives -= 1"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">count</span> to 0, then loop while <span class=\"green-keyword\">count is less than 10</span> - printing <span class=\"green-keyword\">count</span> first, then increasing it by 2</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "count\\s*=\\s*0\\s*\\nwhile\\s+count\\s*<\\s*10\\s*:\\n\\s+print\\s*\\(\\s*count\\s*\\)\\n\\s+count\\s*\\+=\\s*2",
+      "useRegex": true,
+      "notice": "count = 0\nwhile count < 10:\n    print(count)\n    count += 2"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">health</span> to 50, then loop while <span class=\"green-keyword\">health is greater than 0</span> - printing <span class=\"green-keyword\">health</span> first, then decreasing it by 10</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "health\\s*=\\s*50\\s*\\nwhile\\s+health\\s*>\\s*0\\s*:\\n\\s+print\\s*\\(\\s*health\\s*\\)\\n\\s+health\\s*-=\\s*10",
+      "useRegex": true,
+      "notice": "health = 50\nwhile health > 0:\n    print(health)\n    health -= 10"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">distance</span> to 0, then loop while <span class=\"green-keyword\">distance is less than 20</span> - printing <span class=\"green-keyword\">distance</span> first, then increasing it by 5</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "distance\\s*=\\s*0\\s*\\nwhile\\s+distance\\s*<\\s*20\\s*:\\n\\s+print\\s*\\(\\s*distance\\s*\\)\\n\\s+distance\\s*\\+=\\s*5",
+      "useRegex": true,
+      "notice": "distance = 0\nwhile distance < 20:\n    print(distance)\n    distance += 5"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">fuel</span> to 20, then loop while <span class=\"green-keyword\">fuel is greater than 0</span> - printing <span class=\"green-keyword\">fuel</span> first, then decreasing it by 4</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "fuel\\s*=\\s*20\\s*\\nwhile\\s+fuel\\s*>\\s*0\\s*:\\n\\s+print\\s*\\(\\s*fuel\\s*\\)\\n\\s+fuel\\s*-=\\s*4",
+      "useRegex": true,
+      "notice": "fuel = 20\nwhile fuel > 0:\n    print(fuel)\n    fuel -= 4"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">speed</span> to 0, then loop while <span class=\"green-keyword\">speed is less than 60</span> - printing <span class=\"green-keyword\">speed</span> first, then increasing it by 10</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "speed\\s*=\\s*0\\s*\\nwhile\\s+speed\\s*<\\s*60\\s*:\\n\\s+print\\s*\\(\\s*speed\\s*\\)\\n\\s+speed\\s*\\+=\\s*10",
+      "useRegex": true,
+      "notice": "speed = 0\nwhile speed < 60:\n    print(speed)\n    speed += 10"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">temperature</span> to 100, then loop while <span class=\"green-keyword\">temperature is greater than 0</span> - printing <span class=\"green-keyword\">temperature</span> first, then decreasing it by 20</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "temperature\\s*=\\s*100\\s*\\nwhile\\s+temperature\\s*>\\s*0\\s*:\\n\\s+print\\s*\\(\\s*temperature\\s*\\)\\n\\s+temperature\\s*-=\\s*20",
+      "useRegex": true,
+      "notice": "temperature = 100\nwhile temperature > 0:\n    print(temperature)\n    temperature -= 20"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">balance</span> to 0, then loop while <span class=\"green-keyword\">balance is less than 100</span> - printing <span class=\"green-keyword\">balance</span> first, then increasing it by 25</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "balance\\s*=\\s*0\\s*\\nwhile\\s+balance\\s*<\\s*100\\s*:\\n\\s+print\\s*\\(\\s*balance\\s*\\)\\n\\s+balance\\s*\\+=\\s*25",
+      "useRegex": true,
+      "notice": "balance = 0\nwhile balance < 100:\n    print(balance)\n    balance += 25"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Set <span class=\"green-keyword\">attempts</span> to 5, then loop while <span class=\"green-keyword\">attempts is greater than 0</span> - printing <span class=\"green-keyword\">attempts</span> first, then decreasing it by 1</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "attempts\\s*=\\s*5\\s*\\nwhile\\s+attempts\\s*>\\s*0\\s*:\\n\\s+print\\s*\\(\\s*attempts\\s*\\)\\n\\s+attempts\\s*-=\\s*1",
+      "useRegex": true,
+      "notice": "attempts = 5\nwhile attempts > 0:\n    print(attempts)\n    attempts -= 1"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "title": "GCSE Exam 9: Countdown",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to output a countdown from a starting number down to 0.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter a starting integer</li><li>repeatedly output the current value and decrease it by 1</li><li>continue this process until the value reaches 0</li><li>output an appropriate final message</li></ul>",
+      "explanation": "Format:\nnum = int(input('Enter starting number: '))\nwhile num > 0:\n    print(num)\n    num -= 1\nprint('Blast off!')",
+      "testCases": [
+        {
+          "inputs": [
+            "3"
+          ],
+          "expectedOutput": [
+            "3",
+            "2",
+            "1",
+            "Blast"
+          ]
+        },
+        {
+          "inputs": [
+            "5"
+          ],
+          "expectedOutput": [
+            "5",
+            "4",
+            "3",
+            "2",
+            "1"
+          ]
+        },
+        {
+          "inputs": [
+            "1"
+          ],
+          "expectedOutput": [
+            "1"
+          ]
+        }
+      ]
+    }
+  ]
+}

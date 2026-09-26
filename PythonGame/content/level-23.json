@@ -1,0 +1,72 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct Python logical operator:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator: <span class=\"green-keyword\">Returns True if both sides are True</span></span>",
+      "correctCode": "and",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "and",
+        "or",
+        "not",
+        "&&"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator: <span class=\"green-keyword\">Returns True if either side is True</span></span>",
+      "correctCode": "or",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "or",
+        "and",
+        "not",
+        "||"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator: <span class=\"green-keyword\">Returns True if the value is NOT True</span></span>",
+      "correctCode": "not",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "not",
+        "and",
+        "or",
+        "!"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator: <span class=\"green-keyword\">Returns True only when the left and right sides are True</span></span>",
+      "correctCode": "and",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "and",
+        "or",
+        "not",
+        "&"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator: <span class=\"green-keyword\">Returns True if at least one side is True</span></span>",
+      "correctCode": "or",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "or",
+        "and",
+        "not",
+        "any"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator: <span class=\"green-keyword\">Returns True when the original condition is not True</span></span>",
+      "correctCode": "not",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "not",
+        "and",
+        "or",
+        "is not"
+      ]
+    }
+  ]
+}

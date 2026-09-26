@@ -1,0 +1,122 @@
+{
+  "title": "Exam 5: Range & For Loops",
+  "questions": [
+    {
+      "type": "mcq",
+      "prompt": "What numbers are included in range(1, 10)?",
+      "codeHtml": "",
+      "correct": "1, 2, 3, 4, 5, 6, 7, 8, 9",
+      "options": [
+        "1, 2, 3, 4, 5, 6, 7, 8, 9",
+        "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+        "0, 1, 2, 3, 4, 5, 6, 7, 8, 9",
+        "2, 3, 4, 5, 6, 7, 8, 9"
+      ],
+      "explanation": "range(1, 10) starts at 1 and stops BEFORE 10, so the last number is 9."
+    },
+    {
+      "type": "mcq",
+      "prompt": "What numbers are included in range(5)?",
+      "codeHtml": "",
+      "correct": "0, 1, 2, 3, 4",
+      "options": [
+        "0, 1, 2, 3, 4",
+        "1, 2, 3, 4, 5",
+        "0, 1, 2, 3, 4, 5",
+        "1, 2, 3, 4"
+      ],
+      "explanation": "range(5) with one argument always starts at 0 and stops BEFORE 5."
+    },
+    {
+      "type": "mcq",
+      "prompt": "What is the LAST number produced by range(3, 9)?",
+      "codeHtml": "",
+      "correct": "8",
+      "options": [
+        "8",
+        "9",
+        "7",
+        "3"
+      ],
+      "explanation": "range(3, 9) stops BEFORE 9, so the last number is 8."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which line starts a loop that runs exactly 10 times?",
+      "codeHtml": "",
+      "correct": "for i in range(10):",
+      "options": [
+        "for i in range(10):",
+        "for i in range(1, 10):",
+        "for i in range(0, 11):",
+        "for i in range(10)"
+      ],
+      "explanation": "range(10) produces 10 numbers (0 to 9). Don't forget the colon!"
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which of these is a valid first line of a for loop?",
+      "codeHtml": "",
+      "correct": "for i in range(1, 8):",
+      "options": [
+        "for i in range(1, 8):",
+        "for i range(1, 8):",
+        "for i in range(1, 8)",
+        "for in range(1, 8):"
+      ],
+      "explanation": "A for loop needs 'in', brackets around the range, and a colon at the end."
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the range() call that produces: <span class=\"green-keyword\">5, 6, 7, 8, 9</span>",
+      "correctCode": "^\\s*range\\s*\\(\\s*5\\s*,\\s*10\\s*\\)\\s*$",
+      "useRegex": true,
+      "explanation": "Format: range(5, 10)"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the range() call that produces: <span class=\"green-keyword\">0, 2, 4, 6, 8</span>",
+      "correctCode": "^\\s*range\\s*\\(\\s*0\\s*,\\s*10\\s*,\\s*2\\s*\\)\\s*$",
+      "useRegex": true,
+      "explanation": "Format: range(0, 10, 2)"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the first line only of a loop where <span class=\"green-keyword\">i goes from 1 to 10</span> (include the colon)",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*1\\s*,\\s*11\\s*\\)\\s*:$",
+      "useRegex": true,
+      "explanation": "Format: for i in range(1, 11):"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the first line only of a loop that <span class=\"green-keyword\">runs exactly 3 times</span> (include the colon)",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*3\\s*\\)\\s*:|^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*3\\s*\\)\\s*:$",
+      "useRegex": true,
+      "explanation": "Format: for i in range(3):"
+    },
+    {
+      "type": "extended_run",
+      "prompt": "Write a complete for loop that prints every number from <b>1 to 5</b>",
+      "explanation": "Format:\nfor i in range(1, 6):\n    print(i)",
+      "expectedVars": [],
+      "testValues": [],
+      "expectedOutput": [
+        {
+          "containsStr": "1"
+        },
+        {
+          "containsStr": "2"
+        },
+        {
+          "containsStr": "3"
+        },
+        {
+          "containsStr": "4"
+        },
+        {
+          "containsStr": "5"
+        }
+      ]
+    }
+  ]
+}

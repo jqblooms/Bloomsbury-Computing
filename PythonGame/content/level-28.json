@@ -1,0 +1,126 @@
+{
+  "type": "multiline",
+  "inputLabel": "Write the full if/else block:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">coins</span> is greater than or equal to <span class=\"green-keyword\">5</span>, print 'You have enough!', otherwise print 'Not enough coins.'</span>",
+      "correctCode": "if\\s+coins\\s*>=\\s*5\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if coins >= 5:\n    print('You have enough!')\nelse:\n    print('Not enough coins.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">health</span> is less than <span class=\"green-keyword\">10</span>, print 'Low health!', otherwise print 'Health is fine.'</span>",
+      "correctCode": "if\\s+health\\s*<\\s*10\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if health < 10:\n    print('Low health!')\nelse:\n    print('Health is fine.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">score</span> is equal to <span class=\"green-keyword\">100</span>, print 'Perfect!', otherwise print 'Keep trying.'</span>",
+      "correctCode": "if\\s+score\\s*==\\s*100\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if score == 100:\n    print('Perfect!')\nelse:\n    print('Keep trying.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">level</span> is greater than <span class=\"green-keyword\">3</span>, print 'Advanced player', otherwise print 'Beginner player.'</span>",
+      "correctCode": "if\\s+level\\s*>\\s*3\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if level > 3:\n    print('Advanced player')\nelse:\n    print('Beginner player.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">lives</span> is not equal to <span class=\"green-keyword\">0</span>, print 'Still alive!', otherwise print 'Game over.'</span>",
+      "correctCode": "if\\s+lives\\s*!=\\s*0\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if lives != 0:\n    print('Still alive!')\nelse:\n    print('Game over.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">age</span> is less than or equal to <span class=\"green-keyword\">12</span>, print 'Child ticket', otherwise print 'Adult ticket.'</span>",
+      "correctCode": "if\\s+age\\s*<=\\s*12\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if age <= 12:\n    print('Child ticket')\nelse:\n    print('Adult ticket.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">temperature</span> is greater than <span class=\"green-keyword\">30</span>, print 'Too hot!', otherwise print 'Nice weather.'</span>",
+      "correctCode": "if\\s+temperature\\s*>\\s*30\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if temperature > 30:\n    print('Too hot!')\nelse:\n    print('Nice weather.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">speed</span> is greater than or equal to <span class=\"green-keyword\">100</span>, print 'Too fast!', otherwise print 'Safe speed.'</span>",
+      "correctCode": "if\\s+speed\\s*>=\\s*100\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if speed >= 100:\n    print('Too fast!')\nelse:\n    print('Safe speed.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">attempts</span> is equal to <span class=\"green-keyword\">3</span>, print 'No more tries!', otherwise print 'Try again.'</span>",
+      "correctCode": "if\\s+attempts\\s*==\\s*3\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if attempts == 3:\n    print('No more tries!')\nelse:\n    print('Try again.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">battery</span> is less than or equal to <span class=\"green-keyword\">20</span>, print 'Low battery!', otherwise print 'Battery OK.'</span>",
+      "correctCode": "if\\s+battery\\s*<=\\s*20\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if battery <= 20:\n    print('Low battery!')\nelse:\n    print('Battery OK.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">errors</span> is not equal to <span class=\"green-keyword\">0</span>, print 'Fix your code!', otherwise print 'All clear.'</span>",
+      "correctCode": "if\\s+errors\\s*!=\\s*0\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if errors != 0:\n    print('Fix your code!')\nelse:\n    print('All clear.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">players</span> is greater than <span class=\"green-keyword\">1</span>, print 'Multiplayer mode!', otherwise print 'Single player mode.'</span>",
+      "correctCode": "if\\s+players\\s*>\\s*1\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if players > 1:\n    print('Multiplayer mode!')\nelse:\n    print('Single player mode.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">fuel</span> is less than <span class=\"green-keyword\">5</span>, print 'Low fuel!', otherwise print 'Fuel is fine.'</span>",
+      "correctCode": "if\\s+fuel\\s*<\\s*5\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if fuel < 5:\n    print('Low fuel!')\nelse:\n    print('Fuel is fine.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">rank</span> is equal to <span class=\"green-keyword\">1</span>, print 'You are first place!', otherwise print 'Keep going.'</span>",
+      "correctCode": "if\\s+rank\\s*==\\s*1\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if rank == 1:\n    print('You are first place!')\nelse:\n    print('Keep going.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">time</span> is greater than or equal to <span class=\"green-keyword\">60</span>, print 'Time is up!', otherwise print 'Keep going.'</span>",
+      "correctCode": "if\\s+time\\s*>=\\s*60\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if time >= 60:\n    print('Time is up!')\nelse:\n    print('Keep going.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">stock</span> is less than or equal to <span class=\"green-keyword\">0</span>, print 'Out of stock!', otherwise print 'In stock.'</span>",
+      "correctCode": "if\\s+stock\\s*<=\\s*0\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if stock <= 0:\n    print('Out of stock!')\nelse:\n    print('In stock.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">password</span> is not equal to <span class=\"green-keyword\">1234</span>, print 'Wrong password!', otherwise print 'Access granted.'</span>",
+      "correctCode": "if\\s+password\\s*!=\\s*1234\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if password != 1234:\n    print('Wrong password!')\nelse:\n    print('Access granted.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">distance</span> is greater than <span class=\"green-keyword\">100</span>, print 'Long journey!', otherwise print 'Short trip.'</span>",
+      "correctCode": "if\\s+distance\\s*>\\s*100\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if distance > 100:\n    print('Long journey!')\nelse:\n    print('Short trip.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">grade</span> is greater than or equal to <span class=\"green-keyword\">50</span>, print 'You passed!', otherwise print 'You failed.'</span>",
+      "correctCode": "if\\s+grade\\s*>=\\s*50\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if grade >= 50:\n    print('You passed!')\nelse:\n    print('You failed.')"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">If <span class=\"green-keyword\">hunger</span> is greater than <span class=\"green-keyword\">7</span>, print 'Time to eat!', otherwise print 'Not hungry yet.'</span>",
+      "correctCode": "if\\s+hunger\\s*>\\s*7\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)\\nelse\\s*:\\n\\s+print\\s*\\(\\s*[\"'][^\"']+[\"']\\s*\\)",
+      "useRegex": true,
+      "notice": "if hunger > 7:\n    print('Time to eat!')\nelse:\n    print('Not hungry yet.')"
+    }
+  ]
+}

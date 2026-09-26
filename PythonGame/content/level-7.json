@@ -1,0 +1,94 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct variable creation:",
+  "questions": [
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called name</span>",
+      "correctCode": "name = \"Ryan\"",
+      "optionsRaw": [
+        "name = \"Ryan\"",
+        "name = Ryan",
+        "SET name TO \"Ryan\"",
+        "age = 15"
+      ],
+      "explanation": "Strings must be wrapped in quotes. Variable assignment uses '='."
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called age</span>",
+      "correctCode": "age = 16",
+      "optionsRaw": [
+        "age = 16",
+        "age : 16",
+        "SET age TO 16",
+        "name = \"Sam\""
+      ],
+      "explanation": "Numbers do not need quotes. Python uses '=' for assignment."
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called city</span>",
+      "correctCode": "city = \"London\"",
+      "optionsRaw": [
+        "city = \"London\"",
+        "city = London",
+        "city : \"London\"",
+        "SET city TO \"London\""
+      ],
+      "explanation": "Strings must be wrapped in quotes."
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called school</span>",
+      "correctCode": "school = \"Hogwarts\"",
+      "optionsRaw": [
+        "school = \"Hogwarts\"",
+        "school = Hogwarts",
+        "SET school = \"Hogwarts\"",
+        "school == \"Hogwarts\""
+      ],
+      "explanation": "Missing quotes causes a NameError."
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called hobby</span>",
+      "correctCode": "hobby = \"Coding\"",
+      "optionsRaw": [
+        "hobby = \"Coding\"",
+        "hobby = Coding",
+        "SET hobby TO \"Coding\"",
+        "hobby : \"Coding\""
+      ],
+      "explanation": "Strings must be wrapped in quotes."
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called score</span>",
+      "correctCode": "score = 100",
+      "optionsRaw": [
+        "score = 100",
+        "score : 100",
+        "SET score TO 100",
+        "score == 100"
+      ],
+      "explanation": "Numbers do not need quotes. Use '=' to assign."
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called power</span>",
+      "correctCode": "power = \"Flying\"",
+      "optionsRaw": [
+        "power = \"Flying\"",
+        "power = Flying",
+        "SET power TO \"Flying\"",
+        "power = 10"
+      ],
+      "explanation": "Strings must be wrapped in quotes."
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called year</span>",
+      "correctCode": "year = 9",
+      "optionsRaw": [
+        "year = 9",
+        "year : 9",
+        "SET year TO 9",
+        "year == 9"
+      ],
+      "explanation": "Numbers do not need quotes."
+    }
+  ]
+}

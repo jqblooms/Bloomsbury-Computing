@@ -1,0 +1,116 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct code to print every item:",
+  "questions": [
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>fruits</span> = [<span class='code-string'>\"apple\"</span>, <span class='code-string'>\"banana\"</span>, <span class='code-string'>\"cherry\"</span>]</pre>",
+      "correctCode": "for i in range(len(fruits)):\n    print(fruits[i])",
+      "optionsRaw": [
+        "for i in range(len(fruits)):\n    print(fruits[i])",
+        "for i in range(len(fruits)):\n    print(fruits)",
+        "for i in range(fruits):\n    print(fruits[i])",
+        "for i in len(fruits):\n    print(fruits[i])"
+      ],
+      "notice": "for i in range(len(fruits)):\\n    print(fruits[i]) - range(len()) gives you the indexes, then fruits[i] gets each item"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>names</span> = [<span class='code-string'>\"Alice\"</span>, <span class='code-string'>\"Bob\"</span>, <span class='code-string'>\"Charlie\"</span>]</pre>",
+      "correctCode": "for i in range(len(names)):\n    print(names[i])",
+      "optionsRaw": [
+        "for i in range(len(names)):\n    print(names[i])",
+        "for i in range(len(names)):\n    print(names)",
+        "for i in range(names):\n    print(names[i])",
+        "for i in len(range(names)):\n    print(names[i])"
+      ],
+      "notice": "for i in range(len(names)):\\n    print(names[i]) - i is the index, names[i] is the item at that index"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>scores</span> = [<span class='code-num'>10</span>, <span class='code-num'>20</span>, <span class='code-num'>30</span>]</pre>",
+      "correctCode": "for i in range(len(scores)):\n    print(scores[i])",
+      "optionsRaw": [
+        "for i in range(len(scores)):\n    print(scores[i])",
+        "for i in range(len(scores)):\n    print(i)",
+        "for i in range(scores):\n    print(scores[i])",
+        "for i in len(scores):\n    print(scores[i])"
+      ],
+      "notice": "for i in range(len(scores)):\\n    print(scores[i]) - printing i would print the index number, not the score"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>colours</span> = [<span class='code-string'>\"red\"</span>, <span class='code-string'>\"blue\"</span>, <span class='code-string'>\"green\"</span>]</pre>",
+      "correctCode": "for i in range(len(colours)):\n    print(colours[i])",
+      "optionsRaw": [
+        "for i in range(len(colours)):\n    print(colours[i])",
+        "for i in range(len(colours)):\n    print(colours)",
+        "for colour in range(len(colours)):\n    print(colour)",
+        "for i in len(colours):\n    print(colours[i])"
+      ],
+      "notice": "for i in range(len(colours)):\\n    print(colours[i]) - range(len()) gives indexes 0, 1, 2 and colours[i] gets each item"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>planets</span> = [<span class='code-string'>\"Mars\"</span>, <span class='code-string'>\"Venus\"</span>, <span class='code-string'>\"Earth\"</span>]</pre>",
+      "correctCode": "for i in range(len(planets)):\n    print(planets[i])",
+      "optionsRaw": [
+        "for i in range(len(planets)):\n    print(planets[i])",
+        "for i in range(len(planets)):\n    print(planets)",
+        "for i in range(planets):\n    print(planets[i])",
+        "for i in range(len(planets))\n    print(planets[i])"
+      ],
+      "notice": "for i in range(len(planets)):\\n    print(planets[i]) - don't forget the colon at the end of the for line"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>pets</span> = [<span class='code-string'>\"cat\"</span>, <span class='code-string'>\"dog\"</span>, <span class='code-string'>\"fish\"</span>]</pre>",
+      "correctCode": "for i in range(len(pets)):\n    print(pets[i])",
+      "optionsRaw": [
+        "for i in range(len(pets)):\n    print(pets[i])",
+        "for i in range(len(pets)):\n    print(pets[0])",
+        "for i in len(range(pets)):\n    print(pets[i])",
+        "for i in range(pets):\n    print(pets[i])"
+      ],
+      "notice": "for i in range(len(pets)):\\n    print(pets[i]) - print(pets[0]) would just print the first item every time"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>cities</span> = [<span class='code-string'>\"London\"</span>, <span class='code-string'>\"Paris\"</span>, <span class='code-string'>\"Rome\"</span>]</pre>",
+      "correctCode": "for i in range(len(cities)):\n    print(cities[i])",
+      "optionsRaw": [
+        "for i in range(len(cities)):\n    print(cities[i])",
+        "for i in range(len(cities)):\n    print(cities)",
+        "for i in range(len(cities)):\n    print(i)",
+        "for i in len(cities):\n    print(cities[i])"
+      ],
+      "notice": "for i in range(len(cities)):\\n    print(cities[i]) - len() cannot be used directly in a for loop without range()"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>numbers</span> = [<span class='code-num'>5</span>, <span class='code-num'>10</span>, <span class='code-num'>15</span>, <span class='code-num'>20</span>]</pre>",
+      "correctCode": "for i in range(len(numbers)):\n    print(numbers[i])",
+      "optionsRaw": [
+        "for i in range(len(numbers)):\n    print(numbers[i])",
+        "for i in range(len(numbers)):\n    print(numbers)",
+        "for i in range(numbers):\n    print(numbers[i])",
+        "for i in range(len(numbers)):\n    print(i)"
+      ],
+      "notice": "for i in range(len(numbers)):\\n    print(numbers[i]) - range(numbers) would fail because numbers is a list not an integer"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>days</span> = [<span class='code-string'>\"Monday\"</span>, <span class='code-string'>\"Tuesday\"</span>, <span class='code-string'>\"Wednesday\"</span>]</pre>",
+      "correctCode": "for i in range(len(days)):\n    print(days[i])",
+      "optionsRaw": [
+        "for i in range(len(days)):\n    print(days[i])",
+        "for i in range(len(days)):\n    print(days)",
+        "for i in range(days):\n    print(days[i])",
+        "for i in len(days):\n    print(days[i])"
+      ],
+      "notice": "for i in range(len(days)):\\n    print(days[i]) - range(len()) is the standard pattern for looping through a list by index"
+    },
+    {
+      "html": "<b>Print every item in this list:</b><pre class='code-block-display'><span class='code-var'>ages</span> = [<span class='code-num'>15</span>, <span class='code-num'>22</span>, <span class='code-num'>37</span>]</pre>",
+      "correctCode": "for i in range(len(ages)):\n    print(ages[i])",
+      "optionsRaw": [
+        "for i in range(len(ages)):\n    print(ages[i])",
+        "for i in range(len(ages)):\n    print(ages)",
+        "for i in range(ages):\n    print(ages[i])",
+        "for i in range(len(ages))\n    print(ages[i])"
+      ],
+      "notice": "for i in range(len(ages)):\\n    print(ages[i]) - missing colon at the end of the for line is a syntax error"
+    }
+  ]
+}

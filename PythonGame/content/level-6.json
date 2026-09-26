@@ -1,0 +1,87 @@
+{
+  "type": "multistep",
+  "inputLabel": "Write pairs of # comments and print code:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem; line-height:1.2; display:block; white-space:normal;\">First <span class=\"green-keyword\">output your name</span>, then <span class=\"green-keyword\">write your age</span></span>",
+      "tasks": [
+        {
+          "verb": "output",
+          "noun": "name",
+          "validation": "string"
+        },
+        {
+          "verb": "write",
+          "noun": "age",
+          "validation": "number",
+          "min": 10,
+          "max": 99
+        }
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem; line-height:1.2; display:block; white-space:normal;\">First <span class=\"green-keyword\">show your hobby</span>, then <span class=\"green-keyword\">print your city</span></span>",
+      "tasks": [
+        {
+          "verb": "show",
+          "noun": "hobby",
+          "validation": "string"
+        },
+        {
+          "verb": "print",
+          "noun": "city",
+          "validation": "string"
+        }
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem; line-height:1.2; display:block; white-space:normal;\">First <span class=\"green-keyword\">display your school year</span>, then <span class=\"green-keyword\">output your name</span></span>",
+      "tasks": [
+        {
+          "verb": "display",
+          "noun": "year",
+          "validation": "number",
+          "min": 1,
+          "max": 13
+        },
+        {
+          "verb": "output",
+          "noun": "name",
+          "validation": "string"
+        }
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem; line-height:1.2; display:block; white-space:normal;\">First <span class=\"green-keyword\">write your favorite food</span>, then <span class=\"green-keyword\">display your age</span></span>",
+      "tasks": [
+        {
+          "verb": "write",
+          "noun": "food",
+          "validation": "string"
+        },
+        {
+          "verb": "display",
+          "noun": "age",
+          "validation": "number",
+          "min": 1,
+          "max": 100
+        }
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem; line-height:1.2; display:block; white-space:normal;\">First <span class=\"green-keyword\">print your city</span>, then <span class=\"green-keyword\">show your hobby</span></span>",
+      "tasks": [
+        {
+          "verb": "print",
+          "noun": "city",
+          "validation": "string"
+        },
+        {
+          "verb": "show",
+          "noun": "hobby",
+          "validation": "string"
+        }
+      ]
+    }
+  ]
+}

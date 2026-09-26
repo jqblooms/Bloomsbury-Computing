@@ -1,0 +1,54 @@
+{
+  "title": "GCSE Exam 1: Items Sold Algorithm",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to calculate the total number of items sold in a week.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter the number of items sold each day</li><li>repeat this input process for 7 days</li><li>calculate the total number of items sold</li><li>output the total in an appropriate message</li></ul>",
+      "explanation": "Format:\ntotal = 0\nfor i in range(7):\n    items = int(input('Enter items sold: '))\n    total += items\nprint('Total items sold:', total)",
+      "testCases": [
+        {
+          "inputs": [
+            "10",
+            "20",
+            "15",
+            "5",
+            "30",
+            "25",
+            "10"
+          ],
+          "expectedOutput": [
+            "115"
+          ]
+        },
+        {
+          "inputs": [
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1"
+          ],
+          "expectedOutput": [
+            "7"
+          ]
+        },
+        {
+          "inputs": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "100"
+          ],
+          "expectedOutput": [
+            "100"
+          ]
+        }
+      ]
+    }
+  ]
+}

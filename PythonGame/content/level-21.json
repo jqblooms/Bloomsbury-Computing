@@ -1,0 +1,138 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct Python if statement:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">temperature is greater than 30</span></span>",
+      "correctCode": "if temperature > 30:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if temperature > 30:",
+        "if temperature >= 30:",
+        "if temperature < 30:",
+        "if temperature => 30:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">weight is greater than 100</span></span>",
+      "correctCode": "if weight > 100:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if weight > 100:",
+        "if weight < 100:",
+        "if weight == 100:",
+        "if weight >= 100:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">timer is less than 10</span></span>",
+      "correctCode": "if timer < 10:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if timer < 10:",
+        "if timer <= 10:",
+        "if timer > 10:",
+        "if timer =< 10:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">price is less than 50</span></span>",
+      "correctCode": "if price < 50:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if price < 50:",
+        "if price > 50:",
+        "if price <= 50:",
+        "if price == 50:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">balance is greater than or equal to 0</span></span>",
+      "correctCode": "if balance >= 0:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if balance >= 0:",
+        "if balance > 0:",
+        "if balance <= 0:",
+        "if balance => 0:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">experience is greater than or equal to 1000</span></span>",
+      "correctCode": "if experience >= 1000:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if experience >= 1000:",
+        "if experience > 1000:",
+        "if experience < 1000:",
+        "if experience == 1000:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">health is less than or equal to 5</span></span>",
+      "correctCode": "if health <= 5:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if health <= 5:",
+        "if health < 5:",
+        "if health =< 5:",
+        "if health >= 5:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">distance is less than or equal to 100</span></span>",
+      "correctCode": "if distance <= 100:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if distance <= 100:",
+        "if distance < 100:",
+        "if distance == 100:",
+        "if distance != 100:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">role is exactly equal to 'player'</span></span>",
+      "correctCode": "if role == 'player':",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if role == 'player':",
+        "if role = 'player':",
+        "if role != 'player':",
+        "if role === 'player':"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">lives is equal to 3</span></span>",
+      "correctCode": "if lives == 3:",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if lives == 3:",
+        "if lives = 3:",
+        "if lives >= 3:",
+        "if lives != 3:"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">state does not equal 'idle'</span></span>",
+      "correctCode": "if state != 'idle':",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if state != 'idle':",
+        "if state == 'idle':",
+        "if state !== 'idle':",
+        "if state not= 'idle':"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Checks if <span class=\"green-keyword\">password does not equal '1234'</span></span>",
+      "correctCode": "if password != '1234':",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "if password != '1234':",
+        "if password == '1234':",
+        "if password <> '1234':",
+        "if password =! '1234':"
+      ]
+    }
+  ]
+}

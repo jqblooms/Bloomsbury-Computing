@@ -1,0 +1,90 @@
+{
+  "type": "text",
+  "inputLabel": "Write the increment or decrement:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">increases score by 5</span></span>",
+      "correctCode": "^\\s*score\\s*\\+=\\s*5\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "score += 5"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">decreases lives by 1</span></span>",
+      "correctCode": "^\\s*lives\\s*-=\\s*1\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "lives -= 1"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">increases total by 10</span></span>",
+      "correctCode": "^\\s*total\\s*\\+=\\s*10\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "total += 10"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">decreases health by 25</span></span>",
+      "correctCode": "^\\s*health\\s*-=\\s*25\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "health -= 25"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">increases count by 1</span></span>",
+      "correctCode": "^\\s*count\\s*\\+=\\s*1\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "count += 1"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">decreases fuel by 3</span></span>",
+      "correctCode": "^\\s*fuel\\s*-=\\s*3\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "fuel -= 3"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">increases balance by 50</span></span>",
+      "correctCode": "^\\s*balance\\s*\\+=\\s*50\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "balance += 50"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">decreases temperature by 2</span></span>",
+      "correctCode": "^\\s*temperature\\s*-=\\s*2\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "temperature -= 2"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">increases speed by 15</span></span>",
+      "correctCode": "^\\s*speed\\s*\\+=\\s*15\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "speed += 15"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">decreases attempts by 1</span></span>",
+      "correctCode": "^\\s*attempts\\s*-=\\s*1\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "attempts -= 1"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">increases distance by 100</span></span>",
+      "correctCode": "^\\s*distance\\s*\\+=\\s*100\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "distance += 100"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code that <span class=\"green-keyword\">decreases battery by 5</span></span>",
+      "correctCode": "^\\s*battery\\s*-=\\s*5\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "battery -= 5"
+    }
+  ]
+}

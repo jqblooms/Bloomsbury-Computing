@@ -1,0 +1,116 @@
+{
+  "levelName": "While Loops with Print",
+  "type": "mcq",
+  "questions": [
+    {
+      "html": "<b>Which code sets <code>score</code> to 0, then loops while <code>score</code> is less than 5 - printing <code>score</code> first, then increasing it by 1?</b>",
+      "correctCode": "score = 0\nwhile score < 5:\n    print(score)\n    score += 1",
+      "optionsRaw": [
+        "score = 0\nwhile score < 5:\n    print(score)\n    score += 1",
+        "score = 0\nwhile score < 5:\n    score += 1\n    print(score)",
+        "score = 0\nwhile score < 5:\n    print(score)\n    score -= 1",
+        "score = 0\nwhile score > 5:\n    print(score)\n    score += 1"
+      ],
+      "notice": "score = 0\nwhile score < 5:\n    print(score)\n    score += 1"
+    },
+    {
+      "html": "<b>Which code sets <code>lives</code> to 3, then loops while <code>lives</code> is greater than 0 - printing <code>lives</code> first, then decreasing it by 1?</b>",
+      "correctCode": "lives = 3\nwhile lives > 0:\n    print(lives)\n    lives -= 1",
+      "optionsRaw": [
+        "lives = 3\nwhile lives > 0:\n    print(lives)\n    lives -= 1",
+        "lives = 3\nwhile lives > 0:\n    lives -= 1\n    print(lives)",
+        "lives = 3\nwhile lives < 0:\n    print(lives)\n    lives -= 1",
+        "lives = 3\nwhile lives > 0:\n    print(lives)\n    lives += 1"
+      ],
+      "notice": "lives = 3\nwhile lives > 0:\n    print(lives)\n    lives -= 1"
+    },
+    {
+      "html": "<b>Which code sets <code>count</code> to 0, then loops while <code>count</code> is less than 10 - printing <code>count</code> first, then increasing it by 2?</b>",
+      "correctCode": "count = 0\nwhile count < 10:\n    print(count)\n    count += 2",
+      "optionsRaw": [
+        "count = 0\nwhile count < 10:\n    print(count)\n    count += 2",
+        "count = 0\nwhile count < 10:\n    print(count)\n    count += 1",
+        "count = 0\nwhile count > 10:\n    print(count)\n    count += 2",
+        "count = 0\nwhile count < 10:\n    count += 2\n    print(count)"
+      ],
+      "notice": "count = 0\nwhile count < 10:\n    print(count)\n    count += 2"
+    },
+    {
+      "html": "<b>Which code sets <code>health</code> to 50, then loops while <code>health</code> is greater than 0 - printing <code>health</code> first, then decreasing it by 10?</b>",
+      "correctCode": "health = 50\nwhile health > 0:\n    print(health)\n    health -= 10",
+      "optionsRaw": [
+        "health = 50\nwhile health > 0:\n    print(health)\n    health -= 10",
+        "health = 50\nwhile health > 0:\n    print(health)\n    health += 10",
+        "health = 50\nwhile health < 0:\n    print(health)\n    health -= 10",
+        "health = 0\nwhile health > 0:\n    print(health)\n    health -= 10"
+      ],
+      "notice": "health = 50\nwhile health > 0:\n    print(health)\n    health -= 10"
+    },
+    {
+      "html": "<b>Which code sets <code>distance</code> to 0, then loops while <code>distance</code> is less than 20 - printing <code>distance</code> first, then increasing it by 5?</b>",
+      "correctCode": "distance = 0\nwhile distance < 20:\n    print(distance)\n    distance += 5",
+      "optionsRaw": [
+        "distance = 0\nwhile distance < 20:\n    print(distance)\n    distance += 5",
+        "distance = 0\nwhile distance < 20:\n    distance += 5\n    print(distance)",
+        "distance = 0\nwhile distance <= 20:\n    print(distance)\n    distance += 5",
+        "distance = 0\nwhile distance < 20:\n    print(distance)\n    distance -= 5"
+      ],
+      "notice": "distance = 0\nwhile distance < 20:\n    print(distance)\n    distance += 5"
+    },
+    {
+      "html": "<b>Which code sets <code>fuel</code> to 20, then loops while <code>fuel</code> is greater than 0 - printing <code>fuel</code> first, then decreasing it by 4?</b>",
+      "correctCode": "fuel = 20\nwhile fuel > 0:\n    print(fuel)\n    fuel -= 4",
+      "optionsRaw": [
+        "fuel = 20\nwhile fuel > 0:\n    print(fuel)\n    fuel -= 4",
+        "fuel = 20\nwhile fuel > 0:\n    fuel -= 4\n    print(fuel)",
+        "fuel = 20\nwhile fuel > 0:\n    print(fuel)\n    fuel += 4",
+        "fuel = 0\nwhile fuel > 0:\n    print(fuel)\n    fuel -= 4"
+      ],
+      "notice": "fuel = 20\nwhile fuel > 0:\n    print(fuel)\n    fuel -= 4"
+    },
+    {
+      "html": "<b>Which code sets <code>speed</code> to 0, then loops while <code>speed</code> is less than 60 - printing <code>speed</code> first, then increasing it by 10?</b>",
+      "correctCode": "speed = 0\nwhile speed < 60:\n    print(speed)\n    speed += 10",
+      "optionsRaw": [
+        "speed = 0\nwhile speed < 60:\n    print(speed)\n    speed += 10",
+        "speed = 0\nwhile speed < 60:\n    speed += 10\n    print(speed)",
+        "speed = 0\nwhile speed > 60:\n    print(speed)\n    speed += 10",
+        "speed = 0\nwhile speed < 60:\n    print(speed)\n    speed -= 10"
+      ],
+      "notice": "speed = 0\nwhile speed < 60:\n    print(speed)\n    speed += 10"
+    },
+    {
+      "html": "<b>Which code sets <code>temperature</code> to 100, then loops while <code>temperature</code> is greater than 0 - printing <code>temperature</code> first, then decreasing it by 20?</b>",
+      "correctCode": "temperature = 100\nwhile temperature > 0:\n    print(temperature)\n    temperature -= 20",
+      "optionsRaw": [
+        "temperature = 100\nwhile temperature > 0:\n    print(temperature)\n    temperature -= 20",
+        "temperature = 100\nwhile temperature > 0:\n    temperature -= 20\n    print(temperature)",
+        "temperature = 100\nwhile temperature < 0:\n    print(temperature)\n    temperature -= 20",
+        "temperature = 100\nwhile temperature > 0:\n    print(temperature)\n    temperature += 20"
+      ],
+      "notice": "temperature = 100\nwhile temperature > 0:\n    print(temperature)\n    temperature -= 20"
+    },
+    {
+      "html": "<b>Which code sets <code>balance</code> to 0, then loops while <code>balance</code> is less than 100 - printing <code>balance</code> first, then increasing it by 25?</b>",
+      "correctCode": "balance = 0\nwhile balance < 100:\n    print(balance)\n    balance += 25",
+      "optionsRaw": [
+        "balance = 0\nwhile balance < 100:\n    print(balance)\n    balance += 25",
+        "balance = 0\nwhile balance < 100:\n    print(balance)\n    balance += 10",
+        "balance = 0\nwhile balance <= 100:\n    print(balance)\n    balance += 25",
+        "balance = 100\nwhile balance < 100:\n    print(balance)\n    balance += 25"
+      ],
+      "notice": "balance = 0\nwhile balance < 100:\n    print(balance)\n    balance += 25"
+    },
+    {
+      "html": "<b>Which code sets <code>attempts</code> to 5, then loops while <code>attempts</code> is greater than 0 - printing <code>attempts</code> first, then decreasing it by 1?</b>",
+      "correctCode": "attempts = 5\nwhile attempts > 0:\n    print(attempts)\n    attempts -= 1",
+      "optionsRaw": [
+        "attempts = 5\nwhile attempts > 0:\n    print(attempts)\n    attempts -= 1",
+        "attempts = 5\nwhile attempts > 0:\n    attempts -= 1\n    print(attempts)",
+        "attempts = 5\nwhile attempts < 0:\n    print(attempts)\n    attempts -= 1",
+        "attempts = 0\nwhile attempts > 0:\n    print(attempts)\n    attempts -= 1"
+      ],
+      "notice": "attempts = 5\nwhile attempts > 0:\n    print(attempts)\n    attempts -= 1"
+    }
+  ]
+}

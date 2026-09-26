@@ -1,0 +1,75 @@
+{
+  "type": "multiline",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">fruits</span> with <span class=\"green-keyword\">apple</span>, <span class=\"green-keyword\">banana</span>, <span class=\"green-keyword\">cherry</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "fruits\\s*=\\s*\\[\\s*[\"']apple[\"']\\s*,\\s*[\"']banana[\"']\\s*,\\s*[\"']cherry[\"']\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*fruits\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*fruits\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "fruits = [\"apple\", \"banana\", \"cherry\"]\nfor i in range(len(fruits)):\n    print(fruits[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">names</span> with <span class=\"green-keyword\">Alice</span>, <span class=\"green-keyword\">Bob</span>, <span class=\"green-keyword\">Charlie</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "names\\s*=\\s*\\[\\s*[\"']Alice[\"']\\s*,\\s*[\"']Bob[\"']\\s*,\\s*[\"']Charlie[\"']\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*names\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*names\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "names = [\"Alice\", \"Bob\", \"Charlie\"]\nfor i in range(len(names)):\n    print(names[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">scores</span> with <span class=\"green-keyword\">10</span>, <span class=\"green-keyword\">20</span>, <span class=\"green-keyword\">30</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "scores\\s*=\\s*\\[\\s*10\\s*,\\s*20\\s*,\\s*30\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*scores\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*scores\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "scores = [10, 20, 30]\nfor i in range(len(scores)):\n    print(scores[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">colours</span> with <span class=\"green-keyword\">red</span>, <span class=\"green-keyword\">blue</span>, <span class=\"green-keyword\">green</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "colours\\s*=\\s*\\[\\s*[\"']red[\"']\\s*,\\s*[\"']blue[\"']\\s*,\\s*[\"']green[\"']\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*colours\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*colours\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "colours = [\"red\", \"blue\", \"green\"]\nfor i in range(len(colours)):\n    print(colours[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">planets</span> with <span class=\"green-keyword\">Mars</span>, <span class=\"green-keyword\">Venus</span>, <span class=\"green-keyword\">Earth</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "planets\\s*=\\s*\\[\\s*[\"']Mars[\"']\\s*,\\s*[\"']Venus[\"']\\s*,\\s*[\"']Earth[\"']\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*planets\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*planets\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "planets = [\"Mars\", \"Venus\", \"Earth\"]\nfor i in range(len(planets)):\n    print(planets[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">pets</span> with <span class=\"green-keyword\">cat</span>, <span class=\"green-keyword\">dog</span>, <span class=\"green-keyword\">fish</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "pets\\s*=\\s*\\[\\s*[\"']cat[\"']\\s*,\\s*[\"']dog[\"']\\s*,\\s*[\"']fish[\"']\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*pets\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*pets\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "pets = [\"cat\", \"dog\", \"fish\"]\nfor i in range(len(pets)):\n    print(pets[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">cities</span> with <span class=\"green-keyword\">London</span>, <span class=\"green-keyword\">Paris</span>, <span class=\"green-keyword\">Rome</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "cities\\s*=\\s*\\[\\s*[\"']London[\"']\\s*,\\s*[\"']Paris[\"']\\s*,\\s*[\"']Rome[\"']\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*cities\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*cities\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "cities = [\"London\", \"Paris\", \"Rome\"]\nfor i in range(len(cities)):\n    print(cities[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">numbers</span> with <span class=\"green-keyword\">5</span>, <span class=\"green-keyword\">10</span>, <span class=\"green-keyword\">15</span>, <span class=\"green-keyword\">20</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "numbers\\s*=\\s*\\[\\s*5\\s*,\\s*10\\s*,\\s*15\\s*,\\s*20\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*numbers\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*numbers\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "numbers = [5, 10, 15, 20]\nfor i in range(len(numbers)):\n    print(numbers[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">days</span> with <span class=\"green-keyword\">Monday</span>, <span class=\"green-keyword\">Tuesday</span>, <span class=\"green-keyword\">Wednesday</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "days\\s*=\\s*\\[\\s*[\"']Monday[\"']\\s*,\\s*[\"']Tuesday[\"']\\s*,\\s*[\"']Wednesday[\"']\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*days\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*days\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "days = [\"Monday\", \"Tuesday\", \"Wednesday\"]\nfor i in range(len(days)):\n    print(days[i])"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a list called <span class=\"green-keyword\">ages</span> with <span class=\"green-keyword\">15</span>, <span class=\"green-keyword\">22</span>, <span class=\"green-keyword\">37</span>, then print every item using a for loop</span>",
+      "inputLabel": "Write the code:",
+      "correctCode": "ages\\s*=\\s*\\[\\s*15\\s*,\\s*22\\s*,\\s*37\\s*\\]\\s*\\nfor\\s+i\\s+in\\s+range\\s*\\(\\s*(?:0\\s*,\\s*)?len\\s*\\(\\s*ages\\s*\\)\\s*\\)\\s*:\\n\\s+print\\s*\\(\\s*ages\\s*\\[\\s*i\\s*\\]\\s*\\)",
+      "useRegex": true,
+      "notice": "ages = [15, 22, 37]\nfor i in range(len(ages)):\n    print(ages[i])"
+    }
+  ]
+}

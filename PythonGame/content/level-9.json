@@ -1,0 +1,83 @@
+{
+  "type": "multiline",
+  "inputLabel": "Type comment & variable code (Enter for new line):",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a <span class=\"green-keyword\">variable</span> called <span class=\"green-keyword\">name</span> with an appropriate comment.</span>",
+      "keywords": [
+        "variable",
+        "name"
+      ],
+      "correctCode": "name\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true,
+      "notice": "Example:\n# Create variable name\nname = \"Ryan\""
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a <span class=\"green-keyword\">variable</span> called <span class=\"green-keyword\">age</span> with an appropriate comment.</span>",
+      "keywords": [
+        "variable",
+        "age"
+      ],
+      "correctCode": "age\\s*=\\s*\\d+",
+      "useRegex": true,
+      "notice": "Example:\n# Create variable age\nage = 15"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a <span class=\"green-keyword\">variable</span> called <span class=\"green-keyword\">city</span> with an appropriate comment.</span>",
+      "keywords": [
+        "variable",
+        "city"
+      ],
+      "correctCode": "city\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true,
+      "notice": "Strings need quotes!"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a <span class=\"green-keyword\">variable</span> called <span class=\"green-keyword\">score</span> with an appropriate comment.</span>",
+      "keywords": [
+        "variable",
+        "score"
+      ],
+      "correctCode": "score\\s*=\\s*\\d+",
+      "useRegex": true,
+      "notice": "Numbers do not use quotes."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a <span class=\"green-keyword\">variable</span> called <span class=\"green-keyword\">favourite_hobby</span> with an appropriate comment.</span>",
+      "keywords": [
+        "variable",
+        "hobby"
+      ],
+      "correctCode": "favourite_hobby\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true,
+      "notice": "Comment must contain 'variable' and 'hobby'."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a <span class=\"green-keyword\">variable</span> called <span class=\"green-keyword\">school</span> with an appropriate comment.</span>",
+      "keywords": [
+        "variable",
+        "school"
+      ],
+      "correctCode": "school\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a <span class=\"green-keyword\">variable</span> called <span class=\"green-keyword\">year</span> with an appropriate comment.</span>",
+      "keywords": [
+        "variable",
+        "year"
+      ],
+      "correctCode": "year\\s*=\\s*\\d+",
+      "useRegex": true
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Create a <span class=\"green-keyword\">variable</span> called <span class=\"green-keyword\">superpower</span> with an appropriate comment.</span>",
+      "keywords": [
+        "variable",
+        "superpower"
+      ],
+      "correctCode": "superpower\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true
+    }
+  ]
+}

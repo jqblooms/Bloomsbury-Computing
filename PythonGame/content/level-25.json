@@ -1,0 +1,156 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct if statement:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">coins</span> is greater than or equal to <span class=\"green-keyword\">5</span>?</span>",
+      "correctCode": "if coins >= 5:\n    print('You have enough!')",
+      "optionsRaw": [
+        "if coins >= 5:\n    print('You have enough!')",
+        "if coins > 5:\n    print('You have enough!')",
+        "if coins <= 5:\n    print('You have enough!')",
+        "if coins == 5:\n    print('You have enough!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">health</span> is less than <span class=\"green-keyword\">10</span>?</span>",
+      "correctCode": "if health < 10:\n    print('Low health!')",
+      "optionsRaw": [
+        "if health < 10:\n    print('Low health!')",
+        "if health <= 10:\n    print('Low health!')",
+        "if health > 10:\n    print('Low health!')",
+        "if health != 10:\n    print('Low health!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">score</span> is exactly <span class=\"green-keyword\">100</span>?</span>",
+      "correctCode": "if score == 100:\n    print('Perfect!')",
+      "optionsRaw": [
+        "if score == 100:\n    print('Perfect!')",
+        "if score = 100:\n    print('Perfect!')",
+        "if score != 100:\n    print('Perfect!')",
+        "if score >= 100:\n    print('Perfect!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">level</span> is greater than <span class=\"green-keyword\">3</span>?</span>",
+      "correctCode": "if level > 3:\n    print('Advanced!')",
+      "optionsRaw": [
+        "if level > 3:\n    print('Advanced!')",
+        "if level >= 3:\n    print('Advanced!')",
+        "if level < 3:\n    print('Advanced!')",
+        "if level == 3:\n    print('Advanced!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">lives</span> is not equal to <span class=\"green-keyword\">0</span>?</span>",
+      "correctCode": "if lives != 0:\n    print('Still alive!')",
+      "optionsRaw": [
+        "if lives != 0:\n    print('Still alive!')",
+        "if lives == 0:\n    print('Still alive!')",
+        "if lives > 0:\n    print('Still alive!')",
+        "if lives < 0:\n    print('Still alive!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">age</span> is less than or equal to <span class=\"green-keyword\">12</span>?</span>",
+      "correctCode": "if age <= 12:\n    print('Child ticket')",
+      "optionsRaw": [
+        "if age <= 12:\n    print('Child ticket')",
+        "if age < 12:\n    print('Child ticket')",
+        "if age >= 12:\n    print('Child ticket')",
+        "if age == 12:\n    print('Child ticket')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">temperature</span> is greater than <span class=\"green-keyword\">30</span>?</span>",
+      "correctCode": "if temperature > 30:\n    print('Too hot!')",
+      "optionsRaw": [
+        "if temperature > 30:\n    print('Too hot!')",
+        "if temperature >= 30:\n    print('Too hot!')",
+        "if temperature < 30:\n    print('Too hot!')",
+        "if temperature != 30:\n    print('Too hot!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">speed</span> is greater than or equal to <span class=\"green-keyword\">100</span>?</span>",
+      "correctCode": "if speed >= 100:\n    print('Too fast!')",
+      "optionsRaw": [
+        "if speed >= 100:\n    print('Too fast!')",
+        "if speed > 100:\n    print('Too fast!')",
+        "if speed <= 100:\n    print('Too fast!')",
+        "if speed == 100:\n    print('Too fast!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">attempts</span> is equal to <span class=\"green-keyword\">3</span>?</span>",
+      "correctCode": "if attempts == 3:\n    print('No more tries!')",
+      "optionsRaw": [
+        "if attempts == 3:\n    print('No more tries!')",
+        "if attempts = 3:\n    print('No more tries!')",
+        "if attempts != 3:\n    print('No more tries!')",
+        "if attempts > 3:\n    print('No more tries!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">battery</span> is less than or equal to <span class=\"green-keyword\">20</span>?</span>",
+      "correctCode": "if battery <= 20:\n    print('Low battery!')",
+      "optionsRaw": [
+        "if battery <= 20:\n    print('Low battery!')",
+        "if battery < 20:\n    print('Low battery!')",
+        "if battery >= 20:\n    print('Low battery!')",
+        "if battery == 20:\n    print('Low battery!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">errors</span> is not equal to <span class=\"green-keyword\">0</span>?</span>",
+      "correctCode": "if errors != 0:\n    print('Fix your code!')",
+      "optionsRaw": [
+        "if errors != 0:\n    print('Fix your code!')",
+        "if errors == 0:\n    print('Fix your code!')",
+        "if errors > 0:\n    print('Fix your code!')",
+        "if errors <= 0:\n    print('Fix your code!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">grade</span> is greater than or equal to <span class=\"green-keyword\">50</span>?</span>",
+      "correctCode": "if grade >= 50:\n    print('You passed!')",
+      "optionsRaw": [
+        "if grade >= 50:\n    print('You passed!')",
+        "if grade > 50:\n    print('You passed!')",
+        "if grade <= 50:\n    print('You passed!')",
+        "if grade == 50:\n    print('You passed!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">fuel</span> is less than <span class=\"green-keyword\">5</span>?</span>",
+      "correctCode": "if fuel < 5:\n    print('Low fuel!')",
+      "optionsRaw": [
+        "if fuel < 5:\n    print('Low fuel!')",
+        "if fuel <= 5:\n    print('Low fuel!')",
+        "if fuel > 5:\n    print('Low fuel!')",
+        "if fuel != 5:\n    print('Low fuel!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">rank</span> is equal to <span class=\"green-keyword\">1</span>?</span>",
+      "correctCode": "if rank == 1:\n    print('First place!')",
+      "optionsRaw": [
+        "if rank == 1:\n    print('First place!')",
+        "if rank = 1:\n    print('First place!')",
+        "if rank != 1:\n    print('First place!')",
+        "if rank >= 1:\n    print('First place!')"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which correctly prints a message if <span class=\"green-keyword\">stock</span> is less than or equal to <span class=\"green-keyword\">0</span>?</span>",
+      "correctCode": "if stock <= 0:\n    print('Out of stock!')",
+      "optionsRaw": [
+        "if stock <= 0:\n    print('Out of stock!')",
+        "if stock < 0:\n    print('Out of stock!')",
+        "if stock >= 0:\n    print('Out of stock!')",
+        "if stock == 0:\n    print('Out of stock!')"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct list:",
+  "questions": [
+    {
+      "html": "<b>Which creates a list with the items <code>Michael</code>, <code>Ryan</code>, <code>Henry</code>?</b>",
+      "correctCode": "names = [\"Michael\", \"Ryan\", \"Henry\"]",
+      "optionsRaw": [
+        "names = [\"Michael\", \"Ryan\", \"Henry\"]",
+        "names = (\"Michael\", \"Ryan\", \"Henry\")",
+        "names = [\"Michael\" \"Ryan\" \"Henry\"]",
+        "names = [\"Michael\", \"Ryan\", \"Harry\"]"
+      ],
+      "notice": "names = [\"Michael\", \"Ryan\", \"Henry\"] - use square brackets and separate items with commas"
+    },
+    {
+      "html": "<b>Which creates a list with the numbers <code>1</code>, <code>2</code>, <code>3</code>?</b>",
+      "correctCode": "numbers = [1, 2, 3]",
+      "optionsRaw": [
+        "numbers = [1, 2, 3]",
+        "numbers = (1, 2, 3)",
+        "numbers = [1 2 3]",
+        "numbers = {1, 2, 3}"
+      ],
+      "notice": "numbers = [1, 2, 3] - lists use square brackets, not round or curly"
+    },
+    {
+      "html": "<b>Which creates a list with the colours <code>red</code>, <code>blue</code>, <code>green</code>?</b>",
+      "correctCode": "colours = [\"red\", \"blue\", \"green\"]",
+      "optionsRaw": [
+        "colours = [\"red\", \"blue\", \"green\"]",
+        "colours = [\"red\", \"blue\" \"green\"]",
+        "colours = [red, blue, green]",
+        "colours = (\"red\", \"blue\", \"green\")"
+      ],
+      "notice": "colours = [\"red\", \"blue\", \"green\"] - strings need quotes and items need commas between them"
+    },
+    {
+      "html": "<b>Which creates a list with the items <code>cat</code>, <code>dog</code>, <code>fish</code>?</b>",
+      "correctCode": "pets = [\"cat\", \"dog\", \"fish\"]",
+      "optionsRaw": [
+        "pets = [\"cat\", \"dog\", \"fish\"]",
+        "pets = [\"cat\", \"dog\", \"bird\"]",
+        "pets = \"cat\", \"dog\", \"fish\"",
+        "pets = [\"cat\" \"dog\" \"fish\"]"
+      ],
+      "notice": "pets = [\"cat\", \"dog\", \"fish\"] - don't forget the square brackets around the whole list"
+    },
+    {
+      "html": "<b>Which creates a list with the scores <code>10</code>, <code>20</code>, <code>30</code>?</b>",
+      "correctCode": "scores = [10, 20, 30]",
+      "optionsRaw": [
+        "scores = [10, 20, 30]",
+        "scores = [10, 20 30]",
+        "scores = (10, 20, 30)",
+        "scores = [10, 20, 300]"
+      ],
+      "notice": "scores = [10, 20, 30] - every item in the list needs a comma after it except the last"
+    },
+    {
+      "html": "<b>Which creates a list with the cities <code>London</code>, <code>Paris</code>, <code>Rome</code>?</b>",
+      "correctCode": "cities = [\"London\", \"Paris\", \"Rome\"]",
+      "optionsRaw": [
+        "cities = [\"London\", \"Paris\", \"Rome\"]",
+        "cities = [London, Paris, Rome]",
+        "cities = [\"London\", \"Paris\", \"Milan\"]",
+        "cities = [\"London\" \"Paris\" \"Rome\"]"
+      ],
+      "notice": "cities = [\"London\", \"Paris\", \"Rome\"] - city names are strings so they need quote marks"
+    },
+    {
+      "html": "<b>Which creates a list with the items <code>True</code>, <code>False</code>, <code>True</code>?</b>",
+      "correctCode": "flags = [True, False, True]",
+      "optionsRaw": [
+        "flags = [True, False, True]",
+        "flags = [true, false, true]",
+        "flags = (True, False, True)",
+        "flags = [True False True]"
+      ],
+      "notice": "flags = [True, False, True] - Python booleans are capitalised: True and False"
+    },
+    {
+      "html": "<b>Which creates a list with the fruits <code>apple</code>, <code>banana</code>, <code>cherry</code>?</b>",
+      "correctCode": "fruits = [\"apple\", \"banana\", \"cherry\"]",
+      "optionsRaw": [
+        "fruits = [\"apple\", \"banana\", \"cherry\"]",
+        "fruits = [\"apple\", \"banana\", \"cherry\"",
+        "fruits = [\"apple\", \"mango\", \"cherry\"]",
+        "fruits = {\"apple\", \"banana\", \"cherry\"}"
+      ],
+      "notice": "fruits = [\"apple\", \"banana\", \"cherry\"] - make sure the closing square bracket is there"
+    },
+    {
+      "html": "<b>Which creates a list with the ages <code>15</code>, <code>22</code>, <code>37</code>?</b>",
+      "correctCode": "ages = [15, 22, 37]",
+      "optionsRaw": [
+        "ages = [15, 22, 37]",
+        "ages = [15, 22, 38]",
+        "ages = [15 22 37]",
+        "ages = (15, 22, 37)"
+      ],
+      "notice": "ages = [15, 22, 37] - check every number matches exactly and commas are in place"
+    },
+    {
+      "html": "<b>Which creates a list with the planets <code>Mars</code>, <code>Venus</code>, <code>Earth</code>?</b>",
+      "correctCode": "planets = [\"Mars\", \"Venus\", \"Earth\"]",
+      "optionsRaw": [
+        "planets = [\"Mars\", \"Venus\", \"Earth\"]",
+        "planets = [\"Mars\", \"Venus\", \"Jupiter\"]",
+        "planets = [Mars, Venus, Earth]",
+        "planets = [\"Mars\" \"Venus\" \"Earth\"]"
+      ],
+      "notice": "planets = [\"Mars\", \"Venus\", \"Earth\"] - planet names are strings and need quote marks"
+    },
+    {
+      "html": "<b>Which creates a list with the items <code>5</code>, <code>10</code>, <code>15</code>, <code>20</code>?</b>",
+      "correctCode": "evens = [5, 10, 15, 20]",
+      "optionsRaw": [
+        "evens = [5, 10, 15, 20]",
+        "evens = [5, 10, 15 20]",
+        "evens = (5, 10, 15, 20)",
+        "evens = [5, 10, 15, 25]"
+      ],
+      "notice": "evens = [5, 10, 15, 20] - four items, four commas between them, square brackets"
+    },
+    {
+      "html": "<b>Which creates a list with the names <code>Alice</code>, <code>Bob</code>?</b>",
+      "correctCode": "players = [\"Alice\", \"Bob\"]",
+      "optionsRaw": [
+        "players = [\"Alice\", \"Bob\"]",
+        "players = [\"Alice\" \"Bob\"]",
+        "players = (\"Alice\", \"Bob\")",
+        "players = [\"Alice\", \"Rob\"]"
+      ],
+      "notice": "players = [\"Alice\", \"Bob\"] - even with just two items you still need a comma between them"
+    },
+    {
+      "html": "<b>Which creates an empty list?</b>",
+      "correctCode": "items = []",
+      "optionsRaw": [
+        "items = []",
+        "items = {}",
+        "items = ()",
+        "items = [ ]"
+      ],
+      "notice": "items = [] - an empty list is just two square brackets with nothing inside"
+    },
+    {
+      "html": "<b>Which creates a list with the days <code>Monday</code>, <code>Tuesday</code>, <code>Wednesday</code>?</b>",
+      "correctCode": "days = [\"Monday\", \"Tuesday\", \"Wednesday\"]",
+      "optionsRaw": [
+        "days = [\"Monday\", \"Tuesday\", \"Wednesday\"]",
+        "days = [\"Monday\", \"Tuesday\", \"Thursday\"]",
+        "days = [Monday, Tuesday, Wednesday]",
+        "days = [\"Monday\" \"Tuesday\" \"Wednesday\"]"
+      ],
+      "notice": "days = [\"Monday\", \"Tuesday\", \"Wednesday\"] - day names are strings so they need quote marks"
+    },
+    {
+      "html": "<b>Which creates a list with the values <code>0.5</code>, <code>1.5</code>, <code>2.5</code>?</b>",
+      "correctCode": "decimals = [0.5, 1.5, 2.5]",
+      "optionsRaw": [
+        "decimals = [0.5, 1.5, 2.5]",
+        "decimals = (0.5, 1.5, 2.5)",
+        "decimals = [0.5 1.5 2.5]",
+        "decimals = [0.5, 1.5, 3.5]"
+      ],
+      "notice": "decimals = [0.5, 1.5, 2.5] - decimal numbers don't need quotes, just commas between them"
+    }
+  ]
+}

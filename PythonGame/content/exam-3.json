@@ -1,0 +1,142 @@
+{
+  "title": "Exam 3: Input & Data Types",
+  "questions": [
+    {
+      "type": "mcq",
+      "prompt": "Which correctly asks the user for their name and stores it?",
+      "codeHtml": "",
+      "correct": "name = input(\"Enter your name\")",
+      "options": [
+        "name = input(\"Enter your name\")",
+        "name = print(\"Enter your name\")",
+        "input(\"Enter your name\")",
+        "name = input(\"Enter your name\""
+      ],
+      "explanation": "input() reads from the user and must be assigned to a variable to store it."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which correctly asks the user for their age as a number?",
+      "codeHtml": "",
+      "correct": "age = int(input(\"Enter your age\"))",
+      "options": [
+        "age = int(input(\"Enter your age\"))",
+        "age = input(\"Enter your age\")",
+        "age = int(input(\"Enter your age\")",
+        "int(input(\"Enter your age\"))"
+      ],
+      "explanation": "input() always returns a string - use int() to convert it to a number."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which data type is this value: <span class=\"green-keyword\">\"Hello\"</span>",
+      "codeHtml": "",
+      "correct": "String",
+      "options": [
+        "String",
+        "Integer",
+        "Float",
+        "Boolean"
+      ],
+      "explanation": "Any value wrapped in quotes is a String."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which data type is this value: <span class=\"green-keyword\">3.14</span>",
+      "codeHtml": "",
+      "correct": "Float",
+      "options": [
+        "String",
+        "Integer",
+        "Float",
+        "Boolean"
+      ],
+      "explanation": "A number with a decimal point is a Float."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which code correctly converts the variable <span class=\"green-keyword\">score</span> to an integer?",
+      "codeHtml": "",
+      "correct": "int(score)",
+      "options": [
+        "int(score)",
+        "integer(score)",
+        "score.int()",
+        "str(score)"
+      ],
+      "explanation": "Use int() to convert a value to an integer."
+    },
+    {
+      "type": "mcq",
+      "prompt": "What data type does input() always return?",
+      "codeHtml": "",
+      "correct": "String",
+      "options": [
+        "String",
+        "Integer",
+        "Float",
+        "Boolean"
+      ],
+      "explanation": "input() always returns a String, even if the user types a number."
+    },
+    {
+      "type": "text_var",
+      "prompt": "Ask the user for their <span class=\"green-keyword\">name</span> and store it.",
+      "targetVar": "name",
+      "isString": true,
+      "isInput": true,
+      "explanation": "Format: name = input(\"Enter your name\")"
+    },
+    {
+      "type": "text_var",
+      "prompt": "Ask the user for their <span class=\"green-keyword\">age</span> and store it as a number.",
+      "targetVar": "age",
+      "isString": false,
+      "isInput": true,
+      "explanation": "Format: age = int(input(\"Enter your age\"))"
+    },
+    {
+      "type": "text_var",
+      "prompt": "Convert the variable <span class=\"green-keyword\">score</span> to a <span class=\"green-keyword\">float</span>.",
+      "targetVar": "score",
+      "isString": false,
+      "explanation": "Format: float(score)"
+    },
+    {
+      "type": "extended_run",
+      "prompt": "Write a script that:\n1. Asks the user for their <b>name</b> (string)\n2. Asks the user for their <b>age</b> (number)\n3. Asks the user for their <b>city</b> (string)\n4. Prints each one with an appropriate message.",
+      "explanation": "Format:\nname = input(\"Enter your name\")\nage = int(input(\"Enter your age\"))\ncity = input(\"Enter your city\")\nprint(\"Name:\", name)\nprint(\"Age:\", age)\nprint(\"City:\", city)",
+      "expectedVars": [
+        {
+          "name": "name",
+          "type": "string",
+          "strict": false
+        },
+        {
+          "name": "age",
+          "type": "number",
+          "strict": false
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "strict": false
+        }
+      ],
+      "expectedOutput": [
+        {
+          "containsVar": "name",
+          "hasMessage": true
+        },
+        {
+          "containsVar": "age",
+          "hasMessage": true
+        },
+        {
+          "containsVar": "city",
+          "hasMessage": true
+        }
+      ]
+    }
+  ]
+}

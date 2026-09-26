@@ -1,0 +1,145 @@
+{
+  "title": "Exam 6: While Loops",
+  "questions": [
+    {
+      "type": "mcq",
+      "prompt": "Which code keeps running while <span class=\"green-keyword\">total</span> is less than 10?",
+      "codeHtml": "",
+      "correct": "while total < 10:",
+      "options": [
+        "while total < 10:",
+        "while total <= 10:",
+        "while total < 10",
+        "while total > 10:"
+      ],
+      "explanation": "while total < 10: - don't forget the colon, and the loop stops as soon as total reaches 10"
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which code keeps running while <span class=\"green-keyword\">lives</span> is greater than 0?",
+      "codeHtml": "",
+      "correct": "while lives > 0:",
+      "options": [
+        "while lives > 0:",
+        "while lives >= 0:",
+        "while lives < 0:",
+        "while lives > 0"
+      ],
+      "explanation": "while lives > 0: - the loop continues as long as lives is at least 1"
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which code sets <span class=\"green-keyword\">count</span> to 0, then loops while <span class=\"green-keyword\">count is less than 5</span> - printing count first, then increasing it by 1?",
+      "codeHtml": "",
+      "correct": "count = 0\nwhile count < 5:\n    print(count)\n    count += 1",
+      "options": [
+        "count = 0\nwhile count < 5:\n    print(count)\n    count += 1",
+        "count = 0\nwhile count < 5:\n    count += 1\n    print(count)",
+        "count = 0\nwhile count > 5:\n    print(count)\n    count += 1",
+        "count = 0\nwhile count < 5:\n    print(count)\n    count -= 1"
+      ],
+      "explanation": "count = 0\nwhile count < 5:\n    print(count)\n    count += 1"
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which code sets <span class=\"green-keyword\">health</span> to 50, then loops while <span class=\"green-keyword\">health is greater than 0</span> - printing health first, then decreasing it by 10?",
+      "codeHtml": "",
+      "correct": "health = 50\nwhile health > 0:\n    print(health)\n    health -= 10",
+      "options": [
+        "health = 50\nwhile health > 0:\n    print(health)\n    health -= 10",
+        "health = 50\nwhile health > 0:\n    health -= 10\n    print(health)",
+        "health = 50\nwhile health < 0:\n    print(health)\n    health -= 10",
+        "health = 0\nwhile health > 0:\n    print(health)\n    health -= 10"
+      ],
+      "explanation": "health = 50\nwhile health > 0:\n    print(health)\n    health -= 10"
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which of these is a valid first line of a while loop?",
+      "codeHtml": "",
+      "correct": "while speed > 30:",
+      "options": [
+        "while speed > 30:",
+        "while speed > 30",
+        "while (speed > 30)",
+        "whilst speed > 30:"
+      ],
+      "explanation": "Python uses 'while' not 'whilst', no brackets needed, and always needs a colon"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the first line only of a loop that <span class=\"green-keyword\">keeps running while balance is not equal to 0</span> (include the colon)",
+      "correctCode": "^\\s*while\\s+balance\\s*!=\\s*0\\s*:$",
+      "useRegex": true,
+      "explanation": "Format: while balance != 0:"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the code that <span class=\"green-keyword\">increases score by 5</span>",
+      "correctCode": "^\\s*score\\s*\\+=\\s*5\\s*$",
+      "useRegex": true,
+      "explanation": "Format: score += 5"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the code that <span class=\"green-keyword\">decreases lives by 1</span>",
+      "correctCode": "^\\s*lives\\s*-=\\s*1\\s*$",
+      "useRegex": true,
+      "explanation": "Format: lives -= 1"
+    },
+    {
+      "type": "extended_run",
+      "prompt": "Write a program that sets <b>score</b> to 0, then loops while <b>score is less than 5</b> - printing score first, then increasing it by 1 each time.",
+      "explanation": "Format:\nscore = 0\nwhile score < 5:\n    print(score)\n    score += 1",
+      "testCases": [
+        {
+          "inputs": [],
+          "expectedOutput": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "extended_run",
+      "prompt": "Write a program that sets <b>total</b> to 0, then repeatedly asks the user to enter a number and adds it to <b>total</b> - stopping when <b>total reaches 100 or more</b>. Output the final total in an appropriate message.",
+      "explanation": "Format:\ntotal = 0\nwhile total < 100:\n    num = int(input('Enter a number: '))\n    total += num\nprint('Total:', total)",
+      "testCases": [
+        {
+          "inputs": [
+            "30",
+            "30",
+            "30",
+            "30"
+          ],
+          "expectedOutput": [
+            "120"
+          ]
+        },
+        {
+          "inputs": [
+            "100"
+          ],
+          "expectedOutput": [
+            "100"
+          ]
+        },
+        {
+          "inputs": [
+            "25",
+            "25",
+            "25",
+            "25"
+          ],
+          "expectedOutput": [
+            "100"
+          ]
+        }
+      ]
+    }
+  ]
+}

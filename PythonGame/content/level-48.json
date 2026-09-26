@@ -1,0 +1,90 @@
+{
+  "type": "text",
+  "inputLabel": "What will this output? Type the answer:",
+  "questions": [
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>items</span> = [<span class='code-string'>\"Ryan\"</span>, <span class='code-string'>\"Michael\"</span>, <span class='code-string'>\"Jacob\"</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(items))</pre>",
+      "correctCode": "3",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "3 - len() counts how many items are in the list"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>colours</span> = [<span class='code-string'>\"red\"</span>, <span class='code-string'>\"blue\"</span>, <span class='code-string'>\"green\"</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(colours))</pre>",
+      "correctCode": "3",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "3 - there are three items in the colours list"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>scores</span> = [<span class='code-num'>10</span>, <span class='code-num'>20</span>, <span class='code-num'>30</span>, <span class='code-num'>40</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(scores))</pre>",
+      "correctCode": "4",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "4 - len() counts items not their values"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>pets</span> = [<span class='code-string'>\"cat\"</span>, <span class='code-string'>\"dog\"</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(pets))</pre>",
+      "correctCode": "2",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "2 - there are two items in the pets list"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>planets</span> = [<span class='code-string'>\"Mars\"</span>, <span class='code-string'>\"Venus\"</span>, <span class='code-string'>\"Earth\"</span>, <span class='code-string'>\"Jupiter\"</span>, <span class='code-string'>\"Saturn\"</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(planets))</pre>",
+      "correctCode": "5",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "5 - count each item in the list to find the length"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>items</span> = []\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(items))</pre>",
+      "correctCode": "0",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "0 - an empty list has a length of 0"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>numbers</span> = [<span class='code-num'>5</span>, <span class='code-num'>10</span>, <span class='code-num'>15</span>, <span class='code-num'>20</span>, <span class='code-num'>25</span>, <span class='code-num'>30</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(numbers))</pre>",
+      "correctCode": "6",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "6 - len() counts items not their values, so 30 is wrong"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>days</span> = [<span class='code-string'>\"Monday\"</span>, <span class='code-string'>\"Tuesday\"</span>, <span class='code-string'>\"Wednesday\"</span>, <span class='code-string'>\"Thursday\"</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(days))</pre>",
+      "correctCode": "4",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "4 - count the items: Monday, Tuesday, Wednesday, Thursday"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>players</span> = [<span class='code-string'>\"Alice\"</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(players))</pre>",
+      "correctCode": "1",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "1 - a list with one item has a length of 1"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>cities</span> = [<span class='code-string'>\"London\"</span>, <span class='code-string'>\"Paris\"</span>, <span class='code-string'>\"Rome\"</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(cities))</pre>",
+      "correctCode": "3",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "3 - London, Paris, Rome - three items so len() returns 3"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>ages</span> = [<span class='code-num'>15</span>, <span class='code-num'>22</span>, <span class='code-num'>37</span>, <span class='code-num'>41</span>, <span class='code-num'>58</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(ages))</pre>",
+      "correctCode": "5",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "5 - len() counts the number of items, not their values"
+    },
+    {
+      "html": "<pre class='code-block-display'><span class='code-var'>words</span> = [<span class='code-string'>\"hello\"</span>, <span class='code-string'>\"world\"</span>, <span class='code-string'>\"python\"</span>, <span class='code-string'>\"code\"</span>]\n<span class='code-func'>print</span>(<span class='code-func'>len</span>(words))</pre>",
+      "correctCode": "4",
+      "useRegex": false,
+      "triggerConsole": false,
+      "notice": "4 - four strings in the list so len() returns 4"
+    }
+  ]
+}

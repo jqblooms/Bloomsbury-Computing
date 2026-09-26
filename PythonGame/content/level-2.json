@@ -1,0 +1,74 @@
+{
+  "type": "text",
+  "inputLabel": "Fix the code (Type the correct version):",
+  "questions": [
+    {
+      "html": "<span class=\"code-func\" style=\"color:#d16969\">Print</span><span class=\"code-string\">(\"Hello\")</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Hello[\"']\\s*\\)",
+      "type": "syntax",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span><span class=\"code-string\">(\"World\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']World[\"']\\s*\\)",
+      "type": "syntax",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span> <span class=\"code-string\">\"Score\")</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Score[\"']\\s*\\)",
+      "type": "syntax",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span><span class=\"code-string\">(\"Game)</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Game[\"']\\s*\\)",
+      "type": "syntax",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span><span class=\"code-string\">(Name\")</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Name[\"']\\s*\\)",
+      "type": "syntax",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span><span class=\"code-string\">(\"\"Value\")</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Value[\"']\\s*\\)",
+      "type": "syntax",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Helo\"</span>)",
+      "correctCode": "print\\s*\\(\\s*[\"']Hello[\"']\\s*\\)",
+      "type": "logic",
+      "typoWord": "Helo",
+      "originalWord": "Hello",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Pyton\"</span>)",
+      "correctCode": "print\\s*\\(\\s*[\"']Python[\"']\\s*\\)",
+      "type": "logic",
+      "typoWord": "Pyton",
+      "originalWord": "Python",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Wrold\"</span>)",
+      "correctCode": "print\\s*\\(\\s*[\"']World[\"']\\s*\\)",
+      "type": "logic",
+      "typoWord": "Wrold",
+      "originalWord": "World",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Lsit\"</span>)",
+      "correctCode": "print\\s*\\(\\s*[\"']List[\"']\\s*\\)",
+      "type": "logic",
+      "typoWord": "Lsit",
+      "originalWord": "List",
+      "useRegex": true
+    }
+  ]
+}

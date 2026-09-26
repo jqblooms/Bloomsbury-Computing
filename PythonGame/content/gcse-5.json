@@ -1,0 +1,54 @@
+{
+  "title": "GCSE Exam 5: Highest Temperature",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to determine the highest temperature recorded in a week.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter the temperature for each day</li><li>repeat this input process for 7 days</li><li>determine which temperature is the highest</li><li>output the highest temperature in an appropriate message</li></ul>",
+      "explanation": "Format:\nhighest = 0\nfor i in range(7):\n    temp = float(input('Enter temperature: '))\n    if temp > highest:\n        highest = temp\nprint('Highest temperature:', highest)",
+      "testCases": [
+        {
+          "inputs": [
+            "15",
+            "18",
+            "22",
+            "19",
+            "25",
+            "21",
+            "17"
+          ],
+          "expectedOutput": [
+            "25"
+          ]
+        },
+        {
+          "inputs": [
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5"
+          ],
+          "expectedOutput": [
+            "5"
+          ]
+        },
+        {
+          "inputs": [
+            "30",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "expectedOutput": [
+            "30"
+          ]
+        }
+      ]
+    }
+  ]
+}

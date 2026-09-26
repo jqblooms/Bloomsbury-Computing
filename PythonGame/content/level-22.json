@@ -1,0 +1,78 @@
+{
+  "type": "text",
+  "inputLabel": "Type the correct Python if statement:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">temperature is greater than 30</span></span>",
+      "correctCode": "^if\\s+temperature\\s*>\\s*30\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">timer is less than 10</span></span>",
+      "correctCode": "^if\\s+timer\\s*<\\s*10\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">score is greater than or equal to 1000</span></span>",
+      "correctCode": "^if\\s+score\\s*>=\\s*1000\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">apples are less than or equal to 5</span></span>",
+      "correctCode": "^if\\s+apples\\s*<=\\s*5\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">color is exactly equal to 'red'</span></span>",
+      "correctCode": "^if\\s+color\\s*==\\s*['\"]red['\"]\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">animal does not equal 'cat'</span></span>",
+      "correctCode": "^if\\s+animal\\s*!=\\s*['\"]cat['\"]\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">height is greater than 100</span></span>",
+      "correctCode": "^if\\s+height\\s*>\\s*100\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">coins are less than 50</span></span>",
+      "correctCode": "^if\\s+coins\\s*<\\s*50\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">level is greater than or equal to 5</span></span>",
+      "correctCode": "^if\\s+level\\s*>=\\s*5\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">distance is less than or equal to 100</span></span>",
+      "correctCode": "^if\\s+distance\\s*<=\\s*100\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">stars are equal to 3</span></span>",
+      "correctCode": "^if\\s+stars\\s*==\\s*3\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Type the statement: Checks if <span class=\"green-keyword\">name does not equal 'Alex'</span></span>",
+      "correctCode": "^if\\s+name\\s*!=\\s*['\"]Alex['\"]\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false
+    }
+  ]
+}

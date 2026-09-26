@@ -1,0 +1,54 @@
+{
+  "type": "text",
+  "inputLabel": "Create the variable (e.g. name = \"Bob\"):",
+  "questions": [
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called name</span>",
+      "correctCode": "name\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true,
+      "notice": "Strings need quotes! e.g. name = \"Ryan\""
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called age</span>",
+      "correctCode": "age\\s*=\\s*\\d+",
+      "useRegex": true,
+      "notice": "Numbers do not use quotes! e.g. age = 15"
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called city</span>",
+      "correctCode": "city\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true,
+      "notice": "Strings need quotes! e.g. city = \"London\""
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called school</span>",
+      "correctCode": "school\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true,
+      "notice": "e.g. school = \"Hogwarts\""
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called score</span>",
+      "correctCode": "score\\s*=\\s*\\d+",
+      "useRegex": true,
+      "notice": "e.g. score = 100"
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called hobby</span>",
+      "correctCode": "hobby\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true,
+      "notice": "e.g. hobby = \"Coding\""
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called year</span>",
+      "correctCode": "year\\s*=\\s*\\d+",
+      "useRegex": true,
+      "notice": "e.g. year = 9"
+    },
+    {
+      "html": "<span class=\"code-comment\"># Create a variable called power</span>",
+      "correctCode": "power\\s*=\\s*(?:\"[^\"]*\"|'[^']*')",
+      "useRegex": true,
+      "notice": "e.g. power = \"Flying\""
+    }
+  ]
+}

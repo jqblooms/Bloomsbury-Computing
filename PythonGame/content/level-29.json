@@ -1,0 +1,116 @@
+{
+  "levelName": "The Range Function",
+  "type": "mcq",
+  "questions": [
+    {
+      "html": "<b>What numbers are included in this range?</b><br><code>range(1, 10)</code>",
+      "correctCode": "1, 2, 3, 4, 5, 6, 7, 8, 9",
+      "optionsRaw": [
+        "1, 2, 3, 4, 5, 6, 7, 8, 9",
+        "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+        "0, 1, 2, 3, 4, 5, 6, 7, 8, 9",
+        "2, 3, 4, 5, 6, 7, 8, 9"
+      ],
+      "notice": "range(1, 10) starts at 1 and stops BEFORE 10"
+    },
+    {
+      "html": "<b>What numbers are included in this range?</b><br><code>range(0, 5)</code>",
+      "correctCode": "0, 1, 2, 3, 4",
+      "optionsRaw": [
+        "0, 1, 2, 3, 4",
+        "0, 1, 2, 3, 4, 5",
+        "1, 2, 3, 4, 5",
+        "1, 2, 3, 4"
+      ],
+      "notice": "range(0, 5) starts at 0 and stops BEFORE 5"
+    },
+    {
+      "html": "<b>What numbers are included in this range?</b><br><code>range(5)</code>",
+      "correctCode": "0, 1, 2, 3, 4",
+      "optionsRaw": [
+        "0, 1, 2, 3, 4",
+        "1, 2, 3, 4, 5",
+        "0, 1, 2, 3, 4, 5",
+        "1, 2, 3, 4"
+      ],
+      "notice": "range(5) with one argument always starts at 0 and stops BEFORE 5"
+    },
+    {
+      "html": "<b>What numbers are included in this range?</b><br><code>range(3, 8)</code>",
+      "correctCode": "3, 4, 5, 6, 7",
+      "optionsRaw": [
+        "3, 4, 5, 6, 7",
+        "3, 4, 5, 6, 7, 8",
+        "4, 5, 6, 7, 8",
+        "4, 5, 6, 7"
+      ],
+      "notice": "range(3, 8) starts at 3 and stops BEFORE 8"
+    },
+    {
+      "html": "<b>What numbers are included in this range?</b><br><code>range(0, 10, 2)</code>",
+      "correctCode": "0, 2, 4, 6, 8",
+      "optionsRaw": [
+        "0, 2, 4, 6, 8",
+        "0, 2, 4, 6, 8, 10",
+        "2, 4, 6, 8, 10",
+        "1, 3, 5, 7, 9"
+      ],
+      "notice": "range(0, 10, 2) starts at 0, stops BEFORE 10, counting up in steps of 2"
+    },
+    {
+      "html": "<b>What numbers are included in this range?</b><br><code>range(1, 10, 3)</code>",
+      "correctCode": "1, 4, 7",
+      "optionsRaw": [
+        "1, 4, 7",
+        "1, 4, 7, 10",
+        "3, 6, 9",
+        "1, 3, 6, 9"
+      ],
+      "notice": "range(1, 10, 3) starts at 1 and adds 3 each time: 1, 4, 7 - then 10 would be reached but 10 is excluded"
+    },
+    {
+      "html": "<b>How many numbers are in this range?</b><br><code>range(0, 100)</code>",
+      "correctCode": "100",
+      "optionsRaw": [
+        "100",
+        "101",
+        "99",
+        "0"
+      ],
+      "notice": "range(0, 100) produces 100 numbers: 0 up to and including 99"
+    },
+    {
+      "html": "<b>What is the LAST number produced by this range?</b><br><code>range(2, 9)</code>",
+      "correctCode": "8",
+      "optionsRaw": [
+        "8",
+        "9",
+        "7",
+        "2"
+      ],
+      "notice": "range(2, 9) stops BEFORE 9, so the last number is 8"
+    },
+    {
+      "html": "<b>What is the FIRST number produced by this range?</b><br><code>range(4, 12, 2)</code>",
+      "correctCode": "4",
+      "optionsRaw": [
+        "4",
+        "0",
+        "2",
+        "6"
+      ],
+      "notice": "range(4, 12, 2) always starts at the first argument, which is 4"
+    },
+    {
+      "html": "<b>Which of these correctly creates a range from 1 to 5 inclusive?</b>",
+      "correctCode": "range(1, 6)",
+      "optionsRaw": [
+        "range(1, 6)",
+        "range(1, 5)",
+        "range(1 5)",
+        "range(0, 5)"
+      ],
+      "notice": "To include 5, the stop value must be 6 - range always stops BEFORE the second argument"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "title": "Exam 2: Variables & Output",
+  "questions": [
+    {
+      "type": "mcq",
+      "prompt": "Choose the correct code to create a name variable:",
+      "codeHtml": "<span class=\"code-comment\"># Create variable name</span>",
+      "correct": "name = \"Ryan\"",
+      "options": [
+        "name = \"Ryan\"",
+        "name = Ryan",
+        "SET name TO \"Ryan\"",
+        "age = 15"
+      ],
+      "explanation": "Strings must be wrapped in quotes. Use '=' for assignment."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Choose the correct code to create an age variable:",
+      "codeHtml": "<span class=\"code-comment\"># Create variable age</span>",
+      "correct": "age = 16",
+      "options": [
+        "age = 16",
+        "age : 16",
+        "age = \"16\"",
+        "SET age = 16"
+      ],
+      "explanation": "Integers (numbers) do not need quotes in Python."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which code outputs: \"I live in London\"",
+      "codeHtml": "",
+      "correct": "city = \"London\"\nprint(\"I live in\", city)",
+      "options": [
+        "city = \"London\"\nprint(\"I live in\", city)",
+        "city = \"London\"\nprint(\"I live in\" city)",
+        "city = \"London\"\nprint(\"I live in\" + city)",
+        "city = \"London\"\nprint(\"City:\", city)"
+      ],
+      "explanation": "To print a string and a variable together using a comma, Python adds a space automatically."
+    },
+    {
+      "type": "text_var",
+      "prompt": "Create a variable called <span class=\"green-keyword\">color</span> and store a value in it.",
+      "targetVar": "color",
+      "isString": true,
+      "explanation": "Format: color = \"Red\""
+    },
+    {
+      "type": "text_var",
+      "prompt": "Create a variable called <span class=\"green-keyword\">score</span> and set it to a number.",
+      "targetVar": "score",
+      "isString": false,
+      "explanation": "Format: score = 100 (No quotes for numbers)"
+    },
+    {
+      "type": "text_var_com",
+      "prompt": "Create a variable called <span class=\"green-keyword\">pet</span> with an appropriate # comment containing the word 'variable'.",
+      "targetVar": "pet",
+      "isString": true,
+      "keywords": [
+        "variable",
+        "pet"
+      ],
+      "explanation": "Format:\n# Create variable pet\npet = \"Dog\""
+    },
+    {
+      "type": "text_var_print",
+      "prompt": "Store your <span class=\"green-keyword\">team</span> in a variable and <span class=\"green-keyword\">print</span> it.",
+      "targetVar": "team",
+      "isString": true,
+      "explanation": "Format:\nteam = \"Lions\"\nprint(team)"
+    },
+    {
+      "type": "text_var_print_multi",
+      "prompt": "Store your <span class=\"green-keyword\">level</span> in a variable (number) and print it with a message.",
+      "targetVar": "level",
+      "isString": false,
+      "explanation": "Format:\nlevel = 5\nprint(\"Level:\", level)"
+    },
+    {
+      "type": "text_var_print_multi",
+      "prompt": "Store your <span class=\"green-keyword\">food</span> in a variable and output it with a message.",
+      "targetVar": "food",
+      "isString": true,
+      "explanation": "Format:\nfood = \"Pizza\"\nprint(\"I like\", food)"
+    },
+    {
+      "type": "extended_var",
+      "prompt": "Write a script to store your <b>Name</b>, <b>Age</b>, and <b>Hobby</b> in 3 variables.\nThen print each one alongside an appropriate message (e.g. print(\"Name:\", name)).",
+      "explanation": "You need to assign 'name', 'age', and 'hobby', and use print(\"Message\", var) for each one."
+    }
+  ]
+}

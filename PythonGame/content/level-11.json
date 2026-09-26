@@ -1,0 +1,72 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the code that produces the output:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which code outputs: \"My name is Ryan\"</span>",
+      "correctCode": "name = \"Ryan\"\nprint(\"My name is\", name)",
+      "optionsRaw": [
+        "name = \"Ryan\"\nprint(\"My name is\", name)",
+        "name = \"Ryan\"\nprint(\"My name is\" name)",
+        "age = 15\nprint(\"My name is\", age)",
+        "name = \"Ryan\"\nprint(\"Hello\", name)"
+      ],
+      "explanation": "Use a comma to separate the text string from the variable."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which code outputs: \"My age is 15\"</span>",
+      "correctCode": "age = 15\nprint(\"My age is\", age)",
+      "optionsRaw": [
+        "age = 15\nprint(\"My age is\", age)",
+        "age = 15\nprint(\"My age is\" age)",
+        "name = \"Sam\"\nprint(\"My age is\", name)",
+        "age = 15\nprint(\"I am\", age)"
+      ],
+      "explanation": "Variables and strings must be separated by a comma in print()."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which code outputs: \"I live in London\"</span>",
+      "correctCode": "city = \"London\"\nprint(\"I live in\", city)",
+      "optionsRaw": [
+        "city = \"London\"\nprint(\"I live in\", city)",
+        "city = \"London\"\nprint(\"I live in\" city)",
+        "school = \"Hogwarts\"\nprint(\"I live in\", school)",
+        "city = \"London\"\nprint(\"City is\", city)"
+      ],
+      "explanation": "The variable must match the data, and a comma is required."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which code outputs: \"I like Gaming\"</span>",
+      "correctCode": "hobby = \"Gaming\"\nprint(\"I like\", hobby)",
+      "optionsRaw": [
+        "hobby = \"Gaming\"\nprint(\"I like\", hobby)",
+        "hobby = \"Gaming\"\nprint(\"I like\" hobby)",
+        "food = \"Pizza\"\nprint(\"I like\", food)",
+        "hobby = \"Gaming\"\nprint(\"My hobby is\", hobby)"
+      ],
+      "explanation": "Check the variable name and syntax."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which code outputs: \"Score: 100\"</span>",
+      "correctCode": "score = 100\nprint(\"Score:\", score)",
+      "optionsRaw": [
+        "score = 100\nprint(\"Score:\", score)",
+        "score = 100\nprint(\"Score:\" score)",
+        "age = 100\nprint(\"Score:\", age)",
+        "score = 100\nprint(\"Points:\", score)"
+      ],
+      "explanation": "The print function creates a space where the comma is."
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which code outputs: \"I go to Hogwarts\"</span>",
+      "correctCode": "school = \"Hogwarts\"\nprint(\"I go to\", school)",
+      "optionsRaw": [
+        "school = \"Hogwarts\"\nprint(\"I go to\", school)",
+        "school = \"Hogwarts\"\nprint(\"I go to\" school)",
+        "city = \"London\"\nprint(\"I go to\", city)",
+        "school = \"Hogwarts\"\nprint(\"School is\", school)"
+      ],
+      "explanation": "Match the text string exactly and use correct syntax."
+    }
+  ]
+}

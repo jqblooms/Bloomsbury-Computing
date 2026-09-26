@@ -1,0 +1,134 @@
+{
+  "title": "Exam 1 Replica",
+  "questions": [
+    {
+      "type": "ident",
+      "prompt": "Identify the error type:",
+      "codeHtml": "<span class=\"code-func\" style=\"color:#d16969\">Print</span><span class=\"code-string\">(\"Hello\")</span>",
+      "correct": "Syntax Error",
+      "options": [
+        "Syntax Error",
+        "Logic Error"
+      ],
+      "explanation": "Capital 'P' in Print is a syntax error (Python is case-sensitive)."
+    },
+    {
+      "type": "ident",
+      "prompt": "Identify the error type:",
+      "codeHtml": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Helo\"</span>)",
+      "correct": "Logic Error",
+      "options": [
+        "Syntax Error",
+        "Logic Error"
+      ],
+      "explanation": "The code runs, but 'Helo' is spelled wrong (Logic Error)."
+    },
+    {
+      "type": "ident",
+      "prompt": "Identify the error type:",
+      "codeHtml": "<span class=\"code-func\">print</span><span class=\"code-string\">(\"World\"</span>",
+      "correct": "Syntax Error",
+      "options": [
+        "Syntax Error",
+        "Logic Error"
+      ],
+      "explanation": "Missing the closing parenthesis ')' causes a Syntax Error."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which code matches this comment?",
+      "codeHtml": "<span class=\"code-comment\"># Output \"Score\"</span>",
+      "correct": "print(\"Score\")",
+      "options": [
+        "print(\"Score\")",
+        "print \"Score\"",
+        "print(Score)",
+        "Print(\"Score\")"
+      ],
+      "explanation": "Only print(\"Score\") is valid Python 3 syntax."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which comment matches this code?",
+      "codeHtml": "<span class=\"code-func\">print</span>(<span class=\"code-string\">\"Game Over\"</span>)",
+      "correct": "# Display \"Game Over\"",
+      "options": [
+        "# Display \"Game Over\"",
+        "# Input \"Game Over\"",
+        "// Display \"Game Over\"",
+        "print \"Game Over\""
+      ],
+      "explanation": "Comments must start with #."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which of these is a VALID Python comment?",
+      "codeHtml": "",
+      "correct": "# This is a comment",
+      "options": [
+        "# This is a comment",
+        "// This is a comment",
+        "<!-- This is a comment -->",
+        "/* This is a comment */"
+      ],
+      "explanation": "Python comments start with a hash symbol (#)."
+    },
+    {
+      "type": "text",
+      "prompt": "Write a comment to <span class=\"green-keyword\">output</span> <span class=\"green-keyword\">Hello</span>",
+      "keywords": [
+        "output",
+        "hello"
+      ],
+      "correctCode": "print(\"Hello\")",
+      "explanation": "Format:\n# Output Hello\nprint(\"Hello\")"
+    },
+    {
+      "type": "text",
+      "prompt": "Write a comment to <span class=\"green-keyword\">show</span> <span class=\"green-keyword\">Winner</span>",
+      "keywords": [
+        "show",
+        "winner"
+      ],
+      "correctCode": "print(\"Winner\")",
+      "explanation": "Format:\n# Show Winner\nprint(\"Winner\")"
+    },
+    {
+      "type": "text",
+      "prompt": "Write a comment to <span class=\"green-keyword\">display</span> <span class=\"green-keyword\">100</span>",
+      "keywords": [
+        "display",
+        "100"
+      ],
+      "correctCode": "print(\"100\")",
+      "explanation": "Format:\n# Display 100\nprint(\"100\")"
+    },
+    {
+      "type": "extended",
+      "prompt": "Write a script to:\n1. output your name,\n2. display your age,\n3. print your school,\n4. show your hobby,\n5. write your favorite food.\nInclude a # comment for each line.",
+      "tasks": [
+        {
+          "noun": "name",
+          "desc": "output your name"
+        },
+        {
+          "noun": "age",
+          "desc": "display your age"
+        },
+        {
+          "noun": "school",
+          "desc": "print your school"
+        },
+        {
+          "noun": "hobby",
+          "desc": "show your hobby"
+        },
+        {
+          "noun": "food",
+          "desc": "write your favorite food"
+        }
+      ],
+      "explanation": "You need 5 pairs: A comment describing the action, followed by a valid print statement."
+    }
+  ]
+}

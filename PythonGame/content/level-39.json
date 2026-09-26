@@ -1,0 +1,116 @@
+{
+  "levelName": "While Loops with Increment",
+  "type": "mcq",
+  "questions": [
+    {
+      "html": "<b>Which code sets <code>score</code> to 0, then increases it by 1 until <code>score</code> reaches 10?</b>",
+      "correctCode": "score = 0\nwhile score < 10:\n    score += 1",
+      "optionsRaw": [
+        "score = 0\nwhile score < 10:\n    score += 1",
+        "score = 0\nwhile score < 10:\n    score -= 1",
+        "score = 0\nwhile score > 10:\n    score += 1",
+        "score = 0\nwhile score < 10:\n    score += 2"
+      ],
+      "notice": "score = 0\nwhile score < 10:\n    score += 1"
+    },
+    {
+      "html": "<b>Which code sets <code>lives</code> to 10, then decreases it by 1 until <code>lives</code> reaches 0?</b>",
+      "correctCode": "lives = 10\nwhile lives > 0:\n    lives -= 1",
+      "optionsRaw": [
+        "lives = 10\nwhile lives > 0:\n    lives -= 1",
+        "lives = 10\nwhile lives > 0:\n    lives += 1",
+        "lives = 10\nwhile lives < 0:\n    lives -= 1",
+        "lives = 0\nwhile lives > 0:\n    lives -= 1"
+      ],
+      "notice": "lives = 10\nwhile lives > 0:\n    lives -= 1"
+    },
+    {
+      "html": "<b>Which code sets <code>count</code> to 0, then increases it by 1 until <code>count</code> reaches 5?</b>",
+      "correctCode": "count = 0\nwhile count < 5:\n    count += 1",
+      "optionsRaw": [
+        "count = 0\nwhile count < 5:\n    count += 1",
+        "count = 0\nwhile count <= 5:\n    count += 1",
+        "count = 0\nwhile count < 5:\n    count -= 1",
+        "count = 5\nwhile count < 5:\n    count += 1"
+      ],
+      "notice": "count = 0\nwhile count < 5:\n    count += 1"
+    },
+    {
+      "html": "<b>Which code sets <code>health</code> to 100, then decreases it by 10 until <code>health</code> reaches 0?</b>",
+      "correctCode": "health = 100\nwhile health > 0:\n    health -= 10",
+      "optionsRaw": [
+        "health = 100\nwhile health > 0:\n    health -= 10",
+        "health = 100\nwhile health > 0:\n    health += 10",
+        "health = 100\nwhile health < 0:\n    health -= 10",
+        "health = 0\nwhile health > 0:\n    health -= 10"
+      ],
+      "notice": "health = 100\nwhile health > 0:\n    health -= 10"
+    },
+    {
+      "html": "<b>Which code sets <code>total</code> to 0, then increases it by 5 until <code>total</code> reaches 25?</b>",
+      "correctCode": "total = 0\nwhile total < 25:\n    total += 5",
+      "optionsRaw": [
+        "total = 0\nwhile total < 25:\n    total += 5",
+        "total = 0\nwhile total < 25:\n    total += 1",
+        "total = 0\nwhile total > 25:\n    total += 5",
+        "total = 25\nwhile total < 25:\n    total += 5"
+      ],
+      "notice": "total = 0\nwhile total < 25:\n    total += 5"
+    },
+    {
+      "html": "<b>Which code sets <code>fuel</code> to 50, then decreases it by 5 until <code>fuel</code> reaches 0?</b>",
+      "correctCode": "fuel = 50\nwhile fuel > 0:\n    fuel -= 5",
+      "optionsRaw": [
+        "fuel = 50\nwhile fuel > 0:\n    fuel -= 5",
+        "fuel = 50\nwhile fuel > 0:\n    fuel += 5",
+        "fuel = 50\nwhile fuel < 0:\n    fuel -= 5",
+        "fuel = 0\nwhile fuel > 0:\n    fuel -= 5"
+      ],
+      "notice": "fuel = 50\nwhile fuel > 0:\n    fuel -= 5"
+    },
+    {
+      "html": "<b>Which code sets <code>distance</code> to 0, then increases it by 10 until <code>distance</code> reaches 100?</b>",
+      "correctCode": "distance = 0\nwhile distance < 100:\n    distance += 10",
+      "optionsRaw": [
+        "distance = 0\nwhile distance < 100:\n    distance += 10",
+        "distance = 0\nwhile distance < 100:\n    distance -= 10",
+        "distance = 0\nwhile distance > 100:\n    distance += 10",
+        "distance = 100\nwhile distance < 100:\n    distance += 10"
+      ],
+      "notice": "distance = 0\nwhile distance < 100:\n    distance += 10"
+    },
+    {
+      "html": "<b>Which code sets <code>attempts</code> to 20, then decreases it by 1 until <code>attempts</code> reaches 0?</b>",
+      "correctCode": "attempts = 20\nwhile attempts > 0:\n    attempts -= 1",
+      "optionsRaw": [
+        "attempts = 20\nwhile attempts > 0:\n    attempts -= 1",
+        "attempts = 20\nwhile attempts > 0:\n    attempts += 1",
+        "attempts = 20\nwhile attempts < 0:\n    attempts -= 1",
+        "attempts = 0\nwhile attempts > 0:\n    attempts -= 1"
+      ],
+      "notice": "attempts = 20\nwhile attempts > 0:\n    attempts -= 1"
+    },
+    {
+      "html": "<b>Which code sets <code>speed</code> to 0, then increases it by 2 until <code>speed</code> reaches 20?</b>",
+      "correctCode": "speed = 0\nwhile speed < 20:\n    speed += 2",
+      "optionsRaw": [
+        "speed = 0\nwhile speed < 20:\n    speed += 2",
+        "speed = 0\nwhile speed < 20:\n    speed -= 2",
+        "speed = 0\nwhile speed > 20:\n    speed += 2",
+        "speed = 0\nwhile speed < 20:\n    speed += 1"
+      ],
+      "notice": "speed = 0\nwhile speed < 20:\n    speed += 2"
+    },
+    {
+      "html": "<b>Which code sets <code>temperature</code> to 30, then decreases it by 3 until <code>temperature</code> reaches 0?</b>",
+      "correctCode": "temperature = 30\nwhile temperature > 0:\n    temperature -= 3",
+      "optionsRaw": [
+        "temperature = 30\nwhile temperature > 0:\n    temperature -= 3",
+        "temperature = 30\nwhile temperature > 0:\n    temperature += 3",
+        "temperature = 30\nwhile temperature < 0:\n    temperature -= 3",
+        "temperature = 0\nwhile temperature > 0:\n    temperature -= 3"
+      ],
+      "notice": "temperature = 30\nwhile temperature > 0:\n    temperature -= 3"
+    }
+  ]
+}

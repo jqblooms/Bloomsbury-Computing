@@ -1,0 +1,133 @@
+{
+  "title": "Exam 4: Selection",
+  "questions": [
+    {
+      "type": "mcq",
+      "prompt": "Which correctly prints a message if <span class=\"green-keyword\">coins</span> is greater than or equal to <span class=\"green-keyword\">5</span>?",
+      "codeHtml": "",
+      "correct": "if coins >= 5:\n    print('You have enough!')",
+      "options": [
+        "if coins >= 5:\n    print('You have enough!')",
+        "if coins > 5:\n    print('You have enough!')",
+        "if coins <= 5:\n    print('You have enough!')",
+        "if coins == 5:\n    print('You have enough!')"
+      ],
+      "explanation": "'>= 5' means greater than OR equal to 5. '> 5' would miss the case where coins is exactly 5."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which correctly prints a message if <span class=\"green-keyword\">score</span> is exactly equal to <span class=\"green-keyword\">100</span>?",
+      "codeHtml": "",
+      "correct": "if score == 100:\n    print('Perfect!')",
+      "options": [
+        "if score == 100:\n    print('Perfect!')",
+        "if score = 100:\n    print('Perfect!')",
+        "if score != 100:\n    print('Perfect!')",
+        "if score >= 100:\n    print('Perfect!')"
+      ],
+      "explanation": "Use == to check equality. A single = is assignment, not comparison."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which correctly writes an if/else block checking if <span class=\"green-keyword\">lives</span> is not equal to <span class=\"green-keyword\">0</span>?",
+      "codeHtml": "",
+      "correct": "if lives != 0:\n    print('Alive!')\nelse:\n    print('Game over!')",
+      "options": [
+        "if lives != 0:\n    print('Alive!')\nelse:\n    print('Game over!')",
+        "if lives == 0:\n    print('Alive!')\nelse:\n    print('Game over!')",
+        "if lives != 0:\n    print('Alive!')\nelse\n    print('Game over!')",
+        "if lives != 0:\nprint('Alive!')\nelse:\n    print('Game over!')"
+      ],
+      "explanation": "else needs a colon. The print inside both branches must be indented."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which correctly writes an if/else block checking if <span class=\"green-keyword\">grade</span> is greater than or equal to <span class=\"green-keyword\">50</span>?",
+      "codeHtml": "",
+      "correct": "if grade >= 50:\n    print('Passed!')\nelse:\n    print('Failed!')",
+      "options": [
+        "if grade >= 50:\n    print('Passed!')\nelse:\n    print('Failed!')",
+        "if grade > 50:\n    print('Passed!')\nelse:\n    print('Failed!')",
+        "if grade >= 50:\n    print('Passed!')\nElse:\n    print('Failed!')",
+        "if grade >= 50:\nprint('Passed!')\nelse:\n    print('Failed!')"
+      ],
+      "explanation": "'else' must be lowercase and have a colon. Both print lines must be indented."
+    },
+    {
+      "type": "mcq",
+      "prompt": "Which correctly writes an if/else block checking if <span class=\"green-keyword\">temperature</span> is greater than <span class=\"green-keyword\">30</span>?",
+      "codeHtml": "",
+      "correct": "if temperature > 30:\n    print('Hot!')\nelse:\n    print('Nice!')",
+      "options": [
+        "if temperature > 30:\n    print('Hot!')\nelse:\n    print('Nice!')",
+        "if temperature >= 30:\n    print('Hot!')\nelse:\n    print('Nice!')",
+        "if temperature > 30:\n    print('Hot!')\nElse:\n    print('Nice!')",
+        "if temperature > 30:\n    print('Hot!')\nelse:\nprint('Nice!')"
+      ],
+      "explanation": "'> 30' means strictly greater than. '>= 30' would also trigger at exactly 30."
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the if statement that checks if <span class=\"green-keyword\">health</span> is less than <span class=\"green-keyword\">10</span> (first line only, include the colon)",
+      "correctCode": "^\\s*if\\s+health\\s*<\\s*10\\s*:$",
+      "useRegex": true,
+      "explanation": "Format: if health < 10:"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the if statement that checks if <span class=\"green-keyword\">age</span> is less than or equal to <span class=\"green-keyword\">12</span> (first line only, include the colon)",
+      "correctCode": "^\\s*if\\s+age\\s*<=\\s*12\\s*:$",
+      "useRegex": true,
+      "explanation": "Format: if age <= 12:"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the if statement that checks if <span class=\"green-keyword\">speed</span> is greater than or equal to <span class=\"green-keyword\">100</span> (first line only, include the colon)",
+      "correctCode": "^\\s*if\\s+speed\\s*>=\\s*100\\s*:$",
+      "useRegex": true,
+      "explanation": "Format: if speed >= 100:"
+    },
+    {
+      "type": "text_simple",
+      "prompt": "Write the if statement that checks if <span class=\"green-keyword\">attempts</span> is equal to <span class=\"green-keyword\">3</span> (first line only, include the colon)",
+      "correctCode": "^\\s*if\\s+attempts\\s*==\\s*3\\s*:$",
+      "useRegex": true,
+      "explanation": "Format: if attempts == 3:"
+    },
+    {
+      "type": "extended_run",
+      "prompt": "Write a script that stores a <b>score</b> and a <b>lives</b> value of your choice as numbers, then writes an if/else block for each:\n- If score is greater than or equal to 50, print a pass message, otherwise print a fail message\n- If lives is not equal to 0, print 'Still alive!', otherwise print 'Game over!'",
+      "explanation": "Format:\nscore = 75\nlives = 3\nif score >= 50:\n    print('Passed!')\nelse:\n    print('Failed!')\nif lives != 0:\n    print('Still alive!')\nelse:\n    print('Game over!')",
+      "expectedVars": [
+        {
+          "name": "score",
+          "type": "number",
+          "strict": false
+        },
+        {
+          "name": "lives",
+          "type": "number",
+          "strict": false
+        }
+      ],
+      "testValues": [
+        {
+          "name": "score",
+          "value": 75
+        },
+        {
+          "name": "lives",
+          "value": 3
+        }
+      ],
+      "expectedOutput": [
+        {
+          "containsStr": "Pass"
+        },
+        {
+          "containsStr": "alive"
+        }
+      ]
+    }
+  ]
+}

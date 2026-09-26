@@ -4,8 +4,9 @@ function buildRegex(pattern) {
     return new RegExp(anchored ? pattern : '^' + pattern + '$');
 }
 
+// While the console waits for input, the block is already answered.
 function submitTextAnswer() {
-    if (!state.selectedBlockId) return;
+    if (!state.selectedBlockId || state.waitingForInput) return;
     const block = state.blocks.find(b => b.id === state.selectedBlockId);
     const input = els.codeInput.value.trim();
 
@@ -37,7 +38,7 @@ function submitTextAnswer() {
 }
 
 function submitMCQAnswer(i) {
-    if (!state.selectedBlockId) return;
+    if (!state.selectedBlockId || state.waitingForInput) return;
     const block = state.blocks.find(b => b.id === state.selectedBlockId);
     const ans = state.currentOptions[i];
     const isCorrect = ans === block.data.correctCode;
@@ -75,9 +76,7 @@ function triggerConsoleInput(block, customPrompt = null) {
     els.consoleBar.scrollTop = els.consoleBar.scrollHeight; els.consoleRealInput.focus();
 }
 
-// No changes needed to triggerConsoleInput - it already handles prompts correctly
-// The key change: handleConsoleInput now runs real Python instead of faking output
-
+// Runs the accepted code with what the student typed at each input() prompt.
 async function handleConsoleInput() {
     if (!state.waitingForInput) return;
 
@@ -129,17 +128,27 @@ async function handleConsoleInput() {
         processResult(true);
     } catch (e) {
         logToConsole("Error: " + e);
+        // The code was already marked right; the value typed at the prompt
+        // is what int() or float() could not convert. Ask again rather than
+        // count a correct answer wrong.
+        if (/ValueError/.test(String(e))) {
+            block._runnableCode = codeToRun;
+            const firstPrompt = codeToRun.match(/input\s*\(\s*["'](.+?)["']\s*\)/);
+            triggerConsoleInput(block, firstPrompt ? firstPrompt[1] : null);
+            showLogicNotice(/float/.test(String(e))
+                ? 'float() needs a number, like 1.75. Type it again.'
+                : 'int() needs a whole number, like 15. Type it again.');
+            return;
+        }
         processResult(false);
     }
 }
 
 function submitMultiAnswer() {
-    if (!state.selectedBlockId) return;
+    if (!state.selectedBlockId || state.waitingForInput) return;
     const block = state.blocks.find(b => b.id === state.selectedBlockId);
     if (!block) return;
-    console.log('RAW:', JSON.stringify(els.codeArea.value));
     const lines = els.codeArea.value.trim().split('\n').filter(l => l !== "");
-    console.log('LINES:', lines);
     const type = state.customLevelData.type;
 
     if (type === 'multistep') submitCustomMultiStep(block, lines);

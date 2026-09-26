@@ -1,0 +1,90 @@
+{
+  "type": "text",
+  "inputLabel": "Write the first line of the while loop:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while total is less than 10</span></span>",
+      "correctCode": "^\\s*while\\s+total\\s*<\\s*10\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while total < 10:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while lives is greater than 0</span></span>",
+      "correctCode": "^\\s*while\\s+lives\\s*>\\s*0\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while lives > 0:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while password is not equal to 'open'</span></span>",
+      "correctCode": "^\\s*while\\s+password\\s*!=\\s*[\"']open[\"']\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while password != 'open':"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while count is less than or equal to 5</span></span>",
+      "correctCode": "^\\s*while\\s+count\\s*<=\\s*5\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while count <= 5:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while score is equal to 0</span></span>",
+      "correctCode": "^\\s*while\\s+score\\s*==\\s*0\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while score == 0:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while health is greater than or equal to 50</span></span>",
+      "correctCode": "^\\s*while\\s+health\\s*>=\\s*50\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while health >= 50:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while attempts is less than 3</span></span>",
+      "correctCode": "^\\s*while\\s+attempts\\s*<\\s*3\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while attempts < 3:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while balance is not equal to 0</span></span>",
+      "correctCode": "^\\s*while\\s+balance\\s*!=\\s*0\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while balance != 0:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while speed is greater than 30</span></span>",
+      "correctCode": "^\\s*while\\s+speed\\s*>\\s*30\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while speed > 30:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while temperature is less than 100</span></span>",
+      "correctCode": "^\\s*while\\s+temperature\\s*<\\s*100\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while temperature < 100:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while fuel is greater than or equal to 10</span></span>",
+      "correctCode": "^\\s*while\\s+fuel\\s*>=\\s*10\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while fuel >= 10:"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">keeps running while age is not equal to 18</span></span>",
+      "correctCode": "^\\s*while\\s+age\\s*!=\\s*18\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "while age != 18:"
+    }
+  ]
+}

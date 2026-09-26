@@ -1,0 +1,61 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the code that asks for it and then prints it:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask for <span class=\"green-keyword\">name</span>, then display <span class=\"green-keyword\">Welcome [name]</span></span>",
+      "correctCode": "name = input(\"Enter name\")\nprint(\"Welcome\", name)",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "name = input(\"Enter name\")\nprint(\"Welcome\", name)",
+        "name = input(\"Enter name\")\nprint(\"Welcome\" name)",
+        "input(\"Enter name\")\nprint(\"Welcome\", name)",
+        "name = print(\"Enter name\")\nprint(\"Welcome\", name)"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask for <span class=\"green-keyword\">city</span>, then display <span class=\"green-keyword\">You live in [city]</span></span>",
+      "correctCode": "city = input(\"City?\")\nprint(\"You live in\", city)",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "city = input(\"City?\")\nprint(\"You live in\", city)",
+        "city = input(\"City?\")\nprint(\"You live in\" city)",
+        "city = input(\"City?\")\nprint(\"You live in\" + city)",
+        "print(\"City?\")\ninput(\"You live in\", city)"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask for <span class=\"green-keyword\">age</span> (a whole number), then display <span class=\"green-keyword\">Age: [age]</span></span>",
+      "correctCode": "age = int(input(\"Age?\"))\nprint(\"Age:\", age)",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "age = int(input(\"Age?\"))\nprint(\"Age:\", age)",
+        "age = input(\"Age?\")\nprint(\"Age:\", age)",
+        "age = int(input(\"Age?\"))\nprint(\"Age:\" age)",
+        "int(input(\"Age?\"))\nprint(\"Age:\", age)"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask for <span class=\"green-keyword\">food</span>, then display <span class=\"green-keyword\">I like [food]</span></span>",
+      "correctCode": "food = input(\"Food?\")\nprint(\"I like\", food)",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "food = input(\"Food?\")\nprint(\"I like\", food)",
+        "food = input(\"Food?\")\nprint(\"I like\" food)",
+        "food == input(\"Food?\")\nprint(\"I like\", food)",
+        "input(\"Food?\")\nprint(\"I like\", food)"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask for <span class=\"green-keyword\">hobby</span>, then display <span class=\"green-keyword\">Hobby is [hobby]</span></span>",
+      "correctCode": "hobby = input(\"Hobby?\")\nprint(\"Hobby is\", hobby)",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "hobby = input(\"Hobby?\")\nprint(\"Hobby is\", hobby)",
+        "hobby = input(\"Hobby?\")\nprint(\"Hobby is\" + hobby)",
+        "var = input(\"Hobby?\")\nprint(\"Hobby is\", hobby)",
+        "hobby = input(\"Hobby?\")\nprint(\"Hobby is\" hobby)"
+      ]
+    }
+  ]
+}

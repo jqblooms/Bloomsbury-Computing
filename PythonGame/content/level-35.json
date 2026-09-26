@@ -1,0 +1,116 @@
+{
+  "levelName": "While Loop Conditions",
+  "type": "mcq",
+  "questions": [
+    {
+      "html": "<b>Which code keeps running while <code>total</code> is less than 10?</b>",
+      "correctCode": "while total < 10:",
+      "optionsRaw": [
+        "while total < 10:",
+        "while total <= 10:",
+        "while total < 10",
+        "while total > 10:"
+      ],
+      "notice": "while total < 10: - don't forget the colon, and the loop stops as soon as total reaches 10"
+    },
+    {
+      "html": "<b>Which code keeps running while <code>lives</code> is greater than 0?</b>",
+      "correctCode": "while lives > 0:",
+      "optionsRaw": [
+        "while lives > 0:",
+        "while lives >= 0:",
+        "while lives < 0:",
+        "while lives > 0"
+      ],
+      "notice": "while lives > 0: - the loop continues as long as lives is at least 1"
+    },
+    {
+      "html": "<b>Which code keeps running while <code>password</code> is not equal to 'open'?</b>",
+      "correctCode": "while password != 'open':",
+      "optionsRaw": [
+        "while password != 'open':",
+        "while password == 'open':",
+        "while password != open:",
+        "while password != 'open'"
+      ],
+      "notice": "while password != 'open': - != means 'not equal to', so the loop keeps going until the correct password is entered"
+    },
+    {
+      "html": "<b>Which code keeps running while <code>count</code> is less than or equal to 5?</b>",
+      "correctCode": "while count <= 5:",
+      "optionsRaw": [
+        "while count <= 5:",
+        "while count < 5:",
+        "while count >= 5:",
+        "while count <= 5"
+      ],
+      "notice": "while count <= 5: - <= means less than OR equal to, so the loop includes when count is exactly 5"
+    },
+    {
+      "html": "<b>Which code keeps running while <code>score</code> is equal to 0?</b>",
+      "correctCode": "while score == 0:",
+      "optionsRaw": [
+        "while score == 0:",
+        "while score = 0:",
+        "while score != 0:",
+        "while score == 0"
+      ],
+      "notice": "while score == 0: - use == to compare, not = which is for assignment"
+    },
+    {
+      "html": "<b>Which code keeps running while <code>health</code> is greater than or equal to 50?</b>",
+      "correctCode": "while health >= 50:",
+      "optionsRaw": [
+        "while health >= 50:",
+        "while health > 50:",
+        "while health <= 50:",
+        "while health >= 50"
+      ],
+      "notice": "while health >= 50: - >= means greater than OR equal to, so the loop includes when health is exactly 50"
+    },
+    {
+      "html": "<b>Which code keeps running while <code>attempts</code> is less than 3?</b>",
+      "correctCode": "while attempts < 3:",
+      "optionsRaw": [
+        "while attempts < 3:",
+        "while attempts <= 3:",
+        "while attempts > 3:",
+        "while attempts < 3"
+      ],
+      "notice": "while attempts < 3: - the loop runs when attempts is 0, 1 or 2, then stops when it reaches 3"
+    },
+    {
+      "html": "<b>Which code keeps running while <code>balance</code> is not equal to 0?</b>",
+      "correctCode": "while balance != 0:",
+      "optionsRaw": [
+        "while balance != 0:",
+        "while balance == 0:",
+        "while balance > 0:",
+        "while balance != 0"
+      ],
+      "notice": "while balance != 0: - the loop keeps going until balance reaches exactly 0"
+    },
+    {
+      "html": "<b>Which of these is a valid first line of a while loop?</b>",
+      "correctCode": "while speed > 30:",
+      "optionsRaw": [
+        "while speed > 30:",
+        "while speed > 30",
+        "while (speed > 30)",
+        "whilst speed > 30:"
+      ],
+      "notice": "while speed > 30: - Python uses 'while' not 'whilst', no brackets needed, and always needs a colon"
+    },
+    {
+      "html": "<b>Which code keeps running while <code>temperature</code> is less than 100?</b>",
+      "correctCode": "while temperature < 100:",
+      "optionsRaw": [
+        "while temperature < 100:",
+        "while temperature <= 100:",
+        "while temperature > 100:",
+        "while temperature < 100"
+      ],
+      "notice": "while temperature < 100: - the loop stops as soon as temperature reaches 100"
+    }
+  ]
+}

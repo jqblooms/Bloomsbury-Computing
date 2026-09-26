@@ -1,0 +1,57 @@
+{
+  "title": "GCSE Exam 8: Password Validation",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to keep asking the user for a password until the correct password is entered.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter a password</li><li>repeatedly take inputs until the user enters the correct password</li><li>output an appropriate message when the correct password is entered</li></ul><br>For this exercise, the correct password is <b>python123</b>.",
+      "explanation": "Format:\npassword = input('Enter password: ')\nwhile password != 'python123':\n    password = input('Enter password: ')\nprint('Access granted')",
+      "testCases": [
+        {
+          "inputs": [
+            "wrong",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123"
+          ],
+          "anyOutput": true
+        },
+        {
+          "inputs": [
+            "abc",
+            "xyz",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123"
+          ],
+          "anyOutput": true
+        },
+        {
+          "inputs": [
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123",
+            "python123"
+          ],
+          "anyOutput": true
+        }
+      ]
+    }
+  ]
+}

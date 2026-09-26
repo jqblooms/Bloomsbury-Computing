@@ -1,0 +1,94 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct data type:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which data type is this: <span class=\"green-keyword\">5</span></span>",
+      "correctCode": "Integer",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which data type is this: <span class=\"green-keyword\">5.4</span></span>",
+      "correctCode": "Float",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which data type is this: <span class=\"green-keyword\">\"Hello\"</span></span>",
+      "correctCode": "String",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which data type is this: <span class=\"green-keyword\">False</span></span>",
+      "correctCode": "Boolean",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which data type is this: <span class=\"green-keyword\">0</span></span>",
+      "correctCode": "Integer",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which data type is this: <span class=\"green-keyword\">\"42\"</span></span>",
+      "correctCode": "String",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which data type is this: <span class=\"green-keyword\">3.1415</span></span>",
+      "correctCode": "Float",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which data type is this: <span class=\"green-keyword\">True</span></span>",
+      "correctCode": "Boolean",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "Integer",
+        "Float",
+        "String",
+        "Boolean"
+      ]
+    }
+  ]
+}

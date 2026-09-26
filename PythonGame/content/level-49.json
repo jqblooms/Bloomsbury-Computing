@@ -1,0 +1,138 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct code to get the length:",
+  "questions": [
+    {
+      "html": "<b>Which correctly gets the length of a list called <code>items</code>?</b>",
+      "correctCode": "len(items)",
+      "optionsRaw": [
+        "len(items)",
+        "items.length",
+        "items.len()",
+        "length(items)"
+      ],
+      "notice": "len(items) - in Python, len() is a function you pass the list into"
+    },
+    {
+      "html": "<b>Which correctly gets the length of a list called <code>scores</code>?</b>",
+      "correctCode": "len(scores)",
+      "optionsRaw": [
+        "len(scores)",
+        "scores.length",
+        "scores.len()",
+        "length(scores)"
+      ],
+      "notice": "len(scores) - len() works with any list, just pass the list name in"
+    },
+    {
+      "html": "<b>Which correctly prints the length of a list called <code>names</code>?</b>",
+      "correctCode": "print(len(names))",
+      "optionsRaw": [
+        "print(len(names))",
+        "print(names.length)",
+        "len(print(names))",
+        "print(length(names))"
+      ],
+      "notice": "print(len(names)) - wrap len() inside print() to display the result"
+    },
+    {
+      "html": "<b>Which correctly prints the length of a list called <code>colours</code>?</b>",
+      "correctCode": "print(len(colours))",
+      "optionsRaw": [
+        "print(len(colours))",
+        "print(colours.length)",
+        "print(colours.len())",
+        "len(print(colours))"
+      ],
+      "notice": "print(len(colours)) - len() goes inside print(), not the other way around"
+    },
+    {
+      "html": "<b>Which correctly stores the length of a list called <code>fruits</code> in a variable?</b>",
+      "correctCode": "total = len(fruits)",
+      "optionsRaw": [
+        "total = len(fruits)",
+        "total = fruits.length",
+        "total = fruits.len()",
+        "total = length(fruits)"
+      ],
+      "notice": "total = len(fruits) - you can store the result of len() just like any other value"
+    },
+    {
+      "html": "<b>Which correctly gets the length of a list called <code>players</code>?</b>",
+      "correctCode": "len(players)",
+      "optionsRaw": [
+        "len(players)",
+        "players.size()",
+        "players.length",
+        "count(players)"
+      ],
+      "notice": "len(players) - Python uses len(), not .size() or .length like other languages"
+    },
+    {
+      "html": "<b>Which correctly prints the length of a list called <code>pets</code>?</b>",
+      "correctCode": "print(len(pets))",
+      "optionsRaw": [
+        "print(len(pets))",
+        "print(pets.length)",
+        "print(size(pets))",
+        "print(count(pets))"
+      ],
+      "notice": "print(len(pets)) - len() is the only correct way to get a list's length in Python"
+    },
+    {
+      "html": "<b>Which correctly stores the length of a list called <code>cities</code> in a variable called <code>total</code>?</b>",
+      "correctCode": "total = len(cities)",
+      "optionsRaw": [
+        "total = len(cities)",
+        "total = cities.length",
+        "len(total) = cities",
+        "total = count(cities)"
+      ],
+      "notice": "total = len(cities) - assign the result of len() to the variable"
+    },
+    {
+      "html": "<b>Which correctly gets the length of a list called <code>numbers</code>?</b>",
+      "correctCode": "len(numbers)",
+      "optionsRaw": [
+        "len(numbers)",
+        "numbers.length()",
+        "numbers.size",
+        "count(numbers)"
+      ],
+      "notice": "len(numbers) - len() is a built-in Python function, pass the list as an argument"
+    },
+    {
+      "html": "<b>Which correctly prints the length of a list called <code>days</code>?</b>",
+      "correctCode": "print(len(days))",
+      "optionsRaw": [
+        "print(len(days))",
+        "print(days.length)",
+        "print(days.count())",
+        "len(days).print()"
+      ],
+      "notice": "print(len(days)) - you can't call .print() on a number, print() is a function"
+    },
+    {
+      "html": "<b>Which correctly stores the length of a list called <code>words</code> in a variable called <code>count</code>?</b>",
+      "correctCode": "count = len(words)",
+      "optionsRaw": [
+        "count = len(words)",
+        "count = words.length",
+        "count = words.len()",
+        "len(words) = count"
+      ],
+      "notice": "count = len(words) - the variable goes on the left, the value on the right"
+    },
+    {
+      "html": "<b>Which correctly gets the length of a list called <code>ages</code>?</b>",
+      "correctCode": "len(ages)",
+      "optionsRaw": [
+        "len(ages)",
+        "ages.length",
+        "ages.size()",
+        "sizeof(ages)"
+      ],
+      "notice": "len(ages) - Python does not have .length, .size() or sizeof() for lists"
+    }
+  ]
+}

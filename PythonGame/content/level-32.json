@@ -1,0 +1,90 @@
+{
+  "type": "text",
+  "inputLabel": "Write the first line of the for loop:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">runs exactly 4 times</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*4\\s*\\)\\s*:|^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*4\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(4): or for i in range(0, 4):"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">runs exactly 10 times</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*10\\s*\\)\\s*:|^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*10\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(10): or for i in range(0, 10):"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop where <span class=\"green-keyword\">i goes from 1 to 5</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*1\\s*,\\s*6\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(1, 6): - stop value must be 6 to include 5"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop where <span class=\"green-keyword\">i goes from 0 to 9</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*10\\s*\\)\\s*:|^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*10\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(10): or for i in range(0, 10):"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop where <span class=\"green-keyword\">i goes from 3 to 7</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*3\\s*,\\s*8\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(3, 8): - starts at 3 and stops before 8"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">runs exactly once</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*1\\s*\\)\\s*:|^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*1\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(1): or for i in range(0, 1):"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop where <span class=\"green-keyword\">i goes from 5 to 9</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*5\\s*,\\s*10\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(5, 10): - starts at 5 and stops before 10"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">runs exactly 3 times</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*3\\s*\\)\\s*:|^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*3\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(3): or for i in range(0, 3):"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop where <span class=\"green-keyword\">i goes from 0 to 4</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*5\\s*\\)\\s*:|^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*5\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(5): or for i in range(0, 5):"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop where <span class=\"green-keyword\">i goes from 1 to 10</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*1\\s*,\\s*11\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(1, 11): - stop value must be 11 to include 10"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop where <span class=\"green-keyword\">i goes from 2 to 6</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*2\\s*,\\s*7\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(2, 7): - starts at 2 and stops before 7"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a loop that <span class=\"green-keyword\">runs exactly 100 times</span></span>",
+      "correctCode": "^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*100\\s*\\)\\s*:|^\\s*for\\s+i\\s+in\\s+range\\s*\\(\\s*0\\s*,\\s*100\\s*\\)\\s*:$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "for i in range(100): or for i in range(0, 100):"
+    }
+  ]
+}

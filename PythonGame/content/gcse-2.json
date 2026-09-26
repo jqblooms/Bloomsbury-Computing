@@ -1,0 +1,123 @@
+{
+  "title": "GCSE Exam 2: Total Rainfall",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to calculate the total rainfall recorded in a 30-day month.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter the rainfall for each day in millimetres</li><li>repeat this input process for 30 days</li><li>calculate the total rainfall for the month</li><li>output the total rainfall in an appropriate message</li></ul>",
+      "explanation": "Format:\ntotal = 0\nfor i in range(30):\n    rainfall = float(input('Enter rainfall: '))\n    total += rainfall\nprint('Total rainfall:', total)",
+      "testCases": [
+        {
+          "inputs": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ],
+          "expectedOutput": [
+            "165"
+          ]
+        },
+        {
+          "inputs": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "10"
+          ],
+          "expectedOutput": [
+            "10"
+          ]
+        },
+        {
+          "inputs": [
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5",
+            "5"
+          ],
+          "expectedOutput": [
+            "150"
+          ]
+        }
+      ]
+    }
+  ]
+}

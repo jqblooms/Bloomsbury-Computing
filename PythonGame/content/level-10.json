@@ -1,0 +1,54 @@
+{
+  "type": "var_print",
+  "inputLabel": "Define variable & print it (Enter for new line):",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">name</span> in a variable and <span class=\"green-keyword\">print</span> it.</span>",
+      "correctCode": "name\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*\\n\\s*print\\(\\s*name\\s*\\)",
+      "useRegex": true,
+      "notice": "variable = \"string\"\nprint(variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">age</span> in a variable and <span class=\"green-keyword\">display</span> it.</span>",
+      "correctCode": "age\\s*=\\s*\\d+\\s*\\n\\s*print\\(\\s*age\\s*\\)",
+      "useRegex": true,
+      "notice": "variable = number\nprint(variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">city</span> in a variable and <span class=\"green-keyword\">output</span> it.</span>",
+      "correctCode": "city\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*\\n\\s*print\\(\\s*city\\s*\\)",
+      "useRegex": true,
+      "notice": "variable = \"string\"\nprint(variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">school</span> in a variable and <span class=\"green-keyword\">show</span> it.</span>",
+      "correctCode": "school\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*\\n\\s*print\\(\\s*school\\s*\\)",
+      "useRegex": true,
+      "notice": "variable = \"string\"\nprint(variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">hobby</span> in a variable and <span class=\"green-keyword\">print</span> it.</span>",
+      "correctCode": "hobby\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*\\n\\s*print\\(\\s*hobby\\s*\\)",
+      "useRegex": true,
+      "notice": "variable = \"string\"\nprint(variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">score</span> in a variable and <span class=\"green-keyword\">display</span> it.</span>",
+      "correctCode": "score\\s*=\\s*\\d+\\s*\\n\\s*print\\(\\s*score\\s*\\)",
+      "useRegex": true,
+      "notice": "variable = number\nprint(variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">year</span> in a variable and <span class=\"green-keyword\">write</span> it.</span>",
+      "correctCode": "year\\s*=\\s*\\d+\\s*\\n\\s*print\\(\\s*year\\s*\\)",
+      "useRegex": true,
+      "notice": "variable = number\nprint(variable)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store your <span class=\"green-keyword\">superpower</span> in a variable and <span class=\"green-keyword\">output</span> it.</span>",
+      "correctCode": "superpower\\s*=\\s*(?:\"[^\"]*\"|'[^']*')\\s*\\n\\s*print\\(\\s*superpower\\s*\\)",
+      "useRegex": true,
+      "notice": "variable = \"string\"\nprint(variable)"
+    }
+  ]
+}

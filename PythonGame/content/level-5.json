@@ -1,0 +1,70 @@
+{
+  "type": "multiline",
+  "inputLabel": "Write a comment (#) then the code:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a comment to <span class=\"green-keyword\">output</span> <span class=\"green-keyword\">Hello</span></span>",
+      "keywords": [
+        "output",
+        "Hello"
+      ],
+      "correctCode": "print(\"Hello\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a comment to <span class=\"green-keyword\">display</span> <span class=\"green-keyword\">World</span></span>",
+      "keywords": [
+        "display",
+        "World"
+      ],
+      "correctCode": "print(\"World\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a comment to <span class=\"green-keyword\">show</span> <span class=\"green-keyword\">Score</span></span>",
+      "keywords": [
+        "show",
+        "Score"
+      ],
+      "correctCode": "print(\"Score\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a comment to <span class=\"green-keyword\">write</span> <span class=\"green-keyword\">Game Over</span></span>",
+      "keywords": [
+        "write",
+        "Game Over"
+      ],
+      "correctCode": "print(\"Game Over\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a comment to <span class=\"green-keyword\">print</span> <span class=\"green-keyword\">Winner</span></span>",
+      "keywords": [
+        "print",
+        "Winner"
+      ],
+      "correctCode": "print(\"Winner\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a comment to <span class=\"green-keyword\">display</span> <span class=\"green-keyword\">Level 5</span></span>",
+      "keywords": [
+        "display",
+        "Level 5"
+      ],
+      "correctCode": "print(\"Level 5\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a comment to <span class=\"green-keyword\">output</span> <span class=\"green-keyword\">Coding</span></span>",
+      "keywords": [
+        "output",
+        "Coding"
+      ],
+      "correctCode": "print(\"Coding\")"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write a comment to <span class=\"green-keyword\">show</span> <span class=\"green-keyword\">Python</span></span>",
+      "keywords": [
+        "show",
+        "Python"
+      ],
+      "correctCode": "print(\"Python\")"
+    }
+  ]
+}

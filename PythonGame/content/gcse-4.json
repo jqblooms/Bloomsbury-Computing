@@ -1,0 +1,63 @@
+{
+  "title": "GCSE Exam 4: Total Cost",
+  "questions": [
+    {
+      "type": "extended_run",
+      "prompt": "An algorithm is required to calculate the total cost of 10 items purchased.<br><br>Write a Python program to:<br><ul style='text-align:left; margin-top:8px;'><li>prompt the user to enter the price of each item</li><li>repeat this input process for 10 items</li><li>calculate the total cost of all the items</li><li>output the total cost in an appropriate message</li></ul>",
+      "explanation": "Format:\ntotal = 0\nfor i in range(10):\n    price = float(input('Enter price: '))\n    total += price\nprint('Total cost:', total)",
+      "testCases": [
+        {
+          "inputs": [
+            "1.99",
+            "2.50",
+            "3.00",
+            "4.99",
+            "5.00",
+            "0.99",
+            "1.50",
+            "2.00",
+            "3.50",
+            "4.00"
+          ],
+          "expectedOutput": [
+            "29.47"
+          ]
+        },
+        {
+          "inputs": [
+            "10",
+            "10",
+            "10",
+            "10",
+            "10",
+            "10",
+            "10",
+            "10",
+            "10",
+            "10"
+          ],
+          "expectedOutput": [
+            "100"
+          ]
+        },
+        {
+          "inputs": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "99.99"
+          ],
+          "expectedOutput": [
+            "99.99"
+          ]
+        }
+      ]
+    }
+  ]
+}

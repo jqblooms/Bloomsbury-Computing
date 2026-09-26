@@ -1,0 +1,86 @@
+{
+  "type": "mcq",
+  "inputLabel": "Match the code to the comment:",
+  "questions": [
+    {
+      "html": "<span class=\"code-comment\"># Output \"Hello\"</span>",
+      "correctCode": "print(\"Hello\")",
+      "optionsRaw": [
+        "print(\"Hello\")",
+        "print \"Hello\"",
+        "print(\"Hi\")",
+        "print(Hello)"
+      ]
+    },
+    {
+      "html": "<span class=\"code-comment\"># Display \"Game Over\"</span>",
+      "correctCode": "print(\"Game Over\")",
+      "optionsRaw": [
+        "print(\"Game Over\")",
+        "print(\"Game Over\"",
+        "print(\"GameOver\")",
+        "print(\"Start\")"
+      ]
+    },
+    {
+      "html": "<span class=\"code-comment\"># Tell user \"Score\"</span>",
+      "correctCode": "print(\"Score\")",
+      "optionsRaw": [
+        "print(\"Score\")",
+        "Print(\"Score\")",
+        "print(\"Points\")",
+        "print(Score)"
+      ]
+    },
+    {
+      "html": "<span class=\"code-comment\"># Write \"Python\"</span>",
+      "correctCode": "print(\"Python\")",
+      "optionsRaw": [
+        "print(\"Python\")",
+        "print(\"Python)",
+        "print(\"Java\")",
+        "print \"Python\""
+      ]
+    },
+    {
+      "html": "<span class=\"code-comment\"># Show \"Win\"</span>",
+      "correctCode": "print(\"Win\")",
+      "optionsRaw": [
+        "print(\"Win\")",
+        "print(\"Won\")",
+        "print(Win)",
+        "print(\"Win\""
+      ]
+    },
+    {
+      "html": "<span class=\"code-comment\"># Print \"Loading...\"</span>",
+      "correctCode": "print(\"Loading...\")",
+      "optionsRaw": [
+        "print(\"Loading...\")",
+        "print(\"Loading..\")",
+        "print(\"Load\")",
+        "print \"Loading...\""
+      ]
+    },
+    {
+      "html": "<span class=\"code-comment\"># Output \"Error\"</span>",
+      "correctCode": "print(\"Error\")",
+      "optionsRaw": [
+        "print(\"Error\")",
+        "Print(\"Error\")",
+        "print(\"Mistake\")",
+        "print(Error)"
+      ]
+    },
+    {
+      "html": "<span class=\"code-comment\"># Display \"100\"</span>",
+      "correctCode": "print(\"100\")",
+      "optionsRaw": [
+        "print(\"100\")",
+        "print(\"100\"",
+        "print(\"Ten\")",
+        "print \"100\""
+      ]
+    }
+  ]
+}

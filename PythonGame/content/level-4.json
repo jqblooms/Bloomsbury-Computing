@@ -1,0 +1,56 @@
+{
+  "type": "text",
+  "inputLabel": "Read the comment and type the code:",
+  "questions": [
+    {
+      "html": "<span class=\"code-comment\"># Output \"Hello\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Hello[\"']\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Display \"Game Over\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Game Over[\"']\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Tell user \"Score\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Score[\"']\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Write \"Python\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Python[\"']\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Show \"Win\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Win[\"']\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Print \"Loading...\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Loading\\.\\.\\.[\"']\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Output \"Error\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Error[\"']\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Display \"100\"</span>",
+      "correctCode": "print\\s*\\(\\s*(?:[\"']100[\"']|100)\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Write \"Code\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Code[\"']\\s*\\)",
+      "useRegex": true
+    },
+    {
+      "html": "<span class=\"code-comment\"># Show \"Start\"</span>",
+      "correctCode": "print\\s*\\(\\s*[\"']Start[\"']\\s*\\)",
+      "useRegex": true
+    }
+  ]
+}

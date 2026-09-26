@@ -1,0 +1,72 @@
+{
+  "type": "mcq",
+  "inputLabel": "Choose the correct code to get input:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">name</span> and store it</span>",
+      "correctCode": "name = input(\"Please enter your name\")",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "name = input(\"Please enter your name\")",
+        "name = input(\"Please enter your name\"",
+        "input(\"Please enter your name\")",
+        "name = print(\"Please enter your name\")"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">age</span> and store it</span>",
+      "correctCode": "age = int(input(\"Please enter your age\"))",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "age = int(input(\"Please enter your age\"))",
+        "age = input(\"Please enter your age\")",
+        "age = int(input(\"Please enter your age\")",
+        "int(input(\"Please enter your age\"))"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">city</span> and store it</span>",
+      "correctCode": "city = input(\"Please enter your city\")",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "city = input(\"Please enter your city\")",
+        "city = input(\"Please enter your city\"",
+        "input(\"Please enter your city\")",
+        "city = print(\"Please enter your city\")"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">hobby</span> and store it</span>",
+      "correctCode": "hobby = input(\"Please enter your hobby\")",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "hobby = input(\"Please enter your hobby\")",
+        "hobby = input(\"Please enter your hobby\"",
+        "input(\"Please enter your hobby\")",
+        "hobby = print(\"Please enter your hobby\")"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">score</span> (number) and store it</span>",
+      "correctCode": "score = int(input(\"Enter score\"))",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "score = int(input(\"Enter score\"))",
+        "score = input(\"Enter score\")",
+        "score = int(input(\"Enter score\")",
+        "int(input(\"Enter score\"))"
+      ]
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Ask the user for their <span class=\"green-keyword\">school</span> and store it</span>",
+      "correctCode": "school = input(\"Enter school\")",
+      "triggerConsole": true,
+      "optionsRaw": [
+        "school = input(\"Enter school\")",
+        "school = input(\"Enter school\"",
+        "input(\"Enter school\")",
+        "school = print(\"Enter school\")"
+      ]
+    }
+  ]
+}

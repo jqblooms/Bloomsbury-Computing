@@ -1,0 +1,103 @@
+{
+  "type": "mcq",
+  "execute": false,
+  "inputLabel": "Choose the correct comparison operator:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator means: <span class=\"green-keyword\">Greater than</span></span>",
+      "correctCode": ">",
+      "triggerConsole": false,
+      "optionsRaw": [
+        ">",
+        "<",
+        ">=",
+        "=="
+      ],
+      "notice": "> means greater than"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator means: <span class=\"green-keyword\">Less than</span></span>",
+      "correctCode": "<",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "<",
+        ">",
+        "<=",
+        "!="
+      ],
+      "notice": "< means less than"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator means: <span class=\"green-keyword\">Equal to</span></span>",
+      "correctCode": "==",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "==",
+        "!=",
+        ">=",
+        "<="
+      ],
+      "notice": "== means equal to - use double equals to compare, single = is for assignment"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator means: <span class=\"green-keyword\">Not equal to</span></span>",
+      "correctCode": "!=",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "!=",
+        "==",
+        "<",
+        ">"
+      ],
+      "notice": "!= means not equal to"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator means: <span class=\"green-keyword\">Greater than or equal to</span></span>",
+      "correctCode": ">=",
+      "triggerConsole": false,
+      "optionsRaw": [
+        ">=",
+        "<=",
+        ">",
+        "=="
+      ],
+      "notice": ">= means greater than or equal to"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator means: <span class=\"green-keyword\">Less than or equal to</span></span>",
+      "correctCode": "<=",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "<=",
+        ">=",
+        "<",
+        "!="
+      ],
+      "notice": "<= means less than or equal to"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator means: <span class=\"green-keyword\">Is exactly the same as</span></span>",
+      "correctCode": "==",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "==",
+        "!=",
+        ">",
+        "<"
+      ],
+      "notice": "== means is exactly the same as - don't confuse it with = which assigns a value"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Which operator means: <span class=\"green-keyword\">Does not equal</span></span>",
+      "correctCode": "!=",
+      "triggerConsole": false,
+      "optionsRaw": [
+        "!=",
+        "==",
+        ">=",
+        "<="
+      ],
+      "notice": "!= means does not equal - the ! means 'not'"
+    }
+  ]
+}

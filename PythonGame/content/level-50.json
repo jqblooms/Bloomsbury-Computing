@@ -1,0 +1,90 @@
+{
+  "type": "text",
+  "inputLabel": "Write the correct code to get the length:",
+  "questions": [
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code to get the length of a list called <span class=\"green-keyword\">items</span></span>",
+      "correctCode": "^\\s*len\\s*\\(\\s*items\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "len(items)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code to get the length of a list called <span class=\"green-keyword\">scores</span></span>",
+      "correctCode": "^\\s*len\\s*\\(\\s*scores\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "len(scores)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code to <span class=\"green-keyword\">print</span> the length of a list called <span class=\"green-keyword\">names</span></span>",
+      "correctCode": "^\\s*print\\s*\\(\\s*len\\s*\\(\\s*names\\s*\\)\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "print(len(names))"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code to <span class=\"green-keyword\">print</span> the length of a list called <span class=\"green-keyword\">colours</span></span>",
+      "correctCode": "^\\s*print\\s*\\(\\s*len\\s*\\(\\s*colours\\s*\\)\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "print(len(colours))"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store the length of a list called <span class=\"green-keyword\">fruits</span> in a variable called <span class=\"green-keyword\">total</span></span>",
+      "correctCode": "^\\s*total\\s*=\\s*len\\s*\\(\\s*fruits\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "total = len(fruits)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code to get the length of a list called <span class=\"green-keyword\">players</span></span>",
+      "correctCode": "^\\s*len\\s*\\(\\s*players\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "len(players)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code to <span class=\"green-keyword\">print</span> the length of a list called <span class=\"green-keyword\">pets</span></span>",
+      "correctCode": "^\\s*print\\s*\\(\\s*len\\s*\\(\\s*pets\\s*\\)\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "print(len(pets))"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store the length of a list called <span class=\"green-keyword\">cities</span> in a variable called <span class=\"green-keyword\">total</span></span>",
+      "correctCode": "^\\s*total\\s*=\\s*len\\s*\\(\\s*cities\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "total = len(cities)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code to get the length of a list called <span class=\"green-keyword\">numbers</span></span>",
+      "correctCode": "^\\s*len\\s*\\(\\s*numbers\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "len(numbers)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Write the code to <span class=\"green-keyword\">print</span> the length of a list called <span class=\"green-keyword\">days</span></span>",
+      "correctCode": "^\\s*print\\s*\\(\\s*len\\s*\\(\\s*days\\s*\\)\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "print(len(days))"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store the length of a list called <span class=\"green-keyword\">words</span> in a variable called <span class=\"green-keyword\">count</span></span>",
+      "correctCode": "^\\s*count\\s*=\\s*len\\s*\\(\\s*words\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "count = len(words)"
+    },
+    {
+      "html": "<span style=\"font-size:0.9rem\">Store the length of a list called <span class=\"green-keyword\">ages</span> in a variable called <span class=\"green-keyword\">total</span></span>",
+      "correctCode": "^\\s*total\\s*=\\s*len\\s*\\(\\s*ages\\s*\\)\\s*$",
+      "useRegex": true,
+      "triggerConsole": false,
+      "notice": "total = len(ages)"
+    }
+  ]
+}
