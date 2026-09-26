@@ -118,6 +118,14 @@
           delete e.returnValue;
         }, true);
 
+        // Bloomsbury Computing: the site is dark, so the editor starts dark
+        // with a blue accent, unless the student has picked a theme already.
+        try {
+          if (!localStorage.getItem('tw:theme')) localStorage.setItem('tw:theme', JSON.stringify({ accent: 'blue', gui: 'dark' }));
+        } catch (e) {
+          // storage blocked: the editor falls back to the system setting
+        }
+
         var theme = '';
         var accent = '#ff4c4c';
 

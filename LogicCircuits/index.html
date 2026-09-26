@@ -4,31 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Logic Circuits: Learn by Building</title>
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
+  /* The site's dark theme (shared/bc-theme.css, loaded above). Gate
+     colours are the site palette's light tones, which read on dark. */
   :root {
-    --bg: #f5f5f0;
-    --panel: #ffffff;
-    --panel2: #f0f0eb;
-    --border: #cccccc;
-    --accent: #2255cc;
-    --accent2: #cc3300;
-    --accent3: #1a7a1a;
-    --text: #1a1a1a;
-    --text-dim: #666666;
-    --gate-and: #2255cc;
-    --gate-or: #7733aa;
-    --gate-not: #cc3300;
-    --gate-nand: #b36200;
-    --gate-nor: #993366;
-    --gate-xor: #1a7a1a;
-    --wire: #2255cc;
-    --wire-active: #1a7a1a;
+    --panel: var(--surface);
+    --panel2: var(--surface-2);
+    --border: var(--line-strong);
+    --accent: var(--brand);
+    --accent2: #f28b82;
+    --accent3: #81c995;
+    --text: var(--ink);
+    --text-dim: var(--muted);
+    --gate-and: #8ab4f8;
+    --gate-or: #c58af9;
+    --gate-not: #f28b82;
+    --gate-nand: #fcad70;
+    --gate-nor: #ff8bcb;
+    --gate-xor: #81c995;
+    --wire: #8ab4f8;
+    --wire-active: #81c995;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     background: var(--bg);
     color: var(--text);
     height: 100vh;
@@ -49,7 +51,7 @@
     position: relative;
   }
   header h1 {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1.2rem;
     font-weight: 700;
     color: var(--accent);
@@ -58,7 +60,7 @@
   }
   .header-sep { flex: 1; }
   .score-display {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.9rem;
     color: var(--text-dim);
     display: flex;
@@ -67,11 +69,11 @@
   .score-display span { color: var(--accent3); font-size: 1rem; font-weight: 700; }
 
   .question-box {
-    background: #eef2ff;
+    background: rgba(138, 180, 248, .12);
     border: 2px solid var(--accent);
     border-radius: 6px;
     padding: 8px 18px;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1.15rem;
     color: var(--text);
     letter-spacing: 0;
@@ -118,7 +120,7 @@
     min-height: 0;
   }
   .palette-label {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-dim);
@@ -141,13 +143,13 @@
     user-select: none;
   }
   .palette-gate:hover {
-    background: #eef2ff;
+    background: rgba(138, 180, 248, .12);
     border-color: var(--accent);
   }
   .palette-gate:active { cursor: grabbing; }
   .palette-gate svg { pointer-events: none; }
   .palette-gate-name {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--text);
@@ -215,7 +217,7 @@
     cursor: pointer;
   }
   .zoom-control-row span {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--text-dim);
@@ -223,7 +225,7 @@
     flex: 1;
   }
   .zoom-reset-btn {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.75rem;
     font-weight: 600;
     border: 1px solid var(--border);
@@ -247,10 +249,10 @@
   .io-node.input-node { left: 20px; }
   .io-node.output-node { right: 20px; }
   .io-label {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #e8eaed;
     width: 24px;
     text-align: center;
   }
@@ -258,13 +260,13 @@
     width: 22px; height: 22px;
     border-radius: 50%;
     background: var(--panel2);
-    border: 2px solid #1a1a1a;
+    border: 2px solid #e8eaed;
     cursor: crosshair;
     position: relative;
     transition: all 0.15s;
     flex-shrink: 0;
   }
-  .io-anchor:hover, .io-anchor.highlight { background: #1a1a1a; border-color: #1a1a1a; }
+  .io-anchor:hover, .io-anchor.highlight { background: #e8eaed; border-color: #e8eaed; }
 
   /* PLACED GATES */
   .placed-gate {
@@ -289,7 +291,7 @@
     right: 20px;
     width: 48px; height: 48px;
     background: var(--panel);
-    border: 2px solid #ff4444;
+    border: 2px solid #f28b82;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -299,8 +301,8 @@
     z-index: 10;
   }
   .bin.drag-over {
-    background: #ffeeee;
-    border-color: #cc0000;
+    background: rgba(242, 139, 130, .13);
+    border-color: #f28b82;
     transform: scale(1.1);
   }
   .bin svg { pointer-events: none; }
@@ -316,7 +318,7 @@
     z-index: 10;
   }
   .btn {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0;
@@ -328,16 +330,16 @@
   }
   .btn-primary {
     background: var(--accent);
-    color: #000;
+    color: var(--on-brand);
     font-weight: 700;
   }
-  .btn-primary:hover { background: #1144bb; }
+  .btn-primary:hover { background: #aecbfa; }
   .btn-secondary {
-    background: #ffffff;
+    background: #1d2128;
     color: var(--text);
     border: 2px solid var(--border);
   }
-  .btn-secondary:hover { border-color: #888; background: #f0f0f0; }
+  .btn-secondary:hover { border-color: #858c95; background: #1d2128; }
 
   /* FEEDBACK TOAST */
   .toast {
@@ -347,7 +349,7 @@
     transform: translateX(-50%) translateY(-80px);
     padding: 12px 28px;
     border-radius: 6px;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
     letter-spacing: 0;
     font-weight: 700;
@@ -357,8 +359,8 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.correct { background: #d4edda; color: #155724; border: 2px solid #28a745; }
-  .toast.wrong { background: #f8d7da; color: #721c24; border: 2px solid #dc3545; }
+  .toast.correct { background: rgba(129, 201, 149, .13); color: #81c995; border: 2px solid #81c995; }
+  .toast.wrong { background: rgba(242, 139, 130, .13); color: #f28b82; border: 2px solid #f28b82; }
 
   /* DRAG GHOST */
   .drag-ghost {
@@ -382,7 +384,7 @@
   .levelup {
     position: absolute;
     inset: 0;
-    background: rgba(255,255,255,0.92);
+    background: rgba(15, 17, 21, .92);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -395,7 +397,7 @@
   }
   .levelup.show { opacity: 1; pointer-events: all; }
   .levelup h2 {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 2rem;
     color: var(--accent3);
     letter-spacing: 0;
@@ -411,18 +413,18 @@
   .we-el.highlight-new path,
   .we-el.highlight-new line,
   .we-el.highlight-new rect,
-  .we-el.highlight-new circle { stroke: #2255cc !important; }
+  .we-el.highlight-new circle { stroke: #8ab4f8 !important; }
 
   scrollbar-width: thin;
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #f0f0f0; }
-  ::-webkit-scrollbar-thumb { background: #cccccc; border-radius: 3px; }
+  ::-webkit-scrollbar-track { background: #1d2128; }
+  ::-webkit-scrollbar-thumb { background: #3b424e; border-radius: 3px; }
 
   /* MAIN MENU */
   #main-menu {
     position: fixed;
     inset: 0;
-    background: #f5f5f0;
+    background: #0f1115;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -431,20 +433,20 @@
     z-index: 5000;
   }
   #main-menu h1 {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 2rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #e8eaed;
     margin-bottom: 8px;
   }
   #main-menu p {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
-    color: #666;
+    color: #9aa0a6;
     margin-bottom: 16px;
   }
   .menu-btn {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 700;
     padding: 14px 48px;
@@ -455,22 +457,22 @@
     width: 220px;
   }
   .menu-btn-primary {
-    background: #2255cc;
-    color: #fff;
+    background: #8ab4f8;
+    color: #1d2128;
   }
-  .menu-btn-primary:hover { background: #1144bb; }
+  .menu-btn-primary:hover { background: #aecbfa; }
   .menu-btn-secondary {
-    background: #fff;
-    color: #1a1a1a;
-    border: 2px solid #ccc;
+    background: #1d2128;
+    color: #e8eaed;
+    border: 2px solid #3b424e;
   }
-  .menu-btn-secondary:hover { background: #f0f0f0; border-color: #888; }
+  .menu-btn-secondary:hover { background: #1d2128; border-color: #858c95; }
 
   /* HELP SCREENS */
   #help-menu, #help-gates, #help-connections, #help-expressions {
     position: fixed;
     inset: 0;
-    background: #f5f5f0;
+    background: #0f1115;
     display: none;
     flex-direction: column;
     align-items: center;
@@ -482,62 +484,62 @@
   .help-back {
     align-self: flex-start;
     background: none;
-    border: 2px solid #ccc;
+    border: 2px solid #3b424e;
     border-radius: 6px;
     padding: 8px 16px;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
-    color: #333;
+    color: #c9cdd4;
     margin-bottom: 28px;
   }
-  .help-back:hover { border-color: #888; }
+  .help-back:hover { border-color: #858c95; }
   .help-menu-title {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1.8rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #e8eaed;
     margin-bottom: 8px;
   }
   .help-menu-sub {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
-    color: #666;
+    color: #9aa0a6;
     margin-bottom: 32px;
   }
   .help-topic-btn {
     width: 320px;
     padding: 16px 24px;
     margin-bottom: 12px;
-    background: #fff;
-    border: 2px solid #ccc;
+    background: #1d2128;
+    border: 2px solid #3b424e;
     border-radius: 8px;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 600;
-    color: #1a1a1a;
+    color: #e8eaed;
     cursor: pointer;
     text-align: left;
     transition: border-color 0.15s, background 0.15s;
   }
-  .help-topic-btn:hover { border-color: #2255cc; background: #f0f4ff; }
+  .help-topic-btn:hover { border-color: #8ab4f8; background: rgba(138, 180, 248, .12); }
   /* Gate info page */
   .gate-info-wrap {
     width: 100%;
     max-width: 700px;
   }
   .gate-info-title {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1.8rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #e8eaed;
     margin-bottom: 24px;
     text-align: center;
   }
   .gate-card {
-    background: #fff;
-    border: 2px solid #ddd;
+    background: #1d2128;
+    border: 2px solid #3b424e;
     border-radius: 10px;
     padding: 28px;
     margin-bottom: 24px;
@@ -546,11 +548,11 @@
     gap: 16px;
   }
   .gate-card h3 {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 1.3rem;
     font-weight: 700;
-    color: #1a1a1a;
-    border-bottom: 2px solid #eee;
+    color: #e8eaed;
+    border-bottom: 2px solid #2b3039;
     padding-bottom: 10px;
   }
   .gate-card-body {
@@ -564,8 +566,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f8f8f8;
-    border: 1px solid #eee;
+    background: #171a20;
+    border: 1px solid #2b3039;
     border-radius: 8px;
     padding: 20px 28px;
   }
@@ -574,35 +576,35 @@
     min-width: 200px;
   }
   .gate-card-text p {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.95rem;
-    color: #333;
+    color: #c9cdd4;
     line-height: 1.6;
     margin-bottom: 14px;
   }
   .truth-table {
     border-collapse: collapse;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.9rem;
     width: 100%;
     max-width: 280px;
   }
   .truth-table th {
-    background: #1a1a1a;
-    color: #fff;
+    background: var(--surface-3);
+    color: var(--ink);
     padding: 8px 14px;
     text-align: center;
     font-weight: 700;
   }
   .truth-table td {
-    border: 1px solid #ddd;
+    border: 1px solid #3b424e;
     padding: 7px 14px;
     text-align: center;
-    color: #1a1a1a;
+    color: #e8eaed;
   }
-  .truth-table tr:nth-child(even) td { background: #f5f5f5; }
-  .truth-table .out-1 { color: #1a7a1a; font-weight: 700; }
-  .truth-table .out-0 { color: #cc3300; font-weight: 700; }
+  .truth-table tr:nth-child(even) td { background: #171a20; }
+  .truth-table .out-1 { color: #81c995; font-weight: 700; }
+  .truth-table .out-0 { color: #f28b82; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -615,7 +617,7 @@
 </div>
 
 <header id="app-header" style="display:none">
-  <button onclick="goHome()" title="Home" style="background:none;border:2px solid #ccc;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:2rem;line-height:1;color:#333;flex-shrink:0;" onmouseover="this.style.borderColor='#888'" onmouseout="this.style.borderColor='#ccc'">&#8962;</button>
+  <button onclick="goHome()" title="Home" style="background:none;border:2px solid #3b424e;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:2rem;line-height:1;color:#c9cdd4;flex-shrink:0;" onmouseover="this.style.borderColor='#858c95'" onmouseout="this.style.borderColor='#3b424e'">&#8962;</button>
   <h1>Logic Circuits</h1>
   <div class="question-box" id="question-display">
     <div class="q-label">BUILD THIS CIRCUIT</div>
@@ -666,7 +668,7 @@
     </div>
 
     <div class="bin" id="bin">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="2">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f28b82" stroke-width="2">
         <polyline points="3 6 5 6 21 6"/>
         <path d="M19 6l-1 14H6L5 6"/>
         <path d="M10 11v6M14 11v6"/>
@@ -685,9 +687,9 @@
 <script>
 // ===================== GATE SVG DEFINITIONS =====================
 const GATE_DEFS = {
-  AND: { color: '#1a1a1a', inputs: 2, w: 70, h: 50 },
-  OR:  { color: '#1a1a1a', inputs: 2, w: 70, h: 50 },
-  NOT: { color: '#1a1a1a', inputs: 1, w: 60, h: 40 },
+  AND: { color: '#e8eaed', inputs: 2, w: 70, h: 50 },
+  OR:  { color: '#e8eaed', inputs: 2, w: 70, h: 50 },
+  NOT: { color: '#e8eaed', inputs: 1, w: 60, h: 40 },
 };
 
 // ===================== CANVAS ZOOM =====================
@@ -744,34 +746,34 @@ function makeGateSVG(type, color, small = false) {
 function gateShape(type, color) {
   switch(type) {
     case 'AND': return `
-      <path d="M10 8 L30 8 Q50 8 50 25 Q50 42 30 42 L10 42 Z" fill="#ffffff" stroke="${color}" stroke-width="2"/>
+      <path d="M10 8 L30 8 Q50 8 50 25 Q50 42 30 42 L10 42 Z" fill="#1d2128" stroke="${color}" stroke-width="2"/>
       <line x1="0" y1="16" x2="10" y2="16" stroke="${color}" stroke-width="1.5"/>
       <line x1="0" y1="34" x2="10" y2="34" stroke="${color}" stroke-width="1.5"/>
       <line x1="50" y1="25" x2="60" y2="25" stroke="${color}" stroke-width="1.5"/>`;
     case 'OR': return `
-      <path d="M10 8 Q20 8 35 8 Q55 8 58 25 Q55 42 35 42 Q20 42 10 42 Q18 30 18 25 Q18 20 10 8 Z" fill="#ffffff" stroke="${color}" stroke-width="2"/>
+      <path d="M10 8 Q20 8 35 8 Q55 8 58 25 Q55 42 35 42 Q20 42 10 42 Q18 30 18 25 Q18 20 10 8 Z" fill="#1d2128" stroke="${color}" stroke-width="2"/>
       <line x1="0" y1="16" x2="13" y2="16" stroke="${color}" stroke-width="1.5"/>
       <line x1="0" y1="34" x2="13" y2="34" stroke="${color}" stroke-width="1.5"/>
       <line x1="58" y1="25" x2="68" y2="25" stroke="${color}" stroke-width="1.5"/>`;
     case 'NOT': return `
-      <path d="M8 5 L48 20 L8 35 Z" fill="#ffffff" stroke="${color}" stroke-width="2"/>
-      <circle cx="51" cy="20" r="4" fill="#ffffff" stroke="${color}" stroke-width="2"/>
+      <path d="M8 5 L48 20 L8 35 Z" fill="#1d2128" stroke="${color}" stroke-width="2"/>
+      <circle cx="51" cy="20" r="4" fill="#1d2128" stroke="${color}" stroke-width="2"/>
       <line x1="0" y1="20" x2="8" y2="20" stroke="${color}" stroke-width="1.5"/>
       <line x1="55" y1="20" x2="60" y2="20" stroke="${color}" stroke-width="1.5"/>`;
     case 'NAND': return `
-      <path d="M10 8 L30 8 Q50 8 50 25 Q50 42 30 42 L10 42 Z" fill="#ffffff" stroke="${color}" stroke-width="2"/>
-      <circle cx="54" cy="25" r="4" fill="#ffffff" stroke="${color}" stroke-width="2"/>
+      <path d="M10 8 L30 8 Q50 8 50 25 Q50 42 30 42 L10 42 Z" fill="#1d2128" stroke="${color}" stroke-width="2"/>
+      <circle cx="54" cy="25" r="4" fill="#1d2128" stroke="${color}" stroke-width="2"/>
       <line x1="0" y1="16" x2="10" y2="16" stroke="${color}" stroke-width="1.5"/>
       <line x1="0" y1="34" x2="10" y2="34" stroke="${color}" stroke-width="1.5"/>
       <line x1="58" y1="25" x2="70" y2="25" stroke="${color}" stroke-width="1.5"/>`;
     case 'NOR': return `
-      <path d="M10 8 Q20 8 35 8 Q55 8 58 25 Q55 42 35 42 Q20 42 10 42 Q18 30 18 25 Q18 20 10 8 Z" fill="#ffffff" stroke="${color}" stroke-width="2"/>
-      <circle cx="62" cy="25" r="4" fill="#ffffff" stroke="${color}" stroke-width="2"/>
+      <path d="M10 8 Q20 8 35 8 Q55 8 58 25 Q55 42 35 42 Q20 42 10 42 Q18 30 18 25 Q18 20 10 8 Z" fill="#1d2128" stroke="${color}" stroke-width="2"/>
+      <circle cx="62" cy="25" r="4" fill="#1d2128" stroke="${color}" stroke-width="2"/>
       <line x1="0" y1="16" x2="13" y2="16" stroke="${color}" stroke-width="1.5"/>
       <line x1="0" y1="34" x2="13" y2="34" stroke="${color}" stroke-width="1.5"/>
       <line x1="66" y1="25" x2="70" y2="25" stroke="${color}" stroke-width="1.5"/>`;
     case 'XOR': return `
-      <path d="M13 8 Q23 8 38 8 Q58 8 61 25 Q58 42 38 42 Q23 42 13 42 Q21 30 21 25 Q21 20 13 8 Z" fill="#ffffff" stroke="${color}" stroke-width="2"/>
+      <path d="M13 8 Q23 8 38 8 Q58 8 61 25 Q58 42 38 42 Q23 42 13 42 Q21 30 21 25 Q21 20 13 8 Z" fill="#1d2128" stroke="${color}" stroke-width="2"/>
       <path d="M8 8 Q16 25 8 42" fill="none" stroke="${color}" stroke-width="2"/>
       <line x1="0" y1="16" x2="16" y2="16" stroke="${color}" stroke-width="1.5"/>
       <line x1="0" y1="34" x2="16" y2="34" stroke="${color}" stroke-width="1.5"/>
@@ -1256,7 +1258,7 @@ function startWireDrag(e, fromId, fromPort, fromType) {
   document.getElementById('canvas-zoom-layer').appendChild(previewSVG);
 
   const previewPath = document.createElementNS('http://www.w3.org/2000/svg','path');
-  previewPath.setAttribute('stroke','#1a1a1a');
+  previewPath.setAttribute('stroke','#e8eaed');
   previewPath.setAttribute('stroke-width','2');
   previewPath.setAttribute('fill','none');
   previewPath.setAttribute('stroke-dasharray','6 3');
@@ -1357,7 +1359,7 @@ function drawWires() {
 
     const path = document.createElementNS('http://www.w3.org/2000/svg','path');
     path.setAttribute('d', bezierPath(from.x, from.y, to.x, to.y));
-    path.setAttribute('stroke', '#1a1a1a');
+    path.setAttribute('stroke', '#e8eaed');
     path.setAttribute('stroke-width', '2');
     path.setAttribute('fill', 'none');
     path.setAttribute('opacity', '0.8');
@@ -1367,7 +1369,7 @@ function drawWires() {
     [from, to].forEach(pt => {
       const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
       c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('r','3');
-      c.setAttribute('fill','#1a1a1a');
+      c.setAttribute('fill','#e8eaed');
       svg.appendChild(c);
     });
   }
@@ -1479,18 +1481,18 @@ function openDevPanel() {
   panel.id = 'dev-panel';
   panel.style.cssText = [
     'position:fixed','top:50%','left:50%','transform:translate(-50%,-50%)',
-    'background:#fff','border:2px solid #333','border-radius:8px',
+    'background:#1d2128','border:2px solid #c9cdd4','border-radius:8px',
     'padding:24px 28px','z-index:9999','box-shadow:0 8px 32px rgba(0,0,0,0.25)',
-    'font-family:Arial,sans-serif','min-width:260px'
+    'font-family:Roboto,sans-serif','min-width:260px'
   ].join(';');
   panel.innerHTML =
     '<div style="font-weight:700;font-size:1rem;margin-bottom:4px;">Dev Mode</div>' +
-    '<div style="font-size:0.8rem;color:#666;margin-bottom:16px;">Current score: <strong>' + state.score + '</strong>, inputs: <strong>' + state.numInputs + '</strong></div>' +
+    '<div style="font-size:0.8rem;color:#9aa0a6;margin-bottom:16px;">Current score: <strong>' + state.score + '</strong>, inputs: <strong>' + state.numInputs + '</strong></div>' +
     '<label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px;">Set score:</label>' +
-    '<input id="dev-score-input" type="number" min="0" value="' + state.score + '" style="width:100%;padding:8px;font-size:1rem;border:2px solid #ccc;border-radius:4px;box-sizing:border-box;margin-bottom:12px;"/>' +
+    '<input id="dev-score-input" type="number" min="0" value="' + state.score + '" style="width:100%;padding:8px;font-size:1rem;border:2px solid #3b424e;border-radius:4px;box-sizing:border-box;margin-bottom:12px;"/>' +
     '<div style="display:flex;gap:8px;">' +
-    '<button id="dev-apply-btn" style="flex:1;padding:9px;background:#2255cc;color:#fff;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:0.9rem;">Apply</button>' +
-    '<button id="dev-cancel-btn" style="flex:1;padding:9px;background:#eee;color:#333;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:0.9rem;">Cancel</button>' +
+    '<button id="dev-apply-btn" style="flex:1;padding:9px;background:#8ab4f8;color:#1d2128;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:0.9rem;">Apply</button>' +
+    '<button id="dev-cancel-btn" style="flex:1;padding:9px;background:#2b3039;color:#c9cdd4;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-size:0.9rem;">Cancel</button>' +
     '</div>';
 
   document.body.appendChild(panel);
@@ -1596,31 +1598,31 @@ function svgGroup(id, children) {
   return g;
 }
 function svgBox(x, y, label) {
-  var r = svgEl('rect', { x:x, y:y, width:32, height:22, rx:4, fill:'#fff', stroke:'#1a1a1a', 'stroke-width':2 });
-  var t = svgEl('text', { x:x+16, y:y+16, 'font-family':'Arial', 'font-size':13, 'font-weight':'bold', fill:'#1a1a1a', 'text-anchor':'middle', 'dominant-baseline':'middle' });
+  var r = svgEl('rect', { x:x, y:y, width:32, height:22, rx:4, fill:'#1d2128', stroke:'#e8eaed', 'stroke-width':2 });
+  var t = svgEl('text', { x:x+16, y:y+16, 'font-family':'Roboto, sans-serif', 'font-size':13, 'font-weight':'bold', fill:'#e8eaed', 'text-anchor':'middle', 'dominant-baseline':'middle' });
   t.textContent = label;
   return [r, t];
 }
 function svgLine(id, x1,y1,x2,y2) {
-  var l = svgEl('line', { id:id, x1:x1, y1:y1, x2:x2, y2:y2, stroke:'#1a1a1a', 'stroke-width':2, class:'we-el hidden' });
+  var l = svgEl('line', { id:id, x1:x1, y1:y1, x2:x2, y2:y2, stroke:'#e8eaed', 'stroke-width':2, class:'we-el hidden' });
   return l;
 }
 function svgAND(id, x, y) {
-  var p = svgEl('path', { d:'M'+x+' '+(y-18)+' L'+(x+24)+' '+(y-18)+' Q'+(x+48)+' '+(y-18)+' '+(x+48)+' '+y+' Q'+(x+48)+' '+(y+18)+' '+(x+24)+' '+(y+18)+' L'+x+' '+(y+18)+' Z', fill:'#fff', stroke:'#1a1a1a', 'stroke-width':2.5 });
+  var p = svgEl('path', { d:'M'+x+' '+(y-18)+' L'+(x+24)+' '+(y-18)+' Q'+(x+48)+' '+(y-18)+' '+(x+48)+' '+y+' Q'+(x+48)+' '+(y+18)+' '+(x+24)+' '+(y+18)+' L'+x+' '+(y+18)+' Z', fill:'#1d2128', stroke:'#e8eaed', 'stroke-width':2.5 });
   return svgGroup(id, [p]);
 }
 function svgOR(id, x, y) {
-  var p = svgEl('path', { d:'M'+x+' '+(y-18)+' Q'+(x+10)+' '+(y-18)+' '+(x+24)+' '+(y-18)+' Q'+(x+48)+' '+(y-18)+' '+(x+52)+' '+y+' Q'+(x+48)+' '+(y+18)+' '+(x+24)+' '+(y+18)+' Q'+(x+10)+' '+(y+18)+' '+x+' '+(y+18)+' Q'+(x+8)+' '+y+' '+x+' '+(y-18)+' Z', fill:'#fff', stroke:'#1a1a1a', 'stroke-width':2.5 });
+  var p = svgEl('path', { d:'M'+x+' '+(y-18)+' Q'+(x+10)+' '+(y-18)+' '+(x+24)+' '+(y-18)+' Q'+(x+48)+' '+(y-18)+' '+(x+52)+' '+y+' Q'+(x+48)+' '+(y+18)+' '+(x+24)+' '+(y+18)+' Q'+(x+10)+' '+(y+18)+' '+x+' '+(y+18)+' Q'+(x+8)+' '+y+' '+x+' '+(y-18)+' Z', fill:'#1d2128', stroke:'#e8eaed', 'stroke-width':2.5 });
   return svgGroup(id, [p]);
 }
 function svgNOT(id, x, y) {
-  var p = svgEl('path', { d:'M'+x+' '+(y-15)+' L'+(x+38)+' '+y+' L'+x+' '+(y+15)+' Z', fill:'#fff', stroke:'#1a1a1a', 'stroke-width':2 });
-  var c = svgEl('circle', { cx:x+42, cy:y, r:4, fill:'#fff', stroke:'#1a1a1a', 'stroke-width':2 });
+  var p = svgEl('path', { d:'M'+x+' '+(y-15)+' L'+(x+38)+' '+y+' L'+x+' '+(y+15)+' Z', fill:'#1d2128', stroke:'#e8eaed', 'stroke-width':2 });
+  var c = svgEl('circle', { cx:x+42, cy:y, r:4, fill:'#1d2128', stroke:'#e8eaed', 'stroke-width':2 });
   return svgGroup(id, [p, c]);
 }
 function svgQBox(id, x, y) {
-  var r = svgEl('rect', { x:x, y:y-12, width:36, height:24, rx:4, fill:'#fff', stroke:'#1a1a1a', 'stroke-width':2 });
-  var t = svgEl('text', { x:x+18, y:y+5, 'font-family':'Arial', 'font-size':13, 'font-weight':'bold', fill:'#1a1a1a', 'text-anchor':'middle' });
+  var r = svgEl('rect', { x:x, y:y-12, width:36, height:24, rx:4, fill:'#1d2128', stroke:'#e8eaed', 'stroke-width':2 });
+  var t = svgEl('text', { x:x+18, y:y+5, 'font-family':'Roboto, sans-serif', 'font-size':13, 'font-weight':'bold', fill:'#e8eaed', 'text-anchor':'middle' });
   t.textContent = 'Q';
   return svgGroup(id, [r, t]);
 }
@@ -1645,9 +1647,9 @@ var WE_EXAMPLES = [
       [boxA,boxB,wireA,wireB,gate,wireQ,boxQ].forEach(function(e){ svg.appendChild(e); });
     },
     steps: [
-      { text:'Read the expression: <strong>Q = A AND B</strong>. No brackets here: it\'s just two inputs going into one gate. Simple!', hi:['a','and','b'], hiColor:'#f59e0b', show:[], newIds:[] },
-      { text:'Place an AND gate on the canvas. Connect input <strong>A</strong> to its top input and <strong>B</strong> to its bottom input.', hi:['a','b'], hiColor:'#2255cc', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'], newIds:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'] },
-      { text:'Connect the AND gate\'s output wire all the way to <strong>Q</strong>. Done! The AND gate outputs 1 only when both A and B are 1.', hi:['and'], hiColor:'#1a7a1a', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
+      { text:'Read the expression: <strong>Q = A AND B</strong>. No brackets here: it\'s just two inputs going into one gate. Simple!', hi:['a','and','b'], hiColor:'#fdd663', show:[], newIds:[] },
+      { text:'Place an AND gate on the canvas. Connect input <strong>A</strong> to its top input and <strong>B</strong> to its bottom input.', hi:['a','b'], hiColor:'#8ab4f8', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'], newIds:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'] },
+      { text:'Connect the AND gate\'s output wire all the way to <strong>Q</strong>. Done! The AND gate outputs 1 only when both A and B are 1.', hi:['and'], hiColor:'#81c995', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
     ]
   },
   {
@@ -1672,11 +1674,11 @@ var WE_EXAMPLES = [
       [boxA,boxB,boxC,wA,wB,gAND,wAO,wC,gOR,wQ,boxQ].forEach(function(e){ svg.appendChild(e); });
     },
     steps: [
-      { text:'Read the expression: <strong>Q = (A AND B) OR C</strong>. Spot the brackets around <em>A AND B</em>: that tells us to build the AND gate first.', hi:['br1','a','and','b','br2'], hiColor:'#f59e0b', show:[], newIds:[] },
-      { text:'Place an AND gate. Connect <strong>A</strong> to its top input and <strong>B</strong> to its bottom input. This handles the part inside the brackets.', hi:['a','b'], hiColor:'#2255cc', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'], newIds:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'] },
-      { text:'Now place an OR gate. Connect the AND gate\'s output wire into the OR gate\'s top input.', hi:['or'], hiColor:'#7733aa', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-ao','we-gate2'], newIds:['we-wire-ao','we-gate2'] },
-      { text:'Connect input <strong>C</strong> into the OR gate\'s bottom input.', hi:['c'], hiColor:'#1a7a1a', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-wire-c','we-gate1','we-wire-ao','we-gate2'], newIds:['we-box-c','we-wire-c'] },
-      { text:'Connect the OR gate\'s output to <strong>Q</strong>. Circuit complete! The signal flows from A and B through the AND gate, then together with C through the OR gate to reach Q.', hi:['or','c'], hiColor:'#1a7a1a', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-wire-c','we-gate1','we-wire-ao','we-gate2','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
+      { text:'Read the expression: <strong>Q = (A AND B) OR C</strong>. Spot the brackets around <em>A AND B</em>: that tells us to build the AND gate first.', hi:['br1','a','and','b','br2'], hiColor:'#fdd663', show:[], newIds:[] },
+      { text:'Place an AND gate. Connect <strong>A</strong> to its top input and <strong>B</strong> to its bottom input. This handles the part inside the brackets.', hi:['a','b'], hiColor:'#8ab4f8', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'], newIds:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'] },
+      { text:'Now place an OR gate. Connect the AND gate\'s output wire into the OR gate\'s top input.', hi:['or'], hiColor:'#c58af9', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-ao','we-gate2'], newIds:['we-wire-ao','we-gate2'] },
+      { text:'Connect input <strong>C</strong> into the OR gate\'s bottom input.', hi:['c'], hiColor:'#81c995', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-wire-c','we-gate1','we-wire-ao','we-gate2'], newIds:['we-box-c','we-wire-c'] },
+      { text:'Connect the OR gate\'s output to <strong>Q</strong>. Circuit complete! The signal flows from A and B through the AND gate, then together with C through the OR gate to reach Q.', hi:['or','c'], hiColor:'#81c995', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-wire-c','we-gate1','we-wire-ao','we-gate2','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
     ]
   },
   {
@@ -1694,9 +1696,9 @@ var WE_EXAMPLES = [
       [boxA,wA,gNOT,wQ,boxQ].forEach(function(e){ svg.appendChild(e); });
     },
     steps: [
-      { text:'Read the expression: <strong>Q = NOT A</strong>. Just one gate, one input. NOT flips the signal: if A is 1, Q is 0, and if A is 0, Q is 1.', hi:['not','a'], hiColor:'#f59e0b', show:[], newIds:[] },
-      { text:'Place a NOT gate on the canvas. Connect input <strong>A</strong> to its single input. The little circle at the output is the symbol for "inverted".', hi:['a','not'], hiColor:'#cc3300', show:['we-box-a','we-wire-a','we-gate1'], newIds:['we-box-a','we-wire-a','we-gate1'] },
-      { text:'Connect the NOT gate\'s output to <strong>Q</strong>. That\'s it: one gate, two wires, done!', hi:['not'], hiColor:'#1a7a1a', show:['we-box-a','we-wire-a','we-gate1','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
+      { text:'Read the expression: <strong>Q = NOT A</strong>. Just one gate, one input. NOT flips the signal: if A is 1, Q is 0, and if A is 0, Q is 1.', hi:['not','a'], hiColor:'#fdd663', show:[], newIds:[] },
+      { text:'Place a NOT gate on the canvas. Connect input <strong>A</strong> to its single input. The little circle at the output is the symbol for "inverted".', hi:['a','not'], hiColor:'#f28b82', show:['we-box-a','we-wire-a','we-gate1'], newIds:['we-box-a','we-wire-a','we-gate1'] },
+      { text:'Connect the NOT gate\'s output to <strong>Q</strong>. That\'s it: one gate, two wires, done!', hi:['not'], hiColor:'#81c995', show:['we-box-a','we-wire-a','we-gate1','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
     ]
   },
   {
@@ -1720,11 +1722,11 @@ var WE_EXAMPLES = [
       [boxA,boxB,wA,wB,gNOT,wNO,gOR,wQ,boxQ].forEach(function(e){ svg.appendChild(e); });
     },
     steps: [
-      { text:'Read the expression: <strong>Q = A OR (NOT B)</strong>. The brackets are around <em>NOT B</em>, so build the NOT gate first before the OR gate.', hi:['br1','not','b','br2'], hiColor:'#f59e0b', show:[], newIds:[] },
-      { text:'Place a NOT gate. Connect input <strong>B</strong> to it. This creates the <em>NOT B</em> part: the inverted version of B.', hi:['not','b'], hiColor:'#cc3300', show:['we-box-b','we-wire-b','we-gate1'], newIds:['we-box-b','we-wire-b','we-gate1'] },
-      { text:'Now place an OR gate. Connect the NOT gate\'s output into the OR gate\'s bottom input.', hi:['or'], hiColor:'#7733aa', show:['we-box-b','we-wire-b','we-gate1','we-wire-no','we-gate2'], newIds:['we-wire-no','we-gate2'] },
-      { text:'Connect input <strong>A</strong> into the OR gate\'s top input.', hi:['a'], hiColor:'#2255cc', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-no','we-gate2'], newIds:['we-box-a','we-wire-a'] },
-      { text:'Connect the OR gate\'s output to <strong>Q</strong>. Complete! The OR gate outputs 1 if A is 1, OR if B is 0 (because NOT B flips it).', hi:['or'], hiColor:'#1a7a1a', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-no','we-gate2','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
+      { text:'Read the expression: <strong>Q = A OR (NOT B)</strong>. The brackets are around <em>NOT B</em>, so build the NOT gate first before the OR gate.', hi:['br1','not','b','br2'], hiColor:'#fdd663', show:[], newIds:[] },
+      { text:'Place a NOT gate. Connect input <strong>B</strong> to it. This creates the <em>NOT B</em> part: the inverted version of B.', hi:['not','b'], hiColor:'#f28b82', show:['we-box-b','we-wire-b','we-gate1'], newIds:['we-box-b','we-wire-b','we-gate1'] },
+      { text:'Now place an OR gate. Connect the NOT gate\'s output into the OR gate\'s bottom input.', hi:['or'], hiColor:'#c58af9', show:['we-box-b','we-wire-b','we-gate1','we-wire-no','we-gate2'], newIds:['we-wire-no','we-gate2'] },
+      { text:'Connect input <strong>A</strong> into the OR gate\'s top input.', hi:['a'], hiColor:'#8ab4f8', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-no','we-gate2'], newIds:['we-box-a','we-wire-a'] },
+      { text:'Connect the OR gate\'s output to <strong>Q</strong>. Complete! The OR gate outputs 1 if A is 1, OR if B is 0 (because NOT B flips it).', hi:['or'], hiColor:'#81c995', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-no','we-gate2','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
     ]
   },
   {
@@ -1753,11 +1755,11 @@ var WE_EXAMPLES = [
       [boxA,boxB,boxC,wA,wB,gOR,wOA,wC,gNOT,wNA,gAND,wQ,boxQ].forEach(function(e){ svg.appendChild(e); });
     },
     steps: [
-      { text:'Read the expression: <strong>Q = (A OR B) AND (NOT C)</strong>. There are two bracketed parts: <em>(A OR B)</em> and <em>(NOT C)</em>. Build both of those before the AND gate.', hi:['br1','a','or','b','br2','br3','not','c','br4'], hiColor:'#f59e0b', show:[], newIds:[] },
-      { text:'Start with the first bracket: <em>(A OR B)</em>. Place an OR gate and connect <strong>A</strong> and <strong>B</strong> to its inputs.', hi:['a','or','b'], hiColor:'#7733aa', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'], newIds:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'] },
-      { text:'Now build the second bracket: <em>(NOT C)</em>. Place a NOT gate and connect <strong>C</strong> to it.', hi:['not','c'], hiColor:'#cc3300', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-gate1','we-wire-c','we-gate2'], newIds:['we-box-c','we-wire-c','we-gate2'] },
-      { text:'Now place an AND gate. Connect the OR gate\'s output into its top input, and the NOT gate\'s output into its bottom input.', hi:['and'], hiColor:'#2255cc', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-gate1','we-wire-c','we-gate2','we-wire-oa','we-wire-na','we-gate3'], newIds:['we-wire-oa','we-wire-na','we-gate3'] },
-      { text:'Connect the AND gate\'s output to <strong>Q</strong>. Done! Both brackets had to be built first before they could feed into the AND gate.', hi:['and'], hiColor:'#1a7a1a', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-gate1','we-wire-c','we-gate2','we-wire-oa','we-wire-na','we-gate3','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
+      { text:'Read the expression: <strong>Q = (A OR B) AND (NOT C)</strong>. There are two bracketed parts: <em>(A OR B)</em> and <em>(NOT C)</em>. Build both of those before the AND gate.', hi:['br1','a','or','b','br2','br3','not','c','br4'], hiColor:'#fdd663', show:[], newIds:[] },
+      { text:'Start with the first bracket: <em>(A OR B)</em>. Place an OR gate and connect <strong>A</strong> and <strong>B</strong> to its inputs.', hi:['a','or','b'], hiColor:'#c58af9', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'], newIds:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'] },
+      { text:'Now build the second bracket: <em>(NOT C)</em>. Place a NOT gate and connect <strong>C</strong> to it.', hi:['not','c'], hiColor:'#f28b82', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-gate1','we-wire-c','we-gate2'], newIds:['we-box-c','we-wire-c','we-gate2'] },
+      { text:'Now place an AND gate. Connect the OR gate\'s output into its top input, and the NOT gate\'s output into its bottom input.', hi:['and'], hiColor:'#8ab4f8', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-gate1','we-wire-c','we-gate2','we-wire-oa','we-wire-na','we-gate3'], newIds:['we-wire-oa','we-wire-na','we-gate3'] },
+      { text:'Connect the AND gate\'s output to <strong>Q</strong>. Done! Both brackets had to be built first before they could feed into the AND gate.', hi:['and'], hiColor:'#81c995', show:['we-box-a','we-box-b','we-box-c','we-wire-a','we-wire-b','we-gate1','we-wire-c','we-gate2','we-wire-oa','we-wire-na','we-gate3','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
     ]
   },
   {
@@ -1781,10 +1783,10 @@ var WE_EXAMPLES = [
       [boxA,boxB,wA,wB,gAND,wAN,gNOT,wQ,boxQ].forEach(function(e){ svg.appendChild(e); });
     },
     steps: [
-      { text:'Read the expression: <strong>Q = NOT (A AND B)</strong>. The brackets come first: build the AND gate before applying the NOT.', hi:['br1','a','and','b','br2'], hiColor:'#f59e0b', show:[], newIds:[] },
-      { text:'Place an AND gate. Connect <strong>A</strong> and <strong>B</strong> to its inputs. This builds the <em>(A AND B)</em> part inside the brackets.', hi:['a','and','b'], hiColor:'#2255cc', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'], newIds:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'] },
-      { text:'Now place a NOT gate. Connect the AND gate\'s output wire into the NOT gate\'s input. The NOT gate will flip whatever the AND gate outputs.', hi:['not'], hiColor:'#cc3300', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-an','we-gate2'], newIds:['we-wire-an','we-gate2'] },
-      { text:'Connect the NOT gate\'s output to <strong>Q</strong>. Complete! This circuit outputs 0 when both A and B are 1, and 1 in all other cases.', hi:['not'], hiColor:'#1a7a1a', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-an','we-gate2','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
+      { text:'Read the expression: <strong>Q = NOT (A AND B)</strong>. The brackets come first: build the AND gate before applying the NOT.', hi:['br1','a','and','b','br2'], hiColor:'#fdd663', show:[], newIds:[] },
+      { text:'Place an AND gate. Connect <strong>A</strong> and <strong>B</strong> to its inputs. This builds the <em>(A AND B)</em> part inside the brackets.', hi:['a','and','b'], hiColor:'#8ab4f8', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'], newIds:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1'] },
+      { text:'Now place a NOT gate. Connect the AND gate\'s output wire into the NOT gate\'s input. The NOT gate will flip whatever the AND gate outputs.', hi:['not'], hiColor:'#f28b82', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-an','we-gate2'], newIds:['we-wire-an','we-gate2'] },
+      { text:'Connect the NOT gate\'s output to <strong>Q</strong>. Complete! This circuit outputs 0 when both A and B are 1, and 1 in all other cases.', hi:['not'], hiColor:'#81c995', show:['we-box-a','we-box-b','we-wire-a','we-wire-b','we-gate1','we-wire-an','we-gate2','we-wire-q','we-box-q'], newIds:['we-wire-q','we-box-q'] }
     ]
   }
 ];
@@ -1806,7 +1808,7 @@ function weBuildExampleButtons() {
   WE_EXAMPLES.forEach(function(ex, i) {
     var btn = document.createElement('button');
     btn.textContent = ex.title;
-    btn.style.cssText = 'font-family:Arial;font-size:0.82rem;font-weight:600;padding:7px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;border:2px solid #ccc;background:#fff;color:#333;';
+    btn.style.cssText = 'font-family:Roboto,sans-serif;font-size:0.82rem;font-weight:600;padding:7px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;border:2px solid #3b424e;background:#1d2128;color:#c9cdd4;';
     btn.onclick = function() { weLoadExample(i); };
     btn.id = 'we-ex-btn-' + i;
     container.appendChild(btn);
@@ -1822,9 +1824,9 @@ function weLoadExample(idx) {
     var b = document.getElementById('we-ex-btn-' + i);
     if (!b) return;
     if (i === idx) {
-      b.style.background = '#1a1a1a'; b.style.color = '#fff'; b.style.borderColor = '#1a1a1a';
+      b.style.background = '#8ab4f8'; b.style.color = '#0b1a33'; b.style.borderColor = '#8ab4f8';
     } else {
-      b.style.background = '#fff'; b.style.color = '#333'; b.style.borderColor = '#ccc';
+      b.style.background = '#1d2128'; b.style.color = '#c9cdd4'; b.style.borderColor = '#3b424e';
     }
   });
 
@@ -1859,7 +1861,7 @@ function weRenderStep() {
   var exprEl = document.getElementById('we-expr');
   exprEl.querySelectorAll('[data-wid]').forEach(function(el) {
     el.style.background = '';
-    el.style.color = '#1a1a1a';
+    el.style.color = '#e8eaed';
     el.style.borderRadius = '';
     el.style.padding = '';
   });
@@ -1867,7 +1869,7 @@ function weRenderStep() {
     var el = exprEl.querySelector('[data-wid="' + wid + '"]');
     if (!el) return;
     el.style.background = step.hiColor;
-    el.style.color = '#fff';
+    el.style.color = '#1d2128';
     el.style.borderRadius = '4px';
     el.style.padding = '2px 5px';
   });
@@ -1895,7 +1897,7 @@ function weRenderStep() {
   dotsEl.innerHTML = '';
   ex.steps.forEach(function(_, i) {
     var d = document.createElement('div');
-    d.style.cssText = 'width:10px;height:10px;border-radius:50%;background:' + (i === weCurrentStep ? '#2255cc' : '#ccc') + ';transition:background 0.2s;';
+    d.style.cssText = 'width:10px;height:10px;border-radius:50%;background:' + (i === weCurrentStep ? '#8ab4f8' : '#3b424e') + ';transition:background 0.2s;';
     dotsEl.appendChild(d);
   });
 
@@ -1904,9 +1906,9 @@ function weRenderStep() {
   document.getElementById('we-prev').style.pointerEvents = weCurrentStep === 0 ? 'none' : 'auto';
   var isLast = weCurrentStep === total - 1;
   document.getElementById('we-next').textContent = isLast ? '\u2713 Done' : 'Next \u2192';
-  document.getElementById('we-next').style.background = isLast ? '#1a7a1a' : '#2255cc';
-  document.getElementById('we-next').onmouseover = function(){ this.style.background = isLast ? '#155a15' : '#1144bb'; };
-  document.getElementById('we-next').onmouseout  = function(){ this.style.background = isLast ? '#1a7a1a' : '#2255cc'; };
+  document.getElementById('we-next').style.background = isLast ? '#81c995' : '#8ab4f8';
+  document.getElementById('we-next').onmouseover = function(){ this.style.background = isLast ? '#a8dab5' : '#aecbfa'; };
+  document.getElementById('we-next').onmouseout  = function(){ this.style.background = isLast ? '#81c995' : '#8ab4f8'; };
 }
 function showHelpConnections() {
   document.getElementById('help-menu').classList.remove('active');
@@ -1943,10 +1945,10 @@ function showHelpGates() {
       <div class="gate-card-body">
         <div class="gate-card-svg">
           <svg width="120" height="80" viewBox="0 0 70 50" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 8 L30 8 Q50 8 50 25 Q50 42 30 42 L10 42 Z" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <line x1="0" y1="16" x2="10" y2="16" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="0" y1="34" x2="10" y2="34" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="50" y1="25" x2="60" y2="25" stroke="#1a1a1a" stroke-width="1.5"/>
+            <path d="M10 8 L30 8 Q50 8 50 25 Q50 42 30 42 L10 42 Z" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <line x1="0" y1="16" x2="10" y2="16" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="0" y1="34" x2="10" y2="34" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="50" y1="25" x2="60" y2="25" stroke="#e8eaed" stroke-width="1.5"/>
           </svg>
         </div>
         <div class="gate-card-text">
@@ -1969,10 +1971,10 @@ function showHelpGates() {
       <div class="gate-card-body">
         <div class="gate-card-svg">
           <svg width="120" height="80" viewBox="0 0 70 50" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 8 Q20 8 35 8 Q55 8 58 25 Q55 42 35 42 Q20 42 10 42 Q18 30 18 25 Q18 20 10 8 Z" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <line x1="0" y1="16" x2="13" y2="16" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="0" y1="34" x2="13" y2="34" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="58" y1="25" x2="68" y2="25" stroke="#1a1a1a" stroke-width="1.5"/>
+            <path d="M10 8 Q20 8 35 8 Q55 8 58 25 Q55 42 35 42 Q20 42 10 42 Q18 30 18 25 Q18 20 10 8 Z" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <line x1="0" y1="16" x2="13" y2="16" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="0" y1="34" x2="13" y2="34" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="58" y1="25" x2="68" y2="25" stroke="#e8eaed" stroke-width="1.5"/>
           </svg>
         </div>
         <div class="gate-card-text">
@@ -1995,10 +1997,10 @@ function showHelpGates() {
       <div class="gate-card-body">
         <div class="gate-card-svg">
           <svg width="120" height="80" viewBox="0 0 62 42" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 5 L48 20 L8 35 Z" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <circle cx="51" cy="20" r="4" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <line x1="0" y1="20" x2="8" y2="20" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="55" y1="20" x2="62" y2="20" stroke="#1a1a1a" stroke-width="1.5"/>
+            <path d="M8 5 L48 20 L8 35 Z" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <circle cx="51" cy="20" r="4" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <line x1="0" y1="20" x2="8" y2="20" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="55" y1="20" x2="62" y2="20" stroke="#e8eaed" stroke-width="1.5"/>
           </svg>
         </div>
         <div class="gate-card-text">
@@ -2028,10 +2030,10 @@ function showHelpGates() {
       <div class="gate-card-body">
         <div class="gate-card-svg" style="flex-direction:column;gap:10px;">
           <svg width="120" height="60" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="18" width="30" height="24" rx="4" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <text x="17" y="35" font-family="Arial" font-size="13" font-weight="bold" fill="#1a1a1a" text-anchor="middle">A</text>
-            <line x1="32" y1="30" x2="80" y2="30" stroke="#1a1a1a" stroke-width="2"/>
-            <circle cx="80" cy="30" r="6" fill="#1a1a1a"/>
+            <rect x="2" y="18" width="30" height="24" rx="4" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <text x="17" y="35" font-family="Roboto, sans-serif" font-size="13" font-weight="bold" fill="#e8eaed" text-anchor="middle">A</text>
+            <line x1="32" y1="30" x2="80" y2="30" stroke="#e8eaed" stroke-width="2"/>
+            <circle cx="80" cy="30" r="6" fill="#e8eaed"/>
           </svg>
         </div>
         <div class="gate-card-text">
@@ -2048,22 +2050,22 @@ function showHelpGates() {
         <div class="gate-card-svg">
           <svg width="140" height="80" viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg">
             <!-- Input A -->
-            <rect x="2" y="8" width="28" height="20" rx="3" fill="#fff" stroke="#1a1a1a" stroke-width="1.5"/>
-            <text x="16" y="23" font-family="Arial" font-size="11" font-weight="bold" fill="#1a1a1a" text-anchor="middle">A</text>
+            <rect x="2" y="8" width="28" height="20" rx="3" fill="#1d2128" stroke="#e8eaed" stroke-width="1.5"/>
+            <text x="16" y="23" font-family="Roboto, sans-serif" font-size="11" font-weight="bold" fill="#e8eaed" text-anchor="middle">A</text>
             <!-- Input B -->
-            <rect x="2" y="52" width="28" height="20" rx="3" fill="#fff" stroke="#1a1a1a" stroke-width="1.5"/>
-            <text x="16" y="67" font-family="Arial" font-size="11" font-weight="bold" fill="#1a1a1a" text-anchor="middle">B</text>
+            <rect x="2" y="52" width="28" height="20" rx="3" fill="#1d2128" stroke="#e8eaed" stroke-width="1.5"/>
+            <text x="16" y="67" font-family="Roboto, sans-serif" font-size="11" font-weight="bold" fill="#e8eaed" text-anchor="middle">B</text>
             <!-- Wires to AND gate -->
-            <line x1="30" y1="18" x2="70" y2="18" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="30" y1="62" x2="70" y2="62" stroke="#1a1a1a" stroke-width="1.5"/>
+            <line x1="30" y1="18" x2="70" y2="18" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="30" y1="62" x2="70" y2="62" stroke="#e8eaed" stroke-width="1.5"/>
             <!-- AND gate -->
-            <path d="M70 8 L90 8 Q110 8 110 40 Q110 72 90 72 L70 72 Z" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <line x1="70" y1="18" x2="70" y2="18" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="70" y1="62" x2="70" y2="62" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="110" y1="40" x2="130" y2="40" stroke="#1a1a1a" stroke-width="1.5"/>
+            <path d="M70 8 L90 8 Q110 8 110 40 Q110 72 90 72 L70 72 Z" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <line x1="70" y1="18" x2="70" y2="18" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="70" y1="62" x2="70" y2="62" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="110" y1="40" x2="130" y2="40" stroke="#e8eaed" stroke-width="1.5"/>
             <!-- Dots at connection points -->
-            <circle cx="70" cy="18" r="4" fill="#2255cc"/>
-            <circle cx="70" cy="62" r="4" fill="#2255cc"/>
+            <circle cx="70" cy="18" r="4" fill="#8ab4f8"/>
+            <circle cx="70" cy="62" r="4" fill="#8ab4f8"/>
           </svg>
         </div>
         <div class="gate-card-text">
@@ -2080,20 +2082,20 @@ function showHelpGates() {
         <div class="gate-card-svg">
           <svg width="160" height="80" viewBox="0 0 160 80" xmlns="http://www.w3.org/2000/svg">
             <!-- First AND gate -->
-            <path d="M10 10 L28 10 Q46 10 46 28 Q46 46 28 46 L10 46 Z" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <line x1="0" y1="18" x2="10" y2="18" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="0" y1="38" x2="10" y2="38" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="46" y1="28" x2="62" y2="28" stroke="#1a1a1a" stroke-width="1.5"/>
+            <path d="M10 10 L28 10 Q46 10 46 28 Q46 46 28 46 L10 46 Z" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <line x1="0" y1="18" x2="10" y2="18" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="0" y1="38" x2="10" y2="38" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="46" y1="28" x2="62" y2="28" stroke="#e8eaed" stroke-width="1.5"/>
             <!-- Wire between gates -->
-            <line x1="62" y1="28" x2="80" y2="28" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <line x1="62" y1="28" x2="80" y2="28" stroke="#e8eaed" stroke-width="1.5" stroke-dasharray="4 2"/>
             <!-- Second OR gate -->
-            <path d="M80 14 Q88 14 98 14 Q114 14 117 35 Q114 56 98 56 Q88 56 80 56 Q87 45 87 35 Q87 25 80 14 Z" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <line x1="80" y1="24" x2="80" y2="24" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="80" y1="46" x2="70" y2="46" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="70" y1="46" x2="70" y2="60" stroke="#1a1a1a" stroke-width="1.5"/>
-            <line x1="117" y1="35" x2="135" y2="35" stroke="#1a1a1a" stroke-width="1.5"/>
+            <path d="M80 14 Q88 14 98 14 Q114 14 117 35 Q114 56 98 56 Q88 56 80 56 Q87 45 87 35 Q87 25 80 14 Z" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <line x1="80" y1="24" x2="80" y2="24" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="80" y1="46" x2="70" y2="46" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="70" y1="46" x2="70" y2="60" stroke="#e8eaed" stroke-width="1.5"/>
+            <line x1="117" y1="35" x2="135" y2="35" stroke="#e8eaed" stroke-width="1.5"/>
             <!-- Dot at join -->
-            <circle cx="80" cy="28" r="4" fill="#2255cc"/>
+            <circle cx="80" cy="28" r="4" fill="#8ab4f8"/>
           </svg>
         </div>
         <div class="gate-card-text">
@@ -2109,11 +2111,11 @@ function showHelpGates() {
       <div class="gate-card-body">
         <div class="gate-card-svg">
           <svg width="120" height="60" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
-            <line x1="0" y1="30" x2="50" y2="30" stroke="#1a1a1a" stroke-width="1.5" stroke-dasharray="4 2"/>
-            <circle cx="50" cy="30" r="6" fill="#2255cc"/>
-            <line x1="56" y1="30" x2="84" y2="30" stroke="#1a1a1a" stroke-width="2"/>
-            <rect x="84" y="12" width="34" height="36" rx="4" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
-            <text x="101" y="35" font-family="Arial" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle">Q</text>
+            <line x1="0" y1="30" x2="50" y2="30" stroke="#e8eaed" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <circle cx="50" cy="30" r="6" fill="#8ab4f8"/>
+            <line x1="56" y1="30" x2="84" y2="30" stroke="#e8eaed" stroke-width="2"/>
+            <rect x="84" y="12" width="34" height="36" rx="4" fill="#1d2128" stroke="#e8eaed" stroke-width="2"/>
+            <text x="101" y="35" font-family="Roboto, sans-serif" font-size="14" font-weight="bold" fill="#e8eaed" text-anchor="middle">Q</text>
           </svg>
         </div>
         <div class="gate-card-text">
@@ -2129,12 +2131,12 @@ function showHelpGates() {
       <div class="gate-card-body">
         <div class="gate-card-svg">
           <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="10" width="60" height="60" rx="8" fill="#fff" stroke="#cc3300" stroke-width="2"/>
-            <line x1="22" y1="28" x2="58" y2="28" stroke="#cc3300" stroke-width="2"/>
-            <path d="M32 28 L32 58 Q32 62 36 62 L44 62 Q48 62 48 58 L48 28" fill="none" stroke="#cc3300" stroke-width="2"/>
-            <line x1="36" y1="34" x2="36" y2="56" stroke="#cc3300" stroke-width="1.5"/>
-            <line x1="44" y1="34" x2="44" y2="56" stroke="#cc3300" stroke-width="1.5"/>
-            <path d="M28 28 L30 22 L50 22 L52 28" fill="none" stroke="#cc3300" stroke-width="2"/>
+            <rect x="10" y="10" width="60" height="60" rx="8" fill="#1d2128" stroke="#f28b82" stroke-width="2"/>
+            <line x1="22" y1="28" x2="58" y2="28" stroke="#f28b82" stroke-width="2"/>
+            <path d="M32 28 L32 58 Q32 62 36 62 L44 62 Q48 62 48 58 L48 28" fill="none" stroke="#f28b82" stroke-width="2"/>
+            <line x1="36" y1="34" x2="36" y2="56" stroke="#f28b82" stroke-width="1.5"/>
+            <line x1="44" y1="34" x2="44" y2="56" stroke="#f28b82" stroke-width="1.5"/>
+            <path d="M28 28 L30 22 L50 22 L52 28" fill="none" stroke="#f28b82" stroke-width="2"/>
           </svg>
         </div>
         <div class="gate-card-text">
@@ -2180,35 +2182,35 @@ function showHelpGates() {
 
     <!-- INTERACTIVE WORKED EXAMPLE -->
     <div class="gate-card" style="padding:0;overflow:hidden;">
-      <div style="background:#1a1a1a;padding:16px 24px;">
-        <h3 style="color:#fff;border:none;padding:0;font-size:1.1rem;">Worked Examples: step through them yourself</h3>
+      <div style="background:#252a33;padding:16px 24px;">
+        <h3 style="color:#e8eaed;border:none;padding:0;font-size:1.1rem;">Worked Examples: step through them yourself</h3>
       </div>
       <div style="padding:24px;">
 
         <!-- Example selector buttons -->
-        <div style="font-family:Arial;font-size:0.8rem;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Choose an example:</div>
+        <div style="font-family:Roboto,sans-serif;font-size:0.8rem;font-weight:700;color:#9aa0a6;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Choose an example:</div>
         <div id="we-example-btns" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;"></div>
 
         <!-- Expression display -->
-        <div style="font-family:Arial;font-size:1rem;color:#555;margin-bottom:8px;font-weight:600;">Expression:</div>
-        <div id="we-expr" style="font-family:Arial;font-size:1.4rem;font-weight:700;color:#1a1a1a;margin-bottom:20px;line-height:2;letter-spacing:0.02em;min-height:2.5rem;"></div>
+        <div style="font-family:Roboto,sans-serif;font-size:1rem;color:#9aa0a6;margin-bottom:8px;font-weight:600;">Expression:</div>
+        <div id="we-expr" style="font-family:Roboto,sans-serif;font-size:1.4rem;font-weight:700;color:#e8eaed;margin-bottom:20px;line-height:2;letter-spacing:0.02em;min-height:2.5rem;"></div>
 
         <!-- Diagram -->
-        <div style="background:#f8f8f8;border:1px solid #eee;border-radius:8px;padding:16px;margin-bottom:20px;display:flex;justify-content:center;min-height:160px;align-items:center;">
+        <div style="background:#171a20;border:1px solid #2b3039;border-radius:8px;padding:16px;margin-bottom:20px;display:flex;justify-content:center;min-height:160px;align-items:center;">
           <svg id="we-svg" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
 
         <!-- Step explanation box -->
-        <div id="we-step-box" style="background:#f0f4ff;border:2px solid #2255cc;border-radius:8px;padding:18px 20px;margin-bottom:20px;min-height:80px;">
-          <div id="we-step-num" style="font-family:Arial;font-size:0.75rem;font-weight:700;color:#2255cc;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;"></div>
-          <div id="we-step-text" style="font-family:Arial;font-size:0.95rem;color:#1a1a1a;line-height:1.6;"></div>
+        <div id="we-step-box" style="background:rgba(138, 180, 248, .12);border:2px solid #8ab4f8;border-radius:8px;padding:18px 20px;margin-bottom:20px;min-height:80px;">
+          <div id="we-step-num" style="font-family:Roboto,sans-serif;font-size:0.75rem;font-weight:700;color:#8ab4f8;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;"></div>
+          <div id="we-step-text" style="font-family:Roboto,sans-serif;font-size:0.95rem;color:#e8eaed;line-height:1.6;"></div>
         </div>
 
         <!-- Navigation -->
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <button id="we-prev" onclick="weStep(-1)" style="font-family:Arial;font-size:1rem;font-weight:700;padding:10px 24px;border:2px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;" onmouseover="this.style.borderColor='#888'" onmouseout="this.style.borderColor='#ccc'">← Back</button>
+          <button id="we-prev" onclick="weStep(-1)" style="font-family:Roboto,sans-serif;font-size:1rem;font-weight:700;padding:10px 24px;border:2px solid #3b424e;border-radius:6px;background:#1d2128;cursor:pointer;" onmouseover="this.style.borderColor='#858c95'" onmouseout="this.style.borderColor='#3b424e'">← Back</button>
           <div id="we-dots" style="display:flex;gap:8px;"></div>
-          <button id="we-next" onclick="weStep(1)" style="font-family:Arial;font-size:1rem;font-weight:700;padding:10px 24px;border:none;border-radius:6px;background:#2255cc;color:#fff;cursor:pointer;" onmouseover="this.style.background='#1144bb'" onmouseout="this.style.background='#2255cc'">Next →</button>
+          <button id="we-next" onclick="weStep(1)" style="font-family:Roboto,sans-serif;font-size:1rem;font-weight:700;padding:10px 24px;border:none;border-radius:6px;background:#8ab4f8;color:#1d2128;cursor:pointer;" onmouseover="this.style.background='#aecbfa'" onmouseout="this.style.background='#8ab4f8'">Next →</button>
         </div>
 
       </div>
@@ -2228,8 +2230,8 @@ function showHelpGates() {
     </div>
 
     <!-- Tip -->
-    <div class="gate-card" style="border-color:#2255cc;background:#f0f4ff;">
-      <h3 style="border-bottom-color:#c0d0ee;">💡 Quick tip</h3>
+    <div class="gate-card" style="border-color:#8ab4f8;background:rgba(138, 180, 248, .12);">
+      <h3 style="border-bottom-color:rgba(138, 180, 248, .35);">💡 Quick tip</h3>
       <div class="gate-card-body">
         <div class="gate-card-text">
           <p>Before placing any gates, count how many you need. <strong>Q = (A AND B) OR C</strong> needs <strong>one AND</strong> and <strong>one OR</strong>: place both first, then wire them up!</p>

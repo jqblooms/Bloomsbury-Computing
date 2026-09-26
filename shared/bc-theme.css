@@ -1,0 +1,146 @@
+/* Bloomsbury Computing app theme.
+
+   Every app and resource loads this, so it looks like part of the site it
+   sits in: the same dark surfaces, text colours, blue accent, fonts and
+   focus rings as the Apps Script shell (bloomsbury-computing-main,
+   css/base.html). Keep the two token lists identical; change a colour in
+   one place and the other must follow.
+
+   What it does:
+   - defines the tokens on :root (an app's own stylesheet uses them);
+   - paints the page background and default text;
+   - gives raw form controls, tables, code and links a dark default, all
+     inside :where() so any rule in the app's own stylesheet wins;
+   - offers a few opt-in components (.bc-btn, .bc-card, .bc-chip,
+     .bc-field) for new work.
+
+   Load it before the app's own <style>:
+     <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927"> */
+
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  color-scheme: dark;
+
+  --bg: #0f1115;
+  --surface: #171a20;
+  --surface-2: #1d2128;
+  --surface-3: #252a33;
+  --surface-4: #2e3440;
+  --line: #2b3039;
+  --line-strong: #3b424e;
+
+  --ink: #e8eaed;
+  --ink-soft: #c9cdd4;
+  --muted: #9aa0a6;
+  --muted-2: #858c95;
+
+  --brand: #8ab4f8;
+  --brand-dark: #aecbfa;
+  --brand-soft: rgba(138, 180, 248, .14);
+  --brand-soft-strong: rgba(138, 180, 248, .24);
+  --brand-solid: #1a73e8;       /* filled buttons that carry white text */
+  --on-brand: #0b1a33;
+
+  --good: #81c995;
+  --good-soft: rgba(129, 201, 149, .13);
+  --good-line: rgba(129, 201, 149, .55);
+  --bad: #f28b82;
+  --bad-soft: rgba(242, 139, 130, .13);
+  --bad-line: rgba(242, 139, 130, .55);
+  --warn: #fdd663;
+  --warn-soft: rgba(253, 214, 99, .13);
+  --warn-line: rgba(253, 214, 99, .5);
+  --accent: #fbbc04;
+
+  --scrim: rgba(4, 6, 10, .66);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .45), 0 1px 3px 1px rgba(0, 0, 0, .22);
+  --shadow-2: 0 2px 6px 2px rgba(0, 0, 0, .28), 0 1px 2px rgba(0, 0, 0, .45);
+  --shadow-3: 0 8px 28px rgba(0, 0, 0, .5), 0 2px 6px rgba(0, 0, 0, .35);
+
+  --radius: 8px;
+  --radius-lg: 16px;
+  --font-body: Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: Figtree, Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+html { background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+:where(h1, h2, h3, h4) { font-family: var(--font-display); letter-spacing: -.01em; }
+:where(a) { color: var(--brand); }
+:where(code, kbd, pre, samp) { font-family: var(--font-mono); }
+::selection { background: var(--brand-soft-strong); }
+:where(:focus-visible) { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+:where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"]), select, textarea) {
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  font: inherit;
+}
+:where(input, select, textarea):focus { outline: none; border-color: var(--brand); }
+:where(input, textarea)::placeholder { color: var(--muted-2); }
+:where(input[type="checkbox"], input[type="radio"], input[type="range"]) { accent-color: var(--brand); }
+:where(select) option { background: var(--surface); color: var(--ink); }
+
+:where(table) { border-collapse: collapse; }
+:where(th, td) { border-color: var(--line); }
+
+* { scrollbar-color: var(--surface-4) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--surface-4); border: 2px solid transparent; border-radius: 999px; background-clip: padding-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ---- Opt-in components ---- */
+.bc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--on-brand);
+  font: 500 14px/1 var(--font-body);
+  cursor: pointer;
+  text-decoration: none;
+}
+.bc-btn:hover { background: var(--brand-dark); }
+.bc-btn:disabled { opacity: .45; cursor: not-allowed; }
+.bc-btn.is-tonal { background: var(--brand-soft-strong); color: var(--brand-dark); }
+.bc-btn.is-tonal:hover { background: rgba(138, 180, 248, .32); }
+.bc-btn.is-outline { background: transparent; border-color: var(--line-strong); color: var(--brand); }
+.bc-btn.is-outline:hover { background: var(--brand-soft); }
+.bc-btn.is-text { background: transparent; color: var(--brand); padding: 0 12px; }
+.bc-btn.is-text:hover { background: var(--brand-soft); }
+
+.bc-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.bc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.bc-field { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 13px; font-weight: 500; }
+.bc-field :where(input, select, textarea) { min-height: 40px; padding: 8px 12px; color: var(--ink); font-size: 14px; }

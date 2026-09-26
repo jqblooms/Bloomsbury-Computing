@@ -520,7 +520,7 @@
   function toast(msg) {
     var t = document.createElement("div");
     t.textContent = msg;
-    t.style.cssText = "position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#1f2733;color:#fff;padding:10px 16px;border-radius:10px;font-weight:600;font-size:.85rem;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:90%;text-align:center";
+    t.style.cssText = "position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#e8eaed;color:#202124;padding:12px 18px;border-radius:8px;font-weight:500;font-size:.85rem;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.5);max-width:90%;text-align:center";
     document.body.appendChild(t);
     setTimeout(function () { t.style.transition = "opacity .4s"; t.style.opacity = "0"; }, 2600);
     setTimeout(function () { t.remove(); }, 3100);

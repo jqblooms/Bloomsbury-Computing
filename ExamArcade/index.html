@@ -4,32 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Exam Arcade</title>
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
+  /* The site's dark theme (shared/bc-theme.css); these are this page's own
+     names for the same tokens. */
   :root {
-    --bg: #0b1220;
-    --panel: #111a2c;
-    --panel2: #16223a;
-    --border: #24314d;
-    --accent: #38bdf8;
-    --accent-dark: #0e7bab;
-    --green: #4ade80;
-    --red: #fb7185;
-    --amber: #fbbf24;
-    --text: #e2e8f0;
-    --text-dim: #94a3b8;
+    --panel: var(--surface);
+    --panel2: var(--surface-2);
+    --border: var(--line);
+    --accent: var(--brand);
+    --accent-dark: var(--brand-dark);
+    --green: var(--good);
+    --red: var(--bad);
+    --amber: var(--warn);
+    --text: var(--ink);
+    --text-dim: var(--muted);
   }
   * { box-sizing: border-box; }
   html, body {
     margin: 0; padding: 0; min-height: 100vh;
-    background: radial-gradient(circle at 50% 20%, #142642 0%, #070c16 55%, #030509 100%);
+    background: var(--bg);
     color: var(--text);
-    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-family: var(--font-body);
   }
   button { font: inherit; cursor: pointer; }
   .wrap { max-width: 880px; margin: 0 auto; padding: 22px 18px 60px; }
 
   header.top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px; flex-wrap: wrap; gap: 8px; }
-  header.top h1 { margin: 0; font-size: 1.5rem; color: var(--accent); letter-spacing: .02em; }
+  header.top h1 { margin: 0; font-size: 1.6rem; color: var(--ink); }
   header.top .sub { color: var(--text-dim); font-size: .82rem; }
 
   /* ---------- Level select ---------- */
@@ -65,31 +67,31 @@
 
   .answer-row { display: flex; gap: 10px; flex-wrap: wrap; }
   .answer-row input[type=text] {
-    flex: 1; min-width: 160px; background: #0a1220; border: 1.5px solid var(--border); border-radius: 8px;
+    flex: 1; min-width: 160px; background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: 12px;
     padding: 12px 14px; color: var(--text); font-size: 1rem;
   }
   .answer-row input[type=text]:focus { outline: none; border-color: var(--accent); }
   .answer-row button.submit {
-    background: var(--accent); color: #06121e; border: none; border-radius: 8px; padding: 12px 20px;
+    background: var(--accent); color: var(--on-brand); border: none; border-radius: 8px; padding: 12px 20px;
     font-weight: 700;
   }
   .answer-row button.submit:disabled { opacity: .5; cursor: default; }
 
   .mcq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
   .mcq-grid button {
-    background: #0a1220; border: 1.5px solid var(--border); border-radius: 8px; padding: 12px 14px;
+    background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: 12px; padding: 12px 14px;
     color: var(--text); text-align: left; font-size: .92rem;
   }
   .mcq-grid button:hover { border-color: var(--accent); }
-  .mcq-grid button.is-correct { border-color: var(--green); background: #0f2a1c; }
-  .mcq-grid button.is-wrong { border-color: var(--red); background: #2a0f16; }
+  .mcq-grid button.is-correct { border-color: var(--good-line); background: var(--good-soft); }
+  .mcq-grid button.is-wrong { border-color: var(--bad-line); background: var(--bad-soft); }
   .mcq-grid button:disabled { pointer-events: none; }
 
   .feedback { margin-top: 16px; padding: 12px 14px; border-radius: 8px; font-size: .88rem; display: none; }
   .feedback.show { display: block; }
-  .feedback.is-correct { background: #0f2a1c; color: var(--green); border: 1px solid #1f5a3a; }
-  .feedback.is-wrong { background: #2a0f16; color: var(--red); border: 1px solid #5a1f2c; }
-  .feedback .next-btn { margin-top: 10px; background: var(--accent); color: #06121e; border: none; border-radius: 8px; padding: 8px 16px; font-weight: 700; }
+  .feedback.is-correct { background: var(--good-soft); color: var(--green); border: 1px solid var(--good-line); }
+  .feedback.is-wrong { background: var(--bad-soft); color: var(--red); border: 1px solid var(--bad-line); }
+  .feedback .next-btn { margin-top: 10px; background: var(--accent); color: var(--on-brand); border: none; border-radius: 8px; padding: 8px 16px; font-weight: 700; }
 
   /* ---------- Results ---------- */
   .results-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 30px; text-align: center; }
@@ -103,7 +105,7 @@
     background: var(--panel2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 18px;
     color: var(--text); font-weight: 700;
   }
-  .results-card .actions button.primary { background: var(--accent); color: #06121e; border: none; }
+  .results-card .actions button.primary { background: var(--accent); color: var(--on-brand); border: none; }
 
   .back-link { background: none; border: none; color: var(--text-dim); font-size: .8rem; padding: 0; margin-bottom: 14px; text-decoration: underline; }
 </style>

@@ -4,25 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trace Tables Practice</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
+  /* The site's dark theme: shared/bc-theme.css (loaded above) defines --bg
+     and --surface; the names below are this page's own, pointed at the same
+     tokens. Amber marks the line being run, as in the lesson slides. */
   :root {
-    /* Light theme, Bloomsbury blue accent */
-    --bg: #f4f6f9; /* Light grey-blue background */
-    --surface: #dddddd; /* White containers */
-    --surface2: #e2e8f0; /* Light grey for buttons/tabs */
-    --border: #cbd5e1;
-    --accent: #1479be; /* Bloomsbury blue */
-    --accent-gold: #ffc107; /* Highlight accent */
-    --accent-gold-dark: #e0a800;
-    --text: #0f172a; /* Very dark slate for readability */
-    --text-dim: #475569;
-    --text-dimmer: #94a3b8;
-    --highlight-active: rgba(255, 193, 7, 0.25); /* Gold highlight for code lines */
-    --correct: #059669; /* Clear green for light mode */
-    --wrong: #dc2626; /* Clear red for light mode */
-    --mono: 'Space Mono', monospace;
-    --sans: 'DM Sans', sans-serif;
+    --surface2: var(--surface-2);
+    --border: var(--line);
+    --accent: var(--brand);
+    --accent-gold: #fdd663;
+    --accent-gold-dark: #fcc934;
+    --text: var(--ink);
+    --text-dim: var(--muted);
+    --text-dimmer: var(--muted-2);
+    --highlight-active: rgba(253, 214, 99, .16);
+    --correct: var(--good);
+    --wrong: var(--bad);
+    --mono: var(--font-mono);
+    --sans: var(--font-body);
+    --code-bg: #13161b;
   }
 
   body {
@@ -40,7 +41,6 @@
     background: var(--surface);
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     border: 1px solid var(--border);
   }
 
@@ -49,7 +49,7 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2rem;
-    border-bottom: 3px solid var(--accent);
+    border-bottom: 1px solid var(--border);
     padding-bottom: 1.5rem;
     flex-wrap: wrap;
     gap: 1rem;
@@ -90,8 +90,7 @@
   .language-btn:hover { color: var(--accent); }
   .language-btn.active {
     background: var(--accent);
-    color: #fff;
-    box-shadow: 0 2px 5px rgba(20, 121, 190, 0.2);
+    color: var(--on-brand);
   }
   @media (max-width: 700px) {
     .site-header { align-items: flex-start; }
@@ -107,24 +106,24 @@
     align-items: center;
     justify-content: center;
     background: var(--accent);
-    color: #fff;
+    color: var(--on-brand);
+    font-family: var(--font-display);
     font-weight: 800;
     font-size: 1.8rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: 12px;
   }
 
-  h1 { margin: 0; font-size: 2.2rem; color: var(--accent); }
-  h2 { margin-top: 0; color: var(--accent); font-weight: 700;}
+  h1 { margin: 0; font-size: 2rem; color: var(--ink); }
+  h2 { margin-top: 0; color: var(--ink); font-weight: 700;}
   p { margin: 0; color: var(--text-dim); }
 
   /* Navigation Tabs */
-  .tabs { 
-    display: flex; 
-    gap: 1rem; 
-    margin-bottom: 2rem; 
-    border-bottom: 2px solid var(--border); 
-    padding-bottom: 1rem; 
+  .tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 1rem;
     overflow-x: auto;
   }
   .tab-btn {
@@ -134,11 +133,11 @@
     white-space: nowrap; font-weight: 500;
   }
   .tab-btn:hover { background: var(--surface2); color: var(--accent); }
-  .tab-btn.active { 
-    background: var(--surface2); 
-    color: var(--accent); 
-    font-weight: 700; 
-    box-shadow: 0 4px 0 var(--accent-gold); 
+  .tab-btn.active {
+    background: var(--surface2);
+    color: var(--accent);
+    font-weight: 700;
+    box-shadow: inset 0 -3px 0 var(--accent);
   }
 
   .page { display: none; animation: fadeIn 0.3s; }
@@ -156,17 +155,17 @@
     font-weight: 600; transition: 0.2s; font-size: 1rem;
   }
   select.btn { padding-right: 2rem; }
-  .btn:hover { background: var(--border); color: var(--accent); }
-  .btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  
-  /* Primary Button (Gold + Navy Text) */
-  .btn-primary { background: var(--accent-gold); color: var(--accent); border: none; font-weight: 700; }
-  .btn-primary:hover { background: var(--accent-gold-dark); color: var(--accent); }
+  .btn:hover { background: var(--surface-3); color: var(--accent); }
+  .btn.active { background: var(--accent); color: var(--on-brand); border-color: var(--accent); }
+
+  /* Primary button: the site's filled blue. */
+  .btn-primary { background: var(--accent); color: var(--on-brand); border: none; font-weight: 700; }
+  .btn-primary:hover { background: var(--brand-dark); color: var(--on-brand); }
 
   .controls { display: flex; gap: 0.8rem; flex-wrap: wrap; }
   .controls-spaced { justify-content: space-between; align-items: center; }
   .controls-group { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;}
-  
+
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
   @media (max-width: 850px) { .grid { grid-template-columns: 1fr; } }
 
@@ -199,7 +198,7 @@
 
   /* Code Blocks */
   .code-container {
-    background: #f8fafc;
+    background: var(--code-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 1rem 0;
@@ -220,13 +219,12 @@
     background: var(--surface);
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   }
-  .trace-table th { 
-    background: var(--accent); 
-    color: var(--accent-gold); 
-    padding: 0.8rem; 
-    border: 1px solid var(--accent); 
+  .trace-table th {
+    background: var(--surface-3);
+    color: var(--ink);
+    padding: 0.8rem;
+    border: 1px solid var(--line-strong);
     font-family: var(--sans);
     font-weight: 700;
     font-size: 1.1rem;
@@ -237,7 +235,7 @@
     border: none; color: var(--text); text-align: center;
     font-family: var(--mono); font-size: 1.1rem; outline: none; font-weight: 700;
   }
-  .trace-table input:focus { background: rgba(255, 193, 7, 0.15); }
+  .trace-table input:focus { background: rgba(253, 214, 99, .12); }
   .walk-table-scroll {
     max-height: 65vh;
     overflow: auto;
@@ -248,10 +246,10 @@
     top: 0;
     z-index: 1;
   }
-  
+
   /* Validation Styles */
-  .trace-table td.correct { background: rgba(5, 150, 105, 0.15); box-shadow: inset 0 0 0 2px var(--correct); }
-  .trace-table td.wrong { background: rgba(220, 38, 38, 0.15); box-shadow: inset 0 0 0 2px var(--wrong); }
+  .trace-table td.correct { background: var(--good-soft); box-shadow: inset 0 0 0 2px var(--correct); }
+  .trace-table td.wrong { background: var(--bad-soft); box-shadow: inset 0 0 0 2px var(--wrong); }
 
   /* Support Mode (Fill the Table only): a greyed-out hint of the correct
      answer sits under each cell's input, colored per-character against
@@ -293,8 +291,8 @@
     padding: 1rem; border-radius: 8px; margin-top: 1rem; font-weight: bold; display: none; font-size: 1.1rem;
   }
   .result-badge.show { display: block; animation: fadeIn 0.3s; }
-  .result-badge.pass { background: rgba(5, 150, 105, 0.1); color: var(--correct); border: 1px solid var(--correct); }
-  .result-badge.fail { background: rgba(220, 38, 38, 0.1); color: var(--wrong); border: 1px solid var(--wrong); }
+  .result-badge.pass { background: var(--good-soft); color: var(--correct); border: 1px solid var(--good-line); }
+  .result-badge.fail { background: var(--bad-soft); color: var(--wrong); border: 1px solid var(--bad-line); }
 
   /* Informational Lists */
   .info-list { margin-top: 1rem; padding-left: 1.5rem; }
@@ -328,7 +326,7 @@
   /* Code Editor (used in "write the code" practice mode) */
   .code-editor {
     display: flex;
-    background: #f8fafc;
+    background: var(--code-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     overflow: hidden;
@@ -370,9 +368,13 @@
      the chrome the lesson page already provides its own version of
      (brand header, page tabs, algorithm picker), leaving just the
      context/code/table panel. See "EMBED API" in the script below. */
+  /* Inside a lesson slide the slide shows through, and cards take the
+     slide's own card colours. */
+  html:has(body.tt-embed), body.tt-embed { background: transparent; }
   body.tt-embed {
     padding: 0.75rem;
-    background: var(--bg);
+    --surface: #1f232b; --surface-2: #272c35; --surface-3: #2f3540;
+    --line: #343b46; --line-strong: #454d5a;
   }
   body.tt-embed .container {
     max-width: none;
@@ -479,7 +481,7 @@
   <div id="page-prac" class="page">
     <h2>Practice Tracing</h2>
     <p>Fill in the tables below. Leave cells blank if the variable doesn't change on that specific line. Progress is automatically saved.</p>
-    
+
     <div class="controls mb-4">
        <button class="btn active" onclick="showPrac(5, this)">Sequence</button>
        <button class="btn" onclick="showPrac(6, this)">Selection Foundations</button>
@@ -519,7 +521,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Sub-page: Practice 1 -->
     <div id="prac1-area" class="prac-area">
       <div class="grid">
@@ -549,7 +551,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Sub-page: Practice 3 (Do...Until) -->
     <div id="prac3-area" class="prac-area">
       <div class="grid">
@@ -564,7 +566,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Sub-page: Practice 4 (Arrays) -->
     <div id="prac4-area" class="prac-area">
       <div class="grid">
@@ -600,7 +602,7 @@
   <div id="page-gen" class="page">
     <h2>Infinite Practice Generator</h2>
     <p>Procedurally generates code traces to practice. Master difficulty scales in complexity with your score.</p>
-    
+
     <div class="controls controls-spaced mb-4">
       <div class="controls-group">
         <select id="gen-type" class="btn" aria-label="Question type" onchange="resetGeneratedPractice()">
@@ -882,7 +884,7 @@ function initProgress() {
         if (!isNaN(num) && num > maxGen) maxGen = num;
       }
     });
-    genQuestionIdCounter = maxGen; 
+    genQuestionIdCounter = maxGen;
   } else {
     progressData = [
       { id: 'prac0', title: 'Practice 1', attempts: 0, correct: false, tableData: null, codeSnippet: null },
@@ -913,9 +915,9 @@ function recordAttempt(id, title, isCorrect, tableData, codeSnippet) {
     progressData.push(q);
   }
   q.attempts += 1;
-  q.correct = isCorrect; 
+  q.correct = isCorrect;
   q.tableData = tableData;
-  q.codeSnippet = codeSnippet; 
+  q.codeSnippet = codeSnippet;
   q.codeLanguage = currentCodeLanguage;
   saveProgress();
 }
@@ -1546,16 +1548,16 @@ function stepWalk() {
    const view = codeView(algo);
    if(walkStep >= view.answers.length) return;
    const stepData = view.answers[walkStep];
-   
+
    const lines = document.querySelectorAll('#walk-code .code-line');
    lines.forEach(l => l.classList.remove('active'));
    if(lines[parseInt(stepData.Line) - 1]) lines[parseInt(stepData.Line) - 1].classList.add('active');
-   
+
    const tr = document.createElement('tr');
    algo.cols.forEach(c => {
      const td = document.createElement('td');
      td.textContent = stepData[c];
-     if (stepData[c] !== '') td.style.color = 'var(--correct)'; 
+     if (stepData[c] !== '') td.style.color = 'var(--correct)';
      tr.appendChild(td);
    });
    document.getElementById('walk-tbody').appendChild(tr);
@@ -1582,7 +1584,7 @@ function checkPractice(idx) {
        if(!td) return;
        const expected = (row[k] || '').toString().trim().toLowerCase().replace(/\s+/g,' ');
        const given = td.querySelector('input').value.trim().toLowerCase().replace(/\s+/g,' ');
-       td.className = ''; 
+       td.className = '';
        if(given === expected) {
          if(given !== '') td.classList.add('correct');
          correct++;
@@ -1931,9 +1933,9 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
     if (diff === 'easy') { numVars = 2; numInputs = 0; }
     else if (diff === 'medium') { numVars = 2; numInputs = 1; }
     else if (diff === 'hard') { numVars = 2; numInputs = 2; }
-    else if (diff === 'master') { 
+    else if (diff === 'master') {
         numVars = Math.min(4, 2 + Math.floor(genStats.score / 5)); // Capped at 4 vars to prevent massive scrolling
-        numInputs = numVars - 1; 
+        numInputs = numVars - 1;
     }
 
     const VAR_NAMES = contextData.vars;
@@ -1944,7 +1946,7 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
     let loopType = forcedLoopType || loopTypes[Math.floor(Math.random() * loopTypes.length)];
 
     let isCountdown = loopType !== 'for' && Math.random() < 0.5; // Do-Until and While can count downwards
-    
+
     if (isCountdown) {
         startVals[0] = Math.floor(Math.random() * 10) + 15; // Set a high starting point to subtract from
     }
@@ -1959,11 +1961,11 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
             else simVals[j] += simVals[j+1];
         }
     }
-    let limit = simVals[0]; 
+    let limit = simVals[0];
 
     let contextParts = [];
     let lines = [];
-    
+
     // Initialise Variables
     for (let i=0; i<numVars; i++) {
        if (i < numInputs) {
@@ -1975,7 +1977,7 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
     }
 
     let activeVars = VAR_NAMES.slice(0, numVars);
-    if (loopType === 'for') activeVars.push('i'); 
+    if (loopType === 'for') activeVars.push('i');
 
     let cols = ['Line', ...activeVars, 'Output'];
     let answers = [];
@@ -1988,7 +1990,7 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
         answers.push(row);
     }
 
-    let context = diff === 'easy' 
+    let context = diff === 'easy'
         ? `Trace this algorithm which calculates abstract stats for ${contextData.theme}.`
         : `A program calculates abstract stats for ${contextData.theme}. The user entered the following starting values: ${contextParts.join(', ')}.`;
 
@@ -2014,7 +2016,7 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
             let rowPrint = { Line: (loopStartLine + 1).toString(), Output: currentVals[0].toString() };
             activeVars.forEach(v => rowPrint[v] = '');
             answers.push(rowPrint);
-            
+
             for(let u of updateCommands) {
                 currentVals[u.varIdx] += currentVals[u.addsIdx];
                 let rowUp = { Line: u.lineNum.toString(), Output: '' };
@@ -2039,15 +2041,15 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
 
         while(true) {
             if (isCountdown ? currentVals[0] <= limit : currentVals[0] >= limit) break;
-            
+
             let rowPrint = { Line: (loopStartLine + 1).toString(), Output: currentVals[0].toString() };
             activeVars.forEach(v => rowPrint[v] = '');
             answers.push(rowPrint);
-            
+
             for(let u of updateCommands) {
                 if(isCountdown) currentVals[u.varIdx] -= currentVals[u.addsIdx];
                 else currentVals[u.varIdx] += currentVals[u.addsIdx];
-                
+
                 let rowUp = { Line: u.lineNum.toString(), Output: '' };
                 activeVars.forEach(v => rowUp[v] = '');
                 rowUp[VAR_NAMES[u.varIdx]] = currentVals[u.varIdx].toString();
@@ -2078,11 +2080,11 @@ function generateStandardAlgorithm(contextData, diff, forcedLoopType) {
             let rowPrint = { Line: (loopStartLine + 1).toString(), Output: currentVals[0].toString() };
             activeVars.forEach(v => rowPrint[v] = '');
             answers.push(rowPrint);
-            
+
             for(let u of updateCommands) {
                 if (isCountdown) currentVals[u.varIdx] -= currentVals[u.addsIdx];
                 else currentVals[u.varIdx] += currentVals[u.addsIdx];
-                
+
                 let rowUp = { Line: u.lineNum.toString(), Output: '' };
                 activeVars.forEach(v => rowUp[v] = '');
                 rowUp[VAR_NAMES[u.varIdx]] = currentVals[u.varIdx].toString();
@@ -2149,7 +2151,7 @@ function checkGeneratedPractice() {
        total++;
     });
   }
-  
+
   const isCorrect = (correct === total);
   recordAttempt(genQuestion.id, genQuestion.title, isCorrect, extractTableData(prefix, genQuestion.cols, totalRows), view.code);
 
@@ -2238,10 +2240,10 @@ window.addEventListener('keydown', (e) => {
       devCodeBuffer += e.key.toUpperCase();
       if (devCodeBuffer.endsWith("DEV")) {
           executeDevAutoFill();
-          devCodeBuffer = ""; 
+          devCodeBuffer = "";
       }
   } else if (!e.shiftKey) {
-      devCodeBuffer = ""; 
+      devCodeBuffer = "";
   }
 });
 

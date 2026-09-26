@@ -4,19 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Binary Mine</title>
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
+  /* The page around the game is on the site's dark theme
+     (shared/bc-theme.css); the game keeps its own block-world look. */
   :root {
-    --bg: #0b1220;
-    --panel: #111a2c;
-    --border: #24314d;
-    --accent: #38bdf8;
-    --text: #e2e8f0;
-    --text-dim: #94a3b8;
+    --panel: var(--surface);
+    --border: var(--line);
+    --accent: var(--brand);
+    --text: var(--ink);
+    --text-dim: var(--muted);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-family: var(--font-body);
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -28,8 +30,8 @@
   }
   header h1 {
     margin: 0 0 8px;
-    font-size: 1.2rem;
-    color: var(--accent);
+    font-size: 1.3rem;
+    color: var(--ink);
   }
   .intro-grid {
     display: flex;
@@ -45,6 +47,7 @@
   }
   .intro-grid div span:last-child {
     color: var(--text);
+    font-family: var(--font-mono);
   }
   #bmg-root {
     min-height: calc(100vh - 110px);
@@ -72,7 +75,7 @@
   if (window.initBinaryMiningGame) {
     initBinaryMiningGame('bmg-root');
   } else {
-    document.getElementById('bmg-root').innerHTML = '<p style="color:#f87171;padding:20px">Game could not load. Please refresh the page.</p>';
+    document.getElementById('bmg-root').innerHTML = '<p style="color:#f28b82;padding:20px">Game could not load. Please refresh the page.</p>';
   }
 </script>
 

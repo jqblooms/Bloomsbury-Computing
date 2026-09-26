@@ -4,90 +4,91 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Drills</title>
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
+  /* The site's dark theme (tokens: shared/bc-theme.css). --answer marks the
+     answer Learn mode reveals, in the same amber the lesson slides use. */
   :root {
-    --bg: #f4f6fb; --card: #ffffff; --ink: #1f2733; --muted: #667085;
-    --line: #d7dced; --brand: #2f5bd7; --brand-dark: #23459f; --brand-soft: #e5ecff;
-    --good: #1f8a5a; --good-soft: #e7f6ee; --bad: #c0392b; --bad-soft: #fdeceb;
-    --answer: #b8860b; --answer-soft: #fff6e0;
+    --answer: #fdd663; --answer-soft: rgba(253, 214, 99, .12); --answer-line: rgba(253, 214, 99, .45);
+    --node: #9aa0a6;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  body { background: var(--bg); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { font-size: 15px; line-height: 1.55; }
   .wrap { max-width: 760px; margin: 0 auto; padding: 18px 16px 60px; }
-  /* Embedded inside a lesson slide (?embed=1): the slide has its own title,
-     and the iframe is sized to the content, so no header and less padding. */
+  /* Embedded inside a lesson slide (?embed=1): the slide shows through and
+     supplies the title, the iframe is sized to the content, and cards take
+     the slide's own card colours. */
+  html:has(body.is-embed), body.is-embed { background: transparent; }
+  body.is-embed {
+    --surface: #1f232b; --surface-2: #272c35; --surface-3: #2f3540;
+    --line: #343b46; --line-strong: #454d5a;
+  }
   body.is-embed .wrap { max-width: none; padding: 4px 6px 12px; }
+  /* The lesson's own embed frame is the card here, so the drill's outer cards go flat. */
+  body.is-embed .setup-card, body.is-embed .card { background: transparent; border: 0; padding: 10px 12px; margin: 0; }
   body.is-embed header.drill-head { display: none; }
 
   header.drill-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 6px; }
-  header.drill-head h1 { font-size: 1.15rem; margin: 0; }
+  header.drill-head h1 { font-size: 1.25rem; margin: 0; }
   header.drill-head .sub { color: var(--muted); font-size: .82rem; }
 
-  .setup-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 14px 0; }
+  .setup-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin: 14px 0; }
   .setup-lead { margin: 0 0 14px; color: var(--muted); font-size: .88rem; }
   .setup-row { display: flex; flex-wrap: wrap; gap: 12px; }
   .setup-row + .setup-row { margin-top: 14px; }
-  .setup-field { display: flex; flex-direction: column; gap: 6px; font-size: .82rem; font-weight: 700; color: var(--ink); flex: 1; min-width: 200px; }
-  .setup-field select {
-    padding: 10px 12px; border: 2px solid var(--line); border-radius: 9px; font: inherit; font-weight: 600;
-    background: #fff; color: var(--ink);
-  }
+  .setup-field { display: flex; flex-direction: column; gap: 6px; font-size: .82rem; font-weight: 500; color: var(--muted); flex: 1; min-width: 200px; }
+  .setup-field select { padding: 10px 12px; border-radius: 10px; font-weight: 500; }
   .setup-actions { align-items: center; }
   .setup-resume-note { margin: 10px 0 0; color: var(--muted); font-size: .82rem; }
 
   .scopebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin: 10px 0; }
-  .scopebar #scope-label { font-weight: 700; color: var(--muted); font-size: .85rem; }
-  .btn.small { padding: 6px 12px; font-size: .78rem; }
+  .scopebar #scope-label { font-weight: 500; color: var(--muted); font-size: .85rem; }
+  .btn.small { min-height: 30px; padding: 0 14px; font-size: .8rem; }
 
-  .modebar { display: flex; gap: 8px; margin: 12px 0; }
+  /* Learn / Quiz: a segmented control, like the site's own switches. */
+  .modebar { display: flex; margin: 12px 0; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; }
   .modebar button {
-    flex: 1; padding: 10px 12px; border: 2px solid var(--line); border-radius: 10px;
-    background: var(--card); color: var(--ink); font: inherit; font-weight: 700; cursor: pointer;
+    flex: 1; min-height: 38px; padding: 0 12px; border: 0; background: transparent;
+    color: var(--ink-soft); font: 500 .9rem/1 var(--font-body); cursor: pointer;
   }
-  .modebar button.is-active { border-color: var(--brand); background: var(--brand-soft); color: var(--brand-dark); }
-  .modebar button:hover:not(.is-active) { border-color: var(--brand); }
+  .modebar button + button { border-left: 1px solid var(--line-strong); }
+  .modebar button.is-active { background: var(--brand-soft-strong); color: var(--brand-dark); }
+  .modebar button:hover:not(.is-active) { background: var(--surface-2); }
 
-  .notice { font-size: .82rem; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; }
-  .notice.learn { background: var(--answer-soft); color: #7a5c05; border: 1px solid #e8cf93; }
-  .notice.quiz  { background: var(--brand-soft); color: var(--brand-dark); border: 1px solid #b9c9f5; }
+  .notice { font-size: .82rem; padding: 8px 12px; border-radius: 10px; margin-bottom: 12px; font-weight: 500; }
+  .notice.learn { background: var(--answer-soft); color: var(--answer); border: 1px solid var(--answer-line); }
+  .notice.quiz  { background: var(--brand-soft); color: var(--brand-dark); border: 1px solid rgba(138, 180, 248, .35); }
 
-  .progress { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: .82rem; color: var(--muted); font-weight: 600; }
-  .progress .bar { flex: 1; height: 8px; border-radius: 999px; background: #e3e7f2; overflow: hidden; }
+  .progress { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: .82rem; color: var(--muted); font-weight: 500; }
+  .progress .bar { flex: 1; height: 8px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
   .progress .bar span { display: block; height: 100%; background: var(--good); width: 0%; transition: width .3s; }
 
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px; box-shadow: 0 1px 2px rgba(20,30,60,.04); }
-  .card .prompt { font-size: 1.06rem; font-weight: 700; margin: 0 0 4px; white-space: pre-wrap; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 16px; }
+  .card .prompt { font-size: 1.06rem; font-weight: 500; margin: 0 0 4px; white-space: pre-wrap; }
   /* A prompt with embedded pseudocode (a real newline in card.prompt, e.g. the
      Y8 algorithms drills' trace/output questions) gets the same monospace
      treatment as a type:'code' card's .code-given block, so indentation and
-     line breaks are both visible and read as code, not as run-together
-     prose. Added via JS in renderCard() as a class, not baked into the
-     plain .prompt rule above, so a normal one-line question keeps its
-     usual proportional font. */
-  .card .prompt.has-code { font: 600 .95rem/1.5 "SFMono-Regular", Consolas, monospace; }
-  /* Real flowchart symbols (James, 2026-09-16: "displaying actual flowchart
-     symbols in the questions rather than just describing them where
-     necessary") - same shapes, colours and clip-paths as the lesson
-     shell's .lesson-flow-node (Index.html), ported here since Drills is a
-     separate standalone page with its own stylesheet. A .fc-diagram is a
-     vertical sequence of .fc-node shapes joined by down-arrows; a
-     .fc-legend lays the four shape types out side by side with the
-     relevant one emphasised (.is-focus) and the rest dimmed (.is-dim), for
-     "which symbol is this" questions. */
+     line breaks are both visible and read as code. Added via JS in
+     renderCard() as a class, so a one-line question keeps the body font. */
+  .card .prompt.has-code { font: 500 .95rem/1.5 var(--font-mono); }
+  /* Real flowchart symbols, drawn like the lesson slides' .lesson-flow-node:
+     a .fc-diagram is a vertical sequence of .fc-node shapes joined by
+     arrows; a .fc-legend lays the four shape types side by side with the
+     relevant one emphasised (.is-focus) and the rest dimmed (.is-dim). */
   .fc-diagram, .fc-legend { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: 4px 0 14px; }
   .fc-diagram { flex-direction: column; }
   .fc-node {
-    min-width: 120px; max-width: 220px; padding: 8px 14px; border: 2px solid #52647a;
-    background: #fff; color: var(--ink); font-size: .82rem; font-weight: 650; line-height: 1.3; text-align: center;
+    min-width: 120px; max-width: 220px; padding: 8px 14px; border: 2px solid var(--node);
+    background: var(--surface-2); color: var(--ink); font-size: .82rem; font-weight: 500; line-height: 1.3; text-align: center;
   }
   .fc-node.is-terminal { border-radius: 999px; }
   .fc-node.is-process { border-radius: 5px; }
   .fc-node.is-decision {
     min-width: 140px; padding: 18px 26px; border: 0;
-    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: #52647a;
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: var(--node);
   }
-  .fc-node.is-decision span { display: block; margin: -14px -22px; padding: 14px 22px; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: #fff; }
+  .fc-node.is-decision span { display: block; margin: -14px -22px; padding: 14px 22px; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: var(--surface-2); }
   .fc-node.is-io { border-radius: 5px; transform: skew(-10deg); }
   .fc-node.is-io span { display: block; transform: skew(10deg); }
   .fc-arrow { color: var(--brand); font-size: 18px; font-weight: 800; line-height: 1; }
@@ -95,60 +96,62 @@
   .fc-legend-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
   .fc-legend-item .fc-node { min-width: 96px; font-size: .74rem; }
   .fc-legend-item.is-dim { opacity: .35; }
-  .fc-legend-item.is-focus .fc-node { border-color: var(--brand); box-shadow: 0 0 0 3px var(--answer-soft); }
-  .fc-legend-item.is-focus .fc-node.is-decision { box-shadow: none; filter: drop-shadow(0 0 0 3px var(--answer-soft)); }
-  .fc-legend-label { font-size: .68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
-  .card .hint-kind { font-size: .76rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 12px; }
+  .fc-legend-item.is-focus .fc-node { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft-strong); }
+  .fc-legend-item.is-focus .fc-node.is-decision { box-shadow: none; background: var(--brand); }
+  .fc-legend-label { font-size: .68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .card .hint-kind { font-size: .74rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px; }
   .options { display: grid; gap: 8px; margin: 6px 0 4px; }
   .opt {
-    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 2px solid var(--line);
-    border-radius: 10px; cursor: pointer; background: #fff; font-weight: 600;
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--line-strong);
+    border-radius: 12px; cursor: pointer; background: var(--surface-2); font-weight: 500;
   }
   .opt:hover { border-color: var(--brand); }
   .opt input { margin-top: 3px; flex-shrink: 0; }
   .opt.is-picked { border-color: var(--brand); background: var(--brand-soft); }
-  .opt.is-answer { border-color: var(--answer); background: var(--answer-soft); }
-  .opt.is-correct { border-color: var(--good); background: var(--good-soft); }
-  .opt.is-wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .opt.is-answer { border-color: var(--answer-line); background: var(--answer-soft); }
+  .opt.is-correct { border-color: var(--good-line); background: var(--good-soft); }
+  .opt.is-wrong { border-color: var(--bad-line); background: var(--bad-soft); }
   .opt.is-locked { cursor: default; }
-  .opt.is-locked:hover { border-color: var(--line); }
-  .opt.is-locked.is-answer:hover { border-color: var(--answer); }
+  .opt.is-locked:hover { border-color: var(--line-strong); }
+  .opt.is-locked.is-answer:hover { border-color: var(--answer-line); }
+  .opt.is-locked.is-correct:hover { border-color: var(--good-line); }
+  .opt.is-locked.is-wrong:hover { border-color: var(--bad-line); }
 
   .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
   .btn {
-    padding: 9px 16px; border: 0; border-radius: 9px; background: var(--brand); color: #fff;
-    font: inherit; font-weight: 700; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 0 18px;
+    border: 0; border-radius: 999px; background: var(--brand); color: var(--on-brand);
+    font: 500 .9rem/1 var(--font-body); cursor: pointer;
   }
   .btn:hover { background: var(--brand-dark); }
-  .btn.ghost { background: #eef1f8; color: var(--ink); }
-  .btn.ghost:hover { background: #e2e7f3; }
-  .btn:disabled { background: #cfd6e6; cursor: not-allowed; }
+  .btn.ghost { background: transparent; color: var(--brand); box-shadow: inset 0 0 0 1px var(--line-strong); }
+  .btn.ghost:hover { background: var(--brand-soft); }
+  .btn:disabled, .btn:disabled:hover { background: var(--surface-3); color: var(--muted-2); box-shadow: none; cursor: not-allowed; }
   .spacer { flex: 1; }
 
-  .feedback { margin-top: 12px; padding: 10px 12px; border-radius: 9px; font-weight: 600; font-size: .9rem; display: none; }
+  .feedback { margin-top: 12px; padding: 10px 12px; border-radius: 10px; font-weight: 500; font-size: .9rem; display: none; }
   .feedback.show { display: block; }
-  .feedback.ok { background: var(--good-soft); color: var(--good); border: 1px solid #b6e2c9; }
-  .feedback.no { background: var(--bad-soft); color: var(--bad); border: 1px solid #efc2bc; }
-  .feedback .note { display: block; margin-top: 4px; color: var(--ink); font-weight: 500; }
+  .feedback.ok { background: var(--good-soft); color: var(--good); border: 1px solid var(--good-line); }
+  .feedback.no { background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad-line); }
+  .feedback .note { display: block; margin-top: 4px; color: var(--ink); font-weight: 400; }
 
   .streakdots { display: inline-flex; gap: 4px; vertical-align: middle; margin-left: 6px; }
-  .streakdots i { width: 8px; height: 8px; border-radius: 50%; background: #d7dced; display: inline-block; }
+  .streakdots i { width: 8px; height: 8px; border-radius: 50%; background: var(--surface-4); display: inline-block; }
   .streakdots i.on { background: var(--good); }
 
   .done { text-align: center; padding: 40px 16px; }
   .done .big { font-size: 2.4rem; }
   .done h2 { margin: 10px 0 6px; }
   .done p { color: var(--muted); }
-  .done-partial-note { background: #fff4e0; color: #8a5a10; border-radius: 10px; padding: 10px 14px; margin: 14px auto 0; max-width: 480px; font-weight: 600; font-size: .85rem; }
+  .done-partial-note { background: var(--answer-soft); color: var(--answer); border: 1px solid var(--answer-line); border-radius: 12px; padding: 10px 14px; margin: 14px auto 0; max-width: 480px; font-weight: 500; font-size: .85rem; }
   .text-answer-input {
-    display: block; width: 100%; padding: 12px 14px; font: inherit; font-size: 1rem;
-    border: 2px solid var(--line); border-radius: 10px; margin: 4px 0 6px;
+    display: block; width: 100%; padding: 12px 14px; font-size: 1rem;
+    border-radius: 12px; margin: 4px 0 6px;
   }
-  .text-answer-input:focus { outline: none; border-color: var(--brand); }
-  .text-answer-input:disabled { background: #f1f3f8; color: var(--ink); }
+  .text-answer-input:disabled { background: var(--surface-3); color: var(--ink); }
   .help-box {
-    display: none; margin: 8px 0; padding: 10px 12px; border-radius: 9px;
-    background: var(--answer-soft); border: 1px solid #e8cf93; color: #7a5c05; font-weight: 600;
+    display: none; margin: 8px 0; padding: 10px 12px; border-radius: 10px;
+    background: var(--answer-soft); border: 1px solid var(--answer-line); color: var(--answer); font-weight: 500;
   }
   .help-box.show { display: block; }
 
@@ -158,56 +161,53 @@
      solution's source) so a wrong attempt is still informative without
      just handing over the answer. */
   .code-given {
-    font: 600 .92rem/1.5 "SFMono-Regular", Consolas, monospace;
-    background: #f6f8fb; border: 1px solid var(--line); border-radius: 8px;
+    font: 500 .92rem/1.5 var(--font-mono);
+    background: #13161b; border: 1px solid var(--line); border-radius: 10px;
     padding: 10px 12px; margin: 4px 0 10px; white-space: pre-wrap;
   }
   .code-textarea {
     display: block; width: 100%; min-height: 130px; padding: 12px 14px;
-    font: 500 .95rem/1.5 "SFMono-Regular", Consolas, monospace;
-    border: 2px solid var(--line); border-radius: 10px; margin: 4px 0 6px;
+    font: 500 .95rem/1.5 var(--font-mono);
+    background: #13161b; border-radius: 12px; margin: 4px 0 6px;
     resize: vertical; tab-size: 2;
   }
-  .code-textarea:focus { outline: none; border-color: var(--brand); }
-  .code-textarea:disabled { background: #f1f3f8; color: var(--ink); }
+  .code-textarea:disabled { background: var(--surface-3); color: var(--ink); }
   .code-result {
-    margin: 8px 0; padding: 10px 12px; border-radius: 8px; font-size: .92rem;
-    background: #f6f8fb; border: 1px solid var(--line);
+    margin: 8px 0; padding: 10px 12px; border-radius: 10px; font-size: .92rem;
+    background: var(--surface-2); border: 1px solid var(--line);
   }
-  .code-result.ok { background: var(--good-soft); border-color: #b6e2c9; color: var(--good); }
-  .code-result.no { background: var(--bad-soft); border-color: #efc2bc; color: var(--bad); }
-  .code-result pre { margin: 4px 0 0; font: 600 .85rem/1.4 "SFMono-Regular", Consolas, monospace; white-space: pre-wrap; color: inherit; }
+  .code-result.ok { background: var(--good-soft); border-color: var(--good-line); color: var(--good); }
+  .code-result.no { background: var(--bad-soft); border-color: var(--bad-line); color: var(--bad); }
+  .code-result pre { margin: 4px 0 0; font: 500 .85rem/1.4 var(--font-mono); white-space: pre-wrap; color: inherit; }
   .code-help-box {
-    display: none; margin: 8px 0; padding: 10px 12px; border-radius: 9px;
-    background: var(--answer-soft); border: 1px solid #e8cf93; color: #7a5c05;
+    display: none; margin: 8px 0; padding: 10px 12px; border-radius: 10px;
+    background: var(--answer-soft); border: 1px solid var(--answer-line); color: var(--answer);
   }
   .code-help-box.show { display: block; }
 
   /* Exam Questions (drill.isExamSet cards): a real multi-mark exam
      question split into one box per distinct marking point. */
-  .exam-progress { font-size: .82rem; color: var(--muted); margin: 0 0 6px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+  .exam-progress { font-size: .78rem; color: var(--muted); margin: 0 0 6px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
   .exam-parts { display: flex; flex-direction: column; gap: 12px; margin: 12px 0; }
-  .exam-part { padding: 10px 12px; border: 2px solid var(--line); border-radius: 10px; }
-  .exam-part.is-correct { border-color: #b6e2c9; background: var(--good-soft); }
-  .exam-part.is-wrong { border-color: #efc2bc; background: var(--bad-soft); }
-  .exam-part-label { display: block; font-weight: 600; font-size: .92rem; margin-bottom: 6px; }
+  .exam-part { padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface-2); }
+  .exam-part.is-correct { border-color: var(--good-line); background: var(--good-soft); }
+  .exam-part.is-wrong { border-color: var(--bad-line); background: var(--bad-soft); }
+  .exam-part-label { display: block; font-weight: 500; font-size: .92rem; margin-bottom: 6px; }
   .exam-part-input {
     display: block; width: 100%; max-width: 260px; padding: 8px 10px;
-    font: 500 .95rem/1.4 "SFMono-Regular", Consolas, monospace;
-    border: 2px solid var(--line); border-radius: 8px;
+    font: 500 .95rem/1.4 var(--font-mono); border-radius: 8px;
   }
-  .exam-part-input:focus { outline: none; border-color: var(--brand); }
-  .exam-part-input:disabled { background: #f1f3f8; color: var(--ink); }
-  .exam-part-feedback { margin-top: 6px; font-size: .85rem; font-weight: 600; }
+  .exam-part-input:disabled { background: var(--surface-3); color: var(--ink); }
+  .exam-part-feedback { margin-top: 6px; font-size: .85rem; font-weight: 500; }
   .exam-part.is-correct .exam-part-feedback { color: var(--good); }
   .exam-part.is-wrong .exam-part-feedback { color: var(--bad); }
   .exam-source { font-size: .82rem; color: var(--muted); font-style: italic; margin: 4px 0 0; }
   .exam-card-summary { margin-top: 10px; }
   .exam-card-score { font-weight: 700; font-size: .98rem; }
-  .exam-final-score { font-size: 1.4rem; font-weight: 800; margin: 6px 0 16px; }
+  .exam-final-score { font: 700 1.5rem/1.2 var(--font-display); margin: 6px 0 16px; }
 
   .code-help-box pre {
-    margin: 4px 0 0; font: 600 .85rem/1.4 "SFMono-Regular", Consolas, monospace;
+    margin: 4px 0 0; font: 500 .85rem/1.4 var(--font-mono);
     white-space: pre-wrap; color: inherit;
   }
 
@@ -219,15 +219,15 @@
      server/admin, not this run's own temporary streaks), so what a
      student sees here should always match what a teacher sees for them. */
   .mastery-overview { margin: 14px 0; }
-  .mastery-overview-title { font-weight: 700; font-size: .95rem; margin: 0 0 2px; }
+  .mastery-overview-title { font: 600 1rem/1.3 var(--font-display); margin: 0 0 2px; }
   .mastery-overview-note { color: var(--muted); font-size: .78rem; margin: 0 0 10px; }
   .mastery-row { margin: 0 0 10px; }
   .mastery-row-top { display: flex; justify-content: space-between; gap: 10px; font-size: .88rem; margin-bottom: 3px; }
-  .mastery-label { font-weight: 600; }
-  .mastery-pct { font-weight: 700; color: var(--brand-dark); flex: none; }
-  .mastery-bar { height: 8px; border-radius: 5px; background: #e7ebf5; overflow: hidden; }
+  .mastery-label { font-weight: 500; }
+  .mastery-pct { font-weight: 700; color: var(--brand); flex: none; }
+  .mastery-bar { height: 8px; border-radius: 5px; background: var(--surface-3); overflow: hidden; }
   .mastery-bar-fill { height: 100%; background: var(--brand); border-radius: 5px 0 0 5px; }
-  .mastery-bar-fill.is-complete { background: var(--good, #1f8a5a); border-radius: 5px; }
+  .mastery-bar-fill.is-complete { background: var(--good); border-radius: 5px; }
   .mastery-sub { font-size: .76rem; color: var(--muted); margin-top: 2px; }
 </style>
 </head>

@@ -10,6 +10,8 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../shared/bc-tailwind.js?v=20260927"></script>
+    <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
     <!-- Real flowchart layout, not hand-placed CSS boxes and arrow glyphs -
          same Mermaid pipeline the main site uses for its own lesson
          diagrams (Index.html's initBranchDiagram), reused here since this
@@ -40,8 +42,7 @@
       }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
-        body { font-family: 'JetBrains Mono', monospace; overflow: hidden; touch-action: manipulation; background-color: #0f172a; }
+        body { font-family: var(--font-body); overflow: hidden; touch-action: manipulation; background-color: var(--bg); }
         #root { height: 100%; width: 100%; }
         .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake { 10%,90%{transform:translate3d(-1px,0,0)} 20%,80%{transform:translate3d(2px,0,0)} 30%,50%,70%{transform:translate3d(-4px,0,0)} 40%,60%{transform:translate3d(4px,0,0)} }

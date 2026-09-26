@@ -3,7 +3,11 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Exam Circuit</title>
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
+/* The circuit board is the game, so it keeps its soldermask green and
+   copper. Around it (the page, the HUD, its buttons and the type) is the
+   site's dark theme from shared/bc-theme.css. */
 :root{
   --board-base:#0b3d2e;      /* soldermask green - unbuilt region background */
   --copper:#c98a4a;          /* live traces/pads (built) */
@@ -11,20 +15,20 @@
   --silkscreen:#f2f2ea;      /* labels - never used for state */
   --gold:#ffd166;            /* Signal collector + flowing current */
   --fault:#e05a4e;           /* reserved for the Noise/interference layer (not in this slice) */
-  --bg:#050b08;
-  --panel:#0d1f17;
+  --bg:#0f1115;
+  --panel:#171a20;
   --line:#1c4a37;
   --text:#eef7ef;
   --muted:#8fbfa8;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/1.4 ui-monospace,'Cascadia Code',monospace;overflow:hidden}
-#hud{position:fixed;top:0;left:0;right:0;height:56px;background:var(--panel);border-bottom:2px solid var(--line);display:flex;align-items:center;gap:24px;padding:0 18px;z-index:30}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/1.4 var(--font-body);overflow:hidden}
+#hud{position:fixed;top:0;left:0;right:0;height:56px;background:var(--panel);border-bottom:1px solid #2b3039;display:flex;align-items:center;gap:24px;padding:0 18px;z-index:30}
 #hud .signal-total{font-size:1.3rem;font-weight:900;color:var(--gold)}
 #hud .signal-rate{color:var(--muted);font-size:.85rem}
 #hud .region-label{margin-left:auto;color:var(--muted);font-size:.8rem}
-#hud button{background:var(--copper-dim);color:var(--silkscreen);border:1px solid var(--line);padding:6px 12px;font:inherit;cursor:pointer;border-radius:3px}
-#hud button:hover{background:var(--line)}
+#hud button{background:#1d2128;color:#e8eaed;border:1px solid #3b424e;padding:6px 14px;font:inherit;font-weight:500;cursor:pointer;border-radius:999px}
+#hud button:hover{background:#252a33;border-color:#8ab4f8}
 #ws{position:absolute;top:56px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab;background:
   radial-gradient(circle at 20% 20%, #0d2a1f 0%, var(--bg) 60%);}
 #ws.panning{cursor:grabbing}
@@ -82,7 +86,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/
   <div><div class="signal-total"><span id="signalTotal">0</span> Signal</div>
   <div class="signal-rate">+<span id="signalRate">0</span>/s</div></div>
   <button id="resetView">Reset view</button>
-  <div class="region-label">Exam Circuit — prototype slice: Topics 1.1–1.2 (0478)</div>
+  <div class="region-label">Exam Circuit: topics 1.1 and 1.2 (0478)</div>
 </div>
 <div id="ws">
   <div id="world"></div>
