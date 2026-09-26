@@ -1,0 +1,406 @@
+/* Trace Table Practice, on the site theme (shared/bc-theme.css provides the tokens). */
+/* The site's dark theme: shared/bc-theme.css (loaded above) defines --bg
+   and --surface; the names below are this page's own, pointed at the same
+   tokens. Amber marks the line being run, as in the lesson slides. */
+:root {
+  --surface2: var(--surface-2);
+  --border: var(--line);
+  --accent: var(--brand);
+  --accent-gold: #fdd663;
+  --accent-gold-dark: #fcc934;
+  --text: var(--ink);
+  --text-dim: var(--muted);
+  --text-dimmer: var(--muted-2);
+  --highlight-active: rgba(253, 214, 99, .16);
+  --correct: var(--good);
+  --wrong: var(--bad);
+  --mono: var(--font-mono);
+  --sans: var(--font-body);
+  --code-bg: #13161b;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  margin: 0;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.language-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+.language-picker-label {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0 0.55rem;
+}
+.language-btn {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.55rem 0.8rem;
+}
+.language-btn:hover { color: var(--accent); }
+.language-btn.active {
+  background: var(--accent);
+  color: var(--on-brand);
+}
+@media (max-width: 700px) {
+  .site-header { align-items: flex-start; }
+  .language-picker { width: 100%; }
+  .language-btn { flex: 1; }
+}
+
+.logo {
+  height: 64px;
+  width: 64px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: var(--on-brand);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.8rem;
+  border-radius: 12px;
+}
+
+h1 { margin: 0; font-size: 2rem; color: var(--ink); }
+h2 { margin-top: 0; color: var(--ink); font-weight: 700;}
+p { margin: 0; color: var(--text-dim); }
+
+/* Navigation Tabs */
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 1rem;
+  overflow-x: auto;
+}
+.tab-btn {
+  background: transparent; border: none; color: var(--text-dim);
+  font-size: 1.1rem; font-family: var(--sans); cursor: pointer;
+  padding: 0.6rem 1.2rem; border-radius: 8px; transition: 0.2s;
+  white-space: nowrap; font-weight: 500;
+}
+.tab-btn:hover { background: var(--surface2); color: var(--accent); }
+.tab-btn.active {
+  background: var(--surface2);
+  color: var(--accent);
+  font-weight: 700;
+  box-shadow: inset 0 -3px 0 var(--accent);
+}
+
+.page { display: none; animation: fadeIn 0.3s; }
+.page.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Buttons */
+.btn {
+  background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+  padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-family: var(--sans);
+  font-weight: 600; transition: 0.2s; font-size: 1rem;
+}
+select.btn { padding-right: 2rem; }
+.btn:hover { background: var(--surface-3); color: var(--accent); }
+.btn.active { background: var(--accent); color: var(--on-brand); border-color: var(--accent); }
+
+/* Primary button: the site's filled blue. */
+.btn-primary { background: var(--accent); color: var(--on-brand); border: none; font-weight: 700; }
+.btn-primary:hover { background: var(--brand-dark); color: var(--on-brand); }
+
+.controls { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.controls-spaced { justify-content: space-between; align-items: center; }
+.controls-group { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;}
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
+@media (max-width: 850px) { .grid { grid-template-columns: 1fr; } }
+
+.mt-4 { margin-top: 1rem; }
+.mb-4 { margin-bottom: 1rem; }
+
+/* Stats Badge */
+.stat-badge {
+  background: var(--surface2);
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--accent);
+  font-weight: bold;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+}
+
+/* Context Boxes */
+.context-box {
+  background: var(--surface2);
+  border-left: 4px solid var(--accent-gold);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  color: var(--text);
+  font-style: italic;
+}
+.context-box strong { color: var(--accent); font-weight: 700; }
+
+/* Code Blocks */
+.code-container {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 0;
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+.code-line { display: flex; gap: 1rem; padding: 0.15rem 1rem; border-left: 3px solid transparent; }
+.code-line.active { background: var(--highlight-active); border-left: 3px solid var(--accent-gold); }
+.line-num { color: var(--text-dimmer); user-select: none; width: 25px; text-align: right; }
+.line-code { color: var(--accent); white-space: pre; font-weight: 700;}
+
+/* Trace Tables */
+table.trace-table {
+  width: 100%; border-collapse: collapse;
+  font-family: var(--mono);
+  background: var(--surface);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.trace-table th {
+  background: var(--surface-3);
+  color: var(--ink);
+  padding: 0.8rem;
+  border: 1px solid var(--line-strong);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.trace-table td { border: 1px solid var(--border); text-align: center; height: 3rem;}
+.trace-table input {
+  width: 100%; height: 100%; box-sizing: border-box; background: transparent;
+  border: none; color: var(--text); text-align: center;
+  font-family: var(--mono); font-size: 1.1rem; outline: none; font-weight: 700;
+}
+.trace-table input:focus { background: rgba(253, 214, 99, .12); }
+.walk-table-scroll {
+  max-height: 65vh;
+  overflow: auto;
+  border-radius: 8px;
+}
+.walk-table-scroll .trace-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Validation Styles */
+.trace-table td.correct { background: var(--good-soft); box-shadow: inset 0 0 0 2px var(--correct); }
+.trace-table td.wrong { background: var(--bad-soft); box-shadow: inset 0 0 0 2px var(--wrong); }
+
+/* Support Mode (Fill the Table only): a greyed-out hint of the correct
+   answer sits under each cell's input, colored per-character against
+   what's actually been typed. See the "SUPPORT MODE" script section for
+   the full mechanic - modelled on PseudocodeBlitz's own Support Mode. */
+.trace-table.support-mode td { height: auto; padding: 0.35rem 0.25rem; }
+.trace-table.support-mode input { height: 1.9rem; }
+.tt-hint {
+  margin-top: 0.2rem;
+  min-height: 1.1em;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+}
+.tt-hint-char { color: var(--text-dimmer); }
+.tt-hint-char.tt-hint-ok { color: var(--correct); font-weight: 700; }
+.tt-hint-char.tt-hint-bad { color: var(--wrong); font-weight: 700; text-decoration: line-through; }
+/* A masked (not-yet-revealed) character never renders as blank space -
+   that would look identical to "nothing needed here", the one thing
+   Support Mode must never claim. A small dotted-underline box makes it
+   visibly a hidden blank the student still has to fill in themselves. */
+.tt-hint-blank {
+  display: inline-block;
+  width: 0.85ch;
+  height: 0.9em;
+  margin: 0 0.06em;
+  border-bottom: 2px dotted var(--text-dimmer);
+  vertical-align: -0.05em;
+}
+
+.prac-area { display: none; }
+.prac-area.active { display: block; }
+
+.result-badge {
+  padding: 1rem; border-radius: 8px; margin-top: 1rem; font-weight: bold; display: none; font-size: 1.1rem;
+}
+.result-badge.show { display: block; animation: fadeIn 0.3s; }
+.result-badge.pass { background: var(--good-soft); color: var(--correct); border: 1px solid var(--good-line); }
+.result-badge.fail { background: var(--bad-soft); color: var(--wrong); border: 1px solid var(--bad-line); }
+
+/* Informational Lists */
+.info-list { margin-top: 1rem; padding-left: 1.5rem; }
+.info-list li { margin-bottom: 0.8rem; color: var(--text-dim); }
+.info-list strong { color: var(--accent); }
+
+/* Operator hints (used in "write the code" practice mode) */
+.code-hints {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+.code-hints-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.4rem;
+}
+.code-hint-row { display: flex; gap: 0.7rem; padding: 0.1rem 0; }
+.code-hint-line { color: var(--text-dimmer); width: 1.4rem; text-align: right; flex: 0 0 auto; }
+.code-hint-ops { color: var(--accent); font-weight: 700; }
+.code-hint-ops.empty { color: var(--text-dimmer); font-weight: 400; font-style: italic; }
+
+/* Code Editor (used in "write the code" practice mode) */
+.code-editor {
+  display: flex;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.code-editor-gutter {
+  background: var(--surface2);
+  color: var(--text-dimmer);
+  text-align: right;
+  padding: 1rem 0.6rem;
+  user-select: none;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.gutter-line { padding: 0 0.2rem; white-space: pre; }
+.gutter-line.correct { color: var(--correct); font-weight: 700; }
+.gutter-line.wrong { color: var(--wrong); font-weight: 700; }
+.code-editor-textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: vertical;
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
+  padding: 1rem;
+  min-height: 10rem;
+  white-space: pre;
+  overflow: auto;
+}
+
+/* Embed mode: this page loaded inside a lesson step's own iframe,
+   showing one pre-selected algorithm rather than the full app. Strips
+   the chrome the lesson page already provides its own version of
+   (brand header, page tabs, algorithm picker), leaving just the
+   context/code/table panel. See "EMBED API" in the script below. */
+/* Inside a lesson slide the slide shows through, and cards take the
+   slide's own card colours. */
+html:has(body.tt-embed), body.tt-embed { background: transparent; }
+body.tt-embed {
+  padding: 0.75rem;
+  --surface: #1f232b; --surface-2: #272c35; --surface-3: #2f3540;
+  --line: #343b46; --line-strong: #454d5a;
+}
+body.tt-embed .container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+/* An embed exists to do one specific thing the lesson chose (trace this
+   one algorithm, in this one language, in this one mode) - every
+   picker/tab that would let a student wander into a different task is
+   hidden, not just the brand header. This also sidesteps a real bug
+   found live: the "Write the code" mode's editor did not finish
+   initialising the first time a step landed in that mode, only
+   appearing after a manual mode switch triggered a re-render - with
+   the toggle gone and trace mode forced (see initEmbed() below), that
+   broken path is simply unreachable rather than patched around. */
+body.tt-embed .site-header,
+body.tt-embed .tabs,
+body.tt-embed .page .controls.mb-4 {
+  display: none;
+}
+/* The lesson iframe this loads into is almost always narrower than the
+   850px breakpoint below, which would otherwise stack the code and
+   table into a single column, roughly doubling the content height and
+   forcing an internal scrollbar (the iframe has a fixed CSS height, it
+   does not grow to fit its content, and the host lesson page has no way
+   to know how tall this page wants to be). Keeping two columns instead
+   uses the embed's width, which is rarely in short supply, rather than
+   its height, which is. */
+body.tt-embed .grid {
+  grid-template-columns: minmax(200px, 1fr) minmax(240px, 1.15fr);
+  gap: 1rem;
+}
