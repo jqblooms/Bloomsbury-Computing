@@ -50,8 +50,10 @@ function init() {
     // to remeasure, which is why line numbers and text overlap until an
     // unrelated change (like reaching a two-digit line count) forces a
     // relayout. Refresh whenever the editor's real size changes instead.
+    // Deferred a tick: refreshing inside the observer's own callback resizes
+    // what it observes and the browser reports a ResizeObserver loop.
     new ResizeObserver(function () {
-        editor.refresh();
+        setTimeout(function () { editor.refresh(); }, 0);
     }).observe(document.getElementById('editor-container'));
 
     // Setup UI Listeners
@@ -74,7 +76,7 @@ function init() {
     });
 
     // Resize handler for Three.js
-    new ResizeObserver(resizeCanvas).observe(document.getElementById('right-pane'));
+    new ResizeObserver(function () { setTimeout(resizeCanvas, 0); }).observe(document.getElementById('right-pane'));
 
     initThreeJS();
     initEmbedListener();
