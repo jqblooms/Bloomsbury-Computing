@@ -293,6 +293,12 @@
     })();
   </script>
   <!-- PyScratch: Python editor overlay. No-op unless ?pyscratch is in URL. -->
+  <!-- Tutorial progress follows the student to any computer (see shared/cloud-save.js). -->
+  <script>
+    if (/[?&]pyscratch/.test(location.search)) window.BC_CLOUD_SAVE = { app: 'pyscratch', patterns: ['^pyscratch:tut:\\d+:(completed|progress)$'] };
+    else if (/[?&]flowscratch/.test(location.search)) window.BC_CLOUD_SAVE = { app: 'flowscratch', keys: ['flowscratchTutorialProgress_v1'] };
+  </script>
+  <script src="../shared/cloud-save.js?v=20260926"></script>
   <script src="../assets/js/pyscratch-tutorials.js?v=20260925split"></script>
   <script src="../assets/js/pyscratch.js?v=20260925split"></script>
   <!-- FlowScratch: flowchart editor overlay. No-op unless ?flowscratch is in URL. -->
