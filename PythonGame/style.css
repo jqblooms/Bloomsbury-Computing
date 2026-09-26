@@ -83,7 +83,7 @@ body {
 
 .pg-menu-body { display: flex; gap: 16px; align-items: flex-start; }
 .pg-stages { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-@media (max-width: 760px) { .pg-stages { grid-template-columns: minmax(0, 1fr); } .pg-menu-body { flex-direction: column; } }
+@media (max-width: 760px) { .pg-stages { grid-template-columns: minmax(0, 1fr); } .pg-menu-body { flex-direction: column; align-items: stretch; } }
 
 .pg-stage { display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--stage); border-radius: var(--radius-lg); }
 .pg-stage-wide { grid-column: 1 / -1; }
