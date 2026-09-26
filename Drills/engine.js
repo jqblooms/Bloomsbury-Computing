@@ -485,28 +485,29 @@
   // ============================================================
   var current = null; // { cardId, set, checked, helpTimer }
 
-  // Switching Learn<->Quiz keeps the current topic/card-count selection but
-  // always starts a fresh run (see freshRun) - the anti-cheat rule James
-  // asked for. Choosing a new topic or count from the setup panel (see
-  // startRun below) also always starts fresh, for the same reason.
+  // Switching Learn<->Quiz keeps the current topic, card count and card pool
+  // but starts a fresh run, so streaks built with Learn's help can't carry
+  // into Quiz (the anti-cheat rule James asked for). Mastery itself is never
+  // touched: it lives in everMastered, and the progress bar shows it in both
+  // modes, so a mode switch never looks like lost progress.
   function applyModeUI(mode) {
     els.modeLearn.classList.toggle("is-active", mode === "learn");
     els.modeQuiz.classList.toggle("is-active", mode === "quiz");
     els.noticeLearn.style.display = mode === "learn" ? "" : "none";
     els.noticeQuiz.style.display = mode === "quiz" ? "" : "none";
-    els.progress.style.display = mode === "quiz" ? "flex" : "none";
+    els.progress.style.display = "flex";
   }
 
   function setMode(mode, opts) {
     opts = opts || {};
     var switching = run && run.mode !== mode;
     if (switching || !run) {
-      run = freshRun(mode, run ? run.category : "all", run ? run.count : null, run ? run.answerMode : "mc");
+      run = freshRun(mode, run ? run.category : "all", run ? run.count : null, run ? run.answerMode : "mc", run ? run.pool : "unmastered");
       persistRun();
     }
     applyModeUI(mode);
     updateScopeLabel();
-    if (switching && !opts.silent) toast("Run reset - switching modes clears this run. Your overall mastery is kept.");
+    if (switching && !opts.silent) toast("Now in " + (mode === "learn" ? "Learn" : "Quiz") + " mode with a fresh run. Your mastery is kept.");
     nextCard();
   }
 
@@ -525,11 +526,16 @@
     setTimeout(function () { t.remove(); }, 3100);
   }
 
+  // The bar is this topic's lasting mastery (the same number the setup
+  // screen and the teacher's dashboard show), with this run's count beside
+  // it in Quiz mode.
   function updateProgress() {
-    var total = run.count;
-    var mastered = Object.keys(run.masteredThisRun).length;
-    els.progressLabel.textContent = mastered + " / " + total + " mastered this run";
-    els.progressFill.style.width = (total ? Math.round(mastered / total * 100) : 0) + "%";
+    var ids = categoryCardIds(run.category);
+    var mastered = ids.filter(function (id) { return everMastered[id]; }).length;
+    var thisRun = Object.keys(run.masteredThisRun).length;
+    els.progressLabel.textContent = mastered + " / " + ids.length + " mastered in " + categoryLabel(run.category) +
+      (run.mode === "quiz" ? " · " + thisRun + " / " + run.count + " this run" : "");
+    els.progressFill.style.width = (ids.length ? Math.round(mastered / ids.length * 100) : 0) + "%";
   }
 
   function nextCard() {
@@ -537,10 +543,8 @@
     if (isExamSet) { nextExamCard(); return; }
     if (current && current.advanceTimer) clearTimeout(current.advanceTimer);
     persistRun();
-    if (run.mode === "quiz") {
-      updateProgress();
-      if (!run.queue.length) return renderDone();
-    }
+    updateProgress();
+    if (run.mode === "quiz" && !run.queue.length) return renderDone();
     if (!run.queue.length) { // learn mode ran dry - reshuffle everything
       run.queue = shuffle(drill.cards.map(function (c) { return c.id; }));
     }
@@ -1618,6 +1622,44 @@
     else setInterval(postEmbedHeight, 500);
     window.addEventListener("load", postEmbedHeight);
     postEmbedHeight();
+  }
+
+  // ---- mastery saved on the student's account --------------------------
+  // This browser's saved mastery is empty on a computer the student hasn't
+  // used before. The site (our parent window) keeps every mastered card on
+  // the student's account, so ask it and merge the answer in: mastery only
+  // ever grows here, never shrinks. Nothing happens when the page is opened
+  // on its own or the student isn't signed in.
+  function applyAccountMastery(ids) {
+    var added = 0;
+    (ids || []).forEach(function (id) {
+      id = String(id);
+      var key = id.indexOf("__code_category__") === 0 ? codeMasteryKey(id.slice("__code_category__".length)) : (cardsById[id] ? id : null);
+      if (key && !everMastered[key]) { everMastered[key] = true; added++; }
+    });
+    if (!added) return;
+    saveEver(everMastered);
+    if (els.setupCard.style.display !== "none") {
+      if (!isCodeDrill && !isExamSet) {
+        populatePoolSelect(els.setupCategory.value, els.setupPool ? els.setupPool.value : null);
+        populateCountSelect(els.setupCategory.value, Number(els.setupCount.value) || null, els.setupPool ? els.setupPool.value : "all");
+        refreshResumeUI();
+      }
+      renderMasteryOverview();
+    } else if (run && !run.examSet) {
+      if (isCodeDrill) { if (run.mode === "quiz" && typeof updateCodeProgress === "function") updateCodeProgress(); }
+      else updateProgress();
+    }
+    toast("Restored " + added + " mastered " + (isCodeDrill ? "question type" : "card") + (added === 1 ? "" : "s") + " from your account.");
+  }
+  if (window.parent !== window && !isExamSet) {
+    window.addEventListener("message", function (event) {
+      if (event.source !== window.parent) return;
+      var data = event.data;
+      if (!data || data.type !== "BC_DRILL_STATE" || data.drillId !== drillId) return;
+      applyAccountMastery(data.mastered);
+    });
+    try { window.parent.postMessage({ type: "BC_DRILL_STATE_REQUEST", drillId: drillId }, "*"); } catch (e) {}
   }
 
   var restored = loadRun();
