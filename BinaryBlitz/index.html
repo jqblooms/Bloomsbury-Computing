@@ -308,15 +308,20 @@ const Button = ({ onClick, children, className = "", disabled = false, variant =
     return <button type="button" onClick={onClick} disabled={disabled} className={`${base} ${variants[variant]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>{children}</button>;
 };
 
-const Toggle = ({ checked, onChange, label }) => (
-    <div className="flex items-center justify-center mb-6 cursor-pointer" onClick={() => onChange(!checked)}>
-        <span className={`mr-3 font-bold text-sm ${checked ? 'text-red-400' : 'text-slate-400'}`}>{label}</span>
-        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-            <div className={`w-12 h-6 rounded-full shadow-inner transition-colors duration-200 ${checked ? 'bg-red-900' : 'bg-slate-700'}`}></div>
-            <div className={`absolute w-6 h-6 rounded-full shadow inset-y-0 left-0 transition-transform duration-200 ease-in-out ${checked ? 'translate-x-6 bg-red-500' : 'translate-x-0 bg-slate-400'}`}></div>
-        </div>
-    </div>
-);
+// The site's switch (as in shared/bc-support.js), red for hard mode.
+const Toggle = ({ checked, onChange, label }) => {
+    const danger = /hard/i.test(label);
+    const onCls = danger ? 'border-[#f28b82] text-[#f28b82]' : 'border-[#8ab4f8] text-[#aecbfa]';
+    return (
+        <button type="button" aria-pressed={checked} onClick={() => onChange(!checked)}
+            className={`inline-flex items-center gap-2 min-h-[32px] pl-1.5 pr-3 mb-6 rounded-full border text-[13px] font-medium transition-colors hover:bg-[rgba(138,180,248,.14)] ${checked ? onCls : 'border-[#3b424e] text-[#c9cdd4]'}`}>
+            <span className={`relative w-8 h-[18px] rounded-full transition-colors ${checked ? (danger ? 'bg-[#f28b82]' : 'bg-[#8ab4f8]') : 'bg-[#2e3440]'}`}>
+                <span className={`absolute top-[3px] left-[3px] w-3 h-3 rounded-full transition-transform ${checked ? 'translate-x-[14px] bg-[#0f1115]' : 'bg-[#9aa0a6]'}`}></span>
+            </span>
+            {label.charAt(0) + label.slice(1).toLowerCase()}
+        </button>
+    );
+};
 
 const BinaryDisplay = ({ bits, hideHeaders, useNibbles, signed }) => (
     <div className="flex justify-between items-center w-full gap-1 mb-4">
@@ -604,7 +609,7 @@ const MainMenu = ({ onStart, isHardMode, setHardMode, isSupportMode, setSupportM
         <div className="flex flex-col items-center h-full p-4 fade-in overflow-y-auto custom-scrollbar">
             {helpLevel && <HelpModal levelId={helpLevel} onClose={() => setHelpLevel(null)} />}
             <div className="text-center mb-4 mt-6">
-                <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 mb-1">BINARY BLITZ</h1>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-slate-100 mb-1">Binary <span className="text-blue-300">Blitz</span></h1>
                 <p className="text-slate-400 text-sm">13 Levels.</p>
                 <p className="text-violet-400 text-xs mt-1 font-mono">{playerName}</p>
             </div>
