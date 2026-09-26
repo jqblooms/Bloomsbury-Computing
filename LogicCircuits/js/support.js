@@ -67,7 +67,7 @@ function refreshSupportPlan() {
   if (reveal > 0.9) {
     html += '<ol>' + steps.map((s, i) => '<li class="' + (built[i] ? 'is-done' : '') + '"><b>' + s.op + '</b> gate with ' +
       s.ins.join(', ') + (i === steps.length - 1 ? ', into Q' : '') + '</li>').join('') + '</ol>' +
-      '<p class="plan-note">Each number is the output of that step.</p>';
+      (steps.length > 1 ? '<p class="plan-note">(1) means the output of step 1.</p>' : '');
   } else if (reveal > 0.5) {
     html += '<ol>' + steps.map((s, i) => '<li class="' + (built[i] ? 'is-done' : '') + '"><b>' + s.op + '</b></li>').join('') + '</ol>' +
       '<p class="plan-note">Brackets first. Which inputs go into each?</p>';
@@ -77,6 +77,12 @@ function refreshSupportPlan() {
   if (supportMismatch && circuitSignature() === lastSupportCircuit) html += '<p class="plan-check">' + supportMismatch + '</p>';
   panel.innerHTML = html;
   panel.hidden = false;
+}
+
+// Called by loadQuestion.
+function onSupportQuestion() {
+  supportMismatch = '';
+  refreshSupportPlan();
 }
 
 function circuitSignature() {

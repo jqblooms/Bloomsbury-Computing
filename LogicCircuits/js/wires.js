@@ -179,5 +179,5 @@ function drawWires() {
       svg.appendChild(c);
     });
   }
-  refreshSupportPlan();
+  if (window.refreshSupportPlan) refreshSupportPlan();
 }
