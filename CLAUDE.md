@@ -16,7 +16,7 @@ Everything the school computing site shows that does not need the student's acco
   - `shared/cloud-save.js`: mirrors chosen localStorage keys to the student's account through the shell.
   - `shared/frame-relay.js`: for a wrapper page around one editor iframe; passes `BC_*` messages both ways.
   - `shared/pseudocode-engine.js`: the Cambridge pseudocode interpreter (DECLARE required, types checked).
-- Apps, one folder each with an `index.html`: `BinaryBlitz`, `BooleanBlitz`, `PseudocodeBlitz`, `FlowchartBlitz`, `StorageBlitz`, `FileForge`, `HexMachine`, `BinaryMine`, `LogicCircuits`, `PacketLab`, `ControllerDesigner`, `TraceTablePractice`, `PythonGame`, `PseudocodeFarmer`, `PseudocodeReference` (the Y11 Pseudocode Recap), `ByteBrawlers` (Live Game launcher and host download).
+- Apps, one folder each with an `index.html`: `BinaryBlitz`, `BooleanBlitz`, `PseudocodeBlitz`, `FlowchartBlitz`, `StorageBlitz`, `FileForge`, `HexMachine`, `BinaryMine`, `LogicCircuits`, `PacketLab`, `ControllerDesigner`, `TraceTablePractice`, `PythonGame`, `PseudocodeFarmer`, `PseudocodeReference` (the Y11 Pseudocode Recap), `ByteBrawlers` (Live Game launcher and host download), `HexQuiz` (hex digits and the 16 times table), `AlgorithmPractice` (`search.html` and `sort.html`, sharing `style.css` and `common.js`).
 - TurboWarp: `scratch/` is the TurboWarp build; `scratch/editor.html` loads the PyScratch, FlowScratch and TurboBot overlays from the root `assets/js/` folder, each active only with its URL flag. Their `?v=` tags in `scratch/editor.html` are pinned by hand, as are `psv` / `fsv` / `tbv` in the wrappers: bump them when an overlay changes. `PyScratch/`, `FlowScratch/` and `TurboBot/` are thin wrappers (`TurboBot/pybot.html` is PyBot).
 - `ExamArcade/`, `ExamCircuit/` and `GDD.md`: a game still being designed; keep them.
 - `oauth-callback.html`: the Classroom sign-in popup's landing page.
@@ -25,7 +25,7 @@ Everything the school computing site shows that does not need the student's acco
 
 ## Rules for any app here
 
-- **Look like the site.** Load `shared/bc-theme.css` (and `shared/bc-tailwind.js` for Tailwind). Use the tokens (`var(--surface)`, `var(--ink)`, `var(--brand)`), not new colours. Game art (Hex Machine, the Binary Mine board, Farmer's scene) is the exception. The shell's check-site fails if a registered page does not load the theme.
+- **Look like the site.** Load `shared/bc-theme.css` (and `shared/bc-tailwind.js` for Tailwind). Use the tokens (`var(--surface)`, `var(--ink)`, `var(--brand)`), not new colours. No old styles anywhere (James, 2026-09-26): a game world may keep its art, but its panels, buttons, type and backgrounds are the site's; rebuild a page rather than leave it in an old look. The shell's check-site fails if a registered page does not load the theme (only the TurboWarp editor is exempt; see the shell's `docs/ui-design-system.md`).
 - **Embed mode.** With `?embed=1` an app drops its page chrome, keeps a transparent background, and reports its height with `TT_CONTENT_HEIGHT` so a lesson can size the iframe.
 - **Cache-busting.** The shell adds `?bcv=<GH_PAGES_BUILD>`; a split app passes it to its own files as `?v=`. Every `<script src>` to `shared/` carries a `?v=` too: bump it when that file changes.
 - **Talking to the shell.** `postMessage` to `window.parent`; the protocol table is in the shell's `docs/architecture.md`. Opened on its own (`window.parent === window`), an app must work with nothing saved to the account.

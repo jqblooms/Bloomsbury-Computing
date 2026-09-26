@@ -1,302 +1,172 @@
-:root {
-  --bg: #cdeeff;
-  --panel: #fff8ec;
-  --panel-dark: #6b4a2b;
-  --wood: #8a5a34;
-  --wood-dark: #5e3b1f;
-  --leaf: #4c9a4a;
-  --leaf-dark: #2e6b30;
-  --ink: #33241a;
-  --muted: #7a6650;
-  --gold: #f2b53c;
-  --red: #d9534f;
-  --sky-top: #8ecae6;
-  --sky-bottom: #ffe9b3;
-}
+/* Pseudocode Farmer, on the site theme (shared/bc-theme.css provides the
+   tokens and fonts). The 3D farm is the game world and keeps its own art;
+   everything around it uses the site's look. Panels that need to stand
+   apart keep an accent of their own: amber for lesson missions, green for
+   machine tutorials, gold for Sell the Farm, blue for Switch Back, purple
+   for the Rocket Yard. */
+:root { --code-bg: #0b0d11; --mission: #fdd663; --tutorial: #81c995; --rocket: #c58af9; }
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
-body {
-  font-family: "Baloo 2", "Comic Sans MS", "Segoe UI", system-ui, sans-serif;
-  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
-  color: var(--ink);
-  overflow: hidden;
-  user-select: none;
-}
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap');
-
+body { font-family: var(--font-body); background: var(--bg); color: var(--ink); overflow: hidden; user-select: none; }
+button { font-family: inherit; }
 #app { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
 
-/* ---------- HUD ---------- */
-#hud {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 10px 16px;
-  background: linear-gradient(180deg, #7a4b26, var(--wood-dark));
-  border-bottom: 5px solid var(--wood-dark);
-  box-shadow: 0 4px 0 #4a2f18;
-  z-index: 5;
-}
-#hud .brand { display: flex; align-items: center; gap: 10px; color: #fff; }
-#hud .brand .logo {
-  width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center;
-  background: var(--leaf); font-size: 22px; box-shadow: inset 0 -3px 0 var(--leaf-dark);
-}
-#hud .brand b { font-size: 1.25rem; letter-spacing: .02em; text-shadow: 0 2px 0 #3a2210; }
-#hud .brand small { display: block; color: #ffe6b8; font-weight: 700; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
-#stats { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.stat-pill {
-  display: flex; align-items: center; gap: 6px;
-  background: #fff8ec; border: 3px solid var(--wood-dark); border-radius: 999px;
-  padding: 6px 14px; font-weight: 800; color: var(--ink); box-shadow: 0 3px 0 #c99a5f;
-  white-space: nowrap;
-}
-.stat-pill .icon { font-size: 1.1rem; }
-#money-pill { color: #1d6b2e; }
-#earned-pill { color: #9a5b0a; }
-.reset-btn {
-  display: flex; align-items: center; gap: 6px;
-  background: #d9534f; border: 3px solid var(--wood-dark); border-radius: 999px;
-  padding: 6px 14px; font-weight: 800; color: #fff; cursor: pointer;
-  box-shadow: 0 3px 0 #9c3d3a; white-space: nowrap; font-family: inherit; font-size: .82rem;
-}
-.reset-btn:active { transform: translateY(2px); box-shadow: none; }
-.reset-btn.armed { background: #ff8a85; color: #4a1010; }
-#hud .hint { color: #ffe6b8; font-size: .78rem; font-weight: 600; max-width: 260px; text-align: right; display: none; }
+/* ---------- Top bar ---------- */
+#hud { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--line); z-index: 5; }
+#hud .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); }
+#hud .brand .logo { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--good-soft); color: var(--good); }
+#hud .brand .logo svg { width: 24px; height: 24px; }
+#hud .brand b { font: 700 18px var(--font-display); }
+#hud .brand small { display: block; color: var(--muted); font-size: 12px; font-weight: 500; }
+#stats { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.stat-pill { display: flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 14px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line-strong); font: 700 15px var(--font-mono); white-space: nowrap; }
+.stat-pill .icon { display: grid; place-items: center; }
+.stat-pill .icon svg { width: 16px; height: 16px; }
+#money-pill { color: var(--good); }
+#earned-pill { color: var(--warn); }
+.reset-btn { display: flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 14px; border: 1px solid var(--bad-line); border-radius: 999px; background: transparent; color: var(--bad); font: 500 13px var(--font-body); cursor: pointer; white-space: nowrap; }
+.reset-btn:hover { background: var(--bad-soft); }
+.reset-btn.armed { background: var(--bad); color: #3b0907; border-color: var(--bad); }
+#hud .hint { display: none; max-width: 260px; color: var(--muted); font-size: 13px; text-align: right; }
 @media (min-width: 980px) { #hud .hint { display: block; } }
+#farm-type-badge { display: none; padding: 3px 10px; border-radius: 999px; color: #fff; font-size: 12px; font-weight: 700; vertical-align: middle; white-space: nowrap; }
+#farm-type-badge.shown { display: inline-block; }
 
 /* ---------- Layout ---------- */
-#main { display: grid; grid-template-columns: minmax(0,1fr) 450px; min-height: 0; }
+#main { display: grid; grid-template-columns: minmax(0, 1fr) 450px; min-height: 0; }
 #canvas-wrap { position: relative; min-width: 0; }
 #three-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
 #three-canvas:active { cursor: grabbing; }
-#canvas-hint {
-  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
-  background: #00000066; color: #fff; padding: 6px 14px; border-radius: 999px;
-  font-size: .78rem; font-weight: 700; pointer-events: none; backdrop-filter: blur(3px);
-}
-#tile-info {
-  position: absolute; top: 12px; left: 12px; background: #ffffffee; border: 3px solid var(--wood);
-  border-radius: 12px; padding: 8px 12px; font-weight: 700; font-size: .82rem; box-shadow: 0 3px 0 #c99a5f;
-  max-width: 240px; display: none;
-}
+#canvas-hint { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); padding: 6px 16px; border-radius: 999px; background: rgba(15, 17, 21, .78); border: 1px solid var(--line-strong); color: var(--ink-soft); font-size: 13px; pointer-events: none; backdrop-filter: blur(4px); }
+#tile-info { position: absolute; top: 12px; left: 12px; display: none; max-width: 260px; padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line-strong); box-shadow: var(--shadow-3); color: var(--ink); font-size: 14px; line-height: 1.45; }
 #tile-info.show { display: block; }
-#compass {
-  position: absolute; top: 12px; right: 12px;
-  width: 60px; height: 60px; pointer-events: none; z-index: 3;
-}
-#compass-card {
-  position: relative; width: 100%; height: 100%;
-  border: 2px solid rgba(255,255,255,.5); border-radius: 50%;
-  background: rgba(24,32,24,.45); backdrop-filter: blur(3px);
-  box-shadow: 0 2px 8px rgba(0,0,0,.3);
-  transform: rotate(var(--rot, 0deg));
-}
-#compass-card .dir {
-  position: absolute; left: 50%; top: 50%;
-  width: 16px; height: 16px; margin: -8px 0 0 -8px;
-  display: grid; place-items: center;
-  font-weight: 800; font-size: .68rem; color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,.7); transform-origin: center;
-  transform: rotate(calc(var(--rot, 0deg) * -1));
-}
-#compass-card .n { transform: translateY(-21px) rotate(calc(var(--rot, 0deg) * -1)); color: #ffb08a; }
+#tile-info .sell-btn { width: 100%; min-height: 34px; margin-top: 8px; border: 0; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-weight: 500; cursor: pointer; }
+#tile-info .sell-btn:hover { background: var(--brand-dark); }
+#tile-info .machine-actions { display: grid; gap: 6px; margin-top: 8px; }
+#tile-info .machine-action-btn { width: 100%; min-height: 32px; border: 0; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; background: var(--surface-4); color: var(--ink); }
+#tile-info .machine-action-btn.is-primary { background: var(--brand); color: var(--on-brand); }
+#tile-info .machine-action-btn.is-danger { background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad-line); }
+#tile-info #machine-code-edit { width: 100%; height: 130px; margin-top: 6px; resize: vertical; padding: 8px; border-radius: 10px; background: var(--code-bg); color: var(--ink); border: 1px solid var(--brand); font: 12px/1.45 var(--font-mono); }
+#tile-info #machine-code-edit.has-error { border-color: var(--bad); }
+.machine-code-preview { max-height: 80px; overflow: auto; margin: 6px 0 0; padding: 6px 8px; border-radius: 8px; background: var(--code-bg); color: var(--ink-soft); font: 11.5px/1.45 var(--font-mono); white-space: pre-wrap; }
+.machine-code-preview .empty { color: var(--muted); }
+.value-hint { font-size: 12px; }
+.value-hint.bad { color: var(--bad); font-weight: 600; }
+.value-hint.warn { color: var(--warn); font-weight: 600; }
+.value-hint.good { color: var(--good); }
+.value-hint.muted { color: var(--muted); }
+#compass { position: absolute; top: 12px; right: 12px; z-index: 3; width: 60px; height: 60px; pointer-events: none; }
+#compass-card { position: relative; width: 100%; height: 100%; border-radius: 50%; border: 1px solid var(--line-strong); background: rgba(15, 17, 21, .72); backdrop-filter: blur(4px); box-shadow: var(--shadow-2); transform: rotate(var(--rot, 0deg)); }
+#compass-card .dir { position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; display: grid; place-items: center; color: var(--ink); font-size: 11px; font-weight: 700; transform-origin: center; transform: rotate(calc(var(--rot, 0deg) * -1)); }
+#compass-card .n { transform: translateY(-21px) rotate(calc(var(--rot, 0deg) * -1)); color: var(--bad); }
 #compass-card .e { transform: translateX(21px) rotate(calc(var(--rot, 0deg) * -1)); }
 #compass-card .s { transform: translateY(21px) rotate(calc(var(--rot, 0deg) * -1)); }
 #compass-card .w { transform: translateX(-21px) rotate(calc(var(--rot, 0deg) * -1)); }
-#compass-up {
-  position: absolute; left: 50%; top: -2px; transform: translateX(-50%);
-  width: 0; height: 0; border-left: 5px solid transparent;
-  border-right: 5px solid transparent; border-bottom: 7px solid #ffe9b3;
-  filter: drop-shadow(0 1px 1px rgba(0,0,0,.5)); z-index: 2;
-}
-#coords {
-  position: absolute; top: 24px; right: 80px;
-  background: rgba(24,32,24,.5); color: #eafff0; font-weight: 800; font-size: .74rem;
-  padding: 5px 10px; border: 2px solid rgba(255,255,255,.45); border-radius: 999px;
-  backdrop-filter: blur(3px); box-shadow: 0 2px 8px rgba(0,0,0,.3); white-space: nowrap;
-}
-#coords b { color: #ffe9b3; }
-#tile-info .sell-btn {
-  margin-top: 6px; width: 100%; border: 0; border-radius: 8px; padding: 6px 8px;
-  background: var(--gold); color: #4a2f00; font-weight: 800; cursor: pointer;
-}
-#tile-info .sell-btn:active { transform: translateY(1px); }
-#tile-info .machine-actions { display: grid; gap: 6px; margin-top: 6px; }
-#tile-info .machine-action-btn {
-  width: 100%; border: 0; border-radius: 8px; padding: 6px 8px;
-  font-weight: 800; cursor: pointer; font-size: .78rem;
-}
-#tile-info .machine-action-btn:active { transform: translateY(1px); }
-#tile-info #machine-code-edit {
-  width: 100%; height: 130px; margin-top: 6px; resize: vertical;
-  font-family: "Courier New", ui-monospace, monospace; font-size: .72rem; line-height: 1.4;
-  background: #12190f; color: #b9e6b0; border: 2px solid #6ea8fe; border-radius: 8px; padding: 6px;
-}
+#compass-up { position: absolute; left: 50%; top: -2px; transform: translateX(-50%); z-index: 2; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid var(--ink); }
+#coords { position: absolute; top: 24px; right: 80px; padding: 5px 12px; border-radius: 999px; background: rgba(15, 17, 21, .78); border: 1px solid var(--line-strong); color: var(--ink-soft); font-size: 12px; font-weight: 500; backdrop-filter: blur(4px); white-space: nowrap; }
+#coords b { color: var(--ink); font-family: var(--font-mono); }
 
 /* ---------- Sidebar ---------- */
-#sidebar {
-  display: flex; flex-direction: column; min-height: 0;
-  background: var(--panel); border-left: 5px solid var(--wood-dark);
-  overflow-y: auto;
-}
-.panel-section { flex-shrink: 0; border-bottom: 3px dashed #d8c19a; padding: 12px 14px; }
-.panel-section h2 {
-  margin: 0 0 8px; font-size: .95rem; text-transform: uppercase; letter-spacing: .05em;
-  color: var(--panel-dark); display: flex; align-items: center; gap: 6px;
-}
+#sidebar { display: flex; flex-direction: column; min-height: 0; overflow-y: auto; background: var(--surface); border-left: 1px solid var(--line); }
+.panel-section { flex-shrink: 0; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.panel-section h2 { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; color: var(--ink); font: 700 15px var(--font-display); }
 
 #shop-list { display: grid; gap: 8px; }
-.shop-item {
-  display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 8px;
-  background: #fff; border: 2px solid #e6d5b3; border-radius: 10px; padding: 6px 8px;
-}
+.shop-item { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
 .shop-item img { width: 30px; height: 30px; }
-.shop-item .name { font-weight: 800; font-size: .84rem; }
-.shop-item .price { color: var(--muted); font-size: .74rem; font-weight: 700; }
-.shop-item button {
-  border: 0; border-radius: 8px; padding: 7px 10px; background: var(--leaf); color: #fff;
-  font-weight: 800; cursor: pointer; font-size: .78rem; box-shadow: 0 2px 0 var(--leaf-dark);
-}
-.shop-item button:disabled { background: #b7c9b6; box-shadow: none; cursor: not-allowed; }
-.shop-item button:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
-.shop-item .have { grid-column: 1 / -1; font-size: .72rem; color: var(--muted); font-weight: 700; }
-.shop-item.locked { background: #f1ece0; opacity: .82; }
-.shop-item.locked img { filter: grayscale(1) brightness(0.6); }
-.shop-item .locked-msg { grid-column: 1 / -1; font-size: .7rem; color: var(--muted); font-weight: 700; }
-
-/* Mystery shop row - appears once the active farm type's last tier is unlocked, so a
-   player who just bought Mushroom (or any farm type's final item) sees there is still
-   something ahead instead of assuming the shop - and the game - is finished. Deliberately
-   doesn't say "Sell the Farm" anywhere while locked; see handleMysteryRowClick/
-   updateMysteryRow. Gold accent, matching #sell-farm-panel's own "rare unlock" colour. */
-.shop-item.mystery { border-color: #e0b93f; background: #fffaf0; }
+.shop-item .name { font-weight: 700; font-size: 14px; }
+.shop-item .price { color: var(--muted); font-size: 12px; }
+.shop-item button { min-height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-size: 13px; font-weight: 500; cursor: pointer; }
+.shop-item button:hover:not(:disabled) { background: var(--brand-dark); }
+.shop-item button:disabled { background: var(--surface-4); color: var(--muted); cursor: not-allowed; }
+.shop-item .have, .shop-item .locked-msg { grid-column: 1 / -1; color: var(--muted); font-size: 12px; }
+.shop-item.locked { opacity: .7; }
+.shop-item.locked img { filter: grayscale(1) brightness(.7); }
+/* The mystery row appears once a farm type's last tier is unlocked, so a
+   player sees there is still something ahead. */
+.shop-item.mystery { border-color: var(--warn-line); background: var(--warn-soft); }
 .shop-item.mystery img { display: none; }
-.shop-item.mystery .mystery-icon {
-  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-  background: #e6d5b3; color: #8a6416; display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 1rem;
-}
-.shop-item.mystery .name { color: #8a6416; }
-.shop-item.mystery .buy-btn { background: #e0b93f; box-shadow: 0 2px 0 #b8952a; }
-.shop-item.mystery .buy-btn:disabled { background: #e8d9ad; box-shadow: none; }
-.shop-item.mystery .locked-msg { color: #8a6416; }
-/* A gentle pulse once it's genuinely revealed - draws the eye back to a row a player may
-   have stopped checking while it sat locked for a while. */
+.shop-item.mystery .mystery-icon { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(253, 214, 99, .2); color: var(--warn); font-weight: 700; }
+.shop-item.mystery .name, .shop-item.mystery .locked-msg { color: var(--warn); }
+.shop-item.mystery .buy-btn { background: var(--warn); color: #3b2b00; }
+.shop-item.mystery .buy-btn:disabled { background: var(--surface-4); color: var(--muted); }
 .shop-item.mystery.revealed { animation: mysteryRowPulse 1.8s ease-in-out infinite; }
-@keyframes mysteryRowPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(224,185,63,.45); }
-  50% { box-shadow: 0 0 0 6px rgba(224,185,63,0); }
-}
+@keyframes mysteryRowPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(253, 214, 99, .4); } 50% { box-shadow: 0 0 0 6px rgba(253, 214, 99, 0); } }
+#shop-tutorial-note { display: none; margin-bottom: 8px; padding: 8px 10px; border-radius: 10px; background: var(--good-soft); border: 1px solid var(--good-line); color: var(--good); font-size: 12px; }
+#machine-tiers { margin-top: 8px; padding: 6px 10px; border-radius: 10px; background: var(--brand-soft); color: var(--brand-dark); font-size: 12px; font-weight: 500; text-align: center; }
 
-#machine-tiers {
-  margin-top: 6px; padding: 6px 8px; border: 2px solid #b8cff3; border-radius: 8px;
-  background: #eaf2ff; color: #244774; font-weight: 800; font-size: .7rem; text-align: center;
-}
-
+/* ---------- Code Box ---------- */
 #code-panel { flex: 1 0 auto; display: flex; flex-direction: column; min-height: 260px; }
-.code-editor { flex: 1; min-height: 140px; position: relative; background: #1f2b22; border: 2px solid #e6d5b3; border-radius: 10px; overflow: hidden; }
-/* In the sidebar (not the pop-out modal, which keeps its own sizing via
-   #code-modal-body .code-editor) give the Code Box a fixed, generous default height
-   and a drag handle so a student can make it as tall as they need. */
+.code-editor { flex: 1; min-height: 140px; position: relative; overflow: hidden; border-radius: 12px; background: var(--code-bg); border: 1px solid var(--line-strong); }
+/* In the sidebar the Code Box has a fixed default height and a drag handle;
+   popped out it fills the floating window instead. */
 #code-panel .code-editor { flex: 0 0 auto; height: 240px; min-height: 120px; resize: vertical; }
-.code-editor:focus-within { border-color: var(--leaf); }
-.code-editor.has-error { border-color: #d9534f; }
-#code-input {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  margin: 0; padding: 10px; resize: none;
-  font-family: "Courier New", ui-monospace, monospace; font-size: .86rem; line-height: 1.5;
-  background: transparent; color: transparent; caret-color: #d9f2d2;
-  white-space: pre-wrap; overflow-wrap: break-word; tab-size: 4;
-  border: 0; outline: none;
-}
-#code-backdrop {
-  position: absolute; inset: 0; margin: 0; padding: 10px;
-  overflow: hidden;
-  font-family: "Courier New", ui-monospace, monospace; font-size: .86rem; line-height: 1.5;
-  color: #d9f2d2; white-space: pre-wrap; overflow-wrap: break-word; tab-size: 4;
-  pointer-events: none;
-}
-#code-backdrop .code-line.error { background: rgba(217, 83, 79, 0.45); border-radius: 3px; }
-.code-actions { display: flex; gap: 8px; margin-top: 8px; }
-.code-actions button {
-  flex: 1; border: 0; border-radius: 10px; padding: 10px 8px; font-weight: 800; cursor: pointer;
-  font-size: .84rem;
-}
-#run-btn { background: var(--gold); color: #4a2f00; box-shadow: 0 3px 0 #c68f1f; }
-#run-btn:active { transform: translateY(2px); box-shadow: none; }
-#run-btn:disabled { background: #e2d3ab; color: #9c8a63; box-shadow: none; cursor: not-allowed; }
-#machine-btn { background: #6ea8fe; color: #04214f; box-shadow: 0 3px 0 #3d6fc4; }
-#machine-btn:active { transform: translateY(2px); box-shadow: none; }
-#machine-btn:disabled { background: #cfe0fb; color: #7391b8; box-shadow: none; cursor: not-allowed; }
-
-#console-output {
-  margin-top: 8px; height: 110px; overflow-y: auto; background: #12190f; color: #b9e6b0;
-  border-radius: 10px; padding: 8px 10px; font-family: "Courier New", ui-monospace, monospace;
-  font-size: .78rem; line-height: 1.5;
-}
-#console-output .err { color: #ff9a8a; }
-#console-output .machine-line { color: #9ec8ff; }
+.code-editor:focus-within { border-color: var(--brand); }
+.code-editor.has-error { border-color: var(--bad); }
+#code-input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 10px 12px; resize: none; border: 0; outline: none; background: transparent; color: transparent; caret-color: var(--ink); font: 13.5px/1.5 var(--font-mono); white-space: pre-wrap; overflow-wrap: break-word; tab-size: 4; }
+#code-backdrop { position: absolute; inset: 0; margin: 0; padding: 10px 12px; overflow: hidden; pointer-events: none; color: var(--ink); font: 13.5px/1.5 var(--font-mono); white-space: pre-wrap; overflow-wrap: break-word; tab-size: 4; }
+#code-backdrop .code-line.error { background: rgba(242, 139, 130, .28); border-radius: 3px; }
+#code-expand, #tutorial-code-expand { position: absolute; top: 6px; right: 6px; z-index: 1; padding: 2px 6px; border-radius: 6px; background: var(--surface-3); border: 1px solid var(--line-strong); color: var(--muted); font-size: 13px; line-height: 1.2; cursor: pointer; }
+#code-expand:hover, #tutorial-code-expand:hover { color: var(--ink); border-color: var(--brand); }
+.code-actions { display: flex; gap: 8px; margin-top: 10px; }
+.code-actions button { flex: 1; min-height: 40px; border: 0; border-radius: 999px; font-size: 14px; font-weight: 500; cursor: pointer; }
+#run-btn { background: var(--brand); color: var(--on-brand); }
+#run-btn:hover:not(:disabled) { background: var(--brand-dark); }
+#machine-btn { background: var(--brand-soft-strong); color: var(--brand-dark); }
+#machine-btn:hover:not(:disabled) { background: rgba(138, 180, 248, .32); }
+#run-btn:disabled, #machine-btn:disabled { background: var(--surface-4); color: var(--muted); cursor: not-allowed; }
+#console-output { height: 110px; margin-top: 10px; overflow-y: auto; padding: 8px 12px; border-radius: 12px; background: var(--code-bg); border: 1px solid var(--line); color: var(--ink-soft); font: 12.5px/1.5 var(--font-mono); user-select: text; }
+#console-output .err { color: var(--bad); }
+#console-output .machine-line { color: var(--brand); }
 #console-output div { white-space: pre-wrap; word-break: break-word; }
 
-details.cheat-sheet { font-size: .8rem; }
-details.cheat-sheet summary {
-  cursor: pointer; font-weight: 800; color: var(--panel-dark); margin-bottom: 6px;
-  display: inline-flex; align-items: center; gap: 6px;
-}
-details.cheat-sheet table { width: 100%; border-collapse: collapse; margin-top: 6px; }
-details.cheat-sheet td { padding: 4px 4px; border-bottom: 1px dashed #e0d0ac; vertical-align: top; }
-details.cheat-sheet code { background: #eee0c4; border-radius: 5px; padding: 1px 5px; font-size: .78rem; white-space: nowrap; }
+details.cheat-sheet { font-size: 13px; }
+details.cheat-sheet summary { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 6px; color: var(--brand); font-weight: 500; cursor: pointer; }
+details.cheat-sheet table { width: 100%; margin-top: 6px; border-collapse: collapse; }
+details.cheat-sheet td { padding: 6px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+details.cheat-sheet code { padding: 1px 6px; border-radius: 6px; background: var(--surface-3); color: var(--ink); font-size: 12px; white-space: nowrap; }
 details.cheat-sheet .desc { color: var(--muted); }
 
 #toast-layer { position: fixed; inset: 0; pointer-events: none; z-index: 40; }
 
 @media (max-width: 1000px) {
-  #main { grid-template-columns: 1fr; grid-template-rows: minmax(280px,1fr) auto; }
-  #sidebar { border-left: 0; border-top: 5px solid var(--wood-dark); max-height: 46vh; }
+  #main { grid-template-columns: 1fr; grid-template-rows: minmax(280px, 1fr) auto; }
+  #sidebar { max-height: 46vh; border-left: 0; border-top: 1px solid var(--line); }
 }
-/* Mission panel: pinned to the top of the sidebar (order: -1) and shown
-   before Run is even reachable, so it's the first thing a student sees -
-   not a card buried below the shop and code box. */
-#lesson-mission-panel { display: none; background: #fff8df; border-bottom: 3px solid #d6a53e; }
+
+/* ---------- Lesson mission (amber) ---------- */
+/* Pinned to the top of the sidebar so it is the first thing a student sees. */
+#lesson-mission-panel { display: none; background: rgba(253, 214, 99, .06); border-bottom: 1px solid var(--warn-line); }
 #lesson-mission-panel.active { display: block; order: -1; }
 #lesson-mission-panel.just-started { animation: missionPop 1.6s ease-out; }
-@keyframes missionPop { 0%,100% { box-shadow: none; } 15%,45% { box-shadow: inset 0 0 0 3px #f0b93f; } 30% { box-shadow: none; } }
-#lesson-mission-toggle { cursor: pointer; margin: 0 0 8px; user-select: none; }
+@keyframes missionPop { 0%, 100% { box-shadow: none; } 15%, 45% { box-shadow: inset 0 0 0 2px var(--mission); } 30% { box-shadow: none; } }
+#lesson-mission-panel h2 { color: var(--mission); }
+#lesson-mission-toggle { cursor: pointer; margin: 0 0 10px; user-select: none; }
 #lesson-mission-toggle span:first-child { flex: 1; }
-#lesson-mission-title-collapsed { display: none; font-size: .74rem; font-weight: 700; color: #8a6a2f; text-transform: none; letter-spacing: 0; }
-#lesson-mission-chevron { font-size: .8rem; color: #8a6a2f; transition: transform .15s; }
+#lesson-mission-title-collapsed { display: none; color: var(--ink-soft); font: 500 12px var(--font-body); }
+#lesson-mission-chevron { color: var(--muted); font-size: 13px; transition: transform .15s; }
 #lesson-mission-panel.collapsed #lesson-mission-chevron { transform: rotate(-90deg); }
 #lesson-mission-panel.collapsed #lesson-mission-title-collapsed { display: inline; }
 #lesson-mission-panel.collapsed #lesson-mission-body { display: none; }
-#lesson-mission-panel h2 { color: #7a4d05; }
-#lesson-mission-title { font-weight: 800; color: #4a3517; margin-bottom: 8px; font-size: .95rem; }
-/* The objective is the actual instruction a student has to act on - the title above it is
-   just a name for the sequence. It was previously the same small, quiet body text as
-   everything else and got skipped; it's now the single most visually weighted thing in the
-   card besides the title, styled like a real task callout rather than a caption. */
-#lesson-mission-objective-label { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #a3711f; }
-#lesson-mission-objective { font-size: .92rem; line-height: 1.4; color: #3d2c10; font-weight: 700; background: #fff; border: 2px solid #eab952; border-radius: 8px; padding: 10px 12px; margin: 3px 0 4px; }
-#lesson-mission-status { margin-top: 9px; padding: 6px 8px; border-radius: 7px; background: #fff; border: 1px solid #e1c77f; font-size: .74rem; font-weight: 800; color: #6d541e; }
-#lesson-mission-status.complete { background: #e6f7e6; border-color: #80bd80; color: #216b2b; }
-#lesson-mission-next { margin-top: 8px; font-size: .74rem; font-weight: 700; color: #7a4d05; }
+#lesson-mission-title { margin-bottom: 8px; color: var(--ink); font-weight: 700; font-size: 15px; }
+/* The objective is the instruction the student acts on, so it is the most
+   prominent thing in the card after the title. */
+#lesson-mission-objective-label, #lesson-mission-commands-label { color: var(--mission); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+#lesson-mission-objective { margin: 4px 0; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--warn-line); color: var(--ink); font-size: 15px; font-weight: 500; line-height: 1.45; }
+#lesson-mission-status { margin-top: 10px; padding: 6px 10px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line-strong); color: var(--ink-soft); font-size: 12px; font-weight: 500; }
+#lesson-mission-status.complete { background: var(--good-soft); border-color: var(--good-line); color: var(--good); }
+#lesson-mission-next { margin-top: 8px; color: var(--ink-soft); font-size: 12px; }
 #lesson-mission-status.complete ~ #lesson-mission-next { display: none; }
-/* Stuck-mission failsafe: shown only when the student has genuinely no way forward
-   (no seeds, no money, nothing growing anywhere to eventually sell) - see
-   missionIsDeadEnd(). A clear, distinct warning rather than a silent soft-lock. */
-#lesson-mission-stuck-warning { margin-top: 9px; padding: 8px 10px; border-radius: 7px; background: #fdecec; border: 1px solid #e0968f; font-size: .76rem; font-weight: 700; color: #7a2a20; line-height: 1.35; }
-/* Mission-specific mini cheat sheet: only the exact commands this task needs, in the
-   syntax the checker actually accepts - a beginner shouldn't have to search a 30-row
-   general reference for the 1-3 lines a given mission uses. */
-#lesson-mission-commands-label { margin-top: 9px; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #8a6a2f; }
-#lesson-mission-commands { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: .74rem; }
-#lesson-mission-commands td { padding: 4px 0; vertical-align: top; border-top: 1px dashed #e6d4a8; }
+/* Shown only when the student genuinely has no way forward. */
+#lesson-mission-stuck-warning { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: var(--bad-soft); border: 1px solid var(--bad-line); color: var(--bad); font-size: 12px; line-height: 1.4; }
+#lesson-mission-commands-label { margin-top: 10px; }
+#lesson-mission-commands { width: 100%; margin-top: 4px; border-collapse: collapse; font-size: 12px; }
+#lesson-mission-commands td { padding: 5px 0; vertical-align: top; border-top: 1px solid var(--line); }
 #lesson-mission-commands tr:first-child td { border-top: 0; }
-#lesson-mission-commands code { display: block; background: #fffef6; border: 1px solid #e6d4a8; border-radius: 4px; padding: 3px 6px; color: #4a3517; font-weight: 700; white-space: nowrap; }
-#lesson-mission-commands .desc { padding-left: 8px; color: #6d5a3a; line-height: 1.3; }
-#lesson-mission-reset { margin-top: 7px; border: 0; border-radius: 7px; padding: 6px 9px; background: #8a5a34; color: #fff; font-weight: 800; cursor: pointer; }
-/* The seed shop's own Buy button and free-roam expansion have no place in a
-   fixed, deliberately tiny mission world - and leaving it visible would let
-   a student sidestep the pseudocode entirely by clicking it. Missions
-   supply money/inventory directly, and CALL Buy() is the only way in. */
+#lesson-mission-commands code { display: block; padding: 3px 8px; border-radius: 6px; background: var(--surface-3); color: var(--ink); font-weight: 600; white-space: nowrap; }
+#lesson-mission-commands .desc { padding-left: 8px; color: var(--ink-soft); line-height: 1.35; }
+#lesson-mission-reset { min-height: 32px; margin-top: 8px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--brand); font-size: 13px; cursor: pointer; }
+/* In a mission the shop, prestige panels and machines are off: CALL Buy() is the only way in. */
 body.lesson-mission-mode #shop-panel,
 body.lesson-mission-mode #sell-farm-panel,
 body.lesson-mission-mode #revert-farm-panel,
@@ -304,245 +174,150 @@ body.lesson-mission-mode #rocket-panel,
 body.lesson-mission-mode #reset-btn,
 body.lesson-mission-mode #machine-btn,
 body.lesson-mission-mode #machine-tiers { display: none; }
-/* Sell the Farm is a free-play prestige mechanic - it makes no sense mid-tutorial (the
-   sandbox's tiny fixed economy could never legitimately reach the milestone, and even if
-   it somehow did, liquidating a throwaway practice world isn't a real choice worth making).
-   Same for the revert panel below it - a tutorial has no farm types to revert between. */
 body.tutorial-active #sell-farm-panel, body.tutorial-active #revert-farm-panel, body.tutorial-active #rocket-panel { display: none; }
 
-/* ============================================================
-   MACHINE TUTORIALS - self-contained, independent of the Lesson Mission
-   system above. Green/teal accent throughout so it's visually distinct
-   from the mission panel's amber, even though both can (at different
-   times - never together, see the body.lesson-mission-mode rule below)
-   occupy the same "pinned to top of sidebar" slot.
-   ============================================================ */
+/* ---------- Machine tutorials (green) ---------- */
 body.lesson-mission-mode #tutorial-picker-panel,
 body.lesson-mission-mode #tutorial-bar-panel { display: none; }
-/* Pinned above the Shop and Code Box (order:-2) so it's the first thing a student sees,
-   not a section buried below ~30 shop rows - exactly the discoverability problem the
-   Lesson Mission panel had before it got the same fix. */
 #tutorial-picker-panel { order: -2; }
-#tutorial-picker-panel h2 { color: #1f6e4f; margin: 0; }
-#tutorial-picker-open { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 12px; border-radius: 8px;
-  background: #2e8b57; color: #fff; border: 0; font: inherit; font-weight: 800; font-size: .82rem; cursor: pointer; }
-#tutorial-picker-open:hover { background: #257048; }
-#tutorial-picker-summary { font-size: .68rem; font-weight: 700; color: #4d8a6c; margin-top: 6px; }
-
-/* Tutorial picker modal - same "browse all tutorials" pattern as PyScratch's own tutorial
-   pick modal (assets/js/pyscratch.js), rather than a permanently-expanded sidebar list. */
-#tutorial-modal-overlay { position: fixed; inset: 0; background: rgba(51,36,26,.55); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+#tutorial-picker-panel h2 { margin: 0 0 10px; }
+#tutorial-picker-open { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 38px; border: 0; border-radius: 999px; background: var(--good); color: #0b2a15; font-size: 14px; font-weight: 500; cursor: pointer; }
+#tutorial-picker-open:hover { filter: brightness(1.08); }
+#tutorial-picker-summary { margin-top: 8px; color: var(--muted); font-size: 12px; }
+#tutorial-modal-overlay { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; background: var(--scrim); }
 #tutorial-modal-overlay.open { display: flex; }
-#tutorial-modal { background: #fbfff9; border-radius: 14px; max-width: 560px; width: 100%; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
-#tutorial-modal-head { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 2px solid #d9f0e2; }
-#tutorial-modal-head h2 { margin: 0; flex: 1; color: #1f6e4f; font-size: 1.05rem; }
-#tutorial-modal-close { background: none; border: none; font-size: 1.2rem; color: #4d6b5b; cursor: pointer; line-height: 1; padding: 4px; }
-#tutorial-modal-close:hover { color: #1f4d38; }
+#tutorial-modal { display: flex; flex-direction: column; width: 100%; max-width: 560px; max-height: 82vh; border-radius: 20px; background: var(--surface); border: 1px solid var(--line-strong); box-shadow: var(--shadow-3); }
+#tutorial-modal-head { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+#tutorial-modal-head h2 { flex: 1; margin: 0; font: 700 18px var(--font-display); }
+#tutorial-modal-close, #tutorial-code-modal-close, #code-modal-close { width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 16px; line-height: 1; cursor: pointer; flex-shrink: 0; }
+#tutorial-modal-close:hover, #tutorial-code-modal-close:hover, #code-modal-close:hover { background: var(--surface-3); color: var(--ink); }
 #tutorial-picker-list { display: grid; gap: 10px; padding: 16px 20px; overflow-y: auto; }
-.tut-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 10px; background: #f0faf3; border: 1px solid #bfe6cf; cursor: pointer; text-align: left; font-family: inherit; }
-.tut-card:hover { background: #e2f5e8; border-color: #8fd4ac; }
-.tut-card-badge { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center;
-  justify-content: center; color: #fff; font-weight: 800; font-size: .95rem; }
+.tut-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); text-align: left; font-family: inherit; cursor: pointer; }
+.tut-card:hover { border-color: var(--good-line); background: var(--surface-3); }
+.tut-card-badge { width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #fff; font-weight: 700; }
 .tut-card-body { flex: 1; min-width: 0; }
-.tut-card-title { display: block; font-weight: 800; color: #1f4d38; font-size: .9rem; margin-bottom: 3px; }
-.tut-card-desc { display: block; font-size: .76rem; color: #4d6b5b; line-height: 1.4; }
-.tut-card-status { font-size: .68rem; font-weight: 800; color: #2e8b57; white-space: nowrap; flex-shrink: 0; }
-.tut-card-status.tut-inprogress { color: #a3711f; }
+.tut-card-title { display: block; margin-bottom: 3px; color: var(--ink); font-weight: 700; font-size: 14px; }
+.tut-card-desc { display: block; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.tut-card-status { flex-shrink: 0; color: var(--good); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.tut-card-status.tut-inprogress { color: var(--warn); }
 
-#tutorial-bar-panel { display: none; background: #eefaf2; border-bottom: 3px solid #6cc499; }
+#tutorial-bar-panel { display: none; background: rgba(129, 201, 149, .06); border-bottom: 1px solid var(--good-line); }
 #tutorial-bar-panel.active { display: block; order: -3; }
 #tutorial-bar-panel.just-started { animation: tutorialPop 1.6s ease-out; }
-@keyframes tutorialPop { 0%,100% { box-shadow: none; } 15%,45% { box-shadow: inset 0 0 0 3px #4fbf87; } 30% { box-shadow: none; } }
-#tutorial-bar-toggle { cursor: pointer; margin: 0 0 8px; user-select: none; color: #1f6e4f; }
+@keyframes tutorialPop { 0%, 100% { box-shadow: none; } 15%, 45% { box-shadow: inset 0 0 0 2px var(--tutorial); } 30% { box-shadow: none; } }
+#tutorial-bar-toggle { margin: 0 0 10px; color: var(--tutorial); cursor: pointer; user-select: none; }
 #tutorial-bar-toggle span:first-child { flex: 1; }
-#tutorial-bar-stepcount { font-size: .68rem; font-weight: 700; color: #4d8a6c; margin-right: 4px; }
-#tutorial-bar-chevron { font-size: .8rem; color: #4d8a6c; transition: transform .15s; }
+#tutorial-bar-stepcount { margin-right: 4px; color: var(--muted); font: 500 12px var(--font-body); }
+#tutorial-bar-chevron { color: var(--muted); font-size: 13px; transition: transform .15s; }
 #tutorial-bar-panel.collapsed #tutorial-bar-chevron { transform: rotate(-90deg); }
 #tutorial-bar-panel.collapsed #tutorial-bar-body { display: none; }
-#tutorial-bar-dots { display: flex; gap: 5px; margin-bottom: 8px; }
-.tb-dot { width: 8px; height: 8px; border-radius: 50%; background: #cfe9da; }
-.tb-dot.tb-done { background: #4fbf87; }
-.tb-dot.tb-cur { background: #1f8a5a; transform: scale(1.3); }
-#tutorial-bar-title { font-weight: 800; color: #1f4d38; margin-bottom: 5px; font-size: .88rem; }
-#tutorial-bar-text { font-size: .78rem; line-height: 1.4; color: #33241a; }
-#tutorial-bar-text code { background: #dff2e6; border-radius: 3px; padding: 1px 4px; font-weight: 700; color: #1f6e4f; }
-.tb-code-wrap { margin: 8px 0; position: relative; }
+#tutorial-bar-dots { display: flex; gap: 5px; margin-bottom: 10px; }
+.tb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--surface-4); }
+.tb-dot.tb-done { background: var(--good-line); }
+.tb-dot.tb-cur { background: var(--good); transform: scale(1.3); }
+#tutorial-bar-title { margin-bottom: 6px; color: var(--ink); font-weight: 700; font-size: 15px; }
+#tutorial-bar-text { color: var(--ink-soft); font-size: 13px; line-height: 1.5; }
+#tutorial-bar-text code { padding: 1px 5px; border-radius: 5px; background: var(--surface-3); color: var(--ink); font-weight: 600; }
+.tb-code-wrap { position: relative; margin: 10px 0; }
 .tb-code-wrap.tb-no-target { display: none; }
-#tutorial-bar-code, #tutorial-code-modal-body { background: #10241a; color: #eaf7ee; border-radius: 6px; padding: 8px 10px; font: 700 .74rem/1.5 ui-monospace, "Roboto Mono", monospace; overflow-x: auto; user-select: none; margin: 0; white-space: pre; }
+#tutorial-bar-code, #tutorial-code-modal-body { margin: 0; padding: 8px 12px; overflow-x: auto; border-radius: 10px; background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); font: 600 12.5px/1.5 var(--font-mono); white-space: pre; user-select: none; }
 #tutorial-bar-code .tb-line, #tutorial-code-modal-body .tb-line { display: block; }
-#tutorial-bar-code .tb-line.old, #tutorial-code-modal-body .tb-line.old { color: #7fa896; font-style: italic; font-weight: 400; }
-/* New lines are diffed character-by-character against whatever the student has typed so
-   far at that position (see tutorialLineCharStatuses) - not just "typed at all" - so
-   progress shows live as they type, and a genuine mistake shows red instead of staying
-   the same amber as an untouched character. */
-#tutorial-bar-code .tb-line.new, #tutorial-code-modal-body .tb-line.new { color: #ffd166; }
-#tutorial-bar-code .tc-pending, #tutorial-code-modal-body .tc-pending { color: #ffd166; }
-#tutorial-bar-code .tc-match, #tutorial-code-modal-body .tc-match { color: #6cf0a0; }
-#tutorial-bar-code .tc-mismatch, #tutorial-code-modal-body .tc-mismatch { color: #ff6b6b; text-decoration: underline wavy #ff6b6b; text-underline-offset: 2px; }
-/* Pop-out button: same idea as PyScratch's own draggable code window - a 1:1 live copy of
-   the current step's reference code that can float wherever the student wants it, instead
-   of only living inside the (often narrow) sidebar tutorial bar. */
-#tutorial-code-expand { position: absolute; top: 4px; right: 4px; background: #0a1a12; border: 1px solid #2f4c3d;
-  border-radius: 4px; color: #8fbfa8; cursor: pointer; font-size: .8rem; line-height: 1; padding: 2px 5px; z-index: 1; }
-#tutorial-code-expand:hover { color: #eaf7ee; border-color: #4d8a6c; }
-#tutorial-code-modal { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); width: 380px; max-width: 90vw;
-  background: #fbfff9; border: 2px solid #6cc499; border-radius: 10px; z-index: 300; display: none; flex-direction: column;
-  box-shadow: 0 10px 32px rgba(0,0,0,.35); max-height: 70vh; }
-#tutorial-code-modal.open { display: flex; }
-#tutorial-code-modal-head { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #eefaf2; border-bottom: 1px solid #bfe6cf;
-  border-radius: 8px 8px 0 0; cursor: grab; user-select: none; flex-shrink: 0; }
-#tutorial-code-modal-head:active { cursor: grabbing; }
-#tutorial-code-modal-title { flex: 1; font-size: .78rem; font-weight: 800; color: #1f6e4f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#tutorial-code-modal-close { background: none; border: none; color: #4d6b5b; cursor: pointer; font-size: .95rem; line-height: 1; padding: 2px 4px; flex-shrink: 0; }
-#tutorial-code-modal-close:hover { color: #1f4d38; }
-#tutorial-code-modal-body { border-radius: 0 0 8px 8px; overflow: auto; }
-
-/* Pop-out Code Box - same floating/draggable shape as tutorial-code-modal above,
-   sized a bit larger since it holds a real editable textarea, not a read-only quote. */
-#code-expand { position: absolute; top: 4px; right: 4px; background: rgba(10,26,18,.55); border: 1px solid #3a4a3e;
-  border-radius: 4px; color: #d9f2d2; cursor: pointer; font-size: .8rem; line-height: 1; padding: 2px 5px; z-index: 1; }
-#code-expand:hover { color: #fff; border-color: #6cc499; }
-#code-modal { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); width: 440px; max-width: 92vw;
-  background: #fbfff9; border: 2px solid #6cc499; border-radius: 10px; z-index: 300; display: none; flex-direction: column;
-  box-shadow: 0 10px 32px rgba(0,0,0,.35); height: 340px; max-height: 82vh; }
-#code-modal.open { display: flex; }
-#code-modal-head { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #eefaf2; border-bottom: 1px solid #bfe6cf;
-  border-radius: 8px 8px 0 0; cursor: grab; user-select: none; flex-shrink: 0; }
-#code-modal-head:active { cursor: grabbing; }
-#code-modal-title { flex: 1; font-size: .78rem; font-weight: 800; color: #1f6e4f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#code-modal-close { background: none; border: none; color: #4d6b5b; cursor: pointer; font-size: .95rem; line-height: 1; padding: 2px 4px; flex-shrink: 0; }
-#code-modal-close:hover { color: #1f4d38; }
+#tutorial-bar-code .tb-line.old, #tutorial-code-modal-body .tb-line.old { color: var(--muted-2); font-style: italic; font-weight: 400; }
+/* New lines are compared character by character with what the student has
+   typed: amber not yet typed, green right, red wrong. */
+#tutorial-bar-code .tb-line.new, #tutorial-code-modal-body .tb-line.new,
+#tutorial-bar-code .tc-pending, #tutorial-code-modal-body .tc-pending { color: var(--warn); }
+#tutorial-bar-code .tc-match, #tutorial-code-modal-body .tc-match { color: var(--good); }
+#tutorial-bar-code .tc-mismatch, #tutorial-code-modal-body .tc-mismatch { color: var(--bad); text-decoration: underline wavy var(--bad); text-underline-offset: 2px; }
+#tutorial-code-modal, #code-modal { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); z-index: 300; display: none; flex-direction: column; max-width: 90vw; border-radius: 14px; background: var(--surface); border: 1px solid var(--line-strong); box-shadow: var(--shadow-3); }
+#tutorial-code-modal { width: 380px; max-height: 70vh; }
+#code-modal { width: 440px; max-width: 92vw; height: 340px; max-height: 82vh; }
+#tutorial-code-modal.open, #code-modal.open { display: flex; }
+#tutorial-code-modal-head, #code-modal-head { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 6px 8px 6px 14px; border-bottom: 1px solid var(--line); background: var(--surface-3); border-radius: 13px 13px 0 0; cursor: grab; user-select: none; }
+#tutorial-code-modal-head:active, #code-modal-head:active { cursor: grabbing; }
+#tutorial-code-modal-title, #code-modal-title { flex: 1; overflow: hidden; color: var(--ink); font-size: 13px; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+#tutorial-code-modal-body { border-radius: 0 0 13px 13px; overflow: auto; border: 0; }
 #code-modal-body { flex: 1; min-height: 0; display: flex; padding: 8px; }
-/* .code-editor normally relies on #code-panel's flex sizing for its height - once
-   popped out it needs to fill the modal body's own flex box instead. */
 #code-modal-body .code-editor { flex: 1; min-height: 0; }
-
-/* Code box glow: while a tutorial is running, a slow, continuous pulse around the
-   whole Code Box - not just a one-off flash on entry (that's tutorial-bar-panel's
-   own .just-started/tutorialPop) - so a student glancing back at the field always
-   has an obvious, ongoing "your code goes here" cue, not just a moment they might
-   have missed. Matches the tutorial system's own green accent (#4fbf87). */
-body.tutorial-active #code-panel { animation: codeBoxGlow 2.4s ease-in-out infinite; border-radius: 10px; }
-@keyframes codeBoxGlow {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(79,191,135,.25), 0 0 6px 1px rgba(79,191,135,.15); }
-  50% { box-shadow: 0 0 0 2px rgba(79,191,135,.65), 0 0 16px 5px rgba(79,191,135,.45); }
-}
-#tutorial-bar-checks { margin-top: 8px; font-size: .74rem; font-family: ui-monospace, monospace; }
-.tb-check { display: flex; align-items: center; gap: 6px; padding: 2px 0; color: #7a8f83; }
-.tb-check.tb-ok { color: #1f8a5a; font-weight: 700; }
-.tb-check-icon { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #b9d6c4; flex-shrink: 0; display: inline-block; }
-.tb-check.tb-ok .tb-check-icon { background: #2e8b57; border-color: #2e8b57; }
-#tutorial-bar-action-hint { margin-top: 8px; padding: 7px 9px; border-radius: 7px; background: #fff; border: 1px solid #bfe6cf; font-size: .74rem; font-weight: 700; color: #1f6e4f; }
+/* While a tutorial runs, a slow pulse around the Code Box keeps "your code
+   goes here" obvious. */
+body.tutorial-active #code-panel { animation: codeBoxGlow 2.4s ease-in-out infinite; }
+@keyframes codeBoxGlow { 0%, 100% { box-shadow: inset 0 0 0 1px rgba(129, 201, 149, .2); } 50% { box-shadow: inset 0 0 0 2px rgba(129, 201, 149, .6); } }
+#tutorial-bar-checks { margin-top: 10px; font-size: 12px; }
+.tb-check { display: flex; align-items: center; gap: 6px; padding: 2px 0; color: var(--muted); }
+.tb-check.tb-ok { color: var(--good); font-weight: 600; }
+.tb-check-icon { display: inline-block; width: 12px; height: 12px; flex-shrink: 0; border-radius: 50%; border: 2px solid var(--line-strong); }
+.tb-check.tb-ok .tb-check-icon { background: var(--good); border-color: var(--good); }
+#tutorial-bar-action-hint { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--good-line); color: var(--good); font-size: 12px; font-weight: 500; }
 #tutorial-bar-action-hint:empty { display: none; }
-#tutorial-bar-attempt-warning { margin-top: 8px; padding: 7px 9px; border-radius: 7px; background: #fdecec; border: 1px solid #e0968f; font-size: .74rem; font-weight: 700; color: #7a2a20; }
-#tutorial-bar-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+#tutorial-bar-attempt-warning { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: var(--bad-soft); border: 1px solid var(--bad-line); color: var(--bad); font-size: 12px; }
+#tutorial-bar-foot { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
 .tb-spacer { flex: 1; }
-#tutorial-bar-exit { background: transparent; border: 1px solid #bfe6cf; color: #4d6b5b; border-radius: 7px; padding: 6px 9px; font-weight: 700; cursor: pointer; font: inherit; font-size: .74rem; }
-#tutorial-bar-back, #tutorial-bar-next { border: 0; border-radius: 7px; padding: 6px 12px; font-weight: 800; cursor: pointer; font: inherit; font-size: .78rem; }
-#tutorial-bar-back { background: #dff2e6; color: #1f6e4f; }
+#tutorial-bar-exit, #tutorial-bar-back, #tutorial-bar-next { min-height: 32px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; }
+#tutorial-bar-exit { background: transparent; border: 1px solid var(--line-strong); color: var(--muted); }
+#tutorial-bar-back { background: var(--surface-4); border: 0; color: var(--ink); }
 #tutorial-bar-back:disabled { opacity: .4; cursor: not-allowed; }
-#tutorial-bar-next { background: #2e8b57; color: #fff; }
-#tutorial-bar-next:disabled { opacity: .45; cursor: not-allowed; background: #9cc9ac; }
-
-/* While a tutorial is active, the point is to force CALL syntax practice - the shop's
-   own Buy button and a grown plant's own Sell button are real, working shortcuts that
-   would let a student finish without typing a line of pseudocode. Disabled (not hidden -
-   prices/state are still useful reference), not removed, so free play is completely
-   unaffected the moment no tutorial is running. */
+#tutorial-bar-next { background: var(--good); border: 0; color: #0b2a15; }
+#tutorial-bar-next:disabled { background: var(--surface-4); color: var(--muted); cursor: not-allowed; }
+/* In a tutorial the shop's Buy and a plant's Sell buttons are off (CALL is
+   the point), and the long shop sinks below the Code Box. */
 body.tutorial-active #shop-list .buy-btn,
 body.tutorial-active #tile-info .sell-btn { pointer-events: none; opacity: .35; cursor: not-allowed; }
-/* The shop is ~30 items tall - left in normal document order it sits between the tutorial
-   bar/picker (pinned to the top) and the Code Box, forcing constant scrolling to get from
-   the instructions to where you actually type. Sink it below the Code Box while a tutorial
-   is active instead of hiding it outright, since its prices are still useful reference. */
 body.tutorial-active #shop-panel { order: 5; }
-#shop-tutorial-note { display: none; margin-bottom: 8px; padding: 6px 8px; border-radius: 6px; background: #eefaf2; border: 1px solid #bfe6cf; color: #1f6e4f; font-size: .72rem; font-weight: 700; }
 body.tutorial-active #shop-tutorial-note { display: block; }
 
-/* Only shown once "Sell the Farm" has actually been used - crops is the default everyone
-   starts on, so labelling it explicitly would just be noise on every single load. */
-#farm-type-badge { display: none; padding: 3px 9px; border-radius: 999px;
-  font-size: .68rem; font-weight: 800; color: #fff; vertical-align: middle; white-space: nowrap; }
-#farm-type-badge.shown { display: inline-block; }
-
-/* "Sell the Farm" - a rare, exciting prestige unlock, so it gets its own distinct gold
-   accent rather than the game's usual green, and stays completely hidden (not just
-   disabled) until genuinely reachable - see sellFarmUnlocked() for the milestone. */
-#sell-farm-panel { display: none; background: #fff8e6; border: 2px solid #e0b93f; }
+/* ---------- Sell the Farm (gold) ---------- */
+#sell-farm-panel { display: none; background: var(--warn-soft); border: 1px solid var(--warn-line); }
 #sell-farm-panel.unlocked { display: block; }
-#sell-farm-panel h2 { color: #8a6416; }
-#sell-farm-desc { font-size: .78rem; color: #6b5320; line-height: 1.4; margin: 0 0 8px; }
-.sell-farm-option { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; margin-bottom: 6px;
-  border-radius: 8px; border: 1px solid #e0b93f; background: #fffefb; cursor: pointer; text-align: left; font: inherit; }
-.sell-farm-option:hover { background: #fef3d6; }
-.sell-farm-option .sfo-badge { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-weight: 800; color: #fff; flex-shrink: 0; font-size: .95rem; }
-.sell-farm-option .sfo-body { flex: 1; min-width: 0; }
-.sell-farm-option .sfo-title { display: block; font-weight: 800; color: #6b4a10; font-size: .86rem; }
-.sell-farm-option .sfo-desc { display: block; font-size: .72rem; color: #7a6438; line-height: 1.35; }
-.sell-farm-option.armed { border-color: #d9534f; background: #fdecec; }
-.sell-farm-option.armed .sfo-title { color: #a3271f; }
+#sell-farm-panel h2 { color: var(--warn); }
+#sell-farm-desc, #revert-farm-desc { margin: 0 0 10px; color: var(--ink-soft); font-size: 13px; line-height: 1.45; }
+.sell-farm-option, .revert-farm-option { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 6px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); color: var(--ink); text-align: left; font: inherit; cursor: pointer; }
+.sell-farm-option { border: 1px solid var(--warn-line); }
+.sell-farm-option:hover { background: var(--surface-3); }
+.sell-farm-option .sfo-badge, .revert-farm-option .rfo-badge { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #fff; font-weight: 700; }
+.sell-farm-option .sfo-body, .revert-farm-option .rfo-body { flex: 1; min-width: 0; }
+.sell-farm-option .sfo-title, .revert-farm-option .rfo-title { display: block; font-weight: 700; font-size: 14px; }
+.sell-farm-option .sfo-title { color: var(--warn); }
+.sell-farm-option .sfo-desc, .revert-farm-option .rfo-desc { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; }
+.sell-farm-option.armed, .revert-farm-option.armed { border-color: var(--bad-line); background: var(--bad-soft); }
+.sell-farm-option.armed .sfo-title, .revert-farm-option.armed .rfo-title { color: var(--bad); }
 
-/* "Stuck? Switch Back" (James, 2026-09-15): a student who has spent everything on a later
-   stage (Solar/Aquarium/Rocket) had no way back except the top-bar Reset Game button, which
-   wipes every discovered farm type, not just the current one. This panel is the recovery
-   path - a fresh start (40 coins, tier 1) on any ALREADY-discovered earlier stage, with no
-   earnings gate (unlike Sell the Farm, which is a reward for mastering the current farm, not
-   a rescue for being broke on it). Calmer blue, "help is here" rather than "you earned
-   this", and only ever shown once there IS another discovered stage to go back to. */
-#revert-farm-panel { display: none; background: #eaf3fb; border: 2px solid #6ba3d6; }
+/* ---------- Switch Back (blue) ---------- */
+#revert-farm-panel { display: none; background: var(--brand-soft); border: 1px solid rgba(138, 180, 248, .45); }
 #revert-farm-panel.shown { display: block; }
-#revert-farm-panel h2 { color: #1f5c8a; }
-#revert-farm-desc { font-size: .78rem; color: #2c5876; line-height: 1.4; margin: 0 0 8px; }
-.revert-farm-option { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; margin-bottom: 6px;
-  border-radius: 8px; border: 1px solid #6ba3d6; background: #fbfdff; cursor: pointer; text-align: left; font: inherit; }
-.revert-farm-option:hover { background: #ddeeff; }
-.revert-farm-option .rfo-badge { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-weight: 800; color: #fff; flex-shrink: 0; font-size: .95rem; }
-.revert-farm-option .rfo-body { flex: 1; min-width: 0; }
-.revert-farm-option .rfo-title { display: block; font-weight: 800; color: #1f5c8a; font-size: .86rem; }
-.revert-farm-option .rfo-desc { display: block; font-size: .72rem; color: #3d6684; line-height: 1.35; }
-.revert-farm-option.armed { border-color: #d9534f; background: #fdecec; }
-.revert-farm-option.armed .rfo-title { color: #a3271f; }
+#revert-farm-panel h2 { color: var(--brand); }
+.revert-farm-option { border: 1px solid rgba(138, 180, 248, .45); }
+.revert-farm-option:hover { background: var(--surface-3); }
+.revert-farm-option .rfo-title { color: var(--brand-dark); }
 
-/* Rocket Yard - only ever visible while actually on that farm type, so the sidebar stays
-   uncluttered for every other player. Deep indigo/night-sky palette, distinct from every
-   other panel's colour, matching "this one ends in outer space". */
-#rocket-panel { display: none; background: #241b3d; border: 2px solid #6b4fa0; color: #e6def7; }
+/* ---------- Rocket Yard (purple) ---------- */
+#rocket-panel { display: none; background: rgba(197, 138, 249, .08); border: 1px solid rgba(197, 138, 249, .45); color: var(--ink); }
 #rocket-panel.shown { display: block; }
-#rocket-panel h2 { color: #d8c6ff; }
-.rocket-part-row { display: flex; align-items: center; gap: 8px; width: 100%; padding: 7px 9px; margin-bottom: 5px;
-  border-radius: 8px; border: 1px solid #4a3874; background: #2e2451; font-size: .78rem; }
-.rocket-part-row.owned { border-color: #4fbf87; background: #24382e; }
+#rocket-panel h2 { color: var(--rocket); }
+.rocket-part-row { display: flex; align-items: center; gap: 8px; width: 100%; margin-bottom: 6px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid rgba(197, 138, 249, .3); font-size: 13px; }
+.rocket-part-row.owned { border-color: var(--good-line); background: var(--good-soft); }
 .rocket-part-row.locked { opacity: .55; }
-.rocket-part-name { flex: 1; font-weight: 800; }
-.rocket-part-cost { font-size: .72rem; color: #b6a6de; }
-.rocket-part-check { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 2px solid #6b4fa0; }
-.rocket-part-row.owned .rocket-part-check { background: #4fbf87; border-color: #4fbf87; }
-.rocket-action-btn { width: 100%; padding: 9px; margin-top: 6px; border: 0; border-radius: 8px; font: inherit; font-weight: 800;
-  font-size: .84rem; cursor: pointer; background: #6b4fa0; color: #fff; }
-.rocket-action-btn:disabled { background: #443666; color: #a094c2; cursor: not-allowed; }
-.rocket-action-btn.armed { background: #d9534f; }
+.rocket-part-name { flex: 1; font-weight: 700; }
+.rocket-part-cost { color: var(--muted); font-size: 12px; }
+.rocket-part-check { width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; border: 2px solid rgba(197, 138, 249, .6); }
+.rocket-part-row.owned .rocket-part-check { background: var(--good); border-color: var(--good); }
+.rocket-action-btn { width: 100%; min-height: 38px; margin-top: 6px; border: 0; border-radius: 999px; background: var(--rocket); color: #2a0b45; font: inherit; font-weight: 500; font-size: 14px; cursor: pointer; }
+.rocket-action-btn:disabled { background: var(--surface-4); color: var(--muted); cursor: not-allowed; }
+.rocket-action-btn.is-secondary { background: rgba(197, 138, 249, .18); color: var(--rocket); }
+.rocket-action-btn.is-secondary:disabled { background: var(--surface-4); color: var(--muted); }
+.rocket-action-btn.armed { background: var(--bad); color: #3b0907; }
+.rocket-note { color: var(--muted); font-size: 12px; }
 #rocket-flight { text-align: center; }
-.rocket-flight-track { position: relative; height: 130px; width: 34px; margin: 6px auto 10px; border-radius: 17px;
-  background: linear-gradient(#0a0620, #1c1240); border: 1px solid #4a3874; overflow: hidden; }
-.rocket-flight-track .stars { position: absolute; inset: 0; background-image:
-  radial-gradient(1px 1px at 20% 15%, #fff, transparent), radial-gradient(1px 1px at 70% 35%, #fff, transparent),
-  radial-gradient(1px 1px at 40% 65%, #fff, transparent), radial-gradient(1px 1px at 85% 80%, #fff, transparent),
-  radial-gradient(1px 1px at 10% 90%, #fff, transparent); opacity: .7; }
-.rocket-flight-track .rocket-icon { position: absolute; left: 50%; bottom: 4px; font-size: 20px; line-height: 1;
-  transform: translate(-50%, 0); transition: bottom 1s linear; }
-#rocket-flight-pct { font-weight: 800; font-size: 1rem; color: #d8c6ff; }
-#rocket-flight-eta { font-size: .74rem; color: #b6a6de; margin-top: 2px; }
+.rocket-flight-track { position: relative; width: 34px; height: 130px; margin: 6px auto 10px; overflow: hidden; border-radius: 17px; background: linear-gradient(#07050f, #160f2e); border: 1px solid rgba(197, 138, 249, .4); }
+.rocket-flight-track .stars { position: absolute; inset: 0; opacity: .7; background-image: radial-gradient(1px 1px at 20% 15%, #fff, transparent), radial-gradient(1px 1px at 70% 35%, #fff, transparent), radial-gradient(1px 1px at 40% 65%, #fff, transparent), radial-gradient(1px 1px at 85% 80%, #fff, transparent), radial-gradient(1px 1px at 10% 90%, #fff, transparent); }
+.rocket-flight-track .rocket-icon { position: absolute; left: 50%; bottom: 4px; font-size: 20px; line-height: 1; transform: translate(-50%, 0); transition: bottom 1s linear; }
+#rocket-flight-pct { color: var(--rocket); font: 700 16px var(--font-mono); }
+#rocket-flight-eta { margin-top: 2px; color: var(--muted); font-size: 12px; }
 #rocket-arrived { display: none; text-align: center; }
 #rocket-arrived.shown { display: block; }
-#rocket-arrived .arrived-title { font-weight: 800; font-size: 1rem; color: #d8c6ff; margin: 4px 0; }
-#rocket-arrived .arrived-anim { font-size: 30px; display: inline-block; animation: rocketLiftoff 2.4s ease-in forwards; }
-@keyframes rocketLiftoff {
-  0%   { transform: translateY(40px) scale(0.9); opacity: 0; }
-  15%  { transform: translateY(40px) scale(1); opacity: 1; }
-  70%  { transform: translateY(-60px) scale(1.05); opacity: 1; }
-  100% { transform: translateY(-140px) scale(0.6); opacity: 0; }
-}
-#rocket-reset-btn { margin-top: 8px; padding: 7px 12px; border: 1px solid #6b4fa0; border-radius: 7px;
-  background: transparent; color: #d8c6ff; font: inherit; font-weight: 700; font-size: .76rem; cursor: pointer; }
+#rocket-arrived .arrived-title { margin: 4px 0; color: var(--rocket); font-weight: 700; font-size: 16px; }
+#rocket-arrived .arrived-anim { display: inline-block; font-size: 30px; animation: rocketLiftoff 2.4s ease-in forwards; }
+@keyframes rocketLiftoff { 0% { transform: translateY(40px) scale(.9); opacity: 0; } 15% { transform: translateY(40px) scale(1); opacity: 1; } 70% { transform: translateY(-60px) scale(1.05); opacity: 1; } 100% { transform: translateY(-140px) scale(.6); opacity: 0; } }
+#rocket-reset-btn { min-height: 32px; margin-top: 8px; padding: 0 14px; border: 1px solid rgba(197, 138, 249, .5); border-radius: 999px; background: transparent; color: var(--rocket); font: inherit; font-size: 13px; cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

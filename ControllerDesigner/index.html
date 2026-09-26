@@ -6,8 +6,8 @@
 <title>Controller Designer</title>
 <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
-  /* The site's dark theme (shared/bc-theme.css): the page around the
-     board is dark; the board itself stays white, as it is the drawing. */
+  /* The site's dark theme (shared/bc-theme.css). The board is dark paper
+     with light inks, like the notepad. */
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; }
   body {
@@ -81,8 +81,8 @@
     min-height: 0;
   }
   #board {
-    background: #fff;
-    border: 1px solid var(--line);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
     border-radius: 10px;
     box-shadow: var(--shadow-3);
     max-width: 100%;
@@ -110,7 +110,7 @@
     border-radius: 5px;
     padding: 5px 7px;
     outline: none;
-    font: 600 18px "Segoe UI", Arial, sans-serif;
+    font: 600 18px var(--font-body);
   }
   .text-input-overlay:focus { border-color: var(--brand); box-shadow: 0 0 0 2px var(--brand-soft); }
   .text-editor-action {
@@ -118,7 +118,7 @@
     border: 0;
     border-radius: 5px;
     padding: 4px 9px;
-    font: 700 12px "Segoe UI", Arial, sans-serif;
+    font: 600 12px var(--font-body);
     cursor: pointer;
     touch-action: manipulation;
   }
@@ -152,7 +152,7 @@
   </div>
   <div class="tool-group swatch-row" id="swatchRow"></div>
   <div class="tool-group">
-    <input type="color" id="customColor" value="#16233a" title="Custom colour">
+    <input type="color" id="customColor" value="#e8eaed" title="Custom colour">
   </div>
   <div class="tool-group">
     <span class="size-label">Size</span>
@@ -166,7 +166,7 @@
 </div>
 <div class="canvas-wrap">
   <canvas id="board" width="900" height="600"></canvas>
-  <div class="status-note" id="statusNote">Draws automatically save to this browser.</div>
+  <div class="status-note" id="statusNote">Drawings save automatically in this browser.</div>
 </div>
 
 <script>
@@ -177,7 +177,7 @@
 
   var state = {
     tool: 'pen',
-    color: '#16233a',
+    color: '#e8eaed',
     size: 6,
     drawing: false,
     lastX: 0,
@@ -186,11 +186,14 @@
     textEditor: null
   };
 
-  var PALETTE = ['#16233a', '#d64545', '#2296e3', '#2f9e58', '#f2a52c', '#8a4fd1', '#ffffff'];
+  // The notepad's inks, chosen to read on the dark board.
+  var PALETTE = ['#e8eaed', '#f28b82', '#8ab4f8', '#81c995', '#fdd663', '#c58af9', '#9aa0a6'];
+  var BOARD = '#171a20';
+  var DARK_KEY = 'controllerDesigner_dark_v1';
 
-  function fillWhiteBackground() {
+  function fillBoard() {
     ctx.save();
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = BOARD;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
   }
@@ -198,14 +201,38 @@
   function loadAutosave() {
     var saved;
     try { saved = localStorage.getItem(AUTOSAVE_KEY); } catch (_e) { saved = null; }
-    if (!saved) { fillWhiteBackground(); return; }
+    if (!saved) { fillBoard(); return; }
     var img = new Image();
     img.onload = function () {
-      fillWhiteBackground();
+      fillBoard();
       ctx.drawImage(img, 0, 0);
+      migrateToDark();
     };
-    img.onerror = function () { fillWhiteBackground(); };
+    img.onerror = function () { fillBoard(); };
     img.src = saved;
+  }
+
+  // Drawings saved before the board went dark are on white paper. Once, turn
+  // the paper into the board and dark or grey ink into light ink, so they
+  // still show. Coloured ink already reads on the dark board, so it stays.
+  function migrateToDark() {
+    var done = false;
+    try { done = localStorage.getItem(DARK_KEY) === '1'; } catch (_e) {}
+    if (done) return;
+    try { localStorage.setItem(DARK_KEY, '1'); } catch (_e) {}
+    var corner = ctx.getImageData(2, 2, 1, 1).data;
+    if (corner[0] < 240 || corner[1] < 240 || corner[2] < 240) return;
+    var image = ctx.getImageData(0, 0, canvas.width, canvas.height), px = image.data;
+    var board = [0x17, 0x1a, 0x20], ink = [0xe8, 0xea, 0xed];
+    for (var i = 0; i < px.length; i += 4) {
+      var r = px[i], g = px[i + 1], b = px[i + 2];
+      if (Math.max(r, g, b) - Math.min(r, g, b) < 40) {
+        var light = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        for (var c = 0; c < 3; c++) px[i + c] = Math.round(board[c] + (1 - light) * (ink[c] - board[c]));
+      }
+    }
+    ctx.putImageData(image, 0, 0);
+    autosave();
   }
 
   function autosave() {
@@ -224,7 +251,7 @@
     var last = state.undoStack.pop();
     var img = new Image();
     img.onload = function () {
-      fillWhiteBackground();
+      fillBoard();
       ctx.drawImage(img, 0, 0);
       autosave();
     };
@@ -243,7 +270,7 @@
     canvas.style.cursor = tool === 'text' ? 'text' : 'crosshair';
     document.getElementById('statusNote').textContent = tool === 'text'
       ? 'Click the canvas, type a label, then press Enter or Add text.'
-      : 'Draws automatically save to this browser.';
+      : 'Drawings save automatically in this browser.';
   }
   document.getElementById('toolPen').addEventListener('click', function () { setTool('pen'); });
   document.getElementById('toolEraser').addEventListener('click', function () { setTool('eraser'); });
@@ -255,7 +282,6 @@
     btn.type = 'button';
     btn.className = 'swatch';
     btn.style.background = color;
-    if (color === '#ffffff') btn.style.boxShadow = '0 0 0 1px var(--line), inset 0 0 0 1px #ccd6e4';
     btn.title = color;
     btn.addEventListener('click', function () {
       state.color = color;
@@ -300,7 +326,7 @@
     clearBtn.classList.remove('is-armed');
     clearBtn.textContent = 'Clear Canvas';
     pushUndoSnapshot();
-    fillWhiteBackground();
+    fillBoard();
     autosave();
   });
 
@@ -326,7 +352,7 @@
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.lineWidth = state.tool === 'eraser' ? state.size * 3 : state.size;
-    ctx.strokeStyle = state.tool === 'eraser' ? '#ffffff' : state.color;
+    ctx.strokeStyle = state.tool === 'eraser' ? BOARD : state.color;
     ctx.beginPath();
     ctx.moveTo(state.lastX, state.lastY);
     ctx.lineTo(x, y);
@@ -346,7 +372,7 @@
         pushUndoSnapshot();
         ctx.save();
         ctx.fillStyle = editor.color;
-        ctx.font = '600 ' + editor.fontSize + 'px "Segoe UI", Arial, sans-serif';
+        ctx.font = '600 ' + editor.fontSize + 'px Roboto, "Segoe UI", Arial, sans-serif';
         ctx.textBaseline = 'top';
         ctx.fillText(text, editor.canvasX, editor.canvasY);
         ctx.restore();

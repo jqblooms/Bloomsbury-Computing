@@ -1,0 +1,192 @@
+/* Algorithm Practice: searching and sorting, one step at a time. Built on
+   the site theme (shared/bc-theme.css); only layout and the pieces this app
+   adds live here. */
+
+body { margin: 0; min-height: 100vh; }
+
+.ap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---- Header ---- */
+.ap-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+.ap-title { display: flex; align-items: center; gap: 12px; }
+.ap-title svg { width: 32px; height: 32px; color: var(--brand); flex: none; }
+.ap-title h1 { margin: 0; font-size: 24px; font-weight: 700; }
+.ap-title p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.ap-head-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* ---- Algorithm tabs ---- */
+.ap-tabs { display: flex; gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; width: fit-content; max-width: 100%; overflow-x: auto; }
+.ap-tab {
+  min-height: 36px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: 500 14px var(--font-body);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ap-tab:hover { color: var(--ink); background: var(--surface-2); }
+.ap-tab.is-active { background: var(--brand-soft-strong); color: var(--brand-dark); }
+
+/* ---- Controls row ---- */
+.ap-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.ap-controls label { color: var(--muted); font-size: 14px; }
+.ap-controls select { min-height: 36px; padding: 0 10px; font-size: 14px; }
+.ap-controls .spacer { flex: 1; }
+
+/* ---- Two columns: the board and the code ---- */
+.ap-main { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
+@media (max-width: 960px) { .ap-main { grid-template-columns: minmax(0, 1fr); } }
+.ap-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.ap-card { padding: 18px 20px; }
+.ap-card h2 { margin: 0 0 10px; font-size: 16px; font-weight: 700; }
+.ap-task { font-size: 16px; line-height: 1.5; color: var(--ink-soft); }
+.ap-task strong { color: var(--ink); }
+.ap-target { display: inline-flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 15px; color: var(--muted); }
+.ap-target b { min-width: 52px; padding: 4px 14px; border-radius: 10px; background: var(--brand-soft-strong); color: var(--brand-dark); font: 700 24px var(--font-mono); text-align: center; }
+
+/* ---- The row of values ---- */
+.ap-board { padding: 22px 16px 18px; overflow-x: auto; }
+.ap-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.ap-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 52px; }
+.ap-box {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 2px solid var(--line-strong);
+  background: var(--surface-3);
+  color: var(--ink);
+  font: 700 20px var(--font-mono);
+  transition: background .2s, border-color .2s, opacity .2s, transform .15s;
+}
+button.ap-box { cursor: pointer; }
+button.ap-box:hover:not(:disabled) { border-color: var(--brand); transform: translateY(-2px); }
+button.ap-box:disabled { cursor: default; }
+.ap-box.is-hidden { color: var(--muted); }
+.ap-box.is-checked { background: var(--surface-2); color: var(--muted); border-color: var(--line); }
+.ap-box.is-out { opacity: .28; }
+.ap-box.is-found { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+.ap-box.is-sorted { background: var(--good-soft); border-color: var(--good-line); color: var(--good); }
+.ap-box.is-active { border-color: var(--warn); background: var(--warn-soft); color: var(--warn); }
+.ap-box.is-picked { border-color: var(--brand); background: var(--brand-soft-strong); color: var(--brand-dark); }
+.ap-box.is-hint { box-shadow: 0 0 0 3px var(--brand-soft-strong); border-style: dashed; border-color: var(--brand); }
+.ap-box.shake { animation: ap-shake .35s ease; }
+.ap-idx { color: var(--muted); font: 500 12px var(--font-mono); }
+.ap-ptr { min-height: 18px; font: 700 12px var(--font-body); letter-spacing: .02em; }
+.ap-ptr .low { color: var(--brand); }
+.ap-ptr .high { color: var(--bad); }
+.ap-ptr .mid { color: var(--warn); }
+
+/* Gaps a value can be dropped into (insertion sort) */
+.ap-gap {
+  width: 14px;
+  height: 52px;
+  margin: 0 -6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.ap-gap::after { content: ''; display: block; width: 4px; height: 100%; margin: 0 auto; border-radius: 4px; background: var(--line-strong); transition: background .15s; }
+.ap-gap:hover::after { background: var(--brand); }
+.ap-gap.is-hint::after { background: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft-strong); }
+
+/* ---- Decision buttons (bubble sort) ---- */
+.ap-decide { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+
+/* ---- Feedback line ---- */
+.ap-feedback { min-height: 24px; font-size: 16px; font-weight: 500; text-align: center; }
+.ap-feedback.good { color: var(--good); }
+.ap-feedback.bad { color: var(--bad); }
+.ap-feedback.info { color: var(--ink-soft); }
+
+/* ---- Support hint ---- */
+.ap-hint {
+  display: none;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-size: 15px;
+  line-height: 1.45;
+  user-select: none;
+}
+.ap-hint.show { display: block; }
+.ap-hint code { font-size: 14px; }
+
+/* ---- Pseudocode ---- */
+.ap-code {
+  margin: 0;
+  padding: 12px 0;
+  border-radius: 12px;
+  background: #13161b;
+  border: 1px solid var(--line);
+  font: 13.5px/1.6 var(--font-mono);
+  color: var(--ink-soft);
+  overflow-x: auto;
+}
+.ap-code .ln { display: block; padding: 0 14px; white-space: pre; border-left: 3px solid transparent; }
+.ap-code .ln.is-on { background: var(--brand-soft-strong); border-left-color: var(--brand); color: var(--ink); }
+.ap-code .kw { color: #c58af9; }
+.ap-code .str { color: #81c995; }
+.ap-note { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+/* ---- Trace table and counters ---- */
+.ap-trace-wrap { max-height: 280px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; }
+.ap-trace { width: 100%; font: 14px var(--font-mono); }
+.ap-trace th, .ap-trace td { padding: 6px 10px; border-bottom: 1px solid var(--line); text-align: center; }
+.ap-trace th { position: sticky; top: 0; background: var(--surface-2); color: var(--muted); font: 600 13px var(--font-body); }
+.ap-trace tr:last-child td { border-bottom: 0; }
+.ap-trace tr.is-new td { background: var(--brand-soft); }
+.ap-trace-empty { padding: 14px; color: var(--muted); font-size: 14px; text-align: center; }
+.ap-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.ap-stat { padding: 6px 12px; border-radius: 10px; background: var(--surface-2); color: var(--muted); font-size: 13px; }
+.ap-stat b { color: var(--ink); font: 700 16px var(--font-mono); margin-left: 4px; }
+
+/* ---- Finished panel ---- */
+.ap-done { display: none; padding: 16px 18px; border-radius: 12px; border: 1px solid var(--good-line); background: var(--good-soft); color: var(--ink); line-height: 1.5; }
+.ap-done.show { display: block; }
+.ap-done strong { color: var(--good); }
+
+/* ---- Merge sort ---- */
+.ap-merge { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+.ap-merge-level { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.ap-list { display: flex; gap: 6px; padding: 8px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); min-height: 68px; align-items: center; }
+.ap-list.is-current { border-color: var(--warn-line); background: var(--warn-soft); }
+.ap-list.is-output { border-style: dashed; border-color: var(--line-strong); }
+.ap-list.is-merged { border-color: var(--good-line); }
+.ap-list .ap-box { width: 46px; height: 46px; font-size: 18px; }
+.ap-merge-arrow { color: var(--muted); font-size: 13px; }
+.ap-merge-work { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; }
+.ap-merge-label { color: var(--muted); font-size: 13px; text-align: center; margin-bottom: 4px; }
+
+@keyframes ap-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ap-box, .ap-box.shake { transition: none; animation: none; }
+}
+@media (max-width: 520px) {
+  .ap { padding: 14px 12px 32px; }
+  .ap-box { width: 44px; height: 44px; font-size: 17px; }
+  .ap-cell { min-width: 44px; }
+}

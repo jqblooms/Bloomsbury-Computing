@@ -14,6 +14,10 @@
       /* Prevent the Scratch editor document from ever generating scrollbars when
          embedded in an iframe (the parent letterboxes it to fit the available space). */
       html, body { overflow: hidden; margin: 0; }
+      /* Bloomsbury Computing: the menu bar's "See Project Page" and
+         "TurboWarp Feedback" buttons lead off the site. */
+      [class*="menu-bar_menu-bar-item"]:has(> [class*="community-button_community-button"]),
+      [class*="menu-bar_menu-bar-item"]:has(> [class*="menu-bar_feedback-link"]) { display: none !important; }
       .splash-screen {
         position: absolute;
         width: 100%;
@@ -26,14 +30,14 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-family: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
       }
       .splash-screen[hidden] {
         display: none;
       }
       .splash-screen[data-theme="dark"] {
-        background-color: #333;
-        color: white;
+        background-color: #0f1115;
+        color: #e8eaed;
       }
       .splash-screen > * {
         max-width: 80%;
@@ -144,7 +148,7 @@
             if (parsed.accent === 'purple') {
               accent = '#855cd6';
             } else if (parsed.accent === 'blue') {
-              accent = '#4c97ff';
+              accent = '#1a73e8';
             }
             if (parsed.gui === 'dark' || parsed.gui === 'light') {
               theme = parsed.gui;
@@ -240,7 +244,7 @@
       }
     }
   </script>
-  <script src="js/vendors~addon-settings~credits~editor~embed~fullscreen~player.js"></script><script src="js/vendors~editor~embed~fullscreen~player.js"></script><script src="js/addon-settings~addons~editor~fullscreen~player.js"></script><script src="js/addon-settings~editor~embed~fullscreen~player.js"></script><script src="js/editor.js"></script>
+  <script src="js/vendors~addon-settings~credits~editor~embed~fullscreen~player.js"></script><script src="js/vendors~editor~embed~fullscreen~player.js"></script><script src="js/addon-settings~addons~editor~fullscreen~player.js"></script><script src="js/addon-settings~editor~embed~fullscreen~player.js?v=20260927"></script><script src="js/editor.js"></script>
   <script>
     // Rare bug James diagnosed: a block's puzzle-piece shape is sized from
     // its label text's measured width (getComputedTextLength on the SVG
@@ -307,11 +311,11 @@
     else if (/[?&]flowscratch/.test(location.search)) window.BC_CLOUD_SAVE = { app: 'flowscratch', keys: ['flowscratchTutorialProgress_v1'] };
   </script>
   <script src="../shared/cloud-save.js?v=20260926"></script>
-  <script src="../assets/js/pyscratch-tutorials.js?v=20260925split"></script>
-  <script src="../assets/js/pyscratch.js?v=20260925split"></script>
+  <script src="../assets/js/pyscratch-tutorials.js?v=20260927"></script>
+  <script src="../assets/js/pyscratch.js?v=20260927"></script>
   <!-- FlowScratch: flowchart editor overlay. No-op unless ?flowscratch is in URL. -->
   <script src="../assets/js/flowscratch-tutorials.js?v=20260925split"></script>
-  <script src="../assets/js/flowscratch.js?v=20260925split"></script>
+  <script src="../assets/js/flowscratch.js?v=20260927"></script>
   <!-- TurboBot: Scratch blocks driving PyBot. No-op unless ?turbobot is in URL. -->
   <script src="../assets/js/turbobot.js?v=20260826b"></script></body>
 </html>

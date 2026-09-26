@@ -203,14 +203,14 @@ function startLessonMission(id) {
   var objective = document.getElementById('lesson-mission-objective');
   var status = document.getElementById('lesson-mission-status');
   if (title) title.textContent = cfg.title;
-  if (titleCollapsed) titleCollapsed.textContent = '— ' + cfg.title;
+  if (titleCollapsed) titleCollapsed.textContent = cfg.title;
   if (objective) objective.textContent = cfg.objective;
   if (status) { status.className = ''; status.textContent = 'Write your code, then press Run.'; }
   renderMissionCommands(cfg);
   // The full 30-command reference is for free play; a mission has its own short list above,
   // so relabel the generic one as a fallback rather than two competing "the" cheat sheets.
   var cheatSummary = document.getElementById('cheat-sheet-summary');
-  if (cheatSummary) cheatSummary.textContent = '📖 Need a command not listed above? Full cheat sheet';
+  if (cheatSummary) cheatSummary.textContent = 'Need a command not listed above? Full cheat sheet';
   clearMissionWorld();
   var reset = document.getElementById('lesson-mission-reset');
   if (reset && !reset.dataset.bound) { reset.dataset.bound = '1'; reset.addEventListener('click', handleMissionResetClick); }

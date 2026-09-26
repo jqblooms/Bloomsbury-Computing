@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pseudocode Farmer</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <script>document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "") + '">');</script>
 </head>
 <body>
@@ -12,7 +13,7 @@
 <div id="app">
   <header id="hud">
     <div class="brand">
-      <div class="logo">🌱</div>
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12c0-4 3-6.5 7.5-6.5 0 4-3 6.5-7.5 6.5z"/><path d="M12 10C12 6.5 9.5 4 5 4c0 3.5 2.5 6 7 6z"/></svg></div>
       <div>
         <b>Pseudocode Farmer</b>
         <small>Cambridge Pseudocode</small>
@@ -20,9 +21,9 @@
       <span id="farm-type-badge" title="Sell the Farm to switch which one you're on"></span>
     </div>
     <div id="stats">
-      <div class="stat-pill" id="money-pill"><span class="icon">🪙</span><span id="money-value">0</span></div>
-      <div class="stat-pill" id="earned-pill" title="Total coins ever earned - unlocks new vegetables, spending it back down doesn't undo that"><span class="icon">📈</span><span id="earned-value">0</span></div>
-      <button type="button" class="reset-btn" id="reset-btn" title="Start the whole game over from scratch">🔁 Reset Game</button>
+      <div class="stat-pill" id="money-pill"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span><span id="money-value">0</span></div>
+      <div class="stat-pill" id="earned-pill" title="Total coins ever earned - unlocks new vegetables, spending it back down doesn't undo that"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16"/><path d="M5 15l5-5 3 3 6-6"/><path d="M15 7h4v4"/></svg></span><span id="earned-value">0</span></div>
+      <button type="button" class="reset-btn" id="reset-btn" title="Start the whole game over from scratch">Reset Game</button>
     </div>
     <div class="hint">Click a tile to move there. Write pseudocode to plant, buy and automate!</div>
   </header>
@@ -51,32 +52,32 @@
         <div id="sell-farm-options"></div>
       </section>
       <section class="panel-section" id="revert-farm-panel">
-        <h2>🔄 Stuck? Switch Back</h2>
+        <h2>Stuck? Switch back</h2>
         <p id="revert-farm-desc">Out of coins here and nothing left to sell? Switch back to an earlier stage you've already discovered - fresh start, 40 coins, tier 1 - without losing it or resetting the whole game.</p>
         <div id="revert-farm-options"></div>
       </section>
       <section class="panel-section" id="rocket-panel">
-        <h2>🚀 Rocket Yard</h2>
+        <h2>Rocket Yard</h2>
         <div id="rocket-build"></div>
         <div id="rocket-flight"></div>
         <div id="rocket-arrived"></div>
       </section>
       <section class="panel-section" id="shop-panel">
-        <h2 id="shop-title">🛒 Seed Shop</h2>
+        <h2 id="shop-title">Seed Shop</h2>
         <div id="shop-tutorial-note">Tutorial in progress - Buy is off. Use <code>CALL Buy("...")</code> in the Code Box instead.</div>
         <div id="shop-list"></div>
       </section>
 
       <section class="panel-section" id="code-panel">
-        <h2>💻 Code Box</h2>
+        <h2>Code Box</h2>
         <div class="code-editor">
           <button type="button" id="code-expand" title="Pop out the code box into a floating window">&#x2922;</button>
           <div id="code-backdrop" aria-hidden="true"></div>
           <textarea id="code-input" spellcheck="false" autocomplete="off"></textarea>
         </div>
         <div class="code-actions">
-          <button type="button" id="run-btn">▶ Run</button>
-          <button type="button" id="machine-btn">🤖 Place Machine</button>
+          <button type="button" id="run-btn">Run</button>
+          <button type="button" id="machine-btn">Place Machine</button>
         </div>
         <div id="machine-tiers"></div>
         <div id="console-output"></div>
@@ -116,15 +117,15 @@
           <div id="tutorial-bar-foot">
             <button type="button" id="tutorial-bar-exit">Exit Tutorial</button>
             <span class="tb-spacer"></span>
-            <button type="button" id="tutorial-bar-back">◀ Back</button>
-            <button type="button" id="tutorial-bar-next" disabled>Next ▶</button>
+            <button type="button" id="tutorial-bar-back">Back</button>
+            <button type="button" id="tutorial-bar-next" disabled>Next</button>
           </div>
         </div>
       </section>
 
       <section class="panel-section" id="lesson-mission-panel" aria-live="polite">
         <h2 id="lesson-mission-toggle" role="button" tabindex="0" aria-expanded="true">
-          <span>🎯 Lesson Mission</span>
+          <span>Lesson Mission</span>
           <span id="lesson-mission-title-collapsed"></span>
           <span id="lesson-mission-chevron" aria-hidden="true">▾</span>
         </h2>
@@ -136,14 +137,14 @@
           <table id="lesson-mission-commands"></table>
           <div id="lesson-mission-status"></div>
           <div id="lesson-mission-stuck-warning" hidden>You don't have the seeds or money to finish this from here, and nothing is growing that could be sold. Click <strong>Reset Mission</strong> below to start fresh with your original money and seeds.</div>
-          <div id="lesson-mission-next">Write your code in the Code Box below, then press <strong>▶ Run</strong>.</div>
+          <div id="lesson-mission-next">Write your code in the Code Box below, then press <strong>Run</strong>.</div>
           <button type="button" id="lesson-mission-reset">Reset Mission</button>
         </div>
       </section>
 
       <section class="panel-section">
         <details class="cheat-sheet" id="cheat-sheet-details">
-          <summary id="cheat-sheet-summary">📖 Pseudocode cheat sheet</summary>
+          <summary id="cheat-sheet-summary">Pseudocode cheat sheet</summary>
           <table>
             <tr><td><code id="cheat-ex-plant"></code></td><td class="desc" id="cheat-ex-plant-desc">Plants a seed you own where your cursor is standing.</td></tr>
             <tr><td><code id="cheat-ex-buy"></code></td><td class="desc" id="cheat-ex-buy-desc"></td></tr>
@@ -183,7 +184,7 @@
   <div id="tutorial-modal">
     <div id="tutorial-modal-head">
       <h2>Machine Tutorials</h2>
-      <button type="button" id="tutorial-modal-close" title="Close">✕</button>
+      <button type="button" id="tutorial-modal-close" title="Close">&times;</button>
     </div>
     <div id="tutorial-picker-list"></div>
   </div>
@@ -192,7 +193,7 @@
 <div id="tutorial-code-modal">
   <div id="tutorial-code-modal-head">
     <span id="tutorial-code-modal-title">Code</span>
-    <button type="button" id="tutorial-code-modal-close" title="Close">✕</button>
+    <button type="button" id="tutorial-code-modal-close" title="Close">&times;</button>
   </div>
   <pre id="tutorial-code-modal-body"></pre>
 </div>
@@ -204,8 +205,8 @@
      openCodeModal/closeCodeModal. -->
 <div id="code-modal">
   <div id="code-modal-head">
-    <span id="code-modal-title">💻 Code Box</span>
-    <button type="button" id="code-modal-close" title="Close">✕</button>
+    <span id="code-modal-title">Code Box</span>
+    <button type="button" id="code-modal-close" title="Close">&times;</button>
   </div>
   <div id="code-modal-body"></div>
 </div>

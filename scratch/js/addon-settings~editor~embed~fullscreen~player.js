@@ -365,10 +365,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guiColors", function() { return guiColors; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blockColors", function() { return blockColors; });
 const guiColors = {
-  'looks-secondary': 'hsla(215, 100%, 65%, 1)',
-  'looks-transparent': 'hsla(215, 100%, 65%, 0.35)',
-  'looks-light-transparent': 'hsla(215, 100%, 65%, 0.15)',
-  'looks-secondary-dark': 'hsla(215, 60%, 50%, 1)'
+  'looks-secondary': '#669df6',
+  'looks-transparent': 'rgba(138, 180, 248, 0.35)',
+  'looks-light-transparent': 'rgba(138, 180, 248, 0.15)',
+  'looks-secondary-dark': '#1a73e8'
 };
 const blockColors = {};
 
@@ -985,30 +985,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blockColors", function() { return blockColors; });
 const guiColors = {
   'color-scheme': 'dark',
-  'ui-primary': '#111111',
-  'ui-secondary': '#1e1e1e',
-  'ui-tertiary': '#2e2e2e',
-  'ui-modal-overlay': '#333333aa',
-  'ui-modal-background': '#111111',
-  'ui-modal-foreground': '#eeeeee',
-  'ui-modal-header-background': '#333333',
+  'ui-primary': '#0f1115',
+  'ui-secondary': '#171a20',
+  'ui-tertiary': '#252a33',
+  'ui-modal-overlay': '#04060aa8',
+  'ui-modal-background': '#171a20',
+  'ui-modal-foreground': '#e8eaed',
+  'ui-modal-header-background': '#1d2128',
   'ui-modal-header-foreground': '#ffffff',
-  'ui-white': '#111111',
+  'ui-white': '#171a20',
   'ui-black-transparent': '#ffffff26',
-  'text-primary': '#eeeeee',
-  'menu-bar-background': '#333333',
-  'assets-background': '#111111',
-  'input-background': '#1e1e1e',
-  'popover-background': '#1e1e1e',
+  'text-primary': '#e8eaed',
+  'menu-bar-background': '#171a20',
+  'assets-background': '#0f1115',
+  'input-background': '#1d2128',
+  'popover-background': '#1d2128',
   'badge-background': '#16202c',
   'badge-border': '#203652',
-  'fullscreen-background': '#111111',
-  'fullscreen-accent': '#111111',
-  'page-background': '#111111',
-  'page-foreground': '#eeeeee',
+  'fullscreen-background': '#0f1115',
+  'fullscreen-accent': '#0f1115',
+  'page-background': '#0f1115',
+  'page-foreground': '#e8eaed',
   'project-title-inactive': 'var(--ui-secondary)',
   'project-title-hover': '#ffffff3f',
-  'link-color': '#44aaff',
+  'link-color': '#8ab4f8',
   'filter-icon-black': 'invert(100%)',
   'filter-icon-gray': 'grayscale(100%) brightness(1.7)',
   'filter-icon-white': 'brightness(0) invert(100%)',
@@ -1016,19 +1016,19 @@ const guiColors = {
 };
 const blockColors = {
   insertionMarker: '#cccccc',
-  workspace: '#1e1e1e',
-  toolboxSelected: '#1e1e1e',
+  workspace: '#171a20',
+  toolboxSelected: '#252a33',
   toolboxText: '#cccccc',
-  toolbox: '#111111',
-  flyout: '#111111',
+  toolbox: '#0f1115',
+  flyout: '#13161b',
   scrollbar: '#666666',
-  valueReportBackground: '#1e1e1e',
-  valueReportBorder: '#333333',
+  valueReportBackground: '#1d2128',
+  valueReportBorder: '#3b424e',
   valueReportForeground: '#eeeeee',
-  contextMenuBackground: '#111111',
+  contextMenuBackground: '#1d2128',
   contextMenuBorder: '#ffffff26',
   contextMenuForeground: '#eeeeee',
-  contextMenuActiveBackground: '#2e2e2e',
+  contextMenuActiveBackground: '#2e3440',
   contextMenuDisabledForeground: '#666666',
   flyoutLabelColor: '#cccccc',
   checkboxInactiveBackground: '#222222',
@@ -1037,7 +1037,7 @@ const blockColors = {
   buttonActiveBackground: '#222222',
   buttonForeground: '#cccccc',
   zoomIconFilter: 'invert(100%)',
-  gridColor: '#484848'
+  gridColor: '#2e3440'
 };
 
 

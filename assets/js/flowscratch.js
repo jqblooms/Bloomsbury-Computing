@@ -2410,34 +2410,31 @@
       // inflating nodes to ~87px/66px, which is what threw wire endpoints
       // off their anchor dots).
       '#fs-overlay,#fs-overlay *{box-sizing:border-box}',
-      // Force light mode regardless of TurboWarp's own dark theme setting.
-      // color-scheme is inherited, so without this, native <select>/<input>
-      // controls inside the overlay render with the OS's dark-mode chrome
-      // (dark background, light text) even though every element around
-      // them still has its own explicit light background here, making
-      // dropdown text unreadable. Belt-and-braces: also pin background/
-      // color directly on the controls themselves.
-      '#fs-overlay{color-scheme:light;user-select:none;-webkit-user-select:none}',
+      // The overlay is dark, on the Bloomsbury Computing palette, whatever
+      // TurboWarp's own theme is. color-scheme is inherited, so this also
+      // gives native <select>/<input> controls matching dark chrome; the
+      // controls' own background and colour are pinned too.
+      '#fs-overlay{color-scheme:dark;user-select:none;-webkit-user-select:none}',
       // Re-enable text selection only inside editable fields, so dragging a
       // block or panning the canvas never starts a highlight-selection of
       // the inspector/status text around it.
-      '#fs-overlay select,#fs-overlay input,#fs-overlay textarea{background:#fff;color:#18191b;user-select:auto;-webkit-user-select:auto}',
-      '#fs-overlay{position:fixed;left:0;top:92px;right:60%;bottom:0;z-index:45;display:flex;flex-direction:column;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#18191b;background:#e9e9eb;border-right:2px solid #151619;box-shadow:4px 0 20px rgba(0,0,0,.35)}',
+      '#fs-overlay select,#fs-overlay input,#fs-overlay textarea{background:#1d2128;color:#e8eaed;user-select:auto;-webkit-user-select:auto}',
+      '#fs-overlay{position:fixed;left:0;top:92px;right:60%;bottom:0;z-index:45;display:flex;flex-direction:column;font-family:Roboto,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;color:#e8eaed;background:#0f1115;border-right:2px solid #151619;box-shadow:4px 0 20px rgba(0,0,0,.35)}',
       '#fs-overlay.fs-suppressed{display:none}',
       '.blocklyDiv,.blocklyToolboxDiv,.blocklyFlyout,.blocklyWidgetDiv{display:none !important}',
-      '#fs-topbar{display:flex;align-items:center;gap:8px;padding:0 10px;height:42px;flex-shrink:0;background:#151619;color:#fff;border-bottom:1px solid #000}',
-      '#fs-topbar button{font:inherit;cursor:pointer;border:1px solid #3d3f45;background:#24262a;color:#fff;border-radius:7px;padding:5px 9px;font-size:12px}',
-      '#fs-topbar button:hover{background:#32343a}',
+      '#fs-topbar{display:flex;align-items:center;gap:8px;padding:0 10px;height:42px;flex-shrink:0;background:#171a20;color:#fff;border-bottom:1px solid #2b3039}',
+      '#fs-topbar button{font:inherit;cursor:pointer;border:1px solid #3b424e;background:#1d2128;color:#fff;border-radius:7px;padding:5px 9px;font-size:12px}',
+      '#fs-topbar button:hover{background:#252a33}',
       '#fs-topbar .fs-hint{font-size:11px;color:#aeb1b8}',
       '#fs-topbar .fs-spacer{flex:1}',
       '#fs-zoom-readout{min-width:38px;text-align:center;color:#c7c9ce;font-variant-numeric:tabular-nums;font-size:11px}',
       '#fs-body{flex:1;display:flex;min-height:0}',
-      '#fs-sidebar{width:150px;flex-shrink:0;background:#fff;border-right:1px solid #d8d9dd;display:flex;flex-direction:column;min-height:0}',
+      '#fs-sidebar{width:150px;flex-shrink:0;background:#171a20;border-right:1px solid #3b424e;display:flex;flex-direction:column;min-height:0}',
       // Sticky strip of coloured category chips, always visible above the
       // scrolling palette; clicking one jumps that category's <h2> into
       // view, the same "click a category to jump to it" behaviour
       // Scratch's own category bar gives you.
-      '#fs-cat-jump{display:flex;flex-wrap:wrap;gap:5px;padding:8px;border-bottom:1px solid #d8d9dd;flex-shrink:0}',
+      '#fs-cat-jump{display:flex;flex-wrap:wrap;gap:5px;padding:8px;border-bottom:1px solid #3b424e;flex-shrink:0}',
       '.fs-cat-chip{width:16px;height:16px;border-radius:5px;border:1px solid rgba(0,0,0,.15);background:var(--fs-cat-color);cursor:pointer;padding:0}',
       '.fs-cat-chip:hover{box-shadow:0 0 0 2px rgba(0,0,0,.12)}',
       '#fs-palette-scroll{flex:1;overflow:auto;padding:8px}',
@@ -2445,37 +2442,37 @@
       // (see CATEGORIES) so a returning Scratch user recognises them.
       '#fs-sidebar h2{font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 6px;padding:3px 6px;border-radius:5px;color:#fff;background:var(--fs-cat-color);cursor:pointer;scroll-margin-top:4px}',
       '#fs-sidebar h2:first-child{margin-top:0}',
-      '.fs-palette-item{display:flex;align-items:center;gap:6px;min-height:34px;padding:6px 7px;border:1px solid #d8d9dd;border-left:4px solid var(--fs-cat-color);border-radius:6px;background:#fff;cursor:grab;user-select:none;margin-bottom:6px;font-size:11px}',
-      '.fs-palette-item:hover{border-color:#9ea1aa;border-left-color:var(--fs-cat-color);box-shadow:0 3px 10px rgba(0,0,0,.08)}',
-      '.fs-new-var-btn{width:100%;margin-bottom:6px;border:1px solid #d8d9dd;background:#f6f6f7;border-radius:6px;padding:6px;font-size:11px;cursor:pointer}',
-      '.fs-new-var-btn:hover{background:#eceded}',
+      '.fs-palette-item{display:flex;align-items:center;gap:6px;min-height:34px;padding:6px 7px;border:1px solid #3b424e;border-left:4px solid var(--fs-cat-color);border-radius:6px;background:#1d2128;cursor:grab;user-select:none;margin-bottom:6px;font-size:11px}',
+      '.fs-palette-item:hover{border-color:#5f6673;border-left-color:var(--fs-cat-color);box-shadow:0 3px 10px rgba(0,0,0,.08)}',
+      '.fs-new-var-btn{width:100%;margin-bottom:6px;border:1px solid #3b424e;background:#1d2128;border-radius:6px;padding:6px;font-size:11px;cursor:pointer}',
+      '.fs-new-var-btn:hover{background:#252a33}',
       '.fs-var-row{display:flex;align-items:center;justify-content:space-between;gap:4px;padding:3px 2px;font-size:11px}',
       '.fs-var-check{display:flex;align-items:center;gap:5px;cursor:pointer;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.fs-var-del{border:none;background:none;color:#b43030;cursor:pointer;font-size:13px;line-height:1;padding:0 4px}',
+      '.fs-var-del{border:none;background:none;color:#f28b82;cursor:pointer;font-size:13px;line-height:1;padding:0 4px}',
       '.fs-slow-toggle{display:flex;align-items:center;gap:4px;font-size:12px;color:#c7c9ce;cursor:pointer;white-space:nowrap}',
       '#fsSlowSlider{width:80px}',
       '#fsSlowReadout{font-size:11px;color:#aeb1b8;min-width:44px}',
       '.fs-inline-num{width:36px;font-size:9px;padding:1px 2px}',
-      '.fs-inline-name{width:112px;font-size:10px;padding:2px 4px;border:1px solid #c8c9ce;border-radius:4px;text-align:center}',
-      '.fs-inline-text{width:112px;max-width:100%;font-size:10px;padding:2px 4px;border:1px solid #c8c9ce;border-radius:4px}',
-      '.fs-inline-reporter{font-size:10px;font-weight:600;color:#1479be;background:#eef5fb;border-radius:4px;padding:1px 5px;max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.fs-inline-label{font-size:9px;color:#686b73}',
-      '#fs-canvas-wrap{position:relative;overflow:hidden;flex:1;min-width:0;background:#ededee;touch-action:none;cursor:grab}',
+      '.fs-inline-name{width:112px;font-size:10px;padding:2px 4px;border:1px solid #3b424e;border-radius:4px;text-align:center}',
+      '.fs-inline-text{width:112px;max-width:100%;font-size:10px;padding:2px 4px;border:1px solid #3b424e;border-radius:4px}',
+      '.fs-inline-reporter{font-size:10px;font-weight:600;color:#8ab4f8;background:rgba(138,180,248,.14);border-radius:4px;padding:1px 5px;max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.fs-inline-label{font-size:9px;color:#9aa0a6}',
+      '#fs-canvas-wrap{position:relative;overflow:hidden;flex:1;min-width:0;background:#0f1115;touch-action:none;cursor:grab}',
       '#fs-canvas-wrap.panning{cursor:grabbing}#fs-canvas-wrap.connecting,#fs-canvas-wrap.fs-anchor-hover{cursor:crosshair}',
-      '#fs-world{position:absolute;left:0;top:0;width:2200px;height:1400px;transform-origin:0 0;background-color:#fafafa;background-image:radial-gradient(#c9cbd0 1px,transparent 1px);background-size:22px 22px;box-shadow:0 0 0 1px #d3d4d7}',
+      '#fs-world{position:absolute;left:0;top:0;width:2200px;height:1400px;transform-origin:0 0;background-color:#13161b;background-image:radial-gradient(#2e3440 1px,transparent 1px);background-size:22px 22px;box-shadow:0 0 0 1px #2b3039}',
       '#fs-wires{position:absolute;inset:0;width:2200px;height:1400px;overflow:visible;pointer-events:none}',
       '#fs-draft-wire{pointer-events:none}',
-      '.fs-wire{fill:none;stroke:#646873;stroke-width:2.2}.fs-wire.active{stroke:#22b36b;stroke-width:3.6}.fs-wire.selected{stroke:#4b66e8;stroke-width:3.2}',
+      '.fs-wire{fill:none;stroke:#9aa0a6;stroke-width:2.2}.fs-wire.active{stroke:#22b36b;stroke-width:3.6}.fs-wire.selected{stroke:#8ab4f8;stroke-width:3.2}',
       '.fs-wire-hit{fill:none;stroke:transparent;stroke-width:13;pointer-events:stroke;cursor:pointer}.fs-wire-hit:hover+.fs-wire{stroke:#d84c4c}',
-      '.fs-wire-label{font-size:10px;font-weight:750;fill:#454850;paint-order:stroke;stroke:#fafafa;stroke-width:5px;stroke-linejoin:round}',
+      '.fs-wire-label{font-size:10px;font-weight:750;fill:#c9cdd4;paint-order:stroke;stroke:#13161b;stroke-width:5px;stroke-linejoin:round}',
       '.fs-node{position:absolute;width:150px;min-height:66px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 4px 6px rgba(0,0,0,.12));user-select:none}',
       // Border colour matches the block's own category colour (set as
       // --fs-cat-color on .fs-node in nodeMarkup); width stays 2px like
       // before so this can't disturb the anchor-alignment fix, which
       // depends on the node's actual box-model dimensions staying exactly
       // what center() assumes.
-      '.fs-node-body{position:relative;width:100%;min-height:66px;padding:9px 12px;background:#fff;border:2px solid var(--fs-cat-color, #4d515a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;font-size:11px}',
-      '.fs-node.selected .fs-node-body{border-color:#4b66e8;box-shadow:0 0 0 3px rgba(75,102,232,.17)}',
+      '.fs-node-body{position:relative;width:100%;min-height:66px;padding:9px 12px;background:#1d2128;border:2px solid var(--fs-cat-color, #4d515a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;font-size:11px}',
+      '.fs-node.selected .fs-node-body{border-color:#8ab4f8;box-shadow:0 0 0 3px rgba(138,180,248,.25)}',
       // Same green as the active wire (.fs-wire.active above), so the
       // whole path - block and arrow together - reads as one highlighted
       // trail during a run/step walkthrough, not just the arrows between
@@ -2486,7 +2483,7 @@
       // loop's own per-step work - renderWires() already rebuilds the
       // whole wire SVG every step - and made every run feel sluggish
       // even with slow mode off and its delay at 0.
-      '.fs-node.active .fs-node-body{border-color:#22b36b;box-shadow:0 0 0 4px rgba(34,179,107,.25);background:#eafbf2}',
+      '.fs-node.active .fs-node-body{border-color:#22b36b;box-shadow:0 0 0 4px rgba(34,179,107,.25);background:rgba(129,201,149,.13)}',
       '.fs-node.oval .fs-node-body{border-radius:50%}',
       '.fs-node.subroutine .fs-node-body{border-style:solid;border-width:2px;padding-left:18px;padding-right:18px}',
       '.fs-node.subroutine .fs-node-body::before,.fs-node.subroutine .fs-node-body::after{content:"";position:absolute;top:7px;bottom:7px;width:2px;background:var(--fs-cat-color, #4d515a)}',
@@ -2503,28 +2500,28 @@
       // broke wire-anchor alignment before (see center()'s own comment).
       '.fs-node.process select,.fs-node.subroutine select{font-size:9px;padding:1px 2px;max-width:112px}',
       '.fs-node-title{font-size:11px;font-weight:750}',
-      '.fs-node-subtitle{font-size:10px;color:#686b73;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.fs-node-subtitle{font-size:10px;color:#9aa0a6;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
       // Single hover-following anchor dot (replaces the previous 8 fixed
       // compass-point dots): positioned in #fs-world's own coordinate
       // space (left/top in world pixels), so it automatically tracks the
       // canvas's pan/zoom without any extra transform math.
-      '.fs-anchor{position:absolute;width:12px;height:12px;border-radius:50%;background:#24bc70;border:2px solid #fff;box-shadow:0 0 0 1px #16864f;transform:translate(-50%,-50%);z-index:6;pointer-events:none;display:none}',
-      '#fs-toast{display:none;position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:30;max-width:90%;padding:8px 12px;border-radius:8px;color:#fff;background:#202226;font-size:12px;box-shadow:0 8px 22px rgba(0,0,0,.3)}',
+      '.fs-anchor{position:absolute;width:12px;height:12px;border-radius:50%;background:#24bc70;border:2px solid #171a20;box-shadow:0 0 0 1px #16864f;transform:translate(-50%,-50%);z-index:6;pointer-events:none;display:none}',
+      '#fs-toast{display:none;position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:30;max-width:90%;padding:8px 12px;border-radius:8px;color:#fff;background:#252a33;font-size:12px;box-shadow:0 8px 22px rgba(0,0,0,.3)}',
       '#fs-toast.show{display:block}#fs-toast.error{background:#ad3535}#fs-toast.ok{background:#168653}',
-      '#fs-status-bar{flex-shrink:0;display:flex;justify-content:space-between;padding:6px 10px;background:#fff;border-top:1px solid #d8d9dd;color:#686b73;font-size:11px}',
-      '#fs-answer-value{font-family:ui-monospace,monospace;color:#333}',
-      '#fs-inspector{width:170px;flex-shrink:0;background:#fff;border-left:1px solid #d8d9dd;padding:10px 9px;overflow:auto;font-size:11px}',
-      '#fs-inspector h2{font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;color:#666970}',
-      '.fs-empty{color:#686b73;font-size:11px}',
-      '.fs-field{display:grid;gap:4px;margin:8px 0}.fs-field label{font-size:10px;color:#686b73}.fs-field input{width:100%;border:1px solid #c8c9ce;border-radius:6px;padding:5px;background:#fff;font-size:11px}.fs-field select{width:100%;border:1px solid #c8c9ce;border-radius:6px;padding:5px;background:#fff;font-size:11px}',
-      '.fs-danger{width:100%;margin-top:8px;border:1px solid #e2b3b3;color:#b43030;background:#fff;border-radius:6px;padding:5px;cursor:pointer;font-size:11px}',
+      '#fs-status-bar{flex-shrink:0;display:flex;justify-content:space-between;padding:6px 10px;background:#171a20;border-top:1px solid #3b424e;color:#9aa0a6;font-size:11px}',
+      '#fs-answer-value{font-family:ui-monospace,monospace;color:#c9cdd4}',
+      '#fs-inspector{width:170px;flex-shrink:0;background:#171a20;border-left:1px solid #3b424e;padding:10px 9px;overflow:auto;font-size:11px}',
+      '#fs-inspector h2{font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;color:#9aa0a6}',
+      '.fs-empty{color:#9aa0a6;font-size:11px}',
+      '.fs-field{display:grid;gap:4px;margin:8px 0}.fs-field label{font-size:10px;color:#9aa0a6}.fs-field input{width:100%;border:1px solid #3b424e;border-radius:6px;padding:5px;background:#1d2128;font-size:11px}.fs-field select{width:100%;border:1px solid #3b424e;border-radius:6px;padding:5px;background:#1d2128;font-size:11px}',
+      '.fs-danger{width:100%;margin-top:8px;border:1px solid rgba(242,139,130,.55);color:#f28b82;background:#1d2128;border-radius:6px;padding:5px;cursor:pointer;font-size:11px}',
       '#fs-ask-wrap{position:fixed;bottom:14px;left:14px;width:280px;z-index:10010;pointer-events:none;display:none}',
       '#fs-ask-wrap.active{display:block;pointer-events:auto}',
-      '#fs-ask-box{background:#fff;border:2px solid #4c97ff;border-radius:8px;padding:9px 11px;box-shadow:0 4px 20px rgba(0,0,0,.3)}',
-      '#fs-ask-label{font-size:12px;color:#333;margin-bottom:6px}',
+      '#fs-ask-box{background:#171a20;border:2px solid #8ab4f8;border-radius:8px;padding:9px 11px;box-shadow:0 4px 20px rgba(0,0,0,.3)}',
+      '#fs-ask-label{font-size:12px;color:#c9cdd4;margin-bottom:6px}',
       '#fs-ask-row{display:flex;gap:6px}',
-      '#fs-ask-row input{min-width:0;flex:1;border:1px solid #bbb;border-radius:6px;padding:6px}',
-      '#fs-ask-row button{border:0;border-radius:6px;background:#4b66e8;color:#fff;padding:6px 10px;cursor:pointer}',
+      '#fs-ask-row input{min-width:0;flex:1;border:1px solid #3b424e;border-radius:6px;padding:6px}',
+      '#fs-ask-row button{border:0;border-radius:6px;background:#1a73e8;color:#fff;padding:6px 10px;cursor:pointer}',
       // Wraps a real nodeMarkup() render (see bindPalette) rather than a
       // plain text label, so what a student sees held under the cursor
       // while dragging from the palette is the actual block - its shape
@@ -2538,14 +2535,14 @@
       // open the diagram while an Ask block is waiting for input).
       '#fs-diagram-modal{display:none;position:fixed;inset:0;z-index:10020;background:rgba(15,23,42,.55);align-items:center;justify-content:center;padding:24px}',
       '#fs-diagram-modal.show{display:flex}',
-      '#fs-diagram-card{background:#fff;border-radius:12px;max-width:min(900px,100%);max-height:100%;width:100%;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}',
-      '#fs-diagram-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e2e3e7}',
+      '#fs-diagram-card{background:#171a20;border-radius:12px;max-width:min(900px,100%);max-height:100%;width:100%;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}',
+      '#fs-diagram-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #2b3039}',
       '#fs-diagram-head h2{font-size:14px;margin:0}',
-      '#fsDiagramCloseBtn{border:none;background:none;font-size:20px;line-height:1;cursor:pointer;color:#686b73;padding:2px 6px}',
-      '#fsDiagramCloseBtn:hover{color:#18191b}',
+      '#fsDiagramCloseBtn{border:none;background:none;font-size:20px;line-height:1;cursor:pointer;color:#9aa0a6;padding:2px 6px}',
+      '#fsDiagramCloseBtn:hover{color:#e8eaed}',
       '#fs-diagram-body{padding:20px;overflow:auto;text-align:center}',
       '#fs-diagram-body svg{max-width:100%;height:auto}',
-      '.fs-diagram-loading{color:#686b73;font-size:13px;margin:20px 0}',
+      '.fs-diagram-loading{color:#9aa0a6;font-size:13px;margin:20px 0}',
 
       // ── Tutorials (PyScratch-style: a docked bar, never a blocking modal
       // while a tutorial is actually in progress - see buildTutorialUI) ──
@@ -2559,61 +2556,61 @@
       // thing that scrolls; #fs-tut-foot sits outside it, pinned to the bottom of a
       // fixed-max-height bar, always visible regardless of how long the step text or
       // checklist gets.
-      '#fs-tutorial-bar{display:none;flex-direction:column;background:#eefaf2;border-bottom:3px solid #6cc499;flex-shrink:0;max-height:min(46vh,320px)}',
+      '#fs-tutorial-bar{display:none;flex-direction:column;background:rgba(129,201,149,.08);border-bottom:3px solid rgba(129,201,149,.55);flex-shrink:0;max-height:min(46vh,320px)}',
       '#fs-overlay.fs-tutorial-active #fs-tutorial-bar{display:flex}',
       '#fs-tut-scroll{overflow:auto;display:flex;flex-direction:column;gap:6px;padding:10px 12px}',
       '#fs-tut-head{display:flex;align-items:center;gap:8px}',
       '#fs-tut-titlewrap{flex:1;display:flex;align-items:baseline;gap:6px;min-width:0}',
-      '#fs-tut-name{font-weight:800;color:#1f4d38;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '#fs-tut-stepcount{font-size:10px;font-weight:700;color:#4d8a6c;flex-shrink:0}',
-      '#fs-tut-exit{background:transparent;border:0;color:#4d6b5b;font-size:16px;line-height:1;cursor:pointer;padding:2px 4px;flex-shrink:0}',
-      '#fs-tut-exit:hover{color:#1f4d38}',
+      '#fs-tut-name{font-weight:800;color:#e8eaed;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '#fs-tut-stepcount{font-size:10px;font-weight:700;color:#9aa0a6;flex-shrink:0}',
+      '#fs-tut-exit{background:transparent;border:0;color:#9aa0a6;font-size:16px;line-height:1;cursor:pointer;padding:2px 4px;flex-shrink:0}',
+      '#fs-tut-exit:hover{color:#e8eaed}',
       '#fs-tut-dots{display:flex;gap:5px}',
-      '.fs-tut-dot{width:7px;height:7px;border-radius:50%;background:#cfe9da}',
+      '.fs-tut-dot{width:7px;height:7px;border-radius:50%;background:#2e3440}',
       '.fs-tut-dot.done{background:#4fbf87}',
       '.fs-tut-dot.cur{background:#1f8a5a;transform:scale(1.3)}',
-      '#fs-tut-title{font-weight:800;color:#1f4d38;font-size:12.5px}',
-      '#fs-tut-text{font-size:11.5px;line-height:1.4;color:#33241a}',
-      '#fs-tut-text code{background:#dff2e6;border-radius:3px;padding:1px 4px;font-weight:700;color:#1f6e4f}',
+      '#fs-tut-title{font-weight:800;color:#e8eaed;font-size:12.5px}',
+      '#fs-tut-text{font-size:11.5px;line-height:1.4;color:#c9cdd4}',
+      '#fs-tut-text code{background:rgba(129,201,149,.16);border-radius:3px;padding:1px 4px;font-weight:700;color:#81c995}',
       '#fs-tut-checklist{font-size:11px;font-family:inherit}',
-      '.fs-tut-check{display:flex;align-items:center;gap:6px;padding:2px 0;color:#7a8f83}',
-      '.fs-tut-check.ok{color:#1f8a5a;font-weight:700}',
-      '.fs-tut-check-icon{width:11px;height:11px;border-radius:50%;border:2px solid #b9d6c4;flex-shrink:0;display:inline-block}',
+      '.fs-tut-check{display:flex;align-items:center;gap:6px;padding:2px 0;color:#9aa0a6}',
+      '.fs-tut-check.ok{color:#81c995;font-weight:700}',
+      '.fs-tut-check-icon{width:11px;height:11px;border-radius:50%;border:2px solid #3b424e;flex-shrink:0;display:inline-block}',
       '.fs-tut-check.ok .fs-tut-check-icon{background:#2e8b57;border-color:#2e8b57}',
-      '#fs-tut-foot{display:flex;gap:8px;padding:8px 12px;flex-shrink:0;border-top:1px solid #bfe6cf;background:#e3f5e9}',
+      '#fs-tut-foot{display:flex;gap:8px;padding:8px 12px;flex-shrink:0;border-top:1px solid rgba(129,201,149,.35);background:#1d2128}',
       '#fs-tut-back,#fs-tut-next{border:0;border-radius:6px;padding:6px 10px;font-weight:800;cursor:pointer;font:inherit;font-size:11.5px}',
-      '#fs-tut-back{background:#dff2e6;color:#1f6e4f}',
+      '#fs-tut-back{background:rgba(129,201,149,.16);color:#81c995}',
       '#fs-tut-back:disabled{opacity:.4;cursor:not-allowed}',
       '#fs-tut-next{background:#2e8b57;color:#fff;flex:1}',
-      '#fs-tut-next:disabled{opacity:.45;cursor:not-allowed;background:#9cc9ac}',
+      '#fs-tut-next:disabled{opacity:.45;cursor:not-allowed;background:#2e3440}',
       '#fs-tut-picker-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}',
       '#fs-tut-picker-modal.show{display:flex}',
-      '#fs-tut-picker-card{background:#fff;border-radius:12px;max-width:420px;width:92%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.35)}',
-      '#fs-tut-picker-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #e3e3e6}',
-      '#fs-tut-picker-head h2{margin:0;font-size:15px;color:#1f4d38}',
-      '#fs-tut-picker-close{background:none;border:none;font-size:18px;line-height:1;cursor:pointer;color:#4d6b5b}',
+      '#fs-tut-picker-card{background:#171a20;border-radius:12px;max-width:420px;width:92%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.35)}',
+      '#fs-tut-picker-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #2b3039}',
+      '#fs-tut-picker-head h2{margin:0;font-size:15px;color:#e8eaed}',
+      '#fs-tut-picker-close{background:none;border:none;font-size:18px;line-height:1;cursor:pointer;color:#9aa0a6}',
       '#fs-tut-picker-list{padding:12px 16px;overflow:auto;display:flex;flex-direction:column;gap:8px}',
-      '.fs-tut-card{display:flex;align-items:center;gap:10px;width:100%;padding:10px;border-radius:9px;border:1px solid #d9e6dd;background:#fbfff9;cursor:pointer;text-align:left;font:inherit}',
-      '.fs-tut-card:hover{background:#eefaf2}',
+      '.fs-tut-card{display:flex;align-items:center;gap:10px;width:100%;padding:10px;border-radius:9px;border:1px solid #3b424e;background:#1d2128;cursor:pointer;text-align:left;font:inherit}',
+      '.fs-tut-card:hover{background:rgba(129,201,149,.08)}',
       '.fs-tut-card-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0}',
       '.fs-tut-card-body{flex:1;min-width:0}',
-      '.fs-tut-card-title{display:block;font-weight:800;color:#1f4d38;font-size:13px}',
-      '.fs-tut-card-desc{display:block;font-size:11px;color:#4d6b5b;line-height:1.35}',
-      '.fs-tut-card-status{font-size:10px;font-weight:800;color:#2e8b57;white-space:nowrap;flex-shrink:0}',
-      '.fs-tut-card-status.prog{color:#a3711f}',
+      '.fs-tut-card-title{display:block;font-weight:800;color:#e8eaed;font-size:13px}',
+      '.fs-tut-card-desc{display:block;font-size:11px;color:#9aa0a6;line-height:1.35}',
+      '.fs-tut-card-status{font-size:10px;font-weight:800;color:#81c995;white-space:nowrap;flex-shrink:0}',
+      '.fs-tut-card-status.prog{color:#fdd663}',
       '.fs-tut-card-wrap{position:relative}',
-      '.fs-tut-card-reset{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;border:1px solid #d9e6dd;background:#fff;color:#4d6b5b;font-size:12px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}',
-      '.fs-tut-card-reset:hover{background:#f2fbf5;color:#1f4d38}',
+      '.fs-tut-card-reset{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;border:1px solid #3b424e;background:#1d2128;color:#9aa0a6;font-size:12px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}',
+      '.fs-tut-card-reset:hover{background:#252a33;color:#e8eaed}',
       // Category grouping in the picker - a single open <details> today,
       // matching pyscratch.js's own buildTutorialGroupsHTML markup shape
       // so a second/third tutorial category needs no new CSS to slot in.
-      '.fs-tut-cat{border:1px solid #e3e3e6;border-radius:9px;overflow:hidden}',
+      '.fs-tut-cat{border:1px solid #2b3039;border-radius:9px;overflow:hidden}',
       '.fs-tut-cat+.fs-tut-cat{margin-top:2px}',
-      '.fs-tut-cat-summary{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f5f8f6;font-weight:800;font-size:12px;color:#1f4d38;cursor:pointer;list-style:none}',
+      '.fs-tut-cat-summary{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#1d2128;font-weight:800;font-size:12px;color:#e8eaed;cursor:pointer;list-style:none}',
       '.fs-tut-cat-summary::-webkit-details-marker{display:none}',
       '.fs-tut-cat-chevron{transition:transform .12s;display:inline-block}',
       '.fs-tut-cat[open] .fs-tut-cat-chevron{transform:rotate(90deg)}',
-      '.fs-tut-cat-count{margin-left:auto;font-size:10px;color:#7a8f83;background:#e3f5e9;border-radius:99px;padding:1px 7px}',
+      '.fs-tut-cat-count{margin-left:auto;font-size:10px;color:#9aa0a6;background:#1d2128;border-radius:99px;padding:1px 7px}',
       '.fs-tut-cat-list{display:flex;flex-direction:column;gap:8px;padding:10px}',
 
       // ── Highlighting a real page element (see showFsHighlight) - same
@@ -2628,18 +2625,18 @@
       // same role as pyscratch.js's #ps-tut-dialog, styled to match.
       '#fs-tut-dialog{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:center;justify-content:center}',
       '#fs-tut-dialog.show{display:flex}',
-      '#fs-td-card{background:#fff;border-radius:14px;max-width:360px;width:90%;padding:22px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}',
+      '#fs-td-card{background:#171a20;border-radius:14px;max-width:360px;width:90%;padding:22px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}',
       '#fs-td-icon{font-size:34px;line-height:1;margin-bottom:8px}',
-      '#fs-td-title{font-weight:800;font-size:15px;color:#1f4d38;margin-bottom:8px}',
-      '#fs-td-body{font-size:12.5px;color:#41463f;line-height:1.5;margin-bottom:16px}',
+      '#fs-td-title{font-weight:800;font-size:15px;color:#e8eaed;margin-bottom:8px}',
+      '#fs-td-body{font-size:12.5px;color:#c9cdd4;line-height:1.5;margin-bottom:16px}',
       '#fs-td-btns{display:flex;flex-direction:column;gap:8px}',
       '.fs-td-btn{border:0;border-radius:8px;padding:10px 14px;font:inherit;font-weight:800;font-size:12.5px;cursor:pointer}',
       '.fs-td-primary{background:#2e8b57;color:#fff}',
       '.fs-td-primary:hover{background:#257048}',
-      '.fs-td-secondary{background:#eefaf2;color:#1f4d38}',
-      '.fs-td-secondary:hover{background:#dff2e6}',
-      '.fs-td-danger{background:#fdecec;color:#a3241f}',
-      '.fs-td-danger:hover{background:#fbd9d9}'
+      '.fs-td-secondary{background:rgba(129,201,149,.08);color:#e8eaed}',
+      '.fs-td-secondary:hover{background:rgba(129,201,149,.16)}',
+      '.fs-td-danger{background:rgba(242,139,130,.13);color:#f28b82}',
+      '.fs-td-danger:hover{background:rgba(242,139,130,.22)}'
     ].join('\n');
     document.head.appendChild(style);
   }

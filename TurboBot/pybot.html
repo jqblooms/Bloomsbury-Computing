@@ -879,7 +879,7 @@ function init() {
     if (embedLevel !== null) {
         loadLevel(parseInt(embedLevel, 10));
     } else if (hideMenu) {
-        // Embedded with hideMenu=true but no level — wait silently for LOAD_CUSTOM_LEVEL
+        // Embedded with hideMenu=true but no level - wait silently for LOAD_CUSTOM_LEVEL
         // Don't show the menu; the parent will inject a level via postMessage
         document.getElementById('menu-modal').classList.add('hidden');
     } else {
@@ -1051,7 +1051,7 @@ function loadExampleMode(levelString, code) {
     document.getElementById('example-code-display').style.display = 'block';
     document.getElementById('example-mode-badge').style.display = 'inline-block';
 
-    // Hide play/stop controls — example runs itself
+    // Hide play/stop controls - example runs itself
     document.getElementById('btn-play').style.display = 'none';
     document.getElementById('btn-stop').style.display = 'none';
 
@@ -1103,11 +1103,11 @@ function highlightPython(code) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 
-    // Apply syntax highlighting spans (order matters — most specific first)
+    // Apply syntax highlighting spans (order matters - most specific first)
     escaped = escaped
         // Comments
         .replace(/(#[^\n]*)/g, '<span class="cmt">$1</span>')
-        // Keywords (only outside comments — simplified, good enough for lesson code)
+        // Keywords (only outside comments - simplified, good enough for lesson code)
         .replace(/\b(for|in|range|while|if|elif|else|def|return|and|or|not|True|False)\b/g,
                  '<span class="kw">$1</span>')
         // Built-in functions
@@ -1454,7 +1454,7 @@ function animate() {
                     handleWin();
                 }
             } else if (isExampleMode) {
-                // Ran out of commands but didn't win — still loop
+                // Ran out of commands but didn't win - still loop
                 setTimeout(() => examplePlay(), 1200);
             }
         }

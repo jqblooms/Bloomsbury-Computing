@@ -1,16 +1,16 @@
-// Exam Circuit — proof-step generators.
+// Exam Circuit - proof-step generators.
 //
 // Each generator produces an unlimited stream of fresh, parameterised instances of one real
 // exam skill (per GDD.md Section 4, Open Question 3), plus a checker that computes the correct
-// answer algorithmically from those same parameters — never from a fixed answer list.
+// answer algorithmically from those same parameters - never from a fixed answer list.
 //
 // A generator entry is: { id, regionId, label, componentType, generate(rng), check(params, raw) }
-//   - generate(rng) returns { prompt, params, meta } — params is what gets stored for
+//   - generate(rng) returns { prompt, params, meta } - params is what gets stored for
 //     reporting (GDD Section 4 Open Question 5's GeneratorSeed/Params column) and re-fed to check().
-//   - check(params, raw) returns { correct, expected } — expected is only used for the
+//   - check(params, raw) returns { correct, expected } - expected is only used for the
 //     reporting sheet, never shown to the student on a wrong attempt (per the
 //     "don't just give them the answer" rule).
-//   - componentType is one of 'resistor' | 'ic' | 'microcontroller' (GDD Section 3.6) —
+//   - componentType is one of 'resistor' | 'ic' | 'microcontroller' (GDD Section 3.6) - 
 //     v1 only ever produces 'resistor' (scaffolded numeric) and 'ic' (short structured).
 
 (function (root) {
@@ -55,7 +55,7 @@
   }
 
   // Real papers avoid degenerate all-zero/all-one bytes for a first conversion question, so the
-  // generator's bounds keep at least one 0 and one 1 bit — this is the "realistic bounds taken
+  // generator's bounds keep at least one 0 and one 1 bit - this is the "realistic bounds taken
   // from the real papers" step from GDD.md Section 4, Open Question 3.
   function randomByteAvoidingExtremes(rng) {
     let n;

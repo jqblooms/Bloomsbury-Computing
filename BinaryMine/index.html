@@ -6,8 +6,8 @@
 <title>Binary Mine</title>
 <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
-  /* The page around the game is on the site's dark theme
-     (shared/bc-theme.css); the game keeps its own block-world look. */
+  /* On the site's dark theme (shared/bc-theme.css). The ore colours are the
+     game's art; everything else is the site's look (see the module). */
   :root {
     --panel: var(--surface);
     --border: var(--line);
@@ -70,7 +70,8 @@
 
 <script>window.BC_CLOUD_SAVE = {"app":"binarymine","keys":["pylearn_mining_v1"]};</script>
 <script src="../shared/cloud-save.js?v=20260926"></script>
-<script src="binary-mining-module.js"></script>
+<script src="../shared/bc-support.js?v=20260927"></script>
+<script>document.write('<script src="binary-mining-module.js?v=' + encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "") + '"><\/script>');</script>
 <script>
   if (window.initBinaryMiningGame) {
     initBinaryMiningGame('bmg-root');

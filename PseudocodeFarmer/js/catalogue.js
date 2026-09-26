@@ -251,28 +251,28 @@ var FARM_TYPES = {
   crops: {
     id: 'crops', title: 'Crop Farm', kind: 'crop', items: VEGGIES, itemNames: VEGGIE_NAMES,
     unitLabel: 'seed', unitLabelPlural: 'seeds', nameSuffix: ' Seeds', badgeColor: '#4c8bf5',
-    shopTitle: '🛒 Seed Shop', unlockNoun: 'vegetables', growNoun: 'crops', growVerb: 'grow', kindNounSingular: 'vegetable',
+    shopTitle: 'Seed Shop', unlockNoun: 'vegetables', growNoun: 'crops', growVerb: 'grow', kindNounSingular: 'vegetable',
     plantVerb: 'Plant', placedNoun: 'crop', onTileVerb: 'growing',
     desc: 'Grow and sell vegetables, tier by tier.'
   },
   solar: {
     id: 'solar', title: 'Solar Farm', kind: 'battery', items: BATTERIES, itemNames: BATTERY_NAMES,
     unitLabel: 'battery', unitLabelPlural: 'batteries', nameSuffix: '', badgeColor: '#e0a53f',
-    shopTitle: '🛒 Battery Shop', unlockNoun: 'batteries', growNoun: 'batteries', growVerb: 'charge', kindNounSingular: 'battery',
+    shopTitle: 'Battery Shop', unlockNoun: 'batteries', growNoun: 'batteries', growVerb: 'charge', kindNounSingular: 'battery',
     plantVerb: 'Place', placedNoun: 'battery', onTileVerb: 'charging',
     desc: 'Charge batteries instead of growing crops. The longer you leave one past full charge, the more it earns - up to a point. Forget about it too long and it starts losing value, so timing the sell matters here in a way it never did on the crop farm.'
   },
   aquarium: {
     id: 'aquarium', title: 'Aquarium', kind: 'fish', items: FISH, itemNames: FISH_NAMES,
     unitLabel: 'fish', unitLabelPlural: 'fish', nameSuffix: '', badgeColor: '#1e8fa8',
-    shopTitle: '🛒 Fish Shop', unlockNoun: 'fish', growNoun: 'fish', growVerb: 'grow', kindNounSingular: 'fish',
+    shopTitle: 'Fish Shop', unlockNoun: 'fish', growNoun: 'fish', growVerb: 'grow', kindNounSingular: 'fish',
     plantVerb: 'Place', placedNoun: 'fish', onTileVerb: 'swimming',
     desc: 'Raise fish in watery tiles instead of growing crops. A fish is never "wasted value" for waiting - it just keeps growing worth, forever, though more and more slowly the longer you leave it. There is no downside to patience here, unlike the Solar Farm.'
   },
   rocket: {
     id: 'rocket', title: 'Rocket Yard', kind: 'fuel', items: FUEL, itemNames: FUEL_NAMES,
     unitLabel: 'canister', unitLabelPlural: 'canisters', nameSuffix: '', badgeColor: '#6b4fa0',
-    shopTitle: '🛒 Fuel Depot', unlockNoun: 'fuel types', growNoun: 'fuel', growVerb: 'mine', kindNounSingular: 'type of fuel',
+    shopTitle: 'Fuel Depot', unlockNoun: 'fuel types', growNoun: 'fuel', growVerb: 'mine', kindNounSingular: 'type of fuel',
     plantVerb: 'Place', placedNoun: 'canister', onTileVerb: 'mining',
     desc: 'Mine and sell fuel instead of growing crops - then spend the coins building a real rocket. Once every part is bought and the tank is full, launch it: the flight itself takes real hours, counting down whether you\'re watching or not.'
   }

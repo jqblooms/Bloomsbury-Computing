@@ -117,8 +117,9 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 var scene = new THREE.Scene();
-scene.background = new THREE.Color(0x8ecae6);
-scene.fog = new THREE.Fog(0x8ecae6, 14, 30);
+// The site background, so the lit farm sits on the dark page.
+scene.background = new THREE.Color(0x0f1115);
+scene.fog = new THREE.Fog(0x0f1115, 14, 30);
 
 var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
 
@@ -257,7 +258,7 @@ refreshEdgeTiles();
 // void. Sized for the maximum expansion so it never needs to grow later.
 var base = new THREE.Mesh(
   new THREE.BoxGeometry((GRID_SIZE + MAX_EXPANSION * 2) + 0.4, 0.18, (GRID_SIZE + MAX_EXPANSION * 2) + 0.4),
-  new THREE.MeshStandardMaterial({ color: 0x6b4a2b, roughness: 1 })
+  new THREE.MeshStandardMaterial({ color: 0x2e2620, roughness: 1 })
 );
 base.position.y = -0.3;
 base.receiveShadow = true;
@@ -508,7 +509,7 @@ canvas.addEventListener('pointermove', function (e) {
   if (pointer.down) return;
   var hitData = raycastTileMesh(e.clientX, e.clientY);
   if (hitData && hitData.isEdge) {
-    canvasHintEl.textContent = '🪙 Click to buy this tile (' + nextTileCost() + ' coins)';
+    canvasHintEl.textContent = 'Click to buy this tile (' + nextTileCost() + ' coins)';
   } else {
     canvasHintEl.textContent = 'Drag or WASD / arrows to move · Right-drag or Q/E/R/F to rotate · Scroll to zoom · Click a tile';
   }
@@ -1007,7 +1008,7 @@ function flushMachineConsole(now, force) {
 function setRunningUI(running) {
   isRunning = running;
   runBtn.disabled = running;
-  runBtn.textContent = running ? '⏳ Running...' : '▶ Run';
+  runBtn.textContent = running ? 'Running...' : 'Run';
 }
 
 runBtn.addEventListener('click', function () {
@@ -1497,8 +1498,8 @@ function startEditingMachine(machine) {
   tileInfoEl.innerHTML = '<b>Editing Machine #' + machine.id + ' code</b>' +
     '<textarea id="machine-code-edit" spellcheck="false" autocomplete="off"></textarea>' +
     '<div class="machine-actions">' +
-      '<button type="button" class="machine-action-btn" id="machine-save-btn" style="background:#4c9a4a;color:#fff">Save code</button>' +
-      '<button type="button" class="machine-action-btn" id="machine-cancel-btn" style="background:#8a5a34;color:#fff">Cancel</button>' +
+      '<button type="button" class="machine-action-btn is-primary" id="machine-save-btn">Save code</button>' +
+      '<button type="button" class="machine-action-btn" id="machine-cancel-btn">Cancel</button>' +
     '</div>';
   document.getElementById('machine-code-edit').value = machine.code;
   document.getElementById('machine-save-btn').addEventListener('click', function () { saveMachineCode(machine); });
@@ -1512,7 +1513,7 @@ function saveMachineCode(machine) {
     compiledProgram = compile(newCode);
   } catch (e) {
     var ta = document.getElementById('machine-code-edit');
-    if (ta) ta.style.borderColor = '#d9534f';
+    if (ta) ta.classList.add('has-error');
     logConsole('Cannot save machine code: ' + e.message, true);
     return;
   }
@@ -2150,7 +2151,7 @@ function updateRocketUI() {
     arrivedEl.classList.add('shown');
     arrivedEl.innerHTML = '<span class="arrived-anim">🚀</span>' +
       '<div class="arrived-title">You reached space!</div>' +
-      '<div style="font-size:.76rem;color:#b6a6de">Every part built, every hour of the flight real - your rocket made it.</div>' +
+      '<div class="rocket-note">Every part built, every hour of the flight real - your rocket made it.</div>' +
       '<button type="button" id="rocket-reset-btn">Build Another Rocket</button>';
     document.getElementById('rocket-reset-btn').addEventListener('click', resetRocket);
     return;
@@ -2202,8 +2203,7 @@ function updateRocketUI() {
   if (!ready) {
     var buyBtn = document.createElement('button');
     buyBtn.type = 'button';
-    buyBtn.className = 'rocket-action-btn';
-    buyBtn.style.background = '#4a3874';
+    buyBtn.className = 'rocket-action-btn is-secondary';
     buyBtn.textContent = 'Buy ' + ROCKET_PARTS[rocketPartsOwned].name + ' (' + ROCKET_PARTS[rocketPartsOwned].cost.toLocaleString() + 'c)';
     buyBtn.disabled = money < ROCKET_PARTS[rocketPartsOwned].cost;
     buyBtn.addEventListener('click', function () {
@@ -2220,18 +2220,18 @@ var resetArmTimer = null;
 resetBtn.addEventListener('click', function () {
   if (!resetArmed) {
     resetArmed = true;
-    resetBtn.textContent = '⚠️ Click again to confirm';
+    resetBtn.textContent = 'Click again to confirm';
     resetBtn.classList.add('armed');
     clearTimeout(resetArmTimer);
     resetArmTimer = setTimeout(function () {
       resetArmed = false;
-      resetBtn.textContent = '🔁 Reset Game';
+      resetBtn.textContent = 'Reset Game';
       resetBtn.classList.remove('armed');
     }, 3000);
   } else {
     clearTimeout(resetArmTimer);
     resetArmed = false;
-    resetBtn.textContent = '🔁 Reset Game';
+    resetBtn.textContent = 'Reset Game';
     resetBtn.classList.remove('armed');
     resetGame();
   }
@@ -2264,7 +2264,7 @@ function updateHUD() {
     var unlocked = isUnlocked(name);
     row.classList.toggle('locked', !unlocked);
     if (!unlocked) {
-      row.querySelector('.locked-msg').textContent = '🔒 ' + unlockProgressMessage(name);
+      row.querySelector('.locked-msg').textContent = unlockProgressMessage(name);
       row.querySelector('.buy-btn').disabled = true;
       return;
     }
@@ -2427,13 +2427,13 @@ function updateMysteryRow() {
     var lastItem = activeItems()[lastName];
     var target = lastItem.unlockEarned * SELL_FARM_EARN_MULTIPLE;
     var pct = Math.max(1, Math.min(100, Math.floor((farmEarned / target) * 100)));
-    msgEl.textContent = '🔒 ' + pct + '% revealed. Keep earning on this farm to unlock it.';
+    msgEl.textContent = pct + '% revealed. Keep earning on this farm to unlock it.';
     return;
   }
   nameEl.textContent = mysteryArmed ? 'Click again to confirm' : 'Sell the Farm!';
   btnEl.disabled = false;
   btnEl.textContent = mysteryArmed ? 'Confirm' : 'Buy';
-  msgEl.textContent = '🎉 Unlocked! This clears the farm and starts a brand-new kind of farm from scratch - 40 coins, tier 1, a whole new mechanic.';
+  msgEl.textContent = 'Unlocked! This clears the farm and starts a brand-new kind of farm from scratch - 40 coins, tier 1, a whole new mechanic.';
 }
 buildShop();
 var missionParam = new URLSearchParams(window.location.search).get('lessonMission');
@@ -2574,17 +2574,17 @@ function updateTileInfoPanel() {
       var idx = levelConfig.level - 1;
       if (idx < MACHINE_LEVELS.length - 1) {
         var nextLevel = MACHINE_LEVELS[idx + 1];
-        upgradeHtml = '<button type="button" class="machine-action-btn" id="machine-upgrade-btn" style="background:#6ea8fe;color:#04214f">Upgrade to Level ' + nextLevel.level + ' (' + nextLevel.price + 'c)</button>';
+        upgradeHtml = '<button type="button" class="machine-action-btn is-primary" id="machine-upgrade-btn">Upgrade to Level ' + nextLevel.level + ' (' + nextLevel.price + 'c)</button>';
       }
       tileInfoEl.className = 'show';
       tileInfoEl.innerHTML = '<b>Machine #' + selected.id + ' · Level ' + levelConfig.level + '</b> (pink cursor) &middot; ' +
         machineRateLabel(selected) + ' &middot; cursor at (' + selected.cursor.x + ', ' + selected.cursor.z + ')' +
-        '<pre style="white-space:pre-wrap;margin:6px 0 0;font-size:.7rem;background:#12190f;color:#b9e6b0;padding:6px;border-radius:6px;max-height:80px;overflow:auto">' +
-        (selected.code.trim() ? escapeHtmlLocal(selected.code) : '<span style="color:#6f8f68">(no code yet - press Edit code)</span>') + '</pre>' +
+        '<pre class="machine-code-preview">' +
+        (selected.code.trim() ? escapeHtmlLocal(selected.code) : '<span class="empty">(no code yet - press Edit code)</span>') + '</pre>' +
         '<div class="machine-actions">' +
-          '<button type="button" class="machine-action-btn" id="machine-edit-btn" style="background:#6ea8fe;color:#04214f">Edit code</button>' +
+          '<button type="button" class="machine-action-btn is-primary" id="machine-edit-btn">Edit code</button>' +
           upgradeHtml +
-          '<button type="button" class="machine-action-btn" id="machine-sell-btn" style="background:#d9534f;color:#fff">Sell for ' + refund + 'c</button>' +
+          '<button type="button" class="machine-action-btn is-danger" id="machine-sell-btn">Sell for ' + refund + 'c</button>' +
         '</div>';
       tileInfoEl.querySelector('#machine-edit-btn').addEventListener('click', function () { startEditingMachine(selected); });
       var upBtn = tileInfoEl.querySelector('#machine-upgrade-btn');
@@ -2603,17 +2603,17 @@ function updateTileInfoPanel() {
     var valueHint = '';
     var phase = sellValuePhase(tile.plant);
     if (phase === 'decaying') {
-      valueHint = '<br><span style="font-size:.68rem;color:#a3271f;font-weight:700">This has been sitting too long and lost value - sell it now.</span>';
+      valueHint = '<br><span class="value-hint bad">This has been sitting too long and lost value - sell it now.</span>';
     } else if (phase === 'peak') {
-      valueHint = '<br><span style="font-size:.68rem;color:#8a6416;font-weight:700">At its best value right now - sell before it starts losing value.</span>';
+      valueHint = '<br><span class="value-hint warn">At its best value right now - sell before it starts losing value.</span>';
     } else if (phase === 'climbing' && BATTERIES[tile.plant.type]) {
-      valueHint = '<br><span style="font-size:.68rem;color:#1f6e4f">Still climbing towards its best value - wait a little longer for more, or sell now.</span>';
+      valueHint = '<br><span class="value-hint good">Still climbing towards its best value - wait a little longer for more, or sell now.</span>';
     } else if (phase === 'climbing' && FISH[tile.plant.type]) {
-      valueHint = '<br><span style="font-size:.68rem;color:#1f6e4f">Its value only ever grows the longer it stays here - no rush to sell.</span>';
+      valueHint = '<br><span class="value-hint good">Its value only ever grows the longer it stays here - no rush to sell.</span>';
     }
     tileInfoEl.innerHTML = 'A fully grown <b>' + tile.plant.type + '</b> is here!' +
       '<br><button type="button" class="sell-btn">Sell for ' + liveValue.toLocaleString() + ' coins</button>' +
-      '<br><span style="font-size:.68rem;color:#7a6650">Tip: CALL Sell() pays ' + Math.round(liveValue * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>' +
+      '<br><span class="value-hint muted">Tip: CALL Sell() pays ' + Math.round(liveValue * CODE_SELL_BONUS).toLocaleString() + ' coins.</span>' +
       valueHint;
     tileInfoEl.querySelector('.sell-btn').addEventListener('click', function () {
       var result = sellAt(playerCursor);
@@ -3025,13 +3025,13 @@ function updateTutorialNextButton(reqsOk) {
   if (!step || !nextBtn) return;
   if (!step.action) {
     nextBtn.disabled = !reqsOk;
-    nextBtn.textContent = (activeTutorial.stepIdx === TUTORIALS[activeTutorial.tutIdx].steps.length - 1) ? 'Finish ✓' : 'Next ▶';
+    nextBtn.textContent = (activeTutorial.stepIdx === TUTORIALS[activeTutorial.tutIdx].steps.length - 1) ? 'Finish' : 'Next';
   } else {
     // Action-gated steps only ever advance via the real run-btn/machine-btn listeners
     // below - the Next button itself stays disabled the whole step, so there's exactly
     // one way through: actually doing the real game action with the right code typed.
     nextBtn.disabled = true;
-    nextBtn.textContent = 'Waiting for you to ' + (step.action === 'run' ? 'press ▶ Run' : 'place the machine') + '...';
+    nextBtn.textContent = 'Waiting for you to ' + (step.action === 'run' ? 'press Run' : 'place the machine') + '...';
   }
 }
 
@@ -3063,7 +3063,7 @@ function completeTutorial() {
   document.getElementById('tutorial-bar-back').disabled = true;
   var nextBtn = document.getElementById('tutorial-bar-next');
   nextBtn.disabled = true;
-  nextBtn.textContent = 'Finished ✓';
+  nextBtn.textContent = 'Finished';
   closeTutorialCodeModal(); // no current step left for it to be a copy of
 }
 

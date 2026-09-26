@@ -5,40 +5,39 @@
 <title>Exam Circuit</title>
 <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
 <style>
-/* The circuit board is the game, so it keeps its soldermask green and
-   copper. Around it (the page, the HUD, its buttons and the type) is the
-   site's dark theme from shared/bc-theme.css. */
+/* On the site theme (shared/bc-theme.css). The circuit is the game: copper
+   traces and gold signal are its art, drawn on the site's dark surfaces. */
 :root{
-  --board-base:#0b3d2e;      /* soldermask green - unbuilt region background */
+  --board-base:#171a20;      /* unbuilt region background (site surface) */
   --copper:#c98a4a;          /* live traces/pads (built) */
   --copper-dim:#3a2d1e;      /* unbuilt but attemptable */
-  --silkscreen:#f2f2ea;      /* labels - never used for state */
+  --silkscreen:#e8eaed;      /* labels - never used for state */
   --gold:#ffd166;            /* Signal collector + flowing current */
   --fault:#e05a4e;           /* reserved for the Noise/interference layer (not in this slice) */
   --bg:#0f1115;
   --panel:#171a20;
-  --line:#1c4a37;
-  --text:#eef7ef;
-  --muted:#8fbfa8;
+  --line:#3b424e;
+  --text:#e8eaed;
+  --muted:#9aa0a6;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/1.4 var(--font-body);overflow:hidden}
 #hud{position:fixed;top:0;left:0;right:0;height:56px;background:var(--panel);border-bottom:1px solid #2b3039;display:flex;align-items:center;gap:24px;padding:0 18px;z-index:30}
-#hud .signal-total{font-size:1.3rem;font-weight:900;color:var(--gold)}
+#hud .signal-total{font:700 20px var(--font-display);color:var(--gold)}
 #hud .signal-rate{color:var(--muted);font-size:.85rem}
 #hud .region-label{margin-left:auto;color:var(--muted);font-size:.8rem}
 #hud button{background:#1d2128;color:#e8eaed;border:1px solid #3b424e;padding:6px 14px;font:inherit;font-weight:500;cursor:pointer;border-radius:999px}
 #hud button:hover{background:#252a33;border-color:#8ab4f8}
 #ws{position:absolute;top:56px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab;background:
-  radial-gradient(circle at 20% 20%, #0d2a1f 0%, var(--bg) 60%);}
+  linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px) 0 0/32px 32px, linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px) 0 0/32px 32px, #0c0e12;}
 #ws.panning{cursor:grabbing}
 #world{position:absolute;top:0;left:0;transform-origin:0 0;width:2400px;height:1600px}
-.region{position:absolute;background:var(--board-base);border:2px solid var(--line);border-radius:6px;padding:14px}
-.region-title{color:var(--silkscreen);font-weight:900;letter-spacing:.03em;margin-bottom:10px;font-size:.9rem}
-.pad{width:96px;min-height:64px;border:2px solid var(--copper-dim);border-radius:4px;display:inline-flex;
+.region{position:absolute;background:var(--board-base);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow-2)}
+.region-title{color:var(--silkscreen);font:700 15px var(--font-display);margin-bottom:10px}
+.pad{width:96px;min-height:64px;border:2px solid var(--copper-dim);border-radius:10px;display:inline-flex;
   flex-direction:column;align-items:center;justify-content:center;margin:6px;cursor:pointer;
   padding:6px 0;background:rgba(255,255,255,.02);position:relative;vertical-align:top;transition:border-color .2s,box-shadow .2s}
-.pad .pad-label{font-size:.62rem;color:var(--muted);text-align:center;padding:0 4px}
+.pad .pad-label{font-size:12px;color:var(--ink-soft);text-align:center;padding:0 4px}
 .pad.attemptable{border-color:var(--copper-dim);animation:pulse 2.2s ease-in-out infinite}
 .pad.built{border-color:var(--copper);background:rgba(201,138,74,.12);box-shadow:0 0 10px rgba(201,138,74,.35)}
 .pad.built .pad-label{color:var(--copper)}
@@ -57,28 +56,28 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/
 .region.locked .pad .pad-label{visibility:hidden}
 .region.just-unlocked{animation:unlockFade .6s ease-out}
 @keyframes unlockFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.region-sub{color:var(--muted);font-size:.68rem;margin-bottom:8px;opacity:.85}
+.region-sub{color:var(--muted);font-size:12px;margin-bottom:8px}
 /* bridge trace between a region and its prerequisite */
 .bridge{position:absolute;height:3px;background:var(--copper-dim);z-index:1}
 .bridge.live{background:var(--copper);box-shadow:0 0 6px var(--copper)}
 #unlockBanner{position:fixed;top:66px;left:50%;transform:translateX(-50%);background:var(--gold);color:#221507;
-  padding:8px 16px;border-radius:4px;font-weight:700;font-size:.85rem;z-index:40;display:none;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+  padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px;z-index:40;display:none;box-shadow:0 2px 10px rgba(0,0,0,.4)}
 #unlockBanner.show{display:block;animation:bannerPop 2.4s ease-out forwards}
 @keyframes bannerPop{0%{opacity:0;transform:translateX(-50%) translateY(-6px)}12%{opacity:1;transform:translateX(-50%) translateY(0)}82%{opacity:1}100%{opacity:0}}
 /* proof modal */
-#modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+#modalOverlay{position:fixed;inset:0;background:var(--scrim);display:none;align-items:center;justify-content:center;z-index:50}
 #modalOverlay.open{display:flex}
-#modal{background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:22px;max-width:440px;width:92%}
+#modal{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;max-width:440px;width:92%;box-shadow:var(--shadow-3)}
 #modal .prompt{font-size:1.02rem;margin-bottom:14px}
-#modal input{width:100%;padding:10px;font:inherit;background:#08130e;border:1px solid var(--line);color:var(--text);border-radius:4px}
+#modal input{width:100%;min-height:44px;padding:0 12px;font:inherit;font-size:16px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:10px}
 #modal .feedback{margin-top:10px;min-height:1.4em;font-size:.88rem}
-#modal .feedback.wrong{color:#ff9d8f}
-#modal .feedback.right{color:#8fe3b0}
+#modal .feedback.wrong{color:var(--bad)}
+#modal .feedback.right{color:var(--good)}
 #modal .actions{display:flex;gap:10px;margin-top:14px}
-#modal button{flex:1;padding:9px;font:inherit;border:1px solid var(--line);border-radius:4px;cursor:pointer}
-#modal .submit{background:var(--copper);color:#221507;font-weight:700}
-#modal .close{background:transparent;color:var(--muted)}
-#modal .based-on{margin-top:12px;font-size:.68rem;color:var(--muted);opacity:.75}
+#modal button{flex:1;min-height:40px;font:inherit;font-weight:500;border:1px solid var(--line);border-radius:999px;cursor:pointer}
+#modal .submit{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+#modal .close{background:transparent;color:var(--brand)}
+#modal .based-on{margin-top:12px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -110,7 +109,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/
 <script>
 'use strict';
 /*
- * Exam Circuit — first playable vertical slice.
+ * Exam Circuit: first playable vertical slice.
  * Scope of this slice (see GDD.md for the full design):
  *   - Two regions, IGCSE (0478) board: Topic 1.1 Number Systems (open from the start) and
  *     Topic 1.2 Data Representation (locked until 2 components are built in 1.1, per
@@ -118,7 +117,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/
  *   - Two proof types built (resistor = scaffolded numeric, ic = short structured);
  *     microcontroller/code-writing proofs are out of scope (GDD Section 4, Open Q4).
  *   - Signal economy (passive income per built pad) is real; buy/sell and the
- *     Noise/interference pressure layer are NOT built yet — this slice now proves the core
+ *     Noise/interference pressure layer are NOT built yet; this slice now proves the core
  *     "generator -> proof -> built pad -> passive income -> region unlock" loop end to end.
  *   - Admin reporting (GDD Section 4, Open Q5) is stubbed: every attempt is recorded to
  *     localStorage in the exact shape the future Progress.gs sheet needs, with a single

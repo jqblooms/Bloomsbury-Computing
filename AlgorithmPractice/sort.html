@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorting Algorithms Practice</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
+  <script>document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "") + '">');</script>
+  <script src="../shared/bc-support.js?v=20260927"></script>
+</head>
+<body>
+  <div class="ap">
+    <header class="ap-head">
+      <div class="ap-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"/><path d="M6 16v-3M10 16V9M14 16V6M18 16V4"/></svg>
+        <div>
+          <h1>Sorting Algorithms Practice</h1>
+          <p>Sort the list yourself, making each move the algorithm would make.</p>
+        </div>
+      </div>
+      <div class="ap-head-tools" id="support-slot"></div>
+    </header>
+
+    <div class="ap-tabs" role="tablist" aria-label="Algorithm">
+      <button type="button" class="ap-tab is-active" role="tab" aria-selected="true" data-algo="bubble">Bubble sort</button>
+      <button type="button" class="ap-tab" role="tab" aria-selected="false" data-algo="insertion">Insertion sort</button>
+      <button type="button" class="ap-tab" role="tab" aria-selected="false" data-algo="merge">Merge sort</button>
+    </div>
+
+    <div class="ap-controls">
+      <label for="size">List size</label>
+      <select id="size">
+        <option value="5">5 numbers</option>
+        <option value="6" selected>6 numbers</option>
+        <option value="8">8 numbers</option>
+        <option value="10">10 numbers</option>
+      </select>
+      <button type="button" class="bc-btn" id="new-random">New list</button>
+      <span class="spacer"></span>
+      <button type="button" class="bc-btn is-outline" id="new-sorted">Already sorted</button>
+      <button type="button" class="bc-btn is-outline" id="new-reversed">Reversed</button>
+    </div>
+
+    <div class="ap-main">
+      <div class="ap-col">
+        <section class="bc-card ap-card">
+          <div class="ap-task" id="task"></div>
+        </section>
+        <section class="bc-card ap-board">
+          <div id="board"></div>
+          <div class="ap-feedback" id="feedback" aria-live="polite" style="margin-top:16px"></div>
+          <div class="ap-hint" id="hint" aria-live="polite"></div>
+          <div class="ap-done" id="done"></div>
+        </section>
+      </div>
+      <div class="ap-col">
+        <section class="bc-card ap-card">
+          <h2 id="code-title">The algorithm</h2>
+          <pre class="ap-code" id="code"></pre>
+          <p class="ap-note" id="code-note"></p>
+        </section>
+        <section class="bc-card ap-card">
+          <h2>Trace table</h2>
+          <div class="ap-stats" id="stats"></div>
+          <div class="ap-trace-wrap" id="trace"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var v = encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "");
+      ["common.js", "sort.js"].forEach(function (file) {
+        document.write('<script src="' + file + "?v=" + v + '"><\/script>');
+      });
+    })();
+  </script>
+</body>
+</html>

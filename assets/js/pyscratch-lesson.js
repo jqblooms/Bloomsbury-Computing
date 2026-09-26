@@ -1,5 +1,5 @@
 /**
- * pyscratch-lesson.js  —  lesson integration utilities for PyScratch
+ * pyscratch-lesson.js - lesson integration utilities for PyScratch
  *
  * PyScratchLesson.createStepper(opts)
  *
@@ -51,7 +51,7 @@ window.PyScratchLesson = (function () {
       '.ps-ls-dot.done{background:var(--jhncc-red,#b01c23)}',
       '.ps-ls-dot.cur{background:var(--jhncc-yellow,#f5ba29);transform:scale(1.35)}',
 
-      // ── Instruction text — collapsible/scrollable ─────────────────────────
+      // ── Instruction text - collapsible/scrollable ─────────────────────────
       '.ps-ls-body{padding:8px 14px;background:#1e293b;border-bottom:1px solid #0f172a;' +
         'max-height:110px;overflow-y:auto}',
       '.ps-ls-text{font-size:12.5px;color:#94a3b8;line-height:1.6;margin:0}',
@@ -374,7 +374,7 @@ window.PyScratchLesson = (function () {
           send({ type: 'PS_HIGHLIGHT_CLEAR' });
           send({ type: 'PS_HIDE_THREAD_ACTIONS' });
           blockerEl.classList.remove('hidden');
-          badgeEl.textContent = step.doneBadge || '✓ Done — click Next →';
+          badgeEl.textContent = step.doneBadge || '✓ Done - click Next →';
           badgeEl.classList.remove('hidden');
         }
       }
@@ -407,7 +407,7 @@ window.PyScratchLesson = (function () {
     };
     nextBtn.onclick = tryAdvance;
 
-    // Arrow-key nav — works when focus is anywhere on the stepper except inside the iframe
+    // Arrow-key nav - works when focus is anywhere on the stepper except inside the iframe
     el.setAttribute('tabindex', '0');
     el.addEventListener('keydown', function(e) {
       if (e.target === frameEl || frameEl.contains(e.target)) return;
@@ -418,7 +418,7 @@ window.PyScratchLesson = (function () {
       }
     });
 
-    applyStep(); // initial render (iframe not ready yet — no postMessages)
+    applyStep(); // initial render (iframe not ready yet - no postMessages)
   }
 
   return { createStepper: createStepper };

@@ -1,5 +1,5 @@
 /*
- * PyScratch — Python code editor overlay for TurboWarp
+ * PyScratch - Python code editor overlay for TurboWarp
  *
  * Activated when the URL contains ?pyscratch (or ?pyscratch=1).
  * The blocks workspace is hidden; a Python editor panel overlays the left side.
@@ -21,7 +21,7 @@
   var FRAME_MS = 1000 / 60;
   var SKULPT_BASE = '../assets/js/';
 
-  // Demo mode — activated by ?pyscratch_demo (the guard above already matches it).
+  // Demo mode - activated by ?pyscratch_demo (the guard above already matches it).
   // The lesson embeds  <iframe src="scratch/editor.html?pyscratch_demo=1&project_url=...">
   // and the iframe auto-runs the code stored in the .psb3, loops every N seconds,
   // shows a read-only highlighted code panel, and blocks stage interaction.
@@ -229,7 +229,7 @@
   function getSprites() {
     try {
       if (!S.vm || !S.vm.runtime || !S.vm.runtime.targets) return [];
-      // Exclude the stage and clones — only original (non-clone) sprites.
+      // Exclude the stage and clones - only original (non-clone) sprites.
       // Clones get their own Python threads via runCloneThreads(), not via startAll().
       return S.vm.runtime.targets.filter(function (t) { return !t.isStage && t.sprite && !t.isClone; });
     } catch (e) { return []; }
@@ -251,7 +251,7 @@
   // Fixed-arg _psc helper avoids *args unpacking which varies across Skulpt versions.
   //
   // myGen is embedded as a Python literal (__ps_tgen__) so each thread carries
-  // its own generation token inside its own module globals — immune to the shared
+  // its own generation token inside its own module globals - immune to the shared
   // Sk.builtins being overwritten by later threads.  The static builtins receive
   // __ps_tgen__ as an argument and compare it against S.gen to detect staleness.
   function makePrologue(spriteName, myGen) {
@@ -263,7 +263,7 @@
       // _psc captures __ps_sprite__ and __ps_tgen__ as DEFAULT ARGUMENTS so their
       // values are baked in at definition time (when this module first runs).
       // This prevents any shared-globals interference when the handler is later
-      // invoked from callHandlerFn — each thread's _psc always uses its own sprite.
+      // invoked from callHandlerFn - each thread's _psc always uses its own sprite.
       'def _psc(f,a0=None,a1=None,a2=None,_sp=__ps_sprite__,_tg=__ps_tgen__): return __ps_call(f,_sp,_tg,a0,a1,a2)',
       // Movement
       'def move_steps(s): return _psc("move_steps",s)',
@@ -290,52 +290,52 @@
       'def get_direction(): return direction()',
       'def on_edge(): return _psc("on_edge")',
       'def bounce(): return if_on_edge_bounce()',
-      // Looks — speech/thought
+      // Looks - speech/thought
       // say(message) is non-blocking (shows bubble, continues immediately).
       // say_for(message, secs) blocks for secs seconds, like Scratch's timed bubble.
       'def say(m,s=None): return _psc("say",m,s)',
       'def say_for(m,s): return _psc("say_for",m,s)',
       'def think(m,s=None): return _psc("think",m,s)',
       'def think_for(m,s): return _psc("think_for",m,s)',
-      // Looks — costume
+      // Looks - costume
       'def set_costume(c): return _psc("set_costume",c)',
       'def next_costume(): return _psc("next_costume")',
       'def previous_costume(): return _psc("previous_costume")',
       'def costume_number(): return _psc("costume_number")',
       'def costume_name(): return _psc("costume_name")',
-      // Looks — backdrop (operates on the stage, not the sprite)
+      // Looks - backdrop (operates on the stage, not the sprite)
       'def set_backdrop(b): return _psc("set_backdrop",b)',
       'def next_backdrop(): return _psc("next_backdrop")',
       'def previous_backdrop(): return _psc("previous_backdrop")',
       'def backdrop_name(): return _psc("backdrop_name")',
       'def backdrop_number(): return _psc("backdrop_number")',
-      // Looks — size / visibility
+      // Looks - size / visibility
       'def set_size(s): return _psc("set_size",s)',
       'def change_size(s): return _psc("change_size",s)',
       'def size(): return _psc("size")',
       'def show(): return _psc("show")',
       'def hide(): return _psc("hide")',
-      // Looks — graphic effects
+      // Looks - graphic effects
       'def set_effect(e,v): return _psc("set_effect",e,v)',
       'def change_effect(e,v): return _psc("change_effect",e,v)',
       'def clear_effects(): return _psc("clear_effects")',
-      // Looks — layers
+      // Looks - layers
       'def go_to_front(): return _psc("go_to_front")',
       'def go_to_back(): return _psc("go_to_back")',
       'def go_forward(n=1): return _psc("go_forward",n)',
       'def go_backward(n=1): return _psc("go_backward",n)',
       // Control
-      // wait_until is pure Python — no __ps_call needed
+      // wait_until is pure Python - no __ps_call needed
       'def wait_until(cond):',
       '    while not cond(): wait(0)',
       'def create_clone(): return _psc("create_clone")',
       'def create_clone_of(name): return _psc("create_clone_of",name)',
       'def delete_clone(): return _psc("delete_clone")',
       'def is_clone(): return _psc("is_clone")',
-      // Events — broadcasts (hat-block functions are defined by the student, not here)
+      // Events - broadcasts (hat-block functions are defined by the student, not here)
       'def broadcast(m): return _psc("broadcast",m)',
       'def broadcast_and_wait(m): return _psc("broadcast_and_wait",m)',
-      // Scratch variables — sync Python values with the on-screen Scratch display
+      // Scratch variables - sync Python values with the on-screen Scratch display
       'def set_variable(n,v): return _psc("set_variable",n,v)',
       'def get_variable(n): return _psc("get_variable",n)',
       'def change_variable(n,v): return _psc("change_variable",n,v)',
@@ -365,7 +365,7 @@
       'def reset_timer(): return _psc("reset_timer")',
       'def current(unit): return _psc("current",unit)',
       'def days_since_2000(): return _psc("days_since_2000")',
-      // Operators — Scratch-style equivalents (trig uses degrees, like Scratch)
+      // Operators - Scratch-style equivalents (trig uses degrees, like Scratch)
       'def pick_random(a,b): return _psc("pick_random",a,b)',
       'def sqrt(n): return _psc("sqrt",n)',
       'def floor(n): return _psc("floor",n)',
@@ -380,7 +380,7 @@
       'def log(n): return _psc("log",n)',
       'def e_to(n): return _psc("e_to",n)',
       'def ten_to(n): return _psc("ten_to",n)',
-      // Control — backed by __ps_wait / __ps_stop in Sk.builtins
+      // Control - backed by __ps_wait / __ps_stop in Sk.builtins
       // wait also captures __ps_tgen__ at definition time for the same reason.
       'def wait(s=0,_tg=__ps_tgen__): __ps_wait(s,_tg)',
       'def stop(): __ps_stop()',
@@ -391,7 +391,7 @@
   // Adds __ps_call, __ps_wait, __ps_stop to Sk.builtins.
   //
   // Called ONCE after Skulpt loads (not once per thread).
-  // The generation token is NOT captured in a closure here — it is passed as
+  // The generation token is NOT captured in a closure here - it is passed as
   // a Python argument (__ps_tgen__) from each thread's own prologue, so the
   // shared builtins always receive the calling thread's immutable token.
   //
@@ -565,7 +565,7 @@
   // variable name in S.trackedPyVars.  A setInterval then reads
   // capturedGlobals["score"] every 50 ms and pushes the value to TurboWarp's
   // _monitorState so the on-screen counter stays in sync with the plain Python
-  // variable — no set_variable() / get_variable() needed by the student.
+  // variable - no set_variable() / get_variable() needed by the student.
   function startTrackedVarPoll() {
     if (S.trackedVarTick) return;
     S.trackedVarTick = setInterval(function () {
@@ -623,7 +623,7 @@
   }
 
   // Find a variable or create it on the stage if it doesn't exist.
-  // Also registers a monitor block so the on-screen counter appears automatically —
+  // Also registers a monitor block so the on-screen counter appears automatically - 
   // students don't need to touch TurboWarp's Variables panel at all.
   function findOrCreateVariable(name, initialValue) {
     var existing = findVariable(name);
@@ -674,7 +674,7 @@
     backdrop_name:1, backdrop_number:1,
     // Variables
     set_variable:1, get_variable:1, change_variable:1, display_variable:1,
-    // Sensing — global state
+    // Sensing - global state
     mouse_down:1, ask:1, answer:1,
     timer:1, reset_timer:1,
     current:1, days_since_2000:1,
@@ -774,7 +774,7 @@
       case 'say': {
         var msg = a == null ? '' : String(a);
         if (b === null || b === undefined) {
-          // Non-blocking — just fire-and-forget the SAY event
+          // Non-blocking - just fire-and-forget the SAY event
           try { target.runtime.emit('SAY', target, 'say', msg); } catch(e) {}
           return null;
         }
@@ -1107,7 +1107,7 @@
       case 'sqrt':    return Math.sqrt(Number(a));
       case 'floor':   return Math.floor(Number(a));
       case 'ceiling': return Math.ceil(Number(a));
-      // Trig — degrees in, degrees out (matching Scratch's operator block)
+      // Trig - degrees in, degrees out (matching Scratch's operator block)
       case 'sin':     return Math.sin(Number(a) * Math.PI / 180);
       case 'cos':     return Math.cos(Number(a) * Math.PI / 180);
       case 'tan':     return Math.tan(Number(a) * Math.PI / 180);
@@ -1120,9 +1120,9 @@
       case 'ten_to':  return Math.pow(10, Number(a));
 
       // ── Scratch variables ───────────────────────────────────────
-      // set_variable(name, value) — write to an existing Scratch variable
-      // get_variable(name)        — read its current value
-      // change_variable(name, n)  — add n to its value
+      // set_variable(name, value) - write to an existing Scratch variable
+      // get_variable(name) - read its current value
+      // change_variable(name, n) - add n to its value
       // These operate on stage-global variables first (searched by name).
       // The monitor refreshes automatically so the on-screen display updates.
       case 'set_variable': {
@@ -1162,7 +1162,7 @@
         // ── Python variable tracking ──────────────────────────────────
         // Capture Sk.globals (the calling thread's module $d object) right now,
         // while we are inside the Python execution. Python keeps this same object
-        // alive and mutates its keys in place — so capturedGlobals[dvVarName] will
+        // alive and mutates its keys in place - so capturedGlobals[dvVarName] will
         // always reflect the latest value of the Python variable.
         // A 50 ms polling interval reads it and pushes updates to the monitor.
         if (dvShow) {
@@ -1197,7 +1197,7 @@
         } catch(e) {}
 
         // ── Fallback: standard Scratch VM changeBlock ─────────────────
-        // IMPORTANT: do NOT pre-set block.isMonitored before calling changeBlock —
+        // IMPORTANT: do NOT pre-set block.isMonitored before calling changeBlock - 
         // changeBlock detects the false→true transition to call requestAddMonitor.
         try {
           var dvMb2 = dvRt.monitorBlocks;
@@ -1369,8 +1369,8 @@
 
   // ── Auto-yield injection ──────────────────────────────────────
   // Injects wait(0) as the first line of every `while True:` body.
-  // This gives exactly one-iteration-per-frame behaviour — like Scratch's
-  // `forever` block — without students needing to write wait(0) manually.
+  // This gives exactly one-iteration-per-frame behaviour - like Scratch's
+  // `forever` block - without students needing to write wait(0) manually.
   // Only `while True:` is targeted; `for` loops are left untouched so data
   // processing loops don't become unexpectedly slow.
   function injectFrameYields(code) {
@@ -1417,7 +1417,7 @@
     var entryName = isClone ? 'when_I_start_as_a_clone' : 'game_start';
     var postlude = [
       '',
-      '# Register event handlers — silently skip any that are not defined',
+      '# Register event handlers - silently skip any that are not defined',
       'try: __ps_register__("clicked",  when_clicked,              __ps_sprite__, __ps_tgen__)',
       'except NameError: pass',
       'try: __ps_register__("key",      when_key_pressed,          __ps_sprite__, __ps_tgen__)',
@@ -1480,7 +1480,7 @@
 
   function startAll() {
     if (!S.vm) return;
-    // Always stop first — this increments S.gen, poisoning any sleeping old threads.
+    // Always stop first - this increments S.gen, poisoning any sleeping old threads.
     // They will see gen !== myGen on their next wake and throw __pyscratch_stopped__.
     stopAll();
     S.running    = true;
@@ -1521,13 +1521,13 @@
     updateRunState(true);
   }
 
-  // Stops Python threads only. Does NOT call vm.stopAll — the patched vm.stopAll
+  // Stops Python threads only. Does NOT call vm.stopAll - the patched vm.stopAll
   // is the single place that calls both stopAll() + the original TurboWarp stop.
   // Calling vm.stopAll from here would cause infinite recursion.
   function stopAll() {
     S.running    = false;
     S.gen++;              // sleeping threads see gen mismatch → throw __pyscratch_stopped__
-    S.handlers   = {};    // discard all event registrations — threads re-register on startAll()
+    S.handlers   = {};    // discard all event registrations - threads re-register on startAll()
     S.deadClones = new Set(); // clear per-clone tombstones for a fresh run
     stopTrackedVarPoll(); // cancel Python-variable→monitor polling
     updateRunState(false);
@@ -1694,12 +1694,12 @@
           });
 
         }).catch(function () {
-          // Not a valid ZIP — treat as plain .sb3
+          // Not a valid ZIP - treat as plain .sb3
           return toArrayBuffer(input).then(function (buf2) { return { buffer: buf2, pyCode: null }; });
         });
       });
     }).catch(function () {
-      // JSZip unavailable — pass input through unchanged
+      // JSZip unavailable - pass input through unchanged
       return { buffer: input, pyCode: null };
     });
   }
@@ -1906,7 +1906,7 @@
       '#ps-tut-btn:hover{border-color:var(--ps-tut-accent,#7c5fcf) !important}',
       '#ps-status{position:absolute;top:10px;right:152px;z-index:3;font-size:11px;color:var(--ps-success,#a6e3a1);opacity:.85;pointer-events:none}',
 
-      // Body split — width of ps-left is set dynamically by adjustOverlay()
+      // Body split - width of ps-left is set dynamically by adjustOverlay()
       '#ps-body{flex:1;display:flex;overflow:hidden;pointer-events:none}',
       '#ps-left{width:50%;display:flex;flex-direction:column;background:var(--ps-panel,#1e1e2e);pointer-events:auto;border-right:2px solid var(--ps-border,#312d4b);box-shadow:4px 0 20px var(--ps-shadow,rgba(0,0,0,.4));flex-shrink:0;position:relative}',
       '#ps-right{flex:1;pointer-events:none;background:transparent}', // Pass-through to TurboWarp stage
@@ -1952,7 +1952,7 @@
       '.ps-tchal-hints summary:hover{color:var(--ps-text,#cdd6f4)}',
       '.ps-tchal-hints ol{margin:6px 0 0;padding-left:18px;line-height:1.7;color:var(--ps-muted,#8888aa)}',
       '.ps-tchal-results{margin-top:8px}',
-      // Challenge test result rows (used by runChallenge — shared between modal and any future panel)
+      // Challenge test result rows (used by runChallenge - shared between modal and any future panel)
       '.ps-chal-result-row{display:flex;align-items:flex-start;gap:5px;font-size:11px;padding:2px 0;line-height:1.4}',
       '.ps-cr-icon{flex-shrink:0;width:14px;text-align:center;margin-top:1px}',
       '.ps-cr-label{color:var(--ps-muted,#9ca3af);flex:1}',
@@ -1978,7 +1978,7 @@
       // Hide TurboWarp blocks and related elements when PyScratch is active
       '.blocklyDiv,.blocklyToolboxDiv,.blocklyFlyout,.blocklyWidgetDiv{display:none !important}',
 
-      // Ask dialog — appears over the stage area
+      // Ask dialog - appears over the stage area
       '#ps-ask-wrap{position:fixed;bottom:14px;right:14px;width:300px;z-index:10010;pointer-events:none}',
       '#ps-ask-wrap.active{pointer-events:auto}',
       '.ps-ask-box{display:none;background:var(--ps-panel,#fff);border:2px solid var(--ps-accent,#4c97ff);border-radius:8px;padding:8px 10px;box-shadow:0 4px 20px var(--ps-shadow,rgba(0,0,0,.35))}',
@@ -2067,7 +2067,7 @@
       '.ps-tb-text{font-size:11px;color:var(--ps-text,#cdd6f4);line-height:1.45}',
       '.ps-tb-text code{background:var(--ps-code-bg,#312d4b);padding:1px 3px;border-radius:3px;font-family:monospace;font-size:10px;color:#cba6f7}',
       '.ps-tb-text strong{color:var(--ps-text-strong,#fff)}',
-      // Code block — split into per-line divs so new vs context can be styled separately
+      // Code block - split into per-line divs so new vs context can be styled separately
       '.ps-tb-code-wrap{position:relative;margin:3px 8px 0;flex-shrink:0}',
       '.ps-tb-code-wrap.ps-tb-no-target{display:none}',
       '.ps-tb-code-block{background:#0d1117;border:1px solid #30363d;border-radius:4px;padding:5px 8px;overflow-x:auto;font-family:"Roboto Mono","Consolas","Courier New",monospace;font-size:10px;line-height:1.55}',
@@ -2085,14 +2085,14 @@
       // Warning shown when grey lines have been deleted
       '.ps-tb-miss{margin:2px 8px 0;padding:4px 8px;background:#2a1a1a;border:1px solid #7f1d1d;border-radius:4px;font-size:10px;color:#fca5a5;display:flex;align-items:center;gap:6px;flex-shrink:0}',
       '.ps-tb-miss.ps-tb-miss-hidden{display:none}',
-      // Indentation structure error — shown when code has Python IndentationError-type problems
+      // Indentation structure error - shown when code has Python IndentationError-type problems
       '.ps-tb-ierr{margin:2px 8px 0;padding:4px 8px;background:#1a0d0d;border:1px solid #7f1d1d;border-radius:4px;font-size:10px;color:#fca5a5;flex-shrink:0}',
       '.ps-tb-ierr.ps-tb-ierr-hidden{display:none}',
       '.ps-tb-miss-restore{margin-left:auto;background:none;border:1px solid #f87171;color:#f87171;cursor:pointer;padding:2px 7px;border-radius:3px;font-size:9px;font-family:inherit;flex-shrink:0}',
       '.ps-tb-miss-restore:hover{background:#7f1d1d}',
-      // Prevent selecting or copying the reference code — students must type it themselves
+      // Prevent selecting or copying the reference code - students must type it themselves
       '.ps-tb-code-block{user-select:none;-webkit-user-select:none;-moz-user-select:none}',
-      // Expand button — pops code out into a draggable floating window
+      // Expand button - pops code out into a draggable floating window
       '.ps-tb-expand-btn{position:absolute;top:3px;right:3px;background:#161b22;border:1px solid #30363d;border-radius:3px;color:#6e7681;cursor:pointer;font-size:10px;padding:1px 5px;line-height:1.4;z-index:1;font-family:"Segoe UI",sans-serif}',
       '.ps-tb-expand-btn:hover{color:#e2e8f0;border-color:#7c5fcf}',
       // Draggable code pop-out modal
@@ -2160,7 +2160,7 @@
       '.ps-ics-label{color:#e2e8f0;flex:1;white-space:nowrap}',
       '.ps-ics-detail{color:#4b5563;font-size:10px;font-family:"Segoe UI",sans-serif;white-space:nowrap;overflow:hidden;max-width:140px;text-overflow:ellipsis}',
 
-      // Indentation error gutter — thin coloured strip on the left edge of the editor
+      // Indentation error gutter - thin coloured strip on the left edge of the editor
       '#ps-indent-gutter{position:absolute;left:0;top:0;bottom:0;width:7px;pointer-events:none;z-index:6;overflow:hidden}',
       '.ps-ig-mark{position:absolute;left:1px;width:5px;border-radius:2px;animation:ps-ig-pulse 1.3s ease-in-out infinite}',
       '.ps-ig-mark.ig-tab{background:#f59e0b}',
@@ -2168,7 +2168,7 @@
       '.ps-ig-mark.ig-struct{background:#a855f7}',
       '.ps-ig-mark.ig-pass{background:#f97316}',
       '@keyframes ps-ig-pulse{0%,100%{opacity:1}50%{opacity:.15}}',
-      // Indentation error tooltip — fixed to screen, appears near the bad line
+      // Indentation error tooltip - fixed to screen, appears near the bad line
       '#ps-indent-tip{position:fixed;z-index:40000;background:#1c0a0a;border:1px solid #7f1d1d;border-radius:5px;padding:6px 10px 5px;font-size:10px;font-family:"Segoe UI",sans-serif;color:#fca5a5;line-height:1.5;max-width:320px;pointer-events:auto;display:none;box-shadow:0 4px 16px rgba(0,0,0,.6);transition:opacity 0.15s}',
       '#ps-indent-tip.ps-it-show{display:block}',
       '#ps-indent-tip:hover{opacity:0.35}',
@@ -2217,7 +2217,7 @@
                   '<button class="ps-tb-expand-btn" title="Pop out code view">⤢</button>',
                   '<div class="ps-tb-code-block"></div>',
                   '<div class="ps-tb-code-leg">',
-                    '<span class="ps-tb-leg-item"><span class="ps-tb-leg-dot ld-old"></span>Already in your editor — keep it</span>',
+                    '<span class="ps-tb-leg-item"><span class="ps-tb-leg-dot ld-old"></span>Already in your editor - keep it</span>',
                     '<span class="ps-tb-leg-item"><span class="ps-tb-leg-dot ld-new"></span>Type this</span>',
                     '<span class="ps-tb-leg-item"><span class="ps-tb-leg-dot ld-done"></span>Done ✓</span>',
                   '</div>',
@@ -2316,7 +2316,7 @@
       tab.addEventListener('click', function () { switchPanelTab(tab.dataset.panel); });
     });
 
-    // Auto-snapshot timer — every 3 minutes, skip during tutorials
+    // Auto-snapshot timer - every 3 minutes, skip during tutorials
     startSnapshotTimer();
 
     // Tutorial dialog (resume / keep-or-restore)
@@ -2337,7 +2337,7 @@
     itEl.id = 'ps-indent-tip';
     document.body.appendChild(itEl);
 
-    // Colour picker badge — appears when cursor is inside touching_colour(...)
+    // Colour picker badge - appears when cursor is inside touching_colour(...)
     var cpEl = document.createElement('div');
     cpEl.id = 'ps-colour-pick';
     cpEl.innerHTML = '<span id="ps-cp-swatch"></span><span>🎨 Colour</span><input type="color" id="ps-cp-input">';
@@ -2494,7 +2494,7 @@
     ui.editor.addEventListener('blur', function () {
       // Small delay so mousedown on a dropdown item fires first
       setTimeout(hideICSense, 150);
-      // Hide colour picker — delayed so a click on the badge can fire first
+      // Hide colour picker - delayed so a click on the badge can fire first
       setTimeout(function () {
         var cpEl = document.getElementById('ps-colour-pick');
         if (cpEl && document.activeElement !== document.getElementById('ps-cp-input')) {
@@ -2512,7 +2512,7 @@
       var map = { ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right', Enter:'enter' };
       return map[k] || k.toLowerCase();
     };
-    // Key tracking — also fire when_key_pressed handlers on rising edge
+    // Key tracking - also fire when_key_pressed handlers on rising edge
     window.addEventListener('keydown', function (e) {
       var key = normKey(e.key);
       if (!S.pressedKeys[key]) {
@@ -2548,7 +2548,7 @@
 
 
 
-    // Sprite click — fire when_clicked handlers using the renderer's pick()
+    // Sprite click - fire when_clicked handlers using the renderer's pick()
     window.addEventListener('mousedown', function (e) {
       if (!S.running) return;
       var canvas = document.querySelector('canvas');
@@ -2836,7 +2836,7 @@
   // running embedded there) that a tutorial was just completed, so it can
   // be recorded against the signed-in student and shown to their teacher.
   // No-op when run standalone (window.parent === window) or outside an
-  // iframe entirely — matches the guard used by emitState() below.
+  // iframe entirely - matches the guard used by emitState() below.
   function reportTutorialCompletion(tut) {
     try {
       if (!window.parent || window.parent === window) return;
@@ -2862,7 +2862,7 @@
 
   function _tutSnapshotExistsKey(tutIdx) { return 'pyscratch:tut:' + tutIdx + ':snap-exists'; }
 
-  // Sync check via localStorage flag — avoids an async IDB round-trip every time
+  // Sync check via localStorage flag - avoids an async IDB round-trip every time
   // a tutorial dialog opens.  Flag is written/cleared alongside the IDB blob.
   function hasTutSnapshot(tutIdx) {
     return localStorage.getItem(_tutSnapshotExistsKey(tutIdx)) === '1';
@@ -2945,7 +2945,7 @@
     var hasSnap  = hasTutSnapshot(tutIdx);
 
     if (saved && hasSnap) {
-      // Student has unfinished progress — offer to resume
+      // Student has unfinished progress - offer to resume
       showTutDialog(
         tut.emoji || '📚',
         tut.title,
@@ -2964,7 +2964,7 @@
         ]
       );
     } else {
-      // Fresh start — snapshot full project then begin
+      // Fresh start - snapshot full project then begin
       takeProjectSnapshot('Before ' + tut.title, 'before-tutorial');
       saveTutSnapshot(tutIdx);
       _doStartTutorial(tutIdx, 0);
@@ -3031,7 +3031,7 @@
   // Lightweight stack-based parser that detects Python IndentationError-type
   // problems: unexpected indents and unmatched dedents.
   //
-  // This catches the gap in tutReqMatches — requires without leading whitespace
+  // This catches the gap in tutReqMatches - requires without leading whitespace
   // (the common case) match a line at ANY indent depth.  _pyIndentCheck validates
   // the block structure independently and gates the Next button when the code
   // would fail Python's own indentation rules.
@@ -3039,10 +3039,10 @@
   // NOT handled: backslash continuations, multi-line strings (rare in PyScratch).
   function _pyLineOpensBlock(content) {
     // Returns true when a trimmed line should be followed by a deeper-indented block.
-    // Only fires for recognised block-introducing keywords — avoids false positives
+    // Only fires for recognised block-introducing keywords - avoids false positives
     // from dict literals (key: value), ternary expressions, etc.
     if (!/^(def|class|if|elif|else|for|while|with|try|except|finally)\b/.test(content)) return false;
-    // Strip inline comment (conservative — enough for single-line comments after code)
+    // Strip inline comment (conservative - enough for single-line comments after code)
     var nc = content.replace(/#[^'"]*$/, '').trimRight();
     // Strip simple single-line string literals so a colon inside a string doesn't fire
     nc = nc.replace(/"(?:[^"\\]|\\.)*"/g, '""').replace(/'(?:[^'\\]|\\.)*'/g, "''");
@@ -3067,7 +3067,7 @@
         if (indent <= stack[stack.length - 1]) {
           return {
             lineIdx: i,
-            msg: 'Line ' + (i + 1) + ': expected an indented block here — ' +
+            msg: 'Line ' + (i + 1) + ': expected an indented block here - ' +
                  'the line before ends with \':\' so this line needs more than ' +
                  stack[stack.length - 1] + ' leading spaces'
           };
@@ -3079,7 +3079,7 @@
         if (indent > top) {
           return {
             lineIdx: i,
-            msg: 'Line ' + (i + 1) + ': unexpected indent — ' + indent + ' spaces, ' +
+            msg: 'Line ' + (i + 1) + ': unexpected indent - ' + indent + ' spaces, ' +
                  'but this block uses ' + top + ' spaces'
           };
         } else if (indent < top) {
@@ -3089,7 +3089,7 @@
             return {
               lineIdx: i,
               msg: 'Line ' + (i + 1) + ': indentation of ' + indent + ' spaces doesn\'t match ' +
-                   'any outer block — valid levels here are ' + stack.join(', ') + ' spaces'
+                   'any outer block - valid levels here are ' + stack.join(', ') + ' spaces'
             };
           }
         }
@@ -3100,11 +3100,11 @@
     }
 
     // If we reached end-of-file still expecting a deeper block, the last opener has
-    // no body at all — flag the opener line itself.
+    // no body at all - flag the opener line itself.
     if (expectDeeper && lastOpenerIdx !== -1) {
       return {
         lineIdx: lastOpenerIdx,
-        msg: 'Line ' + (lastOpenerIdx + 1) + ': empty block — nothing indented after the colon'
+        msg: 'Line ' + (lastOpenerIdx + 1) + ': empty block - nothing indented after the colon'
       };
     }
 
@@ -3208,7 +3208,7 @@
     var cLines = code.split('\n');
 
     if (chain.length === 0) {
-      // Module-level line — must appear at indent 0, not inside any block
+      // Module-level line - must appear at indent 0, not inside any block
       for (var ki = 0; ki < cLines.length; ki++) {
         if (cLines[ki].trim() === '' || cLines[ki].charAt(0) === '#') continue;
         if (_lineIndent(cLines[ki]) === 0 && _lineMatchesReq(cLines[ki], trimReq)) return true;
@@ -3227,7 +3227,7 @@
   //   requires 'x > 5 and < 10' (missing x)
   //
   // Algorithm:
-  //   1. Skip truncated requires (unbalanced parens — e.g. set_variable("Score" ).
+  //   1. Skip truncated requires (unbalanced parens - e.g. set_variable("Score" ).
   //   2. Find the FIRST target line that contains reqStr as a substring.
   //   3. If reqStr IS the whole target line, the content check is already sufficient → skip.
   //   4. Otherwise reqStr is a FRAGMENT of a larger expression.
@@ -3279,7 +3279,7 @@
       // Leading whitespace must match exactly at the start of a line so that
       // over-indented code (e.g. 12 spaces when 8 are expected) is rejected.
       //
-      // Some requires are INTENTIONALLY PARTIAL — e.g. '        if key_pressed("up")'
+      // Some requires are INTENTIONALLY PARTIAL - e.g. '        if key_pressed("up")'
       // where the full target line is 'if key_pressed("up") and y_position() <= -149:'.
       // Those must remain prefix-match so the student's longer line still satisfies them.
       //
@@ -3362,15 +3362,15 @@
     //   • Function definitions  (def game_start():, def when_clicked():, …)
     //   • global declarations   (global vx, vy)
     //   • Module-level simple numeric initialisations (vx = 3, vy = 0, hp = 3, …)
-    // These are validated silently — they get an invisible DOM row so span-colouring
-    // (covByReq) still works — but they don't appear in the checklist or progress count.
+    // These are validated silently - they get an invisible DOM row so span-colouring
+    // (covByReq) still works - but they don't appear in the checklist or progress count.
     if (!o.hidden) {
       var _tr = o.reqStr.trim();
       if (/^def \w+\s*\(/.test(_tr)) o.hidden = true;
       else if (/^global /.test(_tr)) o.hidden = true;
       else if (/^\w+ = -?[\d.]+$/.test(_tr)) {
         // Hide simple numeric initialisations at module level (0 spaces) or
-        // first level inside a function body (4 spaces) — these are boilerplate setup.
+        // first level inside a function body (4 spaces) - these are boilerplate setup.
         // Keep visible at 8+ spaces: inside loops/ifs they ARE the actual task
         // (e.g. '            vy = 8' inside 'if key_pressed("up"):').
         var _ri = (o.reqStr.match(/^( *)/) || ['', ''])[1].length;
@@ -3408,7 +3408,7 @@
     var _cmTitle = document.getElementById('ps-cm-title');
     if (_cmTitle) _cmTitle.textContent = step.title || 'Code reference';
 
-    // Code block — highlight new lines in amber, dim context lines
+    // Code block - highlight new lines in amber, dim context lines
     var codeWrap  = bar.querySelector('.ps-tb-code-wrap');
     var codeBlock = bar.querySelector('.ps-tb-code-block');
     if (step.target) {
@@ -3420,7 +3420,7 @@
       // function instead of matching the same line in ANY function.
       var tgtCtxArr = buildTargetCtxArray(step.target);
       codeBlock.innerHTML = step.target.split('\n').map(function (line, idx) {
-        // Empty lines are never individually "typed" by the student — always dim.
+        // Empty lines are never individually "typed" by the student - always dim.
         var cls    = (newSet[line] && line.trim() !== '') ? 'new' : 'old';
         var ctxVal = tgtCtxArr[idx];
         var ctxAttr = ctxVal ? ' data-ctx="' + ctxVal + '"' : '';
@@ -3433,12 +3433,12 @@
       codeBlock.innerHTML = '';
     }
 
-    // Indent tip — show whenever any new line has leading spaces
+    // Indent tip - show whenever any new line has leading spaces
     var indentTip = bar.querySelector('.ps-tb-indent-tip');
     var needsIndent = (step.newLines || []).some(function (l) { return /^ /.test(l); });
     indentTip.classList.toggle('ps-tb-tip-hidden', !needsIndent);
 
-    // Checklist — one row per requires item
+    // Checklist - one row per requires item
     var checksEl = bar.querySelector('.ps-tb-checks');
     var reqs     = step.requires || [];
     var _visReqsForRender = reqs.filter(function (r) { return !_normReq(r).hidden; });
@@ -3459,7 +3459,7 @@
         var ctx = n.context || reqContextInTarget(step.target, n.reqStr);
         var ctxAttr = ctx ? ' data-ctx="' + ctx + '"' : '';
         // Hidden items get an invisible row so covByReq span-colouring can still
-        // query their ck-ok state — but students never see them in the checklist.
+        // query their ck-ok state - but students never see them in the checklist.
         if (n.hidden) {
           return '<div class="ps-tb-ck ck-wait" data-req="' + dReq + '"' + ctxAttr +
                  ' style="display:none" aria-hidden="true"></div>';
@@ -3526,7 +3526,7 @@
       if (line.trim() === '') return; // blank / whitespace-only lines are fine
       if (/^\t/.test(line)) {
         errors.push({ line: i, type: 'tab',
-          msg: 'Tab character detected — use spaces instead',
+          msg: 'Tab character detected - use spaces instead',
           fix: 'Your Tab key already inserts 4 spaces in this editor. If you pasted this code, replace the tab with 4 spaces.' });
         return;
       }
@@ -3537,7 +3537,7 @@
           var nearest = Math.round(n / 4) * 4 || 4;
           var level   = nearest / 4;
           errors.push({ line: i, type: 'bad', spaces: n, nearest: nearest,
-            msg: '<strong>' + n + '</strong> space' + (n === 1 ? '' : 's') + ' — Python needs a multiple of 4&nbsp;&nbsp;(4, 8, 12…)',
+            msg: '<strong>' + n + '</strong> space' + (n === 1 ? '' : 's') + ' - Python needs a multiple of 4&nbsp;&nbsp;(4, 8, 12…)',
             fix: 'Expected <strong>' + nearest + '</strong> spaces here (indent level ' + level + '). Use Shift+Tab / Tab to adjust.' });
         }
       }
@@ -3561,7 +3561,7 @@
         if (_isEmpty) {
           // Block opener at end of file with no body at all
           var _opLine = (_seLines[_se.lineIdx] || '').trim();
-          _smsg = 'Empty block — this line needs an indented body';
+          _smsg = 'Empty block - this line needs an indented body';
           _sfix = '<code>' + _opLine.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</code> ends with <strong>:</strong> but has nothing inside it. Add at least one indented line below.';
         } else if (_isUnexpected) {
           // "Unexpected indent" often means the PREVIOUS line is missing its colon.
@@ -3580,13 +3580,13 @@
             }
           }
           if (_errLine === _se.lineIdx) {
-            // Couldn't identify a missing-colon cause — show generic message on symptom line
+            // Couldn't identify a missing-colon cause - show generic message on symptom line
             _smsg = 'Unexpected indent';
-            _sfix = 'This line is indented more than expected. Check the line above — it may be missing a <strong>:</strong>, or this line has too many spaces.';
+            _sfix = 'This line is indented more than expected. Check the line above - it may be missing a <strong>:</strong>, or this line has too many spaces.';
           }
         } else if (_isExpected) {
           _smsg = 'Expected an indented block here';
-          _sfix = 'The line above ends with <strong>:</strong> — this line should be indented by 4 more spaces.';
+          _sfix = 'The line above ends with <strong>:</strong> - this line should be indented by 4 more spaces.';
         } else {
           _smsg = 'Indentation level doesn\'t match any outer block';
           _sfix = 'Align this line with the block it belongs to (a multiple of 4 spaces).';
@@ -3610,8 +3610,8 @@
         var nextIndent = (_passLines[j].match(/^( *)/) || ['',''])[1].length;
         if (nextIndent === passIndent) {
           errors.push({ line: i, type: 'pass',
-            msg: 'Leftover <code>pass</code> — this placeholder can be deleted',
-            fix: 'You\'ve added real code after this line. Delete the <code>pass</code> line — it was only needed as a temporary placeholder.' });
+            msg: 'Leftover <code>pass</code> - this placeholder can be deleted',
+            fix: 'You\'ve added real code after this line. Delete the <code>pass</code> line - it was only needed as a temporary placeholder.' });
         }
         break; // only check the immediate next non-blank line
       }
@@ -3621,10 +3621,10 @@
     // Tutorial steps can set suppressErrors: ['struct', 'pass', 'tab', 'bad']
     // to prevent specific gutter marks and tooltips for steps that intentionally
     // contain incomplete or unusual code.
-    // 'struct' — structural IndentationErrors (empty block, unexpected/missing indent)
-    // 'pass'   — leftover pass placeholder warning
-    // 'tab'    — tab character warning
-    // 'bad'    — wrong-multiple-of-4 spaces warning
+    // 'struct' - structural IndentationErrors (empty block, unexpected/missing indent)
+    // 'pass' - leftover pass placeholder warning
+    // 'tab' - tab character warning
+    // 'bad' - wrong-multiple-of-4 spaces warning
     if (S.activeTut) {
       try {
         var _curStep = TUTORIALS[S.activeTut.tutIdx].steps[S.activeTut.stepIdx];
@@ -3638,7 +3638,7 @@
     return errors;
   }
 
-  // Key of the last dismissed tooltip (line:msg) — cleared when a different error appears.
+  // Key of the last dismissed tooltip (line:msg) - cleared when a different error appears.
   var _itDismissedKey = null;
 
   function updateIndentGutter() {
@@ -3678,7 +3678,7 @@
     for (var ei = 0; ei < errors.length; ei++) {
       if (errors[ei].line === curLine) { lineErr = errors[ei]; break; }
     }
-    // All error types — tooltip only shows when caret is on the exact flagged line.
+    // All error types - tooltip only shows when caret is on the exact flagged line.
     if (!lineErr) { tip.classList.remove('ps-it-show'); return; }
 
     // If this exact error was dismissed by the user, keep it hidden.
@@ -3744,7 +3744,7 @@
 
       // ── Block-context check ───────────────────────────────────────
       // If content was found and the requires item has NO leading whitespace
-      // (the common case — most requires omit indent to be flexible), verify
+      // (the common case - most requires omit indent to be flexible), verify
       // the line actually lives inside the CORRECT BLOCK as shown in step.target.
       // This catches "line exists but in the wrong if/while/def block" cases
       // that content-only matching cannot see.
@@ -3759,7 +3759,7 @@
         if (found) found = _reqLineMatchesTarget(code, n.reqStr, step.target);
       }
 
-      // Hidden items are silently validated — they update their invisible DOM row
+      // Hidden items are silently validated - they update their invisible DOM row
       // (so covByReq span-colouring sees ck-ok) but don't affect allOk or the UI.
       if (!found && !n.hidden) allOk = false;
       if (ckEl) {
@@ -3772,7 +3772,7 @@
     // Second pass: colour code-block spans.
     // A span turns green when EITHER:
     //   (a) its exact line text is present in the editor within the span's function
-    //       context (data-ctx). If no context, searches all code — handles context
+    //       context (data-ctx). If no context, searches all code - handles context
     //       lines of if-blocks that have no dedicated requires item.
     //   (b) a satisfied requires item whose text is a substring of this span's line,
     //       and the req's context matches this span's context.
@@ -3904,7 +3904,7 @@
     if (ierrEl) {
       if (allOk && step.target && code.trim()) {
         var _indErr = _pyIndentCheck(code);
-        // "empty block" errors occur at end-of-file — in tutorials this is intentional:
+        // "empty block" errors occur at end-of-file - in tutorials this is intentional:
         // many steps ask for a block header (def/while/if) and the body comes in the
         // next step.  The purple gutter mark already signals this in the editor.
         // All other structural errors (unexpected indent, expected-but-missing indent)
@@ -3934,7 +3934,7 @@
       validEl.textContent = '';
       validEl.className   = 'ps-tb-valid';
     } else if (allOk) {
-      validEl.textContent = '✓ All done — click Next';
+      validEl.textContent = '✓ All done - click Next';
       validEl.className   = 'ps-tb-valid tb-ok';
     } else {
       var codeReqsDone = _visReqs.filter(function (r) {
@@ -3957,7 +3957,7 @@
     }
   }
 
-  // Low-level exit — clears state, hides bar, shows buttons
+  // Low-level exit - clears state, hides bar, shows buttons
   function _doExitTutorial() {
     S.activeTut = null;
     if (_tutPollTid) { clearInterval(_tutPollTid); _tutPollTid = null; }
@@ -3973,7 +3973,7 @@
     if (tb) tb.style.display = '';
   }
 
-  // Public exit — prompts for keep/restore then cleans up
+  // Public exit - prompts for keep/restore then cleans up
   function exitTutorial(isFinished) {
     var at = S.activeTut;
     if (!at) { _doExitTutorial(); return; }
@@ -3987,7 +3987,7 @@
     }
 
     if (!hasSnap) {
-      // No snapshot means nothing to restore — just exit
+      // No snapshot means nothing to restore - just exit
       if (isFinished) clearTutProgress(tutIdx);
       _doExitTutorial();
       return;
@@ -3995,7 +3995,7 @@
 
     // Snapshot the finished project so it is recoverable from the Snapshots panel.
     if (isFinished) {
-      takeProjectSnapshot(tut.title + ' — finished', 'after-tutorial');
+      takeProjectSnapshot(tut.title + ' - finished', 'after-tutorial');
     }
 
     var icon  = isFinished ? '🎉' : '📚';
@@ -4190,25 +4190,25 @@
   //
   // step.behaviorCheck shape:
   //   {
-  //     hint:     string    — shown to student if any scenario fails
-  //     setupMs:  number    — wait after green-flag before snapshotting (default 400)
-  //     settleMs: number    — default wait after input before reading state (default 120)
+  //     hint:     string - shown to student if any scenario fails
+  //     setupMs:  number - wait after green-flag before snapshotting (default 400)
+  //     settleMs: number - default wait after input before reading state (default 120)
   //     scenarios: [
   //       {
-  //         label:      string   — appended to hint on failure (optional)
-  //         holdKey:    string   — key name to hold, e.g. 'right', 'up', 'space' (optional)
-  //         durationMs: number   — how long to hold the key (default 400)
-  //         waitMs:     number   — override settleMs for this scenario (for auto-run code)
+  //         label:      string - appended to hint on failure (optional)
+  //         holdKey:    string - key name to hold, e.g. 'right', 'up', 'space' (optional)
+  //         durationMs: number - how long to hold the key (default 400)
+  //         waitMs:     number - override settleMs for this scenario (for auto-run code)
   //         checks: [
-  //           { type:'xChanged',  dir: '+' | '-' }  — active sprite x increased / decreased
-  //           { type:'yChanged',  dir: '+' | '-' }  — active sprite y increased / decreased
-  //           { type:'moved' }                       — sprite moved at all (x or y)
-  //           { type:'costumeChanged' }              — costume index changed
-  //           { type:'xAbove',  value: N }           — final sprite x > N
-  //           { type:'xBelow',  value: N }           — final sprite x < N
-  //           { type:'yAbove',  value: N }           — final sprite y > N
-  //           { type:'yBelow',  value: N }           — final sprite y < N
-  //           { type:'variable', name:'n', op:'>', value: V }  — variable check
+  //           { type:'xChanged',  dir: '+' | '-' } - active sprite x increased / decreased
+  //           { type:'yChanged',  dir: '+' | '-' } - active sprite y increased / decreased
+  //           { type:'moved' } - sprite moved at all (x or y)
+  //           { type:'costumeChanged' } - costume index changed
+  //           { type:'xAbove',  value: N } - final sprite x > N
+  //           { type:'xBelow',  value: N } - final sprite x < N
+  //           { type:'yAbove',  value: N } - final sprite y > N
+  //           { type:'yBelow',  value: N } - final sprite y < N
+  //           { type:'variable', name:'n', op:'>', value: V } - variable check
   //         ]
   //       }
   //     ]
@@ -4251,7 +4251,7 @@
       // Guard: code must still be running after setup time (unless allowStop).
       if (!S.running && !allowStop) {
         stopAll();
-        onFail(hint || 'Your code didn\'t start — make sure it has a <code>def game_start():</code> function.');
+        onFail(hint || 'Your code didn\'t start - make sure it has a <code>def game_start():</code> function.');
         return;
       }
 
@@ -4357,12 +4357,12 @@
     var bar = document.getElementById('ps-tut-bar');
     if (!bar) return;
 
-    // Exit button — mid-tutorial exit, keep progress saved for resume
+    // Exit button - mid-tutorial exit, keep progress saved for resume
     bar.querySelector('.ps-tb-exit').addEventListener('click', function () {
       exitTutorial(false);
     });
 
-    // Restore button — re-applies the step's starter code
+    // Restore button - re-applies the step's starter code
     bar.querySelector('.ps-tb-miss-restore').addEventListener('click', function () {
       applyTutBar(true); // re-loads starter, same as navigating to this step fresh
     });
@@ -4469,7 +4469,7 @@
         { code:'set_sound_effect("pitch", value)', desc:'Set a sound effect. Effects: "pitch" (semitones) and "pan left right" (−100 to 100).' },
         { code:'change_sound_effect("pitch", amount)', desc:'Change a sound effect by the given amount.' },
         { code:'clear_sound_effects()', desc:'Remove all sound effects from this sprite.' },
-        { code:'set_volume(percent)', desc:'Set the volume (0–100). Default is 100.' },
+        { code:'set_volume(percent)', desc:'Set the volume (0 to 100). Default is 100.' },
         { code:'change_volume(amount)', desc:'Change the volume by the given amount.' },
         { code:'volume()', desc:'Return the current volume as a percentage.' },
       ]},
@@ -4486,9 +4486,9 @@
       { cat:'sens', title:'Sensing', items:[
         { code:'touching("SpriteName")', desc:'True if this sprite is touching another sprite.' },
         { code:'touching("mouse_pointer")', desc:'True if touching the mouse cursor.' },
-        { code:'touching_colour("#ff0000")', desc:'True if this sprite is touching a specific colour on the stage or another sprite. While typing inside the brackets a 🎨 Colour badge appears — click it to open the colour picker. Both touching_colour and touching_color are accepted.' },
+        { code:'touching_colour("#ff0000")', desc:'True if this sprite is touching a specific colour on the stage or another sprite. While typing inside the brackets a 🎨 Colour badge appears - click it to open the colour picker. Both touching_colour and touching_color are accepted.' },
         { code:'distance_to("SpriteName")', desc:'Pixel distance to another sprite or "mouse_pointer".' },
-        { code:'key_pressed("space")', desc:'True while a key is held. Keys: space, up, down, left, right, a–z, 0–9.' },
+        { code:'key_pressed("space")', desc:'True while a key is held. Keys: space, up, down, left, right, a-z, 0-9.' },
         { code:'mouse_x() / mouse_y()', desc:'Mouse position in Scratch coordinates (0,0 = centre).' },
         { code:'mouse_down()', desc:'True while the left mouse button is held.' },
         { code:'ask(question)', desc:'Show a text-input dialog over the stage. Waits for the student to type and press Enter.' },
@@ -4499,17 +4499,17 @@
         { code:'days_since_2000()', desc:'Floating-point number of days elapsed since 1 January 2000.' },
       ]},
       { cat:'vars', title:'Variables', items:[
-        { code:'set_variable("Score", 0)', desc:'Set a Scratch variable by name — creates it automatically if it does not exist. Use display_variable("Score", True) to make the on-screen counter visible.' },
+        { code:'set_variable("Score", 0)', desc:'Set a Scratch variable by name - creates it automatically if it does not exist. Use display_variable("Score", True) to make the on-screen counter visible.' },
         { code:'get_variable("Score")', desc:'Read the current value of a Scratch stage variable. Returns 0 if the variable does not exist.' },
-        { code:'change_variable("Score", 1)', desc:'Add a number to a Scratch stage variable — shortcut for get then set. Creates the variable if needed. Use negative numbers to subtract.' },
-        { code:'display_variable("Score", True)', desc:'Creates the variable if it does not exist, then shows (True) or hides (False) its on-screen counter — exactly the same as ticking or unticking the checkbox next to a variable in the Scratch Variables panel. Useful for hiding internal variables like HP that you only want shown at certain times.' },
+        { code:'change_variable("Score", 1)', desc:'Add a number to a Scratch stage variable - shortcut for get then set. Creates the variable if needed. Use negative numbers to subtract.' },
+        { code:'display_variable("Score", True)', desc:'Creates the variable if it does not exist, then shows (True) or hides (False) its on-screen counter - exactly the same as ticking or unticking the checkbox next to a variable in the Scratch Variables panel. Useful for hiding internal variables like HP that you only want shown at certain times.' },
       ]},
       { cat:'ops', title:'Operators', items:[
         { code:'pick_random(1, 10)', desc:'Random integer between the two values (inclusive). Returns a float if either value is a float.' },
         { code:'floor(n) / ceiling(n)', desc:'Round down or up to the nearest integer.' },
         { code:'sqrt(n)', desc:'Square root.' },
         { code:'sin(degrees) / cos(degrees) / tan(degrees)', desc:'Trigonometry using degrees, matching Scratch\'s operator block. Note: Python\'s math.sin uses radians.' },
-        { code:'asin(n) / acos(n) / atan(n)', desc:'Inverse trig — return a result in degrees.' },
+        { code:'asin(n) / acos(n) / atan(n)', desc:'Inverse trig - return a result in degrees.' },
         { code:'ln(n)', desc:'Natural logarithm (base e).' },
         { code:'log(n)', desc:'Base-10 logarithm.' },
         { code:'e_to(n)', desc:'Raise e to the power n  (e^n).' },
@@ -4764,7 +4764,7 @@
       overall.className = 'ps-chal-overall ' + (allPassed ? 'co-pass' : 'co-fail');
       overall.textContent = allPassed
         ? '🎉 All tests passed!'
-        : '✗ Some tests failed — check your code and try again.';
+        : '✗ Some tests failed - check your code and try again.';
       resultsEl.appendChild(overall);
       runBtn.disabled = false;
       runBtn.textContent = '▶ Run Tests Again';
@@ -4773,7 +4773,7 @@
   }
 
   // Like _bcRunScenario but:
-  //   • never stops early on failure — runs every test and records pass/fail
+  //   • never stops early on failure - runs every test and records pass/fail
   //   • supports keepRunning: true to skip the fresh-start between tests
   function _chalRunScenario(tests, idx, setupMs, settleMs, rows, onDone) {
     if (idx >= tests.length) {
@@ -5010,7 +5010,7 @@
   }
 
   // ── Overlay width: align left panel to the TurboWarp stage edge ─
-  // TurboWarp's code area is NOT exactly 50% — it depends on the stage's
+  // TurboWarp's code area is NOT exactly 50% - it depends on the stage's
   // rendered size. We measure the canvas left edge and snap the panel to it.
   function adjustOverlay() {
     var canvas = document.querySelector('canvas');
@@ -5126,7 +5126,7 @@
       // Skip if we already have code for this sprite (in memory or localStorage)
       if (S.spriteCode[name]) return;
       try { if (localStorage.getItem(storeKey(name))) return; } catch(e) {}
-      // No code yet — look for a sprite with matching costume assets
+      // No code yet - look for a sprite with matching costume assets
       var sourceName = findCodeSource(t);
       if (!sourceName) return;
       // Deep-copy the source threads and assign fresh IDs to avoid collisions
@@ -5248,7 +5248,7 @@
     style.textContent = [
       // Hide TurboWarp editing chrome; keep stage visible
       '.ps-demo-active .blocklyDiv,.ps-demo-active .blocklyToolboxDiv,.ps-demo-active .blocklyFlyout{display:none!important}',
-      // Demo overlay — mirrors #ps-overlay geometry but is built differently
+      // Demo overlay - mirrors #ps-overlay geometry but is built differently
       '#ps-demo{position:fixed;left:0;right:0;top:92px;bottom:0;z-index:45;display:flex;pointer-events:none}',
       // Left code panel
       '#ps-demo-left{display:flex;flex-direction:column;background:#0d1117;pointer-events:auto;border-right:2px solid #21262d;box-shadow:4px 0 24px rgba(0,0,0,.5);flex-shrink:0;width:50%;overflow:hidden}',
@@ -5268,7 +5268,7 @@
       '#ps-demo-bar-wrap{height:3px;background:#21262d;border-radius:2px;overflow:hidden}',
       '#ps-demo-bar{height:100%;width:0%;background:#238636;border-radius:2px}',
       '#ps-demo-footer-label{font-size:10px;color:#8b949e;font-family:"Roboto","Segoe UI",sans-serif;margin-bottom:4px;letter-spacing:.03em}',
-      // Transparent blocker over the stage — prevents mouse interaction
+      // Transparent blocker over the stage - prevents mouse interaction
       '#ps-demo-blocker{flex:1;pointer-events:auto;cursor:default;background:transparent;user-select:none}'
     ].join('\n');
     document.head.appendChild(style);
@@ -5385,7 +5385,7 @@
     'help':            '#ps-help-btn',
     'tutorials':    '#ps-tut-btn',
     'console':      '#ps-console',
-    // TurboWarp sprite panel — the action-menu + buttons at the bottom-left
+    // TurboWarp sprite panel - the action-menu + buttons at the bottom-left
     'add-sprite-btn': '[class*="action-menu_"],[class*="actionMenu_"]',
   };
 
@@ -5546,7 +5546,7 @@
       applyPyScratchTheme();
       watchPyScratchTheme();
 
-      // Register Skulpt bridge builtins once — these are static functions
+      // Register Skulpt bridge builtins once - these are static functions
       // that receive the thread's gen token as an argument, so they never
       // need to be re-registered per thread.
       setupBridge();
@@ -5710,7 +5710,7 @@
       } catch(e) {}
 
       // ── Project save: embed Python inside project.json ──────────
-      // Patch vm.toJSON() — called by every TurboWarp save path:
+      // Patch vm.toJSON() - called by every TurboWarp save path:
       //   • File → Save (saveProjectSb3 → _saveProjectZip → toJSON)
       //   • Ctrl+S toolbar button
       //   • TurboWarp restore-point system (saveProjectSb3DontZip → toJSON)
@@ -5731,7 +5731,7 @@
                 // Embed EVERY sprite's Python, not just the ones opened this
                 // session. Un-visited sprites keep their code only in localStorage
                 // (S.spriteCode is a lazy in-memory cache), so pull it straight
-                // from storage when it isn't loaded — otherwise a full-project
+                // from storage when it isn't loaded - otherwise a full-project
                 // snapshot / tutorial-resume SB3 would silently drop their code.
                 var code = S.spriteCode[t.name];
                 if (!code) {

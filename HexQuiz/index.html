@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hex Quiz</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
+  <script src="../shared/bc-support.js?v=20260927"></script>
+  <style>
+    body { margin: 0; min-height: 100vh; display: flex; justify-content: center; }
+    .hq { width: 100%; max-width: 620px; padding: 32px 16px 40px; display: flex; flex-direction: column; gap: 16px; }
+    .hq-screen { display: none; flex-direction: column; gap: 16px; }
+    .hq-screen.is-on { display: flex; }
+
+    .hq-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .hq-head h1 { margin: 0; font-size: 30px; font-weight: 800; }
+    .hq-head h1 span { color: var(--brand); font-family: var(--font-mono); font-weight: 700; }
+    .hq-lead { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+
+    .hq-level {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 16px 18px;
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+    }
+    .hq-level:hover { background: var(--surface-2); border-color: var(--line-strong); }
+    .hq-badge { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 12px; background: var(--brand-soft-strong); color: var(--brand-dark); font: 700 18px var(--font-mono); }
+    .hq-level small { display: block; color: var(--brand); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .hq-level b { display: block; font-family: var(--font-display); font-size: 18px; margin: 2px 0; }
+    .hq-level span.desc { display: block; color: var(--muted); font-size: 14px; }
+    .hq-best { color: var(--muted); font-size: 13px; text-align: right; white-space: nowrap; }
+    .hq-best b { display: block; color: var(--ink); font: 700 16px var(--font-mono); }
+
+    .hq-hud { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--muted); font-size: 14px; }
+    .hq-hud b { color: var(--ink); font-size: 16px; }
+    .hq-chip { padding: 4px 12px; border-radius: 999px; background: var(--brand-soft); color: var(--brand); font-weight: 700; font-size: 13px; }
+    .hq-progress { height: 4px; border-radius: 4px; background: var(--surface-3); overflow: hidden; }
+    .hq-progress div { height: 100%; width: 0; background: var(--brand); transition: width .3s ease; }
+
+    .hq-card { padding: 30px 20px 24px; text-align: center; }
+    .hq-ask { color: var(--muted); font-size: 14px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+    .hq-q { margin: 12px 0 4px; font: 700 64px/1 var(--font-mono); color: var(--ink); }
+    .hq-working { min-height: 24px; margin-top: 10px; color: var(--ink-soft); font-size: 16px; }
+    .hq-hint { display: none; margin-top: 14px; padding: 10px 14px; border-radius: 10px; background: var(--brand-soft); color: var(--brand-dark); font-size: 15px; line-height: 1.5; user-select: none; }
+    .hq-hint.show { display: block; }
+    .hq-hint .mono { font-family: var(--font-mono); }
+    .hq-ladder { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 8px; }
+    .hq-ladder span { padding: 4px 8px; border-radius: 8px; background: var(--surface-2); color: var(--ink); font: 600 14px var(--font-mono); }
+    .hq-ladder span.is-q { background: var(--warn-soft); color: var(--warn); }
+
+    .hq-answer { display: flex; gap: 8px; }
+    .hq-answer input { flex: 1; min-width: 0; height: 56px; padding: 0 16px; border-radius: 12px; font: 700 26px var(--font-mono); text-align: center; }
+    .hq-answer .bc-btn { min-height: 56px; padding: 0 26px; font-size: 16px; }
+    .hq-feedback { min-height: 24px; text-align: center; font-size: 16px; font-weight: 600; }
+    .hq-feedback.good { color: var(--good); }
+    .hq-feedback.bad { color: var(--bad); }
+    .hq-streak { min-height: 20px; text-align: center; color: var(--warn); font-size: 14px; font-weight: 600; }
+
+    .hq-results { padding: 24px 22px; }
+    .hq-results h2 { margin: 0 0 12px; font-size: 22px; }
+    .hq-row { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .hq-row:last-child { border-bottom: 0; }
+    .hq-row span { color: var(--muted); }
+    .hq-row b { font: 700 20px var(--font-mono); }
+    .hq-row b.good { color: var(--good); }
+    .hq-row b.bad { color: var(--bad); }
+    .hq-missed { margin-top: 10px; color: var(--ink-soft); font-size: 15px; line-height: 1.5; }
+    .hq-actions { display: flex; gap: 10px; }
+    .hq-actions .bc-btn { flex: 1; min-height: 44px; font-size: 15px; }
+
+    input.shake { animation: hq-shake .35s ease; }
+    @keyframes hq-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-7px); } 50% { transform: translateX(7px); } 75% { transform: translateX(-3px); } }
+    @media (prefers-reduced-motion: reduce) { input.shake { animation: none; } .hq-progress div { transition: none; } }
+    @media (max-width: 420px) { .hq-q { font-size: 52px; } .hq-level { grid-template-columns: 48px 1fr; } .hq-best { display: none; } .hq-badge { width: 48px; height: 48px; } }
+  </style>
+</head>
+<body>
+  <main class="hq">
+    <section class="hq-screen is-on" id="home">
+      <div class="hq-head">
+        <h1>Hex Quiz <span>A-F</span></h1>
+        <div id="support-slot"></div>
+      </div>
+      <p class="hq-lead">Get every hex digit and the 16 times table so quick you never have to stop and work them out. Each level is 16 questions.</p>
+      <button type="button" class="hq-level" data-level="1">
+        <span class="hq-badge">A=?</span>
+        <span><small>Level 01</small><b>Hex Digits</b><span class="desc">What is each of A to F worth in denary?</span></span>
+        <span class="hq-best" id="best-1"></span>
+      </button>
+      <button type="button" class="hq-level" data-level="2">
+        <span class="hq-badge">16&times;</span>
+        <span><small>Level 02</small><b>The 16&times; Table</b><span class="desc">16 times every hex digit from 0 to F.</span></span>
+        <span class="hq-best" id="best-2"></span>
+      </button>
+      <button type="button" class="hq-level" data-level="both">
+        <span class="hq-badge">1+2</span>
+        <span><small>Full run</small><b>Level 1, then Level 2</b><span class="desc">Both levels back to back.</span></span>
+        <span class="hq-best"></span>
+      </button>
+    </section>
+
+    <section class="hq-screen" id="quiz">
+      <div class="hq-hud">
+        <span class="hq-chip" id="level-chip">Level 1</span>
+        <span>Score <b id="score">0</b></span>
+        <span>Question <b id="qnum">1</b> of <b>16</b></span>
+      </div>
+      <div class="hq-progress"><div id="bar"></div></div>
+      <div class="bc-card hq-card">
+        <div class="hq-ask" id="ask">Denary value of</div>
+        <div class="hq-q" id="question">A</div>
+        <div class="hq-working" id="working" aria-live="polite"></div>
+        <div class="hq-hint" id="hint" aria-live="polite"></div>
+      </div>
+      <div class="hq-streak" id="streak"></div>
+      <form class="hq-answer" id="answer-form" autocomplete="off">
+        <input type="text" inputmode="numeric" id="answer" placeholder="?" aria-label="Your answer" maxlength="4">
+        <button type="submit" class="bc-btn" id="enter">Enter</button>
+      </form>
+      <div class="hq-feedback" id="feedback" aria-live="polite"></div>
+      <button type="button" class="bc-btn is-text" id="quit" style="align-self:center">Back to levels</button>
+    </section>
+
+    <section class="hq-screen" id="results">
+      <div class="bc-card hq-results">
+        <h2 id="results-title">Level 1 complete</h2>
+        <div id="results-rows"></div>
+        <div class="hq-missed" id="missed"></div>
+      </div>
+      <div class="hq-actions">
+        <button type="button" class="bc-btn" id="next">Next</button>
+        <button type="button" class="bc-btn is-outline" id="home-btn">Levels</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+    var LETTERS = ["A", "B", "C", "D", "E", "F"];
+    var ALL = "0123456789ABCDEF".split("");
+    var PER_LEVEL = 16;
+    var BEST_KEY = "hexquiz-best";
+    var Support = window.BCSupport || null;
+    var faders = Support ? { 1: Support.fader("hexquiz:digits"), 2: Support.fader("hexquiz:times16") } : {};
+
+    var run = null;       // { levels: [1] or [1, 2], at, level, questions, i, score, streak, bestStreak, missed, results }
+    var locked = false;
+
+    function shuffle(a) {
+      a = a.slice();
+      for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+      return a;
+    }
+    // Every item at least once, then random extras, in a shuffled order
+    // with no digit twice in a row.
+    function deck(items) {
+      var pool = items.slice();
+      while (pool.length < PER_LEVEL) pool.push(items[Math.floor(Math.random() * items.length)]);
+      for (var tries = 0; tries < 50; tries++) {
+        var d = shuffle(pool);
+        if (d.every(function (x, i) { return i === 0 || d[i - 1] !== x; })) return d;
+      }
+      return shuffle(pool);
+    }
+    function denary(d) { return parseInt(d, 16); }
+
+    function makeQuestions(level) {
+      return deck(level === 1 ? LETTERS : ALL).map(function (d) {
+        return level === 1
+          ? { digit: d, ask: "Denary value of", show: d, answer: denary(d) }
+          : { digit: d, ask: "Work out", show: "16 × " + d, answer: 16 * denary(d) };
+      });
+    }
+
+    // ---- Best scores, per browser ----
+    function bests() { try { return JSON.parse(localStorage.getItem(BEST_KEY) || "{}") || {}; } catch (e) { return {}; } }
+    function saveBest(level, score) {
+      var b = bests();
+      if (!(b[level] >= score)) { b[level] = score; try { localStorage.setItem(BEST_KEY, JSON.stringify(b)); } catch (e) {} }
+    }
+    function showBests() {
+      var b = bests();
+      [1, 2].forEach(function (l) { $("best-" + l).innerHTML = b[l] != null ? "Best<b>" + b[l] + "/" + PER_LEVEL + "</b>" : ""; });
+    }
+
+    function show(id) {
+      ["home", "quiz", "results"].forEach(function (s) { $(s).classList.toggle("is-on", s === id); });
+    }
+
+    function start(levels) {
+      run = { levels: levels, at: 0, results: {} };
+      beginLevel();
+    }
+    function beginLevel() {
+      var level = run.levels[run.at];
+      run.level = level;
+      run.questions = makeQuestions(level);
+      run.i = 0;
+      run.score = 0;
+      run.streak = 0;
+      run.bestStreak = 0;
+      run.missed = [];
+      $("level-chip").textContent = "Level " + level;
+      show("quiz");
+      renderQuestion();
+    }
+
+    // ---- Support mode: the working, not the answer, and less of it as
+    // the student gets them right ----
+    function ladderHtml(d) {
+      var upTo = LETTERS.indexOf(d);
+      var parts = ["9"].concat(LETTERS.slice(0, upTo).map(function (x) { return x + " = " + denary(x); }));
+      return '<div class="hq-ladder">' + parts.map(function (p) { return "<span>" + p + "</span>"; }).join("") +
+        '<span class="is-q">' + d + " = ?</span></div>";
+    }
+    function hintHtml(q, r) {
+      if (!r) return "";
+      var dec = denary(q.digit);
+      if (run.level === 1) {
+        if (r > 0.9) return "Hex carries on counting after 9. Count up to " + q.digit + ":" + ladderHtml(q.digit);
+        if (r > 0.5) return "A = 10, then each letter after it is one more.";
+        return "Hex carries on counting after 9.";
+      }
+      var change = dec > 9 ? '<span class="mono">' + q.digit + "</span> is " + dec + " in denary. " : "";
+      if (r > 0.9) return change + "16 × " + dec + " = 10 × " + dec + " + 6 × " + dec;
+      if (r > 0.5) return change + (dec > 9 ? "Now times it by 16." : "Split 16 into 10 + 6.");
+      return dec > 9 ? "Change " + q.digit + " into denary first." : "16 × a number is 10 lots plus 6 lots.";
+    }
+    function renderHint() {
+      var q = run && run.questions[run.i];
+      var f = run && faders[run.level];
+      var html = q && !locked && Support && Support.isOn() && f ? hintHtml(q, f.reveal()) : "";
+      $("hint").innerHTML = html;
+      $("hint").classList.toggle("show", !!html);
+    }
+    function workingFor(q) {
+      var dec = denary(q.digit);
+      if (run.level === 1) {
+        return q.digit + " = " + q.answer + "   (" + LETTERS.slice(0, LETTERS.indexOf(q.digit) + 1).map(function (x) { return x + " " + denary(x); }).join(", ") + ")";
+      }
+      var steps = "16 × " + q.digit + (dec > 9 ? " = 16 × " + dec : "");
+      return steps + " = " + (10 * dec) + " + " + (6 * dec) + " = " + q.answer;
+    }
+
+    function renderQuestion() {
+      var q = run.questions[run.i];
+      $("ask").textContent = q.ask;
+      $("question").textContent = q.show;
+      $("working").textContent = "";
+      $("feedback").textContent = "";
+      $("feedback").className = "hq-feedback";
+      $("score").textContent = run.score;
+      $("qnum").textContent = run.i + 1;
+      $("bar").style.width = (run.i / PER_LEVEL) * 100 + "%";
+      $("streak").textContent = run.streak >= 3 ? "Streak: " + run.streak : "";
+      $("answer").value = "";
+      locked = false;
+      renderHint();
+      setTimeout(function () { $("answer").focus(); }, 30);
+    }
+
+    function submit() {
+      if (locked) return;
+      var raw = $("answer").value.trim();
+      if (!raw) return;
+      var q = run.questions[run.i];
+      var right = /^\d+$/.test(raw) && Number(raw) === q.answer;
+      var f = faders[run.level];
+      var supported = Support && Support.isOn() && f;
+      locked = true;
+      if (right) {
+        run.score++;
+        run.streak++;
+        run.bestStreak = Math.max(run.bestStreak, run.streak);
+        if (supported) f.correct();
+        $("feedback").textContent = ["Correct!", "Yes!", "Spot on!", "Exactly!", "Right!"][Math.floor(Math.random() * 5)];
+        $("feedback").className = "hq-feedback good";
+        $("hint").classList.remove("show");
+        setTimeout(nextQuestion, 450);
+      } else {
+        run.streak = 0;
+        run.missed.push(q.show + " = " + q.answer);
+        if (supported) f.wrong();
+        $("feedback").textContent = "Not quite. Here is the working:";
+        $("feedback").className = "hq-feedback bad";
+        $("working").textContent = workingFor(q);
+        $("hint").classList.remove("show");
+        var input = $("answer");
+        input.classList.remove("shake"); void input.offsetWidth; input.classList.add("shake");
+        setTimeout(nextQuestion, 2600);
+      }
+    }
+
+    function nextQuestion() {
+      run.i++;
+      if (run.i < PER_LEVEL) { renderQuestion(); return; }
+      levelDone();
+    }
+
+    function levelDone() {
+      var r = { score: run.score, bestStreak: run.bestStreak, missed: run.missed };
+      run.results[run.level] = r;
+      saveBest(run.level, run.score);
+      $("bar").style.width = "100%";
+      $("results-title").textContent = "Level " + run.level + " complete";
+      $("results-rows").innerHTML =
+        '<div class="hq-row"><span>Correct</span><b class="good">' + r.score + " / " + PER_LEVEL + "</b></div>" +
+        '<div class="hq-row"><span>Mistakes</span><b class="bad">' + (PER_LEVEL - r.score) + "</b></div>" +
+        '<div class="hq-row"><span>Best streak</span><b>' + r.bestStreak + "</b></div>";
+      var uniqueMissed = r.missed.filter(function (m, i) { return r.missed.indexOf(m) === i; });
+      $("missed").textContent = uniqueMissed.length ? "Worth another look: " + uniqueMissed.join(", ") + "." : "Every one right. Try it again and aim for a full streak.";
+      var more = run.at < run.levels.length - 1;
+      $("next").textContent = more ? "Go to Level " + run.levels[run.at + 1] : "Play again";
+      show("results");
+    }
+
+    // ---- Wiring ----
+    Array.prototype.forEach.call(document.querySelectorAll(".hq-level"), function (btn) {
+      btn.addEventListener("click", function () {
+        var l = btn.dataset.level;
+        start(l === "both" ? [1, 2] : [Number(l)]);
+      });
+    });
+    $("answer-form").addEventListener("submit", function (e) { e.preventDefault(); submit(); });
+    $("answer").addEventListener("input", function () { this.value = this.value.replace(/[^0-9]/g, ""); });
+    $("quit").addEventListener("click", function () { run = null; showBests(); show("home"); });
+    $("home-btn").addEventListener("click", function () { run = null; showBests(); show("home"); });
+    $("next").addEventListener("click", function () {
+      if (run.at < run.levels.length - 1) { run.at++; beginLevel(); }
+      else start(run.levels);
+    });
+    if (Support) {
+      Support.mountToggle($("support-slot"), "Support");
+      Support.onChange(function () { if (run && $("quiz").classList.contains("is-on")) renderHint(); });
+    }
+    showBests();
+  })();
+  </script>
+</body>
+</html>

@@ -998,7 +998,7 @@ function submitExamAnswer() {
                     finishExam();
                 }
             });
-            return; // Exit early — async handles the rest
+            return; // Exit early - async handles the rest
         }
     }
     state.examAnswers.push({ q: q, user: userAnswer, correct: isCorrect });
@@ -1166,7 +1166,7 @@ function isRunnableCode(code) {
     // Plain text answers like "Syntax Error", "Logic Error"
     if (/^[A-Z][a-z]+ [A-Z][a-z]+$/.test(trimmed)) return false;
 
-    // Single-line incomplete statements — while/for/if with no body
+    // Single-line incomplete statements - while/for/if with no body
     if (/^(while|for|if|elif|else|def|class)\b/.test(trimmed) && !trimmed.includes('\n')) return false;
 
     // Code that uses list indexing (var[i]) but never defines the list
@@ -1181,7 +1181,7 @@ function isRunnableCode(code) {
         if (!hasListAssignment) return false;
     }
 
-    // No parentheses or assignment — just an expression or snippet
+    // No parentheses or assignment - just an expression or snippet
     if (!/[\(\=]/.test(trimmed)) return false;
 
     return true;
@@ -1200,7 +1200,7 @@ function injectDefaultVars(code) {
     // Strip comments before analysis
     const codeNoComments = code.split('\n').filter(l => !l.trim().startsWith('#')).join('\n');
 
-    // Find ALL assignments — varName = (not ==, !=, <=, >=)
+    // Find ALL assignments - varName = (not ==, !=, <=, >=)
     for (const m of codeNoComments.matchAll(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=[^=><!]/gm)) {
         assigned.add(m[1]);
     }

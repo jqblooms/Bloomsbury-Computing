@@ -43,7 +43,7 @@
           newLines: ['        if key_pressed("right"):', '            change_x(5)'],
           requires: ['        if key_pressed("right"):', '            change_x(5)'],
           behaviorCheck: {
-            hint: 'Hold the right arrow key — the sprite should move right. Check your if statement and <code>change_x(5)</code>.',
+            hint: 'Hold the right arrow key - the sprite should move right. Check your if statement and <code>change_x(5)</code>.',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves sprite right', holdKey: 'right', durationMs: 400,
@@ -53,13 +53,13 @@
         },
         {
           title: 'A second if for the left key',
-          text: 'Add another <code>if</code> block below the first. Using two separate <code>if</code> blocks (rather than <code>elif</code>) means both can fire at once — useful for diagonal movement later.',
+          text: 'Add another <code>if</code> block below the first. Using two separate <code>if</code> blocks (rather than <code>elif</code>) means both can fire at once - useful for diagonal movement later.',
           starter: 'def game_start():\n    while True:\n        if key_pressed("right"):\n            change_x(5)',
           target: 'def game_start():\n    while True:\n        if key_pressed("right"):\n            change_x(5)\n        if key_pressed("left"):\n            change_x(-5)',
           newLines: ['        if key_pressed("left"):', '            change_x(-5)'],
           requires: ['        if key_pressed("left"):', '            change_x(-5)'],
           behaviorCheck: {
-            hint: 'Check both arrow keys work — the sprite should move right when right is held and left when left is held.',
+            hint: 'Check both arrow keys work - the sprite should move right when right is held and left when left is held.',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves sprite right', holdKey: 'right', durationMs: 400,
@@ -71,7 +71,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong> and press the left and right arrow keys. The sprite should move — Scratch keeps it on screen automatically.<br><br><strong>Challenge:</strong> Add <code>if</code> blocks for the up and down keys using <code>change_y(5)</code> and <code>change_y(-5)</code>.',
+          text: 'Click the <strong>green flag ▶</strong> and press the left and right arrow keys. The sprite should move - Scratch keeps it on screen automatically.<br><br><strong>Challenge:</strong> Add <code>if</code> blocks for the up and down keys using <code>change_y(5)</code> and <code>change_y(-5)</code>.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -84,13 +84,13 @@
       steps: [
         {
           title: 'Your first for loop',
-          text: 'A <strong>for loop</strong> repeats its code a fixed number of times — no <code>while True:</code> needed. <code>range(5)</code> means "do this 5 times". The <code>def game_start():</code> has been provided — add the for loop inside it:',
+          text: 'A <strong>for loop</strong> repeats its code a fixed number of times - no <code>while True:</code> needed. <code>range(5)</code> means "do this 5 times". The <code>def game_start():</code> has been provided - add the for loop inside it:',
           starter: 'def game_start():',
           target: 'def game_start():\n    for i in range(5):\n        change_x(30)\n        wait(0.3)',
           newLines: ['    for i in range(5):', '        change_x(30)', '        wait(0.3)'],
           requires: ['    for i in range(5):', '        change_x(30)', '        wait(0.3)'],
           behaviorCheck: {
-            hint: 'Run your code — the sprite should move right 5 times automatically. Check <code>change_x(30)</code> is inside the loop.',
+            hint: 'Run your code - the sprite should move right 5 times automatically. Check <code>change_x(30)</code> is inside the loop.',
             setupMs: 100,
             scenarios: [
               { waitMs: 2200, checks: [{ type: 'xChanged', dir: '+' }] }
@@ -99,13 +99,13 @@
         },
         {
           title: 'Use the loop variable',
-          text: '<code>i</code> is the <strong>loop variable</strong> — Python sets it to the current count (0, 1, 2…). Add <code>say(str(i))</code> as the first line inside the loop. <code>str()</code> converts the number to text so <code>say()</code> can display it.',
+          text: '<code>i</code> is the <strong>loop variable</strong> - Python sets it to the current count (0, 1, 2…). Add <code>say(str(i))</code> as the first line inside the loop. <code>str()</code> converts the number to text so <code>say()</code> can display it.',
           starter: 'def game_start():\n    for i in range(5):\n        change_x(30)\n        wait(0.3)',
           target: 'def game_start():\n    for i in range(5):\n        say(str(i))\n        change_x(30)\n        wait(0.3)',
           newLines: ['        say(str(i))'],
           requires: ['        say(str(i))'],
           behaviorCheck: {
-            hint: 'Run your code — the sprite should move right and show numbers. Check <code>say(str(i))</code> is inside the loop.',
+            hint: 'Run your code - the sprite should move right and show numbers. Check <code>say(str(i))</code> is inside the loop.',
             setupMs: 100,
             scenarios: [
               { waitMs: 2200, checks: [{ type: 'xChanged', dir: '+' }] }
@@ -114,13 +114,13 @@
         },
         {
           title: 'range() with a start and end',
-          text: '<code>range()</code> can take two arguments: a start and a stop. <code>range(1, 6)</code> counts 1, 2, 3, 4, 5 — starting at 1 instead of 0. Update your range:',
+          text: '<code>range()</code> can take two arguments: a start and a stop. <code>range(1, 6)</code> counts 1, 2, 3, 4, 5 - starting at 1 instead of 0. Update your range:',
           starter: 'def game_start():\n    for i in range(5):\n        say(str(i))\n        change_x(30)\n        wait(0.3)',
           target: 'def game_start():\n    for i in range(1, 6):\n        say(str(i))\n        change_x(30)\n        wait(0.3)',
           newLines: ['    for i in range(1, 6):'],
           requires: ['range(1, 6)'],
           behaviorCheck: {
-            hint: 'Run your code — the sprite should move right 5 times counting 1 to 5. Check <code>range(1, 6)</code>.',
+            hint: 'Run your code - the sprite should move right 5 times counting 1 to 5. Check <code>range(1, 6)</code>.',
             setupMs: 100,
             scenarios: [
               { waitMs: 2200, checks: [{ type: 'xChanged', dir: '+' }] }
@@ -150,13 +150,13 @@
         },
         {
           title: 'A while loop with a condition',
-          text: 'A <strong>while loop</strong> keeps running as long as its condition is true. Add the loop below — it moves the sprite right and counts up until <code>count</code> reaches 5:',
+          text: 'A <strong>while loop</strong> keeps running as long as its condition is true. Add the loop below - it moves the sprite right and counts up until <code>count</code> reaches 5:',
           starter: 'def game_start():\n    count = 0',
           target: 'def game_start():\n    count = 0\n    while count < 5:\n        change_x(25)\n        count = count + 1\n        wait(0.2)',
           newLines: ['    while count < 5:', '        change_x(25)', '        count = count + 1', '        wait(0.2)'],
           requires: ['    while count < 5:', '        count = count + 1', '        wait(0.2)'],
           behaviorCheck: {
-            hint: 'Run your code — the sprite should slide right 5 times and stop. Check your loop and <code>change_x(25)</code>.',
+            hint: 'Run your code - the sprite should slide right 5 times and stop. Check your loop and <code>change_x(25)</code>.',
             setupMs: 100,
             scenarios: [
               { waitMs: 1800, checks: [{ type: 'xChanged', dir: '+' }] }
@@ -165,13 +165,13 @@
         },
         {
           title: 'Code after the loop',
-          text: 'Once <code>count</code> reaches 5 the condition is false and the loop ends. Python then runs whatever comes next. Add <code>say("Done!")</code> — with <strong>no</strong> indent, so it\'s outside the loop:',
+          text: 'Once <code>count</code> reaches 5 the condition is false and the loop ends. Python then runs whatever comes next. Add <code>say("Done!")</code> - with <strong>no</strong> indent, so it\'s outside the loop:',
           starter: 'def game_start():\n    count = 0\n    while count < 5:\n        change_x(25)\n        count = count + 1\n        wait(0.2)',
           target: 'def game_start():\n    count = 0\n    while count < 5:\n        change_x(25)\n        count = count + 1\n        wait(0.2)\n    say("Done!")',
           newLines: ['    say("Done!")'],
           requires: ['    say("Done!")'],
           behaviorCheck: {
-            hint: 'Run your code — the sprite should slide right then say "Done!". Check <code>say("Done!")</code> is outside (less indented than) the loop.',
+            hint: 'Run your code - the sprite should slide right then say "Done!". Check <code>say("Done!")</code> is outside (less indented than) the loop.',
             setupMs: 100,
             scenarios: [
               { waitMs: 1800, checks: [{ type: 'xChanged', dir: '+' }] }
@@ -180,7 +180,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>. The sprite should slide right five times, then show a speech bubble saying "Done!".<br><br><strong>Challenge:</strong> Change <code>count < 5</code> to <code>count < 10</code>. Or count backwards — start at <code>count = 10</code> and use <code>while count > 0</code>, subtracting 1 each time.',
+          text: 'Click the <strong>green flag ▶</strong>. The sprite should slide right five times, then show a speech bubble saying "Done!".<br><br><strong>Challenge:</strong> Change <code>count < 5</code> to <code>count < 10</code>. Or count backwards - start at <code>count = 10</code> and use <code>while count > 0</code>, subtracting 1 each time.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -208,7 +208,7 @@
           newLines: ['        if key_pressed("right"):', '            change_x(5)', '            point_in_direction(90)'],
           requires: ['        if key_pressed("right"):', '            change_x(5)', '            point_in_direction(90)'],
           behaviorCheck: {
-            hint: 'Hold the right arrow key — the sprite should move right. Check your <code>if key_pressed("right"):</code> block.',
+            hint: 'Hold the right arrow key - the sprite should move right. Check your <code>if key_pressed("right"):</code> block.',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves sprite right', holdKey: 'right', durationMs: 400,
@@ -224,7 +224,7 @@
           newLines: ['        if key_pressed("left"):', '            change_x(-5)', '            point_in_direction(-90)'],
           requires: ['        if key_pressed("left"):', '            change_x(-5)', '            point_in_direction(-90)'],
           behaviorCheck: {
-            hint: 'Check both arrow keys work — right should move the sprite right, left should move it left.',
+            hint: 'Check both arrow keys work - right should move the sprite right, left should move it left.',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves sprite right', holdKey: 'right', durationMs: 400,
@@ -236,7 +236,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong> and press the arrow keys. Your sprite should move and face the right way — Scratch keeps it on screen automatically.<br><br><strong>Challenge:</strong> Add up and down movement with <code>change_y(5)</code> and <code>change_y(-5)</code>.',
+          text: 'Click the <strong>green flag ▶</strong> and press the arrow keys. Your sprite should move and face the right way - Scratch keeps it on screen automatically.<br><br><strong>Challenge:</strong> Add up and down movement with <code>change_y(5)</code> and <code>change_y(-5)</code>.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -249,7 +249,7 @@
       steps: [
         {
           title: 'Starting point',
-          text: 'The movement code has been loaded for you — read through it before continuing. Notice the structure: rotation style, loop, two if blocks, and <code>if_on_edge_bounce()</code> to keep the sprite on screen.<br><br>⚠️ Make sure your sprite has <strong>at least 2 costumes</strong>.',
+          text: 'The movement code has been loaded for you - read through it before continuing. Notice the structure: rotation style, loop, two if blocks, and <code>if_on_edge_bounce()</code> to keep the sprite on screen.<br><br>⚠️ Make sure your sprite has <strong>at least 2 costumes</strong>.',
           starter: 'def game_start():\n    set_rotation_style("left-right")\n    while True:\n        if key_pressed("right"):\n            change_x(5)\n            point_in_direction(90)\n        if key_pressed("left"):\n            change_x(-5)\n            point_in_direction(-90)\n        if_on_edge_bounce()',
           target: null, newLines: [], requires: []
         },
@@ -261,7 +261,7 @@
           newLines: ['            next_costume()', '            next_costume()'],
           requires: [{ req: '            next_costume()', count: 2, label: 'next_costume() in both if blocks' }],
           behaviorCheck: {
-            hint: 'Hold the right arrow key — the sprite should move right. Check both <code>next_costume()</code> calls are inside their if blocks.',
+            hint: 'Hold the right arrow key - the sprite should move right. Check both <code>next_costume()</code> calls are inside their if blocks.',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves sprite right', holdKey: 'right', durationMs: 400,
@@ -271,13 +271,13 @@
         },
         {
           title: 'Idle pose when still',
-          text: 'Right now the sprite freezes mid-walk when you stop. Add a <code>moved</code> flag — set it <code>True</code> inside each key block, then use it to either animate or snap to costume 1:',
+          text: 'Right now the sprite freezes mid-walk when you stop. Add a <code>moved</code> flag - set it <code>True</code> inside each key block, then use it to either animate or snap to costume 1:',
           starter: 'def game_start():\n    set_rotation_style("left-right")\n    while True:\n        if key_pressed("right"):\n            change_x(5)\n            point_in_direction(90)\n            next_costume()\n        if key_pressed("left"):\n            change_x(-5)\n            point_in_direction(-90)\n            next_costume()\n        if_on_edge_bounce()',
           target: 'def game_start():\n    set_rotation_style("left-right")\n    while True:\n        moved = False\n        if key_pressed("right"):\n            change_x(5)\n            point_in_direction(90)\n            moved = True\n        if key_pressed("left"):\n            change_x(-5)\n            point_in_direction(-90)\n            moved = True\n        if moved:\n            next_costume()\n        else:\n            set_costume(1)\n        if_on_edge_bounce()',
           newLines: ['        moved = False', '            moved = True', '        if moved:', '            next_costume()', '        else:', '            set_costume(1)'],
           requires: ['moved = False', { req: '            moved = True', count: 2, label: 'moved = True in both if blocks' }, '        if moved:', '            next_costume()', 'set_costume(1)'],
           behaviorCheck: {
-            hint: 'Hold the right arrow key — the sprite should move right. Check <code>moved = True</code> is in both if blocks.',
+            hint: 'Hold the right arrow key - the sprite should move right. Check <code>moved = True</code> is in both if blocks.',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves sprite right', holdKey: 'right', durationMs: 400,
@@ -287,13 +287,13 @@
         },
         {
           title: 'Control animation speed',
-          text: 'Costumes are changing every frame — too fast. Add <code>wait(0.08)</code> before <code>if_on_edge_bounce()</code> to cap animation at about 12 changes per second.',
+          text: 'Costumes are changing every frame - too fast. Add <code>wait(0.08)</code> before <code>if_on_edge_bounce()</code> to cap animation at about 12 changes per second.',
           starter: 'def game_start():\n    set_rotation_style("left-right")\n    while True:\n        moved = False\n        if key_pressed("right"):\n            change_x(5)\n            point_in_direction(90)\n            moved = True\n        if key_pressed("left"):\n            change_x(-5)\n            point_in_direction(-90)\n            moved = True\n        if moved:\n            next_costume()\n        else:\n            set_costume(1)\n        if_on_edge_bounce()',
           target: 'def game_start():\n    set_rotation_style("left-right")\n    while True:\n        moved = False\n        if key_pressed("right"):\n            change_x(5)\n            point_in_direction(90)\n            moved = True\n        if key_pressed("left"):\n            change_x(-5)\n            point_in_direction(-90)\n            moved = True\n        if moved:\n            next_costume()\n        else:\n            set_costume(1)\n        wait(0.08)\n        if_on_edge_bounce()',
           newLines: ['        wait(0.08)'],
           requires: ['wait(0.08)'],
           behaviorCheck: {
-            hint: 'Hold the right arrow key — the sprite should still move right. Check the overall code structure is intact after adding <code>wait(0.08)</code>.',
+            hint: 'Hold the right arrow key - the sprite should still move right. Check the overall code structure is intact after adding <code>wait(0.08)</code>.',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves sprite right', holdKey: 'right', durationMs: 500,
@@ -303,7 +303,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong> and walk left and right — your sprite should animate while moving and snap to idle when still.<br><br><strong>Challenge:</strong> Try <code>wait(0.2)</code> for a slow walk or <code>wait(0.04)</code> for a sprint.',
+          text: 'Click the <strong>green flag ▶</strong> and walk left and right - your sprite should animate while moving and snap to idle when still.<br><br><strong>Challenge:</strong> Try <code>wait(0.2)</code> for a slow walk or <code>wait(0.04)</code> for a sprint.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -340,7 +340,7 @@
           newLines: ['        vy = vy - 0.5', '        change_y(vy)'],
           requires: ['        vy = vy - 0.5', '        change_y(vy)'],
           behaviorCheck: {
-            hint: 'Run your code — the sprite should fall downward automatically. Check <code>vy = vy - 0.5</code> and <code>change_y(vy)</code> are both inside the loop.',
+            hint: 'Run your code - the sprite should fall downward automatically. Check <code>vy = vy - 0.5</code> and <code>change_y(vy)</code> are both inside the loop.',
             setupMs: 200,
             scenarios: [
               { waitMs: 700, checks: [{ type: 'yChanged', dir: '-' }] }
@@ -355,7 +355,7 @@
           newLines: ['        if y_position() < -150:', '            vy = 0', '            set_y(-150)'],
           requires: ['        if y_position() < -150:', '            set_y(-150)'],
           behaviorCheck: {
-            hint: 'Run your code — the sprite should fall and land at y = −150 without falling off-screen. Check your <code>if y_position() &lt; -150:</code> block.',
+            hint: 'Run your code - the sprite should fall and land at y = −150 without falling off-screen. Check your <code>if y_position() &lt; -150:</code> block.',
             setupMs: 1000,
             scenarios: [
               { waitMs: 100, checks: [{ type: 'yAbove', value: -160 }] }
@@ -364,13 +364,13 @@
         },
         {
           title: 'Jumping',
-          text: 'When the sprite is on the floor <em>and</em> the up key is pressed, set <code>vy</code> to 8 — this launches it upward. Gravity pulls it back down automatically:',
+          text: 'When the sprite is on the floor <em>and</em> the up key is pressed, set <code>vy</code> to 8 - this launches it upward. Gravity pulls it back down automatically:',
           starter: 'vy = 0\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.5\n        change_y(vy)\n        if y_position() < -150:\n            vy = 0\n            set_y(-150)',
           target: 'vy = 0\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.5\n        change_y(vy)\n        if y_position() < -150:\n            vy = 0\n            set_y(-150)\n        if key_pressed("up") and y_position() <= -149:\n            vy = 8',
           newLines: ['        if key_pressed("up") and y_position() <= -149:', '            vy = 8'],
           requires: ['        if key_pressed("up")', '            vy = 8'],
           behaviorCheck: {
-            hint: 'Press the up arrow — the sprite should jump upward from the floor. Check your <code>if key_pressed("up")</code> block and <code>vy = 8</code>.',
+            hint: 'Press the up arrow - the sprite should jump upward from the floor. Check your <code>if key_pressed("up")</code> block and <code>vy = 8</code>.',
             setupMs: 800,
             scenarios: [
               { label: 'up key launches sprite upward', holdKey: 'up', durationMs: 80, waitMs: 300,
@@ -408,7 +408,7 @@
           newLines: ['    global vx, vy', '    while True:', '        change_x(vx)', '        change_y(vy)'],
           requires: ['    global vx, vy', '    while True:', '        change_x(vx)', '        change_y(vy)'],
           behaviorCheck: {
-            hint: 'Run your code — the ball should move automatically. Check <code>change_x(vx)</code> and <code>change_y(vy)</code> are inside the loop.',
+            hint: 'Run your code - the ball should move automatically. Check <code>change_x(vx)</code> and <code>change_y(vy)</code> are inside the loop.',
             setupMs: 100,
             scenarios: [
               { waitMs: 500, checks: [{ type: 'moved' }] }
@@ -423,7 +423,7 @@
           newLines: ['        if x_position() > 220 or x_position() < -220:', '            vx = vx * -1'],
           requires: ['        if x_position() > 220 or x_position() < -220:', '            vx = vx * -1'],
           behaviorCheck: {
-            hint: 'Run your code — the ball should bounce back from the left and right walls, staying on screen. Check your <code>if x_position()</code> block.',
+            hint: 'Run your code - the ball should bounce back from the left and right walls, staying on screen. Check your <code>if x_position()</code> block.',
             setupMs: 100,
             scenarios: [
               { waitMs: 2500, checks: [{ type: 'xAbove', value: -225 }, { type: 'xBelow', value: 225 }] }
@@ -432,13 +432,13 @@
         },
         {
           title: 'Bounce off top and bottom',
-          text: 'Do the same for the top and bottom edges — flip <code>vy</code> when the ball goes above or below the stage:',
+          text: 'Do the same for the top and bottom edges - flip <code>vy</code> when the ball goes above or below the stage:',
           starter: 'vx = 3\nvy = 3\n\ndef game_start():\n    global vx, vy\n    while True:\n        change_x(vx)\n        change_y(vy)\n        if x_position() > 220 or x_position() < -220:\n            vx = vx * -1',
           target: 'vx = 3\nvy = 3\n\ndef game_start():\n    global vx, vy\n    while True:\n        change_x(vx)\n        change_y(vy)\n        if x_position() > 220 or x_position() < -220:\n            vx = vx * -1\n        if y_position() > 160 or y_position() < -160:\n            vy = vy * -1',
           newLines: ['        if y_position() > 160 or y_position() < -160:', '            vy = vy * -1'],
           requires: ['        if y_position() > 160 or y_position() < -160:', '            vy = vy * -1'],
           behaviorCheck: {
-            hint: 'Run your code — the ball should bounce off all four walls and stay on screen. Check your <code>if y_position()</code> block.',
+            hint: 'Run your code - the ball should bounce off all four walls and stay on screen. Check your <code>if y_position()</code> block.',
             setupMs: 100,
             scenarios: [
               { waitMs: 3500, checks: [
@@ -459,7 +459,7 @@
       id: 'flappy-bird',
       title: 'Flappy Bird',
       emoji: '🐦',
-      desc: 'Build the Flappy Bird mechanic — gravity, tap-to-flap, tilting, and a pipe sprite that loops across the screen. You\'ll use two sprites: one for the bird, one for the pipe.',
+      desc: 'Build the Flappy Bird mechanic - gravity, tap-to-flap, tilting, and a pipe sprite that loops across the screen. You\'ll use two sprites: one for the bird, one for the pipe.',
       steps: [
         {
           title: 'Set up the velocity variable',
@@ -478,7 +478,7 @@
           newLines: ['    global vy', '    while True:', '        vy = vy - 0.3', '        change_y(vy)'],
           requires: ['    global vy', '    while True:', '        vy = vy - 0.3', '        change_y(vy)'],
           behaviorCheck: {
-            hint: 'Run your code — the bird should fall downward automatically. Check <code>vy = vy - 0.3</code> and <code>change_y(vy)</code> are inside the loop.',
+            hint: 'Run your code - the bird should fall downward automatically. Check <code>vy = vy - 0.3</code> and <code>change_y(vy)</code> are inside the loop.',
             setupMs: 200,
             scenarios: [
               { waitMs: 600, checks: [{ type: 'yChanged', dir: '-' }] }
@@ -487,13 +487,13 @@
         },
         {
           title: 'Add a floor and ceiling',
-          text: 'Without limits the bird falls forever or flies off screen. Add both boundaries — floor at y = −150 and ceiling at y = 150:',
+          text: 'Without limits the bird falls forever or flies off screen. Add both boundaries - floor at y = −150 and ceiling at y = 150:',
           starter: 'vy = 0\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.3\n        change_y(vy)',
           target: 'vy = 0\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.3\n        change_y(vy)\n        if y_position() < -150:\n            set_y(-150)\n            vy = 0\n        if y_position() > 150:\n            set_y(150)\n            vy = 0',
           newLines: ['        if y_position() < -150:', '            set_y(-150)', '            vy = 0', '        if y_position() > 150:', '            set_y(150)', '            vy = 0'],
           requires: ['y_position() < -150', 'y_position() > 150'],
           behaviorCheck: {
-            hint: 'Run your code — the bird should fall and land at y = −150 without going off-screen. Check both your floor and ceiling <code>if</code> blocks.',
+            hint: 'Run your code - the bird should fall and land at y = −150 without going off-screen. Check both your floor and ceiling <code>if</code> blocks.',
             setupMs: 900,
             scenarios: [
               { waitMs: 100, checks: [{ type: 'yAbove', value: -155 }] }
@@ -502,13 +502,13 @@
         },
         {
           title: 'Flap with the Space key',
-          text: 'In Flappy Bird the player <strong>taps</strong> — not holds — a key. <code>when_key_pressed</code> fires <em>once</em> per tap, unlike <code>key_pressed()</code> which is true every frame the key is held down. Add a new function <strong>below</strong> <code>game_start</code>:',
+          text: 'In Flappy Bird the player <strong>taps</strong> - not holds - a key. <code>when_key_pressed</code> fires <em>once</em> per tap, unlike <code>key_pressed()</code> which is true every frame the key is held down. Add a new function <strong>below</strong> <code>game_start</code>:',
           starter: 'vy = 0\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.3\n        change_y(vy)\n        if y_position() < -150:\n            set_y(-150)\n            vy = 0\n        if y_position() > 150:\n            set_y(150)\n            vy = 0',
           target: 'vy = 0\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.3\n        change_y(vy)\n        if y_position() < -150:\n            set_y(-150)\n            vy = 0\n        if y_position() > 150:\n            set_y(150)\n            vy = 0\n\ndef when_key_pressed(key):\n    global vy\n    if key == "space":\n        vy = 5',
           newLines: ['def when_key_pressed(key):', '    global vy', '    if key == "space":', '        vy = 5'],
           requires: ['def when_key_pressed(key):', 'if key == "space":', 'vy = 5'],
           behaviorCheck: {
-            hint: 'Press Space — the bird should flap upward from the floor. Check your <code>when_key_pressed</code> function and <code>vy = 5</code>.',
+            hint: 'Press Space - the bird should flap upward from the floor. Check your <code>when_key_pressed</code> function and <code>vy = 5</code>.',
             setupMs: 800,
             scenarios: [
               { label: 'space key flaps bird upward', holdKey: 'space', durationMs: 80, waitMs: 300,
@@ -526,7 +526,7 @@
         },
         {
           title: 'Add your obstacle sprite',
-          text: 'Threads let one sprite do multiple things at once — but an obstacle is a <strong>completely different object</strong> in the game. It needs its own sprite with its own position.<br><br>Click the glowing <strong>sprite panel</strong> at the bottom of TurboWarp and add a new sprite. Choose anything — a ball, a block, a drawn shape — as long as it\'s something to dodge. Then click your new sprite to select it.',
+          text: 'Threads let one sprite do multiple things at once - but an obstacle is a <strong>completely different object</strong> in the game. It needs its own sprite with its own position.<br><br>Click the glowing <strong>sprite panel</strong> at the bottom of TurboWarp and add a new sprite. Choose anything - a ball, a block, a drawn shape - as long as it\'s something to dodge. Then click your new sprite to select it.',
           highlight: 'add-sprite-btn',
           highlightLabel: 'Add a sprite here',
           requiresSpriteCount: 2,
@@ -563,11 +563,11 @@
       id: 'doodle-jump',
       title: 'Doodle Jump',
       emoji: '🦘',
-      desc: 'Build the Doodle Jump mechanic — the character bounces upward automatically, moves left and right, and wraps around the screen edges.',
+      desc: 'Build the Doodle Jump mechanic - the character bounces upward automatically, moves left and right, and wraps around the screen edges.',
       steps: [
         {
           title: 'Starting velocity',
-          text: 'In Doodle Jump the character immediately shoots upward. Set <code>vy = 8</code> (positive = upward) so it launches straight away — gravity will curve it back down.',
+          text: 'In Doodle Jump the character immediately shoots upward. Set <code>vy = 8</code> (positive = upward) so it launches straight away - gravity will curve it back down.',
           starter: '',
           target: 'vy = 8\n\ndef game_start():',
           newLines: ['vy = 8', '', 'def game_start():'],
@@ -584,7 +584,7 @@
         },
         {
           title: 'Bounce off the floor',
-          text: 'Instead of stopping at the floor like in the gravity tutorial, set <code>vy</code> back to <code>8</code> when the sprite lands — this launches it upward again automatically:',
+          text: 'Instead of stopping at the floor like in the gravity tutorial, set <code>vy</code> back to <code>8</code> when the sprite lands - this launches it upward again automatically:',
           starter: 'vy = 8\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.4\n        change_y(vy)',
           target: 'vy = 8\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.4\n        change_y(vy)\n        if y_position() < -150:\n            set_y(-150)\n            vy = 8',
           newLines: ['        if y_position() < -150:', '            set_y(-150)', '            vy = 8'],
@@ -592,7 +592,7 @@
         },
         {
           title: 'Left and right movement',
-          text: 'Add horizontal controls. <code>set_rotation_style("left-right")</code> goes before the loop so the sprite only flips — it never tilts:',
+          text: 'Add horizontal controls. <code>set_rotation_style("left-right")</code> goes before the loop so the sprite only flips - it never tilts:',
           starter: 'vy = 8\n\ndef game_start():\n    global vy\n    while True:\n        vy = vy - 0.4\n        change_y(vy)\n        if y_position() < -150:\n            set_y(-150)\n            vy = 8',
           target: 'vy = 8\n\ndef game_start():\n    global vy\n    set_rotation_style("left-right")\n    while True:\n        vy = vy - 0.4\n        change_y(vy)\n        if y_position() < -150:\n            set_y(-150)\n            vy = 8\n        if key_pressed("right"):\n            change_x(4)\n            point_in_direction(90)\n        if key_pressed("left"):\n            change_x(-4)\n            point_in_direction(-90)',
           newLines: ['    set_rotation_style("left-right")', '        if key_pressed("right"):', '            change_x(4)', '            point_in_direction(90)', '        if key_pressed("left"):', '            change_x(-4)', '            point_in_direction(-90)'],
@@ -633,7 +633,7 @@
         },
         {
           title: 'Bounce on the platform',
-          text: 'Click your <strong>player sprite</strong> in the sprite panel to switch back to its code. Add a check inside the loop — when the player is falling (<code>vy</code> is negative) and touching the platform, launch back up:',
+          text: 'Click your <strong>player sprite</strong> in the sprite panel to switch back to its code. Add a check inside the loop - when the player is falling (<code>vy</code> is negative) and touching the platform, launch back up:',
           starter: null,
           target: '        if touching("Platform") and vy < 0:\n            vy = 8',
           newLines: ['        if touching("Platform") and vy < 0:', '            vy = 8'],
@@ -650,7 +650,7 @@
         },
         {
           title: 'Game over',
-          text: 'Click your <strong>player sprite</strong> again. Add a game over check inside the loop — if the player touches the Death barrier, show a message and use <code>break</code> to exit the loop and stop the game:',
+          text: 'Click your <strong>player sprite</strong> again. Add a game over check inside the loop - if the player touches the Death barrier, show a message and use <code>break</code> to exit the loop and stop the game:',
           starter: null,
           target: '        if touching("Death"):\n            say("Game Over!")\n            break',
           newLines: ['        if touching("Death"):', '            say("Game Over!")', '            break'],
@@ -658,7 +658,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>. Bounce on the platform to stay alive — fall into the death zone and it\'s game over.<br><br><strong>Challenge:</strong> Add 2 or 3 more Platform sprites at different starting heights so there are always several platforms to land on. Try making them fall at different speeds using different values instead of <code>-2</code>.',
+          text: 'Click the <strong>green flag ▶</strong>. Bounce on the platform to stay alive - fall into the death zone and it\'s game over.<br><br><strong>Challenge:</strong> Add 2 or 3 more Platform sprites at different starting heights so there are always several platforms to land on. Try making them fall at different speeds using different values instead of <code>-2</code>.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -666,11 +666,11 @@
     {
       emoji: '🦆',
       title: 'Duck Hunt',
-      desc: 'A duck zigzags around the screen bouncing off every edge. Click it to shoot — score goes up and the duck reappears at a random new spot with a new speed.',
+      desc: 'A duck zigzags around the screen bouncing off every edge. Click it to shoot - score goes up and the duck reappears at a random new spot with a new speed.',
       steps: [
         {
           title: 'What are we building?',
-          text: 'A Duck Hunt clone! The duck moves around the stage bouncing off every edge using two velocity variables. Click the duck with your mouse to shoot it — the score goes up and the duck teleports to a new random location at a new speed.<br><br>You only need <strong>one sprite</strong>: the duck. The Score variable is created by <code>set_variable("Score", 0)</code> and shown on screen by <code>display_variable("Score", True)</code>.',
+          text: 'A Duck Hunt clone! The duck moves around the stage bouncing off every edge using two velocity variables. Click the duck with your mouse to shoot it - the score goes up and the duck teleports to a new random location at a new speed.<br><br>You only need <strong>one sprite</strong>: the duck. The Score variable is created by <code>set_variable("Score", 0)</code> and shown on screen by <code>display_variable("Score", True)</code>.',
           starter: null, target: null, newLines: [], requires: []
         },
         {
@@ -692,7 +692,7 @@
         },
         {
           title: 'Bounce off the edges',
-          text: 'When the duck reaches the left or right edge, flip <code>vx</code> — multiplying by <code>-1</code> reverses the sign so it bounces back. Do the same for top and bottom with <code>vy</code>:',
+          text: 'When the duck reaches the left or right edge, flip <code>vx</code> - multiplying by <code>-1</code> reverses the sign so it bounces back. Do the same for top and bottom with <code>vy</code>:',
           starter: 'vx = 3\nvy = 2\n\ndef game_start():\n    global vx, vy\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    set_rotation_style("left-right")\n    go_to_xy(0, 50)\n    while True:\n        change_x(vx)\n        change_y(vy)',
           target: 'vx = 3\nvy = 2\n\ndef game_start():\n    global vx, vy\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    set_rotation_style("left-right")\n    go_to_xy(0, 50)\n    while True:\n        change_x(vx)\n        change_y(vy)\n        if x_position() > 220 or x_position() < -220:\n            vx = vx * -1\n        if y_position() > 150 or y_position() < -130:\n            vy = vy * -1',
           newLines: ['        if x_position() > 220 or x_position() < -220:', '            vx = vx * -1', '        if y_position() > 150 or y_position() < -130:', '            vy = vy * -1'],
@@ -716,7 +716,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>, then click the duck as fast as you can! Each hit scores a point and the duck respawns faster and in a new spot.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a <code>shots = 3</code> variable — each click costs a shot, game over at 0 (<em>hint: use <code>set_variable("Shots", shots)</code></em>)</li><li>Make the duck speed up after each shot — add a small amount to <code>vx</code> and <code>vy</code> inside <code>when_clicked</code></li><li>Add a timer: use <code>timer()</code> to display how long the player survived before missing</li></ul>',
+          text: 'Click the <strong>green flag ▶</strong>, then click the duck as fast as you can! Each hit scores a point and the duck respawns faster and in a new spot.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a <code>shots = 3</code> variable - each click costs a shot, game over at 0 (<em>hint: use <code>set_variable("Shots", shots)</code></em>)</li><li>Make the duck speed up after each shot - add a small amount to <code>vx</code> and <code>vy</code> inside <code>when_clicked</code></li><li>Add a timer: use <code>timer()</code> to display how long the player survived before missing</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -724,18 +724,18 @@
     {
       emoji: '⚔️',
       title: 'RPG Survivor',
-      desc: 'Enemies clone themselves and walk toward the player. Dodge with arrow keys, attack with space. Score goes up for each kill — survive as long as you can!',
+      desc: 'Enemies clone themselves and walk toward the player. Dodge with arrow keys, attack with space. Score goes up for each kill - survive as long as you can!',
       steps: [
         {
           title: 'What are we building?',
-          text: 'An RPG survivor game using clones! Enemy clones spawn from the top of the screen and walk toward the player. Touching an enemy costs HP — attack back with <strong>space</strong> to kill them and earn score.<br><br>Before you start, <strong>rename your sprite to <code>Player</code></strong> using the name box below the stage — the enemy code looks for that name when it checks collisions.<br><br>The <code>HP</code> and <code>Score</code> counters appear on screen because your code calls <code>set_variable()</code> to create them and <code>display_variable()</code> to make them visible — no TurboWarp menus needed.',
+          text: 'An RPG survivor game using clones! Enemy clones spawn from the top of the screen and walk toward the player. Touching an enemy costs HP - attack back with <strong>space</strong> to kill them and earn score.<br><br>Before you start, <strong>rename your sprite to <code>Player</code></strong> using the name box below the stage - the enemy code looks for that name when it checks collisions.<br><br>The <code>HP</code> and <code>Score</code> counters appear on screen because your code calls <code>set_variable()</code> to create them and <code>display_variable()</code> to make them visible - no TurboWarp menus needed.',
           starter: null, target: null, newLines: [], requires: [],
           requiredSpriteNames: ['Player'],
           requiredSpriteHints: { 'Player': 'Rename your sprite to "Player"' }
         },
         {
           title: 'Player: HP variable and game loop',
-          text: 'On your <strong>Player</strong> sprite, type this. <code>hp = 3</code> is a Python variable that tracks health. <code>set_variable("HP", hp)</code> creates the variable and keeps it in sync. <code>display_variable("HP", True)</code> makes it appear as an on-screen counter — without it the variable exists but stays invisible. The same pattern creates <em>Score</em>:',
+          text: 'On your <strong>Player</strong> sprite, type this. <code>hp = 3</code> is a Python variable that tracks health. <code>set_variable("HP", hp)</code> creates the variable and keeps it in sync. <code>display_variable("HP", True)</code> makes it appear as an on-screen counter - without it the variable exists but stays invisible. The same pattern creates <em>Score</em>:',
           starter: null,
           target: 'hp = 3\n\ndef game_start():\n    global hp\n    set_variable("HP", hp)\n    display_variable("HP", True)\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    set_rotation_style("left-right")\n    while True:',
           newLines: ['hp = 3', '', 'def game_start():', '    global hp', '    set_variable("HP", hp)', '    display_variable("HP", True)', '    set_variable("Score", 0)', '    display_variable("Score", True)', '    set_rotation_style("left-right")', '    while True:'],
@@ -776,7 +776,7 @@
         },
         {
           title: 'Player: attack with space',
-          text: 'Pressing <strong>space</strong> broadcasts <code>"attack"</code> — enemy clones will listen for this and delete themselves if they are touching the player. Add this at the very end of the <code>while True</code> loop:',
+          text: 'Pressing <strong>space</strong> broadcasts <code>"attack"</code> - enemy clones will listen for this and delete themselves if they are touching the player. Add this at the very end of the <code>while True</code> loop:',
           starter: 'hp = 3\n\ndef game_start():\n    global hp\n    set_variable("HP", hp)\n    display_variable("HP", True)\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    set_rotation_style("left-right")\n    while True:\n        if key_pressed("right"):\n            change_x(4)\n            point_in_direction(90)\n        if key_pressed("left"):\n            change_x(-4)\n            point_in_direction(-90)\n        if key_pressed("up"):\n            change_y(4)\n        if key_pressed("down"):\n            change_y(-4)\n        if touching("Enemy"):\n            hp = hp - 1\n            set_variable("HP", hp)\n            go_to_xy(pick_random(-200, 200), pick_random(-140, 140))\n            if hp <= 0:\n                say("Game Over!")\n                stop()',
           target: 'hp = 3\n\ndef game_start():\n    global hp\n    set_variable("HP", hp)\n    display_variable("HP", True)\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    set_rotation_style("left-right")\n    while True:\n        if key_pressed("right"):\n            change_x(4)\n            point_in_direction(90)\n        if key_pressed("left"):\n            change_x(-4)\n            point_in_direction(-90)\n        if key_pressed("up"):\n            change_y(4)\n        if key_pressed("down"):\n            change_y(-4)\n        if touching("Enemy"):\n            hp = hp - 1\n            set_variable("HP", hp)\n            go_to_xy(pick_random(-200, 200), pick_random(-140, 140))\n            if hp <= 0:\n                say("Game Over!")\n                stop()\n        if key_pressed("space"):\n            broadcast("attack")',
           newLines: ['        if key_pressed("space"):', '            broadcast("attack")'],
@@ -784,7 +784,7 @@
         },
         {
           title: 'Add the Enemy sprite',
-          text: 'Click the <strong>+</strong> button to add a new sprite. <strong>Name it exactly <code>Enemy</code></strong> — the player code uses <code>touching("Enemy")</code> to detect collisions, so spelling must match.',
+          text: 'Click the <strong>+</strong> button to add a new sprite. <strong>Name it exactly <code>Enemy</code></strong> - the player code uses <code>touching("Enemy")</code> to detect collisions, so spelling must match.',
           starter: null, target: null, newLines: [], requires: [],
           highlight: 'add-sprite-btn', highlightLabel: 'Add sprite here',
           requiredSpriteNames: ['Player', 'Enemy'],
@@ -816,7 +816,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>. Move with arrow keys and press <strong>space</strong> when an enemy is right next to you to kill it.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Make enemies spawn faster as Score increases — use <code>get_variable("Score")</code> to read the current score and reduce the <code>wait()</code></li><li>Make enemies move faster as the game goes on — increase <code>move_steps</code> based on Score</li><li>Add a second type of enemy with a different speed or size using another sprite and <code>create_clone_of("FastEnemy")</code></li></ul>',
+          text: 'Click the <strong>green flag ▶</strong>. Move with arrow keys and press <strong>space</strong> when an enemy is right next to you to kill it.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Make enemies spawn faster as Score increases - use <code>get_variable("Score")</code> to read the current score and reduce the <code>wait()</code></li><li>Make enemies move faster as the game goes on - increase <code>move_steps</code> based on Score</li><li>Add a second type of enemy with a different speed or size using another sprite and <code>create_clone_of("FastEnemy")</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -827,7 +827,7 @@
       cat: 'game',
       emoji: '🍎',
       title: 'Apple Catcher',
-      desc: 'Catch falling apples with a basket. Move left and right to score — miss one and you lose a life. Two sprites, score and lives counters.',
+      desc: 'Catch falling apples with a basket. Move left and right to score - miss one and you lose a life. Two sprites, score and lives counters.',
       steps: [
         {
           title: 'What are we building?',
@@ -879,7 +879,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click <strong>▶</strong>. Apples should fall at random positions — catch them with your basket!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a game-over check: <code>if get_variable("Lives") &lt;= 0: say("Game Over!") stop()</code></li><li>Add <code>wait(0.3)</code> after the reset so there\'s a brief gap before the apple reappears</li><li>Make apples speed up — use a variable for speed instead of the fixed <code>-4</code></li></ul>',
+          text: 'Click <strong>▶</strong>. Apples should fall at random positions - catch them with your basket!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a game-over check: <code>if get_variable("Lives") &lt;= 0: say("Game Over!") stop()</code></li><li>Add <code>wait(0.3)</code> after the reset so there\'s a brief gap before the apple reappears</li><li>Make apples speed up - use a variable for speed instead of the fixed <code>-4</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -931,7 +931,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click <strong>▶</strong>. Moles should pop up at random spots — click them before they vanish!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Speed up the game over time — reduce the <code>wait(1.5)</code> in <code>game_start</code> based on <code>get_variable("Score")</code></li><li>Add a 30-second time limit using <code>timer()</code> and <code>if timer() &gt; 30: say("Time\'s up!") stop()</code></li><li>Make moles shrink as your score increases using <code>set_size()</code></li></ul>',
+          text: 'Click <strong>▶</strong>. Moles should pop up at random spots - click them before they vanish!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Speed up the game over time - reduce the <code>wait(1.5)</code> in <code>game_start</code> based on <code>get_variable("Score")</code></li><li>Add a 30-second time limit using <code>timer()</code> and <code>if timer() &gt; 30: say("Time\'s up!") stop()</code></li><li>Make moles shrink as your score increases using <code>set_size()</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -953,7 +953,7 @@
         },
         {
           title: 'Player: movement and boundary',
-          text: 'Write the Player\'s <code>game_start()</code> — left/right movement with arrow keys and clamping so it stays on screen:',
+          text: 'Write the Player\'s <code>game_start()</code> - left/right movement with arrow keys and clamping so it stays on screen:',
           starter: '',
           target: 'def game_start():\n    go_to_xy(0, -150)\n    set_rotation_style("left-right")\n    while True:\n        if key_pressed("right"):\n            change_x(5)\n            point_in_direction(90)\n        if key_pressed("left"):\n            change_x(-5)\n            point_in_direction(-90)\n        if x_position() > 220:\n            set_x(220)\n        if x_position() < -220:\n            set_x(-220)',
           newLines: ['def game_start():', '    go_to_xy(0, -150)', '    set_rotation_style("left-right")', '    while True:', '        if key_pressed("right"):', '            change_x(5)', '            point_in_direction(90)', '        if key_pressed("left"):', '            change_x(-5)', '            point_in_direction(-90)', '        if x_position() > 220:', '            set_x(220)', '        if x_position() < -220:', '            set_x(-220)'],
@@ -993,7 +993,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click <strong>▶</strong>. Move with arrow keys, fire with space — hit the enemy to score!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a <code>wait(0.2)</code> after <code>broadcast("fire")</code> so bullets have a fire rate limit</li><li>Speed the enemy up as Score increases — use <code>get_variable("Score")</code> to scale <code>vx</code></li><li>Add multiple enemies using <code>create_clone_of("Enemy")</code> from the Player code</li></ul>',
+          text: 'Click <strong>▶</strong>. Move with arrow keys, fire with space - hit the enemy to score!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add a <code>wait(0.2)</code> after <code>broadcast("fire")</code> so bullets have a fire rate limit</li><li>Speed the enemy up as Score increases - use <code>get_variable("Score")</code> to scale <code>vx</code></li><li>Add multiple enemies using <code>create_clone_of("Enemy")</code> from the Player code</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1004,7 +1004,7 @@
       cat: 'game',
       emoji: '🏓',
       title: 'Pong',
-      desc: 'Classic one-player Pong. Bounce the ball off the walls and your paddle — miss it and it\'s game over. Velocity-based bounce across two sprites.',
+      desc: 'Classic one-player Pong. Bounce the ball off the walls and your paddle - miss it and it\'s game over. Velocity-based bounce across two sprites.',
       steps: [
         {
           title: 'What are we building?',
@@ -1055,7 +1055,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click <strong>▶</strong>. Keep the ball alive with your paddle — each bounce scores a point!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Speed the ball up over time — add <code>vy = vy * 1.05</code> each time you hit the paddle</li><li>Make the bounce angle depend on where the ball hits the paddle using <code>x_position() - touching("Paddle")</code> — look up how Scratch Pong angle maths works</li><li>Add a two-player mode: second paddle controlled with W/S keys, both using <code>change_y</code></li></ul>',
+          text: 'Click <strong>▶</strong>. Keep the ball alive with your paddle - each bounce scores a point!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Speed the ball up over time - add <code>vy = vy * 1.05</code> each time you hit the paddle</li><li>Make the bounce angle depend on where the ball hits the paddle using <code>x_position() - touching("Paddle")</code> - look up how Scratch Pong angle maths works</li><li>Add a two-player mode: second paddle controlled with W/S keys, both using <code>change_y</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1070,14 +1070,14 @@
       steps: [
         {
           title: 'What are we building?',
-          text: 'Breakout! A ball bounces around the screen. Use the paddle to keep it alive — when the ball hits a Brick clone it destroys it and you score a point.<br><br>You need <strong>three sprites</strong>: <code>Paddle</code>, <code>Ball</code>, and <code>Brick</code>. <strong>Rename your sprite to <code>Paddle</code></strong> using the name box below the stage.',
+          text: 'Breakout! A ball bounces around the screen. Use the paddle to keep it alive - when the ball hits a Brick clone it destroys it and you score a point.<br><br>You need <strong>three sprites</strong>: <code>Paddle</code>, <code>Ball</code>, and <code>Brick</code>. <strong>Rename your sprite to <code>Paddle</code></strong> using the name box below the stage.',
           starter: null, target: null, newLines: [], requires: [],
           requiredSpriteNames: ['Paddle'],
           requiredSpriteHints: { 'Paddle': 'Rename your sprite to "Paddle"' }
         },
         {
           title: 'Paddle: movement and boundary',
-          text: 'Write the Paddle\'s <code>game_start()</code> — identical to Pong. Place it at the bottom and move left/right with clamping:',
+          text: 'Write the Paddle\'s <code>game_start()</code> - identical to Pong. Place it at the bottom and move left/right with clamping:',
           starter: '',
           target: 'def game_start():\n    go_to_xy(0, -150)\n    while True:\n        if key_pressed("right"):\n            change_x(8)\n        if key_pressed("left"):\n            change_x(-8)\n        if x_position() > 200:\n            set_x(200)\n        if x_position() < -200:\n            set_x(-200)',
           newLines: ['def game_start():', '    go_to_xy(0, -150)', '    while True:', '        if key_pressed("right"):', '            change_x(8)', '        if key_pressed("left"):', '            change_x(-8)', '        if x_position() > 200:', '            set_x(200)', '        if x_position() < -200:', '            set_x(-200)'],
@@ -1109,7 +1109,7 @@
         },
         {
           title: 'Brick: build the grid',
-          text: 'Click the <strong>Brick</strong> sprite. Use two nested <code>for</code> loops to create 3 rows of 8 bricks. The base sprite hides itself — only clones are visible:',
+          text: 'Click the <strong>Brick</strong> sprite. Use two nested <code>for</code> loops to create 3 rows of 8 bricks. The base sprite hides itself - only clones are visible:',
           starter: null,
           target: 'def game_start():\n    hide()\n    for row in range(3):\n        for col in range(8):\n            go_to_xy(-175 + col * 50, 80 - row * 30)\n            create_clone()',
           newLines: ['def game_start():', '    hide()', '    for row in range(3):', '        for col in range(8):', '            go_to_xy(-175 + col * 50, 80 - row * 30)', '            create_clone()'],
@@ -1117,7 +1117,7 @@
         },
         {
           title: 'Brick: clones appear and die on contact',
-          text: 'Each brick clone shows itself when created. It watches for the Ball touching it — when hit, it deletes itself (the Ball\'s code already reverses direction):',
+          text: 'Each brick clone shows itself when created. It watches for the Ball touching it - when hit, it deletes itself (the Ball\'s code already reverses direction):',
           starter: 'def game_start():\n    hide()\n    for row in range(3):\n        for col in range(8):\n            go_to_xy(-175 + col * 50, 80 - row * 30)\n            create_clone()',
           target: 'def game_start():\n    hide()\n    for row in range(3):\n        for col in range(8):\n            go_to_xy(-175 + col * 50, 80 - row * 30)\n            create_clone()\n\ndef when_I_start_as_a_clone():\n    show()\n    while True:\n        if touching("Ball"):\n            delete_clone()',
           newLines: ['def when_I_start_as_a_clone():', '    show()', '    while True:', '        if touching("Ball"):', '            delete_clone()'],
@@ -1125,7 +1125,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click <strong>▶</strong>. Smash all the bricks — each one scores a point!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add more rows of bricks by changing <code>range(3)</code> to a larger number</li><li>Add a win condition: when Score reaches the total brick count, say "You Win!" and <code>stop()</code></li><li>Make different coloured rows worth different points using <code>set_effect("color", ...)</code> on each clone based on <code>row</code></li></ul>',
+          text: 'Click <strong>▶</strong>. Smash all the bricks - each one scores a point!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add more rows of bricks by changing <code>range(3)</code> to a larger number</li><li>Add a win condition: when Score reaches the total brick count, say "You Win!" and <code>stop()</code></li><li>Make different coloured rows worth different points using <code>set_effect("color", ...)</code> on each clone based on <code>row</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1135,7 +1135,7 @@
       isNew: true,
       title: 'Functions',
       emoji: '🧩',
-      desc: 'Wrap code you use again and again into a named function, then call it whenever you need it — and pass it a value to change what it does.',
+      desc: 'Wrap code you use again and again into a named function, then call it whenever you need it - and pass it a value to change what it does.',
       steps: [
         {
           title: 'Write a function',
@@ -1148,14 +1148,14 @@
         },
         {
           title: 'Call your function',
-          text: 'Defining a function does not run it — you have to <strong>call</strong> it by writing its name with brackets. Add a <code>game_start()</code> loop that calls <code>hop()</code> whenever space is pressed.',
+          text: 'Defining a function does not run it - you have to <strong>call</strong> it by writing its name with brackets. Add a <code>game_start()</code> loop that calls <code>hop()</code> whenever space is pressed.',
           starter: 'def hop():\n    for i in range(10):\n        change_y(6)\n        wait(0.02)\n    for i in range(10):\n        change_y(-6)\n        wait(0.02)',
           target: 'def hop():\n    for i in range(10):\n        change_y(6)\n        wait(0.02)\n    for i in range(10):\n        change_y(-6)\n        wait(0.02)\n\ndef game_start():\n    while True:\n        if key_pressed("space"):\n            hop()',
           newLines: ['def game_start():', '    while True:', '        if key_pressed("space"):', '            hop()'],
           requires: ['def game_start():', 'while True:', 'key_pressed("space")', '            hop()']
         },
         {
-          title: 'Reuse it — no copy-paste',
+          title: 'Reuse it - no copy-paste',
           text: 'The magic of functions: one definition, <strong>many calls</strong>. Instead of copying the jump code again, just call <code>hop()</code> from another key too. Add an up-arrow that also hops.',
           starter: 'def hop():\n    for i in range(10):\n        change_y(6)\n        wait(0.02)\n    for i in range(10):\n        change_y(-6)\n        wait(0.02)\n\ndef game_start():\n    while True:\n        if key_pressed("space"):\n            hop()',
           target: 'def hop():\n    for i in range(10):\n        change_y(6)\n        wait(0.02)\n    for i in range(10):\n        change_y(-6)\n        wait(0.02)\n\ndef game_start():\n    while True:\n        if key_pressed("space"):\n            hop()\n        if key_pressed("up"):\n            hop()',
@@ -1172,7 +1172,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>. Press <strong>space</strong> for a small hop and <strong>up</strong> for a big one — same function, two different jumps.<br><br><strong>Challenge:</strong> Add a second parameter so <code>hop(size, speed)</code> also controls how fast the jump plays. Then write a brand-new function <code>spin()</code> and call it too.',
+          text: 'Click the <strong>green flag ▶</strong>. Press <strong>space</strong> for a small hop and <strong>up</strong> for a big one - same function, two different jumps.<br><br><strong>Challenge:</strong> Add a second parameter so <code>hop(size, speed)</code> also controls how fast the jump plays. Then write a brand-new function <code>spin()</code> and call it too.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1195,7 +1195,7 @@
         },
         {
           title: 'Loop through the list',
-          text: 'A <code>for</code> loop can walk through <strong>every item</strong> in a list. Add a <code>while True:</code> loop that visits each point in turn — <code>point</code> becomes each value in the list, one at a time.',
+          text: 'A <code>for</code> loop can walk through <strong>every item</strong> in a list. Add a <code>while True:</code> loop that visits each point in turn - <code>point</code> becomes each value in the list, one at a time.',
           starter: 'def game_start():\n    points = [-150, 0, 150]',
           target: 'def game_start():\n    points = [-150, 0, 150]\n    while True:\n        for point in points:\n            set_x(point)\n            wait(0.5)',
           newLines: ['    while True:', '        for point in points:', '            set_x(point)', '            wait(0.5)'],
@@ -1219,7 +1219,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>. The sprite briefly shows how many stops there are (4), then patrols between them forever.<br><br><strong>Challenge:</strong> Read a single item by its <em>index</em> — <code>points[0]</code> is the first, <code>points[1]</code> the second. Then make a second list of y-positions and patrol in both directions.',
+          text: 'Click the <strong>green flag ▶</strong>. The sprite briefly shows how many stops there are (4), then patrols between them forever.<br><br><strong>Challenge:</strong> Read a single item by its <em>index</em> - <code>points[0]</code> is the first, <code>points[1]</code> the second. Then make a second list of y-positions and patrol in both directions.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1229,7 +1229,7 @@
       isNew: true,
       title: 'Messages & Events',
       emoji: '📣',
-      desc: 'Split a trigger from its reaction. One part of your code broadcasts a message; a separate handler reacts — the same way sprites and clones respond to events.',
+      desc: 'Split a trigger from its reaction. One part of your code broadcasts a message; a separate handler reacts - the same way sprites and clones respond to events.',
       steps: [
         {
           title: 'Broadcast a message',
@@ -1242,7 +1242,7 @@
         },
         {
           title: 'React to the message',
-          text: 'Add a <strong>separate</strong> handler that runs whenever a message arrives. Notice <code>game_start()</code> never calls this code directly — it just announces <code>"cheer"</code> and the handler responds on its own.',
+          text: 'Add a <strong>separate</strong> handler that runs whenever a message arrives. Notice <code>game_start()</code> never calls this code directly - it just announces <code>"cheer"</code> and the handler responds on its own.',
           starter: 'def game_start():\n    while True:\n        if key_pressed("space"):\n            broadcast("cheer")\n            wait(0.3)',
           target: 'def game_start():\n    while True:\n        if key_pressed("space"):\n            broadcast("cheer")\n            wait(0.3)\n\ndef when_message_received(message):\n    if message == "cheer":\n        say("Woohoo!")\n        next_costume()',
           newLines: ['def when_message_received(message):', '    if message == "cheer":', '        say("Woohoo!")', '        next_costume()'],
@@ -1250,7 +1250,7 @@
         },
         {
           title: 'A second message',
-          text: 'One handler can react to many messages. Broadcast <code>"vanish"</code> on the up-arrow, then handle it with <code>elif</code> — the sprite hides for a moment, then reappears.',
+          text: 'One handler can react to many messages. Broadcast <code>"vanish"</code> on the up-arrow, then handle it with <code>elif</code> - the sprite hides for a moment, then reappears.',
           starter: 'def game_start():\n    while True:\n        if key_pressed("space"):\n            broadcast("cheer")\n            wait(0.3)\n\ndef when_message_received(message):\n    if message == "cheer":\n        say("Woohoo!")\n        next_costume()',
           target: 'def game_start():\n    while True:\n        if key_pressed("space"):\n            broadcast("cheer")\n            wait(0.3)\n        if key_pressed("up"):\n            broadcast("vanish")\n            wait(0.3)\n\ndef when_message_received(message):\n    if message == "cheer":\n        say("Woohoo!")\n        next_costume()\n    elif message == "vanish":\n        hide()\n        wait(0.5)\n        show()',
           newLines: ['        if key_pressed("up"):', '            broadcast("vanish")', '    elif message == "vanish":', '        hide()', '        wait(0.5)', '        show()'],
@@ -1258,7 +1258,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>. Press <strong>space</strong> to cheer and <strong>up</strong> to vanish — the reactions live in a totally separate handler from the key checks.<br><br><strong>Challenge:</strong> Add a <em>second sprite</em>, give it its own <code>when_message_received(message)</code>, and make it react to <code>"cheer"</code> too. One broadcast, many sprites responding — that\'s how whole games are coordinated.',
+          text: 'Click the <strong>green flag ▶</strong>. Press <strong>space</strong> to cheer and <strong>up</strong> to vanish - the reactions live in a totally separate handler from the key checks.<br><br><strong>Challenge:</strong> Add a <em>second sprite</em>, give it its own <code>when_message_received(message)</code>, and make it react to <code>"cheer"</code> too. One broadcast, many sprites responding - that\'s how whole games are coordinated.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1272,13 +1272,13 @@
       steps: [
         {
           title: 'Bug 1: wrong way!',
-          text: 'This mover is broken. Run it and press the <strong>right</strong> arrow — the sprite goes the <em>wrong way</em>. Find the line for the right key and fix it so <code>change_x</code> is <strong>positive</strong>.',
+          text: 'This mover is broken. Run it and press the <strong>right</strong> arrow - the sprite goes the <em>wrong way</em>. Find the line for the right key and fix it so <code>change_x</code> is <strong>positive</strong>.',
           starter: 'def game_start():\n    while True:\n        if key_pressed("right"):\n            change_x(-5)\n        if key_pressed("left"):\n            change_x(-5)\n        if key_pressed("up"):\n            change_y(-5)\n        if key_pressed("down"):\n            change_y(-5)',
           target: 'def game_start():\n    while True:\n        if key_pressed("right"):\n            change_x(5)\n        if key_pressed("left"):\n            change_x(-5)\n        if key_pressed("up"):\n            change_y(-5)\n        if key_pressed("down"):\n            change_y(-5)',
           newLines: ['            change_x(5)'],
           requires: ['change_x(5)'],
           behaviorCheck: {
-            hint: 'Hold the right arrow — the sprite should now move RIGHT. The right-key line should be change_x(5).',
+            hint: 'Hold the right arrow - the sprite should now move RIGHT. The right-key line should be change_x(5).',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves right', holdKey: 'right', durationMs: 400, checks: [{ type: 'xChanged', dir: '+' }] }
@@ -1287,13 +1287,13 @@
         },
         {
           title: 'Bug 2: up is down',
-          text: 'Now press the <strong>up</strong> arrow — the sprite drops instead of rising. Fix the up-key line so <code>change_y</code> is <strong>positive</strong> (positive y is up).',
+          text: 'Now press the <strong>up</strong> arrow - the sprite drops instead of rising. Fix the up-key line so <code>change_y</code> is <strong>positive</strong> (positive y is up).',
           starter: 'def game_start():\n    while True:\n        if key_pressed("right"):\n            change_x(5)\n        if key_pressed("left"):\n            change_x(-5)\n        if key_pressed("up"):\n            change_y(-5)\n        if key_pressed("down"):\n            change_y(-5)',
           target: 'def game_start():\n    while True:\n        if key_pressed("right"):\n            change_x(5)\n        if key_pressed("left"):\n            change_x(-5)\n        if key_pressed("up"):\n            change_y(5)\n        if key_pressed("down"):\n            change_y(-5)',
           newLines: ['            change_y(5)'],
           requires: ['change_y(5)'],
           behaviorCheck: {
-            hint: 'Hold the up arrow — the sprite should now move UP. The up-key line should be change_y(5).',
+            hint: 'Hold the up arrow - the sprite should now move UP. The up-key line should be change_y(5).',
             setupMs: 400,
             scenarios: [
               { label: 'up key moves up', holdKey: 'up', durationMs: 400, checks: [{ type: 'yChanged', dir: '+' }] }
@@ -1308,7 +1308,7 @@
           newLines: ['def move(dx, dy):', '    change_x(dx)', '    change_y(dy)', '            move(5, 0)', '            move(-5, 0)', '            move(0, 5)', '            move(0, -5)'],
           requires: ['def move(dx, dy):', 'change_x(dx)', 'change_y(dy)', 'move(5, 0)', 'move(-5, 0)', 'move(0, 5)', 'move(0, -5)'],
           behaviorCheck: {
-            hint: 'Both should still work — right moves right, up moves up — but now through your move() function.',
+            hint: 'Both should still work - right moves right, up moves up - but now through your move() function.',
             setupMs: 400,
             scenarios: [
               { label: 'right key moves right', holdKey: 'right', durationMs: 400, checks: [{ type: 'xChanged', dir: '+' }] },
@@ -1318,7 +1318,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>. All four arrows work, and the logic lives in one tidy <code>move()</code> function.<br><br><strong>Challenge:</strong> Add a <code>speed</code> parameter — <code>move(dx, dy, speed)</code> — and make a "run" key that moves faster. Notice you only change the function <em>once</em>.',
+          text: 'Click the <strong>green flag ▶</strong>. All four arrows work, and the logic lives in one tidy <code>move()</code> function.<br><br><strong>Challenge:</strong> Add a <code>speed</code> parameter - <code>move(dx, dy, speed)</code> - and make a "run" key that moves faster. Notice you only change the function <em>once</em>.',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1333,7 +1333,7 @@
       order: 1,
       title: 'Geometry Dash',
       emoji: '🟦',
-      desc: 'Build a one-button auto-runner. Your cube runs on the spot while spikes rush past — tap space to jump. You will wrap the jump logic in its own function and call it.',
+      desc: 'Build a one-button auto-runner. Your cube runs on the spot while spikes rush past - tap space to jump. You will wrap the jump logic in its own function and call it.',
       steps: [
         {
           title: 'What are we building?',
@@ -1358,7 +1358,7 @@
         },
         {
           title: 'Jump and crash',
-          text: 'Call your function! When <strong>space</strong> is pressed, run <code>jump()</code> — one tidy line instead of the whole jump routine. Then end the game if the cube hits a Spike.',
+          text: 'Call your function! When <strong>space</strong> is pressed, run <code>jump()</code> - one tidy line instead of the whole jump routine. Then end the game if the cube hits a Spike.',
           starter: 'vy = 0\n\ndef jump():\n    global vy\n    if y_position() <= -100:\n        vy = 12\n\ndef game_start():\n    global vy\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    go_to_xy(-150, -100)\n    while True:\n        vy = vy - 0.8\n        change_y(vy)\n        if y_position() < -100:\n            set_y(-100)\n            vy = 0',
           target: 'vy = 0\n\ndef jump():\n    global vy\n    if y_position() <= -100:\n        vy = 12\n\ndef game_start():\n    global vy\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    go_to_xy(-150, -100)\n    while True:\n        vy = vy - 0.8\n        change_y(vy)\n        if y_position() < -100:\n            set_y(-100)\n            vy = 0\n        if key_pressed("space"):\n            jump()\n        if touching("Spike"):\n            say("Game Over!")\n            stop()',
           newLines: ['        if key_pressed("space"):', '            jump()', '        if touching("Spike"):', '            say("Game Over!")', '            stop()'],
@@ -1383,7 +1383,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong> and jump the spikes! The Score climbs every time one passes safely.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Make the spike faster as the Score climbs using <code>get_variable("Score")</code>.</li><li>Add a second obstacle sprite that scrolls at a different height.</li><li>Give <code>jump()</code> a <code>power</code> parameter — <code>jump(power)</code> — so a second key jumps higher.</li></ul>',
+          text: 'Click the <strong>green flag ▶</strong> and jump the spikes! The Score climbs every time one passes safely.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Make the spike faster as the Score climbs using <code>get_variable("Score")</code>.</li><li>Add a second obstacle sprite that scrolls at a different height.</li><li>Give <code>jump()</code> a <code>power</code> parameter - <code>jump(power)</code> - so a second key jumps higher.</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1395,7 +1395,7 @@
       order: 2,
       title: 'Rhythm Game',
       emoji: '🎵',
-      desc: 'Notes drop down the screen — hit space as each one reaches the line. Uses a list of lane positions and broadcast messages to score the hits.',
+      desc: 'Notes drop down the screen - hit space as each one reaches the line. Uses a list of lane positions and broadcast messages to score the hits.',
       steps: [
         {
           title: 'What are we building?',
@@ -1420,7 +1420,7 @@
         },
         {
           title: 'Press space to send a hit',
-          text: 'A <code>when_key_pressed</code> handler fires once each time a key is tapped. When it is space, <code>broadcast("hit")</code> — an announcement every note clone can hear at the same moment.',
+          text: 'A <code>when_key_pressed</code> handler fires once each time a key is tapped. When it is space, <code>broadcast("hit")</code> - an announcement every note clone can hear at the same moment.',
           starter: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()',
           target: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space":\n        broadcast("hit")',
           newLines: ['', 'def when_key_pressed(key):', '    if key == "space":', '        broadcast("hit")'],
@@ -1428,7 +1428,7 @@
         },
         {
           title: 'Score notes in the hit zone',
-          text: 'Every clone listens for <code>"hit"</code>. If the note receiving the message is near the bottom line — its <code>y_position()</code> between <code>-150</code> and <code>-90</code> — it scores a point and disappears. Notes anywhere else simply ignore the message.',
+          text: 'Every clone listens for <code>"hit"</code>. If the note receiving the message is near the bottom line - its <code>y_position()</code> between <code>-150</code> and <code>-90</code> - it scores a point and disappears. Notes anywhere else simply ignore the message.',
           starter: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space":\n        broadcast("hit")',
           target: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space":\n        broadcast("hit")\n\ndef when_message_received(message):\n    if message == "hit":\n        if y_position() < -90 and y_position() > -150:\n            change_variable("Score", 1)\n            delete_clone()',
           newLines: ['', 'def when_message_received(message):', '    if message == "hit":', '        if y_position() < -90 and y_position() > -150:', '            change_variable("Score", 1)', '            delete_clone()'],
@@ -1459,7 +1459,7 @@
         },
         {
           title: 'Enemy: the path list and spawner',
-          text: 'On your <strong>Enemy</strong> sprite, store the route as a <strong>list of waypoints</strong> — notice each item is itself an <code>[x, y]</code> list. <code>game_start()</code> hides the original and spawns a clone every <code>2.5</code> seconds. <code>Lives</code> counts the enemies that get through.',
+          text: 'On your <strong>Enemy</strong> sprite, store the route as a <strong>list of waypoints</strong> - notice each item is itself an <code>[x, y]</code> list. <code>game_start()</code> hides the original and spawns a clone every <code>2.5</code> seconds. <code>Lives</code> counts the enemies that get through.',
           starter: '',
           target: 'path = [[-200, 150], [200, 150], [200, -120], [-200, -120]]\n\ndef game_start():\n    hide()\n    set_variable("Lives", 5)\n    display_variable("Lives", True)\n    while True:\n        create_clone()\n        wait(2.5)',
           newLines: ['path = [[-200, 150], [200, 150], [200, -120], [-200, -120]]', '', 'def game_start():', '    hide()', '    set_variable("Lives", 5)', '    display_variable("Lives", True)', '    while True:', '        create_clone()', '        wait(2.5)'],
@@ -1467,7 +1467,7 @@
         },
         {
           title: 'Enemy: walk the path',
-          text: 'Each clone starts at the first waypoint, then <code>for point in path:</code> glides to every <code>[x, y]</code> in turn — reading <code>point[0]</code> for the x and <code>point[1]</code> for the y. If it survives the whole path it costs you a life.',
+          text: 'Each clone starts at the first waypoint, then <code>for point in path:</code> glides to every <code>[x, y]</code> in turn - reading <code>point[0]</code> for the x and <code>point[1]</code> for the y. If it survives the whole path it costs you a life.',
           starter: 'path = [[-200, 150], [200, 150], [200, -120], [-200, -120]]\n\ndef game_start():\n    hide()\n    set_variable("Lives", 5)\n    display_variable("Lives", True)\n    while True:\n        create_clone()\n        wait(2.5)',
           target: 'path = [[-200, 150], [200, 150], [200, -120], [-200, -120]]\n\ndef game_start():\n    hide()\n    set_variable("Lives", 5)\n    display_variable("Lives", True)\n    while True:\n        create_clone()\n        wait(2.5)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(-200, 150)\n    show()\n    for point in path:\n        glide_to_xy(point[0], point[1], 2)\n    change_variable("Lives", -1)\n    delete_clone()',
           newLines: ['', 'def when_I_start_as_a_clone():', '    go_to_xy(-200, 150)', '    show()', '    for point in path:', '        glide_to_xy(point[0], point[1], 2)', '    change_variable("Lives", -1)', '    delete_clone()'],
@@ -1475,7 +1475,7 @@
         },
         {
           title: 'Add the Tower sprite',
-          text: 'Click the highlighted button to add a second sprite. <strong>Name it exactly <code>Tower</code></strong> — the enemy code measures <code>distance_to("Tower")</code>, so the spelling must match. Give it a tower-like costume near the middle of the stage.',
+          text: 'Click the highlighted button to add a second sprite. <strong>Name it exactly <code>Tower</code></strong> - the enemy code measures <code>distance_to("Tower")</code>, so the spelling must match. Give it a tower-like costume near the middle of the stage.',
           highlight: 'add-sprite-btn',
           highlightLabel: 'Add the Tower sprite here',
           requiredSpriteNames: ['Enemy', 'Tower'],
@@ -1500,7 +1500,7 @@
         },
         {
           title: '✅ Try it!',
-          text: 'Click the <strong>green flag ▶</strong>. Enemies loop the path and vanish when they pass your tower.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add more waypoints to <code>path</code> to make a longer, twistier route.</li><li>Add a game-over when <code>get_variable("Lives") &lt;= 0</code>.</li><li>Add a second Tower sprite — the enemies already listen for any <code>"shoot"</code>, so it just works.</li></ul>',
+          text: 'Click the <strong>green flag ▶</strong>. Enemies loop the path and vanish when they pass your tower.<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Add more waypoints to <code>path</code> to make a longer, twistier route.</li><li>Add a game-over when <code>get_variable("Lives") &lt;= 0</code>.</li><li>Add a second Tower sprite - the enemies already listen for any <code>"shoot"</code>, so it just works.</li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1516,7 +1516,7 @@
       steps: [
         {
           title: 'What are we building?',
-          text: 'A simplified Overcooked! An order appears — <em>Make a Burger!</em> — and you press <strong>1</strong>, <strong>2</strong> or <strong>3</strong> to cook the matching dish.<br><br>This capstone brings the new skills together: a <strong>list</strong> holds the menu, <strong>functions</strong> (one takes a <em>parameter</em>) handle the orders, and a <strong>broadcast</strong> tells a Waiter sprite to run the plate out.',
+          text: 'A simplified Overcooked! An order appears - <em>Make a Burger!</em> - and you press <strong>1</strong>, <strong>2</strong> or <strong>3</strong> to cook the matching dish.<br><br>This capstone brings the new skills together: a <strong>list</strong> holds the menu, <strong>functions</strong> (one takes a <em>parameter</em>) handle the orders, and a <strong>broadcast</strong> tells a Waiter sprite to run the plate out.',
           starter: null, target: null, newLines: [], requires: []
         },
         {
@@ -1529,7 +1529,7 @@
         },
         {
           title: 'A function that takes a parameter',
-          text: 'The <code>serve(choice)</code> function takes a <strong>parameter</strong> — the dish number you tried to cook. If <code>choice</code> matches the <code>current</code> order it scores, tells the waiter with <code>broadcast("served")</code>, and starts the next order.',
+          text: 'The <code>serve(choice)</code> function takes a <strong>parameter</strong> - the dish number you tried to cook. If <code>choice</code> matches the <code>current</code> order it scores, tells the waiter with <code>broadcast("served")</code>, and starts the next order.',
           starter: 'menu = ["Burger", "Pizza", "Salad"]\ncurrent = 0\n\ndef new_order():\n    global current\n    current = pick_random(0, 2)\n    say("Make a " + menu[current] + "!")',
           target: 'menu = ["Burger", "Pizza", "Salad"]\ncurrent = 0\n\ndef new_order():\n    global current\n    current = pick_random(0, 2)\n    say("Make a " + menu[current] + "!")\n\ndef serve(choice):\n    global current\n    if choice == current:\n        change_variable("Score", 1)\n        broadcast("served")\n        new_order()\n        wait(0.3)',
           newLines: ['', 'def serve(choice):', '    global current', '    if choice == current:', '        change_variable("Score", 1)', '        broadcast("served")', '        new_order()', '        wait(0.3)'],
@@ -1537,7 +1537,7 @@
         },
         {
           title: 'The kitchen loop',
-          text: 'Now wire up the keys. <code>game_start()</code> shows the first order, then the loop calls <code>serve()</code> with a different number for each key — <code>serve(0)</code> for key <strong>1</strong>, <code>serve(1)</code> for <strong>2</strong>, <code>serve(2)</code> for <strong>3</strong>. One function handles all three dishes!',
+          text: 'Now wire up the keys. <code>game_start()</code> shows the first order, then the loop calls <code>serve()</code> with a different number for each key - <code>serve(0)</code> for key <strong>1</strong>, <code>serve(1)</code> for <strong>2</strong>, <code>serve(2)</code> for <strong>3</strong>. One function handles all three dishes!',
           starter: 'menu = ["Burger", "Pizza", "Salad"]\ncurrent = 0\n\ndef new_order():\n    global current\n    current = pick_random(0, 2)\n    say("Make a " + menu[current] + "!")\n\ndef serve(choice):\n    global current\n    if choice == current:\n        change_variable("Score", 1)\n        broadcast("served")\n        new_order()\n        wait(0.3)',
           target: 'menu = ["Burger", "Pizza", "Salad"]\ncurrent = 0\n\ndef new_order():\n    global current\n    current = pick_random(0, 2)\n    say("Make a " + menu[current] + "!")\n\ndef serve(choice):\n    global current\n    if choice == current:\n        change_variable("Score", 1)\n        broadcast("served")\n        new_order()\n        wait(0.3)\n\ndef game_start():\n    global current\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    new_order()\n    while True:\n        if key_pressed("1"):\n            serve(0)\n        if key_pressed("2"):\n            serve(1)\n        if key_pressed("3"):\n            serve(2)',
           newLines: ['', 'def game_start():', '    global current', '    set_variable("Score", 0)', '    display_variable("Score", True)', '    new_order()', '    while True:', '        if key_pressed("1"):', '            serve(0)', '        if key_pressed("2"):', '            serve(1)', '        if key_pressed("3"):', '            serve(2)'],
@@ -1554,7 +1554,7 @@
         },
         {
           title: 'Waiter: run the plate out',
-          text: 'Click your <strong>Waiter</strong> sprite and delete its default code. Keep it hidden in the corner until it hears <code>"served"</code> — then it pops up, shouts <em>Order up!</em>, and hides again.',
+          text: 'Click your <strong>Waiter</strong> sprite and delete its default code. Keep it hidden in the corner until it hears <code>"served"</code> - then it pops up, shouts <em>Order up!</em>, and hides again.',
           starter: null,
           target: 'def game_start():\n    go_to_xy(180, -130)\n    hide()\n\ndef when_message_received(message):\n    if message == "served":\n        show()\n        say_for_secs("Order up!", 0.4)\n        hide()',
           newLines: ['def game_start():', '    go_to_xy(180, -130)', '    hide()', '', 'def when_message_received(message):', '    if message == "served":', '        show()', '        say_for_secs("Order up!", 0.4)', '        hide()'],
@@ -1571,18 +1571,18 @@
 
   // ── Challenge data ────────────────────────────────────────────
   // Each challenge is a standalone game for students to build from scratch.
-  // No starter code is given — only a goal, hints, and auto-tests.
+  // No starter code is given - only a goal, hints, and auto-tests.
   //
   // test shape (extends behaviorCheck scenario):
-  //   label       string   — shown in results list
-  //   holdKey     string   — hold a key for durationMs (optional)
-  //   durationMs  number   — how long to hold the key (default 400)
-  //   clickSprite string   — '__active__' or a sprite name to fire a click event (optional)
-  //   broadcast   string   — message to fire a broadcast event (optional)
-  //   waitMs      number   — wait after input before reading state (default 250)
-  //   keepRunning bool     — skip startAll(); continue from previous test (default false)
-  //   allowStop   bool     — don't fail if the program stopped naturally (default false)
-  //   checks      array    — same check types as behaviorCheck scenarios
+  //   label       string - shown in results list
+  //   holdKey     string - hold a key for durationMs (optional)
+  //   durationMs  number - how long to hold the key (default 400)
+  //   clickSprite string - '__active__' or a sprite name to fire a click event (optional)
+  //   broadcast   string - message to fire a broadcast event (optional)
+  //   waitMs      number - wait after input before reading state (default 250)
+  //   keepRunning bool - skip startAll(); continue from previous test (default false)
+  //   allowStop   bool - don't fail if the program stopped naturally (default false)
+  //   checks      array - same check types as behaviorCheck scenarios
   var CHALLENGES = [
     {
       id: 'arrow-mover',
@@ -1591,11 +1591,11 @@
       difficulty: 1,
       goal: 'Control the sprite with all four arrow keys. Right moves the sprite right, left moves it left, up moves it up and down moves it down. The sprite should keep moving as long as the key is held.',
       hints: [
-        'Put a <code>while True:</code> loop inside <code>def game_start():</code> — this keeps checking every frame.',
+        'Put a <code>while True:</code> loop inside <code>def game_start():</code> - this keeps checking every frame.',
         'Use <code>if key_pressed("right"):</code> to check if the right arrow is held down.',
         '<code>change_x(5)</code> moves right, <code>change_x(-5)</code> moves left.',
         '<code>change_y(5)</code> moves up, <code>change_y(-5)</code> moves down.',
-        'You need four separate <code>if</code> blocks — one for each direction.'
+        'You need four separate <code>if</code> blocks - one for each direction.'
       ],
       setupMs: 500,
       settleMs: 100,
@@ -1623,7 +1623,7 @@
       hints: [
         'In <code>def game_start():</code>, use <code>set_variable("Score", 0)</code> to reset the score.',
         'Use <code>display_variable("Score", True)</code> to show it on the stage.',
-        'Define <code>def when_clicked():</code> — this runs every time the sprite is clicked.',
+        'Define <code>def when_clicked():</code> - this runs every time the sprite is clicked.',
         'Inside <code>when_clicked()</code>, use <code>change_variable("Score", 1)</code> to add 1.'
       ],
       setupMs: 700,
@@ -1646,11 +1646,11 @@
       difficulty: 3,
       goal: 'The sprite moves automatically using a speed variable <code>vx</code>. When it reaches the right wall (x > 220) or left wall (x &lt; −220), it reverses direction by flipping <code>vx</code>. The sprite bounces back and forth forever without any key presses.',
       hints: [
-        'Create <code>vx = 5</code> at the top of your code — outside any function.',
+        'Create <code>vx = 5</code> at the top of your code - outside any function.',
         'In <code>def game_start():</code>, write <code>global vx</code> first so Python can change it.',
         'Inside a <code>while True:</code> loop, use <code>change_x(vx)</code> to move each frame.',
         'Check <code>if x_position() > 220 or x_position() &lt; -220:</code> to detect the walls.',
-        'To bounce: <code>vx = vx * -1</code> — this flips the direction.'
+        'To bounce: <code>vx = vx * -1</code> - this flips the direction.'
       ],
       setupMs: 300,
       settleMs: 100,
@@ -1678,7 +1678,7 @@
         'Each frame: <code>vy = vy - 0.5</code> (gravity), then <code>change_y(vy)</code>.',
         'Add <code>if key_pressed("space"): vy = 8</code> to jump.',
         'Add <code>if y_position() &lt; -160: say("Game Over!"); stop()</code> for the game-over check.',
-        'Try adding a Score variable that goes up by 1 each frame — how long can you survive?'
+        'Try adding a Score variable that goes up by 1 each frame - how long can you survive?'
       ],
       setupMs: 150,
       settleMs: 100,

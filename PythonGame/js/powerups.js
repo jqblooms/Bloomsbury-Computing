@@ -330,13 +330,13 @@ function triggerFreeze() {
         border-radius:6px; font-size:0.8rem; font-weight:bold;
         z-index:80; pointer-events:none;
     `;
-    indicator.innerText = '❄ FROZEN — 30s';
+    indicator.innerText = '❄ FROZEN - 30s';
     els.gameArea.appendChild(indicator);
 
     let remaining = 30;
     const interval = setInterval(() => {
         remaining--;
-        if (indicator.parentNode) indicator.innerText = `❄ FROZEN — ${remaining}s`;
+        if (indicator.parentNode) indicator.innerText = `❄ FROZEN - ${remaining}s`;
         if (remaining <= 0) clearInterval(interval);
     }, 1000);
 

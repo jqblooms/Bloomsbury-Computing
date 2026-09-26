@@ -387,12 +387,12 @@
     background: transparent;
   }
   /* An embed exists to do one specific thing the lesson chose (trace this
-     one algorithm, in this one language, in this one mode) — every
+     one algorithm, in this one language, in this one mode) - every
      picker/tab that would let a student wander into a different task is
      hidden, not just the brand header. This also sidesteps a real bug
      found live: the "Write the code" mode's editor did not finish
      initialising the first time a step landed in that mode, only
-     appearing after a manual mode switch triggered a re-render — with
+     appearing after a manual mode switch triggered a re-render - with
      the toggle gone and trace mode forced (see initEmbed() below), that
      broken path is simply unreachable rather than patched around. */
   body.tt-embed .site-header,
@@ -1248,7 +1248,7 @@ const PYTHON_HINT_RE = /\b(for|in|range|while|if|elif|else|break|print|input|int
 // A condition line (IF/WHILE/UNTIL/elif) can't be reconstructed from its
 // operators alone the way every other kind of line can: the reference
 // table alongside this editor proves a condition was true or false for
-// the one input shown, never the exact boundary value — "Score >= 50"
+// the one input shown, never the exact boundary value - "Score >= 50"
 // and "Score >= 49" both look identical from a single passing example.
 // Every other line's own values are already fully derivable by working
 // through the reference table's arithmetic by hand, so this is the one
@@ -1604,7 +1604,7 @@ function checkPractice(idx) {
        } else if(given !== '') td.classList.add('wrong');
        // A cell left blank never gets a red box here, even when it should
        // have held a value (still counted wrong below, just not shown
-       // that way) — a red box only where blank is genuinely blank vs.
+       // that way) - a red box only where blank is genuinely blank vs.
        // needs a value would draw the exact shape of the answer key
        // across the table, telling a student which cells to fill before
        // they have worked that out themselves, the one thing this
@@ -2155,7 +2155,7 @@ function checkGeneratedPractice() {
        } else if(given !== '') td.classList.add('wrong');
        // A cell left blank never gets a red box here, even when it should
        // have held a value (still counted wrong below, just not shown
-       // that way) — a red box only where blank is genuinely blank vs.
+       // that way) - a red box only where blank is genuinely blank vs.
        // needs a value would draw the exact shape of the answer key
        // across the table, telling a student which cells to fill before
        // they have worked that out themselves, the one thing this
@@ -2310,7 +2310,7 @@ function devFillTable(prefix, cols, answers) {
 // walkthrough&idx=0`, same indices the Walkthrough/Practice picker
 // buttons use), or a fully custom algorithm posted from the parent lesson
 // after the iframe loads. Same postMessage-bridge shape as PyBot's own
-// embed API (`initEmbedListener()` in pybot.html) — kept deliberately
+// embed API (`initEmbedListener()` in pybot.html) - kept deliberately
 // similar so a lesson author already familiar with one recognises the
 // other.
 // ======================================================
@@ -2352,7 +2352,7 @@ function ensurePracArea(idx) {
 // using it (see measureFinalWalkHeight/measureFinalPracHeight below,
 // which measure against the *finished* state of the widget, not whatever
 // happens to be on screen the instant this runs), so nothing here ever
-// reports again after that single measurement — not stepping through a
+// reports again after that single measurement - not stepping through a
 // walkthrough, not pressing Check Answers, nothing. The embed's own
 // language/mode toggles are hidden (see `.header-left`/`.language-picker`
 // in the CSS above) specifically so nothing a student can do inside the
@@ -2365,14 +2365,14 @@ function reportEmbedHeight() {
 // Space Mono/DM Sans (this page's whole font stack) load from Google
 // Fonts and can still be downloading the instant a step first selects
 // its algorithm. Measuring before they finish reports a height based on
-// the browser's fallback font, not the real one — found live: a real
+// the browser's fallback font, not the real one - found live: a real
 // lesson slide with content cut off, the monospace code lines had
 // re-wrapped taller once the real font swapped in, well after the
 // (deliberately one-shot, see reportEmbedHeight's own comment above)
 // height report had already fired and nothing was watching any more to
 // catch it.
 //
-// document.fonts.ready alone was not enough — confirmed live, still
+// document.fonts.ready alone was not enough - confirmed live, still
 // growing a second later even after waiting on it. The Google Fonts
 // <link> above uses `display=swap`, and .ready only knows to wait for
 // @font-face rules the CSSOM has already discovered; if that stylesheet
@@ -2394,7 +2394,7 @@ function afterFontsSettle(fn) {
 }
 
 // Walkthrough tables build up one row at a time as the student presses
-// Step Forward — measuring right now would report whatever's on screen
+// Step Forward - measuring right now would report whatever's on screen
 // at this instant (often nothing yet), not the full size the table will
 // reach once fully stepped through. Fills every row in temporarily, off
 // the back of the same call, measures, then puts the empty table back
@@ -2416,7 +2416,7 @@ function measureFinalWalkHeight(idx) {
 }
 
 // Practice mode's table is already full-size the moment it renders
-// (EXTRA_ROWS included) — the only part not yet on screen is the Check
+// (EXTRA_ROWS included) - the only part not yet on screen is the Check
 // Answers result badge, so this reserves room for that too, the same
 // "measure the finished state" idea as the walkthrough version above.
 function measureFinalPracHeight(idx) {
@@ -2447,7 +2447,7 @@ function selectBuiltInEmbed(view, idx) {
 
 // `algorithm` matches the same {context, code, cols, answers} shape every
 // built-in algorithm above already uses (see e.g. `algo0Cols`/
-// `algo0Answers`) — there is no code interpreter here deriving a trace
+// `algo0Answers`) - there is no code interpreter here deriving a trace
 // automatically, so the parent lesson supplies the fully worked-out
 // answer key, not just the code.
 function loadCustomAlgorithm(payload) {
@@ -2481,7 +2481,7 @@ function initEmbed() {
   document.body.classList.add('tt-embed');
 
   // Default code language is otherwise whatever this browser last used
-  // across the whole site (or Python, the very first time) — wrong for a
+  // across the whole site (or Python, the very first time) - wrong for a
   // lesson written entirely in Cambridge pseudocode, so the embedding
   // lesson sets it explicitly instead of inheriting stale/default state.
   const lang = params.get('lang');
@@ -2502,8 +2502,8 @@ function initEmbed() {
   // initialising correctly the first time a step lands in that mode
   // without a language/mode switch happening afterwards to trigger a
   // re-render. Simplest real fix: an embed never starts in that mode, and
-  // — since the toggle is hidden (see `.header-left`/`.language-picker`
-  // in the CSS above) — a student can never switch into it either, so the
+  // - since the toggle is hidden (see `.header-left`/`.language-picker`
+  // in the CSS above) - a student can never switch into it either, so the
   // broken path is simply unreachable here rather than patched around.
   setPracticeMode('trace');
 
