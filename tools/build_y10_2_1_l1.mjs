@@ -36,7 +36,7 @@ function activity(id, label, lead, appId) {
 }
 
 choice('do-now-1', 'Do Now: Compression',
-  'Recap of 1.3 L3: Compression. Cambridge IGCSE 0478/11, June 2022, Question 1(a)(ii). Jack has an MP3 file stored on his computer.', [
+  'Recap of 1.3 L3: Compression. Cambridge IGCSE 0478/11, June 2022, Question 1(a)(ii). Jack has an MP3 file stored on his computer. When the file was created, some sound frequencies that most people cannot hear were permanently removed to make the file smaller.', [
     { prompt: 'Is the MP3 a lossy compressed file, a lossless compressed file, or not a compressed file? [1]',
       options: ['Lossless compressed file', 'Not a compressed file', 'Lossy compressed file'], correct: 2,
       explain: 'MP3 uses lossy compression: some sound data is permanently removed.' }
@@ -60,7 +60,7 @@ choice('check-purpose', 'Check: Packets', 'Choose the best answer for each quest
 
 add({ id: 'packet-structure', label: 'Inside a Packet',
   content: heading('Inside a Packet', 'A packet has three parts:') +
-    '<div class="lesson-exam-card" style="display:grid;grid-template-columns:2fr 1.4fr 1fr;gap:8px;text-align:center;font-weight:700"><div style="padding:12px;background:#dce9fb">Header</div><div style="padding:12px;background:#e7f5e9">Payload</div><div style="padding:12px;background:#fff0da">Trailer</div></div>' +
+    '<div class="lesson-exam-card" style="display:grid;grid-template-columns:2fr 1.4fr 1fr;gap:8px;text-align:center;font-weight:700"><div style="padding:12px;border:2px solid #8ab4f8;border-radius:8px;background:rgba(138,180,248,.12);color:#8ab4f8">Header</div><div style="padding:12px;border:2px solid #81c995;border-radius:8px;background:rgba(129,201,149,.12);color:#81c995">Payload</div><div style="padding:12px;border:2px solid #fdd663;border-radius:8px;background:rgba(253,214,99,.12);color:#fdd663">Trailer</div></div>' +
     '<ul class="lesson-facts"><li><strong>Header:</strong> destination address, originator address, packet number.</li><li><strong>Payload:</strong> part of the data being sent.</li><li><strong>Trailer:</strong> information used to check the packet for errors.</li></ul>' });
 choice('exam-header', 'Exam Question: Packet Header',
   'Cambridge IGCSE 0478/11, June 2025, Question 5(c)(i). A customer sends an order to a restaurant kitchen in packets.', [

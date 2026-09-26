@@ -71,7 +71,7 @@
     {
       "id": "packet-structure",
       "label": "Inside a Packet",
-      "content": "<h2 class=\"lesson-h2\">Inside a Packet</h2><p class=\"lesson-lead\">A packet has three parts:</p><div class=\"lesson-exam-card\" style=\"display:grid;grid-template-columns:2fr 1.4fr 1fr;gap:8px;text-align:center;font-weight:700\"><div style=\"padding:12px;background:#dce9fb\">Header</div><div style=\"padding:12px;background:#e7f5e9\">Payload</div><div style=\"padding:12px;background:#fff0da\">Trailer</div></div><ul class=\"lesson-facts\"><li><strong>Header:</strong> destination address, originator address, packet number.</li><li><strong>Payload:</strong> part of the data being sent.</li><li><strong>Trailer:</strong> information used to check the packet for errors.</li></ul>"
+      "content": "<h2 class=\"lesson-h2\">Inside a Packet</h2><p class=\"lesson-lead\">A packet has three parts:</p><div class=\"lesson-exam-card\" style=\"display:grid;grid-template-columns:2fr 1.4fr 1fr;gap:8px;text-align:center;font-weight:700\"><div style=\"padding:12px;border:2px solid #8ab4f8;border-radius:8px;background:rgba(138,180,248,.12);color:#8ab4f8\">Header</div><div style=\"padding:12px;border:2px solid #81c995;border-radius:8px;background:rgba(129,201,149,.12);color:#81c995\">Payload</div><div style=\"padding:12px;border:2px solid #fdd663;border-radius:8px;background:rgba(253,214,99,.12);color:#fdd663\">Trailer</div></div><ul class=\"lesson-facts\"><li><strong>Header:</strong> destination address, originator address, packet number.</li><li><strong>Payload:</strong> part of the data being sent.</li><li><strong>Trailer:</strong> information used to check the packet for errors.</li></ul>"
     },
     {
       "id": "exam-header",
