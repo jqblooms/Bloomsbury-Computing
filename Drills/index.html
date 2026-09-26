@@ -44,6 +44,7 @@
 
   .scopebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin: 10px 0; }
   .scopebar #scope-label { font-weight: 500; color: var(--muted); font-size: .85rem; }
+  .scopebar-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .btn.small { min-height: 30px; padding: 0 14px; font-size: .8rem; }
 
   /* Learn / Quiz: a segmented control, like the site's own switches. */
@@ -111,6 +112,9 @@
   .opt.is-answer { border-color: var(--answer-line); background: var(--answer-soft); }
   .opt.is-correct { border-color: var(--good-line); background: var(--good-soft); }
   .opt.is-wrong { border-color: var(--bad-line); background: var(--bad-soft); }
+  .opt.is-ruled-out { opacity: .4; cursor: default; }
+  .opt.is-ruled-out span { text-decoration: line-through; }
+  .opt.is-ruled-out:hover { border-color: var(--line-strong); }
   .opt.is-locked { cursor: default; }
   .opt.is-locked:hover { border-color: var(--line-strong); }
   .opt.is-locked.is-answer:hover { border-color: var(--answer-line); }
@@ -149,11 +153,6 @@
     border-radius: 12px; margin: 4px 0 6px;
   }
   .text-answer-input:disabled { background: var(--surface-3); color: var(--ink); }
-  .help-box {
-    display: none; margin: 8px 0; padding: 10px 12px; border-radius: 10px;
-    background: var(--answer-soft); border: 1px solid var(--answer-line); color: var(--answer); font-weight: 500;
-  }
-  .help-box.show { display: block; }
 
   /* Code-writing cards (type: 'code') - a monospace "given" values block,
      a real textarea for the student's own pseudocode, and a result panel
@@ -179,11 +178,6 @@
   .code-result.ok { background: var(--good-soft); border-color: var(--good-line); color: var(--good); }
   .code-result.no { background: var(--bad-soft); border-color: var(--bad-line); color: var(--bad); }
   .code-result pre { margin: 4px 0 0; font: 500 .85rem/1.4 var(--font-mono); white-space: pre-wrap; color: inherit; }
-  .code-help-box {
-    display: none; margin: 8px 0; padding: 10px 12px; border-radius: 10px;
-    background: var(--answer-soft); border: 1px solid var(--answer-line); color: var(--answer);
-  }
-  .code-help-box.show { display: block; }
 
   /* Exam Questions (drill.isExamSet cards): a real multi-mark exam
      question split into one box per distinct marking point. */
@@ -206,10 +200,6 @@
   .exam-card-score { font-weight: 700; font-size: .98rem; }
   .exam-final-score { font: 700 1.5rem/1.2 var(--font-display); margin: 6px 0 16px; }
 
-  .code-help-box pre {
-    margin: 4px 0 0; font: 500 .85rem/1.4 var(--font-mono);
-    white-space: pre-wrap; color: inherit;
-  }
 
   /* Per-topic mastery overview on the setup screen - always shows the
      percentage AND the exact fraction together (never one without the
@@ -269,7 +259,10 @@
   <div id="run-area" style="display:none">
     <div class="scopebar">
       <span id="scope-label"></span>
-      <button type="button" class="btn ghost small" id="change-selection-btn">Change topic / cards</button>
+      <span class="scopebar-actions">
+        <span id="support-slot" hidden></span>
+        <button type="button" class="btn ghost small" id="change-selection-btn">Change topic / cards</button>
+      </span>
     </div>
 
     <div class="modebar" id="modebar">
@@ -277,7 +270,7 @@
       <button type="button" id="mode-quiz">Quiz mode</button>
     </div>
 
-    <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. The answer is never shown unless you ask - press <strong>I need help</strong> to flash it for a second.</div>
+    <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. Stuck? Press <strong>I need help</strong> and it shows you how, helping a little less each time you get a card right. Switch on <strong>Support</strong> to have that help on every card.</div>
     <div class="notice quiz" id="notice-quiz" style="display:none">Quiz mode &middot; answer a card correctly <strong>three times in a row</strong> to master it for this run. A wrong answer sends its streak back to zero. Master every card in this run for completion.</div>
     <div class="notice quiz" id="notice-code" style="display:none">Write real pseudocode for each question &middot; answer <strong>three questions of the same type</strong> correctly in a row to master that type, not the same exact question three times. A wrong or broken answer sends that type's streak back to zero.</div>
     <div class="notice quiz" id="notice-exam" style="display:none">Real exam question &middot; every part is <strong>checked and marked</strong> the moment you submit, showing the correct answer for anything wrong. Your score for this run is shown at the end.</div>
@@ -305,7 +298,7 @@
       drills: {},
       register: function (drillId, def) { this.drills[drillId] = def; }
     };
-    ["../shared/pseudocode-engine.js", "helpers.js", "data/" + id + ".js", "engine.js"].forEach(function (file) {
+    ["../shared/pseudocode-engine.js", "../shared/bc-support.js", "helpers.js", "data/" + id + ".js", "engine.js"].forEach(function (file) {
       document.write('<script src="' + file + "?v=" + v + '"><\/script>');
     });
   })();

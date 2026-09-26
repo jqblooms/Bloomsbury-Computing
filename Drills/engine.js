@@ -10,9 +10,7 @@
   // ============================================================
   var DEFAULT_SHOW = 6;
   var MASTERY_STREAK = 3;
-  var HELP_MS = 1000;
   var ADVANCE_MS = 1000; // auto-advance delay after a card is marked, either mode
-  var TEXT_HELP_MS = 2500; // text mode help reveal has no options to flash, so it gets a bit longer
   var TEXT_WRONG_ADVANCE_MS = 3500; // text mode: linger longer on a wrong answer so it can be memorised
 
   var params = new URLSearchParams(location.search);
@@ -41,7 +39,6 @@
   var isCodeDrill = !!drill.codeDrill;
   var isExamSet = !!drill.isExamSet;
   var CODE_MASTERY_STREAK = 3;
-  var CODE_HELP_MS = 4000; // a whole reference program takes longer to read than one flashed MC option
 
   var els = {
     title: document.getElementById("drill-title"),
@@ -72,6 +69,7 @@
     progressLabel: document.getElementById("progress-label"),
     progressFill: document.getElementById("progress-fill"),
     stage: document.getElementById("stage"),
+    supportSlot: document.getElementById("support-slot"),
     masteryOverview: document.getElementById("mastery-overview")
   };
   els.title.textContent = drill.title;
@@ -483,7 +481,71 @@
   // ============================================================
   // RENDER
   // ============================================================
-  var current = null; // { cardId, set, checked, helpTimer }
+  var current = null; // { cardId, set, checked, usedHelp, hintReveal }
+
+  // ---- Support: Learn mode's help (shared/bc-support.js) ----
+  // Shows how rather than handing over the answer, and helps less as the
+  // student gets a card right. A typed answer gets the model answer greyed
+  // out under the box, colouring in as they type; multiple choice gets wrong
+  // options ruled out to narrow it down; a code question gets the working.
+  // "I need help" brings it up on one card; with Support switched on it is
+  // there on every card. How much is shown fades per card (per question type
+  // for code): three right in a row takes a step away, two wrong gives one
+  // back. Quiz mode never helps: that is where mastery is earned.
+  var Support = window.BCSupport || null;
+  function supportFader(key) { return Support ? Support.fader("drill:" + drillId + ":" + key) : null; }
+  function supportAuto() { return !!(Support && Support.isOn() && run && run.mode === "learn"); }
+  // Asking for help always gets some, even once the fading has taken it all away.
+  function supportReveal(fader, explicit) {
+    var r = fader ? fader.reveal() : 1;
+    return explicit ? Math.max(r, 1 / 3) : r;
+  }
+  function recordSupportResult(key, right) {
+    if (!run || run.mode !== "learn") return;
+    var fader = supportFader(key);
+    if (fader) { if (right) fader.correct(); else fader.wrong(); }
+  }
+  function textHintModel(card) { return card.hint || current.set.correct[0]; }
+  function showTextHint(explicit) {
+    var card = resolveCard(cardsById[current.cardId], current.instance);
+    var box = els.stage.querySelector("#support-hint");
+    var input = els.stage.querySelector("#text-answer");
+    if (!box || !input || !Support) return;
+    var reveal = supportReveal(supportFader(current.cardId), explicit);
+    if (reveal <= 0) return;
+    current.hintReveal = reveal;
+    current.usedHelp = true;
+    Support.renderTypedHint(box, textHintModel(card), input.value, reveal);
+  }
+  function narrowOptions(explicit) {
+    var set = current.set;
+    var reveal = supportReveal(supportFader(current.cardId), explicit);
+    var distractors = [];
+    set.options.forEach(function (opt, idx) {
+      if (set.correct.indexOf(opt) === -1) distractors.push(idx);
+    });
+    // Always leaves at least one wrong option: there is still a choice to make.
+    var count = Math.min(distractors.length - 1, Math.round(distractors.length * reveal));
+    if (count <= 0) return;
+    current.usedHelp = true;
+    shuffle(distractors).slice(0, count).forEach(function (idx) {
+      var el = els.stage.querySelector('.opt[data-opt="' + idx + '"]');
+      if (!el || el.classList.contains("is-ruled-out")) return;
+      el.classList.add("is-ruled-out");
+      el.querySelector("input").disabled = true;
+      el.title = "Ruled out";
+    });
+  }
+  function showCodeHint(explicit) {
+    var card = cardsById[current.cardId];
+    var box = document.getElementById("code-support-hint");
+    var input = document.getElementById("code-input");
+    if (!box || !input || !Support) return;
+    var reveal = supportReveal(supportFader("code:" + card.category), explicit);
+    if (reveal <= 0) return;
+    current.hintReveal = reveal;
+    Support.renderTypedHint(box, String(card.reference).split("\n"), input.value, reveal, "Hint: the working, type it yourself");
+  }
 
   // Switching Learn<->Quiz keeps the current topic, card count and card pool
   // but starts a fresh run, so streaks built with Learn's help can't carry
@@ -496,6 +558,7 @@
     els.noticeLearn.style.display = mode === "learn" ? "" : "none";
     els.noticeQuiz.style.display = mode === "quiz" ? "" : "none";
     els.progress.style.display = "flex";
+    if (els.supportSlot) els.supportSlot.hidden = mode !== "learn";
   }
 
   function setMode(mode, opts) {
@@ -559,7 +622,7 @@
     var instance = cardsById[cardId].randomize ? cardsById[cardId].randomize() : null;
     var card = resolveCard(cardsById[cardId], instance);
     var set = buildOptionSet(card);
-    current = { cardId: cardId, instance: instance, set: set, checked: false, helpTimer: null };
+    current = { cardId: cardId, instance: instance, set: set, checked: false, usedHelp: false, hintReveal: 0 };
     renderCard();
   }
 
@@ -616,7 +679,7 @@
     }).join("");
     var bodyHtml = textMode ?
       ('<input type="text" class="text-answer-input" id="text-answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer...">' +
-        (learn ? '<div class="help-box" id="help-box"></div>' : "")) :
+        (learn ? '<div id="support-hint" hidden></div>' : "")) :
       ('<div class="options">' + optsHtml + "</div>");
 
     // A single-answer card marks itself the instant an option is clicked -
@@ -651,7 +714,7 @@
       var optionEls = els.stage.querySelectorAll(".opt");
       Array.prototype.forEach.call(optionEls, function (el) {
         el.addEventListener("click", function () {
-          if (current.checked) return;
+          if (current.checked || el.classList.contains("is-ruled-out")) return;
           var input = el.querySelector("input");
           if (!set.multi) {
             input.checked = true;
@@ -668,6 +731,14 @@
     if (submitBtn) submitBtn.addEventListener("click", submitAnswer);
     var helpBtn = els.stage.querySelector("#help-btn");
     if (helpBtn) helpBtn.addEventListener("click", onHelp);
+    if (learn && textMode) {
+      var hintInput = els.stage.querySelector("#text-answer");
+      hintInput.addEventListener("input", function () {
+        if (!current.hintReveal || !Support) return;
+        Support.renderTypedHint(els.stage.querySelector("#support-hint"), textHintModel(card), hintInput.value, current.hintReveal);
+      });
+    }
+    if (supportAuto()) { if (textMode) showTextHint(false); else narrowOptions(false); }
     els.stage.querySelector("#restart-btn").addEventListener("click", function () {
       if (current.advanceTimer) clearTimeout(current.advanceTimer);
       run = freshRun(run.mode, run.category, run.count, run.answerMode);
@@ -677,50 +748,14 @@
     });
   }
 
+  // "I need help" (Learn mode): shows how on this card, see Support above.
+  // One press per card; the card then comes back round sooner (advance()).
   function onHelp() {
-    // Learn mode's ONLY reveal, anywhere: flash the correct answer for a
-    // bit, then hide it again completely - the answer is never shown
-    // otherwise, not even on a card's first appearance. Recorded on the
-    // current card so advance() can bring it back round sooner for a quick
-    // second look, rather than losing it in the full deck for a while.
-    current.usedHelp = true;
     var set = current.set;
-    var card = resolveCard(cardsById[current.cardId], current.instance);
     var textMode = run.answerMode === "text" && !set.multi;
-    if (textMode) {
-      var box = els.stage.querySelector("#help-box");
-      if (!box) return;
-      // A card can supply a short `hint` (a handful of words) for this
-      // flash specifically - James, 2026-09-16: "example answers from
-      // 'I need help' are still painfully verbose, way too much to read
-      // and remember in a couple of seconds." The full answers array
-      // still backs grading and the wrong-answer feedback (which stays on
-      // screen, not a timed flash) - only this quick reveal prefers the
-      // short version when a card has one.
-      box.textContent = card.hint || set.correct.join(" / ");
-      box.classList.add("show");
-      if (current.helpTimer) clearTimeout(current.helpTimer);
-      current.helpTimer = setTimeout(function () {
-        if (current.checked) return;
-        box.classList.remove("show");
-      }, TEXT_HELP_MS);
-      return;
-    }
-    var optionEls = els.stage.querySelectorAll(".opt");
-    Array.prototype.forEach.call(optionEls, function (el, idx) {
-      if (set.correct.indexOf(set.options[idx]) !== -1) el.classList.add("is-answer");
-    });
-    if (current.helpTimer) clearTimeout(current.helpTimer);
-    current.helpTimer = setTimeout(function () {
-      if (current.checked) return;
-      Array.prototype.forEach.call(els.stage.querySelectorAll(".opt"), function (el) {
-        el.classList.remove("is-answer");
-      });
-      // Shuffle the visible order once the flash is gone, so a student
-      // cannot just remember "3rd from the top" without reading any text.
-      set.options = shuffle(set.options);
-      renderCard();
-    }, HELP_MS);
+    if (textMode) showTextHint(true); else narrowOptions(true);
+    var helpBtn = els.stage.querySelector("#help-btn");
+    if (helpBtn) helpBtn.disabled = true;
   }
 
   function submitAnswer() {
@@ -744,10 +779,7 @@
       // rather than editing every affected regex by hand.
       right = matchAnswer(card, value) || (!!card.hint && normalizeLoose(value) === normalizeLoose(card.hint));
       current.checked = true;
-      if (current.helpTimer) clearTimeout(current.helpTimer);
       input.disabled = true;
-      var box = els.stage.querySelector("#help-box");
-      if (box) box.classList.remove("show");
       fb = els.stage.querySelector("#fb");
       fb.className = "feedback show " + (right ? "ok" : "no");
       fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer is: " + escapeHtml(set.correct[0])) +
@@ -764,7 +796,6 @@
       right = correctSet === pickedSet;
 
       current.checked = true;
-      if (current.helpTimer) clearTimeout(current.helpTimer);
 
       var optionEls = els.stage.querySelectorAll(".opt");
       Array.prototype.forEach.call(optionEls, function (el, idx) {
@@ -788,6 +819,7 @@
     if (submitBtn) submitBtn.disabled = true;
     var helpBtn = els.stage.querySelector("#help-btn");
     if (helpBtn) helpBtn.disabled = true;
+    recordSupportResult(current.cardId, right);
 
     // ---- scoring ----
     if (run.mode === "quiz") {
@@ -1149,6 +1181,7 @@
     els.noticeLearn.style.display = mode === "learn" ? "" : "none";
     els.noticeQuiz.style.display = "none";
     els.noticeCode.style.display = mode === "quiz" ? "" : "none";
+    if (els.supportSlot) els.supportSlot.hidden = mode !== "learn";
     els.progress.style.display = mode === "quiz" ? "flex" : "none";
     updateScopeLabel();
     if (mode === "quiz") updateCodeProgress();
@@ -1243,7 +1276,7 @@
       '<p class="prompt' + (promptHasCode ? " has-code" : "") + '">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
       (given ? '<div class="code-given">' + escapeHtml(given) + "</div>" : "") +
       '<textarea class="code-textarea" id="code-input" spellcheck="false" autocomplete="off" placeholder="Type your pseudocode here..."></textarea>' +
-      (learn ? '<div class="code-help-box" id="code-help-box"></div>' : "") +
+      (learn ? '<div id="code-support-hint" hidden></div>' : "") +
       '<div id="code-result"></div>' +
       '<div class="actions">' +
       '<button type="button" class="btn" id="code-check-btn">Run and check</button>' +
@@ -1257,6 +1290,11 @@
     document.getElementById("code-check-btn").addEventListener("click", submitCodeAnswer);
     var helpBtn = document.getElementById("code-help-btn");
     if (helpBtn) helpBtn.addEventListener("click", onCodeHelp);
+    input.addEventListener("input", function () {
+      if (!current.hintReveal || !Support) return;
+      Support.renderTypedHint(document.getElementById("code-support-hint"), String(card.reference).split("\n"), input.value, current.hintReveal, "Hint: the working, type it yourself");
+    });
+    if (supportAuto()) showCodeHint(false);
     els.stage.querySelector("#restart-btn").addEventListener("click", function () {
       startCodeRun(run.category, run.mode);
       toast("Run restarted.");
@@ -1264,21 +1302,9 @@
   }
 
   function onCodeHelp() {
-    // Learn mode's only reveal, same rule as everywhere else in Drills -
-    // the answer is never shown unless a student explicitly asks for it,
-    // and it hides itself again rather than staying up. Shows the
-    // reference PSEUDOCODE, not just its result, since seeing the actual
-    // working is the point of asking for help on a code card.
-    var card = cardsById[current.cardId];
-    var box = document.getElementById("code-help-box");
-    if (!box) return;
-    box.innerHTML = "<pre>" + escapeHtml(card.reference) + "</pre>";
-    box.classList.add("show");
-    if (current.helpTimer) clearTimeout(current.helpTimer);
-    current.helpTimer = setTimeout(function () {
-      if (current.checked) return;
-      box.classList.remove("show");
-    }, CODE_HELP_MS);
+    showCodeHint(true);
+    var helpBtn = document.getElementById("code-help-btn");
+    if (helpBtn) helpBtn.disabled = true;
   }
 
   function formatVarsForDisplay(vars, names) {
@@ -1363,11 +1389,9 @@
     current.checked = true;
     input.disabled = true;
     document.getElementById("code-check-btn").disabled = true;
-    if (current.helpTimer) clearTimeout(current.helpTimer);
-    var helpBoxEl = document.getElementById("code-help-box");
-    if (helpBoxEl) helpBoxEl.classList.remove("show");
     var helpBtnEl = document.getElementById("code-help-btn");
     if (helpBtnEl) helpBtnEl.disabled = true;
+    recordSupportResult("code:" + card.category, right);
     resultEl.className = "code-result " + (right ? "ok" : "no");
     resultEl.innerHTML = escapeHtml(message);
 
@@ -1597,6 +1621,18 @@
   els.changeSelectionBtn.addEventListener("click", openSetup);
   els.modeLearn.addEventListener("click", function () { setMode("learn"); });
   els.modeQuiz.addEventListener("click", function () { setMode("quiz"); });
+
+  // The site-wide Support switch, shown in Learn mode. Switching it on part
+  // way through a card helps with that card straight away.
+  if (Support && els.supportSlot) {
+    Support.mountToggle(els.supportSlot);
+    Support.onChange(function (on) {
+      if (!on || !run || run.mode !== "learn" || !current || current.checked) return;
+      if (run.codeDrill) { showCodeHint(false); return; }
+      if (!current.set) return;
+      if (run.answerMode === "text" && !current.set.multi) showTextHint(false); else narrowOptions(false);
+    });
+  }
 
   // When embedded in a lesson slide, tell the parent how tall the page is
   // whenever that changes (setup screen -> card -> feedback -> done screen

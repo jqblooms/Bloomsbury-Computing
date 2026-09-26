@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trace Tables Practice</title>
 <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
+<script src="../shared/bc-support.js?v=20260927"></script>
 <style>
   /* The site's dark theme: shared/bc-theme.css (loaded above) defines --bg
      and --surface; the names below are this page's own, pointed at the same
@@ -1426,8 +1427,14 @@ function buildStudentTableHtml(containerId, prefix, cols, answers) {
 // left alone - it already has its own operator-hint panel
 // (buildCodeHintsHtml above), a different kind of scaffold for a
 // different exercise.
-const SUPPORT_MODE_KEY = 'traceTableSupportMode_v1';
-let isSupportMode = localStorage.getItem(SUPPORT_MODE_KEY) === '1';
+// Support mode is one switch for the whole site (shared/bc-support.js):
+// the Support button here changes it everywhere, and a change made in any
+// other app shows up here. A lesson can still force it on for one embed
+// (support=1, see the embed setup below) without changing the student's
+// own setting.
+const SUPPORT_MODE_KEY = 'traceTableSupportMode_v1'; // this page's own setting before the site-wide one
+let supportForcedByLesson = false;
+let isSupportMode = window.BCSupport ? window.BCSupport.isOn() : localStorage.getItem(SUPPORT_MODE_KEY) === '1';
 const SUPPORT_STAGE_EVERY = 3;
 const SUPPORT_MAX_STAGE = 3;
 let supportStreak = 0;
@@ -1436,15 +1443,21 @@ let supportStreak = 0;
 // 1/3 from a fraction, which never lands on exactly 0 due to float drift.
 let supportStage = 0;
 
-function toggleSupportMode() {
-  isSupportMode = !isSupportMode;
-  localStorage.setItem(SUPPORT_MODE_KEY, isSupportMode ? '1' : '0');
+function applySupportMode(on) {
+  isSupportMode = supportForcedByLesson || !!on;
   syncSupportModeButton();
   if (currentPracticeMode === 'trace') {
     pracData.forEach((data, index) => renderPracEntry(`prac${index}`, data));
     if (genQuestion) renderPracEntry('gen', genQuestion);
   }
 }
+
+function toggleSupportMode() {
+  if (window.BCSupport) { window.BCSupport.set(!isSupportMode); return; } // onChange below applies it
+  localStorage.setItem(SUPPORT_MODE_KEY, !isSupportMode ? '1' : '0');
+  applySupportMode(!isSupportMode);
+}
+if (window.BCSupport) window.BCSupport.onChange(applySupportMode);
 
 function syncSupportModeButton() {
   const btn = document.getElementById('support-mode-btn');
@@ -2480,7 +2493,7 @@ function initEmbed() {
   // body.tt-embed above), so this is the only way in. Set before
   // selectBuiltInEmbed/loadCustomAlgorithm render anything below, since
   // buildStudentTableHtml reads isSupportMode at render time.
-  if (params.get('support') === '1') isSupportMode = true;
+  if (params.get('support') === '1') { supportForcedByLesson = true; isSupportMode = true; }
 
   // Force trace mode regardless of this browser's last-used state: every
   // embed is built around one specific task (trace a table), and the

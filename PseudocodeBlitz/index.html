@@ -11,6 +11,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../shared/bc-tailwind.js?v=20260927"></script>
+    <script src="../shared/bc-support.js?v=20260927"></script>
     <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
     <style>
         body { font-family: var(--font-body); overflow: hidden; touch-action: manipulation; background-color: var(--bg); }
@@ -727,7 +728,15 @@ const App = () => {
     const [lastScore, setLastScore] = useState(0);
     const [lastExamStats, setLastExamStats] = useState(null);
     const [isHardMode, setHardMode] = useState(false);
-    const [isSupportMode, setSupportMode] = useState(false);
+    // Support mode is one switch for the whole site (shared/bc-support.js):
+    // this menu's toggle changes it everywhere, and a change made in any
+    // other app shows up here too.
+    const [isSupportMode, setSupportModeState] = useState(() => !!(window.BCSupport && window.BCSupport.isOn()));
+    useEffect(() => (window.BCSupport ? window.BCSupport.onChange(setSupportModeState) : undefined), []);
+    const setSupportMode = (on) => {
+        setSupportModeState(on);
+        if (window.BCSupport) window.BCSupport.set(on);
+    };
     const [showHelp, setShowHelp] = useState(false);
 
     const handleGameOver = (score, level, duration, correct, wrong) => {
