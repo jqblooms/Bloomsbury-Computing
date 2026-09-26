@@ -216,12 +216,16 @@
 <script>
   // Loads the crop/battery/fish/fuel catalogue and farm types, the pseudocode
   // interpreter, the lesson missions and the machine tutorials (declarations
-  // only), then game.js, which builds the scene and runs top to bottom, so it
-  // goes last. Every file carries this page's bcv, so a new GH_PAGES_BUILD
+  // only), then the game itself, which builds the scene and runs top to bottom
+  // in file order: state, scene, plants, the Code Box, machines, saving, the
+  // farm, the rocket, the HUD, the account save, the tutorial sandbox, and the
+  // loop, which starts it. Every file carries this page's bcv, so a new GH_PAGES_BUILD
   // from the shell refreshes them together.
   (function () {
     var v = encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "");
-    ["js/catalogue.js", "js/interpreter.js", "js/missions.js", "js/tutorials.js", "js/game.js"].forEach(function (file) {
+    ["js/catalogue.js", "js/interpreter.js", "js/missions.js", "js/tutorials.js",
+      "js/state.js", "js/scene.js", "js/plants.js", "js/code.js", "js/machines.js", "js/save.js", "js/farm.js",
+      "js/rocket.js", "js/hud.js", "js/cloud.js", "js/sandbox.js", "js/loop.js"].forEach(function (file) {
       document.write('<script src="' + file + "?v=" + v + '"><\/script>');
     });
   })();
