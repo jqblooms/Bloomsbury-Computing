@@ -1,155 +1,161 @@
-// Year 6, 6.2.4: iCode
+// Year 6, 6.2.4: Costumes, Backdrops and Messages
 // Loaded by Drills/index.html?drill=y6-icode-l4
 DrillData.register("y6-icode-l4", {
-  title: "Year 6, 6.2.4: iCode",
-  subtitle: "iProgram - from plan to program",
-  // [category id, label] in the order the topic picker and mastery overview show them
+  title: "Year 6, 6.2.4: Costumes, Backdrops and Messages",
+  subtitle: "Scratch: costumes, animation, broadcasts and levels",
   categories: [
-    ["vocab", "Key Vocabulary"],
-    ["motion", "Reading Motion Blocks"],
-    ["testing", "Testing and Debugging"],
-    ["plantocode", "Plan to Code"]
+    ["costumes", "Costumes"],
+    ["animation", "Animation"],
+    ["messages", "Broadcasts"],
+    ["levels", "Backdrops and Levels"]
   ],
   cards: [
     {
-      id: "v-algorithm", category: "vocab",
-      prompt: "What word means a set of step-by-step instructions to solve a problem or complete a task?",
-      answers: ["Algorithm"],
-      keywords: [/algorithm/i],
-      distractors: ["Program","Plan","Code","Bug"]
+      id: "co-what", category: "costumes",
+      prompt: "What is a costume in Scratch?",
+      answers: ["A different look for a sprite"],
+      keywords: [[["look", "looks", "picture", "pictures", "image", "images", "appearance", "outfit", "drawing"]]],
+      distractors: ["A named place that stores a value", "A message sent to every sprite", "The background of the stage"],
+      note: "A sprite can have several costumes and switch between them."
     },
     {
-      id: "v-sprite", category: "vocab",
-      prompt: "What word means a character or object in a Scratch/TurboWarp project, like the Bird or the Pig?",
-      answers: ["Sprite"],
-      keywords: [/sprite/i],
-      distractors: ["Costume","Backdrop","Variable","Stage"]
+      id: "co-switch", category: "costumes",
+      prompt: "Which block puts a sprite into one exact costume, such as gold?",
+      answers: ["switch costume to [gold]"],
+      keywords: [/switch\s+costume/i],
+      distractors: ["next costume", "show", "set size to (100) %"],
+      note: "switch costume to picks one costume by name. next costume moves along the list."
     },
     {
-      id: "v-costume", category: "vocab",
-      prompt: "What word means a different look or image a sprite can switch between?",
-      answers: ["Costume"],
-      keywords: [/costume/i],
-      distractors: ["Sprite","Backdrop","Sound","Script"]
+      id: "co-next", category: "costumes",
+      randomize: function () {
+        var k = drillPick([2, 3]), n = drillRange(1, 5);
+        var names = ["walk1", "walk2", "walk3"].slice(0, k);
+        var ans = names[n % k];
+        return {
+          blocks: "when flag clicked\nswitch costume to [walk1 v]\nrepeat (" + n + ")\nnext costume\nend",
+          prompt: "The sprite has " + k + " costumes: " + names.join(", ") + ". Which costume is it wearing when the script ends?",
+          answers: [ans],
+          keywords: [new RegExp("^\\s*(costume\\s*)?" + ans.replace("walk", "walk\\s*") + "\\s*$", "i")],
+          distractors: names.filter(function (c) { return c !== ans; }),
+          working: ["Start on walk1. Each turn of the loop moves one costume along, and after the last costume it goes back to walk1.", "Count along the costumes, one per turn of the loop.", "next costume moves one along the list."],
+          note: "Count one step per turn of the loop, and go back to walk1 after the last costume."
+        };
+      }
     },
     {
-      id: "v-variable", category: "vocab",
-      prompt: "What word means a named place that stores a value that can change while a program runs, like score?",
-      answers: ["Variable"],
-      keywords: [/variable/i],
-      distractors: ["Sprite","Costume","Algorithm","Constant"]
+      id: "co-last", category: "costumes",
+      prompt: "A sprite with 3 costumes is wearing costume 3. What does next costume do?",
+      answers: ["Switches to costume 1"],
+      keywords: [/\b1\b|\bfirst\b|\bone\b|start/i],
+      distractors: ["Stays on costume 3", "Switches to costume 4", "Hides the sprite"],
+      note: "After the last costume, next costume goes back to the first."
     },
     {
-      id: "v-bug", category: "vocab",
-      prompt: "What word means a mistake in code that makes it behave in a way you did not intend?",
-      answers: ["Bug"],
-      keywords: [/bug/i],
-      distractors: ["Feature","Plan","Variable","Test"]
+      id: "an-wait", category: "animation",
+      prompt: "A walk animation is far too fast to see. Which block do you add inside the loop?",
+      answers: ["wait (0.2) seconds"],
+      keywords: [/\bwait\b/i],
+      distractors: ["next costume", "hide", "move (10) steps"],
+      note: "A short wait slows each costume change down to a walking pace."
     },
     {
-      id: "m-glide", category: "motion",
-      prompt: "In the Fly High! script, which block moves a sprite smoothly to an exact x and y position over time?",
-      answers: ["Glide"],
-      keywords: [/glide/i],
-      distractors: ["Move","Point in direction","Go to"]
+      id: "an-rotation", category: "animation",
+      prompt: "A walking sprite turns upside down when it bounces off the edge. Which block fixes it?",
+      answers: ["set rotation style [left-right]"],
+      keywords: [/rotation\s*style|left\s*[-\s]?\s*right/i],
+      distractors: ["point in direction (90)", "turn right (180) degrees", "next costume"],
+      note: "Left-right rotation flips the sprite instead of turning it over."
     },
     {
-      id: "m-point", category: "motion",
-      prompt: "Which block points a sprite in a specific compass-style direction, for example 90?",
-      answers: ["Point in direction"],
-      keywords: [/point\s*in\s*direction/i],
-      distractors: ["Turn ccw","Glide","Move"]
+      id: "an-loop", category: "animation",
+      prompt: "Which loop keeps a walk animation going for the whole game?",
+      answers: ["forever"],
+      keywords: [/^\s*(a\s+|the\s+)?forever(\s+loop)?\s*$/i],
+      distractors: ["repeat (2)", "if then", "wait until"],
+      note: "forever keeps switching costumes until the game stops."
     },
     {
-      id: "m-turn", category: "motion",
-      prompt: "In Fly High!, which block turns the bird based on the angle the player just typed in?",
-      answers: ["Turn ccw"],
-      keywords: [/turn/i],
-      distractors: ["Glide","Move","Point in direction"]
+      id: "an-time", category: "animation",
+      randomize: function () {
+        var n = drillPick([4, 5, 6, 8, 10]), tenths = drillPick([1, 2, 5]);
+        var total = n * tenths / 10;
+        var wait = String(tenths / 10);
+        return {
+          blocks: "when flag clicked\nrepeat (" + n + ")\nnext costume\nwait (" + wait + ") seconds\nend",
+          prompt: "How many seconds does this loop take to finish?",
+          answers: [String(total)],
+          keywords: [new RegExp("^\\s*" + String(total).replace(".", "\\.") + "\\s*(s|secs?|seconds?)?\\s*$", "i")],
+          distractors: drillWrongNumbers(total, [n, tenths / 10, n + tenths / 10, total * 2], 3),
+          working: ["Each turn waits " + wait + " seconds, and the loop runs " + n + " times.", "How long is one turn? How many turns?", "Only the wait block takes time."],
+          note: n + " turns of " + wait + " seconds: " + total + " seconds."
+        };
+      }
     },
     {
-      id: "m-move", category: "motion",
-      prompt: "Which block moves a sprite forward by a number of steps, in the direction it is currently facing?",
-      answers: ["Move"],
-      keywords: [/^\s*move\s*$/i],
-      distractors: ["Glide","Turn","Point in direction"]
+      id: "m-broadcast", category: "messages",
+      prompt: "Which block sends a message to every sprite and the stage?",
+      answers: ["broadcast [level up]"],
+      keywords: [/broadcast/i],
+      distractors: ["when I receive [level up]", "say [level up]", "switch backdrop to [Level 2]"],
+      note: "broadcast sends the message. when I receive waits for it."
     },
     {
-      id: "m-repeatuntil", category: "motion",
-      prompt: "In Fly High!, name BOTH things that can make the repeat until block stop the bird moving.",
-      answers: ["Touching the edge and touching the Pig"],
-      keywords: [/(?=.*edge)(?=.*pig)/i],
-      distractors: ["A ten second timer","Reaching 100 points","Pressing the space bar"]
+      id: "m-receive", category: "messages",
+      prompt: "Which hat block starts a script when a message arrives?",
+      answers: ["when I receive [level up]"],
+      keywords: [/receive/i],
+      distractors: ["broadcast [level up]", "when green flag clicked", "when this sprite clicked"],
+      note: "Every when I receive script for that message starts together."
     },
     {
-      id: "t-fix", category: "testing",
-      prompt: "What should you do immediately after you find a bug, before adding your next piece of code?",
-      answers: ["Fix it"],
-      keywords: [/fix/i],
-      distractors: ["Ignore it","Delete the whole project","Save it for later"]
+      id: "m-who", category: "messages",
+      prompt: "Which scripts start when [level up] is broadcast?",
+      answers: ["Every when I receive [level up] script, in any sprite"],
+      keywords: [/\b(every|all|each|any)\b/i],
+      distractors: ["Only scripts in the sprite that sent it", "Only the stage scripts", "None until the green flag"],
+      note: "A broadcast reaches every sprite and the stage."
     },
     {
-      id: "t-greenflag", category: "testing",
-      prompt: "In TurboWarp, what do you click to test whether your code actually works?",
-      answers: ["Green flag"],
-      keywords: [/green\s*flag/i],
-      distractors: ["Red stop sign","File menu","Save button"]
+      id: "lv-backdrop", category: "levels",
+      prompt: "Which block changes the stage picture to show level 2?",
+      answers: ["switch backdrop to [Level 2]"],
+      keywords: [/switch\s+backdrop|backdrop\s+to|next\s+backdrop/i],
+      distractors: ["switch costume to [Level 2]", "next costume", "broadcast [Level 2]"],
+      note: "Backdrops belong to the stage. Costumes belong to sprites."
     },
     {
-      id: "t-costumecentre", category: "testing",
-      prompt: "What goes wrong if a sprite's costume centre is set in the wrong place?",
-      answers: ["It spins or moves oddly instead of rotating or gliding correctly"],
-      keywords: [/(?=.*(spin|odd|wrong|strange))/i],
-      distractors: ["The sprite disappears completely","The whole project stops saving","The backdrop changes colour"]
+      id: "lv-coins", category: "levels",
+      randomize: function () {
+        var k = drillPick([2, 5]), coins = drillRange(3, 8), target = k * coins;
+        return {
+          blocks: "if <(score) = (" + target + ")> then\nbroadcast [level up v]\nend",
+          prompt: "score starts at 0 and each coin adds " + k + ". How many coins until the level up message?",
+          answers: [String(coins)],
+          keywords: [new RegExp("^\\s*" + coins + "\\s*(coins?)?\\s*$", "i")],
+          distractors: drillWrongNumbers(coins, [target, coins + 1, coins - 1, k], 3),
+          working: ["Each coin adds " + k + ". How many lots of " + k + " make " + target + "?", "Divide the target by the points per coin.", "Count coins until score equals the target."],
+          note: target + " points at " + k + " a coin is " + coins + " coins."
+        };
+      }
     },
     {
-      id: "t-smallsteps", category: "testing",
-      prompt: "Why test after adding just one or two blocks, instead of waiting until the whole project is finished?",
-      answers: ["It is much easier to find which block caused a bug"],
-      keywords: [/(?=.*(easier|quicker|faster))(?=.*(find|know|which|caused))/i],
-      distractors: ["It makes the project run faster","It uses less internet data","TurboWarp requires it every minute"]
+      id: "lv-level", category: "levels",
+      blocks: "when I receive [level up v]\nswitch backdrop to [Level 2 v]\nchange [level v] by (1)",
+      prompt: "level is 1 when the message arrives. What is level afterwards?",
+      answers: ["2"],
+      keywords: [drillNumberRe(2, "level")],
+      distractors: ["1", "0", "3"],
+      working: ["change adds to the value level already has.", "level was 1 before the message.", "change is not the same as set."],
+      note: "change adds 1 to the 1 it already had."
     },
     {
-      id: "t-endonly", category: "testing",
-      prompt: "True or False: only testing at the very end of a project makes bugs easier to find.",
-      answers: ["False"],
-      keywords: [/false/i],
-      distractors: ["True"]
-    },
-    {
-      id: "p-changescore", category: "plantocode",
-      prompt: "Your plan's Variables table listed score. Which block would increase it by 1 when something good happens?",
-      answers: ["Change score by 1"],
-      keywords: [/(?=.*change)(?=.*score)/i],
-      distractors: ["Set score to 0","Show variable score","Repeat until score"]
-    },
-    {
-      id: "p-backdrop", category: "plantocode",
-      prompt: "Your plan said each level has a different background. What is the picture behind the sprites called in Scratch/TurboWarp?",
-      answers: ["Backdrop"],
-      keywords: [/backdrop|background/i],
-      distractors: ["Costume","Sprite","Stage size"]
-    },
-    {
-      id: "p-beforecoding", category: "plantocode",
-      prompt: "What should you do with a sprite BEFORE you can start coding it, if it is not already in the assets folder?",
-      answers: ["Import or draw it"],
-      keywords: [/(import|draw)/i],
-      distractors: ["Name a variable after it","Add it to the backdrop","Write its code first"]
-    },
-    {
-      id: "p-checkplan", category: "plantocode",
-      prompt: "If you cannot remember a detail about what a sprite should do, what should you do before writing its code?",
-      answers: ["Check your plan"],
-      keywords: [/(?=.*(check|look|go back))(?=.*plan)/i],
-      distractors: ["Guess and move on","Delete the sprite","Ask a different group's plan"]
-    },
-    {
-      id: "p-matchplan", category: "plantocode",
-      prompt: "Once you have written real code for a sprite, what should you check it against?",
-      answers: ["Your plan"],
-      keywords: [/plan/i],
-      distractors: ["Another group's game","The title slide","The assets folder name"]
-    },
+      id: "lv-reset", category: "levels",
+      prompt: "Which backdrop should the green flag switch to, so each new game starts on the first level?",
+      answers: ["Level 1"],
+      keywords: [/level\s*1\b|level\s+one|\bfirst\b/i],
+      distractors: ["Level 2", "The last backdrop", "No backdrop"],
+      note: "Reset everything at the green flag: backdrop, score and level."
+    }
   ]
 });

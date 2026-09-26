@@ -309,6 +309,7 @@
   <script>
     if (/[?&]pyscratch/.test(location.search)) window.BC_CLOUD_SAVE = { app: 'pyscratch', patterns: ['^pyscratch:tut:\\d+:(completed|progress)$'] };
     else if (/[?&]flowscratch/.test(location.search)) window.BC_CLOUD_SAVE = { app: 'flowscratch', keys: ['flowscratchTutorialProgress_v1'] };
+    else if (/[?&]scratchcheck/.test(location.search)) window.BC_CLOUD_SAVE = { app: 'scratchcheck', patterns: ['^scratchcheck:done:'] };
   </script>
   <script src="../shared/cloud-save.js?v=20260926"></script>
   <script src="../assets/js/pyscratch-tutorials.js?v=20260927i"></script>
@@ -317,5 +318,19 @@
   <script src="../assets/js/flowscratch-tutorials.js?v=20260925split"></script>
   <script src="../assets/js/flowscratch.js?v=20260927i"></script>
   <!-- TurboBot: Scratch blocks driving PyBot. No-op unless ?turbobot is in URL. -->
-  <script src="../assets/js/turbobot.js?v=20260927p"></script></body>
+  <script src="../assets/js/turbobot.js?v=20260927p"></script>
+  <!-- Scratch Challenges: checked Scratch tasks (Year 6). No-op unless ?scratchcheck is in URL. -->
+  <!-- Its files take the site's bcv, so a new build refreshes them without a hand-pinned tag. -->
+  <script>
+    (function () {
+      if (!/[?&]scratchcheck/.test(location.search)) return;
+      var p = new URLSearchParams(location.search);
+      var v = encodeURIComponent(p.get('bcv') || '20260927sc');
+      var files = ['../vendor/scratchblocks-3.6.4.min.js', '../shared/bc-support.js', '../assets/js/scratchcheck-kit.js', '../assets/js/scratchcheck-tester.js',
+        '../assets/js/scratchcheck-challenges-a.js', '../assets/js/scratchcheck-challenges-b.js'];
+      if (p.has('selftest')) files.push('../assets/js/scratchcheck-solutions.js');
+      files.push('../assets/js/scratchcheck.js');
+      files.forEach(function (f) { document.write('<script src="' + f + '?v=' + v + '"><\/script>'); });
+    })();
+  </script></body>
 </html>

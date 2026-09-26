@@ -1,155 +1,149 @@
-// Year 6, 6.2.5: iDevelop
+// Year 6, 6.2.5: Plan and Build Your Own Game
 // Loaded by Drills/index.html?drill=y6-idevelop-l5
 DrillData.register("y6-idevelop-l5", {
-  title: "Year 6, 6.2.5: iDevelop",
-  subtitle: "iProgram - scoring and levels",
-  // [category id, label] in the order the topic picker and mastery overview show them
+  title: "Year 6, 6.2.5: Plan and Build Your Own Game",
+  subtitle: "Scratch: planning a game and building it in steps",
   categories: [
-    ["vocab", "Key Vocabulary"],
-    ["testing", "Testing and Debugging"],
-    ["y6dev-levels", "Levels and Backdrops"],
-    ["y6dev-variables", "Scoring and Levelling Variables"]
+    ["plan", "Planning a Game"],
+    ["parts", "Parts of a Game"],
+    ["build", "Building in Steps"]
   ],
   cards: [
     {
-      id: "v-algorithm2", category: "vocab",
-      prompt: "What word means a set of step-by-step instructions to solve a problem or complete a task?",
-      answers: ["Algorithm"],
-      keywords: [/algorithm/i],
-      distractors: ["Program","Plan","Variable","Level"]
+      id: "pl-variable", category: "plan",
+      prompt: "In a game plan, score and lives go in which section?",
+      answers: ["Variables"],
+      keywords: [/^\s*(the\s+)?variables?(\s+section)?\s*$/i],
+      distractors: ["Sprites", "Backdrops", "Controls"],
+      note: "Both store a number that changes while the game runs."
     },
     {
-      id: "v-plan2", category: "vocab",
-      prompt: "What document should you check if you forget a detail about what your game should do?",
-      answers: ["Your plan"],
-      keywords: [/\bplan/i],
-      distractors: ["Your worksheet","Another group's game","The title slide"]
+      id: "pl-sprite", category: "plan",
+      prompt: "In a game plan, the Ship and the Meteor go in which section?",
+      answers: ["Sprites"],
+      keywords: [/^\s*(the\s+)?sprites?(\s+section)?\s*$/i],
+      distractors: ["Variables", "Controls", "Levels"],
+      note: "Characters and objects on the stage are sprites."
     },
     {
-      id: "v-variable2", category: "vocab",
-      prompt: "What word means a named place that stores a value that can change while your game runs, like score?",
-      answers: ["Variable"],
-      keywords: [/variable/i],
-      distractors: ["Sprite","Costume","Algorithm","Constant"]
+      id: "pl-controls", category: "plan",
+      prompt: "In a game plan, \"left and right arrow keys\" goes in which section?",
+      answers: ["Controls"],
+      keywords: [/^\s*(the\s+)?controls?(\s+section)?\s*$/i],
+      distractors: ["Sprites", "Variables", "Backdrops"],
+      note: "Controls say how the player moves things."
     },
     {
-      id: "v-forever", category: "vocab",
-      prompt: "Which loop block runs its code over and over without ever stopping on its own?",
-      answers: ["Forever"],
-      keywords: [/forever/i],
-      distractors: ["Repeat 10","Wait","Repeat until"]
+      id: "pl-ending", category: "plan",
+      prompt: "Which part of a game plan says what happens when lives reaches 0?",
+      answers: ["How you win or lose"],
+      keywords: [/\bwin|\blos[et]|\bend(s|ing)?\b|game\s*over/i],
+      distractors: ["Sprites", "Controls", "Costumes"],
+      note: "The ending says how the player wins and how they lose."
     },
     {
-      id: "v-wait", category: "vocab",
-      prompt: "Which block pauses a script for a set amount of time before continuing?",
-      answers: ["Wait"],
-      keywords: [/\bwait/i],
-      distractors: ["Forever","Repeat","Stop"]
+      id: "pl-why", category: "plan",
+      prompt: "Why write a plan before you start building a game?",
+      answers: ["So you know what to build and can build it one piece at a time"],
+      keywords: [[["know", "decide", "remember", "clear", "organised", "organized", "list", "follow", "guide", "idea", "ideas", "piece", "pieces", "step", "steps", "order"], ["build", "building", "make", "making", "code", "coding", "program", "create"]]],
+      distractors: ["So the game runs faster", "So Scratch saves it", "So the sprites are bigger"],
+      note: "Each line of the plan becomes a sprite or a script, so nothing is guessed."
     },
     {
-      id: "l-backdrop", category: "y6dev-levels",
-      prompt: "In this lesson's design, what makes a level look different from another level?",
-      answers: ["A different backdrop"],
-      keywords: [/backdrop/i],
-      distractors: ["A different sprite shape","A louder sound","A smaller stage"]
+      id: "pa-loop", category: "parts",
+      prompt: "Which block keeps a game moving and checking the whole time it runs?",
+      answers: ["forever"],
+      keywords: [/^\s*(a\s+|the\s+)?forever(\s+loop)?\s*$/i],
+      distractors: ["repeat (1)", "when green flag clicked", "say [Hello!]"],
+      note: "Moving enemies and touching checks sit inside forever loops."
     },
     {
-      id: "l-howmany", category: "y6dev-levels",
-      prompt: "How many backdrops should you import or design today, at minimum?",
-      answers: ["Two"],
-      keywords: [/\btwo\b|\b2\b/i],
-      distractors: ["One","Five","Ten"]
+      id: "pa-reset", category: "parts",
+      prompt: "What should happen to score when the green flag is clicked?",
+      answers: ["It is set to 0"],
+      keywords: [/\b0\b|\bzero\b|\breset/i],
+      distractors: ["It goes up by 1", "Nothing", "It is hidden"],
+      note: "set [score] to (0) at the green flag starts every game fresh."
     },
     {
-      id: "l-fromplan", category: "y6dev-levels",
-      prompt: "Where should the number and design of your levels come from?",
-      answers: ["Your plan"],
-      keywords: [/\bplan/i],
-      distractors: ["Whatever looks nicest at the time","Another group's game","A random generator"]
+      id: "pa-decide", category: "parts",
+      prompt: "Which block makes a decision, such as whether the Ship touches a Meteor?",
+      answers: ["if then"],
+      keywords: [/\bif\b/i],
+      distractors: ["forever", "set [score] to (0)", "next costume"],
+      note: "An if block runs its blocks only when its condition is true."
     },
     {
-      id: "l-testswitch", category: "y6dev-levels",
-      prompt: "After adding a second backdrop, what should you do before moving on?",
-      answers: ["Test that you can switch between them"],
-      keywords: [/\btest/i],
-      distractors: ["Delete the first one","Add five more immediately","Ask a different group to check"]
+      id: "pa-control", category: "parts",
+      prompt: "Name a hat block that lets the player move a sprite with the keyboard.",
+      answers: ["when [right arrow] key pressed"],
+      keywords: [/key\b.*\bpressed/i],
+      distractors: ["when green flag clicked", "when I receive [level up]", "forever"],
+      note: "when [key] key pressed runs a script each time that key is pressed."
     },
     {
-      id: "l-notonlylook", category: "y6dev-levels",
-      prompt: "True or false: sprites must behave completely differently on every level for it to count as a real level.",
-      answers: ["False"],
-      keywords: [/false/i],
-      distractors: ["True"]
+      id: "pa-end", category: "parts",
+      prompt: "Which block ends the whole game when the player loses?",
+      answers: ["stop [all]"],
+      keywords: [/stop\s*\[?\s*all/i],
+      distractors: ["stop [this script]", "hide", "wait (1) seconds"],
+      note: "stop [all] stops every script, so the game is over."
     },
     {
-      id: "s-award", category: "y6dev-variables",
-      prompt: "In this lesson's design, when should your score variable increase?",
-      answers: ["When the goodie sprite touches the baddie sprite"],
-      keywords: [new RegExp("^(?=.*touch)(?=.*(goodie|baddie))", "i")],
-      distractors: ["Every time the green flag is clicked","When the game first loads","Never, it only counts time"]
+      id: "b-when", category: "build",
+      prompt: "You build a game one small piece at a time. When should you test it?",
+      answers: ["After every small change"],
+      keywords: [/after\s+(each|every)|(each|every)\s+(time|change|piece|step|bit|block)|as\s+you\s+go|straight\s+away/i],
+      distractors: ["Only when the whole game is finished", "Never", "Once at the start"],
+      note: "Test each piece before adding the next."
     },
     {
-      id: "s-levelup", category: "y6dev-variables",
-      prompt: "What should happen once your score variable reaches the number you chose?",
-      answers: ["The backdrop changes (the level goes up)"],
-      keywords: [new RegExp("^(?=.*backdrop)", "i"), /level/i],
-      distractors: ["The game ends immediately","The score resets to a negative number","Nothing, score is only for show"]
+      id: "b-where", category: "build",
+      prompt: "You added 3 blocks and the game stopped working. Where is the bug most likely to be?",
+      answers: ["In the 3 blocks you just added"],
+      keywords: [/\bjust\b|\bnew\b|\badded\b|\blast\b|\b3\b|\bthree\b/i],
+      distractors: ["In the backdrop", "In the costumes", "Anywhere in the game"],
+      note: "It worked before those blocks, so start looking there."
     },
     {
-      id: "s-create", category: "y6dev-variables",
-      prompt: "Before you can use score and level in your code, what do you need to do to them?",
-      answers: ["Create and name them as variables"],
-      keywords: [new RegExp("^(?=.*(create|make|add))(?=.*(variable|name))", "i")],
-      distractors: ["Draw them as sprites","Record them on the worksheet","Ask a partner to test them"]
+      id: "b-first", category: "build",
+      prompt: "Controls, sprites or the ending: which do you build first?",
+      answers: ["Sprites"],
+      keywords: [/^\s*(the\s+)?sprites?\s*$/i],
+      distractors: ["Controls", "The ending", "It does not matter"],
+      note: "The controls need a sprite to move, and the ending needs the game to work."
     },
     {
-      id: "s-twovars", category: "y6dev-variables",
-      prompt: "This lesson asks for at least two named variables. Which two?",
-      answers: ["Score and level"],
-      keywords: [new RegExp("^(?=.*score)(?=.*level)", "i")],
-      distractors: ["Speed and colour","Sprite and costume","Name and age"]
+      id: "b-star", category: "build",
+      randomize: function () {
+        var k = drillPick([2, 5, 10]), n = drillRange(2, 6);
+        var ans = n * k;
+        return {
+          blocks: "when flag clicked\nforever\nif <touching [Player v] ?> then\nchange [score v] by (" + k + ")\ngo to (random position v)\nend\nend",
+          prompt: "score starts at 0. The Player collects this Star " + n + " times. What is score?",
+          answers: [String(ans)],
+          keywords: [drillNumberRe(ans, "score")],
+          distractors: drillWrongNumbers(ans, [n, k, n + k, (n + 1) * k], 3),
+          working: ["Each time the Star is collected, score goes up by " + k + ". It is collected " + n + " times.", "Add " + k + " for each collection.", "Which block changes score?"],
+          note: n + " stars at " + k + " points each: " + ans + "."
+        };
+      }
     },
     {
-      id: "s-goodiebaddie", category: "y6dev-variables",
-      prompt: "In this lesson's design, which two sprites interact to change the score?",
-      answers: ["The goodie and the baddie"],
-      keywords: [new RegExp("^(?=.*goodie)(?=.*baddie)", "i")],
-      distractors: ["The background and the score display","Two goodies","Two baddies"]
-    },
-    {
-      id: "t-oftennotend", category: "testing",
-      prompt: "Should you test your score and level code only once everything is finished, or as you go?",
-      answers: ["As you go, a little at a time"],
-      keywords: [new RegExp("^(?=.*(go|along))", "i"), /little at a time/i, /small/i],
-      distractors: ["Only at the very end","Never, it is not necessary","Only if a friend asks to see it"]
-    },
-    {
-      id: "t-whyoften", category: "testing",
-      prompt: "Why is testing as you go easier than testing everything at the end?",
-      answers: ["It is easier to spot which piece of code caused a bug"],
-      keywords: [new RegExp("^(?=.*(easier|know|find))(?=.*(piece|which|caused|bug))", "i")],
-      distractors: ["It takes longer overall","It makes the game run faster","It is not actually easier"]
-    },
-    {
-      id: "t-systematic2", category: "testing",
-      prompt: "What word describes testing in a planned, thorough way, rather than randomly?",
-      answers: ["Systematically"],
-      keywords: [/systematic/i],
-      distractors: ["Randomly","Quickly","Secretly"]
-    },
-    {
-      id: "t-bug2", category: "testing",
-      prompt: "What word means a mistake in code that makes it behave in a way you did not intend?",
-      answers: ["Bug"],
-      keywords: [/\bbug/i],
-      distractors: ["Feature","Variable","Backdrop"]
-    },
-    {
-      id: "t-nextlesson", category: "testing",
-      prompt: "Next lesson is iDebug. What will you do with a partner in that lesson?",
-      answers: ["Swap games and test each other's for bugs"],
-      keywords: [new RegExp("^(?=.*swap)(?=.*test)", "i")],
-      distractors: ["Swap seats but keep working alone","Write a new plan together","Delete each other's games"]
-    },
+      id: "b-more", category: "build",
+      randomize: function () {
+        var k = drillPick([2, 5]), target = k * drillRange(6, 10), have = k * drillRange(1, 4);
+        var ans = (target - have) / k;
+        return {
+          blocks: "if <(score) = (" + target + ")> then\nbroadcast [level up v]\nend",
+          prompt: "score is " + have + " and each star adds " + k + ". How many more stars until level 2?",
+          answers: [String(ans)],
+          keywords: [new RegExp("^\\s*" + ans + "\\s*(more\\s+)?(stars?)?\\s*$", "i")],
+          distractors: drillWrongNumbers(ans, [target - have, target / k, ans + 1, ans - 1], 3),
+          working: ["score has to go from " + have + " to " + target + ". Each star adds " + k + ".", "How many more points are needed? How many stars is that?", "Work out the points still needed."],
+          note: (target - have) + " more points at " + k + " a star is " + ans + " stars."
+        };
+      }
+    }
   ]
 });

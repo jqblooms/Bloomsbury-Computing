@@ -1,155 +1,148 @@
-// Year 6, 6.2.6: iDebug
+// Year 6, 6.2.6: Test and Debug
 // Loaded by Drills/index.html?drill=y6-idebug-l6
 DrillData.register("y6-idebug-l6", {
-  title: "Year 6, 6.2.6: iDebug",
-  subtitle: "iProgram - testing and fixing your game",
-  // [category id, label] in the order the topic picker and mastery overview show them
+  title: "Year 6, 6.2.6: Test and Debug",
+  subtitle: "Scratch: testing, finding bugs and fixing them",
   categories: [
-    ["vocab", "Key Vocabulary"],
-    ["testing", "Testing and Debugging"],
-    ["y6debug-record", "Recording a Bug"],
-    ["y6debug-process", "Testing and Fixing Process"]
+    ["testing", "Testing"],
+    ["findbug", "Spot the Bug"],
+    ["fixes", "Fix It"]
   ],
   cards: [
     {
-      id: "v-test", category: "vocab",
-      prompt: "What word means trying out your program to see if it works as expected?",
-      answers: ["Test"],
-      keywords: [/\btest/i],
-      distractors: ["Debug","Plan","Amend","Bug"]
+      id: "t-bug", category: "testing",
+      prompt: "What is a bug?",
+      answers: ["A mistake in the code that makes it do the wrong thing"],
+      keywords: [[["mistake", "mistakes", "error", "errors", "wrong", "problem", "problems", "fault", "faults"], ["code", "program", "script", "scripts", "blocks", "block", "game"]]],
+      distractors: ["A sprite that moves", "A message to every sprite", "A new level"],
+      note: "A bug is where what should happen and what does happen are different."
     },
     {
-      id: "v-bug2", category: "vocab",
-      prompt: "What word means a mistake in code that makes it behave in a way you did not intend?",
-      answers: ["Bug"],
-      keywords: [/\bbug/i],
-      distractors: ["Feature","Sprite","Costume","Variable"]
-    },
-    {
-      id: "v-debug", category: "vocab",
-      prompt: "What word means finding and fixing bugs in a program?",
-      answers: ["Debug"],
+      id: "t-debug", category: "testing",
+      prompt: "What word means finding and fixing the mistakes in a program?",
+      answers: ["Debugging"],
       keywords: [/debug/i],
-      distractors: ["Test","Plan","Code","Amend"]
+      distractors: ["Broadcasting", "Planning", "Animating"],
+      note: "Debugging: find the bug, fix it, test again."
     },
     {
-      id: "v-amend", category: "vocab",
-      prompt: "What word means to change or correct part of your code?",
-      answers: ["Amend"],
-      keywords: [/amend/i],
-      distractors: ["Delete","Test","Plan","Debug"]
+      id: "t-expected", category: "testing",
+      prompt: "In a test, you compare what actually happened with what?",
+      answers: ["What should have happened (the expected result)"],
+      keywords: [/expect|should/i],
+      distractors: ["The backdrop", "The first sprite", "Last lesson's game"],
+      note: "Expected and actual: if they differ, there is a bug."
     },
     {
-      id: "v-systematically", category: "vocab",
-      prompt: "What word describes testing in a planned, thorough way, rather than randomly?",
-      answers: ["Systematically"],
-      keywords: [/systematic/i],
-      distractors: ["Randomly","Quickly","Quietly","Carefully"]
+      id: "t-boundary", category: "testing",
+      prompt: "A win should happen at 10 clicks. Which three click counts are worth testing?",
+      answers: ["9, 10 and 11"],
+      keywords: [[["9", "nine"], ["10", "ten"], ["11", "eleven"]]],
+      distractors: ["1, 2 and 3", "10 only", "100, 200 and 300"],
+      note: "Test just below, on and just above the target."
     },
     {
-      id: "t-everyway", category: "testing",
-      prompt: "A systematic test should try to go through what?",
-      answers: ["Every way the program could be used"],
-      keywords: [new RegExp("^(?=.*\\b(every|all)\\b)(?=.*\\bway\\b)", "i")],
-      distractors: ["Only the way you expect players to use it","Only the first screen","Only the parts you wrote last"]
+      id: "t-one", category: "testing",
+      prompt: "You changed 5 things at once and it still does not work. What should you do instead?",
+      answers: ["Change one thing at a time and test after each"],
+      keywords: [/\bone\s+(thing|change|block|at\s+a\s+time)|\bat\s+a\s+time\b|\beach\s+(one|change)\b/i],
+      distractors: ["Change 10 things at once", "Start a new project", "Stop testing"],
+      note: "One change, one test: then you know which change fixed it, or broke it."
     },
     {
-      id: "t-deliberate", category: "testing",
-      prompt: "Why do good testers deliberately try to make a game fail?",
-      answers: ["To find bugs before a player does"],
-      keywords: [new RegExp("^(?=.*\\bfind)(?=.*\\bbug)", "i")],
-      distractors: ["To prove the programmer got it wrong","Because it is more fun than playing normally","To make the game harder for players"]
+      id: "f-way", category: "findbug",
+      randomize: function () {
+        var key = drillPick(["left arrow", "down arrow"]), step = drillPick([5, 10, 15, 20]);
+        var axis = key === "left arrow" ? "x" : "y", way = key === "left arrow" ? "left" : "down";
+        return {
+          blocks: "when [" + key + " v] key pressed\nchange " + axis + " by (" + step + ")",
+          prompt: "This should move the sprite " + way + " by " + step + ". What number should be in the change " + axis + " block?",
+          answers: ["-" + step],
+          keywords: [drillNumberRe(-step, axis)],
+          distractors: [String(step), "0", "-" + (step * 2)],
+          working: ["Moving " + way + " makes " + axis + " smaller, so the number must be negative. Keep the same size of step.", "Which way should " + axis + " go? Up or down?", "Down and left make numbers smaller."],
+          note: "Moving " + way + " makes " + axis + " smaller, so the number is negative."
+        };
+      }
     },
     {
-      id: "t-eachstatement", category: "testing",
-      prompt: "In a systematic test, how many times should every statement in the code be run and checked?",
-      answers: ["At least once"],
-      keywords: [/\bat least once\b/i, /\bonce\b/i],
-      distractors: ["Never","Only if it looks wrong","Only the statements you wrote today"]
+      id: "f-once", category: "findbug",
+      blocks: "when flag clicked\nmove (10) steps\nif on edge, bounce",
+      prompt: "The Ball moves once and stops. Which block is missing around the move and bounce?",
+      answers: ["forever"],
+      keywords: [/forever|repeat|loop/i],
+      distractors: ["say [Go!]", "wait (1) seconds", "hide"],
+      note: "Blocks that should keep running go inside a forever loop."
     },
     {
-      id: "t-swap", category: "testing",
-      prompt: "Why is it useful to swap games with a partner and test each other's, instead of only testing your own?",
-      answers: ["You are used to your own game, so a fresh player finds bugs you missed"],
-      keywords: [new RegExp("^(?=.*\\b(fresh|else|other|partner|someone)\\b)(?=.*\\b(find|miss|notice))", "i")],
-      distractors: ["It is faster than testing alone","Your own game does not need testing","Partners always agree with you"]
+      id: "f-reset", category: "findbug",
+      blocks: "when this sprite clicked\nset [clicks v] to (0)\nchange [clicks v] by (1)",
+      prompt: "clicks is always 1, however many times you click. Which block is in the wrong script?",
+      answers: ["set [clicks] to (0)"],
+      keywords: [/^\s*set\b/i],
+      distractors: ["change [clicks] by (1)", "when this sprite clicked", "switch costume to [gem]"],
+      note: "The reset belongs in the green flag script, not the click script."
     },
     {
-      id: "t-record", category: "testing",
-      prompt: "What should you do with a bug you find while testing a partner's game?",
-      answers: ["Record it, then discuss it with them"],
-      keywords: [new RegExp("^(?=.*\\b(record|write|note)\\b)", "i")],
-      distractors: ["Fix it yourself in their project","Ignore it if it seems small","Delete the sprite that caused it"]
+      id: "f-sprite", category: "findbug",
+      blocks: "if <touching [Wall v] ?> then\nchange [score v] by (1)\nend",
+      prompt: "This is the Coin's script. It should score when the Hero collects it. What should Wall be changed to?",
+      answers: ["Hero"],
+      keywords: [/^\s*(the\s+)?hero\s*$/i],
+      distractors: ["Wall", "Coin", "Stage"],
+      note: "The Coin must check for the sprite that collects it."
     },
     {
-      id: "r-where", category: "y6debug-record",
-      prompt: "On the Testing Record sheet, \"Where did the bug happen?\" is really asking what?",
-      answers: ["What you were doing when it happened"],
-      keywords: [new RegExp("^(?=.*\\bdoing\\b)(?=.*\\b(you|when)\\b)", "i")],
-      distractors: ["What the correct answer should have been","What colour the sprite was","How long the game had been running"]
+      id: "f-gt", category: "findbug",
+      blocks: "when this sprite clicked\nchange [clicks v] by (1)\nif <(clicks) > (10)> then\nsay [You win!]\nend",
+      prompt: "The win should happen on the 10th click. At 10 clicks, is (clicks) > (10) true or false?",
+      answers: ["false"],
+      keywords: [/^\s*false\s*$/i],
+      distractors: ["true"],
+      working: ["Is 10 more than 10? Equal does not count as more.", "More than means bigger, not equal.", "Compare 10 with 10."],
+      note: "10 is not more than 10, so the win waits until click 11. That is the bug."
     },
     {
-      id: "r-what", category: "y6debug-record",
-      prompt: "On the Testing Record sheet, \"What happened?\" is asking you to describe what?",
-      answers: ["What actually went wrong"],
-      keywords: [new RegExp("^(?=.*\\b(went|wrong|actual)\\b)", "i")],
-      distractors: ["What you expected to happen","Whose game it was","How you fixed it"]
+      id: "f-colour", category: "findbug",
+      blocks: "wait until <touching color [#1a73e8] ?>\nstop [all v]",
+      prompt: "The game never ends at the red floor. This script checks for a blue colour. What should the colour be?",
+      answers: ["Red, the colour of the floor"],
+      keywords: [/\bred\b/i],
+      distractors: ["Blue", "Green", "Yellow"],
+      note: "Use the colour picker on the floor itself so the colour matches exactly."
     },
     {
-      id: "r-expect", category: "y6debug-record",
-      prompt: "On the Testing Record sheet, \"What did you expect to happen?\" is asking for what?",
-      answers: ["What you thought would happen instead"],
-      keywords: [new RegExp("^(?=.*\\b(thought|expect|should)\\b)", "i")],
-      distractors: ["What actually happened","The name of the bug","Who found the bug"]
+      id: "x-win", category: "fixes",
+      prompt: "Change (clicks) > (10) so the win happens at exactly 10 clicks. Give the new condition.",
+      answers: ["(clicks) = (10)"],
+      keywords: [/=\s*\(?\s*10\b|equals?\s*(to\s*)?10\b|>\s*\(?\s*9\b|(more|greater)\s+than\s+9\b/i],
+      distractors: ["(clicks) > (10)", "(clicks) < (10)", "(clicks) = (11)"],
+      note: "(clicks) = (10) or (clicks) > (9) are both true at 10."
     },
     {
-      id: "r-vague", category: "y6debug-record",
-      prompt: "\"It doesn't work\" is a bad bug report. Why?",
-      answers: ["It does not say what you were doing, what happened, or what you expected"],
-      keywords: [new RegExp("^(?=.*\\b(specific|detail|say|explain)\\b)", "i"), /doesn.?t (say|explain|give)/i],
-      distractors: ["It is too polite","It uses too many words","It is written in the wrong colour"]
+      id: "x-lives", category: "fixes",
+      blocks: "if <(lives) < (0)> then\nstop [all v]\nend",
+      prompt: "lives stops at 0, so this game never ends. What should < (0) be changed to?",
+      answers: ["= (0)"],
+      keywords: [/=\s*\(?\s*0\b|equals?\s*(to\s*)?(0|zero)\b|<\s*\(?\s*1\b|less\s+than\s+1\b/i],
+      distractors: ["> (0)", "= (3)", "< (0)"],
+      note: "lives is never less than 0, but it does reach 0."
     },
     {
-      id: "r-return", category: "y6debug-record",
-      prompt: "After you have collected bug reports about your own game, whose game should you fix next?",
-      answers: ["Your own"],
-      keywords: [new RegExp("^(?=.*\\bown\\b)", "i"), /\bmine\b/i, /\bmy own\b/i],
-      distractors: ["Your partner's game","A different group's game","The example game from the slides"]
+      id: "x-away", category: "fixes",
+      prompt: "score jumps by 3 when the Hero touches the Coin once, because they stay touching. What should the Coin do straight after change [score] by (1)?",
+      answers: ["Move away, to a random position"],
+      keywords: [/\bmove|\bgo\s*to|random|away|\bhide|\bjump/i],
+      distractors: ["Wait for the green flag", "Change score by 3", "Switch backdrop"],
+      note: "Once the Coin moves away it is no longer touching, so one collection counts once."
     },
     {
-      id: "p-onechange", category: "y6debug-process",
-      prompt: "When fixing several bugs, why should you test again after each single fix, rather than fixing them all and testing once at the end?",
-      answers: ["So you know that fix actually worked, on its own"],
-      keywords: [new RegExp("^(?=.*\\bknow\\b)(?=.*\\b(work|fixed|worked)\\b)", "i"), /one at a time/i],
-      distractors: ["It saves time overall","It is not necessary to test again","So the game looks more finished"]
-    },
-    {
-      id: "p-order", category: "y6debug-process",
-      prompt: "Put these in order: (1) fix your own bugs, (2) test your own game, (3) swap and test a partner's game, (4) record the bugs you find.",
-      answers: ["2, 3, 4, 1"],
-      keywords: [/2.*3.*4.*1/],
-      distractors: ["1, 2, 3, 4","4, 3, 2, 1","3, 1, 2, 4"]
-    },
-    {
-      id: "p-evaluate", category: "y6debug-process",
-      prompt: "Beyond finding bugs, what else can you do when you play a partner's finished game?",
-      answers: ["Evaluate it and suggest how it could be extended or improved"],
-      keywords: [new RegExp("^(?=.*\\b(extend|improve|better))", "i")],
-      distractors: ["Nothing else, only look for bugs","Delete parts you do not like","Rename their sprites"]
-    },
-    {
-      id: "p-source", category: "y6debug-process",
-      prompt: "A bug report should point to what, so it can actually be fixed?",
-      answers: ["The block or blocks causing it"],
-      keywords: [/\bblock/i],
-      distractors: ["The player's name","The colour of the stage","The time of day it happened"]
-    },
-    {
-      id: "p-honest", category: "y6debug-process",
-      prompt: "If you tested a partner's game carefully and only found one bug, what should you write on the Testing Record?",
-      answers: ["An honest note that only one bug was found"],
-      keywords: [new RegExp("^(?=.*\\b(honest|true|only one|say so)\\b)", "i")],
-      distractors: ["Invent a second bug so the sheet looks full","Leave the rest of the sheet blank and say nothing","Write the same bug twice"]
-    },
+      id: "x-report", category: "fixes",
+      prompt: "A good bug report has three parts. What are they?",
+      answers: ["What I did, what I expected, what actually happened"],
+      keywords: [[["did", "doing", "action", "steps", "pressed", "clicked", "tried"], ["expected", "expect", "should"], ["actual", "actually", "happened", "happens", "saw", "result"]]],
+      distractors: ["Name, date and score", "Sprite, costume and sound", "Start, middle and end"],
+      note: "Anyone can then repeat the test and see the bug for themselves."
+    }
   ]
 });

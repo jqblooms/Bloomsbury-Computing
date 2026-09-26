@@ -112,6 +112,7 @@
       '.bcs-line{display:flex;flex-wrap:wrap;align-items:center;gap:0 .5ch;min-height:1.6em}' +
       '.bcs-text{white-space:pre}.bcs-pending{color:var(--muted-2,#858c95)}.bcs-ok{color:var(--good,#81c995)}.bcs-bad{color:var(--bad,#f28b82)}' +
       '.bcs-blank{display:inline-block;height:1em;border-bottom:2px dotted var(--muted-2,#858c95);vertical-align:middle}' +
+      '.bcs-working{color:var(--ink-soft,#c9cdd4);line-height:1.5}' +
       '.bcs-toggle{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:0 12px 0 6px;border:1px solid var(--line-strong,#3b424e);' +
       'border-radius:999px;background:transparent;color:var(--ink-soft,#c9cdd4);font:500 13px/1 var(--font-body,system-ui,sans-serif);cursor:pointer}' +
       '.bcs-toggle:hover{background:var(--brand-soft,rgba(138,180,248,.14))}' +
@@ -206,6 +207,23 @@
       container.setAttribute('aria-label', 'Hint');
       container.innerHTML = '<div class="bcs-hint-label">' + (label || 'Hint: type it yourself, blanks are hidden') + '</div>' + body;
       if (!container.dataset.bcsBlocked) { blockCopy(container); container.dataset.bcsBlocked = '1'; }
+    },
+
+    // How to work an answer out, for questions where a faded model would be
+    // the answer itself (a number to predict). `steps` runs from most help
+    // to least: reveal 1 shows steps[0], 2/3 steps[1], 1/3 steps[2], each
+    // falling back to the last one given. Renders nothing once reveal is 0.
+    renderWorking: function (container, steps, reveal, label) {
+      ensureStyles();
+      var list = [].concat(steps || []);
+      if (reveal == null) reveal = 1;
+      if (reveal <= 0 || !list.length) { container.innerHTML = ''; container.hidden = true; return; }
+      var text = String(list[Math.min(reveal > 0.9 ? 0 : reveal > 0.5 ? 1 : 2, list.length - 1)]);
+      var safe = text.replace(/[&<>]/g, function (c) { return c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;'; });
+      container.hidden = false;
+      container.classList.add('bcs-hint');
+      container.setAttribute('aria-label', 'Hint');
+      container.innerHTML = '<div class="bcs-hint-label">' + (label || 'How to work it out') + '</div><div class="bcs-working">' + safe + '</div>';
     },
 
     fader: fader

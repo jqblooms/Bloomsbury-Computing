@@ -365,7 +365,9 @@
       var typed = strictNormalize(rawInput, keepCase);
       return !!typed && answers.some(function (a) { return strictNormalize(a, keepCase) === typed; });
     }
-    return bagMatch(keywordsForCard(card), rawInput);
+    // A full stop typed at the end of an answer ("240.", "Event.") is not
+    // part of it; the strict path above already drops it.
+    return bagMatch(keywordsForCard(card), String(rawInput == null ? "" : rawInput).replace(/\s*\.+\s*$/, ""));
   }
   function bagMatch(alts, rawInput) {
     var have = {};
@@ -513,8 +515,11 @@
     if (!box || !input || !Support) return;
     var reveal = supportReveal(supportFader(current.cardId), explicit);
     if (reveal <= 0) return;
-    current.hintReveal = reveal;
     current.usedHelp = true;
+    // A card whose typed model would be the answer itself (a number to
+    // predict) shows how to work it out instead.
+    if (card.working && Support.renderWorking) { Support.renderWorking(box, card.working, reveal); return; }
+    current.hintReveal = reveal;
     Support.renderTypedHint(box, textHintModel(card), input.value, reveal);
   }
   function narrowOptions(explicit) {
@@ -647,7 +652,9 @@
       note: instance.note != null ? instance.note : card.note,
       hint: instance.hint != null ? instance.hint : card.hint,
       diagram: instance.diagram != null ? instance.diagram : card.diagram,
-      legend: instance.legend != null ? instance.legend : card.legend
+      legend: instance.legend != null ? instance.legend : card.legend,
+      blocks: instance.blocks != null ? instance.blocks : card.blocks,
+      working: instance.working != null ? instance.working : card.working
     };
   }
 
@@ -704,6 +711,7 @@
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
       "</div></div>";
 
+    renderCardBlocks(els.stage);
     if (textMode) {
       var textInput = els.stage.querySelector("#text-answer");
       textInput.addEventListener("keydown", function (e) {

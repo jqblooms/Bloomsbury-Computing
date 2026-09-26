@@ -160,7 +160,30 @@ function flowchartLegendHtml(focusShape) {
 function flowchartCardExtraHtml(card) {
   if (card.diagram) return flowchartDiagramHtml(card.diagram);
   if (card.legend) return flowchartLegendHtml(card.legend);
+  if (card.blocks) return '<div class="card-blocks"><pre class="blocks">' + escapeHtml(card.blocks) + "</pre></div>";
   return "";
+}
+
+// A card's Scratch script (card.blocks, scratchblocks text) is drawn as
+// real Scratch blocks. The library loads the first time a card needs it.
+var scratchBlocksLoading = null;
+function renderCardBlocks(root) {
+  if (!root || !root.querySelector("pre.blocks")) return;
+  function draw() {
+    if (!window.scratchblocks) return;
+    try { window.scratchblocks.renderMatching("#stage pre.blocks", { style: "scratch3", languages: ["en"], scale: 0.8 }); } catch (e) {}
+  }
+  if (window.scratchblocks) { draw(); return; }
+  if (!scratchBlocksLoading) {
+    scratchBlocksLoading = new Promise(function (resolve) {
+      var s = document.createElement("script");
+      s.src = "../vendor/scratchblocks-3.6.4.min.js";
+      s.onload = resolve;
+      s.onerror = resolve;
+      document.head.appendChild(s);
+    });
+  }
+  scratchBlocksLoading.then(draw);
 }
 
 function shuffle(arr) {
@@ -178,4 +201,26 @@ function escapeHtml(s) {
   return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
     return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
   });
+}
+
+// ---- helpers for randomised cards (the Year 6 Scratch drills) ----
+function drillPick(list) { return list[Math.floor(Math.random() * list.length)]; }
+function drillRange(from, to, step) {
+  step = step || 1;
+  var n = Math.floor((to - from) / step) + 1;
+  return from + step * Math.floor(Math.random() * n);
+}
+// A typed number, allowing "x: 70" or "x = 70" as well as "70", either minus sign.
+function drillNumberRe(n, label) {
+  var body = (n < 0 ? "[-\\u2212]\\s*" : "") + String(Math.abs(n)).replace(".", "\\.");
+  return new RegExp("^\\s*" + (label ? "(" + label + "\\s*[:=]?\\s*)?" : "") + body + "\\s*$", "i");
+}
+// Up to `count` different wrong numbers, in order, none equal to the answer.
+function drillWrongNumbers(answer, candidates, count) {
+  var out = [];
+  candidates.forEach(function (c) {
+    var s = String(c);
+    if (c !== answer && out.indexOf(s) === -1 && out.length < (count || 4)) out.push(s);
+  });
+  return out;
 }

@@ -1,1 +1,226 @@
-{"id":"y6-icontrol-l1","label":"6.2.1: iControl","steps":[{"id":"do-now","label":"Games You Know","content":"<h2 class=\"lesson-h2\">Games You Know</h2><p class=\"lesson-lead\">Think about a computer game you play, or have played before. Be ready to talk about it.</p><ul class=\"lesson-facts\"><li>What is the game called?</li><li>Where is it set?</li><li>How do you make progress or win?</li><li>What do you press, touch, or move to control it?</li></ul>"},{"id":"title","label":"iControl: Games, Simulations and Input Devices","content":"<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">iProgram</p><h2 class=\"lesson-h2\">iControl: Games, Simulations and Input Devices</h2><p>Year 6, 6.2.1</p></div>"},{"id":"teacher-talk-1","label":"Games and Simulations","content":"<h2 class=\"lesson-h2\">Games and Simulations</h2><p class=\"lesson-lead\">Computer programs that you play are not all the same kind of thing. Two important words for today are game and simulation.</p><ul class=\"lesson-facts\"><li><strong>Game</strong>: lets you explore an imaginary world and complete challenges, mostly for fun. Mario Kart and Pac-Man are games, the tracks and mazes are not real places.</li><li><strong>Simulation</strong>: copies a real-life situation as closely as it can. A flight simulator copies flying a real plane. A virtual pet copies looking after a real animal.</li><li>The question to ask is: is this inventing a make-believe challenge, or is it trying to copy something real?</li></ul><div class=\"lesson-flow-task\"><h3>Today's vocabulary</h3><ul class=\"lesson-facts\"><li><strong>Control</strong>: a way of directing what happens in a game or simulation.</li><li><strong>Input</strong>: information you give to a computer, for example pressing a button.</li><li><strong>Output</strong>: information the computer gives back to you, for example a sound or a picture on the screen.</li><li><strong>Simulation</strong>: a program that copies something from real life.</li></ul></div>"},{"id":"teacher-talk-2","label":"How We Control Games Has Changed","type":"stepper","stepperId":"y6l1-stepper-1","stepperKey":"icontrol_input_timeline","content":"<h2 class=\"lesson-h2\">How We Control Games Has Changed</h2><p class=\"lesson-lead\">Follow the timeline from the very first home console to today. Notice how each new input device let players interact with games in a new way.</p><div id=\"y6l1-stepper-1\" class=\"lesson-stepper\"></div>"},{"id":"activity","label":"Match the Console to the Controller","type":"console-controller-match","containerId":"icontrol-match","content":"<h2 class=\"lesson-h2\">Match the Console to the Controller</h2><p class=\"lesson-lead\">Click a console on the left, then click the controller on the right you think was used with it. A correct match draws a line between them. Use the timeline you just went through if you need to check.</p><div class=\"icontrol-match\" id=\"icontrol-match\"><svg class=\"icontrol-match-svg\" aria-hidden=\"true\"><defs><marker id=\"icontrol-arrow\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"4\" orient=\"auto\"><path d=\"M0,0 L8,4 L0,8 Z\"></path></marker></defs></svg><div class=\"icontrol-match-col icontrol-match-consoles\"></div><div class=\"icontrol-match-col icontrol-match-controllers\"></div></div><div class=\"icontrol-match-status\" id=\"icontrol-match-status\" role=\"status\" aria-live=\"polite\"></div>"},{"id":"formative","label":"Check Your Understanding","content":"<h2 class=\"lesson-h2\">Check Your Understanding</h2><p class=\"lesson-lead\">Questions to ask around the room:</p><ul class=\"lesson-facts\"><li>What is the difference between a game and a simulation?</li><li>What is an input? Give an example from today's timeline.</li><li>What is an output? Give an example.</li><li>Which input device let players use their whole body to control a game?</li><li>Why do you think consoles kept changing how players control games?</li></ul>"},{"id":"plenary","label":"Recap Quiz","type":"short-answer-validation","validatorId":"y6-l1-plenary","validatorKey":"y6l1_plenary","content":"<h2 class=\"lesson-h2\">Recap Quiz</h2><p class=\"lesson-lead\">Three quick questions covering today's two big ideas: games versus simulations, and the input timeline.</p><div class=\"lesson-exam-card\"><h3>Questions</h3><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6-l1-plenary-a\">(a) A flight simulator lets you practise flying a real plane safely. Is this a game or a simulation? [1]</label><input id=\"y6-l1-plenary-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plenary-a\" aria-label=\"Plenary part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-l1-plenary-b\">(b) Mario Kart lets you race around imaginary tracks for fun. Is this a game or a simulation? [1]</label><input id=\"y6-l1-plenary-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plenary-b\" aria-label=\"Plenary part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-l1-plenary-c\">(c) Which came first, the touch screen or the wireless motion controller? [1]</label><input id=\"y6-l1-plenary-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plenary-c\" aria-label=\"Plenary part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6-l1-plenary-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y6-l1-plenary-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"},{"id":"extension","label":"Design a Futuristic Controller","type":"app-link","buttonId":"y6-l1-extension-btn","appId":"controllerdesigner","content":"<h2 class=\"lesson-h2\">Design a Futuristic Controller</h2><p class=\"lesson-lead\">The timeline goes from turning dials in 1972 to using your whole body in 2010. What comes next?</p><div class=\"lesson-flow-task\"><h3>Your task</h3><ul class=\"lesson-facts\"><li>Design a controller for a games console that does not exist yet.</li><li>How would the player interact with it? Think about what they press, touch, wear, or move.</li><li>What would the controller actually do? What kind of game would it be perfect for?</li><li>Use the Pen and Text tools to draw and label your design.</li></ul></div><div class=\"lesson-app-link\"><p>Open Controller Designer to draw your idea, then use Save as PNG to keep a copy.</p><button type=\"button\" class=\"donow-btn\" id=\"y6-l1-extension-btn\">Open Controller Designer</button></div><div class=\"lesson-flow-task\"><h3>Extra challenge</h3><p>Pick one input device from today's timeline, for example the Wii's wireless controller. Write about how you think it actually works. When you move it through the air, how do you think that information gets from the controller to the console?</p></div>"}],"validators":{"y6l1_plenary":[{"suffix":"a","pattern":{"__regex":true,"source":"^\\s*simulation\\s*$","flags":"i"},"feedback":"It copies a real activity, flying a plane, as closely as it can."},{"suffix":"b","pattern":{"__regex":true,"source":"^\\s*game\\s*$","flags":"i"},"feedback":"It is an imaginary challenge for fun, not a copy of something real."},{"suffix":"c","pattern":{"__regex":true,"source":"^\\s*touch\\s*-?\\s*screen\\s*$","flags":"i"},"feedback":"The Nintendo DS (2004) came before the Nintendo Wii (2006)."}]},"pseudocodeValidators":{}}
+{
+  "id": "y6-icontrol-l1",
+  "label": "6.2.1: Events and Coordinates",
+  "steps": [
+    {
+      "id": "do-now",
+      "label": "Do Now: Inputs and Outputs",
+      "type": "multiple-choice",
+      "containerId": "y6l1-do-now",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Inputs and Outputs</h2><p class=\"lesson-lead\">Recap from your earlier computing lessons: a game takes inputs from the player and gives outputs back.</p><div id=\"y6l1-do-now\"></div>",
+      "items": [
+        {
+          "prompt": "A player presses the space bar to make a character jump. Is the key press an input or an output?",
+          "options": [
+            "Input",
+            "Output",
+            "Neither"
+          ],
+          "correct": 0,
+          "explain": "The key press sends information into the computer, so it is an input."
+        },
+        {
+          "prompt": "The game plays a sound when the character collects a coin. Is the sound an input or an output?",
+          "options": [
+            "Input",
+            "Neither",
+            "Output"
+          ],
+          "correct": 2,
+          "explain": "The computer sends the sound out to the player, so it is an output."
+        }
+      ]
+    },
+    {
+      "id": "title",
+      "label": "Events and Coordinates",
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 6 Scratch</p><h2 class=\"lesson-h2\">Events and Coordinates</h2><p>Year 6, 6.2.1</p></div><ul class=\"lesson-facts\"><li>Start scripts with events: the green flag, key presses and clicks.</li><li>Use x and y to place and move a sprite on the stage.</li><li>Build two Scratch projects that check themselves.</li></ul>"
+    },
+    {
+      "id": "events",
+      "label": "Events Start Scripts",
+      "content": "<h2 class=\"lesson-h2\">Events Start Scripts</h2><p class=\"lesson-lead\">In Scratch, an input from the player is an <strong>event</strong>. A hat block waits for its event, then runs the blocks under it, in order.</p><div class=\"igame-two-col\"><ul class=\"lesson-facts\"><li><strong>when green flag clicked</strong>: the player starts the game.</li><li><strong>when [key] key pressed</strong>: the player presses that key.</li><li><strong>when this sprite clicked</strong>: the player clicks the sprite.</li></ul><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\ngo to x: (0) y: (0)\n\nwhen [right arrow v] key pressed\nchange x by (10)</pre></div></div>"
+    },
+    {
+      "id": "check-events",
+      "label": "Check: Events",
+      "type": "multiple-choice",
+      "containerId": "y6l1-check-events",
+      "content": "<h2 class=\"lesson-h2\">Check: Events</h2><p class=\"lesson-lead\">Choose the hat block for each event.</p><div id=\"y6l1-check-events\"></div>",
+      "items": [
+        {
+          "prompt": "Which hat block starts a script when the player presses the space bar?",
+          "options": [
+            "when green flag clicked",
+            "when space key pressed",
+            "when this sprite clicked",
+            "forever"
+          ],
+          "correct": 1,
+          "explain": "when [space] key pressed waits for that key. The other hat blocks wait for different events."
+        },
+        {
+          "prompt": "A script starts with \"when this sprite clicked\". What makes it run?",
+          "options": [
+            "Pressing any key",
+            "Clicking the green flag",
+            "Clicking on that sprite"
+          ],
+          "correct": 2,
+          "explain": "The script waits until the player clicks that sprite with the mouse."
+        }
+      ]
+    },
+    {
+      "id": "coordinates",
+      "label": "The Stage Is a Grid",
+      "content": "<h2 class=\"lesson-h2\">The Stage Is a Grid</h2><p class=\"lesson-lead\">Every point on the stage has an x and a y. They tell Scratch exactly where a sprite is.</p><div class=\"igame-two-col\"><ul class=\"lesson-facts\"><li><strong>x</strong> is left and right: from -240 at the left edge to 240 at the right edge.</li><li><strong>y</strong> is up and down: from -180 at the bottom to 180 at the top.</li><li>The middle of the stage is <strong>x: 0, y: 0</strong>.</li><li>Moving right makes x bigger. Moving down makes y smaller.</li></ul><svg viewBox=\"0 0 480 360\" role=\"img\" aria-label=\"The Scratch stage as a grid: x runs from -240 on the left to 240 on the right, y from -180 at the bottom to 180 at the top, with 0, 0 in the middle\" style=\"display:block;width:100%;max-width:360px;margin:0 auto\"><rect width=\"480\" height=\"360\" rx=\"10\" style=\"fill:var(--surface-2)\"/><line x1=\"90\" y1=\"0\" x2=\"90\" y2=\"360\" style=\"stroke:var(--line)\"/><line x1=\"140\" y1=\"0\" x2=\"140\" y2=\"360\" style=\"stroke:var(--line)\"/><line x1=\"190\" y1=\"0\" x2=\"190\" y2=\"360\" style=\"stroke:var(--line)\"/><line x1=\"290\" y1=\"0\" x2=\"290\" y2=\"360\" style=\"stroke:var(--line)\"/><line x1=\"340\" y1=\"0\" x2=\"340\" y2=\"360\" style=\"stroke:var(--line)\"/><line x1=\"390\" y1=\"0\" x2=\"390\" y2=\"360\" style=\"stroke:var(--line)\"/><line x1=\"0\" y1=\"30\" x2=\"480\" y2=\"30\" style=\"stroke:var(--line)\"/><line x1=\"0\" y1=\"80\" x2=\"480\" y2=\"80\" style=\"stroke:var(--line)\"/><line x1=\"0\" y1=\"130\" x2=\"480\" y2=\"130\" style=\"stroke:var(--line)\"/><line x1=\"0\" y1=\"230\" x2=\"480\" y2=\"230\" style=\"stroke:var(--line)\"/><line x1=\"0\" y1=\"280\" x2=\"480\" y2=\"280\" style=\"stroke:var(--line)\"/><line x1=\"0\" y1=\"330\" x2=\"480\" y2=\"330\" style=\"stroke:var(--line)\"/><line x1=\"0\" y1=\"180\" x2=\"480\" y2=\"180\" style=\"stroke:var(--brand);stroke-width:2\"/><line x1=\"240\" y1=\"0\" x2=\"240\" y2=\"360\" style=\"stroke:var(--brand);stroke-width:2\"/><g style=\"fill:var(--ink-soft);font:600 17px Roboto,sans-serif\"><text x=\"8\" y=\"172\">-240</text><text x=\"472\" y=\"172\" text-anchor=\"end\">240</text><text x=\"248\" y=\"22\">180</text><text x=\"248\" y=\"352\">-180</text></g><circle cx=\"240\" cy=\"180\" r=\"7\" style=\"fill:var(--accent)\"/><text x=\"228\" y=\"204\" text-anchor=\"end\" style=\"fill:var(--accent);font:700 17px Roboto,sans-serif\">(0, 0)</text><circle cx=\"340\" cy=\"130\" r=\"9\" style=\"fill:var(--good)\"/><text x=\"354\" y=\"118\" style=\"fill:var(--good);font:700 17px Roboto,sans-serif\">x: 100, y: 50</text></svg></div>"
+    },
+    {
+      "id": "check-grid",
+      "label": "Check: Read the Grid",
+      "type": "short-answer-validation",
+      "validatorId": "y6l1-check-grid",
+      "validatorKey": "y6l1_check_grid",
+      "content": "<h2 class=\"lesson-h2\">Check: Read the Grid</h2><p class=\"lesson-lead\">Use the grid from the last slide.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l1-check-grid-a\">What is x at the right-hand edge of the stage?</label><input id=\"y6l1-check-grid-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-grid-a\" aria-label=\"Check: Read the Grid, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l1-check-grid-b\">A sprite is at y: 100. It moves 30 steps straight down. What is y now?</label><input id=\"y6l1-check-grid-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-grid-b\" aria-label=\"Check: Read the Grid, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l1-check-grid-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l1-check-grid-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+    },
+    {
+      "id": "activity-1",
+      "label": "Activity 1: Rocket Controls",
+      "type": "app-link",
+      "buttonId": "y6l1-activity-1-btn",
+      "appId": "scratchchallenges",
+      "appQuery": "challenge=rocket-controls",
+      "content": "<h2 class=\"lesson-h2\">Activity 1: Rocket Controls</h2><p class=\"lesson-lead\">Work on your own. Program a rocket that the player flies with the arrow keys.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>The green flag sends the Rocket to x: 0, y: 0.</li><li>Each arrow key moves the Rocket that way.</li><li>Clicking the Rocket makes it say Ready for launch!</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l1-activity-1-btn\">Open Rocket Controls</button></div></div>"
+    },
+    {
+      "id": "glide",
+      "label": "Go To, Glide and Change",
+      "content": "<h2 class=\"lesson-h2\">Go To, Glide and Change</h2><p class=\"lesson-lead\">Three ways to move a sprite. Blocks run from top to bottom, one after another.</p><div class=\"igame-two-col\"><ul class=\"lesson-facts\"><li><strong>go to x: y:</strong> jumps straight to that point.</li><li><strong>glide (1) secs to x: y:</strong> travels there smoothly, taking that many seconds.</li><li><strong>change x by (10)</strong> moves from wherever the sprite is now. A negative number moves the other way.</li></ul><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\ngo to x: (-100) y: (0)\nglide (2) secs to x: (100) y: (0)\nchange y by (-50)</pre></div></div>"
+    },
+    {
+      "id": "predict",
+      "label": "Predict: Where Does It End?",
+      "type": "short-answer-validation",
+      "validatorId": "y6l1-predict",
+      "validatorKey": "y6l1_predict",
+      "content": "<h2 class=\"lesson-h2\">Predict: Where Does It End?</h2><p class=\"lesson-lead\">Follow the script one block at a time, from the top.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\ngo to x: (0) y: (0)\nchange x by (100)\nchange y by (-50)\nchange x by (-30)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l1-predict-a\">What is x when the script ends?</label><input id=\"y6l1-predict-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"predict-a\" aria-label=\"Predict: Where Does It End?, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l1-predict-b\">What is y when the script ends?</label><input id=\"y6l1-predict-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"predict-b\" aria-label=\"Predict: Where Does It End?, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l1-predict-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l1-predict-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "activity-2",
+      "label": "Activity 2: Treasure Tour",
+      "type": "app-link",
+      "buttonId": "y6l1-activity-2-btn",
+      "appId": "scratchchallenges",
+      "appQuery": "challenge=treasure-tour",
+      "content": "<h2 class=\"lesson-h2\">Activity 2: Treasure Tour</h2><p class=\"lesson-lead\">Work on your own. Read the coordinates printed on the stage and glide to each treasure.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>The green flag sends the Robot to its start: x: -180, y: -120.</li><li>It glides to the yellow, then blue, then red treasure.</li><li>At the red treasure it says Found them all!</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l1-activity-2-btn\">Open Treasure Tour</button></div></div>"
+    },
+    {
+      "id": "practice-1",
+      "label": "Checked Practice (1 of 2)",
+      "type": "short-answer-validation",
+      "validatorId": "y6l1-practice-1",
+      "validatorKey": "y6l1_practice_1",
+      "content": "<h2 class=\"lesson-h2\">Checked Practice (1 of 2)</h2><p class=\"lesson-lead\">The sprite starts at x: 0. Look at its script.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when [right arrow v] key pressed\nchange x by (15)\n\nwhen [left arrow v] key pressed\nchange x by (-15)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l1-practice-1-a\">The player presses the right arrow 4 times. What is x now?</label><input id=\"y6l1-practice-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-1-a\" aria-label=\"Checked Practice (1 of 2), part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l1-practice-1-b\">Then they press the left arrow once. What is x now?</label><input id=\"y6l1-practice-1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-1-b\" aria-label=\"Checked Practice (1 of 2), part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l1-practice-1-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l1-practice-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "practice-2",
+      "label": "Checked Practice (2 of 2)",
+      "type": "short-answer-validation",
+      "validatorId": "y6l1-practice-2",
+      "validatorKey": "y6l1_practice_2",
+      "content": "<h2 class=\"lesson-h2\">Checked Practice (2 of 2)</h2><p class=\"lesson-lead\">Read this script from the top.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\ngo to x: (-200) y: (80)\nglide (2) secs to x: (200) y: (80)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l1-practice-2-a\">How many seconds does the sprite take to cross the stage?</label><input id=\"y6l1-practice-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-a\" aria-label=\"Checked Practice (2 of 2), part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l1-practice-2-b\">What is y when the glide finishes?</label><input id=\"y6l1-practice-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-b\" aria-label=\"Checked Practice (2 of 2), part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l1-practice-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l1-practice-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "plenary",
+      "label": "Plenary: Events and Coordinates",
+      "type": "embedded-app",
+      "appId": "drill-y6-icontrol-l1",
+      "embedContainerId": "y6l1-plenary",
+      "content": "<h2 class=\"lesson-h2\">Plenary: Events and Coordinates</h2><p class=\"lesson-lead\">Answer a batch of five. Three right in a row masters a card, and your progress is saved for your teacher.</p><div id=\"y6l1-plenary\"></div>"
+    }
+  ],
+  "validators": {
+    "y6l1_check_grid": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(x\\s*[:=]?\\s*)?240\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Look at the number at the right-hand end of the x line."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(y\\s*[:=]?\\s*)?70\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Moving down makes y smaller. Take 30 away from 100."
+      }
+    ],
+    "y6l1_predict": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(x\\s*[:=]?\\s*)?70\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Start at x: 0. Add 100, then take away 30. Only the change x blocks change x."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(y\\s*[:=]?\\s*)?[-−]\\s*50\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Only one block changes y. Start at y: 0."
+      }
+    ],
+    "y6l1_practice_1": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(x\\s*[:=]?\\s*)?60\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Each press adds 15. Four presses add 15 four times."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(x\\s*[:=]?\\s*)?45\\s*$",
+          "flags": "i"
+        },
+        "feedback": "The left arrow takes 15 away from where the sprite is now."
+      }
+    ],
+    "y6l1_practice_2": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*2\\s*(s|secs?|seconds?)?\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Look at the number in the glide block."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(y\\s*[:=]?\\s*)?80\\s*$",
+          "flags": "i"
+        },
+        "feedback": "The glide ends at the x and y written in the glide block."
+      }
+    ]
+  },
+  "pseudocodeValidators": {}
+}

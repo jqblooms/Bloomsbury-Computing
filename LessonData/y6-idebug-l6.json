@@ -1,1 +1,190 @@
-{"id":"y6-idebug-l6","label":"6.2.6: iDebug","steps":[{"id":"do-now","label":"Do Now: iDevelop Recap","type":"short-answer-validation","validatorId":"y6-l6-do-now","validatorKey":"y6l6_do_now","content":"<h2 class=\"lesson-h2\">Do Now: iDevelop Recap</h2><p class=\"lesson-lead\">Three quick questions about last lesson, before you start testing today.</p><div class=\"lesson-exam-card\"><h3>Complete the questions</h3><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6-l6-do-now-a\">(a) What word means a named place that stores a value that can change while your game runs, like score?</label><input id=\"y6-l6-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"dna-a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-l6-do-now-b\">(b) In your game, what made the backdrop change to the next level?</label><input id=\"y6-l6-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"dna-b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-l6-do-now-c\">(c) What happened to your score variable when the \"goodie\" sprite touched the \"baddie\" sprite?</label><input id=\"y6-l6-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"dna-c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6-l6-do-now-check\">Check answers</button></div><div id=\"y6-l6-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"},{"id":"title","label":"iDebug","content":"<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">iProgram</p><h2 class=\"lesson-h2\">iDebug: Testing and Fixing Your Game</h2><p>Year 6, Lesson 6</p></div>"},{"id":"objectives","label":"Today's Task","content":"<h2 class=\"lesson-h2\">Today's Task</h2><p class=\"lesson-lead\">Your game is built. Today you test it properly, and fix what you find.</p><ul class=\"lesson-facts\"><li><strong>Objective:</strong> develop strategies for testing and debugging your program.</li><li><strong>Success criteria:</strong> find and fix errors in your program.</li></ul><div class=\"lesson-flow-task\"><h3>Key vocabulary</h3><p>Test; bug; debug; amend; systematically.</p></div>"},{"id":"concept-1","label":"Testing Systematically","content":"<h2 class=\"lesson-h2\">Testing Systematically</h2><p class=\"lesson-lead\">Programmers do not just click around and hope. They test systematically.</p><ul class=\"lesson-facts\"><li>A systematic test goes through <strong>every</strong> way the program could be used, not just the ones you expect players to try.</li><li>Every statement in the code should be run and checked at least once.</li><li>Good testers <strong>deliberately</strong> try to make the game fail - clicking fast, doing things in the wrong order, trying to go off the edge of the stage - to make sure it is bug free.</li></ul>"},{"id":"check-systematic","label":"Check: Systematic Testing","type":"multiple-choice","containerId":"mcq-systematic-root","items":[{"prompt":"Which of these is closest to \"testing systematically\"?","options":["Going through every way the game could be used, on purpose, to try to find problems","Playing the game once, the normal way, and stopping if nothing looks wrong","Asking a friend if the game looks good"],"correct":0,"explain":"Systematic testing is planned and thorough - it does not stop at the first normal playthrough."},{"prompt":"Why do testers deliberately try to make a game fail?","options":["To prove the programmer got it wrong","To find bugs before a player does, so they can be fixed","Because it is more fun than playing normally"],"correct":1,"explain":"Trying to break the game on purpose is how testers find the bugs a normal playthrough would miss."}],"content":"<h2 class=\"lesson-h2\">Check: Systematic Testing</h2><div id=\"mcq-systematic-root\"></div>"},{"id":"independent-activity-1","label":"Activity 1: Test Your Own Game","type":"app-link","buttonId":"y6-l6-open-turbowarp-1","appId":"turbowarp","content":"<h2 class=\"lesson-h2\">Activity 1: Test Your Own Game</h2><p class=\"lesson-lead\">Work independently - play your own game systematically, using your plan to check it does what it should.</p><ol class=\"igame-steps\"><li>Open your saved project in TurboWarp using the button.</li><li>Play it the normal way first, then try to break it on purpose: click fast, try the edges, do things out of order.</li><li>Keep a mental note (or a scrap of paper) of anything that goes wrong - you will record it properly in Activity 2.</li></ol><div class=\"lesson-app-link\"><p>The Slides and TurboWarp switcher stays at the top right - use it whenever you need the next instruction.</p><button type=\"button\" class=\"donow-btn\" id=\"y6-l6-open-turbowarp-1\">Open TurboWarp</button></div>"},{"id":"concept-2","label":"Describing a Bug Precisely","content":"<h2 class=\"lesson-h2\">Describing a Bug Precisely</h2><p class=\"lesson-lead\">\"It doesn't work\" does not help anyone fix a bug. A good bug report answers three questions:</p><ul class=\"lesson-facts\"><li><strong>Where did the bug happen?</strong> What were you doing when it happened?</li><li><strong>What happened?</strong> What actually went wrong?</li><li><strong>What did you expect to happen?</strong> What did you think would happen instead?</li></ul><p class=\"lesson-lead\">You will use these three questions on the Testing Record sheet in the next activity.</p>"},{"id":"independent-activity-2","label":"Activity 2: Swap and Record Bugs","type":"self-marked-response","containerId":"y6l6-swap-root","content":"<h2 class=\"lesson-h2\">Activity 2: Swap and Record Bugs</h2><p class=\"lesson-lead\">Swap places with a partner. Play their game systematically, the same way you played your own. Your own eyes get used to your own game, so a fresh player often finds bugs you missed.</p><p class=\"lesson-lead\">For every bug you find in your partner's game, record it using the three questions from the last slide, then hand your notes back to them and discuss what you found.</p><div id=\"y6l6-swap-root\"></div>","items":[{"id":"bug-1","prompt":"Bug 1 - where did it happen (what were you doing)? What happened? What did you expect to happen?","marks":1,"modelAnswer":"A complete answer names a specific action (for example: pressing the up arrow near the top wall), the actual result (for example: the sprite went through the wall), and the expected result (for example: the sprite should have stopped at the wall)."},{"id":"bug-2","prompt":"Bug 2 (if you found a second one) - where did it happen? What happened? What did you expect to happen? If you only found one bug, write \"Only one bug found\" here.","marks":1,"modelAnswer":"Either a second specific bug report in the same three-part format, or an honest note that only one bug was found."}]},{"id":"independent-activity-3","label":"Activity 3: Fix Your Own Bugs","type":"app-link","buttonId":"y6-l6-open-turbowarp-2","appId":"turbowarp","content":"<h2 class=\"lesson-h2\">Activity 3: Fix Your Own Bugs</h2><p class=\"lesson-lead\">Take back the bug reports your partner wrote about your game. Work independently to correct every bug they found.</p><ol class=\"igame-steps\"><li>Open your project in TurboWarp using the button.</li><li>For each bug report, find the block or blocks causing it and amend them.</li><li>Test again after each fix - do not fix everything at once and hope, check each one on its own.</li></ol><div class=\"lesson-app-link\"><p>The Slides and TurboWarp switcher stays at the top right - use it whenever you need the next instruction.</p><button type=\"button\" class=\"donow-btn\" id=\"y6-l6-open-turbowarp-2\">Open TurboWarp</button></div><div class=\"lesson-flow-task\"><h3>Before moving on</h3><p>Every bug your partner recorded about your game should now be fixed and retested.</p></div>"},{"id":"differentiation","label":"Easier and Harder","content":"<h2 class=\"lesson-h2\">Easier and Harder</h2><div class=\"igame-debug-grid\"><div><strong>Easier</strong><span>Ask an adult to help you identify exactly which block is causing a bug before you try to fix it.</span></div><div><strong>Harder</strong><span>Evaluate your partner's finished game and discuss how it could be extended or improved - do not just find bugs, suggest a genuine improvement.</span></div></div>"},{"id":"practice","label":"Reflecting on Testing","type":"self-marked-response","containerId":"y6l6-practice-root","content":"<h2 class=\"lesson-h2\">Reflecting on Testing</h2><p class=\"lesson-lead\">Look back at what actually happened today, then answer honestly - this is marked by you, not a computer.</p><div id=\"y6l6-practice-root\"></div>","items":[{"id":"bug-fixed","prompt":"Describe one bug your partner found in your game, and how you fixed it.","marks":1,"modelAnswer":"A good answer names a specific bug (not just \"it was broken\") and a specific fix (which block was changed, and how)."},{"id":"why-swap","prompt":"Why is it useful to have someone else test your game, instead of only testing it yourself?","marks":1,"modelAnswer":"You already know how your own game is supposed to be played, so you tend to only play it the expected way. Someone who did not write it will try things you would not think of, so they find bugs you would miss."}]},{"id":"plenary","label":"Plenary","type":"embedded-app","appId":"drill-y6-idebug-l6","embedContainerId":"y6l6-plenary-embed","content":"<h2 class=\"lesson-h2\">Plenary: iDebug</h2><div id=\"y6l6-plenary-embed\"></div>"}],"validators":{"y6l6_do_now":[{"suffix":"a","pattern":{"__regex":true,"source":"\\bvariable","flags":"i"},"feedback":"Look at the Key Vocabulary from last lesson - what word means a named place that stores a changing value?"},{"suffix":"b","pattern":{"__regex":true,"source":"score|point","flags":"i"},"feedback":"Think about what number your backdrop-change block was checking."},{"suffix":"c","pattern":{"__regex":true,"source":"(went up|increase|add|\\+|change|rise|higher|more)","flags":"i"},"feedback":"Touching the baddie was supposed to reward the player - what should happen to a score when you are rewarded?"}]},"pseudocodeValidators":{}}
+{
+  "id": "y6-idebug-l6",
+  "label": "6.2.6: Test and Debug",
+  "steps": [
+    {
+      "id": "do-now",
+      "label": "Do Now: Planning and Messages",
+      "type": "multiple-choice",
+      "containerId": "y6l6-do-now",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Planning and Messages</h2><p class=\"lesson-lead\">Question 1 recaps 6.2.5 and question 2 recaps 6.2.4.</p><div id=\"y6l6-do-now\"></div>",
+      "items": [
+        {
+          "prompt": "A game plan should say how the game ends. What does that part describe?",
+          "options": [
+            "How the player wins or loses",
+            "Which costume each sprite starts in",
+            "Which colour the backdrop is"
+          ],
+          "correct": 0,
+          "explain": "The ending is how you win and how you lose."
+        },
+        {
+          "prompt": "Which block makes every when I receive [level up] script start?",
+          "options": [
+            "switch backdrop to [Level 2]",
+            "broadcast [level up]",
+            "next costume"
+          ],
+          "correct": 1,
+          "explain": "broadcast sends the message that those scripts wait for."
+        }
+      ]
+    },
+    {
+      "id": "do-now-2",
+      "label": "Do Now: If Else Recap",
+      "type": "short-answer-validation",
+      "validatorId": "y6l6-do-now-2",
+      "validatorKey": "y6l6_do_now_2",
+      "content": "<h2 class=\"lesson-h2\">Do Now: If Else Recap</h2><p class=\"lesson-lead\">Recap of 6.2.3: Variables and Decisions. clicks is 9.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">if &lt;(clicks) &gt; (9)&gt; then\nsay [You win!]\nelse\nsay [Keep going!]\nend</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l6-do-now-2-a\">What does the sprite say?</label><input id=\"y6l6-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: If Else Recap, part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l6-do-now-2-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y6l6-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "title",
+      "label": "Test and Debug",
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 6 Scratch</p><h2 class=\"lesson-h2\">Test and Debug</h2><p>Year 6, 6.2.6</p></div><ul class=\"lesson-facts\"><li>Test a program like a tester: expected against actual.</li><li>Find and fix bugs in six broken Scratch projects.</li><li>Record a bug clearly enough for someone else to fix it.</li></ul>"
+    },
+    {
+      "id": "testing",
+      "label": "Test It Like a Tester",
+      "content": "<h2 class=\"lesson-h2\">Test It Like a Tester</h2><p class=\"lesson-lead\">A <strong>bug</strong> is where what should happen and what does happen are different.</p><div class=\"igame-two-col\"><table class=\"iplan-table\"><thead><tr><th>I did</th><th>Expected</th><th>Actual</th></tr></thead><tbody><tr><td>Pressed left arrow</td><td>Rocket moves left</td><td>It moved right</td></tr><tr><td>Clicked 10 times</td><td>Says You win!</td><td>Said nothing</td></tr><tr><td>Clicked 9 times</td><td>No message yet</td><td>No message</td></tr></tbody></table><ul class=\"lesson-facts\"><li>Test every control, one at a time.</li><li>Test the edges: the sides of the stage, the floor.</li><li>Test either side of a target: 9, 10 and 11 clicks.</li><li>Change one thing, then test again.</li></ul></div>"
+    },
+    {
+      "id": "check-testing",
+      "label": "Check: Testing",
+      "type": "multiple-choice",
+      "containerId": "y6l6-check-testing",
+      "content": "<h2 class=\"lesson-h2\">Check: Testing</h2><p class=\"lesson-lead\">Choose the best answer.</p><div id=\"y6l6-check-testing\"></div>",
+      "items": [
+        {
+          "prompt": "A game should say You win! at 10 clicks. Which click counts should you test?",
+          "options": [
+            "Only 10",
+            "9, 10 and 11",
+            "1 and 100"
+          ],
+          "correct": 1,
+          "explain": "Test just below, on, and just above the target. Off-by-one bugs hide there."
+        },
+        {
+          "prompt": "Expected: the Rocket moves left. Actual: it moves right. What is this?",
+          "options": [
+            "A bug",
+            "A broadcast",
+            "A costume"
+          ],
+          "correct": 0,
+          "explain": "Expected and actual are different, so there is a bug to fix."
+        }
+      ]
+    },
+    {
+      "id": "activity-1",
+      "label": "Activity 1: Bug Hunt 1 to 3",
+      "type": "app-link",
+      "buttonId": "y6l6-activity-1-btn",
+      "appId": "scratchchallenges",
+      "appQuery": "challenge=bug-wrong-way",
+      "content": "<h2 class=\"lesson-h2\">Activity 1: Bug Hunt 1 to 3</h2><p class=\"lesson-lead\">Work on your own. Each project has one bug. Test it, find the bug, fix it, then press Next.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Bug Hunt 1: one arrow key goes the wrong way.</li><li>Bug Hunt 2: a counter that gets stuck.</li><li>Bug Hunt 3: a ball that moves once and stops.</li><li>Test first: watch what happens before you change any blocks.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l6-activity-1-btn\">Open Bug Hunt</button></div></div>"
+    },
+    {
+      "id": "where-bugs-hide",
+      "label": "Where Bugs Hide",
+      "content": "<h2 class=\"lesson-h2\">Where Bugs Hide</h2><p class=\"lesson-lead\">What you see tells you where to look.</p><div class=\"igame-debug-grid\"><div><strong>Goes the wrong way</strong><span>Look at the numbers in the move and change blocks. Is one negative when it should be positive?</span></div><div><strong>Happens once, then stops</strong><span>Blocks that should keep running need to be inside a forever or repeat loop.</span></div><div><strong>A value never resets</strong><span>Find the green flag script. Does it set the variable?</span></div><div><strong>Something never happens</strong><span>Read the condition. Which sprite or colour does it check? Is the comparison right?</span></div></div>"
+    },
+    {
+      "id": "check-bug",
+      "label": "Check: Spot the Bug",
+      "type": "short-answer-validation",
+      "validatorId": "y6l6-check-bug",
+      "validatorKey": "y6l6_check_bug",
+      "content": "<h2 class=\"lesson-h2\">Check: Spot the Bug</h2><p class=\"lesson-lead\">This script should move the sprite left.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when [left arrow v] key pressed\nchange x by (10)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l6-check-bug-a\">What number should be in the change x block?</label><input id=\"y6l6-check-bug-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-bug-a\" aria-label=\"Check: Spot the Bug, part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l6-check-bug-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y6l6-check-bug-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "activity-2",
+      "label": "Activity 2: Bug Hunt 4 to 6",
+      "type": "app-link",
+      "buttonId": "y6l6-activity-2-btn",
+      "appId": "scratchchallenges",
+      "appQuery": "challenge=bug-wrong-sprite",
+      "content": "<h2 class=\"lesson-h2\">Activity 2: Bug Hunt 4 to 6</h2><p class=\"lesson-lead\">Work on your own. The button opens Bug Hunt 4. Press Next after each fix.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Bug Hunt 4: coins that do not count.</li><li>Bug Hunt 5: a game you cannot win.</li><li>Bug Hunt 6: a game that never ends.</li><li>Then test a partner's game from last lesson.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l6-activity-2-btn\">Open Bug Hunt 4</button></div></div>"
+    },
+    {
+      "id": "bug-report",
+      "label": "Test a Partner's Game",
+      "type": "self-marked-response",
+      "containerId": "y6l6-bug-report",
+      "content": "<h2 class=\"lesson-h2\">Test a Partner's Game</h2><p class=\"lesson-lead\">Swap with a partner and play their game from 6.2.5. Record one bug.</p><div id=\"y6l6-bug-report\"></div>",
+      "items": [
+        {
+          "id": "bug-did",
+          "prompt": "What did you do, what did you expect, and what actually happened? Which script do you think causes it?",
+          "marks": 3,
+          "modelAnswer": "The exact action (pressed the up arrow at the top edge), what should happen (the ship stops at the edge), what did happen (it went off the stage), and a script to look at (the up arrow script has no edge check). One mark each for the action, expected against actual, and the script."
+        }
+      ]
+    },
+    {
+      "id": "practice",
+      "label": "Checked Practice",
+      "type": "multiple-choice",
+      "containerId": "y6l6-practice",
+      "content": "<h2 class=\"lesson-h2\">Checked Practice</h2><p class=\"lesson-lead\">Use what you found in the Bug Hunts.</p><div id=\"y6l6-practice\"></div>",
+      "items": [
+        {
+          "prompt": "score should go up by 1 per coin, but it jumps by 3 every time. Where do you look first?",
+          "options": [
+            "The script with change [score] by",
+            "The backdrop",
+            "The costume list"
+          ],
+          "correct": 0,
+          "explain": "The script that changes score is the one that runs too many times: often because the Coin stays touching and nothing moves it away."
+        },
+        {
+          "prompt": "A game should end when lives reaches 0, but it never ends. Which condition has a bug?",
+          "options": [
+            "if <(lives) = (0)>",
+            "if <(lives) < (0)>",
+            "if <(lives) = (1)>"
+          ],
+          "correct": 1,
+          "explain": "lives stops at 0, so \"less than 0\" is never true. It should be \"= 0\"."
+        }
+      ]
+    },
+    {
+      "id": "plenary",
+      "label": "Plenary: Test and Debug",
+      "type": "embedded-app",
+      "appId": "drill-y6-idebug-l6",
+      "embedContainerId": "y6l6-plenary",
+      "content": "<h2 class=\"lesson-h2\">Plenary: Test and Debug</h2><p class=\"lesson-lead\">Answer a batch of five. Three right in a row masters a card, and your progress is saved for your teacher.</p><div id=\"y6l6-plenary\"></div>"
+    }
+  ],
+  "validators": {
+    "y6l6_do_now_2": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*[\"']?\\s*keep\\s+going\\s*!?\\s*[\"']?\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Is 9 more than 9? If not, the else part runs."
+      }
+    ],
+    "y6l6_check_bug": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(x\\s*[:=]?\\s*)?[-−]\\s*10\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Moving left makes x smaller, so the number must be negative."
+      }
+    ]
+  },
+  "pseudocodeValidators": {}
+}
