@@ -101,13 +101,19 @@ function refreshSupportHints() {
   document.querySelectorAll('.trace-table td[data-expected]').forEach(renderCellHint);
 }
 
-// Called once per Check Answers press in trace mode (see checkPractice /
-// checkGeneratedPractice below). A fully-correct table advances the
-// streak and, every SUPPORT_STAGE_EVERY in a row, fades the hints down
-// another stage; anything else resets the streak without pulling the
-// fade back the other way.
+// Called once per Check Answers press in trace mode (checkPractice in
+// practice.js, checkGeneratedPractice in generator.js). A fully-correct
+// table advances the streak and, every SUPPORT_STAGE_EVERY in a row, fades
+// the hints down another stage; anything else resets the streak without
+// pulling the fade back the other way. Checking the same table twice
+// counts once.
+let lastSupportCheck = null;
 function recordSupportOutcome(isCorrect) {
   if (!isSupportMode) return;
+  const signature = Array.from(document.querySelectorAll('.trace-table td[data-expected]'))
+    .map(td => td.dataset.expected + '=' + ((td.querySelector('input') || {}).value || '')).join('|');
+  if (signature === lastSupportCheck) return;
+  lastSupportCheck = signature;
   if (isCorrect) {
     supportStreak++;
     if (supportStreak % SUPPORT_STAGE_EVERY === 0 && supportStage < SUPPORT_MAX_STAGE) {
