@@ -324,19 +324,14 @@ function triggerFreeze() {
 
     const indicator = document.createElement('div');
     indicator.id = 'ice-indicator';
-    indicator.style.cssText = `
-        position:absolute; top:30px; left:50%; transform:translateX(-50%);
-        background:rgba(70,200,255,0.85); color:#1e1e1e; padding:4px 14px;
-        border-radius:6px; font-size:0.8rem; font-weight:bold;
-        z-index:80; pointer-events:none;
-    `;
-    indicator.innerText = '❄ FROZEN - 30s';
+    indicator.className = 'pg-ice-indicator';
+    indicator.innerText = 'Frozen: 30s';
     els.gameArea.appendChild(indicator);
 
     let remaining = 30;
     const interval = setInterval(() => {
         remaining--;
-        if (indicator.parentNode) indicator.innerText = `❄ FROZEN - ${remaining}s`;
+        if (indicator.parentNode) indicator.innerText = `Frozen: ${remaining}s`;
         if (remaining <= 0) clearInterval(interval);
     }, 1000);
 
