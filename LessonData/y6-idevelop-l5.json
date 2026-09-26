@@ -7,7 +7,7 @@
       "label": "Do Now: Messages and Decisions",
       "type": "multiple-choice",
       "containerId": "y6l5-do-now",
-      "content": "<h2 class=\"lesson-h2\">Do Now: Messages and Decisions</h2><p class=\"lesson-lead\">Question 1 recaps 6.2.4 and question 2 recaps 6.2.3.</p><div id=\"y6l5-do-now\"></div>",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Messages and Decisions</h2><p class=\"lesson-lead\">Recap of 6.2.4.5: Scratch Skills Recap.</p><div id=\"y6l5-do-now\"></div>",
       "items": [
         {
           "prompt": "Which block tells every sprite that the level has changed?",
@@ -38,7 +38,7 @@
     {
       "id": "plan",
       "label": "A Plan Before Code",
-      "content": "<h2 class=\"lesson-h2\">A Plan Before Code</h2><p class=\"lesson-lead\">Here is the plan for the Fruit Catcher game you built in 6.2.3. Yours will have the same parts.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Fruit Catcher plan</h3><ul class=\"lesson-facts\"><li><strong>Sprites</strong>: Bowl (the player moves it), Apple (falls from a random place).</li><li><strong>Controls</strong>: left and right arrow keys.</li><li><strong>Variables</strong>: score (apples caught), lives (misses left, starts at 3).</li><li><strong>Win or lose</strong>: lose when lives reaches 0.</li></ul></div><ul class=\"lesson-facts\"><li>A plan lets you, or someone else, build the game without guessing.</li><li>Each line of the plan becomes a script or a sprite.</li><li>Build one line at a time and test it before the next.</li></ul></div>"
+      "content": "<h2 class=\"lesson-h2\">A Plan Before Code</h2><p class=\"lesson-lead\">Here is the plan for Fruit Catcher, the catching game you have built. Yours will have the same parts.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Fruit Catcher plan</h3><ul class=\"lesson-facts\"><li><strong>Sprites</strong>: Bowl (the player moves it), Apple (falls from a random place).</li><li><strong>Controls</strong>: left and right arrow keys.</li><li><strong>Variables</strong>: score (apples caught), lives (misses left, starts at 3).</li><li><strong>Win or lose</strong>: lose when lives reaches 0.</li></ul></div><ul class=\"lesson-facts\"><li>A plan lets you, or someone else, build the game without guessing.</li><li>Each line of the plan becomes a script or a sprite.</li><li>Build one line at a time and test it before the next.</li></ul></div>"
     },
     {
       "id": "check-plan",
@@ -169,7 +169,7 @@
     {
       "id": "level-two",
       "label": "Make It Better: A Second Level",
-      "content": "<h2 class=\"lesson-h2\">Make It Better: A Second Level</h2><p class=\"lesson-lead\">When every check passes, add a level using what you learned in 6.2.4.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">if &lt;(score) = (10)&gt; then\nbroadcast [level up v]\nend\n\nwhen I receive [level up v]\nswitch backdrop to [Level 2 v]</pre></div><ul class=\"lesson-facts\"><li>Add a second backdrop for level 2.</li><li>Broadcast a message when the player reaches your target.</li><li>Make level 2 harder: faster enemies, or a new sprite.</li><li>The bonus check in My Game looks for the second level.</li></ul></div>"
+      "content": "<h2 class=\"lesson-h2\">Make It Better: A Second Level</h2><p class=\"lesson-lead\">When every check passes, add a level with a broadcast and a backdrop, as in Level Up.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">if &lt;(score) = (10)&gt; then\nbroadcast [level up v]\nend\n\nwhen I receive [level up v]\nswitch backdrop to [Level 2 v]</pre></div><ul class=\"lesson-facts\"><li>Add a second backdrop for level 2.</li><li>Broadcast a message when the player reaches your target.</li><li>Make level 2 harder: faster enemies, or a new sprite.</li><li>The bonus check in My Game looks for the second level.</li></ul></div>"
     },
     {
       "id": "activity-2",

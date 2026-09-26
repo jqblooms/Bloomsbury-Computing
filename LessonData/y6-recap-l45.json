@@ -1,0 +1,265 @@
+{
+  "id": "y6-recap-l45",
+  "label": "6.2.4.5: Scratch Skills Recap",
+  "steps": [
+    {
+      "id": "do-now",
+      "label": "Do Now: Pong",
+      "type": "multiple-choice",
+      "containerId": "y6l45-do-now",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Pong</h2><p class=\"lesson-lead\">Recap of the Pong game you built earlier in this unit.</p><div id=\"y6l45-do-now\"></div>",
+      "items": [
+        {
+          "prompt": "Which block made the Paddle follow the mouse?",
+          "options": [
+            "change y by (10)",
+            "set x to (mouse x)",
+            "go to x: (0) y: (0)"
+          ],
+          "correct": 1,
+          "explain": "set x to (mouse x), inside forever, moved the Paddle to the mouse again and again."
+        },
+        {
+          "prompt": "The Ball touched the Paddle. What happened to score?",
+          "options": [
+            "It went back to 0",
+            "Nothing",
+            "It went up by 1"
+          ],
+          "correct": 2,
+          "explain": "change [score] by (1) ran inside the if touching [Paddle] block."
+        }
+      ]
+    },
+    {
+      "id": "do-now-2",
+      "label": "Do Now: Score and Speed",
+      "type": "short-answer-validation",
+      "validatorId": "y6l45-do-now-2",
+      "validatorKey": "y6l45_do_now_2",
+      "content": "<h2 class=\"lesson-h2\">Do Now: Score and Speed</h2><p class=\"lesson-lead\">Recap of Pong. These blocks ran each time the Ball hit the Paddle. score starts at 0 and speed starts at 5.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">change [score v] by (1)\nchange [speed v] by (0.25)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l45-do-now-2-a\">The Ball hits the Paddle 3 times. What is score?</label><input id=\"y6l45-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Score and Speed, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l45-do-now-2-b\">What is speed after those 3 hits?</label><input id=\"y6l45-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Score and Speed, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l45-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l45-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "title",
+      "label": "Scratch Skills Recap",
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 6 Scratch</p><h2 class=\"lesson-h2\">Scratch Skills Recap</h2><p>Year 6, 6.2.4.5</p></div><ul class=\"lesson-facts\"><li>Control a sprite with the keyboard, using x and y.</li><li>Keep score with variables and decide with if.</li><li>Change costumes, backdrops and levels with messages.</li><li>Build two games that check themselves, ready to plan your own.</li></ul>"
+    },
+    {
+      "id": "keys",
+      "label": "Keyboard Control and the Grid",
+      "content": "<h2 class=\"lesson-h2\">Keyboard Control and the Grid</h2><p class=\"lesson-lead\">The player controls a sprite with <strong>events</strong>. The sprite moves on a grid of x and y.</p><div class=\"igame-two-col\"><ul class=\"lesson-facts\"><li><strong>x</strong> runs from -240 (left) to 240 (right). <strong>y</strong> runs from -180 (bottom) to 180 (top).</li><li><strong>when [key] key pressed</strong> runs its script each time that key is pressed.</li><li><strong>change x by (15)</strong> moves right. A negative number moves left.</li><li>Anything that happens all game long goes inside a <strong>forever</strong> loop.</li></ul><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\ngo to x: (0) y: (-140)\n\nwhen [left arrow v] key pressed\nchange x by (-15)</pre></div></div>"
+    },
+    {
+      "id": "check-keys",
+      "label": "Check: Keys and the Grid",
+      "type": "short-answer-validation",
+      "validatorId": "y6l45-check-keys",
+      "validatorKey": "y6l45_check_keys",
+      "content": "<h2 class=\"lesson-h2\">Check: Keys and the Grid</h2><p class=\"lesson-lead\">The Bowl starts at x: 0.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when [left arrow v] key pressed\nchange x by (-15)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l45-check-keys-a\">The player presses the left arrow 4 times. What is x now?</label><input id=\"y6l45-check-keys-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-keys-a\" aria-label=\"Check: Keys and the Grid, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l45-check-keys-b\">What is y at the top edge of the stage?</label><input id=\"y6l45-check-keys-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-keys-b\" aria-label=\"Check: Keys and the Grid, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l45-check-keys-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l45-check-keys-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "variables",
+      "label": "Variables and Decisions",
+      "content": "<h2 class=\"lesson-h2\">Variables and Decisions</h2><p class=\"lesson-lead\">A <strong>variable</strong> stores a value that changes while the game runs. An <strong>if</strong> block decides what happens next.</p><div class=\"igame-two-col\"><ul class=\"lesson-facts\"><li><strong>set</strong> a variable when the green flag is clicked, so every game starts fresh.</li><li><strong>change</strong> it during the game: +1 for a catch, -1 for a miss.</li><li>A comparison such as <strong>(lives) = (0)</strong> is true or false.</li><li><strong>if then else</strong> runs the top part when true and the else part when false.</li></ul><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\nset [lives v] to (3)\n\nchange [lives v] by (-1)\nif &lt;(lives) = (0)&gt; then\nsay [Game over]\nstop [all v]\nend</pre></div></div>"
+    },
+    {
+      "id": "check-variables",
+      "label": "Check: Variables and Decisions",
+      "type": "multiple-choice",
+      "containerId": "y6l45-check-variables",
+      "content": "<h2 class=\"lesson-h2\">Check: Variables and Decisions</h2><p class=\"lesson-lead\">Choose the best answer.</p><div id=\"y6l45-check-variables\"></div>",
+      "items": [
+        {
+          "prompt": "lives is 1. The player misses once more and change [lives] by (-1) runs. Which condition is now true?",
+          "options": [
+            "(lives) = (1)",
+            "(lives) = (0)",
+            "(lives) > (0)"
+          ],
+          "correct": 1,
+          "explain": "1 take away 1 is 0, so (lives) = (0) is true and the game can end."
+        },
+        {
+          "prompt": "Which block should run when the green flag is clicked, so every game starts with 3 lives?",
+          "options": [
+            "change [lives] by (3)",
+            "change [lives] by (-1)",
+            "set [lives] to (3)"
+          ],
+          "correct": 2,
+          "explain": "set gives lives an exact value. change would add to whatever was left from the last game."
+        }
+      ]
+    },
+    {
+      "id": "catcher-toolkit",
+      "label": "Fruit Catcher Toolkit",
+      "content": "<h2 class=\"lesson-h2\">Fruit Catcher Toolkit</h2><p class=\"lesson-lead\">Blocks for the next challenge. Work out where each one goes.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">go to x: (pick random (-200) to (200)) y: (170)\n\nif &lt;(y position) &lt; (-170)&gt; then\nchange [lives v] by (-1)\nend</pre></div><ul class=\"lesson-facts\"><li><strong>pick random</strong> gives a different number each time, so the Apple drops from a new place.</li><li><strong>y position &lt; -170</strong> is true when the Apple reaches the bottom: a miss.</li><li>A catch is <strong>touching [Bowl]?</strong>.</li><li>When lives reaches 0 the game is over.</li></ul></div>"
+    },
+    {
+      "id": "activity-1",
+      "label": "Activity 1: Fruit Catcher",
+      "type": "app-link",
+      "buttonId": "y6l45-activity-1-btn",
+      "appId": "scratchchallenges",
+      "appQuery": "challenge=fruit-catcher&lesson=y6-recap-l45",
+      "content": "<h2 class=\"lesson-h2\">Activity 1: Fruit Catcher</h2><p class=\"lesson-lead\">Work on your own. The starter project has the Bowl and the Apple.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>The arrow keys move the Bowl. The green flag sets score to 0 and lives to 3.</li><li>The Apple starts at the top at a random x, then falls.</li><li>A catch adds 1 to score. A miss takes 1 from lives. Either way the Apple goes back to the top.</li><li>When lives reaches 0 the game ends.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l45-activity-1-btn\">Open Fruit Catcher</button></div></div>"
+    },
+    {
+      "id": "looks",
+      "label": "Costumes, Backdrops and Messages",
+      "content": "<h2 class=\"lesson-h2\">Costumes, Backdrops and Messages</h2><p class=\"lesson-lead\">Costumes bring a sprite to life. A new backdrop and a broadcast make a new level.</p><div class=\"igame-two-col\"><ul class=\"lesson-facts\"><li><strong>next costume</strong> inside a loop, with <strong>wait (0.2) seconds</strong>, animates a sprite.</li><li><strong>switch backdrop to [Level 2]</strong> changes the stage picture.</li><li><strong>broadcast [level up]</strong> tells every sprite at once, and every <strong>when I receive [level up]</strong> script starts.</li></ul><div class=\"scratchblocks-card\"><pre class=\"blocks\">if &lt;(score) = (5)&gt; then\nbroadcast [level up v]\nend\n\nwhen I receive [level up v]\nswitch backdrop to [Level 2 v]</pre></div></div>"
+    },
+    {
+      "id": "check-looks",
+      "label": "Check: Costumes and Messages",
+      "type": "multiple-choice",
+      "containerId": "y6l45-check-looks",
+      "content": "<h2 class=\"lesson-h2\">Check: Costumes and Messages</h2><p class=\"lesson-lead\">Choose the best answer.</p><div id=\"y6l45-check-looks\"></div>",
+      "items": [
+        {
+          "prompt": "A walk animation changes costume far too fast to see. Which block fixes it?",
+          "options": [
+            "wait (0.2) seconds",
+            "next costume",
+            "move (10) steps"
+          ],
+          "correct": 0,
+          "explain": "A short wait inside the loop slows the costume changes down."
+        },
+        {
+          "prompt": "Which block starts a script when a message arrives?",
+          "options": [
+            "broadcast [level up]",
+            "switch backdrop to [Level 2]",
+            "when I receive [level up]"
+          ],
+          "correct": 2,
+          "explain": "broadcast sends the message. when I receive waits for it."
+        }
+      ]
+    },
+    {
+      "id": "activity-2",
+      "label": "Activity 2: Level Up",
+      "type": "app-link",
+      "buttonId": "y6l45-activity-2-btn",
+      "appId": "scratchchallenges",
+      "appQuery": "challenge=level-up&lesson=y6-recap-l45",
+      "content": "<h2 class=\"lesson-h2\">Activity 2: Level Up</h2><p class=\"lesson-lead\">Work on your own. The Hero already moves with the arrow keys.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>The green flag sets the backdrop to Level 1, score to 0 and level to 1.</li><li>Touching the Coin adds 1 to score and sends the Coin somewhere new.</li><li>At 5 coins, broadcast level up.</li><li>Receiving level up switches to Level 2, sets level to 2 and the Hero says Level 2!</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l45-activity-2-btn\">Open Level Up</button></div></div>"
+    },
+    {
+      "id": "game-needs",
+      "label": "What Every Game Needs",
+      "content": "<h2 class=\"lesson-h2\">What Every Game Needs</h2><p class=\"lesson-lead\">Next lesson you plan and build your own game. The My Game checker looks for these six parts.</p><div class=\"igame-debug-grid\"><div><strong>Sprites</strong><span>At least two: one to control, one to catch, dodge or collect.</span></div><div><strong>Controls</strong><span>when [key] key pressed, or set x to (mouse x).</span></div><div><strong>A loop</strong><span>forever keeps things moving and checking.</span></div><div><strong>A variable</strong><span>Set at the green flag, changed during the game.</span></div><div><strong>A decision</strong><span>An if block with touching or a comparison.</span></div><div><strong>An ending</strong><span>stop [all], say [Game over], or a new backdrop.</span></div></div>"
+    },
+    {
+      "id": "practice-1",
+      "label": "Checked Practice (1 of 2)",
+      "type": "short-answer-validation",
+      "validatorId": "y6l45-practice-1",
+      "validatorKey": "y6l45_practice_1",
+      "content": "<h2 class=\"lesson-h2\">Checked Practice (1 of 2)</h2><p class=\"lesson-lead\">The Apple's loop. score starts at 0 and lives starts at 3.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">forever\nchange y by (-5)\nif &lt;touching [Bowl v] ?&gt; then\nchange [score v] by (1)\nend\nif &lt;(y position) &lt; (-170)&gt; then\nchange [lives v] by (-1)\nend\nend</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l45-practice-1-a\">The player catches the Apple 4 times and misses it once. What is score?</label><input id=\"y6l45-practice-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-1-a\" aria-label=\"Checked Practice (1 of 2), part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l45-practice-1-b\">What is lives?</label><input id=\"y6l45-practice-1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-1-b\" aria-label=\"Checked Practice (1 of 2), part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l45-practice-1-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l45-practice-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+    },
+    {
+      "id": "practice-2",
+      "label": "Checked Practice (2 of 2)",
+      "type": "multiple-choice",
+      "containerId": "y6l45-practice-2",
+      "content": "<h2 class=\"lesson-h2\">Checked Practice (2 of 2)</h2><p class=\"lesson-lead\">Use the six parts every game needs.</p><div id=\"y6l45-practice-2\"></div>",
+      "items": [
+        {
+          "prompt": "Fruit Catcher should end when lives reaches 0. Which block ends the whole game?",
+          "options": [
+            "wait (1) seconds",
+            "stop [all]",
+            "hide"
+          ],
+          "correct": 1,
+          "explain": "stop [all] stops every script, so the game is over."
+        },
+        {
+          "prompt": "Which of the six parts is when [right arrow] key pressed?",
+          "options": [
+            "An ending",
+            "A variable",
+            "A control"
+          ],
+          "correct": 2,
+          "explain": "It lets the player move a sprite, so it is a control."
+        }
+      ]
+    },
+    {
+      "id": "plenary",
+      "label": "Plenary: Scratch Skills Recap",
+      "type": "embedded-app",
+      "appId": "drill-y6-recap-l45",
+      "embedContainerId": "y6l45-plenary",
+      "content": "<h2 class=\"lesson-h2\">Plenary: Scratch Skills Recap</h2><p class=\"lesson-lead\">Answer a batch of five. Three right in a row masters a card, and your progress is saved for your teacher.</p><div id=\"y6l45-plenary\"></div>"
+    }
+  ],
+  "validators": {
+    "y6l45_do_now_2": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(score\\s*[:=]?\\s*)?3\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Each hit adds 1 to score."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(speed\\s*[:=]?\\s*)?5\\.75\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Each hit adds 0.25 to speed, starting from 5."
+      }
+    ],
+    "y6l45_check_keys": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(x\\s*[:=]?\\s*)?[-−]\\s*60\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Each press adds -15, so x goes down by 15 each time."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(y\\s*[:=]?\\s*)?180\\s*$",
+          "flags": "i"
+        },
+        "feedback": "y runs from -180 at the bottom to the same number, positive, at the top."
+      }
+    ],
+    "y6l45_practice_1": [
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(score\\s*[:=]?\\s*)?4\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Only a catch makes touching [Bowl]? true."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*(lives\\s*[:=]?\\s*)?2\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Only a miss takes 1 away from lives."
+      }
+    ]
+  },
+  "pseudocodeValidators": {}
+}

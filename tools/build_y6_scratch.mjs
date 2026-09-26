@@ -1,4 +1,4 @@
-// Builds the six Year 6 Scratch lessons (LessonData/y6-*.json):
+// Builds the Year 6 Scratch lessons, 6.2.1 to 6.2.6 and the 6.2.4.5 recap (LessonData/y6-*.json):
 //   node tools/build_y6_scratch.mjs
 // Edit this file, not the JSON. Every activity is a Scratch Challenge
 // (assets/js/scratchcheck*.js) that checks the student's own project, and
@@ -336,6 +336,122 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
   L.save();
 }
 
+// ============================================================ 6.2.4.5
+// Everything 6.2.5 needs, in one lesson, for a class that met 6.2.1 to
+// 6.2.4 before they were rebuilt. Pong is the one game every class built,
+// so the Do Now starts there. Its two builds reuse the 6.2.3 and 6.2.4
+// challenges, reported under this lesson.
+{
+  const L = lesson('y6-recap-l45', 'y6l45', '6.2.4.5: Scratch Skills Recap');
+  L.choice('do-now', 'Do Now: Pong', 'Recap of the Pong game you built earlier in this unit.', [
+    { prompt: 'Which block made the Paddle follow the mouse?', options: ['change y by (10)', 'set x to (mouse x)', 'go to x: (0) y: (0)'], correct: 1,
+      explain: 'set x to (mouse x), inside forever, moved the Paddle to the mouse again and again.' },
+    { prompt: 'The Ball touched the Paddle. What happened to score?', options: ['It went back to 0', 'Nothing', 'It went up by 1'], correct: 2,
+      explain: 'change [score] by (1) ran inside the if touching [Paddle] block.' }
+  ]);
+  L.short('do-now-2', 'Do Now: Score and Speed', 'Recap of Pong. These blocks ran each time the Ball hit the Paddle. score starts at 0 and speed starts at 5.', [
+    'The Ball hits the Paddle 3 times. What is score?',
+    'What is speed after those 3 hits?'
+  ], [
+    { pattern: num(3, 'score'), feedback: 'Each hit adds 1 to score.' },
+    { pattern: String.raw`^\s*(speed\s*[:=]?\s*)?5\.75\s*$`, feedback: 'Each hit adds 0.25 to speed, starting from 5.' }
+  ], 'change [score v] by (1)\nchange [speed v] by (0.25)');
+  L.title('Scratch Skills Recap', '6.2.4.5', [
+    'Control a sprite with the keyboard, using x and y.',
+    'Keep score with variables and decide with if.',
+    'Change costumes, backdrops and levels with messages.',
+    'Build two games that check themselves, ready to plan your own.'
+  ]);
+  L.slide('keys', 'Keyboard Control and the Grid',
+    L.heading('Keyboard Control and the Grid', 'The player controls a sprite with <strong>events</strong>. The sprite moves on a grid of x and y.') +
+    '<div class="igame-two-col">' + L.facts([
+      '<strong>x</strong> runs from -240 (left) to 240 (right). <strong>y</strong> runs from -180 (bottom) to 180 (top).',
+      '<strong>when [key] key pressed</strong> runs its script each time that key is pressed.',
+      '<strong>change x by (15)</strong> moves right. A negative number moves left.',
+      'Anything that happens all game long goes inside a <strong>forever</strong> loop.'
+    ]) + L.blocks('when flag clicked\ngo to x: (0) y: (-140)\n\nwhen [left arrow v] key pressed\nchange x by (-15)') + '</div>');
+  L.short('check-keys', 'Check: Keys and the Grid', 'The Bowl starts at x: 0.', [
+    'The player presses the left arrow 4 times. What is x now?',
+    'What is y at the top edge of the stage?'
+  ], [
+    { pattern: num(-60, 'x'), feedback: 'Each press adds -15, so x goes down by 15 each time.' },
+    { pattern: num(180, 'y'), feedback: 'y runs from -180 at the bottom to the same number, positive, at the top.' }
+  ], 'when [left arrow v] key pressed\nchange x by (-15)');
+  L.slide('variables', 'Variables and Decisions',
+    L.heading('Variables and Decisions', 'A <strong>variable</strong> stores a value that changes while the game runs. An <strong>if</strong> block decides what happens next.') +
+    '<div class="igame-two-col">' + L.facts([
+      '<strong>set</strong> a variable when the green flag is clicked, so every game starts fresh.',
+      '<strong>change</strong> it during the game: +1 for a catch, -1 for a miss.',
+      'A comparison such as <strong>(lives) = (0)</strong> is true or false.',
+      '<strong>if then else</strong> runs the top part when true and the else part when false.'
+    ]) + L.blocks('when flag clicked\nset [lives v] to (3)\n\nchange [lives v] by (-1)\nif <(lives) = (0)> then\nsay [Game over]\nstop [all v]\nend') + '</div>');
+  L.choice('check-variables', 'Check: Variables and Decisions', 'Choose the best answer.', [
+    { prompt: 'lives is 1. The player misses once more and change [lives] by (-1) runs. Which condition is now true?', options: ['(lives) = (1)', '(lives) = (0)', '(lives) > (0)'], correct: 1,
+      explain: '1 take away 1 is 0, so (lives) = (0) is true and the game can end.' },
+    { prompt: 'Which block should run when the green flag is clicked, so every game starts with 3 lives?', options: ['change [lives] by (3)', 'change [lives] by (-1)', 'set [lives] to (3)'], correct: 2,
+      explain: 'set gives lives an exact value. change would add to whatever was left from the last game.' }
+  ]);
+  L.slide('catcher-toolkit', 'Fruit Catcher Toolkit',
+    L.heading('Fruit Catcher Toolkit', 'Blocks for the next challenge. Work out where each one goes.') +
+    '<div class="igame-two-col">' + L.blocks('go to x: (pick random (-200) to (200)) y: (170)\n\nif <(y position) < (-170)> then\nchange [lives v] by (-1)\nend') +
+    L.facts([
+      '<strong>pick random</strong> gives a different number each time, so the Apple drops from a new place.',
+      '<strong>y position &lt; -170</strong> is true when the Apple reaches the bottom: a miss.',
+      'A catch is <strong>touching [Bowl]?</strong>.',
+      'When lives reaches 0 the game is over.'
+    ]) + '</div>');
+  L.challenge('activity-1', 'Activity 1: Fruit Catcher', 'Work on your own. The starter project has the Bowl and the Apple.', 'fruit-catcher', 'Fruit Catcher', [
+    'The arrow keys move the Bowl. The green flag sets score to 0 and lives to 3.',
+    'The Apple starts at the top at a random x, then falls.',
+    'A catch adds 1 to score. A miss takes 1 from lives. Either way the Apple goes back to the top.',
+    'When lives reaches 0 the game ends.'
+  ], true);
+  L.slide('looks', 'Costumes, Backdrops and Messages',
+    L.heading('Costumes, Backdrops and Messages', 'Costumes bring a sprite to life. A new backdrop and a broadcast make a new level.') +
+    '<div class="igame-two-col">' + L.facts([
+      '<strong>next costume</strong> inside a loop, with <strong>wait (0.2) seconds</strong>, animates a sprite.',
+      '<strong>switch backdrop to [Level 2]</strong> changes the stage picture.',
+      '<strong>broadcast [level up]</strong> tells every sprite at once, and every <strong>when I receive [level up]</strong> script starts.'
+    ]) + L.blocks('if <(score) = (5)> then\nbroadcast [level up v]\nend\n\nwhen I receive [level up v]\nswitch backdrop to [Level 2 v]') + '</div>');
+  L.choice('check-looks', 'Check: Costumes and Messages', 'Choose the best answer.', [
+    { prompt: 'A walk animation changes costume far too fast to see. Which block fixes it?', options: ['wait (0.2) seconds', 'next costume', 'move (10) steps'], correct: 0,
+      explain: 'A short wait inside the loop slows the costume changes down.' },
+    { prompt: 'Which block starts a script when a message arrives?', options: ['broadcast [level up]', 'switch backdrop to [Level 2]', 'when I receive [level up]'], correct: 2,
+      explain: 'broadcast sends the message. when I receive waits for it.' }
+  ]);
+  L.challenge('activity-2', 'Activity 2: Level Up', 'Work on your own. The Hero already moves with the arrow keys.', 'level-up', 'Level Up', [
+    'The green flag sets the backdrop to Level 1, score to 0 and level to 1.',
+    'Touching the Coin adds 1 to score and sends the Coin somewhere new.',
+    'At 5 coins, broadcast level up.',
+    'Receiving level up switches to Level 2, sets level to 2 and the Hero says Level 2!'
+  ], true);
+  L.slide('game-needs', 'What Every Game Needs',
+    L.heading('What Every Game Needs', 'Next lesson you plan and build your own game. The My Game checker looks for these six parts.') +
+    '<div class="igame-debug-grid">' +
+    '<div><strong>Sprites</strong><span>At least two: one to control, one to catch, dodge or collect.</span></div>' +
+    '<div><strong>Controls</strong><span>when [key] key pressed, or set x to (mouse x).</span></div>' +
+    '<div><strong>A loop</strong><span>forever keeps things moving and checking.</span></div>' +
+    '<div><strong>A variable</strong><span>Set at the green flag, changed during the game.</span></div>' +
+    '<div><strong>A decision</strong><span>An if block with touching or a comparison.</span></div>' +
+    '<div><strong>An ending</strong><span>stop [all], say [Game over], or a new backdrop.</span></div>' +
+    '</div>');
+  L.short('practice-1', 'Checked Practice (1 of 2)', 'The Apple\'s loop. score starts at 0 and lives starts at 3.', [
+    'The player catches the Apple 4 times and misses it once. What is score?',
+    'What is lives?'
+  ], [
+    { pattern: num(4, 'score'), feedback: 'Only a catch makes touching [Bowl]? true.' },
+    { pattern: num(2, 'lives'), feedback: 'Only a miss takes 1 away from lives.' }
+  ], 'forever\nchange y by (-5)\nif <touching [Bowl v] ?> then\nchange [score v] by (1)\nend\nif <(y position) < (-170)> then\nchange [lives v] by (-1)\nend\nend');
+  L.choice('practice-2', 'Checked Practice (2 of 2)', 'Use the six parts every game needs.', [
+    { prompt: 'Fruit Catcher should end when lives reaches 0. Which block ends the whole game?', options: ['wait (1) seconds', 'stop [all]', 'hide'], correct: 1,
+      explain: 'stop [all] stops every script, so the game is over.' },
+    { prompt: 'Which of the six parts is when [right arrow] key pressed?', options: ['An ending', 'A variable', 'A control'], correct: 2,
+      explain: 'It lets the player move a sprite, so it is a control.' }
+  ]);
+  L.plenary('y6-recap-l45', 'Scratch Skills Recap');
+  L.save();
+}
+
 // ============================================================ 6.2.5
 {
   const L = lesson('y6-idevelop-l5', 'y6l5', '6.2.5: Plan and Build Your Own Game');
@@ -343,7 +459,7 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
     ? `<textarea class="lesson-exam-answer" data-answer-id="${id}" aria-label="${label}" rows="${rows}" placeholder="${placeholder}"></textarea>`
     : `<input class="pseudocode-output-input lesson-exam-answer" data-answer-kind="short" data-answer-id="${id}" aria-label="${label}" autocomplete="off" placeholder="${placeholder}">`;
   const panel = (title, hint, body) => `<div class="iplan-panel"><h3>${title}</h3><p class="iplan-hint">${hint}</p>${body}</div>`;
-  L.choice('do-now', 'Do Now: Messages and Decisions', 'Question 1 recaps 6.2.4 and question 2 recaps 6.2.3.', [
+  L.choice('do-now', 'Do Now: Messages and Decisions', 'Recap of 6.2.4.5: Scratch Skills Recap.', [
     { prompt: 'Which block tells every sprite that the level has changed?', options: ['broadcast [level up]', 'switch costume to [level up]', 'say [level up]'], correct: 0,
       explain: 'A broadcast reaches every sprite and the stage.' },
     { prompt: 'lives is 1. The player misses once more and change [lives] by (-1) runs. Is (lives) = (0) now true?', options: ['false', 'true'], correct: 1,
@@ -355,7 +471,7 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
     'Check it has the parts every good game needs.'
   ]);
   L.slide('plan', 'A Plan Before Code',
-    L.heading('A Plan Before Code', 'Here is the plan for the Fruit Catcher game you built in 6.2.3. Yours will have the same parts.') +
+    L.heading('A Plan Before Code', 'Here is the plan for Fruit Catcher, the catching game you have built. Yours will have the same parts.') +
     '<div class="igame-two-col"><div class="lesson-flow-task"><h3>Fruit Catcher plan</h3>' + L.facts([
       '<strong>Sprites</strong>: Bowl (the player moves it), Apple (falls from a random place).',
       '<strong>Controls</strong>: left and right arrow keys.',
@@ -407,7 +523,7 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
     'Then an if block that decides something, and a way to win or lose.'
   ]);
   L.slide('level-two', 'Make It Better: A Second Level',
-    L.heading('Make It Better: A Second Level', 'When every check passes, add a level using what you learned in 6.2.4.') +
+    L.heading('Make It Better: A Second Level', 'When every check passes, add a level with a broadcast and a backdrop, as in Level Up.') +
     '<div class="igame-two-col">' + L.blocks('if <(score) = (10)> then\nbroadcast [level up v]\nend\n\nwhen I receive [level up v]\nswitch backdrop to [Level 2 v]') + L.facts([
       'Add a second backdrop for level 2.',
       'Broadcast a message when the player reaches your target.',

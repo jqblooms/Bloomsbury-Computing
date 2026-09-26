@@ -24,10 +24,19 @@
     ['y6-igame-l2', '6.2.2', 'Loops and Pong'],
     ['y6-iplan-l3', '6.2.3', 'Variables and Decisions'],
     ['y6-icode-l4', '6.2.4', 'Costumes, Backdrops and Messages'],
+    ['y6-recap-l45', '6.2.4.5', 'Scratch Skills Recap'],
     ['y6-idevelop-l5', '6.2.5', 'Plan and Build Your Own Game'],
     ['y6-idebug-l6', '6.2.6', 'Test and Debug']
   ];
   function lessonInfo(id) { return LESSONS.filter(function (l) { return l[0] === id; })[0] || [id, '', '']; }
+  // A lesson can reuse another lesson's challenge (&challenge=<id>&lesson=<lessonId>);
+  // that challenge then reports under the lesson that opened it.
+  var lessonFor = {};
+  (function () {
+    var id = params.get('challenge'), lesson = params.get('lesson');
+    if (id && lesson && /^[a-z0-9-]+$/.test(lesson)) lessonFor[id] = lesson;
+  })();
+  function lessonOf(c) { return lessonFor[c.id] || c.lesson; }
 
   var DONE_PREFIX = 'scratchcheck:done:';
   var PROJECT_PREFIX = 'scratchcheck:project:';
@@ -250,7 +259,7 @@
   function render() {
     var c = state.challenge;
     if (!c) return;
-    var info = lessonInfo(c.lesson);
+    var info = lessonInfo(lessonOf(c));
     els.kicker.textContent = 'Scratch Challenge' + (info[1] ? ' · ' + info[1] : '');
     els.title.textContent = c.title;
     var n = counts();
@@ -470,7 +479,7 @@
     if (summary === state.lastReport) return;
     state.lastReport = summary;
     try {
-      window.parent.postMessage({ type: 'BC_SCRATCH_CHECK', challengeId: c.id, lessonId: c.lesson, title: c.title,
+      window.parent.postMessage({ type: 'BC_SCRATCH_CHECK', challengeId: c.id, lessonId: lessonOf(c), title: c.title,
         passed: passed.length, total: req.length, complete: complete, summary: summary }, '*');
     } catch (e) {}
   }

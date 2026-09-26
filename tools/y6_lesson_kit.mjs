@@ -56,10 +56,12 @@ export function lesson(topicId, prefix, label) {
   }
 
   // An independent activity: one Scratch Challenge, opened in the
-  // Scratch Challenges app, which checks the project itself.
-  function challenge(id, label, lead, challengeId, name, build) {
+  // Scratch Challenges app, which checks the project itself. `reused`:
+  // the challenge belongs to another lesson, so its results are sent
+  // under this one (&lesson=).
+  function challenge(id, label, lead, challengeId, name, build, reused) {
     const buttonId = `${prefix}-${id}-btn`;
-    add({ id, label, type: 'app-link', buttonId, appId: 'scratchchallenges', appQuery: `challenge=${challengeId}`,
+    add({ id, label, type: 'app-link', buttonId, appId: 'scratchchallenges', appQuery: `challenge=${challengeId}` + (reused ? `&lesson=${topicId}` : ''),
       content: heading(label, lead) +
         `<div class="igame-two-col"><div class="lesson-flow-task"><h3>Build it</h3>${facts(build)}</div>` +
         `<div class="lesson-app-link"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p>` +
