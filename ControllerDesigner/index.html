@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Controller Designer</title>
 <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927">
+<script>window.BC_CLOUD_SAVE = { app: 'controllerdesigner', keys: ['controllerDesigner_sync_v1'] };</script>
+<script src="../shared/cloud-save.js?v=20260927"></script>
 <style>
   /* The site's dark theme (shared/bc-theme.css). The board is dark paper
      with light inks, like the notepad. */
@@ -166,7 +168,7 @@
 </div>
 <div class="canvas-wrap">
   <canvas id="board" width="900" height="600"></canvas>
-  <div class="status-note" id="statusNote">Drawings save automatically in this browser.</div>
+  <div class="status-note" id="statusNote">Drawings save automatically.</div>
 </div>
 
 <script>
@@ -198,18 +200,66 @@
     ctx.restore();
   }
 
+  // The drawing itself is a lossless PNG in this browser. The account gets a
+  // copy small enough for one save (shared/cloud-save.js mirrors SYNC_KEY):
+  // the PNG when it fits, otherwise WebP at lower quality and size until it
+  // does. SAVED_AT_KEY says which drawing the PNG
+  // is, so a newer one from another computer is loaded instead.
+  var SYNC_KEY = 'controllerDesigner_sync_v1';
+  var SAVED_AT_KEY = 'controllerDesigner_savedAt_v1';
+  var SYNC_MAX_CHARS = 42000;
+
+  function readSync() {
+    try { var s = JSON.parse(localStorage.getItem(SYNC_KEY) || 'null'); return s && s.img ? s : null; } catch (_e) { return null; }
+  }
+
+  // [quality, scale], from best to smallest. The last always fits. A drawing
+  // mostly grows, so each save starts one step before the last fit. Browsers
+  // that cannot write WebP (Safari) use JPEG.
+  var COMPACT_TRIES = [[1, 1], [0.9, 1], [0.8, 1], [0.7, 1], [0.8, 0.75], [0.7, 0.6], [0.6, 0.5], [0.5, 0.4], [0.4, 0.3], [0.3, 0.2]];
+  var COMPACT_TYPE = document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0 ? 'image/webp' : 'image/jpeg';
+  var lastFit = 0;
+  function compactCopy(png) {
+    if (png.length <= SYNC_MAX_CHARS) { lastFit = 0; return png; }
+    var tries = COMPACT_TRIES;
+    var small = document.createElement('canvas'), sctx = small.getContext('2d');
+    for (var i = Math.max(0, lastFit - 1); i < tries.length; i++) {
+      var q = tries[i][0], scale = tries[i][1], src = canvas;
+      if (scale < 1) {
+        small.width = Math.round(canvas.width * scale);
+        small.height = Math.round(canvas.height * scale);
+        sctx.drawImage(canvas, 0, 0, small.width, small.height);
+        src = small;
+      }
+      var url = src.toDataURL(COMPACT_TYPE, q);
+      if (url.length <= SYNC_MAX_CHARS) { lastFit = i; return url; }
+    }
+    return null;
+  }
+
   function loadAutosave() {
-    var saved;
-    try { saved = localStorage.getItem(AUTOSAVE_KEY); } catch (_e) { saved = null; }
-    if (!saved) { fillBoard(); return; }
+    var saved, savedAt = 0, sync = readSync();
+    try { saved = localStorage.getItem(AUTOSAVE_KEY); savedAt = Number(localStorage.getItem(SAVED_AT_KEY)) || 0; } catch (_e) { saved = null; }
+    var fromAccount = sync && (!saved || sync.at > savedAt);
+    var source = fromAccount ? sync.img : saved;
+    if (!source) { fillBoard(); return; }
     var img = new Image();
     img.onload = function () {
       fillBoard();
-      ctx.drawImage(img, 0, 0);
-      migrateToDark();
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      if (fromAccount) {
+        try {
+          localStorage.setItem(AUTOSAVE_KEY, canvas.toDataURL('image/png'));
+          localStorage.setItem(SAVED_AT_KEY, String(sync.at));
+        } catch (_e) {}
+        try { localStorage.setItem(DARK_KEY, '1'); } catch (_e) {}
+      } else {
+        migrateToDark();
+        if (!sync && saved) autosave(); // a drawing from before account saving
+      }
     };
     img.onerror = function () { fillBoard(); };
-    img.src = saved;
+    img.src = source;
   }
 
   // Drawings saved before the board went dark are on white paper. Once, turn
@@ -236,7 +286,15 @@
   }
 
   function autosave() {
-    try { localStorage.setItem(AUTOSAVE_KEY, canvas.toDataURL('image/png')); } catch (_e) { /* storage full or unavailable, not critical */ }
+    var at = Date.now(), png = canvas.toDataURL('image/png');
+    try {
+      localStorage.setItem(AUTOSAVE_KEY, png);
+      localStorage.setItem(SAVED_AT_KEY, String(at));
+    } catch (_e) { /* storage full or unavailable, not critical */ }
+    var copy = compactCopy(png);
+    try {
+      if (copy) localStorage.setItem(SYNC_KEY, JSON.stringify({ at: at, img: copy }));
+    } catch (_e) {}
   }
 
   function pushUndoSnapshot() {
@@ -270,7 +328,7 @@
     canvas.style.cursor = tool === 'text' ? 'text' : 'crosshair';
     document.getElementById('statusNote').textContent = tool === 'text'
       ? 'Click the canvas, type a label, then press Enter or Add text.'
-      : 'Drawings save automatically in this browser.';
+      : 'Drawings save automatically.';
   }
   document.getElementById('toolPen').addEventListener('click', function () { setTool('pen'); });
   document.getElementById('toolEraser').addEventListener('click', function () { setTool('eraser'); });
