@@ -110,14 +110,14 @@ DrillData.register("y11-p2-sql-dev", {
     },
     {
       id: "sql-write1", category: "y11sql",
-      prompt: "The table PETS has the fields Name, Species and Age. Which statement lists the names of pets aged under 4?",
+      prompt: "The table PETS has the fields ID, Name, Type and Age. Which SQL statement lists the names of pets aged under 4?",
       answers: ["SELECT Name FROM PETS WHERE Age < 4;"],
       distractors: ["SELECT Age FROM PETS WHERE Name < 4;", "SELECT Name FROM PETS ORDER BY Age < 4;", "SELECT * WHERE Age < 4 FROM PETS;", "FROM PETS SELECT Name WHERE Age < 4;", "SELECT Name FROM PETS WHERE Age > 4;"],
       note: "The order is SELECT fields, FROM table, WHERE condition, ORDER BY field. Under 4 uses <."
     },
     {
       id: "sql-write2", category: "y11sql",
-      prompt: "Which statement lists the name and type of all pets, in order of name?",
+      prompt: "The table PETS has the fields ID, Name, Type and Age. Which SQL statement lists the name and type of all pets, in order of name?",
       answers: ["SELECT Name, Type FROM PETS ORDER BY Name;"],
       distractors: ["SELECT Name, Type FROM PETS WHERE Name;", "SELECT Name Type FROM PETS ORDER Name;", "ORDER BY Name SELECT Name, Type FROM PETS;", "SELECT Name, Type ORDER BY Name FROM PETS;", "SELECT Name, Type FROM PETS SORT Name;"],
       note: "Fields are separated by commas, and every SQL statement ends with a semicolon."
@@ -153,7 +153,7 @@ DrillData.register("y11-p2-sql-dev", {
     },
     {
       id: "db-pkchoice", category: "y11sql",
-      prompt: "Which field in PETS is the best primary key?",
+      prompt: "The table PETS has the fields ID, Name, Type and Age. Which field is the best primary key?",
       answers: ["ID"],
       distractors: ["Name", "Type", "Age", "Cat", "Milo"],
       note: "Names, types and ages can be repeated (two cats, two dogs). ID is different for every record."
@@ -202,9 +202,10 @@ DrillData.register("y11-p2-sql-dev", {
     },
     {
       id: "dev-maintain", category: "y11dev",
-      prompt: "Which of these does NOT help to make a program easier to maintain?",
-      answers: ["Removing blank lines to make the code shorter"],
-      distractors: ["Using meaningful variable names", "Adding comments", "Using procedures and functions", "Using consistent indentation", "Splitting the program into sections"],
+      prompt: "A programmer removes every blank line from a program to make the code shorter. Does this make the program easier or harder to maintain?",
+      answers: ["Harder"],
+      keywords: [/^\s*(it\s+(makes\s+it\s+)?)?(harder|more\s+difficult|less\s+easy)\b/i],
+      distractors: ["Easier", "No difference", "Only easier for the computer"],
       note: "Blank lines, indentation, comments, sensible names and subroutines make code readable. Cramming it together makes it harder to understand."
     },
     {

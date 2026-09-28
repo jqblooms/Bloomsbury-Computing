@@ -62,7 +62,7 @@ DrillData.register("y11-mock1-c", {
       }),
       {
         id: "m1c-v-message", category: "m1c-valid",
-        prompt: "Where should the message 'The check has been completed' be output?",
+        prompt: "An algorithm uses FOR Index <- 1 TO 20 to input and validate 20 numbers, then must output the message 'The check has been completed' once. Where should that OUTPUT go?",
         answers: ["After the loop has finished (after NEXT)"],
         keywords: [{ required: [["after", "end", "finish", "finished"]], excluded: ["inside", "before", "each", "every"] }],
         distractors: ["Inside the loop, after each number", "Before the loop starts", "Inside the validation loop", "After every valid number", "It does not need a message"],
@@ -249,7 +249,7 @@ DrillData.register("y11-mock1-c", {
       },
       {
         id: "m1c-p-order", category: "m1c-program",
-        prompt: "What is a sensible order for the parts of the rainfall program?",
+        prompt: "Put these five parts of the rainfall program in a sensible order: calculate, declare, initialise, input, output.",
         answers: ["Declare, initialise, input, calculate, output"],
         keywords: [/declare[\s\S]*initiali[sz]e[\s\S]*input[\s\S]*calculat[\s\S]*output/i],
         distractors: ["Output, calculate, input, declare, initialise", "Input, output, declare, calculate, initialise", "Calculate, declare, input, output, initialise", "Declare, output, calculate, input, initialise", "Initialise, output, declare, input, calculate"],

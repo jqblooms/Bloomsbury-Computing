@@ -315,7 +315,7 @@ DrillData.register("y11-p2-basics", {
     },
     {
       id: "file-read", category: "y11strings",
-      prompt: "Which statement reads one line of text from an open file into the variable Line?",
+      prompt: "The file Names.txt is open for reading. Which statement reads one line of text from it into the variable Line?",
       answers: ["READFILE \"Names.txt\", Line"],
       distractors: ["OPENFILE \"Names.txt\", Line", "INPUT Line", "WRITEFILE \"Names.txt\", Line", "CLOSEFILE \"Names.txt\", Line", "GETLINE Line"],
       note: "READFILE takes the file name and the variable that will hold the line that is read."

@@ -215,7 +215,7 @@ DrillData.register("y11-mock1-revision", {
       { id: "c-iter-pair", category: "rev-constructs",
         prompt: "Which pair of pseudocode statements are both used for iteration?",
         answers: ["WHILE ... ENDWHILE and REPEAT ... UNTIL"],
-        keywords: [{ required: [["while"], ["repeat"]], excluded: ["if", "case"] }],
+        keywords: [{ required: [["for", "while", "repeat", "next", "endwhile", "until"]], optional: ["for", "while", "repeat"], need: 2, excluded: ["if", "case"] }],
         distractors: ["IF and CASE", "REPEAT ... UNTIL and IF", "CASE and WHILE ... ENDWHILE"],
         example: "A similar question: is FOR ... NEXT iteration? Yes: it runs its lines again and again.\nIs IF iteration? No: it checks once and chooses a path (selection).\nFor a pair, test BOTH statements: an option is only right if both of them repeat.",
         working: ["Cross out any option containing a statement that chooses rather than repeats.", "Iteration means repeating."],

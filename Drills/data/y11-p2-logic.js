@@ -192,8 +192,9 @@ DrillData.register("y11-p2-logic", {
     },
     {
       id: "logic-discount", category: "y11logic",
-      prompt: "A meal discount (X = 1) is given if the person is a student (A = 1) or 65 or older (B = 1), but only if the order is $20 or more (C = 1). Which expression is right?",
+      prompt: "A meal discount (X = 1) is given if the person is a student (A = 1) or 65 or older (B = 1), but only if the order is $20 or more (C = 1). Write the logic expression for X.",
       answers: ["X = (A OR B) AND C"],
+      keywords: [/^\s*(x\s*=\s*)?(\(\s*(a\s+or\s+b|b\s+or\s+a)\s*\)\s+and\s+c|c\s+and\s+\(\s*(a\s+or\s+b|b\s+or\s+a)\s*\))\s*$/i],
       distractors: ["X = A OR B OR C", "X = A AND B AND C", "X = (A AND B) OR C", "X = A OR (B AND C)", "X = NOT (A OR B) AND C"],
       note: "Either of the two people conditions is enough (OR), and the order value must also be met (AND). Brackets make sure the OR is worked out before the AND."
     }
