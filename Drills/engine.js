@@ -519,25 +519,30 @@
     current.usedHelp = true;
     // A card whose typed model would be the answer itself shows how to work
     // it out instead: a similar question worked through, then nudges.
-    if (showWorkedHint(card, box, reveal)) return;
+    if (showWorkedHint(card, box)) return;
     current.hintReveal = reveal;
     Support.renderTypedHint(box, textHintModel(card), input.value, reveal);
   }
   // card.example: a similar question, worked through step by step (never
   // this card's own question). card.working: shorter nudges, most help
-  // first. Full support shows the example; as it fades, the nudges.
-  function showWorkedHint(card, box, reveal) {
+  // first. Help never fades below the full worked example (James,
+  // 2026-09-28: a lone nudge left students with no way to work it out), so
+  // "I need help" always shows the example, then the first nudge for this
+  // question; a card with only nudges shows all of them.
+  function showWorkedHint(card, box) {
     if (!(card.example || card.working) || !Support.renderWorking || !box) return false;
-    var steps = card.example ? [card.example].concat(card.working || []) : card.working;
-    var first = reveal > 0.9;
-    Support.renderWorking(box, steps, reveal, card.example && first ? "A similar question, worked through" : null);
+    var nudges = card.working || [];
+    var text = card.example
+      ? card.example + (nudges.length ? "\n\nFor this question: " + nudges[0] : "")
+      : nudges.join("\n");
+    Support.renderWorking(box, [text], 1, card.example ? "A similar question, worked through" : "How to work it out");
     return true;
   }
   function narrowOptions(explicit) {
     var set = current.set;
     var reveal = supportReveal(supportFader(current.cardId), explicit);
     var card = resolveCard(cardsById[current.cardId], current.instance);
-    if (reveal > 0 && showWorkedHint(card, els.stage.querySelector("#support-hint"), reveal)) { current.usedHelp = true; return; }
+    if (reveal > 0 && showWorkedHint(card, els.stage.querySelector("#support-hint"))) { current.usedHelp = true; return; }
     var distractors = [];
     set.options.forEach(function (opt, idx) {
       if (set.correct.indexOf(opt) === -1) distractors.push(idx);
@@ -697,8 +702,11 @@
         '<input type="' + (set.multi ? "checkbox" : "radio") + '" name="opt" value="' + idx + '">' +
         "<span>" + escapeHtml(opt) + "</span></label>";
     }).join("");
+    // An answer with an assignment arrow can't be typed as-is: say how.
+    var needsArrow = /←|<-/.test(String(set.correct[0] || ""));
     var bodyHtml = textMode ?
       ('<input type="text" class="text-answer-input" id="text-answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer...">' +
+        (needsArrow ? '<p class="type-note">Type &lt;- for ←</p>' : "") +
         (learn ? '<div id="support-hint" hidden></div>' : "")) :
       ('<div class="options">' + optsHtml + "</div>" + (learn ? '<div id="support-hint" hidden></div>' : ""));
 

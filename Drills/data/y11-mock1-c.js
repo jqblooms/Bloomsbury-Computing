@@ -38,7 +38,7 @@ DrillData.register("y11-mock1-c", {
           var all = ["WHILE Number >= 0 DO", "WHILE Number <= 0 DO", "WHILE Number < 0 DO", "WHILE Number > 0 DO", "WHILE Number = 0 DO", "WHILE Number <> 0 DO",
             "WHILE Number < " + lo + " OR Number > " + hi + " DO", "WHILE Number < " + lo + " AND Number > " + hi + " DO"];
           return {
-            prompt: "Each number must be " + v.rule + ". Which line starts the loop that asks for the number again until it is valid?",
+            prompt: "A program reads a value into the variable Number. Each number must be " + v.rule + ". Which line starts the WHILE loop that asks for Number again until it is valid?",
             answers: [v.a],
             keywords: [new RegExp("^\\s*" + v.a.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/ /g, "\\s*").replace(/\\s\*DO$/, "(\\s+do)?") + "\\s*$", "i")],
             distractors: all.filter(function (x) { return x !== v.a; }),
@@ -89,7 +89,7 @@ DrillData.register("y11-mock1-c", {
           var other = v.t === "REAL" ? "INTEGER" : "REAL";
           var ans = "DECLARE " + v.name + " : ARRAY[1:" + v.n + "] OF " + v.t;
           return {
-            prompt: "Which line declares an array to store " + v.what + "?",
+            prompt: "Which line declares an array called " + v.name + " to store " + v.what + "?",
             answers: [ans],
             keywords: [new RegExp("^\\s*declare\\s+" + v.name + "\\s*:\\s*array\\s*\\[\\s*1\\s*:\\s*" + v.n + "\\s*\\]\\s*of\\s+" + v.t + "\\s*$", "i")],
             distractors: [
@@ -105,7 +105,7 @@ DrillData.register("y11-mock1-c", {
       }),
       {
         id: "m1c-a-init", category: "m1c-arrays",
-        prompt: "Which code sets every element of Rainfall[1:365] to zero?",
+        prompt: "A program stores a rainfall reading for each of 365 days in the array Rainfall[1:365], using the loop FOR Day <- 1 TO 365.\nWhich code uses the Day loop to set every element of Rainfall to zero?",
         answers: ["FOR Day <- 1 TO 365\n   Rainfall[Day] <- 0\nNEXT Day"],
         keywords: [/for\s+(\w+)\s*(<-|\u2190)\s*1\s+to\s+365[\s\S]*rainfall\s*\[\s*\1\s*\]\s*(<-|\u2190)\s*0/i],
         distractors: ["Rainfall <- 0", "FOR Day <- 1 TO 365\n   Rainfall <- 0\nNEXT Day", "Rainfall[365] <- 0", "FOR Day <- 1 TO 365\n   Day <- 0\nNEXT Day", "Rainfall[Day] <- 0"],
@@ -113,7 +113,7 @@ DrillData.register("y11-mock1-c", {
       },
       {
         id: "m1c-a-input", category: "m1c-arrays",
-        prompt: "Inside FOR Day <- 1 TO 365, which line stores the reading for that day in the array?",
+        prompt: "A program stores a rainfall reading for each of 365 days in the array Rainfall[1:365], using the loop FOR Day <- 1 TO 365.\nInside the loop, which line reads the reading for that day straight into the array?",
         answers: ["INPUT Rainfall[Day]"], keywords: [/^\s*input\s+rainfall\s*\[\s*day\s*\]\s*$/i],
         distractors: ["INPUT Rainfall", "OUTPUT Rainfall[Day]", "INPUT Day", "Rainfall[Day] <- Day", "INPUT Rainfall[365]"],
         note: "The loop variable picks a different element each pass."
@@ -150,21 +150,21 @@ DrillData.register("y11-mock1-c", {
       }),
       {
         id: "m1c-s-mean", category: "m1c-stats",
-        prompt: "Which expression gives the mean daily rainfall for a 365-day year?",
+        prompt: "A program stores a rainfall reading for each of 365 days in the array Rainfall[1:365], using the loop FOR Day <- 1 TO 365.\nAfter the loop, the variable Total holds the total rainfall. Which expression gives the mean daily rainfall?",
         answers: ["Total / 365"], keywords: [/^\s*total\s*\/\s*365\s*$/i],
         distractors: ["365 / Total", "Total DIV 365", "Total MOD 365", "Total * 365", "Total - 365"],
         note: "Mean = total of the values / how many values. DIV would throw away the decimal part."
       },
       {
         id: "m1c-s-total", category: "m1c-stats",
-        prompt: "Inside FOR Day <- 1 TO 365, which line adds that day's rainfall to the total?",
+        prompt: "A program stores a rainfall reading for each of 365 days in the array Rainfall[1:365], using the loop FOR Day <- 1 TO 365.\nThe variable Total holds the running total. Inside the loop, which line adds that day's rainfall to Total?",
         answers: ["Total <- Total + Rainfall[Day]"], keywords: [/^\s*total\s*(<-|\u2190)\s*total\s*\+\s*rainfall\s*\[\s*day\s*\]\s*$/i],
         distractors: ["Total <- Total + 1", "Total <- Rainfall[Day]", "Rainfall[Day] <- Total + Rainfall[Day]", "Total <- Total + Day", "Total <- Total + Rainfall"],
         note: "Totalling adds each element onto the running total."
       },
       {
         id: "m1c-s-dry", category: "m1c-stats",
-        prompt: "Which code counts the days with no rainfall?",
+        prompt: "A program stores a rainfall reading for each of 365 days in the array Rainfall[1:365], using the loop FOR Day <- 1 TO 365.\nThe variable DryDays counts the days with no rainfall. Inside the loop, which code adds 1 to DryDays on a day with no rainfall?",
         answers: ["IF Rainfall[Day] = 0\n  THEN\n    DryDays <- DryDays + 1\nENDIF"],
         keywords: [/rainfall\s*\[\s*day\s*\]\s*=\s*0[\s\S]*dry\w*\s*(<-|\u2190)\s*dry\w*\s*\+\s*1/i],
         distractors: ["IF Rainfall[Day] = 0\n  THEN\n    DryDays <- DryDays + Rainfall[Day]\nENDIF", "IF Rainfall[Day] <> 0\n  THEN\n    DryDays <- DryDays + 1\nENDIF", "DryDays <- DryDays + 1", "IF Rainfall = 0\n  THEN\n    DryDays <- 1\nENDIF", "IF Rainfall[Day] > 0\n  THEN\n    DryDays <- DryDays - 1\nENDIF"],
@@ -212,7 +212,7 @@ DrillData.register("y11-mock1-c", {
       },
       {
         id: "m1c-r-update", category: "m1c-runs",
-        prompt: "When should LongestRun be updated?",
+        prompt: "In the rainfall program, CurrentRun counts the dry days in a row so far, and LongestRun stores the longest run found so far. When should LongestRun be updated?",
         answers: ["When CurrentRun is greater than LongestRun"],
         keywords: [{ required: [["greater", "bigger", "more", "larger", "higher", "exceed", "longer"]] }],
         distractors: ["On every day", "On every rainy day", "When CurrentRun is less than LongestRun", "When CurrentRun equals 0", "Only on day 1"],
@@ -220,7 +220,7 @@ DrillData.register("y11-mock1-c", {
       },
       {
         id: "m1c-r-drought", category: "m1c-runs",
-        prompt: "Which line starts the check for a drought (15 or more consecutive dry days)?",
+        prompt: "In the rainfall program, LongestRun stores the most consecutive dry days. Which line starts the check for a drought (15 or more consecutive dry days)?",
         answers: ["IF LongestRun >= 15"], keywords: [/^\s*if\s+longestrun\s*>=\s*15(\s+then)?\s*$/i],
         distractors: ["IF LongestRun > 15", "IF DryDays >= 15", "IF LongestRun = 15", "WHILE LongestRun >= 15 DO", "IF CurrentRun <= 15"],
         note: "'15 or more' means >= 15. DryDays counts all dry days, not consecutive ones."
@@ -235,7 +235,7 @@ DrillData.register("y11-mock1-c", {
       },
       {
         id: "m1c-p-const", category: "m1c-program",
-        prompt: "Which line declares a constant for the number of days in a year?",
+        prompt: "Which line declares a constant called DaysInYear for the number of days in a year?",
         answers: ["CONSTANT DaysInYear <- 365"], keywords: [/^\s*constant\s+\w+\s*(<-|\u2190|=)\s*365\s*$/i],
         distractors: ["DECLARE DaysInYear : 365", "DaysInYear <- 365", "CONSTANT 365 <- DaysInYear", "DECLARE DaysInYear : CONSTANT", "INPUT DaysInYear"],
         note: "A constant is a value that never changes while the program runs."

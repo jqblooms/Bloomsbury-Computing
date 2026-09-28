@@ -110,7 +110,7 @@ DrillData.register("y11-p2-sql-dev", {
     },
     {
       id: "sql-write1", category: "y11sql",
-      prompt: "Which statement lists the names of pets aged under 4 from the table PETS?",
+      prompt: "The table PETS has the fields Name, Species and Age. Which statement lists the names of pets aged under 4?",
       answers: ["SELECT Name FROM PETS WHERE Age < 4;"],
       distractors: ["SELECT Age FROM PETS WHERE Name < 4;", "SELECT Name FROM PETS ORDER BY Age < 4;", "SELECT * WHERE Age < 4 FROM PETS;", "FROM PETS SELECT Name WHERE Age < 4;", "SELECT Name FROM PETS WHERE Age > 4;"],
       note: "The order is SELECT fields, FROM table, WHERE condition, ORDER BY field. Under 4 uses <."
@@ -209,8 +209,9 @@ DrillData.register("y11-p2-sql-dev", {
     },
     {
       id: "dev-identifiers", category: "y11dev",
-      prompt: "Which identifier is the most meaningful for a variable holding the total price of an order?",
+      prompt: "A variable holds the total price of an order. Write a meaningful identifier for it (one word, no spaces).",
       answers: ["TotalPrice"],
+      keywords: [/^\s*[a-z_]*(total[a-z_]*price|price[a-z_]*total|order[a-z_]*total|total[a-z_]*order)[a-z_]*\s*$/i],
       distractors: ["X", "Temp", "Data1", "Thing", "TP2", "A"],
       note: "A meaningful name explains what the variable holds so anyone reading the code can follow it."
     },

@@ -379,7 +379,7 @@ DrillData.register("y11-p2-basics", {
     },
     {
       id: "arr-loop", category: "y11strings",
-      prompt: "Which loop visits every element of Values[1:100] in order?",
+      prompt: "Which loop, using the loop variable Index, visits every element of Values[1:100] in order?",
       answers: ["FOR Index <- 1 TO 100 ... NEXT Index"],
       distractors: ["FOR Index <- 100 ... NEXT Index", "WHILE Index <- 1 TO 100", "REPEAT Values UNTIL 100", "FOR Values <- 1 TO 100 ... NEXT Values", "IF Index = 1 TO 100 THEN"],
       note: "A count-controlled FOR loop with the index as the loop variable is the standard way to go through an array."

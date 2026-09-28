@@ -304,14 +304,14 @@ DrillData.register("y11-mock1-a", {
       },
       {
         id: "m1a-m-totalline", category: "m1a-methods",
-        prompt: "Which line adds Price onto a running total?",
+        prompt: "The variable Total holds a running total. Which line adds Price onto Total?",
         answers: ["Total <- Total + Price"], keywords: [/^\s*total\s*(<-|\u2190)\s*total\s*\+\s*price\s*$/i],
         distractors: ["Total <- Total + 1", "Price <- Total + Price", "Total <- Price", "Total = Total + Price", "Total <- Total * Price"],
         note: "Add the new value onto the old total and store it back in Total. Adding 1 would count instead."
       },
       {
         id: "m1a-m-countline", category: "m1a-methods",
-        prompt: "Which line counts one more pass mark?",
+        prompt: "The variable PassCount counts the pass marks. Which line counts one more pass mark?",
         answers: ["PassCount <- PassCount + 1"], keywords: [/^\s*passcount\s*(<-|\u2190)\s*passcount\s*\+\s*1\s*$/i],
         distractors: ["PassCount <- PassCount + Mark", "PassCount <- 1", "PassCount <- Mark", "PassCount = PassCount + 1", "Mark <- Mark + 1"],
         note: "Counting always adds exactly 1."
