@@ -516,15 +516,27 @@
     var reveal = supportReveal(supportFader(current.cardId), explicit);
     if (reveal <= 0) return;
     current.usedHelp = true;
-    // A card whose typed model would be the answer itself (a number to
-    // predict) shows how to work it out instead.
-    if (card.working && Support.renderWorking) { Support.renderWorking(box, card.working, reveal); return; }
+    // A card whose typed model would be the answer itself shows how to work
+    // it out instead: a similar question worked through, then nudges.
+    if (showWorkedHint(card, box, reveal)) return;
     current.hintReveal = reveal;
     Support.renderTypedHint(box, textHintModel(card), input.value, reveal);
+  }
+  // card.example: a similar question, worked through step by step (never
+  // this card's own question). card.working: shorter nudges, most help
+  // first. Full support shows the example; as it fades, the nudges.
+  function showWorkedHint(card, box, reveal) {
+    if (!(card.example || card.working) || !Support.renderWorking || !box) return false;
+    var steps = card.example ? [card.example].concat(card.working || []) : card.working;
+    var first = reveal > 0.9;
+    Support.renderWorking(box, steps, reveal, card.example && first ? "A similar question, worked through" : null);
+    return true;
   }
   function narrowOptions(explicit) {
     var set = current.set;
     var reveal = supportReveal(supportFader(current.cardId), explicit);
+    var card = resolveCard(cardsById[current.cardId], current.instance);
+    if (reveal > 0 && showWorkedHint(card, els.stage.querySelector("#support-hint"), reveal)) { current.usedHelp = true; return; }
     var distractors = [];
     set.options.forEach(function (opt, idx) {
       if (set.correct.indexOf(opt) === -1) distractors.push(idx);
@@ -654,7 +666,8 @@
       diagram: instance.diagram != null ? instance.diagram : card.diagram,
       legend: instance.legend != null ? instance.legend : card.legend,
       blocks: instance.blocks != null ? instance.blocks : card.blocks,
-      working: instance.working != null ? instance.working : card.working
+      working: instance.working != null ? instance.working : card.working,
+      example: instance.example != null ? instance.example : card.example
     };
   }
 
@@ -687,7 +700,7 @@
     var bodyHtml = textMode ?
       ('<input type="text" class="text-answer-input" id="text-answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer...">' +
         (learn ? '<div id="support-hint" hidden></div>' : "")) :
-      ('<div class="options">' + optsHtml + "</div>");
+      ('<div class="options">' + optsHtml + "</div>" + (learn ? '<div id="support-hint" hidden></div>' : ""));
 
     // A single-answer card marks itself the instant an option is clicked -
     // there is nothing to "submit" when there is only one thing to pick, so
