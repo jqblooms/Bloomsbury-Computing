@@ -8,18 +8,47 @@
   <style>
     body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; box-sizing: border-box; }
     main { max-width: 460px; text-align: center; }
-    .mark { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px; display: grid; place-items: center; background: var(--brand-soft-strong); color: var(--brand-dark); font: 800 26px var(--font-display); }
-    h1 { margin: 0 0 8px; font-size: 26px; }
-    p { margin: 0 0 20px; color: var(--muted); line-height: 1.55; }
+    .mark { display: block; width: 64px; height: 64px; margin: 0 auto 16px; object-fit: contain; }
+    h1 { margin: 0 0 24px; font-size: 26px; }
     .bc-btn { min-height: 44px; padding: 0 24px; font-size: 15px; }
+    body.is-framed { display: block; padding: 0; }
+    .site-frame { display: block; width: 100%; height: 100vh; height: 100dvh; border: 0; }
   </style>
 </head>
 <body>
-  <main>
-    <div class="mark" aria-hidden="true">B</div>
+  <main id="landing">
+    <img class="mark" src="assets/img/bish-crest.png?v=1" alt="">
     <h1>Bloomsbury Computing</h1>
-    <p>This is where the site's lessons, drills and apps are stored. Open the site to use them, sign in and save your progress.</p>
-    <a class="bc-btn" href="https://script.google.com/macros/s/AKfycbxleLXeE1NupxyQpqFtpyVq5DX5sXnbZnxWvmbQz5qUcuHXN5eQu5fRanXcqhNO6WzQ7Q/exec">Open Bloomsbury Computing</a>
+    <a class="bc-btn" id="open-site" href="https://script.google.com/macros/s/AKfycbxleLXeE1NupxyQpqFtpyVq5DX5sXnbZnxWvmbQz5qUcuHXN5eQu5fRanXcqhNO6WzQ7Q/exec">Open Bloomsbury Computing</a>
   </main>
+  <script>
+    // Phones and Chromebooks share the device's Google sign-in with the
+    // browser, and Google then refuses the direct link ("Sorry, unable to
+    // open the file at present"). There the site opens inside this page
+    // instead (Code.gs doGet ?frame=1). Google sees no account in a frame,
+    // exactly as in incognito, so the site works and shows its sign-in
+    // popup. Desktops follow the direct link and sign in as normal.
+    // pointer: coarse still catches a phone in "Desktop site" mode.
+    (function () {
+      var link = document.getElementById('open-site');
+      var ua = navigator.userAgent || '';
+      var phoneOrChromebook = /Android|CrOS|iPhone|iPad|iPod/i.test(ua) ||
+        !!(navigator.userAgentData && navigator.userAgentData.mobile) ||
+        (window.matchMedia && matchMedia('(pointer: coarse)').matches);
+      if (!phoneOrChromebook) return;
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        var frame = document.createElement('iframe');
+        frame.className = 'site-frame';
+        frame.title = 'Bloomsbury Computing';
+        frame.setAttribute('credentialless', '');
+        frame.allow = 'fullscreen; clipboard-read; clipboard-write';
+        frame.src = link.href + '?frame=1' + location.hash;
+        document.getElementById('landing').remove();
+        document.body.classList.add('is-framed');
+        document.body.appendChild(frame);
+      });
+    })();
+  </script>
 </body>
 </html>
