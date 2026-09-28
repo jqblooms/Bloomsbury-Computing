@@ -69,18 +69,6 @@
             "y9-numbers-l2",
             "y9-numbers-l3"
           ]
-        },
-        {
-          "code": "9CT.01",
-          "title": "Algorithms and Data",
-          "lessons": [
-            "y9-algorithms-l4",
-            "y9-algorithms-l5",
-            "y9-algorithms-l6",
-            "y9-algorithms-l7",
-            "y9-algorithms-l8",
-            "y9-algorithms-l9"
-          ]
         }
       ]
     },
