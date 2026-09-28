@@ -12,7 +12,7 @@ Everything the school computing site shows that does not need the student's acco
 - `shared/`: what every app shares:
   - `shared/bc-theme.css`: the site's look (tokens, fonts, control defaults). Every registered app page must load it.
   - `shared/bc-tailwind.js`: for Tailwind apps, load straight after the Tailwind CDN script; re-points Tailwind's colour names at the site palette.
-  - `shared/bc-support.js`: support mode (one site-wide switch, typed-answer hints, fading). See the shell's `docs/support-mode.md`.
+  - `shared/bc-support.js`: support mode (a switch per app, off when the page opens; typed-answer hints; fading). See the shell's `docs/support-mode.md`.
   - `shared/cloud-save.js`: mirrors chosen localStorage keys to the student's account through the shell.
   - `shared/frame-relay.js`: for a wrapper page around one editor iframe; passes `BC_*` messages both ways.
   - `shared/pseudocode-engine.js`: the Cambridge pseudocode interpreter (DECLARE required, types checked).

@@ -404,3 +404,4 @@ body.tt-embed .grid {
   grid-template-columns: minmax(200px, 1fr) minmax(240px, 1.15fr);
   gap: 1rem;
 }
+body.tt-embed .tt-embed-support { display: flex; justify-content: flex-end; margin: 0 0 8px; }

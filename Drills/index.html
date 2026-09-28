@@ -79,6 +79,17 @@
      relevant one emphasised (.is-focus) and the rest dimmed (.is-dim). */
   .fc-diagram, .fc-legend { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: 4px 0 14px; }
   .fc-diagram { flex-direction: column; }
+  /* "I need help": a switch that shows or hides this card's help. */
+  .help-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px 0 8px; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--ink-soft); font: 500 .9rem var(--font-body); cursor: pointer; }
+  .help-toggle:hover { background: var(--brand-soft); }
+  .help-toggle:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .help-toggle .help-track { position: relative; width: 32px; height: 18px; border-radius: 999px; background: var(--surface-4, #2e3440); transition: background .15s; }
+  .help-toggle .help-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); transition: transform .15s, background .15s; }
+  .help-toggle[aria-pressed="true"] { border-color: var(--brand); color: var(--brand-dark); }
+  .help-toggle[aria-pressed="true"] .help-track { background: var(--brand); }
+  .help-toggle[aria-pressed="true"] .help-track::after { transform: translateX(14px); background: var(--on-brand, #0b1a33); }
+  .help-toggle:disabled { opacity: .5; cursor: default; }
+  @media (prefers-reduced-motion: reduce) { .help-toggle .help-track, .help-toggle .help-track::after { transition: none; } }
   /* A Scratch script above the prompt (card.blocks, drawn by scratchblocks). */
   .card-blocks { margin: 2px 0 14px; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); overflow-x: auto; }
   .card-blocks pre.blocks { margin: 0; font: 600 14px/1.45 var(--font-mono); white-space: pre-wrap; }
@@ -264,7 +275,6 @@
     <div class="scopebar">
       <span id="scope-label"></span>
       <span class="scopebar-actions">
-        <span id="support-slot" hidden></span>
         <button type="button" class="btn ghost small" id="change-selection-btn">Change topic / cards</button>
       </span>
     </div>
@@ -274,7 +284,7 @@
       <button type="button" id="mode-quiz">Quiz mode</button>
     </div>
 
-    <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. Stuck? Press <strong>I need help</strong> and it shows you how, helping a little less each time you get a card right. Switch on <strong>Support</strong> to have that help on every card.</div>
+    <div class="notice learn" id="notice-learn">Learn mode &middot; nothing is recorded here. Stuck? Switch on <strong>I need help</strong> to see how to work it out; switch it off to hide it again. It starts off on every card.</div>
     <div class="notice quiz" id="notice-quiz" style="display:none">Quiz mode &middot; answer a card correctly <strong>three times in a row</strong> to master it for this run. A wrong answer sends its streak back to zero. Master every card in this run for completion.</div>
     <div class="notice quiz" id="notice-code" style="display:none">Write real pseudocode for each question &middot; answer <strong>three questions of the same type</strong> correctly in a row to master that type, not the same exact question three times. A wrong or broken answer sends that type's streak back to zero.</div>
     <div class="notice quiz" id="notice-exam" style="display:none">Real exam question &middot; every part is <strong>checked and marked</strong> the moment you submit, showing the correct answer for anything wrong. Your score for this run is shown at the end.</div>

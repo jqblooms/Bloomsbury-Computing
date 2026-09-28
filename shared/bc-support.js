@@ -5,12 +5,11 @@
 //
 // Three parts:
 //
-// 1. One switch for the whole site. BCSupport.isOn() / BCSupport.set(on) /
-//    BCSupport.onChange(fn). Inside the site the shell remembers it for
-//    the signed-in student and tells every app (BC_SUPPORT_REQUEST,
-//    BC_SUPPORT_SET -> BC_SUPPORT_STATE), so turning it on in one app turns
-//    it on everywhere. Opened on its own, an app keeps it in its own
-//    browser storage. BCSupport.mountToggle(el) draws the standard switch.
+// 1. One switch per app. BCSupport.isOn() / BCSupport.set(on) /
+//    BCSupport.onChange(fn). Support is always off when a page opens and
+//    comes on only when the student clicks the switch (James, 2026-09-28):
+//    nothing is saved, and turning it on in one app does not turn it on
+//    anywhere else. BCSupport.mountToggle(el) draws the standard switch.
 //
 // 2. A live hint for a typed answer: BCSupport.renderTypedHint(el, model,
 //    typed, reveal). The model answer sits greyed out under the box and
@@ -25,38 +24,20 @@
 //    options to remove, how many steps of a worked example to show).
 //
 // Load it after the page's own <head> styles (it needs no CSS file):
-//   <script src="../shared/bc-support.js?v=20260927"></script>
+//   <script src="../shared/bc-support.js?v=20260928"></script>
 (function () {
   if (window.BCSupport) return;
-  var STORE_KEY = 'bc-support';
   var FADE_PREFIX = 'bc-support-fade:';
-  var inFrame = window.parent && window.parent !== window;
   var listeners = [];
-  var on = readLocal();
-  var heardFromSite = false;
+  var on = false;
+  // Clear the old site-wide setting so it cannot come back.
+  try { localStorage.removeItem('bc-support'); } catch (e) {}
 
-  function readLocal() {
-    try { return localStorage.getItem(STORE_KEY) === '1'; } catch (e) { return false; }
-  }
-  function writeLocal(value) {
-    try { localStorage.setItem(STORE_KEY, value ? '1' : '0'); } catch (e) {}
-  }
-  function apply(value, fromSite) {
+  function apply(value) {
     value = !!value;
-    if (fromSite) heardFromSite = true;
-    writeLocal(value);
     if (value === on) return;
     on = value;
     listeners.slice().forEach(function (fn) { try { fn(on); } catch (e) {} });
-  }
-
-  window.addEventListener('message', function (e) {
-    var d = e.data;
-    if (!d || d.type !== 'BC_SUPPORT_STATE' || e.source !== window.parent) return;
-    apply(d.on, true);
-  });
-  if (inFrame) {
-    try { window.parent.postMessage({ type: 'BC_SUPPORT_REQUEST' }, '*'); } catch (e) {}
   }
 
   // ---- The live typed-answer hint ----
@@ -159,15 +140,7 @@
 
   window.BCSupport = {
     isOn: function () { return on; },
-    // true once the site has answered (inside the site) - before that, isOn()
-    // is this browser's own last-known setting.
-    heardFromSite: function () { return heardFromSite; },
-    set: function (value) {
-      apply(value, false);
-      if (inFrame) {
-        try { window.parent.postMessage({ type: 'BC_SUPPORT_SET', on: !!value }, '*'); } catch (e) {}
-      }
-    },
+    set: function (value) { apply(value); },
     onChange: function (fn) {
       listeners.push(fn);
       return function () { listeners = listeners.filter(function (f) { return f !== fn; }); };

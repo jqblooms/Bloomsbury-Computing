@@ -69,7 +69,6 @@
     progressLabel: document.getElementById("progress-label"),
     progressFill: document.getElementById("progress-fill"),
     stage: document.getElementById("stage"),
-    supportSlot: document.getElementById("support-slot"),
     masteryOverview: document.getElementById("mastery-overview")
   };
   els.title.textContent = drill.title;
@@ -485,18 +484,20 @@
   // ============================================================
   var current = null; // { cardId, set, checked, usedHelp, hintReveal }
 
-  // ---- Support: Learn mode's help (shared/bc-support.js) ----
-  // Shows how rather than handing over the answer, and helps less as the
-  // student gets a card right. A typed answer gets the model answer greyed
-  // out under the box, colouring in as they type; multiple choice gets wrong
-  // options ruled out to narrow it down; a code question gets the working.
-  // "I need help" brings it up on one card; with Support switched on it is
-  // there on every card. How much is shown fades per card (per question type
-  // for code): three right in a row takes a step away, two wrong gives one
-  // back. Quiz mode never helps: that is where mastery is earned.
+  // ---- Learn mode's help (drawn with shared/bc-support.js) ----
+  // Drills have no support mode (James, 2026-09-28): the "I need help"
+  // switch on each card is the only way in. It starts off on every card,
+  // never turns itself on, and switching it off hides the help again.
+  // The help shows how rather than handing over the answer: a similar
+  // question worked through (card.example) or nudges (card.working) where a
+  // card has them; otherwise a typed answer gets the model greyed out under
+  // the box, colouring in as they type, multiple choice gets some wrong
+  // options ruled out, and a code question gets the working. How much is
+  // shown fades per card (per question type for code): three right in a row
+  // takes a step away, two wrong gives one back, but asking always gets at
+  // least a third. Quiz mode never helps: that is where mastery is earned.
   var Support = window.BCSupport || null;
   function supportFader(key) { return Support ? Support.fader("drill:" + drillId + ":" + key) : null; }
-  function supportAuto() { return !!(Support && Support.isOn() && run && run.mode === "learn"); }
   // Asking for help always gets some, even once the fading has taken it all away.
   function supportReveal(fader, explicit) {
     var r = fader ? fader.reveal() : 1;
@@ -575,7 +576,6 @@
     els.noticeLearn.style.display = mode === "learn" ? "" : "none";
     els.noticeQuiz.style.display = mode === "quiz" ? "" : "none";
     els.progress.style.display = "flex";
-    if (els.supportSlot) els.supportSlot.hidden = mode !== "learn";
   }
 
   function setMode(mode, opts) {
@@ -719,7 +719,7 @@
       '<div class="feedback" id="fb"></div>' +
       '<div class="actions">' +
       (textMode ? '<button type="button" class="btn" id="submit-btn">Check</button>' : (set.multi ? '<button type="button" class="btn" id="submit-btn">Submit</button>' : "")) +
-      (learn ? '<button type="button" class="btn ghost" id="help-btn">I need help</button>' : "") +
+      (learn ? '<button type="button" class="help-toggle" id="help-btn" aria-pressed="false"><span class="help-track" aria-hidden="true"></span><span>I need help</span></button>' : "") +
       '<span class="spacer"></span>' +
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
       "</div></div>";
@@ -759,7 +759,6 @@
         Support.renderTypedHint(els.stage.querySelector("#support-hint"), textHintModel(card), hintInput.value, current.hintReveal);
       });
     }
-    if (supportAuto()) { if (textMode) showTextHint(false); else narrowOptions(false); }
     els.stage.querySelector("#restart-btn").addEventListener("click", function () {
       if (current.advanceTimer) clearTimeout(current.advanceTimer);
       run = freshRun(run.mode, run.category, run.count, run.answerMode);
@@ -769,14 +768,30 @@
     });
   }
 
-  // "I need help" (Learn mode): shows how on this card, see Support above.
-  // One press per card; the card then comes back round sooner (advance()).
+  // "I need help" (Learn mode) is a switch: on shows this card's help, off
+  // hides it again. Using it at all marks the card as helped, so it comes
+  // back round sooner (advance()).
+  function setHelpSwitch(btn, on) {
+    if (btn) btn.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+  function hideHelp(boxId) {
+    var box = document.getElementById(boxId);
+    if (box) { box.hidden = true; box.innerHTML = ""; }
+    current.hintReveal = 0;
+    Array.prototype.forEach.call(els.stage.querySelectorAll(".opt.is-ruled-out"), function (el) {
+      el.classList.remove("is-ruled-out");
+      el.querySelector("input").disabled = false;
+      el.removeAttribute("title");
+    });
+  }
   function onHelp() {
+    var btn = els.stage.querySelector("#help-btn");
+    var on = !(btn && btn.getAttribute("aria-pressed") === "true");
+    setHelpSwitch(btn, on);
+    if (!on) { hideHelp("support-hint"); return; }
     var set = current.set;
     var textMode = run.answerMode === "text" && !set.multi;
     if (textMode) showTextHint(true); else narrowOptions(true);
-    var helpBtn = els.stage.querySelector("#help-btn");
-    if (helpBtn) helpBtn.disabled = true;
   }
 
   function submitAnswer() {
@@ -1202,7 +1217,6 @@
     els.noticeLearn.style.display = mode === "learn" ? "" : "none";
     els.noticeQuiz.style.display = "none";
     els.noticeCode.style.display = mode === "quiz" ? "" : "none";
-    if (els.supportSlot) els.supportSlot.hidden = mode !== "learn";
     els.progress.style.display = mode === "quiz" ? "flex" : "none";
     updateScopeLabel();
     if (mode === "quiz") updateCodeProgress();
@@ -1301,7 +1315,7 @@
       '<div id="code-result"></div>' +
       '<div class="actions">' +
       '<button type="button" class="btn" id="code-check-btn">Run and check</button>' +
-      (learn ? '<button type="button" class="btn ghost" id="code-help-btn">I need help</button>' : "") +
+      (learn ? '<button type="button" class="help-toggle" id="code-help-btn" aria-pressed="false"><span class="help-track" aria-hidden="true"></span><span>I need help</span></button>' : "") +
       '<span class="spacer"></span>' +
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
       "</div></div>";
@@ -1315,7 +1329,6 @@
       if (!current.hintReveal || !Support) return;
       Support.renderTypedHint(document.getElementById("code-support-hint"), String(card.reference).split("\n"), input.value, current.hintReveal, "Hint: the working, type it yourself");
     });
-    if (supportAuto()) showCodeHint(false);
     els.stage.querySelector("#restart-btn").addEventListener("click", function () {
       startCodeRun(run.category, run.mode);
       toast("Run restarted.");
@@ -1323,9 +1336,11 @@
   }
 
   function onCodeHelp() {
+    var btn = document.getElementById("code-help-btn");
+    var on = !(btn && btn.getAttribute("aria-pressed") === "true");
+    setHelpSwitch(btn, on);
+    if (!on) { hideHelp("code-support-hint"); return; }
     showCodeHint(true);
-    var helpBtn = document.getElementById("code-help-btn");
-    if (helpBtn) helpBtn.disabled = true;
   }
 
   function formatVarsForDisplay(vars, names) {
@@ -1643,17 +1658,6 @@
   els.modeLearn.addEventListener("click", function () { setMode("learn"); });
   els.modeQuiz.addEventListener("click", function () { setMode("quiz"); });
 
-  // The site-wide Support switch, shown in Learn mode. Switching it on part
-  // way through a card helps with that card straight away.
-  if (Support && els.supportSlot) {
-    Support.mountToggle(els.supportSlot);
-    Support.onChange(function (on) {
-      if (!on || !run || run.mode !== "learn" || !current || current.checked) return;
-      if (run.codeDrill) { showCodeHint(false); return; }
-      if (!current.set) return;
-      if (run.answerMode === "text" && !current.set.multi) showTextHint(false); else narrowOptions(false);
-    });
-  }
 
   // When embedded in a lesson slide, tell the parent how tall the page is
   // whenever that changes (setup screen -> card -> feedback -> done screen

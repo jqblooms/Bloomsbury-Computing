@@ -263,13 +263,16 @@ function initEmbed() {
   const lang = params.get('lang');
   if (lang === 'cambridge' || lang === 'python') setCodeLanguage(lang);
 
-  // A lesson step opts a specific embed into Support Mode by adding
-  // `support=1` to its embedQuery - there's no toggle to find inside an
-  // embed (the whole header, this button included, is hidden by
-  // body.tt-embed above), so this is the only way in. Set before
-  // selectBuiltInEmbed/loadCustomAlgorithm render anything below, since
-  // buildStudentTableHtml reads isSupportMode at render time.
-  if (params.get('support') === '1') { supportForcedByLesson = true; isSupportMode = true; }
+  // A lesson step offers Support in a specific embed by adding `support=1`
+  // to its embedQuery. The page header (and its Support button) is hidden
+  // in an embed, so the switch goes above the exercise. It starts off: the
+  // student turns it on (James, 2026-09-28: off until clicked).
+  if (params.get('support') === '1' && window.BCSupport) {
+    const bar = document.createElement('div');
+    bar.className = 'tt-embed-support';
+    document.querySelector('.container').prepend(bar);
+    window.BCSupport.mountToggle(bar, 'Support');
+  }
 
   // Force trace mode regardless of this browser's last-used state: every
   // embed is built around one specific task (trace a table), and the

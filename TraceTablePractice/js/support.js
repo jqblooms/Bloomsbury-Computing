@@ -13,14 +13,11 @@
 // left alone - it already has its own operator-hint panel
 // (buildCodeHintsHtml above), a different kind of scaffold for a
 // different exercise.
-// Support mode is one switch for the whole site (shared/bc-support.js):
-// the Support button here changes it everywhere, and a change made in any
-// other app shows up here. A lesson can still force it on for one embed
-// (support=1, see the embed setup below) without changing the student's
-// own setting.
-const SUPPORT_MODE_KEY = 'traceTableSupportMode_v1'; // this page's own setting before the site-wide one
-let supportForcedByLesson = false;
-let isSupportMode = window.BCSupport ? window.BCSupport.isOn() : localStorage.getItem(SUPPORT_MODE_KEY) === '1';
+// Support mode (shared/bc-support.js) is off whenever the page opens and
+// comes on only when the student clicks Support. In an embed the header
+// is hidden, so a lesson that wants it offers the switch with support=1
+// (embed.js).
+let isSupportMode = false; // always off when the page opens; on only when clicked
 const SUPPORT_STAGE_EVERY = 3;
 const SUPPORT_MAX_STAGE = 3;
 let supportStreak = 0;
@@ -30,7 +27,7 @@ let supportStreak = 0;
 let supportStage = 0;
 
 function applySupportMode(on) {
-  isSupportMode = supportForcedByLesson || !!on;
+  isSupportMode = !!on;
   syncSupportModeButton();
   if (currentPracticeMode === 'trace') {
     pracData.forEach((data, index) => renderPracEntry(`prac${index}`, data));
@@ -40,7 +37,6 @@ function applySupportMode(on) {
 
 function toggleSupportMode() {
   if (window.BCSupport) { window.BCSupport.set(!isSupportMode); return; } // onChange below applies it
-  localStorage.setItem(SUPPORT_MODE_KEY, !isSupportMode ? '1' : '0');
   applySupportMode(!isSupportMode);
 }
 if (window.BCSupport) window.BCSupport.onChange(applySupportMode);
