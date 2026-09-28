@@ -69,6 +69,13 @@
             "y9-numbers-l2",
             "y9-numbers-l3"
           ]
+        },
+        {
+          "code": "",
+          "title": "Algorithm Design and Text Programming",
+          "lessons": [
+            "y9-2-2-loops"
+          ]
         }
       ]
     },
