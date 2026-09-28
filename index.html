@@ -6,125 +6,20 @@
   <title>Bloomsbury Computing</title>
   <link rel="stylesheet" href="shared/bc-theme.css?v=20260927s">
   <style>
-    html, body { height: 100%; }
     body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; box-sizing: border-box; }
     main { max-width: 460px; text-align: center; }
-    .mark { display: block; width: 64px; height: 64px; margin: 0 auto 16px; object-fit: contain; }
+    .mark { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px; display: grid; place-items: center; background: var(--brand-soft-strong); color: var(--brand-dark); font: 800 26px var(--font-display); }
     h1 { margin: 0 0 8px; font-size: 26px; }
     p { margin: 0 0 20px; color: var(--muted); line-height: 1.55; }
-    .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-    .bc-btn { min-height: 44px; padding: 0 20px; font-size: 15px; }
-    .spinner { width: 28px; height: 28px; margin: 0 auto 18px; border: 3px solid var(--line-strong); border-top-color: var(--brand); border-radius: 50%; animation: spin .9s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
-    .probe { position: absolute; width: 1px; height: 1px; border: 0; left: -9999px; top: 0; }
-    body.is-framed { display: block; padding: 0; }
-    .site-frame { display: block; width: 100%; height: 100vh; height: 100dvh; border: 0; }
+    .bc-btn { min-height: 44px; padding: 0 24px; font-size: 15px; }
   </style>
 </head>
 <body>
-  <main id="finder">
-    <img class="mark" src="assets/img/bish-crest.png?v=1" alt="">
+  <main>
+    <div class="mark" aria-hidden="true">B</div>
     <h1>Bloomsbury Computing</h1>
-    <div class="spinner" id="spinner" aria-hidden="true"></div>
-    <p id="status" role="status">Finding your school account...</p>
-    <div class="actions">
-      <a class="bc-btn" id="open-direct" href="#">Open the site</a>
-      <a class="bc-btn ghost" id="open-guest" href="#">Open without signing in</a>
-    </div>
+    <p>This is where the site's lessons, drills and apps are stored. Open the site to use them, sign in and save your progress.</p>
+    <a class="bc-btn" href="https://script.google.com/macros/s/AKfycbxleLXeE1NupxyQpqFtpyVq5DX5sXnbZnxWvmbQz5qUcuHXN5eQu5fRanXcqhNO6WzQ7Q/exec">Open Bloomsbury Computing</a>
   </main>
-  <script>
-    // Account finder. On phones and Chromebooks Google can refuse the site
-    // for the account the device is signed in with ("Sorry, unable to open
-    // the file at present"), while the same site opens fine with no account
-    // (incognito). This page tries the site once per signed-in Google
-    // account (/macros/u/0/, /u/1/, /u/2/) with a tiny probe page
-    // (Code.gs doGet ?probe=1) and opens the site as the first account the
-    // probe reports as a school account. If none is, it shows the site here
-    // loaded with no account at all (?frame=1), like incognito: it works,
-    // but progress is not saved to an account.
-    (function () {
-      var SITE_ID = 'AKfycbxleLXeE1NupxyQpqFtpyVq5DX5sXnbZnxWvmbQz5qUcuHXN5eQu5fRanXcqhNO6WzQ7Q';
-      var BASE = 'https://script.google.com/macros/';
-      var SLOTS = [0, 1, 2];
-      var WAIT_MS = 8000;
-      var passOn = location.search + location.hash;
-      var results = {};
-      var done = false;
-      var timedOut = false;
-
-      function accountUrl(slot) { return BASE + 'u/' + slot + '/s/' + SITE_ID + '/exec' + passOn; }
-      function guestUrl() {
-        var query = location.search ? location.search + '&frame=1' : '?frame=1';
-        return BASE + 's/' + SITE_ID + '/exec' + query + location.hash;
-      }
-
-      document.getElementById('open-direct').href = BASE + 's/' + SITE_ID + '/exec' + passOn;
-      document.getElementById('open-guest').addEventListener('click', function (e) { e.preventDefault(); openAsGuest(); });
-
-      function finish() {
-        done = true;
-        Array.prototype.forEach.call(document.querySelectorAll('.probe'), function (f) { f.remove(); });
-      }
-
-      function openAs(slot) {
-        if (done) return;
-        finish();
-        location.replace(accountUrl(slot));
-      }
-
-      function openAsGuest() {
-        if (done && document.body.classList.contains('is-framed')) return;
-        finish();
-        var frame = document.createElement('iframe');
-        frame.className = 'site-frame';
-        frame.title = 'Bloomsbury Computing';
-        // No cookies: Google sees no account, exactly as in incognito.
-        frame.setAttribute('credentialless', '');
-        frame.allow = 'fullscreen; clipboard-read; clipboard-write';
-        frame.src = guestUrl();
-        document.getElementById('finder').remove();
-        document.body.classList.add('is-framed');
-        document.body.appendChild(frame);
-      }
-
-      // Take the first account, in the device's own order, that is a school
-      // account. An account whose probe has not answered yet holds the
-      // decision until the wait is over, so a later one never jumps ahead.
-      function decide() {
-        if (done) return;
-        for (var i = 0; i < SLOTS.length; i++) {
-          var r = results[SLOTS[i]];
-          if (r === undefined) { if (!timedOut) return; continue; }
-          if (r.school) { openAs(SLOTS[i]); return; }
-        }
-        if (timedOut || SLOTS.every(function (s) { return results[s] !== undefined; })) openAsGuest();
-      }
-
-      window.addEventListener('message', function (e) {
-        var d = e.data;
-        if (!d || d.type !== 'BC_ACCOUNT_PROBE') return;
-        if (!/\.googleusercontent\.com$/.test(new URL(e.origin).hostname)) return;
-        var slot = Number(d.slot);
-        if (SLOTS.indexOf(slot) === -1 || results[slot] !== undefined) return;
-        results[slot] = { school: d.school === true };
-        decide();
-      });
-
-      SLOTS.forEach(function (slot) {
-        var f = document.createElement('iframe');
-        f.className = 'probe';
-        f.setAttribute('aria-hidden', 'true');
-        f.tabIndex = -1;
-        f.src = BASE + 'u/' + slot + '/s/' + SITE_ID + '/exec?probe=1&slot=' + slot;
-        document.body.appendChild(f);
-      });
-
-      setTimeout(function () {
-        if (!done) document.getElementById('status').textContent = 'Still looking...';
-      }, WAIT_MS / 2);
-      setTimeout(function () { timedOut = true; decide(); }, WAIT_MS);
-    })();
-  </script>
 </body>
 </html>
