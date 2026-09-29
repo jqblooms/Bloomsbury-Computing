@@ -1,5 +1,5 @@
-// Transmission Lab, activity "wires": send one ASCII letter by serial (one wire, one bit per clock tick) or
-// parallel (eight wires, all eight bits in one tick), down a short or a long cable. On the long cable the
+// Transmission Lab, activity "wires": send one ASCII letter by serial (one wire, one bit per time step) or
+// parallel (eight wires, all eight bits in one time step), down a short or a long cable. On the long cable the
 // parallel wires are not all the same speed, so some bits reach the receiver after it has read the byte
 // (skewing) and the letter arrives wrong. Five tasks walk the student through what that shows.
 (function () {
@@ -9,7 +9,7 @@
   var LETTERS = ['A', 'M', 'Z'];
   var TICK_MS = 380;
   var X0 = 96, X1 = 424;                     // where the wires leave the sender and reach the receiver
-  var TRAVEL = { short: 2, long: 5 };        // clock ticks a bit spends on the wire
+  var TRAVEL = { short: 2, long: 5 };        // time steps a bit spends on the wire
   var state = { method: 'serial', cable: 'short', letter: 'A', busy: false, runs: {}, last: null };
 
   function byteOf(ch) { var s = ch.charCodeAt(0).toString(2); while (s.length < 8) s = '0' + s; return s; }
@@ -80,9 +80,9 @@
     var sent = byteOf(state.letter);
     var html = '<div class="readout-row"><span>Sent</span><span class="bits">' + sent.split('').map(function (b) { return '<i>' + b + '</i>'; }).join('') + '</span></div>';
     if (!result) {
-      html += '<div class="readout-row"><span>Clock ticks to send all 8 bits</span><b>-</b></div><div class="readout-row"><span>Received</span><span class="small">Press Send</span></div>';
+      html += '<div class="readout-row"><span>Time steps to send all 8 bits</span><b>-</b></div><div class="readout-row"><span>Received</span><span class="small">Press Send</span></div>';
     } else {
-      html += '<div class="readout-row"><span>Clock ticks to send all 8 bits</span><b>' + result.ticks + '</b></div>';
+      html += '<div class="readout-row"><span>Time steps to send all 8 bits</span><b>' + result.ticks + '</b></div>';
       html += '<div class="readout-row"><span>Received</span><span class="bits">' + result.got.map(function (b, i) {
         return '<i class="' + (b === null ? '' : b !== sent[i] ? 'wrong' : '') + '">' + (b === null ? '&middot;' : b) + '</i>';
       }).join('') + '</span></div>';
@@ -147,10 +147,10 @@
 
   function needs(key, words) { return function () { return state.runs[key] ? null : 'Send the letter ' + words + ' first, then answer.'; }; }
   Lab.taskCard(taskHost, [
-    { q: 'Send the letter by serial down the short cable. How many clock ticks did it take to send all 8 bits?', kind: 'number', answer: 8,
-      ready: needs('serial-short', 'by serial down the short cable'), retry: 'Watch the tick counter while the bits leave the sender.',
-      why: 'Serial sends one bit per clock tick down a single wire, so 8 bits take 8 ticks.' },
-    { q: 'Now send it by parallel down the short cable. How many clock ticks did it take?', kind: 'number', answer: 1,
+    { q: 'Send the letter by serial down the short cable. How many time steps did it take to send all 8 bits?', kind: 'number', answer: 8,
+      ready: needs('serial-short', 'by serial down the short cable'), retry: 'Watch the time steps count up while the bits leave the sender.',
+      why: 'Serial sends one bit per time step down a single wire, so 8 bits take 8 time steps.' },
+    { q: 'Now send it by parallel down the short cable. How many time steps did it take?', kind: 'number', answer: 1,
       ready: needs('parallel-short', 'by parallel down the short cable'), retry: 'Count how many times the sender had to put bits on the wires.',
       why: 'Parallel sends all 8 bits at the same time, one down each of 8 wires, so it is faster.' },
     { q: 'Switch to the long cable and send by parallel. Was the letter received correctly?', kind: 'choice', options: ['Yes', 'No'], answer: 'No',
