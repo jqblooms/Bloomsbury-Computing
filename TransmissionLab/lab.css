@@ -1,0 +1,104 @@
+/* Transmission Lab: the site's dark theme (shared/bc-theme.css). Bits are drawn in the code number colour,
+   so a 1 and a 0 read the same way as in the site's binary apps. */
+:root { --bit-1: var(--syn-number); --bit-0: var(--muted); --wire: #4a5260; --lane-a: #8ab4f8; --lane-b: #c58af9; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.4 var(--font-body); color: var(--ink); background: var(--bg); }
+main { max-width: 920px; margin: 0 auto; padding: 20px; }
+h1 { margin: 0 0 4px; font: 700 1.6rem/1.2 var(--font-display); }
+h2 { margin: 0 0 6px; font: 700 1.05rem/1.3 var(--font-display); }
+p { margin: 0 0 10px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 18px; }
+.intro { color: var(--muted); }
+.small { font-size: .86rem; color: var(--muted); }
+button, select, input { font: inherit; }
+
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 760px) { .lab-grid { grid-template-columns: 1fr; } }
+
+/* Diagram */
+.stage { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+.stage svg { display: block; width: 100%; height: auto; }
+.stage .device { fill: var(--surface-3); stroke: var(--brand); stroke-width: 2; }
+.stage .device-label { fill: var(--ink); font: 700 14px var(--font-body); text-anchor: middle; }
+.stage .wire { stroke: var(--wire); stroke-width: 3; fill: none; }
+.stage .wire-label { fill: var(--muted); font: 12px var(--font-body); }
+.stage .bit circle { stroke-width: 2; }
+.stage .bit.one circle { fill: rgba(253, 214, 99, .18); stroke: var(--bit-1); }
+.stage .bit.zero circle { fill: rgba(154, 160, 166, .14); stroke: var(--bit-0); }
+.stage .bit text { font: 700 12px var(--font-mono); text-anchor: middle; dominant-baseline: central; }
+.stage .bit.one text { fill: var(--bit-1); }
+.stage .bit.zero text { fill: var(--ink-soft); }
+.stage .bit.late circle { stroke: var(--bad); }
+.stage .msg rect { rx: 7; stroke-width: 2; }
+.stage .msg.a rect { fill: rgba(138, 180, 248, .18); stroke: var(--lane-a); }
+.stage .msg.b rect { fill: rgba(197, 138, 249, .18); stroke: var(--lane-b); }
+.stage .msg text { font: 700 12px var(--font-body); text-anchor: middle; dominant-baseline: central; fill: var(--ink); }
+.stage .blocked, .stage .waiting { fill: var(--bad); font: 700 13px var(--font-body); text-anchor: middle; }
+.stage .waiting { fill: var(--warn); }
+
+/* Controls */
+.controls { display: grid; gap: 10px; }
+.control-row { display: grid; gap: 4px; }
+.control-row > span { font-size: .8rem; font-weight: 500; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px; gap: 3px; background: var(--surface-2); }
+.seg button { border: 0; border-radius: 999px; background: transparent; color: var(--ink-soft); padding: 6px 14px; cursor: pointer; font-weight: 500; }
+.seg button:hover { background: var(--surface-3); color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+.btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--brand); border-radius: 999px; background: var(--brand); color: var(--on-brand); font-weight: 500; padding: 8px 18px; cursor: pointer; }
+.btn:hover { background: var(--brand-dark); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.secondary { background: transparent; color: var(--brand); border-color: var(--line-strong); }
+.btn.secondary:hover { background: var(--brand-soft); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* Readout */
+.readout { display: grid; gap: 6px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.readout-row { display: flex; justify-content: space-between; gap: 10px; font-size: .92rem; }
+.readout-row b { font-variant-numeric: tabular-nums; }
+.bits { display: inline-flex; gap: 3px; font: 700 14px var(--font-mono); }
+.bits i { font-style: normal; width: 20px; text-align: center; border-radius: 4px; background: var(--surface-3); padding: 1px 0; }
+.bits i.wrong { background: var(--bad-soft); color: var(--bad); outline: 1px solid var(--bad-line); }
+.verdict { font-weight: 500; }
+.verdict.good { color: var(--good); }
+.verdict.bad { color: var(--bad); }
+
+/* Tasks */
+.task { margin-top: 14px; border: 1px solid var(--line-strong); border-radius: 12px; padding: 12px 14px; background: var(--surface-2); }
+.task-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.task-count { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.task-q { font-weight: 500; margin-bottom: 8px; }
+.task-answer { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.task-answer input { width: 120px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+.choice { border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--ink); padding: 6px 12px; cursor: pointer; }
+.choice:hover { border-color: var(--brand); }
+.choice[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft-strong); }
+.feedback { min-height: 22px; margin-top: 6px; font-weight: 500; color: var(--good); }
+.feedback.error { color: var(--bad); }
+.feedback.hint { color: var(--warn); }
+.done-banner { display: flex; gap: 10px; align-items: center; color: var(--good); font-weight: 500; }
+.done-banner svg { width: 22px; height: 22px; flex: none; }
+
+/* Scenario table (duplex activity, part 2) */
+.scenarios { display: grid; gap: 6px; margin: 8px 0; }
+.scenario { display: grid; grid-template-columns: minmax(0, 1fr) 150px 120px; gap: 8px; align-items: center; padding: 7px 10px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface-2); }
+.scenario.good { border-color: var(--good-line); background: var(--good-soft); }
+.scenario.bad { border-color: var(--bad-line); background: var(--bad-soft); }
+.scenario select { width: 100%; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+.scenario-head { display: grid; grid-template-columns: minmax(0, 1fr) 150px 120px; gap: 8px; padding: 0 10px; font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+@media (max-width: 640px) { .scenario, .scenario-head { grid-template-columns: 1fr 1fr; } .scenario > span:first-child, .scenario-head > span:first-child { grid-column: 1 / -1; } }
+
+/* Inside a lesson slide the slide shows through. */
+.embed, .embed body { background: transparent; font-size: 14px; }
+.embed body { --surface: #1f232b; --surface-2: #272c35; --surface-3: #2f3540; --line: #343b46; --line-strong: #454d5a; }
+.embed main { padding: 0; }
+.embed .panel { border: 0; border-radius: 0; padding: 4px 8px; background: transparent; }
+.embed h1 { font-size: 1.25rem; }
+.embed .lab-title { display: none; }   /* the slide already names the activity and says what to do */
+.embed p { margin-bottom: 6px; }
+.embed .lab-grid { gap: 12px; }
+.embed .task { margin-top: 10px; padding: 9px 12px; }
+.embed .scenario { padding: 5px 9px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
