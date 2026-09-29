@@ -671,6 +671,7 @@
       diagram: instance.diagram != null ? instance.diagram : card.diagram,
       legend: instance.legend != null ? instance.legend : card.legend,
       blocks: instance.blocks != null ? instance.blocks : card.blocks,
+      flow: instance.flow != null ? instance.flow : card.flow,
       working: instance.working != null ? instance.working : card.working,
       example: instance.example != null ? instance.example : card.example
     };

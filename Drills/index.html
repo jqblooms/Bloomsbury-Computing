@@ -77,6 +77,12 @@
      a .fc-diagram is a vertical sequence of .fc-node shapes joined by
      arrows; a .fc-legend lays the four shape types side by side with the
      relevant one emphasised (.is-focus) and the rest dimmed (.is-dim). */
+  /* A whole flowchart (Drills/flowchart-core.js): an SVG that scales to the card, themed with the site tokens. */
+  .fc-flow { margin: 4px 0 14px; display: flex; justify-content: center;
+    --fc-box: var(--surface-2); --fc-edge: var(--brand); --fc-term: var(--muted); --fc-ink: var(--ink);
+    --fc-dec: rgba(253, 214, 99, .12); --fc-dec-edge: var(--warn); --fc-arrow: var(--brand); --fc-label: var(--warn);
+    --fc-badge: var(--warn); --fc-badge-ink: #1f1400; }
+  .fc-flow svg { max-width: 100%; max-height: 46vh; height: auto; }
   .fc-diagram, .fc-legend { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: 4px 0 14px; }
   .fc-diagram { flex-direction: column; }
   /* "I need help": a switch that shows or hides this card's help. */
@@ -313,7 +319,7 @@
       drills: {},
       register: function (drillId, def) { this.drills[drillId] = def; }
     };
-    ["../shared/pseudocode-engine.js", "../shared/bc-support.js", "helpers.js", "data/" + id + ".js", "engine.js"].forEach(function (file) {
+    ["../shared/pseudocode-engine.js", "../shared/bc-support.js", "helpers.js", "flowchart-core.js", "data/" + id + ".js", "engine.js"].forEach(function (file) {
       document.write('<script src="' + file + "?v=" + v + '"><\/script>');
     });
   })();

@@ -158,6 +158,8 @@ function flowchartLegendHtml(focusShape) {
 // Called by renderCard()/renderCodeCard() - a plain function, not a CSS
 // class toggle, since only some cards define either field.
 function flowchartCardExtraHtml(card) {
+  // A whole flowchart with branches, loops and sub-routines (Drills/flowchart-core.js), drawn as a scalable SVG.
+  if (card.flow && window.FlowchartCore) return '<div class="fc-flow">' + FlowchartCore.svg(card.flow, !!card.flow.numbered) + "</div>";
   if (card.diagram) return flowchartDiagramHtml(card.diagram);
   if (card.legend) return flowchartLegendHtml(card.legend);
   if (card.blocks) return '<div class="card-blocks"><pre class="blocks">' + escapeHtml(card.blocks) + "</pre></div>";
