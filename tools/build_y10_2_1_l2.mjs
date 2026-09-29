@@ -121,13 +121,9 @@ steps.push({ id: 'concept-serial', label: 'Serial and Parallel',
     columns(serialSvg() + facts(['<strong>Serial:</strong> one bit at a time, down a single wire.', 'The bits arrive in order, so it is reliable over long distances.', 'Fewer wires, so it is cheaper. But it is slower.']),
       parallelSvg() + facts(['<strong>Parallel:</strong> several bits at the same time, down several wires.', 'Faster than serial.', 'Over a long distance the bits can <strong>skew</strong> (arrive out of step), so the data can be wrong. Short distances only.'])) });
 
-steps.push(mc('exam-methods', 'Exam Question: Methods of Transmission', 'Exam Question: Methods of Transmission',
-  cite('0478/12, June 2024, Question 2(a)') + ' Data can be transmitted from one device to another.',
-  [{ prompt: 'Which term is not a method for transmitting data? [1]', options: ['Serial', 'Simplex', 'Parity', 'Parallel'], correct: 2,
-    explain: 'Parity is a way of checking for errors. Serial, parallel and simplex are all methods of transmitting data.' }]));
 
 steps.push(mc('check-serial', 'Check: Serial or Parallel?', 'Check: Serial or Parallel?', 'Use the slide on serial and parallel.',
-  [{ prompt: 'Which method sends several bits at the same time?', options: ['Serial', 'Parallel', 'Simplex'], correct: 1,
+  [{ prompt: 'Which method sends several bits at the same time?', options: ['Serial', 'Parallel', 'Packet switching'], correct: 1,
     explain: 'Parallel sends several bits at once, one down each wire.' },
   { prompt: 'Why is parallel not used over long distances?', options: ['Its bits can skew and arrive out of step', 'It only has one wire', 'It is slower than serial'], correct: 0,
     explain: 'Over a long distance the wires are not all the same speed, so the bits skew.' }]));
@@ -141,10 +137,6 @@ steps.push(selfMarked('exam-serial', 'Exam Question: Why Serial?', 'Exam Questio
   [{ id: 'why-serial', prompt: 'Explain why serial transmission is more appropriate than parallel transmission in this scenario. [3]', marks: 3,
     modelAnswer: 'Any three: the data travels a long distance (30 km); parallel bits could skew / arrive out of sync over that distance, so the data could be corrupted; serial sends one bit at a time, so the bits arrive in order and there are fewer errors; serial needs fewer wires, so it is cheaper over a long distance.' }]));
 
-steps.push(selfMarked('exam-umar', 'Exam Question: Parallel Simplex', 'Exam Question: Parallel Simplex',
-  cite('0478/13, June 2022, Question 7(b)') + ' Umar sends data from his computer to a file server using parallel simplex data transmission. The file server is moved to another building that is 1 km away.',
-  [{ id: 'umar-b', prompt: 'Explain why the parallel simplex data transmission method that Umar uses is no longer suitable. [2]', marks: 2,
-    modelAnswer: 'Any two: 1 km is a long distance for parallel; the bits could skew / arrive out of sync, so the data could be corrupted or have errors; many wires over 1 km would be expensive.' }]));
 
 // ---------------------------------------------------------------- concept 2: direction
 steps.push({ id: 'concept-duplex', label: 'Simplex, Half-Duplex and Full-Duplex',
@@ -159,6 +151,16 @@ steps.push(mc('check-duplex', 'Check: Which Direction?', 'Check: Which Direction
     explain: 'Half-duplex: both directions, one at a time.' },
   { prompt: 'With which method can the receiver never send data back?', options: ['Full-duplex', 'Half-duplex', 'Simplex'], correct: 2,
     explain: 'Simplex is one direction only.' }]));
+
+// Both of these name simplex, so they come after the direction slide.
+steps.push(mc('exam-methods', 'Exam Question: Methods of Transmission', 'Exam Question: Methods of Transmission',
+  cite('0478/12, June 2024, Question 2(a)') + ' Data can be transmitted from one device to another.',
+  [{ prompt: 'Which term is not a method for transmitting data? [1]', options: ['Serial', 'Simplex', 'Parity', 'Parallel'], correct: 2,
+    explain: 'Parity is a way of checking for errors. Serial, parallel and simplex are all methods of transmitting data.' }]));
+steps.push(selfMarked('exam-umar', 'Exam Question: Parallel Simplex', 'Exam Question: Parallel Simplex',
+  cite('0478/13, June 2022, Question 7(b)') + ' Umar sends data from his computer to a file server using parallel simplex data transmission. The file server is moved to another building that is 1 km away.',
+  [{ id: 'umar-b', prompt: 'Explain why the parallel simplex data transmission method that Umar uses is no longer suitable. [2]', marks: 2,
+    modelAnswer: 'Any two: 1 km is a long distance for parallel; the bits could skew / arrive out of sync, so the data could be corrupted or have errors; many wires over 1 km would be expensive.' }]));
 
 steps.push(selfMarked('exam-half', 'Exam Question: Half-Duplex', 'Exam Question: Half-Duplex',
   cite('0478/12, March 2021, Question 1(d)(ii)') + ' The data transmission for the hockey scores is also half-duplex.',
