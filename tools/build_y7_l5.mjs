@@ -86,13 +86,33 @@ steps.push(checkStep('do-now', 'Do Now: Reading a Flowchart', 'Do Now: Reading a
     { label: 'Name the symbol used for Say "Ready".', answer: IO, feedback: 'Say is an output, so it uses the sloping input or output symbol.' },
   ],
   chart(FC.line([['process', 'Move 30 steps'], ['io', 'Say "Ready"'], ['process', 'Move 20 steps']]))));
-steps.push(checkStep('do-now-2', 'Do Now: Decisions and Sub-routines', 'Do Now: Decisions and Sub-routines',
-  'A recap of Lessons 3 and 4. Up is 1 and Right is 0.',
-  [
-    { label: 'What is Up AND Right: 1 or 0?', answer: '^\\s*(0|false)\\s*$', feedback: 'AND is only 1 when both parts are 1. Right is 0, so Up AND Right is 0.' },
-    { label: 'What is Up OR Right: 1 or 0?', answer: '^\\s*(1|true)\\s*$', feedback: 'OR is 1 when at least one part is 1. Up is 1, so Up OR Right is 1.' },
-    { label: 'After a sub-routine reaches its End, where does Main carry on?', answer: '^(?=.*\\b(after|next|below|following|under)\\b)(?=.*\\bcall\\b).*$', feedback: 'Main carries on from the box straight after the CALL, not from its own Start.' },
-  ]));
+// Do Now 2: fill in the AND, OR and NOT truth tables (1 or 0 in every output box).
+{
+  const id = 'do-now-2', vid = `${P}-${id}`, key = `${P}_${id}`.replace(/-/g, '_');
+  const rows = [
+    ['AND', [[0, 0, 0], [0, 1, 0], [1, 0, 0], [1, 1, 1]]],
+    ['OR', [[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 1]]],
+    ['NOT', [[0, 1], [1, 0]]],
+  ];
+  const parts = [];
+  const tables = rows.map(([op, list]) => {
+    const head = op === 'NOT' ? '<th>A</th><th>NOT A</th>' : `<th>A</th><th>B</th><th>A ${op} B</th>`;
+    const body = list.map(r => {
+      const s = 'abcdefghijklmnop'[parts.length];
+      const out = r[r.length - 1];
+      parts.push({ suffix: s, pattern: re(`^\\s*${out}\\s*$`), feedback: op === 'AND' ? 'AND is 1 only when both are 1.' : op === 'OR' ? 'OR is 1 when at least one is 1.' : 'NOT swaps: 1 becomes 0, 0 becomes 1.' });
+      const cells = r.slice(0, -1).map(v => `<td>${v}</td>`).join('');
+      return `<tr>${cells}<td><input id="${vid}-${s}" class="pseudocode-output-input lesson-exam-answer" data-answer-kind="short" data-answer-id="${id}-${s}" aria-label="${op} row ${s}" autocomplete="off" style="width:3.2em;text-align:center"></td></tr>`;
+    }).join('');
+    return `<div><p class="lesson-lead" style="margin:0 0 4px"><strong>${op}</strong></p><table class="donow-table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+  }).join('');
+  validators[key] = parts;
+  steps.push({ id, label: 'Do Now: Truth Tables', type: 'short-answer-validation', validatorId: vid, validatorKey: key,
+    content: '<h2 class="lesson-h2">Do Now: Truth Tables</h2><p class="lesson-lead">A recap of Lesson 3. Fill in every output box with 1 or 0.</p>' +
+      `<div class="lesson-exam-card"><div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">${tables}</div>` +
+      `<div class="lesson-do-now-actions"><button type="button" class="donow-btn" id="${vid}-check">Check answers</button><strong>Total: ${parts.length} marks</strong></div>` +
+      `<div id="${vid}-feedback" class="pseudocode-feedback" role="status" aria-live="polite"></div></div>` });
+}
 
 // ---------------------------------------------------------------- title
 steps.push({ id: 'title', label: 'Flowcharts Recap',
