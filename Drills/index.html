@@ -159,6 +159,9 @@
   .feedback.ok { background: var(--good-soft); color: var(--good); border: 1px solid var(--good-line); }
   .feedback.no { background: var(--bad-soft); color: var(--bad); border: 1px solid var(--bad-line); }
   .feedback .note { display: block; margin-top: 4px; color: var(--ink); font-weight: 400; }
+  /* A wrong typed answer next to the right one, so the difference is visible. */
+  .feedback .compare { display: grid; gap: 3px; margin-top: 6px; color: var(--ink); font-weight: 400; }
+  .feedback .compare code { font: 600 .95rem var(--font-mono); white-space: pre-wrap; }
 
   .streakdots { display: inline-flex; gap: 4px; vertical-align: middle; margin-left: 6px; }
   .streakdots i { width: 8px; height: 8px; border-radius: 50%; background: var(--surface-4); display: inline-block; }

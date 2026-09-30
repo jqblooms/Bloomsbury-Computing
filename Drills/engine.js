@@ -353,7 +353,46 @@
     if (!alts.length) return true;
     return (card.distractors || []).some(function (d) { return bagMatch(alts, d); });
   }
+  // "But that's the same thing" (James, 2026-09-30): an answer is not wrong just because it is typed in
+  // quotes, starts with "the", uses the arrow character, or leaves out the spaces around <-. Each relaxed form
+  // is tried only after the answer as typed fails, and check-site still makes sure no wrong option passes.
+  function relaxedForms(card, rawInput) {
+    var s = String(rawInput == null ? "" : rawInput).trim();
+    var answers = (card.answers || []).map(function (a) { return String(a).trim(); });
+    var forms = [];
+    function add(v) { if (v && v !== s && forms.indexOf(v) === -1) forms.push(v); }
+    var arrow = s.replace(/←/g, "<-").replace(/\s*<-\s*/g, " <- ");
+    add(arrow);
+    var unquoted = arrow.replace(/^["'“”‘’](.*)["'“”‘’]\.?$/, "$1").trim();
+    if (!answers.some(function (a) { return /^["'“‘]/.test(a); })) add(unquoted);
+    var noArticle = unquoted.replace(/^(the|a|an)\s+/i, "");
+    if (!answers.some(function (a) { return /^(the|a|an)\s/i.test(a); })) add(noArticle);
+    return forms;
+  }
+  // When a wrong answer is only a small step from the right one, say exactly what differs, so the student is
+  // not left thinking "but that's the same thing".
+  // What to type, said plainly above the answer box (James, 2026-09-30: be unambiguous about what is asked).
+  // A card can say it itself with `format`; otherwise a number, or a whole line or box of code, is spelled out.
+  function answerFormat(card) {
+    if (card.format) return card.format;
+    var a = String((card.answers || [])[0] || "").trim();
+    if (/^[-\u2212]?\d+(\.\d+)?$/.test(a)) return "Type a number";
+    if (/<-|^(OUTPUT|INPUT|IF|ELSE|ENDIF|FOR|NEXT|WHILE|ENDWHILE|DECLARE|REPEAT|UNTIL|CALL)\b/.test(a)) return "Type the whole line";
+    if (/^(Say|Move|Point in direction|Turn)\b/.test(a)) return "Type the whole box";
+    return "Type your answer";
+  }
+  function nearMissReason(answer, typed) {
+    var a = String(answer).trim(), t = String(typed).trim();
+    var noQuotes = function (s) { return s.replace(/["'“”‘’]/g, "").replace(/\s+/g, " ").trim(); };
+    if (a.toLowerCase() === t.toLowerCase()) return " Capital letters matter in this answer.";
+    if (noQuotes(a).toLowerCase() === noQuotes(t).toLowerCase() && /["'“”]/.test(a)) return " Text needs quote marks around it, like the answer below. Without them it means a variable.";
+    return "";
+  }
   function matchAnswer(card, rawInput) {
+    if (matchAnswerAsTyped(card, rawInput)) return true;
+    return relaxedForms(card, rawInput).some(function (f) { return matchAnswerAsTyped(card, f); });
+  }
+  function matchAnswerAsTyped(card, rawInput) {
     if (usesStrictMatch(card)) {
       // Case only counts when the card itself tests it - one of its wrong
       // options is an answer in different case ("STO305" vs "Sto305").
@@ -686,7 +725,7 @@
     // than grading one, so only single-answer cards get the text input.
     var textMode = run.answerMode === "text" && !set.multi;
 
-    var kind = set.multi ? "Pick every correct answer, then submit" : (textMode ? "Type your answer" : "Pick an answer");
+    var kind = set.multi ? "Pick every correct answer, then submit" : (textMode ? answerFormat(card) : "Pick an answer");
     var streakHtml = "";
     if (run.mode === "quiz") {
       var s = run.streak[current.cardId] || 0;
@@ -827,7 +866,8 @@
       input.disabled = true;
       fb = els.stage.querySelector("#fb");
       fb.className = "feedback show " + (right ? "ok" : "no");
-      fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer is: " + escapeHtml(set.correct[0])) +
+      fb.innerHTML = (right ? "Correct." : "Not quite." + nearMissReason(set.correct[0], value) +
+          '<span class="compare"><span>You typed: <code>' + escapeHtml(value.trim()) + '</code></span><span>The answer: <code>' + escapeHtml(set.correct[0]) + "</code></span></span>") +
         (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
     } else {
       var picked = [];
