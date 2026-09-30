@@ -1,0 +1,222 @@
+{
+ "id": "y7-revision-1",
+ "label": "Revision 1: Reading Flowcharts",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Name the Symbols",
+   "type": "short-answer-validation",
+   "validatorId": "y7r1-do-now",
+   "validatorKey": "y7r1_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Name the Symbols</h2><p class=\"lesson-lead\">From Lesson 1. Write the name of each symbol.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:380px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; Move 40 steps; Up arrow pressed? (True to Say &quot;Up&quot;, False to Say &quot;Wait&quot;); Say &quot;Up&quot;; End; Say &quot;Wait&quot;\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc1a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc1a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc1a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">False</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc1a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><rect class=\"fc-b\" x=\"20\" y=\"78\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">Move 40 steps</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"157.5\">Up arrow</text><text class=\"fc-x fc-sm\" x=\"100\" y=\"171.5\">pressed?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">Say &quot;Up&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">5</text><polygon class=\"fc-b\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">Say &quot;Wait&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">6</text></svg></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y7r1-do-now-a\">(a) Box 1 [1]</label><input id=\"y7r1-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Name the Symbols part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-do-now-b\">(b) Box 2 [1]</label><input id=\"y7r1-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Name the Symbols part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-do-now-c\">(c) Box 3 [1]</label><input id=\"y7r1-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Name the Symbols part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-do-now-d\">(d) Box 4 [1]</label><input id=\"y7r1-do-now-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-d\" aria-label=\"Do Now: Name the Symbols part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y7r1-do-now-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y7r1-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "title",
+   "label": "Revision 1: Reading Flowcharts",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Computational Thinking</p><h2 class=\"lesson-h2\">Revision 1: Reading Flowcharts</h2><p>Year 7</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> read a flowchart. Say what the sprite does.</li><li><strong>Next lesson:</strong> Revision 2.</li><li><strong>Then:</strong> the exam.</li></ul>"
+  },
+  {
+   "id": "key-words",
+   "label": "Key Words: The Symbols",
+   "content": "<h2 class=\"lesson-h2\">Key Words: The Symbols</h2><p class=\"lesson-lead\">Every shape has one job.</p><table class=\"donow-table\"><thead><tr><th>Shape</th><th>Name</th><th>Job</th></tr></thead><tbody><tr><td style=\"text-align:center\"><svg viewBox=\"0 0 100 44\" width=\"100\" height=\"44\" role=\"img\" aria-label=\"terminal shape\"><rect x=\"4\" y=\"6\" width=\"92\" height=\"32\" rx=\"16\" fill=\"var(--surface-2)\" stroke-width=\"2\" stroke=\"var(--muted)\"/></svg></td><td><strong>Start/End</strong></td><td>Where the flowchart starts and stops.</td></tr><tr><td style=\"text-align:center\"><svg viewBox=\"0 0 100 44\" width=\"100\" height=\"44\" role=\"img\" aria-label=\"process shape\"><rect x=\"4\" y=\"6\" width=\"92\" height=\"32\" rx=\"3\" fill=\"var(--surface-2)\" stroke-width=\"2\" stroke=\"var(--brand)\"/></svg></td><td><strong>Process</strong></td><td>An instruction. Example: Move 10 steps.</td></tr><tr><td style=\"text-align:center\"><svg viewBox=\"0 0 100 44\" width=\"100\" height=\"44\" role=\"img\" aria-label=\"io shape\"><polygon points=\"16,6 96,6 84,38 4,38\" fill=\"var(--surface-2)\" stroke-width=\"2\" stroke=\"var(--brand)\"/></svg></td><td><strong>Input or output</strong></td><td>A message. Example: Say \"Hello\".</td></tr><tr><td style=\"text-align:center\"><svg viewBox=\"0 0 100 44\" width=\"100\" height=\"44\" role=\"img\" aria-label=\"decision shape\"><polygon points=\"50,2 96,22 50,42 4,22\" fill=\"rgba(253,214,99,.12)\" stroke=\"var(--warn)\" stroke-width=\"2\"/></svg></td><td><strong>Decision</strong></td><td>A question. It has a True arrow and a False arrow.</td></tr><tr><td style=\"text-align:center\"><svg viewBox=\"0 0 100 44\" width=\"100\" height=\"44\" role=\"img\" aria-label=\"arrow shape\"><line x1=\"10\" y1=\"22\" x2=\"80\" y2=\"22\" stroke=\"var(--brand)\" stroke-width=\"3\"/><polygon points=\"80,14 94,22 80,30\" fill=\"var(--brand)\"/></svg></td><td><strong>Arrow</strong></td><td>Shows the order. Follow the arrows.</td></tr></tbody></table>"
+  },
+  {
+   "id": "read",
+   "label": "Read a Flowchart",
+   "content": "<h2 class=\"lesson-h2\">Read a Flowchart</h2><p class=\"lesson-lead\">Start at Start. Follow the arrows. One box at a time.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:400px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 184 380\" width=\"184\" height=\"380\" role=\"img\" aria-label=\"Start; Move 20 steps; Say &quot;Hi&quot;; Move 30 steps; Say &quot;Bye&quot;; End\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc2a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M92 48 L92 78\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M92 114 L92 142\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M92 178 L92 206\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M92 242 L92 270\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M92 306 L92 336\" marker-end=\"url(#fc2a)\"/><rect class=\"fc-t\" x=\"40\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"92\" y=\"36.5\">Start</text><rect class=\"fc-b\" x=\"12\" y=\"78\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"92\" y=\"100.5\">Move 20 steps</text><polygon class=\"fc-b\" points=\"26,142 172,142 158,178 12,178\"/><text class=\"fc-x\" x=\"92\" y=\"164.5\">Say &quot;Hi&quot;</text><rect class=\"fc-b\" x=\"12\" y=\"206\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"92\" y=\"228.5\">Move 30 steps</text><polygon class=\"fc-b\" points=\"26,270 172,270 158,306 12,306\"/><text class=\"fc-x\" x=\"92\" y=\"292.5\">Say &quot;Bye&quot;</text><rect class=\"fc-t\" x=\"40\" y=\"336\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"92\" y=\"356.5\">End</text></svg></div></div><div><table class=\"donow-table\"><thead><tr><th>Box</th><th>What happens</th><th>Steps so far</th></tr></thead><tbody><tr><td>Start</td><td>Begin here.</td><td>0</td></tr><tr><td>Move 20 steps</td><td>The sprite moves.</td><td>20</td></tr><tr><td>Say \"Hi\"</td><td>The sprite says Hi.</td><td>20</td></tr><tr><td>Move 30 steps</td><td>The sprite moves.</td><td>50</td></tr><tr><td>Say \"Bye\"</td><td>The sprite says Bye.</td><td>50</td></tr><tr><td>End</td><td>Stop.</td><td><strong>50</strong></td></tr></tbody></table><p>The sprite moves <strong>50 steps</strong>. It says <strong>Hi</strong>, then <strong>Bye</strong>.</p></div></div>"
+  },
+  {
+   "id": "read-check",
+   "label": "Your Turn: Read It",
+   "type": "short-answer-validation",
+   "validatorId": "y7r1-read-check",
+   "validatorKey": "y7r1_read_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Read It</h2><p class=\"lesson-lead\">Follow the arrows, one box at a time.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:360px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 184 444\" width=\"184\" height=\"444\" role=\"img\" aria-label=\"Start; Say &quot;Ready&quot;; Move 10 steps; Move 40 steps; Say &quot;Go&quot;; Move 20 steps; End\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc3a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M92 48 L92 78\" marker-end=\"url(#fc3a)\"/><path class=\"fc-e\" d=\"M92 114 L92 142\" marker-end=\"url(#fc3a)\"/><path class=\"fc-e\" d=\"M92 178 L92 206\" marker-end=\"url(#fc3a)\"/><path class=\"fc-e\" d=\"M92 242 L92 270\" marker-end=\"url(#fc3a)\"/><path class=\"fc-e\" d=\"M92 306 L92 334\" marker-end=\"url(#fc3a)\"/><path class=\"fc-e\" d=\"M92 370 L92 400\" marker-end=\"url(#fc3a)\"/><rect class=\"fc-t\" x=\"40\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"92\" y=\"36.5\">Start</text><polygon class=\"fc-b\" points=\"26,78 172,78 158,114 12,114\"/><text class=\"fc-x\" x=\"92\" y=\"100.5\">Say &quot;Ready&quot;</text><rect class=\"fc-b\" x=\"12\" y=\"142\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"92\" y=\"164.5\">Move 10 steps</text><rect class=\"fc-b\" x=\"12\" y=\"206\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"92\" y=\"228.5\">Move 40 steps</text><polygon class=\"fc-b\" points=\"26,270 172,270 158,306 12,306\"/><text class=\"fc-x\" x=\"92\" y=\"292.5\">Say &quot;Go&quot;</text><rect class=\"fc-b\" x=\"12\" y=\"334\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"92\" y=\"356.5\">Move 20 steps</text><rect class=\"fc-t\" x=\"40\" y=\"400\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"92\" y=\"420.5\">End</text></svg></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y7r1-read-check-a\">(a) How many steps does the sprite move altogether? [1]</label><input id=\"y7r1-read-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"read-check-a\" aria-label=\"Your Turn: Read It part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-read-check-b\">(b) What does the sprite say last? [1]</label><input id=\"y7r1-read-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"read-check-b\" aria-label=\"Your Turn: Read It part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-read-check-c\">(c) What does the sprite say first? [1]</label><input id=\"y7r1-read-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"read-check-c\" aria-label=\"Your Turn: Read It part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y7r1-read-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y7r1-read-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "fix",
+   "label": "Find the Wrong Box",
+   "type": "short-answer-validation",
+   "validatorId": "y7r1-fix",
+   "validatorKey": "y7r1_fix",
+   "content": "<h2 class=\"lesson-h2\">Find the Wrong Box</h2><p class=\"lesson-lead\">It should: face <strong>right</strong>, move 60 steps, then say \"Here\".</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:380px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 184 316\" width=\"184\" height=\"316\" role=\"img\" aria-label=\"Start; Point in direction 180; Move 60 steps; Say &quot;Here&quot;; End\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc4a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M92 48 L92 78\" marker-end=\"url(#fc4a)\"/><path class=\"fc-e\" d=\"M92 114 L92 142\" marker-end=\"url(#fc4a)\"/><path class=\"fc-e\" d=\"M92 178 L92 206\" marker-end=\"url(#fc4a)\"/><path class=\"fc-e\" d=\"M92 242 L92 272\" marker-end=\"url(#fc4a)\"/><rect class=\"fc-t\" x=\"40\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"92\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"42\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"42\" y=\"22.5\">1</text><rect class=\"fc-b\" x=\"12\" y=\"78\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x fc-sm\" x=\"92\" y=\"93.5\">Point in direction</text><text class=\"fc-x fc-sm\" x=\"92\" y=\"107.5\">180</text><circle class=\"fc-n\" cx=\"14\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"84.5\">2</text><rect class=\"fc-b\" x=\"12\" y=\"142\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"92\" y=\"164.5\">Move 60 steps</text><circle class=\"fc-n\" cx=\"14\" cy=\"144\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"148.5\">3</text><polygon class=\"fc-b\" points=\"26,206 172,206 158,242 12,242\"/><text class=\"fc-x\" x=\"92\" y=\"228.5\">Say &quot;Here&quot;</text><circle class=\"fc-n\" cx=\"14\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"212.5\">4</text><rect class=\"fc-t\" x=\"40\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"92\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"42\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"42\" y=\"278.5\">5</text></svg></div><p style=\"margin-top:8px\">Right is 90. Left is -90. Up is 0. Down is 180.</p></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y7r1-fix-a\">(a) Which box number is wrong? [1]</label><input id=\"y7r1-fix-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-a\" aria-label=\"Find the Wrong Box part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y7r1-fix-b\">(b) Write the correct box. [1]</label><input id=\"y7r1-fix-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-b\" aria-label=\"Find the Wrong Box part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y7r1-fix-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y7r1-fix-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "loops",
+   "label": "Key-Press Loops",
+   "content": "<h2 class=\"lesson-h2\">Key-Press Loops</h2><p class=\"lesson-lead\">A key press is an <strong>input</strong>. The decision checks it.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:400px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 282 270\" width=\"282\" height=\"270\" role=\"img\" aria-label=\"Start; Right arrow pressed? (True to Point in direction 90, False to Right arrow pressed?); Point in direction 90; Move 10 steps\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc5a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M130 48 L130 83\" marker-end=\"url(#fc5a)\"/><path class=\"fc-e\" d=\"M130 141 L130 158\" marker-end=\"url(#fc5a)\"/><text class=\"fc-l\" x=\"140\" y=\"155\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M130 194 L130 222\" marker-end=\"url(#fc5a)\"/><path class=\"fc-e\" d=\"M50 240 L30 240 L30 61 L130 61\" marker-end=\"url(#fc5a)\"/><path class=\"fc-e\" d=\"M218 112 L264 112 L264 71 L130 71\" marker-end=\"url(#fc5a)\"/><text class=\"fc-l\" x=\"224\" y=\"106\" text-anchor=\"start\">False</text><rect class=\"fc-t\" x=\"78\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"130\" y=\"36.5\">Start</text><polygon class=\"fc-d\" points=\"130,83 218,112 130,141 42,112\"/><text class=\"fc-x fc-sm\" x=\"130\" y=\"109.5\">Right arrow</text><text class=\"fc-x fc-sm\" x=\"130\" y=\"123.5\">pressed?</text><rect class=\"fc-b\" x=\"50\" y=\"158\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x fc-sm\" x=\"130\" y=\"173.5\">Point in direction</text><text class=\"fc-x fc-sm\" x=\"130\" y=\"187.5\">90</text><rect class=\"fc-b\" x=\"50\" y=\"222\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"130\" y=\"244.5\">Move 10 steps</text></svg></div></div><div><ul class=\"lesson-facts\"><li><strong>Pressed:</strong> follow the <strong>True</strong> arrow. Point, then Move.</li><li><strong>Not pressed:</strong> follow the <strong>False</strong> arrow. No move.</li><li>Both arrows go back to the decision. It <strong>checks again</strong>.</li><li>Pressed, not pressed, pressed: 10 + 0 + 10 = <strong>20 steps</strong>.</li><li>Right 90. Left -90. Up 0. Down 180.</li></ul></div></div>"
+  },
+  {
+   "id": "loops-check",
+   "label": "Your Turn: Key-Press Loops",
+   "type": "short-answer-validation",
+   "validatorId": "y7r1-loops-check",
+   "validatorKey": "y7r1_loops_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Key-Press Loops</h2><p class=\"lesson-lead\">The up arrow is checked 5 times: pressed, pressed, not pressed, pressed, not pressed.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:400px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 282 270\" width=\"282\" height=\"270\" role=\"img\" aria-label=\"Start; Up arrow pressed? (True to Point in direction 0, False to Up arrow pressed?); Point in direction 0; Move 5 steps\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc6a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M130 48 L130 83\" marker-end=\"url(#fc6a)\"/><path class=\"fc-e\" d=\"M130 141 L130 158\" marker-end=\"url(#fc6a)\"/><text class=\"fc-l\" x=\"140\" y=\"155\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M130 194 L130 222\" marker-end=\"url(#fc6a)\"/><path class=\"fc-e\" d=\"M50 240 L30 240 L30 61 L130 61\" marker-end=\"url(#fc6a)\"/><path class=\"fc-e\" d=\"M218 112 L264 112 L264 71 L130 71\" marker-end=\"url(#fc6a)\"/><text class=\"fc-l\" x=\"224\" y=\"106\" text-anchor=\"start\">False</text><rect class=\"fc-t\" x=\"78\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"130\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"80\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"80\" y=\"22.5\">1</text><polygon class=\"fc-d\" points=\"130,83 218,112 130,141 42,112\"/><text class=\"fc-x fc-sm\" x=\"130\" y=\"109.5\">Up arrow</text><text class=\"fc-x fc-sm\" x=\"130\" y=\"123.5\">pressed?</text><circle class=\"fc-n\" cx=\"44\" cy=\"85\" r=\"11\"/><text class=\"fc-nt\" x=\"44\" y=\"89.5\">2</text><rect class=\"fc-b\" x=\"50\" y=\"158\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x fc-sm\" x=\"130\" y=\"173.5\">Point in direction</text><text class=\"fc-x fc-sm\" x=\"130\" y=\"187.5\">0</text><circle class=\"fc-n\" cx=\"52\" cy=\"160\" r=\"11\"/><text class=\"fc-nt\" x=\"52\" y=\"164.5\">3</text><rect class=\"fc-b\" x=\"50\" y=\"222\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"130\" y=\"244.5\">Move 5 steps</text><circle class=\"fc-n\" cx=\"52\" cy=\"224\" r=\"11\"/><text class=\"fc-nt\" x=\"52\" y=\"228.5\">4</text></svg></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y7r1-loops-check-a\">(a) How many steps does the sprite move? [1]</label><input id=\"y7r1-loops-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"loops-check-a\" aria-label=\"Your Turn: Key-Press Loops part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-loops-check-b\">(b) The key is not pressed. Which box number comes next? [1]</label><input id=\"y7r1-loops-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"loops-check-b\" aria-label=\"Your Turn: Key-Press Loops part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-loops-check-c\">(c) This flowchart should move down instead. What number goes in Point in direction? [1]</label><input id=\"y7r1-loops-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"loops-check-c\" aria-label=\"Your Turn: Key-Press Loops part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y7r1-loops-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y7r1-loops-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Fill In the Flowchart",
+   "type": "short-answer-validation",
+   "validatorId": "y7r1-practice",
+   "validatorKey": "y7r1_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Fill In the Flowchart</h2><p class=\"lesson-lead\">It should move the sprite <strong>left 20 steps</strong> each time the left arrow is pressed.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:380px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 282 270\" width=\"282\" height=\"270\" role=\"img\" aria-label=\"Start; A (True to Point in direction B, False to A); Point in direction B; Move C steps\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc7a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M130 48 L130 83\" marker-end=\"url(#fc7a)\"/><path class=\"fc-e\" d=\"M130 141 L130 158\" marker-end=\"url(#fc7a)\"/><text class=\"fc-l\" x=\"140\" y=\"155\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M130 194 L130 222\" marker-end=\"url(#fc7a)\"/><path class=\"fc-e\" d=\"M50 240 L30 240 L30 61 L130 61\" marker-end=\"url(#fc7a)\"/><path class=\"fc-e\" d=\"M218 112 L264 112 L264 71 L130 71\" marker-end=\"url(#fc7a)\"/><text class=\"fc-l\" x=\"224\" y=\"106\" text-anchor=\"start\">False</text><rect class=\"fc-t\" x=\"78\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"130\" y=\"36.5\">Start</text><polygon class=\"fc-d\" points=\"130,83 218,112 130,141 42,112\"/><text class=\"fc-x fc-sm\" x=\"130\" y=\"116.5\">A</text><rect class=\"fc-b\" x=\"50\" y=\"158\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x fc-sm\" x=\"130\" y=\"173.5\">Point in direction</text><text class=\"fc-x fc-sm\" x=\"130\" y=\"187.5\">B</text><rect class=\"fc-b\" x=\"50\" y=\"222\" width=\"160\" height=\"36\" rx=\"3\"/><text class=\"fc-x\" x=\"130\" y=\"244.5\">Move C steps</text></svg></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y7r1-practice-a\">(a) What should box A say? [1]</label><input id=\"y7r1-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Fill In the Flowchart part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-practice-b\">(b) What number is B? [1]</label><input id=\"y7r1-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Fill In the Flowchart part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y7r1-practice-c\">(c) What number is C? [1]</label><input id=\"y7r1-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Fill In the Flowchart part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y7r1-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y7r1-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Revision 1 Drill",
+   "type": "embedded-app",
+   "appId": "drill-y7-revision-1",
+   "embedContainerId": "y7r1-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Revision 1 Drill</h2><p class=\"lesson-lead\">Symbols, reading, fixing and key-press loops. Your progress is saved.</p><div id=\"y7r1-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y7r1_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(start\\s*(\\/|or|and)?\\s*end|terminal|terminator|rounded(\\s+box)?)(\\s+(symbol|shape|box))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Box 1 is a rounded box: Start/End."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(process|rectangle)(\\s+(symbol|shape|box))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Box 2 is a rectangle: an instruction. It is a process."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(decision|diamond)(\\s+(symbol|shape|box))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Box 3 is a diamond: a question. It is a decision."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(input\\s*(or|\\/|and)?\\s*output|output|input|sloping|parallelogram)(\\s+(symbol|shape|box))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Box 4 is a sloping box: a message. It is input or output."
+   }
+  ],
+  "y7r1_read_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(box\\s*)?70\\s*(steps?)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Add every Move box: 10 + 40 + 20."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*go\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find the last Say box before End."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*ready\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find the first Say box after Start."
+   }
+  ],
+  "y7r1_fix": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(box\\s*)?2\\s*\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check each box. Box 2 points to 180. Is 180 right?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*point\\s+in\\s+direction\\s*:?\\s*90(\\s*degrees?)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Facing right is 90. Keep the words Point in direction."
+   }
+  ],
+  "y7r1_loops_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(box\\s*)?15\\s*(steps?)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the presses. Each press moves 5 steps."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(box\\s*)?2\\s*\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Not pressed follows the False arrow. Where does it point?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(box\\s*)?180\\s*(degrees?)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Up is 0. Down is the opposite way."
+   }
+  ],
+  "y7r1_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(is\\s+(the\\s+)?)?left(\\s+arrow)?(\\s+key)?\\s+pressed\\s*\\??\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A is the decision. It asks a question about the left arrow."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(box\\s*)?[-\\u2212]\\s*90\\s*(degrees?)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "B is the direction. Right is 90. Left is the opposite way."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(box\\s*)?20\\s*(steps?)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read what it should do: how many steps?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
