@@ -92,10 +92,10 @@ const steps = [];
     { from: 'd', to: 'f', label: 'False' }, { from: 't', to: 'e', label: null }, { from: 'f', to: 'e', label: null },
   ] });
   steps.push(checkStep('do-now', 'Do Now: Name the Symbols', 'Do Now: Name the Symbols', 'From Lesson 1. Write the name of each symbol.', [
-    { label: 'Box 1', answer: SYM.terminal, feedback: 'Box 1 is a rounded box: Start/End.' },
-    { label: 'Box 2', answer: SYM.process, feedback: 'Box 2 is a rectangle: an instruction. It is a process.' },
-    { label: 'Box 3', answer: SYM.decision, feedback: 'Box 3 is a diamond: a question. It is a decision.' },
-    { label: 'Box 4', answer: SYM.io, feedback: 'Box 4 is a sloping box: a message. It is input or output.' },
+    { label: 'Box 1', answer: SYM.terminal, feedback: 'Box 1: look at its shape. Where does a flowchart begin and stop?' },
+    { label: 'Box 2', answer: SYM.process, feedback: 'Box 2: it is an instruction. Look at the key words table.' },
+    { label: 'Box 3', answer: SYM.decision, feedback: 'Box 3: it asks a question with a True and a False arrow.' },
+    { label: 'Box 4', answer: SYM.io, feedback: 'Box 4: it shows a message. Which symbol shows messages?' },
   ], chart(f, 380)));
 }
 
@@ -141,7 +141,7 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
   const r = FC.run(f);
   assert(r.steps === 70 && r.said[r.said.length - 1] === 'Go', 'we-do');
   steps.push(checkStep('read-check', 'Your Turn: Read It', 'Your Turn: Read It', 'Follow the arrows, one box at a time.', [
-    { label: 'How many steps does the sprite move altogether?', answer: num(r.steps, 'steps?'), feedback: 'Add every Move box: 10 + 40 + 20.' },
+    { label: 'How many steps does the sprite move altogether?', answer: num(r.steps, 'steps?'), feedback: 'Find every Move box. Add their numbers together.' },
     { label: 'What does the sprite say last?', answer: word('go'), feedback: 'Find the last Say box before End.' },
     { label: 'What does the sprite say first?', answer: word('ready'), feedback: 'Find the first Say box after Start.' },
   ], chart(f, 360)));
@@ -151,8 +151,8 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
 {
   const f = numbered(FC.line([['process', 'Point in direction 180'], ['process', 'Move 60 steps'], ['io', 'Say "Here"']]));
   steps.push(checkStep('fix', 'Find the Wrong Box', 'Find the Wrong Box', 'It should: face <strong>right</strong>, move 60 steps, then say "Here".', [
-    { label: 'Which box number is wrong?', answer: num(2), feedback: 'Check each box. Box 2 points to 180. Is 180 right?' },
-    { line: true, label: 'Write the correct box.', answer: '^\\s*point\\s+in\\s+direction\\s*:?\\s*90(\\s*degrees?)?\\s*$', feedback: 'Facing right is 90. Keep the words Point in direction.' },
+    { label: 'Which box number is wrong?', answer: num(2), feedback: 'Check each box against what it should do. Which one does not match?' },
+    { line: true, label: 'Write the correct box.', answer: '^\\s*point\\s+in\\s+direction\\s*:?\\s*90(\\s*degrees?)?\\s*$', feedback: 'Use the direction numbers under the flowchart. Keep the words Point in direction.' },
   ], chart(f, 380) + '<p style="margin-top:8px">Right is 90. Left is -90. Up is 0. Down is 180.</p>'));
 }
 
@@ -176,9 +176,9 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
   const r = FC.run(f, { presses: [1, 1, 0, 1, 0] });
   assert(r.steps === 15, 'loop check ' + r.steps);
   steps.push(checkStep('loops-check', 'Your Turn: Key-Press Loops', 'Your Turn: Key-Press Loops', 'The up arrow is checked 5 times: pressed, pressed, not pressed, pressed, not pressed.', [
-    { label: 'How many steps does the sprite move?', answer: num(r.steps, 'steps?'), feedback: 'Count the presses. Each press moves 5 steps.' },
-    { label: 'The key is not pressed. Which box number comes next?', answer: num(2), feedback: 'Not pressed follows the False arrow. Where does it point?' },
-    { label: 'This flowchart should move down instead. What number goes in Point in direction?', answer: num(180, 'degrees?'), feedback: 'Up is 0. Down is the opposite way.' },
+    { label: 'How many steps does the sprite move?', answer: num(r.steps, 'steps?'), feedback: 'Count the presses. Each press runs the Move box once.' },
+    { label: 'The key is not pressed. Which box number comes next?', answer: num(2), feedback: 'Not pressed follows the False arrow. Follow it to a box.' },
+    { label: 'This flowchart should move down instead. What number goes in Point in direction?', answer: num(180, 'degrees?'), feedback: 'Down is the opposite way to up. Look at the direction numbers.' },
   ], chart(f, 400)));
 }
 
@@ -188,7 +188,7 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
   assert(FC.run(model, { presses: [1] }).steps === 20 && FC.run(model, { presses: [1] }).direction === -90, 'practice model');
   steps.push(checkStep('practice', 'Practice: Fill In the Flowchart', 'Practice: Fill In the Flowchart', 'It should move the sprite <strong>left 20 steps</strong> each time the left arrow is pressed.', [
     { line: true, label: 'What should box A say?', answer: '^\\s*(is\\s+(the\\s+)?)?left(\\s+arrow)?(\\s+key)?\\s+pressed\\s*\\??\\s*$', feedback: 'A is the decision. It asks a question about the left arrow.' },
-    { label: 'What number is B?', answer: num(-90, 'degrees?'), feedback: 'B is the direction. Right is 90. Left is the opposite way.' },
+    { label: 'What number is B?', answer: num(-90, 'degrees?'), feedback: 'B is the direction. Left is the opposite way to right.' },
     { label: 'What number is C?', answer: num(20, 'steps?'), feedback: 'Read what it should do: how many steps?' },
   ], chart((() => { const f = keyLoop('A', 'B', 'C'); f.nodes[1].text = 'A'; return f; })(), 380)));
 }

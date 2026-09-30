@@ -80,7 +80,7 @@
      "source": "^\\s*(an?\\s+)?(start\\s*(\\/|or|and)?\\s*end|terminal|terminator|rounded(\\s+box)?)(\\s+(symbol|shape|box))?\\s*$",
      "flags": "i"
     },
-    "feedback": "Box 1 is a rounded box: Start/End."
+    "feedback": "Box 1: look at its shape. Where does a flowchart begin and stop?"
    },
    {
     "suffix": "b",
@@ -89,7 +89,7 @@
      "source": "^\\s*(an?\\s+)?(process|rectangle)(\\s+(symbol|shape|box))?\\s*$",
      "flags": "i"
     },
-    "feedback": "Box 2 is a rectangle: an instruction. It is a process."
+    "feedback": "Box 2: it is an instruction. Look at the key words table."
    },
    {
     "suffix": "c",
@@ -98,7 +98,7 @@
      "source": "^\\s*(an?\\s+)?(decision|diamond)(\\s+(symbol|shape|box))?\\s*$",
      "flags": "i"
     },
-    "feedback": "Box 3 is a diamond: a question. It is a decision."
+    "feedback": "Box 3: it asks a question with a True and a False arrow."
    },
    {
     "suffix": "d",
@@ -107,7 +107,7 @@
      "source": "^\\s*(an?\\s+)?(input\\s*(or|\\/|and)?\\s*output|output|input|sloping|parallelogram)(\\s+(symbol|shape|box))?\\s*$",
      "flags": "i"
     },
-    "feedback": "Box 4 is a sloping box: a message. It is input or output."
+    "feedback": "Box 4: it shows a message. Which symbol shows messages?"
    }
   ],
   "y7r1_read_check": [
@@ -118,7 +118,7 @@
      "source": "^\\s*(box\\s*)?70\\s*(steps?)?\\s*$",
      "flags": "i"
     },
-    "feedback": "Add every Move box: 10 + 40 + 20."
+    "feedback": "Find every Move box. Add their numbers together."
    },
    {
     "suffix": "b",
@@ -147,7 +147,7 @@
      "source": "^\\s*(box\\s*)?2\\s*\\s*$",
      "flags": "i"
     },
-    "feedback": "Check each box. Box 2 points to 180. Is 180 right?"
+    "feedback": "Check each box against what it should do. Which one does not match?"
    },
    {
     "suffix": "b",
@@ -156,7 +156,7 @@
      "source": "^\\s*point\\s+in\\s+direction\\s*:?\\s*90(\\s*degrees?)?\\s*$",
      "flags": "i"
     },
-    "feedback": "Facing right is 90. Keep the words Point in direction."
+    "feedback": "Use the direction numbers under the flowchart. Keep the words Point in direction."
    }
   ],
   "y7r1_loops_check": [
@@ -167,7 +167,7 @@
      "source": "^\\s*(box\\s*)?15\\s*(steps?)?\\s*$",
      "flags": "i"
     },
-    "feedback": "Count the presses. Each press moves 5 steps."
+    "feedback": "Count the presses. Each press runs the Move box once."
    },
    {
     "suffix": "b",
@@ -176,7 +176,7 @@
      "source": "^\\s*(box\\s*)?2\\s*\\s*$",
      "flags": "i"
     },
-    "feedback": "Not pressed follows the False arrow. Where does it point?"
+    "feedback": "Not pressed follows the False arrow. Follow it to a box."
    },
    {
     "suffix": "c",
@@ -185,7 +185,7 @@
      "source": "^\\s*(box\\s*)?180\\s*(degrees?)?\\s*$",
      "flags": "i"
     },
-    "feedback": "Up is 0. Down is the opposite way."
+    "feedback": "Down is the opposite way to up. Look at the direction numbers."
    }
   ],
   "y7r1_practice": [
@@ -205,7 +205,7 @@
      "source": "^\\s*(box\\s*)?[-\\u2212]\\s*90\\s*(degrees?)?\\s*$",
      "flags": "i"
     },
-    "feedback": "B is the direction. Right is 90. Left is the opposite way."
+    "feedback": "B is the direction. Left is the opposite way to right."
    },
    {
     "suffix": "c",
