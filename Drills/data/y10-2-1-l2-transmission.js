@@ -53,7 +53,7 @@ DrillData.register("y10-2-1-l2-transmission", {
         note: "Serial uses a single wire, so the bits travel one after another." },
       { id: "tx-03", category: "tx-serial", prompt: "What does parallel transmission send at the same time?", answers: ["Several bits, down several wires"],
         keywords: [{ required: [["several", "multiple", "many", "8", "more", "lot"], ["bit", "bits"]], excluded: ["1"] }],
-        distractors: ["One bit", "Only the packet header", "The whole file in one go"],
+        distractors: ["One bit at a time, down a single wire", "Only the packet header", "The whole file, as one packet, in one go"],
         note: "Parallel sends several bits at the same time, each down its own wire." },
       { id: "tx-04", category: "tx-serial", prompt: "Over a short distance, which is faster: serial or parallel transmission?", answers: ["Parallel"],
         keywords: [WIRING.parallel[1]], distractors: ["Serial", "They are the same speed"],
@@ -78,7 +78,7 @@ DrillData.register("y10-2-1-l2-transmission", {
         note: "Full-duplex: both directions at once." },
       { id: "tx-10", category: "tx-direction", prompt: "Describe half-duplex data transmission.", answers: ["Data is sent in both directions, but only one direction at a time"],
         keywords: [{ required: [["both", "either", "two", "each"], ["not", "only", "turn", "wait"]] }],
-        distractors: ["Data is sent in one direction", "Data is sent both ways at the same time", "Several bits are sent at the same time"],
+        distractors: ["Data is sent in one direction only, from the sender to the receiver", "Data is sent in both directions at the same time, with no delay at all", "Several bits are sent at the same time, each down its own wire"],
         note: "Half-duplex: both directions, but not at the same time. From Cambridge IGCSE 0478/12, March 2021, Question 1(d)(ii)." },
       { id: "tx-11", category: "tx-direction", prompt: "Define full-duplex data transmission.", answers: ["Data is sent in both directions at the same time"],
         keywords: [{ required: [["both", "either", "two", "each"], ["same", "simultaneously", "simultaneous", "together", "once"]], excluded: ["not", "turn", "only"] }],
@@ -110,7 +110,7 @@ DrillData.register("y10-2-1-l2-transmission", {
       { id: "tx-16", category: "tx-choose", prompt: "Data is sent to a computer 30 km away. Explain why serial is more suitable than parallel.",
         answers: ["Over a long distance, parallel bits can skew, but serial bits arrive in order"],
         keywords: [{ required: [["skew", "skewing", "skewed", "sync", "order", "error", "corrupt", "corrupted", "step", "interference", "reliable", "accurate", "accurately"], ["long", "distance", "far", "30", "km"]] }],
-        distractors: ["Serial is faster than parallel", "Parallel is cheaper over a long distance", "Serial sends several bits at the same time"],
+        distractors: ["Serial is faster than parallel, because it sends one bit at a time down one wire", "Parallel is cheaper over a long distance, because it uses fewer wires than serial", "Serial sends several bits at the same time, so the data arrives more quickly"],
         note: "Over 30 km, bits sent in parallel can skew (arrive out of step); serial bits arrive in order, and one wire costs less. From Cambridge IGCSE 0478/12, March 2021, Question 1(d)(i)." },
 
       // ------------------------------------------------ Advantages and Drawbacks
@@ -124,15 +124,15 @@ DrillData.register("y10-2-1-l2-transmission", {
         note: "Serial sends one bit at a time, so it is slower. From Cambridge IGCSE 0478/13, June 2021, Question 6(c)(ii)." },
       { id: "tx-19", category: "tx-compare", prompt: "Give one reason parallel transmission is not suitable over a long distance.", answers: ["The bits can skew and arrive out of step"],
         keywords: [{ required: [["skew", "skewing", "skewed", "sync", "step", "order", "different", "corrupt", "corrupted", "error", "interference", "expensive", "cost"]] }],
-        distractors: ["It is too fast", "It uses only one wire", "It sends one bit at a time"],
+        distractors: ["It sends one bit at a time, so the data takes too long to arrive", "It uses only one wire", "It only works in one direction"],
         note: "Over a long distance the bits can skew, and many wires cost more." },
       { id: "tx-20", category: "tx-compare", prompt: "Give one advantage of full-duplex over half-duplex transmission.", answers: ["Both sides can send at the same time, so there is no waiting"],
         keywords: [{ required: [["wait", "waiting", "same", "simultaneously", "once", "faster", "quicker"]], excluded: ["not"] }],
-        distractors: ["It uses fewer wires", "Data only travels one way", "Bits cannot skew"],
+        distractors: ["It needs fewer wires, because data only travels in one direction", "Bits cannot skew, because they are sent one after another", "Data only travels one way, so nothing collides"],
         note: "Full-duplex sends both ways at once, so neither side has to wait." },
       { id: "tx-21", category: "tx-compare", prompt: "Give one drawback of simplex transmission.", answers: ["The receiver cannot send data back"],
         keywords: [{ required: [["back", "reply", "respond", "return", "confirm", "acknowledge", "1", "direction"]] }],
-        distractors: ["It needs a wire for every bit", "Bits arrive at different times", "It is always slower than parallel"],
+        distractors: ["It needs a wire for every bit", "Bits arrive at different times", "It is always slower than parallel transmission"],
         note: "Simplex is one direction only, so the receiver cannot reply or confirm it received the data." }
     ];
   })()
