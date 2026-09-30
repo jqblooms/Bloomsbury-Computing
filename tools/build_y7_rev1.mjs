@@ -64,6 +64,24 @@ const SYM = {
 // A table readable from the back of the room: 17px text, roomy cells, text left-aligned.
 const bigTable = (html) => html.replace('<table class="donow-table">', '<table class="donow-table" style="font-size:17px;width:100%">')
   .replace(/<t([hd])>/g, '<t$1 style="padding:7px 12px;text-align:left;font-size:17px">');
+// Think, Pair, Share under each slide's heading (James, 2026-09-30: the lesson said what to do but never why;
+// students should be asked why, not told, with plenty of think-pair-share). Each asks one short question:
+// think alone, tell a partner, share with the class. The answer stays hidden until the teacher clicks it after
+// the sharing. On the two teaching slides it is a prediction, and the worked answer is what the click reveals.
+// Styled by .lesson-tps in the shell.
+const TPS = {
+  'do-now': ['Why does every symbol need a name?', 'So everyone reads a flowchart the same way. The exam uses these names too.'],
+  'key-words': ['Why does each job have its own shape?', 'You can see what a box does before you read the words in it.'],
+  'read-check': ['Why does a Say box not add any steps?', 'Say only shows a message. Only Move boxes move the sprite.'],
+  'fix': ['Why do we check every box against what it should do?', 'A mistake is where the flowchart and the plan are different. Checking each box finds it.'],
+  'loops-check': ['Why does "not pressed" move the sprite 0 steps?', 'The False arrow goes back to the decision. It never reaches the Move box.'],
+  'practice': ['Why must box A be a decision?', 'It asks a question about the key. It needs a True arrow and a False arrow.'],
+  'plenary': ['Why practise with new numbers every time?', 'If you can do it with any numbers, you really understand it.'],
+};
+function tps(question, answer, reveal = 'Show the answer') {
+  return `<details class="lesson-tps"><summary><span class="lesson-tps-steps">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span>` +
+    `<span class="lesson-tps-q">${question}</span><span class="lesson-tps-reveal">${reveal}</span></summary><div class="lesson-tps-a">${answer}</div></details>`;
+}
 const facts = (items) => '<ul class="lesson-facts">' + items.map((i) => `<li>${i}</li>`).join('') + '</ul>';
 const columns = (a, b) => `<div class="lesson-do-now-columns"><div>${a}</div><div>${b}</div></div>`;
 const embed = (id, label, appId, heading, lead) => ({ id, label, type: 'embedded-app', appId, embedContainerId: `${P}-${id}`,
@@ -80,6 +98,14 @@ function shape(kind) {
     arrow: `<line x1="10" y1="22" x2="80" y2="22" stroke="var(--brand)" stroke-width="3"/><polygon points="80,14 94,22 80,30" fill="var(--brand)"/>`,
   }[kind];
   return `<svg viewBox="0 0 100 44" width="120" height="53" role="img" aria-label="${kind} shape">${body}</svg>`;
+}
+
+// Two flowcharts side by side for the same idea, so pairs can compare them (James, 2026-09-30: several examples
+// of the same thing, seen from different sides, then discussed). Every answer comes from running both charts.
+function compare(id, label, lead, a, b, question, answer) {
+  const pane = (name, f) => `<div><p style="margin:0 0 6px;font-weight:700;text-align:center">${name}</p>${chart(f, 330)}</div>`;
+  return { id, label, content: `<h2 class="lesson-h2">${label}</h2><p class="lesson-lead">${lead}</p>` +
+    tps(question, answer) + columns(pane('Flowchart A', a), pane('Flowchart B', b)) };
 }
 
 const steps = [];
@@ -105,7 +131,7 @@ const steps = [];
 // ---------------------------------------------------------------- title
 steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Computational Thinking</p><h2 class="lesson-h2">Revision 1: Reading Flowcharts</h2><p>Year 7</p></div>' +
-    facts(['<strong>Today:</strong> read a flowchart. Say what the sprite does.', '<strong>Next lesson:</strong> Revision 2.', '<strong>Then:</strong> the exam.']) });
+    facts(['<strong>Today:</strong> read a flowchart. Say what the sprite does.', '<strong>Think, pair, share:</strong> why do programmers draw a flowchart before they write code?', '<strong>Next lesson:</strong> Revision 2. <strong>Then:</strong> the exam.']) });
 
 // ---------------------------------------------------------------- key words
 {
@@ -135,8 +161,10 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
     '<tr><td>End</td><td>Stop.</td><td><strong>50</strong></td></tr></tbody></table>';
   const bigger = bigTable(table);
   steps.push({ id: 'read', label: 'Read a Flowchart',
-    content: '<h2 class="lesson-h2">Read a Flowchart</h2><p class="lesson-lead">Begin at Start. Follow the arrows. One box at a time.</p>' +
-      columns(chart(f, 400), bigger + '<p>The sprite moves <strong>50 steps</strong> altogether. It says <strong>Hi</strong>, then <strong>Bye</strong>.</p><p><strong>Altogether</strong> means all added up.</p>') });
+    content: '<h2 class="lesson-h2">Read a Flowchart</h2><p class="lesson-lead">Begin at Start. Follow the arrows. One box at a time. <strong>Altogether</strong> means all added up.</p>' +
+      columns(chart(f, 400), tps('Predict: how many steps does the sprite move altogether? What does it say?',
+        bigger + '<p>The sprite moves <strong>50 steps</strong> altogether. It says <strong>Hi</strong>, then <strong>Bye</strong>.</p>' +
+        '<p><strong>Why one box at a time?</strong> The computer runs one box at a time, so we read it the same way.</p>', 'Show the worked answer')) });
 }
 
 // ---------------------------------------------------------------- we do: read one
@@ -151,6 +179,16 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
   ], chart(f, 360)));
 }
 
+{
+  const A = FC.line([['process', 'Move 20 steps'], ['io', 'Say "Hi"'], ['process', 'Move 30 steps']]);
+  const B = FC.line([['process', 'Move 30 steps'], ['process', 'Move 20 steps'], ['io', 'Say "Hi"']]);
+  const ra = FC.run(A), rb = FC.run(B);
+  assert(ra.steps === 50 && rb.steps === 50, 'compare read');
+  steps.push(compare('compare-read', 'Compare: Same Boxes, New Order', 'Read both flowcharts. One box at a time.', A, B,
+    'What is the same? What is different?',
+    '<p><strong>Same:</strong> both move 50 steps altogether, and both say Hi.</p><p><strong>Different:</strong> A says Hi after 20 steps. B says Hi after 50 steps. The order of the boxes changes what happens.</p>'));
+}
+
 // ---------------------------------------------------------------- find and fix
 {
   const f = numbered(FC.line([['process', 'Point in direction 180'], ['process', 'Move 60 steps'], ['io', 'Say "Here"']]));
@@ -158,6 +196,14 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
     { label: 'Which box number is wrong?', answer: num(2), feedback: 'Check each box against what it should do. Which one does not match?' },
     { line: true, label: 'Write the correct box.', answer: '^\\s*point\\s+in\\s+direction\\s*:?\\s*90(\\s*degrees?)?\\s*$', feedback: 'Use the direction numbers under the flowchart. Keep the words Point in direction.' },
   ], chart(f, 380) + '<p style="margin-top:8px">Right is 90. Left is -90. Up is 0. Down is 180.</p>'));
+}
+
+{
+  const A = numbered(FC.line([['process', 'Point in direction -90'], ['process', 'Move 40 steps'], ['io', 'Say "Hi"']]));
+  const B = numbered(FC.line([['process', 'Point in direction 0'], ['process', 'Move 30 steps'], ['io', 'Say "Hi"']]));
+  steps.push(compare('compare-fix', 'Compare: Two Wrong Flowcharts', 'Both should: face <strong>up</strong>, move 30 steps, then say "Hi".', A, B,
+    'Which box is wrong in each flowchart? How do you know?',
+    '<p><strong>A:</strong> box 2 is wrong. -90 faces left; up is 0. Box 3 is also wrong: it moves 40, not 30.</p><p><strong>B:</strong> every box matches. B is correct.</p><p>Check <strong>every</strong> box: a flowchart can have more than one mistake, or none.</p>'));
 }
 
 // ---------------------------------------------------------------- key-press loops
@@ -170,10 +216,10 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
       columns(chart(f, 400), facts([
         '<strong>Pressed:</strong> follow the <strong>True</strong> arrow. Point, then Move.',
         '<strong>Not pressed:</strong> follow the <strong>False</strong> arrow. No move.',
-        'Both arrows go back to the decision. It <strong>checks again</strong>.',
-        'Pressed, not pressed, pressed: 10 + 0 + 10 = <strong>20 steps</strong>.',
         'Right 90. Left -90. Up 0. Down 180.',
-      ])) });
+      ]) + tps('Predict: the key is pressed, not pressed, pressed. How many steps? Why do both arrows go back to the decision?',
+        '<p>Pressed, not pressed, pressed: 10 + 0 + 10 = <strong>20 steps</strong>.</p>' +
+        '<p>Both arrows go back so the program <strong>checks the key again</strong>. The player can press it at any time.</p>', 'Show the worked answer')) });
 }
 {
   const f = numbered(keyLoop('Up arrow', 0, 5));
@@ -184,6 +230,15 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
     { label: 'The key is not pressed. Which box number comes next?', answer: num(2), feedback: 'Not pressed follows the False arrow. Follow it to a box.' },
     { label: 'Box 3 says Point in direction 0. Which way does the sprite face?', answer: '^\\s*(it\\s+(faces|points)\\s+)?up(wards?)?\\s*$', feedback: 'Look at the direction numbers on the last slide. Which one is 0?' },
   ], chart(f, 400)));
+}
+
+{
+  const A = keyLoop('Right arrow', 90, 10), B = keyLoop('Left arrow', -90, 10);
+  const ra = FC.run(A, { presses: [1, 1, 0] }), rb = FC.run(B, { presses: [1, 1, 0] });
+  assert(ra.steps === 20 && rb.steps === 20 && rb.direction === -90, 'compare loops');
+  steps.push(compare('compare-loops', 'Compare: Two Key-Press Loops', 'Each key is pressed, pressed, not pressed.', A, B,
+    'What is the same? What is different? Where does each sprite end up?',
+    '<p><strong>Same:</strong> the same shape: decision, Point, Move, and both arrows go back. Both move 20 steps.</p><p><strong>Different:</strong> the key and the direction. A moves 20 steps right. B moves 20 steps left.</p>'));
 }
 
 // ---------------------------------------------------------------- practice: fill in the flowchart
@@ -202,6 +257,7 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
 steps.push(embed('plenary', 'Plenary: Revision 1 Drill', 'drill-y7-revision-1', 'Plenary: Revision 1 Drill',
   'Symbols, reading, fixing and key-press loops. Your progress is saved.'));
 
+for (const st of steps) if (TPS[st.id]) st.content = st.content.replace('</h2>', '</h2>' + tps(TPS[st.id][0], `<p>${TPS[st.id][1]}</p>`));
 const lesson = { id: ID, label: 'Revision 1: Reading Flowcharts', steps, validators, pseudocodeValidators: {} };
 fs.writeFileSync(path.join(ROOT, 'LessonData', ID + '.json'), JSON.stringify(lesson, null, 1) + '\n');
 
