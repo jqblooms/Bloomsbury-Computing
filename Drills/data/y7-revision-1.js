@@ -131,14 +131,14 @@ DrillData.register("y7-revision-1", {
         var r = FC.run(flow, {}), ans = which === "first" ? r.said[0] : r.said[r.said.length - 1];
         return { flow: flow, prompt: "What does the sprite say " + which + "?", answer: ans, re: wordRe(ans),
           wrong: w.filter(function (x) { return x !== ans; }).concat(["Move"]), steps: r.trace,
-          working: ["Start at Start. Follow the arrows.", "Only the Say boxes are messages."],
+          working: ["Begin at Start. Follow the arrows.", "Only the Say boxes are messages."],
           note: "The " + which + " Say box is \"" + ans + "\"." };
       }),
       card("r1-say-after", "r1-read", function () {
         var w = words(3), a = range(10, 40, 10), b = a + 10;
         var flow = FC.line([["io", "Say \"" + w[0] + "\""], ["process", "Move " + a + " steps"], ["io", "Say \"" + w[1] + "\""], ["process", "Move " + b + " steps"], ["io", "Say \"" + w[2] + "\""]]);
         var r = FC.run(flow, {});
-        return { flow: flow, prompt: "What does the sprite say straight after it moves " + a + " steps?", answer: w[1], re: wordRe(w[1]),
+        return { flow: flow, prompt: "The sprite moves " + a + " steps. What does it say next?", answer: w[1], re: wordRe(w[1]),
           wrong: [w[0], w[2], "Move"], steps: r.trace,
           working: ["Find the box Move " + a + " steps.", "Follow its arrow to the next box."],
           note: "The box after Move " + a + " steps is Say \"" + w[1] + "\"." };

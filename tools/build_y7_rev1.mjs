@@ -61,6 +61,9 @@ const SYM = {
   io: '^\\s*(an?\\s+)?(input\\s*(or|\\/|and)?\\s*output|output|input|sloping|parallelogram)(\\s+(symbol|shape|box))?\\s*$',
   decision: '^\\s*(an?\\s+)?(decision|diamond)(\\s+(symbol|shape|box))?\\s*$',
 };
+// A table readable from the back of the room: 17px text, roomy cells, text left-aligned.
+const bigTable = (html) => html.replace('<table class="donow-table">', '<table class="donow-table" style="font-size:17px;width:100%">')
+  .replace(/<t([hd])>/g, '<t$1 style="padding:7px 12px;text-align:left;font-size:17px">');
 const facts = (items) => '<ul class="lesson-facts">' + items.map((i) => `<li>${i}</li>`).join('') + '</ul>';
 const columns = (a, b) => `<div class="lesson-do-now-columns"><div>${a}</div><div>${b}</div></div>`;
 const embed = (id, label, appId, heading, lead) => ({ id, label, type: 'embedded-app', appId, embedContainerId: `${P}-${id}`,
@@ -76,7 +79,7 @@ function shape(kind) {
     decision: `<polygon points="50,2 96,22 50,42 4,22" fill="rgba(253,214,99,.12)" stroke="var(--warn)" stroke-width="2"/>`,
     arrow: `<line x1="10" y1="22" x2="80" y2="22" stroke="var(--brand)" stroke-width="3"/><polygon points="80,14 94,22 80,30" fill="var(--brand)"/>`,
   }[kind];
-  return `<svg viewBox="0 0 100 44" width="100" height="44" role="img" aria-label="${kind} shape">${body}</svg>`;
+  return `<svg viewBox="0 0 100 44" width="120" height="53" role="img" aria-label="${kind} shape">${body}</svg>`;
 }
 
 const steps = [];
@@ -93,7 +96,7 @@ const steps = [];
   ] });
   steps.push(checkStep('do-now', 'Do Now: Name the Symbols', 'Do Now: Name the Symbols', 'From Lesson 1. Write the name of each symbol.', [
     { label: 'Box 1', answer: SYM.terminal, feedback: 'Box 1: look at its shape. Where does a flowchart begin and stop?' },
-    { label: 'Box 2', answer: SYM.process, feedback: 'Box 2: it is an instruction. Look at the key words table.' },
+    { label: 'Box 2', answer: SYM.process, feedback: 'Box 2: it is an instruction, like Move. What is that symbol called?' },
     { label: 'Box 3', answer: SYM.decision, feedback: 'Box 3: it asks a question with a True and a False arrow.' },
     { label: 'Box 4', answer: SYM.io, feedback: 'Box 4: it shows a message. Which symbol shows messages?' },
   ], chart(f, 380)));
@@ -106,16 +109,16 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
 
 // ---------------------------------------------------------------- key words
 {
-  const row = (kind, name, job) => `<tr><td style="text-align:center">${shape(kind)}</td><td><strong>${name}</strong></td><td>${job}</td></tr>`;
+  const row = (kind, name, job) => `<tr><td style="text-align:center;padding:6px 12px">${shape(kind)}</td><td style="padding:6px 12px;font-size:17px"><strong>${name}</strong></td><td style="padding:6px 12px;font-size:17px;text-align:left">${job}</td></tr>`;
   steps.push({ id: 'key-words', label: 'Key Words: The Symbols',
     content: '<h2 class="lesson-h2">Key Words: The Symbols</h2><p class="lesson-lead">Every shape has one job.</p>' +
-      '<table class="donow-table"><thead><tr><th>Shape</th><th>Name</th><th>Job</th></tr></thead><tbody>' +
+      bigTable('<table class="donow-table"><thead><tr><th>Shape</th><th>Name</th><th>Job</th></tr></thead><tbody>' +
       row('terminal', 'Start/End', 'Where the flowchart starts and stops.') +
       row('process', 'Process', 'An instruction. Example: Move 10 steps.') +
       row('io', 'Input or output', 'A message. Example: Say "Hello".') +
       row('decision', 'Decision', 'A question. It has a True arrow and a False arrow.') +
       row('arrow', 'Arrow', 'Shows the order. Follow the arrows.') +
-      '</tbody></table>' });
+      '</tbody></table>') });
 }
 
 // ---------------------------------------------------------------- I do: read a flowchart
@@ -130,9 +133,10 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
     '<tr><td>Move 30 steps</td><td>The sprite moves.</td><td>50</td></tr>' +
     '<tr><td>Say "Bye"</td><td>The sprite says Bye.</td><td>50</td></tr>' +
     '<tr><td>End</td><td>Stop.</td><td><strong>50</strong></td></tr></tbody></table>';
+  const bigger = bigTable(table);
   steps.push({ id: 'read', label: 'Read a Flowchart',
-    content: '<h2 class="lesson-h2">Read a Flowchart</h2><p class="lesson-lead">Start at Start. Follow the arrows. One box at a time.</p>' +
-      columns(chart(f, 400), table + '<p>The sprite moves <strong>50 steps</strong>. It says <strong>Hi</strong>, then <strong>Bye</strong>.</p>') });
+    content: '<h2 class="lesson-h2">Read a Flowchart</h2><p class="lesson-lead">Begin at Start. Follow the arrows. One box at a time.</p>' +
+      columns(chart(f, 400), bigger + '<p>The sprite moves <strong>50 steps</strong> altogether. It says <strong>Hi</strong>, then <strong>Bye</strong>.</p><p><strong>Altogether</strong> means all added up.</p>') });
 }
 
 // ---------------------------------------------------------------- we do: read one
@@ -142,8 +146,8 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
   assert(r.steps === 70 && r.said[r.said.length - 1] === 'Go', 'we-do');
   steps.push(checkStep('read-check', 'Your Turn: Read It', 'Your Turn: Read It', 'Follow the arrows, one box at a time.', [
     { label: 'How many steps does the sprite move altogether?', answer: num(r.steps, 'steps?'), feedback: 'Find every Move box. Add their numbers together.' },
-    { label: 'What does the sprite say last?', answer: word('go'), feedback: 'Find the last Say box before End.' },
     { label: 'What does the sprite say first?', answer: word('ready'), feedback: 'Find the first Say box after Start.' },
+    { label: 'What does the sprite say last?', answer: word('go'), feedback: 'Find the last Say box before End.' },
   ], chart(f, 360)));
 }
 
@@ -178,7 +182,7 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
   steps.push(checkStep('loops-check', 'Your Turn: Key-Press Loops', 'Your Turn: Key-Press Loops', 'The up arrow is checked 5 times: pressed, pressed, not pressed, pressed, not pressed.', [
     { label: 'How many steps does the sprite move?', answer: num(r.steps, 'steps?'), feedback: 'Count the presses. Each press runs the Move box once.' },
     { label: 'The key is not pressed. Which box number comes next?', answer: num(2), feedback: 'Not pressed follows the False arrow. Follow it to a box.' },
-    { label: 'This flowchart should move down instead. What number goes in Point in direction?', answer: num(180, 'degrees?'), feedback: 'Down is the opposite way to up. Look at the direction numbers.' },
+    { label: 'Box 3 says Point in direction 0. Which way does the sprite face?', answer: '^\\s*(it\\s+(faces|points)\\s+)?up(wards?)?\\s*$', feedback: 'Look at the direction numbers on the last slide. Which one is 0?' },
   ], chart(f, 400)));
 }
 
@@ -190,6 +194,7 @@ steps.push({ id: 'title', label: 'Revision 1: Reading Flowcharts',
     { line: true, label: 'What should box A say?', answer: '^\\s*(is\\s+(the\\s+)?)?left(\\s+arrow)?(\\s+key)?\\s+pressed\\s*\\??\\s*$', feedback: 'A is the decision. It asks a question about the left arrow.' },
     { label: 'What number is B?', answer: num(-90, 'degrees?'), feedback: 'B is the direction. Left is the opposite way to right.' },
     { label: 'What number is C?', answer: num(20, 'steps?'), feedback: 'Read what it should do: how many steps?' },
+    { line: true, label: 'Why does the arrow from the Move box go back to box A?', answer: '^(?=.*\\b(check|checks|checked|checking|again|repeat|repeats|keep|keeps|loop|loops)\\b)(?=.*\\b(key|keys|arrow|press|pressed|decision)\\b).*$', feedback: 'What happens if the player presses the key again? The flowchart must look at the key again.' },
   ], chart((() => { const f = keyLoop('A', 'B', 'C'); f.nodes[1].text = 'A'; return f; })(), 380)));
 }
 
