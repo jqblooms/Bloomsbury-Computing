@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bug Hunt</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="hunt-css" href="bughunt.css">
+  <script src="../shared/bc-support.js?v=20260928"></script>
+</head>
+<body>
+<main>
+  <section class="panel" id="app" aria-live="polite"></section>
+</main>
+<script>
+// ?level=code (find and fix the error in a Cambridge Pseudocode algorithm) or ?level=flow (find and fix the wrong
+// box in a flowchart). ?embed=1 sits the app on a lesson slide. Every file is loaded with the page's bcv.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('hunt-css').href = 'bughunt.css?v=' + encodeURIComponent(v);
+  var level = params.get('level') === 'flow' ? 'flow' : 'code';
+  var files = level === 'flow'
+    ? ['https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js', 'flows.js', 'app.js']
+    : ['../shared/pseudocode-engine.js', 'programs.js', 'app.js'];
+  files.forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file.indexOf('https:') === 0 ? file : file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

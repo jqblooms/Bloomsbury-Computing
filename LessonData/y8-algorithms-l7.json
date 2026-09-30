@@ -1,0 +1,239 @@
+{
+ "id": "y8-algorithms-l7",
+ "label": "L7: Finding and Fixing Errors",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Recap Drill",
+   "type": "embedded-app",
+   "appId": "drill-y8-algorithms-l7-recap",
+   "embedContainerId": "y8l7-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Recap Drill</h2><p class=\"lesson-lead\">Ten questions, two from each lesson so far: L1 and L2 Sequence and Selection, L3 Arrays, L4 Linear Search, L5 Iteration and Data Types, and L6 Flowcharts.</p><div id=\"y8l7-do-now\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Finding and Fixing Errors",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithms, Pseudocode and Python</p><h2 class=\"lesson-h2\">Finding and Fixing Errors</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li>Tell a syntax error from a logic error.</li><li>Find a logic error by testing with values and tracing.</li><li>Correct errors in pseudocode and in flowcharts.</li></ul>"
+  },
+  {
+   "id": "concept",
+   "label": "Two Kinds of Error",
+   "content": "<h2 class=\"lesson-h2\">Two Kinds of Error</h2><p class=\"lesson-lead\">An error in an algorithm is either a syntax error or a logic error.</p><ul class=\"lesson-facts\"><li>A <strong>syntax error</strong> breaks a rule of writing the language, such as a misspelt keyword or <code>=</code> instead of <code>&lt;-</code>. The algorithm <strong>cannot run at all</strong>, and the error message gives the line.</li><li>A <strong>logic error</strong> follows every rule, so the algorithm <strong>runs</strong>, but it gives the <strong>wrong output</strong>. Nothing tells you which line it is on.</li></ul><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-flow-task\"><h3>Syntax errors: line 2 and line 3</h3><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line lesson-code-active\">02&nbsp;&nbsp;Total = 0</div><div class=\"lesson-code-line lesson-code-active\">03&nbsp;&nbsp;OUTPT Total</div></div><p>Line 2 needs <code>&lt;-</code>; line 3 is misspelt.</p></div></div><div><div class=\"lesson-flow-task\"><h3>Logic error: line 3</h3><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Price, Cost : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;Price &lt;- 4</div><div class=\"lesson-code-line lesson-code-active\">03&nbsp;&nbsp;Cost &lt;- Price + 3</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;OUTPUT Cost</div></div><p>Cost should be 3 items at 4 each. It runs, but outputs 7, not 12: line 3 should use <code>*</code>.</p></div></div></div>"
+  },
+  {
+   "id": "check-kinds",
+   "label": "Check: Syntax or Logic?",
+   "type": "multiple-choice",
+   "containerId": "y8l7-check-kinds",
+   "content": "<h2 class=\"lesson-h2\">Check: Syntax or Logic?</h2><p class=\"lesson-lead\">Decide which kind of error each line has.</p><div id=\"y8l7-check-kinds\"></div>",
+   "items": [
+    {
+     "prompt": "The algorithm should repeat 5 times. One line is: FOR Count 1 TO 5",
+     "options": [
+      "Syntax error",
+      "Logic error"
+     ],
+     "correct": 0,
+     "explain": "The arrow <- is missing, which breaks the rules of a FOR line, so the algorithm cannot run."
+    },
+    {
+     "prompt": "The algorithm should output \"Pass\" for a Mark of 50 or more. One line is: IF Mark < 50 THEN",
+     "options": [
+      "Syntax error",
+      "Logic error"
+     ],
+     "correct": 1,
+     "explain": "The line is written correctly, so it runs, but it sends the wrong marks to \"Pass\": a logic error."
+    }
+   ]
+  },
+  {
+   "id": "testing",
+   "label": "Finding a Logic Error: Test It",
+   "content": "<h2 class=\"lesson-h2\">Finding a Logic Error: Test It</h2><p class=\"lesson-lead\">Purpose: output \"Pass\" if Mark is 50 or more, otherwise \"Fail\".</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;INPUT Mark</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;IF Mark &gt; 50 THEN</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT &quot;Pass&quot;</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT &quot;Fail&quot;</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;ENDIF</div></div></div><div><table class=\"donow-table\"><thead><tr><th>Test value</th><th>Should output</th><th>Actually outputs</th></tr></thead><tbody><tr><td>72</td><td>Pass</td><td>Pass</td></tr><tr><td>49</td><td>Fail</td><td>Fail</td></tr><tr><td><strong>50</strong></td><td><strong>Pass</strong></td><td><strong>Fail</strong></td></tr></tbody></table><ul class=\"lesson-facts\"><li>For each <strong>test value</strong>, work out what it <em>should</em> output from the purpose, then trace what it <em>actually</em> outputs.</li><li>Test a value <strong>exactly on the limit</strong> (50 here), and one each side. 72 and 49 both look fine; only 50 shows the error.</li><li>Trace 50 line by line: line 3 asks 50 &gt; 50, which is FALSE. The fix is line 3: <code>IF Mark &gt;= 50 THEN</code>.</li></ul></div></div>"
+  },
+  {
+   "id": "exam-1",
+   "label": "Exam Question: Find the Errors",
+   "type": "short-answer-validation",
+   "validatorId": "y8l7-exam-1",
+   "validatorKey": "y8l7_exam_1",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Find the Errors</h2><p class=\"lesson-lead\">Based on Cambridge IGCSE 0478/23, June 2026, Question 4(a).</p><div class=\"lesson-do-now-columns is-code-wide\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Runners : ARRAY[1:250] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Times : ARRAY[1:250] OF INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;DECLARE RunName : STRING</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;DECLARE RunTime : STRING</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;FOR Index &lt;- 1 TO 250</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT &quot;Enter name, then time in seconds&quot;</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT RunName</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT RunTime</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Runners[Index] &lt;- RunMins</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times[Index] &lt;- RunTime</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;NEXT Index</div></div></div><div><p class=\"lesson-purpose\"><strong>What it should do:</strong> Store 250 runners&apos; names and times (whole seconds) in Runners and Times. Three errors.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y8l7-exam-1-a\">(a) Correct line 05. [1]</label><input id=\"y8l7-exam-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-a\" aria-label=\"Exam Question: Find the Errors part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y8l7-exam-1-b\">(b) Correct line 09. [1]</label><input id=\"y8l7-exam-1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-b\" aria-label=\"Exam Question: Find the Errors part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y8l7-exam-1-c\">(c) Correct line 10. [1]</label><input id=\"y8l7-exam-1-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-c\" aria-label=\"Exam Question: Find the Errors part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8l7-exam-1-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8l7-exam-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Bug Hunt, Pseudocode",
+   "type": "embedded-app",
+   "appId": "bughunt-code",
+   "embedContainerId": "y8l7-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Bug Hunt, Pseudocode</h2><p class=\"lesson-lead\">Fix 6 errors: click the line with the error, say syntax or logic, then type the corrected line.</p><div id=\"y8l7-activity-1\"></div>"
+  },
+  {
+   "id": "exam-2",
+   "label": "Exam Question: Errors That Still Run",
+   "type": "short-answer-validation",
+   "validatorId": "y8l7-exam-2",
+   "validatorKey": "y8l7_exam_2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Errors That Still Run</h2><p class=\"lesson-lead\">Based on Cambridge IGCSE 0478/21, June 2026, Question 7.</p><div class=\"lesson-do-now-columns is-code-wide\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Counter, Total, Number : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Average : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Counter &lt;- 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;INPUT Number</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;WHILE Number &gt; 0 DO</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 1</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Counter &lt;- Counter + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Number</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;ENDWHILE</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;Average &lt;- Counter / Total</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;OUTPUT Average</div></div></div><div><p class=\"lesson-purpose\"><strong>What it should do:</strong> Input whole numbers until 0 is input, then output their average, such as 4.5. Three errors.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y8l7-exam-2-a\">(a) Correct line 02. [1]</label><input id=\"y8l7-exam-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-a\" aria-label=\"Exam Question: Errors That Still Run part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y8l7-exam-2-b\">(b) Correct line 07. [1]</label><input id=\"y8l7-exam-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-b\" aria-label=\"Exam Question: Errors That Still Run part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y8l7-exam-2-c\">(c) Correct line 11. [1]</label><input id=\"y8l7-exam-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-c\" aria-label=\"Exam Question: Errors That Still Run part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8l7-exam-2-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8l7-exam-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "concept-flow",
+   "label": "Errors in Flowcharts",
+   "content": "<h2 class=\"lesson-h2\">Errors in Flowcharts</h2><p class=\"lesson-lead\">A flowchart can have the same kinds of mistake. Check it box by box against the purpose.</p><ul class=\"lesson-facts\"><li><strong>The wrong shape</strong>: every box must use the symbol for its job. Ask for or display a value: Input/Output. Store or calculate a value: Process. A Yes/No question: Decision. Start and End: Terminal.</li><li><strong>The wrong question</strong>: a Decision that asks \"Is Mark greater than 50?\" when the purpose says 50 or more. Test a value exactly on the limit, as with pseudocode.</li><li><strong>The wrong path</strong>: follow the Yes path, then the No path. Each must do what the purpose says for that answer.</li><li><strong>A missing input</strong>: \"Display the value of Age\" before Age has been asked for. A value must be input before it is compared or used.</li></ul>"
+  },
+  {
+   "id": "check-flow",
+   "label": "Check: Errors in Flowcharts",
+   "type": "multiple-choice",
+   "containerId": "y8l7-check-flow",
+   "content": "<h2 class=\"lesson-h2\">Check: Errors in Flowcharts</h2><p class=\"lesson-lead\">Two flowchart errors to find.</p><div id=\"y8l7-check-flow\"></div>",
+   "items": [
+    {
+     "prompt": "A flowchart should display \"Pass\" for a Mark of 50 or more. Its decision asks \"Is Mark greater than 50?\". Which Mark shows the error?",
+     "options": [
+      "49",
+      "50",
+      "51",
+      "100"
+     ],
+     "correct": 1,
+     "explain": "50 should pass, but \"Is 50 greater than 50?\" is No, so it goes down the wrong path. Every other value gets the right answer."
+    },
+    {
+     "prompt": "A flowchart box \"Store Price * Quantity in Cost\" is drawn as a parallelogram. Which symbol should it be?",
+     "options": [
+      "Terminal",
+      "Input/Output",
+      "Decision",
+      "Process"
+     ],
+     "correct": 3,
+     "explain": "Storing a calculated value is a Process, drawn as a rectangle. A parallelogram is for asking for or displaying a value."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Bug Hunt, Flowcharts",
+   "type": "embedded-app",
+   "appId": "bughunt-flow",
+   "embedContainerId": "y8l7-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Bug Hunt, Flowcharts</h2><p class=\"lesson-lead\">Fix 6 flowcharts: click the box with the error, then choose the change that fixes it.</p><div id=\"y8l7-activity-2\"></div>"
+  },
+  {
+   "id": "practice",
+   "label": "Checked Practice",
+   "type": "short-answer-validation",
+   "validatorId": "y8l7-practice",
+   "validatorKey": "y8l7_practice",
+   "content": "<h2 class=\"lesson-h2\">Checked Practice</h2><p class=\"lesson-lead\">Syntax or logic, the value that shows the error, and a fix.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8l7-practice-a\">(a) A line reads OUTPT Total. Is this a syntax error or a logic error? [1]</label><input id=\"y8l7-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Checked Practice part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8l7-practice-b\">(b) An algorithm should count the temperatures above 30, but uses IF Temps[Index] < 30 THEN. Syntax or logic error? [1]</label><input id=\"y8l7-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Checked Practice part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y8l7-practice-c\">(c) Write the corrected version of the line Count = Count + 1 [1]</label><input id=\"y8l7-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Checked Practice part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8l7-practice-d\">(d) Pass is 60 or more, but the algorithm uses IF Mark > 60 THEN. Which Mark value shows the error? [1]</label><input id=\"y8l7-practice-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-d\" aria-label=\"Checked Practice part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8l7-practice-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y8l7-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Finding and Fixing Errors",
+   "type": "embedded-app",
+   "appId": "drill-y8-algorithms-l7",
+   "embedContainerId": "y8l7-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Finding and Fixing Errors</h2><p class=\"lesson-lead\">Complete a drill batch. Your progress is saved for your teacher.</p><div id=\"y8l7-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y8l7_exam_1": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(DECLARE\\s*RunTime\\s*:\\s*INTEGER)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 05: what kind of value is a whole number of seconds? Keep the rest of the DECLARE line."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(INPUT\\s*RunTime)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 09: the time has to come from the user before line 11 can store it."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(Runners\\s*\\[\\s*Index\\s*\\]\\s*(<-|←)\\s*RunName)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 10: Runners holds names. Which variable holds the name that was just input?"
+   }
+  ],
+  "y8l7_exam_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(DECLARE\\s*Average\\s*:\\s*REAL)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 02: which data type holds a number with a decimal point?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(Total\\s*(<-|←)\\s*Total\\s*\\+\\s*Number|Total\\s*(<-|←)\\s*Number\\s*\\+\\s*Total)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 07: test it with 6, 9, 12 then 0. Total should reach 27. What should be added each time round the loop?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(Average\\s*(<-|←)\\s*Total\\s*/\\s*Counter)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 11: an average is the total divided by how many numbers there were."
+   }
+  ],
+  "y8l7_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(a\\s+)?syntax(\\s+error)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Could the computer understand a misspelt keyword? If not, the algorithm cannot run."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(a\\s+)?logic(al)?(\\s+error)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The line is written correctly, so the algorithm runs. Is its output right?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(Count\\s*(<-|←)\\s*Count\\s*\\+\\s*1|Count\\s*(<-|←)\\s*1\\s*\\+\\s*Count)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Storing a value in a variable uses the arrow <-, not =."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*60\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Try a value exactly on the limit: is it \"60 or more\"? Is it \"more than 60\"?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

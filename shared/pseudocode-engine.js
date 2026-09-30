@@ -5,7 +5,7 @@
 // game loop, and touching a live, working game to extract from it under time
 // pressure was a worse risk than writing a smaller, purpose-built interpreter
 // with the same grammar (DECLARE, assignment <-, IF/ELSEIF/ELSE/ENDIF,
-// FOR/NEXT, WHILE/ENDWHILE, OUTPUT, array indexing). No CALL/farm-command
+// FOR/NEXT, WHILE/ENDWHILE, INPUT, OUTPUT, array indexing). No CALL/farm-command
 // support here - drill content never needs it, and leaving it out keeps this
 // file small.
 //
@@ -15,7 +15,8 @@
 //
 // Public API:
 //   PseudocodeError(message, line)
-//   runPseudocode(source, initialVars, maxSteps) -> { vars, outputs, error }
+//   runPseudocode(source, initialVars, maxSteps, inputs) -> { vars, outputs, error }
+//     - inputs: the values typed in, in order, one per INPUT that runs
 //     - vars: final value of every variable that exists after running
 //       (starts from a fresh copy of initialVars)
 //     - outputs: array of every OUTPUT value, in order
@@ -440,6 +441,12 @@
         continue;
       }
 
+      if ((m = line.match(/^INPUT\s+([A-Za-z_]\w*)$/i))) {
+        instructions.push({ type: 'INPUT', var: m[1], line: lineNo });
+        continue;
+      }
+      if (/^INPUT\b/i.test(line)) throw new PseudocodeError('INPUT needs one variable to store the value in, e.g. INPUT Score', lineNo);
+
       if ((m = line.match(/^OUTPUT\s+(.+)$/i))) {
         instructions.push({ type: 'OUTPUT', exprCode: compileExpression(m[1], lineNo), line: lineNo });
         continue;
@@ -469,8 +476,9 @@
   }
 
   // ---- run a compiled program to completion, synchronously ----
-  function runPseudocode(source, initialVars, maxSteps) {
+  function runPseudocode(source, initialVars, maxSteps, inputs) {
     maxSteps = maxSteps || 5000;
+    var inputQueue = (inputs || []).slice();
     var vars = {};
     // Type of every declared variable; null for a value the caller handed
     // in (it exists but is untyped, so anything may be stored in it).
@@ -571,6 +579,15 @@
         if (instr.type === 'WHILE') { pc = instr.conditionCode(vars) ? pc + 1 : instr.pairedEndIndex + 1; continue; }
         if (instr.type === 'ENDWHILE') { pc = instr.pairedWhileIndex; continue; }
         if (instr.type === 'OUTPUT') { outputs.push(instr.exprCode(vars)); pc++; continue; }
+        if (instr.type === 'INPUT') {
+          requireDeclared(instr.var, instr.line);
+          if (!inputQueue.length) throw new PseudocodeError('INPUT ' + instr.var + ' ran, but there were no more values to type in.', instr.line);
+          var typed = inputQueue.shift();
+          // What the user types arrives as text; a number variable reads it as a number.
+          if ((types[instr.var] === 'INTEGER' || types[instr.var] === 'REAL') && typeof typed === 'string' && typed.trim() !== '' && !isNaN(Number(typed))) typed = Number(typed);
+          store(instr.var, typed, instr.line);
+          pc++; continue;
+        }
         pc++;
       }
     } catch (e) {
