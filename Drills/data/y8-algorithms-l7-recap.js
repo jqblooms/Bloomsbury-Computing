@@ -216,15 +216,52 @@ DrillData.register("y8-algorithms-l7-recap", {
         note: "Display the value of " + name + " becomes OUTPUT " + name + "." };
     }
 
+    // Simpler versions (James, 2026-09-30: the class found the first Do Now too hard): one step each.
+    function easySequence() {
+      var a = drillRange(2, 9), k = drillRange(2, 9), out = a + k;
+      return { prompt: code(["What does this output?", "DECLARE A : INTEGER", "A <- " + a, "A <- A + " + k, "OUTPUT A"]),
+        answer: out, re: numRe(out), wrong: others(out, [a, k, a * k, out + 1]), steps: [],
+        working: ["A starts as " + a + ".", "The next line adds " + k + " to A."],
+        note: a + " + " + k + " = " + out + "." };
+    }
+    function easySelection() {
+      var cut = drillRange(3, 8) * 10, x = pick([cut + drillRange(10, 30), cut - drillRange(10, 20)]), yes = x > cut;
+      var ans = yes ? "Pass" : "Fail";
+      return { prompt: code(["Mark is " + x + ". What is output?", "DECLARE Mark : INTEGER", "IF Mark > " + cut + " THEN", "    OUTPUT \"Pass\"", "ELSE", "    OUTPUT \"Fail\"", "ENDIF"]),
+        answer: ans, re: wordRe(ans), wrong: [yes ? "Fail" : "Pass", String(x), String(cut)], steps: [],
+        working: ["Is " + x + " bigger than " + cut + "?", "Yes runs the THEN line; no runs the ELSE line."],
+        note: x + " > " + cut + " is " + (yes ? "TRUE, so Pass." : "FALSE, so Fail.") };
+    }
+    function searchStart() {
+      return { prompt: "A linear search checks the items one at a time. Which position does it check first?",
+        answer: "1", re: /^\s*(1|one|the\s+first|first)(\s+position)?\s*$/i, wrong: ["The last", "The middle", "A random one"], steps: [],
+        working: ["It starts at the beginning of the array.", "Which position is the beginning?"],
+        note: "A linear search starts at position 1, the first item." };
+    }
+    function loopCount() {
+      var n = drillRange(2, 6);
+      return { prompt: code(["How many times is Hello output?", "DECLARE Count : INTEGER", "FOR Count <- 1 TO " + n, "    OUTPUT \"Hello\"", "NEXT Count"]),
+        answer: n, re: numRe(n), wrong: others(n, [n - 1, n + 1, 1]), steps: [],
+        working: ["Count goes 1, 2, 3 and so on.", "It stops after " + "the number after TO."],
+        note: "1 TO " + n + " runs " + n + " times." };
+    }
+    function easyType() {
+      var it = pick([{ d: "a whole number, for example 28", t: "INTEGER" }, { d: "a word, for example Biscuit", t: "STRING" }, { d: "TRUE or FALSE", t: "BOOLEAN" }]);
+      return { prompt: "Which data type stores " + it.d + "?", answer: it.t,
+        re: it.t === "INTEGER" ? /^\s*(integer|int)\s*$/i : it.t === "BOOLEAN" ? /^\s*(boolean|bool)\s*$/i : /^\s*string\s*$/i,
+        wrong: ["INTEGER", "STRING", "BOOLEAN", "REAL"].filter(function (t) { return t !== it.t; }).slice(0, 3), steps: [],
+        working: ["Look at the example value.", "Is it a number, some text, or TRUE or FALSE?"], note: "The type is " + it.t + "." };
+    }
+
     return [
-      card("rc-sequence", "rc-seqsel", [sequence], false),
-      card("rc-selection", "rc-seqsel", [selection], false),
-      card("rc-read", "rc-arrays", [readItem], true),
-      card("rc-size", "rc-arrays", [arraySize], true),
-      card("rc-found-at", "rc-search", [foundAt], true),
-      card("rc-flag", "rc-search", [flagOutput], false),
-      card("rc-loop", "rc-iteration", [forTotal, loopTypes], false),
-      card("rc-types", "rc-iteration", [dataType, declareTwo], false),
+      card("rc-sequence", "rc-seqsel", [easySequence], false),
+      card("rc-selection", "rc-seqsel", [easySelection], false),
+      card("rc-read", "rc-arrays", [readItem], false),
+      card("rc-size", "rc-arrays", [arraySize], false),
+      card("rc-found-at", "rc-search", [foundAt], false),
+      card("rc-flag", "rc-search", [searchStart], false),
+      card("rc-loop", "rc-iteration", [loopCount], false),
+      card("rc-types", "rc-iteration", [easyType], false),
       card("rc-symbol", "rc-flow", [symbol], false),
       card("rc-box", "rc-flow", [boxToLine], false)
     ];
