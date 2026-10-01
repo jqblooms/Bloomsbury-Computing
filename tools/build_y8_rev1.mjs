@@ -75,6 +75,13 @@ steps.push(checkStep('do-now-2', 'Do Now: Trace (2 of 2)', 'Do Now: Trace (2 of 
 ], code(['DECLARE Number : INTEGER', 'Number <- 4', 'Number <- Number + 3', 'OUTPUT Number'], true),
   ['Why is the output not 4?', 'Line 3 changes Number before line 4 outputs it. The lines run in order.']));
 
+// ---------------------------------------------------------------- Do Now Extension (James, 2026-10-01: some students are further
+// along). A drill of harder questions from every lesson so far (L1 to L7), each with a worked example as its help.
+steps.push({ id: 'do-now-ext', label: 'Extension: Do Now Challenge', type: 'embedded-app', appId: 'drill-y8-revision-1-ext', embedContainerId: `${P}-do-now-ext`,
+  content: '<h2 class="lesson-h2">Extension: Do Now Challenge</h2>' +
+    '<p class="lesson-lead"><strong>Extension:</strong> finished the Do Now? Try these harder questions from every lesson so far. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p>' +
+    `<div id="${P}-do-now-ext"></div>` });
+
 // ---------------------------------------------------------------- title
 steps.push({ id: 'title', label: 'Revision 1: Reading Pseudocode',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Algorithms</p><h2 class="lesson-h2">Revision 1: Reading Pseudocode</h2><p>Year 8</p></div>' +
