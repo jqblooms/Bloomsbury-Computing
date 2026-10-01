@@ -96,7 +96,7 @@ DrillData.register("y11-8-1-vc", {
           var s = drillPick(VALUES.filter(function (x) { return x[1] === "c"; }));
           return { prompt: s[0] + " Why should this be a constant?", answers: ["It does not change while the program runs"],
             keywords: [/(not|never|n't|doesn'?t|does\s+not|won'?t|cannot|can'?t)\s+(\w+\s+)?chang|(stays?|always|is)\s+(\w+\s+)?(the\s+)?same|same\s+(every|each|for|all)|fixed|\balways\b/i],
-            distractors: ["It changes every time the program runs", "It is typed in by the user", "It goes up during the program"],
+            distractors: ["It changes every time the program runs again", "It is typed in by the user", "It goes up during the program"],
             working: ["Does this value ever change while the program runs?"],
             note: s[2] };
         } },

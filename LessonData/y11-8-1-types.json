@@ -1,0 +1,252 @@
+{
+ "id": "y11-8-1-types",
+ "label": "8.1 L2: Data Types, Input and Output",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Variables and Constants (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11ty-do-now",
+   "validatorKey": "y11ty_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Variables and Constants (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a score a variable?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It changes while the game runs.</p></div></details><p class=\"lesson-lead\">From last lesson. Write <strong>variable</strong> or <strong>constant</strong>.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11ty-do-now-a\">(a) The number of seconds in a minute: 60 [1]</label><input id=\"y11ty-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Variables and Constants (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11ty-do-now-b\">(b) A player's score in a game [1]</label><input id=\"y11ty-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Variables and Constants (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11ty-do-now-c\">(c) Write the line that makes a constant called MaxLives with the value 3 [1]</label><input id=\"y11ty-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Variables and Constants (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11ty-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11ty-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Trace (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11ty-do-now-2",
+   "validatorKey": "y11ty_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Trace (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does line 1 say INTEGER?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Total only ever holds whole numbers.</p></div></details><p class=\"lesson-lead\">From Unit 7. Trace the program.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 10</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 2</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total - 3</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11ty-do-now-2-a\">(a) What is output? [1]</label><input id=\"y11ty-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Trace (2 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11ty-do-now-2-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y11ty-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "title",
+   "label": "Data Types, Input and Output",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">8.1 Programming Concepts</p><h2 class=\"lesson-h2\">Data Types, Input and Output</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> every variable has a <strong>data type</strong>: the kind of value it stores.</li><li><strong>Then:</strong> INPUT puts a typed value in a variable. OUTPUT shows it.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a program need to know what kind of value it stores?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So it knows what it can do with it. You can add two numbers, but not two names.</p></div></details>"
+  },
+  {
+   "id": "types",
+   "label": "The Five Data Types",
+   "content": "<h2 class=\"lesson-h2\">The Five Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: which type is best for 3.75? For 'Y'? Why not INTEGER for both?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>3.75 is <strong>REAL</strong>: it has a decimal point. 'Y' is <strong>CHAR</strong>: one character.</p><p>INTEGER only stores whole numbers.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Type</th><th style=\"padding:6px 12px;text-align:left\">It stores</th><th style=\"padding:6px 12px;text-align:left\">Examples</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>INTEGER</strong></td><td style=\"padding:6px 12px;text-align:left\">a whole number</td><td style=\"padding:6px 12px;text-align:left\">16, 25, -3</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>REAL</strong></td><td style=\"padding:6px 12px;text-align:left\">a number with a decimal point</td><td style=\"padding:6px 12px;text-align:left\">3.75, 1.68</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>CHAR</strong></td><td style=\"padding:6px 12px;text-align:left\">one character</td><td style=\"padding:6px 12px;text-align:left\">'Y', 'A', '7'</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>STRING</strong></td><td style=\"padding:6px 12px;text-align:left\">many characters</td><td style=\"padding:6px 12px;text-align:left\">\"Muhammed\", \"Room12\"</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>BOOLEAN</strong></td><td style=\"padding:6px 12px;text-align:left\">TRUE or FALSE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr></table>"
+  },
+  {
+   "id": "types-check",
+   "label": "Check: Tick the Type",
+   "type": "multiple-choice",
+   "containerId": "y11ty-types-check",
+   "content": "<h2 class=\"lesson-h2\">Check: Tick the Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is '7' a CHAR here and not an INTEGER?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is one key from the keyboard, stored as a character. We are not doing maths with it.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/22, June 2026, Question 2 and 0478/23, June 2026, Question 2.</p><div id=\"y11ty-types-check\"></div>",
+   "items": [
+    {
+     "prompt": "A programming data type used to store a single letter, symbol or number input from the keyboard",
+     "options": [
+      "Boolean",
+      "char",
+      "integer",
+      "real"
+     ],
+     "correct": 1,
+     "explain": "char stores one character: one letter, one symbol or one digit."
+    },
+    {
+     "prompt": "A programming data type used to store any combination of letters and numbers",
+     "options": [
+      "char",
+      "Boolean",
+      "string",
+      "real"
+     ],
+     "correct": 2,
+     "explain": "string stores many characters, letters and numbers together."
+    }
+   ]
+  },
+  {
+   "id": "compare",
+   "label": "Compare: Same Digits, Different Types",
+   "content": "<h2 class=\"lesson-h2\">Compare: Same Digits, Different Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both store 16. What is different? Which one can you do maths with?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A stores the <strong>number</strong> 16, so A + 1 is 17.</p><p>B stores the <strong>text</strong> \"16\", two characters. You cannot do maths with it.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: an age</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">Age &lt;- 16</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: a room name</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Room : STRING</div><div class=\"lesson-code-line\">Room &lt;- \"16\"</div></div></div></div>"
+  },
+  {
+   "id": "student-table",
+   "label": "Your Turn: Choose the Types",
+   "type": "short-answer-validation",
+   "validatorId": "y11ty-student-table",
+   "validatorKey": "y11ty_student_table",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Choose the Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the telephone number not an INTEGER?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It has a + and a space. We never do maths with a phone number.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/21, June 2026, Question 3. Write the best data type for each variable.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11ty-student-table-a\">(a) Age: the age of the student, for example 16 [1]</label><input id=\"y11ty-student-table-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"student-table-a\" aria-label=\"Your Turn: Choose the Types part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11ty-student-table-b\">(b) TelephoneNumber: for example +44 7846398573 [1]</label><input id=\"y11ty-student-table-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"student-table-b\" aria-label=\"Your Turn: Choose the Types part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11ty-student-table-c\">(c) Teenager: whether the student is a teenager, for example TRUE [1]</label><input id=\"y11ty-student-table-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"student-table-c\" aria-label=\"Your Turn: Choose the Types part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11ty-student-table-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11ty-student-table-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "input-output",
+   "label": "INPUT and OUTPUT",
+   "content": "<h2 class=\"lesson-h2\">INPUT and OUTPUT</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: the user types Mai. What is output? Why is \"Hello \" in quotes, but Name is not?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Output: <strong>Hello Mai</strong>.</p><p>Text in quotes is shown exactly as it is. A name without quotes is a variable, so its <strong>value</strong> is shown.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Name : STRING</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Name</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;OUTPUT \"Hello \", Name</div></div></div><div><ul class=\"lesson-facts\"><li><strong>INPUT</strong> takes a value from the user and stores it in a variable.</li><li><strong>OUTPUT</strong> shows text or a value.</li><li>The lines run <strong>in order</strong>, one at a time: this is <strong>sequence</strong>.</li></ul></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity: Trace a Sequence",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y11ty-embed-2",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Lines in Sequence",
+    "context": "The lines run in order, one at a time. Complete the trace table.",
+    "code": [
+     "DECLARE Number : INTEGER",
+     "DECLARE Answer : INTEGER",
+     "Number = 6",
+     "Answer = Number * 2",
+     "Number = Answer + 1",
+     "print(Number)"
+    ],
+    "cols": [
+     "Line",
+     "Number",
+     "Answer",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "3",
+      "Number": "6",
+      "Answer": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Number": "",
+      "Answer": "12",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Number": "13",
+      "Answer": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Number": "",
+      "Answer": "",
+      "Output": "13"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity: Trace a Sequence</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Line 5 changes Number again. Why is the output 13, not 6?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The lines run in order. By line 6, line 5 has already put 13 in Number.</p></div></details><div id=\"y11ty-embed-2\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "write-lines",
+   "label": "Your Turn: Write the Lines",
+   "type": "short-answer-validation",
+   "validatorId": "y11ty-write-lines",
+   "validatorKey": "y11ty_write_lines",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Write the Lines</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the DECLARE line come first?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The lines run in order. The variable must exist before INPUT can store a value in it.</p></div></details><p class=\"lesson-lead\">Type each whole line.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y11ty-write-lines-a\">(a) Declare a variable called Price that stores a number with a decimal point [1]</label><input id=\"y11ty-write-lines-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"write-lines-a\" aria-label=\"Your Turn: Write the Lines part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11ty-write-lines-b\">(b) Take a value from the user and store it in Price [1]</label><input id=\"y11ty-write-lines-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"write-lines-b\" aria-label=\"Your Turn: Write the Lines part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11ty-write-lines-c\">(c) Show the value of Price [1]</label><input id=\"y11ty-write-lines-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"write-lines-c\" aria-label=\"Your Turn: Write the Lines part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11ty-write-lines-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11ty-write-lines-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Data Types Drill",
+   "type": "embedded-app",
+   "appId": "drill-y11-8-1-types",
+   "embedContainerId": "y11ty-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Data Types Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do it with any values, you really understand it.</p></div></details><p class=\"lesson-lead\">The five types, choosing a type, INPUT and OUTPUT, and writing the lines. Your progress is saved.</p><div id=\"y11ty-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y11ty_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?constants?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does it ever change?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?variables?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does it stay the same while the game runs?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*CONSTANT\\s+MaxLives\\s*(<-|\\u2190|=)\\s*3\\s*$",
+     "flags": "i"
+    },
+    "feedback": "CONSTANT, the name, an arrow, the value."
+   }
+  ],
+  "y11ty_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Total starts at 10. Take 3 away each time the loop runs."
+   }
+  ],
+  "y11ty_student_table": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?integers?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 16 a whole number, or does it have a decimal point?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?strings?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the + and the space. Can a number type hold them?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?boolean\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It can only be TRUE or FALSE."
+   }
+  ],
+  "y11ty_write_lines": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*DECLARE\\s+Price\\s*:\\s*REAL\\s*$",
+     "flags": "i"
+    },
+    "feedback": "DECLARE, the name, a colon, then the type for decimals."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*INPUT\\s+Price\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which keyword takes a value from the user? Then the name."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*OUTPUT\\s+Price\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which keyword shows a value? Then the name."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
