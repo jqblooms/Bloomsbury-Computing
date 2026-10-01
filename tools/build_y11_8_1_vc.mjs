@@ -75,8 +75,8 @@ steps.push(mcStep('do-now', 'Do Now: Iteration (1 of 2)', 'Do Now: Iteration (1 
 steps.push({ id: 'title', label: 'Variables and Constants',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">8.1 Programming Concepts</p><h2 class="lesson-h2">Variables and Constants</h2><p>Year 11</p></div>' +
     facts(['<strong>Today:</strong> a <strong>variable</strong> is a named value that <strong>can change</strong>. A <strong>constant</strong> is a named value that <strong>cannot change</strong>.',
-      '<strong>You will:</strong> trace them, choose between them, and write the lines that make them.',
-      '<strong>Think, pair, share:</strong> why do programs give names to values at all?']) });
+      '<strong>You will:</strong> trace them, choose between them, and write the lines that make them.']) +
+    tps('Why do programs give names to values at all?', '<p>The name says what the value means. The program can use the value again and again by its name.</p>') });
 
 // ---------------------------------------------------------------- a variable: predict then reveal
 steps.push({ id: 'variable', label: 'A Variable',
@@ -84,7 +84,7 @@ steps.push({ id: 'variable', label: 'A Variable',
     tps('Predict: what is output? Why is Score called a <strong>variable</strong>?',
       '<p>Output: <strong>10</strong>. Score is 0, then 5, then 10.</p><p>Its value <strong>changes</strong> (it <strong>varies</strong>) while the program runs. That is why it is a variable.</p>', 'Show the worked answer') +
     columns(code(['DECLARE Score : INTEGER', 'Score <- 0', 'Score <- Score + 5', 'Score <- Score + 5', 'OUTPUT Score'], true),
-      facts(['A <strong>variable</strong> is a <strong>name</strong> for a value.', 'Its value <strong>can change</strong> while the program runs.', '<strong>DECLARE</strong> it first: its name and its data type.', '<code>&lt;-</code> puts a new value in it.'])) });
+      facts(['A <strong>variable</strong> is a <strong>name</strong> for a value.', 'Its value <strong>can change</strong> while the program runs.', '<strong>DECLARE</strong> it first: its name and its data type.', '<strong>INTEGER</strong> means a whole number.', 'The arrow <code>&lt;-</code> puts a new value in it.'])) });
 
 {
   const prog = ['DECLARE Lives : INTEGER', 'Lives <- 3', 'Lives <- Lives - 1', 'OUTPUT Lives'];
@@ -94,13 +94,34 @@ steps.push({ id: 'variable', label: 'A Variable',
   ], code(prog, true), ['Why can line 3 change Lives?', 'Lives is a variable. A variable can be given a new value at any time.']));
 }
 
+// ---------------------------------------------------------------- activity 1: trace a variable in Trace Tables
+// The Trace Tables app takes the program as Python (DECLARE lines pass through) and shows it in Cambridge style.
+steps.push({ id: 'activity-1', label: 'Activity 1: Watch a Variable Change', type: 'embedded-app', appId: 'trace-table-practice', embedContainerId: `${P}-embed-1`,
+  embedQuery: 'view=practice&lang=cambridge&support=1', embedView: 'practice',
+  algorithm: {
+    title: 'Spending Coins',
+    context: 'Complete the trace table. Write a new row each time Coins or Count changes, or something is output.',
+    code: ['DECLARE Coins : INTEGER', 'DECLARE Count : INTEGER', 'Coins = 10', 'for Count in range(1, 4):', '    Coins = Coins - 2', 'print(Coins)'],
+    cols: ['Line', 'Coins', 'Count', 'Output'],
+    answers: [
+      { Line: '3', Coins: '10', Count: '', Output: '' },
+      { Line: '4', Coins: '', Count: '1', Output: '' }, { Line: '5', Coins: '8', Count: '', Output: '' },
+      { Line: '4', Coins: '', Count: '2', Output: '' }, { Line: '5', Coins: '6', Count: '', Output: '' },
+      { Line: '4', Coins: '', Count: '3', Output: '' }, { Line: '5', Coins: '4', Count: '', Output: '' },
+      { Line: '6', Coins: '', Count: '', Output: '4' },
+    ],
+  },
+  content: '<h2 class="lesson-h2">Activity 1: Watch a Variable Change</h2>' +
+    tps('Coins changes 4 times. Why is that allowed?', '<p>Coins is a variable. A variable can get a new value as many times as the program needs.</p>') +
+    `<div id="${P}-embed-1" class="lesson-embed"></div>` });
+
 // ---------------------------------------------------------------- a constant: predict then reveal
 steps.push({ id: 'constant', label: 'A Constant',
   content: '<h2 class="lesson-h2">A Constant</h2>' +
-    tps('Pi is always 3.142. Why make it a <strong>constant</strong>, and not a variable?',
+    tps('Predict: what is output? Pi is always 3.142. Why make it a <strong>constant</strong>, and not a variable?',
       '<p>Its value must <strong>never change</strong>. As a constant, nothing in the program can change it by mistake.</p><p>If it ever needs a new value, you change <strong>one line</strong>.</p><p>Output: 3.142 &times; 2 &times; 2 = <strong>12.568</strong>.</p>', 'Show the worked answer') +
     columns(code(['CONSTANT Pi <- 3.142', 'DECLARE Radius : REAL', 'DECLARE Area : REAL', 'Radius <- 2', 'Area <- Pi * Radius * Radius', 'OUTPUT Area'], true),
-      facts(['A <strong>constant</strong> is a <strong>name</strong> for a value.', 'Its value <strong>cannot change</strong> while the program runs.', 'Make it with <strong>CONSTANT</strong> and give its value once.', 'Use its name, like a variable.'])) });
+      facts(['A <strong>constant</strong> is a <strong>name</strong> for a value.', 'Its value <strong>cannot change</strong> while the program runs.', 'Make it with <strong>CONSTANT</strong> and give its value once.', '<strong>REAL</strong> means a number with a decimal point.'])) });
 
 // ---------------------------------------------------------------- compare
 steps.push({ id: 'compare', label: 'Compare: Variable and Constant',
@@ -119,7 +140,7 @@ steps.push(mcStep('words-check', 'Check: Which One?', 'Check: Which One?', null,
 
 // ---------------------------------------------------------------- activity 1: the restaurant (real scenario)
 steps.push(checkStep('restaurant', 'Your Turn: The Restaurant', 'Your Turn: The Restaurant',
-  'From Cambridge IGCSE 0478/21, November 2025, Question 4(a): a meal for an adult costs $9.99 and a meal for a child costs $6.99. Tables of 6 or more people get a 15% discount. Write <strong>variable</strong> or <strong>constant</strong> for each value.', [
+  'An adult meal costs $9.99. A child meal costs $6.99. Tables of 6 or more people get 15% off. Write <strong>variable</strong> or <strong>constant</strong> for each value.<br><span style="font-size:.85em;color:var(--muted)">The restaurant is from Cambridge IGCSE 0478/21, November 2025, Question 4(a).</span>', [
     { label: 'The price of an adult meal, $9.99', answer: CONW, feedback: 'Is it the same for every table?' },
     { label: 'The number of adults at a table', answer: VARW, feedback: 'Is it the same for every table, or does the waiter type it in?' },
     { label: 'The 15% discount', answer: CONW, feedback: 'Does the discount change from table to table?' },

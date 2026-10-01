@@ -43,12 +43,12 @@
   {
    "id": "title",
    "label": "Variables and Constants",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">8.1 Programming Concepts</p><h2 class=\"lesson-h2\">Variables and Constants</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> a <strong>variable</strong> is a named value that <strong>can change</strong>. A <strong>constant</strong> is a named value that <strong>cannot change</strong>.</li><li><strong>You will:</strong> trace them, choose between them, and write the lines that make them.</li><li><strong>Think, pair, share:</strong> why do programs give names to values at all?</li></ul>"
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">8.1 Programming Concepts</p><h2 class=\"lesson-h2\">Variables and Constants</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> a <strong>variable</strong> is a named value that <strong>can change</strong>. A <strong>constant</strong> is a named value that <strong>cannot change</strong>.</li><li><strong>You will:</strong> trace them, choose between them, and write the lines that make them.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do programs give names to values at all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The name says what the value means. The program can use the value again and again by its name.</p></div></details>"
   },
   {
    "id": "variable",
    "label": "A Variable",
-   "content": "<h2 class=\"lesson-h2\">A Variable</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is output? Why is Score called a <strong>variable</strong>?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Output: <strong>10</strong>. Score is 0, then 5, then 10.</p><p>Its value <strong>changes</strong> (it <strong>varies</strong>) while the program runs. That is why it is a variable.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Score &lt;- 0</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Score &lt;- Score + 5</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Score &lt;- Score + 5</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT Score</div></div></div><div><ul class=\"lesson-facts\"><li>A <strong>variable</strong> is a <strong>name</strong> for a value.</li><li>Its value <strong>can change</strong> while the program runs.</li><li><strong>DECLARE</strong> it first: its name and its data type.</li><li><code>&lt;-</code> puts a new value in it.</li></ul></div></div>"
+   "content": "<h2 class=\"lesson-h2\">A Variable</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is output? Why is Score called a <strong>variable</strong>?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Output: <strong>10</strong>. Score is 0, then 5, then 10.</p><p>Its value <strong>changes</strong> (it <strong>varies</strong>) while the program runs. That is why it is a variable.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Score &lt;- 0</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Score &lt;- Score + 5</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Score &lt;- Score + 5</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT Score</div></div></div><div><ul class=\"lesson-facts\"><li>A <strong>variable</strong> is a <strong>name</strong> for a value.</li><li>Its value <strong>can change</strong> while the program runs.</li><li><strong>DECLARE</strong> it first: its name and its data type.</li><li><strong>INTEGER</strong> means a whole number.</li><li>The arrow <code>&lt;-</code> puts a new value in it.</li></ul></div></div>"
   },
   {
    "id": "variable-check",
@@ -59,9 +59,87 @@
    "content": "<h2 class=\"lesson-h2\">Check: Trace the Variable</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can line 3 change Lives?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Lives is a variable. A variable can be given a new value at any time.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Lives : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Lives &lt;- 3</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Lives &lt;- Lives - 1</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;OUTPUT Lives</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11vc-variable-check-a\">(a) What is the name of the variable? [1]</label><input id=\"y11vc-variable-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"variable-check-a\" aria-label=\"Check: Trace the Variable part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-variable-check-b\">(b) What is output? [1]</label><input id=\"y11vc-variable-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"variable-check-b\" aria-label=\"Check: Trace the Variable part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11vc-variable-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11vc-variable-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
   },
   {
+   "id": "activity-1",
+   "label": "Activity 1: Watch a Variable Change",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y11vc-embed-1",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Spending Coins",
+    "context": "Complete the trace table. Write a new row each time Coins or Count changes, or something is output.",
+    "code": [
+     "DECLARE Coins : INTEGER",
+     "DECLARE Count : INTEGER",
+     "Coins = 10",
+     "for Count in range(1, 4):",
+     "    Coins = Coins - 2",
+     "print(Coins)"
+    ],
+    "cols": [
+     "Line",
+     "Coins",
+     "Count",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "3",
+      "Coins": "10",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Coins": "",
+      "Count": "1",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Coins": "8",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Coins": "",
+      "Count": "2",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Coins": "6",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Coins": "",
+      "Count": "3",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Coins": "4",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Coins": "",
+      "Count": "",
+      "Output": "4"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Watch a Variable Change</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Coins changes 4 times. Why is that allowed?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Coins is a variable. A variable can get a new value as many times as the program needs.</p></div></details><div id=\"y11vc-embed-1\" class=\"lesson-embed\"></div>"
+  },
+  {
    "id": "constant",
    "label": "A Constant",
-   "content": "<h2 class=\"lesson-h2\">A Constant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Pi is always 3.142. Why make it a <strong>constant</strong>, and not a variable?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Its value must <strong>never change</strong>. As a constant, nothing in the program can change it by mistake.</p><p>If it ever needs a new value, you change <strong>one line</strong>.</p><p>Output: 3.142 &times; 2 &times; 2 = <strong>12.568</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;CONSTANT Pi &lt;- 3.142</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Radius : REAL</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;DECLARE Area : REAL</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Radius &lt;- 2</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;Area &lt;- Pi * Radius * Radius</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT Area</div></div></div><div><ul class=\"lesson-facts\"><li>A <strong>constant</strong> is a <strong>name</strong> for a value.</li><li>Its value <strong>cannot change</strong> while the program runs.</li><li>Make it with <strong>CONSTANT</strong> and give its value once.</li><li>Use its name, like a variable.</li></ul></div></div>"
+   "content": "<h2 class=\"lesson-h2\">A Constant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is output? Pi is always 3.142. Why make it a <strong>constant</strong>, and not a variable?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Its value must <strong>never change</strong>. As a constant, nothing in the program can change it by mistake.</p><p>If it ever needs a new value, you change <strong>one line</strong>.</p><p>Output: 3.142 &times; 2 &times; 2 = <strong>12.568</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;CONSTANT Pi &lt;- 3.142</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Radius : REAL</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;DECLARE Area : REAL</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Radius &lt;- 2</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;Area &lt;- Pi * Radius * Radius</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT Area</div></div></div><div><ul class=\"lesson-facts\"><li>A <strong>constant</strong> is a <strong>name</strong> for a value.</li><li>Its value <strong>cannot change</strong> while the program runs.</li><li>Make it with <strong>CONSTANT</strong> and give its value once.</li><li><strong>REAL</strong> means a number with a decimal point.</li></ul></div></div>"
   },
   {
    "id": "compare",
@@ -103,7 +181,7 @@
    "type": "short-answer-validation",
    "validatorId": "y11vc-restaurant",
    "validatorKey": "y11vc_restaurant",
-   "content": "<h2 class=\"lesson-h2\">Your Turn: The Restaurant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the number of adults a variable?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is different for every table. The program finds it out while it runs.</p></div></details><p class=\"lesson-lead\">From Cambridge IGCSE 0478/21, November 2025, Question 4(a): a meal for an adult costs $9.99 and a meal for a child costs $6.99. Tables of 6 or more people get a 15% discount. Write <strong>variable</strong> or <strong>constant</strong> for each value.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-a\">(a) The price of an adult meal, $9.99 [1]</label><input id=\"y11vc-restaurant-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-a\" aria-label=\"Your Turn: The Restaurant part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-b\">(b) The number of adults at a table [1]</label><input id=\"y11vc-restaurant-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-b\" aria-label=\"Your Turn: The Restaurant part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-c\">(c) The 15% discount [1]</label><input id=\"y11vc-restaurant-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-c\" aria-label=\"Your Turn: The Restaurant part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-d\">(d) The total cost for a table [1]</label><input id=\"y11vc-restaurant-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-d\" aria-label=\"Your Turn: The Restaurant part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11vc-restaurant-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11vc-restaurant-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+   "content": "<h2 class=\"lesson-h2\">Your Turn: The Restaurant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the number of adults a variable?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is different for every table. The program finds it out while it runs.</p></div></details><p class=\"lesson-lead\">An adult meal costs $9.99. A child meal costs $6.99. Tables of 6 or more people get 15% off. Write <strong>variable</strong> or <strong>constant</strong> for each value.<br><span style=\"font-size:.85em;color:var(--muted)\">The restaurant is from Cambridge IGCSE 0478/21, November 2025, Question 4(a).</span></p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-a\">(a) The price of an adult meal, $9.99 [1]</label><input id=\"y11vc-restaurant-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-a\" aria-label=\"Your Turn: The Restaurant part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-b\">(b) The number of adults at a table [1]</label><input id=\"y11vc-restaurant-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-b\" aria-label=\"Your Turn: The Restaurant part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-c\">(c) The 15% discount [1]</label><input id=\"y11vc-restaurant-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-c\" aria-label=\"Your Turn: The Restaurant part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-d\">(d) The total cost for a table [1]</label><input id=\"y11vc-restaurant-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-d\" aria-label=\"Your Turn: The Restaurant part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11vc-restaurant-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11vc-restaurant-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
   },
   {
    "id": "two-lines",

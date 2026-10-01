@@ -95,7 +95,7 @@ DrillData.register("y11-8-1-vc", {
       { id: "vc-12", category: "vc-choose", randomize: function () {
           var s = drillPick(VALUES.filter(function (x) { return x[1] === "c"; }));
           return { prompt: s[0] + " Why should this be a constant?", answers: ["It does not change while the program runs"],
-            keywords: [/(not|never|n't|doesn'?t|does\s+not|won'?t|cannot|can'?t)\s+(\w+\s+)?chang|(stays?|always|is)\s+(\w+\s+)?(the\s+)?same|same\s+(every|each|for|all)|fixed/i],
+            keywords: [/(not|never|n't|doesn'?t|does\s+not|won'?t|cannot|can'?t)\s+(\w+\s+)?chang|(stays?|always|is)\s+(\w+\s+)?(the\s+)?same|same\s+(every|each|for|all)|fixed|\balways\b/i],
             distractors: ["It changes every time the program runs", "It is typed in by the user", "It goes up during the program"],
             working: ["Does this value ever change while the program runs?"],
             note: s[2] };
@@ -103,7 +103,7 @@ DrillData.register("y11-8-1-vc", {
       { id: "vc-13", category: "vc-choose", randomize: function () {
           var s = drillPick(VALUES.filter(function (x) { return x[1] === "v"; }));
           return { prompt: s[0] + " Why should this be a variable?", answers: ["It can change while the program runs"],
-            keywords: [/^(?!.*\b(not|never|n't|cannot)\b).*(chang|differ|goes\s+(up|down)|typed|input|enter|vary|varies|each\s+(time|table|user|game))/i],
+            keywords: [/^(?!.*\b(not|never|n't|cannot)\b).*(chang|differ|goes\s+(up|down)|go\s+(up|down)|\btyp(e|es|ed|ing)\b|input|enter|vary|varies|each\s+(time|table|user|game))/i],
             distractors: ["It stays the same for every user", "It never changes while the program runs", "It is fixed when the program is written"],
             working: ["Is it the same every time, or can it change?"],
             note: s[2] };
