@@ -101,6 +101,19 @@
         .fc-support-toggle { display: flex; justify-content: center; margin-bottom: 16px; }
         .fc-palette { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
         .fc-code { text-align: left; background: #0b0d11; border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; font-size: 13px; line-height: 1.7; color: var(--ink); white-space: pre; }
+        /* Support mode: the rule behind an answer, in the middle of the screen for about a second (flashRule). */
+        .fc-rule-tip { position: fixed; left: 50%; top: 50%; z-index: 10000;   /* above the flowchart and its drop boxes */ max-width: min(520px, calc(100vw - 32px)); padding: 18px 24px;
+            border-radius: 14px; background: #161b22; border: 2px solid var(--line); color: var(--ink); font-size: 19px; line-height: 1.45;
+            text-align: center; box-shadow: 0 18px 50px rgba(0, 0, 0, .55); pointer-events: none; opacity: 0;
+            transform: translate(-50%, -46%) scale(.96); transition: opacity .25s ease, transform .25s ease; }
+        .fc-rule-tip.is-shown { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .fc-rule-tip.is-good { border-color: #34d399; }
+        .fc-rule-tip.is-bad { border-color: #fb7185; }
+        .fc-rule-tip strong { color: #fff; }
+        .fc-rule-tip .fc-rule-lead { display: block; font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+        .fc-rule-tip.is-good .fc-rule-lead { color: #34d399; }
+        .fc-rule-tip.is-bad .fc-rule-lead { color: #fb7185; }
+        @media (prefers-reduced-motion: reduce) { .fc-rule-tip { transition: none; transform: translate(-50%, -50%); } }
     </style>
 </head>
 <body class="text-white h-screen w-screen overflow-hidden">
@@ -168,6 +181,55 @@ const checkAnswer = (studentText, expectedLines) => {
     const studentLines = String(studentText || '').split('\n').map((l) => l.trim()).filter((l) => l.length > 0);
     if (studentLines.length !== expectedLines.length) return false;
     return studentLines.every((line, i) => tokensEqual(tokenize(line), tokenize(expectedLines[i])));
+};
+
+// --- SUPPORT: the rule behind an answer ---
+// With Support on, every Check shows the shape rule involved in the middle of the screen for about a second
+// (James, 2026-10-01): "Not quite! Remember, if we Ask the user something we use the parallelogram."
+// Each kind of step has one rule, said the same way every time.
+const RULES = {
+    ask: { bad: 'Remember, if we <strong>Ask</strong> the user something we use the <strong>parallelogram</strong>.',
+        good: 'We use a <strong>parallelogram</strong> when we <strong>Ask</strong> the user something (Input).',
+        code: 'A <strong>parallelogram</strong> that <strong>Asks</strong> the user becomes <strong>INPUT</strong>.' },
+    display: { bad: 'Remember, if we <strong>Display</strong> something we use the <strong>parallelogram</strong>.',
+        good: 'We use a <strong>parallelogram</strong> when we <strong>Display</strong> something (Output).',
+        code: 'A <strong>parallelogram</strong> that <strong>Displays</strong> something becomes <strong>OUTPUT</strong>.' },
+    process: { bad: 'Remember, if the code <strong>Does Something</strong> we use the <strong>rectangle</strong>.',
+        good: 'We use a <strong>rectangle</strong> when the code <strong>Does Something</strong> (Process).',
+        code: 'A <strong>rectangle</strong> that <strong>Stores</strong> a value becomes <strong>Name &lt;- value</strong>.' },
+    decision: { bad: 'Remember, if we ask a <strong>Yes/No question</strong> we use the <strong>diamond</strong>.',
+        good: 'We use a <strong>diamond</strong> for a <strong>Yes/No question</strong> (Decision).',
+        code: 'A <strong>diamond</strong> becomes <strong>IF ... THEN</strong>, <strong>ELSE</strong>, <strong>ENDIF</strong>.' },
+    declare: { code: 'Every new variable needs a <strong>DECLARE</strong> line first. It has no shape in the flowchart.' }
+};
+const nodeKind = (n) => (n.shape === 'process' ? 'process' : n.shape === 'decision' ? 'decision' : /^Ask/i.test(n.text) ? 'ask' : 'display');
+const lineKind = (line) => {
+    const t = String(line || '').trim().toUpperCase();
+    if (t.startsWith('DECLARE')) return 'declare';
+    if (t.startsWith('INPUT')) return 'ask';
+    if (t.startsWith('OUTPUT')) return 'display';
+    if (t.startsWith('IF') || t === 'ELSE' || t.startsWith('ENDIF')) return 'decision';
+    return 'process';
+};
+let ruleTipTimer = null;
+const flashRule = (good, html) => {
+    if (!html) return;
+    let el = document.getElementById('fc-rule-tip');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'fc-rule-tip';
+        el.className = 'fc-rule-tip';
+        el.setAttribute('role', 'status');
+        el.setAttribute('aria-live', 'polite');
+        document.body.appendChild(el);
+    }
+    el.innerHTML = `<span class="fc-rule-lead">${good ? 'Perfect!' : 'Not quite!'}</span>${html}`;
+    el.classList.remove('is-good', 'is-bad', 'is-shown');
+    el.classList.add(good ? 'is-good' : 'is-bad');
+    void el.offsetWidth;                       // restart the fade when two checks come quickly
+    el.classList.add('is-shown');
+    clearTimeout(ruleTipTimer);
+    ruleTipTimer = setTimeout(() => el.classList.remove('is-shown'), 1200);   // about a second, then fades out
 };
 
 // --- QUESTION GENERATORS ---
@@ -608,6 +670,16 @@ const FlowToCodeLevel = ({ onExit, onGameOver, onHelp, isSupportMode }) => {
         if (justRight || !answer.trim()) return;
         const correct = checkAnswer(answer, question.expected);
         if (isSupportMode && supportFader) { if (correct) supportFader.correct(); else supportFader.wrong(); }
+        if (isSupportMode) {
+            // The rule for the first line that does not match (or one of the lines, when it is all right).
+            const typed = answer.split('\n').map((l) => l.trim()).filter((l) => l.length > 0);
+            const firstWrong = question.expected.findIndex((line, i) => !typed[i] || !tokensEqual(tokenize(typed[i]), tokenize(line)));
+            const at = firstWrong >= 0 ? firstWrong : question.expected.length - 1;
+            const kind = correct ? pick(question.expected.map(lineKind).filter((k) => k !== 'declare')) : lineKind(question.expected[at]);
+            // The right kind of line with a wrong value or symbol: the shape rule would not help, so check the values.
+            const sameKind = !correct && typed[at] && lineKind(typed[at]) === kind && kind !== 'declare';
+            flashRule(correct, sameKind ? '<strong>Right keyword!</strong> Now check the values and symbols against the flowchart.' : RULES[kind].code);
+        }
         if (correct) {
             correctRef.current += 1;
             setJustRight(true);
@@ -738,6 +810,18 @@ const CodeToFlowLevel = ({ onExit, onGameOver, onHelp, isSupportMode }) => {
         });
         setCheckState(result);
         if (isSupportMode && supportFader) { if (allCorrect) supportFader.correct(); else supportFader.wrong(); }
+        if (isSupportMode) {
+            // The rule for the first wrong box. A block of the right shape with the wrong value (a distractor) gets a
+            // value reminder instead, since the shape rule would not help.
+            const wrongNode = flat.find((n) => result[`${n.group}-${n.index}`] !== 'correct');
+            if (allCorrect) flashRule(true, RULES[nodeKind(pick(flat))].good);
+            else {
+                const placed = slots[`${wrongNode.group}-${wrongNode.index}`];
+                flashRule(false, placed && placed.shape === wrongNode.shape
+                    ? '<strong>Right shape!</strong> Now check the value against the pseudocode.'
+                    : RULES[nodeKind(wrongNode)].bad);
+            }
+        }
         if (allCorrect) {
             correctRef.current += 1;
             setJustRight(true);
