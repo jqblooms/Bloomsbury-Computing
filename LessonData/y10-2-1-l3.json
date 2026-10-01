@@ -1,0 +1,189 @@
+{
+ "id": "y10-2-1-l3",
+ "label": "2.1 L3: USB",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Packets (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-21l3-do-now",
+   "validatorKey": "y10_21l3_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Packets (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a packet need parts other than the payload?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The payload is the data. The other parts say where it is going, its order, and how to check it arrived whole.</p></div></details><p class=\"lesson-lead\">From Lesson 1. Cambridge IGCSE 0478/12, June 2026, Question 3(e)(i). Each packet of data is divided into three parts. One part is the payload.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-21l3-do-now-a\">(a) Give the names of the two other parts of a packet of data. [2]</label><input id=\"y10-21l3-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Packets (1 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-21l3-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-21l3-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Serial Simplex (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-21l3-do-now-2",
+   "validatorKey": "y10_21l3_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Serial Simplex (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we need two words, serial AND simplex?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Serial says how many bits go at a time. Simplex says which way the data goes. They answer different questions.</p></div></details><p class=\"lesson-lead\">From Lesson 2. Cambridge IGCSE 0478/13, June 2025, Question 6(c)(ii). The data for an alert is sent using serial simplex data transmission.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-21l3-do-now-2-a\">(a) Explain how the data is sent using serial simplex data transmission. [2]</label><input id=\"y10-21l3-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Serial Simplex (2 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-21l3-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-21l3-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "title",
+   "label": "USB",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">2.1 Data Transmission</p><h2 class=\"lesson-h2\">USB</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> what USB is, how it sends data, and why we use it.</li><li><strong>You already know:</strong> serial, parallel, simplex and duplex. USB uses them.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does almost every mouse, keyboard and phone use the same kind of plug?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One standard plug works with almost every computer. People do not need a different cable for each device.</p></div></details>"
+  },
+  {
+   "id": "concept-usb",
+   "label": "What Is USB?",
+   "content": "<h2 class=\"lesson-h2\">What Is USB?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: USB means <strong>Universal Serial Bus</strong>. From last lesson, what does <strong>serial</strong> tell you about how USB sends data?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Serial: <strong>one bit at a time</strong>, one after another, down one wire.</p><p>So the bits cannot skew. They arrive <strong>in order</strong>.</p></div></details><ul class=\"lesson-facts\"><li><strong>USB</strong> is a standard <strong>interface</strong>: a way to connect a device (like a mouse) to a computer.</li><li>A USB cable carries <strong>data</strong> and <strong>power</strong>.</li><li>USB sends data by <strong>serial</strong> transmission: one bit at a time.</li><li>USB is <strong>half-duplex</strong>: both directions, but one direction at a time.</li><li>When you plug a device in, the computer <strong>detects</strong> it and loads its <strong>driver</strong> (the program that lets the computer use the device).</li></ul>"
+  },
+  {
+   "id": "exam-interface",
+   "label": "Exam Question: The USB Interface (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-21l3-exam-interface",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The USB Interface (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the word \"universal\" matter here?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Universal means it is a standard. The same connection works with many different devices.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2026, Question 3(c)(i). A drone can be connected to a computer using a universal serial bus (USB) interface to transfer the video recorded by its camera.</p><div id=\"y10-21l3-exam-interface\"></div>",
+   "items": [
+    {
+     "id": "interface-meaning",
+     "prompt": "State what is meant by a USB interface. [1]",
+     "marks": 1,
+     "modelAnswer": "A standard (universal) connection / port used to connect a device (peripheral) to a computer, so data can be sent between them."
+    }
+   ]
+  },
+  {
+   "id": "exam-interface-2",
+   "label": "Exam Question: The USB Interface (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-21l3-exam-interface-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The USB Interface (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"a way to connect\" not enough for full marks here?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The question says explain HOW. Say how the bits travel: serial, one at a time, and half-duplex.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2026, Question 3(c)(ii). A drone can be connected to a computer using a universal serial bus (USB) interface to transfer the video recorded by its camera.</p><div id=\"y10-21l3-exam-interface-2\"></div>",
+   "items": [
+    {
+     "id": "interface-how",
+     "prompt": "Explain how a USB interface is used to transmit data. [3]",
+     "marks": 3,
+     "modelAnswer": "Any three: the device is connected to the computer with a USB cable / port; the computer detects the device and loads its driver automatically; data is sent using serial transmission, one bit at a time; it is half-duplex, so data goes both ways but one way at a time."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Half-Duplex",
+   "type": "embedded-app",
+   "appId": "transmission-lab-duplex",
+   "embedContainerId": "y10-21l3-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Half-Duplex</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What happens when both sides try to send at once on a half-duplex link? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One side must wait. Half-duplex only lets data go one way at a time.</p></div></details><p class=\"lesson-lead\">USB is half-duplex. Choose <strong>half-duplex</strong> and send data from A, then from B, then from both at once.</p><div id=\"y10-21l3-activity-1\"></div>"
+  },
+  {
+   "id": "concept-good-bad",
+   "label": "Benefits and Drawbacks",
+   "content": "<h2 class=\"lesson-h2\">Benefits and Drawbacks</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: a new USB mouse works the moment you plug it in, with no battery. Which benefits does that show?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It is <strong>detected automatically</strong>: the computer loads its driver for you.</p><p>The cable <strong>supplies power</strong>, so it needs no battery.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700\">Benefits</p><ul class=\"lesson-facts\"><li>A <strong>standard</strong> connection: it fits most devices.</li><li>Devices are <strong>detected automatically</strong> and the driver is loaded.</li><li>It can <strong>supply power</strong> to the device.</li><li>The plug only fits <strong>one way</strong>, so it is not damaged.</li><li>Serial, so the bits arrive <strong>in order</strong>.</li></ul></div><div><p style=\"margin:0 0 6px;font-weight:700\">Drawbacks</p><ul class=\"lesson-facts\"><li>The cable can only be about <strong>5 metres</strong> long.</li><li>It is <strong>slower</strong> than some other connections.</li><li>Very <strong>old versions</strong> may not work with new devices.</li></ul></div></div>"
+  },
+  {
+   "id": "compare",
+   "label": "Compare: Same Cable, Different Job",
+   "content": "<h2 class=\"lesson-h2\">Compare: Same Cable, Different Job</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both use a USB cable. Which one works well? Why does the other one have a problem?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A works well:</strong> the mouse is close, and USB powers it.</p><p><strong>B has a problem:</strong> 20 metres is far longer than a USB cable can be (about 5 metres).</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: a mouse on the desk</p><ul class=\"lesson-facts\"><li>Distance: <strong>1 metre</strong></li><li>Needs power: <strong>yes</strong></li><li>Sends: clicks and movement</li></ul></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: a printer in another room</p><ul class=\"lesson-facts\"><li>Distance: <strong>20 metres</strong></li><li>Has its own power plug</li><li>Sends: pages to print</li></ul></div></div>"
+  },
+  {
+   "id": "exam-type",
+   "label": "Exam Question: Type of Transmission",
+   "type": "short-answer-validation",
+   "validatorId": "y10-21l3-exam-type",
+   "validatorKey": "y10_21l3_exam_type",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Type of Transmission</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can you answer this from the name alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>USB means Universal Serial Bus. The S tells you it is serial.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2021, Question 2(c)(ii). Julia uses a USB connection to transfer data onto her USB flash memory drive.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-21l3-exam-type-a\">(a) Identify the type of data transmission used in a USB connection. [1]</label><input id=\"y10-21l3-exam-type-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-type-a\" aria-label=\"Exam Question: Type of Transmission part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-21l3-exam-type-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-21l3-exam-type-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-benefits",
+   "label": "Exam Question: Two Benefits",
+   "type": "self-marked-response",
+   "containerId": "y10-21l3-exam-benefits",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Two Benefits</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must you not write \"it is universal\" here?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The question already gives that benefit. You must give two OTHER benefits.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2021, Question 2(c)(i). One benefit of using a USB connection is that it is a universal connection.</p><div id=\"y10-21l3-exam-benefits\"></div>",
+   "items": [
+    {
+     "id": "benefits-2021",
+     "prompt": "State two other benefits of using a USB connection. [2]",
+     "marks": 2,
+     "modelAnswer": "Any two: the device is detected automatically; the driver is loaded automatically; it can supply power to the device; it only fits one way, so it is not plugged in wrongly; it is backward compatible with older USB versions; it supports different transmission speeds."
+    }
+   ]
+  },
+  {
+   "id": "exam-mouse",
+   "label": "Exam Question: The USB Mouse",
+   "type": "self-marked-response",
+   "containerId": "y10-21l3-exam-mouse",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The USB Mouse</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does \"less likely to arrive out of order\" happen with USB?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>USB is serial. The bits go one after another, so they cannot skew.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2026, Question 4(c). An optical mouse is connected to a computer using a USB cable. One benefit is that bits of data are less likely to arrive out of order.</p><div id=\"y10-21l3-exam-mouse\"></div>",
+   "items": [
+    {
+     "id": "benefits-2026",
+     "prompt": "Give two other benefits of using the USB cable to connect the optical mouse to the computer. [2]",
+     "marks": 2,
+     "modelAnswer": "Any two: the mouse is detected automatically / the driver is loaded automatically; the cable supplies power, so the mouse needs no battery; it is a universal / standard connection, so it fits most computers; it only fits one way."
+    }
+   ]
+  },
+  {
+   "id": "exam-drawback",
+   "label": "Exam Question: A Drawback",
+   "type": "short-answer-validation",
+   "validatorId": "y10-21l3-exam-drawback",
+   "validatorKey": "y10_21l3_exam_drawback",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: A Drawback</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A mouse is used close to the computer. Why is the 5 metre cable limit still a drawback?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The mouse can never be used further away than the cable reaches. A different connection could reach further.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2025, Question 5(c)(iii). A mouse is connected to a computer using a USB connection.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-21l3-exam-drawback-a\">(a) Give one drawback of using a USB connection for this purpose. [1]</label><input id=\"y10-21l3-exam-drawback-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-drawback-a\" aria-label=\"Exam Question: A Drawback part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-21l3-exam-drawback-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-21l3-exam-drawback-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Why USB Is Serial",
+   "type": "embedded-app",
+   "appId": "transmission-lab-wires",
+   "embedContainerId": "y10-21l3-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Why USB Is Serial</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why did the long parallel cable get the letter wrong? Why does that make serial better for USB?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Over a long cable, parallel bits skew and arrive out of step. Serial bits arrive in order, so the data is correct.</p></div></details><p class=\"lesson-lead\">Send one letter down the <strong>long</strong> cable, first by serial, then by parallel. Compare what arrives.</p><div id=\"y10-21l3-activity-2\"></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: USB Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-1-l3-usb",
+   "embedContainerId": "y10-21l3-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: USB Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new questions every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can answer any USB question, you really understand it.</p></div></details><p class=\"lesson-lead\">What USB is, how it sends data, benefits and drawbacks, and whether it suits a job. Your progress is saved.</p><div id=\"y10-21l3-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_21l3_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\bheaders?\\b)(?=.*\\b(trailers?|footers?)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "One part comes before the payload and one part comes after it."
+   }
+  ],
+  "y10_21l3_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\bbits?\\b)(?=.*\\b(one|1|single|only)\\b)(?=.*\\b(direction|directions|way|ways)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: how many bits go at a time (serial), and which way the data can go (simplex)."
+   }
+  ],
+  "y10_21l3_exam_type": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\bparallel\\b).*\\bserial\\b.*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the letters USB. What does the S stand for?"
+   }
+  ],
+  "y10_21l3_exam_drawback": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^.*(length|long|short|5\\s*m|five\\s+met(re|er)s?|distance|far|slow|speed|older|old\\s+version|not\\s+support|compatib|limited\\s+power|power\\s+(is\\s+)?limited).*$",
+     "flags": "i"
+    },
+    "feedback": "Think about how far a USB cable can reach, or how fast it is compared with other connections."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
