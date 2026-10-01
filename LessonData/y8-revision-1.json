@@ -1,0 +1,326 @@
+{
+ "id": "y8-revision-1",
+ "label": "Revision 1: Reading Pseudocode",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Key Words (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y8r1-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Key Words (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we need both INPUT and OUTPUT?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>INPUT brings a value in from the user. OUTPUT shows the answer back to them.</p></div></details><p class=\"lesson-lead\">From Lesson 1.</p><div id=\"y8r1-do-now\"></div>",
+   "items": [
+    {
+     "prompt": "Which symbol stores a value in a variable?",
+     "options": [
+      "=",
+      "<-",
+      "+",
+      ">"
+     ],
+     "correct": 1,
+     "explain": "The arrow <- stores the value on its right in the variable on its left."
+    },
+    {
+     "prompt": "Which keyword takes a value typed in by the user?",
+     "options": [
+      "OUTPUT",
+      "DECLARE",
+      "INPUT"
+     ],
+     "correct": 2,
+     "explain": "INPUT takes a value from the user."
+    }
+   ]
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Trace (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y8r1-do-now-2",
+   "validatorKey": "y8r1_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Trace (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the output not 4?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Line 3 changes Number before line 4 outputs it. The lines run in order.</p></div></details><p class=\"lesson-lead\">From Lesson 1. Trace the program.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Number : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Number &lt;- 4</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Number &lt;- Number + 3</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;OUTPUT Number</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r1-do-now-2-a\">(a) What is the value of Number after line 2? [1]</label><input id=\"y8r1-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Trace (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r1-do-now-2-b\">(b) What is output? [1]</label><input id=\"y8r1-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Trace (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r1-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8r1-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "title",
+   "label": "Revision 1: Reading Pseudocode",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithms</p><h2 class=\"lesson-h2\">Revision 1: Reading Pseudocode</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> read a program and say what it outputs.</li><li><strong>Three ideas:</strong> sequence, selection, loops. Then flowcharts.</li><li><strong>Next lesson:</strong> arrays and searching. <strong>Then:</strong> the assessment.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do programmers write pseudocode before real code?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is easy to read and check. You can plan the steps without worrying about a real language.</p></div></details>"
+  },
+  {
+   "id": "key-words",
+   "label": "Key Words",
+   "content": "<h2 class=\"lesson-h2\">Key Words</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which of these key words come in pairs? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>IF goes with ENDIF. FOR goes with NEXT. The second word shows where the block <strong>ends</strong>.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">DECLARE Age : INTEGER</td><td style=\"padding:7px 12px;text-align:left\">make a variable (a name for a value)</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">Age &lt;- 12</td><td style=\"padding:7px 12px;text-align:left\">store a value</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">INPUT Age</td><td style=\"padding:7px 12px;text-align:left\">take a value from the user</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">OUTPUT Age</td><td style=\"padding:7px 12px;text-align:left\">show a value</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">IF ... THEN ... ELSE ... ENDIF</td><td style=\"padding:7px 12px;text-align:left\">choose what to do (<strong>selection</strong>)</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">FOR ... NEXT</td><td style=\"padding:7px 12px;text-align:left\">repeat lines (<strong>a loop</strong>)</td></tr></table>"
+  },
+  {
+   "id": "sequence",
+   "label": "Sequence: One Line at a Time",
+   "content": "<h2 class=\"lesson-h2\">Sequence: One Line at a Time</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: the user types 12. What is output? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Output: <strong>13</strong>.</p><p>Line 2 stores 12 in Age. Line 3 adds 1. Line 4 shows Age. The lines run <strong>in order</strong>, one at a time: this is <strong>sequence</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Age</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Age &lt;- Age + 1</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;OUTPUT Age</div></div></div><div><ul class=\"lesson-facts\"><li>The computer runs <strong>line 1</strong>, then <strong>line 2</strong>, then <strong>line 3</strong>.</li><li>Write down the value after each line.</li><li>A new value <strong>replaces</strong> the old one.</li></ul></div></div>"
+  },
+  {
+   "id": "sequence-check",
+   "label": "Check: Sequence",
+   "type": "short-answer-validation",
+   "validatorId": "y8r1-sequence-check",
+   "validatorKey": "y8r1_sequence_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Sequence</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does B stay 2?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>No line after line 4 stores a new value in B.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE A : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE B : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;A &lt;- 5</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;B &lt;- 2</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;A &lt;- A + B</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT A</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r1-sequence-check-a\">(a) What is the value of A after line 5? [1]</label><input id=\"y8r1-sequence-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"sequence-check-a\" aria-label=\"Check: Sequence part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r1-sequence-check-b\">(b) What is the value of B at the end? [1]</label><input id=\"y8r1-sequence-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"sequence-check-b\" aria-label=\"Check: Sequence part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r1-sequence-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8r1-sequence-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "selection",
+   "label": "Selection: Choosing a Path",
+   "content": "<h2 class=\"lesson-h2\">Selection: Choosing a Path</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: the user types 70. Then 30. What is output each time? Why only one OUTPUT?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>70: 70 &gt;= 50 is TRUE, so <strong>Pass</strong>. 30: FALSE, so <strong>Fail</strong>.</p><p>IF chooses <strong>one</strong> path. TRUE runs the THEN line. FALSE runs the ELSE line.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Mark</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Mark &gt;= 50 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div><div><ul class=\"lesson-facts\"><li><code>&gt;=</code> means <strong>more than or equal to</strong>.</li><li><code>&gt;</code> means <strong>more than</strong>.</li><li>TRUE: the line after <strong>THEN</strong> runs.</li><li>FALSE: the line after <strong>ELSE</strong> runs.</li><li><strong>ENDIF</strong> ends the choice.</li></ul></div></div>"
+  },
+  {
+   "id": "compare",
+   "label": "Compare: >= and >",
+   "content": "<h2 class=\"lesson-h2\">Compare: &gt;= and &gt;</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The user types 50 into both. What does each one output? Why are they different?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A outputs <strong>Pass</strong>: 50 &gt;= 50 is TRUE.</p><p>B outputs <strong>Fail</strong>: 50 &gt; 50 is FALSE. 50 is not more than 50.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">INPUT Mark</div><div class=\"lesson-code-line\">IF Mark &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">ENDIF</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">INPUT Mark</div><div class=\"lesson-code-line\">IF Mark &gt; 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">ENDIF</div></div></div></div>"
+  },
+  {
+   "id": "selection-check",
+   "label": "Check: Selection",
+   "type": "short-answer-validation",
+   "validatorId": "y8r1-selection-check",
+   "validatorKey": "y8r1_selection_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Selection</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does 25 give Cold?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>25 is not more than 25, so Temp > 25 is FALSE.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Temp &gt; 25 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Hot\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Cold\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r1-selection-check-a\">(a) The user types 30. What is output? [1]</label><input id=\"y8r1-selection-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"selection-check-a\" aria-label=\"Check: Selection part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r1-selection-check-b\">(b) The user types 25. What is output? [1]</label><input id=\"y8r1-selection-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"selection-check-b\" aria-label=\"Check: Selection part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r1-selection-check-c\">(c) The user types 25. Which line number runs: 5 or 7? [1]</label><input id=\"y8r1-selection-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"selection-check-c\" aria-label=\"Check: Selection part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r1-selection-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8r1-selection-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "loop",
+   "label": "Loops: Repeating Lines",
+   "content": "<h2 class=\"lesson-h2\">Loops: Repeating Lines</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: how many times is Hi output? Why use a loop, and not write OUTPUT four times?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Count goes 1, 2, 3, 4, so Hi is output <strong>4 times</strong>.</p><p>A loop is shorter. To output it 100 times, you only change 4 to 100.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;FOR Count &lt;- 1 TO 4</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Hi\"</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;NEXT Count</div></div></div><div><ul class=\"lesson-facts\"><li><strong>FOR Count &lt;- 1 TO 4</strong>: Count starts at 1 and goes up to 4.</li><li>The lines between FOR and NEXT run <strong>once for each value</strong>.</li><li><strong>NEXT</strong> adds 1 to Count and goes back to the top.</li></ul></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Trace a Loop",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y8r1-embed-1",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Adding in a Loop",
+    "context": "Complete the trace table. Write a new row each time Total or Count changes, or something is output.",
+    "code": [
+     "DECLARE Total : INTEGER",
+     "DECLARE Count : INTEGER",
+     "Total = 0",
+     "for Count in range(1, 4):",
+     "    Total = Total + 5",
+     "print(Total)"
+    ],
+    "cols": [
+     "Line",
+     "Total",
+     "Count",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "3",
+      "Total": "0",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Count": "1",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "5",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Count": "2",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "10",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Count": "3",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "15",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Total": "",
+      "Count": "",
+      "Output": "15"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Trace a Loop</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Total start at 0?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Nothing has been added yet. If it started at 5, the total would be 5 too big.</p></div></details><div id=\"y8r1-embed-1\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "loop-check",
+   "label": "Check: Loops",
+   "type": "short-answer-validation",
+   "validatorId": "y8r1-loop-check",
+   "validatorKey": "y8r1_loop_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Loops</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is OUTPUT after NEXT, not inside the loop?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So the total is shown once, at the end. Inside the loop it would be shown every time.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 2</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r1-loop-check-a\">(a) How many times does line 5 run? [1]</label><input id=\"y8r1-loop-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"loop-check-a\" aria-label=\"Check: Loops part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r1-loop-check-b\">(b) What is output? [1]</label><input id=\"y8r1-loop-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"loop-check-b\" aria-label=\"Check: Loops part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r1-loop-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8r1-loop-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "flowchart",
+   "label": "Flowcharts: The Same Program",
+   "content": "<h2 class=\"lesson-h2\">Flowcharts: The Same Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This flowchart and this pseudocode do the same thing. Which shape is the IF? Why does it have two arrows?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The <strong>diamond</strong> (Decision) is the IF.</p><p>It has two arrows because there are two paths: <strong>Yes</strong> (TRUE, the THEN line) and <strong>No</strong> (FALSE, the ELSE line).</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:380px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; INPUT Mark; Mark &gt;= 50? (True to OUTPUT &quot;Pass&quot;, False to OUTPUT &quot;Fail&quot;); OUTPUT &quot;Pass&quot;; OUTPUT &quot;Fail&quot;; End\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc1a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc1a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">Yes</text><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc1a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">No</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc1a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-b\" points=\"34,78 180,78 166,114 20,114\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">INPUT Mark</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"164.5\">Mark &gt;= 50?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">OUTPUT &quot;Pass&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><polygon class=\"fc-b\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">OUTPUT &quot;Fail&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">5</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">6</text></svg></div></div><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">INPUT Mark</div><div class=\"lesson-code-line\">IF Mark &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">ENDIF</div></div><ul class=\"lesson-facts\"><li>Rounded box: <strong>Terminal</strong> (Start, End)</li><li>Rectangle: <strong>Process</strong> (store a value)</li><li>Sloping box: <strong>Input/Output</strong></li><li>Diamond: <strong>Decision</strong> (IF)</li></ul></div></div>"
+  },
+  {
+   "id": "flowchart-check",
+   "label": "Check: Flowchart Symbols",
+   "type": "short-answer-validation",
+   "validatorId": "y8r1-flowchart-check",
+   "validatorKey": "y8r1_flowchart_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Flowchart Symbols</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is box 2 a sloping box?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It takes a value in from the user. Input and output use the sloping box.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:380px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; INPUT Mark; Mark &gt;= 50? (True to OUTPUT &quot;Pass&quot;, False to OUTPUT &quot;Fail&quot;); OUTPUT &quot;Pass&quot;; OUTPUT &quot;Fail&quot;; End\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc2a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc2a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">Yes</text><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc2a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">No</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc2a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-b\" points=\"34,78 180,78 166,114 20,114\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">INPUT Mark</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"164.5\">Mark &gt;= 50?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">OUTPUT &quot;Pass&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><polygon class=\"fc-b\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">OUTPUT &quot;Fail&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">5</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">6</text></svg></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r1-flowchart-check-a\">(a) What is the name of the shape for box 3? [1]</label><input id=\"y8r1-flowchart-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"flowchart-check-a\" aria-label=\"Check: Flowchart Symbols part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r1-flowchart-check-b\">(b) What is the name of the shape for box 6? [1]</label><input id=\"y8r1-flowchart-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"flowchart-check-b\" aria-label=\"Check: Flowchart Symbols part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r1-flowchart-check-c\">(c) Mark is 40. Which box number runs: 4 or 5? [1]</label><input id=\"y8r1-flowchart-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"flowchart-check-c\" aria-label=\"Check: Flowchart Symbols part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r1-flowchart-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8r1-flowchart-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Flowchart to Pseudocode",
+   "type": "app-link",
+   "buttonId": "y8r1-activity2-btn",
+   "appId": "flowchartblitz",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Flowchart to Pseudocode</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a Decision become IF ... THEN ... ELSE ... ENDIF?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A Decision chooses between two paths. IF chooses between the THEN line and the ELSE line.</p></div></details><p class=\"lesson-lead\">Open Flowchart Blitz. Choose <strong>Flowchart to Pseudocode</strong>.</p><ul class=\"lesson-facts\"><li>Read the flowchart from Start to End.</li><li>Write one line for each shape.</li><li>Start with DECLARE for each new variable.</li></ul><div class=\"lesson-app-link\"><button type=\"button\" class=\"donow-btn\" id=\"y8r1-activity2-btn\">Open Flowchart Blitz</button></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Revision 1 Drill",
+   "type": "embedded-app",
+   "appId": "drill-y8-revision-1",
+   "embedContainerId": "y8r1-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Revision 1 Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new numbers every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do it with any numbers, you really understand it.</p></div></details><p class=\"lesson-lead\">Key words, sequence, selection and loops. Your progress is saved.</p><div id=\"y8r1-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y8r1_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 2 stores 4 in Number."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 3 adds 3 to the value from line 2."
+   }
+  ],
+  "y8r1_sequence_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 5 adds B to A. What are A and B before line 5?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does any line after line 4 change B?"
+   }
+  ],
+  "y8r1_selection_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*hot\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 30 more than 25? TRUE runs the THEN line."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*cold\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 25 more than 25? Read the > carefully."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*$",
+     "flags": "i"
+    },
+    "feedback": "FALSE runs the line after ELSE."
+   }
+  ],
+  "y8r1_loop_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*$|^\\s*3\\s*times?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count goes 1, 2, 3. Line 5 runs once for each value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Total starts at 0. Add 2 each time line 5 runs."
+   }
+  ],
+  "y8r1_flowchart_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(decision|diamond)(\\s+(symbol|shape|box))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Box 3 asks a question. It has a Yes and a No arrow."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(terminal|terminator|start\\s*(\\/|or|and)?\\s*end)(\\s+(symbol|shape|box))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Box 6 shows where the flowchart stops."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 40 >= 50? Follow the No arrow if it is FALSE."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
