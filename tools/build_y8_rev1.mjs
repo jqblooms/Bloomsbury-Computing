@@ -113,12 +113,12 @@ steps.push({ id: 'compare', label: 'Compare: >= and >',
   content: '<h2 class="lesson-h2">Compare: &gt;= and &gt;</h2>' +
     tps('The user types 50 into both. What does each one output? Why are they different?',
       '<p>A outputs <strong>Pass</strong>: 50 &gt;= 50 is TRUE.</p><p>B outputs <strong>Fail</strong>: 50 &gt; 50 is FALSE. 50 is not more than 50.</p>') +
-    columns(caption('Program A') + code(['INPUT Mark', 'IF Mark >= 50 THEN', '  OUTPUT "Pass"', 'ELSE', '  OUTPUT "Fail"', 'ENDIF']),
-      caption('Program B') + code(['INPUT Mark', 'IF Mark > 50 THEN', '  OUTPUT "Pass"', 'ELSE', '  OUTPUT "Fail"', 'ENDIF'])) });
+    columns(caption('Program A') + code(['DECLARE Mark : INTEGER', 'INPUT Mark', 'IF Mark >= 50 THEN', '  OUTPUT "Pass"', 'ELSE', '  OUTPUT "Fail"', 'ENDIF']),
+      caption('Program B') + code(['DECLARE Mark : INTEGER', 'INPUT Mark', 'IF Mark > 50 THEN', '  OUTPUT "Pass"', 'ELSE', '  OUTPUT "Fail"', 'ENDIF'])) });
 steps.push(checkStep('selection-check', 'Check: Selection', 'Check: Selection', null, [
   { label: 'The user types 30. What is output?', answer: word('hot'), feedback: 'Is 30 more than 25? TRUE runs the THEN line.' },
   { label: 'The user types 25. What is output?', answer: word('cold'), feedback: 'Is 25 more than 25? Read the > carefully.' },
-  { label: 'The user types 25. Which line number runs: 5 or 7?', answer: num(7), feedback: 'FALSE runs the line after ELSE.' },
+  { label: 'The user types 25. Which line number runs: 4 or 6?', answer: num(6), feedback: 'FALSE runs the line after ELSE.' },
 ], code(['DECLARE Temp : INTEGER', 'INPUT Temp', 'IF Temp > 25 THEN', '  OUTPUT "Hot"', 'ELSE', '  OUTPUT "Cold"', 'ENDIF'], true),
   ['Why does 25 give Cold?', '25 is not more than 25, so Temp > 25 is FALSE.']));
 
@@ -198,7 +198,7 @@ steps.push({ id: 'plenary', label: 'Plenary: Revision 1 Drill', type: 'embedded-
 const T = (k, i, s) => new RegExp(validators[`${P}_${k}`.replace(/-/g, '_')][i].pattern.source, 'i').test(s);
 assert(T('do-now-2', 0, '4') && !T('do-now-2', 0, '7') && T('do-now-2', 1, '7') && !T('do-now-2', 1, '4'), 'dn2');
 assert(T('sequence-check', 0, '7') && !T('sequence-check', 0, '5') && T('sequence-check', 1, '2') && !T('sequence-check', 1, '7'), 'seq');
-assert(T('selection-check', 0, 'Hot') && T('selection-check', 0, '"Hot"') && !T('selection-check', 0, 'Cold') && T('selection-check', 1, 'cold') && !T('selection-check', 1, 'hot') && T('selection-check', 2, '7') && !T('selection-check', 2, '5'), 'sel');
+assert(T('selection-check', 0, 'Hot') && T('selection-check', 0, '"Hot"') && !T('selection-check', 0, 'Cold') && T('selection-check', 1, 'cold') && !T('selection-check', 1, 'hot') && T('selection-check', 2, '6') && !T('selection-check', 2, '4') && !T('selection-check', 2, '7'), 'sel');
 assert(T('loop-check', 0, '3') && T('loop-check', 0, '3 times') && !T('loop-check', 0, '2') && T('loop-check', 1, '6') && !T('loop-check', 1, '2'), 'loop');
 assert(T('flowchart-check', 0, 'decision') && T('flowchart-check', 0, 'a diamond') && !T('flowchart-check', 0, 'process') && T('flowchart-check', 1, 'Terminal') && T('flowchart-check', 1, 'start/end') && !T('flowchart-check', 1, 'decision') && T('flowchart-check', 2, '5') && !T('flowchart-check', 2, '4'), 'flow');
 assert(FC.svg(flow, true).includes('<svg'), 'flowchart svg');
