@@ -1,6 +1,6 @@
 {
   "id": "y11-8-1-l1",
-  "label": "8.1 L1: Variables, Data Types, Input and Output",
+  "label": "8.1 L2: Data Types, Input and Output",
   "steps": [
     {
       "id": "do-now",
@@ -115,48 +115,186 @@
   ],
   "validators": {
     "y11_8_1_do_now": [
-      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*6\\s*$","flags":""},"feedback":"Use the value assigned on the first line."},
-      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*10\\s*$","flags":""},"feedback":"Use the current Score on the right side, then apply the assignment."}
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*6\\s*$",
+          "flags": ""
+        },
+        "feedback": "Use the value assigned on the first line."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*10\\s*$",
+          "flags": ""
+        },
+        "feedback": "Use the current Score on the right side, then apply the assignment."
+      }
     ],
     "y11_8_1_do_now_2": [
-      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*7\\s*$","flags":""},"feedback":"INPUT stores the value entered by the user."},
-      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*14\\s*$","flags":""},"feedback":"Follow line 2 before reading the OUTPUT line."}
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*7\\s*$",
+          "flags": ""
+        },
+        "feedback": "INPUT stores the value entered by the user."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*14\\s*$",
+          "flags": ""
+        },
+        "feedback": "Follow line 2 before reading the OUTPUT line."
+      }
     ],
     "y11_8_1_do_now_3": [
-      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*integer\\s*$","flags":"i"},"feedback":"This value has no fractional part."},
-      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*string\\s*$","flags":"i"},"feedback":"Quotation marks show that this value is text."}
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*integer\\s*$",
+          "flags": "i"
+        },
+        "feedback": "This value has no fractional part."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*string\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Quotation marks show that this value is text."
+      }
     ],
     "y11_8_1_types": [
-      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*integer\\s*$","flags":"i"},"feedback":"This is a whole number."},
-      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*real\\s*$","flags":"i"},"feedback":"This value includes a fractional part."},
-      {"suffix":"c","pattern":{"__regex":true,"source":"^\\s*string\\s*$","flags":"i"},"feedback":"Quotation marks show that this is text."}
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*integer\\s*$",
+          "flags": "i"
+        },
+        "feedback": "This is a whole number."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*real\\s*$",
+          "flags": "i"
+        },
+        "feedback": "This value includes a fractional part."
+      },
+      {
+        "suffix": "c",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*string\\s*$",
+          "flags": "i"
+        },
+        "feedback": "Quotation marks show that this is text."
+      }
     ],
     "y11_8_1_guided": [
-      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*8\\s*$","flags":""},"feedback":"INPUT stores 8 in Points before line 3 runs."},
-      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*10\\s*$","flags":""},"feedback":"Line 3 adds 2 to the value entered."}
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*8\\s*$",
+          "flags": ""
+        },
+        "feedback": "INPUT stores 8 in Points before line 3 runs."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*10\\s*$",
+          "flags": ""
+        },
+        "feedback": "Line 3 adds 2 to the value entered."
+      }
     ],
     "y11_8_1_practice": [
-      {"suffix":"a","pattern":{"__regex":true,"source":"^\\s*real\\s*$","flags":"i"},"feedback":"The value includes a decimal part."},
-      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*21\\.?5\\s*$","flags":""},"feedback":"OUTPUT shows the current value stored in Temperature."}
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*real\\s*$",
+          "flags": "i"
+        },
+        "feedback": "The value includes a decimal part."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*21\\.?5\\s*$",
+          "flags": ""
+        },
+        "feedback": "OUTPUT shows the current value stored in Temperature."
+      }
     ],
     "y11_8_1_plenary": [
-      {"suffix":"a","pattern":{"__regex":true,"source":"(?=.*(?:decimal|fraction|fractional|point|real)).*","flags":"i"},"feedback":"Consider whether the input could include a fractional part."},
-      {"suffix":"b","pattern":{"__regex":true,"source":"^\\s*25\\s*$","flags":""},"feedback":"Double 12.5 before reading the output."}
+      {
+        "suffix": "a",
+        "pattern": {
+          "__regex": true,
+          "source": "(?=.*(?:decimal|fraction|fractional|point|real)).*",
+          "flags": "i"
+        },
+        "feedback": "Consider whether the input could include a fractional part."
+      },
+      {
+        "suffix": "b",
+        "pattern": {
+          "__regex": true,
+          "source": "^\\s*25\\s*$",
+          "flags": ""
+        },
+        "feedback": "Double 12.5 before reading the output."
+      }
     ]
   },
   "pseudocodeValidators": {
     "y11_8_1_write": {
       "lines": [
-        {"code":"DECLARE QUANTITY : INTEGER","feedback":"Declare Quantity as an INTEGER before using it."},
-        {"code":"INPUT QUANTITY","feedback":"Receive the value in Quantity with INPUT."},
-        {"code":"OUTPUT QUANTITY","feedback":"Output the value stored in Quantity."}
+        {
+          "code": "DECLARE QUANTITY : INTEGER",
+          "feedback": "Declare Quantity as an INTEGER before using it."
+        },
+        {
+          "code": "INPUT QUANTITY",
+          "feedback": "Receive the value in Quantity with INPUT."
+        },
+        {
+          "code": "OUTPUT QUANTITY",
+          "feedback": "Output the value stored in Quantity."
+        }
       ]
     },
     "y11_8_1_plenary_2": {
       "lines": [
-        {"code":"DECLARE MESSAGE : STRING","feedback":"Declare Message as a STRING."},
-        {"code":"INPUT MESSAGE","feedback":"Use INPUT to receive Message."},
-        {"code":"OUTPUT MESSAGE","feedback":"Use OUTPUT to display Message."}
+        {
+          "code": "DECLARE MESSAGE : STRING",
+          "feedback": "Declare Message as a STRING."
+        },
+        {
+          "code": "INPUT MESSAGE",
+          "feedback": "Use INPUT to receive Message."
+        },
+        {
+          "code": "OUTPUT MESSAGE",
+          "feedback": "Use OUTPUT to display Message."
+        }
       ]
     }
   }

@@ -162,6 +162,7 @@
           "code": "8.1",
           "title": "Programming Concepts",
           "lessons": [
+            "y11-8-1-vc",
             "y11-8-1-l1"
           ]
         }

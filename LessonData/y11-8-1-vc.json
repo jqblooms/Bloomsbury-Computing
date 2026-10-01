@@ -1,0 +1,268 @@
+{
+ "id": "y11-8-1-vc",
+ "label": "8.1 L1: Variables and Constants",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Iteration (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y11vc-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Iteration (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we have both selection and iteration?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Selection chooses what to do. Iteration repeats lines, so we do not have to write them again and again.</p></div></details><p class=\"lesson-lead\">From Unit 7. Question 1 is from Cambridge IGCSE 0478/22, June 2026, Question 1.</p><div id=\"y11vc-do-now\"></div>",
+   "items": [
+    {
+     "prompt": "Two types of pseudocode statements used for iteration are",
+     "options": [
+      "CASE and IF",
+      "FOR … NEXT and IF",
+      "FOR … NEXT and WHILE … DO … ENDWHILE",
+      "REPEAT … UNTIL and CASE"
+     ],
+     "correct": 2,
+     "explain": "FOR and WHILE both repeat lines. IF and CASE make a choice: that is selection."
+    },
+    {
+     "prompt": "Which statement is used for selection?",
+     "options": [
+      "FOR … NEXT",
+      "IF … THEN … ENDIF",
+      "WHILE … ENDWHILE"
+     ],
+     "correct": 1,
+     "explain": "Selection chooses what to do. IF chooses between paths."
+    }
+   ]
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Trace a Loop (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11vc-do-now-2",
+   "validatorKey": "y11vc_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Trace a Loop (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does line 1 say DECLARE?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every variable must be declared before it is used: its name and its data type.</p></div></details><p class=\"lesson-lead\">From Unit 7. Trace the program.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 2</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11vc-do-now-2-a\">(a) How many times does line 5 run? [1]</label><input id=\"y11vc-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Trace a Loop (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-do-now-2-b\">(b) What is output? [1]</label><input id=\"y11vc-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Trace a Loop (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11vc-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11vc-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "title",
+   "label": "Variables and Constants",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">8.1 Programming Concepts</p><h2 class=\"lesson-h2\">Variables and Constants</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> a <strong>variable</strong> is a named value that <strong>can change</strong>. A <strong>constant</strong> is a named value that <strong>cannot change</strong>.</li><li><strong>You will:</strong> trace them, choose between them, and write the lines that make them.</li><li><strong>Think, pair, share:</strong> why do programs give names to values at all?</li></ul>"
+  },
+  {
+   "id": "variable",
+   "label": "A Variable",
+   "content": "<h2 class=\"lesson-h2\">A Variable</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is output? Why is Score called a <strong>variable</strong>?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Output: <strong>10</strong>. Score is 0, then 5, then 10.</p><p>Its value <strong>changes</strong> (it <strong>varies</strong>) while the program runs. That is why it is a variable.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Score &lt;- 0</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Score &lt;- Score + 5</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Score &lt;- Score + 5</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT Score</div></div></div><div><ul class=\"lesson-facts\"><li>A <strong>variable</strong> is a <strong>name</strong> for a value.</li><li>Its value <strong>can change</strong> while the program runs.</li><li><strong>DECLARE</strong> it first: its name and its data type.</li><li><code>&lt;-</code> puts a new value in it.</li></ul></div></div>"
+  },
+  {
+   "id": "variable-check",
+   "label": "Check: Trace the Variable",
+   "type": "short-answer-validation",
+   "validatorId": "y11vc-variable-check",
+   "validatorKey": "y11vc_variable_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Trace the Variable</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can line 3 change Lives?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Lives is a variable. A variable can be given a new value at any time.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Lives : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Lives &lt;- 3</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Lives &lt;- Lives - 1</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;OUTPUT Lives</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11vc-variable-check-a\">(a) What is the name of the variable? [1]</label><input id=\"y11vc-variable-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"variable-check-a\" aria-label=\"Check: Trace the Variable part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-variable-check-b\">(b) What is output? [1]</label><input id=\"y11vc-variable-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"variable-check-b\" aria-label=\"Check: Trace the Variable part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11vc-variable-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11vc-variable-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "constant",
+   "label": "A Constant",
+   "content": "<h2 class=\"lesson-h2\">A Constant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Pi is always 3.142. Why make it a <strong>constant</strong>, and not a variable?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Its value must <strong>never change</strong>. As a constant, nothing in the program can change it by mistake.</p><p>If it ever needs a new value, you change <strong>one line</strong>.</p><p>Output: 3.142 &times; 2 &times; 2 = <strong>12.568</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;CONSTANT Pi &lt;- 3.142</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Radius : REAL</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;DECLARE Area : REAL</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Radius &lt;- 2</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;Area &lt;- Pi * Radius * Radius</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT Area</div></div></div><div><ul class=\"lesson-facts\"><li>A <strong>constant</strong> is a <strong>name</strong> for a value.</li><li>Its value <strong>cannot change</strong> while the program runs.</li><li>Make it with <strong>CONSTANT</strong> and give its value once.</li><li>Use its name, like a variable.</li></ul></div></div>"
+  },
+  {
+   "id": "compare",
+   "label": "Compare: Variable and Constant",
+   "content": "<h2 class=\"lesson-h2\">Compare: Variable and Constant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What is the same? What is different? In which program could Price change?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p><strong>Same:</strong> both store 9.99 in Price. Both output 19.98.</p><p><strong>Different:</strong> A makes Price with DECLARE, so it is a variable. B makes Price with CONSTANT, so it can never change.</p><p>Price could change only in <strong>A</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Price : REAL</div><div class=\"lesson-code-line\">DECLARE Total : REAL</div><div class=\"lesson-code-line\">Price &lt;- 9.99</div><div class=\"lesson-code-line\">Total &lt;- Price * 2</div><div class=\"lesson-code-line\">OUTPUT Total</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">CONSTANT Price &lt;- 9.99</div><div class=\"lesson-code-line\">DECLARE Total : REAL</div><div class=\"lesson-code-line\">Total &lt;- Price * 2</div><div class=\"lesson-code-line\">OUTPUT Total</div></div></div></div>"
+  },
+  {
+   "id": "words-check",
+   "label": "Check: Which One?",
+   "type": "multiple-choice",
+   "containerId": "y11vc-words-check",
+   "content": "<h2 class=\"lesson-h2\">Check: Which One?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do both use a name?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So the program can use the value again by its name, in many places.</p></div></details><div id=\"y11vc-words-check\"></div>",
+   "items": [
+    {
+     "prompt": "A named value that can change while the program runs is a",
+     "options": [
+      "constant",
+      "variable",
+      "keyword"
+     ],
+     "correct": 1,
+     "explain": "A variable can change. A constant cannot."
+    },
+    {
+     "prompt": "Which keyword makes a constant?",
+     "options": [
+      "DECLARE",
+      "OUTPUT",
+      "CONSTANT"
+     ],
+     "correct": 2,
+     "explain": "CONSTANT Pi <- 3.142 makes a constant. DECLARE makes a variable."
+    }
+   ]
+  },
+  {
+   "id": "restaurant",
+   "label": "Your Turn: The Restaurant",
+   "type": "short-answer-validation",
+   "validatorId": "y11vc-restaurant",
+   "validatorKey": "y11vc_restaurant",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: The Restaurant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the number of adults a variable?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is different for every table. The program finds it out while it runs.</p></div></details><p class=\"lesson-lead\">From Cambridge IGCSE 0478/21, November 2025, Question 4(a): a meal for an adult costs $9.99 and a meal for a child costs $6.99. Tables of 6 or more people get a 15% discount. Write <strong>variable</strong> or <strong>constant</strong> for each value.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-a\">(a) The price of an adult meal, $9.99 [1]</label><input id=\"y11vc-restaurant-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-a\" aria-label=\"Your Turn: The Restaurant part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-b\">(b) The number of adults at a table [1]</label><input id=\"y11vc-restaurant-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-b\" aria-label=\"Your Turn: The Restaurant part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-c\">(c) The 15% discount [1]</label><input id=\"y11vc-restaurant-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-c\" aria-label=\"Your Turn: The Restaurant part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11vc-restaurant-d\">(d) The total cost for a table [1]</label><input id=\"y11vc-restaurant-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"restaurant-d\" aria-label=\"Your Turn: The Restaurant part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11vc-restaurant-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11vc-restaurant-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "two-lines",
+   "label": "Writing the Two Lines",
+   "content": "<h2 class=\"lesson-h2\">Writing the Two Lines</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does DECLARE need a data type, but CONSTANT does not?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A constant is given its value on the same line, so the value shows its type.</p><p>A variable has no value yet, so we must say what type of value it will hold.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700\">A variable: name, colon, data type</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Adults : INTEGER</div><div class=\"lesson-code-line\">DECLARE TotalCost : REAL</div><div class=\"lesson-code-line\">Adults &lt;- 4</div></div><p style=\"margin:6px 0 0\">INTEGER: a whole number. REAL: a number with a decimal point.</p></div><div><p style=\"margin:0 0 6px;font-weight:700\">A constant: name, arrow, value</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">CONSTANT AdultPrice &lt;- 9.99</div><div class=\"lesson-code-line\">CONSTANT ChildPrice &lt;- 6.99</div><div class=\"lesson-code-line\">CONSTANT Discount &lt;- 0.15</div></div></div></div>"
+  },
+  {
+   "id": "write-lines",
+   "label": "Your Turn: Write the Lines",
+   "type": "short-answer-validation",
+   "validatorId": "y11vc-write-lines",
+   "validatorKey": "y11vc_write_lines",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Write the Lines</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why use the name ChildPrice and not just type 6.99 everywhere?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The name tells you what the number means. If the price changes, you change one line.</p></div></details><p class=\"lesson-lead\">Type each whole line.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y11vc-write-lines-a\">(a) Make a constant called ChildPrice with the value 6.99 [1]</label><input id=\"y11vc-write-lines-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"write-lines-a\" aria-label=\"Your Turn: Write the Lines part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11vc-write-lines-b\">(b) Declare a variable called Children that stores a whole number [1]</label><input id=\"y11vc-write-lines-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"write-lines-b\" aria-label=\"Your Turn: Write the Lines part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11vc-write-lines-c\">(c) Store 3 in the variable Children [1]</label><input id=\"y11vc-write-lines-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"write-lines-c\" aria-label=\"Your Turn: Write the Lines part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11vc-write-lines-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11vc-write-lines-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "find-bug",
+   "label": "Your Turn: Find the Error",
+   "type": "short-answer-validation",
+   "validatorId": "y11vc-find-bug",
+   "validatorKey": "y11vc_find_bug",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Find the Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the computer stop a constant from changing?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A constant should be the same all the time. If it changed, every line that uses it would get the wrong value.</p></div></details><p class=\"lesson-lead\">This program has one error.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;CONSTANT MaxLives &lt;- 3</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Lives : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Lives &lt;- MaxLives</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;MaxLives &lt;- 5</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT Lives</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11vc-find-bug-a\">(a) Which line has the error? [1]</label><input id=\"y11vc-find-bug-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"find-bug-a\" aria-label=\"Your Turn: Find the Error part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11vc-find-bug-b\">(b) Why is it an error? [1]</label><input id=\"y11vc-find-bug-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"find-bug-b\" aria-label=\"Your Turn: Find the Error part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11vc-find-bug-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11vc-find-bug-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Variables and Constants Drill",
+   "type": "embedded-app",
+   "appId": "drill-y11-8-1-vc",
+   "embedContainerId": "y11vc-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Variables and Constants Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do it with any values, you really understand it.</p></div></details><p class=\"lesson-lead\">What they are, tracing, choosing, and writing the lines. Your progress is saved.</p><div id=\"y11vc-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y11vc_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*$|^\\s*3\\s*times?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count goes 1, 2, 3. Line 5 runs once for each value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Total starts at 0. Add 2 each time line 5 runs."
+   }
+  ],
+  "y11vc_variable_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*lives\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at line 1. The name comes after DECLARE."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Lives starts at 3. Line 3 takes 1 away."
+   }
+  ],
+  "y11vc_restaurant": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?constants?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is it the same for every table?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?variables?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is it the same for every table, or does the waiter type it in?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?constants?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does the discount change from table to table?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?variables?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is the total the same for every table?"
+   }
+  ],
+  "y11vc_write_lines": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*CONSTANT\\s+ChildPrice\\s*(<-|\\u2190|=)\\s*6\\.99\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start with CONSTANT. Then the name, an arrow, and the value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*DECLARE\\s+Children\\s*:\\s*INTEGER\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start with DECLARE. Then the name, a colon, and the data type for whole numbers."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*Children\\s*(<-|\\u2190|=)\\s*3\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The name goes on the left of the arrow. The value goes on the right."
+   }
+  ],
+  "y11vc_find_bug": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(line\\s*)?4\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find the name made with CONSTANT. Which line tries to give it a new value?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(constants?|maxlives)\\b)(?=.*\\b(chang\\w*|new\\s+value|reassign\\w*|assign\\w*|update\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Say what kind of name MaxLives is, and what line 4 tries to do to it."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
