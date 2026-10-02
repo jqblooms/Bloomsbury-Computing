@@ -483,7 +483,8 @@
     // Type of every declared variable; null for a value the caller handed
     // in (it exists but is untyped, so anything may be stored in it).
     var types = {};
-    Object.keys(initialVars || {}).forEach(function (k) { vars[k] = initialVars[k]; types[k] = null; });
+    // A given array is copied, so one run (the pupil's) cannot change what the next (the reference) starts with.
+    Object.keys(initialVars || {}).forEach(function (k) { var v = initialVars[k]; vars[k] = Array.isArray(v) ? v.slice() : v; types[k] = null; });
     var given = Object.keys(types);
     var outputs = [];
 

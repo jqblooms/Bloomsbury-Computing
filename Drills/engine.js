@@ -1301,6 +1301,11 @@
     var out = {};
     Object.keys(base).forEach(function (k) {
       var orig = base[k];
+      // An array of numbers (Year 9 arrays) has every element redrawn the same way.
+      if (Array.isArray(orig) && orig.every(function (x) { return typeof x === "number"; })) {
+        out[k] = orig.map(function (x) { return 1 + Math.floor(Math.random() * Math.max(x * 2, 10)); });
+        return;
+      }
       if (typeof orig !== "number") { out[k] = orig; return; }
       var ceiling = Math.max(orig * 2, 10);
       out[k] = 1 + Math.floor(Math.random() * ceiling);
@@ -1334,7 +1339,10 @@
 
   function codeGivenHtml(vars) {
     vars = vars || {};
-    var parts = Object.keys(vars).map(function (k) { return k + " ← " + JSON.stringify(vars[k]).replace(/"/g, ""); });
+    var parts = Object.keys(vars).map(function (k) {
+      if (Array.isArray(vars[k])) return k + "[1:" + vars[k].length + "] holds " + vars[k].map(function (x) { return JSON.stringify(x); }).join(", ");
+      return k + " ← " + JSON.stringify(vars[k]).replace(/"/g, "");
+    });
     return parts.length ? "Given: " + parts.join(", ") : "";
   }
 

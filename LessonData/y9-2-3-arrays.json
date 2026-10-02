@@ -1,0 +1,368 @@
+{
+ "id": "y9-2-3-arrays",
+ "label": "2.3: Data Types and Arrays",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Question 1",
+   "type": "exam-do-now",
+   "questionSetKey": "y10-1-1-l3-2",
+   "content": "<h2 class=\"lesson-h2\">Do Now</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we use hexadecimal at all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is shorter than binary, so it is easier for people to read and copy.</p></div></details><p class=\"lesson-lead\">A recap question from Number Systems: hexadecimal.</p><div id=\"donow-root\"></div>"
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Question 2",
+   "type": "short-answer-validation",
+   "validatorId": "y9l23-do-now-2",
+   "validatorKey": "y9l23_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Loops</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Total &larr; 0 go before the loop?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So it is set only once. Inside the loop, Total would go back to 0 on every pass.</p></div></details><p class=\"lesson-lead\">From 2.2 Loops. Use this program for both parts.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">Total &larr; 0</div><div class=\"lesson-code-line\">FOR Count &larr; 2 TO 5</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Count</div><div class=\"lesson-code-line\">NEXT Count</div><div class=\"lesson-code-line\">OUTPUT Total</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l23-do-now-2-a\">(a) How many times does the loop run? [1]</label><input id=\"y9l23-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Loops part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l23-do-now-2-b\">(b) What does the program output? [1]</label><input id=\"y9l23-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Loops part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l23-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9l23-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-3-ext",
+   "embedContainerId": "y9l23-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from Number Systems and 2.2 Loops. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y9l23-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Data Types and Arrays",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithm Design and Text Programming</p><h2 class=\"lesson-h2\">Data Types and Arrays</h2><p>Year 9, 2.3</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> every value has a <strong>data type</strong>. Then: one name that stores <strong>many</strong> values.</li><li><strong>You already know:</strong> DECLARE, variables and FOR loops.</li><li><strong>Activities:</strong> trace a program in a trace table, then write your own code.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">DECLARE Count : INTEGER. Why does the line say INTEGER?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It tells the computer what kind of value Count stores: whole numbers.</p></div></details>"
+  },
+  {
+   "id": "types",
+   "label": "The Five Data Types",
+   "content": "<h2 class=\"lesson-h2\">The Five Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: which type is best for 3.75? For 'Y'? Why not INTEGER for both?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>3.75 is <strong>REAL</strong>: it has a decimal point. 'Y' is <strong>CHAR</strong>: one character.</p><p>INTEGER only stores whole numbers.</p></div></details><p class=\"lesson-lead\">A <strong>data type</strong> is the kind of value a variable stores.</p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Type</th><th style=\"padding:6px 12px;text-align:left\">It stores</th><th style=\"padding:6px 12px;text-align:left\">Examples</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>INTEGER</strong></td><td style=\"padding:6px 12px;text-align:left\">a whole number</td><td style=\"padding:6px 12px;text-align:left\">16, 25, -3</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>REAL</strong></td><td style=\"padding:6px 12px;text-align:left\">a number with a decimal point</td><td style=\"padding:6px 12px;text-align:left\">3.75, 1.68</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>CHAR</strong></td><td style=\"padding:6px 12px;text-align:left\">one character</td><td style=\"padding:6px 12px;text-align:left\">'Y', 'A', '7'</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>STRING</strong></td><td style=\"padding:6px 12px;text-align:left\">many characters</td><td style=\"padding:6px 12px;text-align:left\">\"Mai\", \"Room12\"</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>BOOLEAN</strong></td><td style=\"padding:6px 12px;text-align:left\">TRUE or FALSE</td><td style=\"padding:6px 12px;text-align:left\">TRUE, FALSE</td></tr></table>"
+  },
+  {
+   "id": "types-check",
+   "label": "Exam Question: Tick the Type",
+   "type": "multiple-choice",
+   "containerId": "y9l23-types-check",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Tick the Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is '7' a CHAR here, not an INTEGER?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is one key from the keyboard, stored as a character. We are not doing maths with it.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/22, June 2026, Question 2 and 0478/23, June 2026, Question 2.</p><div id=\"y9l23-types-check\"></div>",
+   "items": [
+    {
+     "prompt": "A programming data type used to store a single letter, symbol or number input from the keyboard",
+     "options": [
+      "Boolean",
+      "char",
+      "integer",
+      "real"
+     ],
+     "correct": 1,
+     "explain": "char stores one character: one letter, one symbol or one digit."
+    },
+    {
+     "prompt": "A programming data type used to store any combination of letters and numbers",
+     "options": [
+      "char",
+      "Boolean",
+      "string",
+      "real"
+     ],
+     "correct": 2,
+     "explain": "string stores many characters, letters and numbers together."
+    }
+   ]
+  },
+  {
+   "id": "compare-types",
+   "label": "Compare: Same Digits, Different Types",
+   "content": "<h2 class=\"lesson-h2\">Compare: Same Digits, Different Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both store 16. What is different? Which one can you do maths with?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A stores the <strong>number</strong> 16, so Age + 1 is 17.</p><p>B stores the <strong>text</strong> \"16\": two characters. You cannot do maths with it.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: an age</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">Age &larr; 16</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: a room name</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Room : STRING</div><div class=\"lesson-code-line\">Room &larr; \"16\"</div></div></div></div>"
+  },
+  {
+   "id": "types-table",
+   "label": "Exam Question: Choose the Types",
+   "type": "short-answer-validation",
+   "validatorId": "y9l23-types-table",
+   "validatorKey": "y9l23_types_table",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Choose the Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the telephone number not an INTEGER?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It has a + and a space. And we never do maths with a telephone number.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/21, June 2026, Question 3. Write the best data type for each variable.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l23-types-table-a\">(a) Age: the age of the student, for example 16 [1]</label><input id=\"y9l23-types-table-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-table-a\" aria-label=\"Exam Question: Choose the Types part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l23-types-table-b\">(b) TelephoneNumber: for example +44 7846398573 [1]</label><input id=\"y9l23-types-table-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-table-b\" aria-label=\"Exam Question: Choose the Types part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l23-types-table-c\">(c) Teenager: whether the student is a teenager, for example TRUE [1]</label><input id=\"y9l23-types-table-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-table-c\" aria-label=\"Exam Question: Choose the Types part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l23-types-table-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y9l23-types-table-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "array-why",
+   "label": "Why Arrays?",
+   "content": "<h2 class=\"lesson-h2\">Why Arrays?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: you need to store 30 marks. How many DECLARE lines would A need? How many does B need?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A needs <strong>30</strong> DECLARE lines, one for each mark.</p><p>B needs <strong>one</strong>: ARRAY[1:30].</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: separate variables</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Mark1 : INTEGER</div><div class=\"lesson-code-line\">DECLARE Mark2 : INTEGER</div><div class=\"lesson-code-line\">DECLARE Mark3 : INTEGER</div><div class=\"lesson-code-line\">DECLARE Mark4 : INTEGER</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: one array</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Marks : ARRAY[1:4] OF INTEGER</div></div><ul class=\"lesson-facts\"><li>An <strong>array</strong> is one name that stores many values.</li><li>Every value has the <strong>same data type</strong>: OF INTEGER.</li></ul></div></div>"
+  },
+  {
+   "id": "array-index",
+   "label": "Index and Element",
+   "content": "<h2 class=\"lesson-h2\">Index and Element</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is Marks[3]? Is the 3 a mark, or a position?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Marks[3] is <strong>8</strong>.</p><p>The 3 is a <strong>position</strong>: go to index 3 and read the value there.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Marks : ARRAY[1:4] OF INTEGER</div></div><p style=\"margin:0 0 6px\"><strong>Marks</strong></p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">6</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">8</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">5</td></tr></table></div><div><ul class=\"lesson-facts\"><li>Each value in an array is an <strong>element</strong>.</li><li>Its position number is its <strong>index</strong>. The first index is 1.</li><li><strong>Marks[3]</strong> means the element at index 3.</li><li>[1:4] gives the first and last index: 4 elements.</li></ul></div></div>"
+  },
+  {
+   "id": "compare-index",
+   "label": "Compare: Index or Value?",
+   "content": "<h2 class=\"lesson-h2\">Compare: Index or Value?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict what A, B and C output. Why are B and C different?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A:</strong> Marks[3] is <strong>8</strong>.</p><p><strong>B:</strong> 8 + 1 = <strong>9</strong>. The 1 is added to the value.</p><p><strong>C:</strong> 3 + 1 = 4, so it outputs Marks[4]: <strong>5</strong>. The 1 is added to the index.</p></div></details><p style=\"margin:0 0 6px\"><strong>Marks</strong></p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">6</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">8</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">5</td></tr></table><div class=\"lesson-do-now-columns\" style=\"grid-template-columns:repeat(3,minmax(0,1fr))\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">OUTPUT Marks[3]</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">OUTPUT Marks[3] + 1</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">C</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">OUTPUT Marks[3 + 1]</div></div></div></div>"
+  },
+  {
+   "id": "array-check",
+   "label": "Check: Read the Array",
+   "type": "short-answer-validation",
+   "validatorId": "y9l23-array-check",
+   "validatorKey": "y9l23_array_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Read the Array</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the answer to (c) not OUTPUT \"Sam\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Both show Sam. But Names[5] reads the array, so it still works if the name at index 5 changes.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Names : ARRAY[1:5] OF STRING</div></div><p style=\"margin:0 0 6px\"><strong>Names</strong></p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Ali\"</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Mai\"</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Ben\"</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Joy\"</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Sam\"</td></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l23-array-check-a\">(a) What does OUTPUT Names[2] output? [1]</label><input id=\"y9l23-array-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"array-check-a\" aria-label=\"Check: Read the Array part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l23-array-check-b\">(b) Which index holds \"Joy\"? [1]</label><input id=\"y9l23-array-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"array-check-b\" aria-label=\"Check: Read the Array part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l23-array-check-c\">(c) Write the line that outputs \"Sam\". [1]</label><input id=\"y9l23-array-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"array-check-c\" aria-label=\"Check: Read the Array part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l23-array-check-d\">(d) What data type is each element? [1]</label><input id=\"y9l23-array-check-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"array-check-d\" aria-label=\"Check: Read the Array part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l23-array-check-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y9l23-array-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "array-loop",
+   "label": "Loops and Arrays",
+   "content": "<h2 class=\"lesson-h2\">Loops and Arrays</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Index goes 1, 2, 3, 4. What does this program output?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>6, then 3, then 8, then 5.</p><p>On each pass, Index is the next position, so Marks[Index] is the next element.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">FOR Index &larr; 1 TO 4</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT Marks[Index]</div><div class=\"lesson-code-line\">NEXT Index</div></div><p style=\"margin:0 0 6px\"><strong>Marks</strong></p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">6</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">8</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">5</td></tr></table></div><div><ul class=\"lesson-facts\"><li>The loop counter is used as the <strong>index</strong>.</li><li>Each pass visits the <strong>next element</strong>.</li><li>The same three lines work for 4 elements or 400: change the number after TO.</li></ul></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Trace an Array",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y9l23-embed-1",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Adding Up an Array",
+    "context": "The array Scores is already filled: Scores[1] = 7, Scores[2] = 2, Scores[3] = 9, Scores[4] = 4. Complete the trace table.",
+    "code": [
+     "DECLARE Total : INTEGER",
+     "DECLARE Index : INTEGER",
+     "Total = 0",
+     "for Index in range(1, 5):",
+     "    Total = Total + Scores[Index]",
+     "print(Total)"
+    ],
+    "cols": [
+     "Line",
+     "Total",
+     "Index",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "3",
+      "Total": "0",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Index": "1",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "7",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Index": "2",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "9",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Index": "3",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "18",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Index": "4",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "22",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Total": "",
+      "Index": "",
+      "Output": "22"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Trace an Array</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Total go up by a different amount on each pass?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each pass adds a different element: Scores[1], then Scores[2], then Scores[3], then Scores[4].</p></div></details><p class=\"lesson-lead\">Fill in a row whenever a variable changes or something is output.</p><div id=\"y9l23-embed-1\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "exam-temps",
+   "label": "Exam-Style Question: Temperatures",
+   "type": "short-answer-validation",
+   "validatorId": "y9l23-exam-temps",
+   "validatorKey": "y9l23_exam_temps",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Temperatures</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is each element REAL and not INTEGER?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The temperatures have a decimal point, such as 31.5.</p></div></details><p class=\"lesson-lead\">A program stores the temperature, in &deg;C, at midday for each day of one week.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Temps : ARRAY[1:7] OF REAL</div></div><p style=\"margin:0 0 6px\"><strong>Temps</strong></p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">7</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">31.5</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">33.0</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">30.5</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">34.0</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">32.5</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">29.5</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">31.0</td></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l23-exam-temps-a\">(a) How many elements does Temps have? [1]</label><input id=\"y9l23-exam-temps-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-temps-a\" aria-label=\"Exam-Style Question: Temperatures part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l23-exam-temps-b\">(b) Give the data type of each element. [1]</label><input id=\"y9l23-exam-temps-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-temps-b\" aria-label=\"Exam-Style Question: Temperatures part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l23-exam-temps-c\">(c) What is the value of Temps[4]? [1]</label><input id=\"y9l23-exam-temps-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-temps-c\" aria-label=\"Exam-Style Question: Temperatures part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l23-exam-temps-d\">(d) Write the line that outputs the temperature for day 6. [1]</label><input id=\"y9l23-exam-temps-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-temps-d\" aria-label=\"Exam-Style Question: Temperatures part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l23-exam-temps-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y9l23-exam-temps-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-purpose",
+   "label": "Exam-Style Question: Why Use an Array?",
+   "type": "self-marked-response",
+   "containerId": "y9l23-exam-purpose",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Why Use an Array?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This question has 2 marks. What two ideas do you need?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>What an array stores (many values, one name, same data type), and why that helps (an index, so a loop can visit every value).</p></div></details><p class=\"lesson-lead\">The program could use seven separate variables, one for each day, instead of the array Temps.</p><div id=\"y9l23-exam-purpose\"></div>",
+   "items": [
+    {
+     "id": "array-purpose",
+     "prompt": "Explain the purpose of an array. [2]",
+     "marks": 2,
+     "modelAnswer": "An array stores many values of the same data type under one name (identifier). Each value is found by its index, so a loop can visit every value with very little code."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Write the Array Code",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-3-code",
+   "embedContainerId": "y9l23-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Write the Array Code</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why are the numbers in the array different every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So your code must read the array. Typing the answer number will not work.</p></div></details><p class=\"lesson-lead\">Write each program in Cambridge pseudocode. The array is already filled. Your code is run and checked straight away.</p><div id=\"y9l23-activity-2\"></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Data Types and Arrays Drill",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-3-arrays",
+   "embedContainerId": "y9l23-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Data Types and Arrays Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new arrays every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can read any array, you really understand indexes.</p></div></details><p class=\"lesson-lead\">Data types, what an array is for, reading an array by its index, and loops over an array. Your progress is saved.</p><div id=\"y9l23-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y9l23_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4(\\s*times?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "List the values Count takes, from the number after the arrow to the number after TO."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*14\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Total starts at 0. On each pass, add the value of Count onto Total."
+   }
+  ],
+  "y9l23_types_table": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(integer|int)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 16 a whole number, or does it have a decimal point?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(string|str)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the + and the space. Can a number type hold them?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(boolean|bool)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "How many different values can it have?"
+   }
+  ],
+  "y9l23_array_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"']?\\s*mai\\s*[\"']?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Go to index 2 in the top row and read the value under it."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4(\\s*(index)?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find \"Joy\" in the bottom row, then read the number above it."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*output\\s+names\\s*\\[\\s*5\\s*\\]\\s*$",
+     "flags": "i"
+    },
+    "feedback": "OUTPUT, the array name, then the index in square brackets."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(string|str)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read the end of the DECLARE line."
+   }
+  ],
+  "y9l23_exam_temps": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7(\\s*(elements?)?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at [1:7] in the DECLARE line."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(real|float)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the values. Do they have a decimal point?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*34(\\.0)?\\s*(&deg;|°)?\\s*c?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Go to index 4 and read the value there."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*output\\s+temps\\s*\\[\\s*6\\s*\\]\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Day 6 is index 6. OUTPUT, the name, then the index in square brackets."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
