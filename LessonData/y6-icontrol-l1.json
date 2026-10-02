@@ -82,7 +82,7 @@
       "type": "short-answer-validation",
       "validatorId": "y6l1-check-grid",
       "validatorKey": "y6l1_check_grid",
-      "content": "<h2 class=\"lesson-h2\">Check: Read the Grid</h2><p class=\"lesson-lead\">Use the grid from the last slide.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l1-check-grid-a\">What is x at the right-hand edge of the stage?</label><input id=\"y6l1-check-grid-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-grid-a\" aria-label=\"Check: Read the Grid, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l1-check-grid-b\">A sprite is at y: 100. It moves 30 steps straight down. What is y now?</label><input id=\"y6l1-check-grid-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-grid-b\" aria-label=\"Check: Read the Grid, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l1-check-grid-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l1-check-grid-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+      "content": "<h2 class=\"lesson-h2\">Check: Read the Grid</h2><p class=\"lesson-lead\">Use the grid from the last slide.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l1-check-grid-a\">A sprite is at x: 0. It moves 50 steps to the right. What is x now?</label><input id=\"y6l1-check-grid-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-grid-a\" aria-label=\"Check: Read the Grid, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l1-check-grid-b\">A sprite is at y: 100. It moves 30 steps straight down. What is y now?</label><input id=\"y6l1-check-grid-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-grid-b\" aria-label=\"Check: Read the Grid, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l1-check-grid-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l1-check-grid-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
     },
     {
       "id": "activity-1",
@@ -146,10 +146,10 @@
         "suffix": "a",
         "pattern": {
           "__regex": true,
-          "source": "^\\s*(x\\s*[:=]?\\s*)?240\\s*$",
+          "source": "^\\s*(x\\s*[:=]?\\s*)?50\\s*$",
           "flags": "i"
         },
-        "feedback": "Look at the number at the right-hand end of the x line."
+        "feedback": "Moving right makes x bigger. Start at 0 and add 50."
       },
       {
         "suffix": "b",

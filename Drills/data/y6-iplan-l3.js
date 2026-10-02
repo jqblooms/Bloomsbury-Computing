@@ -3,6 +3,8 @@
 DrillData.register("y6-iplan-l3", {
   title: "Year 6, 6.2.3: Variables and Decisions",
   subtitle: "Scratch: variables, comparisons and if then else",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["variables", "Variables"],
     ["compare", "Comparisons"],

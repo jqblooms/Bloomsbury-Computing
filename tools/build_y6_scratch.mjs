@@ -68,10 +68,10 @@ const gameCard = (key, name, control, goal) =>
       'Moving right makes x bigger. Moving down makes y smaller.'
     ]) + GRID + '</div>');
   L.short('check-grid', 'Check: Read the Grid', 'Use the grid from the last slide.', [
-    'What is x at the right-hand edge of the stage?',
+    'A sprite is at x: 0. It moves 50 steps to the right. What is x now?',
     'A sprite is at y: 100. It moves 30 steps straight down. What is y now?'
   ], [
-    { pattern: num(240, 'x'), feedback: 'Look at the number at the right-hand end of the x line.' },
+    { pattern: num(50, 'x'), feedback: 'Moving right makes x bigger. Start at 0 and add 50.' },
     { pattern: num(70, 'y'), feedback: 'Moving down makes y smaller. Take 30 away from 100.' }
   ]);
   L.challenge('activity-1', 'Activity 1: Rocket Controls', 'Work on your own. Program a rocket that the player flies with the arrow keys.', 'rocket-controls', 'Rocket Controls', [
@@ -207,10 +207,10 @@ const gameCard = (key, name, control, goal) =>
   ]);
   L.short('do-now-2', 'Do Now: Loops and the Grid', 'Question (a) recaps 6.2.2: Loops and Pong. Question (b) recaps 6.2.1: Events and Coordinates.', [
     'The sprite starts at x: 0. What is x after the loop?',
-    'What is y at the top edge of the stage?'
+    'Another sprite is at y: 0. It runs change y by (40). What is y now?'
   ], [
     { pattern: num(100, 'x'), feedback: 'The loop runs 4 times and adds 25 each time.' },
-    { pattern: num(180, 'y'), feedback: 'y runs from -180 at the bottom to the same number, positive, at the top.' }
+    { pattern: num(40, 'y'), feedback: 'A positive number in change y moves up, so y gets bigger. Start at 0.' }
   ], 'when flag clicked\nrepeat (4)\nchange x by (25)\nend');
   L.title('Variables and Decisions', '6.2.3', [
     'Store and change values with variables.',
@@ -388,10 +388,10 @@ const gameCard = (key, name, control, goal) =>
     ]) + L.blocks('when flag clicked\ngo to x: (0) y: (-140)\n\nwhen [left arrow v] key pressed\nchange x by (-15)') + '</div>');
   L.short('check-keys', 'Check: Keys and the Grid', 'The Bowl starts at x: 0.', [
     'The player presses the left arrow 4 times. What is x now?',
-    'What is y at the top edge of the stage?'
+    'The Bowl is at y: -140. It runs change y by (20). What is y now?'
   ], [
     { pattern: num(-60, 'x'), feedback: 'Each press adds -15, so x goes down by 15 each time.' },
-    { pattern: num(180, 'y'), feedback: 'y runs from -180 at the bottom to the same number, positive, at the top.' }
+    { pattern: num(-120, 'y'), feedback: 'A positive number in change y moves up. Start at -140 and add 20.' }
   ], 'when [left arrow v] key pressed\nchange x by (-15)');
   L.slide('variables', 'Variables and Decisions',
     L.heading('Variables and Decisions', 'A <strong>variable</strong> stores a value that changes while the game runs. An <strong>if</strong> block decides what happens next.') +

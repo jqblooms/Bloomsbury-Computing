@@ -6,6 +6,8 @@
 DrillData.register("y6-bughunt-l46-ext", {
   title: "Year 6 Extension: Scratch Skills",
   subtitle: "6.2.4.6 Do Now Extension",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["ex-move", "Moving and the Stage"],
     ["ex-loops", "Loops"],
@@ -33,17 +35,14 @@ DrillData.register("y6-bughunt-l46-ext", {
             note: n + " presses of " + (dir * step) + " from x: " + x0 + " is " + ans + "."
           };
         } },
-      { id: "ex-02", category: "ex-move", randomize: function () {
-          var q = drillPick([["bottom", "y", -180], ["left-hand", "x", -240]]);
-          return {
-            prompt: "What is " + q[1] + " at the " + q[0] + " edge of the Scratch stage?",
-            answers: [String(q[2])], keywords: [drillNumberRe(q[2], q[1])],
-            distractors: q[1] === "y" ? ["180", "-240", "0"] : ["240", "-180", "0"],
-            example: "Example: what is x at the right-hand edge?\nThe stage is 480 steps wide, and x: 0 is the middle.\nThe right edge is half of 480 to the right of the middle: 480 / 2 = 240, so x is 240.\nThe stage is 360 steps tall. Left of the middle and below the middle, the numbers are negative.",
-            working: ["Is that edge left or below the middle? Then the number is negative.", q[1] === "y" ? "The stage is 360 steps tall. Half of that is below the middle." : "The stage is 480 steps wide. Half of that is left of the middle."],
-            note: "x runs from -240 to 240. y runs from -180 to 180."
-          };
-        } },
+      { id: "ex-02", category: "ex-move",
+        prompt: "Which block moves a sprite down the stage?",
+        answers: ["change y by (-20)"],
+        keywords: [/change\s*y\s*(by)?\s*\(?\s*[-−]\s*20\b/i],
+        distractors: ["change y by (20)", "change x by (-20)", "change x by (20)"],
+        example: "Example: which block moves a sprite to the right?\nLeft and right is x. Up and down is y.\nRight makes x bigger, so add a positive number: change x by (20) moves right, and change x by (-20) would move left.",
+        working: ["Up and down is y. Left and right is x.", "Down makes y smaller, so the number is negative."],
+        note: "change y by a negative number moves the sprite down." },
       // ------------------------------------------------ 6.2.2 Loops and Pong
       { id: "ex-03", category: "ex-loops", randomize: function () {
           var n, d, ans;

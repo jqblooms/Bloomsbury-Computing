@@ -4,6 +4,8 @@
 DrillData.register("y6-recap-l45", {
   title: "Year 6, 6.2.4.5: Scratch Skills Recap",
   subtitle: "Scratch: the blocks every game needs",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["control", "Keyboard and the Grid"],
     ["loops", "Loops and Sensing"],
@@ -31,22 +33,30 @@ DrillData.register("y6-recap-l45", {
       note: "Left makes x smaller, so the number is negative."
     },
     {
-      id: "r-top", category: "control",
-      prompt: "What is y at the top edge of the Scratch stage?",
-      answers: ["180"],
-      keywords: [drillNumberRe(180, "y")],
-      distractors: ["240", "360", "-180", "100"],
-      working: ["The stage is 360 steps tall and y: 0 is the middle, so the top is half of 360 above it.", "Above the middle, y is positive. How far is the top edge?", "Up the stage, y gets bigger."],
-      note: "y runs from -180 at the bottom to 180 at the top."
+      id: "r-up", category: "control",
+      prompt: "Which block moves a sprite up the stage?",
+      answers: ["change y by (20)"],
+      keywords: [/change\s*y\s*(by)?\s*\(?\s*\+?\s*20\b/i],
+      distractors: ["change y by (-20)", "change x by (20)", "change x by (-20)"],
+      working: ["Up and down is y. Left and right is x.", "Up makes y bigger."],
+      note: "change y by a positive number moves the sprite up."
     },
     {
-      id: "r-right", category: "control",
-      prompt: "What is x at the right-hand edge of the Scratch stage?",
-      answers: ["240"],
-      keywords: [drillNumberRe(240, "x")],
-      distractors: ["180", "480", "100", "-240"],
-      working: ["The stage is 480 steps wide and x: 0 is the middle, so the right edge is half of 480 from the middle.", "x: 0 is the middle. The right edge is half the stage width away.", "Right of the middle, x is positive."],
-      note: "x runs from -240 at the left edge to 240 at the right edge."
+      id: "r-where", category: "control",
+      randomize: function () {
+        var sx = drillPick([1, -1]), sy = drillPick([1, -1]), x = sx * drillPick([60, 100, 150]), y = sy * drillPick([50, 80, 120]);
+        var all = ["Right and up", "Left and up", "Right and down", "Left and down"];
+        var ans = (sx > 0 ? "Right" : "Left") + " and " + (sy > 0 ? "up" : "down");
+        return {
+          blocks: "when flag clicked\ngo to x: (" + x + ") y: (" + y + ")",
+          prompt: "Where does this put the sprite, from the middle of the stage?",
+          answers: [ans],
+          keywords: [new RegExp("^\\s*" + ans.replace(/ /g, "\\s+") + "\\s*$", "i")],
+          distractors: all.filter(function (a) { return a !== ans; }),
+          working: ["The middle is x: 0, y: 0. A positive x is right of it, a negative x is left.", "A positive y is above the middle, a negative y is below."],
+          note: "x: " + x + " is " + (sx > 0 ? "right" : "left") + " of the middle and y: " + y + " is " + (sy > 0 ? "above" : "below") + " it."
+        };
+      }
     },
     {
       id: "r-keys", category: "control",

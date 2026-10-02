@@ -3,6 +3,8 @@
 DrillData.register("y6-idevelop-l5", {
   title: "Year 6, 6.2.5: Plan and Build Your Own Game",
   subtitle: "Scratch: planning a game and building it in steps",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["plan", "Planning a Game"],
     ["parts", "Parts of a Game"],

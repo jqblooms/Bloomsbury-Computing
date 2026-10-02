@@ -3,6 +3,8 @@
 DrillData.register("y6-igame-l2", {
   title: "Year 6, 6.2.2: Loops and Pong",
   subtitle: "Scratch: repeat, forever, sensing and if",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["loops", "Loops"],
     ["predictloop", "Predict the Loop"],

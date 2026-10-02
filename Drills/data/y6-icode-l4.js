@@ -3,6 +3,8 @@
 DrillData.register("y6-icode-l4", {
   title: "Year 6, 6.2.4: Costumes, Backdrops and Messages",
   subtitle: "Scratch: costumes, animation, broadcasts and levels",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["costumes", "Costumes"],
     ["animation", "Animation"],

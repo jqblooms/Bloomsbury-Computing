@@ -6,6 +6,8 @@
 DrillData.register("y6-icontrol-l1", {
   title: "Year 6, 6.2.1: Events and Coordinates",
   subtitle: "Scratch: events, the stage grid and motion",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["events", "Events"],
     ["grid", "The Stage Grid"],
@@ -64,40 +66,62 @@ DrillData.register("y6-icontrol-l1", {
       note: "Blocks run in order from the top, one after another."
     },
     {
-      id: "g-right", category: "grid",
-      prompt: "What is x at the right-hand edge of the Scratch stage?",
-      answers: ["240"],
-      keywords: [drillNumberRe(240, "x")],
-      distractors: ["180", "480", "100", "-240"],
-      working: ["The stage is 480 steps wide and x: 0 is the middle, so the right edge is half of 480 from the middle.", "x: 0 is the middle. The right edge is half the stage width away.", "Right of the middle, x is positive."],
-      note: "x runs from -240 at the left edge to 240 at the right edge."
+      id: "g-movex", category: "grid",
+      randomize: function () {
+        var x0, d, ans;
+        do { x0 = drillRange(-100, 100, 20); d = drillPick([30, 40, 50, -30, -40, -50]); ans = x0 + d; } while ([x0, d].indexOf(ans) !== -1);
+        return {
+          blocks: "when flag clicked\ngo to x: (" + x0 + ") y: (0)\nchange x by (" + d + ")",
+          prompt: "What is x after this script runs?",
+          answers: [String(ans)],
+          keywords: [drillNumberRe(ans, "x")],
+          distractors: drillWrongNumbers(ans, [x0 - d, d, x0, -ans], 3),
+          working: ["The sprite starts where go to puts it.", "change x adds its number to x. A negative number takes away."],
+          note: x0 + " + " + d + " = " + ans + "."
+        };
+      }
     },
     {
-      id: "g-left", category: "grid",
-      prompt: "What is x at the left-hand edge of the Scratch stage?",
-      answers: ["-240"],
-      keywords: [drillNumberRe(-240, "x")],
-      distractors: ["0", "240", "-180", "-480"],
-      working: ["The stage is 480 steps wide and x: 0 is the middle. Left of the middle is negative: minus half of 480.", "Left of the middle, x is negative. How far is the edge?", "Left of the middle, x is negative."],
-      note: "The left edge is x: -240. The middle is x: 0."
+      id: "g-movey", category: "grid",
+      randomize: function () {
+        var y0, d, ans;
+        do { y0 = drillRange(-100, 100, 20); d = drillPick([20, 30, 50, -20, -30, -50]); ans = y0 + d; } while ([y0, d].indexOf(ans) !== -1);
+        return {
+          blocks: "when flag clicked\ngo to x: (0) y: (" + y0 + ")\nchange y by (" + d + ")",
+          prompt: "What is y after this script runs?",
+          answers: [String(ans)],
+          keywords: [drillNumberRe(ans, "y")],
+          distractors: drillWrongNumbers(ans, [y0 - d, d, y0, -ans], 3),
+          working: ["The sprite starts where go to puts it.", "change y adds its number to y. A negative number takes away."],
+          note: y0 + " + " + d + " = " + ans + "."
+        };
+      }
     },
     {
-      id: "g-top", category: "grid",
-      prompt: "What is y at the top edge of the Scratch stage?",
-      answers: ["180"],
-      keywords: [drillNumberRe(180, "y")],
-      distractors: ["240", "360", "-180", "100"],
-      working: ["The stage is 360 steps tall and y: 0 is the middle, so the top is half of 360 above it.", "Above the middle, y is positive. How far is the top edge?", "Up the stage, y gets bigger."],
-      note: "y runs from -180 at the bottom to 180 at the top."
+      id: "g-up", category: "grid",
+      prompt: "Which block moves a sprite up the stage?",
+      answers: ["change y by (20)"],
+      keywords: [/change\s*y\s*(by)?\s*\(?\s*\+?\s*20\b/i],
+      distractors: ["change y by (-20)", "change x by (20)", "change x by (-20)"],
+      working: ["Up and down is y. Left and right is x.", "Up makes y bigger."],
+      note: "change y by a positive number moves the sprite up."
     },
     {
-      id: "g-bottom", category: "grid",
-      prompt: "What is y at the bottom edge of the Scratch stage?",
-      answers: ["-180"],
-      keywords: [drillNumberRe(-180, "y")],
-      distractors: ["0", "180", "-240", "-360"],
-      working: ["The stage is 360 steps tall. The bottom is half of 360 below the middle, so y is negative there.", "Below the middle, y is negative. How far is the bottom edge?", "Down the stage, y gets smaller."],
-      note: "The bottom edge is y: -180."
+      id: "g-where", category: "grid",
+      randomize: function () {
+        var sx = drillPick([1, -1]), sy = drillPick([1, -1]), x = sx * drillPick([60, 100, 150]), y = sy * drillPick([50, 80, 120]);
+        var all = ["Right and up", "Left and up", "Right and down", "Left and down"];
+        var ans = (sx > 0 ? "Right" : "Left") + " and " + (sy > 0 ? "up" : "down");
+        return {
+          blocks: "when flag clicked\ngo to x: (" + x + ") y: (" + y + ")",
+          prompt: "Where does this put the sprite, from the middle of the stage?",
+          answers: [ans],
+          keywords: [new RegExp("^\\s*" + ans.replace(/ /g, "\\s+") + "\\s*$", "i")],
+          distractors: all.filter(function (a) { return a !== ans; }),
+          working: ["The middle is x: 0, y: 0. A positive x is right of it, a negative x is left.", "A positive y is above the middle, a negative y is below."],
+          note: "x: " + x + " is " + (sx > 0 ? "right" : "left") + " of the middle and y: " + y + " is " + (sy > 0 ? "above" : "below") + " it."
+        };
+      }
     },
     {
       id: "g-centre", category: "grid",

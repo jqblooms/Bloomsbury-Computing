@@ -37,7 +37,7 @@
       "type": "short-answer-validation",
       "validatorId": "y6l3-do-now-2",
       "validatorKey": "y6l3_do_now_2",
-      "content": "<h2 class=\"lesson-h2\">Do Now: Loops and the Grid</h2><p class=\"lesson-lead\">Question (a) recaps 6.2.2: Loops and Pong. Question (b) recaps 6.2.1: Events and Coordinates.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\nrepeat (4)\nchange x by (25)\nend</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l3-do-now-2-a\">The sprite starts at x: 0. What is x after the loop?</label><input id=\"y6l3-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Loops and the Grid, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l3-do-now-2-b\">What is y at the top edge of the stage?</label><input id=\"y6l3-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Loops and the Grid, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l3-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l3-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+      "content": "<h2 class=\"lesson-h2\">Do Now: Loops and the Grid</h2><p class=\"lesson-lead\">Question (a) recaps 6.2.2: Loops and Pong. Question (b) recaps 6.2.1: Events and Coordinates.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\nrepeat (4)\nchange x by (25)\nend</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l3-do-now-2-a\">The sprite starts at x: 0. What is x after the loop?</label><input id=\"y6l3-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Loops and the Grid, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l3-do-now-2-b\">Another sprite is at y: 0. It runs change y by (40). What is y now?</label><input id=\"y6l3-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Loops and the Grid, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l3-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l3-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
     },
     {
       "id": "title",
@@ -154,10 +154,10 @@
         "suffix": "b",
         "pattern": {
           "__regex": true,
-          "source": "^\\s*(y\\s*[:=]?\\s*)?180\\s*$",
+          "source": "^\\s*(y\\s*[:=]?\\s*)?40\\s*$",
           "flags": "i"
         },
-        "feedback": "y runs from -180 at the bottom to the same number, positive, at the top."
+        "feedback": "A positive number in change y moves up, so y gets bigger. Start at 0."
       }
     ],
     "y6l3_check_variables": [

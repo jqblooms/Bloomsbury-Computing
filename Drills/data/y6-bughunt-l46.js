@@ -5,6 +5,8 @@
 DrillData.register("y6-bughunt-l46", {
   title: "Year 6, 6.2.4.6: Bug Hunt",
   subtitle: "Scratch: spotting, fixing and tracing bugs",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["spot", "Spot the Bug"],
     ["fix", "Fix It"],

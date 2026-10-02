@@ -3,6 +3,8 @@
 DrillData.register("y6-idebug-l6", {
   title: "Year 6, 6.2.6: Test and Debug",
   subtitle: "Scratch: testing, finding bugs and fixing them",
+  // Races show buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  choiceOnly: true,
   categories: [
     ["testing", "Testing"],
     ["findbug", "Spot the Bug"],

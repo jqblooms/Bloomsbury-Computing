@@ -55,7 +55,7 @@
       "type": "short-answer-validation",
       "validatorId": "y6l45-check-keys",
       "validatorKey": "y6l45_check_keys",
-      "content": "<h2 class=\"lesson-h2\">Check: Keys and the Grid</h2><p class=\"lesson-lead\">The Bowl starts at x: 0.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when [left arrow v] key pressed\nchange x by (-15)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l45-check-keys-a\">The player presses the left arrow 4 times. What is x now?</label><input id=\"y6l45-check-keys-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-keys-a\" aria-label=\"Check: Keys and the Grid, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l45-check-keys-b\">What is y at the top edge of the stage?</label><input id=\"y6l45-check-keys-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-keys-b\" aria-label=\"Check: Keys and the Grid, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l45-check-keys-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l45-check-keys-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+      "content": "<h2 class=\"lesson-h2\">Check: Keys and the Grid</h2><p class=\"lesson-lead\">The Bowl starts at x: 0.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when [left arrow v] key pressed\nchange x by (-15)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l45-check-keys-a\">The player presses the left arrow 4 times. What is x now?</label><input id=\"y6l45-check-keys-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-keys-a\" aria-label=\"Check: Keys and the Grid, part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y6l45-check-keys-b\">The Bowl is at y: -140. It runs change y by (20). What is y now?</label><input id=\"y6l45-check-keys-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-keys-b\" aria-label=\"Check: Keys and the Grid, part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l45-check-keys-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6l45-check-keys-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
     },
     {
       "id": "variables",
@@ -234,10 +234,10 @@
         "suffix": "b",
         "pattern": {
           "__regex": true,
-          "source": "^\\s*(y\\s*[:=]?\\s*)?180\\s*$",
+          "source": "^\\s*(y\\s*[:=]?\\s*)?[-−]\\s*120\\s*$",
           "flags": "i"
         },
-        "feedback": "y runs from -180 at the bottom to the same number, positive, at the top."
+        "feedback": "A positive number in change y moves up. Start at -140 and add 20."
       }
     ],
     "y6l45_practice_1": [
