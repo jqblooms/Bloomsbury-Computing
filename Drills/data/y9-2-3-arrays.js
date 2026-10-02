@@ -7,6 +7,8 @@
 DrillData.register("y9-2-3-arrays", {
   title: "Year 9, 2.3: Data Types and Arrays",
   subtitle: "Data types, arrays and indexes in Cambridge pseudocode",
+  // Races show buttons for every card (James 2026-10-02: Year 9 found the typed race answers too hard).
+  choiceOnly: true,
   categories: [
     ["ar-types", "Data Types"],
     ["ar-why", "What an Array Is For"],

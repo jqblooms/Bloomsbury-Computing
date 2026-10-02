@@ -6,6 +6,8 @@
 DrillData.register("y9-2-3-ext", {
   title: "Year 9 Extension: Number Systems and Loops",
   subtitle: "2.3 Do Now Extension",
+  // Races show buttons for every card (James 2026-10-02: Year 9 found the typed race answers too hard).
+  choiceOnly: true,
   categories: [
     ["ex-binary", "Binary and Binary Addition"],
     ["ex-hex", "Hexadecimal"],

@@ -9,6 +9,8 @@
 DrillData.register("y9-2-2-loops", {
   title: "Year 9, 2.2: Loops and Combined Constructs",
   subtitle: "Count-controlled loops, and decisions inside loops, in Cambridge pseudocode",
+  // Races show buttons for every card (James 2026-10-02: Year 9 found the typed race answers too hard).
+  choiceOnly: true,
   categories: [
     ["loops-count", "How Many Times?"],
     ["loops-predict", "Predict the Output"],

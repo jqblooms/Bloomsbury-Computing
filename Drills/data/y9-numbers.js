@@ -3,6 +3,8 @@
 DrillData.register("y9-numbers", {
   title: "Year 9, Number Systems",
   subtitle: "Binary, Denary and Hexadecimal",
+  // Races show buttons for every card (James 2026-10-02: Year 9 found the typed race answers too hard).
+  choiceOnly: true,
   // [category id, label] in the order the topic picker and mastery overview show them
   categories: [
     ["bases", "Number Bases & Symbols"],
