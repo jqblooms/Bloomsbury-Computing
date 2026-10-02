@@ -25,6 +25,7 @@
     ['y6-iplan-l3', '6.2.3', 'Variables and Decisions'],
     ['y6-icode-l4', '6.2.4', 'Costumes, Backdrops and Messages'],
     ['y6-recap-l45', '6.2.4.5', 'Scratch Skills Recap'],
+    ['y6-bughunt-l46', '6.2.4.6', 'Bug Hunt'],
     ['y6-idevelop-l5', '6.2.5', 'Plan and Build Your Own Game'],
     ['y6-idebug-l6', '6.2.6', 'Test and Debug']
   ];

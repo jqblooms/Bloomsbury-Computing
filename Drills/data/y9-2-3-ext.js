@@ -39,7 +39,7 @@ DrillData.register("y9-2-3-ext", {
             note: n + " = " + b + "." };
         } },
       { id: "ex-03", category: "ex-binary", randomize: function () {
-          var a, c; do { a = drillRange(20, 120); c = drillRange(15, 120); } while (a + c > 255 || (a === 53 && c === 27));
+          var a, c; do { a = drillRange(20, 120); c = drillRange(15, 120); } while (a + c > 255 || [27, 53, 80].indexOf(a + c) !== -1);
           var s = bin8(a + c);
           return { prompt: "Add these two binary numbers. Give the 8-bit answer.\n  " + bin8(a) + "\n+ " + bin8(c), answers: [s], keywords: [new RegExp("^\\s*" + s + "\\s*$")],
             distractors: [flip(s, 7), flip(s, 5), flip(s, 3)].filter(function (x, i, all) { return all.indexOf(x) === i; }),

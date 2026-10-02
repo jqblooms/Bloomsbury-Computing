@@ -1,4 +1,4 @@
-// Builds the Year 6 Scratch lessons, 6.2.1 to 6.2.6 and the 6.2.4.5 recap (LessonData/y6-*.json):
+// Builds the Year 6 Scratch lessons, 6.2.1 to 6.2.6, the 6.2.4.5 recap and the 6.2.4.6 Bug Hunt (LessonData/y6-*.json):
 //   node tools/build_y6_scratch.mjs
 // Edit this file, not the JSON. Every activity is a Scratch Challenge
 // (assets/js/scratchcheck*.js) that checks the student's own project, and
@@ -468,6 +468,109 @@ const gameCard = (key, name, control, goal) =>
   L.save();
 }
 
+// ============================================================ 6.2.4.6
+// A whole lesson of Bug Hunts: one slide for each of the six games, so the
+// teacher can introduce each hunt (what should happen, one clue) before
+// students open it.
+{
+  const L = lesson('y6-bughunt-l46', 'y6l46', '6.2.4.6: Bug Hunt');
+  const hunt = (id, label, challengeId, name, should, clue, why) => L.add({
+    id, label, type: 'app-link', buttonId: `y6l46-${id}-btn`, appId: 'scratchchallenges', appQuery: `challenge=${challengeId}`,
+    content: L.heading(label, 'Work on your own. Play first, then find the bug and fix it.') + tps(why[0], why[1]) +
+      `<div class="igame-two-col"><div class="lesson-flow-task"><h3>What should happen</h3>${L.facts(should)}<p><strong>Clue:</strong> ${clue}</p></div>` +
+      `<div class="lesson-app-link"><p>Press <strong>Check my project</strong> as often as you like. Green ticks show the parts that already work.</p>` +
+      `<button type="button" class="donow-btn" id="y6l46-${id}-btn">Open ${name}</button></div></div>` });
+
+  L.choice('do-now', 'Do Now: Variables and Messages', 'Recap of 6.2.3 and 6.2.4.', [
+    { prompt: 'score is 4. Which block makes score 5?', options: ['set [score] to (1)', 'change [score] by (1)', 'change [score] by (5)'], correct: 1,
+      explain: 'change adds to the value score already has: 4 + 1 = 5. set [score] to (1) would make it 1.' },
+    { prompt: 'Which block starts every when I receive [game over] script?', options: ['broadcast [game over]', 'switch backdrop to [game over]', 'stop [all]'], correct: 0,
+      explain: 'broadcast sends the message that those scripts wait for.' }
+  ]);
+  L.add({ id: 'do-now-ext', label: 'Extension: Do Now Challenge', type: 'embedded-app', appId: 'drill-y6-bughunt-l46-ext', embedContainerId: 'y6l46-do-now-ext',
+    content: L.heading('Extension: Do Now Challenge', '<strong>Extension:</strong> finished the Do Now? Try these questions from 6.2.1 to 6.2.4. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.') + '<div id="y6l46-do-now-ext"></div>' });
+  L.title('Bug Hunt', '6.2.4.6', [
+    'Say what a bug is: expected against actual.',
+    'Follow the same steps to hunt every bug.',
+    'Find and fix the bugs in six broken games.'
+  ]);
+  L.slide('what-bug', 'What Is a Bug?',
+    L.heading('What Is a Bug?', 'A <strong>bug</strong> is where what should happen (<strong>expected</strong>) and what does happen (<strong>actual</strong>) are different.') +
+    tps('The Ship should move left. It moves right. What is expected? What is actual? Is it a bug?', 'Expected: the Ship moves left. Actual: it moves right. They are different, so it is a bug.') +
+    '<table class="iplan-table"><thead><tr><th>I did</th><th>Expected</th><th>Actual</th><th>Bug?</th></tr></thead><tbody>' +
+    '<tr><td>Held the left arrow</td><td>Ship moves left</td><td>Ship moves right</td><td>Yes</td></tr>' +
+    '<tr><td>Popped a balloon</td><td>score goes up by 1</td><td>score goes up by 1</td><td>No</td></tr>' +
+    '<tr><td>Got hit 3 times</td><td>Game Over</td><td>The game kept going</td><td>Yes</td></tr></tbody></table>');
+  L.choice('check-bug', 'Check: Bug or Not?', 'Compare expected and actual.', [
+    { prompt: 'Expected: time counts down 20, 19, 18. Actual: time counts 20, 21, 22. Is it a bug?', options: ['Yes', 'No'], correct: 0,
+      explain: 'Expected and actual are different, so it is a bug.' },
+    { prompt: 'Expected: the Ghost keeps moving. Actual: the Ghost keeps moving. Is it a bug?', options: ['Yes', 'No'], correct: 1,
+      explain: 'Expected and actual are the same, so that part works.' }
+  ]);
+  L.slide('hunt-steps', 'How to Hunt a Bug',
+    L.heading('How to Hunt a Bug', 'The same five steps work for every bug.') +
+    tps('Why change only one thing before you test again?', 'If it works, you know which change fixed it. If it breaks, you know which change to undo.') +
+    '<div class="igame-two-col">' + '<ol class="lesson-facts">' +
+    '<li><strong>Play</strong> the game. Watch carefully.</li>' +
+    '<li><strong>Say</strong> what you expected and what actually happened.</li>' +
+    '<li><strong>Find</strong> the script for that part of the game.</li>' +
+    '<li><strong>Change</strong> one thing.</li>' +
+    '<li><strong>Test</strong> again. Still wrong? Back to step 3.</li></ol>' +
+    L.blocks('if <key [left arrow v] pressed?> then\nchange x by (8)\nend') + '</div>');
+  hunt('hunt-1', 'Bug Hunt 1: Meteor Dodge', 'hunt-meteor-steer', 'Bug Hunt 1', [
+    'The arrow keys steer the Ship left and right.',
+    'A Meteor that falls past adds 1 to score.',
+    'A Meteor that hits the Ship takes 1 life.'
+  ], 'test each arrow key on its own.', ['Predict: which blocks make the Ship move? Where will you look first?', 'The if blocks inside the Ship\'s forever loop. One checks the right arrow, one checks the left arrow. Left should change x by a negative number.']);
+  hunt('hunt-2', 'Bug Hunt 2: Meteor Dodge Never Ends', 'hunt-meteor-end', 'Bug Hunt 2', [
+    'Each hit takes 1 life. lives starts at 3.',
+    'When lives reaches 0, the Game Over screen shows.',
+    'Then the game stops.'
+  ], 'count the lives out loud. Then read what the Stage is waiting for.', ['lives goes 3, 2, 1, 0. What should the Stage wait for? Could lives ever be less than 0?', 'It should wait until lives = 0. lives stops at 0, so "less than 0" is never true and the game never ends.']);
+  hunt('hunt-3', 'Bug Hunt 3: Balloon Pop', 'hunt-balloon-score', 'Bug Hunt 3', [
+    'Each click on the red Balloon adds 1 to score.',
+    'Each click on the Gold Balloon adds 5.',
+    'time counts down from 20. At 0, Time Up.'
+  ], 'click the red Balloon three times and watch score.', ['What is the difference between set [score] to (1) and change [score] by (1)?', 'set replaces the value with 1 every time. change adds 1 to the value it already has.']);
+  L.slide('where-bugs-hide', 'Where Bugs Hide',
+    L.heading('Where Bugs Hide', 'What you see tells you where to look.') +
+    tps('Bug Hunt 3: score was stuck at 1. Which kind of bug was that?', 'A value gets stuck: the click script used set when it should use change.') +
+    '<div class="igame-debug-grid">' +
+    '<div><strong>Goes the wrong way</strong><span>Look at the numbers in the move and change blocks. Is one positive when it should be negative?</span></div>' +
+    '<div><strong>Happens once, then stops</strong><span>Blocks that should keep running need to be inside a forever or repeat loop.</span></div>' +
+    '<div><strong>A value gets stuck</strong><span>Read the blocks that change it. Does it say set when it should say change?</span></div>' +
+    '<div><strong>Something never happens</strong><span>Read the condition. Which sprite does it check? Can the comparison ever be true?</span></div>' +
+    '</div>');
+  L.short('check-spot', 'Check: Spot the Bug', 'This script should move the sprite left.', [
+    'What number should be in the change x block?'
+  ], [
+    { pattern: num(-10, 'x'), feedback: 'Moving left makes x smaller, so the number must be negative.' }
+  ], 'when [left arrow v] key pressed\nchange x by (10)');
+  hunt('hunt-4', 'Bug Hunt 4: Balloon Pop Timer', 'hunt-balloon-timer', 'Bug Hunt 4', [
+    'time starts at 20.',
+    'time goes down by 1 every second.',
+    'At 0, the Time Up screen shows and the game stops.'
+  ], 'watch the time box. Which way is it going?', ['The time box shows 20, 21, 22. Which kind of bug is that?', 'It goes the wrong way. The change [time] by block should use -1, not 1.']);
+  hunt('hunt-5', 'Bug Hunt 5: Ghost Maze', 'hunt-maze-ghost', 'Bug Hunt 5', [
+    'The arrow keys move the Hero. Walls stop it.',
+    'The Ghost patrols back and forth, forever.',
+    'The Ghost sends the Hero back to the start.'
+  ], 'watch the Ghost for 10 seconds.', ['The Ghost glides there and back once, then stops. Which kind of bug is that?', 'Happens once, then stops. The two glide blocks need to go inside a forever loop.']);
+  hunt('hunt-6', 'Bug Hunt 6: Ghost Maze Locked Door', 'hunt-maze-door', 'Bug Hunt 6', [
+    'Touching the Key collects it: keys becomes 1.',
+    'With the key, touching the Door opens it.',
+    'Then You Escaped shows.'
+  ], 'collect the Key, then go to the Door. Read what the Door is waiting for.', ['You have the key and you are at the Door. Nothing happens. Which kind of bug is that?', 'Something never happens. The Door waits until it touches the Ghost, not the Hero.']);
+  L.choice('practice', 'Checked Practice', 'Use what you found in the Bug Hunts.', [
+    { prompt: 'A sprite should keep spinning, but it turns once and stops. What is missing?', options: ['A forever loop around the turn block', 'A new costume', 'A broadcast'], correct: 0,
+      explain: 'Happens once, then stops: the blocks need to be inside a forever loop.' },
+    { prompt: 'Each coin should add 1 to coins, but coins is always 1. Which block is wrong?', options: ['set [coins] to (1)', 'when green flag clicked', 'go to (random position)'], correct: 0,
+      explain: 'set replaces the value with 1 every time. It should be change [coins] by (1).' }
+  ]);
+  L.plenary('y6-bughunt-l46', 'Bug Hunt');
+  L.save();
+}
+
 // ============================================================ 6.2.5
 {
   const L = lesson('y6-idevelop-l5', 'y6l5', '6.2.5: Plan and Build Your Own Game');
@@ -579,7 +682,7 @@ const gameCard = (key, name, control, goal) =>
   ], 'if <(clicks) > (9)> then\nsay [You win!]\nelse\nsay [Keep going!]\nend');
   L.title('Test and Debug', '6.2.6', [
     'Test a program like a tester: expected against actual.',
-    'Find and fix the bugs in six broken games.',
+    'Find and fix two bugs in each of three games.',
     'Test a partner\'s game and record what you find.'
   ]);
   L.slide('testing', 'Test It Like a Tester',
@@ -591,9 +694,9 @@ const gameCard = (key, name, control, goal) =>
     '<tr><td>Clicked 9 times</td><td>No message yet</td><td>No message</td></tr></tbody></table>' +
     L.facts([
       'Test every control, one at a time.',
-      'Test the edges: the sides of the stage, the floor.',
+      'Test the edges: the walls, the top, the floor.',
       'Test either side of a target: 9, 10 and 11 clicks.',
-      'Change one thing, then test again.'
+      'Play a second game: does it start fresh?'
     ]) + '</div>');
   L.choice('check-testing', 'Check: Testing', 'Choose the best answer.', [
     { prompt: 'A game should say You win! at 10 clicks. Which click counts should you test?', options: ['Only 10', '9, 10 and 11', '1 and 100'], correct: 1,
@@ -601,31 +704,31 @@ const gameCard = (key, name, control, goal) =>
     { prompt: 'Expected: the Ship moves left. Actual: it moves right. What is this?', options: ['A bug', 'A broadcast', 'A costume'], correct: 0,
       explain: 'Expected and actual are different, so there is a bug to fix.' }
   ]);
-  L.challenge('activity-1', 'Activity 1: Bug Hunt 1 to 3', 'Work on your own. Each game has one bug. Play it, find the bug, fix it, then press Next.', 'hunt-meteor-steer', 'Bug Hunt 1', [
-    'Bug Hunt 1: Meteor Dodge. One control is broken.',
-    'Bug Hunt 2: Meteor Dodge never ends.',
-    'Bug Hunt 3: Balloon Pop. The score gets stuck.',
-    'Play first: watch what happens before you change any blocks.'
+  L.challenge('activity-1', 'Activity 1: Double Bug Hunt 1', 'Work on your own. Meteor Dodge again, with two new bugs.', 'double-meteor', 'Double Bug Hunt 1', [
+    'Catch a few Stars. Watch score.',
+    'Lose a game. Click the green flag and play again.',
+    'Fix one bug, then test everything again.',
+    'Press Next when every check is green.'
   ]);
-  L.slide('where-bugs-hide', 'Where Bugs Hide',
-    L.heading('Where Bugs Hide', 'What you see tells you where to look.') +
-    tps('The time box goes 20, 21, 22. Which kind of bug is that? Where do you look?', 'It goes the wrong way. Look at the change [time] by block: the number should be -1, not 1.') +
+  L.slide('two-bugs', 'Two Bugs at Once',
+    L.heading('Two Bugs at Once', 'Some bugs only show on the second game, or at the edge of the stage.') +
+    tps('A game works the first time. The second time, it ends straight away. Where do you look?', 'The green flag scripts. Something from the last game was not reset: for example lives is still 0, so the game is over at once.') +
     '<div class="igame-debug-grid">' +
-    '<div><strong>Goes the wrong way</strong><span>Look at the numbers in the move and change blocks. Is one positive when it should be negative?</span></div>' +
-    '<div><strong>Happens once, then stops</strong><span>Blocks that should keep running need to be inside a forever or repeat loop.</span></div>' +
-    '<div><strong>A value gets stuck</strong><span>Read the blocks that change it. Does it say set when it should say change?</span></div>' +
-    '<div><strong>Something never happens</strong><span>Read the condition. Which sprite does it check? Can the comparison ever be true?</span></div>' +
+    '<div><strong>Fix one, test all</strong><span>A fix can break something else. Press Check my project after every change.</span></div>' +
+    '<div><strong>Play it twice</strong><span>Does the green flag reset every variable and show every sprite again?</span></div>' +
+    '<div><strong>Try every edge</strong><span>Walk into every wall. Let things float or fall off the stage.</span></div>' +
+    '<div><strong>Read the panel</strong><span>A red check names the part that is still wrong.</span></div>' +
     '</div>');
-  L.short('check-bug', 'Check: Spot the Bug', 'This script should move the sprite left.', [
-    'What number should be in the change x block?'
+  L.short('check-replay', 'Check: The Second Game', 'The last game ended with lives at 0. This is the Stage\'s green flag script.', [
+    'What is lives at the start of the next game?'
   ], [
-    { pattern: num(-10, 'x'), feedback: 'Moving left makes x smaller, so the number must be negative.' }
-  ], 'when [left arrow v] key pressed\nchange x by (10)');
-  L.challenge('activity-2', 'Activity 2: Bug Hunt 4 to 6', 'Work on your own. The button opens Bug Hunt 4. Press Next after each fix.', 'hunt-balloon-timer', 'Bug Hunt 4', [
-    'Bug Hunt 4: the Balloon Pop timer.',
-    'Bug Hunt 5: Ghost Maze. Watch the Ghost.',
-    'Bug Hunt 6: Ghost Maze. Can you escape?',
-    'The panel shows how many Bug Hunts you have fixed.'
+    { pattern: num(0, 'lives'), feedback: 'Read the script: does anything set lives? If not, lives keeps the value from the last game.' }
+  ], 'when flag clicked\nset [score v] to (0)\nwait until <(lives) = (0)>\nswitch backdrop to [Game Over v]');
+  L.challenge('activity-2', 'Activity 2: Double Bug Hunts 2 and 3', 'Work on your own. The button opens Double Bug Hunt 2. Press Next after each fix.', 'double-balloon', 'Double Bug Hunt 2', [
+    'Double Bug Hunt 2: Balloon Pop. How long should a game last?',
+    'Double Bug Hunt 3: Ghost Maze. Try every wall, then play twice.',
+    'The panel shows how many you have fixed.',
+    'Finished? Test a partner\'s game.'
   ]);
   const cell = (id, label, placeholder) => `<input class="pseudocode-output-input lesson-exam-answer" data-answer-kind="short" data-answer-id="${id}" aria-label="${label}" autocomplete="off" placeholder="${placeholder}">`;
   L.slide('bug-report', 'Test a Partner\'s Game',

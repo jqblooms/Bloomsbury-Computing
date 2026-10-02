@@ -42,12 +42,12 @@
     {
       "id": "title",
       "label": "Test and Debug",
-      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 6 Scratch</p><h2 class=\"lesson-h2\">Test and Debug</h2><p>Year 6, 6.2.6</p></div><ul class=\"lesson-facts\"><li>Test a program like a tester: expected against actual.</li><li>Find and fix the bugs in six broken games.</li><li>Test a partner's game and record what you find.</li></ul>"
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 6 Scratch</p><h2 class=\"lesson-h2\">Test and Debug</h2><p>Year 6, 6.2.6</p></div><ul class=\"lesson-facts\"><li>Test a program like a tester: expected against actual.</li><li>Find and fix two bugs in each of three games.</li><li>Test a partner's game and record what you find.</li></ul>"
     },
     {
       "id": "testing",
       "label": "Test It Like a Tester",
-      "content": "<h2 class=\"lesson-h2\">Test It Like a Tester</h2><p class=\"lesson-lead\">A <strong>bug</strong> is where what should happen and what does happen are different.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Clicked 9 times: expected no message, and there was no message. Is that a bug? Why test it at all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>No, expected and actual match. You test 9 to prove the message does not come too early: bugs often hide just below or above a target.</p></div></details><div class=\"igame-two-col\"><table class=\"iplan-table\"><thead><tr><th>I did</th><th>Expected</th><th>Actual</th></tr></thead><tbody><tr><td>Held left arrow</td><td>Ship moves left</td><td>It moved right</td></tr><tr><td>Clicked 10 times</td><td>Says You win!</td><td>Said nothing</td></tr><tr><td>Clicked 9 times</td><td>No message yet</td><td>No message</td></tr></tbody></table><ul class=\"lesson-facts\"><li>Test every control, one at a time.</li><li>Test the edges: the sides of the stage, the floor.</li><li>Test either side of a target: 9, 10 and 11 clicks.</li><li>Change one thing, then test again.</li></ul></div>"
+      "content": "<h2 class=\"lesson-h2\">Test It Like a Tester</h2><p class=\"lesson-lead\">A <strong>bug</strong> is where what should happen and what does happen are different.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Clicked 9 times: expected no message, and there was no message. Is that a bug? Why test it at all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>No, expected and actual match. You test 9 to prove the message does not come too early: bugs often hide just below or above a target.</p></div></details><div class=\"igame-two-col\"><table class=\"iplan-table\"><thead><tr><th>I did</th><th>Expected</th><th>Actual</th></tr></thead><tbody><tr><td>Held left arrow</td><td>Ship moves left</td><td>It moved right</td></tr><tr><td>Clicked 10 times</td><td>Says You win!</td><td>Said nothing</td></tr><tr><td>Clicked 9 times</td><td>No message yet</td><td>No message</td></tr></tbody></table><ul class=\"lesson-facts\"><li>Test every control, one at a time.</li><li>Test the edges: the walls, the top, the floor.</li><li>Test either side of a target: 9, 10 and 11 clicks.</li><li>Play a second game: does it start fresh?</li></ul></div>"
     },
     {
       "id": "check-testing",
@@ -80,34 +80,34 @@
     },
     {
       "id": "activity-1",
-      "label": "Activity 1: Bug Hunt 1 to 3",
+      "label": "Activity 1: Double Bug Hunt 1",
       "type": "app-link",
       "buttonId": "y6l6-activity-1-btn",
       "appId": "scratchchallenges",
-      "appQuery": "challenge=hunt-meteor-steer",
-      "content": "<h2 class=\"lesson-h2\">Activity 1: Bug Hunt 1 to 3</h2><p class=\"lesson-lead\">Work on your own. Each game has one bug. Play it, find the bug, fix it, then press Next.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Bug Hunt 1: Meteor Dodge. One control is broken.</li><li>Bug Hunt 2: Meteor Dodge never ends.</li><li>Bug Hunt 3: Balloon Pop. The score gets stuck.</li><li>Play first: watch what happens before you change any blocks.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l6-activity-1-btn\">Open Bug Hunt 1</button></div></div>"
+      "appQuery": "challenge=double-meteor",
+      "content": "<h2 class=\"lesson-h2\">Activity 1: Double Bug Hunt 1</h2><p class=\"lesson-lead\">Work on your own. Meteor Dodge again, with two new bugs.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Catch a few Stars. Watch score.</li><li>Lose a game. Click the green flag and play again.</li><li>Fix one bug, then test everything again.</li><li>Press Next when every check is green.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l6-activity-1-btn\">Open Double Bug Hunt 1</button></div></div>"
     },
     {
-      "id": "where-bugs-hide",
-      "label": "Where Bugs Hide",
-      "content": "<h2 class=\"lesson-h2\">Where Bugs Hide</h2><p class=\"lesson-lead\">What you see tells you where to look.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The time box goes 20, 21, 22. Which kind of bug is that? Where do you look?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It goes the wrong way. Look at the change [time] by block: the number should be -1, not 1.</p></div></details><div class=\"igame-debug-grid\"><div><strong>Goes the wrong way</strong><span>Look at the numbers in the move and change blocks. Is one positive when it should be negative?</span></div><div><strong>Happens once, then stops</strong><span>Blocks that should keep running need to be inside a forever or repeat loop.</span></div><div><strong>A value gets stuck</strong><span>Read the blocks that change it. Does it say set when it should say change?</span></div><div><strong>Something never happens</strong><span>Read the condition. Which sprite does it check? Can the comparison ever be true?</span></div></div>"
+      "id": "two-bugs",
+      "label": "Two Bugs at Once",
+      "content": "<h2 class=\"lesson-h2\">Two Bugs at Once</h2><p class=\"lesson-lead\">Some bugs only show on the second game, or at the edge of the stage.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A game works the first time. The second time, it ends straight away. Where do you look?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The green flag scripts. Something from the last game was not reset: for example lives is still 0, so the game is over at once.</p></div></details><div class=\"igame-debug-grid\"><div><strong>Fix one, test all</strong><span>A fix can break something else. Press Check my project after every change.</span></div><div><strong>Play it twice</strong><span>Does the green flag reset every variable and show every sprite again?</span></div><div><strong>Try every edge</strong><span>Walk into every wall. Let things float or fall off the stage.</span></div><div><strong>Read the panel</strong><span>A red check names the part that is still wrong.</span></div></div>"
     },
     {
-      "id": "check-bug",
-      "label": "Check: Spot the Bug",
+      "id": "check-replay",
+      "label": "Check: The Second Game",
       "type": "short-answer-validation",
-      "validatorId": "y6l6-check-bug",
-      "validatorKey": "y6l6_check_bug",
-      "content": "<h2 class=\"lesson-h2\">Check: Spot the Bug</h2><p class=\"lesson-lead\">This script should move the sprite left.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when [left arrow v] key pressed\nchange x by (10)</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l6-check-bug-a\">What number should be in the change x block?</label><input id=\"y6l6-check-bug-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-bug-a\" aria-label=\"Check: Spot the Bug, part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l6-check-bug-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y6l6-check-bug-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+      "validatorId": "y6l6-check-replay",
+      "validatorKey": "y6l6_check_replay",
+      "content": "<h2 class=\"lesson-h2\">Check: The Second Game</h2><p class=\"lesson-lead\">The last game ended with lives at 0. This is the Stage's green flag script.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\nset [score v] to (0)\nwait until &lt;(lives) = (0)&gt;\nswitch backdrop to [Game Over v]</pre></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6l6-check-replay-a\">What is lives at the start of the next game?</label><input id=\"y6l6-check-replay-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-replay-a\" aria-label=\"Check: The Second Game, part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6l6-check-replay-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y6l6-check-replay-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
     },
     {
       "id": "activity-2",
-      "label": "Activity 2: Bug Hunt 4 to 6",
+      "label": "Activity 2: Double Bug Hunts 2 and 3",
       "type": "app-link",
       "buttonId": "y6l6-activity-2-btn",
       "appId": "scratchchallenges",
-      "appQuery": "challenge=hunt-balloon-timer",
-      "content": "<h2 class=\"lesson-h2\">Activity 2: Bug Hunt 4 to 6</h2><p class=\"lesson-lead\">Work on your own. The button opens Bug Hunt 4. Press Next after each fix.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Bug Hunt 4: the Balloon Pop timer.</li><li>Bug Hunt 5: Ghost Maze. Watch the Ghost.</li><li>Bug Hunt 6: Ghost Maze. Can you escape?</li><li>The panel shows how many Bug Hunts you have fixed.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l6-activity-2-btn\">Open Bug Hunt 4</button></div></div>"
+      "appQuery": "challenge=double-balloon",
+      "content": "<h2 class=\"lesson-h2\">Activity 2: Double Bug Hunts 2 and 3</h2><p class=\"lesson-lead\">Work on your own. The button opens Double Bug Hunt 2. Press Next after each fix.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Double Bug Hunt 2: Balloon Pop. How long should a game last?</li><li>Double Bug Hunt 3: Ghost Maze. Try every wall, then play twice.</li><li>The panel shows how many you have fixed.</li><li>Finished? Test a partner's game.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l6-activity-2-btn\">Open Double Bug Hunt 2</button></div></div>"
     },
     {
       "id": "bug-report",
@@ -164,15 +164,15 @@
         "feedback": "Is 9 more than 9? If not, the else part runs."
       }
     ],
-    "y6l6_check_bug": [
+    "y6l6_check_replay": [
       {
         "suffix": "a",
         "pattern": {
           "__regex": true,
-          "source": "^\\s*(x\\s*[:=]?\\s*)?[-−]\\s*10\\s*$",
+          "source": "^\\s*(lives\\s*[:=]?\\s*)?0\\s*$",
           "flags": "i"
         },
-        "feedback": "Moving left makes x smaller, so the number must be negative."
+        "feedback": "Read the script: does anything set lives? If not, lives keeps the value from the last game."
       }
     ]
   },

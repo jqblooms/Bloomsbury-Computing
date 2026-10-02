@@ -1,9 +1,10 @@
 // Scratch Challenges, part 5 of 6: three finished mini-games (Meteor Dodge,
-// Balloon Pop, Ghost Maze) with art and sound, the six 6.2.6 Bug Hunts made
-// from them, and the 6.2.5 game starters.
+// Balloon Pop, Ghost Maze) with art and sound, the six 6.2.4.6 Bug Hunts and
+// the three 6.2.6 Double Bug Hunts made from them, and the 6.2.5 game starters.
 //
-// Each game is a function of the bug to plant: game(null) is the working
-// game (the self-test solution), game('steer') the same game with one bug.
+// Each game is a function of the bug or bugs to plant: game(null) is the
+// working game (the self-test solution), game('steer') has one bug,
+// game(['reset', 'star']) two.
 // Every Bug Hunt checks the whole game, so the student sees which parts
 // already work and which one does not.
 (function () {
@@ -99,6 +100,8 @@
       '<rect width="480" height="360" fill="#8ab4f8"/><rect x="0" y="330" width="480" height="30" fill="#34a853"/>' + banner('GAME OVER', '#f28b82'))
   });
 
+  function has(bug, name) { return bug === name || (Array.isArray(bug) && bug.indexOf(name) !== -1); }
+
   // ---- block shorthands ----
   var flag = ['event_whenflagclicked'];
   function s(x, y, blocks) { return { x: x, y: y, blocks: blocks }; }
@@ -110,7 +113,8 @@
   var toBottom = ['motion_gotoxy', { X: rnd(-200, 200), Y: -170 }];
 
   // ======================= Meteor Dodge =======================
-  // Bugs: 'steer' (left arrow goes right), 'end' (game over waits for lives < 0).
+  // Bugs: 'steer' (left arrow goes right), 'end' (game over waits for lives < 0),
+  // 'reset' (the green flag does not reset lives), 'star' (a caught Star stays on the Ship).
   function meteorDodge(bug) {
     return {
       backdrops: [['Space', 'space'], ['Game Over', 'gameOverSpace']],
@@ -118,15 +122,15 @@
       variables: { score: 0, lives: 3, speed: 5 },
       showVariables: ['score', 'lives'],
       stageScripts: [s(20, 20, [flag, ['looks_switchbackdropto', { BACKDROP: 'Space' }],
-        ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['data_setvariableto', { VARIABLE: 'lives', VALUE: 3 }], ['data_setvariableto', { VARIABLE: 'speed', VALUE: 5 }],
-        ['control_wait_until', { CONDITION: bug === 'end' ? ['operator_lt', { OPERAND1: V('lives'), OPERAND2: 0 }] : ['operator_equals', { OPERAND1: V('lives'), OPERAND2: 0 }] }],
+        ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }]].concat(has(bug, 'reset') ? [] : [['data_setvariableto', { VARIABLE: 'lives', VALUE: 3 }]]).concat([['data_setvariableto', { VARIABLE: 'speed', VALUE: 5 }],
+        ['control_wait_until', { CONDITION: has(bug, 'end') ? ['operator_lt', { OPERAND1: V('lives'), OPERAND2: 0 }] : ['operator_equals', { OPERAND1: V('lives'), OPERAND2: 0 }] }],
         ['event_broadcast', { BROADCAST_INPUT: 'game over' }], ['looks_switchbackdropto', { BACKDROP: 'Game Over' }],
-        ['sound_playuntildone', { SOUND_MENU: 'lose' }], ['control_stop', { STOP_OPTION: 'all' }]])],
+        ['sound_playuntildone', { SOUND_MENU: 'lose' }], ['control_stop', { STOP_OPTION: 'all' }]]))],
       sprites: [
         { name: 'Ship', costumes: [['ship', 'ship']], x: 0, y: -140, scripts: [
           s(20, 20, [flag, ['looks_show'], ['motion_gotoxy', { X: 0, Y: -140 }], ['control_forever', { SUBSTACK: [
             ['control_if', { CONDITION: key('right arrow'), SUBSTACK: [['motion_changexby', { DX: 8 }]] }],
-            ['control_if', { CONDITION: key('left arrow'), SUBSTACK: [['motion_changexby', { DX: bug === 'steer' ? 8 : -8 }]] }]
+            ['control_if', { CONDITION: key('left arrow'), SUBSTACK: [['motion_changexby', { DX: has(bug, 'steer') ? 8 : -8 }]] }]
           ] }]]),
           receive('game over', [['looks_hide']])
         ] },
@@ -145,7 +149,7 @@
             ['motion_changeyby', { DY: -3 }],
             ['control_if', { CONDITION: ['operator_lt', { OPERAND1: ['motion_yposition'], OPERAND2: -170 }], SUBSTACK: [toTop] }],
             ['control_if', { CONDITION: touching('Ship'), SUBSTACK: [
-              ['sound_play', { SOUND_MENU: 'coin' }], ['data_changevariableby', { VARIABLE: 'score', VALUE: 5 }], toTop] }]
+              ['sound_play', { SOUND_MENU: 'coin' }], ['data_changevariableby', { VARIABLE: 'score', VALUE: 5 }]].concat(has(bug, 'star') ? [] : [toTop]) }]
           ] }]]),
           receive('game over', [['looks_hide']])
         ] }
@@ -153,15 +157,25 @@
     };
   }
 
+  // Hold a key until the sprite has clearly moved (up to three holds: the
+  // first frames after a project loads can be slow), and return how far.
+  async function holdUntilMoved(t, name, k, axis) {
+    var start = t.pos(name)[axis], moved = 0;
+    for (var i = 0; i < 3 && Math.abs(moved) <= 8; i++) {
+      await t.hold(k, 300);
+      moved = t.pos(name)[axis] - start;
+    }
+    return moved;
+  }
   // Hold an arrow and see which way the Ship went.
   async function steer(t, k) {
     await t.flag(300);
     t.place('Ship', 0, -140);
     t.place('Meteor', 200, 170);
     t.place('Star', -200, 170);
-    var x0 = t.pos('Ship').x;
-    await t.hold(k, 400);
-    return t.pos('Ship').x - x0;
+    var moved = await holdUntilMoved(t, 'Ship', k, 'x');
+    if (Math.abs(moved) <= 8) t.fail('I held the ' + k + ' arrow. The Ship hardly moved (' + Math.round(moved) + ' steps).');
+    return moved;
   }
 
   var meteorTasks = [
@@ -169,13 +183,13 @@
       tip: 'Hold the right arrow and watch the Ship. Then find the if block that checks for the right arrow.',
       test: async function (t) {
         var moved = await steer(t, 'right');
-        if (!(moved > 10)) t.fail('I held the right arrow. The Ship moved ' + Math.round(moved) + ' steps across. It should go right, so x goes up.');
+        if (moved < 0) t.fail('I held the right arrow. The Ship went left, to x: ' + Math.round(moved) + '. Right should make x go up.');
       } },
     { id: 'left', text: 'Holding the left arrow moves the Ship left.',
       tip: 'Hold the left arrow and watch the Ship. Which way should x change for left? Find the if block that checks for the left arrow.',
       test: async function (t) {
         var moved = await steer(t, 'left');
-        if (!(moved < -10)) t.fail('I held the left arrow. The Ship went from x: 0 to x: ' + Math.round(moved) + '. Left should make x go down.');
+        if (moved > 0) t.fail('I held the left arrow. The Ship went right, to x: ' + Math.round(moved) + '. Left should make x go down.');
       } },
     { id: 'dodge', text: 'A Meteor that reaches the bottom adds 1 to score and starts again at the top.',
       tip: 'Watch score as a Meteor falls past the Ship.',
@@ -186,7 +200,7 @@
         t.place('Star', 200, 170);
         t.setValue('score', 0);
         t.place('Meteor', 150, -160);
-        var ok = await t.until(function () { return t.value('score') === 1; }, 1500);
+        var ok = await t.until(function () { return t.value('score') === 1; }, 3000);
         if (!ok) t.fail('The Meteor fell past the bottom. score was ' + t.value('score') + '. It should be 1.');
         if (!(t.pos('Meteor').y > 100)) t.fail('score went up, but the Meteor did not go back to the top.');
       } },
@@ -198,7 +212,7 @@
         t.place('Star', 200, 170);
         t.place('Ship', 0, -140);
         t.place('Meteor', 0, -140);
-        var ok = await t.until(function () { return t.value('lives') === 2; }, 1500);
+        var ok = await t.until(function () { return t.value('lives') === 2; }, 3000);
         if (!ok) t.fail('A Meteor hit the Ship. lives was ' + t.value('lives') + '. It should go from 3 to 2.');
       } },
     { id: 'end', text: 'When lives reaches 0, the Game Over screen shows and the game stops.',
@@ -210,7 +224,7 @@
         t.setValue('lives', 1);
         t.place('Ship', 0, -140);
         t.place('Meteor', 0, -140);
-        await t.until(function () { return t.value('lives') !== 1; }, 1500);
+        await t.until(function () { return t.value('lives') !== 1; }, 3000);
         var hitAt = t.value('lives');
         t.place('Ship', -200, -140);
         var stopped = await H.stopsWithin(t, 3000);
@@ -221,7 +235,8 @@
   ];
 
   // ======================= Balloon Pop =======================
-  // Bugs: 'score' (a pop sets score to 1), 'timer' (time counts up, so it never reaches 0).
+  // Bugs: 'score' (a pop sets score to 1), 'timer' (time counts up, so it never reaches 0),
+  // 'escape' (the red Balloon never comes back from the top), 'start' (the flag sets time to 2).
   function balloonPop(bug) {
     return {
       backdrops: [['Sky', 'sky'], ['Time Up', 'timeUp']],
@@ -229,19 +244,19 @@
       variables: { score: 0, time: 20 },
       showVariables: ['score', 'time'],
       stageScripts: [s(20, 20, [flag, ['looks_switchbackdropto', { BACKDROP: 'Sky' }],
-        ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['data_setvariableto', { VARIABLE: 'time', VALUE: 20 }],
+        ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['data_setvariableto', { VARIABLE: 'time', VALUE: has(bug, 'start') ? 2 : 20 }],
         ['control_repeat_until', { CONDITION: ['operator_equals', { OPERAND1: V('time'), OPERAND2: 0 }], SUBSTACK: [
-          ['control_wait', { DURATION: 1 }], ['data_changevariableby', { VARIABLE: 'time', VALUE: bug === 'timer' ? 1 : -1 }]] }],
+          ['control_wait', { DURATION: 1 }], ['data_changevariableby', { VARIABLE: 'time', VALUE: has(bug, 'timer') ? 1 : -1 }]] }],
         ['event_broadcast', { BROADCAST_INPUT: 'time up' }], ['looks_switchbackdropto', { BACKDROP: 'Time Up' }],
         ['sound_playuntildone', { SOUND_MENU: 'win' }], ['control_stop', { STOP_OPTION: 'all' }]])],
       sprites: [
         { name: 'Balloon', costumes: [['balloon', 'balloon']], sounds: [['pop', 'pop']], x: -80, y: -170, scripts: [
           s(20, 20, [flag, ['looks_show'], toBottom, ['control_forever', { SUBSTACK: [
             ['motion_changeyby', { DY: 3 }],
-            ['control_if', { CONDITION: ['operator_gt', { OPERAND1: ['motion_yposition'], OPERAND2: 170 }], SUBSTACK: [toBottom] }]
+            ['control_if', { CONDITION: ['operator_gt', { OPERAND1: ['motion_yposition'], OPERAND2: has(bug, 'escape') ? 250 : 170 }], SUBSTACK: [toBottom] }]
           ] }]]),
           s(20, 300, [['event_whenthisspriteclicked'], ['sound_play', { SOUND_MENU: 'pop' }],
-            bug === 'score' ? ['data_setvariableto', { VARIABLE: 'score', VALUE: 1 }] : ['data_changevariableby', { VARIABLE: 'score', VALUE: 1 }],
+            has(bug, 'score') ? ['data_setvariableto', { VARIABLE: 'score', VALUE: 1 }] : ['data_changevariableby', { VARIABLE: 'score', VALUE: 1 }],
             toBottom]),
           receive('time up', [['looks_hide']])
         ] },
@@ -302,12 +317,14 @@
   ];
 
   // ======================= Ghost Maze =======================
-  // Bugs: 'ghost' (the patrol is not in a loop, so it runs once), 'door' (the Door waits for the Ghost).
+  // Bugs: 'ghost' (the patrol is not in a loop, so it runs once), 'door' (the Door waits for the Ghost),
+  // 'wall' (the right arrow's wall check pushes the wrong way, so the Hero walks through),
+  // 'newgame' (the green flag does not reset keys or bring the Key back).
   var START = { X: -195, Y: -140 };
-  function step(k, axis, by) {
+  function step(k, axis, by, wrongWay) {
     var change = axis === 'x' ? 'motion_changexby' : 'motion_changeyby', field = axis === 'x' ? 'DX' : 'DY';
     var go = {}, back = {};
-    go[field] = by; back[field] = -by;
+    go[field] = by; back[field] = wrongWay ? by : -by;
     return ['control_if', { CONDITION: key(k), SUBSTACK: [[change, go],
       ['control_if', { CONDITION: ['sensing_touchingcolor', { COLOR: WALL }], SUBSTACK: [[change, back]] }]] }];
   }
@@ -318,28 +335,28 @@
       variables: { keys: 0 },
       showVariables: ['keys'],
       stageScripts: [
-        s(20, 20, [flag, ['looks_switchbackdropto', { BACKDROP: 'Maze' }], ['data_setvariableto', { VARIABLE: 'keys', VALUE: 0 }]]),
+        s(20, 20, [flag, ['looks_switchbackdropto', { BACKDROP: 'Maze' }]].concat(has(bug, 'newgame') ? [] : [['data_setvariableto', { VARIABLE: 'keys', VALUE: 0 }]])),
         receive('escaped', [['looks_switchbackdropto', { BACKDROP: 'You Escaped' }], ['control_wait', { DURATION: 1 }], ['control_stop', { STOP_OPTION: 'all' }]])
       ],
       sprites: [
         { name: 'Hero', costumes: [['hero', 'hero']], sounds: [['zap', 'zap']], x: START.X, y: START.Y, size: 60, scripts: [
           s(20, 20, [flag, ['looks_show'], ['motion_gotoxy', START], ['control_forever', { SUBSTACK: [
-            step('right arrow', 'x', 4), step('left arrow', 'x', -4), step('up arrow', 'y', 4), step('down arrow', 'y', -4),
+            step('right arrow', 'x', 4, has(bug, 'wall')), step('left arrow', 'x', -4), step('up arrow', 'y', 4), step('down arrow', 'y', -4),
             ['control_if', { CONDITION: touching('Ghost'), SUBSTACK: [['sound_play', { SOUND_MENU: 'zap' }], ['motion_gotoxy', START]] }]
           ] }]]),
           receive('escaped', [['looks_hide']])
         ] },
         { name: 'Ghost', costumes: [['ghost', 'ghost']], x: -100, y: 0, size: 80, scripts: [
-          s(20, 20, [flag, ['looks_show'], ['motion_gotoxy', { X: -100, Y: 0 }]].concat(bug === 'ghost' ? patrol : [['control_forever', { SUBSTACK: patrol }]])),
+          s(20, 20, [flag, ['looks_show'], ['motion_gotoxy', { X: -100, Y: 0 }]].concat(has(bug, 'ghost') ? patrol : [['control_forever', { SUBSTACK: patrol }]])),
           receive('escaped', [['looks_hide']])
         ] },
         { name: 'Key', costumes: [['key', 'key']], sounds: [['coin', 'coin']], x: -190, y: 130, scripts: [
-          s(20, 20, [flag, ['looks_show'], ['motion_gotoxy', { X: -190, Y: 130 }], ['control_wait_until', { CONDITION: touching('Hero') }],
-            ['sound_play', { SOUND_MENU: 'coin' }], ['data_setvariableto', { VARIABLE: 'keys', VALUE: 1 }], ['looks_hide']])
+          s(20, 20, [flag].concat(has(bug, 'newgame') ? [] : [['looks_show']]).concat([['motion_gotoxy', { X: -190, Y: 130 }], ['control_wait_until', { CONDITION: touching('Hero') }],
+            ['sound_play', { SOUND_MENU: 'coin' }], ['data_setvariableto', { VARIABLE: 'keys', VALUE: 1 }], ['looks_hide']]))
         ] },
         { name: 'Door', costumes: [['closed', 'doorClosed'], ['open', 'doorOpen']], sounds: [['win', 'win']], x: 190, y: 120, scripts: [
           s(20, 20, [flag, ['looks_switchcostumeto', { COSTUME: 'closed' }], ['motion_gotoxy', { X: 190, Y: 120 }],
-            ['control_wait_until', { CONDITION: ['operator_and', { OPERAND1: touching(bug === 'door' ? 'Ghost' : 'Hero'), OPERAND2: ['operator_equals', { OPERAND1: V('keys'), OPERAND2: 1 }] }] }],
+            ['control_wait_until', { CONDITION: ['operator_and', { OPERAND1: touching(has(bug, 'door') ? 'Ghost' : 'Hero'), OPERAND2: ['operator_equals', { OPERAND1: V('keys'), OPERAND2: 1 }] }] }],
             ['looks_switchcostumeto', { COSTUME: 'open' }], ['sound_playuntildone', { SOUND_MENU: 'win' }], ['event_broadcast', { BROADCAST_INPUT: 'escaped' }]])
         ] }
       ]
@@ -352,12 +369,11 @@
       test: async function (t) {
         await t.flag(300);
         t.place('Hero', -195, -100);
-        var y0 = t.pos('Hero').y;
-        await t.hold('up', 300);
-        if (!(t.pos('Hero').y > y0 + 8)) t.fail('I held the up arrow. The Hero went from y: ' + Math.round(y0) + ' to y: ' + Math.round(t.pos('Hero').y) + '.');
-        var x0 = t.pos('Hero').x;
-        await t.hold('right', 200);
-        if (!(t.pos('Hero').x > x0 + 8)) t.fail('I held the right arrow. The Hero did not move right.');
+        var up = await holdUntilMoved(t, 'Hero', 'up', 'y');
+        if (!(up > 8)) t.fail('I held the up arrow. The Hero moved ' + Math.round(up) + ' steps up. It should go up.');
+        t.place('Hero', -195, -60);
+        var right = await holdUntilMoved(t, 'Hero', 'right', 'x');
+        if (!(right > 8)) t.fail('I held the right arrow. The Hero did not move right.');
       } },
     { id: 'ghost', text: 'The Ghost keeps patrolling back and forth.',
       tip: 'Click the green flag and watch the Ghost for 10 seconds. When does it stop? Which block makes blocks run again and again?',
@@ -400,7 +416,78 @@
       } }
   ];
 
-  // ======================= 6.2.6 Bug Hunts =======================
+  // Extra checks for the 6.2.6 Double Bug Hunts: replaying, and the parts the single hunts never break.
+  var meteorExtra = [
+    { id: 'replay', text: 'The green flag starts a fresh game: lives back to 3 and score back to 0.',
+      tip: 'Lose a game, then click the green flag again. How many lives do you have? Read the green flag script on the Stage: what does it set?',
+      test: async function (t) {
+        t.variable('lives'); t.variable('score');
+        t.stop();
+        t.setValue('lives', 0); t.setValue('score', 9);
+        await t.flag(300);
+        if (t.value('lives') !== 3) t.fail('The last game ended with lives at 0. After the green flag lives was ' + t.value('lives') + '. It should be 3.');
+        if (t.value('score') !== 0) t.fail('After the green flag score was ' + t.value('score') + '. It should be 0.');
+      } },
+    { id: 'star', text: 'Catching a Star adds 5 to score once, and the Star goes back to the top.',
+      tip: 'Catch a Star and watch score. Does it go up by 5, or keep going up? Read what the Star does after it changes score.',
+      test: async function (t) {
+        t.variable('score');
+        await t.flag(300);
+        t.place('Meteor', 200, 170);
+        t.place('Ship', -100, -140);
+        t.setValue('score', 0);
+        t.place('Star', -100, -140);
+        await t.until(function () { return t.value('score') > 0; }, 3000);
+        await t.wait(400);
+        if (t.value('score') !== 5) t.fail('One Star touched the Ship. score went from 0 to ' + t.value('score') + '. It should be 5.');
+        if (!(t.pos('Star').y > 100)) t.fail('score went up, but the Star stayed at ' + t.where('Star') + '. It should go back to the top.');
+      } }
+  ];
+  var balloonExtra = [
+    { id: 'start', text: 'The green flag sets time to 20, so a game lasts 20 seconds.',
+      tip: 'Click the green flag and look at the time box straight away. What number does it start at?',
+      test: async function (t) {
+        t.variable('time');
+        t.stop();
+        t.setValue('time', 0);
+        await t.flag(200);
+        if (t.value('time') !== 20) t.fail('After the green flag time was ' + t.value('time') + '. It should start at 20.');
+      } },
+    { id: 'return', text: 'A Balloon that floats off the top comes back at the bottom.',
+      tip: 'Do not click the red Balloon. Watch it float up. Does it come back? Read the if block that checks its y position: can that ever be true?',
+      test: async function (t) {
+        await t.flag(300);
+        t.place('Balloon', 0, 150);
+        var back = await t.until(function () { return t.pos('Balloon').y < 0; }, 2500);
+        if (!back) t.fail('The Balloon floated up to ' + t.where('Balloon') + ' and never came back to the bottom.');
+      } }
+  ];
+  var mazeExtra = [
+    { id: 'walls', text: 'The Hero cannot walk through a wall, whichever way it moves.',
+      tip: 'Walk the Hero into a wall with each arrow key. Which key lets it through? Read that key\'s wall check: which way does it move the Hero back?',
+      test: async function (t) {
+        await t.flag(300);
+        t.place('Hero', -180, -100);
+        await t.hold('right', 900);
+        if (t.pos('Hero').x > -145) t.fail('I held the right arrow next to a wall. The Hero went through it to ' + t.where('Hero') + '.');
+        t.place('Hero', -180, -100);
+        await t.hold('left', 900);
+        if (t.pos('Hero').x < -235) t.fail('I held the left arrow next to the outer wall. The Hero went through it.');
+      } },
+    { id: 'replay', text: 'The green flag starts a fresh game: keys back to 0 and the Key back in its place.',
+      tip: 'Escape once, then click the green flag again. Is the Key there? What is keys? Read the green flag scripts on the Stage and the Key.',
+      test: async function (t) {
+        t.variable('keys');
+        t.stop();
+        t.setValue('keys', 1);
+        t.sprite('Key').setVisible(false);
+        await t.flag(300);
+        if (t.value('keys') !== 0) t.fail('The last game ended with keys at 1. After the green flag keys was ' + t.value('keys') + '. It should be 0.');
+        if (!t.sprite('Key').visible) t.fail('After the green flag the Key was still hidden. It should show again.');
+      } }
+  ];
+
+  // ======================= 6.2.4.6 Bug Hunts =======================
   var HUNTS = [
     { id: 'hunt-meteor-steer', title: 'Bug Hunt 1: Meteor Dodge', game: meteorDodge, bug: 'steer', tasks: meteorTasks,
       brief: 'Dodge the Meteors and catch the Stars. One control is broken. Play first, then find the bug and fix it.' },
@@ -419,7 +506,22 @@
   // Support on a Bug Hunt shows how to find the bug (a tip), never the fixed blocks.
   K.solutionStarters = K.solutionStarters || {};
   HUNTS.forEach(function (h) {
-    K.add({ id: h.id, lesson: 'y6-idebug-l6', title: h.title, brief: h.brief, series: 'Bug Hunt', starter: h.game(h.bug), tasks: h.tasks });
+    K.add({ id: h.id, lesson: 'y6-bughunt-l46', title: h.title, brief: h.brief, series: 'Bug Hunt', starter: h.game(h.bug), tasks: h.tasks });
+    K.solutionStarters[h.id] = function () { return h.game(null); };
+  });
+
+  // ======================= 6.2.6 Double Bug Hunts =======================
+  // The same games with two bugs each, one of them only seen on a second game.
+  var DOUBLES = [
+    { id: 'double-meteor', title: 'Double Bug Hunt 1: Meteor Dodge', game: meteorDodge, bug: ['reset', 'star'], tasks: meteorTasks.concat(meteorExtra),
+      brief: 'Two bugs this time. Catch some Stars, then lose a game and play again. Fix one bug, then test everything again.' },
+    { id: 'double-balloon', title: 'Double Bug Hunt 2: Balloon Pop', game: balloonPop, bug: ['escape', 'start'], tasks: balloonTasks.concat(balloonExtra),
+      brief: 'Two bugs. How long should a game last? Let a Balloon float away and watch what happens.' },
+    { id: 'double-maze', title: 'Double Bug Hunt 3: Ghost Maze', game: ghostMaze, bug: ['wall', 'newgame'], tasks: mazeTasks.concat(mazeExtra),
+      brief: 'Two bugs. Try every wall. Then escape and play again from the green flag.' }
+  ];
+  DOUBLES.forEach(function (h) {
+    K.add({ id: h.id, lesson: 'y6-idebug-l6', title: h.title, brief: h.brief, series: 'Double Bug Hunt', starter: h.game(h.bug), tasks: h.tasks });
     K.solutionStarters[h.id] = function () { return h.game(null); };
   });
 
