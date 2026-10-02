@@ -71,21 +71,29 @@ DrillData.register("y6-bughunt-l46", {
         note: "One change, one test: if it works, you know which change fixed it."
       },
       { id: "k-way", category: "kinds", randomize: function () {
-          return kind(0, drillPick(["time should count down 20, 19, 18. It counts 20, 21, 22.", "The left arrow should move the Ship left. It moves right."]));
+          return kind(0, drillPick([
+            "A game has a timer called time. It should count down: 20, 19, 18. Instead it counts up: 20, 21, 22.",
+            "In a space game, the left arrow should move the Ship left. Instead the Ship moves right."]));
         } },
       { id: "k-once", category: "kinds", randomize: function () {
-          return kind(1, drillPick(["The Ghost glides there and back one time, then stands still.", "The Ball moves one step after the green flag, then stops."]));
+          return kind(1, drillPick([
+            "In a maze game, a Ghost should walk back and forth for the whole game. Instead it goes there and back one time, then stands still.",
+            "In a bouncing game, the Ball should keep moving round the stage. Instead it moves one step after the green flag, then stops."]));
         } },
       { id: "k-stuck", category: "kinds", randomize: function () {
-          return kind(2, drillPick(["Every pop should add 1, but score is always 1.", "Each click should add 1 to clicks, but clicks never goes past 1."]));
+          return kind(2, drillPick([
+            "In a balloon game, each click on a Balloon should add 1 to score. The player clicks 3 times, but score is still 1.",
+            "In a clicking game, each click on a Gem should add 1 to clicks. The player clicks 5 times, but clicks is still 1."]));
         } },
       { id: "k-never", category: "kinds", randomize: function () {
-          return kind(3, drillPick(["You have the key and you touch the Door. The Door does not open.", "lives reaches 0, but Game Over does not come."]));
+          return kind(3, drillPick([
+            "In a maze game, the Door should open when the Hero touches it while holding the key. The Hero has the key and touches the Door, but it stays shut.",
+            "In a space game, the game should end when lives reaches 0. lives reaches 0, but the game keeps going."]));
         } },
       {
         id: "f-timer", category: "fixes",
         blocks: "repeat until <(time) = (0)>\nwait (1) seconds\nchange [time v] by (1)\nend",
-        prompt: "time should count down to 0. What number should be in the change [time] block?",
+        prompt: "A game has a timer called time. It should count down to 0, but it counts up. What number should be in the change [time] block?",
         answers: ["-1"],
         keywords: [drillNumberRe(-1)],
         distractors: ["1", "0", "20"],
@@ -95,7 +103,7 @@ DrillData.register("y6-bughunt-l46", {
       {
         id: "f-forever", category: "fixes",
         blocks: "when flag clicked\nglide (1.5) secs to x: (100) y: (0)\nglide (1.5) secs to x: (-100) y: (0)",
-        prompt: "The Ghost should patrol for the whole game, but it goes there and back once. Which block should go around the two glides?",
+        prompt: "In a maze game, this Ghost should walk back and forth for the whole game. It goes there and back once, then stops. Which block should go around the two glides?",
         answers: ["forever"],
         keywords: [/forever|repeat|loop/i],
         distractors: ["if then", "wait (1) seconds", "say [Boo]"],
@@ -105,7 +113,7 @@ DrillData.register("y6-bughunt-l46", {
       {
         id: "f-set", category: "fixes",
         blocks: "when this sprite clicked\nstart sound [pop v]\nset [score v] to (1)",
-        prompt: "score is always 1. Which block should replace set [score] to (1)?",
+        prompt: "This is a Balloon's script. Each click should add 1 to score, but score is always 1. Which block should replace set [score] to (1)?",
         answers: ["change [score] by (1)"],
         keywords: [/change\b.*\b1\b/i],
         distractors: ["set [score] to (0)", "set [score] to (2)", "change [score] by (0)"],
@@ -115,7 +123,7 @@ DrillData.register("y6-bughunt-l46", {
       {
         id: "f-door", category: "fixes",
         blocks: "wait until <<touching [Ghost v] ?> and <(keys) = (1)>>\nswitch costume to [open v]",
-        prompt: "The Door should open when the Hero arrives with the key. What should Ghost be changed to?",
+        prompt: "In a maze game, this is the Door's script. The Door should open when the Hero touches it with the key. What should Ghost be changed to?",
         answers: ["Hero"],
         keywords: [/^\s*(the\s+)?hero\s*$/i],
         distractors: ["Ghost", "Key", "Door"],
@@ -126,7 +134,7 @@ DrillData.register("y6-bughunt-l46", {
           var start = drillPick([3, 4, 5]);
           return {
             blocks: "when flag clicked\nset [lives v] to (" + start + ")\nwait until <(lives) < (0)>\nswitch backdrop to [Game Over v]",
-            prompt: "Each hit takes 1 life, and lives stops at 0. Is (lives) < (0) ever true?",
+            prompt: "In a space game, the game should end when lives reaches 0. Each hit takes 1 life, and lives stops at 0. Is (lives) < (0) ever true?",
             answers: ["No"],
             keywords: [/^\s*no\b|never|false/i],
             distractors: ["Yes"],
@@ -138,7 +146,7 @@ DrillData.register("y6-bughunt-l46", {
           var step = drillPick([4, 6, 8, 10]);
           return {
             blocks: "if <key [left arrow v] pressed?> then\nchange x by (" + step + ")\nend",
-            prompt: "This should move the Ship left by " + step + ". What number should be in the change x block?",
+            prompt: "This script should move the Ship left by " + step + ". What number should be in the change x block?",
             answers: ["-" + step],
             keywords: [drillNumberRe(-step, "x")],
             distractors: [String(step), "0", "-" + (step * 2)],
