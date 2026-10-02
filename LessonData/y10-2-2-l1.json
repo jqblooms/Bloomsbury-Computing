@@ -1,0 +1,251 @@
+{
+ "id": "y10-2-2-l1",
+ "label": "2.2 L1: Errors and Parity Checks",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Packets (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y10-22l1-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Packets (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does every packet need its own header?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each packet travels on its own, so each one must say where it is going and where it fits in the order.</p></div></details><p class=\"lesson-lead\">From 2.1. Cambridge IGCSE 0478/11, June 2025, Question 4(c)(i). A customer orders food over the internet. The order is broken into packets.</p><div id=\"y10-22l1-do-now\"></div>",
+   "items": [
+    {
+     "prompt": "Which item would NOT be included in a packet’s header?",
+     "options": [
+      "destination address",
+      "originator’s address",
+      "packet number",
+      "payload"
+     ],
+     "correct": 3,
+     "explain": "The payload is the data itself, in the middle of the packet. The header holds the addresses and the packet number."
+    }
+   ]
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Out of Order (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l1-do-now-2",
+   "validatorKey": "y10_22l1_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Out of Order (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a packet number help here?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The receiver uses the packet numbers to put the packets back in the right order.</p></div></details><p class=\"lesson-lead\">From 2.1. Cambridge IGCSE 0478/11, June 2025, Question 4(c)(ii). The packets of data may need to be reordered when they arrive at the computer in the restaurant kitchen.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l1-do-now-2-a\">(a) Explain why the packets of data may need to be reordered. [2]</label><input id=\"y10-22l1-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Out of Order (2 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l1-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-22l1-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-2-l1-ext",
+   "embedContainerId": "y10-22l1-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from all of 2.1 Data Transmission. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y10-22l1-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Errors and Parity Checks",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">2.2 Methods of Error Detection</p><h2 class=\"lesson-h2\">Errors and Parity Checks</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> why bits can change on the way, and one way to check: the <strong>parity check</strong>.</li><li><strong>You already know:</strong> data is sent as bits, down a cable or through the air.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the receiver need to check the data, even when it was correct when it was sent?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Something can change the bits on the way. The receiver cannot know unless it checks.</p></div></details>"
+  },
+  {
+   "id": "concept-errors",
+   "label": "Why Errors Happen",
+   "content": "<h2 class=\"lesson-h2\">Why Errors Happen</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: the letter A is sent as 01000001. The receiver gets 01000011. Is that still A? What happened?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>No. One bit changed from 0 to 1, so the receiver gets a different letter (C).</p><p>Something on the way <strong>changed</strong> a bit. This is called <strong>interference</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\">Sent</p><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">01000001</span><p style=\"margin:10px 0 6px\">Received</p><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">010000<span style=\"color:var(--bad);text-decoration:underline\">1</span>1</span></div><div><ul class=\"lesson-facts\"><li><strong>Interference</strong> (for example electrical or magnetic) can affect data on the way.</li><li>A bit can be <strong>lost</strong> (data loss), an extra bit can be <strong>gained</strong> (data gain), or a bit can be <strong>changed</strong> (data change).</li><li>So the receiver <strong>checks</strong> the data when it arrives.</li></ul></div></div>"
+  },
+  {
+   "id": "compare",
+   "label": "Compare: Lost, Gained, Changed",
+   "content": "<h2 class=\"lesson-h2\">Compare: Lost, Gained, Changed</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The same byte was sent three times. What is different about each one that arrived?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A:</strong> only 7 bits arrived: a bit was <strong>lost</strong>.</p><p><strong>B:</strong> 9 bits arrived: a bit was <strong>gained</strong>.</p><p><strong>C:</strong> 8 bits, but one is different: a bit was <strong>changed</strong>.</p></div></details><p class=\"lesson-lead\">Sent: <span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">10110100</span></p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Arrived</th><th style=\"padding:6px 12px;text-align:left\">Bits</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>A</strong></td><td style=\"padding:6px 12px;text-align:left\"><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">1011010</span></td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>B</strong></td><td style=\"padding:6px 12px;text-align:left\"><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">101101001</span></td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>C</strong></td><td style=\"padding:6px 12px;text-align:left\"><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">10100100</span></td></tr></table>"
+  },
+  {
+   "id": "exam-occur",
+   "label": "Exam Question: How Errors Occur",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l1-exam-occur",
+   "validatorKey": "y10_22l1_exam_occur",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: How Errors Occur</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"the data goes wrong\" not enough for the mark?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Say HOW: interference can make a bit be lost, gained or changed.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2026, Question 7(c)(i). The transmitted data may contain an error.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l1-exam-occur-a\">(a) Give one way in which an error can occur during data transmission. [1]</label><input id=\"y10-22l1-exam-occur-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-occur-a\" aria-label=\"Exam Question: How Errors Occur part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l1-exam-occur-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-22l1-exam-occur-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-explain",
+   "label": "Exam Question: Explain How Errors Occur",
+   "type": "self-marked-response",
+   "containerId": "y10-22l1-exam-explain",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Explain How Errors Occur</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This question has 2 marks. What two ideas do you need?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The cause (interference), and what it does to the bits (lost, gained or changed).</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2025, Question 7(f)(i). The data for music and audio books needs to be checked for errors after being transmitted from the cloud.</p><div id=\"y10-22l1-exam-explain\"></div>",
+   "items": [
+    {
+     "id": "errors-explain",
+     "prompt": "Explain how errors may occur in the data during transmission. [2]",
+     "marks": 2,
+     "modelAnswer": "Interference (for example electrical or magnetic) can affect the data on the way; this can cause bits to be lost (data loss), extra bits to be gained (data gain), or bits to change, for example a 0 becoming a 1 (data change)."
+    }
+   ]
+  },
+  {
+   "id": "concept-parity",
+   "label": "The Parity Check",
+   "content": "<h2 class=\"lesson-h2\">The Parity Check</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: even parity means the total number of 1s must be even. The data is 1011000. Should the parity bit be 0 or 1?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>1011000 has <strong>three</strong> 1s. Three is odd.</p><p>A parity bit of <strong>1</strong> makes four 1s: even. So the byte sent is <strong>1</strong>1011000.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Before sending, the sender and receiver agree: <strong>even</strong> or <strong>odd</strong> parity.</li><li>The sender adds a <strong>parity bit</strong> (here, the first bit) to make the number of 1s even, or odd.</li><li>The receiver <strong>counts the 1s</strong>. If the count is wrong, an <strong>error</strong> is detected.</li></ul></div><div><p style=\"margin:0 0 6px\">Even parity</p><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">11011000</span><p style=\"margin:4px 0 12px;color:var(--muted)\">four 1s: even</p><p style=\"margin:0 0 6px\">Odd parity</p><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">01011000</span><p style=\"margin:4px 0 0;color:var(--muted)\">three 1s: odd</p></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Parity Lab",
+   "type": "embedded-app",
+   "appId": "parity-lab-bit",
+   "embedContainerId": "y10-22l1-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Parity Lab</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What happens to the number of 1s when interference changes ONE bit?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It goes up or down by one, so an even count becomes odd. The receiver notices.</p></div></details><p class=\"lesson-lead\">Set the parity bit, send the byte through interference, and check what arrives. Work through the tasks.</p><div id=\"y10-22l1-activity-1\"></div>"
+  },
+  {
+   "id": "exam-type",
+   "label": "Exam Question: Odd or Even?",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l1-exam-type",
+   "validatorKey": "y10_22l1_exam_type",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Odd or Even?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The values arrived correctly. Why does that let you work out the parity?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Correct data still matches its parity. So the count of 1s tells you which parity was used.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2021, Question 8(a). A parity bit is added to each 7-bit value. All the values are transmitted and received correctly. Write <strong>odd</strong> or <strong>even</strong> for each.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-22l1-exam-type-a\">(a) 01100100 [1]</label><input id=\"y10-22l1-exam-type-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-type-a\" aria-label=\"Exam Question: Odd or Even? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l1-exam-type-b\">(b) 10010001 [1]</label><input id=\"y10-22l1-exam-type-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-type-b\" aria-label=\"Exam Question: Odd or Even? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l1-exam-type-c\">(c) 00000011 [1]</label><input id=\"y10-22l1-exam-type-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-type-c\" aria-label=\"Exam Question: Odd or Even? part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l1-exam-type-d\">(d) 10110010 [1]</label><input id=\"y10-22l1-exam-type-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-type-d\" aria-label=\"Exam Question: Odd or Even? part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l1-exam-type-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-22l1-exam-type-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-bits",
+   "label": "Exam Question: Add the Parity Bit",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l1-exam-bits",
+   "validatorKey": "y10_22l1_exam_bits",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Add the Parity Bit</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">When would the parity bit be 0 instead of 1?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>When the data already has the right number of 1s (here, an odd number), so nothing needs adding.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2026, Question 4(a). An odd parity byte check is used. Give the parity bit for each byte of data.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-22l1-exam-bits-a\">(a) Data 0101110 [1]</label><input id=\"y10-22l1-exam-bits-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-bits-a\" aria-label=\"Exam Question: Add the Parity Bit part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l1-exam-bits-b\">(b) Data 1110111 [1]</label><input id=\"y10-22l1-exam-bits-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-bits-b\" aria-label=\"Exam Question: Add the Parity Bit part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l1-exam-bits-c\">(c) Data 1000100 [1]</label><input id=\"y10-22l1-exam-bits-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-bits-c\" aria-label=\"Exam Question: Add the Parity Bit part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l1-exam-bits-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-22l1-exam-bits-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Be the Receiver",
+   "type": "embedded-app",
+   "appId": "parity-lab-check",
+   "embedContainerId": "y10-22l1-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Be the Receiver</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">One byte had two bits changed, but the check said OK. Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two changes keep the number of 1s even (or odd), so the count still matches.</p></div></details><p class=\"lesson-lead\">Eight bytes arrive. Count the 1s in each one and decide what the parity check says.</p><div id=\"y10-22l1-activity-2\"></div>"
+  },
+  {
+   "id": "exam-detect",
+   "label": "Exam Question: How Even Parity Detects an Error",
+   "type": "self-marked-response",
+   "containerId": "y10-22l1-exam-detect",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: How Even Parity Detects an Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the answer say what the RECEIVER does?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Detecting happens when the data arrives: the receiver counts the 1s and checks the total is still even.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2025, Question 3(c)(iii). An even parity check is used to detect errors in data after it has been transmitted to a printer.</p><div id=\"y10-22l1-exam-detect\"></div>",
+   "items": [
+    {
+     "id": "even-detect",
+     "prompt": "Describe how an even parity check detects an error. [3]",
+     "marks": 3,
+     "modelAnswer": "Any three: the sender and receiver agree on even parity; a parity bit is added to each byte to make the number of 1s even; the receiver counts the number of 1s in each byte; if the number of 1s is odd, an error is detected."
+    }
+   ]
+  },
+  {
+   "id": "exam-miss",
+   "label": "Exam Question: When Parity Fails",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l1-exam-miss",
+   "validatorKey": "y10_22l1_exam_miss",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: When Parity Fails</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a parity check never find two changed bits?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each change moves the count by one. Two changes cancel out, so the count is even (or odd) again.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2021, Question 8(b). An error may not be detected when using a parity check.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l1-exam-miss-a\">(a) Identify why an error may not be detected. [1]</label><input id=\"y10-22l1-exam-miss-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-miss-a\" aria-label=\"Exam Question: When Parity Fails part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l1-exam-miss-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-22l1-exam-miss-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Errors and Parity Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-2-l1-parity",
+   "embedContainerId": "y10-22l1-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Errors and Parity Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new bytes every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can check any byte, you really understand parity.</p></div></details><p class=\"lesson-lead\">Why errors happen, setting the parity bit, checking a byte, and when parity fails. Your progress is saved.</p><div id=\"y10-22l1-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_22l1_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(routes?|paths?|ways?)\\b)(?=.*\\b(different|own|separate|each|another|other)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Think about how each packet travels across the internet. Do they all take the same path?"
+   }
+  ],
+  "y10_22l1_exam_occur": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "(interference|noise|electrical|magnetic|lost|loss|gain|gained|extra|chang|flip|corrupt|crosstalk|missing|dropped)",
+     "flags": "i"
+    },
+    "feedback": "Think about what can happen to the bits on the way, and what causes it."
+   }
+  ],
+  "y10_22l1_exam_type": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*odd(\\s+parity)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the 1s in 01100100."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*odd(\\s+parity)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the 1s in 10010001."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*even(\\s+parity)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the 1s in 00000011."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*even(\\s+parity)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the 1s in 10110010."
+   }
+  ],
+  "y10_22l1_exam_bits": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the 1s in 0101110 carefully. Odd parity needs an odd total."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the 1s in 1110111. Odd parity needs an odd total."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the 1s in 1000100. Odd parity needs an odd total."
+   }
+  ],
+  "y10_22l1_exam_miss": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "(\\btwo\\b|\\b2\\b|even\\s+number|\\bboth\\b|swap|transpos|more\\s+than\\s+one|\\bpair|still\\s+(even|odd|match|the\\s+same))",
+     "flags": "i"
+    },
+    "feedback": "Think about Activity 2. What happened when two bits changed?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

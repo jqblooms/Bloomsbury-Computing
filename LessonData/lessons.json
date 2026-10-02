@@ -138,6 +138,13 @@
             "y10-2-1-l2",
             "y10-2-1-l3"
           ]
+        },
+        {
+          "code": "2.2",
+          "title": "Methods of Error Detection",
+          "lessons": [
+            "y10-2-2-l1"
+          ]
         }
       ]
     },

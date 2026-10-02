@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parity Lab</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="lab-css" href="lab.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="activity" aria-live="polite"></section>
+</main>
+<script>
+// ?activity=bit (one byte with a parity bit, odd and even, sent through interference) or ?activity=check (be the
+// receiver: decide what the parity check says for eight bytes). ?embed=1 sits the lab on a lesson slide. Every file
+// is loaded with the page's bcv.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('lab-css').href = 'lab.css?v=' + encodeURIComponent(v);
+  var activity = params.get('activity') === 'check' ? 'check' : 'bit';
+  ['common.js', activity + '.js'].forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>
