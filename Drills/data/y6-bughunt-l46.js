@@ -129,7 +129,7 @@ DrillData.register("y6-bughunt-l46", {
           var n = drillRange(2, 6);
           return {
             blocks: CLICK,
-            prompt: "The player clicks the green flag, then clicks the Balloon " + n + " times. What is score now?",
+            prompt: "This Balloon script has a bug. Follow the blocks exactly as they are. The player clicks the green flag, then clicks the Balloon " + n + " times. What is score now?",
             answers: ["1"],
             keywords: [drillNumberRe(1, "score")],
             distractors: [String(n), String(n + 1), "0"],
@@ -141,7 +141,7 @@ DrillData.register("y6-bughunt-l46", {
           var s = drillRange(2, 5);
           return {
             blocks: TIMER,
-            prompt: "The player clicks the green flag. What is time after " + s + " seconds?",
+            prompt: "This timer script has a bug. Follow the blocks exactly as they are. What is time " + s + " seconds after the green flag?",
             answers: [String(20 + s)],
             keywords: [drillNumberRe(20 + s, "time")],
             distractors: [String(20 - s), "20", String(s)],
@@ -153,7 +153,7 @@ DrillData.register("y6-bughunt-l46", {
           var n = drillRange(2, 5);
           return {
             blocks: "when flag clicked\ngo to x: (0) y: (0)\n\nwhen [left arrow v] key pressed\nchange x by (10)",
-            prompt: "The player clicks the green flag, then presses the left arrow " + n + " times. What is x now?",
+            prompt: "This Ship script has a bug. Follow the blocks exactly as they are. The player clicks the green flag, then presses the left arrow " + n + " times. What is x now?",
             answers: [String(10 * n)],
             keywords: [drillNumberRe(10 * n, "x")],
             distractors: [String(-10 * n), "10", "0"],
@@ -163,7 +163,7 @@ DrillData.register("y6-bughunt-l46", {
         } },
       {
         id: "p-ghost", category: "predict", blocks: GHOST,
-        prompt: "The player clicks the green flag. How many times does the Ghost glide to x: 100?",
+        prompt: "This Ghost script has a bug. Follow the blocks exactly as they are. After the green flag, how many times does the Ghost glide to x: 100?",
         answers: ["1"],
         keywords: [drillNumberRe(1)],
         distractors: ["2", "0", "10"],
