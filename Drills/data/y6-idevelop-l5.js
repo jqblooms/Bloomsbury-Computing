@@ -10,44 +10,64 @@ DrillData.register("y6-idevelop-l5", {
   ],
   cards: [
     {
-      id: "pl-variable", category: "plan",
-      prompt: "In a game plan, score and lives go in which section?",
-      answers: ["Variables"],
-      keywords: [/^\s*(the\s+)?variables?(\s+section)?\s*$/i],
-      distractors: ["Sprites", "Backdrops", "Controls"],
-      note: "Both store a number that changes while the game runs."
+      id: "pv-lives", category: "plan",
+      blocks: "forever\nif <touching [Meteor v] ?> then\n\nend\nend",
+      prompt: "In a dodge game, the Ship loses a life when a Meteor hits it. Which block goes inside the if?",
+      answers: ["change [lives] by (-1)"],
+      keywords: [/change\b.*lives.*[-−]\s*1\b/i],
+      distractors: ["change [lives] by (1)", "set [lives] to (3)", "say [lives]"],
+      working: ["Losing a life makes lives smaller.", "set replaces the value. change adds to it."],
+      note: "change [lives] by (-1) takes one life away."
     },
     {
-      id: "pl-sprite", category: "plan",
-      prompt: "In a game plan, the Ship and the Meteor go in which section?",
-      answers: ["Sprites"],
-      keywords: [/^\s*(the\s+)?sprites?(\s+section)?\s*$/i],
-      distractors: ["Variables", "Controls", "Levels"],
-      note: "Characters and objects on the stage are sprites."
+      id: "ps-ship", category: "plan",
+      blocks: "when [right arrow v] key pressed\nchange x by (10)",
+      prompt: "A dodge game has a Ship, a Meteor and a Star. Which sprite should get this script?",
+      answers: ["Ship"],
+      keywords: [/^\s*(the\s+)?ship\s*$/i],
+      distractors: ["Meteor", "Star", "Stage"],
+      working: ["The player moves one sprite with the arrow keys.", "Meteors and Stars fall by themselves."],
+      note: "The player steers the Ship, so the Ship gets the arrow key scripts."
     },
     {
-      id: "pl-controls", category: "plan",
-      prompt: "In a game plan, \"left and right arrow keys\" goes in which section?",
-      answers: ["Controls"],
-      keywords: [/^\s*(the\s+)?controls?(\s+section)?\s*$/i],
-      distractors: ["Sprites", "Variables", "Backdrops"],
-      note: "Controls say how the player moves things."
+      id: "pc-mouse", category: "plan",
+      blocks: "when flag clicked\nforever\n\nend",
+      prompt: "In a catch game, the Bowl should follow the mouse left and right. Which block goes inside forever?",
+      answers: ["set x to (mouse x)"],
+      keywords: [/set\s*x\s*to\s*\(?\s*mouse\s*x/i],
+      distractors: ["set y to (mouse x)", "change x by (10)", "go to x: (0) y: (0)"],
+      working: ["Left and right is x.", "Which reporter tells you where the mouse is, left to right?"],
+      note: "set x to (mouse x) inside forever keeps the Bowl under the mouse."
     },
     {
-      id: "pl-ending", category: "plan",
-      prompt: "Which part of a game plan says what happens when lives reaches 0?",
-      answers: ["How you win or lose"],
-      keywords: [/\bwin|\blos[et]|\bend(s|ing)?\b|game\s*over/i],
-      distractors: ["Sprites", "Controls", "Costumes"],
-      note: "The ending says how the player wins and how they lose."
+      id: "pe-hits", category: "plan",
+      randomize: function () {
+        var L = drillPick([3, 4, 5]);
+        return {
+          blocks: "when flag clicked\nset [lives v] to (" + L + ")\nwait until <(lives) = (0)>\nswitch backdrop to [Game Over v]\n\nwhen I receive [hit v]\nchange [lives v] by (-1)",
+          prompt: "Each hit takes 1 life. How many hits until Game Over?",
+          answers: [String(L)],
+          keywords: [drillNumberRe(L)],
+          distractors: drillWrongNumbers(L, [L - 1, L + 1, 1, 0], 3),
+          working: ["Read what lives is set to at the start.", "Each hit takes one away. When does lives reach 0?"],
+          note: "lives starts at " + L + ", so " + L + " hits bring it to 0."
+        };
+      }
     },
     {
-      id: "pl-why", category: "plan",
-      prompt: "Why write a plan before you start building a game?",
-      answers: ["So you know what to build and can build it one piece at a time"],
-      keywords: [[["know", "decide", "remember", "clear", "organised", "organized", "list", "follow", "guide", "idea", "ideas", "piece", "pieces", "step", "steps", "order"], ["build", "building", "make", "making", "code", "coding", "program", "create"]]],
-      distractors: ["So the game runs faster", "So Scratch saves it", "So the sprites are bigger"],
-      note: "Each line of the plan becomes a sprite or a script, so nothing is guessed."
+      id: "pw-score", category: "plan",
+      randomize: function () {
+        var n = drillRange(2, 4);
+        return {
+          blocks: "when flag clicked\nset [score v] to (0)\nforever\nif <touching [Ship v] ?> then\nchange [score v] by (5)\ngo to (random position v)\nend\nend",
+          prompt: "This is the Star. It touches the Ship " + n + " times. What is score?",
+          answers: [String(5 * n)],
+          keywords: [drillNumberRe(5 * n, "score")],
+          distractors: drillWrongNumbers(5 * n, [n, 5, 5 * n + 5, 5 * n - 5], 3),
+          working: ["score starts at 0.", "Each touch adds 5, then the Star moves away."],
+          note: n + " touches of 5 points: " + (5 * n) + "."
+        };
+      }
     },
     {
       id: "pa-loop", category: "parts",
@@ -55,15 +75,18 @@ DrillData.register("y6-idevelop-l5", {
       answers: ["forever"],
       keywords: [/^\s*(a\s+|the\s+)?forever(\s+loop)?\s*$/i],
       distractors: ["repeat (1)", "when green flag clicked", "say [Hello!]"],
+      working: ["The game should keep checking until it ends.", "Which loop has no number in it?"],
       note: "Moving enemies and touching checks sit inside forever loops."
     },
     {
-      id: "pa-reset", category: "parts",
-      prompt: "What should happen to score when the green flag is clicked?",
-      answers: ["It is set to 0"],
-      keywords: [/\b0\b|\bzero\b|\breset/i],
-      distractors: ["It goes up by 1", "Nothing", "It is hidden"],
-      note: "set [score] to (0) at the green flag starts every game fresh."
+      id: "pr-reset", category: "parts",
+      blocks: "when flag clicked\ngo to x: (0) y: (-140)",
+      prompt: "Which block should go under go to x: (0) y: (-140), so every game starts with score 0?",
+      answers: ["set [score] to (0)"],
+      keywords: [/^\s*set\b(?!.*\bchange\b).*\b0\b/i],
+      distractors: ["change [score] by (0)", "change [score] by (-1)", "show variable [score]"],
+      working: ["change adds to the old score. That keeps the last game's points.", "Which block gives score a new value?"],
+      note: "set [score] to (0) at the green flag starts every game at 0."
     },
     {
       id: "pa-decide", category: "parts",
@@ -71,6 +94,7 @@ DrillData.register("y6-idevelop-l5", {
       answers: ["if then"],
       keywords: [/\bif\b/i],
       distractors: ["forever", "set [score] to (0)", "next costume"],
+      working: ["A decision asks a question: is the Ship touching a Meteor?", "Look in the Control blocks for one with a space for a condition."],
       note: "An if block runs its blocks only when its condition is true."
     },
     {
@@ -78,7 +102,8 @@ DrillData.register("y6-idevelop-l5", {
       prompt: "Name a hat block that lets the player move a sprite with the keyboard.",
       answers: ["when [right arrow] key pressed"],
       keywords: [/key\b.*\bpressed/i],
-      distractors: ["when green flag clicked", "when I receive [level up]", "forever"],
+      distractors: ["when green flag clicked", "when I receive [level up]", "when backdrop switches to [Level 2]"],
+      working: ["A hat block starts a script.", "Look in the Events blocks for one about the keyboard."],
       note: "when [key] key pressed runs a script each time that key is pressed."
     },
     {
@@ -87,31 +112,38 @@ DrillData.register("y6-idevelop-l5", {
       answers: ["stop [all]"],
       keywords: [/stop\s*\[?\s*all/i],
       distractors: ["stop [this script]", "hide", "wait (1) seconds"],
+      working: ["Look in the Control blocks.", "It stops every script, not just one."],
       note: "stop [all] stops every script, so the game is over."
     },
     {
-      id: "b-when", category: "build",
-      prompt: "You build a game one small piece at a time. When should you test it?",
-      answers: ["After every small change"],
-      keywords: [/after\s+(each|every)|(each|every)\s+(time|change|piece|step|bit|block)|as\s+you\s+go|straight\s+away/i],
-      distractors: ["Only when the whole game is finished", "Never", "Once at the start"],
-      note: "Test each piece before adding the next."
+      id: "bt-ten", category: "build",
+      blocks: "when flag clicked\nset [clicks v] to (0)\n\nwhen this sprite clicked\nchange [clicks v] by (1)\nif <(clicks) = (10)> then\nsay [You win!]\nend",
+      prompt: "You test this by clicking the sprite 10 times. What should it say?",
+      answers: ["You win!"],
+      keywords: [/you\s+win/i],
+      distractors: ["Nothing", "10", "clicks"],
+      working: ["Each click adds 1 to clicks.", "After 10 clicks, is (clicks) = (10) true?"],
+      note: "On the 10th click, clicks is 10, so the sprite says You win!"
     },
     {
-      id: "b-where", category: "build",
-      prompt: "You added 3 blocks and the game stopped working. Where is the bug most likely to be?",
-      answers: ["In the 3 blocks you just added"],
-      keywords: [/\bjust\b|\bnew\b|\badded\b|\blast\b|\b3\b|\bthree\b/i],
-      distractors: ["In the backdrop", "In the costumes", "Anywhere in the game"],
-      note: "It worked before those blocks, so start looking there."
+      id: "bt-nine", category: "build",
+      blocks: "when flag clicked\nset [clicks v] to (0)\n\nwhen this sprite clicked\nchange [clicks v] by (1)\nif <(clicks) = (10)> then\nsay [You win!]\nend",
+      prompt: "You test it again with 9 clicks. What should it say?",
+      answers: ["Nothing"],
+      keywords: [/nothing|^\s*no\b/i],
+      distractors: ["You win!", "9", "Keep going!"],
+      working: ["After 9 clicks, what is clicks?", "If the condition is false, the blocks inside the if are skipped."],
+      note: "9 is not 10, so nothing is said. Testing 9 checks the win does not come too early."
     },
     {
-      id: "b-first", category: "build",
-      prompt: "Controls, sprites or the ending: which do you build first?",
-      answers: ["Sprites"],
-      keywords: [/^\s*(the\s+)?sprites?\s*$/i],
-      distractors: ["Controls", "The ending", "It does not matter"],
-      note: "The controls need a sprite to move, and the ending needs the game to work."
+      id: "bt-start", category: "build",
+      blocks: "when flag clicked\nset y to (-140)\nset [score v] to (0)\nshow",
+      prompt: "You added this script. Now the Ship starts at the bottom of the stage. Which block did that?",
+      answers: ["set y to (-140)"],
+      keywords: [/[-−]\s*140/],
+      distractors: ["set [score] to (0)", "show", "when flag clicked"],
+      working: ["The bottom of the stage has a negative y.", "Which block changes where the sprite is?"],
+      note: "set y to (-140) puts the Ship near the bottom of the stage."
     },
     {
       id: "b-star", category: "build",

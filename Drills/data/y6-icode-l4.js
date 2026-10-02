@@ -11,19 +11,22 @@ DrillData.register("y6-icode-l4", {
   ],
   cards: [
     {
-      id: "co-what", category: "costumes",
-      prompt: "What is a costume in Scratch?",
-      answers: ["A different look for a sprite"],
-      keywords: [[["look", "looks", "picture", "pictures", "image", "images", "appearance", "outfit", "drawing"]]],
-      distractors: ["A named place that stores a value", "A message sent to every sprite", "The background of the stage"],
-      note: "A sprite can have several costumes and switch between them."
+      id: "co-time", category: "costumes",
+      blocks: "when flag clicked\nswitch costume to [gold v]\nwait (1) seconds\nswitch costume to [blue v]",
+      prompt: "Which costume is the sprite wearing 3 seconds after the green flag?",
+      answers: ["blue"],
+      keywords: [/^\s*(the\s+)?blue(\s+costume)?\s*$/i],
+      distractors: ["gold", "both", "none"],
+      working: ["Run the script from the top. What happens after 1 second?", "Which switch costume block runs last?"],
+      note: "It wears gold for 1 second, then blue for the rest of the time."
     },
     {
       id: "co-switch", category: "costumes",
       prompt: "Which block puts a sprite into one exact costume, such as gold?",
       answers: ["switch costume to [gold]"],
       keywords: [/switch\s+costume/i],
-      distractors: ["next costume", "show", "set size to (100) %"],
+      distractors: ["next costume", "switch backdrop to [gold]", "set size to (100) %"],
+      working: ["You want one exact costume, chosen by its name.", "next costume just moves on to the following one."],
       note: "switch costume to picks one costume by name. next costume moves along the list."
     },
     {
@@ -49,6 +52,7 @@ DrillData.register("y6-icode-l4", {
       answers: ["Switches to costume 1"],
       keywords: [/\b1\b|\bfirst\b|\bone\b|start/i],
       distractors: ["Stays on costume 3", "Switches to costume 4", "Hides the sprite"],
+      working: ["There is no costume 4.", "After the last costume, Scratch goes back to the start."],
       note: "After the last costume, next costume goes back to the first."
     },
     {
@@ -56,7 +60,8 @@ DrillData.register("y6-icode-l4", {
       prompt: "A walk animation is far too fast to see. Which block do you add inside the loop?",
       answers: ["wait (0.2) seconds"],
       keywords: [/\bwait\b/i],
-      distractors: ["next costume", "hide", "move (10) steps"],
+      distractors: ["next costume", "turn right (15) degrees", "move (10) steps"],
+      working: ["The loop runs very fast. It needs a short pause each time.", "Look in the Control blocks for a pause."],
       note: "A short wait slows each costume change down to a walking pace."
     },
     {
@@ -64,7 +69,8 @@ DrillData.register("y6-icode-l4", {
       prompt: "A walking sprite turns upside down when it bounces off the edge. Which block fixes it?",
       answers: ["set rotation style [left-right]"],
       keywords: [/rotation\s*style|left\s*[-\s]?\s*right/i],
-      distractors: ["point in direction (90)", "turn right (180) degrees", "next costume"],
+      distractors: ["point in direction (90)", "turn right (180) degrees", "point towards [mouse-pointer]"],
+      working: ["Bouncing turns the sprite to face the other way.", "A Motion block can make it only face left or right."],
       note: "Left-right rotation flips the sprite instead of turning it over."
     },
     {
@@ -73,6 +79,7 @@ DrillData.register("y6-icode-l4", {
       answers: ["forever"],
       keywords: [/^\s*(a\s+|the\s+)?forever(\s+loop)?\s*$/i],
       distractors: ["repeat (2)", "if then", "wait until"],
+      working: ["The animation should never stop by itself.", "Which loop has no number in it?"],
       note: "forever keeps switching costumes until the game stops."
     },
     {
@@ -98,6 +105,7 @@ DrillData.register("y6-icode-l4", {
       answers: ["broadcast [level up]"],
       keywords: [/broadcast/i],
       distractors: ["when I receive [level up]", "say [level up]", "switch backdrop to [Level 2]"],
+      working: ["You want the block that sends, not the one that waits.", "It is in the Events blocks."],
       note: "broadcast sends the message. when I receive waits for it."
     },
     {
@@ -106,15 +114,18 @@ DrillData.register("y6-icode-l4", {
       answers: ["when I receive [level up]"],
       keywords: [/receive/i],
       distractors: ["broadcast [level up]", "when green flag clicked", "when this sprite clicked"],
+      working: ["You want the hat block that waits for a message.", "It is in the Events blocks, next to broadcast."],
       note: "Every when I receive script for that message starts together."
     },
     {
-      id: "m-who", category: "messages",
-      prompt: "Which scripts start when [level up] is broadcast?",
-      answers: ["Every when I receive [level up] script, in any sprite"],
-      keywords: [/\b(every|all|each|any)\b/i],
-      distractors: ["Only scripts in the sprite that sent it", "Only the stage scripts", "None until the green flag"],
-      note: "A broadcast reaches every sprite and the stage."
+      id: "m-start", category: "messages",
+      blocks: "when I receive [level up v]\nswitch costume to [happy v]",
+      prompt: "Which block, in another sprite, makes this script start?",
+      answers: ["broadcast [level up]"],
+      keywords: [/broadcast/i],
+      distractors: ["when I receive [level up]", "say [level up]", "switch costume to [level up]"],
+      working: ["This hat block waits for a message called level up.", "Look in the Events blocks for one that sends a message."],
+      note: "broadcast [level up] starts every when I receive [level up] script."
     },
     {
       id: "lv-backdrop", category: "levels",
@@ -122,6 +133,7 @@ DrillData.register("y6-icode-l4", {
       answers: ["switch backdrop to [Level 2]"],
       keywords: [/switch\s+backdrop|backdrop\s+to|next\s+backdrop/i],
       distractors: ["switch costume to [Level 2]", "next costume", "broadcast [Level 2]"],
+      working: ["The stage's pictures are backdrops. A sprite's pictures are costumes.", "Look in the Looks blocks for the stage."],
       note: "Backdrops belong to the stage. Costumes belong to sprites."
     },
     {
@@ -155,6 +167,7 @@ DrillData.register("y6-icode-l4", {
       answers: ["Level 1"],
       keywords: [/level\s*1\b|level\s+one|\bfirst\b/i],
       distractors: ["Level 2", "The last backdrop", "No backdrop"],
+      working: ["Every new game should start at the beginning.", "Which level comes first?"],
       note: "Reset everything at the green flag: backdrop, score and level."
     }
   ]

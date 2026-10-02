@@ -21,7 +21,7 @@ DrillData.register("y6-bughunt-l46-ext", {
           do {
             step = drillPick([5, 10, 15, 20]); n = drillRange(2, 6); x0 = drillRange(-50, 50, 10); dir = drillPick([1, -1]);
             ans = x0 + dir * n * step;
-          } while (ans === 70);
+          } while (ans === 70 || [x0, dir * step].indexOf(ans) !== -1);
           var key = dir > 0 ? "right arrow" : "left arrow";
           return {
             blocks: "when [" + key + " v] key pressed\nchange x by (" + (dir * step) + ")",

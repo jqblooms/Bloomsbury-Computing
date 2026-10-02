@@ -20,6 +20,7 @@ DrillData.register("y6-icontrol-l1", {
       answers: ["Click the green flag"],
       keywords: [/green\s*flag/i, /\bflag\b/i],
       distractors: ["Click the sprite", "Press the space bar", "Move the mouse"],
+      working: ["Read the hat block at the top of the script.", "It is the button you press to start a Scratch game."],
       note: "The green flag starts the game, so it runs every when flag clicked script."
     },
     {
@@ -29,6 +30,7 @@ DrillData.register("y6-icontrol-l1", {
       answers: ["Press the space bar"],
       keywords: [/\bspace\b/i],
       distractors: ["Click the green flag", "Click the sprite", "Press the up arrow"],
+      working: ["Read the hat block at the top of the script.", "Which key is named in the hat block?"],
       note: "when [space] key pressed waits for that one key."
     },
     {
@@ -38,15 +40,18 @@ DrillData.register("y6-icontrol-l1", {
       answers: ["Click the sprite"],
       keywords: [[["click", "clicks", "clicking", "clicked", "press", "tap"], ["sprite", "it"]]],
       distractors: ["Click the green flag", "Press any key", "Move the mouse over the stage"],
+      working: ["Read the hat block at the top of the script.", "The hat block names what the player clicks."],
       note: "when this sprite clicked runs when the mouse clicks on that sprite."
     },
     {
-      id: "ev-name", category: "events",
-      prompt: "In Scratch, a key press or mouse click that starts a script is called an what?",
-      answers: ["Event"],
-      keywords: [/^\s*(an?\s+)?events?\s*$/i],
-      distractors: ["Loop", "Variable", "Costume", "Sprite"],
-      note: "The yellow Events blocks wait for these inputs."
+      id: "ev-click", category: "events",
+      blocks: "when this sprite clicked\nsay [Ouch!] for (2) seconds",
+      prompt: "What must the player do to make the sprite say Ouch!?",
+      answers: ["Click the sprite"],
+      keywords: [/sprite/i],
+      distractors: ["Click the green flag", "Press the space key", "Press any key"],
+      working: ["Read the hat block at the top of the script.", "The hat block waits for one thing to happen, then runs the blocks under it."],
+      note: "when this sprite clicked waits for a click on that sprite."
     },
     {
       id: "ev-order", category: "events",
@@ -54,7 +59,8 @@ DrillData.register("y6-icontrol-l1", {
       prompt: "Which block runs straight after the go to block?",
       answers: ["say [Hi!] for (2) seconds"],
       keywords: [/\bsay\b/i],
-      distractors: ["change x by (50)", "when flag clicked", "go to x: (0) y: (0)"],
+      distractors: ["change x by (50)", "go to x: (0) y: (0)", "glide (2) secs to x: (50) y: (0)"],
+      working: ["Scripts run from top to bottom.", "Find the go to block. Which block is right under it?"],
       note: "Blocks run in order from the top, one after another."
     },
     {
@@ -108,6 +114,7 @@ DrillData.register("y6-icontrol-l1", {
       answers: ["It gets smaller"],
       keywords: [/^(?!.*\b(bigger|larger|more|increases?|higher|same)\b).*\b(smaller|less|lower|decreases?|goes\s+down|drops?)\b/i],
       distractors: ["It gets bigger", "It stays the same", "It becomes 240"],
+      working: ["y is up and down. Up the stage, y gets bigger.", "Down is the opposite of up."],
       note: "Up the stage y gets bigger, down the stage y gets smaller."
     },
     {
@@ -116,6 +123,7 @@ DrillData.register("y6-icontrol-l1", {
       answers: ["go to x: y:"],
       keywords: [/\bgo\s*to\b/i],
       distractors: ["glide (1) secs to x: y:", "change x by (10)", "move (10) steps"],
+      working: ["This block moves the sprite at once, with no steps in between.", "It has boxes for x and y, and no seconds."],
       note: "go to x: y: jumps there at once. glide travels there over time."
     },
     {
@@ -123,7 +131,8 @@ DrillData.register("y6-icontrol-l1", {
       prompt: "Which block moves a sprite smoothly to an x and y, taking a number of seconds?",
       answers: ["glide (1) secs to x: y:"],
       keywords: [/\bglide/i],
-      distractors: ["go to x: y:", "change x by (10)", "move (10) steps"],
+      distractors: ["go to x: y:", "change x by (10)", "go to (random position)"],
+      working: ["This block takes some time to arrive.", "Look for a block with seconds, x and y."],
       note: "The number in the glide block is how many seconds the journey takes."
     },
     {
@@ -132,6 +141,7 @@ DrillData.register("y6-icontrol-l1", {
       answers: ["change x by (-10)"],
       keywords: [/change\s*x\s*(by)?\s*\(?\s*[-−]\s*10\b/i],
       distractors: ["change x by (10)", "change y by (-10)", "set x to (-10)"],
+      working: ["Left and right is x. Left makes x smaller.", "Smaller means a negative number."],
       note: "Left makes x smaller, so the number is negative."
     },
     {
@@ -140,13 +150,15 @@ DrillData.register("y6-icontrol-l1", {
       answers: ["change y by (10)"],
       keywords: [/change\s*y\s*(by)?\s*\(?\s*\+?\s*10\b/i],
       distractors: ["change y by (-10)", "change x by (10)", "set y to (10)"],
+      working: ["Up and down is y. Up makes y bigger.", "Bigger means a positive number."],
       note: "Up makes y bigger, so change y by a positive number."
     },
     {
       id: "p-changes", category: "predict",
       randomize: function () {
-        var x0 = drillRange(-100, 100, 10), a = drillPick([20, 30, 40, 50, 60, 80]), b = -drillPick([10, 20, 30, 40]);
-        var ans = x0 + a + b;
+        var x0, a, b, ans;
+        do { x0 = drillRange(-100, 100, 10); a = drillPick([20, 30, 40, 50, 60, 80]); b = -drillPick([10, 20, 30, 40]); ans = x0 + a + b; }
+        while ([x0, a, b, x0 + a].indexOf(ans) !== -1);
         return {
           blocks: "when flag clicked\ngo to x: (" + x0 + ") y: (0)\nchange x by (" + a + ")\nchange x by (" + b + ")",
           prompt: "What is x when this script ends?",
@@ -161,8 +173,9 @@ DrillData.register("y6-icontrol-l1", {
     {
       id: "p-y", category: "predict",
       randomize: function () {
-        var y0 = drillRange(-60, 60, 20), a = drillPick([30, 40, 50, 70]), dx = drillPick([25, 35, 45]), b = -drillPick([10, 20, 30]);
-        var ans = y0 + a + b;
+        var y0, a, dx, b, ans;
+        do { y0 = drillRange(-60, 60, 20); a = drillPick([30, 40, 50, 70]); dx = drillPick([25, 35, 45]); b = -drillPick([10, 20, 30]); ans = y0 + a + b; }
+        while ([y0, a, b, y0 + a].indexOf(ans) !== -1);
         return {
           blocks: "when flag clicked\ngo to x: (0) y: (" + y0 + ")\nchange y by (" + a + ")\nchange x by (" + dx + ")\nchange y by (" + b + ")",
           prompt: "What is y when this script ends?",
@@ -177,8 +190,9 @@ DrillData.register("y6-icontrol-l1", {
     {
       id: "p-keys", category: "predict",
       randomize: function () {
-        var step = drillPick([5, 10, 15, 20]), n = drillRange(2, 6), x0 = drillRange(-50, 50, 10);
-        var ans = x0 + n * step;
+        var step, n, x0, ans;
+        do { step = drillPick([5, 10, 15, 20]); n = drillRange(2, 6); x0 = drillRange(-50, 50, 10); ans = x0 + n * step; }
+        while ([x0, step, x0 + step].indexOf(ans) !== -1);
         return {
           blocks: "when [right arrow v] key pressed\nchange x by (" + step + ")",
           prompt: "The sprite is at x: " + x0 + ". The player presses the right arrow " + n + " times. What is x now?",
@@ -193,8 +207,9 @@ DrillData.register("y6-icontrol-l1", {
     {
       id: "p-glide", category: "predict",
       randomize: function () {
-        var gx = drillRange(-150, 150, 50), gy = drillRange(-100, 100, 50), cx = drillPick([-40, -20, 20, 40]);
-        var ans = gx + cx;
+        var gx, gy, cx, ans;
+        do { gx = drillRange(-150, 150, 50); gy = drillRange(-100, 100, 50); cx = drillPick([-40, -20, 20, 40]); ans = gx + cx; }
+        while ([gx, cx].indexOf(ans) !== -1);
         return {
           blocks: "when flag clicked\ngo to x: (0) y: (0)\nglide (2) secs to x: (" + gx + ") y: (" + gy + ")\nchange x by (" + cx + ")",
           prompt: "What is x when this script ends?",

@@ -18,6 +18,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["Press the space bar"],
       keywords: [/\bspace\b/i],
       distractors: ["Click the green flag", "Click the sprite", "Press the up arrow"],
+      working: ["Read the hat block at the top of the script.", "Which key is named in the hat block?"],
       note: "when [space] key pressed waits for that one key."
     },
     {
@@ -26,6 +27,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["change x by (-10)"],
       keywords: [/change\s*x\s*(by)?\s*\(?\s*[-−]\s*10\b/i],
       distractors: ["change x by (10)", "change y by (-10)", "set x to (-10)"],
+      working: ["Left and right is x. Left makes x smaller.", "Smaller means a negative number."],
       note: "Left makes x smaller, so the number is negative."
     },
     {
@@ -49,8 +51,10 @@ DrillData.register("y6-recap-l45", {
     {
       id: "r-keys", category: "control",
       randomize: function () {
-        var step = drillPick([5, 10, 15, 20]), n = drillRange(2, 6), x0 = drillRange(-50, 50, 10), dir = drillPick([1, -1]);
-        var key = dir > 0 ? "right arrow" : "left arrow", ans = x0 + dir * n * step;
+        var step, n, x0, dir, ans;
+        do { step = drillPick([5, 10, 15, 20]); n = drillRange(2, 6); x0 = drillRange(-50, 50, 10); dir = drillPick([1, -1]); ans = x0 + dir * n * step; }
+        while ([x0, dir * step, x0 + dir * step].indexOf(ans) !== -1);
+        var key = dir > 0 ? "right arrow" : "left arrow";
         return {
           blocks: "when [" + key + " v] key pressed\nchange x by (" + (dir * step) + ")",
           prompt: "The sprite is at x: " + x0 + ". The player presses the " + key + " " + n + " times. What is x now?",
@@ -68,6 +72,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["forever"],
       keywords: [/^\s*(a\s+|the\s+)?forever(\s+loop)?\s*$/i],
       distractors: ["repeat (10)", "if then", "wait (1) seconds"],
+      working: ["This loop has no number in it.", "It never stops by itself."],
       note: "forever never finishes, so nothing can be snapped underneath it."
     },
     {
@@ -92,7 +97,8 @@ DrillData.register("y6-recap-l45", {
       prompt: "The Apple is not touching the Bowl. What happens to score?",
       answers: ["Nothing: it stays the same"],
       keywords: [/nothing|same|no\s+change|(doesn.?t|does\s+not|won.?t|will\s+not)\s+change|stays|unchanged/i],
-      distractors: ["It goes up by 1", "It goes down by 1", "It resets to 0"],
+      distractors: ["It goes up by 1", "It goes down by 1", "It goes up by 1 every second"],
+      working: ["The condition is false here.", "When an if condition is false, the blocks inside it are skipped."],
       note: "The condition is false, so the if block skips everything inside it."
     },
     {
@@ -101,6 +107,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["mouse x"],
       keywords: [/mouse\s*x/i],
       distractors: ["mouse y", "x position", "direction"],
+      working: ["Left and right is x.", "Look in the Sensing blocks for a reporter about the mouse."],
       note: "set x to (mouse x) inside forever makes a paddle follow the mouse."
     },
     {
@@ -109,6 +116,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["set [score] to (0)"],
       keywords: [/^\s*set\b(?!.*\bchange\b).*\b0\b/i],
       distractors: ["change [score] by (0)", "change [score] by (-1)", "show variable [score]"],
+      working: ["set gives a variable a new value. change adds to it.", "Which one makes score exactly 0?"],
       note: "set gives the variable a new value. change adds to the value it already has."
     },
     {
@@ -117,6 +125,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["change [score] by (1)"],
       keywords: [/^\s*change\s*\[?\s*score\s*(v\s*)?\]?\s*by\s*\(?\s*\+?\s*1\s*\)?\s*$/i],
       distractors: ["set [score] to (1)", "change [score] by (-1)", "say (score)"],
+      working: ["change adds to a variable. set replaces it.", "You want to add 1 to the score that is already there."],
       note: "change [score] by (1) adds 1. set [score] to (1) would replace the score with 1."
     },
     {
@@ -160,7 +169,7 @@ DrillData.register("y6-recap-l45", {
           prompt: "clicks is " + n + ". What does the sprite say?",
           answers: [ans],
           keywords: [n < 10 ? /^\W*keep\s+going\W*$/i : /^\W*you\s+win\W*$/i],
-          distractors: [n < 10 ? "You win!" : "Keep going!", "Nothing"],
+          distractors: [n < 10 ? "You win!" : "Keep going!", "It says nothing"],
           working: ["Is " + n + " less than 10? True runs the top part, false runs the else part.", "Work out the condition first.", "True: top part. False: else part."],
           note: n + (n < 10 ? " is" : " is not") + " less than 10, so the " + (n < 10 ? "top" : "else") + " part runs."
         };
@@ -171,7 +180,8 @@ DrillData.register("y6-recap-l45", {
       prompt: "A walk animation is far too fast to see. Which block do you add inside the loop?",
       answers: ["wait (0.2) seconds"],
       keywords: [/\bwait\b/i],
-      distractors: ["next costume", "hide", "move (10) steps"],
+      distractors: ["next costume", "turn right (15) degrees", "move (10) steps"],
+      working: ["The loop runs very fast. It needs a short pause each time.", "Look in the Control blocks for a pause."],
       note: "A short wait slows each costume change down to a walking pace."
     },
     {
@@ -180,6 +190,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["broadcast [level up]"],
       keywords: [/broadcast/i],
       distractors: ["when I receive [level up]", "say [level up]", "switch backdrop to [Level 2]"],
+      working: ["You want the block that sends, not the one that waits.", "It is in the Events blocks."],
       note: "broadcast sends the message. when I receive waits for it."
     },
     {
@@ -188,6 +199,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["when I receive [level up]"],
       keywords: [/receive/i],
       distractors: ["broadcast [level up]", "when green flag clicked", "when this sprite clicked"],
+      working: ["You want the hat block that waits for a message.", "It is in the Events blocks, next to broadcast."],
       note: "Every when I receive script for that message starts together."
     },
     {
@@ -196,6 +208,7 @@ DrillData.register("y6-recap-l45", {
       answers: ["switch backdrop to [Level 2]"],
       keywords: [/switch\s+backdrop|backdrop\s+to|next\s+backdrop/i],
       distractors: ["switch costume to [Level 2]", "next costume", "broadcast [Level 2]"],
+      working: ["The stage's pictures are backdrops. A sprite's pictures are costumes.", "Look in the Looks blocks for the stage."],
       note: "Backdrops belong to the stage. Costumes belong to sprites."
     },
     {

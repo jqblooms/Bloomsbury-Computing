@@ -10,28 +10,34 @@ DrillData.register("y6-idebug-l6", {
   ],
   cards: [
     {
-      id: "t-bug", category: "testing",
-      prompt: "What is a bug?",
-      answers: ["A mistake in the code that makes it do the wrong thing"],
-      keywords: [[["mistake", "mistakes", "error", "errors", "wrong", "problem", "problems", "fault", "faults"], ["code", "program", "script", "scripts", "blocks", "block", "game"]]],
-      distractors: ["A sprite that moves", "A message to every sprite", "A new level"],
-      note: "A bug is where what should happen and what does happen are different."
+      id: "d-replay", category: "testing",
+      blocks: "when flag clicked\nset [score v] to (0)\nwait until <(lives) = (0)>\nswitch backdrop to [Game Over v]",
+      prompt: "The first game works. Click the green flag again and the game is over straight away. Which variable does this script forget to reset?",
+      answers: ["lives"],
+      keywords: [/^\s*(the\s+)?lives\s*$/i],
+      distractors: ["score", "speed", "time"],
+      working: ["Play two games in your head. What is each variable at the end of the first game?", "Which variables does the green flag script set?"],
+      note: "lives is still 0 from the last game. Add set [lives] to (3) at the green flag."
     },
     {
-      id: "t-debug", category: "testing",
-      prompt: "What word means finding and fixing the mistakes in a program?",
-      answers: ["Debugging"],
-      keywords: [/debug/i],
-      distractors: ["Broadcasting", "Planning", "Animating"],
-      note: "Debugging: find the bug, fix it, test again."
+      id: "d-start", category: "testing",
+      blocks: "when flag clicked\nset [time v] to (2)\nrepeat until <(time) = (0)>\nwait (1) seconds\nchange [time v] by (-1)\nend",
+      prompt: "A game should last 20 seconds. It ends after 2 seconds. Which block is wrong?",
+      answers: ["set [time] to (2)"],
+      keywords: [/set\s*\[?\s*time\s*(v\s*)?\]?\s*to\s*\(?\s*2\b/i],
+      distractors: ["change [time] by (-1)", "wait (1) seconds", "repeat until <(time) = (0)>"],
+      working: ["How long should the game last?", "Which block decides how many seconds there are?"],
+      note: "set [time] to (2) gives only 2 seconds. It should be 20."
     },
     {
-      id: "t-expected", category: "testing",
-      prompt: "In a test, you compare what actually happened with what?",
-      answers: ["What should have happened (the expected result)"],
-      keywords: [/expect|should/i],
-      distractors: ["The backdrop", "The first sprite", "Last lesson's game"],
-      note: "Expected and actual: if they differ, there is a bug."
+      id: "d-key", category: "testing",
+      blocks: "when flag clicked\ngo to x: (-190) y: (130)\nwait until <touching [Hero v] ?>\nhide",
+      prompt: "You collect the Key and win. In the next game, the Key is gone. Which block is missing at the start of this script?",
+      answers: ["show"],
+      keywords: [/^\s*show\s*$/i],
+      distractors: ["hide", "next costume", "say [Key!]"],
+      working: ["At the end of the last game, the Key was hidden.", "Which block makes a hidden sprite appear again?"],
+      note: "Put show under when flag clicked, so the Key is back for every game."
     },
     {
       id: "t-boundary", category: "testing",
@@ -39,15 +45,18 @@ DrillData.register("y6-idebug-l6", {
       answers: ["9, 10 and 11"],
       keywords: [[["9", "nine"], ["10", "ten"], ["11", "eleven"]]],
       distractors: ["1, 2 and 3", "10 only", "100, 200 and 300"],
+      working: ["Test just below the target, on it, and just above it.", "The target here is 10 clicks."],
       note: "Test just below, on and just above the target."
     },
     {
-      id: "t-one", category: "testing",
-      prompt: "You changed 5 things at once and it still does not work. What should you do instead?",
-      answers: ["Change one thing at a time and test after each"],
-      keywords: [/\bone\s+(thing|change|block|at\s+a\s+time)|\bat\s+a\s+time\b|\beach\s+(one|change)\b/i],
-      distractors: ["Change 10 things at once", "Start a new project", "Stop testing"],
-      note: "One change, one test: then you know which change fixed it, or broke it."
+      id: "d-escape", category: "testing",
+      blocks: "forever\nchange y by (3)\nif <(y position) > (250)> then\ngo to x: (0) y: (-170)\nend\nend",
+      prompt: "This Balloon floats off the top and never comes back. The top of the stage is y: 180. Is (y position) > (250) ever true?",
+      answers: ["No"],
+      keywords: [/^\s*no\b|never|false/i],
+      distractors: ["Yes"],
+      working: ["A sprite cannot go far above the top of the stage.", "Can y position get bigger than 250?"],
+      note: "y never reaches 250, so the Balloon never goes back. Use a number below 180."
     },
     {
       id: "f-way", category: "findbug",
@@ -72,6 +81,7 @@ DrillData.register("y6-idebug-l6", {
       answers: ["forever"],
       keywords: [/forever|repeat|loop/i],
       distractors: ["say [Go!]", "wait (1) seconds", "hide"],
+      working: ["The script runs from top to bottom once, then ends.", "Which block makes blocks run again and again?"],
       note: "Blocks that should keep running go inside a forever loop."
     },
     {
@@ -81,6 +91,7 @@ DrillData.register("y6-idebug-l6", {
       answers: ["set [clicks] to (0)"],
       keywords: [/^\s*set\b/i],
       distractors: ["change [clicks] by (1)", "when this sprite clicked", "switch costume to [gem]"],
+      working: ["The click script runs every time you click.", "Which block should only run once, at the green flag?"],
       note: "The reset belongs in the green flag script, not the click script."
     },
     {
@@ -90,6 +101,7 @@ DrillData.register("y6-idebug-l6", {
       answers: ["Hero"],
       keywords: [/^\s*(the\s+)?hero\s*$/i],
       distractors: ["Wall", "Coin", "Stage"],
+      working: ["The Coin should score when one sprite touches it.", "Which sprite does the player move to collect coins?"],
       note: "The Coin must check for the sprite that collects it."
     },
     {
@@ -106,9 +118,10 @@ DrillData.register("y6-idebug-l6", {
       id: "f-colour", category: "findbug",
       blocks: "wait until <touching color [#1a73e8] ?>\nstop [all v]",
       prompt: "The game never ends at the red floor. This script checks for a blue colour. What should the colour be?",
-      answers: ["Red, the colour of the floor"],
+      answers: ["Red"],
       keywords: [/\bred\b/i],
       distractors: ["Blue", "Green", "Yellow"],
+      working: ["Look at the floor's colour on the stage.", "The block should check that colour."],
       note: "Use the colour picker on the floor itself so the colour matches exactly."
     },
     {
@@ -117,6 +130,7 @@ DrillData.register("y6-idebug-l6", {
       answers: ["(clicks) = (10)"],
       keywords: [/=\s*\(?\s*10\b|equals?\s*(to\s*)?10\b|>\s*\(?\s*9\b|(more|greater)\s+than\s+9\b/i],
       distractors: ["(clicks) > (10)", "(clicks) < (10)", "(clicks) = (11)"],
+      working: ["At exactly 10, (clicks) > (10) is false.", "Which comparison is true when clicks is 10?"],
       note: "(clicks) = (10) or (clicks) > (9) are both true at 10."
     },
     {
@@ -126,23 +140,28 @@ DrillData.register("y6-idebug-l6", {
       answers: ["= (0)"],
       keywords: [/=\s*\(?\s*0\b|equals?\s*(to\s*)?(0|zero)\b|<\s*\(?\s*1\b|less\s+than\s+1\b/i],
       distractors: ["> (0)", "= (3)", "< (0)"],
+      working: ["lives goes 3, 2, 1, 0, then stops.", "Which comparison is true when lives is 0?"],
       note: "lives is never less than 0, but it does reach 0."
     },
     {
-      id: "x-away", category: "fixes",
-      prompt: "score jumps by 3 when the Hero touches the Coin once, because they stay touching. What should the Coin do straight after change [score] by (1)?",
-      answers: ["Move away, to a random position"],
-      keywords: [/\bmove|\bgo\s*to|random|away|\bhide|\bjump/i],
-      distractors: ["Wait for the green flag", "Change score by 3", "Switch backdrop"],
-      note: "Once the Coin moves away it is no longer touching, so one collection counts once."
+      id: "d-star", category: "fixes",
+      blocks: "forever\nchange y by (-3)\nif <touching [Ship v] ?> then\nchange [score v] by (5)\nend\nend",
+      prompt: "One Star touches the Ship and score jumps by 50. Which block is missing after change [score] by (5)?",
+      answers: ["go to (random position)"],
+      keywords: [/go\s*to|random/i],
+      distractors: ["wait (1) seconds", "say [Star!]", "change [score] by (5)"],
+      working: ["The Star stays touching the Ship, so the if is true again and again.", "How can the Star stop touching the Ship?"],
+      note: "Moving the Star away means one catch counts once."
     },
     {
-      id: "x-report", category: "fixes",
-      prompt: "A good bug report has three parts. What are they?",
-      answers: ["What I did, what I expected, what actually happened"],
-      keywords: [[["did", "doing", "action", "steps", "pressed", "clicked", "tried"], ["expected", "expect", "should"], ["actual", "actually", "happened", "happens", "saw", "result"]]],
-      distractors: ["Name, date and score", "Sprite, costume and sound", "Start, middle and end"],
-      note: "Anyone can then repeat the test and see the bug for themselves."
+      id: "d-wall", category: "fixes",
+      blocks: "if <key [right arrow v] pressed?> then\nchange x by (4)\nif <touching color [#6c7fd8] ?> then\nchange x by (4)\nend\nend",
+      prompt: "The Hero should stop at the blue walls, but it walks through them going right. What number should the second change x block use?",
+      answers: ["-4"],
+      keywords: [drillNumberRe(-4, "x")],
+      distractors: ["4", "0", "8"],
+      working: ["The second block should move the Hero back out of the wall.", "Back means the other way: left."],
+      note: "change x by (-4) undoes the step into the wall."
     }
   ]
 });

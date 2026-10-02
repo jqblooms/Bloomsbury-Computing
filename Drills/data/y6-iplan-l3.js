@@ -11,12 +11,19 @@ DrillData.register("y6-iplan-l3", {
   ],
   cards: [
     {
-      id: "v-what", category: "variables",
-      prompt: "What is a variable?",
-      answers: ["A named place that stores a value that can change"],
-      keywords: [[["store", "stores", "storing", "holds", "hold", "keeps", "keep", "saves", "save", "remembers", "remember"], ["value", "values", "number", "numbers", "data", "information", "score", "something"]]],
-      distractors: ["A block that repeats forever", "A picture a sprite can wear", "The background of the stage"],
-      note: "score, lives and clicks are variables: each stores a number that changes while the game runs."
+      id: "v-total", category: "variables",
+      randomize: function () {
+        var a = drillPick([2, 3, 5, 10]), b = drillPick([1, 4, 5, 6]);
+        return {
+          blocks: "when flag clicked\nset [score v] to (0)\nchange [score v] by (" + a + ")\nchange [score v] by (" + b + ")",
+          prompt: "What is score at the end of this script?",
+          answers: [String(a + b)],
+          keywords: [drillNumberRe(a + b, "score")],
+          distractors: drillWrongNumbers(a + b, [a, b, 0, a * b], 3),
+          working: ["score starts at 0.", "Each change block adds its number to the score so far."],
+          note: "0 + " + a + " + " + b + " = " + (a + b) + "."
+        };
+      }
     },
     {
       id: "v-set", category: "variables",
@@ -24,6 +31,7 @@ DrillData.register("y6-iplan-l3", {
       answers: ["set [score] to (0)"],
       keywords: [/^\s*set\b(?!.*\bchange\b).*\b0\b/i],
       distractors: ["change [score] by (0)", "change [score] by (-1)", "show variable [score]"],
+      working: ["set gives a variable a new value. change adds to it.", "Which one makes score exactly 0?"],
       note: "set gives the variable a new value. change adds to the value it already has."
     },
     {
@@ -32,6 +40,7 @@ DrillData.register("y6-iplan-l3", {
       answers: ["change [score] by (1)"],
       keywords: [/^\s*change\s*\[?\s*score\s*(v\s*)?\]?\s*by\s*\(?\s*\+?\s*1\s*\)?\s*$/i],
       distractors: ["set [score] to (1)", "change [score] by (-1)", "say (score)"],
+      working: ["change adds to a variable. set replaces it.", "You want to add 1 to the score that is already there."],
       note: "change [score] by (1) adds 1. set [score] to (1) would replace the score with 1."
     },
     {
@@ -125,19 +134,26 @@ DrillData.register("y6-iplan-l3", {
           prompt: "clicks is " + n + ". What does the sprite say?",
           answers: [ans],
           keywords: [n < 10 ? /^\W*keep\s+going\W*$/i : /^\W*you\s+win\W*$/i],
-          distractors: [n < 10 ? "You win!" : "Keep going!", "Nothing"],
+          distractors: [n < 10 ? "You win!" : "Keep going!", "It says nothing"],
           working: ["Is " + n + " less than 10? True runs the top part, false runs the else part.", "Work out the condition first.", "True: top part. False: else part."],
           note: n + (n < 10 ? " is" : " is not") + " less than 10, so the " + (n < 10 ? "top" : "else") + " part runs."
         };
       }
     },
     {
-      id: "ie-false", category: "ifelse",
-      prompt: "The condition in an if then else block is false. Which part runs?",
-      answers: ["The else part"],
-      keywords: [/\belse\b|bottom|second|lower/i],
-      distractors: ["The top part", "Both parts", "Neither part"],
-      note: "True runs the top part, false runs the else part. Never both."
+      id: "ie-run", category: "ifelse",
+      randomize: function () {
+        var c = drillPick([4, 9, 10, 15]), win = c > 9;
+        return {
+          blocks: "if <(clicks) > (9)> then\nsay [You win!]\nelse\nsay [Keep going!]\nend",
+          prompt: "clicks is " + c + ". What does the sprite say?",
+          answers: [win ? "You win!" : "Keep going!"],
+          keywords: [win ? /you\s+win/i : /keep\s+going/i],
+          distractors: [win ? "Keep going!" : "You win!", "It says nothing"],
+          working: ["Is " + c + " more than 9? Equal does not count.", "True runs the top part. False runs the else part."],
+          note: c + (win ? " is" : " is not") + " more than 9."
+        };
+      }
     },
     {
       id: "ie-lives", category: "ifelse",
@@ -154,7 +170,8 @@ DrillData.register("y6-iplan-l3", {
       prompt: "Which block gives a different number each time, so the Apple drops from a new place?",
       answers: ["pick random (-200) to (200)"],
       keywords: [/random/i],
-      distractors: ["go to x: (0) y: (170)", "change y by (-5)", "set x to (0)"],
+      distractors: ["go to x: (0) y: (170)", "change y by (-5)", "glide (1) secs to x: (0) y: (170)"],
+      working: ["Look in the Operators blocks.", "This block picks a number between two numbers."],
       note: "go to x: (pick random (-200) to (200)) y: (170) drops the Apple from anywhere along the top."
     },
     {
@@ -163,6 +180,7 @@ DrillData.register("y6-iplan-l3", {
       answers: ["touching [Bowl]?"],
       keywords: [/touching/i],
       distractors: ["(y position) < (-170)", "key [space] pressed?", "(score) = (0)"],
+      working: ["The Apple's script checks what it is touching.", "Which sprite catches the Apple?"],
       note: "The Apple asks whether it is touching the Bowl."
     },
     {

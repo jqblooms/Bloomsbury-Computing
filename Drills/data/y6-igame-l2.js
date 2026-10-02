@@ -16,15 +16,18 @@ DrillData.register("y6-igame-l2", {
       answers: ["forever"],
       keywords: [/^\s*(a\s+|the\s+)?forever(\s+loop)?\s*$/i],
       distractors: ["repeat (10)", "if then", "wait (1) seconds"],
+      working: ["This loop has no number in it.", "It never stops by itself."],
       note: "forever never finishes, so nothing can be snapped underneath it."
     },
     {
-      id: "l-why", category: "loops",
-      prompt: "Why use a loop instead of writing the same blocks again and again?",
-      answers: ["You only write the blocks once, so the script is shorter"],
-      keywords: [/\bonce\b|shorter|fewer\s+blocks|less\s+(code|blocks|work|typing)|quicker|saves?\s+time/i],
-      distractors: ["It makes the sprite bigger", "It stops the game", "It makes a new variable"],
-      note: "A loop repeats blocks you wrote once. The script is shorter and easier to change."
+      id: "l-wrap", category: "loops",
+      blocks: "move (100) steps\nturn right (90) degrees",
+      prompt: "These two blocks draw one side of a square. Which loop should go around them to draw the whole square once?",
+      answers: ["repeat (4)"],
+      keywords: [/repeat\s*\(?\s*4\b/i],
+      distractors: ["forever", "repeat (2)", "if then"],
+      working: ["How many sides does a square have?", "The loop should stop when the square is finished."],
+      note: "A square has 4 sides, so repeat (4) draws it once and stops."
     },
     {
       id: "l-after", category: "loops",
@@ -32,7 +35,8 @@ DrillData.register("y6-igame-l2", {
       prompt: "When does the say [Done!] block run?",
       answers: ["After the loop has run 4 times"],
       keywords: [/\bafter\b|\bend\b|finish|\bdone\b|4\s*times|four\s+times|last/i],
-      distractors: ["Before the loop starts", "Every time round the loop", "Never"],
+      distractors: ["Before the loop starts", "Every time round the loop", "At the same time as the first move"],
+      working: ["Blocks under a loop wait until the loop is finished.", "How many times does the loop run first?"],
       note: "repeat finishes its turns, then the blocks underneath it run."
     },
     {
@@ -103,6 +107,7 @@ DrillData.register("y6-igame-l2", {
       answers: ["true or false"],
       keywords: [[["true"], ["false"]]],
       distractors: ["0 or 100", "yes or maybe", "left or right"],
+      working: ["A condition is either right or wrong.", "Scratch uses two words for right and wrong."],
       note: "Every condition is either true or false."
     },
     {
@@ -111,6 +116,7 @@ DrillData.register("y6-igame-l2", {
       answers: ["mouse x"],
       keywords: [/mouse\s*x/i],
       distractors: ["mouse y", "x position", "direction"],
+      working: ["Left and right is x.", "Look in the Sensing blocks for a reporter about the mouse."],
       note: "set x to (mouse x) inside forever makes a paddle follow the mouse."
     },
     {
@@ -119,7 +125,8 @@ DrillData.register("y6-igame-l2", {
       prompt: "The Ball is not touching the Paddle. What happens to score?",
       answers: ["Nothing: it stays the same"],
       keywords: [/nothing|same|no\s+change|(doesn.?t|does\s+not|won.?t|will\s+not)\s+change|stays|unchanged/i],
-      distractors: ["It goes up by 1", "It goes down by 1", "It resets to 0"],
+      distractors: ["It goes up by 1", "It goes down by 1", "It goes up by 1 every second"],
+      working: ["The condition is false here.", "When an if condition is false, the blocks inside it are skipped."],
       note: "The condition is false, so the if block skips everything inside it."
     },
     {
@@ -128,15 +135,18 @@ DrillData.register("y6-igame-l2", {
       answers: ["if on edge, bounce"],
       keywords: [/bounce/i],
       distractors: ["turn right (180) degrees", "point in direction (90)", "forever"],
+      working: ["Look in the Motion blocks.", "The block's name talks about the edge."],
       note: "if on edge, bounce checks for the edge and points the sprite back."
     },
     {
-      id: "s-forever", category: "sensing",
-      prompt: "Why is the if touching [Paddle] block inside a forever loop?",
-      answers: ["So it keeps checking for the Paddle the whole game"],
-      keywords: [[["keep", "keeps", "again", "continually", "continuously", "always", "repeatedly", "constantly", "time", "forever", "every"], ["check", "checks", "checking", "test", "tests", "testing", "look", "looks", "looking", "see", "sees", "sense", "senses"]]],
-      distractors: ["So the Paddle gets bigger", "So the score starts at 0", "So the game stops"],
-      note: "Without the loop the check happens once, at the start, and never again."
+      id: "s-check", category: "sensing",
+      blocks: "when flag clicked\nif <touching [Paddle v] ?> then\nchange [score v] by (1)\nend",
+      prompt: "The Ball hits the Paddle 5 seconds after the green flag, but score does not change. Which block should go around the if?",
+      answers: ["forever"],
+      keywords: [/forever|repeat|loop/i],
+      distractors: ["wait (1) seconds", "say [Hit!]", "hide"],
+      working: ["The if block checks once, straight after the green flag.", "Which block makes the check happen again and again?"],
+      note: "forever around the if keeps checking for the Paddle all game."
     },
     {
       id: "p-direction", category: "pong",
@@ -160,6 +170,7 @@ DrillData.register("y6-igame-l2", {
       answers: ["stop [all]"],
       keywords: [/stop\s*\[?\s*all/i],
       distractors: ["stop [this script]", "wait (1) seconds", "hide"],
+      working: ["Look in the Control blocks.", "It stops every script, not just one."],
       note: "stop [all] stops every script in every sprite."
     },
     {
@@ -168,6 +179,7 @@ DrillData.register("y6-igame-l2", {
       answers: ["touching color [red]?"],
       keywords: [/touching\s+colou?r/i],
       distractors: ["touching [Paddle]?", "mouse x", "key [space] pressed?"],
+      working: ["The floor is a colour, not a sprite.", "Look in the Sensing blocks for a touching block with a colour square."],
       note: "Pick the colour with the colour picker, straight from the floor."
     },
     {
