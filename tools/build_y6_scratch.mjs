@@ -16,6 +16,22 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
   '<circle cx="340" cy="130" r="9" style="fill:var(--good)"/><text x="354" y="118" style="fill:var(--good);font:700 17px Roboto,sans-serif">x: 100, y: 50</text>' +
   '</svg>';
 
+// A teacher-only Think, Pair, Share question with its answer hidden (the EAL-light shape).
+function tps(question, answer) {
+  return `<details class="lesson-tps"><summary><span class="lesson-tps-steps">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span>` +
+    `<span class="lesson-tps-q">${question}</span><span class="lesson-tps-reveal">Show the answer</span></summary><div class="lesson-tps-a"><p>${answer}</p></div></details>`;
+}
+
+// The four 6.2.5 game starters, drawn like the sprites in the Scratch Challenges.
+const GAME_ICONS = {
+  catch: '<svg viewBox="0 0 36 40" width="44" height="48" aria-hidden="true"><path d="M18 10 C10 4 0 8 2 20 C4 32 12 40 18 36 C24 40 32 32 34 20 C36 8 26 4 18 10 Z" fill="#f28b82"/><path d="M18 10 C18 6 20 2 23 0" stroke="#81c995" stroke-width="3" fill="none"/></svg>',
+  dodge: '<svg viewBox="0 0 60 56" width="48" height="44" aria-hidden="true"><path d="M30 2 L46 40 L30 33 L14 40 Z" fill="#e8eaed" stroke="#8ab4f8" stroke-width="2"/><circle cx="30" cy="22" r="6" fill="#8ab4f8"/><path d="M24 38 L30 54 L36 38 Z" fill="#fdd663"/></svg>',
+  maze: '<svg viewBox="0 0 52 58" width="42" height="48" aria-hidden="true"><path d="M4 54 V24 C4 11 14 2 26 2 C38 2 48 11 48 24 V54 L40 47 L33 54 L26 47 L19 54 L12 47 Z" fill="#e9d2fd" stroke="#c58af9" stroke-width="3"/><ellipse cx="18" cy="24" rx="5" ry="7" fill="#202124"/><ellipse cx="34" cy="24" rx="5" ry="7" fill="#202124"/></svg>',
+  pop: '<svg viewBox="0 0 46 76" width="30" height="50" aria-hidden="true"><ellipse cx="23" cy="24" rx="21" ry="23" fill="#f28b82"/><path d="M23 52 C18 58 28 64 23 74" stroke="#9aa0a6" stroke-width="2" fill="none"/><path d="M19 46 L27 46 L23 52 Z" fill="#f28b82"/></svg>'
+};
+const gameCard = (key, name, control, goal) =>
+  `<div class="lesson-flow-task" style="text-align:center">${GAME_ICONS[key]}<h3>${name}</h3><p>${control}</p><p>${goal}</p></div>`;
+
 // ============================================================ 6.2.1
 {
   const L = lesson('y6-icontrol-l1', 'y6l1', '6.2.1: Events and Coordinates');
@@ -466,21 +482,22 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
       explain: '1 take away 1 is 0, so the condition is true and the game can end.' }
   ]);
   L.title('Plan and Build Your Own Game', '6.2.5', [
-    'Plan a game: sprites, controls, variables, and how it ends.',
-    'Build it from the plan, testing each piece as you add it.',
-    'Check it has the parts every good game needs.'
+    'Pick a kind of game and plan it.',
+    'Build it one piece at a time, testing as you go.',
+    'Make it feel good to play: sound, a score on the stage, sprites that react.'
   ]);
   L.slide('plan', 'A Plan Before Code',
     L.heading('A Plan Before Code', 'Here is the plan for Fruit Catcher, the catching game you have built. Yours will have the same parts.') +
+    tps('Why plan first? What goes wrong if you start with no plan?', 'You know what to build next, and you can test each part against the plan. With no plan you guess, and the game often has no way to win or lose.') +
     '<div class="igame-two-col"><div class="lesson-flow-task"><h3>Fruit Catcher plan</h3>' + L.facts([
       '<strong>Sprites</strong>: Bowl (the player moves it), Apple (falls from a random place).',
       '<strong>Controls</strong>: left and right arrow keys.',
       '<strong>Variables</strong>: score (apples caught), lives (misses left, starts at 3).',
       '<strong>Win or lose</strong>: lose when lives reaches 0.'
     ]) + '</div>' + L.facts([
-      'A plan lets you, or someone else, build the game without guessing.',
       'Each line of the plan becomes a script or a sprite.',
-      'Build one line at a time and test it before the next.'
+      'Build one line at a time.',
+      'Test it before the next line.'
     ]) + '</div>');
   L.choice('check-plan', 'Check: The Plan', 'Use the Fruit Catcher plan.', [
     { prompt: 'In the Fruit Catcher plan, what is lives?', options: ['A sprite', 'A variable', 'A backdrop'], correct: 1,
@@ -488,54 +505,55 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
     { prompt: 'You add 6 new blocks at once and the game breaks. Why is testing after each small change better?', options: ['The game runs faster', 'You know the bug is in the part you just added', 'Scratch saves your work'], correct: 1,
       explain: 'Testing each small change means a new bug must be in the few blocks you just added.' }
   ]);
-  L.slide('plan-1', 'Plan: Name, Aim and Controls',
-    L.heading('Plan: Name, Aim and Controls') + '<div class="iplan-grid">' +
-    panel('Game', 'What is it called?', field('game-name', 'Game name', 'e.g. Meteor Dodge')) +
-    panel('Aim', 'What does the player try to do?', field('game-aim', 'Game aim', 'e.g. Dodge the falling meteors and collect stars for points', 3)) +
-    panel('Controls', 'Which keys or mouse moves control it?', field('game-controls', 'Game controls', 'e.g. left and right arrows move the ship')) +
-    panel('Win or lose', 'How does the game end?', field('game-end', 'How the game ends', 'e.g. win at 20 stars, lose when lives reaches 0', 2)) + '</div>');
-  L.slide('plan-2', 'Plan: Sprites',
-    L.heading('Plan: Sprites', 'Two or three sprites. Say what each one does, in your own words.') +
-    '<table class="iplan-table"><thead><tr><th>Sprite</th><th>What will it do?</th></tr></thead><tbody>' +
-    [1, 2, 3].map(n => `<tr><td>${field(`sprite-${n}-desc`, `Sprite ${n} name`, ['e.g. Ship', 'e.g. Meteor', 'e.g. Star'][n - 1])}</td><td>${field(`sprite-${n}-code`, `Sprite ${n} job`, ['e.g. moves left and right with the arrow keys', 'e.g. falls from a random x; touching the Ship loses a life', 'e.g. falls too; touching the Ship adds 1 to score'][n - 1])}</td></tr>`).join('') +
-    '</tbody></table>');
-  L.slide('plan-3', 'Plan: Variables and Levels',
-    L.heading('Plan: Variables and Levels') +
-    '<table class="iplan-table"><thead><tr><th>Variable</th><th>What does it count? What does the green flag set it to?</th></tr></thead><tbody>' +
-    [1, 2].map(n => `<tr><td>${field(`var-${n}-name`, `Variable ${n} name`, ['e.g. score', 'e.g. lives'][n - 1])}</td><td>${field(`var-${n}-desc`, `Variable ${n} description`, ['e.g. stars collected, starts at 0', 'e.g. hits left, starts at 3'][n - 1])}</td></tr>`).join('') +
-    '</tbody></table><div class="iplan-grid">' +
-    panel('Levels', 'Optional: what changes at level 2?', field('levels', 'Levels', 'e.g. at 10 stars, broadcast level up: new backdrop and faster meteors', 2)) + '</div>');
-  L.add({ id: 'review', label: 'Review Your Plan', type: 'plan-summary', containerId: 'y6l5-plan-summary',
-    fields: [
-      { type: 'text', step: 'plan-1', id: 'game-name', label: 'Name' },
-      { type: 'text', step: 'plan-1', id: 'game-aim', label: 'Aim' },
-      { type: 'text', step: 'plan-1', id: 'game-controls', label: 'Controls' },
-      { type: 'text', step: 'plan-1', id: 'game-end', label: 'Win or lose' },
-      { type: 'pairs', step: 'plan-2', label: 'Sprites', items: [1, 2, 3].map(n => ({ desc: `sprite-${n}-desc`, extra: `sprite-${n}-code` })) },
-      { type: 'pairs', step: 'plan-3', label: 'Variables', items: [1, 2].map(n => ({ desc: `var-${n}-name`, extra: `var-${n}-desc` })) },
-      { type: 'text', step: 'plan-3', id: 'levels', label: 'Levels' }
-    ],
-    content: L.heading('Review Your Plan', 'Your whole plan on one screen. Keep this slide open beside TurboWarp while you build.') + '<div class="iplan-summary" id="y6l5-plan-summary"></div>' });
-  L.challenge('activity-1', 'Activity 1: Build Your Game', 'Work on your own, from your plan. Build one piece, test it, then the next.', 'my-game', 'My Game', [
-    'Sprites first, then the controls.',
+  L.slide('pick', 'Pick Your Game',
+    L.heading('Pick Your Game', 'Each game comes with its sprites, sounds and backdrops. You write all the code.') +
+    tps('Look at the four games. What does every one of them need: a control, a variable, a way to win or lose?', 'All four. Catch and Dodge move a sprite with the arrow keys, Maze moves the Hero, Pop uses clicks. Each counts something (score, lives, keys, time) and each ends: lives run out, the Door opens, or time runs out.') +
+    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">' +
+    gameCard('catch', 'Catch', 'Move the Bowl.', 'Catch Apples, miss Rocks.') +
+    gameCard('dodge', 'Dodge', 'Steer the Ship.', 'Dodge Meteors, grab Stars.') +
+    gameCard('maze', 'Maze', 'Walk the Hero.', 'Get the Key, avoid the Ghost.') +
+    gameCard('pop', 'Pop', 'Click the Balloons.', 'Score before time runs out.') +
+    '</div><p class="lesson-lead">Or pick <strong>My own idea</strong>: one sprite and an empty stage.</p>');
+  L.slide('plan-game', 'Plan: Your Game',
+    L.heading('Plan: Your Game', 'Short answers are fine. Keep this slide open while you build.') +
+    tps('Why write down how the game ends before you build it?', 'The ending decides which variable you need and what the if block checks, for example lives = 0 or time = 0.') +
+    '<div class="iplan-grid">' +
+    panel('Game', 'Which game? What is it called?', field('game-name', 'Game name', 'e.g. Dodge: Meteor Storm')) +
+    panel('Controls', 'Which keys or clicks?', field('game-controls', 'Game controls', 'e.g. left and right arrows move the Ship')) +
+    panel('Variable', 'What does it count? What does the green flag set it to?', field('game-variable', 'Game variable', 'e.g. lives, starts at 3')) +
+    panel('Win or lose', 'How does the game end?', field('game-end', 'How the game ends', 'e.g. Game Over when lives reaches 0')) + '</div>');
+  L.challenge('activity-1', 'Activity 1: Build Your Game', 'Work on your own. Open My Game and pick the game you planned.', 'my-game', 'My Game', [
+    'Controls first. Test them.',
     'Then a loop that keeps the game running.',
     'Then a variable: set it at the green flag, change it during the game.',
-    'Then an if block that decides something, and a way to win or lose.'
+    'Then an if block and a way to win or lose.'
   ]);
-  L.slide('level-two', 'Make It Better: A Second Level',
-    L.heading('Make It Better: A Second Level', 'When every check passes, add a level with a broadcast and a backdrop, as in Level Up.') +
-    '<div class="igame-two-col">' + L.blocks('if <(score) = (10)> then\nbroadcast [level up v]\nend\n\nwhen I receive [level up v]\nswitch backdrop to [Level 2 v]') + L.facts([
-      'Add a second backdrop for level 2.',
-      'Broadcast a message when the player reaches your target.',
-      'Make level 2 harder: faster enemies, or a new sprite.',
-      'The bonus check in My Game looks for the second level.'
+  L.slide('feel-good', 'Make It Feel Good',
+    L.heading('Make It Feel Good', 'When every check passes, make the game fun to play. The bonus checks look for these.') +
+    tps('Two games score the same way. One plays a sound and the sprite grows when you score. Which feels better to play? Why?', 'The one with sound and movement. The player sees and hears that they scored straight away, so it feels like a reward.') +
+    '<div class="igame-two-col">' + L.blocks('if <touching [Ship v] ?> then\nstart sound [coin v]\nchange [score v] by (1)\nchange size by (10)\nend') + L.facts([
+      '<strong>Sound</strong>: start sound when you score or get hit.',
+      '<strong>Score on the stage</strong>: tick the box next to the variable.',
+      '<strong>React</strong>: change size, a colour effect or a costume.',
+      '<strong>Level 2</strong>: switch to the Level 2 backdrop with a broadcast.'
     ]) + '</div>');
-  L.challenge('activity-2', 'Activity 2: Level Two', 'Work on your own. Open My Game again: your project is still there.', 'my-game', 'My Game', [
-    'Add a second backdrop.',
-    'Switch to it with a broadcast when the player reaches your target.',
-    'Make level 2 harder than level 1.',
-    'Press Check my project to see the bonus check go green.'
+  L.challenge('activity-2', 'Activity 2: Make It Feel Good', 'Work on your own. Open My Game again: your project is still there.', 'my-game', 'My Game', [
+    'Add a sound.',
+    'Show the score on the stage.',
+    'Make a sprite react when you score.',
+    'Add Level 2. Make it harder.'
   ]);
+  L.slide('arcade', 'Arcade: Play Each Other\'s Games',
+    L.heading('Arcade: Play Each Other\'s Games', 'Leave your game open. Move to the next computer when your teacher says.') +
+    tps('After playing: which game was most fun? What made it fun?', 'Answers vary. Look for clear controls, sound, a score you can see, and a game that gets harder.') +
+    '<div class="igame-two-col"><div class="lesson-flow-task"><h3>At each game</h3>' + L.facts([
+      'Click the green flag. Play for two minutes.',
+      'Try every control.',
+      'Try to win, and try to lose.'
+    ]) + '</div><div class="lesson-flow-task"><h3>Tell the maker</h3>' + L.facts([
+      'One thing that was fun.',
+      'One thing that did not work, if you found one.'
+    ]) + '</div></div>');
   L.short('practice', 'Checked Practice', 'score starts at 0. This script belongs to the Star.', [
     'The Player collects the Star 3 times. What is score?'
   ], [
@@ -561,13 +579,14 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
   ], 'if <(clicks) > (9)> then\nsay [You win!]\nelse\nsay [Keep going!]\nend');
   L.title('Test and Debug', '6.2.6', [
     'Test a program like a tester: expected against actual.',
-    'Find and fix bugs in six broken Scratch projects.',
-    'Record a bug clearly enough for someone else to fix it.'
+    'Find and fix the bugs in six broken games.',
+    'Test a partner\'s game and record what you find.'
   ]);
   L.slide('testing', 'Test It Like a Tester',
     L.heading('Test It Like a Tester', 'A <strong>bug</strong> is where what should happen and what does happen are different.') +
+    tps('Clicked 9 times: expected no message, and there was no message. Is that a bug? Why test it at all?', 'No, expected and actual match. You test 9 to prove the message does not come too early: bugs often hide just below or above a target.') +
     '<div class="igame-two-col"><table class="iplan-table"><thead><tr><th>I did</th><th>Expected</th><th>Actual</th></tr></thead><tbody>' +
-    '<tr><td>Pressed left arrow</td><td>Rocket moves left</td><td>It moved right</td></tr>' +
+    '<tr><td>Held left arrow</td><td>Ship moves left</td><td>It moved right</td></tr>' +
     '<tr><td>Clicked 10 times</td><td>Says You win!</td><td>Said nothing</td></tr>' +
     '<tr><td>Clicked 9 times</td><td>No message yet</td><td>No message</td></tr></tbody></table>' +
     L.facts([
@@ -579,38 +598,44 @@ const GRID = '<svg viewBox="0 0 480 360" role="img" aria-label="The Scratch stag
   L.choice('check-testing', 'Check: Testing', 'Choose the best answer.', [
     { prompt: 'A game should say You win! at 10 clicks. Which click counts should you test?', options: ['Only 10', '9, 10 and 11', '1 and 100'], correct: 1,
       explain: 'Test just below, on, and just above the target. Off-by-one bugs hide there.' },
-    { prompt: 'Expected: the Rocket moves left. Actual: it moves right. What is this?', options: ['A bug', 'A broadcast', 'A costume'], correct: 0,
+    { prompt: 'Expected: the Ship moves left. Actual: it moves right. What is this?', options: ['A bug', 'A broadcast', 'A costume'], correct: 0,
       explain: 'Expected and actual are different, so there is a bug to fix.' }
   ]);
-  L.challenge('activity-1', 'Activity 1: Bug Hunt 1 to 3', 'Work on your own. Each project has one bug. Test it, find the bug, fix it, then press Next.', 'bug-wrong-way', 'Bug Hunt', [
-    'Bug Hunt 1: one arrow key goes the wrong way.',
-    'Bug Hunt 2: a counter that gets stuck.',
-    'Bug Hunt 3: a ball that moves once and stops.',
-    'Test first: watch what happens before you change any blocks.'
+  L.challenge('activity-1', 'Activity 1: Bug Hunt 1 to 3', 'Work on your own. Each game has one bug. Play it, find the bug, fix it, then press Next.', 'hunt-meteor-steer', 'Bug Hunt 1', [
+    'Bug Hunt 1: Meteor Dodge. One control is broken.',
+    'Bug Hunt 2: Meteor Dodge never ends.',
+    'Bug Hunt 3: Balloon Pop. The score gets stuck.',
+    'Play first: watch what happens before you change any blocks.'
   ]);
   L.slide('where-bugs-hide', 'Where Bugs Hide',
     L.heading('Where Bugs Hide', 'What you see tells you where to look.') +
+    tps('The time box goes 20, 21, 22. Which kind of bug is that? Where do you look?', 'It goes the wrong way. Look at the change [time] by block: the number should be -1, not 1.') +
     '<div class="igame-debug-grid">' +
-    '<div><strong>Goes the wrong way</strong><span>Look at the numbers in the move and change blocks. Is one negative when it should be positive?</span></div>' +
+    '<div><strong>Goes the wrong way</strong><span>Look at the numbers in the move and change blocks. Is one positive when it should be negative?</span></div>' +
     '<div><strong>Happens once, then stops</strong><span>Blocks that should keep running need to be inside a forever or repeat loop.</span></div>' +
-    '<div><strong>A value never resets</strong><span>Find the green flag script. Does it set the variable?</span></div>' +
-    '<div><strong>Something never happens</strong><span>Read the condition. Which sprite or colour does it check? Is the comparison right?</span></div>' +
+    '<div><strong>A value gets stuck</strong><span>Read the blocks that change it. Does it say set when it should say change?</span></div>' +
+    '<div><strong>Something never happens</strong><span>Read the condition. Which sprite does it check? Can the comparison ever be true?</span></div>' +
     '</div>');
   L.short('check-bug', 'Check: Spot the Bug', 'This script should move the sprite left.', [
     'What number should be in the change x block?'
   ], [
     { pattern: num(-10, 'x'), feedback: 'Moving left makes x smaller, so the number must be negative.' }
   ], 'when [left arrow v] key pressed\nchange x by (10)');
-  L.challenge('activity-2', 'Activity 2: Bug Hunt 4 to 6', 'Work on your own. The button opens Bug Hunt 4. Press Next after each fix.', 'bug-wrong-sprite', 'Bug Hunt 4', [
-    'Bug Hunt 4: coins that do not count.',
-    'Bug Hunt 5: a game you cannot win.',
-    'Bug Hunt 6: a game that never ends.',
-    'Then test a partner\'s game from last lesson.'
+  L.challenge('activity-2', 'Activity 2: Bug Hunt 4 to 6', 'Work on your own. The button opens Bug Hunt 4. Press Next after each fix.', 'hunt-balloon-timer', 'Bug Hunt 4', [
+    'Bug Hunt 4: the Balloon Pop timer.',
+    'Bug Hunt 5: Ghost Maze. Watch the Ghost.',
+    'Bug Hunt 6: Ghost Maze. Can you escape?',
+    'The panel shows how many Bug Hunts you have fixed.'
   ]);
-  L.written('bug-report', 'Test a Partner\'s Game', 'Swap with a partner and play their game from 6.2.5. Record one bug.', [
-    { id: 'bug-did', prompt: 'What did you do, what did you expect, and what actually happened? Which script do you think causes it?', marks: 3,
-      modelAnswer: 'The exact action (pressed the up arrow at the top edge), what should happen (the ship stops at the edge), what did happen (it went off the stage), and a script to look at (the up arrow script has no edge check). One mark each for the action, expected against actual, and the script.' }
-  ]);
+  const cell = (id, label, placeholder) => `<input class="pseudocode-output-input lesson-exam-answer" data-answer-kind="short" data-answer-id="${id}" aria-label="${label}" autocomplete="off" placeholder="${placeholder}">`;
+  L.slide('bug-report', 'Test a Partner\'s Game',
+    L.heading('Test a Partner\'s Game', 'Swap with a partner and play their game from 6.2.5. Fill in one row for each test.') +
+    tps('Your partner reads "it does not work". Can they fix it? What would help them more?', 'No: they do not know what you did or what went wrong. "Held the up arrow at the top edge. Expected: stop. Actual: went off the stage" tells them exactly where to look.') +
+    '<table class="iplan-table"><thead><tr><th>I did</th><th>Expected</th><th>Actual</th></tr></thead><tbody>' +
+    [1, 2, 3].map(n => `<tr><td>${cell(`test-${n}-did`, `Test ${n}: what I did`, ['e.g. held the right arrow', 'e.g. let lives reach 0', 'e.g. clicked 10 times'][n - 1])}</td>` +
+      `<td>${cell(`test-${n}-expected`, `Test ${n}: expected`, ['e.g. moves right', 'e.g. Game Over', 'e.g. says You win!'][n - 1])}</td>` +
+      `<td>${cell(`test-${n}-actual`, `Test ${n}: actual`, ['e.g. moved right', 'e.g. kept going', 'e.g. said nothing'][n - 1])}</td></tr>`).join('') +
+    '</tbody></table><p class="lesson-lead">Show your partner each row where expected and actual are different.</p>');
   L.choice('practice', 'Checked Practice', 'Use what you found in the Bug Hunts.', [
     { prompt: 'score should go up by 1 per coin, but it jumps by 3 every time. Where do you look first?', options: ['The script with change [score] by', 'The backdrop', 'The costume list'], correct: 0,
       explain: 'The script that changes score is the one that runs too many times: often because the Coin stays touching and nothing moves it away.' },

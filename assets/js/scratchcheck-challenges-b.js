@@ -1,7 +1,6 @@
-// Scratch Challenges, part 4 of 5: the Year 6 challenges for lessons 6.2.4
-// to 6.2.6. The Bug Hunt starters arrive with one planted bug each; their
-// tasks describe what the program should do, so the student tests, finds
-// the bug and fixes it.
+// Scratch Challenges, part 4 of 6: the Year 6 challenges for lessons 6.2.4
+// and 6.2.5. The 6.2.6 Bug Hunts and the 6.2.5 game starters are in
+// scratchcheck-challenges-c.js.
 (function () {
   'use strict';
   if (!/[?&]scratchcheck/.test(location.search)) return;
@@ -171,7 +170,7 @@
 
   K.add({
     id: 'my-game', lesson: 'y6-idevelop-l5', title: 'My Game',
-    brief: 'Build the game from your plan. These checks look for the parts every good game needs. Load your own project with File, Load from your computer, if you started it somewhere else.',
+    brief: 'Build your game, one piece at a time. These checks look for the parts every good game needs. The bonus checks make it feel good to play.',
     starter: {
       backdrops: [['backdrop1', 'grid']],
       sprites: [{ name: 'Player', costumes: [['player', 'hero']], x: 0, y: 0 }]
@@ -236,213 +235,29 @@
           var backdrops = t.vm.runtime.getTargetForStage().getCostumes().length;
           if (backdrops < 2) t.fail('The stage has ' + backdrops + ' backdrop. Add a second one for level 2.');
           if (!anyUsed(t, ['looks_switchbackdropto', 'looks_switchbackdroptoandwait', 'looks_nextbackdrop'])) t.fail('Nothing switches the backdrop yet.');
-        } }
-    ]
-  });
-
-  // ======================= 6.2.6 Bug Hunt =======================
-  // Support on a bug hunt shows how to find the bug (a tip), never the
-  // fixed blocks, which would be the answer.
-  function bugTasks(tasks, tips) {
-    return tasks.map(function (task) {
-      var copy = Object.assign({}, task);
-      delete copy.hint;
-      copy.tip = tips[task.id];
-      return copy;
-    });
-  }
-
-  K.add({
-    id: 'bug-wrong-way', lesson: 'y6-idebug-l6', title: 'Bug Hunt 1: Wrong Way',
-    brief: 'Test every arrow key. One key sends the Rocket the wrong way. Find the bug and fix it.',
-    starter: {
-      backdrops: [['space', 'space']],
-      sprites: [{ name: 'Rocket', costumes: [['rocket', 'rocket']], x: 0, y: 0, scripts: [
-        { x: 20, y: 20, blocks: [['event_whenflagclicked'], ['motion_gotoxy', { X: 0, Y: 0 }]] },
-        { x: 20, y: 140, blocks: [['event_whenkeypressed', { KEY_OPTION: 'right arrow' }], ['motion_changexby', { DX: 10 }]] },
-        { x: 20, y: 240, blocks: [['event_whenkeypressed', { KEY_OPTION: 'left arrow' }], ['motion_changexby', { DX: 10 }]] },
-        { x: 280, y: 140, blocks: [['event_whenkeypressed', { KEY_OPTION: 'up arrow' }], ['motion_changeyby', { DY: 10 }]] },
-        { x: 280, y: 240, blocks: [['event_whenkeypressed', { KEY_OPTION: 'down arrow' }], ['motion_changeyby', { DY: -10 }]] }
-      ] }]
-    },
-    tasks: bugTasks([K.arrowTask('right', 'Rocket'), K.arrowTask('left', 'Rocket'), K.arrowTask('up', 'Rocket'), K.arrowTask('down', 'Rocket')], {
-      right: 'Click the green flag, press the right arrow once and watch the x box under the stage. It should go up.',
-      left: 'Press the left arrow once and watch x. It should go down. Find the script that runs when you press it.',
-      up: 'Press the up arrow once and watch the y box under the stage.',
-      down: 'Press the down arrow once and watch y.'
-    })
-  });
-
-  K.add({
-    id: 'bug-reset', lesson: 'y6-idebug-l6', title: 'Bug Hunt 2: Stuck Counter',
-    brief: 'Each click should add 1 to clicks, and the green flag should set it back to 0. Click the Gem a few times and watch clicks.',
-    starter: {
-      backdrops: [['gem room', 'gemRoom']],
-      showVariables: ['clicks'],
-      sprites: [{ name: 'Gem', costumes: [['gem', 'gem'], ['gold', 'goldGem']], x: 0, y: 0, scripts: [
-        { x: 20, y: 20, blocks: [['event_whenflagclicked'], ['looks_switchcostumeto', { COSTUME: 'gem' }]] },
-        { x: 20, y: 160, blocks: [['event_whenthisspriteclicked'], ['data_setvariableto', { VARIABLE: 'clicks', VALUE: 0 }], ['data_changevariableby', { VARIABLE: 'clicks', VALUE: 1 }]] }
-      ] }]
-    },
-    tasks: [
-      { id: 'count', text: 'Three clicks make clicks 3.',
-        tip: 'Click the Gem three times and watch the clicks box on the stage. Then read the script that runs when the Gem is clicked, one block at a time: what does each block do to clicks?',
-        test: async function (t) {
-          t.variable('clicks');
-          await t.flag(300);
-          t.setValue('clicks', 0);
-          for (var i = 0; i < 3; i++) await t.click('Gem');
-          await t.wait(150);
-          if (t.value('clicks') !== 3) t.fail('I set clicks to 0 and clicked the Gem 3 times. clicks was ' + t.value('clicks') + '.');
         } },
-      { id: 'reset', text: 'The green flag sets clicks to 0.',
-        tip: 'Which script runs when the green flag is clicked? Does anything in it set clicks?',
+      { id: 'sound', bonus: true, text: 'Bonus: a sound plays when something happens, like a catch, a hit or the end.',
+        hint: 'if <touching [Player v] ?> then\nstart sound [coin v]\nend',
         test: async function (t) {
-          t.variable('clicks');
-          t.stop();
-          t.setValue('clicks', 6);
-          await t.flag(300);
-          if (t.value('clicks') !== 0) t.fail('clicks was 6. After the green flag it was ' + t.value('clicks') + '.');
-        } }
-    ]
-  });
-
-  K.add({
-    id: 'bug-once', lesson: 'y6-idebug-l6', title: 'Bug Hunt 3: One Step Only',
-    brief: 'The Ball should keep moving and bounce round the stage. Click the green flag and watch what it really does.',
-    starter: {
-      backdrops: [['grid', 'grid']],
-      sprites: [{ name: 'Ball', costumes: [['ball', 'ball']], x: 0, y: 0, direction: 45, scripts: [
-        { x: 20, y: 20, blocks: [['event_whenflagclicked'], ['motion_gotoxy', { X: 0, Y: 0 }], ['motion_pointindirection', { DIRECTION: 45 }],
-          ['motion_movesteps', { STEPS: 10 }], ['motion_ifonedgebounce']] }
-      ] }]
-    },
-    tasks: [
-      { id: 'moves', text: 'After the green flag the Ball keeps moving.',
-        tip: 'Click the green flag and count how many times the Ball moves. Which block makes blocks run again and again?',
-        test: async function (t) {
-          await t.flag(1000);
-          var p = t.pos('Ball');
-          var gone = Math.abs(p.x) + Math.abs(p.y);
-          if (gone < 60) t.fail('One second after the green flag the Ball was at ' + t.where('Ball') + '. It only moved once.');
+          if (!anyUsed(t, ['sound_play', 'sound_playuntildone'])) t.fail('I cannot find a start sound or play sound until done block. Look in the Sound blocks.');
         } },
-      { id: 'bounce', text: 'It bounces off the edges instead of getting stuck.',
-        tip: 'The bounce check has to keep running too, not happen once at the start.',
+      { id: 'show', bonus: true, text: 'Bonus: the score shows on the stage while you play.',
+        hint: 'show variable [score v]',
         test: async function (t) {
-          await t.flag(200);
-          t.place('Ball', 0, 0, 90);
-          var bounced = await t.until(function () { return t.sprite('Ball').direction < 0; }, 3000);
-          if (!bounced) t.fail('I pointed the Ball right. It reached ' + t.where('Ball') + ' and did not bounce back.');
-        } }
-    ]
-  });
-
-  K.add({
-    id: 'bug-wrong-sprite', lesson: 'y6-idebug-l6', title: 'Bug Hunt 4: Coins That Do Not Count',
-    brief: 'Move the Hero onto the Coin with the arrow keys. score should go up by 1. Touching the Wall should not score.',
-    starter: {
-      backdrops: [['Level 1', 'level1']],
-      showVariables: ['score'],
-      sprites: [
-        { name: 'Hero', costumes: [['hero', 'hero']], x: -150, y: -110, scripts: heroScripts() },
-        { name: 'Wall', costumes: [['wall', 'wall']], x: -40, y: 60 },
-        { name: 'Coin', costumes: [['coin', 'coin']], x: 100, y: -110, scripts: [
-          { x: 20, y: 20, blocks: [['event_whenflagclicked'], ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['control_forever', { SUBSTACK: [
-            ['control_if', { CONDITION: ['sensing_touchingobject', { TOUCHINGOBJECTMENU: 'Wall' }], SUBSTACK: [
-              ['data_changevariableby', { VARIABLE: 'score', VALUE: 1 }],
-              ['motion_gotoxy', { X: ['operator_random', { FROM: -200, TO: 200 }], Y: ['operator_random', { FROM: -140, TO: 140 }] }]
-            ] }]
-          ] }]] }
-        ] }
-      ]
-    },
-    tasks: [
-      { id: 'hero', text: 'When the Hero touches the Coin, score goes up by 1.',
-        tip: 'Move the Hero onto the Coin and watch score. Then read the if block in the Coin: which sprite is it checking for?',
-        test: async function (t) {
-          t.variable('score');
-          await t.flag(300);
-          t.place('Wall', -40, 60);
-          t.setValue('score', 0);
-          var ok = await collect(t);
-          if (!ok) t.fail('I put the Hero on the Coin. score stayed ' + t.value('score') + '.');
+          var shown = false;
+          // Scratch keeps monitors in an Immutable map; TurboWarp wraps a native Map as .map.
+          try {
+            var state = t.vm.runtime._monitorState || t.vm.runtime.getMonitorState();
+            (state.map || state).forEach(function (m) { if (m.get('visible') && m.get('opcode') === 'data_variable') shown = true; });
+          } catch (e) {}
+          if (!shown && !t.uses('data_showvariable')) t.fail('No variable shows on the stage. Tick the box next to your variable in the Variables blocks.');
         } },
-      { id: 'wall', text: 'When the Coin touches the Wall, score does not change.',
-        tip: 'Coins count when the Hero collects them. What should the touching block be looking for?',
+      { id: 'react', bonus: true, text: 'Bonus: something reacts when you score: a costume change, a size change or a colour effect.',
+        hint: 'change [color v] effect by (25)\nchange size by (10)',
         test: async function (t) {
-          t.variable('score');
-          await t.flag(300);
-          t.place('Hero', -210, 150);
-          t.setValue('score', 0);
-          t.place('Coin', -40, 60);
-          t.place('Wall', -40, 60);
-          await t.wait(600);
-          if (t.value('score') !== 0) t.fail('I put the Coin on the Wall, away from the Hero. score went up to ' + t.value('score') + '.');
-        } }
-    ]
-  });
-
-  K.add({
-    id: 'bug-never-wins', lesson: 'y6-idebug-l6', title: 'Bug Hunt 5: Cannot Win',
-    brief: 'The Gem should say You win! on the 10th click, not before and not after. Test it and count carefully.',
-    starter: {
-      backdrops: [['gem room', 'gemRoom']],
-      showVariables: ['clicks'],
-      sprites: [{ name: 'Gem', costumes: [['gem', 'gem'], ['gold', 'goldGem']], x: 0, y: 0, scripts: [
-        { x: 20, y: 20, blocks: [['event_whenflagclicked'], ['data_setvariableto', { VARIABLE: 'clicks', VALUE: 0 }], ['looks_say', { MESSAGE: '' }]] },
-        { x: 20, y: 160, blocks: [['event_whenthisspriteclicked'], ['data_changevariableby', { VARIABLE: 'clicks', VALUE: 1 }],
-          ['control_if', { CONDITION: ['operator_gt', { OPERAND1: V('clicks'), OPERAND2: 10 }], SUBSTACK: [['looks_say', { MESSAGE: 'You win!' }]] }]] }
-      ] }]
-    },
-    tasks: [
-      { id: 'nine', text: 'After 9 clicks the Gem has not said You win! yet.',
-        tip: 'Count out loud as you click, and watch the clicks box.',
-        test: async function (t) {
-          t.variable('clicks');
-          await t.flag(300);
-          for (var i = 0; i < 9; i++) await t.click('Gem');
-          await t.wait(150);
-          if (t.said('Gem', 'You win!')) t.fail('After 9 clicks the Gem already said You win!');
-        } },
-      { id: 'ten', text: 'On the 10th click it says You win!',
-        tip: 'Work the comparison out by hand: when clicks is 10, is (clicks) > (10) true or false?',
-        test: async function (t) {
-          t.variable('clicks');
-          await t.flag(300);
-          for (var i = 0; i < 10; i++) await t.click('Gem');
-          await t.wait(150);
-          if (!t.said('Gem', 'You win!')) t.fail('After 10 clicks clicks was ' + t.value('clicks') + ' and the Gem said ' + (t.saying('Gem') ? '"' + t.saying('Gem') + '"' : 'nothing') + '.');
-        } }
-    ]
-  });
-
-  K.add({
-    id: 'bug-never-ends', lesson: 'y6-idebug-l6', title: 'Bug Hunt 6: Endless Game',
-    brief: 'The game should stop when the Ball touches the red floor. It never does. Find out why.',
-    starter: {
-      backdrops: [['pong', 'pong']],
-      sprites: [{ name: 'Ball', costumes: [['ball', 'ball']], x: 0, y: 100, direction: 150, scripts: [
-        { x: 20, y: 20, blocks: [['event_whenflagclicked'], ['motion_gotoxy', { X: 0, Y: 100 }], ['motion_pointindirection', { DIRECTION: 150 }],
-          ['control_forever', { SUBSTACK: [['motion_movesteps', { STEPS: 6 }], ['motion_ifonedgebounce']] }]] },
-        { x: 20, y: 260, blocks: [['event_whenflagclicked'], ['control_wait_until', { CONDITION: ['sensing_touchingcolor', { COLOR: '#1a73e8' }] }], ['control_stop', { STOP_OPTION: 'all' }]] }
-      ] }]
-    },
-    tasks: [
-      { id: 'moves', text: 'The Ball keeps moving and bouncing.',
-        tip: 'Click the green flag and watch the Ball bounce round the stage.',
-        test: async function (t) {
-          await t.flag(200);
-          t.place('Ball', 0, 60, 90);
-          var bounced = await t.until(function () { return t.sprite('Ball').direction < 0; }, 3000);
-          if (!bounced) t.fail('I pointed the Ball right. It did not bounce off the wall.');
-        } },
-      { id: 'floor', text: 'When the Ball touches the red floor, the game stops.',
-        tip: 'Look closely at the colour square in the touching color block. Is it the colour of the floor? Click it and use the picker on the red floor.',
-        test: async function (t) {
-          await t.flag(200);
-          t.place('Ball', 120, -100, 180);
-          var stopped = await H.stopsWithin(t, 2500);
-          if (!stopped) t.fail('The Ball touched the red floor and the game kept going. Check the colour in the touching color block.');
+          if (!anyUsed(t, ['looks_nextcostume', 'looks_switchcostumeto', 'looks_changesizeby', 'looks_setsizeto', 'looks_changeeffectby', 'looks_seteffectto'])) {
+            t.fail('Nothing changes how a sprite looks. Try change size, change color effect or next costume.');
+          }
         } }
     ]
   });

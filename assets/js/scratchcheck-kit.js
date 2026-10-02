@@ -212,6 +212,53 @@
       '<rect x="140" y="16" width="20" height="230" fill="#1a73e8"/><rect x="320" y="114" width="20" height="230" fill="#1a73e8"/>')
   };
 
+  // ---- sounds: short effects synthesised as 16-bit mono WAV, so no audio file lives in the repo ----
+  var RATE = 22050;
+  // Each sound is a list of notes: [seconds, startHz, endHz, wave, volume]; wave is
+  // 'sine', 'square', 'saw' or 'noise'. Every note fades out over its length.
+  var SOUND_NOTES = {
+    coin: [[0.07, 988, 988, 'square', 0.35], [0.2, 1319, 1319, 'square', 0.35]],
+    pop: [[0.03, 0, 0, 'noise', 0.6], [0.11, 700, 160, 'sine', 0.8]],
+    boom: [[0.55, 0, 0, 'noise', 0.9]],
+    zap: [[0.25, 1400, 180, 'saw', 0.4]],
+    win: [[0.1, 523, 523, 'square', 0.3], [0.1, 659, 659, 'square', 0.3], [0.1, 784, 784, 'square', 0.3], [0.32, 1047, 1047, 'square', 0.3]],
+    lose: [[0.22, 392, 370, 'saw', 0.35], [0.22, 330, 311, 'saw', 0.35], [0.5, 262, 200, 'saw', 0.35]],
+    blip: [[0.06, 880, 880, 'sine', 0.6]]
+  };
+  function wav(key) {
+    var notes = SOUND_NOTES[key];
+    if (!notes) throw new Error('scratchcheck-kit: no sound called ' + key);
+    var samples = [], seed = 12345, phase = 0, low = 0;
+    notes.forEach(function (n) {
+      var count = Math.round(n[0] * RATE);
+      for (var i = 0; i < count; i++) {
+        var f = n[1] + (n[2] - n[1]) * (i / count);
+        phase += f / RATE;
+        var p = phase - Math.floor(phase), v;
+        if (n[3] === 'noise') { seed = (seed * 1103515245 + 12345) & 0x7fffffff; low = low * 0.7 + ((seed / 0x3fffffff) - 1) * 0.3; v = low * 2; }
+        else if (n[3] === 'square') v = p < 0.5 ? 1 : -1;
+        else if (n[3] === 'saw') v = 2 * p - 1;
+        else v = Math.sin(2 * Math.PI * p);
+        var fade = 1 - i / count;
+        samples.push(Math.max(-1, Math.min(1, v * n[4] * fade * Math.min(1, i / 40))));
+      }
+    });
+    var bytes = new Uint8Array(44 + samples.length * 2), view = new DataView(bytes.buffer);
+    function text(at, s) { for (var i = 0; i < s.length; i++) bytes[at + i] = s.charCodeAt(i); }
+    text(0, 'RIFF'); view.setUint32(4, 36 + samples.length * 2, true); text(8, 'WAVE');
+    text(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+    view.setUint32(24, RATE, true); view.setUint32(28, RATE * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+    text(36, 'data'); view.setUint32(40, samples.length * 2, true);
+    samples.forEach(function (s, i) { view.setInt16(44 + i * 2, Math.round(s * 32767), true); });
+    return { bytes: bytes, sampleCount: samples.length };
+  }
+  function sound(name, key, files) {
+    var id = assetId('sound:' + key + ':' + JSON.stringify(SOUND_NOTES[key]));
+    var made = wav(key);
+    if (!files.some(function (f) { return f.name === id + '.wav'; })) files.push({ name: id + '.wav', data: made.bytes });
+    return { name: name, assetId: id, dataFormat: 'wav', format: '', rate: RATE, sampleCount: made.sampleCount, md5ext: id + '.wav' };
+  }
+
   // ---- project builder ----
   // Inputs that take a number shadow, and which kind of shadow.
   var NUM_KIND = { math_number: 4, math_positive_number: 5, math_whole_number: 6, math_integer: 7, math_angle: 8, text: 10 };
@@ -242,6 +289,14 @@
     looks_nextcostume: {},
     looks_switchbackdropto: { BACKDROP: ['menu', 'looks_backdrops', 'BACKDROP'] },
     looks_show: {}, looks_hide: {},
+    looks_changesizeby: { CHANGE: 'math_number' },
+    looks_setsizeto: { SIZE: 'math_number' },
+    looks_changeeffectby: { CHANGE: 'math_number', fields: ['EFFECT'] },
+    looks_seteffectto: { VALUE: 'math_number', fields: ['EFFECT'] },
+    looks_cleargraphiceffects: {},
+    motion_goto: { TO: ['menu', 'motion_goto_menu', 'TO'] },
+    sound_play: { SOUND_MENU: ['menu', 'sound_sounds_menu', 'SOUND_MENU'] },
+    sound_playuntildone: { SOUND_MENU: ['menu', 'sound_sounds_menu', 'SOUND_MENU'] },
     control_forever: { SUBSTACK: 'stack' },
     control_repeat: { TIMES: 'math_whole_number', SUBSTACK: 'stack' },
     control_if: { CONDITION: 'bool', SUBSTACK: 'stack' },
@@ -262,6 +317,7 @@
     operator_add: { NUM1: 'math_number', NUM2: 'math_number' },
     operator_subtract: { NUM1: 'math_number', NUM2: 'math_number' },
     operator_random: { FROM: 'math_number', TO: 'math_number' },
+    operator_not: { OPERAND: 'bool' },
     data_setvariableto: { VALUE: 'text', fields: ['VARIABLE'] },
     data_changevariableby: { VALUE: 'math_number', fields: ['VARIABLE'] }
   };
@@ -368,7 +424,7 @@
         isStage: false, name: s.name, variables: {}, lists: {}, broadcasts: {},
         blocks: b.scripts(s.scripts), comments: {}, currentCostume: 0,
         costumes: s.costumes.map(function (c) { return costume(c[0], c[1], files); }),
-        sounds: [], volume: 100, layerOrder: i + 1, visible: s.visible !== false,
+        sounds: (s.sounds || []).map(function (c) { return sound(c[0], c[1], files); }), volume: 100, layerOrder: i + 1, visible: s.visible !== false,
         x: s.x || 0, y: s.y || 0, size: s.size || 100, direction: s.direction == null ? 90 : s.direction,
         draggable: false, rotationStyle: s.rotationStyle || 'all around'
       };
@@ -382,7 +438,7 @@
         entry.rotationCenterX = 240; entry.rotationCenterY = 180;
         return entry;
       }),
-      sounds: [], volume: 100, layerOrder: 0, tempo: 60, videoTransparency: 50, videoState: 'on', textToSpeechLanguage: null
+      sounds: (def.stageSounds || []).map(function (c) { return sound(c[0], c[1], files); }), volume: 100, layerOrder: 0, tempo: 60, videoTransparency: 50, videoState: 'on', textToSpeechLanguage: null
     };
     Object.keys(b.variables).forEach(function (name) {
       var start = def.variables && Object.prototype.hasOwnProperty.call(def.variables, name) ? def.variables[name] : 0;
@@ -404,5 +460,6 @@
   function add(def) { challenges.push(def); }
   function find(id) { return challenges.filter(function (c) { return c.id === id; })[0] || null; }
 
-  window.ScratchCheckKit = { buildProject: buildProject, V: V, ART: ART, SPEC: SPEC, challenges: challenges, add: add, find: find };
+  window.ScratchCheckKit = { buildProject: buildProject, V: V, ART: ART, SPEC: SPEC, SOUND_NOTES: SOUND_NOTES, svg: svg, TEXT: TEXT, px: px, py: py,
+    challenges: challenges, add: add, find: find };
 })();

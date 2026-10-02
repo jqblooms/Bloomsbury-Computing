@@ -92,34 +92,6 @@
         s(300, 20, [['event_whenthisspriteclicked'], ['data_changevariableby', { VARIABLE: 'score', VALUE: 1 }]])].concat(arrows),
       Stage: [s(20, 20, [flag, ['control_forever', { SUBSTACK: [['control_if', { CONDITION: ['operator_gt', { OPERAND1: V('score'), OPERAND2: 4 }], SUBSTACK: [['control_stop', { STOP_OPTION: 'all' }]] }]] }]])],
       extraSprites: true
-    },
-    'bug-wrong-way': {
-      Rocket: [s(20, 20, [flag, ['motion_gotoxy', { X: 0, Y: 0 }]])].concat(arrows)
-    },
-    'bug-reset': {
-      Gem: [s(20, 20, [flag, ['data_setvariableto', { VARIABLE: 'clicks', VALUE: 0 }], ['looks_switchcostumeto', { COSTUME: 'gem' }]]),
-        s(20, 160, [['event_whenthisspriteclicked'], ['data_changevariableby', { VARIABLE: 'clicks', VALUE: 1 }]])]
-    },
-    'bug-once': {
-      Ball: [s(20, 20, [flag, ['motion_gotoxy', { X: 0, Y: 0 }], ['motion_pointindirection', { DIRECTION: 45 }],
-        ['control_forever', { SUBSTACK: [['motion_movesteps', { STEPS: 10 }], ['motion_ifonedgebounce']] }]])]
-    },
-    'bug-wrong-sprite': {
-      Coin: [s(20, 20, [flag, ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['control_forever', { SUBSTACK: [
-        ['control_if', { CONDITION: ['sensing_touchingobject', { TOUCHINGOBJECTMENU: 'Hero' }], SUBSTACK: [
-          ['data_changevariableby', { VARIABLE: 'score', VALUE: 1 }],
-          ['motion_gotoxy', { X: ['operator_random', { FROM: -200, TO: 200 }], Y: ['operator_random', { FROM: -140, TO: 140 }] }]
-        ] }]] }]])]
-    },
-    'bug-never-wins': {
-      Gem: [s(20, 20, [flag, ['data_setvariableto', { VARIABLE: 'clicks', VALUE: 0 }], ['looks_say', { MESSAGE: '' }]]),
-        s(20, 160, [['event_whenthisspriteclicked'], ['data_changevariableby', { VARIABLE: 'clicks', VALUE: 1 }],
-          ['control_if', { CONDITION: ['operator_equals', { OPERAND1: V('clicks'), OPERAND2: 10 }], SUBSTACK: [['looks_say', { MESSAGE: 'You win!' }]] }]])]
-    },
-    'bug-never-ends': {
-      Ball: [s(20, 20, [flag, ['motion_gotoxy', { X: 0, Y: 100 }], ['motion_pointindirection', { DIRECTION: 150 }],
-          ['control_forever', { SUBSTACK: [['motion_movesteps', { STEPS: 6 }], ['motion_ifonedgebounce']] }]]),
-        s(20, 260, [flag, ['control_wait_until', { CONDITION: ['sensing_touchingcolor', { COLOR: '#e02424' }] }], ['control_stop', { STOP_OPTION: 'all' }]])]
     }
   };
 })();

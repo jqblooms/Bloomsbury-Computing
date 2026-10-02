@@ -1,4 +1,4 @@
-// Scratch Challenges, part 5 of 5: the panel beside TurboWarp.
+// Scratch Challenges, part 6 of 6: the panel beside TurboWarp.
 //
 // Active only with ?scratchcheck in the URL (the site's Scratch Challenges
 // app; a lesson opens one challenge with &challenge=<id>). It loads the
@@ -41,6 +41,7 @@
   var DONE_PREFIX = 'scratchcheck:done:';
   var PROJECT_PREFIX = 'scratchcheck:project:';
   var PANEL_KEY = 'scratchcheck:panel';
+  var STARTER_PREFIX = 'scratchcheck:starter:';
 
   var state = {
     vm: null, challenge: null, results: {}, checking: false, current: null, abort: false,
@@ -132,6 +133,19 @@
       'body.scc-collapsed .scc-head,body.scc-collapsed .scc-body,body.scc-collapsed .scc-foot{display:none}',
       'body.scc-collapsed .scc-rail{display:flex}',
       '.scc-rail-count{writing-mode:vertical-rl;color:var(--muted);font:600 12px Roboto,sans-serif}',
+      '.scc-series{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:13px;color:var(--ink-soft)}',
+      '.scc-series strong{color:var(--ink);font-variant-numeric:tabular-nums}',
+      '.scc-pips{display:flex;gap:5px;margin-left:auto}',
+      '.scc-pip{width:12px;height:12px;border-radius:50%;border:2px solid var(--line-strong);background:transparent}',
+      '.scc-pip.is-done{background:var(--good);border-color:var(--good)}',
+      '.scc-pip.is-here{border-color:var(--brand)}',
+      '.scc-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}',
+      '.scc-pick-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink);text-align:center;font:600 14px Roboto,sans-serif;cursor:pointer}',
+      '.scc-pick-card:hover{border-color:var(--brand);background:var(--surface-3)}',
+      '.scc-pick-card:focus-visible{outline:2px solid var(--brand);outline-offset:2px}',
+      '.scc-pick-card img{width:44px;height:44px;object-fit:contain}',
+      '.scc-pick-blurb{display:block;color:var(--muted);font-size:12px;font-weight:500;line-height:1.35}',
+      '.scc-pick-card.is-wide{grid-column:1 / -1;flex-direction:row;justify-content:center;text-align:left}',
       '.scc-shield{position:fixed;top:0;left:0;bottom:0;right:var(--scc-w);z-index:49;display:none;cursor:progress}',
       'body.scc-checking .scc-shield{display:block}',
       '.scc-shield-banner{position:absolute;left:50%;top:10px;transform:translateX(-50%);max-width:min(560px,90%);padding:9px 16px;border-radius:20px;background:#0b1a33;border:1px solid var(--brand,#8ab4f8);color:#e8eaed;font:600 13.5px Roboto,sans-serif;box-shadow:0 8px 28px rgba(0,0,0,.5)}'
@@ -196,6 +210,8 @@
       state.abort = true;
     } else if (act === 'reset') {
       if (window.confirm('Start this challenge again from the starter project? Your blocks for it will be lost.')) resetChallenge();
+    } else if (act === 'pick') {
+      pickStarter(btn.getAttribute('data-id'));
     } else if (act === 'next') {
       var next = nextChallenge();
       if (next) openChallenge(next.id);
@@ -235,8 +251,50 @@
     var progress = progressFor(id);
     challenge.tasks.forEach(function (t) { if (progress.passed.indexOf(t.id) !== -1) state.results[t.id] = { ok: true, remembered: true }; });
     try { history.replaceState(null, '', location.pathname + '?' + withParam('challenge', id)); } catch (e) {}
+    state.picking = !!challenge.starters && !load(PROJECT_PREFIX + id) && !chosenStarter(challenge);
     render();
-    loadChallengeProject(challenge);
+    if (!state.picking) loadChallengeProject(challenge);
+  }
+
+  // ---- game starters: a challenge with `starters` lets the student pick one first ----
+  function chosenStarter(challenge) {
+    if (!challenge.starters) return null;
+    var id = load(STARTER_PREFIX + challenge.id);
+    return challenge.starters.filter(function (s) { return s.id === id; })[0] || null;
+  }
+  function starterDef(challenge) {
+    var chosen = chosenStarter(challenge);
+    return chosen ? chosen.starter : challenge.starter;
+  }
+  function pickStarter(id) {
+    var c = state.challenge;
+    if (!c || !c.starters) return;
+    store(STARTER_PREFIX + c.id, id);
+    state.picking = false;
+    render();
+    loadChallengeProject(c, true);
+  }
+  function artUrl(key) {
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(K.ART[key] || '');
+  }
+  function renderPicker(c) {
+    els.body.innerHTML = '<p class="scc-brief">Pick a game to start from. It has the sprites, sounds and backdrops ready. You write all the code.</p>' +
+      '<div class="scc-pick">' + c.starters.map(function (s, i) {
+        var wide = i === c.starters.length - 1 && c.starters.length % 2 === 1;
+        return '<button type="button" class="scc-pick-card' + (wide ? ' is-wide' : '') + '" data-act="pick" data-id="' + esc(s.id) + '"><img alt="" src="' + artUrl(s.art) + '">' +
+          '<span>' + esc(s.title) + '<span class="scc-pick-blurb">' + esc(s.blurb) + '</span></span></button>';
+      }).join('') + '</div>';
+    els.foot.innerHTML = '<p class="scc-note" style="margin:0">Started a game somewhere else? Pick any card, then use File, Load from your computer.</p>';
+    els.railCount.textContent = 'Pick a game';
+  }
+
+  // ---- a series (the Bug Hunts): how many are done, shown on each one ----
+  function seriesHtml(c) {
+    if (!c.series) return '';
+    var list = K.challenges.filter(function (x) { return x.series === c.series; });
+    var done = list.filter(function (x) { return progressFor(x.id).done; }).length;
+    return '<div class="scc-series"><span>' + esc(c.series) + 's fixed: <strong>' + done + ' of ' + list.length + '</strong></span><span class="scc-pips">' +
+      list.map(function (x) { return '<span class="scc-pip' + (progressFor(x.id).done ? ' is-done' : '') + (x === c ? ' is-here' : '') + '" title="' + esc(x.title) + '"></span>'; }).join('') + '</span></div>';
   }
 
   function withParam(name, value) {
@@ -262,6 +320,7 @@
     var info = lessonInfo(lessonOf(c));
     els.kicker.textContent = 'Scratch Challenge' + (info[1] ? ' · ' + info[1] : '');
     els.title.textContent = c.title;
+    if (state.picking) return renderPicker(c);
     var n = counts();
     var progress = progressFor(c.id);
     var reveal = supportReveal();
@@ -269,6 +328,7 @@
     if (progress.done && n.passed === n.total) {
       html += '<div class="scc-done">' + ICON.star + '<span><strong>Challenge complete.</strong> Every check passes.</span></div>';
     }
+    html += seriesHtml(c);
     html += '<p class="scc-brief">' + esc(c.brief) + '</p>';
     html += '<div class="scc-meter"><div class="scc-meter-bar"><div class="scc-meter-fill" style="width:' + Math.round(100 * n.passed / Math.max(1, n.total)) + '%"></div></div><span>' + n.passed + ' of ' + n.total + ' checks</span></div>';
     html += '<ol class="scc-tasks">' + c.tasks.map(function (t) {
@@ -345,13 +405,26 @@
     return bytes.buffer;
   }
 
+  // A starter is a project definition (built by the kit) or { sb3: 'projects/name.sb3' },
+  // a real Scratch file on the site, its path relative to scratch/editor.html.
+  function starterData(def) {
+    if (def && def.sb3) {
+      return fetch(def.sb3).then(function (r) {
+        if (!r.ok) throw new Error('Could not load ' + def.sb3);
+        return r.arrayBuffer();
+      });
+    }
+    return Promise.resolve().then(function () { return K.buildProject(def); });
+  }
+
   function loadChallengeProject(challenge, fresh) {
     var saved = fresh ? null : load(PROJECT_PREFIX + challenge.id);
-    var data;
-    try { data = saved ? fromBase64(saved) : K.buildProject(challenge.starter); } catch (e) { data = K.buildProject(challenge.starter); }
+    var def = starterDef(challenge);
     state.loading = true;
-    return state.vm.loadProject(data).catch(function () {
-      return state.vm.loadProject(K.buildProject(challenge.starter));
+    var data;
+    try { data = saved ? Promise.resolve(fromBase64(saved)) : starterData(def); } catch (e) { data = starterData(def); }
+    return data.then(function (buffer) { return state.vm.loadProject(buffer); }).catch(function () {
+      return starterData(def).then(function (buffer) { return state.vm.loadProject(buffer); });
     }).then(function () {
       state.loading = false;
       state.lastFingerprint = '';
@@ -364,6 +437,12 @@
     if (!c) return;
     store(PROJECT_PREFIX + c.id, null);
     state.results = {};
+    if (c.starters) {
+      store(STARTER_PREFIX + c.id, null);
+      state.picking = true;
+      render();
+      return;
+    }
     render();
     loadChallengeProject(c, true);
   }
@@ -377,7 +456,7 @@
   function saveProjectNow() {
     clearTimeout(state.saveTimer);
     var c = state.challenge;
-    if (!c || state.loading || state.checking || state.selfTesting) return;
+    if (!c || state.loading || state.checking || state.selfTesting || state.picking) return;
     try {
       state.vm.saveProjectSb3().then(function (blob) { return blob.arrayBuffer(); }).then(function (buffer) {
         if (buffer.byteLength > 1500000) {
@@ -408,7 +487,7 @@
   }
 
   async function runChecks() {
-    if (state.checking || !state.challenge || state.loading) return;
+    if (state.checking || !state.challenge || state.loading || state.picking) return;
     var c = state.challenge;
     saveProjectNow();
     state.checking = true;
@@ -492,8 +571,11 @@
     state.challenge = c;
     state.results = {};
     render();
+    state.picking = false;
     var def = c.starter;
-    if (which !== 'starter') {
+    if (which !== 'starter' && K.solutionStarters && K.solutionStarters[id]) {
+      def = K.solutionStarters[id]();
+    } else if (which !== 'starter') {
       var sol = window.ScratchCheckSolutions && window.ScratchCheckSolutions[id];
       if (!sol) return { id: id, error: 'no solution' };
       def = JSON.parse(JSON.stringify(c.starter));
@@ -503,7 +585,7 @@
       if (sol.extraSprites) def.sprites.push({ name: 'Coin', costumes: [['coin', 'coin']], x: 120, y: 60 });
     }
     state.loading = true;
-    await state.vm.loadProject(K.buildProject(def));
+    await state.vm.loadProject(await starterData(def));
     state.loading = false;
     await new Promise(function (r) { setTimeout(r, 400); });
     await runChecks();

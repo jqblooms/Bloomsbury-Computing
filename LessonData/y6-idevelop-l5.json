@@ -33,12 +33,12 @@
     {
       "id": "title",
       "label": "Plan and Build Your Own Game",
-      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 6 Scratch</p><h2 class=\"lesson-h2\">Plan and Build Your Own Game</h2><p>Year 6, 6.2.5</p></div><ul class=\"lesson-facts\"><li>Plan a game: sprites, controls, variables, and how it ends.</li><li>Build it from the plan, testing each piece as you add it.</li><li>Check it has the parts every good game needs.</li></ul>"
+      "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 6 Scratch</p><h2 class=\"lesson-h2\">Plan and Build Your Own Game</h2><p>Year 6, 6.2.5</p></div><ul class=\"lesson-facts\"><li>Pick a kind of game and plan it.</li><li>Build it one piece at a time, testing as you go.</li><li>Make it feel good to play: sound, a score on the stage, sprites that react.</li></ul>"
     },
     {
       "id": "plan",
       "label": "A Plan Before Code",
-      "content": "<h2 class=\"lesson-h2\">A Plan Before Code</h2><p class=\"lesson-lead\">Here is the plan for Fruit Catcher, the catching game you have built. Yours will have the same parts.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Fruit Catcher plan</h3><ul class=\"lesson-facts\"><li><strong>Sprites</strong>: Bowl (the player moves it), Apple (falls from a random place).</li><li><strong>Controls</strong>: left and right arrow keys.</li><li><strong>Variables</strong>: score (apples caught), lives (misses left, starts at 3).</li><li><strong>Win or lose</strong>: lose when lives reaches 0.</li></ul></div><ul class=\"lesson-facts\"><li>A plan lets you, or someone else, build the game without guessing.</li><li>Each line of the plan becomes a script or a sprite.</li><li>Build one line at a time and test it before the next.</li></ul></div>"
+      "content": "<h2 class=\"lesson-h2\">A Plan Before Code</h2><p class=\"lesson-lead\">Here is the plan for Fruit Catcher, the catching game you have built. Yours will have the same parts.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why plan first? What goes wrong if you start with no plan?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You know what to build next, and you can test each part against the plan. With no plan you guess, and the game often has no way to win or lose.</p></div></details><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Fruit Catcher plan</h3><ul class=\"lesson-facts\"><li><strong>Sprites</strong>: Bowl (the player moves it), Apple (falls from a random place).</li><li><strong>Controls</strong>: left and right arrow keys.</li><li><strong>Variables</strong>: score (apples caught), lives (misses left, starts at 3).</li><li><strong>Win or lose</strong>: lose when lives reaches 0.</li></ul></div><ul class=\"lesson-facts\"><li>Each line of the plan becomes a script or a sprite.</li><li>Build one line at a time.</li><li>Test it before the next line.</li></ul></div>"
     },
     {
       "id": "check-plan",
@@ -70,92 +70,14 @@
       ]
     },
     {
-      "id": "plan-1",
-      "label": "Plan: Name, Aim and Controls",
-      "content": "<h2 class=\"lesson-h2\">Plan: Name, Aim and Controls</h2><div class=\"iplan-grid\"><div class=\"iplan-panel\"><h3>Game</h3><p class=\"iplan-hint\">What is it called?</p><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"game-name\" aria-label=\"Game name\" autocomplete=\"off\" placeholder=\"e.g. Meteor Dodge\"></div><div class=\"iplan-panel\"><h3>Aim</h3><p class=\"iplan-hint\">What does the player try to do?</p><textarea class=\"lesson-exam-answer\" data-answer-id=\"game-aim\" aria-label=\"Game aim\" rows=\"3\" placeholder=\"e.g. Dodge the falling meteors and collect stars for points\"></textarea></div><div class=\"iplan-panel\"><h3>Controls</h3><p class=\"iplan-hint\">Which keys or mouse moves control it?</p><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"game-controls\" aria-label=\"Game controls\" autocomplete=\"off\" placeholder=\"e.g. left and right arrows move the ship\"></div><div class=\"iplan-panel\"><h3>Win or lose</h3><p class=\"iplan-hint\">How does the game end?</p><textarea class=\"lesson-exam-answer\" data-answer-id=\"game-end\" aria-label=\"How the game ends\" rows=\"2\" placeholder=\"e.g. win at 20 stars, lose when lives reaches 0\"></textarea></div></div>"
+      "id": "pick",
+      "label": "Pick Your Game",
+      "content": "<h2 class=\"lesson-h2\">Pick Your Game</h2><p class=\"lesson-lead\">Each game comes with its sprites, sounds and backdrops. You write all the code.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Look at the four games. What does every one of them need: a control, a variable, a way to win or lose?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>All four. Catch and Dodge move a sprite with the arrow keys, Maze moves the Hero, Pop uses clicks. Each counts something (score, lives, keys, time) and each ends: lives run out, the Door opens, or time runs out.</p></div></details><div style=\"display:grid;grid-template-columns:repeat(4,1fr);gap:12px\"><div class=\"lesson-flow-task\" style=\"text-align:center\"><svg viewBox=\"0 0 36 40\" width=\"44\" height=\"48\" aria-hidden=\"true\"><path d=\"M18 10 C10 4 0 8 2 20 C4 32 12 40 18 36 C24 40 32 32 34 20 C36 8 26 4 18 10 Z\" fill=\"#f28b82\"/><path d=\"M18 10 C18 6 20 2 23 0\" stroke=\"#81c995\" stroke-width=\"3\" fill=\"none\"/></svg><h3>Catch</h3><p>Move the Bowl.</p><p>Catch Apples, miss Rocks.</p></div><div class=\"lesson-flow-task\" style=\"text-align:center\"><svg viewBox=\"0 0 60 56\" width=\"48\" height=\"44\" aria-hidden=\"true\"><path d=\"M30 2 L46 40 L30 33 L14 40 Z\" fill=\"#e8eaed\" stroke=\"#8ab4f8\" stroke-width=\"2\"/><circle cx=\"30\" cy=\"22\" r=\"6\" fill=\"#8ab4f8\"/><path d=\"M24 38 L30 54 L36 38 Z\" fill=\"#fdd663\"/></svg><h3>Dodge</h3><p>Steer the Ship.</p><p>Dodge Meteors, grab Stars.</p></div><div class=\"lesson-flow-task\" style=\"text-align:center\"><svg viewBox=\"0 0 52 58\" width=\"42\" height=\"48\" aria-hidden=\"true\"><path d=\"M4 54 V24 C4 11 14 2 26 2 C38 2 48 11 48 24 V54 L40 47 L33 54 L26 47 L19 54 L12 47 Z\" fill=\"#e9d2fd\" stroke=\"#c58af9\" stroke-width=\"3\"/><ellipse cx=\"18\" cy=\"24\" rx=\"5\" ry=\"7\" fill=\"#202124\"/><ellipse cx=\"34\" cy=\"24\" rx=\"5\" ry=\"7\" fill=\"#202124\"/></svg><h3>Maze</h3><p>Walk the Hero.</p><p>Get the Key, avoid the Ghost.</p></div><div class=\"lesson-flow-task\" style=\"text-align:center\"><svg viewBox=\"0 0 46 76\" width=\"30\" height=\"50\" aria-hidden=\"true\"><ellipse cx=\"23\" cy=\"24\" rx=\"21\" ry=\"23\" fill=\"#f28b82\"/><path d=\"M23 52 C18 58 28 64 23 74\" stroke=\"#9aa0a6\" stroke-width=\"2\" fill=\"none\"/><path d=\"M19 46 L27 46 L23 52 Z\" fill=\"#f28b82\"/></svg><h3>Pop</h3><p>Click the Balloons.</p><p>Score before time runs out.</p></div></div><p class=\"lesson-lead\">Or pick <strong>My own idea</strong>: one sprite and an empty stage.</p>"
     },
     {
-      "id": "plan-2",
-      "label": "Plan: Sprites",
-      "content": "<h2 class=\"lesson-h2\">Plan: Sprites</h2><p class=\"lesson-lead\">Two or three sprites. Say what each one does, in your own words.</p><table class=\"iplan-table\"><thead><tr><th>Sprite</th><th>What will it do?</th></tr></thead><tbody><tr><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"sprite-1-desc\" aria-label=\"Sprite 1 name\" autocomplete=\"off\" placeholder=\"e.g. Ship\"></td><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"sprite-1-code\" aria-label=\"Sprite 1 job\" autocomplete=\"off\" placeholder=\"e.g. moves left and right with the arrow keys\"></td></tr><tr><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"sprite-2-desc\" aria-label=\"Sprite 2 name\" autocomplete=\"off\" placeholder=\"e.g. Meteor\"></td><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"sprite-2-code\" aria-label=\"Sprite 2 job\" autocomplete=\"off\" placeholder=\"e.g. falls from a random x; touching the Ship loses a life\"></td></tr><tr><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"sprite-3-desc\" aria-label=\"Sprite 3 name\" autocomplete=\"off\" placeholder=\"e.g. Star\"></td><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"sprite-3-code\" aria-label=\"Sprite 3 job\" autocomplete=\"off\" placeholder=\"e.g. falls too; touching the Ship adds 1 to score\"></td></tr></tbody></table>"
-    },
-    {
-      "id": "plan-3",
-      "label": "Plan: Variables and Levels",
-      "content": "<h2 class=\"lesson-h2\">Plan: Variables and Levels</h2><table class=\"iplan-table\"><thead><tr><th>Variable</th><th>What does it count? What does the green flag set it to?</th></tr></thead><tbody><tr><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"var-1-name\" aria-label=\"Variable 1 name\" autocomplete=\"off\" placeholder=\"e.g. score\"></td><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"var-1-desc\" aria-label=\"Variable 1 description\" autocomplete=\"off\" placeholder=\"e.g. stars collected, starts at 0\"></td></tr><tr><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"var-2-name\" aria-label=\"Variable 2 name\" autocomplete=\"off\" placeholder=\"e.g. lives\"></td><td><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"var-2-desc\" aria-label=\"Variable 2 description\" autocomplete=\"off\" placeholder=\"e.g. hits left, starts at 3\"></td></tr></tbody></table><div class=\"iplan-grid\"><div class=\"iplan-panel\"><h3>Levels</h3><p class=\"iplan-hint\">Optional: what changes at level 2?</p><textarea class=\"lesson-exam-answer\" data-answer-id=\"levels\" aria-label=\"Levels\" rows=\"2\" placeholder=\"e.g. at 10 stars, broadcast level up: new backdrop and faster meteors\"></textarea></div></div>"
-    },
-    {
-      "id": "review",
-      "label": "Review Your Plan",
-      "type": "plan-summary",
-      "containerId": "y6l5-plan-summary",
-      "fields": [
-        {
-          "type": "text",
-          "step": "plan-1",
-          "id": "game-name",
-          "label": "Name"
-        },
-        {
-          "type": "text",
-          "step": "plan-1",
-          "id": "game-aim",
-          "label": "Aim"
-        },
-        {
-          "type": "text",
-          "step": "plan-1",
-          "id": "game-controls",
-          "label": "Controls"
-        },
-        {
-          "type": "text",
-          "step": "plan-1",
-          "id": "game-end",
-          "label": "Win or lose"
-        },
-        {
-          "type": "pairs",
-          "step": "plan-2",
-          "label": "Sprites",
-          "items": [
-            {
-              "desc": "sprite-1-desc",
-              "extra": "sprite-1-code"
-            },
-            {
-              "desc": "sprite-2-desc",
-              "extra": "sprite-2-code"
-            },
-            {
-              "desc": "sprite-3-desc",
-              "extra": "sprite-3-code"
-            }
-          ]
-        },
-        {
-          "type": "pairs",
-          "step": "plan-3",
-          "label": "Variables",
-          "items": [
-            {
-              "desc": "var-1-name",
-              "extra": "var-1-desc"
-            },
-            {
-              "desc": "var-2-name",
-              "extra": "var-2-desc"
-            }
-          ]
-        },
-        {
-          "type": "text",
-          "step": "plan-3",
-          "id": "levels",
-          "label": "Levels"
-        }
-      ],
-      "content": "<h2 class=\"lesson-h2\">Review Your Plan</h2><p class=\"lesson-lead\">Your whole plan on one screen. Keep this slide open beside TurboWarp while you build.</p><div class=\"iplan-summary\" id=\"y6l5-plan-summary\"></div>"
+      "id": "plan-game",
+      "label": "Plan: Your Game",
+      "content": "<h2 class=\"lesson-h2\">Plan: Your Game</h2><p class=\"lesson-lead\">Short answers are fine. Keep this slide open while you build.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write down how the game ends before you build it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The ending decides which variable you need and what the if block checks, for example lives = 0 or time = 0.</p></div></details><div class=\"iplan-grid\"><div class=\"iplan-panel\"><h3>Game</h3><p class=\"iplan-hint\">Which game? What is it called?</p><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"game-name\" aria-label=\"Game name\" autocomplete=\"off\" placeholder=\"e.g. Dodge: Meteor Storm\"></div><div class=\"iplan-panel\"><h3>Controls</h3><p class=\"iplan-hint\">Which keys or clicks?</p><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"game-controls\" aria-label=\"Game controls\" autocomplete=\"off\" placeholder=\"e.g. left and right arrows move the Ship\"></div><div class=\"iplan-panel\"><h3>Variable</h3><p class=\"iplan-hint\">What does it count? What does the green flag set it to?</p><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"game-variable\" aria-label=\"Game variable\" autocomplete=\"off\" placeholder=\"e.g. lives, starts at 3\"></div><div class=\"iplan-panel\"><h3>Win or lose</h3><p class=\"iplan-hint\">How does the game end?</p><input class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"game-end\" aria-label=\"How the game ends\" autocomplete=\"off\" placeholder=\"e.g. Game Over when lives reaches 0\"></div></div>"
     },
     {
       "id": "activity-1",
@@ -164,21 +86,26 @@
       "buttonId": "y6l5-activity-1-btn",
       "appId": "scratchchallenges",
       "appQuery": "challenge=my-game",
-      "content": "<h2 class=\"lesson-h2\">Activity 1: Build Your Game</h2><p class=\"lesson-lead\">Work on your own, from your plan. Build one piece, test it, then the next.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Sprites first, then the controls.</li><li>Then a loop that keeps the game running.</li><li>Then a variable: set it at the green flag, change it during the game.</li><li>Then an if block that decides something, and a way to win or lose.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l5-activity-1-btn\">Open My Game</button></div></div>"
+      "content": "<h2 class=\"lesson-h2\">Activity 1: Build Your Game</h2><p class=\"lesson-lead\">Work on your own. Open My Game and pick the game you planned.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Controls first. Test them.</li><li>Then a loop that keeps the game running.</li><li>Then a variable: set it at the green flag, change it during the game.</li><li>Then an if block and a way to win or lose.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l5-activity-1-btn\">Open My Game</button></div></div>"
     },
     {
-      "id": "level-two",
-      "label": "Make It Better: A Second Level",
-      "content": "<h2 class=\"lesson-h2\">Make It Better: A Second Level</h2><p class=\"lesson-lead\">When every check passes, add a level with a broadcast and a backdrop, as in Level Up.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">if &lt;(score) = (10)&gt; then\nbroadcast [level up v]\nend\n\nwhen I receive [level up v]\nswitch backdrop to [Level 2 v]</pre></div><ul class=\"lesson-facts\"><li>Add a second backdrop for level 2.</li><li>Broadcast a message when the player reaches your target.</li><li>Make level 2 harder: faster enemies, or a new sprite.</li><li>The bonus check in My Game looks for the second level.</li></ul></div>"
+      "id": "feel-good",
+      "label": "Make It Feel Good",
+      "content": "<h2 class=\"lesson-h2\">Make It Feel Good</h2><p class=\"lesson-lead\">When every check passes, make the game fun to play. The bonus checks look for these.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Two games score the same way. One plays a sound and the sprite grows when you score. Which feels better to play? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The one with sound and movement. The player sees and hears that they scored straight away, so it feels like a reward.</p></div></details><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">if &lt;touching [Ship v] ?&gt; then\nstart sound [coin v]\nchange [score v] by (1)\nchange size by (10)\nend</pre></div><ul class=\"lesson-facts\"><li><strong>Sound</strong>: start sound when you score or get hit.</li><li><strong>Score on the stage</strong>: tick the box next to the variable.</li><li><strong>React</strong>: change size, a colour effect or a costume.</li><li><strong>Level 2</strong>: switch to the Level 2 backdrop with a broadcast.</li></ul></div>"
     },
     {
       "id": "activity-2",
-      "label": "Activity 2: Level Two",
+      "label": "Activity 2: Make It Feel Good",
       "type": "app-link",
       "buttonId": "y6l5-activity-2-btn",
       "appId": "scratchchallenges",
       "appQuery": "challenge=my-game",
-      "content": "<h2 class=\"lesson-h2\">Activity 2: Level Two</h2><p class=\"lesson-lead\">Work on your own. Open My Game again: your project is still there.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Add a second backdrop.</li><li>Switch to it with a broadcast when the player reaches your target.</li><li>Make level 2 harder than level 1.</li><li>Press Check my project to see the bonus check go green.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l5-activity-2-btn\">Open My Game</button></div></div>"
+      "content": "<h2 class=\"lesson-h2\">Activity 2: Make It Feel Good</h2><p class=\"lesson-lead\">Work on your own. Open My Game again: your project is still there.</p><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Build it</h3><ul class=\"lesson-facts\"><li>Add a sound.</li><li>Show the score on the stage.</li><li>Make a sprite react when you score.</li><li>Add Level 2. Make it harder.</li></ul></div><div class=\"lesson-app-link\"><p>The panel beside TurboWarp lists the checks. Press <strong>Check my project</strong> as often as you like: it plays your game and tells you what it saw.</p><button type=\"button\" class=\"donow-btn\" id=\"y6l5-activity-2-btn\">Open My Game</button></div></div>"
+    },
+    {
+      "id": "arcade",
+      "label": "Arcade: Play Each Other's Games",
+      "content": "<h2 class=\"lesson-h2\">Arcade: Play Each Other's Games</h2><p class=\"lesson-lead\">Leave your game open. Move to the next computer when your teacher says.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">After playing: which game was most fun? What made it fun?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Answers vary. Look for clear controls, sound, a score you can see, and a game that gets harder.</p></div></details><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>At each game</h3><ul class=\"lesson-facts\"><li>Click the green flag. Play for two minutes.</li><li>Try every control.</li><li>Try to win, and try to lose.</li></ul></div><div class=\"lesson-flow-task\"><h3>Tell the maker</h3><ul class=\"lesson-facts\"><li>One thing that was fun.</li><li>One thing that did not work, if you found one.</li></ul></div></div>"
     },
     {
       "id": "practice",
