@@ -140,7 +140,7 @@
           if (reached < 2) t.fail('The Robot did not reach the yellow treasure at (-150, 100). ' + wentInstead(t, 'Robot', [], reached));
           var trace = t.trace('Robot');
           var steps = trace.filter(function (p) { return p.y > -120 && p.y < 100; }).length;
-          if (steps < 4) t.fail('The Robot jumped straight to the treasure. Use a glide block so it travels there.');
+          if (steps < 2) t.fail('The Robot jumped straight to the treasure. Use a glide block so it travels there.');
         } },
       { id: 'all', text: 'Next it glides to the blue treasure at (150, 100), then the red treasure at (150, -100).',
         hint: 'glide (1) secs to x: (150) y: (100)\nglide (1) secs to x: (150) y: (-100)',
