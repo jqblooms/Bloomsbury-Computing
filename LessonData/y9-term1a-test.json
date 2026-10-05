@@ -1,0 +1,34 @@
+{
+ "id": "y9-term1a-test",
+ "label": "Term 1a Test",
+ "steps": [
+  {
+   "id": "title",
+   "label": "Term 1a Test",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithm Design and Text Programming</p><h2 class=\"lesson-h2\">Term 1a Test</h2><p>Year 9</p></div><ul class=\"lesson-facts\"><li><strong>First:</strong> 20 minutes of revision practice.</li><li><strong>Then:</strong> a 30-minute test on this website.</li><li><strong>Topics:</strong> number systems, loops, data types and arrays, errors and trace tables.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which topic do you find hardest?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Practise that topic most in the next 20 minutes.</p></div></details>"
+  },
+  {
+   "id": "revision",
+   "label": "Revision Practice",
+   "type": "embedded-app",
+   "appId": "drill-y9-term1a-revision",
+   "embedContainerId": "y9t1a-revision",
+   "content": "<h2 class=\"lesson-h2\">Revision Practice</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program has a bug. Do you follow what it should do, or what it says?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>What it says, one line at a time. Write every change in a trace table.</p></div></details><p class=\"lesson-lead\">20 minutes. The questions are like the test, with different numbers. Choose a topic or practise them all.</p><div id=\"y9t1a-revision\"></div>"
+  },
+  {
+   "id": "how-it-works",
+   "label": "How the Test Works",
+   "content": "<h2 class=\"lesson-h2\">How the Test Works</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Your answers save as you type. Why does that help?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If the computer crashes, you lose nothing. Open the site again and carry on.</p></div></details><ul class=\"lesson-facts\"><li>You have <strong>30 minutes</strong> from when you press <strong>Start</strong>.</li><li>Your answers <strong>save as you type</strong>.</li><li>During the test you <strong>cannot open the rest of the website</strong>.</li><li>The notepad works, but it starts <strong>empty</strong>. Your old notes come back after the test.</li><li>Press <strong>Hand in</strong> when you finish. When time runs out, it hands in for you.</li></ul>"
+  },
+  {
+   "id": "test",
+   "label": "The Test",
+   "type": "app-link",
+   "appId": "tests",
+   "buttonId": "y9t1a-open-test",
+   "content": "<h2 class=\"lesson-h2\">The Test</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">You finish early. What should you do?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Check every answer. Trace each program again, one line at a time.</p></div></details><p class=\"lesson-lead\">Wait until your teacher says the test is open. Then press the button, and press Start.</p><p><button type=\"button\" class=\"donow-btn\" id=\"y9t1a-open-test\">Open the test</button></p>"
+  }
+ ],
+ "validators": {},
+ "pseudocodeValidators": {}
+}
