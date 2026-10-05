@@ -57,7 +57,7 @@
         i += 2;
         continue;
       }
-      if ('()[]+-*/&,=<>'.indexOf(ch) !== -1) {
+      if ('()[]+-*/^&,=<>'.indexOf(ch) !== -1) {
         tokens.push({ type: 'op', value: ch });
         i++;
         continue;
@@ -100,6 +100,7 @@
       if (op === '+') return a + b;
       if (op === '-') return a - b;
       if (op === '*') return a * b;
+      if (op === '^') return Math.pow(a, b);
       if (op === '/' || op === 'DIV' || op === 'MOD') {
         if (b === 0) throw new PseudocodeError('Cannot divide by zero.', line);
         if (op === '/') return a / b;
@@ -160,6 +161,15 @@
           return -v;
         };
       }
+      // The syllabus form of the integer-division routines: DIV(17, 5) and MOD(17, 5).
+      if ((isKw(t, 'DIV') || isKw(t, 'MOD')) && isOp(tokens[pos + 1], '(')) {
+        next(); next();
+        var firstArg = parseExpr();
+        expectOp(',');
+        var secondArg = parseExpr();
+        expectOp(')');
+        return makeBinOp(firstArg, secondArg, t.value, line);
+      }
       if (t.type === 'ident') {
         next();
         var name = t.value;
@@ -184,11 +194,22 @@
 
     function parseUnary() { return parseAtom(); }
 
+    // ^ (raised to the power of) binds tighter than * and /, and from the right.
+    function parsePower() {
+      var base = parseUnary();
+      if (isOp(peek(), '^')) {
+        next();
+        var exponent = parsePower();
+        return makeBinOp(base, exponent, '^', line);
+      }
+      return base;
+    }
+
     function parseProduct() {
-      var left = parseUnary();
+      var left = parsePower();
       while (isOp(peek(), '*') || isOp(peek(), '/') || isKw(peek(), 'DIV') || isKw(peek(), 'MOD')) {
         var op = next().value;
-        var right = parseUnary();
+        var right = parsePower();
         left = makeBinOp(left, right, op, line);
       }
       return left;
