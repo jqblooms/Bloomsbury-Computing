@@ -6640,32 +6640,6 @@ DrillData.register("y11-exam-race", {
    "pickThenType": true
   },
   {
-   "id": "n24-22-q7c",
-   "category": "programming",
-   "prompt": "An algorithm inputs Value until -1 is input. For each Value it sets Answer <- Value, then runs FOR Count <- Value - 1 TO 1 STEP -1 with Answer <- Answer * Count inside the loop. Describe the problem that would be caused in this algorithm if a Value of 1, 0 or less than -1 was input.\nThis question is worth 2 marks: give ONE point that earns a mark.",
-   "answers": [
-    "The program would accept the value and enter the FOR loop",
-    "Count would keep reducing by 1 and would never reach 1, as it would already be less than 1",
-    "There would be an endless loop"
-   ],
-   "distractors": [
-    "The program would reject the value and ask for it to be input again",
-    "Count would keep increasing by 1 until it reached the value input",
-    "The algorithm would stop, as if -1 had been input",
-    "The answer would always be output as zero",
-    "Count would start at 1 and the loop would run exactly once",
-    "The program would output an error message and continue",
-    "Count would keep reducing by 1 until it reached 1, so the loop would run the usual number of times",
-    "Count would keep increasing by 1 and would never reach 1, as it would already be greater than 1",
-    "Count would be set to -1 and the program would stop, just as if the rogue value had been input"
-   ],
-   "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 7(c). The mark scheme accepts: The program would accept the value and enter the FOR loop / Count would keep reducing by 1 and would never reach 1, as it would already be less than 1 / There would be an endless loop",
-   "working": [
-    "Look at the loop: FOR Count <- Value - 1 TO 1 STEP -1. Count starts at Value - 1 and goes down by 1 each time, stopping at 1. If Value is 1, 0 or below -1, nothing rejects it, so it enters the loop, but Count already starts below 1. Counting down will never reach 1, so the loop would never end."
-   ],
-   "pickThenType": true
-  },
-  {
    "id": "n24-22-q8",
    "category": "checks",
    "prompt": "A program being developed takes as input whole numbers that are not greater than 80. Identify two items of test data to test the whole number limit of 80. Explain the reason for your choice of the data in each case.\nThis question is worth 4 marks: give ONE point that earns a mark.",
