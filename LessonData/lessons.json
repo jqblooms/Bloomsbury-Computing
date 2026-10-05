@@ -185,7 +185,8 @@
           "title": "Programming Concepts",
           "lessons": [
             "y11-8-1-vc",
-            "y11-8-1-types"
+            "y11-8-1-types",
+            "y11-8-1-arith"
           ]
         }
       ]
