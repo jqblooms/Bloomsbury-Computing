@@ -82,8 +82,63 @@ const num = (n, unit = '') => `^\\s*${n}${unit ? `(\\s*${unit})?` : ''}\\s*\\.?\
 const word = (w) => `^\\s*["']?\\s*${w}\\s*["']?\\s*\\.?\\s*$`;
 const steps = [];
 
+// ---------------------------------------------------------------- "Walk me through it" pictures
+// Each walkthrough step is { text, visual }: one short sentence, and a picture with the part that matters marked
+// .wt-hl (the shell's lesson-engine.html draws it in a panel inside the slide). It uses different numbers from the
+// slide's own question, so it shows the method and never the answer.
+const PV = [128, 64, 32, 16, 8, 4, 2, 1];
+const wcell = 'padding:6px 10px;text-align:center;font:700 18px var(--font-mono, monospace);min-width:38px';
+function pvTable(bits, hl = []) {
+  const c = (i) => (hl.includes(i) ? ' class="wt-hl"' : '');
+  return '<table class="donow-table"><tr><th style="' + wcell + ';text-align:left">Place value</th>' + PV.map((v, i) => `<th${c(i)} style="${wcell}">${v}</th>`).join('') + '</tr>' +
+    '<tr><th style="' + wcell + ';text-align:left">Bit</th>' + PV.map((v, i) => `<td${c(i)} style="${wcell}">${bits[i] == null ? '' : bits[i]}</td>`).join('') + '</tr></table>';
+}
+const note = (t) => `<div class="wt-note">${t}</div>`;
+function arrWT(name, values, idxHL = [], valHL = []) {
+  return `<div><p style="margin:0 0 6px;text-align:center"><strong>${name}</strong></p><table class="donow-table">` +
+    `<tr><th style="${wcell};text-align:left">Index</th>${values.map((v, i) => `<td${idxHL.includes(i + 1) ? ' class="wt-hl"' : ''} style="${wcell};color:var(--muted)">${i + 1}</td>`).join('')}</tr>` +
+    `<tr><th style="${wcell};text-align:left">Value</th>${values.map((v, i) => `<td${valHL.includes(i + 1) ? ' class="wt-hl"' : ''} style="${wcell}">${v}</td>`).join('')}</tr></table></div>`;
+}
+function codeWT(lines, hl = []) {
+  return '<div class="lesson-code">' + lines.map((l, i) => {
+    const lead = (l.match(/^ */) || [''])[0].length;
+    const text = esc(l.trim()).replace(/&amp;larr;/g, A).replace(/&lt;-/g, A);
+    return `<div class="lesson-code-line${hl.includes(i + 1) ? ' wt-hl' : ''}">` + String(i + 1).padStart(2, '0') + '&nbsp;&nbsp;' + '&nbsp;'.repeat(lead) + text + '</div>';
+  }).join('') + '</div>';
+}
+// Do Now 1 (denary to 8-bit binary), worked with 75: 01001011.
+const WT_BINARY = { title: 'Walk me through it: denary to 8-bit binary', steps: [
+  { text: 'We will change <strong>75</strong> into 8-bit binary. Your question uses different numbers, so you still do the working yourself.', visual: '<div class="wt-big">75</div>' },
+  { text: 'Write the 8 place values. Start with 1 on the right. Each one is <strong>double</strong> the one next to it.', visual: pvTable([], [0, 1, 2, 3, 4, 5, 6, 7]) },
+  { text: 'Start on the left. Is 128 bigger than 75? <strong>Yes</strong>, so it does not fit. Write <strong>0</strong>.', visual: pvTable(['0'], [0]) + note('Left: 75') },
+  { text: 'Does 64 fit into 75? <strong>Yes.</strong> Write <strong>1</strong>. Take it away: 75 - 64 = 11.', visual: pvTable(['0', '1'], [1]) + note('Left: 11') },
+  { text: 'Does 32 fit into 11? <strong>No</strong>: write 0. Does 16 fit into 11? <strong>No</strong>: write 0.', visual: pvTable(['0', '1', '0', '0'], [2, 3]) + note('Left: 11') },
+  { text: 'Does 8 fit into 11? <strong>Yes.</strong> Write <strong>1</strong>. Take it away: 11 - 8 = 3.', visual: pvTable(['0', '1', '0', '0', '1'], [4]) + note('Left: 3') },
+  { text: 'Does 4 fit into 3? <strong>No</strong>: write 0. Does 2 fit into 3? <strong>Yes</strong>: write 1. 3 - 2 = 1.', visual: pvTable(['0', '1', '0', '0', '1', '0', '1'], [5, 6]) + note('Left: 1') },
+  { text: 'Does 1 fit into 1? <strong>Yes.</strong> Write <strong>1</strong>. Nothing is left, so we are done.', visual: pvTable(['0', '1', '0', '0', '1', '0', '1', '1'], [7]) + note('Left: 0') },
+  { text: 'Read the bits from left to right: <strong>01001011</strong>. Count them: there must be 8.', visual: pvTable(['0', '1', '0', '0', '1', '0', '1', '1'], [0, 1, 2, 3, 4, 5, 6, 7]) },
+  { text: 'Check: add the place values that have a 1. 64 + 8 + 2 + 1 = 75. It matches. Now do the same for each number in your question.', visual: pvTable(['0', '1', '0', '0', '1', '0', '1', '1'], [1, 4, 6, 7]) },
+] };
+// Do Now 2 (read an array, then total it in a loop), worked with Scores = 5, 2, 7, 4: Scores[3] = 7, total 18.
+const WS = [5, 2, 7, 4];
+const WPROG = ['DECLARE Total : INTEGER', 'DECLARE Index : INTEGER', 'Total <- 0', 'FOR Index <- 1 TO 4', '    Total <- Total + Scores[Index]', 'NEXT Index', 'OUTPUT Total'];
+const WT_ARRAY = { title: 'Walk me through it: arrays and a loop', steps: [
+  { text: 'This is a different array, called <strong>Scores</strong>. Your question uses Marks, so you still do the working yourself.', visual: arrWT('Scores', WS) },
+  { text: 'The top row is the <strong>index</strong>: the position, 1, 2, 3, 4.', visual: arrWT('Scores', WS, [1, 2, 3, 4]) },
+  { text: 'The bottom row is the <strong>value</strong> stored at each position.', visual: arrWT('Scores', WS, [], [1, 2, 3, 4]) },
+  { text: '<strong>OUTPUT Scores[3]</strong> means: go to index 3.', visual: arrWT('Scores', WS, [3]) + codeWT(['OUTPUT Scores[3]'], [1]) },
+  { text: 'Read the value under index 3. It is <strong>7</strong>. So OUTPUT Scores[3] outputs 7.', visual: arrWT('Scores', WS, [3], [3]) + codeWT(['OUTPUT Scores[3]'], [1]) },
+  { text: 'Now the loop. Line 3 sets Total to <strong>0</strong> before the loop starts.', visual: codeWT(WPROG, [3]) + note('Total = 0') },
+  { text: 'Line 4: the loop runs with Index = 1, then 2, then 3, then 4.', visual: codeWT(WPROG, [4]) + note('Total = 0') },
+  { text: 'Index = 1. Line 5 adds Scores[1], which is 5. Total = 0 + 5 = <strong>5</strong>.', visual: arrWT('Scores', WS, [1], [1]) + codeWT(WPROG, [5]) + note('Total = 5') },
+  { text: 'Index = 2. Add Scores[2], which is 2. Total = 5 + 2 = <strong>7</strong>.', visual: arrWT('Scores', WS, [2], [2]) + codeWT(WPROG, [5]) + note('Total = 7') },
+  { text: 'Index = 3. Add Scores[3], which is 7. Total = 7 + 7 = <strong>14</strong>.', visual: arrWT('Scores', WS, [3], [3]) + codeWT(WPROG, [5]) + note('Total = 14') },
+  { text: 'Index = 4. Add Scores[4], which is 4. Total = 14 + 4 = <strong>18</strong>.', visual: arrWT('Scores', WS, [4], [4]) + codeWT(WPROG, [5]) + note('Total = 18') },
+  { text: 'The loop has finished. Line 7 outputs Total: <strong>18</strong>. Now do the same with Marks in your question.', visual: codeWT(WPROG, [7]) + note('Output: 18') },
+] };
+
 // ---------------------------------------------------------------- Do Now (2.3) and its extension
-steps.push({ id: 'do-now', label: 'Do Now: Question 1', type: 'exam-do-now', questionSetKey: 'y10-1-1-l2-2',
+steps.push({ id: 'do-now', label: 'Do Now: Question 1', type: 'exam-do-now', questionSetKey: 'y10-1-1-l2-2', walkthrough: WT_BINARY,
   content: '<h2 class="lesson-h2">Do Now</h2>' + why('How do you check a binary answer?', 'Convert it back: add up the place values that have a 1 under them.') +
     '<p class="lesson-lead">A recap question from Number Systems.</p><div id="donow-root"></div>' });
 const DN = [4, 9, 2, 7];
@@ -92,6 +147,7 @@ steps.push(checkStep('do-now-2', 'Do Now: Question 2', 'Do Now: Arrays', 'From 2
   { label: 'What does the program on the right output?', answer: num(22), feedback: 'Total starts at 0. Each pass adds the next value in Marks.' },
 ], ['Why does the loop go from 1 TO 4?', 'Marks has 4 elements, at index 1 to index 4.'],
   arrayTable('Marks', DN) + codeBlock(['DECLARE Total : INTEGER', 'DECLARE Index : INTEGER', 'Total <- 0', 'FOR Index <- 1 TO 4', '    Total <- Total + Marks[Index]', 'NEXT Index', 'OUTPUT Total'])));
+steps[steps.length - 1].walkthrough = WT_ARRAY;
 steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y9-2-6-ext', 'Extension: Do Now Challenge',
   '<strong>Extension:</strong> finished the Do Now? Try these questions from 2.2 Loops and 2.3 Data Types and Arrays. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.'));
 
@@ -226,6 +282,10 @@ assert(V('fix-check', 0, '10') && V('fix-check', 1, '15') && V('fix-check', 2, '
 assert(V('fix-check', 3, 'FOR Count <- 1 TO 5') && V('fix-check', 3, 'for count ← 1 to 5') && !V('fix-check', 3, 'FOR Count <- 1 TO 4'), 'fix-check line');
 assert(V('exam-runners', 0, 'INTEGER') && !V('exam-runners', 0, 'STRING') && V('exam-runners', 1, 'input') && V('exam-runners', 2, 'RunName') && !V('exam-runners', 2, 'RunTime'), 'exam-runners');
 assert(DN[1] === 9 && DN.reduce((a, b) => a + b) === 22, 'do-now values');
+// The walkthroughs show the method with other numbers and never the Do Now answers.
+{ const s = JSON.stringify(WT_BINARY); assert(!s.includes('10100111') && !s.includes('11010110'), 'binary walkthrough leaks an answer'); }
+{ const s = WT_ARRAY.steps.map((x) => x.text).join(' '); assert(!/\b22\b/.test(s) && !/\b9\b/.test(s), 'array walkthrough leaks an answer'); }
+assert((75).toString(2).padStart(8, '0') === '01001011' && WS[2] === 7 && WS.reduce((a, b) => a + b) === 18, 'walkthrough numbers');
 { let t = 0; const run = [1, 2, 3, 4].map((c) => (t += c)); assert(run.join() === '1,3,6,10' && t === 10, 'activity-1 trace'); }
 assert([1, 2, 3, 4, 5].reduce((a, b) => a + b) === 15, 'should output 15');
 
