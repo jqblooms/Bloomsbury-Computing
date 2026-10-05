@@ -83,13 +83,9 @@ const word = (w) => `^\\s*["']?\\s*${w}\\s*["']?\\s*\\.?\\s*$`;
 const steps = [];
 
 // ---------------------------------------------------------------- Do Now (2.3) and its extension
-steps.push(mcStep('do-now', 'Do Now: Question 1', 'Do Now: Data Types',
-  'A recap from 2.3. Cambridge IGCSE 0478/22, June 2026, Question 2 and 0478/23, June 2026, Question 2.', [
-    { prompt: 'A programming data type used to store a single letter, symbol or number input from the keyboard', options: ['Boolean', 'char', 'integer', 'real'], correct: 1,
-      explain: 'char stores one character: one letter, one symbol or one digit.' },
-    { prompt: 'A programming data type used to store any combination of letters and numbers', options: ['char', 'Boolean', 'string', 'real'], correct: 2,
-      explain: 'string stores many characters, letters and numbers together.' },
-  ], ['What is the difference between char and string?', 'char is one character. string is many characters.']));
+steps.push({ id: 'do-now', label: 'Do Now: Question 1', type: 'exam-do-now', questionSetKey: 'y10-1-1-l2-2',
+  content: '<h2 class="lesson-h2">Do Now</h2>' + why('How do you check a binary answer?', 'Convert it back: add up the place values that have a 1 under them.') +
+    '<p class="lesson-lead">A recap question from Number Systems.</p><div id="donow-root"></div>' });
 const DN = [4, 9, 2, 7];
 steps.push(checkStep('do-now-2', 'Do Now: Question 2', 'Do Now: Arrays', 'From 2.3 Arrays. The array Marks holds the values in the table.', [
   { label: 'What does OUTPUT Marks[2] output?', answer: num(9), feedback: 'Go to index 2 in the top row and read the value under it.' },
@@ -117,10 +113,13 @@ steps.push({ id: 'two-errors', label: 'Two Kinds of Error',
       label('B') + codeBlock(['DECLARE Total : INTEGER', 'DECLARE Count : INTEGER', 'Total <- 0', 'FOR Count <- 1 TO 4', '    Total <- Total * Count', 'NEXT Count', 'OUTPUT Total']) +
       facts(['<strong>Logic error:</strong> the program runs.', 'But the <strong>answer is wrong</strong>.'])) });
 
-steps.push(mcStep('kind-check', 'Check: Syntax or Logic?', 'Check: Syntax or Logic?', 'Choose the kind of error in each line.', [
-  { prompt: 'OUTPT Total', options: ['Syntax error', 'Logic error'], correct: 0, explain: 'OUTPUT is spelt wrong, so the program cannot run.' },
-  { prompt: 'FOR Count ← 1 TO 4 (the loop should run 5 times)', options: ['Syntax error', 'Logic error'], correct: 1, explain: 'The line follows the rules and runs, but the loop runs 4 times, not 5.' },
-  { prompt: 'DECLARE Total INTEGER', options: ['Syntax error', 'Logic error'], correct: 0, explain: 'The colon is missing, so the line breaks the rules.' },
+steps.push(mcStep('hinge-1', 'Hinge Question: Which Error Is Which?', 'Hinge Question: Which Error Is Which?', 'Each line has one error. Choose the best answer.', [
+  { prompt: 'This loop should run 5 times. Which line RUNS, but gives the wrong answer (a logic error)?',
+    options: ['OUTPT Count', 'FOR Count ← 1 5', 'FOR Count ← 1 TO 4', 'DECLARE Count INTEGER'], correct: 2,
+    explain: 'FOR Count ← 1 TO 4 follows the rules, so it runs, but it runs 4 times. The other three break the rules, so they will not run.' },
+  { prompt: 'Total should be Total + Count. Which line will NOT run at all (a syntax error)?',
+    options: ['Total ← Total - Count', 'Total ← Total * Count', 'Total Total + Count', 'Total ← Count + 1'], correct: 2,
+    explain: 'Total Total + Count is missing the arrow, so it breaks the rules. The other three run, but give the wrong answer.' },
 ], ['Which kind of error is harder to find? Why?', 'A logic error. The program runs, so nothing tells you it is wrong. You have to check the answer.']));
 
 // ---------------------------------------------------------------- a trace table finds a logic error: predict then reveal
@@ -132,6 +131,20 @@ steps.push({ id: 'trace-finds', label: 'A Trace Table Finds the Error',
     columns(codeBlock(RESET, true),
       table([['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']], ['Count', 'Total after the pass']) +
       facts(['A trace table shows every value, one line at a time.', 'You can see the moment it goes wrong.'])) });
+
+// ---------------------------------------------------------------- worked method: find and fix (modelled)
+steps.push({ id: 'how-to-fix', label: 'How to Find and Fix an Error',
+  content: '<h2 class="lesson-h2">How to Find and Fix an Error</h2>' +
+    tps('Why do you need to know what the program SHOULD do before you trace it?', 'You find a logic error by comparing what it should do with what it really does. Without the first, you cannot see the difference.') +
+    columns('<ol class="lesson-facts">' +
+      '<li><strong>Say</strong> what the program should output.</li>' +
+      '<li><strong>Trace</strong> it exactly as it is written.</li>' +
+      '<li><strong>Find</strong> the first line where the trace goes wrong.</li>' +
+      '<li><strong>Fix</strong> that line, then trace or run it again.</li></ol>' +
+      facts(['A syntax error is easier: the program stops and the error message names the line.']),
+      '<p style="margin:0 0 6px;font-weight:700">Worked example: the program on the last slide</p>' +
+      table([['1. Say', 'It should output 10.'], ['2. Trace', 'Total is 1, 2, 3, 4. It outputs 4.'], ['3. Find', 'Line 4 sets Total to 0 on every pass.'], ['4. Fix', 'Move Total &larr; 0 to before the FOR line.']], ['Step', 'What I did']) +
+      '<p style="margin:8px 0 0"><strong>In the exam, write:</strong> Line 4: Total &larr; 0 should come before the FOR loop.</p>') });
 
 // ---------------------------------------------------------------- activity 1: trace a program with a logic error
 const BOUND = ['DECLARE Total : INTEGER', 'DECLARE Count : INTEGER', 'Total <- 0', 'FOR Count <- 1 TO 4', '    Total <- Total + Count', 'NEXT Count', 'OUTPUT Total'];
@@ -152,13 +165,13 @@ steps.push({ id: 'activity-1', label: 'Activity 1: Trace and Find the Error', ty
     ],
   },
   content: `<h2 class="lesson-h2">Activity 1: Trace and Find the Error</h2>` +
-    why('The trace table says 10, but the answer should be 15. Which value of Count is missing?', 'Count never becomes 5, so 5 is never added. The loop stops one pass too early.') +
+    why('Step 1: what SHOULD this program output? Predict, then trace to check.', 'It should output 1 + 2 + 3 + 4 + 5 = 15. The trace shows what it really outputs.') +
     `<p class="lesson-lead">Trace the program. Then answer the questions on the next slide.</p><div id="${P}-embed-1" class="lesson-embed"></div>` });
 
 steps.push(checkStep('fix-check', 'Check: Fix the Error', 'Check: Fix the Error', 'This program should add up the numbers 1 to 5. Use your trace table.', [
   { label: 'What does the program really output?', answer: num(10), feedback: 'Look at the Output column of your trace table.' },
   { label: 'What should it output?', answer: num(15), feedback: 'Add 1 + 2 + 3 + 4 + 5.' },
-  { label: 'Which line has the error?', answer: '^\\s*(line\\s*)?0?4\\s*\\.?\\s*$', feedback: 'Which line decides how many times the loop runs?' },
+  { label: 'Which line has the error? (Use the line numbers.)', answer: '^\\s*(line\\s*)?0?4\\s*\\.?\\s*$', feedback: 'Which line decides how many times the loop runs?' },
   { line: true, label: 'Write the correct line.', answer: '^\\s*for\\s+count\\s*(<-|←)\\s*1\\s+to\\s+5\\s*$', feedback: 'Keep the FOR line the same. Change only the last number.' },
 ], ['Is this a syntax error or a logic error? How do you know?', 'A logic error. The program runs and outputs a number, but the number is wrong.'], codeBlock(BOUND, true)));
 
@@ -169,7 +182,7 @@ steps.push({ id: 'compare-boundary', label: 'Compare: More Than, or More Than or
       '<p><strong>A</strong> outputs <strong>Fail</strong>: 50 is not more than 50.</p><p><strong>B</strong> outputs <strong>Pass</strong>: 50 is equal to 50. A has the logic error.</p>', 'Show the worked answer') +
     columns(label('A') + codeBlock(['Mark <- 50', 'IF Mark > 50 THEN', '    OUTPUT "Pass"', 'ELSE', '    OUTPUT "Fail"', 'ENDIF']),
       label('B') + codeBlock(['Mark <- 50', 'IF Mark >= 50 THEN', '    OUTPUT "Pass"', 'ELSE', '    OUTPUT "Fail"', 'ENDIF'])) +
-    facts(['&gt; means more than. &gt;= means more than <strong>or equal to</strong>.', 'Test the edge: always try the value that is exactly on the boundary, here 50.']) });
+    facts(['&gt; means more than. &gt;= means more than <strong>or equal to</strong> (from 2.2).', 'Logic errors often hide here: try the value exactly on the line, 50.']) });
 
 // ---------------------------------------------------------------- exam question (adapted, cited)
 const RUN = ['DECLARE Runners : ARRAY[1:250] OF STRING', 'DECLARE Times : ARRAY[1:250] OF INTEGER', 'DECLARE RunName : STRING', 'DECLARE RunTime : STRING',
@@ -179,7 +192,15 @@ steps.push(checkStep('exam-runners', 'Exam Question: Find the Errors', 'Exam Que
     { label: 'Line 4: write the correct data type for RunTime.', answer: '^\\s*(integer|int)\\s*\\.?\\s*$', feedback: 'A finish time in whole seconds is a whole number.' },
     { label: 'Line 8: write the keyword that should replace OUTPUT.', answer: word('input'), feedback: 'The time must come IN to the program from the user.' },
     { label: 'Line 9: write the variable that should be stored in Runners[Index].', answer: word('runname'), feedback: 'Runners stores names. Which variable holds the name?' },
-  ], ['Why is a wrong data type a problem, even if the program runs?', 'A time in a STRING is text. You cannot add times up or compare them as numbers.'], codeBlock(RUN, true)));
+  ], ['Why does the question tell you what the algorithm should do?', 'To find an error, you compare what each line does with what the algorithm should do.'], codeBlock(RUN, true)));
+
+// ---------------------------------------------------------------- hinge before Activity 2: choosing the fix
+const ADD2 = ['DECLARE Total : INTEGER', 'DECLARE Count : INTEGER', 'Total <- 0', 'FOR Count <- 1 TO 4', '    Total <- Total + 2', 'NEXT Count', 'OUTPUT Total'];
+steps.push(mcStep('hinge-2', 'Hinge Question: Choose the Fix', 'Hinge Question: Choose the Fix', 'This program should add up 1 to 4 and output 10. It outputs 8.', [
+  { prompt: 'Which change fixes it?',
+    options: ['Change Total + 2 to Total + Count', 'Change TO 4 to TO 5', 'Move Total ← 0 inside the loop', 'Change OUTPUT Total to OUTPUT Count'], correct: 0,
+    explain: 'Each pass should add Count (1, 2, 3, 4), not 2. The loop already runs the right number of times.' },
+], ['How can you check your fix before you run it?', 'Trace it: 0 + 1 + 2 + 3 + 4 = 10, which is what it should output.'], codeBlock(ADD2, true)));
 
 // ---------------------------------------------------------------- activity 2: fix the program (code drill)
 steps.push(embed('activity-2', 'Activity 2: Fix the Program', 'drill-y9-2-6-code', 'Activity 2: Fix the Program',

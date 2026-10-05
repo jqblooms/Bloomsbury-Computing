@@ -37,7 +37,7 @@ DrillData.register("y9-2-6-errors", {
             ["OUTPT Total", "OUTPUT is spelt wrong, so the computer cannot run this line."],
             ["FOR Count " + A + " 1 5", "The keyword TO is missing, so the line breaks the rules."],
             ["DECLARE Total INTEGER", "The colon is missing after Total, so the line breaks the rules."],
-            ["OUTPUT \"Hello", "The closing speech mark is missing, so the line breaks the rules."]]);
+            ["Total Total + Count", "The arrow is missing, so the line breaks the rules."]]);
           return kind(SYNTAX, { prompt: "Which kind of error is in this line?\n" + v[0],
             working: ["Does the line follow the rules of pseudocode exactly?", "Could the computer run this line at all?"], note: v[1] + " That is a syntax error." });
         } },

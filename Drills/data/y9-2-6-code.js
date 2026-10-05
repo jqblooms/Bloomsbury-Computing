@@ -15,7 +15,7 @@ DrillData.register("y9-2-6-code", {
   cards: [
     {
       id: "code-fix-syntax-1", category: "code-fix-syntax",
-      prompt: "This program should output 8. It will not run: one keyword is spelt wrong. Fix it, then run it.",
+      prompt: "This program should output 8. It will not run. Run it, read the error message, then fix the line it names.",
       starter: "DECLARE Total : INTEGER\nTotal <- 5 + 3\nOUTPT Total",
       reference: "DECLARE Total : INTEGER\nTotal <- 5 + 3\nOUTPUT Total",
       checkVars: ["Total"],
@@ -23,14 +23,14 @@ DrillData.register("y9-2-6-code", {
     },
     {
       id: "code-fix-syntax-2", category: "code-fix-syntax",
-      prompt: "This program should output 1, 2, 3. It will not run: a line is missing at the end. Add it, then run it.",
+      prompt: "This program should output 1, 2, 3. It will not run. Run it, read the error message, then fix it.",
       starter: "DECLARE Count : INTEGER\nFOR Count <- 1 TO 3\n    OUTPUT Count",
       reference: "DECLARE Count : INTEGER\nFOR Count <- 1 TO 3\n    OUTPUT Count\nNEXT Count",
       checkOutput: true
     },
     {
       id: "code-fix-syntax-3", category: "code-fix-syntax",
-      prompt: "This program should output 1 to 5. It will not run: the FOR line is missing a keyword. Fix it, then run it.",
+      prompt: "This program should output 1 to 5. It will not run. Run it, read the error message, then fix the line it names.",
       starter: "DECLARE Count : INTEGER\nFOR Count <- 1 5\n    OUTPUT Count\nNEXT Count",
       reference: "DECLARE Count : INTEGER\nFOR Count <- 1 TO 5\n    OUTPUT Count\nNEXT Count",
       checkOutput: true
