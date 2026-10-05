@@ -880,7 +880,10 @@
     if (set.widget) {
       current.usedHelp = true;
       var hintBox = document.getElementById("support-hint");
-      if (hintBox && current.widget) { hintBox.hidden = false; hintBox.textContent = current.widget.hint; }
+      if (hintBox && current.widget) {
+        if (Support && Support.renderWorking) Support.renderWorking(hintBox, [current.widget.hint], 1, "How to work it out");
+        else { hintBox.hidden = false; hintBox.textContent = current.widget.hint; }
+      }
       return;
     }
     var textMode = run.answerMode === "text" && !set.multi;
@@ -1440,6 +1443,9 @@
       "</div></div>";
 
     var input = document.getElementById("code-input");
+    // "Fix the program" cards: the editor opens holding the program with the error, so the student changes
+    // only the wrong line instead of typing the whole program again.
+    if (card.starter) input.value = card.starter;
     input.focus();
     document.getElementById("code-check-btn").addEventListener("click", submitCodeAnswer);
     var helpBtn = document.getElementById("code-help-btn");

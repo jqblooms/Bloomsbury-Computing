@@ -82,8 +82,18 @@
         if (!right) fb += '<span class="note">The mark scheme\'s full table:</span>' + fullTable(cols, rows, k);
         return { right: right, html: fb };
       },
-      hint: "Go through the algorithm one line at a time, using the filled-in columns to keep your place. Write a value in the " +
-        cols[k] + " column only on the row where it changes."
+      // Help shows how to start this column (its first value and where it goes), then how to carry on.
+      hint: (function () {
+        for (var i = 0; i < rows.length; i++) {
+          var v = String(rows[i][k] == null ? "" : rows[i][k]).trim();
+          if (v && !(pre && pre[i][k])) {
+            return "Start at the top of the algorithm and follow it one line at a time, using the filled-in columns to keep your place. " +
+              cols[k] + " first gets the value " + v + ", on row " + (i + 1) + ". After that, write a new value only on the row where " +
+              cols[k] + " changes, and leave the cell empty when it does not.";
+          }
+        }
+        return "Follow the algorithm one line at a time. Write a value in the " + cols[k] + " column only on the row where it changes.";
+      })()
     };
   }
   function fullTable(cols, rows, k) {
@@ -132,7 +142,10 @@
             '<span class="note">The mark scheme\'s corrections:</span><ul class="xw-fixes">' + list + "</ul>"
         };
       },
-      hint: "Check each line against what the algorithm is meant to do: loop bounds, comparisons, which variable is updated, and the order of the lines."
+      // Help points at the line of one error, then says what to compare it with.
+      hint: "One error is on line " + nums[e.errors[0].line - 1] + ". Read the question again and compare that line with what the algorithm " +
+        "should do: is it using the right variable, the right comparison (<, <=, >, >=, =, <>), the right value, and the right arithmetic? " +
+        "Rewrite the line so it does what the question describes."
     };
   }
 
