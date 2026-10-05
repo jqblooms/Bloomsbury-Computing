@@ -1,0 +1,336 @@
+{
+ "id": "y9-2-6-errors",
+ "label": "2.6: Errors and Trace Tables",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Question 1",
+   "type": "multiple-choice",
+   "containerId": "y9l26-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What is the difference between char and string?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>char is one character. string is many characters.</p></div></details><p class=\"lesson-lead\">A recap from 2.3. Cambridge IGCSE 0478/22, June 2026, Question 2 and 0478/23, June 2026, Question 2.</p><div id=\"y9l26-do-now\"></div>",
+   "items": [
+    {
+     "prompt": "A programming data type used to store a single letter, symbol or number input from the keyboard",
+     "options": [
+      "Boolean",
+      "char",
+      "integer",
+      "real"
+     ],
+     "correct": 1,
+     "explain": "char stores one character: one letter, one symbol or one digit."
+    },
+    {
+     "prompt": "A programming data type used to store any combination of letters and numbers",
+     "options": [
+      "char",
+      "Boolean",
+      "string",
+      "real"
+     ],
+     "correct": 2,
+     "explain": "string stores many characters, letters and numbers together."
+    }
+   ]
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Question 2",
+   "type": "short-answer-validation",
+   "validatorId": "y9l26-do-now-2",
+   "validatorKey": "y9l26_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Arrays</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the loop go from 1 TO 4?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Marks has 4 elements, at index 1 to index 4.</p></div></details><p class=\"lesson-lead\">From 2.3 Arrays. The array Marks holds the values in the table.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\"><strong>Marks</strong></p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">4</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">9</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">7</td></tr></table><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Total &larr; 0</div><div class=\"lesson-code-line\">FOR Index &larr; 1 TO 4</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Marks[Index]</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">OUTPUT Total</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l26-do-now-2-a\">(a) What does OUTPUT Marks[2] output? [1]</label><input id=\"y9l26-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Arrays part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l26-do-now-2-b\">(b) What does the program on the right output? [1]</label><input id=\"y9l26-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Arrays part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l26-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9l26-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-6-ext",
+   "embedContainerId": "y9l26-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 2.2 Loops and 2.3 Data Types and Arrays. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y9l26-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Errors and Trace Tables",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithm Design and Text Programming</p><h2 class=\"lesson-h2\">Errors and Trace Tables</h2><p>Year 9, 2.6</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> two kinds of error, and how to find them.</li><li><strong>You already know:</strong> FOR loops, IF, arrays and trace tables.</li><li><strong>Activities:</strong> trace a program to find its error, then fix programs and run them.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program runs but gives the wrong answer. Is that still an error?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Yes. A program can run and still be wrong. Today we learn to find both kinds of error.</p></div></details>"
+  },
+  {
+   "id": "two-errors",
+   "label": "Two Kinds of Error",
+   "content": "<h2 class=\"lesson-h2\">Two Kinds of Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: both programs should output 10. Which one will not run at all? Which one runs but gives the wrong answer?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> will not run: OUTPT is not a keyword. That is a <strong>syntax error</strong>.</p><p><strong>B</strong> runs, but it multiplies, so Total stays 0. That is a <strong>logic error</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">Total &larr; 0</div><div class=\"lesson-code-line\">FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Count</div><div class=\"lesson-code-line\">NEXT Count</div><div class=\"lesson-code-line\">OUTPT Total</div></div><ul class=\"lesson-facts\"><li><strong>Syntax error:</strong> a line breaks the rules of the language.</li><li>The program <strong>will not run</strong>.</li></ul></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">Total &larr; 0</div><div class=\"lesson-code-line\">FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total * Count</div><div class=\"lesson-code-line\">NEXT Count</div><div class=\"lesson-code-line\">OUTPUT Total</div></div><ul class=\"lesson-facts\"><li><strong>Logic error:</strong> the program runs.</li><li>But the <strong>answer is wrong</strong>.</li></ul></div></div>"
+  },
+  {
+   "id": "kind-check",
+   "label": "Check: Syntax or Logic?",
+   "type": "multiple-choice",
+   "containerId": "y9l26-kind-check",
+   "content": "<h2 class=\"lesson-h2\">Check: Syntax or Logic?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which kind of error is harder to find? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A logic error. The program runs, so nothing tells you it is wrong. You have to check the answer.</p></div></details><p class=\"lesson-lead\">Choose the kind of error in each line.</p><div id=\"y9l26-kind-check\"></div>",
+   "items": [
+    {
+     "prompt": "OUTPT Total",
+     "options": [
+      "Syntax error",
+      "Logic error"
+     ],
+     "correct": 0,
+     "explain": "OUTPUT is spelt wrong, so the program cannot run."
+    },
+    {
+     "prompt": "FOR Count ← 1 TO 4 (the loop should run 5 times)",
+     "options": [
+      "Syntax error",
+      "Logic error"
+     ],
+     "correct": 1,
+     "explain": "The line follows the rules and runs, but the loop runs 4 times, not 5."
+    },
+    {
+     "prompt": "DECLARE Total INTEGER",
+     "options": [
+      "Syntax error",
+      "Logic error"
+     ],
+     "correct": 0,
+     "explain": "The colon is missing, so the line breaks the rules."
+    }
+   ]
+  },
+  {
+   "id": "trace-finds",
+   "label": "A Trace Table Finds the Error",
+   "content": "<h2 class=\"lesson-h2\">A Trace Table Finds the Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: this should output 10. What is Total after each pass? What does it really output?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Total is 1, then 2, then 3, then 4. It outputs <strong>4</strong>.</p><p>Line 4 sets Total back to 0 on every pass. It belongs <strong>before</strong> the loop.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Count</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div></div><div><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Count</th><th style=\"padding:6px 12px;text-align:left\">Total after the pass</th></tr><tr><td style=\"padding:6px 12px;text-align:left\">1</td><td style=\"padding:6px 12px;text-align:left\">1</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">2</td><td style=\"padding:6px 12px;text-align:left\">2</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">3</td><td style=\"padding:6px 12px;text-align:left\">3</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">4</td><td style=\"padding:6px 12px;text-align:left\">4</td></tr></table><ul class=\"lesson-facts\"><li>A trace table shows every value, one line at a time.</li><li>You can see the moment it goes wrong.</li></ul></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Trace and Find the Error",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y9l26-embed-1",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Find the Logic Error",
+    "context": "This program should add up the numbers 1 to 5 and output 15. Trace it exactly as it is written. What does it really output?",
+    "code": [
+     "DECLARE Total : INTEGER",
+     "DECLARE Count : INTEGER",
+     "Total = 0",
+     "for Count in range(1, 5):",
+     "    Total = Total + Count",
+     "print(Total)"
+    ],
+    "cols": [
+     "Line",
+     "Total",
+     "Count",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "3",
+      "Total": "0",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Count": "1",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "1",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Count": "2",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "3",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Count": "3",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "6",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Count": "4",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "10",
+      "Count": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Total": "",
+      "Count": "",
+      "Output": "10"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Trace and Find the Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The trace table says 10, but the answer should be 15. Which value of Count is missing?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Count never becomes 5, so 5 is never added. The loop stops one pass too early.</p></div></details><p class=\"lesson-lead\">Trace the program. Then answer the questions on the next slide.</p><div id=\"y9l26-embed-1\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "fix-check",
+   "label": "Check: Fix the Error",
+   "type": "short-answer-validation",
+   "validatorId": "y9l26-fix-check",
+   "validatorKey": "y9l26_fix_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Fix the Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Is this a syntax error or a logic error? How do you know?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A logic error. The program runs and outputs a number, but the number is wrong.</p></div></details><p class=\"lesson-lead\">This program should add up the numbers 1 to 5. Use your trace table.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Count</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l26-fix-check-a\">(a) What does the program really output? [1]</label><input id=\"y9l26-fix-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-check-a\" aria-label=\"Check: Fix the Error part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l26-fix-check-b\">(b) What should it output? [1]</label><input id=\"y9l26-fix-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-check-b\" aria-label=\"Check: Fix the Error part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l26-fix-check-c\">(c) Which line has the error? [1]</label><input id=\"y9l26-fix-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-check-c\" aria-label=\"Check: Fix the Error part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l26-fix-check-d\">(d) Write the correct line. [1]</label><input id=\"y9l26-fix-check-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-check-d\" aria-label=\"Check: Fix the Error part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l26-fix-check-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y9l26-fix-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "compare-boundary",
+   "label": "Compare: More Than, or More Than or Equal?",
+   "content": "<h2 class=\"lesson-h2\">Compare: More Than, or More Than or Equal?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The pass mark is 50 or more. Mark is 50. Predict what A and B output. Which one has a logic error?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> outputs <strong>Fail</strong>: 50 is not more than 50.</p><p><strong>B</strong> outputs <strong>Pass</strong>: 50 is equal to 50. A has the logic error.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">Mark &larr; 50</div><div class=\"lesson-code-line\">IF Mark &gt; 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">ENDIF</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">Mark &larr; 50</div><div class=\"lesson-code-line\">IF Mark &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fail\"</div><div class=\"lesson-code-line\">ENDIF</div></div></div></div><ul class=\"lesson-facts\"><li>&gt; means more than. &gt;= means more than <strong>or equal to</strong>.</li><li>Test the edge: always try the value that is exactly on the boundary, here 50.</li></ul>"
+  },
+  {
+   "id": "exam-runners",
+   "label": "Exam Question: Find the Errors",
+   "type": "short-answer-validation",
+   "validatorId": "y9l26-exam-runners",
+   "validatorKey": "y9l26_exam_runners",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Find the Errors</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a wrong data type a problem, even if the program runs?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A time in a STRING is text. You cannot add times up or compare them as numbers.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/23, May/June 2026, Question 4(a). This algorithm should input the name and the finish time, in whole seconds, of 250 runners and store them in the arrays Runners and Times. It has three errors.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Runners : ARRAY[1:250] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Times : ARRAY[1:250] OF INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE RunName : STRING</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;DECLARE RunTime : STRING</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;FOR Index &larr; 1 TO 250</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT RunName</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT RunTime</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Runners[Index] &larr; RunTime</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times[Index] &larr; RunTime</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;NEXT Index</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l26-exam-runners-a\">(a) Line 4: write the correct data type for RunTime. [1]</label><input id=\"y9l26-exam-runners-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-runners-a\" aria-label=\"Exam Question: Find the Errors part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l26-exam-runners-b\">(b) Line 8: write the keyword that should replace OUTPUT. [1]</label><input id=\"y9l26-exam-runners-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-runners-b\" aria-label=\"Exam Question: Find the Errors part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l26-exam-runners-c\">(c) Line 9: write the variable that should be stored in Runners[Index]. [1]</label><input id=\"y9l26-exam-runners-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-runners-c\" aria-label=\"Exam Question: Find the Errors part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l26-exam-runners-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y9l26-exam-runners-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Fix the Program",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-6-code",
+   "embedContainerId": "y9l26-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Fix the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A syntax error stops the program. How do you know when you have fixed one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The program runs. For a logic error, it must also give the right answer.</p></div></details><p class=\"lesson-lead\">Each program has one error. It is already in the box. Find the error, fix it, then press Run and check.</p><div id=\"y9l26-activity-2\"></div>"
+  },
+  {
+   "id": "exam-explain",
+   "label": "Exam-Style Question: Two Kinds of Error",
+   "type": "self-marked-response",
+   "containerId": "y9l26-exam-explain",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Two Kinds of Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This question has 2 marks. What do you need to say?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One point about a syntax error (breaks the rules, will not run) and one about a logic error (runs, wrong result).</p></div></details><p class=\"lesson-lead\">Use the words syntax and logic in your answer.</p><div id=\"y9l26-exam-explain\"></div>",
+   "items": [
+    {
+     "id": "two-kinds",
+     "prompt": "Describe the difference between a syntax error and a logic error. [2]",
+     "marks": 2,
+     "modelAnswer": "A syntax error breaks the rules of the programming language, so the program will not run. A logic error does not stop the program running, but it gives the wrong result."
+    }
+   ]
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Errors and Trace Tables Drill",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-6-errors",
+   "embedContainerId": "y9l26-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Errors and Trace Tables Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why follow a program with a bug exactly as it is written?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>To see what it really does. That shows you where it goes wrong.</p></div></details><p class=\"lesson-lead\">Syntax or logic, find the line, follow a program with a bug, and fix the line. Your progress is saved.</p><div id=\"y9l26-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y9l26_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*9\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Go to index 2 in the top row and read the value under it."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*22\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Total starts at 0. Each pass adds the next value in Marks."
+   }
+  ],
+  "y9l26_fix_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*10\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the Output column of your trace table."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*15\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Add 1 + 2 + 3 + 4 + 5."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(line\\s*)?0?4\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which line decides how many times the loop runs?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*for\\s+count\\s*(<-|←)\\s*1\\s+to\\s+5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Keep the FOR line the same. Change only the last number."
+   }
+  ],
+  "y9l26_exam_runners": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(integer|int)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A finish time in whole seconds is a whole number."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"']?\\s*input\\s*[\"']?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The time must come IN to the program from the user."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"']?\\s*runname\\s*[\"']?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Runners stores names. Which variable holds the name?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
