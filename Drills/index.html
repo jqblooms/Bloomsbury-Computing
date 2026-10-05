@@ -244,6 +244,36 @@
   .mastery-bar-fill { height: 100%; background: var(--brand); border-radius: 5px 0 0 5px; }
   .mastery-bar-fill.is-complete { background: var(--good); border-radius: 5px; }
   .mastery-sub { font-size: .76rem; color: var(--muted); margin-top: 2px; }
+  /* Exam-format cards (exam-widgets.js): trace tables and error lines, in the paper's own layout. */
+  .xw-ask { margin: 6px 0; }
+  .xw-label { font-size: .85rem; color: var(--muted); }
+  .xw-testdata { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; margin: 6px 0; font: 600 .95rem var(--font-mono); }
+  .xw-testdata .xw-label { width: 100%; font-family: var(--font-body, inherit); }
+  .xw-chip { background: var(--surface-3); border: 1px solid var(--line-strong); border-radius: 6px; padding: 1px 6px 1px 3px; }
+  .xw-chip.unread { opacity: .45; text-decoration: line-through; padding-left: 6px; }
+  .xw-tag { display: inline-block; min-width: 1.2em; margin: 0 3px; padding: 0 3px; border-radius: 999px; background: var(--brand); color: var(--surface);
+    font: 700 .68rem/1.5 var(--font-mono); text-align: center; vertical-align: super; }
+  .xw-chip .xw-tag { vertical-align: middle; margin-left: 0; }
+  .xw-scroll { overflow-x: auto; max-width: 100%; margin: 6px 0; }
+  .xw-trace { border-collapse: collapse; font: 600 .95rem var(--font-mono); }
+  .xw-trace th, .xw-trace td { border: 1px solid var(--line-strong); padding: 3px 8px; min-width: 4rem; text-align: center; }
+  .xw-trace th { background: var(--surface-3); }
+  .xw-trace th.focus { background: var(--warn); color: #202124; }
+  .xw-trace th.focus.ok { background: var(--good); } .xw-trace th.focus.no { background: var(--bad); }
+  .xw-trace td.fixed { color: var(--ink-soft); }
+  .xw-trace td.focus { padding: 0; background: var(--surface-2); }
+  .xw-trace td.focus input { width: 100%; min-width: 4rem; box-sizing: border-box; border: 0; background: transparent; color: var(--ink); font: inherit; text-align: center; padding: 4px; }
+  .xw-trace td.focus input:focus { outline: 2px solid var(--brand); outline-offset: -2px; }
+  .xw-trace.result td.focus { padding: 3px 8px; background: rgba(253, 214, 99, .12); }
+  .xw-lines { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px; font: 600 .95rem/1.5 var(--font-mono); overflow-x: auto; }
+  .xw-line { white-space: pre; padding: 1px 6px; border-radius: 6px; cursor: pointer; }
+  .xw-line:hover, .xw-line:focus-visible { background: var(--surface-3); outline: none; }
+  .xw-line.chosen { background: var(--warn); color: #202124; }
+  .xw-num { display: inline-block; min-width: 2.2em; color: var(--muted); }
+  .xw-line.chosen .xw-num { color: #202124; }
+  .xw-fix { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+  .xw-fix input { font: 600 1rem var(--font-mono); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); }
+  .xw-fixes { margin: 4px 0 0; padding-left: 20px; }
 </style>
 </head>
 <body>
@@ -322,7 +352,7 @@
       drills: {},
       register: function (drillId, def) { this.drills[drillId] = def; }
     };
-    ["../shared/pseudocode-engine.js", "../shared/bc-support.js", "helpers.js", "flowchart-core.js", "data/" + id + ".js", "engine.js"].forEach(function (file) {
+    ["../shared/pseudocode-engine.js", "../shared/bc-support.js", "helpers.js", "flowchart-core.js", "exam-widgets.js", "data/" + id + ".js", "engine.js"].forEach(function (file) {
       document.write('<script src="' + file + "?v=" + v + '"><\/script>');
     });
   })();

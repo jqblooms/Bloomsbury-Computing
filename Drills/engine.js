@@ -504,6 +504,8 @@
 
   // ---- option set for one appearance of a card ----
   function buildOptionSet(card) {
+    // Exam-format cards (trace table, error line) draw and mark themselves: exam-widgets.js.
+    if (card.widget) return { options: [], correct: [], multi: false, widget: true };
     var show = card.show || DEFAULT_SHOW;
     var correct, pool;
     if (card.type === "multi") {
@@ -716,9 +718,46 @@
     };
   }
 
+  // An exam-format card (exam-widgets.js): the prompt, then the widget (trace table or numbered lines), a Check
+  // button, help and restart. submitAnswer() asks the widget whether it is right and scores it like any card.
+  function renderWidgetCard(card) {
+    var learn = run.mode === "learn";
+    var streakHtml = "";
+    if (run.mode === "quiz") {
+      var s = run.streak[current.cardId] || 0, dots = "";
+      for (var i = 0; i < MASTERY_STREAK; i++) dots += '<i class="' + (i < s ? "on" : "") + '"></i>';
+      streakHtml = '<span class="streakdots" title="Streak toward mastery">' + dots + "</span>";
+    }
+    els.stage.innerHTML =
+      '<div class="card">' +
+      '<p class="prompt' + (card.prompt.indexOf("\n") !== -1 ? " has-code" : "") + '">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
+      '<div id="exam-widget"></div>' +
+      (learn ? '<div id="support-hint" hidden></div>' : "") +
+      '<div class="feedback" id="fb"></div>' +
+      '<div class="actions">' +
+      '<button type="button" class="btn" id="submit-btn">Check</button>' +
+      (learn ? '<button type="button" class="help-toggle" id="help-btn" aria-pressed="false"><span class="help-track" aria-hidden="true"></span><span>I need help</span></button>' : "") +
+      '<span class="spacer"></span>' +
+      '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
+      "</div></div>";
+    current.widget = window.ExamWidgets ? window.ExamWidgets.mount(card, els.stage.querySelector("#exam-widget"),
+      { submit: submitAnswer, checked: function () { return current.checked; } }) : null;
+    els.stage.querySelector("#submit-btn").addEventListener("click", submitAnswer);
+    var helpBtn = els.stage.querySelector("#help-btn");
+    if (helpBtn) helpBtn.addEventListener("click", onHelp);
+    els.stage.querySelector("#restart-btn").addEventListener("click", function () {
+      if (current.advanceTimer) clearTimeout(current.advanceTimer);
+      run = freshRun(run.mode, run.category, run.count, run.answerMode);
+      persistRun();
+      toast("Run restarted.");
+      nextCard();
+    });
+  }
+
   function renderCard() {
     var card = resolveCard(cardsById[current.cardId], current.instance);
     var set = current.set;
+    if (set.widget) { renderWidgetCard(card); return; }
     var learn = run.mode === "learn";
     // Multi-answer cards always stay multiple choice, even in text mode -
     // grading several free-typed answers reliably is a much harder problem
@@ -838,6 +877,12 @@
     setHelpSwitch(btn, on);
     if (!on) { hideHelp("support-hint"); return; }
     var set = current.set;
+    if (set.widget) {
+      current.usedHelp = true;
+      var hintBox = document.getElementById("support-hint");
+      if (hintBox && current.widget) { hintBox.hidden = false; hintBox.textContent = current.widget.hint; }
+      return;
+    }
     var textMode = run.answerMode === "text" && !set.multi;
     if (textMode) showTextHint(true); else narrowOptions(true);
   }
@@ -850,7 +895,15 @@
     var right;
     var fb;
 
-    if (textMode) {
+    if (set.widget) {
+      var res = current.widget ? current.widget.check() : { right: false, html: "This question could not be shown." };
+      if (res.error) { toast(res.error); return; }
+      right = res.right;
+      current.checked = true;
+      fb = els.stage.querySelector("#fb");
+      fb.className = "feedback show " + (right ? "ok" : "no");
+      fb.innerHTML = res.html + (card.note ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
+    } else if (textMode) {
       var input = els.stage.querySelector("#text-answer");
       var value = input.value;
       if (!value.trim()) { toast("Type an answer first."); return; }
@@ -930,6 +983,15 @@
     // has time to actually be memorised, otherwise the usual short delay.
     if (current.advanceTimer) clearTimeout(current.advanceTimer);
     var delay = (textMode && !right) ? TEXT_WRONG_ADVANCE_MS : ADVANCE_MS;
+    // An exam-format card shows the mark scheme: it waits for Next instead of moving on by itself.
+    if (set.widget) {
+      var actions = els.stage.querySelector(".actions"), next = document.createElement("button");
+      next.type = "button"; next.className = "btn"; next.textContent = "Next";
+      next.addEventListener("click", function () { if (current.advanceTimer) clearTimeout(current.advanceTimer); advance(); });
+      if (actions) actions.insertBefore(next, actions.firstChild);
+      if (right) { current.advanceTimer = setTimeout(advance, ADVANCE_MS); }
+      return;
+    }
     current.advanceTimer = setTimeout(advance, delay);
   }
 

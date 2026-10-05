@@ -10,6 +10,10 @@ DrillData.register("y11-exam-race", {
    "Number systems"
   ],
   [
+   "trace",
+   "Trace tables"
+  ],
+  [
    "checks",
    "Validation, verification and test data"
   ],
@@ -19,7 +23,7 @@ DrillData.register("y11-exam-race", {
   ],
   [
    "fix",
-   "Completing algorithms"
+   "Finding errors and completing algorithms"
   ],
   [
    "programming",
@@ -8799,6 +8803,8882 @@ DrillData.register("y11-exam-race", {
     "A subprogram can only be called once, so each part of the code is written only one single time"
    ],
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 9. The mark scheme accepts: Use comments / Comments describe sections of code and their purpose / Comments make the code easier for other programmers to understand / Use meaningful identifiers for variables, constants, procedures and arrays / The purpose of each item is suggested by its name / Use procedures and functions / The program is modular and repeated code is avoided / A subprogram can be called anywhere it is needed with different parameters / Use whitespace and indentation / The program is laid out clearly so the start and end of selection and iteration are clear"
+  },
+  {
+   "id": "m21-22-q4a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm accepts weights of bags of cookies. Any cookie bag weighing between 0.9 and 1.1 kilograms inclusive is acceptable. Underweight bags weigh less than 0.9 kilograms and overweight bags weigh more than 1.1 kilograms. An input of a negative number stops the process. Then the total number of bags, the number of overweight bags and the number of underweight bags weighed are output.\n\nComplete a trace table for the given algorithm using this input data.\n\n01  Accept <- 0\n02  Over <- 0\n03  Under <- 0\n04  OUTPUT \"Enter weight of first cookie bag\"\n05  INPUT BagWeight\n06  WHILE BagWeight > 0\n07    IF BagWeight > 1.1\n08      THEN\n09        Error <- 1\n10      ELSE\n11        IF BagWeight < 0.9\n12          THEN\n13            Error <- 2\n14          ELSE\n15            Error <- 0\n16        ENDIF\n17    ENDIF\n18    CASE Error OF\n19      0 : Accept <- Accept + 1\n20      1 : Over <- Over + 1\n21      2 : Under <- Under + 1\n22    ENDCASE\n23    OUTPUT \"Weight of next bag?\"\n24    INPUT BagWeight\n25  ENDWHILE\n26  Total <- Accept - Over - Under\n27  OUTPUT \"Number of bags weighed \", Total\n28  OUTPUT \"Number overweight \", Over\n29  OUTPUT \"Number underweight \", Under",
+   "trace": {
+    "columns": [
+     "BagWeight",
+     "Accept",
+     "Over",
+     "Under",
+     "Error",
+     "Total",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "0",
+      "0",
+      "0",
+      "",
+      "",
+      "Enter weight of first cookie bag"
+     ],
+     [
+      "1.05",
+      "1",
+      "",
+      "",
+      "0",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "0.99",
+      "2",
+      "",
+      "",
+      "0",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "1.2",
+      "",
+      "1",
+      "",
+      "1",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "0.85",
+      "",
+      "",
+      "1",
+      "2",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "1.1",
+      "3",
+      "",
+      "",
+      "0",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "0.9",
+      "4",
+      "",
+      "",
+      "0",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "1.5",
+      "",
+      "2",
+      "",
+      "1",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "0.95",
+      "5",
+      "",
+      "",
+      "0",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "1.05",
+      "6",
+      "",
+      "",
+      "0",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "1.00",
+      "7",
+      "",
+      "",
+      "0",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "1.07",
+      "8",
+      "",
+      "",
+      "0",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "0.89",
+      "",
+      "",
+      "2",
+      "2",
+      "",
+      "Weight of next bag?"
+     ],
+     [
+      "-10",
+      "",
+      "",
+      "",
+      "",
+      "4",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "Number of bags weighed 4"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "Number overweight 2"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "Number underweight 2"
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "testData": [
+     "1.05",
+     "0.99",
+     "1.2",
+     "0.85",
+     "1.1",
+     "0.9",
+     "1.5",
+     "0.95",
+     "1.05",
+     "1.00",
+     "1.07",
+     "0.89",
+     "-10"
+    ],
+    "read": 13,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      6,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      7,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      8,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      9,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      11,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      12,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      13,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2021 Paper 22, Question 4(a)."
+  },
+  {
+   "id": "m21-22-q4b",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This algorithm accepts weights of bags of cookies. Any cookie bag weighing between 0.9 and 1.1 kilograms inclusive is acceptable. Underweight bags weigh less than 0.9 kilograms and overweight bags weigh more than 1.1 kilograms. An input of a negative number stops the process. Then the total number of bags, the number of overweight bags and the number of underweight bags weighed are output.\n\nThere is an error in this algorithm. Identify the error and write the corrected pseudocode statement.\nThere is 1 error.",
+   "errorline": {
+    "code": "Accept <- 0\nOver <- 0\nUnder <- 0\nOUTPUT \"Enter weight of first cookie bag\"\nINPUT BagWeight\nWHILE BagWeight > 0\n  IF BagWeight > 1.1\n    THEN\n      Error <- 1\n    ELSE\n      IF BagWeight < 0.9\n        THEN\n          Error <- 2\n        ELSE\n          Error <- 0\n      ENDIF\n  ENDIF\n  CASE Error OF\n    0 : Accept <- Accept + 1\n    1 : Over <- Over + 1\n    2 : Under <- Under + 1\n  ENDCASE\n  OUTPUT \"Weight of next bag?\"\n  INPUT BagWeight\nENDWHILE\nTotal <- Accept - Over - Under\nOUTPUT \"Number of bags weighed \", Total\nOUTPUT \"Number overweight \", Over\nOUTPUT \"Number underweight \", Under",
+    "errors": [
+     {
+      "line": 26,
+      "fixes": [
+       "Total <- Accept + Over + Under"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2021 Paper 22, Question 4(b)."
+  },
+  {
+   "id": "j21-21-q5a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart represents an algorithm (written here as pseudocode). The algorithm will terminate if -1 is entered.\n\nComplete the trace table for the input data.\n\n01  REPEAT\n02    INPUT Value\n03    IF Value <> -1\n04      THEN\n05        IF Value >= 50 AND Value <= 100\n06          THEN\n07            Diff1 <- 100 - Value\n08            Diff2 <- Value - 50\n09            IF Diff1 < 1 OR Diff2 < 1\n10              THEN\n11                OUTPUT \"Accept: Extreme\"\n12              ELSE\n13                OUTPUT \"Accept: Normal\"\n14            ENDIF\n15          ELSE\n16            OUTPUT \"Reject: Abnormal\"\n17        ENDIF\n18    ENDIF\n19  UNTIL Value = -1",
+   "trace": {
+    "columns": [
+     "Value",
+     "Diff1",
+     "Diff2",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "50",
+      "50",
+      "0",
+      "Accept: Extreme"
+     ],
+     [
+      "75",
+      "25",
+      "25",
+      "Accept: Normal"
+     ],
+     [
+      "99",
+      "1",
+      "49",
+      "Accept: Normal"
+     ],
+     [
+      "28",
+      "",
+      "",
+      "Reject: Abnormal"
+     ],
+     [
+      "82",
+      "18",
+      "32",
+      "Accept: Normal"
+     ],
+     [
+      "150",
+      "",
+      "",
+      "Reject: Abnormal"
+     ],
+     [
+      "-1",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     1,
+     2
+    ],
+    "testData": [
+     "50",
+     "75",
+     "99",
+     "28",
+     "82",
+     "150",
+     "-1",
+     "672",
+     "80"
+    ],
+    "read": 7,
+    "tags": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0
+     ],
+     [
+      4,
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      0,
+      0,
+      0
+     ],
+     [
+      6,
+      0,
+      0,
+      0
+     ],
+     [
+      7,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 5(a)."
+  },
+  {
+   "id": "j21-22-q4a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm checks passwords.\n- Each password must be 8 or more characters in length; the predefined function Length returns the number of characters.\n- Each password is entered twice, and the two entries must match.\n- Either Accept or Reject is output.\n- An input of 999 stops the process.\n\nComplete the trace table for the algorithm using this input data.\n\n01  REPEAT\n02    OUTPUT \"Please enter password\"\n03    INPUT Password\n04    IF Length(Password) >= 8\n05      THEN\n06        INPUT PasswordRepeat\n07        IF Password <> PasswordRepeat\n08          THEN\n09            OUTPUT \"Reject\"\n10          ELSE\n11            OUTPUT \"Accept\"\n12        ENDIF\n13      ELSE\n14        OUTPUT \"Reject\"\n15    ENDIF\n16  UNTIL Password = 999",
+   "trace": {
+    "columns": [
+     "Password",
+     "PasswordRepeat",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "Please enter password"
+     ],
+     [
+      "Secret",
+      "",
+      "Reject"
+     ],
+     [
+      "",
+      "",
+      "Please enter password"
+     ],
+     [
+      "Secret",
+      "",
+      "Reject"
+     ],
+     [
+      "",
+      "",
+      "Please enter password"
+     ],
+     [
+      "VerySecret",
+      "VerySecret",
+      "Accept"
+     ],
+     [
+      "",
+      "",
+      "Please enter password"
+     ],
+     [
+      "Pa55word",
+      "Pa55word",
+      "Accept"
+     ],
+     [
+      "",
+      "",
+      "Please enter password"
+     ],
+     [
+      "999",
+      "",
+      "Reject"
+     ]
+    ],
+    "askable": [
+     2
+    ],
+    "testData": [
+     "Secret",
+     "Secret",
+     "VerySecret",
+     "VerySecret",
+     "Pa55word",
+     "Pa55word",
+     "999",
+     "888"
+    ],
+    "read": 7,
+    "tags": [
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      4,
+      0
+     ],
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      6,
+      0
+     ],
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      7,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2021 Paper 22, Question 4(a)."
+  },
+  {
+   "id": "j21-23-q4a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "The pseudocode algorithm should allow a user to input the number of scores to be entered and then enter the scores. The scores are totalled, the total is output and the option to enter another set of scores is offered.\n\nIdentify the four errors in the pseudocode and suggest a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "Count <- 0\nREPEAT\n  FullScore <- 20\n  INPUT Number\n  FOR StoreLoop <- 1 TO Number\n    INPUT Score\n    FullScore <- FullScore\n  UNTIL StoreLoop = Number\n  OUTPUT \"The full score is \", FullScore\n  OUTPUT \"Another set of scores (Y or N)?\"\n  OUTPUT Another\n  IF Another = \"N\"\n    THEN\n      Count <- 1\n  ENDIF\nUNTIL Count = 1",
+    "errors": [
+     {
+      "line": 3,
+      "fixes": [
+       "FullScore <- 0"
+      ]
+     },
+     {
+      "line": 7,
+      "fixes": [
+       "FullScore <- FullScore + Score"
+      ]
+     },
+     {
+      "line": 8,
+      "fixes": [
+       "NEXT StoreLoop",
+       "NEXT",
+       "ENDFOR"
+      ]
+     },
+     {
+      "line": 11,
+      "fixes": [
+       "INPUT Another"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 4(a)."
+  },
+  {
+   "id": "j21-23-q5a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart represents an algorithm (written here as pseudocode). The algorithm will terminate if 0 is entered at the Op input.\n\nComplete the trace table for the algorithm using this input data.\n\n01  REPEAT\n02    INPUT Op\n03    IF Op <> 0\n04      THEN\n05        INPUT Value1\n06        INPUT Value2\n07        IF Op = 1\n08          THEN\n09            Ans <- Value1 + Value2\n10          ELSE\n11            IF Op = 2\n12              THEN\n13                Ans <- Value1 - Value2\n14              ELSE\n15                IF Op = 3\n16                  THEN\n17                    Ans <- Value1 * Value2\n18                  ELSE\n19                    IF Op = 4\n20                      THEN\n21                        Ans <- Value1 / Value2\n22                      ELSE\n23                        OUTPUT \"Input Error\"\n24                    ENDIF\n25                ENDIF\n26            ENDIF\n27        ENDIF\n28    ENDIF\n29  UNTIL Op = 0",
+   "trace": {
+    "columns": [
+     "Op",
+     "Value1",
+     "Value2",
+     "Ans",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "1",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "87",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "14",
+      "101",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "30",
+      "60",
+      ""
+     ],
+     [
+      "5",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "10",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "6",
+      "",
+      "Input Error"
+     ],
+     [
+      "4",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "10",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "2",
+      "5",
+      ""
+     ],
+     [
+      "0",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     3,
+     4
+    ],
+    "testData": [
+     "1",
+     "87",
+     "14",
+     "3",
+     "2",
+     "30",
+     "5",
+     "10",
+     "6",
+     "4",
+     "10",
+     "2",
+     "0",
+     "2",
+     "90",
+     "6"
+    ],
+    "read": 13,
+    "tags": [
+     [
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      4,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      5,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      0
+     ],
+     [
+      7,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      8,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      9,
+      0,
+      0
+     ],
+     [
+      10,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      11,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      12,
+      0,
+      0
+     ],
+     [
+      13,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 5(a)."
+  },
+  {
+   "id": "n21-21-q2a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to generate 50 positive random integers with values less than or equal to 100. These random integers are stored in the array RandNum[ ]\nThe function Rand(X, Y) generates a random integer greater than or equal to X and less than Y. For example, Rand(1, 4) generates 1 or 2 or 3.\n\nFind the four errors in the pseudocode and write a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "Count <- 0\nREPEAT\n  RandNum[Counter] <- Rand(1, 100)\n  Count <- Count + 2\nUNTIL Count <= 50",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "Counter <- 0"
+      ]
+     },
+     {
+      "line": 3,
+      "fixes": [
+       "RandNum[Counter] <- Rand(1, 101)",
+       "RandNum[Count] <- Rand(1, 101)"
+      ]
+     },
+     {
+      "line": 4,
+      "fixes": [
+       "Count <- Count + 1",
+       "Counter <- Counter + 1"
+      ]
+     },
+     {
+      "line": 5,
+      "fixes": [
+       "UNTIL Count >= 50",
+       "UNTIL Count = 50",
+       "UNTIL Counter >= 50",
+       "UNTIL Counter = 50"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2021 Paper 21, Question 2(a)."
+  },
+  {
+   "id": "n21-21-q4",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The algorithm shown by this flowchart (written here as pseudocode) allows the input of examination marks for a class of students. A mark of -1 ends the process. If a mark is 80 or over then a distinction grade is awarded. The number of distinctions for the whole class is calculated. If this is over 50% of the class, the class is awarded a highly commended certificate.\n\nComplete a trace table for the algorithm using this input data.\n\n01  Counter <- 0\n02  Distinction <- 0\n03  INPUT Mark\n04  WHILE Mark <> -1\n05    Counter <- Counter + 1\n06    IF Mark >= 80\n07      THEN\n08        Distinction <- Distinction + 1\n09    ENDIF\n10    INPUT Mark\n11  ENDWHILE\n12  Award <- Distinction / Counter\n13  IF Award > 0.5\n14    THEN\n15      OUTPUT \"Highly Commended\"\n16  ENDIF",
+   "trace": {
+    "columns": [
+     "Counter",
+     "Distinction",
+     "Mark",
+     "Award",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "1",
+      "88",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "74",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "60",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "2",
+      "90",
+      "",
+      ""
+     ],
+     [
+      "5",
+      "3",
+      "84",
+      "",
+      ""
+     ],
+     [
+      "6",
+      "4",
+      "87",
+      "",
+      ""
+     ],
+     [
+      "7",
+      "5",
+      "95",
+      "",
+      ""
+     ],
+     [
+      "8",
+      "",
+      "72",
+      "",
+      ""
+     ],
+     [
+      "9",
+      "6",
+      "84",
+      "",
+      ""
+     ],
+     [
+      "10",
+      "",
+      "66",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "-1",
+      "0.6",
+      "Highly Commended"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "testData": [
+     "88",
+     "74",
+     "60",
+     "90",
+     "84",
+     "87",
+     "95",
+     "72",
+     "84",
+     "66",
+     "-1"
+    ],
+    "read": 11,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      4,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      7,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      8,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      9,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      10,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      11,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2021 Paper 21, Question 4."
+  },
+  {
+   "id": "n21-22-q4a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "The pseudocode algorithm should work as a calculator and output the result.\n\nFind the five errors in the pseudocode and suggest a correction for each error.\nThere are 5 errors: find any one.",
+   "errorline": {
+    "code": "Continue <- 1\nWHILE Continue = 0\n  OUTPUT \"Enter 1 for +, 2 for -, 3 for * or 4 for /\"\n  INPUT Operator\n  OUTPUT \"Enter the first value\"\n  INPUT Value1\n  OUTPUT \"Enter the second value\"\n  OUTPUT Value2\n  IF Operator\n    1: Answer <- Value1 + Value2\n    2: Answer <- Value1 - Value2\n    3: Answer <- Value1 * Value2\n    4: Answer <- Value1 / Value2\n  ENDCASE\n  OUTPUT \"The answer is \", Value1\n  OUTPUT \"Do you wish to enter more values (Yes or No)?\"\n  INPUT MoreValues\n  IF MoreValues = \"No\"\n    THEN\n      Continue <- 1\n  ENDIF\nUNTIL Continue = 0",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "Continue <- 0"
+      ]
+     },
+     {
+      "line": 8,
+      "fixes": [
+       "INPUT Value2"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "CASE OF Operator",
+       "CASE Operator OF"
+      ]
+     },
+     {
+      "line": 15,
+      "fixes": [
+       "OUTPUT \"The answer is \", Answer"
+      ]
+     },
+     {
+      "line": 22,
+      "fixes": [
+       "ENDWHILE"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2021 Paper 22, Question 4(a)."
+  },
+  {
+   "id": "n21-22-q5",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart represents an algorithm (written here as pseudocode). The algorithm will terminate if -1 is entered at the List input.\n\nComplete the trace table for the algorithm using this input data.\n\n01  List1 <- 0\n02  List2 <- 0\n03  INPUT List\n04  WHILE List <> -1\n05    INPUT Value\n06    IF List = 1\n07      THEN\n08        List1 <- List1 + Value\n09      ELSE\n10        IF List = 2\n11          THEN\n12            List2 <- List2 + Value\n13          ELSE\n14            OUTPUT \"Input Error\"\n15        ENDIF\n16    ENDIF\n17    INPUT List\n18  ENDWHILE\n19  OUTPUT \"List 1 = \", List1\n20  OUTPUT \"List 2 = \", List2\n21  IF List1 > List2\n22    THEN\n23      OUTPUT \"List 1 is greatest\"\n24    ELSE\n25      OUTPUT \"List 2 is greatest\"\n26  ENDIF",
+   "trace": {
+    "columns": [
+     "List",
+     "Value",
+     "List1",
+     "List2",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "0",
+      "0",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "77",
+      "",
+      "77",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "16",
+      "",
+      "93",
+      ""
+     ],
+     [
+      "1",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "35",
+      "35",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "-7",
+      "",
+      "86",
+      ""
+     ],
+     [
+      "5",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "18",
+      "",
+      "",
+      "Input Error"
+     ],
+     [
+      "1",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "11",
+      "46",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "12",
+      "58",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "20",
+      "",
+      "106",
+      ""
+     ],
+     [
+      "-1",
+      "",
+      "",
+      "",
+      "List 1 = 58"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "List 2 = 106"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "List 2 is greatest"
+     ]
+    ],
+    "askable": [
+     2,
+     3,
+     4
+    ],
+    "testData": [
+     "2",
+     "77",
+     "2",
+     "16",
+     "1",
+     "35",
+     "2",
+     "-7",
+     "5",
+     "18",
+     "1",
+     "11",
+     "1",
+     "12",
+     "2",
+     "20",
+     "-1",
+     "18"
+    ],
+    "read": 17,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      4,
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      6,
+      0,
+      0,
+      0
+     ],
+     [
+      7,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      8,
+      0,
+      0,
+      0
+     ],
+     [
+      9,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      10,
+      0,
+      0,
+      0
+     ],
+     [
+      11,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      12,
+      0,
+      0,
+      0
+     ],
+     [
+      13,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      14,
+      0,
+      0,
+      0
+     ],
+     [
+      15,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      16,
+      0,
+      0,
+      0
+     ],
+     [
+      17,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2021 Paper 22, Question 5."
+  },
+  {
+   "id": "n21-23-q2a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to generate 50 positive random integers with values less than or equal to 100. These numbers are stored in the array NumRand[]\nThe function RandUp(X,Y) generates a random integer greater than X and less than or equal to Y. For example, RandUp(1,4) generates 2 or 3 or 4\n\nFind the four errors in the pseudocode and write a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "Count <- 0\nWHILE Counter > 50 DO\n  NumRand[Counter] <- RandUp(1,100)\n  Counter <- Counter - 2\nENDWHILE",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "Counter <- 0"
+      ]
+     },
+     {
+      "line": 2,
+      "fixes": [
+       "WHILE Counter < 50 DO"
+      ]
+     },
+     {
+      "line": 3,
+      "fixes": [
+       "NumRand[Counter] <- RandUp(0,100)",
+       "NumRand[Counter] <- RandUp(-1,100)"
+      ]
+     },
+     {
+      "line": 4,
+      "fixes": [
+       "Counter <- Counter + 1"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2021 Paper 23, Question 2(a)."
+  },
+  {
+   "id": "n21-23-q4",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The algorithm, shown by this flowchart (written here as pseudocode), allows the input of examination marks for a class of students. A mark of 999 ends the process. If a mark is 40 or over then a pass grade is awarded. The number of pass grades is calculated for the whole class. If this is under 50% of the class, the class is offered extra help.\n\nComplete a trace table for the algorithm using this input data.\n\n01  Counter <- 0\n02  Pass <- 0\n03  INPUT Mark\n04  WHILE Mark <> 999\n05    Counter <- Counter + 1\n06    IF Mark >= 40\n07      THEN\n08        Pass <- Pass + 1\n09    ENDIF\n10    INPUT Mark\n11  ENDWHILE\n12  Help <- Pass / Counter\n13  IF Help < 0.5\n14    THEN\n15      OUTPUT \"Extra Help\"\n16  ENDIF",
+   "trace": {
+    "columns": [
+     "Counter",
+     "Pass",
+     "Mark",
+     "Help",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "1",
+      "88",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "24",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "2",
+      "60",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "",
+      "30",
+      "",
+      ""
+     ],
+     [
+      "5",
+      "3",
+      "44",
+      "",
+      ""
+     ],
+     [
+      "6",
+      "",
+      "17",
+      "",
+      ""
+     ],
+     [
+      "7",
+      "",
+      "25",
+      "",
+      ""
+     ],
+     [
+      "8",
+      "",
+      "22",
+      "",
+      ""
+     ],
+     [
+      "9",
+      "4",
+      "54",
+      "",
+      ""
+     ],
+     [
+      "10",
+      "",
+      "6",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "999",
+      "0.4",
+      "Extra Help"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "testData": [
+     "88",
+     "24",
+     "60",
+     "30",
+     "44",
+     "17",
+     "25",
+     "22",
+     "54",
+     "6",
+     "999",
+     "-1"
+    ],
+    "read": 11,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      4,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      7,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      8,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      9,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      10,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      11,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2021 Paper 23, Question 4."
+  },
+  {
+   "id": "m22-22-q4a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This flowchart (written here as pseudocode) inputs a whole number. The function INT returns the integer value of a number. For example, INT(7.5) is 7\nAn input of -1 ends the routine.\n\nComplete the trace table for the given algorithm using this input data.\n\n01  INPUT Number\n02  WHILE Number <> -1\n03    C <- 0\n04    D <- INT(Number / 2)\n05    REPEAT\n06      IF INT(Number / D) = Number / D\n07        THEN\n08          C <- C + 1\n09      ENDIF\n10      D <- D - 1\n11    UNTIL D = 1\n12    IF C <> 0\n13      THEN\n14        OUTPUT C\n15    ENDIF\n16    INPUT Number\n17  ENDWHILE",
+   "trace": {
+    "columns": [
+     "Number",
+     "C",
+     "D",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "7",
+      "0",
+      "3",
+      ""
+     ],
+     [
+      "",
+      "",
+      "2",
+      ""
+     ],
+     [
+      "",
+      "",
+      "1",
+      ""
+     ],
+     [
+      "6",
+      "0",
+      "3",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "2",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "1",
+      "2"
+     ],
+     [
+      "5",
+      "0",
+      "2",
+      ""
+     ],
+     [
+      "",
+      "",
+      "1",
+      ""
+     ],
+     [
+      "4",
+      "0",
+      "2",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "1",
+      "1"
+     ],
+     [
+      "-1",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3
+    ],
+    "testData": [
+     "7",
+     "6",
+     "5",
+     "4",
+     "-1",
+     "12",
+     "34"
+    ],
+    "read": 5,
+    "tags": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      4,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 4(a)."
+  },
+  {
+   "id": "j22-21-q5a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The pseudocode represents an algorithm.\nThe pre-defined function DIV gives the value of the result of integer division. For example, Y = 9 DIV 4 gives the value Y = 2\nThe pre-defined function MOD gives the value of the remainder of integer division. For example, R = 9 MOD 4 gives the value R = 1\n\nComplete the trace table for the algorithm using this input data.\n\n01  First <- 0\n02  Last <- 0\n03  INPUT Limit\n04  FOR Counter <- 1 TO Limit\n05    INPUT Value\n06    IF Value >= 100\n07      THEN\n08        IF Value < 1000\n09          THEN\n10            First <- Value DIV 100\n11            Last <- Value MOD 10\n12            IF First = Last\n13              THEN\n14                OUTPUT Value\n15            ENDIF\n16        ENDIF\n17    ENDIF\n18  NEXT Counter",
+   "trace": {
+    "columns": [
+     "Counter",
+     "Value",
+     "First",
+     "Last",
+     "Limit",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "0",
+      "0",
+      "8",
+      ""
+     ],
+     [
+      "1",
+      "66",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "606",
+      "6",
+      "6",
+      "",
+      "606"
+     ],
+     [
+      "3",
+      "6226",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "8448",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "5",
+      "642",
+      "6",
+      "2",
+      "",
+      ""
+     ],
+     [
+      "6",
+      "747",
+      "7",
+      "7",
+      "",
+      "747"
+     ],
+     [
+      "7",
+      "77",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "8",
+      "121",
+      "1",
+      "1",
+      "",
+      "121"
+     ]
+    ],
+    "askable": [
+     0,
+     2,
+     3,
+     5
+    ],
+    "testData": [
+     "8",
+     "66",
+     "606",
+     "6226",
+     "8448",
+     "642",
+     "747",
+     "77",
+     "121"
+    ],
+    "read": 9,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      3,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      4,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      5,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      6,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      7,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      8,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      9,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2022 Paper 21, Question 5(a)."
+  },
+  {
+   "id": "j22-22-q2a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm allows a user to input their password and checks that there are at least eight characters in the password. Then, the user is asked to re-input the password to check that both inputs are the same. The user is allowed three attempts at inputting a password of the correct length and a matching pair of passwords. The pre-defined function LEN(X) returns the number of characters in the string, X\n\nIdentify the three errors in the pseudocode and suggest a correction to remove each error.\nThere are 3 errors: find any one.",
+   "errorline": {
+    "code": "Attempt <- 0\nREPEAT\n  PassCheck <- TRUE\n  OUTPUT \"Please enter your password \"\n  INPUT Password\n  IF LEN(Password) < 8\n    THEN\n      PassCheck <- TRUE\n    ELSE\n      OUTPUT \"Please re-enter your password \"\n      INPUT Password2\n      IF Password <> Password\n        THEN\n          PassCheck <- FALSE\n      ENDIF\n  ENDIF\n  Attempt <- Attempt + 1\nUNTIL PassCheck OR Attempt <> 3\nIF PassCheck\n  THEN\n    OUTPUT \"Password success\"\n  ELSE\n    OUTPUT \"Password fail\"\nENDIF",
+    "errors": [
+     {
+      "line": 8,
+      "fixes": [
+       "PassCheck <- FALSE"
+      ]
+     },
+     {
+      "line": 12,
+      "fixes": [
+       "IF Password2 <> Password",
+       "IF Password <> Password2"
+      ]
+     },
+     {
+      "line": 18,
+      "fixes": [
+       "UNTIL PassCheck OR Attempt = 3",
+       "UNTIL PassCheck OR Attempt >= 3"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2022 Paper 22, Question 2(a)."
+  },
+  {
+   "id": "j22-22-q4a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm (a flowchart, written here as pseudocode) checks the temperature of hot food being served to customers.\n\nComplete the trace table for the algorithm using this input data.\n\n01  Counter <- 0\n02  Hot <- 0\n03  Cold <- 0\n04  Serve <- 0\n05  INPUT Temp\n06  WHILE Temp <> -1\n07    IF Temp > 86\n08      THEN\n09        Hot <- Hot + 1\n10        OUTPUT \"Too Hot\"\n11      ELSE\n12        IF Temp < 63\n13          THEN\n14            Cold <- Cold + 1\n15            OUTPUT \"Too Cold\"\n16          ELSE\n17            Serve <- Serve + 1\n18        ENDIF\n19    ENDIF\n20    Counter <- Counter + 1\n21    INPUT Temp\n22  ENDWHILE\n23  Error <- ((Hot + Cold) / Counter) * 100\n24  OUTPUT Error",
+   "trace": {
+    "columns": [
+     "Counter",
+     "Hot",
+     "Cold",
+     "Serve",
+     "Temp",
+     "Error",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "0",
+      "0",
+      "",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "",
+      "",
+      "1",
+      "75",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "",
+      "2",
+      "78",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "",
+      "3",
+      "84",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "1",
+      "",
+      "",
+      "87",
+      "",
+      "Too Hot"
+     ],
+     [
+      "5",
+      "2",
+      "",
+      "",
+      "91",
+      "",
+      "Too Hot"
+     ],
+     [
+      "6",
+      "",
+      "",
+      "4",
+      "80",
+      "",
+      ""
+     ],
+     [
+      "7",
+      "",
+      "",
+      "5",
+      "75",
+      "",
+      ""
+     ],
+     [
+      "8",
+      "",
+      "",
+      "6",
+      "70",
+      "",
+      ""
+     ],
+     [
+      "9",
+      "",
+      "",
+      "7",
+      "65",
+      "",
+      ""
+     ],
+     [
+      "10",
+      "",
+      "1",
+      "",
+      "62",
+      "",
+      "Too Cold"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "-1",
+      "30",
+      "30"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    "testData": [
+     "75",
+     "78",
+     "84",
+     "87",
+     "91",
+     "80",
+     "75",
+     "70",
+     "65",
+     "62",
+     "-1",
+     "20"
+    ],
+    "read": 11,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      6,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      7,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      8,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      9,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      10,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      11,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2022 Paper 22, Question 4(a)."
+  },
+  {
+   "id": "j22-23-q4a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The pseudocode represents an algorithm.\nThe pre-defined function DIV gives the value of the result of integer division. For example, Y = 11 DIV 4 gives the value Y = 2\n\nComplete the trace table for the algorithm using this input data.\n\n01  Count <- 0\n02  INPUT Limit\n03  FOR In <- 1 TO Limit\n04    Logic <- TRUE\n05    Test <- 2\n06    INPUT Number\n07    REPEAT\n08      IF Number / Test = Number DIV Test\n09        THEN\n10          Logic <- FALSE\n11        ELSE\n12          Test <- Test + 1\n13      ENDIF\n14    UNTIL NOT Logic OR Test >= Number DIV 2\n15    IF Logic\n16      THEN\n17        Store[Count] <- Number\n18        Count <- Count + 1\n19    ENDIF\n20  NEXT In\n21  FOR Out <- 0 TO Count - 1\n22    OUTPUT Store[Out]\n23  NEXT Out",
+   "trace": {
+    "columns": [
+     "In",
+     "Logic",
+     "Test",
+     "Number",
+     "Store[Count]",
+     "Count",
+     "Limit",
+     "Out",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "0",
+      "5",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "TRUE",
+      "2",
+      "9",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "FALSE",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "TRUE",
+      "2",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "3",
+      "",
+      "5",
+      "1",
+      "",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "TRUE",
+      "2",
+      "8",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "FALSE",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "TRUE",
+      "2",
+      "10",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "FALSE",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "5",
+      "TRUE",
+      "2",
+      "7",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "3",
+      "",
+      "7",
+      "2",
+      "",
+      "0",
+      "5"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "1",
+      "7"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     2,
+     4,
+     5,
+     7,
+     8
+    ],
+    "testData": [
+     "5",
+     "9",
+     "5",
+     "8",
+     "10",
+     "7"
+    ],
+    "read": 6,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2022 Paper 23, Question 4(a)."
+  },
+  {
+   "id": "n22-21-q4a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm (a flowchart, written here as pseudocode) makes sure that there are enough fresh bread rolls available for customers to buy.\n\nComplete the trace table for the algorithm using this input data.\n\n01  Stock <- 50\n02  Total <- 0\n03  INPUT Sold\n04  WHILE Sold <> -1\n05    Stock <- Stock - Sold\n06    IF Stock < 20\n07      THEN\n08        OUTPUT \"Add new stock\"\n09        Stock <- Stock + 50\n10    ENDIF\n11    Total <- Total + Sold\n12    INPUT Sold\n13  ENDWHILE\n14  OUTPUT Total",
+   "trace": {
+    "columns": [
+     "Sold",
+     "Stock",
+     "Total",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "50",
+      "0",
+      ""
+     ],
+     [
+      "24",
+      "26",
+      "24",
+      ""
+     ],
+     [
+      "12",
+      "14",
+      "",
+      "Add new stock"
+     ],
+     [
+      "",
+      "64",
+      "36",
+      ""
+     ],
+     [
+      "6",
+      "58",
+      "42",
+      ""
+     ],
+     [
+      "30",
+      "28",
+      "72",
+      ""
+     ],
+     [
+      "12",
+      "16",
+      "",
+      "Add new stock"
+     ],
+     [
+      "",
+      "66",
+      "84",
+      ""
+     ],
+     [
+      "18",
+      "48",
+      "102",
+      ""
+     ],
+     [
+      "-1",
+      "",
+      "",
+      "102"
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3
+    ],
+    "testData": [
+     "24",
+     "12",
+     "6",
+     "30",
+     "12",
+     "18",
+     "-1",
+     "24"
+    ],
+    "read": 7,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0
+     ],
+     [
+      4,
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      6,
+      0,
+      0,
+      0
+     ],
+     [
+      7,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 4(a)."
+  },
+  {
+   "id": "n22-22-q5a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode should allow 500 marks to be entered into the algorithm. If the mark is 80 or greater it is stored in an array for higher marks. If the mark is less than 80, but greater than or equal to 50 it is stored in an array for middle marks. The remaining marks are stored in an array for lower marks. The results from the algorithm are displayed at the end.\n\nIdentify the four errors in the pseudocode and suggest a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "HighList <- 0\nMidList <- 0\nLowList <- 0\nMarksEntry <- 0\nREPEAT\n  INPUT Mark\n  IF Mark >= 80\n    THEN\n      Higher[HighList] <- MarksEntry\n      HighList <- HighList + 1\n    ELSE\n      IF Mark >= 50\n        THEN\n          Middle[MidList] <- Mark\n          MidList <- MidList\n        ELSE\n          Lower[HighList] <- Mark\n          LowList <- LowList + 1\n      ENDIF\n  ENDIF\n  MarksEntry <- MarksEntry + 1\nNEXT MarksEntry = 500\nOUTPUT \"You entered \", HighList, \" higher marks\"\nOUTPUT \"You entered \", MidList, \" middle marks\"\nOUTPUT \"You entered \", LowList, \" lower marks\"",
+    "errors": [
+     {
+      "line": 9,
+      "fixes": [
+       "Higher[HighList] <- Mark"
+      ]
+     },
+     {
+      "line": 15,
+      "fixes": [
+       "MidList <- MidList + 1"
+      ]
+     },
+     {
+      "line": 17,
+      "fixes": [
+       "Lower[LowList] <- Mark"
+      ]
+     },
+     {
+      "line": 22,
+      "fixes": [
+       "UNTIL MarksEntry = 500"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 5(a)."
+  },
+  {
+   "id": "n22-22-q6",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This flowchart (written here as pseudocode) represents an algorithm to divide three-digit numbers into hundreds, tens and units.\nThe pre-defined function DIV gives the value of the result of integer division, for example Y = 9 DIV 4 gives the value Y = 2\nThe pre-defined function MOD gives the value of the remainder of integer division, for example R = 9 MOD 4 gives the value R = 1\n\nComplete the trace table for the algorithm using this input data.\n\n01  Counter <- 0\n02  REPEAT\n03    Counter <- Counter + 1\n04    IF Counter <= 7\n05      THEN\n06        INPUT Number\n07        IF Number >= 100\n08          THEN\n09            IF Number <= 999\n10              THEN\n11                Hundreds <- Number DIV 100\n12                Temp <- Number MOD 100\n13                Tens <- Temp DIV 10\n14                Units <- Number MOD 10\n15                OUTPUT \"Hundreds: \", Hundreds, \" Tens: \", Tens, \" Units: \", Units\n16            ENDIF\n17        ENDIF\n18    ENDIF\n19  UNTIL Counter > 7",
+   "trace": {
+    "columns": [
+     "Counter",
+     "Number",
+     "Hundreds",
+     "Temp",
+     "Tens",
+     "Units",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "97",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "876",
+      "8",
+      "76",
+      "7",
+      "6",
+      "Hundreds: 8 Tens: 7 Units: 6"
+     ],
+     [
+      "3",
+      "4320",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "606",
+      "6",
+      "6",
+      "0",
+      "6",
+      "Hundreds: 6 Tens: 0 Units: 6"
+     ],
+     [
+      "5",
+      "9875",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "6",
+      "42",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "7",
+      "124",
+      "1",
+      "24",
+      "2",
+      "4",
+      "Hundreds: 1 Tens: 2 Units: 4"
+     ],
+     [
+      "8",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     0,
+     2,
+     3,
+     4,
+     5
+    ],
+    "testData": [
+     "97",
+     "876",
+     "4320",
+     "606",
+     "9875",
+     "42",
+     "124"
+    ],
+    "read": 7,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      6,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      7,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 6."
+  },
+  {
+   "id": "n22-23-q4a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm (a flowchart, written here as pseudocode) makes sure that there are enough wheelbarrows in stock.\n\nComplete the trace table for the algorithm using this input data.\n\n01  Stock <- 10\n02  Total <- 0\n03  INPUT Sale\n04  WHILE Sale <> \"N\"\n05    Stock <- Stock - 1\n06    IF Stock < 5\n07      THEN\n08        OUTPUT \"Add new stock\"\n09        Stock <- Stock + 10\n10    ENDIF\n11    Total <- Total + 1\n12    INPUT Sale\n13  ENDWHILE\n14  OUTPUT Total",
+   "trace": {
+    "columns": [
+     "Stock",
+     "Total",
+     "Sale",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "10",
+      "0",
+      "",
+      ""
+     ],
+     [
+      "9",
+      "1",
+      "Y",
+      ""
+     ],
+     [
+      "8",
+      "2",
+      "Y",
+      ""
+     ],
+     [
+      "7",
+      "3",
+      "Y",
+      ""
+     ],
+     [
+      "6",
+      "4",
+      "Y",
+      ""
+     ],
+     [
+      "5",
+      "5",
+      "Y",
+      ""
+     ],
+     [
+      "4",
+      "6",
+      "Y",
+      ""
+     ],
+     [
+      "14",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "N",
+      "Add new stock"
+     ],
+     [
+      "",
+      "",
+      "",
+      "6"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     3
+    ],
+    "testData": [
+     "\"Y\"",
+     "\"Y\"",
+     "\"Y\"",
+     "\"Y\"",
+     "\"Y\"",
+     "\"Y\"",
+     "\"N\""
+    ],
+    "read": 7,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      1,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0
+     ],
+     [
+      0,
+      0,
+      4,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      7,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 4(a)."
+  },
+  {
+   "id": "m23-22-q6a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "The energy efficiency of an electrical appliance is the percentage of useful energy out compared with the total energy in. Values for total energy in and useful energy out are input. The efficiency is calculated and output as a percentage. The entry of the number -1 for either value stops the algorithm. Identify the three errors in the pseudocode and suggest corrections.\nThere are 3 errors: find any one.",
+   "errorline": {
+    "code": "REPEAT\n    OUTPUT \"Enter total energy in \"\n    INPUT TotalEnergyIn\n    OUTPUT \"Enter useful energy out \"\n    OUTPUT UsefulEnergyOut\n    IF TotalEnergyIn <> -1 AND UsefulEnergy <> -1\n      THEN\n        Efficiency <- (UsefulEnergyOut / TotalEnergyIn) * 100\n        OUTPUT \"Efficiency is \", Efficiency, \"%\"\n    ENDIF\nUNTIL TotalEnergyIn <> -1 OR UsefulEnergyOut <> -1",
+    "errors": [
+     {
+      "line": 5,
+      "fixes": [
+       "INPUT UsefulEnergyOut"
+      ]
+     },
+     {
+      "line": 6,
+      "fixes": [
+       "IF TotalEnergyIn <> -1 AND UsefulEnergyOut <> -1"
+      ]
+     },
+     {
+      "line": 11,
+      "fixes": [
+       "UNTIL TotalEnergyIn = -1 OR UsefulEnergyOut = -1"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 6(a)."
+  },
+  {
+   "id": "m23-22-q8a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This flowchart (written here as steps) represents an algorithm to find the average value of a number of sales. Complete the trace table using this data: 5.50, 3.40, 6.25, 3.85, -11.00, 0\n\n01  NumberSales <- 0\n02  Total <- 0\n03  INPUT SaleValue\n04  WHILE SaleValue <> 0\n05      NumberSales <- NumberSales + 1\n06      Total <- Total + SaleValue\n07      INPUT SaleValue\n08  ENDWHILE\n09  Average <- Total / NumberSales\n10  OUTPUT \"Average sale value \", Average",
+   "trace": {
+    "columns": [
+     "NumberSales",
+     "Total",
+     "SaleValue",
+     "Average",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "5.50",
+      "5.50",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "8.90",
+      "3.40",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "15.15",
+      "6.25",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "19.00",
+      "3.85",
+      "",
+      ""
+     ],
+     [
+      "5",
+      "8.00",
+      "-11.00",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "0",
+      "1.6",
+      "Average sale value 1.6"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "testData": [
+     "5.50",
+     "3.40",
+     "6.25",
+     "3.85",
+     "-11.00",
+     "0"
+    ],
+    "read": 6,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      4,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 8(a)."
+  },
+  {
+   "id": "j23-21-q5a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to allow some numbers to be input. All the positive numbers that are input are totalled and this total is output at the end. An input of 0 stops the algorithm. Identify the four errors in the pseudocode and suggest a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "Exit <- 1\nWHILE Exit <> 0 DO\n    INPUT Number\n    IF Number < 0\n      THEN\n        Total <- Total + Number\n      ELSE\n        IF Number = 0\n          THEN\n            Exit <- 1\n        ENDIF\n    ENDIF\nENDIF\nOUTPUT \"The total value of your numbers is \", Number",
+    "errors": [
+     {
+      "line": 4,
+      "fixes": [
+       "IF Number > 0"
+      ]
+     },
+     {
+      "line": 10,
+      "fixes": [
+       "Exit <- 0"
+      ]
+     },
+     {
+      "line": 13,
+      "fixes": [
+       "ENDWHILE"
+      ]
+     },
+     {
+      "line": 14,
+      "fixes": [
+       "OUTPUT \"The total value of your numbers is \", Total"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 5(a)."
+  },
+  {
+   "id": "j23-21-q7a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart (written here as steps) represents an algorithm. The 2D array Word[] stores the first half of the phonetic alphabet: Word[1,1] to Word[13,1] hold A to M and Word[1,2] to Word[13,2] hold Alpha, Bravo, Charlie, Delta, Echo, Foxtrot, Golf, Hotel, India, Juliet, Kilo, Lima, Mike. For example, Word[10,1] is 'J'. Complete the trace table for the algorithm by using the input data: F, Y, D, N\n\n01  REPEAT\n02      Pointer <- 1\n03      INPUT Letter\n04      WHILE Word[Pointer, 1] <> Letter\n05          Pointer <- Pointer + 1\n06      ENDWHILE\n07      OUTPUT \"Letter \", Letter, \" is represented by \", Word[Pointer, 2]\n08      OUTPUT \"Another Letter? (Y or N)\"\n09      INPUT Choice\n10  UNTIL Choice <> 'Y'",
+   "trace": {
+    "columns": [
+     "Pointer",
+     "Letter",
+     "Choice",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "1",
+      "F",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "",
+      "",
+      ""
+     ],
+     [
+      "5",
+      "",
+      "",
+      ""
+     ],
+     [
+      "6",
+      "",
+      "",
+      "Letter F is represented by Foxtrot"
+     ],
+     [
+      "",
+      "",
+      "",
+      "Another Letter? (Y or N)"
+     ],
+     [
+      "",
+      "",
+      "Y",
+      ""
+     ],
+     [
+      "1",
+      "D",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "",
+      "",
+      "Letter D is represented by Delta"
+     ],
+     [
+      "",
+      "",
+      "",
+      "Another Letter? (Y or N)"
+     ],
+     [
+      "",
+      "",
+      "N",
+      ""
+     ]
+    ],
+    "askable": [
+     0
+    ],
+    "testData": [
+     "F",
+     "Y",
+     "D",
+     "N"
+    ],
+    "read": 4,
+    "tags": [
+     [
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      0
+     ],
+     [
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      4,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 7(a)."
+  },
+  {
+   "id": "j23-22-q7b",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to calculate a check digit for a four-digit number. The algorithm then outputs the five-digit number including the check digit. The algorithm stops when -1 is input as the fourth digit. Identify the three errors in the pseudocode and suggest a correction for each error.\nThere are 3 errors: find any one.",
+   "errorline": {
+    "code": "Flag <- FALSE\nREPEAT\n    Total <- 0\n    FOR Counter <- 1 TO 4\n        OUTPUT \"Enter a digit \", Counter\n        INPUT Number[Counter]\n        Total <- Total + Number * Counter\n        IF Number[Counter] = 0\n          THEN\n            Flag <- TRUE\n        ENDIF\n    NEXT Counter\n    IF NOT Flag\n      THEN\n        Number[5] <- MOD(Total, 10)\n        FOR Counter <- 0 TO 5\n            OUTPUT Number[Counter]\n        NEXT\n    ENDIF\nUNTIL Flag",
+    "errors": [
+     {
+      "line": 7,
+      "fixes": [
+       "Total <- Total + Number[Counter] * Counter"
+      ]
+     },
+     {
+      "line": 8,
+      "fixes": [
+       "IF Number[Counter] = -1",
+       "IF Number[Counter] < 0"
+      ]
+     },
+     {
+      "line": 16,
+      "fixes": [
+       "FOR Counter <- 1 TO 5"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 7(b)."
+  },
+  {
+   "id": "j23-22-q9a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This flowchart (written here as steps) represents an algorithm. The array X[1:5] used in the flowchart contains this data: X[1] = 10, X[2] = 1, X[3] = 5, X[4] = 7, X[5] = 11. Complete the trace table by using the data given in the array.\n\n01  REPEAT\n02      F <- 0\n03      C <- 1\n04      REPEAT\n05          IF NOT (X[C] < X[C + 1])\n06            THEN\n07              T <- X[C]\n08              X[C] <- X[C + 1]\n09              X[C + 1] <- T\n10              F <- 1\n11          ENDIF\n12          C <- C + 1\n13      UNTIL C = 5\n14  UNTIL F = 0",
+   "trace": {
+    "columns": [
+     "F",
+     "C",
+     "X[1]",
+     "X[2]",
+     "X[3]",
+     "X[4]",
+     "X[5]",
+     "T"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "10",
+      "1",
+      "5",
+      "7",
+      "11",
+      ""
+     ],
+     [
+      "0",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "10"
+     ],
+     [
+      "1",
+      "2",
+      "1",
+      "10",
+      "",
+      "",
+      "",
+      "10"
+     ],
+     [
+      "1",
+      "3",
+      "",
+      "5",
+      "10",
+      "",
+      "",
+      "10"
+     ],
+     [
+      "1",
+      "4",
+      "",
+      "",
+      "7",
+      "10",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "0",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     7
+    ],
+    "prefilled": [
+     [
+      "",
+      "",
+      "10",
+      "1",
+      "5",
+      "7",
+      "11",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 9(a)."
+  },
+  {
+   "id": "j23-23-q6a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to allow 100 positive numbers to be input. The total and the average of the numbers are output. Identify the four errors in the pseudocode and suggest corrections.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "Counter <- 100\nTotal <- 0\nWHILE Counter > 100 DO\n    INPUT Number\n    IF Number > 0\n      THEN\n        Total <- Total + Counter\n        Counter <- Counter + 1\n    ENDCASE\nENDWHILE\nOUTPUT \"The total value of your numbers is \", Total\nOUTPUT \"The average value of your numbers is \", Total / 100",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "Counter <- 0"
+      ]
+     },
+     {
+      "line": 3,
+      "fixes": [
+       "WHILE Counter < 100 DO"
+      ]
+     },
+     {
+      "line": 7,
+      "fixes": [
+       "Total <- Total + Number"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "ENDIF"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 6(a)."
+  },
+  {
+   "id": "j23-23-q7a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart (written here as steps) represents an algorithm. An input of -1 will terminate the algorithm. Complete the trace table for the input data: 5, 50, 52, 555, 57, 500, -1, 5500, 55\n\n01  Total <- 0\n02  INPUT Value\n03  WHILE Value <> -1\n04      Five1 <- Value DIV 5\n05      Five2 <- Value / 5\n06      IF Five1 = Five2\n07        THEN\n08          Ten1 <- Value DIV 10\n09          Ten2 <- Value / 10\n10          IF Ten1 = Ten2\n11            THEN\n12              Total <- Total + Value\n13            ELSE\n14              OUTPUT \"Rejected\"\n15          ENDIF\n16        ELSE\n17          OUTPUT \"Rejected\"\n18      ENDIF\n19      INPUT Value\n20  ENDWHILE\n21  OUTPUT Total",
+   "trace": {
+    "columns": [
+     "Total",
+     "Value",
+     "Five1",
+     "Five2",
+     "Ten1",
+     "Ten2",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "1",
+      "1",
+      "0",
+      "0.5",
+      "Rejected"
+     ],
+     [
+      "",
+      "50",
+      "10",
+      "10",
+      "5",
+      "5",
+      ""
+     ],
+     [
+      "50",
+      "52",
+      "10",
+      "10.4",
+      "",
+      "",
+      "Rejected"
+     ],
+     [
+      "",
+      "555",
+      "111",
+      "111",
+      "55",
+      "55.5",
+      "Rejected"
+     ],
+     [
+      "",
+      "57",
+      "11",
+      "11.4",
+      "",
+      "",
+      "Rejected"
+     ],
+     [
+      "",
+      "500",
+      "100",
+      "100",
+      "50",
+      "50",
+      ""
+     ],
+     [
+      "550",
+      "-1",
+      "",
+      "",
+      "",
+      "",
+      "550"
+     ]
+    ],
+    "askable": [
+     0,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "testData": [
+     "5",
+     "50",
+     "52",
+     "555",
+     "57",
+     "500",
+     "-1",
+     "5500",
+     "55"
+    ],
+    "read": 7,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      6,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      7,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 7(a)."
+  },
+  {
+   "id": "n23-22-q4a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to allow the names of 50 cities and their countries to be entered and stored in a two-dimensional (2D) array. The contents of the array are then output. Identify the errors in the pseudocode and suggest corrections.\nThere are 5 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE City ARRAY[1:50, 1:2] OF BOOLEAN\nDECLARE Count : INTEGER\nDECLARE Out : INTEGER\nCount <- 1\nIF\n    OUTPUT \"Enter the name of the city\"\n    INPUT City[Count, 2]\n    OUTPUT \"Enter the name of the country\"\n    INPUT City[Count, 2]\n    Count <- Count + 1\nUNTIL Count = 50\nFOR Out <- 1 TO 1\n    OUTPUT \"The city \", City[Out, 1], \" is in \", City[Out, 2]\nNEXT Out",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "DECLARE City : ARRAY[1:50, 1:2] OF STRING"
+      ]
+     },
+     {
+      "line": 5,
+      "fixes": [
+       "REPEAT"
+      ]
+     },
+     {
+      "line": 7,
+      "fixes": [
+       "INPUT City[Count, 1]"
+      ]
+     },
+     {
+      "line": 11,
+      "fixes": [
+       "UNTIL Count > 50",
+       "UNTIL Count = 51"
+      ]
+     },
+     {
+      "line": 12,
+      "fixes": [
+       "FOR Out <- 1 TO 50"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 4(a)."
+  },
+  {
+   "id": "n23-22-q6a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart (written here as steps) represents an algorithm that performs a process on groups of values that are input. The algorithm will fail if the first value of any group is 0. An input of -1 will terminate the algorithm. Complete the trace table for the input data: 25, 35, 3, 0, 57, 20, 25, 18, 0, -1, 307, 40, 0\n\n01  REPEAT\n02      Total <- 0\n03      Count <- 0\n04      INPUT Value\n05      WHILE Value <> 0 AND Value <> -1\n06          Total <- Total + Value\n07          Count <- Count + 1\n08          INPUT Value\n09      ENDWHILE\n10      IF Value = 0\n11        THEN\n12          Average <- Total / Count\n13          OUTPUT \"Total is \", Total\n14          OUTPUT \"Average is \", Average\n15      ENDIF\n16  UNTIL Value = -1",
+   "trace": {
+    "columns": [
+     "Value",
+     "Average",
+     "Total",
+     "Count",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "0",
+      "0",
+      ""
+     ],
+     [
+      "25",
+      "",
+      "25",
+      "1",
+      ""
+     ],
+     [
+      "35",
+      "",
+      "60",
+      "2",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "63",
+      "3",
+      ""
+     ],
+     [
+      "0",
+      "21",
+      "",
+      "",
+      "Total is 63"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Average is 21"
+     ],
+     [
+      "",
+      "",
+      "0",
+      "0",
+      ""
+     ],
+     [
+      "57",
+      "",
+      "57",
+      "1",
+      ""
+     ],
+     [
+      "20",
+      "",
+      "77",
+      "2",
+      ""
+     ],
+     [
+      "25",
+      "",
+      "102",
+      "3",
+      ""
+     ],
+     [
+      "18",
+      "",
+      "120",
+      "4",
+      ""
+     ],
+     [
+      "0",
+      "30",
+      "",
+      "",
+      "Total is 120"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Average is 30"
+     ],
+     [
+      "",
+      "",
+      "0",
+      "0",
+      ""
+     ],
+     [
+      "-1",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "testData": [
+     "25",
+     "35",
+     "3",
+     "0",
+     "57",
+     "20",
+     "25",
+     "18",
+     "0",
+     "-1",
+     "307",
+     "40",
+     "0"
+    ],
+    "read": 10,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      4,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      6,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      7,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      8,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      9,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      10,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 6(a)."
+  },
+  {
+   "id": "n23-23-q5a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to check if a new password is in a list of previously used passwords OldList[]. If the password is not found, the new password will be stored at the end of the list to replace \"XXXX\" already stored there. Identify the three errors in the pseudocode and suggest corrections.\nThere are 3 errors: find any one.",
+   "errorline": {
+    "code": "OUTPUT \"Enter your new password \"\nINPUT NewPassword\nPosn <- 1\nFound <- FALSE\nREPEAT\n    IF Password = OldList[Posn]\n      THEN\n        Found <- TRUE\n      ELSE Posn <- Posn + 1\n    ENDIF\nUNTIL Found AND OldList[Posn] = \"XXXX\"\nIF Found\n  THEN\n    OUTPUT \"Password has been used before\"\n  ELSE\n    INPUT \"New password accepted\"\n    OldList[Posn] <- NewPassword\nENDIF",
+    "errors": [
+     {
+      "line": 6,
+      "fixes": [
+       "IF NewPassword = OldList[Posn]"
+      ]
+     },
+     {
+      "line": 11,
+      "fixes": [
+       "UNTIL Found OR OldList[Posn] = \"XXXX\""
+      ]
+     },
+     {
+      "line": 16,
+      "fixes": [
+       "OUTPUT \"New password accepted\""
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 5(a)."
+  },
+  {
+   "id": "n23-23-q8a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This is an algorithm (a flowchart, written here as steps) to find if a batch of parts has been manufactured successfully. Complete the trace table using this data: Y, Y, Y, N, Y, Y, Y, Y, N, Y, Y, Y, Y\n\n01  Accept <- 0\n02  Reject <- 0\n03  REPEAT\n04      INPUT PartOK\n05      IF PartOK = 'Y'\n06        THEN\n07          Accept <- Accept + 1\n08        ELSE\n09          Reject <- Reject + 1\n10      ENDIF\n11  UNTIL Accept = 10\n12  IF Reject > 1\n13    THEN\n14      Error <- Reject / Accept * 100\n15      OUTPUT \"Too many rejected \", Error, \"% error\"\n16    ELSE\n17      OUTPUT \"Success\"\n18  ENDIF",
+   "trace": {
+    "columns": [
+     "Accept",
+     "Reject",
+     "PartOK",
+     "Error",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "N",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "5",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "6",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "7",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "N",
+      "",
+      ""
+     ],
+     [
+      "8",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "9",
+      "",
+      "Y",
+      "",
+      ""
+     ],
+     [
+      "10",
+      "",
+      "Y",
+      "20",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Too many rejected 20% error"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "testData": [
+     "Y",
+     "Y",
+     "Y",
+     "N",
+     "Y",
+     "Y",
+     "Y",
+     "Y",
+     "N",
+     "Y",
+     "Y",
+     "Y",
+     "Y"
+    ],
+    "read": 12,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      4,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      7,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      8,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      9,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      10,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      11,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      12,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 8(a)."
+  },
+  {
+   "id": "m24-22-q5a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to calculate the profit when an item is sold. Values for cost price and selling price are input, the profit is calculated (selling price - cost price) and output. The input of zero for either value stops the algorithm. Identify the line numbers of three errors in the pseudocode and suggest corrections.\nThere are 3 errors: find any one.",
+   "errorline": {
+    "code": "REPEAT\n    OUTPUT \"Enter cost price \"\n    INPUT Cost\n    OUTPUT \"Enter selling price \"\n    OUTPUT Sell\n    IF Cost <> 0 OR Sell <> 0\n      THEN\n        Profit <- Sell - Cost\n        OUTPUT \"Profit is \", Profit\n    NEXT\nUNTIL Cost = 0 OR Sell = 0",
+    "errors": [
+     {
+      "line": 5,
+      "fixes": [
+       "INPUT Sell"
+      ]
+     },
+     {
+      "line": 6,
+      "fixes": [
+       "IF Cost <> 0 AND Sell <> 0"
+      ]
+     },
+     {
+      "line": 10,
+      "fixes": [
+       "ENDIF"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 5(a)."
+  },
+  {
+   "id": "m24-22-q8",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This flowchart (written here as steps) represents an algorithm to find the average size of groups of visitors to an attraction. Complete the trace table using this data: 7, 10, 2, 8, 3, 9, 0, 6\n\n01  NumberGroups <- 0\n02  Total <- 0\n03  INPUT GroupSize\n04  WHILE GroupSize <> 0\n05      NumberGroups <- NumberGroups + 1\n06      Total <- Total + GroupSize\n07      INPUT GroupSize\n08  ENDWHILE\n09  Average <- DIV(Total, NumberGroups)\n10  OUTPUT \"Average group size \", Average",
+   "trace": {
+    "columns": [
+     "NumberGroups",
+     "Total",
+     "GroupSize",
+     "Average",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "7",
+      "7",
+      "",
+      ""
+     ],
+     [
+      "2",
+      "17",
+      "10",
+      "",
+      ""
+     ],
+     [
+      "3",
+      "19",
+      "2",
+      "",
+      ""
+     ],
+     [
+      "4",
+      "27",
+      "8",
+      "",
+      ""
+     ],
+     [
+      "5",
+      "30",
+      "3",
+      "",
+      ""
+     ],
+     [
+      "6",
+      "39",
+      "9",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "0",
+      "6",
+      "Average group size 6"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "testData": [
+     "7",
+     "10",
+     "2",
+     "8",
+     "3",
+     "9",
+     "0",
+     "6"
+    ],
+    "read": 7,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      4,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      5,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      7,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 8."
+  },
+  {
+   "id": "j24-21-q4a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode algorithm is intended to allow, at random, between 1 and 20 values to be entered and totalled. The total and average of the entered values are output at the end of the algorithm. Identify the line numbers of four errors in the pseudocode and suggest corrections.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Loop : STRING\nDECLARE Limit : INTEGER\nDECLARE Value : REAL\nDECLARE Total : REAL\nTotal <- 0\nLimit <- ROUND(RANDOM() * 19,0) + 1\nIF Loop <- 1 TO Limit\n    OUTPUT \"Enter a number\"\n    INPUT Loop\n    Total <- Total * Value\nNEXT Loop\nOUTPUT \"The total of the numbers entered is \", Total\nOUTPUT \"The average of the numbers entered is \", Total / Limit",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "DECLARE Loop : INTEGER"
+      ]
+     },
+     {
+      "line": 7,
+      "fixes": [
+       "FOR Loop <- 1 TO Limit"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "INPUT Value"
+      ]
+     },
+     {
+      "line": 10,
+      "fixes": [
+       "Total <- Total + Value"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 4(a)."
+  },
+  {
+   "id": "j24-21-q6a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart (written here as steps) represents an algorithm. Complete the trace table for the input data: 7, 47, 50, 52, 60, 80, 63, 70\n\n01  INPUT Limit\n02  Count <- 1\n03  REPEAT\n04      INPUT Numbers[Count]\n05      Count <- Count + 1\n06  UNTIL Count > Limit\n07  Flag <- TRUE\n08  WHILE Flag = TRUE\n09      Flag <- FALSE\n10      Count <- 1\n11      WHILE NOT (Count > Limit - 1)\n12          IF Numbers[Count] > Numbers[Count + 1]\n13            THEN\n14              Swap <- Numbers[Count]\n15              Numbers[Count] <- Numbers[Count + 1]\n16              Numbers[Count + 1] <- Swap\n17              Flag <- TRUE\n18          ENDIF\n19          Count <- Count + 1\n20      ENDWHILE\n21  ENDWHILE\n22  Result <- Limit DIV 2 + 1\n23  OUTPUT Numbers[Result]",
+   "trace": {
+    "columns": [
+     "Limit",
+     "Count",
+     "Numbers[1]",
+     "Numbers[2]",
+     "Numbers[3]",
+     "Numbers[4]",
+     "Numbers[5]",
+     "Numbers[6]",
+     "Numbers[7]",
+     "Flag",
+     "Swap",
+     "Result",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "7",
+      "1",
+      "47",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "",
+      "50",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "",
+      "",
+      "52",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "",
+      "",
+      "",
+      "60",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "80",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "6",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "63",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "7",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "70",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "8",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "TRUE",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "FALSE",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "80",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "63",
+      "80",
+      "",
+      "TRUE",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "6",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "80",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "70",
+      "80",
+      "TRUE",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "7",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "FALSE",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "6",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "7",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "4",
+      "60"
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 6(a)."
+  },
+  {
+   "id": "j24-22-q7b",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to find and display the maximum and minimum values in an array of 1000 positive numbers. The array List[] starts at index 1. Identify the line numbers of the three errors in the pseudocode and suggest a correction for each error.\nThere are 3 errors: find any one.",
+   "errorline": {
+    "code": "Max <- List[1]\nMin <- List[1]\nFOR Counter <- 2 TO 1000\n    IF List[Counter] < Max\n      THEN\n        Max <- List[Counter]\n    ENDIF\n    IF List[Count] < Min\n      THEN\n        Min <- List[Counter]\n    ENDWHILE\nNEXT Counter\nOUTPUT \"Maximum value is \", Max\nOUTPUT \"Minimum value is \", Min",
+    "errors": [
+     {
+      "line": 4,
+      "fixes": [
+       "IF List[Counter] > Max"
+      ]
+     },
+     {
+      "line": 8,
+      "fixes": [
+       "IF List[Counter] < Min"
+      ]
+     },
+     {
+      "line": 11,
+      "fixes": [
+       "ENDIF"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 7(b)."
+  },
+  {
+   "id": "j24-22-q9a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This flowchart (written here as steps) represents an algorithm. The array List[1:5] used in the flowchart contains this data: List[1] = 15, List[2] = 17, List[3] = 20, List[4] = 5, List[5] = 9. Complete the trace table using the data given in the array.\n\n01  REPEAT\n02      A <- FALSE\n03      B <- 1\n04      REPEAT\n05          IF NOT (List[B] > List[B + 1])\n06            THEN\n07              T <- List[B]\n08              List[B] <- List[B + 1]\n09              List[B + 1] <- T\n10              A <- TRUE\n11          ENDIF\n12          B <- B + 1\n13      UNTIL B = 5\n14  UNTIL A <> TRUE",
+   "trace": {
+    "columns": [
+     "A",
+     "B",
+     "List[1]",
+     "List[2]",
+     "List[3]",
+     "List[4]",
+     "List[5]",
+     "T"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "15",
+      "17",
+      "20",
+      "5",
+      "9",
+      ""
+     ],
+     [
+      "FALSE",
+      "1",
+      "17",
+      "15",
+      "",
+      "",
+      "",
+      "15"
+     ],
+     [
+      "TRUE",
+      "2",
+      "",
+      "20",
+      "15",
+      "",
+      "",
+      "15"
+     ],
+     [
+      "TRUE",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "TRUE",
+      "4",
+      "",
+      "",
+      "",
+      "9",
+      "5",
+      "5"
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "FALSE",
+      "1",
+      "20",
+      "17",
+      "",
+      "",
+      "",
+      "17"
+     ],
+     [
+      "TRUE",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "FALSE",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "prefilled": [
+     [
+      "",
+      "",
+      "15",
+      "17",
+      "20",
+      "5",
+      "9",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 9(a)."
+  },
+  {
+   "id": "j24-23-q4a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode algorithm is intended to allow data for up to 50 people to be entered and stored in a two-dimensional (2D) array. The data is their last name, first name and the city in which they live. Identify the line numbers of the four errors in the pseudocode and suggest corrections.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE People : ARRAY[1:50, 1:3] OF REAL\nDECLARE Count : INTEGER\nDECLARE Response : CHAR\nDECLARE Continue : BOOLEAN\nFOR I <- 1 TO 50\n    FOR J <- 1 TO 3\n        People[I, J] <- \"\"\n    NEXT J\nNEXT I\nCount <- 100\nContinue <- TRUE\nCASE OF\n    OUTPUT \"Enter the last name\"\n    INPUT People[Count, 1]\n    OUTPUT \"Enter the first name\"\n    INPUT People[Count, 2]\n    OUTPUT \"Enter the city\"\n    INPUT People[Count, 3]\n    OUTPUT \"Do you want to enter another name (Y or N)?\"\n    INPUT Response\n    IF Response = 'N'\n      THEN\n        Continue <- FALSE\n      ELSE\n        Count <- Count + 1\n    ENDIF\nUNTIL NOT Count",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "DECLARE People : ARRAY[1:50, 1:3] OF STRING"
+      ]
+     },
+     {
+      "line": 10,
+      "fixes": [
+       "Count <- 1"
+      ]
+     },
+     {
+      "line": 12,
+      "fixes": [
+       "REPEAT"
+      ]
+     },
+     {
+      "line": 27,
+      "fixes": [
+       "UNTIL NOT Continue",
+       "UNTIL Continue = FALSE",
+       "UNTIL Response = 'N'"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 4(a)."
+  },
+  {
+   "id": "j24-23-q5a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart (written here as steps) represents an algorithm. Complete the trace table for the input data: 10, 30, 18, 8, 25, 12, 17, 2, 50, 15, 5\n\n01  L <- 0\n02  S <- 10000\n03  T <- 0\n04  A <- 0\n05  INPUT Limit\n06  Count <- 1\n07  REPEAT\n08      INPUT Value\n09      IF Value > L\n10        THEN\n11          L <- Value\n12        ELSE\n13          IF Value < S\n14            THEN\n15              S <- Value\n16          ENDIF\n17      ENDIF\n18      T <- T + Value\n19      Count <- Count + 1\n20  UNTIL Count > Limit\n21  A <- T / Limit\n22  OUTPUT \"L = \", L, \" S = \", S, \" T = \", T, \" A = \", A",
+   "trace": {
+    "columns": [
+     "L",
+     "S",
+     "T",
+     "A",
+     "Limit",
+     "Count",
+     "Value",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "10000",
+      "0",
+      "0",
+      "10",
+      "1",
+      "30",
+      ""
+     ],
+     [
+      "30",
+      "",
+      "30",
+      "",
+      "",
+      "2",
+      "18",
+      ""
+     ],
+     [
+      "",
+      "18",
+      "48",
+      "",
+      "",
+      "3",
+      "8",
+      ""
+     ],
+     [
+      "",
+      "8",
+      "56",
+      "",
+      "",
+      "4",
+      "25",
+      ""
+     ],
+     [
+      "",
+      "",
+      "81",
+      "",
+      "",
+      "5",
+      "12",
+      ""
+     ],
+     [
+      "",
+      "",
+      "93",
+      "",
+      "",
+      "6",
+      "17",
+      ""
+     ],
+     [
+      "",
+      "",
+      "110",
+      "",
+      "",
+      "7",
+      "2",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "112",
+      "",
+      "",
+      "8",
+      "50",
+      ""
+     ],
+     [
+      "50",
+      "",
+      "162",
+      "",
+      "",
+      "9",
+      "15",
+      ""
+     ],
+     [
+      "",
+      "",
+      "177",
+      "",
+      "",
+      "10",
+      "5",
+      ""
+     ],
+     [
+      "",
+      "",
+      "182",
+      "18.2",
+      "",
+      "11",
+      "",
+      "L = 50 S = 2 T = 182 A = 18.2"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     2,
+     3,
+     5,
+     7
+    ],
+    "testData": [
+     "10",
+     "30",
+     "18",
+     "8",
+     "25",
+     "12",
+     "17",
+     "2",
+     "50",
+     "15",
+     "5"
+    ],
+    "read": 11,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      2,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      6,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      7,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      8,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      9,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      10,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      11,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 5(a)."
+  },
+  {
+   "id": "n24-21-q9a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to check if a temperature is in a given range. The temperature values used in the algorithm are correct. Identify the line numbers of four errors in the pseudocode and suggest a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "REPEAT\n    OUTPUT \"Please enter temperature \"\n    INPUT Temp\n    IF Temperature = 999\n      THEN\n        IF Temperature > 38.0\n          THEN\n            OUTPUT \"Temperature too high\"\n        ENDIF\n        IF Temperature < 35.0\n          THEN\n            OUTPUT \"Temperature too low\"\n        ENDIF\n        IF Temperature >= 35.0 OR Temperature <= 38.0\n          THEN\n            OUTPUT \"Temperature normal\"\n        ENDIF\n    ENDIF\nWHILE Temperature = 999",
+    "errors": [
+     {
+      "line": 3,
+      "fixes": [
+       "INPUT Temperature"
+      ]
+     },
+     {
+      "line": 4,
+      "fixes": [
+       "IF Temperature <> 999"
+      ]
+     },
+     {
+      "line": 14,
+      "fixes": [
+       "IF Temperature >= 35.0 AND Temperature <= 38.0"
+      ]
+     },
+     {
+      "line": 19,
+      "fixes": [
+       "UNTIL Temperature = 999"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 9(a)."
+  },
+  {
+   "id": "n24-21-q9c",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "An algorithm has been written in pseudocode to check if a temperature is in a given range. Complete the trace table for the corrected algorithm using this data: 34.22, 36.1, 37.4, 38.0, 999, -1\n\n01  REPEAT\n02      OUTPUT \"Please enter temperature \"\n03      INPUT Temperature\n04      IF Temperature <> 999\n05        THEN\n06          IF Temperature > 38.0\n07            THEN\n08              OUTPUT \"Temperature too high\"\n09          ENDIF\n10          IF Temperature < 35.0\n11            THEN\n12              OUTPUT \"Temperature too low\"\n13          ENDIF\n14          IF Temperature >= 35.0 AND Temperature <= 38.0\n15            THEN\n16              OUTPUT \"Temperature normal\"\n17          ENDIF\n18      ENDIF\n19  UNTIL Temperature = 999",
+   "trace": {
+    "columns": [
+     "Temperature",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "Please enter temperature"
+     ],
+     [
+      "34.22",
+      "Temperature too low"
+     ],
+     [
+      "",
+      "Please enter temperature"
+     ],
+     [
+      "36.1",
+      "Temperature normal"
+     ],
+     [
+      "",
+      "Please enter temperature"
+     ],
+     [
+      "37.4",
+      "Temperature normal"
+     ],
+     [
+      "",
+      "Please enter temperature"
+     ],
+     [
+      "38.0",
+      "Temperature normal"
+     ],
+     [
+      "",
+      "Please enter temperature"
+     ],
+     [
+      "999",
+      ""
+     ]
+    ],
+    "askable": [
+     1
+    ],
+    "testData": [
+     "34.22",
+     "36.1",
+     "37.4",
+     "38.0",
+     "999",
+     "-1"
+    ],
+    "read": 5,
+    "tags": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      0,
+      0
+     ],
+     [
+      5,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 9(c)."
+  },
+  {
+   "id": "n24-22-q4a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode algorithm is intended to sort a pre-populated one-dimensional (1D) array named ItemList into alphabetical order using a bubble sort. Identify the line numbers of five errors in the pseudocode and suggest a correction for each error.\nThere are 7 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE ItemList : ARRAY[1:100] OF STRING\nDECLARE Counter : STRING\nDECLARE Limit : INTEGER\nDECLARE Pass : INTEGER\nDECLARE Swapped : BOOLEAN\nDECLARE Temp : STRING\nLimit <- 100\nPass <- 1\nTemp <- TRUE\nWHILE Swapped = TRUE OR Pass <= Limit - 1 DO\n    Swapped <- FALSE\n    FOR Counter <- 1 TO Limit - Pass\n        IF ItemList[Counter] > ItemList[Counter + 1]\n          THEN\n            Temp <- ItemList[Counter]\n            ItemList[Counter] <- ItemList[Counter + 1]\n            ItemList[Counter] <- Temp\n            Swapped <- TRUE\n    ENDCASE\n    Pass <- Pass + 1\n    NEXT Counter\nENDWHILE",
+    "errors": [
+     {
+      "line": 2,
+      "fixes": [
+       "DECLARE Counter : INTEGER"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "Swapped <- TRUE"
+      ]
+     },
+     {
+      "line": 10,
+      "fixes": [
+       "WHILE Swapped = TRUE AND Pass <= Limit - 1 DO"
+      ]
+     },
+     {
+      "line": 17,
+      "fixes": [
+       "ItemList[Counter + 1] <- Temp"
+      ]
+     },
+     {
+      "line": 19,
+      "fixes": [
+       "ENDIF"
+      ]
+     },
+     {
+      "line": 20,
+      "fixes": [
+       "NEXT Counter"
+      ]
+     },
+     {
+      "line": 21,
+      "fixes": [
+       "Pass <- Pass + 1"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 4(a)."
+  },
+  {
+   "id": "n24-22-q7a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This pseudocode represents an algorithm. An input of -1 will terminate the algorithm. Complete the trace table for the input data: 5, 6, -1, 20, 9, 4\n\n01  DECLARE Count : INTEGER\n02  DECLARE Answer : INTEGER\n03  DECLARE Value : INTEGER\n04  REPEAT\n05      INPUT Value\n06      IF Value <> -1\n07        THEN\n08          Answer <- Value\n09          FOR Count <- Value - 1 TO 1 STEP -1\n10              Answer <- Answer * Count\n11          NEXT Count\n12          OUTPUT Answer\n13      ENDIF\n14  UNTIL Value = -1",
+   "trace": {
+    "columns": [
+     "Value",
+     "Count",
+     "Answer",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "5",
+      "",
+      "5",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "20",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "60",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "120",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "120",
+      "120"
+     ],
+     [
+      "6",
+      "",
+      "6",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "30",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "120",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "360",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "720",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "720",
+      "720"
+     ],
+     [
+      "-1",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3
+    ],
+    "testData": [
+     "5",
+     "6",
+     "-1",
+     "20",
+     "9",
+     "4"
+    ],
+    "read": 3,
+    "tags": [
+     [
+      1,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 7(a)."
+  },
+  {
+   "id": "n24-23-q10a1",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "An algorithm has been written in pseudocode to check that a password meets a set of rules. Complete the trace table using the data: MYWORD\n\n01  OUTPUT \"Please enter password \"\n02  INPUT Password\n03  Accept <- TRUE\n04  IF LENGTH(Password) < 8 OR LENGTH(Password) > 20\n05    THEN\n06      Accept <- FALSE\n07  ENDIF\n08  IF LCASE(Password) = Password OR UCASE(Password) = Password\n09    THEN\n10      Accept <- FALSE\n11  ENDIF\n12  Index <- 1\n13  Found <- FALSE\n14  WHILE NOT Found AND Accept AND Index < LENGTH(Password)\n15      IF SUBSTRING(Password, Index, 1) = '!'\n16        THEN\n17          Found <- TRUE\n18      ENDIF\n19      Index <- Index + 1\n20  ENDWHILE\n21  IF NOT Found\n22    THEN\n23      Accept <- FALSE\n24  ENDIF\n25  IF Accept\n26    THEN\n27      OUTPUT \"Accepted\"\n28    ELSE\n29      OUTPUT \"Rejected\"\n30  ENDIF",
+   "trace": {
+    "columns": [
+     "Password",
+     "Accept",
+     "Index",
+     "Found",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "MYWORD",
+      "TRUE",
+      "",
+      "",
+      "Please enter password"
+     ],
+     [
+      "",
+      "FALSE",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "FALSE",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "1",
+      "FALSE",
+      ""
+     ],
+     [
+      "",
+      "FALSE",
+      "",
+      "",
+      "Rejected"
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 10(a)."
+  },
+  {
+   "id": "n24-23-q10a2",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "An algorithm has been written in pseudocode to check that a password meets a set of rules. Complete the trace table using the data: M!word\n\n01  OUTPUT \"Please enter password \"\n02  INPUT Password\n03  Accept <- TRUE\n04  IF LENGTH(Password) < 8 OR LENGTH(Password) > 20\n05    THEN\n06      Accept <- FALSE\n07  ENDIF\n08  IF LCASE(Password) = Password OR UCASE(Password) = Password\n09    THEN\n10      Accept <- FALSE\n11  ENDIF\n12  Index <- 1\n13  Found <- FALSE\n14  WHILE NOT Found AND Accept AND Index < LENGTH(Password)\n15      IF SUBSTRING(Password, Index, 1) = '!'\n16        THEN\n17          Found <- TRUE\n18      ENDIF\n19      Index <- Index + 1\n20  ENDWHILE\n21  IF NOT Found\n22    THEN\n23      Accept <- FALSE\n24  ENDIF\n25  IF Accept\n26    THEN\n27      OUTPUT \"Accepted\"\n28    ELSE\n29      OUTPUT \"Rejected\"\n30  ENDIF",
+   "trace": {
+    "columns": [
+     "Password",
+     "Accept",
+     "Index",
+     "Found",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "M!word",
+      "TRUE",
+      "",
+      "",
+      "Please enter password"
+     ],
+     [
+      "",
+      "FALSE",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "1",
+      "FALSE",
+      ""
+     ],
+     [
+      "",
+      "FALSE",
+      "",
+      "",
+      "Rejected"
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 10(a)."
+  },
+  {
+   "id": "n24-23-q10a3",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "An algorithm has been written in pseudocode to check that a password meets a set of rules. Complete the trace table using the data: My!Hidden\n\n01  OUTPUT \"Please enter password \"\n02  INPUT Password\n03  Accept <- TRUE\n04  IF LENGTH(Password) < 8 OR LENGTH(Password) > 20\n05    THEN\n06      Accept <- FALSE\n07  ENDIF\n08  IF LCASE(Password) = Password OR UCASE(Password) = Password\n09    THEN\n10      Accept <- FALSE\n11  ENDIF\n12  Index <- 1\n13  Found <- FALSE\n14  WHILE NOT Found AND Accept AND Index < LENGTH(Password)\n15      IF SUBSTRING(Password, Index, 1) = '!'\n16        THEN\n17          Found <- TRUE\n18      ENDIF\n19      Index <- Index + 1\n20  ENDWHILE\n21  IF NOT Found\n22    THEN\n23      Accept <- FALSE\n24  ENDIF\n25  IF Accept\n26    THEN\n27      OUTPUT \"Accepted\"\n28    ELSE\n29      OUTPUT \"Rejected\"\n30  ENDIF",
+   "trace": {
+    "columns": [
+     "Password",
+     "Accept",
+     "Index",
+     "Found",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "My!Hidden",
+      "TRUE",
+      "",
+      "",
+      "Please enter password"
+     ],
+     [
+      "",
+      "",
+      "1",
+      "FALSE",
+      ""
+     ],
+     [
+      "",
+      "",
+      "2",
+      "FALSE",
+      ""
+     ],
+     [
+      "",
+      "",
+      "3",
+      "TRUE",
+      ""
+     ],
+     [
+      "",
+      "",
+      "4",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Accepted"
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 10(a)."
+  },
+  {
+   "id": "m25-22-q6a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode algorithm is intended to allow 1000 positive integers to be input and stored in a one-dimensional (1D) array. The integers are added together as they are input and the highest value is identified. At the end of the algorithm, the highest number, the total and the average of the numbers are output. Identify the line numbers of five errors in the pseudocode and suggest a correction for each error.\nThere are 5 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Numbers : ARRAY[1:1000] OF INTEGER\nDECLARE Highest : STRING\nDECLARE Count : INTEGER\nDECLARE Total : INTEGER\nHighest <- 1500\nTotal <- 0\nFOR Count <- 1 TO 1000\n    INPUT Numbers[Count]\n    Total <- Total + Count\n    IF Numbers[Count] > Total\n      THEN\n        Highest <- Numbers[Count]\n    ENDIF\nNEXT Count\nOUTPUT \"The highest number is \", Highest\nOUTPUT \"The total is \", Total\nOUTPUT \"The average is \", Average / 1000",
+    "errors": [
+     {
+      "line": 2,
+      "fixes": [
+       "DECLARE Highest : INTEGER"
+      ]
+     },
+     {
+      "line": 5,
+      "fixes": [
+       "Highest <- 0"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "Total <- Total + Numbers[Count]"
+      ]
+     },
+     {
+      "line": 10,
+      "fixes": [
+       "IF Numbers[Count] > Highest"
+      ]
+     },
+     {
+      "line": 17,
+      "fixes": [
+       "OUTPUT \"The average is \", Total / 1000"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 6(a)."
+  },
+  {
+   "id": "m25-22-q7a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm (shown as a flowchart on the paper, written here as pseudocode) is a simple calculator. Complete the trace table for the input data: Y, 7, S, 9, Y, 5, M, 12, Y, 25, D, 5, N, 10, A, 6\n\n01  OUTPUT \"Continue?\"\n02  INPUT Answer\n03  WHILE Answer = 'Y' DO\n04      INPUT Value1\n05      INPUT Operator\n06      INPUT Value2\n07      CASE OF Operator\n08          'A' : OUTPUT Value1 + Value2\n09          'S' : OUTPUT Value1 - Value2\n10          'M' : OUTPUT Value1 * Value2\n11          OTHERWISE : OUTPUT Value1 / Value2\n12      ENDCASE\n13      OUTPUT \"Continue?\"\n14      INPUT Answer\n15  ENDWHILE",
+   "trace": {
+    "columns": [
+     "Answer",
+     "Value1",
+     "Operator",
+     "Value2",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "",
+      "",
+      "Continue?"
+     ],
+     [
+      "Y",
+      "7",
+      "S",
+      "9",
+      "-2"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Continue?"
+     ],
+     [
+      "Y",
+      "5",
+      "M",
+      "12",
+      "60"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Continue?"
+     ],
+     [
+      "Y",
+      "25",
+      "D",
+      "5",
+      "5"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Continue?"
+     ],
+     [
+      "N",
+      "",
+      "",
+      "",
+      ""
+     ]
+    ],
+    "askable": [
+     4
+    ],
+    "testData": [
+     "Y",
+     "7",
+     "S",
+     "9",
+     "Y",
+     "5",
+     "M",
+     "12",
+     "Y",
+     "25",
+     "D",
+     "5",
+     "N",
+     "10",
+     "A",
+     "6"
+    ],
+    "read": 13,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      6,
+      7,
+      8,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      9,
+      10,
+      11,
+      12,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      13,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 7(a)."
+  },
+  {
+   "id": "j25-21-q10a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart (written here as pseudocode) represents an algorithm to calculate grades. Complete the trace table for the algorithm, using the input data: 21, 46, 63, 91, 12 (the algorithm is run once for each value).\n\n01  INPUT Score\n02  IF Score >= 40\n03    THEN\n04      Grade <- \"C\"\n05    ELSE\n06      IF Score >= 60\n07        THEN\n08          Grade <- \"B\"\n09        ELSE\n10          IF Score >= 80\n11            THEN\n12              Grade <- \"A\"\n13            ELSE\n14              Grade <- \"D\"\n15          ENDIF\n16      ENDIF\n17  ENDIF\n18  OUTPUT \"You achieved a \", Grade",
+   "trace": {
+    "columns": [
+     "Score",
+     "Grade",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "21",
+      "D",
+      "You achieved a D"
+     ],
+     [
+      "46",
+      "C",
+      "You achieved a C"
+     ],
+     [
+      "63",
+      "C",
+      "You achieved a C"
+     ],
+     [
+      "91",
+      "C",
+      "You achieved a C"
+     ],
+     [
+      "12",
+      "D",
+      "You achieved a D"
+     ]
+    ],
+    "askable": [
+     1
+    ],
+    "testData": [
+     "21",
+     "46",
+     "63",
+     "91",
+     "12"
+    ],
+    "read": 5,
+    "tags": [
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      5,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 10(a)."
+  },
+  {
+   "id": "j25-22-q5a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode algorithm should allow 500 names of people and their heights to be entered and stored in two one-dimensional (1D) arrays. The name of a person and the height of that person are in the same index in both the Names[] and the Heights[] arrays. The heights are totalled, the shortest person is found, and at the end the name and height of the shortest person and the average height of all 500 people are output. Identify the line numbers of five errors in the pseudocode and suggest a correction for each error.\nThere are 5 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Names : ARRAY[1:500] OF REAL\nDECLARE Heights : ARRAY[1:500] OF REAL\nDECLARE Shortest : REAL\nDECLARE Total : REAL\nDECLARE Counter : INTEGER\nDECLARE Index : INTEGER\nShortest <- 500\nIndex <- 0\nTotal <- 100\nFOR Counter <- 1 TO 500\n    INPUT Names[Index]\n    INPUT Heights[Counter]\n    Total <- Counter + Heights[Counter]\n    IF Heights[Counter] < Shortest\n      THEN\n        Shortest <- Heights[Counter]\n        Index <- Counter\n    ENDIF\nNEXT Counter\nOUTPUT \"The shortest height is \", Heights\nOUTPUT \"The shortest person is \", Names[Index]\nOUTPUT \"The average height is \", Total / 500",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "DECLARE Names : ARRAY[1:500] OF STRING"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "Total <- 0"
+      ]
+     },
+     {
+      "line": 11,
+      "fixes": [
+       "INPUT Names[Counter]"
+      ]
+     },
+     {
+      "line": 13,
+      "fixes": [
+       "Total <- Total + Heights[Counter]"
+      ]
+     },
+     {
+      "line": 20,
+      "fixes": [
+       "OUTPUT \"The shortest height is \", Shortest",
+       "OUTPUT \"The shortest height is \", Heights[Index]"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 5(a)."
+  },
+  {
+   "id": "j25-22-q6a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "Complete the trace table for the algorithm, using the input data: 2, RACECAR, TREAT\n\n01  DECLARE Word : STRING\n02  DECLARE V1 : INTEGER\n03  DECLARE V2 : INTEGER\n04  DECLARE Number : INTEGER\n05  DECLARE Index : INTEGER\n06  DECLARE L1 : CHAR\n07  DECLARE L2 : CHAR\n08  DECLARE Continue : BOOLEAN\n09  INPUT Number\n10  FOR Index <- 1 TO Number\n11      INPUT Word\n12      Continue <- TRUE\n13      V1 <- 1\n14      V2 <- LENGTH(Word)\n15      WHILE Continue = TRUE AND V1 < V2 DO\n16          L1 <- SUBSTRING(Word, V1, 1)\n17          L2 <- SUBSTRING(Word, V2, 1)\n18          IF L1 <> L2\n19            THEN\n20              Continue <- FALSE\n21            ELSE\n22              V1 <- V1 + 1\n23              V2 <- V2 - 1\n24          ENDIF\n25      ENDWHILE\n26      IF Continue = TRUE\n27        THEN\n28          OUTPUT \"Successful\"\n29        ELSE\n30          OUTPUT \"NOT successful\"\n31      ENDIF\n32  NEXT Index",
+   "trace": {
+    "columns": [
+     "Number",
+     "Index",
+     "Word",
+     "Continue",
+     "V1",
+     "V2",
+     "L1",
+     "L2",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "2",
+      "1",
+      "RACECAR",
+      "TRUE",
+      "1",
+      "7",
+      "R",
+      "R",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "2",
+      "6",
+      "A",
+      "A",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "3",
+      "5",
+      "C",
+      "C",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "4",
+      "4",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "Successful"
+     ],
+     [
+      "",
+      "2",
+      "TREAT",
+      "TRUE",
+      "1",
+      "5",
+      "T",
+      "T",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "2",
+      "4",
+      "R",
+      "A",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "FALSE",
+      "",
+      "",
+      "",
+      "",
+      "NOT successful"
+     ]
+    ],
+    "askable": [
+     1,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "testData": [
+     "2",
+     "RACECAR",
+     "TREAT"
+    ],
+    "read": 3,
+    "tags": [
+     [
+      1,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 6(a)."
+  },
+  {
+   "id": "j25-23-q3a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "The purpose of this pseudocode algorithm is to carry out a bubble sort to sort, in descending order, 1000 numbers stored in a one-dimensional (1D) array. Identify the line numbers of four errors in the pseudocode and suggest a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Values : ARRAY[1:1000] OF REAL\nDECLARE Index : CHAR\nDECLARE Stop : BOOLEAN\nDECLARE Hold : REAL\nStop <- FALSE\nWHILE NOT Stop DO\n    Stop <- FALSE\n    FOR Index <- 1 TO 50\n        IF Values[Index + 1] > Values[Index]\n          THEN\n            Hold <- Values[Index]\n            Values[Index] <- Values[Index + 1]\n            Values[Index + 1] <- Hold\n            Stop <- FALSE\n        ENDIF\n    NEXT Index\nNEXT Stop",
+    "errors": [
+     {
+      "line": 2,
+      "fixes": [
+       "DECLARE Index : INTEGER"
+      ]
+     },
+     {
+      "line": 7,
+      "fixes": [
+       "Stop <- TRUE"
+      ]
+     },
+     {
+      "line": 8,
+      "fixes": [
+       "FOR Index <- 1 TO 999",
+       "FOR Index <- 1 TO 1000 - 1"
+      ]
+     },
+     {
+      "line": 17,
+      "fixes": [
+       "ENDWHILE"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 3(a)."
+  },
+  {
+   "id": "j25-23-q6a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "Complete the trace table for the algorithm, using input data: COMPUTER\n\n01  DECLARE Store : ARRAY[1:100] OF CHAR\n02  DECLARE Word : STRING\n03  DECLARE Index : INTEGER\n04  DECLARE Letter : CHAR\n05  INPUT Word\n06  FOR Index <- 1 TO LENGTH(Word)\n07      Letter <- SUBSTRING(Word, Index, 1)\n08      CASE OF Letter\n09          'A' : Letter <- \"\"\n10          'E' : Letter <- \"\"\n11          'I' : Letter <- \"\"\n12          'O' : Letter <- \"\"\n13          'U' : Letter <- \"\"\n14      ENDCASE\n15      Store[Index] <- Letter\n16  NEXT Index\n17  FOR Index <- 1 TO LENGTH(Word)\n18      IF Store[Index] <> \"\"\n19        THEN\n20          OUTPUT Store[Index]\n21      ENDIF\n22  NEXT Index",
+   "trace": {
+    "columns": [
+     "Word",
+     "Index",
+     "Letter",
+     "Store[1]",
+     "Store[2]",
+     "Store[3]",
+     "Store[4]",
+     "Store[5]",
+     "Store[6]",
+     "Store[7]",
+     "Store[8]",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "COMPUTER",
+      "1",
+      "C",
+      "C",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "O",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "M",
+      "",
+      "",
+      "M",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "4",
+      "P",
+      "",
+      "",
+      "",
+      "P",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "5",
+      "U",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "6",
+      "T",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "T",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "7",
+      "E",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "8",
+      "R",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "R",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "C"
+     ],
+     [
+      "",
+      "2",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "M"
+     ],
+     [
+      "",
+      "4",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "P"
+     ],
+     [
+      "",
+      "5",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "6",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "T"
+     ],
+     [
+      "",
+      "7",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "8",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "R"
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     5,
+     6,
+     8,
+     10,
+     11
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 6(a)."
+  },
+  {
+   "id": "n25-21-q6a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "The check digit for a 5-digit number is calculated as follows: each digit is multiplied by its position (the first digit on the left is in position 1); the results are totalled; MOD(Total, 11) is used to calculate the check digit; if the result is 10, the check digit is 'X'. For example, for 30475: (3 * 1) + (0 * 2) + (4 * 3) + (7 * 4) + (5 * 5) = 68 and MOD(68, 11) = 2. This pseudocode algorithm should calculate and output the check digit of a 5-digit number. Identify the line numbers of the four errors in the pseudocode and suggest a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Total : INTEGER\nDECLARE Digit : INTEGER\nDECLARE CheckDigit : CHAR\nTotal <- 0\nFOR Count <- 1 TO 10\n    OUTPUT \"Please enter digit \", Count\n    INPUT Digit\n    Total <- Total + (Digit / Count)\nNEXT Count\nCheckDigit <- MOD(Total, 11)\nIF CheckDigit = 10\n  THEN\n    OUTPUT \"The check digit is X\"\n  ELSE\n    OUTPUT \"The check digit is \", Count\nENDIF",
+    "errors": [
+     {
+      "line": 3,
+      "fixes": [
+       "DECLARE CheckDigit : INTEGER"
+      ]
+     },
+     {
+      "line": 5,
+      "fixes": [
+       "FOR Count <- 1 TO 5"
+      ]
+     },
+     {
+      "line": 8,
+      "fixes": [
+       "Total <- Total + (Digit * Count)"
+      ]
+     },
+     {
+      "line": 15,
+      "fixes": [
+       "OUTPUT \"The check digit is \", CheckDigit"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 6(a)."
+  },
+  {
+   "id": "n25-21-q7a-20",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart (written here as pseudocode) represents an algorithm. Complete the table, using the given data. Input data: 20\n\n1  Count <- 0\n2  INPUT Number\n3  Value <- Count * Number\n4  WHILE Value <= 100 DO\n5      Count <- Count + 1\n6      Value <- Count * Number\n7  ENDWHILE\n8  Count <- Count - 1\n9  OUTPUT Count",
+   "trace": {
+    "columns": [
+     "Count",
+     "Number",
+     "Value",
+     "Output"
+    ],
+    "rows": [
+     [
+      "0",
+      "20",
+      "0",
+      ""
+     ],
+     [
+      "1",
+      "",
+      "20",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "40",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "60",
+      ""
+     ],
+     [
+      "4",
+      "",
+      "80",
+      ""
+     ],
+     [
+      "5",
+      "",
+      "100",
+      ""
+     ],
+     [
+      "6",
+      "",
+      "120",
+      ""
+     ],
+     [
+      "5",
+      "",
+      "",
+      "5"
+     ]
+    ],
+    "askable": [
+     0,
+     2,
+     3
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 7(a)."
+  },
+  {
+   "id": "n25-21-q7a-110",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The flowchart (written here as pseudocode) represents an algorithm. Complete the table, using the given data. Input data: 110\n\n1  Count <- 0\n2  INPUT Number\n3  Value <- Count * Number\n4  WHILE Value <= 100 DO\n5      Count <- Count + 1\n6      Value <- Count * Number\n7  ENDWHILE\n8  Count <- Count - 1\n9  OUTPUT Count",
+   "trace": {
+    "columns": [
+     "Count",
+     "Number",
+     "Value",
+     "Output"
+    ],
+    "rows": [
+     [
+      "0",
+      "110",
+      "0",
+      ""
+     ],
+     [
+      "1",
+      "",
+      "110",
+      ""
+     ],
+     [
+      "0",
+      "",
+      "",
+      "0"
+     ]
+    ],
+    "askable": [
+     0,
+     2,
+     3
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 7(a)."
+  },
+  {
+   "id": "n25-22-q2a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode algorithm is intended to input a first name from a user and search for it in a two-dimensional (2D) array. If the name is found, the algorithm outputs all the remaining details for that name. The algorithm will continue to allow other names to be entered for searching, until the user input stops it. Identify the line numbers of five errors in the pseudocode and suggest a correction for each error.\nThere are 5 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Contacts : ARRAY[1:500, 1:4] OF REAL\nDECLARE Row : INTEGER\nDECLARE Column : INTEGER\nDECLARE Continue : BOOLEAN\nDECLARE Stop : BOOLEAN\nDECLARE FirstName : STRING\nContinue <- TRUE\nStop <- FALSE\nWHILE Continue\n    Row <- 1\n    OUTPUT \"Enter a first name \"\n    OUTPUT FirstName\n    REPEAT\n        IF Contacts[Row, 1] = FirstName\n          THEN\n            FOR Column <- 1 TO 4\n                OUTPUT Contacts[Row, 1]\n            NEXT Column\n            Stop <- TRUE\n          ELSE\n            Row <- Row + 1\n        ENDIF\n    NEXT Stop OR Row > 500\n    OUTPUT \"Search for another name? (Y or N)\"\n    INPUT Answer\n    IF Answer = 'N' OR Answer = 'n'\n      THEN\n        Continue <- TRUE\n    ENDIF\nENDWHILE",
+    "errors": [
+     {
+      "line": 1,
+      "fixes": [
+       "DECLARE Contacts : ARRAY[1:500, 1:4] OF STRING"
+      ]
+     },
+     {
+      "line": 12,
+      "fixes": [
+       "INPUT FirstName"
+      ]
+     },
+     {
+      "line": 17,
+      "fixes": [
+       "OUTPUT Contacts[Row, Column]"
+      ]
+     },
+     {
+      "line": 23,
+      "fixes": [
+       "UNTIL Stop OR Row > 500"
+      ]
+     },
+     {
+      "line": 28,
+      "fixes": [
+       "Continue <- FALSE"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(a)."
+  },
+  {
+   "id": "n25-23-q5a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "A program has been written in pseudocode to input five numbers between 1 and 900 inclusive and store the highest number and the lowest number entered. Complete the trace table for the algorithm using the following numbers: 563, 21, 376, 99, 400\n\n01  Lowest <- 900\n02  Highest <- 1\n03  FOR Count <- 1 TO 5\n04      INPUT Number\n05      IF Number < Lowest\n06        THEN\n07          Lowest <- Number\n08        ELSE\n09          IF Number > Highest\n10            THEN\n11              Highest <- Number\n12          ENDIF\n13      ENDIF\n14  NEXT Count",
+   "trace": {
+    "columns": [
+     "Count",
+     "Number",
+     "Lowest",
+     "Highest"
+    ],
+    "rows": [
+     [
+      "",
+      "",
+      "900",
+      "1"
+     ],
+     [
+      "1",
+      "563",
+      "563",
+      "1"
+     ],
+     [
+      "2",
+      "21",
+      "21",
+      "1"
+     ],
+     [
+      "3",
+      "376",
+      "21",
+      "376"
+     ],
+     [
+      "4",
+      "99",
+      "21",
+      "376"
+     ],
+     [
+      "5",
+      "400",
+      "21",
+      "400"
+     ]
+    ],
+    "askable": [
+     0,
+     2,
+     3
+    ],
+    "testData": [
+     "563",
+     "21",
+     "376",
+     "99",
+     "400"
+    ],
+    "read": 5,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      2,
+      0,
+      0
+     ],
+     [
+      0,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      4,
+      0,
+      0
+     ],
+     [
+      0,
+      5,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 5(a)."
+  },
+  {
+   "id": "n25-23-q6a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "The algorithm (a flowchart on the paper, written here as pseudocode) uses the 1D array ClassList that contains: [1] Henil, [2] Sven, [3] Ella, [4] Asia, [5] Ridwan. Complete the table by writing the output when each of the given names is input: Ridwan, Yan, Ella (the algorithm is run once for each name).\n\n01  Position <- -1\n02  Count <- 1\n03  INPUT Name\n04  WHILE Count <= 5 DO\n05      IF Name = ClassList[Count]\n06        THEN\n07          Position <- Count\n08          Count <- 6\n09        ELSE\n10          Count <- Count + 1\n11      ENDIF\n12  ENDWHILE\n13  OUTPUT Position",
+   "trace": {
+    "columns": [
+     "Name",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "Ridwan",
+      "5"
+     ],
+     [
+      "Yan",
+      "-1"
+     ],
+     [
+      "Ella",
+      "3"
+     ]
+    ],
+    "askable": [
+     1
+    ],
+    "prefilled": [
+     [
+      "Ridwan",
+      ""
+     ],
+     [
+      "Yan",
+      ""
+     ],
+     [
+      "Ella",
+      ""
+     ]
+    ],
+    "testData": [
+     "Ridwan",
+     "Yan",
+     "Ella"
+    ],
+    "read": 3,
+    "tags": [
+     [
+      1,
+      0
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      3,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 6(a)."
+  },
+  {
+   "id": "n25-23-q7a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode to input a whole number between 1 and 255 inclusive, convert the input to an 8-bit binary number and store each bit of the binary number in an array. For example, if the denary number 127 was input, the binary number 01111111 would be stored in the array. Identify the line numbers of the three errors in the pseudocode and suggest a correction for each error.\nThere are 3 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE BinaryArray : ARRAY[1:8] OF INTEGER\nDECLARE DenaryNumber : CHAR\nOUTPUT \"Please enter a whole number between 1 and 255 inclusive \"\nINPUT DenaryNumber\nFOR Count <- 7 TO 1 STEP -1\n    BinaryArray[Count] <- MOD(DenaryNumber,3)\n    DenaryNumber <- DIV(DenaryNumber,2)\nNEXT Count",
+    "errors": [
+     {
+      "line": 2,
+      "fixes": [
+       "DECLARE DenaryNumber : INTEGER"
+      ]
+     },
+     {
+      "line": 5,
+      "fixes": [
+       "FOR Count <- 8 TO 1 STEP -1"
+      ]
+     },
+     {
+      "line": 6,
+      "fixes": [
+       "BinaryArray[Count] <- MOD(DenaryNumber,2)"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 7(a)."
+  },
+  {
+   "id": "m26-22-q5a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode algorithm is intended to sort 200 names in ascending order, using a bubble sort. The last names and first names are stored in separate columns of a two-dimensional (2D) array. The last names are stored in column 1 of the array. Identify the line numbers of five errors in the pseudocode and suggest corrections.\nThere are 5 errors: find any one.",
+   "errorline": {
+    "code": "// The array Names[] has already been declared as\n// ARRAY[1:200, 1:2] OF STRING and it is already populated\nDECLARE Row : STRING\nDECLARE Temp1 : STRING\nDECLARE Temp2 : STRING\nDECLARE Swap : BOOLEAN\nSwap <- FALSE\nWHILE NOT Swap DO\n    Swap <- FALSE\n    FOR Row <- 2 TO 199\n        IF Names[Row, 1] > Names[Row + 1, 1]\n          THEN\n            Temp1 <- Names[Row, 1]\n            Temp2 <- Names[Row, 2]\n            Names[Row, 1] <- Names[Row + 1, 1]\n            Names[Row, 1] <- Names[Row + 1, 2]\n            Names[Row + 1, 1] <- Temp1\n            Names[Row + 1, 2] <- Temp2\n            Swap <- FALSE\n        ENDIF\n    NEXT Column\nENDWHILE",
+    "errors": [
+     {
+      "line": 3,
+      "fixes": [
+       "DECLARE Row : INTEGER"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "Swap <- TRUE"
+      ]
+     },
+     {
+      "line": 10,
+      "fixes": [
+       "FOR Row <- 1 TO 199"
+      ]
+     },
+     {
+      "line": 16,
+      "fixes": [
+       "Names[Row, 2] <- Names[Row + 1, 2]"
+      ]
+     },
+     {
+      "line": 21,
+      "fixes": [
+       "NEXT Row"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 5(a)."
+  },
+  {
+   "id": "m26-22-q6a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm (a flowchart on the paper, written here as pseudocode) works through a sentence. Complete the trace table for the algorithm, using the given sentence. Note: the start position of the sentence is index 1.\nTest data: Computing is fun\n\n01  INPUT Sentence\n02  SentLength <- LENGTH(Sentence)\n03  LetterNo <- 1\n04  Start <- 1\n05  REPEAT\n06      IF SUBSTRING(Sentence, LetterNo, 1) = \" \"\n07        THEN\n08          Word <- SUBSTRING(Sentence, Start, LetterNo - Start)\n09          OUTPUT Word, \" \", LENGTH(Word)\n10          Start <- LetterNo + 1\n11      ENDIF\n12      LetterNo <- LetterNo + 1\n13  UNTIL LetterNo = SentLength\n14  Word <- SUBSTRING(Sentence, Start, LetterNo - Start + 1)\n15  OUTPUT Word, \" \", LENGTH(Word)",
+   "trace": {
+    "columns": [
+     "Sentence",
+     "SentLength",
+     "LetterNo",
+     "Start",
+     "Word",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "Computing is fun",
+      "16",
+      "1",
+      "1",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "2",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "3",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "4",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "5",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "6",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "7",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "8",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "9",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "10",
+      "11",
+      "Computing",
+      "Computing 9"
+     ],
+     [
+      "",
+      "",
+      "11",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "12",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "13",
+      "14",
+      "is",
+      "is 2"
+     ],
+     [
+      "",
+      "",
+      "14",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "15",
+      "",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "16",
+      "",
+      "fun",
+      "fun 3"
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 6(a)."
+  },
+  {
+   "id": "j26-21-q7",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "An algorithm has been written in pseudocode for a user to repeatedly input positive whole numbers and store them in an array called Values[] until -1 is input or until the array is full. The algorithm outputs the average of the numbers to 2 decimal places. Identify the line numbers of four errors in the pseudocode and suggest a correction for each error.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Counter : INTEGER\nDECLARE Total : INTEGER\nDECLARE Average : INTEGER\nDECLARE Values : ARRAY[1:100] OF INTEGER\nCounter <- 1\nTotal <- 0\nOUTPUT \"Please enter a positive whole number or -1 \"\nINPUT Number\nWHILE Number = -1 AND Counter <= 100 DO\n    Values[Counter] <- Number\n    Total <- Total + 1\n    Counter <- Counter + 1\n    INPUT Number\nENDWHILE\nCounter <- Counter - 1\nAverage <- Counter / Total\nOUTPUT \"The average is \", ROUND(Average, 2)",
+    "errors": [
+     {
+      "line": 3,
+      "fixes": [
+       "DECLARE Average : REAL"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "WHILE Number <> -1 AND Counter <= 100 DO"
+      ]
+     },
+     {
+      "line": 11,
+      "fixes": [
+       "Total <- Total + Number",
+       "Total <- Total + Values[Counter]"
+      ]
+     },
+     {
+      "line": 16,
+      "fixes": [
+       "Average <- Total / Counter"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 7."
+  },
+  {
+   "id": "j26-22-q5a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "The purpose of this pseudocode algorithm is to find the name of a customer using an account ID, which contains letters and numbers. The name of the customer and the account ID are stored in the pre-populated two-dimensional (2D) array Accounts[]. The algorithm would then output the name of the customer. For example, Accounts[1, 1] contains the account ID of the first customer and Accounts[1, 2] contains the name of the first customer. Identify the line numbers of four errors in the pseudocode and suggest corrections.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Accounts : ARRAY[1:1000, 1:2] OF STRING\nDECLARE Row : INTEGER\nDECLARE AccountID : INTEGER\nOUTPUT \"Please enter an account ID \"\nOUTPUT AccountID\nFOR Row <- 1 TO 1000\n    CASE OF AccountID = Accounts[Row, 1]\n      THEN\n        OUTPUT \"The customer's name is \", Accounts[1, 2]\n    ENDIF\nNEXT Row",
+    "errors": [
+     {
+      "line": 3,
+      "fixes": [
+       "DECLARE AccountID : STRING"
+      ]
+     },
+     {
+      "line": 5,
+      "fixes": [
+       "INPUT AccountID"
+      ]
+     },
+     {
+      "line": 7,
+      "fixes": [
+       "IF AccountID = Accounts[Row, 1]"
+      ]
+     },
+     {
+      "line": 9,
+      "fixes": [
+       "OUTPUT \"The customer's name is \", Accounts[Row, 2]"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 5(a)."
+  },
+  {
+   "id": "j26-22-q6a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm (a flowchart on the paper, written here as pseudocode) works through words. Complete the trace table for the algorithm, using the input data: post, Y, committee, N, bookkeeper. Note: the first character of each word is in position 1.\n\n01  REPEAT\n02      INPUT Word\n03      WordLength <- LENGTH(Word)\n04      Count <- 0\n05      NumLetter <- 1\n06      REPEAT\n07          IF SUBSTRING(Word, NumLetter, 1) = SUBSTRING(Word, NumLetter + 1, 1)\n08            THEN\n09              Count <- Count + 1\n10          ENDIF\n11          NumLetter <- NumLetter + 1\n12      UNTIL NumLetter = WordLength\n13      OUTPUT Count\n14      INPUT Choice\n15  UNTIL Choice <> 'Y'",
+   "trace": {
+    "columns": [
+     "Word",
+     "WordLength",
+     "Count",
+     "NumLetter",
+     "Choice",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "post",
+      "4",
+      "0",
+      "1",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "2",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "3",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "4",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Y",
+      "0"
+     ],
+     [
+      "committee",
+      "9",
+      "0",
+      "1",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "2",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "1",
+      "3",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "4",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "5",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "2",
+      "6",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "7",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "3",
+      "8",
+      "",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "9",
+      "",
+      "3"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "N",
+      ""
+     ]
+    ],
+    "askable": [
+     1,
+     2,
+     3,
+     5
+    ],
+    "testData": [
+     "post",
+     "Y",
+     "committee",
+     "N",
+     "bookkeeper"
+    ],
+    "read": 4,
+    "tags": [
+     [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      2,
+      0
+     ],
+     [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      4,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 6(a)."
+  },
+  {
+   "id": "j26-23-q4a",
+   "category": "fix",
+   "widget": "errorline",
+   "prompt": "This pseudocode algorithm is intended to store the names of up to 250 runners who finish a race. The names of the runners are stored in a one-dimensional (1D) array Runners[] and their time in seconds in a one-dimensional (1D) array Times[]. After the time for each runner has been entered into the array, the name of the runner and the time of the runner in minutes and seconds are displayed for verification. Each runner takes 60 minutes or less to finish the race. A time of 60 minutes would be entered as 3600 seconds. Identify the line numbers of four errors in the pseudocode and suggest corrections.\nThere are 4 errors: find any one.",
+   "errorline": {
+    "code": "DECLARE Runners : ARRAY[1:250] OF STRING\nDECLARE Times : ARRAY[1:250] OF INTEGER\nDECLARE Index : INTEGER\nDECLARE RunName : STRING\nDECLARE RunTime : STRING\nDECLARE RunMins : INTEGER\nDECLARE RunSecs : INTEGER\nFOR Index <- 1 TO 250\n    OUTPUT \"Enter a runner's name and then time (in seconds) \"\n    INPUT RunName\n    OUTPUT RunTime\n    RunMins <- DIV(RunTime, 60)\n    RunSecs <- DIV(RunTime, 60)\n    OUTPUT \"Runner's Name: \", RunName\n    OUTPUT \"Time: \", RunMins, \" Minutes \", RunSecs, \" Seconds\"\n    Runners[Index] <- RunMins\n    Times[Index] <- RunTime\nNEXT Index",
+    "errors": [
+     {
+      "line": 5,
+      "fixes": [
+       "DECLARE RunTime : INTEGER"
+      ]
+     },
+     {
+      "line": 11,
+      "fixes": [
+       "INPUT RunTime"
+      ]
+     },
+     {
+      "line": 13,
+      "fixes": [
+       "RunSecs <- MOD(RunTime, 60)",
+       "RunSecs <- RunTime - RunMins * 60"
+      ]
+     },
+     {
+      "line": 16,
+      "fixes": [
+       "Runners[Index] <- RunName"
+      ]
+     }
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 4(a)."
+  },
+  {
+   "id": "j26-23-q5a",
+   "category": "trace",
+   "widget": "trace",
+   "prompt": "This algorithm (a flowchart on the paper, written here as pseudocode) counts passes and fails. Complete the trace table for the algorithm, using the input data: 49.8, 48.7, 62.5, 49.9, 30.0, 58.2, -12.5, 50.0, 26.7, -49.2, 58.9\n\n01  PassCount <- 0\n02  FailCount <- 0\n03  Count <- 0\n04  REPEAT\n05      INPUT Size\n06      IF Size < 50.0\n07        THEN\n08          PassCount <- PassCount + 1\n09        ELSE\n10          FailCount <- FailCount + 1\n11      ENDIF\n12      Count <- Count + 1\n13  UNTIL Count = 9\n14  OUTPUT \"Number passed: \", PassCount\n15  OUTPUT \"Number failed: \", FailCount",
+   "trace": {
+    "columns": [
+     "PassCount",
+     "FailCount",
+     "Count",
+     "Size",
+     "OUTPUT"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "0",
+      "",
+      ""
+     ],
+     [
+      "1",
+      "",
+      "1",
+      "49.8",
+      ""
+     ],
+     [
+      "2",
+      "",
+      "2",
+      "48.7",
+      ""
+     ],
+     [
+      "",
+      "1",
+      "3",
+      "62.5",
+      ""
+     ],
+     [
+      "3",
+      "",
+      "4",
+      "49.9",
+      ""
+     ],
+     [
+      "4",
+      "",
+      "5",
+      "30.0",
+      ""
+     ],
+     [
+      "",
+      "2",
+      "6",
+      "58.2",
+      ""
+     ],
+     [
+      "5",
+      "",
+      "7",
+      "-12.5",
+      ""
+     ],
+     [
+      "",
+      "3",
+      "8",
+      "50.0",
+      ""
+     ],
+     [
+      "6",
+      "",
+      "9",
+      "26.7",
+      ""
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Number passed: 6"
+     ],
+     [
+      "",
+      "",
+      "",
+      "",
+      "Number failed: 3"
+     ]
+    ],
+    "askable": [
+     0,
+     1,
+     2,
+     4
+    ],
+    "testData": [
+     "49.8",
+     "48.7",
+     "62.5",
+     "49.9",
+     "30.0",
+     "58.2",
+     "-12.5",
+     "50.0",
+     "26.7",
+     "-49.2",
+     "58.9"
+    ],
+    "read": 9,
+    "tags": [
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      1,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      2,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      3,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      4,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      5,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      6,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      7,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      8,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      9,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "answers": [
+    "(see the mark scheme)"
+   ],
+   "distractors": [],
+   "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 5(a)."
   }
  ]
 });
