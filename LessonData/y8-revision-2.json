@@ -1,0 +1,563 @@
+{
+ "id": "y8-revision-2",
+ "label": "Revision 2: Arrays and Searching",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Selection (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y8r2-do-now",
+   "validatorKey": "y8r2_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Selection (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is only one word output each time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>IF chooses one path. TRUE runs the THEN line. FALSE runs the ELSE line.</p></div></details><p class=\"lesson-lead\">From Revision 1.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Score &gt;= 40 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Win\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Lose\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r2-do-now-a\">(a) The user types 40. What is output? [1]</label><input id=\"y8r2-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Selection (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-do-now-b\">(b) The user types 35. What is output? [1]</label><input id=\"y8r2-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Selection (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r2-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8r2-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: selection",
+    "steps": [
+     {
+      "text": "This is a different program. Your question uses different values, so you still do the working yourself.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &gt; 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div>"
+     },
+     {
+      "text": "Line 2: the user types <strong>30</strong>. INPUT puts 30 in Speed.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line wt-hl\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &gt; 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Speed = 30</div>"
+     },
+     {
+      "text": "Line 3 asks a question: is Speed &gt; 30?",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Speed &gt; 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Speed = 30</div>"
+     },
+     {
+      "text": "&gt; means <strong>more than</strong>. Is 30 more than 30? <strong>No.</strong> So the question is FALSE.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Speed &gt; 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">30 &gt; 30 is FALSE</div>"
+     },
+     {
+      "text": "FALSE: skip the THEN line. Run the line after <strong>ELSE</strong>. The output is Slow.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &gt; 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line wt-hl\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Output: Slow</div>"
+     },
+     {
+      "text": "Now the user types <strong>45</strong>. Is 45 more than 30? <strong>Yes.</strong> So the question is TRUE.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Speed &gt; 30 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">45 &gt; 30 is TRUE</div>"
+     },
+     {
+      "text": "TRUE: run the line after <strong>THEN</strong>. The output is Fast.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &gt; 30 THEN</div><div class=\"lesson-code-line wt-hl\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Output: Fast</div>"
+     },
+     {
+      "text": "Read the symbol carefully. When the two numbers are the same, &gt; and &gt;= give different answers. Now do your question.",
+      "visual": "<table class=\"donow-table\"><tr class=\"wt-hl\"><td style=\"padding:6px 10px;text-align:center;font:700 18px var(--font-mono, monospace);min-width:38px\">30 &gt; 30</td><td style=\"padding:6px 10px;text-align:center;font:700 18px var(--font-mono, monospace);min-width:38px\">FALSE</td></tr><tr class=\"wt-hl\"><td style=\"padding:6px 10px;text-align:center;font:700 18px var(--font-mono, monospace);min-width:38px\">30 &gt;= 30</td><td style=\"padding:6px 10px;text-align:center;font:700 18px var(--font-mono, monospace);min-width:38px\">TRUE</td></tr></table>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Loops (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y8r2-do-now-2",
+   "validatorKey": "y8r2_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Loops (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Total start at 0?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Nothing has been added yet. The loop adds to it.</p></div></details><p class=\"lesson-lead\">From Revision 1.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 4</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 3</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r2-do-now-2-a\">(a) How many times does line 5 run? [1]</label><input id=\"y8r2-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Loops (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-do-now-2-b\">(b) What is output? [1]</label><input id=\"y8r2-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Loops (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r2-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8r2-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: a loop",
+    "steps": [
+     {
+      "text": "This is a different program. Your question uses different values, so you still do the working yourself.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 5</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div>"
+     },
+     {
+      "text": "Line 3 sets Total to <strong>0</strong> before the loop starts.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 5</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Total = 0</div>"
+     },
+     {
+      "text": "The FOR line: Count goes 1, then 2, then 3.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line wt-hl\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 5</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Total = 0</div>"
+     },
+     {
+      "text": "Count = 1. Line 5 adds 5. Total = 0 + 5 = <strong>5</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line wt-hl\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 5</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Count = 1, Total = 5</div>"
+     },
+     {
+      "text": "Count = 2. Line 5 adds 5 again. Total = 5 + 5 = <strong>10</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line wt-hl\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 5</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Count = 2, Total = 10</div>"
+     },
+     {
+      "text": "Count = 3. Line 5 adds 5 again. Total = 10 + 5 = <strong>15</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line wt-hl\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 5</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Count = 3, Total = 15</div>"
+     },
+     {
+      "text": "Count has reached 3, the end value, so the loop stops. Line 5 ran <strong>3 times</strong>: once for each value of Count.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 5</div><div class=\"lesson-code-line wt-hl\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Total = 15</div>"
+     },
+     {
+      "text": "Line 7 outputs Total: <strong>15</strong>. Now do the same with the program in your question.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Count &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + 5</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line wt-hl\">7&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Output: 15</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y8-revision-2-ext",
+   "embedContainerId": "y8r2-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these harder questions on sequence, selection, loops and flowcharts. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y8r2-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Revision 2: Arrays and Searching",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithms</p><h2 class=\"lesson-h2\">Revision 2: Arrays and Searching</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> read an array, then trace a search.</li><li><strong>Then:</strong> practice questions like the test.</li><li><strong>Next lesson:</strong> the assessment.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep many values in one array, and not in many variables?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One name holds them all. One loop can visit every value. Ten variables would need ten lines.</p></div></details>"
+  },
+  {
+   "id": "key-words",
+   "label": "Key Words",
+   "content": "<h2 class=\"lesson-h2\">Key Words</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Look at Marks[2]. Which part is the name? Which part is the index?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p><strong>Marks</strong> is the name of the array. <strong>2</strong> is the index: the position.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">DECLARE Marks : ARRAY[1:4] OF INTEGER</td><td style=\"padding:7px 12px;text-align:left\">make an <strong>array</strong>: 4 values, one name</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">index</td><td style=\"padding:7px 12px;text-align:left\">the position number, in [ ]</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">Marks[2]</td><td style=\"padding:7px 12px;text-align:left\">the value at index 2</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">DECLARE Found : BOOLEAN</td><td style=\"padding:7px 12px;text-align:left\">a <strong>BOOLEAN</strong> stores TRUE or FALSE</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">linear search</td><td style=\"padding:7px 12px;text-align:left\">check each item, one at a time, from index 1</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-family:monospace\">trace table</td><td style=\"padding:7px 12px;text-align:left\">write each new value when it changes</td></tr></table>"
+  },
+  {
+   "id": "arrays",
+   "label": "Arrays: Index and Value",
+   "content": "<h2 class=\"lesson-h2\">Arrays: Index and Value</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does line 6 output? Why is it not 3?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Output: <strong>5</strong>.</p><p>3 is the <strong>index</strong>, the position. Go to index 3 and read the <strong>value</strong> there: 5.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Marks : ARRAY[1:4] OF INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Marks[1] &lt;- 6</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Marks[2] &lt;- 9</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Marks[3] &lt;- 5</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;Marks[4] &lt;- 8</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT Marks[3]</div></div></div><div><p style=\"margin:0 0 6px\"><strong>Marks</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">6</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">9</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">5</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">8</td></tr></table><ul class=\"lesson-facts\"><li>The top row is the <strong>index</strong> (the position).</li><li>The bottom row is the <strong>value</strong>.</li><li>Marks[3]: go to index 3, read the value.</li><li>Index 1 is the first item.</li></ul></div></div>"
+  },
+  {
+   "id": "arrays-check",
+   "label": "Check: Index and Value",
+   "type": "short-answer-validation",
+   "validatorId": "y8r2-arrays-check",
+   "validatorKey": "y8r2_arrays_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Index and Value</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we need the index?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It tells the computer which value to use. Scores alone is the whole array.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\"><strong>Scores</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">7</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">10</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">5</td></tr></table></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r2-arrays-check-a\">(a) What does OUTPUT Scores[1] output? [1]</label><input id=\"y8r2-arrays-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"arrays-check-a\" aria-label=\"Check: Index and Value part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-arrays-check-b\">(b) What does OUTPUT Scores[4] output? [1]</label><input id=\"y8r2-arrays-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"arrays-check-b\" aria-label=\"Check: Index and Value part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-arrays-check-c\">(c) Which index holds the value 10? [1]</label><input id=\"y8r2-arrays-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"arrays-check-c\" aria-label=\"Check: Index and Value part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r2-arrays-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8r2-arrays-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "array-loop",
+   "label": "Arrays and Loops: Adding Up",
+   "content": "<h2 class=\"lesson-h2\">Arrays and Loops: Adding Up</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is output? Fill in a trace table to check.</span><span class=\"lesson-tps-reveal\">Show the trace table</span></summary><div class=\"lesson-tps-a\"><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Index</th><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Total</th><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Output</th></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\"></td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">0</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\"></td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">1</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">4</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\"></td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">2</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">13</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\"></td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">3</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">15</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\"></td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\"></td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\"></td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">15</td></tr></table></div><div><p>Output: <strong>15</strong>.</p><p>Each time round, Index is the next position, so line 5 adds the next value: 4, then 9, then 2.</p></div></div></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\"><strong>Prices</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">4</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">9</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">2</td></tr></table><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Index &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Prices[Index]</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div></div><div><ul class=\"lesson-facts\"><li>Index goes 1, 2, 3.</li><li>Line 5 uses <strong>Prices[Index]</strong>: the value at that index.</li><li>So each time round, it adds the <strong>next</strong> value.</li><li>In a <strong>trace table</strong>, write a new row each time a value changes.</li></ul></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Trace an Array Total",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y8r2-embed-1",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Adding Up an Array",
+    "context": "The array Points is already filled: Points[1] = 5, Points[2] = 8, Points[3] = 2, Points[4] = 6. Complete the trace table.",
+    "code": [
+     "DECLARE Total : INTEGER",
+     "DECLARE Index : INTEGER",
+     "Total = 0",
+     "for Index in range(1, 5):",
+     "    Total = Total + Points[Index]",
+     "print(Total)"
+    ],
+    "cols": [
+     "Line",
+     "Total",
+     "Index",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "3",
+      "Total": "0",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Index": "1",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "5",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Index": "2",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "13",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Index": "3",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "15",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "4",
+      "Total": "",
+      "Index": "4",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Total": "21",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Total": "",
+      "Index": "",
+      "Output": "21"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Trace an Array Total</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the loop go up to 4?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Points has 4 values, at index 1 to index 4. The loop visits every one.</p></div></details><div id=\"y8r2-embed-1\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "array-loop-check",
+   "label": "Check: Adding Up an Array",
+   "type": "short-answer-validation",
+   "validatorId": "y8r2-array-loop-check",
+   "validatorKey": "y8r2_array_loop_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Adding Up an Array</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is OUTPUT after NEXT?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So the total is shown once, after every value has been added.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\"><strong>Coins</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">5</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">6</td></tr></table><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Index &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Coins[Index]</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r2-array-loop-check-a\">(a) What is Total after line 5 runs with Index = 2? [1]</label><input id=\"y8r2-array-loop-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"array-loop-check-a\" aria-label=\"Check: Adding Up an Array part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-array-loop-check-b\">(b) What is output? [1]</label><input id=\"y8r2-array-loop-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"array-loop-check-b\" aria-label=\"Check: Adding Up an Array part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r2-array-loop-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8r2-array-loop-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "search",
+   "label": "Linear Search: Check Each Item",
+   "content": "<h2 class=\"lesson-h2\">Linear Search: Check Each Item</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: the user types Dog. What is output? At which index does it match?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Output: <strong>Found</strong>.</p><p>Index 1: Cat is not Dog. Index 2: Dog = Dog, so line 8 sets Found to TRUE. After the loop, Found = TRUE, so line 12 runs.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"line-height:1.25;padding-top:10px;padding-bottom:10px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Search : STRING</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Found : BOOLEAN</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;INPUT Search</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;Found &lt;- FALSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;FOR Index &lt;- 1 TO 3</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;IF Pets[Index] = Search THEN</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Found &lt;- TRUE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;IF Found = TRUE THEN</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Found\"</div><div class=\"lesson-code-line\">13&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">14&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not Found\"</div><div class=\"lesson-code-line\">15&nbsp;&nbsp;ENDIF</div></div></div><div><p style=\"margin:0 0 6px\"><strong>Pets</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Cat\"</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Dog\"</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Fish\"</td></tr></table><ul class=\"lesson-facts\"><li>Found starts as <strong>FALSE</strong> (line 5).</li><li>The loop checks each item, from index 1.</li><li>A match sets Found to <strong>TRUE</strong> (line 8).</li><li>After the loop, line 11 checks Found.</li></ul></div></div>"
+  },
+  {
+   "id": "compare",
+   "label": "Compare: Found and Not Found",
+   "content": "<h2 class=\"lesson-h2\">Compare: Found and Not Found</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The same search runs twice. What is Found at the end each time? What is the same? What is different?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Search 9: index 3 matches, so Found becomes TRUE and stays TRUE. Output: <strong>Found</strong>.</p><p>Search 5: nothing matches, so Found stays FALSE. Output: <strong>Not Found</strong>.</p><p>Same: the loop checks all 4 items both times. Nothing sets Found back to FALSE.</p></div></details><p class=\"lesson-lead\">The array Numbers holds 4, 7, 9, 2. The program is the search from the last slide.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">The user types 9</p><table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Index</th><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Numbers[Index]</th><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Match?</th><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Found</th></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">1</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">4</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">4 = 9?</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">?</td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">2</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">7</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">7 = 9?</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">?</td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">3</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">9</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">9 = 9?</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">?</td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">4</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">2</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">2 = 9?</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">?</td></tr></table></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">The user types 5</p><table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Index</th><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Numbers[Index]</th><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Match?</th><th style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">Found</th></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">1</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">4</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">4 = 5?</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">?</td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">2</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">7</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">7 = 5?</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">?</td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">3</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">9</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">9 = 5?</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">?</td></tr><tr><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">4</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">2</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">2 = 5?</td><td style=\"padding:4px 10px;text-align:center;font:600 16px var(--font-mono, monospace)\">?</td></tr></table></div></div>"
+  },
+  {
+   "id": "search-check",
+   "label": "Check: Linear Search",
+   "type": "short-answer-validation",
+   "validatorId": "y8r2-search-check",
+   "validatorKey": "y8r2_search_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Linear Search</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the search check every item, even after a match?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The FOR loop always runs from 1 to 4. It does not stop early.</p></div></details><p class=\"lesson-lead\">Codes holds 3, 8, 6, 1 at index 1 to 4.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"line-height:1.25;padding-top:10px;padding-bottom:10px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Search : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Found : BOOLEAN</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;INPUT Search</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;Found &lt;- FALSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;IF Codes[Index] = Search THEN</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Found &lt;- TRUE</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;IF Found = TRUE THEN</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Found\"</div><div class=\"lesson-code-line\">13&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">14&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not Found\"</div><div class=\"lesson-code-line\">15&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r2-search-check-a\">(a) The user types 6. What is Found after the loop? [1]</label><input id=\"y8r2-search-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"search-check-a\" aria-label=\"Check: Linear Search part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-search-check-b\">(b) The user types 6. What is output? [1]</label><input id=\"y8r2-search-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"search-check-b\" aria-label=\"Check: Linear Search part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-search-check-c\">(c) The user types 7. What is output? [1]</label><input id=\"y8r2-search-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"search-check-c\" aria-label=\"Check: Linear Search part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r2-search-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8r2-search-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Trace a Search",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y8r2-embed-2",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Linear Search",
+    "context": "The array Numbers is already filled: Numbers[1] = 5, Numbers[2] = 3, Numbers[3] = 8, Numbers[4] = 1. Complete the trace table.",
+    "code": [
+     "DECLARE Search : INTEGER",
+     "DECLARE Found : BOOLEAN",
+     "DECLARE Index : INTEGER",
+     "Search = 8",
+     "Found = False",
+     "for Index in range(1, 5):",
+     "    if Numbers[Index] == Search:",
+     "        Found = True",
+     "if Found == True:",
+     "    print(\"Found\")",
+     "else:",
+     "    print(\"Not Found\")"
+    ],
+    "cols": [
+     "Line",
+     "Search",
+     "Found",
+     "Index",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "4",
+      "Search": "8",
+      "Found": "",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Search": "",
+      "Found": "FALSE",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Search": "",
+      "Found": "",
+      "Index": "1",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Search": "",
+      "Found": "",
+      "Index": "2",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Search": "",
+      "Found": "",
+      "Index": "3",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Search": "",
+      "Found": "TRUE",
+      "Index": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Search": "",
+      "Found": "",
+      "Index": "4",
+      "Output": ""
+     },
+     {
+      "Line": "10",
+      "Search": "",
+      "Found": "",
+      "Index": "",
+      "Output": "Found"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Trace a Search</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is there no new Found row when Index is 4?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Numbers[4] is 1, not 8, so line 8 does not run. Found keeps its value, TRUE.</p></div></details><div id=\"y8r2-embed-2\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "practice-1",
+   "label": "Practice: Like the Test (1 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y8r2-practice-1",
+   "validatorKey": "y8r2_practice_1",
+   "content": "<h2 class=\"lesson-h2\">Practice: Like the Test (1 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must you do line 3 before line 4?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The lines run in order. Line 4 uses the new value of Price.</p></div></details><p class=\"lesson-lead\">Sequence, selection and flowcharts.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Price : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Price</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Price &lt;- Price * 2</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;IF Price &gt; 20 THEN</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Big\"</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Small\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r2-practice-1-a\">(a) The user types 8. What is output? [1]</label><input id=\"y8r2-practice-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-1-a\" aria-label=\"Practice: Like the Test (1 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-practice-1-b\">(b) The user types 12. What is output? [1]</label><input id=\"y8r2-practice-1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-1-b\" aria-label=\"Practice: Like the Test (1 of 3) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-practice-1-c\">(c) In a flowchart, what is the name of the shape for line 4? [1]</label><input id=\"y8r2-practice-1-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-1-c\" aria-label=\"Practice: Like the Test (1 of 3) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r2-practice-1-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y8r2-practice-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "practice-2",
+   "label": "Practice: Like the Test (2 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y8r2-practice-2",
+   "validatorKey": "y8r2_practice_2",
+   "content": "<h2 class=\"lesson-h2\">Practice: Like the Test (2 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does line 5 set Found to FALSE before the loop?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Nothing has been found yet. Only a match changes it to TRUE.</p></div></details><p class=\"lesson-lead\">A linear search. Ages holds 12, 15, 11, 14 at index 1 to 4.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"line-height:1.25;padding-top:10px;padding-bottom:10px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Search : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Found : BOOLEAN</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;INPUT Search</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;Found &lt;- FALSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;IF Ages[Index] = Search THEN</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;....................</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;IF Found = TRUE THEN</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Found\"</div><div class=\"lesson-code-line\">13&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">14&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not Found\"</div><div class=\"lesson-code-line\">15&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y8r2-practice-2-a\">(a) Line 8 is missing. Write line 8. [1]</label><input id=\"y8r2-practice-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-a\" aria-label=\"Practice: Like the Test (2 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-practice-2-b\">(b) The user types 13. What is output? [1]</label><input id=\"y8r2-practice-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-b\" aria-label=\"Practice: Like the Test (2 of 3) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r2-practice-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8r2-practice-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "practice-3",
+   "label": "Practice: Like the Test (3 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y8r2-practice-3",
+   "validatorKey": "y8r2_practice_3",
+   "content": "<h2 class=\"lesson-h2\">Practice: Like the Test (3 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Bags holds 4 values. Why is Bags[4] not added?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The loop stops at 3, so Index is never 4.</p></div></details><p class=\"lesson-lead\">Arrays and loops. Read the FOR line carefully.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\"><strong>Bags</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">6</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">4</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">9</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">3</td></tr></table><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Total &lt;- 0</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Index &lt;- 1 TO 3</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Bags[Index]</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT Total</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8r2-practice-3-a\">(a) How many times does line 5 run? [1]</label><input id=\"y8r2-practice-3-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-3-a\" aria-label=\"Practice: Like the Test (3 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y8r2-practice-3-b\">(b) What is output? [1]</label><input id=\"y8r2-practice-3-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-3-b\" aria-label=\"Practice: Like the Test (3 of 3) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8r2-practice-3-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8r2-practice-3-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Revision 2 Drill",
+   "type": "embedded-app",
+   "appId": "drill-y8-revision-2",
+   "embedContainerId": "y8r2-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Revision 2 Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which question type do you find hardest? What will you practise before the test?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Answers will vary. Use the drill to find out: the cards you get wrong come back more often.</p></div></details><p class=\"lesson-lead\">Arrays, adding up, linear search and mixed questions. Your progress is saved.</p><div id=\"y8r2-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y8r2_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*win\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read the symbol on line 3. Is 40 more than or equal to 40?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*lose\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is the question on line 3 TRUE or FALSE for 35? FALSE runs the ELSE line."
+   }
+  ],
+  "y8r2_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*$|^\\s*4\\s*times?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count starts at 1. When does it stop?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*12\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Total starts at 0. Add 3 each time line 5 runs."
+   }
+  ],
+  "y8r2_arrays_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find index 1 in the top row. Read the value under it."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find index 4 in the top row. Read the value under it."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*$|^\\s*index\\s*3\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find 10 in the bottom row. Read the number above it."
+   }
+  ],
+  "y8r2_array_loop_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Index = 1 adds Coins[1]. Index = 2 adds Coins[2]. Add both to 0."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*13\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Keep adding: one value for each index, 1 to 3."
+   }
+  ],
+  "y8r2_search_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*true\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check each value in Codes. Does any of them equal 6?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*found\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 11 checks Found after the loop. Which OUTPUT line runs?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*not\\s*found\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 7 anywhere in Codes? If nothing matches, what is Found?"
+   }
+  ],
+  "y8r2_practice_1": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*small\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out Price after line 3 first. Then answer the question on line 4."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*big\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 3 changes Price before the IF. Is the new value more than 20?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(decision|diamond)(\\s+(symbol|shape|box))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 4 asks a question with a Yes and a No path."
+   }
+  ],
+  "y8r2_practice_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*found\\s*(<-|←|<--)\\s*true\\s*$",
+     "flags": "i"
+    },
+    "feedback": "What should happen to the flag when an item matches?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*not\\s*found\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check each age in turn. Is any of them 13?"
+   }
+  ],
+  "y8r2_practice_3": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*$|^\\s*3\\s*times?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the numbers on the FOR line. Where does Index stop?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*19\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Add only the values the loop visits. Which index does it stop at?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
