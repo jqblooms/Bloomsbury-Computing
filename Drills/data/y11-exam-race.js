@@ -263,9 +263,7 @@ DrillData.register("y11-exam-race", {
    "category": "ns",
    "prompt": "Hexadecimal and binary are two examples of a number system. Give one other example of a number system.",
    "answers": [
-    "Denary",
-    "Decimal",
-    "Base-10"
+    "Denary"
    ],
    "distractors": [
     "ASCII",
@@ -276,7 +274,7 @@ DrillData.register("y11-exam-race", {
     "Parity",
     "Kibibyte"
    ],
-   "note": "From Cambridge IGCSE 0478, June 2026 Paper 11, Question 3(a). The mark scheme accepts: Denary / Decimal / Base-10"
+   "note": "From Cambridge IGCSE 0478, June 2026 Paper 11, Question 3(a). The mark scheme accepts: Denary"
   },
   {
    "id": "ns-fact-0",
@@ -514,8 +512,7 @@ DrillData.register("y11-exam-race", {
    "category": "ns",
    "prompt": "Give the name of the number system that is base 10.",
    "answers": [
-    "Denary",
-    "Decimal"
+    "Denary"
    ],
    "distractors": [
     "2",
@@ -7015,10 +7012,7 @@ DrillData.register("y11-exam-race", {
     "Char",
     "Boolean",
     "Date",
-    "Text",
-    "Decimal",
-    "Fraction",
-    "Counter"
+    "Text"
    ],
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 7(c). The mark scheme accepts: Integer"
   },
