@@ -274,6 +274,12 @@
   .xw-fix { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
   .xw-fix input { font: 600 1rem var(--font-mono); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); }
   .xw-fixes { margin: 4px 0 0; padding-left: 20px; }
+  /* Pick-then-type cards (engine.js startPickTyping). */
+  .pick-type { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
+  .pick-type label { font-size: .9rem; color: var(--muted); }
+  .pick-type-model { font-weight: 600; opacity: .75; }
+  .pick-type input { font: inherit; padding: 8px 10px; border-radius: 8px; border: 2px solid var(--line-strong); background: var(--surface-2); color: var(--ink); }
+  .pick-type input.off { border-color: var(--bad); }
 </style>
 </head>
 <body>

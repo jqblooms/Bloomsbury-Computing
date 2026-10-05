@@ -34,7 +34,7 @@ DrillData.register("y11-exam-race", {
   {
    "id": "ns-why-hex",
    "category": "ns",
-   "prompt": "Give two reasons why a programmer may use hexadecimal to represent binary numbers.\nChoose ONE answer that earns a mark.",
+   "prompt": "Give two reasons why a programmer may use hexadecimal to represent binary numbers.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "It is easier for humans to read and understand",
     "It is quicker to read and write",
@@ -60,12 +60,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 12, Question 1(b). The mark scheme accepts: It is easier for humans to read and understand / It is quicker to read and write / It is easier for the user to recognise / It is easier to identify errors and debug / It is quicker to debug / It takes up less screen space / It is a shorter representation of binary / There is less chance of making an error / It is less likely that a mistake is made",
    "working": [
     "Hexadecimal is for people, not the computer. The computer always stores and processes binary, so hexadecimal does not save memory, make files smaller or run faster. One hex digit stands for 4 bits, so a long binary number becomes a short hex number. Short numbers are quicker for people to read, write and remember, take less space on screen, make mistakes less likely and make errors easier to spot when debugging."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-why-hex-display",
    "category": "ns",
-   "prompt": "Give one reason why the addresses are displayed in hexadecimal instead of binary.",
+   "prompt": "A programmer is creating a computer game. One character is not moving correctly. The programmer needs to debug the program. To do this they need to look at addresses that are locations in memory. The addresses are displayed as hexadecimal numbers, for example A2F.\n\nGive one reason why the addresses are displayed in hexadecimal instead of binary.",
    "answers": [
     "It is easier for humans to read and remember",
     "It is quicker to read and understand",
@@ -88,12 +89,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 13, Question 3(c). The mark scheme accepts: It is easier for humans to read and remember / It is quicker to read and understand / It is a shorter representation of binary / It takes up less space on the screen / It is shorter for humans to enter / Humans are less likely to make mistakes / It is easier to spot errors and debug",
    "working": [
     "The computer always stores addresses in binary, so hexadecimal does not save memory, use fewer bits or run faster. Hexadecimal only changes how the address is shown to people. One hex digit stands for 4 bits, so a long binary address becomes a short hex one. Short values are quicker for people to read, remember and type, take less space on screen, and make mistakes less likely and errors easier to spot."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-hex-uses",
    "category": "ns",
-   "prompt": "Identify two ways that hexadecimal is used in computer science.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify two ways that hexadecimal is used in computer science.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "HTML colour codes",
     "MAC addresses",
@@ -123,7 +125,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 12, Question 1(c). The mark scheme accepts: HTML colour codes / MAC addresses / URLs / Web addresses / Assembly language / Low-level language / Error codes / Error messages / IP addresses / Memory addresses / Locations in memory / Memory dumps",
    "working": [
     "Hexadecimal is used where people need to read or type long binary values. Examples: HTML colour codes such as #FF0000, MAC addresses, IP addresses, URLs, memory addresses (locations in memory), memory dumps, assembly language and other low-level code, and error codes or messages. Sampling sound, compressing images, encrypting, counting pixels and parity checks are jobs done on binary data, not uses of hexadecimal."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-hex-use-website",
@@ -144,7 +147,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 12, Question 1(d)(i). The mark scheme accepts: To represent HTML colour codes / In error messages",
    "working": [
     "In web development, hexadecimal is used where a short code stands for a binary value. HTML colour codes such as #FF0000 give the amounts of red, green and blue as hex numbers. Error messages and error codes are also often shown in hexadecimal. Page size, fonts, compression, encryption, visitor counts and the page text are not set by writing hexadecimal."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-hex-use-low-level",
@@ -167,12 +171,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 12, Question 1(d)(ii). The mark scheme accepts: Assembly code / Memory address locations / Error messages / Memory dumps",
    "working": [
     "Low-level programming works close to the hardware, with memory and machine code. Programmers use hexadecimal there to show memory address locations, memory dumps (the contents of memory), assembly code and error messages, because hex is a short way to write binary. High-level languages such as Python are not low-level, and compressing, encrypting, storing images or sound sampling are not ways hex is used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-why-binary",
    "category": "ns",
-   "prompt": "Explain why a computer can only process binary data.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain why a computer can only process binary data.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "A computer contains logic gates",
     "A computer is made of transistors",
@@ -193,12 +198,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 11, Question 4(a). The mark scheme accepts: A computer contains logic gates / A computer is made of transistors / A computer contains switches / They only have two states, on and off / They can only process the values 1 and 0",
    "working": [
     "A computer is built from millions of tiny switches called transistors, joined together into logic gates. Each switch can only be in one of two states: on or off. On is shown as 1 and off as 0. So all data must be turned into 1s and 0s before the computer can process it. The reason is the hardware, not speed, security, storage or how easy it is for people."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-binary-meaning",
    "category": "ns",
-   "prompt": "Humans use a denary number system and computers use a binary number system. Explain what is meant by a binary number system.\nChoose ONE answer that earns a mark.",
+   "prompt": "Humans use a denary number system and computers use a binary number system. Explain what is meant by a binary number system.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "It has a base of 2",
     "It only uses two values",
@@ -216,12 +222,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 13, Question 2(a). The mark scheme accepts: It has a base of 2 / It only uses two values / The two values are 1 and 0",
    "working": [
     "A number system is a way of writing numbers. Its base tells you how many different digits it uses. Denary is base 10 and uses 0 to 9. Hexadecimal is base 16 and uses 0 to 9 and A to F. Binary is base 2, so it only uses two values: 0 and 1. Each place value is double the one to its right: 1, 2, 4, 8, 16 and so on."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-overflow-why",
    "category": "ns",
-   "prompt": "Two 8-bit binary numbers are added together and an overflow error occurs. Explain why the overflow error occurs.\nChoose ONE answer that earns a mark.",
+   "prompt": "Two 8-bit binary numbers are added together and an overflow error occurs. Explain why the overflow error occurs.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "The result is greater than 255",
     "The result is too large to be stored in the register",
@@ -245,7 +252,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 11, Question 1(e). The mark scheme accepts: The result is greater than 255 / The result is too large to be stored in the register / The result needs more than 8 bits / It cannot be stored in the 8 bits of the register",
    "working": [
     "A register holds a fixed number of bits. 8 bits can store denary values from 0 (00000000) up to 255 (11111111). If two 8-bit numbers add up to more than 255, the answer needs a 9th bit. There is no room for it in the 8-bit register, so the extra bit is lost and an overflow error occurs. 128 still fits in 8 bits, so it does not cause overflow."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-hex-binary-similarity",
@@ -264,12 +272,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 12, Question 3(a)(i). The mark scheme accepts: They are both number systems",
    "working": [
     "Look for something true of both. Binary is base 2 and uses only 0 and 1. Hexadecimal is base 16 and uses 0 to 9 and A to F. So they have different bases and different symbols, and the CPU only processes binary. What they share is their job: both are ways of writing numbers, in the same way that denary is."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-hex-binary-differences",
    "category": "ns",
-   "prompt": "Give two differences between hexadecimal and binary.\nChoose ONE answer that earns a mark.",
+   "prompt": "Give two differences between hexadecimal and binary.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Binary is base-2 whereas hexadecimal is base-16",
     "Binary only uses 0 and 1 whereas hexadecimal uses 0 to 9 and A to F",
@@ -286,7 +295,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 12, Question 3(a)(ii). The mark scheme accepts: Binary is base-2 whereas hexadecimal is base-16 / Binary only uses 0 and 1 whereas hexadecimal uses 0 to 9 and A to F / Binary only uses numbers whereas hexadecimal also uses letters",
    "working": [
     "Compare the base and the symbols. Binary is base 2: it uses only the two digits 0 and 1. Hexadecimal is base 16: it uses sixteen symbols, 0 to 9 and then the letters A to F for 10 to 15. So binary uses only numbers, while hexadecimal also uses letters. Denary is the base 10 system. Check each difference puts binary and hexadecimal the right way round."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-other-number-system",
@@ -307,7 +317,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 11, Question 3(a). The mark scheme accepts: Denary",
    "working": [
     "A number system is a way of writing numbers using a base. Binary is base 2 and hexadecimal is base 16. The number system people use every day is base 10, with the digits 0 to 9, and in Computer Science it is called denary. ASCII and Unicode are character sets, a byte is 8 bits, a pixel is a dot in an image, and overflow and parity are an error and a check."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-fact-0",
@@ -600,7 +611,7 @@ DrillData.register("y11-exam-race", {
   {
    "id": "ns-shift-left-process",
    "category": "ns",
-   "prompt": "A binary integer stored in a register has a logical left shift performed on it. Describe the process of the logical left shift.\nChoose ONE answer that earns a mark.",
+   "prompt": "A binary integer stored in a register has a logical left shift performed on it. Describe the process of the logical left shift.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Every bit is moved to the left",
     "The most significant bit is lost",
@@ -617,7 +628,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 12, Question 3(d)(i). The mark scheme accepts: Every bit is moved to the left / The most significant bit is lost / A 0 is added as the least significant bit",
    "working": [
     "In a logical left shift every bit moves one place to the left. The bit at the far left (the most significant bit) has nowhere to go, so it is lost. This leaves an empty place at the far right (the least significant bit), and it is always filled with 0. Example: 10110011 shifted left once becomes 01100110."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-shift-left-effect",
@@ -641,7 +653,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 13, Question 1(c)(ii). The mark scheme accepts: The number is multiplied by 4 / The most significant bits are lost",
    "working": [
     "Each place in binary is worth double the place to its right. So when every bit moves one place left, the number is multiplied by 2. Two places means multiply by 2 and then by 2 again. Bits pushed off the left end (the most significant bits) are lost, which makes the answer wrong if any of them were 1. A left shift never divides."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-shift-right-effect",
@@ -666,7 +679,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 12, Question 2(b)(ii). The mark scheme accepts: It is divided by 8 / The rightmost bits are lost so the value may be inaccurate",
    "working": [
     "Each place in binary is worth half the place to its left. Moving every bit one place right divides the number by 2. Three places means divide by 2 three times (2 x 2 x 2). Bits pushed off the right end (the least significant bits) are lost, so if any were 1 the answer is not exact, like dropping a remainder."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "ns-negative-numbers",
@@ -686,13 +700,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 12, Question 3(e). The mark scheme accepts: Two's complement",
    "working": [
-    "Ordinary binary can only store positive numbers. To store a negative integer, a system called two's complement is used: the most significant bit has a negative place value (for 8 bits it is -128), and the other bits are added to it. Example: 11111111 = -128 + 127 = -1. Hexadecimal and denary have no sign bit, and shifting and parity are not number systems."
-   ]
+    "Ordinary binary can only store positive numbers. Compare the systems. Hexadecimal is base 16, a short way to write binary; it has no sign. Binary-coded decimal stores each denary digit in 4 bits; it has no sign either. Two's complement gives the most significant bit a negative place value (for 8 bits it is -128), and the other bits are added to it. Example: 11111111 = -128 + 127 = -1. Logical shifting and Parity checking are not number systems."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m21-22-q2a-r1",
    "category": "design",
-   "prompt": "An algorithm has been written in pseudocode to input 25 positive whole numbers less than 100, find and output the largest number, and find and output the average of all the numbers.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nGive the line number for the statements showing each of these.\n\nTotalling",
+   "prompt": "An algorithm has been written in pseudocode to input 25 positive whole numbers less than 100, find and output the largest number, and find and output the average of all the numbers.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nGive the line number for the statements showing each of these.\n\nTotalling\n\nWhich one is this: Line 07, Line 08, Line 12, Line 13, Line 14, Line 15?",
    "answers": [
     "Line 12"
    ],
@@ -706,12 +721,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2021 Paper 22, Question 2(a). The mark scheme accepts: Line 12",
    "working": [
     "Totalling adds each new value to a running total: Total <- Total + Value. Counting adds 1 each time: Count <- Count + 1. A range check makes sure an input is between two limits; here the input is repeated until D is above 0 and below 100. The average is the total divided by how many numbers there are. Find the line that does each job. Line 08 compares D with B to find the largest, and line 14 ends the loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m21-22-q2a-r2",
    "category": "design",
-   "prompt": "An algorithm has been written in pseudocode to input 25 positive whole numbers less than 100, find and output the largest number, and find and output the average of all the numbers.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nGive the line number for the statements showing each of these.\n\nCounting",
+   "prompt": "An algorithm has been written in pseudocode to input 25 positive whole numbers less than 100, find and output the largest number, and find and output the average of all the numbers.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nGive the line number for the statements showing each of these.\n\nCounting\n\nWhich one is this: Line 07, Line 08, Line 12, Line 13, Line 14, Line 15?",
    "answers": [
     "Line 13"
    ],
@@ -725,12 +741,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2021 Paper 22, Question 2(a). The mark scheme accepts: Line 13",
    "working": [
     "Totalling adds each new value to a running total: Total <- Total + Value. Counting adds 1 each time: Count <- Count + 1. A range check makes sure an input is between two limits; here the input is repeated until D is above 0 and below 100. The average is the total divided by how many numbers there are. Find the line that does each job. Line 08 compares D with B to find the largest, and line 14 ends the loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m21-22-q2a-r3",
    "category": "design",
-   "prompt": "An algorithm has been written in pseudocode to input 25 positive whole numbers less than 100, find and output the largest number, and find and output the average of all the numbers.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nGive the line number for the statements showing each of these.\n\nRange check",
+   "prompt": "An algorithm has been written in pseudocode to input 25 positive whole numbers less than 100, find and output the largest number, and find and output the average of all the numbers.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nGive the line number for the statements showing each of these.\n\nRange check\n\nWhich one is this: Line 07, Line 08, Line 12, Line 13, Line 14, Line 15?",
    "answers": [
     "Line 07"
    ],
@@ -744,12 +761,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2021 Paper 22, Question 2(a). The mark scheme accepts: Line 07",
    "working": [
     "Totalling adds each new value to a running total: Total <- Total + Value. Counting adds 1 each time: Count <- Count + 1. A range check makes sure an input is between two limits; here the input is repeated until D is above 0 and below 100. The average is the total divided by how many numbers there are. Find the line that does each job. Line 08 compares D with B to find the largest, and line 14 ends the loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m21-22-q2a-r4",
    "category": "design",
-   "prompt": "An algorithm has been written in pseudocode to input 25 positive whole numbers less than 100, find and output the largest number, and find and output the average of all the numbers.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nGive the line number for the statements showing each of these.\n\nCalculating the average",
+   "prompt": "An algorithm has been written in pseudocode to input 25 positive whole numbers less than 100, find and output the largest number, and find and output the average of all the numbers.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nGive the line number for the statements showing each of these.\n\nCalculating the average\n\nWhich one is this: Line 07, Line 08, Line 12, Line 13, Line 14, Line 15?",
    "answers": [
     "Line 15"
    ],
@@ -763,12 +781,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2021 Paper 22, Question 2(a). The mark scheme accepts: Line 15",
    "working": [
     "Totalling adds each new value to a running total: Total <- Total + Value. Counting adds 1 each time: Count <- Count + 1. A range check makes sure an input is between two limits; here the input is repeated until D is above 0 and below 100. The average is the total divided by how many numbers there are. Find the line that does each job. Line 08 compares D with B to find the largest, and line 14 ends the loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m21-22-q2b",
    "category": "checks",
-   "prompt": "An algorithm inputs 25 positive whole numbers less than 100. Each number is checked with: UNTIL D > 0 AND D < 100 AND D = INT(D)\n\nState an example for each type of test data needed to test the input of the number: normal, erroneous/abnormal and extreme.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs 25 positive whole numbers less than 100. Each number is checked with: UNTIL D > 0 AND D < 100 AND D = INT(D)\n\nState an example for each type of test data needed to test the input of the number: normal, erroneous/abnormal and extreme.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal test data: 27",
     "Normal test data: 50",
@@ -795,12 +814,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2021 Paper 22, Question 2(b). The mark scheme accepts: Normal test data: 27 / Normal test data: 50 / Normal test data: any whole number from 1 to 99 / Erroneous/abnormal test data: 106 / Erroneous/abnormal test data: -5 / Erroneous/abnormal test data: 2.5 / Extreme test data: 99 / Extreme test data: 1",
    "working": [
     "The input must be a whole number above 0 and below 100, so 1 to 99 is accepted. Normal data is inside that range and accepted. Extreme data is the very largest or smallest value that is still accepted. Erroneous (abnormal) data should be rejected: too big, too small, negative, or not a whole number. 0 and 100 are rejected, so they are not normal or extreme."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m21-22-q2c",
    "category": "design",
-   "prompt": "An algorithm inputs 25 positive whole numbers less than 100 and finds the largest number (B) and the average.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nThe algorithm needs to be changed to include finding and outputting the smallest number input. Describe how you would change the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs 25 positive whole numbers less than 100 and finds the largest number (B) and the average.\n\n01 A <- 0\n02 B <- 0\n03 C <- 0\n04 REPEAT\n05   REPEAT\n06     INPUT D\n07   UNTIL D > 0 AND D < 100 AND D = INT(D)\n08   IF D > B\n09     THEN\n10       B <- D\n11   ENDIF\n12   C <- C + D\n13   A <- A + 1\n14 UNTIL A >= 25\n15 E <- C / A\n16 OUTPUT \"Largest number is \", B\n17 OUTPUT \"Average is \", E\n\nThe algorithm needs to be changed to include finding and outputting the smallest number input. Describe how you would change the algorithm.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Add a new variable to store the minimum",
     "Set the minimum to the first value input or to a high value such as 100",
@@ -826,12 +846,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2021 Paper 22, Question 2(c). The mark scheme accepts: Add a new variable to store the minimum / Set the minimum to the first value input or to a high value such as 100 / Set the minimum to a high value at the start of the program, before line 4 / Test the input D to see if it is less than the minimum / Replace the value of the minimum if the input is less than it / Replace the minimum with D, after line 7 and before line 14 / Add a new output for the minimum at the end of the program, after line 14",
    "working": [
     "B finds the largest: it is replaced when D > B. Copy that idea with a new minimum variable. Before the loop, set it to a high value such as 100 (or the first input); a start of 0 would never change. Inside the loop, after the valid input, if D is less than the minimum, replace it with D. Output the minimum after the loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-21-q2-r1",
    "category": "checks",
-   "prompt": "Tick one box in each row to identify if the statement is about validation, verification or both.\n\nEntering the data twice to check if both entries are the same.",
+   "prompt": "Entering the data twice to check if both entries are the same.\n\nWhich one is this: Validation, Verification, Both?",
    "answers": [
     "Verification"
    ],
@@ -842,12 +863,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 2. The mark scheme accepts: Verification",
    "working": [
     "Validation is an automatic check by the computer that data is sensible and follows rules, for example a type check that only numbers have been entered. Verification checks that data has been entered or copied without mistakes, so it matches the original. Methods are double entry (type it twice and compare the entries) and a visual check (a person looks at it). Both validation and verification are checks done on data as it is entered, before it is stored or processed."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-21-q2-r2",
    "category": "checks",
-   "prompt": "Tick one box in each row to identify if the statement is about validation, verification or both.\n\nAutomatically checking that only numeric data has been entered.",
+   "prompt": "Automatically checking that only numeric data has been entered.\n\nWhich one is this: Validation, Verification, Both?",
    "answers": [
     "Validation"
    ],
@@ -858,12 +880,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 2. The mark scheme accepts: Validation",
    "working": [
     "Validation is an automatic check by the computer that data is sensible and follows rules, for example a type check that only numbers have been entered. Verification checks that data has been entered or copied without mistakes, so it matches the original. Methods are double entry (type it twice and compare the entries) and a visual check (a person looks at it). Both validation and verification are checks done on data as it is entered, before it is stored or processed."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-21-q2-r3",
    "category": "checks",
-   "prompt": "Tick one box in each row to identify if the statement is about validation, verification or both.\n\nChecking data entered into a computer system before it is stored or processed.",
+   "prompt": "Checking data entered into a computer system before it is stored or processed.\n\nWhich one is this: Validation, Verification, Both?",
    "answers": [
     "Both"
    ],
@@ -874,12 +897,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 2. The mark scheme accepts: Both",
    "working": [
     "Validation is an automatic check by the computer that data is sensible and follows rules, for example a type check that only numbers have been entered. Verification checks that data has been entered or copied without mistakes, so it matches the original. Methods are double entry (type it twice and compare the entries) and a visual check (a person looks at it). Both validation and verification are checks done on data as it is entered, before it is stored or processed."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-21-q2-r4",
    "category": "checks",
-   "prompt": "Tick one box in each row to identify if the statement is about validation, verification or both.\n\nVisually checking that no errors have been introduced during data entry.",
+   "prompt": "Visually checking that no errors have been introduced during data entry.\n\nWhich one is this: Validation, Verification, Both?",
    "answers": [
     "Verification"
    ],
@@ -890,12 +914,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 2. The mark scheme accepts: Verification",
    "working": [
     "Validation is an automatic check by the computer that data is sensible and follows rules, for example a type check that only numbers have been entered. Verification checks that data has been entered or copied without mistakes, so it matches the original. Methods are double entry (type it twice and compare the entries) and a visual check (a person looks at it). Both validation and verification are checks done on data as it is entered, before it is stored or processed."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-21-q3",
    "category": "programming",
-   "prompt": "Name and describe the most appropriate programming data type for each of the examples of data given. Each data type must be different.\n\nData: 37\nData: Cambridge2021\nData: 47.86\nChoose ONE answer that earns a mark.",
+   "prompt": "Name and describe the most appropriate programming data type for each of the examples of data given. Each data type must be different.\n\nData: 37\nData: Cambridge2021\nData: 47.86\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "37: Integer",
     "Integer: any whole number",
@@ -920,12 +945,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 3. The mark scheme accepts: 37: Integer / Integer: any whole number / Cambridge2021: String / String: a group of characters or text / 47.86: Real / Real: any number that could be a whole number or a fraction",
    "working": [
     "Choose the data type from what the value looks like. INTEGER: a whole number with no fractional part, such as 37. REAL: a number that can have a fractional part, such as 47.86. STRING: a group of characters (letters, digits and symbols) stored as text. CHAR: only one single character. A value that mixes letters and digits cannot be a number type. Each item needs a different type."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-21-q4a",
    "category": "design",
-   "prompt": "The pseudocode algorithm shown has been written by a teacher to enter marks for the students in her class and then to apply some simple processing.\n\nCount <- 0\nREPEAT\n  INPUT Score[Count]\n  IF Score[Count] >= 70\n    THEN\n      Grade[Count] <- \"A\"\n    ELSE\n      IF Score[Count] >= 60\n        THEN\n          Grade[Count] <- \"B\"\n        ELSE\n          IF Score[Count] >= 50\n            THEN\n              Grade[Count] <- \"C\"\n            ELSE\n              IF Score[Count] >= 40\n                THEN\n                  Grade[Count] <- \"D\"\n                ELSE\n                  IF Score[Count] >= 30\n                    THEN\n                      Grade[Count] <- \"E\"\n                    ELSE\n                      Grade[Count] <- \"F\"\n                  ENDIF\n              ENDIF\n          ENDIF\n      ENDIF\n  ENDIF\n  Count <- Count + 1\nUNTIL Count = 30\n\nDescribe what happens in this algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "The pseudocode algorithm shown has been written by a teacher to enter marks for the students in her class and then to apply some simple processing.\n\nCount <- 0\nREPEAT\n  INPUT Score[Count]\n  IF Score[Count] >= 70\n    THEN\n      Grade[Count] <- \"A\"\n    ELSE\n      IF Score[Count] >= 60\n        THEN\n          Grade[Count] <- \"B\"\n        ELSE\n          IF Score[Count] >= 50\n            THEN\n              Grade[Count] <- \"C\"\n            ELSE\n              IF Score[Count] >= 40\n                THEN\n                  Grade[Count] <- \"D\"\n                ELSE\n                  IF Score[Count] >= 30\n                    THEN\n                      Grade[Count] <- \"E\"\n                    ELSE\n                      Grade[Count] <- \"F\"\n                  ENDIF\n              ENDIF\n          ENDIF\n      ENDIF\n  ENDIF\n  Count <- Count + 1\nUNTIL Count = 30\n\nDescribe what happens in this algorithm.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Marks input are stored in the array Score[]",
     "Marks are checked against a range of boundaries, for example 70 or more",
@@ -950,12 +976,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 4(a). The mark scheme accepts: Marks input are stored in the array Score[] / Marks are checked against a range of boundaries, for example 70 or more / A matching grade is assigned to each mark that has been input / The grade is stored in the array Grade[] / The grade is stored at the same index as the mark input / The algorithm finishes after 30 marks have been input",
    "working": [
     "Trace one pass of the loop. INPUT Score[Count] stores a mark in the array Score at position Count. The nested IFs compare the mark with boundaries: 70 or more gets A, 60 or more B, then C, D and E, and below 30 F. The grade goes into Grade[Count], the same index as its mark. Count goes up by 1. Count starts at 0 and the loop stops when Count = 30."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-21-q4c",
    "category": "programming",
-   "prompt": "A teacher's algorithm uses Count <- 0, then REPEAT ... INPUT Score[Count] ... Count <- Count + 1 ... UNTIL Count = 30 to enter the marks for a class of 30 and store a grade for each in Grade[].\n\nDescribe how you could change the algorithm to allow teachers to use it with any size of class.\nChoose ONE answer that earns a mark.",
+   "prompt": "A teacher's algorithm uses Count <- 0, then REPEAT ... INPUT Score[Count] ... Count <- Count + 1 ... UNTIL Count = 30 to enter the marks for a class of 30 and store a grade for each in Grade[].\n\nDescribe how you could change the algorithm to allow teachers to use it with any size of class.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Add an input to allow teachers to enter the class size",
     "Add a variable to store the input class size",
@@ -978,12 +1005,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 4(c). The mark scheme accepts: Add an input to allow teachers to enter the class size / Add a variable to store the input class size / Use the class size variable as the terminating condition for the loop / Make sure the arrays are large enough for the largest possible class size",
    "working": [
     "Now the class size is fixed by UNTIL Count = 30. To work for any class, the program must ask for the size. Add an INPUT for the class size and store it in a new variable. Then use that variable in the loop condition, such as UNTIL Count = ClassSize. The arrays Score and Grade must be declared big enough for the largest class that could be entered."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-21-q5b",
    "category": "design",
-   "prompt": "The flowchart represents an algorithm (written here as pseudocode). The algorithm will terminate if -1 is entered.\n\nREPEAT\n  INPUT Value\n  IF Value <> -1\n    THEN\n      IF Value >= 50 AND Value <= 100\n        THEN\n          Diff1 <- 100 - Value\n          Diff2 <- Value - 50\n          IF Diff1 < 1 OR Diff2 < 1\n            THEN\n              OUTPUT \"Accept: Extreme\"\n            ELSE\n              OUTPUT \"Accept: Normal\"\n          ENDIF\n        ELSE\n          OUTPUT \"Reject: Abnormal\"\n      ENDIF\n  ENDIF\nUNTIL Value = -1\n\nDescribe the purpose of the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "The flowchart represents an algorithm (written here as pseudocode). The algorithm will terminate if -1 is entered.\n\nREPEAT\n  INPUT Value\n  IF Value <> -1\n    THEN\n      IF Value >= 50 AND Value <= 100\n        THEN\n          Diff1 <- 100 - Value\n          Diff2 <- Value - 50\n          IF Diff1 < 1 OR Diff2 < 1\n            THEN\n              OUTPUT \"Accept: Extreme\"\n            ELSE\n              OUTPUT \"Accept: Normal\"\n          ENDIF\n        ELSE\n          OUTPUT \"Reject: Abnormal\"\n      ENDIF\n  ENDIF\nUNTIL Value = -1\n\nDescribe the purpose of the algorithm.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "To output the type of test data that has been input",
     "It performs a range check on each number",
@@ -1005,12 +1033,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 21, Question 5(b). The mark scheme accepts: To output the type of test data that has been input / It performs a range check on each number / It checks if numbers are within the range 50 to 100 inclusive",
    "working": [
     "Trace it. Values from 50 to 100 inclusive pass the IF, so it is a range check. Diff1 or Diff2 is below 1 only when the value is exactly 100 or 50, the ends of the range, and then it outputs Extreme. Other values in range output Normal; values outside output Abnormal. These are names of test data types, so it tells you what type each input is. Nothing is totalled or counted."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-22-q2b",
    "category": "checks",
-   "prompt": "An algorithm inputs 500 positive whole numbers. Each number input must be less than 1000. It finds and outputs the largest number input, the smallest number input and the range (difference between the largest number and smallest number).\n\nDescribe how the algorithm could be changed to make testing less time-consuming.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs 500 positive whole numbers. Each number input must be less than 1000. It finds and outputs the largest number input, the smallest number input and the range (difference between the largest number and smallest number).\n\nDescribe how the algorithm could be changed to make testing less time-consuming.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Reduce the amount of numbers entered",
     "Remove the need to input the values",
@@ -1034,12 +1063,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 22, Question 2(b). The mark scheme accepts: Reduce the amount of numbers entered / Remove the need to input the values / Decrease the final value of the loop / Use random numbers instead of input values / Use a previously populated array instead of input values",
    "working": [
     "Typing 500 inputs by hand takes a long time. To make testing quicker, cut down the typing. Make the loop run fewer times by lowering its final value, so fewer numbers are entered. Or remove the need to type values at all: use random numbers, or read values from an array that was filled in advance. Removing the validation would make testing less useful, not quicker."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-22-q3b-r1",
    "category": "design",
-   "prompt": "State the type of each pseudocode statement. For example, X <- X + Y is totalling.\n\nIF Number = 20",
+   "prompt": "State the type of each pseudocode statement. For example, X <- X + Y is totalling.\n\nIF Number = 20\n\nWhich one is this: Selection, Iteration, Input, Output, Counting, Totalling?",
    "answers": [
     "Selection"
    ],
@@ -1053,12 +1083,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 22, Question 3(b). The mark scheme accepts: Selection",
    "working": [
     "Selection chooses a path using a condition: IF or CASE. Iteration repeats: FOR, WHILE, REPEAT. Input takes data in: INPUT. Output shows data: OUTPUT or PRINT. Counting adds 1 to a variable each time: X <- X + 1. Totalling adds a value to a running total: X <- X + Y. Look at the first word of each statement, or at what is being added."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-22-q3b-r2",
    "category": "design",
-   "prompt": "State the type of each pseudocode statement. For example, X <- X + Y is totalling.\n\nPRINT Number",
+   "prompt": "State the type of each pseudocode statement. For example, X <- X + Y is totalling.\n\nPRINT Number\n\nWhich one is this: Selection, Iteration, Input, Output, Counting, Totalling?",
    "answers": [
     "Output"
    ],
@@ -1072,12 +1103,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 22, Question 3(b). The mark scheme accepts: Output",
    "working": [
     "Selection chooses a path using a condition: IF or CASE. Iteration repeats: FOR, WHILE, REPEAT. Input takes data in: INPUT. Output shows data: OUTPUT or PRINT. Counting adds 1 to a variable each time: X <- X + 1. Totalling adds a value to a running total: X <- X + Y. Look at the first word of each statement, or at what is being added."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-22-q3b-r3",
    "category": "design",
-   "prompt": "State the type of each pseudocode statement. For example, X <- X + Y is totalling.\n\nNumber <- Number + 1",
+   "prompt": "State the type of each pseudocode statement. For example, X <- X + Y is totalling.\n\nNumber <- Number + 1\n\nWhich one is this: Selection, Iteration, Input, Output, Counting, Totalling?",
    "answers": [
     "Counting"
    ],
@@ -1091,12 +1123,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 22, Question 3(b). The mark scheme accepts: Counting",
    "working": [
     "Selection chooses a path using a condition: IF or CASE. Iteration repeats: FOR, WHILE, REPEAT. Input takes data in: INPUT. Output shows data: OUTPUT or PRINT. Counting adds 1 to a variable each time: X <- X + 1. Totalling adds a value to a running total: X <- X + Y. Look at the first word of each statement, or at what is being added."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-22-q4b",
    "category": "programming",
-   "prompt": "This algorithm checks passwords. Each password must be 8 or more characters; each password is entered twice and the two entries must match; Accept or Reject is output; an input of 999 stops the process.\n\nREPEAT\n  OUTPUT \"Please enter password\"\n  INPUT Password\n  IF Length(Password) >= 8\n    THEN\n      INPUT PasswordRepeat\n      IF Password <> PasswordRepeat\n        THEN\n          OUTPUT \"Reject\"\n        ELSE\n          OUTPUT \"Accept\"\n      ENDIF\n    ELSE\n      OUTPUT \"Reject\"\n  ENDIF\nUNTIL Password = 999\n\nExplain how the algorithm could be extended to allow three attempts at inputting the matching password.\nChoose ONE answer that earns a mark.",
+   "prompt": "This algorithm checks passwords. Each password must be 8 or more characters; each password is entered twice and the two entries must match; Accept or Reject is output; an input of 999 stops the process.\n\nREPEAT\n  OUTPUT \"Please enter password\"\n  INPUT Password\n  IF Length(Password) >= 8\n    THEN\n      INPUT PasswordRepeat\n      IF Password <> PasswordRepeat\n        THEN\n          OUTPUT \"Reject\"\n        ELSE\n          OUTPUT \"Accept\"\n      ENDIF\n    ELSE\n      OUTPUT \"Reject\"\n  ENDIF\nUNTIL Password = 999\n\nExplain how the algorithm could be extended to allow three attempts at inputting the matching password.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Use a counter variable for the number of tries, or a flag",
     "Initialise the counter or flag before INPUT PasswordRepeat",
@@ -1122,12 +1155,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 22, Question 4(b). The mark scheme accepts: Use a counter variable for the number of tries, or a flag / Initialise the counter or flag before INPUT PasswordRepeat / Insert a REPEAT or WHILE loop after IF Length(Password) >= 8 THEN / After OUTPUT \"Reject\", add one to the counter for the number of tries / After OUTPUT \"Reject\", output a message such as \"Try again\" and add INPUT PasswordRepeat / After OUTPUT \"Accept\", set the flag to show the password matched / End the loop after three tries or when the repeated password matches the original",
    "working": [
     "Now the second entry is input once and then Accept or Reject is output. To allow three tries, put a loop around INPUT PasswordRepeat, after the length check passes. Use a counter (set before the loop) or a flag. Each time the entries do not match, output Reject or Try again, add 1 to the counter and input PasswordRepeat again. When they match, set the flag. End the loop after three tries or a match."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-22-q5b",
    "category": "programming",
-   "prompt": "A one-dimensional array dataArray[1:20] needs each element set to zero. A pseudocode routine uses the most suitable loop structure:\n\nFOR Count <- 1 TO 20\n  dataArray[Count] <- 0\nNEXT Count\n\nExplain why you chose this loop structure.",
+   "prompt": "A one-dimensional array dataArray[1:20] needs each element set to zero. A pseudocode routine uses the most suitable loop structure:\n\nFOR Count <- 1 TO 20\n  dataArray[Count] <- 0\nNEXT Count\n\nExplain why this loop structure was chosen.",
    "answers": [
     "A FOR loop has a fixed number of repetitions",
     "There is no need to manage the loop counter",
@@ -1147,12 +1181,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 22, Question 5(b). The mark scheme accepts: A FOR loop has a fixed number of repetitions / There is no need to manage the loop counter / There is no need to use another variable for the array index",
    "working": [
     "There are three loop types. A FOR loop (count-controlled) repeats a fixed number of times and changes its own counter each pass, so the counter can be used straight away as the array index. WHILE tests its condition at the start and REPEAT tests at the end; both suit an unknown number of repeats and you must manage a counter yourself. Here there are exactly 20 elements."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-23-q2-r1",
    "category": "programming",
-   "prompt": "Connect each data type to the most appropriate description.\n\nReal",
+   "prompt": "Real\n\nWhich one is this: Must be a whole number, Must be one of two values, May be any number, May contain any combination of characters?",
    "answers": [
     "May be any number"
    ],
@@ -1164,12 +1199,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 2. The mark scheme accepts: May be any number",
    "working": [
     "INTEGER: a whole number only, with no fractional part. REAL: a number that may have a fractional part, so it can be any number. STRING: text made of any characters, letters, digits and symbols together. BOOLEAN: only one of two values, TRUE or FALSE. Match each data type to the rule that describes what it can hold."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-23-q2-r2",
    "category": "programming",
-   "prompt": "Connect each data type to the most appropriate description.\n\nString",
+   "prompt": "String\n\nWhich one is this: Must be a whole number, Must be one of two values, May be any number, May contain any combination of characters?",
    "answers": [
     "May contain any combination of characters"
    ],
@@ -1181,12 +1217,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 2. The mark scheme accepts: May contain any combination of characters",
    "working": [
     "INTEGER: a whole number only, with no fractional part. REAL: a number that may have a fractional part, so it can be any number. STRING: text made of any characters, letters, digits and symbols together. BOOLEAN: only one of two values, TRUE or FALSE. Match each data type to the rule that describes what it can hold."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-23-q2-r3",
    "category": "programming",
-   "prompt": "Connect each data type to the most appropriate description.\n\nInteger",
+   "prompt": "Integer\n\nWhich one is this: Must be a whole number, Must be one of two values, May be any number, May contain any combination of characters?",
    "answers": [
     "Must be a whole number"
    ],
@@ -1198,12 +1235,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 2. The mark scheme accepts: Must be a whole number",
    "working": [
     "INTEGER: a whole number only, with no fractional part. REAL: a number that may have a fractional part, so it can be any number. STRING: text made of any characters, letters, digits and symbols together. BOOLEAN: only one of two values, TRUE or FALSE. Match each data type to the rule that describes what it can hold."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-23-q2-r4",
    "category": "programming",
-   "prompt": "Connect each data type to the most appropriate description.\n\nBoolean",
+   "prompt": "Boolean\n\nWhich one is this: Must be a whole number, Must be one of two values, May be any number, May contain any combination of characters?",
    "answers": [
     "Must be one of two values"
    ],
@@ -1215,12 +1253,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 2. The mark scheme accepts: Must be one of two values",
    "working": [
     "INTEGER: a whole number only, with no fractional part. REAL: a number that may have a fractional part, so it can be any number. STRING: text made of any characters, letters, digits and symbols together. BOOLEAN: only one of two values, TRUE or FALSE. Match each data type to the rule that describes what it can hold."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-23-q3",
    "category": "checks",
-   "prompt": "Identify a suitable validation check that could be used for each piece of normal test data and describe how it would be used. Each validation check must be different.\n\nTest data for entering an email address: id27@cambridgeuniversity.com\nTest data for entering a year: 2021\nTest data for entering a name: Ericson-Bower\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify a suitable validation check that could be used for each piece of normal test data and describe how it would be used. Each validation check must be different.\n\nTest data for entering an email address: id27@cambridgeuniversity.com\nTest data for entering a year: 2021\nTest data for entering a name: Ericson-Bower\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Email address: length check",
     "Email address: count the number of characters to make sure it is not too long",
@@ -1245,7 +1284,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 3. The mark scheme accepts: Email address: length check / Email address: count the number of characters to make sure it is not too long / Year: range check / Year: check that the number entered fits within given limits / Name: type check / Name: check the type of data entered to make sure no numbers are present",
    "working": [
     "Validation checks: a length check counts the characters to make sure data is not too short or too long. A range check makes sure a number is between a lowest and a highest value. A type check makes sure data is the right kind, for example no digits in a name. A check digit is for codes such as ID numbers. Choose the check that suits each item, using each check once."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-23-q5b",
@@ -1269,7 +1309,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 5(b). The mark scheme accepts: To work as a calculator / To add, subtract, multiply or divide a pair of numbers",
    "working": [
     "Trace it. Op chooses an action: 1 gives Value1 + Value2, 2 gives Value1 - Value2, 3 multiplies them and 4 divides them. Any other Op outputs Input Error, and 0 stops the loop. Each pass works on one pair of numbers with the chosen operation. Think what everyday device does this. It does not keep a total, count, check ranges or find the largest."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j21-23-q5c",
@@ -1294,7 +1335,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2021 Paper 23, Question 5(c). The mark scheme accepts: Output the value of Ans after it is calculated / Store the result in Ans so it can be output / Add prompts for data entry",
    "working": [
     "Look at what the algorithm gives the user. It works out Ans but never outputs it, so the user never sees the result. It also inputs Op, Value1 and Value2 without telling the user what to type. Useful additions fix these gaps: show the user something after the calculation, and show a message before each input."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-21-q2c",
@@ -1318,12 +1360,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 21, Question 2(c). The mark scheme accepts: Pre-condition loop / WHILE ... DO ... ENDWHILE",
    "working": [
     "Pseudocode has three loop structures. FOR ... TO ... NEXT is a count-controlled loop. REPEAT ... UNTIL is a post-condition loop: its condition is tested at the end. WHILE ... DO ... ENDWHILE is a pre-condition loop: its condition is tested at the start. The question already used two of these, so name the third. IF and CASE are selection, not loops."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-21-q3ai",
    "category": "checks",
-   "prompt": "A program has been written to check the value of a measurement. The measurement must be a positive number and given to three decimal places, for example, 3.982\n\nState suitable examples of normal and erroneous test data that could be used to test this program. For each example give the reason for your choice of test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program has been written to check the value of a measurement. The measurement must be a positive number and given to three decimal places, for example, 3.982\n\nState suitable examples of normal and erroneous test data that could be used to test this program. For each example give the reason for your choice of test data.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal test data: 5.682",
     "Reason for normal data: to test that normal data is accepted and processed correctly",
@@ -1347,12 +1390,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 21, Question 3(a)(i). The mark scheme accepts: Normal test data: 5.682 / Reason for normal data: to test that normal data is accepted and processed correctly / Erroneous test data: 5.6 / Erroneous test data: -1.345 / Erroneous test data: seven / Reason for erroneous data: to test that erroneous data is rejected",
    "working": [
     "The rule: a positive number with exactly three decimal places, like 3.982. Normal data follows the rule and should be accepted and processed correctly. Erroneous data breaks the rule and should be rejected: too few decimal places, a negative number, or text instead of a number. The reason must say whether the program should accept or reject the data."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-21-q3aii",
    "category": "checks",
-   "prompt": "A program has been written to check the value of a measurement. The measurement must be a positive number and given to three decimal places, for example, 3.982\n\nExplain why two pieces of boundary test data are required for this program. Give an example of each piece of boundary test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program has been written to check the value of a measurement. The measurement must be a positive number and given to three decimal places, for example, 3.982\n\nExplain why two pieces of boundary test data are required for this program. Give an example of each piece of boundary test data.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "To test that the highest value that is not positive, such as 0.000, is rejected and the lowest positive number, 0.001, is accepted",
     "Boundary test data example: 0.000",
@@ -1375,12 +1419,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 21, Question 3(a)(ii). The mark scheme accepts: To test that the highest value that is not positive, such as 0.000, is rejected and the lowest positive number, 0.001, is accepted / Boundary test data example: 0.000 / Boundary test data example: -0.001 / Boundary test data example: 0.001",
    "working": [
     "Boundary data tests the edge of a rule from both sides. Here the edge is between not positive and positive. With three decimal places, the smallest positive value is 0.001, which should be accepted. The largest value that is not positive is 0.000, or the negative just below it, which should be rejected. Two values are needed: one just inside the limit and one just outside it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-21-q3b",
    "category": "checks",
-   "prompt": "A program has been written to check the value of a measurement. The measurement must be a positive number and given to three decimal places, for example, 3.982\n\nExplain why verification is needed and how verification could be performed by this program.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program has been written to check the value of a measurement. The measurement must be a positive number and given to three decimal places, for example, 3.982\n\nExplain why verification is needed and how verification could be performed by this program.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "To check that values are entered as intended",
     "To prevent incorrect values that meet the validation rules being accepted",
@@ -1405,12 +1450,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 21, Question 3(b). The mark scheme accepts: To check that values are entered as intended / To prevent incorrect values that meet the validation rules being accepted / Ask the user to enter the value twice and compare the values (double entry) / Display the value as it is entered / Only accept the value if both entries are identical / So the user can correct any errors made as the value was entered",
    "working": [
     "Validation checks data is sensible, but a wrong value can still pass, for example typing 3.928 instead of 3.982. Verification checks the data was entered as intended. Methods: double entry, where the value is typed twice and only accepted if both entries match, and a visual check, where the value is shown on screen so the user can spot and correct mistakes. Range, length and presence checks are validation."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-22-q2-r1",
    "category": "checks",
-   "prompt": "Tick one box in each row to identify if the statement is about validation, verification or neither.\n\na check where data is re-entered to make sure no errors have been introduced during data entry",
+   "prompt": "a check where data is re-entered to make sure no errors have been introduced during data entry\n\nWhich one is this: Validation, Verification, Neither?",
    "answers": [
     "Verification"
    ],
@@ -1421,12 +1467,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 22, Question 2. The mark scheme accepts: Verification",
    "working": [
     "Validation is an automatic check by the computer that data is sensible or reasonable and follows rules, such as having the right number of characters. Verification checks that data has not been changed by mistakes during entry or copying, for example by re-entering it (double entry) or by a visual check. Neither method can prove data is correct: a sensible value typed accurately can still be the wrong value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-22-q2-r2",
    "category": "checks",
-   "prompt": "Tick one box in each row to identify if the statement is about validation, verification or neither.\n\nan automatic check to make sure the data entered has the correct number of characters",
+   "prompt": "an automatic check to make sure the data entered has the correct number of characters\n\nWhich one is this: Validation, Verification, Neither?",
    "answers": [
     "Validation"
    ],
@@ -1437,12 +1484,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 22, Question 2. The mark scheme accepts: Validation",
    "working": [
     "Validation is an automatic check by the computer that data is sensible or reasonable and follows rules, such as having the right number of characters. Verification checks that data has not been changed by mistakes during entry or copying, for example by re-entering it (double entry) or by a visual check. Neither method can prove data is correct: a sensible value typed accurately can still be the wrong value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-22-q2-r3",
    "category": "checks",
-   "prompt": "Tick one box in each row to identify if the statement is about validation, verification or neither.\n\na check to make sure the data entered is sensible",
+   "prompt": "a check to make sure the data entered is sensible\n\nWhich one is this: Validation, Verification, Neither?",
    "answers": [
     "Validation"
    ],
@@ -1453,12 +1501,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 22, Question 2. The mark scheme accepts: Validation",
    "working": [
     "Validation is an automatic check by the computer that data is sensible or reasonable and follows rules, such as having the right number of characters. Verification checks that data has not been changed by mistakes during entry or copying, for example by re-entering it (double entry) or by a visual check. Neither method can prove data is correct: a sensible value typed accurately can still be the wrong value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-22-q2-r4",
    "category": "checks",
-   "prompt": "Tick one box in each row to identify if the statement is about validation, verification or neither.\n\na check to make sure the data entered is correct",
+   "prompt": "a check to make sure the data entered is correct\n\nWhich one is this: Validation, Verification, Neither?",
    "answers": [
     "Neither"
    ],
@@ -1469,12 +1518,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 22, Question 2. The mark scheme accepts: Neither",
    "working": [
     "Validation is an automatic check by the computer that data is sensible or reasonable and follows rules, such as having the right number of characters. Verification checks that data has not been changed by mistakes during entry or copying, for example by re-entering it (double entry) or by a visual check. Neither method can prove data is correct: a sensible value typed accurately can still be the wrong value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-22-q3",
    "category": "checks",
-   "prompt": "A program checks that the data entered is between 1 and 100 inclusive.\n\nIdentify one piece of normal, extreme and erroneous test data for this program, and give a reason for each.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program checks that the data entered is between 1 and 100 inclusive.\n\nIdentify one piece of normal, extreme and erroneous test data for this program, and give a reason for each.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal test data: 50",
     "Normal test data: any number between 1 and 100 inclusive",
@@ -1502,12 +1552,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 22, Question 3. The mark scheme accepts: Normal test data: 50 / Normal test data: any number between 1 and 100 inclusive / Normal reason: data that is within range and should be accepted / Extreme test data: 100 / Extreme test data: 1 / Extreme reason: data at the maximum or minimum end of the range that should be accepted / Erroneous test data: 300 / Erroneous test data: anything that is not between 1 and 100 inclusive / Erroneous reason: data outside the range that should be rejected",
    "working": [
     "Accepted range: 1 to 100 inclusive. Normal data is inside the range and should be accepted. Extreme data is exactly the highest or lowest value that is still accepted. Erroneous data is outside the range, or the wrong type, and should be rejected. 0 and 101 are just outside, so they are rejected, not extreme. Each reason should say accepted or rejected."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-23-q3ai",
    "category": "checks",
-   "prompt": "A program has been written to check the length and content of a password. The password must be eight or more characters long and contain at least one special character, for example, Secret!*!\n\nState suitable examples of normal and erroneous test data that could be used to test this program. For each example give the reason for your choice of test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program has been written to check the length and content of a password. The password must be eight or more characters long and contain at least one special character, for example, Secret!*!\n\nState suitable examples of normal and erroneous test data that could be used to test this program. For each example give the reason for your choice of test data.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal test data: Password!",
     "Reason for normal data: to test that normal data is accepted and processed correctly",
@@ -1528,12 +1579,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 23, Question 3(a)(i). The mark scheme accepts: Normal test data: Password! / Reason for normal data: to test that normal data is accepted and processed correctly / Erroneous test data: secret / Reason for erroneous data: to test that erroneous data is rejected",
    "working": [
     "Rule: 8 or more characters and at least one special character, such as ! or ?. Normal data meets both parts and should be accepted and processed correctly. Erroneous data breaks the rule and should be rejected, for example too short or with no special character. Count the characters in each example and look for a special character before deciding."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-23-q3aii",
    "category": "checks",
-   "prompt": "A program has been written to check the length and content of a password. The password must be eight or more characters long and contain at least one special character, for example, Secret!*!\n\nExplain why two pieces of boundary test data are required for this program. Give an example of each piece of boundary test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program has been written to check the length and content of a password. The password must be eight or more characters long and contain at least one special character, for example, Secret!*!\n\nExplain why two pieces of boundary test data are required for this program. Give an example of each piece of boundary test data.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "To test that Secret? which has 7 characters is rejected and Secret?? which has 8 characters is accepted",
     "Boundary test data example: Secret?",
@@ -1551,12 +1603,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 23, Question 3(a)(ii). The mark scheme accepts: To test that Secret? which has 7 characters is rejected and Secret?? which has 8 characters is accepted / Boundary test data example: Secret? / Boundary test data example: Secret??",
    "working": [
     "Boundary data tests both sides of a limit. The limit here is the length: 8 characters is the shortest allowed. So test one value just outside (7 characters, should be rejected) and one exactly on the limit (8 characters, should be accepted). Both values keep a special character so only the length changes. Count the characters in each example carefully."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n21-23-q3b",
    "category": "checks",
-   "prompt": "A program has been written to check the length and content of a password. The password must be eight or more characters long and contain at least one special character.\n\nDescribe two methods of verification that could be used to verify this data as it is input.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program has been written to check the length and content of a password. The password must be eight or more characters long and contain at least one special character.\n\nDescribe two methods of verification that could be used to verify this data as it is input.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Ask the user to enter the password twice and compare the values",
     "Only accept the data if both entries are identical",
@@ -1579,7 +1632,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2021 Paper 23, Question 3(b). The mark scheme accepts: Ask the user to enter the password twice and compare the values / Only accept the data if both entries are identical / Display the password as it is entered / So the user can correct any errors made as the password was typed",
    "working": [
     "Verification checks the data was typed as the user intended. Double entry: the password is entered twice and only accepted if both entries are identical. Visual check: the password is shown on screen as it is typed, so the user can see and correct mistakes. Counting characters, checking for a special character or checking it is not blank are validation checks, not verification."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q2a-g1",
@@ -1598,7 +1652,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 2(a). The mark scheme accepts: 100",
    "working": [
     "A FOR loop runs from its start value TO its end value, once for each number. Here it must run once for every student whose age is input. Read the task: how many students' ages are input? The loop starts at 1, so the end value is that number of students. One less or one more would input the wrong number of ages."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q2a-g3",
@@ -1616,7 +1671,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 2(a). The mark scheme accepts: Count12to18 + 1",
    "working": [
     "This line runs when a student is aged 12 and under 18. It is counting, so the counter for that group must go up by 1. Counting means counter <- counter + 1, using the same variable on both sides. Look at the line that counts the 7 to 12 group for the pattern. Adding Age would total the ages instead of counting students."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q2a-g4",
@@ -1635,12 +1691,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 2(a). The mark scheme accepts: CountOver18",
    "working": [
     "Each OUTPUT shows the counter for its group. The first shows Count7to12 and the second shows Count12to18. The last message is about students aged 18 and over, so it needs the variable that was counted in the IF Age >= 18 part of the loop. Output just the variable; adding 1 here would give a wrong count."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q3-r1",
    "category": "checks",
-   "prompt": "Four validation checks and five descriptions are shown. Match each validation check to the most appropriate description.\n\nlength check",
+   "prompt": "Four validation checks and five descriptions are shown. Match each validation check to the most appropriate description.\n\nlength check\n\nWhich one is this: checks that the data input is between two values, checks that the data input is an integer, checks that the data input has three digits, checks that the data has been input, checks that the data input has the correct digits?",
    "answers": [
     "checks that the data input has three digits"
    ],
@@ -1653,12 +1710,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 3. The mark scheme accepts: checks that the data input has three digits",
    "working": [
     "Length check: checks the number of characters or digits, for example exactly three. Range check: checks a value is between a lowest and a highest value. Type check: checks the data is the right data type, such as an integer. Check digit: an extra digit calculated from the other digits, used to check the digits are correct. Presence check: checks data has been input at all, not left blank. One description is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q3-r2",
    "category": "checks",
-   "prompt": "Four validation checks and five descriptions are shown. Match each validation check to the most appropriate description.\n\ncheck digit",
+   "prompt": "Four validation checks and five descriptions are shown. Match each validation check to the most appropriate description.\n\ncheck digit\n\nWhich one is this: checks that the data input is between two values, checks that the data input is an integer, checks that the data input has three digits, checks that the data has been input, checks that the data input has the correct digits?",
    "answers": [
     "checks that the data input has the correct digits"
    ],
@@ -1671,12 +1729,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 3. The mark scheme accepts: checks that the data input has the correct digits",
    "working": [
     "Length check: checks the number of characters or digits, for example exactly three. Range check: checks a value is between a lowest and a highest value. Type check: checks the data is the right data type, such as an integer. Check digit: an extra digit calculated from the other digits, used to check the digits are correct. Presence check: checks data has been input at all, not left blank. One description is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q3-r3",
    "category": "checks",
-   "prompt": "Four validation checks and five descriptions are shown. Match each validation check to the most appropriate description.\n\nrange check",
+   "prompt": "Four validation checks and five descriptions are shown. Match each validation check to the most appropriate description.\n\nrange check\n\nWhich one is this: checks that the data input is between two values, checks that the data input is an integer, checks that the data input has three digits, checks that the data has been input, checks that the data input has the correct digits?",
    "answers": [
     "checks that the data input is between two values"
    ],
@@ -1689,12 +1748,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 3. The mark scheme accepts: checks that the data input is between two values",
    "working": [
     "Length check: checks the number of characters or digits, for example exactly three. Range check: checks a value is between a lowest and a highest value. Type check: checks the data is the right data type, such as an integer. Check digit: an extra digit calculated from the other digits, used to check the digits are correct. Presence check: checks data has been input at all, not left blank. One description is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q3-r4",
    "category": "checks",
-   "prompt": "Four validation checks and five descriptions are shown. Match each validation check to the most appropriate description.\n\ntype check",
+   "prompt": "Four validation checks and five descriptions are shown. Match each validation check to the most appropriate description.\n\ntype check\n\nWhich one is this: checks that the data input is between two values, checks that the data input is an integer, checks that the data input has three digits, checks that the data has been input, checks that the data input has the correct digits?",
    "answers": [
     "checks that the data input is an integer"
    ],
@@ -1707,12 +1767,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 3. The mark scheme accepts: checks that the data input is an integer",
    "working": [
     "Length check: checks the number of characters or digits, for example exactly three. Range check: checks a value is between a lowest and a highest value. Type check: checks the data is the right data type, such as an integer. Check digit: an extra digit calculated from the other digits, used to check the digits are correct. Presence check: checks data has been input at all, not left blank. One description is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q4b",
    "category": "design",
-   "prompt": "This flowchart (written here as pseudocode) inputs a whole number. The function INT returns the integer value of a number. An input of -1 ends the routine.\n\nINPUT Number\nWHILE Number <> -1\n  C <- 0\n  D <- INT(Number / 2)\n  REPEAT\n    IF INT(Number / D) = Number / D\n      THEN\n        C <- C + 1\n    ENDIF\n    D <- D - 1\n  UNTIL D = 1\n  IF C <> 0\n    THEN\n      OUTPUT C\n  ENDIF\n  INPUT Number\nENDWHILE\n\nDescribe the purpose of this algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "This flowchart (written here as pseudocode) inputs a whole number. The function INT returns the integer value of a number. An input of -1 ends the routine.\n\nINPUT Number\nWHILE Number <> -1\n  C <- 0\n  D <- INT(Number / 2)\n  REPEAT\n    IF INT(Number / D) = Number / D\n      THEN\n        C <- C + 1\n    ENDIF\n    D <- D - 1\n  UNTIL D = 1\n  IF C <> 0\n    THEN\n      OUTPUT C\n  ENDIF\n  INPUT Number\nENDWHILE\n\nDescribe the purpose of this algorithm.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "To count the factors of a number, other than 1 and itself",
     "To count the numbers that go into a number, other than 1 and itself",
@@ -1734,12 +1795,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 4(b). The mark scheme accepts: To count the factors of a number, other than 1 and itself / To count the numbers that go into a number, other than 1 and itself / To output the number of factors",
    "working": [
     "Trace with Number = 12. D starts at 6. Each pass checks if Number / D is a whole number, which means D divides exactly into Number, so D is a factor. If it is, C goes up by 1. D goes down by 1 until D = 1, so 1 and Number itself are never tested. For 12 the values 6, 4, 3 and 2 divide exactly, so C = 4 is output."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q4ci",
    "category": "fix",
-   "prompt": "This flowchart (written here as pseudocode) inputs a whole number. An input of -1 ends the routine.\n\nINPUT Number\nWHILE Number <> -1\n  C <- 0\n  D <- INT(Number / 2)\n  REPEAT\n    IF INT(Number / D) = Number / D\n      THEN\n        C <- C + 1\n    ENDIF\n    D <- D - 1\n  UNTIL D = 1\n  IF C <> 0\n    THEN\n      OUTPUT C\n  ENDIF\n  INPUT Number\nENDWHILE\n\nDescribe the problem that occurs if a whole number smaller than 4 and not equal to -1 is input.\nChoose ONE answer that earns a mark.",
+   "prompt": "This flowchart (written here as pseudocode) inputs a whole number. An input of -1 ends the routine.\n\nINPUT Number\nWHILE Number <> -1\n  C <- 0\n  D <- INT(Number / 2)\n  REPEAT\n    IF INT(Number / D) = Number / D\n      THEN\n        C <- C + 1\n    ENDIF\n    D <- D - 1\n  UNTIL D = 1\n  IF C <> 0\n    THEN\n      OUTPUT C\n  ENDIF\n  INPUT Number\nENDWHILE\n\nDescribe the problem that occurs if a whole number smaller than 4 and not equal to -1 is input.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "The value of D becomes zero",
     "A division by zero error occurs",
@@ -1756,12 +1818,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 4(c)(i). The mark scheme accepts: The value of D becomes zero / A division by zero error occurs / The loop never ends (an endless loop)",
    "working": [
     "Trace with Number = 3. D = INT(3 / 2) = 1. In the REPEAT, Number / 1 works, then D <- D - 1 makes D = 0. The UNTIL tests D = 1, which is false, so the loop goes round again and calculates Number / 0. Dividing by zero is an error. D keeps going down (-1, -2 and so on) and never equals 1 again, so the loop never ends."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m22-22-q4cii",
    "category": "checks",
-   "prompt": "This flowchart inputs a whole number and counts its factors. An input of -1 ends the routine. If a whole number smaller than 4 and not equal to -1 is input, D becomes zero and the loop never ends.\n\nExplain how to change the flowchart to prevent this problem occurring.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs a whole number and counts its factors. An input of -1 ends the routine. For each number it sets D <- INT(Number / 2), then repeats a check that subtracts 1 from D each time, UNTIL D = 1. If a whole number smaller than 4 and not equal to -1 is input, D becomes zero and the loop never ends.\n\nExplain how to change the algorithm to prevent this problem occurring.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "After the decision box that tests if the number is -1",
     "Insert another decision box to test if the number is less than 4",
@@ -1784,12 +1847,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2022 Paper 22, Question 4(c)(ii). The mark scheme accepts: After the decision box that tests if the number is -1 / Insert another decision box to test if the number is less than 4 / Insert another decision box to test if the number is less than or equal to 3 / Return to INPUT Number if this is true",
    "working": [
     "The problem happens when the number is less than 4. The fix is to stop such numbers before they reach the REPEAT loop. After the decision that checks for -1 (so -1 can still end the routine), add a decision that tests whether the number is less than 4, or 3 or less. If it is true, go back to INPUT Number to ask for another value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-21-q2-r1",
    "category": "programming",
-   "prompt": "Tick one box in each row to identify the most appropriate data type for each description. Only one tick per column.\n\na single character from the keyboard",
+   "prompt": "a single character from the keyboard\n\nWhich one is this: Boolean, Char, Integer, Real, String?",
    "answers": [
     "Char"
    ],
@@ -1802,12 +1866,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 21, Question 2. The mark scheme accepts: Char",
    "working": [
     "BOOLEAN: one of only two values, TRUE or FALSE. CHAR: one single character, such as A. INTEGER: a whole number only. REAL: a number that may have a fractional part, so it can be any number. STRING: a group of several characters, such as a word. Read each description and match how many characters or what kind of number it allows."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-21-q2-r2",
    "category": "programming",
-   "prompt": "Tick one box in each row to identify the most appropriate data type for each description. Only one tick per column.\n\nmultiple characters from the keyboard",
+   "prompt": "multiple characters from the keyboard\n\nWhich one is this: Boolean, Char, Integer, Real, String?",
    "answers": [
     "String"
    ],
@@ -1820,12 +1885,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 21, Question 2. The mark scheme accepts: String",
    "working": [
     "BOOLEAN: one of only two values, TRUE or FALSE. CHAR: one single character, such as A. INTEGER: a whole number only. REAL: a number that may have a fractional part, so it can be any number. STRING: a group of several characters, such as a word. Read each description and match how many characters or what kind of number it allows."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-21-q2-r3",
    "category": "programming",
-   "prompt": "Tick one box in each row to identify the most appropriate data type for each description. Only one tick per column.\n\nonly one of two possible values",
+   "prompt": "only one of two possible values\n\nWhich one is this: Boolean, Char, Integer, Real, String?",
    "answers": [
     "Boolean"
    ],
@@ -1838,12 +1904,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 21, Question 2. The mark scheme accepts: Boolean",
    "working": [
     "BOOLEAN: one of only two values, TRUE or FALSE. CHAR: one single character, such as A. INTEGER: a whole number only. REAL: a number that may have a fractional part, so it can be any number. STRING: a group of several characters, such as a word. Read each description and match how many characters or what kind of number it allows."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-21-q2-r4",
    "category": "programming",
-   "prompt": "Tick one box in each row to identify the most appropriate data type for each description. Only one tick per column.\n\nonly whole numbers",
+   "prompt": "only whole numbers\n\nWhich one is this: Boolean, Char, Integer, Real, String?",
    "answers": [
     "Integer"
    ],
@@ -1856,12 +1923,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 21, Question 2. The mark scheme accepts: Integer",
    "working": [
     "BOOLEAN: one of only two values, TRUE or FALSE. CHAR: one single character, such as A. INTEGER: a whole number only. REAL: a number that may have a fractional part, so it can be any number. STRING: a group of several characters, such as a word. Read each description and match how many characters or what kind of number it allows."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-21-q2-r5",
    "category": "programming",
-   "prompt": "Tick one box in each row to identify the most appropriate data type for each description. Only one tick per column.\n\nany number",
+   "prompt": "any number\n\nWhich one is this: Boolean, Char, Integer, Real, String?",
    "answers": [
     "Real"
    ],
@@ -1874,12 +1942,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 21, Question 2. The mark scheme accepts: Real",
    "working": [
     "BOOLEAN: one of only two values, TRUE or FALSE. CHAR: one single character, such as A. INTEGER: a whole number only. REAL: a number that may have a fractional part, so it can be any number. STRING: a group of several characters, such as a word. Read each description and match how many characters or what kind of number it allows."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-21-q3",
    "category": "checks",
-   "prompt": "Give one piece of normal test data and one piece of erroneous test data that could be used to validate the input of an email address. State the reason for your choice in each case.\nChoose ONE answer that earns a mark.",
+   "prompt": "Give one piece of normal test data and one piece of erroneous test data that could be used to validate the input of an email address. State the reason for your choice in each case.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal test data: computerscience@cambridge.org.uk",
     "Reason for normal data: this is a valid email address containing the @ symbol, so it should be accepted",
@@ -1901,12 +1970,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 21, Question 3. The mark scheme accepts: Normal test data: computerscience@cambridge.org.uk / Reason for normal data: this is a valid email address containing the @ symbol, so it should be accepted / Erroneous test data: computerscienceisgreat / Reason for erroneous data: this is just a string with no @ symbol, so it should be rejected",
    "working": [
     "An email address must contain one @ symbol, with text before and after it. Normal data is a real-looking email address that follows this rule, so it should be accepted. Erroneous data breaks the rule, for example text with no @ symbol or with two @ symbols, so it should be rejected. The reason must match the data: normal is accepted, erroneous is rejected."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-21-q5b",
    "category": "design",
-   "prompt": "The pseudocode represents an algorithm. DIV gives the result of integer division; MOD gives the remainder of integer division.\n\nFirst <- 0\nLast <- 0\nINPUT Limit\nFOR Counter <- 1 TO Limit\n  INPUT Value\n  IF Value >= 100\n    THEN\n      IF Value < 1000\n        THEN\n          First <- Value DIV 100\n          Last <- Value MOD 10\n          IF First = Last\n            THEN\n              OUTPUT Value\n          ENDIF\n      ENDIF\n  ENDIF\nNEXT Counter\n\nDescribe the purpose of the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "The pseudocode represents an algorithm. DIV gives the result of integer division; MOD gives the remainder of integer division.\n\nFirst <- 0\nLast <- 0\nINPUT Limit\nFOR Counter <- 1 TO Limit\n  INPUT Value\n  IF Value >= 100\n    THEN\n      IF Value < 1000\n        THEN\n          First <- Value DIV 100\n          Last <- Value MOD 10\n          IF First = Last\n            THEN\n              OUTPUT Value\n          ENDIF\n      ENDIF\n  ENDIF\nNEXT Counter\n\nDescribe the purpose of the algorithm.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "It checks for and outputs 3-digit numbers",
     "It outputs the numbers where the first and last digit are the same"
@@ -1927,12 +1997,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 21, Question 5(b). The mark scheme accepts: It checks for and outputs 3-digit numbers / It outputs the numbers where the first and last digit are the same",
    "working": [
     "Value must be at least 100 and below 1000, so only numbers with a set number of digits go on. DIV 100 keeps the whole number part after dividing by 100, which is the first (hundreds) digit: 474 DIV 100 = 4. MOD 10 is the remainder after dividing by 10, which is the last digit: 474 MOD 10 = 4. The value is output only if these two digits are equal."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-22-q2b",
    "category": "checks",
-   "prompt": "An algorithm allows a user to input their password and checks that there are at least eight characters in the password. Then, the user is asked to re-input the password to check that both inputs are the same. The user is allowed three attempts.\n\nThe algorithm includes two types of check on the data input. Identify and describe each type of check.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm allows a user to input their password and checks that there are at least eight characters in the password. Then, the user is asked to re-input the password to check that both inputs are the same. The user is allowed three attempts.\n\nThe algorithm includes two types of check on the data input. Identify and describe each type of check.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Check 1: validation, a length check",
     "It checks the number of characters in the password",
@@ -1955,12 +2026,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 22, Question 2(b). The mark scheme accepts: Check 1: validation, a length check / It checks the number of characters in the password / Check 2: verification, a double entry check / It compares the two inputs to check that they are the same",
    "working": [
     "Validation is an automatic check that data is sensible and follows a rule; a length check counts the characters. Verification checks the data was entered as intended; double entry makes the user type the data twice and compares the two entries, and a visual check means a person looks at it. Read the algorithm: one check counts characters (at least eight), the other asks for the password again and compares."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-22-q2c",
    "category": "checks",
-   "prompt": "An algorithm allows a user to input their password and checks that there are at least eight characters in the password. Then, the user is asked to re-input the password to check that both inputs are the same. The user is allowed three attempts.\n\nGive two sets of test data for this algorithm and a reason for choosing each set. Each set of test data and its reason must be different.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm allows a user to input their password and checks that there are at least eight characters in the password. Then, the user is asked to re-input the password to check that both inputs are the same. The user is allowed three attempts.\n\nGive two sets of test data for this algorithm and a reason for choosing each set. Each set of test data and its reason must be different.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Set: \"small\", with reason: it is abnormal data that should be rejected",
     "Set: \"password\" and \"password\", with reason: it is normal data that should be accepted"
@@ -1977,7 +2049,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 22, Question 2(c). The mark scheme accepts: Set: \"small\", with reason: it is abnormal data that should be rejected / Set: \"password\" and \"password\", with reason: it is normal data that should be accepted",
    "working": [
     "The rules: at least 8 characters, and both entries must match exactly. Normal data meets every rule, so it should be accepted. Abnormal data breaks a rule, so it should be rejected. For each set, count the characters and compare the two entries letter by letter (capitals and digits matter), then decide accepted or rejected. The reason must agree with the data."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-22-q4b",
@@ -2001,7 +2074,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 22, Question 4(b). The mark scheme accepts: Include a message to explain the value output, for example \"The percentage of meals not served\" / Output the values of Hot, Cold and Serve as well",
    "working": [
     "OUTPUT Error shows only a number, for example 12.5. The user does not know what it means. Output is better when it is explained: add a message saying what the value is, the percentage of meals that were too hot or too cold and so not served. It also helps to output the other results the algorithm worked out, the counts in Hot, Cold and Serve."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-22-q4c",
@@ -2024,12 +2098,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 22, Question 4(c). The mark scheme accepts: Updating the Serve variable, Serve <- Serve + 1",
    "working": [
     "Check which variables are used after they are changed. Counter, Hot and Cold are all used to work out Error. INPUT Temp feeds the loop and OUTPUT Error shows the result. Look for a variable that is updated in the loop but never used in any calculation or output. That process could be removed without changing the result."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-23-q2-r1",
    "category": "checks",
-   "prompt": "Tick one or more boxes in each row to match the type(s) of test data to each description.\n\ntest data that is always on the limit of acceptability",
+   "prompt": "test data that is always on the limit of acceptability\n\nWhich one is this: Boundary, Erroneous / Abnormal, Extreme, Normal?",
    "answers": [
     "Extreme"
    ],
@@ -2041,12 +2116,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 23, Question 2. The mark scheme accepts: Extreme",
    "working": [
     "Normal data is well inside the limits and should be accepted. Extreme data is exactly on a limit: the largest or smallest value that is still accepted. Boundary data tests both sides of a limit, so it can be a value on the limit or a value just outside it. Erroneous (abnormal) data is outside the limits or the wrong type, so it is always rejected. Read each description carefully: always on the limit, or either side of it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-23-q2-r2",
    "category": "checks",
-   "prompt": "Tick one or more boxes in each row to match the type(s) of test data to each description.\n\ntest data that is either on the limit of acceptability or test data that is just outside the limit of acceptability",
+   "prompt": "test data that is either on the limit of acceptability or test data that is just outside the limit of acceptability\n\nWhich one is this: Boundary, Erroneous / Abnormal, Extreme, Normal?",
    "answers": [
     "Boundary"
    ],
@@ -2058,12 +2134,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 23, Question 2. The mark scheme accepts: Boundary",
    "working": [
     "Normal data is well inside the limits and should be accepted. Extreme data is exactly on a limit: the largest or smallest value that is still accepted. Boundary data tests both sides of a limit, so it can be a value on the limit or a value just outside it. Erroneous (abnormal) data is outside the limits or the wrong type, so it is always rejected. Read each description carefully: always on the limit, or either side of it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-23-q2-r3",
    "category": "checks",
-   "prompt": "Tick one or more boxes in each row to match the type(s) of test data to each description.\n\ntest data that will always be rejected",
+   "prompt": "test data that will always be rejected\n\nWhich one is this: Boundary, Erroneous / Abnormal, Extreme, Normal?",
    "answers": [
     "Erroneous / Abnormal"
    ],
@@ -2075,12 +2152,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 23, Question 2. The mark scheme accepts: Erroneous / Abnormal",
    "working": [
     "Normal data is well inside the limits and should be accepted. Extreme data is exactly on a limit: the largest or smallest value that is still accepted. Boundary data tests both sides of a limit, so it can be a value on the limit or a value just outside it. Erroneous (abnormal) data is outside the limits or the wrong type, so it is always rejected. Read each description carefully: always on the limit, or either side of it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-23-q2-r4",
    "category": "checks",
-   "prompt": "Tick one or more boxes in each row to match the type(s) of test data to each description.\n\ntest data that is within the limits of acceptability",
+   "prompt": "test data that is within the limits of acceptability\n\nWhich one is this: Boundary, Erroneous / Abnormal, Extreme, Normal?",
    "answers": [
     "Normal"
    ],
@@ -2092,12 +2170,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 23, Question 2. The mark scheme accepts: Normal",
    "working": [
     "Normal data is well inside the limits and should be accepted. Extreme data is exactly on a limit: the largest or smallest value that is still accepted. Boundary data tests both sides of a limit, so it can be a value on the limit or a value just outside it. Erroneous (abnormal) data is outside the limits or the wrong type, so it is always rejected. Read each description carefully: always on the limit, or either side of it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-23-q3",
    "category": "programming",
-   "prompt": "Describe what is meant by the terms variable and constant and give an example of each in your answer.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe what is meant by the terms variable and constant and give an example of each in your answer.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "A variable represents a value that can change during the execution of a program",
     "A variable can store the results of calculations, counting or totalling",
@@ -2122,12 +2201,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 23, Question 3. The mark scheme accepts: A variable represents a value that can change during the execution of a program / A variable can store the results of calculations, counting or totalling / A variable can store values entered by the user / Variable example: any data that is input into a program, such as a date / A constant represents a value that must stay the same throughout the execution of a program / Constant example: any value that does not change, such as Pi in mathematical formulae",
    "working": [
     "A variable is a named store whose value can change while the program runs. Inputs, counters and running totals are variables, such as a date the user types in. A constant is a named store whose value is set once and stays the same while the program runs, such as Pi in a formula. Ask: could this value change during one run of the program?"
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-23-q4b",
    "category": "design",
-   "prompt": "The pseudocode represents an algorithm. DIV gives the result of integer division.\n\nCount <- 0\nINPUT Limit\nFOR In <- 1 TO Limit\n  Logic <- TRUE\n  Test <- 2\n  INPUT Number\n  REPEAT\n    IF Number / Test = Number DIV Test\n      THEN\n        Logic <- FALSE\n      ELSE\n        Test <- Test + 1\n    ENDIF\n  UNTIL NOT Logic OR Test >= Number DIV 2\n  IF Logic\n    THEN\n      Store[Count] <- Number\n      Count <- Count + 1\n  ENDIF\nNEXT In\nFOR Out <- 0 TO Count - 1\n  OUTPUT Store[Out]\nNEXT Out\n\nState the purpose of this algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "The pseudocode represents an algorithm. DIV gives the result of integer division.\n\nCount <- 0\nINPUT Limit\nFOR In <- 1 TO Limit\n  Logic <- TRUE\n  Test <- 2\n  INPUT Number\n  REPEAT\n    IF Number / Test = Number DIV Test\n      THEN\n        Logic <- FALSE\n      ELSE\n        Test <- Test + 1\n    ENDIF\n  UNTIL NOT Logic OR Test >= Number DIV 2\n  IF Logic\n    THEN\n      Store[Count] <- Number\n      Count <- Count + 1\n  ENDIF\nNEXT In\nFOR Out <- 0 TO Count - 1\n  OUTPUT Store[Out]\nNEXT Out\n\nState the purpose of this algorithm.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "To find and output prime numbers",
     "To store the prime numbers in an array"
@@ -2145,12 +2225,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 23, Question 4(b). The mark scheme accepts: To find and output prime numbers / To store the prime numbers in an array",
    "working": [
     "Trace it. For each Number, Test starts at 2 and goes up. If Number / Test = Number DIV Test, Test divides exactly, so Number has a factor and Logic becomes FALSE. If no factor is found, Logic stays TRUE and Number is stored in the array Store. At the end every stored number is output. A number whose only factors are 1 and itself has a special name."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j22-23-q4c",
    "category": "checks",
-   "prompt": "An algorithm inputs Number inside a FOR loop and then uses a REPEAT loop to test whether Number divides exactly by other numbers. This algorithm only works for numbers that are 3 or greater.\n\nDescribe how you could change this algorithm to make sure that only numbers that are 3 or greater are entered.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs Number inside a FOR loop and then uses a REPEAT loop to test whether Number divides exactly by other numbers. This algorithm only works for numbers that are 3 or greater.\n\nDescribe how you could change this algorithm to make sure that only numbers that are 3 or greater are entered.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Insert a WHILE (pre-condition) loop after INPUT Number",
     "Insert a REPEAT (post-condition) loop before INPUT Number",
@@ -2174,7 +2255,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2022 Paper 23, Question 4(c). The mark scheme accepts: Insert a WHILE (pre-condition) loop after INPUT Number / Insert a REPEAT (post-condition) loop before INPUT Number / The WHILE loop is entered with the condition Number < 3 / After INPUT Number, a conditional statement checks if Number < 3 / Include an error message inside the loop asking for Number to be entered again / Include another input prompt for Number inside the loop / Close the loop with ENDWHILE, or UNTIL Number >= 3, and carry on from the original REPEAT",
    "working": [
     "This is validation with a loop. Straight after INPUT Number, keep asking while the number is too small. Use a WHILE loop with the condition Number < 3, or put the input inside REPEAT ... UNTIL Number >= 3. Inside the loop show an error message and input Number again. When the loop ends the number is valid, and the original algorithm carries on."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q2a-g1",
@@ -2193,7 +2275,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 2(a). The mark scheme accepts: 100",
    "working": [
     "The array is Reading[1:100], so its elements are numbered 1 to 100. This FOR loop must set every element to zero, so Count must go from the first index to the last index. Read the last index from the array in the task. Stopping one short would miss an element, and one more does not exist."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q2a-g2",
@@ -2211,7 +2294,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 2(a). The mark scheme accepts: Value > 100 / Value >= 101",
    "working": [
     "Valid inputs are integers from 1 to 100. This IF rejects bad values. Value <= 0 already catches values that are too small. The second part, joined with OR, must catch values that are too big: anything above 100. 100 itself is allowed, so the test must not catch 100. For integers, greater than 100 means the same as 101 or more."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q2a-g3",
@@ -2229,7 +2313,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 2(a). The mark scheme accepts: Reading[Value] + 1",
    "working": [
     "Reading[Value] stores how many times Value has been input. When a valid Value is input, that count must go up by 1. Counting means count <- count + 1. Here the count is the array element for this value, so the same element is used on both sides. Using Count would update the wrong element, and adding Value would total instead of count."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q2a-g4",
@@ -2248,7 +2333,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 2(a). The mark scheme accepts: INPUT Value",
    "working": [
     "This is a WHILE loop. It tests Value <> -1 at the start of each pass, so a new Value must be read in before the loop tests again. Without this line Value never changes and the loop never ends. The OUTPUT line just before asks the user for the next reading; the missing line takes that reading in."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q2a-g5",
@@ -2267,7 +2353,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 2(a). The mark scheme accepts: Reading[Count]",
    "working": [
     "This loop outputs the count for every value from 100 down to 1. Count holds the value being reported, and Reading[Count] holds how many times that value was input. The message reads: There are (how many) readings of (value). So the gap needs how many times, which is the array element at index Count."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q2a-g6",
@@ -2285,12 +2372,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 2(a). The mark scheme accepts: Count - 1",
    "working": [
     "Count starts at 100 because the output must start with the largest value. Each pass must move to the next smaller value. The loop ends UNTIL Count = 0, so Count must go down by 1 each time to reach 0 after 1. Adding would go past 100 and never reach 0."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q2b",
    "category": "programming",
-   "prompt": "An algorithm counts how many times each value from 1 to 100 is input, storing the counts in Reading[1:100]. It then outputs every count, starting with the largest value:\n\nCount <- 100\nREPEAT\n  OUTPUT \"There are \", Reading[Count], \" readings of \", Count\n  Count <- Count - 1\nUNTIL Count = 0\n\nDescribe how the algorithm could be changed so that it does not output any counts of zero.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm counts how many times each value from 1 to 100 is input, storing the counts in Reading[1:100]. It then outputs every count, starting with the largest value:\n\nCount <- 100\nREPEAT\n  OUTPUT \"There are \", Reading[Count], \" readings of \", Count\n  Count <- Count - 1\nUNTIL Count = 0\n\nDescribe how the algorithm could be changed so that it does not output any counts of zero.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Use an IF (conditional) statement",
     "Check if Reading[Count] is not equal to zero",
@@ -2312,12 +2400,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 2(b). The mark scheme accepts: Use an IF (conditional) statement / Check if Reading[Count] is not equal to zero / Place the check before outputting the value, between the REPEAT and the OUTPUT statement",
    "working": [
     "Now every count is output, even counts of 0. To skip some outputs, use selection: an IF statement. The count for each value is in Reading[Count], so test whether Reading[Count] <> 0. Put the IF around the OUTPUT, between REPEAT and OUTPUT, with ENDIF after it. Count <- Count - 1 must still run every time so the loop still ends."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q3a",
    "category": "checks",
-   "prompt": "A PIN (personal identification number) is input into a banking app by the user. Before the PIN is accepted, the following validation checks are performed:\n- check 1 - each character must be a digit\n- check 2 - there must be exactly four digits\n- check 3 - the value of the PIN must be between 1000 and 9999 inclusive.\n\nDescribe each validation check.\nChoose ONE answer that earns a mark.",
+   "prompt": "A PIN (personal identification number) is input into a banking app by the user. Before the PIN is accepted, the following validation checks are performed:\n- check 1 - each character must be a digit\n- check 2 - there must be exactly four digits\n- check 3 - the value of the PIN must be between 1000 and 9999 inclusive.\n\nDescribe each validation check.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Check 1 is a type check",
     "A type check makes sure the value is a number or integer",
@@ -2342,12 +2431,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 3(a). The mark scheme accepts: Check 1 is a type check / A type check makes sure the value is a number or integer / Check 2 is a length check / A length check makes sure there are only 4 characters or digits / Check 3 is a range check / A range check makes sure the value is >= 1000 and <= 9999",
    "working": [
     "Type check: makes sure the data is the right data type, such as only digits (a number or integer). Length check: makes sure the data has the right number of characters or digits, such as exactly 4. Range check: makes sure a value is between a lowest and a highest value, such as >= 1000 and <= 9999. Match each PIN rule to the check that tests that thing."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q3b",
    "category": "checks",
-   "prompt": "A PIN is input into a banking app by the user. The PIN can be changed by the user.\n\nDescribe how the new PIN could be verified before use.\nChoose ONE answer that earns a mark.",
+   "prompt": "A PIN is input into a banking app by the user. The PIN can be changed by the user.\n\nDescribe how the new PIN could be verified before use.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Input the new PIN",
     "Input the new PIN again",
@@ -2371,13 +2461,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 3(b). The mark scheme accepts: Input the new PIN / Input the new PIN again / Ask the user to check the number on screen / Check that both PINs are the same / Confirm that it is the PIN to use / Check that the new PIN is not the same as the old PIN",
    "working": [
-    "Verification checks the new PIN was entered as the user intended. Double entry: input the new PIN, then input it again, and check that both entries are the same. Visual check: show the PIN on screen so the user can check it and confirm it is the one to use. Checking digits, length or range is validation. It also makes sense to check the new PIN is different from the old one."
-   ]
+    "Verification checks the new PIN was entered as the user intended. Double entry: the user types the new PIN a second time, and the two entries must be the same. Visual check: the PIN is shown on screen so the user can check it and confirm it is the one to use. Checking digits, length or range is validation. It also makes sense to check the new PIN is different from the old one."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-21-q4b",
    "category": "fix",
-   "prompt": "This algorithm makes sure that there are enough fresh bread rolls available for customers to buy.\n\nStock <- 50\nTotal <- 0\nINPUT Sold\nWHILE Sold <> -1\n  Stock <- Stock - Sold\n  IF Stock < 20\n    THEN\n      OUTPUT \"Add new stock\"\n      Stock <- Stock + 50\n  ENDIF\n  Total <- Total + Sold\n  INPUT Sold\nENDWHILE\nOUTPUT Total\n\nIdentify the problem that will occur if the input data starts with a value of 70. Explain how you would correct this problem.\nChoose ONE answer that earns a mark.",
+   "prompt": "This algorithm makes sure that there are enough fresh bread rolls available for customers to buy.\n\nStock <- 50\nTotal <- 0\nINPUT Sold\nWHILE Sold <> -1\n  Stock <- Stock - Sold\n  IF Stock < 20\n    THEN\n      OUTPUT \"Add new stock\"\n      Stock <- Stock + 50\n  ENDIF\n  Total <- Total + Sold\n  INPUT Sold\nENDWHILE\nOUTPUT Total\n\nIdentify the problem that will occur if the input data starts with a value of 70. Explain how you would correct this problem.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "The stock level will fall below zero and become negative",
     "Before subtracting the amount Sold from Stock",
@@ -2400,12 +2491,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 21, Question 4(b). The mark scheme accepts: The stock level will fall below zero and become negative / Before subtracting the amount Sold from Stock / Test that Stock is greater than the number of rolls to be sold / Give a suitable error message and ask for Sold to be input again",
    "working": [
     "Trace with Sold = 70. Stock starts at 50, so Stock <- 50 - 70 gives -20. You cannot have fewer than zero rolls. Adding 50 only gives 30, which hides the fact that 70 rolls were never there. To fix it, before Sold is taken away from Stock, test whether there is enough stock for the amount sold. If not, output an error message and input Sold again."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-22-q2-r1",
    "category": "design",
-   "prompt": "Connect each programming concept to the most appropriate description.\n\ncounting",
+   "prompt": "counting\n\nWhich one is this: carrying out an action multiple times within a loop structure, adding together the numbers in a list of numbers, tracking the number of iterations a program has performed in a loop, branching off to take a course of action depending on the answer to a question, a set of statements to be executed in order?",
    "answers": [
     "tracking the number of iterations a program has performed in a loop"
    ],
@@ -2418,12 +2510,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 2. The mark scheme accepts: tracking the number of iterations a program has performed in a loop",
    "working": [
     "Counting: adding 1 to a variable each time a loop runs, to track how many iterations. Totalling: adding each number to a running total. Repetition (iteration): doing an action many times in a loop. Selection: using a condition, such as IF, to choose which path to take. Sequence: statements run one after another in order. Match each word to the description of that job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-22-q2-r2",
    "category": "design",
-   "prompt": "Connect each programming concept to the most appropriate description.\n\nrepetition",
+   "prompt": "repetition\n\nWhich one is this: carrying out an action multiple times within a loop structure, adding together the numbers in a list of numbers, tracking the number of iterations a program has performed in a loop, branching off to take a course of action depending on the answer to a question, a set of statements to be executed in order?",
    "answers": [
     "carrying out an action multiple times within a loop structure"
    ],
@@ -2436,12 +2529,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 2. The mark scheme accepts: carrying out an action multiple times within a loop structure",
    "working": [
     "Counting: adding 1 to a variable each time a loop runs, to track how many iterations. Totalling: adding each number to a running total. Repetition (iteration): doing an action many times in a loop. Selection: using a condition, such as IF, to choose which path to take. Sequence: statements run one after another in order. Match each word to the description of that job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-22-q2-r3",
    "category": "design",
-   "prompt": "Connect each programming concept to the most appropriate description.\n\nselection",
+   "prompt": "selection\n\nWhich one is this: carrying out an action multiple times within a loop structure, adding together the numbers in a list of numbers, tracking the number of iterations a program has performed in a loop, branching off to take a course of action depending on the answer to a question, a set of statements to be executed in order?",
    "answers": [
     "branching off to take a course of action depending on the answer to a question"
    ],
@@ -2454,12 +2548,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 2. The mark scheme accepts: branching off to take a course of action depending on the answer to a question",
    "working": [
     "Counting: adding 1 to a variable each time a loop runs, to track how many iterations. Totalling: adding each number to a running total. Repetition (iteration): doing an action many times in a loop. Selection: using a condition, such as IF, to choose which path to take. Sequence: statements run one after another in order. Match each word to the description of that job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-22-q2-r4",
    "category": "design",
-   "prompt": "Connect each programming concept to the most appropriate description.\n\nsequence",
+   "prompt": "sequence\n\nWhich one is this: carrying out an action multiple times within a loop structure, adding together the numbers in a list of numbers, tracking the number of iterations a program has performed in a loop, branching off to take a course of action depending on the answer to a question, a set of statements to be executed in order?",
    "answers": [
     "a set of statements to be executed in order"
    ],
@@ -2472,12 +2567,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 2. The mark scheme accepts: a set of statements to be executed in order",
    "working": [
     "Counting: adding 1 to a variable each time a loop runs, to track how many iterations. Totalling: adding each number to a running total. Repetition (iteration): doing an action many times in a loop. Selection: using a condition, such as IF, to choose which path to take. Sequence: statements run one after another in order. Match each word to the description of that job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-22-q2-r5",
    "category": "design",
-   "prompt": "Connect each programming concept to the most appropriate description.\n\ntotalling",
+   "prompt": "totalling\n\nWhich one is this: carrying out an action multiple times within a loop structure, adding together the numbers in a list of numbers, tracking the number of iterations a program has performed in a loop, branching off to take a course of action depending on the answer to a question, a set of statements to be executed in order?",
    "answers": [
     "adding together the numbers in a list of numbers"
    ],
@@ -2490,12 +2586,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 2. The mark scheme accepts: adding together the numbers in a list of numbers",
    "working": [
     "Counting: adding 1 to a variable each time a loop runs, to track how many iterations. Totalling: adding each number to a running total. Repetition (iteration): doing an action many times in a loop. Selection: using a condition, such as IF, to choose which path to take. Sequence: statements run one after another in order. Match each word to the description of that job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-22-q3",
    "category": "checks",
-   "prompt": "Describe the use of verification on input of data when entering a list of items in stock into a database. Explain why verification is necessary.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe the use of verification on input of data when entering a list of items in stock into a database. Explain why verification is necessary.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Verification makes sure the items in stock do not change from what was intended to be input",
     "Verification makes sure the items are accurately copied",
@@ -2518,12 +2615,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 3. The mark scheme accepts: Verification makes sure the items in stock do not change from what was intended to be input / Verification makes sure the items are accurately copied / Double entry: enter each item twice and only accept identical values / Visual check: look at the data that has been entered and confirm it matches",
    "working": [
     "Verification checks that data has been entered or copied accurately, so it matches what was intended, such as the original stock list. It does not check data is sensible or in range; that is validation. Methods: double entry, where each item is typed twice and only accepted if both entries are identical, and a visual check, where someone looks at the entered data and confirms it matches the original."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-22-q4",
    "category": "checks",
-   "prompt": "Describe one type of test data that must be used to test if a program accepts valid input data.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe one type of test data that must be used to test if a program accepts valid input data.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal data: data that would be accepted by the program",
     "Boundary or extreme data: data that is on the acceptable limits"
@@ -2543,7 +2641,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 22, Question 4. The mark scheme accepts: Normal data: data that would be accepted by the program / Boundary or extreme data: data that is on the acceptable limits",
    "working": [
     "Normal data is inside the limits and should be accepted. Extreme data is on the limits and should also be accepted. Boundary data is on or just outside the limits. Abnormal (erroneous) data is outside the limits or the wrong type and should be rejected. The question asks about data the program should accept, so choose a type that is accepted and describe it correctly."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q2a-g1",
@@ -2562,7 +2661,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 2(a). The mark scheme accepts: 50",
    "working": [
     "The array is Reading[1:50], so its elements are numbered 1 to 50. This FOR loop must set every element to zero, so Count must run from the first index to the last index. Use the last index of the array in the task. One less would miss an element, and one more does not exist."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q2a-g2",
@@ -2579,7 +2679,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 2(a). The mark scheme accepts: Value > 50",
    "working": [
     "Valid values are 35 to 50 inclusive. This IF rejects bad values. Value < 35 already catches values that are too small. The second part, joined with OR, must catch values that are too big: anything above 50. 50 itself is allowed, so the test must not catch 50."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q2a-g3",
@@ -2597,7 +2698,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 2(a). The mark scheme accepts: Reading[Value] + 1",
    "working": [
     "Reading[Value] stores how many times Value has been input. When a valid Value is input, that count must go up by 1. Counting means count <- count + 1. Here the count is the array element for this value, so the same element is used on both sides. Using Count would update the wrong element, and adding Value would total instead of count."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q2a-g4",
@@ -2616,7 +2718,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 2(a). The mark scheme accepts: INPUT Value",
    "working": [
     "The REPEAT loop tests UNTIL Value = -1 at the end of each pass. If Count is still 50 or less, the user is asked for the next reading, and a new Value must then be read in. Without this line Value never changes. The OUTPUT line just before is the prompt; the missing line takes the reading in."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q2a-g5",
@@ -2635,7 +2738,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 2(a). The mark scheme accepts: Reading[Count]",
    "working": [
     "This loop reports each value from 35 up to 50. Count holds the value being reported, and Reading[Count] holds how many times that value was input. The message reads: There are (how many) readings of (value). So the gap needs how many times, which is the array element at index Count."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q2a-g6",
@@ -2653,12 +2757,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 2(a). The mark scheme accepts: Count + 1",
    "working": [
     "Count starts at 35 because the output must start with the lowest value. Each pass must move to the next larger value. The loop ends UNTIL Count > 50, so Count must go up by 1 each time until it passes 50. Going down would never get past 50."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q2b",
    "category": "programming",
-   "prompt": "An algorithm counts how many times each value from 35 to 50 is input, storing the counts in the array Reading. It outputs the counts starting with the lowest value:\n\n21 Count <- 35\n22 REPEAT\n23   OUTPUT \"There are \", Reading[Count], \" readings of \", Count\n24   Count <- Count + 1\n25 UNTIL Count > 50\n\nDescribe how the algorithm could be changed to output the number of times each value has been input, starting with the highest value.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm counts how many times each value from 35 to 50 is input, storing the counts in the array Reading. It outputs the counts starting with the lowest value:\n\n21 Count <- 35\n22 REPEAT\n23   OUTPUT \"There are \", Reading[Count], \" readings of \", Count\n24   Count <- Count + 1\n25 UNTIL Count > 50\n\nDescribe how the algorithm could be changed to output the number of times each value has been input, starting with the highest value.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Line 21: set Count to 50",
     "Line 21: use FOR Count <- 50 TO 35 STEP -1",
@@ -2683,7 +2788,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 2(b). The mark scheme accepts: Line 21: set Count to 50 / Line 21: use FOR Count <- 50 TO 35 STEP -1 / Line 24: subtract 1 from Count, Count <- Count - 1 / Remove lines 22 and 24 when using the FOR loop / Line 25: UNTIL Count = 34, or UNTIL Count < 35 / Line 25: end the FOR loop with NEXT Count",
    "working": [
     "To start with the highest value, reverse the loop. Start Count at the highest value, 50, not 35. Each pass, take 1 away from Count instead of adding 1. Stop after 35 has been output, so the end test must become true below 35: UNTIL Count < 35, or Count = 34. A FOR loop can do the same: FOR Count <- 50 TO 35 STEP -1 ... NEXT Count."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q3ai",
@@ -2703,12 +2809,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 3(a)(i). The mark scheme accepts: 1",
    "working": [
     "Follow the method in the example. Add up the five digits of 69321. Then divide the sum by 10 and take the remainder (the same as MOD 10). The remainder is always a single digit. Example: 5 + 1 + 2 + 4 + 3 = 15, and 15 divided by 10 leaves a remainder of 5. Do the same with 6, 9, 3, 2 and 1."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q3aii-r1",
    "category": "checks",
-   "prompt": "A check digit is to be used to validate an identification number on input. The identification number contains five digits and the check digit.\nThe check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\nFor example, 5 + 1 + 2 + 4 + 3 divided by 10 gives a remainder of 5 so the six-digit identification number would be 512435\n\nState which of these identification numbers have incorrect check digits.\n\nA 123455",
+   "prompt": "A check digit is to be used to validate an identification number on input. The identification number contains five digits and the check digit.\nThe check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\nFor example, 5 + 1 + 2 + 4 + 3 divided by 10 gives a remainder of 5 so the six-digit identification number would be 512435\n\nState which of these identification numbers have incorrect check digits.\n\nA 123455\n\nWhich one is this: Correct check digit, Incorrect check digit?",
    "answers": [
     "Correct check digit"
    ],
@@ -2718,12 +2825,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 3(a)(ii). The mark scheme accepts: Correct check digit",
    "working": [
     "For each number, use only the first five digits. Add them together, divide by 10 and take the remainder. Compare the remainder with the sixth digit, the check digit. If they match, the check digit is correct; if they are different, it is incorrect. Example: 512435 gives 5 + 1 + 2 + 4 + 3 = 15, remainder 5, and the last digit is 5, so it is correct."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q3aii-r2",
    "category": "checks",
-   "prompt": "A check digit is to be used to validate an identification number on input. The identification number contains five digits and the check digit.\nThe check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\nFor example, 5 + 1 + 2 + 4 + 3 divided by 10 gives a remainder of 5 so the six-digit identification number would be 512435\n\nState which of these identification numbers have incorrect check digits.\n\nB 691400",
+   "prompt": "A check digit is to be used to validate an identification number on input. The identification number contains five digits and the check digit.\nThe check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\nFor example, 5 + 1 + 2 + 4 + 3 divided by 10 gives a remainder of 5 so the six-digit identification number would be 512435\n\nState which of these identification numbers have incorrect check digits.\n\nB 691400\n\nWhich one is this: Correct check digit, Incorrect check digit?",
    "answers": [
     "Correct check digit"
    ],
@@ -2733,12 +2841,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 3(a)(ii). The mark scheme accepts: Correct check digit",
    "working": [
     "For each number, use only the first five digits. Add them together, divide by 10 and take the remainder. Compare the remainder with the sixth digit, the check digit. If they match, the check digit is correct; if they are different, it is incorrect. Example: 512435 gives 5 + 1 + 2 + 4 + 3 = 15, remainder 5, and the last digit is 5, so it is correct."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q3aii-r3",
    "category": "checks",
-   "prompt": "A check digit is to be used to validate an identification number on input. The identification number contains five digits and the check digit.\nThe check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\nFor example, 5 + 1 + 2 + 4 + 3 divided by 10 gives a remainder of 5 so the six-digit identification number would be 512435\n\nState which of these identification numbers have incorrect check digits.\n\nC 722855",
+   "prompt": "A check digit is to be used to validate an identification number on input. The identification number contains five digits and the check digit.\nThe check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\nFor example, 5 + 1 + 2 + 4 + 3 divided by 10 gives a remainder of 5 so the six-digit identification number would be 512435\n\nState which of these identification numbers have incorrect check digits.\n\nC 722855\n\nWhich one is this: Correct check digit, Incorrect check digit?",
    "answers": [
     "Incorrect check digit"
    ],
@@ -2748,12 +2857,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 3(a)(ii). The mark scheme accepts: Incorrect check digit",
    "working": [
     "For each number, use only the first five digits. Add them together, divide by 10 and take the remainder. Compare the remainder with the sixth digit, the check digit. If they match, the check digit is correct; if they are different, it is incorrect. Example: 512435 gives 5 + 1 + 2 + 4 + 3 = 15, remainder 5, and the last digit is 5, so it is correct."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q3aii-r4",
    "category": "checks",
-   "prompt": "A check digit is to be used to validate an identification number on input. The identification number contains five digits and the check digit.\nThe check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\nFor example, 5 + 1 + 2 + 4 + 3 divided by 10 gives a remainder of 5 so the six-digit identification number would be 512435\n\nState which of these identification numbers have incorrect check digits.\n\nD 231200",
+   "prompt": "A check digit is to be used to validate an identification number on input. The identification number contains five digits and the check digit.\nThe check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\nFor example, 5 + 1 + 2 + 4 + 3 divided by 10 gives a remainder of 5 so the six-digit identification number would be 512435\n\nState which of these identification numbers have incorrect check digits.\n\nD 231200\n\nWhich one is this: Correct check digit, Incorrect check digit?",
    "answers": [
     "Incorrect check digit"
    ],
@@ -2763,12 +2873,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 3(a)(ii). The mark scheme accepts: Incorrect check digit",
    "working": [
     "For each number, use only the first five digits. Add them together, divide by 10 and take the remainder. Compare the remainder with the sixth digit, the check digit. If they match, the check digit is correct; if they are different, it is incorrect. Example: 512435 gives 5 + 1 + 2 + 4 + 3 = 15, remainder 5, and the last digit is 5, so it is correct."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q3bi",
    "category": "checks",
-   "prompt": "A check digit is used to validate a five-digit identification number on input. The check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\n\nDescribe an input error that would not be found using this check digit.\nChoose ONE answer that earns a mark.",
+   "prompt": "A check digit is used to validate a five-digit identification number on input. The check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.\n\nDescribe an input error that would not be found using this check digit.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Two or more digits are transposed (swapped round)"
    ],
@@ -2786,12 +2897,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 3(b)(i). The mark scheme accepts: Two or more digits are transposed (swapped round)",
    "working": [
     "This check digit only adds the digits. Adding gives the same total in any order: 1 + 2 = 2 + 1. So an error that changes the order of the digits gives the same check digit and is not found. Errors that change a digit's value, miss a digit out or add an extra one change the total, so they are usually found. Which error keeps the same digits?"
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q3bii",
    "category": "checks",
-   "prompt": "A check digit is used to validate a five-digit identification number on input. The check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder. This does not find transposed digits.\n\nDescribe a more suitable algorithm to calculate the check digit for this identification number.\nChoose ONE answer that earns a mark.",
+   "prompt": "A check digit is used to validate a five-digit identification number on input. The check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder. This does not find transposed digits.\n\nDescribe a more suitable algorithm to calculate the check digit for this identification number.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Multiply each digit by a different number, such as its place value",
     "Then add them together and divide by a number to find the remainder"
@@ -2810,12 +2922,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 3(b)(ii). The mark scheme accepts: Multiply each digit by a different number, such as its place value / Then add them together and divide by a number to find the remainder",
    "working": [
     "The problem: adding gives the same total whatever order the digits are in. Fix it by giving each position a different weight. Multiply each digit by a different number, such as its place (1st by 1, 2nd by 2 and so on). Then add the results, divide by a number such as 11 and use the remainder. Now swapping two digits changes the total, so the error is found."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q3c",
    "category": "checks",
-   "prompt": "A check digit is used to validate an identification number on input. The identification number contains five digits and the check digit.\n\nIdentify two other validation checks that could be used when inputting this identification number.\nChoose ONE answer that earns a mark.",
+   "prompt": "A check digit is used to validate an identification number on input. The identification number contains five digits and the check digit.\n\nIdentify two other validation checks that could be used when inputting this identification number.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Length check",
     "Type check",
@@ -2833,12 +2946,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 3(c). The mark scheme accepts: Length check / Type check / Presence check / Format check",
    "working": [
     "Validation checks used on input: length check (the right number of characters, here 6 digits), type check (only digits, no letters), presence check (something has been entered) and format check (the data matches a pattern). Double entry and visual check are verification, not validation. Parity check and checksum are used when data is transmitted, not when it is input."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n22-23-q4b",
    "category": "programming",
-   "prompt": "This algorithm makes sure that there are enough wheelbarrows in stock.\n\nStock <- 10\nTotal <- 0\nINPUT Sale\nWHILE Sale <> \"N\"\n  Stock <- Stock - 1\n  IF Stock < 5\n    THEN\n      OUTPUT \"Add new stock\"\n      Stock <- Stock + 10\n  ENDIF\n  Total <- Total + 1\n  INPUT Sale\nENDWHILE\nOUTPUT Total\n\nExplain how you could extend the algorithm to allow for the sale of more than one wheelbarrow at a time.\nChoose ONE answer that earns a mark.",
+   "prompt": "This algorithm makes sure that there are enough wheelbarrows in stock.\n\nStock <- 10\nTotal <- 0\nINPUT Sale\nWHILE Sale <> \"N\"\n  Stock <- Stock - 1\n  IF Stock < 5\n    THEN\n      OUTPUT \"Add new stock\"\n      Stock <- Stock + 10\n  ENDIF\n  Total <- Total + 1\n  INPUT Sale\nENDWHILE\nOUTPUT Total\n\nExplain how you could extend the algorithm to allow for the sale of more than one wheelbarrow at a time.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Input a number for the quantity being sold",
     "Check that the number is less than or equal to the number in stock",
@@ -2861,7 +2975,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2022 Paper 23, Question 4(b). The mark scheme accepts: Input a number for the quantity being sold / Check that the number is less than or equal to the number in stock / Do this after checking for N / Update Stock by that number, Stock <- Stock - Number / Update Total by that number, Total <- Total + Number",
    "working": [
     "Now each sale is one wheelbarrow: Stock - 1 and Total + 1. To sell several at once, input a number for how many are being sold. Do this after Sale has been checked for N. Check the number is not more than the stock. Then use that number in the updates: subtract it from Stock and add it to Total, instead of using 1."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q1",
@@ -2881,12 +2996,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 1. The mark scheme accepts: Local",
    "working": [
     "Scope means which parts of a program can use a variable. A global variable is declared in the main program and can be used anywhere. A variable declared inside a procedure or function can only be used inside that procedure, and is lost when it ends. That kind of scope has its own name, the opposite of global."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q2a-r1",
    "category": "programming",
-   "prompt": "Four descriptions and five pseudocode statements are shown. Link each description to its most appropriate pseudocode statement. Not all pseudocode statements will be used.\n\na statement to count",
+   "prompt": "Four descriptions and five pseudocode statements are shown. Link each description to its most appropriate pseudocode statement. Not all pseudocode statements will be used.\n\na statement to count\n\nWhich one is this: FOR Count <- 1 TO 10, Value <- Value + NewValue, WHILE Value > 10 DO, Value <- Value + 1, REPEAT?",
    "answers": [
     "Value <- Value + 1"
    ],
@@ -2899,12 +3015,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 2(a). The mark scheme accepts: Value <- Value + 1",
    "working": [
     "Counting adds 1 each time: Value <- Value + 1. Totalling adds a new value to a running total: Value <- Value + NewValue. A pre-condition loop tests its condition at the start of each pass: WHILE ... DO. A post-condition loop tests at the end, so it always runs at least once: REPEAT ... UNTIL, which starts with REPEAT. FOR is a count-controlled loop and is not used here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q2a-r2",
    "category": "programming",
-   "prompt": "Four descriptions and five pseudocode statements are shown. Link each description to its most appropriate pseudocode statement. Not all pseudocode statements will be used.\n\na statement to total",
+   "prompt": "Four descriptions and five pseudocode statements are shown. Link each description to its most appropriate pseudocode statement. Not all pseudocode statements will be used.\n\na statement to total\n\nWhich one is this: FOR Count <- 1 TO 10, Value <- Value + NewValue, WHILE Value > 10 DO, Value <- Value + 1, REPEAT?",
    "answers": [
     "Value <- Value + NewValue"
    ],
@@ -2917,12 +3034,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 2(a). The mark scheme accepts: Value <- Value + NewValue",
    "working": [
     "Counting adds 1 each time: Value <- Value + 1. Totalling adds a new value to a running total: Value <- Value + NewValue. A pre-condition loop tests its condition at the start of each pass: WHILE ... DO. A post-condition loop tests at the end, so it always runs at least once: REPEAT ... UNTIL, which starts with REPEAT. FOR is a count-controlled loop and is not used here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q2a-r3",
    "category": "programming",
-   "prompt": "Four descriptions and five pseudocode statements are shown. Link each description to its most appropriate pseudocode statement. Not all pseudocode statements will be used.\n\na statement to start a pre-condition loop",
+   "prompt": "Four descriptions and five pseudocode statements are shown. Link each description to its most appropriate pseudocode statement. Not all pseudocode statements will be used.\n\na statement to start a pre-condition loop\n\nWhich one is this: FOR Count <- 1 TO 10, Value <- Value + NewValue, WHILE Value > 10 DO, Value <- Value + 1, REPEAT?",
    "answers": [
     "WHILE Value > 10 DO"
    ],
@@ -2935,12 +3053,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 2(a). The mark scheme accepts: WHILE Value > 10 DO",
    "working": [
     "Counting adds 1 each time: Value <- Value + 1. Totalling adds a new value to a running total: Value <- Value + NewValue. A pre-condition loop tests its condition at the start of each pass: WHILE ... DO. A post-condition loop tests at the end, so it always runs at least once: REPEAT ... UNTIL, which starts with REPEAT. FOR is a count-controlled loop and is not used here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q2a-r4",
    "category": "programming",
-   "prompt": "Four descriptions and five pseudocode statements are shown. Link each description to its most appropriate pseudocode statement. Not all pseudocode statements will be used.\n\na statement to start a post-condition loop",
+   "prompt": "Four descriptions and five pseudocode statements are shown. Link each description to its most appropriate pseudocode statement. Not all pseudocode statements will be used.\n\na statement to start a post-condition loop\n\nWhich one is this: FOR Count <- 1 TO 10, Value <- Value + NewValue, WHILE Value > 10 DO, Value <- Value + 1, REPEAT?",
    "answers": [
     "REPEAT"
    ],
@@ -2953,12 +3072,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 2(a). The mark scheme accepts: REPEAT",
    "working": [
     "Counting adds 1 each time: Value <- Value + 1. Totalling adds a new value to a running total: Value <- Value + NewValue. A pre-condition loop tests its condition at the start of each pass: WHILE ... DO. A post-condition loop tests at the end, so it always runs at least once: REPEAT ... UNTIL, which starts with REPEAT. FOR is a count-controlled loop and is not used here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q2b",
    "category": "design",
-   "prompt": "Write an algorithm in pseudocode, using a single loop, to output the average of 50 numbers that have been stored in the array Number[]. Which lines belong in the algorithm?\nChoose ONE answer that earns a mark.",
+   "prompt": "Write an algorithm in pseudocode, using a single loop, to output the average of 50 numbers that have been stored in the array Number[]. Which lines belong in the algorithm?\nThis question is worth 5 marks: give ONE point that earns a mark.",
    "answers": [
     "Total <- 0 before the loop starts",
     "FOR Count <- 1 TO 50 to control the loop",
@@ -2981,12 +3101,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 2(b). The mark scheme accepts: Total <- 0 before the loop starts / FOR Count <- 1 TO 50 to control the loop / Total <- Total + Number[Count] inside the loop / Average <- Total / 50 after the loop ends / OUTPUT \"The average is \", Average after the loop ends",
    "working": [
     "Average = total of the numbers / how many numbers. Set Total to 0 once, before the loop. Use one FOR loop from 1 to 50, the array indexes. Inside it, add each element to the running total: Total <- Total + Number[Count]. After the loop has added all 50, divide the total by 50 and output it with a message. Setting Total to 0 inside the loop would wipe the total."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q3",
    "category": "checks",
-   "prompt": "Describe the purpose of test data. Include an example of a type of test data in your answer.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe the purpose of test data. Include an example of a type of test data in your answer.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "To check that the program works as expected",
     "To check for logic or runtime errors",
@@ -3013,12 +3134,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 3. The mark scheme accepts: To check that the program works as expected / To check for logic or runtime errors / To check that the program rejects any invalid data that is input / To check that the program only accepts reasonable data / Normal data / Abnormal (erroneous) data / Extreme data / Boundary data",
    "working": [
     "Test data is data chosen to try out a program, to check it works as expected and to find errors such as logic or runtime errors. It checks the program accepts reasonable data and rejects invalid data. The types of test data are normal, abnormal (erroneous), extreme and boundary. Typing data twice is verification, and test data does not fix errors or speed up a program."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q4",
    "category": "programming",
-   "prompt": "Describe how variables and constants are used in programming.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe how variables and constants are used in programming.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Variables and constants are used to store items of data",
     "The data in variables and constants is accessed by an identifier (they are named data stores)",
@@ -3040,12 +3162,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 4. The mark scheme accepts: Variables and constants are used to store items of data / The data in variables and constants is accessed by an identifier (they are named data stores) / The value of a variable may change during the execution of a program / The value of a constant will remain the same during the execution of a program",
    "working": [
     "Variables and constants are named data stores: each holds an item of data and is found by its identifier (its name). The value of a variable can change while the program runs, for example a running total. The value of a constant stays the same while the program runs, for example Pi. Loops repeat instructions; variables and constants only store data."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q6b",
    "category": "programming",
-   "prompt": "An algorithm calculates the energy efficiency of an appliance as a percentage and stores it in Efficiency. Write pseudocode to check for an efficiency of 92% or over for this appliance and to output \"A-rated\" if the efficiency is 92% or over.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm calculates the energy efficiency of an appliance as a percentage and stores it in Efficiency. Write pseudocode to check for an efficiency of 92% or over for this appliance and to output \"A-rated\" if the efficiency is 92% or over.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "IF Efficiency >= 92",
     "THEN OUTPUT \"A-rated\" (only when the condition is met)"
@@ -3062,12 +3185,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 6(b). The mark scheme accepts: IF Efficiency >= 92 / THEN OUTPUT \"A-rated\" (only when the condition is met)",
    "working": [
     "Use selection with IF ... THEN ... ENDIF. Efficiency is stored as a percentage, so 92% is the number 92, not 0.92. 92 or over means greater than or equal to: >=. The THEN part runs only when the condition is true, and it should OUTPUT the message. ELSE runs when the condition is false. WHILE is a loop, not a single check."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q8b",
    "category": "fix",
-   "prompt": "A flowchart sets NumberSales and Total to 0, then repeatedly inputs SaleValue, adding 1 to NumberSales and SaleValue to Total, until a SaleValue of 0 is input; it then outputs Total / NumberSales as the average sale value. With the data 5.50, 3.40, 6.25, 3.85, -11.00, 0 it outputs 1.6. Identify the error in the algorithm and describe how to correct it.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart sets NumberSales and Total to 0, then repeatedly inputs SaleValue, adding 1 to NumberSales and SaleValue to Total, until a SaleValue of 0 is input; it then outputs Total / NumberSales as the average sale value. With the data 5.50, 3.40, 6.25, 3.85, -11.00, 0 it outputs 1.6. Identify the error in the algorithm and describe how to correct it.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Error: negative numbers are included in the total and the count of sales",
     "Correction placed straight after the input of SaleValue",
@@ -3088,12 +3212,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 8(b). The mark scheme accepts: Error: negative numbers are included in the total and the count of sales / Correction placed straight after the input of SaleValue / Insert a decision there to reject negative numbers",
    "working": [
     "Trace it. 5.50 + 3.40 + 6.25 + 3.85 = 19.00. The value -11.00 is also added, giving 8.00, and counted, giving 5 sales: 8.00 / 5 = 1.6. A sale value cannot be negative, so it should not be in the total or the count. Fix it with a decision straight after SaleValue is input that rejects values below zero."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q10a",
    "category": "programming",
-   "prompt": "The variables X, Y and Z are used in a program: X stores a whole number, Y stores a decimal number and Z stores a flag that can be set to TRUE or FALSE. Write pseudocode statements to declare the variables X, Y and Z.\nChoose ONE answer that earns a mark.",
+   "prompt": "The variables X, Y and Z are used in a program: X stores a whole number, Y stores a decimal number and Z stores a flag that can be set to TRUE or FALSE. Write pseudocode statements to declare the variables X, Y and Z.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "DECLARE X : INTEGER",
     "DECLARE Y : REAL",
@@ -3111,12 +3236,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 10(a). The mark scheme accepts: DECLARE X : INTEGER / DECLARE Y : REAL / DECLARE Z : BOOLEAN",
    "working": [
     "In Cambridge pseudocode every variable is declared: DECLARE Name : TYPE. INTEGER holds whole numbers. REAL holds numbers with a fractional part, such as 3.5. BOOLEAN holds TRUE or FALSE, so it is used for a flag. STRING holds text and CHAR holds one character. Match each variable to the kind of data it stores."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q10b",
    "category": "programming",
-   "prompt": "X stores a whole number, Y stores a decimal number and Z stores TRUE or FALSE. The function Same(A,B) returns TRUE if the value of A is the same as the value of B when B is rounded to the nearest whole number and FALSE otherwise. Write pseudocode statements to define the function and to call the function with X and Y and store the return value in Z.\nChoose ONE answer that earns a mark.",
+   "prompt": "X stores a whole number, Y stores a decimal number and Z stores TRUE or FALSE. The function Same(A,B) returns TRUE if the value of A is the same as the value of B when B is rounded to the nearest whole number and FALSE otherwise. Write pseudocode statements to define the function and to call the function with X and Y and store the return value in Z.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "FUNCTION ... RETURNS BOOLEAN, ending with ENDFUNCTION",
     "The function is named Same",
@@ -3138,7 +3264,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 10(b). The mark scheme accepts: FUNCTION ... RETURNS BOOLEAN, ending with ENDFUNCTION / The function is named Same / Parameters defined as (A : INTEGER, B : REAL) / IF A = ROUND(B,0) compares the two parameters / RETURN TRUE when they match, otherwise RETURN FALSE / Z <- Same(X,Y)",
    "working": [
     "A function returns a value, so use FUNCTION Same(A : INTEGER, B : REAL) RETURNS BOOLEAN ... ENDFUNCTION. A is the whole number and B is the number to round. ROUND(B, 0) rounds B to 0 decimal places. Compare them with IF A = ROUND(B, 0), RETURN TRUE, otherwise RETURN FALSE. A procedure does not return a value. To call the function, use it in an assignment: Z <- Same(X, Y)."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m23-22-q10c",
@@ -3159,12 +3286,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2023 Paper 22, Question 10(c). The mark scheme accepts: Defining sets up the function; calling is using the function / A function is defined once and can be called many times",
    "working": [
     "Defining a function writes it once: its name, parameters, the code inside and what it returns, between FUNCTION and ENDFUNCTION. This does not run it. Calling a function is using it: writing its name with values, such as Z <- Same(X, Y), so its code runs and returns a value. One definition can be called as many times as needed."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q1a-r1",
    "category": "design",
-   "prompt": "Four descriptions of stages in the program development life cycle are shown. Link each description to its most appropriate program development life cycle stage. Not all stages will be used.\n\ndevelop an algorithm to solve the problem by using structure diagrams, flowcharts or pseudocode",
+   "prompt": "Four descriptions of stages in the program development life cycle are shown. Link each description to its most appropriate program development life cycle stage. Not all stages will be used.\n\ndevelop an algorithm to solve the problem by using structure diagrams, flowcharts or pseudocode\n\nWhich one is this: analysis, coding, design, evaluation, testing?",
    "answers": [
     "design"
    ],
@@ -3177,12 +3305,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 1(a). The mark scheme accepts: design",
    "working": [
     "Program development life cycle stages: analysis is finding out the problem and its requirements. Design is planning the solution with structure diagrams, flowcharts or pseudocode. Coding is writing and implementing the program instructions. Testing is running the program to find and fix errors. Evaluation, judging how well the finished solution works, is the stage not used here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q1a-r2",
    "category": "design",
-   "prompt": "Four descriptions of stages in the program development life cycle are shown. Link each description to its most appropriate program development life cycle stage. Not all stages will be used.\n\ndetect and fix the errors in the program",
+   "prompt": "Four descriptions of stages in the program development life cycle are shown. Link each description to its most appropriate program development life cycle stage. Not all stages will be used.\n\ndetect and fix the errors in the program\n\nWhich one is this: analysis, coding, design, evaluation, testing?",
    "answers": [
     "testing"
    ],
@@ -3195,12 +3324,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 1(a). The mark scheme accepts: testing",
    "working": [
     "Program development life cycle stages: analysis is finding out the problem and its requirements. Design is planning the solution with structure diagrams, flowcharts or pseudocode. Coding is writing and implementing the program instructions. Testing is running the program to find and fix errors. Evaluation, judging how well the finished solution works, is the stage not used here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q1a-r3",
    "category": "design",
-   "prompt": "Four descriptions of stages in the program development life cycle are shown. Link each description to its most appropriate program development life cycle stage. Not all stages will be used.\n\nidentify the problem and its requirements",
+   "prompt": "Four descriptions of stages in the program development life cycle are shown. Link each description to its most appropriate program development life cycle stage. Not all stages will be used.\n\nidentify the problem and its requirements\n\nWhich one is this: analysis, coding, design, evaluation, testing?",
    "answers": [
     "analysis"
    ],
@@ -3213,12 +3343,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 1(a). The mark scheme accepts: analysis",
    "working": [
     "Program development life cycle stages: analysis is finding out the problem and its requirements. Design is planning the solution with structure diagrams, flowcharts or pseudocode. Coding is writing and implementing the program instructions. Testing is running the program to find and fix errors. Evaluation, judging how well the finished solution works, is the stage not used here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q1a-r4",
    "category": "design",
-   "prompt": "Four descriptions of stages in the program development life cycle are shown. Link each description to its most appropriate program development life cycle stage. Not all stages will be used.\n\nwrite and implement the instructions to solve the problem",
+   "prompt": "Four descriptions of stages in the program development life cycle are shown. Link each description to its most appropriate program development life cycle stage. Not all stages will be used.\n\nwrite and implement the instructions to solve the problem\n\nWhich one is this: analysis, coding, design, evaluation, testing?",
    "answers": [
     "coding"
    ],
@@ -3231,12 +3362,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 1(a). The mark scheme accepts: coding",
    "working": [
     "Program development life cycle stages: analysis is finding out the problem and its requirements. Design is planning the solution with structure diagrams, flowcharts or pseudocode. Coding is writing and implementing the program instructions. Testing is running the program to find and fix errors. Evaluation, judging how well the finished solution works, is the stage not used here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q1b",
    "category": "design",
-   "prompt": "Identify three of the component parts after a problem has been decomposed.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify three of the component parts after a problem has been decomposed.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Inputs (what is put into the system)",
     "Processes (actions taken to achieve a result)",
@@ -3258,7 +3390,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 1(b). The mark scheme accepts: Inputs (what is put into the system) / Processes (actions taken to achieve a result) / Outputs (what is taken out of the system) / Storage (what needs to be kept for future use)",
    "working": [
     "Decomposition breaks a problem into its component parts. Every system has four parts: inputs (data that goes in), processes (what is done to the data), outputs (what comes out) and storage (data kept for later). Testing, analysis and evaluation are stages of the life cycle. Validation, comments and iteration are things inside a program, not the parts a problem splits into."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q2",
@@ -3278,12 +3411,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 2. The mark scheme accepts: Array",
    "working": [
     "A variable or a constant holds one item of data. An array is a data structure that holds many items of the same data type under one name, each found by its index, for example Score[1] to Score[30]. A string is text. Procedures and functions are blocks of code. A record can hold items of different data types."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q3a",
    "category": "checks",
-   "prompt": "Describe what is meant by data validation.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe what is meant by data validation.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Validation is an automated check carried out by a computer",
     "It makes sure the data entered is sensible, acceptable or reasonable"
@@ -3302,12 +3436,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 3(a). The mark scheme accepts: Validation is an automated check carried out by a computer / It makes sure the data entered is sensible, acceptable or reasonable",
    "working": [
     "Validation is done automatically by the computer when data is entered. It checks the data follows set rules so it is sensible, acceptable or reasonable, for example with a range check or a length check. It cannot prove data is correct or true. Checking data matches the original, or typing it twice, is verification, not validation."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q3b",
    "category": "checks",
-   "prompt": "A validation check is used to make sure that any value that is input is an integer between 30 and 200 inclusive. Give one example of normal, abnormal and extreme test data to check that the validation check is working as intended, with a reason for each choice.\nChoose ONE answer that earns a mark.",
+   "prompt": "A validation check is used to make sure that any value that is input is an integer between 30 and 200 inclusive. Give one example of normal, abnormal and extreme test data to check that the validation check is working as intended, with a reason for each choice.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal: 75",
     "Reason: the data lies within the required range and should be accepted",
@@ -3332,12 +3467,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 3(b). The mark scheme accepts: Normal: 75 / Reason: the data lies within the required range and should be accepted / Abnormal: Sixty / Reason: this is the wrong data type and should be rejected / Extreme: 200 / Reason: the highest value in the required range that should be accepted",
    "working": [
     "Rule: an integer from 30 to 200 inclusive. Normal data is inside the range and should be accepted. Abnormal data should be rejected: outside the range, or the wrong data type such as a word instead of a number. Extreme data is the highest or lowest value that is still accepted, exactly 30 or 200. 201 is outside the range, so it is not extreme."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q4",
    "category": "programming",
-   "prompt": "Explain the purpose of the library routines DIV and ROUND.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain the purpose of the library routines DIV and ROUND.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "DIV performs integer division",
     "DIV keeps only the whole number part of the answer, e.g. DIV(9,4) = 2",
@@ -3359,12 +3495,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 4. The mark scheme accepts: DIV performs integer division / DIV keeps only the whole number part of the answer, e.g. DIV(9,4) = 2 / ROUND returns a value rounded to a specified number of decimal places / ROUND rounds up or down depending on whether the next digit is >= 5 or < 5, e.g. ROUND(4.56, 1) = 4.6",
    "working": [
     "DIV is integer division: it divides and keeps only the whole number part. DIV(9, 4): 9 / 4 = 2.25, keep 2. MOD gives the remainder instead (1). ROUND(value, places) rounds a value to the given number of decimal places: if the next digit is 5 or more round up, below 5 round down. ROUND(4.56, 1): the next digit is 6, so it gives 4.6."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q5b",
    "category": "design",
-   "prompt": "An algorithm inputs numbers until 0 is input, totalling the positive numbers with Total <- Total + Number inside IF Number > 0, and outputs the total after the loop. Describe how you could change the corrected algorithm to record and output how many positive numbers have been included in the final total. You do not need to rewrite the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm allows some numbers to be input until 0 is input. Inside the loop, IF Number > 0 THEN Total <- Total + Number totals the positive numbers, and the total is output after the loop. Describe how you could change this algorithm to record and output how many positive numbers have been included in the final total. You do not need to rewrite the algorithm.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Initialise a new counting variable",
     "Count <- 0 to count the acceptable numbers",
@@ -3388,12 +3525,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 5(b). The mark scheme accepts: Initialise a new counting variable / Count <- 0 to count the acceptable numbers / Insert a counting statement inside the IF, next to the totalling line / Count <- Count + 1 / Add a new output after the loop / OUTPUT Count",
    "working": [
     "Counting adds 1 each time something happens. You need a new counting variable, set to 0 before the loop. Put Count <- Count + 1 inside the IF Number > 0, next to Total <- Total + Number, so only numbers added to the total are counted. After the loop ends, output the count once. Adding Number to it would total, not count."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q6",
    "category": "programming",
-   "prompt": "State two features that should be included to create a maintainable program. Give a reason why each feature should be used.\nChoose ONE answer that earns a mark.",
+   "prompt": "State two features that should be included to create a maintainable program. Give a reason why each feature should be used.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Meaningful identifiers",
     "So programmers can easily recognise the purpose of a variable, array or constant",
@@ -3415,8 +3553,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 6. The mark scheme accepts: Meaningful identifiers / So programmers can easily recognise the purpose of a variable, array or constant / Comments / To annotate each section so a programmer knows the purpose of that section of code / Procedures and functions / To make programs modular and easier to update or add functionality",
    "working": [
-    "A maintainable program is easy for another programmer to understand and change later. Features: meaningful identifiers, so each name shows what a variable, array or constant is for. Comments, which explain what each section of code does. Procedures and functions, which split the program into modules that are easier to update. Single-letter names, global variables everywhere and one long block of code make it harder."
-   ]
+    "A maintainable program is easy for another programmer to understand and change later. Good features: names that clearly describe what each variable, array or constant stores; comments, which explain what each section of code does; procedures and functions, which split the program into modules that are easier to update. Single-letter names, global variables used everywhere and one long block of code make a program harder to maintain."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q7b",
@@ -3436,12 +3575,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 7(b). The mark scheme accepts: Linear search",
    "working": [
     "Trace it. Pointer starts at 1 and goes up by 1 each time, checking each item in order until it finds the Letter, then outputs the matching word. Looking at items one after another from the start is the simplest kind of search. It does not sort, total, count or find a maximum. A binary search halves a sorted list each time instead."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q7c",
    "category": "design",
-   "prompt": "An algorithm sets Pointer to 1, inputs a Letter, then adds 1 to Pointer until Word[Pointer, 1] = Letter. The array Word[] holds the letters A to M at indexes 1 to 13. Describe one problem that could occur with this algorithm if an invalid character was input.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm sets Pointer to 1, inputs a Letter, then adds 1 to Pointer until Word[Pointer, 1] = Letter. The array Word[] holds the letters A to M at indexes 1 to 13. Describe one problem that could occur with this algorithm if an invalid character was input.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "The algorithm would not stop",
     "The array would run out of values after the pointer reached 13",
@@ -3462,12 +3602,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 7(c). The mark scheme accepts: The algorithm would not stop / The array would run out of values after the pointer reached 13 / Because it would not have found the item it was seeking / The algorithm will crash",
    "working": [
     "The loop only stops when Word[Pointer, 1] = Letter. If the Letter is not one of A to M, it is never found. Pointer keeps going up past 13, the last index, where there are no more values. So the algorithm cannot stop normally: it runs off the end of the array and crashes, or never ends. Nothing in it outputs an error message or asks again."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q8a",
    "category": "programming",
-   "prompt": "The function LENGTH(Phrase) calculates the length of a string Phrase. Write the pseudocode statements to store the string \"The beginning is the most important part\" in Phrase, calculate and output the length of the string, and output the string in upper case.\nChoose ONE answer that earns a mark.",
+   "prompt": "The function LENGTH(Phrase) calculates the length of a string Phrase. Write the pseudocode statements to store the string \"The beginning is the most important part\" in Phrase, calculate and output the length of the string, and output the string in upper case.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Phrase <- \"The beginning is the most important part\"",
     "OUTPUT LENGTH(Phrase)",
@@ -3486,12 +3627,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 8(a). The mark scheme accepts: Phrase <- \"The beginning is the most important part\" / OUTPUT LENGTH(Phrase) / OUTPUT UCASE(Phrase)",
    "working": [
     "Assignment puts a value into a variable: Variable <- value, with the variable on the left. A string value goes in double quotes. LENGTH(Phrase) gives the number of characters, so OUTPUT it. UCASE(Phrase) gives the string in upper case (capitals); LCASE gives lower case. OUTPUT the result of each function. INPUT is only for data typed in by the user."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-21-q8b",
    "category": "programming",
-   "prompt": "Phrase stores \"The beginning is the most important part\". Write the output of OUTPUT LENGTH(Phrase) followed by OUTPUT UCASE(Phrase).\nChoose ONE answer that earns a mark.",
+   "prompt": "Phrase stores \"The beginning is the most important part\". Write the output of OUTPUT LENGTH(Phrase) followed by OUTPUT UCASE(Phrase).\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "40",
     "THE BEGINNING IS THE MOST IMPORTANT PART"
@@ -3504,7 +3646,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 21, Question 8(b). The mark scheme accepts: 40 / THE BEGINNING IS THE MOST IMPORTANT PART",
    "working": [
     "LENGTH counts every character, including spaces. Count the letters in each word: The (3), beginning (9), is (2), the (3), most (4), important (9), part (4). Then add one space between each pair of the 7 words. UCASE changes every letter to a capital and leaves the spaces where they are. Output the length first, then the upper case phrase."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q1",
@@ -3524,12 +3667,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 1. The mark scheme accepts: Analysis",
    "working": [
     "The program development life cycle stages, in order, are analysis, design, coding and testing. Before planning anything you must identify the problem and what is needed (the requirements); that is analysis. Design then plans the solution, coding writes it and testing checks it. Decomposition is part of analysis, not a stage of its own."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q3",
    "category": "design",
-   "prompt": "Identify three different ways that the design of a solution to a problem can be presented.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify three different ways that the design of a solution to a problem can be presented.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Structure diagram (chart)",
     "Flowchart",
@@ -3550,12 +3694,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 3. The mark scheme accepts: Structure diagram (chart) / Flowchart / Pseudocode",
    "working": [
     "In the design stage a solution is planned before it is coded. It can be shown three ways: a structure diagram (breaks the system into smaller parts), a flowchart (shapes and arrows for each step) and pseudocode (written steps in a code-like language). Trace tables and test data are used in testing. Truth tables and logic circuits are for logic gates. Program code belongs to the coding stage."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q4a",
    "category": "checks",
-   "prompt": "A program needs to make sure the value input for a measurement meets the following rules: the value is a positive number; a value is always input; the value is less than 1000. Describe the validation checks that the programmer would need to use.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program needs to make sure the value input for a measurement meets the following rules: the value is a positive number; a value is always input; the value is less than 1000. Describe the validation checks that the programmer would need to use.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Range check that the value is greater than zero and less than 1000",
     "Presence check so the program will not continue until a value has been entered",
@@ -3577,7 +3722,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 4(a). The mark scheme accepts: Range check that the value is greater than zero and less than 1000 / Presence check so the program will not continue until a value has been entered / Type check to make sure that a number is entered / Length check to make sure there are no more than 3 digits entered",
    "working": [
     "Match each rule to a validation check. A range check tests a value is between limits: positive means greater than 0, and less than 1000 does not include 1000. A presence check makes sure a value has been entered. A type check makes sure a number was entered. A length check limits how many digits, here no more than 3. Double entry and visual checks are verification."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q4bi",
@@ -3600,12 +3746,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 4(b)(i). The mark scheme accepts: To verify the data, making sure that no changes are made to the data on entry",
    "working": [
     "A double entry check makes the user type the value twice and compares the two entries. This is verification: it checks no mistakes or changes happened while the data was being entered, so it is what the user meant. It does not test range, type, length or presence; those are validation checks."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q4bii",
    "category": "checks",
-   "prompt": "The input value needs to be stored in the variable Measurement. Write pseudocode to perform the double entry check until a successful input is made. Which features belong in the pseudocode?\nChoose ONE answer that earns a mark.",
+   "prompt": "A program inputs a value for a measurement. The program needs editing to include a double entry check for the value input. The input value needs to be stored in the variable Measurement. Write pseudocode to perform the double entry check until a successful input is made. Which features belong in the pseudocode?\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "A REPEAT ... UNTIL loop so the inputs are repeated",
     "Two inputs: INPUT Measurement then INPUT MeasurementCheck",
@@ -3625,12 +3772,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 4(b)(ii). The mark scheme accepts: A REPEAT ... UNTIL loop so the inputs are repeated / Two inputs: INPUT Measurement then INPUT MeasurementCheck / UNTIL Measurement = MeasurementCheck / The given variable Measurement stores the input",
    "working": [
     "Double entry means: input the value, input it again into a second variable, and compare them. Keep repeating until they match, so use a loop that tests at the end: REPEAT ... UNTIL. Inside it, INPUT Measurement and then INPUT MeasurementCheck. End with UNTIL Measurement = MeasurementCheck. Inputting into the same variable twice would lose the first value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q6",
    "category": "programming",
-   "prompt": "State three different features of a high-level programming language that a programmer could use to make sure that their program will be easier to understand by another programmer. Give an example for each feature.\nChoose ONE answer that earns a mark.",
+   "prompt": "State three different features of a high-level programming language that a programmer could use to make sure that their program will be easier to understand by another programmer. Give an example for each feature.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Making sure all identifiers have meaningful names",
     "Example: using Total to store a running total",
@@ -3653,12 +3801,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 6. The mark scheme accepts: Making sure all identifiers have meaningful names / Example: using Total to store a running total / Using comments to explain how the program works / Example: // all values are zeroed before the next calculation / Using procedures and functions for the tasks within a program / Example: CalculateInterest(Deposit, Rate)",
    "working": [
     "Code is easier for another programmer to read when identifiers have meaningful names, such as Total for a running total rather than X. Comments explain what the code does; in pseudocode a comment starts with two slashes. Procedures and functions split the program into named tasks, such as CalculateInterest(Deposit, Rate). Short names, global variables everywhere and one long block of code make it harder."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q7a",
    "category": "programming",
-   "prompt": "An algorithm calculates a check digit for a four-digit number:\n01 Flag <- FALSE\n02 REPEAT\n03   Total <- 0\n04   FOR Counter <- 1 TO 4\n05     OUTPUT \"Enter a digit \", Counter\n06     INPUT Number[Counter]\n07     Total <- Total + Number * Counter\n08     IF Number[Counter] = 0\n09       THEN\n10         Flag <- TRUE\n11     ENDIF\n12   NEXT Counter\n13   IF NOT Flag\n14     THEN\n15       Number[5] <- MOD(Total, 10)\n16       FOR Counter <- 0 TO 5\n17         OUTPUT Number[Counter]\n18       NEXT\n19   ENDIF\n20 UNTIL Flag\nGive the line number(s) for the statements showing totalling, a count-controlled loop and a post-condition loop.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm calculates a check digit for a four-digit number:\n01 Flag <- FALSE\n02 REPEAT\n03   Total <- 0\n04   FOR Counter <- 1 TO 4\n05     OUTPUT \"Enter a digit \", Counter\n06     INPUT Number[Counter]\n07     Total <- Total + Number * Counter\n08     IF Number[Counter] = 0\n09       THEN\n10         Flag <- TRUE\n11     ENDIF\n12   NEXT Counter\n13   IF NOT Flag\n14     THEN\n15       Number[5] <- MOD(Total, 10)\n16       FOR Counter <- 0 TO 5\n17         OUTPUT Number[Counter]\n18       NEXT\n19   ENDIF\n20 UNTIL Flag\nGive the line number(s) for the statements showing totalling, a count-controlled loop and a post-condition loop.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Totalling: line 07",
     "Count-controlled loop: lines 04 and 12",
@@ -3677,12 +3826,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 7(a). The mark scheme accepts: Totalling: line 07 / Count-controlled loop: lines 04 and 12 / Count-controlled loop: lines 16 and 18 / Post-condition loop: lines 02 and 20",
    "working": [
     "Totalling adds a value to a running total: Total <- Total + something. Find that line; setting Total to 0 is not totalling. A count-controlled loop is FOR ... NEXT: give the FOR line and its NEXT line, and note there are two FOR loops. A post-condition loop tests its condition at the end: give the REPEAT line and the UNTIL line. IF ... ENDIF is selection, not a loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q7c",
    "category": "checks",
-   "prompt": "An algorithm inputs four digits with INPUT Number[Counter] inside a FOR loop, and stops when -1 is input as the fourth digit. The algorithm does not check that each input is a single digit. Identify the place in the algorithm where this check should occur and write pseudocode for this check. Your pseudocode must make sure that the input is a single digit and checks for -1.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs four digits with INPUT Number[Counter] inside a FOR loop, and stops when -1 is input as the fourth digit. The algorithm does not check that each input is a single digit. Identify the place in the algorithm where this check should occur and write pseudocode for this check. Your pseudocode must make sure that the input is a single digit and checks for -1.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Place: immediately after the input of the number",
     "Use a REPEAT ... UNTIL loop around the input",
@@ -3705,12 +3855,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 7(c). The mark scheme accepts: Place: immediately after the input of the number / Use a REPEAT ... UNTIL loop around the input / Check Number[Counter] > 0 (or >= 0) / Check Number[Counter] < 10 / Check it is a whole number: Number[Counter] = ROUND(Number[Counter], 0) / Allow Number[Counter] = -1",
    "working": [
     "Validation must happen straight after the input, before the value is used. To keep asking until it is valid, put a REPEAT ... UNTIL loop around INPUT Number[Counter]. A single digit is a whole number from 0 to 9: test it is >= 0 and < 10, and that it equals ROUND(Number[Counter], 0). The value -1 must also be allowed, because it stops the algorithm."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q9b",
    "category": "design",
-   "prompt": "A flowchart repeatedly passes through the array X[1:5], comparing X[C] with X[C + 1] and swapping them using T when X[C] is not less than X[C + 1], setting F to 1 on a swap. It stops after a pass in which F stays 0. Describe what the algorithm represented by the flowchart is doing.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart repeatedly passes through the array X[1:5], comparing X[C] with X[C + 1] and swapping them using T when X[C] is not less than X[C + 1], setting F to 1 on a swap. It stops after a pass in which F stays 0. Describe what the algorithm represented by the flowchart is doing.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "It (bubble) sorts the data in the array",
     "Into ascending order"
@@ -3729,12 +3880,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 9(b). The mark scheme accepts: It (bubble) sorts the data in the array / Into ascending order",
    "working": [
     "Trace it. Each pass compares neighbours X[C] and X[C + 1]. If the first is not smaller, they swap, so the bigger value moves right. F = 1 records that a swap happened. When a whole pass has no swaps, F stays 0 and it stops, because everything is in order. Large values bubble to the end, so the order runs from smallest to largest."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q11a",
    "category": "programming",
-   "prompt": "The variables P and Q are used to store data in a program. P stores a string. Q stores a character. Write pseudocode statements to declare the variables P and Q, store \"The world\" in P and store 'W' in Q.\nChoose ONE answer that earns a mark.",
+   "prompt": "The variables P and Q are used to store data in a program. P stores a string. Q stores a character. Write pseudocode statements to declare the variables P and Q, store \"The world\" in P and store 'W' in Q.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "DECLARE P : STRING",
     "P <- \"The world\"",
@@ -3752,12 +3904,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 11(a). The mark scheme accepts: DECLARE P : STRING / P <- \"The world\" / DECLARE Q : CHAR / Q <- 'W'",
    "working": [
     "Declare each variable with DECLARE Name : TYPE. STRING holds text made of many characters; CHAR holds one single character. Then assign with Variable <- value, with the variable on the left. A STRING value goes in double quotes and a CHAR value goes in single quotes."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q11b",
    "category": "programming",
-   "prompt": "P stores the string \"The world\" and Q stores the character 'W'. Write a pseudocode algorithm to convert P to upper case, find the position of Q in the string P (the first character in this string is in position 1) and store the position of Q in the variable Position. Which steps belong in the algorithm?\nChoose ONE answer that earns a mark.",
+   "prompt": "P stores the string \"The world\" and Q stores the character 'W'. Write a pseudocode algorithm to convert P to upper case, find the position of Q in the string P (the first character in this string is in position 1) and store the position of Q in the variable Position. Which steps belong in the algorithm?\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "P <- UCASE(P)",
     "Use LENGTH(P) to find the length of P",
@@ -3780,7 +3933,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 11(b). The mark scheme accepts: P <- UCASE(P) / Use LENGTH(P) to find the length of P / Use a loop to check each position for Q / Use SUBSTRING(P, Counter, 1) = Q / Position <- Counter when the value is found",
    "working": [
     "UCASE(P) changes every letter in P to upper case, so 'W' can match. LENGTH(P) gives how many characters are in P, so the loop knows where to stop. A loop with a Counter checks each position. SUBSTRING(P, Counter, 1) takes one character from P starting at position Counter, and compares it with Q. When they match, the value of Counter is the position, so it is stored in Position."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-22-q11c",
@@ -3800,7 +3954,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 22, Question 11(c). The mark scheme accepts: 5",
    "working": [
     "After UCASE, P is \"THE WORLD\". Count every character from position 1, and remember that a space is a character too: T is 1, H is 2, E is 3, the space is 4, then the next character. Q is 'W', so find which position W is in. That number is stored in Position."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q1",
@@ -3820,12 +3975,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 1. The mark scheme accepts: stores a value that cannot change during the execution of a program.",
    "working": [
     "A constant is a named place to store data, like a variable. The difference is that a constant is given its value once, when it is declared, and that value stays the same for the whole time the program runs. A variable's value can change while the program runs. A constant does not need user input and is not reset by loops."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q2",
    "category": "programming",
-   "prompt": "Explain the purpose of the library routines MOD and RANDOM.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain the purpose of the library routines MOD and RANDOM.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "MOD performs integer division when one number is divided by another",
     "MOD finds the remainder, e.g. 7 MOD 2 = 1",
@@ -3847,12 +4003,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 2. The mark scheme accepts: MOD performs integer division when one number is divided by another / MOD finds the remainder, e.g. 7 MOD 2 = 1 / RANDOM generates (pseudo) random numbers / RANDOM usually gives a number within a specified range, e.g. RANDOM() * 10 gives a number between 0 and 10",
    "working": [
     "MOD is a library routine that divides one integer by another using integer division and gives back the remainder. Example: 7 divided by 2 is 3 remainder 1, so 7 MOD 2 = 1. It never gives a fraction. RANDOM generates a (pseudo) random number, usually between 0 and 1, so you multiply it to get a range: RANDOM() * 10 gives a number from 0 to 10. Each run gives a different number."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q3",
    "category": "programming",
-   "prompt": "Describe what happens when a function is called during the execution of a program.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe what happens when a function is called during the execution of a program.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "The function is called using its identifier",
     "Parameters may be passed from the main program to the function",
@@ -3873,12 +4030,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 3. The mark scheme accepts: The function is called using its identifier / Parameters may be passed from the main program to the function / The function performs its task / The function returns a value to the main program",
    "working": [
     "A function is a subroutine with an identifier (a name). The main program calls it by writing its identifier, for example Total <- Add(3, 4). Values in the brackets are parameters, passed from the main program into the function. The function then carries out its task and uses RETURN to send one value back to the main program, which then carries on. The function is defined only once."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q4a",
    "category": "checks",
-   "prompt": "Explain why verification checks are used when data is input.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain why verification checks are used when data is input.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "To make sure data has been accurately copied, with no changes to the values originally intended",
     "When the data is copied from one source to another"
@@ -3897,12 +4055,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 4(a). The mark scheme accepts: To make sure data has been accurately copied, with no changes to the values originally intended / When the data is copied from one source to another",
    "working": [
     "Verification checks that data has been entered or copied accurately, so the value stored is exactly what was intended, with nothing changed by a typing or copying mistake. It is used when data is copied from one source to another, for example from a paper form into a computer. Checking that data is sensible, in range or the right type is validation, which is a different job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q4b",
    "category": "checks",
-   "prompt": "Give two types of verification check and state how each one can be used.\nChoose ONE answer that earns a mark.",
+   "prompt": "Give two types of verification check and state how each one can be used.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Visual check",
     "The user looks through the data that has been entered and confirms that no changes have been made",
@@ -3922,13 +4081,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 4(b). The mark scheme accepts: Visual check / The user looks through the data that has been entered and confirms that no changes have been made / Double data entry / Data is entered twice, the two entries are compared and if they do not match a re-entry is requested",
    "working": [
-    "Verification checks that data was copied or entered correctly. There are two types. In a visual check, the person who entered the data reads it on screen, compares it with the original, and confirms nothing has changed. In double data entry, the data is typed in twice; the computer compares the two entries and asks for re-entry if they do not match. Presence, range and check digit are validation checks."
-   ]
+    "Verification checks that data was copied or entered correctly. Visual check: the person who entered the data reads it on screen, compares it with the original and confirms nothing has changed. Double data entry: the data is typed twice, and the computer asks for re-entry if the two do not match. Compare validation, done by the computer: a Presence check tests the data is not blank, a Range check tests it is between limits, and a Check digit is calculated from the other digits."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q5a-r1",
    "category": "checks",
-   "prompt": "Four descriptions of validation checks are shown. Link each description to the most appropriate check. Not all checks will be used.\n\nto check that the data entered is an integer",
+   "prompt": "Four descriptions of validation checks are shown. Link each description to the most appropriate check. Not all checks will be used.\n\nto check that the data entered is an integer\n\nWhich one is this: check digit, format check, length check, presence check, type check?",
    "answers": [
     "type check"
    ],
@@ -3941,12 +4101,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 5(a). The mark scheme accepts: type check",
    "working": [
     "A type check makes sure data is the right data type, such as an INTEGER. A presence check makes sure something has been entered, so the field is not empty. A length check makes sure the data has the right number of characters. A check digit is an extra digit calculated from the other digits of an identification number, used to find errors in it. A format check makes sure data matches a pattern, such as dd/mm/yyyy."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q5a-r2",
    "category": "checks",
-   "prompt": "Four descriptions of validation checks are shown. Link each description to the most appropriate check. Not all checks will be used.\n\nto check that some data has been entered",
+   "prompt": "Four descriptions of validation checks are shown. Link each description to the most appropriate check. Not all checks will be used.\n\nto check that some data has been entered\n\nWhich one is this: check digit, format check, length check, presence check, type check?",
    "answers": [
     "presence check"
    ],
@@ -3959,12 +4120,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 5(a). The mark scheme accepts: presence check",
    "working": [
     "A type check makes sure data is the right data type, such as an INTEGER. A presence check makes sure something has been entered, so the field is not empty. A length check makes sure the data has the right number of characters. A check digit is an extra digit calculated from the other digits of an identification number, used to find errors in it. A format check makes sure data matches a pattern, such as dd/mm/yyyy."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q5a-r3",
    "category": "checks",
-   "prompt": "Four descriptions of validation checks are shown. Link each description to the most appropriate check. Not all checks will be used.\n\nto check that the data entered has an appropriate number of characters",
+   "prompt": "Four descriptions of validation checks are shown. Link each description to the most appropriate check. Not all checks will be used.\n\nto check that the data entered has an appropriate number of characters\n\nWhich one is this: check digit, format check, length check, presence check, type check?",
    "answers": [
     "length check"
    ],
@@ -3977,12 +4139,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 5(a). The mark scheme accepts: length check",
    "working": [
     "A type check makes sure data is the right data type, such as an INTEGER. A presence check makes sure something has been entered, so the field is not empty. A length check makes sure the data has the right number of characters. A check digit is an extra digit calculated from the other digits of an identification number, used to find errors in it. A format check makes sure data matches a pattern, such as dd/mm/yyyy."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q5a-r4",
    "category": "checks",
-   "prompt": "Four descriptions of validation checks are shown. Link each description to the most appropriate check. Not all checks will be used.\n\nto check that an identification number contains no errors",
+   "prompt": "Four descriptions of validation checks are shown. Link each description to the most appropriate check. Not all checks will be used.\n\nto check that an identification number contains no errors\n\nWhich one is this: check digit, format check, length check, presence check, type check?",
    "answers": [
     "check digit"
    ],
@@ -3995,12 +4158,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 5(a). The mark scheme accepts: check digit",
    "working": [
     "A type check makes sure data is the right data type, such as an INTEGER. A presence check makes sure something has been entered, so the field is not empty. A length check makes sure the data has the right number of characters. A check digit is an extra digit calculated from the other digits of an identification number, used to find errors in it. A format check makes sure data matches a pattern, such as dd/mm/yyyy."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q5b",
    "category": "checks",
-   "prompt": "Write an algorithm in pseudocode to make sure that an input for the variable Length is between 15 and 35 inclusive. The code must iterate until a valid input has been made and the code must include appropriate messages. Which features belong in the algorithm?\nChoose ONE answer that earns a mark.",
+   "prompt": "Write an algorithm in pseudocode to make sure that an input for the variable Length is between 15 and 35 inclusive. The code must iterate until a valid input has been made and the code must include appropriate messages. Which features belong in the algorithm?\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "A REPEAT ... UNTIL (or WHILE ... ENDWHILE) loop",
     "INPUT Length",
@@ -4022,12 +4186,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 5(b). The mark scheme accepts: A REPEAT ... UNTIL (or WHILE ... ENDWHILE) loop / INPUT Length / An input prompt such as OUTPUT \"Enter a number between 15 and 35 inclusive\" / UNTIL Length >= 15 AND Length <= 35 / WHILE Length < 15 OR Length > 35",
    "working": [
     "The code must keep asking until the input is valid, so it needs a loop, not a single IF. Inside it: OUTPUT a prompt, then INPUT Length. A REPEAT loop stops when the value is valid: Length must be at least 15 AND at most 35, both true together. A WHILE loop keeps going while the value is invalid: Length is below 15 OR above 35."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q6b",
    "category": "programming",
-   "prompt": "This corrected algorithm allows 100 positive numbers to be input:\n01 Counter <- 0\n02 Total <- 0\n03 WHILE Counter < 100 DO\n04   INPUT Number\n05   IF Number > 0\n06     THEN\n07       Total <- Total + Number\n08       Counter <- Counter + 1\n09   ENDIF\n10 ENDWHILE\n11 OUTPUT \"The total value of your numbers is \", Total\n12 OUTPUT \"The average value of your numbers is \", Total / 100\nDescribe the changes you should make so that a count-controlled loop is used to allow 100 positive numbers to be input. You do not need to rewrite the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "This corrected algorithm allows 100 positive numbers to be input:\n01 Counter <- 0\n02 Total <- 0\n03 WHILE Counter < 100 DO\n04   INPUT Number\n05   IF Number > 0\n06     THEN\n07       Total <- Total + Number\n08       Counter <- Counter + 1\n09   ENDIF\n10 ENDWHILE\n11 OUTPUT \"The total value of your numbers is \", Total\n12 OUTPUT \"The average value of your numbers is \", Total / 100\nDescribe the changes you should make so that a count-controlled loop is used to allow 100 positive numbers to be input. You do not need to rewrite the algorithm.\nThis question is worth 5 marks: give ONE point that earns a mark.",
    "answers": [
     "Replace line 03",
     "With a FOR loop",
@@ -4052,12 +4217,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 6(b). The mark scheme accepts: Replace line 03 / With a FOR loop / With limits 1 to 100 (or 0 to 99) / Replace line 05 to check if Number is not positive / Insert a validation and re-input routine that repeats until a positive value is entered / Remove the counter update on line 08 / Replace ENDWHILE on line 10 with NEXT",
    "working": [
     "A count-controlled loop is a FOR loop: FOR Counter <- 1 TO 100 runs exactly 100 times, and NEXT ends it in place of ENDWHILE. FOR adds 1 to Counter itself, so line 08 is no longer needed. Each pass must still get one positive number, so the IF on line 05 becomes a check for a value that is not positive, with a loop that asks for re-input until a positive value is entered."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q7b",
    "category": "design",
-   "prompt": "A flowchart inputs values until -1 is input. For each value it compares Value DIV 5 with Value / 5, then Value DIV 10 with Value / 10; if either pair is different it outputs \"Rejected\", otherwise it adds Value to Total. At the end it outputs Total. Describe the purpose of the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart inputs values until -1 is input. For each value it compares Value DIV 5 with Value / 5, then Value DIV 10 with Value / 10; if either pair is different it outputs \"Rejected\", otherwise it adds Value to Total. At the end it outputs Total. Describe the purpose of the algorithm.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "To find if an input is divisible by (both 5 and) 10",
     "Add those inputs together and output the total"
@@ -4073,7 +4239,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 7(b). The mark scheme accepts: To find if an input is divisible by (both 5 and) 10 / Add those inputs together and output the total",
    "working": [
     "DIV gives the whole number part of a division, and / gives the full answer. They are the same only when the number divides exactly. Example: 25 DIV 10 = 2 but 25 / 10 = 2.5. So the comparisons test whether Value divides exactly by 5 and by 10. Values that fail are rejected. Values that pass are added to Total, which is output at the end."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j23-23-q9a",
@@ -4092,7 +4259,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2023 Paper 23, Question 9(a). The mark scheme accepts: DECLARE Saying : STRING",
    "working": [
     "A variable is declared in Cambridge pseudocode with: DECLARE identifier : data type. The identifier comes first, then a colon, then the type. STRING stores text of any length; CHAR stores just one character. TEXT and ARRAY are not the basic data types here, and CONSTANT is used for values that never change, not for declaring variables."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q2",
@@ -4112,12 +4280,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 2. The mark scheme accepts: parameter",
    "working": [
     "A procedure is a subroutine that is called by its name. Values are sent into it inside brackets when it is called, for example CALL Greet(\"Ali\"). The value in the brackets is received by the procedure as a named item listed in its header, such as PROCEDURE Greet(Name : STRING). This item is called a parameter. RETURN sends a value back out of a function, not into a procedure."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q3-r1",
    "category": "programming",
-   "prompt": "Four descriptions of data and five data types are shown. Link each description to the most appropriate data type. Not all data types will be used.\n\na whole number",
+   "prompt": "Four descriptions of data and five data types are shown. Link each description to the most appropriate data type. Not all data types will be used.\n\na whole number\n\nWhich one is this: BOOLEAN, CHAR, INTEGER, REAL, STRING?",
    "answers": [
     "INTEGER"
    ],
@@ -4130,12 +4299,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 3. The mark scheme accepts: INTEGER",
    "working": [
     "INTEGER stores a whole number with no fractional part, such as 27 or -4. REAL stores a number with a fractional part, such as 18.75, so a value with two decimal places is REAL. CHAR stores one single character, such as 'X'. STRING stores a group of characters, such as a word or phrase. BOOLEAN stores only TRUE or FALSE."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q3-r2",
    "category": "programming",
-   "prompt": "Four descriptions of data and five data types are shown. Link each description to the most appropriate data type. Not all data types will be used.\n\na single letter",
+   "prompt": "Four descriptions of data and five data types are shown. Link each description to the most appropriate data type. Not all data types will be used.\n\na single letter\n\nWhich one is this: BOOLEAN, CHAR, INTEGER, REAL, STRING?",
    "answers": [
     "CHAR"
    ],
@@ -4148,12 +4318,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 3. The mark scheme accepts: CHAR",
    "working": [
     "INTEGER stores a whole number with no fractional part, such as 27 or -4. REAL stores a number with a fractional part, such as 18.75, so a value with two decimal places is REAL. CHAR stores one single character, such as 'X'. STRING stores a group of characters, such as a word or phrase. BOOLEAN stores only TRUE or FALSE."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q3-r3",
    "category": "programming",
-   "prompt": "Four descriptions of data and five data types are shown. Link each description to the most appropriate data type. Not all data types will be used.\n\na word or phrase",
+   "prompt": "Four descriptions of data and five data types are shown. Link each description to the most appropriate data type. Not all data types will be used.\n\na word or phrase\n\nWhich one is this: BOOLEAN, CHAR, INTEGER, REAL, STRING?",
    "answers": [
     "STRING"
    ],
@@ -4166,12 +4337,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 3. The mark scheme accepts: STRING",
    "working": [
     "INTEGER stores a whole number with no fractional part, such as 27 or -4. REAL stores a number with a fractional part, such as 18.75, so a value with two decimal places is REAL. CHAR stores one single character, such as 'X'. STRING stores a group of characters, such as a word or phrase. BOOLEAN stores only TRUE or FALSE."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q3-r4",
    "category": "programming",
-   "prompt": "Four descriptions of data and five data types are shown. Link each description to the most appropriate data type. Not all data types will be used.\n\na number with two decimal places",
+   "prompt": "Four descriptions of data and five data types are shown. Link each description to the most appropriate data type. Not all data types will be used.\n\na number with two decimal places\n\nWhich one is this: BOOLEAN, CHAR, INTEGER, REAL, STRING?",
    "answers": [
     "REAL"
    ],
@@ -4184,12 +4356,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 3. The mark scheme accepts: REAL",
    "working": [
     "INTEGER stores a whole number with no fractional part, such as 27 or -4. REAL stores a number with a fractional part, such as 18.75, so a value with two decimal places is REAL. CHAR stores one single character, such as 'X'. STRING stores a group of characters, such as a word or phrase. BOOLEAN stores only TRUE or FALSE."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q4",
    "category": "programming",
-   "prompt": "Choose the three words representing places where data may be stored: array, constant, dimension, input, output, procedure, variable.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify the three words in this list that represent places where data may be stored: array, constant, dimension, input, output, procedure, variable.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "array",
     "constant",
@@ -4206,12 +4379,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 4. The mark scheme accepts: array / constant / variable",
    "working": [
     "Data is stored in named places in memory. A variable stores one value that can change. A constant stores one value that cannot change. An array stores many values of the same data type under one identifier, using an index. Input and output move data in and out of the program, and a procedure is a block of code. None of these store data themselves."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q5a",
    "category": "design",
-   "prompt": "The first stage of the program development life cycle is analysis. Two of the tasks in analysis are abstraction and decomposition. Describe what is meant by abstraction.\nChoose ONE answer that earns a mark.",
+   "prompt": "The first stage of the program development life cycle is analysis. Two of the tasks in analysis are abstraction and decomposition. Describe what is meant by abstraction.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Simplifying the problem",
     "Removing unnecessary details from the problem",
@@ -4231,12 +4405,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 5(a). The mark scheme accepts: Simplifying the problem / Removing unnecessary details from the problem / Filtering out irrelevant characteristics from the elements",
    "working": [
     "Abstraction means making a problem simpler by keeping only the details that matter and removing the details that do not matter. Example: a map of a train network shows stations and lines but not buildings or trees. Splitting a problem into smaller parts is a different task, called decomposition."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q5b",
    "category": "design",
-   "prompt": "Identify three of the component parts when a problem has been decomposed at the analysis stage.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify three of the component parts when a problem has been decomposed at the analysis stage.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Inputs",
     "Processes",
@@ -4254,12 +4429,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 5(b). The mark scheme accepts: Inputs / Processes / Outputs / Storage",
    "working": [
     "Decomposition breaks a problem down into its component parts. Every computer system can be broken into: the inputs (data going in), the processes (what is done to the data), the outputs (results coming out), and the storage (data that is kept). Testing, validation and evaluation are tasks done to a program, not parts of the problem."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q5c",
    "category": "design",
-   "prompt": "The first stage of the program development life cycle is analysis. Identify and describe one other stage of the program development life cycle.\nChoose ONE answer that earns a mark.",
+   "prompt": "The first stage of the program development life cycle is analysis. Identify and describe one other stage of the program development life cycle.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Design",
     "Coding",
@@ -4279,7 +4455,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 5(c). The mark scheme accepts: Design / Coding / Testing / Design: the details of the solution are set out / Coding: the program is developed / Testing: the program is tested for errors",
    "working": [
     "The program development life cycle has four stages in order. Analysis: the problem and its requirements are identified, using abstraction and decomposition. Design: the details of the solution are set out, using structure diagrams, flowcharts and pseudocode. Coding: the program is written in a programming language. Testing: the program is run with test data to find errors. Abstraction and decomposition are tasks inside analysis, not stages."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q6a",
@@ -4302,12 +4479,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 6(a). The mark scheme accepts: To sort 10 names into alphabetical order and display them",
    "working": [
     "Follow the code. The first FOR loop inputs 10 names into the array A. The nested loops compare each pair of next-door names, A[L] and A[L + 1]. If the first is greater (comes later in the alphabet), they swap using T. Repeating this pass moves names into the order A to Z: this is a bubble sort into alphabetical order. The last loop outputs every name in its new order."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q6b",
    "category": "design",
-   "prompt": "An algorithm declares A[1:10] : STRING, inputs 10 names into A[] in a FOR loop, sorts them with nested FOR loops that compare A[L] > A[L + 1] and swap them using T, then outputs \"Name \", C, \" is \", A[C] for each name. State four processes in this algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm declares A[1:10] : STRING, inputs 10 names into A[] in a FOR loop, sorts them with nested FOR loops that compare A[L] > A[L + 1] and swap them using T, then outputs \"Name \", C, \" is \", A[C] for each name. State four processes in this algorithm.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Initialisation",
     "Inputting 10 names",
@@ -4329,13 +4507,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 6(b). The mark scheme accepts: Initialisation / Inputting 10 names / Storing the names in an array / Sorting the names in alphabetical order using a bubble sort / Displaying the 10 names / Iteration",
    "working": [
-    "A process is something the algorithm does. Look at each part of the code: L <- 10 sets a starting value (initialisation). The first loop inputs 10 names and stores them in an array. The nested loops compare next-door names and swap them, which is a bubble sort into alphabetical order. The last loop displays the names. Each loop repeats steps, which is iteration. There is no totalling, searching or validation."
-   ]
+    "A process is something the algorithm does. Look at each part of the code: L <- 10 sets a starting value before the loops use it. The first loop inputs 10 names and stores them in an array. The nested loops compare next-door names and swap them, which is a bubble sort into alphabetical order. The last loop displays the names. Each loop repeats steps, which is iteration. There is no totalling, searching or validation."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q6c",
    "category": "programming",
-   "prompt": "An algorithm stores 10 names in the array A, uses T to hold a name during a swap, uses C as a loop counter and L to store how many names there are (10). Meaningful identifiers have not been used. Suggest suitable meaningful identifiers for A, T, C and L.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm stores 10 names in the array A, uses T to hold a name during a swap, uses C as a loop counter and L to store how many names there are (10). Meaningful identifiers have not been used. Suggest suitable meaningful identifiers for A, T, C and L.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "A: Names",
     "T: Temp",
@@ -4357,12 +4536,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 6(c). The mark scheme accepts: A: Names / T: Temp / C: Counter / L: Length",
    "working": [
     "A meaningful identifier says what the item holds. A holds a list of names, so name it after names. T holds one value for a short time during a swap, so a temporary name fits. C counts the loop passes, so name it after counting. L holds how many names there are, the size of the list, so a name about length fits."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q6d",
    "category": "programming",
-   "prompt": "Meaningful identifiers have not been used in an algorithm. State two other ways the algorithm can be made easier to understand and maintain.\nChoose ONE answer that earns a mark.",
+   "prompt": "Meaningful identifiers have not been used in an algorithm. State two other ways the algorithm can be made easier to understand and maintain.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Use comments",
     "Use procedures and functions",
@@ -4382,7 +4562,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 6(d). The mark scheme accepts: Use comments / Use procedures and functions / Use white space",
    "working": [
     "A program is easier to understand and maintain when another programmer can read it quickly. Comments explain what each part of the code does. Procedures and functions split the code into named, reusable parts. White space and indentation (blank lines and spacing) show where blocks such as loops and IFs start and end. Short identifiers and global variables make code harder to follow."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q8a",
@@ -4402,12 +4583,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 8(a). The mark scheme accepts: Range check",
    "working": [
     "Match the rule to the check. A value that must lie between a lowest and highest value (here 0.5 and 6.0) is tested by a range check. A length check counts characters. A type check tests the data type. A presence check tests that something was entered. A format check tests a pattern. A check digit tests an identification number."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q8c",
    "category": "checks",
-   "prompt": "An algorithm inputs Length (in metres) and Cost (of one metre), checks Length is between 0.5 and 6.0 inclusive, calculates Price and outputs it rounded to two decimal places. Give two different sets of test data for this algorithm and state the purpose of each set.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs Length (in metres) and Cost (of one metre), checks Length is between 0.5 and 6.0 inclusive, calculates Price and outputs it rounded to two decimal places. Give two different sets of test data for this algorithm and state the purpose of each set.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Set: 1 and 1",
     "Normal data to make sure the algorithm accepts it",
@@ -4428,12 +4610,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 8(c). The mark scheme accepts: Set: 1 and 1 / Normal data to make sure the algorithm accepts it / Set: -1 and 1 / Abnormal data for Length to make sure it is rejected",
    "working": [
     "Each set of test data has a purpose. Normal data is a typical valid value that the algorithm should accept, for example Length 1 is inside 0.5 to 6.0. Abnormal data is a value that should be rejected, for example a negative Length is outside the range. Extreme data is the largest or smallest value that is still accepted, such as 0.5 or 6.0."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q8d",
    "category": "programming",
-   "prompt": "An algorithm inputs Length and Cost, validates Length, calculates Price and outputs the price rounded to two decimal places. Complete the headings for the trace table to show a dry-run for this algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "A programmer is designing an algorithm to calculate the cost of a length of rope. The program requirements are: input two values, the length of rope in metres Length and the cost of one metre Cost; perform a validation check on the length to ensure that the value is between 0.5 and 6.0 inclusive; calculate the price Price; output the price rounded to two decimal places. Complete the headings for the trace table to show a dry-run for this algorithm. You do not need to trace the algorithm.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Length",
     "Cost",
@@ -4451,12 +4634,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 8(d). The mark scheme accepts: Length / Cost / Price / OUTPUT",
    "working": [
     "A trace table has one column for each variable that changes while the algorithm runs, plus a column for OUTPUT. Look at what this algorithm uses: it inputs the length of rope and the cost of one metre, works out a price, and outputs the result. Use the same identifiers the algorithm uses. Do not add variables it does not have, such as a counter or total."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-21-q8e",
    "category": "checks",
-   "prompt": "The requirements for an algorithm are: input the length of rope Length and the cost of one metre Cost; perform a range check on Length (0.5 to 6.0 inclusive); calculate Price; output the price rounded to two decimal places. Describe an improvement that should be made to the requirements for this algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "The requirements for an algorithm are: input the length of rope Length and the cost of one metre Cost; perform a range check on Length (0.5 to 6.0 inclusive); calculate Price; output the price rounded to two decimal places. Describe an improvement that should be made to the requirements for this algorithm.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Validate Cost",
     "With a range or presence check",
@@ -4476,7 +4660,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 21, Question 8(e). The mark scheme accepts: Validate Cost / With a range or presence check / Add another validation check for Length",
    "working": [
     "The requirements validate Length but nothing checks the other input, Cost. An invalid cost, such as a negative number or no value at all, would give a wrong price. A good improvement adds validation to that input, for example a range check (no negative values) or a presence check (a value must be entered). Another check on Length, such as a type check, would also help."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q1",
@@ -4499,7 +4684,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 1. The mark scheme accepts: has not changed during input.",
    "working": [
     "Verification checks that data has been entered or copied accurately, so the value stored matches the original exactly and nothing changed while it was typed in. It does not check that data is sensible, the right type, the right length or in range; those are validation checks. Neither check can prove the data is true in real life."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q2a",
@@ -4519,12 +4705,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 2(a). The mark scheme accepts: Format check",
    "working": [
     "Each validation check tests something different. A format check makes sure data follows a set pattern of characters, such as two digits, a slash, two digits, a slash, four digits. A range check tests limits, a type check tests the data type, and a presence check tests that data was entered. Double entry and visual checks are verification, not validation."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q2b",
    "category": "checks",
-   "prompt": "A format check is used to make sure that any date entered is in the dd/mm/yyyy style. Give one example of normal test data and one example of abnormal test data you should use to make sure the check is working properly. State a reason for each of your choices of test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A format check is used to make sure that any date entered is in the dd/mm/yyyy style. Give one example of normal test data and one example of abnormal test data you should use to make sure the check is working properly. State a reason for each of your choices of test data.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal: 30/12/1960",
     "Reason: the date is written in the correct format and should be accepted",
@@ -4545,12 +4732,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 2(b). The mark scheme accepts: Normal: 30/12/1960 / Reason: the date is written in the correct format and should be accepted / Abnormal: 30/Dec/1960 / Reason: the month is not written in the correct format and should be rejected",
    "working": [
     "Normal test data is valid and should be accepted. Abnormal test data is invalid and should be rejected. For a dd/mm/yyyy format check, a valid date written as two digits, slash, two digits, slash, four digits should be accepted. A date with the month written as letters, such as Dec, breaks the pattern and should be rejected. Do not mix up which one is accepted."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q2c",
    "category": "checks",
-   "prompt": "A date is entered in the dd/mm/yyyy style. Describe how a length check could be used with the date entered.\nChoose ONE answer that earns a mark.",
+   "prompt": "A date is entered in the dd/mm/yyyy style. Describe how a length check could be used with the date entered.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Check that there are 10 characters in total",
     "If the date is too long or too short it will be rejected"
@@ -4569,12 +4757,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 2(c). The mark scheme accepts: Check that there are 10 characters in total / If the date is too long or too short it will be rejected",
    "working": [
     "A length check counts the characters in the data and rejects it if there are too many or too few. Count the characters in dd/mm/yyyy: 2 for the day, 1 slash, 2 for the month, 1 slash, 4 for the year. The slashes count. A length check only counts; it does not check values or letters."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q3a-r1",
    "category": "programming",
-   "prompt": "Four pseudocode statements and five pseudocode uses are shown. Link each pseudocode statement to the most appropriate pseudocode use. Not all pseudocode uses will be required.\n\nCALL Colour(NewColour)",
+   "prompt": "Four pseudocode statements and five pseudocode uses are shown. Link each pseudocode statement to the most appropriate pseudocode use. Not all pseudocode uses will be required.\n\nCALL Colour(NewColour)\n\nWhich one is this: counting, finding an average, totalling, using a conditional statement, using a procedure?",
    "answers": [
     "using a procedure"
    ],
@@ -4586,13 +4775,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 3(a). The mark scheme accepts: using a procedure",
    "working": [
-    "CALL followed by a name runs a procedure. Adding several values and dividing by how many there are finds an average. Adding 1 to a variable each time, as in X <- X + 1, is counting. Adding a value to a running total, as in Total <- Total + Value, is totalling. IF ... THEN chooses what to do depending on a condition, so it is a conditional statement."
-   ]
+    "Match each pattern. CALL followed by a name is using a procedure. IF ... THEN chooses what to do depending on a condition, so it is using a conditional statement. Adding a value to a running total, as in Total <- Total + Value, is totalling. Adding several values and dividing by how many there are is finding an average. Adding 1 to a variable each time, as in X <- X + 1, is counting."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q3a-r2",
    "category": "programming",
-   "prompt": "Four pseudocode statements and five pseudocode uses are shown. Link each pseudocode statement to the most appropriate pseudocode use. Not all pseudocode uses will be required.\n\nValue <- (A1 + A2 + A3) / 3",
+   "prompt": "Four pseudocode statements and five pseudocode uses are shown. Link each pseudocode statement to the most appropriate pseudocode use. Not all pseudocode uses will be required.\n\nValue <- (A1 + A2 + A3) / 3\n\nWhich one is this: counting, finding an average, totalling, using a conditional statement, using a procedure?",
    "answers": [
     "finding an average"
    ],
@@ -4604,13 +4794,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 3(a). The mark scheme accepts: finding an average",
    "working": [
-    "CALL followed by a name runs a procedure. Adding several values and dividing by how many there are finds an average. Adding 1 to a variable each time, as in X <- X + 1, is counting. Adding a value to a running total, as in Total <- Total + Value, is totalling. IF ... THEN chooses what to do depending on a condition, so it is a conditional statement."
-   ]
+    "Match each pattern. CALL followed by a name is using a procedure. IF ... THEN chooses what to do depending on a condition, so it is using a conditional statement. Adding a value to a running total, as in Total <- Total + Value, is totalling. Adding several values and dividing by how many there are is finding an average. Adding 1 to a variable each time, as in X <- X + 1, is counting."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q3a-r3",
    "category": "programming",
-   "prompt": "Four pseudocode statements and five pseudocode uses are shown. Link each pseudocode statement to the most appropriate pseudocode use. Not all pseudocode uses will be required.\n\nLoop1 <- Loop1 + 1",
+   "prompt": "Four pseudocode statements and five pseudocode uses are shown. Link each pseudocode statement to the most appropriate pseudocode use. Not all pseudocode uses will be required.\n\nLoop1 <- Loop1 + 1\n\nWhich one is this: counting, finding an average, totalling, using a conditional statement, using a procedure?",
    "answers": [
     "counting"
    ],
@@ -4622,13 +4813,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 3(a). The mark scheme accepts: counting",
    "working": [
-    "CALL followed by a name runs a procedure. Adding several values and dividing by how many there are finds an average. Adding 1 to a variable each time, as in X <- X + 1, is counting. Adding a value to a running total, as in Total <- Total + Value, is totalling. IF ... THEN chooses what to do depending on a condition, so it is a conditional statement."
-   ]
+    "Match each pattern. CALL followed by a name is using a procedure. IF ... THEN chooses what to do depending on a condition, so it is using a conditional statement. Adding a value to a running total, as in Total <- Total + Value, is totalling. Adding several values and dividing by how many there are is finding an average. Adding 1 to a variable each time, as in X <- X + 1, is counting."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q3a-r4",
    "category": "programming",
-   "prompt": "Four pseudocode statements and five pseudocode uses are shown. Link each pseudocode statement to the most appropriate pseudocode use. Not all pseudocode uses will be required.\n\nIF Count > 7 THEN X1 <- 0",
+   "prompt": "Four pseudocode statements and five pseudocode uses are shown. Link each pseudocode statement to the most appropriate pseudocode use. Not all pseudocode uses will be required.\n\nIF Count > 7 THEN X1 <- 0\n\nWhich one is this: counting, finding an average, totalling, using a conditional statement, using a procedure?",
    "answers": [
     "using a conditional statement"
    ],
@@ -4640,13 +4832,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 3(a). The mark scheme accepts: using a conditional statement",
    "working": [
-    "CALL followed by a name runs a procedure. Adding several values and dividing by how many there are finds an average. Adding 1 to a variable each time, as in X <- X + 1, is counting. Adding a value to a running total, as in Total <- Total + Value, is totalling. IF ... THEN chooses what to do depending on a condition, so it is a conditional statement."
-   ]
+    "Match each pattern. CALL followed by a name is using a procedure. IF ... THEN chooses what to do depending on a condition, so it is using a conditional statement. Adding a value to a running total, as in Total <- Total + Value, is totalling. Adding several values and dividing by how many there are is finding an average. Adding 1 to a variable each time, as in X <- X + 1, is counting."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q3b",
    "category": "design",
-   "prompt": "A one-dimensional (1D) array called Temperatures[] has 25 elements beginning at index 1. It holds values that range between -20 and 100 inclusive. Write a pseudocode algorithm using a single loop to find the lowest value in this array and output the result only once. Which lines belong in the algorithm?\nChoose ONE answer that earns a mark.",
+   "prompt": "A one-dimensional (1D) array called Temperatures[] has 25 elements beginning at index 1. It holds values that range between -20 and 100 inclusive. Write a pseudocode algorithm using a single loop to find the lowest value in this array and output the result only once. Which lines belong in the algorithm?\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Min <- 100 before the loop",
     "FOR Count <- 1 TO 25",
@@ -4668,12 +4861,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 3(b). The mark scheme accepts: Min <- 100 before the loop / FOR Count <- 1 TO 25 / IF Temperatures[Count] < Min / THEN Min <- Temperatures[Count] / OUTPUT \"The lowest temperature is \", Min after the loop",
    "working": [
     "To find the lowest value, start Min at a value that every real value will beat. The values range from -20 to 100, so start at the highest possible value, 100. Loop through every index from 1 to 25. If the current element is less than Min, copy that element into Min. Output Min once, after the loop has finished, so it is shown only once."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q4b",
    "category": "design",
-   "prompt": "This corrected algorithm stores 50 cities and their countries in City[] and outputs them:\n01 DECLARE City : ARRAY[1:50, 1:2] OF STRING\n02 DECLARE Count : INTEGER\n03 DECLARE Out : INTEGER\n04 Count <- 1\n05 REPEAT\n06   OUTPUT \"Enter the name of the city\"\n07   INPUT City[Count, 1]\n08   OUTPUT \"Enter the name of the country\"\n09   INPUT City[Count, 2]\n10   Count <- Count + 1\n11 UNTIL Count > 50\n12 FOR Out <- 1 TO 50\n13   OUTPUT \"The city \", City[Out, 1], \" is in \", City[Out, 2]\n14 NEXT Out\nDescribe the changes you should make to allow the name of a country to be input and to display only the stored cities from that country. You do not need to rewrite the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "This corrected algorithm stores 50 cities and their countries in City[] and outputs them:\n01 DECLARE City : ARRAY[1:50, 1:2] OF STRING\n02 DECLARE Count : INTEGER\n03 DECLARE Out : INTEGER\n04 Count <- 1\n05 REPEAT\n06   OUTPUT \"Enter the name of the city\"\n07   INPUT City[Count, 1]\n08   OUTPUT \"Enter the name of the country\"\n09   INPUT City[Count, 2]\n10   Count <- Count + 1\n11 UNTIL Count > 50\n12 FOR Out <- 1 TO 50\n13   OUTPUT \"The city \", City[Out, 1], \" is in \", City[Out, 2]\n14 NEXT Out\nDescribe the changes you should make to allow the name of a country to be input and to display only the stored cities from that country. You do not need to rewrite the algorithm.\nThis question is worth 5 marks: give ONE point that earns a mark.",
    "answers": [
     "Add an input (and prompt) for the country to be searched",
     "Put it between lines 11 and 12",
@@ -4698,12 +4892,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 4(b). The mark scheme accepts: Add an input (and prompt) for the country to be searched / Put it between lines 11 and 12 / Use a new variable for the input / Add an IF statement to check if the current country array element matches the country being searched / Put the IF between lines 12 and 13 / If it matches, allow the output in line 13 (after a THEN) / If it does not match, check the next element",
    "working": [
     "To show only cities from one country, the user must type a country first. Put the prompt and input before the output loop starts (after the data is stored) and store it in a new variable. Then, inside the output loop, before the output line, add an IF that compares column 2 of the array (the country) with the input. Only output when they match; otherwise move on to the next element."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q5",
    "category": "programming",
-   "prompt": "Explain how variables and constants should be used when creating and running a program.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain how variables and constants should be used when creating and running a program.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Variables and constants should have meaningful identifiers",
     "So that programmers can understand their purpose",
@@ -4725,12 +4920,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 5. The mark scheme accepts: Variables and constants should have meaningful identifiers / So that programmers can understand their purpose / They are both used for data storage / Constants store values that never change during the execution of a program / Variables contain values that can change during the execution of the program",
    "working": [
     "Variables and constants are both used to store data. A variable's value can change while the program runs. A constant's value is set once and never changes while the program runs. Both should have meaningful identifiers, for example Total or VATRate, so programmers can understand what each one is for. Single letters do not show their purpose."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q6b",
    "category": "design",
-   "prompt": "A flowchart sets Total and Count to 0, then inputs values, adding each to Total and adding 1 to Count. When 0 is input it calculates Average <- Total / Count, outputs the total and the average, and resets Total and Count to 0. An input of -1 stops the algorithm. Describe the purpose of the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart sets Total and Count to 0, then inputs values, adding each to Total and adding 1 to Count. When 0 is input it calculates Average <- Total / Count, outputs the total and the average, and resets Total and Count to 0. An input of -1 stops the algorithm. Describe the purpose of the algorithm.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "To add together and find the average of a batch of numbers",
     "The total and average are output when 0 is entered",
@@ -4750,12 +4946,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 6(b). The mark scheme accepts: To add together and find the average of a batch of numbers / The total and average are output when 0 is entered / When 0 is entered a new batch is started",
    "working": [
     "Trace the flowchart. Each number input is added to Total, and Count goes up by 1, so it is totalling and counting a group (batch) of numbers. Total / Count is the average. When 0 is input, the total and average are output and both are reset to 0, so a new batch starts. Only -1 stops the whole algorithm."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q7",
    "category": "programming",
-   "prompt": "The string operation SUBSTRING(Quote, Start, Number) returns a string from Quote beginning at position Start that is Number characters long. The first character in Quote is in position 1. Write pseudocode statements to store the string \"Learning Never Exhausts The Mind\" in Quote, extract and display the words \"The Mind\" from the string, and output the original string in lower case.\nChoose ONE answer that earns a mark.",
+   "prompt": "The string operation SUBSTRING(Quote, Start, Number) returns a string from Quote beginning at position Start that is Number characters long. The first character in Quote is in position 1. Write pseudocode statements to store the string \"Learning Never Exhausts The Mind\" in Quote, extract and display the words \"The Mind\" from the string, and output the original string in lower case.\nThis question is worth 5 marks: give ONE point that earns a mark.",
    "answers": [
     "Quote <- \"Learning Never Exhausts The Mind\"",
     "Start <- 25",
@@ -4777,12 +4974,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 7. The mark scheme accepts: Quote <- \"Learning Never Exhausts The Mind\" / Start <- 25 / Number <- 8 / OUTPUT SUBSTRING(Quote, Start, Number) / OUTPUT LCASE(Quote)",
    "working": [
     "Store the text with an assignment: Quote <- \"...\". SUBSTRING needs the string first, then the start position, then how many characters. Count every character from 1, spaces included, to find where 'T' of 'The' is, then count the characters in 'The Mind' (the space counts). OUTPUT SUBSTRING(...) displays it. LCASE changes letters to lower case; UCASE changes them to upper case."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-22-q8",
    "category": "programming",
-   "prompt": "Explain why a programmer would use procedures and parameters when writing a program.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain why a programmer would use procedures and parameters when writing a program.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Procedures let a collection of programming statements be written under a single identifier",
     "Procedures allow modular programs to be created and re-used in this or other programs",
@@ -4806,7 +5004,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 22, Question 8. The mark scheme accepts: Procedures let a collection of programming statements be written under a single identifier / Procedures allow modular programs to be created and re-used in this or other programs / Procedures make program creation faster, and different programmers can work on different procedures / Procedures make programs shorter with less duplicated code, so they are easier to maintain / Parameters pass values from the main program to a procedure / So that the values can be used in the procedure / Parameters allow the procedure to be re-used with different data",
    "working": [
     "A procedure is a group of statements written once under one identifier and run with CALL. This makes programs modular: code can be re-used instead of repeated, so programs are shorter and easier to maintain, and different programmers can write different procedures. Parameters pass values from the main program into the procedure, so it can use them, and the same procedure can work with different data each time."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-23-q1",
@@ -4829,7 +5028,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 1. The mark scheme accepts: Double entry check",
    "working": [
     "Validation checks that data is sensible: range, length, type, presence and format checks, and check digits. Verification checks that data was entered or copied exactly as the original. Verification methods are a visual check (a person compares the entry with the original) and double entry (data is typed twice and the computer compares the two entries)."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-23-q2",
@@ -4849,12 +5049,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 2. The mark scheme accepts: MOD",
    "working": [
     "Know the library routines: DIV gives the whole number part of a division (7 DIV 2 = 3). MOD gives what is left over after dividing (7 MOD 2 = 1). ROUND rounds a number to given places. RANDOM gives a random number. LENGTH counts characters in a string. SUBSTRING takes part of a string. UCASE changes letters to upper case."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-23-q4a",
    "category": "checks",
-   "prompt": "A programmer is writing a data entry program for booking theatre seats. The programmer needs the program to accept only whole numbers that are greater than or equal to one and less than or equal to six. Give the names of two validation checks that are required for this program.\nChoose ONE answer that earns a mark.",
+   "prompt": "A programmer is writing a data entry program for booking theatre seats. The programmer needs the program to accept only whole numbers that are greater than or equal to one and less than or equal to six. Give the names of two validation checks that are required for this program.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Type check",
     "Range check"
@@ -4869,13 +5070,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 4(a). The mark scheme accepts: Type check / Range check",
    "working": [
-    "Think about each rule. 'Whole numbers only' needs a check that the data is the INTEGER data type: a type check. 'From one to six' needs a check that the value is between a lower and an upper limit: a range check. Length and format checks look at characters and patterns, and double entry and visual checks are verification."
-   ]
+    "Think about each rule. 'Whole numbers only' needs a Type check, which tests that the data is the INTEGER data type. 'From one to six' needs a Range check, which tests that the value is between a lower and an upper limit. Compare: a Length check counts characters, a Format check tests a pattern of characters, and a Presence check tests that something was entered. A Double entry check and a Visual check are verification."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-23-q4b",
    "category": "checks",
-   "prompt": "A program must accept only whole numbers greater than or equal to one and less than or equal to six. Complete this pseudocode to perform a type check and a range check:\nOUTPUT \"Please enter the number of seats you want to book \"\nINPUT Seats\nWhich features belong in your completion?\nChoose ONE answer that earns a mark.",
+   "prompt": "A program must accept only whole numbers greater than or equal to one and less than or equal to six. Complete this pseudocode to perform a type check and a range check:\nOUTPUT \"Please enter the number of seats you want to book \"\nINPUT Seats\nWhich features belong in your completion?\nThis question is worth 5 marks: give ONE point that earns a mark.",
    "answers": [
     "A loop for the check, e.g. WHILE ... DO ... ENDWHILE",
     "Checking for a whole number: Seats <> ROUND(Seats, 0)",
@@ -4896,12 +5098,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 4(b). The mark scheme accepts: A loop for the check, e.g. WHILE ... DO ... ENDWHILE / Checking for a whole number: Seats <> ROUND(Seats, 0) / Checking for a number greater than or equal to one: Seats < 1 / Checking for a number less than or equal to six: Seats > 6 / An error or re-input message, e.g. OUTPUT \"Please enter a valid number of seats \" / The ability to re-input the value: INPUT Seats inside the loop",
    "working": [
     "The user must keep re-entering until the value is valid, so use a loop such as WHILE ... DO ... ENDWHILE, not one IF. The loop runs while the value is bad. Bad means: not a whole number (Seats is not equal to ROUND(Seats, 0)), OR less than 1, OR more than 6. Use OR, because any one problem makes it invalid. Inside the loop, output an error message and INPUT Seats again."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-23-q4c",
    "category": "checks",
-   "prompt": "A theatre booking program must accept only whole numbers that are greater than or equal to one and less than or equal to six. Give one item of test data to use when testing this program and state the reason for your choice.\nChoose ONE answer that earns a mark.",
+   "prompt": "A theatre booking program must accept only whole numbers that are greater than or equal to one and less than or equal to six. Give one item of test data to use when testing this program and state the reason for your choice.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Test data: 7",
     "Abnormal data to show that this value would be rejected"
@@ -4920,12 +5123,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 4(c). The mark scheme accepts: Test data: 7 / Abnormal data to show that this value would be rejected",
    "working": [
     "There are four types of test data. Normal data is a typical valid value and should be accepted. Abnormal data is invalid and should be rejected. Extreme data is the largest or smallest valid value, here 1 or 6, and should be accepted. Boundary data is the valid limit plus the invalid value just past it. A value above 6 is outside the range."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-23-q7",
    "category": "programming",
-   "prompt": "A program uses both local variables and global variables. Describe two differences between local variables and global variables.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program uses both local variables and global variables. Describe two differences between local variables and global variables.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Local variables: scope is a defined block of code, subroutine, procedure or function",
     "Global variables: scope is the whole program",
@@ -4946,12 +5150,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 7. The mark scheme accepts: Local variables: scope is a defined block of code, subroutine, procedure or function / Global variables: scope is the whole program / Local variables: value cannot be changed elsewhere in the program / Global variables: value can be changed anywhere in the program",
    "working": [
     "Scope means which parts of the program can use a variable. A local variable is declared inside a procedure, function or block of code, so only that part can use or change it. A global variable is declared in the main program, so its scope is the whole program and any part can use or change its value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n23-23-q8b",
    "category": "programming",
-   "prompt": "A flowchart inputs PartOK, then a decision box asks IS PartOK = 'Y'? If yes, Accept <- Accept + 1; if no, Reject <- Reject + 1. Describe how the algorithm should be changed to accept 'Y' or 'y' for a successfully manufactured part.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart inputs PartOK, then a decision box asks IS PartOK = 'Y'? If yes, Accept <- Accept + 1; if no, Reject <- Reject + 1. Describe how the algorithm should be changed to accept 'Y' or 'y' for a successfully manufactured part.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "After the input box, before the first decision box",
     "Insert a process box",
@@ -4973,7 +5178,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2023 Paper 23, Question 8(b). The mark scheme accepts: After the input box, before the first decision box / Insert a process box / To convert the input to upper case / Change the first decision box to accept 'y' as well / By adding OR PartOK = 'y'",
    "working": [
     "The decision box only accepts upper-case 'Y'. There are two fixes. Insert a process box straight after the input box, before the decision, that converts PartOK to upper case with UCASE, so 'y' becomes 'Y'. Or change the decision so it is true for either letter, using OR (one or the other is enough). AND would need both at once, which is impossible."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q1",
@@ -4996,12 +5202,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 1. The mark scheme accepts: decomposition",
    "working": [
     "The life cycle stages are analysis, design, coding and testing. Analysis identifies the problem and its requirements, using abstraction (removing details that do not matter) and decomposition (breaking the problem into smaller parts). Flowcharts and pseudocode belong to design, and trace tables belong to testing."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q2a-r1",
    "category": "checks",
-   "prompt": "Four test data types and five descriptions are shown. Link each test data type to its most appropriate description.\n\nabnormal",
+   "prompt": "Four test data types and five descriptions are shown. Link each test data type to its most appropriate description.\n\nabnormal\n\nWhich one is this: a value that is accepted, a value that is the highest or lowest value to be accepted and the corresponding lowest or highest value to be rejected, a value that is the highest or lowest value to be rejected, a value that is rejected, a value that is the highest or lowest value to be accepted?",
    "answers": [
     "a value that is rejected"
    ],
@@ -5013,13 +5220,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 2(a). The mark scheme accepts: a value that is rejected",
    "working": [
-    "Normal test data is a typical value that is accepted. Abnormal data is a value that is rejected. Extreme data is the largest or smallest value that is still accepted, the very edge of the valid range. Boundary data is a pair at the edge: the last value that is accepted together with the first value just past it that is rejected. Example for 1 to 10: normal 5, abnormal 50, extreme 10, boundary 10 and 11."
-   ]
+    "Normal test data is a typical value inside the range, and the program accepts it. Abnormal data is outside the valid range, so the program refuses it. Extreme data is the largest or smallest value that is still accepted, the very edge of the range. Boundary data is a pair at the edge: the last value accepted together with the first value just past it, which is refused. Example for 1 to 10: normal 5, abnormal 50, extreme 10, boundary 10 and 11."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q2a-r2",
    "category": "checks",
-   "prompt": "Four test data types and five descriptions are shown. Link each test data type to its most appropriate description.\n\nboundary",
+   "prompt": "Four test data types and five descriptions are shown. Link each test data type to its most appropriate description.\n\nboundary\n\nWhich one is this: a value that is accepted, a value that is the highest or lowest value to be accepted and the corresponding lowest or highest value to be rejected, a value that is the highest or lowest value to be rejected, a value that is rejected, a value that is the highest or lowest value to be accepted?",
    "answers": [
     "a value that is the highest or lowest value to be accepted and the corresponding lowest or highest value to be rejected"
    ],
@@ -5031,13 +5239,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 2(a). The mark scheme accepts: a value that is the highest or lowest value to be accepted and the corresponding lowest or highest value to be rejected",
    "working": [
-    "Normal test data is a typical value that is accepted. Abnormal data is a value that is rejected. Extreme data is the largest or smallest value that is still accepted, the very edge of the valid range. Boundary data is a pair at the edge: the last value that is accepted together with the first value just past it that is rejected. Example for 1 to 10: normal 5, abnormal 50, extreme 10, boundary 10 and 11."
-   ]
+    "Normal test data is a typical value inside the range, and the program accepts it. Abnormal data is outside the valid range, so the program refuses it. Extreme data is the largest or smallest value that is still accepted, the very edge of the range. Boundary data is a pair at the edge: the last value accepted together with the first value just past it, which is refused. Example for 1 to 10: normal 5, abnormal 50, extreme 10, boundary 10 and 11."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q2a-r3",
    "category": "checks",
-   "prompt": "Four test data types and five descriptions are shown. Link each test data type to its most appropriate description.\n\nextreme",
+   "prompt": "Four test data types and five descriptions are shown. Link each test data type to its most appropriate description.\n\nextreme\n\nWhich one is this: a value that is accepted, a value that is the highest or lowest value to be accepted and the corresponding lowest or highest value to be rejected, a value that is the highest or lowest value to be rejected, a value that is rejected, a value that is the highest or lowest value to be accepted?",
    "answers": [
     "a value that is the highest or lowest value to be accepted"
    ],
@@ -5049,13 +5258,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 2(a). The mark scheme accepts: a value that is the highest or lowest value to be accepted",
    "working": [
-    "Normal test data is a typical value that is accepted. Abnormal data is a value that is rejected. Extreme data is the largest or smallest value that is still accepted, the very edge of the valid range. Boundary data is a pair at the edge: the last value that is accepted together with the first value just past it that is rejected. Example for 1 to 10: normal 5, abnormal 50, extreme 10, boundary 10 and 11."
-   ]
+    "Normal test data is a typical value inside the range, and the program accepts it. Abnormal data is outside the valid range, so the program refuses it. Extreme data is the largest or smallest value that is still accepted, the very edge of the range. Boundary data is a pair at the edge: the last value accepted together with the first value just past it, which is refused. Example for 1 to 10: normal 5, abnormal 50, extreme 10, boundary 10 and 11."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q2a-r4",
    "category": "checks",
-   "prompt": "Four test data types and five descriptions are shown. Link each test data type to its most appropriate description.\n\nnormal",
+   "prompt": "Four test data types and five descriptions are shown. Link each test data type to its most appropriate description.\n\nnormal\n\nWhich one is this: a value that is accepted, a value that is the highest or lowest value to be accepted and the corresponding lowest or highest value to be rejected, a value that is the highest or lowest value to be rejected, a value that is rejected, a value that is the highest or lowest value to be accepted?",
    "answers": [
     "a value that is accepted"
    ],
@@ -5067,13 +5277,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 2(a). The mark scheme accepts: a value that is accepted",
    "working": [
-    "Normal test data is a typical value that is accepted. Abnormal data is a value that is rejected. Extreme data is the largest or smallest value that is still accepted, the very edge of the valid range. Boundary data is a pair at the edge: the last value that is accepted together with the first value just past it that is rejected. Example for 1 to 10: normal 5, abnormal 50, extreme 10, boundary 10 and 11."
-   ]
+    "Normal test data is a typical value inside the range, and the program accepts it. Abnormal data is outside the valid range, so the program refuses it. Extreme data is the largest or smallest value that is still accepted, the very edge of the range. Boundary data is a pair at the edge: the last value accepted together with the first value just past it, which is refused. Example for 1 to 10: normal 5, abnormal 50, extreme 10, boundary 10 and 11."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q2b",
    "category": "checks",
-   "prompt": "An algorithm has been written to test if an integer that is input is in the range 5 to 10 inclusive. Identify an example of suitable test data for each test data type: abnormal, boundary, extreme and normal.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm has been written to test if an integer that is input is in the range 5 to 10 inclusive. Identify an example of suitable test data for each test data type: abnormal, boundary, extreme and normal.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Abnormal: 31",
     "Boundary: 4 and 5",
@@ -5097,12 +5308,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 2(b). The mark scheme accepts: Abnormal: 31 / Boundary: 4 and 5 / Boundary: 10 and 11 / Extreme: 5 / Extreme: 10 / Normal: 6",
    "working": [
     "The range is 5 to 10 inclusive. Normal: any typical value inside the range. Abnormal: any value outside, which is rejected. Extreme: the smallest or largest accepted value, the ends of the range themselves. Boundary: a pair at one edge, one value just outside (rejected) next to the end value (accepted). A value inside the range is never abnormal."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q3a",
    "category": "design",
-   "prompt": "Fifty numbers are already stored in the array Values[1:50]. Write an algorithm in pseudocode to input a number, MyNumber, and use a linear search to test if that number is stored in the array. If the number is found in the array, the position in the array is output. If the number is not found in the array, \"Not found\" is output. Which features belong in the algorithm?\nChoose ONE answer that earns a mark.",
+   "prompt": "Fifty numbers are already stored in the array Values[1:50]. Write an algorithm in pseudocode to input a number, MyNumber, and use a linear search to test if that number is stored in the array. If the number is found in the array, the position in the array is output. If the number is not found in the array, \"Not found\" is output. Which features belong in the algorithm?\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "INPUT MyNumber, outside the loop",
     "A loop such as FOR Index <- 1 TO 50",
@@ -5123,12 +5335,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 3(a). The mark scheme accepts: INPUT MyNumber, outside the loop / A loop such as FOR Index <- 1 TO 50 / IF Values[Index] = MyNumber inside the loop / THEN Location <- Index / After the loop: IF Location = 0 THEN OUTPUT \"Not found\" ELSE OUTPUT Location",
    "working": [
     "A linear search checks each element in turn. Input MyNumber once, before the loop. Loop the index through every position, 1 to 50. If the element at that index equals MyNumber, store the index in Location. Location starts at 0, so after the loop, if it is still 0 the number was never found and \"Not found\" is output; otherwise output Location. Outputting \"Not found\" inside the loop would repeat it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q3b",
    "category": "design",
-   "prompt": "Fifty numbers are already stored in the array Values[1:50]. Write an algorithm in pseudocode to sort the array Values[1:50] into ascending order using a bubble sort. Which features belong in the algorithm?\nChoose ONE answer that earns a mark.",
+   "prompt": "Fifty numbers are already stored in the array Values[1:50]. Write an algorithm in pseudocode to sort the array Values[1:50] into ascending order using a bubble sort. Which features belong in the algorithm?\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "An outer loop (REPEAT ... UNTIL) and an inner loop (FOR Index <- 1 TO Last - 1)",
     "IF Values[Index] > Values[Index + 1] to check adjacent values",
@@ -5149,12 +5362,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 3(b). The mark scheme accepts: An outer loop (REPEAT ... UNTIL) and an inner loop (FOR Index <- 1 TO Last - 1) / IF Values[Index] > Values[Index + 1] to check adjacent values / Swap using Temp <- Values[Index], Values[Index] <- Values[Index + 1], Values[Index + 1] <- Temp / Swap <- TRUE when a swap is made, after Swap <- FALSE at the start of each pass / Stop with UNTIL NOT Swap OR Last = 1",
    "working": [
     "A bubble sort compares next-door values. The inner loop goes through the list, and if Values[Index] > Values[Index + 1] they are swapped. A swap needs a Temp variable, or a value is lost. A flag, Swap, is set to FALSE at the start of each pass and TRUE when a swap happens. The outer loop repeats passes until a pass makes no swaps (NOT Swap) or there is nothing left to check."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q4",
    "category": "programming",
-   "prompt": "Identify three data types used in programming.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify three data types used in programming.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Integer",
     "Real",
@@ -5172,13 +5386,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 4. The mark scheme accepts: Integer / Real / Char / String / Boolean",
    "working": [
-    "A data type tells the computer what kind of value is stored. The five Cambridge data types are: INTEGER (whole number), REAL (number with a fractional part), CHAR (one character), STRING (a group of characters) and BOOLEAN (TRUE or FALSE). Arrays, variables and constants are ways to store data, not data types."
-   ]
+    "A data type tells the computer what kind of value is stored. The five Cambridge data types are: INTEGER (whole number), REAL (number with a fractional part), CHAR (one character), STRING (a group of characters) and BOOLEAN (TRUE or FALSE). Compare: an Array is a group of values under one name. A Variable is a named store whose value can change. A Constant is a named store whose value stays the same. These are ways to store data, not data types."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q5bi",
    "category": "checks",
-   "prompt": "An algorithm inputs a cost price Cost and a selling price Sell. It needs to be improved with a range check. Write pseudocode to reject the input of values less than zero for variables Cost and Sell. Which features belong in the pseudocode?\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs a cost price Cost and a selling price Sell. It needs to be improved with a range check. Write pseudocode to reject the input of values less than zero for variables Cost and Sell. Which features belong in the pseudocode?\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "A check for Cost < 0 (or Cost >= 0)",
     "Checks on both inputs, Cost and Sell",
@@ -5197,12 +5412,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 5(b)(i). The mark scheme accepts: A check for Cost < 0 (or Cost >= 0) / Checks on both inputs, Cost and Sell / Repeat each input until valid, e.g. REPEAT INPUT Cost UNTIL Cost >= 0",
    "working": [
     "A range check here rejects any value below zero. Zero itself is allowed, so the test for a bad value is Cost < 0 (or the good value is Cost >= 0). Both inputs need checking, Cost and Sell. To reject properly, the input must be repeated until it is valid, for example REPEAT INPUT Cost UNTIL Cost >= 0. A single IF only warns once and then carries on."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q5bii",
    "category": "checks",
-   "prompt": "An algorithm inputs a cost price and a selling price, and a range check rejects values less than zero. Describe two other validation checks that should be included in this algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs a cost price and a selling price, and a range check rejects values less than zero. Describe two other validation checks that should be included in this algorithm.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Presence check",
     "To check that values have been input",
@@ -5219,13 +5435,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 5(b)(ii). The mark scheme accepts: Presence check / To check that values have been input / Type check / To check for numerical values",
    "working": [
-    "Validation checks that data is sensible, done by the computer. A presence check makes sure a value has been entered, not left blank. A type check makes sure the data is the right data type, here a number. The range check is already used. Double entry and visual checks are verification, which checks copying, not sense."
-   ]
+    "Validation is done by the computer to check that data is sensible. A Presence check makes sure a value has been entered, not left blank. A Type check makes sure the data is the right data type, here a number. A Range check tests limits, and it is already used here. A Double entry check and a Visual check are verification: they check the data was copied correctly, not that it is sensible."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q6",
    "category": "programming",
-   "prompt": "Describe two types of iteration that a programmer can use whilst writing a program.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe two types of iteration that a programmer can use whilst writing a program.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Count-controlled",
     "The number of iterations is pre-determined",
@@ -5247,13 +5464,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 6. The mark scheme accepts: Count-controlled / The number of iterations is pre-determined / Pre-condition / Checks the condition at the start of the loop, so the loop may not iterate / Post-condition / Checks the condition at the end of the loop, so the loop always iterates at least once",
    "working": [
-    "Iteration means a loop. Count-controlled (FOR): the number of repeats is fixed before it starts. Pre-condition (WHILE): the condition is checked at the start, so if it is false straight away, the loop may never run. Post-condition (REPEAT ... UNTIL): the condition is checked at the end, so the loop always runs at least once."
-   ]
+    "Iteration means a loop. Count-controlled (FOR): the number of repeats is fixed before it starts. Pre-condition (WHILE): the condition is checked at the start, so if it is false straight away, the loop may never run. Post-condition (REPEAT ... UNTIL): the condition is checked at the end, so the loop always runs at least once. Compare: Condition-selected and Nested-selection are about selection, choosing a path with IF or CASE, so they are not loops."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m24-22-q10",
    "category": "programming",
-   "prompt": "A programmer has written a program that will be maintained by another programmer. Explain how the program can be written to make sure it can be easily maintained by the other programmer.\nChoose ONE answer that earns a mark.",
+   "prompt": "A programmer has written a program that will be maintained by another programmer. Explain how the program can be written to make sure it can be easily maintained by the other programmer.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Use comments",
     "To explain the purpose of each section of code",
@@ -5278,7 +5496,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2024 Paper 22, Question 10. The mark scheme accepts: Use comments / To explain the purpose of each section of code / Use meaningful identifier names / To clearly identify the purpose of variables, constants, arrays and procedures / Use procedures and functions / To avoid repeated code and simplify the logic / Use indentation and white space / To make the program readable",
    "working": [
     "Maintenance is easier when another programmer can read the code. Comments explain the purpose of each section. Meaningful identifiers show what each variable, constant, array or procedure is for. Procedures and functions stop code being repeated and simplify the logic. Indentation and white space make the structure easy to read. Single letters, global variables everywhere and one long program all make code harder to follow."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q1",
@@ -5298,12 +5517,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 1. The mark scheme accepts: format check.",
    "working": [
     "A format check makes sure data matches a set pattern, for example that certain characters, such as an '@', appear in the right place. A range check tests limits, a length check counts characters, a type check tests the data type, a presence check tests that data was entered, and a check digit tests an identification number. A visual check is verification."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q2a-r1",
    "category": "programming",
-   "prompt": "Four descriptions of programming concepts and five programming concepts are shown. Link each description to the most appropriate programming concept. Not all programming concepts will be used.\n\na subroutine that may not return a value",
+   "prompt": "Four descriptions of programming concepts and five programming concepts are shown. Link each description to the most appropriate programming concept. Not all programming concepts will be used.\n\na subroutine that may not return a value\n\nWhich one is this: function, procedure, parameter, global variable, local variable?",
    "answers": [
     "procedure"
    ],
@@ -5316,12 +5536,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 2(a). The mark scheme accepts: procedure",
    "working": [
     "A subroutine is a named block of code. A function always returns a value to the code that called it. A procedure carries out a task and may not return a value. A parameter is a value a subroutine expects to be given when it is called, inside the brackets. A local variable is declared and used only inside one subroutine. A global variable can be used anywhere in the program."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q2a-r2",
    "category": "programming",
-   "prompt": "Four descriptions of programming concepts and five programming concepts are shown. Link each description to the most appropriate programming concept. Not all programming concepts will be used.\n\na value that is declared and used within a specific procedure",
+   "prompt": "Four descriptions of programming concepts and five programming concepts are shown. Link each description to the most appropriate programming concept. Not all programming concepts will be used.\n\na value that is declared and used within a specific procedure\n\nWhich one is this: function, procedure, parameter, global variable, local variable?",
    "answers": [
     "local variable"
    ],
@@ -5334,12 +5555,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 2(a). The mark scheme accepts: local variable",
    "working": [
     "A subroutine is a named block of code. A function always returns a value to the code that called it. A procedure carries out a task and may not return a value. A parameter is a value a subroutine expects to be given when it is called, inside the brackets. A local variable is declared and used only inside one subroutine. A global variable can be used anywhere in the program."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q2a-r3",
    "category": "programming",
-   "prompt": "Four descriptions of programming concepts and five programming concepts are shown. Link each description to the most appropriate programming concept. Not all programming concepts will be used.\n\na value that a procedure expects you to supply when it is called",
+   "prompt": "Four descriptions of programming concepts and five programming concepts are shown. Link each description to the most appropriate programming concept. Not all programming concepts will be used.\n\na value that a procedure expects you to supply when it is called\n\nWhich one is this: function, procedure, parameter, global variable, local variable?",
    "answers": [
     "parameter"
    ],
@@ -5352,12 +5574,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 2(a). The mark scheme accepts: parameter",
    "working": [
     "A subroutine is a named block of code. A function always returns a value to the code that called it. A procedure carries out a task and may not return a value. A parameter is a value a subroutine expects to be given when it is called, inside the brackets. A local variable is declared and used only inside one subroutine. A global variable can be used anywhere in the program."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q2a-r4",
    "category": "programming",
-   "prompt": "Four descriptions of programming concepts and five programming concepts are shown. Link each description to the most appropriate programming concept. Not all programming concepts will be used.\n\na subroutine that will always return a value",
+   "prompt": "Four descriptions of programming concepts and five programming concepts are shown. Link each description to the most appropriate programming concept. Not all programming concepts will be used.\n\na subroutine that will always return a value\n\nWhich one is this: function, procedure, parameter, global variable, local variable?",
    "answers": [
     "function"
    ],
@@ -5370,12 +5593,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 2(a). The mark scheme accepts: function",
    "working": [
     "A subroutine is a named block of code. A function always returns a value to the code that called it. A procedure carries out a task and may not return a value. A parameter is a value a subroutine expects to be given when it is called, inside the brackets. A local variable is declared and used only inside one subroutine. A global variable can be used anywhere in the program."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q2b",
    "category": "programming",
-   "prompt": "Write the pseudocode to use a procedure named Average that passes the values 25 and 50 to the procedure.\nChoose ONE answer that earns a mark.",
+   "prompt": "Write the pseudocode to use a procedure named Average that passes the values 25 and 50 to the procedure.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "CALL Average(25, 50)"
    ],
@@ -5388,12 +5612,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 2(b). The mark scheme accepts: CALL Average(25, 50)",
    "working": [
     "In Cambridge pseudocode a procedure is run with the keyword CALL, then its identifier, then the values to pass to it in brackets, separated by commas. A procedure does not return a value, so it is not assigned, returned or output. The word PROCEDURE is used only to define it, not to use it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q2c",
    "category": "programming",
-   "prompt": "Outline the role of procedures and functions in creating a program that is easier to maintain.\nChoose ONE answer that earns a mark.",
+   "prompt": "Outline the role of procedures and functions in creating a program that is easier to maintain.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Procedures and functions divide the program into smaller manageable segments",
     "This makes the program more readable, easier to understand and easier to debug",
@@ -5415,12 +5640,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 2(c). The mark scheme accepts: Procedures and functions divide the program into smaller manageable segments / This makes the program more readable, easier to understand and easier to debug / Procedures and functions with meaningful names help to document the program / Procedures and functions may be re-used in the program, in other programs or as part of a library / Procedures and functions can reduce or eliminate repeated code",
    "working": [
     "Procedures and functions split a program into smaller parts that each do one job. Each part is easier to read, understand and debug. Meaningful names for them help document what the program does. They can be re-used in the same program, in other programs or in a library, and they reduce repeated code. They do not make the program faster or remove the need for testing."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q3",
    "category": "programming",
-   "prompt": "State what is meant by the data types integer and real. Give an example of each.\nChoose ONE answer that earns a mark.",
+   "prompt": "State what is meant by the data types integer and real. Give an example of each.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Integer: a whole number",
     "Integer example: 27",
@@ -5437,12 +5663,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 3. The mark scheme accepts: Integer: a whole number / Integer example: 27 / Real: a number that contains a fractional part / Real example: 18.75",
    "working": [
     "An integer is a whole number with no fractional part, positive or negative, such as 12 or -3. A real is a number that has a fractional part, such as 3.5. So any example with a point and digits after it is real, and an example with no fractional part is an integer. TRUE or FALSE values are BOOLEAN, not numbers."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q4b",
    "category": "programming",
-   "prompt": "Line 13 of an algorithm is OUTPUT \"The average of the numbers entered is \", Total / Limit. Write the pseudocode statement that would output the average rounded to one decimal place.\nChoose ONE answer that earns a mark.",
+   "prompt": "Line 13 of an algorithm is OUTPUT \"The average of the numbers entered is \", Total / Limit. Write the pseudocode statement that would output the average rounded to one decimal place.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "OUTPUT \"The average of the numbers entered is \", ROUND(Total / Limit, 1)"
    ],
@@ -5457,12 +5684,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 4(b). The mark scheme accepts: OUTPUT \"The average of the numbers entered is \", ROUND(Total / Limit, 1)",
    "working": [
     "ROUND(value, places) rounds a number. The first thing in the brackets is the value to round; the second is how many places after the point to keep, as a whole number (1 for one place, 2 for two). Round the whole average, so the full division Total / Limit goes inside ROUND. DIV and MOD give whole number parts and remainders, not rounded averages."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q4c",
    "category": "checks",
-   "prompt": "A corrected algorithm uses FOR Loop <- 1 TO Limit with line 08 OUTPUT \"Enter a number\", line 09 INPUT Value and line 10 Total <- Total + Value. Explain how you should alter the algorithm to make sure that all the numbers entered are between 1 and 500 inclusive. If any numbers fall outside these limits, a replacement value is requested and entered. You do not need to re-write the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "A corrected algorithm uses FOR Loop <- 1 TO Limit with line 08 OUTPUT \"Enter a number\", line 09 INPUT Value and line 10 Total <- Total + Value. Explain how you should alter the algorithm to make sure that all the numbers entered are between 1 and 500 inclusive. If any numbers fall outside these limits, a replacement value is requested and entered. You do not need to re-write the algorithm.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "After line 09 (after the input), insert a WHILE (pre-condition) loop",
     "To check if the value entered is between 1 and 500 inclusive",
@@ -5487,12 +5715,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 4(c). The mark scheme accepts: After line 09 (after the input), insert a WHILE (pre-condition) loop / To check if the value entered is between 1 and 500 inclusive / If the value is not in range, output an error message / And insert another input statement for re-input / Or: before line 08 start a REPEAT loop, and after line 09 close it by checking the value is between 1 and 500 inclusive",
    "working": [
     "Check each value straight after it is input, before it is added to the total. Use a loop for the check: a WHILE loop after the input that runs while the value is outside 1 to 500, outputs an error message and inputs the value again. Or put the prompt and input inside a REPEAT loop that ends only when the value is in range. An IF only checks once."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q5",
    "category": "programming",
-   "prompt": "Write the pseudocode statements to accept the input of a whole number from 1 to 4 inclusive, and use a CASE statement to output the number (1 to 4 inclusive) that was entered, or output the word \"ERROR\" if a 1 to 4 inclusive number was not entered. Which features belong in the pseudocode?\nChoose ONE answer that earns a mark.",
+   "prompt": "Write the pseudocode statements to accept the input of a whole number from 1 to 4 inclusive, and use a CASE statement to output the number (1 to 4 inclusive) that was entered, or output the word \"ERROR\" if a 1 to 4 inclusive number was not entered. Which features belong in the pseudocode?\nThis question is worth 5 marks: give ONE point that earns a mark.",
    "answers": [
     "INPUT Number",
     "CASE OF Number ... ENDCASE",
@@ -5513,12 +5742,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 5. The mark scheme accepts: INPUT Number / CASE OF Number ... ENDCASE / A branch such as 1 : OUTPUT Number / Branches for all of 1, 2, 3 and 4 / OTHERWISE OUTPUT \"ERROR\"",
    "working": [
     "A CASE statement chooses one branch by the value of a variable: CASE OF Number, then one line per value such as 1 : OUTPUT Number, and it finishes with ENDCASE. Values 1, 2, 3 and 4 each need a branch. OTHERWISE catches every other value, so it is where \"ERROR\" is output. ELSE belongs to IF statements, not CASE. Input the number before the CASE."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-21-q6b",
    "category": "design",
-   "prompt": "A flowchart inputs Limit, then inputs Limit values into Numbers[]. It then repeatedly compares Numbers[Count] with Numbers[Count + 1], swapping them when the first is larger, until a pass makes no swaps. Finally it calculates Result <- Limit DIV 2 + 1 and outputs Numbers[Result]. Outline the processes involved in the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart inputs Limit, then inputs Limit values into Numbers[]. It then repeatedly compares Numbers[Count] with Numbers[Count + 1], swapping them when the first is larger, until a pass makes no swaps. Finally it calculates Result <- Limit DIV 2 + 1 and outputs Numbers[Result]. Outline the processes involved in the algorithm.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "A set of numbers is input and stored in an array",
     "The numbers are bubble sorted into ascending order",
@@ -5538,7 +5768,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 21, Question 6(b). The mark scheme accepts: A set of numbers is input and stored in an array / The numbers are bubble sorted into ascending order / The middle (median) value is found and output",
    "working": [
     "Trace the flowchart. First, Limit numbers are input and stored in the array Numbers. Then next-door values are compared and swapped when the first is larger, repeating until a pass has no swaps: a bubble sort, smallest first (ascending). Limit DIV 2 + 1 is the position in the middle of the sorted list, so the value output is the middle value, called the median."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q1",
@@ -5558,12 +5789,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 1. The mark scheme accepts: flowchart",
    "working": [
     "Design methods plan a solution before coding. They are structure diagrams, flowcharts and pseudocode. A flowchart shows the steps of an algorithm with symbols joined by arrows. Analysis, coding and testing are life cycle stages, decomposition is part of analysis, and trace tables and test data are used for testing."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q3",
    "category": "design",
-   "prompt": "Identify three different tasks in the analysis stage of the program development life cycle.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify three different tasks in the analysis stage of the program development life cycle.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Abstraction",
     "Decomposition",
@@ -5583,13 +5815,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 3. The mark scheme accepts: Abstraction / Decomposition / Identification of the problem / Identification of the requirements",
    "working": [
-    "Analysis is the first stage of the life cycle. Its tasks are: identify the problem, identify the requirements of the solution, abstraction (remove details that do not matter) and decomposition (break the problem into smaller parts). Flowcharts, pseudocode and structure diagrams are design. Code, test data and trace tables belong to coding and testing."
-   ]
+    "Analysis is the first stage of the life cycle. Its tasks are: identify the problem, identify the requirements of the solution, abstraction (remove details that do not matter) and decomposition (break the problem into smaller parts). Compare: Drawing a flowchart, Writing pseudocode and Drawing a structure diagram are design tasks. Writing program code is coding. Choosing test data and Completing a trace table belong to testing."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q4a",
    "category": "checks",
-   "prompt": "A program needs to make sure the characters input for a product code meet these rules: the product code is six characters in length; the first two characters must be \"PD\"; the last four characters must be a number in the range 1000 to 9999 inclusive. Identify three validation checks and state how each check would make sure the product code met one of these rules.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program needs to make sure the characters input for a product code meet these rules: the product code is six characters in length; the first two characters must be \"PD\"; the last four characters must be a number in the range 1000 to 9999 inclusive. Identify three validation checks and state how each check would make sure the product code met one of these rules.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Length check",
     "To ensure the product code entered is 6 characters in length",
@@ -5611,13 +5844,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 4(a). The mark scheme accepts: Length check / To ensure the product code entered is 6 characters in length / Format check / To ensure the first two characters of the product code entered are \"PD\" / Range check / To ensure the value of the last four figures of the product code is between 1000 and 9999",
    "working": [
-    "Match each rule to a check. 'Six characters' is about the number of characters: a length check. 'First two characters must be PD' is about a fixed pattern of characters: a format check. 'A number from 1000 to 9999' is about a lower and upper limit for a value: a range check. Say what each check tests for this product code."
-   ]
+    "Match each rule to a check. 'Six characters' is about how many characters: a Length check. 'First two characters must be PD' is a fixed pattern of characters: a format check. 'A number from 1000 to 9999' is a lower and upper limit: a range check. Compare: a Presence check only tests the code is not blank, a Type check tests the data type, and a Check digit is calculated from the other digits. Say what each check tests for this code."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q4bi",
    "category": "programming",
-   "prompt": "The product code is stored in the variable Product. Write the pseudocode to make sure that the product code is six characters in length.\nChoose ONE answer that earns a mark.",
+   "prompt": "The product code is stored in the variable Product. Write the pseudocode to make sure that the product code is six characters in length.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "REPEAT INPUT Product UNTIL LENGTH(Product) = 6"
    ],
@@ -5630,12 +5864,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 4(b)(i). The mark scheme accepts: REPEAT INPUT Product UNTIL LENGTH(Product) = 6",
    "working": [
     "LENGTH(Product) gives the number of characters in Product. To keep asking until the code is exactly six characters, put the input inside a REPEAT loop and end it with UNTIL LENGTH(...) = 6. Comparing Product itself with 6 compares the code, not how many characters it has."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q4bii",
    "category": "programming",
-   "prompt": "The product code is stored in the variable Product. Write the pseudocode to make sure that the first two characters of the product code are \"PD\".\nChoose ONE answer that earns a mark.",
+   "prompt": "The product code is stored in the variable Product. Write the pseudocode to make sure that the first two characters of the product code are \"PD\".\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "REPEAT INPUT Product UNTIL SUBSTRING(Product, 1, 2) = \"PD\""
    ],
@@ -5649,12 +5884,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 4(b)(ii). The mark scheme accepts: REPEAT INPUT Product UNTIL SUBSTRING(Product, 1, 2) = \"PD\"",
    "working": [
     "SUBSTRING(String, Start, Number) takes part of a string: it begins at position Start (the first character is position 1) and takes Number characters. The first two characters means starting at position 1 and taking 2 characters. Compare that with \"PD\" in the UNTIL condition of a REPEAT loop around the input. The string goes first in the brackets."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q5",
    "category": "programming",
-   "prompt": "A high-level programming language makes use of arithmetic, Boolean and logical operators. State how each type of operator is used. Give an example statement, in pseudocode, for each one.\nChoose ONE answer that earns a mark.",
+   "prompt": "A high-level programming language makes use of arithmetic, Boolean and logical operators. State how each type of operator is used. Give an example statement, in pseudocode, for each one.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Arithmetic: used in calculations",
     "Example: A <- B + C",
@@ -5676,12 +5912,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 5. The mark scheme accepts: Arithmetic: used in calculations / Example: A <- B + C / Boolean: used for operations with TRUE or FALSE values / Example: IF B AND C / Logical: used in comparisons in conditional (selection) statements / Example: IF B > C",
    "working": [
     "Arithmetic operators (+, -, *, /, DIV, MOD) do calculations, for example in an assignment. Logical operators (=, <, <=, >, >=, <>) compare two values, for example in an IF condition. Boolean operators (AND, OR, NOT) work on TRUE and FALSE values, joining or reversing conditions. FOR is a loop, not an operator."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q6a",
    "category": "design",
-   "prompt": "Numbers are input. The number 9999.9 is the last number to be input and is ignored. Write an algorithm in pseudocode to total the numbers input and to output the total. You do not need to validate the input. Which features belong in the algorithm?\nChoose ONE answer that earns a mark.",
+   "prompt": "Numbers are input. The number 9999.9 is the last number to be input and is ignored. Write an algorithm in pseudocode to total the numbers input and to output the total. You do not need to validate the input. Which features belong in the algorithm?\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Total <- Total + Value inside the loop",
     "Input more than one number: INPUT Value before and inside the loop",
@@ -5702,12 +5939,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 6(a). The mark scheme accepts: Total <- Total + Value inside the loop / Input more than one number: INPUT Value before and inside the loop / Total <- 0 before the loop / WHILE Value <> 9999.9 ... ENDWHILE / OUTPUT Total after the loop",
    "working": [
     "To total numbers: set Total to 0 before the loop, and inside the loop add each value with Total <- Total + Value. 9999.9 ends the input and must not be added, so INPUT the first value before the loop, use WHILE Value <> 9999.9, and INPUT the next value at the end of the loop body. Output Total once, after the loop. A FOR loop cannot wait for a stop value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q6b",
    "category": "design",
-   "prompt": "Numbers are input. The number 9999.9 is the last number to be input and is ignored. Write an algorithm in pseudocode to count and output the number of input values that are greater than 100. You do not need to validate the input. Which features belong in the algorithm?\nChoose ONE answer that earns a mark.",
+   "prompt": "Numbers are input. The number 9999.9 is the last number to be input and is ignored. Write an algorithm in pseudocode to count and output the number of input values that are greater than 100. You do not need to validate the input. Which features belong in the algorithm?\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Counter <- Counter + 1",
     "IF Value > 100 THEN ... ENDIF around the counting statement",
@@ -5728,13 +5966,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 6(b). The mark scheme accepts: Counter <- Counter + 1 / IF Value > 100 THEN ... ENDIF around the counting statement / Input more than one number: INPUT Value before and inside the loop / Counter <- 0 before the loop / WHILE Value <> 9999.9 ... ENDWHILE / OUTPUT Counter after the loop",
    "working": [
-    "To count values: set Counter to 0 before the loop, and add 1 with Counter <- Counter + 1 only when the value is greater than 100, so wrap it in IF Value > 100. 9999.9 ends input: INPUT a value before the loop, use WHILE Value <> 9999.9, and INPUT again inside the loop. Output Counter once, after the loop. Adding Value would total, not count."
-   ]
+    "To count values: set Counter to 0 before the loop, never inside it. Each time a value is greater than 100, add 1 to Counter, so wrap that statement in IF Value > 100. Adding Value to Counter would total, not count. 9999.9 ends input: INPUT a value before the loop, use WHILE Value <> 9999.9, and INPUT again inside the loop. Output Counter once, after the loop."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q7a",
    "category": "programming",
-   "prompt": "An algorithm finds the maximum and minimum values in an array of 1000 positive numbers:\n01 Max <- List[1]\n02 Min <- List[1]\n03 FOR Counter <- 2 TO 1000\n04   IF List[Counter] < Max\n05     THEN\n06       Max <- List[Counter]\n07   ENDIF\n08   IF List[Count] < Min\n09     THEN\n10       Min <- List[Counter]\n11   ENDWHILE\n12 NEXT Counter\n13 OUTPUT \"Maximum value is \", Max\n14 OUTPUT \"Minimum value is \", Min\nGive a line number for each of these types of statement: assignment, selection, iteration.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm finds the maximum and minimum values in an array of 1000 positive numbers:\n01 Max <- List[1]\n02 Min <- List[1]\n03 FOR Counter <- 2 TO 1000\n04   IF List[Counter] < Max\n05     THEN\n06       Max <- List[Counter]\n07   ENDIF\n08   IF List[Count] < Min\n09     THEN\n10       Min <- List[Counter]\n11   ENDWHILE\n12 NEXT Counter\n13 OUTPUT \"Maximum value is \", Max\n14 OUTPUT \"Minimum value is \", Min\nGive a line number for each of these types of statement: assignment, selection, iteration.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Assignment: line 01",
     "Assignment: line 02",
@@ -5756,12 +5995,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 7(a). The mark scheme accepts: Assignment: line 01 / Assignment: line 02 / Assignment: line 06 / Assignment: line 10 / Selection: line 04 / Selection: line 08 / Iteration: line 03",
    "working": [
     "Assignment gives a variable a value with <-, as in Max <- List[1]. Selection chooses what to do with a condition, using IF. Iteration repeats code, using a loop such as FOR. Find each kind of line in the code. Lines with OUTPUT are output statements, and NEXT only ends the loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-22-q9b",
    "category": "design",
-   "prompt": "A flowchart repeatedly passes through the array List[1:5], comparing List[B] with List[B + 1] and swapping them using T when List[B] is not greater than List[B + 1], setting A to TRUE on a swap. It stops after a pass in which A stays FALSE. Describe what the algorithm represented by the flowchart is doing.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart repeatedly passes through the array List[1:5], comparing List[B] with List[B + 1] and swapping them using T when List[B] is not greater than List[B + 1], setting A to TRUE on a swap. It stops after a pass in which A stays FALSE. Describe what the algorithm represented by the flowchart is doing.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "It (bubble) sorts the data in the array",
     "Into descending order"
@@ -5780,12 +6020,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 22, Question 9(b). The mark scheme accepts: It (bubble) sorts the data in the array / Into descending order",
    "working": [
     "Next-door values are compared and swapped, with a flag showing whether a swap happened, repeating until a pass makes no swaps: that is a bubble sort. Look at when it swaps: when List[B] is not greater than List[B + 1], meaning when the first is smaller. So larger values move to the front and smaller ones move to the end, giving largest first."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q3",
    "category": "programming",
-   "prompt": "Describe the characteristics of the string and char data types and give an example of each.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe the characteristics of the string and char data types and give an example of each.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "String: a group of characters consisting of letters, numbers and special characters",
     "String example: Cambridge2024",
@@ -5806,12 +6047,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 3. The mark scheme accepts: String: a group of characters consisting of letters, numbers and special characters / String example: Cambridge2024 / Char: a single character / Char example: X",
    "working": [
     "CHAR stores one single character, such as a letter, digit or symbol, for example 'A'. STRING stores a group of characters, which can mix letters, numbers and special characters, for example a word with digits in it. So an example with more than one character is a string, and only one character is a char. TRUE and numbers with a fractional part are other data types."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q4b",
    "category": "programming",
-   "prompt": "An algorithm stores the last name, first name and city of up to 50 people in People[1:50, 1:3], with every element first set to \"\". Write the pseudocode that you could add to the end of this algorithm to output the contents of the array. Make sure that the output ends when the data in the array ends. Which features belong in the pseudocode?\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm stores the last name, first name and city of up to 50 people in People[1:50, 1:3], with every element first set to \"\". Write the pseudocode that you could add to the end of this algorithm to output the contents of the array. Make sure that the output ends when the data in the array ends. Which features belong in the pseudocode?\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "An appropriate loop, e.g. WHILE ... DO ... ENDWHILE with Count <- 1 before it",
     "A check that the array maximum is not exceeded: Count <= 50",
@@ -5832,12 +6074,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 4(b). The mark scheme accepts: An appropriate loop, e.g. WHILE ... DO ... ENDWHILE with Count <- 1 before it / A check that the array maximum is not exceeded: Count <= 50 / A check that the current array element is not empty: People[Count, 1] <> \"\" / Output of all three array elements per row: People[Count, 1], People[Count, 2], People[Count, 3]",
    "working": [
     "Use a loop such as WHILE, with Count <- 1 before it. The loop must keep going only while both checks are true, so join them with AND: Count has not passed the array size of 50 rows, and the current row is not empty (column 1 is not \"\"). Inside, output all three columns of that row, People[Count, 1], People[Count, 2] and People[Count, 3], then add 1 to Count."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q4c",
    "category": "checks",
-   "prompt": "A corrected algorithm sets Count <- 1, then in a REPEAT loop inputs a person's last name, first name and city into People[Count, 1], People[Count, 2] and People[Count, 3] (line 18 is the last of these inputs), asks whether to enter another name and adds 1 to Count. Explain how you could alter the algorithm to make sure that the number of elements being added to the array does not exceed the maximum size of the array (50 elements).\nChoose ONE answer that earns a mark.",
+   "prompt": "A corrected algorithm sets Count <- 1, then in a REPEAT loop inputs a person's last name, first name and city into People[Count, 1], People[Count, 2] and People[Count, 3] (line 18 is the last of these inputs), asks whether to enter another name and adds 1 to Count. Explain how you could alter the algorithm to make sure that the number of elements being added to the array does not exceed the maximum size of the array (50 elements).\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Declare and use a variable that is set to the maximum size of the array",
     "At the start of the program",
@@ -5859,12 +6102,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 4(c). The mark scheme accepts: Declare and use a variable that is set to the maximum size of the array / At the start of the program / After line 18 / Check that the value of the counting variable is not greater than the array maximum / If it is, do not allow any more entries (e.g. set Response to 'N' or add a condition to the UNTIL statement)",
    "working": [
     "The array holds at most 50 rows. Declare a variable at the start of the program set to the maximum size, 50. After the last input of each person (line 18), check whether the counting variable has gone past this maximum. If it has, no more entries are allowed, for example by setting Response to 'N' or adding the check to the UNTIL condition."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q5b",
    "category": "design",
-   "prompt": "A flowchart sets L <- 0, S <- 10000, T <- 0 and A <- 0, inputs Limit, then inputs Limit values. For each value it sets L to the value if it is greater than L, otherwise sets S to the value if it is less than S, and adds the value to T. Finally A <- T / Limit and L, S, T and A are output. Outline the purpose of the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart sets L <- 0, S <- 10000, T <- 0 and A <- 0, inputs Limit, then inputs Limit values. For each value it sets L to the value if it is greater than L, otherwise sets S to the value if it is less than S, and adds the value to T. Finally A <- T / Limit and L, S, T and A are output. Outline the purpose of the algorithm.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Finds and outputs the largest of a set of numbers",
     "Finds and outputs the smallest of a set of numbers",
@@ -5882,12 +6126,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 5(b). The mark scheme accepts: Finds and outputs the largest of a set of numbers / Finds and outputs the smallest of a set of numbers / Finds and outputs the total of a set of numbers / Finds and outputs the average of a set of numbers",
    "working": [
     "Trace each variable. L starts at 0 and takes any value greater than itself, so it ends as the largest value. S starts very high and takes any value smaller than itself, so it ends as the smallest. T adds every value, so it is the total. A is T / Limit, the total divided by how many values, so it is the average. All four are output."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q5c",
    "category": "programming",
-   "prompt": "An algorithm finds the largest, smallest, total and average of a set of numbers using the identifiers L, S, T and A. Explain why the identifiers L, S, T and A may not be appropriate to use as identifiers and how they could be improved.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm finds the largest, smallest, total and average of a set of numbers using the identifiers L, S, T and A. Explain why the identifiers L, S, T and A may not be appropriate to use as identifiers and how they could be improved.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "They are single letters",
     "So they do not give any indication of what values they hold",
@@ -5907,12 +6152,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 5(c). The mark scheme accepts: They are single letters / So they do not give any indication of what values they hold / Identifiers should have meaningful names so the program is maintainable",
    "working": [
     "An identifier is the name of a variable, constant, array or procedure. A single letter tells the reader nothing about what is stored there. Meaningful identifiers, such as words describing the value held, show the purpose of each variable, which makes the program easier to understand and maintain. Single letters still run correctly and do not change memory use."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q5d",
    "category": "programming",
-   "prompt": "In an algorithm, L holds the largest value, S the smallest value, T the total and A the average. State a more appropriate identifier for each of the variables L, S, T and A.\nChoose ONE answer that earns a mark.",
+   "prompt": "In an algorithm, L holds the largest value, S the smallest value, T the total and A the average. State a more appropriate identifier for each of the variables L, S, T and A.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "L: Largest",
     "L: Maximum",
@@ -5938,12 +6184,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 5(d). The mark scheme accepts: L: Largest / L: Maximum / S: Smallest / S: Minimum / T: Total / T: Sum / A: Average / A: Mean",
    "working": [
     "A meaningful identifier is a word that says what the variable holds. L holds the largest value, S the smallest value, T the total, A the average. Choose a word with the same meaning as each of these. Words such as Limit, Size or Temp describe other things, so they would mislead a reader."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q6a",
    "category": "checks",
-   "prompt": "A program is to be written that will accept integers that are between the values of 1 and 80 inclusive. Give examples of normal, abnormal and extreme test data that could be used to make sure the program only accepts valid data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program is to be written that will accept integers that are between the values of 1 and 80 inclusive. Give examples of normal, abnormal and extreme test data that could be used to make sure the program only accepts valid data.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal: 75",
     "Abnormal: 101",
@@ -5963,12 +6210,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 6(a). The mark scheme accepts: Normal: 75 / Abnormal: 101 / Extreme: 80",
    "working": [
     "The valid range is 1 to 80 inclusive. Normal data is a typical value inside the range that is accepted. Abnormal data is a value outside the range that is rejected. Extreme data is the very largest or very smallest value that is still accepted, so it is one of the two ends of the range. A value just outside the range is never extreme."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q6b",
    "category": "checks",
-   "prompt": "Describe what is meant by extreme test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe what is meant by extreme test data.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Test data to test the limits of acceptable data entry",
     "It uses only the largest and smallest acceptable values"
@@ -5984,12 +6232,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 6(b). The mark scheme accepts: Test data to test the limits of acceptable data entry / It uses only the largest and smallest acceptable values",
    "working": [
     "Extreme test data tests the limits of what is accepted. It uses only the largest and smallest values that are still valid, the two ends of the range. Example: for 1 to 100 the extreme values are 1 and 100. Values just outside the range are tested with boundary data, and invalid values with abnormal data."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j24-23-q7a",
    "category": "programming",
-   "prompt": "The string operation SUBSTRING(FullText, X, Y) returns a string from FullText beginning at position X that is Y characters long. The first character in FullText is in position 1. Write the pseudocode statements to store the string \"IGCSE Computer Science at Cambridge\" in FullText, extract and display the words \"Computer Science\" from the string and store it in a suitable variable, and output the original string in upper case.\nChoose ONE answer that earns a mark.",
+   "prompt": "The string operation SUBSTRING(FullText, X, Y) returns a string from FullText beginning at position X that is Y characters long. The first character in FullText is in position 1. Write the pseudocode statements to store the string \"IGCSE Computer Science at Cambridge\" in FullText, extract and display the words \"Computer Science\" from the string and store it in a suitable variable, and output the original string in upper case.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "FullText <- \"IGCSE Computer Science at Cambridge\"",
     "PartText <- SUBSTRING(FullText, 7, 16)",
@@ -6010,7 +6259,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2024 Paper 23, Question 7(a). The mark scheme accepts: FullText <- \"IGCSE Computer Science at Cambridge\" / PartText <- SUBSTRING(FullText, 7, 16) / UCASE(FullText) / OUTPUT PartText, UCASE(FullText)",
    "working": [
     "Store the string with FullText <- \"...\". SUBSTRING(FullText, X, Y) starts at position X and takes Y characters, string first. Count every character from 1, spaces included, to find where 'Computer' starts, then count the characters in 'Computer Science' including its space. Store this part in a new variable such as PartText. UCASE(FullText) gives the original string in upper case."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q1",
@@ -6029,13 +6279,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 1. The mark scheme accepts: visual check",
    "working": [
-    "Verification checks that data was entered or copied exactly as the original. Its methods are a visual check, where a person reads the entered data and compares it with the original, and double entry, where data is typed twice and compared. Length, range, type, presence and format checks and check digits are validation."
-   ]
+    "Verification checks that data was entered or copied exactly as the original. In a visual check, a person reads the entered data and compares it with the original. Validation checks that data is sensible. Compare: a length check counts characters, a range check tests limits, a type check tests the data type, a presence check tests the field is not blank, and a format check tests a pattern."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q3-r1",
    "category": "programming",
-   "prompt": "Four operators and three types of operator are shown. Link each operator to its correct operator type.\n\n>=",
+   "prompt": "Four operators and three types of operator are shown. Link each operator to its correct operator type.\n\n>=\n\nWhich one is this: Boolean, Arithmetic, Logical?",
    "answers": [
     "Logical"
    ],
@@ -6046,12 +6297,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 3. The mark scheme accepts: Logical",
    "working": [
     "Arithmetic operators do calculations: +, -, *, /, DIV and MOD. Logical operators compare two values and give TRUE or FALSE: =, <, <=, >, >= and <>. Boolean operators combine or reverse TRUE and FALSE values: AND, OR and NOT. Sort each operator into one of these groups."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q3-r2",
    "category": "programming",
-   "prompt": "Four operators and three types of operator are shown. Link each operator to its correct operator type.\n\nAND",
+   "prompt": "Four operators and three types of operator are shown. Link each operator to its correct operator type.\n\nAND\n\nWhich one is this: Boolean, Arithmetic, Logical?",
    "answers": [
     "Boolean"
    ],
@@ -6062,12 +6314,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 3. The mark scheme accepts: Boolean",
    "working": [
     "Arithmetic operators do calculations: +, -, *, /, DIV and MOD. Logical operators compare two values and give TRUE or FALSE: =, <, <=, >, >= and <>. Boolean operators combine or reverse TRUE and FALSE values: AND, OR and NOT. Sort each operator into one of these groups."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q3-r3",
    "category": "programming",
-   "prompt": "Four operators and three types of operator are shown. Link each operator to its correct operator type.\n\nDIV",
+   "prompt": "Four operators and three types of operator are shown. Link each operator to its correct operator type.\n\nDIV\n\nWhich one is this: Boolean, Arithmetic, Logical?",
    "answers": [
     "Arithmetic"
    ],
@@ -6078,12 +6331,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 3. The mark scheme accepts: Arithmetic",
    "working": [
     "Arithmetic operators do calculations: +, -, *, /, DIV and MOD. Logical operators compare two values and give TRUE or FALSE: =, <, <=, >, >= and <>. Boolean operators combine or reverse TRUE and FALSE values: AND, OR and NOT. Sort each operator into one of these groups."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q3-r4",
    "category": "programming",
-   "prompt": "Four operators and three types of operator are shown. Link each operator to its correct operator type.\n\n+",
+   "prompt": "Four operators and three types of operator are shown. Link each operator to its correct operator type.\n\n+\n\nWhich one is this: Boolean, Arithmetic, Logical?",
    "answers": [
     "Arithmetic"
    ],
@@ -6094,12 +6348,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 3. The mark scheme accepts: Arithmetic",
    "working": [
     "Arithmetic operators do calculations: +, -, *, /, DIV and MOD. Logical operators compare two values and give TRUE or FALSE: =, <, <=, >, >= and <>. Boolean operators combine or reverse TRUE and FALSE values: AND, OR and NOT. Sort each operator into one of these groups."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q4",
    "category": "design",
-   "prompt": "Identify three stages of the program development life cycle from the following list of words: analysis, decomposition, design, input, pseudocode, testing, variable.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify three stages of the program development life cycle from the following list of words: analysis, decomposition, design, input, pseudocode, testing, variable.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "analysis",
     "design",
@@ -6116,12 +6371,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 4. The mark scheme accepts: analysis / design / testing",
    "working": [
     "The program development life cycle has four stages: analysis, design, coding and testing. Abstraction and decomposition are tasks inside analysis, not stages. Pseudocode and flowcharts are methods used in design. Input and variable are programming ideas, not stages."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q5",
    "category": "design",
-   "prompt": "Describe three methods that are used to design and construct a solution to a problem.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe three methods that are used to design and construct a solution to a problem.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Structure diagram",
     "A hierarchical diagram showing the breakdown of a computer program into sub-programs",
@@ -6143,8 +6399,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 5. The mark scheme accepts: Structure diagram / A hierarchical diagram showing the breakdown of a computer program into sub-programs / Flowchart / A diagram showing the ordered steps to complete a computer program / Pseudocode / Shows what a program does in plain language",
    "working": [
-    "Design methods show a solution before it is coded. A structure diagram is a hierarchy that breaks a program into smaller sub-programs. A flowchart shows the ordered steps of an algorithm using symbols and arrows. Pseudocode writes the steps in plain language that looks like code. Trace tables and test data are used in testing, and truth tables belong to logic circuits."
-   ]
+    "Design methods show a solution before it is coded. A Structure diagram is a hierarchy that breaks a program into smaller sub-programs. A Flowchart shows the ordered steps using symbols and arrows. Pseudocode writes the steps in plain language that looks like code. Compare: a Trace table records variable values while an algorithm is tested, Test data is values used to check a program works, and a Truth table shows every output of a logic circuit."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q6a-g1",
@@ -6164,7 +6421,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 6(a). The mark scheme accepts: T <- 0",
    "working": [
     "T counts the zeros: T <- T + 1 runs each time a zero is found. A count must start at a known value before the loop, or adding 1 to it has no meaning. I is already set before the loop, so gap [1] sets the other running value, T, to its starting value. No zeros have been counted yet."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q6a-g2",
@@ -6181,7 +6439,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 6(a). The mark scheme accepts: = 0",
    "working": [
     "When the IF is true, T (the count of zeros) goes up by 1. When it is false, the value is added to I (the total of non-zero values). So the condition must be true exactly when the element A[C] is zero. Use the comparison operator for 'equal to' with 0."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q6a-g3",
@@ -6202,12 +6461,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 6(a). The mark scheme accepts: NEXT C / NEXT",
    "working": [
     "Every FOR loop must be closed so the program knows where the repeated code ends. In Cambridge pseudocode a FOR loop ends with NEXT followed by the loop counter. The counter here is C, the variable named in FOR C <- 1 TO 50. ENDWHILE and UNTIL close other kinds of loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q6b",
    "category": "programming",
-   "prompt": "An algorithm counts the number of zeros stored in the array A[1:50] in T and totals the non-zero values in I. Write the pseudocode to display, with suitable messages, the number of zeros stored in the array and the total of the non-zero values.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm counts the number of zeros stored in the array A[1:50] in T and totals the non-zero values in I. Write the pseudocode to display, with suitable messages, the number of zeros stored in the array and the total of the non-zero values.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "OUTPUT \"Number of zeros in the array is \", T",
     "OUTPUT \"Total of non-zero elements in the array is \", I"
@@ -6222,12 +6482,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 6(b). The mark scheme accepts: OUTPUT \"Number of zeros in the array is \", T / OUTPUT \"Total of non-zero elements in the array is \", I",
    "working": [
     "OUTPUT can show a message and a value together, separated by a comma. T is the count of zeros: it goes up by 1 for each zero. I is the total of the non-zero values: each one is added to it. Match each message with the variable that holds that result. INPUT reads data in; it does not display results."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q6c",
    "category": "programming",
-   "prompt": "An algorithm uses array A to store 50 integers, T to count the zeros, C as the FOR loop counter (index), and I to total the non-zero values. Meaningful identifiers have not been used. Suggest suitable meaningful identifiers for A, T, C and I.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm uses array A to store 50 integers, T to count the zeros, C as the FOR loop counter (index), and I to total the non-zero values. Meaningful identifiers have not been used. Suggest suitable meaningful identifiers for A, T, C and I.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "A: MyArray",
     "T: Counter",
@@ -6246,12 +6507,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 6(c). The mark scheme accepts: A: MyArray / T: Counter / C: Index / I: Total",
    "working": [
     "A meaningful identifier says what each item does. A is the array holding all the values. T counts the zeros, so it is a counter. C is the FOR loop counter used as the position in the array, which is an index. I adds up the non-zero values, so it is a total. Pick the name that matches each job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-21-q9b",
    "category": "programming",
-   "prompt": "A corrected algorithm outputs \"Temperature too high\" if Temperature > 38.0, \"Temperature too low\" if Temperature < 35.0, and \"Temperature normal\" if Temperature >= 35.0 AND Temperature <= 38.0. Identify the temperature range used.\nChoose ONE answer that earns a mark.",
+   "prompt": "A corrected algorithm outputs \"Temperature too high\" if Temperature > 38.0, \"Temperature too low\" if Temperature < 35.0, and \"Temperature normal\" if Temperature >= 35.0 AND Temperature <= 38.0. Identify the temperature range used.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Greater than or equal to 35",
     "And less than or equal to 38"
@@ -6267,7 +6529,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 21, Question 9(b). The mark scheme accepts: Greater than or equal to 35 / And less than or equal to 38",
    "working": [
     "Read the 'normal' condition: Temperature >= 35.0 AND Temperature <= 38.0. The symbol >= means 'greater than or equal to' and <= means 'less than or equal to', so both 35 and 38 count as normal. Values below 35 are too low and values above 38 are too high."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q1",
@@ -6289,8 +6552,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 1. The mark scheme accepts: structure diagrams.",
    "working": [
-    "There are three standard design methods for showing a solution: pseudocode, flowcharts and structure diagrams. A structure diagram shows how a problem is broken into smaller sub-problems, as a hierarchy. Trace tables and test data are used for testing, and truth tables are for logic circuits."
-   ]
+    "There are three standard design methods for showing a solution. Two of them are pseudocode and flowcharts. The third shows how a problem is broken into smaller sub-problems, drawn as a hierarchy with the whole program at the top and its modules below. Trace tables and test data are used for testing, and truth tables are for logic circuits."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q2",
@@ -6313,12 +6577,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 2. The mark scheme accepts: IF X = 7 THEN Y <- 21 ENDIF",
    "working": [
     "Selection means choosing what to do based on a condition, using IF ... THEN ... ENDIF or CASE. Iteration means repeating, using FOR, WHILE or REPEAT. DECLARE creates a variable, CALL runs a procedure and <- assigns a value. Find the statement that tests a condition and acts only if it is true."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q4b",
    "category": "design",
-   "prompt": "A corrected bubble sort uses WHILE Swapped = TRUE AND Pass <= Limit - 1 DO, sets Swapped <- FALSE at the start of each pass and Swapped <- TRUE when a swap is made, uses FOR Counter <- 1 TO Limit - Pass for the inner loop, and adds 1 to Pass after each pass. Explain why the corrected bubble sort algorithm is efficient.\nChoose ONE answer that earns a mark.",
+   "prompt": "A corrected bubble sort uses WHILE Swapped = TRUE AND Pass <= Limit - 1 DO, sets Swapped <- FALSE at the start of each pass and Swapped <- TRUE when a swap is made, uses FOR Counter <- 1 TO Limit - Pass for the inner loop, and adds 1 to Pass after each pass. Explain why the corrected bubble sort algorithm is efficient.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "It uses a flag (set to FALSE at the start of each pass) to show if a swap has been made",
     "So the loop stops as soon as the list has been sorted",
@@ -6339,7 +6604,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 4(b). The mark scheme accepts: It uses a flag (set to FALSE at the start of each pass) to show if a swap has been made / So the loop stops as soon as the list has been sorted / The limit of the inner loop is reduced after each pass / So the number of comparisons needed is reduced",
    "working": [
     "The algorithm is efficient for two reasons. A flag, Swapped, is set to FALSE at the start of each pass and TRUE when a swap happens; if a pass makes no swaps the list is sorted, so the loop stops early. Also, each pass puts the next largest value in its final place, so the inner loop's limit, Limit - Pass, gets smaller and fewer comparisons are made."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q5a",
@@ -6361,12 +6627,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 5(a). The mark scheme accepts: Design / Coding / Testing",
    "working": [
     "The program development life cycle has four stages: analysis, design, coding and testing. Abstraction and decomposition are tasks done inside analysis. Pseudocode and flowcharts are methods used in design. Validation and iteration are programming ideas, not stages."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q5b",
    "category": "design",
-   "prompt": "Describe the analysis stage of the program development life cycle.\nChoose ONE answer that earns a mark.",
+   "prompt": "Describe the analysis stage of the program development life cycle.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Abstraction",
     "Removing irrelevant information and keeping the key elements of the problem",
@@ -6389,13 +6656,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 5(b). The mark scheme accepts: Abstraction / Removing irrelevant information and keeping the key elements of the problem / Decomposition of the problem / Breaking the problem into inputs, processes and outputs / Identification of the problem / Identification of the requirements of the solution / Research into the problem by data collection",
    "working": [
-    "Analysis is the first stage. It identifies the problem and the requirements of the solution, and may research the problem by collecting data. It uses abstraction, which removes details that do not matter and keeps the key ones, and decomposition, which breaks the problem into inputs, processes and outputs. Flowcharts are design, writing code is coding, and test data and trace tables are testing."
-   ]
+    "Analysis is the first stage. It identifies the problem and the requirements of the solution, and may research the problem by collecting data. It removes details that do not matter and keeps the key elements of the problem. It uses decomposition, which breaks the problem into inputs, processes and outputs. Flowcharts and pseudocode are design, writing code is coding, and test data and trace tables are testing."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q6",
    "category": "checks",
-   "prompt": "Outline one type of verification check that could be used when inputting data.\nChoose ONE answer that earns a mark.",
+   "prompt": "Outline one type of verification check that could be used when inputting data.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Visual check",
     "Double entry check",
@@ -6415,8 +6683,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 6. The mark scheme accepts: Visual check / Double entry check / Looking at the data that has been entered and confirming it is correct or correcting errors / Data is entered twice and the two entries are compared; if they do not match, re-entry is requested",
    "working": [
-    "Verification checks that data was entered or copied exactly as the original. In a visual check, a person looks at the data entered, compares it with the original and corrects any errors. In double entry, the data is typed twice; the computer compares the two and asks for re-entry if they differ. Range, presence and length checks and check digits are validation."
-   ]
+    "Verification checks that data was entered or copied exactly as the original. Visual check: a person looks at the data entered, compares it with the original and corrects any errors. Double entry: the data is typed twice, and the computer asks for re-entry if the two differ. Compare validation: a Range check tests the data is between limits, a Presence check tests it is not blank, and a Check digit is calculated from the other digits."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q7b",
@@ -6440,12 +6709,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 7(b). The mark scheme accepts: It multiplies the input number by one less than itself repeatedly, until the value is 1 / It calculates the number of permutations of all the numbers up to the input value",
    "working": [
     "Trace with Value 4: Answer starts at 4. Count goes 3, 2, 1, so Answer becomes 4 * 3 = 12, then 12 * 2 = 24, then 24 * 1 = 24. The number is multiplied by each number below it down to 1. This result is the number of different orders (permutations) that this many items can be arranged in."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q7c",
    "category": "programming",
-   "prompt": "An algorithm inputs Value until -1 is input. For each Value it sets Answer <- Value, then runs FOR Count <- Value - 1 TO 1 STEP -1 with Answer <- Answer * Count inside the loop. Describe the problem that would be caused in this algorithm if a Value of 1, 0 or less than -1 was input.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs Value until -1 is input. For each Value it sets Answer <- Value, then runs FOR Count <- Value - 1 TO 1 STEP -1 with Answer <- Answer * Count inside the loop. Describe the problem that would be caused in this algorithm if a Value of 1, 0 or less than -1 was input.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "The program would accept the value and enter the FOR loop",
     "Count would keep reducing by 1 and would never reach 1, as it would already be less than 1",
@@ -6465,12 +6735,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 7(c). The mark scheme accepts: The program would accept the value and enter the FOR loop / Count would keep reducing by 1 and would never reach 1, as it would already be less than 1 / There would be an endless loop",
    "working": [
     "Look at the loop: FOR Count <- Value - 1 TO 1 STEP -1. Count starts at Value - 1 and goes down by 1 each time, stopping at 1. If Value is 1, 0 or below -1, nothing rejects it, so it enters the loop, but Count already starts below 1. Counting down will never reach 1, so the loop would never end."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-22-q8",
    "category": "checks",
-   "prompt": "A program being developed takes as input whole numbers that are not greater than 80. Identify two items of test data to test the whole number limit of 80. Explain the reason for your choice of the data in each case.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program being developed takes as input whole numbers that are not greater than 80. Identify two items of test data to test the whole number limit of 80. Explain the reason for your choice of the data in each case.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "80",
     "The largest whole number that would be accepted (boundary/extreme data)",
@@ -6491,7 +6762,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 22, Question 8. The mark scheme accepts: 80 / The largest whole number that would be accepted (boundary/extreme data) / 81 / The smallest whole number that would be rejected (boundary/abnormal data)",
    "working": [
     "To test a limit, use the values either side of it. The largest valid value is the limit itself: it should be accepted (extreme data, and part of boundary data). The next whole number above it is the smallest invalid value: it should be rejected (abnormal data, and the other part of boundary data). Values further away do not test the limit exactly."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q1",
@@ -6510,8 +6782,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 1. The mark scheme accepts: type check",
    "working": [
-    "Validation is done by the computer to check that data is sensible: type, range, length, presence and format checks and check digits. A type check makes sure data is the right data type. Double entry and visual checks are verification. Checksums and parity checks check data after transmission."
-   ]
+    "Validation is done by the computer to check that data is sensible. A type check makes sure data is the right data type. Compare: a double entry check and a visual check are verification, which checks that data was copied correctly. A checksum and a parity check test data after transmission, not when it is input."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q2",
@@ -6534,12 +6807,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 2. The mark scheme accepts: structure diagram",
    "working": [
     "Methods used to design and construct a solution are structure diagrams, flowcharts and pseudocode. A structure diagram shows a problem broken into smaller sub-problems as a hierarchy. Abstraction and decomposition are analysis tasks, test data and trace tables are for testing, and a variable stores data."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q5",
    "category": "design",
-   "prompt": "One stage of the program development life cycle is the analysis stage. Identify and describe two other stages of the program development life cycle.\nChoose ONE answer that earns a mark.",
+   "prompt": "One stage of the program development life cycle is the analysis stage. Identify and describe two other stages of the program development life cycle.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Design",
     "Construction of a solution, using standard methods such as flowcharts",
@@ -6562,7 +6836,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 5. The mark scheme accepts: Design / Construction of a solution, using standard methods such as flowcharts / Coding / The program is written, and iterative testing takes place / Testing / The program is tested for errors and that it meets its requirements",
    "working": [
     "After analysis come three stages. Design: the solution is planned using standard methods such as structure diagrams, flowcharts and pseudocode. Coding: the program is written in a programming language, with iterative testing as it is built. Testing: the program is run with test data to find errors and check it meets the requirements. Decomposition and abstraction are tasks inside analysis."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q6a-g1",
@@ -6580,7 +6855,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 6(a). The mark scheme accepts: 1",
    "working": [
     "C is the index used to step through the array, and the WHILE condition checks A[C]. The values are stored starting at A[1], and the array is declared ARRAY[1:50], so the first element is at index 1. C must start at the first index so the first value is checked and added."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q6a-g2",
@@ -6598,7 +6874,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 6(a). The mark scheme accepts: W + A[C]",
    "working": [
     "W starts at 0 and should hold the total of the values. Each time round the loop, the current element A[C] must be added to the total so far. A running total always uses the form Total <- Total + new value. Adding 1 would count, not total."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q6a-g3",
@@ -6620,12 +6897,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 6(a). The mark scheme accepts: W / (C - 1) / ROUND(W / (C - 1),0)",
    "working": [
     "The average is the total divided by how many values there are. W holds the total. C starts at 1 and goes up by 1 after each value, and the loop stops when C is at the zero. So C is one more than the number of values, and the count is C - 1. Use brackets so the subtraction happens before the division."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q6b",
    "category": "programming",
-   "prompt": "An algorithm steps through the array A with C (starting at 1) until it reaches a zero, adding each value to W; it then calculates X <- W / (C - 1). Write pseudocode to display, with suitable messages, the number of values stored in the array and the average of those values stored.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm steps through the array A with C (starting at 1) until it reaches a zero, adding each value to W; it then calculates X <- W / (C - 1). Write pseudocode to display, with suitable messages, the number of values stored in the array and the average of those values stored.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "OUTPUT \"Number of values stored in the array is \", C - 1",
     "OUTPUT \"Average of non-zero elements in the array is \", X"
@@ -6640,12 +6918,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 6(b). The mark scheme accepts: OUTPUT \"Number of values stored in the array is \", C - 1 / OUTPUT \"Average of non-zero elements in the array is \", X",
    "working": [
     "OUTPUT shows a message and a value, separated by a comma. C stops at the position of the zero, which is one past the last value, so the number of values stored is C - 1. X already holds the average, worked out as W / (C - 1). W is the total, not the count or the average."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q6c",
    "category": "programming",
-   "prompt": "An algorithm uses array A to hold the values, C to step through the array, W to add up the values and X to hold their average. Meaningful identifiers have not been used. Suggest suitable meaningful identifiers for A, C, X and W.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm uses array A to hold the values, C to step through the array, W to add up the values and X to hold their average. Meaningful identifiers have not been used. Suggest suitable meaningful identifiers for A, C, X and W.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "A: Values",
     "C: Index",
@@ -6667,12 +6946,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 6(c). The mark scheme accepts: A: Values / C: Index / X: Average / W: Total",
    "working": [
     "A meaningful identifier says what each item does. A holds all the values. C steps through the array positions, so it is an index. W adds the values up, so it is a total. X holds the total divided by the count, so it is an average. Match each letter to the word that describes its job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q7",
    "category": "checks",
-   "prompt": "A programmer is testing a program that requires a positive value between 1 and 100 inclusive to be entered. The range check in the program is to be tested. Identify three different types of test data to be used. For each type of test data, give an example of the value(s) to be used and the expected outcome.\nChoose ONE answer that earns a mark.",
+   "prompt": "A programmer is testing a program that requires a positive value between 1 and 100 inclusive to be entered. The range check in the program is to be tested. Identify three different types of test data to be used. For each type of test data, give an example of the value(s) to be used and the expected outcome.\nThis question is worth 9 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal",
     "Example: 25",
@@ -6701,13 +6981,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 7. The mark scheme accepts: Normal / Example: 25 / Outcome: accepted / Extreme / Example: 1 or 100 / Outcome: accepted (extreme) / Abnormal / Example: 125 / Outcome: rejected / Boundary / Example: 1 and 0, or 100 and 101 / Outcome: first value accepted, second value rejected",
    "working": [
-    "The valid range is 1 to 100. Normal: a typical value inside the range, accepted. Extreme: the smallest or largest valid value, 1 or 100, accepted. Abnormal: a value outside the range, rejected. Boundary: a pair at one edge, the valid end value and the invalid value just past it; the first is accepted and the second is rejected."
-   ]
+    "The valid range is 1 to 100. A typical value well inside the range, such as 25, is accepted. Extreme: the smallest or largest valid value, 1 or 100, accepted. A value outside the range, such as 125, is rejected. Boundary: a pair at one edge, the valid end value and the invalid value just past it; the first is accepted and the second is rejected."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n24-23-q10b",
    "category": "programming",
-   "prompt": "A password-checking algorithm sets Accept to FALSE if LENGTH(Password) < 8 OR LENGTH(Password) > 20, if LCASE(Password) = Password OR UCASE(Password) = Password, or if no SUBSTRING(Password, Index, 1) = '!' is found. State the rules that the password must meet.\nChoose ONE answer that earns a mark.",
+   "prompt": "A password-checking algorithm sets Accept to FALSE if LENGTH(Password) < 8 OR LENGTH(Password) > 20, if LCASE(Password) = Password OR UCASE(Password) = Password, or if no SUBSTRING(Password, Index, 1) = '!' is found. State the rules that the password must meet.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Maximum length 20 characters and minimum length 8 characters",
     "It must contain upper-case and lower-case letters (it cannot be all upper case or all lower case)",
@@ -6727,7 +7008,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2024 Paper 23, Question 10(b). The mark scheme accepts: Maximum length 20 characters and minimum length 8 characters / It must contain upper-case and lower-case letters (it cannot be all upper case or all lower case) / It must contain an !",
    "working": [
     "Each check makes Accept FALSE when a rule is broken, so each rule is the opposite. LENGTH < 8 OR LENGTH > 20 rejects passwords that are too short or too long. LCASE(Password) = Password is true when it has no upper-case letters; UCASE(Password) = Password when it has no lower-case letters. Rejecting when no '!' is found means one must be present."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q1",
@@ -6747,13 +7029,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 1. The mark scheme accepts: linear search",
    "working": [
-    "Standard methods of solution include totalling, counting, finding maximum, minimum and average, a linear search and a bubble sort. A linear search checks each element of an array in turn, from the first, until it finds the item or reaches the end. A bubble sort puts data in order; it does not find an item."
-   ]
+    "Standard methods of solution include totalling, counting, finding the maximum, minimum and average, a linear search and a bubble sort. Compare: a totalling routine adds each value to a running total. A counting routine adds 1 each time something happens. A bubble sort puts data in order; it does not find an item. A linear search checks each element of an array in turn, from the first, until it finds the item or reaches the end."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q3-r1",
    "category": "design",
-   "prompt": "Four development life cycle stages and some descriptions are shown. Match each description to the most appropriate stage.\n\nidentifying the problem and requirements",
+   "prompt": "Four development life cycle stages and some descriptions are shown. Match each description to the most appropriate stage.\n\nidentifying the problem and requirements\n\nWhich one is this: testing, analysis, coding, design?",
    "answers": [
     "analysis"
    ],
@@ -6765,12 +7048,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 3. The mark scheme accepts: analysis",
    "working": [
     "Analysis identifies the problem and what the solution must do (its requirements). Design plans the solution using structure diagrams, flowcharts and pseudocode. Coding writes the program in a programming language. Testing runs the program to make sure it works as expected."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q3-r2",
    "category": "design",
-   "prompt": "Four development life cycle stages and some descriptions are shown. Match each description to the most appropriate stage.\n\nmaking sure the program code works as expected",
+   "prompt": "Four development life cycle stages and some descriptions are shown. Match each description to the most appropriate stage.\n\nmaking sure the program code works as expected\n\nWhich one is this: testing, analysis, coding, design?",
    "answers": [
     "testing"
    ],
@@ -6782,12 +7066,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 3. The mark scheme accepts: testing",
    "working": [
     "Analysis identifies the problem and what the solution must do (its requirements). Design plans the solution using structure diagrams, flowcharts and pseudocode. Coding writes the program in a programming language. Testing runs the program to make sure it works as expected."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q3-r3",
    "category": "design",
-   "prompt": "Four development life cycle stages and some descriptions are shown. Match each description to the most appropriate stage.\n\nusing structure diagrams, flowcharts and pseudocode to plan the solution",
+   "prompt": "Four development life cycle stages and some descriptions are shown. Match each description to the most appropriate stage.\n\nusing structure diagrams, flowcharts and pseudocode to plan the solution\n\nWhich one is this: testing, analysis, coding, design?",
    "answers": [
     "design"
    ],
@@ -6799,12 +7084,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 3. The mark scheme accepts: design",
    "working": [
     "Analysis identifies the problem and what the solution must do (its requirements). Design plans the solution using structure diagrams, flowcharts and pseudocode. Coding writes the program in a programming language. Testing runs the program to make sure it works as expected."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q3-r4",
    "category": "design",
-   "prompt": "Four development life cycle stages and some descriptions are shown. Match each description to the most appropriate stage.\n\nusing a programming language to create the solution",
+   "prompt": "Four development life cycle stages and some descriptions are shown. Match each description to the most appropriate stage.\n\nusing a programming language to create the solution\n\nWhich one is this: testing, analysis, coding, design?",
    "answers": [
     "coding"
    ],
@@ -6816,7 +7102,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 3. The mark scheme accepts: coding",
    "working": [
     "Analysis identifies the problem and what the solution must do (its requirements). Design plans the solution using structure diagrams, flowcharts and pseudocode. Coding writes the program in a programming language. Testing runs the program to make sure it works as expected."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q4a",
@@ -6836,7 +7123,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 4(a). The mark scheme accepts: To check that a value has been entered",
    "working": [
     "A presence check is a validation check that makes sure data has been entered, so a required field is not left empty. Other checks do other jobs: a type check tests the data type, a range check tests limits, a length check counts characters, and a format check tests a pattern."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q4bi",
@@ -6857,12 +7145,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 4(b)(i). The mark scheme accepts: Type check",
    "working": [
     "An integer is a whole number, which is a data type. The check that makes sure data is the correct data type is a type check. A range check tests limits, a length check counts characters, a format check tests a pattern, and a presence check tests that something was entered."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q5-row1",
    "category": "checks",
-   "prompt": "A program is written to only accept data that contains more than 9 characters. The test data is ABC. Give the type of test data and the purpose of this test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program is written to only accept data that contains more than 9 characters. The test data is ABC. Give the type of test data and the purpose of this test data.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Abnormal",
     "To make sure that the program rejects data that is too short"
@@ -6878,12 +7167,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 5. The mark scheme accepts: Abnormal / To make sure that the program rejects data that is too short",
    "working": [
     "The rule is more than 9 characters. ABC has only 3 characters, so it breaks the rule and should be rejected. Data that should be rejected is abnormal data. Its purpose is to make sure the program rejects data that is too short. Normal data is accepted, and extreme and boundary data sit at the edge of the rule."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q5-row2",
    "category": "checks",
-   "prompt": "A program is written to only accept data that contains more than 9 characters. The type of test data is Boundary. Give suitable test data and the purpose of this test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program is written to only accept data that contains more than 9 characters. The type of test data is Boundary. Give suitable test data and the purpose of this test data.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Password1 (exactly 9 characters)",
     "Password22 (exactly 10 characters)",
@@ -6904,12 +7194,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 5. The mark scheme accepts: Password1 (exactly 9 characters) / Password22 (exactly 10 characters) / To make sure that the program rejects data that is only just too short / To make sure that the program accepts data that is only just at the correct length",
    "working": [
     "Boundary data is a pair at the edge of the rule: the last value that is rejected and the first value that is accepted. More than 9 characters means 9 characters is just too short and is rejected, and 10 characters is just long enough and is accepted. Count the characters in each example. Values far from the edge are not boundary data."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q5-row3",
    "category": "checks",
-   "prompt": "A program is written to only accept data that contains more than 9 characters. The purpose of the test data is to make sure that the program accepts data that is an appropriate length. Give suitable test data and its type.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program is written to only accept data that contains more than 9 characters. The purpose of the test data is to make sure that the program accepts data that is an appropriate length. Give suitable test data and its type.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "CambridgeInternational (22 characters)",
     "Normal"
@@ -6928,12 +7219,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 5. The mark scheme accepts: CambridgeInternational (22 characters) / Normal",
    "working": [
     "The rule is more than 9 characters. To show the program accepts a valid length, use a typical value well inside the rule, with clearly more than 9 characters. A typical valid value is normal data. Values with 9 or fewer characters are rejected, so they cannot show acceptance."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q6b",
    "category": "programming",
-   "prompt": "The corrected algorithm inputs 1000 positive integers and adds them to Total. Write the pseudocode statement to output the average of the numbers, rounded to two decimal places.\nChoose ONE answer that earns a mark.",
+   "prompt": "The corrected algorithm inputs 1000 positive integers and adds them to Total. Write the pseudocode statement to output the average of the numbers, rounded to two decimal places.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "OUTPUT ROUND(Total / 1000, 2)"
    ],
@@ -6949,12 +7241,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 6(b). The mark scheme accepts: OUTPUT ROUND(Total / 1000, 2)",
    "working": [
     "The average is the total divided by how many numbers there are: Total / 1000. ROUND(value, places) rounds it: the value goes first, then the number of places after the point to keep. Two decimal places means 2. Round the whole division, so Total / 1000 goes inside ROUND. DIV would lose the fractional part."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q6c",
    "category": "design",
-   "prompt": "The corrected algorithm inputs 1000 positive integers into an array, totals them and finds the highest. Explain how you could change the corrected algorithm so that it also finds the smallest number that was input and outputs its value at the end.\nChoose ONE answer that earns a mark.",
+   "prompt": "The corrected algorithm inputs 1000 positive integers into an array, totals them and finds the highest. Explain how you could change the corrected algorithm so that it also finds the smallest number that was input and outputs its value at the end.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Declare a new variable for the smallest value at the start of the algorithm",
     "Initialise the smallest variable to a high number",
@@ -6977,7 +7270,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 6(c). The mark scheme accepts: Declare a new variable for the smallest value at the start of the algorithm / Initialise the smallest variable to a high number / Initialise the smallest variable to the first number input / Add a new selection statement after the input to compare the input with the current smallest number / If the input is smaller than the current smallest, it replaces the smallest value / Outside the loop, output the value of the smallest variable",
    "working": [
     "To find the smallest, add a new variable for it, declared at the start. Give it a starting value that any input will beat: a very high number or the first number input (0 is too low, as all numbers are positive). After each input, use IF to compare the input with the current smallest; if the input is smaller, it becomes the new smallest. Output it once, after the loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q7b",
@@ -7000,12 +7294,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 7(b). The mark scheme accepts: It is a calculator",
    "working": [
     "Trace it: two numbers are input with a letter for the operation. A gives Value1 + Value2 (add), S gives Value1 - Value2 (subtract), M gives Value1 * Value2 (multiply) and D gives Value1 / Value2 (divide). The result is output, and it repeats while the user wants. A program that does sums on numbers you enter is a calculator."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m25-22-q7cii",
    "category": "fix",
-   "prompt": "In the calculator algorithm, if a lower-case 'y' is entered for Answer the algorithm stops, and if a lower-case letter is entered for Operator the algorithm gives an incorrect output. Identify one more error related to inputs when the algorithm is run.",
+   "prompt": "A calculator algorithm outputs \"Continue?\" and inputs Answer. While Answer = 'Y' it inputs Value1, then an Operator ('A' to add, 'S' to subtract, 'M' to multiply, anything else to divide), then Value2, and outputs the result before asking \"Continue?\" again. If the lower-case letter 'y' is entered for Answer, the algorithm stops, and if a lower-case letter is entered for Operator, the algorithm gives an incorrect output. Identify one more error related to inputs when the algorithm is run.",
    "answers": [
     "It only tests for A, S and M, so any other input is treated as D (division)",
     "Dividing by 0 gives an error if D and 0 are entered",
@@ -7028,7 +7323,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2025 Paper 22, Question 7(c)(ii). The mark scheme accepts: It only tests for A, S and M, so any other input is treated as D (division) / Dividing by 0 gives an error if D and 0 are entered / A character could be entered instead of a number for Value1 or Value2 / No data could be entered for an input / If Yes or yes is entered the algorithm stops / There are no input prompts",
    "working": [
     "Think about what could go wrong with each input. Only A, S and M are tested, so any other letter is treated as division. Dividing by 0 gives an error. A letter could be typed where a number is expected. Nothing might be entered at all. Only 'Y' continues, so 'Yes' or 'yes' stops it. With no prompts, the user does not know what to type."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q1",
@@ -7048,12 +7344,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 1. The mark scheme accepts: Extreme test data",
    "working": [
     "There are four types of test data. Normal data is a typical valid value. Abnormal data is invalid and rejected. Boundary data is a pair: the last accepted value and the first rejected value next to it. The type that uses only the largest or smallest value that is still accepted, nothing outside, is extreme data."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q2a-r1",
    "category": "checks",
-   "prompt": "Four requirements for validating inputs are given. Choose the most appropriate validation check for each requirement. Not all validation checks will be used.\n\nDate of birth must be between 01/01/1900 and 01/01/2010.",
+   "prompt": "Four requirements for validating inputs are given. Not all validation checks will be used.\n\nDate of birth must be between 01/01/1900 and 01/01/2010.\n\nWhich one is this: length check, format check, range check, check digit, presence check?",
    "answers": [
     "range check"
    ],
@@ -7066,12 +7363,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 2(a). The mark scheme accepts: range check",
    "working": [
     "A range check tests that a value is between a lower and an upper limit, such as two dates. A presence check tests that something has been entered. A length check tests the number of characters. A format check tests that data matches a pattern, such as letters then digits. A check digit is an extra digit used to find errors in an identification number."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q2a-r2",
    "category": "checks",
-   "prompt": "Four requirements for validating inputs are given. Choose the most appropriate validation check for each requirement. Not all validation checks will be used.\n\nName has been entered.",
+   "prompt": "Four requirements for validating inputs are given. Not all validation checks will be used.\n\nName has been entered.\n\nWhich one is this: length check, format check, range check, check digit, presence check?",
    "answers": [
     "presence check"
    ],
@@ -7084,12 +7382,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 2(a). The mark scheme accepts: presence check",
    "working": [
     "A range check tests that a value is between a lower and an upper limit, such as two dates. A presence check tests that something has been entered. A length check tests the number of characters. A format check tests that data matches a pattern, such as letters then digits. A check digit is an extra digit used to find errors in an identification number."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q2a-r3",
    "category": "checks",
-   "prompt": "Four requirements for validating inputs are given. Choose the most appropriate validation check for each requirement. Not all validation checks will be used.\n\nPassword has exactly 12 characters.",
+   "prompt": "Four requirements for validating inputs are given. Not all validation checks will be used.\n\nPassword has exactly 12 characters.\n\nWhich one is this: length check, format check, range check, check digit, presence check?",
    "answers": [
     "length check"
    ],
@@ -7102,12 +7401,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 2(a). The mark scheme accepts: length check",
    "working": [
     "A range check tests that a value is between a lower and an upper limit, such as two dates. A presence check tests that something has been entered. A length check tests the number of characters. A format check tests that data matches a pattern, such as letters then digits. A check digit is an extra digit used to find errors in an identification number."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q2a-r4",
    "category": "checks",
-   "prompt": "Four requirements for validating inputs are given. Choose the most appropriate validation check for each requirement. Not all validation checks will be used.\n\nStudent ID must contain 2 letters followed by a 4-digit number.",
+   "prompt": "Four requirements for validating inputs are given. Not all validation checks will be used.\n\nStudent ID must contain 2 letters followed by a 4-digit number.\n\nWhich one is this: length check, format check, range check, check digit, presence check?",
    "answers": [
     "format check"
    ],
@@ -7120,12 +7420,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 2(a). The mark scheme accepts: format check",
    "working": [
     "A range check tests that a value is between a lower and an upper limit, such as two dates. A presence check tests that something has been entered. A length check tests the number of characters. A format check tests that data matches a pattern, such as letters then digits. A check digit is an extra digit used to find errors in an identification number."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q2b",
    "category": "checks",
-   "prompt": "Identify and describe one verification check that could be applied when a new password is input into a system.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify and describe one verification check that could be applied when a new password is input into a system.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Visual check",
     "Double entry check",
@@ -7144,8 +7445,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 2(b). The mark scheme accepts: Visual check / Double entry check / Look at the data that has been entered / Enter the data twice / Confirm it matches the original / Only accept the data if both entries are identical",
    "working": [
-    "Verification checks that data was entered exactly as intended. Visual check: the user looks at the data entered and confirms it matches the original. Double entry check: the password is entered twice, the two entries are compared, and it is only accepted if both are identical. Presence and length checks, and rules about what a password contains, are validation."
-   ]
+    "Verification checks that data was entered exactly as intended. Visual check: the user looks at the data entered and confirms it matches the original. Double entry check: the password is entered twice, the two entries are compared, and it is only accepted if both are identical. Compare validation: a Presence check tests the password is not blank, and a Length check tests it has enough characters. Rules about what a password contains are validation too."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q3-g1",
@@ -7164,7 +7466,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 3. The mark scheme accepts: 1",
    "working": [
     "The FOR loop starts with Count at 1, so the first name goes into Names[1]. A WHILE loop does not set its counter, so Count must be given that same starting value before the loop begins. The array starts at index 1."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q3-g3",
@@ -7182,12 +7485,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 3. The mark scheme accepts: Count <- Count + 1",
    "working": [
     "A FOR loop adds 1 to its counter by itself, but a WHILE loop does not. Without this, Count would stay at 1 and the loop would never end. At the end of each pass, Count must be increased by 1 with an assignment: the variable on the left, <-, then the new value worked out from the old value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q4b",
    "category": "checks",
-   "prompt": "An algorithm inputs a telephone number that should have 13 characters. Explain how you could change the algorithm to repeatedly prompt for the telephone number until the number entered is 13 characters in length.\nChoose ONE answer that earns a mark.",
+   "prompt": "A telephone number with 13 characters is input. The first character is a '+', followed by a 2-digit country code and then the rest of the number, for example +20xxxxxxxxxx where 20 is the country code and each x is a digit between 0 and 9 inclusive. An algorithm inputs the telephone number, extracts the 2-digit country code and outputs the matching country. Explain how you could change the algorithm to repeatedly prompt for the telephone number until the number entered is 13 characters in length.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Find the length of the input using LENGTH",
     "Use a suitable loop such as REPEAT or WHILE",
@@ -7208,12 +7512,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 4(b). The mark scheme accepts: Find the length of the input using LENGTH / Use a suitable loop such as REPEAT or WHILE / Use the correct condition, such as UNTIL LENGTH(Telephone) = 13 / Prompt for a 13-digit telephone number and input it inside the loop",
    "working": [
     "LENGTH(Telephone) gives the number of characters entered. To ask again and again until it is correct, use a REPEAT or WHILE loop. Put the prompt and the INPUT inside the loop so each pass gets a new number. A REPEAT loop ends with UNTIL LENGTH(Telephone) = 13. A FOR loop runs a fixed number of times, so it cannot wait for a correct input."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q5",
    "category": "programming",
-   "prompt": "Two library routines used in programming are MOD and DIV. State the purpose of each of the library routines. Give one example pseudocode statement for each of the library routines.\nChoose ONE answer that earns a mark.",
+   "prompt": "Two library routines used in programming are MOD and DIV. State the purpose of each of the library routines. Give one example pseudocode statement for each of the library routines.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "MOD returns the remainder of a division",
     "Example: X <- MOD(10, 3)",
@@ -7233,12 +7538,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 5. The mark scheme accepts: MOD returns the remainder of a division / Example: X <- MOD(10, 3) / DIV returns the whole-number quotient of a division / Example: Y <- DIV(10, 3)",
    "working": [
     "When you divide, you get a whole-number part and a remainder. 10 divided by 3 is 3 remainder 1. MOD gives the remainder (MOD(10, 3) is 1). DIV gives the whole-number part only, with the fraction thrown away (DIV(10, 3) is 3). In pseudocode both are library routines written as a name with two values in brackets, and the result is assigned to a variable: Variable <- ROUTINE(first, second)."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q6b",
    "category": "programming",
-   "prompt": "A number-guessing algorithm uses variables called N and G. Identify one method to make the algorithm maintainable. Give an example.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm has been written in pseudocode to generate a random integer between 1 and 100 inclusive and store the value in N. The user enters a guess for the number into G and the algorithm indicates whether the guess is higher or lower than the random number. The algorithm outputs the number of guesses when the user has correctly guessed the random number. Identify one method to make the algorithm maintainable. Give an example.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Use meaningful identifiers",
     "Add comments",
@@ -7261,12 +7567,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 6(b). The mark scheme accepts: Use meaningful identifiers / Add comments / Use procedures or functions / For example, N should be renamed Number / For example, // loops until the guess equals the number / For example, make the algorithm into a procedure",
    "working": [
     "A maintainable program is easy for another programmer to read, fix and change later. Three ways: meaningful identifiers (names that say what the data is, so N becomes a full word that describes it), comments (notes after // that explain what a section does), and procedures or functions (code split into named parts). Short names, no indentation, global variables and repeated lines all make code harder to understand."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q9a",
    "category": "programming",
-   "prompt": "The variables A and B are used in a program. A holds a whole number and B holds text. Write pseudocode statements to declare the variables A and B.\nChoose ONE answer that earns a mark.",
+   "prompt": "The variables A and B are used in a program. A holds a whole number and B holds text. Write pseudocode statements to declare the variables A and B.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "DECLARE A : INTEGER",
     "DECLARE B : STRING"
@@ -7283,7 +7590,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 9(a). The mark scheme accepts: DECLARE A : INTEGER / DECLARE B : STRING",
    "working": [
     "A declaration has the form DECLARE Name : TYPE. Choose the type from the data: INTEGER for a whole number, REAL for a number with a fractional part, CHAR for one single character, STRING for text of any length, BOOLEAN for TRUE or FALSE. TEXT is not a Cambridge data type. Match each variable's description to one of these types."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q9b-g1",
@@ -7302,7 +7610,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 9(b). The mark scheme accepts: X : INTEGER",
    "working": [
     "Inside the brackets after a function name you list its parameters, in the form Name : TYPE. The function is described as Odds(X), so the parameter is called X. X holds a whole number, so its type is the type for whole numbers. A and B belong to the main program, not the function definition, and the name always comes before the colon."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q9b-g2",
@@ -7321,7 +7630,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 9(b). The mark scheme accepts: STRING",
    "working": [
     "After RETURNS you write the data type of the value the function sends back. Look at the RETURN lines: the function returns \"Even\" or \"Odd\", which are text in quotation marks. Text of more than one character is a STRING. INTEGER and REAL are numbers, CHAR is one character only, BOOLEAN is TRUE or FALSE, and Odds is the function's name, not a type."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q9b-g3",
@@ -7340,7 +7650,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 9(b). The mark scheme accepts: MOD(X, 2)",
    "working": [
     "A number is even if it divides by 2 with nothing left over. MOD gives the remainder after a division, so MOD(number, 2) is 0 for an even number and 1 for an odd number. Use the parameter X, the number to divide first and 2 second. DIV gives the whole-number part, not the remainder, and / gives a fractional answer."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q9b-g4",
@@ -7362,7 +7673,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 9(b). The mark scheme accepts: ENDFUNCTION",
    "working": [
     "Every block in pseudocode is closed by its matching keyword. IF is closed by ENDIF (already there). The whole block starts with FUNCTION, so it must be closed by the keyword that matches FUNCTION. ENDPROCEDURE closes a PROCEDURE, NEXT closes a FOR loop, and RETURN sends a value back but does not end the definition."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q9b-g5",
@@ -7381,12 +7693,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 9(b). The mark scheme accepts: Odds(A)",
    "working": [
     "A function is called by writing its name with the value to use in brackets, and because it returns a value the call goes on the right of an assignment. The question says to use parameter A, and B already appears on the left to store the result. CALL is only used for procedures, and X is only the name used inside the definition."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-21-q10b",
    "category": "fix",
-   "prompt": "The grades algorithm checks IS Score >= 40 first (Grade C), then IS Score >= 60 (Grade B), then IS Score >= 80 (Grade A), otherwise Grade D. Scores of 63 and 91 both get a C. Explain how the flowchart can be changed to produce the correct output.\nChoose ONE answer that earns a mark.",
+   "prompt": "The grades algorithm checks IS Score >= 40 first (Grade C), then IS Score >= 60 (Grade B), then IS Score >= 80 (Grade A), otherwise Grade D. Scores of 63 and 91 both get a C. Explain how the flowchart can be changed to produce the correct output.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Change the first decision box to IS Score >= 80 ?",
     "Change the last decision box to IS Score >= 40 ?",
@@ -7408,7 +7721,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 21, Question 10(b). The mark scheme accepts: Change the first decision box to IS Score >= 80 ? / Change the last decision box to IS Score >= 40 ? / Change the process box from Grade <- \"C\" to Grade <- \"A\" / Change the process box from Grade <- \"A\" to Grade <- \"C\" / Add a loop with an exit condition so more than one score can be input",
    "working": [
     "Decision boxes are checked in order and the first Yes wins. Because Score >= 40 is checked first, 63 and 91 both say Yes there and get C. The test with the highest number must come first: check >= 80 first (Grade A), then >= 60 (Grade B), then >= 40 (Grade C), else D. So swap the first and last decision boxes and their grades. A loop could also allow more scores to be input."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q1",
@@ -7431,12 +7745,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 1. The mark scheme accepts: removing details from the problem that are not relevant",
    "working": [
     "Abstraction means keeping only what matters for solving the problem and leaving out the rest. For example, a map of a train line shows the stations but not every tree and building. Breaking a problem into inputs, processes and outputs or into sub-systems is decomposition, a different idea. Testing, coding and structure diagrams belong to other stages."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q2-r1",
    "category": "design",
-   "prompt": "A fence measuring 2 metres in height and 20 metres in length needs painting. The area of the fence needs to be calculated so that enough paint for the job is purchased. After the task is decomposed, there are three component parts: input, process and output. Choose the component part for each description.\n\nthe height of the fence, the length of the fence",
+   "prompt": "A fence measuring 2 metres in height and 20 metres in length needs painting. The area of the fence needs to be calculated so that enough paint for the job is purchased. After the task is decomposed, there are three component parts: input, process and output.\n\nthe height of the fence, the length of the fence\n\nWhich one is this: input, process, output?",
    "answers": [
     "input"
    ],
@@ -7447,12 +7762,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 2. The mark scheme accepts: input",
    "working": [
     "Decomposition splits a task into three parts. Input is the data that goes into the system before any work is done, such as measurements typed in. Process is the work done on the data, such as a calculation (height multiplied by length). Output is the result given back to the user at the end, such as the amount needed. Decide for each description: is it data going in, a calculation, or the final result shown?"
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q2-r2",
    "category": "design",
-   "prompt": "A fence measuring 2 metres in height and 20 metres in length needs painting. The area of the fence needs to be calculated so that enough paint for the job is purchased. After the task is decomposed, there are three component parts: input, process and output. Choose the component part for each description.\n\nThe area of fence is calculated as 40 square metres.",
+   "prompt": "A fence measuring 2 metres in height and 20 metres in length needs painting. The area of the fence needs to be calculated so that enough paint for the job is purchased. After the task is decomposed, there are three component parts: input, process and output.\n\nThe area of fence is calculated as 40 square metres.\n\nWhich one is this: input, process, output?",
    "answers": [
     "process"
    ],
@@ -7463,12 +7779,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 2. The mark scheme accepts: process",
    "working": [
     "Decomposition splits a task into three parts. Input is the data that goes into the system before any work is done, such as measurements typed in. Process is the work done on the data, such as a calculation (height multiplied by length). Output is the result given back to the user at the end, such as the amount needed. Decide for each description: is it data going in, a calculation, or the final result shown?"
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q2-r3",
    "category": "design",
-   "prompt": "A fence measuring 2 metres in height and 20 metres in length needs painting. The area of the fence needs to be calculated so that enough paint for the job is purchased. After the task is decomposed, there are three component parts: input, process and output. Choose the component part for each description.\n\nThe amount of paint required is 40 square metres.",
+   "prompt": "A fence measuring 2 metres in height and 20 metres in length needs painting. The area of the fence needs to be calculated so that enough paint for the job is purchased. After the task is decomposed, there are three component parts: input, process and output.\n\nThe amount of paint required is 40 square metres.\n\nWhich one is this: input, process, output?",
    "answers": [
     "output"
    ],
@@ -7479,12 +7796,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 2. The mark scheme accepts: output",
    "working": [
     "Decomposition splits a task into three parts. Input is the data that goes into the system before any work is done, such as measurements typed in. Process is the work done on the data, such as a calculation (height multiplied by length). Output is the result given back to the user at the end, such as the amount needed. Decide for each description: is it data going in, a calculation, or the final result shown?"
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q3",
    "category": "checks",
-   "prompt": "A range check is used to validate that the input temperature is an integer between -100 and 0, inclusive. Suggest suitable normal, abnormal, extreme and boundary test data to test if this validation check is working correctly.\nChoose ONE answer that earns a mark.",
+   "prompt": "A range check is used to validate that the input temperature is an integer between -100 and 0, inclusive. Suggest suitable normal, abnormal, extreme and boundary test data to test if this validation check is working correctly.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal: -50",
     "Abnormal: 50",
@@ -7509,7 +7827,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 3. The mark scheme accepts: Normal: -50 / Abnormal: 50 / Extreme: 0 / Extreme: -100 / Boundary: 1 / Boundary: 0 / Boundary: -100 / Boundary: -101",
    "working": [
     "Normal data is well inside the range and accepted, for example a middle value. Abnormal data is outside the range or the wrong type and rejected, for example a positive number here. Extreme data is the largest or smallest value that is accepted, so the two ends of the range. Boundary data is a value at each end that is accepted and the value just outside it that is rejected, one step past each end."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q4a",
@@ -7529,12 +7848,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 4(a). The mark scheme accepts: To check that the value entered has not changed on input",
    "working": [
     "Verification checks that data has been copied or entered exactly as it was in the original, with no mistakes made while typing. Methods are double entry and a visual check. Checking a range, data type, presence, length or format are all validation checks, which test if data is sensible, not if it matches the original. Security is a different topic."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q5b",
    "category": "programming",
-   "prompt": "The corrected algorithm totals the heights of 500 people in Total. Write the pseudocode statement that will output the average height rounded to one decimal place.\nChoose ONE answer that earns a mark.",
+   "prompt": "The corrected algorithm totals the heights of 500 people in Total. Write the pseudocode statement that will output the average height rounded to one decimal place.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "OUTPUT ROUND(Total / 500, 1)"
    ],
@@ -7550,12 +7870,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 5(b). The mark scheme accepts: OUTPUT ROUND(Total / 500, 1)",
    "working": [
     "The average is the total divided by how many values there are: Total / 500. ROUND(value, places) rounds a value to a set number of places after the point. The value to round goes first and the number of places second, so one place after the point uses 1. Divide inside the brackets before rounding, and use / not DIV, because DIV throws away the fraction."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q5c",
    "category": "design",
-   "prompt": "The corrected algorithm inputs 500 names and heights, totals the heights and finds the shortest person. Explain how you could change the corrected algorithm so that it will also find the height of the tallest person and output it at the end of the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "The corrected algorithm inputs 500 names and heights, totals the heights and finds the shortest person. Explain how you could change the corrected algorithm so that it will also find the height of the tallest person and output it at the end of the algorithm.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Declare a new variable for the tallest height at the start of the algorithm",
     "Initialise the tallest variable to a low number such as 0",
@@ -7577,7 +7898,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 5(c). The mark scheme accepts: Declare a new variable for the tallest height at the start of the algorithm / Initialise the tallest variable to a low number such as 0 / Add a new selection statement after the height is input to compare it with the current tallest value / If the height input is larger than the current tallest, it becomes the new tallest value / Outside the loop, output the value of the tallest variable",
    "working": [
     "Finding the largest value is the opposite of finding the shortest. Declare a new variable for the largest value and set it at the start to a very low number, so the first height input will be bigger. Inside the loop, after each input, use an IF: if this height is larger than the stored largest, store it. After the loop has finished, output the largest. Total and Shortest are for other jobs."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q6b",
@@ -7600,12 +7922,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 6(b). The mark scheme accepts: It finds words that read the same forwards and backwards",
    "working": [
     "Comparing the first letter with the last, then the second with the second-to-last, and so on, checks that the word is the same from both ends. If every pair matches, the word is spelt the same in both directions, like level or noon. Checking only the first and last letters would stop after one pair, and the algorithm does not reverse, count or sort anything."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-22-q6c",
    "category": "programming",
-   "prompt": "The algorithm sets V1 <- 1 and V2 <- LENGTH(Word), then loops WHILE Continue = TRUE AND V1 < V2, comparing SUBSTRING(Word, V1, 1) with SUBSTRING(Word, V2, 1). Explain how the algorithm knows when all the letters in the word have been checked so that it can stop checking.\nChoose ONE answer that earns a mark.",
+   "prompt": "The algorithm sets V1 <- 1 and V2 <- LENGTH(Word), then loops WHILE Continue = TRUE AND V1 < V2, comparing SUBSTRING(Word, V1, 1) with SUBSTRING(Word, V2, 1). Explain how the algorithm knows when all the letters in the word have been checked so that it can stop checking.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "V1 marks the start of the word and V2 marks the end of the word",
     "After each check, V1 is incremented by 1 and V2 is decremented by 1",
@@ -7626,12 +7949,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 22, Question 6(c). The mark scheme accepts: V1 marks the start of the word and V2 marks the end of the word / After each check, V1 is incremented by 1 and V2 is decremented by 1 / When V1 = V2 or V1 > V2, the whole word has been checked / The algorithm exits if two compared letters are not the same",
    "working": [
     "V1 starts at position 1, the first letter. V2 starts at LENGTH(Word), the last letter. After each comparison V1 goes up by 1 and V2 goes down by 1, so they move towards the middle. When they meet or pass each other (V1 is no longer less than V2) every pair has been checked. The loop also stops early when Continue becomes FALSE because two letters do not match."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q1b",
    "category": "design",
-   "prompt": "An algorithm for quality control on a biscuit production line inputs the weight of each biscuit into Weight. If the weight is between 16.2 and 17.2 grammes inclusive, PassCount is incremented by 1, otherwise RejectCount is incremented by 1. The process continues until -1 is entered, then PassCount and RejectCount are output. Explain how you would alter the algorithm so that it calculates and outputs the average weight of only the biscuits that passed the weight check.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm for quality control on a biscuit production line inputs the weight of each biscuit into Weight. If the weight is between 16.2 and 17.2 grammes inclusive, PassCount is incremented by 1, otherwise RejectCount is incremented by 1. The process continues until -1 is entered, then PassCount and RejectCount are output. Explain how you would alter the algorithm so that it calculates and outputs the average weight of only the biscuits that passed the weight check.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Initialise a new variable at the start to total the biscuit weights",
     "Add a new process where PassCount is incremented, after the Yes from the weight check",
@@ -7653,12 +7977,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 1(b). The mark scheme accepts: Initialise a new variable at the start to total the biscuit weights / Add a new process where PassCount is incremented, after the Yes from the weight check / The new process adds the weight of the current biscuit to the running total weight / Outside the loop, calculate the average as the total weight divided by PassCount / Output the average weight, outside the loop",
    "working": [
     "An average is total divided by count. Only biscuits that passed are wanted, and PassCount already counts them. So: set a new total variable to 0 at the start. On the pass branch, where PassCount is increased, add the current Weight to the total. Rejected biscuits must not be added. After the loop ends, divide the total by PassCount and output it, once, outside the loop."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q2-r1",
    "category": "programming",
-   "prompt": "Three uses of arithmetic operators and four results are shown. Choose the correct result for each use of an arithmetic operator. Not all results will be used.\n\n355 DIV 10",
+   "prompt": "Three uses of arithmetic operators and four results are shown. Not all results will be used.\n\n355 DIV 10\n\nWhich one is this: 5, 355, 35, 35.5?",
    "answers": [
     "35"
    ],
@@ -7670,12 +7995,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 2. The mark scheme accepts: 35",
    "working": [
     "355 divided by 10 is 35 remainder 5, or exactly 35.5. DIV gives the whole-number part only, with the fraction thrown away. / is normal division and keeps the fractional part. MOD gives only the remainder left over after dividing. Work out each row with these rules; one result is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q2-r2",
    "category": "programming",
-   "prompt": "Three uses of arithmetic operators and four results are shown. Choose the correct result for each use of an arithmetic operator. Not all results will be used.\n\n355 / 10",
+   "prompt": "Three uses of arithmetic operators and four results are shown. Not all results will be used.\n\n355 / 10\n\nWhich one is this: 5, 355, 35, 35.5?",
    "answers": [
     "35.5"
    ],
@@ -7687,12 +8013,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 2. The mark scheme accepts: 35.5",
    "working": [
     "355 divided by 10 is 35 remainder 5, or exactly 35.5. DIV gives the whole-number part only, with the fraction thrown away. / is normal division and keeps the fractional part. MOD gives only the remainder left over after dividing. Work out each row with these rules; one result is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q2-r3",
    "category": "programming",
-   "prompt": "Three uses of arithmetic operators and four results are shown. Choose the correct result for each use of an arithmetic operator. Not all results will be used.\n\n355 MOD 10",
+   "prompt": "Three uses of arithmetic operators and four results are shown. Not all results will be used.\n\n355 MOD 10\n\nWhich one is this: 5, 355, 35, 35.5?",
    "answers": [
     "5"
    ],
@@ -7704,7 +8031,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 2. The mark scheme accepts: 5",
    "working": [
     "355 divided by 10 is 35 remainder 5, or exactly 35.5. DIV gives the whole-number part only, with the fraction thrown away. / is normal division and keeps the fractional part. MOD gives only the remainder left over after dividing. Work out each row with these rules; one result is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q3bi-g1",
@@ -7726,7 +8054,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 3(b)(i). The mark scheme accepts: Index1 : INTEGER, Index2 : INTEGER",
    "working": [
     "The parameters are the two indexes of the elements to swap, so the procedure needs two parameters, each written Name : TYPE and separated by a comma. The code uses the names Index1 and Index2. An index is a position in an array (1st, 2nd, 3rd...), so it is always a whole number. Hold is declared inside, and the array is not a parameter here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q3bi-g2",
@@ -7745,7 +8074,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 3(b)(i). The mark scheme accepts: Index1",
    "working": [
     "A swap uses a spare variable so a value is not lost. Step 1: copy the first element into Hold. Step 2: copy the second element into the first. Step 3: copy Hold into the second. This line is step 1, so the index in the brackets is the first of the two index parameters."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q3bi-g3",
@@ -7767,7 +8097,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 3(b)(i). The mark scheme accepts: Values[Index1] <- Values[Index2]",
    "working": [
     "Hold now keeps a safe copy of the first element. Step 2 of a swap copies the second element over the first one: the first element goes on the left of <- and the second element on the right. Copying the other way would overwrite the second value before it is saved, and Hold is used in step 3, not here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q3bi-g4",
@@ -7786,12 +8117,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 3(b)(i). The mark scheme accepts: Values[Index2] <- Hold",
    "working": [
     "Step 3 of a swap finishes the job. The first element now holds the second value, and the original first value is safe in Hold. So the second element must receive the value in Hold: the array element goes on the left of <- and Hold on the right. Hold is the value being moved, not an index."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q3bii",
    "category": "programming",
-   "prompt": "In a bubble sort, the elements Values[Index] and Values[Index + 1] are swapped. PROCEDURE Swap takes two parameters representing the indexes of the array elements to be swapped. Write the pseudocode to transfer control to PROCEDURE Swap.\nChoose ONE answer that earns a mark.",
+   "prompt": "In a bubble sort, the elements Values[Index] and Values[Index + 1] are swapped. PROCEDURE Swap takes two parameters representing the indexes of the array elements to be swapped. Write the pseudocode to transfer control to PROCEDURE Swap.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "CALL Swap(Index + 1, Index)"
    ],
@@ -7806,12 +8138,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 3(b)(ii). The mark scheme accepts: CALL Swap(Index + 1, Index)",
    "working": [
     "To run a procedure you write CALL followed by its name and the parameters in brackets. The parameters of Swap are indexes (positions), not the values in the array, so pass the two positions being compared: Index and Index + 1. A procedure does not return a value, so do not use RETURN or <-."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q3c",
    "category": "programming",
-   "prompt": "PROCEDURE Swap declares the variable Hold inside the procedure. Explain the difference between global variables and the variable Hold declared in the procedure.\nChoose ONE answer that earns a mark.",
+   "prompt": "PROCEDURE Swap declares the variable Hold inside the procedure. Explain the difference between global variables and the variable Hold declared in the procedure.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Global variables can be used throughout the program and its procedures",
     "The memory used by global variables is not recovered until the program ends",
@@ -7832,7 +8165,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 3(c). The mark scheme accepts: Global variables can be used throughout the program and its procedures / The memory used by global variables is not recovered until the program ends / Hold is a local variable and can only be used in that procedure / The memory used by a local variable is recovered at the end of the procedure",
    "working": [
     "A global variable is declared in the main program and can be used anywhere, including inside procedures. Its memory is kept until the program ends. A local variable is declared inside a procedure or function and can only be used there. When the procedure finishes, the local variable's memory is released. Ask: where was the variable declared?"
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q4ai",
@@ -7852,12 +8186,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 4(a)(i). The mark scheme accepts: Range check",
    "working": [
     "Validation checks: a range check tests that a value is between a lower and an upper limit. A length check tests the number of characters. A type check tests the data type, such as whole number. A format check tests a pattern. A presence check tests that something was entered. A check digit is an extra digit calculated from the others. Which one tests between two values?"
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q4aii",
    "category": "checks",
-   "prompt": "An input must be an integer between 10 and 95, inclusive. Suggest suitable abnormal and extreme test data, and give a reason for each of your choices.\nChoose ONE answer that earns a mark.",
+   "prompt": "An input must be an integer between 10 and 95, inclusive. Suggest suitable abnormal and extreme test data, and give a reason for each of your choices.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Abnormal test data: 150",
     "Reason: this data is out of range so should be rejected",
@@ -7880,7 +8215,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 4(a)(ii). The mark scheme accepts: Abnormal test data: 150 / Reason: this data is out of range so should be rejected / Extreme test data: 10 / Extreme test data: 95 / Reason: this is the smallest data entry that will be accepted / Reason: this is the largest data entry that will be accepted",
    "working": [
     "Abnormal test data is outside the range or the wrong type, so it should be rejected; a number above the upper limit works. Extreme test data is the largest or smallest value that is still accepted, so the lower limit itself or the upper limit itself. A value one past the limit is boundary data, not extreme. Give a reason that says whether it is accepted or rejected and why."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q4bi",
@@ -7900,12 +8236,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 4(b)(i). The mark scheme accepts: Length check",
    "working": [
     "A length check tests the number of characters in the data, for example at least 12 characters. A range check tests a number between limits, a type check tests the data type, a format check tests a pattern, a presence check tests that something was entered, and double entry is verification, not validation."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j25-23-q6b",
    "category": "design",
-   "prompt": "An algorithm inputs a Word, takes each Letter in turn using SUBSTRING, uses a CASE statement so that 'A', 'E', 'I', 'O' and 'U' set Letter <- \"\", stores each Letter in Store[Index], then outputs every element of Store[] that is not \"\". Describe the processes in the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs a Word, takes each Letter in turn using SUBSTRING, uses a CASE statement so that 'A', 'E', 'I', 'O' and 'U' set Letter <- \"\", stores each Letter in Store[Index], then outputs every element of Store[] that is not \"\". Describe the processes in the algorithm.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Each letter of the word is checked to see if it is a vowel (A, E, I, O or U)",
     "Vowels are changed to the null string using a case statement",
@@ -7926,12 +8263,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2025 Paper 23, Question 6(b). The mark scheme accepts: Each letter of the word is checked to see if it is a vowel (A, E, I, O or U) / Vowels are changed to the null string using a case statement / Each letter or null string is individually stored in an array / All the consonants are output",
    "working": [
     "Walk through it: each Letter of the Word is taken one at a time with SUBSTRING. The CASE statement looks for A, E, I, O and U (the vowels) and changes them to the null string \"\". Each result, a letter or \"\", is stored in the next place in Store[]. The output skips \"\", so only the letters that are not vowels (consonants) appear."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q2",
    "category": "checks",
-   "prompt": "Identify three different types of test data that can be used to test a program.\nChoose ONE answer that earns a mark.",
+   "prompt": "Identify three different types of test data that can be used to test a program.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal",
     "Abnormal",
@@ -7952,7 +8290,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 2. The mark scheme accepts: Normal / Abnormal / Extreme / Boundary",
    "working": [
     "The Cambridge types of test data are: normal (sensible data that should be accepted), abnormal (data that should be rejected), extreme (the largest or smallest value accepted), and boundary (values at each limit and just outside it). Other words such as random, sample or dummy are not the syllabus names."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q3",
@@ -7972,12 +8311,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 3. The mark scheme accepts: DIV",
    "working": [
     "The quotient is the result of a division. / keeps the fractional part (7 / 2 is 3.5). DIV keeps only the whole-number part (7 DIV 2 is 3). MOD gives the remainder (7 MOD 2 is 1). ^ is to the power of, * is multiply, and ROUND rounds to a number of places."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q4b",
    "category": "programming",
-   "prompt": "A restaurant algorithm stores the final cost of an order in Total. The final cost after a discount may have more than 2 decimal places. Write a pseudocode statement to set the final cost of the order to 2 decimal places.\nChoose ONE answer that earns a mark.",
+   "prompt": "A restaurant algorithm stores the final cost of an order in Total. The final cost after a discount may have more than 2 decimal places. Write a pseudocode statement to set the final cost of the order to 2 decimal places.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Total <- ROUND(Total, 2)"
    ],
@@ -7991,12 +8331,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 4(b). The mark scheme accepts: Total <- ROUND(Total, 2)",
    "working": [
     "ROUND(value, places) rounds a value to a set number of places after the point. The value goes first and the number of places second. To change the value stored in Total, the result must be assigned back into Total: Total goes on the left of <- and the ROUND on the right. DIV and MOD give whole-number answers, not rounding."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q6b",
    "category": "checks",
-   "prompt": "A check digit algorithm uses a FOR loop to input each digit of a 5-digit number into Digit and add it to Total. Explain how you could modify the pseudocode to validate that each input is a single digit.\nChoose ONE answer that earns a mark.",
+   "prompt": "A check digit algorithm uses a FOR loop to input each digit of a 5-digit number into Digit and add it to Total. Explain how you could modify the pseudocode to validate that each input is a single digit.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Add the validation after the input, inside the FOR loop but before the total",
     "Use a suitable loop such as REPEAT or WHILE",
@@ -8017,12 +8358,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 6(b). The mark scheme accepts: Add the validation after the input, inside the FOR loop but before the total / Use a suitable loop such as REPEAT or WHILE / Check that the digit is between 0 and 9 / Re-input the digit inside the loop",
    "working": [
     "A single digit is a value from 0 to 9. To validate, check each Digit straight after it is input, inside the FOR loop, before it is added to Total. Use a condition-controlled loop (REPEAT ... UNTIL or WHILE) so that if the digit is outside 0 to 9 the user must input it again until it is valid. An IF alone only checks once."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q6c",
    "category": "checks",
-   "prompt": "The 5-digit number needs to be entered as a single input. Describe one verification method that could be applied to the input of the 5-digit number.\nChoose ONE answer that earns a mark.",
+   "prompt": "The 5-digit number needs to be entered as a single input. Describe one verification method that could be applied to the input of the 5-digit number.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Visual check",
     "Double entry",
@@ -8042,8 +8384,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 6(c). The mark scheme accepts: Visual check / Double entry / Look at the data that has been entered and confirm it matches the original / Enter the data twice and only accept identical values",
    "working": [
-    "Verification checks that data was entered exactly as in the original. Two methods: double entry, where the data is entered twice and only accepted if both entries are the same; and a visual check, where the user looks at what was entered and confirms it matches the original. Range checks, check digits and digit counts are validation, not verification."
-   ]
+    "Verification checks that data was entered exactly as in the original. Double entry: the data is entered twice and only accepted if both entries are the same. Visual check: the user looks at what was entered and confirms it matches the original. Compare validation: a Range check tests the number is between limits, and a Check digit is calculated from the other digits to catch typing errors. Counting the digits is validation too."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q7b",
@@ -8065,7 +8408,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 7(b). The mark scheme accepts: It is a DIV algorithm / It performs integer division / It finds how many times the number goes into 100",
    "working": [
     "Trace it with 20: 0x20, 1x20 ... 5x20 = 100 are all <= 100, then 6x20 = 120 is too big, so Count is 6 and the loop stops. Subtract 1 gives 5. That is how many whole times 20 fits into 100, with no remainder shown. Try 110: it does not fit into 100 at all, giving 0. This is the same as one DIV operation."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q7c",
@@ -8085,7 +8429,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 7(c). The mark scheme accepts: Integer",
    "working": [
     "Choose the type from the values the variable will hold. Count starts at 0 and only has 1 added or subtracted, so it is always a whole number. INTEGER holds whole numbers, REAL holds numbers with a fractional part, STRING and CHAR hold characters, BOOLEAN holds TRUE or FALSE. Date and text are not needed here."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q7d-g2",
@@ -8103,7 +8448,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 7(d). The mark scheme accepts: Count <- Count + 1",
    "working": [
     "Inside the loop the description says Count goes up by 1 each time, then Value is worked out again. Increasing a variable by 1 is written with the variable on both sides: Variable <- Variable + 1. Changing Number or Value here would not follow the description."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q7d-g3",
@@ -8121,7 +8467,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 7(d). The mark scheme accepts: Count <- Count - 1",
    "working": [
     "The loop stops only after Count has gone one step too far (Value is now more than 100). So after the loop, Count must be made one smaller to get back to the last value that worked. Decreasing a variable by 1 is written Variable <- Variable - 1."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q10a",
@@ -8141,7 +8488,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 10(a). The mark scheme accepts: DECLARE Seconds : INTEGER and DECLARE Minutes : INTEGER",
    "working": [
     "A declaration has the form DECLARE Name : TYPE, with the name first and the type after the colon. Both variables hold whole numbers, and INTEGER is the type for whole numbers. REAL is for numbers with a fractional part, STRING is text, and TIME is not a Cambridge data type. CONSTANT is for values that never change."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q10b-g1",
@@ -8160,7 +8508,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 10(b). The mark scheme accepts: PROCEDURE Time(TotalSeconds : INTEGER)",
    "working": [
     "A procedure header is PROCEDURE Name(Parameter : TYPE). The question says it is a procedure called Time with the parameter TotalSeconds, a whole number. A procedure does not return a value, so it has no RETURNS. FUNCTION is used only when a value is returned, and CALL is used to run it, not define it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q10b-g2",
@@ -8179,7 +8528,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 10(b). The mark scheme accepts: DIV(TotalSeconds, 60)",
    "working": [
     "There are 60 seconds in a minute. The number of whole minutes is how many whole times 60 fits into TotalSeconds, with the remainder thrown away. DIV gives the whole-number part of a division. Put the value being divided first and 60 second. MOD gives the remainder instead, which is the leftover seconds."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q10b-g3",
@@ -8198,7 +8548,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 10(b). The mark scheme accepts: MOD(TotalSeconds, 60)",
    "working": [
     "After the whole minutes are taken out, the seconds left over are the remainder when TotalSeconds is divided by 60. For example 130 seconds is 2 minutes with 10 seconds left over. MOD gives the remainder of a division. The value being divided comes first and 60 second."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-21-q10b-g4",
@@ -8220,7 +8571,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 21, Question 10(b). The mark scheme accepts: ENDPROCEDURE",
    "working": [
     "Every block is closed by its matching keyword. This block began with PROCEDURE, so it must end with the keyword that matches PROCEDURE. ENDFUNCTION closes a FUNCTION, ENDIF closes an IF, NEXT closes a FOR loop, and a procedure does not RETURN a value."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q1",
@@ -8240,7 +8592,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 1. The mark scheme accepts: 16",
    "working": [
     "^ means to the power of: the first number is multiplied by itself the number of times given by the second number. So 4 ^ 2 is 4 x 4. Do not multiply 4 by 2, add them, or join the digits."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q2bi-g1",
@@ -8259,7 +8612,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(b)(i). The mark scheme accepts: Number : INTEGER",
    "working": [
     "A parameter in a procedure header is written Name : TYPE. The question names the parameter Number, and it holds how many new contacts there are, which is always a whole number. The name comes before the colon and the type after. A procedure does not use RETURNS."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q2bi-g2",
@@ -8278,7 +8632,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(b)(i). The mark scheme accepts: Number",
    "working": [
     "The outer FOR loop goes once for each new contact, one row each. The number of new contacts is held in the parameter, so the loop must stop at that value. 500 is the size of the whole array, and 4 is the number of columns, which the inner loop already handles."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q2bi-g3",
@@ -8297,7 +8652,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(b)(i). The mark scheme accepts: Contacts[Row, Column]",
    "working": [
     "A 2D array element is written ArrayName[row, column]. The outer loop variable Row picks the contact and the inner loop variable Column picks which of the 4 pieces of data. Use both loop variables, row first, so each input goes into the next empty place."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q2bi-g4",
@@ -8316,7 +8672,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(b)(i). The mark scheme accepts: NEXT Column",
    "working": [
     "Nested FOR loops close in reverse order: the inner loop closes first. The inner loop uses Column, so it is closed with NEXT followed by its own loop variable. Cambridge pseudocode closes a FOR loop with NEXT, never ENDFOR or ENDWHILE."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q2bi-g5",
@@ -8335,12 +8692,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(b)(i). The mark scheme accepts: NEXT Row",
    "working": [
     "After the inner loop is closed, the outer loop must be closed. A FOR loop is closed with NEXT followed by its own loop variable, and the outer loop uses Row. ENDPROCEDURE comes after this line, closing the procedure itself."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q2bii",
    "category": "programming",
-   "prompt": "PROCEDURE NewData(Number : INTEGER) inputs the data for Number new contacts. Write the pseudocode to input the number of new contacts and to use procedure NewData. A variable declaration is not required.\nChoose ONE answer that earns a mark.",
+   "prompt": "PROCEDURE NewData(Number : INTEGER) inputs the data for Number new contacts. Write the pseudocode to input the number of new contacts and to use procedure NewData. A variable declaration is not required.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "INPUT MyNumber then CALL NewData(MyNumber)"
    ],
@@ -8355,12 +8713,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(b)(ii). The mark scheme accepts: INPUT MyNumber then CALL NewData(MyNumber)",
    "working": [
     "The main program must first get the value from the user with INPUT into a variable. Then it runs the procedure with CALL, the procedure name, and that variable in brackets as the parameter. The order matters: the value must be input before it can be passed. A procedure does not return a value, so do not use RETURN or <-."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q2ci",
    "category": "design",
-   "prompt": "A first name is used as the search key in a search of a 2D array of contacts. If the name is found, all the data for that name is output and the algorithm stops searching. Explain why the algorithm may not always give the expected results.\nChoose ONE answer that earns a mark.",
+   "prompt": "A first name is used as the search key in a search of a 2D array of contacts. If the name is found, all the data for that name is output and the algorithm stops searching. Explain why the algorithm may not always give the expected results.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "There may be more than one person with the given first name",
     "The name may not exist in the array",
@@ -8381,12 +8740,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(c)(i). The mark scheme accepts: There may be more than one person with the given first name / The name may not exist in the array / The search stops at the first occurrence and may output the data for the wrong person / If the name is not present there could be no output",
    "working": [
     "Think about what can go wrong with a first name as the search key. Many people can share a first name, and the search stops at the first match, so it may show the wrong person's data. Also, the name may not be in the array at all, and then nothing is output, so the user is not told."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q2cii",
    "category": "design",
-   "prompt": "A first name is used as the search key in a search of a 2D array of contacts. If the name is found, all the data for that name is output and the algorithm stops searching. Explain how you could improve the algorithm so that the search is more likely to find the required results.\nChoose ONE answer that earns a mark.",
+   "prompt": "A first name is used as the search key in a search of a 2D array of contacts. If the name is found, all the data for that name is output and the algorithm stops searching. Explain how you could improve the algorithm so that the search is more likely to find the required results.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Add more search criteria to make the search more specific to each person",
     "Use the last name as well as the first name, or an ID number, date of birth or post code",
@@ -8409,12 +8769,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 2(c)(ii). The mark scheme accepts: Add more search criteria to make the search more specific to each person / Use the last name as well as the first name, or an ID number, date of birth or post code / Search the whole array to find all the matches / Remove the stop variable so the search does not stop at the first match / Use selection to confirm the name has not been found in the whole array / If the name is not present, output an appropriate message",
    "working": [
     "To make a search more likely to find the right person: search with more than one item of data (for example last name too, an ID number, date of birth or post code) so each person is unique; let the search go through the whole array to find every match instead of stopping at the first; and if nothing was found, output a message saying so."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q3-row1",
    "category": "checks",
-   "prompt": "A program is written that will only accept values between -99.99 and +99.99, inclusive. The test data is 0. Give the type of test data and the purpose of the test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program is written that will only accept values between -99.99 and +99.99, inclusive. The test data is 0. Give the type of test data and the purpose of the test data.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Normal",
     "To make sure that the program accepts data that is in range"
@@ -8430,12 +8791,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 3. The mark scheme accepts: Normal / To make sure that the program accepts data that is in range",
    "working": [
     "The range is -99.99 to +99.99. Normal test data is well inside the range and should be accepted. Abnormal is outside and should be rejected. Extreme is the largest or smallest value accepted. Boundary is a limit value and the value just outside it. Decide where 0 is in the range, then whether the program should accept or reject it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q3-row2",
    "category": "checks",
-   "prompt": "A program is written that will only accept values between -99.99 and +99.99, inclusive. The type of test data is boundary. Give suitable test data and the purpose of the test data.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program is written that will only accept values between -99.99 and +99.99, inclusive. The type of test data is boundary. Give suitable test data and the purpose of the test data.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "100",
     "-100",
@@ -8455,12 +8817,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 3. The mark scheme accepts: 100 / -100 / To make sure that the program rejects data that is on the wrong side of the boundary",
    "working": [
     "Boundary test data tests the edges of a range: the value at the limit that is accepted, and the value just past the limit that should be rejected. Here the limits are -99.99 and +99.99, so pick a value just outside either limit. Its purpose is to make sure the program rejects a value on the wrong side of the edge."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q3-row3",
    "category": "checks",
-   "prompt": "A program is written that will only accept values between -99.99 and +99.99, inclusive. The purpose of the test data is to make sure that the program rejects data that is outside acceptable limits. Give suitable test data and its type.\nChoose ONE answer that earns a mark.",
+   "prompt": "A program is written that will only accept values between -99.99 and +99.99, inclusive. The purpose of the test data is to make sure that the program rejects data that is outside acceptable limits. Give suitable test data and its type.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "300",
     "Abnormal"
@@ -8479,7 +8842,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 3. The mark scheme accepts: 300 / Abnormal",
    "working": [
     "Data outside the acceptable limits should be rejected. Test data that is clearly outside the range, or the wrong type, is abnormal. Normal data is inside the range, extreme is the highest or lowest accepted value, and boundary sits right at an edge. Pick a value far outside -99.99 to +99.99."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q4a",
@@ -8502,12 +8866,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 4(a). The mark scheme accepts: To check that the data entered has the required number of characters",
    "working": [
     "Each validation check tests one thing. A length check tests the number of characters in the data. Range tests between lower and upper values, type tests the data type, presence tests that it is not blank, format tests a pattern. Matching the original is verification, not validation."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q5b",
    "category": "design",
-   "prompt": "An algorithm inputs a Code. If LENGTH(Code) is not 4 it outputs \"Length must be 4\". Otherwise it compares Code with each element of the six-element array CodeStore[]: if a match is found it outputs \"Code used before\"; if an element is \"\" the code is stored there. When Count goes past 6 it outputs \"CodeStore full\" and stops. Describe the processes in the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs a Code. If LENGTH(Code) is not 4 it outputs \"Length must be 4\". Otherwise it compares Code with each element of the six-element array CodeStore[]: if a match is found it outputs \"Code used before\"; if an element is \"\" the code is stored there. When Count goes past 6 it outputs \"CodeStore full\" and stops. Describe the processes in the algorithm.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "It checks that the length of the code input is 4 characters",
     "It checks the code against the array contents to see if it has been used before",
@@ -8529,7 +8894,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 5(b). The mark scheme accepts: It checks that the length of the code input is 4 characters / It checks the code against the array contents to see if it has been used before / If the code passes the tests, it is stored in the array / It stores the code in the lowest available index / It outputs a code store full message when the array is full",
    "working": [
     "Trace the steps: first it tests LENGTH(Code), the number of characters, against 4. Then it compares the code with each element of CodeStore[] in order from 1, looking for a match (used before). The first empty element \"\" it finds, the lowest index, gets the new code. If Count passes 6, every element is full, so it outputs a full message."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q5c-g1",
@@ -8548,7 +8914,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 5(c). The mark scheme accepts: STRING",
    "working": [
     "An array declaration ends with OF and the data type of every element. The question says it is a string array, and each element starts as the null string \"\", which is text. CHAR holds only one character, INTEGER and REAL are numbers, BOOLEAN is TRUE or FALSE."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q5c-g2",
@@ -8567,7 +8934,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 5(c). The mark scheme accepts: INTEGER",
    "working": [
     "Index is the loop counter used to step through the array positions 1, 2, 3 ... 6. Array positions are always whole numbers. Choose the data type for whole numbers. ARRAY is not a type for a single variable."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q5c-g3",
@@ -8586,7 +8954,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 5(c). The mark scheme accepts: 6",
    "working": [
     "The loop must visit every element once. The array was declared ARRAY[1:6], so the positions go from 1 up to 6. The FOR loop starts at 1, so it must end at the last position. 5 would miss one, and 7 does not exist."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-22-q5c-g4",
@@ -8606,12 +8975,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 22, Question 5(c). The mark scheme accepts: CodeStore[Index] <- \"\"",
    "working": [
     "Inside the loop each element is set to the null string. Use the loop variable inside the square brackets so a different element is set each time round the loop, and put the empty string \"\" on the right of <-. 0 is a number, not a string, and a fixed position like 6 would set the same element every time."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q1",
    "category": "programming",
-   "prompt": "Give three ways of creating a maintainable program.\nChoose ONE answer that earns a mark.",
+   "prompt": "Give three ways of creating a maintainable program.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Use meaningful identifiers",
     "Use comments",
@@ -8628,12 +8998,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 1. The mark scheme accepts: Use meaningful identifiers / Use comments / Use procedures and functions",
    "working": [
     "A maintainable program is easy for others to read and change. Three ways: meaningful identifiers (names that say what each variable holds), comments (notes that explain the code), and procedures and functions (code in named parts that can be reused). Short names, globals, one-line code, no indentation, GOTO and repeated code all make it harder."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q2-r1",
    "category": "programming",
-   "prompt": "Four descriptions of programming techniques and five programming techniques are given. Choose the relevant technique for each description. Not all techniques will be used.\n\nadding up a set of numbers",
+   "prompt": "Four descriptions of programming techniques and five programming techniques are given. Not all techniques will be used.\n\nadding up a set of numbers\n\nWhich one is this: output, selection, totalling, iteration, counting?",
    "answers": [
     "totalling"
    ],
@@ -8646,12 +9017,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 2. The mark scheme accepts: totalling",
    "working": [
     "Totalling means adding values together into a running total. Counting means adding 1 each time something happens. Output means displaying a result to the user. Selection means choosing which instructions to run using a condition (IF or CASE). Iteration means repeating instructions (a loop). Match each description to one technique; one is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q2-r2",
    "category": "programming",
-   "prompt": "Four descriptions of programming techniques and five programming techniques are given. Choose the relevant technique for each description. Not all techniques will be used.\n\ndisplaying the result of a calculation",
+   "prompt": "Four descriptions of programming techniques and five programming techniques are given. Not all techniques will be used.\n\ndisplaying the result of a calculation\n\nWhich one is this: output, selection, totalling, iteration, counting?",
    "answers": [
     "output"
    ],
@@ -8664,12 +9036,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 2. The mark scheme accepts: output",
    "working": [
     "Totalling means adding values together into a running total. Counting means adding 1 each time something happens. Output means displaying a result to the user. Selection means choosing which instructions to run using a condition (IF or CASE). Iteration means repeating instructions (a loop). Match each description to one technique; one is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q2-r3",
    "category": "programming",
-   "prompt": "Four descriptions of programming techniques and five programming techniques are given. Choose the relevant technique for each description. Not all techniques will be used.\n\nexecuting a set of instructions based on a condition",
+   "prompt": "Four descriptions of programming techniques and five programming techniques are given. Not all techniques will be used.\n\nexecuting a set of instructions based on a condition\n\nWhich one is this: output, selection, totalling, iteration, counting?",
    "answers": [
     "selection"
    ],
@@ -8682,12 +9055,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 2. The mark scheme accepts: selection",
    "working": [
     "Totalling means adding values together into a running total. Counting means adding 1 each time something happens. Output means displaying a result to the user. Selection means choosing which instructions to run using a condition (IF or CASE). Iteration means repeating instructions (a loop). Match each description to one technique; one is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q2-r4",
    "category": "programming",
-   "prompt": "Four descriptions of programming techniques and five programming techniques are given. Choose the relevant technique for each description. Not all techniques will be used.\n\nexecuting the same set of instructions multiple times",
+   "prompt": "Four descriptions of programming techniques and five programming techniques are given. Not all techniques will be used.\n\nexecuting the same set of instructions multiple times\n\nWhich one is this: output, selection, totalling, iteration, counting?",
    "answers": [
     "iteration"
    ],
@@ -8700,7 +9074,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 2. The mark scheme accepts: iteration",
    "working": [
     "Totalling means adding values together into a running total. Counting means adding 1 each time something happens. Output means displaying a result to the user. Selection means choosing which instructions to run using a condition (IF or CASE). Iteration means repeating instructions (a loop). Match each description to one technique; one is not used."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q3",
@@ -8720,12 +9095,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 3. The mark scheme accepts: char",
    "working": [
     "Choose the type from the data. 'M' is one single character. CHAR holds exactly one character. STRING holds text of any length, INTEGER is a whole number, REAL has a fractional part, BOOLEAN is TRUE or FALSE. Date, array and constant are not the best type for one character."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q4b",
    "category": "checks",
-   "prompt": "A theme park booking algorithm inputs the number of adult tickets into Adult. Each booking must have at least one adult ticket. Explain how the algorithm could be changed to repeatedly ask for the number of adult tickets if the number input is less than 1.\nChoose ONE answer that earns a mark.",
+   "prompt": "A theme park booking algorithm inputs the number of adult tickets into Adult. Each booking must have at least one adult ticket. Explain how the algorithm could be changed to repeatedly ask for the number of adult tickets if the number input is less than 1.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Add a WHILE loop or a REPEAT UNTIL loop",
     "Use the correct condition, such as WHILE Adult < 1 or UNTIL Adult >= 1",
@@ -8744,12 +9120,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 4(b). The mark scheme accepts: Add a WHILE loop or a REPEAT UNTIL loop / Use the correct condition, such as WHILE Adult < 1 or UNTIL Adult >= 1 / Output a suitable message asking for at least one adult / Input the number of adults inside the loop",
    "working": [
     "To ask again and again until the input is valid, use a condition-controlled loop: WHILE or REPEAT ... UNTIL. A FOR loop runs a set number of times, so it is not suitable. The loop repeats while Adult is less than 1 (or until Adult is 1 or more). Inside the loop, output a message saying at least one adult is needed and input Adult again."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q5b",
    "category": "fix",
-   "prompt": "An algorithm inputs five numbers between 1 and 900 and should store the highest and lowest. It uses IF Number < Lowest THEN Lowest <- Number ELSE IF Number > Highest THEN Highest <- Number. With the input 563, 21, 376, 99, 400 it ends with Highest = 400. State the reason why the algorithm does not work as expected and explain how the algorithm could be corrected.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs five numbers between 1 and 900 and should store the highest and lowest. It uses IF Number < Lowest THEN Lowest <- Number ELSE IF Number > Highest THEN Highest <- Number. With the input 563, 21, 376, 99, 400 it ends with Highest = 400. State the reason why the algorithm does not work as expected and explain how the algorithm could be corrected.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "The highest value is incorrect because the highest cannot be checked when the lowest is updated",
     "Replace the ELSE with ENDIF and remove the second ENDIF, so there are two separate IF statements for Highest and Lowest"
@@ -8768,7 +9145,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 5(b). The mark scheme accepts: The highest value is incorrect because the highest cannot be checked when the lowest is updated / Replace the ELSE with ENDIF and remove the second ENDIF, so there are two separate IF statements for Highest and Lowest",
    "working": [
     "Trace it: with ELSE, the Highest test only runs when the number is not a new lowest. The first number 563 becomes the lowest, so it is never compared with Highest and is lost. The two checks must be independent. End the first IF with ENDIF and make the Highest check its own separate IF, so every number is tested for both."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q6b",
@@ -8788,7 +9166,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 6(b). The mark scheme accepts: Linear search",
    "working": [
     "The algorithm looks at each element of the list in order, from the first to the last, comparing it with the item being searched for, and records the position if it matches. Checking items one by one in order is a linear search. A bubble sort puts data in order, totalling adds, counting adds 1."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q6c-g1",
@@ -8806,7 +9185,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 6(c). The mark scheme accepts: -1",
    "working": [
     "The description sets Position to -1 at the start. -1 cannot be a real position in the list, which starts at 1, so if Position is still -1 at the end, the name was not found. 0, 1 or 5 could be mistaken for real positions."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q6c-g3",
@@ -8824,7 +9204,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 6(c). The mark scheme accepts: Name = ClassList[Count]",
    "working": [
     "This IF tests if the name has been found. Compare the input Name with the element of ClassList at the current position Count. If they are equal, the THEN part stores the position. Use the equals sign and the loop counter, not a fixed position."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q6c-g4",
@@ -8842,7 +9223,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 6(c). The mark scheme accepts: Count <- Count + 1",
    "working": [
     "If the name does not match, the search must move on to the next element. The description says Count is increased by 1. Increasing a variable by 1 is written Variable <- Variable + 1. Changing Position would lose the result."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q6c-g5",
@@ -8861,7 +9243,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 6(c). The mark scheme accepts: Position",
    "working": [
     "At the end the algorithm outputs the result of the search. The description says Position is output: it holds where the name was found, or -1 if it was not found. Count has been changed to 6 or more to stop the loop, so it is not the answer."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q7b",
@@ -8883,7 +9266,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 7(b). The mark scheme accepts: Input / Output / Iteration",
    "working": [
     "Programming techniques in the syllabus include input (getting data from the user), output (displaying data), selection (IF or CASE), iteration (a loop such as FOR), totalling and counting. Look for which of these appear in the description: a prompt is shown, a number is typed in, and a FOR loop repeats 8 times. There is no IF, sum or search."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q7ci",
@@ -8902,8 +9286,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 7(c)(i). The mark scheme accepts: Range check",
    "working": [
-    "A presence check and a type check are already used. The number must be between 1 and 255 inclusive, so it must be between a lower and an upper limit. The validation check that tests this is a range check. Double entry and visual checks are verification, not validation."
-   ]
+    "A presence check and a type check are already used. The number must be between 1 and 255 inclusive, so it must be between a lower and an upper limit. A Range check tests exactly this. Compare: a Format check tests a pattern of characters, and a Check digit is calculated from the other digits. A Double entry check and a Visual check are verification, not validation."
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q7cii-g1",
@@ -8925,7 +9310,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 7(c)(ii). The mark scheme accepts: REPEAT",
    "working": [
     "The code ends with UNTIL, so it is a post-condition loop. UNTIL closes a loop that begins with REPEAT. WHILE ends with ENDWHILE, FOR ends with NEXT, IF ends with ENDIF, CASE ends with ENDCASE. This loop inputs again until the number is valid."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q7cii-g2",
@@ -8944,12 +9330,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 7(c)(ii). The mark scheme accepts: DenaryNumber >= 1 AND DenaryNumber <= 255",
    "working": [
     "REPEAT ... UNTIL stops when the condition is TRUE, so the condition must describe valid data. Valid means at least 1 AND at most 255, inclusive, so use >= and <=. Both parts must be true at once, so join them with AND. OR would let almost any number pass."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q9a",
    "category": "programming",
-   "prompt": "The variables Name, Age and Found are used in a computer program. Name holds the name of a person. Age holds the age of a person as a whole number. Found holds a flag that can be set to TRUE or FALSE. Write pseudocode statements to declare the variables Name, Age and Found.\nChoose ONE answer that earns a mark.",
+   "prompt": "The variables Name, Age and Found are used in a computer program. Name holds the name of a person. Age holds the age of a person as a whole number. Found holds a flag that can be set to TRUE or FALSE. Write pseudocode statements to declare the variables Name, Age and Found.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "DECLARE Name : STRING",
     "DECLARE Age : INTEGER",
@@ -8970,12 +9357,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 9(a). The mark scheme accepts: DECLARE Name : STRING / DECLARE Age : INTEGER / DECLARE Found : BOOLEAN",
    "working": [
     "A declaration is DECLARE Name : TYPE. A name is text of several characters, so STRING. An age as a whole number is INTEGER. A flag that is TRUE or FALSE is BOOLEAN. CHAR is one character only, REAL has a fractional part, and TEXT is not a Cambridge data type."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "n25-23-q9bii",
    "category": "programming",
-   "prompt": "The procedure StoreData(Name) stores the name of a person in the file People.txt. Write the pseudocode that uses the procedure StoreData() to store the name 'Suella' in the file People.txt.\nChoose ONE answer that earns a mark.",
+   "prompt": "The procedure StoreData(Name) stores the name of a person in the file People.txt. Write the pseudocode that uses the procedure StoreData() to store the name 'Suella' in the file People.txt.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "CALL StoreData(\"Suella\")"
    ],
@@ -8990,7 +9378,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, November 2025 Paper 23, Question 9(b)(ii). The mark scheme accepts: CALL StoreData(\"Suella\")",
    "working": [
     "A procedure is run with CALL, then its name, then the parameter in brackets. The procedure takes one parameter, the name. A fixed piece of text is written in quotation marks. The procedure already knows the file, so the file name is not passed. Procedures do not return values."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q1",
@@ -9013,7 +9402,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 1. The mark scheme accepts: To make sure that no errors have been introduced during input",
    "working": [
     "Verification checks that data has been entered or copied exactly as it was in the original, so no mistakes were made during input, for example by double entry or a visual check. It does not check that data is sensible: range, length, type, presence and format are validation. Data can be verified and still be wrong in the original."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q2ai",
@@ -9032,8 +9422,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 2(a)(i). The mark scheme accepts: Format check",
    "working": [
-    "A format check tests that data follows a set pattern, such as letters and digits in fixed places. Length counts characters, type tests the data type, range tests between limits, presence tests that something was entered, and a check digit is calculated from other digits."
-   ]
+    "A Format check tests that data follows a set pattern, such as letters and digits in fixed places. Compare: a Length check counts characters, a Type check tests the data type, a Range check tests between limits, a Presence check tests that something was entered, and a Check digit is calculated from other digits."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q2aii",
@@ -9052,13 +9443,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 2(a)(ii). The mark scheme accepts: Type check",
    "working": [
-    "A type check tests that the data is of the right data type, for example a whole number (INTEGER) and not text or a number with a fractional part. A range check tests limits, length counts characters, format tests a pattern, presence tests for blanks."
-   ]
+    "A Type check tests that the data is of the right data type, for example a whole number (INTEGER) and not text or a number with a fractional part. Compare: a Range check tests limits, a Length check counts characters, a Format check tests a pattern, and a Presence check tests for blanks."
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q2b",
    "category": "checks",
-   "prompt": "Explain the reasons why validation checks are necessary when data is input.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain the reasons why validation checks are necessary when data is input.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "To check that the data meets the given criteria",
     "To check that the data entered is sensible",
@@ -9080,12 +9472,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 2(b). The mark scheme accepts: To check that the data meets the given criteria / To check that the data entered is sensible / The checks happen automatically as the data is entered / It reduces the likelihood of errors before data is stored / It reduces the need for later correction and maintenance",
    "working": [
     "Validation is an automatic check by the computer, done as data is input, that the data is sensible and meets set rules (such as a range or a format). It stops many errors before the data is stored, so less fixing is needed later. It cannot prove data is correct or matches the original: that is verification. It does not replace testing or encrypt data."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q3-analysis",
    "category": "design",
-   "prompt": "The program development life cycle is split into a number of stages. Describe what happens during the analysis stage.\nChoose ONE answer that earns a mark.",
+   "prompt": "The program development life cycle is split into a number of stages. Describe what happens during the analysis stage.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Abstraction is used to emphasise the important aspects of the problem",
     "The problem is decomposed into smaller, manageable parts",
@@ -9105,12 +9498,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 3. The mark scheme accepts: Abstraction is used to emphasise the important aspects of the problem / The problem is decomposed into smaller, manageable parts / The problem and its requirements are identified",
    "working": [
     "Analysis is the first stage: find out what the problem is and what the solution must do (the requirements). Abstraction keeps the important parts and removes what is not needed. Decomposition breaks the problem into smaller parts. Drawing flowcharts is design, writing code is coding, and using test data is testing."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q3-design",
    "category": "design",
-   "prompt": "The program development life cycle is split into a number of stages. Describe what happens during the design stage.\nChoose ONE answer that earns a mark.",
+   "prompt": "The program development life cycle is split into a number of stages. Describe what happens during the design stage.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Decomposition separates the problem into further sub-problems",
     "Structure diagrams are produced to represent the proposed system",
@@ -9131,7 +9525,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 3. The mark scheme accepts: Decomposition separates the problem into further sub-problems / Structure diagrams are produced to represent the proposed system / A flowchart is drawn to represent the algorithm / The algorithm is written in pseudocode",
    "working": [
     "Design is the stage after analysis, where the solution is planned before any code is written. The problem is decomposed into sub-problems, and the plan is shown using structure diagrams, flowcharts and pseudocode. Identifying requirements is analysis, writing code is coding, and running test data is testing."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q4",
@@ -9151,7 +9546,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 4. The mark scheme accepts: Remove blank lines to make the program code shorter",
    "working": [
     "Maintainable code is easy for others to read and change. Meaningful identifiers, procedures and functions, comments, indentation, constants and local variables all help. Ask which option makes code harder to read: white space, such as blank lines, separates sections so code is easier to follow, so taking it away does not help."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q5b-g1",
@@ -9170,7 +9566,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 5(b). The mark scheme accepts: 200",
    "working": [
     "In ARRAY[1:200, 1:2] the first pair gives the rows, from 1 to 200, and the second pair gives the columns, from 1 to 2. The outer loop variable is Row, so it must go up to the last row number."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q5b-g2",
@@ -9189,7 +9586,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 5(b). The mark scheme accepts: 2",
    "working": [
     "In ARRAY[1:200, 1:2] the second pair gives the columns: column 1 is the last name and column 2 the first name. The inner loop variable is Column, so it must go up to the last column number."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q5b-g3",
@@ -9211,12 +9609,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 5(b). The mark scheme accepts: Names[Row, Column]",
    "working": [
     "A 2D array element is written ArrayName[row, column], with the row first. Use both loop variables so every element is visited: Row from the outer loop and Column from the inner loop. A fixed number would output the same column every time."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q5c",
    "category": "design",
-   "prompt": "A bubble sort sorts 200 names in a 2D array. Last names are in column 1 and first names in column 2. The comparison is IF Names[Row, 1] > Names[Row + 1, 1]. Describe a possible problem with the algorithm that could mean the names are not sorted accurately.\nChoose ONE answer that earns a mark.",
+   "prompt": "A bubble sort sorts 200 names in a 2D array. Last names are in column 1 and first names in column 2. The comparison is IF Names[Row, 1] > Names[Row + 1, 1]. Describe a possible problem with the algorithm that could mean the names are not sorted accurately.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "The sort only looks at the last name in the first column of the array",
     "If several people have the same last name, their first names will not be sorted correctly"
@@ -9235,12 +9634,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 5(c). The mark scheme accepts: The sort only looks at the last name in the first column of the array / If several people have the same last name, their first names will not be sorted correctly",
    "working": [
     "Look at the comparison: it only uses column 1, which holds the last names. The first names in column 2 are never compared. So when two people have the same last name, the sort does not put their first names in order, and they may be in the wrong order."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q6b",
    "category": "design",
-   "prompt": "An algorithm inputs a Sentence and stores LENGTH(Sentence) in SentLength. It checks each character in turn; each time it finds a space it takes SUBSTRING(Sentence, Start, LetterNo - Start) as Word and outputs Word and LENGTH(Word). At the end it outputs the last word and its length. Explain the purpose of the algorithm.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs a Sentence and stores LENGTH(Sentence) in SentLength. It checks each character in turn; each time it finds a space it takes SUBSTRING(Sentence, Start, LetterNo - Start) as Word and outputs Word and LENGTH(Word). At the end it outputs the last word and its length. Explain the purpose of the algorithm.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "It calculates and stores the length of the sentence",
     "It divides the sentence into its separate words by finding the spaces",
@@ -9261,12 +9661,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 6(b). The mark scheme accepts: It calculates and stores the length of the sentence / It divides the sentence into its separate words by finding the spaces / It finds the length of each word in the sentence / It outputs the separate words along with their lengths",
    "working": [
     "Trace it: LENGTH(Sentence) gives the length of the sentence. It then checks each character. A space marks the end of a word, so SUBSTRING takes out the characters from the start of the word to the space. It outputs that word and LENGTH(Word). So the sentence is split into words and each word is shown with its length."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m26-22-q6c",
    "category": "programming",
-   "prompt": "An algorithm inputs a Sentence with no prompt, then outputs each word and its length with no headings, and then stops. As currently written, the algorithm may be difficult to understand if it was used as a program. Identify three improvements that could be made to the algorithm to make it more user friendly.\nChoose ONE answer that earns a mark.",
+   "prompt": "An algorithm inputs a Sentence with no prompt, then outputs each word and its length with no headings, and then stops. As currently written, the algorithm may be difficult to understand if it was used as a program. Identify three improvements that could be made to the algorithm to make it more user friendly.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Add an input prompt so that the user knows what to enter",
     "Add output messages or headings so that the output is understood",
@@ -9286,7 +9687,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, March 2026 Paper 22, Question 6(c). The mark scheme accepts: Add an input prompt so that the user knows what to enter / Add output messages or headings so that the output is understood / Put the program in a repeating loop so the user can input another sentence without restarting",
    "working": [
     "User friendly means the user knows what to do and what the output means. With no prompt the user does not know what to type, so add an input prompt. With no headings the numbers are unclear, so add output messages. It stops after one sentence, so put it in a loop to let the user enter another."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q1",
@@ -9306,12 +9708,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 1. The mark scheme accepts: Range check",
    "working": [
     "A range check tests that a value is between a lower and an upper value. A length check counts characters, a presence check tests something was entered, a type check tests the data type, a format check tests a pattern, and a check digit is calculated from the other digits."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q3-r1",
    "category": "programming",
-   "prompt": "Choose the most appropriate data type for each variable described.\n\nAge: the age of the student, for example 16",
+   "prompt": "Age: the age of the student, for example 16\n\nWhich one is this: integer, real, char, string, Boolean?",
    "answers": [
     "integer"
    ],
@@ -9324,12 +9727,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 3. The mark scheme accepts: integer",
    "working": [
     "INTEGER: a whole number, such as a count or an age. REAL: a number with a fractional part, such as 2.5. CHAR: exactly one character. STRING: text or any mix of characters; numbers that are not used in calculations, and that contain + or spaces, are stored as STRING. BOOLEAN: only TRUE or FALSE. For each row, look at the example value and match it to the description."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q3-r2",
    "category": "programming",
-   "prompt": "Choose the most appropriate data type for each variable described.\n\nTelephoneNumber: the telephone number of the student, for example +44 7846398573",
+   "prompt": "TelephoneNumber: the telephone number of the student, for example +44 7846398573\n\nWhich one is this: integer, real, char, string, Boolean?",
    "answers": [
     "string"
    ],
@@ -9342,12 +9746,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 3. The mark scheme accepts: string",
    "working": [
     "INTEGER: a whole number, such as a count or an age. REAL: a number with a fractional part, such as 2.5. CHAR: exactly one character. STRING: text or any mix of characters; numbers that are not used in calculations, and that contain + or spaces, are stored as STRING. BOOLEAN: only TRUE or FALSE. For each row, look at the example value and match it to the description."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q3-r3",
    "category": "programming",
-   "prompt": "Choose the most appropriate data type for each variable described.\n\nTeenager: whether the student is a teenager or not, for example TRUE",
+   "prompt": "Teenager: whether the student is a teenager or not, for example TRUE\n\nWhich one is this: integer, real, char, string, Boolean?",
    "answers": [
     "Boolean"
    ],
@@ -9360,7 +9765,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 3. The mark scheme accepts: Boolean",
    "working": [
     "INTEGER: a whole number, such as a count or an age. REAL: a number with a fractional part, such as 2.5. CHAR: exactly one character. STRING: text or any mix of characters; numbers that are not used in calculations, and that contain + or spaces, are stored as STRING. BOOLEAN: only TRUE or FALSE. For each row, look at the example value and match it to the description."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q4-g1",
@@ -9379,7 +9785,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 4. The mark scheme accepts: 50",
    "working": [
     "Last is the position of the last element still to be sorted. At the start nothing is sorted yet, so Last is the position of the final element. The array Names has 50 elements, so the last position is 50. The FOR loop already uses Last - 1 to compare each element with the next."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q4-g2",
@@ -9401,7 +9808,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 4. The mark scheme accepts: FALSE",
    "working": [
     "Swap is a flag that records if any swap happened in this pass. At the start of each pass no swap has happened yet, so it starts as the opposite of TRUE. Inside the IF it is set to TRUE when two names swap."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q4-g3",
@@ -9420,7 +9828,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 4. The mark scheme accepts: Index",
    "working": [
     "A FOR loop needs a loop variable after FOR. Look at the lines inside: Names[Index] and Names[Index + 1] are compared, and the loop ends with NEXT Index. So the loop variable must be the same name."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q4-g4",
@@ -9442,13 +9851,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 4. The mark scheme accepts: NOT / FALSE =",
    "working": [
-    "The sort should stop when a whole pass made no swaps, meaning Swap is FALSE. REPEAT ... UNTIL stops when its condition is TRUE. So the condition must be TRUE when Swap is FALSE: put the opposite of Swap. NOT turns TRUE into FALSE and FALSE into TRUE. Writing FALSE = Swap gives the same result."
-   ]
+    "The sort should stop when a whole pass made no swaps, meaning Swap is FALSE. REPEAT ... UNTIL stops when its condition is TRUE. So the condition must be TRUE when Swap is FALSE. NOT turns TRUE into FALSE and FALSE into TRUE. Compare: TRUE = Swap is TRUE only when Swap is TRUE, the opposite of what is needed. AND and OR join two conditions, and the gap holds only one, Swap, before the OR."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q5a",
    "category": "programming",
-   "prompt": "A computer system automatically creates usernames for new users, including a random whole number between 1 and 1000 inclusive. Write the pseudocode to generate a whole random number between 1 and 1000 inclusive and store it in the variable GeneratedNumber.\nChoose ONE answer that earns a mark.",
+   "prompt": "A computer system automatically creates usernames for new users, including a random whole number between 1 and 1000 inclusive. Write the pseudocode to generate a whole random number between 1 and 1000 inclusive and store it in the variable GeneratedNumber.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "GeneratedNumber <- RANDOM() * 999 + 1",
     "GeneratedNumber <- ROUND(RANDOM() * 999, 0) + 1"
@@ -9465,12 +9875,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 5(a). The mark scheme accepts: GeneratedNumber <- RANDOM() * 999 + 1 / GeneratedNumber <- ROUND(RANDOM() * 999, 0) + 1",
    "working": [
     "RANDOM() gives a random value from 0 to 1. Multiplying by 999 gives a value from 0 to 999. Adding 1 shifts this to 1 to 1000. To make it a whole number, ROUND the value to 0 places before adding 1. Multiplying by 1000 then adding 1 could give 1001. The variable goes on the left of <-."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q5b",
    "category": "programming",
-   "prompt": "A username uses the first two letters of the last name in upper case (for example, Hann gives HA). The last name is input into the variable LastName. Write the pseudocode to take the first two letters from LastName, convert the letters to upper case and store the result in the variable Temp.\nChoose ONE answer that earns a mark.",
+   "prompt": "A username uses the first two letters of the last name in upper case (for example, Hann gives HA). The last name is input into the variable LastName. Write the pseudocode to take the first two letters from LastName, convert the letters to upper case and store the result in the variable Temp.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Temp <- UCASE(SUBSTRING(LastName, 1, 2))"
    ],
@@ -9485,12 +9896,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 5(b). The mark scheme accepts: Temp <- UCASE(SUBSTRING(LastName, 1, 2))",
    "working": [
     "SUBSTRING(string, start, length) takes characters from a string: start is the position of the first character (from 1), length is how many characters. The first two letters start at position 1 with length 2. UCASE changes letters to upper case, and LCASE to lower case. Put SUBSTRING inside UCASE and store the result on the left of <-."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q5d",
    "category": "checks",
-   "prompt": "A new user enters their first name and their last name. Identify and describe verification checks that could be applied to the inputs of the first name and the last name of the user.\nChoose ONE answer that earns a mark.",
+   "prompt": "A new user enters their first name and their last name. Identify and describe verification checks that could be applied to the inputs of the first name and the last name of the user.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Double entry",
     "Enter the data twice and only accept identical values",
@@ -9510,13 +9922,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 5(d). The mark scheme accepts: Double entry / Enter the data twice and only accept identical values / Visual check / Look at the data that has been entered and confirm it matches",
    "working": [
-    "Verification checks data was entered exactly as intended. Double entry: the data is typed twice, and only accepted if both entries are identical. Visual check: the user looks at what was entered on screen and confirms it matches the original. Presence, format and length checks are validation, not verification."
-   ]
+    "Verification checks that data was entered exactly as intended. Double entry: the data is typed twice and only accepted if both entries are identical. Visual check: the user looks at what was entered on screen and confirms it matches the original. Compare validation: a Presence check tests the name was not left blank, and a Format check tests it contains only letters. Length checks are validation too."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q6",
    "category": "programming",
-   "prompt": "Give programming examples for a count-controlled loop and a post-condition loop. Describe each of the loops.\nChoose ONE answer that earns a mark.",
+   "prompt": "Give programming examples for a count-controlled loop and a post-condition loop. Describe each of the loops.\nThis question is worth 4 marks: give ONE point that earns a mark.",
    "answers": [
     "Count-controlled loop example: FOR",
     "It iterates a pre-determined number of times",
@@ -9537,12 +9950,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 6. The mark scheme accepts: Count-controlled loop example: FOR / It iterates a pre-determined number of times / Post-condition loop example: REPEAT UNTIL / It checks the condition at the end of the loop, so it always iterates at least once",
    "working": [
     "A count-controlled loop repeats a set number of times that is known before it starts; in pseudocode this is FOR ... NEXT. A post-condition loop tests its condition at the end, after the code inside has run, so it always runs at least once; this is REPEAT ... UNTIL. WHILE is a pre-condition loop, tested at the start, so it may not run at all."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q10b",
    "category": "checks",
-   "prompt": "A flowchart inputs six whole numbers, one at a time with INPUT Number, and outputs the highest. Describe how the flowchart could be changed to only accept positive whole numbers.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart inputs six whole numbers, one at a time with INPUT Number, and outputs the highest. Describe how the flowchart could be changed to only accept positive whole numbers.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "Add a new decision box with IS Number > 0 ?",
     "Place the decision box straight after INPUT Number",
@@ -9562,7 +9976,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 10(b). The mark scheme accepts: Add a new decision box with IS Number > 0 ? / Place the decision box straight after INPUT Number / If the number is not positive, loop back to before INPUT Number",
    "working": [
     "To accept only positive numbers, check every number as soon as it is input. Add a decision box straight after INPUT Number that asks if the number is greater than 0. If No, go back to before the input so the user must enter it again. If Yes, carry on. Stopping or changing the number does not make the user re-enter it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q11-g1",
@@ -9584,7 +9999,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 11. The mark scheme accepts: FirstNumber : INTEGER, SecondNumber : INTEGER",
    "working": [
     "Parameters in a header are written Name : TYPE, separated by commas. The function is described as Power(FirstNumber, SecondNumber), and both are integers. Each parameter needs its own name and type, with the name before the colon. A and B are the variables in the main program, used only when calling it."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q11-g2",
@@ -9603,7 +10019,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 11. The mark scheme accepts: RETURN",
    "working": [
     "Inside a function, the value worked out is sent back with RETURN followed by the value. RETURNS (with S) only goes in the header to give the type. OUTPUT shows a value on screen but does not send it back, and CALL is for running procedures."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q11-g3",
@@ -9625,7 +10042,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 11. The mark scheme accepts: ENDFUNCTION",
    "working": [
     "Every block is closed by its matching keyword. This block began with FUNCTION, so it must end with the keyword that matches it. ENDPROCEDURE closes a PROCEDURE, ENDIF closes an IF, NEXT closes a FOR loop, and RETURN sends a value back but does not end the definition."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-21-q11-g4",
@@ -9644,7 +10062,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 21, Question 11. The mark scheme accepts: Power(A, B)",
    "working": [
     "A function is called by writing its name with the values to use in brackets, and the result goes into the variable on the left of <-. Use the main program's variables A and B, in the same order as the parameters (first number, then second number). CALL is only for procedures."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q1",
@@ -9667,7 +10086,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 1. The mark scheme accepts: FOR ... NEXT and WHILE ... DO ... ENDWHILE",
    "working": [
     "Iteration means repeating code, a loop. The three loops in Cambridge pseudocode are FOR ... NEXT, WHILE ... DO ... ENDWHILE and REPEAT ... UNTIL. IF and CASE are selection, which choose between options and do not repeat. Both parts of the answer must be loops."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q2",
@@ -9687,7 +10107,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 2. The mark scheme accepts: char",
    "working": [
     "One single character, whether a letter, symbol or digit, is stored as a CHAR. STRING is for text of any length, INTEGER and REAL are numbers used in calculations, and BOOLEAN is TRUE or FALSE. Date and array are not single-character types."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q3ai",
@@ -9709,8 +10130,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 3(a)(i). The mark scheme accepts: Presence check",
    "working": [
-    "A presence check tests that data has been entered and the field is not left blank. Length counts characters, type tests the data type, range tests between limits, format tests a pattern, and a check digit is calculated from other digits."
-   ]
+    "A Presence check tests that data has been entered and the field is not left blank. Compare: a Length check counts characters, a Type check tests the data type, a Range check tests between limits, a Format check tests a pattern, and a Check digit is calculated from other digits."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q3aii",
@@ -9729,13 +10151,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 3(a)(ii). The mark scheme accepts: Check digit",
    "working": [
-    "A check digit is an extra digit added to the end of a number. It is calculated from all the digits before it. When the number is input, the calculation is done again and compared with it to catch typing errors. Range, length, format, type and presence checks do not add a calculated value."
-   ]
+    "A Check digit is an extra digit added to the end of a number. It is calculated from all the digits before it. When the number is input, the calculation is done again and compared with it to catch typing errors. Compare: a Range check tests limits, a Length check counts characters, a Format check tests a pattern, a Type check tests the data type, and a Presence check tests for blanks."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q3b",
    "category": "checks",
-   "prompt": "Explain the purpose of a format check and give an example of where it could be used.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain the purpose of a format check and give an example of where it could be used.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "To check that the input matches a required pattern or structure",
     "It must contain a set number of letters and numbers, or specific characters, in the right places",
@@ -9756,12 +10179,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 3(b). The mark scheme accepts: To check that the input matches a required pattern or structure / It must contain a set number of letters and numbers, or specific characters, in the right places / Example: a date in the format dd/mm/yyyy / Example: an email address containing an @",
    "working": [
     "A format check tests that data follows a set pattern: the right kinds of characters in the right places, such as digits and slashes, or a required symbol. Good examples are a date like dd/mm/yyyy or an email address that must contain @. Between two values is a range check, not blank is presence, and a number of characters is a length check."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q4-coding",
    "category": "design",
-   "prompt": "The program development life cycle is split into several stages. Outline what happens during the coding stage.\nChoose ONE answer that earns a mark.",
+   "prompt": "The program development life cycle is split into several stages. Outline what happens during the coding stage.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "The program code is written in a programming language",
     "The pseudocode, flowcharts and structure diagrams from the design stage are used to create the code",
@@ -9784,12 +10208,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 4. The mark scheme accepts: The program code is written in a programming language / The pseudocode, flowcharts and structure diagrams from the design stage are used to create the code / The code is documented with comments so that it is maintainable / Procedures and functions or library routines are written and used / A compiler, interpreter or IDE is used when writing the code / The code is tested in small parts as it is written to make sure it works as expected",
    "working": [
     "Coding is the stage where the program is written in a programming language, using the plans from design (pseudocode, flowcharts, structure diagrams). Programmers add comments, use procedures, functions and library routines, use a translator or IDE, and test small parts as they write. Requirements, abstraction and decomposition are analysis; structure diagrams are drawn in design."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q4-testing",
    "category": "design",
-   "prompt": "The program development life cycle is split into several stages. Outline what happens during the testing stage.\nChoose ONE answer that earns a mark.",
+   "prompt": "The program development life cycle is split into several stages. Outline what happens during the testing stage.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "The whole program is tested for errors as the final stage",
     "Test data with known outcomes is used",
@@ -9811,7 +10236,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 4. The mark scheme accepts: The whole program is tested for errors as the final stage / Test data with known outcomes is used / To make sure the whole program produces the expected outcomes and accepts valid data and rejects invalid data / Errors are corrected and the code is debugged / Different types of test data are used, such as normal, abnormal, boundary and extreme",
    "working": [
     "Testing is the stage where the finished program is checked using test data whose expected results are known in advance: normal, abnormal, extreme and boundary. It shows the program gives the right results, accepts valid data and rejects invalid data. Errors found are corrected (debugged). Requirements, plans and decomposition belong to earlier stages."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q5b",
@@ -9835,12 +10261,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 5(b). The mark scheme accepts: Linear search / Sequential search",
    "working": [
     "The algorithm compares the item being searched for with each row in turn, from the first to the last, until it finds a match. Checking items one by one in order is a linear search (also called sequential). A bubble sort puts data in order, totalling adds values, counting adds 1."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q5c",
    "category": "design",
-   "prompt": "A corrected linear search inputs AccountID, then uses FOR Row <- 1 TO 1000 and IF AccountID = Accounts[Row, 1] THEN OUTPUT the customer's name. The algorithm stops if the account number is not found in the array. Write the pseudocode statements to change the algorithm to inform the user that the account number has not been found in the array. Clearly state where in the original algorithm your new statements would be placed.\nChoose ONE answer that earns a mark.",
+   "prompt": "A corrected linear search inputs AccountID, then uses FOR Row <- 1 TO 1000 and IF AccountID = Accounts[Row, 1] THEN OUTPUT the customer's name. The algorithm stops if the account number is not found in the array. Write the pseudocode statements to change the algorithm to inform the user that the account number has not been found in the array. Clearly state where in the original algorithm your new statements would be placed.\nThis question is worth 5 marks: give ONE point that earns a mark.",
    "answers": [
     "Initialise a flag at the start, before the loop",
     "Flag <- FALSE",
@@ -9861,7 +10288,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 5(c). The mark scheme accepts: Initialise a flag at the start, before the loop / Flag <- FALSE / Inside the IF statement, where the item has been found / Flag <- TRUE / After the loop, add another selection statement / IF Flag = FALSE / THEN OUTPUT \"Account number not found in the array\"",
    "working": [
     "Use a flag, a BOOLEAN variable. Before the loop, set it to FALSE (not found yet). Inside the IF, where a match is found, set it to TRUE. After the loop has checked every row, add an IF: if the flag is still FALSE, output a message saying the account number was not found. Outputting inside the loop would give a message for every row."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-22-q6b",
@@ -9881,7 +10309,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 22, Question 6(b). The mark scheme accepts: It counts and outputs the number of double letters in a word",
    "working": [
     "Trace committee: each letter is compared with the letter next to it. m-m, t-t and e-e are the same, so Count is 3. post has no letter next to the same letter, so 0. So it counts pairs of the same letter side by side. It is not counting vowels or all letters."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q1",
@@ -9901,7 +10330,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 1. The mark scheme accepts: totalling",
    "working": [
     "Totalling means adding each value to a running total during a loop: Total <- Total + Value. Counting is different: it adds 1 each time, Count <- Count + 1. Searching finds an item, sorting puts items in order, and validating checks data is sensible."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q2",
@@ -9921,7 +10351,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 2. The mark scheme accepts: string",
    "working": [
     "A STRING holds any mix of characters (letters, digits, symbols) of any length. CHAR holds only one character, INTEGER and REAL are numbers, BOOLEAN is TRUE or FALSE. Date and array are not the answer."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q3ai",
@@ -9940,8 +10371,9 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 3(a)(i). The mark scheme accepts: Normal test data",
    "working": [
-    "Normal test data is sensible data inside the range that should be accepted. Abnormal is outside the range and rejected. Extreme is the highest or lowest value accepted. Boundary is a limit value and the value just outside it. Erroneous, invalid and rogue are not the Cambridge names here."
-   ]
+    "Normal test data is sensible data inside the range that should be accepted. Abnormal test data is outside the range and is rejected. Extreme test data is the highest or lowest value accepted. Boundary test data is a limit value and the value just outside it. Erroneous, invalid and rogue are not the Cambridge names here."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q3aii",
@@ -9961,13 +10393,14 @@ DrillData.register("y11-exam-race", {
    ],
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 3(a)(ii). The mark scheme accepts: Extreme test data / Boundary test data",
    "working": [
-    "Extreme test data is the largest or smallest value that is still accepted, the very ends of the range. Boundary test data also tests the edges, using the value at each limit and the one just past it. Normal is in the middle of the range, abnormal is outside it."
-   ]
+    "Extreme test data is the largest or smallest value that is still accepted, the very ends of the range. Boundary test data also tests the edges, using the value at each limit and the one just past it. Compare: Normal test data is a typical value in the middle of the range, and Abnormal test data is outside the range and is rejected."
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q3b",
    "category": "checks",
-   "prompt": "Explain the purpose of a check digit and give an example of where it could be used.\nChoose ONE answer that earns a mark.",
+   "prompt": "Explain the purpose of a check digit and give an example of where it could be used.\nThis question is worth 3 marks: give ONE point that earns a mark.",
    "answers": [
     "It is a value used to instantly check the accuracy of data",
     "It is calculated from the other digits of the input",
@@ -9986,12 +10419,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 3(b). The mark scheme accepts: It is a value used to instantly check the accuracy of data / It is calculated from the other digits of the input / Example: the last digit of an ISBN on a book / Example: a bar code / Example: a credit card number",
    "working": [
     "A check digit is an extra digit at the end of a long number, calculated from all the other digits. When the number is input, the calculation is repeated; if the result does not match the check digit, an error was made. It is used on long code numbers, such as an ISBN on a book, a bar code, or a credit card number. Dates, passwords and ages use other checks."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q4bi",
    "category": "checks",
-   "prompt": "A FOR loop inputs RunName then RunTime (line 11: INPUT RunTime) for each of 250 runners, then calculates RunMins and RunSecs from RunTime (line 12 onwards). The algorithm is intended to work for positive finish times that are 3600 seconds or less, but any number of seconds can currently be input. Write the pseudocode statements to show how you would change the algorithm so that only times in the correct range could be input. The time needs to be input again until valid data is input. Clearly state where in the original algorithm your new statements would be placed.\nChoose ONE answer that earns a mark.",
+   "prompt": "A FOR loop inputs RunName then RunTime (line 11: INPUT RunTime) for each of 250 runners, then calculates RunMins and RunSecs from RunTime (line 12 onwards). The algorithm is intended to work for positive finish times that are 3600 seconds or less, but any number of seconds can currently be input. Write the pseudocode statements to show how you would change the algorithm so that only times in the correct range could be input. The time needs to be input again until valid data is input. Clearly state where in the original algorithm your new statements would be placed.\nThis question is worth 5 marks: give ONE point that earns a mark.",
    "answers": [
     "Use a condition-controlled loop inside the existing loop, before the RunTime input",
     "REPEAT (or WHILE RunTime < 1 OR RunTime > 3600 DO)",
@@ -10015,12 +10449,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 4(b)(i). The mark scheme accepts: Use a condition-controlled loop inside the existing loop, before the RunTime input / REPEAT (or WHILE RunTime < 1 OR RunTime > 3600 DO) / After INPUT RunTime on line 11, insert a selection statement with a range check / IF RunTime < 1 OR RunTime > 3600 / OUTPUT \"The time must be positive and no greater than 3600 seconds\" / Finish the loop before the calculations start, before line 12 / UNTIL RunTime > 0 AND RunTime <= 3600",
    "working": [
     "Each time inside the existing FOR loop, the time must be input again until it is valid. Use a condition-controlled loop around INPUT RunTime: REPEAT, input, UNTIL RunTime > 0 AND RunTime <= 3600 (or WHILE RunTime < 1 OR RunTime > 3600). Add an IF that outputs an error message for a bad value. The loop must finish before line 12, so calculations only use valid times."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q4bii",
    "category": "fix",
-   "prompt": "An algorithm uses FOR Index <- 1 TO 250 to input the name and time of each runner in a race and store them in the arrays Runners[] and Times[], each with 250 elements. Identify one other possible problem with the algorithm.",
+   "prompt": "An algorithm is intended to store the names of up to 250 runners who finish a race. It uses FOR Index <- 1 TO 250 to input the name and the time in seconds of each runner, display them for verification, and store them in the arrays Runners[] and Times[], each with 250 elements. Apart from any number of seconds being accepted as a finish time, identify one other possible problem with the algorithm.",
    "answers": [
     "The FOR loop always iterates 250 times, even if there are not 250 runners",
     "Only 250 runners can be stored in the array",
@@ -10041,12 +10476,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 4(b)(ii). The mark scheme accepts: The FOR loop always iterates 250 times, even if there are not 250 runners / Only 250 runners can be stored in the array / Two runners could have the same name, so they would be difficult to identify / The runner's name is not validated or verified",
    "working": [
     "Think about the fixed number 250. A FOR loop always runs a set number of times, so it asks for 250 runners even if fewer ran, and an array of 250 cannot store more. Also, nothing checks the name that is input (no validation or verification), and two runners with the same name could not be told apart."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q5b",
    "category": "checks",
-   "prompt": "A flowchart inputs Size, then a decision box IS Size < 50.0 ? adds 1 to PassCount or FailCount. Describe how you would change the flowchart to prevent negative numbers from being input.\nChoose ONE answer that earns a mark.",
+   "prompt": "A flowchart inputs Size, then a decision box IS Size < 50.0 ? adds 1 to PassCount or FailCount. Describe how you would change the flowchart to prevent negative numbers from being input.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "Add another decision box after the input box and before the existing decision box",
     "Check for values < 0 in this decision box",
@@ -10066,7 +10502,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 5(b). The mark scheme accepts: Add another decision box after the input box and before the existing decision box / Check for values < 0 in this decision box / If the check fails, loop back to the input box for re-input",
    "working": [
     "To stop negative numbers, check each number as soon as it is input, before it is used. Add a new decision box between the input box and the existing decision box that checks if Size is less than 0. If it is, go back to the input box so the user must enter it again. If not, carry on to the existing check."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q6a-g1",
@@ -10084,7 +10521,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 6(a). The mark scheme accepts: LENGTH(Fact)",
    "working": [
     "LENGTH(string) gives the number of characters in a string. Put the variable name inside the brackets without quotation marks, so the value stored in Fact is measured. With quotation marks it would measure the word Fact itself. UCASE changes to upper case, a different job."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q6a-g2",
@@ -10102,12 +10540,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 6(a). The mark scheme accepts: UCASE(Fact)",
    "working": [
     "UCASE(string) gives a copy of the string in upper case (capital letters). LCASE gives lower case. Put the variable name inside the brackets without quotation marks so the value stored in Fact is used. UPPER is not a Cambridge pseudocode function."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q6b",
    "category": "programming",
-   "prompt": "The variable Fact stores \"I learnt to program in computer science\". Write the pseudocode statements to use a string function to output the word program taken from the string stored in the variable Fact.\nChoose ONE answer that earns a mark.",
+   "prompt": "The variable Fact stores \"I learnt to program in computer science\". Write the pseudocode statements to use a string function to output the word program taken from the string stored in the variable Fact.\nThis question is worth 2 marks: give ONE point that earns a mark.",
    "answers": [
     "OUTPUT SUBSTRING(Fact, 13, 7)",
     "OUTPUT SUBSTRING(Fact, 12, 7)"
@@ -10123,12 +10562,13 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 6(b). The mark scheme accepts: OUTPUT SUBSTRING(Fact, 13, 7) / OUTPUT SUBSTRING(Fact, 12, 7)",
    "working": [
     "SUBSTRING(string, start, length) takes part of a string. Count positions from 1, including spaces: I is 1, the space is 2, learnt is 3 to 8, space 9, to is 10 and 11, space 12. So program starts at 13, or at 12 if positions are counted from 0. Its length is the number of letters in program. Use the variable Fact, not text in quotes."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "j26-23-q9",
    "category": "programming",
-   "prompt": "Outline two techniques that can be used to create a maintainable program.\nChoose ONE answer that earns a mark.",
+   "prompt": "Outline two techniques that can be used to create a maintainable program.\nThis question is worth 6 marks: give ONE point that earns a mark.",
    "answers": [
     "Use comments",
     "Comments describe sections of code and their purpose",
@@ -10155,7 +10595,8 @@ DrillData.register("y11-exam-race", {
    "note": "From Cambridge IGCSE 0478, June 2026 Paper 23, Question 9. The mark scheme accepts: Use comments / Comments describe sections of code and their purpose / Comments make the code easier for other programmers to understand / Use meaningful identifiers for variables, constants, procedures and arrays / The purpose of each item is suggested by its name / Use procedures and functions / The program is modular and repeated code is avoided / A subprogram can be called anywhere it is needed with different parameters / Use whitespace and indentation / The program is laid out clearly so the start and end of selection and iteration are clear",
    "working": [
     "Techniques for maintainable programs: comments, which explain what each section does so others can understand it; meaningful identifiers, where each name tells you what it holds; procedures and functions, which split the program into parts that can be called with parameters, avoiding repeated code; and indentation and white space, which show where selection and loops start and end. Outline two, each with why it helps."
-   ]
+   ],
+   "pickThenType": true
   },
   {
    "id": "m21-22-q4a",
@@ -14441,7 +14882,7 @@ DrillData.register("y11-exam-race", {
    "id": "n23-22-q4a",
    "category": "fix",
    "widget": "errorline",
-   "prompt": "An algorithm has been written in pseudocode to allow the names of 50 cities and their countries to be entered and stored in a two-dimensional (2D) array. The contents of the array are then output. Identify the errors in the pseudocode and suggest corrections.\nThere are 5 errors: find any one.",
+   "prompt": "An algorithm has been written in pseudocode to allow the names of 50 cities and their countries to be entered and stored in a two-dimensional (2D) array. The contents of the array are then output. Identify the four errors in the pseudocode and suggest corrections.\nThere are 5 errors: find any one.",
    "errorline": {
     "code": "DECLARE City ARRAY[1:50, 1:2] OF BOOLEAN\nDECLARE Count : INTEGER\nDECLARE Out : INTEGER\nCount <- 1\nIF\n    OUTPUT \"Enter the name of the city\"\n    INPUT City[Count, 2]\n    OUTPUT \"Enter the name of the country\"\n    INPUT City[Count, 2]\n    Count <- Count + 1\nUNTIL Count = 50\nFOR Out <- 1 TO 1\n    OUTPUT \"The city \", City[Out, 1], \" is in \", City[Out, 2]\nNEXT Out",
     "errors": [
@@ -18266,7 +18707,7 @@ DrillData.register("y11-exam-race", {
    "id": "m26-22-q6a",
    "category": "trace",
    "widget": "trace",
-   "prompt": "This algorithm (a flowchart on the paper, written here as pseudocode) works through a sentence. Complete the trace table for the algorithm, using the given sentence. Note: the start position of the sentence is index 1.\nTest data: Computing is fun\n\n01  INPUT Sentence\n02  SentLength <- LENGTH(Sentence)\n03  LetterNo <- 1\n04  Start <- 1\n05  REPEAT\n06      IF SUBSTRING(Sentence, LetterNo, 1) = \" \"\n07        THEN\n08          Word <- SUBSTRING(Sentence, Start, LetterNo - Start)\n09          OUTPUT Word, \" \", LENGTH(Word)\n10          Start <- LetterNo + 1\n11      ENDIF\n12      LetterNo <- LetterNo + 1\n13  UNTIL LetterNo = SentLength\n14  Word <- SUBSTRING(Sentence, Start, LetterNo - Start + 1)\n15  OUTPUT Word, \" \", LENGTH(Word)",
+   "prompt": "This algorithm (a flowchart on the paper, written here as pseudocode) works through a sentence. Complete the trace table for the algorithm, using the sentence: Computing is fun. Note: the start position of the sentence is index 1.\n\n01  INPUT Sentence\n02  SentLength <- LENGTH(Sentence)\n03  LetterNo <- 1\n04  Start <- 1\n05  REPEAT\n06      IF SUBSTRING(Sentence, LetterNo, 1) = \" \"\n07        THEN\n08          Word <- SUBSTRING(Sentence, Start, LetterNo - Start)\n09          OUTPUT Word, \" \", LENGTH(Word)\n10          Start <- LetterNo + 1\n11      ENDIF\n12      LetterNo <- LetterNo + 1\n13  UNTIL LetterNo = SentLength\n14  Word <- SUBSTRING(Sentence, Start, LetterNo - Start + 1)\n15  OUTPUT Word, \" \", LENGTH(Word)",
    "trace": {
     "columns": [
      "Sentence",

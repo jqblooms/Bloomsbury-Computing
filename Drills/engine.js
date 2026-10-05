@@ -754,6 +754,32 @@
     });
   }
 
+  // Pick-then-type (the Exam Race's worded questions, James 2026-10-05): the student picks the option that earns the
+  // mark, then types it out; it locks in (and is marked) once the typing matches the option they picked. Matching is
+  // against THEIR pick, never the right answer, so typing can't give the answer away. Capitals and punctuation
+  // don't matter; pasting is blocked.
+  function startPickTyping(el, radio, opt) {
+    if (current.checked) return;
+    Array.prototype.forEach.call(els.stage.querySelectorAll(".opt"), function (o) { o.classList.remove("is-picked"); });
+    el.classList.add("is-picked");
+    var box = els.stage.querySelector("#pick-type");
+    if (!box) {
+      box = document.createElement("div"); box.id = "pick-type"; box.className = "pick-type";
+      els.stage.querySelector(".options").insertAdjacentElement("afterend", box);
+    }
+    box.innerHTML = '<label for="pick-type-input">Type it out to lock it in:</label>' +
+      '<div class="pick-type-model">' + escapeHtml(opt) + "</div>" +
+      '<input type="text" id="pick-type-input" autocomplete="off" autocapitalize="off" spellcheck="false">';
+    var inp = box.querySelector("input"), want = normalizeLoose(opt);
+    inp.addEventListener("paste", function (e) { e.preventDefault(); });
+    inp.addEventListener("input", function () {
+      var got = normalizeLoose(inp.value);
+      inp.classList.toggle("off", got !== "" && want.indexOf(got) !== 0);
+      if (got === want) { inp.disabled = true; radio.checked = true; submitAnswer(); }
+    });
+    inp.focus();
+  }
+
   function renderCard() {
     var card = resolveCard(cardsById[current.cardId], current.instance);
     var set = current.set;
@@ -762,9 +788,10 @@
     // Multi-answer cards always stay multiple choice, even in text mode -
     // grading several free-typed answers reliably is a much harder problem
     // than grading one, so only single-answer cards get the text input.
-    var textMode = run.answerMode === "text" && !set.multi;
+    // A pick-then-type card always shows its options (the student picks one, then types it out): never plain typing.
+    var textMode = run.answerMode === "text" && !set.multi && !cardsById[current.cardId].pickThenType;
 
-    var kind = set.multi ? "Pick every correct answer, then submit" : (textMode ? answerFormat(card) : "Pick an answer");
+    var kind = set.multi ? "Pick every correct answer, then submit" : card.pickThenType ? "Pick the answer that earns the mark, then type it out to lock it in" : (textMode ? answerFormat(card) : "Pick an answer");
     var streakHtml = "";
     if (run.mode === "quiz") {
       var s = run.streak[current.cardId] || 0;
@@ -824,6 +851,7 @@
         el.addEventListener("click", function () {
           if (current.checked || el.classList.contains("is-ruled-out")) return;
           var input = el.querySelector("input");
+          if (card.pickThenType) { startPickTyping(el, input, set.options[+el.getAttribute("data-opt")]); return; }
           if (!set.multi) {
             input.checked = true;
             el.classList.add("is-picked");
@@ -886,7 +914,8 @@
       }
       return;
     }
-    var textMode = run.answerMode === "text" && !set.multi;
+    // A pick-then-type card always shows its options (the student picks one, then types it out): never plain typing.
+    var textMode = run.answerMode === "text" && !set.multi && !cardsById[current.cardId].pickThenType;
     if (textMode) showTextHint(true); else narrowOptions(true);
   }
 
@@ -894,7 +923,8 @@
     if (current.checked) return;
     var set = current.set;
     var card = resolveCard(cardsById[current.cardId], current.instance);
-    var textMode = run.answerMode === "text" && !set.multi;
+    // A pick-then-type card always shows its options (the student picks one, then types it out): never plain typing.
+    var textMode = run.answerMode === "text" && !set.multi && !cardsById[current.cardId].pickThenType;
     var right;
     var fb;
 
