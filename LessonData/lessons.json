@@ -41,7 +41,8 @@
           "code": "",
           "title": "Term 1 Exam Revision",
           "lessons": [
-            "y7-revision-1"
+            "y7-revision-1",
+            "y7-revision-2"
           ]
         }
       ]
@@ -147,7 +148,8 @@
           "code": "2.2",
           "title": "Methods of Error Detection",
           "lessons": [
-            "y10-2-2-l1"
+            "y10-2-2-l1",
+            "y10-2-2-l2"
           ]
         }
       ]
