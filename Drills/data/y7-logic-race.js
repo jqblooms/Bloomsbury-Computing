@@ -20,9 +20,15 @@ DrillData.register("y7-logic-race", {
       return { id: id, category: "lg-calc", prompt: "What is the answer?\n" + q + " = ?", answers: [ans],
         keywords: [new RegExp("^\\s*" + ans + "\\s*$")], distractors: [ans === "1" ? "0" : "1"], working: HELP[op] };
     }
-    function gap(id, q, ans, op, opts) {
-      return { id: id, category: "lg-gap", prompt: "Fill the gap.\n" + q, answers: [ans],
-        keywords: [new RegExp("^\\s*" + ans + "\\s*$", "i")], distractors: opts || [ans === "1" ? "0" : "1"], working: HELP[op] };
+    // A whole truth table with one output missing (row `miss`, counting from 0).
+    function table(id, op, miss) {
+      var rows = op === "NOT" ? [[0], [1]] : [[0, 0], [0, 1], [1, 0], [1, 1]];
+      var out = function (r) { return op === "NOT" ? 1 - r[0] : op === "AND" ? (r[0] && r[1]) : (r[0] || r[1]); };
+      var head = op === "NOT" ? "A | NOT A" : "A | B | A " + op + " B";
+      var lines = rows.map(function (r, i) { return r.join(" | ") + " | " + (i === miss ? "?" : out(r)); });
+      var ans = String(out(rows[miss]));
+      return { id: id, category: "lg-gap", prompt: "Fill the gap in the truth table.\n" + head + "\n" + lines.join("\n"), answers: [ans],
+        keywords: [new RegExp("^\\s*" + ans + "\\s*$")], distractors: [ans === "1" ? "0" : "1"], working: HELP[op] };
     }
     return [
       calc("c-and-00", "0 AND 0", "0", "AND"),
@@ -35,16 +41,9 @@ DrillData.register("y7-logic-race", {
       calc("c-or-11", "1 OR 1", "1", "OR"),
       calc("c-not-0", "NOT 0", "1", "NOT"),
       calc("c-not-1", "NOT 1", "0", "NOT"),
-      gap("g-and-1", "1 AND ___ = 1", "1", "AND"),
-      gap("g-and-0", "1 AND ___ = 0", "0", "AND"),
-      gap("g-and-l", "___ AND 1 = 1", "1", "AND"),
-      gap("g-or-1", "0 OR ___ = 1", "1", "OR"),
-      gap("g-or-0", "0 OR ___ = 0", "0", "OR"),
-      gap("g-or-l", "___ OR 0 = 1", "1", "OR"),
-      gap("g-not-1", "NOT ___ = 1", "0", "NOT"),
-      gap("g-not-0", "NOT ___ = 0", "1", "NOT"),
-      gap("g-op-or", "1 ___ 0 = 1", "OR", "PICK", ["AND"]),
-      gap("g-op-and", "1 ___ 0 = 0", "AND", "PICK", ["OR"])
+      table("t-and-0", "AND", 0), table("t-and-1", "AND", 1), table("t-and-2", "AND", 2), table("t-and-3", "AND", 3),
+      table("t-or-0", "OR", 0), table("t-or-1", "OR", 1), table("t-or-2", "OR", 2), table("t-or-3", "OR", 3),
+      table("t-not-0", "NOT", 0), table("t-not-1", "NOT", 1)
     ];
   })()
 });
