@@ -18,7 +18,12 @@ const P = 'y10-22l2';
 const re = (source) => ({ __regex: true, source, flags: 'i' });
 const cite = (ref) => `Cambridge IGCSE ${ref}.`;
 const facts = (items) => '<ul class="lesson-facts">' + items.map((i) => `<li>${i}</li>`).join('') + '</ul>';
-const columns = (a, b) => `<div class="lesson-do-now-columns"><div>${a}</div><div>${b}</div></div>`;
+// A side holding a parity table takes the table's own width (nine columns do not fit half a slide); the other side gets the rest.
+const columns = (a, b) => {
+  const t = (s) => s.includes('donow-table');
+  const tpl = t(a) && !t(b) ? 'max-content minmax(0, 1fr)' : t(b) && !t(a) ? 'minmax(0, 1fr) max-content' : '';
+  return `<div class="lesson-do-now-columns"${tpl ? ` style="grid-template-columns:${tpl}"` : ''}><div>${a}</div><div>${b}</div></div>`;
+};
 const MONO = 'font:700 20px var(--font-mono, monospace);letter-spacing:4px';
 const bits = (s, mark = []) => `<span style="${MONO}">` +
   s.split('').map((b, i) => mark.includes(i) ? `<span style="color:var(--bad);text-decoration:underline">${b}</span>` : b).join('') + '</span>';
