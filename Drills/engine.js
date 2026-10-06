@@ -22,6 +22,9 @@
   // so the lesson can size the iframe instead of guessing.
   var isEmbedded = params.get("embed") === "1";
   if (isEmbedded) document.body.classList.add("is-embed");
+  // True once a run's done screen is showing; a run in progress (or learn mode) is reported to the lesson
+  // as BC_DRILL_RUN active, so a student pressing the slide's Next is asked first (js/steps/embeds.html).
+  var drillRunFinished = false;
   var drill = DRILLS[drillId];
   if (!drill) {
     document.getElementById("drill-title").textContent = "Drill not found";
@@ -1051,6 +1054,7 @@
   }
 
   function renderDone() {
+    drillRunFinished = true;
     // "True mastery" (the whole drill, all topics) is a different thing
     // from just finishing the run's own chosen subset - a student who
     // picked 10 cards from one topic has completed THIS RUN, not
@@ -1281,6 +1285,7 @@
   // run is found.
   function resumeRun() {
     if (!run) { openSetup(); return; }
+    drillRunFinished = false;
     els.setupCard.style.display = "none";
     els.runArea.style.display = "";
     applyModeUI(run.mode);
@@ -1288,6 +1293,7 @@
     nextCard();
   }
   function startRun(mode) {
+    drillRunFinished = false;
     var category = els.setupCategory.value;
     var count = Number(els.setupCount.value) || null;
     if (isCodeDrill) { startCodeRun(category, mode); return; }
@@ -1331,6 +1337,7 @@
   // writing code is a one-sitting activity, not something to resume days
   // later, so there is no localStorage save here at all.
   function startCodeRun(category, mode) {
+    drillRunFinished = false;
     // Deliberately ignores the card-count picker (hidden for code drills
     // anyway): a type can only be mastered if every one of its authored
     // variants is available to draw from, so the run always includes the
@@ -1634,6 +1641,7 @@
   }
 
   function renderCodeDone() {
+    drillRunFinished = true;
     els.stage.innerHTML =
       '<div class="done"><div class="big"><svg viewBox="0 0 48 48" width="56" height="56" aria-hidden="true"><path d="M14 8h20v10a10 10 0 0 1-20 0z" fill="#fdd663"/><path d="M14 11H8v4a7 7 0 0 0 7 7M34 11h6v4a7 7 0 0 1-7 7" fill="none" stroke="#fdd663" stroke-width="3"/><path d="M21 28h6v7h-6zM15 36h18v5H15z" fill="#fcad70"/></svg></div><h2>Every type mastered!</h2>' +
       "<p>You wrote correct code for every type of question, three times in a row, for " + escapeHtml(categoryLabel(run.category)) + ".</p>" +
@@ -1668,6 +1676,7 @@
   // otherwise (all real cards shipped with this feature are 1 mark per
   // part, matching how they're actually marked in the original exam).
   function startExamRun(category, count) {
+    drillRunFinished = false;
     var ids = shuffle(categoryCardIds(category).slice());
     if (count && count < ids.length) ids = ids.slice(0, count);
     run = {
@@ -1777,6 +1786,7 @@
   }
 
   function renderExamDone() {
+    drillRunFinished = true;
     var pct = run.totalMarks ? Math.round((run.scoreMarks / run.totalMarks) * 100) : 0;
     els.stage.innerHTML =
       '<div class="card">' +
@@ -1836,6 +1846,14 @@
     };
     if (window.ResizeObserver) new ResizeObserver(postEmbedHeight).observe(embedWrap);
     else setInterval(postEmbedHeight, 500);
+    var lastRunActive = null;
+    setInterval(function () {
+      var shown = function (el) { return !!el && getComputedStyle(el).display !== "none"; };
+      var active = shown(els.runArea) && !shown(els.setupCard) && !drillRunFinished;
+      if (active === lastRunActive) return;
+      lastRunActive = active;
+      try { window.parent.postMessage({ type: "BC_DRILL_RUN", active: active }, "*"); } catch (e) {}
+    }, 500);
     window.addEventListener("load", postEmbedHeight);
     postEmbedHeight();
   }
