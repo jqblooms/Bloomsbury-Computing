@@ -13,7 +13,8 @@ DrillData.register("y7-logic-race", {
     var HELP = {
       AND: ["AND gives 1 only when both sides are 1.", "Look at both sides. Are they both 1?"],
       OR: ["OR gives 1 when at least one side is 1.", "Look at both sides. Is either one a 1?"],
-      NOT: ["NOT flips the value.", "What is the opposite of the value?"]
+      NOT: ["NOT flips the value.", "What is the opposite of the value?"],
+      PICK: ["One of them gives 1 only when both sides are 1. The other gives 1 when either side is 1.", "Here one side is 1, the other side is 0. Which one gives this answer?"]
     };
     function calc(id, q, ans, op) {
       return { id: id, category: "lg-calc", prompt: "What is the answer?\n" + q + " = ?", answers: [ans],
@@ -42,8 +43,8 @@ DrillData.register("y7-logic-race", {
       gap("g-or-l", "___ OR 0 = 1", "1", "OR"),
       gap("g-not-1", "NOT ___ = 1", "0", "NOT"),
       gap("g-not-0", "NOT ___ = 0", "1", "NOT"),
-      gap("g-op-or", "1 ___ 0 = 1", "OR", "OR", ["AND"]),
-      gap("g-op-and", "1 ___ 0 = 0", "AND", "AND", ["OR"])
+      gap("g-op-or", "1 ___ 0 = 1", "OR", "PICK", ["AND"]),
+      gap("g-op-and", "1 ___ 0 = 0", "AND", "PICK", ["OR"])
     ];
   })()
 });
