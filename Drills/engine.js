@@ -20,6 +20,20 @@
   // already shows the lesson title, so the drill's own header is hidden,
   // and the page reports its height to the parent (see the boot section)
   // so the lesson can size the iframe instead of guessing.
+
+  // A question line above a program: the question shows as plain text and only
+  // the program goes in the code box (students read "What is output?" as part of
+  // the code, James 2026-10-07). A first line ending in ? . or : is a question.
+  function promptHtml(prompt, extraHtml) {
+    var nl = prompt.indexOf("\n");
+    if (nl === -1) return '<p class="prompt">' + escapeHtml(prompt) + extraHtml + "</p>";
+    var first = prompt.slice(0, nl);
+    if (/[a-z]/.test(first) && /[?.:]\s*$/.test(first)) {
+      return '<p class="prompt">' + escapeHtml(first) + "</p>" +
+        '<p class="prompt has-code">' + escapeHtml(prompt.slice(nl + 1)) + extraHtml + "</p>";
+    }
+    return '<p class="prompt has-code">' + escapeHtml(prompt) + extraHtml + "</p>";
+  }
   var isEmbedded = params.get("embed") === "1";
   if (isEmbedded) document.body.classList.add("is-embed");
   // True once a run's done screen is showing; a run in progress (or learn mode) is reported to the lesson
@@ -733,7 +747,7 @@
     }
     els.stage.innerHTML =
       '<div class="card">' +
-      '<p class="prompt' + (card.prompt.indexOf("\n") !== -1 ? " has-code" : "") + '">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
+      promptHtml(card.prompt, streakHtml) +
       '<div id="exam-widget"></div>' +
       (learn ? '<div id="support-hint" hidden></div>' : "") +
       '<div class="feedback" id="fb"></div>' +
@@ -830,7 +844,7 @@
     els.stage.innerHTML =
       '<div class="card">' +
       flowchartCardExtraHtml(card) +
-      '<p class="prompt' + (promptHasCode ? " has-code" : "") + '">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
+      promptHtml(card.prompt, streakHtml) +
       '<div class="hint-kind">' + kind + "</div>" +
       bodyHtml +
       '<div class="feedback" id="fb"></div>' +
@@ -1467,7 +1481,7 @@
     els.stage.innerHTML =
       '<div class="card">' +
       flowchartCardExtraHtml(card) +
-      '<p class="prompt' + (promptHasCode ? " has-code" : "") + '">' + escapeHtml(card.prompt) + streakHtml + "</p>" +
+      promptHtml(card.prompt, streakHtml) +
       (given ? '<div class="code-given">' + escapeHtml(given) + "</div>" : "") +
       '<textarea class="code-textarea" id="code-input" spellcheck="false" autocomplete="off" placeholder="Type your pseudocode here..."></textarea>' +
       (learn ? '<div id="code-support-hint" hidden></div>' : "") +
