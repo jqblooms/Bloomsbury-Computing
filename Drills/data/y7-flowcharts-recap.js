@@ -343,6 +343,50 @@ DrillData.register("y7-flowcharts-recap", {
           steps: ["A sub-routine is written as its own flowchart.", "Each CALL runs that same flowchart again, so it is never copied out."],
           working: ["Count the sub-routine flowcharts, not the CALL boxes.", "A CALL jumps to the sub-routine; it does not copy its boxes."],
           note: name + " is written out once and CALLed " + k + " times." };
+      }),
+
+      // ================= Added 2026-10-07 so the revision covers every Year 7 Term 1 Test question.
+      // Answers that mean the same thing are all accepted ("2", "two", "2 arrows"; "-90", "left").
+      card("dec-arrows", "y7r-read", function () {
+        var w = words(2), q = pick(["Space pressed?", "Up arrow pressed?", "Score > Target?"]);
+        var flow = branch([], q, [["io", "Say \"" + w[0] + "\""]], [["io", "Say \"" + w[1] + "\""]]);
+        return { flow: flow, prompt: "How many arrows come out of the decision box?", answer: "2",
+          re: /^\s*(2|two)(\s*arrows?)?\s*$|^\s*(2\s*:?\s*)?true\s*(and|,|&)\s*false\s*$|^\s*(2\s*:?\s*)?false\s*(and|,|&)\s*true\s*$/i,
+          wrong: ["1", "3", "4"], steps: ["A decision asks a question with two answers.", "One arrow is labelled True and one is labelled False."],
+          working: ["Look at the labels on the arrows leaving the diamond.", "Every question in a decision has two possible answers."],
+          note: "A decision always has two arrows out: True and False." };
+      }),
+      card("turn-direction", "y7r-loops", function () {
+        var start = pick(DIRS), turns = [], n = range(2, 3);
+        for (var i = 0; i < n; i++) turns.push(pick(["right", "left"]));
+        var boxes = [["process", "Point in direction " + start[1]]];
+        turns.forEach(function (t) { boxes.push(["process", "Move " + range(10, 40, 10) + " steps"]); boxes.push(["process", "Turn " + t + " 90 degrees"]); });
+        var flow = FC.line(boxes);
+        var r = FC.run(flow, {});
+        var d = ((r.direction % 360) + 360) % 360; if (d > 180) d -= 360;
+        var name = DIRS.filter(function (x) { return x[1] === d || (d === -180 && x[1] === 180); })[0];
+        var nums = d === 180 || d === -180 ? "180|[-\\u2212]\\s*180" : (d < 0 ? "[-\\u2212]\\s*" : "") + Math.abs(d);
+        var one = "(" + nums + ")(\\s*(degrees?|\\u00b0))?|" + name[0];
+        var re = new RegExp("^\\s*((facing|pointing)\\s+)?(" + one + ")(\\s*\\(?\\s*(" + one + ")\\s*\\)?)?\\s*$", "i");
+        return { flow: flow, prompt: "Which direction is the sprite facing at the end? Give the number or the direction.",
+          answer: String(name[1]), re: re,
+          wrong: DIRS.filter(function (x) { return x[0] !== name[0]; }).map(function (x) { return String(x[1]); }), steps: r.trace,
+          working: ["Start from the Point in direction box. Move boxes do not change the direction.", "Each right turn goes one step round: right, down, left, up. A left turn goes the other way round."],
+          note: "After the turns the sprite faces " + name[0] + " (" + name[1] + ")." };
+      }),
+      card("call-change", "y7r-sub", function () {
+        var name = pick(["Hop", "Step", "Jump"]), w = pick(WORDS), k = range(2, 4), m = range(10, 30, 10), n;
+        do { n = range(20, 50, 10); } while (n === m || k * n === k * m || k * n === 90);
+        var make = function (steps) {
+          var f = FC.line(Array.apply(null, Array(k)).map(function () { return ["call", "CALL " + name]; }));
+          f.subs = {}; f.subs[name] = FC.line([["process", "Move " + steps + " steps"], ["io", "Say \"" + w + "\""]]);
+          return f;
+        };
+        var flow = make(m), after = FC.run(make(n), {}).steps;
+        return { flow: flow, prompt: name + " is changed to Move " + n + " steps. How many steps does the sprite move now?",
+          answer: after, re: numRe(after, "steps?"), wrong: others(after, [k * m, n, after + n, k + n]), steps: FC.run(make(n), {}).trace,
+          working: ["A change inside the sub-routine changes every CALL.", "Count the CALL boxes, then multiply by the new number of steps."],
+          note: name + " is CALLed " + k + " times: " + k + " x " + n + " = " + after + " steps." };
       })
     ];
   })()
