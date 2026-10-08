@@ -1,0 +1,510 @@
+{
+ "id": "y11-8-1-ops",
+ "label": "8.1 L4: Relational and Logical Operators",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Arithmetic Operators (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y11op-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Arithmetic Operators (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a program write ^ and not a small raised number, like in maths?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Code is typed on one line. ^ shows the power on that line.</p></div></details><p class=\"lesson-lead\">From 8.1 L3. Cambridge IGCSE 0478/22, November 2025, Question 1.</p><div id=\"y11op-do-now\"></div>",
+   "items": [
+    {
+     "prompt": "Tick one box to complete this sentence. The result of the arithmetic operation 4 ^ 2 is",
+     "options": [
+      "2",
+      "8",
+      "16",
+      "42"
+     ],
+     "correct": 2,
+     "explain": "4 ^ 2 means 4 raised to the power of 2: 4 * 4."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: raised to the power of",
+    "steps": [
+     {
+      "text": "We will work out <strong>3 ^ 4</strong>. Your question has different numbers, so you still do the working yourself.",
+      "visual": "<div class=\"wt-big\">3 ^ 4</div>"
+     },
+     {
+      "text": "^ means <strong>raised to the power of</strong>. The second number says how many times to write the first number.",
+      "visual": "<div class=\"wt-big\">3 ^ <span class=\"wt-hl\">4</span></div>"
+     },
+     {
+      "text": "Write 3 four times, with * between each one.",
+      "visual": "<div class=\"wt-big\"><span class=\"wt-hl\">3 * 3 * 3 * 3</span></div>"
+     },
+     {
+      "text": "Multiply one step at a time: 3 * 3 = 9. Then 9 * 3 = 27. Then 27 * 3 = 81.",
+      "visual": "<div class=\"wt-big\">9 &rarr; 27 &rarr; <span class=\"wt-hl\">81</span></div>"
+     },
+     {
+      "text": "So 3 ^ 4 = 81. It is <strong>not</strong> 3 * 4 = 12. That is a different operator.",
+      "visual": "<div class=\"wt-big\">3 ^ 4 = <span class=\"wt-hl\">81</span></div><div class=\"wt-note\">3 * 4 = 12 is multiply, not power.</div>"
+     },
+     {
+      "text": "Now do your question the same way: write the first number, the second number of times, and multiply.",
+      "visual": "<div class=\"wt-big\">? ^ ?</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Data Types (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11op-do-now-2",
+   "validatorKey": "y11op_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Data Types (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a program need to know the data type?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It must know what kind of value it stores and what it can do with it, such as maths with numbers.</p></div></details><p class=\"lesson-lead\">From 8.1 L2. Cambridge IGCSE 0478/21, November 2023, Question 3.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 8px\">Write the most appropriate data type for each description. Not all data types will be used.</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">BOOLEAN</div><div class=\"lesson-code-line\">CHAR</div><div class=\"lesson-code-line\">INTEGER</div><div class=\"lesson-code-line\">REAL</div><div class=\"lesson-code-line\">STRING</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11op-do-now-2-a\">(a) a whole number [1]</label><input id=\"y11op-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Data Types (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-do-now-2-b\">(b) a single letter [1]</label><input id=\"y11op-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Data Types (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-do-now-2-c\">(c) a word or phrase [1]</label><input id=\"y11op-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Data Types (2 of 2) part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-do-now-2-d\">(d) a number with two decimal places [1]</label><input id=\"y11op-do-now-2-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-d\" aria-label=\"Do Now: Data Types (2 of 2) part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11op-do-now-2-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11op-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: match data to a data type",
+    "steps": [
+     {
+      "text": "A similar description: <strong>whether a door is open</strong>. We will find its data type.",
+      "visual": "<div class=\"wt-big\">whether a door is open</div>"
+     },
+     {
+      "text": "Ask the first question: is it only TRUE or FALSE? A door is open or it is not. <strong>Yes.</strong>",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px\"><tr class=\"wt-hl\"><td style=\"padding:6px 12px;text-align:left\">Is it only TRUE or FALSE?</td><td style=\"padding:6px 12px;text-align:left\"><strong>Yes</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Is it a number?</td><td style=\"padding:6px 12px;text-align:left\"><strong></strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Does the number have a decimal point?</td><td style=\"padding:6px 12px;text-align:left\"><strong></strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Is it text: one letter, or many letters?</td><td style=\"padding:6px 12px;text-align:left\"><strong></strong></td></tr></table>"
+     },
+     {
+      "text": "A value that is only TRUE or FALSE is <strong>BOOLEAN</strong>. You can stop asking.",
+      "visual": "<div class=\"wt-big\">door open &rarr; <span class=\"wt-hl\">BOOLEAN</span></div>"
+     },
+     {
+      "text": "If the answer is No, ask the next question: is it a number? Then: does it have a decimal point?",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px\"><tr><td style=\"padding:6px 12px;text-align:left\">Is it only TRUE or FALSE?</td><td style=\"padding:6px 12px;text-align:left\"><strong>No</strong></td></tr><tr class=\"wt-hl\"><td style=\"padding:6px 12px;text-align:left\">Is it a number?</td><td style=\"padding:6px 12px;text-align:left\"><strong>?</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Does the number have a decimal point?</td><td style=\"padding:6px 12px;text-align:left\"><strong>?</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Is it text: one letter, or many letters?</td><td style=\"padding:6px 12px;text-align:left\"><strong></strong></td></tr></table>"
+     },
+     {
+      "text": "If it is not a number, it is text. Ask: is it one letter, or many letters?",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px\"><tr><td style=\"padding:6px 12px;text-align:left\">Is it only TRUE or FALSE?</td><td style=\"padding:6px 12px;text-align:left\"><strong>No</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Is it a number?</td><td style=\"padding:6px 12px;text-align:left\"><strong>No</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Does the number have a decimal point?</td><td style=\"padding:6px 12px;text-align:left\"><strong></strong></td></tr><tr class=\"wt-hl\"><td style=\"padding:6px 12px;text-align:left\">Is it text: one letter, or many letters?</td><td style=\"padding:6px 12px;text-align:left\"><strong>?</strong></td></tr></table>"
+     },
+     {
+      "text": "Now ask the questions, in order, for each description in your question. One data type is not used.",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px\"><tr><td style=\"padding:6px 12px;text-align:left\">Is it only TRUE or FALSE?</td><td style=\"padding:6px 12px;text-align:left\"><strong>?</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Is it a number?</td><td style=\"padding:6px 12px;text-align:left\"><strong>?</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Does the number have a decimal point?</td><td style=\"padding:6px 12px;text-align:left\"><strong>?</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">Is it text: one letter, or many letters?</td><td style=\"padding:6px 12px;text-align:left\"><strong>?</strong></td></tr></table>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y11-8-1-ops-ext",
+   "embedContainerId": "y11op-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 8.1 L1 to L3: variables, constants, data types, and arithmetic operators with DIV and MOD. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y11op-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Relational and Logical Operators",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">8.1 Programming Concepts</p><h2 class=\"lesson-h2\">Relational and Logical Operators</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> a <strong>relational operator</strong> compares two values. The answer is TRUE or FALSE.</li><li><strong>Then:</strong> <strong>logical operators</strong>: AND, OR and NOT.</li><li><strong>Activities:</strong> trace a program, then write IF statements and run them.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a program need to compare values?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>To make a decision: pass or fail, the right password or the wrong one, game over or keep playing.</p></div></details>"
+  },
+  {
+   "id": "relational",
+   "label": "Six Relational Operators",
+   "content": "<h2 class=\"lesson-h2\">Six Relational Operators</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Age is 15. Is Age &lt; 18 TRUE or FALSE? Is Age &gt; 18 TRUE or FALSE?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Age &lt; 18 is <strong>TRUE</strong>: 15 is less than 18.</p><p>Age &gt; 18 is <strong>FALSE</strong>: 15 is not greater than 18.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Operator</th><th style=\"padding:6px 12px;text-align:left\">It means</th><th style=\"padding:6px 12px;text-align:left\">Example</th><th style=\"padding:6px 12px;text-align:left\">When Age is 15</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>=</strong></td><td style=\"padding:6px 12px;text-align:left\">equal to</td><td style=\"padding:6px 12px;text-align:left\">Age = 15</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>&lt;</strong></td><td style=\"padding:6px 12px;text-align:left\">less than</td><td style=\"padding:6px 12px;text-align:left\">Age &lt; 18</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>&lt;=</strong></td><td style=\"padding:6px 12px;text-align:left\">less than or equal to</td><td style=\"padding:6px 12px;text-align:left\">Age &lt;= 15</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>&gt;</strong></td><td style=\"padding:6px 12px;text-align:left\">greater than</td><td style=\"padding:6px 12px;text-align:left\">Age &gt; 18</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>&gt;=</strong></td><td style=\"padding:6px 12px;text-align:left\">greater than or equal to</td><td style=\"padding:6px 12px;text-align:left\">Age &gt;= 16</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>&lt;&gt;</strong></td><td style=\"padding:6px 12px;text-align:left\">not equal to</td><td style=\"padding:6px 12px;text-align:left\">Age &lt;&gt; 15</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td></tr></table><ul class=\"lesson-facts\"><li>The answer is always <strong>TRUE</strong> or <strong>FALSE</strong>: a BOOLEAN value.</li><li>In a program: <code>IF Age &lt; 18 THEN</code></li></ul>"
+  },
+  {
+   "id": "check-rel",
+   "label": "Check: TRUE or FALSE?",
+   "type": "short-answer-validation",
+   "validatorId": "y11op-check-rel",
+   "validatorKey": "y11op_check_rel",
+   "content": "<h2 class=\"lesson-h2\">Check: TRUE or FALSE?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is &lt;&gt; made of two symbols?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Not equal means less than or greater than: &lt; and &gt; together.</p></div></details><p class=\"lesson-lead\">Score is 12. Is each condition TRUE or FALSE?</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11op-check-rel-a\">(a) Score &gt; 10 [1]</label><input id=\"y11op-check-rel-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-rel-a\" aria-label=\"Check: TRUE or FALSE? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-check-rel-b\">(b) Score &lt;&gt; 12 [1]</label><input id=\"y11op-check-rel-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-rel-b\" aria-label=\"Check: TRUE or FALSE? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-check-rel-c\">(c) Score &lt;= 11 [1]</label><input id=\"y11op-check-rel-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-rel-c\" aria-label=\"Check: TRUE or FALSE? part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-check-rel-d\">(d) Write the operator that means not equal to. [1]</label><input id=\"y11op-check-rel-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-rel-d\" aria-label=\"Check: TRUE or FALSE? part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11op-check-rel-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11op-check-rel-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "compare-gt",
+   "label": "Compare: > and >=",
+   "content": "<h2 class=\"lesson-h2\">Compare: &gt; and &gt;=</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Look at the row where Mark is 50. Why are the two answers different?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>&gt;= includes 50 itself. &gt; only starts above 50.</p><p>50 is the value <strong>on the line</strong>. That is where the two operators are different.</p></div></details><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Mark</th><th style=\"padding:6px 12px;text-align:left\">Mark &gt; 50</th><th style=\"padding:6px 12px;text-align:left\">Mark &gt;= 50</th></tr><tr><td style=\"padding:6px 12px;text-align:left\">49</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">50</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">51</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr></table></div><div><ul class=\"lesson-facts\"><li><strong>\"more than 50\"</strong> means <code>Mark &gt; 50</code>.</li><li><strong>\"50 or more\"</strong> means <code>Mark &gt;= 50</code>.</li><li>Always test the value on the line.</li></ul></div></div>"
+  },
+  {
+   "id": "check-bound",
+   "label": "Check: On the Line",
+   "type": "short-answer-validation",
+   "validatorId": "y11op-check-bound",
+   "validatorKey": "y11op_check_bound",
+   "content": "<h2 class=\"lesson-h2\">Check: On the Line</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do exam questions often use the value on the line?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is where &gt; and &gt;= give different answers, so it finds the mistake.</p></div></details><p class=\"lesson-lead\">Age is 18.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11op-check-bound-a\">(a) Is Age &gt; 18 TRUE or FALSE? [1]</label><input id=\"y11op-check-bound-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-bound-a\" aria-label=\"Check: On the Line part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-check-bound-b\">(b) Is Age &gt;= 18 TRUE or FALSE? [1]</label><input id=\"y11op-check-bound-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-bound-b\" aria-label=\"Check: On the Line part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11op-check-bound-c\">(c) Write the condition: Age is 18 or more. [1]</label><input id=\"y11op-check-bound-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-bound-c\" aria-label=\"Check: On the Line part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11op-check-bound-d\">(d) Write the condition: Speed is less than 30. [1]</label><input id=\"y11op-check-bound-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-bound-d\" aria-label=\"Check: On the Line part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11op-check-bound-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11op-check-bound-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Trace the Passes",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y11op-embed-1",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Count the Passes",
+    "context": "Four marks are input: 50, 38, 72, 49. A pass is 50 or more. Complete the trace table.",
+    "code": [
+     "DECLARE Mark : INTEGER",
+     "DECLARE Count : INTEGER",
+     "DECLARE Passes : INTEGER",
+     "Passes = 0",
+     "for Count in range(1, 5):",
+     "    Mark = int(input())",
+     "    if Mark >= 50:",
+     "        Passes = Passes + 1",
+     "print(Passes)"
+    ],
+    "cols": [
+     "Line",
+     "Mark",
+     "Count",
+     "Passes",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "4",
+      "Mark": "",
+      "Count": "",
+      "Passes": "0",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Mark": "",
+      "Count": "1",
+      "Passes": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Mark": "50",
+      "Count": "",
+      "Passes": "",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Mark": "",
+      "Count": "",
+      "Passes": "1",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Mark": "",
+      "Count": "2",
+      "Passes": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Mark": "38",
+      "Count": "",
+      "Passes": "",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Mark": "",
+      "Count": "3",
+      "Passes": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Mark": "72",
+      "Count": "",
+      "Passes": "",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Mark": "",
+      "Count": "",
+      "Passes": "2",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Mark": "",
+      "Count": "4",
+      "Passes": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Mark": "49",
+      "Count": "",
+      "Passes": "",
+      "Output": ""
+     },
+     {
+      "Line": "9",
+      "Mark": "",
+      "Count": "",
+      "Passes": "",
+      "Output": "2"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Trace the Passes</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does 50 add to Passes, but 49 does not?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>50 &gt;= 50 is TRUE: 50 is equal to 50. 49 &gt;= 50 is FALSE.</p></div></details><div id=\"y11op-embed-1\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "logical",
+   "label": "Three Logical Operators",
+   "content": "<h2 class=\"lesson-h2\">Three Logical Operators</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Age is 15. Is Age &gt; 12 AND Age &lt; 20 TRUE or FALSE?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Age &gt; 12 is TRUE. Age &lt; 20 is TRUE.</p><p>Both are TRUE, so the answer is <strong>TRUE</strong>.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Operator</th><th style=\"padding:6px 12px;text-align:left\">It means</th><th style=\"padding:6px 12px;text-align:left\">Example</th><th style=\"padding:6px 12px;text-align:left\">When Age is 15</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>AND</strong></td><td style=\"padding:6px 12px;text-align:left\">TRUE only when <strong>both</strong> conditions are TRUE</td><td style=\"padding:6px 12px;text-align:left\">Age &gt; 12 AND Age &lt; 20</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>OR</strong></td><td style=\"padding:6px 12px;text-align:left\">TRUE when <strong>at least one</strong> condition is TRUE</td><td style=\"padding:6px 12px;text-align:left\">Age &lt; 10 OR Age &gt; 13</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><strong>NOT</strong></td><td style=\"padding:6px 12px;text-align:left\"><strong>changes</strong> TRUE to FALSE, and FALSE to TRUE</td><td style=\"padding:6px 12px;text-align:left\">NOT Age = 15</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td></tr></table><ul class=\"lesson-facts\"><li>A logical operator joins two conditions, or changes one.</li><li>Work out each condition first. Then use AND, OR or NOT.</li></ul>"
+  },
+  {
+   "id": "check-logic",
+   "label": "Check: AND, OR, NOT",
+   "type": "short-answer-validation",
+   "validatorId": "y11op-check-logic",
+   "validatorKey": "y11op_check_logic",
+   "content": "<h2 class=\"lesson-h2\">Check: AND, OR, NOT</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why work out each condition before AND or OR?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>AND and OR join two answers. You need both answers first.</p></div></details><p class=\"lesson-lead\">X is 8. Is each condition TRUE or FALSE?</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11op-check-logic-a\">(a) X &gt; 5 AND X &lt; 10 [1]</label><input id=\"y11op-check-logic-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-logic-a\" aria-label=\"Check: AND, OR, NOT part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-check-logic-b\">(b) X &lt; 5 OR X &gt; 10 [1]</label><input id=\"y11op-check-logic-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-logic-b\" aria-label=\"Check: AND, OR, NOT part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-check-logic-c\">(c) NOT X = 8 [1]</label><input id=\"y11op-check-logic-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-logic-c\" aria-label=\"Check: AND, OR, NOT part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-check-logic-d\">(d) X = 8 OR X = 9 [1]</label><input id=\"y11op-check-logic-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-logic-d\" aria-label=\"Check: AND, OR, NOT part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11op-check-logic-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11op-check-logic-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "compare-andor",
+   "label": "Compare: AND and OR",
+   "content": "<h2 class=\"lesson-h2\">Compare: AND and OR</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Look at the OR column. Why is it TRUE for every age?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every age is greater than 12 or less than 20, so OR is always TRUE here.</p><p>To check a value is <strong>between</strong> two numbers, use AND.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Age</th><th style=\"padding:6px 12px;text-align:left\">Age &gt; 12</th><th style=\"padding:6px 12px;text-align:left\">Age &lt; 20</th><th style=\"padding:6px 12px;text-align:left\">Age &gt; 12 AND Age &lt; 20</th><th style=\"padding:6px 12px;text-align:left\">Age &gt; 12 OR Age &lt; 20</th></tr><tr><td style=\"padding:6px 12px;text-align:left\">10</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">15</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">25</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td><td style=\"padding:6px 12px;text-align:left\">FALSE</td><td style=\"padding:6px 12px;text-align:left\">TRUE</td></tr></table><ul class=\"lesson-facts\"><li><strong>AND</strong>: both must be TRUE. Use it for <strong>between</strong>.</li><li><strong>OR</strong>: one is enough. Use it for <strong>either one</strong>.</li></ul>"
+  },
+  {
+   "id": "exam-le",
+   "label": "Exam Question: Which Operator?",
+   "type": "multiple-choice",
+   "containerId": "y11op-exam-le",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Which Operator?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which option can you cross out first, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>OR: it is a logical operator. It joins two conditions and does not compare values.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/21, November 2023, Question 1.</p><div id=\"y11op-exam-le\"></div>",
+   "items": [
+    {
+     "prompt": "Tick one box to show which operator means less than or equal to.",
+     "options": [
+      "OR",
+      "<",
+      "<=",
+      ">="
+     ],
+     "correct": 2,
+     "explain": "<= means less than or equal to. < is less than only. OR is a logical operator."
+    }
+   ]
+  },
+  {
+   "id": "exam-profit",
+   "label": "Exam Question: Find the Errors",
+   "type": "self-marked-response",
+   "containerId": "y11op-exam-profit",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Find the Errors</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Line 11 uses OR and it is correct. Why is OR wrong on line 06?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Line 06 must work out the profit only when both prices are not zero, so it needs AND. Line 11 stops when either price is zero, so OR is right.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/22, March 2024, Question 5(a). An algorithm has been written in pseudocode to calculate the profit when an item is sold. Values for cost price and selling price are input, the profit is calculated (selling price - cost price) and output. The input of zero for either value stops the algorithm.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;REPEAT</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Enter cost price \"</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Cost</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Enter selling price \"</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT Sell</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Cost &lt;&gt; 0 OR Sell &lt;&gt; 0</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Profit &lt;- Sell - Cost</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Profit is \", Profit</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NEXT</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;UNTIL Cost = 0 OR Sell = 0</div></div></div><div><div id=\"y11op-exam-profit\"></div></div></div>",
+   "items": [
+    {
+     "id": "errors",
+     "prompt": "Identify the line numbers of three errors in the pseudocode and suggest corrections. [3]",
+     "marks": 3,
+     "modelAnswer": "Line 05: OUTPUT should be INPUT. Line 06: OR should be AND. Line 10: NEXT should be ENDIF."
+    }
+   ]
+  },
+  {
+   "id": "check-write",
+   "label": "Check: Write the Condition",
+   "type": "short-answer-validation",
+   "validatorId": "y11op-check-write",
+   "validatorKey": "y11op_check_write",
+   "content": "<h2 class=\"lesson-h2\">Check: Write the Condition</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must you write Day twice in part (b)?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each side of OR is a whole condition: a variable, an operator and a value.</p></div></details><p class=\"lesson-lead\">Write each condition. Use the variable names given.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y11op-check-write-a\">(a) Mark is from 0 to 100, including 0 and 100. [1]</label><input id=\"y11op-check-write-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-write-a\" aria-label=\"Check: Write the Condition part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11op-check-write-b\">(b) Day is 6 or Day is 7. [1]</label><input id=\"y11op-check-write-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-write-b\" aria-label=\"Check: Write the Condition part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11op-check-write-c\">(c) Age is 25. Is Age &gt;= 13 AND Age &lt;= 19 TRUE or FALSE? [1]</label><input id=\"y11op-check-write-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-write-c\" aria-label=\"Check: Write the Condition part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11op-check-write-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11op-check-write-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Write the IF",
+   "type": "embedded-app",
+   "appId": "drill-y11-8-1-ops-code",
+   "embedContainerId": "y11op-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Write the IF</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is your program tested with new values each time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A condition must be right for every value, not just one. New values find a wrong operator.</p></div></details><p class=\"lesson-lead\">Write the program in the box. Press Run. Your program must give the same output as the model program, with new values each time.</p><div id=\"y11op-activity-2\"></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Relational and Logical Operators Drill",
+   "type": "embedded-app",
+   "appId": "drill-y11-8-1-ops",
+   "embedContainerId": "y11op-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Relational and Logical Operators Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do it with any values, you really understand it.</p></div></details><p class=\"lesson-lead\">The six relational operators, the value on the line, AND, OR and NOT, and writing conditions. Your progress is saved.</p><div id=\"y11op-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y11op_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*INTEGER\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It is a number with no decimal point."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(CHAR|CHARACTER)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It is text, but only one letter."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*STRING\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It is text with many letters."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*REAL\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which type stores a number with a decimal point?"
+   }
+  ],
+  "y11op_check_rel": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*TRUE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Put the value into the condition. Then ask: is 12 greater than 10?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*FALSE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "&lt;&gt; means not equal to. Is 12 not equal to 12?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*FALSE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Put the value into the condition. Then ask: is 12 less than 11, or equal to 11?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*<>\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look back at the table: the last row."
+   }
+  ],
+  "y11op_check_bound": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*FALSE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 18 greater than 18?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*TRUE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "&gt;= means greater than or equal to. Is 18 equal to 18?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(Age\\s*>=\\s*18|18\\s*<=\\s*Age|Age\\s*>\\s*17)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "\"or more\" includes 18 itself. Which operator includes the value?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(Speed\\s*<\\s*30|30\\s*>\\s*Speed|Speed\\s*<=\\s*29)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The variable, then the operator, then the number."
+   }
+  ],
+  "y11op_check_logic": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*TRUE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out X &gt; 5, then X &lt; 10. AND needs both."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*FALSE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out each side first. OR needs at least one."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*FALSE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out X = 8 first. Then NOT changes it."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*TRUE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is one of the two sides TRUE?"
+   }
+  ],
+  "y11op_check_write": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(((Mark\\s*>=\\s*0|0\\s*<=\\s*Mark|Mark\\s*>\\s*-1))\\s+AND\\s+((Mark\\s*<=\\s*100|100\\s*>=\\s*Mark|Mark\\s*<\\s*101))|((Mark\\s*<=\\s*100|100\\s*>=\\s*Mark|Mark\\s*<\\s*101))\\s+AND\\s+((Mark\\s*>=\\s*0|0\\s*<=\\s*Mark|Mark\\s*>\\s*-1)))\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Between two numbers: two conditions joined with AND. \"Including\" means the operator includes the value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(((Day\\s*=\\s*6))\\s+OR\\s+((Day\\s*=\\s*7))|((Day\\s*=\\s*7))\\s+OR\\s+((Day\\s*=\\s*6)))\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Either one is enough. Write Day and = twice."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*FALSE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out each side first. AND needs both."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

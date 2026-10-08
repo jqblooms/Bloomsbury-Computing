@@ -1,0 +1,34 @@
+{
+ "id": "y8-term1-test",
+ "label": "Term 1 Test",
+ "steps": [
+  {
+   "id": "title",
+   "label": "Term 1 Test",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithms</p><h2 class=\"lesson-h2\">Term 1 Test</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>First:</strong> 20 minutes of revision practice.</li><li><strong>Then:</strong> a 30-minute test on this website.</li><li><strong>Topics:</strong> sequence, selection, FOR and WHILE loops, arrays, linear search, flowchart symbols, finding errors.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which topic do you find hardest?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Practise that topic most in the next 20 minutes.</p></div></details>"
+  },
+  {
+   "id": "revision",
+   "label": "Revision Practice",
+   "type": "embedded-app",
+   "appId": "drill-y8-term1-revision",
+   "embedContainerId": "y8t1-revision",
+   "content": "<h2 class=\"lesson-h2\">Revision Practice</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program changes a variable, then an IF tests it. Which value does the IF use?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The new value. Lines run in order, top to bottom.</p></div></details><p class=\"lesson-lead\">20 minutes. Practise every topic. Trace each program one line at a time.</p><div id=\"y8t1-revision\"></div>"
+  },
+  {
+   "id": "how-it-works",
+   "label": "How the Test Works",
+   "content": "<h2 class=\"lesson-h2\">How the Test Works</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Every question needs you to trace a program. How can you check an answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Trace it again, one line at a time. Write down each variable as it changes.</p></div></details><ul class=\"lesson-facts\"><li>You have <strong>30 minutes</strong> from when you press <strong>Start</strong>.</li><li>Your answers <strong>save as you type</strong>.</li><li>During the test you <strong>cannot open the rest of the website</strong>.</li><li>The notepad works, but it starts <strong>empty</strong>. Use it to trace the programs.</li><li>Press <strong>Hand in</strong> when you finish. When time runs out, it hands in for you.</li></ul>"
+  },
+  {
+   "id": "test",
+   "label": "The Test",
+   "type": "app-link",
+   "appId": "tests",
+   "buttonId": "y8t1-open-test",
+   "content": "<h2 class=\"lesson-h2\">The Test</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">You finish early. What should you do?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Trace every program again. Check each answer one line at a time.</p></div></details><p class=\"lesson-lead\">Wait until your teacher says the test is open. Then press the button, and press Start.</p><p><button type=\"button\" class=\"donow-btn\" id=\"y8t1-open-test\">Open the test</button></p>"
+  }
+ ],
+ "validators": {},
+ "pseudocodeValidators": {}
+}

@@ -71,7 +71,8 @@
           "title": "Term 1 Exam Revision",
           "lessons": [
             "y8-revision-1",
-            "y8-revision-2"
+            "y8-revision-2",
+            "y8-term1-test"
           ]
         }
       ]
@@ -187,7 +188,8 @@
           "lessons": [
             "y11-8-1-vc",
             "y11-8-1-types",
-            "y11-8-1-arith"
+            "y11-8-1-arith",
+            "y11-8-1-ops"
           ]
         }
       ]
