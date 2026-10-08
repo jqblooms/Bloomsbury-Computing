@@ -115,7 +115,7 @@ DrillData.register("y8-term1-revision", {
           var ans = out(p);
           return { prompt: "What does this program output?\n" + code(p), answers: [ans], keywords: [word(ans)],
             distractors: [ans === "High" ? "Low" : "High", String(s - d), "Score"],
-            example: "Example:\nScore <- 9\nIF Score > 6 THEN Score <- Score - 4\nIF Score > 6 THEN OUTPUT \"Up\" ELSE OUTPUT \"Down\"\nStep 1: 9 > 6, so Score becomes 5.\nStep 2: the second IF tests 5. Is 5 > 6? No.\nSo the output is Down.",
+            example: "Example:\nLevel <- 9\nIF Level > 6 THEN Level <- Level - 4\nIF Level > 6 THEN OUTPUT \"Up\" ELSE OUTPUT \"Down\"\nStep 1: 9 > 6, so Level becomes 5.\nStep 2: the second IF tests 5. Is 5 > 6? No.\nSo the output is Down.",
             working: ["The first IF may change Score. Work out Score after it.", "The second IF tests the new Score."],
             note: "Score becomes " + (s - d) + " before the second IF." };
         } },
