@@ -147,6 +147,22 @@ const test = {
 assert(/^IF/.test(DOUBLE[3]) && /^INPUT/.test(DOUBLE[1]), 'symbol lines');
 
 const qs = test.sections.flatMap((s) => s.questions);
+
+// Topics, for setting practice from the results (Teacher dashboard, Tests, Practice; James 2026-10-08), and the
+// drill suggested for each. '*' is for a student with no weak topic. The homework drills come from the Term 1
+// results (tools/build_y8_homework.mjs).
+const TOPIC = {
+  a1: 'Variables', a2: 'Variables', a3: 'Selection', a5: 'Selection', a4: 'Comparing with > and >=', a6: 'Comparing with > and >=',
+  b1: 'FOR loops', b2: 'FOR loops', b4: 'FOR loops', b3: 'Trace tables', b5: 'WHILE loops',
+  c1: 'Array positions', c2: 'Array positions', c3: 'Loops over arrays', c4: 'Loops over arrays', c5: 'Linear search', c6: 'Linear search',
+  c7: 'Writing programs', d1: 'Flowchart shapes', d2: 'Flowchart shapes', d3: 'Comparing with > and >=', d4: 'Comparing with > and >='
+};
+qs.forEach((q) => { assert(TOPIC[q.id], 'topic for ' + q.id); q.topic = TOPIC[q.id]; });
+test.topicDrills = {
+  'Variables': 'y8-hw-read', 'Selection': 'y8-hw-trace', 'Comparing with > and >=': 'y8-hw-trace', 'FOR loops': 'y8-hw-trace',
+  'Trace tables': 'y8-hw-loops', 'WHILE loops': 'y8-hw-loops', 'Array positions': 'y8-hw-read', 'Loops over arrays': 'y8-hw-loops',
+  'Linear search': 'y8-hw-search', 'Writing programs': 'y8-term1-code', 'Flowchart shapes': 'y8-hw-read', '*': 'y8-hw-search'
+};
 assert(new Set(qs.map((q) => q.id)).size === qs.length, 'unique ids');
 qs.filter((q) => q.type === 'choice').forEach((q) => assert(q.options.length === 4 && q.options.includes(q.answer), 'hinge has 4 options ' + q.id));
 const total = qs.reduce((t, q) => t + q.marks, 0);
