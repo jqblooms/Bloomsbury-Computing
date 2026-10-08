@@ -731,7 +731,11 @@
       blocks: instance.blocks != null ? instance.blocks : card.blocks,
       flow: instance.flow != null ? instance.flow : card.flow,
       working: instance.working != null ? instance.working : card.working,
-      example: instance.example != null ? instance.example : card.example
+      example: instance.example != null ? instance.example : card.example,
+      // A randomised exam-format card (exam-widgets.js) draws a fresh table or program each time.
+      widget: instance.widget != null ? instance.widget : card.widget,
+      trace: instance.trace != null ? instance.trace : card.trace,
+      errorline: instance.errorline != null ? instance.errorline : card.errorline
     };
   }
 

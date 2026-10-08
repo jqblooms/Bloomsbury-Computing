@@ -179,6 +179,9 @@ const steps = [
   { id: 'revision', label: 'Revision Practice', type: 'embedded-app', appId: 'drill-y8-term1-revision', embedContainerId: 'y8t1-revision',
     content: '<h2 class="lesson-h2">Revision Practice</h2>' + tps('A program changes a variable, then an IF tests it. Which value does the IF use?', 'The new value. Lines run in order, top to bottom.') +
       '<p class="lesson-lead">20 minutes. Practise every topic. Trace each program one line at a time.</p><div id="y8t1-revision"></div>' },
+  { id: 'revision-code', label: 'Revision: Write the Program', type: 'embedded-app', appId: 'drill-y8-term1-code', embedContainerId: 'y8t1-revision-code',
+    content: '<h2 class="lesson-h2">Revision: Write the Program</h2>' + tps('A program adds up an array. Why must Total be set to 0 before the loop, not inside it?', 'Inside the loop, Total would go back to 0 on every pass and lose what it added.') +
+      '<p class="lesson-lead">The test asks you to write a whole program. Practise here: declare, set to 0, loop, output after the loop.</p><div id="y8t1-revision-code"></div>' },
   { id: 'how-it-works', label: 'How the Test Works',
     content: '<h2 class="lesson-h2">How the Test Works</h2>' + tps('Every question needs you to trace a program. How can you check an answer?', 'Trace it again, one line at a time. Write down each variable as it changes.') +
       facts(['You have <strong>30 minutes</strong> from when you press <strong>Start</strong>.', 'Your answers <strong>save as you type</strong>.', 'During the test you <strong>cannot open the rest of the website</strong>.',

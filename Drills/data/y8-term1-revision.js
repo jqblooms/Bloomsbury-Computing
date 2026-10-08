@@ -174,6 +174,24 @@ DrillData.register("y8-term1-revision", {
             working: ["Make a trace table with Count and Total. Write the start value of Total first.", "On each pass, use the Total from the row above, and that pass's Count."],
             note: (ask ? "After Count " + pass + ": " : "Output: ") + a + "." };
         } },
+      // A whole trace table, like the test's: Count and OUTPUT are filled in, the student writes the Total column.
+      { id: "l-table", category: "t8-loop", widget: "trace", randomize: function () {
+          var s, n, k, op;
+          do { s = drillRange(0, 30); n = drillRange(4, 5); k = drillRange(1, 3); op = drillPick(["+", "-"]); }
+          while ((s === 20 && n === 4 && op === "-" && k === 1) || (op === "-" && s < n * (n + 1) * k / 2));
+          var step = k === 1 ? "Count" : "Count * " + k;
+          var p = ["DECLARE Total : INTEGER", "DECLARE Count : INTEGER", "Total <- " + s, "FOR Count <- 1 TO " + n, "  Total <- Total " + op + " " + step, "NEXT Count", "OUTPUT Total"];
+          var rows = [["", String(s), ""]], t = s;
+          for (var c = 1; c <= n; c++) { t = op === "+" ? t + c * k : t - c * k; rows.push([String(c), String(t), ""]); }
+          rows.push(["", "", String(t)]);
+          assert8(out(p) === String(t), "trace table");
+          var col = rows.map(function (r) { return r[1]; }).filter(Boolean).join(", ");
+          return { prompt: "Complete the trace table for this program. Write Total for each pass of the loop.\n" + code(p),
+            trace: { columns: ["Count", "Total", "OUTPUT"], rows: rows, askable: [1] },
+            answers: [col], keywords: [listRe(col.split(", "))], distractors: [],
+            working: ["Write the first value of Total in the first row, before the loop starts.", "On each pass, use the Total from the row above, and that row's Count."],
+            note: "Total: " + col + "." };
+        } },
       { id: "l-inside", category: "t8-loop", randomize: function () {
           var k, n;
           do { k = drillRange(2, 9); n = drillRange(3, 4); } while (k === 5 && n === 3);

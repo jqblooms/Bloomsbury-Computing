@@ -16,6 +16,14 @@
    "content": "<h2 class=\"lesson-h2\">Revision Practice</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program changes a variable, then an IF tests it. Which value does the IF use?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The new value. Lines run in order, top to bottom.</p></div></details><p class=\"lesson-lead\">20 minutes. Practise every topic. Trace each program one line at a time.</p><div id=\"y8t1-revision\"></div>"
   },
   {
+   "id": "revision-code",
+   "label": "Revision: Write the Program",
+   "type": "embedded-app",
+   "appId": "drill-y8-term1-code",
+   "embedContainerId": "y8t1-revision-code",
+   "content": "<h2 class=\"lesson-h2\">Revision: Write the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program adds up an array. Why must Total be set to 0 before the loop, not inside it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Inside the loop, Total would go back to 0 on every pass and lose what it added.</p></div></details><p class=\"lesson-lead\">The test asks you to write a whole program. Practise here: declare, set to 0, loop, output after the loop.</p><div id=\"y8t1-revision-code\"></div>"
+  },
+  {
    "id": "how-it-works",
    "label": "How the Test Works",
    "content": "<h2 class=\"lesson-h2\">How the Test Works</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Every question needs you to trace a program. How can you check an answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Trace it again, one line at a time. Write down each variable as it changes.</p></div></details><ul class=\"lesson-facts\"><li>You have <strong>30 minutes</strong> from when you press <strong>Start</strong>.</li><li>Your answers <strong>save as you type</strong>.</li><li>During the test you <strong>cannot open the rest of the website</strong>.</li><li>The notepad works, but it starts <strong>empty</strong>. Use it to trace the programs.</li><li>Press <strong>Hand in</strong> when you finish. When time runs out, it hands in for you.</li></ul>"
