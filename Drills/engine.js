@@ -588,6 +588,7 @@
   // "I need help" always shows the example, then the first nudge for this
   // question; a card with only nudges shows all of them.
   function showWorkedHint(card, box) {
+    if (card.walk && card.walk.length && box) { renderWalk(card, box); return true; }
     if (!(card.example || card.working) || !Support.renderWorking || !box) return false;
     var nudges = card.working || [];
     var text = card.example
@@ -595,6 +596,40 @@
       : nudges.join("\n");
     Support.renderWorking(box, [text], 1, card.example ? "A similar question, worked through" : "How to work it out");
     return true;
+  }
+  // card.walk: "Walk me through it" (James, 2026-10-08, as on the lessons' Do Now slides). A similar question,
+  // never this card's own, worked one step at a time: [{text, code: [lines], hl: [line indexes], state}], with
+  // Back and Next. The highlighted lines are the ones the step is about; state shows the variables after it. The
+  // last step adds this card's first nudge. Help in Learn mode always starts at step 1.
+  function renderWalk(card, box) {
+    var steps = card.walk, i = 0, nudge = (card.working || [])[0];
+    function draw() {
+      var s = steps[i];
+      var code = s.code && s.code.length ? '<div class="dw-code">' + s.code.map(function (l, n) {
+        return '<span class="dw-line' + ((s.hl || []).indexOf(n) !== -1 ? " is-hl" : "") + '">' + escapeHtml(l || " ") + "</span>";
+      }).join("") + "</div>" : "";
+      box.hidden = false;
+      box.classList.add("bcs-hint");
+      box.setAttribute("aria-label", "Walk me through it");
+      box.innerHTML = '<div class="bcs-hint-label">Walk me through it: a similar question</div>' +
+        '<div class="dw-count">Step ' + (i + 1) + " of " + steps.length + "</div>" +
+        '<div class="dw-text">' + escapeHtml(s.text) + "</div>" + code +
+        (s.state ? '<div class="dw-state">' + escapeHtml(s.state) + "</div>" : "") +
+        (i === steps.length - 1 && nudge ? '<div class="dw-nudge">Now your question: ' + escapeHtml(nudge) + "</div>" : "") +
+        '<div class="dw-nav"><button type="button" class="dw-btn" data-dw="-1"' + (i ? "" : " disabled") + ">Back</button>" +
+        '<button type="button" class="dw-btn is-next" data-dw="1"' + (i < steps.length - 1 ? "" : " disabled") + ">Next step</button></div>";
+    }
+    box.onclick = function (e) {
+      var b = e.target.closest ? e.target.closest("[data-dw]") : null;
+      if (!b || b.disabled) return;
+      e.preventDefault();
+      e.stopPropagation();
+      i = Math.max(0, Math.min(steps.length - 1, i + Number(b.getAttribute("data-dw"))));
+      draw();
+      var next = box.querySelector('[data-dw="1"]:not([disabled])') || box.querySelector('[data-dw="-1"]');
+      if (next) try { next.focus({ preventScroll: true }); } catch (err) {}
+    };
+    draw();
   }
   function narrowOptions(explicit) {
     var set = current.set;
@@ -732,6 +767,7 @@
       flow: instance.flow != null ? instance.flow : card.flow,
       working: instance.working != null ? instance.working : card.working,
       example: instance.example != null ? instance.example : card.example,
+      walk: instance.walk != null ? instance.walk : card.walk,
       // A randomised exam-format card (exam-widgets.js) draws a fresh table or program each time.
       widget: instance.widget != null ? instance.widget : card.widget,
       trace: instance.trace != null ? instance.trace : card.trace,
@@ -929,6 +965,8 @@
     if (set.widget) {
       current.usedHelp = true;
       var hintBox = document.getElementById("support-hint");
+      var wcard = resolveCard(cardsById[current.cardId], current.instance);
+      if (hintBox && wcard.walk && wcard.walk.length) { renderWalk(wcard, hintBox); return; }
       if (hintBox && current.widget) {
         if (Support && Support.renderWorking) Support.renderWorking(hintBox, [current.widget.hint], 1, "How to work it out");
         else { hintBox.hidden = false; hintBox.textContent = current.widget.hint; }

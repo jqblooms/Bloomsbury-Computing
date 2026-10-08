@@ -14,6 +14,22 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
+  /* "Walk me through it" in Learn mode's help (card.walk, engine.js renderWalk): a similar question, one step at a time. */
+  .dw-count { color: var(--muted); font-size: .75rem; font-weight: 600; }
+  .dw-text { margin: 4px 0 8px; color: var(--ink); line-height: 1.55; white-space: pre-wrap; }
+  .dw-code { margin: 0 0 8px; padding: 8px 6px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line);
+    font: .86rem/1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; overflow-x: auto; }
+  .dw-line { display: block; padding: 0 6px; border-radius: 4px; white-space: pre; }
+  .dw-line.is-hl { background: var(--answer-soft); box-shadow: inset 3px 0 0 var(--answer); color: var(--ink); }
+  .dw-state { margin: 0 0 8px; padding: 6px 10px; border-radius: 8px; background: var(--brand-soft); color: var(--ink);
+    font: .86rem/1.45 ui-monospace, "Cascadia Mono", Consolas, monospace; white-space: pre-wrap; }
+  .dw-nudge { margin: 0 0 8px; padding: 6px 10px; border-left: 3px solid var(--answer); color: var(--ink); }
+  .dw-nav { display: flex; gap: 8px; }
+  .dw-btn { font: inherit; font-size: .82rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line-strong); background: transparent; color: var(--ink); }
+  .dw-btn.is-next { background: var(--brand-soft-strong); border-color: var(--brand); }
+  .dw-btn:disabled { opacity: .45; cursor: default; }
+  .dw-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   body { font-size: 15px; line-height: 1.55; }
   .wrap { max-width: 760px; margin: 0 auto; padding: 18px 16px 60px; }
   /* Embedded inside a lesson slide (?embed=1): the slide shows through and
