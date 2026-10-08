@@ -273,7 +273,8 @@
      "source": "^(?=.*\\b(odd|not\\s+even|uneven|even\\s+parity)\\b)(?=.*(\\b1'?s\\b|\\bones\\b|\\bcount\\w*|\\bcolumns?\\b|\\brows?\\b)).*$",
      "flags": "i"
     },
-    "feedback": "Say what you counted, which parity was used, and what you found in that row and that column."
+    "feedback": "Say what you counted, which parity was used, and what you found in that row and that column.",
+    "marks": 2
    }
   ],
   "y10_22l3_do_now_2": [
@@ -310,7 +311,7 @@
     "suffix": "b",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(the\\s+)?(sender|send\\w*\\s+(device|computer))\\s*\\.?\\s*$",
+     "source": "^\\s*(the\\s+)?(sender|sending)(\\s*'?s)?(\\s+(device|computer))?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Who still has the data that was sent?"
@@ -319,7 +320,7 @@
     "suffix": "c",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*no\\b",
+     "source": "^\\s*(no|none|nope|not\\s+detected)\\b(?!.*\\bbut\\b)",
      "flags": "i"
     },
     "feedback": "Compare the two bytes bit by bit."

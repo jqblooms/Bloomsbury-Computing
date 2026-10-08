@@ -30,7 +30,7 @@ const validators = {};
 function checkStep(id, label, heading, lead, parts, whyQ = null, extra = '') {
   const key = `${P}_${id}`.replace(/-/g, '_');
   const vid = `${P}-${id}`;
-  validators[key] = parts.map((p, i) => ({ suffix: 'abcdefgh'[i], pattern: re(p.answer), feedback: p.feedback }));
+  validators[key] = parts.map((p, i) => Object.assign({ suffix: 'abcdefgh'[i], pattern: re(p.answer), feedback: p.feedback }, p.marks > 1 ? { marks: p.marks } : {}));
   const inputs = parts.map((p, i) => {
     const s = 'abcdefgh'[i];
     return `<div class="lesson-do-now-response${p.line ? ' is-line' : ''}"><label for="${vid}-${s}">(${s}) ${p.label} [${p.marks || 1}]</label>` +

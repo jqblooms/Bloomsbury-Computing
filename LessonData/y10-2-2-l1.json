@@ -154,7 +154,8 @@
      "source": "^(?=.*\\b(routes?|paths?|ways?)\\b)(?=.*\\b(different|own|separate|each|another|other)\\b).*$",
      "flags": "i"
     },
-    "feedback": "Think about how each packet travels across the internet. Do they all take the same path?"
+    "feedback": "Think about how each packet travels across the internet. Do they all take the same path?",
+    "marks": 2
    }
   ],
   "y10_22l1_exam_occur": [

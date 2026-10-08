@@ -79,7 +79,7 @@ const validators = {};
 function checkStep(id, label, heading, lead, parts, whyQ = null, extra = '') {
   const key = `${P}_${id}`.replace(/-/g, '_');
   const vid = `${P}-${id}`;
-  validators[key] = parts.map((p, i) => ({ suffix: 'abcdefgh'[i], pattern: re(p.answer), feedback: p.feedback }));
+  validators[key] = parts.map((p, i) => Object.assign({ suffix: 'abcdefgh'[i], pattern: re(p.answer), feedback: p.feedback }, p.marks > 1 ? { marks: p.marks } : {}));
   const inputs = parts.map((p, i) => {
     const s = 'abcdefgh'[i];
     return `<div class="lesson-do-now-response${p.line ? ' is-line' : ''}"><label for="${vid}-${s}">(${s}) ${p.label} [${p.marks || 1}]</label>` +
@@ -187,8 +187,8 @@ steps.push({ id: 'concept-echo', label: 'The Echo Check',
 
 steps.push(checkStep('check-echo', 'Check: The Echo Check', 'Check: The Echo Check', 'Answer in one or two words.', [
   { label: 'In an echo check, who sends the data back?', answer: '^\\s*(the\\s+)?receiv\\w*(\\s+(device|computer))?\\s*\\.?\\s*$', feedback: 'The data goes there, then a copy comes back. Who has the data when it arrives?' },
-  { label: 'Who compares the copy with the data that was sent?', answer: '^\\s*(the\\s+)?(sender|send\\w*\\s+(device|computer))\\s*\\.?\\s*$', feedback: 'Who still has the data that was sent?' },
-  { label: 'Sent: 11100101. Copy back: 11100101. Is an error detected?', answer: '^\\s*no\\b', feedback: 'Compare the two bytes bit by bit.' },
+  { label: 'Who compares the copy with the data that was sent?', answer: '^\\s*(the\\s+)?(sender|sending)(\\s*\'?s)?(\\s+(device|computer))?\\s*\\.?\\s*$', feedback: 'Who still has the data that was sent?' },
+  { label: 'Sent: 11100101. Copy back: 11100101. Is an error detected?', answer: '^\\s*(no|none|nope|not\\s+detected)\\b(?!.*\\bbut\\b)', feedback: 'Compare the two bytes bit by bit.' },
 ], ['Why must the receiver send back what it GOT, not what it expected?', 'The sender needs to see what really arrived, so it can compare.']));
 
 steps.push(selfMarked('exam-echo', 'Exam Question: How the Echo Check Works', 'Exam Question: How the Echo Check Works',

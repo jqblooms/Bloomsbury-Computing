@@ -243,7 +243,8 @@
      "source": "^\\s*1\\s*0\\s*0\\s*0\\s*1\\s*0\\s*1\\s*0\\s*$",
      "flags": "i"
     },
-    "feedback": "Work one column at a time, going down. Count the 1s and choose the bit that makes the column odd."
+    "feedback": "Work one column at a time, going down. Count the 1s and choose the bit that makes the column odd.",
+    "marks": 3
    }
   ],
   "y10_22l2_exam_find": [
