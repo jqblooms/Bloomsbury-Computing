@@ -194,7 +194,9 @@ DrillData.register("y9-term1a-revision", {
             ["a pupil's height in metres, for example 1.62", "REAL"], ["a temperature, for example 31.5", "REAL"],
             ["the first letter of a city name, for example 'H'", "CHAR"], ["a Y or N answer, for example 'Y'", "CHAR"],
             ["a pupil's surname", "STRING"], ["the name of a town", "STRING"],
-            ["whether a light is on", "BOOLEAN"], ["whether a game is over", "BOOLEAN"]]);
+            ["whether a light is on", "BOOLEAN"], ["whether a game is over", "BOOLEAN"],
+            ["a bus fare stored in whole satang, for example 2500 (always a whole number of satang)", "INTEGER"],
+            ["a bus fare in baht, for example 25.50", "REAL"]]);
           var ex = drillPick(otherTypes(v[1]));
           return { prompt: "A variable stores " + v[0] + ". Which data type is best?", answers: [v[1]], keywords: [TYPE_RE[v[1]]],
             distractors: sample(otherTypes(v[1]), 3),
@@ -236,6 +238,28 @@ DrillData.register("y9-term1a-revision", {
             example: "A similar program: Heights holds 120, 140, 130. Total starts at 0 and a loop from 1 TO 3 adds Heights[Index].\nIndex 1: Total = 0 + 120 = 120\nIndex 2: Total = 120 + 140 = 260\nIndex 3: Total = 260 + 130 = 390\nOUTPUT 390.",
             working: ["On each pass, Index is 1, then 2, then 3, then 4.", "Add the value at that index onto Total each time. Do not add the index."],
             note: vals.join(" + ") + " = " + t + "." };
+        } },
+
+      { id: "a-change-if", category: "rv-arrays", randomize: function () {
+          var name = drillPick(NAMES), k, t, vals, ans, missed, equal;
+          do {
+            k = drillPick([2, 3, 4, 10]); t = drillPick([20, 25, 30, 50]);
+            vals = distinctValues(5, t - 12, t + 8);
+            vals[drillRange(0, 4)] = t - k;
+            ans = vals.filter(function (v) { return v + k > t; }).length;
+            missed = vals.filter(function (v) { return v > t; }).length;
+            equal = vals.filter(function (v) { return v + k >= t; }).length;
+          } while (new Set(vals).size < 5 || ans === missed || ans === 0 || ans === 5 || (k === 5 && t === 40));
+          var lines = ["DECLARE " + name + " : ARRAY[1:5] OF INTEGER", "DECLARE Index : INTEGER", "DECLARE Count : INTEGER", "Count " + A + " 0",
+            "FOR Index " + A + " 1 TO 5", "    " + name + "[Index] " + A + " " + name + "[Index] + " + k, "    IF " + name + "[Index] > " + t + " THEN",
+            "        Count " + A + " Count + 1", "    ENDIF", "NEXT Index", "OUTPUT Count"];
+          var after = vals.map(function (v) { return v + k; });
+          return { prompt: "Follow this program exactly as it is written. What does it output?\n" + table(name, vals) + "\n" + code.apply(null, lines),
+            answers: [String(ans)], keywords: [drillNumberRe(ans)],
+            distractors: others(ans, [missed, equal, 5 - ans]),
+            example: "A similar program: Heights holds 18, 25, 21. Each pass adds 4, THEN asks IF Heights[Index] > 25.\nIndex 1: 18 + 4 = 22. Is 22 > 25? No.\nIndex 2: 25 + 4 = 29. Is 29 > 25? Yes, Count is 1.\nIndex 3: 21 + 4 = 25. Is 25 > 25? No: equal is not more.\nOUTPUT 1.",
+            working: ["The value changes first, on the line before the IF. Use the new value in the IF.", "Is it more than " + t + "? Equal is not more."],
+            note: "After + " + k + ": " + after.join(", ") + ". More than " + t + ": " + ans + "." };
         } },
 
       // ================================================= Errors and Trace Tables
