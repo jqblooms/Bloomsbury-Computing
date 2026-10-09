@@ -164,8 +164,22 @@
     themeSignature:   '',
     activeTut:        null,  // { tutIdx, stepIdx } when a tutorial bar is running
     trackedPyVars:    {},    // varName → { capturedGlobals, scratchVarId, visible }
-    trackedVarTick:   null   // setInterval id for Python-variable→monitor polling
+    trackedVarTick:   null,  // setInterval id for Python-variable→monitor polling
+    lang:             'python', // 'python' or 'pseudo' (CIE pseudocode), chosen with the switch
+    frameStart:       0,     // when the current 60 fps frame began
+    redraw:           false, // a visible sprite changed this frame, so loops wait for the next one
+    frameWaiters:     [],    // resolvers for threads waiting for the next frame
+    frameTimer:       null,
+    loadingProject:   false, // true while vm.loadProject runs: the editor must not save into the new project
+    nameById:         {},    // target id → sprite name, to notice renames
+    lastError:        null,  // { sprite, threadIdx, line } of the last runtime error, marked in the editor
+    infos:            {},    // thread module details by id, for mapping error lines
+    infoSeq:          0
   };
+
+  var PSEUDO = window.PyScratchPseudo || null;
+  if (!PSEUDO) console.warn('PyScratch: pyscratch-pseudo.js did not load; pseudocode mode unavailable.');
+  try { if (localStorage.getItem('pyscratch:lang') === 'pseudo' && PSEUDO) S.lang = 'pseudo'; } catch (e) {}
 
   // ── DOM helpers ───────────────────────────────────────────────
   var ui = {}; // will hold references to key elements
@@ -195,34 +209,37 @@
   }
 
   // ── Thread storage ────────────────────────────────────────────
-  // Key by the sprite's stable target UUID so that:
-  //   • renames don't break the lookup (t.id stays the same after rename)
-  //   • different projects with the same sprite name use different keys
-  //     (each new project assigns fresh UUIDs to its targets)
-  function storeKey(spriteName) {
-    try {
-      var t = getTargetByName(spriteName);
-      if (t && t.id) return 'pyscratch:' + t.id;
-    } catch(e) {}
-    // Fallback: name-based key (used before the VM is ready)
-    return 'pyscratch:name:' + spriteName;
+  // Code lives in S.spriteCode (sprite name → threads) and is saved inside the
+  // project itself (vm.toJSON is patched), plus a session copy of the whole
+  // project in IndexedDB so a reload brings it back. Sprite ids change on every
+  // load, so nothing is keyed by them. Each thread keeps its Python in .code
+  // and its pseudocode in .pseudo; the language switch picks which one runs.
+  var PY_DEFAULT = 'def game_start():\n    pass  # Delete this line before writing code\n';
+
+  function defaultCode(lang) {
+    return lang === 'pseudo' && PSEUDO ? PSEUDO.DEFAULT_CODE : PY_DEFAULT;
+  }
+
+  function threadCode(thread, lang) {
+    if (!thread) return '';
+    if ((lang || S.lang) === 'pseudo') return thread.pseudo != null ? thread.pseudo : defaultCode('pseudo');
+    return thread.code != null ? thread.code : PY_DEFAULT;
+  }
+
+  function setThreadCode(thread, text, lang) {
+    if ((lang || S.lang) === 'pseudo') thread.pseudo = text;
+    else thread.code = text;
   }
 
   function loadThreads(spriteName) {
     if (S.spriteCode[spriteName]) return S.spriteCode[spriteName];
-    try {
-      var saved = localStorage.getItem(storeKey(spriteName));
-      if (saved) { S.spriteCode[spriteName] = JSON.parse(saved); return S.spriteCode[spriteName]; }
-    } catch (e) {}
-    var def = [{ id: 't_' + Date.now(), name: 'Main',
-      code: 'def game_start():\n    pass  # Delete this line before writing code\n' }];
+    var def = [{ id: 't_' + Date.now(), name: 'Main', code: PY_DEFAULT }];
     S.spriteCode[spriteName] = def;
     return def;
   }
 
-  function saveThreads(spriteName) {
-    try { localStorage.setItem(storeKey(spriteName), JSON.stringify(S.spriteCode[spriteName])); }
-    catch (e) {}
+  function saveThreads() {
+    scheduleSessionSave();
   }
 
   // ── VM helpers ────────────────────────────────────────────────
@@ -254,12 +271,13 @@
   // its own generation token inside its own module globals - immune to the shared
   // Sk.builtins being overwritten by later threads.  The static builtins receive
   // __ps_tgen__ as an argument and compare it against S.gen to detect staleness.
-  function makePrologue(spriteName, myGen) {
+  function makePrologue(spriteName, myGen, infoId) {
     var n = JSON.stringify(spriteName);
     var g = String(myGen);           // embed as a Python integer literal
     return [
       '__ps_sprite__ = ' + n,
       '__ps_tgen__   = ' + g,        // this thread's immutable generation token
+      '__ps_info__   = ' + (infoId || 0), // which thread this is, for error reports from its events
       // _psc captures __ps_sprite__ and __ps_tgen__ as DEFAULT ARGUMENTS so their
       // values are baked in at definition time (when this module first runs).
       // This prevents any shared-globals interference when the handler is later
@@ -273,7 +291,7 @@
       'def go_to(x,y=None): return _psc("go_to",x,y)',
       'def go_to_xy(x,y): return _psc("go_to_xy",x,y)',
       'def glide_to(target_or_x,y_or_secs=None,secs=None): return _psc("glide_to",target_or_x,y_or_secs,secs)',
-      'def glide_to_xy(s,x,y): return _psc("glide_to_xy",s,x,y)',
+      'def glide_to_xy(x,y,secs=1): return _psc("glide_to_xy",x,y,secs)',
       'def point_in_direction(d): return _psc("point_in_direction",d)',
       'def point_towards(t,b=None): return _psc("point_towards",t,b)',
       'def change_x(v): return _psc("change_x",v)',
@@ -293,10 +311,13 @@
       // Looks - speech/thought
       // say(message) is non-blocking (shows bubble, continues immediately).
       // say_for(message, secs) blocks for secs seconds, like Scratch's timed bubble.
-      'def say(m,s=None): return _psc("say",m,s)',
-      'def say_for(m,s): return _psc("say_for",m,s)',
-      'def think(m,s=None): return _psc("think",m,s)',
-      'def think_for(m,s): return _psc("think_for",m,s)',
+      // str() so numbers and True/False show as Python writes them (5, not 5.0).
+      'def say(m="",s=None): return _psc("say",str(m),s)',
+      'def say_for(m,s=2): return _psc("say_for",str(m),s)',
+      'def say_for_secs(m,s=2): return say_for(m,s)',
+      'def think(m="",s=None): return _psc("think",str(m),s)',
+      'def think_for(m,s=2): return _psc("think_for",str(m),s)',
+      'def think_for_secs(m,s=2): return think_for(m,s)',
       // Looks - costume
       'def set_costume(c): return _psc("set_costume",c)',
       'def next_costume(): return _psc("next_costume")',
@@ -339,7 +360,7 @@
       'def set_variable(n,v): return _psc("set_variable",n,v)',
       'def get_variable(n): return _psc("get_variable",n)',
       'def change_variable(n,v): return _psc("change_variable",n,v)',
-      'def display_variable(n,visible=True): return _psc("display_variable",n,visible)',
+      'def display_variable(n,visible=True): return _psc("display_variable",n,visible,n)',
       // Sound
       'def play_sound(n): return _psc("play_sound",n)',
       'def play_sound_until_done(n): return _psc("play_sound_until_done",n)',
@@ -383,6 +404,9 @@
       // Control - backed by __ps_wait / __ps_stop in Sk.builtins
       // wait also captures __ps_tgen__ at definition time for the same reason.
       'def wait(s=0,_tg=__ps_tgen__): __ps_wait(s,_tg)',
+      // Added at the top of every loop body: waits for the next frame once a
+      // visible sprite has changed, like a Scratch loop, so loops animate.
+      'def _ps_tick(_tg=__ps_tgen__): __ps_tick(_tg)',
       'def stop(): __ps_stop()',
     ].join('\n') + '\n';
   }
@@ -415,7 +439,9 @@
         return susp;
       }
       if (typeof r === 'boolean') return r ? Sk.builtin.bool.true$ : Sk.builtin.bool.false$;
-      if (typeof r === 'number')  return new Sk.builtin.float_(r);
+      // Whole numbers come back as Python ints, so pick_random(0, 2) can index a
+      // list and str(x_position()) shows 10, not 10.0.
+      if (typeof r === 'number')  return (Number.isInteger(r) && Math.abs(r) < 9007199254740991) ? new Sk.builtin.int_(r) : new Sk.builtin.float_(r);
       if (typeof r === 'string')  return new Sk.builtin.str(r);
       return Sk.builtin.none.none$;
     }
@@ -458,6 +484,22 @@
       return susp;
     });
 
+    // __ps_tick(tgen): at the top of every loop body. Carries on straight away
+    // unless a visible sprite changed this frame (or the frame's time is used
+    // up), then waits for the next frame - the way a Scratch loop behaves.
+    Sk.builtins['__ps_tick'] = new Sk.builtin.func(function (tgenArg) {
+      var g = Sk.ffi.remapToJs(tgenArg);
+      if (!S.running || S.gen !== g) throw new Error('__pyscratch_stopped__');
+      if (!S.redraw && (Date.now() - S.frameStart) < 12) return Sk.builtin.none.none$;
+      var susp = new Sk.misceval.Suspension();
+      susp.data = { type: 'Sk.promise', promise: nextFrame() };
+      susp.resume = function () {
+        if (!S.running || S.gen !== g) throw new Error('__pyscratch_stopped__');
+        return Sk.builtin.none.none$;
+      };
+      return susp;
+    });
+
     Sk.builtins['__ps_stop'] = new Sk.builtin.func(function () {
       // Go through vm.stopAll (the patched version) so TurboWarp sprites also stop.
       if (S.vm) { try { S.vm.stopAll(); } catch(e) { stopAll(); } }
@@ -467,15 +509,44 @@
 
     // __ps_register__(event, fn, sprite, tgen)
     // Called from the postlude to register a hat-block handler function.
-    Sk.builtins['__ps_register__'] = new Sk.builtin.func(function (evtArg, fnArg, spriteArg, tgenArg) {
+    Sk.builtins['__ps_register__'] = new Sk.builtin.func(function (evtArg, fnArg, spriteArg, tgenArg, infoArg) {
       var evt    = Sk.ffi.remapToJs(evtArg);
+      var info   = infoArg ? S.infos[Sk.ffi.remapToJs(infoArg)] : null;
       var sprite = Sk.ffi.remapToJs(spriteArg);
       var tgen   = Sk.ffi.remapToJs(tgenArg);
       if (!fnArg || fnArg instanceof Sk.builtin.none) return Sk.builtin.none.none$;
       if (!S.handlers[sprite]) S.handlers[sprite] = {};
-      S.handlers[sprite][evt] = { fn: fnArg, tgen: tgen };
+      // A list, so two threads of one sprite can both react to the same event.
+      (S.handlers[sprite][evt] = S.handlers[sprite][evt] || []).push({ fn: fnArg, tgen: tgen, info: info });
       return Sk.builtin.none.none$;
     });
+  }
+
+  // ── Frames ────────────────────────────────────────────────────
+  // A 60 fps clock while code runs. Loops (via __ps_tick) wait on it once a
+  // visible sprite has changed, so movement in a loop shows every step.
+  function nextFrame() {
+    return new Promise(function (resolve) { S.frameWaiters.push(resolve); });
+  }
+
+  function startFrameClock() {
+    S.frameStart = Date.now();
+    S.redraw = false;
+    if (S.frameTimer) return;
+    S.frameTimer = setInterval(function () {
+      S.frameStart = Date.now();
+      S.redraw = false;
+      var waiting = S.frameWaiters;
+      S.frameWaiters = [];
+      waiting.forEach(function (r) { r(); });
+    }, FRAME_MS);
+  }
+
+  function stopFrameClock() {
+    if (S.frameTimer) { clearInterval(S.frameTimer); S.frameTimer = null; }
+    var waiting = S.frameWaiters;
+    S.frameWaiters = [];
+    waiting.forEach(function (r) { r(); });
   }
 
   // ── Scratch API implementation ────────────────────────────────
@@ -576,7 +647,7 @@
         var tv = S.trackedPyVars[pyName];
         if (!tv || !tv.visible || !tv.capturedGlobals) return;
         try {
-          var pyObj = tv.capturedGlobals[pyName];
+          var pyObj = tv.capturedGlobals[tv.pyName || pyName];
           if (pyObj === undefined) return;
           var jsVal = Sk.ffi.remapToJs(pyObj);
           if (jsVal === null || jsVal === undefined) jsVal = 0;
@@ -686,11 +757,37 @@
   // Keep the old name as an alias so existing code that references STAGE_FNS still works.
   var STAGE_FNS = NOTARGET_FNS;
 
+  // Commands that change what a sprite looks like on the stage. While one runs
+  // on a visible sprite, loops wait for the next frame (see __ps_tick).
+  var VISUAL_FNS = {
+    move_steps:1, turn:1, turn_right:1, turn_left:1, go_to:1, go_to_xy:1, glide_to:1, glide_to_xy:1,
+    point_in_direction:1, point_towards:1, change_x:1, change_y:1, set_x:1, set_y:1,
+    if_on_edge_bounce:1, bounce:1, set_rotation_style:1, say:1, say_for:1, think:1, think_for:1,
+    set_costume:1, next_costume:1, previous_costume:1, set_size:1, change_size:1, show:1, hide:1,
+    set_effect:1, change_effect:1, clear_effects:1, go_to_front:1, go_to_back:1, go_forward:1, go_backward:1,
+    create_clone:1, create_clone_of:1, delete_clone:1
+  };
+  var BACKDROP_FNS = { set_backdrop:1, next_backdrop:1, previous_backdrop:1 };
+  var MAX_CLONES = 300; // Scratch's own limit
+
+  // Every visible copy of a sprite: the sprite itself and its clones.
+  function spriteAndClones(name) {
+    var targets = (S.vm && S.vm.runtime && S.vm.runtime.targets) || [];
+    return targets.filter(function (t) { return !t.isStage && t.sprite && t.sprite.name === name; });
+  }
+
+  function fireBackdropEvent() {
+    var stage = getStage();
+    var co = stage && stage.sprite.costumes[stage.currentCostume];
+    if (co) fireEventHandlers(null, 'backdrop', co.name);
+  }
+
   function callAPI(fn, spriteName, args) {
     var target = getTargetByName(spriteName);
     var a = args[0], b = args[1], c = args[2];
 
     if (!target && !NOTARGET_FNS[fn] && fn !== 'stop' && fn !== 'key_pressed' && fn !== 'mouse_x' && fn !== 'mouse_y') return null;
+    if ((VISUAL_FNS[fn] && target && target.visible !== false) || BACKDROP_FNS[fn] || fn === 'show') S.redraw = true;
 
     switch (fn) {
       // ── Movement ───────────────────────────────────────────────
@@ -814,20 +911,18 @@
         var stage = getStage();
         if (stage) {
           setCostumeByValue(stage, a);
-          // Fire when_backdrop_switches_to handlers on all sprites
-          var bName = stage.sprite.costumes[stage.currentCostume];
-          if (bName) fireEventHandlers(null, 'backdrop', bName.name);
+          fireBackdropEvent();   // when_backdrop_switches_to handlers on all sprites
         }
         break;
       }
       case 'next_backdrop': {
         var stage = getStage();
-        if (stage) stage.setCostume((stage.currentCostume + 1) % stage.sprite.costumes.length);
+        if (stage) { stage.setCostume((stage.currentCostume + 1) % stage.sprite.costumes.length); fireBackdropEvent(); }
         break;
       }
       case 'previous_backdrop': {
         var stage = getStage();
-        if (stage) stage.setCostume((stage.currentCostume - 1 + stage.sprite.costumes.length) % stage.sprite.costumes.length);
+        if (stage) { stage.setCostume((stage.currentCostume - 1 + stage.sprite.costumes.length) % stage.sprite.costumes.length); fireBackdropEvent(); }
         break;
       }
       case 'backdrop_name': {
@@ -939,6 +1034,8 @@
         // For clones, resolve original sprite name (cloneSourceName may be a target ID)
         var cloneSource = getTargetByName(cloneSourceName);
         if (!cloneSource) break;
+        var cloneCount = S.vm.runtime.targets.filter(function (t) { return t.isClone || t.isOriginal === false; }).length;
+        if (cloneCount >= MAX_CLONES) break;
         // Use the sprite's display name so we load the right code
         var originalName = (cloneSource.sprite && cloneSource.sprite.name) || cloneSourceName;
         try {
@@ -1004,13 +1101,16 @@
               S.vm.runtime.renderer.isTouchingDrawable(target.drawableID, S.mouse.x, S.mouse.y));
           } catch (e) { return false; }
         }
-        var other = getTargetByName(a);
-        if (!other) return false;
+        if (a === 'edge' || a === '_edge_') return callAPI('on_edge', spriteName, []);
+        // Like Scratch, touching a sprite's name includes all of its clones
+        // (bricks, enemies...). Hidden copies never count.
+        var others = spriteAndClones(String(a)).filter(function (t) { return t !== target && t.visible !== false; });
+        if (!others.length || target.visible === false) return false;
         try {
           return !!(S.vm.runtime.renderer &&
-            S.vm.runtime.renderer.isTouchingDrawables(target.drawableID, [other.drawableID]));
+            S.vm.runtime.renderer.isTouchingDrawables(target.drawableID, others.map(function (t) { return t.drawableID; })));
         } catch (e) {
-          return Math.abs(target.x - other.x) < 30 && Math.abs(target.y - other.y) < 30;
+          return others.some(function (o) { return Math.abs(target.x - o.x) < 30 && Math.abs(target.y - o.y) < 30; });
         }
       }
       case 'touching_colour':
@@ -1153,6 +1253,7 @@
         // b is the Python bool (true/false from Skulpt); default True shows the counter.
         var dvShow = (b !== false && b !== 0 && b !== 'False');
         var dvVarName = String(a);
+        var dvPyName = c ? String(c) : dvVarName;   // the Python global to follow (pseudocode prefixes its names)
         var dvVar  = findOrCreateVariable(dvVarName, 0);
         if (!dvVar) break;
         var dvId   = dvVar.id;
@@ -1168,6 +1269,7 @@
         if (dvShow) {
           S.trackedPyVars[dvVarName] = {
             capturedGlobals: Sk.globals,   // live reference to thread's module $d
+            pyName:          dvPyName,
             scratchVarId:    dvId,
             visible:         true
           };
@@ -1216,11 +1318,13 @@
     return null;
   }
 
-  function glide(target, x, y, dur, secsFirst) {
+  // glide_to_xy(x, y, secs); glide_to(target, secs) or glide_to(x, y, secs).
+  function glide(target, x, y, dur, xyFirst) {
     var pos, tx, ty, secs;
-    if (secsFirst) {
-      secs = x;
-      pos = resolvePosition(y, dur);
+    var myGen = S.gen;
+    if (xyFirst) {
+      secs = dur;
+      pos = { x: Number(x) || 0, y: Number(y) || 0 };
     } else if (typeof x === 'number') {
       secs = dur;
       pos = resolvePosition(x, y);
@@ -1230,12 +1334,12 @@
     }
     tx = pos.x;
     ty = pos.y;
-    secs = (secs == null ? 1 : secs);
+    secs = (secs == null ? 1 : Math.max(0, Number(secs) || 0));
     var sx = target.x, sy = target.y;
     var start = Date.now();
     var ms = secs * 1000;
     return (function tick() {
-      if (!S.running) return Promise.resolve();
+      if (!S.running || S.gen !== myGen) return Promise.resolve();
       var elapsed = Date.now() - start;
       if (elapsed >= ms) { target.setXY(tx, ty); return Promise.resolve(); }
       var p = elapsed / ms;
@@ -1245,17 +1349,19 @@
   }
 
   function bubbleAsync(target, text, type, secs) {
+    var myGen = S.gen;
     try { target.runtime.emit('SAY', target, type, text); } catch (e) {}
-    return new Promise(function (r) { setTimeout(r, secs * 1000); })
+    return new Promise(function (r) { setTimeout(r, Math.max(0, Number(secs) || 0) * 1000); })
       .then(function () {
+        if (S.gen !== myGen) return;
         try { target.runtime.emit('SAY', target, type, ''); } catch (e) {}
       });
   }
 
   // ── Event system ─────────────────────────────────────────────
-  // Call a registered Python hat-block handler, launching it as its own
-  // async thread (just like runThread does).  Returns the Promise, or null
-  // if the handler is stale / not registered.
+  // Call a registered hat-block handler, launching it as its own async
+  // thread (just like runThread does). Returns the Promise, or null if the
+  // handler is stale.
   function callHandlerFn(h, arg) {
     if (!h || !S.running || S.gen !== h.tgen) return null;
     var fn = h.fn;
@@ -1265,29 +1371,35 @@
     return Sk.misceval.asyncToPromise(function () {
       return fn.tp$call(argList, []);
     }).catch(function (err) {
-      if (!err) return;
-      var msg = (err.args && err.args.v && err.args.v[0] && err.args.v[0].v) || err.toString();
-      if (msg.indexOf('__pyscratch_stopped__') !== -1) return;
-      logError('[event] ' + msg);
+      reportRunError(err, h.info);
     });
   }
 
   // Fire a named event for every sprite that has registered a handler for it.
-  // Pass null for spriteName to broadcast to ALL sprites.
+  // Pass null for spriteName to broadcast to ALL sprites (and their clones).
   // Returns an array of Promises (one per handler that was started).
   function fireEventHandlers(spriteName, event, arg) {
     if (!S.running) return [];
     var keys = spriteName ? [spriteName] : Object.keys(S.handlers);
     var promises = [];
     keys.forEach(function (sp) {
-      var h = S.handlers[sp] && S.handlers[sp][event];
-      var p = callHandlerFn(h, arg);
-      if (p) promises.push(p);
+      var list = (S.handlers[sp] && S.handlers[sp][event]) || [];
+      list.slice().forEach(function (h) {
+        var p = callHandlerFn(h, arg);
+        if (p) promises.push(p);
+      });
     });
     return promises;
   }
 
-  // ── Display-variable global hoisting ─────────────────────────
+  // ── Code transforms ──────────────────────────────────────────
+  // The code a thread runs is built as a list of { text, src } lines, where
+  // src is the student's own line number (0 for lines PyScratch adds). Errors
+  // are then reported against the line the student wrote.
+  function toLines(code) {
+    return String(code || '').replace(/\r\n?/g, '\n').split('\n').map(function (t, i) { return { text: t, src: i + 1 }; });
+  }
+
   // Syntactic sugar: when a student writes display_variable("score", True)
   // anywhere in their code, any function in the same thread that assigns to
   // `score` automatically gets a `global score` declaration injected at the
@@ -1301,108 +1413,243 @@
   //           wait(1)
   //
   // without ever needing to know about Python's global/local distinction.
-  // The transform happens before Skulpt compiles the code, so from the VM's
-  // perspective the code was always written correctly.
-  function injectDisplayVarGlobals(code) {
-    // Collect all variable names passed to display_variable("name", ...).
+  function injectDisplayVarGlobals(lines) {
     var tracked = {};
     var dvRe = /display_variable\s*\(\s*["'](\w+)["']/g;
     var m;
-    while ((m = dvRe.exec(code)) !== null) tracked[m[1]] = true;
-    if (!Object.keys(tracked).length) return code;
+    var all = lines.map(function (l) { return l.text; }).join('\n');
+    while ((m = dvRe.exec(all)) !== null) tracked[m[1]] = true;
+    if (!Object.keys(tracked).length) return lines;
 
-    var lines = code.split('\n');
-    var out   = [];
-    var i     = 0;
+    var out = [];
+    var i = 0;
     while (i < lines.length) {
       var line = lines[i];
-      var defM = line.match(/^(\s*)def\s+\w+\s*\([^)]*\)\s*:/);
+      var defM = line.text.match(/^(\s*)def\s+\w+\s*\([^)]*\)\s*:/);
       if (!defM) { out.push(line); i++; continue; }
-
       var defIndent = defM[1];
       out.push(line); i++;
-
-      // Collect all lines that belong to this function body.
       var body = [];
       while (i < lines.length) {
-        var bl = lines[i];
+        var bl = lines[i].text;
         var pastEnd = bl.trim() !== '' && !bl.startsWith(defIndent + ' ') && !bl.startsWith(defIndent + '\t');
         if (pastEnd) break;
-        body.push(bl); i++;
+        body.push(lines[i]); i++;
       }
-
-      // Determine the body indent level from the first non-blank line.
       var bIndent = defIndent + '    ';
       for (var j = 0; j < body.length; j++) {
-        if (body[j].trim()) {
-          var bm = body[j].match(/^(\s+)/);
+        if (body[j].text.trim()) {
+          var bm = body[j].text.match(/^(\s+)/);
           if (bm) bIndent = bm[1];
           break;
         }
       }
-
-      // Find which tracked vars are assigned in this function but lack a
-      // `global` declaration (augmented assignment counts: +=, -=, etc.)
-      var bodyStr   = body.join('\n');
-      var toGlobal  = [];
+      var bodyStr = body.map(function (b) { return b.text; }).join('\n');
+      var toGlobal = [];
       Object.keys(tracked).forEach(function (v) {
         var alreadyGlobal = new RegExp('(?:^|\\n)[ \\t]*global\\b[^\\n]*\\b' + v + '\\b').test(bodyStr);
         if (alreadyGlobal) return;
         var isAssigned = new RegExp('(?:^|\\n)[ \\t]+' + v + '\\s*(?:[+\\-*/%&|^]|\\*\\*|\\/\\/)?=(?!=)').test(bodyStr);
         if (isAssigned) toGlobal.push(v);
       });
-
-      // Inject `global v1, v2` before the first non-blank, non-comment body line.
       if (toGlobal.length) {
         var ins = 0;
-        for (var j = 0; j < body.length; j++) {
-          if (body[j].trim() && body[j].trim()[0] !== '#') { ins = j; break; }
-          ins = j + 1;
+        for (var k = 0; k < body.length; k++) {
+          if (body[k].text.trim() && body[k].text.trim()[0] !== '#') { ins = k; break; }
+          ins = k + 1;
         }
-        body.splice(ins, 0, bIndent + 'global ' + toGlobal.join(', '));
+        body.splice(ins, 0, { text: bIndent + 'global ' + toGlobal.join(', '), src: 0 });
       }
-
       out = out.concat(body);
     }
-    return out.join('\n');
+    return out;
   }
 
-  // ── Auto-yield injection ──────────────────────────────────────
-  // Injects wait(0) as the first line of every `while True:` body.
-  // This gives exactly one-iteration-per-frame behaviour - like Scratch's
-  // `forever` block - without students needing to write wait(0) manually.
-  // Only `while True:` is targeted; `for` loops are left untouched so data
-  // processing loops don't become unexpectedly slow.
-  function injectFrameYields(code) {
-    var lines = code.split('\n');
+  // Loop timing, added at the top of each loop body:
+  //   while True:  waits one frame every time round (wait(0)), exactly like
+  //                a Scratch forever block - the tutorials rely on this.
+  //   other while and for loops: _ps_tick(), which waits for the next frame
+  //                only once a visible sprite has changed, so a loop that
+  //                moves a sprite shows each step while loops that only work
+  //                with numbers still run fast.
+  function injectFrameYields(lines) {
     var output = [];
-
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
-      var stripped = line.trimStart();
-      var loopIndent = line.length - stripped.length;
-
+      var stripped = line.text.replace(/^\s+/, '');
+      var loopIndent = line.text.length - stripped.length;
       output.push(line);
-
-      // Match `while True:` (with optional whitespace / comment after colon)
-      if (/^while\s+(True|true)\s*:/.test(stripped)) {
-        // Find first non-empty, non-comment body line to measure body indent
-        for (var j = i + 1; j < lines.length; j++) {
-          var next = lines[j];
-          var nextStrip = next.trimStart();
-          if (nextStrip && nextStrip.charAt(0) !== '#') {
-            var bodyIndent = next.length - nextStrip.length;
-            if (bodyIndent > loopIndent) {
-              // Inject wait(0) as the very first line of the loop body
-              output.push(new Array(bodyIndent + 1).join(' ') + 'wait(0)');
-            }
-            break;
-          }
+      if (!/^(while|for)\b.*:\s*(#.*)?$/.test(stripped)) continue;
+      for (var j = i + 1; j < lines.length; j++) {
+        var next = lines[j].text;
+        var nextStrip = next.replace(/^\s+/, '');
+        if (nextStrip && nextStrip.charAt(0) !== '#') {
+          var bodyIndent = next.length - nextStrip.length;
+          var forever = /^while\s+(True|true)\s*:/.test(stripped);
+          if (bodyIndent > loopIndent) output.push({ text: new Array(bodyIndent + 1).join(' ') + (forever ? 'wait(0)' : '_ps_tick()'), src: 0 });
+          break;
         }
       }
     }
+    return output;
+  }
 
-    return output.join('\n');
+  // Builds the full Python module a thread runs: the prologue, the student's
+  // code (Python, or pseudocode turned into Python) and the postlude that
+  // registers events and calls the entry point. Returns null (after logging
+  // the problem) when the pseudocode has a mistake.
+  function buildThreadModule(spriteName, thread, myGen, isClone, lang) {
+    var info = { sprite: spriteName, thread: thread, lang: lang, prologueLines: 0, lines: null, isClone: !!isClone };
+    var infoId = ++S.infoSeq;
+    info.id = infoId;
+    S.infos[infoId] = info;
+    var prologue = makePrologue(spriteName, myGen, infoId);
+    var userLines;
+    if (lang === 'pseudo') {
+      if (!PSEUDO) { logError('Pseudocode mode did not load. Reload the page.'); return null; }
+      var tr = PSEUDO.transpile(threadCode(thread, 'pseudo'));
+      if (tr.errors.length) {
+        if (!isClone) reportStaticError(spriteName, thread, tr.errors[0]);
+        return null;
+      }
+      prologue += PSEUDO.prologue();
+      userLines = tr.python;
+      info.hasMain = tr.hasMain;
+    } else {
+      userLines = toLines(threadCode(thread, 'python'));
+      if (!isClone) warnMisspeltEvents(spriteName, thread);
+    }
+    userLines = injectFrameYields(injectDisplayVarGlobals(userLines));
+
+    var events = [
+      ['clicked', 'when_clicked'], ['key', 'when_key_pressed'],
+      ['message', 'when_message_received'], ['backdrop', 'when_backdrop_switches_to']
+    ];
+    var post = ['', '# Register event handlers - silently skip any that are not defined'];
+    events.forEach(function (ev) {
+      post.push('try: __ps_register__("' + ev[0] + '", ' + ev[1] + ', __ps_sprite__, __ps_tgen__, __ps_info__)');
+      post.push('except NameError: pass');
+    });
+    var entryName = isClone ? 'when_I_start_as_a_clone' : 'game_start';
+    if (lang === 'pseudo' && info.hasMain && !isClone) post.push('_ps_main()');
+    post.push('try:', '    _ps_entry = ' + entryName, 'except NameError:', '    _ps_entry = None',
+      'if _ps_entry is not None:', '    _ps_entry()', '');
+
+    info.prologueLines = prologue.split('\n').length - 1;
+    info.lines = userLines;
+    var fullCode = prologue + userLines.map(function (l) { return l.text; }).join('\n') + '\n' + post.join('\n');
+    return { code: fullCode, info: info };
+  }
+
+  // A function spelt nearly like an event (def game_strat) never runs, and
+  // nothing says why - so say it.
+  var PY_EVENTS = ['game_start', 'when_clicked', 'when_key_pressed', 'when_message_received', 'when_backdrop_switches_to', 'when_I_start_as_a_clone'];
+  function editDistance(a, b) {
+    var prev = [], cur, i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      cur = [i];
+      for (j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+  function warnMisspeltEvents(spriteName, thread) {
+    var code = threadCode(thread, 'python');
+    var re = /^def\s+(\w+)\s*\(/gm, m, lineOf = function (idx) { return code.slice(0, idx).split('\n').length; };
+    while ((m = re.exec(code)) !== null) {
+      var name = m[1];
+      if (PY_EVENTS.indexOf(name) !== -1) continue;
+      if (new RegExp('\\b' + name + '\\s*\\(').test(code.slice(m.index + m[0].length))) continue; // it is called
+      for (var i = 0; i < PY_EVENTS.length; i++) {
+        if (editDistance(name.toLowerCase(), PY_EVENTS[i].toLowerCase()) <= 2) {
+          logError(displaySpriteName(spriteName) + ' / ' + thread.name + ', line ' + lineOf(m.index) + ': ' + name + '() is never run. If you meant the event, it is spelt ' + PY_EVENTS[i] + '().');
+          break;
+        }
+      }
+    }
+  }
+
+  // ── Error reports ─────────────────────────────────────────────
+  // Maps a line of the generated module back to the student's line.
+  function studentLine(info, moduleLine) {
+    if (!info || !info.lines) return 0;
+    var idx = moduleLine - info.prologueLines - 1;
+    if (idx < 0 || idx >= info.lines.length) return 0;
+    for (var i = idx; i >= 0; i--) if (info.lines[i].src) return info.lines[i].src;
+    return 0;
+  }
+
+  function errorText(err) {
+    if (!err) return '';
+    var msg = '';
+    try {
+      if (err.args && err.args.v && err.args.v[0]) msg = String(err.args.v[0].v != null ? err.args.v[0].v : err.args.v[0]);
+    } catch (e) {}
+    var type = (err.tp$name) || (err.constructor && err.constructor.tp$name) || '';
+    if (!msg) msg = (err.nativeError && (err.nativeError.message || String(err.nativeError))) || String(err);
+    else if (type && type !== 'Exception') msg = type + ': ' + msg;
+    return msg;
+  }
+
+  // Common Python errors, said plainly.
+  function friendlyPython(msg) {
+    var m;
+    if ((m = /NameError: name '(\w+)' is not defined/.exec(msg))) {
+      return msg + '. Check the spelling of ' + m[1] + ' - Python cares about capitals - and that it has been given a value first.';
+    }
+    if (/unsupported operand type\(s\) for \+: 'int' and 'str'|can only concatenate str|cannot concatenate 'str' and/.test(msg) || /for \+: 'str' and 'int'/.test(msg)) {
+      return msg + '. To join text and a number, turn the number into text first: "Score: " + str(score)';
+    }
+    if (/UnboundLocalError|local variable '(\w+)' referenced before assignment/.test(msg)) {
+      m = /'(\w+)'/.exec(msg);
+      return msg + '. Add global ' + (m ? m[1] : 'name') + ' as the first line of the function to change the variable made outside it.';
+    }
+    if (/list indices must be integers/.test(msg)) return msg + '. Use int() to turn the number into a whole number.';
+    return msg;
+  }
+
+  function reportRunError(err, info) {
+    if (!err) return;
+    var msg = errorText(err);
+    if (msg.indexOf('__pyscratch_stopped__') !== -1) return;
+    var line = 0;
+    var tb = err.traceback || [];
+    for (var i = 0; i < tb.length && !line; i++) {
+      if (tb[i] && tb[i].lineno && (!info || !tb[i].filename || tb[i].filename.indexOf('<ps:') === 0 || tb[i].filename === '<stdin>')) {
+        line = studentLine(info, tb[i].lineno);
+      }
+    }
+    msg = msg.replace(/\s+on line \d+\s*$/, '');
+    if (info && info.lang === 'pseudo') {
+      msg = msg.replace(/\bv_(\w+)/g, '$1').replace(/\bp_(\w+)/g, '$1').replace(/^Exception: /, '');
+      var own = /^Line (\d+): ([\s\S]*)$/.exec(msg);
+      if (own) { line = Number(own[1]); msg = own[2]; }
+    } else {
+      msg = friendlyPython(msg);
+    }
+    var where = info ? displaySpriteName(info.sprite) + ' / ' + info.thread.name + (info.isClone ? ' (clone)' : '') : 'Event';
+    logError(where + (line ? ', line ' + line : '') + ': ' + msg);
+    markErrorLine(info, line);
+  }
+
+  function reportStaticError(spriteName, thread, e) {
+    logError(displaySpriteName(spriteName) + ' / ' + thread.name + ', line ' + e.line + ': ' + e.message);
+    markErrorLine({ sprite: spriteName, thread: thread }, e.line);
+  }
+
+  // Clone threads run under the clone's target id; show the sprite's name.
+  function displaySpriteName(name) {
+    var t = getTargetByName(name);
+    return (t && t.sprite && t.sprite.name) || name;
+  }
+
+  function markErrorLine(info, line) {
+    if (!info || !line) return;
+    var spriteName = displaySpriteName(info.sprite);
+    var threads = S.spriteCode[spriteName] || [];
+    S.lastError = { sprite: spriteName, threadIdx: threads.indexOf(info.thread), line: line, lang: info.lang || S.lang };
+    updateIndentGutter();
   }
 
   // ── Thread runner ─────────────────────────────────────────────
@@ -1411,44 +1658,18 @@
   // isClone:    true → call when_I_start_as_a_clone() instead of game_start()
   function runThread(spriteName, thread, threadGen, isClone) {
     var myGen = (threadGen !== undefined) ? threadGen : S.gen;
-    var prologue = makePrologue(spriteName, myGen);
-
-    // Entry-point name depends on whether this is a clone thread
-    var entryName = isClone ? 'when_I_start_as_a_clone' : 'game_start';
-    var postlude = [
-      '',
-      '# Register event handlers - silently skip any that are not defined',
-      'try: __ps_register__("clicked",  when_clicked,              __ps_sprite__, __ps_tgen__)',
-      'except NameError: pass',
-      'try: __ps_register__("key",      when_key_pressed,          __ps_sprite__, __ps_tgen__)',
-      'except NameError: pass',
-      'try: __ps_register__("message",  when_message_received,     __ps_sprite__, __ps_tgen__)',
-      'except NameError: pass',
-      'try: __ps_register__("backdrop", when_backdrop_switches_to, __ps_sprite__, __ps_tgen__)',
-      'except NameError: pass',
-      '# Entry point',
-      'try:',
-      '    _ps_entry = ' + entryName,
-      'except NameError:',
-      '    _ps_entry = None',
-      'if _ps_entry is not None:',
-      '    _ps_entry()',
-      ''
-    ].join('\n');
-
-    var userCode = injectFrameYields(injectDisplayVarGlobals(thread.code));
-    var fullCode = prologue + userCode + postlude;
-
-    var label = '<ps:' + spriteName + ':' + thread.name + (isClone ? ':clone' : '') + '>';
+    var built = buildThreadModule(spriteName, thread, myGen, isClone, S.lang);
+    if (!built) return Promise.resolve();
+    // The module name must be plain: Skulpt reads a "." as a package path,
+    // and clone ids are random characters that often include one, which
+    // used to stop those clones' code from running at all.
+    var safe = function (x) { return String(x).replace(/[^A-Za-z0-9_]/g, '_'); };
+    var label = '<ps:' + safe(displaySpriteName(spriteName)) + ':' + safe(thread.name) + (isClone ? ':clone' + safe(built.info.id) : '') + '>';
+    S.currentInfo = built.info;
     return Sk.misceval.asyncToPromise(function () {
-      return Sk.importMainWithBody(label, false, fullCode, true);
+      return Sk.importMainWithBody(label, false, built.code, true);
     }).catch(function (err) {
-      if (!err) return;
-      var msg = (err.args && err.args.v && err.args.v[0] && err.args.v[0].v)
-             || (err.nativeError && (err.nativeError.message || err.nativeError.toString()))
-             || err.toString();
-      if (msg.indexOf('__pyscratch_stopped__') !== -1) return;
-      logError(spriteName + ' / ' + thread.name + ': ' + msg);
+      reportRunError(err, built.info);
     });
   }
 
@@ -1462,56 +1683,58 @@
   // runs inside an active Skulpt coroutine (__ps_call).  If we called
   // Sk.importMainWithBody here synchronously it would clobber Skulpt's shared
   // module globals (Sk.globals, Sk.breadcrumbs, the module namespace) while the
-  // parent thread's __ps_call frame is still live on the call stack.  When
-  // callAPI returned the parent coroutine would resume into a corrupted Skulpt
-  // state, producing the "no module named …" / "file not found" errors.
-  // Deferring one tick lets the parent's suspension save its state cleanly first.
+  // parent thread's __ps_call frame is still live on the call stack.
   function runCloneThreads(cloneTarget, originalSpriteName, threadGen) {
     var cloneId   = cloneTarget.id;
     var savedGen  = threadGen;
     setTimeout(function () {
-      // Abort if the run was stopped or restarted while we were waiting.
       if (!S.running || S.gen !== savedGen) return;
+      if (S.deadClones.has(cloneId)) return;
       loadThreads(originalSpriteName).forEach(function (thread) {
         runThread(cloneId, thread, savedGen, true /* isClone */);
       });
     }, 0);
   }
 
+  // input() in Python asks with the on-stage box (window.prompt is blocked in
+  // the site's frame).
+  function askForInput(promptText) {
+    return new Promise(function (resolve) {
+      showAskDialog(promptText == null ? '' : String(promptText), function (ans) { resolve(String(ans == null ? '' : ans)); });
+    });
+  }
+
   function startAll() {
     if (!S.vm) return;
     // Always stop first - this increments S.gen, poisoning any sleeping old threads.
-    // They will see gen !== myGen on their next wake and throw __pyscratch_stopped__.
     stopAll();
     S.running    = true;
     S.timerStart = Date.now();   // timer() counts from green-flag press
+    S.lastError  = null;
     clearConsole();
+    updateIndentGutter();
+    saveCurrentCode();
     // Snapshot the full project on every run so the Snapshots panel has history.
     if (!S.activeTut) takeProjectSnapshot('Run', 'auto');
 
     // Configure Skulpt ONCE per run, before any threads start.
-    // IMPORTANT: Sk.configure resets Sk.sysmodules (the module cache).
-    // Calling it inside runThread (once per thread/clone) would clear the cache
-    // mid-execution for already-running coroutines, causing "no module found"
-    // errors.  A single call here is safe because all threads share the same
-    // read/output functions for the entire run.
+    // IMPORTANT: Sk.configure resets Sk.sysmodules (the module cache), so it
+    // must not be called per thread while other threads are running.
     Sk.configure({
       output: function (text) { log(text); },
       read: function (x) {
         if (Sk.builtinFiles && Sk.builtinFiles.files[x]) return Sk.builtinFiles.files[x];
         throw new Error("File not found: '" + x + "'");
       },
+      inputfun: askForInput,
+      inputfunTakesPrompt: true,
       execLimit: undefined,
-      yieldLimit: 1000
+      yieldLimit: 100
     });
+    startFrameClock();
 
-    // Capture the generation AFTER stopAll() incremented it so every new thread
-    // gets the same gen value. Old threads have a smaller gen and die at the very
-    // next __ps_call or wait().
     var currentGen = S.gen;
-
-    var sprites = getSprites();
-    sprites.forEach(function (t) {
+    getSprites().forEach(function (t) {
       var name = t.sprite.name;
       loadThreads(name).forEach(function (thread) {
         runThread(name, thread, currentGen);
@@ -1523,14 +1746,17 @@
 
   // Stops Python threads only. Does NOT call vm.stopAll - the patched vm.stopAll
   // is the single place that calls both stopAll() + the original TurboWarp stop.
-  // Calling vm.stopAll from here would cause infinite recursion.
   function stopAll() {
     S.running    = false;
     S.gen++;              // sleeping threads see gen mismatch → throw __pyscratch_stopped__
     S.handlers   = {};    // discard all event registrations - threads re-register on startAll()
     S.deadClones = new Set(); // clear per-clone tombstones for a fresh run
+    S.infos      = {};
     stopTrackedVarPoll(); // cancel Python-variable→monitor polling
+    stopFrameClock();     // wakes any loop waiting for a frame so it can stop
+    closeAskDialog();
     updateRunState(false);
+    scheduleSessionSave();
   }
 
   // ── Project save / load ───────────────────────────────────────
@@ -1546,7 +1772,7 @@
     return new Promise(function (resolve, reject) {
       if (window.JSZip) { resolve(window.JSZip); return; }
       var s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+      s.src = SKULPT_BASE + 'jszip.min.js';
       s.onload  = function () { resolve(window.JSZip); };
       s.onerror = function () { reject(new Error('Could not load JSZip')); };
       document.head.appendChild(s);
@@ -1611,22 +1837,33 @@
 
   // Build a full .sb3 blob with pyscratch code embedded in project.json.
   // Uses the already-patched vm.toJSON() so code is always up to date.
+  // The project is captured straight away (code and all), then zipped
+  // later. Capturing first matters: a tutorial snapshot taken just before
+  // the first step's starter code replaces the editor must hold the old code.
   function exportFullSb3() {
-    return ensureJSZip().then(function (JSZip) {
+    var json, files = [];
+    try {
       saveCurrentCode();
-      var zip = new JSZip();
-      zip.file('project.json', S.vm.toJSON());
+      json = S.vm.toJSON();
       var seen = {};
       ((S.vm.runtime && S.vm.runtime.targets) || []).forEach(function (target) {
+        if (target.isOriginal === false || target.isClone) return;
         var assets = ((target.sprite ? target.sprite.costumes : []) || [])
           .concat((target.sprite ? target.sprite.sounds   : []) || []);
         assets.forEach(function (a) {
           var name = a && a.md5ext;
           if (!name || !a.asset || !a.asset.data || seen[name]) return;
           seen[name] = true;
-          zip.file(name, a.asset.data);
+          files.push([name, a.asset.data]);
         });
       });
+    } catch (e) {
+      return Promise.reject(e);
+    }
+    return ensureJSZip().then(function (JSZip) {
+      var zip = new JSZip();
+      zip.file('project.json', json);
+      files.forEach(function (f) { zip.file(f[0], f[1]); });
       return zip.generateAsync({ type: 'blob', compression: 'DEFLATE',
                                   compressionOptions: { level: 6 } });
     });
@@ -1864,29 +2101,158 @@
   // ── Ask dialog ───────────────────────────────────────────────
   // Shows a small input box over the stage (bottom-right) and resolves when
   // the student presses Enter or clicks the tick button.
-  function showAskDialog(question, resolve) {
-    var wrap  = document.getElementById('ps-ask-wrap');
-    if (!wrap) { resolve(''); return; }
-    var qEl   = wrap.querySelector('.ps-ask-q');
-    var input = wrap.querySelector('.ps-ask-input');
-    var btn   = wrap.querySelector('.ps-ask-submit');
+  // Questions from several threads wait their turn, like Scratch's ask block.
+  var _askQueue = [];
+  var _askCurrent = null;
 
-    qEl.textContent = question || '';
+  function showAskDialog(question, resolve) {
+    var wrap = document.getElementById('ps-ask-wrap');
+    if (!wrap) { resolve(''); return; }
+    _askQueue.push({ q: question || '', resolve: resolve });
+    if (!_askCurrent) nextAsk();
+  }
+
+  function nextAsk() {
+    var wrap = document.getElementById('ps-ask-wrap');
+    _askCurrent = _askQueue.shift() || null;
+    if (!wrap || !_askCurrent) { if (wrap) wrap.classList.remove('active'); return; }
+    var input = wrap.querySelector('.ps-ask-input');
+    wrap.querySelector('.ps-ask-q').textContent = _askCurrent.q;
     input.value = '';
     wrap.classList.add('active');
-
-    function submit() {
-      wrap.classList.remove('active');
-      resolve(input.value);
-      input.removeEventListener('keydown', onKey);
-      btn.removeEventListener('click', submit);
-    }
-    function onKey(e) {
-      if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); submit(); }
-    }
-    input.addEventListener('keydown', onKey);
-    btn.addEventListener('click', submit);
     setTimeout(function () { try { input.focus(); } catch(e) {} }, 30);
+  }
+
+  function submitAsk() {
+    var wrap = document.getElementById('ps-ask-wrap');
+    if (!_askCurrent || !wrap) return;
+    var done = _askCurrent;
+    var value = wrap.querySelector('.ps-ask-input').value;
+    nextAsk();
+    done.resolve(value);
+  }
+
+  // On stop: close the box and let any waiting thread finish (it then stops).
+  function closeAskDialog() {
+    var pending = (_askCurrent ? [_askCurrent] : []).concat(_askQueue);
+    _askQueue = [];
+    _askCurrent = null;
+    var wrap = document.getElementById('ps-ask-wrap');
+    if (wrap) wrap.classList.remove('active');
+    pending.forEach(function (p) { try { p.resolve(''); } catch (e) {} });
+  }
+
+  // ── In-editor dialogs and toasts ──────────────────────────────
+  // Native confirm() and prompt() can be silently blocked inside the site's
+  // frame, so PyScratch asks with its own box.
+  function psDialog(opts) {
+    var dlg = document.getElementById('ps-tut-dialog');
+    if (!dlg) return;
+    document.getElementById('ps-td-icon').innerHTML = psIcon(opts.icon || 'question', 36);
+    document.getElementById('ps-td-title').textContent = opts.title || '';
+    var body = document.getElementById('ps-td-body');
+    body.textContent = opts.body || '';
+    var input = null;
+    if (opts.input != null) {
+      input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'ps-td-input';
+      input.value = opts.input;
+      input.setAttribute('aria-label', opts.title || 'Name');
+      body.appendChild(input);
+    }
+    var btns = document.getElementById('ps-td-btns');
+    btns.innerHTML = '';
+    function close() { dlg.classList.add('ps-td-hidden'); dlg.onclick = null; }
+    (opts.buttons || []).forEach(function (b) {
+      var btn = document.createElement('button');
+      btn.className = 'ps-td-btn ' + (b.cls || 'td-secondary');
+      btn.textContent = b.label;
+      btn.addEventListener('click', function () { close(); if (b.cb) b.cb(input ? input.value : undefined); });
+      btns.appendChild(btn);
+    });
+    if (input) {
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); var first = btns.querySelector('.td-primary'); if (first) first.click(); }
+        if (e.key === 'Escape') { e.preventDefault(); close(); }
+      });
+    }
+    dlg.onclick = function (e) { if (e.target === dlg) close(); };
+    dlg.classList.remove('ps-td-hidden');
+    if (input) setTimeout(function () { input.focus(); input.select(); }, 30);
+  }
+
+  function psConfirm(title, body, okLabel, onOk, danger) {
+    psDialog({ icon: danger ? 'question' : 'book', title: title, body: body, buttons: [
+      { label: okLabel, cls: danger ? 'td-danger' : 'td-primary', cb: onOk },
+      { label: 'Cancel', cls: 'td-secondary' }
+    ] });
+  }
+
+  function psPrompt(title, value, onOk) {
+    psDialog({ icon: 'list', title: title, input: value, buttons: [
+      { label: 'Save', cls: 'td-primary', cb: onOk },
+      { label: 'Cancel', cls: 'td-secondary' }
+    ] });
+  }
+
+  var _toastTimer = null;
+  function showToast(text) {
+    var el = document.getElementById('ps-toast');
+    if (!el) return;
+    el.textContent = text;
+    el.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(function () { el.classList.remove('show'); }, 6000);
+  }
+
+  // ── Session copy ──────────────────────────────────────────────
+  // In the PyScratch app (?ps_session=1) the whole project is kept in
+  // IndexedDB as the student works, and put back after a reload. Sprite ids
+  // change every load, so the code cannot be found again any other way.
+  var SESSION_ON = /[?&]ps_session=1/.test(location.search) && !DEMO_MODE &&
+    !/[?&]project_url=/.test(location.search) && !(location.hash && location.hash.length > 1);
+  var SESSION_KEY = 'pyscratch-session';
+  var _sessionTimer = null;
+
+  function scheduleSessionSave() {
+    if (!SESSION_ON || !S.vm || S.loadingProject || !S.sessionReady) return;
+    clearTimeout(_sessionTimer);
+    _sessionTimer = setTimeout(saveSessionNow, 2000);
+  }
+
+  function saveSessionNow() {
+    clearTimeout(_sessionTimer);
+    _sessionTimer = null;
+    if (!SESSION_ON || S.loadingProject || !S.sessionReady) return Promise.resolve();
+    return exportFullSb3().then(function (blob) { return idbPut(SESSION_KEY, blob); })
+      .then(function () { try { localStorage.setItem('pyscratch:session', String(Date.now())); } catch (e) {} })
+      .catch(function (e) { console.warn('[PyScratch] session save failed:', e); });
+  }
+
+  function restoreSession() {
+    var has = false;
+    try { has = !!localStorage.getItem('pyscratch:session'); } catch (e) {}
+    if (!SESSION_ON || !has) { S.sessionReady = true; return Promise.resolve(); }
+    return idbGet(SESSION_KEY).then(function (blob) {
+      if (!blob) return;
+      return S.vm.loadProject(blob).then(function () {
+        showToast('Your last PyScratch project is back. File > New starts a fresh one.');
+      });
+    }).catch(function (e) {
+      console.warn('[PyScratch] session restore failed:', e);
+      try { localStorage.removeItem('pyscratch:session'); } catch (e2) {}
+    }).then(function () { S.sessionReady = true; });
+  }
+
+  // Older versions saved each sprite's code under its (per-load) id. Those
+  // keys can never be read again, so clear them out.
+  function purgeOldCodeKeys() {
+    try {
+      Object.keys(localStorage).forEach(function (k) {
+        if (/^pyscratch:/.test(k) && !/^pyscratch:(tut:|project-snaps$|lang$|session$)/.test(k)) localStorage.removeItem(k);
+      });
+    } catch (e) {}
   }
 
   // ── Build UI ──────────────────────────────────────────────────
@@ -1903,8 +2269,27 @@
       '#ps-tut-btn{right:62px}',
       '#ps-help-btn:hover,#ps-tut-btn:hover{background:var(--ps-accent-soft,#303052);color:var(--ps-text-strong,#fff);border-color:var(--ps-accent,#6366f1)}',
       '#ps-tut-btn{border-color:var(--ps-tut-border,#3d3555)}',
+      // Python / Pseudocode switch
+      '#ps-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:5px 8px;background:var(--ps-panel-2,#18182a);border-bottom:1px solid var(--ps-border,#312d4b);flex-shrink:0}',
+      '#ps-toolbar #ps-help-btn,#ps-toolbar #ps-tut-btn,#ps-toolbar #ps-status{position:static;box-shadow:none}',
+      '#ps-toolbar #ps-status{margin-right:auto;opacity:1}',
+      '#ps-lang{display:inline-flex;padding:2px;border:1px solid var(--ps-border-strong,#45456a);border-radius:999px;background:var(--ps-panel-3,#252537);box-shadow:0 2px 8px var(--ps-shadow,rgba(0,0,0,.24))}',
+      '#ps-lang button{border:0;background:transparent;color:var(--ps-muted,#9090b0);font-size:11px;font-weight:600;line-height:1.2;font-family:inherit;padding:3px 9px;border-radius:999px;cursor:pointer}',
+      '#ps-lang button:hover{color:var(--ps-text-strong,#fff)}',
+      '#ps-lang button[aria-pressed="true"]{background:var(--ps-accent,#7c5fcf);color:#fff}',
+      '#ps-lang button:focus-visible{outline:2px solid var(--ps-accent,#7c5fcf);outline-offset:1px}',
+      '#ps-lang.ps-lang-locked{display:none}',
+      '#ps-toast{position:absolute;left:12px;right:12px;bottom:84px;z-index:8;padding:8px 12px;border-radius:8px;background:var(--ps-panel-3,#252538);border:1px solid var(--ps-accent,#7c5fcf);color:var(--ps-text,#cdd6f4);font-size:12px;line-height:1.45;box-shadow:0 4px 16px var(--ps-shadow,rgba(0,0,0,.4));opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none}',
+      '#ps-toast.show{opacity:1;transform:none}',
+      '.ps-td-input{display:block;width:100%;margin-top:10px;padding:6px 9px;border-radius:6px;border:1px solid var(--ps-border-strong,#45456a);background:var(--ps-code-bg,#1e1e1e);color:var(--ps-text,#cdd6f4);font-size:13px;font-family:inherit;box-sizing:border-box;text-align:left}',
+      '.ps-hcat.vars{background:#3b2410;color:#fdba74}',
+      'html:not([data-ps-lang="pseudo"]) .ps-hint-pseudo,html[data-ps-lang="pseudo"] .ps-hint-py,html:not([data-ps-lang="pseudo"]) .ps-tut-lang-note{display:none}',
+      '.ps-tut-lang-note{margin:0;padding:8px 12px;border-radius:8px;background:var(--ps-panel-3,#252538);border:1px solid var(--ps-border-strong,#3f3f5a);color:var(--ps-muted,#9090b0);font-size:12px;line-height:1.5}',
+      '.ps-tb-sprite{margin:3px 8px 0;padding:5px 8px;background:#2a1f0d;border:1px solid #b45309;border-radius:4px;font-size:11px;color:#fcd34d;display:flex;align-items:center;gap:8px;flex-shrink:0}',
+      '.ps-tb-sprite.ps-tb-sprite-hidden{display:none}',
+      '.ps-tb-sprite button{margin-left:auto;background:#b45309;border:0;color:#fff;cursor:pointer;padding:3px 9px;border-radius:4px;font-size:10px;font-family:inherit;font-weight:600}',
       '#ps-tut-btn:hover{border-color:var(--ps-tut-accent,#7c5fcf) !important}',
-      '#ps-status{position:absolute;top:10px;right:152px;z-index:3;font-size:11px;color:var(--ps-success,#a6e3a1);opacity:.85;pointer-events:none}',
+      '#ps-status{position:absolute;top:10px;right:290px;z-index:3;font-size:11px;color:var(--ps-success,#a6e3a1);opacity:.85;pointer-events:none}',
 
       // Body split - width of ps-left is set dynamically by adjustOverlay()
       '#ps-body{flex:1;display:flex;overflow:hidden;pointer-events:none}',
@@ -1966,7 +2351,7 @@
       '#ps-editor-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}',
       '#ps-editor{flex:1;background:var(--ps-panel,#1e1e2e);color:var(--ps-text,#cdd6f4);border:none;outline:none;resize:none;font-family:"Roboto Mono","Consolas","Courier New",monospace;font-size:13px;line-height:1.65;padding:12px;tab-size:4;overflow-y:auto;min-height:0}',
       '#ps-editor::selection{background:var(--ps-selection,#3b3b5a)}',
-      '#ps-console{height:72px;background:var(--ps-console,#13131f);color:var(--ps-success,#a6e3a1);font-family:"Roboto Mono","Consolas",monospace;font-size:11px;padding:5px 10px;overflow-y:auto;border-top:1px solid var(--ps-border,#312d4b);flex-shrink:0;line-height:1.5}',
+      '#ps-console{white-space:pre-wrap;word-break:break-word;height:72px;background:var(--ps-console,#13131f);color:var(--ps-success,#a6e3a1);font-family:"Roboto Mono","Consolas",monospace;font-size:11px;padding:5px 10px;overflow-y:auto;border-top:1px solid var(--ps-border,#312d4b);flex-shrink:0;line-height:1.5}',
       '.ps-con-err{color:var(--ps-error,#f38ba8)}',
 
       // Colour picker badge (appears when cursor is inside touching_colour(...))
@@ -2187,9 +2572,6 @@
     o.innerHTML = [
       '<div id="ps-body">',
         '<div id="ps-left">',
-          '<button id="ps-help-btn" title="PyScratch reference">Help</button>',
-          '<button id="ps-tut-btn" title="Step-by-step tutorials">Tutorials</button>',
-          '<span id="ps-status"></span>',
           '<div id="ps-code-area">',
             '<div id="ps-threads">',
               '<div id="ps-panel-tabs">',
@@ -2204,6 +2586,12 @@
               '<div id="ps-snap-list"></div>',
             '</div>',
             '<div id="ps-editor-wrap">',
+              '<div id="ps-toolbar">',
+                '<span id="ps-status" role="status"></span>',
+                '<span id="ps-lang" role="group" aria-label="Language"><button type="button" data-lang="python" aria-pressed="true">Python</button><button type="button" data-lang="pseudo" aria-pressed="false">Pseudocode</button></span>',
+                '<button id="ps-tut-btn" title="Step-by-step tutorials">Tutorials</button>',
+                '<button id="ps-help-btn" title="PyScratch reference">Help</button>',
+              '</div>',
               '<div id="ps-tut-bar" class="ps-tb-hidden">',
                 '<div class="ps-tb-head">',
                   '<span class="ps-tb-tut-name"></span>',
@@ -2231,6 +2619,7 @@
                 '<div class="ps-tb-indent-tip ps-tb-tip-hidden">',
                   '↹ Press <strong>Tab</strong> to indent (on some keyboards the key shows two arrows ↹ instead of "Tab") · 4 spaces per indent level',
                 '</div>',
+                '<div class="ps-tb-sprite ps-tb-sprite-hidden"><span class="ps-tb-sprite-msg"></span><button type="button" class="ps-tb-sprite-go">Switch</button></div>',
                 '<div class="ps-tb-checks ps-tb-no-checks"></div>',
                 '<div class="ps-tb-ierr ps-tb-ierr-hidden"></div>',
                 '<div class="ps-tb-foot">',
@@ -2240,8 +2629,9 @@
                 '</div>',
               '</div>',
               '<div id="ps-indent-gutter"></div>',
-              '<textarea id="ps-editor" spellcheck="false"></textarea>',
-              '<div id="ps-console"></div>',
+              '<textarea id="ps-editor" spellcheck="false" aria-label="Code"></textarea>',
+              '<div id="ps-toast" role="status"></div>',
+              '<div id="ps-console" aria-live="polite"></div>',
             '</div>',
           '</div>',
         '</div>',
@@ -2254,7 +2644,7 @@
     var hm = document.createElement('div');
     hm.id = 'ps-help';
     hm.className = 'hidden';
-    hm.innerHTML = buildHelpHTML();
+    hm.innerHTML = buildHelpHTML(S.lang);
     document.body.appendChild(hm);
 
     // Tutorial modal
@@ -2383,9 +2773,16 @@
     // Button events
     document.getElementById('ps-add-thread').onclick = addThread;
     document.getElementById('ps-help-btn').onclick = function () { hm.classList.remove('hidden'); };
-    hm.querySelector('.ps-mhead button').onclick = function () { hm.classList.add('hidden'); };
+    refreshHelp();
     hm.onclick = function (e) { if (e.target === hm) hm.classList.add('hidden'); };
     document.getElementById('ps-tut-btn').onclick = function () { tm.classList.remove('hidden'); };
+    document.querySelectorAll('#ps-lang button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.lang === S.lang) return;
+        setLang(b.dataset.lang, true);
+      });
+    });
+    if (!PSEUDO) document.getElementById('ps-lang').style.display = 'none';
     tm.onclick = function (e) { if (e.target === tm) tm.classList.add('hidden'); };
 
     // Editor behaviour
@@ -2479,7 +2876,7 @@
         var els = ev.lastIndexOf('\n', es - 1) + 1;
         var el  = ev.substring(els, es);
         var ind = (el.match(/^(\s*)/) || ['', ''])[1];
-        if (el.trimEnd().endsWith(':')) ind += '    ';
+        if (S.lang === 'pseudo' ? pseudoOpensBlock(el) : el.trimEnd().endsWith(':')) ind += '    ';
         document.execCommand('insertText', false, '\n' + ind);
       }
     });
@@ -2488,6 +2885,8 @@
       if (S.activeTut) checkTutBar();
       updateCompletions();
       updateColourPicker();
+      S.lastError = null;
+      schedulePseudoCheck();
       updateIndentGutter();
     });
     ui.editor.addEventListener('click', function () { updateColourPicker(); updateIndentGutter(); });
@@ -2514,8 +2913,17 @@
       var map = { ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right', Enter:'enter' };
       return map[k] || k.toLowerCase();
     };
-    // Key tracking - also fire when_key_pressed handlers on rising edge
+    // Key tracking - also fire when_key_pressed handlers on rising edge.
+    // Typing in the code editor, the ask box or a TurboWarp field is not
+    // game input, as in Scratch.
+    function isTypingTarget(el) {
+      if (!el) return false;
+      var tag = (el.tagName || '').toLowerCase();
+      return tag === 'textarea' || tag === 'select' || el.isContentEditable ||
+        (tag === 'input' && !/^(button|checkbox|radio|range|color|submit)$/i.test(el.type || ''));
+    }
     window.addEventListener('keydown', function (e) {
+      if (isTypingTarget(e.target)) return;
       var key = normKey(e.key);
       if (!S.pressedKeys[key]) {
         S.pressedKeys[key] = true;
@@ -2523,6 +2931,8 @@
       }
     });
     window.addEventListener('keyup', function (e) { S.pressedKeys[normKey(e.key)] = false; });
+    // A key released outside the page would otherwise count as held forever.
+    window.addEventListener('blur', function () { S.pressedKeys = {}; S.mouse.down = false; });
 
     // Mouse tracking (map to Scratch coords: centre=0,0; Y-up)
     window.addEventListener('mousemove', function (e) {
@@ -2542,6 +2952,10 @@
         '<button class="ps-ask-submit">&#10003;</button>' +
       '</div></div>';
     document.body.appendChild(askWrap);
+    askWrap.querySelector('.ps-ask-submit').addEventListener('click', submitAsk);
+    askWrap.querySelector('.ps-ask-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); submitAsk(); }
+    });
 
     // Mouse button tracking (for mouse_down())
     window.addEventListener('mousedown', function (e) { if (e.button === 0) S.mouse.down = true; });
@@ -2730,7 +3144,8 @@
   function buildChallengeCardsHTML() {
     return CHALLENGES.map(function (ch, i) {
       var stars = '★'.repeat(ch.difficulty) + '☆'.repeat(4 - ch.difficulty);
-      var hintsHTML = ch.hints.map(function (h) { return '<li>' + h + '</li>'; }).join('');
+      var hintsHTML = ch.hints.map(function (h) { return '<li class="ps-hint-py">' + h + '</li>'; }).join('') +
+        (ch.pseudoHints || []).map(function (h) { return '<li class="ps-hint-pseudo">' + h + '</li>'; }).join('');
       return '<div class="ps-tcard ps-tcard-chal" data-chal-idx="' + i + '">' +
         '<div class="ps-tcard-top">' +
           '<span class="ps-tcard-emoji">' + psIcon(ch.icon, 22) + '</span>' +
@@ -2755,7 +3170,7 @@
         '<div class="ps-ttab" data-panel="challenges">Challenges</div>' +
       '</div>' +
       '<div class="ps-tcontent">' +
-        '<div class="ps-tpanel" data-panel="tutorials">' + buildTutorialGroupsHTML() + '</div>' +
+        '<div class="ps-tpanel" data-panel="tutorials"><p class="ps-tut-lang-note">The tutorials are written in Python, so starting one switches to Python. Your pseudocode is kept and comes back when you leave the tutorial.</p>' + buildTutorialGroupsHTML() + '</div>' +
         '<div class="ps-tpanel ps-tpanel-hidden" data-panel="challenges">' +
           '<div class="ps-tgrid">' + buildChallengeCardsHTML() + '</div>' +
         '</div>' +
@@ -2844,7 +3259,7 @@
   function saveTutProgress() {
     var at = S.activeTut;
     if (!at) return;
-    try { localStorage.setItem(_tutProgressKey(at.tutIdx), JSON.stringify({ stepIdx: at.stepIdx })); } catch(e) {}
+    try { localStorage.setItem(_tutProgressKey(at.tutIdx), JSON.stringify({ stepIdx: at.stepIdx, mainName: at.mainName || null })); } catch(e) {}
   }
 
   // Completion is tracked separately from progress: finishing a tutorial
@@ -2968,14 +3383,57 @@
   }
 
   // ── Tutorial bar (interactive in-editor walkthrough) ──────────
-  function _doStartTutorial(tutIdx, stepIdx) {
-    S.activeTut = { tutIdx: tutIdx, stepIdx: stepIdx };
+  // The project as it was at the start of the step the student reached, so
+  // Resume brings back their own work (the snapshot above is the project
+  // from before the tutorial, used by "Restore Original Code").
+  function _tutStepSnapKey(tutIdx) { return 'pyscratch:tut:' + tutIdx + ':step-snapshot'; }
+
+  function saveTutStepSnapshot() {
+    var at = S.activeTut;
+    if (!at) return;
+    var tutIdx = at.tutIdx;
+    exportFullSb3().then(function (blob) {
+      return idbPut(_tutStepSnapKey(tutIdx), blob);
+    }).catch(function (e) { console.warn('[PyScratch] step snapshot failed:', e); });
+  }
+
+  function clearTutStepSnapshot(tutIdx) {
+    return idbDelete(_tutStepSnapKey(tutIdx)).catch(function () {});
+  }
+
+  function restoreTutStepSnapshot(tutIdx) {
+    return idbGet(_tutStepSnapKey(tutIdx)).then(function (blob) {
+      if (blob) return S.vm.loadProject(blob).then(function () { return true; });
+      return restoreTutSnapshot(tutIdx).then(function () { return false; });
+    }).catch(function (e) {
+      console.warn('[PyScratch] restore step snapshot failed:', e);
+      return false;
+    });
+  }
+
+  function _doStartTutorial(tutIdx, stepIdx, resumed, mainName) {
+    var main = (mainName && getTargetByName(mainName)) || getTargetByName(S.activeSprite) || getSprites()[0];
+    S.activeTut = {
+      tutIdx: tutIdx,
+      stepIdx: stepIdx,
+      // Steps up to maxStep have been reached; starter code is only loaded
+      // the first time a step is reached, so going Back loses nothing.
+      maxStep: resumed ? stepIdx : -1,
+      mainId: main ? main.id : null,
+      mainName: main && main.sprite ? main.sprite.name : null,
+      langBefore: S.lang,
+      startCode: null
+    };
+    // Tutorials are written in Python.
+    if (S.lang !== 'python') setLang('python', false);
+    var lang = document.getElementById('ps-lang');
+    if (lang) lang.classList.add('ps-lang-locked');
     var hb = document.getElementById('ps-help-btn');
     var tb = document.getElementById('ps-tut-btn');
     if (hb) hb.style.display = 'none';
     if (tb) tb.style.display = 'none';
     saveTutProgress();
-    applyTutBar(true);
+    applyTutBar();
   }
 
   function startTutorial(tutIdx) {
@@ -2988,26 +3446,73 @@
       showTutDialog(
         tut.icon || 'book',
         tut.title,
-        'You left off at <strong>Step ' + (saved.stepIdx + 1) + ' of ' + tut.steps.length + '</strong>. Want to pick up where you left off?',
+        'You left off at <strong>Step ' + (saved.stepIdx + 1) + ' of ' + tut.steps.length + '</strong>. Resume puts your project back as it was at that step.',
         [
           { label: 'Resume →', cls: 'td-primary', cb: function () {
-              restoreTutSnapshot(tutIdx).then(function () {
-                _doStartTutorial(tutIdx, saved.stepIdx);
+              restoreTutStepSnapshot(tutIdx).then(function (hadStep) {
+                // Without a step copy the project is the original one, so the
+                // step's starter code is loaded as if arriving fresh.
+                _doStartTutorial(tutIdx, saved.stepIdx, hadStep, saved.mainName);
               });
           }},
           { label: 'Start Fresh', cls: 'td-secondary', cb: function () {
               clearTutProgress(tutIdx);
-              saveTutSnapshot(tutIdx); // overwrite snapshot with full current project
-              _doStartTutorial(tutIdx, 0);
+              clearTutStepSnapshot(tutIdx);
+              saveTutSnapshot(tutIdx); // the project as it is now becomes the "original"
+              _doStartTutorial(tutIdx, 0, false);
           }}
         ]
       );
     } else {
-      // Fresh start - snapshot full project then begin
+      // Fresh start - snapshot full project then begin. Both snapshots
+      // capture the project before the first step's starter replaces it.
       takeProjectSnapshot('Before ' + tut.title, 'before-tutorial');
       saveTutSnapshot(tutIdx);
-      _doStartTutorial(tutIdx, 0);
+      clearTutStepSnapshot(tutIdx);
+      _doStartTutorial(tutIdx, 0, false);
     }
+  }
+
+  // Which sprite a step's code belongs to ('@main' is the sprite that was
+  // selected when the tutorial started). Null when the step doesn't say.
+  function stepSpriteName(step) {
+    var at = S.activeTut;
+    if (!at || !step || !step.sprite) return null;
+    if (step.sprite === '@main') {
+      var t = at.mainId && S.vm.runtime.targets.find(function (x) { return x.id === at.mainId; });
+      if (t && t.sprite) return t.sprite.name;
+      return at.mainName && getTargetByName(at.mainName) ? at.mainName : null;
+    }
+    return getTargetByName(step.sprite) ? step.sprite : null;
+  }
+
+  function stepSpriteLabel(step) {
+    if (!step || !step.sprite) return '';
+    if (step.sprite === '@main') return (S.activeTut && S.activeTut.mainName) || 'first';
+    return step.sprite;
+  }
+
+  // Select a sprite in TurboWarp and show its code.
+  function selectSpriteByName(name) {
+    var t = getTargetByName(name);
+    if (!t || t.isStage) return false;
+    if (S.activeSprite === name) return true;
+    try { S.vm.setEditingTarget(t.id); } catch (e) {}
+    syncSelectedSprite(false);
+    return S.activeSprite === name;
+  }
+
+  // Put the editor back to how it was when this step began.
+  function restoreStepStart() {
+    var at = S.activeTut;
+    if (!at || !at.startCode) return;
+    if (at.startCode.sprite !== S.activeSprite && !selectSpriteByName(at.startCode.sprite)) return;
+    var threads = loadThreads(S.activeSprite);
+    var t = threads[S.activeThreadIdx];
+    if (!t) return;
+    setThreadCode(t, at.startCode.code, 'python');
+    saveThreads(S.activeSprite);
+    loadCodeToEditor();
   }
 
   // ── Context-aware code search helpers ────────────────────────
@@ -3419,15 +3924,22 @@
     return o;
   }
 
-  function applyTutBar(isNewStep) {
+  function applyTutBar() {
     var at   = S.activeTut;
     if (!at) return;
     var tut  = TUTORIALS[at.tutIdx];
     var step = tut.steps[at.stepIdx];
     var bar  = document.getElementById('ps-tut-bar');
     if (!bar) return;
+    var firstVisit = at.stepIdx > at.maxStep;
+    if (firstVisit) at.maxStep = at.stepIdx;
 
     bar.classList.remove('ps-tb-hidden');
+
+    // A step whose code belongs to a particular sprite selects it first, so
+    // starter code and checks always use the right sprite.
+    var spriteName = stepSpriteName(step);
+    if (spriteName) selectSpriteByName(spriteName);
 
     // Header
     var tutNameEl = bar.querySelector('.ps-tb-tut-name');
@@ -3445,7 +3957,6 @@
     // Body
     bar.querySelector('.ps-tb-title').textContent = step.title;
     bar.querySelector('.ps-tb-text').innerHTML    = step.text;
-    // Keep pop-out modal title in sync with the current step
     var _cmTitle = document.getElementById('ps-cm-title');
     if (_cmTitle) _cmTitle.textContent = step.title || 'Code reference';
 
@@ -3456,12 +3967,10 @@
       codeWrap.classList.remove('ps-tb-no-target');
       var newSet  = {};
       (step.newLines || []).forEach(function (l) { newSet[l] = true; });
-      // Build a per-line context array so each span knows which def-function it
-      // lives in. This lets the green-check pass restrict its search to the right
-      // function instead of matching the same line in ANY function.
+      // Per-line function context, so the green ticks only count a line typed
+      // in the right function.
       var tgtCtxArr = buildTargetCtxArray(step.target);
       codeBlock.innerHTML = step.target.split('\n').map(function (line, idx) {
-        // Empty lines are never individually "typed" by the student - always dim.
         var cls    = (newSet[line] && line.trim() !== '') ? 'new' : 'old';
         var ctxVal = tgtCtxArr[idx];
         var ctxAttr = ctxVal ? ' data-ctx="' + ctxVal + '"' : '';
@@ -3479,40 +3988,24 @@
     var needsIndent = (step.newLines || []).some(function (l) { return /^ /.test(l); });
     indentTip.classList.toggle('ps-tb-tip-hidden', !needsIndent);
 
-    // Checklist - one row per requires item
+    // Checklist - one row per requires item, found again by its position
+    // (data-idx), never by its text.
     var checksEl = bar.querySelector('.ps-tb-checks');
     var reqs     = step.requires || [];
-    var _visReqsForRender = reqs.filter(function (r) { return !_normReq(r).hidden; });
-    if (_visReqsForRender.length > 0 || reqs.length > 0) {
-      // Always render all rows (hidden included for state tracking), but only
-      // show the checks container when there are visible rows.
-      if (_visReqsForRender.length > 0) checksEl.classList.remove('ps-tb-no-checks');
-      else checksEl.classList.add('ps-tb-no-checks');
-      checksEl.innerHTML = reqs.map(function (r) {
-        var n    = _normReq(r);
-        var dReq = n.reqStr.replace(/"/g, '&quot;');
-        var lbl  = n.label + (n.count > 1 ? ' <em>×' + n.count + '</em>' : '');
-        lbl = lbl.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-                 .replace(/&lt;em&gt;/g,'<em>').replace(/&lt;\/em&gt;/g,'</em>');
-        // Stamp the context (which def-function this requires item lives in)
-        // so checkTutBar can restrict its search to the right function.
-        // Explicit context wins; otherwise auto-derive from target.
-        var ctx = n.context || reqContextInTarget(step.target, n.reqStr);
-        var ctxAttr = ctx ? ' data-ctx="' + ctx + '"' : '';
-        // Hidden items get an invisible row so covByReq span-colouring can still
-        // query their ck-ok state - but students never see them in the checklist.
-        if (n.hidden) {
-          return '<div class="ps-tb-ck ck-wait" data-req="' + dReq + '"' + ctxAttr +
-                 ' style="display:none" aria-hidden="true"></div>';
-        }
-        return '<div class="ps-tb-ck ck-wait" data-req="' + dReq + '"' + ctxAttr + '>' +
-               '<i class="ps-tb-ck-icon">⏳</i><span>' + lbl + '</span>' +
-               '</div>';
-      }).join('');
-    } else {
-      checksEl.classList.add('ps-tb-no-checks');
-      checksEl.innerHTML = '';
-    }
+    var visCount = reqs.filter(function (r) { return !_normReq(r).hidden; }).length;
+    checksEl.classList.toggle('ps-tb-no-checks', visCount === 0);
+    checksEl.innerHTML = reqs.map(function (r, i) {
+      var n    = _normReq(r);
+      var lbl  = String(n.label).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') +
+        (n.count > 1 ? ' <em>×' + n.count + '</em>' : '');
+      var ctx = n.context || reqContextInTarget(step.target, n.reqStr);
+      var ctxAttr = ctx ? ' data-ctx="' + ctx + '"' : '';
+      if (n.hidden) {
+        return '<div class="ps-tb-ck ck-wait" data-idx="' + i + '"' + ctxAttr + ' style="display:none" aria-hidden="true"></div>';
+      }
+      return '<div class="ps-tb-ck ck-wait" data-idx="' + i + '"' + ctxAttr + '>' +
+             '<i class="ps-tb-ck-icon">⏳</i><span>' + lbl + '</span></div>';
+    }).join('');
 
     // Buttons
     var prevBtn = bar.querySelector('[data-tb="prev"]');
@@ -3520,18 +4013,20 @@
     prevBtn.disabled    = (at.stepIdx === 0);
     nextBtn.textContent = (at.stepIdx === tut.steps.length - 1) ? 'Finish ✓' : 'Next →';
 
-    // Pre-fill editor if this step has a starter
-    if (isNewStep && step.starter !== null && step.starter !== undefined) {
-      if (ui.editor) {
-        var threads = loadThreads(S.activeSprite);
-        if (!S.activeThreadIdx) S.activeThreadIdx = 0;
-        if (threads[S.activeThreadIdx]) {
-          threads[S.activeThreadIdx].code = step.starter;
-          saveThreads(S.activeSprite);
-          loadCodeToEditor();
-        }
+    // Starter code, the first time this step is reached. Without a named
+    // sprite, it goes in the sprite already selected.
+    if (firstVisit && step.starter !== null && step.starter !== undefined && ui.editor && S.activeSprite &&
+        (!step.sprite || stepSpriteName(step) === S.activeSprite)) {
+      var threads = loadThreads(S.activeSprite);
+      if (!S.activeThreadIdx) S.activeThreadIdx = 0;
+      if (threads[S.activeThreadIdx]) {
+        setThreadCode(threads[S.activeThreadIdx], step.starter, 'python');
+        saveThreads(S.activeSprite);
+        loadCodeToEditor();
       }
     }
+    // Remember how the step began, for the Restore button.
+    if (firstVisit || !at.startCode) at.startCode = { sprite: S.activeSprite, code: ui.editor ? ui.editor.value : '' };
 
     // Highlight a TurboWarp / PyScratch UI element if the step asks for it
     if (_tutPollTid) { clearInterval(_tutPollTid); _tutPollTid = null; }
@@ -3541,14 +4036,15 @@
       clearHighlight();
     }
 
-    // Poll sprite count / sprite names for steps that wait for the student to add/rename a sprite
-    if (step.requiresSpriteCount !== undefined || (step.requiredSpriteNames || []).length > 0) {
+    // Steps that wait for a sprite to be added, renamed or selected are
+    // checked again every moment.
+    if (step.requiresSpriteCount !== undefined || (step.requiredSpriteNames || []).length > 0 || step.sprite) {
       _tutPollTid = setInterval(checkTutBar, 600);
     }
 
-    // Scroll bar to top
     bar.scrollTop = 0;
-
+    saveTutProgress();
+    saveTutStepSnapshot();
     checkTutBar();
   }
 
@@ -3558,8 +4054,24 @@
   var _INDENT_LINE_H  = 13 * 1.65; // must match #ps-editor line-height in CSS
   var _INDENT_PAD_TOP = 12;         // must match #ps-editor padding in CSS
 
+  // The line of the last run error, if it belongs to the code on screen.
+  function _runErrorMark() {
+    var le = S.lastError;
+    if (!le || le.lang !== S.lang || le.sprite !== S.activeSprite || le.threadIdx !== S.activeThreadIdx) return null;
+    return { line: le.line - 1, type: 'bad', msg: 'This line went wrong when the code ran', fix: 'The console below the code says what happened.' };
+  }
+
   function _detectIndentErrors(code) {
     var errors = [];
+    var runMark = _runErrorMark();
+
+    // Pseudocode: indentation is only for reading, so the one mark is the
+    // first mistake the pseudocode checker finds.
+    if (S.lang === 'pseudo') {
+      if (S.pseudoErr) errors.push({ line: S.pseudoErr.line - 1, type: 'struct', msg: S.pseudoErr.message.replace(/</g, '&lt;'), fix: 'Fix this line, then run the code again.' });
+      if (runMark && !errors.length) errors.push(runMark);
+      return errors;
+    }
 
     // ── Phase 1: character-level issues ───────────────────────────
     // Tabs and non-multiple-of-4 spaces are flagged regardless of structure.
@@ -3676,6 +4188,7 @@
       } catch(e) {}
     }
 
+    if (runMark && !errors.some(function (e) { return e.line === runMark.line; })) errors.push(runMark);
     return errors;
   }
 
@@ -3755,6 +4268,58 @@
     }
   }
 
+  // How far some code meets a step's code checks. Pure: no page or sprite
+  // state, so the bar and the tutorial self-test give the same answers.
+  function evaluateTutStep(step, code) {
+    var reqs = step.requires || [];
+    var firstLine = (step.target || '').split('\n').filter(function (l) { return l.trim(); })[0] || '';
+    // A target that is only a snippet (it starts indented) has no structure to
+    // check lines against, so only the text is checked.
+    var fragment = /^\s/.test(firstLine);
+    var items = reqs.map(function (r) {
+      var n   = _normReq(r);
+      var ctx = n.context || reqContextInTarget(step.target, n.reqStr);
+      var sc  = ctx ? getCodeInContext(code, ctx) : code;
+      var found = n.count > 1 ? tutReqCount(sc, n.reqStr) >= n.count : tutReqMatches(sc, n.reqStr);
+      // Block-context check: an unindented requires line must sit inside the
+      // same blocks as in the target (catches code in the wrong if / loop /
+      // function). Full-line check: a fragment such as 'x > 5' needs the
+      // whole target line around it.
+      if (found && n.count <= 1 && step.target && !fragment && !/^[ \t]/.test(n.reqStr)) {
+        found = _reqWithinTargetBlock(code, n.reqStr, step.target);
+        if (found) found = _reqLineMatchesTarget(code, n.reqStr, step.target);
+      }
+      return { n: n, found: found, ctx: ctx };
+    });
+
+    // Grey (keep) lines of the target that have gone from the code.
+    var missingOld = false;
+    if (step.target && !fragment) {
+      var newLineSet = {};
+      (step.newLines || []).forEach(function (l) { newLineSet[l] = true; });
+      var hay = '\n' + code;
+      missingOld = step.target.split('\n').some(function (line) {
+        return line.trim() !== '' && !newLineSet[line] && hay.indexOf('\n' + line) === -1;
+      });
+    }
+
+    var codeOk = !missingOld && items.every(function (it) { return it.found; });
+    var indentErr = null;
+    if (codeOk && step.target && code.trim()) {
+      var e = _pyIndentCheck(code);
+      // An empty block at the end is fine: many steps add the header first.
+      if (e && e.msg.indexOf('empty block') === -1 && (step.suppressErrors || []).indexOf('struct') === -1) indentErr = e;
+    }
+    return { items: items, missingOld: missingOld, indentErr: indentErr, codeOk: codeOk && !indentErr };
+  }
+
+  function liveSpriteNames() {
+    try {
+      return S.vm.runtime.targets.filter(function (t) { return !t.isStage && t.sprite && t.isOriginal !== false && !t.isClone; })
+        .map(function (t) { return t.sprite.name; });
+    } catch (e) { return []; }
+  }
+
   function checkTutBar() {
     var at = S.activeTut;
     if (!at) return;
@@ -3764,201 +4329,119 @@
     var bar     = document.getElementById('ps-tut-bar');
     if (!bar) return;
 
-    var allOk = true;
+    var ev = evaluateTutStep(step, code);
+    var allOk = ev.codeOk;
+    var checksEl = bar.querySelector('.ps-tb-checks');
 
-    // ── Code string checks ────────────────────────────────────────
-    // Helper: get the code to search for a given checklist element.
-    // If the element has data-ctx, restrict the search to that def-function's body.
-    function _searchCode(ckEl) {
-      var ctx = ckEl && ckEl.dataset && ckEl.dataset.ctx;
-      return ctx ? getCodeInContext(code, ctx) : code;
-    }
-
-    // First pass: evaluate every requires item and update its checklist row.
-    reqs.forEach(function (r) {
-      var n    = _normReq(r);
-      var ckEl = bar.querySelector('.ps-tb-ck[data-req="' + n.reqStr.replace(/"/g, '&quot;') + '"]');
-      var sc   = _searchCode(ckEl);
-      var found = n.count > 1
-        ? tutReqCount(sc, n.reqStr) >= n.count
-        : tutReqMatches(sc, n.reqStr);
-
-      // ── Block-context check ───────────────────────────────────────
-      // If content was found and the requires item has NO leading whitespace
-      // (the common case - most requires omit indent to be flexible), verify
-      // the line actually lives inside the CORRECT BLOCK as shown in step.target.
-      // This catches "line exists but in the wrong if/while/def block" cases
-      // that content-only matching cannot see.
-      // Skipped for: indented requires (already enforce exact indent), count-based
-      // items (multiple occurrences, harder to pin to one block), and steps without
-      // a target (no oracle to compare against).
-      if (found && !n.count && step.target && !/^[ \t]/.test(n.reqStr)) {
-        // Block-context check: line must be in the correct nested block
-        found = _reqWithinTargetBlock(code, n.reqStr, step.target);
-        // Full-line check: when reqStr is a fragment (e.g. 'x > 5' in 'if x > 5 and x < 10:')
-        // the student must have written the COMPLETE target line, not just the fragment.
-        if (found) found = _reqLineMatchesTarget(code, n.reqStr, step.target);
-      }
-
-      // Hidden items are silently validated - they update their invisible DOM row
-      // (so covByReq span-colouring sees ck-ok) but don't affect allOk or the UI.
-      if (!found && !n.hidden) allOk = false;
-      if (ckEl) {
-        ckEl.className = 'ps-tb-ck ' + (found ? 'ck-ok' : 'ck-wait');
-        var _icon = ckEl.querySelector('.ps-tb-ck-icon');
-        if (_icon) _icon.textContent = found ? '✓' : '⏳';
-      }
+    // Checklist rows, by position.
+    ev.items.forEach(function (it, i) {
+      var ckEl = checksEl.querySelector('.ps-tb-ck[data-idx="' + i + '"]');
+      if (!ckEl) return;
+      ckEl.className = 'ps-tb-ck ' + (it.found ? 'ck-ok' : 'ck-wait');
+      var icon = ckEl.querySelector('.ps-tb-ck-icon');
+      if (icon) icon.textContent = it.found ? '✓' : '⏳';
     });
 
-    // Second pass: colour code-block spans.
-    // A span turns green when EITHER:
-    //   (a) its exact line text is present in the editor within the span's function
-    //       context (data-ctx). If no context, searches all code - handles context
-    //       lines of if-blocks that have no dedicated requires item.
-    //   (b) a satisfied requires item whose text is a substring of this span's line,
-    //       and the req's context matches this span's context.
-    // Separate pass so no unsatisfied req can undo a green already set.
-    // Track per-line occurrence counts so duplicate target lines (e.g. two
-    // next_costume() spans) only go green for as many instances as the student
-    // actually typed.  Without this a single occurrence would light up every
-    // span sharing the same text.
-    var _spanUsed = {};
+    // Code-block lines turn green once typed. Each typed line can only count
+    // for one target line, so two identical lines need typing twice.
+    var spanUsed = {};
     bar.querySelectorAll('.ps-tb-cl.new').forEach(function (sp) {
       var lineText = sp.textContent;
       var ctx  = sp.dataset && sp.dataset.ctx;
       var sc   = ctx ? getCodeInContext(code, ctx) : code;
-      // (a) Count-limited direct match: each student-code occurrence can only
-      // satisfy one target span.  Prevents one next_costume() from lighting up
-      // both identical next_costume() spans.
-      var _key = (ctx || '') + '\x00' + lineText;
-      if (!(_key in _spanUsed)) _spanUsed[_key] = tutReqCount(sc, lineText);
-      var lineInCode = _spanUsed[_key] > 0;
-      if (lineInCode) _spanUsed[_key]--;
-      // (b) A satisfied req whose text is a substring of this span's line.
-      // Only fires when the checklist item is ck-ok (count requirement met),
-      // so a count:2 req with only 1 instance cannot cover an extra span.
-      var covByReq = !lineInCode && reqs.some(function (r) {
-        var n    = _normReq(r);
-        var ckEl = bar.querySelector('.ps-tb-ck[data-req="' + n.reqStr.replace(/"/g, '&quot;') + '"]');
-        if (!ckEl || !ckEl.classList.contains('ck-ok')) return false;
-        var rsc  = _searchCode(ckEl);
-        return tutReqMatches(rsc, n.reqStr) && tutReqMatches(lineText, n.reqStr);
+      var key = (ctx || '') + '\x00' + lineText;
+      if (!(key in spanUsed)) spanUsed[key] = tutReqCount(sc, lineText);
+      var lineInCode = spanUsed[key] > 0;
+      if (lineInCode) spanUsed[key]--;
+      var covByReq = !lineInCode && ev.items.some(function (it) {
+        return it.found && tutReqMatches(lineText, it.n.reqStr);
       });
       sp.classList.toggle('typed', lineInCode || covByReq);
     });
-
-    // Mirror updated typed/green state into the pop-out modal (if open)
-    var _cmCode = document.getElementById('ps-cm-code');
-    if (_cmCode) {
-      var _cbEl = bar.querySelector('.ps-tb-code-block');
-      if (_cbEl) _cmCode.innerHTML = _cbEl.innerHTML;
+    var cmCode = document.getElementById('ps-cm-code');
+    if (cmCode) {
+      var cbEl = bar.querySelector('.ps-tb-code-block');
+      if (cbEl) cmCode.innerHTML = cbEl.innerHTML;
     }
 
-    // ── Missing grey-line detection ──────────────────────────────
-    // Check if any "old" (grey, context) lines have been deleted from the editor.
-    // Old lines = non-empty lines that appear in target but are NOT in newLines.
     var missWarn = bar.querySelector('.ps-tb-miss');
-    if (missWarn && step.target) {
-      var newLineSet = {};
-      (step.newLines || []).forEach(function (l) { newLineSet[l] = true; });
-      var _haystack = '\n' + code;
-      var missingOld = step.target.split('\n').some(function (line) {
-        // Use newline-anchored search so a grey line at 8 spaces is NOT treated
-        // as present just because the student has the same text at 4 or 12 spaces.
-        return line.trim() !== '' && !newLineSet[line] &&
-               _haystack.indexOf('\n' + line) === -1;
-      });
-      if (missingOld) allOk = false;
-      missWarn.classList.toggle('ps-tb-miss-hidden', !missingOld);
-    } else if (missWarn) {
-      missWarn.classList.add('ps-tb-miss-hidden');
+    if (missWarn) missWarn.classList.toggle('ps-tb-miss-hidden', !ev.missingOld);
+
+    // The step's code belongs to one sprite: it must be the one selected.
+    var spriteBox = bar.querySelector('.ps-tb-sprite');
+    var wantSprite = step.sprite ? stepSpriteName(step) : null;
+    var wrongSprite = false;
+    if (step.sprite && (step.target || (step.requires || []).length)) {
+      var label = stepSpriteLabel(step);
+      var msgEl = spriteBox.querySelector('.ps-tb-sprite-msg');
+      var go = spriteBox.querySelector('.ps-tb-sprite-go');
+      if (!wantSprite) {
+        wrongSprite = true;
+        msgEl.textContent = 'This code goes in the ' + label + ' sprite, which is missing. Add it back or rename a sprite to ' + label + '.';
+        go.style.display = 'none';
+      } else if (S.activeSprite !== wantSprite) {
+        wrongSprite = true;
+        msgEl.textContent = 'This code goes in the ' + wantSprite + ' sprite, but ' + S.activeSprite + ' is selected.';
+        go.textContent = 'Switch to ' + wantSprite;
+        go.style.display = '';
+        go.onclick = function () { selectSpriteByName(wantSprite); };
+      }
     }
+    spriteBox.classList.toggle('ps-tb-sprite-hidden', !wrongSprite);
+    if (wrongSprite) allOk = false;
 
     // ── Sprite count check ────────────────────────────────────────
+    var spriteDone = 0, spriteTotal = 0;
+    var live = liveSpriteNames();
     if (step.requiresSpriteCount !== undefined) {
-      var spriteCount = 0;
-      try { spriteCount = vm.runtime.targets.filter(function (t) { return !t.isStage; }).length; } catch(e) {}
-      var spriteOk = spriteCount >= step.requiresSpriteCount;
-      if (!spriteOk) allOk = false;
-
-      // Update the sprite-count checklist row (keyed by data-req="__sprite__")
-      var scEl = bar.querySelector('.ps-tb-ck[data-req="__sprite__"]');
+      spriteTotal++;
+      var spriteOk = live.length >= step.requiresSpriteCount;
+      if (spriteOk) spriteDone++; else allOk = false;
+      var scEl = checksEl.querySelector('.ps-tb-ck[data-sprite="__count__"]');
       if (!scEl) {
-        // First time: inject the row into the checks container
-        var checksEl = bar.querySelector('.ps-tb-checks');
         checksEl.classList.remove('ps-tb-no-checks');
         scEl = document.createElement('div');
         scEl.className = 'ps-tb-ck ck-wait';
-        scEl.dataset.req = '__sprite__';
-        scEl.innerHTML = '<i class="ps-tb-ck-icon">⏳</i><span>' +
-          (step.requiresSpriteHint || 'Add a new sprite in the sprite panel') + '</span>';
+        scEl.dataset.sprite = '__count__';
+        scEl.innerHTML = '<i class="ps-tb-ck-icon">⏳</i><span></span>';
+        scEl.querySelector('span').textContent = step.requiresSpriteHint || 'Add a new sprite in the sprite panel';
         checksEl.insertBefore(scEl, checksEl.firstChild);
       }
       scEl.className = 'ps-tb-ck ' + (spriteOk ? 'ck-ok' : 'ck-wait');
       scEl.querySelector('.ps-tb-ck-icon').textContent = spriteOk ? '✓' : '⏳';
-
-      // Clear the highlight once the sprite is added
       if (spriteOk && step.highlight) clearHighlight();
     }
 
     // ── Required sprite names check ───────────────────────────────
-    // Each entry in step.requiredSpriteNames must match a live (non-stage) sprite name.
-    // step.requiredSpriteHints is an optional { Name: 'label text' } map.
     var spriteNamesReq = step.requiredSpriteNames || [];
     if (spriteNamesReq.length > 0) {
-      var liveNames = [];
-      try {
-        liveNames = vm.runtime.targets
-          .filter(function (t) { return !t.isStage; })
-          .map(function (t) { return t.sprite.name; });
-      } catch(e) {}
       var hintMap = step.requiredSpriteHints || {};
-      var namesChecksEl = bar.querySelector('.ps-tb-checks');
-      namesChecksEl.classList.remove('ps-tb-no-checks');
+      checksEl.classList.remove('ps-tb-no-checks');
       spriteNamesReq.forEach(function (name) {
-        var key = '__sprite_' + name + '__';
-        var ok  = liveNames.indexOf(name) !== -1;
-        if (!ok) allOk = false;
-        var row = bar.querySelector('.ps-tb-ck[data-req="' + key + '"]');
+        spriteTotal++;
+        var ok  = live.indexOf(name) !== -1;
+        if (ok) spriteDone++; else allOk = false;
+        var row = checksEl.querySelector('.ps-tb-ck[data-sprite="' + name.replace(/["\\]/g, '') + '"]');
         if (!row) {
           row = document.createElement('div');
-          row.className   = 'ps-tb-ck ck-wait';
-          row.dataset.req = key;
-          var hint = hintMap[name] || ('Sprite named "' + name + '"');
-          row.innerHTML = '<i class="ps-tb-ck-icon">⏳</i><span>' + hint + '</span>';
-          namesChecksEl.appendChild(row);
+          row.className = 'ps-tb-ck ck-wait';
+          row.dataset.sprite = name.replace(/["\\]/g, '');
+          row.innerHTML = '<i class="ps-tb-ck-icon">⏳</i><span></span>';
+          row.querySelector('span').textContent = hintMap[name] || ('Sprite named "' + name + '"');
+          checksEl.appendChild(row);
         }
         row.className = 'ps-tb-ck ' + (ok ? 'ck-ok' : 'ck-wait');
         row.querySelector('.ps-tb-ck-icon').textContent = ok ? '✓' : '⏳';
       });
-      if (step.highlight) {
-        var allNamesOk = spriteNamesReq.every(function (n) { return liveNames.indexOf(n) !== -1; });
-        if (allNamesOk) clearHighlight();
-      }
+      if (step.highlight && spriteNamesReq.every(function (n) { return live.indexOf(n) !== -1; })) clearHighlight();
     }
 
     // ── Python indentation structure check ────────────────────────
-    // Runs only when all other checks already pass AND a target exists.
-    // Catches structural IndentationError conditions that tutReqMatches misses
-    // (requires without leading whitespace match at any depth).
     var ierrEl = bar.querySelector('.ps-tb-ierr');
     if (ierrEl) {
-      if (allOk && step.target && code.trim()) {
-        var _indErr = _pyIndentCheck(code);
-        // "empty block" errors occur at end-of-file - in tutorials this is intentional:
-        // many steps ask for a block header (def/while/if) and the body comes in the
-        // next step.  The purple gutter mark already signals this in the editor.
-        // All other structural errors (unexpected indent, expected-but-missing indent)
-        // are genuine mid-code Python syntax errors and still block Next.
-        var _isEmptyBlock = _indErr && _indErr.msg.indexOf('empty block') !== -1;
-        var _structSuppressed = ((step.suppressErrors || []).indexOf('struct') !== -1);
-        if (_indErr && !_isEmptyBlock && !_structSuppressed) {
-          allOk = false;
-          ierrEl.textContent = '⚠ ' + _indErr.msg;
-          ierrEl.classList.remove('ps-tb-ierr-hidden');
-        } else {
-          ierrEl.classList.add('ps-tb-ierr-hidden');
-        }
+      if (ev.indentErr) {
+        ierrEl.textContent = '⚠ ' + ev.indentErr.msg;
+        ierrEl.classList.remove('ps-tb-ierr-hidden');
       } else {
         ierrEl.classList.add('ps-tb-ierr-hidden');
       }
@@ -3967,9 +4450,8 @@
     // ── Footer status ─────────────────────────────────────────────
     var nextBtn = bar.querySelector('[data-tb="next"]');
     var validEl = bar.querySelector('.ps-tb-valid');
-    // Visible reqs = non-hidden only.  hasAnyReq and the progress counter use these.
-    var _visReqs = reqs.filter(function (r) { return !_normReq(r).hidden; });
-    var hasAnyReq = _visReqs.length > 0 || step.requiresSpriteCount !== undefined || (step.requiredSpriteNames || []).length > 0;
+    var visItems = ev.items.filter(function (it) { return !it.n.hidden; });
+    var hasAnyReq = visItems.length > 0 || spriteTotal > 0 || !!step.target || wrongSprite;
     nextBtn.disabled = hasAnyReq && !allOk;
     if (!hasAnyReq) {
       validEl.textContent = '';
@@ -3977,41 +4459,35 @@
     } else if (allOk) {
       validEl.textContent = '✓ All done - click Next';
       validEl.className   = 'ps-tb-valid tb-ok';
+    } else if (ev.missingOld) {
+      validEl.textContent = 'Some lines you need to keep have gone - use Restore';
+      validEl.className   = 'ps-tb-valid tb-err';
     } else {
-      var codeReqsDone = _visReqs.filter(function (r) {
-        var n    = _normReq(r);
-        var ckEl = bar.querySelector('.ps-tb-ck[data-req="' + n.reqStr.replace(/"/g, '&quot;') + '"]');
-        var sc   = _searchCode(ckEl);
-        return n.count > 1 ? tutReqCount(sc, n.reqStr) >= n.count : tutReqMatches(sc, n.reqStr);
-      }).length;
-      var total = _visReqs.length + (step.requiresSpriteCount !== undefined ? 1 : 0) + (step.requiredSpriteNames || []).length;
-      var spriteDone = 0;
-      if (step.requiresSpriteCount !== undefined) {
-        try { spriteDone = vm.runtime.targets.filter(function(t){return !t.isStage;}).length >= step.requiresSpriteCount ? 1 : 0; } catch(e){}
-      }
-      var spriteNamesDone = (step.requiredSpriteNames || []).filter(function (name) {
-        try { return vm.runtime.targets.some(function (t) { return !t.isStage && t.sprite.name === name; }); } catch(e) { return false; }
-      }).length;
-      var done  = codeReqsDone + spriteDone + spriteNamesDone;
-      validEl.textContent = done + ' / ' + total + ' tasks complete';
+      var done  = visItems.filter(function (it) { return it.found; }).length + spriteDone;
+      var total = visItems.length + spriteTotal;
+      validEl.textContent = total ? done + ' / ' + total + ' tasks complete' : '';
       validEl.className   = 'ps-tb-valid';
     }
   }
 
   // Low-level exit - clears state, hides bar, shows buttons
   function _doExitTutorial() {
+    var at = S.activeTut;
     S.activeTut = null;
     if (_tutPollTid) { clearInterval(_tutPollTid); _tutPollTid = null; }
     clearHighlight();
     var bar = document.getElementById('ps-tut-bar');
     if (bar) bar.classList.add('ps-tb-hidden');
-    // Close pop-out code modal when tutorial exits
     var cmEl2 = document.getElementById('ps-code-modal');
     if (cmEl2) cmEl2.classList.remove('ps-cm-open');
     var hb = document.getElementById('ps-help-btn');
     var tb = document.getElementById('ps-tut-btn');
     if (hb) hb.style.display = '';
     if (tb) tb.style.display = '';
+    var lang = document.getElementById('ps-lang');
+    if (lang) lang.classList.remove('ps-lang-locked');
+    if (at && at.langBefore && at.langBefore !== S.lang) setLang(at.langBefore, false);
+    scheduleSessionSave();
   }
 
   // Public exit - prompts for keep/restore then cleans up
@@ -4025,37 +4501,40 @@
     if (isFinished) {
       markTutCompleted(tutIdx);
       reportTutorialCompletion(tut);
+      takeProjectSnapshot(tut.title + ' - finished', 'after-tutorial');
+    }
+
+    function forget() {
+      clearTutSnapshot(tutIdx);
+      clearTutStepSnapshot(tutIdx);
+      clearTutProgress(tutIdx);
     }
 
     if (!hasSnap) {
-      // No snapshot means nothing to restore - just exit
-      if (isFinished) clearTutProgress(tutIdx);
+      if (isFinished) forget();
       _doExitTutorial();
       return;
-    }
-
-    // Snapshot the finished project so it is recoverable from the Snapshots panel.
-    if (isFinished) {
-      takeProjectSnapshot(tut.title + ' - finished', 'after-tutorial');
     }
 
     var icon  = isFinished ? 'trophy' : 'book';
     var title = isFinished ? 'Tutorial Complete!' : 'Exit Tutorial';
     var body  = isFinished
       ? 'Great work finishing <strong>' + tut.title + '</strong>! What would you like to do with the code you wrote?'
-      : 'What would you like to do with the code you typed during <strong>' + tut.title + '</strong>?';
+      : 'What would you like to do with the code you typed during <strong>' + tut.title + '</strong>? If you keep it, you can resume the tutorial later from the Tutorials list.';
 
     showTutDialog(icon, title, body, [
       { label: 'Keep My Code', cls: 'td-primary', cb: function () {
-          clearTutSnapshot(tutIdx);
-          clearTutProgress(tutIdx);
+          // A finished tutorial is forgotten; an unfinished one keeps its
+          // place so it can be resumed.
+          if (isFinished) forget(); else { saveTutProgress(); saveTutStepSnapshot(); }
           _doExitTutorial();
       }},
       { label: 'Restore Original Code', cls: 'td-danger', cb: function () {
+          var mainName = at.mainName;
           restoreTutSnapshot(tutIdx).then(function () {
-            clearTutSnapshot(tutIdx);
-            clearTutProgress(tutIdx);
+            forget();
             _doExitTutorial();
+            if (mainName) selectSpriteByName(mainName);
           });
       }}
     ]);
@@ -4110,7 +4589,7 @@
     if (!editor) return null;
     var pos  = editor.selectionStart;
     var text = editor.value;
-    var re   = /touching_colou?r\(/g;
+    var re   = /(?:touching_colou?r|TouchingColou?r)\(/g;
     var m;
     while ((m = re.exec(text)) !== null) {
       var open = m.index + m[0].length;
@@ -4175,10 +4654,17 @@
       replStart = w.wordStart;
     }
 
+    // Pseudocode procedures start a line with CALL.
+    if (comp.pre && trimmed.length === 0) ins = comp.pre + ins;
+    // Later lines of a snippet line up with the line it was typed on.
+    var indentStr = linePre.substring(0, indentLen);
+    if (ins.indexOf('\n') !== -1) ins = ins.split('\n').join('\n' + indentStr);
+    var mark = ins.indexOf('|');
+    if (mark !== -1) ins = ins.slice(0, mark) + ins.slice(mark + 1);
     var before = ui.editor.value.substring(0, replStart);
     var after  = ui.editor.value.substring(w.end);
     ui.editor.value = before + ins + after;
-    var cur = before.length + ins.length - (comp.back || 0);
+    var cur = mark !== -1 ? before.length + mark : before.length + ins.length - (comp.back || 0);
     ui.editor.selectionStart = ui.editor.selectionEnd = cur;
     hideICSense();
     saveCurrentCode();
@@ -4192,7 +4678,8 @@
     var w    = _getCurrentWord(ui.editor);
     var lLow = w.word.toLowerCase();
     if (lLow.length < 2) { hideICSense(); return; }
-    var hits = PS_COMPLETIONS.filter(function (c) {
+    var list = (S.lang === 'pseudo' && PSEUDO) ? PSEUDO.COMPLETIONS : PS_COMPLETIONS;
+    var hits = list.filter(function (c) {
       var cL = c.t.toLowerCase();
       return cL.startsWith(lLow) && cL !== lLow;
     }).slice(0, 8);
@@ -4248,6 +4735,7 @@
   //           { type:'xAbove',  value: N } - final sprite x > N
   //           { type:'xBelow',  value: N } - final sprite x < N
   //           { type:'yAbove',  value: N } - final sprite y > N
+  //           { type:'peakAbove', value: N } - after the input the sprite rose (a jump) to above N
   //           { type:'yBelow',  value: N } - final sprite y < N
   //           { type:'variable', name:'n', op:'>', value: V } - variable check
   //         ]
@@ -4256,6 +4744,14 @@
   //   }
   //
   // Calls onPass() when all scenarios pass, or onFail(hint) on first failure.
+
+  // The sprite a behaviour test watches: the one being edited (the tutorial
+  // selects the right one), not simply the first in the list.
+  function checkSprite() {
+    var t = S.activeSprite ? getTargetByName(S.activeSprite) : null;
+    if (t && !t.isStage && t.isOriginal !== false) return t;
+    return getSprites()[0] || null;
+  }
 
   function runBehaviorCheck(step, onPass, onFail) {
     var bc = step.behaviorCheck;
@@ -4282,8 +4778,8 @@
       if (S.running) stopAll();
       // Centre the active sprite so there's room to move in any direction.
       try {
-        var sp = getSprites();
-        if (sp.length) sp[0].setXY(0, 0);
+        var cs = checkSprite();
+        if (cs) cs.setXY(0, 0);
       } catch(e) {}
       startAll();
     }
@@ -4297,10 +4793,20 @@
       }
 
       // Snapshot initial state after setup (before stimulus).
-      var sp0      = getSprites()[0] || null;
+      var sp0      = checkSprite();
       var initX    = sp0 ? sp0.x              : 0;
       var initY    = sp0 ? sp0.y              : 0;
       var initCos  = sp0 ? sp0.currentCostume : -1;
+      // How far the sprite rises after the input starts (a jump): the biggest
+      // climb from its lowest point so far, wherever it started.
+      var peak = { hi: -Infinity, lo: Infinity, rise: 0 };
+      var peakTimer = setInterval(function () {
+        var p = checkSprite();
+        if (!p) return;
+        peak.lo = Math.min(peak.lo, p.y);
+        peak.hi = Math.max(peak.hi, p.y);
+        peak.rise = Math.max(peak.rise, p.y - peak.lo);
+      }, 10);
 
       // Press key.
       if (sc.holdKey) {
@@ -4323,11 +4829,12 @@
 
         setTimeout(function () {
           // Read final state.
-          var sp1      = getSprites()[0] || null;
+          var sp1      = checkSprite();
           var finalX   = sp1 ? sp1.x              : 0;
           var finalY   = sp1 ? sp1.y              : 0;
           var finalCos = sp1 ? sp1.currentCostume : -1;
           var didStop  = !S.running;
+          clearInterval(peakTimer);
 
           // Run checks.
           var passed = true;
@@ -4352,6 +4859,9 @@
               ok = finalX < ck.value;
             } else if (ck.type === 'yAbove') {
               ok = finalY > ck.value;
+            } else if (ck.type === 'peakAbove') {
+              // highest y reached at any moment after the input (a jump)
+              ok = peak.rise > 15 && peak.hi > ck.value;
             } else if (ck.type === 'yBelow') {
               ok = finalY < ck.value;
             } else if (ck.type === 'stopped') {
@@ -4403,17 +4913,18 @@
       exitTutorial(false);
     });
 
-    // Restore button - re-applies the step's starter code
+    // Restore button - puts the code back as it was when this step began
     bar.querySelector('.ps-tb-miss-restore').addEventListener('click', function () {
-      applyTutBar(true); // re-loads starter, same as navigating to this step fresh
+      restoreStepStart();
     });
 
-    // Prev / Next buttons
+    // Prev / Next buttons. Going back shows the earlier step without
+    // touching the code.
     bar.querySelector('[data-tb="prev"]').addEventListener('click', function () {
       if (!S.activeTut || S.activeTut.stepIdx === 0) return;
       S.activeTut.stepIdx--;
-      saveTutProgress();
-      applyTutBar(true);
+      S.activeTut.startCode = null;
+      applyTutBar();
     });
     bar.querySelector('[data-tb="next"]').addEventListener('click', function () {
       if (!S.activeTut) return;
@@ -4426,8 +4937,8 @@
           exitTutorial(true);
         } else {
           S.activeTut.stepIdx++;
-          saveTutProgress();
-          applyTutBar(true);
+          S.activeTut.startCode = null;
+          applyTutBar();
         }
       };
 
@@ -4460,13 +4971,13 @@
   }
 
   // ── Help modal HTML ───────────────────────────────────────────
-  function buildHelpHTML() {
-    var sections = [
+  function buildHelpHTML(lang) {
+    var pySections = [
       { cat:'mov', title:'Movement', items:[
         { code:'move_steps(steps)', desc:'Move the sprite forward in its current direction.' },
         { code:'turn_right(degrees) / turn_left(degrees)', desc:'Rotate clockwise or anticlockwise by the given degrees. turn(degrees) still works as a shortcut for turn_right.' },
         { code:'go_to(target) / go_to_xy(x, y)', desc:'Teleport to "random", "mouse_pointer", another sprite name, or exact coordinates.' },
-        { code:'glide_to(target, secs) / glide_to_xy(secs, x, y)', desc:'Smoothly glide to a target or to exact coordinates over secs seconds.' },
+        { code:'glide_to(target, secs) / glide_to_xy(x, y, secs)', desc:'Smoothly glide to a target or to exact coordinates over secs seconds.' },
         { code:'point_in_direction(degrees)', desc:'Face a Scratch direction such as 90 for right, -90 for left, 0 for up, or 180 for down.' },
         { code:'point_towards(target)', desc:'Point at "random", "mouse_pointer", another sprite name, or pass x and y coordinates.' },
         { code:'change_x(dx) / change_y(dy)', desc:'Move relative to current position.' },
@@ -4474,10 +4985,10 @@
         { code:'x_position() / y_position() / direction()', desc:'Read current position or direction. get_x(), get_y(), and get_direction() still work.' },
         { code:'on_edge()', desc:'Returns True when touching the stage boundary.' },
         { code:'if_on_edge_bounce()', desc:'Reflect direction when touching the stage boundary. bounce() still works as a shortcut.' },
-        { code:'set_rotation_style(style)', desc:'Use "all around", "left-right", or "don\\\'t rotate".' },
+        { code:'set_rotation_style(style)', desc:'Use "all around", "left-right", or "don\'t rotate".' },
       ]},
       { cat:'look', title:'Looks', items:[
-        { code:'say(message)', desc:'Show a speech bubble without pausing. say_for(message, secs) shows it for a set time and waits.' },
+        { code:'say(message)', desc:'Show a speech bubble without pausing. say_for(message, secs) shows it for a set time and waits (say_for_secs does the same).' },
         { code:'think(message)', desc:'Show a thought bubble without pausing. think_for(message, secs) shows it for a set time and waits.' },
         { code:'set_costume(name)', desc:'Switch costume by name, number (1-based), "next", "previous", or "random".' },
         { code:'next_costume() / previous_costume()', desc:'Step through costumes one at a time.' },
@@ -4557,6 +5068,7 @@
         { code:'ten_to(n)', desc:'Raise 10 to the power n  (10^n).' },
       ]},
     ];
+    var sections = (lang === 'pseudo' && PSEUDO) ? PSEUDO.helpSections() : pySections;
 
     var inner = sections.map(function (s) {
       var items = s.items.map(function (i) {
@@ -4567,7 +5079,7 @@
     }).join('');
 
     return '<div class="ps-mbox">' +
-      '<div class="ps-mhead"><span class="ps-head-title">' + psIcon('book', 16) + ' PyScratch reference</span><button title="Close">&times;</button></div>' +
+      '<div class="ps-mhead"><span class="ps-head-title">' + psIcon('book', 16) + ' ' + (lang === 'pseudo' ? 'Pseudocode reference' : 'PyScratch reference') + '</span><button title="Close">&times;</button></div>' +
       '<div class="ps-mbody">' + inner + '</div>' +
       '</div>';
   }
@@ -4600,6 +5112,7 @@
   }
 
   function syncSelectedSprite(force) {
+    if (S.loadingProject) return;
     var sprites = getSprites();
     if (!sprites.length) return;
     var selectedName = nativeSelectedSpriteName() || (S.activeSprite && getTargetByName(S.activeSprite) ? S.activeSprite : sprites[0].sprite.name);
@@ -4608,40 +5121,8 @@
       // Save editor content into S.spriteCode before we switch
       saveCurrentCode();
 
-      // ── Rename detection ──────────────────────────────────────────
-      // If the old sprite name has vanished from the VM but the editing
-      // target has the same ID as before, the sprite was renamed (not
-      // replaced).  Migrate the in-memory code to the new name so work
-      // isn't lost, and tidy up any stale fallback localStorage entry.
-      if (S.activeSprite && selectedName !== S.activeSprite &&
-          !getTargetByName(S.activeSprite)) {
-        var selTarget = null;
-        try { selTarget = S.vm && S.vm.editingTarget; } catch(e) {}
-        if (selTarget && S.activeSpriteId && selTarget.id === S.activeSpriteId) {
-          if (S.spriteCode[S.activeSprite]) {
-            S.spriteCode[selectedName] = S.spriteCode[S.activeSprite];
-            delete S.spriteCode[S.activeSprite];
-            // storeKey now resolves correctly via the target ID, so just
-            // re-save under the new name and remove the stale fallback entry.
-            saveThreads(selectedName);
-            try { localStorage.removeItem('pyscratch:name:' + S.activeSprite); } catch(e) {}
-          }
-          // Migrate snapshots to new name key so they survive the rename.
-          try {
-            var _oldSnaps = localStorage.getItem('pyscratch:snaps:' + S.activeSprite);
-            if (_oldSnaps) {
-              localStorage.setItem('pyscratch:snaps:' + selectedName, _oldSnaps);
-              localStorage.removeItem('pyscratch:snaps:' + S.activeSprite);
-            }
-          } catch(e) {}
-        }
-      }
-      // ── End rename detection ──────────────────────────────────────
-
       S.activeSprite    = selectedName;
       S.activeThreadIdx = 0;
-
-      // Track the target's stable UUID so future rename detection works
       try {
         var activeTarget = getTargetByName(selectedName);
         S.activeSpriteId = activeTarget ? activeTarget.id : null;
@@ -4655,6 +5136,33 @@
     }
   }
 
+  // A sprite renamed in TurboWarp keeps its id, so its code moves to the new
+  // name with it. Runs on every sync; also notices added or removed sprites
+  // so the session copy is saved.
+  function followRenames() {
+    var seen = {};
+    var changed = false;
+    getSprites().forEach(function (t) {
+      var name = t.sprite.name;
+      var old = S.nameById[t.id];
+      seen[t.id] = true;
+      if (old === undefined) { changed = true; }
+      else if (old !== name) {
+        changed = true;
+        if (S.spriteCode[old] && !S.spriteCode[name]) {
+          S.spriteCode[name] = S.spriteCode[old];
+          delete S.spriteCode[old];
+        }
+        if (S.activeSprite === old) S.activeSprite = name;
+        if (S.activeTut && S.activeTut.mainName === old) S.activeTut.mainName = name;
+      }
+      S.nameById[t.id] = name;
+    });
+    Object.keys(S.nameById).forEach(function (id) {
+      if (!seen[id]) { delete S.nameById[id]; changed = true; }
+    });
+    if (changed) scheduleSessionSave();
+  }
   // ── Per-project snapshots ─────────────────────────────────────
   // Each snapshot is a full SB3 blob (pyscratch code embedded) stored in IDB.
   // Metadata array (ts, label, kind, blobKey) lives in localStorage for fast listing.
@@ -4745,19 +5253,22 @@
       btn.textContent = 'Restore this snapshot';
       btn.onclick = (function (m) {
         return function () {
-          if (!confirm('Restore "' + m.label + '"?\nThe full project (all sprites & code) will be replaced.')) return;
-          btn.disabled = true;
-          btn.textContent = 'Restoring…';
-          idbGet(m.blobKey).then(function (blob) {
-            if (!blob) { alert('Snapshot data not found.'); return; }
-            return S.vm.loadProject(blob);
-          }).then(function () {
-            renderSnapList();
-          }).catch(function (e) {
-            alert('Could not restore snapshot: ' + e.message);
-            btn.disabled    = false;
-            btn.textContent = 'Restore this snapshot';
-          });
+          psConfirm('Restore "' + m.label + '"?', 'The whole project (all sprites and code) will be replaced by this snapshot.', 'Restore', function () {
+            btn.disabled = true;
+            btn.textContent = 'Restoring…';
+            takeProjectSnapshot('Before restoring', 'auto').then(function () {
+              return idbGet(m.blobKey);
+            }).then(function (blob) {
+              if (!blob) { showToast('That snapshot could not be found.'); return; }
+              return S.vm.loadProject(blob).then(function () { showToast('Snapshot restored.'); });
+            }).then(function () {
+              renderSnapList();
+            }).catch(function (e) {
+              showToast('Could not restore the snapshot: ' + (e && e.message ? e.message : e));
+              btn.disabled    = false;
+              btn.textContent = 'Restore this snapshot';
+            });
+          }, true);
         };
       })(snap);
 
@@ -4835,8 +5346,8 @@
     if (!keepRun) {
       if (S.running) stopAll();
       try {
-        var sp = getSprites();
-        if (sp.length) sp[0].setXY(0, 0);
+        var cs = checkSprite();
+        if (cs) cs.setXY(0, 0);
       } catch(e) {}
       startAll();
     }
@@ -4852,10 +5363,20 @@
       }
 
       // Snapshot before input
-      var sp0     = getSprites()[0] || null;
+      var sp0     = checkSprite();
       var initX   = sp0 ? sp0.x              : 0;
       var initY   = sp0 ? sp0.y              : 0;
       var initCos = sp0 ? sp0.currentCostume : -1;
+      // How far the sprite rises after the input starts (a jump): the biggest
+      // climb from its lowest point so far, wherever it started.
+      var peak = { hi: -Infinity, lo: Infinity, rise: 0 };
+      var peakTimer = setInterval(function () {
+        var p = checkSprite();
+        if (!p) return;
+        peak.lo = Math.min(peak.lo, p.y);
+        peak.hi = Math.max(peak.hi, p.y);
+        peak.rise = Math.max(peak.rise, p.y - peak.lo);
+      }, 10);
 
       // Fire inputs
       if (sc.holdKey) {
@@ -4874,11 +5395,12 @@
         if (sc.holdKey) S.pressedKeys[sc.holdKey] = false;
 
         setTimeout(function () {
-          var sp1      = getSprites()[0] || null;
+          var sp1      = checkSprite();
           var finalX   = sp1 ? sp1.x              : 0;
           var finalY   = sp1 ? sp1.y              : 0;
           var finalCos = sp1 ? sp1.currentCostume : -1;
           var didStop  = !S.running;
+          clearInterval(peakTimer);
 
           var passed = true;
           (sc.checks || []).forEach(function (ck) {
@@ -4892,6 +5414,7 @@
             else if (ck.type === 'xBelow')        { ok = finalX < ck.value; }
             else if (ck.type === 'yAbove')        { ok = finalY > ck.value; }
             else if (ck.type === 'yBelow')        { ok = finalY < ck.value; }
+            else if (ck.type === 'peakAbove')     { ok = peak.rise > 15 && peak.hi > ck.value; }
             else if (ck.type === 'stopped')       { ok = didStop; }
             else if (ck.type === 'stoppedOrBelow'){ ok = didStop || finalY < ck.value; }
             else if (ck.type === 'variable') {
@@ -4964,8 +5487,9 @@
       renBtn.onclick = function (e) {
         e.stopPropagation();
         if (S.running) stopAll();
-        var n = prompt('Rename thread:', thread.name);
-        if (n && n.trim()) { thread.name = n.trim(); saveThreads(S.activeSprite); renderThreadList(); }
+        psPrompt('Rename thread', thread.name, function (n) {
+          if (n && n.trim()) { thread.name = n.trim(); saveThreads(S.activeSprite); renderThreadList(); }
+        });
       };
       acts.appendChild(renBtn);
 
@@ -4974,12 +5498,18 @@
         delBtn.textContent = '✕'; delBtn.title = 'Delete';
         delBtn.onclick = function (e) {
           e.stopPropagation();
-          if (!confirm('Delete "' + thread.name + '"?')) return;
-          threads.splice(idx, 1);
-          if (S.activeThreadIdx >= threads.length) S.activeThreadIdx = threads.length - 1;
-          saveThreads(S.activeSprite);
-          renderThreadList();
-          loadCodeToEditor();
+          psConfirm('Delete "' + thread.name + '"?', 'Its code will be removed from this sprite.', 'Delete', function () {
+            if (S.running) stopAll();
+            saveCurrentCode();
+            var i = threads.indexOf(thread);
+            if (i === -1) return;
+            threads.splice(i, 1);
+            if (S.activeThreadIdx >= threads.length) S.activeThreadIdx = threads.length - 1;
+            S.lastError = null;
+            saveThreads(S.activeSprite);
+            renderThreadList();
+            loadCodeToEditor();
+          }, true);
         };
         acts.appendChild(delBtn);
       }
@@ -5002,27 +5532,85 @@
     if (!S.activeSprite) return;
     if (S.running) stopAll();
     var threads = loadThreads(S.activeSprite);
-    threads.push({ id: 't_' + Date.now(), name: 'Thread ' + (threads.length + 1),
-      code: 'def game_start():\n    pass\n' });
+    var fresh = { id: 't_' + Date.now(), name: 'Thread ' + (threads.length + 1), code: 'def game_start():\n    pass\n' };
+    if (S.lang === 'pseudo') fresh.pseudo = PSEUDO.DEFAULT_CODE;
+    threads.push(fresh);
     S.activeThreadIdx = threads.length - 1;
     saveThreads(S.activeSprite);
     renderThreadList();
     loadCodeToEditor();
   }
 
+  // ── Language: Python or CIE pseudocode ────────────────────────
+  // Each thread keeps both versions; the switch picks which one is shown,
+  // edited and run. Tutorials are written in Python, so they switch to it.
+  function setLang(lang, remember) {
+    var next = (lang === 'pseudo' && PSEUDO) ? 'pseudo' : 'python';
+    if (next !== S.lang) {
+      if (S.running) { try { S.vm.stopAll(); } catch (e) { stopAll(); } }
+      saveCurrentCode();
+      S.lang = next;
+    }
+    if (remember) { try { localStorage.setItem('pyscratch:lang', next); } catch (e) {} }
+    document.querySelectorAll('#ps-lang button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === S.lang));
+    });
+    document.documentElement.setAttribute('data-ps-lang', S.lang);
+    var hb = document.getElementById('ps-help-btn');
+    if (hb) hb.title = S.lang === 'pseudo' ? 'Pseudocode reference' : 'PyScratch reference';
+    refreshHelp();
+    S.lastError = null;
+    hideICSense();
+    loadCodeToEditor();
+  }
+
+  function refreshHelp() {
+    var hm = document.getElementById('ps-help');
+    if (!hm) return;
+    hm.innerHTML = buildHelpHTML(S.lang);
+    hm.querySelector('.ps-mhead button').onclick = function () { hm.classList.add('hidden'); };
+  }
+
+  // Lines after which Enter indents the next line, in pseudocode.
+  function pseudoOpensBlock(line) {
+    var t = line.replace(/\/\/.*$/, '').trim();
+    if (!t) return false;
+    if (/^(PROCEDURE|FUNCTION|FOR|WHILE|REPEAT|CASE OF)\b/.test(t)) return true;
+    if (/^(IF|ELSE IF)\b/.test(t)) return true;
+    if (/(^|\s)(THEN|ELSE|DO|OTHERWISE)$/.test(t)) return true;
+    return /^("[^"]*"|'.'|-?\d+(\.\d+)?|TRUE|FALSE)(\s+TO\s+\S+)?\s*:\s*$/.test(t) || /^OTHERWISE\s*:\s*$/.test(t);
+  }
+
+  // Pseudocode is checked a moment after typing stops, so a half-written
+  // line is not flagged while the student is still on it.
+  var _pseudoCheckTimer = null;
+  function schedulePseudoCheck() {
+    clearTimeout(_pseudoCheckTimer);
+    if (S.lang !== 'pseudo' || !PSEUDO || !ui.editor) { S.pseudoErr = null; return; }
+    _pseudoCheckTimer = setTimeout(function () {
+      var r = PSEUDO.transpile(ui.editor.value);
+      S.pseudoErr = r.errors[0] || null;
+      updateIndentGutter();
+    }, 900);
+  }
+
   function loadCodeToEditor() {
     if (!S.activeSprite || !ui.editor) return;
     var threads = loadThreads(S.activeSprite);
     var t = threads[S.activeThreadIdx];
-    ui.editor.value = t ? t.code : '';
+    ui.editor.value = t ? threadCode(t) : '';
+    S.pseudoErr = null;
+    schedulePseudoCheck();
     updateIndentGutter();
+    if (S.activeTut) checkTutBar();
   }
 
   function saveCurrentCode() {
-    if (!S.activeSprite || !ui.editor) return;
+    if (!S.activeSprite || !ui.editor || S.loadingProject) return;
     var threads = loadThreads(S.activeSprite);
-    if (threads[S.activeThreadIdx]) {
-      threads[S.activeThreadIdx].code = ui.editor.value;
+    var t = threads[S.activeThreadIdx];
+    if (t && threadCode(t) !== ui.editor.value) {
+      setThreadCode(t, ui.editor.value);
       saveThreads(S.activeSprite);
     }
   }
@@ -5162,12 +5750,12 @@
   // Called during sync to detect sprites that were just duplicated via
   // TurboWarp's UI and auto-copy the source sprite's Python code to them.
   function inheritCodeFromDuplicates() {
+    if (S.loadingProject) return;
     var sprites = getSprites();
     sprites.forEach(function (t) {
       var name = t.sprite.name;
-      // Skip if we already have code for this sprite (in memory or localStorage)
-      if (S.spriteCode[name]) return;
-      try { if (localStorage.getItem(storeKey(name))) return; } catch(e) {}
+      // Only sprites that have just appeared, and have no code yet.
+      if (S.nameById[t.id] !== undefined || S.spriteCode[name]) return;
       // No code yet - look for a sprite with matching costume assets
       var sourceName = findCodeSource(t);
       if (!sourceName) return;
@@ -5183,7 +5771,9 @@
 
   // ── Sync ──────────────────────────────────────────────────────
   function sync() {
+    if (S.loadingProject) return;
     inheritCodeFromDuplicates();
+    followRenames();
     syncSelectedSprite(!S.activeSprite);
     renderThreadList();
     updateOverlaySuppression();
@@ -5563,11 +6153,108 @@
       var state = { type: 'PS_STATE', threads: {} };
       Object.keys(S.spriteCode).forEach(function(spriteName) {
         state.threads[spriteName] = (S.spriteCode[spriteName] || []).map(function(t) {
-          return { name: t.name || '', code: t.code || '' };
+          return { name: t.name || '', code: threadCode(t) };
         });
       });
       window.parent.postMessage(state, '*');
     } catch(e) {}
+  }
+
+  // ── Self-test hook ────────────────────────────────────────────
+  // With ?pstest=1 the tutorial checks and the code builder are reachable from
+  // the console, so every tutorial step can be tested against its own target.
+  if (/[?&]pstest=1/.test(location.search)) {
+    window.PyScratchTest = {
+      S: S,
+      TUTORIALS: TUTORIALS,
+      CHALLENGES: CHALLENGES,
+      evaluate: evaluateTutStep,
+      build: function (code, lang) {
+        return buildThreadModule('Sprite1', { name: 'Test', code: code, pseudo: code }, S.gen, false, lang || 'python');
+      },
+      compile: function (code, lang) {
+        var built = this.build(code, lang);
+        if (!built) return 'did not build';
+        if (!Sk.__future__) Sk.configure({ output: function () {}, read: function (x) { return Sk.builtinFiles.files[x]; } });
+        try { Sk.compile(built.code, '<ps:test>.py', 'exec', true); return null; }
+        catch (e) { return errorText(e) + ' (module line ' + (e.traceback && e.traceback[0] ? e.traceback[0].lineno : '?') + ')'; }
+      },
+      startTutorial: startTutorial,
+      exitTutorial: exitTutorial,
+      applyTutBar: applyTutBar,
+      checkTutBar: checkTutBar,
+      runBehaviorCheck: runBehaviorCheck,
+      runChallenge: runChallenge,
+      startAll: startAll,
+      stopAll: stopAll,
+      setLang: setLang,
+      selectSpriteByName: selectSpriteByName,
+      loadCodeToEditor: loadCodeToEditor,
+      saveSessionNow: saveSessionNow
+    };
+  }
+
+  // ── Project save / load patches ───────────────────────────────
+  // vm.toJSON() is used by every TurboWarp save path (File > Save, restore
+  // points) and by PyScratch's own snapshots: each sprite's threads are added
+  // to its target as a "pyscratch" array. Scratch ignores unknown fields, so
+  // files stay valid .sb3. vm.loadProject() takes them back out again.
+  function installProjectPatches(vm) {
+    if (!DEMO_MODE) {
+      try {
+        var _origToJSON = vm.toJSON.bind(vm);
+        vm.toJSON = function (optTargetId, serializationOptions) {
+          saveCurrentCode();   // flush the editor into S.spriteCode first
+          var jsonStr = _origToJSON(optTargetId, serializationOptions);
+          try {
+            var proj = JSON.parse(jsonStr);
+            (proj.targets || []).forEach(function (t) {
+              if (t.isStage) return;
+              var code = S.spriteCode[t.name];
+              if (code && code.length) t.pyscratch = code;
+            });
+            return JSON.stringify(proj);
+          } catch(e) {
+            return jsonStr;
+          }
+        };
+      } catch(e) {
+        console.warn('[PyScratch] Could not patch vm.toJSON:', e);
+      }
+    }
+
+    // Any project loaded (File menu, drag-and-drop, snapshots, the session
+    // copy, tutorials) brings its own code; the editor is cleared while it
+    // loads so nothing from the old project is saved into the new one.
+    try {
+      var _origLoadProject = vm.loadProject.bind(vm);
+      vm.loadProject = function (input) {
+        S.loadingProject = true;
+        if (S.running) { try { stopAll(); } catch (e) {} }
+        return extractPyScratchData(input).then(function (result) {
+          S.spriteCode = result.pyCode || {};
+          S.activeSprite = null;
+          S.activeSpriteId = null;
+          S.activeThreadIdx = 0;
+          S.lastError = null;
+          if (ui.editor) ui.editor.value = '';
+          return _origLoadProject(result.buffer);
+        }).then(function (r) {
+          S.loadingProject = false;
+          S.nameById = {};
+          followRenames();
+          syncSelectedSprite(true);
+          renderThreadList();
+          return r;
+        }, function (err) {
+          S.loadingProject = false;
+          syncSelectedSprite(true);
+          throw err;
+        });
+      };
+    } catch(e) {
+      console.warn('[PyScratch] Could not patch loadProject:', e);
+    }
   }
 
   // ── Boot ──────────────────────────────────────────────────────
@@ -5577,6 +6264,7 @@
     return (window.vm && window.vm.runtime) ? window.vm : null;
   }).then(function (vm) {
     S.vm = vm; // S.vm = VirtualMachine; S.vm.runtime = Runtime ✓
+    installProjectPatches(vm);
 
     loadSkulpt(function () {
       if (DEMO_MODE) {
@@ -5655,7 +6343,7 @@
           var _allCode = '';
           Object.keys(S.spriteCode).forEach(function(spriteName) {
             (S.spriteCode[spriteName] || []).forEach(function(t) {
-              _allCode += (t.code || '') + '\n';
+              _allCode += threadCode(t) + '\n';
             });
           });
           try {
@@ -5697,8 +6385,15 @@
         try { vm.runtime.on('TARGETS_UPDATE', adjustDemoOverlay); } catch(e) {}
       } else {
         // Normal editor mode: sync UI and wire up editing events
-        // Initial sync after TurboWarp finishes loading its project
+        purgeOldCodeKeys();
+        setLang(S.lang, false);
+        // Initial sync after TurboWarp finishes loading its project, then
+        // (in the PyScratch app) bring back the last session's project.
         setTimeout(sync, 600);
+        setTimeout(function () { restoreSession(); }, 1200);
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'hidden' && _sessionTimer) saveSessionNow();
+        });
         // Second pass in case TurboWarp takes longer on slow connections
         setTimeout(sync, 1500);
 
@@ -5750,64 +6445,6 @@
           if (S.running) stopAll();
         });
       } catch(e) {}
-
-      // ── Project save: embed Python inside project.json ──────────
-      // Patch vm.toJSON() - called by every TurboWarp save path:
-      //   • File → Save (saveProjectSb3 → _saveProjectZip → toJSON)
-      //   • Ctrl+S toolbar button
-      //   • TurboWarp restore-point system (saveProjectSb3DontZip → toJSON)
-      // Python code is added as a "pyscratch" array on each non-stage target.
-      // Standard .sb3 files: TurboWarp/Scratch ignores unknown target fields,
-      // and our extractPyScratchData strips them back out on load so the parser
-      // never sees them.  No custom .psb3 extension needed.
-      if (!DEMO_MODE) {
-        try {
-          var _origToJSON = vm.toJSON.bind(vm);
-          vm.toJSON = function (optTargetId, serializationOptions) {
-            saveCurrentCode();   // flush editor textarea into S.spriteCode first
-            var jsonStr = _origToJSON(optTargetId, serializationOptions);
-            try {
-              var proj = JSON.parse(jsonStr);
-              (proj.targets || []).forEach(function (t) {
-                if (t.isStage) return;
-                // Embed EVERY sprite's Python, not just the ones opened this
-                // session. Un-visited sprites keep their code only in localStorage
-                // (S.spriteCode is a lazy in-memory cache), so pull it straight
-                // from storage when it isn't loaded - otherwise a full-project
-                // snapshot / tutorial-resume SB3 would silently drop their code.
-                var code = S.spriteCode[t.name];
-                if (!code) {
-                  try { var raw = localStorage.getItem(storeKey(t.name)); if (raw) code = JSON.parse(raw); } catch (e) {}
-                }
-                if (code && code.length) t.pyscratch = code;
-                // Snapshots are stored as separate full SB3 blobs in IndexedDB.
-              });
-              return JSON.stringify(proj);
-            } catch(e) {
-              return jsonStr;   // fallback: return original if anything goes wrong
-            }
-          };
-        } catch(e) {
-          console.warn('[PyScratch] Could not patch vm.toJSON:', e);
-        }
-      }
-
-      // Wrap vm.loadProject so any file loaded through TurboWarp's UI
-      // (File menu, drag-and-drop) has its pyscratch.json extracted first.
-      // Python code is applied BEFORE the project fires TARGETS_UPDATE → sync().
-      try {
-        var _origLoadProject = vm.loadProject.bind(vm);
-        vm.loadProject = function (input) {
-          return extractPyScratchData(input).then(function (result) {
-            if (result.pyCode) S.spriteCode = result.pyCode;
-            return _origLoadProject(result.buffer).then(function (r) {
-              return r;
-            });
-          });
-        };
-      } catch(e) {
-        console.warn('[PyScratch] Could not patch loadProject:', e);
-      }
 
       console.log('[PyScratch] Ready. vm=', vm, 'runtime=', vm.runtime);
     });

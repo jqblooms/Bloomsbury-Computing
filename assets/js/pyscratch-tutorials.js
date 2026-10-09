@@ -17,6 +17,7 @@
   //   starter  {string|null}  Pre-fill editor when this step loads (null = keep current)
   //   target   {string|null}  Code shown as a hint block
   //   requires {string[]} All must appear in editor before Next unlocks ([] = always unlocked)
+  //   sprite   {string?}  Set from STEP_SPRITES below: the sprite this step's code belongs to
   //   category {string?}  Tutorial picker category; falls back to TUTORIAL_CATEGORY_BY_ID
   //   isNew    {bool?}    Show a yellow NEW badge for newly-added tutorials
   var TUTORIALS = [
@@ -371,10 +372,10 @@
           requires: ['        if key_pressed("up")', '            vy = 8'],
           behaviorCheck: {
             hint: 'Press the up arrow - the sprite should jump upward from the floor. Check your <code>if key_pressed("up")</code> block and <code>vy = 8</code>.',
-            setupMs: 800,
+            setupMs: 1300,
             scenarios: [
-              { label: 'up key launches sprite upward', holdKey: 'up', durationMs: 80, waitMs: 300,
-                checks: [{ type: 'yAbove', value: -135 }] }
+              { label: 'up key launches sprite upward', holdKey: 'up', durationMs: 250, waitMs: 250,
+                checks: [{ type: 'peakAbove', value: -135 }] }
             ]
           }
         },
@@ -509,10 +510,10 @@
           requires: ['def when_key_pressed(key):', 'if key == "space":', 'vy = 5'],
           behaviorCheck: {
             hint: 'Press Space - the bird should flap upward from the floor. Check your <code>when_key_pressed</code> function and <code>vy = 5</code>.',
-            setupMs: 800,
+            setupMs: 1300,
             scenarios: [
-              { label: 'space key flaps bird upward', holdKey: 'space', durationMs: 80, waitMs: 300,
-                checks: [{ type: 'yAbove', value: -130 }] }
+              { label: 'space key flaps bird upward', holdKey: 'space', durationMs: 120, waitMs: 300,
+                checks: [{ type: 'peakAbove', value: -130 }] }
             ]
           }
         },
@@ -526,11 +527,11 @@
         },
         {
           title: 'Add your obstacle sprite',
-          text: 'Threads let one sprite do multiple things at once - but an obstacle is a <strong>completely different object</strong> in the game. It needs its own sprite with its own position.<br><br>Click the glowing <strong>sprite panel</strong> at the bottom of TurboWarp and add a new sprite. Choose anything - a ball, a block, a drawn shape - as long as it\'s something to dodge. Then click your new sprite to select it.',
+          text: 'Threads let one sprite do multiple things at once - but an obstacle is a <strong>completely different object</strong> in the game. It needs its own sprite with its own position.<br><br>Click the glowing button at the bottom of TurboWarp and add a new sprite. Choose anything - a ball, a block, a drawn shape - as long as it\'s something to dodge. <strong>Name it <code>Pipe</code></strong> in the name box below the stage.',
           highlight: 'add-sprite-btn',
           highlightLabel: 'Add a sprite here',
-          requiresSpriteCount: 2,
-          requiresSpriteHint: 'Add a new sprite using the highlighted buttons',
+          requiredSpriteNames: ['Pipe'],
+          requiredSpriteHints: { 'Pipe': 'Add a sprite and name it "Pipe"' },
           starter: null,
           target: null,
           newLines: [],
@@ -538,7 +539,7 @@
         },
         {
           title: 'Move the obstacle left',
-          text: 'You\'re now editing the <strong>obstacle sprite\'s</strong> code. Start it off-screen to the right at a <strong>random height</strong> using <code>pick_random</code>, then slide it left every frame:',
+          text: 'You\'re now editing the <strong>Pipe</strong> sprite\'s code. Start it off-screen to the right at a <strong>random height</strong> using <code>pick_random</code>, then slide it left every frame:',
           starter: '',
           target: 'def game_start():\n    go_to_xy(240, pick_random(-100, 100))\n    while True:\n        change_x(-3)',
           newLines: ['def game_start():', '    go_to_xy(240, pick_random(-100, 100))', '    while True:', '        change_x(-3)'],
@@ -635,7 +636,7 @@
           title: 'Bounce on the platform',
           text: 'Click your <strong>player sprite</strong> in the sprite panel to switch back to its code. Add a check inside the loop - when the player is falling (<code>vy</code> is negative) and touching the platform, launch back up:',
           starter: null,
-          target: '        if touching("Platform") and vy < 0:\n            vy = 8',
+          target: 'vy = 8\n\ndef game_start():\n    global vy\n    set_rotation_style("left-right")\n    while True:\n        vy = vy - 0.4\n        change_y(vy)\n        if y_position() < -150:\n            set_y(-150)\n            vy = 8\n        if key_pressed("right"):\n            change_x(4)\n            point_in_direction(90)\n        if key_pressed("left"):\n            change_x(-4)\n            point_in_direction(-90)\n        if x_position() > 240:\n            set_x(-240)\n        if x_position() < -240:\n            set_x(240)\n        if touching("Platform") and vy < 0:\n            vy = 8',
           newLines: ['        if touching("Platform") and vy < 0:', '            vy = 8'],
           requires: ['touching("Platform")', 'vy < 0']
         },
@@ -652,7 +653,7 @@
           title: 'Game over',
           text: 'Click your <strong>player sprite</strong> again. Add a game over check inside the loop - if the player touches the Death barrier, show a message and use <code>break</code> to exit the loop and stop the game:',
           starter: null,
-          target: '        if touching("Death"):\n            say("Game Over!")\n            break',
+          target: 'vy = 8\n\ndef game_start():\n    global vy\n    set_rotation_style("left-right")\n    while True:\n        vy = vy - 0.4\n        change_y(vy)\n        if y_position() < -150:\n            set_y(-150)\n            vy = 8\n        if key_pressed("right"):\n            change_x(4)\n            point_in_direction(90)\n        if key_pressed("left"):\n            change_x(-4)\n            point_in_direction(-90)\n        if x_position() > 240:\n            set_x(-240)\n        if x_position() < -240:\n            set_x(240)\n        if touching("Platform") and vy < 0:\n            vy = 8\n        if touching("Death"):\n            say("Game Over!")\n            break',
           newLines: ['        if touching("Death"):', '            say("Game Over!")', '            break'],
           requires: ['touching("Death")', 'say("Game Over!")', 'break']
         },
@@ -664,6 +665,7 @@
       ]
     },
     {
+      id: 'duck-hunt',
       icon: 'target',
       title: 'Duck Hunt',
       desc: 'A duck zigzags around the screen bouncing off every edge. Click it to shoot - score goes up and the duck reappears at a random new spot with a new speed.',
@@ -722,6 +724,7 @@
       ]
     },
     {
+      id: 'rpg-survivor',
       icon: 'sword',
       title: 'RPG Survivor',
       desc: 'Enemies clone themselves and walk toward the player. Dodge with arrow keys, attack with space. Score goes up for each kill - survive as long as you can!',
@@ -824,6 +827,7 @@
 
     // ── Apple Catcher ─────────────────────────────────────────────
     {
+      id: 'apple-catcher',
       cat: 'game',
       icon: 'apple',
       title: 'Apple Catcher',
@@ -887,6 +891,7 @@
 
     // ── Whack-a-Mole ──────────────────────────────────────────────
     {
+      id: 'whack-a-mole',
       cat: 'game',
       icon: 'hammer',
       title: 'Whack-a-Mole',
@@ -939,6 +944,7 @@
 
     // ── Space Shooter ─────────────────────────────────────────────
     {
+      id: 'space-shooter',
       cat: 'game',
       icon: 'rocket',
       title: 'Space Shooter',
@@ -977,10 +983,10 @@
         },
         {
           title: 'Bullet: listen for "fire" and launch a clone',
-          text: 'With the <strong>Bullet</strong> sprite selected, write its code. The base sprite hides itself. When the "fire" broadcast arrives it jumps to the Player\'s position and spawns a clone. The clone then shoots upward:',
+          text: 'With the <strong>Bullet</strong> sprite selected, write its code. The base sprite hides itself. When the "fire" broadcast arrives it jumps to the Player\'s position and spawns a clone. Clones hear broadcasts too, so <code>not is_clone()</code> makes only the original answer - otherwise flying bullets would jump back. The clone then shoots upward:',
           starter: null,
-          target: 'def game_start():\n    hide()\n\ndef when_message_received(message):\n    if message == "fire":\n        go_to("Player")\n        create_clone()\n\ndef when_I_start_as_a_clone():\n    show()\n    while True:\n        change_y(8)\n        if y_position() > 180:\n            delete_clone()\n        if touching("Enemy"):\n            change_variable("Score", 1)\n            delete_clone()',
-          newLines: ['def game_start():', '    hide()', 'def when_message_received(message):', '    if message == "fire":', '        go_to("Player")', '        create_clone()', 'def when_I_start_as_a_clone():', '    show()', '    while True:', '        change_y(8)', '        if y_position() > 180:', '            delete_clone()', '        if touching("Enemy"):', '            change_variable("Score", 1)', '            delete_clone()'],
+          target: 'def game_start():\n    hide()\n\ndef when_message_received(message):\n    if message == "fire" and not is_clone():\n        go_to("Player")\n        create_clone()\n\ndef when_I_start_as_a_clone():\n    show()\n    while True:\n        change_y(8)\n        if y_position() > 180:\n            delete_clone()\n        if touching("Enemy"):\n            change_variable("Score", 1)\n            delete_clone()',
+          newLines: ['def game_start():', '    hide()', 'def when_message_received(message):', '    if message == "fire" and not is_clone():', '        go_to("Player")', '        create_clone()', 'def when_I_start_as_a_clone():', '    show()', '    while True:', '        change_y(8)', '        if y_position() > 180:', '            delete_clone()', '        if touching("Enemy"):', '            change_variable("Score", 1)', '            delete_clone()'],
           requires: ['def game_start():', 'hide()', 'def when_message_received(message):', 'message == "fire"', 'go_to("Player")', 'create_clone()', 'def when_I_start_as_a_clone():', 'show()', 'change_y(8)', 'y_position() > 180', 'touching("Enemy")', 'change_variable("Score"', 'delete_clone()']
         },
         {
@@ -1001,6 +1007,7 @@
 
     // ── Pong ──────────────────────────────────────────────────────
     {
+      id: 'pong',
       cat: 'game',
       icon: 'pong',
       title: 'Pong',
@@ -1055,7 +1062,7 @@
         },
         {
           title: 'Try it!',
-          text: 'Click <strong>▶</strong>. Keep the ball alive with your paddle - each bounce scores a point!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Speed the ball up over time - add <code>vy = vy * 1.05</code> each time you hit the paddle</li><li>Make the bounce angle depend on where the ball hits the paddle using <code>x_position() - touching("Paddle")</code> - look up how Scratch Pong angle maths works</li><li>Add a two-player mode: second paddle controlled with W/S keys, both using <code>change_y</code></li></ul>',
+          text: 'Click <strong>▶</strong>. Keep the ball alive with your paddle - each bounce scores a point!<br><br><strong>Challenges:</strong><ul style="margin-top:0.5rem;padding-left:1.2rem"><li>Speed the ball up over time - add <code>vy = vy * 1.05</code> each time you hit the paddle</li><li>Make the ball faster each time it hits the paddle: multiply <code>vx</code> by <code>1.1</code> as well as flipping <code>vy</code></li><li>Add a two-player mode: second paddle controlled with W/S keys, both using <code>change_y</code></li></ul>',
           starter: null, target: null, newLines: [], requires: []
         }
       ]
@@ -1063,6 +1070,7 @@
 
     // ── Breakout ──────────────────────────────────────────────────
     {
+      id: 'breakout',
       cat: 'game',
       icon: 'bricks',
       title: 'Breakout',
@@ -1420,17 +1428,17 @@
         },
         {
           title: 'Press space to send a hit',
-          text: 'A <code>when_key_pressed</code> handler fires once each time a key is tapped. When it is space, <code>broadcast("hit")</code> - an announcement every note clone can hear at the same moment.',
+          text: 'A <code>when_key_pressed</code> handler fires once each time a key is tapped. When it is space, <code>broadcast("hit")</code> - an announcement every note clone can hear at the same moment. <code>not is_clone()</code> makes only the hidden original send it, once per tap.',
           starter: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()',
-          target: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space":\n        broadcast("hit")',
-          newLines: ['', 'def when_key_pressed(key):', '    if key == "space":', '        broadcast("hit")'],
+          target: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space" and not is_clone():\n        broadcast("hit")',
+          newLines: ['', 'def when_key_pressed(key):', '    if key == "space" and not is_clone():', '        broadcast("hit")'],
           requires: ['def when_key_pressed(key):', 'key == "space"', 'broadcast("hit")']
         },
         {
           title: 'Score notes in the hit zone',
           text: 'Every clone listens for <code>"hit"</code>. If the note receiving the message is near the bottom line - its <code>y_position()</code> between <code>-150</code> and <code>-90</code> - it scores a point and disappears. Notes anywhere else simply ignore the message.',
-          starter: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space":\n        broadcast("hit")',
-          target: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space":\n        broadcast("hit")\n\ndef when_message_received(message):\n    if message == "hit":\n        if y_position() < -90 and y_position() > -150:\n            change_variable("Score", 1)\n            delete_clone()',
+          starter: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space" and not is_clone():\n        broadcast("hit")',
+          target: 'lanes = [-150, -50, 50, 150]\n\ndef game_start():\n    hide()\n    set_variable("Score", 0)\n    display_variable("Score", True)\n    while True:\n        create_clone()\n        wait(0.7)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(lanes[pick_random(0, 3)], 160)\n    show()\n    while True:\n        change_y(-5)\n        if y_position() < -180:\n            delete_clone()\n\ndef when_key_pressed(key):\n    if key == "space" and not is_clone():\n        broadcast("hit")\n\ndef when_message_received(message):\n    if message == "hit":\n        if y_position() < -90 and y_position() > -150:\n            change_variable("Score", 1)\n            delete_clone()',
           newLines: ['', 'def when_message_received(message):', '    if message == "hit":', '        if y_position() < -90 and y_position() > -150:', '            change_variable("Score", 1)', '            delete_clone()'],
           requires: ['def when_message_received(message):', 'message == "hit"', 'y_position() < -90', 'y_position() > -150', 'change_variable("Score", 1)']
         },
@@ -1492,10 +1500,10 @@
         },
         {
           title: 'Enemy: get shot down',
-          text: 'Click your <strong>Enemy</strong> sprite again. Add a message handler: when a clone hears <code>"shoot"</code> while it is close to the tower (<code>distance_to("Tower") &lt; 90</code>), it scores a point and is destroyed.',
+          text: 'Click your <strong>Enemy</strong> sprite again. Add a message handler: when a clone hears <code>"shoot"</code> while it is close to the tower (<code>distance_to("Tower") &lt; 90</code>), it scores a point and is destroyed. <code>is_clone()</code> leaves out the hidden original, which never walks the path.',
           starter: null,
-          target: 'path = [[-200, 150], [200, 150], [200, -120], [-200, -120]]\n\ndef game_start():\n    hide()\n    set_variable("Lives", 5)\n    display_variable("Lives", True)\n    while True:\n        create_clone()\n        wait(2.5)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(-200, 150)\n    show()\n    for point in path:\n        glide_to_xy(point[0], point[1], 2)\n    change_variable("Lives", -1)\n    delete_clone()\n\ndef when_message_received(message):\n    if message == "shoot":\n        if distance_to("Tower") < 90:\n            change_variable("Score", 1)\n            delete_clone()',
-          newLines: ['', 'def when_message_received(message):', '    if message == "shoot":', '        if distance_to("Tower") < 90:', '            change_variable("Score", 1)', '            delete_clone()'],
+          target: 'path = [[-200, 150], [200, 150], [200, -120], [-200, -120]]\n\ndef game_start():\n    hide()\n    set_variable("Lives", 5)\n    display_variable("Lives", True)\n    while True:\n        create_clone()\n        wait(2.5)\n\ndef when_I_start_as_a_clone():\n    go_to_xy(-200, 150)\n    show()\n    for point in path:\n        glide_to_xy(point[0], point[1], 2)\n    change_variable("Lives", -1)\n    delete_clone()\n\ndef when_message_received(message):\n    if message == "shoot" and is_clone():\n        if distance_to("Tower") < 90:\n            change_variable("Score", 1)\n            delete_clone()',
+          newLines: ['', 'def when_message_received(message):', '    if message == "shoot" and is_clone():', '        if distance_to("Tower") < 90:', '            change_variable("Score", 1)', '            delete_clone()'],
           requires: ['def when_message_received(message):', 'message == "shoot"', 'distance_to("Tower") < 90', 'change_variable("Score", 1)']
         },
         {
@@ -1597,6 +1605,13 @@
         '<code>change_y(5)</code> moves up, <code>change_y(-5)</code> moves down.',
         'You need four separate <code>if</code> blocks - one for each direction.'
       ],
+      pseudoHints: [
+        'Put a <code>WHILE TRUE DO</code> loop inside <code>PROCEDURE GameStart()</code> - it checks the keys every frame.',
+        'Use <code>IF KeyPressed("right") THEN</code> to check if the right arrow is held down.',
+        '<code>CALL ChangeX(5)</code> moves right, <code>CALL ChangeX(-5)</code> moves left.',
+        '<code>CALL ChangeY(5)</code> moves up, <code>CALL ChangeY(-5)</code> moves down.',
+        'You need four separate <code>IF ... ENDIF</code> blocks - one for each direction.'
+      ],
       setupMs: 500,
       settleMs: 100,
       tests: [
@@ -1626,6 +1641,12 @@
         'Define <code>def when_clicked():</code> - this runs every time the sprite is clicked.',
         'Inside <code>when_clicked()</code>, use <code>change_variable("Score", 1)</code> to add 1.'
       ],
+      pseudoHints: [
+        'In <code>PROCEDURE GameStart()</code>, use <code>CALL SetVariable("Score", 0)</code> to reset the score.',
+        'Use <code>CALL DisplayVariable("Score", TRUE)</code> to show it on the stage.',
+        'Write <code>PROCEDURE WhenClicked()</code> - it runs every time the sprite is clicked.',
+        'Inside it, use <code>CALL ChangeVariable("Score", 1)</code> to add 1.'
+      ],
       setupMs: 700,
       settleMs: 400,
       tests: [
@@ -1651,6 +1672,13 @@
         'Inside a <code>while True:</code> loop, use <code>change_x(vx)</code> to move each frame.',
         'Check <code>if x_position() > 220 or x_position() &lt; -220:</code> to detect the walls.',
         'To bounce: <code>vx = vx * -1</code> - this flips the direction.'
+      ],
+      pseudoHints: [
+        'Write <code>DECLARE Vx : INTEGER</code> at the top, outside any procedure, so every procedure can use it.',
+        'In <code>PROCEDURE GameStart()</code>, set <code>Vx &lt;- 5</code>.',
+        'Inside a <code>WHILE TRUE DO</code> loop, use <code>CALL ChangeX(Vx)</code> to move each frame.',
+        'Check <code>IF XPosition() > 220 OR XPosition() &lt; -220 THEN</code> to detect the walls.',
+        'To bounce: <code>Vx &lt;- Vx * -1</code> - this flips the direction.'
       ],
       setupMs: 300,
       settleMs: 100,
@@ -1680,6 +1708,13 @@
         'Add <code>if y_position() &lt; -160: say("Game Over!"); stop()</code> for the game-over check.',
         'Try adding a Score variable that goes up by 1 each frame - how long can you survive?'
       ],
+      pseudoHints: [
+        'Write <code>DECLARE Vy : REAL</code> at the top - REAL, because it will hold numbers like -0.5.',
+        'In <code>PROCEDURE GameStart()</code>, set <code>Vy &lt;- 0</code>, then start a <code>WHILE TRUE DO</code> loop.',
+        'Each frame: <code>Vy &lt;- Vy - 0.5</code> (gravity), then <code>CALL ChangeY(Vy)</code>.',
+        'Add <code>IF KeyPressed("space") THEN</code> ... <code>Vy &lt;- 8</code> to jump.',
+        'Add <code>IF YPosition() &lt; -160 THEN</code> with <code>CALL Say("Game Over!")</code> and <code>CALL Stop()</code>.'
+      ],
       setupMs: 150,
       settleMs: 100,
       tests: [
@@ -1695,6 +1730,40 @@
       ]
     }
   ];
+
+  // Which sprite each step's code belongs to, by step number (from 1). The
+  // tutorial bar selects that sprite before loading starter code, and warns if
+  // another one is chosen. '@main' is the sprite selected when the tutorial
+  // started. Tutorials not listed have one sprite, so all their code steps use '@main'.
+  var STEP_SPRITES = {
+    'flappy-bird':   { '@main': [1, 2, 3, 4, 5], 'Pipe': [7, 8] },
+    'doodle-jump':   { '@main': [1, 2, 3, 4, 5, 9, 11], 'Platform': [7, 8] },
+    'rpg-survivor':  { 'Player': [2, 3, 4, 5, 6, 7], 'Enemy': [9, 10, 11] },
+    'apple-catcher': { 'Catcher': [2, 3], 'Apple': [5, 6] },
+    'space-shooter': { 'Player': [2, 3], 'Bullet': [5], 'Enemy': [6] },
+    'pong':          { 'Paddle': [2], 'Ball': [4, 5, 6] },
+    'breakout':      { 'Paddle': [2], 'Ball': [4, 5], 'Brick': [6, 7] },
+    'geometry-dash': { '@main': [2, 3, 4], 'Spike': [6] },
+    'tower-defense': { 'Enemy': [2, 3, 6], 'Tower': [5] },
+    'overcooked':    { '@main': [2, 3, 4], 'Waiter': [6] }
+  };
+  // The first code step on a newly added sprite clears its default code.
+  var FRESH_SPRITE_STEPS = {
+    'rpg-survivor': [2, 9], 'apple-catcher': [5], 'space-shooter': [5, 6], 'pong': [4],
+    'breakout': [4, 6], 'geometry-dash': [6], 'tower-defense': [5], 'overcooked': [6]
+  };
+  TUTORIALS.forEach(function (t) {
+    var map = STEP_SPRITES[t.id];
+    if (map) Object.keys(map).forEach(function (sprite) {
+      map[sprite].forEach(function (n) { if (t.steps[n - 1]) t.steps[n - 1].sprite = sprite; });
+    });
+    // One-sprite tutorials: every code step belongs to the tutorial's sprite.
+    else t.steps.forEach(function (st) { if (st.target) st.sprite = '@main'; });
+    (FRESH_SPRITE_STEPS[t.id] || []).forEach(function (n) {
+      var st = t.steps[n - 1];
+      if (st && (st.starter === null || st.starter === undefined)) st.starter = '';
+    });
+  });
 
   window.PyScratchContent = { TUTORIALS: TUTORIALS, CHALLENGES: CHALLENGES };
 })();
