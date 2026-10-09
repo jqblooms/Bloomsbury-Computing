@@ -55,11 +55,15 @@
     <div id="main-area">
         <div id="left-pane">
             <div class="editor-header">
-                <span class="pb-targets">Python code <span class="pb-target">Gold <b id="gold-req"></b></span><span class="pb-target">Silver <b id="silver-req"></b></span><span class="pb-target">Bronze <b id="bronze-req"></b></span></span>
+                <span class="pb-lang" role="group" aria-label="Language">
+                    <button type="button" data-lang="python" aria-pressed="true">Python</button><button type="button" data-lang="pseudo" aria-pressed="false">Pseudocode</button>
+                </span>
+                <span class="pb-targets"><span class="pb-target">Gold <b id="gold-req"></b></span><span class="pb-target">Silver <b id="silver-req"></b></span><span class="pb-target">Bronze <b id="bronze-req"></b></span></span>
                 <span id="example-mode-badge">Example</span>
             </div>
             <div id="editor-container"></div>
             <div id="example-code-display"></div>
+            <div id="code-error" role="alert" hidden></div>
         </div>
         <div id="right-pane">
             <div id="canvas-container"></div>
@@ -95,6 +99,35 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
             </button>
             <h2>Commands</h2>
+            <div class="only-pseudo">
+            <h3>Moving the robot</h3>
+            <p>Keywords are written in capitals. Write each procedure name exactly as shown.</p>
+            <dl class="cmd-list">
+                <dt>CALL MoveForward()</dt><dd>move forward one space</dd>
+                <dt>CALL TurnLeft()</dt><dd>turn 90 degrees left</dd>
+                <dt>CALL TurnRight()</dt><dd>turn 90 degrees right</dd>
+                <dt>CALL Jump()</dt><dd>jump up or down a ledge while moving forward</dd>
+                <dt>CALL Light()</dt><dd>switch a tile on or off; light every tile to win</dd>
+            </dl>
+            <h3>FOR loops</h3>
+            <p>Repeats a fixed number of times. DECLARE the counter first.</p>
+            <pre class="code"><span class="kw">DECLARE</span> Count : <span class="kw">INTEGER</span>
+<span class="kw">FOR</span> Count &lt;- <span class="num">1</span> <span class="kw">TO</span> <span class="num">4</span>
+    <span class="kw">CALL</span> <span class="fn">MoveForward</span>()
+    <span class="kw">CALL</span> <span class="fn">Light</span>()
+<span class="kw">NEXT</span> Count</pre>
+            <h3>WHILE loops</h3>
+            <p>Repeats as long as the condition is true. Change <code>Count</code> yourself, or the loop never ends.</p>
+            <pre class="code"><span class="kw">DECLARE</span> Count : <span class="kw">INTEGER</span>
+Count &lt;- <span class="num">0</span>
+<span class="kw">WHILE</span> Count &lt; <span class="num">3</span> <span class="kw">DO</span>
+    <span class="kw">CALL</span> <span class="fn">Jump</span>()
+    Count &lt;- Count + <span class="num">1</span>
+<span class="kw">ENDWHILE</span></pre>
+            <h3>Counting lines</h3>
+            <p>DECLARE lines and the closing NEXT, ENDWHILE and ENDIF lines are free, so the medal targets are the same as in Python.</p>
+            </div>
+            <div class="only-python">
             <h3>Moving the robot</h3>
             <dl class="cmd-list">
                 <dt>walk_forward()</dt><dd>move forward one space</dd>
@@ -114,13 +147,16 @@
 <span class="kw">while</span> i &lt; <span class="num">3</span>:
     <span class="fn">jump</span>()
     i += <span class="num">1</span></pre>
+            </div>
         </div>
     </div>
 
 <script>
-  // The game in load order: the levels, the state, the site and lesson bridge, start-up and the menu, loading levels, the 3D world, then running the Python. Each file carries the page's version.
+  // The game in load order: the levels, the state, the site and lesson bridge, start-up and the menu, loading levels, the 3D world, running the Python,
+  // then the Pseudocode Farmer interpreter and the pseudocode mode that plugs the robot into it. Each file carries the page's version.
   (function () {
-    ["js/levels.js", "js/state.js", "js/embed.js", "js/setup.js", "js/level.js", "js/world.js", "js/run.js"].forEach(function (file) {
+    ["js/levels.js", "js/state.js", "js/embed.js", "js/setup.js", "js/level.js", "js/world.js", "js/run.js",
+      "../PseudocodeFarmer/js/interpreter.js", "js/pseudo.js"].forEach(function (file) {
       document.write('<script src="' + file + "?v=" + window.PYBOT_V + '"><\/script>');
     });
   })();

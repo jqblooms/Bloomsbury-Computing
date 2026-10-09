@@ -29,6 +29,7 @@ function init() {
     });
 
     editor.on("change", updateLineCount);
+    editor.on("change", () => { if (errorLineHandle) clearCodeError(); });
 
     // Loading a level replaces the editor's content wholesale via
     // setValue() (starter code, saved code, injected code, resets). If the
@@ -91,9 +92,11 @@ function init() {
     if (hideNav)  document.getElementById('top-bar').style.display = 'none';
     if (hideMenu) document.getElementById('btn-home').style.display = 'none';
     if (turboBotMode) applyTurboBotLayout();
+    initCodeLang(params);
 
     if (embedLevel !== null) {
         loadLevel(parseInt(embedLevel, 10));
+        document.getElementById('menu-modal').classList.add('hidden');
     } else if (hideMenu) {
         // Embedded with hideMenu=true but no level - wait silently for LOAD_CUSTOM_LEVEL
         // Don't show the menu; the parent will inject a level via postMessage
@@ -193,6 +196,6 @@ function clearSaveData() {
 function saveCurrentCode() {
     if (!isLevelActive || isCustomLevel) return;
     if (!savedData.levels[currentLevelIndex]) savedData.levels[currentLevelIndex] = {};
-    savedData.levels[currentLevelIndex].code = editor.getValue();
+    savedData.levels[currentLevelIndex][codeKey()] = editor.getValue();
     localStorage.setItem('lightbotSave', JSON.stringify(savedData));
 }

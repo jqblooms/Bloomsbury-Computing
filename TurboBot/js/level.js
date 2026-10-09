@@ -29,7 +29,7 @@ function loadLevel(index) {
     document.getElementById("btn-close-win").style.display  = '';
 
     const saved = savedData.levels[index] || {};
-    editor.setValue(saved.code || "");
+    editor.setValue(saved[codeKey()] || "");
     updateLineCount();
 
     build3DLevel();
@@ -72,6 +72,7 @@ function loadCustomLevel(levelString) {
 // --- Example mode: read-only demo that loops automatically ---
 function loadExampleMode(levelString, code) {
     isExampleMode = true;
+    document.body.classList.add('example-mode');
     isCustomLevel = true;
     currentLevelIndex = 'custom';
     isLevelActive = true;
@@ -154,8 +155,7 @@ function highlightPython(code) {
 }
 
 function updateLineCount() {
-    const code = editor.getValue();
-    const lines = code.split('\n').filter(l => l.trim() !== '' && !l.trim().startsWith('#')).length;
+    const lines = countedCodeLines(editor.getValue());
     document.getElementById("line-count").innerText = lines;
     return lines;
 }

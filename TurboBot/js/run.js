@@ -5,6 +5,7 @@ function resetLevel() {
     isPlaying = false;
     commandQueue = [];
     clearInterval(timerInterval);
+    clearCodeError();
     timeElapsed = 0;
     document.getElementById("time-elapsed").innerText = "0.0";
     
@@ -66,6 +67,7 @@ function playCode() {
     saveCurrentCode();
     
     const prog = editor.getValue();
+    if (codeLang === 'pseudo') { playPseudocode(prog); return; }
     Sk.configure({ output: outf, read: builtinRead });
     
     Sk.builtins.walk_forward = new Sk.builtin.func(() => { commandQueue.push('walk_forward'); });
@@ -84,10 +86,11 @@ function playCode() {
             }, 100);
         })
         .catch(err => {
-            alert(err.toString());
+            commandQueue = [];
+            showCodeError(err.toString(), err.traceback && err.traceback[0] ? err.traceback[0].lineno : 0);
         });
     } catch (e) {
-        alert(e.toString());
+        showCodeError(e.toString());
     }
 }
 
@@ -323,6 +326,7 @@ function handleWin() {
         postToParent({
             type: 'LEVEL_COMPLETE',
             appHint: 'pybot',
+            lang: codeLang,
             level: currentLevelIndex,
             medal,
             lines: linesUsed,

@@ -30,6 +30,9 @@ function initEmbedListener() {
             case 'RUN_CODE':
                 runInjectedCode(data.code || '');
                 break;
+            case 'SET_LANG':
+                setCodeLang(data && data.lang, { loadCode: true });
+                break;
             case 'TURBOBOT_MODE':
                 applyTurboBotLayout(data || {});
                 break;
@@ -109,6 +112,7 @@ function setSpeedMultiplier(value) {
 
 function restoreEditableRunUi() {
     isExampleMode = false;
+    document.body.classList.remove('example-mode');
     document.getElementById('editor-container').style.display = '';
     document.getElementById('example-code-display').style.display = 'none';
     document.getElementById('example-mode-badge').style.display = 'none';
