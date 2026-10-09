@@ -164,7 +164,11 @@
 
   // run state - reset whenever the mode, topic or card count changes
   var run = null;
+  // Year 6 answers with buttons only: a choiceOnly Year 6 drill never offers "Type the answer", because the
+  // students cannot guess the exact wording a typed answer needs. Other years' choiceOnly flags are for the races.
+  var buttonsOnly = !!drill.choiceOnly && /^y6-/.test(drillId);
   function freshRun(mode, category, count, answerMode, poolChoice) {
+    if (buttonsOnly) answerMode = "mc";
     var pool = poolCardIds(category, poolChoice);
     var size = (count && count < pool.length) ? count : pool.length;
     var queue = (count && count < pool.length) ? sample(pool, size) : shuffle(pool);
@@ -193,7 +197,7 @@
         // category/count - they were always the whole drill.
         if (!r.category) r.category = "all";
         if (!r.count) r.count = drill.cards.length;
-        if (r.answerMode !== "text") r.answerMode = "mc";
+        if (r.answerMode !== "text" || buttonsOnly) r.answerMode = "mc";
         // Saves from before the "Which cards?" pool picker drew from every card.
         if (r.pool !== "mastered" && r.pool !== "unmastered") r.pool = "all";
         return r;
@@ -1333,6 +1337,10 @@
     // still gets their own last choice remembered, same as before.
     els.setupAnswerMode.value = run ? run.answerMode : "text";
     if (els.setupAnswerMode.selectedIndex === -1) els.setupAnswerMode.value = "text";
+    if (buttonsOnly) {
+      els.setupAnswerMode.value = "mc";
+      els.setupAnswerModeField.style.display = "none";
+    }
     refreshResumeUI();
   }
   // Resumes the saved run exactly as it was left - same queue position,
@@ -1492,6 +1500,9 @@
     }
     run.lastCardId = pick;
     current = { cardId: pick, checked: false, setup: randomizeSetup(cardsById[pick]) };
+    // card.inputs: the values typed in for INPUT, in order (a list, or a function of this draw's setup).
+    var inp = cardsById[pick].inputs;
+    current.inputs = typeof inp === "function" ? inp(current.setup) : (inp || null);
     renderCodeCard();
   }
 
@@ -1518,6 +1529,7 @@
       streakHtml = '<span class="streakdots" title="Streak toward mastering this type of question">' + dots + "</span>";
     }
     var given = codeGivenHtml(current.setup);
+    if (current.inputs && current.inputs.length) given += (given ? ". " : "") + "Typed in, one per INPUT: " + current.inputs.join(", ");
     var promptHasCode = card.prompt.indexOf("\n") !== -1;
 
     els.stage.innerHTML =
@@ -1617,7 +1629,7 @@
     // reference solution against the same freshly-drawn values each time
     // is what makes hardcoding the answer stop working.
     var setupVars = current.setup || card.setup || {};
-    var studentResult = PseudocodeEngine.runPseudocode(code, setupVars);
+    var studentResult = PseudocodeEngine.runPseudocode(code, setupVars, undefined, current.inputs || undefined);
     var resultEl = document.getElementById("code-result");
     var right = false;
     var message = "";
@@ -1625,7 +1637,7 @@
     if (studentResult.error) {
       message = "Line " + studentResult.error.line + ": " + studentResult.error.message;
     } else {
-      var referenceResult = PseudocodeEngine.runPseudocode(card.reference, setupVars);
+      var referenceResult = PseudocodeEngine.runPseudocode(card.reference, setupVars, undefined, current.inputs || undefined);
       var checkVars = card.checkVars || [];
       var varsMatch = checkVars.every(function (v) { return studentResult.vars[v] === referenceResult.vars[v]; });
       var outputsMatch = !card.checkOutput || JSON.stringify(studentResult.outputs) === JSON.stringify(referenceResult.outputs);

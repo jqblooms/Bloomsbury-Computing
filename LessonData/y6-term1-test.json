@@ -20,9 +20,9 @@
    "label": "Warm Up: Fix a Game",
    "type": "app-link",
    "appId": "scratchchallenges",
-   "appQuery": "challenge=hunt-meteor-steer&lesson=y6-term1-test",
+   "appQuery": "challenge=hunt-maze-ghost&lesson=y6-term1-test",
    "buttonId": "y6t1-warm-up-btn",
-   "content": "<h2 class=\"lesson-h2\">Warm Up: Fix a Game</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How do you find a bug?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Play the game. Say what should happen and what does happen. Find the block that does the wrong thing. Change one thing, then test again.</p></div></details><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Fix it</h3><ul class=\"lesson-facts\"><li>Play the game first.</li><li>Find the block that does the wrong thing.</li><li>Fix it, then press <strong>Check my project</strong>.</li></ul></div><div class=\"lesson-app-link\"><p>6 minutes. The test has a game like this to fix.</p><button type=\"button\" class=\"donow-btn\" id=\"y6t1-warm-up-btn\">Open Meteor Dodge</button></div></div>"
+   "content": "<h2 class=\"lesson-h2\">Warm Up: Fix a Game</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How do you find a bug?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Play the game. Say what should happen and what does happen. Find the block that does the wrong thing. Change one thing, then test again.</p></div></details><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Fix it</h3><ul class=\"lesson-facts\"><li>Play the game first.</li><li>Find the block that does the wrong thing.</li><li>Fix it, then press <strong>Check my project</strong>.</li></ul></div><div class=\"lesson-app-link\"><p>6 minutes. The test has a different game to fix in the same way.</p><button type=\"button\" class=\"donow-btn\" id=\"y6t1-warm-up-btn\">Open Ghost Maze</button></div></div>"
   },
   {
    "id": "warm-up-2",

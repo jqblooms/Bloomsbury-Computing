@@ -10,7 +10,8 @@
 DrillData.register("y9-term1a-revision", {
   title: "Year 9, Term 1a Revision",
   subtitle: "Number Systems, Loops, Data Types and Arrays, Errors and Trace Tables",
-  // Races show buttons for every card (James 2026-10-02: Year 9 found the typed race answers too hard).
+  // choiceOnly is read only by the game races (James 2026-10-02: Year 9 found typed race answers too hard). On the
+  // site the drill types answers by default, like the test, so every card's keywords accept typed answers.
   choiceOnly: true,
   categories: [
     ["rv-numbers", "Number Systems"],
@@ -38,6 +39,7 @@ DrillData.register("y9-term1a-revision", {
       list.forEach(function (x) { if (x !== n && out.indexOf(x) === -1 && out.length < 3) out.push(x); });
       return out;
     }
+    function step(text, lines, hl, state) { return { text: text, code: lines, hl: hl == null ? [] : [].concat(hl), state: state || "" }; }
     function hex2(n) { return HEX[Math.floor(n / 16)] + HEX[n % 16]; }
     function flip(b, i) { return b.slice(0, i) + (b[i] === "1" ? "0" : "1") + b.slice(i + 1); }
     function listRe(vals) { return new RegExp("^\\s*" + vals.join("[\\s,]+") + "\\s*$"); }
@@ -243,6 +245,16 @@ DrillData.register("y9-term1a-revision", {
           return { prompt: "This program should output the total of " + a + " to " + n + ". It has a bug. Follow it exactly as it is written. What does it output?\n" +
               code("DECLARE " + T + " : INTEGER", "DECLARE " + C + " : INTEGER", "FOR " + C + " " + A + " " + a + " TO " + n, "    " + T + " " + A + " 0", "    " + T + " " + A + " " + T + " + " + C, "NEXT " + C, "OUTPUT " + T),
             answers: [String(n)], keywords: [drillNumberRe(n)], distractors: others(n, [intended, 0, n - 1, intended - n]),
+            walk: (function () {
+              var w = ["DECLARE Score : INTEGER", "DECLARE Num : INTEGER", "FOR Num " + A + " 1 TO 3", "    Score " + A + " 0", "    Score " + A + " Score + Num", "NEXT Num", "OUTPUT Score"];
+              return [
+                step("A similar program. Follow what it says, not what it should do. Lines 4 and 5 are inside the loop, so both run on every pass.", w, [3, 4]),
+                step("Pass 1: Num = 1. Line 4 sets Score to 0. Line 5: Score = 0 + 1 = 1.", w, [3, 4], "Num 1, Score 1"),
+                step("Pass 2: Num = 2. Line 4 sets Score back to 0. Line 5: Score = 0 + 2 = 2.", w, [3, 4], "Num 2, Score 2"),
+                step("Pass 3: Num = 3. Score goes back to 0 again, then 0 + 3 = 3.", w, [3, 4], "Num 3, Score 3"),
+                step("OUTPUT shows the Score left after the last pass: 3, not 1 + 2 + 3 = 6.", w, 6, "OUTPUT 3")
+              ];
+            })(),
             example: "A similar program: inside FOR Num " + A + " 1 TO 2 are the lines Score " + A + " 0 and Score " + A + " Score + Num.\nPass 1: Score " + A + " 0, then Score = 0 + 1 = 1.\nPass 2: Score " + A + " 0 again, then Score = 0 + 2 = 2.\nOUTPUT 2. Score goes back to 0 on every pass, so only the last pass is left.",
             working: ["Which lines are inside the loop? They run on every pass.", "What is " + T + " at the start of every pass? Trace the last pass."],
             note: T + " goes back to 0 on every pass, so only the last " + C + " is left: " + n + ". It should be " + intended + "." };
@@ -257,7 +269,7 @@ DrillData.register("y9-term1a-revision", {
             note: "Total starts at 0, and 0 times anything is 0. It should be Total " + A + " 1 to multiply." };
         } },
       { id: "e-bound", category: "rv-errors", randomize: function () {
-          var n = drillRange(5, 8), ans = sum(n - 1);
+          var n = drillPick([5, 7, 8]), ans = sum(n - 1);
           return { prompt: "This program should add up 1 to " + n + ". It has a bug. Follow it exactly as it is written. What does it output?\n" +
               code("DECLARE Total : INTEGER", "DECLARE Count : INTEGER", "Total " + A + " 0", "FOR Count " + A + " 1 TO " + (n - 1), "    Total " + A + " Total + Count", "NEXT Count", "OUTPUT Total"),
             answers: [String(ans)], keywords: [drillNumberRe(ans)], distractors: others(ans, [sum(n), n - 1, sum(n - 2)]),
@@ -327,7 +339,13 @@ DrillData.register("y9-term1a-revision", {
           var ans = "IF " + v + " >= " + x + " THEN";
           return { prompt: c[0].replace("X", x) + " Which line should replace line 3?\n" +
               numbered(["DECLARE " + v + " : INTEGER", "INPUT " + v, "IF " + v + " > " + x + " THEN", "    OUTPUT " + c[3], "ELSE", "    OUTPUT " + c[4], "ENDIF"]),
-            answers: [ans], keywords: [new RegExp("^\\s*if\\s+" + v + "\\s*>=\\s*" + x + "\\s+then\\s*$", "i")],
+            walk: [
+              step("A similar question: a shop gives a gift when you spend 500 or more.", ["DECLARE Spend : INTEGER", "INPUT Spend", "IF Spend > 500 THEN", "    OUTPUT \"Gift\"", "ENDIF"], 2),
+              step("Test the value exactly on the line: Spend = 500. Is 500 > 500? No. So spending exactly 500 gets no gift, which breaks the rule.", ["IF Spend > 500 THEN"], 0, "500 > 500 is FALSE"),
+              step("\"500 or more\" must include 500. >= means more than or equal to: 500 >= 500 is TRUE.", ["IF Spend >= 500 THEN"], 0, "500 >= 500 is TRUE"),
+              step("Check a value below the line too: 499 >= 500 is FALSE, so 499 still gets no gift. The new line works.", ["IF Spend >= 500 THEN"], 0, "499: no gift. 500: gift.")
+            ],
+            answers: [ans], keywords: [new RegExp("^\\s*if\\s*\\(?\\s*(" + v + "\\s*(>=|≥)\\s*" + x + "|" + v + "\\s*>\\s*" + (x - 1) + "|" + x + "\\s*(<=|≤)\\s*" + v + "|" + (x - 1) + "\\s*<\\s*" + v + ")\\s*\\)?\\s*(then)?\\s*$", "i")],
             distractors: ["IF " + v + " < " + x + " THEN", "IF " + v + " = " + x + " THEN", "IF " + v + " > " + x + " THEN"],
             example: "A similar question: a shop gives a gift when you spend 500 or more. The line is IF Spend > 500 THEN.\nStep 1: test the value exactly on the line: Spend = 500.\nStep 2: is 500 > 500? No, so a customer who spends 500 gets no gift. That is wrong.\nStep 3: >= means more than or equal to. IF Spend >= 500 THEN is true for 500.",
             working: ["Test the value exactly on the line: " + v + " = " + x + ". Is " + x + " > " + x + " true?", "\"Or more\" includes " + x + " itself. Which sign means more than or equal to?"],
@@ -356,11 +374,124 @@ DrillData.register("y9-term1a-revision", {
             "Logic error: it breaks the rules, so it will not run", "Syntax error: it runs, but the answer is wrong"];
           var logic = v[2].indexOf("Logic") === 0;
           return { prompt: v[0] + " Which kind of error is in it?\n" + v[1], answers: [v[2]],
-            keywords: [logic ? /^(?=.*logic)(?=.*(runs|wrong)).*$/i : /^(?=.*syntax)(?=.*(rules|not run|won't run)).*$/i],
+            // "Logic error" or "syntax error" alone is enough; a description that fits the other kind is not.
+            keywords: [logic ? /^(?!.*syntax)(?!.*rules)(?!.*not run)(?!.*won'?t run).*\blogic(al)?\b.*$/i : /^(?!.*logic)(?!.*\bruns\b)(?!.*wrong).*\bsyntax\b.*$/i],
             distractors: all.filter(function (x) { return x !== v[2]; }),
             example: "Example: the line Count " + A + " Count * 1 should add 1 to Count.\nStep 1: does it follow the rules? Yes, so it can run.\nStep 2: does it do the right thing? No: it multiplies instead of adding.\nA line that breaks the rules cannot run. A line that runs but gives the wrong answer has the other kind of error.",
             working: ["Does the line follow the rules exactly? Could it run?", "If it runs, does it do what it should?"],
             note: v[2] + "." };
+        } },
+
+      // A whole trace table, like the test's two: one with a starting row (b2's layout), one without (d1's).
+      { id: "e-table", category: "rv-errors", widget: "trace", randomize: function () {
+          var p, rows = [], t, n, intro;
+          if (drillPick([0, 1])) {
+            var lim, s0;
+            do { n = drillRange(5, 7); lim = drillRange(2, 4); } while (lim >= n - 1 || (n === 6 && lim === 3));
+            s0 = drillPick([0, 5, 10]);
+            p = ["DECLARE Total : INTEGER", "DECLARE Count : INTEGER", "Total " + A + " " + s0, "FOR Count " + A + " 1 TO " + n,
+              "    IF Count > " + lim + " THEN", "        Total " + A + " Total + Count", "    ELSE", "        Total " + A + " Total + 1", "    ENDIF", "NEXT Count", "OUTPUT Total"];
+            rows.push(["", String(s0), ""]); t = s0;
+            for (var c = 1; c <= n; c++) { t += c > lim ? c : 1; rows.push([String(c), String(t), ""]); }
+            intro = "Complete the trace table. The first row is before the loop starts. Write Total for every pass, and the output in the last row.";
+          } else {
+            n = drillPick([3, 4, 6]);
+            p = ["DECLARE Total : INTEGER", "DECLARE Count : INTEGER", "FOR Count " + A + " 1 TO " + n, "    Total " + A + " 0",
+              "    Total " + A + " Total + Count * 2", "NEXT Count", "OUTPUT Total"];
+            for (var d = 1; d <= n; d++) rows.push([String(d), String(d * 2), ""]);
+            t = n * 2;
+            intro = "This program has a bug. Follow it exactly as it is written. There is no starting row: write one row for each pass, with Total at the end of that pass, and the output in the last row.";
+          }
+          rows.push(["", "", String(t)]);
+          var col = rows.map(function (r) { return r[1]; }).filter(Boolean).join(", ");
+          var w = ["DECLARE Total : INTEGER", "DECLARE Num : INTEGER", "Total " + A + " 0", "FOR Num " + A + " 1 TO 3", "    IF Num > 1 THEN", "        Total " + A + " Total + Num", "    ENDIF", "NEXT Num", "OUTPUT Total"];
+          return { prompt: intro + "\n" + code.apply(null, p),
+            trace: { columns: ["Count", "Total", "OUTPUT"], rows: rows, askable: [1] },
+            answers: [col], keywords: [listRe(col.split(", "))], distractors: [],
+            walk: [
+              step("A similar program. A trace table has a row for each change, in order. This one starts with a row for before the loop.", w, []),
+              step("Before the loop: Total " + A + " 0. Num has no value yet.", w, 2, "Num  Total\n       0"),
+              step("Pass 1: Num = 1. Is 1 > 1? No, so Total stays 0.", w, [3, 4], "Num  Total\n 1     0"),
+              step("Pass 2: Num = 2. Is 2 > 1? Yes: Total = 0 + 2 = 2.", w, [4, 5], "Num  Total\n 2     2"),
+              step("Pass 3: Num = 3. 3 > 1: Total = 2 + 3 = 5. The loop ends, then OUTPUT 5 goes in the last row, once.", w, [5, 8], "OUTPUT 5")
+            ],
+            working: ["Read the question: is there a starting row before the loop, or not?", "On each pass, use the Total from the row above. The output goes in the last row only."],
+            note: "Total: " + col + ". Output: " + t + "." };
+        } },
+
+      // "Which change fixes it?" (like the test's), with four kinds of bug.
+      { id: "e-fix", category: "rv-errors", pickThenType: true, randomize: function () {
+          var kind = drillPick(["start", "bound", "reset", "out"]), n = drillPick([3, 4, 6, 7]), want = sum(n);
+          var L = ["DECLARE Total : INTEGER", "DECLARE Count : INTEGER", "Total " + A + " 0", "FOR Count " + A + " 1 TO " + n, "    Total " + A + " Total + Count", "NEXT Count", "OUTPUT Total"];
+          var fix, wrong, got;
+          if (kind === "start") {
+            L[2] = "Total " + A + " 1"; got = want + 1;
+            fix = "Change line 3 to Total " + A + " 0";
+            wrong = ["Change line 4 to FOR Count " + A + " 0 TO " + n, "Change line 5 to Total " + A + " Total * Count", "Change line 7 to OUTPUT Count"];
+          } else if (kind === "bound") {
+            L[3] = "FOR Count " + A + " 1 TO " + (n - 1); got = sum(n - 1);
+            fix = "Change line 4 to FOR Count " + A + " 1 TO " + n;
+            wrong = ["Change line 3 to Total " + A + " 1", "Change line 5 to Total " + A + " Total + Count + 1", "Change line 7 to OUTPUT Count"];
+          } else if (kind === "reset") {
+            L = ["DECLARE Total : INTEGER", "DECLARE Count : INTEGER", "FOR Count " + A + " 1 TO " + n, "    Total " + A + " 0", "    Total " + A + " Total + Count", "NEXT Count", "OUTPUT Total"]; got = n;
+            fix = "Move line 4 to before the loop";
+            wrong = ["Change line 3 to FOR Count " + A + " 0 TO " + n, "Delete line 5", "Change line 7 to OUTPUT Count"];
+          } else {
+            L[6] = "OUTPUT Count"; got = n;
+            fix = "Change line 7 to OUTPUT Total";
+            wrong = ["Change line 3 to Total " + A + " 1", "Change line 5 to Total " + A + " Count", "Change line 4 to FOR Count " + A + " 1 TO " + (n + 1)];
+          }
+          return { prompt: "This program should output " + want + ", the total of 1 to " + n + ". It outputs " + got + ". Which change fixes it?\n" + numbered(L),
+            answers: [fix], keywords: [new RegExp("^\\s*" + fix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s*") + "\\s*\\.?\\s*$", "i")],
+            distractors: wrong,
+            walk: [
+              step("Test each change by tracing the program with that change made. Only one change gives the right answer.", L, []),
+              step("Work out what the program should output: " + want + ". Then trace it as it is written: it gives " + got + ". Where does it go wrong?", L, []),
+              step("Try a change in your head and trace again. If it still gives the wrong answer, it is not the fix.", L, [])
+            ],
+            working: ["Trace the program as written. Where does it first go wrong?", "For each change, trace the program again with that change made. Does it give " + want + "?"],
+            note: fix + "." };
+        } },
+
+      // Several errors (like the test's last question): the line number and the correct line.
+      { id: "e-multi", category: "rv-errors", randomize: function () {
+          var v = drillPick([["Price", "prices"], ["Score", "scores"], ["Goals", "goal totals"]]), name = v[0], n = drillPick([3, 4, 6]);
+          var L = ["DECLARE " + name + " : INTEGER", "DECLARE Total : INTEGER", "DECLARE Count : INTEGER", "Total " + A + " 0",
+            "FOR Count " + A + " 1 TO " + n, "    OUTPUT " + name, "    Total " + A + " Total * " + name, "NEXT Count", "OUTPUT Count"];
+          var fixes = [[6, "INPUT " + name, new RegExp("^\\s*input\\s+" + name + "\\s*$", "i")],
+            [7, "Total " + A + " Total + " + name, new RegExp("^\\s*total\\s*(" + A + "|<-+|=)\\s*(total\\s*\\+\\s*" + name + "|" + name + "\\s*\\+\\s*total)\\s*$", "i")],
+            [9, "OUTPUT Total", /^\s*output\s+total\s*$/i]];
+          var f = drillPick(fixes);
+          var others3 = fixes.filter(function (x) { return x !== f; });
+          return { prompt: "This program should let the user input " + n + " " + v[1] + " and output their total. It has three errors. Line " + f[0] + " is one of them. Write the correct line " + f[0] + ".\n" + numbered(L),
+            answers: [f[1]], keywords: [f[2]],
+            distractors: [L[f[0] - 1].trim(), others3[0][1], others3[1][1]],
+            walk: [
+              step("A similar program should add up 3 heights that the user types in. Say what each line should do, then check it does that.", ["FOR Count " + A + " 1 TO 3", "    OUTPUT Height", "    Total " + A + " Total + Height", "NEXT Count"], []),
+              step("The user should type each height. OUTPUT shows a value; INPUT lets the user type one. So OUTPUT Height should be INPUT Height.", ["    OUTPUT Height"], 0, "Fix: INPUT Height"),
+              step("Adding up uses +. A line with * or - would multiply or take away instead.", ["    Total " + A + " Total + Height"], 0, "+ adds"),
+              step("The last line should show the total. A line that outputs the loop counter shows how many passes ran, not the total.", ["OUTPUT Total"], 0)
+            ],
+            working: ["What should line " + f[0] + " do in a program that adds up typed values?", "Write the whole line, the way it should be."],
+            note: "Line " + f[0] + " should be " + f[1] + "." };
+        } },
+
+      // Why use an array (like the test's).
+      { id: "a-why", category: "rv-arrays", randomize: function () {
+          var right = drillPick([
+            "One name stores all the values, and a loop can go through them with the index",
+            "A loop can use the index to go through every value, so the code is shorter",
+            "It is easy to store more values without making new variables"]);
+          var wrong = ["Each value takes up less memory in an array",
+            "Separate variables cannot be used in a loop condition",
+            "An array can store values of different data types",
+            "An array sorts its values into order by itself"];
+          return { prompt: "A program stores " + drillPick(["30 test marks", "20 race times", "12 monthly rainfall totals", "25 pupils' heights"]) + ". Give one reason to store them in an array instead of separate variables.",
+            answers: [right], keywords: [/(loop.*\b(index|through|every|each|go)|\bindex\b|one name|single name|same name|shorter|less code|fewer lines|more values|add more|easy to (add|store|extend))/i],
+            distractors: sample(wrong, 3),
+            example: "Example: storing 6 dice rolls.\nWith separate variables you need Roll1, Roll2 ... Roll6, and six lines to add them up.\nWith an array Rolls[1:6], a FOR loop from 1 to 6 adds Rolls[Index] in three lines, and works the same for 600 rolls.",
+            working: ["Think about adding up 30 separate variables. How many lines would that take?", "With an array, what can a FOR loop use to reach each value?"],
+            note: "Any of: one name for all the values, a loop can use the index, shorter code, easy to add more values." };
         } }
     ];
   })()

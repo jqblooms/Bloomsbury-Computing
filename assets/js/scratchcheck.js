@@ -326,7 +326,10 @@
     if (state.picking) return renderPicker(c);
     var n = counts();
     var progress = progressFor(c.id);
-    var reveal = supportReveal();
+    // A test challenge (exam: true) says only pass or not yet: what the checker saw would name the bug, and Support
+    // would show the blocks.
+    var exam = !!c.exam;
+    var reveal = exam ? 0 : supportReveal();
     var html = '';
     if (progress.done && n.passed === n.total) {
       html += '<div class="scc-done">' + ICON.star + '<span><strong>Challenge complete.</strong> Every check passes.</span></div>';
@@ -339,7 +342,7 @@
       var cls = state.current === t.id ? 'is-running' : (r ? (r.ok ? 'is-pass' : 'is-fail') : '');
       var icon = state.current === t.id ? ICON.run : (r ? (r.ok ? ICON.pass : ICON.fail) : ICON.todo);
       var extra = '';
-      if (r && !r.ok && r.msg) extra += '<p class="scc-said">' + esc(r.msg) + '</p>';
+      if (r && !r.ok && r.msg) extra += '<p class="scc-said">' + (exam ? 'Not yet.' : esc(r.msg)) + '</p>';
       if (reveal > 0 && !(r && r.ok) && t.hint) extra += hintHtml(t.hint, reveal);
       if (reveal > 0.5 && !(r && r.ok) && t.tip) extra += '<div class="scc-hint scc-tip"><span class="scc-hint-label">How to find it</span>' + esc(t.tip) + '</div>';
       return '<li class="scc-task ' + cls + '"><div class="scc-task-row"><span class="scc-task-icon">' + icon + '</span><span class="scc-task-text">' +
@@ -366,7 +369,7 @@
       '<div class="scc-foot-row"><span class="scc-support"></span>' +
       '<button type="button" class="scc-link" data-act="reset"' + (state.checking ? ' disabled' : '') + '>' + ICON.reset + 'Start again</button></div>';
     var slot = els.foot.querySelector('.scc-support');
-    if (window.BCSupport && slot) window.BCSupport.mountToggle(slot, 'Support');
+    if (window.BCSupport && slot && !exam) window.BCSupport.mountToggle(slot, 'Support');
   }
 
   // ---- support: the task's blocks, faded as the student succeeds ----

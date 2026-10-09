@@ -230,9 +230,16 @@
     }
     function pick(from, to, avoid, stepBy) { var n, guard = 0; do { n = drillRange(from, to, stepBy); } while ((avoid || []).indexOf(n) !== -1 && ++guard < 200); return n; }
     function four(ans, list) {
-      var o = [];
-      list.forEach(function (x) { x = String(x); if (x !== String(ans) && o.indexOf(x) === -1 && o.length < 3) o.push(x); });
+      var o = [], all = [];
+      list.forEach(function (x) { x = String(x); if (x !== String(ans) && all.indexOf(x) === -1) all.push(x); });
+      all.forEach(function (x) { if (o.length < 3) o.push(x); });
       if (o.length < 3) throw new Error("Y6 revision: fewer than 3 wrong options for " + ans + ": " + list.join(" | "));
+      // Length must not give the answer away: if every wrong option is shorter, swap in a wrong one that is not.
+      var len = String(ans).length;
+      if (!o.some(function (x) { return x.length >= len; })) {
+        var long = all.filter(function (x) { return x.length >= len && o.indexOf(x) === -1; })[0];
+        if (long) o[2] = long;
+      }
       return o;
     }
     function nums(ans, list) {
@@ -241,10 +248,19 @@
     }
     function pos(x, y) { return "x: " + x + "  y: " + y; }
     function posRe(x, y) { return new RegExp("^\\s*\\(?\\s*(x\\s*[:=]?\\s*)?" + String(x).replace("-", "[-\\u2212]") + "\\s*[,;]?\\s*(and\\s*)?(y\\s*[:=]?\\s*)?" + String(y).replace("-", "[-\\u2212]") + "\\s*\\)?\\s*$", "i"); }
-    var WORDS = ["Hello", "Ouch", "Jump", "Yes", "Wow", "Hi", "Run", "Stop"];
+    // All four letters, so the length of an option never points to the answer.
+    var WORDS = ["Ouch", "Jump", "Stop", "Duck", "Hide", "Spin", "Wave", "Clap"];
     var KEYS = ["space", "up arrow", "down arrow", "a", "b"];
     var CARDS = [];
-    function card(id, category, randomize) { CARDS.push({ id: id, category: category, randomize: randomize }); }
+    // Y6_TEST_BLOCKS holds the test's own scripts (the builder fills it in): a card that ever draws one draws again.
+    var TEST_BLOCKS = typeof Y6_TEST_BLOCKS !== "undefined" ? Y6_TEST_BLOCKS : [];
+    function card(id, category, randomize) {
+      CARDS.push({ id: id, category: category, randomize: function () {
+        var d, guard = 0;
+        do { d = randomize(); } while (TEST_BLOCKS.indexOf(d.blocks) !== -1 && ++guard < 100);
+        return d;
+      } });
+    }
 
     // ================================================================ events
     card("ev-mix", "events", function () {
@@ -307,7 +323,7 @@
         blocks: Y6.text(s),
         prompt: "Where is the sprite when this script ends?",
         answers: [ans], keywords: [posRe(r.x, r.y)],
-        distractors: four(ans, [pos(r.x, y0 - dy), pos(x0 + dy, y0 + dx), pos(x0 - dx, y0 - dy), pos(x0 + dx, y0)]),
+        distractors: four(ans, [pos(r.x, y0 - dy), pos(x0 + dy, y0 + dx), pos(x0 - dx, y0 - dy), pos(x0 + dx, y0), pos(x0 - dx, r.y), pos(r.y, r.x), pos(x0, r.y)]),
         working: ["change x moves left or right. change y moves up or down.", "A minus number makes it go down or left."],
         walk: w.steps,
         note: "x: " + x0 + " + (" + dx + ") = " + r.x + ". y: " + y0 + " + (" + dy + ") = " + r.y + "."
@@ -387,6 +403,48 @@
         working: ["Each time round, the blocks inside run once.", "Start from the set x block. Add the change once for each time round."],
         walk: w.steps,
         note: x0 + " + " + n + " x " + d + " = " + ans + "."
+      };
+    });
+
+    // Two loops, one after the other (like the test's): the second starts when the first has finished.
+    card("lp-two", "loops", function () {
+      var name = drillPick(["score", "coins", "points"]), a, p, b, q;
+      do { a = drillRange(2, 4); p = drillPick([2, 3, 5, 10]); b = drillRange(2, 4); q = drillPick([1, 2, -1, -2]); } while ((a === 3 && p === 2 && b === 2 && q === 1) || p === q);
+      var s = [[B.flag(), B.set(name, 0), B.repeat(a, [B.change(name, p)]), B.repeat(b, [B.change(name, q)])]];
+      var ans = Y6.run(s, ["flag"]).vars[name];
+      var ws = [[B.flag(), B.set("gems", 10), B.repeat(2, [B.change("gems", 4)]), B.repeat(3, [B.change("gems", -1)])]];
+      var w = Y6.walk(ws, ["flag"], {}, ["gems"], "A similar script. The first loop does all its turns. Then the second loop starts.");
+      return {
+        blocks: Y6.text(s),
+        prompt: "What is " + name + " when this script ends?",
+        answers: [String(ans)], keywords: [drillNumberRe(ans, name)],
+        distractors: nums(ans, [a * p, p + q, (a + 1) * p + (b + 1) * q, a * p + q]),
+        working: ["Do every turn of the first loop. Write the value down.", "Then start the second loop from that value."],
+        walk: w.steps,
+        note: a + " x " + p + " = " + (a * p) + ", then " + b + " x (" + q + ") = " + (b * q) + ". Total " + ans + "."
+      };
+    });
+    // A row of arrow presses, each running its own script (like the test's).
+    card("ev-arrows", "events", function () {
+      var d = drillPick([5, 10, 20]), x0 = drillPick([0, 0, 50, -50]), presses;
+      do {
+        presses = []; var n = drillRange(4, 5);
+        for (var i = 0; i < n; i++) presses.push(drillPick(["right arrow", "left arrow"]));
+      } while (presses.join() === "right arrow,right arrow,left arrow,right arrow" || presses.every(function (p) { return p === presses[0]; }));
+      var s = [[B.flag(), B.setx(x0)], [B.key("right arrow"), B.changex(d)], [B.key("left arrow"), B.changex(-d)]];
+      var ans = Y6.run(s, ["flag"].concat(presses.map(function (k) { return { key: k }; }))).x;
+      var rights = presses.filter(function (p) { return p === "right arrow"; }).length;
+      var ws = [[B.flag(), B.setx(30)], [B.key("right arrow"), B.changex(5)], [B.key("left arrow"), B.changex(-5)]];
+      var w = Y6.walk(ws, ["flag", { key: "left arrow" }, { key: "right arrow" }, { key: "left arrow" }], {}, ["x"],
+        "A similar sprite. The player clicks the green flag, then presses left, right, left. Each press runs its own script once.");
+      return {
+        blocks: Y6.text(s),
+        prompt: "The player clicks the green flag. Then they press: " + presses.join(", ") + ". What is x now?",
+        answers: [String(ans)], keywords: [drillNumberRe(ans, "x")],
+        distractors: nums(ans, [x0 + presses.length * d, x0 - (ans - x0), x0 + rights * d, ans + d]),
+        working: ["Start at the green flag: set x gives the start.", "Go through the presses in order: right adds, left takes away."],
+        walk: w.steps,
+        note: "x starts at " + x0 + ". " + rights + " right presses and " + (presses.length - rights) + " left presses: " + ans + "."
       };
     });
 
@@ -497,17 +555,23 @@
     });
     card("dec-touch", "decisions", function () {
       var L = drillRange(3, 6), n = drillRange(1, 3), name = drillPick(["Rock", "Ghost", "Bat"]);
-      var s = [[B.flag(), B.set("lives", L), B.forever([B.ifThen(C.touching(name), [B.change("lives", -1), B.goto(0, 180)])])]];
-      var ev = ["flag"]; for (var i = 0; i < n; i++) { ev.push({ tick: true }); ev.push({ tick: true, touching: name }); }
+      // stays: no go to block moves it away, so the if is true on every turn it stays touching.
+      var stays = drillPick([0, 1]);
+      var inner = stays ? [B.change("lives", -1)] : [B.change("lives", -1), B.goto(0, 180)];
+      var s = [[B.flag(), B.set("lives", L), B.forever([B.ifThen(C.touching(name), inner)])]];
+      var ev = ["flag"];
+      if (stays) { n = drillRange(2, Math.min(4, L)); for (var j = 0; j < n; j++) ev.push({ tick: true, touching: name }); }
+      else for (var i = 0; i < n; i++) { ev.push({ tick: true }); ev.push({ tick: true, touching: name }); }
       var ans = Y6.run(s, ev).vars.lives;
       var ws = [[B.flag(), B.set("score", 10), B.forever([B.ifThen(C.touching("Apple"), [B.change("score", 5)])])]];
       var w = Y6.walk(ws, ["flag", { tick: true }, { tick: true, touching: "Apple" }], {}, ["score"], "A similar game. The forever loop checks the if block again and again.");
       return {
         blocks: Y6.text(s),
-        prompt: "The " + name + " touches the sprite " + n + " times. What is lives now?",
+        prompt: stays ? "The " + name + " lands on the sprite and stays touching it for " + n + " turns of the forever loop. What is lives now?"
+          : "The " + name + " touches the sprite " + n + " times. What is lives now?",
         answers: [String(ans)], keywords: [drillNumberRe(ans, "lives")],
-        distractors: nums(ans, [L + n, ans - 1, L, n]),
-        working: ["The blocks inside if run only while it is touching.", "Start from the set block. Each touch runs the blocks inside if once."],
+        distractors: nums(ans, stays ? [L - 1, L, L + n, ans - 1] : [L + n, ans - 1, L, n]),
+        working: ["The forever loop checks the if again on every turn. Is it still touching?", "Start from the set block. Each turn that it is touching runs the blocks inside if once."],
         walk: w.steps,
         note: L + " - " + n + " = " + ans + "."
       };
@@ -550,8 +614,8 @@
         blocks: Y6.text(s),
         prompt: "When this broadcast happens, another sprite should show a message. Which hat block should start that sprite's script?",
         answers: [ans], keywords: [exactRe(ans)],
-        distractors: ["broadcast [" + m + "]", "when I receive [" + msgs[1] + "]", "when flag clicked"],
-        working: ["A hat block starts a script. Which hat block waits for a message?", "It must wait for the same message the broadcast sends."],
+        distractors: ["when I receive [" + msgs[1] + "]", "when backdrop switches to [" + m + "]", "broadcast [" + m + "] and wait"],
+        working: ["broadcast sends a message. Which hat block starts when a message arrives?", "It must wait for the same message the broadcast sends."],
         walk: walk,
         note: "broadcast [" + m + "] starts every when I receive [" + m + "] script."
       };
@@ -562,7 +626,7 @@
       function () {
         var d = drillPick([5, 10, 15]);
         return { what: "The left arrow should move the sprite left. It moves right.", s: [[B.key("left arrow"), B.changex(d)]],
-          ans: "change x by (-" + d + ")", wrong: ["change y by (-" + d + ")", "change x by (" + (d * 2) + ")", "set x to (-" + d + ")"] };
+          ans: "change x by (-" + d + ")", wrong: ["change y by (-" + d + ")", "change x by (" + (d * 2) + ")", "change x by (-" + (d * 2) + ")"] };
       },
       function () {
         var d = drillPick([5, 10]);
@@ -572,12 +636,12 @@
       function () {
         var t = drillPick([20, 30, 60]);
         return { what: "The timer should count down from " + t + ". It counts up.", s: [[B.flag(), B.set("time", t), B.repeat(t, [B.wait(1), B.change("time", 1)])]],
-          ans: "change [time] by (-1)", wrong: ["set [time] to (-1)", "change [time] by (0)", "wait (-1) seconds"] };
+          ans: "change [time] by (-1)", wrong: ["set [time] to (-1)", "change [score] by (-1)", "change [time] by (-" + t + ")"] };
       },
       function () {
         var k = drillPick([1, 2, 5]);
         return { what: "Each click should add " + k + " to coins. coins gets stuck.", s: [[B.click(), B.set("coins", k)]],
-          ans: "change [coins] by (" + k + ")", wrong: ["set [coins] to (" + (k + 1) + ")", "change [coins] by (0)", "set [coins] to (0)"] };
+          ans: "change [coins] by (" + k + ")", wrong: ["set [coins] to (" + (k + 1) + ")", "change [coins] by (0)", "change [score] by (" + k + ")"] };
       },
       function () {
         return { what: "The game should end when lives reaches 0. It never ends.", s: [[B.flag(), B.set("lives", 3), B.waitUntil(C.lt("lives", 0)), B.backdrop("Game Over")]],

@@ -3,7 +3,8 @@
 // Code cards: the student writes Cambridge pseudocode, which is run against
 // the reference program with the given values (and fresh ones) and must give
 // the same output and variables. Only DECLARE, assignment, OUTPUT,
-// FOR ... TO ... NEXT and IF ... THEN ... ELSE ... ENDIF are needed.
+// FOR ... TO ... NEXT and IF ... THEN ... ELSE ... ENDIF are needed, and INPUT for the card that counts typed
+// numbers (its typed values are drawn fresh each time, always including the limit itself).
 DrillData.register("y9-2-2-code", {
   title: "Year 9, 2.2: Write the Loop",
   subtitle: "Write count-controlled loops, then combine them with decisions",
@@ -80,6 +81,19 @@ DrillData.register("y9-2-2-code", {
       setup: { "Limit": 6, "Cutoff": 2 },
       reference: "DECLARE Score : INTEGER\nDECLARE Count : INTEGER\nScore <- 0\nFOR Count <- 1 TO Limit\n    IF Count <= Cutoff THEN\n        Score <- Score + 2\n    ELSE\n        Score <- Score + 1\n    ENDIF\nNEXT Count\nOUTPUT Score",
       checkVars: ["Score"],
+      checkOutput: true
+    },
+    {
+      id: "code-loop-decide-4", category: "code-loop-decide",
+      prompt: "Declare Number, Tally and Count (all INTEGER). Set Tally to 0. Write a FOR loop that runs 5 times. On each pass, INPUT Number, and add 1 to Tally if Number is Limit or more. Output Tally after the loop.",
+      setup: { "Limit": 30 },
+      inputs: function (s) {
+        var lim = s.Limit, vals = [lim, Math.max(0, lim - 1)];
+        while (vals.length < 5) vals.push(Math.max(0, lim - 12 + Math.floor(Math.random() * 25)));
+        return vals.sort(function () { return Math.random() - 0.5; });
+      },
+      reference: "DECLARE Number : INTEGER\nDECLARE Tally : INTEGER\nDECLARE Count : INTEGER\nTally <- 0\nFOR Count <- 1 TO 5\n    INPUT Number\n    IF Number >= Limit THEN\n        Tally <- Tally + 1\n    ENDIF\nNEXT Count\nOUTPUT Tally",
+      checkVars: ["Tally"],
       checkOutput: true
     }
   ]

@@ -26,7 +26,7 @@ steps.push({ id: 'title', label: 'Term 1a Test',
     facts(['<strong>First:</strong> 25 minutes of revision practice: questions, then writing programs.',
       '<strong>Then:</strong> a 30-minute test on this website.',
       '<strong>Topics:</strong> number systems, loops, data types and arrays, errors and trace tables.']) +
-    why('Which topic do you find hardest?', 'Practise that topic most in the next 15 minutes.') });
+    why('Which topic do you find hardest?', 'Practise that topic most in the next 25 minutes.') });
 
 steps.push({ id: 'revision', label: 'Revision Practice', type: 'embedded-app', appId: 'drill-y9-term1a-revision', embedContainerId: `${P}-revision`,
   content: '<h2 class="lesson-h2">Revision Practice</h2>' +
@@ -38,7 +38,7 @@ steps.push({ id: 'revision', label: 'Revision Practice', type: 'embedded-app', a
 // the inputs over a limit), so 10 minutes on writing loops with an IF inside them.
 steps.push({ id: 'revision-code', label: 'Revision: Write the Program', type: 'embedded-app', appId: 'drill-y9-2-2-code', embedContainerId: `${P}-revision-code`,
   content: '<h2 class="lesson-h2">Revision: Write the Program</h2>' +
-    why('A program counts how many numbers are 10 or more. Why is the count set to 0 before the loop, not inside it?', 'Inside the loop it would go back to 0 on every pass and lose what it counted.') +
+    why('A program counts how many pupils in a class scored 70 or more. Why is the count set to 0 before the loop, not inside it?', 'Inside the loop it would go back to 0 on every pass and lose what it counted.') +
     '<p class="lesson-lead">10 minutes. The test asks you to write a whole program. Declare every variable, set totals to 0 before the loop, and output after the loop.</p>' +
     `<div id="${P}-revision-code"></div>` });
 

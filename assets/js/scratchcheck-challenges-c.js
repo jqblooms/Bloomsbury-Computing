@@ -601,9 +601,13 @@
         t.variable('score');
         await t.flag(300);
         if (t.backdrop() === 'You Win') t.fail('score was 0 and the backdrop was already You Win. It should only switch when score reaches 10.');
-        t.setValue('score', 10);
+        // Score goes up the way it does in play, by popping the Balloon, so a backdrop switch placed in the
+        // Balloon's own click script counts too.
+        t.setValue('score', 0);
+        for (var i = 0; i < 15 && Number(t.value('score')) < 10; i++) { await t.click('Balloon'); await t.wait(80); }
+        if (Number(t.value('score')) < 10) t.fail('I clicked the red Balloon 15 times and score only reached ' + t.value('score') + '.');
         var ok = await t.until(function () { return t.backdrop() === 'You Win'; }, 2000);
-        if (!ok) t.fail('score was 10. The backdrop stayed ' + t.backdrop() + '. It should switch to You Win.');
+        if (!ok) t.fail('score reached ' + t.value('score') + '. The backdrop stayed ' + t.backdrop() + '. It should switch to You Win.');
       } }
   ];
   K.add({ id: 'test-fix', lesson: 'y6-term1-test', exam: true, title: 'Fix the Game: Meteor Dodge', starter: meteorDodge(['hitgain', 'starlives']), tasks: testFixTasks,

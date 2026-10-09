@@ -19,7 +19,7 @@ function assert(ok, msg) { if (!ok) throw new Error('Check failed: ' + msg); }
 
 // ---------------------------------------------------------------- the kit (simulator and drill cards)
 const kit = fs.readFileSync(path.join(ROOT, 'tools', 'y6_term1_kit.js'), 'utf8').replace(/\r\n/g, '\n');
-const ctx = vm.createContext({ console });
+const ctx = vm.createContext({ console, Y6_TEST_BLOCKS: [] });
 vm.runInContext(fs.readFileSync(path.join(ROOT, 'Drills', 'helpers.js'), 'utf8'), ctx);
 const { Y6, CARDS } = vm.runInContext('(function () {\n' + kit + '\nreturn { Y6: Y6, CARDS: CARDS };\n})()', ctx);
 const { B, C } = Y6;
@@ -61,9 +61,11 @@ assert(a5 === 5, 'a5 ' + a5);
 
 // a6 if else with >, played four times.
 const WIN = [[B.flag(), B.ifThen(C.gt('score', 10), [B.say('You win!')], [B.say('Try again')])]];
-const a6 = [8, 10, 11, 15].filter((v) => Y6.run(WIN, ['flag'], { vars: { score: v } }).said === 'You win!').length;
+const A6PLAYS = [7, 10, 12, 10, 15];
+const a6 = A6PLAYS.filter((v) => Y6.run(WIN, ['flag'], { vars: { score: v } }).said === 'You win!').length;
 assert(a6 === 2, 'a6 ' + a6);
-// wrong: 10 counted as more than 10 (3)
+// wrong: > read as >= (4, both 10s win), the sign read backwards as < (1), as <= (3)
+assert(A6PLAYS.filter((v) => v >= 10).length === 4 && A6PLAYS.filter((v) => v < 10).length === 1 && A6PLAYS.filter((v) => v <= 10).length === 3, 'a6 options');
 
 // a7 next costume past the last costume.
 const COSTUMES = ['walk1', 'walk2', 'walk3', 'walk4'];
@@ -74,18 +76,18 @@ assert(a7 === 'walk1', 'a7 ' + a7);
 
 // a8 broadcast: which hat block starts the Apple's new script when score reaches 10.
 const STAGE = [B.flag(), B.waitUntil(C.eq('score', 10)), B.broadcast('level 2'), B.backdrop('Level 2')];
-const hats = { 'when I receive [level 2]': B.receive('level 2'), 'broadcast [level 2]': null, 'when I receive [game over]': B.receive('game over'), 'when flag clicked': B.flag() };
+// Every option is a hat block, so the question is which one, not which one is a hat.
+const hats = { 'when I receive [level 2]': B.receive('level 2'), 'when I receive [level 1]': B.receive('level 1'), 'when I receive [game over]': B.receive('game over'), 'when flag clicked': B.flag() };
 const starts = (h, score) => !!h && Y6.run([STAGE, [h, B.say('faster')]], ['flag'], { vars: { score } }).said === 'faster';
 const a8 = Object.keys(hats).filter((k) => starts(hats[k], 10) && !starts(hats[k], 0));
 assert(a8.length === 1 && a8[0] === 'when I receive [level 2]', 'a8 ' + a8);
 
-// a9 the bug: a hit should take 1 life; this script adds one.
-const ROCK = (inner) => [[B.flag(), B.set('lives', 3), B.forever([B.ifThen(C.touching('Bowl'), [inner, B.goto(0, 180)])])]];
-const hit = (inner) => Y6.run(ROCK(inner), ['flag', { tick: true }, { tick: true, touching: 'Bowl' }, { tick: true }, { tick: true, touching: 'Bowl' }]).vars.lives;
-assert(hit(B.change('lives', 1)) === 5, 'a9 bug');
-const a9fix = { 'change [lives] by (-1)': B.change('lives', -1), 'set [lives] to (-1)': B.set('lives', -1), 'change [score] by (-1)': B.change('score', -1), 'change [lives] by (0)': B.change('lives', 0) };
-const a9 = Object.keys(a9fix).filter((k) => hit(a9fix[k]) === 1);
-assert(a9.length === 1 && a9[0] === 'change [lives] by (-1)', 'a9 ' + a9);
+// a9 a forever loop with nothing to move the Laser away: the if is true on every turn it stays touching.
+// (It used to be a fix for change [lives] by (1), which is b1's first bug: James's audit, 2026-10-09.)
+const SHIP = [[B.flag(), B.set('shield', 5), B.forever([B.ifThen(C.touching('Laser'), [B.change('shield', -1)])])]];
+const a9 = Y6.run(SHIP, ['flag', { tick: true, touching: 'Laser' }, { tick: true, touching: 'Laser' }, { tick: true, touching: 'Laser' }]).vars.shield;
+assert(a9 === 2, 'a9 ' + a9);
+// wrong: counted once (4), counted twice (3), thinks it only changes when the touch ends (5)
 
 // More questions (James, 2026-10-09: the test must last 30 minutes; the Year 7 one was over in 5).
 // a10 two loops one after the other.
@@ -110,7 +112,7 @@ assert(a12 === 1, 'a12 ' + a12);
 const APPLE = (inner) => [[B.flag(), B.set('score', 0), B.forever([B.ifThen(C.touching('Bowl'), [inner, B.goto(0, 180)])])]];
 const catches = (inner) => Y6.run(APPLE(inner), ['flag', { tick: true }, { tick: true, touching: 'Bowl' }, { tick: true }, { tick: true, touching: 'Bowl' }, { tick: true, touching: 'Bowl' }]).vars.score;
 assert(catches(B.set('score', 1)) === 1, 'a13 bug');
-const a13fix = { 'change [score] by (1)': B.change('score', 1), 'set [score] to (0)': B.set('score', 0), 'change [lives] by (1)': B.change('lives', 1), 'change [score] by (-1)': B.change('score', -1) };
+const a13fix = { 'change [score] by (1)': B.change('score', 1), 'change [score] by (-1)': B.change('score', -1), 'set [score] to (2)': B.set('score', 2), 'set [score] to (-1)': B.set('score', -1) };
 const a13 = Object.keys(a13fix).filter((k) => catches(a13fix[k]) === 3);
 assert(a13.length === 1 && a13[0] === 'change [score] by (1)', 'a13 ' + a13);
 
@@ -120,6 +122,12 @@ const r14 = Y6.run(STEPS, ['flag']);
 assert(r14.x === 15 && r14.y === 30, 'a14');
 // wrong: x and y mixed up, one turn too many, the loop counted once
 const a14opts = [pos(15, 30), pos(30, 15), pos(20, 40), pos(5, 10)];
+
+// a15 a longer costume trace: 6 turns from walk3 go past the last costume twice.
+const COS6 = [[B.flag(), B.costume('walk3'), B.repeat(6, [B.next(), B.wait(0.2)])]];
+const a15 = Y6.run(COS6, ['flag'], { costumes: COSTUMES }).costume;
+assert(a15 === 'walk1', 'a15 ' + a15);
+// wrong: one turn short (walk4), one turn too many (walk2), thinks 6 turns lands back where it started (walk3)
 
 // ---------------------------------------------------------------- the test
 const test = {
@@ -136,14 +144,14 @@ const test = {
         options: ['70', '85', '60', '25'], answer: String(a4), scheme: '4 turns of 15 = 60, then + 10 after the loop = 70.' }),
       choice({ id: 'a5', prompt: 'What is score when this script ends?', blocks: Y6.text(VARS),
         options: ['5', '10', '4', '6'], answer: String(a5), scheme: 'The second set gives 4 and throws away 5. Then + 1 = 5.' }),
-      choice({ id: 'a6', prompt: 'The game is played 4 times. score is 8, then 10, then 11, then 15. How many times does the sprite say You win!?', blocks: Y6.text(WIN),
-        options: ['2', '3', '1', '4'], answer: String(a6), scheme: '11 and 15. 10 is not more than 10.' }),
+      choice({ id: 'a6', prompt: 'The game is played 5 times. score is 7, then 10, then 12, then 10, then 15. How many times does the sprite say You win!?', blocks: Y6.text(WIN),
+        options: ['2', '4', '1', '3'], answer: String(a6), scheme: '12 and 15. 10 is not more than 10, so both 10s lose. (4 counts the 10s; 1 and 3 read the sign the wrong way round.)' }),
       choice({ id: 'a7', prompt: 'The sprite has 4 costumes: walk1, walk2, walk3, walk4. Which costume does it show when this script ends?', blocks: Y6.text(COS),
         options: ['walk1', 'walk4', 'walk3', 'walk2'], answer: a7, scheme: 'walk2, then walk3, walk4, and after the last costume back to walk1.' }),
       choice({ id: 'a8', prompt: 'In this Catch game, the Stage runs this script. When score reaches 10, the Apple should fall faster. Which hat block should start the Apple\'s new script?', blocks: Y6.text([STAGE]),
-        options: Object.keys(hats), answer: a8[0], scheme: 'broadcast [level 2] sends the message; when I receive [level 2] starts when it arrives.' }),
-      choice({ id: 'a9', prompt: 'This is the Rock in a Catch game. When the Rock touches the Bowl, lives should go down by 1. Which block should replace change [lives] by (1)?', blocks: Y6.text(ROCK(B.change('lives', 1))),
-        options: Object.keys(a9fix), answer: a9[0], scheme: 'change [lives] by (-1). set would make lives -1 every time; score is the wrong variable; 0 changes nothing.' }),
+        options: Object.keys(hats), answer: a8[0], scheme: 'broadcast [level 2] sends the message; when I receive [level 2] starts when it arrives. when flag clicked would start at the beginning, not at 10.' }),
+      choice({ id: 'a9', prompt: 'This is the Ship in a space game. A Laser hits the Ship and stays touching it for 3 turns of the forever loop. What is shield then?', blocks: Y6.text(SHIP),
+        options: ['2', '4', '3', '5'], answer: String(a9), scheme: 'Nothing moves the Laser away, so the if is true on all 3 turns: 5 - 3 = 2. (4 counts the hit once.)' }),
       choice({ id: 'a10', prompt: 'What is score when this script ends?', blocks: Y6.text(LOOPS2),
         options: ['8', '6', '3', '11'], answer: String(a10), scheme: '3 turns of 2 = 6, then 2 turns of 1 = 2. Total 8.' }),
       choice({ id: 'a11', prompt: 'The player clicks the green flag. Then they press: right arrow, right arrow, left arrow, right arrow. What is x now?', blocks: Y6.text(ARROWS),
@@ -151,9 +159,11 @@ const test = {
       choice({ id: 'a12', prompt: 'What is lives when this script ends?', blocks: Y6.text(IFLOOP),
         options: ['1', '0', '2', '3'], answer: String(a12), scheme: 'score goes 1, 2, 3, 4, 5. Only 4 and 5 are more than 3, so lives goes down twice: 3 - 2 = 1.' }),
       choice({ id: 'a13', prompt: 'This is the Apple in a Catch game. Each time the Apple touches the Bowl, score should go up by 1. But score never goes past 1. Which block should replace set [score] to (1)?', blocks: Y6.text(APPLE(B.set('score', 1))),
-        options: Object.keys(a13fix), answer: a13[0], scheme: 'change [score] by (1). set puts 1 in score every time, so it never goes past 1.' }),
+        options: Object.keys(a13fix), answer: a13[0], scheme: 'change [score] by (1). set puts the same number in score every time, so it gets stuck; -1 makes it go down.' }),
       choice({ id: 'a14', prompt: 'Where is the sprite when this script ends?', blocks: Y6.text(STEPS),
-        options: a14opts, answer: pos(r14.x, r14.y), scheme: '3 turns: y goes up 10 each turn (30), x goes up 5 each turn (15).' })
+        options: a14opts, answer: pos(r14.x, r14.y), scheme: '3 turns: y goes up 10 each turn (30), x goes up 5 each turn (15).' }),
+      choice({ id: 'a15', prompt: 'The sprite has 4 costumes: walk1, walk2, walk3, walk4. Which costume does it show when this script ends?', blocks: Y6.text(COS6),
+        options: ['walk1', 'walk4', 'walk2', 'walk3'], answer: a15, scheme: 'walk3, then walk4, walk1, walk2, walk3, walk4, walk1: after the last costume it goes back to the first, twice.' })
     ] },
     { title: 'Fix and Change a Game', questions: [
       // freeChecks: the arrow check already passes in the starter, so it earns nothing: 1 mark per bug fixed.
@@ -170,8 +180,8 @@ const test = {
 const qs = test.sections.flatMap((s) => s.questions);
 const TOPIC = {
   a1: 'Events', a2: 'Coordinates and motion', a3: 'Coordinates and motion', a4: 'Loops', a5: 'Variables', a6: 'Decisions',
-  a7: 'Costumes and messages', a8: 'Costumes and messages', a9: 'Fixing bugs', b1: 'Fixing bugs', b2: 'Changing a game',
-  a10: 'Loops', a11: 'Events', a12: 'Decisions', a13: 'Fixing bugs', a14: 'Loops'
+  a7: 'Costumes and messages', a8: 'Costumes and messages', a9: 'Decisions', b1: 'Fixing bugs', b2: 'Changing a game',
+  a10: 'Loops', a11: 'Events', a12: 'Decisions', a13: 'Fixing bugs', a14: 'Loops', a15: 'Costumes and messages'
 };
 qs.forEach((q) => { assert(TOPIC[q.id], 'topic for ' + q.id); q.topic = TOPIC[q.id]; });
 test.topicDrills = {
@@ -212,7 +222,24 @@ fs.writeFileSync(bankPath, crlf ? bank.replace(/\n/g, '\r\n') : bank);
 // ---------------------------------------------------------------- the revision drill
 // Never the test's own scripts: no card may draw the same blocks as a test question.
 const testScripts = new Set(qs.filter((q) => q.blocks).map((q) => q.blocks));
-for (let i = 0; i < 400; i++) CARDS.forEach((c) => { const d = c.randomize(); assert(!testScripts.has(d.blocks), 'card ' + c.id + ' draws a test script'); });
+ctx.Y6_TEST_BLOCKS.push(...testScripts);
+const longest = {};
+for (let i = 0; i < 3000; i++) CARDS.forEach((c) => {
+  const d = c.randomize();
+  assert(!testScripts.has(d.blocks), 'card ' + c.id + ' draws a test script');
+  assert(d.distractors.length === 3 && new Set(d.distractors.concat(d.answers[0])).size === 4, 'card ' + c.id + ' has 4 different options');
+  // How often the right answer is the only longest option (a length clue).
+  if (!/^-?\d+$/.test(d.answers[0])) {
+    const len = d.answers[0].length;
+    longest[c.id] = longest[c.id] || [0, 0];
+    longest[c.id][1]++;
+    if (d.distractors.every((o) => o.length < len)) longest[c.id][0]++;
+  }
+});
+Object.keys(longest).forEach((id) => {
+  const rate = longest[id][0] / longest[id][1];
+  assert(rate < 0.1, 'card ' + id + ': the answer is the only longest option in ' + Math.round(rate * 100) + '% of draws');
+});
 const DRILL = 'y6-term1-revision';
 const drillJs = `// Year 6 Term 1 Test Revision
 // Loaded by Drills/index.html?drill=${DRILL}
@@ -226,6 +253,7 @@ DrillData.register(${JSON.stringify(DRILL)}, {
   choiceOnly: true,
   categories: [["events","Events"],["motion","Coordinates and Motion"],["loops","Loops"],["variables","Variables"],["decisions","Decisions"],["looks","Costumes and Messages"],["bugs","Fixing Bugs"]],
   cards: (function () {
+    var Y6_TEST_BLOCKS = ${JSON.stringify([...testScripts])};
 ${kit}
     return CARDS;
   })()
@@ -250,10 +278,12 @@ const steps = [
   { id: 'revision', label: 'Revision Practice', type: 'embedded-app', appId: 'drill-' + DRILL, embedContainerId: 'y6t1-revision',
     content: '<h2 class="lesson-h2">Revision Practice</h2>' + tps('A repeat (4) loop has one change x by (10) inside. How much does x change?', 'By 40: the block inside runs 4 times, 10 each time.') +
       '<p class="lesson-lead">12 minutes. Read each script one block at a time. Stuck? Switch on I need help and press Walk me through it.</p><div id="y6t1-revision"></div>' },
-  { id: 'warm-up', label: 'Warm Up: Fix a Game', type: 'app-link', appId: 'scratchchallenges', appQuery: 'challenge=hunt-meteor-steer&lesson=' + LID, buttonId: 'y6t1-warm-up-btn',
+  // The warm-up bug hunt is Ghost Maze, not Meteor Dodge: b1 breaks Meteor Dodge, and a Meteor Dodge warm-up would show
+  // its correct scripts just before the test (James's audit, 2026-10-09).
+  { id: 'warm-up', label: 'Warm Up: Fix a Game', type: 'app-link', appId: 'scratchchallenges', appQuery: 'challenge=hunt-maze-ghost&lesson=' + LID, buttonId: 'y6t1-warm-up-btn',
     content: '<h2 class="lesson-h2">Warm Up: Fix a Game</h2>' + tps('How do you find a bug?', 'Play the game. Say what should happen and what does happen. Find the block that does the wrong thing. Change one thing, then test again.') +
       '<div class="igame-two-col"><div class="lesson-flow-task"><h3>Fix it</h3>' + facts(['Play the game first.', 'Find the block that does the wrong thing.', 'Fix it, then press <strong>Check my project</strong>.']) + '</div>' +
-      '<div class="lesson-app-link"><p>6 minutes. The test has a game like this to fix.</p><button type="button" class="donow-btn" id="y6t1-warm-up-btn">Open Meteor Dodge</button></div></div>' },
+      '<div class="lesson-app-link"><p>6 minutes. The test has a different game to fix in the same way.</p><button type="button" class="donow-btn" id="y6t1-warm-up-btn">Open Ghost Maze</button></div></div>' },
   { id: 'warm-up-2', label: 'Warm Up: Change a Game', type: 'app-link', appId: 'scratchchallenges', appQuery: 'challenge=practice-change&lesson=' + LID, buttonId: 'y6t1-warm-up-2-btn',
     content: '<h2 class="lesson-h2">Warm Up: Change a Game</h2>' + tps('You need score to go up by 10, not 5. Which block do you change?', 'The change [score] by block in the script that runs when the sprite is clicked. Change only its number.') +
       '<div class="igame-two-col"><div class="lesson-flow-task"><h3>Change it</h3>' + facts(['Read the list of changes.', 'Find the script that does that part of the game.', 'Change one thing, then press <strong>Check my project</strong>.']) + '</div>' +

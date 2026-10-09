@@ -5,7 +5,7 @@
   {
    "id": "title",
    "label": "Term 1a Test",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithm Design and Text Programming</p><h2 class=\"lesson-h2\">Term 1a Test</h2><p>Year 9</p></div><ul class=\"lesson-facts\"><li><strong>First:</strong> 25 minutes of revision practice: questions, then writing programs.</li><li><strong>Then:</strong> a 30-minute test on this website.</li><li><strong>Topics:</strong> number systems, loops, data types and arrays, errors and trace tables.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which topic do you find hardest?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Practise that topic most in the next 15 minutes.</p></div></details>"
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithm Design and Text Programming</p><h2 class=\"lesson-h2\">Term 1a Test</h2><p>Year 9</p></div><ul class=\"lesson-facts\"><li><strong>First:</strong> 25 minutes of revision practice: questions, then writing programs.</li><li><strong>Then:</strong> a 30-minute test on this website.</li><li><strong>Topics:</strong> number systems, loops, data types and arrays, errors and trace tables.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Which topic do you find hardest?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Practise that topic most in the next 25 minutes.</p></div></details>"
   },
   {
    "id": "revision",
@@ -21,7 +21,7 @@
    "type": "embedded-app",
    "appId": "drill-y9-2-2-code",
    "embedContainerId": "y9t1a-revision-code",
-   "content": "<h2 class=\"lesson-h2\">Revision: Write the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program counts how many numbers are 10 or more. Why is the count set to 0 before the loop, not inside it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Inside the loop it would go back to 0 on every pass and lose what it counted.</p></div></details><p class=\"lesson-lead\">10 minutes. The test asks you to write a whole program. Declare every variable, set totals to 0 before the loop, and output after the loop.</p><div id=\"y9t1a-revision-code\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Revision: Write the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program counts how many pupils in a class scored 70 or more. Why is the count set to 0 before the loop, not inside it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Inside the loop it would go back to 0 on every pass and lose what it counted.</p></div></details><p class=\"lesson-lead\">10 minutes. The test asks you to write a whole program. Declare every variable, set totals to 0 before the loop, and output after the loop.</p><div id=\"y9t1a-revision-code\"></div>"
   },
   {
    "id": "how-it-works",
