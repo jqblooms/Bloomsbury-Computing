@@ -248,12 +248,12 @@
       variables: { score: 0, time: 20 },
       showVariables: ['score', 'time'],
       stageScripts: [s(20, 20, [flag, ['looks_switchbackdropto', { BACKDROP: 'Sky' }],
-        ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['data_setvariableto', { VARIABLE: 'time', VALUE: has(bug, 'start') ? 2 : has(bug, 'time30') ? 30 : 20 }],
+        ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['data_setvariableto', { VARIABLE: 'time', VALUE: has(bug, 'start') ? 2 : has(bug, 'time30') ? 30 : has(bug, 'time25') ? 25 : 20 }],
         ['control_repeat_until', { CONDITION: ['operator_equals', { OPERAND1: V('time'), OPERAND2: 0 }], SUBSTACK: [
           ['control_wait', { DURATION: 1 }], ['data_changevariableby', { VARIABLE: 'time', VALUE: has(bug, 'timer') ? 1 : -1 }]] }],
         ['event_broadcast', { BROADCAST_INPUT: 'time up' }], ['looks_switchbackdropto', { BACKDROP: 'Time Up' }],
-        ['sound_playuntildone', { SOUND_MENU: 'win' }], ['control_stop', { STOP_OPTION: 'all' }]])].concat(has(bug, 'win10') ? [s(20, 620, [flag,
-        ['control_wait_until', { CONDITION: ['operator_gt', { OPERAND1: V('score'), OPERAND2: 9 }] }], ['looks_switchbackdropto', { BACKDROP: 'You Win' }]])] : []),
+        ['sound_playuntildone', { SOUND_MENU: 'win' }], ['control_stop', { STOP_OPTION: 'all' }]])].concat(has(bug, 'win10') || has(bug, 'win15') ? [s(20, 620, [flag,
+        ['control_wait_until', { CONDITION: ['operator_gt', { OPERAND1: V('score'), OPERAND2: has(bug, 'win15') ? 14 : 9 }] }], ['looks_switchbackdropto', { BACKDROP: 'You Win' }]])] : []),
       sprites: [
         { name: 'Balloon', costumes: [['balloon', 'balloon']], sounds: [['pop', 'pop']], x: -80, y: -170, scripts: [
           s(20, 20, [flag, ['looks_show'], toBottom, ['control_forever', { SUBSTACK: [
@@ -271,7 +271,7 @@
             ['control_if', { CONDITION: ['operator_gt', { OPERAND1: ['motion_yposition'], OPERAND2: 170 }], SUBSTACK: [toBottom] }]
           ] }]]),
           s(20, 440, [['event_whenthisspriteclicked'], ['sound_play', { SOUND_MENU: 'coin' }],
-            ['data_changevariableby', { VARIABLE: 'score', VALUE: 5 }], toBottom]),
+            ['data_changevariableby', { VARIABLE: 'score', VALUE: has(bug, 'gold10') ? 10 : 5 }], toBottom]),
           receive('time up', [['looks_hide']])
         ] }
       ]
@@ -612,6 +612,50 @@
   K.add({ id: 'test-change', lesson: 'y6-term1-test', exam: true, title: 'Change the Game: Balloon Pop', starter: balloonChange(false), tasks: testChangeTasks,
     brief: 'This game works. Make the 3 changes in the list. Press Check my project to test them.' });
   K.solutionStarters['test-change'] = function () { return balloonChange(true); };
+
+  // Practice before the test (James, 2026-10-09: 25 minutes of practice, Scratch included): the same kind of task as
+  // Change the Game, with different changes, so the test's own changes stay unseen. Practice, so hints are allowed.
+  function balloonPractice(solved) {
+    var def = balloonPop(solved ? ['gold10', 'time25', 'win15'] : null);
+    def.backdrops.push(['You Win', 'youWinSky']);
+    return def;
+  }
+  K.add({ id: 'practice-change', lesson: 'y6-term1-test', title: 'Practice: Change the Game', starter: balloonPractice(false),
+    brief: 'This game works. Make the 3 changes in the list. Press Check my project to test them.',
+    tasks: [
+      { id: 'gold10', text: 'Each click on the Gold Balloon adds 10 to score.',
+        hint: 'when this sprite clicked\nchange [score v] by (10)',
+        test: async function (t) {
+          t.variable('score');
+          await t.flag(300);
+          t.setValue('score', 0);
+          for (var i = 0; i < 2; i++) await t.click('Gold Balloon');
+          await t.wait(150);
+          if (t.value('score') !== 20) t.fail('score was 0. I clicked the Gold Balloon 2 times and score was ' + t.value('score') + '. It should be 20.');
+        } },
+      { id: 'time25', text: 'The green flag sets time to 25, so a game lasts 25 seconds.',
+        hint: 'when flag clicked\nset [time v] to (25)',
+        test: async function (t) {
+          t.variable('time');
+          t.stop();
+          t.setValue('time', 0);
+          await t.flag(200);
+          if (t.value('time') !== 25) t.fail('After the green flag time was ' + t.value('time') + '. It should start at 25.');
+        } },
+      { id: 'win15', text: 'When score reaches 15, the backdrop switches to You Win.',
+        hint: 'when flag clicked\nwait until <(score) > (14)>\nswitch backdrop to [You Win v]',
+        test: async function (t) {
+          t.variable('score');
+          await t.flag(300);
+          t.setValue('score', 14);
+          await t.wait(400);
+          if (t.backdrop() === 'You Win') t.fail('score was 14 and the backdrop was You Win. It should only switch when score reaches 15.');
+          t.setValue('score', 15);
+          var ok = await t.until(function () { return t.backdrop() === 'You Win'; }, 2000);
+          if (!ok) t.fail('score was 15. The backdrop stayed ' + t.backdrop() + '. It should switch to You Win.');
+        } }
+    ] });
+  K.solutionStarters['practice-change'] = function () { return balloonPractice(true); };
 
   // ======================= 6.2.5 game starters =======================
   // Sprites, art, sounds and backdrops, no scripts: the student builds the game.

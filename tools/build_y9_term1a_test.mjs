@@ -23,16 +23,24 @@ const steps = [];
 
 steps.push({ id: 'title', label: 'Term 1a Test',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Algorithm Design and Text Programming</p><h2 class="lesson-h2">Term 1a Test</h2><p>Year 9</p></div>' +
-    facts(['<strong>First:</strong> 20 minutes of revision practice.',
+    facts(['<strong>First:</strong> 25 minutes of revision practice: questions, then writing programs.',
       '<strong>Then:</strong> a 30-minute test on this website.',
       '<strong>Topics:</strong> number systems, loops, data types and arrays, errors and trace tables.']) +
-    why('Which topic do you find hardest?', 'Practise that topic most in the next 20 minutes.') });
+    why('Which topic do you find hardest?', 'Practise that topic most in the next 15 minutes.') });
 
 steps.push({ id: 'revision', label: 'Revision Practice', type: 'embedded-app', appId: 'drill-y9-term1a-revision', embedContainerId: `${P}-revision`,
   content: '<h2 class="lesson-h2">Revision Practice</h2>' +
     why('A program has a bug. Do you follow what it should do, or what it says?', 'What it says, one line at a time. Write every change in a trace table.') +
-    '<p class="lesson-lead">20 minutes. The questions are like the test, with different numbers. Choose a topic or practise them all.</p>' +
+    '<p class="lesson-lead">15 minutes. The questions are like the test, with different numbers. Choose a topic or practise them all.</p>' +
     `<div id="${P}-revision"></div>` });
+
+// James, 2026-10-09: 25 minutes of practice before the test. The test asks for a whole program (a loop that counts
+// the inputs over a limit), so 10 minutes on writing loops with an IF inside them.
+steps.push({ id: 'revision-code', label: 'Revision: Write the Program', type: 'embedded-app', appId: 'drill-y9-2-2-code', embedContainerId: `${P}-revision-code`,
+  content: '<h2 class="lesson-h2">Revision: Write the Program</h2>' +
+    why('A program counts how many numbers are 10 or more. Why is the count set to 0 before the loop, not inside it?', 'Inside the loop it would go back to 0 on every pass and lose what it counted.') +
+    '<p class="lesson-lead">10 minutes. The test asks you to write a whole program. Declare every variable, set totals to 0 before the loop, and output after the loop.</p>' +
+    `<div id="${P}-revision-code"></div>` });
 
 steps.push({ id: 'how-it-works', label: 'How the Test Works',
   content: '<h2 class="lesson-h2">How the Test Works</h2>' +

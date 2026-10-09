@@ -364,6 +364,25 @@ DrillData.register("y6-term1-revision", {
         note: s0 + " + " + n + " x " + d + " + (" + e + ") = " + ans + "."
       };
     });
+    // Moving inside a repeat: both blocks run on every turn (James 2026-10-09: the test gained this question).
+    card("lp-move", "loops", function () {
+      var n, dx, dy;
+      do { n = drillRange(2, 5); dx = drillPick([5, 10, 15, 20]); dy = drillPick([10, 20, -10, 25]); } while (n === 3 && dx === 5 && dy === 10);
+      var s = [[B.flag(), B.goto(0, 0), B.repeat(n, [B.changey(dy), B.changex(dx)])]];
+      var r = Y6.run(s, ["flag"]), ans = pos(r.x, r.y);
+      var wn = pick(2, 3, [n]), wdx = pick(2, 8, [dx]), wdy = pick(2, 8, [dy]);
+      var ws = [[B.flag(), B.goto(10, 10), B.repeat(wn, [B.changex(wdx), B.changey(wdy)])]];
+      var w = Y6.walk(ws, ["flag"], {}, ["x", "y"], "A similar script. Each turn of the loop runs both blocks inside it. Keep x and y apart.");
+      return {
+        blocks: Y6.text(s),
+        prompt: "Where is the sprite when this script ends?",
+        answers: [ans], keywords: [posRe(r.x, r.y)],
+        distractors: four(ans, [pos(r.y, r.x), pos(r.x + dx, r.y + dy), pos(dx, dy), pos(r.x - dx, r.y - dy), pos(r.x, 0)]),
+        working: ["Count the turns of the loop. Both blocks inside run on every turn.", "Add up the x changes on their own, then the y changes on their own."],
+        walk: w.steps,
+        note: "x: " + n + " x " + dx + " = " + r.x + ". y: " + n + " x " + dy + " = " + r.y + "."
+      };
+    });
     card("lp-forever", "loops", function () {
       var d = drillPick([3, 4, 6, 8, 12]), n = drillRange(3, 6), x0 = drillPick([0, 10, -20]);
       var s = [[B.flag(), B.setx(x0), B.forever([B.changex(d), B.wait(1)])]];
@@ -448,6 +467,26 @@ DrillData.register("y6-term1-revision", {
         working: ["Test each score in the if block, one at a time.", "A number equal to the one in the block is not more than it, and not less than it."],
         walk: w1.steps.concat(w2.steps),
         note: (op === ">" ? "More than " : "Less than ") + t + ": " + ans + " of them. " + t + " itself does not count."
+      };
+    });
+    // An if inside a repeat: the if is checked on every turn (James 2026-10-09: the test gained this question).
+    card("dec-loop", "decisions", function () {
+      var n, t, l0;
+      do { n = drillRange(4, 6); t = drillRange(1, n - 2); l0 = drillPick([3, 4, 5, 6]); } while ((n === 5 && t === 3 && l0 === 3) || l0 - (n - t) < 0);
+      var s = [[B.flag(), B.set("lives", l0), B.set("score", 0), B.repeat(n, [B.change("score", 1), B.ifThen(C.gt("score", t), [B.change("lives", -1)])])]];
+      var ans = Y6.run(s, ["flag"]).vars.lives;
+      // The walk's last values (score = its turns, coins) must not be this card's answer.
+      var wt = 1, wn = [3, 4, 5].filter(function (k) { return k !== n && k !== ans && 10 + 5 * (k - wt) !== ans; })[0];
+      var ws = [[B.flag(), B.set("coins", 10), B.set("score", 0), B.repeat(wn, [B.change("score", 1), B.ifThen(C.gt("score", wt), [B.change("coins", 5)])])]];
+      var w = Y6.walk(ws, ["flag"], {}, ["score", "coins"], "A similar script. On every turn, score goes up first, then the if checks the new score.");
+      return {
+        blocks: Y6.text(s),
+        prompt: "What is lives when this script ends?",
+        answers: [String(ans)], keywords: [drillNumberRe(ans, "lives")],
+        distractors: nums(ans, [ans - 1, l0 - 1, l0, l0 - n]),
+        working: ["Write score down after each turn of the loop.", "For each turn, is score more than the number in the if? Only then does lives change."],
+        walk: w.steps,
+        note: "score is more than " + t + " on " + (n - t) + " turns, so lives = " + l0 + " - " + (n - t) + " = " + ans + "."
       };
     });
     card("dec-ifelse", "decisions", function () {
