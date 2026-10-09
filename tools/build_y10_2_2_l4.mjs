@@ -191,7 +191,7 @@ steps.push(checkStep('do-now-3', 'Do Now: ARQ (3 of 3)', 'Do Now: ARQ (3 of 3)',
       answer: '^(?=.*\\b(lost|lose|loses|never|not|no|nothing|forever|ever|stuck|missing|corrupt\\w*)\\b)(?=.*\\b(arriv\\w*|receiv\\w*|acknowledg\\w*|ack|back|repl\\w*|wait\\w*|comes?|gets?|reach\\w*|sent|send\\w*)\\b).*$',
       feedback: 'What if the acknowledgement never comes back? What would the sender do?' },
     { line: true, label: 'With negative acknowledgement, why does the sender not have to wait for a timeout to find out about an error?',
-      answer: '^(?=.*\\b(negative|nak|receiver|receiving)\\b)(?=.*\\b(straight|immediate\\w*|at\\s+once|right\\s+away|soon|quick\\w*|fast\\w*|tells?|told|knows?|informs?|warns?|says?|saying|lets?|message)\\b).*$',
+      answer: '^(?=.*\\b(negative|nak|receiver|receiving|message|error|reply|replies)\\b)(?=.*\\b(straight|immediate\\w*|at\\s+once|right\\s+away|soon|quick\\w*|fast\\w*|tells?|told|knows?|informs?|warns?|says?|saying|lets?|message)\\b).*$',
       feedback: 'Who sends the negative acknowledgement, and what does it tell the sender?' },
   ], ['Why use a parity check AND ARQ together?', 'The parity check finds the error. ARQ makes sure the data is sent again.']));
 steps[steps.length - 1].walkthrough = WT_ARQ;
