@@ -1,0 +1,551 @@
+{
+ "id": "y10-2-2-l4",
+ "label": "2.2 L4: Check Digits",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Parity Checks (1 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-do-now",
+   "validatorKey": "y10_22l4_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Parity Checks (1 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the printer need its data checked at all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Interference can change bits on the way. A changed bit could print the wrong thing.</p></div></details><p class=\"lesson-lead\">From 2.2 L1 and L2. Part (a): Cambridge IGCSE 0478/12, June 2026, Question 4(b)(i). An odd parity byte check is used to check for errors in data that is transmitted from a computer to a printer. There is an error in the data after transmission. This error is not detected by the parity byte check.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-do-now-a\">(a) Explain why the error may not be detected by a parity byte check. [2]</label><input id=\"y10-22l4-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Parity Checks (1 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-do-now-b\">(b) A parity block check is used instead. Why can it find which bit is wrong? [1]</label><input id=\"y10-22l4-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Parity Checks (1 of 3) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-22l4-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: parity byte and parity block",
+    "steps": [
+     {
+      "text": "<strong>Parity byte.</strong> A different byte, sent with <strong>even</strong> parity. Count the 1s.",
+      "visual": "<span style=\"font:700 18px var(--font-mono, monospace);letter-spacing:3px;padding:2px 8px;border-radius:6px;background:var(--surface-3);white-space:nowrap\">0<span class=\"wt-hl\">1</span><span class=\"wt-hl\">1</span>0<span class=\"wt-hl\">1</span>00<span class=\"wt-hl\">1</span></span><div class=\"wt-note\">1s sent: 4. Even, so it matches even parity.</div>"
+     },
+     {
+      "text": "On the way, <strong>two</strong> bits change. Bit 2 goes from 1 to 0. Bit 7 goes from 0 to 1.",
+      "visual": "<span style=\"font:700 18px var(--font-mono, monospace);letter-spacing:3px;padding:2px 8px;border-radius:6px;background:var(--surface-3);white-space:nowrap\">01101001</span> &rarr; <span style=\"font:700 18px var(--font-mono, monospace);letter-spacing:3px;padding:2px 8px;border-radius:6px;background:var(--surface-3);white-space:nowrap\">0<span class=\"wt-hl\">0</span>1010<span class=\"wt-hl\">1</span>1</span>"
+     },
+     {
+      "text": "The receiver counts the 1s that arrived.",
+      "visual": "<span style=\"font:700 18px var(--font-mono, monospace);letter-spacing:3px;padding:2px 8px;border-radius:6px;background:var(--surface-3);white-space:nowrap\">00<span class=\"wt-hl\">1</span>0<span class=\"wt-hl\">1</span>0<span class=\"wt-hl\">1</span><span class=\"wt-hl\">1</span></span><div class=\"wt-note\">1s that arrived: 4</div>"
+     },
+     {
+      "text": "Think: the receiver only sees the count. What does it see here? What does it decide? Now use the same idea for odd parity in part (a).",
+      "visual": "<div class=\"wt-note\">4 went, 4 arrived</div>"
+     },
+     {
+      "text": "<strong>Parity block.</strong> A different block, even parity. One bit changed. First check every <strong>row</strong>.",
+      "visual": "<table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\"></th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">P</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">1</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">2</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">3</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">4</th></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 1</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 2</th><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 3</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Parity byte</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td></tr></table><div class=\"wt-note\">Byte 2 has five 1s: odd</div>"
+     },
+     {
+      "text": "Then check every <strong>column</strong>, with the parity byte.",
+      "visual": "<table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\"></th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">P</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">1</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">2</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">3</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">4</th></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 1</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 2</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 3</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Parity byte</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td></tr></table><div class=\"wt-note\">Column 2 has three 1s: odd</div>"
+     },
+     {
+      "text": "Look at both results together on the block. For part (b), explain what a block can show that one byte on its own cannot.",
+      "visual": "<table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\"></th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">P</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">1</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">2</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">3</th><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">4</th></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 1</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 2</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td class=\"wt-hl\" style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Byte 3</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td></tr><tr><th style=\"padding:3px 9px;font-size:14px;text-align:left;white-space:nowrap\">Parity byte</th><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">0</td><td style=\"padding:3px 9px;text-align:center;font:600 17px var(--font-mono, monospace)\">1</td></tr></table>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Checksum and Echo Check (2 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-do-now-2",
+   "validatorKey": "y10_22l4_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Checksum and Echo Check (2 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check data sent 30 kilometres?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A long cable picks up more interference, so bits are more likely to change.</p></div></details><p class=\"lesson-lead\">From 2.2 L2 and L3. Part (a): Cambridge IGCSE 0478/12, March 2021, Question 1(d)(iii). Data about the final score for a match is transmitted to a central computer 30 kilometres away. The data transmission uses checksums.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-do-now-2-a\">(a) Describe how checksums are used to detect errors in data transmission. [3]</label><input id=\"y10-22l4-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Checksum and Echo Check (2 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-do-now-2-b\">(b) Why is the checksum calculated before the data is sent AND again after it arrives? [1]</label><input id=\"y10-22l4-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Checksum and Echo Check (2 of 3) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-do-now-2-c\">(c) An echo check finds an error. Why can the sender not tell if it happened on the way there or on the way back? [1]</label><input id=\"y10-22l4-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Checksum and Echo Check (2 of 3) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-do-now-2-check\">Check answers</button><strong>Total: 5 marks</strong></div><div id=\"y10-22l4-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: checksum and echo check",
+    "steps": [
+     {
+      "text": "<strong>Describe a check.</strong> A similar question: describe how a parity check detects errors. Answer in the order things happen.",
+      "visual": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Before sending</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">After arriving</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Decide</span></div>"
+     },
+     {
+      "text": "Before sending: the sender adds a <strong>parity bit</strong> so the number of 1s is odd or even.",
+      "visual": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span class=\"wt-hl\" style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Before sending</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">After arriving</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Decide</span></div>"
+     },
+     {
+      "text": "After arriving: the receiver <strong>counts the 1s</strong> in the byte that arrived.",
+      "visual": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Before sending</span><b>&rarr;</b><span class=\"wt-hl\" style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">After arriving</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Decide</span></div>"
+     },
+     {
+      "text": "Decide: the count does not fit the parity, so there is an error. One point for each step.",
+      "visual": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Before sending</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">After arriving</span><b>&rarr;</b><span class=\"wt-hl\" style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Decide</span></div>"
+     },
+     {
+      "text": "For part (a), follow these three steps for a checksum: what happens before sending, after arriving, and how the receiver decides.",
+      "visual": "<div class=\"wt-note\">before &rarr; after &rarr; decide</div>"
+     },
+     {
+      "text": "<strong>Why twice?</strong> A different case: a teacher marks a test, and a second teacher marks it again. Why do it twice?",
+      "visual": "<div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Teacher 1: 34 marks</div></div><div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Teacher 2: 31 marks</div></div>"
+     },
+     {
+      "text": "One mark on its own tells you nothing. Put the two side by side: now you can see something went wrong. Use this idea for part (b).",
+      "visual": "<div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Teacher 1: <span class=\"wt-hl\">34</span></div></div><div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Teacher 2: <span class=\"wt-hl\">31</span></div></div>"
+     },
+     {
+      "text": "<strong>Echo check.</strong> A different case: you post a letter to a friend. Your friend posts a photocopy of it back to you. The photocopy has a smudge.",
+      "visual": "<div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Your letter: clean</div></div><div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Photocopy back: <span class=\"wt-hl\">smudge</span></div></div>"
+     },
+     {
+      "text": "The smudge could come from the trip to your friend, or from the trip back to you. You hold two things: your letter and the photocopy.",
+      "visual": "<div class=\"wt-note\">your letter + the photocopy</div>"
+     },
+     {
+      "text": "Think: what would you need to look at to know which trip made the smudge? Do you have it? Use this idea for part (c).",
+      "visual": "<div class=\"wt-note\">which trip?</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-3",
+   "label": "Do Now: ARQ (3 of 3)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-do-now-3",
+   "validatorKey": "y10_22l4_do_now_3",
+   "content": "<h2 class=\"lesson-h2\">Do Now: ARQ (3 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why use a parity check AND ARQ together?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The parity check finds the error. ARQ makes sure the data is sent again.</p></div></details><p class=\"lesson-lead\">From 2.2 L1 to L3. Part (a): Cambridge IGCSE 0478/11, June 2024, Question 9(b)(ii). A company checks data for errors after transmission. The error detection system uses an odd parity check and a positive automatic repeat query (ARQ).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-do-now-3-a\">(a) Give two other error detection methods that could be used. [2]</label><input id=\"y10-22l4-do-now-3-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-a\" aria-label=\"Do Now: ARQ (3 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-do-now-3-b\">(b) Why does ARQ need a timeout? [1]</label><input id=\"y10-22l4-do-now-3-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-b\" aria-label=\"Do Now: ARQ (3 of 3) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-do-now-3-c\">(c) With negative acknowledgement, why does the sender not have to wait for a timeout to find out about an error? [1]</label><input id=\"y10-22l4-do-now-3-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-c\" aria-label=\"Do Now: ARQ (3 of 3) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-do-now-3-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-22l4-do-now-3-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: ARQ",
+    "steps": [
+     {
+      "text": "<strong>Name other methods.</strong> A similar question from 2.1: data is sent by serial simplex. Give two other methods of data transmission.",
+      "visual": "<div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">serial simplex</div></div>"
+     },
+     {
+      "text": "List every method you know, in its family.",
+      "visual": "<div class=\"wt-note\">serial, parallel<br>simplex, half-duplex, full-duplex</div>"
+     },
+     {
+      "text": "Cross out the ones the question already uses.",
+      "visual": "<div class=\"wt-note\"><s>serial</s>, parallel<br><s>simplex</s>, half-duplex, full-duplex</div>"
+     },
+     {
+      "text": "Any two that are left score: for example parallel and full-duplex. For part (a), list the 2.2 checks the same way, then cross out the two the question uses.",
+      "visual": "<div class=\"wt-note\"><s>serial</s>, <span class=\"wt-hl\">parallel</span><br><s>simplex</s>, half-duplex, <span class=\"wt-hl\">full-duplex</span></div>"
+     },
+     {
+      "text": "<strong>Why a timer?</strong> A different case: you put food in an oven and wait for a bell. The bell is broken.",
+      "visual": "<div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Oven on. Waiting for the bell...</div></div>"
+     },
+     {
+      "text": "Without a timer, how long would you stand there? A timer says when to stop and look. For part (b), think about the sender after it sends a packet.",
+      "visual": "<div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Oven on. <span class=\"wt-hl\">Timer: 20 minutes</span></div></div>"
+     },
+     {
+      "text": "<strong>Why ring?</strong> A different case: a friend is at your door. If they wait in silence, you only find out when you look. If they ring the bell, you know at once.",
+      "visual": "<div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Waiting in silence</div></div><div style=\"display:flex;gap:12px;align-items:center;margin:6px 0\"><div style=\"flex:1;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Rings the <span class=\"wt-hl\">bell</span></div></div>"
+     },
+     {
+      "text": "For part (c), ask: in your question, who rings the bell, and when?",
+      "visual": "<div class=\"wt-note\">who sends what, and when?</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-2-l4-ext",
+   "embedContainerId": "y10-22l4-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 2.1 Data Transmission and 2.2 Lessons 1 to 3. Stuck? Switch on <strong>I need help</strong> and use <strong>Walk me through it</strong>.</p><div id=\"y10-22l4-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Check Digits",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">2.2 Methods of Error Detection</p><h2 class=\"lesson-h2\">Check Digits</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> mistakes when a person <strong>types</strong> a number, or a machine <strong>scans</strong> one, and how a <strong>check digit</strong> finds them.</li><li><strong>You already know:</strong> parity checks, checksums, echo checks and ARQ. They find errors when data is <strong>sent</strong>.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A shop worker types a product number and presses one wrong key. Why is that a problem? Could a parity check find it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The wrong number is the data. A parity check only checks that data arrives the same as it was sent, so it would not find it. We need a different check.</p></div></details>"
+  },
+  {
+   "id": "concept-entry",
+   "label": "Data Entry Errors",
+   "content": "<h2 class=\"lesson-h2\">Data Entry Errors</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Ana should type 69321. She types 69821. Ben types 96321. What went wrong each time?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Ana typed <strong>one digit wrong</strong>: 3 became 8.</p><p>Ben <strong>swapped two digits</strong>: 6 and 9 changed places.</p><p>The computer cannot see the number they meant. These are <strong>data entry</strong> errors.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>Data entry</strong>: a person types a number, or a scanner reads one.</li><li>Two common errors: <strong>one digit wrong</strong>, or <strong>two digits swapped</strong>.</li><li>The error happens <strong>before</strong> the data is sent, so a parity check or checksum cannot see it.</li></ul></div><div><div style=\"display:grid;grid-template-columns:auto auto;gap:10px 14px;align-items:center\"><strong>Should be</strong><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">6</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">9</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">3</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">2</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">1</span></div><strong>Ana typed</strong><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">6</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">9</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;color:var(--bad);text-decoration:underline\">8</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">2</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">1</span></div><strong>Ben typed</strong><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;color:var(--bad);text-decoration:underline\">9</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;color:var(--bad);text-decoration:underline\">6</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">3</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">2</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">1</span></div></div></div></div>"
+  },
+  {
+   "id": "concept-check-digit",
+   "label": "The Check Digit",
+   "content": "<h2 class=\"lesson-h2\">The Check Digit</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: the last digit of 512435 was worked out from the first five digits. Ben types 512485. How could the computer notice?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It works out the last digit again from the first five digits it got. The answer will not match the 5 that was typed, so there is an <strong>error</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>check digit</strong> is an extra digit at the <strong>end</strong> of a number.</li><li>It is <strong>calculated</strong> from the other digits, using an algorithm.</li><li>When the number is entered, the computer <strong>calculates it again</strong> and <strong>compares</strong>.</li><li>They match: accepted. Different: an error, so the number is entered again.</li><li>Used in <strong>ISBN</strong> numbers on books, and in <strong>bar codes</strong> on products.</li></ul></div><div><div style=\"text-align:center\"><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">5</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">1</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">2</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">4</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">3</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;margin-left:12px;border:3px solid var(--brand)\">5</span></div><p style=\"margin:8px 0 0;font-size:15px;color:var(--muted)\">the last digit is the check digit</p></div></div></div>"
+  },
+  {
+   "id": "exam-purpose",
+   "label": "Exam Question: What a Check Digit Is For",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-exam-purpose",
+   "validatorKey": "y10_22l4_exam_purpose",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: What a Check Digit Is For</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the mark scheme want the word \"calculated\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The check digit is not chosen at random. It is worked out from the other digits, so the computer can work it out again.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/23, June 2026, Question 3(b). Explain the purpose of a check digit and give an example of where it could be used.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-exam-purpose-a\">(a) Purpose [2]</label><input id=\"y10-22l4-exam-purpose-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-purpose-a\" aria-label=\"Exam Question: What a Check Digit Is For part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-exam-purpose-b\">(b) Example [1]</label><input id=\"y10-22l4-exam-purpose-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-purpose-b\" aria-label=\"Exam Question: What a Check Digit Is For part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-exam-purpose-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-22l4-exam-purpose-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "concept-sum",
+   "label": "Method 1: Add the Digits",
+   "content": "<h2 class=\"lesson-h2\">Method 1: Add the Digits</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: add up the digits of 51243. Divide the total by 10. What is the remainder?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>5 + 1 + 2 + 4 + 3 = 15. 15 divided by 10 is 1, remainder <strong>5</strong>.</p><p>So the check digit is 5, and the full number is <strong>512435</strong>.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/23, November 2022, Question 3. The check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.</p><div class=\"lesson-do-now-columns\" style=\"grid-template-columns:minmax(0, 1fr) max-content\"><div><ul class=\"lesson-facts\"><li><strong>Step 1:</strong> add up the digits.</li><li><strong>Step 2:</strong> divide the total by 10.</li><li><strong>Step 3:</strong> the <strong>remainder</strong> is the check digit.</li><li>The remainder is always 0 to 9: one digit.</li></ul></div><div><table class=\"donow-table\" style=\"margin:0 auto;font-size:18px\"><tr><th style=\"padding:5px 12px\">Step</th><th style=\"padding:5px 12px\">Working</th></tr><tr><td style=\"padding:5px 12px\">1</td><td style=\"padding:5px 12px\">5 + 1 + 2 + 4 + 3 = 15</td></tr><tr><td style=\"padding:5px 12px\">2</td><td style=\"padding:5px 12px\">15 &divide; 10 = 1 remainder 5</td></tr><tr><td style=\"padding:5px 12px\">3</td><td style=\"padding:5px 12px\">check digit = 5</td></tr></table><div style=\"margin-top:10px;text-align:center\"><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">5</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">1</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">2</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">4</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">3</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;margin-left:12px;border:3px solid var(--brand)\">5</span></div></div></div></div>"
+  },
+  {
+   "id": "exam-calc",
+   "label": "Exam Question: Calculate and Check",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-exam-calc",
+   "validatorKey": "y10_22l4_exam_calc",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Calculate and Check</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check every number, not just the ones that look wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A wrong number looks just like a right one. Only the calculation shows it.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/23, November 2022, Question 3(a). The check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.</p><div class=\"lesson-do-now-columns\"><div><div style=\"padding:10px 16px;border-radius:10px;background:var(--surface-2);font:600 19px/1.7 var(--font-mono, monospace)\">A&nbsp;&nbsp;123455<br>B&nbsp;&nbsp;691400<br>C&nbsp;&nbsp;722855<br>D&nbsp;&nbsp;231200</div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-exam-calc-a\">(a) Calculate the check digit for 69321 [1]</label><input id=\"y10-22l4-exam-calc-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-calc-a\" aria-label=\"Exam Question: Calculate and Check part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-exam-calc-b\">(b) State which of these identification numbers have incorrect check digits. [2]</label><input id=\"y10-22l4-exam-calc-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-calc-b\" aria-label=\"Exam Question: Calculate and Check part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-exam-calc-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-22l4-exam-calc-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "compare-swap",
+   "label": "Compare: One Wrong Digit and Two Swapped",
+   "content": "<h2 class=\"lesson-h2\">Compare: One Wrong Digit and Two Swapped</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The right number is 372541. Two people type it wrongly. Predict: does Method 1 find both errors?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It finds the wrong digit: the total changes, so the remainder changes.</p><p>It does <strong>not</strong> find the swap: the same digits give the <strong>same total</strong>, in any order.</p></div></details><div style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start\"><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>One digit typed wrong</strong></p><div style=\"text-align:center\"><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">3</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">7</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;color:var(--bad);text-decoration:underline\">8</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">5</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">4</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;margin-left:12px;border:3px solid var(--brand)\">1</span></div></div><p style=\"margin:8px 0 0;font-size:17px\">3 + 7 + 8 + 5 + 4 = 27<br>remainder 7. Typed check digit: 1.<br><strong>Different: the error is found.</strong></p></div><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>Two digits swapped</strong></p><div style=\"text-align:center\"><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">3</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;color:var(--bad);text-decoration:underline\">2</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;color:var(--bad);text-decoration:underline\">7</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">5</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px\">4</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;border-radius:8px;font:700 22px var(--font-mono, monospace);background:var(--surface-3);margin:0 2px;margin-left:12px;border:3px solid var(--brand)\">1</span></div></div><p style=\"margin:8px 0 0;font-size:17px\">3 + 2 + 7 + 5 + 4 = 21<br>remainder 1. Typed check digit: 1.<br><strong>They match: the error is NOT found.</strong></p></div></div><ul class=\"lesson-facts\"><li>Adding the digits finds <strong>one wrong digit</strong>.</li><li>It misses <strong>two digits swapped</strong>: the total stays the same.</li></ul>"
+  },
+  {
+   "id": "concept-position",
+   "label": "Method 2: Multiply by Position",
+   "content": "<h2 class=\"lesson-h2\">Method 2: Multiply by Position</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: swap the first two digits, 03475. With Method 2, does the check digit change?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Yes. 0 &times; 1 + 3 &times; 2 + 4 &times; 3 + 7 &times; 4 + 5 &times; 5 = 71. MOD(71, 11) = 5, not 2.</p><p>Each digit is multiplied by a <strong>different</strong> number, so a swap changes the total. The swap is found.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/21, November 2025, Question 6. The check digit for a 5-digit number:</p><div class=\"lesson-do-now-columns\" style=\"grid-template-columns:minmax(0, 1fr) max-content\"><div><ul class=\"lesson-facts\"><li>Multiply each digit by its <strong>position</strong> (the first digit is position 1).</li><li>Add the results: the <strong>total</strong>.</li><li><strong>MOD(Total, 11)</strong> is the remainder after dividing by 11.</li><li>If the result is 10, the check digit is <strong>X</strong>.</li></ul></div><div><table class=\"donow-table\" style=\"margin:0 auto;font-size:17px\"><tr><th style=\"padding:4px 10px;text-align:left\">Digit</th><td style=\"padding:4px 10px;text-align:center\">3</td><td style=\"padding:4px 10px;text-align:center\">0</td><td style=\"padding:4px 10px;text-align:center\">4</td><td style=\"padding:4px 10px;text-align:center\">7</td><td style=\"padding:4px 10px;text-align:center\">5</td></tr><tr><th style=\"padding:4px 10px;text-align:left\">Position</th><td style=\"padding:4px 10px;text-align:center\">1</td><td style=\"padding:4px 10px;text-align:center\">2</td><td style=\"padding:4px 10px;text-align:center\">3</td><td style=\"padding:4px 10px;text-align:center\">4</td><td style=\"padding:4px 10px;text-align:center\">5</td></tr><tr><th style=\"padding:4px 10px;text-align:left\">Digit &times; position</th><td style=\"padding:4px 10px;text-align:center\">3</td><td style=\"padding:4px 10px;text-align:center\">0</td><td style=\"padding:4px 10px;text-align:center\">12</td><td style=\"padding:4px 10px;text-align:center\">28</td><td style=\"padding:4px 10px;text-align:center\">25</td></tr></table><p style=\"margin:8px 0 0;text-align:center;font-size:17px\">3 + 0 + 12 + 28 + 25 = 68<br>68 = 6 &times; 11 + 2, so MOD(68, 11) = <strong>2</strong></p></div></div>"
+  },
+  {
+   "id": "check-position",
+   "label": "Check: Multiply by Position",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-check-position",
+   "validatorKey": "y10_22l4_check_position",
+   "content": "<h2 class=\"lesson-h2\">Check: Multiply by Position</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does part (c) give a different check digit from part (a)?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The digits sit in new positions, so they are multiplied by different numbers. The total changes, so the swap is found.</p></div></details><p class=\"lesson-lead\">Use Method 2. Type the check digit.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-check-position-a\">(a) What is the check digit for 41302? [1]</label><input id=\"y10-22l4-check-position-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-position-a\" aria-label=\"Check: Multiply by Position part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-check-position-b\">(b) The total is 54. What is the check digit? [1]</label><input id=\"y10-22l4-check-position-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-position-b\" aria-label=\"Check: Multiply by Position part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-check-position-c\">(c) 41302 is typed as 14302. What check digit does the computer calculate now? [1]</label><input id=\"y10-22l4-check-position-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-position-c\" aria-label=\"Check: Multiply by Position part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-check-position-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-22l4-check-position-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-algorithm",
+   "label": "Exam Question: A Better Algorithm",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-exam-algorithm",
+   "validatorKey": "y10_22l4_exam_algorithm",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: A Better Algorithm</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is (ii) worth two marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One mark for multiplying each digit by a different number, one for then adding and dividing.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/23, November 2022, Question 3(b). The check digit is calculated by adding up the first five digits, dividing by 10 and taking the remainder.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-exam-algorithm-a\">(a) Describe an input error that would not be found using this check digit. [2]</label><input id=\"y10-22l4-exam-algorithm-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-algorithm-a\" aria-label=\"Exam Question: A Better Algorithm part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-exam-algorithm-b\">(b) Describe a more suitable algorithm to calculate the check digit for this identification number. [2]</label><input id=\"y10-22l4-exam-algorithm-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-algorithm-b\" aria-label=\"Exam Question: A Better Algorithm part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-exam-algorithm-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-22l4-exam-algorithm-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Calculate the Check Digit",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-2-l4-calc",
+   "embedContainerId": "y10-22l4-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Calculate the Check Digit</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do both methods end with a remainder?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A remainder is always small, so the check digit fits in one place at the end.</p></div></details><p class=\"lesson-lead\">Method 1 and Method 2, with new numbers every time. Stuck? Switch on <strong>I need help</strong> and walk through a different number, step by step.</p><div id=\"y10-22l4-activity-1\"></div>"
+  },
+  {
+   "id": "hinge-mismatch",
+   "label": "Check: When It Does Not Match",
+   "type": "multiple-choice",
+   "containerId": "y10-22l4-hinge-mismatch",
+   "content": "<h2 class=\"lesson-h2\">Check: When It Does Not Match</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a check digit not correct the error?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It only tells the computer the number is wrong, not which digit is wrong.</p></div></details><p class=\"lesson-lead\">Choose one answer for each.</p><div id=\"y10-22l4-hinge-mismatch\"></div>",
+   "items": [
+    {
+     "prompt": "A bar code is scanned. The computer calculates the check digit again, and it does not match. What happens?",
+     "options": [
+      "The computer corrects the wrong digit",
+      "The data is sent again down the cable",
+      "The bar code is rejected and scanned again",
+      "The check digit is changed to match"
+     ],
+     "correct": 2,
+     "explain": "A check digit only shows THAT there is an error. It cannot show which digit is wrong, so the number is entered or scanned again."
+    },
+    {
+     "prompt": "Cambridge IGCSE 0478/13, November 2023, Question 5(b). Some error detection methods use a calculated value to check for errors. Which error detection method does NOT use a calculated value to check for errors?",
+     "options": [
+      "Check digit",
+      "Checksum",
+      "Echo check",
+      "Parity check"
+     ],
+     "correct": 2,
+     "explain": "An echo check sends a copy of the data back and compares. Nothing is calculated."
+    }
+   ]
+  },
+  {
+   "id": "compare-entry",
+   "label": "Compare: Data Entry and Transmission",
+   "content": "<h2 class=\"lesson-h2\">Compare: Data Entry and Transmission</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A bar code is scanned at a till. Then the price is sent to the stock computer. Which check fits each step? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Scanning is <strong>data entry</strong>: a <strong>check digit</strong> finds a bad scan.</p><p>Sending to the stock computer is <strong>transmission</strong>: a parity check, checksum, echo check or ARQ finds bits changed on the way.</p></div></details><table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\"></th><th style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">Data entry</th><th style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">Transmission</th></tr><tr><th style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">When</th><td style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">a person types a number,<br>or a scanner reads one</td><td style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">data is sent from one<br>device to another</td></tr><tr><th style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">Errors</th><td style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">one digit wrong,<br>two digits swapped</td><td style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">bits lost, gained<br>or changed</td></tr><tr><th style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">Check</th><td style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\"><strong>check digit</strong></td><td style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">parity check, checksum,<br>echo check, ARQ</td></tr><tr><th style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">Example</th><td style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">an ISBN typed in,<br>a bar code scanned</td><td style=\"padding:6px 12px;text-align:left;vertical-align:top;font-size:17px\">a file sent to a printer</td></tr></table>"
+  },
+  {
+   "id": "exam-printer",
+   "label": "Exam Question: Checks for the Printer",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-exam-printer",
+   "validatorKey": "y10_22l4_exam_printer",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Checks for the Printer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the mark scheme say \"Do not accept check digit\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A check digit is for data entry. Here the data is being transmitted.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/12, June 2026, Question 4(b)(ii). An odd parity byte check is used to check for errors in data that is transmitted from a computer to a printer.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-exam-printer-a\">(a) Give two other error detection methods that could be used. [2]</label><input id=\"y10-22l4-exam-printer-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-printer-a\" aria-label=\"Exam Question: Checks for the Printer part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-22l4-exam-printer-b\">(b) Why is a check digit not a correct answer to (a)? [1]</label><input id=\"y10-22l4-exam-printer-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-printer-b\" aria-label=\"Exam Question: Checks for the Printer part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-exam-printer-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-22l4-exam-printer-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-barcode",
+   "label": "Exam Question: The Bar Code Scanner",
+   "type": "self-marked-response",
+   "containerId": "y10-22l4-exam-barcode",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Bar Code Scanner</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This has 4 marks. What happens before the scan, and what happens after it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Before: the check digit is calculated and added. After: it is calculated again and the two are compared.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2024, Question 5. A barcode scanning system uses a check digit to check for errors in data on input.</p><div id=\"y10-22l4-exam-barcode\"></div>",
+   "items": [
+    {
+     "id": "barcode-explain",
+     "prompt": "(a) Explain how the barcode scanning system operates to check for errors. [4]",
+     "marks": 4,
+     "modelAnswer": "Any four: a check digit is calculated from the barcode data; using an algorithm (for example, modulo 11); and added to the barcode; when the barcode is scanned the check digit is recalculated; using the same algorithm; if the check digits do not match, an error has occurred when scanning the barcode (if they match, no error has occurred)."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Accept or Reject?",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-2-l4-valid",
+   "embedContainerId": "y10-22l4-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Accept or Reject?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Method 1 accept some codes that were typed wrongly?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two digits swapped give the same total, so the check digit still matches.</p></div></details><p class=\"lesson-lead\">Be the computer: check each code and accept or reject it. Then name the error, and say which method finds it. New codes every time.</p><div id=\"y10-22l4-activity-2\"></div>"
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Which Method?",
+   "type": "short-answer-validation",
+   "validatorId": "y10-22l4-practice",
+   "validatorKey": "y10_22l4_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Which Method?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do two methods both compare calculated values?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Both calculate a value, then calculate it again and compare. One is for data entry, one for transmission.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2021, Question 3(a). Which method does each statement apply to: ARQ, check digit or checksum? Some statements apply to more than one method.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-practice-a\">(a) checks for errors on data entry [1]</label><input id=\"y10-22l4-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Which Method? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-practice-b\">(b) uses a process of acknowledgement and timeout [1]</label><input id=\"y10-22l4-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Which Method? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-practice-c\">(c) compares two calculated values to see if an error has occurred (two methods) [1]</label><input id=\"y10-22l4-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Which Method? part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-practice-d\">(d) may resend data until it is confirmed as received [1]</label><input id=\"y10-22l4-practice-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-d\" aria-label=\"Practice: Which Method? part d\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-22l4-practice-e\">(e) checks for errors in data after transmission from a computer to another [1]</label><input id=\"y10-22l4-practice-e\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-e\" aria-label=\"Practice: Which Method? part e\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-22l4-practice-check\">Check answers</button><strong>Total: 5 marks</strong></div><div id=\"y10-22l4-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Check Digits Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-2-l4",
+   "embedContainerId": "y10-22l4-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Check Digits Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new numbers every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can check any number, you really understand the method.</p></div></details><p class=\"lesson-lead\">What a check digit is for, both methods, accept or reject, and which errors each method finds. Your progress is saved.</p><div id=\"y10-22l4-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_22l4_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(two|2\\s+(bits?|of|errors?|changes?)|even\\s+number|pair|both|swap\\w*|transpos\\w*|interchang\\w*|changed\\s+places|out\\s+of\\s+order|order|several|more\\s+than\\s+one|multiple)\\b)(?=.*\\b(still|same|unchanged|odd|correct|matches|meets|match|fits|(does\\s*n.?t|did\\s*n.?t|not)\\s+change)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what happened to the bits, and what that did to the number of 1s.",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(rows?|bytes?|across)\\b)(?=.*\\b(columns?|down)\\b)(?=.*\\b(both|together|where|locat\\w*|pinpoint\\w*|exact\\w*|which|find\\w*|identif\\w*|shows?|point\\w*)\\b).*$|^(?=.*\\b(cross\\w*|intersect\\w*|meet\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "A block checks in two directions. Name both, and say where the error is."
+   }
+  ],
+  "y10_22l4_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(calculat\\w*|add\\w*|total\\w*|sum\\w*|value|algorithm)\\b)(?=.*\\b(recalculat\\w*|again|receiv\\w*|arriv\\w*|after|other\\s+end)\\b)(?=.*\\b(compar\\w*|match\\w*|same|differ\\w*|equal|error)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Three steps: what the sender does before sending, what the receiver does, and how it decides.",
+    "marks": 3
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(compar\\w*|match\\w*|same|differ\\w*|equal|chang\\w*|check\\s+(them|both|the\\s+two))\\b)(?=.*\\b(two|both|values?|results?|answers?|totals?|checksums?|them|they|data|before|after|sent|arriv\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "One value on its own tells the receiver nothing. What can it do with two?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(see|sees|saw|seen|know|knows|view|access|has|have|get|gets)\\b)(?=.*\\b(receiv\\w*|arriv\\w*|got|middle|other\\s+end)\\b).*$|^(?=.*\\b(same|identical|alike|both)\\b)(?=.*\\b(copy|copies|result|looks?|mismatch|match|wrong|different)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Think about what the sender can see, and what it cannot see."
+   }
+  ],
+  "y10_22l4_do_now_3": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\becho)(?=.*\\bcheck\\s*-?\\s*sum).*$|^(?=.*\\becho)(?=.*\\beven\\s+parity).*$|^(?=.*\\becho)(?=.*\\bnegative).*$|^(?=.*\\bcheck\\s*-?\\s*sum)(?=.*\\beven\\s+parity).*$|^(?=.*\\bcheck\\s*-?\\s*sum)(?=.*\\bnegative).*$|^(?=.*\\beven\\s+parity)(?=.*\\bnegative).*$",
+     "flags": "i"
+    },
+    "feedback": "List every check from 2.2, then cross out the two the question already uses.",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(lost|lose|loses|never|not|no|nothing|forever|ever|stuck|missing|corrupt\\w*)\\b)(?=.*\\b(arriv\\w*|receiv\\w*|acknowledg\\w*|ack|back|repl\\w*|wait\\w*|comes?|gets?|reach\\w*|sent|send\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "What if the acknowledgement never comes back? What would the sender do?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(negative|nak|receiver|receiving)\\b)(?=.*\\b(straight|immediate\\w*|at\\s+once|right\\s+away|soon|quick\\w*|fast\\w*|tells?|told|knows?|informs?|warns?|says?|saying|lets?|message)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Who sends the negative acknowledgement, and what does it tell the sender?"
+   }
+  ],
+  "y10_22l4_exam_purpose": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(errors?|mistakes?|accura\\w*|verif\\w*|correct\\w*|checks?|checking|valid\\w*|wrong)\\b)(?=.*\\b(calculat\\w*|algorithm|worked\\s+out|from\\s+the\\s+(other\\s+)?(digits|data|input|number)|using\\s+the\\s+(other\\s+)?(digits|data|number))\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what it is used for, and how it is made.",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "\\b(isbns?|books?|bar\\s*-?\\s*codes?|products?|credit\\s+cards?|bank\\s+cards?|parity\\s+bits?)\\b",
+     "flags": "i"
+    },
+    "feedback": "Where have you seen a long number with a check digit at the end?"
+   }
+  ],
+  "y10_22l4_exam_calc": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(check\\s+digit\\s*(is|[:=])?\\s*)?1\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Add the five digits. Divide the total by 10. What is left over?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\bc\\b)(?=.*\\bd\\b)(?!.*\\bb\\b)(?!.*(^|[\\s,])a([\\s,.]|$)).*$",
+     "flags": "i"
+    },
+    "feedback": "For each number, add the first five digits and find the remainder. Does it match the last digit? Type every letter that does not match.",
+    "marks": 2
+   }
+  ],
+  "y10_22l4_check_position": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(check\\s+digit\\s*(is|[:=])?\\s*)?3\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Digit times position for each digit, add them up, then the remainder after dividing by 11."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+letter\\s+)?x\\s*$",
+     "flags": "i"
+    },
+    "feedback": "How many 11s fit in 54? What is left over? Read the rule for that remainder."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(check\\s+digit\\s*(is|[:=])?\\s*)?6\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out the total again with the new order of digits."
+   }
+  ],
+  "y10_22l4_exam_algorithm": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(two|2|digits|numbers|pair|both)\\b)(?=.*\\b(swap\\w*|transpos\\w*|switch\\w*|order|places|round|revers\\w*|interchang\\w*|mixed|flipped)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Look back at the compare slide. Which mistake gave the same total?",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(multipl\\w*|times|weight\\w*|positions?|place\\s+values?|different\\s+numbers?)\\b)(?=.*\\b(add\\w*|total\\w*|sum\\w*|divid\\w*|mod|modulo|remainder)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what is done to each digit first, then what is done with the results.",
+    "marks": 2
+   }
+  ],
+  "y10_22l4_exam_printer": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*check\\s*-?\\s*digit)((?=.*\\bparity\\s+block)(?=.*\\beven\\s+parity)|(?=.*\\bparity\\s+block)(?=.*\\bcheck\\s*-?\\s*sum)|(?=.*\\bparity\\s+block)(?=.*\\becho)|(?=.*\\bparity\\s+block)(?=.*\\b(arq|automatic\\s+repeat))|(?=.*\\bparity\\s+block)(?=.*\\bcyclic)|(?=.*\\beven\\s+parity)(?=.*\\bcheck\\s*-?\\s*sum)|(?=.*\\beven\\s+parity)(?=.*\\becho)|(?=.*\\beven\\s+parity)(?=.*\\b(arq|automatic\\s+repeat))|(?=.*\\beven\\s+parity)(?=.*\\bcyclic)|(?=.*\\bcheck\\s*-?\\s*sum)(?=.*\\becho)|(?=.*\\bcheck\\s*-?\\s*sum)(?=.*\\b(arq|automatic\\s+repeat))|(?=.*\\bcheck\\s*-?\\s*sum)(?=.*\\bcyclic)|(?=.*\\becho)(?=.*\\b(arq|automatic\\s+repeat))|(?=.*\\becho)(?=.*\\bcyclic)|(?=.*\\b(arq|automatic\\s+repeat))(?=.*\\bcyclic)).*$",
+     "flags": "i"
+    },
+    "feedback": "The data is being sent to a printer. Which checks are for data that is sent?",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(data\\s+entry|entry|entered|enter\\w*|typ\\w*|scann?\\w*|input\\w*|key\\w*)\\b)(?=.*\\b(transmi\\w*|sent|send\\w*|travel\\w*|cable|printer|network|moving)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Use the compare slide: what is a check digit for, and what is happening to this data?"
+   }
+  ],
+  "y10_22l4_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(arq|automatic\\s+repeat)\\b)(?=.*\\bcheck\\s*-?\\s*digits?\\b)(?!.*\\bcheck\\s*-?\\s*sums?\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Which method is used when a number is typed or scanned?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(arq|automatic\\s+repeat)\\b)(?!.*\\bcheck\\s*-?\\s*digits?\\b)(?!.*\\bcheck\\s*-?\\s*sums?\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Which method uses a timer?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(arq|automatic\\s+repeat)\\b)(?=.*\\bcheck\\s*-?\\s*digits?\\b)(?=.*\\bcheck\\s*-?\\s*sums?\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Which methods calculate a value, then calculate it again? Type both."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(arq|automatic\\s+repeat)\\b)(?!.*\\bcheck\\s*-?\\s*digits?\\b)(?!.*\\bcheck\\s*-?\\s*sums?\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Which method waits for an acknowledgement?"
+   },
+   {
+    "suffix": "e",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(arq|automatic\\s+repeat)\\b)(?!.*\\bcheck\\s*-?\\s*digits?\\b)(?=.*\\bcheck\\s*-?\\s*sums?\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Which of the three calculates a value from the data that was sent?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
