@@ -137,6 +137,7 @@
       '.scc-series{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:13px;color:var(--ink-soft)}',
       '.scc-series strong{color:var(--ink);font-variant-numeric:tabular-nums}',
       '.scc-pips{display:flex;gap:5px;margin-left:auto}',
+      '.scc-exam [data-act="menu"]{display:none}',
       '.scc-pip{width:12px;height:12px;border-radius:50%;border:2px solid var(--line-strong);background:transparent}',
       '.scc-pip.is-done{background:var(--good);border-color:var(--good)}',
       '.scc-pip.is-here{border-color:var(--brand)}',
@@ -202,7 +203,7 @@
       document.body.classList.toggle('scc-collapsed', state.collapsed);
       relayout();
     } else if (act === 'menu') {
-      if (!state.checking) showMenu();
+      if (!state.checking && !(state.challenge && state.challenge.exam)) showMenu();
     } else if (act === 'open') {
       openChallenge(btn.getAttribute('data-id'));
     } else if (act === 'check') {
@@ -319,6 +320,7 @@
     var c = state.challenge;
     if (!c) return;
     var info = lessonInfo(lessonOf(c));
+    els.panel.classList.toggle('scc-exam', !!c.exam);
     els.kicker.textContent = 'Scratch Challenge' + (info[1] ? ' · ' + info[1] : '');
     els.title.textContent = c.title;
     if (state.picking) return renderPicker(c);
@@ -353,7 +355,9 @@
   function renderFoot() {
     var n = counts();
     var complete = n.passed === n.total && n.total > 0;
-    var next = nextChallenge();
+    // A test challenge (exam: true) has no Next and no menu: the student stays on it. Support shows only its tips.
+    var exam = !!(state.challenge && state.challenge.exam);
+    var next = exam ? null : nextChallenge();
     els.foot.innerHTML =
       (state.checking ?
         '<button type="button" class="scc-btn" data-act="stop">Stop checking</button>' :
@@ -620,6 +624,14 @@
     if (window.BCSupport) window.BCSupport.onChange(function () { if (state.challenge && !state.checking) render(); });
     window.ScratchCheck = { open: openChallenge, check: runChecks, selfTest: selfTest, state: state };
     var id = params.get('challenge');
+    // A test opens its challenge with &run=<the attempt's start time>: a new attempt starts from the starter
+    // project, so a teacher preview or an earlier try on this computer never carries into a test.
+    var run = params.get('run');
+    if (id && run && load('scratchcheck:run:' + id) !== run) {
+      store(PROJECT_PREFIX + id, null);
+      store(DONE_PREFIX + id, null);
+      store('scratchcheck:run:' + id, run);
+    }
     if (id && K.find(id)) openChallenge(id); else showMenu();
   }
 

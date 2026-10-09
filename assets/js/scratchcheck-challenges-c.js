@@ -90,6 +90,7 @@
     sky: svg(480, 360, skyArt('#8ab4f8', '#34a853', '#fdd663')),
     sunset: svg(480, 360, skyArt('#f6aea9', '#1e8e3e', '#fa7b17')),
     timeUp: svg(480, 360, skyArt('#8ab4f8', '#34a853', '#fdd663') + banner('TIME UP!', '#fdd663')),
+    youWinSky: svg(480, 360, skyArt('#8ab4f8', '#34a853', '#fdd663') + banner('YOU WIN!', '#81c995')),
     dungeon: svg(480, 360, dungeonArt('#161b2e', '#1d2439')),
     dungeon2: svg(480, 360, dungeonArt('#24142b', '#2e1a37')),
     escaped: svg(480, 360, dungeonArt('#161b2e', '#1d2439') + banner('YOU ESCAPED!', '#81c995')),
@@ -114,7 +115,8 @@
 
   // ======================= Meteor Dodge =======================
   // Bugs: 'steer' (left arrow goes right), 'end' (game over waits for lives < 0),
-  // 'reset' (the green flag does not reset lives), 'star' (a caught Star stays on the Ship).
+  // 'reset' (the green flag does not reset lives), 'star' (a caught Star stays on the Ship),
+  // 'hitgain' (a hit adds a life), 'starlives' (a caught Star adds 5 to lives, not score).
   function meteorDodge(bug) {
     return {
       backdrops: [['Space', 'space'], ['Game Over', 'gameOverSpace']],
@@ -140,7 +142,7 @@
             ['control_if', { CONDITION: ['operator_lt', { OPERAND1: ['motion_yposition'], OPERAND2: -170 }], SUBSTACK: [
               ['data_changevariableby', { VARIABLE: 'score', VALUE: 1 }], ['data_changevariableby', { VARIABLE: 'speed', VALUE: 0.2 }], toTop] }],
             ['control_if', { CONDITION: touching('Ship'), SUBSTACK: [
-              ['sound_play', { SOUND_MENU: 'boom' }], ['data_changevariableby', { VARIABLE: 'lives', VALUE: -1 }], toTop] }]
+              ['sound_play', { SOUND_MENU: 'boom' }], ['data_changevariableby', { VARIABLE: 'lives', VALUE: has(bug, 'hitgain') ? 1 : -1 }], toTop] }]
           ] }]]),
           receive('game over', [['looks_hide']])
         ] },
@@ -149,7 +151,7 @@
             ['motion_changeyby', { DY: -3 }],
             ['control_if', { CONDITION: ['operator_lt', { OPERAND1: ['motion_yposition'], OPERAND2: -170 }], SUBSTACK: [toTop] }],
             ['control_if', { CONDITION: touching('Ship'), SUBSTACK: [
-              ['sound_play', { SOUND_MENU: 'coin' }], ['data_changevariableby', { VARIABLE: 'score', VALUE: 5 }]].concat(has(bug, 'star') ? [] : [toTop]) }]
+              ['sound_play', { SOUND_MENU: 'coin' }], ['data_changevariableby', { VARIABLE: has(bug, 'starlives') ? 'lives' : 'score', VALUE: 5 }]].concat(has(bug, 'star') ? [] : [toTop]) }]
           ] }]]),
           receive('game over', [['looks_hide']])
         ] }
@@ -237,6 +239,8 @@
   // ======================= Balloon Pop =======================
   // Bugs: 'score' (a pop sets score to 1), 'timer' (time counts up, so it never reaches 0),
   // 'escape' (the red Balloon never comes back from the top), 'start' (the flag sets time to 2).
+  // Changes (the solution to the test's Change the Game): 'pop2' (a pop adds 2), 'time30' (the flag sets
+  // time to 30), 'win10' (a Stage script switches to You Win when score reaches 10).
   function balloonPop(bug) {
     return {
       backdrops: [['Sky', 'sky'], ['Time Up', 'timeUp']],
@@ -244,19 +248,20 @@
       variables: { score: 0, time: 20 },
       showVariables: ['score', 'time'],
       stageScripts: [s(20, 20, [flag, ['looks_switchbackdropto', { BACKDROP: 'Sky' }],
-        ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['data_setvariableto', { VARIABLE: 'time', VALUE: has(bug, 'start') ? 2 : 20 }],
+        ['data_setvariableto', { VARIABLE: 'score', VALUE: 0 }], ['data_setvariableto', { VARIABLE: 'time', VALUE: has(bug, 'start') ? 2 : has(bug, 'time30') ? 30 : 20 }],
         ['control_repeat_until', { CONDITION: ['operator_equals', { OPERAND1: V('time'), OPERAND2: 0 }], SUBSTACK: [
           ['control_wait', { DURATION: 1 }], ['data_changevariableby', { VARIABLE: 'time', VALUE: has(bug, 'timer') ? 1 : -1 }]] }],
         ['event_broadcast', { BROADCAST_INPUT: 'time up' }], ['looks_switchbackdropto', { BACKDROP: 'Time Up' }],
-        ['sound_playuntildone', { SOUND_MENU: 'win' }], ['control_stop', { STOP_OPTION: 'all' }]])],
+        ['sound_playuntildone', { SOUND_MENU: 'win' }], ['control_stop', { STOP_OPTION: 'all' }]])].concat(has(bug, 'win10') ? [s(20, 620, [flag,
+        ['control_wait_until', { CONDITION: ['operator_gt', { OPERAND1: V('score'), OPERAND2: 9 }] }], ['looks_switchbackdropto', { BACKDROP: 'You Win' }]])] : []),
       sprites: [
         { name: 'Balloon', costumes: [['balloon', 'balloon']], sounds: [['pop', 'pop']], x: -80, y: -170, scripts: [
           s(20, 20, [flag, ['looks_show'], toBottom, ['control_forever', { SUBSTACK: [
             ['motion_changeyby', { DY: 3 }],
             ['control_if', { CONDITION: ['operator_gt', { OPERAND1: ['motion_yposition'], OPERAND2: has(bug, 'escape') ? 250 : 170 }], SUBSTACK: [toBottom] }]
           ] }]]),
-          s(20, 300, [['event_whenthisspriteclicked'], ['sound_play', { SOUND_MENU: 'pop' }],
-            has(bug, 'score') ? ['data_setvariableto', { VARIABLE: 'score', VALUE: 1 }] : ['data_changevariableby', { VARIABLE: 'score', VALUE: 1 }],
+          s(20, 440, [['event_whenthisspriteclicked'], ['sound_play', { SOUND_MENU: 'pop' }],
+            has(bug, 'score') ? ['data_setvariableto', { VARIABLE: 'score', VALUE: 1 }] : ['data_changevariableby', { VARIABLE: 'score', VALUE: has(bug, 'pop2') ? 2 : 1 }],
             toBottom]),
           receive('time up', [['looks_hide']])
         ] },
@@ -265,7 +270,7 @@
             ['motion_changeyby', { DY: 6 }],
             ['control_if', { CONDITION: ['operator_gt', { OPERAND1: ['motion_yposition'], OPERAND2: 170 }], SUBSTACK: [toBottom] }]
           ] }]]),
-          s(20, 300, [['event_whenthisspriteclicked'], ['sound_play', { SOUND_MENU: 'coin' }],
+          s(20, 440, [['event_whenthisspriteclicked'], ['sound_play', { SOUND_MENU: 'coin' }],
             ['data_changevariableby', { VARIABLE: 'score', VALUE: 5 }], toBottom]),
           receive('time up', [['looks_hide']])
         ] }
@@ -524,6 +529,89 @@
     K.add({ id: h.id, lesson: 'y6-idebug-l6', title: h.title, brief: h.brief, series: 'Double Bug Hunt', starter: h.game(h.bug), tasks: h.tasks });
     K.solutionStarters[h.id] = function () { return h.game(null); };
   });
+
+  // ======================= Year 6 Term 1 Test =======================
+  // Two challenges the test opens (Tests question type 'scratch'): the mark is the share of checks passed.
+  // Not in the panel's lesson list, so the menu never shows them; exam: true hides the menu and Next while one is
+  // open. Support shows a tip, never the blocks.
+  // Fix the Game: Meteor Dodge with two bugs no Bug Hunt uses (a hit adds a life; a Star adds to lives).
+  var testFixTasks = [
+    { id: 'steer', text: 'The left and right arrows move the Ship left and right.',
+      tip: 'Hold each arrow and watch the Ship.',
+      test: async function (t) {
+        var right = await steer(t, 'right');
+        if (right < 0) t.fail('I held the right arrow. The Ship went left. Right should make x go up.');
+        var left = await steer(t, 'left');
+        if (left > 0) t.fail('I held the left arrow. The Ship went right. Left should make x go down.');
+      } },
+    { id: 'hit', text: 'A Meteor that hits the Ship takes away 1 life.',
+      tip: 'Let a Meteor hit the Ship and watch the lives box. Then read what the Meteor does when it touches the Ship.',
+      test: async function (t) {
+        t.variable('lives');
+        await t.flag(300);
+        t.place('Star', 200, 170);
+        t.place('Ship', 0, -140);
+        t.place('Meteor', 0, -140);
+        var ok = await t.until(function () { return t.value('lives') !== 3; }, 3000);
+        if (!ok || t.value('lives') !== 2) t.fail('lives was 3. A Meteor hit the Ship and lives was ' + t.value('lives') + '. It should be 2.');
+      } },
+    { id: 'star', text: 'Catching a Star adds 5 to score. lives stays the same.',
+      tip: 'Catch a Star and watch both boxes, score and lives. Which one changes? Then read what the Star does when it touches the Ship.',
+      test: async function (t) {
+        t.variable('score'); t.variable('lives');
+        await t.flag(300);
+        t.place('Meteor', 200, 170);
+        t.place('Ship', -100, -140);
+        t.setValue('score', 0); t.setValue('lives', 3);
+        t.place('Star', -100, -140);
+        await t.until(function () { return t.value('score') !== 0 || t.value('lives') !== 3; }, 3000);
+        await t.wait(200);
+        if (t.value('score') !== 5 || t.value('lives') !== 3) t.fail('score was 0 and lives was 3. A Star touched the Ship. Then score was ' + t.value('score') + ' and lives was ' + t.value('lives') + '. score should be 5 and lives should stay 3.');
+      } }
+  ];
+  // Change the Game: Balloon Pop works; the student makes three changes, each checked by what it does.
+  function balloonChange(solved) {
+    var def = balloonPop(solved ? ['pop2', 'time30', 'win10'] : null);
+    def.backdrops.push(['You Win', 'youWinSky']);
+    return def;
+  }
+  var testChangeTasks = [
+    { id: 'pop2', text: 'Each click on the red Balloon adds 2 to score.',
+      tip: 'Click the red Balloon and watch score. Find the Balloon\'s when this sprite clicked script.',
+      test: async function (t) {
+        t.variable('score');
+        await t.flag(300);
+        t.setValue('score', 0);
+        for (var i = 0; i < 3; i++) await t.click('Balloon');
+        await t.wait(150);
+        if (t.value('score') !== 6) t.fail('score was 0. I clicked the red Balloon 3 times and score was ' + t.value('score') + '. It should be 6.');
+      } },
+    { id: 'time30', text: 'The green flag sets time to 30, so a game lasts 30 seconds.',
+      tip: 'Click the green flag and look at the time box straight away. Find the Stage\'s green flag script.',
+      test: async function (t) {
+        t.variable('time');
+        t.stop();
+        t.setValue('time', 0);
+        await t.flag(200);
+        if (t.value('time') !== 30) t.fail('After the green flag time was ' + t.value('time') + '. It should start at 30.');
+      } },
+    { id: 'win', text: 'When score reaches 10, the backdrop switches to You Win.',
+      tip: 'Which block waits until something is true? Which block changes the backdrop? Test it: pop balloons until score is 10.',
+      test: async function (t) {
+        t.variable('score');
+        await t.flag(300);
+        if (t.backdrop() === 'You Win') t.fail('score was 0 and the backdrop was already You Win. It should only switch when score reaches 10.');
+        t.setValue('score', 10);
+        var ok = await t.until(function () { return t.backdrop() === 'You Win'; }, 2000);
+        if (!ok) t.fail('score was 10. The backdrop stayed ' + t.backdrop() + '. It should switch to You Win.');
+      } }
+  ];
+  K.add({ id: 'test-fix', lesson: 'y6-term1-test', exam: true, title: 'Fix the Game: Meteor Dodge', starter: meteorDodge(['hitgain', 'starlives']), tasks: testFixTasks,
+    brief: 'Dodge the Meteors and catch the Stars. This game has 2 bugs. Play it, find each bug and fix it. Press Check my project to test it.' });
+  K.solutionStarters['test-fix'] = function () { return meteorDodge(null); };
+  K.add({ id: 'test-change', lesson: 'y6-term1-test', exam: true, title: 'Change the Game: Balloon Pop', starter: balloonChange(false), tasks: testChangeTasks,
+    brief: 'This game works. Make the 3 changes in the list. Press Check my project to test them.' });
+  K.solutionStarters['test-change'] = function () { return balloonChange(true); };
 
   // ======================= 6.2.5 game starters =======================
   // Sprites, art, sounds and backdrops, no scripts: the student builds the game.
