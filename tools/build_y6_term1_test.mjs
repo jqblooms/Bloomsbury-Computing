@@ -2,8 +2,9 @@
 // markers), the revision drill y6-term1-revision (from tools/y6_term1_kit.js) and the lesson y6-term1-test
 // (20 minutes of revision, then a link to the Tests page).
 //   node tools/build_y6_term1_test.mjs
-// James, 2026-10-08: Year 6 answer with buttons only, every question shows a real Scratch script, prompts are
-// short and plain, and the four options of each choice are hinge options (each wrong one is the answer a real
+// James, 2026-10-08: every question shows a real Scratch script and prompts are short and plain. Since
+// 2026-10-09 ("way too much multiple choice") traced numbers, positions and costume names are typed; only the
+// questions that ask which block are choices, and their four options are hinge options (each wrong one is the answer a real
 // mistake gives: a repeat counted one more, set read as change, a minus sign missed, x and y mixed up). Part 2 has
 // students fix and change real Scratch games: the Scratch Challenges test-fix and test-change
 // (assets/js/scratchcheck-challenges-c.js), marked by the share of checks passed. Every answer below comes from
@@ -27,6 +28,18 @@ const { B, C } = Y6;
 // ---------------------------------------------------------------- scripts and their answers
 const pos = (x, y) => `x: ${x}, y: ${y}`;
 const choice = (q) => Object.assign({ type: 'choice', marks: 1 }, q);
+// Traced values are typed (James 2026-10-09: "way too much multiple choice"). A number has no wording to guess;
+// a position is typed as x then y ('list' reads the numbers in order, so "x: -40, y: -20" and "-40 -20" both count).
+const typed = (q) => {
+  const out = Object.assign({ type: 'short', input: 'number', marks: 1 }, q);
+  out.accept = [String(q.answer)];
+  delete out.answer; delete out.options;
+  return out;
+};
+const where = (q, r) => Object.assign(typed(Object.assign({}, q, { answer: r.x + ',' + r.y })), {
+  input: 'list', placeholder: 'x, y', prompt: q.prompt.replace('Where is the sprite when this script ends?', 'Where is the sprite when this script ends? Type x, then y.')
+});
+const named = (q) => Object.assign(typed(q), { input: 'text', accept: [q.answer, q.answer.replace(/(\d)$/, ' $1')], placeholder: 'costume name' });
 
 // a1 events: each event runs its own script.
 const EVENTS = [[B.flag(), B.set('score', 0)], [B.click(), B.change('score', 1)], [B.key('space'), B.change('score', 5)]];
@@ -38,14 +51,12 @@ const MOVE = [[B.flag(), B.goto(-60, 30), B.changex(20), B.changey(-50)]];
 const r2 = Y6.run(MOVE, ['flag']);
 assert(r2.x === -40 && r2.y === -20, "a2");
 // wrong: y sign missed (30 + 50), x and y mixed up (-60 - 50, 30 + 20), both signs missed (-60 - 20, 30 + 50)
-const a2opts = [pos(-40, -20), pos(-40, 80), pos(-110, 50), pos(-80, 80)];
 
 // a3 glide then change.
 const GLIDE = [[B.flag(), B.goto(100, 0), B.glide(2, -100, 50), B.changey(20)]];
 const r3 = Y6.run(GLIDE, ['flag']);
 assert(r3.x === -100 && r3.y === 70, 'a3');
 // wrong: last block missed, glide added to the start (100 - 100, 0 + 50 + 20), change put on x
-const a3opts = [pos(-100, 70), pos(-100, 50), pos(0, 70), pos(-80, 50)];
 
 // a4 repeat, then one block after the loop.
 const LOOP = [[B.flag(), B.setx(0), B.repeat(4, [B.changex(15)]), B.changex(10)]];
@@ -121,7 +132,6 @@ const STEPS = [[B.flag(), B.goto(0, 0), B.repeat(3, [B.changey(10), B.changex(5)
 const r14 = Y6.run(STEPS, ['flag']);
 assert(r14.x === 15 && r14.y === 30, 'a14');
 // wrong: x and y mixed up, one turn too many, the loop counted once
-const a14opts = [pos(15, 30), pos(30, 15), pos(20, 40), pos(5, 10)];
 
 // a15 a longer costume trace: 6 turns from walk3 go past the last costume twice.
 const COS6 = [[B.flag(), B.costume('walk3'), B.repeat(6, [B.next(), B.wait(0.2)])]];
@@ -134,35 +144,35 @@ const test = {
   id: 'y6-term1', title: 'Year 6 Term 1 Test', subtitle: 'Scratch: events, coordinates, loops, variables, decisions, costumes, messages and bugs', year: 'year6', minutes: 30,
   sections: [
     { title: 'Reading Scripts', questions: [
-      choice({ id: 'a1', prompt: 'The player clicks the green flag. Then they click the sprite 2 times and press the space key once. What is score now?', blocks: Y6.text(EVENTS),
+      typed({ id: 'a1', prompt: 'The player clicks the green flag. Then they click the sprite 2 times and press the space key once. What is score now?', blocks: Y6.text(EVENTS),
         options: ['7', '3', '2', '6'], answer: String(a1), scheme: 'Flag: 0. Two clicks: 1 + 1. Space: + 5. Total 7. (3 counts space as 1; 2 forgets space; 6 counts one click.)' }),
-      choice({ id: 'a2', prompt: 'Where is the sprite when this script ends?', blocks: Y6.text(MOVE),
-        options: a2opts, answer: pos(r2.x, r2.y), scheme: 'x: -60 + 20 = -40. y: 30 - 50 = -20.' }),
-      choice({ id: 'a3', prompt: 'Where is the sprite when this script ends?', blocks: Y6.text(GLIDE),
-        options: a3opts, answer: pos(r3.x, r3.y), scheme: 'glide ends at x: -100, y: 50. Then change y by 20 gives y: 70.' }),
-      choice({ id: 'a4', prompt: 'What is x when this script ends?', blocks: Y6.text(LOOP),
+      where({ id: 'a2', prompt: 'Where is the sprite when this script ends?', blocks: Y6.text(MOVE),
+        scheme: 'x: -60 + 20 = -40. y: 30 - 50 = -20.' }, r2),
+      where({ id: 'a3', prompt: 'Where is the sprite when this script ends?', blocks: Y6.text(GLIDE),
+        scheme: 'glide ends at x: -100, y: 50. Then change y by 20 gives y: 70.' }, r3),
+      typed({ id: 'a4', prompt: 'What is x when this script ends?', blocks: Y6.text(LOOP),
         options: ['70', '85', '60', '25'], answer: String(a4), scheme: '4 turns of 15 = 60, then + 10 after the loop = 70.' }),
-      choice({ id: 'a5', prompt: 'What is score when this script ends?', blocks: Y6.text(VARS),
+      typed({ id: 'a5', prompt: 'What is score when this script ends?', blocks: Y6.text(VARS),
         options: ['5', '10', '4', '6'], answer: String(a5), scheme: 'The second set gives 4 and throws away 5. Then + 1 = 5.' }),
-      choice({ id: 'a6', prompt: 'The game is played 5 times. score is 7, then 10, then 12, then 10, then 15. How many times does the sprite say You win!?', blocks: Y6.text(WIN),
+      typed({ id: 'a6', prompt: 'The game is played 5 times. score is 7, then 10, then 12, then 10, then 15. How many times does the sprite say You win!?', blocks: Y6.text(WIN),
         options: ['2', '4', '1', '3'], answer: String(a6), scheme: '12 and 15. 10 is not more than 10, so both 10s lose. (4 counts the 10s; 1 and 3 read the sign the wrong way round.)' }),
-      choice({ id: 'a7', prompt: 'The sprite has 4 costumes: walk1, walk2, walk3, walk4. Which costume does it show when this script ends?', blocks: Y6.text(COS),
+      named({ id: 'a7', prompt: 'The sprite has 4 costumes: walk1, walk2, walk3, walk4. Which costume does it show when this script ends?', blocks: Y6.text(COS),
         options: ['walk1', 'walk4', 'walk3', 'walk2'], answer: a7, scheme: 'walk2, then walk3, walk4, and after the last costume back to walk1.' }),
       choice({ id: 'a8', prompt: 'In this Catch game, the Stage runs this script. When score reaches 10, the Apple should fall faster. Which hat block should start the Apple\'s new script?', blocks: Y6.text([STAGE]),
         options: Object.keys(hats), answer: a8[0], scheme: 'broadcast [level 2] sends the message; when I receive [level 2] starts when it arrives. when flag clicked would start at the beginning, not at 10.' }),
-      choice({ id: 'a9', prompt: 'This is the Ship in a space game. A Laser hits the Ship and stays touching it for 3 turns of the forever loop. What is shield then?', blocks: Y6.text(SHIP),
+      typed({ id: 'a9', prompt: 'This is the Ship in a space game. A Laser hits the Ship and stays touching it for 3 turns of the forever loop. What is shield then?', blocks: Y6.text(SHIP),
         options: ['2', '4', '3', '5'], answer: String(a9), scheme: 'Nothing moves the Laser away, so the if is true on all 3 turns: 5 - 3 = 2. (4 counts the hit once.)' }),
-      choice({ id: 'a10', prompt: 'What is score when this script ends?', blocks: Y6.text(LOOPS2),
+      typed({ id: 'a10', prompt: 'What is score when this script ends?', blocks: Y6.text(LOOPS2),
         options: ['8', '6', '3', '11'], answer: String(a10), scheme: '3 turns of 2 = 6, then 2 turns of 1 = 2. Total 8.' }),
-      choice({ id: 'a11', prompt: 'The player clicks the green flag. Then they press: right arrow, right arrow, left arrow, right arrow. What is x now?', blocks: Y6.text(ARROWS),
+      typed({ id: 'a11', prompt: 'The player clicks the green flag. Then they press: right arrow, right arrow, left arrow, right arrow. What is x now?', blocks: Y6.text(ARROWS),
         options: ['20', '40', '10', '-20'], answer: String(a11), scheme: '0 + 10 + 10 - 10 + 10 = 20.' }),
-      choice({ id: 'a12', prompt: 'What is lives when this script ends?', blocks: Y6.text(IFLOOP),
+      typed({ id: 'a12', prompt: 'What is lives when this script ends?', blocks: Y6.text(IFLOOP),
         options: ['1', '0', '2', '3'], answer: String(a12), scheme: 'score goes 1, 2, 3, 4, 5. Only 4 and 5 are more than 3, so lives goes down twice: 3 - 2 = 1.' }),
       choice({ id: 'a13', prompt: 'This is the Apple in a Catch game. Each time the Apple touches the Bowl, score should go up by 1. But score never goes past 1. Which block should replace set [score] to (1)?', blocks: Y6.text(APPLE(B.set('score', 1))),
         options: Object.keys(a13fix), answer: a13[0], scheme: 'change [score] by (1). set puts the same number in score every time, so it gets stuck; -1 makes it go down.' }),
-      choice({ id: 'a14', prompt: 'Where is the sprite when this script ends?', blocks: Y6.text(STEPS),
-        options: a14opts, answer: pos(r14.x, r14.y), scheme: '3 turns: y goes up 10 each turn (30), x goes up 5 each turn (15).' }),
-      choice({ id: 'a15', prompt: 'The sprite has 4 costumes: walk1, walk2, walk3, walk4. Which costume does it show when this script ends?', blocks: Y6.text(COS6),
+      where({ id: 'a14', prompt: 'Where is the sprite when this script ends?', blocks: Y6.text(STEPS),
+        scheme: '3 turns: y goes up 10 each turn (30), x goes up 5 each turn (15).' }, r14),
+      named({ id: 'a15', prompt: 'The sprite has 4 costumes: walk1, walk2, walk3, walk4. Which costume does it show when this script ends?', blocks: Y6.text(COS6),
         options: ['walk1', 'walk4', 'walk2', 'walk3'], answer: a15, scheme: 'walk3, then walk4, walk1, walk2, walk3, walk4, walk1: after the last costume it goes back to the first, twice.' })
     ] },
     { title: 'Fix and Change a Game', questions: [
@@ -249,7 +259,7 @@ const drillJs = `// Year 6 Term 1 Test Revision
 DrillData.register(${JSON.stringify(DRILL)}, {
   title: "Year 6 Term 1 Test Revision",
   subtitle: "Scratch: events, coordinates, loops, variables, decisions, costumes, messages and bugs",
-  // Buttons for every card, numbers too: Year 6 never has to guess a typed answer's wording.
+  // On the site a number answer is typed and every other card is buttons (Drills/engine.js); races show buttons for every card.
   choiceOnly: true,
   categories: [["events","Events"],["motion","Coordinates and Motion"],["loops","Loops"],["variables","Variables"],["decisions","Decisions"],["looks","Costumes and Messages"],["bugs","Fixing Bugs"]],
   cards: (function () {

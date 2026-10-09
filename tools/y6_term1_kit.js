@@ -322,7 +322,7 @@
       return {
         blocks: Y6.text(s),
         prompt: "Where is the sprite when this script ends?",
-        answers: [ans], keywords: [posRe(r.x, r.y)],
+        answers: [ans], keywords: [posRe(r.x, r.y)], typed: true, format: "Type x, then y",
         distractors: four(ans, [pos(r.x, y0 - dy), pos(x0 + dy, y0 + dx), pos(x0 - dx, y0 - dy), pos(x0 + dx, y0), pos(x0 - dx, r.y), pos(r.y, r.x), pos(x0, r.y)]),
         working: ["change x moves left or right. change y moves up or down.", "A minus number makes it go down or left."],
         walk: w.steps,
@@ -341,7 +341,7 @@
       return {
         blocks: Y6.text(s),
         prompt: "Where is the sprite when this script ends?",
-        answers: [ans], keywords: [posRe(r.x, r.y)],
+        answers: [ans], keywords: [posRe(r.x, r.y)], typed: true, format: "Type x, then y",
         distractors: four(ans, [pos(gx, gy), wrongAxis, axis === "x" ? pos(x0 + gx + c, gy) : pos(x0 + gx, gy + c), pos(x0, gy)]),
         working: ["glide goes to the x and y in the glide block.", "Then the last block moves it from there."],
         walk: w.steps,
@@ -380,7 +380,7 @@
       return {
         blocks: Y6.text(s),
         prompt: "Where is the sprite when this script ends?",
-        answers: [ans], keywords: [posRe(r.x, r.y)],
+        answers: [ans], keywords: [posRe(r.x, r.y)], typed: true, format: "Type x, then y",
         distractors: four(ans, [pos(r.y, r.x), pos(r.x + dx, r.y + dy), pos(dx, dy), pos(r.x - dx, r.y - dy), pos(r.x, 0)]),
         working: ["Count the turns of the loop. Both blocks inside run on every turn.", "Add up the x changes on their own, then the y changes on their own."],
         walk: w.steps,
@@ -591,7 +591,7 @@
       return {
         blocks: Y6.text(s),
         prompt: "The sprite has " + count + " costumes: " + costumes.join(", ") + ". Which costume does it show when this script ends?",
-        answers: [ans], keywords: [exactRe(ans)],
+        answers: [ans], keywords: [exactRe(ans)], typed: true, format: "Type the costume name",
         distractors: four(ans, [short, noWrap, costumes[start], costumes[(start + n + 1) % count]].concat(costumes)),
         working: ["Each turn of the loop moves on 1 costume.", "After the last costume, next costume goes back to the first."],
         walk: w.steps,

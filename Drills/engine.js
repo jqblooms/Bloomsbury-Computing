@@ -164,9 +164,16 @@
 
   // run state - reset whenever the mode, topic or card count changes
   var run = null;
-  // Year 6 answers with buttons only: a choiceOnly Year 6 drill never offers "Type the answer", because the
-  // students cannot guess the exact wording a typed answer needs. Other years' choiceOnly flags are for the races.
+  // Year 6 (a choiceOnly drill whose id starts y6-): a number answer, or a card drawn with typed: true (a position,
+  // a costume name), is always typed; everything else is always buttons, with no "Type the answer" choice. The students cannot guess a typed answer's wording, but a traced
+  // number has no wording (James 2026-10-09: "way too much multiple choice"). Other years' choiceOnly flags are
+  // for the races only.
   var buttonsOnly = !!drill.choiceOnly && /^y6-/.test(drillId);
+  function typesAnswer(set) {
+    if (set.multi || cardsById[current.cardId].pickThenType) return false;
+    if (buttonsOnly) return !!(current.instance && current.instance.typed) || /^-?\d+(\.\d+)?$/.test(String(set.correct[0]).trim());
+    return run.answerMode === "text";
+  }
   function freshRun(mode, category, count, answerMode, poolChoice) {
     if (buttonsOnly) answerMode = "mc";
     var pool = poolCardIds(category, poolChoice);
@@ -775,7 +782,8 @@
       // A randomised exam-format card (exam-widgets.js) draws a fresh table or program each time.
       widget: instance.widget != null ? instance.widget : card.widget,
       trace: instance.trace != null ? instance.trace : card.trace,
-      errorline: instance.errorline != null ? instance.errorline : card.errorline
+      errorline: instance.errorline != null ? instance.errorline : card.errorline,
+      format: instance.format != null ? instance.format : card.format
     };
   }
 
@@ -850,7 +858,7 @@
     // grading several free-typed answers reliably is a much harder problem
     // than grading one, so only single-answer cards get the text input.
     // A pick-then-type card always shows its options (the student picks one, then types it out): never plain typing.
-    var textMode = run.answerMode === "text" && !set.multi && !cardsById[current.cardId].pickThenType;
+    var textMode = typesAnswer(set);
 
     var kind = set.multi ? "Pick every correct answer, then submit" : card.pickThenType ? "Pick the answer that earns the mark, then type it out to lock it in" : (textMode ? answerFormat(card) : "Pick an answer");
     var streakHtml = "";
@@ -978,7 +986,7 @@
       return;
     }
     // A pick-then-type card always shows its options (the student picks one, then types it out): never plain typing.
-    var textMode = run.answerMode === "text" && !set.multi && !cardsById[current.cardId].pickThenType;
+    var textMode = typesAnswer(set);
     if (textMode) showTextHint(true); else narrowOptions(true);
   }
 
@@ -987,7 +995,7 @@
     var set = current.set;
     var card = resolveCard(cardsById[current.cardId], current.instance);
     // A pick-then-type card always shows its options (the student picks one, then types it out): never plain typing.
-    var textMode = run.answerMode === "text" && !set.multi && !cardsById[current.cardId].pickThenType;
+    var textMode = typesAnswer(set);
     var right;
     var fb;
 
