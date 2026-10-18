@@ -1,0 +1,610 @@
+{
+ "id": "y9-3-1-pseudocode",
+ "label": "3.1: Following and Correcting Pseudocode",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Question 1",
+   "type": "short-answer-validation",
+   "validatorId": "y9l31-do-now",
+   "validatorKey": "y9l31_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Follow the Loop</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must you follow what each line says, not what the program should do?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The computer cannot see what we meant. It only does what each line says, one line at a time.</p></div></details><p class=\"lesson-lead\">From 2.2 Loops and 2.6 Trace Tables. This program should add up 3, 4, 5 and 6. Follow it exactly as it is written.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 3 TO 6</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + 3</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l31-do-now-a\">(a) What is Total after the first pass? [1]</label><input id=\"y9l31-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Follow the Loop part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l31-do-now-b\">(b) What is Total after the second pass? [1]</label><input id=\"y9l31-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Follow the Loop part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l31-do-now-c\">(c) What does the program output? [1]</label><input id=\"y9l31-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Follow the Loop part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l31-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y9l31-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: follow a loop exactly as written",
+    "steps": [
+     {
+      "text": "This is a similar program. It <strong>should</strong> add up 2, 3 and 4. We follow what each line <strong>says</strong>, not what it should do.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 2 TO 4</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + 10</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div>"
+     },
+     {
+      "text": "Line 3 sets Total to <strong>0</strong>, once, before the loop.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line wt-hl\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 2 TO 4</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + 10</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Total = 0</div>"
+     },
+     {
+      "text": "Line 4: Count will be 2, then 3, then 4. That is <strong>3 passes</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line wt-hl\">04&nbsp;&nbsp;FOR Count &larr; 2 TO 4</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + 10</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Total = 0</div>"
+     },
+     {
+      "text": "Pass 1, Count = 2. Line 5 says add <strong>10</strong>, not Count. Total = 0 + 10 = <strong>10</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 2 TO 4</div><div class=\"lesson-code-line wt-hl\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + 10</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Total = 10</div>"
+     },
+     {
+      "text": "Pass 2, Count = 3. Line 5 still adds 10. Total = 10 + 10 = <strong>20</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 2 TO 4</div><div class=\"lesson-code-line wt-hl\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + 10</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Total = 20</div>"
+     },
+     {
+      "text": "Pass 3, Count = 4. Total = 20 + 10 = <strong>30</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 2 TO 4</div><div class=\"lesson-code-line wt-hl\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + 10</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Total = 30</div>"
+     },
+     {
+      "text": "The loop ends. Line 7 outputs <strong>30</strong>. It should be 9, but the computer only does what line 5 says. Now trace your program the same way.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 2 TO 4</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + 10</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line wt-hl\">07&nbsp;&nbsp;OUTPUT Total</div></div><div class=\"wt-note\">Output: 30</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Question 2",
+   "type": "short-answer-validation",
+   "validatorId": "y9l31-do-now-2",
+   "validatorKey": "y9l31_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: The Value on the Line</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the score of 30 not counted?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>30 &gt; 30 is FALSE: 30 is equal, not more. The program does what line 7 says, not what the rule says.</p></div></details><p class=\"lesson-lead\">From 2.2 and 2.6. A player wins a round with a score of 30 or more. The user types 30, 45, 12, 31.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Score : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Wins : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Wins &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Score</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Score &gt; 30 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wins &larr; Wins + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Wins</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l31-do-now-2-a\">(a) The first score is 30. Is Score &gt; 30 TRUE or FALSE? [1]</label><input id=\"y9l31-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: The Value on the Line part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l31-do-now-2-b\">(b) What does the program output? [1]</label><input id=\"y9l31-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: The Value on the Line part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l31-do-now-2-c\">(c) Write line 7 so that a score of 30 wins. [1]</label><input id=\"y9l31-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: The Value on the Line part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l31-do-now-2-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y9l31-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: the value on the line",
+    "steps": [
+     {
+      "text": "A similar program. A hot day is <strong>25 or more</strong>. The user types 25, then 19, then 32.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Hot : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Hot &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 3</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &gt; 25 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hot &larr; Hot + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Hot</div></div>"
+     },
+     {
+      "text": "Line 4 sets Hot to <strong>0</strong>, once, before the loop.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Hot : INTEGER</div><div class=\"lesson-code-line wt-hl\">04&nbsp;&nbsp;Hot &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 3</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &gt; 25 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hot &larr; Hot + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Hot</div></div><div class=\"wt-note\">Hot = 0</div>"
+     },
+     {
+      "text": "Pass 1: line 6 stores the first number typed, <strong>25</strong>, in Temp.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Hot : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Hot &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 3</div><div class=\"lesson-code-line wt-hl\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &gt; 25 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hot &larr; Hot + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Hot</div></div><div class=\"wt-note\">Temp = 25, Hot = 0</div>"
+     },
+     {
+      "text": "Line 7: is 25 &gt; 25? <strong>No.</strong> 25 is equal to 25, not more. The condition is FALSE, so line 8 does not run.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Hot : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Hot &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 3</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line wt-hl\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &gt; 25 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hot &larr; Hot + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Hot</div></div><div class=\"wt-note\">Hot = 0</div>"
+     },
+     {
+      "text": "Pass 2: Temp is 19. Is 19 &gt; 25? FALSE. Line 8 does not run.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Hot : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Hot &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 3</div><div class=\"lesson-code-line wt-hl\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line wt-hl\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &gt; 25 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hot &larr; Hot + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Hot</div></div><div class=\"wt-note\">Hot = 0</div>"
+     },
+     {
+      "text": "Pass 3: Temp is 32. Is 32 &gt; 25? TRUE. Line 8 runs: Hot = 0 + 1 = <strong>1</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Hot : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Hot &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 3</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line wt-hl\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &gt; 25 THEN</div><div class=\"lesson-code-line wt-hl\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hot &larr; Hot + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Hot</div></div><div class=\"wt-note\">Hot = 1</div>"
+     },
+     {
+      "text": "Line 11 outputs <strong>1</strong>. The day of 25 was not counted, but the rule says it should be. Check your value on the line the same way.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Hot : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Hot &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 3</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &gt; 25 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hot &larr; Hot + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line wt-hl\">11&nbsp;&nbsp;OUTPUT Hot</div></div><div class=\"wt-note\">Output: 1</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y9-3-1-ext",
+   "embedContainerId": "y9l31-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from Term 1a: number systems, loops, arrays, and errors. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y9l31-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Following and Correcting Pseudocode",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Pseudocode and Software Development</p><h2 class=\"lesson-h2\">Following and Correcting Pseudocode</h2><p>Year 9, 3.1</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> read a program one line at a time, and correct it so it does its job.</li><li><strong>You already know:</strong> DECLARE, FOR loops, IF, arrays and trace tables.</li><li><strong>Activities:</strong> trace a program with an error, then correct programs and run them.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program gives the wrong answer. Is that the computer's fault, or the program's? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The program's. The computer does exactly what each line says, in order. It cannot guess what we meant.</p></div></details>"
+  },
+  {
+   "id": "line-by-line",
+   "label": "One Line at a Time",
+   "content": "<h2 class=\"lesson-h2\">One Line at a Time</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does line 6 output? Why is A not 4 any more?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Line 4 makes B 7. Line 5 uses that B: A = 7 * 2 = <strong>14</strong>.</p><p>The new value replaces the old 4. The old value is gone.</p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Line</th><th style=\"padding:6px 12px;text-align:left\">A</th><th style=\"padding:6px 12px;text-align:left\">B</th></tr><tr><td style=\"padding:6px 12px;text-align:left\">3</td><td style=\"padding:6px 12px;text-align:left\">4</td><td style=\"padding:6px 12px;text-align:left\"></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">4</td><td style=\"padding:6px 12px;text-align:left\"></td><td style=\"padding:6px 12px;text-align:left\">7</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">5</td><td style=\"padding:6px 12px;text-align:left\">14</td><td style=\"padding:6px 12px;text-align:left\"></td></tr></table></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE A : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE B : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;A &larr; 4</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;B &larr; A + 3</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;A &larr; B * 2</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;OUTPUT A</div></div></div><div><ul class=\"lesson-facts\"><li>The computer runs <strong>one line at a time</strong>, from the top.</li><li>A line changes only the variable on the <strong>left</strong> of the arrow.</li><li>A new value <strong>replaces</strong> the old one.</li><li>A line uses the values the variables hold <strong>now</strong>.</li></ul></div></div>"
+  },
+  {
+   "id": "hinge-1",
+   "label": "Hinge Question: Follow It Exactly",
+   "type": "multiple-choice",
+   "containerId": "y9l31-hinge-1",
+   "content": "<h2 class=\"lesson-h2\">Hinge Question: Follow It Exactly</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does line 5 not change Y?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Line 4 copied the value into Y. After that, X and Y are separate. Line 5 changes only the variable on the left: X.</p></div></details><p class=\"lesson-lead\">Follow the program one line at a time. Choose the best answer.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE X : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Y : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;X &larr; 5</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Y &larr; X</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;X &larr; X + 4</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;OUTPUT Y</div></div></div><div><div id=\"y9l31-hinge-1\"></div></div></div>",
+   "items": [
+    {
+     "prompt": "What does line 6 output?",
+     "options": [
+      "9",
+      "0",
+      "5",
+      "14"
+     ],
+     "correct": 2,
+     "explain": "Line 4 copies 5 into Y. Line 5 changes only X, so Y is still 5. (9 thinks Y changes with X. 0 thinks Y is empty.)"
+    }
+   ]
+  },
+  {
+   "id": "compare-output",
+   "label": "Compare: OUTPUT Inside or After the Loop",
+   "content": "<h2 class=\"lesson-h2\">Compare: OUTPUT Inside or After the Loop</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both should output the last value of Number, once. Predict what A and B output. Why are they different?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> outputs 6, 12, 24, 48. <strong>B</strong> outputs 48.</p><p>A line inside the loop runs on <strong>every pass</strong>. A line after NEXT runs <strong>once</strong>, when the loop has finished.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Number : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Number &larr; 3</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number &larr; Number * 2</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT Number</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;NEXT Count</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Number : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Number &larr; 3</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number &larr; Number * 2</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Number</div></div></div></div><ul class=\"lesson-facts\"><li>The lines are the same. Only <strong>one line has moved</strong>.</li><li>So the order of the lines changes the result.</li></ul>"
+  },
+  {
+   "id": "compare-reset",
+   "label": "Compare: Total ← 0 Before or Inside the Loop",
+   "content": "<h2 class=\"lesson-h2\">Compare: Total &larr; 0 Before or Inside the Loop</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both should output 2 + 3 + 4 + 5 = 14. What does B really output? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> outputs 14. <strong>B</strong> outputs <strong>5</strong>.</p><p>In B, Total goes back to 0 at the start of every pass, so only the last Count is left. A sets Total to 0 once, before the loop starts.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 2 TO 5</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Count</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;FOR Count &larr; 2 TO 5</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Count</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div></div></div><ul class=\"lesson-facts\"><li>A line <strong>before</strong> the loop runs once.</li><li>A line <strong>inside</strong> the loop runs on every pass.</li></ul>"
+  },
+  {
+   "id": "hinge-2",
+   "label": "Hinge Question: Where Is the IF?",
+   "type": "multiple-choice",
+   "containerId": "y9l31-hinge-2",
+   "content": "<h2 class=\"lesson-h2\">Hinge Question: Where Is the IF?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the IF go inside the loop, after INPUT?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It must check every number. Inside the loop it runs on every pass, and after INPUT, Number holds the new value.</p></div></details><p class=\"lesson-lead\">This program should count the numbers that are 10 or more. The user types 12, 3, 15, 8, 20. It outputs 1, not 3.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Number : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Big : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Big &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 5</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Number</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;IF Number &gt;= 10 THEN</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Big &larr; Big + 1</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Big</div></div></div><div><div id=\"y9l31-hinge-2\"></div></div></div>",
+   "items": [
+    {
+     "prompt": "Why does it output 1?",
+     "options": [
+      "Big ← 0 must go inside the loop",
+      "The loop must go to 6, not 5",
+      "The IF checks only the last Number",
+      "IF Number >= 10 must use >"
+     ],
+     "correct": 2,
+     "explain": "The IF is after NEXT, so it runs once, on the last number, 20. Move it inside the loop, after INPUT, so it checks every number: then it outputs 3."
+    }
+   ]
+  },
+  {
+   "id": "compare-boundary",
+   "label": "Compare: More Than, or More Than or Equal To?",
+   "content": "<h2 class=\"lesson-h2\">Compare: More Than, or More Than or Equal To?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Members must be 13 or over. Predict: the user types 13. What do A and B output? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> outputs Too young: 13 is not more than 13. <strong>B</strong> outputs Join: 13 is equal to 13.</p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Age typed</th><th style=\"padding:6px 12px;text-align:left\">A outputs</th><th style=\"padding:6px 12px;text-align:left\">B outputs</th></tr><tr><td style=\"padding:6px 12px;text-align:left\">12</td><td style=\"padding:6px 12px;text-align:left\">Too young</td><td style=\"padding:6px 12px;text-align:left\">Too young</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">13</td><td style=\"padding:6px 12px;text-align:left\">Too young</td><td style=\"padding:6px 12px;text-align:left\">Join</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">14</td><td style=\"padding:6px 12px;text-align:left\">Join</td><td style=\"padding:6px 12px;text-align:left\">Join</td></tr></table></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">INPUT Age</div><div class=\"lesson-code-line\">IF Age &gt; 13 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Join\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Too young\"</div><div class=\"lesson-code-line\">ENDIF</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">INPUT Age</div><div class=\"lesson-code-line\">IF Age &gt;= 13 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Join\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Too young\"</div><div class=\"lesson-code-line\">ENDIF</div></div></div></div><ul class=\"lesson-facts\"><li>&gt; means more than. &gt;= means more than <strong>or equal to</strong>.</li><li>Always test the value <strong>exactly on the line</strong>. That is where they differ.</li></ul>"
+  },
+  {
+   "id": "check-boundary",
+   "label": "Check: The Value on the Line",
+   "type": "short-answer-validation",
+   "validatorId": "y9l31-check-boundary",
+   "validatorKey": "y9l31_check_boundary",
+   "content": "<h2 class=\"lesson-h2\">Check: The Value on the Line</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the program miss the two days of 20?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>20 &lt; 20 is FALSE: 20 is equal, not less. \"20 or less\" needs &lt;=.</p></div></details><p class=\"lesson-lead\">This program should count the cold days: 20 or less. The user types 20, 25, 18, 20, 31.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Day : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Cold : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Cold &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Day &larr; 1 TO 5</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Temp &lt; 20 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cold &larr; Cold + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Day</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Cold</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l31-check-boundary-a\">(a) What does it output, exactly as written? [1]</label><input id=\"y9l31-check-boundary-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-boundary-a\" aria-label=\"Check: The Value on the Line part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l31-check-boundary-b\">(b) What should it output? [1]</label><input id=\"y9l31-check-boundary-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-boundary-b\" aria-label=\"Check: The Value on the Line part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l31-check-boundary-c\">(c) Write the correct line 7. [1]</label><input id=\"y9l31-check-boundary-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-boundary-c\" aria-label=\"Check: The Value on the Line part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l31-check-boundary-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y9l31-check-boundary-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "how-to-correct",
+   "label": "Four Steps to Correct a Program",
+   "content": "<h2 class=\"lesson-h2\">Four Steps to Correct a Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the last step \"fix, then trace again\", and not just \"fix\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\">A fix is a guess until you test it. A new trace proves the program now does its job.</div></details><div class=\"lesson-do-now-columns\"><div><ol class=\"lesson-facts\"><li><strong>Purpose:</strong> say what the program should do, and what it should output.</li><li><strong>Trace:</strong> follow it exactly as it is written.</li><li><strong>Find:</strong> the first line that makes a value go wrong.</li><li><strong>Fix and prove:</strong> change that line, then trace again.</li></ol></div><div><ul class=\"lesson-facts\"><li>The <strong>purpose</strong> of a program is the job it should do.</li><li>You can only see an error when you know the purpose.</li><li>A correction is finished when a new trace gives the purpose.</li></ul></div></div>"
+  },
+  {
+   "id": "shows-starts",
+   "label": "Where It Shows, Where It Starts",
+   "content": "<h2 class=\"lesson-h2\">Where It Shows, Where It Starts</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Purpose: output the total of the four prices, 30. It outputs 25. The wrong number shows on line 8. Is line 8 the line to fix? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>No. Line 8 only shows Total. Total was already wrong, because line 5 starts at 2, so Prices[1] is never added.</p><p>Fix line 5: FOR Index &larr; 1 TO 4. Trace again: Total is 5, 17, 20, 30. It outputs 30.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Prices : ARRAY[1:4] OF INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Index &larr; 2 TO 4</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Prices[Index]</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;OUTPUT Total</div></div></div><div><p style=\"margin:0 0 6px\"><strong>Prices</strong></p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">5</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">12</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">10</td></tr></table><ul class=\"lesson-facts\"><li>The line where a wrong value <strong>shows</strong> is often not the line that <strong>causes</strong> it.</li><li>Follow the wrong value back up the program to where it first goes wrong.</li></ul></div></div>"
+  },
+  {
+   "id": "hinge-3",
+   "label": "Hinge Question: Which Line Causes It?",
+   "type": "multiple-choice",
+   "containerId": "y9l31-hinge-3",
+   "content": "<h2 class=\"lesson-h2\">Hinge Question: Which Line Causes It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The wrong total shows on line 9. Why is line 9 not the answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Line 9 only outputs Total. Total is wrong because Mark never gets a value: line 6 outputs Mark when it should input it.</p></div></details><p class=\"lesson-lead\">Purpose: input four marks and output their total. The user types 5, 8, 2, 6. The program outputs 0, 0, 0, 0, 0.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT Mark</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Mark</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;OUTPUT Total</div></div></div><div><div id=\"y9l31-hinge-3\"></div></div></div>",
+   "items": [
+    {
+     "prompt": "Which line causes the wrong result?",
+     "options": [
+      "Line 9",
+      "Line 6",
+      "Line 7",
+      "Line 4"
+     ],
+     "correct": 1,
+     "explain": "Line 6 should be INPUT Mark. With OUTPUT, Mark never gets the marks typed in, so line 7 adds 0 each time. Line 9 only shows the wrong total. After the fix, a new trace gives 21."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Trace and Find the Error",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y9l31-embed-1",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Find the Line That Causes It",
+    "context": "This program should input four prices and output their total. The user types 6, 9, 4, 8. Trace it exactly as it is written. What does it really output?",
+    "code": [
+     "DECLARE Price : INTEGER",
+     "DECLARE Count : INTEGER",
+     "DECLARE Total : INTEGER",
+     "Total = 0",
+     "for Count in range(1, 5):",
+     "    Price = int(input())",
+     "    Total = Price",
+     "print(Total)"
+    ],
+    "cols": [
+     "Line",
+     "Price",
+     "Count",
+     "Total",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "4",
+      "Price": "",
+      "Count": "",
+      "Total": "0",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Price": "",
+      "Count": "1",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Price": "6",
+      "Count": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Price": "",
+      "Count": "",
+      "Total": "6",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Price": "",
+      "Count": "2",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Price": "9",
+      "Count": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Price": "",
+      "Count": "",
+      "Total": "9",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Price": "",
+      "Count": "3",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Price": "4",
+      "Count": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Price": "",
+      "Count": "",
+      "Total": "4",
+      "Output": ""
+     },
+     {
+      "Line": "5",
+      "Price": "",
+      "Count": "4",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Price": "8",
+      "Count": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Price": "",
+      "Count": "",
+      "Total": "8",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Price": "",
+      "Count": "",
+      "Total": "",
+      "Output": "8"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Trace and Find the Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Step 1: what is the purpose of this program? What SHOULD it output?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It should output the total of the prices: 6 + 9 + 4 + 8 = 27. The trace shows what it really does.</p></div></details><p class=\"lesson-lead\">Trace the program. Then correct it on the next slide.</p><div id=\"y9l31-embed-1\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "fix-check",
+   "label": "Check: Correct the Program",
+   "type": "short-answer-validation",
+   "validatorId": "y9l31-fix-check",
+   "validatorKey": "y9l31_fix_check",
+   "content": "<h2 class=\"lesson-h2\">Check: Correct the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we trace again after the fix?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>To prove it. The new trace must give 27, the purpose. If it does not, the fix is wrong.</p></div></details><p class=\"lesson-lead\">Purpose: input four prices and output their total. The user types 6, 9, 4, 8. Use your trace table.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Price : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INPUT Price</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Price</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;OUTPUT Total</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l31-fix-check-a\">(a) What does the program really output? [1]</label><input id=\"y9l31-fix-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-check-a\" aria-label=\"Check: Correct the Program part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l31-fix-check-b\">(b) Which line causes the wrong result? [1]</label><input id=\"y9l31-fix-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-check-b\" aria-label=\"Check: Correct the Program part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l31-fix-check-c\">(c) Write the correct line. [1]</label><input id=\"y9l31-fix-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-check-c\" aria-label=\"Check: Correct the Program part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l31-fix-check-d\">(d) Trace again with the same prices. What does it output now? [1]</label><input id=\"y9l31-fix-check-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"fix-check-d\" aria-label=\"Check: Correct the Program part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l31-fix-check-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y9l31-fix-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-maxmin",
+   "label": "Exam Question: Correct the Algorithm (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y9l31-exam-maxmin",
+   "validatorKey": "y9l31_exam_maxmin",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Correct the Algorithm (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Line 08 runs with no error message. How can you tell it is wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Compare it with the purpose. Max should change when a value is bigger, but &lt; changes it when a value is smaller.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/22, May/June 2024, Question 7(b). This algorithm should find the largest value (Max) and the smallest value (Min) in the array List of 1000 positive numbers. It has two errors.</p><div class=\"lesson-do-now-columns is-code-wide\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE List : ARRAY[1:1000] OF INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Max : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Min : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;DECLARE Counter : INTEGER</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;Max &larr; List[1]</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;Min &larr; List[1]</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;FOR Counter &larr; 2 TO 1000</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF List[Counter] &lt; Max THEN</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max &larr; List[Counter]</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF List[Count] &lt; Min THEN</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Min &larr; List[Counter]</div><div class=\"lesson-code-line\">13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">14&nbsp;&nbsp;NEXT Counter</div><div class=\"lesson-code-line\">15&nbsp;&nbsp;OUTPUT Max</div><div class=\"lesson-code-line\">16&nbsp;&nbsp;OUTPUT Min</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y9l31-exam-maxmin-a\">(a) Line 08: write the correct line. [1]</label><input id=\"y9l31-exam-maxmin-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-maxmin-a\" aria-label=\"Exam Question: Correct the Algorithm (1 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l31-exam-maxmin-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y9l31-exam-maxmin-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-maxmin-2",
+   "label": "Exam Question: Correct the Algorithm (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y9l31-exam-maxmin-2",
+   "validatorKey": "y9l31_exam_maxmin_2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Correct the Algorithm (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does this error stop the program, when line 08 did not?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Count was never declared, so the program breaks a rule and cannot run. Line 08 follows the rules but does the wrong job.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/22, May/June 2024, Question 7(b). This algorithm should find the largest value (Max) and the smallest value (Min) in the array List of 1000 positive numbers. It has two errors.</p><div class=\"lesson-do-now-columns is-code-wide\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE List : ARRAY[1:1000] OF INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Max : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Min : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;DECLARE Counter : INTEGER</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;Max &larr; List[1]</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;Min &larr; List[1]</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;FOR Counter &larr; 2 TO 1000</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF List[Counter] &lt; Max THEN</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max &larr; List[Counter]</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF List[Count] &lt; Min THEN</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Min &larr; List[Counter]</div><div class=\"lesson-code-line\">13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">14&nbsp;&nbsp;NEXT Counter</div><div class=\"lesson-code-line\">15&nbsp;&nbsp;OUTPUT Max</div><div class=\"lesson-code-line\">16&nbsp;&nbsp;OUTPUT Min</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l31-exam-maxmin-2-a\">(a) Which other line has an error? (Use the line numbers.) [1]</label><input id=\"y9l31-exam-maxmin-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-maxmin-2-a\" aria-label=\"Exam Question: Correct the Algorithm (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l31-exam-maxmin-2-b\">(b) Write the correct line for it. [1]</label><input id=\"y9l31-exam-maxmin-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-maxmin-2-b\" aria-label=\"Exam Question: Correct the Algorithm (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l31-exam-maxmin-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9l31-exam-maxmin-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "compare-fixes",
+   "label": "Compare: Two Fixes, One Works",
+   "content": "<h2 class=\"lesson-h2\">Compare: Two Fixes, One Works</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Purpose: output the total of 1 to 4, once. The program output 1, 3, 6, 10. Both fixes move the OUTPUT line. Trace both. Which one works? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> outputs 10, once: it does the job.</p><p><strong>B</strong> outputs 0: OUTPUT runs before the loop has added anything. Only a new trace shows which fix works.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Fix A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Count</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT Total</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Fix B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Total &larr; 0</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;OUTPUT Total</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 4</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &larr; Total + Count</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;NEXT Count</div></div></div></div><ul class=\"lesson-facts\"><li>The program before the fix output <strong>1, 3, 6, 10</strong>: OUTPUT was inside the loop.</li><li>A fix is correct only when a new trace gives the purpose.</li></ul>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Correct the Program",
+   "type": "embedded-app",
+   "appId": "drill-y9-3-1-code",
+   "embedContainerId": "y9l31-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Correct the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is your program run with new values each time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A correct program must do its job for any values, not only one set. New values catch a fix that only works by luck.</p></div></details><p class=\"lesson-lead\">Each program has one error. It is already in the box. Read the purpose, find the line that causes the error, correct it, then press Run and check.</p><div id=\"y9l31-activity-2\"></div>"
+  },
+  {
+   "id": "exam-ages",
+   "label": "Exam-Style Question: Three Errors",
+   "type": "short-answer-validation",
+   "validatorId": "y9l31-exam-ages",
+   "validatorKey": "y9l31_exam_ages",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Three Errors</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The count is output at the end. Why can line 6 still cause a wrong count?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Age never gets the typed value, so every check on line 7 uses the wrong age. The error shows at the end, but it starts on line 6.</p></div></details><p class=\"lesson-lead\">This algorithm should input the ages of 6 visitors, count how many are 18 or over, then output the count. It has three errors.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Adults : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Adults &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Count &larr; 1 TO 6</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT Age</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Age &gt; 18 THEN</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adults &larr; Adults + 1</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;NEXT Count</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;OUTPUT Count</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l31-exam-ages-a\">(a) The ages typed in are never stored. Which line causes this? [1]</label><input id=\"y9l31-exam-ages-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-ages-a\" aria-label=\"Exam-Style Question: Three Errors part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l31-exam-ages-b\">(b) Write the correct line 6. [1]</label><input id=\"y9l31-exam-ages-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-ages-b\" aria-label=\"Exam-Style Question: Three Errors part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l31-exam-ages-c\">(c) A visitor aged 18 is not counted. Write the correct line 7. [1]</label><input id=\"y9l31-exam-ages-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-ages-c\" aria-label=\"Exam-Style Question: Three Errors part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9l31-exam-ages-d\">(d) Line 11 does not output the count. Write the correct line 11. [1]</label><input id=\"y9l31-exam-ages-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-ages-d\" aria-label=\"Exam-Style Question: Three Errors part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l31-exam-ages-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y9l31-exam-ages-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-explain",
+   "label": "Exam-Style Question: Explain the Method (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y9l31-exam-explain",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Explain the Method (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This part has 2 marks. What two ideas does the answer need?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Where the value is made (an earlier line), and why that matters (that line causes the wrong value).</p></div></details><p class=\"lesson-lead\">Answer in full sentences. This part has 2 marks: give two connected points.</p><div id=\"y9l31-exam-explain\"></div>",
+   "items": [
+    {
+     "id": "shows-line",
+     "prompt": "A student says: \"The error is on the OUTPUT line, because that is where the wrong number appears.\" Explain why the student may be wrong. [2]",
+     "marks": 2,
+     "modelAnswer": "The OUTPUT line only shows the value of a variable. That value may have been made wrong by an earlier line, such as the FOR line or an assignment, so the earlier line is the one to correct."
+    }
+   ]
+  },
+  {
+   "id": "exam-explain-2",
+   "label": "Exam-Style Question: Explain the Method (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y9l31-exam-explain-2",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Explain the Method (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This part has 2 marks. What two ideas does the answer need?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>What could go wrong (a fix that fails or a new error), and what the trace proves (the output matches the purpose).</p></div></details><p class=\"lesson-lead\">Answer in full sentences. This part has 2 marks: give two connected points.</p><div id=\"y9l31-exam-explain-2\"></div>",
+   "items": [
+    {
+     "id": "trace-again",
+     "prompt": "Explain why a corrected program should be traced again. [2]",
+     "marks": 2,
+     "modelAnswer": "The correction might not fix the error, or it might cause a new error. Tracing again shows whether the program now gives the output its purpose needs."
+    }
+   ]
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Following and Correcting Pseudocode Drill",
+   "type": "embedded-app",
+   "appId": "drill-y9-3-1-pseudocode",
+   "embedContainerId": "y9l31-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Following and Correcting Pseudocode Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card ask what the program DOES, not what it should do?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>To correct a program, you must first see exactly what it does. Then you can compare it with its purpose.</p></div></details><p class=\"lesson-lead\">Follow programs line by line, see why order matters, test the value on the line, and find, fix and prove. Your progress is saved.</p><div id=\"y9l31-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y9l31_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count is 3 on the first pass. What does line 5 add?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read line 5 again. Does it add Count, or something else?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*12\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Follow every pass. The computer does what line 5 says, not what the program should do."
+   }
+  ],
+  "y9l31_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"']?\\s*FALSE\\s*[\"']?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 30 more than 30, or equal to it?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check each score against line 7. Equal is not more."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*if\\s+(score\\s*>=\\s*30|score\\s*>\\s*29)\\s*(then)?\\s*\\.?\\s*$|^\\s*if\\s+30\\s*<=\\s*score\\s*(then)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which operator means more than OR equal to?"
+   }
+  ],
+  "y9l31_check_boundary": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check each number with line 7. Is 20 &lt; 20 TRUE?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the numbers that are 20 or less."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*if\\s+(temp\\s*<=\\s*20|temp\\s*<\\s*21)\\s*(then)?\\s*\\.?\\s*$|^\\s*if\\s+20\\s*>=\\s*temp\\s*(then)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "\"20 or less\" includes 20 itself. Which operator is TRUE when Temp is 20?"
+   }
+  ],
+  "y9l31_fix_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*8\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the Output column of your trace table."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(line\\s*)?0?7\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which line changes Total? Does it keep the old total?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*total\\s*(<-|←|&larr;)\\s*(total\\s*\\+\\s*price|price\\s*\\+\\s*total)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Total must keep what it had, and add the new Price."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*27\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Total starts at 0 and grows by each price."
+   }
+  ],
+  "y9l31_exam_maxmin": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*if\\s+(list\\s*\\[\\s*counter\\s*\\]\\s*>\\s*max|max\\s*<\\s*list\\s*\\[\\s*counter\\s*\\])\\s*(then)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Max should change when a value is BIGGER than Max."
+   }
+  ],
+  "y9l31_exam_maxmin_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(line\\s*)?0?11\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read every variable name. Which name was never declared?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*if\\s+(list\\s*\\[\\s*counter\\s*\\]\\s*<\\s*min|min\\s*>\\s*list\\s*\\[\\s*counter\\s*\\])\\s*(then)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The loop variable is Counter."
+   }
+  ],
+  "y9l31_exam_ages": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(line\\s*)?0?6\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which line should take in what the user types?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"']?\\s*input\\s+age\\s*[\"']?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The age must come IN to the program."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*if\\s+(age\\s*>=\\s*18|age\\s*>\\s*17)\\s*(then)?\\s*\\.?\\s*$|^\\s*if\\s+18\\s*<=\\s*age\\s*(then)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "\"18 or over\" includes 18. Which operator is TRUE when Age is 18?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"']?\\s*output\\s+adults\\s*[\"']?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which variable counts the visitors aged 18 or over?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

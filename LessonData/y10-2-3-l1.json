@@ -1,0 +1,444 @@
+{
+ "id": "y10-2-3-l1",
+ "label": "2.3 L1: Symmetric Encryption",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Packets (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l1-do-now",
+   "validatorKey": "y10_23l1_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Packets (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why break the image into packets at all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Small packets can each take the best route, so the network is not blocked by one huge file. If one packet is lost, only that packet is sent again.</p></div></details><p class=\"lesson-lead\">From 2.1 L1. Parts (a) and (b): Cambridge IGCSE 0478/11, November 2025, Question 2(b)(i) and (ii). An employee sends images of houses to his company. The image data is broken down into packets to be sent across a network to the company. The destination internet protocol (IP) address is read by a device in the network. The device uses the IP address to forward the packet towards its correct destination.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-23l1-do-now-a\">(a) State the name of the device that reads the destination IP address. [1]</label><input id=\"y10-23l1-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Packets (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l1-do-now-b\">(b) Identify the part of the packet where the destination IP address is found. [1]</label><input id=\"y10-23l1-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Packets (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-do-now-c\">(c) Why does every packet need the destination IP address, not just the first packet? [1]</label><input id=\"y10-23l1-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Packets (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l1-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-23l1-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: packets",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Name the part of a packet that holds the data being sent.",
+      "visual": "<div style=\"display:flex;gap:4px\"><span style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 1: at the start</span><span style=\"flex:2;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 2: in the middle</span><span style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 3: at the end</span></div>"
+     },
+     {
+      "text": "A packet has three parts. The data being sent is the main load, so it is the biggest part, in the middle.",
+      "visual": "<div style=\"display:flex;gap:4px\"><span style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 1: at the start</span><span class=\"wt-hl\" style=\"flex:2;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 2: in the middle</span><span style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 3: at the end</span></div>"
+     },
+     {
+      "text": "The middle part is called the <strong>payload</strong>. One word is enough for the mark.",
+      "visual": "<div style=\"display:flex;gap:4px\"><span style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 1</span><span class=\"wt-hl\" style=\"flex:2;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">payload</span><span style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 3</span></div>"
+     },
+     {
+      "text": "For part (b), ask: which part must a device read <strong>first</strong>, before anything else? An address is needed first.",
+      "visual": "<div style=\"display:flex;gap:4px\"><span class=\"wt-hl\" style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 1</span><span style=\"flex:2;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">payload</span><span style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">Part 3</span></div>"
+     },
+     {
+      "text": "<strong>Name the device.</strong> Picture one packet crossing the internet. It meets a junction, then another.",
+      "visual": "<div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Sender</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">?</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">?</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Company</span></div>"
+     },
+     {
+      "text": "At every junction, a device reads the destination address and picks the next path for the packet: its <strong>route</strong>. The device is named after that job.",
+      "visual": "<div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Sender</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\"><span class=\"wt-hl\">picks the route</span></span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Company</span></div>"
+     },
+     {
+      "text": "<strong>Why?</strong> A different case: a family moves house. Their boxes go in three vans, and each van takes its own road.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Van 1: the main road</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Van 2: the coast road</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Van 3: the hill road</div>"
+     },
+     {
+      "text": "Each driver only sees the boxes in that van. Think: what must be written on every box, and why? Use the same idea for part (c).",
+      "visual": "<div class=\"wt-note\">what is on every box?</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Echo Check (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l1-do-now-2",
+   "validatorKey": "y10_23l1_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Echo Check (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check an image after it is sent at all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Interference can change bits on the way. A changed bit can spoil part of the picture.</p></div></details><p class=\"lesson-lead\">From 2.2 L3. Part (a): adapted from Cambridge IGCSE 0478/11, November 2025, Question 2(d). An echo check is used to check for errors after the image has been transmitted.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-do-now-2-a\">(a) Describe how the echo check would detect any errors. [3]</label><input id=\"y10-23l1-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Echo Check (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-do-now-2-b\">(b) Why does an echo check make sending data slower? [1]</label><input id=\"y10-23l1-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Echo Check (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-do-now-2-c\">(c) Why is the copy sent back to the sender, not checked by the receiver? [1]</label><input id=\"y10-23l1-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Echo Check (2 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l1-do-now-2-check\">Check answers</button><strong>Total: 5 marks</strong></div><div id=\"y10-23l1-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: the echo check",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Describe how a checksum detects errors. Answer in the order things happen.",
+      "visual": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Before sending</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">After arriving</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Decide</span></div>"
+     },
+     {
+      "text": "Before sending: the sender calculates a value from the data. The value is sent with the data.",
+      "visual": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span class=\"wt-hl\" style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Before sending</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">After arriving</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Decide</span></div>"
+     },
+     {
+      "text": "After arriving: the receiver calculates the value from the data it got.",
+      "visual": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Before sending</span><b>&rarr;</b><span class=\"wt-hl\" style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">After arriving</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Decide</span></div>"
+     },
+     {
+      "text": "Decide: the two values are compared. Different values mean an error. One mark for each step.",
+      "visual": "<div style=\"display:flex;gap:8px;align-items:center;flex-wrap:wrap\"><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Before sending</span><b>&rarr;</b><span style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">After arriving</span><b>&rarr;</b><span class=\"wt-hl\" style=\"padding:6px 10px;border-radius:8px;background:var(--surface-3);font-weight:700\">Decide</span></div>"
+     },
+     {
+      "text": "For part (a), use the same three steps for an echo check: what is sent, where it goes next, and who decides.",
+      "visual": "<div class=\"wt-note\">sent &rarr; next &rarr; decide</div>"
+     },
+     {
+      "text": "<strong>Why slower?</strong> A different case: a parity check adds 1 bit to every 7 bits of data.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">7 data bits + 1 parity bit = 8 bits</div>"
+     },
+     {
+      "text": "More bits to send means sending takes a little longer. For part (b), count how far the data travels in an echo check.",
+      "visual": "<div class=\"wt-note\"><span class=\"wt-hl\">more to send</span> = more time</div>"
+     },
+     {
+      "text": "<strong>Who decides?</strong> A different case: you lend a friend a book. Later your friend gives you a book. Is it yours?",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">You lend: a clean book</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">You get: a book with a torn page</div>"
+     },
+     {
+      "text": "Only you remember your own book. For part (c), ask: in an echo check, who still holds the data as it was at the start?",
+      "visual": "<div class=\"wt-note\">who remembers it?</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-3-l1-ext",
+   "embedContainerId": "y10-23l1-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 2.1 Data Transmission and 2.2 Methods of Error Detection. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l1-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Symmetric Encryption",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">2.3 Encryption</p><h2 class=\"lesson-h2\">Symmetric Encryption</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> why data is <strong>encrypted</strong> when it is sent, and how one <strong>shared key</strong> locks and unlocks it.</li><li><strong>You already know:</strong> packets, routers and the error checks. They make sure data <strong>arrives</strong> without errors.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Every packet arrives, and every error check passes. Why might the data still not be safe?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The packets passed through many devices on the way. Someone could have copied and read them. An error check cannot tell.</p></div></details>"
+  },
+  {
+   "id": "concept-intercept",
+   "label": "Data Can Be Intercepted",
+   "content": "<h2 class=\"lesson-h2\">Data Can Be Intercepted</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Ana sends Ben a message. Every packet arrives with no errors. Could anyone else have read it? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>Yes.</strong> The packets passed through routers and cables that Ana does not own. Anyone with access to them could copy the packets on the way.</p><p>This is <strong>interception</strong>. The packets still arrive, so Ana and Ben cannot tell.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Packets pass through many devices on the way: routers, cables, Wi-Fi.</li><li>Someone on the route can <strong>intercept</strong> the data: copy it and read it.</li><li>Error checks find <strong>changed</strong> data. They cannot tell if data was <strong>read</strong>.</li><li><strong>Encryption</strong> does not stop interception. It makes intercepted data <strong>meaningless</strong>.</li></ul></div><div><div style=\"display:grid;gap:12px;text-align:center\"><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ana's computer</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Router</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Router</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ben's computer</span></div><div><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Eve copies every packet on the way</span></div><div><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Ben: all packets arrived, no errors</span></div></div></div></div>"
+  },
+  {
+   "id": "concept-encrypt",
+   "label": "Plain Text, Key and Cipher Text",
+   "content": "<h2 class=\"lesson-h2\">Plain Text, Key and Cipher Text</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: every letter of MEET AT TEN moves 3 places along the alphabet. Eve intercepts the result. Why can she not understand it?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>She sees <strong>PHHW DW WHQ</strong>. It is <strong>meaningless</strong> to her.</p><p>To read it she must know <strong>how far</strong> each letter moved. That number is the <strong>key</strong>, and she does not have it.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>Plain text</strong>: the data before it is encrypted.</li><li>The <strong>encryption algorithm</strong> uses a <strong>key</strong> to scramble the plain text.</li><li><strong>Cipher text</strong>: the encrypted data. It is meaningless without the key.</li><li><strong>Decrypt</strong>: turn cipher text back into plain text.</li></ul></div><div><div style=\"display:grid;gap:10px\"><table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Plain text</th><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">M</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">E</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">E</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">T</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">A</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">T</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">T</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">E</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">N</td></tr><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Shift</th><td colspan=\"11\" style=\"padding:2px 8px;text-align:center;font-size:15px\">forward 3</td></tr><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Cipher text</th><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">P</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">W</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">D</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">W</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">W</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">Q</td></tr></table><p style=\"margin:0;text-align:center;font-size:16px\">Algorithm: move each letter forward along the alphabet.<br>Key: <strong>3</strong>. After Z, carry on from A.</p></div></div></div>"
+  },
+  {
+   "id": "exam-purpose",
+   "label": "Exam Question: Why Encrypt?",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l1-exam-purpose",
+   "validatorKey": "y10_23l1_exam_purpose",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Why Encrypt?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the mark scheme say \"cannot be understood\", not \"cannot be intercepted\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Encryption does not stop anyone copying the data. It stops them understanding it.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/12, March 2024, Question 7(a)(i). Data is transmitted using the internet. The data is encrypted before transmission. Part (b): Cambridge IGCSE 0478/12, June 2026, Question 4(c)(iii).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-exam-purpose-a\">(a) State the purpose of encrypting data. [1]</label><input id=\"y10-23l1-exam-purpose-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-purpose-a\" aria-label=\"Exam Question: Why Encrypt? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l1-exam-purpose-b\">(b) State the name given to the encrypted data. [1]</label><input id=\"y10-23l1-exam-purpose-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-purpose-b\" aria-label=\"Exam Question: Why Encrypt? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-exam-purpose-c\">(c) Why is it safe to send cipher text, even if it is intercepted? [1]</label><input id=\"y10-23l1-exam-purpose-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-purpose-c\" aria-label=\"Exam Question: Why Encrypt? part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l1-exam-purpose-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-23l1-exam-purpose-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "concept-symmetric",
+   "label": "Symmetric Encryption: One Shared Key",
+   "content": "<h2 class=\"lesson-h2\">Symmetric Encryption: One Shared Key</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Ben receives PHHW DW WHQ. He knows the key is 3. How does he get the message back? Why does that work?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>He moves each letter <strong>back</strong> 3 places: P to M, H to E, W to T. He reads <strong>MEET AT TEN</strong>.</p><p>Moving back 3 undoes moving forward 3. The <strong>same key</strong> that encrypted the message decrypts it.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>In <strong>symmetric</strong> encryption, the <strong>same key</strong> encrypts and decrypts.</li><li>The sender and the receiver both have this key. It is a <strong>shared</strong> key.</li><li>Encrypt: move forward by the key. Decrypt: move back by the same key.</li><li>Everyone can know the algorithm. Only the <strong>key</strong> is kept secret.</li></ul></div><div><div style=\"display:grid;gap:10px\"><table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Cipher text</th><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">P</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">W</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">D</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">W</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">W</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">Q</td></tr><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Shift</th><td colspan=\"11\" style=\"padding:2px 8px;text-align:center;font-size:15px\">back 3</td></tr><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Plain text</th><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">M</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">E</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">E</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">T</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">A</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">T</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">T</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">E</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">N</td></tr></table><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">Ana: key 3</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">cipher text</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">Ben: key 3</span></div><p style=\"margin:0;text-align:center;font-size:16px\"><strong>Same key</strong> at both ends.</p></div></div></div>"
+  },
+  {
+   "id": "compare-key",
+   "label": "Compare: The Right Key and the Wrong Key",
+   "content": "<h2 class=\"lesson-h2\">Compare: The Right Key and the Wrong Key</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Ben and Eve both get KHOOR. Ben has the key, 3. Eve knows the algorithm and guesses 5. Predict what each one reads. Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ben reads <strong>HELLO</strong>. Eve gets <strong>FCJJM</strong>: meaningless.</p><p>Knowing the algorithm is not enough. Only the right key undoes the shift.</p></div></details><div style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start\"><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 8px;text-align:center\"><strong>Ben: key 3</strong></p><table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Cipher text</th><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">K</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">O</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">O</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">R</td></tr><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Shift</th><td colspan=\"5\" style=\"padding:2px 8px;text-align:center;font-size:15px\">back 3</td></tr><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Result</th><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">E</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">L</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">L</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">O</td></tr></table><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">The message</span></p></div><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 8px;text-align:center\"><strong>Eve: key 5</strong></p><table class=\"donow-table\" style=\"margin:0 auto\"><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Cipher text</th><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">K</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">O</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">O</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">R</td></tr><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Shift</th><td colspan=\"5\" style=\"padding:2px 8px;text-align:center;font-size:15px\">back 5</td></tr><tr><th style=\"padding:4px 10px;text-align:left;font-size:15px;white-space:nowrap\">Result</th><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">F</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">C</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">J</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">J</td><td style=\"padding:4px 8px;text-align:center;font:700 19px var(--font-mono, monospace)\">M</td></tr></table><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Meaningless</span></p></div></div><ul class=\"lesson-facts\"><li>Same algorithm, different key: a different result.</li><li>Only the key used to encrypt gives back the plain text.</li></ul>"
+  },
+  {
+   "id": "check-shift",
+   "label": "Check: Encrypt and Decrypt",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l1-check-shift",
+   "validatorKey": "y10_23l1_check_shift",
+   "content": "<h2 class=\"lesson-h2\">Check: Encrypt and Decrypt</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must Ben move back by exactly the key, not a number close to it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Any other number gives different letters. Only the same key undoes the shift.</p></div></details><p class=\"lesson-lead\">Use the alphabet. After Z, carry on from A.</p><div class=\"lesson-do-now-columns\"><div><div style=\"text-align:center\"><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">A</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">B</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">C</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">D</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">E</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">F</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">G</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">H</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">I</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">J</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">K</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">L</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">M</span></div><div style=\"white-space:nowrap\"><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">N</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">O</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">P</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">Q</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">R</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">S</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">T</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">U</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">V</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">W</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">X</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">Y</span><span style=\"display:inline-flex;align-items:center;justify-content:center;width:28px;height:32px;border-radius:6px;font:700 16px var(--font-mono, monospace);background:var(--surface-3);margin:1px\">Z</span></div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-23l1-check-shift-a\">(a) Encrypt DOG with the key 4. [1]</label><input id=\"y10-23l1-check-shift-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-shift-a\" aria-label=\"Check: Encrypt and Decrypt part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l1-check-shift-b\">(b) Decrypt EBUB with the key 1. [1]</label><input id=\"y10-23l1-check-shift-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-shift-b\" aria-label=\"Check: Encrypt and Decrypt part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l1-check-shift-c\">(c) The plain text SAFE became the cipher text VDIH. What was the key? [1]</label><input id=\"y10-23l1-check-shift-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-shift-c\" aria-label=\"Check: Encrypt and Decrypt part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l1-check-shift-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-23l1-check-shift-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Encrypt, Decrypt, Crack",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-3-l1-shift",
+   "embedContainerId": "y10-23l1-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Encrypt, Decrypt, Crack</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why could Eve crack these messages without the key?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>There are only 25 keys. She can try every one until a real word appears.</p></div></details><p class=\"lesson-lead\">Encrypt and decrypt with the key. Then be Eve: no key, only cipher text. New words and keys every time. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l1-activity-1\"></div>"
+  },
+  {
+   "id": "compare-length",
+   "label": "Compare: 25 Keys and a 128-Bit Key",
+   "content": "<h2 class=\"lesson-h2\">Compare: 25 Keys and a 128-Bit Key</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Eve has no key, so she tries every key. Predict: why does that work on the letter shift, but not on a key 128 bits long?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The letter shift has only <strong>25</strong> keys. A computer tries them all in under a second.</p><p>A 128-bit key has 2<sup>128</sup> possible keys. Trying them all would take far longer than anyone could wait.</p></div></details><div style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start\"><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>Letter shift</strong></p><p style=\"margin:0;font-size:17px;line-height:1.6\">Possible keys: <strong>25</strong><br>At a billion tries a second:<br><strong>under a second</strong></p><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Cracked</span></p></div><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>128-bit key</strong></p><p style=\"margin:0;font-size:17px;line-height:1.6\">Possible keys: <span style=\"font-family:var(--font-mono, monospace)\">340 282 366 920 938 463 463 374 607 431 768 211 456</span><br>At a billion tries a second:<br><strong>more than 10 000 000 000 000 000 000 000 years</strong></p><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Safe</span></p></div></div><ul class=\"lesson-facts\"><li>Each extra bit in the key <strong>doubles</strong> the number of possible keys: 1 bit 2 keys, 2 bits 4, 8 bits 256.</li><li>More possible keys means more to try, so a <strong>longer key</strong> is harder to crack.</li></ul>"
+  },
+  {
+   "id": "exam-key",
+   "label": "Exam Question: The Encryption Key",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l1-exam-key",
+   "validatorKey": "y10_23l1_exam_key",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Encryption Key</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the key kept secret, but not the algorithm?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Without the key, knowing the algorithm does not help: you would still have to try every key.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/13, June 2026, Question 2(e)(ii). All data that is transmitted across the network is encrypted before transmission. Part (b): Cambridge IGCSE 0478/12, June 2026, Question 4(c)(i). The data that is transmitted is encrypted.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-exam-key-a\">(a) Describe what is meant by an encryption key. [2]</label><input id=\"y10-23l1-exam-key-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-key-a\" aria-label=\"Exam Question: The Encryption Key part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l1-exam-key-b\">(b) Give one method of encryption that could be used. [1]</label><input id=\"y10-23l1-exam-key-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-key-b\" aria-label=\"Exam Question: The Encryption Key part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l1-exam-key-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-23l1-exam-key-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "concept-sharing",
+   "label": "The Weak Point: Sharing the Key",
+   "content": "<h2 class=\"lesson-h2\">The Weak Point: Sharing the Key</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Ben needs the key before he can decrypt. Ana emails it to him. Eve intercepts that email. What can Eve now do? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Eve can <strong>decrypt</strong> every message that uses that key. Symmetric encryption uses the same key to encrypt and decrypt, so whoever has the key can read the data.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Both people need the <strong>same key</strong> before any message is sent.</li><li>A key sent across a network can be <strong>intercepted</strong>, like any other data.</li><li>Anyone with the key can decrypt the cipher text.</li><li>So the hard part is <strong>sharing the key safely</strong>.</li><li>Next lesson: a method where the key that decrypts is never sent.</li></ul></div><div><div style=\"display:grid;gap:12px;text-align:center\"><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ana</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">cipher text</span> <span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">key 3</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ben</span></div><div><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Eve intercepts both</span></div><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">cipher text</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">key 3</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">the message</span></div></div></div></div>"
+  },
+  {
+   "id": "compare-sharing",
+   "label": "Compare: Key Sent and Key Agreed First",
+   "content": "<h2 class=\"lesson-h2\">Compare: Key Sent and Key Agreed First</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Ana sends the same cipher text both times. Predict: in which case can Eve read the message? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Left: Eve has the cipher text <strong>and</strong> the key, so she can decrypt it.</p><p>Right: Eve has only the cipher text. Without the key it stays meaningless.</p></div></details><div style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start\"><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>Key sent in the same email</strong></p><p style=\"margin:0;font-size:17px;line-height:1.6\">Ana emails the cipher text and the key.<br>Eve intercepts: <strong>cipher text + key</strong><br>She moves each letter back by the key.</p><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Eve reads it</span></p></div><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>Key agreed in person first</strong></p><p style=\"margin:0;font-size:17px;line-height:1.6\">Ana and Ben met last week and agreed the key.<br>Eve intercepts: <strong>cipher text only</strong><br>She has no key to undo the shift.</p><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Meaningless to Eve</span></p></div></div><ul class=\"lesson-facts\"><li>The encryption was the same both times. Only the <strong>key sharing</strong> was different.</li></ul>"
+  },
+  {
+   "id": "exam-mc",
+   "label": "Exam Question: Which Statement Is Correct?",
+   "type": "multiple-choice",
+   "containerId": "y10-23l1-exam-mc",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Which Statement Is Correct?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"the most secure form of encryption\" wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The key has to be shared. If it is intercepted on the way, every message can be read.</p></div></details><p class=\"lesson-lead\">Choose one answer for each.</p><div id=\"y10-23l1-exam-mc\"></div>",
+   "items": [
+    {
+     "prompt": "Cambridge IGCSE 0478/11, November 2025, Question 2(e)(i). The image data is encrypted using symmetric encryption. Which is the correct statement about symmetric encryption?",
+     "options": [
+      "Encrypted text is known as plain text.",
+      "The most secure form of encryption.",
+      "The encryption key is shared with any device receiving the encrypted data.",
+      "Two different keys are used."
+     ],
+     "correct": 2,
+     "explain": "The receiver decrypts with the same key, so it must be shared. Encrypted text is cipher text, and one key is used, not two."
+    },
+    {
+     "prompt": "Eve intercepts cipher text made with symmetric encryption. She knows the algorithm. What else does she need to read it?",
+     "options": [
+      "The key used to encrypt it",
+      "The packet numbers",
+      "The receiver's IP address",
+      "A faster connection"
+     ],
+     "correct": 0,
+     "explain": "The same key encrypts and decrypts. With the key, she can turn the cipher text back into plain text."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Who Can Read It?",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-3-l1-sharing",
+   "embedContainerId": "y10-23l1-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Who Can Read It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Eve need BOTH the cipher text and the key?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The cipher text alone is meaningless. The key alone has nothing to unlock.</p></div></details><p class=\"lesson-lead\">Read how Ana shares the key and what Eve intercepts. Can Eve read the message? Then explain why, and find the safest way to share the key.</p><div id=\"y10-23l1-activity-2\"></div>"
+  },
+  {
+   "id": "exam-describe",
+   "label": "Exam Question: How Symmetric Encryption Works (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-23l1-exam-describe",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: How Symmetric Encryption Works (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Part (i) has 4 marks. What happens at the sender, and what happens at the receiver?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Sender: an algorithm and a key turn plain text into cipher text. Receiver: the same key turns it back. The key must be sent to the receiver.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2024, Question 2(c)(i). Data is often encrypted when it is transmitted from one device to another.</p><div id=\"y10-23l1-exam-describe\"></div>",
+   "items": [
+    {
+     "id": "symmetric-explain",
+     "prompt": "(i) Explain how data is encrypted using symmetric encryption. [4]",
+     "marks": 4,
+     "modelAnswer": "One mark: data is encrypted and decrypted using the same key. Then any three from: plain text is encrypted into cipher text, or cipher text is decrypted into plain text; data is encrypted using an algorithm that uses a key; the key can be generated using an algorithm; the key is transmitted to the receiver."
+    }
+   ]
+  },
+  {
+   "id": "exam-describe-2",
+   "label": "Exam Question: How Symmetric Encryption Works (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-23l1-exam-describe-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: How Symmetric Encryption Works (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"to make it meaningless\" a good answer even though the data can still be intercepted?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Encryption does not stop interception. It stops the intercepted data being understood without the key.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2024, Question 2(c)(ii). Data is often encrypted when it is transmitted from one device to another.</p><div id=\"y10-23l1-exam-describe-2\"></div>",
+   "items": [
+    {
+     "id": "encryption-purpose",
+     "prompt": "(ii) Give the purpose of encryption. [1]",
+     "marks": 1,
+     "modelAnswer": "Any one from: to help keep the data secure; to make the data meaningless (if it is intercepted)."
+    }
+   ]
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Symmetric Encryption",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l1-practice",
+   "validatorKey": "y10_23l1_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Symmetric Encryption</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is part (c) about the key, not the algorithm?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The algorithm can be known by everyone. The key is the secret, so it is the weak point.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/11, November 2022, Question 4(b)(i). Rebekah decides to encrypt the data that she transmits whilst using the Internet. She does this to keep the data safe.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-practice-a\">(a) State why encryption helps keep the data safe. [1]</label><input id=\"y10-23l1-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Symmetric Encryption part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l1-practice-b\">(b) Rebekah receives ZLQ. The key is 3. Decrypt it. [1]</label><input id=\"y10-23l1-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Symmetric Encryption part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-practice-c\">(c) Rebekah sends the key in the same message as the cipher text. Why is the data no longer safe? [1]</label><input id=\"y10-23l1-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Symmetric Encryption part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l1-practice-d\">(d) Why does a longer key make the cipher text harder to crack? [1]</label><input id=\"y10-23l1-practice-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-d\" aria-label=\"Practice: Symmetric Encryption part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l1-practice-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-23l1-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Symmetric Encryption Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-3-l1",
+   "embedContainerId": "y10-23l1-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Symmetric Encryption Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new words and keys every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can encrypt and decrypt any word, you really understand how the key works.</p></div></details><p class=\"lesson-lead\">Why data is encrypted, the words, encrypting and decrypting, and why sharing the key is the weak point. Your progress is saved.</p><div id=\"y10-23l1-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_23l1_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+|the\\s+)?routers?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which device picks the route for each packet?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(in\\s+)?(the\\s+|a\\s+)?(packet\\s+)?header\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which part of the packet is read first?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(different\\s+(routes?|ways?|paths?)|own\\s+(route|way|path)|separate\\w*|independent\\w*|on\\s+(its|their)\\s+own|alone|individual\\w*)\\b)(?=.*\\b(routers?|where|forward\\w*|next|destination|direct\\w*|reach\\w*|deliver\\w*|send\\s+it)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: how do the packets travel, and what must each router know?"
+   }
+  ],
+  "y10_23l1_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(back|return\\w*|bounc\\w*|echo\\w*)\\b)(?=.*\\b(compar\\w*|match\\w*|same|check\\w*)\\b)(?=.*\\b(errors?|wrong|differ\\w*|mismatch\\w*|not\\s+(the\\s+)?same|do\\w*\\s*n.?t\\s+match|not\\s+match\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Three steps: where the copy goes, what the sender does with it, and how it decides.",
+    "marks": 3
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(twice|two\\s+times|both\\s+ways|doubl\\w*|back|again|return\\w*|two\\s+trips?|second\\s+time)\\b)(?=.*\\b(sent|send\\w*|travel\\w*|trips?|journey\\w*|transmi\\w*|goes|go|moves?|data|copy)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "How many times does the data cross the network?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(original|first\\s+copy|kept|keeps|has\\s+the|still\\s+has|own\\s+copy|knows\\s+what|only\\s+the\\s+sender)\\b)(?=.*\\b(compar\\w*|check\\w*|match\\w*|same|see\\s+if)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Who still has the data as it was before it was sent?"
+   }
+  ],
+  "y10_23l1_exam_purpose": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(intercept\\w*|stolen|steal\\w*|hack\\w*|access\\w*|someone|anyone|unauthori[sz]ed|attackers?|eve|copied|read\\s+by)\\b)(?=.*\\b(cannot|can.?t|unable|meaningless|unreadable|scrambl\\w*|nonsense|useless|not\\s+(be\\s+)?(understood|read\\w*|understandable|used)|no\\s+sense)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what could happen to the data on the way, and what encryption does about it."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(ciph|cyph)er\\s*-?\\s*(text|data)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Plain text goes in. What comes out?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(meaningless|cannot|can.?t|unable|unreadable|scrambl\\w*|nonsense|useless|not\\s+understand\\w*|no\\s+sense)\\b)(?=.*\\b(keys?|decrypt\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "What does Eve need to turn it back into plain text?"
+   }
+  ],
+  "y10_23l1_check_shift": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*HSK\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Move each letter forward by the key."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*DATA\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Move each letter back by the key."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(key\\s*(is|[:=])?\\s*)?(3|three)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count how far the first letter moved."
+   }
+  ],
+  "y10_23l1_exam_key": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(strings?|characters?|numbers?|values?|digits?|bits?|binary|letters?|algorithms?|ciphers?|codes?)\\b)(?=.*\\b(encrypt\\w*|decrypt\\w*|scrambl\\w*|unscrambl\\w*|cipher\\s*text|plain\\s*text)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what a key is made of, and what it is used for.",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(symmetric|asymmetric|synchronous|asynchronous)(\\s+(key\\s+)?(encryption|method))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Name the kind of encryption that uses one shared key."
+   }
+  ],
+  "y10_23l1_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(meaningless|cannot|can.?t|unable|unreadable|scrambl\\w*|nonsense|useless|not\\s+understand\\w*)\\b)(?=.*\\b(stolen|steal\\w*|intercept\\w*|hack\\w*|someone|anyone|attackers?|access\\w*|copied|without\\s+the\\s+key)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what could happen to the data, and what it looks like to that person."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*WIN\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Move each letter back by the key."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(intercept\\w*|stolen|steal\\w*|caught|copied|gets?|has|have|finds?|hack\\w*|sees?|takes?)\\b)(?=.*\\b(decrypt\\w*|read\\w*|unlock\\w*|undo\\w*|understand\\w*|plain\\s*text|message)\\b)(?=.*\\b(key|both)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what an attacker would get, and what they could then do."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(more|many|lots|huge|billions?|combinations?|possib\\w*|options?|doubl\\w*)\\b)(?=.*\\b(try|trying|tried|tries|guess\\w*|check\\w*|test\\w*|long|longer|time|years|forever|ages)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what a longer key does to the number of keys, and what that means for an attacker."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

@@ -5,7 +5,8 @@
 // game loop, and touching a live, working game to extract from it under time
 // pressure was a worse risk than writing a smaller, purpose-built interpreter
 // with the same grammar (DECLARE, assignment <-, IF/ELSEIF/ELSE/ENDIF,
-// FOR/NEXT, WHILE/ENDWHILE, INPUT, OUTPUT, array indexing). No CALL/farm-command
+// FOR/NEXT, WHILE/ENDWHILE, INPUT, OUTPUT, array indexing, and the string
+// functions LENGTH, SUBSTRING, UCASE and LCASE). No CALL/farm-command
 // support here - drill content never needs it, and leaving it out keeps this
 // file small.
 //
@@ -49,6 +50,14 @@
         if (j >= s.length) throw new PseudocodeError('Missing a closing " for a text value.', line);
         tokens.push({ type: 'string', value: val });
         i = j + 1;
+        continue;
+      }
+      // A CHAR in single quotes, as the syllabus writes it: 'W'.
+      if (ch === "'") {
+        var close = s.indexOf("'", i + 1);
+        if (close === -1) throw new PseudocodeError("Missing a closing ' for a character value.", line);
+        tokens.push({ type: 'string', value: s.slice(i + 1, close) });
+        i = close + 1;
         continue;
       }
       var two = s.substr(i, 2);
@@ -127,6 +136,34 @@
     };
   }
 
+  // ---- string handling (syllabus 8.1 4(e)) ----
+  // LENGTH(S) gives the number of characters; SUBSTRING(S, Start, Length) gives Length characters starting at
+  // position Start, where the first character is position 1; UCASE and LCASE give a new string in upper or lower
+  // case. None of them changes the variable passed in: the result must be stored or output.
+  var STRING_FUNCTIONS = { LENGTH: 1, SUBSTRING: 3, UCASE: 1, LCASE: 1 };
+  var STRING_FUNCTION_FORMS = { LENGTH: 'one string, e.g. LENGTH(Word)', SUBSTRING: 'three values, e.g. SUBSTRING(Word, 1, 3): the string, the start position and how many characters',
+    UCASE: 'one string, e.g. UCASE(Word)', LCASE: 'one string, e.g. LCASE(Word)' };
+
+  function makeStringFunction(fname, fargs, line) {
+    return function (vars) {
+      var s = fargs[0](vars);
+      if (typeof s !== 'string') throw new PseudocodeError(fname + ' needs a STRING or CHAR, but was given ' + describeValue(s) + ' (' + JSON.stringify(s) + ').', line);
+      if (fname === 'LENGTH') return s.length;
+      if (fname === 'UCASE') return s.toUpperCase();
+      if (fname === 'LCASE') return s.toLowerCase();
+      var start = fargs[1](vars), count = fargs[2](vars);
+      if (typeof start !== 'number' || !Number.isInteger(start) || typeof count !== 'number' || !Number.isInteger(count)) {
+        throw new PseudocodeError('SUBSTRING needs whole numbers for the start position and the number of characters.', line);
+      }
+      if (start < 1) throw new PseudocodeError('SUBSTRING starts at position ' + start + ', but the first character is position 1.', line);
+      if (count < 0) throw new PseudocodeError('SUBSTRING cannot take a negative number of characters (' + count + ').', line);
+      if (start + count - 1 > s.length) {
+        throw new PseudocodeError('SUBSTRING(' + JSON.stringify(s) + ', ' + start + ', ' + count + ') goes past the end: the string has only ' + s.length + ' characters.', line);
+      }
+      return s.substr(start - 1, count);
+    };
+  }
+
   // Builds a recursive-descent parser over `tokens`. `parseExpr` covers
   // arithmetic/concatenation (used inside expressions AND as the operands
   // of a comparison); `parseCondition` covers OR/AND/NOT/comparison on top
@@ -169,6 +206,19 @@
         var secondArg = parseExpr();
         expectOp(')');
         return makeBinOp(firstArg, secondArg, t.value, line);
+      }
+      // The syllabus string functions: LENGTH(S), SUBSTRING(S, Start, Length), UCASE(S), LCASE(S).
+      if (t.type === 'ident' && STRING_FUNCTIONS.hasOwnProperty(t.value.toUpperCase()) && isOp(tokens[pos + 1], '(')) {
+        next(); next();
+        var fname = t.value.toUpperCase();
+        var fargs = [];
+        if (!isOp(peek(), ')')) {
+          fargs.push(parseExpr());
+          while (isOp(peek(), ',')) { next(); fargs.push(parseExpr()); }
+        }
+        expectOp(')');
+        if (fargs.length !== STRING_FUNCTIONS[fname]) throw new PseudocodeError(fname + ' needs ' + STRING_FUNCTION_FORMS[fname] + '.', line);
+        return makeStringFunction(fname, fargs, line);
       }
       if (t.type === 'ident') {
         next();
@@ -483,6 +533,10 @@
       }
       if ((m = line.match(/^([A-Za-z_]\w*)\s*=\s*(.+)$/))) {
         throw new PseudocodeError('Use "<-" for assignment, not "=": ' + m[1] + ' <- ' + m[2], lineNo);
+      }
+      // A string function on its own line: its result goes nowhere, and the variable inside does not change.
+      if ((m = line.match(/^(LENGTH|SUBSTRING|UCASE|LCASE)\s*\(/i))) {
+        throw new PseudocodeError(m[1].toUpperCase() + '(...) gives back a new value, but this line does not store it or output it. Store it, e.g. Name <- UCASE(Name), or output it, e.g. OUTPUT UCASE(Name).', lineNo);
       }
       throw new PseudocodeError('I can’t understand this line: "' + line + '"', lineNo);
     }

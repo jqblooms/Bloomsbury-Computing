@@ -1,0 +1,640 @@
+{
+ "id": "y11-8-1-strings",
+ "label": "8.1 L5: String Handling",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Constants and Totalling (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y11st-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Constants and Totalling (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a program use a constant for a value that never changes?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It cannot be changed by mistake while the program runs, and it is set in one place, so it is easy to update.</p></div></details><p class=\"lesson-lead\">From 8.1 L1 and topic 7. Cambridge IGCSE 0478/23, June 2023, Question 1 and 0478/23, June 2026, Question 1.</p><div id=\"y11st-do-now\"></div>",
+   "items": [
+    {
+     "prompt": "Tick one box to complete the sentence. A constant",
+     "options": [
+      "stores a value that can change at any time during the execution of a program.",
+      "stores a value that cannot change during the execution of a program.",
+      "stores values of multiple data types.",
+      "stores values that must be of the same data type."
+     ],
+     "correct": 1,
+     "explain": "A constant is set once. Its value cannot change while the program runs."
+    },
+    {
+     "prompt": "Tick one box to complete this sentence. A standard method of solution used for adding together a set of values during iteration is",
+     "options": [
+      "counting.",
+      "searching.",
+      "sorting.",
+      "totalling."
+     ],
+     "correct": 3,
+     "explain": "Totalling adds each value to a running total. Counting only adds 1 each time."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: tick one box",
+    "steps": [
+     {
+      "text": "A similar question: <strong>a standard method of solution used to find a piece of data in an array is</strong> ...",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px\"><tr><td style=\"padding:6px 12px;text-align:left\">A</td><td style=\"padding:6px 12px;text-align:left\"><strong>bubble sort</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">B</td><td style=\"padding:6px 12px;text-align:left\"><strong>counting routine</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">C</td><td style=\"padding:6px 12px;text-align:left\"><strong>linear search</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">D</td><td style=\"padding:6px 12px;text-align:left\"><strong>selection search</strong></td></tr></table>"
+     },
+     {
+      "text": "First find the key words in the sentence. Here they are <strong>find a piece of data</strong>.",
+      "visual": "<div class=\"wt-big\">used to <span class=\"wt-hl\">find a piece of data</span> in an array</div>"
+     },
+     {
+      "text": "Now say what each option does, in plain words.",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px\"><tr><td style=\"padding:6px 12px;text-align:left\">bubble sort</td><td style=\"padding:6px 12px;text-align:left\"><strong>puts data in order</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">counting routine</td><td style=\"padding:6px 12px;text-align:left\"><strong>adds 1 each time</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">linear search</td><td style=\"padding:6px 12px;text-align:left\"><strong>checks each item until it finds one</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">selection search</td><td style=\"padding:6px 12px;text-align:left\"><strong>not a method we use</strong></td></tr></table>"
+     },
+     {
+      "text": "Match the key words to one option. Finding data is a <strong>linear search</strong>, so tick C.",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px\"><tr><td style=\"padding:6px 12px;text-align:left\">bubble sort</td><td style=\"padding:6px 12px;text-align:left\"><strong>puts data in order</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">counting routine</td><td style=\"padding:6px 12px;text-align:left\"><strong>adds 1 each time</strong></td></tr><tr class=\"wt-hl\"><td style=\"padding:6px 12px;text-align:left\">linear search</td><td style=\"padding:6px 12px;text-align:left\"><strong>checks each item until it finds one</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">selection search</td><td style=\"padding:6px 12px;text-align:left\"><strong>not a method we use</strong></td></tr></table>"
+     },
+     {
+      "text": "Now do your two questions the same way: find the key words, then say what each option does.",
+      "visual": "<div class=\"wt-big\">key words &rarr; what each option does &rarr; tick one</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: STRING and CHAR (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11st-do-now-2",
+   "validatorKey": "y11st_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: STRING and CHAR (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a name stored as a STRING and not a CHAR?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A name has many characters. A CHAR holds only one character.</p></div></details><p class=\"lesson-lead\">From 8.1 L2. Cambridge IGCSE 0478/23, June 2024, Question 3. Describe the characteristics of the string and char data types and give an example of each.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y11st-do-now-2-a\">(a) String: what it holds [1]</label><input id=\"y11st-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: STRING and CHAR (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11st-do-now-2-b\">(b) String: an example [1]</label><input id=\"y11st-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: STRING and CHAR (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11st-do-now-2-c\">(c) Char: what it holds [1]</label><input id=\"y11st-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: STRING and CHAR (2 of 2) part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11st-do-now-2-d\">(d) Char: an example [1]</label><input id=\"y11st-do-now-2-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-d\" aria-label=\"Do Now: STRING and CHAR (2 of 2) part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11st-do-now-2-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11st-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: describe a data type",
+    "steps": [
+     {
+      "text": "A similar question: say what is meant by <strong>INTEGER</strong> and <strong>REAL</strong>, and give an example of each.",
+      "visual": "<div class=\"wt-big\">INTEGER &nbsp; REAL</div>"
+     },
+     {
+      "text": "Say what kind of value the type holds. An INTEGER holds a <strong>whole number</strong>.",
+      "visual": "<div class=\"wt-big\">INTEGER: <span class=\"wt-hl\">a whole number</span></div>"
+     },
+     {
+      "text": "Give an example that fits this type: <strong>27</strong>.",
+      "visual": "<div class=\"wt-big\">INTEGER: a whole number. Example: <span class=\"wt-hl\">27</span></div>"
+     },
+     {
+      "text": "A REAL holds a number with a decimal point. Example: <strong>3.5</strong>.",
+      "visual": "<div class=\"wt-big\">REAL: a number with a decimal point. Example: <span class=\"wt-hl\">3.5</span></div>"
+     },
+     {
+      "text": "Check each example: 3.5 cannot be an INTEGER, so it shows what a REAL is.",
+      "visual": "<div class=\"wt-big\">3.5 &rarr; <span class=\"wt-hl\">REAL only</span></div>"
+     },
+     {
+      "text": "Now do your two types the same way: what does it hold? Then one example.",
+      "visual": "<div class=\"wt-big\">what it holds &rarr; one example</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y11-8-1-strings-ext",
+   "embedContainerId": "y11st-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 8.1 L1 to L4: variables, constants, data types, arithmetic operators, and relational and logical operators. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y11st-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "String Handling",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">8.1 Programming Concepts</p><h2 class=\"lesson-h2\">String Handling</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> count the characters in a string, take part of a string, and change it to capital or small letters.</li><li><strong>Every time, ask why:</strong> why does it give that answer?</li><li><strong>Activities:</strong> trace a program, then write your own string code and run it.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a program need to look at the characters inside a string?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>To check what the user typed: a password that is long enough, a code that starts with PD, a yes typed as YES or yes.</p></div></details>"
+  },
+  {
+   "id": "length",
+   "label": "LENGTH: Count the Characters",
+   "content": "<h2 class=\"lesson-h2\">LENGTH: Count the Characters</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does LENGTH(\"Happy Days\") give? Why is it not 9?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It gives <strong>10</strong>.</p><p>The space is a character too. 5 letters, 1 space, 4 letters: 5 + 1 + 4 = 10.</p></div></details><table class=\"donow-table\" style=\"font-size:18px\"><tr><th style=\"padding:6px 10px;text-align:left\">Position</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">1</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">2</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">3</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">4</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">5</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">6</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">7</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">8</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">9</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">10</th></tr><tr><th style=\"padding:6px 10px;text-align:left\">Character</th><td style=\"padding:6px 10px;text-align:center;min-width:34px\">H</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">a</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">p</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">p</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">y</td><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">&middot;</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">D</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">a</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">y</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">s</td></tr></table><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Code</th><th style=\"padding:6px 12px;text-align:left\">Result</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>LENGTH(\"Cat\")</code></td><td style=\"padding:6px 12px;text-align:left\">3</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>LENGTH(\"Happy Days\")</code></td><td style=\"padding:6px 12px;text-align:left\">10</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>LENGTH(\"Year 11\")</code></td><td style=\"padding:6px 12px;text-align:left\">7</td></tr></table></div><div><ul class=\"lesson-facts\"><li><code>LENGTH(Word)</code> gives the number of characters in Word.</li><li>Letters, digits, symbols and spaces all count.</li><li>The result is a whole number: an INTEGER.</li></ul></div></div>"
+  },
+  {
+   "id": "check-length",
+   "label": "Check: LENGTH",
+   "type": "short-answer-validation",
+   "validatorId": "y11st-check-length",
+   "validatorKey": "y11st_check_length",
+   "content": "<h2 class=\"lesson-h2\">Check: LENGTH</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the result of LENGTH an INTEGER, not a STRING?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>LENGTH counts the characters. A count is a whole number.</p></div></details><p class=\"lesson-lead\">Name holds \"Ali Khan\".</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11st-check-length-a\">(a) What does LENGTH(Name) give? [1]</label><input id=\"y11st-check-length-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-length-a\" aria-label=\"Check: LENGTH part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11st-check-length-b\">(b) What does LENGTH(\"Hi there!\") give? [1]</label><input id=\"y11st-check-length-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-length-b\" aria-label=\"Check: LENGTH part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11st-check-length-c\">(c) Write the line that stores the number of characters in Password in the variable Size. [1]</label><input id=\"y11st-check-length-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-length-c\" aria-label=\"Check: LENGTH part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11st-check-length-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11st-check-length-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-length",
+   "label": "Exam Question: Six Characters Long",
+   "type": "self-marked-response",
+   "containerId": "y11st-exam-length",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Six Characters Long</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the check test for exactly six characters?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The rule says six characters. A check for six or more would also accept a code with seven characters.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/22, June 2024, Question 4(b)(i). A program needs to make sure the characters input for a product code meet these rules: the product code is six characters in length; the first two characters must be \"PD\"; the last four characters must be a number in the range 1000 to 9999 inclusive. The product code is stored in the variable Product.</p><div id=\"y11st-exam-length\"></div>",
+   "items": [
+    {
+     "id": "length-six",
+     "prompt": "Write the pseudocode to make sure that the product code is six characters in length.",
+     "marks": 2,
+     "modelAnswer": "REPEAT<br>&nbsp;&nbsp;INPUT Product<br>UNTIL LENGTH(Product) = 6<br>One mark for LENGTH(Product), one mark for testing it against 6 so the code is input again until it fits. A WHILE LENGTH(Product) &lt;&gt; 6 DO loop is also correct."
+    }
+   ]
+  },
+  {
+   "id": "substring",
+   "label": "SUBSTRING: Take Part of a String",
+   "content": "<h2 class=\"lesson-h2\">SUBSTRING: Take Part of a String</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does SUBSTRING(\"Computer\", 1, 3) give? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It gives <strong>\"Com\"</strong>.</p><p>1 is the start: the first character is position 1. 3 is how many characters to take: C, o, m.</p></div></details><table class=\"donow-table\" style=\"font-size:18px\"><tr><th style=\"padding:6px 10px;text-align:left\">Position</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">1</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">2</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">3</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">4</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">5</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">6</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">7</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">8</th></tr><tr><th style=\"padding:6px 10px;text-align:left\">Character</th><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">C</td><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">o</td><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">m</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">p</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">u</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">t</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">e</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">r</td></tr></table><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Code</th><th style=\"padding:6px 12px;text-align:left\">Start</th><th style=\"padding:6px 12px;text-align:left\">How many</th><th style=\"padding:6px 12px;text-align:left\">Result</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>SUBSTRING(\"Computer\", 1, 3)</code></td><td style=\"padding:6px 12px;text-align:left\">1</td><td style=\"padding:6px 12px;text-align:left\">3</td><td style=\"padding:6px 12px;text-align:left\">\"Com\"</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>SUBSTRING(\"Computer\", 4, 3)</code></td><td style=\"padding:6px 12px;text-align:left\">4</td><td style=\"padding:6px 12px;text-align:left\">3</td><td style=\"padding:6px 12px;text-align:left\">\"put\"</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>SUBSTRING(\"Computer\", 8, 1)</code></td><td style=\"padding:6px 12px;text-align:left\">8</td><td style=\"padding:6px 12px;text-align:left\">1</td><td style=\"padding:6px 12px;text-align:left\">\"r\"</td></tr></table><ul class=\"lesson-facts\"><li><code>SUBSTRING(Word, Start, Length)</code>: take <strong>Length</strong> characters, starting at position <strong>Start</strong>.</li><li>The first character is position 1.</li></ul>"
+  },
+  {
+   "id": "compare-count",
+   "label": "Compare: How Many, Not Where to Stop",
+   "content": "<h2 class=\"lesson-h2\">Compare: How Many, Not Where to Stop</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does SUBSTRING(\"Computer\", 3, 5) give \"mpute\" and not \"mpu\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>5 is <strong>how many</strong> characters to take, not the position to stop at.</p><p>Start at position 3, then take 5 characters: m, p, u, t, e.</p></div></details><table class=\"donow-table\" style=\"font-size:18px\"><tr><th style=\"padding:6px 10px;text-align:left\">Position</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">1</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">2</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">3</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">4</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">5</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">6</th><th style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">7</th><th style=\"padding:6px 10px;text-align:center;min-width:34px\">8</th></tr><tr><th style=\"padding:6px 10px;text-align:left\">Character</th><td style=\"padding:6px 10px;text-align:center;min-width:34px\">C</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">o</td><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">m</td><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">p</td><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">u</td><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">t</td><td style=\"padding:6px 10px;text-align:center;min-width:34px;background:var(--brand-soft);color:var(--ink)\">e</td><td style=\"padding:6px 10px;text-align:center;min-width:34px\">r</td></tr></table><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Code</th><th style=\"padding:6px 12px;text-align:left\">If it meant \"stop at\"</th><th style=\"padding:6px 12px;text-align:left\">What SUBSTRING really gives</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>SUBSTRING(\"Computer\", 3, 5)</code></td><td style=\"padding:6px 12px;text-align:left\">\"mpu\"</td><td style=\"padding:6px 12px;text-align:left\"><strong>\"mpute\"</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>SUBSTRING(\"Computer\", 2, 4)</code></td><td style=\"padding:6px 12px;text-align:left\">\"omp\"</td><td style=\"padding:6px 12px;text-align:left\"><strong>\"ompu\"</strong></td></tr></table><ul class=\"lesson-facts\"><li>The second value is <strong>where to start</strong>.</li><li>The third value is <strong>how many</strong> characters.</li></ul>"
+  },
+  {
+   "id": "compare-last",
+   "label": "Compare: Reaching the Last Character",
+   "content": "<h2 class=\"lesson-h2\">Compare: Reaching the Last Character</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both lines work for \"Computer\". Why does only the second line work for every word?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>8 is the last position only when the word has 8 characters. \"Mouse\" has no position 8, and in \"Keyboards\" position 8 is not the end.</p><p>LENGTH(Word) is always the position of the last character, whatever the word.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Word</th><th style=\"padding:6px 12px;text-align:left\">LENGTH(Word)</th><th style=\"padding:6px 12px;text-align:left\"><code>SUBSTRING(Word, 8, 1)</code></th><th style=\"padding:6px 12px;text-align:left\"><code>SUBSTRING(Word, LENGTH(Word), 1)</code></th></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"Computer\"</td><td style=\"padding:6px 12px;text-align:left\">8</td><td style=\"padding:6px 12px;text-align:left\">\"r\"</td><td style=\"padding:6px 12px;text-align:left\"><strong>\"r\"</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"Mouse\"</td><td style=\"padding:6px 12px;text-align:left\">5</td><td style=\"padding:6px 12px;text-align:left\">Error: past the end</td><td style=\"padding:6px 12px;text-align:left\"><strong>\"e\"</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"Keyboards\"</td><td style=\"padding:6px 12px;text-align:left\">9</td><td style=\"padding:6px 12px;text-align:left\">\"d\"</td><td style=\"padding:6px 12px;text-align:left\"><strong>\"s\"</strong></td></tr></table><ul class=\"lesson-facts\"><li>The last character is at position <code>LENGTH(Word)</code>.</li><li>A program must work for any word, not just the one you tested.</li></ul>"
+  },
+  {
+   "id": "check-sub",
+   "label": "Check: SUBSTRING",
+   "type": "short-answer-validation",
+   "validatorId": "y11st-check-sub",
+   "validatorKey": "y11st_check_sub",
+   "content": "<h2 class=\"lesson-h2\">Check: SUBSTRING</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does part (c) give the last letter?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>LENGTH(Word) is 8, the position of the last character. Taking 1 character from there gives the last letter.</p></div></details><p class=\"lesson-lead\">Word holds \"Keyboard\". Capital letters matter.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11st-check-sub-a\">(a) SUBSTRING(Word, 1, 3) [1]</label><input id=\"y11st-check-sub-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-sub-a\" aria-label=\"Check: SUBSTRING part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11st-check-sub-b\">(b) SUBSTRING(Word, 4, 5) [1]</label><input id=\"y11st-check-sub-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-sub-b\" aria-label=\"Check: SUBSTRING part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11st-check-sub-c\">(c) SUBSTRING(Word, LENGTH(Word), 1) [1]</label><input id=\"y11st-check-sub-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-sub-c\" aria-label=\"Check: SUBSTRING part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11st-check-sub-d\">(d) Write the line that stores the first letter of Name in the variable Initial. [1]</label><input id=\"y11st-check-sub-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-sub-d\" aria-label=\"Check: SUBSTRING part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11st-check-sub-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11st-check-sub-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-pd",
+   "label": "Exam Question: Starts With PD",
+   "type": "self-marked-response",
+   "containerId": "y11st-exam-pd",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Starts With PD</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does this check need SUBSTRING and not LENGTH?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>LENGTH only counts the characters. SUBSTRING takes the first two characters, so the program can compare them with \"PD\".</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/22, June 2024, Question 4(b)(ii). The same product code rules: six characters, the first two characters must be \"PD\", the last four characters a number from 1000 to 9999. The product code is stored in the variable Product.</p><div id=\"y11st-exam-pd\"></div>",
+   "items": [
+    {
+     "id": "starts-pd",
+     "prompt": "Write the pseudocode to make sure that the first two characters of the product code are \"PD\".",
+     "marks": 2,
+     "modelAnswer": "REPEAT<br>&nbsp;&nbsp;INPUT Product<br>UNTIL SUBSTRING(Product, 1, 2) = \"PD\"<br>One mark for SUBSTRING(Product, 1, 2), one mark for testing it against \"PD\" so the code is input again until it starts with PD."
+    }
+   ]
+  },
+  {
+   "id": "exam-program",
+   "label": "Exam Question: Find the Word",
+   "type": "short-answer-validation",
+   "validatorId": "y11st-exam-program",
+   "validatorKey": "y11st_exam_program",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Find the Word</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The word program comes third. Why is its start position not 3?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Spaces are characters too. \"I learnt to \" is 12 characters, so program starts at 13.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/23, June 2026, Question 6(b). The string \"I learnt to program in computer science\" is stored in the variable Fact.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">Fact &lt;- \"I learnt to program in computer science\"</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y11st-exam-program-a\">(a) Write the pseudocode statement to use a string function to output the word program taken from the string stored in Fact. Do not declare any variables. [2]</label><input id=\"y11st-exam-program-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-program-a\" aria-label=\"Exam Question: Find the Word part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11st-exam-program-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11st-exam-program-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Trace the Letters",
+   "type": "embedded-app",
+   "appId": "trace-table-practice",
+   "embedContainerId": "y11st-embed-1",
+   "embedQuery": "view=practice&lang=cambridge&support=1",
+   "embedView": "practice",
+   "algorithm": {
+    "title": "Count the Letter A",
+    "context": "Word holds \"PASTA\". The first character is position 1. Complete the trace table.",
+    "code": [
+     "DECLARE Word : STRING",
+     "DECLARE Letter : STRING",
+     "DECLARE Count : INTEGER",
+     "DECLARE Total : INTEGER",
+     "Word = \"PASTA\"",
+     "Total = 0",
+     "for Count in range(1, LENGTH(Word) + 1):",
+     "    Letter = SUBSTRING(Word, Count, 1)",
+     "    if Letter == \"A\":",
+     "        Total = Total + 1",
+     "print(Total)"
+    ],
+    "cols": [
+     "Line",
+     "Word",
+     "Count",
+     "Letter",
+     "Total",
+     "Output"
+    ],
+    "answers": [
+     {
+      "Line": "5",
+      "Word": "PASTA",
+      "Count": "",
+      "Letter": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "6",
+      "Word": "",
+      "Count": "",
+      "Letter": "",
+      "Total": "0",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Word": "",
+      "Count": "1",
+      "Letter": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Word": "",
+      "Count": "",
+      "Letter": "P",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Word": "",
+      "Count": "2",
+      "Letter": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Word": "",
+      "Count": "",
+      "Letter": "A",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "10",
+      "Word": "",
+      "Count": "",
+      "Letter": "",
+      "Total": "1",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Word": "",
+      "Count": "3",
+      "Letter": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Word": "",
+      "Count": "",
+      "Letter": "S",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Word": "",
+      "Count": "4",
+      "Letter": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Word": "",
+      "Count": "",
+      "Letter": "T",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "7",
+      "Word": "",
+      "Count": "5",
+      "Letter": "",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "8",
+      "Word": "",
+      "Count": "",
+      "Letter": "A",
+      "Total": "",
+      "Output": ""
+     },
+     {
+      "Line": "10",
+      "Word": "",
+      "Count": "",
+      "Letter": "",
+      "Total": "2",
+      "Output": ""
+     },
+     {
+      "Line": "11",
+      "Word": "",
+      "Count": "",
+      "Letter": "",
+      "Total": "",
+      "Output": "2"
+     }
+    ]
+   },
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Trace the Letters</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the loop go up to LENGTH(Word) and not to 10?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>\"PASTA\" has 5 characters, so the loop stops at the last one. Position 6 does not exist, so SUBSTRING would go past the end.</p></div></details><div id=\"y11st-embed-1\" class=\"lesson-embed\"></div>"
+  },
+  {
+   "id": "case",
+   "label": "UCASE and LCASE: Change the Case",
+   "content": "<h2 class=\"lesson-h2\">UCASE and LCASE: Change the Case</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does UCASE(\"Room 12b\") give? Why do the 1 and the 2 not change?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It gives <strong>\"ROOM 12B\"</strong>.</p><p>UCASE changes small letters to capital letters. Digits and spaces have no capital, so they stay the same.</p></div></details><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Code</th><th style=\"padding:6px 12px;text-align:left\">Result</th></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>UCASE(\"Happy\")</code></td><td style=\"padding:6px 12px;text-align:left\">\"HAPPY\"</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>LCASE(\"W\")</code></td><td style=\"padding:6px 12px;text-align:left\">\"w\"</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>UCASE(\"Room 12b\")</code></td><td style=\"padding:6px 12px;text-align:left\">\"ROOM 12B\"</td></tr><tr><td style=\"padding:6px 12px;text-align:left\"><code>LCASE(\"PD12\")</code></td><td style=\"padding:6px 12px;text-align:left\">\"pd12\"</td></tr></table></div><div><ul class=\"lesson-facts\"><li><code>UCASE(Word)</code> gives Word in <strong>upper case</strong>: capital letters.</li><li><code>LCASE(Word)</code> gives Word in <strong>lower case</strong>: small letters.</li><li>Only letters change.</li></ul></div></div>"
+  },
+  {
+   "id": "compare-case",
+   "label": "Compare: \"yes\" and \"YES\"",
+   "content": "<h2 class=\"lesson-h2\">Compare: \"yes\" and \"YES\"</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The user typed yes. Why does the first condition say No match?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>= checks every character exactly. A small y and a capital Y are different characters.</p><p>UCASE(Answer) turns yes, Yes and YES into YES first, so all three match.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Answer typed</th><th style=\"padding:6px 12px;text-align:left\"><code>IF Answer = \"YES\" THEN</code></th><th style=\"padding:6px 12px;text-align:left\"><code>IF UCASE(Answer) = \"YES\" THEN</code></th></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"YES\"</td><td style=\"padding:6px 12px;text-align:left\">Match</td><td style=\"padding:6px 12px;text-align:left\"><strong>Match</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"yes\"</td><td style=\"padding:6px 12px;text-align:left\">No match</td><td style=\"padding:6px 12px;text-align:left\"><strong>Match</strong></td></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"Yes\"</td><td style=\"padding:6px 12px;text-align:left\">No match</td><td style=\"padding:6px 12px;text-align:left\"><strong>Match</strong></td></tr></table><ul class=\"lesson-facts\"><li>Users type in different ways.</li><li>Change the input to one case <strong>before</strong> you compare it.</li></ul>"
+  },
+  {
+   "id": "compare-store",
+   "label": "Compare: Store the Result",
+   "content": "<h2 class=\"lesson-h2\">Compare: Store the Result</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Programs A and B both use UCASE. Why do they still output sam?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>UCASE gives back a <strong>new</strong> string. It does not change Name.</p><p>A throws the new string away. B stores it in Big, not in Name. Only C stores it back in Name.</p></div></details><p class=\"lesson-lead\">Name holds \"sam\".</p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Program</th><th style=\"padding:6px 12px;text-align:left\">Lines</th><th style=\"padding:6px 12px;text-align:left\">Output</th></tr><tr><td style=\"padding:6px 12px;text-align:left\">A</td><td style=\"padding:6px 12px;text-align:left\"><code>UCASE(Name)</code><br><code>OUTPUT Name</code></td><td style=\"padding:6px 12px;text-align:left\">sam: the new string is lost</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">B</td><td style=\"padding:6px 12px;text-align:left\"><code>Big &lt;- UCASE(Name)</code><br><code>OUTPUT Name</code></td><td style=\"padding:6px 12px;text-align:left\">sam</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">C</td><td style=\"padding:6px 12px;text-align:left\"><code>Name &lt;- UCASE(Name)</code><br><code>OUTPUT Name</code></td><td style=\"padding:6px 12px;text-align:left\"><strong>SAM</strong></td></tr></table><ul class=\"lesson-facts\"><li>A string function gives back a new value.</li><li>Store it with &lt;-, or output it. On its own, it changes nothing.</li></ul>"
+  },
+  {
+   "id": "check-case",
+   "label": "Check: UCASE and LCASE",
+   "type": "short-answer-validation",
+   "validatorId": "y11st-check-case",
+   "validatorKey": "y11st_check_case",
+   "content": "<h2 class=\"lesson-h2\">Check: UCASE and LCASE</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does part (c) compare UCASE(Reply) with \"NO\", and not Reply?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Reply holds small letters, and = checks the case. UCASE(Reply) gives \"NO\", which matches. Reply itself still holds \"no\".</p></div></details><p class=\"lesson-lead\">Capital letters matter.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11st-check-case-a\">(a) UCASE(\"Bloomsbury\") [1]</label><input id=\"y11st-check-case-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-case-a\" aria-label=\"Check: UCASE and LCASE part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11st-check-case-b\">(b) LCASE(\"HAT YAI\") [1]</label><input id=\"y11st-check-case-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-case-b\" aria-label=\"Check: UCASE and LCASE part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11st-check-case-c\">(c) Reply holds \"no\". Is UCASE(Reply) = \"NO\" TRUE or FALSE? [1]</label><input id=\"y11st-check-case-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-case-c\" aria-label=\"Check: UCASE and LCASE part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11st-check-case-d\">(d) Write the line that changes Reply to upper case and stores it back in Reply. [1]</label><input id=\"y11st-check-case-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-case-d\" aria-label=\"Check: UCASE and LCASE part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11st-check-case-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11st-check-case-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-phrase",
+   "label": "Exam Question: Length and Upper Case (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y11st-exam-phrase",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Length and Upper Case (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the results of LENGTH and UCASE go in an OUTPUT?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They give back new values. Without OUTPUT, nothing is shown, and Phrase does not change.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/21, June 2023, Question 8(a). The function LENGTH(Phrase) calculates the length of a string Phrase.</p><div id=\"y11st-exam-phrase\"></div>",
+   "items": [
+    {
+     "id": "phrase-code",
+     "prompt": "Write the pseudocode statements to: store the string \"The beginning is the most important part\" in Phrase; calculate and output the length of the string; output the string in upper case.",
+     "marks": 3,
+     "modelAnswer": "Phrase &lt;- \"The beginning is the most important part\"<br>OUTPUT LENGTH(Phrase)<br>OUTPUT UCASE(Phrase)<br>Marks for: storing the string in Phrase, using LENGTH, using UCASE, and outputting both results."
+    }
+   ]
+  },
+  {
+   "id": "exam-phrase-2",
+   "label": "Exam Question: Length and Upper Case (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11st-exam-phrase-2",
+   "validatorKey": "y11st_exam_phrase_2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Length and Upper Case (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does LENGTH give more than the number of letters in the phrase?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>LENGTH counts every character. The 6 spaces are characters too: 34 letters + 6 spaces = 40.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/21, June 2023, Question 8(b). Write the output your pseudocode should produce.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">Phrase &lt;- \"The beginning is the most important part\"</div><div class=\"lesson-code-line\">OUTPUT LENGTH(Phrase)</div><div class=\"lesson-code-line\">OUTPUT UCASE(Phrase)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11st-exam-phrase-2-a\">(a) The first line of output [1]</label><input id=\"y11st-exam-phrase-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-phrase-2-a\" aria-label=\"Exam Question: Length and Upper Case (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11st-exam-phrase-2-b\">(b) The second line of output [1]</label><input id=\"y11st-exam-phrase-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-phrase-2-b\" aria-label=\"Exam Question: Length and Upper Case (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11st-exam-phrase-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11st-exam-phrase-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "exam-world",
+   "label": "Exam Question: Find the W",
+   "type": "short-answer-validation",
+   "validatorId": "y11st-exam-world",
+   "validatorKey": "y11st_exam_world",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Find the W</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must P be changed to upper case before the search?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Q is a capital W. \"The world\" has a small w, and = sees w and W as different, so without UCASE the W is never found.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/22, June 2023, Question 11(c). P stores the string \"The world\". Q stores the character 'W'. An algorithm converts P to upper case, then finds the position of Q in the string P (the first character in this string is in position 1), and stores it in the variable Position.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">P &lt;- \"The world\"</div><div class=\"lesson-code-line\">Q &lt;- 'W'</div><div class=\"lesson-code-line\">P &lt;- UCASE(P)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11st-exam-world-a\">(a) Give the value of Position after the algorithm has been executed. [1]</label><input id=\"y11st-exam-world-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-world-a\" aria-label=\"Exam Question: Find the W part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11st-exam-world-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y11st-exam-world-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "exam-username",
+   "label": "Exam Question: Make a Username",
+   "type": "short-answer-validation",
+   "validatorId": "y11st-exam-username",
+   "validatorKey": "y11st_exam_username",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Make a Username</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the result be stored in Temp?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>UCASE and SUBSTRING give back a new string. If it is not stored, it is lost, and LastName does not change.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/21, June 2026, Question 5(b). A system makes usernames. It takes the first letter of the first name and the first two letters of the last name, converts all the letters to upper case, and adds a random number: Muhammed Hann gets MHA492. The last name is input into the variable LastName.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y11st-exam-username-a\">(a) Write the pseudocode to: take the first two letters from LastName; convert the letters to upper case; store the result in the variable Temp. Write it as one line. [3]</label><input id=\"y11st-exam-username-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-username-a\" aria-label=\"Exam Question: Make a Username part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11st-exam-username-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11st-exam-username-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Write the String Code",
+   "type": "embedded-app",
+   "appId": "drill-y11-8-1-strings-code",
+   "embedContainerId": "y11st-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Write the String Code</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is your program tested with a new word each time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>String code must work for any word. A new word finds a start position or a length that only fits one word.</p></div></details><p class=\"lesson-lead\">Write the program in the box. Press Run. Your program must give the same output as the model program, with a new word typed in each time.</p><div id=\"y11st-activity-2\"></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: String Handling Drill",
+   "type": "embedded-app",
+   "appId": "drill-y11-8-1-strings",
+   "embedContainerId": "y11st-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: String Handling Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do some cards ask you to explain, not just to answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>In the exam, explain questions need a reason. Saying why shows you understand it.</p></div></details><p class=\"lesson-lead\">LENGTH, SUBSTRING, UCASE and LCASE, and why each one gives its answer. Your progress is saved.</p><div id=\"y11st-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y11st_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(characters?|letters?|symbols?|digits?|text)\\b)(?=.*\\b(group|groups|many|more than one|several|sequence|series|collection|set|lots|multiple|any number|zero or more|one or more|combination|mix|mixture|list|row|word|words|sentence)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "How many characters can a string hold? Say what they can be.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'“”‘’]?[^\"'“”‘’]{2,}[\"'“”‘’]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Give a value with more than one character.",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(more than one|many|group|several|multiple|words?)\\b)(?=.*\\b(single|one|1)\\b)(?=.*\\b(characters?|letters?|symbols?|digits?|char)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "How many characters does a char hold?",
+    "marks": 1
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'“”‘’]?[^\\s\"'“”‘’][\"'“”‘’]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Give a value with exactly one character.",
+    "marks": 1
+   }
+  ],
+  "y11st_check_length": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*8\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count every character. The space counts too.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*9\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the letters, the space and the !",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*Size\\s*(<-|←)\\s*LENGTH\\s*\\(\\s*Password\\s*\\)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The variable, then &lt;-, then LENGTH with Password in the brackets.",
+    "marks": 1
+   }
+  ],
+  "y11st_check_sub": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'“”‘’]?Key[\"'“”‘’]?\\s*$",
+     "flags": ""
+    },
+    "feedback": "Start at position 1. Take 3 characters.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'“”‘’]?board[\"'“”‘’]?\\s*$",
+     "flags": ""
+    },
+    "feedback": "Start at position 4. Then take 5 characters: 5 is how many, not where to stop.",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'“”‘’]?d[\"'“”‘’]?\\s*$",
+     "flags": ""
+    },
+    "feedback": "Work out LENGTH(Word) first. That position is the last character.",
+    "marks": 1
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*Initial\\s*(<-|←)\\s*SUBSTRING\\s*\\(\\s*Name\\s*,\\s*1\\s*,\\s*1\\s*\\)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "SUBSTRING needs three values: the string, where to start, how many.",
+    "marks": 1
+   }
+  ],
+  "y11st_exam_program": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*OUTPUT\\s+SUBSTRING\\s*\\(\\s*Fact\\s*,\\s*1[23]\\s*,\\s*7\\s*\\)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the characters before \"program\", spaces too. Then: how many letters are in program?",
+    "marks": 2
+   }
+  ],
+  "y11st_check_case": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'“”‘’]?BLOOMSBURY[\"'“”‘’]?\\s*$",
+     "flags": ""
+    },
+    "feedback": "UCASE: every letter becomes a capital letter.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'“”‘’]?hat\\s+yai[\"'“”‘’]?\\s*$",
+     "flags": ""
+    },
+    "feedback": "LCASE: every letter becomes a small letter. The space stays.",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*TRUE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out UCASE(Reply) first. Then compare it with \"NO\".",
+    "marks": 1
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*Reply\\s*(<-|←)\\s*UCASE\\s*\\(\\s*Reply\\s*\\)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "UCASE on its own changes nothing. Store the result back in Reply with &lt;-.",
+    "marks": 1
+   }
+  ],
+  "y11st_exam_phrase_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*40\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count every character in the phrase, and every space.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'“”‘’]?THE\\s+BEGINNING\\s+IS\\s+THE\\s+MOST\\s+IMPORTANT\\s+PART[\"'“”‘’]?\\s*$",
+     "flags": ""
+    },
+    "feedback": "UCASE changes every letter to a capital letter. Spaces stay.",
+    "marks": 1
+   }
+  ],
+  "y11st_exam_world": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write P in upper case first. Then count the positions, and the space counts.",
+    "marks": 1
+   }
+  ],
+  "y11st_exam_username": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*Temp\\s*(<-|←)\\s*(UCASE\\s*\\(\\s*SUBSTRING\\s*\\(\\s*LastName\\s*,\\s*[01]\\s*,\\s*2\\s*\\)\\s*\\)|SUBSTRING\\s*\\(\\s*UCASE\\s*\\(\\s*LastName\\s*\\)\\s*,\\s*[01]\\s*,\\s*2\\s*\\))\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Put SUBSTRING inside UCASE: UCASE( SUBSTRING(...) ). Then store it in Temp with &lt;-.",
+    "marks": 3
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

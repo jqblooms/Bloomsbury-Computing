@@ -101,6 +101,13 @@
             "y9-2-6-errors",
             "y9-term1a-test"
           ]
+        },
+        {
+          "code": "",
+          "title": "Pseudocode and Software Development",
+          "lessons": [
+            "y9-3-1-pseudocode"
+          ]
         }
       ]
     },
@@ -157,6 +164,13 @@
             "y10-2-2-l3",
             "y10-2-2-l4"
           ]
+        },
+        {
+          "code": "2.3",
+          "title": "Encryption",
+          "lessons": [
+            "y10-2-3-l1"
+          ]
         }
       ]
     },
@@ -192,7 +206,8 @@
             "y11-8-1-vc",
             "y11-8-1-types",
             "y11-8-1-arith",
-            "y11-8-1-ops"
+            "y11-8-1-ops",
+            "y11-8-1-strings"
           ]
         }
       ]
