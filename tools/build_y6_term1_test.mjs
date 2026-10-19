@@ -286,7 +286,7 @@ const steps = [
         '<strong>Topics:</strong> events, x and y, loops, variables, if blocks, costumes, messages, fixing bugs.']) +
       tps('Which Scratch blocks do you find hardest?', 'Practise those cards most in the next 12 minutes.') },
   { id: 'revision', label: 'Revision Practice', type: 'embedded-app', appId: 'drill-' + DRILL, embedContainerId: 'y6t1-revision',
-    content: '<h2 class="lesson-h2">Revision Practice</h2>' + tps('A repeat (4) loop has one change x by (10) inside. How much does x change?', 'By 40: the block inside runs 4 times, 10 each time.') +
+    content: '<h2 class="lesson-h2">Revision Practice</h2>' + tps('Why read a script one block at a time, even a short one?', 'One block can change everything after it. Reading each block in order stops you guessing.') +
       '<p class="lesson-lead">12 minutes. Read each script one block at a time. Stuck? Switch on I need help and press Walk me through it.</p><div id="y6t1-revision"></div>' },
   // The warm-up bug hunt is Ghost Maze, not Meteor Dodge: b1 breaks Meteor Dodge, and a Meteor Dodge warm-up would show
   // its correct scripts just before the test (James's audit, 2026-10-09).
@@ -295,7 +295,7 @@ const steps = [
       '<div class="igame-two-col"><div class="lesson-flow-task"><h3>Fix it</h3>' + facts(['Play the game first.', 'Find the block that does the wrong thing.', 'Fix it, then press <strong>Check my project</strong>.']) + '</div>' +
       '<div class="lesson-app-link"><p>6 minutes. The test has a different game to fix in the same way.</p><button type="button" class="donow-btn" id="y6t1-warm-up-btn">Open Ghost Maze</button></div></div>' },
   { id: 'warm-up-2', label: 'Warm Up: Change a Game', type: 'app-link', appId: 'scratchchallenges', appQuery: 'challenge=practice-change&lesson=' + LID, buttonId: 'y6t1-warm-up-2-btn',
-    content: '<h2 class="lesson-h2">Warm Up: Change a Game</h2>' + tps('You need score to go up by 10, not 5. Which block do you change?', 'The change [score] by block in the script that runs when the sprite is clicked. Change only its number.') +
+    content: '<h2 class="lesson-h2">Warm Up: Change a Game</h2>' + tps('Why change one thing, then press Check my project?', 'If a check turns red, you know which change did it. Then you only undo that one.') +
       '<div class="igame-two-col"><div class="lesson-flow-task"><h3>Change it</h3>' + facts(['Read the list of changes.', 'Find the script that does that part of the game.', 'Change one thing, then press <strong>Check my project</strong>.']) + '</div>' +
       '<div class="lesson-app-link"><p>7 minutes. The test has a game like this to change.</p><button type="button" class="donow-btn" id="y6t1-warm-up-2-btn">Open Balloon Pop</button></div></div>' },
   { id: 'how-it-works', label: 'How the Test Works',

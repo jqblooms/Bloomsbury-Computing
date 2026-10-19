@@ -72,10 +72,10 @@ const bigTable = (html) => html.replace('<table class="donow-table">', '<table c
 const TPS = {
   'do-now': ['Why does every symbol need a name?', 'So everyone reads a flowchart the same way. The exam uses these names too.'],
   'key-words': ['Why does each job have its own shape?', 'You can see what a box does before you read the words in it.'],
-  'read-check': ['Why does a Say box not add any steps?', 'Say only shows a message. Only Move boxes move the sprite.'],
+  'read-check': ['Why write the steps so far after each box?', 'You keep a running total, so you do not lose count. You can check your working too.'],
   'fix': ['Why do we check every box against what it should do?', 'A mistake is where the flowchart and the plan are different. Checking each box finds it.'],
-  'loops-check': ['Why does "not pressed" move the sprite 0 steps?', 'The False arrow goes back to the decision. It never reaches the Move box.'],
-  'practice': ['Why must box A be a decision?', 'It asks a question about the key. It needs a True arrow and a False arrow.'],
+  'loops-check': ['Why write pressed or not pressed for each check before you count the steps?', 'Each check can go a different way. A list helps you follow the right arrow every time.'],
+  'practice': ['Why read the plan sentence before you fill in any box?', 'The plan says what the flowchart must do. Each part of the plan matches a box.'],
   'plenary': ['Why practise with new numbers every time?', 'If you can do it with any numbers, you really understand it.'],
 };
 function tps(question, answer, reveal = 'Show the answer') {

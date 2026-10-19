@@ -13,7 +13,7 @@
    "type": "embedded-app",
    "appId": "drill-y6-term1-revision",
    "embedContainerId": "y6t1-revision",
-   "content": "<h2 class=\"lesson-h2\">Revision Practice</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A repeat (4) loop has one change x by (10) inside. How much does x change?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>By 40: the block inside runs 4 times, 10 each time.</p></div></details><p class=\"lesson-lead\">12 minutes. Read each script one block at a time. Stuck? Switch on I need help and press Walk me through it.</p><div id=\"y6t1-revision\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Revision Practice</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read a script one block at a time, even a short one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One block can change everything after it. Reading each block in order stops you guessing.</p></div></details><p class=\"lesson-lead\">12 minutes. Read each script one block at a time. Stuck? Switch on I need help and press Walk me through it.</p><div id=\"y6t1-revision\"></div>"
   },
   {
    "id": "warm-up",
@@ -31,7 +31,7 @@
    "appId": "scratchchallenges",
    "appQuery": "challenge=practice-change&lesson=y6-term1-test",
    "buttonId": "y6t1-warm-up-2-btn",
-   "content": "<h2 class=\"lesson-h2\">Warm Up: Change a Game</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">You need score to go up by 10, not 5. Which block do you change?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The change [score] by block in the script that runs when the sprite is clicked. Change only its number.</p></div></details><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Change it</h3><ul class=\"lesson-facts\"><li>Read the list of changes.</li><li>Find the script that does that part of the game.</li><li>Change one thing, then press <strong>Check my project</strong>.</li></ul></div><div class=\"lesson-app-link\"><p>7 minutes. The test has a game like this to change.</p><button type=\"button\" class=\"donow-btn\" id=\"y6t1-warm-up-2-btn\">Open Balloon Pop</button></div></div>"
+   "content": "<h2 class=\"lesson-h2\">Warm Up: Change a Game</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why change one thing, then press Check my project?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If a check turns red, you know which change did it. Then you only undo that one.</p></div></details><div class=\"igame-two-col\"><div class=\"lesson-flow-task\"><h3>Change it</h3><ul class=\"lesson-facts\"><li>Read the list of changes.</li><li>Find the script that does that part of the game.</li><li>Change one thing, then press <strong>Check my project</strong>.</li></ul></div><div class=\"lesson-app-link\"><p>7 minutes. The test has a game like this to change.</p><button type=\"button\" class=\"donow-btn\" id=\"y6t1-warm-up-2-btn\">Open Balloon Pop</button></div></div>"
   },
   {
    "id": "how-it-works",

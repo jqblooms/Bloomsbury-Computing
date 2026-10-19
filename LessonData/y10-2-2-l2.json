@@ -141,7 +141,7 @@
    "label": "Exam Question: Block or Byte?",
    "type": "self-marked-response",
    "containerId": "y10-22l2-exam-block-why",
-   "content": "<h2 class=\"lesson-h2\">Exam Question: Block or Byte?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This has 2 marks. What two ideas do you need?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>What the parity byte check misses (two changes in one byte), and what the block adds (the columns show where).</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2023, Question 5(c)(ii). A parity block check can be used instead of a parity byte check.</p><div id=\"y10-22l2-exam-block-why\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Block or Byte?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This has 2 marks. What two ideas do you need?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One mark for what the parity byte check cannot see. One mark for the extra thing the parity block check does that finds it.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2023, Question 5(c)(ii). A parity block check can be used instead of a parity byte check.</p><div id=\"y10-22l2-exam-block-why\"></div>",
    "items": [
     {
      "id": "block-why",
@@ -169,7 +169,7 @@
    "label": "Exam Question: Using the Checksum",
    "type": "self-marked-response",
    "containerId": "y10-22l2-exam-checksum",
-   "content": "<h2 class=\"lesson-h2\">Exam Question: Using the Checksum</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Activity 2 had three steps for the receiver. What were they?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Recalculate the checksum, compare the two values, decide: same means no error, different means an error.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2026, Question 2(d). A checksum is used to check for errors in the data. A checksum value is calculated from the data before it is transmitted.</p><div id=\"y10-22l2-exam-checksum\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Using the Checksum</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This has 3 marks. Why does it help to think back to being the receiver in Activity 2?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You did each step yourself there. Write each step you did as one mark, in order.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2026, Question 2(d). A checksum is used to check for errors in the data. A checksum value is calculated from the data before it is transmitted.</p><div id=\"y10-22l2-exam-checksum\"></div>",
    "items": [
     {
      "id": "checksum-use",
@@ -184,7 +184,7 @@
    "label": "Exam Question: Why a Mismatch Means an Error",
    "type": "self-marked-response",
    "containerId": "y10-22l2-exam-match",
-   "content": "<h2 class=\"lesson-h2\">Exam Question: Why a Mismatch Means an Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">If the data did NOT change, could the two values be different?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>No. The same algorithm on the same data always gives the same value.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2024, Question 2(f)(ii). In the checksum error detection method, two values are compared after transmission. If the values do not match, an error is detected.</p><div id=\"y10-22l2-exam-match\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Why a Mismatch Means an Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This has 2 marks. Why is \"because they are different\" not enough?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It repeats the question. Explain where each value comes from, and what a difference must mean.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2024, Question 2(f)(ii). In the checksum error detection method, two values are compared after transmission. If the values do not match, an error is detected.</p><div id=\"y10-22l2-exam-match\"></div>",
    "items": [
     {
      "id": "checksum-match",

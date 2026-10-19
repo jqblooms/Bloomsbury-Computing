@@ -127,7 +127,7 @@ steps.push(mcStep('types-check', 'Exam Question: Tick the Type', 'Exam Question:
       explain: 'char stores one character: one letter, one symbol or one digit.' },
     { prompt: 'A programming data type used to store any combination of letters and numbers', options: ['char', 'Boolean', 'string', 'real'], correct: 2,
       explain: 'string stores many characters, letters and numbers together.' },
-  ], ['Why is \'7\' a CHAR here, not an INTEGER?', 'It is one key from the keyboard, stored as a character. We are not doing maths with it.']));
+  ], ['Why does the data type matter? What goes wrong with the wrong one?', 'The type decides what can be stored and what you can do with it. The wrong type can lose part of a value, or stop you doing maths.']));
 
 steps.push({ id: 'compare-types', label: 'Compare: Same Digits, Different Types',
   content: '<h2 class="lesson-h2">Compare: Same Digits, Different Types</h2>' +
@@ -141,7 +141,7 @@ steps.push(checkStep('types-table', 'Exam Question: Choose the Types', 'Exam Que
     { label: 'Age: the age of the student, for example 16', answer: T5.INTEGER, feedback: 'Is 16 a whole number, or does it have a decimal point?' },
     { label: 'TelephoneNumber: for example +44 7846398573', answer: T5.STRING, feedback: 'Look at the + and the space. Can a number type hold them?' },
     { label: 'Teenager: whether the student is a teenager, for example TRUE', answer: T5.BOOLEAN, feedback: 'How many different values can it have?' },
-  ], ['Why is the telephone number not an INTEGER?', 'It has a + and a space. And we never do maths with a telephone number.']));
+  ], ['Why does each row give an example value?', 'The example shows what the value looks like. Check it for a decimal point, letters, symbols or spaces. That tells you the type.']));
 
 // ---------------------------------------------------------------- why arrays: compare, predict then reveal
 steps.push({ id: 'array-why', label: 'Why Arrays?',
@@ -177,7 +177,7 @@ steps.push(checkStep('array-check', 'Check: Read the Array', 'Check: Read the Ar
   { label: 'Which index holds "Joy"?', answer: num(4, '(index)?'), feedback: 'Find "Joy" in the bottom row, then read the number above it.' },
   { line: true, label: 'Write the line that outputs "Sam".', answer: '^\\s*output\\s+names\\s*\\[\\s*5\\s*\\]\\s*$', feedback: 'OUTPUT, the array name, then the index in square brackets.' },
   { label: 'What data type is each element?', answer: T5.STRING, feedback: 'Read the end of the DECLARE line.' },
-], ['Why is the answer to (c) not OUTPUT "Sam"?', 'Both show Sam. But Names[5] reads the array, so it still works if the name at index 5 changes.'],
+], ['Why output an element of the array, not type the value in quotes?', 'The array can change. Reading the element always shows the value stored there now. Typed text never changes.'],
   codeBlock(['DECLARE Names : ARRAY[1:5] OF STRING']) + arrayTable('Names', NAMES)));
 
 // ---------------------------------------------------------------- loops and arrays: predict then reveal
@@ -218,13 +218,13 @@ steps.push(checkStep('exam-temps', 'Exam-Style Question: Temperatures', 'Exam-St
     { label: 'Give the data type of each element.', answer: T5.REAL, feedback: 'Look at the values. Do they have a decimal point?' },
     { label: 'What is the value of Temps[4]?', answer: '^\\s*34(\\.0)?\\s*(&deg;|°)?\\s*c?\\s*$', feedback: 'Go to index 4 and read the value there.' },
     { line: true, label: 'Write the line that outputs the temperature for day 6.', answer: '^\\s*output\\s+temps\\s*\\[\\s*6\\s*\\]\\s*$', feedback: 'Day 6 is index 6. OUTPUT, the name, then the index in square brackets.' },
-  ], ['Why is each element REAL and not INTEGER?', 'The temperatures have a decimal point, such as 31.5.'],
+  ], ['Why does the DECLARE line give a size and a type?', 'The computer must know how many elements to keep, and what kind of value each one holds.'],
   codeBlock(['DECLARE Temps : ARRAY[1:7] OF REAL']) + arrayTable('Temps', TEMPS)));
 steps.push(selfMarked('exam-purpose', 'Exam-Style Question: Why Use an Array?', 'Exam-Style Question: Why Use an Array?',
   'The program could use seven separate variables, one for each day, instead of the array Temps.', [
     { id: 'array-purpose', prompt: 'Explain the purpose of an array. [2]', marks: 2,
       modelAnswer: 'An array stores many values of the same data type under one name (identifier). Each value is found by its index, so a loop can visit every value with very little code.' },
-  ], ['This question has 2 marks. What two ideas do you need?', 'What an array stores (many values, one name, same data type), and why that helps (an index, so a loop can visit every value).']));
+  ], ['This question has 2 marks. How do you plan the answer?', 'Make two different points. Say what the thing is, then say why that helps. One clear point earns one mark.']));
 
 // ---------------------------------------------------------------- activity 2: write array code (code drill)
 steps.push(embed('activity-2', 'Activity 2: Write the Array Code', 'drill-y9-2-3-code', 'Activity 2: Write the Array Code',

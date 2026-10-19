@@ -112,7 +112,7 @@ const WT_DECLARE = { title: 'Walk me through it: declare variables', steps: [
 steps.push(mcStep('do-now', 'Do Now: Data Types (1 of 2)', 'Do Now: Data Types (1 of 2)', 'From 8.1 L2. Cambridge IGCSE 0478/23, November 2025, Question 3.', [
   { prompt: 'Tick one box to identify the most appropriate data type to store \'M\'', options: ['integer', 'char', 'real', 'Boolean'], correct: 1,
     explain: '\'M\' is one character in quote marks.' },
-], ['Why are there quote marks around M?', 'They show it is text, not a number or a variable.']));
+], ['Why can the same value need a different type in another program?', 'The type depends on how the value is used. 16 is an INTEGER for an age, but a STRING for a room name.']));
 steps[steps.length - 1].walkthrough = WT_TYPE;
 const DECL = (name, type) => `^\\s*DECLARE\\s+${name}\\s*:\\s*${type}\\s*$`;
 steps.push(checkStep('do-now-2', 'Do Now: Declare Variables (2 of 2)', 'Do Now: Declare Variables (2 of 2)',
@@ -150,7 +150,7 @@ steps.push(checkStep('check-ops', 'Check: Use the Operators', 'Check: Use the Op
   { label: 'What is 9 / 2?', answer: num(4.5), feedback: '/ means divide. Does 2 go into 9 exactly?' },
   { label: 'What is 3 ^ 2?', answer: num(9), feedback: '^ means raised to the power of: 3 times itself.' },
   { label: 'Write the operator that means raised to the power of.', answer: '^\\s*\\^\\s*$', feedback: 'Look back at the table: the last row.' },
-], '', ['Why is 3 ^ 2 not 6?', '3 ^ 2 is 3 * 3. 6 is 3 * 2, a different operator.']));
+], '', ['Why does a program use * for multiply, and not x?', 'x could be the name of a variable. * can only mean multiply, so the computer is never confused.']));
 
 // ---------------------------------------------------------------- DIV and MOD: predict then reveal
 const dot = '<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--accent, #6aa9ff);margin:2px"></span>';
@@ -182,7 +182,7 @@ steps.push(checkStep('check-divmod', 'Check: DIV and MOD', 'Check: DIV and MOD',
   { label: 'MOD(23, 5)', answer: num(run('OUTPUT MOD(23, 5)')[0]), feedback: 'Take away the full groups of 5. What is left?' },
   { label: 'MOD(12, 4)', answer: num(run('OUTPUT MOD(12, 4)')[0]), feedback: 'Does 4 go into 12 exactly?' },
   { label: 'DIV(9, 2)', answer: num(run('OUTPUT DIV(9, 2)')[0]), feedback: 'Work out 9 / 2, then throw away the fractional part.' },
-], '', ['Why is MOD(12, 4) a useful check?', 'It tells you if 4 goes into 12 exactly: the remainder is 0.']));
+], '', ['MOD gives the remainder. Why can it show if a number is even?', 'An even number divides by 2 exactly, so nothing is left over. Any other remainder means the number is odd.']));
 
 // ---------------------------------------------------------------- exam question: 355 and 10
 const R355 = run('OUTPUT 355 DIV 10\nOUTPUT 355 / 10\nOUTPUT 355 MOD 10');
@@ -220,14 +220,14 @@ steps.push({ id: 'activity-1', label: 'Activity 1: Trace Hours and Minutes', typ
 steps.push(mcStep('exam-quotient', 'Exam Question: Which Operator?', 'Exam Question: Which Operator?', 'Cambridge IGCSE 0478/21, November 2025, Question 3.', [
   { prompt: 'Tick one box to identify the operator that returns the quotient of a calculation with the fractional part discarded.', options: ['/', 'DIV', '^', 'MOD'], correct: 1,
     explain: 'DIV returns the quotient, the whole number part. / keeps the fractional part. MOD returns the remainder.' },
-], ['What does "discarded" mean here?', 'Thrown away. The fractional part, after the decimal point, is thrown away.']));
+], ['Why say what each option returns before you tick?', 'Then you can compare each one with every word in the question. Only one option matches them all.']));
 
 const NOT_ARITH = '^(?=.*>(?!=))(?=.*<=)(?=.*\\bAND\\b)(?=.*\\bNOT\\b)(?!.*(\\+|\\*|\\^|/|\\bDIV\\b|\\bMOD\\b))[\\s,;>=<a-z]*$';
 steps.push(checkStep('exam-not-arith', 'Exam Question: Not Arithmetic', 'Exam Question: Not Arithmetic',
   'Cambridge IGCSE 0478/21, June 2026, Question 2. Identify four operators that are <strong>not</strong> arithmetic operators from the list.', [
     { label: 'Write the four operators, with a space between each one.', answer: NOT_ARITH, marks: 4, feedback: 'Cross out the seven arithmetic operators from today. Write the four that are left.' },
   ], code(['/    >    <=    +    *', '^    AND  DIV   MOD  NOT']),
-  ['How can you answer this without knowing what AND means?', 'You know the arithmetic operators. Any operator that is not one of them is the answer.']));
+  ['Why sort the list into groups before you answer?', 'Each symbol belongs to one group. You check each symbol once, so nothing is missed.']));
 
 // ---------------------------------------------------------------- activity 2: write the lines (code drill)
 steps.push(embed('activity-2', 'Activity 2: Write the Lines', 'drill-y11-8-1-arith-code', 'Activity 2: Write the Lines',

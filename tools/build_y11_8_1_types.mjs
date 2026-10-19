@@ -64,7 +64,7 @@ steps.push(checkStep('do-now', 'Do Now: Variables and Constants (1 of 2)', 'Do N
   { label: 'The number of seconds in a minute: 60', answer: CONW, feedback: 'Does it ever change?' },
   { label: 'A player\'s score in a game', answer: VARW, feedback: 'Does it stay the same while the game runs?' },
   { line: true, label: 'Write the line that makes a constant called MaxLives with the value 3', answer: '^\\s*CONSTANT\\s+MaxLives\\s*(<-|\\u2190|=)\\s*3\\s*$', feedback: 'CONSTANT, the name, an arrow, the value.' },
-], '', ['Why is a score a variable?', 'It changes while the game runs.']));
+], '', ['A bus app shows the time now and the name of the app. Which one changes while it runs?', 'The time now changes every minute. The name of the app stays the same.']));
 {
   const prog = ['DECLARE Total : INTEGER', 'DECLARE Count : INTEGER', 'Total <- 10', 'FOR Count <- 1 TO 2', '  Total <- Total - 3', 'NEXT Count', 'OUTPUT Total'];
   steps.push(checkStep('do-now-2', 'Do Now: Trace (2 of 2)', 'Do Now: Trace (2 of 2)', 'From Unit 7. Trace the program.', [
@@ -95,7 +95,7 @@ steps.push(mcStep('types-check', 'Check: Tick the Type', 'Check: Tick the Type',
     explain: 'char stores one character: one letter, one symbol or one digit.' },
   { prompt: 'A programming data type used to store any combination of letters and numbers', options: ['char', 'Boolean', 'string', 'real'], correct: 2,
     explain: 'string stores many characters, letters and numbers together.' },
-], ['Why is \'7\' a CHAR here and not an INTEGER?', 'It is one key from the keyboard, stored as a character. We are not doing maths with it.']));
+], ['Why are there five data types, and not just one?', 'Each kind of value is stored and used in a different way. The type tells the program what it can do with it.']));
 
 // ---------------------------------------------------------------- compare
 steps.push({ id: 'compare', label: 'Compare: Same Digits, Different Types',
@@ -110,7 +110,7 @@ steps.push(checkStep('student-table', 'Your Turn: Choose the Types', 'Your Turn:
   { label: 'Age: the age of the student, for example 16', answer: T5.INTEGER, feedback: 'Is 16 a whole number, or does it have a decimal point?' },
   { label: 'TelephoneNumber: for example +44 7846398573', answer: T5.STRING, feedback: 'Look at the + and the space. Can a number type hold them?' },
   { label: 'Teenager: whether the student is a teenager, for example TRUE', answer: T5.BOOLEAN, feedback: 'It can only be TRUE or FALSE.' },
-], '', ['Why is the telephone number not an INTEGER?', 'It has a + and a space. We never do maths with a phone number.']));
+], '', ['A height is 1.68 metres. Why must its type store a decimal point?', '1.68 is not a whole number. A type for whole numbers only would lose the .68.']));
 
 // ---------------------------------------------------------------- input and output: predict then reveal
 steps.push({ id: 'input-output', label: 'INPUT and OUTPUT',
@@ -136,7 +136,7 @@ steps.push({ id: 'activity-2', label: 'Activity: Trace a Sequence', type: 'embed
     ],
   },
   content: '<h2 class="lesson-h2">Activity: Trace a Sequence</h2>' +
-    tps('Line 5 changes Number again. Why is the output 13, not 6?', '<p>The lines run in order. By line 6, line 5 has already put 13 in Number.</p>') +
+    tps('Why does a trace table have a column for every variable?', '<p>Each column shows one variable. You can see its value at every line and spot when it changes.</p>') +
     `<div id="${P}-embed-2" class="lesson-embed"></div>` });
 
 // ---------------------------------------------------------------- write the lines
@@ -144,7 +144,7 @@ steps.push(checkStep('write-lines', 'Your Turn: Write the Lines', 'Your Turn: Wr
   { line: true, label: 'Declare a variable called Price that stores a number with a decimal point', answer: '^\\s*DECLARE\\s+Price\\s*:\\s*REAL\\s*$', feedback: 'DECLARE, the name, a colon, then the type for decimals.' },
   { line: true, label: 'Take a value from the user and store it in Price', answer: '^\\s*INPUT\\s+Price\\s*$', feedback: 'Which keyword takes a value from the user? Then the name.' },
   { line: true, label: 'Show the value of Price', answer: '^\\s*OUTPUT\\s+Price\\s*$', feedback: 'Which keyword shows a value? Then the name.' },
-], '', ['Why must the DECLARE line come first?', 'The lines run in order. The variable must exist before INPUT can store a value in it.']));
+], '', ['Why does the order of lines matter in a program?', 'The lines run one at a time, from the top. A line can only use what the lines before it have made.']));
 
 // ---------------------------------------------------------------- plenary
 steps.push({ id: 'plenary', label: 'Plenary: Data Types Drill', type: 'embedded-app', appId: 'drill-y11-8-1-types', embedContainerId: `${P}-plenary`,

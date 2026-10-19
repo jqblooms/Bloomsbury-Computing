@@ -68,12 +68,12 @@ const steps = [];
 steps.push(mcStep('do-now', 'Do Now: Key Words (1 of 2)', 'Do Now: Key Words (1 of 2)', 'From Lesson 1.', [
   { prompt: 'Which symbol stores a value in a variable?', options: ['=', '<-', '+', '>'], correct: 1, explain: 'The arrow <- stores the value on its right in the variable on its left.' },
   { prompt: 'Which keyword takes a value typed in by the user?', options: ['OUTPUT', 'DECLARE', 'INPUT'], correct: 2, explain: 'INPUT takes a value from the user.' },
-], ['Why do we need both INPUT and OUTPUT?', 'INPUT brings a value in from the user. OUTPUT shows the answer back to them.']));
+], ['Why does a program need variables?', 'A variable keeps a value, so later lines can use it. Without one, the value is lost.']));
 steps.push(checkStep('do-now-2', 'Do Now: Trace (2 of 2)', 'Do Now: Trace (2 of 2)', 'From Lesson 1. Trace the program.', [
   { label: 'What is the value of Number after line 2?', answer: num(4), feedback: 'Line 2 stores 4 in Number.' },
   { label: 'What is output?', answer: num(7), feedback: 'Line 3 adds 3 to the value from line 2.' },
 ], code(['DECLARE Number : INTEGER', 'Number <- 4', 'Number <- Number + 3', 'OUTPUT Number'], true),
-  ['Why is the output not 4?', 'Line 3 changes Number before line 4 outputs it. The lines run in order.']));
+  ['Test it: A &lt;- 10, then A &lt;- A - 2. Why must you trace every line before you say what A is?', 'Each line can change A. A new value replaces the old one, so the lines run in order, top to bottom.']));
 
 // ---------------------------------------------------------------- Do Now Extension (James, 2026-10-01: some students are further
 // along). A drill of harder questions from every lesson so far (L1 to L7), each with a worked example as its help.
@@ -107,7 +107,7 @@ steps.push(checkStep('sequence-check', 'Check: Sequence', 'Check: Sequence', nul
   { label: 'What is the value of A after line 5?', answer: num(7), feedback: 'Line 5 adds B to A. What are A and B before line 5?' },
   { label: 'What is the value of B at the end?', answer: num(2), feedback: 'Does any line after line 4 change B?' },
 ], code(['DECLARE A : INTEGER', 'DECLARE B : INTEGER', 'A <- 5', 'B <- 2', 'A <- A + B', 'OUTPUT A'], true),
-  ['Why does B stay 2?', 'No line after line 4 stores a new value in B.']));
+  ['Test it: X &lt;- 1, Y &lt;- 4, X &lt;- X + Y. Which variable changes? Why?', 'Only X changes, to 5. The arrow stores a value only in the variable on its left. Y is only read.']));
 
 // ---------------------------------------------------------------- selection
 const PASS = ['DECLARE Mark : INTEGER', 'INPUT Mark', 'IF Mark >= 50 THEN', '  OUTPUT "Pass"', 'ELSE', '  OUTPUT "Fail"', 'ENDIF'];
@@ -127,7 +127,7 @@ steps.push(checkStep('selection-check', 'Check: Selection', 'Check: Selection', 
   { label: 'The user types 25. What is output?', answer: word('cold'), feedback: 'Is 25 more than 25? Read the > carefully.' },
   { label: 'The user types 25. Which line number runs: 4 or 6?', answer: num(6), feedback: 'FALSE runs the line after ELSE.' },
 ], code(['DECLARE Temp : INTEGER', 'INPUT Temp', 'IF Temp > 25 THEN', '  OUTPUT "Hot"', 'ELSE', '  OUTPUT "Cold"', 'ENDIF'], true),
-  ['Why does 25 give Cold?', '25 is not more than 25, so Temp > 25 is FALSE.']));
+  ['A test says Speed > 60. Is a speed of exactly 60 too fast? Why?', 'No. 60 > 60 is FALSE. 60 is equal, not more. Read the symbol before you choose a path.']));
 
 // ---------------------------------------------------------------- loops
 steps.push({ id: 'loop', label: 'Loops: Repeating Lines',

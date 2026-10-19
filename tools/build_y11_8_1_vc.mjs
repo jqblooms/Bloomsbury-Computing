@@ -61,7 +61,7 @@ steps.push(mcStep('do-now', 'Do Now: Iteration (1 of 2)', 'Do Now: Iteration (1 
       explain: 'FOR and WHILE both repeat lines. IF and CASE make a choice: that is selection.' },
     { prompt: 'Which statement is used for selection?', options: ['FOR … NEXT', 'IF … THEN … ENDIF', 'WHILE … ENDWHILE'], correct: 1,
       explain: 'Selection chooses what to do. IF chooses between paths.' },
-  ], ['Why do we have both selection and iteration?', 'Selection chooses what to do. Iteration repeats lines, so we do not have to write them again and again.']));
+  ], ['Why is a loop better than copying the same line 100 times?', 'The program is much shorter. To change how many times it runs, you change one number.']));
 
 {
   const prog = ['DECLARE Total : INTEGER', 'DECLARE Count : INTEGER', 'Total <- 0', 'FOR Count <- 1 TO 3', '  Total <- Total + 2', 'NEXT Count', 'OUTPUT Total'];
@@ -91,7 +91,7 @@ steps.push({ id: 'variable', label: 'A Variable',
   steps.push(checkStep('variable-check', 'Check: Trace the Variable', 'Check: Trace the Variable', null, [
     { label: 'What is the name of the variable?', answer: '^\\s*lives\\s*$', feedback: 'Look at line 1. The name comes after DECLARE.' },
     { label: 'What is output?', answer: num(2), feedback: 'Lives starts at 3. Line 3 takes 1 away.' },
-  ], code(prog, true), ['Why can line 3 change Lives?', 'Lives is a variable. A variable can be given a new value at any time.']));
+  ], code(prog, true), ['Coins holds 7. Why does Coins &lt;- Coins + 3 put 10 in Coins?', 'The right side is worked out first: 7 + 3 = 10. Then 10 is stored in Coins. The old 7 is gone.']));
 }
 
 // ---------------------------------------------------------------- activity 1: trace a variable in Trace Tables
@@ -112,7 +112,7 @@ steps.push({ id: 'activity-1', label: 'Activity 1: Watch a Variable Change', typ
     ],
   },
   content: '<h2 class="lesson-h2">Activity 1: Watch a Variable Change</h2>' +
-    tps('Coins changes 4 times. Why is that allowed?', '<p>Coins is a variable. A variable can get a new value as many times as the program needs.</p>') +
+    tps('Why does a trace table get a new row when a value changes?', '<p>Each row shows one moment in the program. Read the rows in order and you see the whole story.</p>') +
     `<div id="${P}-embed-1" class="lesson-embed"></div>` });
 
 // ---------------------------------------------------------------- a constant: predict then reveal
@@ -145,7 +145,7 @@ steps.push(checkStep('restaurant', 'Your Turn: The Restaurant', 'Your Turn: The 
     { label: 'The number of adults at a table', answer: VARW, feedback: 'Is it the same for every table, or does the waiter type it in?' },
     { label: 'The 15% discount', answer: CONW, feedback: 'Does the discount change from table to table?' },
     { label: 'The total cost for a table', answer: VARW, feedback: 'Is the total the same for every table?' },
-  ], '', ['Why is the number of adults a variable?', 'It is different for every table. The program finds it out while it runs.']));
+  ], '', ['How can you test if a value can change while the program runs?', 'Imagine two different tables, or the same table on another day. Is the value still the same?']));
 
 // ---------------------------------------------------------------- the two lines
 steps.push({ id: 'two-lines', label: 'Writing the Two Lines',
@@ -167,7 +167,7 @@ steps.push(checkStep('write-lines', 'Your Turn: Write the Lines', 'Your Turn: Wr
   steps.push(checkStep('find-bug', 'Your Turn: Find the Error', 'Your Turn: Find the Error', 'This program has one error.', [
     { label: 'Which line has the error?', answer: '^\\s*(line\\s*)?4\\s*$', feedback: 'Find the name made with CONSTANT. Which line tries to give it a new value?' },
     { line: true, label: 'Why is it an error?', answer: '^(?=.*\\b(constants?|maxlives)\\b)(?=.*\\b(chang\\w*|new\\s+value|reassign\\w*|assign\\w*|update\\w*)\\b).*$', feedback: 'Say what kind of name MaxLives is, and what line 4 tries to do to it.' },
-  ], code(prog, true), ['Why does the computer stop a constant from changing?', 'A constant should be the same all the time. If it changed, every line that uses it would get the wrong value.']));
+  ], code(prog, true), ['Why is it useful to find an error by reading the code?', 'Reading finds it before anything goes wrong. In the exam you cannot run the code, so you read each line.']));
 }
 
 // ---------------------------------------------------------------- plenary

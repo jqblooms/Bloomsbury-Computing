@@ -91,16 +91,16 @@ const bigTable = (html) => html.replace('<table class="donow-table">', '<table c
 // teacher clicks. On teaching slides it is a prediction and the click shows the worked answer.
 const TPS = {
   'do-now': ['Why do we read one box at a time?', 'The computer runs one box at a time. We read it the same way, so we get the same answer.'],
-  'do-now-2': ['Why does "not pressed" add no steps?', 'The False arrow goes back to the decision. It never reaches the Move box.'],
+  'do-now-2': ['Why write pressed or not pressed for each check before you count the steps?', 'Each check can go a different way. A list helps you follow the right arrow every time.'],
   'key-words': ['Why does a decision give 1 or 0?', 'A decision has only two arrows. 1 follows True and 0 follows False.'],
-  'logic-check': ['Why can OR be True when only one key is pressed?', 'OR needs at least one part to be 1. One pressed key is enough.'],
-  'compare-check': ['Why must you put the numbers in first?', 'The decision compares the two numbers. You need the numbers to get 1 or 0.'],
-  'activity-1': ['Why must box A be a decision?', 'It asks a question. It needs a True arrow and a False arrow.'],
-  'call-check': ['Why is a sub-routine written only once?', 'Each CALL runs the same flowchart again. We never copy its boxes.'],
-  'activity-2': ['Why use a sub-routine here?', 'The same boxes are needed twice. We write them once and CALL them twice.'],
-  'exam-1': ['Which lesson is this question from? How do you know?', 'Lesson 2: a key-press loop. A decision checks a key and both arrows go back.'],
+  'logic-check': ['Why write 1 or 0 for each key before you use the word?', 'Then the rule is easy to use. Example: Left is 0, Down is 1. Left AND Down is 0.'],
+  'compare-check': ['Why put the numbers in before you choose an arrow?', 'The sign alone does not tell you. Score > 50? goes one way for 60 and the other way for 40.'],
+  'activity-1': ['How can you check your answer for box A?', 'Try it with the keys pressed and not pressed. Follow the arrows. Does it match the plan every time?'],
+  'call-check': ['Why is a sub-routine easy to change?', 'You change it in one place. Every CALL then uses the new version.'],
+  'activity-2': ['Why give a sub-routine a clear name?', 'The name tells you what it does. Then Main reads like a short plan.'],
+  'exam-1': ['Which lesson is this question from? What clue tells you?', 'Lesson 2. The plan says "each time the left arrow is pressed".'],
   'exam-2': ['What do you do first with a comparison?', 'Put the two numbers into the question. Then decide: 1 (True) or 0 (False).'],
-  'exam-3': ['Where does Main carry on after a sub-routine ends?', 'Just after the CALL. Never back at Main\'s own Start.'],
+  'exam-3': ['Why keep a list as you follow Main?', 'You jump into the sub-routine and back again. A list stops you losing your place.'],
   'plenary': ['Why practise with new numbers every time?', 'If you can do it with any numbers, you really understand it.'],
 };
 function tps(question, answer, reveal = 'Show the answer') {

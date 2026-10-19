@@ -154,7 +154,7 @@ steps.push(checkStep('do-now', 'Do Now: Parity Block (1 of 2)', 'Do Now: Parity 
     { line: true, marks: 2, label: 'Explain how you found the error.',
       answer: '^(?=.*\\b(odd|not\\s+even|uneven|even\\s+parity)\\b)(?=.*(\\b1\'?s\\b|\\bones\\b|\\bcount\\w*|\\bcolumns?\\b|\\brows?\\b)).*$',
       feedback: 'Say what you counted, which parity was used, and what you found in that row and that column.' },
-  ], ['The paper does not say odd or even parity. How can you tell?', 'Most rows and columns have an even number of 1s, so even parity was used.'],
+  ], ['The paper does not say which parity was used. Why can you still work it out?', 'Only one bit is wrong, so almost every row and column still follows the rule. Look at what most of them do.'],
   block(N22, N22_P, { head: WB_HEAD, size: 14, pad: '1px 6px' })));
 steps[steps.length - 1].walkthrough = WT_BLOCK;
 const DN2_A = 'An odd or even process can be used.';
@@ -189,13 +189,13 @@ steps.push(checkStep('check-echo', 'Check: The Echo Check', 'Check: The Echo Che
   { label: 'In an echo check, who sends the data back?', answer: '^\\s*(the\\s+)?receiv\\w*(\\s+(device|computer))?\\s*\\.?\\s*$', feedback: 'The data goes there, then a copy comes back. Who has the data when it arrives?' },
   { label: 'Who compares the copy with the data that was sent?', answer: '^\\s*(the\\s+)?(sender|sending)(\\s*\'?s)?(\\s+(device|computer))?\\s*\\.?\\s*$', feedback: 'Who still has the data that was sent?' },
   { label: 'Sent: 11100101. Copy back: 11100101. Is an error detected?', answer: '^\\s*(no|none|nope|not\\s+detected)\\b(?!.*\\bbut\\b)', feedback: 'Compare the two bytes bit by bit.' },
-], ['Why must the receiver send back what it GOT, not what it expected?', 'The sender needs to see what really arrived, so it can compare.']));
+], ['Why does an echo check use a full copy of the data, not just a count of 1s?', 'A count of 1s can miss some errors, like two changed bits. A full copy shows every bit.']));
 
 steps.push(selfMarked('exam-echo', 'Exam Question: How the Echo Check Works', 'Exam Question: How the Echo Check Works',
   cite('0478/13, November 2024, Question 2(f)') + ' An employee emails a report to their employer. The email data is checked for errors after it has been transmitted, using an echo check and a checksum.', [
     { id: 'echo-explain', prompt: '(i) Explain how the echo check is used to check for errors in the email data. [3]', marks: 3,
       modelAnswer: 'A copy of the data is sent back to the employee\'s device (the sender); the sender compares the data sent with the data received back; if the original and the copy do not match, an error has occurred.' },
-  ], ['This has 3 marks. What are the three steps?', 'The copy is sent back; the sender compares; different means an error.']));
+  ], ['This has 3 marks. Why should each mark be a different step?', 'Saying the same step twice only gets one mark. Write the steps in order, from start to end.']));
 
 // ---------------------------------------------------------------- compare: there, back, no error
 const C_SENT = '10110100';
@@ -222,7 +222,7 @@ steps.push(selfMarked('exam-echo-2', 'Exam Question: The Tractor and the Echo Ch
   cite('0478/12, March 2024, Question 6(e)') + ' At the end of each day a self-driving tractor transmits the data it has collected to the farmer\'s computer in their house. The transmission uses an echo check.', [
     { id: 'echo-roles', prompt: '(i) Describe the role of the self-driving tractor and the farmer\'s computer in the echo check. [3]', marks: 3,
       modelAnswer: 'Any three: the farmer\'s computer transmits the same data back to the tractor; the tractor compares both sets of data; if they are identical there is no error; if they are different, the tractor resends the data (or reports an error).' },
-  ], ['Which one is the sender here, and which one is the receiver?', 'The tractor sends the data, so the tractor compares. The computer receives it, so it sends the copy back.']));
+  ], ['Why find out first which device sends the data?', 'Each job in an echo check depends on who sends and who receives. Once you know that, you can work out what each device does.']));
 
 // ---------------------------------------------------------------- ARQ: predict then reveal
 steps.push({ id: 'concept-arq', label: 'Automatic Repeat Query (ARQ)',
@@ -241,7 +241,7 @@ steps.push(checkStep('check-arq', 'Check: Timer and Timeout', 'Check: Timer and 
   { label: 'When the sender sends the data, what does it start?', answer: '^(?!.*\\bnot\\b).*\\b(timer|clock|count\\s*down|countdown)\\b', feedback: 'The sender waits for an acknowledgement, but not forever. What tells it when to stop waiting?' },
   { label: 'The timer runs out before an acknowledgement arrives. What is this called?', answer: '^\\s*(a\\s+|the\\s+)?time[\\s-]*out\\s*\\.?\\s*$', feedback: 'It is one word, made from what ran out and the word for finished.' },
   { label: 'What does the sender do after this?', answer: '^(?!\\s*(no|not|it\\s+does\\s+not)\\b)(?!.*\\b(next|never)\\b)(?!.*\\b(not|don\'?t)\\s+(re-?)?send).*\\b(again|resen[dt]|re-?send\\w*|re-?transmit\\w*|repeat\\w*)\\b', feedback: 'No acknowledgement came. Can the sender be sure the data arrived correctly?' },
-], ['Why does the sender not just wait for ever?', 'The data, or the acknowledgement, may be lost. A timer makes sure the data is sent again.']));
+], ['Why is ARQ called "automatic"?', 'No person has to notice a problem or press anything. The devices follow the rules on their own.']));
 
 // ---------------------------------------------------------------- compare: positive and negative acknowledgement
 steps.push({ id: 'compare-ack', label: 'Compare: Positive and Negative Acknowledgement',
@@ -263,7 +263,7 @@ steps.push({ id: 'compare-ack', label: 'Compare: Positive and Negative Acknowled
 steps.push(mcStep('hinge-timeout', 'Check: What a Timeout Means', 'Check: What a Timeout Means', 'ARQ with positive acknowledgement. The sender sent packet 6 and started the timer.', [
   { prompt: 'A timeout happens. What does the sender know?', options: ['Packet 6 arrived with an error', 'A negative acknowledgement arrived', 'No acknowledgement arrived in time', 'Packet 6 arrived with no error'], correct: 2,
     explain: 'A timeout only means the timer ran out before an acknowledgement arrived. Packet 6 may have been lost or had an error, or the acknowledgement may have been lost. So the sender sends packet 6 again.' },
-], ['Why can the sender not know WHY nothing came back?', 'It cannot see the packet or the receiver. It only knows that nothing arrived in time.']));
+], ['Why does the receiver check each packet before it replies?', 'The reply tells the sender what to do next. A reply sent without checking could say the data is fine when it is not.']));
 
 steps.push(embed('activity-2', 'Activity 2: Be the Sender, Be the Receiver', 'drill-y10-2-2-l3-arq', 'Activity 2: Be the Sender, Be the Receiver',
   'Be the receiver: check the byte and decide what to send back. Be the sender: decide which packet to send next. New bytes and packets every time.',
@@ -273,13 +273,13 @@ steps.push(selfMarked('exam-arq', 'Exam Question: ARQ with Positive Acknowledgem
   cite('0478/13, November 2023, Question 5(c)') + ' An automatic repeat query (ARQ) can be used to make sure that data is received free of errors. It can use a positive or negative acknowledgement method to do this.', [
     { id: 'arq-positive', prompt: 'Explain how an ARQ operates using a positive acknowledgement method. [5]', marks: 5,
       modelAnswer: 'Any five: a timer is started when the sending device transmits a data packet to the receiver; the receiving device checks the data packet for errors; once the receiving device knows the packet is error free it sends an acknowledgement back to the sending device; and the next packet is sent; if the sending device does not receive an acknowledgement before the timer ends, a timeout occurs; the data packet is resent; until an acknowledgement is received, or until a maximum number of attempts is reached.' },
-  ], ['This has 5 marks. Use the timeline: what happens at each step?', 'Timer starts; receiver checks; acknowledgement sent; next packet sent; no acknowledgement means timeout, so the packet is sent again.']));
+  ], ['This has 5 marks. Why does following the timeline from top to bottom help?', 'Each step on the timeline can be one mark. Going in order means you do not miss a step.']));
 
 steps.push(selfMarked('exam-arq-2', 'Exam Question: Checksum and ARQ Together', 'Exam Question: Checksum and ARQ Together',
   cite('0478/13, June 2022, Question 7(c)') + ' Umar\'s data is sent to a file server. Checksum and ARQ are both used when transmitting the data from a computer to the file server.', [
     { id: 'checksum-arq', prompt: 'Explain why checksum and ARQ are both used. [3]', marks: 3,
       modelAnswer: 'Any three (at most two about ARQ): the checksum is used to detect errors during transmission, using a calculated value; ARQ checks that the data is received; it uses acknowledgement and timeout; it requests that the data is sent again if the checksum detects an error or the data is not received.' },
-  ], ['What does each one do? Which one finds the error, and which one gets the data sent again?', 'The checksum finds the error. ARQ makes sure the data arrives, and asks for it again if there is an error.']));
+  ], ['Why must your answer say what EACH method does?', 'The question asks why both are used. That only makes sense if they do different jobs, so give the job of each one.']));
 
 // 0478/13 June 2025 Q7(b): the echo check and ARQ statements (the parity sentence was in L1). Mark scheme: echo check;
 // automatic repeat query (ARQ); timeout; positive/negative.

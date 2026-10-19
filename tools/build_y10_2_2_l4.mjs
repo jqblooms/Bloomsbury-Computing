@@ -177,7 +177,7 @@ steps.push(checkStep('do-now-2', 'Do Now: Checksum and Echo Check (2 of 3)', 'Do
     { line: true, label: 'An echo check finds an error. Why can the sender not tell if it happened on the way there or on the way back?',
       answer: '^(?=.*\\b(see|sees|saw|seen|know|knows|view|access|has|have|get|gets)\\b)(?=.*\\b(receiv\\w*|arriv\\w*|got|middle|other\\s+end)\\b).*$|^(?=.*\\b(same|identical|alike|both)\\b)(?=.*\\b(copy|copies|result|looks?|mismatch|match|wrong|different)\\b).*$',
       feedback: 'Think about what the sender can see, and what it cannot see.' },
-  ], ['Why check data sent 30 kilometres?', 'A long cable picks up more interference, so bits are more likely to change.']));
+  ], ['Why does a 30 kilometre link need an error check more than a short one?', 'A long cable picks up more interference, so more bits can go wrong.']));
 steps[steps.length - 1].walkthrough = WT_CHECKSUM_ECHO;
 
 // 0478/11 June 2024 Q9(b)(ii). Mark scheme (any two): echo check; checksum; even parity check; negative ARQ.
@@ -230,7 +230,7 @@ steps.push(checkStep('exam-purpose', 'Exam Question: What a Check Digit Is For',
       feedback: 'Two ideas: what it is used for, and how it is made.' },
     { line: true, label: 'Example', answer: '\\b(isbns?|books?|bar\\s*-?\\s*codes?|products?|credit\\s+cards?|bank\\s+cards?|parity\\s+bits?)\\b',
       feedback: 'Where have you seen a long number with a check digit at the end?' },
-  ], ['Why does the mark scheme want the word "calculated"?', 'The check digit is not chosen at random. It is worked out from the other digits, so the computer can work it out again.']));
+  ], ['Purpose has 2 marks. Why is "to check the number" only worth one?', 'It gives one idea. The second mark needs how the check digit is made.']));
 
 // ---------------------------------------------------------------- method 1: add the digits
 steps.push({ id: 'concept-sum', label: 'Method 1: Add the Digits',
@@ -287,7 +287,7 @@ steps.push(checkStep('check-position', 'Check: Multiply by Position', 'Check: Mu
   { label: `What is the check digit for ${CW}?`, answer: `^\\s*(check\\s+digit\\s*(is|[:=])?\\s*)?${posCheck(CW)}\\s*$`, feedback: 'Digit times position for each digit, add them up, then the remainder after dividing by 11.' },
   { label: 'The total is 54. What is the check digit?', answer: '^\\s*(the\\s+letter\\s+)?x\\s*$', feedback: 'How many 11s fit in 54? What is left over? Read the rule for that remainder.' },
   { label: `${CW} is typed as ${CW_SWAP}. What check digit does the computer calculate now?`, answer: `^\\s*(check\\s+digit\\s*(is|[:=])?\\s*)?${posCheck(CW_SWAP)}\\s*$`, feedback: 'Work out the total again with the new order of digits.' },
-], ['Why does part (c) give a different check digit from part (a)?', 'The digits sit in new positions, so they are multiplied by different numbers. The total changes, so the swap is found.']));
+], ['Work out 2 &times; 1 + 5 &times; 2, then 5 &times; 1 + 2 &times; 2. Why are the two totals different?', 'They are 12 and 9. Each digit is multiplied by its position, so moving a digit changes what it adds.']));
 
 // 0478/23 November 2022 Q3(b). Mark scheme: (i) two or more digits; transposed. (ii) multiply each digit by a different
 // number / its place value; before adding them together and dividing by a number.
@@ -299,7 +299,7 @@ steps.push(checkStep('exam-algorithm', 'Exam Question: A Better Algorithm', 'Exa
     { line: true, marks: 2, label: 'Describe a more suitable algorithm to calculate the check digit for this identification number.',
       answer: '^(?!\\s*(no|not)\\b)(?=.*\\b(multipl\\w*|times|weight\\w*|positions?|place\\s+values?|different\\s+numbers?)\\b)(?=.*\\b(add\\w*|total\\w*|sum\\w*|divid\\w*|mod|modulo|remainder)\\b).*$',
       feedback: 'Two ideas: what is done to each digit first, then what is done with the results.' },
-  ], ['Why is (ii) worth two marks?', 'One mark for multiplying each digit by a different number, one for then adding and dividing.']));
+  ], ['Why is (b) worth two marks?', 'One mark for each part of the method. Say what is done to each digit, then how the total becomes one digit.']));
 
 steps.push(embed('activity-1', 'Activity 1: Calculate the Check Digit', 'drill-y10-2-2-l4-calc', 'Activity 1: Calculate the Check Digit',
   'Method 1 and Method 2, with new numbers every time. Stuck? Switch on <strong>I need help</strong> and walk through a different number, step by step.',
@@ -313,7 +313,7 @@ steps.push(mcStep('hinge-mismatch', 'Check: When It Does Not Match', 'Check: Whe
   { prompt: cite('0478/13, November 2023, Question 5(b)') + ' Some error detection methods use a calculated value to check for errors. Which error detection method does NOT use a calculated value to check for errors?',
     options: ['Check digit', 'Checksum', 'Echo check', 'Parity check'], correct: 2,
     explain: 'An echo check sends a copy of the data back and compares. Nothing is calculated.' },
-], ['Why can a check digit not correct the error?', 'It only tells the computer the number is wrong, not which digit is wrong.']));
+], ['Why do shops use a check digit, when a person could just read the number?', 'A person gets tired and misses mistakes. The computer checks every scan in an instant, the same way every time.']));
 
 // ---------------------------------------------------------------- compare: data entry and transmission
 const ct = 'padding:6px 12px;text-align:left;vertical-align:top;font-size:17px';
@@ -339,14 +339,14 @@ steps.push(checkStep('exam-printer', 'Exam Question: Checks for the Printer', 'E
     { line: true, label: 'Why is a check digit not a correct answer to (a)?',
       answer: '^(?=.*\\b(data\\s+entry|entry|entered|enter\\w*|typ\\w*|scann?\\w*|input\\w*|key\\w*)\\b)(?=.*\\b(transmi\\w*|sent|send\\w*|travel\\w*|cable|printer|network|moving)\\b).*$',
       feedback: 'Use the compare slide: what is a check digit for, and what is happening to this data?' },
-  ], ['Why does the mark scheme say "Do not accept check digit"?', 'A check digit is for data entry. Here the data is being transmitted.']));
+  ], ['Why does it help to ask WHEN the error could happen?', 'Each check is made for one kind of error. Knowing when the error can happen tells you which checks fit.']));
 
 // 0478/12 November 2024 Q5(a). Mark scheme (any four).
 steps.push(selfMarked('exam-barcode', 'Exam Question: The Bar Code Scanner', 'Exam Question: The Bar Code Scanner',
   cite('0478/12, November 2024, Question 5') + ' A barcode scanning system uses a check digit to check for errors in data on input.', [
     { id: 'barcode-explain', prompt: '(a) Explain how the barcode scanning system operates to check for errors. [4]', marks: 4,
       modelAnswer: 'Any four: a check digit is calculated from the barcode data; using an algorithm (for example, modulo 11); and added to the barcode; when the barcode is scanned the check digit is recalculated; using the same algorithm; if the check digits do not match, an error has occurred when scanning the barcode (if they match, no error has occurred).' },
-  ], ['This has 4 marks. What happens before the scan, and what happens after it?', 'Before: the check digit is calculated and added. After: it is calculated again and the two are compared.']));
+  ], ['This has 4 marks. What happens before the scan, and what happens after it?', 'Each step can be one mark. Say what is done before the scan, what the computer does after it, and what the result means.']));
 
 steps.push(embed('activity-2', 'Activity 2: Accept or Reject?', 'drill-y10-2-2-l4-valid', 'Activity 2: Accept or Reject?',
   'Be the computer: check each code and accept or reject it. Then name the error, and say which method finds it. New codes every time.',
@@ -365,7 +365,7 @@ steps.push(checkStep('practice', 'Practice: Which Method?', 'Practice: Which Met
     { label: 'compares two calculated values to see if an error has occurred (two methods)', answer: ONLY(['digit', 'sum']), feedback: 'Which methods calculate a value, then calculate it again? Type both.' },
     { label: 'may resend data until it is confirmed as received', answer: ONLY(['arq']), feedback: 'Which method waits for an acknowledgement?' },
     { label: 'checks for errors in data after transmission from a computer to another', answer: ONLY(['sum']), feedback: 'Which of the three calculates a value from the data that was sent?' },
-  ], ['Why do two methods both compare calculated values?', 'Both calculate a value, then calculate it again and compare. One is for data entry, one for transmission.']));
+  ], ['Why can one statement apply to more than one method?', 'Some methods share a step, even though each one has its own job. Test each statement against each method in turn.']));
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Check Digits Drill', 'drill-y10-2-2-l4', 'Plenary: Check Digits Drill',

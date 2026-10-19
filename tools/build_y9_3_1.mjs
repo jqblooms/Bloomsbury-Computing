@@ -183,7 +183,7 @@ steps.push(checkStep('do-now-2', 'Do Now: Question 2', 'Do Now: The Value on the
   { label: 'The first score is 30. Is Score &gt; 30 TRUE or FALSE?', answer: word(DN2_TF), feedback: 'Is 30 more than 30, or equal to it?' },
   { label: 'What does the program output?', answer: num(DN2_OUT), feedback: 'Check each score against line 7. Equal is not more.' },
   { line: true, label: 'Write line 7 so that a score of 30 wins.', answer: ifRe('score', [['>=', 30], ['>', 29]]) + `|^\\s*if\\s+30\\s*<=\\s*score\\s*(then)?\\s*$`, feedback: 'Which operator means more than OR equal to?' },
-], ['Why is the score of 30 not counted?', '30 &gt; 30 is FALSE: 30 is equal, not more. The program does what line 7 says, not what the rule says.'], codeBlock(DN2, true)));
+], ['Why test a program with many inputs, not just one?', 'One input can hide an error. Different inputs take different paths through the program, so more mistakes show up.'], codeBlock(DN2, true)));
 steps[steps.length - 1].walkthrough = WT_BOUND;
 steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y9-3-1-ext', 'Extension: Do Now Challenge',
   '<strong>Extension:</strong> finished the Do Now? Try these questions from Term 1a: number systems, loops, arrays, and errors. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.'));
@@ -218,7 +218,7 @@ assert(H1_OUT === '5' && H1_X === '9', 'hinge 1 values');
 steps.push(mcStep('hinge-1', 'Hinge Question: Follow It Exactly', 'Hinge Question: Follow It Exactly', 'Follow the program one line at a time. Choose the best answer.', [
   { prompt: 'What does line 6 output?', options: [H1_X, '0', H1_OUT, '14'], correct: 2,
     explain: `Line 4 copies ${H1_OUT} into Y. Line 5 changes only X, so Y is still ${H1_OUT}. (${H1_X} thinks Y changes with X. 0 thinks Y is empty.)` },
-], ['Why does line 5 not change Y?', 'Line 4 copied the value into Y. After that, X and Y are separate. Line 5 changes only the variable on the left: X.'], codeBlock(H1, true)));
+], ['Does copying link two variables forever? Test it: A &larr; 3, B &larr; A, A &larr; 8.', 'No. B is still 3. B &larr; A copies the value once. Changing A later does not change B.'], codeBlock(H1, true)));
 
 // ---------------------------------------------------------------- order matters 1: OUTPUT inside or after the loop
 const DBL_IN = ['DECLARE Number : INTEGER', 'DECLARE Count : INTEGER', 'Number <- 3', 'FOR Count <- 1 TO 4', '    Number <- Number * 2', '    OUTPUT Number', 'NEXT Count'];
@@ -257,7 +257,7 @@ steps.push(mcStep('hinge-2', 'Hinge Question: Where Is the IF?', 'Hinge Question
     { prompt: `Why does it output ${H2_OUT}?`,
       options: ['Big ← 0 must go inside the loop', 'The loop must go to 6, not 5', 'The IF checks only the last Number', 'IF Number >= 10 must use >'], correct: 2,
       explain: `The IF is after NEXT, so it runs once, on the last number, ${H2_IN[4]}. Move it inside the loop, after INPUT, so it checks every number: then it outputs ${H2_GOOD}.` },
-  ], ['Why must the IF go inside the loop, after INPUT?', 'It must check every number. Inside the loop it runs on every pass, and after INPUT, Number holds the new value.'], codeBlock(H2, true)));
+  ], ['How can a trace table help you find what is wrong?', 'Write each value as it changes. Compare it with what should happen. The first row that is different shows where it goes wrong.'], codeBlock(H2, true)));
 
 // ---------------------------------------------------------------- compare: > 13 and >= 13 (the value on the line)
 const AGE_A = ['DECLARE Age : INTEGER', 'INPUT Age', 'IF Age > 13 THEN', '    OUTPUT "Join"', 'ELSE', '    OUTPUT "Too young"', 'ENDIF'];
@@ -284,7 +284,7 @@ steps.push(checkStep('check-boundary', 'Check: The Value on the Line', 'Check: T
     { label: 'What does it output, exactly as written?', answer: num(COLD_OUT), feedback: 'Check each number with line 7. Is 20 &lt; 20 TRUE?' },
     { label: 'What should it output?', answer: num(COLD_GOOD), feedback: 'Count the numbers that are 20 or less.' },
     { line: true, label: 'Write the correct line 7.', answer: ifRe('temp', [['<=', 20], ['<', 21]]) + `|^\\s*if\\s+20\\s*>=\\s*temp\\s*(then)?\\s*$`, feedback: '"20 or less" includes 20 itself. Which operator is TRUE when Temp is 20?' },
-  ], ['Why does the program miss the two days of 20?', '20 &lt; 20 is FALSE: 20 is equal, not less. "20 or less" needs &lt;=.'], codeBlock(COLD, true)));
+  ], ['Why does the question give the rule in words, as well as the code?', 'The words say what the program should do. Compare each line with them to find the error.'], codeBlock(COLD, true)));
 
 // ---------------------------------------------------------------- four steps to correct a program
 steps.push({ id: 'how-to-correct', label: 'Four Steps to Correct a Program',
@@ -324,7 +324,7 @@ steps.push(mcStep('hinge-3', 'Hinge Question: Which Line Causes It?', 'Hinge Que
   `Purpose: input four marks and output their total. The user types ${H3_IN.join(', ')}. The program outputs ${H3_OUT.join(', ')}.`, [
     { prompt: 'Which line causes the wrong result?', options: ['Line 9', 'Line 6', 'Line 7', 'Line 4'], correct: 1,
       explain: `Line 6 should be INPUT Mark. With OUTPUT, Mark never gets the marks typed in, so line 7 adds 0 each time. Line 9 only shows the wrong total. After the fix, a new trace gives ${H3_GOOD}.` },
-  ], ['The wrong total shows on line 9. Why is line 9 not the answer?', 'Line 9 only outputs Total. Total is wrong because Mark never gets a value: line 6 outputs Mark when it should input it.'], codeBlock(H3, true)));
+  ], ['Why read the purpose before you look for the error?', 'The purpose tells you what each value should be. Then a trace shows which line first makes a value wrong.'], codeBlock(H3, true)));
 
 // ---------------------------------------------------------------- activity 1: trace a program with an error
 const ACT_IN = [6, 9, 4, 8];
@@ -350,7 +350,7 @@ steps.push({ id: 'activity-1', label: 'Activity 1: Trace and Find the Error', ty
     answers: trRows,
   },
   content: '<h2 class="lesson-h2">Activity 1: Trace and Find the Error</h2>' +
-    why('Step 1: what is the purpose of this program? What SHOULD it output?', `It should output the total of the prices: ${ACT_IN.join(' + ')} = ${ACT_GOOD}. The trace shows what it really does.`) +
+    why('Step 1: what is the purpose of this program? Why work it out before you trace?', 'The purpose says what it SHOULD output. The trace shows what it really does. Then you can compare.') +
     `<p class="lesson-lead">Trace the program. Then correct it on the next slide.</p><div id="${P}-embed-1" class="lesson-embed"></div>` });
 
 steps.push(checkStep('fix-check', 'Check: Correct the Program', 'Check: Correct the Program', `Purpose: input four prices and output their total. The user types ${ACT_IN.join(', ')}. Use your trace table.`, [
@@ -358,7 +358,7 @@ steps.push(checkStep('fix-check', 'Check: Correct the Program', 'Check: Correct 
   { label: 'Which line causes the wrong result?', answer: lineRe(7), feedback: 'Which line changes Total? Does it keep the old total?' },
   { line: true, label: 'Write the correct line.', answer: `^\\s*total${ARW}(total\\s*\\+\\s*price|price\\s*\\+\\s*total)\\s*$`, feedback: 'Total must keep what it had, and add the new Price.' },
   { label: 'Trace again with the same prices. What does it output now?', answer: num(ACT_GOOD), feedback: 'Total starts at 0 and grows by each price.' },
-], ['Why do we trace again after the fix?', `To prove it. The new trace must give ${ACT_GOOD}, the purpose. If it does not, the fix is wrong.`], codeBlock(ACT, true)));
+], ['Why write a new row each time a value changes?', 'Each row shows one moment in the program. Then you can point to the exact line where a value first goes wrong.'], codeBlock(ACT, true)));
 
 // ---------------------------------------------------------------- exam question (adapted from a real paper, cited)
 const LIST = ['DECLARE List : ARRAY[1:1000] OF INTEGER', 'DECLARE Max : INTEGER', 'DECLARE Min : INTEGER', 'DECLARE Counter : INTEGER', 'Max <- List[1]', 'Min <- List[1]',
@@ -377,12 +377,12 @@ const LIST = ['DECLARE List : ARRAY[1:1000] OF INTEGER', 'DECLARE Max : INTEGER'
 const MAXMIN_LEAD = 'Adapted from Cambridge IGCSE 0478/22, May/June 2024, Question 7(b). This algorithm should find the largest value (Max) and the smallest value (Min) in the array List of 1000 positive numbers. It has two errors.';
 steps.push(checkStep('exam-maxmin', 'Exam Question: Correct the Algorithm (1 of 2)', 'Exam Question: Correct the Algorithm (1 of 2)', MAXMIN_LEAD, [
     { line: true, label: 'Line 08: write the correct line.', answer: `^\\s*if\\s+(list\\s*\\[\\s*counter\\s*\\]\\s*>\\s*max|max\\s*<\\s*list\\s*\\[\\s*counter\\s*\\])\\s*(then)?\\s*$`, feedback: 'Max should change when a value is BIGGER than Max.' },
-  ], ['Line 08 runs with no error message. How can you tell it is wrong?', 'Compare it with the purpose. Max should change when a value is bigger, but &lt; changes it when a value is smaller.'], codeBlock(LIST, true)));
+  ], ['Why can a program run with no error message and still be wrong?', 'The computer only checks the rules, not the purpose. A line can follow every rule and still do the wrong job.'], codeBlock(LIST, true)));
 steps[steps.length - 1].content = steps[steps.length - 1].content.replace('<div class="lesson-do-now-columns">', '<div class="lesson-do-now-columns is-code-wide">');
 steps.push(checkStep('exam-maxmin-2', 'Exam Question: Correct the Algorithm (2 of 2)', 'Exam Question: Correct the Algorithm (2 of 2)', MAXMIN_LEAD, [
     { label: 'Which other line has an error? (Use the line numbers.)', answer: lineRe(11), feedback: 'Read every variable name. Which name was never declared?' },
     { line: true, label: 'Write the correct line for it.', answer: `^\\s*if\\s+(list\\s*\\[\\s*counter\\s*\\]\\s*<\\s*min|min\\s*>\\s*list\\s*\\[\\s*counter\\s*\\])\\s*(then)?\\s*$`, feedback: 'The loop variable is Counter.' },
-  ], ['Why does this error stop the program, when line 08 did not?', 'Count was never declared, so the program breaks a rule and cannot run. Line 08 follows the rules but does the wrong job.'], codeBlock(LIST, true)));
+  ], ['Why do Max and Min both start as List[1], not 0?', 'List[1] is a real value from the list. A Min of 0 would never change, because every number in List is bigger.'], codeBlock(LIST, true)));
 steps[steps.length - 1].content = steps[steps.length - 1].content.replace('<div class="lesson-do-now-columns">', '<div class="lesson-do-now-columns is-code-wide">');
 
 // ---------------------------------------------------------------- compare: two fixes, trace both
@@ -419,19 +419,19 @@ steps.push(checkStep('exam-ages', 'Exam-Style Question: Three Errors', 'Exam-Sty
     { line: true, label: 'Write the correct line 6.', answer: word('input\\s+age'), feedback: 'The age must come IN to the program.' },
     { line: true, label: 'A visitor aged 18 is not counted. Write the correct line 7.', answer: ifRe('age', [['>=', 18], ['>', 17]]) + `|^\\s*if\\s+18\\s*<=\\s*age\\s*(then)?\\s*$`, feedback: '"18 or over" includes 18. Which operator is TRUE when Age is 18?' },
     { line: true, label: 'Line 11 does not output the count. Write the correct line 11.', answer: word('output\\s+adults'), feedback: 'Which variable counts the visitors aged 18 or over?' },
-  ], ['The count is output at the end. Why can line 6 still cause a wrong count?', 'Age never gets the typed value, so every check on line 7 uses the wrong age. The error shows at the end, but it starts on line 6.'], codeBlock(AGES, true)));
+  ], ['Why does the question say what the algorithm SHOULD do?', 'To find an error, compare what each line does with what it should do. Each difference is an error to correct.'], codeBlock(AGES, true)));
 
 // ---------------------------------------------------------------- exam-style question: explain (self-marked)
 steps.push(selfMarked('exam-explain', 'Exam-Style Question: Explain the Method (1 of 2)', 'Exam-Style Question: Explain the Method (1 of 2)',
   'Answer in full sentences. This part has 2 marks: give two connected points.', [
     { id: 'shows-line', prompt: 'A student says: "The error is on the OUTPUT line, because that is where the wrong number appears." Explain why the student may be wrong. [2]', marks: 2,
       modelAnswer: 'The OUTPUT line only shows the value of a variable. That value may have been made wrong by an earlier line, such as the FOR line or an assignment, so the earlier line is the one to correct.' },
-  ], ['This part has 2 marks. What two ideas does the answer need?', 'Where the value is made (an earlier line), and why that matters (that line causes the wrong value).']));
+  ], ['This part has 2 marks. How do you plan the answer?', 'Make one point. Then join a second point to it with "so" or "because". Two connected points earn two marks.']));
 steps.push(selfMarked('exam-explain-2', 'Exam-Style Question: Explain the Method (2 of 2)', 'Exam-Style Question: Explain the Method (2 of 2)',
   'Answer in full sentences. This part has 2 marks: give two connected points.', [
     { id: 'trace-again', prompt: 'Explain why a corrected program should be traced again. [2]', marks: 2,
       modelAnswer: 'The correction might not fix the error, or it might cause a new error. Tracing again shows whether the program now gives the output its purpose needs.' },
-  ], ['This part has 2 marks. What two ideas does the answer need?', 'What could go wrong (a fix that fails or a new error), and what the trace proves (the output matches the purpose).']));
+  ], ['Why does a 2-mark answer need full sentences?', 'Each mark needs a clear point. A full sentence shows exactly what you mean. One word rarely earns a mark.']));
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Following and Correcting Pseudocode Drill', 'drill-y9-3-1-pseudocode', 'Plenary: Following and Correcting Pseudocode Drill',

@@ -129,7 +129,7 @@ const steps = [
       facts(['<strong>First:</strong> 20 minutes of revision practice.', '<strong>Then:</strong> a 30-minute test on this website.', '<strong>Topics:</strong> reading flowcharts, key-press loops, AND, OR and NOT, sub-routines.']) +
       tps('Which topic do you find hardest?', 'Practise that topic most in the next 20 minutes.') },
   { id: 'revision', label: 'Revision Practice', type: 'embedded-app', appId: 'drill-y7-flowcharts-recap', embedContainerId: 'y7t1-revision',
-    content: '<h2 class="lesson-h2">Revision Practice</h2>' + tps('A key-press loop: the key is not pressed. Where does the arrow go?', 'Back to the decision, to check the key again.') +
+    content: '<h2 class="lesson-h2">Revision Practice</h2>' + tps('Why practise every topic, not just the easy ones?', 'The test has questions on every topic. Practice now shows you what needs more work.') +
       '<p class="lesson-lead">20 minutes. Practise every topic. Follow each flowchart one box at a time.</p><div id="y7t1-revision"></div>' },
   { id: 'how-it-works', label: 'How the Test Works',
     content: '<h2 class="lesson-h2">How the Test Works</h2>' + tps('Your answers save as you type. Why does that help?', 'If the computer crashes, you lose nothing. Open the site again and carry on.') +

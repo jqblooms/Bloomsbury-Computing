@@ -521,17 +521,17 @@ const gameCard = (key, name, control, goal) =>
     'The arrow keys steer the Ship left and right.',
     'A Meteor that falls past adds 1 to score.',
     'A Meteor that hits the Ship takes 1 life.'
-  ], 'test each arrow key on its own.', ['Predict: which blocks make the Ship move? Where will you look first?', 'The if blocks inside the Ship\'s forever loop. One checks the right arrow, one checks the left arrow. Left should change x by a negative number.']);
+  ], 'test each arrow key on its own.', ['Why test each arrow key on its own?', 'Then you know which key goes wrong. That tells you which script to read first.']);
   hunt('hunt-2', 'Bug Hunt 2: Meteor Dodge Never Ends', 'hunt-meteor-end', 'Bug Hunt 2', [
     'Each hit takes 1 life. lives starts at 3.',
     'When lives reaches 0, the Game Over screen shows.',
     'Then the game stops.'
-  ], 'count the lives out loud. Then read what the Stage is waiting for.', ['lives goes 3, 2, 1, 0. What should the Stage wait for? Could lives ever be less than 0?', 'It should wait until lives = 0. lives stops at 0, so "less than 0" is never true and the game never ends.']);
+  ], 'count the lives out loud. Then read what the Stage is waiting for.', ['Why count the lives out loud before you read the Stage script?', 'You see every value lives really has. Then you can try each value in the condition: can it ever be true?']);
   hunt('hunt-3', 'Bug Hunt 3: Balloon Pop', 'hunt-balloon-score', 'Bug Hunt 3', [
     'Each click on the red Balloon adds 1 to score.',
     'Each click on the Gold Balloon adds 5.',
     'time counts down from 20. At 0, Time Up.'
-  ], 'click the red Balloon three times and watch score.', ['What is the difference between set [score] to (1) and change [score] by (1)?', 'set replaces the value with 1 every time. change adds 1 to the value it already has.']);
+  ], 'click the red Balloon three times and watch score.', ['Why click the red Balloon three times, not just once?', 'One click can look right. After three clicks you can compare what score should be with what it really is.']);
   L.slide('where-bugs-hide', 'Where Bugs Hide',
     L.heading('Where Bugs Hide', 'What you see tells you where to look.') +
     tps('Bug Hunt 3: score was stuck at 1. Which kind of bug was that?', 'A value gets stuck: the click script used set when it should use change.') +
@@ -550,17 +550,17 @@ const gameCard = (key, name, control, goal) =>
     'time starts at 20.',
     'time goes down by 1 every second.',
     'At 0, the Time Up screen shows and the game stops.'
-  ], 'watch the time box. Which way is it going?', ['The time box shows 20, 21, 22. Which kind of bug is that?', 'It goes the wrong way. The change [time] by block should use -1, not 1.']);
+  ], 'watch the time box. Which way is it going?', ['Why watch the time box while you play?', 'You see the value change every second. Then you can say what you expected and what really happened.']);
   hunt('hunt-5', 'Bug Hunt 5: Ghost Maze', 'hunt-maze-ghost', 'Bug Hunt 5', [
     'The arrow keys move the Hero. Walls stop it.',
     'The Ghost patrols back and forth, forever.',
     'The Ghost sends the Hero back to the start.'
-  ], 'watch the Ghost for 10 seconds.', ['The Ghost glides there and back once, then stops. Which kind of bug is that?', 'Happens once, then stops. The two glide blocks need to go inside a forever loop.']);
+  ], 'watch the Ghost for 10 seconds.', ['Why watch the Ghost for 10 seconds, not just 2?', 'Some bugs only show after a while. A sprite can look fine at first, then go wrong later.']);
   hunt('hunt-6', 'Bug Hunt 6: Ghost Maze Locked Door', 'hunt-maze-door', 'Bug Hunt 6', [
     'Touching the Key collects it: keys becomes 1.',
     'With the key, touching the Door opens it.',
     'Then You Escaped shows.'
-  ], 'collect the Key, then go to the Door. Read what the Door is waiting for.', ['You have the key and you are at the Door. Nothing happens. Which kind of bug is that?', 'Something never happens. The Door waits until it touches the Ghost, not the Hero.']);
+  ], 'collect the Key, then go to the Door. Read what the Door is waiting for.', ['Why collect the Key first, then go to the Door?', 'That is the order a player uses. You test the Door the way the game should really be played.']);
   L.choice('practice', 'Checked Practice', 'Use what you found in the Bug Hunts.', [
     { prompt: 'A sprite should keep spinning, but it turns once and stops. What is missing?', options: ['A forever loop around the turn block', 'A new costume', 'A broadcast'], correct: 0,
       explain: 'Happens once, then stops: the blocks need to be inside a forever loop.' },
@@ -712,7 +712,7 @@ const gameCard = (key, name, control, goal) =>
   ]);
   L.slide('two-bugs', 'Two Bugs at Once',
     L.heading('Two Bugs at Once', 'Some bugs only show on the second game, or at the edge of the stage.') +
-    tps('A game works the first time. The second time, it ends straight away. Where do you look?', 'The green flag scripts. Something from the last game was not reset: for example lives is still 0, so the game is over at once.') +
+    tps('A game works the first time. The second time, the Hero starts in the wrong place. Where do you look?', 'The green flag scripts. They must put every sprite back where the game starts. Here, a go to block is missing.') +
     '<div class="igame-debug-grid">' +
     '<div><strong>Fix one, test all</strong><span>A fix can break something else. Press Check my project after every change.</span></div>' +
     '<div><strong>Play it twice</strong><span>Does the green flag reset every variable and show every sprite again?</span></div>' +

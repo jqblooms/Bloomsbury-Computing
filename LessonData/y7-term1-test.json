@@ -13,7 +13,7 @@
    "type": "embedded-app",
    "appId": "drill-y7-flowcharts-recap",
    "embedContainerId": "y7t1-revision",
-   "content": "<h2 class=\"lesson-h2\">Revision Practice</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A key-press loop: the key is not pressed. Where does the arrow go?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Back to the decision, to check the key again.</p></div></details><p class=\"lesson-lead\">20 minutes. Practise every topic. Follow each flowchart one box at a time.</p><div id=\"y7t1-revision\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Revision Practice</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise every topic, not just the easy ones?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The test has questions on every topic. Practice now shows you what needs more work.</p></div></details><p class=\"lesson-lead\">20 minutes. Practise every topic. Follow each flowchart one box at a time.</p><div id=\"y7t1-revision\"></div>"
   },
   {
    "id": "how-it-works",

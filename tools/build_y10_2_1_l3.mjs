@@ -62,7 +62,7 @@ steps.push(checkStep('do-now', 'Do Now: Packets (1 of 2)', 'Do Now: Packets (1 o
 steps.push(checkStep('do-now-2', 'Do Now: Serial Simplex (2 of 2)', 'Do Now: Serial Simplex (2 of 2)',
   'From Lesson 2. ' + cite('0478/13, June 2025, Question 6(c)(ii)') + ' The data for an alert is sent using serial simplex data transmission.', [
     { line: true, marks: 2, label: 'Explain how the data is sent using serial simplex data transmission.', answer: '^(?=.*\\bbits?\\b)(?=.*\\b(one|1|single|only)\\b)(?=.*\\b(direction|directions|way|ways)\\b).*$', feedback: 'Two ideas: how many bits go at a time (serial), and which way the data can go (simplex).' },
-  ], ['Why do we need two words, serial AND simplex?', 'Serial says how many bits go at a time. Simplex says which way the data goes. They answer different questions.']));
+  ], ['Why do we need two words, like parallel AND duplex?', 'Parallel says how many bits go at a time. Duplex says which way the data can go. They answer different questions.']));
 
 // ---------------------------------------------------------------- title
 steps.push({ id: 'title', label: 'USB',
@@ -86,12 +86,12 @@ steps.push(selfMarked('exam-interface', 'Exam Question: The USB Interface (1 of 
   cite('0478/12, March 2026, Question 3(c)(i)') + DRONE, [
     { id: 'interface-meaning', prompt: 'State what is meant by a USB interface. [1]', marks: 1,
       modelAnswer: 'A standard (universal) connection / port used to connect a device (peripheral) to a computer, so data can be sent between them.' },
-  ], ['Why does the word "universal" matter here?', 'Universal means it is a standard. The same connection works with many different devices.']));
+  ], ['This has 1 mark. Why is "a USB cable" not enough?', 'It only names a part. The mark needs what the interface is and what it is used for.']));
 steps.push(selfMarked('exam-interface-2', 'Exam Question: The USB Interface (2 of 2)', 'Exam Question: The USB Interface (2 of 2)',
   cite('0478/12, March 2026, Question 3(c)(ii)') + DRONE, [
     { id: 'interface-how', prompt: 'Explain how a USB interface is used to transmit data. [3]', marks: 3,
       modelAnswer: 'Any three: the device is connected to the computer with a USB cable / port; the computer detects the device and loads its driver automatically; data is sent using serial transmission, one bit at a time; it is half-duplex, so data goes both ways but one way at a time.' },
-  ], ['Why is "a way to connect" not enough for full marks here?', 'The question says explain HOW. Say how the bits travel: serial, one at a time, and half-duplex.']));
+  ], ['Why is "a way to connect" not enough for full marks here?', 'The question asks HOW the data is sent. Each of the 3 marks needs a different fact, not the same idea three times.']));
 
 steps.push(embed('activity-1', 'Activity 1: Half-Duplex', 'transmission-lab-duplex', 'Activity 1: Half-Duplex',
   'USB is half-duplex. Choose <strong>half-duplex</strong> and send data from A, then from B, then from both at once.',
@@ -115,7 +115,7 @@ steps.push({ id: 'compare', label: 'Compare: Same Cable, Different Job',
 steps.push(checkStep('exam-type', 'Exam Question: Type of Transmission', 'Exam Question: Type of Transmission',
   cite('0478/11, June 2021, Question 2(c)(ii)') + ' Julia uses a USB connection to transfer data onto her USB flash memory drive.', [
     { label: 'Identify the type of data transmission used in a USB connection.', answer: '^(?!.*\\bparallel\\b).*\\bserial\\b.*$', feedback: 'Look at the letters USB. What does the S stand for?' },
-  ], ['Why can you answer this from the name alone?', 'USB means Universal Serial Bus. The S tells you it is serial.']));
+  ], ['An old printer cable sent 8 bits at the same time, down 8 wires. Which type of transmission is that? Why?', 'Parallel: many bits go at the same time, one on each wire.']));
 steps.push(selfMarked('exam-benefits', 'Exam Question: Two Benefits', 'Exam Question: Two Benefits',
   cite('0478/11, June 2021, Question 2(c)(i)') + ' One benefit of using a USB connection is that it is a universal connection.', [
     { id: 'benefits-2021', prompt: 'State two other benefits of using a USB connection. [2]', marks: 2,
@@ -129,7 +129,7 @@ steps.push(selfMarked('exam-mouse', 'Exam Question: The USB Mouse', 'Exam Questi
 steps.push(checkStep('exam-drawback', 'Exam Question: A Drawback', 'Exam Question: A Drawback',
   cite('0478/12, November 2025, Question 5(c)(iii)') + ' A mouse is connected to a computer using a USB connection.', [
     { line: true, label: 'Give one drawback of using a USB connection for this purpose.', answer: `^.*${DRAWBACK}.*$`, feedback: 'Think about how far a USB cable can reach, or how fast it is compared with other connections.' },
-  ], ['A mouse is used close to the computer. Why is the 5 metre cable limit still a drawback?', 'The mouse can never be used further away than the cable reaches. A different connection could reach further.']));
+  ], ['Why should a drawback be something USB does worse than another connection?', 'A drawback is a real limit. Say what USB cannot do well that another way of connecting can.']));
 
 steps.push(embed('activity-2', 'Activity 2: Why USB Is Serial', 'transmission-lab-wires', 'Activity 2: Why USB Is Serial',
   'Send one letter down the <strong>long</strong> cable, first by serial, then by parallel. Compare what arrives.',

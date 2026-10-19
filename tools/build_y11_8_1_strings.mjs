@@ -139,7 +139,7 @@ steps.push(mcStep('do-now', 'Do Now: Constants and Totalling (1 of 2)', 'Do Now:
       explain: 'A constant is set once. Its value cannot change while the program runs.' },
     { prompt: 'Tick one box to complete this sentence. A standard method of solution used for adding together a set of values during iteration is', options: ['counting.', 'searching.', 'sorting.', 'totalling.'], correct: 3,
       explain: 'Totalling adds each value to a running total. Counting only adds 1 each time.' },
-  ], ['Why does a program use a constant for a value that never changes?', 'It cannot be changed by mistake while the program runs, and it is set in one place, so it is easy to update.']));
+  ], ['Why is a loop useful when a program works with many values?', 'The same lines run for every value. You write them once, and the loop repeats them as many times as needed.']));
 steps[steps.length - 1].walkthrough = WT_TICK;
 
 const STRING_DESC = '^(?=.*\\b(characters?|letters?|symbols?|digits?|text)\\b)(?=.*\\b(group|groups|many|more than one|several|sequence|series|collection|set|lots|multiple|any number|zero or more|one or more|combination|mix|mixture|list|row|word|words|sentence)\\b).*$';
@@ -152,7 +152,7 @@ steps.push(checkStep('do-now-2', 'Do Now: STRING and CHAR (2 of 2)', 'Do Now: ST
     { label: 'String: an example', answer: STRING_EX, feedback: 'Give a value with more than one character.' },
     { label: 'Char: what it holds', answer: CHAR_DESC, line: true, feedback: 'How many characters does a char hold?' },
     { label: 'Char: an example', answer: CHAR_EX, feedback: 'Give a value with exactly one character.' },
-  ], '', ['Why is a name stored as a STRING and not a CHAR?', 'A name has many characters. A CHAR holds only one character.']));
+  ], '', ['Why is TRUE stored as BOOLEAN, not as text?', 'BOOLEAN holds only TRUE or FALSE, so conditions can use it. Text could hold anything, even spelling mistakes.']));
 steps[steps.length - 1].walkthrough = WT_TYPES;
 steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y11-8-1-strings-ext', 'Extension: Do Now Challenge',
   '<strong>Extension:</strong> finished the Do Now? Try these questions from 8.1 L1 to L4: variables, constants, data types, arithmetic operators, and relational and logical operators. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.'));
@@ -190,7 +190,7 @@ steps.push(selfStep('exam-length', 'Exam Question: Six Characters Long', 'Exam Q
   'Cambridge IGCSE 0478/22, June 2024, Question 4(b)(i). A program needs to make sure the characters input for a product code meet these rules: the product code is six characters in length; the first two characters must be "PD"; the last four characters must be a number in the range 1000 to 9999 inclusive. The product code is stored in the variable Product.', [
     { id: 'length-six', prompt: 'Write the pseudocode to make sure that the product code is six characters in length.', marks: 2,
       modelAnswer: 'REPEAT<br>&nbsp;&nbsp;INPUT Product<br>UNTIL LENGTH(Product) = 6<br>One mark for LENGTH(Product), one mark for testing it against 6 so the code is input again until it fits. A WHILE LENGTH(Product) &lt;&gt; 6 DO loop is also correct.' },
-  ], ['Why must the check test for exactly six characters?', 'The rule says six characters. A check for six or more would also accept a code with seven characters.']));
+  ], ['Why read the rules in the question twice before you write code?', 'Each rule becomes a test in your code. If you miss one word, your check is wrong.']));
 
 // ---------------------------------------------------------------- SUBSTRING: predict then reveal
 const COM = V('SUBSTRING("Computer", 1, 3)');
@@ -238,13 +238,13 @@ steps.push(checkStep('check-sub', 'Check: SUBSTRING', 'Check: SUBSTRING', 'Word 
   { label: 'SUBSTRING(Word, 4, 5)', answer: textRe(CS[1]), cs: true, feedback: 'Start at position 4. Then take 5 characters: 5 is how many, not where to stop.' },
   { label: 'SUBSTRING(Word, LENGTH(Word), 1)', answer: textRe(CS[2]), cs: true, feedback: 'Work out LENGTH(Word) first. That position is the last character.' },
   { label: 'Write the line that stores the first letter of Name in the variable Initial.', answer: `^\\s*Initial${ARROW}${fn('SUBSTRING', 'Name', '1', '1')}\\s*$`, line: true, feedback: 'SUBSTRING needs three values: the string, where to start, how many.' },
-], '', ['Why does part (c) give the last letter?', 'LENGTH(Word) is 8, the position of the last character. Taking 1 character from there gives the last letter.']));
+], '', ['Why must a program never ask SUBSTRING for a position past the end?', 'That position does not exist, so there is no character to take. The program stops with an error.']));
 
 steps.push(selfStep('exam-pd', 'Exam Question: Starts With PD', 'Exam Question: Starts With PD',
   'Cambridge IGCSE 0478/22, June 2024, Question 4(b)(ii). The same product code rules: six characters, the first two characters must be "PD", the last four characters a number from 1000 to 9999. The product code is stored in the variable Product.', [
     { id: 'starts-pd', prompt: 'Write the pseudocode to make sure that the first two characters of the product code are "PD".', marks: 2,
       modelAnswer: 'REPEAT<br>&nbsp;&nbsp;INPUT Product<br>UNTIL SUBSTRING(Product, 1, 2) = "PD"<br>One mark for SUBSTRING(Product, 1, 2), one mark for testing it against "PD" so the code is input again until it starts with PD.' },
-  ], ['Why does this check need SUBSTRING and not LENGTH?', 'LENGTH only counts the characters. SUBSTRING takes the first two characters, so the program can compare them with "PD".']));
+  ], ['Why does a product code have rules at all?', 'Every code has the same shape, so a wrong code can be found as soon as it is typed in.']));
 
 const FACT = 'I learnt to program in computer science';
 const PROG = V('SUBSTRING(Fact, 13, 7)', { Fact: FACT });
@@ -254,7 +254,7 @@ steps.push(checkStep('exam-program', 'Exam Question: Find the Word', 'Exam Quest
     { label: 'Write the pseudocode statement to use a string function to output the word program taken from the string stored in Fact. Do not declare any variables.', marks: 2,
       answer: `^\\s*OUTPUT\\s+${fn('SUBSTRING', 'Fact', '1[23]', '7')}\\s*$`, line: true, feedback: 'Count the characters before "program", spaces too. Then: how many letters are in program?' },
   ], code(['Fact <- "I learnt to program in computer science"']),
-  ['The word program comes third. Why is its start position not 3?', 'Spaces are characters too. "I learnt to " is 12 characters, so program starts at 13.']));
+  ['In "We love maths", maths is the third word. Why does it not start at position 3?', 'Spaces are characters too. "We love " is 8 characters, so maths starts at 9.']));
 
 // ---------------------------------------------------------------- activity 1: Trace Tables, count the A's
 const WORD = 'PASTA';
@@ -280,7 +280,7 @@ steps.push({ id: 'activity-1', label: 'Activity 1: Trace the Letters', type: 'em
     answers: trRows,
   },
   content: '<h2 class="lesson-h2">Activity 1: Trace the Letters</h2>' +
-    why('Why does the loop go up to LENGTH(Word) and not to 10?', `"${WORD}" has ${WORD.length} characters, so the loop stops at the last one. Position 6 does not exist, so SUBSTRING would go past the end.`) +
+    why('Why does SUBSTRING(Word, Count, 1) take only 1 character?', 'The loop looks at one letter at a time. Each time round, Count moves on to the next position.') +
     `<div id="${P}-embed-1" class="lesson-embed"></div>` });
 
 // ---------------------------------------------------------------- UCASE and LCASE: predict then reveal
@@ -328,7 +328,7 @@ steps.push(checkStep('check-case', 'Check: UCASE and LCASE', 'Check: UCASE and L
   { label: 'LCASE("HAT YAI")', answer: textRe(CC[1]), cs: true, feedback: 'LCASE: every letter becomes a small letter. The space stays.' },
   { label: 'Reply holds "no". Is UCASE(Reply) = "NO" TRUE or FALSE?', answer: TF(CC[2]), feedback: 'Work out UCASE(Reply) first. Then compare it with "NO".' },
   { label: 'Write the line that changes Reply to upper case and stores it back in Reply.', answer: `^\\s*Reply${ARROW}${fn('UCASE', 'Reply')}\\s*$`, line: true, feedback: 'UCASE on its own changes nothing. Store the result back in Reply with &lt;-.' },
-], '', ['Why does part (c) compare UCASE(Reply) with "NO", and not Reply?', 'Reply holds small letters, and = checks the case. UCASE(Reply) gives "NO", which matches. Reply itself still holds "no".']));
+], '', ['Why does UCASE not change digits or spaces?', 'Only letters have a capital and a small form. A digit or a space has only one form.']));
 
 // ---------------------------------------------------------------- exam questions on all four functions
 const PHRASE = 'The beginning is the most important part';
@@ -338,13 +338,13 @@ steps.push(selfStep('exam-phrase', 'Exam Question: Length and Upper Case (1 of 2
   'Cambridge IGCSE 0478/21, June 2023, Question 8(a). The function LENGTH(Phrase) calculates the length of a string Phrase.', [
     { id: 'phrase-code', prompt: 'Write the pseudocode statements to: store the string "The beginning is the most important part" in Phrase; calculate and output the length of the string; output the string in upper case.', marks: 3,
       modelAnswer: 'Phrase &lt;- "The beginning is the most important part"<br>OUTPUT LENGTH(Phrase)<br>OUTPUT UCASE(Phrase)<br>Marks for: storing the string in Phrase, using LENGTH, using UCASE, and outputting both results.' },
-  ], ['Why must the results of LENGTH and UCASE go in an OUTPUT?', 'They give back new values. Without OUTPUT, nothing is shown, and Phrase does not change.']));
+  ], ['This question lists three tasks. Why tick each one off as you write?', 'Each task is worth a mark. A task you forget is a mark you lose.']));
 steps.push(checkStep('exam-phrase-2', 'Exam Question: Length and Upper Case (2 of 2)', 'Exam Question: Length and Upper Case (2 of 2)',
   'Cambridge IGCSE 0478/21, June 2023, Question 8(b). Write the output your pseudocode should produce.', [
     { label: 'The first line of output', answer: numRe(PH[0]), feedback: 'Count every character in the phrase, and every space.' },
     { label: 'The second line of output', answer: textRe(PH[1]), cs: true, line: true, feedback: 'UCASE changes every letter to a capital letter. Spaces stay.' },
   ], code(['Phrase <- "The beginning is the most important part"', 'OUTPUT LENGTH(Phrase)', 'OUTPUT UCASE(Phrase)']),
-  ['Why does LENGTH give more than the number of letters in the phrase?', 'LENGTH counts every character. The 6 spaces are characters too: 34 letters + 6 spaces = 40.']));
+  ['Why does LENGTH("Hi there") give 8, not 7?', 'LENGTH counts every character. The space is a character too: 7 letters + 1 space = 8.']));
 
 const FIND = (up) => `DECLARE P : STRING\nDECLARE Q : CHAR\nDECLARE Counter : INTEGER\nDECLARE Position : INTEGER\nP <- "The world"\nQ <- 'W'\n${up ? 'P <- UCASE(P)\n' : ''}Counter <- 1\nPosition <- 0\nWHILE Position = 0 AND Counter <= LENGTH(P) DO\n  IF SUBSTRING(P, Counter, 1) = Q THEN\n    Position <- Counter\n  ENDIF\n  Counter <- Counter + 1\nENDWHILE\nOUTPUT Position`;
 const POS = run(FIND(true))[0], POS_NO = run(FIND(false))[0];
@@ -362,7 +362,7 @@ steps.push(checkStep('exam-username', 'Exam Question: Make a Username', 'Exam Qu
   'Cambridge IGCSE 0478/21, June 2026, Question 5(b). A system makes usernames. It takes the first letter of the first name and the first two letters of the last name, converts all the letters to upper case, and adds a random number: Muhammed Hann gets MHA492. The last name is input into the variable LastName.', [
     { label: 'Write the pseudocode to: take the first two letters from LastName; convert the letters to upper case; store the result in the variable Temp. Write it as one line.', marks: 3,
       answer: TEMP_RE, line: true, feedback: 'Put SUBSTRING inside UCASE: UCASE( SUBSTRING(...) ). Then store it in Temp with &lt;-.' },
-  ], '', ['Why must the result be stored in Temp?', 'UCASE and SUBSTRING give back a new string. If it is not stored, it is lost, and LastName does not change.']));
+  ], '', ['Why does the system add a random number to each username?', 'Two people can have the same letters, such as Mai Han and Mo Hann. The number makes each username different.']));
 
 // ---------------------------------------------------------------- activity 2: write the string code (code drill)
 steps.push(embed('activity-2', 'Activity 2: Write the String Code', 'drill-y11-8-1-strings-code', 'Activity 2: Write the String Code',

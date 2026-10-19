@@ -67,7 +67,7 @@ steps.push(mcStep('do-now', 'Do Now: Packets (1 of 2)', 'Do Now: Packets (1 of 2
   'From 2.1. ' + cite('0478/11, June 2025, Question 4(c)(i)') + ' A customer orders food over the internet. The order is broken into packets.', [
     { prompt: 'Which item would NOT be included in a packet’s header?', options: ['destination address', 'originator’s address', 'packet number', 'payload'], correct: 3,
       explain: 'The payload is the data itself, in the middle of the packet. The header holds the addresses and the packet number.' },
-  ], ['Why does every packet need its own header?', 'Each packet travels on its own, so each one must say where it is going and where it fits in the order.']));
+  ], ['Why is a large file sent as many small packets, not one big piece?', 'If one packet is lost, only that packet is sent again. Small packets also stop one huge file blocking the network.']));
 steps.push(checkStep('do-now-2', 'Do Now: Out of Order (2 of 2)', 'Do Now: Out of Order (2 of 2)',
   'From 2.1. ' + cite('0478/11, June 2025, Question 4(c)(ii)') + ' The packets of data may need to be reordered when they arrive at the computer in the restaurant kitchen.', [
     { line: true, marks: 2, label: 'Explain why the packets of data may need to be reordered.', answer: '^(?=.*\\b(routes?|paths?|ways?)\\b)(?=.*\\b(different|own|separate|each|another|other)\\b).*$',
@@ -102,12 +102,12 @@ steps.push(checkStep('exam-occur', 'Exam Question: How Errors Occur', 'Exam Ques
   cite('0478/12, March 2026, Question 7(c)(i)') + ' The transmitted data may contain an error.', [
     { line: true, label: 'Give one way in which an error can occur during data transmission.', answer: '(interference|noise|electrical|magnetic|lost|loss|gain|gained|extra|chang|flip|corrupt|crosstalk|missing|dropped)',
       feedback: 'Think about what can happen to the bits on the way, and what causes it.' },
-  ], ['Why is "the data goes wrong" not enough for the mark?', 'Say HOW: interference can make a bit be lost, gained or changed.']));
+  ], ['Why is "the data goes wrong" not enough for the mark?', 'It only says there is a problem. The mark needs one real cause, or one real thing that happens to the bits.']));
 steps.push(selfMarked('exam-explain', 'Exam Question: Explain How Errors Occur', 'Exam Question: Explain How Errors Occur',
   cite('0478/12, November 2025, Question 7(f)(i)') + ' The data for music and audio books needs to be checked for errors after being transmitted from the cloud.', [
     { id: 'errors-explain', prompt: 'Explain how errors may occur in the data during transmission. [2]', marks: 2,
       modelAnswer: 'Interference (for example electrical or magnetic) can affect the data on the way; this can cause bits to be lost (data loss), extra bits to be gained (data gain), or bits to change, for example a 0 becoming a 1 (data change).' },
-  ], ['This question has 2 marks. What two ideas do you need?', 'The cause (interference), and what it does to the bits (lost, gained or changed).']));
+  ], ['This question has 2 marks. What two ideas do you need?', 'One mark for what causes the error. One mark for what it does to the data. Two different ideas, one for each mark.']));
 
 // ---------------------------------------------------------------- parity: predict then reveal
 steps.push({ id: 'concept-parity', label: 'The Parity Check',
@@ -133,7 +133,7 @@ steps.push(checkStep('exam-bits', 'Exam Question: Add the Parity Bit', 'Exam Que
     { label: 'Data 0101110', answer: bitAns(1), feedback: 'Count the 1s in 0101110 carefully. Odd parity needs an odd total.' },
     { label: 'Data 1110111', answer: bitAns(1), feedback: 'Count the 1s in 1110111. Odd parity needs an odd total.' },
     { label: 'Data 1000100', answer: bitAns(1), feedback: 'Count the 1s in 1000100. Odd parity needs an odd total.' },
-  ], ['When would the parity bit be 0 instead of 1?', 'When the data already has the right number of 1s (here, an odd number), so nothing needs adding.']));
+  ], ['With EVEN parity, the data 1100000 has two 1s. What should its parity bit be? Why?', 'It should be 0. Two is already even, so nothing needs adding.']));
 
 steps.push(embed('activity-2', 'Activity 2: Be the Receiver', 'parity-lab-check', 'Activity 2: Be the Receiver',
   'Eight bytes arrive. Count the 1s in each one and decide what the parity check says.',
@@ -143,12 +143,12 @@ steps.push(selfMarked('exam-detect', 'Exam Question: How Even Parity Detects an 
   cite('0478/12, June 2025, Question 3(c)(iii)') + ' An even parity check is used to detect errors in data after it has been transmitted to a printer.', [
     { id: 'even-detect', prompt: 'Describe how an even parity check detects an error. [3]', marks: 3,
       modelAnswer: 'Any three: the sender and receiver agree on even parity; a parity bit is added to each byte to make the number of 1s even; the receiver counts the number of 1s in each byte; if the number of 1s is odd, an error is detected.' },
-  ], ['Why must the answer say what the RECEIVER does?', 'Detecting happens when the data arrives: the receiver counts the 1s and checks the total is still even.']));
+  ], ['Why must the answer say what the RECEIVER does?', 'Detecting happens when the data arrives. Only the receiver has the data that arrived, so only it can find the error.']));
 steps.push(checkStep('exam-miss', 'Exam Question: When Parity Fails', 'Exam Question: When Parity Fails',
   cite('0478/11, June 2021, Question 8(b)') + ' An error may not be detected when using a parity check.', [
     { line: true, label: 'Identify why an error may not be detected.', answer: '(\\btwo\\b|\\b2\\b|even\\s+number|\\bboth\\b|swap|transpos|more\\s+than\\s+one|\\bpair|still\\s+(even|odd|match|the\\s+same))',
       feedback: 'Think about Activity 2. What happened when two bits changed?' },
-  ], ['Why can a parity check never find two changed bits?', 'Each change moves the count by one. Two changes cancel out, so the count is even (or odd) again.']));
+  ], ['Each changed bit moves the count of 1s up or down by one. Why does that matter for the check?', 'One change turns an even count odd, or an odd count even. That is how the receiver notices.']));
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Errors and Parity Drill', 'drill-y10-2-2-l1-parity', 'Plenary: Errors and Parity Drill',

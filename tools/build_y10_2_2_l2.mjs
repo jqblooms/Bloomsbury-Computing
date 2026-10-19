@@ -207,7 +207,7 @@ steps.push(selfMarked('exam-block-why', 'Exam Question: Block or Byte?', 'Exam Q
   cite('0478/12, March 2023, Question 5(c)(ii)') + ' A parity block check can be used instead of a parity byte check.', [
     { id: 'block-why', prompt: 'Explain how a parity block check might detect an error in transmission that would <strong>not</strong> be detected by a parity byte check. [2]', marks: 2,
       modelAnswer: 'A parity byte check cannot detect an even number of changes in a byte (for example two bits swapped), because the parity stays correct. A parity block check also checks every column, so it identifies the horizontal and vertical position of the changes.' },
-  ], ['This has 2 marks. What two ideas do you need?', 'What the parity byte check misses (two changes in one byte), and what the block adds (the columns show where).']));
+  ], ['This has 2 marks. What two ideas do you need?', 'One mark for what the parity byte check cannot see. One mark for the extra thing the parity block check does that finds it.']));
 
 // ---------------------------------------------------------------- the checksum: predict then reveal
 const CS_SENT = [20, 35, 14], CS_GOT = [20, 36, 14];
@@ -230,12 +230,12 @@ steps.push(selfMarked('exam-checksum', 'Exam Question: Using the Checksum', 'Exa
   cite('0478/13, June 2026, Question 2(d)') + ' A checksum is used to check for errors in the data. A checksum value is calculated from the data before it is transmitted.', [
     { id: 'checksum-use', prompt: 'Describe how this checksum value is used to check for errors in the data after transmission. [3]', marks: 3,
       modelAnswer: 'Any three: the checksum value is sent with the data; the receiving device uses the same algorithm to recalculate the checksum value; the two checksum values are compared; if the checksum values are the same no error has occurred, if they are different an error has occurred.' },
-  ], ['Activity 2 had three steps for the receiver. What were they?', 'Recalculate the checksum, compare the two values, decide: same means no error, different means an error.']));
+  ], ['This has 3 marks. Why does it help to think back to being the receiver in Activity 2?', 'You did each step yourself there. Write each step you did as one mark, in order.']));
 steps.push(selfMarked('exam-match', 'Exam Question: Why a Mismatch Means an Error', 'Exam Question: Why a Mismatch Means an Error',
   cite('0478/13, November 2024, Question 2(f)(ii)') + ' In the checksum error detection method, two values are compared after transmission. If the values do not match, an error is detected.', [
     { id: 'checksum-match', prompt: 'Explain why the values not matching would show an error has occurred. [2]', marks: 2,
       modelAnswer: 'Any two: the checksum is calculated from (using) the data; using the same algorithm on both sides; so if the values are different, the data must be different.' },
-  ], ['If the data did NOT change, could the two values be different?', 'No. The same algorithm on the same data always gives the same value.']));
+  ], ['This has 2 marks. Why is "because they are different" not enough?', 'It repeats the question. Explain where each value comes from, and what a difference must mean.']));
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Parity Blocks and Checksums Drill', 'drill-y10-2-2-l2', 'Plenary: Parity Blocks and Checksums Drill',

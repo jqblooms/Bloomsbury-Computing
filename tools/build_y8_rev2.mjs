@@ -245,7 +245,7 @@ steps.push(checkStep('search-check', 'Check: Linear Search', 'Check: Linear Sear
   { label: 'The user types 6. What is Found after the loop?', answer: word('true'), feedback: 'Check each value in Codes. Does any of them equal 6?' },
   { label: 'The user types 6. What is output?', answer: word('found'), feedback: 'Line 11 checks Found after the loop. Which OUTPUT line runs?' },
   { label: 'The user types 7. What is output?', answer: word('not\\s*found'), feedback: 'Is 7 anywhere in Codes? If nothing matches, what is Found?' },
-], code(CSEARCH, true, true), ['Why does the search check every item, even after a match?', 'The FOR loop always runs from 1 to 4. It does not stop early.']));
+], code(CSEARCH, true, true), ['Codes has 4 items. Why does the FOR line go 1 TO 4?', 'So Index visits every position, from the first item to the last. A smaller end value would skip items.']));
 
 // activity 2: trace a linear search in Trace Tables
 const NUMS2 = [5, 3, 8, 1];
@@ -291,7 +291,7 @@ const PR2SHOWN = PR2.map((l, i) => (i === 7 ? '    ....................' : l));
 steps.push(checkStep('practice-2', 'Practice: Like the Test (2 of 3)', 'Practice: Like the Test (2 of 3)', 'A linear search. Ages holds 12, 15, 11, 14 at index 1 to 4.', [
   { line: true, label: 'Line 8 is missing. Write line 8.', answer: '^\\s*found\\s*(<-|←|<--)\\s*true\\s*$', feedback: 'What should happen to the flag when an item matches?' },
   { label: 'The user types 13. What is output?', answer: word('not\\s*found'), feedback: 'Check each age in turn. Is any of them 13?' },
-], code(PR2SHOWN, true, true), ['Why does line 5 set Found to FALSE before the loop?', 'Nothing has been found yet. Only a match changes it to TRUE.']));
+], code(PR2SHOWN, true, true), ['Why does line 11 check Found after NEXT, not inside the loop?', 'It must wait until every item has been checked. Then it outputs one message, not one for each item.']));
 
 const BAGS = [6, 4, 9, 3];
 const PR3 = ['DECLARE Total : INTEGER', 'DECLARE Index : INTEGER', 'Total <- 0', 'FOR Index <- 1 TO 3', '  Total <- Total + Bags[Index]', 'NEXT Index', 'OUTPUT Total'];
@@ -299,7 +299,7 @@ assert(out(PR3, [], fill('Bags', 'INTEGER', BAGS)) === '19', 'practice 3');
 steps.push(checkStep('practice-3', 'Practice: Like the Test (3 of 3)', 'Practice: Like the Test (3 of 3)', 'Arrays and loops. Read the FOR line carefully.', [
   { label: 'How many times does line 5 run?', answer: num(3) + '|^\\s*3\\s*times?\\s*$', feedback: 'Look at the numbers on the FOR line. Where does Index stop?' },
   { label: 'What is output?', answer: num(19), feedback: 'Add only the values the loop visits. Which index does it stop at?' },
-], arrayTable('Bags', BAGS) + code(PR3, true), ['Bags holds 4 values. Why is Bags[4] not added?', 'The loop stops at 3, so Index is never 4.']));
+], arrayTable('Bags', BAGS) + code(PR3, true), ['A loop says FOR Index &lt;- 5 TO 8. Which index values does it visit? Why?', '5, 6, 7 and 8. Index starts at the first number and stops after the second number.']));
 
 // ---------------------------------------------------------------- plenary
 steps.push({ id: 'plenary', label: 'Plenary: Revision 2 Drill', type: 'embedded-app', appId: 'drill-y8-revision-2', embedContainerId: `${P}-plenary`,

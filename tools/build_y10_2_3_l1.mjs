@@ -133,7 +133,7 @@ steps.push(checkStep('do-now', 'Do Now: Packets (1 of 2)', 'Do Now: Packets (1 o
     { line: true, label: 'Why does every packet need the destination IP address, not just the first packet?',
       answer: '^(?!\\s*(no|not)\\b)(?=.*\\b(different\\s+(routes?|ways?|paths?)|own\\s+(route|way|path)|separate\\w*|independent\\w*|on\\s+(its|their)\\s+own|alone|individual\\w*)\\b)(?=.*\\b(routers?|where|forward\\w*|next|destination|direct\\w*|reach\\w*|deliver\\w*|send\\s+it)\\b).*$',
       feedback: 'Two ideas: how do the packets travel, and what must each router know?' },
-  ], ['Why break the image into packets at all?', 'Small packets can each take the best route, so the network is not blocked by one huge file. If one packet is lost, only that packet is sent again.']));
+  ], ['Why does sending an image as many small packets help if one is lost?', 'Only the lost packet is sent again, not the whole image. That saves time on the network.']));
 steps[steps.length - 1].walkthrough = WT_PACKETS;
 
 // 0478/11 November 2025 Q2(d), which asks for an annotated diagram. Mark scheme (any three): data is sent to the
@@ -194,7 +194,7 @@ steps.push(checkStep('exam-purpose', 'Exam Question: Why Encrypt?', 'Exam Questi
     { line: true, label: 'Why is it safe to send cipher text, even if it is intercepted?',
       answer: '^(?=.*\\b(meaningless|cannot|can.?t|unable|unreadable|scrambl\\w*|nonsense|useless|not\\s+understand\\w*|no\\s+sense)\\b)(?=.*\\b(keys?|decrypt\\w*)\\b).*$',
       feedback: 'What does Eve need to turn it back into plain text?' },
-  ], ['Why does the mark scheme say "cannot be understood", not "cannot be intercepted"?', 'Encryption does not stop anyone copying the data. It stops them understanding it.']));
+  ], ['Why does the mark scheme ask what happens IF the data is intercepted?', 'Encryption does not stop the data being copied. So think about what a copy is worth to the person who took it.']));
 
 // ---------------------------------------------------------------- concept: symmetric, one shared key
 steps.push({ id: 'concept-symmetric', label: 'Symmetric Encryption: One Shared Key',
@@ -286,7 +286,7 @@ steps.push(mcStep('exam-mc', 'Exam Question: Which Statement Is Correct?', 'Exam
   { prompt: 'Eve intercepts cipher text made with symmetric encryption. She knows the algorithm. What else does she need to read it?',
     options: ['The key used to encrypt it', 'The packet numbers', "The receiver's IP address", 'A faster connection'], correct: 0,
     explain: 'The same key encrypts and decrypts. With the key, she can turn the cipher text back into plain text.' },
-], ['Why is "the most secure form of encryption" wrong?', 'The key has to be shared. If it is intercepted on the way, every message can be read.']));
+], ['Why does encryption not stop Eve copying the packets?', 'The packets still pass through routers and cables she can reach. Encryption changes what the data looks like, not where it goes.']));
 
 // ---------------------------------------------------------------- activity 2
 steps.push(embed('activity-2', 'Activity 2: Who Can Read It?', 'drill-y10-2-3-l1-sharing', 'Activity 2: Who Can Read It?',
@@ -299,12 +299,12 @@ steps.push(selfMarked('exam-describe', 'Exam Question: How Symmetric Encryption 
   cite('0478/12, June 2024, Question 2(c)(i)') + ' Data is often encrypted when it is transmitted from one device to another.', [
     { id: 'symmetric-explain', prompt: '(i) Explain how data is encrypted using symmetric encryption. [4]', marks: 4,
       modelAnswer: 'One mark: data is encrypted and decrypted using the same key. Then any three from: plain text is encrypted into cipher text, or cipher text is decrypted into plain text; data is encrypted using an algorithm that uses a key; the key can be generated using an algorithm; the key is transmitted to the receiver.' },
-  ], ['Part (i) has 4 marks. What happens at the sender, and what happens at the receiver?', 'Sender: an algorithm and a key turn plain text into cipher text. Receiver: the same key turns it back. The key must be sent to the receiver.']));
+  ], ['Part (i) has 4 marks. What happens at the sender, and what happens at the receiver?', 'Each mark is one step or one fact. Start at the sender, follow the data to the receiver, and say what each one needs.']));
 steps.push(selfMarked('exam-describe-2', 'Exam Question: How Symmetric Encryption Works (2 of 2)', 'Exam Question: How Symmetric Encryption Works (2 of 2)',
   cite('0478/12, June 2024, Question 2(c)(ii)') + ' Data is often encrypted when it is transmitted from one device to another.', [
     { id: 'encryption-purpose', prompt: '(ii) Give the purpose of encryption. [1]', marks: 1,
       modelAnswer: 'Any one from: to help keep the data secure; to make the data meaningless (if it is intercepted).' },
-  ], ['Why is "to make it meaningless" a good answer even though the data can still be intercepted?', 'Encryption does not stop interception. It stops the intercepted data being understood without the key.']));
+  ], ['Why is "to stop hackers" not the best answer here?', 'Encryption cannot stop anyone copying the data. Say what it does for data that is copied.']));
 
 // ---------------------------------------------------------------- checked practice
 // 0478/11 November 2022 Q4(b)(i). Mark scheme: the data will be meaningless if it is stolen. Parts (b) to (d) are not
@@ -322,7 +322,7 @@ steps.push(checkStep('practice', 'Practice: Symmetric Encryption', 'Practice: Sy
     { line: true, label: 'Why does a longer key make the cipher text harder to crack?',
       answer: '^(?=.*\\b(more|many|lots|huge|billions?|combinations?|possib\\w*|options?|doubl\\w*)\\b)(?=.*\\b(try|trying|tried|tries|guess\\w*|check\\w*|test\\w*|long|longer|time|years|forever|ages)\\b).*$',
       feedback: 'Two ideas: what a longer key does to the number of keys, and what that means for an attacker.' },
-  ], ['Why is part (c) about the key, not the algorithm?', 'The algorithm can be known by everyone. The key is the secret, so it is the weak point.']));
+  ], ['Why is a system only as safe as its weakest part?', 'Someone trying to read the data uses the easiest way in. Strong encryption does not help if another part is easy to get past.']));
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Symmetric Encryption Drill', 'drill-y10-2-3-l1', 'Plenary: Symmetric Encryption Drill',

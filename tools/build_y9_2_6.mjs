@@ -256,7 +256,7 @@ steps.push(mcStep('hinge-2', 'Hinge Question: Choose the Fix', 'Hinge Question: 
   { prompt: 'Which change fixes it?',
     options: ['Change Total + 2 to Total + Count', 'Change TO 4 to TO 5', 'Move Total ← 0 inside the loop', 'Change OUTPUT Total to OUTPUT Count'], correct: 0,
     explain: 'Each pass should add Count (1, 2, 3, 4), not 2. The loop already runs the right number of times.' },
-], ['How can you check your fix before you run it?', 'Trace it: 0 + 1 + 2 + 3 + 4 = 10, which is what it should output.'], codeBlock(ADD2, true)));
+], ['How can you check a fix before you run it?', 'Trace the new program by hand, one line at a time. Its output must match what the program should do.'], codeBlock(ADD2, true)));
 
 // ---------------------------------------------------------------- activity 2: fix the program (code drill)
 steps.push(embed('activity-2', 'Activity 2: Fix the Program', 'drill-y9-2-6-code', 'Activity 2: Fix the Program',
@@ -268,7 +268,7 @@ steps.push(selfMarked('exam-explain', 'Exam-Style Question: Two Kinds of Error',
   'Use the words syntax and logic in your answer.', [
     { id: 'two-kinds', prompt: 'Describe the difference between a syntax error and a logic error. [2]', marks: 2,
       modelAnswer: 'A syntax error breaks the rules of the programming language, so the program will not run. A logic error does not stop the program running, but it gives the wrong result.' },
-  ], ['This question has 2 marks. What do you need to say?', 'One point about a syntax error (breaks the rules, will not run) and one about a logic error (runs, wrong result).']));
+  ], ['This question has 2 marks. How do you plan the answer?', 'Write one point about each kind of error. Use the word syntax in one sentence and logic in the other.']));
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Errors and Trace Tables Drill', 'drill-y9-2-6-errors', 'Plenary: Errors and Trace Tables Drill',

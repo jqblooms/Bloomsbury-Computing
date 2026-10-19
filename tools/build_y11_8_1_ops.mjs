@@ -160,7 +160,7 @@ steps.push(checkStep('check-rel', 'Check: TRUE or FALSE?', 'Check: TRUE or FALSE
   { label: 'Score &lt;&gt; 12', answer: TF(CR[1]), feedback: '&lt;&gt; means not equal to. Is 12 not equal to 12?' },
   { label: 'Score &lt;= 11', answer: TF(CR[2]), feedback: tfFeedback('is 12 less than 11, or equal to 11?') },
   { label: 'Write the operator that means not equal to.', answer: '^\\s*<>\\s*$', feedback: 'Look back at the table: the last row.' },
-], '', ['Why is &lt;&gt; made of two symbols?', 'Not equal means less than or greater than: &lt; and &gt; together.']));
+], '', ['Why can a comparison have only two possible answers?', 'A comparison asks a yes or no question. The program uses the answer to make a decision.']));
 
 // ---------------------------------------------------------------- compare: > and >=
 const CMP = [49, 50, 51].map((m) => [String(m), tf('Mark > 50', { Mark: m }), tf('Mark >= 50', { Mark: m })]);
@@ -183,7 +183,7 @@ steps.push(checkStep('check-bound', 'Check: On the Line', 'Check: On the Line', 
   { label: 'Is Age &gt;= 18 TRUE or FALSE?', answer: TF(CB[1]), feedback: '&gt;= means greater than or equal to. Is 18 equal to 18?' },
   { label: 'Write the condition: Age is 18 or more.', answer: AGE18, line: true, feedback: '"or more" includes 18 itself. Which operator includes the value?' },
   { label: 'Write the condition: Speed is less than 30.', answer: SPEED, line: true, feedback: 'The variable, then the operator, then the number.' },
-], '', ['Why do exam questions often use the value on the line?', 'It is where &gt; and &gt;= give different answers, so it finds the mistake.']));
+], '', ['Why must you read words like "or more" and "less than" carefully?', 'Each phrase matches one operator. One missed word gives the wrong operator.']));
 
 // ---------------------------------------------------------------- activity 1: Trace Tables counting passes
 const MARKS = [50, 38, 72, 49];
@@ -209,7 +209,7 @@ steps.push({ id: 'activity-1', label: 'Activity 1: Trace the Passes', type: 'emb
     answers: trRows,
   },
   content: '<h2 class="lesson-h2">Activity 1: Trace the Passes</h2>' +
-    why('Why does 50 add to Passes, but 49 does not?', '50 &gt;= 50 is TRUE: 50 is equal to 50. 49 &gt;= 50 is FALSE.') +
+    why('Why does Passes start at 0, before the loop?', 'Passes is a count. It starts at 0, then adds 1 for each pass. Any other start would give the wrong count.') +
     `<div id="${P}-embed-1" class="lesson-embed"></div>` });
 
 // ---------------------------------------------------------------- the three logical operators: predict then reveal
@@ -261,7 +261,7 @@ const fixed = tf('Cost <> 0 AND Sell <> 0', { Cost: 5, Sell: 0 }), faulty = tf('
 assert(fixed === 'FALSE' && faulty === 'TRUE', 'line 06: OR lets a zero through, AND does not');
 steps.push({ id: 'exam-profit', label: 'Exam Question: Find the Errors', type: 'self-marked-response', containerId: `${P}-exam-profit`,
   content: '<h2 class="lesson-h2">Exam Question: Find the Errors</h2>' +
-    why('Line 11 uses OR and it is correct. Why is OR wrong on line 06?', 'Line 06 must work out the profit only when both prices are not zero, so it needs AND. Line 11 stops when either price is zero, so OR is right.') +
+    why('Why read the description before you read the code?', 'The description says what the code should do. An error is a line that does something different. Check each line against it.') +
     '<p class="lesson-lead">Cambridge IGCSE 0478/22, March 2024, Question 5(a). An algorithm has been written in pseudocode to calculate the profit when an item is sold. Values for cost price and selling price are input, the profit is calculated (selling price - cost price) and output. The input of zero for either value stops the algorithm.</p>' +
     columns(code(PROFIT, true), `<div id="${P}-exam-profit"></div>`),
   items: [
@@ -277,7 +277,7 @@ steps.push(checkStep('check-write', 'Check: Write the Condition', 'Check: Write 
   { label: 'Mark is from 0 to 100, including 0 and 100.', answer: MARKRANGE, line: true, feedback: 'Between two numbers: two conditions joined with AND. "Including" means the operator includes the value.' },
   { label: 'Day is 6 or Day is 7.', answer: WEEKEND, line: true, feedback: 'Either one is enough. Write Day and = twice.' },
   { label: 'Age is 25. Is Age &gt;= 13 AND Age &lt;= 19 TRUE or FALSE?', answer: TF(CW), feedback: 'Work out each side first. AND needs both.' },
-], '', ['Why must you write Day twice in part (b)?', 'Each side of OR is a whole condition: a variable, an operator and a value.']));
+], '', ['Why do exam questions give you the variable names to use?', 'The marks are for the exact names. A condition with a different name checks a different variable.']));
 
 // ---------------------------------------------------------------- activity 2: write the IF (code drill)
 steps.push(embed('activity-2', 'Activity 2: Write the IF', 'drill-y11-8-1-ops-code', 'Activity 2: Write the IF',
