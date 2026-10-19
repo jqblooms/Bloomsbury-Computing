@@ -151,7 +151,7 @@
    "type": "embedded-app",
    "appId": "drill-y10-2-3-l1-shift",
    "embedContainerId": "y10-23l1-activity-1",
-   "content": "<h2 class=\"lesson-h2\">Activity 1: Encrypt, Decrypt, Crack</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why could Eve crack these messages without the key?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>There are only 25 keys. She can try every one until a real word appears.</p></div></details><p class=\"lesson-lead\">Encrypt and decrypt with the key. Then be Eve: no key, only cipher text. New words and keys every time. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l1-activity-1\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Encrypt, Decrypt, Crack</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Ben decrypts with the key and gets the message back every time. Why does moving back by the key always work?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Encrypting moved every letter forward by the key. Moving back by the same number undoes each move exactly.</p></div></details><p class=\"lesson-lead\">Encrypt and decrypt with the key. Then be Eve: no key, only cipher text. New words and keys every time. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l1-activity-1\"></div>"
   },
   {
    "id": "compare-length",

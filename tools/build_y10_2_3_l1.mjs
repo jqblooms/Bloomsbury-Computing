@@ -229,7 +229,7 @@ steps.push(checkStep('check-shift', 'Check: Encrypt and Decrypt', 'Check: Encryp
 // ---------------------------------------------------------------- activity 1
 steps.push(embed('activity-1', 'Activity 1: Encrypt, Decrypt, Crack', 'drill-y10-2-3-l1-shift', 'Activity 1: Encrypt, Decrypt, Crack',
   'Encrypt and decrypt with the key. Then be Eve: no key, only cipher text. New words and keys every time. Stuck? Switch on <strong>I need help</strong>.',
-  ['Why could Eve crack these messages without the key?', 'There are only 25 keys. She can try every one until a real word appears.']));
+  ['Ben decrypts with the key and gets the message back every time. Why does moving back by the key always work?', 'Encrypting moved every letter forward by the key. Moving back by the same number undoes each move exactly.']));
 
 // ---------------------------------------------------------------- compare: 25 keys and a 128-bit key
 const BIG = 2n ** 128n, PER_YEAR = 1000000000n * 31557600n, YEARS = BIG / PER_YEAR;
