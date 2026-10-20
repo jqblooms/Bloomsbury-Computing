@@ -69,28 +69,24 @@
     "title": "Walk me through it: describe a data type",
     "steps": [
      {
-      "text": "A similar question: say what is meant by <strong>INTEGER</strong> and <strong>REAL</strong>, and give an example of each.",
-      "visual": "<div class=\"wt-big\">INTEGER &nbsp; REAL</div>"
+      "text": "Look at some values stored as each type. The type is what they have in common.",
+      "visual": "<div class=\"wt-big\">STRING: \"Cat\" &nbsp; \"Hi there\" &nbsp; \"A1-B2\"</div><div class=\"wt-big\">CHAR: 'Q' &nbsp; '7' &nbsp; '#'</div>"
      },
      {
-      "text": "Say what kind of value the type holds. An INTEGER holds a <strong>whole number</strong>.",
-      "visual": "<div class=\"wt-big\">INTEGER: <span class=\"wt-hl\">a whole number</span></div>"
+      "text": "Count the characters in each STRING value. A space counts too.",
+      "visual": "<div class=\"wt-big\">\"Cat\" = <span class=\"wt-hl\">3</span> &nbsp; \"Hi there\" = <span class=\"wt-hl\">8</span> &nbsp; \"A1-B2\" = <span class=\"wt-hl\">5</span></div>"
      },
      {
-      "text": "Give an example that fits this type: <strong>27</strong>.",
-      "visual": "<div class=\"wt-big\">INTEGER: a whole number. Example: <span class=\"wt-hl\">27</span></div>"
+      "text": "Now count the characters in each CHAR value. What do you notice?",
+      "visual": "<div class=\"wt-big\">'Q' = <span class=\"wt-hl\">1</span> &nbsp; '7' = <span class=\"wt-hl\">1</span> &nbsp; '#' = <span class=\"wt-hl\">1</span></div>"
      },
      {
-      "text": "A REAL holds a number with a decimal point. Example: <strong>3.5</strong>.",
-      "visual": "<div class=\"wt-big\">REAL: a number with a decimal point. Example: <span class=\"wt-hl\">3.5</span></div>"
+      "text": "Look at what kinds of character appear: letters, digits, symbols and spaces.",
+      "visual": "<div class=\"wt-big\"><span class=\"wt-hl\">C</span>at &nbsp; A<span class=\"wt-hl\">1</span><span class=\"wt-hl\">-</span>B2 &nbsp; '<span class=\"wt-hl\">#</span>'</div>"
      },
      {
-      "text": "Check each example: 3.5 cannot be an INTEGER, so it shows what a REAL is.",
-      "visual": "<div class=\"wt-big\">3.5 &rarr; <span class=\"wt-hl\">REAL only</span></div>"
-     },
-     {
-      "text": "Now do your two types the same way: what does it hold? Then one example.",
-      "visual": "<div class=\"wt-big\">what it holds &rarr; one example</div>"
+      "text": "Now write each answer: the number of characters the type can hold, and what kinds. Then give your own example in quotes.",
+      "visual": "<div class=\"wt-big\">number of characters &rarr; what kinds &rarr; your own example</div>"
      }
     ]
    }
@@ -132,7 +128,7 @@
      "id": "length-six",
      "prompt": "Write the pseudocode to make sure that the product code is six characters in length.",
      "marks": 2,
-     "modelAnswer": "REPEAT<br>&nbsp;&nbsp;INPUT Product<br>UNTIL LENGTH(Product) = 6<br>One mark for LENGTH(Product), one mark for testing it against 6 so the code is input again until it fits. A WHILE LENGTH(Product) &lt;&gt; 6 DO loop is also correct."
+     "modelAnswer": "IF LENGTH(Product) = 6 THEN<br>1 mark: LENGTH(Product). 1 mark: testing it against 6. A loop such as UNTIL LENGTH(Product) = 6 also gets both marks."
     }
    ]
   },
@@ -170,7 +166,7 @@
      "id": "starts-pd",
      "prompt": "Write the pseudocode to make sure that the first two characters of the product code are \"PD\".",
      "marks": 2,
-     "modelAnswer": "REPEAT<br>&nbsp;&nbsp;INPUT Product<br>UNTIL SUBSTRING(Product, 1, 2) = \"PD\"<br>One mark for SUBSTRING(Product, 1, 2), one mark for testing it against \"PD\" so the code is input again until it starts with PD."
+     "modelAnswer": "IF SUBSTRING(Product, 1, 2) = \"PD\" THEN<br>1 mark: SUBSTRING(Product, 1, 2). 1 mark: testing it against \"PD\". A loop such as UNTIL SUBSTRING(Product, 1, 2) = \"PD\" also gets both marks."
     }
    ]
   },

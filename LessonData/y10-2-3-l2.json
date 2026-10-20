@@ -1,0 +1,462 @@
+{
+ "id": "y10-2-3-l2",
+ "label": "2.3 L2: Asymmetric Encryption",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Encryption Words (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l2-do-now",
+   "validatorKey": "y10_23l2_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Encryption Words (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can you not decide a gap by looking at that gap alone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The words around a gap say what kind of word fits.</p></div></details><p class=\"lesson-lead\">From 2.3 L1. Adapted from Cambridge IGCSE 0478/11, June 2025, Question 6(a). Use terms from the list. Some will not be used.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:6px 0;font-size:17px;line-height:1.7\">Data is encrypted using an encryption key. This is a type of <b>(1)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> that scrambles the <b>(2)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> and turns it into <b>(3)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> . This makes the data <b>(4)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> .</p><div style=\"display:flex;flex-wrap:wrap;gap:6px;margin:6px 0\"><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">algorithm</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">binary</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">cipher text</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">compression</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">error</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">hardware</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">hexadecimal</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">meaningless</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">plain text</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">readable</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">transmission</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">unreadable</span></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-do-now-a\">(a) Gap 1 [1]</label><input id=\"y10-23l2-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Encryption Words (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-do-now-b\">(b) Gap 2 [1]</label><input id=\"y10-23l2-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Encryption Words (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-do-now-c\">(c) Gap 3 [1]</label><input id=\"y10-23l2-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Encryption Words (1 of 2) part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-do-now-d\">(d) Gap 4 [1]</label><input id=\"y10-23l2-do-now-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-d\" aria-label=\"Do Now: Encryption Words (1 of 2) part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l2-do-now-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-23l2-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: filling the gaps",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Fill the gaps from the list.",
+      "visual": "<p style=\"margin:6px 0;font-size:17px;line-height:1.7\">Data is broken into <b>(1)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> . Each one is sent across a <b>(2)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> .</p><div style=\"display:flex;flex-wrap:wrap;gap:6px;margin:6px 0\"><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">packets</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">network</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">header</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">binary</span></div>"
+     },
+     {
+      "text": "Read the whole paragraph first. Do not fill any gap yet.",
+      "visual": "<div class=\"wt-note\">read it all first</div>"
+     },
+     {
+      "text": "For each gap, ask: does it need a thing, or a describing word?",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">broken into <strong>a thing</strong></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">sent across <strong>a thing</strong></div>"
+     },
+     {
+      "text": "Gap 1: data is broken into small parts. In the list, that is packets. Cross it off.",
+      "visual": "<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin:6px 0\"><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\"><span class=\"wt-hl\">packets</span></span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">network</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">header</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">binary</span></div>"
+     },
+     {
+      "text": "Gap 2: the packets are sent across something. That is network.",
+      "visual": "<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin:6px 0\"><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\"><span class=\"wt-hl\">packets</span></span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\"><span class=\"wt-hl\">network</span></span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">header</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">binary</span></div>"
+     },
+     {
+      "text": "Read the paragraph again with the words in. It must make sense.",
+      "visual": "<p style=\"margin:6px 0;font-size:17px;line-height:1.7\">Data is broken into <span class=\"wt-hl\">packets</span> . Each one is sent across a <span class=\"wt-hl\">network</span> .</p>"
+     },
+     {
+      "text": "For your question, gap 4 needs a describing word for scrambled data. Find the describing words in the list. Test each one in the sentence, and keep the one the exam uses for data with no meaning.",
+      "visual": "<div class=\"wt-note\">test each describing word</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Packets (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l2-do-now-2",
+   "validatorKey": "y10_23l2_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Packets (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a file sent as many small packets, not one big block?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If one packet is lost, only that packet is sent again.</p></div></details><p class=\"lesson-lead\">From 2.1 L1. Parts (a) and (b): Cambridge IGCSE 0478/12, March 2024, Question 7(b)(i) and (ii). The data is transmitted using packet switching.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-do-now-2-a\">(a) Identify two items of data contained in a packet header. [2]</label><input id=\"y10-23l2-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Packets (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-do-now-2-b\">(b) Give the purpose of a router in the packet-switching process. [1]</label><input id=\"y10-23l2-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Packets (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l2-do-now-2-c\">(c) Why can packets of one file arrive in a different order? [1]</label><input id=\"y10-23l2-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Packets (2 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l2-do-now-2-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-23l2-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: the packet header",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> A parcel is sent in three boxes. Name two things written on each label.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Label: ? and ?</div>"
+     },
+     {
+      "text": "The van driver never opens a box. Everything needed is written on the outside.",
+      "visual": "<div class=\"wt-note\">read the outside only</div>"
+     },
+     {
+      "text": "Who is it for? The label says: <strong>To: 12 Hill Road</strong>. The driver needs this first.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">To: 12 Hill Road</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">From: ?</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Box ? of 3</div>"
+     },
+     {
+      "text": "Who sent it, in case it must go back? <strong>From: 4 Park Lane</strong>. Which box is it? <strong>Box 2 of 3</strong>, so the boxes can be put in order.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">To: 12 Hill Road</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">From: 4 Park Lane</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">Box 2 of 3</span></div>"
+     },
+     {
+      "text": "A packet header is the label of a packet. It holds the same three kinds of thing. Give two of them, in network words, for part (a).",
+      "visual": "<div style=\"display:flex;gap:4px\"><span class=\"wt-hl\" style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">header: ?</span><span style=\"flex:2;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">payload</span><span style=\"flex:1;padding:10px;border-radius:8px;background:var(--surface-3);text-align:center;font-weight:700\">trailer</span></div>"
+     },
+     {
+      "text": "<strong>The router.</strong> A different case: a sat nav reads where you want to end up. At every junction it picks the next road for you.",
+      "visual": "<div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Start</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">junction</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">junction</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">End</span></div>"
+     },
+     {
+      "text": "A router does that job for each packet, at each junction of the network. Write that job for part (b).",
+      "visual": "<div class=\"wt-note\"><span class=\"wt-hl\">at each junction</span></div>"
+     },
+     {
+      "text": "<strong>Why a different order?</strong> A different case: three friends leave school at 3 pm. One takes the main road, one the park, one the bus.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Main road: busy today</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Park: quiet</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Bus: stops a lot</div>"
+     },
+     {
+      "text": "They each went by a different road, and some roads are slower. So they get home in a different order from the one they left in. Use the same idea for part (c).",
+      "visual": "<div class=\"wt-note\">each by its own road</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-3-l2-ext",
+   "embedContainerId": "y10-23l2-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 2.1 Data Transmission, 2.2 Methods of Error Detection and 2.3 L1 Symmetric Encryption. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l2-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Asymmetric Encryption",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">2.3 Encryption</p><h2 class=\"lesson-h2\">Asymmetric Encryption</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> how <strong>two different keys</strong> fix the weak point of symmetric encryption.</li><li><strong>You already know:</strong> plain text, cipher text, the key, and symmetric encryption with <strong>one shared key</strong>.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Last lesson ended on a weak point of symmetric encryption. What was it, and why does it matter?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The key has to be shared. If it is intercepted on the way, whoever has it can decrypt every message.</p></div></details>"
+  },
+  {
+   "id": "concept-problem",
+   "label": "The Problem: People Who Have Never Met",
+   "content": "<h2 class=\"lesson-h2\">The Problem: People Who Have Never Met</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Ana buys from a shop in another country. She has never met anyone there. How can they agree a symmetric key that Eve never sees? Why is that hard?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>They cannot meet in person, so the key must be <strong>sent</strong> across the network.</p><p>Anything sent can be <strong>intercepted</strong>. If Eve gets the key, she can decrypt everything.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Symmetric: the <strong>same key</strong> encrypts and decrypts, so the receiver must be <strong>sent</strong> the key.</li><li>We send data to shops, banks and websites we have <strong>never met</strong>.</li><li>Any key sent across a network can be <strong>intercepted</strong>.</li><li>Today's question: can we encrypt with a key that is <strong>safe to send</strong>?</li></ul></div><div><div style=\"display:grid;gap:12px;text-align:center\"><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ana</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">key ?</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Shop</span></div><div><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Eve intercepts everything sent</span></div><div><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">No safe way to send the key</span></div></div></div></div>"
+  },
+  {
+   "id": "concept-padlock",
+   "label": "A Padlock Anyone Can Close",
+   "content": "<h2 class=\"lesson-h2\">A Padlock Anyone Can Close</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Ben posts open padlocks to anyone who asks. He keeps the only key. Ana locks a box for Ben with one. Eve has a padlock too. Can Eve open the box? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>No.</strong> A padlock closes without a key, but only Ben's key opens it.</p><p>Having a padlock lets Eve <strong>lock</strong> boxes, not <strong>open</strong> them.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>Anyone</strong> can close an open padlock. Closing needs no secret.</li><li>Only the <strong>key</strong> opens it, and Ben never sends his key.</li><li>So it does not matter who sees the padlock on the way.</li><li>Next: the same idea with two encryption keys.</li></ul></div><div><div style=\"display:grid;gap:10px;text-align:center\"><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ben</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">open padlock</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ana</span></div><div><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Eve sees the padlock: no problem</span></div><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ana locks the box</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">locked box</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Ben opens it with his key</span></div><div><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Eve sees the locked box: cannot open it</span></div></div></div></div>"
+  },
+  {
+   "id": "concept-asymmetric",
+   "label": "Asymmetric Encryption: Public Key and Private Key",
+   "content": "<h2 class=\"lesson-h2\">Asymmetric Encryption: Public Key and Private Key</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Ben sends his public key to Ana. Eve copies it on the way. Can Eve decrypt Ana's message to Ben? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>No.</strong> The public key only <strong>encrypts</strong>. It cannot decrypt.</p><p>Decrypting needs Ben's <strong>private key</strong>, and that never left Ben's computer.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>Asymmetric</strong> encryption uses <strong>two different keys</strong>: a <strong>public key</strong> and a <strong>private key</strong>.</li><li>Ben makes both keys. They work together.</li><li>The <strong>public key encrypts</strong>. Ben gives it to anyone, even Eve.</li><li>The <strong>private key decrypts</strong>. Ben keeps it. It is <strong>never sent</strong>.</li><li>Data encrypted with Ben's public key can only be decrypted with Ben's private key.</li></ul></div><div><div style=\"display:grid;gap:10px;text-align:center\"><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ben</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">Ben's public key</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">Ana</span></div><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">plain text</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">Ben's public key</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">cipher text</span></div><div style=\"display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">cipher text</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Ben's private key</span><b style=\"margin:0 6px\">&rarr;</b><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;\">plain text</span></div><div><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Eve has the public key and the cipher text: meaningless</span></div></div></div></div>"
+  },
+  {
+   "id": "exam-gaps",
+   "label": "Exam Question: Complete the Paragraph",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l2-exam-gaps",
+   "validatorKey": "y10_23l2_exam_gaps",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Complete the Paragraph</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does an exam list include words like symmetric and serial key that are not used?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The wrong words are there on purpose. You must know what each word means, not just pick one that sounds familiar.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2024, Question 7. Data is encrypted to keep it safe during transmission. Complete the paragraph about asymmetric encryption. Use the terms from the list. Some of the terms will not be used. You should only use a term once.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:6px 0;font-size:17px;line-height:1.7\"><b>(1)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> is encrypted into <b>(2)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> using a <b>(3)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> . The encrypted data is then transmitted from the sender to the receiver. The encrypted data is then decrypted using a <b>(4)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> .</p><div style=\"display:flex;flex-wrap:wrap;gap:6px;margin:6px 0\"><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">asymmetric</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">certificate</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">cipher text</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">decrypted</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">encrypted</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">parallel key</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">plain text</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">private key</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">protected</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">public key</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">serial key</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">symmetric</span></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-exam-gaps-a\">(a) Gap 1 [1]</label><input id=\"y10-23l2-exam-gaps-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-a\" aria-label=\"Exam Question: Complete the Paragraph part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-exam-gaps-b\">(b) Gap 2 [1]</label><input id=\"y10-23l2-exam-gaps-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-b\" aria-label=\"Exam Question: Complete the Paragraph part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-exam-gaps-c\">(c) Gap 3 [1]</label><input id=\"y10-23l2-exam-gaps-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-c\" aria-label=\"Exam Question: Complete the Paragraph part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-exam-gaps-d\">(d) Gap 4 [1]</label><input id=\"y10-23l2-exam-gaps-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-d\" aria-label=\"Exam Question: Complete the Paragraph part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l2-exam-gaps-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-23l2-exam-gaps-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "compare-intercept",
+   "label": "Compare: Eve Intercepts the Key",
+   "content": "<h2 class=\"lesson-h2\">Compare: Eve Intercepts the Key</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both times, Eve intercepts the key that is sent and then the cipher text. Predict: in which case can she read the message? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Left: the key that was sent also <strong>decrypts</strong>, so Eve reads the message.</p><p>Right: the key that was sent only <strong>encrypts</strong>. The key that decrypts was never sent.</p></div></details><div style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start\"><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>Symmetric</strong></p><p style=\"margin:0;font-size:17px;line-height:1.6\">Ana sends Ben the shared key.<br>Eve intercepts: <strong>the key + cipher text</strong><br>The same key decrypts.</p><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Eve reads it</span></p></div><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>Asymmetric</strong></p><p style=\"margin:0;font-size:17px;line-height:1.6\">Ben sends Ana his public key.<br>Eve intercepts: <strong>public key + cipher text</strong><br>The public key cannot decrypt.</p><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Meaningless to Eve</span></p></div></div><ul class=\"lesson-facts\"><li>Eve intercepted everything that was sent, both times.</li><li>Asymmetric never sends the key that <strong>decrypts</strong>.</li></ul>"
+  },
+  {
+   "id": "compare-whose",
+   "label": "Compare: Ben's Public Key and Chen's Public Key",
+   "content": "<h2 class=\"lesson-h2\">Compare: Ben's Public Key and Chen's Public Key</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Ana writes to Ben. The first time she encrypts with Ben's public key. The second time she uses Chen's public key by mistake. Predict: can Ben read each one? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>First: <strong>yes</strong>. Ben's private key matches Ben's public key.</p><p>Second: <strong>no</strong>. Only Chen's private key can decrypt it, and only Chen has that.</p></div></details><div style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start\"><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>Encrypted with Ben's public key</strong></p><p style=\"margin:0;font-size:17px;line-height:1.6\">Sent to Ben.<br>Ben uses <strong>Ben's private key</strong>.<br>The keys match.</p><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--good);border:2px solid var(--good-line)\">Ben reads it</span></p></div><div style=\"padding:10px 14px;border-radius:10px;background:var(--surface-2)\"><p style=\"margin:0 0 6px;text-align:center\"><strong>Encrypted with Chen's public key</strong></p><p style=\"margin:0;font-size:17px;line-height:1.6\">Sent to Ben.<br>Ben uses <strong>Ben's private key</strong>.<br>The keys do not match.</p><p style=\"margin:8px 0 0;text-align:center\"><span style=\"display:inline-block;padding:7px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;color:var(--bad);border:2px solid var(--bad-line)\">Meaningless to Ben</span></p></div></div><ul class=\"lesson-facts\"><li>Everyone has their <strong>own</strong> public key and private key.</li><li>Encrypt with the public key of the person who will <strong>read</strong> the message.</li></ul>"
+  },
+  {
+   "id": "check-keys",
+   "label": "Check: Which Key?",
+   "type": "multiple-choice",
+   "containerId": "y10-23l2-check-keys",
+   "content": "<h2 class=\"lesson-h2\">Check: Which Key?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does every person make their own two keys, rather than everyone sharing one private key?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If everyone had the same private key, anyone could decrypt anyone's messages. A private key is only safe if one person has it.</p></div></details><p class=\"lesson-lead\">Choose one answer for each.</p><div id=\"y10-23l2-check-keys\"></div>",
+   "items": [
+    {
+     "prompt": "Ana sends Ben a message using asymmetric encryption. Which key does Ana use to encrypt it?",
+     "options": [
+      "Ben's private key",
+      "Ben's public key",
+      "Ana's private key",
+      "A key that Ana and Ben share"
+     ],
+     "correct": 1,
+     "explain": "Ana encrypts with Ben's public key, so only Ben's private key can decrypt it."
+    },
+    {
+     "prompt": "Eve intercepts Ben's public key and the cipher text. Why can she not read the message?",
+     "options": [
+      "The cipher text is too long",
+      "She does not know the algorithm",
+      "The public key cannot decrypt it",
+      "The public key was sent first"
+     ],
+     "correct": 2,
+     "explain": "The public key only encrypts. Decrypting needs Ben's private key, which was never sent."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Which Key?",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-3-l2-keys",
+   "embedContainerId": "y10-23l2-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Which Key?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do you always need to say WHOSE key, not just \"the public key\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Everyone has their own public key and private key. A key only works with its own partner key.</p></div></details><p class=\"lesson-lead\">Who encrypts, who decrypts, and with whose key? Then decide who can read each message. New names every time. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l2-activity-1\"></div>"
+  },
+  {
+   "id": "exam-gaps-2",
+   "label": "Exam Question: Asymmetric Encryption",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l2-exam-gaps-2",
+   "validatorKey": "y10_23l2_exam_gaps_2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Asymmetric Encryption</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check that a sentence still makes sense after each gap is filled?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A word can look right alone but give the sentence the wrong meaning.</p></div></details><p class=\"lesson-lead\">Parts (a) to (c): last four gaps of Cambridge IGCSE 0478/11, June 2025, Question 6(a). You may use a term more than once.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:6px 0;font-size:17px;line-height:1.7\">A <b>(1)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> key is used to encrypt the data. This key cannot be used to decrypt the data. A <b>(2)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> key is used to decrypt the data. Any device is able to request the <b>(3)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> key, but only your device knows the <b>(4)</b>&nbsp;<span style=\"display:inline-block;min-width:70px;border-bottom:2px solid var(--ink-2, currentColor)\">&nbsp;</span> key.</p><div style=\"display:flex;flex-wrap:wrap;gap:6px;margin:6px 0\"><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">algorithm</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">binary</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">cipher text</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">compression</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">error</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">hardware</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">hexadecimal</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">meaningless</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">plain text</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">private</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">public</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">readable</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">transmission</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">unreadable</span></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-exam-gaps-2-a\">(a) Gaps 1 and 2: type both words, in order. [2]</label><input id=\"y10-23l2-exam-gaps-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-2-a\" aria-label=\"Exam Question: Asymmetric Encryption part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-exam-gaps-2-b\">(b) Gap 3 [1]</label><input id=\"y10-23l2-exam-gaps-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-2-b\" aria-label=\"Exam Question: Asymmetric Encryption part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-exam-gaps-2-c\">(c) Gap 4 [1]</label><input id=\"y10-23l2-exam-gaps-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-2-c\" aria-label=\"Exam Question: Asymmetric Encryption part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l2-exam-gaps-2-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-23l2-exam-gaps-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "compare-methods",
+   "label": "Compare: Symmetric and Asymmetric",
+   "content": "<h2 class=\"lesson-h2\">Compare: Symmetric and Asymmetric</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: Eve can intercept every message, including any key that is sent. Which method still keeps the data safe? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p><strong>Asymmetric.</strong> The only key it sends is the public key, and that cannot decrypt.</p><p>Symmetric must send the key that decrypts, so Eve could get it.</p></div></details><table class=\"donow-table\" style=\"margin:0 auto;width:100%\"><tr><th></th><th style=\"padding:6px 10px;text-align:left\">Symmetric</th><th style=\"padding:6px 10px;text-align:left\">Asymmetric</th></tr><tr><th style=\"padding:6px 10px;text-align:left;font-size:16px\">Keys</th><td style=\"padding:6px 10px;font-size:16px\">One shared key</td><td style=\"padding:6px 10px;font-size:16px\">Two keys: a public key and a private key</td></tr><tr><th style=\"padding:6px 10px;text-align:left;font-size:16px\">Encrypt with</th><td style=\"padding:6px 10px;font-size:16px\">The shared key</td><td style=\"padding:6px 10px;font-size:16px\">The receiver's public key</td></tr><tr><th style=\"padding:6px 10px;text-align:left;font-size:16px\">Decrypt with</th><td style=\"padding:6px 10px;font-size:16px\">The same key</td><td style=\"padding:6px 10px;font-size:16px\">The receiver's private key: a different key</td></tr><tr><th style=\"padding:6px 10px;text-align:left;font-size:16px\">Is the key that decrypts sent?</th><td style=\"padding:6px 10px;font-size:16px\">Yes: it must reach the receiver</td><td style=\"padding:6px 10px;font-size:16px\">No: it is never sent</td></tr></table><ul class=\"lesson-facts\"><li><strong>The same in both:</strong> a key is used, plain text becomes cipher text, intercepted data is meaningless.</li><li>Asymmetric is <strong>more secure</strong>: there is no key exchange to intercept.</li></ul>"
+  },
+  {
+   "id": "exam-similar",
+   "label": "Exam Question: The Same in Both",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l2-exam-similar",
+   "validatorKey": "y10_23l2_exam_similar",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Same in Both</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must a similarity be true of BOTH methods, not just one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A similarity is a fact that holds for each one. Test your idea against symmetric, then against asymmetric.</p></div></details><p class=\"lesson-lead\">Parts (a) and (b): Cambridge IGCSE 0478/13, November 2024, Question 2(g)(i) and (ii). An employee has a report that they need to email to their employer. The email data is encrypted using asymmetric encryption before it is sent. Part (c): Cambridge IGCSE 0478/11, June 2025, Question 6(b).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l2-exam-similar-a\">(a) Give one reason why the email data is encrypted. [1]</label><input id=\"y10-23l2-exam-similar-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-similar-a\" aria-label=\"Exam Question: The Same in Both part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l2-exam-similar-b\">(b) Give one similarity between symmetric encryption and asymmetric encryption. [1]</label><input id=\"y10-23l2-exam-similar-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-similar-b\" aria-label=\"Exam Question: The Same in Both part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l2-exam-similar-c\">(c) Give one reason why a person would use asymmetric encryption instead of symmetric encryption. [1]</label><input id=\"y10-23l2-exam-similar-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-similar-c\" aria-label=\"Exam Question: The Same in Both part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l2-exam-similar-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-23l2-exam-similar-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-differences",
+   "label": "Exam Question: Two Differences",
+   "type": "self-marked-response",
+   "containerId": "y10-23l2-exam-differences",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Two Differences</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a good difference name both methods in one sentence?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The mark is for the contrast. Say what one method does, then \"whereas\", then what the other does instead.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2024, Question 2(g)(iii). The email data is encrypted using asymmetric encryption before it is sent.</p><div id=\"y10-23l2-exam-differences\"></div>",
+   "items": [
+    {
+     "id": "two-differences",
+     "prompt": "(iii) Give two differences between symmetric encryption and asymmetric encryption.",
+     "marks": 2,
+     "modelAnswer": "Any two from: symmetric uses one key, whereas asymmetric uses two keys (public and private); symmetric can send the key with the data, whereas asymmetric does not; symmetric decrypts with the same key, whereas asymmetric decrypts with a different key; symmetric is less secure than asymmetric."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Symmetric or Asymmetric?",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-3-l2-compare",
+   "embedContainerId": "y10-23l2-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Symmetric or Asymmetric?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it useful to test a statement against both methods?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Some statements are true for one method only. Others are true for both. Testing each one shows which.</p></div></details><p class=\"lesson-lead\">Decide which method each statement is about. Then decide who can read each message, and explain why. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l2-activity-2\"></div>"
+  },
+  {
+   "id": "exam-describe",
+   "label": "Exam Question: Describe the Differences",
+   "type": "self-marked-response",
+   "containerId": "y10-23l2-exam-describe",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Describe the Differences</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why plan two facts about each method before you write?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark is one fact, so two facts about each method cover four marks.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2024, Question 7(a)(ii). Data is transmitted using the internet. The data is encrypted before transmission.</p><div id=\"y10-23l2-exam-describe\"></div>",
+   "items": [
+    {
+     "id": "describe-differences",
+     "prompt": "(ii) Describe the differences between symmetric and asymmetric encryption.",
+     "marks": 4,
+     "modelAnswer": "Four from: symmetric has a shared key ... to encrypt and decrypt; both the sender and receiver know the key; asymmetric has different keys, a public key and a private key; ... the public key encrypts the data and the private key decrypts it; anyone can know the public key, but only those intended know the private key."
+    }
+   ]
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Asymmetric Encryption",
+   "type": "short-answer-validation",
+   "validatorId": "y10-23l2-practice",
+   "validatorKey": "y10_23l2_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Asymmetric Encryption</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do exam answers about keys say whose key it is?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each person has their own two keys. Naming the owner shows exactly which key you mean.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/11, November 2025, Question 2(e)(ii). The image data is encrypted using symmetric encryption.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-practice-a\">(a) Give one other type of encryption that could be used. [1]</label><input id=\"y10-23l2-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Asymmetric Encryption part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-23l2-practice-b\">(b) Dara wants anyone to be able to send her secret messages. Which of her two keys does she give out? [1]</label><input id=\"y10-23l2-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Asymmetric Encryption part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l2-practice-c\">(c) Why is it safe for Dara to give that key to anyone, even Eve? [1]</label><input id=\"y10-23l2-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Asymmetric Encryption part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-23l2-practice-d\">(d) Ana encrypts a message to Ben, but uses Chen's public key by mistake. Why can Ben not read it? [1]</label><input id=\"y10-23l2-practice-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-d\" aria-label=\"Practice: Asymmetric Encryption part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-23l2-practice-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-23l2-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Asymmetric Encryption Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-3-l2",
+   "embedContainerId": "y10-23l2-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Asymmetric Encryption Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new names and new cases every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can choose the right key for anyone, you really understand how the two keys work.</p></div></details><p class=\"lesson-lead\">Why two keys, which key does what, who can read it, and how symmetric and asymmetric compare. Your progress is saved.</p><div id=\"y10-23l2-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_23l2_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?algorithms?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which word in the list is a set of steps?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?plain\\s*-?\\s*text\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "What goes in, before it is scrambled?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(ciph|cyph)er\\s*-?\\s*text\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "What comes out, after it is scrambled?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*meaningless\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Use the word from the list that the exam uses for scrambled data."
+   }
+  ],
+  "y10_23l2_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\bpayload\\b)(?:(?=.*\\b(destination|receiver\\W?s?|recipient\\W?s?)\\b)(?=.*\\b(sender\\W?s?|senders|source|origin\\w*|from)\\b)(?=.*\\b(address\\w*|ip)\\b)|(?=.*\\b(destination|receiver\\W?s?|recipient\\W?s?)\\b)(?=.*\\b(address\\w*|ip)\\b)(?=.*(\\b(packet|sequence)\\W?s?\\s+(number|no)\\b|\\bnumber\\s+of\\s+(the\\s+|each\\s+)?packet))|(?=.*\\b(sender\\W?s?|senders|source|origin\\w*|from)\\b)(?=.*\\b(address\\w*|ip)\\b)(?=.*(\\b(packet|sequence)\\W?s?\\s+(number|no)\\b|\\bnumber\\s+of\\s+(the\\s+|each\\s+)?packet))).*$",
+     "flags": "i"
+    },
+    "feedback": "Two items: think about what a router needs, and what the receiver needs to rebuild the file.",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(route[sd]?|routing|paths?|forward\\w*|direct\\w*|destination|towards|next\\s+(device|router|hop|node)|way)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "What does a router decide for each packet?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(routes?|paths?|ways?)\\b)(?=.*\\b(different|own|separate\\w*|independent\\w*|various|longer|shorter|slower|faster|busier|quicker|another|each|many|other)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "How do the packets cross the network?"
+   }
+  ],
+  "y10_23l2_exam_gaps": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?plain\\s*-?\\s*text\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "What is the data called before it is encrypted?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(ciph|cyph)er\\s*-?\\s*text\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "What is the data called after it is encrypted?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(a\\s+|the\\s+)?public(\\s*-?\\s*key)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which key can anyone have?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(a\\s+|the\\s+)?private(\\s*-?\\s*key)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which key does only the receiver have?"
+   }
+  ],
+  "y10_23l2_exam_gaps_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(a\\s+)?(public(\\s*-?\\s*key)?(\\s*(,|and|then|&|/|\\s)\\s*)(a\\s+)?private|private(\\s*-?\\s*key)?(\\s*(,|and|then|&|/|\\s)\\s*)(a\\s+)?public)(\\s*-?\\s*key)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Two different kinds of key. Which one encrypts, and which one decrypts?",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?public(\\s*-?\\s*key)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which key can any device ask for?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?private(\\s*-?\\s*key)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which key does only your device know?"
+   }
+  ],
+  "y10_23l2_exam_similar": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!\\s*(no|not)\\b)(?=.*\\b(secur\\w*|safe\\w*|sensitive|confidential|private|personal|secret|meaningless|unreadable|cannot\\s+be\\s+(read|understood)|can.?t\\s+be\\s+(read|understood)|protect\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "What kind of data is a work report, and what does encryption do to it?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(same|one|single|shared|two|public|private)\\s+keys?\\b)(?!.*\\b(sen[dt]\\w*|shar\\w*)\\b)(?=.*\\b(both|each|they|all|same|similar\\w*|either)\\b|.*\\buses?\\b)(?=.*\\b(keys?|scrambl\\w*|meaningless|unreadable|plain\\s*text|ciph\\w*|cyph\\w*|encrypt\\w*\\s+the\\s+data)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "What is true of BOTH methods? Look at the \"same in both\" line."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\b(not|less)\\s+(more\\s+)?(secure|safe))(?:.*\\b(more|very|most|extra)\\s+(secure|safe)\\b|.*\\b(safer|securer)\\b|(?=.*\\bkeys?\\b)(?=.*\\b(no|not|dont|doesnt|cant|isnt|wont|didnt|\\w+n\\Wt|never|without)\\b)(?=.*\\b(exchang\\w*|shar\\w*|sen[dt]\\w*|swap\\w*|transmit\\w*|intercept\\w*|stolen|travel\\w*)\\b)).*$",
+     "flags": "i"
+    },
+    "feedback": "Think about the weak point of symmetric encryption."
+   }
+  ],
+  "y10_23l2_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(asymmetric|asynchronous)(\\s+(key\\s+)?encryption)?\\s*\\.?\\s*$|^\\s*public\\s*(key\\s*)?(and|&|\\/)\\s*private\\s*key(\\s+encryption)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which method uses two different keys?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|her\\s+|dara\\W?s\\s+)?public(\\s*-?\\s*key)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which key only encrypts?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(cannot|can.?t|unable|not|never|only)\\b)(?=.*\\b(decrypt\\w*|unlock\\w*|read\\w*|undo\\w*|encrypt\\w*)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "What can that key do, and what can it not do?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(chen\\W?s?|only|wrong|different|match\\w*|other|another|not\\s+his|isn.?t\\s+his)\\b)(?=.*\\b(private|decrypt\\w*|keys?)\\b)(?!.*\\bben\\W?s\\s+public\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Which private key matches the public key Ana used, and who has it?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

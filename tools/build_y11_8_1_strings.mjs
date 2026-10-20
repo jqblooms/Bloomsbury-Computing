@@ -122,14 +122,14 @@ const WT_TICK = { title: 'Walk me through it: tick one box', steps: [
   { text: 'Match the key words to one option. Finding data is a <strong>linear search</strong>, so tick C.', visual: askList([['bubble sort', 'puts data in order'], ['counting routine', 'adds 1 each time'], ['linear search', 'checks each item until it finds one'], ['selection search', 'not a method we use']], 2) },
   { text: 'Now do your two questions the same way: find the key words, then say what each option does.', visual: '<div class="wt-big">key words &rarr; what each option does &rarr; tick one</div>' },
 ] };
-// Do Now 2 (describe STRING and CHAR with an example), worked with INTEGER and REAL.
+// Do Now 2 (describe STRING and CHAR with an example). James, 2026-10-20: a walkthrough must lead to the answer,
+// so it works from real STRING and CHAR values (count the characters, look at what kinds they are) and never states it.
 const WT_TYPES = { title: 'Walk me through it: describe a data type', steps: [
-  { text: 'A similar question: say what is meant by <strong>INTEGER</strong> and <strong>REAL</strong>, and give an example of each.', visual: '<div class="wt-big">INTEGER &nbsp; REAL</div>' },
-  { text: 'Say what kind of value the type holds. An INTEGER holds a <strong>whole number</strong>.', visual: '<div class="wt-big">INTEGER: <span class="wt-hl">a whole number</span></div>' },
-  { text: 'Give an example that fits this type: <strong>27</strong>.', visual: '<div class="wt-big">INTEGER: a whole number. Example: <span class="wt-hl">27</span></div>' },
-  { text: 'A REAL holds a number with a decimal point. Example: <strong>3.5</strong>.', visual: '<div class="wt-big">REAL: a number with a decimal point. Example: <span class="wt-hl">3.5</span></div>' },
-  { text: 'Check each example: 3.5 cannot be an INTEGER, so it shows what a REAL is.', visual: '<div class="wt-big">3.5 &rarr; <span class="wt-hl">REAL only</span></div>' },
-  { text: 'Now do your two types the same way: what does it hold? Then one example.', visual: '<div class="wt-big">what it holds &rarr; one example</div>' },
+  { text: 'Look at some values stored as each type. The type is what they have in common.', visual: '<div class="wt-big">STRING: "Cat" &nbsp; "Hi there" &nbsp; "A1-B2"</div><div class="wt-big">CHAR: \'Q\' &nbsp; \'7\' &nbsp; \'#\'</div>' },
+  { text: 'Count the characters in each STRING value. A space counts too.', visual: '<div class="wt-big">"Cat" = <span class="wt-hl">3</span> &nbsp; "Hi there" = <span class="wt-hl">8</span> &nbsp; "A1-B2" = <span class="wt-hl">5</span></div>' },
+  { text: 'Now count the characters in each CHAR value. What do you notice?', visual: '<div class="wt-big">\'Q\' = <span class="wt-hl">1</span> &nbsp; \'7\' = <span class="wt-hl">1</span> &nbsp; \'#\' = <span class="wt-hl">1</span></div>' },
+  { text: 'Look at what kinds of character appear: letters, digits, symbols and spaces.', visual: '<div class="wt-big"><span class="wt-hl">C</span>at &nbsp; A<span class="wt-hl">1</span><span class="wt-hl">-</span>B2 &nbsp; \'<span class="wt-hl">#</span>\'</div>' },
+  { text: 'Now write each answer: the number of characters the type can hold, and what kinds. Then give your own example in quotes.', visual: '<div class="wt-big">number of characters &rarr; what kinds &rarr; your own example</div>' },
 ] };
 
 // ---------------------------------------------------------------- Do Now (8.1 L1, topic 7, 8.1 L2) and its extension
@@ -189,7 +189,7 @@ steps.push(checkStep('check-length', 'Check: LENGTH', 'Check: LENGTH', 'Name hol
 steps.push(selfStep('exam-length', 'Exam Question: Six Characters Long', 'Exam Question: Six Characters Long',
   'Cambridge IGCSE 0478/22, June 2024, Question 4(b)(i). A program needs to make sure the characters input for a product code meet these rules: the product code is six characters in length; the first two characters must be "PD"; the last four characters must be a number in the range 1000 to 9999 inclusive. The product code is stored in the variable Product.', [
     { id: 'length-six', prompt: 'Write the pseudocode to make sure that the product code is six characters in length.', marks: 2,
-      modelAnswer: 'REPEAT<br>&nbsp;&nbsp;INPUT Product<br>UNTIL LENGTH(Product) = 6<br>One mark for LENGTH(Product), one mark for testing it against 6 so the code is input again until it fits. A WHILE LENGTH(Product) &lt;&gt; 6 DO loop is also correct.' },
+      modelAnswer: 'IF LENGTH(Product) = 6 THEN<br>1 mark: LENGTH(Product). 1 mark: testing it against 6. A loop such as UNTIL LENGTH(Product) = 6 also gets both marks.' },
   ], ['Why read the rules in the question twice before you write code?', 'Each rule becomes a test in your code. If you miss one word, your check is wrong.']));
 
 // ---------------------------------------------------------------- SUBSTRING: predict then reveal
@@ -243,7 +243,7 @@ steps.push(checkStep('check-sub', 'Check: SUBSTRING', 'Check: SUBSTRING', 'Word 
 steps.push(selfStep('exam-pd', 'Exam Question: Starts With PD', 'Exam Question: Starts With PD',
   'Cambridge IGCSE 0478/22, June 2024, Question 4(b)(ii). The same product code rules: six characters, the first two characters must be "PD", the last four characters a number from 1000 to 9999. The product code is stored in the variable Product.', [
     { id: 'starts-pd', prompt: 'Write the pseudocode to make sure that the first two characters of the product code are "PD".', marks: 2,
-      modelAnswer: 'REPEAT<br>&nbsp;&nbsp;INPUT Product<br>UNTIL SUBSTRING(Product, 1, 2) = "PD"<br>One mark for SUBSTRING(Product, 1, 2), one mark for testing it against "PD" so the code is input again until it starts with PD.' },
+      modelAnswer: 'IF SUBSTRING(Product, 1, 2) = "PD" THEN<br>1 mark: SUBSTRING(Product, 1, 2). 1 mark: testing it against "PD". A loop such as UNTIL SUBSTRING(Product, 1, 2) = "PD" also gets both marks.' },
   ], ['Why does a product code have rules at all?', 'Every code has the same shape, so a wrong code can be found as soon as it is typed in.']));
 
 const FACT = 'I learnt to program in computer science';

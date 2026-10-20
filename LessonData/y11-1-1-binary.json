@@ -1,0 +1,725 @@
+{
+ "id": "y11-1-1-binary",
+ "label": "1.1: Binary Place Values",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Place Value (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-do-now",
+   "validatorKey": "y11_11b_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Place Value (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">In 7 and in 70, the digit 7 is worth different amounts. Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>In 70 the 7 is in the tens column, so it is worth seven tens. The column decides what a digit is worth.</p></div></details><p class=\"lesson-lead\">Our everyday numbers are called <strong>denary</strong>. Each column has a <strong>place value</strong>: what one digit in that column is worth.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Hundreds</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Tens</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Ones</th></tr><tr><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">3</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">5</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">2</td></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-do-now-a\">(a) In 352, what is the 3 worth? [1]</label><input id=\"y11-11b-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Place Value (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-do-now-b\">(b) In 352, what is the 5 worth? [1]</label><input id=\"y11-11b-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Place Value (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: place value",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> In the number 461, what is each digit worth?",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Hundreds</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Tens</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Ones</th></tr><tr><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">4</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">6</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td></tr></table>"
+     },
+     {
+      "text": "Find the column of the 4. It is in the <strong>Hundreds</strong> column.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Hundreds</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Tens</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Ones</th></tr><tr><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);outline:3px solid var(--brand);outline-offset:-3px\" class=\"wt-hl\">4</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">6</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td></tr></table>"
+     },
+     {
+      "text": "4 hundreds is 400. So the 4 is worth <strong>400</strong>.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Hundreds</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Tens</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Ones</th></tr><tr><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);outline:3px solid var(--brand);outline-offset:-3px\" class=\"wt-hl\">4</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">6</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td></tr></table><div class=\"wt-note\"><span class=\"wt-hl\">4 hundreds</span> = 400</div>"
+     },
+     {
+      "text": "The 6 is in the <strong>Tens</strong> column. 6 tens is 60.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Hundreds</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Tens</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Ones</th></tr><tr><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">4</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);outline:3px solid var(--brand);outline-offset:-3px\" class=\"wt-hl\">6</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td></tr></table><div class=\"wt-note\"><span class=\"wt-hl\">6 tens</span> = 60</div>"
+     },
+     {
+      "text": "The 1 is in the <strong>Ones</strong> column. It is worth 1.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Hundreds</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Tens</th><th style=\"padding:6px 14px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Ones</th></tr><tr><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">4</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong)\">6</td><td style=\"padding:6px 14px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);outline:3px solid var(--brand);outline-offset:-3px\" class=\"wt-hl\">1</td></tr></table>"
+     },
+     {
+      "text": "Now use the same steps for the 3 and the 5 in 352.",
+      "visual": "<div class=\"wt-note\">Which column? Then: how many of that column?</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Have a Go (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-do-now-2",
+   "validatorKey": "y11_11b_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Have a Go (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might a computer use only two digits, 0 and 1?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Inside a computer are tiny switches. A switch is either on or off: two states, so two digits.</p></div></details><p class=\"lesson-lead\">A <strong>binary</strong> number uses only the digits 0 and 1. Have a go. Cambridge IGCSE 0478/13, June 2023, Question 1(a). Computers store data as binary. The binary number 10101110 is stored.</p><div class=\"lesson-do-now-columns\"><div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">10101110</div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-do-now-2-a\">Convert the binary number to denary. [1]</label><input id=\"y11-11b-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Have a Go (2 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-do-now-2-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y11-11b-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: binary to denary",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Convert the binary number 10010110 to denary.",
+      "visual": "<div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">10010110</div>"
+     },
+     {
+      "text": "Each binary column is worth <strong>double</strong> the column on its right. Start at 1 on the right.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Digit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">0</td></tr></table>"
+     },
+     {
+      "text": "Keep doubling as you move left: 1, 2, 4, 8, 16, 32, 64, 128. These are the place values.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Digit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr></table>"
+     },
+     {
+      "text": "A <strong>1</strong> means: count this column. A <strong>0</strong> means: skip it.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Digit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr></table>"
+     },
+     {
+      "text": "Add the place values that have a 1 under them.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Digit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">128 + 16 + 4 + 2</p>"
+     },
+     {
+      "text": "128 + 16 + 4 + 2 = 150. So 10010110 is <strong>150</strong> in denary.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">128 + 16 + 4 + 2 = 150</span></p>"
+     },
+     {
+      "text": "Now do the same with 10101110: write the place values, find each 1, then add.",
+      "visual": "<div class=\"wt-note\">place values &rarr; find each 1 &rarr; add</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-1-ext",
+   "embedContainerId": "y11-11b-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card use new numbers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you practise the method, not one answer.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y11-11b-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Binary Place Values",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">1.1 Number Systems</p><h2 class=\"lesson-h2\">Binary Place Values</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> why computers use binary.</li><li>The <strong>place values</strong> of a binary number, and why they double.</li><li>How to turn a binary number into <strong>denary</strong>.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do you think a computer needs its own number system?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A computer is built from switches that are on or off. It needs numbers made from just two digits.</p></div></details>"
+  },
+  {
+   "id": "concept-binary",
+   "label": "Why Computers Use Binary",
+   "content": "<h2 class=\"lesson-h2\">Why Computers Use Binary</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: a switch can only be on or off. Why does a computer need only two digits?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A switch has <strong>two states</strong>. One digit for each state is enough: <strong>0</strong> for off, <strong>1</strong> for on.</p><p>So a computer stores everything as 0s and 1s.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A computer has billions of tiny switches.</li><li>Each switch is <strong>on</strong> or <strong>off</strong>. There are only two states.</li><li>Off is <strong>0</strong>. On is <strong>1</strong>.</li><li>A number made of only 0s and 1s is <strong>binary</strong>.</li><li>One binary digit is a <strong>bit</strong>.</li><li>Binary is <strong>base 2</strong>: 2 digits. Denary is <strong>base 10</strong>: 10 digits.</li></ul></div><div><div style=\"display:grid;gap:14px\"><div style=\"display:flex;gap:8px;justify-content:center;flex-wrap:wrap\"><div style=\"display:grid;gap:6px;justify-items:center\"><span style=\"display:inline-block;width:52px;padding:8px 0;border-radius:8px;text-align:center;font-weight:700;background:var(--brand-soft);color:var(--brand-dark);border:2px solid var(--brand)\">On</span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">1</span></div><div style=\"display:grid;gap:6px;justify-items:center\"><span style=\"display:inline-block;width:52px;padding:8px 0;border-radius:8px;text-align:center;font-weight:700;background:var(--surface-3);color:var(--muted)\">Off</span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">0</span></div><div style=\"display:grid;gap:6px;justify-items:center\"><span style=\"display:inline-block;width:52px;padding:8px 0;border-radius:8px;text-align:center;font-weight:700;background:var(--brand-soft);color:var(--brand-dark);border:2px solid var(--brand)\">On</span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">1</span></div><div style=\"display:grid;gap:6px;justify-items:center\"><span style=\"display:inline-block;width:52px;padding:8px 0;border-radius:8px;text-align:center;font-weight:700;background:var(--brand-soft);color:var(--brand-dark);border:2px solid var(--brand)\">On</span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">1</span></div><div style=\"display:grid;gap:6px;justify-items:center\"><span style=\"display:inline-block;width:52px;padding:8px 0;border-radius:8px;text-align:center;font-weight:700;background:var(--surface-3);color:var(--muted)\">Off</span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">0</span></div><div style=\"display:grid;gap:6px;justify-items:center\"><span style=\"display:inline-block;width:52px;padding:8px 0;border-radius:8px;text-align:center;font-weight:700;background:var(--surface-3);color:var(--muted)\">Off</span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">0</span></div><div style=\"display:grid;gap:6px;justify-items:center\"><span style=\"display:inline-block;width:52px;padding:8px 0;border-radius:8px;text-align:center;font-weight:700;background:var(--brand-soft);color:var(--brand-dark);border:2px solid var(--brand)\">On</span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">1</span></div><div style=\"display:grid;gap:6px;justify-items:center\"><span style=\"display:inline-block;width:52px;padding:8px 0;border-radius:8px;text-align:center;font-weight:700;background:var(--surface-3);color:var(--muted)\">Off</span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">0</span></div></div><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">8 switches: 8 bits</p></div></div></div>"
+  },
+  {
+   "id": "check-binary",
+   "label": "Check: Binary and Bits",
+   "type": "multiple-choice",
+   "containerId": "y11-11b-check-binary",
+   "content": "<h2 class=\"lesson-h2\">Check: Binary and Bits</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Denary is called base 10. Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It has ten digits: zero up to nine. When a column is full, a new column starts.</p></div></details><div id=\"y11-11b-check-binary\"></div>",
+   "items": [
+    {
+     "prompt": "Which digits does binary use?",
+     "options": [
+      "0 to 9",
+      "1 and 2",
+      "0 and 1",
+      "0 to 7"
+     ],
+     "correct": 2,
+     "explain": "Binary uses only 0 and 1: one digit for off, one for on."
+    },
+    {
+     "prompt": "What is one binary digit called?",
+     "options": [
+      "A switch",
+      "A bit",
+      "A column",
+      "A place value"
+     ],
+     "correct": 1,
+     "explain": "One binary digit is a bit."
+    }
+   ]
+  },
+  {
+   "id": "concept-double",
+   "label": "Why Each Place Value Doubles",
+   "content": "<h2 class=\"lesson-h2\">Why Each Place Value Doubles</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Count in binary: 0, then 1. A column can only hold 0 or 1. Predict: why does 2 need a new column?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>At 1 the first column is <strong>full</strong>. There is no digit 2, so we write <strong>10</strong>: a 1 in a new column.</p><p>That new column is worth 2. The next new column starts at 4, then 8: each one <strong>double</strong> the last.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Each column holds only <strong>0</strong> or <strong>1</strong>.</li><li>When a column is full, we start a new column on the left. Denary does this too: 9, then 10.</li><li>In binary a new column starts at 1, 2, 4, 8.</li><li>So each place value is <strong>double</strong> the one on its right.</li></ul></div><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:3px 12px;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Denary</th><th style=\"padding:3px 12px;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">Binary</th><th style=\"padding:3px 12px;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\"></th></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">0</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-family:var(--font-mono, monospace);letter-spacing:3px\">0000</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-size:14px\"></td></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700\">1</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700;font-family:var(--font-mono, monospace);letter-spacing:3px\">0001</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700;font-size:14px\">new column</td></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700\">2</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700;font-family:var(--font-mono, monospace);letter-spacing:3px\">0010</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700;font-size:14px\">new column</td></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">3</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-family:var(--font-mono, monospace);letter-spacing:3px\">0011</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-size:14px\"></td></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700\">4</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700;font-family:var(--font-mono, monospace);letter-spacing:3px\">0100</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700;font-size:14px\">new column</td></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">5</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-family:var(--font-mono, monospace);letter-spacing:3px\">0101</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-size:14px\"></td></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">6</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-family:var(--font-mono, monospace);letter-spacing:3px\">0110</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-size:14px\"></td></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">7</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-family:var(--font-mono, monospace);letter-spacing:3px\">0111</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;font-size:14px\"></td></tr><tr><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700\">8</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700;font-family:var(--font-mono, monospace);letter-spacing:3px\">1000</td><td style=\"padding:1px 12px;text-align:center;border:1px solid var(--line-strong);font-size:16px;background:var(--brand-soft);font-weight:700;font-size:14px\">new column</td></tr></table></div></div>"
+  },
+  {
+   "id": "concept-places",
+   "label": "The 8 Place Values",
+   "content": "<h2 class=\"lesson-h2\">The 8 Place Values</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The place values start 1, 2, 4, 8 from the right. Predict the next four. Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>16, 32, 64, 128.</strong> Each one is double the one before it.</p></div></details><ul class=\"lesson-facts\"><li>Start with <strong>1</strong> on the right.</li><li>Double each time as you move left.</li><li>A binary number with 8 bits is an <strong>8-bit</strong> number. It has 8 place values.</li></ul><div style=\"display:grid;gap:12px;margin-top:6px\"><div style=\"display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap\"><span style=\"display:inline-block;padding:6px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">128</span><b style=\"margin:0 2px;font-size:14px;color:var(--muted)\">&larr;</b><span style=\"display:inline-block;padding:6px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">64</span><b style=\"margin:0 2px;font-size:14px;color:var(--muted)\">&larr;</b><span style=\"display:inline-block;padding:6px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">32</span><b style=\"margin:0 2px;font-size:14px;color:var(--muted)\">&larr;</b><span style=\"display:inline-block;padding:6px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">16</span><b style=\"margin:0 2px;font-size:14px;color:var(--muted)\">&larr;</b><span style=\"display:inline-block;padding:6px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">8</span><b style=\"margin:0 2px;font-size:14px;color:var(--muted)\">&larr;</b><span style=\"display:inline-block;padding:6px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">4</span><b style=\"margin:0 2px;font-size:14px;color:var(--muted)\">&larr;</b><span style=\"display:inline-block;padding:6px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">2</span><b style=\"margin:0 2px;font-size:14px;color:var(--muted)\">&larr;</b><span style=\"display:inline-block;padding:6px 12px;border-radius:8px;background:var(--surface-3);font-weight:700;border:2px solid var(--brand)\">1</span></div><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">Moving left: <strong>times 2</strong> each time.</p><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div>"
+  },
+  {
+   "id": "check-places",
+   "label": "Check: Place Values (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-check-places",
+   "validatorKey": "y11_11b_check_places",
+   "content": "<h2 class=\"lesson-h2\">Check: Place Values (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do denary place values grow ten times bigger, from ones to tens to hundreds?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Denary has ten digits. A column is full at 9, so the next column is worth ten times more.</p></div></details><p class=\"lesson-lead\">Type a number for each.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-check-places-a\">(a) Which place value comes after 8? [1]</label><input id=\"y11-11b-check-places-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-places-a\" aria-label=\"Check: Place Values (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-check-places-b\">(b) Which place value comes after 64? [1]</label><input id=\"y11-11b-check-places-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-places-b\" aria-label=\"Check: Place Values (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-check-places-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-check-places-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "check-places-2",
+   "label": "Check: Place Values (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-check-places-2",
+   "validatorKey": "y11_11b_check_places_2",
+   "content": "<h2 class=\"lesson-h2\">Check: Place Values (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it useful to know the 8 place values by heart?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every binary question starts by writing them down. Knowing them saves time and avoids a slip.</p></div></details><p class=\"lesson-lead\">Start on the left.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-check-places-2-a\">(a) What is the place value of the column on the far right? [1]</label><input id=\"y11-11b-check-places-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-places-2-a\" aria-label=\"Check: Place Values (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11-11b-check-places-2-b\">(b) Write all 8 place values, from left to right. [1]</label><input id=\"y11-11b-check-places-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-places-2-b\" aria-label=\"Check: Place Values (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-check-places-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-check-places-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "concept-4bit",
+   "label": "Reading a 4-Bit Number",
+   "content": "<h2 class=\"lesson-h2\">Reading a 4-Bit Number</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: in 0101, the 8 column has a 0. Why do we not add the 8?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A <strong>0</strong> means off. That column adds nothing.</p><p>We only add the place values with a <strong>1</strong> under them.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>4-bit</strong> number has 4 place values: 8, 4, 2, 1.</li><li>Write the place values above the bits.</li><li>A <strong>1</strong>: add that place value.</li><li>A <strong>0</strong>: add nothing.</li><li>The total is the <strong>denary</strong> value.</li></ul></div><div><div style=\"display:grid;gap:12px\"><div style=\"display:grid;gap:4px;padding:10px;border-radius:10px;background:var(--surface-2)\"><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Bit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">4 + 1 = <strong>5</strong></p></div><div style=\"display:grid;gap:4px;padding:10px;border-radius:10px;background:var(--surface-2)\"><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Bit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">8 + 4 = <strong>12</strong></p></div></div></div></div>"
+  },
+  {
+   "id": "check-4bit",
+   "label": "Check: 4-Bit Numbers",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-check-4bit",
+   "validatorKey": "y11_11b_check_4bit",
+   "content": "<h2 class=\"lesson-h2\">Check: 4-Bit Numbers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we write the place values above the bits before adding?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then each 1 lines up with its own place value, so we add the right numbers.</p></div></details><p class=\"lesson-lead\">Convert each binary number to denary.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-check-4bit-a\">(a) 0011 [1]</label><input id=\"y11-11b-check-4bit-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-4bit-a\" aria-label=\"Check: 4-Bit Numbers part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-check-4bit-b\">(b) 1001 [1]</label><input id=\"y11-11b-check-4bit-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-4bit-b\" aria-label=\"Check: 4-Bit Numbers part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-check-4bit-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-check-4bit-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "concept-8bit",
+   "label": "Reading an 8-Bit Number",
+   "content": "<h2 class=\"lesson-h2\">Reading an 8-Bit Number</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: 00100101 has three 1s. Which place values do we add? Why only those?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>32, 4, 1.</strong> Only the columns with a 1 count. 32 + 4 + 1 = 37.</p></div></details><ul class=\"lesson-facts\"><li>The same steps as 4 bits, with all 8 place values.</li><li>Find each <strong>1</strong>. Add its place value.</li><li>Skip every <strong>0</strong>.</li></ul><div style=\"display:grid;gap:8px;margin-top:4px\"><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:58px;text-align:center;font-weight:700;font-size:18px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Bit</th><td style=\"padding:6px 4px;min-width:58px;height:48px;text-align:center;font:700 22px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:58px;height:48px;text-align:center;font:700 22px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:58px;height:48px;text-align:center;font:700 22px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:58px;height:48px;text-align:center;font:700 22px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:58px;height:48px;text-align:center;font:700 22px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:58px;height:48px;text-align:center;font:700 22px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:58px;height:48px;text-align:center;font:700 22px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:58px;height:48px;text-align:center;font:700 22px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">32 + 4 + 1 = <strong>37</strong></p></div>"
+  },
+  {
+   "id": "predict",
+   "label": "Predict: Which Is Bigger?",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-predict",
+   "validatorKey": "y11_11b_predict",
+   "content": "<h2 class=\"lesson-h2\">Predict: Which Is Bigger?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the 0s in a binary number matter, if they add nothing?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They keep every 1 in its own column. Without them, 101 and 10001 would look the same, but they are 5 and 17.</p></div></details><p class=\"lesson-lead\">10000000 has one 1. 01111111 has seven 1s. Predict first. The next slide checks.</p><div class=\"lesson-do-now-columns\"><div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">10000000</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">01111111</div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-predict-a\">Predict: which binary number is bigger? Type it. [1]</label><input id=\"y11-11b-predict-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"predict-a\" aria-label=\"Predict: Which Is Bigger? part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-predict-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y11-11b-predict-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "predict-check",
+   "label": "Check Your Prediction",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-predict-check",
+   "validatorKey": "y11_11b_predict_check",
+   "content": "<h2 class=\"lesson-h2\">Check Your Prediction</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">1000 has one 1 and 0111 has three. Why is 1000 bigger?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>1000 is 8. 0111 is 4 + 2 + 1 = 7. Each place value is bigger than all the place values to its right added together.</p></div></details><p class=\"lesson-lead\">Work out both in denary. Was your prediction right?</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-predict-check-a\">(a) Convert 10000000 to denary. [1]</label><input id=\"y11-11b-predict-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"predict-check-a\" aria-label=\"Check Your Prediction part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-predict-check-b\">(b) Convert 01111111 to denary. [1]</label><input id=\"y11-11b-predict-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"predict-check-b\" aria-label=\"Check Your Prediction part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-predict-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-predict-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "stepper",
+   "label": "Worked Example: 01101001",
+   "type": "stepper",
+   "stepperId": "y11-11b-stepper",
+   "stepperKey": "y11_binary_to_denary",
+   "content": "<h2 class=\"lesson-h2\">Worked Example: 01101001</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we add one place value at a time, not all at once?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Small steps are easy to check. A slip is easy to spot.</p></div></details><p class=\"lesson-lead\">Press <strong>Next step</strong>. One small step at a time.</p><div id=\"y11-11b-stepper\" class=\"lesson-stepper\"></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Binary to Denary Practice",
+   "type": "sequential-practice",
+   "practiceType": "binary_to_denary",
+   "containerId": "y11-11b-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Binary to Denary Practice</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why are the place values the same for every 8-bit number?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every 8-bit number uses the same 8 columns. Only the bits change.</p></div></details><p class=\"lesson-lead\">Four numbers, each under its place values. Find each 1, then add. Then keep going.</p><div id=\"y11-11b-activity-1\"></div>"
+  },
+  {
+   "id": "exam-1",
+   "label": "Exam Questions: Convert to Denary (1 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-1",
+   "validatorKey": "y11_11b_exam_1",
+   "content": "<h2 class=\"lesson-h2\">Exam Questions: Convert to Denary (1 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The paper gives a working space for these 1-mark questions. Why use it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Writing the place values above the bits helps you add the right numbers and avoid a slip.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/12, March 2022, Question 1(a). Part (b): Cambridge IGCSE 0478/12, November 2023, Question 2(a). A register stores the binary number 11100011.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-1-a\">(a) Convert the 8-bit binary number 01010101 to denary. [1]</label><input id=\"y11-11b-exam-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-a\" aria-label=\"Exam Questions: Convert to Denary (1 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-1-b\">(b) Give the denary number for the binary number stored in the register. [1]</label><input id=\"y11-11b-exam-1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-b\" aria-label=\"Exam Questions: Convert to Denary (1 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-1-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-exam-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-2",
+   "label": "Exam Question: Convert to Denary (2 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-2",
+   "validatorKey": "y11_11b_exam_2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Convert to Denary (2 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a 1 in the leftmost column worth so much more than a 1 on the right?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The leftmost place value is 128 and the rightmost is 1. Each column is double the one on its right.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2025, Question 1(c)(i). A student records himself singing a song. The recorded sound is converted to binary. Two binary numbers stored from the recording are 00011001 and 10110100. Convert the two binary numbers to denary numbers.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-2-a\">(a) 00011001 [1]</label><input id=\"y11-11b-exam-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-a\" aria-label=\"Exam Question: Convert to Denary (2 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-2-b\">(b) 10110100 [1]</label><input id=\"y11-11b-exam-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-b\" aria-label=\"Exam Question: Convert to Denary (2 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-exam-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-3",
+   "label": "Exam Question: Convert to Denary (3 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-3",
+   "validatorKey": "y11_11b_exam_3",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Convert to Denary (3 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A number you met earlier comes back here. Why check it again instead of copying it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Exams reuse numbers, but a copied slip stays a slip. Working it out again is quick with the place values.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2026, Question 8(b). A building has a security keypad. A 3-digit denary number is input and converted to an 8-bit binary number. Two binary numbers are 00101001 and 10110100. Give the denary numbers that were input for these binary numbers.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-3-a\">(a) 00101001 [1]</label><input id=\"y11-11b-exam-3-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-3-a\" aria-label=\"Exam Question: Convert to Denary (3 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-3-b\">(b) 10110100 [1]</label><input id=\"y11-11b-exam-3-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-3-b\" aria-label=\"Exam Question: Convert to Denary (3 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-3-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-exam-3-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-4",
+   "label": "Exam Question: Convert to Denary (4 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-4",
+   "validatorKey": "y11_11b_exam_4",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Convert to Denary (4 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A number has only small 1s on the right. Why will its denary value be small?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The right-hand place values are 1, 2, 4 and 8. Adding only those gives at most 15.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2025, Question 1(c) and (d). A student has a calculator with 8-bit registers. The result of a calculation is stored in a register. Give the denary number that will be displayed on the screen for each binary number.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-4-a\">(a) 00001011 [1]</label><input id=\"y11-11b-exam-4-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-4-a\" aria-label=\"Exam Question: Convert to Denary (4 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-4-b\">(b) 01000010 [1]</label><input id=\"y11-11b-exam-4-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-4-b\" aria-label=\"Exam Question: Convert to Denary (4 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-4-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-exam-4-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-5",
+   "label": "Exam Question: Convert to Denary (5 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-5",
+   "validatorKey": "y11_11b_exam_5",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Convert to Denary (5 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the leading 0s on the left not change the denary value?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A 0 adds nothing, wherever it is. Only the 1s count.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2025, Question 1(b)(iii) and (iv). A shop owner enters a denary number to set the room temperature. It is stored as a binary number in a register. Give the denary number that has been entered for each binary number to be stored.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-5-a\">(a) 00010011 [1]</label><input id=\"y11-11b-exam-5-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-5-a\" aria-label=\"Exam Question: Convert to Denary (5 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-5-b\">(b) 00100010 [1]</label><input id=\"y11-11b-exam-5-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-5-b\" aria-label=\"Exam Question: Convert to Denary (5 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-5-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-exam-5-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-6",
+   "label": "Exam Question: The Parking Cost (6 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-6",
+   "validatorKey": "y11_11b_exam_6",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Parking Cost (6 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">$10.50 is stored as 10 and 50. Why are two registers used, not one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each register holds one whole number. One holds the dollars and one holds the cents.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2023, Question 2(a). The cost of parking is stored in two 8-bit binary registers. For a cost of $10.50, register 1 stores the denary value 10 as binary and register 2 stores the denary value 50 as binary. Register 1 stores 00010001. Register 2 stores 01000110.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-6-a\">Give the parking cost that would be displayed on the payment machine. [2]</label><input id=\"y11-11b-exam-6-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-6-a\" aria-label=\"Exam Question: The Parking Cost (6 of 6) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-6-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-exam-6-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "concept-255",
+   "label": "Why 11111111 Is 255",
+   "content": "<h2 class=\"lesson-h2\">Why 11111111 Is 255</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Every bit is 1: 11111111. Predict its denary value. Why can no 8-bit number be bigger?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = <strong>255</strong>.</p><p>Every place value is already added. One more would need a 9th column, worth 256.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>Largest</strong>: every bit is 1, so every place value is added.</li><li>128 + 64 + 32 + 16 + 8 + 4 + 2 + 1 = <strong>255</strong>.</li><li><strong>Smallest</strong>: every bit is 0. 00000000 is <strong>0</strong>.</li><li>One more than 255 needs a 9th column, worth 256. An 8-bit number has no 9th column.</li></ul></div><div><div style=\"display:grid;gap:10px\"><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">Largest: <strong>255</strong></p><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">Smallest: <strong>0</strong></p></div></div></div>"
+  },
+  {
+   "id": "exam-max",
+   "label": "Exam Question: The Largest Value",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-max",
+   "validatorKey": "y11_11b_exam_max",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Largest Value</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A 4-bit number has place values 8, 4, 2, 1. Why is its largest value 15?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>All four bits are 1: 8 + 4 + 2 + 1 = 15. A bigger number would need a fifth column.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2021, Question 1(b). A hockey club records the number of people that watch each match. An 8-bit binary register is used to store this value. (A register is a small store inside the computer.)</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-max-a\">Give the largest denary value that can be stored in the 8-bit binary register. [1]</label><input id=\"y11-11b-exam-max-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-max-a\" aria-label=\"Exam Question: The Largest Value part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-max-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y11-11b-exam-max-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-gaps",
+   "label": "Exam Question: Number Systems (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-gaps",
+   "validatorKey": "y11_11b_exam_gaps",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Number Systems (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the sentences say 8-bit? Why does the number of bits matter?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The number of bits decides how many place values there are. More bits means bigger numbers can be stored.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/12, March 2025, Question 1(a). Complete the sentences about number systems.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-gaps-a\">(a) The binary number system is base ______. [1]</label><input id=\"y11-11b-exam-gaps-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-a\" aria-label=\"Exam Question: Number Systems (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-gaps-b\">(b) The smallest denary number that can be represented as an 8-bit binary number is ______. [1]</label><input id=\"y11-11b-exam-gaps-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-b\" aria-label=\"Exam Question: Number Systems (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-gaps-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-exam-gaps-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-gaps-2",
+   "label": "Exam Question: Number Systems (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-gaps-2",
+   "validatorKey": "y11_11b_exam_gaps_2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Number Systems (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A 3-bit number has place values 4, 2, 1. Why is its largest value 7?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>All three bits are 1: 4 + 2 + 1 = 7. A bigger number needs a fourth column.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/12, March 2025, Question 1(a). Complete the sentence about number systems.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-exam-gaps-2-a\">The largest denary number that can be represented as an 8-bit binary number is ______. [1]</label><input id=\"y11-11b-exam-gaps-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-gaps-2-a\" aria-label=\"Exam Question: Number Systems (2 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-gaps-2-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y11-11b-exam-gaps-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-explain",
+   "label": "Exam Question: What Is Binary?",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-exam-explain",
+   "validatorKey": "y11_11b_exam_explain",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: What Is Binary?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is denary called a base 10 number system?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It uses ten digits, zero up to nine. A new column starts after nine.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2023, Question 2(a). Humans use a denary number system and computers use a binary number system.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y11-11b-exam-explain-a\">Explain what is meant by a binary number system. [2]</label><input id=\"y11-11b-exam-explain-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-explain-a\" aria-label=\"Exam Question: What Is Binary? part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-exam-explain-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-exam-explain-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-match",
+   "label": "Exam Question: Match the Binary Value (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y11-11b-exam-match",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Match the Binary Value (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why convert every option, not guess from its pattern?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One bit in a different column changes the value a lot. Only converting shows which one is right.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/12, June 2022, Question 1(a).</p><div id=\"y11-11b-exam-match\"></div>",
+   "items": [
+    {
+     "prompt": "Convert each option to denary. Which 8-bit binary value is 41?",
+     "options": [
+      "10100110",
+      "00100001",
+      "00101001",
+      "10000110"
+     ],
+     "correct": 2,
+     "explain": "00101001 = 32 + 8 + 1 = 41."
+    }
+   ]
+  },
+  {
+   "id": "exam-match-2",
+   "label": "Exam Question: Match the Binary Value (2 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y11-11b-exam-match-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Match the Binary Value (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why work out every option before you choose?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you compare numbers, not patterns of 1s and 0s, and the match is certain.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/13, November 2022, Question 2(a).</p><div id=\"y11-11b-exam-match-2\"></div>",
+   "items": [
+    {
+     "prompt": "Convert each option to denary. Which 8-bit binary value is 245?",
+     "options": [
+      "00010101",
+      "11100101",
+      "01110010",
+      "11110101"
+     ],
+     "correct": 3,
+     "explain": "11110101 = 128 + 64 + 32 + 16 + 4 + 1 = 245."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Find the 1s, Then Add",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-1-convert",
+   "embedContainerId": "y11-11b-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Find the 1s, Then Add</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why find the place values first, and add second?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you pick the wrong columns, the total is wrong, even when the adding is right.</p></div></details><p class=\"lesson-lead\">Find the place values with a 1. Add them. Then fix Sam's mistakes. Most numbers come from real exam papers.</p><div id=\"y11-11b-activity-2\"></div>"
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Binary to Denary (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-practice",
+   "validatorKey": "y11_11b_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Binary to Denary (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it worth adding your place values a second time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A small slip changes the answer. Adding again catches it.</p></div></details><p class=\"lesson-lead\">Adapted from: (a) Cambridge IGCSE 0478/11, November 2024, Question 3(c)(i). (b) Cambridge IGCSE 0478/12, March 2023, Question 6(a).</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-practice-a\">(a) Convert 01111001 to denary. [1]</label><input id=\"y11-11b-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Binary to Denary (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-practice-b\">(b) Convert 01011010 to denary. [1]</label><input id=\"y11-11b-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Binary to Denary (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-practice-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "practice-2",
+   "label": "Practice: Binary to Denary (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-practice-2",
+   "validatorKey": "y11_11b_practice_2",
+   "content": "<h2 class=\"lesson-h2\">Practice: Binary to Denary (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why start from the left when you add the place values?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The biggest place values are on the left. Starting there, the running total grows in big steps first.</p></div></details><p class=\"lesson-lead\">Adapted from: (a) Cambridge IGCSE 0478/12, June 2022, Question 1(a). (b) Cambridge IGCSE 0478/13, November 2022, Question 2(a).</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-11b-practice-2-a\">(a) Convert 01010110 to denary. [1]</label><input id=\"y11-11b-practice-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-a\" aria-label=\"Practice: Binary to Denary (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-11b-practice-2-b\">(b) Convert 01001000 to denary. [1]</label><input id=\"y11-11b-practice-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-b\" aria-label=\"Practice: Binary to Denary (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-practice-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-practice-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "practice-why",
+   "label": "Practice: Why?",
+   "type": "short-answer-validation",
+   "validatorId": "y11-11b-practice-why",
+   "validatorKey": "y11_11b_practice_why",
+   "content": "<h2 class=\"lesson-h2\">Practice: Why?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do exams ask why, not only how?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Knowing why helps you remember the method and spot a wrong answer.</p></div></details><p class=\"lesson-lead\">Answer in a short sentence.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y11-11b-practice-why-a\">(a) Why is 11111111 the largest 8-bit number? [1]</label><input id=\"y11-11b-practice-why-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-why-a\" aria-label=\"Practice: Why? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y11-11b-practice-why-b\">(b) Why is each place value double the one on its right? [1]</label><input id=\"y11-11b-practice-why-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-why-b\" aria-label=\"Practice: Why? part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-11b-practice-why-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-11b-practice-why-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Binary Place Values Drill",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-1-binary",
+   "embedContainerId": "y11-11b-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Binary Place Values Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new numbers every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you know the method, not just one answer.</p></div></details><p class=\"lesson-lead\">Why binary, the place values, and binary to denary. Your progress is saved.</p><div id=\"y11-11b-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y11_11b_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?300(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which column is the 3 in?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?50(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which column is the 5 in?"
+   }
+  ],
+  "y11_11b_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?174(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Stuck? Try Walk me through it."
+   }
+  ],
+  "y11_11b_check_places": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?16(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Double 8."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?128(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Double 64."
+   }
+  ],
+  "y11_11b_check_places_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(1|one)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Where do the place values start?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*128[\\s,]+64[\\s,]+32[\\s,]+16[\\s,]+8[\\s,]+4[\\s,]+2[\\s,]+1\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start with the biggest on the left. Halve each time."
+   }
+  ],
+  "y11_11b_check_4bit": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?3(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write 8 4 2 1 above the bits. Add the place values with a 1."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?9(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write 8 4 2 1 above the bits. Add the place values with a 1."
+   }
+  ],
+  "y11_11b_predict": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\s*0\\s*0\\s*0\\s*0\\s*0\\s*0\\s*0\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at where the 1s are, not how many there are."
+   }
+  ],
+  "y11_11b_predict_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?128(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which place value has the 1?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?127(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Add 64 + 32 + 16 + 8 + 4 + 2 + 1."
+   }
+  ],
+  "y11_11b_exam_1": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?85(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?227(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   }
+  ],
+  "y11_11b_exam_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?25(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?180(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   }
+  ],
+  "y11_11b_exam_3": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?41(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?180(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   }
+  ],
+  "y11_11b_exam_4": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?11(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?66(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   }
+  ],
+  "y11_11b_exam_5": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?19(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?34(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   }
+  ],
+  "y11_11b_exam_6": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*\\$?\\s*17\\s*[.,:]\\s*70\\s*(dollars?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Convert each register to denary. Register 1 gives the dollars, register 2 the cents.",
+    "marks": 2
+   }
+  ],
+  "y11_11b_exam_max": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?255(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which bits are 1 in the largest 8-bit number? Add their place values."
+   }
+  ],
+  "y11_11b_exam_gaps": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(base\\s*)?(2|two)\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "How many digits does binary use?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?(0|zero)(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "What is 00000000 in denary?"
+   }
+  ],
+  "y11_11b_exam_gaps_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?255(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "What is 11111111 in denary?"
+   }
+  ],
+  "y11_11b_exam_explain": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?:(?=.*base\\s*-?\\s*(of\\s+)?(2|two)\\b)(?=.*\\b((two|2)\\s+(different\\s+)?(values?|digits?|states?|numbers?|symbols?|options?)|only\\s+(uses?\\s+|has\\s+)?(two|2)\\b|only\\s+(uses?\\s+|has\\s+)?(the\\s+)?(digits?\\s+|values?\\s+)?(1|0|one|zero)s?\\b))|(?=.*base\\s*-?\\s*(of\\s+)?(2|two)\\b)(?=.*\\b((1|one)s?\\s*(and|or|,|&)\\s*(0|zero)s?|(0|zero)s?\\s*(and|or|,|&)\\s*(1|one)s?)\\b)|(?=.*\\b((two|2)\\s+(different\\s+)?(values?|digits?|states?|numbers?|symbols?|options?)|only\\s+(uses?\\s+|has\\s+)?(two|2)\\b|only\\s+(uses?\\s+|has\\s+)?(the\\s+)?(digits?\\s+|values?\\s+)?(1|0|one|zero)s?\\b))(?=.*\\b((1|one)s?\\s*(and|or|,|&)\\s*(0|zero)s?|(0|zero)s?\\s*(and|or|,|&)\\s*(1|one)s?)\\b)).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: its base, and which values it uses.",
+    "marks": 2
+   }
+  ],
+  "y11_11b_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?121(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?90(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   }
+  ],
+  "y11_11b_practice_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?86(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?72(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   }
+  ],
+  "y11_11b_practice_why": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(all|every|each|eight|8)\\b)(?=.*\\b(1s?|ones?|on|used|added|full|filled)\\b)(?=.*\\b(no\\s+more|cannot|can.?t|9th|ninth|nine|9|256|another|extra|new|next|more\\s+(bits?|columns?|places?))\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what every bit is, and what one more would need."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\b(only|two|2|0\\s+(and|or)\\s+1|1\\s+(and|or)\\s+0|full|no\\s+(digit\\s+)?2|binary|base\\s*2)\\b)(?=.*\\b(new|next|another|carr\\w*|move\\w*|start\\w*|columns?|left)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Two ideas: what one column can hold, and what happens when it is full."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

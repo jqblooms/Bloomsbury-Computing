@@ -46,6 +46,13 @@
             "y7-revision-2",
             "y7-term1-test"
           ]
+        },
+        {
+          "code": "7CT.08",
+          "title": "Software Development and Physical Computing",
+          "lessons": [
+            "y7-3-1-constructs"
+          ]
         }
       ]
     },
@@ -169,7 +176,8 @@
           "code": "2.3",
           "title": "Encryption",
           "lessons": [
-            "y10-2-3-l1"
+            "y10-2-3-l1",
+            "y10-2-3-l2"
           ]
         }
       ]
@@ -208,6 +216,13 @@
             "y11-8-1-arith",
             "y11-8-1-ops",
             "y11-8-1-strings"
+          ]
+        },
+        {
+          "code": "1.1",
+          "title": "Number Systems",
+          "lessons": [
+            "y11-1-1-binary"
           ]
         }
       ]
