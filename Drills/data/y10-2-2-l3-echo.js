@@ -15,11 +15,16 @@ DrillData.register("y10-2-2-l3-echo", {
     function bits(n) { var s = ""; for (var i = 0; i < n; i++) s += Math.random() < 0.5 ? "1" : "0"; return s; }
     function flip(s, k) { return s.slice(0, k) + (s[k] === "1" ? "0" : "1") + s.slice(k + 1); }
     // One trip: the data sent, what arrived at the receiver, and the copy that came back to the sender.
+    // Never the bytes a worked example uses, or the example would show the card's own question.
+    var EXAMPLE_BYTES = ["11001010", "11001110", "00110101", "10011100", "10111100", "01110001", "01010001", "01101100", "01101101"];
     function trip(kind) {
-      var sent = bits(8), arrived = sent, back;
-      if (kind === "there") arrived = flip(sent, rnd(8));
-      back = arrived;
-      if (kind === "back") back = flip(arrived, rnd(8));
+      var sent, arrived, back;
+      do {
+        sent = bits(8); arrived = sent;
+        if (kind === "there") arrived = flip(sent, rnd(8));
+        back = arrived;
+        if (kind === "back") back = flip(arrived, rnd(8));
+      } while (EXAMPLE_BYTES.indexOf(sent) !== -1 || EXAMPLE_BYTES.indexOf(arrived) !== -1 || EXAMPLE_BYTES.indexOf(back) !== -1);
       return { sent: sent, arrived: arrived, back: back };
     }
     function whole(t) {
