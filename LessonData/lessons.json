@@ -234,6 +234,24 @@
           ]
         }
       ]
+    },
+    {
+      "id": "competition",
+      "label": "Competition",
+      "course": "ACSL Junior Division",
+      "kind": "competition",
+      "units": [
+        {
+          "code": "",
+          "title": "ACSL Junior Contest 2",
+          "lessons": [
+            "acsl-c2-notation",
+            "acsl-c2-bits",
+            "acsl-c2-loops",
+            "acsl-c2-contest"
+          ]
+        }
+      ]
     }
   ]
 }

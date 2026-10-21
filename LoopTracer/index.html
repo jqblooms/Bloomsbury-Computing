@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Loop Tracer</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="lt-css" href="style.css">
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<script>
+// Loop Tracer: ACSL "What Does This Program Do?" practice with loops.
+//   ?mode=trace    Trace Table Race: predict each new value in the trace table before it is shown.
+//   ?mode=predict  Predict the Output: one try at what the program outputs, then see the trace.
+//   ?mode=mock     Mock Contest: 2 notation, 2 bit-string and 1 program question against the clock.
+//   (no mode)      a menu of all three.
+// &level=1..6 (6 is contest length, predict only), &rounds=n programs per round, &minutes=n for the mock,
+// &embed=1 on a lesson slide. Every file is loaded with the page's bcv.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('lt-css').href = 'style.css?v=' + encodeURIComponent(v);
+  ['../shared/acsl-pseudocode.js', '../shared/bc-support.js', 'js/programs.js', 'js/contest-gen.js', 'js/common.js', 'js/trace.js', 'js/predict.js', 'js/mock.js', 'js/main.js'].forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

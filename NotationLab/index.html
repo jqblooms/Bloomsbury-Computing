@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NotationLab</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="nl-css" href="lab.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="activity" aria-live="polite"></section>
+</main>
+<script src="../shared/bc-support.js?v=20260928"></script>
+<script>
+// NotationLab (ACSL Junior Contest 2: prefix, infix and postfix). ?mode= picks one:
+//   stack   Stack Machine: evaluate prefix and postfix with a stack, then without it (?form=postfix|prefix, ?level=n, ?pow=0)
+//   tree    Tree Builder: build the tree of an infix expression, then read prefix or postfix off it
+//   group   Group It: turn prefix or postfix back into infix
+//   race    Convert Race: 90 seconds of mixed questions
+// With no mode it lists them. ?embed=1 sits it on a lesson slide. Every file is loaded with the page's bcv.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('nl-css').href = 'lab.css?v=' + encodeURIComponent(v);
+  var FILE = { stack: 'stack.js', tree: 'tree.js', group: 'group.js', race: 'race.js' };
+  var mode = params.get('mode');
+  var files = ['core.js', 'common.js'].concat(FILE[mode] ? [FILE[mode]] : [], ['main.js']);
+  files.forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

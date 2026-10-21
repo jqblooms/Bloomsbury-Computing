@@ -1,0 +1,381 @@
+{
+ "id": "acsl-c2-notation",
+ "label": "Contest 2: Prefix, Infix and Postfix",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Order of Operations",
+   "type": "short-answer-validation",
+   "validatorId": "acn-do-now",
+   "validatorKey": "acn_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Order of Operations</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we need rules for which part of a sum to work out first?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Without rules, two people could work out the same sum in different orders and get different answers.</p></div></details><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acn-do-now-a\">(a) Work out 9 - 5 + 3 [1]</label><input id=\"acn-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Order of Operations part a\" autocomplete=\"off\" spellcheck=\"false\"></div><div class=\"lesson-do-now-response\"><label for=\"acn-do-now-b\">(b) Work out 4 + 6 * 2 [1]</label><input id=\"acn-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Order of Operations part b\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acn-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acn-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: order of operations",
+    "steps": [
+     {
+      "text": "These are the same kind of questions with different numbers. Work out one part at a time.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\">8 - 3 + 1<br>2 + 4 * 3</div>"
+     },
+     {
+      "text": "+ and - have the same rank. Work them from <strong>left to right</strong>: 8 - 3 first.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\"><span class=\"wt-hl\">8 - 3</span> + 1</div><div class=\"wt-note\">8 - 3 = 5, so it becomes 5 + 1 = <span class=\"wt-hl\">6</span></div>"
+     },
+     {
+      "text": "* ranks above +. Work out the <strong>*</strong> first, even though it is on the right.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\">2 + <span class=\"wt-hl\">4 * 3</span></div><div class=\"wt-note\">4 * 3 = 12, so it becomes 2 + 12 = <span class=\"wt-hl\">14</span></div>"
+     },
+     {
+      "text": "Now do the same with your two: * and / first, then + and -, left to right.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\"><span class=\"wt-hl\">8 - 3 + 1</span><br><span class=\"wt-hl\">2 + 4 * 3</span></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-notation-ext",
+   "embedContainerId": "acn-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these longer sums. Stuck? Switch on <strong>I need help</strong> to see a similar one worked through.</p><div id=\"acn-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Contest 2: Prefix, Infix and Postfix",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">ACSL Junior Division</p><h2 class=\"lesson-h2\">Contest 2: Prefix, Infix and Postfix</h2><p>Competition</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> three ways to write the same sum, and how a computer works it out.</li><li><strong>The big question:</strong> how can a computer work out a sum with no brackets at all?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Your calculator works out long sums with brackets. How might it keep track of what to do next?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Talk about it in pairs. By the end of the lesson you will know one way computers do it.</p></div></details>"
+  },
+  {
+   "id": "why-brackets",
+   "label": "Compare: Where Do the Brackets Go?",
+   "type": "multiple-choice",
+   "containerId": "acn-why-brackets",
+   "content": "<h2 class=\"lesson-h2\">Compare: Where Do the Brackets Go?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a calculator need rules or brackets to work out a sum?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The same numbers and operators can give different answers. The rules and brackets say which part to work out first.</p></div></details><div class=\"lesson-do-now-columns\"><div><div style=\"display:flex;align-items:center;gap:14px;padding:4px 14px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)\"><b>Sum 1</b><p style=\"font:700 1.5rem/1.3 var(--font-mono);letter-spacing:.04em;margin:6px 0\">5 + 3 * 2</p></div></div><div><div style=\"display:flex;align-items:center;gap:14px;padding:4px 14px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)\"><b>Sum 2</b><p style=\"font:700 1.5rem/1.3 var(--font-mono);letter-spacing:.04em;margin:6px 0\">(5 + 3) * 2</p></div></div></div><div id=\"acn-why-brackets\"></div>",
+   "items": [
+    {
+     "prompt": "Which one has the value 16?",
+     "options": [
+      "5 + 3 * 2",
+      "(5 + 3) * 2",
+      "Both of them"
+     ],
+     "correct": 1,
+     "explain": "(5 + 3) * 2 = 8 * 2 = 16. Without brackets, * comes first: 5 + 6 = 11. Brackets change the order, so they change the answer."
+    }
+   ]
+  },
+  {
+   "id": "three-forms",
+   "label": "Three Ways to Write It",
+   "content": "<h2 class=\"lesson-h2\">Three Ways to Write It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might \"pre\" and \"post\" be good names for two of these forms?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Pre means before and post means after: the operator comes before or after its two values.</p></div></details><p class=\"lesson-lead\">Every operator joins <strong>two values</strong>. The forms differ in where the operator goes.</p><table class=\"donow-table\" style=\"font-size:18px;width:100%\"><thead><tr><th style=\"padding:3px 8px;text-align:left;font-size:18px\">Form</th><th style=\"padding:3px 8px;text-align:left;font-size:18px\">The operator goes</th><th style=\"padding:3px 8px;text-align:left;font-size:18px\">A + B</th><th style=\"padding:3px 8px;text-align:left;font-size:18px\">(A + B) * C</th></tr></thead><tbody><tr><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><strong>Infix</strong></td><td style=\"padding:3px 8px;text-align:left;font-size:18px\">between the two values</td><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><code style=\"font:700 1.02em var(--font-mono)\">A + B</code></td><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><code style=\"font:700 1.02em var(--font-mono)\">(A + B) * C</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><strong>Prefix</strong></td><td style=\"padding:3px 8px;text-align:left;font-size:18px\">before the two values</td><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><code style=\"font:700 1.02em var(--font-mono)\">+ A B</code></td><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><code style=\"font:700 1.02em var(--font-mono)\">* + A B C</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><strong>Postfix</strong></td><td style=\"padding:3px 8px;text-align:left;font-size:18px\">after the two values</td><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><code style=\"font:700 1.02em var(--font-mono)\">A B +</code></td><td style=\"padding:3px 8px;text-align:left;font-size:18px\"><code style=\"font:700 1.02em var(--font-mono)\">A B + C *</code></td></tr></tbody></table><ul class=\"lesson-facts\"><li>Prefix and postfix <strong>never need brackets</strong>.</li><li>Computers like postfix: they work it out with a <strong>stack</strong>.</li></ul>"
+  },
+  {
+   "id": "forms-check",
+   "label": "Your Turn: Which Form?",
+   "type": "multiple-choice",
+   "containerId": "acn-forms-check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Which Form?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How can you tell the three forms apart at a glance?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Look at where the operators are: between the values, at the front, or at the end.</p></div></details><div id=\"acn-forms-check\"></div>",
+   "items": [
+    {
+     "prompt": "Which of these is postfix?",
+     "options": [
+      "6 3 /",
+      "/ 6 3",
+      "6 / 3"
+     ],
+     "correct": 0,
+     "explain": "In postfix the operator comes after its two values: 6 3 /."
+    },
+    {
+     "prompt": "Which is C * D written in prefix?",
+     "options": [
+      "C D *",
+      "* C D",
+      "C * D"
+     ],
+     "correct": 1,
+     "explain": "In prefix the operator comes first, then the values in the same order: * C D."
+    }
+   ]
+  },
+  {
+   "id": "postfix-stack",
+   "label": "Postfix: Use a Stack",
+   "content": "<h2 class=\"lesson-h2\">Postfix: Use a Stack</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the first value popped go on the right?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It was pushed last, so it was written last. The value written first always goes on the left.</p></div></details><p class=\"lesson-lead\">A <strong>stack</strong> is a pile. You <strong>push</strong> a value onto the top and <strong>pop</strong> a value off the top.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Read from <strong>left to right</strong>.</li><li>A number: <strong>push</strong> it.</li><li>An operator: <strong>pop</strong> two values, work them out, push the answer.</li><li>The <strong>first</strong> value popped goes on the <strong>right</strong>.</li><li>At the end, one value is left: the answer.</li></ul></div><div><p style=\"font:700 1.3rem/1.3 var(--font-mono);letter-spacing:.04em;margin:6px 0\">6 2 - 3 *</p><table class=\"donow-table\" style=\"font-size:15px;width:100%\"><thead><tr><th style=\"padding:3px 8px;text-align:left;font-size:15px\">Read</th><th style=\"padding:3px 8px;text-align:left;font-size:15px\">Do</th><th style=\"padding:3px 8px;text-align:left;font-size:15px\">Stack</th></tr></thead><tbody><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">6</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">6</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">2</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">6 2</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">-</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">pop 2, pop 6: 6 - 2 = 4, push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">4</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">3</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">4 3</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">*</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">pop 3, pop 4: 4 * 3 = 12, push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">12</code></td></tr></tbody></table></div></div>"
+  },
+  {
+   "id": "postfix-check",
+   "label": "Your Turn: Postfix",
+   "type": "short-answer-validation",
+   "validatorId": "acn-postfix-check",
+   "validatorKey": "acn_postfix_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Postfix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the answer the last value left on the stack?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every operator turns two values into one. When the last operator is done, only the answer is left.</p></div></details><p class=\"lesson-lead\">Predict each value. Write the stack down as you go.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acn-postfix-check-a\">(a) Work out 8 3 - 2 * [1]</label><input id=\"acn-postfix-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"postfix-check-a\" aria-label=\"Your Turn: Postfix part a\" autocomplete=\"off\" spellcheck=\"false\"></div><div class=\"lesson-do-now-response\"><label for=\"acn-postfix-check-b\">(b) Work out 5 1 2 + 4 * + 3 - [1]</label><input id=\"acn-postfix-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"postfix-check-b\" aria-label=\"Your Turn: Postfix part b\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acn-postfix-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acn-postfix-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "prefix-stack",
+   "label": "Prefix: Read from the Right",
+   "content": "<h2 class=\"lesson-h2\">Prefix: Read from the Right</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we read prefix from the right?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each operator comes before its values. Reading from the right, its values are already on the stack when we reach it.</p></div></details><p class=\"lesson-lead\">Prefix uses the same stack, read the other way.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Read from <strong>right to left</strong>.</li><li>A number: push it.</li><li>An operator: pop two values, work them out, push the answer.</li><li>The <strong>first</strong> value popped goes on the <strong>left</strong>.</li></ul></div><div><p style=\"font:700 1.3rem/1.3 var(--font-mono);letter-spacing:.04em;margin:6px 0\">- * 3 4 5</p><table class=\"donow-table\" style=\"font-size:15px;width:100%\"><thead><tr><th style=\"padding:3px 8px;text-align:left;font-size:15px\">Read</th><th style=\"padding:3px 8px;text-align:left;font-size:15px\">Do</th><th style=\"padding:3px 8px;text-align:left;font-size:15px\">Stack</th></tr></thead><tbody><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">5</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">5</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">4</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">5 4</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">3</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">5 4 3</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">*</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">pop 3, pop 4: 3 * 4 = 12, push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">5 12</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">-</code></td><td style=\"padding:3px 8px;text-align:left;font-size:15px\">pop 12, pop 5: 12 - 5 = 7, push it</td><td style=\"padding:3px 8px;text-align:left;font-size:15px\"><code style=\"font:700 1.02em var(--font-mono)\">7</code></td></tr></tbody></table></div></div>"
+  },
+  {
+   "id": "compare-order",
+   "label": "Compare: Postfix and Prefix",
+   "type": "multiple-choice",
+   "containerId": "acn-compare-order",
+   "content": "<h2 class=\"lesson-h2\">Compare: Postfix and Prefix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the order of two values matter for - and /, but not for + and *?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>6 - 1 and 1 - 6 are different. 6 + 1 and 1 + 6 are the same.</p></div></details><div class=\"lesson-do-now-columns\"><div><div style=\"display:flex;align-items:center;gap:14px;padding:4px 14px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)\"><b>Postfix</b><p style=\"font:700 1.5rem/1.3 var(--font-mono);letter-spacing:.04em;margin:6px 0\">8 2 /</p></div></div><div><div style=\"display:flex;align-items:center;gap:14px;padding:4px 14px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)\"><b>Prefix</b><p style=\"font:700 1.5rem/1.3 var(--font-mono);letter-spacing:.04em;margin:6px 0\">/ 8 2</p></div></div></div><div id=\"acn-compare-order\"></div>",
+   "items": [
+    {
+     "prompt": "What is the value of each one?",
+     "options": [
+      "Postfix 4, prefix 0.25",
+      "Both are 4",
+      "Postfix 0.25, prefix 4"
+     ],
+     "correct": 1,
+     "explain": "In both, 8 is written first, so it goes on the left: 8 / 2 = 4. Postfix pops 2 first (right); prefix, read from the right, pops 8 first (left)."
+    }
+   ]
+  },
+  {
+   "id": "prefix-check",
+   "label": "Your Turn: Prefix",
+   "type": "short-answer-validation",
+   "validatorId": "acn-prefix-check",
+   "validatorKey": "acn_prefix_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Prefix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">In prefix, why is the operator at the very front the last one you work out?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>We read from the right, so we reach the front last. It joins the two biggest parts.</p></div></details><p class=\"lesson-lead\">Read from the right. Predict, then check.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acn-prefix-check-a\">(a) Work out + 7 * 2 3 [1]</label><input id=\"acn-prefix-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"prefix-check-a\" aria-label=\"Your Turn: Prefix part a\" autocomplete=\"off\" spellcheck=\"false\"></div><div class=\"lesson-do-now-response\"><label for=\"acn-prefix-check-b\">(b) Work out * - 9 4 + 1 2 [1]</label><input id=\"acn-prefix-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"prefix-check-b\" aria-label=\"Your Turn: Prefix part b\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acn-prefix-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acn-prefix-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Stack Machine",
+   "type": "embedded-app",
+   "appId": "notation-lab",
+   "embedQuery": "mode=stack&pow=0",
+   "embedContainerId": "acn-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Stack Machine</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the machine ask you which way round the two values go?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>For - and / the order changes the answer. The machine only pops; you use the rule for the form.</p></div></details><p class=\"lesson-lead\">Choose every step. A mistake costs a heart. Two clean expressions move you up a level.</p><div id=\"acn-activity-1\"></div>"
+  },
+  {
+   "id": "to-post",
+   "label": "Infix to Prefix and Postfix",
+   "content": "<h2 class=\"lesson-h2\">Infix to Prefix and Postfix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why put brackets round every operation first?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then each operator has its own pair of brackets, so you know exactly which two values it joins.</p></div></details><p class=\"lesson-lead\">Three steps, from the inside out.</p><ol class=\"lesson-facts\"><li>Put <strong>brackets</strong> round every operation, in the order you work it out.</li><li><strong>Move</strong> each operator to the front (prefix) or the end (postfix) of its own brackets.</li><li><strong>Remove</strong> the brackets.</li></ol><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:3px 8px;text-align:left;font-size:17px\"></th><th style=\"padding:3px 8px;text-align:left;font-size:17px\">Postfix</th><th style=\"padding:3px 8px;text-align:left;font-size:17px\">Prefix</th></tr></thead><tbody><tr><td style=\"padding:3px 8px;text-align:left;font-size:17px\">1. Brackets</td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">(A + (B * C))</code></td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">(A + (B * C))</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:17px\">2. Move</td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">(A (B C *) +)</code></td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">(+ A (* B C))</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:17px\">3. Remove</td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">A B C * +</code></td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">+ A * B C</code></td></tr></tbody></table><p class=\"lesson-lead\" style=\"margin-top:8px\">Infix: <code style=\"font:700 1.02em var(--font-mono)\">A + B * C</code></p>"
+  },
+  {
+   "id": "convert-check",
+   "label": "Your Turn: Convert",
+   "type": "short-answer-validation",
+   "validatorId": "acn-convert-check",
+   "validatorKey": "acn_convert_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Convert</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does postfix not need the brackets from (D + E) / F?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The order of the tokens already shows that + is worked out before /.</p></div></details><p class=\"lesson-lead\">Infix: <code style=\"font:700 1.02em var(--font-mono)\">(A - B) * C</code>. Spaces are optional.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"acn-convert-check-a\">(a) Write it in postfix. [1]</label><input id=\"acn-convert-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"convert-check-a\" aria-label=\"Your Turn: Convert part a\" autocomplete=\"off\" spellcheck=\"false\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"acn-convert-check-b\">(b) Write it in prefix. [1]</label><input id=\"acn-convert-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"convert-check-b\" aria-label=\"Your Turn: Convert part b\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acn-convert-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acn-convert-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "power",
+   "label": "The Power Arrow",
+   "content": "<h2 class=\"lesson-h2\">The Power Arrow ↑</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might the power arrow rank above *?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A power is repeated multiplication, so it is worked out before the * around it, just as * comes before +.</p></div></details><p class=\"lesson-lead\"><code style=\"font:700 1.02em var(--font-mono)\">A ↑ B</code> means A to the power B. You can type it as <code style=\"font:700 1.02em var(--font-mono)\">^</code>.</p><ul class=\"lesson-facts\"><li><code style=\"font:700 1.02em var(--font-mono)\">2 ↑ 3</code> = 2 * 2 * 2 = 8</li><li>Order: brackets, then <strong>↑</strong>, then <strong>* and /</strong>, then <strong>+ and -</strong>.</li><li>Two of the same rank: work from left to right.</li><li><code style=\"font:700 1.02em var(--font-mono)\">3 + 2 ↑ 3</code> = 3 + 8 = 11</li></ul>"
+  },
+  {
+   "id": "power-check",
+   "label": "Your Turn: The Power Arrow",
+   "type": "short-answer-validation",
+   "validatorId": "acn-power-check",
+   "validatorKey": "acn_power_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: The Power Arrow</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is 5 ↑ 2 not the same as 5 * 2?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>5 ↑ 2 means two copies of 5 multiplied together: 5 * 5.</p></div></details><p class=\"lesson-lead\">Type <code style=\"font:700 1.02em var(--font-mono)\">^</code> for <code style=\"font:700 1.02em var(--font-mono)\">↑</code> if you like.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acn-power-check-a\">(a) Work out 1 + 2 ↑ 3 * 2 [1]</label><input id=\"acn-power-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"power-check-a\" aria-label=\"Your Turn: The Power Arrow part a\" autocomplete=\"off\" spellcheck=\"false\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"acn-power-check-b\">(b) Write A * B ↑ 2 in postfix. [1]</label><input id=\"acn-power-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"power-check-b\" aria-label=\"Your Turn: The Power Arrow part b\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acn-power-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acn-power-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Tree Builder",
+   "type": "embedded-app",
+   "appId": "notation-lab",
+   "embedQuery": "mode=tree",
+   "embedContainerId": "acn-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Tree Builder</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the operator worked out last at the top of the tree?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It joins the two biggest parts. Everything below it must be worked out first.</p></div></details><div id=\"acn-activity-2\"></div>"
+  },
+  {
+   "id": "to-infix",
+   "label": "Back to Infix",
+   "content": "<h2 class=\"lesson-h2\">Back to Infix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can we always find an operator with two values right next to it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The first operator to work out has plain values beside it. After that, each group counts as one value.</p></div></details><p class=\"lesson-lead\">Find an operator with two values right next to it, and join the three into one group.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>Postfix:</strong> the two values are just <strong>before</strong> the operator.</li><li><strong>Prefix:</strong> the two values are just <strong>after</strong> it.</li><li>A group counts as one value. Repeat until one group is left.</li><li>Last, remove brackets that change nothing.</li></ul></div><div><table class=\"donow-table\" style=\"font-size:16px;width:100%\"><thead><tr><th style=\"padding:3px 8px;text-align:left;font-size:16px\">Step</th><th style=\"padding:3px 8px;text-align:left;font-size:16px\">Row</th></tr></thead><tbody><tr><td style=\"padding:3px 8px;text-align:left;font-size:16px\">Start</td><td style=\"padding:3px 8px;text-align:left;font-size:16px\"><code style=\"font:700 1.02em var(--font-mono)\">A B C * +</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:16px\">Group 1</td><td style=\"padding:3px 8px;text-align:left;font-size:16px\"><code style=\"font:700 1.02em var(--font-mono)\">A (B * C) +</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:16px\">Group 2</td><td style=\"padding:3px 8px;text-align:left;font-size:16px\"><code style=\"font:700 1.02em var(--font-mono)\">(A + (B * C))</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:16px\">Remove</td><td style=\"padding:3px 8px;text-align:left;font-size:16px\"><code style=\"font:700 1.02em var(--font-mono)\">A + B * C</code></td></tr></tbody></table></div></div>"
+  },
+  {
+   "id": "group-app",
+   "label": "Your Turn: Group It",
+   "type": "embedded-app",
+   "appId": "notation-lab",
+   "embedQuery": "mode=group",
+   "embedContainerId": "acn-group-app",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Group It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does grouping give the brackets back?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each group is one operator with its two values, so the brackets show what is worked out first.</p></div></details><p class=\"lesson-lead\">Click an operator that has two values right next to it. From level 4, predict the infix first.</p><div id=\"acn-group-app\"></div>"
+  },
+  {
+   "id": "acsl-prefix",
+   "label": "Contest Style: A Long Prefix",
+   "type": "short-answer-validation",
+   "validatorId": "acn-acsl-prefix",
+   "validatorKey": "acn_acsl_prefix",
+   "content": "<h2 class=\"lesson-h2\">Contest Style: A Long Prefix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write the stack down rather than keep it in your head?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A long expression has many values waiting. Writing them down keeps the order, so the right value goes on the left.</p></div></details><p class=\"lesson-lead\">Contest questions use long expressions of single digits. Use the stack, from the right.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acn-acsl-prefix-a\">(a) Work out - * + 3 4 2 / ↑ 2 3 4 [1]</label><input id=\"acn-acsl-prefix-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"acsl-prefix-a\" aria-label=\"Contest Style: A Long Prefix part a\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acn-acsl-prefix-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"acn-acsl-prefix-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "implied",
+   "label": "Contest Style: Hidden Multiplication",
+   "content": "<h2 class=\"lesson-h2\">Contest Style: Hidden Multiplication</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write the hidden * before you convert?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every operator must move. A * you cannot see is easy to leave out.</p></div></details><p class=\"lesson-lead\">In contests, a number written next to a letter or a bracket means <strong>multiply</strong>.</p><ul class=\"lesson-facts\"><li><code style=\"font:700 1.02em var(--font-mono)\">2B</code> means <code style=\"font:700 1.02em var(--font-mono)\">2 * B</code>.</li><li><code style=\"font:700 1.02em var(--font-mono)\">3(A + 2B)</code> means <code style=\"font:700 1.02em var(--font-mono)\">3 * (A + 2 * B)</code>.</li><li>Write the hidden * first, then convert as usual.</li></ul><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:3px 8px;text-align:left;font-size:17px\"></th><th style=\"padding:3px 8px;text-align:left;font-size:17px\"></th></tr></thead><tbody><tr><td style=\"padding:3px 8px;text-align:left;font-size:17px\">Contest form</td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">3(A + 2B)</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:17px\">With every *</td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">3 * (A + 2 * B)</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:17px\">Brackets</td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">(3 * (A + (2 * B)))</code></td></tr><tr><td style=\"padding:3px 8px;text-align:left;font-size:17px\">Postfix</td><td style=\"padding:3px 8px;text-align:left;font-size:17px\"><code style=\"font:700 1.02em var(--font-mono)\">3 A 2 B * + *</code></td></tr></tbody></table>"
+  },
+  {
+   "id": "implied-check",
+   "label": "Your Turn: Hidden Multiplication",
+   "type": "short-answer-validation",
+   "validatorId": "acn-implied-check",
+   "validatorKey": "acn_implied_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Hidden Multiplication</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How many operators are in 5(D + 3E)? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Three: the + you can see, and two hidden *, one in 3E and one before the bracket.</p></div></details><p class=\"lesson-lead\">Infix: <code style=\"font:700 1.02em var(--font-mono)\">4(B - 2C)</code>. Spaces are optional.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"acn-implied-check-a\">(a) Write it in postfix. [1]</label><input id=\"acn-implied-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"implied-check-a\" aria-label=\"Your Turn: Hidden Multiplication part a\" autocomplete=\"off\" spellcheck=\"false\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"acn-implied-check-b\">(b) Write it in prefix. [1]</label><input id=\"acn-implied-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"implied-check-b\" aria-label=\"Your Turn: Hidden Multiplication part b\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acn-implied-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acn-implied-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Convert Race",
+   "type": "embedded-app",
+   "appId": "notation-lab",
+   "embedQuery": "mode=race",
+   "embedContainerId": "acn-practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Convert Race</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a streak score more than the same answers with mistakes between them?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Contests reward accuracy. A streak shows you can do it every time, not just sometimes.</p></div></details><p class=\"lesson-lead\">90 seconds of mixed questions. Get 8 right in one race to pass.</p><div id=\"acn-practice\"></div>"
+  },
+  {
+   "id": "links",
+   "label": "Try Real Contest Questions",
+   "content": "<h2 class=\"lesson-h2\">Try Real Contest Questions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with real past contest questions?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You see the style and the length they use, so nothing surprises you on the day.</p></div></details><p class=\"lesson-lead\">The official ACSL pages explain this topic and show real contest questions.</p><ul class=\"lesson-facts\"><li><a href=\"http://www.categories.acsl.org/wiki/index.php?title=Prefix/Infix/Postfix_Notation\" target=\"_blank\" rel=\"noopener\">ACSL wiki: Prefix, Infix and Postfix Notation</a>: the rules, with worked examples.</li><li><a href=\"http://datafiles.acsl.org/samples/contest2/2junior.pdf\" target=\"_blank\" rel=\"noopener\">Junior Contest 2 sample</a>: two of its five questions are on this topic. Try them.</li><li>In the contest: a single answer, no calculator. Write the stack down as you go.</li></ul>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Prefix, Infix and Postfix",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-notation",
+   "embedContainerId": "acn-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Prefix, Infix and Postfix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new expressions every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do any expression, you really know the method, not just one answer.</p></div></details><p class=\"lesson-lead\">Evaluate, convert and convert back. New expressions every time. Your progress is saved.</p><div id=\"acn-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "acn_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "+ and - have the same rank. Work from left to right."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*16\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which ranks higher, * or +? Work that part out first."
+   }
+  ],
+  "acn_postfix_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*10\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Push the numbers. At each operator pop two: the first one popped goes on the right."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*14\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Keep going left to right. Three numbers can wait on the stack before an operator."
+   }
+  ],
+  "acn_prefix_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*13\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start at the right end. At each operator pop two: the first one popped goes on the left."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*15\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out the two parts on the right first. The front operator joins them."
+   }
+  ],
+  "acn_convert_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[Aa][\\s,]*[Bb][\\s,]*[-\\u2212\\u2013][\\s,]*[Cc][\\s,]*[*\\u00d7xX\\u00b7]\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Brackets round every part first. Then move each operator to the end of its own brackets."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[*\\u00d7xX\\u00b7][\\s,]*[-\\u2212\\u2013][\\s,]*[Aa][\\s,]*[Bb][\\s,]*[Cc]\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Move each operator to the front of its own brackets. The values stay in the same order."
+   }
+  ],
+  "acn_power_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*17\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The arrow first, then *, then +."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[Aa][\\s,]*[Bb][\\s,]*2[\\s,]*(?:\\u2191|\\^)[\\s,]*[*\\u00d7xX\\u00b7]\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Bracket the arrow part first: it ranks highest."
+   }
+  ],
+  "acn_acsl_prefix": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*12\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Push from the right. ↑ means a power. The first value popped goes on the left."
+   }
+  ],
+  "acn_implied_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4[\\s,]*[Bb][\\s,]*2[\\s,]*[Cc][\\s,]*[*\\u00d7xX\\u00b7][\\s,]*[-\\u2212\\u2013][\\s,]*[*\\u00d7xX\\u00b7]\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write in every hidden * first. There are two."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[*\\u00d7xX\\u00b7][\\s,]*4[\\s,]*[-\\u2212\\u2013][\\s,]*[Bb][\\s,]*[*\\u00d7xX\\u00b7][\\s,]*2[\\s,]*[Cc]\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Bracket every part, then move each operator to the front."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

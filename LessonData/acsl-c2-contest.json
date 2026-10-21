@@ -1,0 +1,239 @@
+{
+ "id": "acsl-c2-contest",
+ "label": "ACSL Contest 2: Contest Day",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Notation (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "acc-do-now",
+   "validatorKey": "acc_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Notation (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does prefix need no brackets?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each operator comes just before its two operands, so the order of the work is already fixed.</p></div></details><p class=\"lesson-lead\">From the Prefix, Infix and Postfix lesson.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"acc-do-now-a\">(a) Evaluate the prefix expression <code>- * 3 + 2 4 / 8 2</code> [1]</label><input id=\"acc-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Notation (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"acc-do-now-b\">(b) Write <code>(a + b) * c - d</code> in postfix. [1]</label><input id=\"acc-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Notation (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acc-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acc-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: prefix and postfix",
+    "steps": [
+     {
+      "text": "A similar prefix question: find an operator with two numbers straight after it.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:34px\">+ <span class=\"wt-hl\">* 2 3</span> - 9 4</div>"
+     },
+     {
+      "text": "Work it out and put the answer in its place: * 2 3 is 6.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:34px\">+ 6 <span class=\"wt-hl\">- 9 4</span></div>"
+     },
+     {
+      "text": "Repeat: - 9 4 is 5. Then + 6 5 is 11.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:34px\">+ 6 5 &rarr; <span class=\"wt-hl\">11</span></div>"
+     },
+     {
+      "text": "A similar postfix question: a * (b - c) + d. First put brackets round every operation.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">((a * (b - c)) + d)</div>"
+     },
+     {
+      "text": "Start inside: b - c becomes b c -. Then a times that becomes a b c - *.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">a <span class=\"wt-hl\">b c -</span> *</div>"
+     },
+     {
+      "text": "Last, add d: the + goes after both of its operands.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\"><span class=\"wt-hl\">a b c - * d +</span></div>"
+     },
+     {
+      "text": "Now do your two questions the same way.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">find &rarr; work out &rarr; replace &rarr; repeat</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Bit Strings (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "acc-do-now-2",
+   "validatorKey": "acc_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Bit Strings (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a shift keep the string the same length?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Bits fall off one end and the same number of zeros come in at the other end.</p></div></details><p class=\"lesson-lead\">From the Bit-String Flicking lesson. Write all 5 bits.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"acc-do-now-2-a\">(a) <code>LSHIFT-2 01101 OR 10010</code> [1]</label><input id=\"acc-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Bit Strings (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"acc-do-now-2-b\">(b) <code>NOT 11010 AND RCIRC-1 10011</code> [1]</label><input id=\"acc-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Bit Strings (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acc-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acc-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: bit strings",
+    "steps": [
+     {
+      "text": "A similar question: RSHIFT-1 11100 XOR 01100. Shifts go first.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:34px\"><span class=\"wt-hl\">RSHIFT-1 11100</span> XOR 01100</div>"
+     },
+     {
+      "text": "RSHIFT-1 moves every bit one place right. The last bit is lost and a 0 comes in on the left.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:34px\">11100 &rarr; <span class=\"wt-hl\">01110</span></div>"
+     },
+     {
+      "text": "Now XOR, bit by bit: 1 where the bits are different.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:34px\">01110 XOR 01100 = <span class=\"wt-hl\">00010</span></div>"
+     },
+     {
+      "text": "Another: NOT 01110 AND LCIRC-1 11001. NOT and the circulate go before AND.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">NOT 01110 = 10001 &nbsp; LCIRC-1 11001 = 10011</div>"
+     },
+     {
+      "text": "LCIRC-1 moves the bits left, and the bit that falls off comes back on the right. Then AND: 1 only where both are 1.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">10001 AND 10011 = <span class=\"wt-hl\">10001</span></div>"
+     },
+     {
+      "text": "Now do your two questions the same way: NOT, shifts and circulates first, then AND, XOR, OR.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">NOT, SHIFT, CIRC &rarr; AND &rarr; XOR &rarr; OR</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-contest-ext",
+   "embedContainerId": "acc-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from all three Contest 2 topics. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"acc-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Contest Day",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">ACSL Junior Contest 2</p><h2 class=\"lesson-h2\">Contest Day</h2><p>Competition</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> how the contest works, how to write answers that score, a mock contest against the clock, and the programming problem.</li><li><strong>Every time, ask why:</strong> why would that answer score, or not score?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise a whole contest, not just one topic at a time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>On the day the topics are mixed. You have to switch between them quickly and manage your time.</p></div></details>"
+  },
+  {
+   "id": "how-it-works",
+   "label": "How the Contest Works",
+   "content": "<h2 class=\"lesson-h2\">How the Contest Works</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each short question ask for only one answer, with no working?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Answers can be checked quickly and fairly. The working is for you: it is how you get the answer right.</p></div></details><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">Question</th><th style=\"padding:6px 12px;text-align:center\">Usual topic</th></tr><tr><td style=\"padding:5px 12px;text-align:center\">1</td><td style=\"padding:5px 12px;text-align:center\">Prefix, Infix and Postfix</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">2</td><td style=\"padding:5px 12px;text-align:center\">Prefix, Infix and Postfix</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">3</td><td style=\"padding:5px 12px;text-align:center\">Bit-String Flicking</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">4</td><td style=\"padding:5px 12px;text-align:center\">Bit-String Flicking</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">5</td><td style=\"padding:5px 12px;text-align:center\">What Does This Program Do?</td></tr></table></div><div><ul class=\"lesson-facts\"><li><strong>Part 1:</strong> five short questions. Each answer is one value or one expression.</li><li><strong>Part 2:</strong> a programming problem. Your program reads test input and prints the answers.</li><li>The program is run on test inputs. Each output that matches scores.</li><li>Your teacher tells you the time for each part.</li></ul></div></div>"
+  },
+  {
+   "id": "answer-forms",
+   "label": "Compare: Answers That Score",
+   "content": "<h2 class=\"lesson-h2\">Compare: Answers That Score</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is 110 not a good answer when the question works with 5-bit strings?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The strings keep their length. 110 hides the two zeros at the front, so it does not show the full answer: write 00110.</p></div></details><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">Answer type</th><th style=\"padding:6px 12px;text-align:center\">Scores</th><th style=\"padding:6px 12px;text-align:center\">Does not score</th></tr><tr><td style=\"padding:5px 12px;text-align:center\">bit string</td><td style=\"padding:5px 12px;text-align:center\"><code>00110</code></td><td style=\"padding:5px 12px;text-align:center\"><code>110</code></td></tr><tr><td style=\"padding:5px 12px;text-align:center\">find every x</td><td style=\"padding:5px 12px;text-align:center\"><code>1*0*1</code></td><td style=\"padding:5px 12px;text-align:center\"><code>10001</code> (only one of them)</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">postfix</td><td style=\"padding:5px 12px;text-align:center\"><code>a b + c *</code></td><td style=\"padding:5px 12px;text-align:center\"><code>a + b c *</code> (still infix order)</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">program output</td><td style=\"padding:5px 12px;text-align:center\"><code>25.5</code></td><td style=\"padding:5px 12px;text-align:center\"><code>25</code> (/ keeps the decimal part)</td></tr></table><ul class=\"lesson-facts\"><li>Give the answer in the form the question asks for.</li><li>Write every bit. Use * for a bit that can be 0 or 1.</li><li>Read it back: does it answer the question that was asked?</li></ul>"
+  },
+  {
+   "id": "check-forms",
+   "label": "Check: Which Answer Scores?",
+   "type": "multiple-choice",
+   "containerId": "acc-check-forms",
+   "content": "<h2 class=\"lesson-h2\">Check: Which Answer Scores?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must you check whether a question says prefix or postfix before you answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They put the operators in opposite places. A correct prefix answer to a postfix question scores nothing.</p></div></details><p class=\"lesson-lead\">Choose the answer that scores.</p><div id=\"acc-check-forms\"></div>",
+   "items": [
+    {
+     "prompt": "x is a 5-bit string. Which answer shows every x that makes <code>x AND 11000 = 10000</code> true?",
+     "options": [
+      "10***",
+      "10000",
+      "1****",
+      "**000"
+     ],
+     "correct": 0,
+     "explain": "AND with 11000 keeps only the first two bits, so they must be 1 and 0. The last three bits are hidden by the 0s: each can be anything."
+    },
+    {
+     "prompt": "Which is the postfix form of <code>a + b * c</code>?",
+     "options": [
+      "a b + c *",
+      "a b c * +",
+      "+ a * b c",
+      "a + b c *"
+     ],
+     "correct": 1,
+     "explain": "* goes first, so b * c becomes b c *. Then a plus that: a b c * +."
+    }
+   ]
+  },
+  {
+   "id": "tips",
+   "label": "Tips for Each Question Type",
+   "content": "<h2 class=\"lesson-h2\">Tips for Each Question Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why leave no question blank, even when you are unsure?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>An answer you are unsure of can still be right. A blank can never score.</p></div></details><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:center\">Question</th><th style=\"padding:6px 12px;text-align:center\">How to get it right</th></tr><tr><td style=\"padding:5px 12px;text-align:center\">Prefix, infix, postfix</td><td style=\"padding:5px 12px;text-align:center\">Bracket every operation first. Evaluate with a stack, or find an operator with two numbers next to it.</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">Bit strings</td><td style=\"padding:5px 12px;text-align:center\">NOT, shifts and circulates first, then AND, XOR, OR. Write each step as a new 5-bit string.</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">Find every x</td><td style=\"padding:5px 12px;text-align:center\">Work one bit at a time. Check your answer by putting a value of x back in.</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">Programs</td><td style=\"padding:5px 12px;text-align:center\">Say what each loop does in words. Trace a few turns. Spot the pattern.</td></tr></table><ul class=\"lesson-facts\"><li>Check each answer a second way if there is time.</li></ul>"
+  },
+  {
+   "id": "mock",
+   "label": "Activity 1: Mock Contest",
+   "type": "embedded-app",
+   "appId": "loop-tracer",
+   "embedContainerId": "acc-mock",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Mock Contest</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise against a clock?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>On the day, time runs out. Practising with a clock shows you which questions take you too long.</p></div></details><p class=\"lesson-lead\">Five questions, 15 minutes. Press Start the clock when your teacher says. Nothing is marked until you hand in.</p><div id=\"acc-mock\"></div>",
+   "embedQuery": "mode=mock&minutes=15"
+  },
+  {
+   "id": "programming",
+   "label": "The Programming Problem",
+   "content": "<h2 class=\"lesson-h2\">The Programming Problem</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why test your program with your own inputs, not just the sample?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The program is marked on inputs you have not seen. Your own inputs, with ties and short words, find the bugs first.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">line = input()</div><div class=\"lesson-code-line\">words = line.split()</div><div class=\"lesson-code-line\">print(len(words))</div><div class=\"lesson-code-line\">print(len(words[0]))</div></div><p class=\"lesson-lead\">Input: <code>Cats sleep a lot</code><br>Output: 4, then 4</p></div><div><ul class=\"lesson-facts\"><li>Read the input with <code>input()</code>.</li><li>Print the answers in order, one per line.</li><li>Print only the answer: no labels, no extra lines.</li><li>Test with the sample, then with inputs you make up.</li></ul></div></div>"
+  },
+  {
+   "id": "compare-output",
+   "label": "Compare: Output That Matches",
+   "content": "<h2 class=\"lesson-h2\">Compare: Output That Matches</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Words: 4 score nothing when the answer is 4?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The output is checked line by line against the expected output. Words: 4 is not the same text as 4.</p></div></details><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">Expected</th><th style=\"padding:6px 12px;text-align:center\">Printed</th><th style=\"padding:6px 12px;text-align:center\">Result</th></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>4</code></td><td style=\"padding:5px 12px;text-align:center\"><code>4</code></td><td style=\"padding:5px 12px;text-align:center\">matches</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>4</code></td><td style=\"padding:5px 12px;text-align:center\"><code>Words: 4</code></td><td style=\"padding:5px 12px;text-align:center\">no match: extra text</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>4</code></td><td style=\"padding:5px 12px;text-align:center\"><code>4.0</code></td><td style=\"padding:5px 12px;text-align:center\">no match: a decimal, not a whole number</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>sleep</code></td><td style=\"padding:5px 12px;text-align:center\"><code>Sleep</code></td><td style=\"padding:5px 12px;text-align:center\">no match: capital letter</td></tr></table><ul class=\"lesson-facts\"><li>Match the expected output exactly.</li><li>Use <code>int()</code> or whole-number maths when the answer is a whole number.</li></ul>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Word Stats",
+   "type": "embedded-app",
+   "appId": "acsl-c2-prog",
+   "embedContainerId": "acc-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Word Stats</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the problem say what to do when two words tie?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Without a rule, two different programs could both be right. The rule means there is only one correct output.</p></div></details><p class=\"lesson-lead\">Write the program in Python. Run it on the sample, then Submit: it is tested on four more inputs you cannot see. Aim for 25 out of 25.</p><div id=\"acc-activity-2\"></div>",
+   "embedQuery": "problem=word-stats"
+  },
+  {
+   "id": "more-problems",
+   "label": "More Programming Problems",
+   "type": "app-link",
+   "appId": "acsl-c2-prog",
+   "buttonId": "acc-more-problems-open",
+   "content": "<h2 class=\"lesson-h2\">More Programming Problems</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise more than one problem?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each problem needs different Python: counting, comparing, building new strings. More problems means fewer surprises.</p></div></details><p class=\"lesson-lead\">Contest Code has more problems in the same style: Number Line and Code Words. Each is tested on the sample and four hidden inputs.</p><ul class=\"lesson-facts\"><li>Finished Word Stats? Try Number Line next.</li><li>Then try the official sample problem: <a href=\"http://datafiles.acsl.org/samples/contest2/c2-jr-prog.pdf\" target=\"_blank\" rel=\"noopener\">ACSL Junior Contest 2 programming problem (PDF)</a>.</li></ul><p><button type=\"button\" class=\"donow-btn\" id=\"acc-more-problems-open\">Open Contest Code</button></p>"
+  },
+  {
+   "id": "samples",
+   "label": "The Official Samples",
+   "content": "<h2 class=\"lesson-h2\">The Official Samples</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why try the official sample as well as the mock?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The sample is written by ACSL, so it shows exactly how real questions look.</p></div></details><p class=\"lesson-lead\">Try the sample contest on paper, under the clock. Then check it together.</p><ul class=\"lesson-facts\"><li><a href=\"http://datafiles.acsl.org/samples/contest2/2junior.pdf\" target=\"_blank\" rel=\"noopener\">ACSL Junior Contest 2 sample (PDF)</a></li><li><a href=\"http://datafiles.acsl.org/samples/contest2/c2-jr-prog.pdf\" target=\"_blank\" rel=\"noopener\">Junior Contest 2 programming problem (PDF)</a></li><li>ACSL wiki: <a href=\"http://www.categories.acsl.org/wiki/index.php?title=Prefix/Infix/Postfix_Notation\" target=\"_blank\" rel=\"noopener\">Prefix/Infix/Postfix</a>, <a href=\"http://www.categories.acsl.org/wiki/index.php?title=Bit-String_Flicking\" target=\"_blank\" rel=\"noopener\">Bit-String Flicking</a>, <a href=\"http://www.categories.acsl.org/wiki/index.php?title=What_Does_This_Program_Do%3F\" target=\"_blank\" rel=\"noopener\">What Does This Program Do?</a></li></ul>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Mock Contest Drill",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-mock",
+   "embedContainerId": "acc-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Mock Contest Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the drill bring back the kinds you got wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Mastery means getting each kind right three times in a row. The kinds you miss come back until you have them.</p></div></details><p class=\"lesson-lead\">Five card slots, like the contest: two notation, two bit strings, one program. Every card is new each time. Choose Quiz and 5 questions for another mock. Your progress is saved.</p><div id=\"acc-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "acc_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*14\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find an operator with two numbers straight after it. Work it out, put the answer in its place, and repeat.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*a\\s*b\\s*\\+\\s*c\\s*\\*\\s*d\\s*-\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Bracket every operation first. Then move each operator after its two operands, from the inside out.",
+    "marks": 1
+   }
+  ],
+  "acc_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*10110\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Shift first: two places left, zeros come in on the right. Then OR.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*00001\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out NOT and RCIRC-1 first. Then AND, bit by bit.",
+    "marks": 1
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contest Code</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="cc-css" href="style.css">
+</head>
+<body>
+<main id="app"></main>
+<script>
+// Contest Code: ACSL-style programming problems in Python. The student's program runs in the browser (Skulpt)
+// against the sample and four hidden test inputs, and is scored like ACSL: one point for each output line that
+// matches. ?problem=<id> opens one problem (CC_PROBLEMS in js/problems.js), ?embed=1 on a lesson slide.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('cc-css').href = 'style.css?v=' + encodeURIComponent(v);
+  ['../assets/js/skulpt.min.js', '../assets/js/skulpt-stdlib.js', 'js/problems.js', 'js/app.js'].forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

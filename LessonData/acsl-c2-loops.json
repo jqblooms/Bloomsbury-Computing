@@ -1,0 +1,431 @@
+{
+ "id": "acsl-c2-loops",
+ "label": "ACSL Contest 2: What Does This Program Do? (Loops)",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Repeat the Rule",
+   "type": "short-answer-validation",
+   "validatorId": "acl-do-now",
+   "validatorKey": "acl_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Repeat the Rule</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it easy to lose count when you repeat a rule many times?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You have to remember which turn you are on. Writing every number down stops you from losing your place.</p></div></details><p class=\"lesson-lead\">A warm-up puzzle. There is no code yet: follow each rule exactly.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"acl-do-now-a\">(a) Start with 3. Double it, then add 1. Do this 4 times. What number do you end with? [1]</label><input id=\"acl-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Repeat the Rule part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"acl-do-now-b\">(b) Count from 2 to 20 in steps of 3. How many numbers do you say? [1]</label><input id=\"acl-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Repeat the Rule part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acl-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acl-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: repeat a rule",
+    "steps": [
+     {
+      "text": "A similar puzzle: start with <strong>2</strong>. Triple it, then take away 1. Do this <strong>3 times</strong>.",
+      "visual": "<div class=\"wt-big\">2</div>"
+     },
+     {
+      "text": "Turn 1: 2 &times; 3 = 6, then 6 take away 1 is 5.",
+      "visual": "<div class=\"wt-big\">2 &rarr; <span class=\"wt-hl\">5</span></div>"
+     },
+     {
+      "text": "Turn 2 starts from the new number: 5 &times; 3 = 15, then 14.",
+      "visual": "<div class=\"wt-big\">2 &rarr; 5 &rarr; <span class=\"wt-hl\">14</span></div>"
+     },
+     {
+      "text": "Turn 3: 14 &times; 3 = 42, then 41. That was the third turn, so stop: the answer is 41.",
+      "visual": "<div class=\"wt-big\">2 &rarr; 5 &rarr; 14 &rarr; <span class=\"wt-hl\">41</span></div>"
+     },
+     {
+      "text": "Counting in steps: count from 1 to 15 in steps of 4. Write every number you say.",
+      "visual": "<div class=\"wt-big\"><span class=\"wt-hl\">1</span>, 5, 9, 13</div>"
+     },
+     {
+      "text": "The next one would be 17. That is past 15, so stop. You said 4 numbers.",
+      "visual": "<div class=\"wt-big\">1, 5, 9, 13, <span class=\"wt-dim\">17</span></div>"
+     },
+     {
+      "text": "Now do your puzzle the same way: one turn at a time, and write every number down.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">one turn &rarr; write it &rarr; next turn</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-loops-ext",
+   "embedContainerId": "acl-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these: repeating a rule, prefix, infix and postfix, and bit-string flicking. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"acl-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "What Does This Program Do? Loops",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">ACSL Junior Contest 2</p><h2 class=\"lesson-h2\">What Does This Program Do? Loops</h2><p>Competition</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> read ACSL pseudocode, follow FOR and WHILE loops, and find what a program outputs.</li><li><strong>Every time, ask why:</strong> why does the loop stop there? Why is that the output?</li><li><strong>Activities:</strong> a trace table race, then contest-length programs.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a contest ask what a program outputs, instead of asking you to write one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Reading code exactly is a skill on its own. If you can follow every line, you can find bugs and check your own programs.</p></div></details>"
+  },
+  {
+   "id": "reading",
+   "label": "Reading ACSL Pseudocode",
+   "content": "<h2 class=\"lesson-h2\">Reading ACSL Pseudocode</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does this program output? Why does line 3 not change a?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It outputs <strong>TRUE</strong>.</p><p>== asks a question: is a equal to 8? A single = stores a value. Line 3 only asks, so a stays 8.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;a = 5 : b = 3</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;a = a + b</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;OUTPUT a == 8</div></div></div><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">Code</th><th style=\"padding:6px 12px;text-align:center\">Meaning</th></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>a = 5</code></td><td style=\"padding:5px 12px;text-align:center\">store 5 in a</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>a == 5</code></td><td style=\"padding:5px 12px;text-align:center\">is a equal to 5? TRUE or FALSE</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>a = 5 : b = 3</code></td><td style=\"padding:5px 12px;text-align:center\">two statements on one line</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>a != b</code></td><td style=\"padding:5px 12px;text-align:center\">is a not equal to b?</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>OUTPUT a</code></td><td style=\"padding:5px 12px;text-align:center\">show the value of a</td></tr></table></div></div><ul class=\"lesson-facts\"><li><code>=</code> stores. <code>==</code> compares.</li><li>A colon <code>:</code> separates statements on the same line.</li><li>Keywords can be in capitals or small letters.</li></ul>"
+  },
+  {
+   "id": "operators",
+   "label": "Operators and Functions",
+   "content": "<h2 class=\"lesson-h2\">Operators and Functions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is 2 + 3 * 4 ^ 2? Why is it not 400?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It is <strong>50</strong>. The power goes first: 4 ^ 2 = 16. Then 3 * 16 = 48. Then 2 + 48 = 50.</p><p>400 comes from working left to right, which ignores the order.</p></div></details><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">Code</th><th style=\"padding:6px 12px;text-align:center\">Value</th><th style=\"padding:6px 12px;text-align:center\">What it does</th></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>7 / 2</code></td><td style=\"padding:5px 12px;text-align:center\"><strong>3.5</strong></td><td style=\"padding:5px 12px;text-align:center\">real division</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>7 % 2</code></td><td style=\"padding:5px 12px;text-align:center\"><strong>1</strong></td><td style=\"padding:5px 12px;text-align:center\">remainder</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>int(7 / 2)</code></td><td style=\"padding:5px 12px;text-align:center\"><strong>3</strong></td><td style=\"padding:5px 12px;text-align:center\">whole number part</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>2 ^ 3</code></td><td style=\"padding:5px 12px;text-align:center\"><strong>8</strong></td><td style=\"padding:5px 12px;text-align:center\">power (also written 2 ↑ 3)</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>abs(3 - 8)</code></td><td style=\"padding:5px 12px;text-align:center\"><strong>5</strong></td><td style=\"padding:5px 12px;text-align:center\">distance from 0</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>sqrt(16)</code></td><td style=\"padding:5px 12px;text-align:center\"><strong>4</strong></td><td style=\"padding:5px 12px;text-align:center\">square root</td></tr></table></div><div><ul class=\"lesson-facts\"><li>Order: <strong>!</strong> first, then <strong>^</strong>, then <strong>* / %</strong>, then <strong>+ -</strong>, then comparisons, then <strong>&amp;&amp;</strong> and <strong>||</strong>.</li><li>The same level goes left to right.</li><li><code>/</code> keeps the decimal part. <code>int()</code> drops it.</li></ul></div></div>"
+  },
+  {
+   "id": "check-operators",
+   "label": "Check: Operators",
+   "type": "short-answer-validation",
+   "validatorId": "acl-check-operators",
+   "validatorKey": "acl_check_operators",
+   "content": "<h2 class=\"lesson-h2\">Check: Operators</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does 9 % 3 give 0?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>3 goes into 9 exactly three times. Nothing is left over, so the remainder is 0.</p></div></details><p class=\"lesson-lead\">Work out each value.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acl-check-operators-a\">(a) <code>17 / 4</code> [1]</label><input id=\"acl-check-operators-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-operators-a\" aria-label=\"Check: Operators part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-operators-b\">(b) <code>17 % 4</code> [1]</label><input id=\"acl-check-operators-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-operators-b\" aria-label=\"Check: Operators part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-operators-c\">(c) <code>int(17 / 4)</code> [1]</label><input id=\"acl-check-operators-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-operators-c\" aria-label=\"Check: Operators part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-operators-d\">(d) <code>3 + 2 ^ 3 * 2</code> [1]</label><input id=\"acl-check-operators-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-operators-d\" aria-label=\"Check: Operators part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acl-check-operators-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"acl-check-operators-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "for-loop",
+   "label": "FOR Loops",
+   "content": "<h2 class=\"lesson-h2\">FOR Loops</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is output? Why does the loop stop after i = 4?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It outputs <strong>10</strong>: 1 + 2 + 3 + 4.</p><p>After i = 4, NEXT makes i = 5. That is past the end value 4, so the loop stops.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;s = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR i = 1 TO 4</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;s = s + i</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;NEXT i</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;OUTPUT s</div></div><ul class=\"lesson-facts\"><li><code>FOR i = 1 TO 4</code> gives i the values 1, 2, 3, 4 in turn.</li><li>The lines between FOR and NEXT run once for each value.</li><li><code>NEXT i</code> adds 1 to i and goes back to the top.</li></ul></div><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:4px 10px;text-align:center\">Line</th><th style=\"padding:4px 10px;text-align:center\">s</th><th style=\"padding:4px 10px;text-align:center\">i</th><th style=\"padding:4px 10px;text-align:center\">Output</th></tr><tr><td style=\"padding:2px 10px;text-align:center\">1</td><td style=\"padding:2px 10px;text-align:center\">0</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">2</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">1</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">1</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">2</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">2</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">2</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">6</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">2</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">4</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">10</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">5</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">10</td></tr></table></div></div>"
+  },
+  {
+   "id": "step",
+   "label": "Compare: STEP Up and STEP Down",
+   "content": "<h2 class=\"lesson-h2\">Compare: STEP Up and STEP Down</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the third loop stop at 9, not at 10?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>i goes 1, 5, 9. The next value is 13, which is past 10, so the loop stops.</p><p>The end value is a limit. The loop does not have to land on it.</p></div></details><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">Loop</th><th style=\"padding:6px 12px;text-align:center\">Values of i</th></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>FOR i = 1 TO 9 STEP 2</code></td><td style=\"padding:5px 12px;text-align:center\">1, 3, 5, 7, 9</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>FOR i = 5 TO 1 STEP -1</code></td><td style=\"padding:5px 12px;text-align:center\">5, 4, 3, 2, 1</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>FOR i = 1 TO 10 STEP 4</code></td><td style=\"padding:5px 12px;text-align:center\">1, 5, 9</td></tr></table><ul class=\"lesson-facts\"><li><code>STEP 2</code> adds 2 each time. Without STEP, it adds 1.</li><li><code>STEP -1</code> counts down. The loop stops when i goes <strong>below</strong> the end value.</li><li>Work out the start, the end and the step once, at the start of the loop.</li></ul>"
+  },
+  {
+   "id": "check-for",
+   "label": "Check: FOR and STEP",
+   "type": "short-answer-validation",
+   "validatorId": "acl-check-for",
+   "validatorKey": "acl_check_for",
+   "content": "<h2 class=\"lesson-h2\">Check: FOR and STEP</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">FOR i = 1 TO 5 STEP 2: why does the body run three times?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>i takes the values 1, 3 and 5. The next value, 7, is past 5.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;t = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR k = 2 TO 11 STEP 3</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;t = t + k</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;NEXT k</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;OUTPUT t</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acl-check-for-a\">(a) How many times does line 3 run? [1]</label><input id=\"acl-check-for-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-for-a\" aria-label=\"Check: FOR and STEP part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-for-b\">(b) What is output? [1]</label><input id=\"acl-check-for-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-for-b\" aria-label=\"Check: FOR and STEP part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-for-c\">(c) How many times does the body of <code>FOR j = 20 TO 1 STEP -5</code> run? [1]</label><input id=\"acl-check-for-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-for-c\" aria-label=\"Check: FOR and STEP part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acl-check-for-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"acl-check-for-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Trace Table Race",
+   "type": "embedded-app",
+   "appId": "loop-tracer",
+   "embedContainerId": "acl-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Trace Table Race</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a trace table get a new row only when a value changes?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The table records what the program does. A row shows the moment a variable gets a new value, so you can follow every step.</p></div></details><p class=\"lesson-lead\">The program runs one step at a time. Type each new value before it is shown, then press Enter. One try for each value: keep your streak going.</p><div id=\"acl-activity-1\"></div>",
+   "embedQuery": "mode=trace&level=2&rounds=3"
+  },
+  {
+   "id": "accumulators",
+   "label": "Compare: Total and Counter",
+   "content": "<h2 class=\"lesson-h2\">Compare: Total and Counter</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">i goes up to 7. Why does c end at 5, not 7?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>c adds 1 each time the loop runs. The loop runs for i = 3, 4, 5, 6 and 7: that is 5 times.</p><p>s adds i itself, so s ends at 3 + 4 + 5 + 6 + 7 = 25.</p></div></details><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">Line inside FOR i = 3 TO 7</th><th style=\"padding:6px 12px;text-align:center\">Name</th><th style=\"padding:6px 12px;text-align:center\">What it adds</th><th style=\"padding:6px 12px;text-align:center\">At the end</th></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>s = s + i</code></td><td style=\"padding:5px 12px;text-align:center\">a <strong>total</strong> (accumulator)</td><td style=\"padding:5px 12px;text-align:center\">adds the value of i</td><td style=\"padding:5px 12px;text-align:center\"><strong>25</strong></td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>c = c + 1</code></td><td style=\"padding:5px 12px;text-align:center\">a <strong>counter</strong></td><td style=\"padding:5px 12px;text-align:center\">adds 1 every time</td><td style=\"padding:5px 12px;text-align:center\"><strong>5</strong></td></tr></table><ul class=\"lesson-facts\"><li>A total starts at 0 and adds a value each time round.</li><li>A counter starts at 0 and adds 1 each time round.</li><li>A product starts at 1, because times 0 would always give 0.</li></ul>"
+  },
+  {
+   "id": "while",
+   "label": "WHILE Loops",
+   "content": "<h2 class=\"lesson-h2\">WHILE Loops</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is output? Why does the loop stop when x is 96?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It outputs <strong>5</strong>. x goes 6, 12, 24, 48, 96.</p><p>The condition x &lt; 50 is checked at the top. 96 &lt; 50 is FALSE, so the loop stops.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;x = 3 : c = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;WHILE x &lt; 50</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;x = x * 2</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;c = c + 1</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;END WHILE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;OUTPUT c</div></div><ul class=\"lesson-facts\"><li><code>WHILE cond</code> repeats the lines up to <code>END WHILE</code> while the condition is TRUE.</li><li>The condition is checked at the top, before each turn.</li><li>Something inside must change, or the loop never stops.</li></ul></div><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:4px 10px;text-align:center\">Line</th><th style=\"padding:4px 10px;text-align:center\">x</th><th style=\"padding:4px 10px;text-align:center\">c</th><th style=\"padding:4px 10px;text-align:center\">Output</th></tr><tr><td style=\"padding:2px 10px;text-align:center\">1</td><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">1</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">0</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">6</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">4</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">1</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">12</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">4</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">2</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">24</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">4</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">48</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">4</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">4</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">3</td><td style=\"padding:2px 10px;text-align:center\">96</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">4</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">5</td><td style=\"padding:2px 10px;text-align:center\"></td></tr><tr><td style=\"padding:2px 10px;text-align:center\">6</td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\"></td><td style=\"padding:2px 10px;text-align:center\">5</td></tr></table></div></div>"
+  },
+  {
+   "id": "compare-while",
+   "label": "Compare: How Many Times?",
+   "content": "<h2 class=\"lesson-h2\">Compare: How Many Times?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the loop run 0 times when x starts at 60?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The condition is checked before the first turn. 60 &lt; 50 is FALSE, so the lines inside never run.</p><p>A FOR loop like FOR i = 5 TO 1 (no STEP) also runs 0 times.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;x = ? : c = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;WHILE x &lt; 50</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;x = x * 2</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;c = c + 1</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;END WHILE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;OUTPUT c</div></div></div><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">x starts at</th><th style=\"padding:6px 12px;text-align:center\">Output (c)</th></tr><tr><td style=\"padding:5px 12px;text-align:center\">3</td><td style=\"padding:5px 12px;text-align:center\"><strong>5</strong></td></tr><tr><td style=\"padding:5px 12px;text-align:center\">30</td><td style=\"padding:5px 12px;text-align:center\"><strong>1</strong></td></tr><tr><td style=\"padding:5px 12px;text-align:center\">60</td><td style=\"padding:5px 12px;text-align:center\"><strong>0</strong></td></tr></table></div></div><ul class=\"lesson-facts\"><li>FOR: you can count the turns before it starts.</li><li>WHILE: it runs until the condition is FALSE. It may run 0 times.</li></ul>"
+  },
+  {
+   "id": "check-while",
+   "label": "Check: WHILE",
+   "type": "short-answer-validation",
+   "validatorId": "acl-check-while",
+   "validatorKey": "acl_check_while",
+   "content": "<h2 class=\"lesson-h2\">Check: WHILE</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">n = 52. Why does int(n / 10) give 5?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>52 / 10 is 5.2, and int() drops the .2. Dividing by 10 and taking int() removes the last digit.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;n = 365 : s = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;WHILE n &gt; 0</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;s = s + n % 10</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;n = int(n / 10)</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;END WHILE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;OUTPUT s</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acl-check-while-a\">(a) What is n after the first time round the loop? [1]</label><input id=\"acl-check-while-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-while-a\" aria-label=\"Check: WHILE part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-while-b\">(b) How many times does the loop run? [1]</label><input id=\"acl-check-while-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-while-b\" aria-label=\"Check: WHILE part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-while-c\">(c) What is output? [1]</label><input id=\"acl-check-while-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-while-c\" aria-label=\"Check: WHILE part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acl-check-while-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"acl-check-while-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "divisible",
+   "label": "Does k Divide x?",
+   "content": "<h2 class=\"lesson-h2\">Does k Divide x?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does int() change 2.4 but not 4?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>int() drops the decimal part. 4 has no decimal part, so it stays 4. 2.4 becomes 2.</p><p>So x / k == int(x / k) is TRUE only when x / k is a whole number: k divides x exactly.</p></div></details><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">x / k</th><th style=\"padding:6px 12px;text-align:center\">value</th><th style=\"padding:6px 12px;text-align:center\">int(x / k)</th><th style=\"padding:6px 12px;text-align:center\">x / k == int(x / k)</th></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>12 / 3</code></td><td style=\"padding:5px 12px;text-align:center\">4</td><td style=\"padding:5px 12px;text-align:center\">4</td><td style=\"padding:5px 12px;text-align:center\"><strong>TRUE</strong></td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>12 / 5</code></td><td style=\"padding:5px 12px;text-align:center\">2.4</td><td style=\"padding:5px 12px;text-align:center\">2</td><td style=\"padding:5px 12px;text-align:center\"><strong>FALSE</strong></td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>12 / 4</code></td><td style=\"padding:5px 12px;text-align:center\">3</td><td style=\"padding:5px 12px;text-align:center\">3</td><td style=\"padding:5px 12px;text-align:center\"><strong>TRUE</strong></td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>12 / 7</code></td><td style=\"padding:5px 12px;text-align:center\">1.71428571429</td><td style=\"padding:5px 12px;text-align:center\">1</td><td style=\"padding:5px 12px;text-align:center\"><strong>FALSE</strong></td></tr></table><ul class=\"lesson-facts\"><li><code>x / k == int(x / k)</code> is TRUE when k divides x exactly.</li><li><code>x % k == 0</code> tests the same thing.</li><li>Inside <code>FOR k = 1 TO x</code>, it finds the <strong>factors</strong> of x.</li></ul>"
+  },
+  {
+   "id": "check-divisible",
+   "label": "Check: Count the Factors",
+   "type": "short-answer-validation",
+   "validatorId": "acl-check-divisible",
+   "validatorKey": "acl_check_divisible",
+   "content": "<h2 class=\"lesson-h2\">Check: Count the Factors</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">n = 21. Why do k = 3 and k = 7 both count?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>3 &times; 7 = 21, so 21 / 3 and 21 / 7 are both whole numbers. Factors come in pairs.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;n = 18 : c = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR k = 1 TO n</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;IF n / k == int(n / k) THEN</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c = c + 1</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;END IF</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT k</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT c</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acl-check-divisible-a\">(a) Is <code>18 / 4 == int(18 / 4)</code> TRUE or FALSE? [1]</label><input id=\"acl-check-divisible-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-divisible-a\" aria-label=\"Check: Count the Factors part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-divisible-b\">(b) What is output? [1]</label><input id=\"acl-check-divisible-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-divisible-b\" aria-label=\"Check: Count the Factors part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-divisible-c\">(c) What is output when line 1 is <code>n = 16 : c = 0</code>? [1]</label><input id=\"acl-check-divisible-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-divisible-c\" aria-label=\"Check: Count the Factors part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acl-check-divisible-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"acl-check-divisible-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "nested",
+   "label": "Nested Loops",
+   "content": "<h2 class=\"lesson-h2\">Nested Loops</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is output? Why is it not 3 + 4?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It outputs <strong>12</strong>.</p><p>The inner loop runs all 4 times for <strong>each</strong> value of i. 3 values of i &times; 4 values of j = 12.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;c = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR i = 1 TO 3</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;FOR j = 1 TO 4</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c = c + 1</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;NEXT j</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT i</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT c</div></div></div><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">i</th><th style=\"padding:6px 12px;text-align:center\">pairs (i, j) the inner loop runs</th></tr><tr><td style=\"padding:5px 12px;text-align:center\">1</td><td style=\"padding:5px 12px;text-align:center\">(1, 1) (1, 2) (1, 3) (1, 4)</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">2</td><td style=\"padding:5px 12px;text-align:center\">(2, 1) (2, 2) (2, 3) (2, 4)</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">3</td><td style=\"padding:5px 12px;text-align:center\">(3, 1) (3, 2) (3, 3) (3, 4)</td></tr></table></div></div><ul class=\"lesson-facts\"><li>The inner loop starts again from the beginning every time the outer loop turns.</li><li>Same size every time: outer turns &times; inner turns.</li></ul>"
+  },
+  {
+   "id": "compare-nested",
+   "label": "Compare: j = 1 and j = i",
+   "content": "<h2 class=\"lesson-h2\">Compare: j = 1 and j = i</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does changing FOR j = 1 TO 4 into FOR j = i TO 4 give 9, not 12?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Now the inner loop starts at i, so it gets shorter each time: 4, then 3, then 2 turns.</p><p>4 + 3 + 2 = 9. You cannot just multiply.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;c = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR i = 1 TO 3</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;FOR j = i TO 4</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c = c + 1</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;NEXT j</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT i</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT c</div></div></div><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">i</th><th style=\"padding:6px 12px;text-align:center\">inner loop</th><th style=\"padding:6px 12px;text-align:center\">turns</th></tr><tr><td style=\"padding:5px 12px;text-align:center\">1</td><td style=\"padding:5px 12px;text-align:center\"><code>FOR j = 1 TO 4</code></td><td style=\"padding:5px 12px;text-align:center\">4</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">2</td><td style=\"padding:5px 12px;text-align:center\"><code>FOR j = 2 TO 4</code></td><td style=\"padding:5px 12px;text-align:center\">3</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">3</td><td style=\"padding:5px 12px;text-align:center\"><code>FOR j = 3 TO 4</code></td><td style=\"padding:5px 12px;text-align:center\">2</td></tr></table></div></div><ul class=\"lesson-facts\"><li>When the inner loop uses i, count its turns for each i.</li><li>Then add them up.</li></ul>"
+  },
+  {
+   "id": "check-nested",
+   "label": "Check: Nested Loops",
+   "type": "short-answer-validation",
+   "validatorId": "acl-check-nested",
+   "validatorKey": "acl_check_nested",
+   "content": "<h2 class=\"lesson-h2\">Check: Nested Loops</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">FOR i = 1 TO 2 with FOR j = 1 TO i inside: why does the inner body run 3 times?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>For i = 1 it runs once. For i = 2 it runs twice. 1 + 2 = 3.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;s = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR i = 1 TO 3</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;FOR j = 1 TO i</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s = s + j</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;NEXT j</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT i</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;OUTPUT s</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acl-check-nested-a\">(a) How many times does line 4 run? [1]</label><input id=\"acl-check-nested-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-nested-a\" aria-label=\"Check: Nested Loops part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-nested-b\">(b) What is output? [1]</label><input id=\"acl-check-nested-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-nested-b\" aria-label=\"Check: Nested Loops part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-check-nested-c\">(c) What is output if line 4 is <code>s = s + i</code>? [1]</label><input id=\"acl-check-nested-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-nested-c\" aria-label=\"Check: Nested Loops part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acl-check-nested-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"acl-check-nested-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "pattern",
+   "label": "Trace Fast: Spot the Pattern",
+   "content": "<h2 class=\"lesson-h2\">Trace Fast: Spot the Pattern</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This program runs over 100 steps. Why is spotting the pattern faster than a trace table here?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The inner loop adds i, i times: that is i &times; i. So a = 1 + 4 + 9 + 16 + 25 + 36 = 91.</p><p>The last loop counts the factors of 91. In pairs: 1 &times; 91 and 7 &times; 13. So it outputs <strong>4</strong>.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;a = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR i = 1 TO 6</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;FOR j = 1 TO i</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a = a + i</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;&nbsp;&nbsp;NEXT j</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;NEXT i</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;c = 0</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;FOR k = 1 TO a</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;&nbsp;&nbsp;IF a / k == int(a / k) THEN c = c + 1</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;END IF</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;NEXT k</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;OUTPUT c</div></div></div><div><table class=\"donow-table\" style=\"font-size:17px\"><tr><th style=\"padding:6px 12px;text-align:center\">If you see</th><th style=\"padding:6px 12px;text-align:center\">It means</th></tr><tr><td style=\"padding:5px 12px;text-align:center\">adds i, i times</td><td style=\"padding:5px 12px;text-align:center\">i &times; i</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>s = s + i</code> for i = 1 to n</td><td style=\"padding:5px 12px;text-align:center\">1 + 2 + ... + n</td></tr><tr><td style=\"padding:5px 12px;text-align:center\"><code>x / k == int(x / k)</code></td><td style=\"padding:5px 12px;text-align:center\">k is a factor of x</td></tr><tr><td style=\"padding:5px 12px;text-align:center\">a count of factors</td><td style=\"padding:5px 12px;text-align:center\">list factors in pairs</td></tr></table></div></div><ul class=\"lesson-facts\"><li>First ask: what does each loop do? Say it in words.</li><li>Trace a few turns to check your idea. Then use it.</li></ul>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Predict the Output",
+   "type": "embedded-app",
+   "appId": "loop-tracer",
+   "embedContainerId": "acl-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Predict the Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the replay show only the first and the last rows?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The full trace has hundreds of rows. The start shows the pattern, and the end shows the answer.</p></div></details><p class=\"lesson-lead\">Contest-length programs. You get one try at each output. Then watch the trace and the pattern.</p><div id=\"acl-activity-2\"></div>",
+   "embedQuery": "mode=predict&level=6&rounds=4"
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Contest Style (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "acl-practice",
+   "validatorKey": "acl_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Contest Style (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Up to 30, how would you count the numbers that are multiples of 2 or of 5, without listing them all?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Count the multiples of 2 and of 5, then take away the multiples of 10, because they were counted twice.</p></div></details><p class=\"lesson-lead\">Contest style: one answer. Spot the pattern before you trace.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;c = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR i = 1 TO 60</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;IF i % 4 == 0 || i % 6 == 0 THEN c = c + 1</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;END IF</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;NEXT i</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;OUTPUT c</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acl-practice-a\">(a) What is output? [1]</label><input id=\"acl-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Contest Style (1 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acl-practice-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"acl-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "practice-2",
+   "label": "Practice: Contest Style (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "acl-practice-2",
+   "validatorKey": "acl_practice_2",
+   "content": "<h2 class=\"lesson-h2\">Practice: Contest Style (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">FOR k = 30 TO 1 STEP -9: why is the last value of k 3?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>k goes 30, 21, 12, 3. The next value, -6, is below 1, so the loop stops.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;s = 0 : n = 0</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR k = 50 TO 1 STEP -7</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;s = s + k</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;n = n + 1</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;NEXT k</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;OUTPUT s / n</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acl-practice-2-a\">(a) What is the value of n at the end? [1]</label><input id=\"acl-practice-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-a\" aria-label=\"Practice: Contest Style (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"acl-practice-2-b\">(b) What is output? [1]</label><input id=\"acl-practice-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-b\" aria-label=\"Practice: Contest Style (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acl-practice-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acl-practice-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "sample",
+   "label": "Try the Real Sample",
+   "content": "<h2 class=\"lesson-h2\">Try the Real Sample</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise on a real past paper before the contest?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You see how the questions are written and how long they take. Nothing on the day is a surprise.</p></div></details><p class=\"lesson-lead\">ACSL publishes a sample Junior Contest 2. Try its What Does This Program Do? question on paper, then check it with your class.</p><ul class=\"lesson-facts\"><li><a href=\"http://datafiles.acsl.org/samples/contest2/2junior.pdf\" target=\"_blank\" rel=\"noopener\">ACSL Junior Contest 2 sample (PDF)</a></li><li><a href=\"http://www.categories.acsl.org/wiki/index.php?title=What_Does_This_Program_Do%3F\" target=\"_blank\" rel=\"noopener\">ACSL wiki: What Does This Program Do?</a> (rules and more examples)</li><li>Use what you learned today: say what each loop does, trace a few turns, then spot the pattern.</li></ul>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Loops Drill",
+   "type": "embedded-app",
+   "appId": "drill-acsl-c2-loops",
+   "embedContainerId": "acl-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Loops Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card give you a new program every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You cannot remember the answer, so you have to trace it. That is the skill the contest tests.</p></div></details><p class=\"lesson-lead\">Operators, FOR and STEP, WHILE, nested loops and the int() test. Every program is new each time. Your progress is saved.</p><div id=\"acl-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "acl_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*63\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write down the number after every turn. Each turn starts from the last number.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write the numbers: 2, 5, ... Stop before you pass 20. Then count them.",
+    "marks": 1
+   }
+  ],
+  "acl_check_operators": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\.25\\s*$",
+     "flags": "i"
+    },
+    "feedback": "/ is real division: keep the decimal part.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\s*$",
+     "flags": "i"
+    },
+    "feedback": "% gives the remainder. How many are left after taking out all the 4s?",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out 17 / 4 first. Then int() drops the decimal part.",
+    "marks": 1
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*19\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Power first, then *, then +.",
+    "marks": 1
+   }
+  ],
+  "acl_check_for": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write the values of k: start at 2 and add 3. Stop before you pass 11.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*26\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Add up every value that k takes.",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count down from 20 in fives. Stop before you go below 1.",
+    "marks": 1
+   }
+  ],
+  "acl_check_while": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*36\\s*$",
+     "flags": "i"
+    },
+    "feedback": "365 / 10 is 36.5. int() drops the decimal part.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Keep going until n is 0. Count the turns.",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*14\\s*$",
+     "flags": "i"
+    },
+    "feedback": "n % 10 is the last digit. s adds up the digits.",
+    "marks": 1
+   }
+  ],
+  "acl_check_divisible": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*FALSE\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out 18 / 4. Is it a whole number?",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6\\s*$",
+     "flags": "i"
+    },
+    "feedback": "c counts every k that divides 18 exactly. List them in pairs: 1 and 18, ...",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "List the factors of 16 in pairs. One pair is the same number twice.",
+    "marks": 1
+   }
+  ],
+  "acl_check_nested": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6\\s*$",
+     "flags": "i"
+    },
+    "feedback": "For each i, the inner loop runs i times. Add them up.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*10\\s*$",
+     "flags": "i"
+    },
+    "feedback": "For each i, add 1 + 2 + ... + i. Then add those totals.",
+    "marks": 1
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*14\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Now each turn adds i, and there are i turns. What does that make for each i?",
+    "marks": 1
+   }
+  ],
+  "acl_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*20\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the multiples of 4 and the multiples of 6 up to 60. Some numbers are both: count them once.",
+    "marks": 1
+   }
+  ],
+  "acl_practice_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*8\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write the values of k: 50, 43, ... Stop before you go below 1.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*25\\.5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Add up the values of k, then divide by n. / keeps the decimal part.",
+    "marks": 1
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

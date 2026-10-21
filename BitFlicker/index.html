@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bit Flicker</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="flick-css" href="flicker.css">
+</head>
+<body>
+<main>
+  <header class="top">
+    <h1>Bit Flicker</h1>
+    <nav class="modes" aria-label="Game mode">
+      <a href="?mode=lab" data-mode="lab">Flick Lab</a>
+      <a href="?mode=pile" data-mode="pile">Precedence Pile-up</a>
+      <a href="?mode=findx" data-mode="findx">Find X</a>
+    </nav>
+  </header>
+  <section class="panel" id="game"></section>
+</main>
+<script>
+// ?mode=lab (predict one operator, then plan moves to reach a target), ?mode=pile (choose which operator is worked
+// next in a long expression, then predict its result) or ?mode=findx (find every x that makes an equation true).
+// ?embed=1 sits the game on a lesson slide. Every file is loaded with the page's bcv.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('flick-css').href = 'flicker.css?v=' + encodeURIComponent(v);
+  var mode = ({ lab: 'lab', pile: 'pile', findx: 'findx' })[params.get('mode')] || 'lab';
+  Array.prototype.forEach.call(document.querySelectorAll('.modes a'), function (a) {
+    var q = new URLSearchParams(location.search);
+    q.set('mode', a.getAttribute('data-mode'));
+    a.href = '?' + q.toString();
+    if (a.getAttribute('data-mode') === mode) a.setAttribute('aria-current', 'page');
+  });
+  ['bits-core.js', 'common.js', mode + '.js'].forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>
