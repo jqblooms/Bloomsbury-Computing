@@ -407,7 +407,8 @@ function plenPrelude() {
       var mentions = new RegExp("(^|[^a-z0-9])" + esc(String(c.answer).toLowerCase()) + "($|[^a-z0-9])");
       for (var i = 0; i < 120 && !ex; i++) {
         var e = gen(), text = (e.prompt + " " + e.steps.join(" ") + " " + e.answer).toLowerCase();
-        if (e.key !== c.key && String(e.answer) !== String(c.answer) && (String(c.answer).length < 3 || mentions.test(c.prompt.toLowerCase()) || !mentions.test(text))) ex = e;
+        var shared = e.prompt.split("\n").filter(function (l) { return l.trim().length > 12 && c.prompt.toLowerCase().indexOf(l.trim().toLowerCase()) >= 0; }).length;
+        if (shared < 2 && e.key !== c.key && String(e.answer) !== String(c.answer) && (String(c.answer).length < 3 || mentions.test(c.prompt.toLowerCase()) || !mentions.test(text))) ex = e;
       }
       var example = ex ? "A similar question:\n" + ex.prompt + "\n" + ex.steps.join("\n") + "\nAnswer: " + ex.answer : null;
       return { prompt: c.prompt, answers: [String(c.answer)], keywords: [c.re], distractors: c.wrong, example: example, working: c.working, note: c.note };
