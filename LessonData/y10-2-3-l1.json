@@ -244,6 +244,14 @@
      "id": "symmetric-explain",
      "prompt": "(i) Explain how data is encrypted using symmetric encryption. [4]",
      "marks": 4,
+     "scheme": [
+      "Data is encrypted and decrypted using the same key",
+      "Plain text is encrypted into cipher text (accept cipher text is decrypted into plain text)",
+      "Data is encrypted using an algorithm",
+      "The algorithm uses a key",
+      "The key can be generated using an algorithm",
+      "The key is transmitted to the receiver"
+     ],
      "modelAnswer": "One mark: data is encrypted and decrypted using the same key. Then any three from: plain text is encrypted into cipher text, or cipher text is decrypted into plain text; data is encrypted using an algorithm that uses a key; the key can be generated using an algorithm; the key is transmitted to the receiver."
     }
    ]
@@ -259,6 +267,10 @@
      "id": "encryption-purpose",
      "prompt": "(ii) Give the purpose of encryption. [1]",
      "marks": 1,
+     "scheme": [
+      "To help keep the data secure",
+      "To make the data meaningless (if it is intercepted)"
+     ],
      "modelAnswer": "Any one from: to help keep the data secure; to make the data meaningless (if it is intercepted)."
     }
    ]

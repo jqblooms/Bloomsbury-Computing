@@ -227,6 +227,12 @@
      "id": "two-differences",
      "prompt": "(iii) Give two differences between symmetric encryption and asymmetric encryption.",
      "marks": 2,
+     "scheme": [
+      "Symmetric uses one key, whereas asymmetric uses two keys (a public and a private key)",
+      "Symmetric can send the key with the data, whereas asymmetric does not",
+      "Symmetric decrypts the data using the same key, whereas asymmetric decrypts the data using a different key",
+      "Symmetric is less secure than asymmetric (accept asymmetric is more secure than symmetric)"
+     ],
      "modelAnswer": "Any two from: symmetric uses one key, whereas asymmetric uses two keys (public and private); symmetric can send the key with the data, whereas asymmetric does not; symmetric decrypts with the same key, whereas asymmetric decrypts with a different key; symmetric is less secure than asymmetric."
     }
    ]
@@ -250,6 +256,14 @@
      "id": "describe-differences",
      "prompt": "(ii) Describe the differences between symmetric and asymmetric encryption.",
      "marks": 4,
+     "scheme": [
+      "Symmetric has a shared key",
+      "The symmetric key is used to encrypt and decrypt",
+      "In symmetric, both the sender and receiver know the key",
+      "Asymmetric has different keys (accept a public key and a private key)",
+      "In asymmetric, the public key encrypts the data and the private key decrypts it",
+      "Anyone can know the public key, but only those intended know the private key"
+     ],
      "modelAnswer": "Four from: symmetric has a shared key ... to encrypt and decrypt; both the sender and receiver know the key; asymmetric has different keys, a public key and a private key; ... the public key encrypts the data and the private key decrypts it; anyone can know the public key, but only those intended know the private key."
     }
    ]

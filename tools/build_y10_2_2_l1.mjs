@@ -141,8 +141,12 @@ steps.push(embed('activity-2', 'Activity 2: Be the Receiver', 'parity-lab-check'
 
 steps.push(selfMarked('exam-detect', 'Exam Question: How Even Parity Detects an Error', 'Exam Question: How Even Parity Detects an Error',
   cite('0478/12, June 2025, Question 3(c)(iii)') + ' An even parity check is used to detect errors in data after it has been transmitted to a printer.', [
-    { id: 'even-detect', prompt: 'Describe how an even parity check detects an error. [3]', marks: 3,
-      modelAnswer: 'Any three: the sender and receiver agree on even parity; a parity bit is added to each byte to make the number of 1s even; the receiver counts the number of 1s in each byte; if the number of 1s is odd, an error is detected.' },
+    { id: 'even-detect', prompt: 'Describe how an even parity check detects an error. [4]', marks: 4,
+      scheme: ['A parity bit is added to each byte',
+        'to make the number of 1s even (accept number of 0s; accept it is 1 if the number of 1s is odd, or 0 if the number of 1s is even)',
+        'The number of 1s in each byte is counted after transmission (accept number of 0s)',
+        'If any byte has an odd number of 1s, an error is detected (accept number of 0s)'],
+      modelAnswer: 'A parity bit is added to each byte to make the number of 1s even. After transmission, the 1s in each byte are counted. If any byte has an odd number of 1s, an error is detected.' },
   ], ['Why must the answer say what the RECEIVER does?', 'Detecting happens when the data arrives. Only the receiver has the data that arrived, so only it can find the error.']));
 steps.push(checkStep('exam-miss', 'Exam Question: When Parity Fails', 'Exam Question: When Parity Fails',
   cite('0478/11, June 2021, Question 8(b)') + ' An error may not be detected when using a parity check.', [
@@ -182,7 +186,10 @@ if (!unit) {
   const after = y10.units.findIndex((u) => u.lessons.includes('y10-2-1-l3'));
   y10.units.splice(after + 1, 0, unit);
 }
-if (!unit.lessons.includes(ID)) unit.lessons.push(ID);
-const indent = (raw.match(/\n( +)"/) || [, '  '])[1];
-fs.writeFileSync(lp, JSON.stringify(all, null, indent) + (raw.endsWith('\n') ? '\n' : ''));
+if (!unit.lessons.includes(ID)) {
+  unit.lessons.push(ID);
+  const indent = (raw.match(/\n( +)"/) || [, '  '])[1];
+  const eol = raw.includes('\r\n') ? '\r\n' : '\n';
+  fs.writeFileSync(lp, JSON.stringify(all, null, indent).replace(/\n/g, eol) + (raw.endsWith('\n') ? eol : ''));
+}
 console.log(`${ID}: ${steps.length} steps, ${Object.keys(validators).length} validator sets; Year 10 units: ${y10.units.map((u) => u.code).join(', ')}`);

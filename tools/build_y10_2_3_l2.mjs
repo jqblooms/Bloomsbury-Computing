@@ -287,6 +287,10 @@ steps.push(checkStep('exam-similar', 'Exam Question: The Same in Both', 'Exam Qu
 steps.push(selfMarked('exam-differences', 'Exam Question: Two Differences', 'Exam Question: Two Differences',
   cite('0478/13, November 2024, Question 2(g)(iii)') + ' The email data is encrypted using asymmetric encryption before it is sent.', [
     { id: 'two-differences', prompt: '(iii) Give two differences between symmetric encryption and asymmetric encryption.', marks: 2,
+      scheme: ['Symmetric uses one key, whereas asymmetric uses two keys (a public and a private key)',
+        'Symmetric can send the key with the data, whereas asymmetric does not',
+        'Symmetric decrypts the data using the same key, whereas asymmetric decrypts the data using a different key',
+        'Symmetric is less secure than asymmetric (accept asymmetric is more secure than symmetric)'],
       modelAnswer: 'Any two from: symmetric uses one key, whereas asymmetric uses two keys (public and private); symmetric can send the key with the data, whereas asymmetric does not; symmetric decrypts with the same key, whereas asymmetric decrypts with a different key; symmetric is less secure than asymmetric.' },
   ], ['Why does a good difference name both methods in one sentence?', 'The mark is for the contrast. Say what one method does, then "whereas", then what the other does instead.']));
 
@@ -299,6 +303,12 @@ steps.push(embed('activity-2', 'Activity 3: Symmetric or Asymmetric?', 'drill-y1
 steps.push(selfMarked('exam-describe', 'Exam Question: Describe the Differences', 'Exam Question: Describe the Differences',
   cite('0478/12, March 2024, Question 7(a)(ii)') + ' Data is transmitted using the internet. The data is encrypted before transmission.', [
     { id: 'describe-differences', prompt: '(ii) Describe the differences between symmetric and asymmetric encryption.', marks: 4,
+      scheme: ['Symmetric has a shared key',
+        'The symmetric key is used to encrypt and decrypt',
+        'In symmetric, both the sender and receiver know the key',
+        'Asymmetric has different keys (accept a public key and a private key)',
+        'In asymmetric, the public key encrypts the data and the private key decrypts it',
+        'Anyone can know the public key, but only those intended know the private key'],
       modelAnswer: 'Four from: symmetric has a shared key ... to encrypt and decrypt; both the sender and receiver know the key; asymmetric has different keys, a public key and a private key; ... the public key encrypts the data and the private key decrypts it; anyone can know the public key, but only those intended know the private key.' },
   ], ['Why plan two facts about each method before you write?', 'Each mark is one fact, so two facts about each method cover four marks.']));
 
