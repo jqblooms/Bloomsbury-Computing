@@ -82,6 +82,13 @@
             "y8-revision-2",
             "y8-term1-test"
           ]
+        },
+        {
+          "code": "",
+          "title": "Data Models and Collection",
+          "lessons": [
+            "y8-3-1-models"
+          ]
         }
       ]
     },

@@ -1,0 +1,379 @@
+{
+ "id": "y8-3-1-models",
+ "label": "3.1: Models and Simulators",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Selection (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y831-do-now",
+   "validatorKey": "y831_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Selection (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is only one word output each time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>IF chooses one path. TRUE runs the THEN line. FALSE runs the ELSE line.</p></div></details><p class=\"lesson-lead\">From Term 1a: selection.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Temp : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Temp</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Temp &gt;= 25 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Hot\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Cool\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y831-do-now-a\">(a) The user types 25. What is output? [1]</label><input id=\"y831-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Selection (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y831-do-now-b\">(b) The user types 18. What is output? [1]</label><input id=\"y831-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Selection (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y831-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y831-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: selection",
+    "steps": [
+     {
+      "text": "This is a different program with the same kind of question. Do the same steps with your program.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &gt;= 40 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div>"
+     },
+     {
+      "text": "Line 2: the user types <strong>40</strong>. INPUT puts 40 in Speed.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line wt-hl\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &gt;= 40 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Speed = 40</div>"
+     },
+     {
+      "text": "Line 3 asks: is Speed &gt;= 40? <strong>&gt;=</strong> means more than <strong>or equal to</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Speed &gt;= 40 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div>"
+     },
+     {
+      "text": "Is 40 more than or equal to 40? It is equal, so <strong>yes</strong>. The question is TRUE.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Speed &gt;= 40 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">40 &gt;= 40 is TRUE</div>"
+     },
+     {
+      "text": "TRUE: run the line after <strong>THEN</strong>. The output is Fast.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &gt;= 40 THEN</div><div class=\"lesson-code-line wt-hl\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Output: Fast</div>"
+     },
+     {
+      "text": "Now the user types <strong>32</strong>. Is 32 more than or equal to 40? <strong>No.</strong> FALSE.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line wt-hl\">3&nbsp;&nbsp;IF Speed &gt;= 40 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">32 &gt;= 40 is FALSE</div>"
+     },
+     {
+      "text": "FALSE: skip the THEN line. Run the line after <strong>ELSE</strong>. The output is Slow. Now do your question.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Speed : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Speed</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;IF Speed &gt;= 40 THEN</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Fast\"</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line wt-hl\">6&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Slow\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ENDIF</div></div><div class=\"wt-note\">Output: Slow</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Arrays (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y831-do-now-2",
+   "validatorKey": "y831_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Arrays (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a linear search start at index 1?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It checks the items in order, one at a time, so it cannot miss one.</p></div></details><p class=\"lesson-lead\">From Term 1a: arrays and linear search.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\"><strong>Names</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td></tr><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Tom</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Ana</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Mia</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Leo</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Sam</td></tr></table></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y831-do-now-2-a\">(a) What does OUTPUT Names[2] output? [1]</label><input id=\"y831-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Arrays (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y831-do-now-2-b\">(b) A linear search for \"Leo\" starts at index 1. How many items does it check? [1]</label><input id=\"y831-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Arrays (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y831-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y831-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: arrays and searching",
+    "steps": [
+     {
+      "text": "This is a different array with the same two questions. Do the same steps with your array.",
+      "visual": "<p style=\"margin:0 0 6px\"><strong>Pets</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td></tr><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Dog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Fish</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Bird</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Frog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Duck</td></tr></table>"
+     },
+     {
+      "text": "Pets[3]: the 3 in [ ] is the <strong>index</strong>. Find 3 in the Index row.",
+      "visual": "<p style=\"margin:0 0 6px\"><strong>Pets</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td></tr><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Dog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Fish</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Bird</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Frog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Duck</td></tr></table><div class=\"wt-note\">Look for index 3</div>"
+     },
+     {
+      "text": "Read the value under index 3: <strong>Fish</strong>. So Pets[3] is Fish.",
+      "visual": "<p style=\"margin:0 0 6px\"><strong>Pets</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td></tr><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Dog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Fish</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Bird</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Frog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Duck</td></tr></table><div class=\"wt-note\">Pets[3] = Fish</div>"
+     },
+     {
+      "text": "A linear search for \"Frog\" starts at index 1. Check 1: Cat. Not Frog.",
+      "visual": "<p style=\"margin:0 0 6px\"><strong>Pets</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td></tr><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Cat</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Dog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Fish</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Bird</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Frog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Duck</td></tr></table><div class=\"wt-note\">Checked: 1 item</div>"
+     },
+     {
+      "text": "Then Dog, then Fish, then Bird. None of them is Frog.",
+      "visual": "<p style=\"margin:0 0 6px\"><strong>Pets</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td></tr><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Dog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Fish</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Bird</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Frog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Duck</td></tr></table><div class=\"wt-note\">Checked so far: Cat, Dog, Fish, Bird</div>"
+     },
+     {
+      "text": "Check 5: <strong>Frog</strong>. Found it, so the search stops.",
+      "visual": "<p style=\"margin:0 0 6px\"><strong>Pets</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td></tr><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Dog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Fish</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Bird</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Frog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Duck</td></tr></table><div class=\"wt-note\">Checked: 5 items</div>"
+     },
+     {
+      "text": "It checked 5 items: the found item counts too. Now do the same with your array.",
+      "visual": "<p style=\"margin:0 0 6px\"><strong>Pets</strong></p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td></tr><tr><th style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Dog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Fish</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Bird</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Frog</td><td style=\"padding:6px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">Duck</td></tr></table>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y8-3-1-ext",
+   "embedContainerId": "y831-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on selection, loops, arrays and searching. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y831-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "3.1: Models and Simulators",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Data Models and Collection</p><h2 class=\"lesson-h2\">3.1: Models and Simulators</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> what a model is, and its parts.</li><li><strong>The big question:</strong> why does a model need good data?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How does a weather forecast know about tomorrow before it happens?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A computer works it out from data about today. Today we see how.</p></div></details>"
+  },
+  {
+   "id": "what-is-model",
+   "label": "What Is a Model?",
+   "content": "<h2 class=\"lesson-h2\">What Is a Model?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: why would a company test a new car on a computer before it builds one?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Building a real car to test is slow and costs a lot. A computer version can be tried first.</p><p><strong>Why?</strong> The computer version acts like the real car, so it shows problems early.</p></div></details><p class=\"lesson-lead\">A <strong>model</strong> is a simple computer version of a real system. It works things out, so it can <strong>predict</strong> what will happen.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A weather forecast predicts tomorrow's rain.</li><li>A traffic model shows how long the queue gets.</li><li>A rabbit model predicts how many rabbits there will be.</li></ul></div><div><ul class=\"lesson-facts\"><li>A <strong>simulator</strong> is a model you use like the real thing.</li><li>A <strong>flight simulator</strong>: a pilot flies, and the screen acts like a real plane.</li><li>A model is <strong>simpler</strong> than the real system.</li></ul></div></div>"
+  },
+  {
+   "id": "model-check",
+   "label": "Your Turn: Model or Not?",
+   "type": "short-answer-validation",
+   "validatorId": "y831-model-check",
+   "validatorKey": "y831_model_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Model or Not?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might two people disagree about one of these? What question settles it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Use the meaning: is it a computer version of a real system that works things out? Check each one against that.</p></div></details><p class=\"lesson-lead\">Type <strong>model</strong> or <strong>not a model</strong> for each one.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y831-model-check-a\">(a) A computer program that predicts tomorrow's rain. [1]</label><input id=\"y831-model-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"model-check-a\" aria-label=\"Your Turn: Model or Not? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y831-model-check-b\">(b) A photo of a storm. [1]</label><input id=\"y831-model-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"model-check-b\" aria-label=\"Your Turn: Model or Not? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y831-model-check-c\">(c) A list of the names in your class. [1]</label><input id=\"y831-model-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"model-check-c\" aria-label=\"Your Turn: Model or Not? part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y831-model-check-d\">(d) A program that trains pilots to land a plane. [1]</label><input id=\"y831-model-check-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"model-check-d\" aria-label=\"Your Turn: Model or Not? part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y831-model-check-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y831-model-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "key-features",
+   "label": "The Parts of a Model",
+   "content": "<h2 class=\"lesson-h2\">The Parts of a Model</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: how many rabbits after 3 years? Why do we need the rule to work it out?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>20, then 40, then 80, then <strong>160</strong>.</p><p><strong>Why?</strong> The input alone is only the start. The rule says how it changes each year.</p></div></details><p class=\"lesson-lead\">A rabbit model.</p><div style=\"display:flex;gap:8px;align-items:stretch;margin:6px 0 10px\"><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Inputs (data)</div>20 rabbits at the start</div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Rules</div>Each year, the number of rabbits doubles.</div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Outputs</div>Rabbits after 3 years</div></div><ul class=\"lesson-facts\"><li><strong>Inputs:</strong> the data that goes in.</li><li><strong>Rules:</strong> the calculations that work out the answer.</li><li><strong>Outputs:</strong> the predictions that come out.</li><li><strong>Simplified:</strong> it leaves out things like foxes and weather.</li></ul>"
+  },
+  {
+   "id": "features-check",
+   "label": "Your Turn: Name the Parts",
+   "type": "short-answer-validation",
+   "validatorId": "y831-features-check",
+   "validatorKey": "y831_features_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Name the Parts</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the job of a part decide what it is called?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The same number can go in to one system and come out of another. Ask what it does here.</p></div></details><p class=\"lesson-lead\">A traffic light model. Type <strong>input</strong>, <strong>rule</strong> or <strong>output</strong> for (a) to (c).</p><div class=\"lesson-do-now-columns\"><div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><strong>Traffic light model</strong><br>0 cars are waiting at the start.<br>6 cars arrive each minute.<br>The green light lets 4 cars go each minute.</div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y831-features-check-a\">(a) 6 cars arrive each minute. [1]</label><input id=\"y831-features-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"features-check-a\" aria-label=\"Your Turn: Name the Parts part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y831-features-check-b\">(b) Each minute: waiting = waiting + arriving - going. [1]</label><input id=\"y831-features-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"features-check-b\" aria-label=\"Your Turn: Name the Parts part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y831-features-check-c\">(c) The number of cars waiting after 3 minutes. [1]</label><input id=\"y831-features-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"features-check-c\" aria-label=\"Your Turn: Name the Parts part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y831-features-check-d\">(d) How many cars are waiting after 3 minutes? [1]</label><input id=\"y831-features-check-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"features-check-d\" aria-label=\"Your Turn: Name the Parts part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y831-features-check-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y831-features-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Parts of a Model",
+   "type": "embedded-app",
+   "appId": "drill-y8-3-1-parts",
+   "embedContainerId": "y831-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Parts of a Model</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why name the parts before you trust a prediction?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you know what goes in and how it is worked out, you can check where a wrong answer came from.</p></div></details><p class=\"lesson-lead\">Is it a model? Which part is the input, the rule, the output? Your progress is saved.</p><div id=\"y831-activity-1\"></div>"
+  },
+  {
+   "id": "why-models",
+   "label": "Why Use a Model?",
+   "content": "<h2 class=\"lesson-h2\">Why Use a Model?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: a new pilot must practise an engine failure. Why not practise in a real plane?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A mistake in a real plane could kill people and wreck the plane.</p><p><strong>Why?</strong> In a simulator, a crash hurts no one and costs nothing. The pilot can try again.</p></div></details><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:7px 12px;text-align:left;font-size:17px\">Reason</th><th style=\"padding:7px 12px;text-align:left;font-size:17px\">Example</th></tr><tr><td style=\"padding:7px 12px;text-align:left;font-size:17px\"><strong>Safer</strong></td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">A pilot can crash a simulator. Nobody is hurt.</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-size:17px\"><strong>Cheaper</strong></td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">No real bridge is built and broken.</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-size:17px\"><strong>Faster</strong></td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">100 years of rabbits in one second.</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-size:17px\"><strong>\"What if?\"</strong></td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Change one input and run it again.</td></tr></table>"
+  },
+  {
+   "id": "compare-test",
+   "label": "Compare: Real Test or Model?",
+   "content": "<h2 class=\"lesson-h2\">Compare: Real Test or Model?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">You must test 50 bridge designs. Which way would you choose? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The model. 50 real bridges would cost a fortune and take years.</p><p><strong>Why?</strong> In the model you change the design and run it again in seconds, and nothing real breaks.</p></div></details><p class=\"lesson-lead\">Testing a new bridge: how much weight can it hold?</p><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:7px 12px;text-align:left;font-size:17px\"></th><th style=\"padding:7px 12px;text-align:left;font-size:17px\">Real test</th><th style=\"padding:7px 12px;text-align:left;font-size:17px\">Model</th></tr><tr><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Cost</td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Build a real bridge</td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">A computer</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Danger</td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">It can fall on people</td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Nobody is hurt</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Time</td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Months</td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Seconds</td></tr><tr><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Try again?</td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Build it again</td><td style=\"padding:7px 12px;text-align:left;font-size:17px\">Change an input, run again</td></tr></table>"
+  },
+  {
+   "id": "why-check",
+   "label": "Explain: Why a Flight Simulator?",
+   "type": "self-marked-response",
+   "containerId": "y831-why-check",
+   "content": "<h2 class=\"lesson-h2\">Explain: Why a Flight Simulator?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two connected points: a reason, and what it means here. Join them with because or so.</p></div></details><p class=\"lesson-lead\">New pilots learn to land in a flight simulator first.</p><div id=\"y831-why-check\"></div>",
+   "items": [
+    {
+     "id": "why-sim",
+     "prompt": "Explain why pilots train in a flight simulator. [2]",
+     "marks": 2,
+     "modelAnswer": "It is safer: a crash hurts no one (1). It is cheaper: no real plane is damaged (1)."
+    }
+   ]
+  },
+  {
+   "id": "data-matters",
+   "label": "Why the Data Matters",
+   "content": "<h2 class=\"lesson-h2\">Why the Data Matters</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Someone types 200 instead of 20. Predict the output. Why is the rule not to blame?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>200, 400, 800, <strong>1600</strong> rabbits. The real island has about 160.</p><p><strong>Why?</strong> The rule is right. The input was wrong, so the output is wrong too.</p></div></details><p class=\"lesson-lead\">The data makes a model match the real system.</p><div style=\"display:flex;gap:8px;align-items:stretch;margin:6px 0 10px\"><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Inputs (data)</div>20 rabbits (counted)</div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Rules</div>Doubles each year</div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Outputs</div>160 after 3 years</div></div><ul class=\"lesson-facts\"><li>Wrong data in gives a wrong prediction out.</li><li>We call this <strong>garbage in, garbage out</strong>.</li><li>Good data is <strong>correct</strong>, <strong>up to date</strong> and <strong>complete</strong>.</li></ul>"
+  },
+  {
+   "id": "compare-data",
+   "label": "Compare: Good Data, Missing Data",
+   "content": "<h2 class=\"lesson-h2\">Compare: Good Data, Missing Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both use the same rule. Predict each output. Why does only one match the real account?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A: 100 + 4 x 10 = <strong>140</strong>. B: 0 + 4 x 10 = <strong>40</strong>.</p><p><strong>Why?</strong> B is missing the start amount, so it begins at 0. The rule cannot fix missing data.</p></div></details><p class=\"lesson-lead\">A savings model. Rule: each week, add 10. Real account after 4 weeks: 140.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Model A: start data 100</p><div style=\"display:flex;gap:8px;align-items:stretch;margin:6px 0 10px\"><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Inputs (data)</div>Start: 100</div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Rules</div>Add 10 a week</div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Outputs</div>After 4 weeks: ?</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Model B: start data missing</p><div style=\"display:flex;gap:8px;align-items:stretch;margin:6px 0 10px\"><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Inputs (data)</div>Start: (missing)</div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Rules</div>Add 10 a week</div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><div style=\"font-weight:700;color:var(--brand);margin-bottom:4px\">Outputs</div>After 4 weeks: ?</div></div></div></div>"
+  },
+  {
+   "id": "data-check",
+   "label": "Your Turn: Change the Data",
+   "type": "short-answer-validation",
+   "validatorId": "y831-data-check",
+   "validatorKey": "y831_data_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Change the Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a computer never notice that its data is wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It only follows its steps. It cannot look at the real world to check.</p></div></details><p class=\"lesson-lead\">A savings model. Rule: each week, add 15.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y831-data-check-a\">(a) The start is 50. What does it predict after 3 weeks? [1]</label><input id=\"y831-data-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"data-check-a\" aria-label=\"Your Turn: Change the Data part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y831-data-check-b\">(b) Someone types the start as 5 by mistake. What does it predict after 3 weeks? [1]</label><input id=\"y831-data-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"data-check-b\" aria-label=\"Your Turn: Change the Data part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y831-data-check-c\">(c) Wrong data in, wrong prediction out. What do we call this? [1]</label><input id=\"y831-data-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"data-check-c\" aria-label=\"Your Turn: Change the Data part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y831-data-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y831-data-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Change the Data",
+   "type": "embedded-app",
+   "appId": "drill-y8-3-1-data",
+   "embedContainerId": "y831-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Change the Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why change only one input at a time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you know which change made the output different.</p></div></details><p class=\"lesson-lead\">Run each model in your head. Then change the data and predict again. Your progress is saved.</p><div id=\"y831-activity-2\"></div>"
+  },
+  {
+   "id": "practice",
+   "label": "Practice: A Fish Pond Model",
+   "type": "short-answer-validation",
+   "validatorId": "y831-practice",
+   "validatorKey": "y831_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: A Fish Pond Model</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check a prediction against the real thing later?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If they are different, the data or the steps need fixing.</p></div></details><p class=\"lesson-lead\">Use the model for (a) to (c).</p><div class=\"lesson-do-now-columns\"><div><div style=\"flex:1;border:2px solid var(--brand);border-radius:10px;padding:8px 10px;background:var(--surface-2);font-size:16px;line-height:1.35\"><strong>Fish pond model</strong><br>Input: 30 fish at the start.<br>Rule: each year, add 12 fish.<br>Output: fish after some years.</div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y831-practice-a\">(a) What does it predict after 2 years? [1]</label><input id=\"y831-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: A Fish Pond Model part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y831-practice-b\">(b) \"30 fish at the start\". Input, rule or output? [1]</label><input id=\"y831-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: A Fish Pond Model part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y831-practice-c\">(c) Birds eat fish, but the model leaves them out. Will the real pond have more or fewer fish than it predicts? [1]</label><input id=\"y831-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: A Fish Pond Model part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y831-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y831-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Models and Simulators",
+   "type": "embedded-app",
+   "appId": "drill-y8-3-1-models",
+   "embedContainerId": "y831-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Models and Simulators</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new numbers every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do it with any numbers, you really understand it.</p></div></details><p class=\"lesson-lead\">Models, their parts, why we use them, and why the data matters. Your progress is saved.</p><div id=\"y831-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y831_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*hot\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read the symbol on line 3. Is 25 more than or equal to 25?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*cool\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is the question on line 3 TRUE or FALSE for 18? FALSE runs the ELSE line."
+   }
+  ],
+  "y831_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*ana\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find index 2 in the top row. Read the value under it."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*(\\s*(items?|checks?|times?))?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check one item at a time from index 1. Count them, and count the one you find too."
+   }
+  ],
+  "y831_model_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(yes,?\\s*)?(it\\s+is\\s+)?(an?\\s+)?(computer\\s+)?model\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is it a computer version of a real system? Does it work something out?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(no,?\\s*)?((it\\s+is\\s+)?not(\\s+an?)?(\\s+model)?|no)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Can it work out what happens next, or does it only show one moment?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(no,?\\s*)?((it\\s+is\\s+)?not(\\s+an?)?(\\s+model)?|no)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does it work anything out or predict anything?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(yes,?\\s*)?(it\\s+is\\s+)?(an?\\s+)?(computer\\s+)?model\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does it act like a real system and work out what happens?"
+   }
+  ],
+  "y831_features_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+)?(an?\\s+)?inputs?(\\s+data)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is it data that goes in, a calculation, or what comes out?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+)?(an?\\s+)?(rules?|calculations?)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does it say how to work something out?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+)?(an?\\s+)?(outputs?|predictions?|results?)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is it given at the start, or worked out at the end?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6\\s*(\\s*cars?)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start at 0. Each minute, add the cars that arrive. Take away the cars that go."
+   }
+  ],
+  "y831_data_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*95\\s*\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start with the start amount. Add 15 for each week."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*50\\s*\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Use the typed start, not the real one. Then add 15 for each week."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "garbage\\s+in,?\\s*(and\\s+)?garbage\\s+out",
+     "flags": "i"
+    },
+    "feedback": "It has four words. Look back at the slide on why the data matters."
+   }
+  ],
+  "y831_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*54\\s*(\\s*fish)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start with the fish at the start. Add 12 for each year."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+)?(an?\\s+)?inputs?(\\s+data)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is it given at the start, or worked out?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+will\\s+have\\s+)?(fewer|less)(\\s+fish)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "What do the birds do to the number of fish?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
