@@ -86,6 +86,7 @@ function selfMarked(id, label, heading, lead, items) {
 const num = (n, unit = '') => `^\\s*${n}\\s*${unit ? `(${unit})?` : ''}\\s*$`;
 const word = (w) => `^\\s*["'\\u201c]?\\s*${w}\\s*["'\\u201d]?\\s*[.!]?\\s*$`;
 const MODEL = '^\\s*(yes,?\\s*)?(it\\s+is\\s+)?(an?\\s+)?(computer\\s+)?model\\s*[.!]?\\s*$';
+const MODEL_OR_SIM = '^\\s*(yes,?\\s*)?(it\\s+is\\s+)?(an?\\s+)?((computer\\s+)?model|(flight\\s+)?simulator|model\\s*(,|and|or|\\/)\\s*(a\\s+)?simulator)\\s*[.!]?\\s*$';
 const NOT_MODEL = '^\\s*(no,?\\s*)?((it\\s+is\\s+)?not(\\s+an?)?(\\s+model)?|no)\\s*[.!]?\\s*$';
 const ROLE = {
   input: '^\\s*(it\\s+is\\s+)?(an?\\s+)?inputs?(\\s+data)?\\s*[.!]?\\s*$',
@@ -102,7 +103,7 @@ const TPS = {
   'model-check': ['Why might two people disagree about one of these? What question settles it?', 'Use the meaning: is it a computer version of a real system that works things out? Check each one against that.'],
   'features-check': ['Why does the job of a part decide what it is called?', 'The same number can go in to one system and come out of another. Ask what it does here.'],
   'activity-1': ['Why name the parts before you trust a prediction?', 'If you know what goes in and how it is worked out, you can check where a wrong answer came from.'],
-  'why-check': ['What makes an explanation worth 2 marks?', 'Two connected points: a reason, and what it means here. Join them with because or so.'],
+  'why-check': ['What makes an explanation worth 2 marks?', 'Two different reasons. Each one says what it means for the pilot, joined with because or so.'],
   'data-check': ['Why does a computer never notice that its data is wrong?', 'It only follows its steps. It cannot look at the real world to check.'],
   'activity-2': ['Why change only one input at a time?', 'Then you know which change made the output different.'],
   'practice': ['Why check a prediction against the real thing later?', 'If they are different, the data or the steps need fixing.'],
@@ -179,7 +180,7 @@ steps.push(checkStep('model-check', 'Your Turn: Model or Not?', 'Your Turn: Mode
   { line: true, label: 'A computer program that predicts tomorrow\'s rain.', answer: MODEL, feedback: 'Is it a computer version of a real system? Does it work something out?' },
   { line: true, label: 'A photo of a storm.', answer: NOT_MODEL, feedback: 'Can it work out what happens next, or does it only show one moment?' },
   { line: true, label: 'A list of the names in your class.', answer: NOT_MODEL, feedback: 'Does it work anything out or predict anything?' },
-  { line: true, label: 'A program that trains pilots to land a plane.', answer: MODEL, feedback: 'Does it act like a real system and work out what happens?' },
+  { line: true, label: 'A program that trains pilots to land a plane.', answer: MODEL_OR_SIM, feedback: 'Does it act like a real system and work out what happens?' },
 ]));
 
 // ---------------------------------------------------------------- key features
@@ -237,7 +238,7 @@ steps.push({ id: 'compare-test', label: 'Compare: Real Test or Model?',
 steps.push(selfMarked('why-check', 'Explain: Why a Flight Simulator?', 'Explain: Why a Flight Simulator?',
   '<p class="lesson-lead">New pilots learn to land in a flight simulator first.</p>', [
     { id: 'why-sim', prompt: 'Explain why pilots train in a flight simulator. [2]', marks: 2,
-      modelAnswer: 'It is safer: a crash hurts no one (1). It is cheaper: no real plane is damaged (1).' },
+      modelAnswer: 'It is safer, because a crash in a simulator hurts no one (1). It is cheaper, because no real plane is damaged (1).' },
   ]));
 
 // ---------------------------------------------------------------- data
@@ -297,7 +298,7 @@ for (const st of steps) if (TPS[st.id]) st.content = st.content.replace('</h2>',
 const V = (k, i, s) => new RegExp(validators[`${P}_${k}`.replace(/-/g, '_')][i].pattern.source, 'i').test(s);
 assert(V('do-now', 0, 'Hot') && V('do-now', 0, '"hot"') && !V('do-now', 0, 'Cool') && V('do-now', 1, 'cool') && !V('do-now', 1, 'Hot'), 'do-now marks');
 assert(V('do-now-2', 0, 'Ana') && !V('do-now-2', 0, 'Tom') && V('do-now-2', 1, '4') && V('do-now-2', 1, '4 items') && !V('do-now-2', 1, '3') && !V('do-now-2', 1, '5'), 'do-now-2 marks');
-assert(V('model-check', 0, 'model') && V('model-check', 0, 'It is a model') && !V('model-check', 0, 'not a model') && V('model-check', 1, 'not a model') && V('model-check', 1, 'Not') && !V('model-check', 1, 'model') && V('model-check', 2, 'no') && V('model-check', 3, 'a model'), 'model-check marks');
+assert(V('model-check', 0, 'model') && V('model-check', 0, 'It is a model') && !V('model-check', 0, 'not a model') && V('model-check', 1, 'not a model') && V('model-check', 1, 'Not') && !V('model-check', 1, 'model') && V('model-check', 2, 'no') && V('model-check', 3, 'a model') && V('model-check', 3, 'simulator') && V('model-check', 3, 'a flight simulator') && !V('model-check', 3, 'not a model'), 'model-check marks');
 assert(V('features-check', 0, 'input') && V('features-check', 0, 'an input') && !V('features-check', 0, 'output') && !V('features-check', 0, 'rule') && V('features-check', 1, 'rule') && V('features-check', 1, 'a calculation') && !V('features-check', 1, 'input') && V('features-check', 2, 'output') && V('features-check', 2, 'prediction') && !V('features-check', 2, 'input') && V('features-check', 3, '6') && V('features-check', 3, '6 cars') && !V('features-check', 3, '18'), 'features-check marks');
 assert(V('data-check', 0, '95') && !V('data-check', 0, '50') && V('data-check', 1, '50') && !V('data-check', 1, '95') && V('data-check', 2, 'garbage in, garbage out') && V('data-check', 2, 'Garbage in garbage out') && !V('data-check', 2, 'garbage'), 'data-check marks');
 assert(V('practice', 0, '54') && V('practice', 0, '54 fish') && !V('practice', 0, '42') && V('practice', 1, 'input') && !V('practice', 1, 'output') && V('practice', 2, 'fewer') && V('practice', 2, 'less') && !V('practice', 2, 'more'), 'practice marks');
@@ -519,15 +520,15 @@ function modelPrelude() {
   }
   var LEAVE = [
     ["A traffic model counts the cars, but leaves out the colour of each car.", "The colour"],
-    ["A rabbit model counts the rabbits, but leaves out each rabbit's name.", "The names"],
+    ["A rabbit model counts the rabbits, but leaves out each rabbit's name.", "The names", "do"],
     ["A flight simulator leaves out the smell of the real cockpit.", "The smell"],
     ["A savings model leaves out the colour of the bank's front door.", "The door colour"]
   ];
   function simpleGen() {
     var l = pick(LEAVE);
-    return { prompt: l[0] + "\nWhy is it still useful?", answer: l[1] + " does not change the result, so the model can stay simple.",
+    return { prompt: l[0] + "\nWhy is it still useful?", answer: l[1] + " " + (l[2] || "does") + " not change the result, so the model can stay simple.",
       re: /(?=.*\b(not|no|never|doesn'?t|don'?t|nothing)\b.*\b(chang\w*|matter\w*|affect\w*|need\w*|important|use\w*|help\w*))(?=.*\b(simple\w*|easier|faster|quicker|less|smaller)\b)/i,
-      wrong: ["It looks nice.", "Colours are fun.", "It is a game."],
+      wrong: ["It looks more real, because the left out part makes the screen look better.", "Leaving it out changes the prediction, so the model becomes more exciting.", "The computer stores more data, so the model can keep every small detail."],
       working: ["Would the left out part change the prediction?", "What does leaving it out do to the model?"],
       note: "A good model leaves out what does not change the result, so it stays simple." };
   }
@@ -536,7 +537,7 @@ function modelPrelude() {
     var job = pick(["land in a storm", "deal with an engine failure", "land for the first time"]);
     return { prompt: "A new pilot practises how to " + job + " in a flight simulator.\nWhy use a simulator, not a real plane?", answer: "It is safer, because a crash in a simulator hurts no one.",
       re: /(?=.*\b(safe|safer|safely|safety|danger\w*|risk\w*|hurt\w*|injur\w*|die|dies|kill\w*)\b)(?=.*\b(crash\w*|mistakes?|no\s*one|nobody|people|pilots?|passengers?|real|wrong)\b)/i,
-      wrong: ["Planes are slow.", "It is more fun.", "Simulators are new."],
+      wrong: ["It is faster, because a simulator plane flies at a much higher speed.", "It is more fun, because the screen shows a game with points.", "It is newer, because real planes are too old to use for lessons."],
       working: ["What could go wrong in a real plane?", "Who could be hurt, and does that happen in a simulator?"],
       note: "Safer: a mistake in a simulator hurts no one." };
   }
@@ -544,7 +545,7 @@ function modelPrelude() {
     var what = pick(["a new bridge", "a new tall tower", "a new dam"]);
     return { prompt: "Engineers test " + what + " in a model before they build it.\nWhy test it in a model first?", answer: "It is cheaper, because nothing real is built and broken.",
       re: /(?=.*\b(cheap\w*|cost\w*|money|pay|expensive|fast\w*|quick\w*|time|safe\w*|danger\w*)\b)(?=.*\b(real|build\w*|built|broke\w*|break\w*|fall\w*|collaps\w*|materials?|people|hurt|wast\w*)\b)/i,
-      wrong: ["It looks tall.", "Engineers like it.", "Models are fun."],
+      wrong: ["It looks better, because a model shows it in bright colours.", "Engineers like it more, because drawing a picture is fun.", "The model is always right, so the real one never needs checking."],
       working: ["What would a real test cost, or risk?", "What happens to the real thing if the test fails?"],
       note: "Cheaper and safer: nothing real is built, broken or falls on people." };
   }
@@ -552,7 +553,7 @@ function modelPrelude() {
     var q = pick(["What if twice as many cars arrive?", "What if the rabbits only grow by half each year?", "What if the wind is twice as strong?"]);
     return { prompt: "\"" + q + "\"\nWhy is a model good for testing a question like this?", answer: "You can change the input and run it again, and nothing real is harmed.",
       re: /(?=.*\b(chang\w*|try|tries|trying|again|many|different|test\w*)\b)(?=.*\b(safe\w*|danger\w*|harm\w*|hurt\w*|real|risk\w*|damag\w*|quick\w*|fast\w*|seconds?|cheap\w*)\b)/i,
-      wrong: ["Cars are fast.", "It is a guess.", "Wind is strong."],
+      wrong: ["A model gives one fixed answer, so there is only one thing to ask.", "It is a guess, because a computer cannot work anything out.", "The weather decides the answer, so a model cannot help with it."],
       working: ["What do you change in the model to ask it?", "What would happen if you tried it for real?"],
       note: "Change one input and run again: fast, and nothing real is harmed." };
   }
@@ -613,14 +614,14 @@ function modelPrelude() {
     var why = pick(["readings from last month", "readings from a broken thermometer", "readings that were typed in wrong"]);
     return { prompt: "A weather model uses " + why + ".\nWhy may its forecast for tomorrow be wrong?", answer: "The data is wrong or old, so the prediction does not match the real weather.",
       re: /(?=.*(\b(old|bad|broken|incorrect|mistakes?|out\s+of\s+date|last\s+month|garbage)\b|\b(data|readings?|inputs?|thermometer)\b.*\b(wrong|not\s+(new|current|correct|right))\b|\bwrong\s+(data|readings?|inputs?)\b))(?=.*\b(outputs?|predictions?|predicts?|forecasts?|results?|answers?|match\w*|today|tomorrow|now|real|garbage\s+out)\b)/i,
-      wrong: ["The computer is slow.", "It rained.", "Models are always right."],
+      wrong: ["The computer is too slow to finish the forecast before tomorrow.", "It rained today, so a model cannot forecast tomorrow at all.", "Models are always right, so the forecast cannot be wrong."],
       working: ["What is wrong with the data it uses?", "What does that do to what comes out?"],
       note: "Wrong or old data in gives a wrong forecast out: garbage in, garbage out." };
   }
   function missingGen() {
     return { prompt: "A rabbit model leaves out the foxes that eat rabbits.\nWhy does it predict more rabbits than really live on the island?", answer: "Foxes eat rabbits, but the model has no foxes, so fewer rabbits really live.",
       re: /(?=.*\b(eat\w*|eaten|hunt\w*|kill\w*)\b)(?=.*\b(left\s+out|leaves?\s+out|missing|no\s+fox\w*|not\s+in|does\s*n[o']t|ignor\w*|without|fewer|less|die\w*)\b)/i,
-      wrong: ["Rabbits are fast.", "Islands are big.", "The rule is right."],
+      wrong: ["Rabbits run fast, so the model cannot count all of them.", "The island is big, so there is room for more rabbits than it says.", "The rule is right, so the model always matches the island."],
       working: ["What do foxes do to the real rabbits?", "Does the model know about that?"],
       note: "The model is missing data about foxes, so it predicts too many rabbits." };
   }

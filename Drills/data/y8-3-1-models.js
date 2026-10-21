@@ -94,15 +94,15 @@ DrillData.register("y8-3-1-models", {
   }
   var LEAVE = [
     ["A traffic model counts the cars, but leaves out the colour of each car.", "The colour"],
-    ["A rabbit model counts the rabbits, but leaves out each rabbit's name.", "The names"],
+    ["A rabbit model counts the rabbits, but leaves out each rabbit's name.", "The names", "do"],
     ["A flight simulator leaves out the smell of the real cockpit.", "The smell"],
     ["A savings model leaves out the colour of the bank's front door.", "The door colour"]
   ];
   function simpleGen() {
     var l = pick(LEAVE);
-    return { prompt: l[0] + "\nWhy is it still useful?", answer: l[1] + " does not change the result, so the model can stay simple.",
+    return { prompt: l[0] + "\nWhy is it still useful?", answer: l[1] + " " + (l[2] || "does") + " not change the result, so the model can stay simple.",
       re: /(?=.*\b(not|no|never|doesn'?t|don'?t|nothing)\b.*\b(chang\w*|matter\w*|affect\w*|need\w*|important|use\w*|help\w*))(?=.*\b(simple\w*|easier|faster|quicker|less|smaller)\b)/i,
-      wrong: ["It looks nice.", "Colours are fun.", "It is a game."],
+      wrong: ["It looks more real, because the left out part makes the screen look better.", "Leaving it out changes the prediction, so the model becomes more exciting.", "The computer stores more data, so the model can keep every small detail."],
       working: ["Would the left out part change the prediction?", "What does leaving it out do to the model?"],
       note: "A good model leaves out what does not change the result, so it stays simple." };
   }
@@ -111,7 +111,7 @@ DrillData.register("y8-3-1-models", {
     var job = pick(["land in a storm", "deal with an engine failure", "land for the first time"]);
     return { prompt: "A new pilot practises how to " + job + " in a flight simulator.\nWhy use a simulator, not a real plane?", answer: "It is safer, because a crash in a simulator hurts no one.",
       re: /(?=.*\b(safe|safer|safely|safety|danger\w*|risk\w*|hurt\w*|injur\w*|die|dies|kill\w*)\b)(?=.*\b(crash\w*|mistakes?|no\s*one|nobody|people|pilots?|passengers?|real|wrong)\b)/i,
-      wrong: ["Planes are slow.", "It is more fun.", "Simulators are new."],
+      wrong: ["It is faster, because a simulator plane flies at a much higher speed.", "It is more fun, because the screen shows a game with points.", "It is newer, because real planes are too old to use for lessons."],
       working: ["What could go wrong in a real plane?", "Who could be hurt, and does that happen in a simulator?"],
       note: "Safer: a mistake in a simulator hurts no one." };
   }
@@ -119,7 +119,7 @@ DrillData.register("y8-3-1-models", {
     var what = pick(["a new bridge", "a new tall tower", "a new dam"]);
     return { prompt: "Engineers test " + what + " in a model before they build it.\nWhy test it in a model first?", answer: "It is cheaper, because nothing real is built and broken.",
       re: /(?=.*\b(cheap\w*|cost\w*|money|pay|expensive|fast\w*|quick\w*|time|safe\w*|danger\w*)\b)(?=.*\b(real|build\w*|built|broke\w*|break\w*|fall\w*|collaps\w*|materials?|people|hurt|wast\w*)\b)/i,
-      wrong: ["It looks tall.", "Engineers like it.", "Models are fun."],
+      wrong: ["It looks better, because a model shows it in bright colours.", "Engineers like it more, because drawing a picture is fun.", "The model is always right, so the real one never needs checking."],
       working: ["What would a real test cost, or risk?", "What happens to the real thing if the test fails?"],
       note: "Cheaper and safer: nothing real is built, broken or falls on people." };
   }
@@ -127,7 +127,7 @@ DrillData.register("y8-3-1-models", {
     var q = pick(["What if twice as many cars arrive?", "What if the rabbits only grow by half each year?", "What if the wind is twice as strong?"]);
     return { prompt: "\"" + q + "\"\nWhy is a model good for testing a question like this?", answer: "You can change the input and run it again, and nothing real is harmed.",
       re: /(?=.*\b(chang\w*|try|tries|trying|again|many|different|test\w*)\b)(?=.*\b(safe\w*|danger\w*|harm\w*|hurt\w*|real|risk\w*|damag\w*|quick\w*|fast\w*|seconds?|cheap\w*)\b)/i,
-      wrong: ["Cars are fast.", "It is a guess.", "Wind is strong."],
+      wrong: ["A model gives one fixed answer, so there is only one thing to ask.", "It is a guess, because a computer cannot work anything out.", "The weather decides the answer, so a model cannot help with it."],
       working: ["What do you change in the model to ask it?", "What would happen if you tried it for real?"],
       note: "Change one input and run again: fast, and nothing real is harmed." };
   }
@@ -188,14 +188,14 @@ DrillData.register("y8-3-1-models", {
     var why = pick(["readings from last month", "readings from a broken thermometer", "readings that were typed in wrong"]);
     return { prompt: "A weather model uses " + why + ".\nWhy may its forecast for tomorrow be wrong?", answer: "The data is wrong or old, so the prediction does not match the real weather.",
       re: /(?=.*(\b(old|bad|broken|incorrect|mistakes?|out\s+of\s+date|last\s+month|garbage)\b|\b(data|readings?|inputs?|thermometer)\b.*\b(wrong|not\s+(new|current|correct|right))\b|\bwrong\s+(data|readings?|inputs?)\b))(?=.*\b(outputs?|predictions?|predicts?|forecasts?|results?|answers?|match\w*|today|tomorrow|now|real|garbage\s+out)\b)/i,
-      wrong: ["The computer is slow.", "It rained.", "Models are always right."],
+      wrong: ["The computer is too slow to finish the forecast before tomorrow.", "It rained today, so a model cannot forecast tomorrow at all.", "Models are always right, so the forecast cannot be wrong."],
       working: ["What is wrong with the data it uses?", "What does that do to what comes out?"],
       note: "Wrong or old data in gives a wrong forecast out: garbage in, garbage out." };
   }
   function missingGen() {
     return { prompt: "A rabbit model leaves out the foxes that eat rabbits.\nWhy does it predict more rabbits than really live on the island?", answer: "Foxes eat rabbits, but the model has no foxes, so fewer rabbits really live.",
       re: /(?=.*\b(eat\w*|eaten|hunt\w*|kill\w*)\b)(?=.*\b(left\s+out|leaves?\s+out|missing|no\s+fox\w*|not\s+in|does\s*n[o']t|ignor\w*|without|fewer|less|die\w*)\b)/i,
-      wrong: ["Rabbits are fast.", "Islands are big.", "The rule is right."],
+      wrong: ["Rabbits run fast, so the model cannot count all of them.", "The island is big, so there is room for more rabbits than it says.", "The rule is right, so the model always matches the island."],
       working: ["What do foxes do to the real rabbits?", "Does the model know about that?"],
       note: "The model is missing data about foxes, so it predicts too many rabbits." };
   }

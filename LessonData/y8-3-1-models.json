@@ -146,13 +146,13 @@
    "label": "Explain: Why a Flight Simulator?",
    "type": "self-marked-response",
    "containerId": "y831-why-check",
-   "content": "<h2 class=\"lesson-h2\">Explain: Why a Flight Simulator?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two connected points: a reason, and what it means here. Join them with because or so.</p></div></details><p class=\"lesson-lead\">New pilots learn to land in a flight simulator first.</p><div id=\"y831-why-check\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain: Why a Flight Simulator?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two different reasons. Each one says what it means for the pilot, joined with because or so.</p></div></details><p class=\"lesson-lead\">New pilots learn to land in a flight simulator first.</p><div id=\"y831-why-check\"></div>",
    "items": [
     {
      "id": "why-sim",
      "prompt": "Explain why pilots train in a flight simulator. [2]",
      "marks": 2,
-     "modelAnswer": "It is safer: a crash hurts no one (1). It is cheaper: no real plane is damaged (1)."
+     "modelAnswer": "It is safer, because a crash in a simulator hurts no one (1). It is cheaper, because no real plane is damaged (1)."
     }
    ]
   },
@@ -272,7 +272,7 @@
     "suffix": "d",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(yes,?\\s*)?(it\\s+is\\s+)?(an?\\s+)?(computer\\s+)?model\\s*[.!]?\\s*$",
+     "source": "^\\s*(yes,?\\s*)?(it\\s+is\\s+)?(an?\\s+)?((computer\\s+)?model|(flight\\s+)?simulator|model\\s*(,|and|or|\\/)\\s*(a\\s+)?simulator)\\s*[.!]?\\s*$",
      "flags": "i"
     },
     "feedback": "Does it act like a real system and work out what happens?"
