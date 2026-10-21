@@ -257,6 +257,19 @@ steps.push(checkStep('exam-key', 'Exam Question: The Encryption Key', 'Exam Ques
       feedback: 'Name the kind of encryption that uses one shared key.' },
   ], ['Why is the key kept secret, but not the algorithm?', 'Without the key, knowing the algorithm does not help: you would still have to try every key.']));
 
+// ---------------------------------------------------------------- activity 2: class messages (ClassMessages app)
+// Students send each other real messages as packets (James, 2026-10-21): encrypt with a key, then the packets carry
+// the cipher text AND the key, the hook for the weak point on the next slide. The receiver puts the packets back in
+// order by packet number (2.1) before decrypting. Messages.gs keeps a plain text safety copy for the teacher.
+steps.push(embed('activity-send', 'Activity 2: Send a Secret Message', 'class-messages-symmetric', 'Activity 2: Send a Secret Message',
+  'Write a message and encrypt it with a key. Then send it to someone in your class.',
+  ['Eve copies every packet on the way. Which one does she want most? Why?', 'The packet with the key. With the key and the cipher text, she can decrypt the whole message.']));
+steps[steps.length - 1].embedQuery = 'view=send';
+steps.push(embed('activity-read', 'Activity 2: Read Your Messages', 'class-messages-symmetric', 'Activity 2: Read Your Messages',
+  'Put the packets in order by packet number. Then decrypt the message with the key.',
+  ['Why must the packets go back in order before you decrypt?', 'Each payload is one part of the cipher text. In the wrong order the letters are mixed up, so decrypting gives nonsense.']));
+steps[steps.length - 1].embedQuery = 'view=inbox';
+
 // ---------------------------------------------------------------- concept 2: the weak point is sharing the key
 steps.push({ id: 'concept-sharing', label: 'The Weak Point: Sharing the Key',
   content: '<h2 class="lesson-h2">The Weak Point: Sharing the Key</h2>' +
@@ -289,7 +302,7 @@ steps.push(mcStep('exam-mc', 'Exam Question: Which Statement Is Correct?', 'Exam
 ], ['Why does encryption not stop Eve copying the packets?', 'The packets still pass through routers and cables she can reach. Encryption changes what the data looks like, not where it goes.']));
 
 // ---------------------------------------------------------------- activity 2
-steps.push(embed('activity-2', 'Activity 2: Who Can Read It?', 'drill-y10-2-3-l1-sharing', 'Activity 2: Who Can Read It?',
+steps.push(embed('activity-2', 'Activity 3: Who Can Read It?', 'drill-y10-2-3-l1-sharing', 'Activity 3: Who Can Read It?',
   'Read how Ana shares the key and what Eve intercepts. Can Eve read the message? Then explain why, and find the safest way to share the key.',
   ['Why does Eve need BOTH the cipher text and the key?', 'The cipher text alone is meaningless. The key alone has nothing to unlock.']));
 

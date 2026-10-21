@@ -224,6 +224,20 @@ steps.push(embed('activity-1', 'Activity 1: Which Key?', 'drill-y10-2-3-l2-keys'
   'Who encrypts, who decrypts, and with whose key? Then decide who can read each message. New names every time. Stuck? Switch on <strong>I need help</strong>.',
   ['Why do you always need to say WHOSE key, not just "the public key"?', 'Everyone has their own public key and private key. A key only works with its own partner key.']));
 
+// ---------------------------------------------------------------- activity 2: class messages (ClassMessages app)
+// Students send each other real messages as packets (James, 2026-10-21). Each browser makes its own two keys; only
+// the public key is published, the private key never leaves the browser, and the packets carry only cipher text.
+// The receiver puts the packets back in order by packet number (2.1), then decrypts with their private key.
+// Messages.gs keeps a plain text safety copy for the teacher.
+steps.push(embed('activity-send', 'Activity 2: Send a Secret Message', 'class-messages-asymmetric', 'Activity 2: Send a Secret Message',
+  'Make your two keys. Then encrypt with a classmate\'s public key and send it.',
+  ['Everyone can see your public key, even Eve. Why is that safe?', 'The public key only encrypts. Decrypting needs your private key, and that never leaves your computer.']));
+steps[steps.length - 1].embedQuery = 'view=send';
+steps.push(embed('activity-read', 'Activity 2: Read Your Messages', 'class-messages-asymmetric', 'Activity 2: Read Your Messages',
+  'Put the packets in order by packet number. Then decrypt the message with your private key.',
+  ['Eve copied every packet. Why can she still not read the message?', 'The packets hold only cipher text. Only your private key decrypts it, and that was never sent.']));
+steps[steps.length - 1].embedQuery = 'view=inbox';
+
 // 0478/11 June 2025 Q6(a), last four gaps. Mark scheme: public/private; private/public (must be opposite of the first);
 // public; private. Q6(b) is on the exam-similar slide.
 const LIST_3 = ['algorithm', 'binary', 'cipher text', 'compression', 'error', 'hardware', 'hexadecimal', 'meaningless', 'plain text', 'private', 'public', 'readable', 'transmission', 'unreadable'];
@@ -277,7 +291,7 @@ steps.push(selfMarked('exam-differences', 'Exam Question: Two Differences', 'Exa
   ], ['Why does a good difference name both methods in one sentence?', 'The mark is for the contrast. Say what one method does, then "whereas", then what the other does instead.']));
 
 // ---------------------------------------------------------------- activity 2
-steps.push(embed('activity-2', 'Activity 2: Symmetric or Asymmetric?', 'drill-y10-2-3-l2-compare', 'Activity 2: Symmetric or Asymmetric?',
+steps.push(embed('activity-2', 'Activity 3: Symmetric or Asymmetric?', 'drill-y10-2-3-l2-compare', 'Activity 3: Symmetric or Asymmetric?',
   'Decide which method each statement is about. Then decide who can read each message, and explain why. Stuck? Switch on <strong>I need help</strong>.',
   ['Why is it useful to test a statement against both methods?', 'Some statements are true for one method only. Others are true for both. Testing each one shows which.']));
 

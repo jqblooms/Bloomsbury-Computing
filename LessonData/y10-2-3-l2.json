@@ -178,6 +178,24 @@
    "content": "<h2 class=\"lesson-h2\">Activity 1: Which Key?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do you always need to say WHOSE key, not just \"the public key\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Everyone has their own public key and private key. A key only works with its own partner key.</p></div></details><p class=\"lesson-lead\">Who encrypts, who decrypts, and with whose key? Then decide who can read each message. New names every time. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l2-activity-1\"></div>"
   },
   {
+   "id": "activity-send",
+   "label": "Activity 2: Send a Secret Message",
+   "type": "embedded-app",
+   "appId": "class-messages-asymmetric",
+   "embedContainerId": "y10-23l2-activity-send",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Send a Secret Message</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Everyone can see your public key, even Eve. Why is that safe?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The public key only encrypts. Decrypting needs your private key, and that never leaves your computer.</p></div></details><p class=\"lesson-lead\">Make your two keys. Then encrypt with a classmate's public key and send it.</p><div id=\"y10-23l2-activity-send\"></div>",
+   "embedQuery": "view=send"
+  },
+  {
+   "id": "activity-read",
+   "label": "Activity 2: Read Your Messages",
+   "type": "embedded-app",
+   "appId": "class-messages-asymmetric",
+   "embedContainerId": "y10-23l2-activity-read",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Read Your Messages</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Eve copied every packet. Why can she still not read the message?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The packets hold only cipher text. Only your private key decrypts it, and that was never sent.</p></div></details><p class=\"lesson-lead\">Put the packets in order by packet number. Then decrypt the message with your private key.</p><div id=\"y10-23l2-activity-read\"></div>",
+   "embedQuery": "view=inbox"
+  },
+  {
    "id": "exam-gaps-2",
    "label": "Exam Question: Asymmetric Encryption",
    "type": "short-answer-validation",
@@ -215,11 +233,11 @@
   },
   {
    "id": "activity-2",
-   "label": "Activity 2: Symmetric or Asymmetric?",
+   "label": "Activity 3: Symmetric or Asymmetric?",
    "type": "embedded-app",
    "appId": "drill-y10-2-3-l2-compare",
    "embedContainerId": "y10-23l2-activity-2",
-   "content": "<h2 class=\"lesson-h2\">Activity 2: Symmetric or Asymmetric?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it useful to test a statement against both methods?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Some statements are true for one method only. Others are true for both. Testing each one shows which.</p></div></details><p class=\"lesson-lead\">Decide which method each statement is about. Then decide who can read each message, and explain why. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l2-activity-2\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Activity 3: Symmetric or Asymmetric?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it useful to test a statement against both methods?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Some statements are true for one method only. Others are true for both. Testing each one shows which.</p></div></details><p class=\"lesson-lead\">Decide which method each statement is about. Then decide who can read each message, and explain why. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-23l2-activity-2\"></div>"
   },
   {
    "id": "exam-describe",

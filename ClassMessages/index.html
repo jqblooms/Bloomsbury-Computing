@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Class Messages</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="cm-css" href="messages.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="app" aria-live="polite"></section>
+</main>
+<script>
+// Send a secret message to someone in your class (Year 10, 2.3 Encryption).
+// ?mode=symmetric (L1: the letter shift; the key travels in a packet) or ?mode=asymmetric (L2: public key and
+// private key; the private key never leaves this browser). ?view=send or ?view=inbox. ?embed=1 sits it on a slide.
+// The shell relays every request to Messages.gs as the signed-in student (BC_CLASS_MSG_REQUEST).
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('cm-css').href = 'messages.css?v=' + encodeURIComponent(v);
+  var mode = params.get('mode') === 'asymmetric' ? 'asymmetric' : 'symmetric';
+  ['common.js', mode + '.js'].forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>
