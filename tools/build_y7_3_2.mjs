@@ -6,6 +6,10 @@
 // Same shape as tools/build_y7_3_1.mjs: EAL-light and Term 1b "why" (one idea per slide, a teacher-only Think, Pair,
 // Share under every heading, compare slides). Year 7 has no exam board papers, so nothing carries a citation. The
 // Do Now flowcharts are drawn and run by Drills/flowchart-core.js; every drill answer comes from the card's own data.
+// The lesson is hands-on (James, 2026-10-21: "largely a copy/write activity"): nine slides are Project Planner
+// activities (ProjectPlanner/ in this repo, one app, embedQuery activity=<name>), checked as the student works,
+// with limited runs, checks or misses so they cannot be guessed, and each posts its result as the slide's answer.
+// The order and missing drills stay in the Drills library; their why cards are "pick every true reason".
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -73,13 +77,6 @@ function checkStep(id, label, heading, lead, parts, extra = '') {
 const num = (n, unit = '') => `^\\s*(box\\s*)?${n}\\s*${unit ? `(${unit})?` : ''}\\s*$`;
 const word = (w) => `^\\s*["'\\u201c]?\\s*${w}\\s*["'\\u201d]?\\s*[.!]?\\s*$`;
 const boxText = (body) => `^\\s*["'\\u201c]?\\s*${body}\\s*["'\\u201d]?\\s*[.!]?\\s*$`;
-// A stage, by its name or its task, or by its task number when it has one.
-const STAGE_ALT = { Decide: 'decid\\w*|what\\s+it\\s+must\\s+do', Design: 'design\\w*|draw\\w*(\\s+the)?\\s+flowchart|(the\\s+)?flowchart',
-  Build: 'build\\w*|built|make|making|made', Test: 'test\\w*', Improve: 'improv\\w*|fix\\w*' };
-const stageAns = (s, n) => `^\\s*(the\\s+)?(${STAGE_ALT[s]}${n ? `|task\\s*${n}|${n}` : ''})(\\s+(task|stage))?\\s*[.!]?\\s*$`;
-const letter = (l) => `^\\s*(task\\s*)?${l}\\s*[.!]?\\s*$`;
-const letters = (list) => '^\\s*' + list.map((l) => `(task\\s*)?${l}`).join('\\s*(,|;|->|then|and|\\s)?\\s*(then\\s+)?') + '\\s*[.!]?\\s*$';
-
 function tps(question, answer, reveal = 'Show the answer') {
   return `<details class="lesson-tps"><summary><span class="lesson-tps-steps">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span>` +
     `<span class="lesson-tps-q">${question}</span><span class="lesson-tps-reveal">${reveal}</span></summary><div class="lesson-tps-a">${answer}</div></details>`;
@@ -89,9 +86,17 @@ const columns = (a, b) => `<div class="lesson-do-now-columns"><div>${a}</div><di
 const paneTitle = (t) => `<p style="margin:0 0 6px;font-weight:700;text-align:center">${t}</p>`;
 const embed = (id, label, appId, heading, lead) => ({ id, label, type: 'embedded-app', appId, embedContainerId: `${P}-${id}`,
   content: `<h2 class="lesson-h2">${heading}</h2>` + (lead ? `<p class="lesson-lead">${lead}</p>` : '') + `<div id="${P}-${id}"></div>` });
-function selfMarked(id, label, heading, lead, items) {
-  return { id, label, type: 'self-marked-response', containerId: `${P}-${id}`,
-    content: `<h2 class="lesson-h2">${heading}</h2>${lead}<div id="${P}-${id}"></div>`, items };
+// A Project Planner activity on a slide (ProjectPlanner/ in this repo: one app, the activity picked by embedQuery).
+// Each activity posts its result as BC_APP_RESULT, which the slide saves as its answer (js/steps/embeds.html).
+const app = (id, label, heading, lead, activity) => ({ id, label, type: 'embedded-app', appId: 'project-planner', embedQuery: `activity=${activity}`,
+  embedContainerId: `${P}-${id}`, content: `<h2 class="lesson-h2">${heading}</h2>` + (lead ? `<p class="lesson-lead">${lead}</p>` : '') + `<div id="${P}-${id}"></div>` });
+// Two short boxes side by side (the compare slides).
+const teamBox = (title, text) => `<div style="padding:8px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)"><b>${title}</b><br>${text}</div>`;
+// Multiple choice: the step marks a click at once, one try (js/steps/quiz.html).
+function mcStep(id, label, heading, lead, items, extra = '') {
+  const cid = `${P}-${id}`;
+  return { id, label, type: 'multiple-choice', containerId: cid,
+    content: `<h2 class="lesson-h2">${heading}</h2>` + (lead ? `<p class="lesson-lead">${lead}</p>` : '') + `${extra}<div id="${cid}"></div>`, items };
 }
 const note = (t) => `<div class="wt-note">${t}</div>`;
 const hl = (t) => `<span class="wt-hl">${t}</span>`;
@@ -101,14 +106,6 @@ function table(head, rows) {
   return `<table class="donow-table" style="font-size:16px;width:100%"><thead><tr>${head.map((h) => cell(h, 'h')).join('')}</tr></thead>` +
     `<tbody>${rows.map((r) => `<tr>${r.map((c) => cell(c, 'd')).join('')}</tr>`).join('')}</tbody></table>`;
 }
-// The five stages as a row of boxes joined by arrows.
-const STAGES = [['Decide', 'What must it do? Write a list.'], ['Design', 'Draw the flowchart.'], ['Build', 'Make it on the computer.'],
-  ['Test', 'Try it. Find the mistakes.'], ['Improve', 'Fix the mistakes. Test again.']];
-const stageRow = () => '<div style="display:flex;gap:6px;align-items:stretch;justify-content:center;margin:12px 0">' +
-  STAGES.map(([n, t], i) => `<div style="flex:1 1 0;max-width:210px;border:2px solid var(--brand);border-radius:10px;padding:10px 12px;background:var(--surface-2)">` +
-    `<div style="font-weight:800;font-size:21px">${i + 1}. ${n}</div><div style="font-size:17px;margin-top:4px">${t}</div></div>` +
-    (i < STAGES.length - 1 ? '<div style="align-self:center;font-size:24px;color:var(--brand)">&rarr;</div>' : '')).join('') + '</div>';
-
 // Think, Pair, Share under each slide's heading: one short why question, answer hidden until the teacher clicks.
 // On a check slide it never gives or presupposes an answer on that slide (tools/tps-leak-check.mjs in the shell).
 const TPS = {
@@ -116,16 +113,19 @@ const TPS = {
   'do-now-2': ['Why put a job in a sub-routine, not draw its boxes again in Main?', 'You draw it once and CALL it as often as you need. To change it, you change one place.'],
   'title': ['Why might a team of good programmers still not finish a game on time?', 'Good work is not enough. They also need to know what to do, in what order, who does it and by when. Today we learn how.'],
   'project': ['Why split a big project into small tasks?', 'A small task is easy to start and easy to check. You can see what is done and what is still left.'],
-  'stages': ['Predict: why does Design come before Build?', 'You build from the flowchart. A mistake on paper takes a minute to fix. The same mistake in a finished game can take hours.'],
-  'order-check': ['Why does each stage need the one before it?', 'Each stage uses what the stage before it gave. A stage cannot start with nothing.'],
-  'activity-1': ['Why is "Put the tasks in order" the first thing a team does?', 'The order tells everyone what can start now and what has to wait.'],
+  'stages': ['Look at what each stage needs. How does that tell you which stage can come first?', 'A stage can only start once a stage before it has given what it needs. Start with the stage that needs only an idea.'],
+  'compare-order': ['You build a model without looking at the picture on the box. What might happen? Why?', 'Pieces can go in the wrong place, and you take it apart and start again. The picture shows how it fits before you begin.'],
+  'order-check': ['"Draw" is often a Design word. Can a task that draws ever be a different stage? Why?', 'Yes. Drawing the levels on the computer, to make the game, is Build. The stage depends on what the whole task does.'],
+  'activity-1': ['Why can two tasks sometimes swap places, but other tasks never can?', 'Two tasks that do not need each other can go in either order. A task that needs another one must wait for it.'],
   'what-plan': ['Why does every task get a deadline?', 'Everyone knows when their task must be finished. If every task is on time, the whole project is on time.'],
-  'plan-check': ['Why does a plan put a name next to every task?', 'Everyone knows which jobs are theirs. No job is done twice, and no job is left out.'],
+  'plan-check': ['Why does a plan say what each task needs?', 'So you know which task must be finished first, and what to have ready on the day.'],
+  'compare-plans': ['Both teams had the same people and the same week. Why might one team finish and the other not?', 'Talk about it in pairs. Then check your idea with the question.'],
   'why-plan': ['Predict: which of these reasons stops two people doing the same job? Why?', 'Everyone knows who does what. Each task has one name next to it.'],
   'missing-check': ['Why check a plan before the project starts?', 'A gap is quick to put right on paper. Found in the middle of the project, the same gap costs days.'],
-  'activity-2': ['Why does one gap in a plan put the whole project at risk?', 'The tasks are joined in order. If one task is late or never done, every task after it waits.'],
+  'what-if': ['When one task is late, how do you find every task that has to wait?', 'Find the tasks that need it, then the tasks that need those. Then check what else the same person had to do.'],
+  'activity-2': ['How do you choose which task to plan first? Why?', 'Start with the task that needs nothing. A task can only go on a day after every task it needs.'],
   'why-check': ['What makes an explanation worth 2 marks?', 'Two connected points: what the plan shows, and what that gives the team. Join them with "so".'],
-  'practice': ['Why can some tasks not start until another task is finished?', 'They use what an earlier task gave. A task cannot use something that does not exist yet.'],
+  'practice': ['Why find every fault before you change anything?', 'One change can fix one fault and make a new one. When you can see them all, you can fix them together.'],
   'plenary': ['Why practise with a new project every time?', 'If you can plan any project, you really understand planning.'],
 };
 
@@ -201,28 +201,25 @@ steps.push({ id: 'project', label: 'What Is a Software Project?',
       'A <strong>task</strong> is one small job, like "Draw the flowchart".',
     ]) });
 
-// ---------------------------------------------------------------- the stages
-steps.push({ id: 'stages', label: 'The Stages of a Software Project',
-  content: '<h2 class="lesson-h2">The Stages of a Software Project</h2>' +
-    '<p class="lesson-lead">Most software projects have five <strong>stages</strong>, in this order.</p>' + stageRow() +
-    facts(['Each stage uses what the stage before it made.', 'After Improve, test again.']) });
+// ---------------------------------------------------------------- the stages (Project Planner: stages)
+// The student puts the five stages in an order that works (each card says what the stage needs and gives), runs
+// it, then predicts where two broken orders get stuck. The app shows the stage row once the order works.
+steps.push(app('stages', 'The Stages of a Software Project', 'The Stages of a Software Project',
+  '', 'stages'));
 
-steps.push({ id: 'compare-order', label: 'Compare: Design First or Build First?',
-  content: '<h2 class="lesson-h2">Compare: Design First or Build First?</h2>' +
-    tps('Both teams make the same Catch game. Which team finishes first? Why?',
-      '<p><strong>Team Blue.</strong> Team Red found the mistake after building, so they built again.</p><p><strong>Why?</strong> The design shows how the game must work before anyone builds it. A mistake in a flowchart is quick to fix.</p>') +
-    '<p class="lesson-lead">Two teams make a Catch game. The fruit must fall faster when the score goes up.</p>' +
-    columns(paneTitle('Team Red: build first') + facts(['Day 1 to 3: build the game.', 'Day 4: the fruit never gets faster. Nobody planned it.', 'Day 5 to 6: build it again.']),
-      paneTitle('Team Blue: design first') + facts(['Day 1: draw the flowchart. The faster fruit is in it.', 'Day 2 to 3: build the game.', 'Day 4: test. Day 5: improve.'])) });
+steps.push(mcStep('compare-order', 'Compare: Design First or Build First?', 'Compare: Design First or Build First?',
+  '', [
+    { prompt: 'Both teams must make the fruit fall faster as the score goes up. Which team finishes first, and why?', options: ['Team Blue: the faster fruit was in its flowchart', 'Team Red: it started building on Day 1',
+      'Team Blue: its game had fewer sprites to make', 'Team Red: it spent more days building'], correct: 0,
+      explain: 'Team Blue. The design showed how the game must work before anyone built it, so it was built right first time. Team Red built it twice.' },
+  ], columns(teamBox('Team Red: build first', 'Day 1 to 3: build. Day 4: the fruit never gets faster. Nobody planned it. Day 5 to 6: build it again.'),
+    teamBox('Team Blue: design first', 'Day 1: draw the flowchart, with the faster fruit in it. Day 2 to 3: build. Day 4: test. Day 5: improve.'))));
 
-steps.push(checkStep('order-check', 'Your Turn: Which Stage Comes Next?', 'Your Turn: Which Stage Comes Next?', 'Type the name of a stage.', [
-  { line: true, label: 'Which stage comes straight after Design?', answer: stageAns('Build'), feedback: 'Design gives you the flowchart. What do you do with a flowchart?' },
-  { line: true, label: 'Which stage comes straight before Improve?', answer: stageAns('Test'), feedback: 'To improve, you must know the mistakes. Which stage finds them?' },
-  { line: true, label: 'A team has written what the game must do. Which stage is next?', answer: stageAns('Design'), feedback: 'That list is stage 1. What comes straight after stage 1?' },
-]));
+steps.push(app('order-check', 'Your Turn: Which Stage Is It?', 'Your Turn: Which Stage Is It?',
+  '', 'sort'));
 
-steps.push(embed('activity-1', 'Activity 1: Put the Tasks in Order', 'drill-y7-3-2-order', 'Activity 1: Put the Tasks in Order',
-  'Put each project\'s tasks in order. Then say why. Your progress is saved.'));
+steps.push(app('activity-1', 'Activity 1: Put the Tasks in Order', 'Activity 1: Put the Tasks in Order',
+  '', 'order'));
 
 // ---------------------------------------------------------------- what a plan lists
 steps.push({ id: 'what-plan', label: 'What a Project Plan Lists',
@@ -236,27 +233,16 @@ steps.push({ id: 'what-plan', label: 'What a Project Plan Lists',
       ['<strong>Needs</strong>', 'what the task needs', 'paper and a pencil'],
     ]) });
 
-const PLAN_A = [
-  ['1. Decide what the game must do', 'Ploy', 'Monday', 'paper'],
-  ['2. Design: draw the flowchart', 'Nat', 'Tuesday', 'the list from task 1'],
-  ['3. Build the game', 'Mint', 'Thursday', 'a computer'],
-  ['4. Test: play it, find mistakes', 'Ben', 'Friday', 'the game'],
-  ['5. Improve: fix the mistakes', 'Mint', 'next Monday', 'the test notes'],
-];
-steps.push(checkStep('plan-check', 'Your Turn: Read the Plan', 'Your Turn: Read the Plan', 'A plan for the Catch game.', [
-  { line: true, label: 'Who builds the game?', answer: word('mint'), feedback: 'Find the Build task. Read across to the Who column.' },
-  { line: true, label: 'What is the deadline for the Test task?', answer: word('(on\\s+)?(by\\s+)?friday'), feedback: 'Find the Test task. Read across to the Deadline column.' },
-  { line: true, label: 'Nat is ill on Tuesday. Which task could miss its deadline?', answer: stageAns('Design', 2), feedback: 'Find Nat in the Who column. Is that task due on the day Nat is ill?' },
-], table(['Task', 'Who', 'Deadline', 'Needs'], PLAN_A)));
+steps.push(app('plan-check', 'Your Turn: Read the Plan', 'Your Turn: Read the Plan',
+  '', 'read'));
 
 // ---------------------------------------------------------------- why plan
-steps.push({ id: 'compare-plans', label: 'Compare: With a Plan, Without a Plan',
-  content: '<h2 class="lesson-h2">Compare: With a Plan, Without a Plan</h2>' +
-    tps('Both teams worked hard. Why did only one game work on Sports Day?',
-      '<p>Team Blue knew who did each task and when. Nothing was done twice, nothing was forgotten, and there was time to test.</p><p>Team Red had no plan, so nobody knew which jobs were theirs.</p>') +
-    '<p class="lesson-lead">Two teams make a Catch game for Sports Day on Friday.</p>' +
-    columns(paneTitle('Team Red: no plan') + facts(['Two people drew the same fruit.', 'Nobody made the score. Each one thought another person would.', 'Friday: no time to test. The game broke.']),
-      paneTitle('Team Blue: a project plan') + facts(['Every task has one name.', 'Every task has a deadline.', 'Thursday: test. Friday: the game worked.'])) });
+steps.push(mcStep('compare-plans', 'Compare: With a Plan, Without a Plan', 'Compare: With a Plan, Without a Plan',
+  '', [
+    { prompt: 'Both teams make a Catch game for Sports Day on Friday. Which part of Team Blue\'s plan stopped two people drawing the same fruit?', options: ['Every task has one name', 'Every task has a deadline', 'The tasks are in order', 'Each task says what it needs'], correct: 0,
+      explain: 'One name on each task: everyone knows which jobs are theirs, so no job is done twice and none is forgotten.' },
+  ], columns(teamBox('Team Red: no plan', 'Two people drew the same fruit. Nobody made the score: each thought another person would. Friday: no time to test, and the game broke.'),
+    teamBox('Team Blue: a project plan', 'Every task has one name. Every task has a deadline. Thursday: test. Friday: the game worked.'))));
 
 steps.push({ id: 'why-plan', label: 'Why Write a Project Plan?',
   content: '<h2 class="lesson-h2">Why Write a Project Plan?</h2>' +
@@ -268,39 +254,21 @@ steps.push({ id: 'why-plan', label: 'Why Write a Project Plan?',
       'In a team, everyone knows <strong>who does what</strong>.',
     ]) });
 
-const PLAN_B = [
-  ['1. Decide: write the questions', 'Ploy', 'Monday'],
-  ['2. Design: draw the flowchart', '', 'Tuesday'],
-  ['3. Build the quiz', 'Mint', 'Thursday'],
-  ['4. Improve: fix the mistakes', 'Ben', ''],
-];
-steps.push(checkStep('missing-check', 'Your Turn: What Is Missing?', 'Your Turn: What Is Missing?', 'A plan for a Space Quiz. It has three gaps.', [
-  { line: true, label: 'Which task has nobody to do it?', answer: stageAns('Design', 2), feedback: 'Look down the Who column. Which row is empty?' },
-  { line: true, label: 'Which task has no deadline?', answer: stageAns('Improve', 4), feedback: 'Look down the Deadline column. Which row is empty?' },
-  { line: true, label: 'One stage is missing. Which one?', answer: stageAns('Test'), feedback: 'Say the five stages in order. Which one has no task here?' },
-], table(['Task', 'Who', 'Deadline'], PLAN_B)));
+steps.push(app('missing-check', 'Your Turn: What Is Missing?', 'Your Turn: What Is Missing?',
+  '', 'gaps'));
 
-steps.push(embed('activity-2', 'Activity 2: What Is Missing from This Plan?', 'drill-y7-3-2-missing', 'Activity 2: What Is Missing from This Plan?',
-  'Find the gap in each plan. Then say why it matters. Your progress is saved.'));
+steps.push(app('what-if', 'What If? Predict, Then Run It', 'What If? Predict, Then Run It',
+  '', 'whatif'));
 
-steps.push(selfMarked('why-check', 'Explain: Why a Project Plan Is Useful', 'Explain: Why a Project Plan Is Useful',
-  '<p class="lesson-lead">Your class will make a Catch game for Sports Day, in teams of four.</p>', [
-    { id: 'why-plan', prompt: 'Explain why a project plan is useful for this project. [2]', marks: 2,
-      modelAnswer: 'It shows who does each task and by when (1 mark), so the team finishes on time and no task is forgotten (1 mark).' },
-  ]));
+steps.push(app('activity-2', 'Activity 2: Plan the Project', 'Activity 2: Plan the Project',
+  '', 'build'));
 
-// ---------------------------------------------------------------- practice
-const PLAN_C = [
-  ['A', 'Ask Year 6 to try the quiz', 'Nat', 'Friday'],
-  ['B', 'Make the quiz on the computer', 'Mint', 'Thursday'],
-  ['C', 'Write the questions it must ask', 'Ploy', 'Monday'],
-  ['D', 'Draw the flowchart for one question', 'Ploy', 'Tuesday'],
-];
-steps.push(checkStep('practice', 'Practice: Plan the Quiz', 'Practice: Plan the Quiz', 'A team makes a quiz for Year 6. The tasks are mixed up.', [
-  { line: true, label: 'Type the letters in the right order.', answer: letters(['C', 'D', 'B', 'A']), feedback: 'Start with the task that says what it must do. Then the flowchart, then making it, then trying it.' },
-  { label: 'Mint is ill on Thursday. Which task could miss its deadline?', answer: letter('B'), feedback: 'Find Mint in the Who column. Which task is that?' },
-  { label: 'Which task must be finished before task B can start?', answer: letter('D'), feedback: 'Task B makes the quiz. What do you make it from?' },
-], table(['', 'Task', 'Who', 'Deadline'], PLAN_C)));
+steps.push(app('why-check', 'Explain: Why a Project Plan Is Useful', 'Explain: Why a Project Plan Is Useful',
+  '', 'explain'));
+
+// ---------------------------------------------------------------- practice: the hardest task
+steps.push(app('practice', 'Practice: Find and Fix the Plan', 'Practice: Find and Fix the Plan',
+  '', 'fix'));
 
 // ---------------------------------------------------------------- plenary
 steps.push(embed('plenary', 'Plenary: Project Plans', 'drill-y7-3-2-plans', 'Plenary: Project Plans',
@@ -318,14 +286,6 @@ const V = (k, i, s) => new RegExp(validators[`${P}_${k}`.replace(/-/g, '_')][i].
 assert(V('do-now', 0, '50') && V('do-now', 0, '50 steps') && !V('do-now', 0, '20') && V('do-now', 1, '20') && !V('do-now', 1, '50') && V('do-now', 2, 'Try again') && V('do-now', 2, '"try again"') && !V('do-now', 2, 'Ready'), 'do-now marks');
 assert(V('do-now-2', 0, '60') && V('do-now-2', 0, '60 steps') && !V('do-now-2', 0, '35') && V('do-now-2', 1, '2') && V('do-now-2', 1, 'twice') && V('do-now-2', 1, 'two times') && !V('do-now-2', 1, '1'), 'do-now-2 marks');
 assert(V('do-now-2', 2, 'Move 10 steps') && V('do-now-2', 2, 'move 10') && !V('do-now-2', 2, 'CALL Hop') && !V('do-now-2', 2, 'Move 25 steps'), 'do-now-2 box');
-assert(V('order-check', 0, 'Build') && V('order-check', 0, 'building') && V('order-check', 0, 'make it') === false && V('order-check', 0, 'the build stage') && !V('order-check', 0, 'test'), 'order-check a');
-assert(V('order-check', 1, 'test') && V('order-check', 1, 'Testing') && !V('order-check', 1, 'build') && V('order-check', 2, 'Design') && V('order-check', 2, 'draw the flowchart') && !V('order-check', 2, 'build'), 'order-check b c');
-assert(V('plan-check', 0, 'Mint') && !V('plan-check', 0, 'Ben') && V('plan-check', 1, 'Friday') && V('plan-check', 1, 'by Friday') && !V('plan-check', 1, 'Thursday'), 'plan-check a b');
-assert(V('plan-check', 2, 'design') && V('plan-check', 2, 'task 2') && V('plan-check', 2, '2') && V('plan-check', 2, 'the design task') && !V('plan-check', 2, 'test') && !V('plan-check', 2, '4'), 'plan-check c');
-assert(V('missing-check', 0, 'Design') && V('missing-check', 0, 'task 2') && !V('missing-check', 0, 'task 4') && V('missing-check', 1, 'Improve') && V('missing-check', 1, '4') && !V('missing-check', 1, 'build'), 'missing-check a b');
-assert(V('missing-check', 2, 'Test') && V('missing-check', 2, 'testing') && !V('missing-check', 2, 'design') && !V('missing-check', 2, 'improve'), 'missing-check c');
-assert(V('practice', 0, 'C, D, B, A') && V('practice', 0, 'CDBA') && V('practice', 0, 'c d b a') && V('practice', 0, 'C then D then B then A') && !V('practice', 0, 'C, B, D, A') && !V('practice', 0, 'A, B, C, D'), 'practice order');
-assert(V('practice', 1, 'B') && V('practice', 1, 'task B') && !V('practice', 1, 'D') && V('practice', 2, 'D') && !V('practice', 2, 'C'), 'practice letters');
 // Feedback nudges and never contains an accepted answer (every 1 to 6 word run is tested against its own pattern).
 for (const [k, parts] of Object.entries(validators)) for (const p of parts) {
   const rx = new RegExp(p.pattern.source, 'i'), w = p.feedback.split(/\s+/);
@@ -439,12 +399,28 @@ function planPrelude() {
         example: example, working: c.working, note: c.note };
     } };
   }
+  // A why card: pick every true reason (a "multi" card, always buttons, never a written sentence). Each draw shows
+  // 1 to 3 true reasons among plausible wrong ones of the same kind and length, so it cannot be guessed.
+  function why(id, category, gen) {
+    return { id: id, category: category, type: "multi", show: 5, randomize: function () {
+      var c = gen();
+      return { prompt: c.prompt, answers: c.answers, distractors: c.wrong, working: c.working, note: c.note };
+    } };
+  }
   function explain(id, category, gen) {
     return { id: id, category: category, randomize: function () {
       var c = gen();
       return { prompt: c.prompt, answers: [c.answer], keywords: [c.re], distractors: c.wrong, working: c.working, note: c.note };
     } };
   }
+  // A plan with one task per day, Monday to Friday, people shuffled: lines to show.
+  function dayPlan() {
+    var p = pick(PROJECTS), team = shuffled(PEOPLE).slice(0, 3);
+    var rows = p.tasks.map(function (t, i) { return { n: i + 1, stage: STAGES[i], task: t, who: team[i % 3], day: DAYS[i], d: i }; });
+    return { p: p, rows: rows, team: team };
+  }
+  function taskName(r) { return "Task " + r.n + ": " + r.task; }
+
 
   // ---------------------------------------------------------------- put the tasks in order
   function orderAllGen(n) {
@@ -490,28 +466,25 @@ function planPrelude() {
   // ---------------------------------------------------------------- explain the order
   function whyTestGen() {
     var p = pick(PROJECTS);
-    return { prompt: "Project: " + p.name + ". Why must \"" + p.tasks[2] + "\" come before \"" + p.tasks[3] + "\"?",
-      answer: "You cannot test something that is not made yet, so it must be built first",
-      re: /^(?=.*\b(not|nothing|no|cannot|can.?t|without|before|first)\b)(?=.*\b(built|build|made|make|exists?|there|finished|ready|yet)\b).*$/i,
-      wrong: ["Testing is quick, so it is best left to the very end of the whole week", "The tester is busy at the start, so the two tasks have to swap round", "Making things is more fun, so the team always wants to do it first"],
+    return { prompt: "Project: " + p.name + ". Why must \"" + p.tasks[2] + "\" come before \"" + p.tasks[3] + "\"? Pick every true reason.",
+      answers: ["You cannot test something that is not made yet", "The test tries out what the build has made"],
+      wrong: ["Testing is quick, so it is best left until last", "The tester is busy at the start of the week", "Making things is more fun, so it goes first", "The computer must be on before any test starts"],
       working: ["What does the test task try out?", "Can you try out something that is still not there?"],
       note: "You can only test what has been built. Build comes first." };
   }
   function whyDesignGen() {
     var p = pick(PROJECTS);
-    return { prompt: "Project: " + p.name + ". Why draw the flowchart before making the " + p.short + "?",
-      answer: "The flowchart shows how it must work, so you make it right and do not build it again",
-      re: /^(?=.*\b(shows?|plan|plans|know|knows|how|mistakes?|wrong|paper|quick\w*|easy|easier)\b)(?=.*\b(again|rebuild\w*|re-?build\w*|re-?do|time|saves?|start\s+over|changes?|fix\w*|right|correct\w*)\b).*$/i,
-      wrong: ["The teacher likes a nice drawing, so a flowchart at the start gets more marks", "The computer cannot open a game until it gets a flowchart, so it must come first", "Drawing is more fun than typing, so the team wants to do the drawing at the start"],
+    return { prompt: "Project: " + p.name + ". Why draw the flowchart before making the " + p.short + "? Pick every true reason.",
+      answers: ["It shows how it must work before you make it", "A mistake on paper is quicker to fix than in the game"],
+      wrong: ["The teacher gives more marks for a nice drawing", "The computer cannot open a game without a flowchart", "Drawing is more fun than typing, so it goes first", "A flowchart makes the finished game run faster"],
       working: ["What does the flowchart show the team?", "What happens if you find a mistake after the whole thing is made?"],
       note: "The flowchart shows how it must work. A mistake on paper is quick to fix, so you do not build it twice." };
   }
   function whyWrongGen() {
     var p = pick(PROJECTS);
-    return { prompt: "Project: " + p.name + ". A team started to make it before they wrote what it must do. What is likely to go wrong?",
-      answer: "They may make the wrong thing, so they have to build it again",
-      re: /^(?=.*\b(wrong|not\s+what|missing|miss|forgot\w*|different|mistakes?|parts?)\b)(?=.*\b(again|rebuild\w*|re-?do|redo|change\w*|fix\w*|time|late|start\s+over|waste\w*)\b).*$/i,
-      wrong: ["They will finish too early, so they get bored and stop", "They will have too many people, so nobody can test it", "The computer will run too fast, so the game is too hard"],
+    return { prompt: "Project: " + p.name + ". A team started to make it before they wrote what it must do. What is likely to go wrong? Pick every likely problem.",
+      answers: ["They may make something nobody wanted", "They may have to build it all again", "They may leave out a part it needed"],
+      wrong: ["They will finish too early and get bored", "The computer will run the game too fast", "They will have too many people to test it", "The flowchart will be too long to draw"],
       working: ["If nobody wrote what it must do, how do they know what to make?", "What must they do when they find it is not what was wanted?"],
       note: "Without the list, they may make the wrong thing, and then build it again." };
   }
@@ -552,57 +525,87 @@ function planPrelude() {
   // ---------------------------------------------------------------- why it matters
   function whyWhoGen() {
     var P = plan(), k = range(0, 4);
-    return { prompt: "Project: " + P.p.name + ". In the plan, nobody is down for \"" + P.rows[k].task + "\". Why is that a problem?",
-      answer: "Nobody knows it is their job, so it might never be done",
-      re: /^(?=.*\b(nobody|no\s*one|anyone|someone|who|job|their|person)\b)(?=.*\b(never|not|forgot\w*|missed|late|undone|left)\b).*$/i,
-      wrong: ["The plan will look too short, so it seems untidy", "The computer needs a name on each line, so it can read it", "Each task must have two names, so one name is too few"],
+    return { prompt: "Project: " + P.p.name + ". In the plan, nobody is down for \"" + P.rows[k].task + "\". Why is that a problem? Pick every true reason.",
+      answers: ["Nobody knows it is their job", "The task might never be done"],
+      wrong: ["The plan will look too short", "The computer needs a name on every line", "Every task must have two names", "The task will be done far too early"],
       working: ["Whose job is it now?", "What happens to a job that is nobody's?"],
       note: "With no name, nobody knows it is their job, so it may never be done." };
   }
   function whyWhenGen() {
-    var P = plan(), k = range(0, 4);
-    return { prompt: "Project: " + P.p.name + ". In the plan, \"" + P.rows[k].task + "\" has no deadline. Why is that a problem?",
-      answer: "Nobody knows when it must be finished, so the project could be late",
-      re: /^(?=.*\b(when|time|day|date|knows?)\b)(?=.*\b(late|delay\w*|on\s*time|finish\w*|ready|wait\w*|never)\b).*$/i,
-      wrong: ["The task becomes too hard, so nobody in the team is able to do it", "The person will not remember the name of the task, so they skip it", "The flowchart cannot be drawn, so the game has no sprites"],
+    var P = plan(), k = range(0, 3);
+    return { prompt: "Project: " + P.p.name + ". In the plan, \"" + P.rows[k].task + "\" has no deadline. Why is that a problem? Pick every true reason.",
+      answers: ["Nobody knows when it must be finished", "The tasks after it may have to wait", "The whole project could be late"],
+      wrong: ["The task becomes too hard to do", "The person forgets the name of the task", "The task will be done twice over", "The flowchart cannot be drawn at all"],
       working: ["What does a deadline tell the person?", "What can happen to the tasks after it?"],
       note: "Nobody knows when it must be finished, so it can run late, and every task after it waits." };
   }
   function whyTestMissingGen() {
     var p = pick(PROJECTS);
-    return { prompt: "Project: " + p.name + ". The plan has no Test stage. Why is that a problem?",
-      answer: "Mistakes are not found, so the " + p.short + " may not work",
-      re: /^(?=.*\b(mistakes?|errors?|bugs?|wrong|problems?|works?|working|broken|breaks?)\b)(?=.*\b(not|never|no|nobody|found|find|check\w*|know\w*)\b).*$/i,
-      wrong: ["The plan will be too long, so it takes more paper to print", "The team will finish too early, so they get bored and stop", "The " + p.short + " will have too many sprites, so it looks busy"],
+    return { prompt: "Project: " + p.name + ". The plan has no Test stage. Why is that a problem? Pick every true reason.",
+      answers: ["Mistakes may not be found", "It may not work when people use it"],
+      wrong: ["The plan will need more paper", "The team will finish far too early", "It will have too many sprites", "Nobody will know who builds it"],
       working: ["What does the Test stage find?", "What happens to those if nobody looks for them?"],
       note: "Without testing, mistakes are not found, so it may not work when people use it." };
   }
   function whyPlanGen() {
     var p = pick(PROJECTS);
-    return { prompt: "Project: " + p.name + ". Why does the team write a project plan before it starts?",
-      answer: "So everyone knows what to do and when, and the project finishes on time",
-      re: /^(?=.*\b(knows?|who|what|order|first|tasks?|jobs?)\b)(?=.*\b(time|late|deadlines?|forget\w*|forgot\w*|missed|nothing|twice|finish\w*)\b).*$/i,
-      wrong: ["So the computer can run the program faster, and the game has no mistakes", "So the teacher can give the team a score, and the best team wins a prize", "So the sprites look better in the game, and the players enjoy it more"],
+    return { prompt: "Project: " + p.name + ". Why does the team write a project plan before it starts? Pick every true reason.",
+      answers: ["Everyone knows what to do and when", "Nothing is forgotten or done twice", "It is more likely to finish on time"],
+      wrong: ["The computer runs the program faster", "The game will have no mistakes at all", "The sprites look better in the game", "The teacher can give the team a score"],
       working: ["What does a plan list for each task?", "What does that stop going wrong?"],
       note: "A plan shows what to do, who does it and by when, so nothing is forgotten and the project is on time." };
   }
   function whyDeadlineGen() {
     var p = pick(PROJECTS);
-    return { prompt: "Project: " + p.name + ". Why does every task in the plan need a deadline?",
-      answer: "So everyone knows when it must be done, and the project finishes on time",
-      re: /^(?=.*\b(when|time|day|date|knows?)\b)(?=.*\b(late|on\s*time|finish\w*|ready|done|wait\w*)\b).*$/i,
-      wrong: ["So the tasks can be done in any order, and nobody has to wait for others", "So two people can do each task, and every job is done twice to be safe", "So the computer knows the name of each task, and can print the plan"],
+    return { prompt: "Project: " + p.name + ". Why does every task in the plan need a deadline? Pick every true reason.",
+      answers: ["Everyone knows when their task must be done", "So the whole project can finish on time"],
+      wrong: ["The tasks can then be done in any order", "Two people can then do each of the tasks", "The computer can then print the plan", "Nobody ever has to wait for anyone"],
       working: ["What does a deadline tell the person doing the task?", "What happens to the project if every task is on time?"],
       note: "Everyone knows when their task must be done, so the whole project is on time." };
   }
   function whyNameGen() {
     var p = pick(PROJECTS);
-    return { prompt: "Project: " + p.name + ". Two people made the same sprite, and nobody made the score. Why would a project plan stop this?",
-      answer: "It says who does each task, so no task is done twice or forgotten",
-      re: /^(?=.*\b(who|names?|person|people|each|everyone|jobs?|tasks?)\b)(?=.*\b(twice|again|same|forgot\w*|forget\w*|missed|left|nobody|no\s*one|all)\b).*$/i,
-      wrong: ["It makes the sprites look better, so nobody wants to make them again", "It makes the computer run the game faster, so the score is made sooner", "It gives the game a higher score, so the players are happy at the end"],
+    return { prompt: "Project: " + p.name + ". Two people made the same sprite, and nobody made the score. How would a project plan stop this? Pick every true reason.",
+      answers: ["Each task has one name, so nothing is done twice", "Every task has someone, so nothing is forgotten"],
+      wrong: ["It makes the sprites look better, so nobody redoes them", "It makes the game run faster, so the score is quicker", "It gives the game a higher score at the end", "It tells the team which day of the week it is"],
       working: ["What does a plan put next to every task?", "If every task has one name, what cannot happen?"],
       note: "Each task has one name, so nothing is done twice and nothing is forgotten." };
+  }
+
+  // ---------------------------------------------------------------- harder plan cards: what if, a fault, at the same time
+  function slipGen() {
+    var P = dayPlan(), k = range(2, 3), r = P.rows[k];
+    var late = P.rows.filter(function (x) { return x.d >= k; });
+    return { prompt: "Project: " + P.p.name + ". Each task needs the one before it.\n" + planLines(P.rows) + "\n" + r.who + " is ill on " + r.day + ", so task " + r.n + " moves to the next day. Which tasks will now finish later? Pick every one.",
+      answers: late.map(taskName), wrong: P.rows.filter(function (x) { return x.d < k; }).map(taskName).concat(["None of the tasks", "Only the last task"]),
+      working: ["The ill person's task moves one day later.", "Which tasks need that one, or need a task that needs it?"],
+      note: "Task " + r.n + " is late, and every task after it waits for it." };
+  }
+  var FAULTS = ["One person has two tasks on one day", "A task is due before what it needs is ready", "A task is due after the project deadline", "A task has nobody to do it"];
+  function faultGen() {
+    // In this plan every task needs the one before it, so two tasks on one day would also break the order: the
+    // clash is not drawn here, only offered as a wrong option.
+    var P = dayPlan(), kind = range(1, 3), k, rows = P.rows.map(function (r) { return Object.assign({}, r); });
+    if (kind === 3) { k = range(0, 4); rows[k].who = ""; }
+    else if (kind === 1) { k = range(1, 3); rows[k].day = rows[k - 1].day; rows[k].who = P.team.filter(function (w) { return w !== rows[k - 1].who && w !== rows[k].who; })[0] || rows[k].who; }
+    else { k = 4; rows[k].day = "next Monday"; }
+    var why = ["", "Task " + (k + 1) + " is due the same day as task " + k + ", which it needs.", "Task 5 is due next Monday, after the Friday deadline.", "Task " + (k + 1) + " has nobody in Who."][kind];
+    return { prompt: "Project: " + P.p.name + ". Each task needs the one before it. The project deadline is Friday.\n" + planLines(rows) + "\nWhat is wrong with this plan?",
+      answers: [FAULTS[kind]], wrong: FAULTS.filter(function (f, i) { return i !== kind; }).concat(["A stage has no task in the plan"]),
+      working: ["Check each task: is its person free that day?", "Is it after the task it needs, and is it in time for the deadline?"],
+      note: why };
+  }
+  function parallelGen() {
+    var p = pick(PROJECTS), d = range(1, 2), other = d === 1 ? 2 : 1;
+    var extra = { "Catch game": "Draw the fruit and basket on paper", "Space Quiz": "Plan the score screen on paper", "Maze game": "Sketch the maze levels on paper",
+      "Times Table app": "Plan the buttons on paper", "Birthday Card": "Draw the pictures on paper" }[p.short];
+    var tasks = [p.tasks[0], p.tasks[1], extra, p.tasks[2], p.tasks[3]];
+    var lines = tasks.map(function (t, i) { return LETTERS[i] + ": " + t; });
+    var me = d === 1 ? tasks[1] : tasks[2], ans = d === 1 ? tasks[2] : tasks[1];
+    return { prompt: "Project: " + p.name + ". Two people can work on the same day. Which task can be done on the same day as \"" + me + "\"? Pick every one.\n" + lines.join("\n"),
+      answers: [ans], wrong: [tasks[0], tasks[3], tasks[4], "None of the other tasks"],
+      working: ["Two tasks can be on the same day only if neither needs the other.", "What does this task need? Which other task needs the same thing, and nothing else?"],
+      note: "\"" + me + "\" and \"" + ans + "\" both need only the list, so two people can do them on the same day." };
   }
 
   // ---------------------------------------------------------------- what a plan lists
@@ -622,9 +625,8 @@ function planPrelude() {
   function deadlineGen() {
     var p = pick(PROJECTS);
     return { prompt: "Project: " + p.name + ". A task in its plan has a deadline. What is a deadline?",
-      answer: "The day a task must be finished by",
-      re: /^(?=.*\b(time|day|date|when)\b)(?=.*\b(finish\w*|done|complete\w*|end|ready)\b).*$/i,
-      wrong: ["The person who must do a task", "The last task in the whole plan", "Something a task needs to be done"],
+      answers: ["The day a task must be finished by"],
+      wrong: ["The person who must do the task", "The last task in the whole plan", "Something the task needs to start", "The day the whole team first meets"],
       working: ["In a plan, a deadline is a day like Tuesday.", "What must happen to the task by that day?"],
       note: "A deadline is when the task must be finished." };
   }
@@ -880,9 +882,9 @@ function orderCards() {
     card("or-first", "or-next", orderFirstGen),
     card("or-next", "or-next", orderNextGen),
     card("or-before", "or-next", orderBeforeGen),
-    explain("or-why-test", "or-why", whyTestGen),
-    explain("or-why-design", "or-why", whyDesignGen),
-    explain("or-why-wrong", "or-why", whyWrongGen)
+    why("or-why-test", "or-why", whyTestGen),
+    why("or-why-design", "or-why", whyDesignGen),
+    why("or-why-wrong", "or-why", whyWrongGen)
   ];
 }
 function missingCards() {
@@ -892,15 +894,15 @@ function missingCards() {
     card("mi-when", "mi-gap", missWhenGen),
     card("mi-stage", "mi-gap", missStageGen),
     card("mi-late", "mi-read", lateGen),
-    explain("mi-why-who", "mi-why", whyWhoGen),
-    explain("mi-why-when", "mi-why", whyWhenGen),
-    explain("mi-why-test", "mi-why", whyTestMissingGen)
+    why("mi-why-who", "mi-why", whyWhoGen),
+    why("mi-why-when", "mi-why", whyWhenGen),
+    why("mi-why-test", "mi-why", whyTestMissingGen)
   ];
 }
 function plenaryCards() {
   return [
     card("pl-column", "pl-what", columnGen),
-    explain("pl-deadline", "pl-what", deadlineGen),
+    why("pl-deadline", "pl-what", deadlineGen),
     explain("pl-lists", "pl-what", listsGen),
     card("pl-order", "pl-stages", orderAllGen(5)),
     card("pl-next", "pl-stages", orderNextGen),
@@ -910,11 +912,14 @@ function plenaryCards() {
     card("pl-when", "pl-read", missWhenGen),
     card("pl-missing", "pl-read", missStageGen),
     card("pl-late", "pl-read", lateGen),
-    explain("pl-why-plan", "pl-why", whyPlanGen),
-    explain("pl-why-test", "pl-why", whyTestGen),
-    explain("pl-why-design", "pl-why", whyDesignGen),
-    explain("pl-why-name", "pl-why", whyNameGen),
-    explain("pl-why-deadline", "pl-why", whyDeadlineGen)
+    why("pl-slip", "pl-read", slipGen),
+    why("pl-fault", "pl-read", faultGen),
+    why("pl-parallel", "pl-stages", parallelGen),
+    why("pl-why-plan", "pl-why", whyPlanGen),
+    why("pl-why-test", "pl-why", whyTestGen),
+    why("pl-why-design", "pl-why", whyDesignGen),
+    why("pl-why-name", "pl-why", whyNameGen),
+    why("pl-why-deadline", "pl-why", whyDeadlineGen)
   ];
 }
 
@@ -964,6 +969,18 @@ for (const [id, about, title, subtitle, cats, fn, pre] of DRILLS) {
     for (const card of d.cards) {
       for (let n = 0; n < 300; n++) {
         const r = { ...card, ...card.randomize() };
+        if (card.type === 'multi') {
+          // Pick every true reason: enough wrong ones to fill the five options, none also true, no length tell.
+          const all = r.answers.concat(r.distractors).map(String);
+          assert(r.answers.length >= 1 && r.answers.length <= 3 && r.distractors.length >= 4 && new Set(all).size === all.length, `${id} ${card.id}: options ${JSON.stringify(all)}`);
+          const longest = Math.max(...r.distractors.map((w) => String(w).length));
+          // Options that are the plan's own task names are as long as the tasks are.
+          if (!/^pl-(slip|parallel)$/.test(card.id)) for (const a of r.answers) assert(String(a).length <= 1.15 * longest, `${id} ${card.id}: "${a}" is clearly the longest option`);
+          assert(r.working && r.working.length >= 2 && !r.working.some((w) => r.answers.some((a) => w.includes(a))), `${id} ${card.id}: nudges`);
+          assert(!/[\u2013\u2014]/.test(JSON.stringify(r)), `${id} ${card.id}: dash`);
+          if (id === 'y7-3-2-order') assert(!/\b(project plans?|deadlines?)\b/i.test(JSON.stringify([r.prompt, r.answers, r.distractors, r.working, r.note])), `${id} ${card.id}: uses a term before it is taught`);
+          continue;
+        }
         const pass = (s) => r.keywords.some((k) => k.test(s));
         const ans = String(r.answers[0]);
         assert(pass(ans), `${id} ${card.id}: own answer "${ans}" fails`);

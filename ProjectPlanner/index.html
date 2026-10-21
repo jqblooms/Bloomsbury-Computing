@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Planner</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="pp-css" href="planner.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="activity" aria-live="polite"></section>
+</main>
+<script>
+// Project Planner (Year 7, 3.2 Project Plans). ?activity= picks one task:
+//   stages   put the five stages in an order that works, then say which stage gets stuck in a broken order
+//   sort     sort jumbled tasks into their stages
+//   order    put a project's tasks in an order that works (what each task needs decides it)
+//   read     click the part of a plan that answers each question
+//   gaps     find the faults in a plan
+//   whatif   predict which tasks will be late when something changes, then run it
+//   build    plan a project from a brief: who does each task, and on which day
+//   explain  build a 2-mark explanation of why a plan helps
+//   fix      find every fault in a broken plan, then fix it
+// With no activity it lists them. ?embed=1 sits it on a lesson slide. Every file is loaded with the page's bcv.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('pp-css').href = 'planner.css?v=' + encodeURIComponent(v);
+  var FILE = { stages: 'order.js', order: 'order.js', sort: 'sort.js', read: 'plans.js', gaps: 'plans.js', fix: 'plans.js',
+    whatif: 'plans.js', build: 'plans.js', explain: 'explain.js' };
+  var activity = params.get('activity');
+  var files = ['common.js'].concat(FILE[activity] ? [FILE[activity]] : ['order.js', 'sort.js', 'plans.js', 'explain.js'], ['main.js']);
+  files.forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

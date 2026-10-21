@@ -105,28 +105,49 @@
   {
    "id": "stages",
    "label": "The Stages of a Software Project",
-   "content": "<h2 class=\"lesson-h2\">The Stages of a Software Project</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: why does Design come before Build?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You build from the flowchart. A mistake on paper takes a minute to fix. The same mistake in a finished game can take hours.</p></div></details><p class=\"lesson-lead\">Most software projects have five <strong>stages</strong>, in this order.</p><div style=\"display:flex;gap:6px;align-items:stretch;justify-content:center;margin:12px 0\"><div style=\"flex:1 1 0;max-width:210px;border:2px solid var(--brand);border-radius:10px;padding:10px 12px;background:var(--surface-2)\"><div style=\"font-weight:800;font-size:21px\">1. Decide</div><div style=\"font-size:17px;margin-top:4px\">What must it do? Write a list.</div></div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1 1 0;max-width:210px;border:2px solid var(--brand);border-radius:10px;padding:10px 12px;background:var(--surface-2)\"><div style=\"font-weight:800;font-size:21px\">2. Design</div><div style=\"font-size:17px;margin-top:4px\">Draw the flowchart.</div></div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1 1 0;max-width:210px;border:2px solid var(--brand);border-radius:10px;padding:10px 12px;background:var(--surface-2)\"><div style=\"font-weight:800;font-size:21px\">3. Build</div><div style=\"font-size:17px;margin-top:4px\">Make it on the computer.</div></div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1 1 0;max-width:210px;border:2px solid var(--brand);border-radius:10px;padding:10px 12px;background:var(--surface-2)\"><div style=\"font-weight:800;font-size:21px\">4. Test</div><div style=\"font-size:17px;margin-top:4px\">Try it. Find the mistakes.</div></div><div style=\"align-self:center;font-size:24px;color:var(--brand)\">&rarr;</div><div style=\"flex:1 1 0;max-width:210px;border:2px solid var(--brand);border-radius:10px;padding:10px 12px;background:var(--surface-2)\"><div style=\"font-weight:800;font-size:21px\">5. Improve</div><div style=\"font-size:17px;margin-top:4px\">Fix the mistakes. Test again.</div></div></div><ul class=\"lesson-facts\"><li>Each stage uses what the stage before it made.</li><li>After Improve, test again.</li></ul>"
+   "type": "embedded-app",
+   "appId": "project-planner",
+   "embedQuery": "activity=stages",
+   "embedContainerId": "y732-stages",
+   "content": "<h2 class=\"lesson-h2\">The Stages of a Software Project</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Look at what each stage needs. How does that tell you which stage can come first?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A stage can only start once a stage before it has given what it needs. Start with the stage that needs only an idea.</p></div></details><div id=\"y732-stages\"></div>"
   },
   {
    "id": "compare-order",
    "label": "Compare: Design First or Build First?",
-   "content": "<h2 class=\"lesson-h2\">Compare: Design First or Build First?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both teams make the same Catch game. Which team finishes first? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p><strong>Team Blue.</strong> Team Red found the mistake after building, so they built again.</p><p><strong>Why?</strong> The design shows how the game must work before anyone builds it. A mistake in a flowchart is quick to fix.</p></div></details><p class=\"lesson-lead\">Two teams make a Catch game. The fruit must fall faster when the score goes up.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Team Red: build first</p><ul class=\"lesson-facts\"><li>Day 1 to 3: build the game.</li><li>Day 4: the fruit never gets faster. Nobody planned it.</li><li>Day 5 to 6: build it again.</li></ul></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Team Blue: design first</p><ul class=\"lesson-facts\"><li>Day 1: draw the flowchart. The faster fruit is in it.</li><li>Day 2 to 3: build the game.</li><li>Day 4: test. Day 5: improve.</li></ul></div></div>"
+   "type": "multiple-choice",
+   "containerId": "y732-compare-order",
+   "content": "<h2 class=\"lesson-h2\">Compare: Design First or Build First?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">You build a model without looking at the picture on the box. What might happen? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Pieces can go in the wrong place, and you take it apart and start again. The picture shows how it fits before you begin.</p></div></details><div class=\"lesson-do-now-columns\"><div><div style=\"padding:8px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)\"><b>Team Red: build first</b><br>Day 1 to 3: build. Day 4: the fruit never gets faster. Nobody planned it. Day 5 to 6: build it again.</div></div><div><div style=\"padding:8px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)\"><b>Team Blue: design first</b><br>Day 1: draw the flowchart, with the faster fruit in it. Day 2 to 3: build. Day 4: test. Day 5: improve.</div></div></div><div id=\"y732-compare-order\"></div>",
+   "items": [
+    {
+     "prompt": "Both teams must make the fruit fall faster as the score goes up. Which team finishes first, and why?",
+     "options": [
+      "Team Blue: the faster fruit was in its flowchart",
+      "Team Red: it started building on Day 1",
+      "Team Blue: its game had fewer sprites to make",
+      "Team Red: it spent more days building"
+     ],
+     "correct": 0,
+     "explain": "Team Blue. The design showed how the game must work before anyone built it, so it was built right first time. Team Red built it twice."
+    }
+   ]
   },
   {
    "id": "order-check",
-   "label": "Your Turn: Which Stage Comes Next?",
-   "type": "short-answer-validation",
-   "validatorId": "y732-order-check",
-   "validatorKey": "y732_order_check",
-   "content": "<h2 class=\"lesson-h2\">Your Turn: Which Stage Comes Next?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each stage need the one before it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each stage uses what the stage before it gave. A stage cannot start with nothing.</p></div></details><p class=\"lesson-lead\">Type the name of a stage.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y732-order-check-a\">(a) Which stage comes straight after Design? [1]</label><input id=\"y732-order-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"order-check-a\" aria-label=\"Your Turn: Which Stage Comes Next? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y732-order-check-b\">(b) Which stage comes straight before Improve? [1]</label><input id=\"y732-order-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"order-check-b\" aria-label=\"Your Turn: Which Stage Comes Next? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y732-order-check-c\">(c) A team has written what the game must do. Which stage is next? [1]</label><input id=\"y732-order-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"order-check-c\" aria-label=\"Your Turn: Which Stage Comes Next? part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y732-order-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y732-order-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+   "label": "Your Turn: Which Stage Is It?",
+   "type": "embedded-app",
+   "appId": "project-planner",
+   "embedQuery": "activity=sort",
+   "embedContainerId": "y732-order-check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Which Stage Is It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">\"Draw\" is often a Design word. Can a task that draws ever be a different stage? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Yes. Drawing the levels on the computer, to make the game, is Build. The stage depends on what the whole task does.</p></div></details><div id=\"y732-order-check\"></div>"
   },
   {
    "id": "activity-1",
    "label": "Activity 1: Put the Tasks in Order",
    "type": "embedded-app",
-   "appId": "drill-y7-3-2-order",
+   "appId": "project-planner",
+   "embedQuery": "activity=order",
    "embedContainerId": "y732-activity-1",
-   "content": "<h2 class=\"lesson-h2\">Activity 1: Put the Tasks in Order</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"Put the tasks in order\" the first thing a team does?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The order tells everyone what can start now and what has to wait.</p></div></details><p class=\"lesson-lead\">Put each project's tasks in order. Then say why. Your progress is saved.</p><div id=\"y732-activity-1\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Put the Tasks in Order</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can two tasks sometimes swap places, but other tasks never can?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two tasks that do not need each other can go in either order. A task that needs another one must wait for it.</p></div></details><div id=\"y732-activity-1\"></div>"
   },
   {
    "id": "what-plan",
@@ -136,15 +157,31 @@
   {
    "id": "plan-check",
    "label": "Your Turn: Read the Plan",
-   "type": "short-answer-validation",
-   "validatorId": "y732-plan-check",
-   "validatorKey": "y732_plan_check",
-   "content": "<h2 class=\"lesson-h2\">Your Turn: Read the Plan</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a plan put a name next to every task?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Everyone knows which jobs are theirs. No job is done twice, and no job is left out.</p></div></details><p class=\"lesson-lead\">A plan for the Catch game.</p><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:16px;width:100%\"><thead><tr><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Task</th><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Who</th><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Deadline</th><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Needs</th></tr></thead><tbody><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">1. Decide what the game must do</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Ploy</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Monday</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">paper</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">2. Design: draw the flowchart</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Nat</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Tuesday</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">the list from task 1</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">3. Build the game</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Mint</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Thursday</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">a computer</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">4. Test: play it, find mistakes</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Ben</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Friday</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">the game</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">5. Improve: fix the mistakes</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Mint</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">next Monday</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">the test notes</td></tr></tbody></table></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y732-plan-check-a\">(a) Who builds the game? [1]</label><input id=\"y732-plan-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plan-check-a\" aria-label=\"Your Turn: Read the Plan part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y732-plan-check-b\">(b) What is the deadline for the Test task? [1]</label><input id=\"y732-plan-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plan-check-b\" aria-label=\"Your Turn: Read the Plan part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y732-plan-check-c\">(c) Nat is ill on Tuesday. Which task could miss its deadline? [1]</label><input id=\"y732-plan-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"plan-check-c\" aria-label=\"Your Turn: Read the Plan part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y732-plan-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y732-plan-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+   "type": "embedded-app",
+   "appId": "project-planner",
+   "embedQuery": "activity=read",
+   "embedContainerId": "y732-plan-check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Read the Plan</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a plan say what each task needs?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So you know which task must be finished first, and what to have ready on the day.</p></div></details><div id=\"y732-plan-check\"></div>"
   },
   {
    "id": "compare-plans",
    "label": "Compare: With a Plan, Without a Plan",
-   "content": "<h2 class=\"lesson-h2\">Compare: With a Plan, Without a Plan</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both teams worked hard. Why did only one game work on Sports Day?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Team Blue knew who did each task and when. Nothing was done twice, nothing was forgotten, and there was time to test.</p><p>Team Red had no plan, so nobody knew which jobs were theirs.</p></div></details><p class=\"lesson-lead\">Two teams make a Catch game for Sports Day on Friday.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Team Red: no plan</p><ul class=\"lesson-facts\"><li>Two people drew the same fruit.</li><li>Nobody made the score. Each one thought another person would.</li><li>Friday: no time to test. The game broke.</li></ul></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Team Blue: a project plan</p><ul class=\"lesson-facts\"><li>Every task has one name.</li><li>Every task has a deadline.</li><li>Thursday: test. Friday: the game worked.</li></ul></div></div>"
+   "type": "multiple-choice",
+   "containerId": "y732-compare-plans",
+   "content": "<h2 class=\"lesson-h2\">Compare: With a Plan, Without a Plan</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both teams had the same people and the same week. Why might one team finish and the other not?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Talk about it in pairs. Then check your idea with the question.</p></div></details><div class=\"lesson-do-now-columns\"><div><div style=\"padding:8px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)\"><b>Team Red: no plan</b><br>Two people drew the same fruit. Nobody made the score: each thought another person would. Friday: no time to test, and the game broke.</div></div><div><div style=\"padding:8px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)\"><b>Team Blue: a project plan</b><br>Every task has one name. Every task has a deadline. Thursday: test. Friday: the game worked.</div></div></div><div id=\"y732-compare-plans\"></div>",
+   "items": [
+    {
+     "prompt": "Both teams make a Catch game for Sports Day on Friday. Which part of Team Blue's plan stopped two people drawing the same fruit?",
+     "options": [
+      "Every task has one name",
+      "Every task has a deadline",
+      "The tasks are in order",
+      "Each task says what it needs"
+     ],
+     "correct": 0,
+     "explain": "One name on each task: everyone knows which jobs are theirs, so no job is done twice and none is forgotten."
+    }
+   ]
   },
   {
    "id": "why-plan",
@@ -154,41 +191,47 @@
   {
    "id": "missing-check",
    "label": "Your Turn: What Is Missing?",
-   "type": "short-answer-validation",
-   "validatorId": "y732-missing-check",
-   "validatorKey": "y732_missing_check",
-   "content": "<h2 class=\"lesson-h2\">Your Turn: What Is Missing?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check a plan before the project starts?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A gap is quick to put right on paper. Found in the middle of the project, the same gap costs days.</p></div></details><p class=\"lesson-lead\">A plan for a Space Quiz. It has three gaps.</p><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:16px;width:100%\"><thead><tr><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Task</th><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Who</th><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Deadline</th></tr></thead><tbody><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">1. Decide: write the questions</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Ploy</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Monday</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">2. Design: draw the flowchart</td><td style=\"padding:4px 8px;text-align:left;font-size:16px;background:rgba(253,214,99,.18)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Tuesday</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">3. Build the quiz</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Mint</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Thursday</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">4. Improve: fix the mistakes</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Ben</td><td style=\"padding:4px 8px;text-align:left;font-size:16px;background:rgba(253,214,99,.18)\">&nbsp;</td></tr></tbody></table></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y732-missing-check-a\">(a) Which task has nobody to do it? [1]</label><input id=\"y732-missing-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"missing-check-a\" aria-label=\"Your Turn: What Is Missing? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y732-missing-check-b\">(b) Which task has no deadline? [1]</label><input id=\"y732-missing-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"missing-check-b\" aria-label=\"Your Turn: What Is Missing? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y732-missing-check-c\">(c) One stage is missing. Which one? [1]</label><input id=\"y732-missing-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"missing-check-c\" aria-label=\"Your Turn: What Is Missing? part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y732-missing-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y732-missing-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+   "type": "embedded-app",
+   "appId": "project-planner",
+   "embedQuery": "activity=gaps",
+   "embedContainerId": "y732-missing-check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: What Is Missing?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check a plan before the project starts?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A gap is quick to put right on paper. Found in the middle of the project, the same gap costs days.</p></div></details><div id=\"y732-missing-check\"></div>"
+  },
+  {
+   "id": "what-if",
+   "label": "What If? Predict, Then Run It",
+   "type": "embedded-app",
+   "appId": "project-planner",
+   "embedQuery": "activity=whatif",
+   "embedContainerId": "y732-what-if",
+   "content": "<h2 class=\"lesson-h2\">What If? Predict, Then Run It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">When one task is late, how do you find every task that has to wait?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Find the tasks that need it, then the tasks that need those. Then check what else the same person had to do.</p></div></details><div id=\"y732-what-if\"></div>"
   },
   {
    "id": "activity-2",
-   "label": "Activity 2: What Is Missing from This Plan?",
+   "label": "Activity 2: Plan the Project",
    "type": "embedded-app",
-   "appId": "drill-y7-3-2-missing",
+   "appId": "project-planner",
+   "embedQuery": "activity=build",
    "embedContainerId": "y732-activity-2",
-   "content": "<h2 class=\"lesson-h2\">Activity 2: What Is Missing from This Plan?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does one gap in a plan put the whole project at risk?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The tasks are joined in order. If one task is late or never done, every task after it waits.</p></div></details><p class=\"lesson-lead\">Find the gap in each plan. Then say why it matters. Your progress is saved.</p><div id=\"y732-activity-2\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Plan the Project</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How do you choose which task to plan first? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Start with the task that needs nothing. A task can only go on a day after every task it needs.</p></div></details><div id=\"y732-activity-2\"></div>"
   },
   {
    "id": "why-check",
    "label": "Explain: Why a Project Plan Is Useful",
-   "type": "self-marked-response",
-   "containerId": "y732-why-check",
-   "content": "<h2 class=\"lesson-h2\">Explain: Why a Project Plan Is Useful</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two connected points: what the plan shows, and what that gives the team. Join them with \"so\".</p></div></details><p class=\"lesson-lead\">Your class will make a Catch game for Sports Day, in teams of four.</p><div id=\"y732-why-check\"></div>",
-   "items": [
-    {
-     "id": "why-plan",
-     "prompt": "Explain why a project plan is useful for this project. [2]",
-     "marks": 2,
-     "modelAnswer": "It shows who does each task and by when (1 mark), so the team finishes on time and no task is forgotten (1 mark)."
-    }
-   ]
+   "type": "embedded-app",
+   "appId": "project-planner",
+   "embedQuery": "activity=explain",
+   "embedContainerId": "y732-why-check",
+   "content": "<h2 class=\"lesson-h2\">Explain: Why a Project Plan Is Useful</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two connected points: what the plan shows, and what that gives the team. Join them with \"so\".</p></div></details><div id=\"y732-why-check\"></div>"
   },
   {
    "id": "practice",
-   "label": "Practice: Plan the Quiz",
-   "type": "short-answer-validation",
-   "validatorId": "y732-practice",
-   "validatorKey": "y732_practice",
-   "content": "<h2 class=\"lesson-h2\">Practice: Plan the Quiz</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can some tasks not start until another task is finished?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They use what an earlier task gave. A task cannot use something that does not exist yet.</p></div></details><p class=\"lesson-lead\">A team makes a quiz for Year 6. The tasks are mixed up.</p><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:16px;width:100%\"><thead><tr><th style=\"padding:4px 8px;text-align:left;font-size:16px;background:rgba(253,214,99,.18)\">&nbsp;</th><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Task</th><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Who</th><th style=\"padding:4px 8px;text-align:left;font-size:16px\">Deadline</th></tr></thead><tbody><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">A</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Ask Year 6 to try the quiz</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Nat</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Friday</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">B</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Make the quiz on the computer</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Mint</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Thursday</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">C</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Write the questions it must ask</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Ploy</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Monday</td></tr><tr><td style=\"padding:4px 8px;text-align:left;font-size:16px\">D</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Draw the flowchart for one question</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Ploy</td><td style=\"padding:4px 8px;text-align:left;font-size:16px\">Tuesday</td></tr></tbody></table></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y732-practice-a\">(a) Type the letters in the right order. [1]</label><input id=\"y732-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Plan the Quiz part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y732-practice-b\">(b) Mint is ill on Thursday. Which task could miss its deadline? [1]</label><input id=\"y732-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Plan the Quiz part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y732-practice-c\">(c) Which task must be finished before task B can start? [1]</label><input id=\"y732-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Plan the Quiz part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y732-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y732-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+   "label": "Practice: Find and Fix the Plan",
+   "type": "embedded-app",
+   "appId": "project-planner",
+   "embedQuery": "activity=fix",
+   "embedContainerId": "y732-practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Find and Fix the Plan</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why find every fault before you change anything?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One change can fix one fault and make a new one. When you can see them all, you can fix them together.</p></div></details><div id=\"y732-practice\"></div>"
   },
   {
    "id": "plenary",
@@ -256,122 +299,6 @@
      "flags": "i"
     },
     "feedback": "Main carries on just after the first CALL. Write that whole box."
-   }
-  ],
-  "y732_order_check": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(the\\s+)?(build\\w*|built|make|making|made)(\\s+(task|stage))?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Design gives you the flowchart. What do you do with a flowchart?"
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(the\\s+)?(test\\w*)(\\s+(task|stage))?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "To improve, you must know the mistakes. Which stage finds them?"
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(the\\s+)?(design\\w*|draw\\w*(\\s+the)?\\s+flowchart|(the\\s+)?flowchart)(\\s+(task|stage))?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "That list is stage 1. What comes straight after stage 1?"
-   }
-  ],
-  "y732_plan_check": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*mint\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Find the Build task. Read across to the Who column."
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*[\"'\\u201c]?\\s*(on\\s+)?(by\\s+)?friday\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Find the Test task. Read across to the Deadline column."
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(the\\s+)?(design\\w*|draw\\w*(\\s+the)?\\s+flowchart|(the\\s+)?flowchart|task\\s*2|2)(\\s+(task|stage))?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Find Nat in the Who column. Is that task due on the day Nat is ill?"
-   }
-  ],
-  "y732_missing_check": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(the\\s+)?(design\\w*|draw\\w*(\\s+the)?\\s+flowchart|(the\\s+)?flowchart|task\\s*2|2)(\\s+(task|stage))?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Look down the Who column. Which row is empty?"
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(the\\s+)?(improv\\w*|fix\\w*|task\\s*4|4)(\\s+(task|stage))?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Look down the Deadline column. Which row is empty?"
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(the\\s+)?(test\\w*)(\\s+(task|stage))?\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Say the five stages in order. Which one has no task here?"
-   }
-  ],
-  "y732_practice": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(task\\s*)?C\\s*(,|;|->|then|and|\\s)?\\s*(then\\s+)?(task\\s*)?D\\s*(,|;|->|then|and|\\s)?\\s*(then\\s+)?(task\\s*)?B\\s*(,|;|->|then|and|\\s)?\\s*(then\\s+)?(task\\s*)?A\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Start with the task that says what it must do. Then the flowchart, then making it, then trying it."
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(task\\s*)?B\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Find Mint in the Who column. Which task is that?"
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*(task\\s*)?D\\s*[.!]?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Task B makes the quiz. What do you make it from?"
    }
   ]
  },
