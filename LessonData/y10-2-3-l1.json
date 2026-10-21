@@ -252,6 +252,7 @@
       "The key can be generated using an algorithm",
       "The key is transmitted to the receiver"
      ],
+     "guidance": "Award 1 mark for: data is encrypted and decrypted using the same key (point 1). Then any three from the other points, up to 3 more marks. Point 4 follows on from point 3: the mark scheme writes them as \"data is encrypted using an algorithm ... that uses a key\".",
      "modelAnswer": "One mark: data is encrypted and decrypted using the same key. Then any three from: plain text is encrypted into cipher text, or cipher text is decrypted into plain text; data is encrypted using an algorithm that uses a key; the key can be generated using an algorithm; the key is transmitted to the receiver."
     }
    ]
@@ -271,6 +272,7 @@
       "To help keep the data secure",
       "To make the data meaningless (if it is intercepted)"
      ],
+     "guidance": "Any one from the points.",
      "modelAnswer": "Any one from: to help keep the data secure; to make the data meaningless (if it is intercepted)."
     }
    ]

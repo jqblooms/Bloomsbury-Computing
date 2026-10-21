@@ -106,6 +106,10 @@ steps.push(checkStep('exam-occur', 'Exam Question: How Errors Occur', 'Exam Ques
 steps.push(selfMarked('exam-explain', 'Exam Question: Explain How Errors Occur', 'Exam Question: Explain How Errors Occur',
   cite('0478/12, November 2025, Question 7(f)(i)') + ' The data for music and audio books needs to be checked for errors after being transmitted from the cloud.', [
     { id: 'errors-explain', prompt: 'Explain how errors may occur in the data during transmission. [2]', marks: 2,
+      // The published MS (0478/12 November 2025 Q7(f)(i)): "Any two from:" these eight points.
+      scheme: ['Data could be lost', 'Data could be gained', 'Data could be changed', 'Skewing of data could occur',
+        'Interference could occur', 'Crosstalk could occur', 'Data collisions could occur', 'Data packets could time out or reach their hop count'],
+      guidance: 'Any two from the points.',
       modelAnswer: 'Interference (for example electrical or magnetic) can affect the data on the way; this can cause bits to be lost (data loss), extra bits to be gained (data gain), or bits to change, for example a 0 becoming a 1 (data change).' },
   ], ['This question has 2 marks. What two ideas do you need?', 'One mark for what causes the error. One mark for what it does to the data. Two different ideas, one for each mark.']));
 
@@ -146,6 +150,8 @@ steps.push(selfMarked('exam-detect', 'Exam Question: How Even Parity Detects an 
         'to make the number of 1s even (accept number of 0s; accept it is 1 if the number of 1s is odd, or 0 if the number of 1s is even)',
         'The number of 1s in each byte is counted after transmission (accept number of 0s)',
         'If any byte has an odd number of 1s, an error is detected (accept number of 0s)'],
+      // The published MS writes point 2 as "... to make the number of 1s/0s even", following on from point 1.
+      guidance: 'One mark for each point. Point 2 follows on from point 1: the mark scheme writes it as "... to make the number of 1s/0s even".',
       modelAnswer: 'A parity bit is added to each byte to make the number of 1s even. After transmission, the 1s in each byte are counted. If any byte has an odd number of 1s, an error is detected.' },
   ], ['Why must the answer say what the RECEIVER does?', 'Detecting happens when the data arrives. Only the receiver has the data that arrived, so only it can find the error.']));
 steps.push(checkStep('exam-miss', 'Exam Question: When Parity Fails', 'Exam Question: When Parity Fails',

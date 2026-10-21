@@ -291,6 +291,7 @@ steps.push(selfMarked('exam-differences', 'Exam Question: Two Differences', 'Exa
         'Symmetric can send the key with the data, whereas asymmetric does not',
         'Symmetric decrypts the data using the same key, whereas asymmetric decrypts the data using a different key',
         'Symmetric is less secure than asymmetric (accept asymmetric is more secure than symmetric)'],
+      guidance: 'Any two from the points.',
       modelAnswer: 'Any two from: symmetric uses one key, whereas asymmetric uses two keys (public and private); symmetric can send the key with the data, whereas asymmetric does not; symmetric decrypts with the same key, whereas asymmetric decrypts with a different key; symmetric is less secure than asymmetric.' },
   ], ['Why does a good difference name both methods in one sentence?', 'The mark is for the contrast. Say what one method does, then "whereas", then what the other does instead.']));
 
@@ -309,6 +310,9 @@ steps.push(selfMarked('exam-describe', 'Exam Question: Describe the Differences'
         'Asymmetric has different keys (accept a public key and a private key)',
         'In asymmetric, the public key encrypts the data and the private key decrypts it',
         'Anyone can know the public key, but only those intended know the private key'],
+      // The published MS: "Four from:", with "Symmetric has a shared key... / ... to encrypt and decrypt" and
+      // "Asymmetric has different keys ... / ...public to encrypt ... / ...anyone can know the public key ...".
+      guidance: 'Four from the points. Point 2 follows on from point 1, and points 5 and 6 follow on from point 4: the mark scheme writes them with ...',
       modelAnswer: 'Four from: symmetric has a shared key ... to encrypt and decrypt; both the sender and receiver know the key; asymmetric has different keys, a public key and a private key; ... the public key encrypts the data and the private key decrypts it; anyone can know the public key, but only those intended know the private key.' },
   ], ['Why plan two facts about each method before you write?', 'Each mark is one fact, so two facts about each method cover four marks.']));
 

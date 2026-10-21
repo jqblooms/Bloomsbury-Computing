@@ -72,6 +72,17 @@
      "id": "errors-explain",
      "prompt": "Explain how errors may occur in the data during transmission. [2]",
      "marks": 2,
+     "scheme": [
+      "Data could be lost",
+      "Data could be gained",
+      "Data could be changed",
+      "Skewing of data could occur",
+      "Interference could occur",
+      "Crosstalk could occur",
+      "Data collisions could occur",
+      "Data packets could time out or reach their hop count"
+     ],
+     "guidance": "Any two from the points.",
      "modelAnswer": "Interference (for example electrical or magnetic) can affect the data on the way; this can cause bits to be lost (data loss), extra bits to be gained (data gain), or bits to change, for example a 0 becoming a 1 (data change)."
     }
    ]
@@ -130,6 +141,7 @@
       "The number of 1s in each byte is counted after transmission (accept number of 0s)",
       "If any byte has an odd number of 1s, an error is detected (accept number of 0s)"
      ],
+     "guidance": "One mark for each point. Point 2 follows on from point 1: the mark scheme writes it as \"... to make the number of 1s/0s even\".",
      "modelAnswer": "A parity bit is added to each byte to make the number of 1s even. After transmission, the 1s in each byte are counted. If any byte has an odd number of 1s, an error is detected."
     }
    ]

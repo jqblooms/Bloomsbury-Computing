@@ -317,6 +317,9 @@ steps.push(selfMarked('exam-describe', 'Exam Question: How Symmetric Encryption 
         'The algorithm uses a key',
         'The key can be generated using an algorithm',
         'The key is transmitted to the receiver'],
+      // Guidance from the published MS: "Data is encrypted and decrypted using the same key (1 mark)", then
+      // "Any three from:", with "Data is encrypted using an algorithm ... ... that uses a key" as a linked pair.
+      guidance: 'Award 1 mark for: data is encrypted and decrypted using the same key (point 1). Then any three from the other points, up to 3 more marks. Point 4 follows on from point 3: the mark scheme writes them as "data is encrypted using an algorithm ... that uses a key".',
       modelAnswer: 'One mark: data is encrypted and decrypted using the same key. Then any three from: plain text is encrypted into cipher text, or cipher text is decrypted into plain text; data is encrypted using an algorithm that uses a key; the key can be generated using an algorithm; the key is transmitted to the receiver.' },
   ], ['Part (i) has 4 marks. What happens at the sender, and what happens at the receiver?', 'Each mark is one step or one fact. Start at the sender, follow the data to the receiver, and say what each one needs.']));
 steps.push(selfMarked('exam-describe-2', 'Exam Question: How Symmetric Encryption Works (2 of 2)', 'Exam Question: How Symmetric Encryption Works (2 of 2)',
@@ -324,6 +327,7 @@ steps.push(selfMarked('exam-describe-2', 'Exam Question: How Symmetric Encryptio
     { id: 'encryption-purpose', prompt: '(ii) Give the purpose of encryption. [1]', marks: 1,
       scheme: ['To help keep the data secure',
         'To make the data meaningless (if it is intercepted)'],
+      guidance: 'Any one from the points.',
       modelAnswer: 'Any one from: to help keep the data secure; to make the data meaningless (if it is intercepted).' },
   ], ['Why is "to stop hackers" not the best answer here?', 'Encryption cannot stop anyone copying the data. Say what it does for data that is copied.']));
 
