@@ -97,7 +97,7 @@ const note = (t) => `<div class="wt-note">${t}</div>`;
 const hl = (t) => `<span class="wt-hl">${t}</span>`;
 // A plan as a table: rows of cells; an empty cell is drawn as a gap.
 function table(head, rows) {
-  const cell = (t, h) => `<t${h} style="padding:6px 10px;text-align:left;font-size:16px${t === '' ? ';background:rgba(253,214,99,.18)' : ''}">${t === '' ? '&nbsp;' : t}</t${h}>`;
+  const cell = (t, h) => `<t${h} style="padding:4px 8px;text-align:left;font-size:16px${t === '' ? ';background:rgba(253,214,99,.18)' : ''}">${t === '' ? '&nbsp;' : t}</t${h}>`;
   return `<table class="donow-table" style="font-size:16px;width:100%"><thead><tr>${head.map((h) => cell(h, 'h')).join('')}</tr></thead>` +
     `<tbody>${rows.map((r) => `<tr>${r.map((c) => cell(c, 'd')).join('')}</tr>`).join('')}</tbody></table>`;
 }
@@ -154,7 +154,7 @@ steps.push(checkStep('do-now', 'Do Now: Sequence and Selection', 'Do Now: Sequen
   { label: 'Score is 55. How many steps altogether?', answer: num(50, 'steps?'), feedback: 'Add the Move box before the decision. Then put the number in and follow that arrow.' },
   { label: 'Score is 40. How many steps altogether?', answer: num(20, 'steps?'), feedback: 'Is 40 bigger than 40? Then follow that arrow. Does it move again?' },
   { label: 'Score is 40. What does the sprite say last?', answer: word('try\\s+again'), feedback: 'Follow the whole path for 40. Which Say box do you reach last?' },
-], chart(DN1, 380)));
+], chart(DN1, 300)));
 steps[steps.length - 1].walkthrough = WT_BOTH;
 
 // ---------------------------------------------------------------- Do Now 2 (Lesson 4): sub-routines
@@ -179,7 +179,7 @@ steps.push(checkStep('do-now-2', 'Do Now: Sub-routines', 'Do Now: Sub-routines',
   { label: 'How many steps does the sprite move altogether?', answer: num(60, 'steps?'), feedback: 'Each CALL runs all of Hop. Count the CALLs, then add the Move box in Main too.' },
   { label: 'How many times does the sprite say "Hop"?', answer: '^\\s*(2|two|twice)(\\s+times)?\\s*$', feedback: 'Hop has one Say box. How many times does Main CALL Hop?' },
   { line: true, label: 'Hop reaches its End the first time. Which box in Main runs next?', answer: boxText('move\\s*:?\\s*10(\\s*steps?)?'), feedback: 'Main carries on just after the first CALL. Write that whole box.' },
-], chart(DN2, 300)));
+], chart(DN2, 250)));
 steps[steps.length - 1].walkthrough = WT_SUB;
 
 steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y7-3-2-ext', 'Extension: Do Now Challenge',
