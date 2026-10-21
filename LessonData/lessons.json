@@ -88,7 +88,8 @@
           "code": "",
           "title": "Data Models and Collection",
           "lessons": [
-            "y8-3-1-models"
+            "y8-3-1-models",
+            "y8-3-2-data"
           ]
         }
       ]
@@ -230,7 +231,8 @@
           "code": "1.1",
           "title": "Number Systems",
           "lessons": [
-            "y11-1-1-binary"
+            "y11-1-1-binary",
+            "y11-1-2-denary"
           ]
         }
       ]

@@ -1,0 +1,313 @@
+{
+ "id": "y8-3-2-data",
+ "label": "3.2: Data Requirements for Models",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Using a Model (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y832-do-now",
+   "validatorKey": "y832_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Using a Model (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a model need a rule as well as the start amount?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The start is only where it begins. The rule says how it changes each week.</p></div></details><p class=\"lesson-lead\">From 3.1: models and their parts.</p><div class=\"lesson-do-now-columns\"><div><div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Savings model</strong><br>Rule: each week, add 15.<br>Start: 40 in the account.</div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y832-do-now-a\">(a) What does the model predict after 4 weeks? [1]</label><input id=\"y832-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Using a Model (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y832-do-now-b\">(b) \"Start: 40 in the account\". Input, rule or output? [1]</label><input id=\"y832-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Using a Model (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y832-do-now-c\">(c) Someone types the start as 4 by mistake. What does it predict after 4 weeks? [1]</label><input id=\"y832-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Using a Model (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y832-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y832-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: using a model",
+    "steps": [
+     {
+      "text": "This is a different model with the same three questions. Do the same steps with yours.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Coin jar model</strong><br>Rule: each week, add 8.<br>Start: 30 in the jar.</div>"
+     },
+     {
+      "text": "Predict after 5 weeks. Begin with the start: <strong>30</strong>.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\">Start: <span class=\"wt-hl\">30</span><br>Rule: each week, add 8.</div><div class=\"wt-note\">So far: 30</div>"
+     },
+     {
+      "text": "The rule adds 8 once for <strong>every</strong> week. 5 weeks of 8 is 40.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\">Start: 30<br>Rule: <span class=\"wt-hl\">each week, add 8</span>.</div><div class=\"wt-note\">5 x 8 = 40</div>"
+     },
+     {
+      "text": "Add it to the start: 30 + 40 = <strong>70</strong>.",
+      "visual": "<div class=\"wt-note\">30 + 5 x 8 = <span class=\"wt-hl\">70</span></div>"
+     },
+     {
+      "text": "Which part is \"each week, add 8\"? Ask: is it given at the start, does it say how to work something out, or is it worked out at the end?",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\">Start: 30<br>Rule: <span class=\"wt-hl\">each week, add 8</span>.</div>"
+     },
+     {
+      "text": "It says how to work the answer out, so it is the <strong>rule</strong>. Ask the same three things about your part.",
+      "visual": "<div class=\"wt-note\">\"each week, add 8\" = the rule</div>"
+     },
+     {
+      "text": "Someone types the start as 3, not 30. The model only knows what it is given, so it uses 3: 3 + 40 = <strong>43</strong>.",
+      "visual": "<div class=\"wt-note\">3 + 5 x 8 = <span class=\"wt-hl\">43</span></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: What a Model Leaves Out (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y832-do-now-2",
+   "validatorKey": "y832_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: What a Model Leaves Out (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a queue get longer when more cars arrive than go?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each minute, the cars that arrive are added and the cars that go are taken away. More in than out means it grows.</p></div></details><p class=\"lesson-lead\">From 3.1: running a model, and what it leaves out.</p><div class=\"lesson-do-now-columns\"><div><div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Traffic light model</strong><br>2 cars wait at the start.<br>6 cars arrive each minute.<br>The green light lets 4 go each minute.</div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y832-do-now-2-a\">(a) How many cars are waiting after 3 minutes? [1]</label><input id=\"y832-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: What a Model Leaves Out (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y832-do-now-2-b\">(b) The model leaves out the colour of each car. Does that change its prediction? Type yes or no. [1]</label><input id=\"y832-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: What a Model Leaves Out (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y832-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y832-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: the traffic model",
+    "steps": [
+     {
+      "text": "This is a different traffic model, with two questions like yours. Use these steps on yours.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Traffic light model</strong><br>0 cars wait at the start.<br>7 cars arrive each minute.<br>The green light lets 3 go each minute.</div>"
+     },
+     {
+      "text": "Each minute, <strong>add</strong> the cars that arrive: 7.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Traffic light model</strong><br>0 cars wait at the start.<br><span class=\"wt-hl\">7 cars arrive each minute.</span><br>The green light lets 3 go each minute.</div><div class=\"wt-note\">+7 each minute</div>"
+     },
+     {
+      "text": "Each minute, <strong>take away</strong> the cars that go: 3. So each minute the queue grows by 7 - 3 = 4.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Traffic light model</strong><br>0 cars wait at the start.<br>7 cars arrive each minute.<br><span class=\"wt-hl\">The green light lets 3 go each minute.</span></div><div class=\"wt-note\">7 - 3 = 4 more each minute</div>"
+     },
+     {
+      "text": "Start at the cars waiting at the start, then add 4 for every minute. After 4 minutes: 0 + 4 x 4 = <strong>16</strong>.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Traffic light model</strong><br><span class=\"wt-hl\">0 cars wait at the start.</span><br>7 cars arrive each minute.<br>The green light lets 3 go each minute.</div><div class=\"wt-note\">0 + 4 x 4 = <span class=\"wt-hl\">16 cars</span></div>"
+     },
+     {
+      "text": "The model leaves out the drivers' names. Look at what the model works with: cars arriving and cars going.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Traffic light model</strong><br>0 cars wait at the start.<br>7 cars arrive each minute.<br>The green light lets 3 go each minute.</div>"
+     },
+     {
+      "text": "Names are never added or taken away, so they cannot change the number waiting. The prediction stays at 16. Now ask this about your question.",
+      "visual": "<div class=\"wt-note\">Names: never used</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y8-3-2-ext",
+   "embedContainerId": "y832-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on models, their parts and their data from 3.1. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y832-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "3.2: Data Requirements for Models",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Data Models and Collection</p><h2 class=\"lesson-h2\">3.2: Data Requirements for Models</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> find the data a model needs.</li><li><strong>The big question:</strong> why do different apps need different data?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A sat nav and a weather app run on the same phone. Why might they need different data?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They do different jobs. Today we find out how the job decides the data.</p></div></details>"
+  },
+  {
+   "id": "data-needs",
+   "label": "What Data Does a Model Need?",
+   "content": "<h2 class=\"lesson-h2\">What Data Does a Model Need?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: which numbers must someone count before this model can run? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The cars waiting at 8 am, the cars that arrive each minute, the cars that go each minute, and the number of minutes.</p><p><strong>Why?</strong> The rule uses each one. Without one of them, the rule cannot be worked out.</p></div></details><p class=\"lesson-lead\">The <strong>data requirements</strong> of a model are the data it needs to work.</p><div class=\"lesson-do-now-columns\"><div><div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Traffic light model</strong><br>It predicts the cars waiting at the end.<br><strong>Rule:</strong> each minute, cars waiting = cars waiting + cars that arrive - cars that go.</div></div><div><ul class=\"lesson-facts\"><li>Read the rule. Find each thing it <strong>uses</strong>.</li><li>Each one is data the model <strong>needs</strong>.</li><li>Data the rule never uses is <strong>not needed</strong>, like the colour of each car.</li></ul></div></div>"
+  },
+  {
+   "id": "needs-check",
+   "label": "Your Turn: Needed or Not?",
+   "type": "multiple-choice",
+   "containerId": "y832-needs-check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Needed or Not?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read the rule before you look at the options?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The rule says exactly what the model works with. An option can sound sensible and still not be in the rule.</p></div></details><div id=\"y832-needs-check\"></div>",
+   "items": [
+    {
+     "prompt": "Rabbit model. Rule: each year, the rabbits double. Which data does it need?",
+     "options": [
+      "The rabbits on the island now",
+      "The number of foxes on the island",
+      "The size of the island",
+      "How much each rabbit weighs"
+     ],
+     "correct": 0,
+     "explain": "The rule only doubles the rabbits. It never uses foxes, size or weight, so the model does not need them."
+    },
+    {
+     "prompt": "Trip model. Rule: cost = price of the coach + price of one ticket x students going. Which data is NOT needed?",
+     "options": [
+      "The price of one ticket",
+      "The number of students going",
+      "How far away the trip is",
+      "The price of the coach"
+     ],
+     "correct": 2,
+     "explain": "The rule never uses the distance. The price of the coach is already in the rule."
+    }
+   ]
+  },
+  {
+   "id": "compare-near",
+   "label": "Compare: This Year's Data, Last Year's Data",
+   "content": "<h2 class=\"lesson-h2\">Compare: This Year's Data, Last Year's Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both use the same rule. Predict each cost. Why does only one match the real cost?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A: 3000 + 150 x 40 = <strong>9000</strong>. B: 3000 + 100 x 40 = <strong>7000</strong>.</p><p><strong>Why?</strong> Tickets cost 150 this year. B uses last year's price, so the rule gets the wrong number.</p></div></details><p class=\"lesson-lead\">School trip model. Rule: cost = price of the coach + price of one ticket x number of students going.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Model A</p><table class=\"donow-table\" style=\"width:100%\"><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Price of the coach</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">3000</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Price of one ticket <strong>this year</strong></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">150</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Number of students going</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">40</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><strong>Cost</strong></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">?</td></tr></table></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Model B</p><table class=\"donow-table\" style=\"width:100%\"><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Price of the coach</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">3000</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Price of one ticket <strong>last year</strong></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">100</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Number of students going</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">40</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><strong>Cost</strong></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">?</td></tr></table></div></div><ul class=\"lesson-facts\"><li>The data must be about <strong>this</strong> system, <strong>now</strong>.</li><li>Old data, or data about something else, gives a wrong prediction.</li></ul>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Choose the Data",
+   "type": "embedded-app",
+   "appId": "model-lab",
+   "embedQuery": "activity=pick",
+   "embedContainerId": "y832-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Choose the Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why run the model after you choose the data?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The run shows what the rule really used. A blank or a wrong number shows up as a wrong prediction.</p></div></details><div id=\"y832-activity-1\"></div>"
+  },
+  {
+   "id": "compare-missing",
+   "label": "Compare: All the Data, One Item Missing",
+   "content": "<h2 class=\"lesson-h2\">Compare: All the Data, One Item Missing</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both use the same rule. Predict each output. Why is B so far out when its rule is right?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A: 2 + (7 - 4) x 5 = <strong>17</strong> cars. B: 2 + (7 - 0) x 5 = <strong>37</strong> cars.</p><p><strong>Why?</strong> B has no number for the cars that go. The rule takes away 0 each minute, so no car ever leaves.</p></div></details><p class=\"lesson-lead\">Traffic light model. Rule: each minute, cars waiting = cars waiting + cars that arrive - cars that go.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Model A: all the data</p><table class=\"donow-table\" style=\"width:100%\"><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Cars waiting at 8 am</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">2</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Cars that arrive each minute</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">7</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Cars that go each minute</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">4</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Number of minutes</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">5</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><strong>Cars waiting at the end</strong></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">?</td></tr></table></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Model B: one item missing</p><table class=\"donow-table\" style=\"width:100%\"><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Cars waiting at 8 am</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">2</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Cars that arrive each minute</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">7</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Cars that go each minute</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><span style=\"display:inline-block;padding:0 6px;border-radius:6px;background:var(--bad-soft);color:var(--bad);font-weight:700\">blank</span></td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">Number of minutes</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">5</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><strong>Cars waiting at the end</strong></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">?</td></tr></table></div></div><ul class=\"lesson-facts\"><li>A blank counts as 0, so the rule works out the wrong answer.</li><li>Data the rule never uses changes nothing, and takes time to collect.</li></ul>"
+  },
+  {
+   "id": "what-if",
+   "label": "What If? Predict, Then Run It",
+   "type": "embedded-app",
+   "appId": "model-lab",
+   "embedQuery": "activity=run",
+   "embedContainerId": "y832-what-if",
+   "content": "<h2 class=\"lesson-h2\">What If? Predict, Then Run It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict before you run it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A prediction shows what you think the rule does. If the run is different, you find out which idea to fix.</p></div></details><div id=\"y832-what-if\"></div>"
+  },
+  {
+   "id": "why-missing",
+   "label": "Explain: Why Missing Data Matters",
+   "type": "self-marked-response",
+   "containerId": "y832-why-missing",
+   "content": "<h2 class=\"lesson-h2\">Explain: Why Missing Data Matters</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two points, where the second one follows from the first. Join them with so.</p></div></details><div id=\"y832-why-missing\"></div>",
+   "items": [
+    {
+     "id": "why-missing",
+     "prompt": "A traffic light model has this rule: each minute, cars waiting = cars waiting + cars that arrive - cars that go. It is not given the number of cars the green light lets go each minute. Explain why its prediction will be wrong.",
+     "marks": 2,
+     "modelAnswer": "The rule takes away the cars that go, so it needs that number (1). With it blank, no cars go, so it predicts a queue that is too long (1).",
+     "scheme": [
+      "The rule uses / needs the cars that go (it takes them away each minute)",
+      "With it missing (blank / 0) no cars leave, so the predicted queue is too long / too big / more than the real queue"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "apps",
+   "label": "Different Applications, Different Data",
+   "content": "<h2 class=\"lesson-h2\">Different Applications, Different Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: does a sat nav need the air pressure? Why or why not?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>No.</p><p><strong>Why?</strong> Air pressure does not change the journey time, so the sat nav never uses it.</p></div></details><p class=\"lesson-lead\">An <strong>application</strong> (app) is a program that does a job for its users.</p><div class=\"lesson-do-now-columns\"><div><div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Weather app</strong><br>It works out: the chance of rain tomorrow.<br>It needs: air pressure, how wet the air is, wind, where you are.</div></div><div><div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Sat nav</strong><br>It works out: the fastest way and the journey time.<br>It needs: where you are, where you want to go, the roads, how fast the traffic is moving.</div></div></div><ul class=\"lesson-facts\"><li>A different job means a different output.</li><li>A different output needs a different rule, so it needs different data.</li></ul>"
+  },
+  {
+   "id": "compare-apps",
+   "label": "Compare: Same Data, Two Applications",
+   "type": "multiple-choice",
+   "containerId": "y832-compare-apps",
+   "content": "<h2 class=\"lesson-h2\">Compare: Same Data, Two Applications</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why would a fitness app need your heart rate, but a savings app would not?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Heart rate changes the energy you used. It never changes the money you will have.</p></div></details><table class=\"donow-table\" style=\"width:100%\"><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><strong>Weather app</strong></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">works out the chance of rain</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">needs air pressure, how wet the air is, wind</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\"><strong>Flight simulator</strong></td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">works out how the plane moves</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">needs the control stick, engine power, wind</td></tr></table><div id=\"y832-compare-apps\"></div>",
+   "items": [
+    {
+     "prompt": "Why do both need the wind speed and direction?",
+     "options": [
+      "Wind changes the rain and the plane's path",
+      "Wind is easy to measure, so both collect it",
+      "The simulator copies the weather app's data",
+      "Every application needs the same data"
+     ],
+     "correct": 0,
+     "explain": "Wind changes where the rain goes, and it pushes the plane."
+    },
+    {
+     "prompt": "Why does only the simulator need the control stick?",
+     "options": [
+      "The weather app cannot measure the stick",
+      "Only the plane's path depends on the stick",
+      "The stick is part of every computer",
+      "The weather app is older than the simulator"
+     ],
+     "correct": 1,
+     "explain": "The stick moves the plane. It never changes the rain."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Two Applications, Different Data",
+   "type": "embedded-app",
+   "appId": "model-lab",
+   "embedQuery": "activity=compare",
+   "embedContainerId": "y832-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Two Applications, Different Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check each item against each application, one at a time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>An item can matter to one application, to both, or to neither. Checking each one stops you guessing.</p></div></details><div id=\"y832-activity-2\"></div>"
+  },
+  {
+   "id": "why-apps",
+   "label": "Explain: Why Applications Need Different Data",
+   "type": "self-marked-response",
+   "containerId": "y832-why-apps",
+   "content": "<h2 class=\"lesson-h2\">Explain: Why Applications Need Different Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"they need different data\" not enough for 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It only repeats the question. A mark needs a reason, and the second mark needs a link to it.</p></div></details><div id=\"y832-why-apps\"></div>",
+   "items": [
+    {
+     "id": "why-apps",
+     "prompt": "A weather app and a sat nav run on the same phone. Explain why the two applications need different data.",
+     "marks": 2,
+     "modelAnswer": "They work out different things: the chance of rain and the journey time (1). So their rules use different data, like air pressure and traffic speed (1).",
+     "scheme": [
+      "They do different jobs / work out different outputs (the chance of rain; the journey time or the way)",
+      "So their rules use different data, with an example only one of them needs (air pressure / how wet the air is; where you want to go / traffic speed / the roads)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Design the Data",
+   "type": "embedded-app",
+   "appId": "model-lab",
+   "embedQuery": "activity=design",
+   "embedContainerId": "y832-practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Design the Data</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why read the whole brief before you choose any data?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each part of the brief says something that changes the answer. Miss one part and the model misses data it needs.</p></div></details><div id=\"y832-practice\"></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Data Requirements for Models",
+   "type": "embedded-app",
+   "appId": "drill-y8-3-2-data",
+   "embedContainerId": "y832-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Data Requirements for Models</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with a new model every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can find the data for any model, you really understand it.</p></div></details><p class=\"lesson-lead\">The data a model needs, what missing or wrong data does, and why applications need different data. Your progress is saved.</p><div id=\"y832-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y832_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*100\\s*\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Begin with the start. Add 15 once for every week."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(it\\s+is\\s+)?(an?\\s+)?inputs?(\\s+data)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is it given at the start, a way to work something out, or worked out at the end?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*64\\s*\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The model only knows the start it is given. Use the typed start, then add 15 for each week."
+   }
+  ],
+  "y832_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*8\\s*(\\s*cars?)?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Begin with the cars at the start. Each minute, add the cars that arrive and take away the cars that go."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(no(\\s*,?\\s*(it\\s+)?(does\\s*n[o']?t|will\\s+not|won'?t)(\\s+change)?|\\s*,?\\s*(it\\s+)?(stays|is)\\s+the\\s+same)?|(it\\s+)?(does\\s*n[o']?t|will\\s+not|won'?t)(\\s+change)?|(it\\s+)?(stays|is)\\s+the\\s+same|(the\\s+)?same|unchanged)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does the model add or take away anything to do with colour?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

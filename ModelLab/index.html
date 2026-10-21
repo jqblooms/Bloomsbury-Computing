@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Model Lab</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="ml-css" href="lab.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="activity" aria-live="polite"></section>
+</main>
+<script>
+// Model Lab (Year 8, 3.2 Data Requirements for Models). ?activity= picks one task:
+//   pick     sort data cards into Needed and Not needed for a model's rule, then run it with that data
+//   run      one data item changes (blank, typed wrong, the wrong data, data the rule never uses): predict, then run
+//   compare  which data each of two applications needs, then why
+//   design   choose the data a model must collect from a user's brief, run it on the real day (hardest)
+// With no activity it lists them. ?embed=1 sits it on a lesson slide. Every file is loaded with the page's bcv.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('ml-css').href = 'lab.css?v=' + encodeURIComponent(v);
+  var FILE = { pick: 'pick.js', run: 'run.js', compare: 'compare.js', design: 'design.js' };
+  var activity = params.get('activity');
+  var files = ['bank.js', 'common.js'].concat(FILE[activity] ? [FILE[activity]] : ['pick.js', 'run.js', 'compare.js', 'design.js'], ['main.js']);
+  files.forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>
