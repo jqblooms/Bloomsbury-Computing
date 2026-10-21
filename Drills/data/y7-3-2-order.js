@@ -124,7 +124,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + p.name + ". Why must \"" + p.tasks[2] + "\" come before \"" + p.tasks[3] + "\"?",
       answer: "You cannot test something that is not made yet, so it must be built first",
       re: /^(?=.*\b(not|nothing|no|cannot|can.?t|without|before|first)\b)(?=.*\b(built|build|made|make|exists?|there|finished|ready|yet)\b).*$/i,
-      wrong: ["Testing is quick, so it is best left to the end of the week", "The tester is busy early on, so the tasks swap round", "Making things is more fun, so the team wants it at the start"],
+      wrong: ["Testing is quick, so it is best left to the very end of the whole week", "The tester is busy at the start, so the two tasks have to swap round", "Making things is more fun, so the team always wants to do it first"],
       working: ["What does the test task try out?", "Can you try out something that is still not there?"],
       note: "You can only test what has been built. Build comes first." };
   }
@@ -133,7 +133,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + p.name + ". Why draw the flowchart before making the " + p.short + "?",
       answer: "The flowchart shows how it must work, so you make it right and do not build it again",
       re: /^(?=.*\b(shows?|plan|plans|know|knows|how|mistakes?|wrong|paper|quick\w*|easy|easier)\b)(?=.*\b(again|rebuild\w*|re-?build\w*|re-?do|time|saves?|start\s+over|changes?|fix\w*|right|correct\w*)\b).*$/i,
-      wrong: ["The teacher likes a nice drawing, so it gets more marks", "The computer cannot open a game until it gets a flowchart", "Drawing is more fun than typing, so it goes at the start"],
+      wrong: ["The teacher likes a nice drawing, so a flowchart at the start gets more marks", "The computer cannot open a game until it gets a flowchart, so it must come first", "Drawing is more fun than typing, so the team wants to do the drawing at the start"],
       working: ["What does the flowchart show the team?", "What happens if you find a mistake after the whole thing is made?"],
       note: "The flowchart shows how it must work. A mistake on paper is quick to fix, so you do not build it twice." };
   }
@@ -142,7 +142,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + p.name + ". A team started to make it before they wrote what it must do. What is likely to go wrong?",
       answer: "They may make the wrong thing, so they have to build it again",
       re: /^(?=.*\b(wrong|not\s+what|missing|miss|forgot\w*|different|mistakes?|parts?)\b)(?=.*\b(again|rebuild\w*|re-?do|redo|change\w*|fix\w*|time|late|start\s+over|waste\w*)\b).*$/i,
-      wrong: ["They will finish early, so they get bored", "They will have too many people to test it", "The computer will run the program too fast"],
+      wrong: ["They will finish too early, so they get bored and stop", "They will have too many people, so nobody can test it", "The computer will run too fast, so the game is too hard"],
       working: ["If nobody wrote what it must do, how do they know what to make?", "What must they do when they find it is not what was wanted?"],
       note: "Without the list, they may make the wrong thing, and then build it again." };
   }
@@ -186,7 +186,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + P.p.name + ". In the plan, nobody is down for \"" + P.rows[k].task + "\". Why is that a problem?",
       answer: "Nobody knows it is their job, so it might never be done",
       re: /^(?=.*\b(nobody|no\s*one|anyone|someone|who|job|their|person)\b)(?=.*\b(never|not|forgot\w*|missed|late|undone|left)\b).*$/i,
-      wrong: ["The plan will look too short, so it seems untidy", "The computer needs a name for each line it reads", "Each task must have two names, so it is too small"],
+      wrong: ["The plan will look too short, so it seems untidy", "The computer needs a name on each line, so it can read it", "Each task must have two names, so one name is too few"],
       working: ["Whose job is it now?", "What happens to a job that is nobody's?"],
       note: "With no name, nobody knows it is their job, so it may never be done." };
   }
@@ -195,7 +195,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + P.p.name + ". In the plan, \"" + P.rows[k].task + "\" has no deadline. Why is that a problem?",
       answer: "Nobody knows when it must be finished, so the project could be late",
       re: /^(?=.*\b(when|time|day|date|knows?)\b)(?=.*\b(late|delay\w*|on\s*time|finish\w*|ready|wait\w*|never)\b).*$/i,
-      wrong: ["The task becomes too hard, so nobody can do it", "The person will not remember the name of the task", "The flowchart cannot be drawn, so the game has no sprites"],
+      wrong: ["The task becomes too hard, so nobody in the team is able to do it", "The person will not remember the name of the task, so they skip it", "The flowchart cannot be drawn, so the game has no sprites"],
       working: ["What does a deadline tell the person?", "What can happen to the tasks after it?"],
       note: "Nobody knows when it must be finished, so it can run late, and every task after it waits." };
   }
@@ -204,7 +204,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + p.name + ". The plan has no Test stage. Why is that a problem?",
       answer: "Mistakes are not found, so the " + p.short + " may not work",
       re: /^(?=.*\b(mistakes?|errors?|bugs?|wrong|problems?|works?|working|broken|breaks?)\b)(?=.*\b(not|never|no|nobody|found|find|check\w*|know\w*)\b).*$/i,
-      wrong: ["The plan will be too long, so it takes more paper", "The team will finish too early, so they get bored", "The " + p.short + " will have too many sprites in it"],
+      wrong: ["The plan will be too long, so it takes more paper to print", "The team will finish too early, so they get bored and stop", "The " + p.short + " will have too many sprites, so it looks busy"],
       working: ["What does the Test stage find?", "What happens to those if nobody looks for them?"],
       note: "Without testing, mistakes are not found, so it may not work when people use it." };
   }
@@ -213,7 +213,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + p.name + ". Why does the team write a project plan before it starts?",
       answer: "So everyone knows what to do and when, and the project finishes on time",
       re: /^(?=.*\b(knows?|who|what|order|first|tasks?|jobs?)\b)(?=.*\b(time|late|deadlines?|forget\w*|forgot\w*|missed|nothing|twice|finish\w*)\b).*$/i,
-      wrong: ["So the computer can run the program faster", "So the teacher can give the team a score", "So the sprites look better in the game"],
+      wrong: ["So the computer can run the program faster, and the game has no mistakes", "So the teacher can give the team a score, and the best team wins a prize", "So the sprites look better in the game, and the players enjoy it more"],
       working: ["What does a plan list for each task?", "What does that stop going wrong?"],
       note: "A plan shows what to do, who does it and by when, so nothing is forgotten and the project is on time." };
   }
@@ -222,7 +222,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + p.name + ". Why does every task in the plan need a deadline?",
       answer: "So everyone knows when it must be done, and the project finishes on time",
       re: /^(?=.*\b(when|time|day|date|knows?)\b)(?=.*\b(late|on\s*time|finish\w*|ready|done|wait\w*)\b).*$/i,
-      wrong: ["So the tasks can be done in any order", "So two people can do each task", "So the computer knows the name of each task"],
+      wrong: ["So the tasks can be done in any order, and nobody has to wait for others", "So two people can do each task, and every job is done twice to be safe", "So the computer knows the name of each task, and can print the plan"],
       working: ["What does a deadline tell the person doing the task?", "What happens to the project if every task is on time?"],
       note: "Everyone knows when their task must be done, so the whole project is on time." };
   }
@@ -231,7 +231,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + p.name + ". Two people made the same sprite, and nobody made the score. Why would a project plan stop this?",
       answer: "It says who does each task, so no task is done twice or forgotten",
       re: /^(?=.*\b(who|names?|person|people|each|everyone|jobs?|tasks?)\b)(?=.*\b(twice|again|same|forgot\w*|forget\w*|missed|left|nobody|no\s*one|all)\b).*$/i,
-      wrong: ["It makes the sprites look better", "It makes the computer run the game faster", "It gives the game a higher score"],
+      wrong: ["It makes the sprites look better, so nobody wants to make them again", "It makes the computer run the game faster, so the score is made sooner", "It gives the game a higher score, so the players are happy at the end"],
       working: ["What does a plan put next to every task?", "If every task has one name, what cannot happen?"],
       note: "Each task has one name, so nothing is done twice and nothing is forgotten." };
   }
@@ -255,7 +255,7 @@ DrillData.register("y7-3-2-order", {
     return { prompt: "Project: " + p.name + ". A task in its plan has a deadline. What is a deadline?",
       answer: "The day a task must be finished by",
       re: /^(?=.*\b(time|day|date|when)\b)(?=.*\b(finish\w*|done|complete\w*|end|ready)\b).*$/i,
-      wrong: ["The person who does a task", "The last task in the plan", "Something a task needs"],
+      wrong: ["The person who must do a task", "The last task in the whole plan", "Something a task needs to be done"],
       working: ["In a plan, a deadline is a day like Tuesday.", "What must happen to the task by that day?"],
       note: "A deadline is when the task must be finished." };
   }
