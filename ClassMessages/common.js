@@ -9,6 +9,7 @@ var CM = (function () {
   var VIEW = params.get('view') === 'inbox' ? 'inbox' : 'send';
   var MAX_CHARS = 24, SYM_PAYLOAD = 6, ASYM_PAYLOAD = 4;
   var root = document.getElementById('app');
+  document.documentElement.classList.add('mode-' + MODE);
 
   function el(tag, attrs, html) {
     var node = document.createElement(tag);
@@ -69,6 +70,16 @@ var CM = (function () {
     text = String(text || '').replace(/[^\x20-\x7e]/g, '').replace(/\s+/g, ' ').trim();
     return MODE === 'symmetric' ? text.toUpperCase() : text;
   }
+  // What the student typed, checked before encrypting: {plain, error, note}. Only English letters, numbers,
+  // spaces and punctuation can be sent (Thai or emoji are left out, and the student is told).
+  function checkText(raw) {
+    raw = String(raw || '');
+    var plain = clean(raw);
+    var dropped = /[^\x20-\x7e\s]/.test(raw);
+    if (!plain) return { plain: '', error: dropped ? 'Use English letters, numbers and spaces only.' : 'Write a message first.' };
+    if (plain.length > MAX_CHARS) return { plain: plain, error: 'A message is at most ' + MAX_CHARS + ' characters.' };
+    return { plain: plain, note: dropped ? 'Some characters were left out. Use English letters, numbers and spaces only.' : '' };
+  }
   function shift(text, k) {
     return text.replace(/[A-Z]/g, function (c) { return String.fromCharCode(((c.charCodeAt(0) - 65 + k) % 26 + 26) % 26 + 65); });
   }
@@ -127,7 +138,7 @@ var CM = (function () {
   function packetHtml(p, opts) {
     opts = opts || {};
     var ok = opts.checked ? (checksum(String(p.payload)) === Number(p.checksum) ? ' <span class="ok" title="Checksum matches">&#10003;</span>' : ' <span class="status bad">error</span>') : '';
-    return '<div class="ph"><b>Packet ' + p.number + ' of ' + p.total + '</b>To: ' + esc(p.to) + '<br>From: ' + esc(p.from) + '</div>' +
+    return '<div class="ph"><b>Packet number: ' + p.number + ' of ' + p.total + '</b><span class="hl"><span class="hk">Destination:</span> ' + esc(p.to) + '</span><span class="hl"><span class="hk">Originator:</span> ' + esc(p.from) + '</span></div>' +
       '<div class="pp">' + esc(p.payload).replace(/ /g, '&nbsp;') + '</div>' +
       '<div class="pt">Checksum: ' + p.checksum + ok + '</div>';
   }
@@ -183,6 +194,8 @@ var CM = (function () {
     [head, trayLane, slotsLane, foot].forEach(function (n) { box.appendChild(n); });
     host.appendChild(box);
     var locked = false;
+    // Packets can only be put in order once the last one has arrived.
+    function allArrived() { return shown.length === packets.length; }
     function draw() {
       tray.innerHTML = '';
       shown.forEach(function (p) {
@@ -190,7 +203,8 @@ var CM = (function () {
         var b = packetEl(p, { checked: true, arrive: !p.drawn }, 'button');
         p.drawn = true;
         b.setAttribute('aria-label', 'Packet ' + p.number + ' of ' + p.total);
-        b.addEventListener('click', function () { if (locked) return; placed.push(p); clearStatus(); draw(); });
+        if (!allArrived()) { b.disabled = true; b.classList.add('waiting'); }
+        b.addEventListener('click', function () { if (locked || !allArrived()) return; placed.push(p); clearStatus(); draw(); });
         tray.appendChild(b);
       });
       var allIn = shown.length === packets.length && placed.length === packets.length;
@@ -205,12 +219,17 @@ var CM = (function () {
       checkBtn.disabled = locked || !allIn;
       reportHeight();
     }
-    function clearStatus() { status.className = 'status lab'; status.textContent = 'They arrived out of order. Tap them in order of packet number.'; }
+    function clearStatus() {
+      status.className = 'status lab';
+      status.textContent = !allArrived() ? 'Packets are arriving. Wait for the last one.'
+        : packets.length === 1 ? 'Only 1 packet arrived. Tap it, then press Check the order.'
+        : 'They took different routes, so they arrived out of order. Tap them in order of packet number.';
+    }
     clearStatus();
     arrived.forEach(function (p, i) {
       p = Object.assign({}, p);
       arrived[i] = p;
-      timers.push(setTimeout(function () { shown.push(p); draw(); }, 200 + i * 350));
+      timers.push(setTimeout(function () { shown.push(p); if (!placed.length) clearStatus(); draw(); }, 200 + i * 350));
     });
     checkBtn.addEventListener('click', function () {
       var inOrder = placed.every(function (p, i) { return p.number === i + 1; });
@@ -242,7 +261,8 @@ var CM = (function () {
   }
 
   // The inbox, shared by both lessons: a message picker, then the packets, then the mode's own decrypt step.
-  // opts: { top(host) optional, decrypt(host, placed, rebuilt, message) }.
+  // opts: { top(host) optional, decrypt(host, placed, rebuilt, message), autoOpen() optional: false stops the
+  // newest message opening by itself }.
   function inboxView(data, opts) {
     var bar = el('div', { class: 'bar' });
     var chip = el('div', { class: 'note-chip' });
@@ -253,12 +273,14 @@ var CM = (function () {
     bar.appendChild(pickField);
     bar.appendChild(refresh);
     bar.insertAdjacentHTML('beforeend', teacherNote());
+    bar.appendChild(chip);
     root.appendChild(bar);
-    root.appendChild(chip);
     if (opts.top) { var top = el('div'); root.appendChild(top); opts.top(top, chip); }
-    var area = el('div', { id: 'cm-open', class: 'open-area' }, '<p class="small" style="margin:0">Choose a message. Its packets arrive out of order.</p>');
+    var EMPTY = 'No messages yet. Ask the person next to you to send you one, then press Check for messages.';
+    var area = el('div', { id: 'cm-open', class: 'open-area' }, '<p class="small" id="cm-open-hint" style="margin:0">Loading your messages...</p>');
     root.appendChild(area);
     var seenKey = 'bc-class-msg-seen-' + MODE + ':' + data.me.id;
+    var openKey = 'bc-class-msg-open-' + MODE + ':' + data.me.id;
     var seen = store(seenKey) || {};
     var messages = [], current = null, stop = null, first = true;
     function drawPick() {
@@ -274,16 +296,27 @@ var CM = (function () {
       request('inbox').then(function (res) {
         messages = res.inbox || [];
         drawPick();
+        var hint = area.querySelector('#cm-open-hint');
+        if (hint) hint.textContent = messages.length ? 'Choose a message. Its packets arrive out of order.' : EMPTY;
         if (first && !current) {
           first = false;
-          var fresh = messages.filter(function (m) { return !seen[m.id]; })[0];
-          if (fresh) open(fresh);
+          var lastOpen = null;
+          try { lastOpen = sessionStorage.getItem(openKey); } catch (e) {}
+          var fresh = messages.filter(function (m) { return m.id === lastOpen; })[0] || messages.filter(function (m) { return !seen[m.id]; })[0];
+          if (fresh && (!opts.autoOpen || opts.autoOpen())) open(fresh);
         }
         reportHeight();
-      }).catch(function (err) { pick.innerHTML = '<option value="">' + esc(err.message) + '</option>'; reportHeight(); });
+      }).catch(function (err) {
+        // Keep the list already shown; a failed check only says so.
+        if (!messages.length) pick.innerHTML = '<option value="">' + esc(err.message) + '</option>';
+        var hint = area.querySelector('#cm-open-hint');
+        if (hint) hint.textContent = err.message;
+        reportHeight();
+      });
     }
     function open(m) {
       current = m.id;
+      try { sessionStorage.setItem(openKey, m.id); } catch (e) {}
       seen[m.id] = true;
       store(seenKey, seen);
       drawPick();
@@ -366,6 +399,16 @@ var CM = (function () {
     var s = c && c.students.filter(function (x) { return x.id === parts[1]; })[0];
     return s ? { courseId: c.courseId, student: s } : null;
   }
+  // A half-written message, kept for this tab only: the lesson rebuilds the app each time its slide is shown, so
+  // the clicker (PageDown, then PageUp) must not lose what a student was typing. Cleared once it is sent.
+  function draft(me, value) {
+    var key = 'bc-class-msg-draft-' + MODE + ':' + me.id;
+    try {
+      if (value === undefined) return JSON.parse(sessionStorage.getItem(key) || 'null');
+      if (value === null) sessionStorage.removeItem(key); else sessionStorage.setItem(key, JSON.stringify(value));
+    } catch (e) { return null; }
+    return value;
+  }
   function store(key, value) {
     try {
       if (value === undefined) return JSON.parse(localStorage.getItem(key) || 'null');
@@ -385,11 +428,11 @@ var CM = (function () {
   function teacherLog() {
     root.innerHTML = '<h1 class="app-title">Class Messages</h1>';
     var card = el('div', { class: 'card' });
-    card.innerHTML = '<h2>Teacher view: every message in this activity</h2><p class="small" style="margin:0">Times are Bangkok time. Students see only their own messages. The full list is also in the Teacher dashboard, under Class messages.</p>';
-    var actions = el('div', { class: 'row' });
-    var refresh = el('button', { type: 'button', class: 'btn secondary' }, ICON.refresh + '<span>Refresh</span>');
-    actions.appendChild(refresh);
-    card.appendChild(actions);
+    var head = el('div', { class: 'net-head' }, '<h2>Teacher view: every message in this activity</h2>');
+    var refresh = el('button', { type: 'button', class: 'btn secondary', id: 'cm-teacher-refresh' }, ICON.refresh + '<span>Refresh</span>');
+    head.appendChild(refresh);
+    card.appendChild(head);
+    card.appendChild(el('p', { class: 'small', style: 'margin:0' }, 'Times are Bangkok time. Students see only their own messages. The full list is also in the Teacher dashboard, under Class messages.'));
     var body = el('div', { class: 'log-wrap' }, '<p class="small">Loading...</p>');
     card.appendChild(body);
     root.appendChild(card);
@@ -400,8 +443,8 @@ var CM = (function () {
         body.innerHTML = '<table class="log"><thead><tr><th>Time</th><th>Class</th><th>From</th><th>To</th><th>Plain text</th><th>Cipher text</th><th>' +
           (MODE === 'symmetric' ? 'Key' : 'Public key used') + '</th><th>What travelled</th></tr></thead><tbody>' +
           list.map(function (m) {
-            return '<tr><td>' + esc(bangkok(m.sentAt)) + '</td><td>' + esc(m.courseName) + '</td><td>' + esc(m.fromName) + '</td><td>' + esc(m.toName) + '</td>' +
-              '<td class="mono">' + esc(m.teacherCopy) + '</td><td class="mono">' + esc(m.cipherText) + '</td><td class="mono">' + esc(MODE === 'symmetric' ? m.key : '(' + m.key.replace(',', ', ') + ')') + '</td>' +
+            return '<tr><td class="nowrap">' + esc(bangkok(m.sentAt)) + '</td><td>' + esc(m.courseName) + '</td><td>' + esc(m.fromName) + '</td><td>' + esc(m.toName) + '</td>' +
+              '<td class="mono plain">' + esc(m.teacherCopy) + '</td><td class="mono">' + esc(m.cipherText) + '</td><td class="mono nowrap">' + esc(MODE === 'symmetric' ? m.key : '(' + m.key.replace(',', ', ') + ')') + '</td>' +
               '<td><details><summary>' + (m.packets || []).length + ' packets</summary><div class="packets">' +
               (m.packets || []).map(function (p) { return '<div class="packet">' + packetHtml(p, {}) + '</div>'; }).join('') + '</div></details></td></tr>';
           }).join('') + '</tbody></table>';
@@ -434,9 +477,9 @@ var CM = (function () {
 
   return {
     MODE: MODE, VIEW: VIEW, MAX_CHARS: MAX_CHARS, root: root, el: el, esc: esc, ICON: ICON, reportHeight: reportHeight,
-    request: request, clean: clean, shift: shift, makeKeys: makeKeys, parsePublicKey: parsePublicKey, encryptAsym: encryptAsym,
+    request: request, clean: clean, checkText: checkText, shift: shift, makeKeys: makeKeys, parsePublicKey: parsePublicKey, encryptAsym: encryptAsym,
     decryptNumber: decryptNumber, buildPackets: buildPackets, packetEl: packetEl, packetHtml: packetHtml, PACKET_KEY: PACKET_KEY,
     reassemble: reassemble, inboxView: inboxView, sentPanel: sentPanel, joinPayloads: joinPayloads, arrivalOrder: arrivalOrder, bangkok: bangkok, pairs: pairs, teacherNote: teacherNote,
-    classmateOptions: classmateOptions, findClassmate: findClassmate, store: store, poll: poll, start: start, session: session
+    classmateOptions: classmateOptions, findClassmate: findClassmate, store: store, draft: draft, poll: poll, start: start, session: session
   };
 })();

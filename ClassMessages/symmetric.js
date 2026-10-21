@@ -47,30 +47,44 @@
     right.appendChild(status);
     compose.appendChild(right);
 
-    var encrypted = null;
+    var encrypted = null, gen = 0;
     function invalidate() {
       encrypted = null;
+      gen++;   // stops an encryption still being drawn, so Send never uses old cipher text
       table.innerHTML = '<p class="small" style="margin:0">Your cipher text appears here.</p>';
       sendBtn.disabled = true;
       root.querySelector('#cm-count').textContent = CM.clean(input.value).length + ' of ' + CM.MAX_CHARS;
       CM.reportHeight();
     }
-    input.addEventListener('input', invalidate);
-    keySelect.addEventListener('change', invalidate);
-    toSelect.addEventListener('change', function () { sendBtn.disabled = !encrypted || !toSelect.value; });
+    function saveDraft() { CM.draft(data.me, input.value ? { text: input.value, key: keySelect.value, to: toSelect.value } : null); }
+    input.addEventListener('input', function () { invalidate(); saveDraft(); });
+    keySelect.addEventListener('change', function () { invalidate(); saveDraft(); });
+    toSelect.addEventListener('change', function () { sendBtn.disabled = !encrypted || !toSelect.value; saveDraft(); });
+    var kept = CM.draft(data.me);
+    if (kept && kept.text) {
+      input.value = String(kept.text).slice(0, CM.MAX_CHARS);
+      if (keySelect.querySelector('option[value="' + Number(kept.key) + '"]')) keySelect.value = String(Number(kept.key));
+      if ([].some.call(toSelect.options, function (o) { return o.value === kept.to; })) toSelect.value = kept.to;
+      invalidate();
+    }
 
     // Encrypt one letter at a time, so the student sees each one move.
     encryptBtn.addEventListener('click', function () {
-      var plain = CM.clean(input.value);
-      if (!plain) { status.className = 'status hint'; status.textContent = 'Write a message first.'; return; }
+      var checked = CM.checkText(input.value);
+      if (checked.error) { status.className = 'status hint'; status.textContent = checked.error; return; }
+      var plain = checked.plain;
       var key = Number(keySelect.value);
       var cipher = CM.shift(plain, key);
-      status.className = 'status'; status.textContent = '';
+      var mine = ++gen;
+      encrypted = null;
+      sendBtn.disabled = true;
+      status.className = checked.note ? 'status hint' : 'status'; status.textContent = checked.note;
       table.innerHTML = '<span>Each letter moves forward ' + key + '</span>' + CM.pairs(plain.split(''), [], false) +
         '<div class="pairs-legend"><span>plain text</span><span class="c">cipher text</span></div>';
       var cells = table.querySelectorAll('.pair');
       var i = 0;
       (function next() {
+        if (mine !== gen) return;
         if (i >= cells.length) {
           encrypted = { plain: plain, key: key, cipher: cipher };
           sendBtn.disabled = !toSelect.value;
@@ -95,12 +109,14 @@
       CM.request('send', { courseId: mate.courseId, toId: mate.student.id, packets: packets, teacherCopy: encrypted.plain }).then(function (res) {
         status.className = 'status'; status.textContent = '';
         compose.style.display = 'none';
+        CM.draft(data.me, null);
         CM.sentPanel(sent, res.packets || packets,
-          '<p class="status good" style="margin:0">Sent to ' + esc(mate.student.name) + ' at ' + esc(CM.bangkok(res.sentAt)) + '. ' + packets.length + ' packets: the cipher text, and the key in the last one.</p>',
+          '<p class="status good" style="margin:0">Sent to ' + esc(mate.student.name) + ' at ' + esc(CM.bangkok(res.sentAt)) + '. ' + packets.length + ' packets: the cipher text, and the key in the last one.</p>' +
+          '<p class="status bad" id="cm-key-warning" style="margin:0">Anyone who copies these packets has the key too.</p>',
           function () { sent.innerHTML = ''; compose.style.display = ''; input.value = ''; invalidate(); input.focus(); });
       }).catch(function (err) {
-        status.className = 'status bad'; status.textContent = err.message;
-        sendBtn.disabled = false;
+        status.className = 'status bad'; status.textContent = 'Not sent. ' + err.message;
+        sendBtn.disabled = !encrypted || !toSelect.value;
         CM.reportHeight();
       });
     });
@@ -112,11 +128,16 @@
     var cipher = CM.joinPayloads(placed.slice(0, -1));
     var card = el('div', { class: 'card', id: 'cm-decrypt' },
       '<div class="keybox"><span>Cipher text: <span class="mono">' + esc(cipher) + '</span></span><span>Key: <span class="mono">' + key + '</span> (it arrived in the last packet). Move each letter back ' + key + '.</span></div>');
+    // The same A to Z strip as the lesson's Check: Encrypt and Decrypt slide.
+    var abc = '';
+    for (var a = 0; a < 26; a++) abc += '<span>' + String.fromCharCode(65 + a) + '</span>';
+    card.appendChild(el('div', { class: 'abc', 'aria-hidden': 'true' }, abc));
     var row = el('div', { class: 'row' });
-    var answer = el('input', { type: 'text', class: 'decrypt-input', autocomplete: 'off', spellcheck: 'false', 'aria-label': 'Plain text', id: 'cm-plain' });
+    var label = el('label', { class: 'decrypt-label', for: 'cm-plain' }, 'Type the plain text:');
+    var answer = el('input', { type: 'text', class: 'decrypt-input', autocomplete: 'off', spellcheck: 'false', id: 'cm-plain', maxlength: '40' });
     var check = el('button', { type: 'button', class: 'btn', id: 'cm-check-plain' }, 'Check');
     var show = el('button', { type: 'button', class: 'btn secondary', id: 'cm-show-me' }, 'Show me step by step');
-    row.appendChild(answer); row.appendChild(check); row.appendChild(show);
+    row.appendChild(label); row.appendChild(answer); row.appendChild(check); row.appendChild(show);
     card.appendChild(row);
     var table = el('div');
     var fb = el('div', { class: 'status', role: 'status' });
@@ -125,9 +146,11 @@
     host.appendChild(card);
     var plain = CM.shift(cipher, -key);
     function done() { fb.className = 'status good'; fb.innerHTML = 'The message: <span class="plain-out">' + esc(plain) + '</span>'; CM.reportHeight(); }
+    var tried = false, walking = false;
     check.addEventListener('click', function () {
       var given = CM.clean(answer.value);
       if (!given) { fb.className = 'status hint'; fb.textContent = 'Type the plain text first.'; return; }
+      tried = true;
       if (given === plain) { done(); return; }
       var wrong = 0;
       for (var i = 0; i < Math.max(given.length, plain.length); i++) if (given.charAt(i) !== plain.charAt(i)) wrong++;
@@ -136,12 +159,28 @@
       CM.reportHeight();
     });
     answer.addEventListener('keydown', function (e) { if (e.key === 'Enter') check.click(); });
+    // Before a first try it walks only the first two letters, then hands over. After a try it walks them all.
     show.addEventListener('click', function () {
+      if (walking) return;
+      walking = true;
+      var full = tried;
       show.disabled = true;
+      // The full walk takes the place of the A to Z strip.
+      if (full) card.querySelector('.abc').style.display = 'none';
       table.innerHTML = CM.pairs(cipher.split(''), [], false) + '<div class="pairs-legend"><span>cipher text</span><span class="c">plain text</span></div>';
-      var cells = table.querySelectorAll('.pair'), i = 0;
+      var cells = table.querySelectorAll('.pair'), i = 0, letters = 0;
+      var handOver = Math.max(1, Math.min(2, cipher.replace(/[^A-Z]/g, '').length - 1));
       (function next() {
-        if (i >= cells.length) { done(); return; }
+        if (!full && letters >= handOver && i < cells.length) {
+          walking = false;
+          show.disabled = false;
+          fb.className = 'status hint';
+          fb.textContent = 'Now you do the rest: move each letter back ' + key + '. Type the whole message, then press Check.';
+          CM.reportHeight();
+          return;
+        }
+        if (i >= cells.length) { walking = false; done(); return; }
+        if (/[A-Z]/.test(cipher.charAt(i))) letters++;
         var c = plain.charAt(i);
         cells[i].querySelector('i').innerHTML = c === ' ' ? '&middot;' : esc(c);
         Array.prototype.forEach.call(cells, function (x, n) { x.classList.toggle('on', n === i); });

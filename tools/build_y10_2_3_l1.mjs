@@ -257,25 +257,12 @@ steps.push(checkStep('exam-key', 'Exam Question: The Encryption Key', 'Exam Ques
       feedback: 'Name the kind of encryption that uses one shared key.' },
   ], ['Why is the key kept secret, but not the algorithm?', 'Without the key, knowing the algorithm does not help: you would still have to try every key.']));
 
-// ---------------------------------------------------------------- activity 2: class messages (ClassMessages app)
-// Students send each other real messages as packets (James, 2026-10-21): encrypt with a key, then the packets carry
-// the cipher text AND the key, the hook for the weak point on the next slide. The receiver puts the packets back in
-// order by packet number (2.1) before decrypting. Messages.gs keeps a plain text safety copy for the teacher.
-steps.push(embed('activity-send', 'Activity 2: Send a Secret Message', 'class-messages-symmetric', 'Activity 2: Send a Secret Message',
-  'Write a message and encrypt it with a key. Then send it to someone in your class.',
-  ['Eve copies every packet on the way. Which one does she want most? Why?', 'The packet with the key. With the key and the cipher text, she can decrypt the whole message.']));
-steps[steps.length - 1].embedQuery = 'view=send';
-steps.push(embed('activity-read', 'Activity 2: Read Your Messages', 'class-messages-symmetric', 'Activity 2: Read Your Messages',
-  'Put the packets in order by packet number. Then decrypt the message with the key.',
-  ['Why must the packets go back in order before you decrypt?', 'Each payload is one part of the cipher text. In the wrong order the letters are mixed up, so decrypting gives nonsense.']));
-steps[steps.length - 1].embedQuery = 'view=inbox';
-
 // ---------------------------------------------------------------- concept 2: the weak point is sharing the key
 steps.push({ id: 'concept-sharing', label: 'The Weak Point: Sharing the Key',
   content: '<h2 class="lesson-h2">The Weak Point: Sharing the Key</h2>' +
     tps('Predict: Ben needs the key before he can decrypt. Ana emails it to him. Eve intercepts that email. What can Eve now do? Why?',
       '<p>Eve can <strong>decrypt</strong> every message that uses that key. Symmetric encryption uses the same key to encrypt and decrypt, so whoever has the key can read the data.</p>', 'Show the worked answer') +
-    columns(facts(['Both people need the <strong>same key</strong> before any message is sent.', 'A key sent across a network can be <strong>intercepted</strong>, like any other data.', 'Anyone with the key can decrypt the cipher text.', 'So the hard part is <strong>sharing the key safely</strong>.', 'Next lesson: a method where the key that decrypts is never sent.']),
+    columns(facts(['Ben needs the <strong>same key</strong> before he can decrypt.', 'A key sent across a network can be <strong>intercepted</strong>, like any other data.', 'Anyone with the key can decrypt the cipher text.', 'So the hard part is <strong>sharing the key safely</strong>.', 'Next lesson: a method where the key that decrypts is never sent.']),
       '<div style="display:grid;gap:12px;text-align:center">' + flow(pill('Ana'), pill('cipher text') + ' ' + pill('key 3', 'brand'), pill('Ben')) +
       `<div>${pill('Eve intercepts both', 'bad')}</div>` + flow(pill('cipher text'), pill('key 3', 'brand'), pill('the message', 'bad')) + '</div>') });
 
@@ -290,6 +277,19 @@ steps.push({ id: 'compare-sharing', label: 'Compare: Key Sent and Key Agreed Fir
     shareCol('Key sent in the same email', ['Ana emails the cipher text and the key.', 'Eve intercepts: <strong>cipher text + key</strong>', 'She moves each letter back by the key.'], 'Eve reads it', 'bad') +
     shareCol('Key agreed in person first', ['Ana and Ben met last week and agreed the key.', 'Eve intercepts: <strong>cipher text only</strong>', 'She has no key to undo the shift.'], 'Meaningless to Eve', 'good') + '</div>' +
     facts(['The encryption was the same both times. Only the <strong>key sharing</strong> was different.']) });
+
+// ---------------------------------------------------------------- activity 2: class messages (ClassMessages app)
+// Students send each other real messages as packets (James, 2026-10-21): encrypt with a key, then the packets carry
+// the cipher text AND the key, after the weak point slides, so students see it happen. The receiver puts the packets back in
+// order by packet number (2.1) before decrypting. Messages.gs keeps a plain text safety copy for the teacher.
+steps.push(embed('activity-send', 'Activity 2: Send a Secret Message', 'class-messages-symmetric', 'Activity 2: Send a Secret Message',
+  'Write a message. Choose a key and press Encrypt. Then choose the person next to you and press Send.',
+  ['Eve copies every packet on the way. Which one does she want most? Why?', 'The packet with the key. With the key and the cipher text, she can decrypt the whole message.']));
+steps[steps.length - 1].embedQuery = 'view=send';
+steps.push(embed('activity-read', 'Activity 2: Read Your Messages', 'class-messages-symmetric', 'Activity 2: Read Your Messages',
+  'Tap the packets in order, packet 1 first, and press Check the order. Then move each letter back by the key and type the message.',
+  ['Why must the packets go back in order before you decrypt?', 'Each payload is one part of the cipher text. In the wrong order the letters are mixed up, so decrypting gives nonsense.']));
+steps[steps.length - 1].embedQuery = 'view=inbox';
 
 // 0478/11 November 2025 Q2(e)(i). Mark scheme: C.
 steps.push(mcStep('exam-mc', 'Exam Question: Which Statement Is Correct?', 'Exam Question: Which Statement Is Correct?', 'Choose one answer for each.', [

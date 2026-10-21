@@ -13,7 +13,8 @@
 
   // "Your keys": one line once this computer has keys that match the published public key.
   // onReady(keys or null) each time it is drawn.
-  function keysLine(data, host, onReady, chipHost) {
+  // onPublished() after this computer's public key reaches the class list.
+  function keysLine(data, host, onReady, chipHost, onPublished) {
     var me = data.me;
     function draw() {
       var keys = keysFor(me);
@@ -21,12 +22,12 @@
       host.innerHTML = '';
       if (chipHost) chipHost.innerHTML = '';
       if (keys && published === pubText(keys) && chipHost) {
-        chipHost.innerHTML = '<span class="keychip" id="cm-my-keys">' + CM.ICON.key + '<span>Your private key <span class="mono">(' + keys.n + ', ' + keys.d + ')</span> is on this computer.</span></span>';
+        chipHost.innerHTML = '<span class="keychip" id="cm-my-keys">' + CM.ICON.key + '<span>Your private key is on this computer.</span></span>';
         onReady(keys);
       } else if (keys && published === pubText(keys)) {
         host.appendChild(el('div', { class: 'keybox keyline', id: 'cm-my-keys' }, CM.ICON.key +
           '<span><span class="pub">Your public key <span class="mono">' + showPub(keys) + '</span> is on the class list.</span> ' +
-          '<span class="priv">Your private key <span class="mono">(' + keys.n + ', ' + keys.d + ')</span> stays on this computer. It is never sent.</span></span>'));
+          '<span class="priv">Your private key stays on this computer. It is never sent.</span></span>'));
         onReady(keys);
       } else if (keys && !published) {
         host.appendChild(el('p', { class: 'small' }, 'Sending your public key to the class list...'));
@@ -39,7 +40,8 @@
         var make = el('button', { type: 'button', class: 'btn', id: 'cm-make-keys' }, '<span>' + (lost ? 'Make new keys' : 'Make my keys') + '</span>');
         make.addEventListener('click', function () {
           make.disabled = true;
-          var fresh = CM.makeKeys();
+          // Keys made meanwhile in another tab of this browser are used, not replaced.
+          var fresh = keysFor(me) || CM.makeKeys();
           saveKeys(me, fresh);
           publish(fresh);
         });
@@ -53,8 +55,14 @@
       CM.request('publishKey', { publicKey: pubText(keys) }).then(function (res) {
         me.publicKey = res.publicKey;
         draw();
+        if (onPublished) onPublished();
       }).catch(function (err) {
-        host.appendChild(el('p', { class: 'notice bad' }, esc(err.message)));
+        host.innerHTML = '';
+        var box = el('div', { class: 'notice bad row', id: 'cm-publish-failed' }, '<span>' + esc(err.message) + '</span>');
+        var retry = el('button', { type: 'button', class: 'btn secondary' }, '<span>Try again</span>');
+        retry.addEventListener('click', function () { retry.disabled = true; publish(keys); });
+        box.appendChild(retry);
+        host.appendChild(box);
         CM.reportHeight();
       });
     }
@@ -63,68 +71,115 @@
 
   function send(data) {
     var root = CM.root;
-    root.insertAdjacentHTML('beforeend', CM.teacherNote());
     var keysHost = el('div');
     root.appendChild(keysHost);
-    keysLine(data, keysHost, function () {});
     var compose = el('div', { class: 'cm-grid' });
     var sent = el('div');
     root.appendChild(compose);
     root.appendChild(sent);
 
-    var left = el('div', { class: 'card' }, '<h2><span class="step">1</span>Write, encrypt and send</h2>');
-    var toField = el('label', { class: 'field' }, '<span>To</span>');
-    var toSelect = el('select', { id: 'cm-to' });
-    CM.classmateOptions(toSelect, data.classes, { needKey: true });
+    var left = el('div', { class: 'card' }, '<h2><span class="step">1</span>Write and encrypt</h2>');
+    var toRow = el('div', { class: 'row end' });
+    var toField = el('label', { class: 'field grow' });
+    var toSelect = el('select', { id: 'cm-to', 'aria-label': 'Send to' });
     toField.appendChild(toSelect);
+    var recheck = el('button', { type: 'button', class: 'btn secondary', id: 'cm-check-again' }, CM.ICON.refresh + '<span>Check again</span>');
+    toRow.appendChild(toField);
+    toRow.appendChild(recheck);
+    var toHint = el('p', { class: 'to-hint', id: 'cm-to-hint' });
     var msgField = el('label', { class: 'field' }, '<span>Your message <b class="count" id="cm-count">0 of ' + CM.MAX_CHARS + '</b></span>');
     var input = el('input', { type: 'text', maxlength: String(CM.MAX_CHARS), autocomplete: 'off', spellcheck: 'false', id: 'cm-message' });
     msgField.appendChild(input);
     var encryptBtn = el('button', { type: 'button', class: 'btn', id: 'cm-encrypt' }, CM.ICON.lock + '<span>Encrypt with their public key</span>');
-    left.appendChild(toField);
-    left.appendChild(msgField);
+    var status = el('div', { class: 'status', role: 'status' });
+    left.appendChild(toRow);
+    left.appendChild(toHint);
+    var msgRow = left.appendChild(el('div', { class: 'row end' }));
+    msgField.classList.add('grow');
+    msgRow.appendChild(msgField);
+    msgRow.appendChild(encryptBtn);
+    left.appendChild(status);
+    left.insertAdjacentHTML('beforeend', CM.teacherNote());
     compose.appendChild(left);
 
-    var right = el('div', { class: 'card' }, '<h2><span class="step">2</span>Your cipher text</h2>');
+    var right = el('div', { class: 'card' }, '<h2><span class="step">2</span>Send your cipher text</h2>');
     var table = el('div', { class: 'field' }, '<p class="small" style="margin:0">Your cipher text appears here.</p>');
     var sendBtn = el('button', { type: 'button', class: 'btn', id: 'cm-send', disabled: 'disabled' }, CM.ICON.send + '<span>Send</span>');
-    var status = el('div', { class: 'status', role: 'status' });
-    var actionRow = left.appendChild(el('div', { class: 'row' }));
-    actionRow.appendChild(encryptBtn);
-    actionRow.appendChild(sendBtn);
-    left.appendChild(status);
     right.appendChild(table);
+    right.appendChild(el('div', { class: 'row' })).appendChild(sendBtn);
     compose.appendChild(right);
 
-    var encrypted = null;
+    // The To list, with grey names for classmates who have not made their keys yet. Rebuilt from the class list
+    // after Make my keys, on Check again and every 20 seconds, keeping the current choice.
+    function drawTo() {
+      var keep = toSelect.value;
+      CM.classmateOptions(toSelect, data.classes, { needKey: true });
+      var still = [].filter.call(toSelect.options, function (o) { return o.value === keep && !o.disabled; })[0];
+      toSelect.value = still ? keep : '';
+      if (keep && !still) invalidate();
+      var grey = data.classes.some(function (c) { return c.students.some(function (s) { return !s.hasKey; }); });
+      toHint.textContent = grey ? 'Grey names have not made their keys yet. Press Check again.' : '';
+      toHint.style.display = grey ? '' : 'none';
+      CM.reportHeight();
+    }
+    var checking = false;
+    function refreshTo() {
+      if (checking) return;
+      checking = true;
+      recheck.disabled = true;
+      CM.request('classmates').then(function (fresh) {
+        var classes = (fresh.classes || []).filter(function (c) { return c.students && c.students.length; });
+        if (classes.length) data.classes = classes;
+        drawTo();
+      }).catch(function () {}).then(function () { checking = false; recheck.disabled = false; });
+    }
+    recheck.addEventListener('click', refreshTo);
+    CM.poll(refreshTo);
+
+    var encrypted = null, gen = 0;
     function invalidate() {
       encrypted = null;
+      gen++;   // a public key or an encryption still on its way never fills in Send
+      encryptBtn.disabled = false;
       table.innerHTML = '<p class="small" style="margin:0">Your cipher text appears here.</p>';
       sendBtn.disabled = true;
       root.querySelector('#cm-count').textContent = CM.clean(input.value).length + ' of ' + CM.MAX_CHARS;
       CM.reportHeight();
     }
-    input.addEventListener('input', invalidate);
-    toSelect.addEventListener('change', invalidate);
+    function saveDraft() { CM.draft(data.me, input.value ? { text: input.value, to: toSelect.value } : null); }
+    input.addEventListener('input', function () { invalidate(); saveDraft(); });
+    toSelect.addEventListener('change', function () { invalidate(); saveDraft(); });
+    var kept = CM.draft(data.me);
+    if (kept && kept.text) input.value = String(kept.text).slice(0, CM.MAX_CHARS);
+    if (kept && kept.to) { CM.classmateOptions(toSelect, data.classes, { needKey: true }); toSelect.value = kept.to; }
+    drawTo();
+    invalidate();
+    keysLine(data, keysHost, function () {}, null, refreshTo);
 
     encryptBtn.addEventListener('click', function () {
-      var plain = CM.clean(input.value);
+      var checked = CM.checkText(input.value);
       var mate = CM.findClassmate(data.classes, toSelect.value);
       if (!mate) { status.className = 'status hint'; status.textContent = 'Choose who it is for first.'; return; }
-      if (!plain) { status.className = 'status hint'; status.textContent = 'Write a message first.'; return; }
+      if (checked.error) { status.className = 'status hint'; status.textContent = checked.error; return; }
+      var plain = checked.plain;
+      var mine = ++gen;
+      encrypted = null;
+      sendBtn.disabled = true;
       status.className = 'status'; status.textContent = 'Getting ' + mate.student.name + "'s public key...";
       encryptBtn.disabled = true;
       CM.request('getKey', { courseId: mate.courseId, toId: mate.student.id }).then(function (res) {
+        if (mine !== gen) return;
         encryptBtn.disabled = false;
         var pub = CM.parsePublicKey(res.publicKey);
         if (!pub) { status.className = 'status bad'; status.textContent = mate.student.name + ' has not made their keys yet.'; return; }
-        status.className = 'status'; status.textContent = '';
+        status.className = checked.note ? 'status hint' : 'status'; status.textContent = checked.note;
         var cipher = CM.encryptAsym(plain, pub);
         var nums = cipher.split(' ');
         table.innerHTML = '<span>' + esc(mate.student.name) + "'s public key <span class=\"mono\">" + showPub(pub) + '</span></span>' +
           CM.pairs(plain.split(''), [], true) + '<div class="pairs-legend"><span>plain text</span><span class="c">cipher text</span></div>';
         var cells = table.querySelectorAll('.pair'), i = 0;
         (function next() {
+          if (mine !== gen) return;
           if (i >= cells.length) {
             encrypted = { plain: plain, cipher: cipher, pub: pub, mate: mate };
             sendBtn.disabled = false;
@@ -137,7 +192,10 @@
           setTimeout(next, 90);
         })();
         CM.reportHeight();
-      }).catch(function (err) { encryptBtn.disabled = false; status.className = 'status bad'; status.textContent = err.message; CM.reportHeight(); });
+      }).catch(function (err) {
+        if (mine !== gen) return;
+        encryptBtn.disabled = false; status.className = 'status bad'; status.textContent = err.message; CM.reportHeight();
+      });
     });
 
     sendBtn.addEventListener('click', function () {
@@ -149,6 +207,7 @@
       CM.request('send', { courseId: mate.courseId, toId: mate.student.id, packets: packets, teacherCopy: e.plain }).then(function (res) {
         status.className = 'status'; status.textContent = '';
         compose.style.display = 'none';
+        CM.draft(data.me, null);
         keysHost.style.display = 'none';
         CM.sentPanel(sent, res.packets || packets,
           '<p class="status good" style="margin:0">Sent to ' + name + ' at ' + esc(CM.bangkok(res.sentAt)) + '.</p>' +
@@ -157,8 +216,8 @@
           '<p class="stayed">Your private key stayed on this computer. ' + name + "'s private key never left their computer.</p>",
           function () { sent.innerHTML = ''; compose.style.display = ''; keysHost.style.display = ''; input.value = ''; invalidate(); input.focus(); });
       }).catch(function (err) {
-        status.className = 'status bad'; status.textContent = err.message;
-        sendBtn.disabled = false;
+        status.className = 'status bad'; status.textContent = 'Not sent. ' + err.message;
+        sendBtn.disabled = !encrypted;
         CM.reportHeight();
       });
     });
@@ -168,11 +227,16 @@
     var myKeys = null;
     CM.inboxView(data, {
       top: function (host, chip) { keysLine(data, host, function (keys) { myKeys = keys; }, chip); },
+      // Without the private key a message cannot be decrypted here, so it does not open by itself.
+      autoOpen: function () { return !!myKeys; },
       decrypt: function (host, placed, cipher, m) {
         var card = el('div', { class: 'card', id: 'cm-decrypt' },
           '<div class="keybox"><span>Cipher text: <span class="mono">' + esc(cipher) + '</span></span>' +
-          '<span>Encrypted with the public key <span class="mono">(' + esc(String(m.key).replace(',', ', ')) + ')</span></span></div>');
+          '<span>Encrypted with your public key <span class="mono">(' + esc(String(m.key).replace(',', ', ')) + ')</span></span></div>');
         host.appendChild(card);
+        // Read the keys again: another tab of this browser may have made them since this page opened.
+        var stored = keysFor(data.me);
+        if (stored && pubText(stored) === m.key) myKeys = stored;
         if (!myKeys || pubText(myKeys) !== m.key) {
           card.appendChild(el('p', { class: 'notice warn', id: 'cm-locked' }, myKeys
             ? 'This message was encrypted with your old public key. The private key that matches it is not on this computer, so no one can decrypt it.'

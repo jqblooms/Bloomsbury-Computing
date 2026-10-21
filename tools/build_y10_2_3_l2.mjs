@@ -230,12 +230,12 @@ steps.push(embed('activity-1', 'Activity 1: Which Key?', 'drill-y10-2-3-l2-keys'
 // The receiver puts the packets back in order by packet number (2.1), then decrypts with their private key.
 // Messages.gs keeps a plain text safety copy for the teacher.
 steps.push(embed('activity-send', 'Activity 2: Send a Secret Message', 'class-messages-asymmetric', 'Activity 2: Send a Secret Message',
-  'Make your two keys. Then encrypt with a classmate\'s public key and send it.',
+  'Press Make my keys. Choose the person next to you, write a message, press Encrypt with their public key, then press Send.',
   ['Everyone can see your public key, even Eve. Why is that safe?', 'The public key only encrypts. Decrypting needs your private key, and that never leaves your computer.']));
 steps[steps.length - 1].embedQuery = 'view=send';
 steps.push(embed('activity-read', 'Activity 2: Read Your Messages', 'class-messages-asymmetric', 'Activity 2: Read Your Messages',
-  'Put the packets in order by packet number. Then decrypt the message with your private key.',
-  ['Eve copied every packet. Why can she still not read the message?', 'The packets hold only cipher text. Only your private key decrypts it, and that was never sent.']));
+  'Tap the packets in order, packet 1 first, and press Check the order. Then press Decrypt with my private key.',
+  ['Why must you read your messages on the computer where you made your keys?', 'Your private key is stored only on that computer. It is never sent, so no other computer has it.']));
 steps[steps.length - 1].embedQuery = 'view=inbox';
 
 // 0478/11 June 2025 Q6(a), last four gaps. Mark scheme: public/private; private/public (must be opposite of the first);
@@ -263,7 +263,7 @@ steps.push({ id: 'compare-methods', label: 'Compare: Symmetric and Asymmetric',
     row('Decrypt with', 'The same key', "The receiver's private key: a different key") +
     row('Is the key that decrypts sent?', 'Yes: it must reach the receiver', 'No: it is never sent') +
     '</table>' +
-    facts(['<strong>The same in both:</strong> a key is used, plain text becomes cipher text, intercepted data is meaningless.', 'Asymmetric is <strong>more secure</strong>: there is no key exchange to intercept.']) });
+    facts(['<strong>The same in both:</strong> a key is used, plain text becomes cipher text, intercepted data is meaningless.', 'Asymmetric is <strong>more secure</strong>: the key that decrypts is never sent.']) });
 
 // 0478/13 November 2024 Q2(g)(i), any one from: to keep it secure; the data is sensitive/confidential; to make it
 // meaningless. Q2(g)(ii), any one from: they both use a key; they both scramble the data // both make the data

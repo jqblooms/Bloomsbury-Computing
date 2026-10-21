@@ -137,3 +137,49 @@ button.packet:disabled { cursor: default; opacity: .3; }
 .packet .pp { padding: 2px 6px; min-height: 20px; }
 .packet .pt { padding: 2px 6px; }
 .slot { min-height: 80px; }
+
+/* Decrypt helpers (L1) and packets still arriving */
+.abc { display: flex; flex-wrap: wrap; gap: 2px; }
+.abc span { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 24px; border-radius: 5px; background: var(--surface-3); font: 700 13px var(--font-mono); }
+.decrypt-label { font-weight: 500; font-size: .9rem; }
+button.packet.waiting:disabled { opacity: 1; cursor: wait; }
+.packet, .slot { width: 124px; }
+/* 2.1 header terms: each address on its own line under its label, so six packets still fit one row. */
+.packet .ph b { font-size: 10.5px; white-space: nowrap; }
+.packet .ph .hl { display: block; white-space: nowrap; }
+.packet .ph .hk { display: block; color: var(--muted); font-size: 10px; }
+/* L1 has at most 5 packets, so they are wide enough for each label and address on one line. */
+.mode-symmetric .packet, .mode-symmetric .slot { width: 146px; }
+.mode-symmetric .packet .ph .hk { display: inline; }
+/* Once in order, the addresses (the same on every packet) fold away. */
+#cm-slots .packet .ph .hl { display: none; }
+#cm-arrived .net-head .btn { padding: 5px 14px; }
+.lane { grid-template-columns: 50px minmax(0, 1fr); }
+.to-hint { margin: 0; font-size: .8rem; color: var(--warn); }
+/* Compact packets in the inbox so both lanes fit a 1366x768 slide. */
+.packet .ph { line-height: 1.15; }
+#cm-arrived { gap: 4px; padding: 7px 10px; }
+#cm-arrived .packet .pp { min-height: 18px; }
+#cm-arrived .slot { min-height: 64px; }
+.card > .status:empty { display: none; }
+.mode-asymmetric .packet .pp { font-size: 11px; line-height: 1.25; }
+.pair.num b, .pair.num i { line-height: 1.4; }
+#cm-network { gap: 5px; }
+#cm-network ul { font-size: .86rem; }
+.bar .note-chip { margin: 0 0 9px; }
+.card > .teacher-note { margin: 0; }
+.packet .ph { line-height: 1.1; }
+.packet .ph b { font-size: 10px; }
+#cm-arrived { gap: 3px; padding: 5px 9px; }
+#cm-arrived .slot { min-height: 50px; }
+.bar { margin-bottom: 4px; }
+.open-area { gap: 6px; }
+.mode-asymmetric .cm-grid .card { gap: 6px; }
+/* Teacher log: words stay whole, long lists scroll inside the app, not the slide. */
+.log td.plain { word-break: normal; overflow-wrap: anywhere; min-width: 110px; }
+.log td.nowrap { white-space: nowrap; }
+.embed .log-wrap { max-height: 210px; overflow-y: auto; }
+.log thead th { position: sticky; top: 0; background: var(--surface-2); }
+.keyline { margin-bottom: 6px; padding: 5px 10px; }
+.keyline .btn { padding: 5px 14px; }
+.pair.num b, .pair.num i { line-height: 1.3; }
