@@ -1,118 +1,85 @@
 {
  "id": "y10-2-r",
- "label": "2.R: Data Transmission Exam Practice",
+ "label": "2.R Exam Practice 1: Packets and Transmission Methods",
  "steps": [
   {
-   "id": "do-now",
-   "label": "Do Now: Parity (1 of 3)",
+   "id": "do-now-packets",
+   "label": "Do Now: Packets (1 of 2)",
    "type": "short-answer-validation",
-   "validatorId": "y10-2r-do-now",
-   "validatorKey": "y10_2r_do_now",
-   "content": "<h2 class=\"lesson-h2\">Do Now: Parity (1 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the receiver check each byte when it arrives, and not the sender before it leaves?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Errors happen on the way. Only the receiver sees what actually arrived.</p></div></details><p class=\"lesson-lead\">From 2.2. Cambridge IGCSE 0478/13, June 2021, Question 6(a). Four 7-bit binary values are transmitted from one computer to another. A parity bit is added to each binary value creating 8-bit binary values. All the binary values are transmitted and received correctly. Identify whether each 8-bit binary value has been sent using odd or even parity.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div style=\"display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));column-gap:20px\"><div class=\"lesson-do-now-response\"><label for=\"y10-2r-do-now-a\">(a) 01111100 [1]</label><input id=\"y10-2r-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Parity (1 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-do-now-b\">(b) 10010000 [1]</label><input id=\"y10-2r-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Parity (1 of 3) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-do-now-c\">(c) 10011001 [1]</label><input id=\"y10-2r-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Parity (1 of 3) part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-do-now-d\">(d) 00101001 [1]</label><input id=\"y10-2r-do-now-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-d\" aria-label=\"Do Now: Parity (1 of 3) part d\" autocomplete=\"off\"></div></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-do-now-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-2r-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "validatorId": "y10-2r-do-now-packets",
+   "validatorKey": "y10_2r_do_now_packets",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Packets (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the question say \"two items\" and give 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each item is one mark. Two different items earn the 2 marks, and a third item earns nothing more.</p></div></details><p class=\"lesson-lead\">From 2.1. Cambridge IGCSE 0478/12, March 2023, Question 5(a). Computer A sends a request for the homepage to a website's server. The request is sent using packet switching. The structure of a packet of data has three elements. One element is the packet header.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-do-now-packets-a\">(a) Identify two items of data contained in a packet header. [2]</label><input id=\"y10-2r-do-now-packets-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-packets-a\" aria-label=\"Do Now: Packets (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-do-now-packets-b\">(b) Identify the two other elements of a packet. [2]</label><input id=\"y10-2r-do-now-packets-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-packets-b\" aria-label=\"Do Now: Packets (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-do-now-packets-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-2r-do-now-packets-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
    "walkthrough": {
-    "title": "Walk me through it: odd or even parity",
+    "title": "Walk me through it: the parts of a packet",
     "steps": [
      {
-      "text": "<strong>A similar question.</strong> These bytes were received correctly. Was each one sent with odd or even parity?",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">11000110</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">10110000</span></div>"
+      "text": "<strong>A similar question.</strong> A parcel is sent in three boxes. Identify two items of data written on the label of each box.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Label: ?</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Label: ?</div>"
      },
      {
-      "text": "Received correctly means nothing changed on the way. So the count of 1s still fits the parity that was used.",
-      "visual": "<div class=\"wt-note\">count the 1s, then match the count to a parity type</div>"
+      "text": "People on the way read the label without opening the box. So the label holds what they, and the receiver, need to know.",
+      "visual": "<div class=\"wt-note\">ask: who reads the label, and what do they need?</div>"
      },
      {
-      "text": "Count the 1s in the whole byte. The parity bit counts too.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\"><span class=\"wt-hl\">1</span><span class=\"wt-hl\">1</span>000<span class=\"wt-hl\">1</span><span class=\"wt-hl\">1</span>0</span></div><div class=\"wt-note\">1, 2, 3, 4</div>"
+      "text": "Item 1: the van driver needs to know where the box is going.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">To: <span class=\"wt-hl\">12 Hill Road</span></div>"
      },
      {
-      "text": "4 is an even number. So this byte fits the parity type named after even numbers.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\"><span class=\"wt-hl\">1</span><span class=\"wt-hl\">1</span>000<span class=\"wt-hl\">1</span><span class=\"wt-hl\">1</span>0</span> &rarr; 4 ones</div>"
+      "text": "Item 2: the receiver needs to know which box is which, to open them in order.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">Box 2 of 3</span></div>"
      },
      {
-      "text": "The second byte: count the 1s again.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\"><span class=\"wt-hl\">1</span>0<span class=\"wt-hl\">1</span><span class=\"wt-hl\">1</span>0000</span> &rarr; 3 ones</div>"
+      "text": "Your part (i): the header is the label of a packet, and routers read it on the way. Give the network words for the same two kinds of item.",
+      "visual": "<div class=\"wt-note\">where it is going + which packet it is</div>"
      },
      {
-      "text": "3 is an odd number. So this byte fits the other parity type. Now count the 1s in each byte on your slide.",
-      "visual": "<div class=\"wt-note\">count, then decide: is the count odd or even?</div>"
+      "text": "Your part (ii): a packet has three elements. The header comes first. Name the other two from what each one holds.",
+      "visual": "<div style=\"display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px\"><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><strong>Header</strong><br>the label</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><strong>?</strong><br><span class=\"wt-hl\">the main data</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><strong>?</strong><br><span class=\"wt-hl\">the error check, at the end</span></div></div>"
      }
     ]
    }
   },
   {
-   "id": "do-now-2",
-   "label": "Do Now: Parity (2 of 3)",
+   "id": "do-now-methods",
+   "label": "Do Now: Methods (2 of 2)",
    "type": "short-answer-validation",
-   "validatorId": "y10-2r-do-now-2",
-   "validatorKey": "y10_2r_do_now_2",
-   "content": "<h2 class=\"lesson-h2\">Do Now: Parity (2 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A parity check is quick and simple. Why do networks still use other checks as well?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>No single check finds every error. Using more than one check means fewer errors get through.</p></div></details><p class=\"lesson-lead\">From 2.2. Cambridge IGCSE 0478/13, June 2021, Question 6(b). The 8-bit binary value 10110001 is transmitted and received as 10110010. A parity check does not identify any errors in the binary value received.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-do-now-2-a\">(a) State why the parity check does not identify any errors. [1]</label><input id=\"y10-2r-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Parity (2 of 3) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-do-now-2-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y10-2r-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "validatorId": "y10-2r-do-now-methods",
+   "validatorKey": "y10_2r_do_now_methods",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Methods (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a method that is better in one way still have a drawback?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every method gives something up. Being better at one thing often costs something else, so the scenario decides which to use.</p></div></details><p class=\"lesson-lead\">From 2.1. Part (a): Cambridge IGCSE 0478/12, June 2024, Question 2(a). Part (b): Cambridge IGCSE 0478/13, June 2021, Question 6(c)(ii). The data is sent using serial duplex data transmission.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div style=\"display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));column-gap:20px\"><div class=\"lesson-do-now-response\"><label for=\"y10-2r-do-now-methods-a\">(a) Which term is not a method for transmitting data: serial, simplex, parallel or parity? [1]</label><input id=\"y10-2r-do-now-methods-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-methods-a\" aria-label=\"Do Now: Methods (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-do-now-methods-b\">(b) State one drawback of using serial data transmission, rather than parallel data transmission. [1]</label><input id=\"y10-2r-do-now-methods-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-methods-b\" aria-label=\"Do Now: Methods (2 of 2) part b\" autocomplete=\"off\"></div></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-do-now-methods-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y10-2r-do-now-methods-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
    "walkthrough": {
-    "title": "Walk me through it: a change the check misses",
+    "title": "Walk me through it: methods of transmission",
     "steps": [
      {
-      "text": "<strong>A similar case.</strong> This byte is sent, and a different byte arrives. The parity check finds no error.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Sent: <span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">11000010</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Received: <span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">10100010</span></div>"
+      "text": "<strong>A similar question.</strong> Which of these terms is not a number system?",
+      "visual": "<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin:6px 0\"><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">binary</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">denary</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">hexadecimal</span><span style=\"padding:4px 10px;border-radius:6px;background:var(--surface-3);font-size:15px\">pixel</span></div>"
      },
      {
-      "text": "First find the bits that changed. Bit 2 and bit 3 are different.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Sent: <span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">1<span class=\"wt-hl\">1</span><span class=\"wt-hl\">0</span>00010</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Received: <span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\">1<span class=\"wt-hl\">0</span><span class=\"wt-hl\">1</span>00010</span></div>"
+      "text": "Ask the same question of every term: what is it?",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">binary: base 2</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">denary: base 10 &nbsp;&nbsp; hexadecimal: base 16</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">pixel: ?</div>"
      },
      {
-      "text": "Look closely: bit 2 was 1 and became 0. Bit 3 was 0 and became 1.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">bit 2: 1 &rarr; <span class=\"wt-hl\">0</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">bit 3: 0 &rarr; <span class=\"wt-hl\">1</span></div>"
+      "text": "A pixel is one dot of an image. It is not a way of writing numbers, so it is the odd one out.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">pixel</span>: a dot of an image</div>"
      },
      {
-      "text": "Now count the 1s in each byte, as the receiver does.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Sent: <span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\"><span class=\"wt-hl\">1</span><span class=\"wt-hl\">1</span>0000<span class=\"wt-hl\">1</span>0</span> &rarr; 3</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Received: <span style=\"font:700 20px var(--font-mono, monospace);letter-spacing:4px\"><span class=\"wt-hl\">1</span>0<span class=\"wt-hl\">1</span>000<span class=\"wt-hl\">1</span>0</span> &rarr; 3</div>"
+      "text": "Your part (a): ask of each term: does it say how the bits travel (how many wires, which direction)? Or does it do a different job?",
+      "visual": "<div class=\"wt-note\">how the bits travel, or another job?</div>"
      },
      {
-      "text": "A parity check only counts the 1s. It does not look at where each 1 is.",
-      "visual": "<div class=\"wt-note\">3 before, 3 after</div>"
+      "text": "<strong>A similar question.</strong> State one drawback of using parallel rather than serial data transmission.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Drawback of parallel: ?</div>"
      },
      {
-      "text": "Your question: do the same with 10110001 and 10110010. Find the bits that changed, count the 1s, and write what you see as your reason.",
-      "visual": "<div class=\"wt-note\">changed bits + the count</div>"
-     }
-    ]
-   }
-  },
-  {
-   "id": "do-now-3",
-   "label": "Do Now: Encryption (3 of 3)",
-   "type": "short-answer-validation",
-   "validatorId": "y10-2r-do-now-3",
-   "validatorKey": "y10_2r_do_now_3",
-   "content": "<h2 class=\"lesson-h2\">Do Now: Encryption (3 of 3)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do exam questions on encryption reward exact terms, like the ones in the syllabus?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>An exact term shows the examiner you know the idea. A vague word could mean many things.</p></div></details><p class=\"lesson-lead\">From 2.3. Part (a): Cambridge IGCSE 0478/13, June 2026, Question 2(e)(i). Part (b): Cambridge IGCSE 0478/12, June 2026, Question 4(c)(ii). Part (c): Cambridge IGCSE 0478/11, June 2022, Question 7(d).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-2r-do-now-3-a\">(a) Give two types of encryption that could be used. [2]</label><input id=\"y10-2r-do-now-3-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-a\" aria-label=\"Do Now: Encryption (3 of 3) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-do-now-3-b\">(b) State what is meant by an encryption key. [1]</label><input id=\"y10-2r-do-now-3-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-b\" aria-label=\"Do Now: Encryption (3 of 3) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-do-now-3-c\">(c) State how encryption will keep the data more secure. [1]</label><input id=\"y10-2r-do-now-3-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-3-c\" aria-label=\"Do Now: Encryption (3 of 3) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-do-now-3-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-2r-do-now-3-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
-   "walkthrough": {
-    "title": "Walk me through it: types and terms",
-    "steps": [
-     {
-      "text": "<strong>A similar question.</strong> Give two types of parity check.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Type 1: ?</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Type 2: ?</div>"
+      "text": "A drawback of one method is something the other method does better. Serial sends one bit at a time, so the bits stay in order over a long distance.",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">serial does better: <span class=\"wt-hl\">bits stay in order over a long way</span></div>"
      },
      {
-      "text": "Ask: how are the types different? With one, the count of 1s must come out odd. With the other, it must come out even.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">count must be odd</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">count must be even</div>"
+      "text": "So a drawback of parallel: over a long distance, its bits can arrive at different times (skew).",
+      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Drawback of parallel: <span class=\"wt-hl\">the bits can skew</span></div>"
      },
      {
-      "text": "Name each type after its difference: odd parity and even parity.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">odd</span> parity</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\"><span class=\"wt-hl\">even</span> parity</div>"
-     },
-     {
-      "text": "Your part (a): how are the types of encryption different? One uses a single key that both people share. The other uses two different keys. Write the name of each type.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">one shared key: ?</div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">two different keys: ?</div>"
-     },
-     {
-      "text": "<strong>A similar question.</strong> State what is meant by a parity bit. Say what it is, then what it is used for.",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">What is it? <span class=\"wt-hl\">an extra bit</span></div><div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">What is it for? <span class=\"wt-hl\">making the count of 1s odd or even</span></div>"
-     },
-     {
-      "text": "Your part (b): do the same for a key. What is it made of? Which job does it do in the process?",
-      "visual": "<div class=\"wt-note\">what it is + what it is for</div>"
-     },
-     {
-      "text": "Your part (c): Eve intercepts the data on the way. She does not have the key. What does the data look like to her?",
-      "visual": "<div style=\"margin:6px 0;padding:8px 12px;border-radius:8px;background:var(--surface-3)\">Eve sees: X7#QPA 2!Lw ...</div>"
+      "text": "Your part (b): what does parallel do better than serial? The drawback of serial is the other side of that.",
+      "visual": "<div class=\"wt-note\">what parallel does better &rarr; what serial gives up</div>"
      }
     ]
    }
@@ -127,8 +94,8 @@
   },
   {
    "id": "title",
-   "label": "Data Transmission Exam Practice",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Topic 2 Review</p><h2 class=\"lesson-h2\">Data Transmission Exam Practice</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> real exam questions from all of Topic 2: packets, methods of transmission, error detection and encryption.</li><li><strong>Also:</strong> choose a transmission method for a scenario and say why, and fix answers that lose marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An exam question has 4 marks. Why is one long sentence about one idea not enough?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark is for a different point. One idea, said in many ways, still gets one mark.</p></div></details>"
+   "label": "Packets and Transmission Methods Exam Practice",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Topic 2 Review: Exam Practice 1</p><h2 class=\"lesson-h2\">Packets and Transmission Methods</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> real exam questions on packets, methods of transmission and USB.</li><li><strong>Also:</strong> choose a transmission method for a scenario and say why, and fix answers that lose marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">An exam question has 4 marks. Why is one long sentence about one idea not enough?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark is for a different point. One idea, said in many ways, still gets one mark.</p></div></details>"
   },
   {
    "id": "concept-command",
@@ -194,28 +161,6 @@
    ]
   },
   {
-   "id": "exam-serial",
-   "label": "Methods: Serial Transmission",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-exam-serial",
-   "content": "<h2 class=\"lesson-h2\">Methods: Serial Transmission</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must \"two benefits\" be two different ideas?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark is for a different point. The same idea in new words still gets one mark.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2023, Question 4(a)(ii). A student uses a mobile phone to take photographs. The student needs to transmit the photographs to their computer.</p><div id=\"y10-2r-exam-serial\"></div>",
-   "items": [
-    {
-     "id": "serial-benefits",
-     "prompt": "Give two benefits of transmitting the photographs using serial data transmission.",
-     "marks": 2,
-     "modelAnswer": "The data will not be skewed. There is less chance of interference.",
-     "scheme": [
-      "data won't be skewed",
-      "less chance of interference / crosstalk / corruption / error",
-      "transmission speed is adequate"
-     ],
-     "source": "0478/12 June 2023 Q4(a)(ii)",
-     "context": "Cambridge IGCSE 0478/12, June 2023, Question 4(a)(ii). A student uses a mobile phone to take photographs. The student needs to transmit the photographs to their computer. Marking rule: Any two from, one mark for each point met, up to 2."
-    }
-   ]
-  },
-  {
    "id": "exam-duplex",
    "label": "Methods: Serial Half-Duplex",
    "type": "self-marked-response",
@@ -235,27 +180,6 @@
      ],
      "source": "0478/13 November 2021 Q4(c)(i)",
      "context": "Cambridge IGCSE 0478/13, November 2021, Question 4(c)(i). Frederick prints a document that he has typed. The type of data transmission between the computer and the printer is serial half-duplex data transmission. Marking rule: Four from, one mark for each point met, up to 4."
-    }
-   ]
-  },
-  {
-   "id": "exam-duplex-2",
-   "label": "Methods: Half-Duplex, Not Simplex",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-exam-duplex-2",
-   "content": "<h2 class=\"lesson-h2\">Methods: Half-Duplex, Not Simplex</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a reason about THIS scenario earn more than a general fact?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The mark scheme rewards a reason in context. It shows you can use the fact, not just remember it.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2021, Question 4(c)(ii). The printer begins to print a document, but then a message is displayed on the computer to say that the paper has jammed. The data transmission between the computer and the printer is serial half-duplex.</p><div id=\"y10-2r-exam-duplex-2\"></div>",
-   "items": [
-    {
-     "id": "half-not-simplex",
-     "prompt": "Explain why the data transmission needs to be half-duplex rather than simplex.",
-     "marks": 2,
-     "modelAnswer": "Simplex only sends data in one direction, so the printer could not tell the computer the paper has jammed.",
-     "scheme": [
-      "simplex only sends data in one direction",
-      "... so the printer may not be able to tell the computer an error has occurred, and the computer may not be able to send the printer the document to be printed (any valid answer in context)"
-     ],
-     "source": "0478/13 November 2021 Q4(c)(ii)",
-     "context": "Cambridge IGCSE 0478/13, November 2021, Question 4(c)(ii). The printer begins to print a document, but then a message is displayed on the computer to say that the paper has jammed. The data transmission between the computer and the printer is serial half-duplex. Marking rule: Any two from, one mark for each point met, up to 2."
     }
    ]
   },
@@ -388,31 +312,6 @@
    ]
   },
   {
-   "id": "exam-choose-3",
-   "label": "Choosing: Why Parallel Full-Duplex?",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-exam-choose-3",
-   "content": "<h2 class=\"lesson-h2\">Choosing: Why Parallel Full-Duplex?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Here the method is given. How is that different from choosing one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You do not choose. Each reason must show why the given method fits, using words from the scenario.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2024, Question 4(b)(i). All the company devices are within a single room. The employees will need to use their devices to send data to each other and share files. The company decides to use parallel full-duplex data transmission to send the data across the network.</p><div id=\"y10-2r-exam-choose-3\"></div>",
-   "items": [
-    {
-     "id": "why-parallel-full",
-     "prompt": "Explain the reasons why the company have chosen this method of data transmission.",
-     "marks": 4,
-     "modelAnswer": "It sends multiple bits at the same time, so the data is sent fast. The devices are all in a single room, so the data does not need to travel a long distance.",
-     "scheme": [
-      "it sends the data multiple bits at the same time // it uses multiple wires",
-      "... so the transmission speed of the data will be fast",
-      "data may not need to travel a long distance",
-      "... as the devices are all within a single room",
-      "it sends data in both directions at the same time",
-      "... so users on the network can send data to each other with no delay"
-     ],
-     "source": "0478/11 November 2024 Q4(b)(i)",
-     "context": "Cambridge IGCSE 0478/11, November 2024, Question 4(b)(i). All the company devices are within a single room. The employees will need to use their devices to send data to each other and share files. The company decides to use parallel full-duplex data transmission to send the data across the network. Marking rule: Any four from, one mark for each point met, up to 4."
-    }
-   ]
-  },
-  {
    "id": "fix-serial",
    "label": "Choosing: Fix the Answer",
    "type": "self-marked-response",
@@ -441,273 +340,71 @@
    ]
   },
   {
-   "id": "exam-parity",
-   "label": "Error Detection: The Odd Parity Check",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-exam-parity",
-   "content": "<h2 class=\"lesson-h2\">Error Detection: The Odd Parity Check</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write a process in the order it happens: before sending, then after?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each step in time can be a mark. Going in order helps you not to miss a step.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2023, Question 4(b). Data is transmitted between a computer and a printer. An odd parity check is used to detect errors in the data transmission.</p><div id=\"y10-2r-exam-parity\"></div>",
-   "items": [
-    {
-     "id": "odd-parity",
-     "prompt": "Explain how the odd parity check detects errors.",
-     "marks": 4,
-     "modelAnswer": "A parity bit is added to each byte before transmission, to make the number of 1s odd. After transmission the 1s are counted. If the number is even, an error is detected.",
-     "scheme": [
-      "the number of 1s / 0s are counted",
-      "a parity bit is added to each byte / 7 bits before transmission",
-      "... to make the sum of the bits / 1s or 0s in each byte odd",
-      "after transmission, if the number is odd no error is detected",
-      "after transmission, if the number is even an error is detected"
-     ],
-     "source": "0478/11 November 2023 Q4(b)",
-     "context": "Cambridge IGCSE 0478/11, November 2023, Question 4(b). Data is transmitted between a computer and a printer. An odd parity check is used to detect errors in the data transmission. Marking rule: Any four from, one mark for each point met, up to 4."
-    }
-   ]
-  },
-  {
-   "id": "exam-checksum",
-   "label": "Error Detection: The Checksum",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-exam-checksum",
-   "content": "<h2 class=\"lesson-h2\">Error Detection: The Checksum</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A checksum and a check digit both calculate a value. Why do they find errors at different times?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A check digit checks data when it is entered. A checksum checks data after it is transmitted.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2025, Question 4(b)(i). A restaurant's ordering system transmits each customer's order across its network to a computer in the kitchen. A checksum is used to check the data for errors after transmission.</p><div id=\"y10-2r-exam-checksum\"></div>",
-   "items": [
-    {
-     "id": "checksum-process",
-     "prompt": "Describe the process of the checksum error detection method.",
-     "marks": 5,
-     "modelAnswer": "The checksum is calculated from the data, using an algorithm. It is transmitted with the data. The receiver recalculates it. If the two values do not match, an error is detected.",
-     "scheme": [
-      "the checksum is calculated from / using the data",
-      "... using an algorithm // by example",
-      "the (checksum) value is transmitted with the data",
-      "the (checksum) value is recalculated after transmission / by the recipient",
-      "if the checksum values do not match, an error is detected // if the checksum values match, no error is detected ...",
-      "... request for the data to be resent if there is an error"
-     ],
-     "source": "0478/11 June 2025 Q4(b)(i)",
-     "context": "Cambridge IGCSE 0478/11, June 2025, Question 4(b)(i). A restaurant's ordering system transmits each customer's order across its network to a computer in the kitchen. A checksum is used to check the data for errors after transmission. Marking rule: Any five from, one mark for each point met, up to 5."
-    }
-   ]
-  },
-  {
-   "id": "exam-parity-arq",
-   "label": "Error Detection: Parity Checks and ARQ",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-exam-parity-arq",
-   "content": "<h2 class=\"lesson-h2\">Error Detection: Parity Checks and ARQ</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This answer is about two methods. Why plan which marks come from each one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The mark scheme gives at most four marks for ARQ, so you need points about parity too. A plan stops you writing about only one method.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2022, Question 9. A system uses parity checks and automatic repeat queries (ARQ) to detect and correct errors in the transmission of data.</p><div id=\"y10-2r-exam-parity-arq\"></div>",
-   "items": [
-    {
-     "id": "parity-arq",
-     "prompt": "Describe how parity checks and ARQ operate together to detect and correct errors.",
-     "marks": 6,
-     "modelAnswer": "Even parity is agreed. A parity bit is added to each byte to make the number of 1s even. When the data is sent, a timer is started. If no error is found, a positive acknowledgement is sent. If no acknowledgement arrives before the timeout, the data is resent.",
-     "scheme": [
-      "odd or even parity is set / agreed for the data",
-      "a parity bit is added to each byte of data",
-      "... to make the number of 1s match the parity",
-      "data is checked after transmission to see if the parity is correct",
-      "ARQ uses acknowledgement and timeout",
-      "if no error is found, a positive acknowledgement is sent to the sender / no acknowledgement is sent to the sender",
-      "if an error is found, a negative acknowledgement is sent to the sender ...",
-      "... that triggers the data to be resent",
-      "when the data is sent, a timer is started",
-      "if an acknowledgement is not received within the time set, the data is resent ...",
-      "... until an acknowledgement is received / the resend limit is reached"
-     ],
-     "source": "0478/13 November 2022 Q9",
-     "context": "Cambridge IGCSE 0478/13, November 2022, Question 9. A system uses parity checks and automatic repeat queries (ARQ) to detect and correct errors in the transmission of data. Marking rule: Any six from (MAX four for ARQ), one mark for each point met, up to 6."
-    }
-   ]
-  },
-  {
-   "id": "fix-echo",
-   "label": "Error Detection: Fix the Answer",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-fix-echo",
-   "content": "<h2 class=\"lesson-h2\">Error Detection: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check a student answer one sentence at a time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One sentence can be right and the next one wrong. That shows where the marks are lost.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2024, Question 2(f)(i). Explain how the echo check is used to check for errors in the email data.</p><div id=\"y10-2r-fix-echo\"></div>",
-   "items": [
-    {
-     "id": "fix-echo-check",
-     "prompt": "A student wrote: <em>&ldquo;The employer's device sends the data back and checks it. If the copies are the same, there is an error.&rdquo;</em><br>This answer gets 1 mark. Write a better answer that gets 3 marks.",
-     "marks": 3,
-     "modelAnswer": "A copy is sent back to the sender. The sender compares it with the data sent. If they do not match, there is an error.",
-     "scheme": [
-      "a copy of the data is sent back to the employee's device / the sender",
-      "the employee's device / the sender compares the data sent to the data received back",
-      "if the original and the copy do not match, an error has occurred"
-     ],
-     "source": "0478/13 November 2024 Q2(f)(i)",
-     "ariaLabel": "Explain how the echo check is used to check for errors in the email data. (better answer)",
-     "context": "Cambridge IGCSE 0478/13, November 2024, Question 2(f)(i). Explain how the echo check is used to check for errors in the email data. A student wrote: \"The employer's device sends the data back and checks it. If the copies are the same, there is an error.\" This got 1 of 3 marks: the sender compares, not the receiver, and an error is when the copies do NOT match. The student now writes a better answer. Marking rule: One mark each, one mark for each point met, up to 3."
-    }
-   ]
-  },
-  {
-   "id": "exam-methods",
-   "label": "Error Detection: Which Method?",
-   "type": "short-answer-validation",
-   "validatorId": "y10-2r-exam-methods",
-   "validatorKey": "y10_2r_exam_methods",
-   "content": "<h2 class=\"lesson-h2\">Error Detection: Which Method?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why test each statement against every method?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Some statements fit more than one method. Testing each one stops you missing one.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2021, Question 3(a). For each statement, type the method or methods it applies to: checksum, check digit or parity check. Some apply to more than one.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div style=\"display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));column-gap:20px\"><div class=\"lesson-do-now-response\"><label for=\"y10-2r-exam-methods-a\">(a) uses an additional bit to create an odd or even number of 1s [1]</label><input id=\"y10-2r-exam-methods-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-methods-a\" aria-label=\"Error Detection: Which Method? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-exam-methods-b\">(b) checks for errors on data entry [1]</label><input id=\"y10-2r-exam-methods-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-methods-b\" aria-label=\"Error Detection: Which Method? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-exam-methods-c\">(c) compares two calculated values to see if an error has occurred [1]</label><input id=\"y10-2r-exam-methods-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-methods-c\" aria-label=\"Error Detection: Which Method? part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-exam-methods-d\">(d) will not detect transposition errors [1]</label><input id=\"y10-2r-exam-methods-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-methods-d\" aria-label=\"Error Detection: Which Method? part d\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-exam-methods-e\">(e) sends additional values when data is transmitted from one computer to another [1]</label><input id=\"y10-2r-exam-methods-e\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-methods-e\" aria-label=\"Error Detection: Which Method? part e\" autocomplete=\"off\"></div></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-exam-methods-check\">Check answers</button><strong>Total: 5 marks</strong></div><div id=\"y10-2r-exam-methods-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
-  },
-  {
    "id": "activity-2",
    "label": "Activity 2: Spot and Fix the Mistake",
    "type": "embedded-app",
    "appId": "drill-y10-2-r-fix",
    "embedContainerId": "y10-2r-activity-2",
-   "content": "<h2 class=\"lesson-h2\">Activity 2: Spot and Fix the Mistake</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is fixing wrong answers good practice for your own answers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You learn the mistakes examiners see most often, so you can check for them in your own work.</p></div></details><p class=\"lesson-lead\">Each student answer has one mistake. Find it, then type what it should say. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-2r-activity-2\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Spot and Fix the Mistake</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is fixing wrong answers good practice for your own answers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You learn the mistakes examiners see most often, so you can check for them in your own work.</p></div></details><p class=\"lesson-lead\">Each student answer about packets or methods of transmission has one mistake. Find it, then type what it should say. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-2r-activity-2\"></div>"
   },
   {
-   "id": "exam-symmetric",
-   "label": "Encryption: Symmetric Encryption",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-exam-symmetric",
-   "content": "<h2 class=\"lesson-h2\">Encryption: Symmetric Encryption</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can \"the data is scrambled\" on its own not get full marks here?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is true, but it is one general idea. Each mark needs a different, exact fact that uses the right terms.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2022, Question 4(b)(ii). Rebekah decides to encrypt the data that she transmits whilst using the Internet. She does this to keep the data safe. The data is encrypted using symmetric encryption.</p><div id=\"y10-2r-exam-symmetric\"></div>",
-   "items": [
-    {
-     "id": "symmetric-describe",
-     "prompt": "Describe how the data is encrypted using symmetric encryption.",
-     "marks": 4,
-     "modelAnswer": "The data is encrypted and decrypted using the same key. Plain text is encrypted into cipher text. The key is sent to the receiver.",
-     "scheme": [
-      "data is encrypted and decrypted using the same key / algorithm",
-      "data before encryption is known as plain text",
-      "data after encryption is known as cypher text",
-      "the key is sent to the receiver (to allow the data to be decrypted) // values are sent to the receiver that are used to generate the key"
-     ],
-     "source": "0478/11 November 2022 Q4(b)(ii)",
-     "context": "Cambridge IGCSE 0478/11, November 2022, Question 4(b)(ii). Rebekah decides to encrypt the data that she transmits whilst using the Internet. She does this to keep the data safe. The data is encrypted using symmetric encryption. Marking rule: One from the first point, then any three from the rest, one mark for each point met, up to 4."
-    }
-   ]
-  },
-  {
-   "id": "fix-encryption",
-   "label": "Encryption: Fix the Answer",
-   "type": "self-marked-response",
-   "containerId": "y10-2r-fix-encryption",
-   "content": "<h2 class=\"lesson-h2\">Encryption: Fix the Answer</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the word \"whereas\" help in a difference answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It joins what one method does to what the other does instead, so the examiner sees the contrast.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2024, Question 2(g)(iii). Give two differences between symmetric encryption and asymmetric encryption.</p><div id=\"y10-2r-fix-encryption\"></div>",
-   "items": [
-    {
-     "id": "fix-differences",
-     "prompt": "A student wrote: <em>&ldquo;Symmetric encryption is more secure. Asymmetric encryption scrambles the data.&rdquo;</em><br>This answer gets 0 marks. Write a better answer that gets 2 marks.",
-     "marks": 2,
-     "modelAnswer": "Symmetric uses one key, whereas asymmetric uses two keys. Symmetric decrypts with the same key, whereas asymmetric decrypts with a different key.",
-     "scheme": [
-      "symmetric uses one / public key whereas asymmetric uses two / public and private keys",
-      "symmetric can send the key with the data whereas asymmetric does not",
-      "symmetric decrypts the data using the same key whereas asymmetric decrypts the data using a different key",
-      "symmetric is less secure than asymmetric"
-     ],
-     "source": "0478/13 November 2024 Q2(g)(iii)",
-     "ariaLabel": "Give two differences between symmetric encryption and asymmetric encryption. (better answer)",
-     "context": "Cambridge IGCSE 0478/13, November 2024, Question 2(g)(iii). Give two differences between symmetric encryption and asymmetric encryption. A student wrote: \"Symmetric encryption is more secure. Asymmetric encryption scrambles the data.\" This got 0 of 2 marks: symmetric is less secure, and both methods scramble the data, so that is not a difference. The student now writes a better answer. Marking rule: Any two from, one mark for each point met, up to 2."
-    }
-   ]
-  },
-  {
-   "id": "practice",
-   "label": "Practice: Quick Exam Questions (1 of 2)",
+   "id": "practice-methods",
+   "label": "Practice: Quick Exam Questions",
    "type": "short-answer-validation",
-   "validatorId": "y10-2r-practice",
-   "validatorKey": "y10_2r_practice",
-   "content": "<h2 class=\"lesson-h2\">Practice: Quick Exam Questions (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do short exam parts need the exact name of a method, not a description of it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Identify and state questions want the name. A description of the method may not get the mark.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2023, Question 4(a) and (c). Data is transmitted between a computer and a printer. The data is transmitted one bit at a time down a single wire. The computer can transmit data to the printer and the printer can transmit data to the computer, using the same connection.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-practice-a\">(a) Name the two data transmission methods that will transmit data in this way. [2]</label><input id=\"y10-2r-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Quick Exam Questions (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-practice-b\">(b) Another method sends the data to the printer, then a copy of the data received is sent back to the computer. The two sets of data are compared. State the name of this error detection method. [1]</label><input id=\"y10-2r-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Quick Exam Questions (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-2r-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
-  },
-  {
-   "id": "practice-2",
-   "label": "Practice: Quick Exam Questions (2 of 2)",
-   "type": "short-answer-validation",
-   "validatorId": "y10-2r-practice-2",
-   "validatorKey": "y10_2r_practice_2",
-   "content": "<h2 class=\"lesson-h2\">Practice: Quick Exam Questions (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a question say \"one other\" method?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A method already named in the question gets no mark. You must give a different one.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/12, June 2023, Question 4(a)(iii). Part (b): Cambridge IGCSE 0478/11, November 2024, Question 4(b)(iii). Part (c): Cambridge IGCSE 0478/11, June 2025, Question 4(b)(ii).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-practice-2-a\">(a) Photographs are sent from a phone to a computer. State one benefit of using parallel instead of serial data transmission. [1]</label><input id=\"y10-2r-practice-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-a\" aria-label=\"Practice: Quick Exam Questions (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-practice-2-b\">(b) A company chose parallel full-duplex. Give one other method of data transmission it could have chosen. [1]</label><input id=\"y10-2r-practice-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-b\" aria-label=\"Practice: Quick Exam Questions (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-practice-2-c\">(c) A checksum is used. Identify one other error detection method that could be used to check for errors in the data. [1]</label><input id=\"y10-2r-practice-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-2-c\" aria-label=\"Practice: Quick Exam Questions (2 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-practice-2-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-2r-practice-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+   "validatorId": "y10-2r-practice-methods",
+   "validatorKey": "y10_2r_practice_methods",
+   "content": "<h2 class=\"lesson-h2\">Practice: Quick Exam Questions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do short exam parts need the exact name of a method, not a description of it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Identify and name questions want the name. A description of the method may not get the mark.</p></div></details><p class=\"lesson-lead\">Part (a): Cambridge IGCSE 0478/11, November 2023, Question 4(a). Data is transmitted one bit at a time down a single wire. The computer and the printer can each transmit data to the other, using the same connection. Part (b): Cambridge IGCSE 0478/11, November 2024, Question 4(b)(iii).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y10-2r-practice-methods-a\">(a) Name the two data transmission methods that will transmit data in this way. [2]</label><input id=\"y10-2r-practice-methods-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-methods-a\" aria-label=\"Practice: Quick Exam Questions part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-2r-practice-methods-b\">(b) A company chose parallel full-duplex. Give one other method of data transmission it could have chosen. [1]</label><input id=\"y10-2r-practice-methods-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-methods-b\" aria-label=\"Practice: Quick Exam Questions part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-2r-practice-methods-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-2r-practice-methods-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
   },
   {
    "id": "plenary",
-   "label": "Plenary: Topic 2 Exam Drill",
+   "label": "Plenary: Packets and Methods Exam Drill",
    "type": "embedded-app",
    "appId": "drill-y10-2-r",
    "embedContainerId": "y10-2r-plenary",
-   "content": "<h2 class=\"lesson-h2\">Plenary: Topic 2 Exam Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do questions keep coming back until you get them right three times in a row?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right once can be luck. Three times in a row shows that you really know it.</p></div></details><p class=\"lesson-lead\">Real exam questions from all of Topic 2. Get each one right three times in a row. Your progress is saved.</p><div id=\"y10-2r-plenary\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Plenary: Packets and Methods Exam Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do questions keep coming back until you get them right three times in a row?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right once can be luck. Three times in a row shows that you really know it.</p></div></details><p class=\"lesson-lead\">Real exam questions on packets, methods of transmission and USB. Get each one right three times in a row. Your progress is saved.</p><div id=\"y10-2r-plenary\"></div>"
   }
  ],
  "validators": {
-  "y10_2r_do_now": [
+  "y10_2r_do_now_packets": [
    {
     "suffix": "a",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*odd(\\s+parity)?\\s*\\.?\\s*$",
+     "source": "^(?!.*\\bpay\\s*-?\\s*load\\b)(?:(?=.*\\b(destination|receiver\\W?s?|recipient\\W?s?)\\b)(?=.*\\b(originator\\W?s?|origin|sender\\W?s?|source|sending\\s+(device|computer))\\b)(?=.*\\b(address\\w*|ip)\\b)|(?=.*(\\b(destination|receiver\\W?s?|recipient\\W?s?)\\b|\\b(originator\\W?s?|origin|sender\\W?s?|source|sending\\s+(device|computer))\\b))(?=.*\\b(address\\w*|ip)\\b)(?=.*(\\b(packet|sequence)\\W*(number|no)\\b|\\berror\\W+(detection|check\\w*)\\b))|(?=.*\\b(packet|sequence)\\W*(number|no)\\b)(?=.*\\berror\\W+(detection|check\\w*)\\b)).*$",
      "flags": "i"
     },
-    "feedback": "Count the 1s in 01111100, then decide."
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*even(\\s+parity)?\\s*\\.?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Count the 1s in 10010000, then decide."
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*even(\\s+parity)?\\s*\\.?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Count the 1s in 10011001, then decide."
-   },
-   {
-    "suffix": "d",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*odd(\\s+parity)?\\s*\\.?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Count the 1s in 00101001, then decide."
-   }
-  ],
-  "y10_2r_do_now_2": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "\\b(transpos\\w*|swap\\w*|switch\\w*|interchang\\w*|changed\\s+places|(out\\s+of|wrong|different)\\s+order|two\\s+bits|2\\s+bits|both\\s+bits|even\\s+number\\s+of\\s+(bits|errors|changes)|still\\s+(odd|even|correct|the\\s+same|matches|fits|adds?\\s+up)|still\\s+(has|have|gives?|is)\\s+(an?\\s+)?(odd|even)|same\\s+(number|amount|count)\\s+of\\s+(1|one)s?|parity\\s+(is\\s+)?(still\\s+)?(correct|the\\s+same|unchanged|ok)|adds?\\s+up\\s+to\\s+(the\\s+)?(correct|right|same)|number\\s+of\\s+(1|one)s?\\s+(is|stays|remains|has\\s+not\\s+changed|did\\s*n.?t\\s+change)|(1|one)s?\\s+(count|total)\\s+(is|stays|remains)\\s+(the\\s+)?same)\\b",
-     "flags": "i"
-    },
-    "feedback": "Compare the two bytes. Which bits changed? What happens to the count of 1s?"
-   }
-  ],
-  "y10_2r_do_now_3": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^(?=.*\\b(symmetric|synchronous|single[\\s-]*key|one[\\s-]*key|shared[\\s-]*key|secret[\\s-]*key)\\b)(?=.*\\b(asymmetric|asynchronous|public|two[\\s-]*keys?)\\b).*$",
-     "flags": "i"
-    },
-    "feedback": "Two types: one uses one shared key, the other uses two different keys. Name both.",
+    "feedback": "Two items: what does a router need to send the packet on? What does the receiver need to put the packets in order?",
     "marks": 2
    },
    {
     "suffix": "b",
     "pattern": {
      "__regex": true,
-     "source": "^(?!\\s*(no|not|idk)\\b)(?:(?=.*\\b(strings?|characters?|numbers?|values?|code|sequence|digits?|bits?|algorithms?|cipher|password|letters?|data)\\b)(?=.*\\b(encrypt\\w*|decrypt\\w*|scrambl\\w*|unscrambl\\w*|cipher|algorithms?)\\b)|(?=.*\\bused\\b)(?=.*\\b(encrypt\\w*|decrypt\\w*|scrambl\\w*)\\b)).*$",
+     "source": "^(?=.*\\bpay\\s*-?\\s*loads?\\b)(?=.*\\btrailers?\\b).*$",
      "flags": "i"
     },
-    "feedback": "Say what a key is made of, and what it is used for."
-   },
+    "feedback": "One element holds the main data. One comes at the end and holds the error check. Name both.",
+    "marks": 2
+   }
+  ],
+  "y10_2r_do_now_methods": [
    {
-    "suffix": "c",
+    "suffix": "a",
     "pattern": {
      "__regex": true,
-     "source": "\\b(meaningless|unreadable|unintelligible|gibberish|scrambl\\w*|no\\s+meaning|not\\s+(be\\s+)?(readable|understood|understandable)|(cannot|can.?t|unable\\s+to|could\\s*n.?t|not\\s+able\\s+to)\\s+(be\\s+)?(read|understo+d|understand|make\\s+sense))\\b",
+     "source": "^\\s*(d\\s*[.):-]?\\s*)?parity(\\s+(check|bit))?\\s*\\.?\\s*$|^\\s*d\\s*\\.?\\s*$",
      "flags": "i"
     },
-    "feedback": "Someone intercepts the data. What does it look like to them?"
+    "feedback": "Ask of each term: does it say how the bits travel? One of them does a different job."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?!.*\\bparallel\\s+(is\\s+|would\\s+be\\s+)?(slow\\w*|not\\s+as\\s+fast))(?=.*\\b(slow\\w*|not\\s+(as\\s+)?(fast|quick)|less\\s+(fast|quick)|takes?\\s+(more\\s+time|longer)|lower\\s+speed|less\\s+speed|additional\\s+data|extra\\s+data|more\\s+data)\\b).*$",
+     "flags": "i"
+    },
+    "feedback": "Serial sends one bit at a time. Parallel sends several bits at the same time. What does serial give up?"
    }
   ],
   "y10_2r_exam_packet_gaps": [
@@ -748,54 +445,7 @@
     "feedback": "The receiver can only put them in order when it has all of them."
    }
   ],
-  "y10_2r_exam_methods": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^(?!.*check\\s*-?\\s*sums?)(?!.*check\\s*-?\\s*digits?)(?=.*parity).*$",
-     "flags": "i"
-    },
-    "feedback": "Which method adds one extra bit?"
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^(?!.*check\\s*-?\\s*sums?)(?!.*parity)(?=.*check\\s*-?\\s*digits?).*$",
-     "flags": "i"
-    },
-    "feedback": "Which method checks a number when it is typed in or scanned?"
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^(?!.*parity)(?=.*check\\s*-?\\s*sums?)(?=.*check\\s*-?\\s*digits?).*$",
-     "flags": "i"
-    },
-    "feedback": "Which methods calculate a value, then calculate it again and compare? There is more than one."
-   },
-   {
-    "suffix": "d",
-    "pattern": {
-     "__regex": true,
-     "source": "^(?!.*check\\s*-?\\s*sums?)(?!.*check\\s*-?\\s*digits?)(?=.*parity).*$",
-     "flags": "i"
-    },
-    "feedback": "If two bits swap places, which method still sees the right count?"
-   },
-   {
-    "suffix": "e",
-    "pattern": {
-     "__regex": true,
-     "source": "^(?!.*check\\s*-?\\s*digits?)(?=.*check\\s*-?\\s*sums?).*$",
-     "flags": "i"
-    },
-    "feedback": "Which method sends a calculated value with the transmitted data?"
-   }
-  ],
-  "y10_2r_practice": [
+  "y10_2r_practice_methods": [
    {
     "suffix": "a",
     "pattern": {
@@ -810,39 +460,10 @@
     "suffix": "b",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+|the\\s+)?echo(\\s+check(ing)?)?\\s*\\.?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "The data comes back, like a sound off a wall."
-   }
-  ],
-  "y10_2r_practice_2": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^(?!.*\\b(slow\\w*|not\\s+(as\\s+)?fast)\\b)(?=.*\\b(fast\\w*|quick\\w*|speed\\w*|sooner|less\\s+time|more\\s+bits\\s+at\\s+(once|a\\s+time))\\b).*$",
-     "flags": "i"
-    },
-    "feedback": "Parallel sends several bits at the same time. What does that do?"
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
      "source": "^\\s*(serial\\s+(simplex|half[\\s-]*duplex|full[\\s-]*duplex|duplex)|parallel\\s+(simplex|half[\\s-]*duplex))(\\s+(data\\s+)?transmission)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Give both parts: serial or parallel, then simplex, half-duplex or full-duplex. Not the one they chose."
-   },
-   {
-    "suffix": "c",
-    "pattern": {
-     "__regex": true,
-     "source": "^(?!.*check\\s*-?\\s*(sum|digit))(?=.*\\b(parity|echo)\\b).*$",
-     "flags": "i"
-    },
-    "feedback": "Name a method that checks data after transmission, not when it is typed in."
    }
   ]
  },

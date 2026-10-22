@@ -1,7 +1,13 @@
-// Builds LessonData/y10-2-r.json: Year 10, 2.R Data Transmission Exam Practice (the Topic 2 review: 2.1 packets,
-// packet switching, serial and parallel, simplex, half-duplex and full-duplex, USB, choosing a method; 2.2 parity
-// byte and block, checksum, echo check, check digits, ARQ; 2.3 symmetric and asymmetric encryption).
-// It also writes the lesson's four drills and registers the lesson as a "2.R Topic 2 Review" unit after the 2.3 unit.
+// Builds the Topic 2 review as two 55-minute lessons (James, 2026-10-21: the one 32-slide lesson ran 85 to 90 minutes):
+//   LessonData/y10-2-r.json   2.R Exam Practice 1: Packets and Transmission Methods (2.1 packets, packet switching,
+//                             serial and parallel, simplex, half-duplex and full-duplex, USB, choosing a method)
+//   LessonData/y10-2-r2.json  2.R Exam Practice 2: Error Detection and Encryption (2.2 parity, checksum, echo check,
+//                             check digits, ARQ; 2.3 symmetric and asymmetric encryption)
+// Lesson 1 keeps the old id and every step id it kept, so saved answers stay with their slides. The parity and
+// encryption Do Now moved to Lesson 2; Lesson 1 has a new 2.1 Do Now. Trimmed for time: the serial benefits question
+// (0478/12 June 2023 Q4(a)(ii)), half-duplex not simplex (0478/13 November 2021 Q4(c)(ii)) and parallel full-duplex
+// reasons (0478/11 November 2024 Q4(b)(i)).
+// It also writes the seven drills and registers both lessons in a "2.R Topic 2 Review" unit after the 2.3 unit.
 //   node tools/build_y10_2_r.mjs
 // Objectives: apply Topic 2 knowledge to structured questions; identify and correct common errors in transmission
 // explanations. 2.1.5 Choosing Transmission Methods was never taught as its own lesson, so it has its own section here
@@ -11,17 +17,24 @@
 // Every written part (describe, explain, justify) is self-marked and carries the full mark scheme for AI marking
 // (docs/lessons.md, AI marking): scheme (one string per point), marks, and context (the question, the student answer
 // on a Fix the Answer slide, and the marking rule, such as "any four from" or "MAX four for ARQ").
-// Do Now: 0478/13 June 2021 Q6(a) and (b) (parity, 2.2), then 0478/13 June 2026 Q2(e)(i), 0478/12 June 2026
-// Q4(c)(ii) and 0478/11 June 2022 Q7(d) (encryption, 2.3), each with a Walk me through it. Extension: y10-2-r-ext.
-// Activities: y10-2-r-choose (choose the method for a scenario and justify it) and y10-2-r-fix (spot and fix the
-// mistake). Plenary: y10-2-r (real exam questions from the whole topic, each cited in its note).
+// Lesson 1 Do Now: 0478/12 March 2023 Q5(a)(i) and (ii) (packets), then 0478/12 June 2024 Q2(a) and 0478/13 June 2021
+// Q6(c)(ii) (methods), each with a Walk me through it. Extension: y10-2-r-ext. Activities: y10-2-r-choose (choose the
+// method for a scenario and justify it) and y10-2-r-fix (spot and fix the mistake, 2.1). Plenary: y10-2-r (real 2.1
+// exam questions, each cited in its note).
+// Lesson 2 Do Now: 0478/13 June 2021 Q6(a) and (b) (parity, 2.2), then 0478/13 June 2026 Q2(e)(i), 0478/12 June 2026
+// Q4(c)(ii) and 0478/11 June 2022 Q7(d) (encryption, 2.3), each with a Walk me through it. Extension: y10-2-r2-ext.
+// Activities: y10-2-2-l3-arq (2.2 L3's be the sender, be the receiver) and y10-2-r2-fix (spot and fix the mistake,
+// 2.2 and 2.3). Plenary: y10-2-r2 (real 2.2 and 2.3 exam questions).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ID = 'y10-2-r';
-const P = 'y10-2r';
+const L1 = { id: 'y10-2-r', P: 'y10-2r', label: '2.R Exam Practice 1: Packets and Transmission Methods', steps: [], validators: {} };
+const L2 = { id: 'y10-2-r2', P: 'y10-2r2', label: '2.R Exam Practice 2: Error Detection and Encryption', steps: [], validators: {} };
+// The step helpers below write into the lesson chosen by use().
+let P, steps, validators;
+const use = (L) => { P = L.P; steps = L.steps; validators = L.validators; };
 const re = (source) => ({ __regex: true, source, flags: 'i' });
 const cite = (ref) => `Cambridge IGCSE ${ref}.`;
 const facts = (items) => '<ul class="lesson-facts">' + items.map((i) => `<li>${i}</li>`).join('') + '</ul>';
@@ -42,7 +55,6 @@ const col = (title, rows, verdict, tone) => `<div style="padding:10px 14px;borde
   `<p style="margin:0;font-size:17px;line-height:1.6">${rows.join('<br>')}</p><p style="margin:8px 0 0;text-align:center">${pill(verdict, tone)}</p></div>`;
 const twoCols = (a, b) => `<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start">${a}${b}</div>`;
 
-const validators = {};
 function checkStep(id, label, heading, lead, parts, whyQ, extra = '') {
   const key = `${P}_${id}`.replace(/-/g, '_');
   const vid = `${P}-${id}`;
@@ -96,7 +108,6 @@ function embed(id, label, appId, heading, lead, whyQ) {
   return { id, label, type: 'embedded-app', appId, embedContainerId: `${P}-${id}`,
     content: `<h2 class="lesson-h2">${heading}</h2>` + why(whyQ[0], whyQ[1]) + (lead ? `<p class="lesson-lead">${lead}</p>` : '') + `<div id="${P}-${id}"></div>` };
 }
-const steps = [];
 
 // ---------------------------------------------------------------- "Walk me through it" pictures
 const note = (t) => `<div class="wt-note">${t}</div>`;
@@ -143,7 +154,8 @@ const WT_ENC = { title: 'Walk me through it: types and terms', steps: [
   { text: 'Your part (c): Eve intercepts the data on the way. She does not have the key. What does the data look like to her?', visual: stmt('Eve sees: X7#QPA 2!Lw ...') },
 ] };
 
-// ---------------------------------------------------------------- Do Now
+// ================================================================ Lesson 2: Do Now
+use(L2);
 // 0478/13 June 2021 Q6(a): odd; even; even; odd. Q6(b) any one: there is a transposition of bits; bits still add up to
 // the correct parity.
 const DN1 = ['01111100', '10010000', '10011001', '00101001'];
@@ -179,14 +191,75 @@ steps.push(checkStep('do-now-3', 'Do Now: Encryption (3 of 3)', 'Do Now: Encrypt
   ], ['Why do exam questions on encryption reward exact terms, like the ones in the syllabus?', 'An exact term shows the examiner you know the idea. A vague word could mean many things.']));
 steps[steps.length - 1].walkthrough = WT_ENC;
 
+steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y10-2-r2-ext', 'Extension: Do Now Challenge',
+  '<strong>Extension:</strong> finished the Do Now? Try these questions from all of Topic 2: 2.1 Data Transmission, 2.2 Methods of Error Detection and 2.3 Encryption. Stuck? Switch on <strong>I need help</strong>.',
+  ['Why mix questions from the last lesson with questions from much earlier ones?', 'Coming back to a topic after a gap helps you remember it for longer. The exam mixes topics too.']));
+
+steps.push({ id: 'title', label: 'Error Detection and Encryption Exam Practice',
+  content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Topic 2 Review: Exam Practice 2</p><h2 class="lesson-h2">Error Detection and Encryption</h2><p>Year 10</p></div>' +
+    facts(['<strong>Today:</strong> real exam questions on error detection and encryption.',
+      '<strong>Also:</strong> be the sender and the receiver in ARQ, and fix answers that lose marks.']) +
+    why('A question has 5 marks. Why plan five different points before you write?', 'Each mark is for a different point. A plan shows whether you have enough different points, so you do not repeat one.') });
+
+// ================================================================ Lesson 1: Do Now (2.1)
+use(L1);
+// Do Now 1: the parts of a packet. A parcel sent in three boxes, worked to the two label items, then the jobs of the
+// packet's three elements, stopping before every name.
+const WT_PACKETS = { title: 'Walk me through it: the parts of a packet', steps: [
+  { text: '<strong>A similar question.</strong> A parcel is sent in three boxes. Identify two items of data written on the label of each box.', visual: stmt('Label: ?') + stmt('Label: ?') },
+  { text: 'People on the way read the label without opening the box. So the label holds what they, and the receiver, need to know.', visual: note('ask: who reads the label, and what do they need?') },
+  { text: 'Item 1: the van driver needs to know where the box is going.', visual: stmt('To: ' + kw('12 Hill Road')) },
+  { text: 'Item 2: the receiver needs to know which box is which, to open them in order.', visual: stmt(kw('Box 2 of 3')) },
+  { text: 'Your part (i): the header is the label of a packet, and routers read it on the way. Give the network words for the same two kinds of item.', visual: note('where it is going + which packet it is') },
+  { text: 'Your part (ii): a packet has three elements. The header comes first. Name the other two from what each one holds.', visual: '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">' +
+    stmt('<strong>Header</strong><br>the label') + stmt('<strong>?</strong><br>' + kw('the main data')) + stmt('<strong>?</strong><br>' + kw('the error check, at the end')) + '</div>' },
+] };
+
+// Do Now 2: not a method, and a drawback. A similar odd-one-out on number systems, then the drawback of parallel worked
+// as "what the other method does better", stopping before each answer.
+const WT_METHODS = { title: 'Walk me through it: methods of transmission', steps: [
+  { text: '<strong>A similar question.</strong> Which of these terms is not a number system?', visual: chips(['binary', 'denary', 'hexadecimal', 'pixel']) },
+  { text: 'Ask the same question of every term: what is it?', visual: stmt('binary: base 2') + stmt('denary: base 10 &nbsp;&nbsp; hexadecimal: base 16') + stmt('pixel: ?') },
+  { text: 'A pixel is one dot of an image. It is not a way of writing numbers, so it is the odd one out.', visual: stmt(kw('pixel') + ': a dot of an image') },
+  { text: 'Your part (a): ask of each term: does it say how the bits travel (how many wires, which direction)? Or does it do a different job?', visual: note('how the bits travel, or another job?') },
+  { text: '<strong>A similar question.</strong> State one drawback of using parallel rather than serial data transmission.', visual: stmt('Drawback of parallel: ?') },
+  { text: 'A drawback of one method is something the other method does better. Serial sends one bit at a time, so the bits stay in order over a long distance.', visual: stmt('serial does better: ' + kw('bits stay in order over a long way')) },
+  { text: 'So a drawback of parallel: over a long distance, its bits can arrive at different times (skew).', visual: stmt('Drawback of parallel: ' + kw('the bits can skew')) },
+  { text: 'Your part (b): what does parallel do better than serial? The drawback of serial is the other side of that.', visual: note('what parallel does better &rarr; what serial gives up') },
+] };
+
+// 0478/12 March 2023 Q5(a)(i), any two: destination IP / address; packet number; originator's IP / address; error
+// detection method. Q5(a)(ii), one mark each: payload; trailer.
+const HD = { dest: '\\b(destination|receiver\\W?s?|recipient\\W?s?)\\b', orig: '\\b(originator\\W?s?|origin|sender\\W?s?|source|sending\\s+(device|computer))\\b',
+  addr: '\\b(address\\w*|ip)\\b', num: '\\b(packet|sequence)\\W*(number|no)\\b', err: '\\berror\\W+(detection|check\\w*)\\b' };
+const RE_HEADER = `^(?!.*\\bpay\\s*-?\\s*load\\b)(?:(?=.*${HD.dest})(?=.*${HD.orig})(?=.*${HD.addr})|(?=.*(${HD.dest}|${HD.orig}))(?=.*${HD.addr})(?=.*(${HD.num}|${HD.err}))|(?=.*${HD.num})(?=.*${HD.err})).*$`;
+const RE_PAY_TRAIL = '^(?=.*\\bpay\\s*-?\\s*loads?\\b)(?=.*\\btrailers?\\b).*$';
+steps.push(checkStep('do-now-packets', 'Do Now: Packets (1 of 2)', 'Do Now: Packets (1 of 2)',
+  'From 2.1. ' + cite('0478/12, March 2023, Question 5(a)') + ' Computer A sends a request for the homepage to a website\'s server. The request is sent using packet switching. The structure of a packet of data has three elements. One element is the packet header.', [
+    { line: true, marks: 2, label: 'Identify two items of data contained in a packet header.', answer: RE_HEADER, feedback: 'Two items: what does a router need to send the packet on? What does the receiver need to put the packets in order?' },
+    { line: true, marks: 2, label: 'Identify the two other elements of a packet.', answer: RE_PAY_TRAIL, feedback: 'One element holds the main data. One comes at the end and holds the error check. Name both.' },
+  ], ['Why does the question say "two items" and give 2 marks?', 'Each item is one mark. Two different items earn the 2 marks, and a third item earns nothing more.']));
+steps[steps.length - 1].walkthrough = WT_PACKETS;
+
+// 0478/12 June 2024 Q2(a): D, parity. 0478/13 June 2021 Q6(c)(ii), any one: data transmission can be slower (than
+// parallel); additional data may need to be sent.
+const RE_NOT_METHOD = '^\\s*(d\\s*[.):-]?\\s*)?parity(\\s+(check|bit))?\\s*\\.?\\s*$|^\\s*d\\s*\\.?\\s*$';
+const RE_SLOWER = '^(?!.*\\bparallel\\s+(is\\s+|would\\s+be\\s+)?(slow\\w*|not\\s+as\\s+fast))(?=.*\\b(slow\\w*|not\\s+(as\\s+)?(fast|quick)|less\\s+(fast|quick)|takes?\\s+(more\\s+time|longer)|lower\\s+speed|less\\s+speed|additional\\s+data|extra\\s+data|more\\s+data)\\b).*$';
+steps.push(checkStep('do-now-methods', 'Do Now: Methods (2 of 2)', 'Do Now: Methods (2 of 2)',
+  'From 2.1. Part (a): ' + cite('0478/12, June 2024, Question 2(a)') + ' Part (b): ' + cite('0478/13, June 2021, Question 6(c)(ii)') + ' The data is sent using serial duplex data transmission.', [
+    { grid: true, label: 'Which term is not a method for transmitting data: serial, simplex, parallel or parity?', answer: RE_NOT_METHOD, feedback: 'Ask of each term: does it say how the bits travel? One of them does a different job.' },
+    { grid: true, label: 'State one drawback of using serial data transmission, rather than parallel data transmission.', answer: RE_SLOWER, feedback: 'Serial sends one bit at a time. Parallel sends several bits at the same time. What does serial give up?' },
+  ], ['Why can a method that is better in one way still have a drawback?', 'Every method gives something up. Being better at one thing often costs something else, so the scenario decides which to use.']));
+steps[steps.length - 1].walkthrough = WT_METHODS;
+
 steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y10-2-r-ext', 'Extension: Do Now Challenge',
   '<strong>Extension:</strong> finished the Do Now? Try these questions from all of Topic 2: 2.1 Data Transmission, 2.2 Methods of Error Detection and 2.3 Encryption. Stuck? Switch on <strong>I need help</strong>.',
   ['Why practise questions from the whole topic, not just the last lesson?', 'The exam can ask about any part of the topic, in any order. Mixing topics helps you remember all of it.']));
 
 // ---------------------------------------------------------------- title
-steps.push({ id: 'title', label: 'Data Transmission Exam Practice',
-  content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Topic 2 Review</p><h2 class="lesson-h2">Data Transmission Exam Practice</h2><p>Year 10</p></div>' +
-    facts(['<strong>Today:</strong> real exam questions from all of Topic 2: packets, methods of transmission, error detection and encryption.',
+steps.push({ id: 'title', label: 'Packets and Transmission Methods Exam Practice',
+  content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Topic 2 Review: Exam Practice 1</p><h2 class="lesson-h2">Packets and Transmission Methods</h2><p>Year 10</p></div>' +
+    facts(['<strong>Today:</strong> real exam questions on packets, methods of transmission and USB.',
       '<strong>Also:</strong> choose a transmission method for a scenario and say why, and fix answers that lose marks.']) +
     why('An exam question has 4 marks. Why is one long sentence about one idea not enough?', 'Each mark is for a different point. One idea, said in many ways, still gets one mark.') });
 
@@ -236,16 +309,6 @@ steps.push(fixStep('fix-packets', 'Packets: Fix the Answer', '0478/11, June 2025
   ['Why does saying the question again in other words get no marks?', 'It adds no new fact. Each mark needs a reason: a cause or a result.']));
 
 // ================================================================ 2.1 Methods of transmission
-// 0478/12 June 2023 Q4(a)(i), two from: data is sent one bit at a time; a single wire is used.
-// Q4(a)(ii), any two from: data won't be skewed; less chance of interference / crosstalk / corruption / error;
-// transmission speed is adequate.
-steps.push(selfMarked('exam-serial', 'Methods: Serial Transmission', 'Methods: Serial Transmission',
-  cite('0478/12, June 2023, Question 4(a)(ii)') + ' A student uses a mobile phone to take photographs. The student needs to transmit the photographs to their computer.', [
-    written('serial-benefits', 'Give two benefits of transmitting the photographs using serial data transmission.', 2,
-      'The data will not be skewed. There is less chance of interference.', 'Any two from',
-      ['data won\'t be skewed', 'less chance of interference / crosstalk / corruption / error', 'transmission speed is adequate'], '0478/12 June 2023 Q4(a)(ii)'),
-  ], ['Why must "two benefits" be two different ideas?', 'Each mark is for a different point. The same idea in new words still gets one mark.']));
-
 // 0478/13 November 2021 Q4(c)(i), four from: bits sent one at a time; down a single wire; data sent in both directions;
 // but only one direction at a time. Q4(c)(ii), any two from: simplex only sends data in one direction; so the printer
 // may not be able to tell the computer an error has occurred, and the computer may not be able to send the printer the
@@ -256,12 +319,6 @@ steps.push(selfMarked('exam-duplex', 'Methods: Serial Half-Duplex', 'Methods: Se
       'Bits are sent one at a time, down a single wire. Data is sent in both directions, but only one direction at a time.', 'Four from',
       ['bits sent one at a time', '... down a single wire', 'data sent in both directions ...', '... but only one direction at a time'], '0478/13 November 2021 Q4(c)(i)'),
   ], ['Why should you plan your points before you write a 4-mark answer?', 'A plan shows whether you have four different points. Without one, it is easy to repeat a point.']));
-steps.push(selfMarked('exam-duplex-2', 'Methods: Half-Duplex, Not Simplex', 'Methods: Half-Duplex, Not Simplex',
-  cite('0478/13, November 2021, Question 4(c)(ii)') + ' The printer begins to print a document, but then a message is displayed on the computer to say that the paper has jammed. The data transmission between the computer and the printer is serial half-duplex.', [
-    written('half-not-simplex', 'Explain why the data transmission needs to be half-duplex rather than simplex.', 2,
-      'Simplex only sends data in one direction, so the printer could not tell the computer the paper has jammed.', 'Any two from',
-      ['simplex only sends data in one direction', '... so the printer may not be able to tell the computer an error has occurred, and the computer may not be able to send the printer the document to be printed (any valid answer in context)'], '0478/13 November 2021 Q4(c)(ii)'),
-  ], ['Why does a reason about THIS scenario earn more than a general fact?', 'The mark scheme rewards a reason in context. It shows you can use the fact, not just remember it.']));
 
 // 0478/12 March 2023 Q5(b)(ii), one mark each: data goes in both directions; at the same time.
 steps.push(fixStep('fix-duplex', 'Methods: Fix the Answer', '0478/12, March 2023, Question 5(b)(ii)',
@@ -328,15 +385,6 @@ steps.push(selfMarked('exam-choose-2', 'Choosing: Why Serial Simplex?', 'Choosin
       '0478/12 November 2024 Q5(b)(ii)'),
   ], ['The method here has two words. Why should your reasons cover both of them?', 'Each word is a separate choice. Reasons for only one of them can leave marks behind.']));
 
-// 0478/11 November 2024 Q4(b)(i), any four; Q4(b)(ii), any two.
-steps.push(selfMarked('exam-choose-3', 'Choosing: Why Parallel Full-Duplex?', 'Choosing: Why Parallel Full-Duplex?',
-  cite('0478/11, November 2024, Question 4(b)(i)') + ' All the company devices are within a single room. The employees will need to use their devices to send data to each other and share files. The company decides to use parallel full-duplex data transmission to send the data across the network.', [
-    written('why-parallel-full', 'Explain the reasons why the company have chosen this method of data transmission.', 4,
-      'It sends multiple bits at the same time, so the data is sent fast. The devices are all in a single room, so the data does not need to travel a long distance.', 'Any four from',
-      ['it sends the data multiple bits at the same time // it uses multiple wires', '... so the transmission speed of the data will be fast', 'data may not need to travel a long distance', '... as the devices are all within a single room', 'it sends data in both directions at the same time', '... so users on the network can send data to each other with no delay'],
-      '0478/11 November 2024 Q4(b)(i)'),
-  ], ['Here the method is given. How is that different from choosing one?', 'You do not choose. Each reason must show why the given method fits, using words from the scenario.']));
-
 // 0478/11 June 2024 Q4(c). Mark scheme, any three.
 steps.push(fixStep('fix-serial', 'Choosing: Fix the Answer', '0478/11, June 2024, Question 4(c)',
   'Data packets are transmitted across a network. Explain why serial data transmission is used to transmit the data packets.', 3,
@@ -346,7 +394,28 @@ steps.push(fixStep('fix-serial', 'Choosing: Fix the Answer', '0478/11, June 2024
     source: '0478/11 June 2024 Q4(c)', why: 'serial is slower than parallel, and "cheaper" is not in the mark scheme.' },
   ['Why is a wrong fact worse than a missing fact?', 'A wrong fact gets no mark and shows the examiner a mix-up. Check each fact before you write it down.']));
 
-// ================================================================ 2.2 Error detection
+steps.push(embed('activity-2', 'Activity 2: Spot and Fix the Mistake', 'drill-y10-2-r-fix', 'Activity 2: Spot and Fix the Mistake',
+  'Each student answer about packets or methods of transmission has one mistake. Find it, then type what it should say. Stuck? Switch on <strong>I need help</strong>.',
+  ['Why is fixing wrong answers good practice for your own answers?', 'You learn the mistakes examiners see most often, so you can check for them in your own work.']));
+
+// ---------------------------------------------------------------- Lesson 1 checked practice
+// (a) 0478/11 November 2023 Q4(a): serial half-duplex; serial full-duplex. (b) 0478/11 November 2024 Q4(b)(iii), any
+// one: serial simplex; serial half-duplex; serial full-duplex; parallel simplex; parallel half-duplex.
+const RE_TWO_SERIAL = '^(?!.*\\bparallel\\b)(?!.*simplex)(?=.*\\bserial\\b)(?=.*\\bhalf[\\s-]*duplex\\b)(?=.*\\bfull[\\s-]*duplex\\b).*$';
+const RE_OTHER_METHOD = '^\\s*(serial\\s+(simplex|half[\\s-]*duplex|full[\\s-]*duplex|duplex)|parallel\\s+(simplex|half[\\s-]*duplex))(\\s+(data\\s+)?transmission)?\\s*\\.?\\s*$';
+steps.push(checkStep('practice-methods', 'Practice: Quick Exam Questions', 'Practice: Quick Exam Questions',
+  'Part (a): ' + cite('0478/11, November 2023, Question 4(a)') + ' Data is transmitted one bit at a time down a single wire. The computer and the printer can each transmit data to the other, using the same connection. Part (b): ' + cite('0478/11, November 2024, Question 4(b)(iii)'), [
+    { line: true, marks: 2, label: 'Name the two data transmission methods that will transmit data in this way.',
+      answer: RE_TWO_SERIAL, feedback: 'One bit at a time is serial. Which two direction methods let both devices send?' },
+    { label: 'A company chose parallel full-duplex. Give one other method of data transmission it could have chosen.', answer: RE_OTHER_METHOD, feedback: 'Give both parts: serial or parallel, then simplex, half-duplex or full-duplex. Not the one they chose.' },
+  ], ['Why do short exam parts need the exact name of a method, not a description of it?', 'Identify and name questions want the name. A description of the method may not get the mark.']));
+
+steps.push(embed('plenary', 'Plenary: Packets and Methods Exam Drill', 'drill-y10-2-r', 'Plenary: Packets and Methods Exam Drill',
+  'Real exam questions on packets, methods of transmission and USB. Get each one right three times in a row. Your progress is saved.',
+  ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
+
+// ================================================================ Lesson 2: 2.2 Error detection
+use(L2);
 // 0478/11 November 2023 Q4(b). Mark scheme, any four.
 steps.push(selfMarked('exam-parity', 'Error Detection: The Odd Parity Check', 'Error Detection: The Odd Parity Check',
   cite('0478/11, November 2023, Question 4(b)') + ' Data is transmitted between a computer and a printer. An odd parity check is used to detect errors in the data transmission.', [
@@ -364,6 +433,10 @@ steps.push(selfMarked('exam-checksum', 'Error Detection: The Checksum', 'Error D
       ['the checksum is calculated from / using the data', '... using an algorithm // by example', 'the (checksum) value is transmitted with the data', 'the (checksum) value is recalculated after transmission / by the recipient', 'if the checksum values do not match, an error is detected // if the checksum values match, no error is detected ...', '... request for the data to be resent if there is an error'],
       '0478/11 June 2025 Q4(b)(i)'),
   ], ['A checksum and a check digit both calculate a value. Why do they find errors at different times?', 'A check digit checks data when it is entered. A checksum checks data after it is transmitted.']));
+
+steps.push(embed('activity-1', 'Activity 1: Be the Sender, Be the Receiver', 'drill-y10-2-2-l3-arq', 'Activity 1: Be the Sender, Be the Receiver',
+  'Be the receiver: check each byte and decide what to send back. Be the sender: decide which packet to send next. New bytes every time. Stuck? Switch on <strong>I need help</strong>.',
+  ['Why must the receiver check the data before it sends anything back?', 'What it sends back depends on whether the data arrived safely, so it must find that out first.']));
 
 // 0478/13 November 2022 Q9. Any six from (MAX four for ARQ). The paper says "Automatic Repeat reQuests"; the stem here
 // uses the syllabus term.
@@ -396,8 +469,8 @@ steps.push(checkStep('exam-methods', 'Error Detection: Which Method?', 'Error De
     { grid: true, label: 'sends additional values when data is transmitted from one computer to another', answer: `^(?!.*${M.digit})(?=.*${M.sum}).*$`, feedback: 'Which method sends a calculated value with the transmitted data?' },
   ], ['Why test each statement against every method?', 'Some statements fit more than one method. Testing each one stops you missing one.']));
 
-steps.push(embed('activity-2', 'Activity 2: Spot and Fix the Mistake', 'drill-y10-2-r-fix', 'Activity 2: Spot and Fix the Mistake',
-  'Each student answer has one mistake. Find it, then type what it should say. Stuck? Switch on <strong>I need help</strong>.',
+steps.push(embed('activity-2', 'Activity 2: Spot and Fix the Mistake', 'drill-y10-2-r2-fix', 'Activity 2: Spot and Fix the Mistake',
+  'Each student answer about error detection or encryption has one mistake. Find it, then type what it should say. Stuck? Switch on <strong>I need help</strong>.',
   ['Why is fixing wrong answers good practice for your own answers?', 'You learn the mistakes examiners see most often, so you can check for them in your own work.']));
 
 // ================================================================ 2.3 Encryption
@@ -420,37 +493,38 @@ steps.push(fixStep('fix-encryption', 'Encryption: Fix the Answer', '0478/13, Nov
   ['Why does the word "whereas" help in a difference answer?', 'It joins what one method does to what the other does instead, so the examiner sees the contrast.']));
 
 // ---------------------------------------------------------------- checked practice
-// (a) 0478/11 November 2023 Q4(a): serial half-duplex; serial full-duplex. (b) Q4(c): echo (check).
-// (c) 0478/12 June 2023 Q4(a)(iii): the data may be transmitted quicker. (d) 0478/11 November 2024 Q4(b)(iii), any one:
-// serial simplex; serial half-duplex; serial full-duplex; parallel simplex; parallel half-duplex.
-// (e) 0478/11 June 2025 Q4(b)(ii), any one: parity byte / block check; echo check.
-const RE_TWO_SERIAL = '^(?!.*\\bparallel\\b)(?!.*simplex)(?=.*\\bserial\\b)(?=.*\\bhalf[\\s-]*duplex\\b)(?=.*\\bfull[\\s-]*duplex\\b).*$';
+// (a) 0478/11 November 2023 Q4(c): echo (check). (b) 0478/11 June 2025 Q4(b)(ii), any one: parity byte / block check;
+// echo check. (c) 0478/12 June 2026 Q4(c)(iii): cipher / cypher text (BOD cipher alone or cipher data).
 const RE_ECHO = '^\\s*(an?\\s+|the\\s+)?echo(\\s+check(ing)?)?\\s*\\.?\\s*$';
-const RE_FASTER = '^(?!.*\\b(slow\\w*|not\\s+(as\\s+)?fast)\\b)(?=.*\\b(fast\\w*|quick\\w*|speed\\w*|sooner|less\\s+time|more\\s+bits\\s+at\\s+(once|a\\s+time))\\b).*$';
-const RE_OTHER_METHOD = '^\\s*(serial\\s+(simplex|half[\\s-]*duplex|full[\\s-]*duplex|duplex)|parallel\\s+(simplex|half[\\s-]*duplex))(\\s+(data\\s+)?transmission)?\\s*\\.?\\s*$';
 const RE_OTHER_CHECK = '^(?!.*check\\s*-?\\s*(sum|digit))(?=.*\\b(parity|echo)\\b).*$';
-steps.push(checkStep('practice', 'Practice: Quick Exam Questions (1 of 2)', 'Practice: Quick Exam Questions (1 of 2)',
-  cite('0478/11, November 2023, Question 4(a) and (c)') + ' Data is transmitted between a computer and a printer. The data is transmitted one bit at a time down a single wire. The computer can transmit data to the printer and the printer can transmit data to the computer, using the same connection.', [
-    { line: true, marks: 2, label: 'Name the two data transmission methods that will transmit data in this way.',
-      answer: RE_TWO_SERIAL, feedback: 'One bit at a time is serial. Which two direction methods let both devices send?' },
-    { line: true, label: 'Another method sends the data to the printer, then a copy of the data received is sent back to the computer. The two sets of data are compared. State the name of this error detection method.', answer: RE_ECHO, feedback: 'The data comes back, like a sound off a wall.' },
-  ], ['Why do short exam parts need the exact name of a method, not a description of it?', 'Identify and state questions want the name. A description of the method may not get the mark.']));
-steps.push(checkStep('practice-2', 'Practice: Quick Exam Questions (2 of 2)', 'Practice: Quick Exam Questions (2 of 2)',
-  'Part (a): ' + cite('0478/12, June 2023, Question 4(a)(iii)') + ' Part (b): ' + cite('0478/11, November 2024, Question 4(b)(iii)') + ' Part (c): ' + cite('0478/11, June 2025, Question 4(b)(ii)'), [
-    { line: true, label: 'Photographs are sent from a phone to a computer. State one benefit of using parallel instead of serial data transmission.', answer: RE_FASTER, feedback: 'Parallel sends several bits at the same time. What does that do?' },
-    { line: true, label: 'A company chose parallel full-duplex. Give one other method of data transmission it could have chosen.', answer: RE_OTHER_METHOD, feedback: 'Give both parts: serial or parallel, then simplex, half-duplex or full-duplex. Not the one they chose.' },
-    { line: true, label: 'A checksum is used. Identify one other error detection method that could be used to check for errors in the data.', answer: RE_OTHER_CHECK, feedback: 'Name a method that checks data after transmission, not when it is typed in.' },
+const RE_CIPHER = '^\\s*(the\\s+|a\\s+)?(ciph|cyph)er(\\s*-?\\s*(text|data))?\\s*\\.?\\s*$';
+steps.push(checkStep('practice', 'Practice: Quick Exam Questions', 'Practice: Quick Exam Questions',
+  'Part (a): ' + cite('0478/11, November 2023, Question 4(c)') + ' Data is sent from a computer to a printer, then a copy of the data received is sent back to the computer. The two sets of data are compared. Part (b): ' + cite('0478/11, June 2025, Question 4(b)(ii)') + ' Part (c): ' + cite('0478/12, June 2026, Question 4(c)(iii)'), [
+    { grid: true, label: 'State the name of this error detection method.', answer: RE_ECHO, feedback: 'The data comes back, like a sound off a wall.' },
+    { grid: true, label: 'A checksum is used. Identify one other error detection method that could be used to check for errors in the data.', answer: RE_OTHER_CHECK, feedback: 'Name a method that checks data after transmission, not when it is typed in.' },
+    { grid: true, label: 'The data that is transmitted is encrypted. State the name given to the encrypted data.', answer: RE_CIPHER, feedback: 'Plain text is the data before encryption. What is it called after?' },
   ], ['Why does a question say "one other" method?', 'A method already named in the question gets no mark. You must give a different one.']));
 
 // ---------------------------------------------------------------- plenary
-steps.push(embed('plenary', 'Plenary: Topic 2 Exam Drill', 'drill-y10-2-r', 'Plenary: Topic 2 Exam Drill',
-  'Real exam questions from all of Topic 2. Get each one right three times in a row. Your progress is saved.',
+steps.push(embed('plenary', 'Plenary: Error Detection and Encryption Exam Drill', 'drill-y10-2-r2', 'Plenary: Error Detection and Encryption Exam Drill',
+  'Real exam questions on error detection and encryption. Get each one right three times in a row. Your progress is saved.',
   ['Why do questions keep coming back until you get them right three times in a row?', 'Getting it right once can be luck. Three times in a row shows that you really know it.']));
 
 // ---------------------------------------------------------------- self-checks
-const V = (k) => validators[`${P}_${k}`.replace(/-/g, '_')];
+const VL = (L, k) => L.validators[`${L.P}_${k}`.replace(/-/g, '_')];
+const lessonOf = (k) => (VL(L1, k) ? L1 : L2);
+const V = (k) => VL(lessonOf(k), k);
 const T = (k, i, s) => new RegExp(V(k)[i].pattern.source, 'i').test(s);
 const ok = (k, i, yes, no) => { yes.forEach((s) => assert(T(k, i, s), `${k}[${i}] rejects "${s}"`)); no.forEach((s) => assert(!T(k, i, s), `${k}[${i}] accepts "${s}"`)); };
+// Step ids shared by both lessons (title, do-now-ext, activity-2, plenary) carry no validators, so lessonOf is safe.
+ok('do-now-packets', 0, ['destination address and packet number', 'the IP address of the sender and the destination', 'Destination IP, packet number', 'sender address, receiver address', 'packet number and error detection method', 'originator IP address and sequence number'],
+  ['payload and trailer', 'IP address', 'destination address', 'packet number and payload', 'the data and the address', 'header and trailer']);
+ok('do-now-packets', 1, ['payload and trailer', 'The payload, the trailer', 'Trailer and pay load'], ['payload', 'trailer and footer', 'header and payload', 'body and footer', 'data and trailer']);
+ok('do-now-methods', 0, ['parity', 'D', 'D parity', 'Parity check', 'd.'], ['serial', 'simplex', 'parallel', 'A', 'C', 'parallel and parity']);
+ok('do-now-methods', 1, ['it is slower', 'data transmission can be slower than parallel', 'it is not as fast', 'additional data may need to be sent', 'it takes longer to send the data', 'slower'], ['it is faster', 'parallel is slower', 'more interference', 'the bits can skew', 'it uses one wire']);
+ok('practice-methods', 0, ['serial half-duplex and serial full-duplex', 'Serial full duplex, serial half duplex', 'serial halfduplex and serial fullduplex'], ['serial simplex and serial half-duplex', 'parallel half-duplex and parallel full-duplex', 'half-duplex', 'serial half-duplex']);
+ok('practice-methods', 1, ['serial simplex', 'Serial half-duplex', 'serial full duplex', 'parallel simplex', 'parallel half-duplex transmission'], ['parallel full-duplex', 'serial', 'simplex', 'parallel', 'packet switching']);
+ok('practice', 2, ['cipher text', 'Cypher text', 'cipher', 'the ciphertext', 'cipher data'], ['plain text', 'encrypted', 'key', 'code']);
 ok('do-now', 0, ['odd', 'Odd parity', 'ODD.'], ['even', 'odd or even', '5']);
 ok('do-now', 1, ['even', 'Even parity'], ['odd', 'uneven']);
 ok('do-now-2', 0, ['there is a transposition of bits', 'two bits swapped places', 'the bits still add up to the correct parity', 'the number of 1s is still the same', 'two bits changed so the parity is still correct', 'the bits are in the wrong order', 'it still has an even number of 1s', 'an even number of bits changed'],
@@ -467,15 +541,12 @@ ok('exam-methods', 1, ['check digit', 'Check digits'], ['checksum', 'parity chec
 ok('exam-methods', 2, ['checksum and check digit', 'check digit, checksum', 'check sum and check digit'], ['checksum', 'check digit', 'checksum, check digit and parity check']);
 ok('exam-methods', 3, ['parity check'], ['checksum', 'check digit', 'parity and checksum']);
 ok('exam-methods', 4, ['checksum', 'checksum and parity check', 'check sum'], ['parity check', 'check digit', 'checksum and check digit']);
-ok('practice', 0, ['serial half-duplex and serial full-duplex', 'Serial full duplex, serial half duplex', 'serial halfduplex and serial fullduplex'], ['serial simplex and serial half-duplex', 'parallel half-duplex and parallel full-duplex', 'half-duplex', 'serial half-duplex']);
-ok('practice', 1, ['echo check', 'Echo', 'an echo check'], ['checksum', 'parity check', 'ARQ']);
-ok('practice-2', 0, ['it is faster', 'the data may be transmitted quicker', 'higher speed', 'faster transmission'], ['it is slower', 'not as fast', 'less interference', 'longer distance']);
-ok('practice-2', 1, ['serial simplex', 'Serial half-duplex', 'serial full duplex', 'parallel simplex', 'parallel half-duplex transmission'], ['parallel full-duplex', 'serial', 'simplex', 'parallel', 'packet switching']);
-ok('practice-2', 2, ['parity check', 'echo check', 'parity block check', 'Even parity byte check'], ['checksum', 'check digit', 'ARQ', 'encryption']);
+ok('practice', 0, ['echo check', 'Echo', 'an echo check'], ['checksum', 'parity check', 'ARQ']);
+ok('practice', 1, ['parity check', 'echo check', 'parity block check', 'Even parity byte check'], ['checksum', 'check digit', 'ARQ', 'encryption']);
 // Do Now walkthroughs: no step, as plain text (alone or with its picture), passes any part on its slide.
 {
   const plain = (h) => h.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ');
-  steps.filter((s) => /^do-now(-\d)?$/.test(s.id)).forEach((s) => {
+  [...L1.steps, ...L2.steps].filter((s) => s.type === 'short-answer-validation' && /^do-now/.test(s.id)).forEach((s) => {
     assert(s.walkthrough && s.walkthrough.steps.length >= 6, `${s.id} has a walkthrough`);
     V(s.id).forEach((v, i) => s.walkthrough.steps.forEach((w, n) => {
       [w.text, w.visual, w.text + ' ' + w.visual].forEach((part) => assert(!new RegExp(v.pattern.source, 'i').test(plain(part)), `${s.id} walkthrough step ${n + 1} passes part ${'abcde'[i]}: ${plain(part)}`));
@@ -485,9 +556,17 @@ ok('practice-2', 2, ['parity check', 'echo check', 'parity block check', 'Even p
   DN1.forEach((b) => assert(!wt1.includes(b), `parity walkthrough shows Do Now byte ${b}`));
   assert(!/transpos|swap|same number|changed places|two bits/i.test(plain(JSON.stringify(WT_SWAP))), 'swap walkthrough gives the reason');
   assert(!/\b(a)?symmetric|synchronous|meaningless|unreadable|string of|characters/i.test(plain(JSON.stringify(WT_ENC))), 'encryption walkthrough names a Do Now answer');
+  assert(!/pay\s*load|trailer|destination|packet number|sequence number|originator|sender|source|error detection/i.test(plain(JSON.stringify(WT_PACKETS))), 'packets walkthrough names a Do Now answer');
+  assert(!/\bparity\b|slow|not as fast|longer|additional data|extra data|more data/i.test(plain(JSON.stringify(WT_METHODS))), 'methods walkthrough names a Do Now answer');
 }
+// Lesson 1 keeps the old lesson's step ids for every slide it kept (saved answers stay on their slides). New: the 2.1
+// Do Now and the Lesson 1 practice slide.
+const OLD_IDS = ['do-now', 'do-now-2', 'do-now-3', 'do-now-ext', 'title', 'concept-command', 'exam-packet', 'exam-packet-gaps', 'fix-packets', 'exam-serial', 'exam-duplex', 'exam-duplex-2', 'fix-duplex', 'exam-usb', 'concept-choose', 'compare-choose', 'exam-choose', 'activity-1', 'exam-choose-2', 'exam-choose-3', 'fix-serial', 'exam-parity', 'exam-checksum', 'exam-parity-arq', 'fix-echo', 'exam-methods', 'activity-2', 'exam-symmetric', 'fix-encryption', 'practice', 'practice-2', 'plenary'];
+L1.steps.forEach((s) => assert(OLD_IDS.includes(s.id) || ['do-now-packets', 'do-now-methods', 'practice-methods'].includes(s.id), `lesson 1 step ${s.id} is new`));
+['do-now', 'do-now-2', 'do-now-3', 'practice'].forEach((id) => assert(!L1.steps.some((s) => s.id === id), `lesson 1 reuses ${id} for a different question`));
+[L1, L2].forEach((L) => assert(new Set(L.steps.map((s) => s.id)).size === L.steps.length, `${L.id} step ids unique`));
 // Every written part carries a mark scheme (at most 12 points, at least as many as marks), a context and a source.
-steps.filter((s) => s.type === 'self-marked-response').forEach((s) => s.items.forEach((it) => {
+[...L1.steps, ...L2.steps].filter((s) => s.type === 'self-marked-response').forEach((s) => s.items.forEach((it) => {
   assert(Array.isArray(it.scheme) && it.scheme.length >= it.marks && it.scheme.length <= 12 && it.id && it.context && !/[<>]/.test(it.context), `${s.id}/${it.id} mark scheme`);
   assert(/^0478\/1[123] /.test(it.source), `${s.id}/${it.id} source`);
 }));
@@ -576,6 +655,101 @@ function extCards() {
       example: "Example question: you post a locked box to a friend, with its key taped to the lid. Why is that risky?\nStep 1: a thief can open a parcel on the way.\nStep 2: the thief finds what is taped to the lid.\nStep 3: with it, the thief opens the box.\nNow your question: what could happen to the secret on the way, and what could that person then do?",
       working: ["Anything sent across a network can be intercepted.", "If a person has that, what can they do with the cipher text?"],
       note: "The key could be intercepted on the way, and whoever has it can decrypt the data." }
+  ];
+}
+
+// ---- Exam Practice 2, Do Now Extension: all of Topic 2, a different selection from Exam Practice 1's. Every card has
+// an example on different details and two nudges.
+function ext2Cards() {
+  function ones(s) { return s.split("").filter(function (b) { return b === "1"; }).length; }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  var NAMES = ["Ana", "Ben", "Chen", "Dara", "Femi", "Hana", "Ivan", "Lina", "Omar", "Rosa"];
+  var SC = [
+    ["A sensor in a field sends readings to a farm computer 300 metres away. The computer never sends anything back.", "serial", "simplex"],
+    ["Two people in different countries talk to each other on a video call at the same time.", "serial", "full-duplex"],
+    ["Two chips 2 cm apart on one circuit board send data one way only, as fast as possible.", "parallel", "simplex"],
+    ["A computer sends work to a printer in another room. The printer replies 'out of paper', but never while it is receiving.", "serial", "half-duplex"]
+  ];
+  var DRE = { "simplex": "simplex", "half-duplex": "half[\\s-]*duplex", "full-duplex": "full[\\s-]*duplex" };
+  return [
+    // ------------------------------------------------ Data Transmission (2.1)
+    { id: "e2-01", category: "e2-trans", format: "Type serial or parallel, then simplex, half-duplex or full-duplex", randomize: function () {
+        var s = drillPick(SC), other = s[1] === "serial" ? "parallel" : "serial";
+        var notDir = Object.keys(DRE).filter(function (k) { return k !== s[2]; }).map(function (k) { return "(?!.*\\b" + DRE[k] + "\\b)"; }).join("");
+        var dirs = Object.keys(DRE).filter(function (k) { return k !== s[2]; });
+        return { prompt: s[0] + "\nWhich method of data transmission fits best?", answers: [cap(s[1]) + " " + s[2]],
+          keywords: [new RegExp("^(?!.*\\b" + other + "\\b)" + notDir + "(?=.*\\b" + s[1] + "\\b)(?=.*\\b" + DRE[s[2]] + "\\b).*$", "i")],
+          distractors: [cap(other) + " " + s[2], cap(s[1]) + " " + dirs[0], cap(s[1]) + " " + dirs[1]],
+          example: "Example: a doorbell camera at the gate sends video to a screen in the house, 40 metres away. Nothing is sent back.\nStep 1: how far? 40 metres is a long way, so send one bit at a time: the bits stay in order.\nStep 2: which way? Video only goes from the camera to the screen: one way only.\nStep 3: name the method with two words: the word for one bit at a time, then the word for one way only.",
+          working: ["How far does the data go? Far: one bit at a time. Very short and fast: several bits at once.", "Who sends? One way only, both ways taking turns, or both ways at once?"],
+          note: cap(s[1]) + " " + s[2] + "." };
+      } },
+    { id: "e2-02", category: "e2-trans", prompt: "Name the part of a packet that holds the main data, such as part of an email.", answers: ["Payload"],
+      keywords: [/^\s*(the\s+)?pay\s*-?\s*load\s*\.?\s*$/i], distractors: ["Header", "Trailer", "Router"],
+      example: "Example question: name the part of a packet that holds the destination address.\nStep 1: a packet has three parts: one at the front, one in the middle, one at the end.\nStep 2: the address is read on the way, like the label on a parcel, so it is at the front.\nStep 3: the part at the front is the header.\nNow your question: the main data is not the label. Which part sits in the middle?",
+      working: ["A packet has a header, a middle part and a trailer.", "The middle part carries the load of the packet: the data itself."],
+      note: "The payload holds the main data. The header holds the addresses and the packet number. The trailer comes at the end." },
+    { id: "e2-03", category: "e2-trans", prompt: "Give one reason why parallel data transmission is not used over a long distance.", answers: ["The bits can be skewed"],
+      keywords: [/\b(skew\w*|out\s+of\s+(order|step|sync\w*)|wrong\s+order|different\s+times|interfer\w*|crosstalk|errors?|corrupt\w*)\b/i],
+      distractors: ["It is too slow", "It sends one bit at a time", "It only goes one way"],
+      example: "Example question: give one reason why serial data transmission is not used inside a chip, where speed matters most.\nStep 1: serial sends one bit at a time, down one wire.\nStep 2: compared with several bits at once, that takes more time.\nStep 3: so the reason is about speed.\nNow your question: several bits travel side by side down a long cable. Do they all arrive together?",
+      working: ["Parallel sends several bits at the same time, down several wires.", "Over a long cable, do bits on different wires all arrive at the same moment?"],
+      note: "Over a long distance the bits on the different wires can skew: they arrive at different times, out of order. There is also more interference." },
+    // ------------------------------------------------ Methods of Error Detection (2.2)
+    { id: "e2-04", category: "e2-errors", format: "Type yes or no", randomize: function () {
+        var mode = drillPick(["even", "odd"]), b = [];
+        for (var i = 0; i < 8; i++) b.push(Math.random() < 0.5 ? "1" : "0");
+        var d = b.join(""), n = ones(d), fits = (n % 2 === 0) === (mode === "even"), a = fits ? "No" : "Yes";
+        var ex = mode === "even" ? "10110101" : "10010110", en = ones(ex);
+        return { prompt: cap(mode) + " parity is used. This byte arrives: " + d + "\nIs an error detected: yes or no?", answers: [a],
+          keywords: [new RegExp("^\\s*" + a + "\\b", "i")], distractors: [fits ? "Yes" : "No"],
+          example: "Example: " + mode + " parity is used. The byte " + ex + " arrives.\nStep 1: count the 1s in the whole byte, parity bit included: " + en + ".\nStep 2: " + mode + " parity needs an " + mode + " count of 1s.\nStep 3: " + en + " is " + (en % 2 === 0 ? "even" : "odd") + ", so it does not fit: an error is detected.",
+          working: ["Count the 1s in the whole byte, parity bit included.", "Does the count fit " + mode + " parity?"],
+          note: d + " has " + n + " ones. With " + mode + " parity that " + (fits ? "fits, so no error is detected." : "does not fit, so an error is detected.") };
+      } },
+    { id: "e2-05", category: "e2-errors", format: "Type what the receiver decides", randomize: function () {
+        var s = 60 + Math.floor(Math.random() * 190), same = Math.random() < 0.5;
+        var r = same ? s : s + drillPick([-5, -3, -2, -1, 1, 2, 3, 4]);
+        var bad = /^(?!.*\bno\s+errors?\b)(?=.*\b(errors?|wrong|corrupt\w*|resen\w*|sent\s+again|not\s+match\w*|do\s*n.?t\s+match|does\s*n.?t\s+match|different|differ)\b).*$/i;
+        var good = /\bno\s+errors?\b|^(?!.*\b(errors?|not|never)\b)(?!.*n.t\b)(?=.*\b(correct|ok|okay|fine|match\w*|same|accept\w*|safe\w*)\b).*$/i;
+        return { prompt: "The sender sends a checksum of " + s + " with the data. The receiver adds up the data it received and gets " + r + ".\nWhat does the receiver decide?",
+          answers: [same ? "No error is detected" : "An error is detected"], keywords: [same ? good : bad],
+          distractors: same ? ["An error is detected", "The data is sent again", "The checksum is wrong"] : ["No error is detected", "The checksum is changed to match", "The data is encrypted"],
+          example: "Example: the sender sends a checksum of 120. The receiver adds up the data it received and gets 118.\nStep 1: the receiver works out the checksum again from the data that arrived.\nStep 2: it compares its value with the one that was sent: 118 and 120.\nStep 3: if the two values are not equal, the data changed on the way. If they are equal, nothing was found.",
+          working: ["Compare the two values: " + s + " and " + r + ".", "Equal values mean nothing was found. Values that are not equal mean the data changed."],
+          note: s + " and " + r + (same ? " match, so no error is detected." : " do not match, so an error is detected and the data can be sent again.") };
+      } },
+    { id: "e2-06", category: "e2-errors", prompt: "In ARQ, the receiver finds an error in a packet. What does it send back to the sender?", answers: ["A negative acknowledgement"],
+      keywords: [/\bnegative\s+acknowledg\w*|\bnak\b|\bnack\b/i], distractors: ["A positive acknowledgement", "The packet again", "A check digit"],
+      example: "Example question: in ARQ, the receiver finds no error in a packet. What does it send back?\nStep 1: the sender is waiting to hear how the packet arrived.\nStep 2: the news is good: the packet is safe.\nStep 3: so the receiver sends a positive acknowledgement.\nNow your question: the news is bad. Which kind of acknowledgement says that?",
+      working: ["An acknowledgement is a message back to the sender.", "Positive means it arrived safely. What is the opposite?"],
+      note: "A negative acknowledgement. The sender then sends the packet again." },
+    { id: "e2-07", category: "e2-errors", format: "Type yes or no", prompt: "A byte is sent with even parity. On the way, one 1 becomes 0 and one 0 becomes 1. Will the parity check detect the error?", answers: ["No"],
+      keywords: [/^\s*no\b/i], distractors: ["Yes"],
+      example: "Example: a byte is sent with even parity. On the way, one 0 becomes 1.\nStep 1: the count of 1s goes up by one.\nStep 2: an even count plus one is odd.\nStep 3: odd does not fit even parity, so the check sees the change.\nNow your question: one 1 is lost and one 1 is gained. What happens to the count?",
+      working: ["One 1 is lost and one 1 is gained.", "Is the count of 1s still even?"],
+      note: "No. The count of 1s stays the same, so it still fits even parity and the check misses the error." },
+    // ------------------------------------------------ Encryption (2.3)
+    { id: "e2-08", category: "e2-enc", prompt: "In symmetric encryption, which key decrypts the data?", answers: ["The same key that encrypted it"],
+      keywords: [/\b(same|identical|shared|secret|single)\b/i], distractors: ["A public key", "A private key", "A different key"],
+      example: "Example question: in asymmetric encryption, which key decrypts data that was encrypted with Ana's public key?\nStep 1: asymmetric means the two keys are not alike.\nStep 2: the key that decrypts is the partner of the key that encrypted.\nStep 3: so it is Ana's private key.\nNow your question: symmetric means both sides are alike. Which key decrypts?",
+      working: ["Symmetric means both sides match.", "How many keys does symmetric encryption use?"],
+      note: "The same key encrypts and decrypts. Both sides must have it." },
+    { id: "e2-09", category: "e2-enc", format: "Type whose key and which key, for example: Rosa's private key", randomize: function () {
+        var a = drillPick(NAMES), b = drillPick(NAMES.filter(function (n) { return n !== a; })), c = drillPick(NAMES.filter(function (n) { return n !== a && n !== b; }));
+        return { prompt: a + " encrypts a message for " + b + " using asymmetric encryption. Which key does " + a + " use to encrypt it?", answers: [b + "'s public key"],
+          keywords: [new RegExp("^\\s*(the\\s+)?(" + b + "\\W?s?\\s+public(\\s*-?\\s*key)?|public\\s+key\\s+(of|from|belonging\\s+to)\\s+" + b + ")\\s*\\.?\\s*$", "i")],
+          distractors: [a + "'s public key", b + "'s private key", a + "'s private key"],
+          example: "Example: " + c + " wants to receive secret messages.\nStep 1: " + c + " makes two keys: one to give to everyone, one to keep.\nStep 2: anyone sending to " + c + " must encrypt so that only " + c + " can decrypt.\nStep 3: so they encrypt with the key " + c + " gives to everyone: " + c + "'s public key.",
+          working: ["Who will decrypt the message?", "The sender uses the key of that person that everyone is allowed to have."],
+          note: b + "'s public key. Only " + b + "'s private key can then decrypt it." };
+      } },
+    { id: "e2-10", category: "e2-enc", prompt: "Data passes every error check when it arrives. Why might it still need to be encrypted?", answers: ["It could still be intercepted and read on the way"],
+      keywords: [/\b(intercept\w*|stolen|steal\w*|hack\w*|eavesdrop\w*|read\s+by|seen\s+by|(someone|anyone|people|others?)\s+(could|can|might|may)\s+(read|see|get|access))\b/i],
+      distractors: ["Encryption finds more errors", "Encryption makes it faster", "Encryption makes it smaller"],
+      example: "Example question: a letter arrives with every word spelled correctly. Why might the writer still have wanted to seal it?\nStep 1: a correct letter only tells you nothing changed on the way.\nStep 2: it does not tell you who opened it and looked inside.\nStep 3: sealing is about who can look, not about mistakes.\nNow your question: error checks find changes. What can they not stop?",
+      working: ["Error checks only find changes to the data.", "Who else could get the data on the way?"],
+      note: "Error checks do not stop interception. Encryption makes intercepted data meaningless without the key." }
   ];
 }
 
@@ -688,7 +862,7 @@ function chooseCards() {
   return [methodCard("ch-01"), methodCard("ch-02"), methodCard("ch-03"), wireWhyCard("ch-04"), wireWhyCard("ch-05"), dirWhyCard("ch-06"), dirWhyCard("ch-07"), mistakeCard("ch-08"), mistakeCard("ch-09")];
 }
 
-// ---- Activity 2: spot the mistake in a student answer, and type the fix.
+// ---- Exam Practice 1, Activity 2: spot the mistake in a student answer about packets or methods, and type the fix.
 function fixCards() {
   var F = "Type what it should say instead";
   function card(id, cat, wrote, ans, kw, dis, w1, w2, note) {
@@ -717,6 +891,25 @@ function fixCards() {
     card("fx-07", "fx-trans", "Serial data can be skewed over a long distance.", "parallel", /^\s*parallel(\s+(data|transmission))?\b/i,
       ["serial", "simplex", "full-duplex"], "Skew happens when bits travel side by side.", "Which method sends bits side by side?",
       "Parallel data can be skewed over a long distance. Serial bits arrive in order."),
+    card("fx-19", "fx-trans", "A USB connection uses parallel data transmission.", "serial", /^\s*(it\s+uses\s+)?serial(\s+(data\s+)?transmission)?\b/i,
+      ["parallel", "simplex", "full-duplex"], "Look at the letters USB.", "What does the S in USB stand for?",
+      "A USB connection uses serial data transmission: universal serial bus."),
+    card("fx-20", "fx-trans", "Simplex sends data in both directions, one direction at a time.", "one direction only", /^(?!.*\b(at\s+a\s+time|both|turns?|taking\s+turns)\b)(?=.*\b((one|1|single)\s+(direction|way)|one[\s-]way)\b).*$/i,
+      ["both directions at the same time", "both directions, taking turns", "several bits at a time"], "Both directions, one at a time, is a different method. Which one?", "How many directions does simplex use?",
+      "Simplex sends data in one direction only. Both directions, one at a time, is half-duplex."),
+    card("fx-21", "fx-trans", "With packet switching, every packet of a file must take the same route.", "each packet can take a different route", /\b(different|own|separate|any|various|another|other)\s+(routes?|paths?|ways?)\b|\b(routes?|paths?)\s+(can|may|could|might)\s+(be\s+)?differ\w*/i,
+      ["the same route", "the shortest route only", "one route at a time"], "A router chooses a path for each packet on its own.", "So must they all go the same way?",
+      "Each packet can take a different route. The router chooses a path for each packet.")
+  ];
+}
+
+// ---- Exam Practice 2, Activity 2: spot the mistake in a student answer about error detection or encryption.
+function fixCards2() {
+  var F = "Type what it should say instead";
+  function card(id, cat, wrote, ans, kw, dis, w1, w2, note) {
+    return { id: id, category: cat, format: F, prompt: "A student wrote:\n\"" + wrote + "\"\nOne part is wrong. Type what it should say instead.", answers: [ans], keywords: [kw], distractors: dis, working: [w1, w2], note: note };
+  }
+  return [
     // ------------------------------------------------ 2.2
     card("fx-08", "fx-errors", "With even parity, the parity bit makes the number of 1s in the byte odd.", "even", /^\s*(an?\s+)?even(\s+number)?\b/i,
       ["odd", "zero", "eight"], "Look at the name of the parity type.", "What must the count of 1s be with even parity?",
@@ -755,7 +948,7 @@ function fixCards() {
   ];
 }
 
-// ---- Plenary: real exam questions from all of Topic 2. Each note cites the paper and question.
+// ---- Exam Practice 1 plenary: real exam questions on packets and methods. Each note cites the paper and question.
 function plenaryCards() {
   var TWO_SERIAL = /^(?!.*\bparallel\b)(?!.*simplex)(?=.*\bserial\b)(?=.*\bhalf[\s-]*duplex\b)(?=.*\bfull[\s-]*duplex\b).*$/i;
   return [
@@ -832,7 +1025,13 @@ function plenaryCards() {
     { id: "pl-17", category: "pl-methods", prompt: "A company uses parallel full-duplex data transmission. Give one drawback of using this method of data transmission.", answers: ["More interference"],
       keywords: [/\b(interfer\w*|crosstalk|skew\w*|out\s+of\s+order|wrong\s+order|collisions?|errors?)\b/i], distractors: ["It is slow", "Data only goes one way", "It uses a single wire"],
       working: ["Parallel uses many wires next to each other.", "Bits sent side by side can arrive at different times."],
-      note: "From 0478/11 November 2024 Q4(b)(ii), any two: more interference or crosstalk; data may be skewed; more chance of data collisions; more chance of error." },
+      note: "From 0478/11 November 2024 Q4(b)(ii), any two: more interference or crosstalk; data may be skewed; more chance of data collisions; more chance of error." }
+  ];
+}
+
+// ---- Exam Practice 2 plenary: real exam questions on error detection and encryption. Each note cites the paper.
+function plenaryCards2() {
+  return [
     // ================================================= Error detection
     { id: "pl-18", category: "pl-errors", format: "Type odd or even", randomize: function () {
         var v = drillPick(["10011001", "01111110", "11100000", "00111001"]);
@@ -912,12 +1111,21 @@ const DRILLS = [
   ['y10-2-r-choose', 'Activity 1: choose the transmission method for a scenario, and justify each part of the choice.',
     'Year 10, 2.R: Choose the Method', 'Cambridge IGCSE Computer Science 0478',
     [['ch-method', 'Which Method?'], ['ch-why', 'Why Does It Fit?'], ['ch-mistake', 'Why Is It Wrong?']], chooseCards],
-  ['y10-2-r-fix', 'Activity 2: spot the mistake in a student answer and type the fix.',
+  ['y10-2-r-fix', 'Exam Practice 1, Activity 2: spot the mistake in a student answer about packets or methods and type the fix.',
     'Year 10, 2.R: Spot and Fix the Mistake', 'Cambridge IGCSE Computer Science 0478',
-    [['fx-trans', 'Data Transmission (2.1)'], ['fx-errors', 'Methods of Error Detection (2.2)'], ['fx-enc', 'Encryption (2.3)']], fixCards],
-  ['y10-2-r', 'Plenary: real exam questions from all of Topic 2, each cited in its note.',
-    'Year 10, 2.R: Topic 2 Exam Drill', 'Cambridge IGCSE Computer Science 0478',
-    [['pl-packets', 'Packets'], ['pl-methods', 'Methods of Transmission'], ['pl-errors', 'Error Detection'], ['pl-enc', 'Encryption']], plenaryCards],
+    [['fx-trans', 'Data Transmission (2.1)']], fixCards],
+  ['y10-2-r', 'Exam Practice 1 plenary: real exam questions on packets and methods of transmission, each cited in its note.',
+    'Year 10, 2.R: Packets and Methods Exam Drill', 'Cambridge IGCSE Computer Science 0478',
+    [['pl-packets', 'Packets'], ['pl-methods', 'Methods of Transmission']], plenaryCards],
+  ['y10-2-r2-ext', 'Exam Practice 2, Do Now Extension: all of Topic 2. Every card has an example on different details and two nudges.',
+    'Year 10 Extension: Topic 2 Data Transmission', '2.R Exam Practice 2 Do Now Extension',
+    [['e2-trans', 'Data Transmission (2.1)'], ['e2-errors', 'Methods of Error Detection (2.2)'], ['e2-enc', 'Encryption (2.3)']], ext2Cards],
+  ['y10-2-r2-fix', 'Exam Practice 2, Activity 2: spot the mistake in a student answer about error detection or encryption and type the fix.',
+    'Year 10, 2.R: Spot and Fix the Mistake', 'Cambridge IGCSE Computer Science 0478',
+    [['fx-errors', 'Methods of Error Detection (2.2)'], ['fx-enc', 'Encryption (2.3)']], fixCards2],
+  ['y10-2-r2', 'Exam Practice 2 plenary: real exam questions on error detection and encryption, each cited in its note.',
+    'Year 10, 2.R: Error Detection and Encryption Exam Drill', 'Cambridge IGCSE Computer Science 0478',
+    [['pl-errors', 'Error Detection'], ['pl-enc', 'Encryption']], plenaryCards2],
 ];
 for (const [id, about, title, subtitle, cats, fn] of DRILLS) {
   const src = drillFile(id, about, title, subtitle, cats, fn);
@@ -971,7 +1179,11 @@ const loaded = {};
   tk('y10-2-r-ext', 'ex-01', ['destination address and packet number', 'the sender IP address and the destination IP address', 'packet number, originator address'], ['payload and trailer', 'IP address', 'packet number and payload']);
   tk('y10-2-r-ext', 'ex-04', ['it is detected automatically', 'it can power the device', 'the driver is installed automatically', 'it only fits one way'], ['it is fast', 'it sends data', 'it is a cable']);
   tk('y10-2-r-ext', 'ex-10', ['someone could intercept the key and decrypt the data', 'the key could be stolen and used to read the messages', 'a hacker could intercept it and read the data'], ['it is slow', 'the key is long', 'it uses one key']);
-  tk('y10-2-r-fix', 'fx-12', ['if no acknowledgement arrives', 'if the acknowledgement does not arrive', 'when it does not get an acknowledgement'], ['if an acknowledgement arrives', 'when the acknowledgement arrives']);
+  tk('y10-2-r-fix', 'fx-20', ['one direction only', 'only one way', 'in one direction', 'one-way'], ['one direction at a time', 'both directions', 'one way at a time, taking turns']);
+  tk('y10-2-r-fix', 'fx-21', ['each packet can take a different route', 'they can take different paths', 'packets may go on their own routes'], ['the same route', 'the shortest route']);
+  tk('y10-2-r2-ext', 'e2-03', ['the bits can skew', 'they arrive at different times', 'there is more interference'], ['it is slow', 'it is far']);
+  tk('y10-2-r2-ext', 'e2-10', ['it could be intercepted', 'a hacker could read it', 'someone could see the data on the way'], ['it has errors', 'it is faster']);
+  tk('y10-2-r2-fix', 'fx-12', ['if no acknowledgement arrives', 'if the acknowledgement does not arrive', 'when it does not get an acknowledgement'], ['if an acknowledgement arrives', 'when the acknowledgement arrives']);
   tk('y10-2-r-fix', 'fx-03', ['one direction at a time', 'not at the same time', 'they take turns'], ['at the same time', 'both directions']);
   tk('y10-2-r', 'pl-06', ['each packet can take a different route', 'they take different paths and some are slower', 'some packets take longer so they arrive in the wrong order'], ['they are sent at different times', 'the router is slow', 'they are lost']);
   tk('y10-2-r', 'pl-16', ['it only needs to go one way', 'the stock system does not need to reply', 'no response is needed'], ['it is faster', 'both ways']);
@@ -996,26 +1208,39 @@ const loaded = {};
   }
 }
 
-const text = JSON.stringify(steps);
-assert(!/[–—]|&mdash;|&ndash;/.test(text), 'dash found');
-assert(!/mario/i.test(text), 'never named');
+for (const L of [L1, L2]) {
+  const text = JSON.stringify(L.steps);
+  assert(!/[\u2013\u2014]|&mdash;|&ndash;/.test(text), `dash found in ${L.id}`);
+  assert(!/mario/i.test(text), 'never named');
+  const lesson = { id: L.id, label: L.label, steps: L.steps, validators: L.validators, pseudocodeValidators: {} };
+  fs.writeFileSync(path.join(ROOT, 'LessonData', L.id + '.json'), JSON.stringify(lesson, null, 1) + '\n');
+}
 
-const lesson = { id: ID, label: '2.R: Data Transmission Exam Practice', steps, validators, pseudocodeValidators: {} };
-fs.writeFileSync(path.join(ROOT, 'LessonData', ID + '.json'), JSON.stringify(lesson, null, 1) + '\n');
-
-// Register it as its own "2.R" unit straight after the 2.3 unit. lessons.json is shared with other builders, so read it
-// at the last moment and insert the new unit as text, leaving the rest of the file exactly as it was.
+// Register Lesson 1 as its own "2.R" unit straight after the 2.3 unit, then Lesson 2 right after it. lessons.json is
+// shared with other builders, so read it at the last moment and insert as text, leaving the rest exactly as it was.
 const lp = path.join(ROOT, 'LessonData', 'lessons.json');
-const raw = fs.readFileSync(lp, 'utf8');
-if (!JSON.parse(raw).years.some((y) => y.units.some((u) => u.lessons.includes(ID)))) {
-  const eol = raw.includes('\r\n') ? '\r\n' : '\n';
+let raw = fs.readFileSync(lp, 'utf8');
+const eol = raw.includes('\r\n') ? '\r\n' : '\n';
+const has = (id) => JSON.parse(raw).years.some((y) => y.units.some((u) => u.lessons.includes(id)));
+if (!has(L1.id)) {
   const anchor = ['            "y10-2-3-l2"', '          ]', '        }'].join(eol);
   const parts = raw.split(anchor);
   assert(parts.length === 2, 'the 2.3 unit ending with y10-2-3-l2 must appear exactly once in lessons.json');
-  const unit = ['            "y10-2-3-l2"', '          ]', '        },', '        {', '          "code": "2.R",', '          "title": "Topic 2 Review",', '          "lessons": [', `            "${ID}"`, '          ]', '        }'].join(eol);
-  const next = parts.join(unit);
-  JSON.parse(next);
-  fs.writeFileSync(lp, next);
+  const unit = ['            "y10-2-3-l2"', '          ]', '        },', '        {', '          "code": "2.R",', '          "title": "Topic 2 Review",', '          "lessons": [', `            "${L1.id}"`, '          ]', '        }'].join(eol);
+  raw = parts.join(unit);
+  JSON.parse(raw);
+  fs.writeFileSync(lp, raw);
+}
+if (!has(L2.id)) {
+  const anchor = `            "${L1.id}"` + eol;
+  const parts = raw.split(anchor);
+  assert(parts.length === 2, 'y10-2-r must appear exactly once in lessons.json, last in its unit');
+  raw = parts.join(`            "${L1.id}",` + eol + `            "${L2.id}"` + eol);
+  JSON.parse(raw);
+  fs.writeFileSync(lp, raw);
 }
 const y10 = JSON.parse(fs.readFileSync(lp, 'utf8')).years.find((y) => y.id === 'year10');
-console.log(`${ID}: ${steps.length} steps, ${Object.keys(validators).length} validator sets; Year 10 units: ${y10.units.map((u) => u.code).join(', ')}`);
+const unitR = y10.units.find((u) => u.code === '2.R');
+assert(unitR && unitR.lessons.join() === [L1.id, L2.id].join(), '2.R unit holds both lessons in order');
+for (const L of [L1, L2]) console.log(`${L.id}: ${L.steps.length} steps, ${Object.keys(L.validators).length} validator sets`);
+console.log(`Year 10 units: ${y10.units.map((u) => u.code).join(', ')}`);
