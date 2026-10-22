@@ -243,7 +243,7 @@ steps[steps.length - 1].walkthrough = WT_PACKETS;
 
 // 0478/12 June 2024 Q2(a): D, parity. 0478/13 June 2021 Q6(c)(ii), any one: data transmission can be slower (than
 // parallel); additional data may need to be sent.
-const RE_NOT_METHOD = '^\\s*(d\\s*[.):-]?\\s*)?parity(\\s+(check|bit))?\\s*\\.?\\s*$|^\\s*d\\s*\\.?\\s*$';
+const RE_NOT_METHOD = '^\\s*(d\\s*[.:\\)-]?\\s*)?parity(\\s+(check|bit))?\\s*\\.?\\s*$|^\\s*d\\s*\\.?\\s*$';
 const RE_SLOWER = '^(?!.*\\bparallel\\s+(is\\s+|would\\s+be\\s+)?(slow\\w*|not\\s+as\\s+fast))(?=.*\\b(slow\\w*|not\\s+(as\\s+)?(fast|quick)|less\\s+(fast|quick)|takes?\\s+(more\\s+time|longer)|lower\\s+speed|less\\s+speed|additional\\s+data|extra\\s+data|more\\s+data)\\b).*$';
 steps.push(checkStep('do-now-methods', 'Do Now: Methods (2 of 2)', 'Do Now: Methods (2 of 2)',
   'From 2.1. Part (a): ' + cite('0478/12, June 2024, Question 2(a)') + ' Part (b): ' + cite('0478/13, June 2021, Question 6(c)(ii)') + ' The data is sent using serial duplex data transmission.', [

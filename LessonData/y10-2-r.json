@@ -392,7 +392,7 @@
     "suffix": "a",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(d\\s*[.):-]?\\s*)?parity(\\s+(check|bit))?\\s*\\.?\\s*$|^\\s*d\\s*\\.?\\s*$",
+     "source": "^\\s*(d\\s*[.:\\)-]?\\s*)?parity(\\s+(check|bit))?\\s*\\.?\\s*$|^\\s*d\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Ask of each term: does it say how the bits travel? One of them does a different job."
