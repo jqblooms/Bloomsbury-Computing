@@ -1,0 +1,546 @@
+{
+ "id": "y11-1-3-hex",
+ "label": "1.3: Hexadecimal Digits",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Binary to Denary (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-do-now",
+   "validatorKey": "y11_13h_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Binary to Denary (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the place values double each time you move left?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Binary is base 2. Each column holds twice as much as the column to its right.</p></div></details><p class=\"lesson-lead\">Recap of 1.1 Binary Place Values. Cambridge IGCSE 0478/12, November 2023, Question 2(a). A register stores the binary number 11100011.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-do-now-a\">Give the denary number for the binary number stored in the register. [1]</label><input id=\"y11-13h-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Binary to Denary (1 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-do-now-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y11-13h-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: binary to denary",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> A register stores the binary number 10010110. Give the denary number.",
+      "visual": "<div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">10010110</div>"
+     },
+     {
+      "text": "Write the 8 place values. Start at 1 on the right and double each time.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table>"
+     },
+     {
+      "text": "Write the bits under the place values, one bit in each column.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Bit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr></table>"
+     },
+     {
+      "text": "Find each <strong>1</strong>. Read the place value above it. Every 0 adds nothing.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Bit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">128, 16, 4, 2</p>"
+     },
+     {
+      "text": "Add those place values: 128 + 16 + 4 + 2 = 150.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">128 + 16 + 4 + 2 = 150</span></p>"
+     },
+     {
+      "text": "So 10010110 is <strong>150</strong> in denary.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Bit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr></table>"
+     },
+     {
+      "text": "Now do the same for the register in the question: place values, find each 1, then add.",
+      "visual": "<div class=\"wt-note\">place values &rarr; find each 1 &rarr; add</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Denary to Binary (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-do-now-2",
+   "validatorKey": "y11_13h_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Denary to Binary (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we start with the biggest place value that fits?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each place value is bigger than all the smaller ones added together, so if it fits it must be used.</p></div></details><p class=\"lesson-lead\">Recap of 1.2 Denary to Binary. Cambridge IGCSE 0478/12, November 2024, Question 3(b). Data that is denary can also be converted to binary. Give the binary number for each of the three denary numbers.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\" style=\"display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:28px\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-do-now-2-a\">(a) 15 [1]</label><input id=\"y11-13h-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Denary to Binary (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-do-now-2-b\">(b) 180 [1]</label><input id=\"y11-13h-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Denary to Binary (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-do-now-2-c\">(c) 235 [1]</label><input id=\"y11-13h-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Denary to Binary (2 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-do-now-2-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11-13h-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: denary to binary",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Give the binary number for the denary number 202.",
+      "visual": "<div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">202</div>"
+     },
+     {
+      "text": "Write the 8 place values. Start at 128 on the left.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table>"
+     },
+     {
+      "text": "Does 128 fit in 202? Yes. Write 1. 202 - 128 = 74 left.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">202 - 128 = 74</span></p>"
+     },
+     {
+      "text": "Does 64 fit in 74? Yes. Write 1. 74 - 64 = 10 left. 32 and 16 are too big: write 0.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">74 - 64 = 10</span></p>"
+     },
+     {
+      "text": "8 fits in 10: write 1, 2 left. 4 is too big: write 0. 2 fits: write 1, 0 left. 1 is too big for 0: write 0.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Left</th><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">202</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">74</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">10</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">10</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">10</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">2</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">2</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font-size:16px\">0</td></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Bit</th><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font:700 20px var(--font-mono, monospace)\">1</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font:700 20px var(--font-mono, monospace)\">1</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font:700 20px var(--font-mono, monospace)\">0</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font:700 20px var(--font-mono, monospace)\">0</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font:700 20px var(--font-mono, monospace)\">1</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font:700 20px var(--font-mono, monospace)\">0</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font:700 20px var(--font-mono, monospace)\">1</td><td style=\"padding:5px 4px;min-width:46px;text-align:center;border:1px solid var(--line-strong);font:700 20px var(--font-mono, monospace)\">0</td></tr></table>"
+     },
+     {
+      "text": "So 202 is <strong>11001010</strong>. Check: 128 + 64 + 8 + 2 = 202.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">128 + 64 + 8 + 2 = 202</span></p>"
+     },
+     {
+      "text": "A small number works the same way. 13 = 8 + 4 + 1, so it is 00001101, or just 1101.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">128</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">64</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">32</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:46px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Bit</th><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:6px 4px;min-width:46px;height:36px;text-align:center;font:700 18px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">1</td></tr></table>"
+     },
+     {
+      "text": "Now do the same for each number in the question: start at 128, fits: write 1 and subtract, too big: write 0.",
+      "visual": "<div class=\"wt-note\">fits &rarr; 1 and subtract &nbsp; too big &rarr; 0</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-3-ext",
+   "embedContainerId": "y11-13h-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card use new numbers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you practise the method, not one answer.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y11-13h-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Hexadecimal Digits",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">1.1 Number Systems</p><h2 class=\"lesson-h2\">Hexadecimal Digits</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> a third number system, <strong>hexadecimal</strong>.</li><li>Why it uses the letters <strong>A to F</strong>.</li><li>How to convert hexadecimal to <strong>denary</strong>.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Binary numbers are long. Why might people want a shorter way to write them?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Long strings of 1s and 0s are hard to read and easy to copy wrongly.</p></div></details>"
+  },
+  {
+   "id": "concept-digits",
+   "label": "Why Base 16 Needs 16 Digits",
+   "content": "<h2 class=\"lesson-h2\">Why Base 16 Needs 16 Digits</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Denary is base 10 and has 10 digits. Binary is base 2 and has 2 digits. Predict: how many digits does base 16 need?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>16 digits. A base 16 system needs one digit for every value from 0 up to 15.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>The <strong>base</strong> is how many digits a number system has.</li><li><strong>Denary</strong> is base 10: digits 0 to 9.</li><li><strong>Binary</strong> is base 2: digits 0 and 1.</li><li><strong>Hexadecimal</strong> is base 16. It needs <strong>16</strong> digits: values 0 to 15.</li><li>Each digit must be <strong>one symbol</strong>.</li></ul></div><div><div style=\"display:grid;gap:8px\"><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Binary: base 2</div><p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span style=\"font-family:var(--font-mono, monospace);font-weight:700\">0 1</span></p><div style=\"font-size:16px\">2 digits. The biggest digit is 1.</div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Denary: base 10</div><p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span style=\"font-family:var(--font-mono, monospace);font-weight:700\">0 1 2 3 4 5 6 7 8 9</span></p><div style=\"font-size:16px\">10 digits. The biggest digit is 9.</div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Hexadecimal: base 16</div><p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span style=\"font-family:var(--font-mono, monospace);font-weight:700\">0 1 2 3 4 5 6 7 8 9 ? ? ? ? ? ?</span></p><div style=\"font-size:16px\">16 digits. We have run out of number symbols.</div></div></div></div></div>"
+  },
+  {
+   "id": "concept-letters",
+   "label": "Why Letters A to F?",
+   "content": "<h2 class=\"lesson-h2\">Why Letters A to F?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">We have used up 0 to 9. Why can we not just write 10 for the value ten in one hexadecimal column?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>10 is two symbols, a 1 and a 0. It would look like two columns. Each value needs a single symbol, so new symbols are needed.</p></div></details><ul class=\"lesson-facts\"><li>The values 10 to 15 each need <strong>one</strong> symbol.</li><li>Hexadecimal uses the letters <strong>A, B, C, D, E, F</strong>.</li><li>A is 10. Each letter is one more than the letter before it. F is 15.</li></ul><div style=\"display:grid;gap:10px;margin-top:6px\"><div style=\"display:flex;flex-wrap:wrap;gap:4px;justify-content:center\"><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">0</div><div style=\"padding:4px 2px;font-size:17px\">0</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">1</div><div style=\"padding:4px 2px;font-size:17px\">1</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">2</div><div style=\"padding:4px 2px;font-size:17px\">2</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">3</div><div style=\"padding:4px 2px;font-size:17px\">3</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">4</div><div style=\"padding:4px 2px;font-size:17px\">4</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">5</div><div style=\"padding:4px 2px;font-size:17px\">5</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">6</div><div style=\"padding:4px 2px;font-size:17px\">6</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">7</div><div style=\"padding:4px 2px;font-size:17px\">7</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">8</div><div style=\"padding:4px 2px;font-size:17px\">8</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">9</div><div style=\"padding:4px 2px;font-size:17px\">9</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px;outline:3px solid var(--brand);outline-offset:-3px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">A</div><div style=\"padding:4px 2px;font-size:17px;background:var(--brand-soft);color:var(--brand-dark)\">10</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px;outline:3px solid var(--brand);outline-offset:-3px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">B</div><div style=\"padding:4px 2px;font-size:17px;background:var(--brand-soft);color:var(--brand-dark)\">11</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px;outline:3px solid var(--brand);outline-offset:-3px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">C</div><div style=\"padding:4px 2px;font-size:17px;background:var(--brand-soft);color:var(--brand-dark)\">12</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px;outline:3px solid var(--brand);outline-offset:-3px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">D</div><div style=\"padding:4px 2px;font-size:17px;background:var(--brand-soft);color:var(--brand-dark)\">13</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px;outline:3px solid var(--brand);outline-offset:-3px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">E</div><div style=\"padding:4px 2px;font-size:17px;background:var(--brand-soft);color:var(--brand-dark)\">14</div></div><div style=\"display:grid;min-width:38px;text-align:center;border:1px solid var(--line-strong);border-radius:6px;outline:3px solid var(--brand);outline-offset:-3px\"><div style=\"padding:4px 2px;font:700 20px var(--font-mono, monospace);background:var(--surface-2)\">F</div><div style=\"padding:4px 2px;font-size:17px;background:var(--brand-soft);color:var(--brand-dark)\">15</div></div></div><p style=\"margin:4px 0 0;text-align:center;font-size:15px;color:var(--muted)\">Top: hexadecimal digit. Bottom: denary value.</p><div class=\"lesson-do-now-columns\"><div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">One symbol</div><p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span style=\"font-family:var(--font-mono, monospace);font-weight:700\">A</span> = ten</p><div style=\"font-weight:700;font-size:17px;color:var(--good)\">One column: clear.</div></div></div><div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Two symbols</div><p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span style=\"font-family:var(--font-mono, monospace);font-weight:700\">10</span> = ten?</p><div style=\"font-weight:700;font-size:17px;color:var(--bad, var(--danger, #b42318))\">Looks like two columns: unclear.</div></div></div></div></div>"
+  },
+  {
+   "id": "check-letters",
+   "label": "Check: The Letters A to F",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-check-letters",
+   "validatorKey": "y11_13h_check_letters",
+   "content": "<h2 class=\"lesson-h2\">Check: The Letters A to F</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must every hexadecimal digit be one symbol, not two?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each column holds one digit. Two symbols would look like two columns.</p></div></details><p class=\"lesson-lead\">Give the denary value of each hexadecimal digit, from memory.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\" style=\"display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:28px\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-check-letters-a\">(a) C [1]</label><input id=\"y11-13h-check-letters-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-letters-a\" aria-label=\"Check: The Letters A to F part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-check-letters-b\">(b) E [1]</label><input id=\"y11-13h-check-letters-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-letters-b\" aria-label=\"Check: The Letters A to F part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-check-letters-c\">(c) B [1]</label><input id=\"y11-13h-check-letters-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-letters-c\" aria-label=\"Check: The Letters A to F part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-check-letters-d\">(d) D [1]</label><input id=\"y11-13h-check-letters-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-letters-d\" aria-label=\"Check: The Letters A to F part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-check-letters-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11-13h-check-letters-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-1",
+   "label": "Exam Question: Complete the Sentences",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-exam-1",
+   "validatorKey": "y11_13h_exam_1",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Complete the Sentences</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does every number system need the digit zero?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Zero fills an empty column, so the other digits stay in their own columns.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/12, March 2025, Question 1(a). Complete the sentences about number systems.<br>The hexadecimal number system is base <strong>(a)</strong> ...... The numbers 1 to 9 are used and the number 10 is represented by <strong>(b)</strong> ...... The hexadecimal number system continues up to the number 15, which is represented by <strong>(c)</strong> ......</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\" style=\"display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:28px\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-1-a\">(a) Gap [1]</label><input id=\"y11-13h-exam-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-a\" aria-label=\"Exam Question: Complete the Sentences part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-1-b\">(b) Gap [1]</label><input id=\"y11-13h-exam-1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-b\" aria-label=\"Exam Question: Complete the Sentences part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-1-c\">(c) Gap [1]</label><input id=\"y11-13h-exam-1-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-c\" aria-label=\"Exam Question: Complete the Sentences part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-exam-1-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11-13h-exam-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Know Your Digits",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-3-digits",
+   "embedContainerId": "y11-13h-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Know Your Digits</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why learn A to F by heart, and not look them up?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>In the exam there is no table. Every conversion needs these values.</p></div></details><p class=\"lesson-lead\">Letters to values, values to letters, order and add. No table this time: work from memory.</p><div id=\"y11-13h-activity-1\"></div>"
+  },
+  {
+   "id": "concept-places",
+   "label": "Why the Place Values Are 16 and 1",
+   "content": "<h2 class=\"lesson-h2\">Why the Place Values Are 16 and 1</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">In denary the columns are 100, 10, 1. In binary they are 8, 4, 2, 1. Predict: what are the hexadecimal columns?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Start at 1 on the right and multiply by 16 each time: 1, then 16, then 256.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>The rightmost column is always worth <strong>1</strong>.</li><li>Each column to the left is worth the <strong>base</strong> times more.</li><li>Denary: &times; 10. Binary: &times; 2.</li><li>Hexadecimal: &times; 16. So the next column is <strong>16</strong>.</li><li>A 1 in the 16s column is worth 16, not ten.</li></ul></div><div><div style=\"display:grid;gap:8px\"><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Denary</div><div style=\"display:flex;gap:6px;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">100</span><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">10</span><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">1</span></div><div style=\"font-size:16px\">Each column is 10 times the next.</div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Binary</div><div style=\"display:flex;gap:6px;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">8</span><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">4</span><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">2</span><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">1</span></div><div style=\"font-size:16px\">Each column is 2 times the next.</div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Hexadecimal</div><div style=\"display:flex;gap:6px;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">16</span><span style=\"font-family:var(--font-mono, monospace);font-weight:700;font-size:20px;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px\">1</span></div><div style=\"font-size:16px\">Each column is 16 times the next.</div></div></div></div></div>"
+  },
+  {
+   "id": "concept-method",
+   "label": "Hexadecimal to Denary: Multiply, Then Add",
+   "content": "<h2 class=\"lesson-h2\">Hexadecimal to Denary: Multiply, Then Add</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">In 3D, why is the 3 worth more than the D, although D is the bigger digit?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The 3 is in the 16s column: 3 &times; 16 = 48. The D is in the 1s column: 13 &times; 1 = 13.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Write the place values: <strong>16</strong> and <strong>1</strong>.</li><li>Write the denary <strong>value</strong> of each digit (D = 13).</li><li>Multiply each value by its place value.</li><li><strong>Add</strong> the results.</li></ul></div><div><div style=\"display:grid;gap:8px\"><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Digit</th><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font:700 26px var(--font-mono, monospace)\">3</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font:700 26px var(--font-mono, monospace)\">D</td></tr><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Value</th><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">3</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">13</td></tr><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Worth</th><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">3 &times; 16 = 48</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">13 &times; 1 = 13</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">3 &times; 16 + 13 &times; 1 = 48 + 13 = <strong>61</strong></p><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">3D in denary is <strong>61</strong></p></div></div></div>"
+  },
+  {
+   "id": "predict-30",
+   "label": "Predict: What Is 30 Worth?",
+   "type": "multiple-choice",
+   "containerId": "y11-13h-predict-30",
+   "content": "<h2 class=\"lesson-h2\">Predict: What Is 30 Worth?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">In hexadecimal 70, why does the 0 matter, although it adds nothing?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It keeps the 7 in the 16s column. Without it, 7 would be in the 1s column.</p></div></details><div id=\"y11-13h-predict-30\"></div>",
+   "items": [
+    {
+     "prompt": "A number is written in hexadecimal as 30. What is it in denary?",
+     "options": [
+      "30",
+      "48",
+      "18"
+     ],
+     "correct": 1,
+     "explain": "The 3 is in the 16s column: 3 x 16 = 48. The 0 adds nothing. 48 + 0 = 48."
+    }
+   ]
+  },
+  {
+   "id": "exam-2",
+   "label": "Exam Question: Hexadecimal to Denary (1 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-exam-2",
+   "validatorKey": "y11_13h_exam_2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Hexadecimal to Denary (1 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">In the hexadecimal number 50, why is the 5 worth much more than 5?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is in the left column. Each column is worth the base times the column to its right.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2021, Question 1(b). Hexadecimal and denary are number systems that can be used by programmers. Convert these four hexadecimal values into denary values.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\" style=\"display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:28px\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-2-a\">(a) 09 [1]</label><input id=\"y11-13h-exam-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-a\" aria-label=\"Exam Question: Hexadecimal to Denary (1 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-2-b\">(b) 10 [1]</label><input id=\"y11-13h-exam-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-b\" aria-label=\"Exam Question: Hexadecimal to Denary (1 of 6) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-2-c\">(c) 28 [1]</label><input id=\"y11-13h-exam-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-c\" aria-label=\"Exam Question: Hexadecimal to Denary (1 of 6) part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-2-d\">(d) A1 [1]</label><input id=\"y11-13h-exam-2-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-2-d\" aria-label=\"Exam Question: Hexadecimal to Denary (1 of 6) part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-exam-2-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11-13h-exam-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-3",
+   "label": "Exam Question: Hexadecimal to Denary (2 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-exam-3",
+   "validatorKey": "y11_13h_exam_3",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Hexadecimal to Denary (2 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">When a letter is in the 16s column, why do we change it to its value first?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>We can only multiply numbers. The letter stands for a value from 10 to 15.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2021, Question 1(b). Hexadecimal values can be used to represent denary values. Convert these four hexadecimal values into denary values.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\" style=\"display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:28px\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-3-a\">(a) 05 [1]</label><input id=\"y11-13h-exam-3-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-3-a\" aria-label=\"Exam Question: Hexadecimal to Denary (2 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-3-b\">(b) 20 [1]</label><input id=\"y11-13h-exam-3-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-3-b\" aria-label=\"Exam Question: Hexadecimal to Denary (2 of 6) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-3-c\">(c) 1A [1]</label><input id=\"y11-13h-exam-3-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-3-c\" aria-label=\"Exam Question: Hexadecimal to Denary (2 of 6) part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-3-d\">(d) AB [1]</label><input id=\"y11-13h-exam-3-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-3-d\" aria-label=\"Exam Question: Hexadecimal to Denary (2 of 6) part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-exam-3-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y11-13h-exam-3-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Multiply, Add, Check",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-3-convert",
+   "embedContainerId": "y11-13h-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Multiply, Add, Check</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why check Sam's answer with the method, not by guessing?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The method gives the one right value. A guess can look close and still be wrong.</p></div></details><p class=\"lesson-lead\">Work out what each digit is worth, convert, then find Sam's slips. Most numbers come from real exam papers.</p><div id=\"y11-13h-activity-2\"></div>"
+  },
+  {
+   "id": "exam-4",
+   "label": "Exam Question: The MAC Address (3 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-exam-4",
+   "validatorKey": "y11_13h_exam_4",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The MAC Address (3 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the address written in hexadecimal and not in denary or binary?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Hexadecimal is short and easy for people to read and copy.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2021, Question 1(a)(iii). Greta's computer has the address 00:A0:C9:14:C8:29. The values in the address are hexadecimal values. Convert the two given hexadecimal values into denary.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-4-a\">(a) 29 [1]</label><input id=\"y11-13h-exam-4-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-4-a\" aria-label=\"Exam Question: The MAC Address (3 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-4-b\">(b) C8 [1]</label><input id=\"y11-13h-exam-4-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-4-b\" aria-label=\"Exam Question: The MAC Address (3 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-exam-4-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-13h-exam-4-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "concept-256",
+   "label": "Three Digits: Why the Next Place Value Is 256",
+   "content": "<h2 class=\"lesson-h2\">Three Digits: Why the Next Place Value Is 256</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The columns so far are 16 and 1. Predict: what is the next column to the left, and why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>256. Each column is 16 times the one to its right, and 16 &times; 16 = 256.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Each column is 16 times the column to its right.</li><li>16 &times; 16 = <strong>256</strong>.</li><li>Three digits: place values <strong>256, 16, 1</strong>.</li><li>A 0 on the left adds nothing: 0B5 is the same as B5.</li></ul></div><div><div style=\"display:grid;gap:8px\"><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">256</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Digit</th><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font:700 26px var(--font-mono, monospace)\">1</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font:700 26px var(--font-mono, monospace)\">C</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font:700 26px var(--font-mono, monospace)\">3</td></tr><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Value</th><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">1</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">12</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">3</td></tr><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Worth</th><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">1 &times; 256 = 256</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">12 &times; 16 = 192</td><td style=\"padding:6px 8px;min-width:70px;text-align:center;border:1px solid var(--line-strong);font-size:18px\">3 &times; 1 = 3</td></tr></table><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">1 &times; 256 + 12 &times; 16 + 3 &times; 1</p><p style=\"margin:10px 0 0;text-align:center;font-size:20px\">= 256 + 192 + 3 = <strong>451</strong></p></div></div></div>"
+  },
+  {
+   "id": "exam-5",
+   "label": "Exam Question: Error Codes (4 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-exam-5",
+   "validatorKey": "y11_13h_exam_5",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Error Codes (4 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a 0 on the left not change the value?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>0 times any place value is 0, so it adds nothing.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2022, Question 3(c). Hexadecimal values can also be represented as denary values. The hexadecimal error code 022 means 'file system error'. The hexadecimal error code 0AC means 'insufficient memory'. Convert the hexadecimal error codes 022 and 0AC to denary values.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">256</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-5-a\">(a) 022 [1]</label><input id=\"y11-13h-exam-5-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-5-a\" aria-label=\"Exam Question: Error Codes (4 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-5-b\">(b) 0AC [1]</label><input id=\"y11-13h-exam-5-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-5-b\" aria-label=\"Exam Question: Error Codes (4 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-exam-5-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-13h-exam-5-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-6",
+   "label": "Exam Question: Ticket Numbers (5 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-exam-6",
+   "validatorKey": "y11_13h_exam_6",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Ticket Numbers (5 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">With three digits, why must you count the columns from the right?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The right column is always 1. Counting from there puts 16 and 256 in the right places.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2025, Question 2(c)(i). A ticket machine displays ticket numbers in hexadecimal. The ticket numbers could also be represented as denary. Convert the two ticket numbers from hexadecimal to denary.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">256</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-6-a\">(a) 02C [1]</label><input id=\"y11-13h-exam-6-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-6-a\" aria-label=\"Exam Question: Ticket Numbers (5 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-6-b\">(b) 10B [1]</label><input id=\"y11-13h-exam-6-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-6-b\" aria-label=\"Exam Question: Ticket Numbers (5 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-exam-6-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-13h-exam-6-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-7",
+   "label": "Exam Question: More Error Codes (6 of 6)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-13h-exam-7",
+   "validatorKey": "y11_13h_exam_7",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: More Error Codes (6 of 6)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it worth writing the working, even for a 1 mark answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The working shows each column, so a slip is easy to find and fix.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2026, Question 3(d). Hexadecimal numbers can also be converted to denary numbers. Convert the two hexadecimal error codes 0A2 and 104 to denary numbers.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong);text-align:right;padding-right:10px;min-width:0\">Place value</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">256</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">16</th><th style=\"padding:6px 4px;min-width:70px;text-align:center;font-weight:700;font-size:16px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr></table></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-7-a\">(a) 0A2 [1]</label><input id=\"y11-13h-exam-7-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-7-a\" aria-label=\"Exam Question: More Error Codes (6 of 6) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-13h-exam-7-b\">(b) 104 [1]</label><input id=\"y11-13h-exam-7-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-7-b\" aria-label=\"Exam Question: More Error Codes (6 of 6) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-13h-exam-7-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-13h-exam-7-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "concept-shorter",
+   "label": "Why Hexadecimal Is Shorter",
+   "content": "<h2 class=\"lesson-h2\">Why Hexadecimal Is Shorter</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">200 in binary needs 8 digits. Predict: why does hexadecimal need only 2?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Each hexadecimal digit has 16 possible values. A binary digit has only 2. More values in each digit means fewer digits.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>The same number, written three ways.</li><li>A hexadecimal digit has <strong>16</strong> values. A binary digit has <strong>2</strong>.</li><li>So hexadecimal needs <strong>fewer digits</strong>.</li><li>Shorter: <strong>easier to read</strong>, <strong>fewer mistakes</strong>, less space. The computer still stores binary.</li></ul></div><div><div style=\"display:grid;gap:8px\"><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Binary: 8 digits</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:26px;font-weight:700;letter-spacing:3px\">11001000</div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Denary: 3 digits</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:26px;font-weight:700;letter-spacing:3px\">200</div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Hexadecimal: 2 digits</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:26px;font-weight:700;letter-spacing:3px\">C8</div></div></div></div></div>"
+  },
+  {
+   "id": "exam-why",
+   "label": "Exam Question: Two Differences",
+   "type": "self-marked-response",
+   "containerId": "y11-13h-exam-why",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Two Differences</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why should a difference name both number systems?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A difference compares two things. Saying only one side does not show how they differ.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2024, Question 3(a). A user enters hexadecimal data. It is converted to binary to be processed.</p><div id=\"y11-13h-exam-why\"></div>",
+   "items": [
+    {
+     "id": "hexadecimal-binary-differences",
+     "prompt": "(ii) Give two differences between hexadecimal and binary.",
+     "marks": 2,
+     "modelAnswer": "Binary is base 2 but hexadecimal is base 16. Binary only uses 0 and 1 but hexadecimal also uses A to F.",
+     "scheme": [
+      "Binary is base-2 whereas hexadecimal is base-16",
+      "Binary only uses numbers whereas hexadecimal also uses letters // Binary only uses 0 and 1 whereas hexadecimal uses 0 to 9 / A to F"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "exam-why-2",
+   "label": "Exam Question: Why Not Binary?",
+   "type": "self-marked-response",
+   "containerId": "y11-13h-exam-why-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Why Not Binary?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do two different points earn more than one long point?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark needs its own point. The same idea twice earns one mark.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2025, Question 2(b)(ii). Ticket numbers such as 14B are stored in binary.</p><div id=\"y11-13h-exam-why-2\"></div>",
+   "items": [
+    {
+     "id": "ticket-reasons",
+     "prompt": "(ii) Give two reasons why the ticket number is displayed as hexadecimal instead of binary.",
+     "marks": 2,
+     "modelAnswer": "It is shorter, so it is easier for the customer to read.",
+     "scheme": [
+      "Easier / quicker for the customer to understand / read / remember",
+      "Takes up less space on the ticket // Shorter representation"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Hexadecimal Drill",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-3-hex",
+   "embedContainerId": "y11-13h-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Hexadecimal Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new numbers every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you know the method, not just one answer.</p></div></details><p class=\"lesson-lead\">The digits A to F, the place values, real exam conversions and why hexadecimal is used. Your progress is saved.</p><div id=\"y11-13h-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y11_13h_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*227(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each 1. Add its place value."
+   }
+  ],
+  "y11_13h_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(?:0\\s*)*1(?:\\s*)1(?:\\s*)1(?:\\s*)1(\\s*(in\\s+)?(binary|base\\s*2))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start at 128. Fits: write 1 and subtract. Too big: write 0."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(?:0\\s*)*1(?:\\s*)0(?:\\s*)1(?:\\s*)1(?:\\s*)0(?:\\s*)1(?:\\s*)0(?:\\s*)0(\\s*(in\\s+)?(binary|base\\s*2))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start at 128. Fits: write 1 and subtract. Too big: write 0."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(?:0\\s*)*1(?:\\s*)1(?:\\s*)1(?:\\s*)0(?:\\s*)1(?:\\s*)0(?:\\s*)1(?:\\s*)1(\\s*(in\\s+)?(binary|base\\s*2))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start at 128. Fits: write 1 and subtract. Too big: write 0."
+   }
+  ],
+  "y11_13h_check_letters": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*12(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A is 10. Count on one for each letter: A, B, C, D, E, F."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*14(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A is 10. Count on one for each letter: A, B, C, D, E, F."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*11(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A is 10. Count on one for each letter: A, B, C, D, E, F."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*13(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A is 10. Count on one for each letter: A, B, C, D, E, F."
+   }
+  ],
+  "y11_13h_exam_1": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(base\\s*)?(-\\s*)?16\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "How many digits does hexadecimal have?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*A\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which letter is the first one after 9?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*F\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count on from A = 10 up to 15."
+   }
+  ],
+  "y11_13h_exam_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*9(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*16(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*40(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*161(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   }
+  ],
+  "y11_13h_exam_3": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*5(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*32(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*26(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*171(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   }
+  ],
+  "y11_13h_exam_4": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*41(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*200(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   }
+  ],
+  "y11_13h_exam_5": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*34(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*172(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   }
+  ],
+  "y11_13h_exam_6": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*44(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*267(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   }
+  ],
+  "y11_13h_exam_7": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*162(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*260(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write each digit's value (A = 10 ... F = 15). Multiply it by its place value, then add."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
