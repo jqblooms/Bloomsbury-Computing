@@ -54,6 +54,13 @@
             "y7-3-1-constructs",
             "y7-3-2-plans"
           ]
+        },
+        {
+          "code": "",
+          "title": "Competition Practice",
+          "lessons": [
+            "y7-comp-practice"
+          ]
         }
       ]
     },
@@ -91,6 +98,13 @@
             "y8-3-1-models",
             "y8-3-2-data"
           ]
+        },
+        {
+          "code": "",
+          "title": "Competition Practice",
+          "lessons": [
+            "y8-comp-practice"
+          ]
         }
       ]
     },
@@ -123,6 +137,13 @@
           "title": "Pseudocode and Software Development",
           "lessons": [
             "y9-3-1-pseudocode"
+          ]
+        },
+        {
+          "code": "",
+          "title": "Competition Practice",
+          "lessons": [
+            "y9-comp-practice"
           ]
         }
       ]

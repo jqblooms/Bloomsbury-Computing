@@ -1,0 +1,147 @@
+{
+ "id": "y8-comp-practice",
+ "label": "Competition Practice: Contest 2 Games",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Contest 2 Warm-up",
+   "type": "short-answer-validation",
+   "validatorId": "y8cp-do-now",
+   "validatorKey": "y8cp_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Contest 2 Warm-up</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write each new bit string out in full, even for one small step?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every bit stays in its place, so a slip shows up straight away and you can check each step.</p></div></details><div class=\"lesson-do-now-columns\"><div><p class=\"lesson-lead\" style=\"margin:0 0 6px\">From Contest 2: Prefix, Infix and Postfix, and Bit-String Flicking.</p><p style=\"margin:0\">(a) Postfix</p><p style=\"font:700 1.45rem/1.3 var(--font-mono);letter-spacing:.04em;margin:2px 0 8px\">7 3 2 * +</p><p style=\"margin:0\">(b) Bit string</p><p style=\"font:700 1.45rem/1.3 var(--font-mono);letter-spacing:.04em;margin:2px 0 8px\">LCIRC-2 10011</p></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y8cp-do-now-a\">(a) The value of postfix expression (a) [1]</label><input id=\"y8cp-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Contest 2 Warm-up part a\" autocomplete=\"off\" spellcheck=\"false\"></div><div class=\"lesson-do-now-response\"><label for=\"y8cp-do-now-b\">(b) The new bit string for (b) [1]</label><input id=\"y8cp-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Contest 2 Warm-up part b\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y8cp-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y8cp-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: postfix and circulates",
+    "steps": [
+     {
+      "text": "These are the same kinds of question with different values. Use the same steps on yours.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\">4 5 2 * +</div><div class=\"wt-big\" style=\"font-family:var(--font-mono)\">LCIRC-2 11010</div>"
+     },
+     {
+      "text": "Postfix: read from the <strong>left</strong>. Push each number onto the stack.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\"><span class=\"wt-hl\">4 5 2</span> * +</div><div class=\"wt-note\">Stack: 4 5 2</div>"
+     },
+     {
+      "text": "<strong>*</strong> pops two numbers. The first one popped goes on the <strong>right</strong>: 5 * 2 = 10. Push 10.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\">4 <span class=\"wt-hl\">5 2 *</span> +</div><div class=\"wt-note\">Stack: 4 10</div>"
+     },
+     {
+      "text": "<strong>+</strong> pops 10, then 4: 4 + 10 = 14. One number is left on the stack. That is the value.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\"><span class=\"wt-hl\">4</span> (10) <span class=\"wt-hl\">+</span></div><div class=\"wt-note\">Value: 14</div>"
+     },
+     {
+      "text": "LCIRC-2: every bit moves 2 places <strong>left</strong>. The 2 bits that fall off the left end come back on the right.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\"><span class=\"wt-hl\">11</span>010</div>"
+     },
+     {
+      "text": "So LCIRC-2 11010 = 01011. The string keeps its length. Now do the same with yours.",
+      "visual": "<div class=\"wt-big\" style=\"font-family:var(--font-mono)\">010<span class=\"wt-hl\">11</span></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y8-comp-practice-ext",
+   "embedContainerId": "y8cp-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from all three Contest 2 topics. Stuck? Switch on <strong>I need help</strong> to see a similar one worked through.</p><div id=\"y8cp-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Competition Practice: Contest 2 Games",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Year 8</p><h2 class=\"lesson-h2\">Competition Practice: Contest 2 Games</h2><p>ACSL Junior Division</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> five games on the three Contest 2 topics: prefix, infix and postfix; bit strings; loops.</li><li><strong>Points:</strong> one try per question, new values every round, harder as you go.</li><li><strong>The big question:</strong> why does each trick work?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A contest gives a point only for an exact answer. Why do speed and care both matter?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Time is short, but one wrong digit or bit scores nothing. Fast and careful wins.</p></div></details>"
+  },
+  {
+   "id": "trick-notation",
+   "label": "Trick 1: Stacks and Brackets",
+   "content": "<h2 class=\"lesson-h2\">Trick 1: Stacks and Brackets</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict the value of <code style=\"font:700 1.02em var(--font-mono)\">6 2 4 + *</code>. Why does postfix never need brackets?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><code style=\"font:700 1.02em var(--font-mono)\">6 2 4 + *</code> is 6 * (2 + 4) = 36. An operator always uses the two values just before it, so the order of the tokens already shows what is worked out first.</p></div></details><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">Task</th><th style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">The trick</th><th style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">Example</th></tr><tr><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><strong>Postfix value</strong></td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">Read from the <strong>left</strong>. Push each number. An operator pops two: the first one popped goes on the <strong>right</strong>.</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><code style=\"font:700 1.02em var(--font-mono)\">8 2 /</code> = 8 / 2</td></tr><tr><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><strong>Prefix value</strong></td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">Read from the <strong>right</strong>. Push each number. An operator pops two: the first one popped goes on the <strong>left</strong>.</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><code style=\"font:700 1.02em var(--font-mono)\">/ 8 2</code> = 8 / 2</td></tr><tr><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><strong>Infix to postfix</strong></td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">Put brackets round every operation. Move each operator to the <strong>end</strong> of its own brackets.</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><code style=\"font:700 1.02em var(--font-mono)\">(A + B) * C</code><br><code style=\"font:700 1.02em var(--font-mono)\">A B + C *</code></td></tr><tr><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><strong>Infix to prefix</strong></td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">The same, but move each operator to the <strong>front</strong> of its own brackets.</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><code style=\"font:700 1.02em var(--font-mono)\">(A + B) * C</code><br><code style=\"font:700 1.02em var(--font-mono)\">* + A B C</code></td></tr></table><ul class=\"lesson-facts\"><li><code style=\"font:700 1.02em var(--font-mono)\">↑</code> is a power (type ^). It goes before * and /. <code style=\"font:700 1.02em var(--font-mono)\">3(A + B)</code> means <code style=\"font:700 1.02em var(--font-mono)\">3 * (A + B)</code>.</li></ul>"
+  },
+  {
+   "id": "tower",
+   "label": "Game 1: Expression Tower",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y8",
+   "embedQuery": "mode=tower",
+   "embedContainerId": "y8cp-tower",
+   "content": "<h2 class=\"lesson-h2\">Game 1: Expression Tower</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a streak worth more than the same right answers with mistakes in between?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A contest rewards being right every time. A streak shows your method works every time, not just by luck.</p></div></details><div id=\"y8cp-tower\"></div>"
+  },
+  {
+   "id": "trick-bits",
+   "label": "Trick 2: Flick Bits in the Right Order",
+   "content": "<h2 class=\"lesson-h2\">Trick 2: Flick Bits in the Right Order</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is <code style=\"font:700 1.02em var(--font-mono)\">LCIRC-5 10110</code>? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><code style=\"font:700 1.02em var(--font-mono)\">10110</code> again. In a 5-bit string, each bit moves 5 places and wraps all the way round to where it started.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 4px\"><strong>The order</strong></p><ol style=\"margin:0;padding-left:24px;font-size:17px;line-height:1.7\"><li>Brackets</li><li><strong>NOT</strong>, <strong>LSHIFT</strong>, <strong>RSHIFT</strong>, <strong>LCIRC</strong>, <strong>RCIRC</strong>: start with the one next to the bits</li><li><strong>AND</strong></li><li><strong>XOR</strong></li><li><strong>OR</strong></li></ol><ul class=\"lesson-facts\"><li>Shorter string? Pad it with zeros on the <strong>left</strong>.</li></ul></div><div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">Operator</th><th style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">What it does</th><th style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">On 10110</th></tr><tr><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">NOT</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">flips every bit</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><code style=\"font:700 1.02em var(--font-mono)\">01001</code></td></tr><tr><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">AND, OR, XOR</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">column by column: AND needs both 1, OR needs at least one 1, XOR needs them different</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><code style=\"font:700 1.02em var(--font-mono)\">101 AND 11011</code> = <code style=\"font:700 1.02em var(--font-mono)\">00001</code></td></tr><tr><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">LSHIFT-2</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">2 bits fall off the left, 2 zeros come in on the right</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><code style=\"font:700 1.02em var(--font-mono)\">11000</code></td></tr><tr><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">RCIRC-1</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\">1 bit falls off the right and comes back on the left</td><td style=\"padding:4px 10px;text-align:left;font-size:16px;vertical-align:top\"><code style=\"font:700 1.02em var(--font-mono)\">01011</code></td></tr></table></div></div>"
+  },
+  {
+   "id": "heist",
+   "label": "Game 2: Bit Heist",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y8",
+   "embedQuery": "mode=heist",
+   "embedContainerId": "y8cp-heist",
+   "content": "<h2 class=\"lesson-h2\">Game 2: Bit Heist</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">After a miss, the lock says how many bits are right, not which ones. Why is that still useful?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It shows how close you are. Check each step again, starting with the easy slips: a shift the wrong way, or the order of operators.</p></div></details><div id=\"y8cp-heist\"></div>"
+  },
+  {
+   "id": "trick-loops",
+   "label": "Trick 3: Trace Like a Detective",
+   "content": "<h2 class=\"lesson-h2\">Trick 3: Trace Like a Detective</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict what this program outputs. Why does p start at 1, not 0?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It outputs 24: 1 * 1 * 2 * 3 * 4. Anything times 0 is 0, so a product that started at 0 would stay 0.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>total</strong> starts at 0 and adds a value each turn. A <strong>counter</strong> adds 1. A <strong>product</strong> starts at 1.</li><li><code style=\"font:700 1.02em var(--font-mono)\">FOR i = 1 TO 9 STEP 2</code>: i is 1, 3, 5, 7, 9. <code style=\"font:700 1.02em var(--font-mono)\">NEXT i</code> adds the step.</li><li><code style=\"font:700 1.02em var(--font-mono)\">WHILE</code> checks its condition before every turn.</li><li><strong>Nested loops:</strong> the inner loop runs all the way through for every turn of the outer loop.</li><li><code style=\"font:700 1.02em var(--font-mono)\">%</code> gives the remainder. <code style=\"font:700 1.02em var(--font-mono)\">int(x)</code> drops the decimal part. <code style=\"font:700 1.02em var(--font-mono)\">abs(x)</code> removes a minus sign. <code style=\"font:700 1.02em var(--font-mono)\">&amp;&amp;</code> means both are true.</li></ul></div><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;p = 1</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;FOR i = 1 TO 4</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;&nbsp;&nbsp;p = p * i</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;NEXT i</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;OUTPUT p</div></div><p class=\"lesson-lead\" style=\"margin-top:6px\">Trace it: a column for each variable, a new row each time a value changes.</p></div></div>"
+  },
+  {
+   "id": "detective",
+   "label": "Game 3: Loop Detective",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y8",
+   "embedQuery": "mode=detective",
+   "embedContainerId": "y8cp-detective",
+   "content": "<h2 class=\"lesson-h2\">Game 3: Loop Detective</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a trace table better than doing the loop in your head?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each row records one change. You never lose track of which turn you are on, and you can check every step.</p></div></details><div id=\"y8cp-detective\"></div>"
+  },
+  {
+   "id": "board",
+   "label": "Team Quiz Board",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y8",
+   "embedQuery": "mode=board",
+   "embedContainerId": "y8cp-board",
+   "content": "<h2 class=\"lesson-h2\">Team Quiz Board</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why should your team agree on one answer before the reveal?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Explaining your method to each other catches slips. If two methods disagree, one has a mistake.</p></div></details><div id=\"y8cp-board\"></div>"
+  },
+  {
+   "id": "contest",
+   "label": "Mini Contest",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y8",
+   "embedQuery": "mode=contest&minutes=8",
+   "embedContainerId": "y8cp-contest",
+   "content": "<h2 class=\"lesson-h2\">Mini Contest</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer the questions you are sure of first?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every question is worth one point. Bank the sure points first, so a hard question cannot use up all your time.</p></div></details><div id=\"y8cp-contest\"></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Contest 2 Drill",
+   "type": "embedded-app",
+   "appId": "drill-y8-comp-practice",
+   "embedContainerId": "y8cp-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Contest 2 Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do any expression or program, you know the method, not just one answer.</p></div></details><p class=\"lesson-lead\">Get each card right 3 times in a row to master it. New values every time. Your progress is saved.</p><div id=\"y8cp-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y8cp_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*13\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Use a stack. An operator uses the two numbers just before it."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*0\\s*1\\s*1\\s*1\\s*0\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Move every bit 2 places left. Bits that fall off the left end come back on the right."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

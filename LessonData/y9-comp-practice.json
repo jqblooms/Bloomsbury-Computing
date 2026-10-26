@@ -1,0 +1,241 @@
+{
+ "id": "y9-comp-practice",
+ "label": "Competition Practice: Contest 2 Games",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Notation (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y9cp-do-now",
+   "validatorKey": "y9cp_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Notation (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a postfix expression never need brackets?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each operator comes right after its two operands, so the order is fixed.</p></div></details><p class=\"lesson-lead\">From the Prefix, Infix and Postfix lesson.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y9cp-do-now-a\">(a) Evaluate postfix <code>8 3 2 ↑ + 4 2 * -</code> [1]</label><input id=\"y9cp-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Notation (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9cp-do-now-b\">(b) Write <code>3(a - b) + c / d</code> in prefix. [1]</label><input id=\"y9cp-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Notation (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9cp-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9cp-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: postfix and prefix",
+    "steps": [
+     {
+      "text": "A similar postfix question. Read left to right. Push each number onto the stack.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\"><span class=\"wt-hl\">2 3</span> ↑ 5 * 6 2 / +</div>"
+     },
+     {
+      "text": "An operator takes the top two numbers. The lower one goes first: 2 ↑ 3 is 8.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">stack: <span class=\"wt-hl\">8</span> &nbsp; then 8 * 5 = 40</div>"
+     },
+     {
+      "text": "Keep going: 6 / 2 is 3. Then + takes 40 and 3.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">40 + 3 = <span class=\"wt-hl\">43</span></div>"
+     },
+     {
+      "text": "A similar prefix question: 2(c + d) - a / b. A number next to a bracket means multiply.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">2 <span class=\"wt-hl\">*</span> (c + d) - a / b</div>"
+     },
+     {
+      "text": "Put brackets round every operation, in the order they are worked out.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:26px\">((2 * (c + d)) - (a / b))</div>"
+     },
+     {
+      "text": "Move each operator just before its two operands, from the inside out.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">- <span class=\"wt-hl\">* 2 + c d</span> / a b</div>"
+     },
+     {
+      "text": "Now do your two questions the same way.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">stack for postfix &nbsp; | &nbsp; brackets, then move the operators</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Bit Strings (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y9cp-do-now-2",
+   "validatorKey": "y9cp_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Bit Strings (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write each step as a new 5-bit string?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>All 5 bits stay in every step, so no bit is lost and each step can be checked.</p></div></details><p class=\"lesson-lead\">From the Bit-String Flicking lesson. (a) Evaluate it. (b) Find every x: use * for a bit that can be 0 or 1.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y9cp-do-now-2-a\">(a) <code>RCIRC-2 10110 XOR NOT 01101 AND 11100</code> [1]</label><input id=\"y9cp-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Bit Strings (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y9cp-do-now-2-b\">(b) <code>LSHIFT-1 x AND 10110 = 00100</code> [1]</label><input id=\"y9cp-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Bit Strings (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9cp-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9cp-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: bit strings",
+    "steps": [
+     {
+      "text": "A similar question: LCIRC-1 10001 OR NOT 10011 AND 11110. NOT and circulates go first.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:24px\"><span class=\"wt-hl\">LCIRC-1 10001</span> OR <span class=\"wt-hl\">NOT 10011</span> AND 11110</div>"
+     },
+     {
+      "text": "LCIRC-1: the left bit wraps round to the right. NOT flips every bit.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:26px\">00011 OR <span class=\"wt-hl\">01100</span> AND 11110</div>"
+     },
+     {
+      "text": "AND goes before OR, even though OR is written first.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:26px\">00011 OR <span class=\"wt-hl\">01100</span></div>"
+     },
+     {
+      "text": "Then OR, bit by bit.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\"><span class=\"wt-hl\">01111</span></div>"
+     },
+     {
+      "text": "A similar solve: RSHIFT-1 x AND 01110 = 00100. Call the bits of x abcde. RSHIFT-1 x is 0abcd.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:26px\">0abcd AND 0<span class=\"wt-hl\">111</span>0 = 00100</div>"
+     },
+     {
+      "text": "Under a 1 in the mask, the bit must match: a = 0, b = 1, c = 0. d sits under a 0 and e falls off, so they can be anything.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:24px\">a = 0 &nbsp; b = 1 &nbsp; c = 0 &nbsp; d, e: <span class=\"wt-hl\">*</span></div>"
+     },
+     {
+      "text": "Put the bits back in order with * for anything.",
+      "visual": "<div class=\"wt-big\" style=\"font-size:30px\">x = <span class=\"wt-hl\">010**</span></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y9-comp-practice-ext",
+   "embedContainerId": "y9cp-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these contest questions from all three topics. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y9cp-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Competition Practice: Contest 2 Games",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">ACSL Junior Contest 2</p><h2 class=\"lesson-h2\">Competition Practice: Contest 2 Games</h2><p>Year 9</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> five games at full contest level. Notation Race, Bit Flick Blaster, Loop Lock, Contest Showdown, then a Mini-Contest.</li><li><strong>Every game:</strong> new questions each round, harder as you go. Your best scores are saved.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with games against a clock?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The real contest is timed. Speed comes from doing many questions, and games make you do many.</p></div></details>"
+  },
+  {
+   "id": "check-tricks",
+   "label": "Check: Why the Tricks Work (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y9cp-check-tricks",
+   "content": "<h2 class=\"lesson-h2\">Check: Why the Tricks Work (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does prefix put each operator before its two operands?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is one fixed rule, so an expression can only be read one way, with no brackets.</p></div></details><div id=\"y9cp-check-tricks\"></div>",
+   "items": [
+    {
+     "prompt": "Why does a postfix operator take the top two numbers?",
+     "options": [
+      "They are its two operands",
+      "They are the biggest numbers",
+      "The stack is in order",
+      "They were typed first"
+     ],
+     "correct": 0,
+     "explain": "Postfix writes each operator straight after its two operands, so they are the last two values on the stack."
+    }
+   ]
+  },
+  {
+   "id": "check-tricks-2",
+   "label": "Check: Why the Tricks Work (2 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y9cp-check-tricks-2",
+   "content": "<h2 class=\"lesson-h2\">Check: Why the Tricks Work (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does LSHIFT-1 bring a 0 in on the right?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A shift keeps all 5 places. One bit falls off the left, so a 0 fills the gap.</p></div></details><div id=\"y9cp-check-tricks-2\"></div>",
+   "items": [
+    {
+     "prompt": "Why is bit 2 of x a * in <code>x AND 10011 = 00010</code>?",
+     "options": [
+      "It must be 0",
+      "It must be 1",
+      "AND with 0 always gives 0",
+      "NOT goes first"
+     ],
+     "correct": 2,
+     "explain": "The mask has a 0 there. 0 AND 0 and 1 AND 0 are both 0, so that bit of x can be anything."
+    }
+   ]
+  },
+  {
+   "id": "game-race",
+   "label": "Game 1: Notation Race",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y9",
+   "embedContainerId": "y9cp-game-race",
+   "content": "<h2 class=\"lesson-h2\">Game 1: Notation Race</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why work out prefix from an operator with two numbers after it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They are its operands, so it can be done now. Its answer feeds the operator before it.</p></div></details><p class=\"lesson-lead\">90 seconds. One try each. Streaks multiply your points.</p><div id=\"y9cp-game-race\"></div>",
+   "embedQuery": "game=race"
+  },
+  {
+   "id": "game-blaster",
+   "label": "Game 2: Bit Flick Blaster",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y9",
+   "embedContainerId": "y9cp-game-blaster",
+   "content": "<h2 class=\"lesson-h2\">Game 2: Bit Flick Blaster</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does putting one x back in check a * answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every value the pattern allows must work. One that fails shows the pattern is wrong.</p></div></details><p class=\"lesson-lead\">Find every x before the block lands. You have 3 lives.</p><div id=\"y9cp-game-blaster\"></div>",
+   "embedQuery": "game=blaster"
+  },
+  {
+   "id": "game-lock",
+   "label": "Game 3: Loop Lock",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y9",
+   "embedContainerId": "y9cp-game-lock",
+   "content": "<h2 class=\"lesson-h2\">Game 3: Loop Lock</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a sum from 1 to 100 skip tracing every turn?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It adds 1 to 100. Pairs from each end (1 + 100, 2 + 99, ...) all have the same total.</p></div></details><p class=\"lesson-lead\">The code for each lock is what its program outputs.</p><div id=\"y9cp-game-lock\"></div>",
+   "embedQuery": "game=lock"
+  },
+  {
+   "id": "showdown",
+   "label": "Game 4: Contest Showdown",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y9",
+   "embedContainerId": "y9cp-showdown",
+   "content": "<h2 class=\"lesson-h2\">Game 4: Contest Showdown</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why should your team agree an answer before you buzz?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A wrong answer loses points and hands the question to the other team.</p></div></details><p class=\"lesson-lead\">Team A against Team B. Buzz, then answer out loud.</p><div id=\"y9cp-showdown\"></div>",
+   "embedQuery": "game=showdown"
+  },
+  {
+   "id": "mini-contest",
+   "label": "Game 5: Mini-Contest",
+   "type": "embedded-app",
+   "appId": "comp-arcade-y9",
+   "embedContainerId": "y9cp-mini-contest",
+   "content": "<h2 class=\"lesson-h2\">Game 5: Mini-Contest</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why answer every question, even one you are not sure of?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>An unsure answer can still score. A blank never can.</p></div></details><p class=\"lesson-lead\">5 questions in contest order: 12 minutes today, 30 in the real contest.</p><div id=\"y9cp-mini-contest\"></div>",
+   "embedQuery": "game=contest&minutes=12"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Three in a Row",
+   "type": "embedded-app",
+   "appId": "drill-y9-comp-practice",
+   "embedContainerId": "y9cp-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Three in a Row</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a card come back after you get it wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A miss resets that card, so it comes back until you get it 3 times in a row.</p></div></details><p class=\"lesson-lead\">Get each card right 3 times in a row to master it. Every card is new each time. Your progress is saved.</p><div id=\"y9cp-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y9cp_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*9\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Use a stack. Push each number. An operator takes the top two numbers: the lower one goes first.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*\\+ ?\\* ?3 ?- ?a ?b ?/ ?c ?d\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A number next to a bracket means multiply. Bracket every operation, then move each operator before its two operands.",
+    "marks": 1
+   }
+  ],
+  "y9cp_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*00101\\s*$",
+     "flags": "i"
+    },
+    "feedback": "NOT and RCIRC first. Then AND, then XOR.",
+    "marks": 1
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(?:x ?= ?)?\\* ?0 ?\\* ?1 ?0\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write x as abcde and shift it. Under a 0 in the mask, that bit of x can be anything.",
+    "marks": 1
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

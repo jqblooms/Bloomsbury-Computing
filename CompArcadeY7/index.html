@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comp Arcade</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="ca-css" href="style.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="game" aria-live="polite"></section>
+</main>
+<script>
+// Comp Arcade (Year 7 Competition Practice: ACSL Junior Contest 2 games). ?game= picks one:
+//   stack    Stack Stacker: push and pop to work out postfix or prefix (&form=postfix|prefix)
+//   bits     Bit Switch Board: flip switches to show a bit-string result (&ops=logic|shift)
+//   loop     Loop Runner: predict a FOR loop's output, then watch a runner do one lap per turn
+//   quiz     Team Quiz Board: Team A against Team B, run by the teacher on one screen
+//   contest  Mini Contest: five contest questions against the clock (&minutes=n), marked on hand in
+// &rounds=n sets the rounds to win per level. With no game it lists them. ?embed=1 sits it on a lesson slide.
+// Every file is loaded with the page's bcv. The question code is NotationLab's, BitFlicker's and the ACSL
+// interpreter's own, loaded from their folders, with js/gen.js on top.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('ca-css').href = 'style.css?v=' + encodeURIComponent(v);
+  var FILE = { stack: 'js/stack.js', bits: 'js/bits.js', loop: 'js/loop.js', quiz: 'js/quiz.js', contest: 'js/contest.js' };
+  var game = params.get('game');
+  var files = ['../NotationLab/core.js', '../BitFlicker/bits-core.js', '../shared/acsl-pseudocode.js', 'js/gen.js', 'js/common.js']
+    .concat(FILE[game] ? [FILE[game]] : [], ['js/main.js']);
+  files.forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

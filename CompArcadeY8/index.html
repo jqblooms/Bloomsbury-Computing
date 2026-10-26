@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Competition Arcade</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="ca-css" href="arcade.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="activity" aria-live="polite"></section>
+</main>
+<script>
+// Competition Arcade (Year 8): games for ACSL Junior Contest 2. ?mode= picks one:
+//   tower      Expression Tower: prefix, infix and postfix; each right answer adds a floor
+//   heist      Bit Heist: five vaults locked by bit-string expressions
+//   detective  Loop Detective: what mystery loop programs output, rank by rank
+//   board      Team Quiz Board: two teams, one screen, run by the teacher
+//   contest    Mini Contest: five contest questions against the clock (&minutes=n), with a scoreboard
+// With no mode it lists them. ?embed=1 sits it on a lesson slide. Every file is loaded with the page's bcv.
+// The rules and notation come from the Competition lessons' own code: NotationLab/core.js, BitFlicker/bits-core.js,
+// LoopTracer/js/programs.js and shared/acsl-pseudocode.js.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('ca-css').href = 'arcade.css?v=' + encodeURIComponent(v);
+  var FILE = { tower: 'tower.js', heist: 'heist.js', detective: 'detective.js', board: 'board.js', contest: 'contest.js' };
+  var mode = params.get('mode');
+  var files = ['../shared/acsl-pseudocode.js', '../LoopTracer/js/programs.js', '../NotationLab/core.js', '../BitFlicker/bits-core.js', 'gen.js', 'common.js']
+    .concat(FILE[mode] ? [FILE[mode]] : ['tower.js', 'heist.js', 'detective.js', 'board.js', 'contest.js'], ['main.js']);
+  files.forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

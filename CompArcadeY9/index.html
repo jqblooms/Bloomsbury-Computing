@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contest 2 Arcade</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="ca-css" href="arcade.css">
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<script>
+// Contest 2 Arcade (Year 9 Competition Practice): ACSL Junior Contest 2 games.
+//   ?game=race      Notation Race: 90 seconds of prefix, infix and postfix, one try each, streak multiplier.
+//   ?game=blaster   Bit Flick Blaster: solve for x before the block lands. Three lives.
+//   ?game=lock      Loop Lock: trace each program to get the code for its lock. Four locks.
+//   ?game=showdown  Contest Showdown: a Team A against Team B quiz board the teacher runs on one screen.
+//   ?game=contest   Mini-Contest: five contest questions against the clock (&minutes=n), marked on hand in.
+//   (no game)       a menu of all five.
+// &embed=1 on a lesson slide. Every question is made and marked by code: LoopTracer's generators and
+// shared/acsl-pseudocode.js, loaded from their own folders. Timers use setTimeout, never requestAnimationFrame.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('ca-css').href = 'arcade.css?v=' + encodeURIComponent(v);
+  ['../shared/acsl-pseudocode.js', '../LoopTracer/js/programs.js', '../LoopTracer/js/contest-gen.js',
+    'js/common.js', 'js/gen.js', 'js/race.js', 'js/blaster.js', 'js/lock.js', 'js/showdown.js', 'js/contest.js', 'js/main.js'].forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>
