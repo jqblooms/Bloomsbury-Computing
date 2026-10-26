@@ -136,3 +136,4 @@ button.tok:disabled { cursor: default; }
   .machine { grid-template-columns: 1fr; }
   .stack-well { min-height: 140px; }
 }
+.nl-back { margin: 0 0 10px; }

@@ -14,7 +14,20 @@
     NL.activities[id](host);
     NL.reportHeight();
   }
-  if (NL.activities[mode]) { open(mode); return; }
+  if (NL.activities[mode]) {
+    if (!document.documentElement.classList.contains('embed')) {
+      var back = NL.el('button', { type: 'button', class: 'btn secondary nl-back' }, '&larr; All modes');
+      back.addEventListener('click', function () {
+        var p = new URLSearchParams(location.search);
+        ['mode', 'level', 'form', 'pow'].forEach(function (k) { p.delete(k); });
+        var q = p.toString();
+        location.href = location.pathname + (q ? '?' + q : '');
+      });
+      host.parentNode.insertBefore(back, host);
+    }
+    open(mode);
+    return;
+  }
   host.appendChild(NL.el('h1', {}, 'NotationLab'));
   host.appendChild(NL.el('p', { class: 'intro' }, 'Prefix, infix and postfix: the same expression written three ways.'));
   var grid = NL.el('div', { class: 'menu-grid' });
