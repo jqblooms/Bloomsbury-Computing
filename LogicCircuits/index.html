@@ -92,7 +92,7 @@
   // The app, in load order: gate drawings and canvas zoom, question generation and circuit evaluation, the palette and placing and dragging gates, wires, scoring and the teacher dev mode, support mode's build plan, the menu and start-up, then help and the worked example. Each file carries the page bcv.
   (function () {
     var v = encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "");
-    ["js/gates.js", "js/questions.js", "js/board.js", "js/wires.js", "js/scoring.js", "js/support.js", "js/menu.js", "js/help.js"].forEach(function (file) {
+    ["js/gates.js", "js/questions.js", "js/board.js", "js/wires.js", "js/scoring.js", "js/support.js", "js/menu.js", "js/help.js", "js/advanced.js"].forEach(function (file) {
       document.write('<script src="' + file + "?v=" + v + '"><\/script>');
     });
   })();
