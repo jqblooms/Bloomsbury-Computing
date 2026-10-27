@@ -220,16 +220,36 @@
       T.hearts--; T.mistakes++; streak = 0; sup.wrong();
       T.flashNode = id;
       NL.later(700, function () { T.flashNode = null; if (T.phase === 'read') drawTree(); });
-      var why = T.form === 'postfix' ? 'Postfix: the whole left branch, then the whole right branch, then the node at the top.' :
-        'Prefix: the node at the top first, then the whole left branch, then the whole right branch.';
+      var why = readWhy(T.nodes[id]);
       if (T.hearts <= 0) { T.read = T.readOrder.slice(); T.phase = 'over'; finishExpr(false, why + ' No hearts left: here is the order.'); return; }
       draw([why, 'bad']);
     }
+    // Why a tapped node is not next (James 2026-10-27: students could not work out the order to tap in).
+    function below(n) { return n.op ? [n.l.id, n.r.id].concat(below(n.l), below(n.r)) : []; }
+    function done(n) { return T.read.indexOf(n.id) >= 0 && below(n).every(function (k) { return T.read.indexOf(k) >= 0; }); }
+    function label(n) { return '<b class="calc">' + esc(n.op || n.v) + '</b>'; }
+    function readWhy(n) {
+      var left = null;
+      for (var c = n; c.parent && !left; c = c.parent) if (c === c.parent.r && !done(c.parent.l)) left = c.parent;
+      if (T.form === 'postfix') {
+        if (n.op && below(n).some(function (k) { return T.read.indexOf(k) < 0; })) return 'Not yet. In postfix a node is tapped only after everything below it. Tap the nodes below ' + label(n) + ' first.';
+        if (left) return 'Not yet. Finish the whole left branch under ' + label(left) + ' before you start its right branch.';
+        return 'Not yet. Postfix: the whole left branch, then the whole right branch, then the node at the top.';
+      }
+      if (n.parent && T.read.indexOf(n.parent.id) < 0) return 'Not yet. In prefix a node is tapped before anything below it. Tap ' + label(n.parent) + ' first.';
+      if (left) return 'Not yet. Finish the whole left branch under ' + label(left) + ' before you start its right branch.';
+      return 'Not yet. Prefix: the node at the top first, then the whole left branch, then the whole right branch.';
+    }
+    var READ_HOW = {
+      prefix: 'How to read <b>prefix</b>: walk round the outside of the tree, starting at the top and going down the left side. Tap each node the <b>first</b> time you pass it. Example: the tree for A + B * C reads <b class="calc">+ A * B C</b>.',
+      postfix: 'How to read <b>postfix</b>: walk round the outside of the tree, starting at the top and going down the left side. Tap each node the <b>last</b> time you pass it, on the way back up. Example: the tree for A + B * C reads <b class="calc">A B C * +</b>.'
+    };
     function drawRead() {
       if (T.phase === 'build') { readBox.innerHTML = ''; return; }
       var list = (T.read || []).map(function (id) { var n = T.nodes[id]; return n.op || n.v; });
       if (T.phase === 'read') {
-        readBox.innerHTML = '<div class="small" style="margin-top:8px">' + (T.form === 'prefix' ? 'Prefix' : 'Postfix') + ' so far:</div><div class="strip">' +
+        readBox.innerHTML = '<div class="small" style="margin-top:8px">' + READ_HOW[T.form] + '</div>' +
+          '<div class="small" style="margin-top:8px">' + (T.form === 'prefix' ? 'Prefix' : 'Postfix') + ' so far:</div><div class="strip">' +
           (list.length ? list.map(function (tk) { return NL.tile(tk); }).join('') : '<span class="small">Tap the first node.</span>') + '</div>';
         return;
       }
