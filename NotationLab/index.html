@@ -15,6 +15,7 @@
 <script>
 // NotationLab (ACSL Junior Contest 2: prefix, infix and postfix). ?mode= picks one:
 //   stack   Stack Machine: evaluate prefix and postfix with a stack, then without it (?form=postfix|prefix, ?level=n, ?pow=0)
+//   convert Convert It: infix, prefix and postfix by the bracket method, one step at a time, with the reason shown
 //   tree    Tree Builder: build the tree of an infix expression, then read prefix or postfix off it
 //   group   Group It: turn prefix or postfix back into infix
 //   race    Convert Race: 90 seconds of mixed questions
@@ -24,7 +25,7 @@
   var v = params.get('bcv') || '1';
   if (params.get('embed') === '1') document.documentElement.classList.add('embed');
   document.getElementById('nl-css').href = 'lab.css?v=' + encodeURIComponent(v);
-  var FILE = { stack: 'stack.js', tree: 'tree.js', group: 'group.js', race: 'race.js' };
+  var FILE = { stack: 'stack.js', convert: 'convert.js', tree: 'tree.js', group: 'group.js', race: 'race.js' };
   var mode = params.get('mode');
   var files = ['core.js', 'common.js'].concat(FILE[mode] ? [FILE[mode]] : [], ['main.js']);
   files.forEach(function (file) {

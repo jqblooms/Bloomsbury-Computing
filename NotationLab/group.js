@@ -145,8 +145,11 @@
       var ok = solved && predOk !== false;
       log.add(G.form + ' ' + G.list.join(' ') + ' is ' + infix + (G.prediction != null ? (predOk ? ', predicted right' : ', predicted ' + G.prediction) : '') + (solved ? (G.mistakes ? ', ' + G.mistakes + ' wrong clicks' : '') : ', out of hearts'), ok);
       var up = false;
-      if (ok) {
-        have += G.mistakes === 0 ? 1 : 0.5;
+      // James 2026-10-27: an expression with any mistake never counts and starts the run again.
+      if (ok && G.mistakes) text += ' It had ' + (G.mistakes === 1 ? 'a wrong click' : G.mistakes + ' wrong clicks') + ', so it does not count.';
+      if (!ok || G.mistakes) { have = 0; text += ' Your run is back to 0: you need ' + NEED + ' in a row with no mistakes.'; }
+      else {
+        have += 1;
         if (have >= NEED && lv < LEVELS.length - 1) { lv++; have = 0; up = true; }
         else if (have >= NEED) { log.finish(); have = 0; }
       }

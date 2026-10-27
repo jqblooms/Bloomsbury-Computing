@@ -228,14 +228,16 @@
       if (solved && S.mistakes === 0) score += 20;
       log.add((S.form === 'prefix' ? 'prefix ' : 'postfix ') + shown + ' = ' + S.value + (solved ? (S.mistakes ? ', ' + S.mistakes + ' mistake' + (S.mistakes > 1 ? 's' : '') : ', no mistakes') : ', out of hearts'), solved);
       var levelled = false;
-      if (solved) {
-        have += S.mistakes === 0 ? 1 : 0.5;
+      // James 2026-10-27: an expression with any mistake never counts and starts the run again.
+      if (!solved || S.mistakes) have = 0;
+      if (solved && !S.mistakes) {
+        have += 1;
         solvedTop += lv === levels.length - 1 ? 1 : 0;
         if (have >= NEED && lv < levels.length - 1) { lv++; have = 0; levelled = true; }
         if (lv === levels.length - 1 && have >= NEED) { log.finish(); have = 0; }
       }
       S.phase = solved ? 'end' : 'over';
-      var msg = solved ? 'The stack holds one value: <b>' + S.value + '</b>.' + (S.mistakes === 0 ? ' No mistakes: +20.' : '') : 'The value is <b>' + S.value + '</b>. This one does not count.';
+      var msg = solved ? 'The stack holds one value: <b>' + S.value + '</b>.' + (S.mistakes === 0 ? ' No mistakes: +20. ' + (levelled ? '' : have + ' of ' + NEED + ' in a row.') : ' It had ' + (S.mistakes === 1 ? 'a mistake' : S.mistakes + ' mistakes') + ', so it does not count. Your run is back to 0: you need ' + NEED + ' in a row with no mistakes.') : 'The value is <b>' + S.value + '</b>. This one does not count. Your run is back to 0: you need ' + NEED + ' in a row with no mistakes.';
       if (levelled) msg += ' Level up: ' + esc(levels[lv].name) + '.';
       if (log.isDone() && lv === levels.length - 1) msg = NL.doneBanner('You can work without the machine. Keep going for a higher score.') + msg;
       draw([msg, solved ? '' : 'hint']);

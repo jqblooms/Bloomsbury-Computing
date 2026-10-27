@@ -6,7 +6,7 @@
 // NotationLab app runs), and the drill files carry a copy of it, so a card's answer is computed when it is drawn.
 // The questions are written for this site in the contest's style; the official samples are linked, never copied.
 // Shape: EAL-light (one idea per slide, a teacher-only Think, Pair, Share under every heading that never gives a
-// slide answer away, predict then check, compare slides), two NotationLab activities, checked practice, a drill
+// slide answer away, predict then check, compare slides), three NotationLab activities, checked practice, a drill
 // plenary.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -148,6 +148,7 @@ const TPS = {
   'convert-check': ['Why does postfix not need the brackets from (D + E) / F?', 'The order of the tokens already shows that + is worked out before /.'],
   'power': ['Why might the power arrow rank above *?', 'A power is repeated multiplication, so it is worked out before the * around it, just as * comes before +.'],
   'power-check': ['Why is 5 ' + POW + ' 2 not the same as 5 * 2?', '5 ' + POW + ' 2 means two copies of 5 multiplied together: 5 * 5.'],
+  'convert-app': ['Why might it help to do a conversion in small steps and say the reason for each one?', 'You can check each step on its own. If you know why each step is right, you can convert any expression, not just one you have seen before.'],
   'activity-2': ['Why is the operator worked out last at the top of the tree?', 'It joins the two biggest parts. Everything below it must be worked out first.'],
   'to-infix': ['Why can we always find an operator with two values right next to it?', 'The first operator to work out has plain values beside it. After that, each group counts as one value.'],
   'group-app': ['Why does grouping give the brackets back?', 'Each group is one operator with its two values, so the brackets show what is worked out first.'],
@@ -262,6 +263,7 @@ steps.push({ id: 'power', label: 'The Power Arrow', content: `<h2 class="lesson-
   facts([`${mono('2 ' + POW + ' 3')} = 2 * 2 * 2 = ${NC.evaluate(NC.parseInfix('2^3'))}`,
     `Order: brackets, then <strong>${POW}</strong>, then <strong>* and /</strong>, then <strong>+ and -</strong>.`,
     'Two of the same rank: work from left to right.',
+    `Two arrows are the one exception: right to left. ${mono('2 ' + POW + ' 3 ' + POW + ' 2')} means ${mono('2 ' + POW + ' (3 ' + POW + ' 2)')}.`,
     `${mono('3 + 2 ' + POW + ' 3')} = 3 + 8 = ${NC.evaluate(NC.parseInfix('3 + 2^3'))}`]) });
 
 steps.push(checkStep('power-check', 'Your Turn: The Power Arrow', 'Your Turn: The Power Arrow', `Type ${mono('^')} for ${mono(POW)} if you like.`, [
@@ -269,7 +271,10 @@ steps.push(checkStep('power-check', 'Your Turn: The Power Arrow', 'Your Turn: Th
   { line: true, label: `Write ${NC.toInfix(POW_CONV)} in postfix.`, answer: seq(NC.toPostfix(POW_CONV)), feedback: 'Bracket the arrow part first: it ranks highest.' },
 ]));
 
-steps.push(lab('activity-2', 'Activity 2: Tree Builder', 'Activity 2: Tree Builder',
+steps.push(lab('convert-app', 'Activity 2: Convert It', 'Activity 2: Convert It',
+  'Convert one step at a time: brackets, move, remove. A conversion with a mistake does not count. Two with no mistakes in a row move you up a level.', 'mode=convert'));
+
+steps.push(lab('activity-2', 'Activity 3: Tree Builder', 'Activity 3: Tree Builder',
   '', 'mode=tree'));
 
 // ---------------------------------------------------------------- back to infix
@@ -307,7 +312,7 @@ steps.push(checkStep('implied-check', 'Your Turn: Hidden Multiplication', 'Your 
 ]));
 
 steps.push(lab('practice', 'Practice: Convert Race', 'Practice: Convert Race',
-  '90 seconds of mixed questions. Get 8 right in one race to pass.', 'mode=race'));
+  '90 seconds of mixed questions. Get 6 right in a row in one race to pass.', 'mode=race'));
 
 steps.push({ id: 'links', label: 'Try Real Contest Questions', content: '<h2 class="lesson-h2">Try Real Contest Questions</h2>' +
   '<p class="lesson-lead">The official ACSL pages explain this topic and show real contest questions.</p>' +

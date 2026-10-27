@@ -1,7 +1,7 @@
 // NotationLab core: prefix, infix and postfix expressions as trees (ACSL Junior Contest 2).
 // Operands are single digits or single letters (never X: a typed x means multiply). Operators: + - * / and the
 // power arrow (shown as \u2191, typed as ^ too). Infix uses the usual precedence (\u2191, then * and /, then + and -),
-// equal precedence left to right; a number next to a letter or a bracket is a hidden multiplication (3(A+2B)).
+// equal precedence left to right except two arrows, which go right to left; a number next to a letter or a bracket is a hidden multiplication (3(A+2B)).
 // Shared by the app, by tools/build_acsl_c2_notation.mjs (which also copies this file into the drill data files)
 // and by the drills, so every answer anywhere comes from the same code.
 var NotationCore = (function () {
@@ -66,7 +66,7 @@ var NotationCore = (function () {
       if (!left) return null;
       while (p < x.length && isOp(x[p]) && PREC[x[p]] >= minPrec) {
         var op = x[p++];
-        var right = expr(PREC[op] + 1);
+        var right = expr(op === POW ? PREC[op] : PREC[op] + 1); // two arrows group right to left: A^B^C is A^(B^C)
         if (!right) return null;
         left = node(op, left, right);
       }

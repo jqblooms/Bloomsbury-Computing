@@ -3,6 +3,9 @@
 // that operator is the top of the branch, and the parts on either side become its two branches. Read: tap the tree's
 // nodes in prefix or postfix order. Wrong clicks cost hearts; the rule shows after a mistake. Levels rise from two
 // operators to brackets, chains of equal operators, the power arrow and contest-style hidden multiplication (3(A+2B)).
+// How it works (walk): before the first tree of each level, and on its button, a worked example on another expression:
+// why the operator worked out last is the top, its two parts as branches, the same again down each branch, the link to
+// the Convert It brackets, and why reading round the tree gives prefix or postfix.
 (function () {
   'use strict';
   var NC = NL.NC, el = NL.el, esc = NL.esc;
@@ -28,9 +31,104 @@
     var sup = NL.support('tree', rule);
     sup.toggle(bar.slot);
     var stripBox = el('div'), treeBox = el('div', { class: 'tree-wrap' }), readBox = el('div'), act = el('div', { class: 'actions' }), fb = el('div', { class: 'feedback' });
-    [q, rule, stripBox, treeBox, readBox, act, fb].forEach(function (n) { host.appendChild(n); });
+    var game = [q, rule, stripBox, treeBox, readBox, act, fb];
+    game.forEach(function (n) { host.appendChild(n); });
+    var walkBox = el('div', { class: 'wk-box' });
+    walkBox.style.display = 'none';
+    host.appendChild(walkBox);
+    var walked = {};
 
     function L() { return LEVELS[lv]; }
+
+    // ------------------------------------------------ How it works: a worked example on another expression
+    // James 2026-10-27: "They need to understand the how, and why for the tree builder game. Not just on instinct."
+    // Shown before the first tree of each level and on the How it works button. Next and Back step through it.
+    var EXAMPLES = ['P - Q * R', '(P + Q) * R', 'P - Q + R', 'P * Q ' + NC.POW + ' 2', '2(P + 3Q)'];
+    function lastWhy(n, implied) {
+      var bits = [], me = name(n, implied);
+      [['l', n.l], ['r', n.r]].forEach(function (s) {
+        var c = s[1];
+        if (!c.op) return;
+        if (NC.needs(c, n.op, s[0])) bits.push(esc(NC.toInfix(c, { implied: implied })) + ' is in brackets, so it is worked out before ' + me);
+        else if (NC.PREC[c.op] > NC.PREC[n.op]) bits.push(name(c, implied) + ' ranks above ' + me + ', so ' + name(c, implied) + ' is worked out first');
+        else bits.push(name(c, implied) + ' has the same rank and is on the left, and the same rank goes left to right');
+      });
+      return bits.length ? bits.join('; ') : 'it is the only operator in this part';
+    }
+    function name(n, implied) { return implied && NC.hiddenTimes(n) ? 'the hidden *' : '<b class="calc">' + esc(n.op) + '</b>'; }
+    function walkSteps() {
+      var lev = L(), implied = !!lev.implied, ex = NC.parseInfix(EXAMPLES[lv]);
+      var p = prepare(ex, implied), shown = NC.toInfix(ex, { implied: implied });
+      var ops = p.nodes.filter(function (n) { return n.op; });
+      var steps = [{ text: 'Example: <b class="calc">' + esc(shown) + '</b>. A tree shows the order an expression is worked out. Each operator joins the two parts hanging below it. Letters and numbers are at the ends of the branches.' +
+        (implied ? ' The number written next to a letter or a bracket hides a *: the dashed tile.' : ''), built: 0, region: null }];
+      ops.forEach(function (n, i) {
+        var part = NC.toInfix(n, { implied: implied });
+        var text = (i ? 'Now the same again, inside the branch <b class="calc">' + esc(part) + '</b>. ' : 'Start with the whole expression. ') +
+          'Which operator is worked out <b>last</b>? ' + name(n, implied) + ', because ' + lastWhy(n, implied) + '. ' +
+          'The last thing done joins the two results below it, so ' + name(n, implied) + ' goes at the top' + (i ? ' of this branch' : '') + '. ' +
+          'The part on its left, <b class="calc">' + esc(NC.toInfix(n.l, { implied: implied })) + '</b>, is its left branch. The part on its right, <b class="calc">' + esc(NC.toInfix(n.r, { implied: implied })) + '</b>, is its right branch.';
+        steps.push({ text: text, built: i + 1, region: n });
+      });
+      steps.push({ text: 'Only letters and numbers are left, so the tree is built. This is the bracket method from Convert It: <b class="calc">' + esc(NC.toInfix(ex, { full: true })) +
+        '</b>. Each pair of brackets is one operator with its two branches, and the outside pair is the top.', built: ops.length, region: null });
+      steps.push({ text: '<b>Prefix</b> puts each operator <b>before</b> its two branches: the top first, then all of the left branch, then all of the right branch. The numbers show the order: <b class="calc">' +
+        esc(NC.show(NC.toPrefix(ex))) + '</b>.', built: ops.length, read: preorder(ex) });
+      steps.push({ text: '<b>Postfix</b> puts each operator <b>after</b> its two branches: all of the left branch, then all of the right branch, then the top. <b class="calc">' +
+        esc(NC.show(NC.toPostfix(ex))) + '</b>. Now build one yourself. A tree with a mistake does not count.', built: ops.length, read: postorder(ex) });
+      return { steps: steps, prep: p, tree: ex, ops: ops };
+    }
+    function walk() {
+      var W = walkSteps(), at = 0;
+      game.forEach(function (n) { n.style.display = 'none'; });
+      walkBox.style.display = '';
+      function show() {
+        var s = W.steps[at], built = {};
+        W.ops.slice(0, s.built).forEach(function (n) { built[n.id] = true; });
+        var cur = s.region;
+        var strip = W.prep.items.map(function (it, i) {
+          var cls = 'tok' + (it.kind === 'op' ? ' op' : it.kind === 'hid' ? ' hid' : it.kind === 'br' ? ' br' : '');
+          if (cur) cls += i >= cur.span[0] && i <= cur.span[1] ? ' region' : ' outside';
+          if (cur && it.node === cur.id) cls += ' picked-ok';
+          return '<span class="' + cls + '">' + (it.kind === 'hid' ? '·' : esc(it.text)) + '</span>';
+        }).join('');
+        walkBox.innerHTML = '<h2>How a tree is built (' + (at + 1) + ' of ' + W.steps.length + ')</h2><div class="strip">' + strip + '</div>' +
+          '<div class="tree-wrap">' + treeSvg(W.tree, W.prep.nodes, built, cur ? cur.id : -1, s.read || null) + '</div><p class="wk-text">' + s.text + '</p>';
+        var a = el('div', { class: 'actions' });
+        if (at > 0) { var bk = el('button', { type: 'button', class: 'btn secondary' }, 'Back'); bk.addEventListener('click', function () { at--; show(); }); a.appendChild(bk); }
+        var last = at === W.steps.length - 1;
+        var nx = el('button', { type: 'button', class: 'btn' }, last ? 'Build a tree ' + NL.ICON.play : 'Next ' + NL.ICON.next);
+        nx.addEventListener('click', function () {
+          if (!last) { at++; show(); return; }
+          walkBox.style.display = 'none';
+          game.forEach(function (n) { n.style.display = ''; });
+          draw();
+        });
+        a.appendChild(nx);
+        walkBox.appendChild(a);
+        NL.reportHeight();
+      }
+      show();
+    }
+    // The example's tree: operators not built yet are hidden with everything below them.
+    function treeSvg(tree, nodes, built, curId, read) {
+      var order = [];
+      (function ino(n) { if (n.op) { ino(n.l); order.push(n); ino(n.r); } else order.push(n); })(tree);
+      var small = document.documentElement.classList.contains('embed');
+      var dx = 46, dy = small ? 50 : 62, r = small ? 17 : 19, pad = small ? 30 : 34, pos = {};
+      order.forEach(function (n, i) { var d = 0; for (var p = n.parent; p; p = p.parent) d++; pos[n.id] = { x: pad + i * dx, y: pad + d * dy }; });
+      var w = pad * 2 + (order.length - 1) * dx, h = pad * 2 + NC.depth(tree) * dy, lines = '', circles = '';
+      nodes.forEach(function (n) {
+        if (n.parent && !built[n.parent.id]) return;
+        if (n.parent) { var a = pos[n.parent.id], c = pos[n.id]; lines += '<line x1="' + a.x + '" y1="' + a.y + '" x2="' + c.x + '" y2="' + c.y + '"/>'; }
+        var isBuilt = !n.op || built[n.id];
+        var ri = read ? read.indexOf(n.id) : -1;
+        var cls = 'nd' + (n.op ? ' op' : ' leaf') + (isBuilt ? '' : ' todo') + (n.id === curId ? ' current' : '') + (ri >= 0 ? ' read' : '');
+        circles += '<g class="' + cls + '" transform="translate(' + pos[n.id].x + ',' + pos[n.id].y + ')"><circle r="' + r + '"/><text>' + esc(isBuilt ? (n.op || n.v) : '?') + '</text>' +
+          (ri >= 0 ? '<text class="badge" y="-25">' + (ri + 1) + '</text>' : '') + '</g>';
+      });
+      return '<svg class="tree-svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="Example tree">' + lines + circles + '</svg>';
+    }
 
     function generate() {
       var lev = L();
@@ -84,6 +182,7 @@
         'Last worked out: outside brackets, lowest rank, the one furthest right.',
         'Lowest rank, outside brackets.'
       ]);
+      if (!walked[lv]) { walked[lv] = true; walk(); return; }
       draw();
     }
 
@@ -103,6 +202,9 @@
         b.addEventListener('click', function () { NL.say(fb, ''); newExpr(); });
         act.appendChild(b);
       }
+      var how = el('button', { type: 'button', class: 'btn secondary' }, 'How it works');
+      how.addEventListener('click', walk);
+      act.appendChild(how);
       if (note) NL.say(fb, note[0], note[1]);
       NL.reportHeight();
     }

@@ -167,7 +167,7 @@
   {
    "id": "power",
    "label": "The Power Arrow",
-   "content": "<h2 class=\"lesson-h2\">The Power Arrow ↑</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might the power arrow rank above *?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A power is repeated multiplication, so it is worked out before the * around it, just as * comes before +.</p></div></details><p class=\"lesson-lead\"><code style=\"font:700 1.02em var(--font-mono)\">A ↑ B</code> means A to the power B. You can type it as <code style=\"font:700 1.02em var(--font-mono)\">^</code>.</p><ul class=\"lesson-facts\"><li><code style=\"font:700 1.02em var(--font-mono)\">2 ↑ 3</code> = 2 * 2 * 2 = 8</li><li>Order: brackets, then <strong>↑</strong>, then <strong>* and /</strong>, then <strong>+ and -</strong>.</li><li>Two of the same rank: work from left to right.</li><li><code style=\"font:700 1.02em var(--font-mono)\">3 + 2 ↑ 3</code> = 3 + 8 = 11</li></ul>"
+   "content": "<h2 class=\"lesson-h2\">The Power Arrow ↑</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might the power arrow rank above *?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A power is repeated multiplication, so it is worked out before the * around it, just as * comes before +.</p></div></details><p class=\"lesson-lead\"><code style=\"font:700 1.02em var(--font-mono)\">A ↑ B</code> means A to the power B. You can type it as <code style=\"font:700 1.02em var(--font-mono)\">^</code>.</p><ul class=\"lesson-facts\"><li><code style=\"font:700 1.02em var(--font-mono)\">2 ↑ 3</code> = 2 * 2 * 2 = 8</li><li>Order: brackets, then <strong>↑</strong>, then <strong>* and /</strong>, then <strong>+ and -</strong>.</li><li>Two of the same rank: work from left to right.</li><li>Two arrows are the one exception: right to left. <code style=\"font:700 1.02em var(--font-mono)\">2 ↑ 3 ↑ 2</code> means <code style=\"font:700 1.02em var(--font-mono)\">2 ↑ (3 ↑ 2)</code>.</li><li><code style=\"font:700 1.02em var(--font-mono)\">3 + 2 ↑ 3</code> = 3 + 8 = 11</li></ul>"
   },
   {
    "id": "power-check",
@@ -178,13 +178,22 @@
    "content": "<h2 class=\"lesson-h2\">Your Turn: The Power Arrow</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is 5 ↑ 2 not the same as 5 * 2?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>5 ↑ 2 means two copies of 5 multiplied together: 5 * 5.</p></div></details><p class=\"lesson-lead\">Type <code style=\"font:700 1.02em var(--font-mono)\">^</code> for <code style=\"font:700 1.02em var(--font-mono)\">↑</code> if you like.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"acn-power-check-a\">(a) Work out 1 + 2 ↑ 3 * 2 [1]</label><input id=\"acn-power-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"power-check-a\" aria-label=\"Your Turn: The Power Arrow part a\" autocomplete=\"off\" spellcheck=\"false\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"acn-power-check-b\">(b) Write A * B ↑ 2 in postfix. [1]</label><input id=\"acn-power-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"power-check-b\" aria-label=\"Your Turn: The Power Arrow part b\" autocomplete=\"off\" spellcheck=\"false\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"acn-power-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"acn-power-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
   },
   {
+   "id": "convert-app",
+   "label": "Activity 2: Convert It",
+   "type": "embedded-app",
+   "appId": "notation-lab",
+   "embedQuery": "mode=convert",
+   "embedContainerId": "acn-convert-app",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Convert It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might it help to do a conversion in small steps and say the reason for each one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You can check each step on its own. If you know why each step is right, you can convert any expression, not just one you have seen before.</p></div></details><p class=\"lesson-lead\">Convert one step at a time: brackets, move, remove. A conversion with a mistake does not count. Two with no mistakes in a row move you up a level.</p><div id=\"acn-convert-app\"></div>"
+  },
+  {
    "id": "activity-2",
-   "label": "Activity 2: Tree Builder",
+   "label": "Activity 3: Tree Builder",
    "type": "embedded-app",
    "appId": "notation-lab",
    "embedQuery": "mode=tree",
    "embedContainerId": "acn-activity-2",
-   "content": "<h2 class=\"lesson-h2\">Activity 2: Tree Builder</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the operator worked out last at the top of the tree?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It joins the two biggest parts. Everything below it must be worked out first.</p></div></details><div id=\"acn-activity-2\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Activity 3: Tree Builder</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the operator worked out last at the top of the tree?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It joins the two biggest parts. Everything below it must be worked out first.</p></div></details><div id=\"acn-activity-2\"></div>"
   },
   {
    "id": "to-infix",
@@ -228,7 +237,7 @@
    "appId": "notation-lab",
    "embedQuery": "mode=race",
    "embedContainerId": "acn-practice",
-   "content": "<h2 class=\"lesson-h2\">Practice: Convert Race</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a streak score more than the same answers with mistakes between them?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Contests reward accuracy. A streak shows you can do it every time, not just sometimes.</p></div></details><p class=\"lesson-lead\">90 seconds of mixed questions. Get 8 right in one race to pass.</p><div id=\"acn-practice\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Practice: Convert Race</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a streak score more than the same answers with mistakes between them?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Contests reward accuracy. A streak shows you can do it every time, not just sometimes.</p></div></details><p class=\"lesson-lead\">90 seconds of mixed questions. Get 6 right in a row in one race to pass.</p><div id=\"acn-practice\"></div>"
   },
   {
    "id": "links",

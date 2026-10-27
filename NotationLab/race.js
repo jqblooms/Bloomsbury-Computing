@@ -6,7 +6,7 @@
   'use strict';
   var NC = NL.NC, el = NL.el, esc = NL.esc;
   var FOUR = ['+', '-', '*', '/'], ALL = FOUR.concat([NC.POW]);
-  var SECONDS = 90, PASS = 8;
+  var SECONDS = 90, PASS = 6; // pass: PASS right in a row in one race (James 2026-10-27: mistakes never count)
   var TIERS = [
     { kinds: ['evpost', 'topost'], n: 2, ops: FOUR },
     { kinds: ['evpost', 'evpre', 'topre', 'topost'], n: [2, 3], ops: FOUR },
@@ -25,7 +25,7 @@
     function intro() {
       head.innerHTML = '';
       body.innerHTML = '<h1 style="font-size:1.35rem">Convert Race</h1><p class="intro">' + SECONDS + ' seconds. Work out values and convert between prefix, infix and postfix. ' +
-        'Three right in a row moves you up a level, and a streak scores more. Spaces in answers are optional. Type ^ for ' + NC.POW + '.</p>' +
+        'Three right in a row moves you up a level, and a streak scores more. To pass, get ' + PASS + ' right in a row: a wrong answer starts the run again. Spaces in answers are optional. Type ^ for ' + NC.POW + '.</p>' +
         (best() ? '<p class="small">Your best score on this computer: <b>' + best() + '</b></p>' : '');
       var go = el('button', { type: 'button', class: 'btn' }, NL.ICON.play + ' Start the race');
       go.addEventListener('click', start);
@@ -100,7 +100,7 @@
     function answer(ok, raw, skipped) {
       st.tries++;
       if (ok) {
-        st.right++; st.streak++; st.downRun = 0; st.upRun++;
+        st.right++; st.streak++; st.bestRun = Math.max(st.bestRun || 0, st.streak); st.downRun = 0; st.upRun++;
         var pts = 10 * (st.tier + 1) + 2 * Math.min(st.streak, 10);
         st.score += pts;
         NL.say(fb, 'Right: +' + pts + '.', '');
@@ -122,15 +122,15 @@
       var s = st; st = null;
       var old = best();
       if (s.score > old) { try { localStorage.setItem(BEST_KEY, String(s.score)); } catch (e) {} }
-      log.add('race: ' + s.right + ' right of ' + s.tries + ', score ' + s.score + ', reached level ' + (s.topTier + 1), s.right >= PASS);
-      if (s.right >= PASS) log.finish();
+      log.add('race: ' + s.right + ' right of ' + s.tries + ', score ' + s.score + ', best run ' + (s.bestRun || 0) + ' in a row, reached level ' + (s.topTier + 1), (s.bestRun || 0) >= PASS);
+      if ((s.bestRun || 0) >= PASS) log.finish();
       head.innerHTML = '';
       NL.say(fb, '');
       body.innerHTML = '<h1 style="font-size:1.35rem">Time!</h1><div class="big-score">' + s.score + '</div>' +
         '<div class="summary-grid"><div><span class="small">Right</span><b>' + s.right + ' of ' + s.tries + '</b></div>' +
         '<div><span class="small">Highest level</span><b>' + (s.topTier + 1) + ' of ' + TIERS.length + '</b></div>' +
         '<div><span class="small">Best on this computer</span><b>' + Math.max(old, s.score) + '</b></div></div>' +
-        (s.score > old && old ? '<p>New best score.</p>' : '') + (s.right >= PASS ? NL.doneBanner(PASS + ' or more right: race passed.') : '<p class="small">Get ' + PASS + ' right in one race to pass.</p>');
+        (s.score > old && old ? '<p>New best score.</p>' : '') + ((s.bestRun || 0) >= PASS ? NL.doneBanner(PASS + ' or more right in a row: race passed.') : '<p class="small">Best run: ' + (s.bestRun || 0) + ' in a row. A wrong answer starts the run again. Get ' + PASS + ' right in a row in one race to pass.</p>');
       var again = el('button', { type: 'button', class: 'btn' }, NL.ICON.play + ' Race again');
       again.addEventListener('click', start);
       var row = el('div', { class: 'actions' }); row.appendChild(again); body.appendChild(row);
