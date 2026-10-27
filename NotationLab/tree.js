@@ -90,7 +90,8 @@
     function draw(note) {
       var lev = L();
       bar.set({ level: 'Level ' + (lv + 1) + ': ' + lev.name, have: have, need: log.isDone() && lv === LEVELS.length - 1 ? 0 : NEED, score: score, streak: streak, hearts: T.hearts });
-      if (T.phase === 'build') q.innerHTML = 'Build the tree. In the highlighted part, click the operator that is worked out <b>last</b>.' + (lev.implied ? ' A number written next to a letter or a bracket hides a *: it is the dashed tile.' : '');
+      if (T.phase === 'build') q.innerHTML = 'Build the tree. In the highlighted part, click the operator that is worked out <b>last</b>.' + (lev.implied ? ' A number written next to a letter or a bracket hides a *: it is the dashed tile.' : '') +
+        '<span class="small" style="display:block;margin-top:6px">How a tree is built: (1) find the operator worked out last; (2) it goes at the top; (3) the part on its left becomes the left branch and the part on its right becomes the right branch; (4) do the same for each branch until only letters and numbers are left. A tree with a mistake does not count.</span>';
       else if (T.phase === 'read') q.innerHTML = 'Now tap the nodes of the tree in <b>' + T.form + '</b> order.';
       else q.innerHTML = 'Done. Here are all three forms.';
       drawStrip();
@@ -144,7 +145,9 @@
           draw(['The tree is built. The top is the operator worked out last.', '']);
           return;
         }
-        draw(['Yes. ' + esc(it.kind === 'hid' ? 'The hidden *' : it.text) + ' is worked out last in that part.', '']);
+        draw(['Yes. ' + esc(it.kind === 'hid' ? 'The hidden *' : it.text) + ' is worked out last in that part, so it goes at the top of this branch. ' +
+          'Everything on its left, <b class="calc">' + esc(NC.toInfix(cur.l)) + '</b>, hangs below it on the left. Everything on its right, <b class="calc">' +
+          esc(NC.toInfix(cur.r)) + '</b>, hangs below it on the right.' + (T.pending.length ? ' Now do the same for the next highlighted part.' : ''), '']);
         return;
       }
       T.hearts--; T.mistakes++; streak = 0; sup.wrong();
@@ -238,15 +241,18 @@
     function finishExpr(solved, msg) {
       var lev = L();
       if (solved && T.mistakes === 0) score += 20;
-      log.add(T.shown + ' to ' + T.form + (solved ? (T.mistakes ? ', ' + T.mistakes + ' mistake' + (T.mistakes > 1 ? 's' : '') : ', no mistakes') : ', out of hearts'), solved);
+      log.add(T.shown + ' to ' + T.form + (solved ? (T.mistakes ? ', ' + T.mistakes + ' mistake' + (T.mistakes > 1 ? 's' : '') + ' (not counted)' : ', no mistakes') : ', out of hearts'), solved && !T.mistakes);
       var up = false;
-      if (solved) {
-        have += T.mistakes === 0 ? 1 : 0.5;
+      // James 2026-10-27: a tree with any mistake never counts, so guessing cannot move anyone on.
+      if (!solved || T.mistakes) have = 0;
+      if (solved && !T.mistakes) {
+        have += 1;
         if (have >= NEED && lv < LEVELS.length - 1) { lv++; have = 0; up = true; }
         else if (have >= NEED) { log.finish(); have = 0; }
       }
       T.phase = solved ? 'end' : 'over';
-      var text = msg || (T.mistakes === 0 ? 'Tree built and read with no mistakes: +20.' : 'Tree built and read.');
+      var text = msg || (T.mistakes === 0 ? 'Tree built and read with no mistakes: +20.' : 'Tree built and read, but with ' + (T.mistakes === 1 ? 'a mistake' : T.mistakes + ' mistakes') + ', so it does not count. Build the next one with no mistakes.');
+      if (!solved) text += ' This one does not count. You need ' + NEED + ' trees in a row with no mistakes.';
       if (up) text += ' Level up: ' + esc(LEVELS[lv].name) + '.';
       if (log.isDone() && lv === LEVELS.length - 1 && solved) text = NL.doneBanner('You can build contest-style trees. Keep going for a higher score.') + text;
       draw([text, solved ? '' : 'hint']);
