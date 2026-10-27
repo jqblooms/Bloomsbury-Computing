@@ -162,3 +162,25 @@ button.tok:disabled { cursor: default; }
 @media (max-width: 520px) { .cv-table th { white-space: normal; } .cv-table .calc { font-size: 1rem; } }
 .wk-box .strip { margin-bottom: 8px; }
 .wk-text { margin: 10px 0 0; max-width: 70ch; }
+
+/* Walk me through it (walk.js): a step by step on a similar question */
+.wt-row { margin-top: 12px; }
+.wt-box h2 { margin: 0; font: 700 1.2rem/1.2 var(--font-display); }
+.wt-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-bottom: 6px; }
+.wt-dots { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 8px; }
+.wt-dots i { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--brand); }
+.wt-dots i.past { background: var(--brand-soft-strong); }
+.wt-dots i.on { background: var(--brand); }
+.wt-note { margin: 0 0 6px; }
+.wt-q { margin: 0 0 8px; }
+.wt-vis { padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); overflow-x: auto; }
+.wt-text { padding: 8px 12px; border-left: 3px solid var(--brand); background: var(--surface-2); border-radius: 0 10px 10px 0; }
+.wt-arrow { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 2px 0; }
+.tok.wt-hl { border-color: var(--warn); background: var(--warn-soft); box-shadow: 0 0 0 2px var(--warn); }
+.tok.wt-new { border-color: var(--good-line); background: var(--good-soft); }
+.tok.br.wt-br { color: var(--warn); background: var(--warn-soft); font-weight: 800; }
+.wt-hl-text { padding: 4px 10px; border-radius: 8px; background: var(--warn-soft); }
+.wt-machine { grid-template-columns: minmax(0, 1fr) 150px; }
+.wt-machine .stack-well { min-height: 120px; }
+@media (max-width: 700px) { .wt-machine { grid-template-columns: 1fr; } .wt-machine .stack-well { min-height: 0; } }
+@media (max-width: 420px) { .wt-box .tok { min-width: 34px; height: 40px; font-size: 1.1rem; padding: 0 5px; } .wt-box .tok.br { min-width: 12px; } }

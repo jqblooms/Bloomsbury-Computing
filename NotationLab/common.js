@@ -59,12 +59,12 @@ var NL = (function () {
   // finished on this computer it stays finished, even when the slide is opened again and the mode started over.
   var MODE = params.get('mode') || '';
   function results(label) {
-    var lines = [], right = 0, done = false, key = 'bc-notation-done-v1:' + MODE;
+    var lines = [], right = 0, tries = 0, walks = 0, done = false, key = 'bc-notation-done-v1:' + MODE;
     var before = false;
     try { before = localStorage.getItem(key) === '1'; } catch (e) {}
     function post() {
       if (window.parent === window || !MODE) return;
-      var head = (done ? 'Finished. ' : before ? 'Finished on an earlier visit. Now: ' : 'Not finished yet. ') + right + ' right in ' + lines.length + ' tries.';
+      var head = (done ? 'Finished. ' : before ? 'Finished on an earlier visit. Now: ' : 'Not finished yet. ') + right + ' right in ' + tries + ' tries.' + (walks ? ' Used Walk me through it ' + walks + (walks === 1 ? ' time.' : ' times.') : '');
       var shown = lines.slice(-12);
       try {
         window.parent.postMessage({ type: 'BC_APP_RESULT', questionId: 'notation-' + MODE, label: 'NotationLab: ' + label,
@@ -72,7 +72,9 @@ var NL = (function () {
       } catch (e) {}
     }
     return {
-      add: function (text, ok) { if (ok) right++; lines.push((lines.length + 1) + '. ' + (ok ? 'Right' : 'Wrong') + ': ' + text + '.'); post(); },
+      add: function (text, ok) { if (ok) right++; tries++; lines.push(tries + '. ' + (ok ? 'Right' : 'Wrong') + ': ' + text + '.'); post(); },
+      // A walkthrough was opened (seen of total steps viewed). Shown to the teacher, never counted as a try.
+      help: function (what, seen, total) { walks++; lines.push('Used Walk me through it (' + what + ', viewed ' + seen + ' of ' + total + ' steps).'); post(); },
       finish: function () { if (done) return; done = true; try { localStorage.setItem(key, '1'); } catch (e) {} post(); },
       isDone: function () { return done; }
     };

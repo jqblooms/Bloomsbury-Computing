@@ -41,14 +41,29 @@
     grid.appendChild(left); grid.appendChild(right);
     host.appendChild(q); host.appendChild(rule); host.appendChild(grid);
     var stripBox = el('div'), dir = el('div', { class: 'read-dir' }), tray = el('div', { class: 'tray' }), act = el('div', { class: 'actions' });
-    var fb = el('div', { class: 'feedback' }), logBox = el('div', { class: 'log' });
-    [dir, stripBox, tray, act, fb, logBox].forEach(function (n) { left.appendChild(n); });
+    var fb = el('div', { class: 'feedback' }), logBox = el('div', { class: 'log' }), walkRow = el('div', { class: 'actions wt-row' });
+    walkRow.appendChild(NLWalk.button(walkMe));
+    [dir, stripBox, tray, act, fb, walkRow, logBox].forEach(function (n) { left.appendChild(n); });
     right.innerHTML = '<div class="stack-title">Stack</div>';
     var well = el('div', { class: 'stack-well' });
     right.appendChild(well);
     right.appendChild(el('div', { class: 'stack-label' }, 'The top is the last value pushed.'));
 
     function L() { return levels[lv]; }
+    // Walk me through it: the stack method on a similar expression (same level and form, different numbers and value).
+    function walkMe() {
+      var lev = L(), form = S.form;
+      var ex = NLWalk.pick(function () {
+        var t = NC.randomTree({ n: NL.sizeOf(lev.n), ops: lev.ops, max: lev.max, noNeg: lev.noNeg, mustUse: lev.mustUse });
+        var list = form === 'prefix' ? NC.toPrefix(t) : NC.toPostfix(t);
+        return { key: list.join(' '), answer: NC.evaluate(t), steps: NLWalk.stack(list, form), show: NC.show(list) };
+      }, { key: S.list.join(' '), answer: S.value, numeric: true });
+      if (!ex) { NL.say(fb, 'Try that again in a moment.', 'hint'); return; }
+      S.walked = true;
+      var mine = S;
+      NLWalk.open(host, { title: 'Walk me through it: ' + form + ' with a stack', question: 'Similar question: work out the ' + form + ' <b class="calc">' + esc(ex.show) + '</b>', steps: ex.steps,
+        onClose: function (seen, total) { log.help(form + ' ' + ex.show + ' while on ' + mine.list.join(' '), seen, total); } });
+    }
     function sym(op) { return op; }
     function calcText(a, op, b) { return a + ' ' + sym(op) + ' ' + b; }
 
@@ -226,7 +241,7 @@
       var lev = L(), shown = S.list.join(' ');
       var solved = S.phase !== 'over';
       if (solved && S.mistakes === 0) score += 20;
-      log.add((S.form === 'prefix' ? 'prefix ' : 'postfix ') + shown + ' = ' + S.value + (solved ? (S.mistakes ? ', ' + S.mistakes + ' mistake' + (S.mistakes > 1 ? 's' : '') : ', no mistakes') : ', out of hearts'), solved);
+      log.add((S.form === 'prefix' ? 'prefix ' : 'postfix ') + shown + ' = ' + S.value + (solved ? (S.mistakes ? ', ' + S.mistakes + ' mistake' + (S.mistakes > 1 ? 's' : '') : ', no mistakes') : ', out of hearts') + (S.walked ? ', used Walk me through it' : ''), solved);
       var levelled = false;
       // James 2026-10-27: an expression with any mistake never counts and starts the run again.
       if (!solved || S.mistakes) have = 0;

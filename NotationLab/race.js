@@ -34,7 +34,7 @@
     }
 
     function start() {
-      st = { end: Date.now() + SECONDS * 1000, score: 0, right: 0, tries: 0, streak: 0, tier: 0, upRun: 0, downRun: 0, topTier: 0, q: null, wait: false };
+      st = { end: Date.now() + SECONDS * 1000, score: 0, right: 0, tries: 0, streak: 0, tier: 0, upRun: 0, downRun: 0, topTier: 0, q: null, wait: false, pausedAt: 0, walks: 0 };
       NL.say(fb, '');
       tick();
       next();
@@ -42,6 +42,7 @@
     function tick() {
       clearTimeout(timer);
       if (!st) return;
+      if (st.pausedAt) { timer = NL.later(250, tick); return; }
       var left = Math.max(0, st.end - Date.now());
       drawHead(left);
       if (left <= 0) { finish(); return; }
@@ -53,20 +54,48 @@
         '<span class="pill">Level ' + (st.tier + 1) + '</span><span class="stat">Score <b>' + st.score + '</b> &nbsp; Streak <b>' + st.streak + '</b> &nbsp; Right <b>' + st.right + '</b></span>';
     }
 
-    function makeQuestion() {
-      var T = TIERS[st.tier], kind = NC.pick(T.kinds), n = NL.sizeOf(T.n);
+    // kind, from and tier keep to one kind of question at one level (the walkthrough makes a similar one).
+    function makeQuestion(kind, from, tier) {
+      var ti = tier == null ? st.tier : tier, T = TIERS[ti], n = NL.sizeOf(T.n);
+      kind = kind || NC.pick(T.kinds);
       if (kind === 'evpost' || kind === 'evpre') {
-        var t = NC.randomTree({ n: n, ops: T.ops, max: st.tier < 2 ? 60 : 120, noNeg: st.tier < 2 });
+        var t = NC.randomTree({ n: n, ops: T.ops, max: ti < 2 ? 60 : 120, noNeg: ti < 2 });
         var list = kind === 'evpre' ? NC.toPrefix(t) : NC.toPostfix(t);
-        return { kind: 'num', ask: 'Work out the value of this ' + (kind === 'evpre' ? 'prefix' : 'postfix') + ' expression.', show: NC.show(list), value: NC.evaluate(t), answer: String(NC.evaluate(t)) };
+        return { k: kind, tier: ti, kind: 'num', form: kind === 'evpre' ? 'prefix' : 'postfix', ask: 'Work out the value of this ' + (kind === 'evpre' ? 'prefix' : 'postfix') + ' expression.', show: NC.show(list), list: list, value: NC.evaluate(t), answer: String(NC.evaluate(t)) };
       }
       var tl = NC.randomTree({ n: n, ops: T.ops, letters: true, digitChance: T.implied ? 0.35 : 0 });
       if (kind === 'toin') {
-        var from = NC.pick(['prefix', 'postfix']);
-        return { kind: 'infix', ask: 'Write this ' + from + ' expression in infix.', show: NC.show(from === 'prefix' ? NC.toPrefix(tl) : NC.toPostfix(tl)), tree: tl, answer: NC.toInfix(tl) };
+        from = from || NC.pick(['prefix', 'postfix']);
+        return { k: kind, tier: ti, from: from, kind: 'infix', ask: 'Write this ' + from + ' expression in infix.', show: NC.show(from === 'prefix' ? NC.toPrefix(tl) : NC.toPostfix(tl)), tree: tl, answer: NC.toInfix(tl) };
       }
       var target = kind === 'topre' ? NC.toPrefix(tl) : NC.toPostfix(tl);
-      return { kind: 'seq', ask: 'Write this infix expression in ' + (kind === 'topre' ? 'prefix' : 'postfix') + '.', show: NC.toInfix(tl, { implied: !!T.implied }), list: target, answer: NC.show(target) };
+      return { k: kind, tier: ti, implied: !!T.implied, kind: 'seq', ask: 'Write this infix expression in ' + (kind === 'topre' ? 'prefix' : 'postfix') + '.', show: NC.toInfix(tl, { implied: !!T.implied }), tree: tl, list: target, answer: NC.show(target) };
+    }
+    // Walk me through it: the right method for this kind of question, on a similar one. Evaluate: the stack.
+    // Infix to prefix or postfix: the bracket method. Prefix or postfix to infix: grouping. The clock stops meanwhile.
+    function walkSteps(q) {
+      if (q.kind === 'num') return { steps: NLWalk.stack(q.list, q.form), title: 'evaluate ' + q.form + ' with a stack',
+        intro: 'To work out a value, use a <b>stack</b>. ' };
+      if (q.kind === 'infix') return { steps: NLWalk.group(q.tree, q.from), title: q.from + ' to infix by grouping',
+        intro: 'To go back to infix, <b>group</b> each operator with its two values. ' };
+      var to = q.k === 'topre' ? 'prefix' : 'postfix';
+      return { steps: NLWalk.bracket(q.tree, 'infix', to, { implied: q.implied }).steps, title: 'infix to ' + to + ' by the bracket method',
+        intro: 'To write infix in ' + to + ', use the <b>bracket method</b>. ' };
+    }
+    function walkMe() {
+      if (!st || st.wait || st.pausedAt) return;
+      var cur = st.q;
+      var ex = NLWalk.pick(function () {
+        var q = makeQuestion(cur.k, cur.from, cur.tier), w = walkSteps(q);
+        return { key: q.show, question: q.show, answer: q.answer, steps: w.steps, q: q, w: w };
+      }, { key: cur.show, question: cur.show, answer: cur.answer, numeric: cur.kind === 'num' });
+      if (!ex) { NL.say(fb, 'Try that again in a moment.', 'hint'); return; }
+      st.pausedAt = Date.now();
+      NLWalk.open(host, { title: 'Walk me through it: ' + ex.w.title, question: ex.w.intro + 'Similar question: ' + esc(ex.q.ask) + ' <b class="calc">' + esc(ex.q.show) + '</b>', steps: ex.steps,
+        onClose: function (seen, total) {
+          if (st) { st.walks++; if (st.pausedAt) { st.end += Date.now() - st.pausedAt; st.pausedAt = 0; tick(); } }
+          log.help(ex.w.title + ', ' + ex.q.show + ' while on ' + cur.show, seen, total);
+        } });
     }
     function mark(q, raw) {
       if (q.kind === 'num') { var v = Number(String(raw).trim().replace(/\u2212/g, '-')); return String(raw).trim() !== '' && v === q.value; }
@@ -94,6 +123,10 @@
       skip.addEventListener('click', function () { if (!st.wait) answer(false, '', true); });
       row.appendChild(input); row.appendChild(go); row.appendChild(skip);
       body.appendChild(row);
+      var wrow = el('div', { class: 'actions wt-row' });
+      wrow.appendChild(NLWalk.button(walkMe));
+      wrow.appendChild(el('span', { class: 'small' }, 'The clock stops while you look.'));
+      body.appendChild(wrow);
       NL.focusSoon(input);
       NL.reportHeight();
     }
@@ -122,7 +155,7 @@
       var s = st; st = null;
       var old = best();
       if (s.score > old) { try { localStorage.setItem(BEST_KEY, String(s.score)); } catch (e) {} }
-      log.add('race: ' + s.right + ' right of ' + s.tries + ', score ' + s.score + ', best run ' + (s.bestRun || 0) + ' in a row, reached level ' + (s.topTier + 1), (s.bestRun || 0) >= PASS);
+      log.add('race: ' + s.right + ' right of ' + s.tries + ', score ' + s.score + ', best run ' + (s.bestRun || 0) + ' in a row, reached level ' + (s.topTier + 1) + (s.walks ? ', used Walk me through it ' + s.walks + (s.walks === 1 ? ' time' : ' times') : ''), (s.bestRun || 0) >= PASS);
       if ((s.bestRun || 0) >= PASS) log.finish();
       head.innerHTML = '';
       NL.say(fb, '');

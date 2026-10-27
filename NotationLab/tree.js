@@ -56,8 +56,10 @@
       return bits.length ? bits.join('; ') : 'it is the only operator in this part';
     }
     function name(n, implied) { return implied && NC.hiddenTimes(n) ? 'the hidden *' : '<b class="calc">' + esc(n.op) + '</b>'; }
-    function walkSteps() {
-      var lev = L(), implied = !!lev.implied, ex = NC.parseInfix(EXAMPLES[lv]);
+    // ex and form: the per-question Walk me through it (a fresh tree like the student's, read in their form only).
+    function walkSteps(ex, form) {
+      var lev = L(), implied = !!lev.implied;
+      ex = ex || NC.parseInfix(EXAMPLES[lv]);
       var p = prepare(ex, implied), shown = NC.toInfix(ex, { implied: implied });
       var ops = p.nodes.filter(function (n) { return n.op; });
       var steps = [{ text: 'Example: <b class="calc">' + esc(shown) + '</b>. A tree shows the order an expression is worked out. Each operator joins the two parts hanging below it. Letters and numbers are at the ends of the branches.' +
@@ -72,14 +74,27 @@
       });
       steps.push({ text: 'Only letters and numbers are left, so the tree is built. This is the bracket method from Convert It: <b class="calc">' + esc(NC.toInfix(ex, { full: true })) +
         '</b>. Each pair of brackets is one operator with its two branches, and the outside pair is the top.', built: ops.length, region: null });
-      steps.push({ text: '<b>Prefix</b> puts each operator <b>before</b> its two branches: the top first, then all of the left branch, then all of the right branch. The numbers show the order: <b class="calc">' +
-        esc(NC.show(NC.toPrefix(ex))) + '</b>.', built: ops.length, read: preorder(ex) });
-      steps.push({ text: '<b>Postfix</b> puts each operator <b>after</b> its two branches: all of the left branch, then all of the right branch, then the top. <b class="calc">' +
-        esc(NC.show(NC.toPostfix(ex))) + '</b>. Now build one yourself. A tree with a mistake does not count.', built: ops.length, read: postorder(ex) });
+      if (form !== 'postfix') steps.push({ text: '<b>Prefix</b> puts each operator <b>before</b> its two branches: the top first, then all of the left branch, then all of the right branch. The numbers show the order: <b class="calc">' +
+        esc(NC.show(NC.toPrefix(ex))) + '</b>.' + (form ? ' Why: each operator comes before the two parts it joins. Now build and read your own tree the same way.' : ''), built: ops.length, read: preorder(ex) });
+      if (form !== 'prefix') steps.push({ text: '<b>Postfix</b> puts each operator <b>after</b> its two branches: all of the left branch, then all of the right branch, then the top. <b class="calc">' +
+        esc(NC.show(NC.toPostfix(ex))) + '</b>.' + (form ? ' Why: each operator comes after the two parts it joins. Now build and read your own tree the same way.' : ' Now build one yourself. A tree with a mistake does not count.'), built: ops.length, read: postorder(ex) });
       return { steps: steps, prep: p, tree: ex, ops: ops };
     }
-    function walk() {
-      var W = walkSteps(), at = 0;
+    // Walk me through it: a fresh tree of the same level, never the student's own (pick checks its answer is not shown).
+    function walkMe() {
+      var mine = T, form = T.form, want = NC.show(form === 'prefix' ? NC.toPrefix(T.tree) : NC.toPostfix(T.tree));
+      var ex = NLWalk.pick(function () {
+        var t = generate();
+        var W = walkSteps(t, form);
+        return { key: NC.toPrefix(t).join(' '), question: NC.toInfix(t, { implied: !!L().implied }), answer: NC.show(form === 'prefix' ? NC.toPrefix(t) : NC.toPostfix(t)), steps: W.steps, W: W };
+      }, { key: NC.toPrefix(T.tree).join(' '), question: T.shown, answer: want });
+      if (!ex) { NL.say(fb, 'Try that again in a moment.', 'hint'); return; }
+      T.walked = true;
+      walk(ex.W, function (seen, total) { log.help('tree for ' + ex.question + ' read in ' + form + ' while on ' + mine.shown, seen, total); });
+    }
+    function walk(given, onDone) {
+      var W = given && given.steps ? given : walkSteps(), at = 0, seen = 1;
+      if (!(given && given.steps)) onDone = null;
       game.forEach(function (n) { n.style.display = 'none'; });
       walkBox.style.display = '';
       function show() {
@@ -92,19 +107,26 @@
           if (cur && it.node === cur.id) cls += ' picked-ok';
           return '<span class="' + cls + '">' + (it.kind === 'hid' ? '·' : esc(it.text)) + '</span>';
         }).join('');
-        walkBox.innerHTML = '<h2>How a tree is built (' + (at + 1) + ' of ' + W.steps.length + ')</h2><div class="strip">' + strip + '</div>' +
+        seen = Math.max(seen, at + 1);
+        walkBox.innerHTML = '<h2>' + (onDone ? 'Walk me through it' : 'How a tree is built') + ' (' + (at + 1) + ' of ' + W.steps.length + ')</h2>' +
+          (onDone ? '<p class="small wt-note">A similar expression, so you can see how and why. Your teacher can see that you used it.</p>' : '') + '<div class="strip">' + strip + '</div>' +
           '<div class="tree-wrap">' + treeSvg(W.tree, W.prep.nodes, built, cur ? cur.id : -1, s.read || null) + '</div><p class="wk-text">' + s.text + '</p>';
         var a = el('div', { class: 'actions' });
         if (at > 0) { var bk = el('button', { type: 'button', class: 'btn secondary' }, 'Back'); bk.addEventListener('click', function () { at--; show(); }); a.appendChild(bk); }
         var last = at === W.steps.length - 1;
-        var nx = el('button', { type: 'button', class: 'btn' }, last ? 'Build a tree ' + NL.ICON.play : 'Next ' + NL.ICON.next);
-        nx.addEventListener('click', function () {
-          if (!last) { at++; show(); return; }
+        function shut() {
           walkBox.style.display = 'none';
           game.forEach(function (n) { n.style.display = ''; });
           draw();
+          if (onDone) onDone(seen, W.steps.length);
+        }
+        var nx = el('button', { type: 'button', class: 'btn' }, last ? (onDone ? 'Back to my question ' : 'Build a tree ') + NL.ICON.play : 'Next ' + NL.ICON.next);
+        nx.addEventListener('click', function () {
+          if (!last) { at++; show(); return; }
+          shut();
         });
         a.appendChild(nx);
+        if (onDone && !last) { var cl = el('button', { type: 'button', class: 'btn secondary' }, 'Close'); cl.addEventListener('click', shut); a.appendChild(cl); }
         walkBox.appendChild(a);
         NL.reportHeight();
       }
@@ -202,8 +224,9 @@
         b.addEventListener('click', function () { NL.say(fb, ''); newExpr(); });
         act.appendChild(b);
       }
+      act.appendChild(NLWalk.button(walkMe));
       var how = el('button', { type: 'button', class: 'btn secondary' }, 'How it works');
-      how.addEventListener('click', walk);
+      how.addEventListener('click', function () { walk(); });
       act.appendChild(how);
       if (note) NL.say(fb, note[0], note[1]);
       NL.reportHeight();
@@ -363,7 +386,7 @@
     function finishExpr(solved, msg) {
       var lev = L();
       if (solved && T.mistakes === 0) score += 20;
-      log.add(T.shown + ' to ' + T.form + (solved ? (T.mistakes ? ', ' + T.mistakes + ' mistake' + (T.mistakes > 1 ? 's' : '') + ' (not counted)' : ', no mistakes') : ', out of hearts'), solved && !T.mistakes);
+      log.add(T.shown + ' to ' + T.form + (solved ? (T.mistakes ? ', ' + T.mistakes + ' mistake' + (T.mistakes > 1 ? 's' : '') + ' (not counted)' : ', no mistakes') : ', out of hearts') + (T.walked ? ', used Walk me through it' : ''), solved && !T.mistakes);
       var up = false;
       // James 2026-10-27: a tree with any mistake never counts, so guessing cannot move anyone on.
       if (!solved || T.mistakes) have = 0;

@@ -27,7 +27,7 @@
   document.getElementById('nl-css').href = 'lab.css?v=' + encodeURIComponent(v);
   var FILE = { stack: 'stack.js', convert: 'convert.js', tree: 'tree.js', group: 'group.js', race: 'race.js' };
   var mode = params.get('mode');
-  var files = ['core.js', 'common.js'].concat(FILE[mode] ? [FILE[mode]] : [], ['main.js']);
+  var files = ['core.js', 'common.js', 'walk.js'].concat(FILE[mode] ? [FILE[mode]] : [], ['main.js']);
   files.forEach(function (file) {
     var s = document.createElement('script');
     s.src = file + '?v=' + encodeURIComponent(v);

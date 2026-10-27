@@ -198,6 +198,7 @@
         nx.addEventListener('click', function () { NL.say(fb, ''); newExpr(); });
         act.appendChild(nx);
       }
+      act.appendChild(NLWalk.button(walkMe));
       var how = el('button', { type: 'button', class: 'btn secondary' }, 'How it works');
       how.addEventListener('click', function () { intro(true); });
       act.appendChild(how);
@@ -376,7 +377,7 @@
     function finish() {
       S.phase = 'end';
       var clean = !S.mistakes, up = false, text;
-      log.add(S.start + ' (' + S.from + ' to ' + S.to + ')' + (clean ? ', no mistakes' : ', ' + S.mistakes + ' mistake' + (S.mistakes > 1 ? 's' : '') + ' (not counted)'), clean);
+      log.add(S.start + ' (' + S.from + ' to ' + S.to + ')' + (clean ? ', no mistakes' : ', ' + S.mistakes + ' mistake' + (S.mistakes > 1 ? 's' : '') + ' (not counted)') + (S.walked ? ', used Walk me through it' : ''), clean);
       if (clean) {
         score += 20; streak++; have++; sup.right();
         text = 'Converted with no mistakes: this one counts. ' + have + ' of ' + NEED + ' in a row.';
@@ -389,6 +390,22 @@
       if (log.isDone() && lv === LEVELS.length - 1 && clean && !up) text = NL.doneBanner('You can convert contest-style expressions. Keep going for a higher score.') + text;
       draw([text, clean ? '' : 'hint']);
       void up;
+    }
+
+    // ------------------------------------------------ Walk me through it: a fresh similar conversion, same level and direction
+    function answerOf(t, to) { return to === 'infix' ? infix(t) : NC.show(to === 'prefix' ? NC.toPrefix(t) : NC.toPostfix(t)); }
+    function walkMe() {
+      var lev = L(), from = S.from, to = S.to, implied = S.implied, keepLast = last, mine = S;
+      var ex = NLWalk.pick(function () {
+        var t = generate(lev, from);
+        var w = NLWalk.bracket(t, from, to, { implied: implied, infix: infix, needs: needsC });
+        return { key: NC.toPrefix(t).join(' '), question: w.question, answer: w.answer, steps: w.steps };
+      }, { key: NC.toPrefix(S.tree).join(' '), question: S.start, answer: answerOf(S.tree, to) });
+      last = keepLast;
+      if (!ex) { NL.say(fb, 'Try that again in a moment.', 'hint'); return; }
+      S.walked = true;
+      NLWalk.open(host, { title: 'Walk me through it: ' + from + ' to ' + to, question: 'Similar question: convert ' + from + ' to <b>' + to + '</b>: ' + b(ex.question), steps: ex.steps,
+        onClose: function (seen, total) { log.help(from + ' to ' + to + ', ' + ex.question + ' while on ' + mine.start, seen, total); } });
     }
 
     // ------------------------------------------------ the worked example for a level (also on "How it works")

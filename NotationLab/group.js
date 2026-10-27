@@ -27,7 +27,24 @@
     var sup = NL.support('group', rule);
     sup.toggle(bar.slot);
     var predBox = el('div'), stripBox = el('div'), act = el('div', { class: 'actions' }), fb = el('div', { class: 'feedback' });
-    [q, rule, predBox, stripBox, act, fb].forEach(function (n) { host.appendChild(n); });
+    var walkRow = el('div', { class: 'actions wt-row' });
+    walkRow.appendChild(NLWalk.button(walkMe));
+    [q, rule, predBox, stripBox, act, fb, walkRow].forEach(function (n) { host.appendChild(n); });
+
+    // Walk me through it: grouping on a similar expression (same level and form, a different expression).
+    function walkMe() {
+      var lev = L(), form = G.form;
+      var ex = NLWalk.pick(function () {
+        var t = NC.randomTree({ n: NL.sizeOf(lev.n), ops: lev.ops, letters: true, digitChance: lev.ops === ALL ? 0.2 : 0 });
+        var list = form === 'prefix' ? NC.toPrefix(t) : NC.toPostfix(t);
+        return { key: NC.toPrefix(t).join(' '), answer: NC.toInfix(t), steps: NLWalk.group(t, form), show: NC.show(list) };
+      }, { key: NC.toPrefix(G.tree).join(' '), answer: NC.toInfix(G.tree) });
+      if (!ex) { NL.say(fb, 'Try that again in a moment.', 'hint'); return; }
+      G.walked = true;
+      var mine = G;
+      NLWalk.open(host, { title: 'Walk me through it: ' + form + ' to infix', question: 'Similar question: write the ' + form + ' <b class="calc">' + esc(ex.show) + '</b> in infix.', steps: ex.steps,
+        onClose: function (seen, total) { log.help(form + ' ' + ex.show + ' while on ' + mine.list.join(' '), seen, total); } });
+    }
 
     function L() { return LEVELS[lv]; }
     function isValue(it) { return it && (it.tree && true); }
@@ -143,7 +160,7 @@
       }
       if (solved && G.mistakes === 0) score += 20;
       var ok = solved && predOk !== false;
-      log.add(G.form + ' ' + G.list.join(' ') + ' is ' + infix + (G.prediction != null ? (predOk ? ', predicted right' : ', predicted ' + G.prediction) : '') + (solved ? (G.mistakes ? ', ' + G.mistakes + ' wrong clicks' : '') : ', out of hearts'), ok);
+      log.add(G.form + ' ' + G.list.join(' ') + ' is ' + infix + (G.prediction != null ? (predOk ? ', predicted right' : ', predicted ' + G.prediction) : '') + (solved ? (G.mistakes ? ', ' + G.mistakes + ' wrong clicks' : '') : ', out of hearts') + (G.walked ? ', used Walk me through it' : ''), ok);
       var up = false;
       // James 2026-10-27: an expression with any mistake never counts and starts the run again.
       if (ok && G.mistakes) text += ' It had ' + (G.mistakes === 1 ? 'a wrong click' : G.mistakes + ' wrong clicks') + ', so it does not count.';
