@@ -42,7 +42,7 @@
       st = null; drawBar(); drawTower();
       right.innerHTML = '<h2>Build the tallest tower</h2><p>Work out prefix and postfix values, and turn infix into prefix or postfix.</p>' +
         '<ul class="rules"><li>Right: a new floor. Wrong or out of time: the top floor falls off.</li>' +
-        '<li>Higher floors, harder questions. 3 right in a row: points x2. 5 in a row: x3.</li>' +
+        '<li>Higher floors, harder questions. 3 right in a row: points x2. 5 in a row: x3.</li><li>To pass: ' + PASS + ' right in a row.</li>' +
         '<li>' + BRICKS + ' bricks to reach floor ' + TOP + '. Spaces are optional. Type ^ for ' + NotationCore.POW + '.</li></ul>' +
         (CA.best('tower') ? '<p class="small">Best score on this computer: <b>' + CA.best('tower') + '</b></p>' : '');
       var go = el('button', { type: 'button', class: 'btn big' }, CA.ICON.play + ' Start building');
@@ -99,7 +99,9 @@
           st.score += pts;
           st.floors.push({ kind: kind, level: level });
           st.maxFloor = Math.max(st.maxFloor, st.floors.length);
-          if (st.maxFloor >= PASS) log.finish();
+          st.bestRun = Math.max(st.bestRun || 0, st.streak);
+          // James 2026-10-27: passed only with PASS right in a row, no mistakes in between.
+          if (st.streak >= PASS) log.finish();
           drawBar(); drawTower(st.floors.length - 1);
           CA.say(fb, 'Right. <span class="pop">+' + pts + '</span>' + (mult > 1 ? ' Combo x' + mult + '.' : ''), '');
           CA.later(900, next);
@@ -129,7 +131,7 @@
         '<div class="summary-grid"><div><span class="small">Right</span><b>' + s.right + ' of ' + s.used + '</b></div>' +
         '<div><span class="small">Highest floor</span><b>' + s.maxFloor + ' of ' + TOP + '</b></div>' +
         '<div><span class="small">Best on this computer</span><b>' + Math.max(old, s.score) + '</b></div></div>' +
-        (s.maxFloor >= PASS ? CA.doneBanner('Floor ' + PASS + ' or higher: tower passed.') : '<p class="small">Reach floor ' + PASS + ' to pass. New expressions every game.</p>');
+        ((s.bestRun || 0) >= PASS ? CA.doneBanner(PASS + ' right in a row: tower passed.') : '<p class="small">To pass: ' + PASS + ' right in a row with no mistakes. Your best run: ' + (s.bestRun || 0) + '. New expressions every game.</p>');
       var again = el('button', { type: 'button', class: 'btn' }, CA.ICON.play + ' Build again');
       again.addEventListener('click', start);
       var row = el('div', { class: 'actions' }); row.appendChild(again); right.appendChild(row);

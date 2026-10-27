@@ -123,7 +123,7 @@ var MiniContest = (function () {
         var rank = list.map(function (r) { return !!r.latest; }).indexOf(true) + 1;
         stage.innerHTML = '';
         var res = el('div', { class: 'card result' });
-        res.innerHTML = '<div class="two"><div class="left"><div class="mock-score"><b>' + score + ' / 5</b><span>' + (score === 5 ? 'A perfect paper.' : 'Open each question to see how to get it.') + '</span></div></div>' +
+        res.innerHTML = '<div class="two"><div class="left"><div class="mock-score"><b>' + score + ' / 5</b><span>' + (score === 5 ? 'A perfect paper.' : 'Not finished: you need all 5 right in one contest. Open each question to see how to get it.') + '</span></div></div>' +
           '<div><h2>Your scoreboard</h2>' + (rank && rank <= 5 ? '<p class="small">You are number <b>' + rank + '</b> on your scoreboard.</p>' : '') + scoreboard(3) + '<div class="actions again"></div></div></div>';
         var ol = el('ol', { class: 'marked' });
         run.qs.forEach(function (q, i) {
@@ -138,7 +138,7 @@ var MiniContest = (function () {
         again.addEventListener('click', function () { start(host); });
         res.querySelector('.again').appendChild(again);
         stage.appendChild(res);
-        CA.report('arcade-contest', 'Mini-Contest', 'Mini-Contest: ' + score + ' of 5 in ' + CA.clockText(used) + ' (' + run.minutes + ' minutes allowed' + (timeUp ? ', time ran out' : '') + '). ' + marks.join(', ') + '.', true);
+        CA.report('arcade-contest', 'Mini-Contest', 'Mini-Contest: ' + score + ' of 5 in ' + CA.clockText(used) + ' (' + run.minutes + ' minutes allowed' + (timeUp ? ', time ran out' : '') + '). ' + marks.join(', ') + '.', score === 5);
         CA.reportHeight();
       }
     }

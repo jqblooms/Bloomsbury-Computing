@@ -154,15 +154,17 @@ var Flick = (function () {
     var lines = [], right = 0, done = false;
     function post(game) {
       if (window.parent === window) return;
-      var head = 'Level ' + game.level + ', score ' + game.score + ', best streak ' + game.best + ', ' + right + ' right' + (done ? ' (goal reached)' : '') + '.';
+      var head = 'Level ' + game.level + ', score ' + game.score + ', best streak ' + game.best + ', ' + right + ' right in a row' + (done ? ' (goal reached)' : '') + '.';
       try {
         window.parent.postMessage({ type: 'BC_APP_RESULT', questionId: 'bit-flicker-' + mode, label: 'Bit Flicker: ' + label,
           summary: head + (lines.length ? ' ' + lines.slice(-30).join(' ') : ''), complete: done }, '*');
       } catch (e) {}
     }
     return {
+      // James 2026-10-27: any wrong answer starts the run again; the goal is that many right in a row.
       add: function (game, text, ok, notGoal) {
-        if (ok && !notGoal) right++;
+        if (!ok) right = 0;
+        else if (!notGoal) right++;
         lines.push((lines.length + 1) + '. ' + (ok ? 'Right' : 'Wrong') + ': ' + text + '.');
         if (right >= goal) done = true;
         post(game);

@@ -119,12 +119,14 @@ CA.games.contest = function (host) {
       var entry = { at: Date.now(), score: right, stars: stars, secs: secs };
       var list = board(); list.push(entry); CA.save(KEY, list.slice(-30));
       res.note('Contest: ' + right + ' of 5 in ' + clockText(secs) + (timeUp ? ' (time up)' : '') + '. ' + lines.join('; ') + '.');
-      if (right >= 3) res.finish();
+      // James 2026-10-27: only a contest with every answer right counts as finished.
+      if (right === qs.length) res.finish();
       foot.innerHTML = '';
       CA.say(fb, '', '');
       var sum = el('div', { class: 'contest-result' });
       sum.innerHTML = CA.stars(stars) + '<span class="big">' + right + ' / 5</span><span class="muted">' + (timeUp ? 'Time up. ' : '') + 'Time ' + clockText(secs) + '</span>';
       foot.appendChild(sum);
+      foot.appendChild(el('p', { class: 'muted' }, right === qs.length ? 'Every answer right: finished.' : 'This contest does not count as finished: get all ' + qs.length + ' right in one contest.'));
       foot.appendChild(CA.btn('Scoreboard', '', function () { menu(entry); }, 'trophy'));
       CA.reportHeight();
     }

@@ -131,7 +131,7 @@ CA.games.loop = function (host) {
     var said = isTurns ? 'The runner did <b>' + q.turns + '</b> laps: i was ' + q.laps.map(function (x) { return x.i; }).join(', ') + '.'
       : 'The OUTPUT is <b>' + q.output + '</b>: ' + q.v + ' started at ' + q.start + ' and became ' + q.laps.map(function (x) { return x.value; }).join(', ') + '.';
     if (ok) { st.streak++; st.score += CA.points(st.streak); st.have++; CA.say(fb, 'Right! ' + said, ''); }
-    else { st.hearts--; st.mistakes++; st.streak = 0; CA.say(fb, 'You said ' + esc(st.guess) + '. ' + said, 'bad'); }
+    else { st.hearts--; st.mistakes++; st.streak = 0; st.have = 0; CA.say(fb, 'You said ' + esc(st.guess) + '. ' + said + ' This one does not count, and the count starts again: you need ' + NEED + ' right in a row.', 'bad'); }
     res.add(q.lines.join(' / ') + (isTurns ? ': laps ' : ': output ') + q.answer + ' (said ' + st.guess + ')', ok);
     drawBar();
     var row = el('div', { class: 'actions' });

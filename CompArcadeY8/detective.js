@@ -42,7 +42,7 @@
     function intro() {
       st = null; drawBar();
       body.innerHTML = '<h2>Solve the mystery programs</h2><p>Each case is a program. Work out exactly what it outputs. One try per case.</p>' +
-        '<ul class="rules"><li>Solve ' + NEED + ' cases at a rank to be promoted. Miss ' + NEED + ' and that rank starts again with new cases.</li>' +
+        '<ul class="rules"><li>Solve ' + NEED + ' cases in a row at a rank to be promoted. A miss starts the count again.</li>' +
         '<li>Ranks: ' + RANKS.map(function (r) { return r.name; }).join(', ') + '. Each one is a new kind of loop.</li>' +
         '<li>Stuck? A clue shows the first rows of the trace table, for half the points.</li></ul>' +
         (CA.best('detective') ? '<p class="small">Best score on this computer: <b>' + CA.best('detective') + '</b></p>' : '');
@@ -85,7 +85,7 @@
         log.add(RANKS[st.rank].name + ' case, ' + q.skill + ' (output ' + q.answer + '): typed ' + input.value.trim() + (clue ? ', with a clue' : ''), ok);
         var msg;
         if (ok) { st.solved++; st.right++; st.score += pts; msg = 'Case solved. <span class="pop">+' + pts + '</span>'; }
-        else { st.missed++; msg = 'Not this time: you typed <b>' + esc(input.value.trim()) + '</b>. The program outputs <b>' + esc(q.answer) + '</b>.'; }
+        else { st.missed++; st.solved = 0; msg = 'Not this time: you typed <b>' + esc(input.value.trim()) + '</b>. The program outputs <b>' + esc(q.answer) + '</b>. This case does not count, and the count starts again: solve ' + NEED + ' in a row to be promoted.'; }
         var promoted = st.solved >= NEED, restart = st.missed >= NEED;
         if (promoted) {
           if (st.rank < RANKS.length - 1) { st.rank++; msg += ' Promoted to <b>' + RANKS[st.rank].name + '</b>!'; }

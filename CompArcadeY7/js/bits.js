@@ -135,7 +135,7 @@ CA.games.bits = function (host) {
       st.streak++; st.score += CA.points(st.streak) + (st.rows.length > 1 ? 5 : 0); st.have++;
       CA.say(fb, 'Right! ' + esc(q.expr) + ' = <b class="mono">' + q.answer + '</b>' + (why ? '<br><span class="small">' + why + '</span>' : ''), '');
     } else {
-      st.hearts--; st.mistakes++; st.streak = 0;
+      st.hearts--; st.mistakes++; st.streak = 0; st.have = 0;
       CA.shake(grid);
       // Each wrong switch now shows the right bit (red ring), so the board shows the right answer without growing.
       st.rows.forEach(function (r) {
@@ -143,7 +143,7 @@ CA.games.bits = function (host) {
           if (sw.classList.contains('bad')) { sw.textContent = r.want[i]; sw.classList.toggle('on', r.want[i] === '1'); }
         });
       });
-      CA.say(fb, 'Not this time: <b class="mono">' + q.answer + '</b>. Switches in a red ring were wrong; they now show the right bit.' + (why ? '<br><span class="small">' + why + '</span>' : ''), 'bad');
+      CA.say(fb, 'Not this time: <b class="mono">' + q.answer + '</b>. Switches in a red ring were wrong; they now show the right bit. This round does not count, and the count starts again: you need ' + NEED + ' right in a row.' + (why ? '<br><span class="small">' + why + '</span>' : ''), 'bad');
     }
     res.add(q.expr + ' = ' + q.answer, ok);
     drawBar();

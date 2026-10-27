@@ -1,6 +1,6 @@
 // Two applications, different data (?activity=compare). Two applications and what each works out; eight data
 // items. Sort each into "Only A", "Only B", "Both" or "Neither", two checks as in Choose the Data. Then one why
-// question, one try. A pair is passed with at most one item wrong on the first check and the why right. Two pairs
+// question, one try. A pair is passed only with nothing wrong on the first check and the why right. Two pairs
 // passed; a pair can have no item in Both.
 (function () {
   'use strict';
@@ -118,11 +118,11 @@
           var ok = o === w.right;
           Array.prototype.forEach.call(box.querySelectorAll('button'), function (x) { x.disabled = true; if (x.textContent === w.right) x.classList.add('good'); });
           if (!ok) b.classList.add('bad');
-          var pass = ok && S.firstWrong <= 1;
-          if (pass) wins++;
+          var pass = ok && S.firstWrong === 0;
+          if (pass) wins++; else wins = 0;
           log.add(S.A.name + ' and ' + S.B.name + ', ' + S.firstWrong + ' of 8 wrong on the first check, why ' + (ok ? 'right' : 'wrong'), pass);
           ML.say(fb, (ok ? '<b>Right.</b> ' : '<b>Not that one.</b> The green one is right. ') + 'Data is needed when it changes what the application works out.' +
-            (pass ? '' : ' To pass: at most one wrong on the first check, and the why right.'), pass ? '' : 'bad');
+            (pass ? '' : ' This pair does not count: it needs nothing wrong on the first check and the why right. The count starts again.'), pass ? '' : 'bad');
           next();
         });
         box.appendChild(b);
@@ -136,7 +136,7 @@
       var b = el('button', { type: 'button', class: 'btn secondary' }, '<span>Next pair</span>' + ML.ICON.next);
       b.addEventListener('click', start);
       bar.appendChild(b);
-      bar.appendChild(el('span', { class: 'small' }, 'Pairs done: ' + wins + ' of ' + NEED));
+      bar.appendChild(el('span', { class: 'small' }, 'Pairs in a row with no mistakes: ' + wins + ' of ' + NEED));
       ML.reportHeight();
     }
     start();

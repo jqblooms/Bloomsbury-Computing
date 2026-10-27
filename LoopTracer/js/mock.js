@@ -85,12 +85,12 @@ var MockContest = (function () {
             '<details><summary>How to get it</summary><ol>' + q.why.map(function (w) { return '<li><code>' + esc(w) + '</code></li>'; }).join('') + '</ol></details>';
         });
         actions.innerHTML = '';
-        var banner = el('div', { class: 'mock-score' }, '<b>' + score + ' / 5</b><span>' + (score === 5 ? 'A perfect paper.' : score >= 3 ? 'Check the ones you missed: open How to get it.' : 'Open How to get it on each one, then try a new mock.') + '</span>');
+        var banner = el('div', { class: 'mock-score' }, '<b>' + score + ' / 5</b><span>' + (score === 5 ? 'A perfect paper: finished.' : 'Not finished: you need all 5 right. ' + (score >= 3 ? 'Check the ones you missed: open How to get it.' : 'Open How to get it on each one, then try a new mock.')) + '</span>');
         stage.insertBefore(banner, list);
         var again = el('button', { type: 'button', class: 'btn' }, LT.ICON.again + '<span>New mock</span>');
         again.addEventListener('click', function () { start(host, opts); });
         actions.appendChild(again);
-        LT.report('looptracer-mock', 'Loop Tracer: Mock Contest', 'Mock contest: ' + score + ' of 5 in ' + LT.clockText(used) + (timeUp ? ' (time ran out)' : '') + '. ' + marks.join(', ') + '.', true);
+        LT.report('looptracer-mock', 'Loop Tracer: Mock Contest', 'Mock contest: ' + score + ' of 5 in ' + LT.clockText(used) + (timeUp ? ' (time ran out)' : '') + '. ' + marks.join(', ') + '.', score === 5);
         LT.reportHeight();
       }
     }

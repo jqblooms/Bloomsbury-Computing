@@ -127,12 +127,13 @@ var LoopLock = (function () {
         var res = el('div', { class: 'card result' });
         res.innerHTML = '<h2>' + (newBest ? 'You escaped: a new best time!' : 'You escaped!') + '</h2>' +
           '<div class="big-stats"><div><b>' + CA.clockText(total) + '</b><span>time with penalties</span></div><div><b>' + st.wrong + '</b><span>wrong codes</span></div>' +
-          '<div><b>' + st.jams + '</b><span>jammed locks</span></div></div>';
+          '<div><b>' + st.jams + '</b><span>jammed locks</span></div></div>' +
+          (st.wrong ? '<p class="small">You escaped, but with ' + st.wrong + ' wrong code' + (st.wrong === 1 ? '' : 's') + ', so this room does not count as finished. Escape a new room with no wrong codes.</p>' : '<p class="small">No wrong codes: finished.</p>');
         var again = el('button', { type: 'button', class: 'btn' }, CA.ICON.again + '<span>A new room</span>');
         again.addEventListener('click', function () { play(null); });
         res.appendChild(el('div', { class: 'actions' })).appendChild(again);
         room.appendChild(res);
-        CA.report('arcade-lock', 'Loop Lock', 'Loop Lock: escaped in ' + CA.clockText(total) + ' with penalties, ' + st.wrong + ' wrong codes, ' + st.jams + ' jammed locks.', true);
+        CA.report('arcade-lock', 'Loop Lock', 'Loop Lock: escaped in ' + CA.clockText(total) + ' with penalties, ' + st.wrong + ' wrong codes, ' + st.jams + ' jammed locks.', st.wrong === 0);
         CA.reportHeight();
       }
     }

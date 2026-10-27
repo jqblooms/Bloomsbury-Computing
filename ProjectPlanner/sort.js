@@ -1,6 +1,6 @@
 // Which stage is it? (?activity=sort) Ten jumbled tasks from different projects go into the five stages. Two
 // checks: the first sends the wrong ones back to look at again, the second shows where each one belongs. A set is
-// passed with at most two wrong on the first check and none on the second; otherwise a new set.
+// passed only with all ten right on the first check (James 2026-10-27); otherwise a new set.
 (function () {
   'use strict';
   var el = PP.el, esc = PP.esc;
@@ -82,11 +82,11 @@
       state.items.forEach(function (x) { if (state.at[x.id] === x.stage) state.locked[x.id] = true; });
       if (state.checks === 1) state.firstWrong = wrong.length;
       if (!wrong.length) {
-        var pass = state.firstWrong <= 2;
+        var pass = state.firstWrong === 0;
         state.over = true; draw();
         log.add('set ' + set + ', ' + state.firstWrong + ' of 10 wrong on the first check', pass);
-        PP.say(fb, pass ? '<b>All right.</b> ' + (state.firstWrong ? state.firstWrong + ' needed a second look.' : 'All ten on the first check.') :
-          '<b>All right now</b>, but ' + state.firstWrong + ' were wrong on the first check. Try a new set: get at most two wrong first time.', pass ? '' : 'bad');
+        PP.say(fb, pass ? '<b>All right.</b> ' + 'All ten on the first check.' :
+          '<b>All right now</b>, but ' + state.firstWrong + ' were wrong on the first check. This set does not count: you need all ten right on the first check. Try a new set.', pass ? '' : 'bad');
         return pass ? done() : again();
       }
       if (state.checks === 1) {

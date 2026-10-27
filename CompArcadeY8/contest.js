@@ -12,7 +12,7 @@
     { kinds: ['bits-chain', 'bits-logic'], level: [3, 4] },
     { kinds: ['loop'], level: [4, 5] }
   ];
-  var PASS = 3, BOARD_KEY = 'bc-ca8-contest-board-v1';
+  var PASS = 5, BOARD_KEY = 'bc-ca8-contest-board-v1';
   function minutes() { var m = Number(CA.params.get('minutes')); return m >= 1 && m <= 30 ? m : 8; }
   function board() { try { var b = JSON.parse(localStorage.getItem(BOARD_KEY) || '[]'); return Array.isArray(b) ? b : []; } catch (e) { return []; } }
 
@@ -108,7 +108,7 @@
       bar.innerHTML = '<span class="pill">' + CA.ICON.trophy + ' Mini Contest</span><span class="spacer"></span>' + CA.chip('Score', score + ' of ' + st.qs.length) + CA.chip('Time used', CA.mmss(used));
       body.innerHTML = '<div class="gbar"><h2 style="margin:0">' + (timeUp ? 'Time is up!' : 'Handed in') + '</h2><span class="big-score" style="margin:0">' + score + ' of ' + st.qs.length + '</span>' +
         (place ? '<span>Place <b>' + place + '</b> on this computer\'s scoreboard.</span>' : '') + '</div>' +
-        (score >= PASS ? CA.doneBanner(PASS + ' or more: contest passed.') : '<p class="small">Get ' + PASS + ' or more to pass.</p>');
+        (score >= PASS ? CA.doneBanner('All ' + PASS + ' right: contest passed.') : '<p class="small">This contest does not count: get all ' + PASS + ' right in one contest to pass.</p>');
       var grid = el('div', { class: 'after' }), list = el('div'), side = el('div');
       grid.appendChild(list); grid.appendChild(side); body.appendChild(grid);
       st.qs.forEach(function (q, i) {

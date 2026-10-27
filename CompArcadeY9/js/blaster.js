@@ -4,6 +4,7 @@
 var BitBlaster = (function () {
   'use strict';
   var el = CA.el, esc = CA.esc;
+  var PASS_RUN = 5; // James 2026-10-27: finished only with this many blocks in a row, no wrong answer or landed block between.
   var LIVES = 3;
 
   function start(host) {
@@ -106,7 +107,7 @@ var BitBlaster = (function () {
           if (timer) clearTimeout(timer);
           var left = Math.max(0, 1 - (Date.now() - startedAt) / fallMs);
           var gain = 50 * level() + Math.round(50 * left);
-          s.score += gain; s.cleared++;
+          s.score += gain; s.cleared++; s.run = (s.run || 0) + 1; s.bestRun = Math.max(s.bestRun || 0, s.run);
           block.className = 'block blasted';
           fb.className = 'feedback';
           fb.innerHTML = 'Blasted! <b>+' + gain + '</b> x = <code>' + esc(q.answer) + '</code>';
@@ -128,7 +129,7 @@ var BitBlaster = (function () {
         if (!over) setTimeout(drop, 2200);
       }
       function lose(msg) {
-        s.lives--;
+        s.lives--; s.run = 0;
         fb.className = 'feedback error';
         fb.textContent = msg;
         draw();
@@ -147,12 +148,13 @@ var BitBlaster = (function () {
         res.innerHTML = '<h2>' + (newBest && s.score > 0 ? 'New personal best!' : 'Game over') + '</h2>' +
           '<div class="big-stats"><div><b>' + s.score + '</b><span>score</span></div><div><b>' + s.cleared + '</b><span>blocks blasted</span></div>' +
           '<div><b>' + level() + '</b><span>level reached</span></div></div>' +
+          '<p class="small">' + ((s.bestRun || 0) >= PASS_RUN ? 'Finished: ' + PASS_RUN + ' blocks in a row.' : 'Not finished yet: you need ' + PASS_RUN + ' blocks in a row with no wrong answer and no block landing. Your best run: ' + (s.bestRun || 0) + '.') + '</p>' +
           '<p class="small">Last block: <code>' + esc(q.code) + '</code> x = <code class="ok">' + esc(q.answer) + '</code></p>';
         var again = el('button', { type: 'button', class: 'btn' }, CA.ICON.again + '<span>Play again</span>');
         again.addEventListener('click', function () { run(); });
         res.appendChild(el('div', { class: 'actions' })).appendChild(again);
         stage.appendChild(res);
-        CA.report('arcade-blaster', 'Bit Flick Blaster', 'Bit Flick Blaster: score ' + s.score + ', ' + s.cleared + ' blocks blasted, level ' + level() + ' reached, ' + s.wrong + ' wrong answers. Best ' + best + '.', s.blocks > 0);
+        CA.report('arcade-blaster', 'Bit Flick Blaster', 'Bit Flick Blaster: score ' + s.score + ', ' + s.cleared + ' blocks blasted, level ' + level() + ' reached, ' + s.wrong + ' wrong answers. Best ' + best + '.', (s.bestRun || 0) >= PASS_RUN);
         CA.reportHeight();
       }
     }

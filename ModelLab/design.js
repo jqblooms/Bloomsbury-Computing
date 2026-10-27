@@ -1,8 +1,8 @@
 // Design the data (?activity=design): the hardest task. A user asks a question in their own words; no rule is
 // shown. From ten data items, choose what the model must collect: some sound right but are old or about another
 // time or place, some are never used. Run the model on the real day. The first run says only how many items are
-// wrong; the second names them. A brief is passed with at most one wrong on the first run, all right by the second,
-// and a why question right. Two briefs passed.
+// wrong; the second names them. A brief is passed only with nothing wrong on the first run
+// and the why question right, NEED in a row (James 2026-10-27). Two briefs passed.
 (function () {
   'use strict';
   var el = ML.el, esc = ML.esc, B = MLBANK;
@@ -95,6 +95,7 @@
         return;
       }
       S.over = true; draw(true);
+      wins = 0;
       log.add(S.b.ask + ' ' + S.firstWrong + ' wrong on the first run, ' + errors + ' on the second', false);
       ML.say(fb, '<b>Still ' + errors + ' wrong</b> (red):<br>' + missing.map(function (x) { return '"' + esc(x.text) + '": needed. The brief says it changes the answer.'; })
         .concat(wrongData.map(function (x) { return '"' + esc(x.text) + '": the wrong data. ' + esc(x.why); }))
@@ -112,13 +113,13 @@
       B.shuffle([w.right].concat(w.wrong)).forEach(function (o) {
         var b = el('button', { type: 'button', class: 'choice' }, esc(o));
         b.addEventListener('click', function () {
-          var ok = o === w.right, pass = ok && S.firstWrong <= 1;
+          var ok = o === w.right, pass = ok && S.firstWrong === 0;
           Array.prototype.forEach.call(box.querySelectorAll('button'), function (x) { x.disabled = true; if (x.textContent === w.right) x.classList.add('good'); });
           if (!ok) b.classList.add('bad');
-          if (pass) { wins++; done.push(S.b.id); }
+          if (pass) { wins++; done.push(S.b.id); } else wins = 0;
           log.add(S.b.ask + ' ' + S.firstWrong + ' wrong on the first run, why ' + (ok ? 'right' : 'wrong'), pass);
           ML.say(fb, (ok ? '<b>Right.</b> ' : '<b>Not that one.</b> The green answer is right. ') + (useNear ? esc(item.why) : 'The answer stays the same without it.') +
-            (pass ? '' : ' To pass: at most one wrong on the first run, and the why right.'), pass ? '' : 'bad');
+            (pass ? '' : ' This brief does not count: it needs nothing wrong on the first run and the why right. The count starts again.'), pass ? '' : 'bad');
           next();
         });
         box.appendChild(b);
@@ -132,7 +133,7 @@
       var b = el('button', { type: 'button', class: 'btn secondary' }, '<span>Next brief</span>' + ML.ICON.next);
       b.addEventListener('click', start);
       bar.appendChild(b);
-      bar.appendChild(el('span', { class: 'small' }, 'Briefs done: ' + wins + ' of ' + NEED));
+      bar.appendChild(el('span', { class: 'small' }, 'Briefs in a row with no mistakes: ' + wins + ' of ' + NEED));
       ML.reportHeight();
     }
     start();

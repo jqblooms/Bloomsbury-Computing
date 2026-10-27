@@ -4,6 +4,7 @@
 var NotationRace = (function () {
   'use strict';
   var el = CA.el, esc = CA.esc;
+  var PASS_RUN = 6; // James 2026-10-27: finished only with this many right in a row in one race.
   var SECONDS = 90;
   var KIND = { 'prefix-eval': 'Evaluate prefix', 'postfix-eval': 'Evaluate postfix', 'to-prefix': 'Infix to prefix', 'to-postfix': 'Infix to postfix',
     'pre-to-post': 'Prefix to postfix', 'post-to-pre': 'Postfix to prefix' };
@@ -116,13 +117,14 @@ var NotationRace = (function () {
         res.innerHTML = '<h2>' + (newBest && s.score > 0 ? 'New personal best!' : 'Time is up') + '</h2>' +
           '<div class="big-stats"><div><b>' + s.score + '</b><span>score</span></div><div><b>' + s.right + ' / ' + s.tries + '</b><span>right</span></div>' +
           '<div><b>' + s.bestStreak + '</b><span>best streak</span></div><div><b>' + s.level + '</b><span>level reached</span></div></div>' +
+          '<p class="small">' + (s.bestStreak >= PASS_RUN ? 'Finished: ' + PASS_RUN + ' right in a row.' : 'Not finished yet: you need ' + PASS_RUN + ' right in a row in one race. Your best run: ' + s.bestStreak + '.') + '</p>' +
           (s.missed.length ? '<p class="muted small">Missed:</p><ul class="missed">' + s.missed.slice(-3).map(function (m) {
             return '<li><code>' + esc(m.code) + '</code> <span class="muted">' + esc(KIND[m.kind]) + '</span> <code class="ok">' + esc(m.answer) + '</code></li>'; }).join('') + '</ul>' : '');
         var again = el('button', { type: 'button', class: 'btn' }, CA.ICON.again + '<span>Race again</span>');
         again.addEventListener('click', run);
         res.appendChild(el('div', { class: 'actions' })).appendChild(again);
         stage.appendChild(res);
-        CA.report('arcade-race', 'Notation Race', 'Notation Race: score ' + s.score + ', ' + s.right + ' right of ' + s.tries + ', best streak ' + s.bestStreak + ', level ' + s.level + ' reached. Best ' + best + '.', s.tries > 0);
+        CA.report('arcade-race', 'Notation Race', 'Notation Race: score ' + s.score + ', ' + s.right + ' right of ' + s.tries + ', best streak ' + s.bestStreak + ', level ' + s.level + ' reached. Best ' + best + '.', s.bestStreak >= PASS_RUN);
         CA.reportHeight();
       }
     }

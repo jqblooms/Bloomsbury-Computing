@@ -170,7 +170,7 @@ var TraceRace = (function () {
       stage.innerHTML = '';
       var card = el('div', { class: 'result-card' });
       card.innerHTML = '<h2>Round complete</h2><div class="big-stats"><div><b>' + cellsRight + '/' + cellsAll + '</b><span>values right</span></div><div><b>' + s.points + '</b><span>points</span></div><div><b>' + s.bestStreak + '</b><span>best streak</span></div><div><b>' + LT.clockText(bar.seconds()) + '</b><span>time</span></div></div>' +
-        '<p>' + (pct >= 90 ? 'Fast and accurate. Try the next level.' : pct >= 70 ? 'Good tracing. Play again to beat your score.' : 'Slow down: work out each value from the line that changes it.') + '</p>';
+        '<p>' + (cellsRight === cellsAll ? 'Every value right: this round counts. Try the next level.' : 'This round does not count: you need every value right in one round. ' + (pct >= 70 ? 'Play again.' : 'Slow down: work out each value from the line that changes it.')) + '</p>';
       var actions = el('div', { class: 'actions' });
       var again = el('button', { type: 'button', class: 'btn' }, LT.ICON.again + '<span>Play again</span>');
       again.addEventListener('click', function () { start(host, opts); });
@@ -183,7 +183,7 @@ var TraceRace = (function () {
       card.appendChild(actions);
       stage.appendChild(card);
       LT.report('looptracer-trace-' + level, 'Loop Tracer: Trace Table Race, level ' + level,
-        'Round finished: ' + cellsRight + ' of ' + cellsAll + ' values right (' + pct + '%), ' + s.points + ' points, best streak ' + s.bestStreak + ', ' + LT.clockText(bar.seconds()) + '.', pct >= 70);
+        'Round finished: ' + cellsRight + ' of ' + cellsAll + ' values right (' + pct + '%), ' + s.points + ' points, best streak ' + s.bestStreak + ', ' + LT.clockText(bar.seconds()) + '.', cellsRight === cellsAll);
       again.focus({ preventScroll: true });
       LT.reportHeight();
     }

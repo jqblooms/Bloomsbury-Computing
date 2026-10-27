@@ -83,7 +83,7 @@
 
   function play() {
     var c = LEVELS[level() - 1], e = makeExpr(c);
-    var phase = 'choose', fresh = null;
+    var phase = 'choose', fresh = null, slips = 0;
     var stage = el('div', { class: 'stage' });
     stage.appendChild(el('div', { class: 'round-head' }, '<span class="round-kind">Expression ' + (exprNo + 1) + '</span><span class="small">Which operator is worked next?</span>'));
     var exprBox = el('div', { class: 'expr', role: 'group', 'aria-label': 'The expression' });
@@ -116,6 +116,7 @@
       if (phase !== 'choose') return;
       if (B.ready(e.tree).indexOf(node) < 0) {
         button.classList.add('nope');
+        slips++;
         var over = game.wrong();
         say('Not yet: ' + reason(node), 'bad');
         report.add(game, 'chose ' + B.opName(node) + ' too early in ' + e.src, false);
@@ -157,6 +158,7 @@
           setTimeout(function () { collapse(node, right); }, 650);
           return;
         }
+        slips++;
         var over = game.wrong();
         box.appendChild(F.bitRow(right, { label: 'answer' }));
         box.appendChild(el('p', { class: 'small' }, F.explain(op, a, b)));
@@ -178,8 +180,8 @@
         solved++;
         var gain = game.right(15);
         draw(null);
-        say('Solved: <code>' + e.src + '</code> = <code>' + e.answer + '</code>. +' + gain, 'good');
-        report.add(game, 'solved ' + e.src, true);
+        say('Solved: <code>' + e.src + '</code> = <code>' + e.answer + '</code>. +' + gain + (slips ? ' This one had a mistake, so it does not count toward the goal. Solve the next one with no mistakes.' : ''), 'good');
+        report.add(game, 'solved ' + e.src + (slips ? ' after a mistake (does not count)' : ''), !slips);
         next(false);
         return;
       }

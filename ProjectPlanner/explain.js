@@ -82,13 +82,17 @@
       var m = (S.a === S.kind ? 1 : 0) + (S.b === S.kind ? 1 : 0);
       marks += m; out += 2;
       if (m === 2) earned[S.kind] = true;
-      else queue.push({ kind: S.kind, v: 1 - S.v });
+      else {
+        // James 2026-10-27: an answer without both marks starts the run again.
+        earned = {};
+        queue = PP.shuffle(IDS).map(function (k) { return { kind: k, v: k === S.kind ? 1 - S.v : PP.rand(2) }; });
+      }
       log.add('"' + KINDS[S.kind].problems[S.v] + '" ' + m + ' of 2 marks: shows ' + KINDS[S.a].shows + ', so ' + KINDS[S.b].gives, m === 2);
       if (IDS.every(function (k) { return earned[k]; })) log.finish();
       draw(true);
       var k = KINDS[S.kind];
       PP.say(fb, (m === 2 ? '<b>2 marks.</b> ' : '<b>' + m + ' mark' + (m === 1 ? '' : 's') + '.</b> ') +
-        (m === 2 ? 'The plan shows ' + k.shows + ', so ' + k.gives + '.' : 'Green shows the parts that answer this problem. A problem like it comes back later.'), m === 2 ? '' : 'bad');
+        (m === 2 ? 'The plan shows ' + k.shows + ', so ' + k.gives + '.' : 'Green shows the parts that answer this problem. This answer did not get 2 marks, so the run starts again: you need a 2-mark answer for every kind of problem in a row.'), m === 2 ? '' : 'bad');
       lead.querySelector('.score').innerHTML = 'Marks: <b>' + marks + '</b> of ' + out;
       var nx = el('button', { type: 'button', class: 'btn secondary' }, '<span>Next problem</span>' + PP.ICON.next);
       nx.addEventListener('click', next);

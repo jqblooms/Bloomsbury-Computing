@@ -178,7 +178,7 @@
       Array.prototype.forEach.call(box.children, function (b) { b.disabled = true; });
       button.classList.add(r.ok ? 'good' : 'bad');
       var win = state.firstRight && r.ok;
-      if (win) wins++;
+      if (win) wins++; else wins = 0;
       log.add('where a broken order gets stuck (' + (state.firstRight ? 'stage right' : 'stage wrong') + ', ' + (r.ok ? 'reason right' : 'reason wrong') + ')', win);
       if (wins >= NEED) log.finish();
       // Now run it, so everyone sees where it stops.
@@ -188,7 +188,7 @@
         marks[state.at] = 'stuck';
         drawPredict(marks);
         var stuck = CARDS[state.order[state.at]];
-        PP.say(fb, (win ? '<b>Right.</b> ' : '<b>Not this time.</b> ') + stuck.name + ' is stuck: it needs ' + stuck.needs + ', and no stage before it gives that.', win ? '' : 'bad');
+        PP.say(fb, (win ? '<b>Right.</b> ' : '<b>Not this time.</b> This one does not count, and the count starts again. ') + stuck.name + ' is stuck: it needs ' + stuck.needs + ', and no stage before it gives that.', win ? '' : 'bad');
         bar.innerHTML = '';
         if (wins >= NEED) { bar.innerHTML = PP.doneBanner('Done: you found where ' + NEED + ' broken orders get stuck.'); PP.reportHeight(); return; }
         var next = el('button', { type: 'button', class: 'btn secondary' }, '<span>Next order</span>' + PP.ICON.next);
@@ -285,9 +285,11 @@
         if (i < stop) { marks[i] = 'ran'; drawBuild(marks); i++; PP.later(300, step); return; }
         state.running = false;
         if (!prob) {
-          wins++; state.over = true; drawBuild(marks);
-          log.add('round ' + round + ', order the ' + state.p.short + ' tasks, run ' + (2 - state.runs) + ' of 2', true);
-          PP.say(fb, '<b>It works.</b> Every task came after what it needed.', '');
+          var first = state.runs === 1;
+          if (first) wins++; else wins = 0;
+          state.over = true; drawBuild(marks);
+          log.add('round ' + round + ', order the ' + state.p.short + ' tasks, run ' + (2 - state.runs) + ' of 2', first);
+          PP.say(fb, '<b>It works.</b> Every task came after what it needed.' + (first ? '' : ' It took a second run, so this round does not count, and the count starts again.'), first ? '' : 'hint');
           return finish();
         }
         marks[stop] = 'stuck';
@@ -295,6 +297,7 @@
         var text = '<b>Stuck at ' + (stop + 1) + '.</b> "' + esc(prob.task.text) + '" needs ' + prob.need.gives + ', and that is not made yet.';
         if (state.runs > 0) { PP.say(fb, text + ' Move the tasks and run it again.', 'bad'); drawBuild(marks); return; }
         state.over = true;
+        wins = 0;
         log.add('round ' + round + ', order the ' + state.p.short + ' tasks, no runs left', false);
         state.slots = anyOrder(state.tasks);
         drawBuild();
@@ -357,14 +360,14 @@
           Array.prototype.forEach.call(box.children, function (x) { x.disabled = true; });
           b.classList.add(r.ok ? 'good' : 'bad');
           var win = state.firstRight && r.ok;
-          if (win) wins++;
+          if (win) wins++; else wins = 0;
           log.add('round ' + round + ', where the ' + state.p.short + ' order gets stuck (' + (state.firstRight ? 'task right' : 'task wrong') + ', ' + (r.ok ? 'reason right' : 'reason wrong') + ')', win);
           var m = {}, i = 0;
           (function step() {
             if (i < state.at) { m[i] = 'ran'; drawPredict(m); i++; PP.later(260, step); return; }
             m[state.at] = 'stuck'; drawPredict(m);
             var need = PP.orderProblem(state.tasks, state.order).need;
-            PP.say(fb, (win ? '<b>Right.</b> ' : '<b>Not this time.</b> ') + 'It needs ' + need.gives + ', from "' + esc(need.text) + '", and that comes later.', win ? '' : 'bad');
+            PP.say(fb, (win ? '<b>Right.</b> ' : '<b>Not this time.</b> This round does not count, and the count starts again. ') + 'It needs ' + need.gives + ', from "' + esc(need.text) + '", and that comes later.', win ? '' : 'bad');
             bar.innerHTML = '';
             finish();
           })();

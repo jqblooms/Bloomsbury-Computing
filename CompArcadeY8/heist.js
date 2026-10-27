@@ -41,7 +41,7 @@
     function intro() {
       st = null; drawBar();
       body.innerHTML = '<h2>Crack five vaults</h2><p>Each vault is locked by a bit-string expression. Work it out and type the bits to open it.</p>' +
-        '<ul class="rules"><li>Two tries per vault. After a miss, the lock tells you how many bits are in the right place.</li>' +
+        '<ul class="rules"><li>Two tries per vault. After a miss, the lock tells you how many bits are in the right place.</li><li>To pass: ' + PASS + ' vaults in a row, each on the first try.</li>' +
         '<li>A second miss, or the guard\'s ' + SECONDS + ' second clock running out, sets off an alarm. Three alarms and you are caught.</li>' +
         '<li>The vaults get harder and the loot gets bigger. Half loot on a second try.</li></ul>' +
         (CA.best('heist') ? '<p class="small">Best loot on this computer: <b>' + CA.best('heist') + '</b></p>' : '');
@@ -104,11 +104,13 @@
         var pts = tries === 1 ? V.loot : V.loot / 2;
         st.loot += pts; st.cracked++; st.result[st.at] = 'won';
         log.add('vault ' + (st.at + 1) + ' ' + q.show + ': typed ' + v + (tries === 1 ? '' : ' (second try)'), true);
-        if (st.cracked >= PASS) log.finish();
+        // James 2026-10-27: passed only with PASS vaults in a row, each cracked on the first try.
+        st.run = tries === 1 ? (st.run || 0) + 1 : 0; st.bestRun = Math.max(st.bestRun || 0, st.run);
+        if (st.run >= PASS) log.finish();
         lock.classList.add('open');
         lock.querySelector('.lock-icon').outerHTML = CA.ICON.unlock.replace('<svg', '<svg class="lock-icon"');
         drawBar(); settle();
-        CA.say(fb, 'Vault open. <span class="pop">+' + pts + '</span>', '');
+        CA.say(fb, 'Vault open. <span class="pop">+' + pts + '</span>' + (tries === 1 ? '' : ' It took a second try, so it does not count toward passing, and the count starts again.'), '');
         why.innerHTML = CA.whyBox(q);
         nextButton();
       }
@@ -116,7 +118,7 @@
         if (busy) return;
         busy = true; clock.stop(); input.disabled = true; go.disabled = true;
         if (timeout) log.add('vault ' + (st.at + 1) + ' ' + q.show + ': out of time', false);
-        st.alarms++; st.result[st.at] = 'lost';
+        st.alarms++; st.result[st.at] = 'lost'; st.run = 0;
         lock.classList.remove('alarm'); void lock.offsetWidth; lock.classList.add('alarm');
         drawBar(); settle();
         CA.say(fb, (timeout ? 'The guard is back. ' : '') + 'Alarm! The bits were <b>' + esc(q.answer) + '</b>.', 'bad');
@@ -147,7 +149,7 @@
         '<div class="summary-grid"><div><span class="small">Vaults cracked</span><b>' + s.cracked + ' of ' + VAULTS.length + '</b></div>' +
         '<div><span class="small">Alarms</span><b>' + s.alarms + ' of ' + ALARMS + '</b></div>' +
         '<div><span class="small">Best on this computer</span><b>' + Math.max(old, s.loot) + '</b></div></div>' +
-        (s.cracked >= PASS ? CA.doneBanner(PASS + ' or more vaults cracked: heist passed.') : '<p class="small">Crack ' + PASS + ' vaults in one heist to pass. New locks every heist.</p>');
+        ((s.bestRun || 0) >= PASS ? CA.doneBanner(PASS + ' vaults in a row, each on the first try: heist passed.') : '<p class="small">To pass: crack ' + PASS + ' vaults in a row, each on the first try. A second try or an alarm starts the count again. New locks every heist.</p>');
       var again = el('button', { type: 'button', class: 'btn' }, CA.ICON.play + ' New heist');
       again.addEventListener('click', start);
       var row = el('div', { class: 'actions' }); row.appendChild(again); body.appendChild(row);

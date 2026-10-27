@@ -123,7 +123,7 @@ var PredictRun = (function () {
       stage.innerHTML = '';
       var card = el('div', { class: 'result-card' });
       card.innerHTML = '<h2>Round complete</h2><div class="big-stats"><div><b>' + right + '/' + rounds + '</b><span>outputs right</span></div><div><b>' + s.points + '</b><span>points</span></div><div><b>' + s.bestStreak + '</b><span>best streak</span></div><div><b>' + LT.clockText(bar.seconds()) + '</b><span>time</span></div></div>' +
-        '<p>' + (right === rounds ? 'Every one right. Try a harder level.' : right >= rounds * 0.6 ? 'Good. Play again for a longer streak.' : 'Trace slowly with a table, then get faster.') + '</p>';
+        '<p>' + (right === rounds ? 'Every one right: this round counts. Try a harder level.' : 'This round does not count: you need every output right in one round. ' + (right >= rounds * 0.6 ? 'Play again.' : 'Trace slowly with a table, then get faster.')) + '</p>';
       var actions = el('div', { class: 'actions' });
       var again = el('button', { type: 'button', class: 'btn' }, LT.ICON.again + '<span>Play again</span>');
       again.addEventListener('click', function () { start(host, opts); });
@@ -136,7 +136,7 @@ var PredictRun = (function () {
       card.appendChild(actions);
       stage.appendChild(card);
       LT.report('looptracer-predict-' + level, 'Loop Tracer: Predict the Output, level ' + level,
-        'Round finished: ' + right + ' of ' + rounds + ' outputs right, ' + s.points + ' points, ' + LT.clockText(bar.seconds()) + '. ' + log.join(', ') + '.', right >= Math.ceil(rounds * 0.6));
+        'Round finished: ' + right + ' of ' + rounds + ' outputs right, ' + s.points + ' points, ' + LT.clockText(bar.seconds()) + '. ' + log.join(', ') + '.', right === rounds);
       again.focus({ preventScroll: true });
       LT.reportHeight();
     }

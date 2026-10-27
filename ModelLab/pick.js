@@ -1,8 +1,8 @@
 // Choose the data (?activity=pick). A model and its rule; eight data cards. Sort each card into Needed or Not
 // needed, then run the model with the Needed cards: a missing card is a blank (0), a card that sounds right but is
 // old or about something else gives the rule the wrong value. Two runs per model: the first sends wrong cards back
-// to look at again, the second shows where each belongs. A model is passed with at most one card wrong on the first
-// run. Three models passed, each harder: 2 or 3 needed, then 3 with one card that sounds right, then 4 with one.
+// to look at again, the second shows where each belongs. A model is passed only with every card right on the first
+// run, NEED in a row (James 2026-10-27). Three models passed, each harder: 2 or 3 needed, then 3 with one card that sounds right, then 4 with one.
 (function () {
   'use strict';
   var el = ML.el, esc = ML.esc, B = MLBANK;
@@ -101,12 +101,12 @@
       run.innerHTML = '<div class="run-out wide"><div class="out-line"><span>Your model predicts</span><b>' + esc(ML.fmt(mine, S.m.unit)) + '</b></div>' +
         '<div class="out-line ' + (mine === real ? 'good' : 'bad') + '"><span>With the right data</span><b>' + esc(ML.fmt(real, S.m.unit)) + '</b></div></div>';
       if (!wrong.length) {
-        var pass = S.firstWrong <= 1;
+        var pass = S.firstWrong === 0;
         S.over = true; draw(true);
         log.add(S.m.name + ', ' + S.firstWrong + ' of 8 cards wrong on the first run', pass);
-        if (pass) wins++;
-        ML.say(fb, pass ? '<b>Right.</b> ' + (S.firstWrong ? 'One card needed a second look.' : 'Every card right on the first run.') + ' The rule uses exactly these cards.' :
-          '<b>All right now</b>, but ' + S.firstWrong + ' cards were wrong on the first run. Try a new model: at most one wrong on the first run.', pass ? '' : 'bad');
+        if (pass) wins++; else wins = 0;
+        ML.say(fb, pass ? '<b>Right.</b> ' + 'Every card right on the first run.' + ' The rule uses exactly these cards.' :
+          '<b>All right now</b>, but ' + S.firstWrong + ' cards were wrong on the first run. This model does not count, and the count starts again: you need every card right on the first run.', pass ? '' : 'bad');
         return next();
       }
       if (S.runs === 1) {
@@ -119,6 +119,7 @@
       S.over = true;
       wrong.forEach(function (c) { S.at[c.id] = c.kind === 'need' ? 'need' : 'not'; });
       draw(true);
+      wins = 0;
       log.add(S.m.name + ', ' + S.firstWrong + ' of 8 cards wrong on the first run, ' + wrong.length + ' still wrong on the second', false);
       ML.say(fb, '<b>' + wrong.length + ' still wrong</b> (now moved to the right place):<br>' + wrong.map(function (c) {
         return '"' + esc(c.text) + '": ' + (c.kind === 'need' ? 'needed. The rule uses it.' : c.kind === 'near' ? 'not needed. ' + esc(c.why) : 'not needed. The rule never uses it.');
@@ -131,7 +132,7 @@
       var b = el('button', { type: 'button', class: 'btn secondary' }, '<span>Next model</span>' + ML.ICON.next);
       b.addEventListener('click', start);
       bar.appendChild(b);
-      bar.appendChild(el('span', { class: 'small' }, 'Models done: ' + wins + ' of ' + NEED));
+      bar.appendChild(el('span', { class: 'small' }, 'Models in a row with no mistakes: ' + wins + ' of ' + NEED));
       bar.appendChild(run);
       ML.reportHeight();
     }

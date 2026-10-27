@@ -54,7 +54,7 @@ var PP = (function () {
   }
   // A round counter: "Round 2. Right so far: 1 of 3 needed."
   function scoreLine(round, right, need) {
-    return '<span class="round">Round ' + round + '</span><span class="score">Right so far: <b>' + right + '</b> of ' + need + ' needed</span>';
+    return '<span class="round">Round ' + round + '</span><span class="score">Right in a row: <b>' + right + '</b> of ' + need + ' needed</span>';
   }
   function doneBanner(text) {
     return '<div class="done-banner">' + ICON.done + '<span>' + text + '</span></div>';

@@ -124,7 +124,7 @@
       if (asked % 3 === 0) newPlan();
       asked++;
       cur = question();
-      lead.innerHTML = '<span class="round">Question ' + asked + '</span><span class="score">Right so far: <b>' + right + '</b> of ' + NEED_READ + ' needed</span><br>' +
+      lead.innerHTML = '<span class="round">Question ' + asked + '</span><span class="score">Right in a row: <b>' + right + '</b> of ' + NEED_READ + ' needed</span><br>' +
         'Project: <b>' + esc(plan.p.name) + '</b>. ' + cur.text;
       board.innerHTML = planTable(plan.tasks, plan.plan, { clickCells: true });
       bar.innerHTML = '';
@@ -137,14 +137,14 @@
       var key = b.getAttribute('data-cell'), ok = key === cur.answer, marks = {};
       marks[cur.answer] = 'good';
       if (!ok) marks[key] = 'bad';
-      if (ok) right++;
+      if (ok) right++; else right = 0;
       log.add(PP.plain(cur.text), ok);
       if (right >= NEED_READ) log.finish();
       board.innerHTML = planTable(plan.tasks, plan.plan, { clickCells: true, marks: marks });
       Array.prototype.forEach.call(board.querySelectorAll('[data-cell]'), function (x) { x.disabled = true; });
-      PP.say(fb, (ok ? '<b>Right.</b> ' : '<b>Not that one.</b> The right one is green. ') + cur.why, ok ? '' : 'bad');
-      lead.querySelector('.score').innerHTML = 'Right so far: <b>' + right + '</b> of ' + NEED_READ + ' needed';
-      if (right >= NEED_READ) { bar.innerHTML = PP.doneBanner('Done: ' + right + ' right in ' + asked + ' questions.'); PP.reportHeight(); return; }
+      PP.say(fb, (ok ? '<b>Right.</b> ' : '<b>Not that one.</b> The right one is green. The count starts again. ') + cur.why, ok ? '' : 'bad');
+      lead.querySelector('.score').innerHTML = 'Right in a row: <b>' + right + '</b> of ' + NEED_READ + ' needed';
+      if (right >= NEED_READ) { bar.innerHTML = PP.doneBanner('Done: ' + right + ' right in a row.'); PP.reportHeight(); return; }
       var next = el('button', { type: 'button', class: 'btn secondary' }, '<span>Next question</span>' + PP.ICON.next);
       next.addEventListener('click', ask);
       bar.appendChild(next);
@@ -315,6 +315,7 @@
     }
     function lose() {
       S.over = true; S.reveal = true; draw();
+      wins = 0;
       log.add('plan ' + attempt + ', ' + foundCount() + ' of ' + S.faults.length + ' faults found, then more than ' + MISSES + ' misses', false);
       PP.say(fb, '<b>More than ' + MISSES + ' misses.</b> The faults you did not find are marked. Try another plan.' +
         (S.faults.some(function (f) { return f.kind === 'missing' && !f.found; }) ? ' The missing stage: ' + PP.STAGES[S.faults.filter(function (f) { return f.kind === 'missing'; })[0].stage] + '.' : ''), 'bad');
@@ -338,6 +339,7 @@
       var text = probs.slice(0, 3).map(function (p) { return 'Task ' + num(p.task) + ': ' + p.text; }).join('<br>') + (probs.length > 3 ? '<br>And ' + (probs.length - 3) + ' more.' : '');
       if (S.checks < 2) { draw(); board.innerHTML = planTable(S.tasks, S.plan, { edit: true, people: S.people, marks: marks, lastDay: PP.deadlineOf(S.brief) + 1 }); PP.say(fb, '<b>Not yet.</b><br>' + text, 'bad'); return; }
       S.over = true;
+      wins = 0;
       log.add('plan ' + attempt + ', every fault found (' + S.misses + ' misses), but the fixed plan was still wrong after 2 checks', false);
       S.plan = PP.solve(S.tasks, S.people, S.brief);
       draw();
@@ -345,9 +347,12 @@
       again('Try another plan');
     }
     function win() {
-      wins++; S.over = true; draw();
+      // James 2026-10-27: a plan counts only with no misses (and, when fixing, fixed on the first check).
+      var clean = !S.misses && (!opts.fixAfter || S.checks === 1);
+      if (clean) wins++; else wins = 0;
+      S.over = true; draw();
       roundIx++;
-      log.add('plan ' + attempt + ', every fault found (' + S.misses + ' misses)' + (opts.fixAfter ? ' and fixed in ' + S.checks + ' of 2 checks' : ''), true);
+      log.add('plan ' + attempt + ', every fault found (' + S.misses + ' misses)' + (opts.fixAfter ? ' and fixed in ' + S.checks + ' of 2 checks' : ''), clean);
       if (wins >= opts.need) log.finish();
       if (wins >= opts.need) {
         PP.say(fb, opts.phaseDone || '<b>Every fault found.</b>', '');
@@ -360,7 +365,7 @@
         PP.reportHeight();
         return;
       }
-      PP.say(fb, '<b>Every fault found.</b> Next plan: it has more.', '');
+      PP.say(fb, '<b>Every fault found.</b> ' + (clean ? 'Next plan: it has more.' : 'You had a miss' + (opts.fixAfter ? ' or needed a second check' : '') + ', so this plan does not count, and the count starts again.'), clean ? '' : 'hint');
       again('Next plan');
     }
     function again(text) {
@@ -510,14 +515,14 @@
       var setRight = S.tasks.every(function (t) { return !!S.pick[t.id] === !!S.slipped[t.id]; });
       var ynRight = (S.yes === 'yes') === S.onTime;
       var win = setRight && ynRight;
-      if (win) right++;
+      if (win) right++; else right = 0;
       log.add(PP.plain(S.ev) + ' (' + (setRight ? 'late tasks right' : 'late tasks wrong') + ', ' + (ynRight ? 'deadline right' : 'deadline wrong') + ')', win);
       if (right >= NEED_WHATIF) log.finish();
       draw();
       var names = S.tasks.filter(function (t) { return S.slipped[t.id]; }).map(function (t) { return '"' + esc(t.short) + '"'; });
       var why = names.length ? 'Later now: ' + names.join(', ') + '. A task that waits makes every task that needs it wait too.' : 'Nothing finishes later: the change did not touch any task.';
-      PP.say(fb, (win ? '<b>Right.</b> ' : '<b>Not quite.</b> ' + (setRight ? '' : 'Green chips you got right, red chips you got wrong. ') + (ynRight ? '' : 'The project ' + (S.onTime ? 'is still ready' : 'is not ready') + ' by ' + DAYS[S.b.deadline] + '. ')) + why, win ? '' : 'bad');
-      lead.querySelector('.score').innerHTML = 'Right so far: <b>' + right + '</b> of ' + NEED_WHATIF + ' needed';
+      PP.say(fb, (win ? '<b>Right.</b> ' : '<b>Not quite.</b> This one does not count, and the count starts again. ' + (setRight ? '' : 'Green chips you got right, red chips you got wrong. ') + (ynRight ? '' : 'The project ' + (S.onTime ? 'is still ready' : 'is not ready') + ' by ' + DAYS[S.b.deadline] + '. ')) + why, win ? '' : 'bad');
+      lead.querySelector('.score').innerHTML = 'Right in a row: <b>' + right + '</b> of ' + NEED_WHATIF + ' needed';
       if (right >= NEED_WHATIF) { bar.innerHTML = PP.doneBanner('Done: ' + right + ' changes predicted right.'); PP.reportHeight(); return; }
       var next = el('button', { type: 'button', class: 'btn secondary' }, '<span>Next change</span>' + PP.ICON.next);
       next.addEventListener('click', start);
@@ -561,7 +566,7 @@
       draw();
     }
     function draw(chips) {
-      lead.innerHTML = '<span class="round">Brief ' + attempt + '</span><span class="score">Plans that work: <b>' + wins + '</b> of ' + NEED_BUILD + ' needed</span><br>' +
+      lead.innerHTML = '<span class="round">Brief ' + attempt + '</span><span class="score">Plans that work first time, in a row: <b>' + wins + '</b> of ' + NEED_BUILD + ' needed</span><br>' +
         'Project: <b>' + esc(S.p.name) + '</b>. Put each task on a person and a day. A task goes after every task it needs.';
       brief.innerHTML = briefLines(S.b, S.people).join(' ');
       var free = S.tasks.filter(function (t) { return S.plan[t.id].day == null; });
@@ -597,10 +602,12 @@
       S.checks++;
       var probs = PP.problems(S.tasks, S.plan, S.b);
       if (!probs.length) {
-        wins++; S.over = true; draw();
-        log.add('brief ' + attempt + ' (' + S.tasks.length + ' tasks), a plan that works in ' + S.checks + ' of 3 checks', true);
+        var first = S.checks === 1;
+        if (first) wins++; else wins = 0;
+        S.over = true; draw();
+        log.add('brief ' + attempt + ' (' + S.tasks.length + ' tasks), a plan that works in ' + S.checks + ' of 3 checks', first);
         if (wins >= NEED_BUILD) log.finish();
-        PP.say(fb, '<b>The plan works.</b> Everyone is free, and every task is after what it needs.', '');
+        PP.say(fb, '<b>The plan works.</b> Everyone is free, and every task is after what it needs.' + (S.checks === 1 ? '' : ' It needed more than one check, so it does not count, and the count starts again.'), S.checks === 1 ? '' : 'hint');
         if (wins >= NEED_BUILD) { bar.innerHTML = PP.doneBanner('Done: ' + wins + ' plans that work.'); PP.reportHeight(); return; }
         return again('Next brief: more tasks, more limits');
       }
@@ -609,6 +616,7 @@
       var text = probs.slice(0, 3).map(function (p) { return '"' + esc(S.tasks[p.task].short) + '": ' + p.text; }).join('<br>') + (probs.length > 3 ? '<br>And ' + (probs.length - 3) + ' more.' : '');
       if (S.checks < 3) { draw(chips); PP.say(fb, '<b>Not yet.</b><br>' + text, 'bad'); return; }
       S.over = true;
+      wins = 0;
       log.add('brief ' + attempt + ' (' + S.tasks.length + ' tasks), still wrong after 3 checks', false);
       S.plan = PP.solve(S.tasks, S.people, S.b);
       draw();

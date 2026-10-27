@@ -210,8 +210,8 @@
       if (ok) {
         solved++;
         var gain = game.right(10 + 5 * c.moves);
-        say('Target reached. +' + gain, 'good');
-        report.add(game, log, true);
+        say('Target reached. +' + gain + (runsLeft === 1 ? '' : ' It took a second run, so it does not count toward the goal.'), 'good');
+        report.add(game, log, runsLeft === 1);
         next(actions, false);
         return;
       }

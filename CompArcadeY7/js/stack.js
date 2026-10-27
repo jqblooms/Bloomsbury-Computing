@@ -80,6 +80,7 @@ CA.games.stack = function (host) {
     action.innerHTML = '';
     var tk = st.q.tokens[st.order[st.pos]];
     action.appendChild(el('p', { class: 'ask' }, 'Next token: <b class="mono">' + esc(tk) + '</b>. What does the machine do?'));
+    action.appendChild(el('p', { class: 'small' }, 'The rule: a number is pushed onto the stack. An operator pops two numbers, works them out and pushes the answer.'));
     var row = el('div', { class: 'actions' });
     row.appendChild(CA.btn('Push it', 'choice-btn', function () { choose('push'); }));
     row.appendChild(CA.btn('Pop 2 and work it out', 'choice-btn', function () { choose('pop'); }));
@@ -166,7 +167,7 @@ CA.games.stack = function (host) {
       if (st.q.re.test(box.input.value)) { st.streak++; st.score += CA.points(st.streak) + 5; endRound(true, 'Right: the answer is <b>' + esc(st.q.value) + '</b>.'); }
       else {
         var over = loseHeart();
-        CA.say(fb, 'Not this time. The answer is <b>' + esc(st.q.value) + '</b>.', 'bad');
+        CA.say(fb, 'Not this time. The answer is <b>' + esc(st.q.value) + '</b>. This one does not count, and the count starts again.', 'bad');
         action.appendChild(el('div', { class: 'worked' }, st.q.steps.map(function (s) { return '<div>' + esc(s) + '</div>'; }).join('')));
         if (over) { outOfHearts(); return; }
         endRound(false, null, true);
@@ -176,10 +177,10 @@ CA.games.stack = function (host) {
 
   function endRound(won, text, keep) {
     if (!keep) action.innerHTML = '';
-    if (won) st.have++;
+    if (won) st.have++; else st.have = 0;
     res.add(st.q.text + ' = ' + st.q.value, won);
     drawBar();
-    if (text) CA.say(fb, text + (won ? '' : ' A heart was lost, so this one does not count. Try another.'), won ? '' : 'hint');
+    if (text) CA.say(fb, text + (won ? '' : ' A heart was lost, so this one does not count, and the count starts again: you need ' + (level().need || NEED) + ' in a row with no mistakes.'), won ? '' : 'hint');
     var row = el('div', { class: 'actions' });
     if (st.have >= (level().need || NEED)) {
       if (st.li === LEVELS.length - 1) { row.appendChild(CA.btn('See your stars', '', finish, 'star')); }
