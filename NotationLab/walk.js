@@ -144,6 +144,171 @@ var NLWalk = (function (NC) {
     return { steps: out, question: question, answer: answer };
   }
 
+  // ------------------------------------------------ trees: shared by Tree Builder, Tree Reader and their walkthroughs
+  // James 2026-10-27: building the tree and reading prefix or postfix off it were one task, and students mixed them
+  // up. Now Tree Builder only builds, bottom up, in the order you would work the expression out, and Tree Reader only
+  // reads a finished tree. Gives every node an id (preorder) and its parent; returns the nodes.
+  function treeIndex(t) {
+    var nodes = [];
+    (function idx(n, p) { n.id = nodes.length; n.parent = p; nodes.push(n); if (n.op) { idx(n.l, n); idx(n.r, n); } })(t, null);
+    return nodes;
+  }
+  // The expression as a row of items. A joined part (a small tree already built) is one block: it counts as one value.
+  function treeItems(t, joined, implied) {
+    var items = [];
+    (function emit(n, br) {
+      if (n.op && joined[n.id]) { items.push({ kind: 'blk', node: n.id, text: NC.toInfix(n, { implied: implied }) }); return; }
+      if (br) items.push({ kind: 'br', text: '(' });
+      if (!n.op) items.push({ kind: 'val', text: n.v, node: n.id });
+      else {
+        emit(n.l, NC.needs(n.l, n.op, 'l'));
+        items.push({ kind: implied && NC.hiddenTimes(n) ? 'hid' : 'op', text: n.op, node: n.id });
+        emit(n.r, NC.needs(n.r, n.op, 'r'));
+      }
+      if (br) items.push({ kind: 'br', text: ')' });
+    })(t, false);
+    return items;
+  }
+  function isOpItem(it) { return it.kind === 'op' || it.kind === 'hid'; }
+  function opName(it) { return it.kind === 'hid' ? 'the hidden *' : b(it.text); }
+  // The operator worked out first: inside the first brackets to close, then the power arrow (right to left), then
+  // * and /, then + and - (left to right). Returns its index, the part looked at, the brackets round it and the reason.
+  function treeNext(items) {
+    var open = [], region = [0, items.length - 1], br = null, i;
+    for (i = 0; i < items.length && !br; i++) {
+      if (items[i].kind !== 'br') continue;
+      if (items[i].text === '(') open.push(i);
+      else { br = [open.pop(), i]; region = [br[0] + 1, i - 1]; }
+    }
+    var ops = [];
+    for (i = region[0]; i <= region[1]; i++) if (isOpItem(items[i])) ops.push(i);
+    var pw = ops.filter(function (k) { return items[k].text === POW; });
+    var md = ops.filter(function (k) { return items[k].text === '*' || items[k].text === '/'; });
+    var at, why;
+    if (ops.length === 1) { at = ops[0]; why = br ? 'it is the only operator inside these brackets, and brackets are worked out first' : 'it is the only operator left'; }
+    else if (pw.length) {
+      at = pw[pw.length - 1];
+      why = pw.length > 1 ? 'two power arrows go right to left, so the arrow on the right is worked out first' : 'the power arrow ranks above * / + and -, so it is worked out first';
+    } else if (md.length) {
+      at = md[0];
+      why = md.length < ops.length ? '* and / are worked out before + and -' : 'they all have the same rank, so go left to right';
+      if (md.length > 1 && md.length < ops.length) why += ', and the same rank goes left to right, so start with the one on the left';
+    } else { at = ops[0]; why = 'only + and - are here, and the same rank goes left to right, so start with the one on the left'; }
+    if (br && ops.length > 1) why = 'it is inside brackets, and brackets are worked out first. Inside them, ' + why;
+    return { at: at, region: region, br: br, why: why };
+  }
+  // Why a clicked operator (index j) is not the one worked out first. N: treeNext of the same items.
+  function treeWrong(items, j, N) {
+    var c = items[j], w = items[N.at];
+    if (N.br && (j < N.region[0] || j > N.region[1])) {
+      var open = [], pair = null;
+      for (var i = 0; i < items.length && !pair; i++) {
+        if (items[i].kind !== 'br') continue;
+        if (items[i].text === '(') open.push(i);
+        else { var a = open.pop(); if (a < j && i > j) pair = [a, i]; }
+      }
+      if (!pair) return 'Not yet. ' + opName(c) + ' is outside the brackets. Brackets are worked out first.';
+      if (pair[0] < N.br[0] && pair[1] > N.br[1]) return 'Not yet. ' + opName(c) + ' is inside brackets, but there are more brackets inside those. Work out the inner brackets first.';
+      return 'Not yet. ' + opName(c) + ' is in brackets too, but work from left to right: finish the brackets on the left first.';
+    }
+    if (w.text === POW) return c.text === POW ? 'Not yet. Two power arrows go right to left, so start with the arrow on the right.' :
+      'Not yet. The power arrow ranks above ' + opName(c) + ', so the arrow is worked out first.';
+    if (w.text === '*' || w.text === '/') return c.text === '+' || c.text === '-' ? 'Not yet. ' + opName(c) + ' ranks below * and /, so it waits until they are done.' :
+      'Not yet. Same rank: go from left to right. There is ' + (w.kind === 'hid' ? 'a hidden *' : 'a * or /') + ' further left.';
+    return 'Not yet. Same rank: go from left to right. Start with the one further left.';
+  }
+  // A tree drawing. o.layout 'height': letters and numbers along the bottom, each joined operator just above its
+  // branches (for building from the bottom up; o.joined says which operators are built). 'depth': the usual drawing,
+  // top at the top. o.hot: a node to ring. o.read: ids read so far (numbered). o.tap: nodes not read yet can be tapped.
+  function treeSvg(t, o) {
+    o = o || {};
+    var order = [], nodes = [];
+    (function ino(n) { if (n.op) { ino(n.l); order.push(n); ino(n.r); } else order.push(n); })(t);
+    (function pre(n) { nodes.push(n); if (n.op) { pre(n.l); pre(n.r); } })(t);
+    function height(n) { return n.op ? 1 + Math.max(height(n.l), height(n.r)) : 0; }
+    function level(n) { var d = 0; for (var p = n.parent; p; p = p.parent) d++; return d; }
+    var H = NC.depth(t), dx = 46, dy = o.small ? 50 : 62, r = o.small ? 17 : 19, pad = o.small ? 30 : 34, pos = {};
+    order.forEach(function (n, i) { pos[n.id] = { x: pad + i * dx, y: pad + (o.layout === 'height' ? H - height(n) : level(n)) * dy }; });
+    var w = pad * 2 + (order.length - 1) * dx, h = pad * 2 + H * dy, lines = '', circles = '';
+    var shown = function (n) { return !o.joined || !n.op || o.joined[n.id]; };
+    nodes.forEach(function (n) {
+      if (!shown(n)) return;
+      if (n.op) [n.l, n.r].forEach(function (c) { lines += '<line x1="' + pos[n.id].x + '" y1="' + pos[n.id].y + '" x2="' + pos[c.id].x + '" y2="' + pos[c.id].y + '"/>'; });
+      var ri = o.read ? o.read.indexOf(n.id) : -1;
+      var cls = 'nd' + (n.op ? ' op' : ' leaf') + (n.id === o.hot ? ' current' : '') + (ri >= 0 ? ' read' : '') + (o.tap && ri < 0 ? ' tap' : '') + (n.id === o.bad ? ' bad' : '');
+      circles += '<g class="' + cls + '" data-node="' + n.id + '" transform="translate(' + pos[n.id].x + ',' + pos[n.id].y + ')"><circle r="' + r + '"/><text>' + esc(n.op || n.v) + '</text>' +
+        (ri >= 0 ? '<text class="badge" y="-25">' + (ri + 1) + '</text>' : '') + '</g>';
+    });
+    return '<svg class="tree-svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + esc(o.label || 'Expression tree') + '">' + lines + circles + '</svg>';
+  }
+  function itemsRow(items, hot, cls) {
+    return strip(items.map(function (it, i) {
+      var c = (i === hot ? ' ' + (cls || 'wt-hl') : '');
+      if (it.kind === 'blk') return '<span class="tok grp' + c + '">' + esc(it.text) + '</span>';
+      if (it.kind === 'br') return '<span class="tok br">' + esc(it.text) + '</span>';
+      return '<span class="tok' + (it.kind === 'op' ? ' op' : it.kind === 'hid' ? ' hid' : '') + c + '">' + (it.kind === 'hid' ? '·' : esc(it.text)) + '</span>';
+    }).join(''));
+  }
+  // Tree Builder walkthrough: the tree built from the bottom up, one operator at a time, with the reason for each.
+  function treeBuild(tree, implied, small) {
+    var t = NC.clone(tree), nodes = treeIndex(t), joined = {}, out = [], order = [];
+    var shownQ = NC.toInfix(t, { implied: implied });
+    out.push({ text: 'Example: ' + b(shownQ) + '. Build the tree in the order you would work it out. Each time, find the operator worked out <b>first</b>. It joins its two values into a small tree. That small tree then counts as one value.' +
+      (implied ? ' A number written next to a letter or a bracket hides a *: the dashed tile.' : ''),
+      html: itemsRow(treeItems(t, joined, implied)) + '<div class="wt-tree">' + treeSvg(t, { layout: 'height', joined: joined, small: small, label: 'Example tree' }) + '</div>' });
+    var k = 0;
+    while (true) {
+      var items = treeItems(t, joined, implied);
+      if (items.length === 1) break;
+      var N = treeNext(items), it = items[N.at], n = nodes[it.node];
+      var before = itemsRow(items, N.at);
+      joined[n.id] = true;
+      order.push(n.id);
+      var after = treeItems(t, joined, implied), at = -1;
+      after.forEach(function (x, i) { if (x.kind === 'blk' && x.node === n.id) at = i; });
+      k++;
+      out.push({ text: 'Step ' + k + '. Which operator is worked out first? ' + opName(it) + '. Why: ' + N.why + '. ' +
+        'It joins ' + b(NC.toInfix(n.l, { implied: implied })) + ' and ' + b(NC.toInfix(n.r, { implied: implied })) + ' into a small tree. Now ' + b(NC.toInfix(n, { implied: implied })) + ' counts as one value.',
+        html: before + '<div class="wt-arrow">becomes</div>' + itemsRow(after, at, 'wt-new') + '<div class="wt-tree">' + treeSvg(t, { layout: 'height', joined: joined, hot: n.id, small: small, label: 'Example tree' }) + '</div>' });
+    }
+    out.push({ text: 'One tree is left, so the tree is built. The last operator joined, ' + (implied && NC.hiddenTimes(t) ? 'the hidden *' : b(t.op)) + ', sits at the <b>top</b>: it is worked out last, so it joins the two biggest parts. Now build your own tree the same way.',
+      html: '<div class="wt-tree">' + treeSvg(t, { layout: 'height', small: small, label: 'Example tree' }) + '</div>' });
+    return { steps: out, order: order, question: shownQ };
+  }
+  // Tree Reader walkthrough: walk round the outside of the tree, reading each node the first (prefix) or last
+  // (postfix) time you pass it, with the reason for each node.
+  function treeOrder(t, form) {
+    return form === 'prefix' ? (function pre(n) { return n.op ? [n.id].concat(pre(n.l), pre(n.r)) : [n.id]; })(t) :
+      (function post(n) { return n.op ? post(n.l).concat(post(n.r), [n.id]) : [n.id]; })(t);
+  }
+  function treeRead(tree, form, small) {
+    var t = NC.clone(tree), nodes = treeIndex(t), list = treeOrder(t, form), read = [];
+    var answer = NC.show(form === 'prefix' ? NC.toPrefix(t) : NC.toPostfix(t));
+    var out = [{ text: 'Walk round the outside of the tree. Start at the top and go down the left side. In <b>' + form + '</b>, read each node the <b>' + (form === 'prefix' ? 'first' : 'last') + '</b> time you pass it. Why: ' +
+      (form === 'prefix' ? 'prefix puts each operator before its two branches.' : 'postfix puts each operator after its two branches.'),
+      html: '<div class="wt-tree">' + treeSvg(t, { read: [], small: small, label: 'Example tree' }) + '</div>' }];
+    list.forEach(function (id, k) {
+      var n = nodes[id], lead = '';
+      if (form === 'prefix') {
+        if (n.parent && n === n.parent.r) lead = 'The left branch of ' + b(n.parent.op) + ' is finished, so go down its right branch. ';
+      } else if (!n.op) {
+        var c = n;
+        while (c.parent && c === c.parent.l) c = c.parent;
+        lead = c.parent ? 'The left branch of ' + b(c.parent.op) + ' is finished, so go down its right branch to the bottom. ' : 'Go down the left side to the bottom. ';
+      }
+      var why = n.op ? (form === 'prefix' ? 'This is the first time you reach ' + b(n.op) + ', so read it now, before its two branches.' :
+        'Both branches below ' + b(n.op) + ' are read, so this is the last time you pass it. Read it now, after its two branches.') :
+        b(n.v) + ' has nothing below it, so you pass it only once. Read it now.';
+      read.push(id);
+      out.push({ text: (k === 0 && form === 'prefix' ? 'Start at the top. ' : '') + lead + why,
+        html: '<div class="wt-tree">' + treeSvg(t, { read: read.slice(), hot: id, small: small, label: 'Example tree' }) + '</div>' +
+          strip(read.map(function (x) { return tile(nodes[x].op || nodes[x].v); }).join('')) });
+    });
+    out.push({ text: 'Every node is read. In ' + form + ' this tree is ' + b(answer) + '.' + (form === 'postfix' ? ' This is the order the Stack Machine needs: both values are on the stack before their operator arrives.' : '') + ' Now read your own tree the same way.',
+      html: '<div class="wt-tree">' + treeSvg(t, { read: list, small: small, label: 'Example tree' }) + '</div>' });
+    return { steps: out, answer: answer, order: list };
+  }
+
   // ------------------------------------------------ never the student's question or answer
   function plain(steps) { return steps.map(function (s) { return (s.text || '') + ' ' + (s.html || ''); }).join(' ').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ''); }
   function squash(s) { return String(s).replace(/\s+/g, ''); }
@@ -197,7 +362,7 @@ var NLWalk = (function (NC) {
       var dots = o.steps.map(function (_, i) { return '<i class="' + (i === at ? 'on' : i < at ? 'past' : '') + '"></i>'; }).join('');
       box.innerHTML = '<div class="wt-head"><h2>' + esc(o.title || 'Walk me through it') + '</h2><span class="small">Step ' + (at + 1) + ' of ' + o.steps.length + '</span></div>' +
         '<div class="wt-dots">' + dots + '</div>' +
-        '<p class="small wt-note">A similar question with different values, so you can see how and why. Your teacher can see that you used it.</p>' +
+        (o.note != null ? (o.note ? '<p class="small wt-note">' + o.note + '</p>' : '') : '<p class="small wt-note">A similar question with different values, so you can see how and why. Your teacher can see that you used it.</p>') +
         (o.question ? '<p class="wt-q">' + o.question + '</p>' : '') +
         '<div class="wt-vis">' + (s.html || '') + '</div><p class="wk-text wt-text">' + s.text + '</p>';
       var row = document.createElement('div');
@@ -206,7 +371,7 @@ var NLWalk = (function (NC) {
       var bk = btn('Back', 'btn secondary', function () { go(-1); });
       bk.disabled = at === 0;
       if (at < o.steps.length - 1) btn('Next', 'btn', function () { go(1); });
-      btn(at < o.steps.length - 1 ? 'Close' : 'Back to my question', at < o.steps.length - 1 ? 'btn secondary' : 'btn', close);
+      btn(at < o.steps.length - 1 ? 'Close' : (o.doneLabel || 'Back to my question'), at < o.steps.length - 1 ? 'btn secondary' : 'btn', close);
       box.appendChild(row);
       if (window.NL) NL.reportHeight();
     }
@@ -214,6 +379,7 @@ var NLWalk = (function (NC) {
     return { close: close };
   }
 
-  return { stack: stack, group: group, bracket: bracket, pick: pick, leaks: leaks, button: button, open: open };
+  return { stack: stack, group: group, bracket: bracket, pick: pick, leaks: leaks, button: button, open: open,
+    treeIndex: treeIndex, treeItems: treeItems, treeNext: treeNext, treeWrong: treeWrong, treeSvg: treeSvg, treeBuild: treeBuild, treeRead: treeRead, treeOrder: treeOrder };
 })(typeof NotationCore !== 'undefined' ? NotationCore : require('./core.js'));
 if (typeof module === 'object' && module && module.exports) module.exports = NLWalk;

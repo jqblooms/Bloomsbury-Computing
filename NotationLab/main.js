@@ -5,7 +5,8 @@
   var LIST = [
     ['stack', 'Stack Machine', 'Work out prefix and postfix with a stack. Choose every push and pop, then go without the machine.'],
     ['convert', 'Convert It', 'Convert between infix, prefix and postfix step by step: brackets, move, remove.'],
-    ['tree', 'Tree Builder', 'Build the tree of an infix expression, then read prefix and postfix off it.'],
+    ['tree', 'Tree Builder', 'Build the tree of an infix expression from the bottom up, in the order you would work it out.'],
+    ['read', 'Tree Reader', 'Read a finished tree in postfix and prefix by walking round the outside.'],
     ['group', 'Group It', 'Turn prefix and postfix back into infix, one operator at a time.'],
     ['race', 'Convert Race', '90 seconds of mixed questions. Build a streak to move up.']
   ];

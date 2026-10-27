@@ -67,5 +67,43 @@ const dirs = [['infix', 'postfix'], ['infix', 'prefix'], ['postfix', 'infix'], [
   }
 }));
 
+// Tree Builder: built bottom up, each operator picked is ready (both its values whole), the last one is the top,
+// every wrong click has a reason, and no prefix or postfix anywhere. Also the game's own rule on the student's tree.
+const ready = (n, joined) => [n.l, n.r].every(c => !c.op || joined[c.id]);
+[[2, FOUR, false], [[2, 3], FOUR, false], [[3, 4], FOUR, false], [[3, 4], ALL, false], [[3, 5], FOUR, true]].forEach(L => {
+  for (let k = 0; k < N; k++) {
+    const implied = L[2];
+    const mk = () => NC.randomTree({ n: size(L[0]), ops: L[1], letters: true, mustUse: L[1] === ALL ? [POW] : undefined, digitChance: implied ? 0.45 : 0 });
+    const t = mk(), shown = NC.toInfix(t, { implied }), cur = { key: NC.toPrefix(t).join(' '), question: shown, answer: shown };
+    const ex = W.pick(() => { const e = mk(), w = W.treeBuild(e, implied); return { key: NC.toPrefix(e).join(' '), question: w.question, answer: w.question, steps: w.steps }; }, cur);
+    common('tree build', ex, cur);
+    if (ex && /prefix|postfix/i.test(text(ex.steps))) fail('tree build: mentions prefix or postfix');
+    const nodes = W.treeIndex(t), joined = {};
+    let last = null;
+    for (let s = 0; s < 20; s++) {
+      const items = W.treeItems(t, joined, implied);
+      if (items.length === 1) break;
+      const nx = W.treeNext(items), n = nodes[items[nx.at].node];
+      if (!ready(n, joined)) { fail('tree build: ' + n.op + ' picked before its values in ' + shown); break; }
+      items.forEach((it, j) => { if (j !== nx.at && (it.kind === 'op' || it.kind === 'hid') && !W.treeWrong(items, j, nx)) fail('tree build: no reason'); });
+      joined[n.id] = true; last = n;
+    }
+    if (last !== t) fail('tree build: last operator is not the top in ' + shown);
+  }
+});
+
+// Tree Reader: the walkthrough reads its own tree in the right order and never shows the student's answer.
+[[2, FOUR], [[3, 4], FOUR], [[3, 4], ALL], [[5, 6], ALL]].forEach(L => ['postfix', 'prefix'].forEach(form => {
+  for (let k = 0; k < N; k++) {
+    const mk = () => NC.randomTree({ n: size(L[0]), ops: L[1], letters: true, digitChance: L[0][0] === 5 ? 0.3 : 0 });
+    const ans = t => NC.show(form === 'prefix' ? NC.toPrefix(t) : NC.toPostfix(t));
+    const t = mk(), cur = { key: NC.toPrefix(t).join(' '), answer: ans(t) };
+    const ex = W.pick(() => { const e = mk(), w = W.treeRead(e, form); return { key: NC.toPrefix(e).join(' '), answer: w.answer, steps: w.steps, e }; }, cur);
+    common('tree read ' + form, ex, cur);
+    if (ex && ex.answer !== ans(ex.e)) fail('tree read: wrong answer');
+    if (ex && ex.steps.length !== NC.toPrefix(ex.e).length + 2) fail('tree read: not one step per node');
+  }
+}));
+
 console.log(fails ? fails + ' failures in ' + runs + ' runs' : 'OK: ' + runs + ' walkthroughs, none shows the question or its answer, every one reaches its own answer');
 process.exit(fails ? 1 : 0);

@@ -184,3 +184,7 @@ button.tok:disabled { cursor: default; }
 .wt-machine .stack-well { min-height: 120px; }
 @media (max-width: 700px) { .wt-machine { grid-template-columns: 1fr; } .wt-machine .stack-well { min-height: 0; } }
 @media (max-width: 420px) { .wt-box .tok { min-width: 34px; height: 40px; font-size: 1.1rem; padding: 0 5px; } .wt-box .tok.br { min-width: 12px; } }
+/* Tree Reader: the rule beside its numbered example tree */
+.read-how-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 8px; }
+.read-how-row .read-ex { flex: 0 0 auto; padding: 2px; }
+.read-how-row p { flex: 1 1 260px; margin: 0; }

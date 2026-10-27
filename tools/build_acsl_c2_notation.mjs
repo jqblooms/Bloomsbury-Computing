@@ -6,7 +6,7 @@
 // NotationLab app runs), and the drill files carry a copy of it, so a card's answer is computed when it is drawn.
 // The questions are written for this site in the contest's style; the official samples are linked, never copied.
 // Shape: EAL-light (one idea per slide, a teacher-only Think, Pair, Share under every heading that never gives a
-// slide answer away, predict then check, compare slides), three NotationLab activities, checked practice, a drill
+// slide answer away, predict then check, compare slides), four NotationLab activities, checked practice, a drill
 // plenary.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -149,7 +149,9 @@ const TPS = {
   'power': ['Why might the power arrow rank above *?', 'A power is repeated multiplication, so it is worked out before the * around it, just as * comes before +.'],
   'power-check': ['Why is 5 ' + POW + ' 2 not the same as 5 * 2?', '5 ' + POW + ' 2 means two copies of 5 multiplied together: 5 * 5.'],
   'convert-app': ['Why might it help to do a conversion in small steps and say the reason for each one?', 'You can check each step on its own. If you know why each step is right, you can convert any expression, not just one you have seen before.'],
-  'activity-2': ['Why is the operator worked out last at the top of the tree?', 'It joins the two biggest parts. Everything below it must be worked out first.'],
+  'activity-2': ['Why might it help to build a tree in the same order you would work the expression out?', 'Each operator needs its two values to be ready. Working in order means they are already built when you join them.'],
+  'read-tree': ['Why might the walk go down the left side first, not the right?', 'We write from left to right, so the left value comes before the right value, just as it does in infix.'],
+  'read-app': ['Why does a tree need no brackets?', 'Its shape already shows which two parts each operator joins.'],
   'to-infix': ['Why can we always find an operator with two values right next to it?', 'The first operator to work out has plain values beside it. After that, each group counts as one value.'],
   'group-app': ['Why does grouping give the brackets back?', 'Each group is one operator with its two values, so the brackets show what is worked out first.'],
   'acsl-prefix': ['Why write the stack down rather than keep it in your head?', 'A long expression has many values waiting. Writing them down keeps the order, so the right value goes on the left.'],
@@ -275,7 +277,40 @@ steps.push(lab('convert-app', 'Activity 2: Convert It', 'Activity 2: Convert It'
   'Convert one step at a time: brackets, move, remove. A conversion with a mistake does not count. Two with no mistakes in a row move you up a level.', 'mode=convert'));
 
 steps.push(lab('activity-2', 'Activity 3: Tree Builder', 'Activity 3: Tree Builder',
-  '', 'mode=tree'));
+  'Build the tree from the bottom up, in the order you would work it out. A tree with a mistake does not count. Two with no mistakes in a row move you up a level.', 'mode=tree'));
+
+// ---------------------------------------------------------------- reading a tree (James 2026-10-27: building and
+// reading a tree are now two activities, one idea each)
+const READ_EX = NC.parseInfix('A * (B + C)');
+function treePic(t, form) {
+  const order = [], pos = new Map(), lines = [], dots = [];
+  (function ino(n, d) { if (n.op) { ino(n.l, d + 1); order.push([n, d]); ino(n.r, d + 1); } else order.push([n, d]); })(t, 0);
+  order.forEach(([n, d], i) => pos.set(n, { x: 30 + i * 44, y: 34 + d * 56 }));
+  const read = form === 'prefix' ? (function pre(n) { return n.op ? [n, ...pre(n.l), ...pre(n.r)] : [n]; })(t) : (function post(n) { return n.op ? [...post(n.l), ...post(n.r), n] : [n]; })(t);
+  (function draw(n) {
+    const p = pos.get(n);
+    if (n.op) [n.l, n.r].forEach((c) => { const q = pos.get(c); lines.push(`<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="var(--line-strong)" stroke-width="2"/>`); draw(c); });
+    dots.push(`<circle cx="${p.x}" cy="${p.y}" r="17" fill="var(--surface-2)" stroke="${n.op ? 'var(--brand)' : 'var(--line-strong)'}" stroke-width="2"/>` +
+      `<text x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="central" fill="var(--ink)" style="font:700 17px var(--font-mono)">${esc(n.op || n.v)}</text>` +
+      `<text x="${p.x}" y="${p.y - 24}" text-anchor="middle" fill="var(--good)" style="font:700 12px var(--font-body)">${read.indexOf(n) + 1}</text>`);
+  })(t);
+  const w = 60 + (order.length - 1) * 44, h = 68 + NC.depth(t) * 56;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Tree read in ${form}">${lines.join('')}${dots.join('')}</svg>`;
+}
+const readCol = (form) => `<div style="display:grid;justify-items:center;gap:4px;padding:6px 14px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2)">` +
+  `<b>${form === 'prefix' ? 'Prefix' : 'Postfix'}</b>${treePic(READ_EX, form)}${mono(NC.show(form === 'prefix' ? NC.toPrefix(READ_EX) : NC.toPostfix(READ_EX)))}</div>`;
+steps.push({ id: 'read-tree', label: 'Reading a Tree', content: '<h2 class="lesson-h2">Reading a Tree</h2>' +
+  '<p class="lesson-lead">Walk round the outside of the tree. Start at the top and go down the left side.</p>' +
+  columns(facts([
+    'Each circle is a <strong>node</strong>. The two lines below an operator lead to its two <strong>branches</strong>.',
+    '<strong>Prefix:</strong> read each node the <strong>first</strong> time you pass it. You reach an operator on the way down, so it comes <strong>before</strong> its two branches.',
+    '<strong>Postfix:</strong> read each node the <strong>last</strong> time you pass it. You leave an operator on the way back up, so it comes <strong>after</strong> its two branches.',
+    'Postfix is the order the Stack Machine needs: both values are pushed before their operator arrives.']),
+  `<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">${readCol('postfix')}${readCol('prefix')}</div>`) +
+  `<p class="lesson-lead" style="margin-top:8px">The numbers show the reading order. Infix: ${mono(NC.toInfix(READ_EX))}</p>` });
+
+steps.push(lab('read-app', 'Activity 4: Tree Reader', 'Activity 4: Tree Reader',
+  'You are given a finished tree. Tap its nodes in postfix or prefix order. A tree with a mistake does not count. Two with no mistakes in a row move you up a level.', 'mode=read'));
 
 // ---------------------------------------------------------------- back to infix
 const backLines = groupLines(TEACH_BACK, 'postfix');
