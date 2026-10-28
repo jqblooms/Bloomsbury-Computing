@@ -20,9 +20,12 @@ CA.games.bits = function (host) {
   ];
   var res = CA.results('bits-' + ops, 'Bit Switch Board (' + (ops === 'logic' ? 'NOT, AND, OR, XOR' : 'shifts and circulates') + ')');
   var st = { li: 0, have: 0, hearts: MAXH, score: 0, streak: 0, mistakes: 0, q: null, rows: [], checked: false, seen: {}, lastKind: null };
+  var T = BitTeach, taught = {}, embedded = CA.params.get('embed') === '1';
+  var bcv = CA.params.get('bcv');
 
   host.innerHTML = '';
-  host.appendChild(el('div', { class: 'game-head' }, '<h1>Bit Switch Board</h1><span class="muted">' + (ops === 'logic' ? 'NOT, AND, OR, XOR' : 'Shifts and circulates') + '</span>'));
+  host.appendChild(el('div', { class: 'game-head' }, '<h1>Bit Switch Board</h1><span class="muted">' + (ops === 'logic' ? 'NOT, AND, OR, XOR' : 'Shifts and circulates') + '</span>' +
+    (embedded ? '' : '<a class="small" href="../BitFlicker/' + (bcv ? '?bcv=' + encodeURIComponent(bcv) : '') + '">All bit games</a>')));
   var bar = CA.topbar(host);
   var board = el('div', { class: 'switch-board' });
   host.appendChild(board);
@@ -102,22 +105,40 @@ CA.games.bits = function (host) {
       st.rows.push({ want: q.answer, sw: switchRow('=', q.len), name: 'the answer' });
       grid.appendChild(st.rows[0].sw.row);
     }
-    // The rule shows the first two times a kind comes up, then hides behind a button.
-    var times = st.seen[kind] = (st.seen[kind] || 0) + 1;
+    // James 2026-10-28: the rule stays on screen every round.
     var ruleText = q.working[0] + (kind === 'two' || kind === 'shift2' ? ' ' + (q.working[1] || '') : '');
-    rule.innerHTML = '';
-    if (times <= 2) rule.innerHTML = '<b>Rule:</b> ' + esc(ruleText);
-    else {
-      var show = el('button', { type: 'button', class: 'link-btn' }, 'Show the rule');
-      show.addEventListener('click', function () { rule.innerHTML = '<b>Rule:</b> ' + esc(ruleText); CA.reportHeight(); });
-      rule.appendChild(show);
-    }
+    rule.innerHTML = '<b>Rule:</b> ' + esc(ruleText);
     action.innerHTML = '';
-    action.appendChild(el('span', { class: 'small muted' }, 'Click a switch to flip it. You get one check.'));
+    action.appendChild(el('span', { class: 'small muted' }, 'Click each switch on the ' + (st.rows.length > 1 ? 'empty rows' : '<b>=</b> row') + ' to set it to 0 or 1 (click again to change it). Then press Check. You get one check.'));
     action.appendChild(CA.btn('Check', '', check, 'check'));
+    action.appendChild(T.button(walk));
     CA.say(fb, '', '');
     drawBar();
     CA.reportHeight();
+    // A worked example before the first round of every operator not met yet.
+    var fams = kind === 'two' ? [q.two.inner === 'NOT' ? 'NOT' : q.two.inner, q.op === 'NOT' ? 'NOT' : q.op + '-1'] : kind === 'shift2' ? [q.op + '-1'] : [opLabel(q)];
+    (function teach(list) {
+      if (!list.length) return;
+      var op = list.shift();
+      if (!T.newOp(board, taught, op, q.len, function () { teach(list); })) teach(list);
+    })(fams);
+  }
+  // Walk me through it: a similar question of the same kind with different bits, one bit or one move at a time.
+  function walk() {
+    var q = st.q, ex = null;
+    for (var t = 0; t < 300 && !ex; t++) {
+      var e = G.bitsQ(q.kind, q.len);
+      if (e.a !== q.a && e.answer !== q.answer && e.expr !== q.expr && (!q.two || (e.two.mid !== q.two.mid && e.two.mid !== q.answer && e.answer !== q.two.mid)) && e.a !== q.answer) ex = e;
+    }
+    if (!ex) return;
+    var steps;
+    if (q.kind === 'two') {
+      var x = ex.two, inner = x.inner === 'NOT' ? T.steps('NOT', ex.a) : T.steps(x.inner, ex.a, ex.b), outerOp = ex.op === 'NOT' ? 'NOT' : ex.op + '-1';
+      steps = [{ text: 'Brackets first: work out ' + T.code(x.inside) + '. Then use ' + T.code(outerOp) + ' on that answer.', html: '' }]
+        .concat(inner, [{ text: 'The brackets give ' + T.code(x.mid) + '. Now use ' + T.code(outerOp) + ' on it.', html: T.row('( )', x.mid) }], T.steps(outerOp, x.mid));
+    } else if (q.kind === 'shift2') steps = T.steps(ex.op + '-2', ex.a);
+    else steps = T.steps(opLabel(ex), ex.a, ex.b);
+    T.open(board, { question: 'Example: ' + T.code(ex.expr), steps: steps });
   }
 
   function check() {
@@ -135,6 +156,15 @@ CA.games.bits = function (host) {
       st.streak++; st.score += CA.points(st.streak) + (st.rows.length > 1 ? 5 : 0); st.have++;
       CA.say(fb, 'Right! ' + esc(q.expr) + ' = <b class="mono">' + q.answer + '</b>' + (why ? '<br><span class="small">' + why + '</span>' : ''), '');
     } else {
+      var whys = st.rows.map(function (r, k) {
+        var got = r.sw.get();
+        if (got === r.want) return '';
+        var op, a, b = null;
+        if (q.kind === 'two') { if (k === 0) { op = q.two.inner; a = q.a; b = q.two.inner === 'NOT' ? null : q.b; } else { op = q.op === 'NOT' ? 'NOT' : q.op + '-1'; a = q.two.mid; } }
+        else if (q.kind === 'shift2') { op = q.op + '-1'; a = k === 0 ? q.a : B.shift(q.op, 1, q.a); }
+        else { op = opLabel(q); a = q.a; b = q.b; }
+        return (st.rows.length > 1 ? '<b>' + esc(r.name.charAt(0).toUpperCase() + r.name.slice(1)) + ':</b> ' : '') + T.wrongWhy(op, a, b, got, r.want);
+      }).filter(Boolean).join('<br>');
       st.hearts--; st.mistakes++; st.streak = 0; st.have = 0;
       CA.shake(grid);
       // Each wrong switch now shows the right bit (red ring), so the board shows the right answer without growing.
@@ -143,7 +173,7 @@ CA.games.bits = function (host) {
           if (sw.classList.contains('bad')) { sw.textContent = r.want[i]; sw.classList.toggle('on', r.want[i] === '1'); }
         });
       });
-      CA.say(fb, 'Not this time: <b class="mono">' + q.answer + '</b>. Switches in a red ring were wrong; they now show the right bit. This round does not count, and the count starts again: you need ' + NEED + ' right in a row.' + (why ? '<br><span class="small">' + why + '</span>' : ''), 'bad');
+      CA.say(fb, 'Not this time: <b class="mono">' + q.answer + '</b>. Switches in a red ring were wrong; they now show the right bit. This round does not count, and the count starts again: you need ' + NEED + ' right in a row.' + (whys ? '<br><span class="small" style="color:var(--ink)">' + whys + '</span>' : '') + (why ? '<br><span class="small">' + why + '</span>' : ''), 'bad');
     }
     res.add(q.expr + ' = ' + q.answer, ok);
     drawBar();
@@ -180,5 +210,12 @@ CA.games.bits = function (host) {
     CA.reportHeight();
   }
 
-  newRound();
+  if (embedded) newRound();
+  else T.gate(host, { title: 'How to play Bit Switch Board', go: 'Start', onGo: newRound, html:
+    '<p>A <b>bit string</b> is a row of 0s and 1s. ' + (ops === 'logic' ? 'NOT, AND, OR and XOR change it one column at a time.' : 'Shifts and circulates slide every bit left or right.') + '</p>' +
+    '<ol><li>Read the question at the top and the rule under it.</li>' +
+    '<li>Click the switches on the <b>=</b> row to set each answer bit to 0 or 1.</li>' +
+    '<li>Press <b>Check</b>. You get one check. Stuck? Press <b>Walk me through it</b> first.</li>' +
+    '<li>Get ' + NEED + ' right in a row to reach the next level. A mistake starts the count again.</li></ol>' +
+    T.exampleHtml(ops === 'logic' ? 'NOT' : 'LSHIFT-1', 4) });
 };

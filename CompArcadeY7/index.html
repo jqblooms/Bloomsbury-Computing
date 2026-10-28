@@ -28,7 +28,7 @@
   document.getElementById('ca-css').href = 'style.css?v=' + encodeURIComponent(v);
   var FILE = { stack: 'js/stack.js', bits: 'js/bits.js', loop: 'js/loop.js', quiz: 'js/quiz.js', contest: 'js/contest.js' };
   var game = params.get('game');
-  var files = ['../NotationLab/core.js', '../BitFlicker/bits-core.js', '../shared/acsl-pseudocode.js', 'js/gen.js', 'js/common.js']
+  var files = ['../NotationLab/core.js', '../BitFlicker/bits-core.js', '../BitFlicker/bit-teach.js', '../shared/acsl-pseudocode.js', 'js/gen.js', 'js/common.js']
     .concat(FILE[game] ? [FILE[game]] : [], ['js/main.js']);
   files.forEach(function (file) {
     var s = document.createElement('script');

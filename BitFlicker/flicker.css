@@ -132,5 +132,5 @@ button, select, input { font: inherit; }
 .embed .stage { padding: 8px 12px; }
 .embed .bitrow { margin: 2px 0; }
 .embed .equation { padding: 8px; }
-@media (max-width: 520px) { :root { --cell: 32px; } .bitrow { grid-template-columns: 84px auto; } .bitrow-note { grid-column: 1 / -1; } .rule { margin-left: 94px; } }
+@media (max-width: 520px) { :root { --cell: 30px; } .cells { gap: 4px; } .bitrow { grid-template-columns: 58px auto; gap: 6px; } .bitrow-label { font-size: 12px; } .bitrow-note { grid-column: 1 / -1; } .rule { margin-left: 64px; } .why, .stage { padding-left: 8px; padding-right: 8px; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

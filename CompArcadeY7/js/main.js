@@ -5,8 +5,9 @@
   var LIST = [
     ['stack', 'form=postfix', 'Stack Stacker: Postfix', 'Push the numbers, pop two at each operator, and watch the stack work it out.'],
     ['stack', 'form=prefix', 'Stack Stacker: Prefix', 'The same stack, read from right to left.'],
-    ['bits', 'ops=logic', 'Bit Switch Board: NOT, AND, OR, XOR', 'Flip the switches to show the answer. One check each round.'],
-    ['bits', 'ops=shift', 'Bit Switch Board: Shifts', 'LSHIFT, RSHIFT, LCIRC and RCIRC, then two steps at once.'],
+    ['bits', 'ops=logic', 'Bit strings 1. Switch Board: NOT, AND, OR, XOR', 'Flip the switches to show the answer, one column at a time.'],
+    ['bits', 'ops=shift', 'Bit strings 2. Shifts and circulates', 'Slide the bits left or right: LSHIFT, RSHIFT, LCIRC, RCIRC.'],
+    ['../BitFlicker/', 'mode=menu', 'Bit strings 3 to 5: Flick Lab, Pile-up, Find X', 'The next bit string games, in Bit Flicker.'],
     ['loop', '', 'Loop Runner', 'Predict what a FOR loop outputs, then watch the runner do one lap for every turn.'],
     ['quiz', '', 'Team Quiz Board', 'Team A against Team B on the projector. The teacher runs it.'],
     ['contest', '', 'Mini Contest', 'Five contest questions in five minutes. Get stars and beat the scoreboard.']
@@ -19,6 +20,7 @@
   LIST.forEach(function (g) {
     var b = CA.el('button', { type: 'button', class: 'menu-tile' }, '<b>' + g[2] + '</b><span>' + g[3] + '</span>');
     b.addEventListener('click', function () {
+      if (g[0].indexOf('/') >= 0) { var v = CA.params.get('bcv'); location.href = g[0] + '?' + g[1] + (v ? '&bcv=' + encodeURIComponent(v) : ''); return; }
       var p = new URLSearchParams(location.search);
       p.set('game', g[0]);
       p.delete('form'); p.delete('ops');

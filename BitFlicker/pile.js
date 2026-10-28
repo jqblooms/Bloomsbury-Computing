@@ -17,14 +17,16 @@
   ];
   var PREC = { AND: 3, XOR: 2, OR: 1 };
   var game, area, report = F.results('pile', 'Precedence Pile-up', 4);
-  var base = 1, solved = 0, exprNo = 0;
+  var base = 1, inRow = 0, exprNo = 0, seen = {}, T = BitTeach;
 
-  host.appendChild(el('p', { class: 'small' }, 'Click the operator that is worked <b>next</b>. Then set every bit of its result and Check. A wrong choice or a wrong result costs a life.'));
+  host.appendChild(el('p', { class: 'small' }, 'Click the operator that is worked <b>next</b>. Then set every bit of its result and Check. Solve 2 expressions in a row with no mistakes to level up.'));
   game = F.Game(host, { lives: 3 });
   area = el('div');
   host.appendChild(area);
 
-  function level() { return Math.min(LEVELS.length, base + Math.floor(solved / 2)); }
+  function level() { return Math.min(LEVELS.length, base); }
+  // James 2026-10-27: an expression with a mistake never counts. Two clean ones in a row move up a level.
+  function won() { inRow++; if (inRow >= 2) { inRow = 0; if (base < LEVELS.length) { base++; return true; } } return false; }
   function unaryOp(c) {
     var op = F.pick(c.unOps);
     if (op === 'NOT') return 'NOT';
@@ -88,11 +90,18 @@
     stage.appendChild(el('div', { class: 'round-head' }, '<span class="round-kind">Expression ' + (exprNo + 1) + '</span><span class="small">Which operator is worked next?</span>'));
     var exprBox = el('div', { class: 'expr', role: 'group', 'aria-label': 'The expression' });
     stage.appendChild(exprBox);
-    if (level() <= 2) stage.appendChild(el('div', { class: 'ladder' }, 'First to last: <span>NOT</span><span>SHIFT, CIRC</span><span>AND</span><span>XOR</span><span>OR</span>'));
+    stage.appendChild(el('div', { class: 'ladder' }, 'Order, first to last: <span>( brackets )</span><span>NOT</span><span>SHIFT, CIRC</span><span>AND</span><span>XOR</span><span>OR</span> Equal ones: left to right.'));
     var work = el('div');
     stage.appendChild(work);
     var actions = el('div', { class: 'actions' });
     stage.appendChild(actions);
+    var walkRow = el('div', { class: 'actions' });
+    var cur = null;
+    walkRow.appendChild(T.button(function () {
+      if (phase === 'predict' && cur) T.walkOp(area, cur.op, cur.a, cur.b);
+      else walkOrder(c, e);
+    }));
+    stage.appendChild(walkRow);
     var say = F.feedback(stage);
     area.innerHTML = '';
     area.appendChild(stage);
@@ -130,6 +139,7 @@
     }
     function predict(node) {
       var a = node.a.v, b = node.t === 'bin' ? node.b.v : null, op = B.opName(node), right = B.apply(node, a, b), L = right.length;
+      cur = { op: op, a: a, b: b };
       work.innerHTML = '';
       var box = el('div', { class: 'why' });
       if (b != null) {
@@ -139,11 +149,13 @@
       box.appendChild(el('div', { class: 'rule' }));
       var input = F.inputRow(L, ['0', '1'], { label: '=', cls: 'result', onEnter: check });
       box.appendChild(input.node);
+      box.appendChild(el('p', { class: 'small' }, 'Click each box on the <b>=</b> row to set 0 or 1, then press Check.'));
+      box.appendChild(el('div', { class: 'bt-rule' }, T.ruleLine([op])));
       work.appendChild(box);
       var checkBtn = F.btn('Check', 'check', '', check);
       actions.innerHTML = '';
       actions.appendChild(checkBtn);
-      input.focus();
+      if (!T.newOp(area, seen, op, L, function () { input.focus(); })) input.focus();
       F.reportHeight();
       function check() {
         if (checkBtn.disabled) return;
@@ -153,8 +165,8 @@
         input.lock(F.diffMarks(given, right));
         report.add(game, op + ' step: ' + given, ok, true);
         if (ok) {
-          var gain = game.right(10);
-          say('Right. +' + gain, 'good');
+          var gain = slips ? 0 : game.right(10);
+          say('Right.' + (gain ? ' +' + gain : ''), 'good');
           setTimeout(function () { collapse(node, right); }, 650);
           return;
         }
@@ -162,7 +174,7 @@
         var over = game.wrong();
         box.appendChild(F.bitRow(right, { label: 'answer' }));
         box.appendChild(el('p', { class: 'small' }, F.explain(op, a, b)));
-        say('Not quite. The answer is in the box.', 'bad');
+        say('Not quite. The right answer is in the box. This expression will not count now, but finish it to practise.<div class="bt-wrong">' + T.wrongWhy(op, a, b, given, right) + '</div>', 'bad');
         if (over) { phase = 'over'; next(true); return; }
         actions.appendChild(F.btn('Continue', 'next', 'secondary', function () { collapse(node, right); }));
       }
@@ -177,10 +189,12 @@
       actions.innerHTML = '';
       if (e.tree.t === 'bits') {
         phase = 'done';
-        solved++;
-        var gain = game.right(15);
+        walkRow.remove();
+        var gain = 0, up = false;
+        if (slips) inRow = 0;
+        else { up = won(); gain = game.right(15); }
         draw(null);
-        say('Solved: <code>' + e.src + '</code> = <code>' + e.answer + '</code>. +' + gain + (slips ? ' This one had a mistake, so it does not count toward the goal. Solve the next one with no mistakes.' : ''), 'good');
+        say('Solved: <code>' + e.src + '</code> = <code>' + e.answer + '</code>.' + (slips ? ' This one had a mistake, so it does not count. Solve the next one with no mistakes.' : ' +' + gain + (up ? ' Level up!' : inRow === 1 ? ' One more with no mistakes to level up.' : '')), slips ? 'hint' : 'good');
         report.add(game, 'solved ' + e.src + (slips ? ' after a mistake (does not count)' : ''), !slips);
         next(false);
         return;
@@ -191,7 +205,7 @@
     }
     function next(over) {
       var b = F.btn(over ? 'See score' : 'Next expression', 'next', 'secondary', function () {
-        if (over) return F.overPanel(area, game, 'You reached level ' + game.level + '.', function () { base = Math.max(1, game.level - 1); solved = 0; game.restart(base); render(); });
+        if (over) return F.overPanel(area, game, 'You reached level ' + game.level + '.', function () { base = Math.max(1, game.level - 1); inRow = 0; game.restart(base); render(); });
         exprNo++;
         render();
       });
@@ -200,10 +214,66 @@
       F.reportHeight();
     }
   }
+  // Walk me through it on a similar expression: which operator goes next and why, then its result, until one is left.
+  function walkOrder(c, cur) {
+    var avoid = [cur.answer], ex = null;
+    B.trace(cur.src).forEach(function (s) { avoid.push(s.result); });
+    for (var t = 0; t < 200 && !ex; t++) {
+      var e2 = makeExpr(c);
+      if (!e2 || e2.src === cur.src) continue;
+      if (B.trace(e2.src).some(function (s) { return avoid.indexOf(s.result) >= 0; })) continue;
+      ex = e2;
+    }
+    if (!ex) return;
+    var tree = B.parse(ex.src), steps = [];
+    function strip(hl) {
+      return '<div class="expr">' + tokens(tree, []).map(function (tk) {
+        return '<span class="tok ' + (tk.k === 'op' ? 'op' + (tk.node === hl ? ' chosen' : '') : tk.k) + '">' + F.esc(tk.t) + '</span>';
+      }).join('') + '</div>';
+    }
+    function inBrackets(target) {
+      var hit = false;
+      (function walk(n, inside) {
+        if (n === target) { hit = inside; return; }
+        if (n.t === 'bits' || n.t === 'var') return;
+        var k = inside || !!n.paren;
+        walk(n.a, k); if (n.t === 'bin') walk(n.b, k);
+      })(tree, false);
+      return hit || !!target.paren;
+    }
+    function firstReady() {
+      var found = null;
+      (function walk(n) {
+        if (found || n.t === 'bits') return;
+        walk(n.a); if (n.t === 'bin') walk(n.b);
+        if (!found && n.a.t === 'bits' && (n.t !== 'bin' || n.b.t === 'bits')) found = n;
+      })(tree);
+      return found;
+    }
+    steps.push({ text: 'Do not just go left to right. Work in this order: brackets first, then NOT, then SHIFT and CIRC, then AND, then XOR, then OR. Two the same: left to right.', html: strip(null) });
+    while (tree.t !== 'bits') {
+      var n = firstReady(), op = B.opName(n), a = n.a.v, b = n.t === 'bin' ? n.b.v : null, r = B.apply(n, a, b), why;
+      if (n.t !== 'bin') why = op + ' goes before AND, XOR and OR. It works on the bits right next to it.';
+      else if (inBrackets(n) && tree !== n) why = 'it is inside brackets, so it goes first.';
+      else why = 'there is no NOT or shift left to do here, and ' + n.op + ' is the highest left in the order AND, XOR, OR' + (n.op === 'AND' ? '' : ' (no ' + (n.op === 'OR' ? 'AND or XOR' : 'AND') + ' is waiting next to it)') + '.';
+      steps.push({ text: 'Next is ' + T.code(op) + ': ' + why + ' Work it out: ' + T.code(b != null ? a + ' ' + op + ' ' + b : op + ' ' + a) + ' = ' + T.code(r) + '.', html: strip(n) });
+      ['a', 'b', 'op', 'n', 'paren'].forEach(function (k) { delete n[k]; });
+      n.t = 'bits'; n.v = r;
+    }
+    steps.push({ text: 'One bit string is left: ' + T.code(tree.v) + '. That is the answer. Now do yours the same way: find the operator that goes next.', html: strip(null) });
+    T.open(area, { question: 'Example: ' + T.code(ex.src), steps: steps });
+  }
   function render() {
     game.level = level();
     game.draw();
     play();
   }
-  render();
+  if (F.embedded) render();
+  else T.gate(host, { title: 'How to play Precedence Pile-up', go: 'Start', onGo: render, html:
+    '<ol><li>You see a long expression with several operators. They are <b>not</b> worked left to right.</li>' +
+    '<li>Click the operator that is worked <b>next</b>. Order, first to last: brackets, NOT, SHIFT and CIRC, AND, XOR, OR. Two the same: left to right.</li>' +
+    '<li>Then click each box to set the bits of that one step, and press <b>Check</b>. It turns into one bit string. Keep going until one string is left.</li>' +
+    '<li>Stuck? Press <b>Walk me through it</b>. Solve <b>2 in a row with no mistakes</b> to level up.</li></ol>' +
+    '<div class="bt-ex"><p class="bt-ex-title">Worked example</p><div class="bt-vis"><div class="expr"><span class="tok bits">1100</span><span class="tok op">OR</span><span class="tok bits">1010</span><span class="tok op chosen">AND</span><span class="tok bits">0110</span></div></div>' +
+    '<p class="bt-text">AND goes before OR, so do <b class="bt-code">1010 AND 0110 = 0010</b> first. Then <b class="bt-code">1100 OR 0010 = 1110</b>.</p></div>' });
 })();
