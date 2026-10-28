@@ -61,6 +61,9 @@
       var tree = B.parse(src), steps = B.trace(tree);
       // Every step should change something, so no step can be guessed by copying an operand.
       if (steps.some(function (s, k) { return /^0+$/.test(s.result) && k < steps.length - 1; })) continue;
+      // No step result may equal a string already on screen (an operand or an earlier step), or it can be copied.
+      var shown = src.match(/[01]{2,}/g) || [];
+      if (tries < 300 && steps.some(function (s, k) { return shown.indexOf(s.result) >= 0 || steps.slice(0, k).some(function (p) { return p.result === s.result; }); })) continue;
       return { src: src, tree: tree, answer: B.evaluate(src) };
     }
     return null;
