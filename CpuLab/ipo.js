@@ -48,7 +48,7 @@
   function newRound() {
     var s = scenario();
     last = s[0];
-    R = { s: s, picks: {}, checked: false, walked: false };
+    R = { s: s, picks: {}, checked: false, walked: false, level: lv };
     if (lv === 2) {
       var gap = Lab.rnd(0, s[1].length - 1), want = s[1][gap];
       var others = [];
@@ -66,17 +66,17 @@
     if (log.isDone()) host.appendChild(el('div', { class: 'done-banner' }, 'Finished: you can follow input, process and output. Keep going for practice.'));
     host.appendChild(Lab.bar('Level ' + (lv + 1) + ' of ' + LEVELS.length + ': ' + LEVELS[lv].name, have, NEED));
     host.appendChild(el('div', { class: 'rule' }, TYPES.map(function (t) { return '<b>' + t + '</b>: ' + WHY[t] + '.'; }).join('<br>')));
-    host.appendChild(el('p', { class: 'task-q' }, lv === 2 ? '<b>' + R.s[0] + '.</b> One step is missing. Which step goes in the gap?' : '<b>' + R.s[0] + '.</b> Label every step Input, Process or Output, then check. One check only.'));
+    host.appendChild(el('p', { class: 'task-q' }, R.level === 2 ? '<b>' + R.s[0] + '.</b> One step is missing. Which step goes in the gap?' : '<b>' + R.s[0] + '.</b> Label every step Input, Process or Output, then check. One check only.'));
     var list = el('div', { class: 'cards' });
     R.s[1].forEach(function (st, i) {
       var card = el('div', { class: 'card' });
-      if (lv === 2 && i === R.gap) {
+      if (R.level === 2 && i === R.gap) {
         card.appendChild(el('span', {}, '<b>Step ' + (i + 1) + ': ?</b>'));
         list.appendChild(card);
         return;
       }
       card.appendChild(el('span', {}, 'Step ' + (i + 1) + ': ' + st[0]));
-      if (lv !== 2) {
+      if (R.level !== 2) {
         var seg = el('div', { class: 'seg', role: 'group', 'aria-label': 'Step ' + (i + 1) });
         TYPES.forEach(function (t) {
           var b = el('button', { type: 'button', 'aria-pressed': String(R.picks[i] === t) }, t);
@@ -93,7 +93,7 @@
       list.appendChild(card);
     });
     host.appendChild(list);
-    if (lv === 2) {
+    if (R.level === 2) {
       var opts = el('div', { class: 'cards', style: 'margin-top:8px' });
       R.options.forEach(function (o, k) {
         var card = el('div', { class: 'card' });
@@ -123,7 +123,7 @@
   function check() {
     if (R.checked) return;
     var ok, text;
-    if (lv === 2) {
+    if (R.level === 2) {
       if (R.choice == null) { draw('Choose a step for the gap first.', 'hint'); return; }
       ok = R.options[R.choice] === R.s[1][R.gap];
       text = R.s[0] + ': gap ' + (ok ? 'right' : 'wrong');
