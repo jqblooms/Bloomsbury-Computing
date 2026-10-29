@@ -21,7 +21,10 @@
     .hq-tabs button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
     .hq-tips { border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); padding: 10px 14px; font-size: 14px; line-height: 1.55; }
     .hq-tips b { color: var(--brand); }
-    .hq-tips .mono { font-family: var(--font-mono); }
+    .hq-tips-title { font-weight: 700; margin-bottom: 4px; }
+    .hq-tips ol { margin: 0; padding-left: 22px; display: grid; gap: 2px; }
+    .hq-tips .muted { color: var(--muted); }
+    .hq-badge { white-space: nowrap; }
 
     .hq-level {
       display: grid;
@@ -93,7 +96,7 @@
   <main class="hq">
     <section class="hq-screen is-on" id="home">
       <div class="hq-head">
-        <h1>Hex Quiz <span>2 digits</span></h1>
+        <h1>Hex Quiz <span>A-F</span></h1>
         <div id="support-slot"></div>
       </div>
       <div class="hq-tabs" role="group" aria-label="Page"><button type="button" aria-pressed="true" data-page="home">Two digits</button><button type="button" aria-pressed="false" data-page="home3">Three digits</button></div>
@@ -117,19 +120,27 @@
 
     <section class="hq-screen" id="home3">
       <div class="hq-head">
-        <h1>Hex Quiz <span>3 digits</span></h1>
+        <h1>Hex Quiz <span>256</span></h1>
         <div id="support-slot-3"></div>
       </div>
       <div class="hq-tabs" role="group" aria-label="Page"><button type="button" aria-pressed="false" data-page="home">Two digits</button><button type="button" aria-pressed="true" data-page="home3">Three digits</button></div>
-      <p class="hq-lead">Three-digit hexadecimal has place values <b>256, 16, 1</b>. Learn the 256 times table, then what each digit is worth, then whole numbers. Each level is 16 questions.</p>
-      <div class="hq-tips"><b>256 in your head.</b> 256 &times; d = <span class="mono">250 &times; d + 6 &times; d</span>. 250 is a quarter of 1000, so 250 &times; 4 = 1000: 250 &times; 7 = 1750, then add 6 &times; 7 = 42: <span class="mono">1792</span>.<br>Or double: 256, 512, 1024, 2048 are &times;1, &times;2, &times;4, &times;8. 256 &times; 3 = 512 + 256 = 768.</div>
+      <p class="hq-lead">Three-digit hexadecimal numbers have the place values 256, 16 and 1. Learn the 256 times table first, then use it. Each level is 16 questions.</p>
+      <div class="hq-tips">
+        <div class="hq-tips-title">Quick way to work out 256 &times; 7</div>
+        <ol>
+          <li>Split 256 into <b>250</b> and <b>6</b>.</li>
+          <li>250 &times; 7 = <b>1750</b> <span class="muted">(four 250s make 1000)</span></li>
+          <li>6 &times; 7 = <b>42</b></li>
+          <li>Add them: 1750 + 42 = <b>1792</b></li>
+        </ol>
+      </div>
       <button type="button" class="hq-level" data-level="3">
         <span class="hq-badge">256&times;</span>
         <span><small>Level 01</small><b>The 256&times; Table</b><span class="desc">256 times every hex digit from 1 to F.</span></span>
         <span class="hq-best" id="best-3"></span>
       </button>
       <button type="button" class="hq-level" data-level="4">
-        <span class="hq-badge">3<u>B</u>7</span>
+        <span class="hq-badge">3B7</span>
         <span><small>Level 02</small><b>What Is Each Digit Worth?</b><span class="desc">The left digit times 256, the middle digit times 16.</span></span>
         <span class="hq-best" id="best-4"></span>
       </button>
