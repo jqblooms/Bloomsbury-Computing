@@ -8,7 +8,8 @@ DrillData.register("y11-1-3-hex", {
     ["pl-digits","The Digits"],
     ["pl-places","Place Values"],
     ["pl-convert","Exam Conversions"],
-    ["pl-why","Why Hexadecimal?"]
+    ["pl-why","Why Hexadecimal?"],
+    ["pl-adv","Advanced: Three Digits"]
   ],
   cards: (function plenaryCards() {
   var D = "0123456789ABCDEF";
@@ -86,7 +87,28 @@ DrillData.register("y11-1-3-hex", {
     { id: "pl-19", category: "pl-why", prompt: "Give one difference between hexadecimal and binary.", answers: ["Binary is base 2 but hexadecimal is base 16"],
       keywords: [/^(?=.*\b(16|sixteen|letters?|a\s*(to|-)\s*f)\b)(?=.*\b(2|two|0\s*and\s*1|1\s*and\s*0|only\s+numbers|numbers\s+only)\b).*$/i],
       distractors: ["They are both number systems", "Hexadecimal is used by computers", "Binary is longer"],
-      working: ["What base is each one?", "Which digits does each one use?"], note: "Mark scheme: binary is base-2 whereas hexadecimal is base-16; binary only uses 0 and 1 whereas hexadecimal uses 0 to 9 / A to F. From Cambridge IGCSE 0478/12, November 2024, Question 3(a)(ii)." }
+      working: ["What base is each one?", "Which digits does each one use?"], note: "Mark scheme: binary is base-2 whereas hexadecimal is base-16; binary only uses 0 and 1 whereas hexadecimal uses 0 to 9 / A to F. From Cambridge IGCSE 0478/12, November 2024, Question 3(a)(ii)." },
+    // ================================================= Advanced: three digits (James 2026-10-29)
+    { id: "pl-20", category: "pl-adv", randomize: function () {
+        var h; do { h = D[rnd(1, 15)] + D[rnd(0, 15)] + D[rnd(0, 15)]; } while (!/[A-F]/.test(h));
+        return convCard([h, "Three digits: 256, 16, 1."]);
+      } },
+    { id: "pl-21", category: "pl-adv", randomize: function () {
+        var h = D[rnd(10, 15)] + D[rnd(0, 15)] + D[rnd(10, 15)];
+        return convCard([h, "Three digits: 256, 16, 1."]);
+      } },
+    { id: "pl-22", category: "pl-adv", randomize: function () {
+        var x = rnd(2, 15), h = D[x] + D[rnd(0, 15)] + D[rnd(0, 15)], a = x * 256;
+        return { prompt: "In the hexadecimal number " + h + ", what is the left digit worth in denary?", answers: [String(a)], keywords: [num(a)], distractors: wrongNum(a, [x * 16, x * 100, x, a + 256]),
+          working: ["Three digits: the place values are 256, 16 and 1.", "The left digit's value x 256."], note: x + " x 256 = " + a + "." };
+      } },
+    { id: "pl-23", category: "pl-adv", randomize: function () {
+        var m = rnd(2, 15), h = D[rnd(1, 15)] + D[m] + D[rnd(0, 15)], a = m * 16;
+        return { prompt: "In the hexadecimal number " + h + ", what is the middle digit worth in denary?", answers: [String(a)], keywords: [num(a)], distractors: wrongNum(a, [m * 256, m, m * 10, a + 16]),
+          working: ["Three digits: the place values are 256, 16 and 1.", "The middle digit's value x 16."], note: m + " x 16 = " + a + "." };
+      } },
+    { id: "pl-24", category: "pl-adv", prompt: "What is the largest three digit hexadecimal number in denary?", answers: ["4095"], keywords: [num(4095)], distractors: ["999", "4096", "255"],
+      working: ["The largest digit is F (15), so the largest number is FFF.", "15 x 256 + 15 x 16 + 15."], note: "FFF = 3840 + 240 + 15 = 4095. From Cambridge IGCSE 0478/12, November 2025, Question 1(b)." }
   ];
 })()
 });
