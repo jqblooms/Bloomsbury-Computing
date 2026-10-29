@@ -77,7 +77,7 @@
     }
     return { outputs: outputs, trace: trace };
   }
-  function cellText(c, hole, i) { if (hole === i) return '?'; return c.op ? c.op + (c.a != null ? ' ' + c.a : '') : String(c.n); }
+  function cellText(c, hole, i) { if (hole != null && hole === i) return '?'; return c.op ? c.op + (c.a != null ? ' ' + c.a : '') : String(c.n); }
   function memTable(mem, opts) {
     opts = opts || {};
     var rows = mem.map(function (c, i) {

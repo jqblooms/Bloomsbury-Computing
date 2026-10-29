@@ -18,7 +18,7 @@
     ['A calculator app', [['You type 12 + 30 on the keyboard', I], ['The CPU adds 12 and 30', P], ['The screen shows 42', O]]],
     ['A self-checkout', [['The barcode scanner reads the barcode', I], ['The CPU looks up the price of the item', P], ['The CPU adds the price to the total', P], ['The screen shows the new total', O]]],
     ['A games console', [['You press jump on the controller', I], ['The CPU works out the character\'s new position', P], ['The screen shows the character jumping', O], ['The speaker plays a jump sound', O]]],
-    ['A music app', [['You tap play on the touch screen', I], ['The CPU decodes the music file', P], ['The speaker plays the song', O]]],
+    ['A music app', [['You tap play on the touch screen', I], ['The CPU reads the music file and turns it into sound data', P], ['The speaker plays the song', O]]],
     ['A word processor', [['You press the A key', I], ['The CPU stores the letter in the document', P], ['The screen shows the letter A', O]]],
     ['A digital camera', [['You press the shutter button', I], ['The CPU compresses the photo', P], ['The screen shows the photo', O]]],
     ['A cash machine', [['You type your PIN on the keypad', I], ['The CPU checks the PIN is correct', P], ['The screen shows your balance', O]]]
