@@ -1,0 +1,531 @@
+{
+ "id": "y11-1-5-hexuse",
+ "label": "1.5: Why Hexadecimal Is Used",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Denary to Hexadecimal (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-15h-do-now",
+   "validatorKey": "y11_15h_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Denary to Hexadecimal (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a remainder of 13 become one letter?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One column can hold only one digit, so 13 is written as D.</p></div></details><p class=\"lesson-lead\">Recap of 1.4 Hexadecimal Conversions. (a) Cambridge IGCSE 0478/12, March 2024, Question 8(a)(i). (b) Cambridge IGCSE 0478/12, June 2023, Question 2(d). Convert each denary number to hexadecimal.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\" style=\"display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:28px\"><div class=\"lesson-do-now-response\"><label for=\"y11-15h-do-now-a\">(a) 236 [1]</label><input id=\"y11-15h-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Denary to Hexadecimal (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-15h-do-now-b\">(b) 301 [2]</label><input id=\"y11-15h-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Denary to Hexadecimal (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-15h-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y11-15h-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: denary to hexadecimal",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Convert the denary number 180 to hexadecimal.",
+      "visual": "<div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">180</div>"
+     },
+     {
+      "text": "Divide by 16: 180 &divide; 16 = 11 remainder 4. 11 sixteens, 4 left over.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">180 &divide; 16 = 11 remainder 4</span></p>"
+     },
+     {
+      "text": "The whole number, 11, is the left digit. 11 is one digit: B. The remainder 4 is the right digit.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">11 = B, 4 = 4</p>"
+     },
+     {
+      "text": "So 180 is <strong>B4</strong>. Check: 11 &times; 16 + 4 = 180.",
+      "visual": "<div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">B4</div>"
+     },
+     {
+      "text": "A bigger number: 330 &divide; 16 = 20 remainder 10. 20 is more than 15, so divide 20 by 16 again: 1 remainder 4.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">20 &divide; 16 = 1 remainder 4</span></p>"
+     },
+     {
+      "text": "Read the digits: 1, then 4, then the first remainder 10 = A. So 330 is <strong>14A</strong>. Check: 256 + 64 + 10 = 330.",
+      "visual": "<div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">14A</div>"
+     },
+     {
+      "text": "Now do the same for the question: divide by 16, keep each remainder, and change 10 to 15 into A to F.",
+      "visual": "<div class=\"wt-note\">divide &rarr; remainder &rarr; A to F &rarr; check</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Colour Code to Binary (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-15h-do-now-2",
+   "validatorKey": "y11_15h_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Colour Code to Binary (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the colour stored in binary, when the code is written in hexadecimal?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The computer can only store and process binary. The hexadecimal code is for the person writing it.</p></div></details><p class=\"lesson-lead\">Recap of 1.4. Cambridge IGCSE 0478/12, June 2022, Question 2(a). Hexadecimal is used for HTML colour codes. An HTML colour code is #2F15D6. Each pair of digits is stored as binary in an 8-bit register. Give the 8-bit binary value that would be stored for each pair of hexadecimal digits.</p><div class=\"lesson-do-now-columns\"><div><div style=\"display:flex;align-items:center;gap:10px;justify-content:center\"><span style=\"display:inline-block;width:46px;height:46px;border-radius:8px;border:1px solid var(--line-strong);background:#2F15D6\"></span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">#2F15D6</span></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\" style=\"display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:28px\"><div class=\"lesson-do-now-response\"><label for=\"y11-15h-do-now-2-a\">(a) 2F [2]</label><input id=\"y11-15h-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Colour Code to Binary (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-15h-do-now-2-b\">(b) 15 [2]</label><input id=\"y11-15h-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Colour Code to Binary (2 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-15h-do-now-2-c\">(c) D6 [2]</label><input id=\"y11-15h-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Colour Code to Binary (2 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-15h-do-now-2-check\">Check answers</button><strong>Total: 6 marks</strong></div><div id=\"y11-15h-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: hexadecimal to binary",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Give the 8-bit binary value for the hexadecimal pair 9C.",
+      "visual": "<div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:34px;font-weight:700;letter-spacing:4px\">9C</div>"
+     },
+     {
+      "text": "Each hexadecimal digit becomes 4 bits, with place values 8, 4, 2, 1.",
+      "visual": "<div class=\"wt-note\">1 digit &rarr; 4 bits</div>"
+     },
+     {
+      "text": "9 = 8 + 1, so 9 is 1001.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">9 = 8 + 1 = 1001</span></p>"
+     },
+     {
+      "text": "C = 12 = 8 + 4, so C is 1100.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">C = 12 = 8 + 4 = 1100</span></p>"
+     },
+     {
+      "text": "Put the nibbles side by side in the same order: <strong>1001 1100</strong>.",
+      "visual": "<table style=\"border-collapse:collapse;margin:0 auto\"><tr><th style=\"padding:6px 4px;min-width:34px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:34px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:34px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:34px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th><td style=\"width:14px;border:0\"></td><th style=\"padding:6px 4px;min-width:34px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">8</th><th style=\"padding:6px 4px;min-width:34px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">4</th><th style=\"padding:6px 4px;min-width:34px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">2</th><th style=\"padding:6px 4px;min-width:34px;text-align:center;font-weight:700;font-size:14px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-strong)\">1</th></tr><tr><td style=\"padding:5px 3px;min-width:34px;text-align:center;font:700 20px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:5px 3px;min-width:34px;text-align:center;font:700 20px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:5px 3px;min-width:34px;text-align:center;font:700 20px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:5px 3px;min-width:34px;text-align:center;font:700 20px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"width:14px;border:0\"></td><td style=\"padding:5px 3px;min-width:34px;text-align:center;font:700 20px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:5px 3px;min-width:34px;text-align:center;font:700 20px var(--font-mono, monospace);border:1px solid var(--line-strong)\">1</td><td style=\"padding:5px 3px;min-width:34px;text-align:center;font:700 20px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td><td style=\"padding:5px 3px;min-width:34px;text-align:center;font:700 20px var(--font-mono, monospace);border:1px solid var(--line-strong);color:var(--muted-2)\">0</td></tr><tr><td colspan=\"4\" style=\"padding:5px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">9</td><td style=\"width:14px;border:0\"></td><td colspan=\"4\" style=\"padding:5px;text-align:center;font:700 24px var(--font-mono, monospace);border:1px solid var(--line-strong);background:var(--brand-soft);color:var(--brand-dark);outline:3px solid var(--brand);outline-offset:-3px\">C</td></tr></table>"
+     },
+     {
+      "text": "A small digit still needs 4 bits: 3 is 0011, never 11.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">3 = 0011</p>"
+     },
+     {
+      "text": "Now do the same for each pair: each digit, 4 bits, in order.",
+      "visual": "<div class=\"wt-note\">digit &rarr; 8 4 2 1 &rarr; side by side</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-4-hexconv",
+   "embedContainerId": "y11-15h-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card use new numbers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you practise the method, not one answer.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these conversions. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y11-15h-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Why Hexadecimal Is Used",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">1.1 Number Systems</p><h2 class=\"lesson-h2\">Why Hexadecimal Is Used</h2><p>Year 11</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> why people write binary as <strong>hexadecimal</strong>.</li><li>Where hexadecimal is used: MAC addresses, colour codes, error codes and more.</li><li>How to write the reasons so they earn the marks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">If the computer works in binary, why would anyone write numbers in another system?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>People find long binary numbers hard to read, so they write them in a shorter way.</p></div></details>"
+  },
+  {
+   "id": "concept-binary",
+   "label": "The Computer Only Stores Binary",
+   "content": "<h2 class=\"lesson-h2\">The Computer Only Stores Binary</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A computer stores the colour #2F15D6. Predict: what is really inside the computer, and who is the hexadecimal for?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Inside the computer it is only binary: 24 bits. The hexadecimal #2F15D6 is how it is <strong>shown</strong> to a person.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>The computer <strong>always</strong> stores and processes <strong>binary</strong>.</li><li>Hexadecimal is how binary is <strong>shown to people</strong>.</li><li>One digit = 4 bits, so hexadecimal is <strong>4 times shorter</strong>.</li><li>It does <strong>not</strong> save memory, make files smaller or make the computer faster.</li></ul></div><div><div style=\"display:grid;gap:8px\"><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">What the computer stores (24 bits)</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:18px;font-weight:700;word-break:break-word\">0010 1111 0001 0101 1101 0110</div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">What a person reads (6 digits)</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:22px;font-weight:700;word-break:break-word\">2F15D6</div></div></div></div></div>"
+  },
+  {
+   "id": "predict-memory",
+   "label": "Predict: Does Hexadecimal Save Memory?",
+   "type": "multiple-choice",
+   "containerId": "y11-15h-predict-memory",
+   "content": "<h2 class=\"lesson-h2\">Predict: Does Hexadecimal Save Memory?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a different way of writing a number not change how much memory it uses?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The computer stores the bits, not the way we write them. The same bits use the same memory.</p></div></details><div id=\"y11-15h-predict-memory\"></div>",
+   "items": [
+    {
+     "prompt": "A memory address is shown as A2F instead of 101000101111. How much memory does the address take up inside the computer?",
+     "options": [
+      "Less, because A2F has fewer digits",
+      "The same: it is still stored as 12 bits",
+      "More, because letters take more space"
+     ],
+     "correct": 1,
+     "explain": "The computer stores the same 12 bits either way. A2F is only a shorter way to show them to a person."
+    },
+    {
+     "prompt": "Which statement about hexadecimal is true?",
+     "options": [
+      "The CPU processes hexadecimal faster than binary",
+      "Hexadecimal makes a file smaller",
+      "Hexadecimal is easier for people to read than binary"
+     ],
+     "correct": 2,
+     "explain": "The computer only uses binary, so hexadecimal cannot change speed or file size. It helps the person reading the number."
+    }
+   ]
+  },
+  {
+   "id": "compare-copy",
+   "label": "Compare: Which Is Easier to Copy?",
+   "content": "<h2 class=\"lesson-h2\">Compare: Which Is Easier to Copy?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Ana copies a value in binary. Sam copies the same value in hexadecimal. Each makes one slip. Predict: whose slip is easier to spot, and why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Sam's. His value is only 4 digits, so one wrong digit stands out. Ana's is 16 bits of 1s and 0s that all look alike.</p></div></details><ul class=\"lesson-facts\"><li>Fewer digits = <strong>quicker</strong> to read, write and type.</li><li>Fewer digits = <strong>less chance of a mistake</strong>.</li><li>A mistake is <strong>easier to spot</strong>, so debugging is easier.</li><li>It takes up <strong>less space on the screen</strong>.</li></ul><div class=\"lesson-do-now-columns\"><div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Ana (binary)</div><div style=\"font-size:16px\">Value:</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:18px;font-weight:700;word-break:break-word\">0011 1100 0100 1101</div><div style=\"font-size:16px\">Ana wrote:</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:18px;font-weight:700;word-break:break-word\">0011 1100 0000 1101</div><div style=\"font-size:16px\">Can you see the slip?</div></div></div><div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Sam (hexadecimal)</div><div style=\"font-size:16px\">Value:</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:22px;font-weight:700;word-break:break-word\">3C4D</div><div style=\"font-size:16px\">Sam wrote:</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:22px;font-weight:700;word-break:break-word\">3C4B</div><div style=\"font-size:16px\">The last digit is wrong.</div></div></div></div>"
+  },
+  {
+   "id": "exam-1",
+   "label": "Exam Question: Which Statement Is Incorrect?",
+   "type": "multiple-choice",
+   "containerId": "y11-15h-exam-1",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Which Statement Is Incorrect?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is hexadecimal called base 16?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It has 16 digits, 0 to 9 and A to F, and each column is worth 16 times the one to its right.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, June 2024, Question 2(a). Hypertext markup language (HTML) colour codes can be represented as hexadecimal. Tick one box to show which statement about the hexadecimal number system is <strong>incorrect</strong>.</p><div id=\"y11-15h-exam-1\"></div>",
+   "items": [
+    {
+     "prompt": "Which statement about the hexadecimal number system is incorrect?",
+     "options": [
+      "It uses the values 0 to 9 and A to F.",
+      "It can be used as a shorter representation of binary.",
+      "It is a base 10 system.",
+      "It can be used to represent error codes."
+     ],
+     "correct": 2,
+     "explain": "Hexadecimal is base 16. Denary is the base 10 system."
+    }
+   ]
+  },
+  {
+   "id": "exam-2",
+   "label": "Exam Question: Two Benefits",
+   "type": "self-marked-response",
+   "containerId": "y11-15h-exam-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Two Benefits</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the question say \"to users\", and not \"to the computer\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The computer still works in binary. Only the person reading the number gains anything.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2021, Question 1(b). Write two different benefits. Each one is a separate mark.</p><div id=\"y11-15h-exam-2\"></div>",
+   "items": [
+    {
+     "id": "benefits",
+     "prompt": "Give two benefits, to users, of converting binary values to hexadecimal.",
+     "marks": 2,
+     "scheme": [
+      "Easier or quicker to read, write or understand",
+      "Easier or quicker to identify errors or debug",
+      "Takes up less screen or display space",
+      "Less chance of making an error"
+     ],
+     "guidance": "Any two from the list, one mark each. Two different points are needed: \"easier to read\" and \"quicker to read\" are the same point. No mark for saying it uses less memory, makes files smaller, or that the computer processes it faster or understands it: the computer only uses binary.",
+     "modelAnswer": "It is easier for users to read and understand. There is less chance of making an error."
+    }
+   ]
+  },
+  {
+   "id": "exam-3",
+   "label": "Exam Question: Why a Programmer Uses It",
+   "type": "self-marked-response",
+   "containerId": "y11-15h-exam-3",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Why a Programmer Uses It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a shorter number easier to debug?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>With fewer digits to check, a wrong digit is quicker to find.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2023, Question 2(c). The same reasons earn the marks in many papers. Write two different ones.</p><div id=\"y11-15h-exam-3\"></div>",
+   "items": [
+    {
+     "id": "programmer",
+     "prompt": "Give two reasons why a programmer may use hexadecimal to represent binary numbers.",
+     "marks": 2,
+     "scheme": [
+      "Easier or quicker to understand, read or write",
+      "Easier or quicker to debug",
+      "Less likely to make a mistake",
+      "Shorter representation of binary or takes up less screen space"
+     ],
+     "guidance": "Any two from the list, one mark each. Two different points are needed: \"easier to read\" and \"quicker to read\" are the same point. No mark for saying it uses less memory, makes files smaller, or that the computer processes it faster or understands it: the computer only uses binary.",
+     "modelAnswer": "It is a shorter representation of binary. It is easier to debug."
+    }
+   ]
+  },
+  {
+   "id": "concept-uses",
+   "label": "Where Hexadecimal Is Used",
+   "content": "<h2 class=\"lesson-h2\">Where Hexadecimal Is Used</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Every use below is a long binary value that a person has to read or type. Predict: which of these have you seen before?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Colour codes in web pages, MAC addresses on a network, and error codes on a screen are the ones most people have seen.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>HTML colour codes</strong>: #FF8000 (red, green, blue).</li><li><strong>MAC addresses</strong>: 00:1A:2B:3C:4D:5E (48 bits).</li><li><strong>Error codes</strong>: 404, 12B.</li><li><strong>Memory addresses</strong> and <strong>memory dumps</strong>.</li><li><strong>Assembly language</strong> (low-level programming).</li><li><strong>IP addresses</strong> (IPv6) and <strong>URLs</strong>.</li></ul></div><div><div style=\"display:grid;gap:8px\"><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">A MAC address in binary</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:14px;font-weight:700;word-break:break-word\">0000 0000  0001 1010  0010 1011  0011 1100  0100 1101  0101 1110</div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">The same MAC address in hexadecimal</div><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:22px;font-weight:700;word-break:break-word\">00:1A:2B:3C:4D:5E</div></div></div></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: What Is This Value?",
+   "type": "click-match",
+   "containerId": "y11-15h-activity-1",
+   "items": [
+    {
+     "id": "m-colour",
+     "left": "#FF8000 in a web page",
+     "right": "HTML colour code"
+    },
+    {
+     "id": "m-mac",
+     "left": "00:1A:2B:3C:4D:5E on a network card",
+     "right": "MAC address"
+    },
+    {
+     "id": "m-error",
+     "left": "\"Error 12B: hardware fault\"",
+     "right": "Error code"
+    },
+    {
+     "id": "m-mem",
+     "left": "A2F, where a program variable is kept",
+     "right": "Memory address"
+    },
+    {
+     "id": "m-ip",
+     "left": "2001:0DB8:85A3::8A2E:0370:7334",
+     "right": "IP address (IPv6)"
+    },
+    {
+     "id": "m-dump",
+     "left": "Rows of values like 3C 4D 5E 00, copied from RAM to find a bug",
+     "right": "Memory dump"
+    }
+   ],
+   "content": "<h2 class=\"lesson-h2\">Activity 1: What Is This Value?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a MAC address written in hexadecimal, and not binary?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is 48 bits long. In hexadecimal it is only 12 digits, so it is easier to read and copy.</p></div></details><p class=\"lesson-lead\">Click a value on the left, then click where hexadecimal is being used on the right.</p><div class=\"icontrol-match\" id=\"y11-15h-activity-1\"><svg class=\"icontrol-match-svg\" aria-hidden=\"true\"><defs><marker id=\"icontrol-arrow\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"4\" orient=\"auto\"><path d=\"M0,0 L8,4 L0,8 Z\"></path></marker></defs></svg><div class=\"icontrol-match-col click-match-left\"></div><div class=\"icontrol-match-col click-match-right\"></div></div><div class=\"icontrol-match-status\" id=\"y11-15h-activity-1-status\" role=\"status\" aria-live=\"polite\"></div>"
+  },
+  {
+   "id": "exam-4",
+   "label": "Exam Question: Three Other Uses",
+   "type": "self-marked-response",
+   "containerId": "y11-15h-exam-4",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Three Other Uses</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why would HTML colour codes earn no mark here?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The question says \"other\" ways, and colour codes are already in the question.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2021, Question 1(c). The question already gives colour codes, so they do not count.</p><div id=\"y11-15h-exam-4\"></div>",
+   "items": [
+    {
+     "id": "uses",
+     "prompt": "Hexadecimal is used to represent Hypertext Markup Language (HTML) colour codes in computer science. Identify three other ways that hexadecimal is used in computer science.",
+     "marks": 3,
+     "scheme": [
+      "MAC address",
+      "URL",
+      "Assembly language",
+      "Error codes or error messages",
+      "IP addresses",
+      "Locations in memory (memory addresses)",
+      "Memory dumps"
+     ],
+     "guidance": "One mark for each different use from the list. HTML colour codes are in the question, so they earn no mark here. A use that only says \"programming\" or \"computers\" earns no mark.",
+     "modelAnswer": "MAC addresses. Error codes. Memory dumps."
+    }
+   ]
+  },
+  {
+   "id": "exam-5",
+   "label": "Exam Question: Websites and Low-Level Programming",
+   "type": "self-marked-response",
+   "containerId": "y11-15h-exam-5",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Websites and Low-Level Programming</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might the same answer earn a mark in one part but not the other?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each part names a different place. The use you give must belong to that place.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2021, Question 1(d). Match each use to the place in the question.</p><div id=\"y11-15h-exam-5\"></div>",
+   "items": [
+    {
+     "id": "web",
+     "prompt": "(i) Give one way that hexadecimal is used in website development.",
+     "marks": 1,
+     "scheme": [
+      "To represent HTML colour codes",
+      "In error messages"
+     ],
+     "guidance": "Any one point from the list. The use must belong to website development.",
+     "modelAnswer": "To represent HTML colour codes."
+    },
+    {
+     "id": "lowlevel",
+     "prompt": "(ii) Give one way that hexadecimal is used in low-level programming.",
+     "marks": 1,
+     "scheme": [
+      "Assembly code or language",
+      "Memory address locations",
+      "In error messages",
+      "Memory dump"
+     ],
+     "guidance": "Any one point from the list. HTML colour codes earn no mark here: they belong to website development.",
+     "modelAnswer": "Memory address locations."
+    }
+   ]
+  },
+  {
+   "id": "concept-colour",
+   "label": "How a Colour Code Works",
+   "content": "<h2 class=\"lesson-h2\">How a Colour Code Works</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A colour code has 3 pairs of digits: red, green and blue. Predict: why is the largest pair FF, and what is FF in denary?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Each pair is 2 digits, so 8 bits. The largest 8-bit value is 1111 1111, which is FF, which is 255.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>#RRGGBB</strong>: the first pair is red, then green, then blue.</li><li>Each pair is <strong>8 bits</strong>: 00 (none) to FF (255, full).</li><li>#FF0000 is full red. #000000 is black. #FFFFFF is white.</li><li>Hexadecimal is used because 6 digits are easier to read and type than 24 bits.</li></ul></div><div><div style=\"display:grid;gap:8px\"><div style=\"display:flex;align-items:center;gap:10px;justify-content:center\"><span style=\"display:inline-block;width:46px;height:46px;border-radius:8px;border:1px solid var(--line-strong);background:#FF0000\"></span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">#FF0000</span></div><div style=\"display:flex;align-items:center;gap:10px;justify-content:center\"><span style=\"display:inline-block;width:46px;height:46px;border-radius:8px;border:1px solid var(--line-strong);background:#000000\"></span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">#000000</span></div><div style=\"display:flex;align-items:center;gap:10px;justify-content:center\"><span style=\"display:inline-block;width:46px;height:46px;border-radius:8px;border:1px solid var(--line-strong);background:#FFFFFF\"></span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">#FFFFFF</span></div><div style=\"display:flex;align-items:center;gap:10px;justify-content:center\"><span style=\"display:inline-block;width:46px;height:46px;border-radius:8px;border:1px solid var(--line-strong);background:#FF8000\"></span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">#FF8000</span></div></div></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Read a Colour Code",
+   "type": "short-answer-validation",
+   "validatorId": "y11-15h-activity-2",
+   "validatorKey": "y11_15h_activity_2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Read a Colour Code</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do two hexadecimal digits fit exactly in one 8-bit register?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each digit is 4 bits, and 2 &times; 4 = 8.</p></div></details><p class=\"lesson-lead\">The colour code #FF8000 is orange. Convert each pair to denary, then say which colour has the most light.</p><div class=\"lesson-do-now-columns\"><div><div style=\"display:flex;align-items:center;gap:10px;justify-content:center\"><span style=\"display:inline-block;width:46px;height:46px;border-radius:8px;border:1px solid var(--line-strong);background:#FF8000\"></span><span style=\"font-family:var(--font-mono, monospace);font-size:26px;font-weight:700\">#FF8000</span></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-15h-activity-2-a\">(a) Red pair, FF, in denary [1]</label><input id=\"y11-15h-activity-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"activity-2-a\" aria-label=\"Activity 2: Read a Colour Code part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-15h-activity-2-b\">(b) Green pair, 80, in denary [1]</label><input id=\"y11-15h-activity-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"activity-2-b\" aria-label=\"Activity 2: Read a Colour Code part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-15h-activity-2-c\">(c) Blue pair, 00, in denary [1]</label><input id=\"y11-15h-activity-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"activity-2-c\" aria-label=\"Activity 2: Read a Colour Code part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-15h-activity-2-d\">(d) Which colour (red, green or blue) has the most light? [1]</label><input id=\"y11-15h-activity-2-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"activity-2-d\" aria-label=\"Activity 2: Read a Colour Code part d\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y11-15h-activity-2-e\">(e) Give the colour code for full blue only. [1]</label><input id=\"y11-15h-activity-2-e\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"activity-2-e\" aria-label=\"Activity 2: Read a Colour Code part e\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-15h-activity-2-check\">Check answers</button><strong>Total: 5 marks</strong></div><div id=\"y11-15h-activity-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "exam-6",
+   "label": "Exam Question: Error Codes (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y11-15h-exam-6",
+   "validatorKey": "y11_15h_exam_6",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Error Codes (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the computer need 12 bits for a three digit error code?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each digit is 4 bits, and 3 &times; 4 = 12.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2022, Question 3(a). Error codes for a computer are often displayed as hexadecimal values. Each error code is stored in a 12-bit register. The error code 404 means 'file not found'.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y11-15h-exam-6-a\">Give the 12-bit binary value that would be stored for the hexadecimal error code 404. [2]</label><input id=\"y11-15h-exam-6-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-6-a\" aria-label=\"Exam Question: Error Codes (1 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y11-15h-exam-6-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y11-15h-exam-6-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-7",
+   "label": "Exam Question: Error Codes (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y11-15h-exam-7",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Error Codes (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is 404 easier to remember than 010000000100?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is 3 digits instead of 12 bits, so there is much less to hold in your head.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2022, Question 3(e). Look back at your 12 bits for 404. Then write two different reasons.</p><div id=\"y11-15h-exam-7\"></div>",
+   "items": [
+    {
+     "id": "error-reasons",
+     "prompt": "Give two reasons why error codes are represented in hexadecimal, instead of binary.",
+     "marks": 2,
+     "scheme": [
+      "It is easier for the user to read, recognise or understand",
+      "It takes up less space on a display"
+     ],
+     "guidance": "Any two from the list, one mark each. Two different points are needed: \"easier to read\" and \"quicker to read\" are the same point. No mark for saying it uses less memory, makes files smaller, or that the computer processes it faster or understands it: the computer only uses binary.",
+     "modelAnswer": "It is easier for the user to recognise. It takes up less space on a display."
+    }
+   ]
+  },
+  {
+   "id": "exam-8",
+   "label": "Exam Question: Memory Addresses",
+   "type": "self-marked-response",
+   "containerId": "y11-15h-exam-8",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Memory Addresses</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does seeing addresses in hexadecimal help someone debug a game?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They can read and compare short addresses quickly, so they find the wrong one sooner.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2024, Question 3(c) and (d). A programmer is creating a computer game. One character is not moving correctly, so the programmer needs to debug the program. To do this they look at addresses that are locations in memory. The addresses are displayed as hexadecimal numbers, for example A2F.</p><div id=\"y11-15h-exam-8\"></div>",
+   "items": [
+    {
+     "id": "addr-reason",
+     "prompt": "(c) Give one reason why the addresses are displayed in hexadecimal instead of binary.",
+     "marks": 1,
+     "scheme": [
+      "It is easier or quicker to read, understand or debug",
+      "It is a shorter representation of binary or takes up less screen space"
+     ],
+     "guidance": "Any one point from the list. No mark for saying it uses less memory, makes files smaller, or that the computer processes it faster or understands it: the computer only uses binary.",
+     "modelAnswer": "It is easier to debug."
+    },
+    {
+     "id": "addr-uses",
+     "prompt": "(d) Identify two other ways that hexadecimal is used in computer science.",
+     "marks": 2,
+     "scheme": [
+      "HTML colour codes",
+      "URL",
+      "Memory dump",
+      "IP address",
+      "MAC address",
+      "Assembly language",
+      "Error codes or messages",
+      "ASCII or Unicode"
+     ],
+     "guidance": "One mark for each different use from the list. Memory addresses are in the question, so they earn no mark here.",
+     "modelAnswer": "MAC addresses. HTML colour codes."
+    }
+   ]
+  },
+  {
+   "id": "exam-9",
+   "label": "Exam Question: Two Other Examples",
+   "type": "self-marked-response",
+   "containerId": "y11-15h-exam-9",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Two Other Examples</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why should you read the whole question before you write your list?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The question may already use some answers. Those earn no marks.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2022, Question 2(b). Two uses are already in the question, so they do not count.</p><div id=\"y11-15h-exam-9\"></div>",
+   "items": [
+    {
+     "id": "other-two",
+     "prompt": "HTML colour codes and Media Access Control (MAC) addresses are two examples of where hexadecimal is used in Computer Science. Give two other examples of where hexadecimal can be used in Computer Science.",
+     "marks": 2,
+     "scheme": [
+      "IP address",
+      "Error messages or codes",
+      "Assembly language or low-level language",
+      "URL or web address",
+      "Memory dumps",
+      "Locations in memory"
+     ],
+     "guidance": "One mark for each different use from the list. HTML colour codes and MAC addresses are in the question, so they earn no mark.",
+     "modelAnswer": "Error codes. Memory dumps."
+    }
+   ]
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Why Hexadecimal Is Used Drill",
+   "type": "embedded-app",
+   "appId": "drill-y11-1-5-hexuse",
+   "embedContainerId": "y11-15h-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Why Hexadecimal Is Used Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the same reason earn marks on so many papers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every paper asks why people use hexadecimal, and the reason is always the same: it is easier for people.</p></div></details><p class=\"lesson-lead\">Reasons and uses from real exam papers. Pick the answer that earns the mark, then type it. Your progress is saved.</p><div id=\"y11-15h-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y11_15h_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?(?:0\\s*)*E\\s*C(\\s*(in\\s+)?(hexadecimal|base\\s*16))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Divide by 16. The whole number is the left digit, the remainder is the right digit. Whole number more than 15? Divide again."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?(?:0\\s*)*1\\s*2\\s*D(\\s*(in\\s+)?(hexadecimal|base\\s*16))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Divide by 16. The whole number is the left digit, the remainder is the right digit. Whole number more than 15? Divide again.",
+    "marks": 2
+   }
+  ],
+  "y11_15h_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*0\\s*0\\s*1\\s*0\\s*1\\s*1\\s*1\\s*1(\\s*(in\\s+)?(binary|base\\s*2))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write every digit as 4 bits (8, 4, 2, 1), even 1. Keep the digits in order.",
+    "marks": 2
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*0\\s*0\\s*0\\s*1\\s*0\\s*1\\s*0\\s*1(\\s*(in\\s+)?(binary|base\\s*2))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write every digit as 4 bits (8, 4, 2, 1), even 1. Keep the digits in order.",
+    "marks": 2
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1\\s*1\\s*0\\s*1\\s*0\\s*1\\s*1\\s*0(\\s*(in\\s+)?(binary|base\\s*2))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write every digit as 4 bits (8, 4, 2, 1), even 1. Keep the digits in order.",
+    "marks": 2
+   }
+  ],
+  "y11_15h_activity_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*255(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "F = 15. 15 &times; 16 + 15."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*128(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "8 &times; 16 + 0."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(=\\s*)?0*0(\\s*(in\\s+)?(denary|base\\s*10))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "No sixteens and no ones."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?red(\\s+pair)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The biggest denary value has the most light."
+   },
+   {
+    "suffix": "e",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*#?\\s*0\\s*0\\s*0\\s*0\\s*F\\s*F\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Red 00, green 00, blue FF, in that order."
+   }
+  ],
+  "y11_15h_exam_6": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*0\\s*1\\s*0\\s*0\\s*0\\s*0\\s*0\\s*0\\s*0\\s*1\\s*0\\s*0(\\s*(in\\s+)?(binary|base\\s*2))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Each digit is 4 bits, even 0: 0 is 0000.",
+    "marks": 2
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
