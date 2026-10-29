@@ -217,6 +217,13 @@
             "y10-2-r",
             "y10-2-r2"
           ]
+        },
+        {
+          "code": "3.1",
+          "title": "Computer Architecture",
+          "lessons": [
+            "y10-3-1-l1"
+          ]
         }
       ]
     },

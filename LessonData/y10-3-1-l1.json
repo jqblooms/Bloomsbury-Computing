@@ -1,0 +1,372 @@
+{
+ "id": "y10-3-1-l1",
+ "label": "3.1.1: CPU and Microprocessors",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Parts of a Packet (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-311-do-now",
+   "validatorKey": "y10_311_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Parts of a Packet (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a large file split into many small packets, and not sent as one piece?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If one small packet is lost or damaged, only that packet has to be sent again, and packets can share the network with other traffic.</p></div></details><p class=\"lesson-lead\">Recap of 2.1 Data Transmission. Cambridge IGCSE 0478/13, November 2025, Question 3(a). Data is split into packets before it is transmitted across a network. A packet has three sections. Give the name of each section, and an example of what is stored in that section.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\" style=\"display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:28px\"><div class=\"lesson-do-now-response\"><label for=\"y10-311-do-now-a\">First section: name [1]</label><input id=\"y10-311-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Parts of a Packet (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-311-do-now-b\">First section: example [1]</label><input id=\"y10-311-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Parts of a Packet (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-311-do-now-c\">Second section: name [1]</label><input id=\"y10-311-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Parts of a Packet (1 of 2) part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-311-do-now-d\">Second section: example [1]</label><input id=\"y10-311-do-now-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-d\" aria-label=\"Do Now: Parts of a Packet (1 of 2) part d\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-311-do-now-e\">Third section: name [1]</label><input id=\"y10-311-do-now-e\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-e\" aria-label=\"Do Now: Parts of a Packet (1 of 2) part e\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-311-do-now-f\">Third section: example [1]</label><input id=\"y10-311-do-now-f\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-f\" aria-label=\"Do Now: Parts of a Packet (1 of 2) part f\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-311-do-now-check\">Check answers</button><strong>Total: 6 marks</strong></div><div id=\"y10-311-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: the parts of a packet",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> A packet is being sent from a laptop to a printer. Name the part of the packet that holds the page to print, and give one thing at the very end of the packet.",
+      "visual": "<div class=\"wt-note\">header &middot; payload &middot; trailer</div>"
+     },
+     {
+      "text": "A packet has three parts, in this order: the <b>header</b>, then the <b>payload</b>, then the <b>trailer</b>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">header</span> &rarr; payload &rarr; trailer</p>"
+     },
+     {
+      "text": "The header goes first because routers read it to send the packet the right way. So it holds addresses and the packet number.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">header: where from, where to, which packet</p>"
+     },
+     {
+      "text": "The middle part carries what is actually being sent. Here, part of the page to print: that is the <span class=\"wt-hl\">payload</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">payload: the data itself</p>"
+     },
+     {
+      "text": "The last part tells the receiver the packet has ended and holds data to check for errors: the <span class=\"wt-hl\">trailer</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">trailer: end of packet, error checking data</p>"
+     },
+     {
+      "text": "Now do the same for the question: name each section in order, and give one thing each section stores.",
+      "visual": "<div class=\"wt-note\">name it, then say what it holds</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Serial Full-Duplex (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-311-do-now-2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Serial Full-Duplex (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can full-duplex send data both ways at the same time, when half-duplex cannot?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Full-duplex has a path for each direction, so the two directions never have to take turns.</p></div></details><p class=\"lesson-lead\">Recap of 2.1. Cambridge IGCSE 0478/13, November 2025, Question 3(b)(i). Packets can be sent across a network using different methods of data transmission.</p><div id=\"y10-311-do-now-2\"></div>",
+   "items": [
+    {
+     "id": "serial-fd",
+     "prompt": "Explain how data is transmitted using serial full-duplex.",
+     "marks": 4,
+     "scheme": [
+      "Data is sent one bit at a time",
+      "down a single wire",
+      "Data can be sent in both directions",
+      "at the same time"
+     ],
+     "guidance": "One mark for each point. \"Both directions\" earns its mark only with \"at the same time\" as a separate mark: both directions alone is 1 mark. \"Down a single wire\" needs the idea of one wire or channel.",
+     "modelAnswer": "Data is sent one bit at a time down a single wire. Data can travel in both directions at the same time."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: explaining a transmission method",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Explain how data is transmitted using <b>parallel simplex</b>.",
+      "visual": "<div class=\"wt-note\">two words: two halves of the answer</div>"
+     },
+     {
+      "text": "Split the name. The first word (serial or parallel) says how many bits go at once. The second (simplex, half-duplex, full-duplex) says which directions.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">parallel</span> + <span class=\"wt-hl\">simplex</span></p>"
+     },
+     {
+      "text": "Parallel: several bits are sent at the same time, down several wires.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">parallel: many bits at once, many wires</p>"
+     },
+     {
+      "text": "Simplex: data goes in one direction only.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">simplex: one direction only</p>"
+     },
+     {
+      "text": "Put the two halves together, one point per mark: several bits at the same time, down several wires, in one direction only.",
+      "visual": "<div class=\"wt-note\">a point for each fact</div>"
+     },
+     {
+      "text": "Now do the same for serial full-duplex: say how many bits go at once and down how many wires, then which directions and when.",
+      "visual": "<div class=\"wt-note\">first word, then second word</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-2-r2-ext",
+   "embedContainerId": "y10-311-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise the last topic when we start a new one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The exam mixes every topic, so you need to remember the old ones too.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from across Topic 2. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-311-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "CPU and Microprocessors",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Computer Architecture</p><h2 class=\"lesson-h2\">CPU and Microprocessors</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> what the <strong>CPU</strong> does, and why every computer needs one.</li><li>What a <strong>microprocessor</strong> is, and why devices use them.</li><li>Why a program and its data are stored in the <strong>same memory</strong>.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A phone, a washing machine and a games console are very different. What job might all three need done inside them?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They all take data in, work on it, and give a result out. Something inside each one has to do that work.</p></div></details>"
+  },
+  {
+   "id": "concept-cpu",
+   "label": "What Does the CPU Do?",
+   "content": "<h2 class=\"lesson-h2\">What Does the CPU Do?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">You type 12 + 30 into a calculator app and the screen shows 42. Predict: which part of the computer worked out 42, and why could it not do it before you typed?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The CPU (central processing unit) worked it out. It needs the data first: it can only process what has been input.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>CPU stands for <strong>central processing unit</strong>.</li><li>The CPU <strong>processes instructions and data</strong> that are input.</li><li>It does this so that the <strong>result can be output</strong>.</li><li>Processing means calculating, comparing and deciding.</li><li>Every program is a list of instructions the CPU carries out.</li></ul></div><div><div style=\"display:grid;gap:10px\"><div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:stretch\"><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--line-strong);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Input</div><div style=\"font-size:15px;margin-top:4px\">You type 12 + 30</div></div><div style=\"align-self:center;font-size:24px;color:var(--muted)\">&rarr;</div><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--brand);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Process (CPU)</div><div style=\"font-size:15px;margin-top:4px\">The CPU adds 12 and 30</div></div><div style=\"align-self:center;font-size:24px;color:var(--muted)\">&rarr;</div><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--line-strong);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Output</div><div style=\"font-size:15px;margin-top:4px\">The screen shows 42</div></div></div><div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:stretch\"><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--line-strong);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Input</div><div style=\"font-size:15px;margin-top:4px\">A barcode is scanned</div></div><div style=\"align-self:center;font-size:24px;color:var(--muted)\">&rarr;</div><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--brand);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Process (CPU)</div><div style=\"font-size:15px;margin-top:4px\">The CPU looks up the price</div></div><div style=\"align-self:center;font-size:24px;color:var(--muted)\">&rarr;</div><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--line-strong);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Output</div><div style=\"font-size:15px;margin-top:4px\">The screen shows the total</div></div></div></div></div></div>"
+  },
+  {
+   "id": "predict-process",
+   "label": "Predict: Which Step Is Processing?",
+   "type": "multiple-choice",
+   "containerId": "y10-311-predict-process",
+   "content": "<h2 class=\"lesson-h2\">Predict: Which Step Is Processing?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we call it the \"central\" processing unit?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>All the processing in the computer goes through it: it sits in the middle, between the input and the output.</p></div></details><div id=\"y10-311-predict-process\"></div>",
+   "items": [
+    {
+     "prompt": "A games console: you press jump, the console works out where the character lands, and the screen shows the jump. Which step is the CPU processing?",
+     "options": [
+      "Pressing the jump button",
+      "Working out where the character lands",
+      "The screen showing the jump"
+     ],
+     "correct": 1,
+     "explain": "Pressing jump is input and the screen is output. Working out where the character lands is the CPU processing the data."
+    },
+    {
+     "prompt": "Why can the CPU not show the result before the data is input?",
+     "options": [
+      "The screen is switched off until then",
+      "It has no data to process yet",
+      "The CPU only works when it is cool"
+     ],
+     "correct": 1,
+     "explain": "The CPU processes the data that is input. With no data, there is nothing to work on, so no result to output."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Input, Process, Output",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-311-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Input, Process, Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can one device have two process steps in a row?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The CPU may need to do more than one piece of work, such as compare a reading and then decide, before it outputs anything.</p></div></details><p class=\"lesson-lead\">Label each step of a device. One check per device, and a mistake means it does not count. Then the sensor systems, then find the missing step.</p><div id=\"y10-311-activity-1\"></div>",
+   "embedQuery": "activity=ipo"
+  },
+  {
+   "id": "exam-1",
+   "label": "Exam Question: The Purpose of the CPU",
+   "type": "self-marked-response",
+   "containerId": "y10-311-exam-1",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Purpose of the CPU</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"the brain of the computer\" not enough to earn a mark?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It does not say what the CPU does. The marks are for the job: processing data and carrying out instructions.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/13, June 2022, Question 5(a). Harriet has a computer. The computer has a central processing unit (CPU).</p><div id=\"y10-311-exam-1\"></div>",
+   "items": [
+    {
+     "id": "purpose",
+     "prompt": "Explain the purpose of the CPU.",
+     "marks": 2,
+     "scheme": [
+      "It processes data",
+      "It processes or executes instructions",
+      "It carries out calculations",
+      "It carries out logical operations"
+     ],
+     "guidance": "Any two different points from the list, one mark each. \"It is the brain of the computer\" earns no mark. \"Processes data and instructions\" in one sentence can earn both marks.",
+     "modelAnswer": "It processes data and executes instructions."
+    }
+   ]
+  },
+  {
+   "id": "concept-micro",
+   "label": "What Is a Microprocessor?",
+   "content": "<h2 class=\"lesson-h2\">What Is a Microprocessor?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A washing machine needs to check the water temperature and switch a heater on. Predict: why would its maker use one small chip, not a whole computer?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>One chip is small, cheap and uses little power, and it can still do the processing the machine needs.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>microprocessor</strong> is an <strong>integrated circuit</strong> (one chip).</li><li>It can perform <strong>many of the functions of a CPU</strong>.</li><li>It is small, cheap and uses little power.</li><li>Found in washing machines, drones, security lights and phones.</li><li>It still processes data input to it, so a result can be output.</li></ul></div><div><div style=\"display:grid;gap:10px\"><div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:stretch\"><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--line-strong);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Input</div><div style=\"font-size:15px;margin-top:4px\">Temperature sensor sends a reading</div></div><div style=\"align-self:center;font-size:24px;color:var(--muted)\">&rarr;</div><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--brand);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Process (CPU)</div><div style=\"font-size:15px;margin-top:4px\">Microprocessor compares it with 30</div></div><div style=\"align-self:center;font-size:24px;color:var(--muted)\">&rarr;</div><div style=\"flex:1 1 140px;padding:10px;border-radius:10px;text-align:center;border:2px solid var(--line-strong);background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Output</div><div style=\"font-size:15px;margin-top:4px\">Signal to switch the heater on</div></div></div><div style=\"display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--surface-2)\"><div style=\"font-weight:700;font-size:17px\">Sensor</div><div style=\"font-size:16px\">An input device that measures something, such as temperature or distance, and sends the reading to the microprocessor.</div></div></div></div></div>"
+  },
+  {
+   "id": "exam-2",
+   "label": "Exam Question: A Drone",
+   "type": "self-marked-response",
+   "containerId": "y10-311-exam-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: A Drone</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"a small computer\" not a full answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It does not say what it is made of or what it does. The answer needs one chip that does the CPU's work.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2026, Question 3(b)(ii). A drone is used to search for lost animals. The drone has a built-in system to stop it from crashing into objects, for example a tree. The system uses sensors and a microprocessor.</p><div id=\"y10-311-exam-2\"></div>",
+   "items": [
+    {
+     "id": "micro",
+     "prompt": "State what is meant by a microprocessor.",
+     "marks": 1,
+     "scheme": [
+      "An integrated circuit (chip) that can perform many of the functions of a CPU"
+     ],
+     "guidance": "One mark for the idea of a single integrated circuit or chip that does the work of (many functions of) a CPU, or that processes data. \"A small computer\" alone earns no mark.",
+     "modelAnswer": "An integrated circuit that can perform many of the functions of a CPU."
+    }
+   ]
+  },
+  {
+   "id": "exam-3",
+   "label": "Exam Question: A Washing Machine",
+   "type": "self-marked-response",
+   "containerId": "y10-311-exam-3",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: A Washing Machine</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the system keep checking, and not check once?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The water keeps cooling or heating, so a reading from a minute ago may already be wrong.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2021, Question 9(b). A washing machine uses sensors and a microprocessor to control the washing cycle of clothes. Use input, process and output to plan your answer.</p><div id=\"y10-311-exam-3\"></div>",
+   "items": [
+    {
+     "id": "washing",
+     "prompt": "Describe how the sensor and the microprocessor are used to make sure the water remains at 30 &deg;C.",
+     "marks": 6,
+     "scheme": [
+      "The sensor sends data to the microprocessor",
+      "The data is converted from analogue to digital (using an ADC)",
+      "The data is compared to the stored value (of 30)",
+      "If the data is below 30 the microprocessor sends a signal to the heater to heat the water up (or add hot water)",
+      "If the data is above 30 the microprocessor sends a signal to turn the heater off (or add cold water)",
+      "An actuator is used to turn the heater on or off (or to add water)",
+      "If the data is 30 no action is taken",
+      "It is a continuous process"
+     ],
+     "guidance": "Six from the list, one mark each. The sensor must send data to the microprocessor: a sensor that \"controls\" or \"decides\" earns no mark, as the microprocessor does the comparing. \"Turns the heater on\" needs the condition (below 30) for its mark.",
+     "modelAnswer": "The temperature sensor sends data to the microprocessor. The microprocessor compares the data to the stored value of 30. If it is below 30, it sends a signal to turn the heater on. If it is above 30, it sends a signal to turn the heater off. If it is 30, no action is taken. This repeats continuously."
+    }
+   ]
+  },
+  {
+   "id": "concept-stored",
+   "label": "Why Store the Program in Memory?",
+   "content": "<h2 class=\"lesson-h2\">Why Store the Program in Memory?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The memory below holds a program and some numbers. The input is 10. Predict: what will the program output, and why is address 4 never used?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>17. The CPU runs addresses 0, 1, 2 and 3 in turn: 10, then 10 + 7 = 17, then outputs 17, then stops. Address 4 comes after STOP, so it is never reached.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>Instructions and data are stored in the same memory.</strong></li><li>The CPU runs the instructions <strong>one after another</strong>, in order.</li><li>Change the program or the data in memory and the computer does a new job, with no new hardware.</li><li>This is the <strong>stored program</strong> idea. Every computer you use works this way.</li></ul></div><div><table style=\"border-collapse:collapse;margin:0 auto;font-size:17px\"><tr><th style=\"padding:3px 10px;font-size:13px;color:var(--muted)\">Address</th><th style=\"padding:3px 10px;font-size:13px;color:var(--muted)\">Stored in memory</th></tr><tr><td style=\"padding:3px 10px;color:var(--muted)\">0</td><td style=\"padding:3px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-keyword, #c58af9)\">INPUT</td></tr><tr><td style=\"padding:3px 10px;color:var(--muted)\">1</td><td style=\"padding:3px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-keyword, #c58af9)\">ADD 5</td></tr><tr><td style=\"padding:3px 10px;color:var(--muted)\">2</td><td style=\"padding:3px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-keyword, #c58af9)\">OUTPUT</td></tr><tr><td style=\"padding:3px 10px;color:var(--muted)\">3</td><td style=\"padding:3px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-keyword, #c58af9)\">STOP</td></tr><tr><td style=\"padding:3px 10px;color:var(--muted)\">4</td><td style=\"padding:3px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">40</td></tr><tr><td style=\"padding:3px 10px;color:var(--muted)\">5</td><td style=\"padding:3px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">7</td></tr></table><p style=\"margin:8px 0 0;text-align:center;font-size:15px;color:var(--muted)\">Purple: instructions. Yellow: data.</p></div></div>"
+  },
+  {
+   "id": "predict-stored",
+   "label": "Predict: Change the Memory",
+   "type": "multiple-choice",
+   "containerId": "y10-311-predict-stored",
+   "content": "<h2 class=\"lesson-h2\">Predict: Change the Memory</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does storing the program in memory mean one computer can do many different jobs?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>To change the job, you only change what is in memory. The hardware stays the same.</p></div></details><p class=\"lesson-lead\">The same memory as before: INPUT, ADD 5, OUTPUT, STOP, then 40 and 7 in addresses 4 and 5.</p><div id=\"y10-311-predict-stored\"></div>",
+   "items": [
+    {
+     "prompt": "Address 5 is changed from 7 to 20. The input is 10. What is output now?",
+     "options": [
+      "17",
+      "30",
+      "50"
+     ],
+     "correct": 1,
+     "explain": "ADD 5 adds whatever is stored in address 5. It now holds 20, so 10 + 20 = 30. The program did not change, only the data."
+    },
+    {
+     "prompt": "Address 1 is changed from ADD 5 to ADD 4. The input is 10. What is output now?",
+     "options": [
+      "50",
+      "17",
+      "40"
+     ],
+     "correct": 0,
+     "explain": "ADD 4 adds what is stored in address 4, which is 40. 10 + 40 = 50. Changing one instruction in memory changed what the computer does."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Run the Program",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-311-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Run the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why should you predict before you press Run?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Running it first shows the answer. Predicting first shows whether you can follow the program yourself.</p></div></details><p class=\"lesson-lead\">Predict first, then run it one instruction at a time to see why. Four levels; a wrong prediction means the round does not count.</p><div id=\"y10-311-activity-2\"></div>",
+   "embedQuery": "activity=run"
+  },
+  {
+   "id": "exam-4",
+   "label": "Exam Question: The Stored Program Concept (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-311-exam-4",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Stored Program Concept (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the instructions be run in order, one at a time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each instruction may use the result of the one before, so doing them out of order would give the wrong result.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2021, Question 8(a). A computer system uses the stored program concept.</p><div id=\"y10-311-exam-4\"></div>",
+   "items": [
+    {
+     "id": "stored-1",
+     "prompt": "Describe what is meant by the stored program concept.",
+     "marks": 2,
+     "scheme": [
+      "Instructions and data are stored in the same (main) memory",
+      "Instructions are fetched and executed in order (one after another, in sequence)"
+     ],
+     "guidance": "One mark for each point. \"Run one after another\" or \"in order\" earns the second mark. \"Programs are stored on the computer\" alone earns no mark: it must say instructions and data share the same memory.",
+     "modelAnswer": "Instructions and data are stored in the same memory. The instructions are run one after another."
+    }
+   ]
+  },
+  {
+   "id": "exam-5",
+   "label": "Exam Question: The Stored Program Concept (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-311-exam-5",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Stored Program Concept (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can the same 2 marks appear in two different papers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The stored program idea does not change, so the mark scheme points stay the same.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2022, Question 1(d). A train station has a ticket machine. The computer in the ticket machine uses the stored program concept.</p><div id=\"y10-311-exam-5\"></div>",
+   "items": [
+    {
+     "id": "stored-2",
+     "prompt": "Describe the stored program concept.",
+     "marks": 2,
+     "scheme": [
+      "Data and instructions are stored in the same memory",
+      "and can only be fetched (taken) one at a time"
+     ],
+     "guidance": "One mark for each point. The second mark needs the idea that instructions are taken from memory one at a time, or run one after another.",
+     "modelAnswer": "Data and instructions are stored in the same memory, and are taken from memory one at a time."
+    }
+   ]
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: CPU and Microprocessors Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l1",
+   "embedContainerId": "y10-311-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: CPU and Microprocessors Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a drill bring back a card you got wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right again later shows you remember it, not that you guessed once.</p></div></details><p class=\"lesson-lead\">The CPU, microprocessors and the stored program, with real exam wording. Pick the answer that earns the mark, then type it. Your progress is saved.</p><div id=\"y10-311-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_311_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(packet\\s+)?header\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The first section is read first by each router."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^.*\\b((originator|sender|source|destination|receiver|recipient)('?s)?\\s*(ip\\s*)?address|ip\\s*address(es)?|packet\\s*(number|no\\.?|order)).*$",
+     "flags": "i"
+    },
+    "feedback": "What does a router need to know to send the packet on?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?payload\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The section that carries what is being sent."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^.*\\b(data|message|part\\s+of\\s+(the\\s+)?(file|message|data)|content)s?\\b.*$",
+     "flags": "i"
+    },
+    "feedback": "What is actually being sent?"
+   },
+   {
+    "suffix": "e",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?trailer\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The section at the very end of the packet."
+   },
+   {
+    "suffix": "f",
+    "pattern": {
+     "__regex": true,
+     "source": "^.*\\b(end\\s+of\\s+(the\\s+)?packet|error\\s*(check(ing)?|detect(ion)?)|check\\s*sum|checksum|parity|crc)\\b.*$",
+     "flags": "i"
+    },
+    "feedback": "It marks the end, or helps the receiver find errors."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}
