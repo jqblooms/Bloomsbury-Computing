@@ -142,7 +142,7 @@
       draw('Right, with no mistakes.' + (up ? ' Level up: ' + LEVELS[lv].name + '.' : ''), 'good');
     } else {
       have = 0;
-      draw('Not this time. Read why for each red step. This device does not count.', 'bad');
+      draw(R.level === 2 ? 'Not this time. Read why under your choice; the green step is the one that fits. This device does not count.' : 'Not this time. Read why for each red step. This device does not count.', 'bad');
     }
   }
   function steps(s, gap) {
