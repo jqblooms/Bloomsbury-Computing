@@ -729,7 +729,7 @@ function divideCards() {
         if (r < 10) s = String(q) + " " + r;
         return { prompt: "Ana converts " + n + ". She gets " + q + " remainder " + r + " and writes " + s + ". What should she write in hexadecimal?", answers: [h], keywords: [hexRe(h)], format: "Type the hexadecimal number",
           distractors: wrongHex(h, [String(q) + String(r), h.split("").reverse().join(""), hx(n + 1)]),
-          working: ["Each value above nine must be one digit.", "Write the whole number, then the remainder, as digits."], note: work(n) + "." + p.src };
+          working: ["Each value above nine needs one single digit.", "Write the whole number, then the remainder, as digits."], note: work(n) + "." + p.src };
       } },
     { id: "dv-08", category: "dv-check", randomize: function () {
         var p, n, h; do { p = pickN(false); n = p.n; h = hx(n); } while (h[0] === h[1] || h[1] === "0");
