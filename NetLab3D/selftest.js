@@ -41,7 +41,7 @@ function walkTo(x, y, face) {
   }
   if (face != null) { p.face = face; s.step(1); }
 }
-function offset(i, f) { const side = i === 0 ? 1 : -1; return [Math.sin(f) * 0.42 + Math.cos(f) * side * 0.2, Math.cos(f) * 0.42 - Math.sin(f) * side * 0.2]; }
+function offset(i, f) { return [Math.sin(f) * 0.45, Math.cos(f) * 0.45]; }   // one grab point between the hands
 function handTo(i, hx, hy, slack = 0) {
   const faces = [Math.PI, -Math.PI / 2, Math.PI / 2, 0, Math.PI * 0.75, -Math.PI * 0.75, Math.PI / 4, -Math.PI / 4];
   for (const rr of slack ? [0, slack] : [0]) for (const f of faces) {

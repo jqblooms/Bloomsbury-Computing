@@ -47,6 +47,7 @@ p { margin: 0; }
 .hands { display: flex; gap: 12px; pointer-events: auto; }
 .key { display: grid; justify-items: center; gap: 1px; width: 104px; padding: 7px 6px; border-radius: 14px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); cursor: pointer; touch-action: none; user-select: none; }
 .key b { font: 700 1.25rem/1 var(--font-display); }
+.key.grab { width: 200px; }
 .key small { font-size: .72rem; color: var(--muted); }
 .key.on, .key:active { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
 .key.on small, .key:active small { color: var(--on-brand); }

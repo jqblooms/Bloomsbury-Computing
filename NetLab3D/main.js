@@ -929,7 +929,8 @@ export function startSolo({ container, myName, colour }) {
   const carried = d => hands.some(h => h.dev === d);
   isHeld = d => !!d && carried(d);
   function free(x, y) { for (const [ox, oy] of [[-0.28, -0.28], [0.28, -0.28], [-0.28, 0.28], [0.28, 0.28]]) if (solidAt(Math.round(x + ox), Math.round(y + oy))) return false; return true; }
-  function handPos(i) { const fx = Math.sin(pos.face), fy = Math.cos(pos.face), side = i === 0 ? 1 : -1; return [pos.x + fx * 0.42 + Math.cos(pos.face) * side * 0.2, pos.y + fy * 0.42 - Math.sin(pos.face) * side * 0.2]; }
+  // The grab point: one spot between your two raised hands, just in front of you (both hands share it).
+  function handPos(i) { const fx = Math.sin(pos.face), fy = Math.cos(pos.face); return [pos.x + fx * 0.45, pos.y + fy * 0.45]; }
 
   // ---- cables: the server's rope, run here (only you are in this lab)
   function newCable(points, len) {
@@ -1052,7 +1053,7 @@ export function startSolo({ container, myName, colour }) {
     if (plugged || g.kind === 'device' || g.kind === 'tablet') { h.pending = { g, at: clock }; hint(); return; }
     doGrab(i, g);
   }
-  const HOLD = 0.3;   // seconds
+  const HOLD = 0;   // seconds: Space is the only grab key, so no delay is needed
   function holdTick() {
     for (let i = 0; i < 2; i++) {
       const h = hands[i], p = h.pending;
@@ -2691,11 +2692,11 @@ export function startSolo({ container, myName, colour }) {
   function hint() {
     const held = hands.map(h => h.dev ? 'dev' : h.cable ? (h.joint === 0 || h.joint === h.cable.n ? 'plug' : 'cable') : null).filter(Boolean);
     let h = '';
-    if (held.includes('dev')) h = 'Walk to where it should go, then let go. Let go at its crate to put it back.';
-    else if (held.includes('plug')) h = 'Push the Ethernet plug into an RJ45 port, then let go. A laptop\'s port is on its right-hand side.';
-    else if (held.length) h = 'Keep holding to carry. Let go to drop it.';
+    if (held.includes('dev')) h = 'Keep holding Space and walk to where it should go, then let go. Let go at its crate to put it back.';
+    else if (held.includes('plug')) h = 'Walk the plug to an RJ45 port and let go of Space. A laptop\'s port is on its right-hand side.';
+    else if (held.length) h = 'Keep holding Space to carry. Let go to drop it.';
     else if (hands.some(x => x.pending)) h = 'Keep holding to pick it up (or pull the plug out).';
-    else h = 'Hold a mouse button to grab: left button = left hand, right button = right hand. Grab a device to carry it.';
+    else h = 'Hold Space to grab what is in front of you. Let go of Space to put it down or plug it in.';
     $('hint').textContent = h;
   }
 
@@ -2747,7 +2748,7 @@ export function startSolo({ container, myName, colour }) {
     }
     pulse.material.opacity = 0.5 + 0.4 * Math.sin(ts / 180);
     updateGuide(ts); if (guideKey) drawPulse();
-    me.update(dt, { x: pos.x, y: pos.y, face: pos.face, moving, hands: hands.map(h => ({ down: h.down, hold: h.cable ? 'cable' : h.dev ? 'dev' : null })) }, true);
+    me.update(dt, { x: pos.x, y: pos.y, face: pos.face, moving, hands: [0, 0].map(() => { const h = hands[0]; return { down: h.down, hold: h.cable ? 'cable' : h.dev ? 'dev' : null }; }) }, true);
     view.follow(pos.x, pos.y);
     view.render(dt);
   }
@@ -2756,13 +2757,13 @@ export function startSolo({ container, myName, colour }) {
   // Keys are read by where they sit on the keyboard (e.code), not the letter they type: with a Thai layout or Shift
   // the W key still walks, and letting go of it always stops you.
   const typing = e => /input|select|textarea/i.test(e.target?.tagName || '');
-  const HAND0 = ['KeyJ', 'Space'], HAND1 = ['KeyK', 'Space'];
+  const HAND0 = ['Space'], HAND1 = [];   // hold Space to grab, let go to put down or plug in
   document.addEventListener('keydown', e => {
     const k = e.code;
     if (typing(e)) return;
     // the Walk me through it card is open: the game behind it does not move; Escape closes the card
     if (!$('cardWrap').hidden) { if (k === 'Escape') $('cardWrap').hidden = true; return; }
-    if (k === 'Space' || k === 'KeyJ' || k === 'KeyK') { e.preventDefault(); if (e.repeat) return; }
+    if (k === 'Space') { e.preventDefault(); if (e.repeat) return; }
     if (k === 'KeyM') { setOverview(!overview); return; }
     if (HAND0.includes(k)) setHand(0, true);
     if (HAND1.includes(k)) setHand(1, true);
@@ -2773,7 +2774,7 @@ export function startSolo({ container, myName, colour }) {
     const k = e.code;
     keys.delete(k);
     if (typing(e)) return;
-    if (k === 'Space' || k === 'KeyJ' || k === 'KeyK') e.preventDefault();
+    if (k === 'Space') e.preventDefault();
     if (HAND0.includes(k)) setHand(0, false);
     if (HAND1.includes(k)) setHand(1, false);
   });
@@ -2789,7 +2790,7 @@ export function startSolo({ container, myName, colour }) {
   // starting to type (the message box, a menu) lets go of every key you were holding, so you stop walking
   document.addEventListener('focusin', e => { if (typing(e)) { keys.clear(); stick = null; const kn = $('knob'); if (kn) kn.style.transform = ''; } });
   addEventListener('blur', () => { keys.clear(); setHand(0, false); setHand(1, false); });
-  container.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && (e.button === 0 || e.button === 2)) setHand(e.button === 0 ? 0 : 1, true); });
+  // the mouse does not grab (Space does), so a click on the lab never picks anything up
   addEventListener('pointerup', e => { if (e.pointerType === 'mouse' && (e.button === 0 || e.button === 2)) setHand(e.button === 0 ? 0 : 1, false); });
   container.addEventListener('contextmenu', e => e.preventDefault());
   for (const [id, i] of [['leftBtn', 0], ['rightBtn', 1]]) {
