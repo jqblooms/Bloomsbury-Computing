@@ -1485,10 +1485,10 @@ export function startSolo({ container, myName, colour }) {
     const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0.016; last = ts;
     if (!view) return;
     let dx = 0, dy = 0;
-    if (keys.has('arrowleft') || keys.has('a')) dx -= 1;
-    if (keys.has('arrowright') || keys.has('d')) dx += 1;
-    if (keys.has('arrowup') || keys.has('w')) dy -= 1;
-    if (keys.has('arrowdown') || keys.has('s')) dy += 1;
+    if (keys.has('ArrowLeft') || keys.has('KeyA')) dx -= 1;
+    if (keys.has('ArrowRight') || keys.has('KeyD')) dx += 1;
+    if (keys.has('ArrowUp') || keys.has('KeyW')) dy -= 1;
+    if (keys.has('ArrowDown') || keys.has('KeyS')) dy += 1;
     if (stick) { dx = stick.x; dy = stick.y; }
     const len = Math.hypot(dx, dy);
     moving = len > 0.15;
@@ -1523,17 +1523,30 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // ---- input
+  // Keys are read by where they sit on the keyboard (e.code), not the letter they type: with a Thai layout or Shift
+  // the W key still walks, and letting go of it always stops you.
+  const typing = e => /input|select|textarea/i.test(e.target?.tagName || '');
+  const HAND0 = ['KeyJ', 'Space'], HAND1 = ['KeyK', 'Space'];
   document.addEventListener('keydown', e => {
-    const k = e.key.toLowerCase();
-    if (/input|select|textarea/i.test(e.target?.tagName || '')) return;
-    if (k === ' ' || k === 'j' || k === 'k') { e.preventDefault(); if (e.repeat) return; }
-    if (k === 'm') { setOverview(!overview); return; }
-    if (k === 'j' || k === ' ') { e.preventDefault(); setHand(0, true); }
-    if (k === 'k' || k === ' ') { e.preventDefault(); setHand(1, true); }
-    if (k.startsWith('arrow')) e.preventDefault();
+    const k = e.code;
+    if (typing(e)) return;
+    if (k === 'Space' || k === 'KeyJ' || k === 'KeyK') { e.preventDefault(); if (e.repeat) return; }
+    if (k === 'KeyM') { setOverview(!overview); return; }
+    if (HAND0.includes(k)) setHand(0, true);
+    if (HAND1.includes(k)) setHand(1, true);
+    if (k.startsWith('Arrow')) e.preventDefault();
     keys.add(k);
   });
-  document.addEventListener('keyup', e => { const k = e.key.toLowerCase(); keys.delete(k); if ((k === ' ' || k === 'j' || k === 'k') && !/input|select|textarea/i.test(e.target?.tagName || '')) e.preventDefault(); if (k === 'j' || k === ' ') setHand(0, false); if (k === 'k' || k === ' ') setHand(1, false); });
+  document.addEventListener('keyup', e => {
+    const k = e.code;
+    keys.delete(k);
+    if (typing(e)) return;
+    if (k === 'Space' || k === 'KeyJ' || k === 'KeyK') e.preventDefault();
+    if (HAND0.includes(k)) setHand(0, false);
+    if (HAND1.includes(k)) setHand(1, false);
+  });
+  // starting to type (the message box, a menu) lets go of every key you were holding, so you stop walking
+  document.addEventListener('focusin', e => { if (typing(e)) { keys.clear(); stick = null; const kn = $('knob'); if (kn) kn.style.transform = ''; } });
   addEventListener('blur', () => { keys.clear(); setHand(0, false); setHand(1, false); });
   container.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && (e.button === 0 || e.button === 2)) setHand(e.button === 0 ? 0 : 1, true); });
   addEventListener('pointerup', e => { if (e.pointerType === 'mouse' && (e.button === 0 || e.button === 2)) setHand(e.button === 0 ? 0 : 1, false); });

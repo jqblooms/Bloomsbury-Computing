@@ -317,18 +317,18 @@ const BREAK = [
   function spaceOnAButton() {
     s.start(1);
     const b = [...document.querySelectorAll('#mission button')].find(x => x.textContent === 'Start again'); b.focus();
-    const e = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }); b.dispatchEvent(e);
+    const e = new KeyboardEvent('keydown', { key: ' ', code: 'Space', bubbles: true, cancelable: true }); b.dispatchEvent(e);
     ok(e.defaultPrevented, 'Space on a focused button was not stopped');
-    b.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', bubbles: true, cancelable: true }));
+    b.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
   },
   function spaceTakesOneCable() {
     s.start(0);
     const [x, y] = crateFront('cable'); walkTo(x, y, 0);
     const n = s.cables().length;
-    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
     ok(s.cables().length === n + 1, 'Space took ' + (s.cables().length - n) + ' cables');
     ok(s.hands[0].cable && s.hands[0].cable === s.hands[1].cable, 'Space should hold both ends of one cable');
-    document.body.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', bubbles: true, cancelable: true }));
+    document.body.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
   },
   function plugBeatsLaptopAndPortsGlow() {
     s.start(0);
@@ -383,6 +383,22 @@ const BREAK = [
     grabEnd(0, c, 1);
     handTo(0, hub.X + 2.3, hub.Y + 1.15); letGo(0);
     ok(c.ends[1] && c.ends[1].dev === hub.id, 'letting go in front of the switch did not plug in (' + s.toastText() + ')');
+  },
+  function typingStopsWalking() {
+    // walking (W held, with a Thai layout so the key types a Thai letter) when the message box opens: you stop
+    s.start(0);
+    const a = placeNew('laptop', 6, 8), b = placeNew('laptop', 15, 8); cable(a, b);
+    walkTo(10, 14, 0);
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: '\u0e44', code: 'KeyW', bubbles: true, cancelable: true }));
+    const y0 = s.pos.y; s.frame(5, 33);
+    ok(s.pos.y < y0 - 0.2, 'W with a Thai layout did not walk');
+    $('nbFrom').value = String(a.id); $('nbFrom').dispatchEvent(new Event('change'));
+    $('nbTo').value = String(b.id); $('nbTo').dispatchEvent(new Event('change'));
+    $('testBar').querySelector('button').click();
+    const box = $('nbMsg'); box.focus(); box.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    const y1 = s.pos.y; s.frame(10, 33);
+    ok(Math.abs(s.pos.y - y1) < 0.01, 'still walking after the message box opened');
+    [...$('testBar').querySelectorAll('button')].find(x => x.textContent === 'Cancel').click();
   },
   function cableCannotStretch() {
     // carrying a device with a cable in it: the cable never stretches past its length; it pulls out of the port

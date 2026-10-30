@@ -121,7 +121,7 @@ export function create(container) {
   el.addEventListener('wheel', e => { if (!overview) { dist = Math.min(1600, Math.max(380, dist * Math.exp(e.deltaY * 0.001))); e.preventDefault(); } }, { passive: false });
   document.addEventListener('keydown', e => {
     if (/input|select|textarea/i.test(e.target?.tagName || '')) return;
-    if (e.key === 'q' || e.key === 'Q') yaw += 0.25; else if (e.key === 'e' || e.key === 'E') yaw -= 0.25;
+    if (e.code === 'KeyQ') yaw += 0.25; else if (e.code === 'KeyE') yaw -= 0.25;
   });
 
   return {
