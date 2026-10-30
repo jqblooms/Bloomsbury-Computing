@@ -214,6 +214,16 @@ const BUILD = {
     g.add(at(rbox(W - 16, 70, D - 20, 0x4a5058, 8, { metalness: 0.5, roughness: 0.4 }), 0, 18, 0));
     g.add(at(new THREE.Mesh(new THREE.BoxGeometry(W - 30, 4, 2), M(0x2b6fd6, { emissive: 0x0b2a5c })), 0, 82, (D - 20) / 2 + 0.5));
   },
+  bus(g, d, W, D) {
+    // a thick main cable on low stands, with a dark terminator cap at each end
+    const cab = new THREE.Mesh(new THREE.CylinderGeometry(16, 16, W - 30, 18).rotateZ(Math.PI / 2), M(0x2b6fd6, { roughness: 0.5 }));
+    g.add(at(cab, 0, 46, 0));
+    for (const sx of [-1, 1]) {
+      g.add(at(new THREE.Mesh(new THREE.CylinderGeometry(19, 19, 22, 18).rotateZ(Math.PI / 2), M(0x212529)), sx * (W / 2 - 18), 46, 0));
+      g.add(at(rbox(20, 30, 30, 0x868e96, 4), sx * (W / 2 - 50), 0, 0));
+    }
+    g.add(at(rbox(20, 30, 30, 0x868e96, 4), 0, 0, 0));
+  },
   wifi(g, d, W, D) {
     g.add(rbox(W - 30, 80, D - 30, 0xeceeef, 18));
     for (const sx of [-40, 40]) { const a = cyl(5, 7, 150, 0x30343b); a.rotation.z = sx < 0 ? 0.18 : -0.18; g.add(at(a, sx, 150, -10)); }

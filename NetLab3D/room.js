@@ -94,7 +94,7 @@ export function create(container) {
   let yaw = 0, pitch = 0.75, dist = 760, overview = false;
   const focus = new THREE.Vector3(), want = focus.clone();
   function placeCamera(dt) {
-    const k = 1 - Math.exp(-dt * 8);
+    const k = Math.min(1, Math.max(0, 1 - Math.exp(-Math.max(0, dt) * 8)));
     focus.lerp(want, k);
     if (overview) {
       const half = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));

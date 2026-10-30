@@ -20,13 +20,14 @@ const $ = id => document.getElementById(id);
 const T = 100, K = 22, OX = 1.5, OY = 1.5;          // world units a tile; desk units a tile; desk origin in tiles
 const MAPW = 34, MAPH = 27, DESK_BOTTOM = 20;        // the room; the desk is rows 1 to 20, the supply shelf below
 const SEG = 0.5, CABLE_LEN = 20, CABLE_R = 10, PLUG_LEN = 58, HAND_Y = 60, SPEED = 5.5;
-const PORTS = { laptop: 1, printer: 1, 'switch': 8, wifi: 1, tablet: 0 };
-const LABEL = { laptop: 'Laptop', printer: 'Printer', 'switch': 'Switch', wifi: 'Wi-Fi point', tablet: 'Tablet' };
+const PORTS = { laptop: 1, printer: 1, 'switch': 8, wifi: 1, tablet: 0, pc: 2, bus: 4 };
+const LABEL = { laptop: 'Laptop', printer: 'Printer', 'switch': 'Switch', wifi: 'Wi-Fi point', tablet: 'Tablet', pc: 'Computer', bus: 'Main cable' };
+const FORWARD = { 'switch': 1, wifi: 1, bus: 1, pc: 1 };   // devices that pass data on to the next device
 const RANGE = 150;
 const NAMES = ['Ana', 'Ben', 'Chi', 'Dev', 'Eli', 'Fai', 'Gus', 'Hana', 'Ivy', 'Jon', 'Kim', 'Lek'];
 const W = 640, H = 380, NEED = 2;
-const SHELF = ['laptop', 'tablet', 'printer', 'switch', 'wifi'];
-const CRATE_COL = { laptop: 0x7fa8d8, tablet: 0x495057, printer: 0xd9d9d4, 'switch': 0x4a5058, wifi: 0x51cf66, cable: 0x2b6fd6 };
+const SHELF = ['laptop', 'tablet', 'printer', 'switch', 'wifi', 'pc'];
+const CRATE_COL = { pc: 0x9775fa, laptop: 0x7fa8d8, tablet: 0x495057, printer: 0xd9d9d4, 'switch': 0x4a5058, wifi: 0x51cf66, cable: 0x2b6fd6 };
 
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const pick = list => list[Math.floor(Math.random() * list.length)];
@@ -40,37 +41,53 @@ function fresh(palette) { return { devs: [], cables: [], names: shuffle(NAMES), 
 function dev(id) { return S.devs.find(d => d.id === id); }
 function cablesOf(id) { return S.cables.filter(c => c.a === id || c.b === id); }
 function sockets(d) { return d.ports || PORTS[d.kind]; }
-function isClient(d) { return d.kind === 'laptop' || d.kind === 'tablet'; }
+function isClient(d) { return d.kind === 'laptop' || d.kind === 'tablet' || d.kind === 'pc'; }
 function inRange(t, w) { return Math.hypot(t.x - w.x, t.y - w.y) <= RANGE; }
 function aps(t) { return S.devs.filter(w => w.kind === 'wifi' && inRange(t, w)); }
 function links(x) {
   const d = dev(x), out = cablesOf(x).map(c => c.a === x ? c.b : c.a);
   if (d.kind === 'wifi') S.devs.forEach(t => { if (t.kind === 'tablet' && inRange(t, d)) out.push(t.id); });
   if (d.kind === 'tablet') aps(d).forEach(w => out.push(w.id));
+  if (d.kind === 'tablet' && btOn(d)) out.push(btPartner(d).id);
   return out;
 }
 function count(kind) { return S.devs.filter(d => d.kind === kind).length; }
 // devices standing on the floor (not in someone's hands); set by the 3D lab
 let isHeld = () => false;
 function placed(kind) { return S.devs.filter(d => d.kind === kind && !isHeld(d)).length; }
-function ends() { return S.devs.filter(d => d.kind !== 'switch' && d.kind !== 'wifi'); }
+function ends() { return S.devs.filter(d => d.kind !== 'switch' && d.kind !== 'wifi' && d.kind !== 'bus'); }
 function place(kind, x, y, name) {
   const d = { id: S.nextId++, kind, x, y };
+  if (kind === 'pc' && S.pcPorts) d.ports = S.pcPorts;
   if (name) d.name = name;
   else if (kind === 'laptop' || kind === 'tablet') { const used = S.devs.map(o => o.name); d.name = S.names.filter(n => used.indexOf(n) < 0)[0]; }
   else d.name = count(kind) ? LABEL[kind] + ' ' + (count(kind) + 1) : LABEL[kind];
   S.devs.push(d);
   return d;
 }
-function plug(a, b) { S.cables.push({ a: a.id, b: b.id }); }
+function plug(a, b, extra) { S.cables.push(Object.assign({ a: a.id, b: b.id }, extra || {})); }
+const BT_RANGE = 70;   // desk units: Bluetooth only reaches a few metres
+function btPartner(t) { const p = (S.bt || []).find(q => q.includes(t.id)); return p ? dev(p[0] === t.id ? p[1] : p[0]) : null; }
+function btOn(t) { const o = btPartner(t); return !!o && Math.hypot(t.x - o.x, t.y - o.y) <= BT_RANGE; }
 // Data travels along cables (and Wi-Fi); only a switch or a Wi-Fi point passes it on to other devices.
+function ringRoute(a, b) {
+  const o = S.ringOrder, n = o.length; let i = o.indexOf(a.id), cur = a.id; const path = [a];
+  for (let k = 0; k < n; k++) {
+    const next = o[(i + 1) % n];
+    if (!S.cables.some(c => (c.a === cur && c.b === next) || (c.b === cur && c.a === next))) return null;
+    path.push(dev(next)); if (next === b.id) return path;
+    cur = next; i++;
+  }
+  return null;
+}
 function route(a, b) {
+  if (S.ringOrder && S.ringOrder.includes(a.id) && S.ringOrder.includes(b.id)) return ringRoute(a, b);
   const prev = {}, q = [a.id];
   prev[a.id] = 0;
   while (q.length) {
     const x = q.shift();
     if (x === b.id) break;
-    if (x !== a.id && dev(x).kind !== 'switch' && dev(x).kind !== 'wifi') continue;
+    if (x !== a.id && !FORWARD[dev(x).kind]) continue;
     links(x).forEach(y => { if (!(y in prev)) { prev[y] = x; q.push(y); } });
   }
   if (!(b.id in prev)) return null;
@@ -82,11 +99,13 @@ function jobText(a, b) { return b.kind === 'printer' ? a.name + ' prints on the 
 function why(a, b) {
   const r = route(a, b);
   if (r) return r.map(d => d.name).join(' &rarr; ');
+  if (S.bt && (btPartner(a) === b)) return 'The tablets are too far apart for Bluetooth.';
   for (const d of [a, b]) {
     if (d.kind === 'tablet' && !aps(d).length) return d.name + ' is out of Wi-Fi range.';
     if (d.kind === 'tablet' && aps(d).every(w => !cablesOf(w.id).length)) return 'The Wi-Fi point near ' + d.name + ' is not plugged in.';
     if (d.kind !== 'tablet' && !cablesOf(d.id).length) return d.name + ' is not plugged in.';
   }
+  if (S.ringOrder) return 'Data goes one way round the ring, and it cannot get past the broken cable.';
   return 'No cables join ' + a.name + ' to ' + b.name + '.';
 }
 function laptops() { return S.devs.filter(d => d.kind === 'laptop'); }
@@ -103,7 +122,7 @@ function routeText(r) { return r.map(d => d.name).join(' &rarr; '); }
 // ================================================================ the missions (the website's, worded for 3D)
 const SOCK = 'Take an <b>Ethernet cable</b> from the cable crate, push one plug into a network socket (an <b>RJ45 port</b>; a laptop\'s is on its right-hand side), then carry the other plug to the other device\'s port and let go.';
 const BUILD = [
-  { id: 'two', group: 'Getting started', title: 'Join Two Laptops', type: 'tutorial', setup() { S = fresh({ laptop: 2 }); },
+  { id: 'two', group: 'Introduction', title: 'Join Two Laptops', type: 'tutorial', setup() { S = fresh({ laptop: 2 }); },
     intro: 'Two laptops on their own cannot share anything. Join them to make a network.',
     steps: [
       { text: 'Grab the <b>Laptop</b> crate on the supply shelf, carry the laptop onto the floor and let go.', show: 'crate-laptop', done: () => placed('laptop') >= 1 },
@@ -114,7 +133,7 @@ const BUILD = [
       { text: 'Share something: send the other laptop a <b>Photo</b> or a <b>File</b>.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && S.lastTest.kind && S.lastTest.kind !== 'message' }
     ], end: 'Not joined, nothing could travel. Joined by a cable, messages, photos and files can travel: that is a <b>network</b>.',
     after: { q: 'Why do people join computers in a network?', options: ['To communicate and share: messages, files, photos and printers', 'To make each computer run faster', 'So each computer uses less electricity'], why: 'A network lets data travel between computers. People can <b>communicate</b> (messages, emails, video calls) and <b>share</b> (files, photos, one printer).' } },
-  { id: 'switch', group: 'Getting started', title: 'Add a Third Laptop', type: 'tutorial', setup() {
+  { id: 'switch', group: 'Introduction', title: 'Add a Third Laptop', type: 'tutorial', setup() {
     S = fresh({ laptop: 3, 'switch': 1 }); const a = place('laptop', 150, 100), b = place('laptop', 490, 100); plug(a, b); },
     intro: 'A third person wants to join the network.',
     steps: [
@@ -125,7 +144,7 @@ const BUILD = [
       { text: 'Plug <b>all three</b> laptops into the switch. Any free port on the switch works.', show: 'switch', done: () => placed('laptop') >= 3 && placed('switch') >= 1 && laptops().every(l => !isHeld(l) && plugged(l, 'switch')) },
       { text: 'Test it: send a message between two laptops. Watch it go through the switch.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok }
     ], end: 'A <b>switch</b> joins many devices. Data goes from one laptop, through the switch, to another.' },
-  { id: 'printer', group: 'Getting started', title: 'Share the Printer', type: 'challenge', setup() { S = fresh({ laptop: 4, printer: 1, 'switch': 1 }); },
+  { id: 'printer', group: 'Introduction', title: 'Share the Printer', type: 'challenge', setup() { S = fresh({ laptop: 4, printer: 1, 'switch': 1 }); },
     before: { q: 'Predict: four laptops and one printer are each plugged into one switch. How many cables will you need?', number: 5, why: 'Each laptop and the printer has <b>one</b> network socket, so each needs <b>one</b> cable to the switch: 4 laptops + 1 printer = <b>5 cables</b>.' },
     after: { q: 'Why does a class share one printer on the network, and not buy a printer for every laptop?', options: ['It costs less: one printer for the whole class', 'One printer prints faster than many', 'A laptop cannot have its own printer'], why: 'Sharing <b>saves money</b>: one printer for the whole class. Sharing files <b>saves time</b> too: a file goes straight to a friend\'s laptop.' },
     end: 'Every laptop shares the one printer.',
@@ -323,7 +342,153 @@ const PACKETS2 = { id: 'paths', group: 'Packets', title: 'Different Paths', type
   ],
   end: 'Packets can take different paths, so they can arrive in a different order. Their numbers put them back in order.',
   after: { q: 'Packet 3 arrives before packet 2. What does the computer do?', options: ['Uses the packet numbers to put them back in order', 'Throws packet 3 away', 'Shows them in the order they arrived'], why: 'Each packet has a number. The computer waits for all the packets, then puts them in number order.' } };
-export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2];
+// ---- topologies: build the shape, then a cable breaks and you predict which jobs still work
+const hasCable = (x, y) => S.cables.some(c => (c.a === x.id && c.b === y.id) || (c.b === x.id && c.a === y.id));
+const pcs = () => S.devs.filter(d => d.kind === 'pc');
+function ringOf(list) {
+  // the computers in loop order, if they make one loop where each has exactly two cables
+  if (list.length < 3 || list.some(d => cablesOf(d.id).length !== 2)) return null;
+  const order = [list[0].id]; let prev = null, cur = list[0].id;
+  for (let k = 0; k < list.length; k++) {
+    const nbr = cablesOf(cur).map(c => c.a === cur ? c.b : c.a).find(x => x !== prev);
+    if (nbr == null) return null;
+    if (nbr === order[0]) return order.length === list.length ? order : null;
+    if (order.includes(nbr)) return null;
+    order.push(nbr); prev = cur; cur = nbr;
+  }
+  return null;
+}
+const STAR = { id: 'star', group: 'Topologies', title: 'Star Network', type: 'challenge', breakAfter: true,
+  setup() { S = fresh({ laptop: 4, 'switch': 1 }); },
+  intro: 'In a <b>star network</b>, every computer has its own cable to one switch in the middle.',
+  goals: ['Put down four laptops and a switch.', 'Plug every laptop straight into the switch.', 'No laptop plugs into another laptop.'],
+  check() {
+    const probs = [], ls = laptops(), sw = S.devs.find(d => d.kind === 'switch');
+    if (ls.length < 4) probs.push('There should be four laptops.');
+    if (!sw) probs.push('There is no switch.');
+    else ls.forEach(l => { if (!hasCable(l, sw)) probs.push(l.name + ' is not plugged straight into the switch.'); });
+    return probs;
+  },
+  breakPick: () => S.cables.filter(c => dev(c.a).kind === 'laptop' || dev(c.b).kind === 'laptop'),
+  walk() {
+    S = fresh({}); const sw = place('switch', 320, 200, 'Switch'), ls = [[110, 80], [530, 80], [110, 300], [530, 300]].map(q => place('laptop', q[0], q[1])), ex = S, st = [];
+    st.push({ text: '<b>A star network.</b> One switch in the middle.', visual: mini(ex) });
+    ls.forEach(l => plug(l, sw));
+    st.push({ text: 'Each laptop has its <b>own</b> cable to the switch, like the points of a star.', visual: mini(ex) });
+    st.push({ text: 'If one cable breaks, only that laptop is cut off. If the switch breaks, everything stops. Now build yours, then check.', visual: '' });
+    return st;
+  },
+  end: 'A star network: every device has its own cable to the switch in the middle.',
+  after: { q: 'In a star network, one laptop\'s cable breaks. What happens?', options: ['Only that laptop is cut off; the others still work', 'The whole network stops', 'Every laptop loses the printer'], why: 'Each laptop has its own cable to the switch, so one broken cable cuts off only that laptop. If the <b>switch</b> breaks, everything stops.' } };
+const BUS = { id: 'bus', group: 'Topologies', title: 'Bus Network', type: 'challenge', breakAfter: true,
+  setup() { S = fresh({ laptop: 4 }); const b1 = place('bus', 170, 200, 'Main cable 1'), b2 = place('bus', 470, 200, 'Main cable 2'); plug(b1, b2); S.startDevs = S.devs.length; },
+  intro: 'In a <b>bus network</b>, every computer joins one long <b>main cable</b>. This main cable is in two parts, joined in the middle.',
+  goals: ['Put down four laptops.', 'Plug two laptops into Main cable 1 and two into Main cable 2.'],
+  check() {
+    const probs = kept([]), [b1, b2] = S.devs.filter(d => d.kind === 'bus');
+    if (laptops().length < 4) probs.push('There should be four laptops.');
+    laptops().forEach(l => { if (!plugged(l, 'bus')) probs.push(l.name + ' is not plugged into the main cable.'); });
+    if (b1 && b2 && !hasCable(b1, b2)) probs.push('The two parts of the main cable are not joined.');
+    if (b1 && laptops().filter(l => hasCable(l, b1)).length < 2) probs.push('Plug two laptops into Main cable 1.');
+    if (b2 && laptops().filter(l => hasCable(l, b2)).length < 2) probs.push('Plug two laptops into Main cable 2.');
+    return probs;
+  },
+  breakPick: () => S.cables.filter(c => dev(c.a).kind === 'bus' && dev(c.b).kind === 'bus'),
+  walk() {
+    S = fresh({}); const b1 = place('bus', 170, 200, 'Main cable 1'), b2 = place('bus', 470, 200, 'Main cable 2'), ex = S, st = []; plug(b1, b2);
+    const ls = [[110, 80], [230, 80], [410, 80], [530, 80]].map(q => place('laptop', q[0], q[1]));
+    st.push({ text: '<b>A bus network.</b> One long main cable runs past everyone.', visual: mini(ex) });
+    ls.forEach((l, i) => plug(l, i < 2 ? b1 : b2));
+    st.push({ text: 'Every computer plugs into the main cable. Data travels along it to everyone.', visual: mini(ex) });
+    st.push({ text: 'If the main cable breaks, the network splits in two. Now build yours, then check.', visual: '' });
+    return st;
+  },
+  end: 'A bus network: every device joins one main cable.',
+  after: { q: 'In a bus network, the main cable breaks in the middle. What happens?', options: ['The network splits: the two halves cannot reach each other', 'Nothing: the data goes round another way', 'Only one computer is cut off'], why: 'All the data travels along the one main cable. When it breaks, nothing can cross the break, so the network splits in two.' } };
+const RING = { id: 'ring', group: 'Topologies', title: 'Ring Network', type: 'challenge', breakAfter: true,
+  setup() { S = fresh({ pc: 4 }); S.pcPorts = 2; },
+  intro: 'In a <b>ring network</b>, each computer joins the next one, all the way round. Data goes <b>one way</b> round the ring, through each computer.',
+  goals: ['Put down four computers (each has two ports).', 'Join them in a loop: each computer to the next, and the last back to the first.'],
+  check() {
+    const probs = [], list = pcs();
+    if (list.length < 4) probs.push('There should be four computers.');
+    else if (!ringOf(list)) probs.push('The computers do not make one loop. Each needs exactly two cables: one to the computer before it and one to the computer after it.');
+    return probs;
+  },
+  onCheck() { S.ringOrder = ringOf(pcs()); },
+  breakPick: () => S.cables.slice(),
+  walk() {
+    S = fresh({}); S.pcPorts = 2; const ps = [[160, 80], [480, 80], [480, 300], [160, 300]].map(q => place('pc', q[0], q[1])), ex = S, st = [];
+    st.push({ text: '<b>A ring network.</b> Four computers, each with two ports.', visual: mini(ex) });
+    for (let i = 0; i < 4; i++) plug(ps[i], ps[(i + 1) % 4]);
+    st.push({ text: 'Each joins the next, and the last joins the first: a loop. Data goes one way round, passing through each computer.', visual: mini(ex) });
+    st.push({ text: 'If one cable breaks, data cannot get past it. Now build yours, then check.', visual: '' });
+    return st;
+  },
+  end: 'A ring network: each device joins the next, in a loop, and data goes one way round.',
+  after: { q: 'In this ring, data goes one way round. One cable breaks. What happens?', options: ['Data cannot get past the break, so some messages fail', 'Every message still gets there', 'Only the two computers next to the break stop'], why: 'Data only goes one way round. A message that has to cross the broken cable cannot get through.' } };
+const MESH = { id: 'mesh', group: 'Topologies', title: 'Mesh Network', type: 'challenge', breakAfter: true,
+  setup() { S = fresh({ pc: 4 }); S.pcPorts = 3; },
+  intro: 'In a <b>mesh network</b>, every computer is joined straight to every other computer.',
+  before: { q: 'Predict: four computers, each joined straight to each of the other three. How many cables?', number: 6, why: 'Count each pair once: A-B, A-C, A-D, B-C, B-D, C-D. That is <b>6 cables</b>.' },
+  goals: ['Put down four computers (each has three ports).', 'Join every computer straight to every other computer.'],
+  check() {
+    const probs = [], list = pcs();
+    if (list.length < 4) probs.push('There should be four computers.');
+    for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) if (!hasCable(list[i], list[j])) probs.push(list[i].name + ' and ' + list[j].name + ' are not joined straight to each other.');
+    return probs;
+  },
+  breakPick: () => S.cables.slice(),
+  walk() {
+    S = fresh({}); S.pcPorts = 3; const ps = [[160, 80], [480, 80], [480, 300], [160, 300]].map(q => place('pc', q[0], q[1])), ex = S, st = [];
+    st.push({ text: '<b>A mesh network.</b> Four computers, each with three ports.', visual: mini(ex) });
+    for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) plug(ps[i], ps[j]);
+    st.push({ text: 'Every computer is joined straight to every other: 6 cables.', visual: mini(ex) });
+    st.push({ text: 'If one cable breaks, the data can go another way. But it needs a lot of cables. Now build yours, then check.', visual: '' });
+    return st;
+  },
+  end: 'A mesh network: every device is joined to every other, so there is always another way.',
+  after: { q: 'Why does a mesh network keep working when one cable breaks?', options: ['There are other paths, so the data goes another way', 'Its cables are stronger', 'The data jumps over the break'], why: 'In a mesh there is more than one path between computers. The downside: it needs a lot of cables.' } };
+// ---- transmission modes and speeds: races between cables (or links) you watch side by side
+function pairs(list) { S = fresh({}); list.forEach(([an, bn, y, kinds, extra]) => { const a = place(kinds[0], 110, y, an), b = place(kinds[1], 530, y, bn); if (extra !== false) plug(a, b, extra); }); }
+const SERIAL = { id: 'serial', group: 'Transmission modes', title: 'Serial and Parallel', type: 'race',
+  setup() { pairs([['Ana', 'Ben', 80, ['laptop', 'laptop'], { type: 'serial' }], ['Chi', 'Dev', 260, ['laptop', 'laptop'], { type: 'parallel' }]]); },
+  intro: 'Data travels as <b>bits</b>: 0s and 1s. The letter A is 8 bits. These see-through cables show the wires inside.',
+  lanes: [{ label: 'Serial', a: 'Ana', b: 'Ben', kind: 'serial', text: 'one wire: the bits go <b>one at a time</b>, one after another.' }, { label: 'Parallel', a: 'Chi', b: 'Dev', kind: 'parallel', text: 'eight wires: the bits go <b>side by side</b>, all at once.' }],
+  predict: { q: 'Both send the letter A (8 bits) at the same moment. Which gets there first?', options: ['Parallel', 'Serial', 'Both at the same time'], why: 'Parallel sends all 8 bits at once on 8 wires. Serial sends them one at a time on one wire.' },
+  end: 'Serial: one bit at a time on one wire. Parallel: several bits at once on several wires. Serial cables are cheaper and work well over long distances, so most cables today (like USB) are serial.',
+  after: { q: 'What is serial transmission?', options: ['Bits sent one at a time, one after another, along one wire', 'Bits sent all at the same time along many wires', 'Data sent both ways at the same time'], why: '<b>Serial</b>: one bit after another on one wire. <b>Parallel</b>: many bits at once on many wires.' } };
+const DUPLEX = { id: 'duplex', group: 'Transmission modes', title: 'Simplex and Duplex', type: 'race',
+  setup() { pairs([['Ana', 'Ben', 60, ['laptop', 'laptop'], { type: 'simplex' }], ['Chi', 'Dev', 190, ['laptop', 'laptop'], { type: 'half' }], ['Eli', 'Fai', 320, ['laptop', 'laptop'], { type: 'full' }]]); },
+  intro: 'The arrows on each cable show which way data can go. On every cable, <b>both</b> laptops try to send at the same moment.',
+  lanes: [{ label: 'Simplex', a: 'Ana', b: 'Ben', kind: 'simplex', text: 'data goes <b>one way only</b>.' }, { label: 'Half duplex', a: 'Chi', b: 'Dev', kind: 'half', text: 'data goes both ways, but <b>one way at a time</b>.' }, { label: 'Full duplex', a: 'Eli', b: 'Fai', kind: 'full', text: 'data goes <b>both ways at the same time</b>.' }],
+  predict: { q: 'On which cable do both messages travel at the same time?', options: ['Full duplex', 'Half duplex', 'Simplex'], why: 'Full duplex has a way for each direction, so both go at once. Half duplex takes turns. Simplex only goes one way.' },
+  end: 'Simplex: one way only (like a TV broadcast). Half duplex: both ways, one at a time (like a walkie-talkie). Full duplex: both ways at once (like a phone call).',
+  after: { q: 'A walkie-talkie lets people talk both ways, but only one person at a time. Which mode is that?', options: ['Half duplex', 'Simplex', 'Full duplex'], why: '<b>Half duplex</b>: both ways, but one way at a time.' } };
+const SPEEDRACE = { id: 'speed', group: 'Speeds', title: 'Speed Race', type: 'race',
+  setup() {
+    S = fresh({});
+    const a = place('laptop', 110, 70, 'Ana'), b = place('laptop', 530, 70, 'Ben'); plug(a, b);
+    const sw = place('switch', 320, 250, 'Switch'), w = place('wifi', 320, 180, 'Wi-Fi point'); plug(w, sw);
+    place('tablet', 210, 200, 'Chi'); place('tablet', 430, 200, 'Dev');
+    const e = place('tablet', 290, 330, 'Eli'), f = place('tablet', 350, 330, 'Fai'); S.bt = [[e.id, f.id]];
+  },
+  intro: 'Three ways to send the same photo: an <b>Ethernet</b> cable, <b>Wi-Fi</b>, and <b>Bluetooth</b> (the small blue circle).',
+  lanes: [{ label: 'Ethernet', a: 'Ana', b: 'Ben', kind: 'ethernet', text: 'a cable between the two laptops.' }, { label: 'Wi-Fi', a: 'Chi', b: 'Dev', via: 'Wi-Fi point', kind: 'wifi', text: 'through the air, via the Wi-Fi point.' }, { label: 'Bluetooth', a: 'Eli', b: 'Fai', kind: 'bluetooth', text: 'through the air, straight between two tablets close together.' }],
+  predict: { q: 'Each sends the same photo (6 packets). Which arrives first?', options: ['Ethernet', 'Wi-Fi', 'Bluetooth'], why: 'A cable is usually the fastest. Wi-Fi is slower but needs no cable. Bluetooth is the slowest, and only reaches a few metres.' },
+  end: 'Ethernet (cable) is usually fastest. Wi-Fi is slower but has no cables. Bluetooth is slow and short range: good for headphones and keyboards close by.',
+  after: { q: 'Bluetooth is slow. Why do people still use it?', options: ['It joins things close by, like headphones, with no cable and no Wi-Fi point', 'It is the fastest way to send data', 'It reaches further than Wi-Fi'], why: 'Bluetooth joins two devices close together (a few metres) with no cable and no Wi-Fi point. Fine for headphones, too slow for big files.' } };
+const BLUETOOTH = { id: 'bluetooth', group: 'Speeds', title: 'Bluetooth Range', type: 'tutorial',
+  setup() { S = fresh({}); const a = place('tablet', 300, 180, 'Ana'), b = place('tablet', 350, 180, 'Ben'); S.bt = [[a.id, b.id]]; S.startDevs = S.devs.length; },
+  intro: 'These two tablets are joined by <b>Bluetooth</b>: no cable, no Wi-Fi point. The small blue circle shows how far Bluetooth reaches.',
+  steps: [
+    { text: 'Send a <b>Photo</b> from one tablet to the other. It goes by Bluetooth.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok },
+    { text: 'Carry one tablet <b>outside</b> the blue circle (only a few metres), then send again.', show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok }
+  ],
+  end: 'Bluetooth only reaches a few metres. Wi-Fi reaches across a room or a building.',
+  after: { q: 'Which reaches further?', options: ['Wi-Fi', 'Bluetooth', 'They reach the same distance'], why: 'Bluetooth reaches only a few metres. Wi-Fi reaches across a room or more.' } };
+export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2, STAR, BUS, RING, MESH, SERIAL, DUPLEX, SPEEDRACE, BLUETOOTH];
+export const SECTIONS = ['Introduction', 'Wi-Fi', 'Bigger networks', 'Troubleshooting', 'Design', 'Packets', 'Topologies', 'Transmission modes', 'Speeds'];
 
 // ================================================================ the small pictures for Walk me through it (website drawing)
 function icon(d, x, y) {
@@ -333,6 +498,7 @@ function icon(d, x, y) {
     for (let i = 0; i < n; i++) s += '<rect class="port" x="' + (x - n * 5 + 2 + i * 10) + '" y="' + (y - 5) + '" width="7" height="7" rx="1"/>';
     return s;
   }
+  if (d.kind === 'bus') return '<rect class="body sw" x="' + (x - 70) + '" y="' + (y - 8) + '" width="140" height="16" rx="8"/>';
   if (d.kind === 'tablet') return '<rect class="body" x="' + (x - 20) + '" y="' + (y - 30) + '" width="40" height="56" rx="6"/><rect class="screen" x="' + (x - 15) + '" y="' + (y - 24) + '" width="30" height="42" rx="2"/>';
   if (d.kind === 'wifi') return '<path class="wave" d="M' + (x - 20) + ' ' + (y - 18) + ' Q' + x + ' ' + (y - 36) + ' ' + (x + 20) + ' ' + (y - 18) + '"/><path class="wave" d="M' + (x - 11) + ' ' + (y - 12) + ' Q' + x + ' ' + (y - 22) + ' ' + (x + 11) + ' ' + (y - 12) + '"/>' +
     '<rect class="body sw" x="' + (x - 26) + '" y="' + (y - 6) + '" width="52" height="20" rx="5"/><circle class="led" cx="' + x + '" cy="' + (y + 4) + '" r="3"/>';
@@ -382,7 +548,7 @@ export function startSolo({ container, myName, colour }) {
   for (let y = 0; y < MAPH; y++) { let r = ''; for (let x = 0; x < MAPW; x++) r += (x === 0 || y === 0 || x === MAPW - 1 || y === MAPH - 1) ? '#' : '.'; rows.push(r); }
   let view = null, scene = null, devG = null, cableG = null, fxG = null, crateG = null;
   const CRATES = {};   // kind -> { x, y, w, h, k3 }
-  const shelfAt = { laptop: 2, tablet: 6, printer: 10, 'switch': 14, wifi: 18, cable: 27 };
+  const shelfAt = { laptop: 2, tablet: 6, printer: 10, 'switch': 14, wifi: 18, pc: 22, cable: 27 };
   const pos = { x: 16, y: 21.5, face: Math.PI };
   let moving = false, overview = false, stick = null;
   const keys = new Set();
@@ -411,7 +577,7 @@ export function startSolo({ container, myName, colour }) {
     guideKey = '';
     view.setRoom({ w: MAPW, h: MAPH, rows, regions: regionsFor(S.rooms) });
     // the last mission's devices, crates, cables and Wi-Fi rings go, and so does their memory
-    dropGroup(cableG); dropGroup(fxG); dropGroup(wifiG); disposeAll(devG); disposeAll(crateG);
+    dropGroup(cableG); dropGroup(fxG); dropGroup(wifiG); dropGroup(ringG); ringG = null; ringKey = ''; disposeAll(devG); disposeAll(crateG);
     drawn.clear(); wifiKey = null;
     devG = new THREE.Group(); cableG = new THREE.Group(); fxG = new THREE.Group(); crateG = new THREE.Group(); wifiG = null;
     scene.add(devG, cableG, fxG, crateG);
@@ -437,7 +603,7 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // ---- devices in 3D: footprints in tiles, kept in step with the desk position (x, y) the model uses
-  function size(kind, ports) { return kind === 'switch' ? ((ports || 8) <= 4 ? [4, 1] : [5, 1]) : kind === 'wifi' ? [2, 1] : kind === 'tablet' ? [1, 1] : [3, 2]; }
+  function size(kind, ports) { return kind === 'bus' ? [7, 1] : kind === 'switch' ? ((ports || 8) <= 4 ? [4, 1] : [5, 1]) : kind === 'wifi' ? [2, 1] : kind === 'tablet' ? [1, 1] : [3, 2]; }
   function socketsFor(d) {
     const n = sockets(d), out = [];
     for (let i = 0; i < n; i++) out.push(d.kind === 'laptop' ? { x: d.X + d.w - 0.5 + 0.12, y: d.Y + d.h / 2 - 0.5, face: 'e' }
@@ -560,7 +726,7 @@ export function startSolo({ container, myName, colour }) {
 
   // ---- the model's cables are the 3D cables with both plugs in
   function sync() {
-    S.cables = cables3.filter(c => c.ends[0] && c.ends[1]).map(c => ({ a: c.ends[0].dev, b: c.ends[1].dev, c3: c }));
+    S.cables = cables3.filter(c => c.ends[0] && c.ends[1] && !c.broken).map(c => ({ a: c.ends[0].dev, b: c.ends[1].dev, c3: c }));
     for (const d of S.devs) for (let i = 0; i < d.k3.lights.length; i++) setLight(d.k3.lights[i], socketTaken(d, i));
     retitleCrates();
     // a switch's label says how many of its ports are used
@@ -576,7 +742,7 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // ---- hands: hold to grab, let go to put down or plug in (as the team game)
-  function locked() { return M.phase === 'ask' || M.phase === 'predict' || M.phase === 'checked' || M.phase === 'done' || !!anim || !!fx || !!pk; }
+  function locked() { return M.phase === 'ask' || M.phase === 'predict' || M.phase === 'checked' || M.phase === 'done' || !!anim || !!fx || !!pk || !!race || M.m.type === 'race'; }
   function release(i) {
     const h = hands[i];
     if (h.dev) dropDevice(i, true);
@@ -588,7 +754,7 @@ export function startSolo({ container, myName, colour }) {
     h.down = down;
     $(i ? 'rightBtn' : 'leftBtn')?.classList.toggle('on', down);
     if (!down) { letGo(i); return; }
-    if (locked()) { toast(M.phase === 'ask' ? 'Answer the question on the right first.' : M.phase === 'predict' ? 'Predict first: choose Yes or No for each job, then press Check my predictions.' : anim ? 'Wait for the message to arrive.' : 'Press the button on the mission sheet to go on.', 'hint'); return; }
+    if (locked()) { toast(M.m.type === 'race' ? 'Watch this one: predict on the right, then press Run it.' : M.phase === 'ask' ? 'Answer the question on the right first.' : M.phase === 'predict' ? 'Predict first: choose Yes or No for each job, then press Check my predictions.' : anim ? 'Wait for the message to arrive.' : 'Press the button on the mission sheet to go on.', 'hint'); return; }
     if (h.cable || h.dev) return;
     const g = grabTarget(i);
     if (!g) return;
@@ -784,6 +950,46 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // ---- drawing cables (thick tubes with a plug on each end) and the Wi-Fi circles
+  const glassMat = new THREE.MeshStandardMaterial({ color: 0x74c0fc, transparent: true, opacity: 0.42, roughness: 0.1, depthWrite: false });
+  const WIRE_COLS = [0xf03e3e, 0xf59f00, 0xfab005, 0x37b24d, 0x1c7ed6, 0x7048e8, 0xd6336c, 0x495057];
+  // a wire inside a typed cable: the cable's path moved a little sideways (ox) and up (oy)
+  function offsetCurve(pts, ox, oy) {
+    const up = new THREE.Vector3(0, 1, 0), out = [];
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], t = b.clone().sub(a).normalize();
+      const side = new THREE.Vector3().crossVectors(t, up).normalize(), up2 = new THREE.Vector3().crossVectors(side, t).normalize();
+      out.push(pts[i].clone().addScaledVector(side, ox).addScaledVector(up2, oy));
+    }
+    return new THREE.CatmullRomCurve3(out);
+  }
+  function wireCount(c) { return c.type === 'parallel' ? 8 : c.type === 'full' ? 2 : 1; }
+  function wireCurves(c, pts) {
+    pts = pts || cablePoints(c);
+    const n = wireCount(c), out = [];
+    for (let i = 0; i < n; i++) { const a = n === 1 ? 0 : i / n * Math.PI * 2, r = n === 1 ? 0 : (n === 2 ? 4 : 6); out.push(offsetCurve(pts, Math.cos(a) * r, Math.sin(a) * r)); }
+    return out;
+  }
+  function wiresFor(c, pts) {
+    const g = new THREE.Group(), curves = wireCurves(c, pts), n = curves.length;
+    curves.forEach((cv, i) => {
+      const col = c.type === 'parallel' ? WIRE_COLS[i] : c.type === 'full' ? (i ? 0xf76707 : 0x1c7ed6) : 0x1c7ed6;
+      const m = new THREE.Mesh(new THREE.TubeGeometry(cv, Math.min(200, pts.length * 3), n > 2 ? 1.8 : 2.6, 6, false), new THREE.MeshStandardMaterial({ color: col, roughness: 0.5 }));
+      m.userData.own = true; g.add(m);
+      // arrows: which way data can go along this wire (simplex one way; half duplex both, one at a time; full duplex one way each)
+      const dirs = c.type === 'half' ? [1, -1] : c.type === 'full' ? [i === 0 ? 1 : -1] : [1];
+      dirs.forEach((dir, k) => {
+        for (const u0 of [0.3, 0.7]) {
+          const u = c.type === 'half' ? u0 + (k ? 0.08 : -0.08) : u0, t = cv.getTangentAt(u).normalize().multiplyScalar(dir);
+          const cone = new THREE.Mesh(new THREE.ConeGeometry(n > 2 ? 6 : 13, n > 2 ? 16 : 34, 10), new THREE.MeshBasicMaterial({ color: c.type === 'half' && k ? 0xf76707 : 0xffd43b }));
+          cone.position.copy(cv.getPointAt(u)).add(new THREE.Vector3(0, n > 2 ? 0 : 22, 0));
+          cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), t);
+          cone.userData.own = true; g.add(cone);
+        }
+      });
+    });
+    return g;
+  }
+  const brokenMat = new THREE.MeshStandardMaterial({ color: 0xe03131, emissive: 0x5c0f0f, roughness: 0.5 });
   const cableMat = new THREE.MeshStandardMaterial({ color: 0x2b6fd6, roughness: 0.45 }), litMat = new THREE.MeshStandardMaterial({ color: 0xf2c21b, emissive: 0x6b5200, roughness: 0.4 });
   const plugT = (() => {
     const g = new THREE.Group();
@@ -807,7 +1013,7 @@ export function startSolo({ container, myName, colour }) {
     return pts;
   }
   function cableKey(c) {
-    let k = (litCables.has(c) ? 'L' : '') + (anim?.cur?.c === c ? 'A' + anim.cur.u.toFixed(3) : '') + hands.map(h => h.cable === c ? h.joint : -1).join() + JSON.stringify(c.ends);
+    let k = (c.type || '') + (c.broken ? 'B' : '') + (litCables.has(c) ? 'L' : '') + (anim?.cur?.c === c ? 'A' + anim.cur.u.toFixed(3) : '') + hands.map(h => h.cable === c ? h.joint : -1).join() + JSON.stringify(c.ends);
     for (let i = 0; i <= c.n; i++) k += ',' + c.P[2 * i].toFixed(2) + ',' + c.P[2 * i + 1].toFixed(2);
     return k;
   }
@@ -825,17 +1031,42 @@ export function startSolo({ container, myName, colour }) {
         else p.quaternion.setFromUnitVectors(UPZ, pts[at].clone().sub(pts[nb]).normalize());
       }
       if (d.tube) { cableG.remove(d.tube); d.tube.geometry.dispose(); }
-      d.tube = new THREE.Mesh(tubeGeometry(c, pts), litCables.has(c) ? litMat : cableMat);
+      d.tube = new THREE.Mesh(tubeGeometry(c, pts), c.type ? glassMat : c.broken ? brokenMat : litCables.has(c) ? litMat : cableMat);
       d.tube.userData.own = true; cableG.add(d.tube); tubes.set(c, d.tube); d.key = key;
+      if (d.extra) { cableG.remove(d.extra); d.extra.traverse(o => { if (o.userData.own) o.geometry.dispose(); }); d.extra = null; }
+      if (c.type) { d.extra = wiresFor(c, pts); cableG.add(d.extra); }
     }
     drawWifi();
+    drawRingArrows();
     drawPulse();
+  }
+  // a ring: arrows on its cables show the one way data goes round
+  let ringG = null, ringKey = '';
+  function drawRingArrows() {
+    const o = S.ringOrder, key = o ? o.join() + ':' + cables3.map(c => cableKey(c)).join('|') : '';
+    if (key === ringKey) return; ringKey = key;
+    if (ringG) dropGroup(ringG); ringG = null;
+    if (!o) return;
+    ringG = new THREE.Group(); scene.add(ringG);
+    for (let i = 0; i < o.length; i++) {
+      const x = o[i], y = o[(i + 1) % o.length], c = cables3.find(c => c.ends[0] && c.ends[1] && ((c.ends[0].dev === x && c.ends[1].dev === y) || (c.ends[1].dev === x && c.ends[0].dev === y)));
+      if (!c) continue;
+      const pts = cablePoints(c); if (c.ends[0].dev !== x) pts.reverse();
+      const curve = new THREE.CatmullRomCurve3(pts);
+      for (const u of [0.3, 0.7]) {
+        const cone = new THREE.Mesh(new THREE.ConeGeometry(16, 40, 12), new THREE.MeshBasicMaterial({ color: c.broken ? 0xe03131 : 0xffd43b }));
+        cone.position.copy(curve.getPointAt(u)).add(new THREE.Vector3(0, 30, 0));
+        cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), curve.getTangentAt(u).normalize());
+        cone.userData.own = true; ringG.add(cone);
+      }
+    }
   }
   // Wi-Fi: each Wi-Fi point's range on the floor, and a dotted line from each tablet that has joined (rebuilt only when it changes)
   function drawWifi() {
     const key = S.devs.filter(d => d.kind === 'wifi' || d.kind === 'tablet').map(d => d.id + ':' + centre(d).map(v => v.toFixed(2)) + (d.kind === 'wifi' ? ':' + (cablesOf(d.id).length > 0) : '')).join('|');
-    if (key === wifiKey) return;
-    wifiKey = key;
+    const btKey = (S.bt || []).map(p => p.map(id => { const d = dev(id); return d ? d.x.toFixed(0) + ',' + d.y.toFixed(0) : ''; }).join('/')).join(';');
+    if (key + btKey === wifiKey) return;
+    wifiKey = key + btKey;
     if (wifiG) dropGroup(wifiG);
     wifiG = new THREE.Group(); scene.add(wifiG);
     for (const w of S.devs.filter(d => d.kind === 'wifi')) {
@@ -851,6 +1082,15 @@ export function startSolo({ container, myName, colour }) {
         const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3((t.tx + 0.5) * T, 120, (t.ty + 0.5) * T), new THREE.Vector3((cx + 0.5) * T, 170, (cy + 0.5) * T)]);
         const line = new THREE.Line(g, new THREE.LineDashedMaterial({ color: 0x2f9e44, dashSize: 18, gapSize: 12 })); line.computeLineDistances(); line.userData.own = true; wifiG.add(line);
       }
+    }
+    // Bluetooth: a small blue circle round a paired tablet (it only reaches a few metres)
+    for (const p of S.bt || []) {
+      const t0 = dev(p[0]); if (!t0) continue;
+      const [cx, cy] = centre(t0), R = BT_RANGE / K * T;
+      const ring = new THREE.Mesh(new THREE.RingGeometry(R - 6, R, 64).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x4dabf7, transparent: true, opacity: 0.9, depthWrite: false }));
+      const fill = new THREE.Mesh(new THREE.CircleGeometry(R, 48).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x4dabf7, transparent: true, opacity: 0.12, depthWrite: false }));
+      ring.position.set((cx + 0.5) * T, 4, (cy + 0.5) * T); fill.position.set((cx + 0.5) * T, 3, (cy + 0.5) * T);
+      ring.userData.own = fill.userData.own = true; wifiG.add(ring, fill);
     }
   }
   // the pulse on what a tutorial step points at
@@ -1176,6 +1416,85 @@ export function startSolo({ container, myName, colour }) {
       }
     }
   }
+  // ---------------- races (transmission modes, speeds)
+  let race = null;
+  const BYTE = [0, 1, 0, 0, 0, 0, 0, 1];   // the letter A
+  function laneLabel(text, at, col) { const sp = tape(text, { bg: col || '#151515', size: 0.032 }); sp.position.copy(at); return sp; }
+  function runRace() {
+    if (race || !M.racePick) return;
+    const g = new THREE.Group(); scene.add(g);
+    race = { t: 0, g, items: [], lanes: [], end: 0 };
+    for (const L of M.m.lanes) {
+      const a = S.devs.find(d => d.name === L.a), b = S.devs.find(d => d.name === L.b);
+      const [ax, ay] = centre(a), [bx, by] = centre(b), mid = new THREE.Vector3(((ax + bx) / 2 + 0.5) * T, 300, ((ay + by) / 2 + 0.5) * T);
+      const lane = { L, a, b, finish: 0, mid };
+      const c3 = cables3.find(c => c.ends[0] && c.ends[1] && ((c.ends[0].dev === a.id && c.ends[1].dev === b.id) || (c.ends[1].dev === a.id && c.ends[0].dev === b.id)));
+      const bit = (v, curve, t0, dur, rev) => {
+        const m = new THREE.Mesh(new THREE.SphereGeometry(v ? 15 : 12, 12, 8), new THREE.MeshBasicMaterial({ color: v ? 0xffd43b : 0xf8f9fa }));
+        m.visible = false; g.add(m); race.items.push({ m, curve, t0, dur, rev, lift: 0 }); return t0 + dur;
+      };
+      if (c3 && ['serial', 'parallel', 'simplex', 'half', 'full'].includes(L.kind)) {
+        const curves = wireCurves(c3), fwd = c3.ends[0].dev === a.id, D = 1.6;
+        const sendSerial = (wire, t0, rev) => { let end = 0; BYTE.forEach((v, i) => { end = bit(v, curves[wire], t0 + i * 0.3, D, rev); }); return end; };
+        if (L.kind === 'parallel') BYTE.forEach((v, i) => { lane.finish = Math.max(lane.finish, bit(v, curves[i], 0, D, !fwd)); });
+        else if (L.kind === 'serial') lane.finish = sendSerial(0, 0, !fwd);
+        else if (L.kind === 'simplex') { lane.finish = sendSerial(0, 0, !fwd); lane.blocked = true; }
+        else if (L.kind === 'half') { const t1 = sendSerial(0, 0, !fwd); lane.finish = sendSerial(0, t1 + 0.3, fwd); lane.waitUntil = t1 + 0.3; }
+        else { const t1 = sendSerial(0, 0, !fwd), t2 = sendSerial(1, 0, fwd); lane.finish = Math.max(t1, t2); }
+      } else {
+        // speeds: the same photo as 6 packets, over a cable, Wi-Fi or Bluetooth
+        let curves = [];
+        if (L.kind === 'ethernet' && c3) { const pts = cablePoints(c3); if (c3.ends[0].dev !== a.id) pts.reverse(); curves = [new THREE.CatmullRomCurve3(pts)]; }
+        else {
+          const stops = [a].concat(L.via ? [S.devs.find(d => d.name === L.via)] : []).concat([b]);
+          for (let i = 0; i + 1 < stops.length; i++) {
+            const [x0, y0] = centre(stops[i]), [x1, y1] = centre(stops[i + 1]);
+            curves.push(new THREE.CatmullRomCurve3([new THREE.Vector3((x0 + 0.5) * T, 120, (y0 + 0.5) * T), new THREE.Vector3(((x0 + x1) / 2 + 0.5) * T, 240, ((y0 + y1) / 2 + 0.5) * T), new THREE.Vector3((x1 + 0.5) * T, 120, (y1 + 0.5) * T)]));
+          }
+        }
+        const speed = { ethernet: 1500, wifi: 650, bluetooth: 220 }[L.kind], gap = { ethernet: 0.25, wifi: 0.45, bluetooth: 0.8 }[L.kind];
+        const len = curves.reduce((t, c) => t + c.getLength(), 0);
+        for (let n = 1; n <= 6; n++) {
+          const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: envelopeTex(n), depthTest: false, transparent: true })); sp.scale.set(70, 52, 1); sp.renderOrder = 7; sp.visible = false; g.add(sp);
+          const t0 = (n - 1) * gap, dur = len / speed;
+          race.items.push({ m: sp, path: curves, len, t0, dur, rev: false, lift: 40 });
+          lane.finish = Math.max(lane.finish, t0 + dur);
+        }
+      }
+      if (lane.blocked) { const x = laneLabel('Cannot send this way', new THREE.Vector3((bx + 0.5) * T, 260, (by + 0.5) * T), '#c92a2a'); g.add(x); }
+      if (lane.waitUntil) { lane.waitSprite = laneLabel('Waiting...', new THREE.Vector3((bx + 0.5) * T, 260, (by + 0.5) * T), '#e67700'); g.add(lane.waitSprite); }
+      race.lanes.push(lane); race.end = Math.max(race.end, lane.finish);
+    }
+    log.note(M.m.title + ': predicted ' + M.racePick + '.');
+    drawAll();
+  }
+  function stepRace(dt) {
+    if (!race) return;
+    race.t += dt;
+    const t = race.t;
+    for (const it of race.items) {
+      const u = (t - it.t0) / it.dur;
+      it.m.visible = u >= 0 && u <= 1;
+      if (!it.m.visible) continue;
+      const f = it.rev ? 1 - u : u;
+      if (it.curve) it.m.position.copy(it.curve.getPointAt(f));
+      else { let d = f * it.len, c = it.path[0]; for (c of it.path) { const l = c.getLength(); if (d <= l) break; d -= l; } it.m.position.copy(c.getPointAt(Math.min(1, d / c.getLength()))); }
+      it.m.position.y += it.lift;
+    }
+    for (const lane of race.lanes) {
+      if (lane.waitSprite && t >= lane.waitUntil) { race.g.remove(lane.waitSprite); lane.waitSprite = null; }
+      if (!lane.shown && t >= lane.finish) { lane.shown = true; race.g.add(laneLabel(lane.L.label + ': ' + lane.finish.toFixed(1) + ' s', lane.mid, '#2b8a3e')); }
+    }
+    if (t >= race.end + 1.2) {
+      const keep = race; race = null;
+      // the labels stay up a little while; the bits go
+      for (const it of keep.items) { keep.g.remove(it.m); it.m.geometry?.dispose?.(); it.m.material.map?.dispose?.(); it.m.material.dispose(); }
+      pages.push({ until: nowS() + 8, done() { scene.remove(keep.g); keep.g.traverse(o => { if (o.material) { o.material.map?.dispose?.(); o.material.dispose(); } }); } });
+      M.raced = true; M.raceTimes = keep.lanes.map(l => l.L.label + ': ' + l.finish.toFixed(1) + ' s').join(', ');
+      log.add(M.m.title + ': prediction ' + (M.racePick === M.m.predict.options[0] ? 'right' : 'not right'), M.racePick === M.m.predict.options[0]);
+      finishMission(); drawAll();
+    }
+  }
   // ---------------- packets
   let pk = null;
   const PK_SPEED = 1300;   // world units a second along the cables
@@ -1357,6 +1676,10 @@ export function startSolo({ container, myName, colour }) {
   }
   // What each laptop and tablet knows about its connection, shown on its taskbar; a change joins its screen's queue.
   function netState(d) {
+    if (d.kind === 'tablet' && S.bt) {
+      const o = btPartner(d);
+      return o && btOn(d) ? { key: 'bt:' + o.id, text: 'Bluetooth: connected to ' + o.name, ok: true, to: o.name } : { key: 'btoff', text: 'Bluetooth: out of range', ok: false };
+    }
     if (d.kind === 'tablet') {
       const w = aps(d);
       if (!w.length) return { key: 'none', text: 'Wi-Fi: no signal', ok: false };
@@ -1487,7 +1810,8 @@ export function startSolo({ container, myName, colour }) {
     }
   }
   function drawTest() {
-    const t = $('testBar'); t.innerHTML = ''; t.hidden = false;
+    const t = $('testBar'); t.innerHTML = ''; t.hidden = M.m.type === 'race';
+    if (M.m.type === 'race') return;
     t.classList.toggle('pulse', M.show === 'test');
     if (compose && (!S.devs.includes(compose.a) || !S.devs.includes(compose.b) || M.phase === 'predict')) compose = null;
     if (compose) {
@@ -1549,16 +1873,19 @@ export function startSolo({ container, myName, colour }) {
 
   // ---- missions
   let M = null, missionAt = 0, have = 0;
+  const openSecs = new Set();
   const done = load('all:done', {}) || {};   // the 2D app's key: the same eleven missions in the same order
   function saveDone() { save('all:done', done); }
 
   function start(i) {
     missionAt = i;
+    openSecs.add(MISSIONS[i].group);
     const m = MISSIONS[i];
-    M = { m, step: 0, phase: m.type === 'fix' ? 'predict' : m.before ? 'ask' : 'build', picks: {}, show: null, walked: false, latched: [], afterOk: !m.after };
+    M = { racePick: null, raced: false, m, step: 0, phase: m.type === 'fix' ? 'predict' : m.before ? 'ask' : 'build', picks: {}, show: null, walked: false, latched: [], afterOk: !m.after };
     for (const h of hands) { h.cable = null; h.joint = -1; h.dev = null; }
-    anim = null; fx = null; stopPackets(); compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
+    anim = null; fx = null; stopPackets(); if (race) { scene.remove(race.g); race = null; } compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
     m.setup();
+    S.ringOrder = null;
     buildWorld();
     for (const d of S.devs) realise(d);
     // the starting cables, laid straight between free sockets
@@ -1567,8 +1894,8 @@ export function startSolo({ container, myName, colour }) {
       const a = dev(w.a), b = dev(w.b);
       const sa = a.k3.sockets.findIndex((_, k) => !socketTaken(a, k)), sb = b.k3.sockets.findIndex((_, k) => !socketTaken(b, k));
       if (sa < 0 || sb < 0) continue;
-      const pa = plugPin(a, sa), pb = plugPin(b, sb), len = Math.hypot(pa[0] - pb[0], pa[1] - pb[1]) * 1.25 + 2;
-      const c = newCable([pa, pb], len); c.ends = [{ dev: a.id, sock: sa }, { dev: b.id, sock: sb }];
+      const pa = plugPin(a, sa), pb = plugPin(b, sb), D0 = Math.hypot(pa[0] - pb[0], pa[1] - pb[1]), len = w.type || M.m.type === 'race' ? D0 * 1.04 + 0.6 : D0 * 1.25 + 2;   // race cables are tight
+      const c = newCable([pa, pb], len); c.ends = [{ dev: a.id, sock: sa }, { dev: b.id, sock: sb }]; c.type = w.type || null;
     }
     sync();
     updateScreens(true);
@@ -1614,11 +1941,31 @@ export function startSolo({ container, myName, colour }) {
     const probs = M.m.check();
     M.phase = 'checked'; M.probs = probs;
     log.add(M.m.title + ': ' + (probs.length ? probs.length + ' problem' + (probs.length > 1 ? 's' : '') : 'everything works'), !probs.length);
+    if (!probs.length && M.m.breakAfter) { if (M.m.onCheck) M.m.onCheck(); topoBreak(); return; }
     if (!probs.length) {
       have++;
       if (have >= (M.m.rounds || 1)) { have = 0; finishMission(); toast('Everything works, with no mistakes.', 'good'); }
       else toast('Everything works, with no mistakes. ' + have + ' of ' + M.m.rounds + ' clean networks.', 'good');
     } else { have = 0; toast('Not this time: this network does not count.', 'bad'); }
+    drawAll();
+  }
+  function topoBreak() {
+    // mend the last break, then break a different cable
+    if (M.broken) { M.broken.broken = false; sync(); }
+    const pool = M.m.breakPick().map(c => c.c3).filter(c => c && c !== M.broken);
+    const c = pick(pool.length ? pool : M.m.breakPick().map(x => x.c3)); c.broken = true; M.broken = c;
+    sync();
+    // three jobs: one that crosses the break if there is one, one that works, and one more
+    const pairs = shuffle(allPairs()), across = pairs.filter(p => !route(p[0], p[1])), fine = pairs.filter(p => route(p[0], p[1]));
+    const direct = pairs.find(p => (p[0].id === c.ends[0].dev && p[1].id === c.ends[1].dev) || (p[1].id === c.ends[0].dev && p[0].id === c.ends[1].dev));
+    let jobs = [];
+    if (across.length) jobs.push(across[0]);
+    if (direct && !jobs.includes(direct)) jobs.push(direct);
+    if (fine.length && !jobs.includes(fine[0])) jobs.push(fine[0]);
+    jobs = jobs.concat(pairs.filter(p => !jobs.includes(p))).slice(0, 3);
+    S.jobs = shuffle(jobs);
+    M.phase = 'predict'; M.picks = {}; M.predicted = false; M.predAns = null; M.probs = null;
+    toast('Crack! A cable broke (it is red). Predict which jobs still work.', 'bad');
     drawAll();
   }
   function checkPredict() {
@@ -1627,7 +1974,8 @@ export function startSolo({ container, myName, colour }) {
     const wrong = S.jobs.filter((p, i) => (M.picks[i] === 'Yes') !== M.predAns[i]).length;
     M.predicted = true;
     log.add(M.m.title + ' predictions: ' + (wrong ? wrong + ' wrong' : 'all right'), !wrong);
-    if (wrong) { have = 0; M.phase = 'checked'; M.probs = null; toast('Not this time: this network does not count. Read why for each red job.', 'bad'); }
+    if (wrong) { have = 0; M.phase = 'checked'; M.probs = null; toast(M.m.breakAfter ? 'Not this time. Read why for each red job, then try another break.' : 'Not this time: this network does not count. Read why for each red job.', 'bad'); }
+    else if (M.m.breakAfter) { finishMission(); toast('All three predictions right.', 'good'); }
     else { M.phase = 'build'; toast('All three predictions right. Now fix it.', 'good'); }
     drawAll();
   }
@@ -1636,16 +1984,27 @@ export function startSolo({ container, myName, colour }) {
   function drawPanel() {
     const t = $('mission'), m = M.m;
     t.hidden = false; t.innerHTML = '';
-    const tabs = el('div', { class: 'tabs', role: 'group', 'aria-label': 'Missions' });
-    MISSIONS.forEach((x, i) => {
-      const open = i === 0 || done[i - 1] || done[i];
-      const b = el('button', { type: 'button', 'aria-pressed': String(i === missionAt), title: x.title }, (done[i] ? '&#10003; ' : '') + (i + 1));
-      b.disabled = !open;
-      b.addEventListener('click', () => { have = 0; start(i); });
-      tabs.appendChild(b);
+    // the missions in collapsible sections; in each section a mission opens when the one before it is done
+    const nav = el('div', { class: 'sections', role: 'navigation', 'aria-label': 'Missions' });
+    SECTIONS.forEach(sec => {
+      const list = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === sec);
+      if (!list.length) return;
+      const det = el('details', { class: 'sec' + (sec === m.group ? ' current' : '') });
+      if (openSecs.has(sec)) det.open = true;
+      det.appendChild(el('summary', {}, '<span>' + sec + '</span><span class="count">' + list.filter(([, i]) => done[i]).length + ' of ' + list.length + '</span>'));
+      det.addEventListener('toggle', () => { if (det.open) openSecs.add(sec); else openSecs.delete(sec); });
+      const items = el('div', { class: 'sec-list' });
+      list.forEach(([x, i], k) => {
+        const b = el('button', { type: 'button', 'aria-current': String(i === missionAt) }, (done[i] ? '<span class="tick">&#10003;</span> ' : '<span class="num">' + (k + 1) + '</span> ') + x.title);
+        b.disabled = !(k === 0 || done[list[k - 1][1]] || done[i]);
+        b.addEventListener('click', () => { have = 0; start(i); });
+        items.appendChild(b);
+      });
+      det.appendChild(items); nav.appendChild(det);
     });
-    t.appendChild(tabs);
-    t.appendChild(el('div', { class: 'head' }, '<span>' + m.group + '</span><span>Mission ' + (missionAt + 1) + ' of ' + MISSIONS.length + '</span>'));
+    t.appendChild(nav);
+    const inSec = MISSIONS.filter(x => x.group === m.group);
+    t.appendChild(el('div', { class: 'head' }, '<span>' + m.group + '</span><span>Mission ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length + '</span>'));
     t.appendChild(el('h2', {}, m.title));
     if (done[missionAt] && M.phase !== 'done') t.appendChild(el('p', { class: 'note' }, 'Done before. Play it again for practice.'));
     t.appendChild(el('p', {}, m.intro));
@@ -1660,27 +2019,25 @@ export function startSolo({ container, myName, colour }) {
     } else {
       t.appendChild(el('p', {}, M.phase === 'predict' ? '<b>1. Predict.</b> Look at the cables. Will each job work? You cannot change the network yet.' : M.phase === 'build' ? '<b>2. Fix it.</b> ' + (m.fixText || 'Fix the cables so <b>every</b> laptop can print and message every other laptop. Test it, then check.') : ''));
       if (m.rounds > 1) t.appendChild(el('p', { class: 'note' }, have + ' of ' + m.rounds + ' clean networks in a row.'));
-      if (M.phase === 'predict' || M.predicted) {
-        const list = el('div', { class: 'jobs' });
-        S.jobs.forEach((p, i) => {
-          const card = el('div', { class: 'job' }, '<span>' + jobText(p[0], p[1]) + '</span>');
-          const seg = el('div', { class: 'seg', role: 'group' });
-          ['Yes', 'No'].forEach(v => {
-            const b = el('button', { type: 'button', 'aria-pressed': String(M.picks[i] === v) }, v);
-            b.disabled = M.phase !== 'predict';
-            b.addEventListener('click', () => { M.picks[i] = v; drawPanel(); });
-            seg.appendChild(b);
-          });
-          card.appendChild(seg);
-          if (M.predicted && M.predAns) {
-            const right = (M.picks[i] === 'Yes') === M.predAns[i];
-            card.className = 'job ' + (right ? 'good' : 'bad');
-            card.appendChild(el('small', {}, (M.predAns[i] ? 'Yes: ' : 'No: ') + M.predWhy[i]));
-          }
-          list.appendChild(card);
-        });
-        t.appendChild(list);
-      }
+      if (M.phase === 'predict' || M.predicted) t.appendChild(jobList());
+    }
+    if (m.type === 'race') {
+      t.appendChild(el('ul', { class: 'goals' }, m.lanes.map(L => '<li><b>' + L.label + ':</b> ' + L.text + '</li>').join('')));
+      const p = m.predict;
+      t.appendChild(el('p', { class: 'ask-q' }, '<b>Predict.</b> ' + p.q));
+      const opts = el('div', { class: 'seg race-pick', role: 'group' });
+      p.options.forEach(o => {
+        const b = el('button', { type: 'button', 'aria-pressed': String(M.racePick === o) }, o);
+        b.disabled = !!race || M.raced;
+        b.addEventListener('click', () => { M.racePick = o; drawPanel(); });
+        opts.appendChild(b);
+      });
+      t.appendChild(opts);
+      if (M.raced) t.appendChild(el('p', { class: M.racePick === p.options[0] ? 'win' : 'note' }, 'You predicted <b>' + M.racePick + '</b>. ' + (M.racePick === p.options[0] ? 'Right! ' : 'Not quite. ') + p.why + '<br><small>' + M.raceTimes + '</small>'));
+    }
+    if (m.breakAfter && (M.phase === 'predict' || M.predicted)) {
+      t.appendChild(el('p', {}, '<b>A cable broke</b> (red). Will each job still work?'));
+      t.appendChild(jobList());
     }
     if (M.phase === 'checked' && M.probs && M.probs.length) t.appendChild(el('ul', { class: 'probs' }, M.probs.slice(0, 5).map(p => '<li>' + p + '</li>').join('')));
     if (M.phase === 'done') t.appendChild(el('p', { class: 'win' }, 'Mission complete! ' + (m.end || '')));
@@ -1689,14 +2046,16 @@ export function startSolo({ container, myName, colour }) {
     const act = el('div', { class: 'actions' });
     if (M.phase === 'ask' || (M.phase === 'done' && !M.afterOk)) { /* answer first */ }
     else if (M.phase === 'done') act.appendChild(missionAt < MISSIONS.length - 1 ? btn('Next mission', 'go', () => start(missionAt + 1)) : btn('Play again', 'go', () => start(missionAt)));
-    else if (M.phase === 'checked') act.appendChild(btn(m.type === 'fix' ? 'New network' : 'Try again', 'go', () => start(missionAt)));
+    else if (M.phase === 'checked') act.appendChild(m.breakAfter && M.predicted ? btn('Try another break', 'go', topoBreak) : btn(m.type === 'fix' ? 'New network' : 'Try again', 'go', () => start(missionAt)));
     else if (M.phase === 'predict') act.appendChild(btn('Check my predictions', 'go', checkPredict));
+    else if (m.breakAfter && M.predicted) { /* the result is shown; Try another break above */ }
+    else if (m.type === 'race') { const r = btn(race ? 'Watch...' : 'Run it', 'go', runRace); r.disabled = !!race || !M.racePick; act.appendChild(r); }
     else if (m.type !== 'tutorial') act.appendChild(btn('Check my network', 'go', checkMission));
     if (m.type === 'tutorial' && M.phase === 'build') act.appendChild(btn('Start again', '', () => start(missionAt)));
     act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
     if (M.phase === 'done' || M.phase === 'checked') t.scrollTop = t.scrollHeight;   // the result and its button in view
-    $('step').textContent = 'Mission ' + (missionAt + 1) + ' of ' + MISSIONS.length;
+    $('step').textContent = m.group + ': ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length;
   }
   // A question in the mission panel: typed number or buttons. Wrong: why, then answer again (the buttons move).
   function askBox(a, onRight) {
@@ -1721,10 +2080,32 @@ export function startSolo({ container, myName, colour }) {
     box.appendChild(fb);
     return box;
   }
+  function jobList() {
+    const list = el('div', { class: 'jobs' });
+    S.jobs.forEach((p, i) => {
+      const card = el('div', { class: 'job' }, '<span>' + jobText(p[0], p[1]) + '</span>');
+      const seg = el('div', { class: 'seg', role: 'group' });
+      ['Yes', 'No'].forEach(v => {
+        const b = el('button', { type: 'button', 'aria-pressed': String(M.picks[i] === v) }, v);
+        b.disabled = M.phase !== 'predict';
+        b.addEventListener('click', () => { M.picks[i] = v; drawPanel(); });
+        seg.appendChild(b);
+      });
+      card.appendChild(seg);
+      if (M.predicted && M.predAns) {
+        const right = (M.picks[i] === 'Yes') === M.predAns[i];
+        card.className = 'job ' + (right ? 'good' : 'bad');
+        card.appendChild(el('small', {}, (M.predAns[i] ? 'Yes: ' : 'No: ') + M.predWhy[i]));
+      }
+      list.appendChild(card);
+    });
+    return list;
+  }
   function walkMe() {
     M.walked = true;
     const keep = S, m = M.m; let steps = [];
     if (m.walk) steps = m.walk();
+    else if (m.type === 'race') steps = m.lanes.map(L => ({ text: '<b>' + L.label + '.</b> ' + L.text, visual: '' })).concat([{ text: 'Predict first, then press Run it and watch. ' + m.predict.why, visual: '' }]);
     else if (m.type === 'tutorial') {
       steps = m.steps.map((s, i) => ({ text: 'Step ' + (i + 1) + '. ' + s.text, visual: '' }));
       steps.push({ text: 'The mission sheet ticks each step when you do it. The yellow ring on the floor shows where to go next.', visual: '' });
@@ -1793,8 +2174,8 @@ export function startSolo({ container, myName, colour }) {
     tick(ts);
   }
   function tick(ts) {
-    clock = ts / 1000;
-    const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0.016; last = ts;
+    clock = Math.max(clock, ts / 1000);
+    const dt = last ? Math.max(0, Math.min(0.1, (ts - last) / 1000)) : 0.016; last = Math.max(last, ts);   // time never runs backwards
     if (!view) return;
     let dx = 0, dy = 0;
     if (keys.has('ArrowLeft') || keys.has('KeyA')) dx -= 1;
@@ -1819,6 +2200,7 @@ export function startSolo({ container, myName, colour }) {
     stepAnim(dt);
     stepFx(dt);
     stepPackets(dt);
+    stepRace(dt);
     updateScreens(false);
     updatePortGlow(ts);
     updateOutline(ts);
@@ -1887,6 +2269,6 @@ export function startSolo({ container, myName, colour }) {
   start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk; }, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }

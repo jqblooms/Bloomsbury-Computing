@@ -57,6 +57,22 @@ p { margin: 0; }
 
 /* the mission panel */
 .mission { overflow: auto; padding: 14px; display: grid; gap: 10px; align-content: start; background: var(--surface); }
+.mission .sections { display: grid; gap: 4px; }
+.mission .sec { border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+.mission .sec.current { border-color: var(--brand); }
+.mission .sec summary { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: .9rem; list-style: none; }
+.mission .sec summary::-webkit-details-marker { display: none; }
+.mission .sec summary::before { content: "\25B8"; color: var(--muted); margin-right: 2px; transition: transform .15s; }
+.mission .sec[open] summary::before { transform: rotate(90deg); }
+.mission .sec summary span:first-of-type { flex: 1; }
+.mission .sec .count { font-weight: 500; font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mission .sec-list { display: grid; gap: 3px; padding: 0 6px 8px; }
+.mission .sec-list button { display: flex; align-items: center; gap: 8px; text-align: left; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--ink); padding: 5px 8px; cursor: pointer; font-size: .88rem; }
+.mission .sec-list button:hover:not(:disabled) { background: var(--surface-3); }
+.mission .sec-list button[aria-current="true"] { background: var(--brand-soft); border-color: var(--brand); font-weight: 700; }
+.mission .sec-list button:disabled { opacity: .45; cursor: default; }
+.mission .sec-list .num, .mission .sec-list .tick { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--surface-3); font-size: .72rem; font-weight: 700; flex: none; }
+.mission .sec-list .tick { background: var(--good); color: var(--on-brand); }
 .mission .tabs { display: flex; flex-wrap: wrap; gap: 4px; }
 .mission .tabs button { border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--ink-soft); padding: 3px 10px; font-weight: 600; font-size: .85rem; cursor: pointer; font-variant-numeric: tabular-nums; }
 .mission .tabs button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
@@ -84,6 +100,7 @@ p { margin: 0; }
 .mission .seg button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
 .mission .actions, .walk .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
+.mission .race-pick { flex-wrap: wrap; justify-self: start; }
 /* questions in the mission panel */
 .mission .ask { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--brand); border-radius: 12px; background: var(--brand-soft); }
 .mission .ask-q { font-size: .95rem; }

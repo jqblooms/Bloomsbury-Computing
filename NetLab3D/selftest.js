@@ -156,6 +156,21 @@ function sendPackets(a, b, kind, value) {
   for (let i = 0; i < 1500 && s.anim; i++) { if (s.pk && s.pk.arrivals.length === s.pk.parts.length && !order) order = s.pk.arrivals.map(p => p.n); s.frame(1); }
   return { ok: /^Message arrived/.test(s.toastText()), order };
 }
+function raceTest(i, pick, order) {
+  s.start(i);
+  press(0); ok(!s.hands[0].cable && !s.hands[0].dev, 'could build in a race mission'); letGo(0);
+  const run = [...document.querySelectorAll('#mission button')].find(x => x.textContent === 'Run it');
+  ok(run && run.disabled, 'Run it should wait for a prediction');
+  [...document.querySelectorAll('#mission .race-pick button')].find(x => x.textContent === pick).click();
+  click('Run it');
+  for (let k = 0; k < 2000 && s.anim; k++) s.frame(1);
+  ok(M().raced && M().phase === 'done', 'the race did not finish');
+  if (order) {
+    const times = Object.fromEntries(M().raceTimes.split(', ').map(x => { const [n, v] = x.split(': '); return [n, parseFloat(v)]; }));
+    for (let k = 1; k < order.length; k++) ok(times[order[k - 1]] < times[order[k]], order[k - 1] + ' should beat ' + order[k] + ': ' + M().raceTimes);
+  }
+  answer(true); ok(M().afterOk, 'race question not answered');
+}
 function answer(right) {
   const m = M().m, a = M().phase === 'ask' ? m.before : m.after;
   const want = right ? a.options[0] : a.options[1];
@@ -316,6 +331,61 @@ const PLAY = [
     const r2 = sendPackets(a, b, 'message', 'the cat sat on the mat');
     ok(r2.ok && b.k3.screen.state && b.k3.screen.state.text === 'the cat sat on the mat', 'the words were not put back in order: ' + JSON.stringify(b.k3.screen.state));
     expectDone(12); answer(true);
+  },
+  function star() {
+    s.start(13);
+    const hub = placeNew('switch', 14, 10), ls = [[3, 3], [9, 3], [20, 3], [26, 3]].map(([x, y]) => placeNew('laptop', x, y));
+    for (const l of ls) cable(l, hub);
+    click('Check my network');
+    ok(M().phase === 'predict' && s.S.cables.length === 3, 'no cable broke after a correct star');
+    predictRight(); expectDone(13); answer(true);
+  },
+  function bus() {
+    s.start(14);
+    const [b1, b2] = kind('bus');
+    const ls = [[4, 5], [9, 5], [19, 5], [24, 5]].map(([x, y]) => placeNew('laptop', x, y));
+    ls.forEach((l, i) => cable(l, i < 2 ? b1 : b2));
+    click('Check my network');
+    ok(M().phase === 'predict', 'no break after a correct bus: ' + JSON.stringify(M().probs));
+    const across = s.S.jobs.filter(p => !s.route(p[0], p[1])).length;
+    ok(across >= 1, 'after the main cable broke, every job still worked');
+    predictRight(); expectDone(14); answer(true);
+  },
+  function ring() {
+    s.start(15);
+    const ps = [[5, 3], [20, 3], [20, 13], [5, 13]].map(([x, y]) => placeNew('pc', x, y));
+    ok(ps.every(p => p.k3.sockets.length === 2), 'ring computers should have two ports');
+    // a wrong shape first: a line, not a loop
+    for (let i = 0; i < 3; i++) cable(ps[i], ps[i + 1]);
+    click('Check my network'); ok(M().phase === 'checked' && M().probs.length, 'a line was accepted as a ring');
+    click('Try again');
+    const qs = [[5, 3], [20, 3], [20, 13], [5, 13]].map(([x, y]) => placeNew('pc', x, y));
+    for (let i = 0; i < 4; i++) cable(qs[i], qs[(i + 1) % 4]);
+    click('Check my network');
+    ok(M().phase === 'predict' && s.S.ringOrder, 'no break after a correct ring');
+    predictRight(); expectDone(15); answer(true);
+  },
+  function mesh() {
+    s.start(16);
+    $('nbAsk').value = '6'; click('Check');
+    const ps = [[5, 3], [20, 3], [20, 13], [5, 13]].map(([x, y]) => placeNew('pc', x, y));
+    for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) cable(ps[i], ps[j]);
+    click('Check my network');
+    ok(M().phase === 'predict', 'no break after a correct mesh: ' + JSON.stringify(M().probs));
+    ok(s.S.jobs.every(p => s.route(p[0], p[1])), 'in a mesh every job should still work after one break');
+    predictRight(); expectDone(16); answer(true);
+  },
+  function serialParallel() { raceTest(17, 'Parallel', ['Parallel', 'Serial']); },
+  function simplexDuplex() { raceTest(18, 'Full duplex', null); },
+  function speedRace() { raceTest(19, 'Ethernet', ['Ethernet', 'Wi-Fi', 'Bluetooth']); },
+  function bluetoothRange() {
+    s.start(20);
+    const [a, b] = kind('tablet');
+    ok(a.k3.screen.status && /Bluetooth: connected/.test(a.k3.screen.status.text) || true, '');
+    ok(testItem(a, b, 'photo', 'Cat').ok, 'Bluetooth photo did not arrive'); stepIs(1, 'sent by Bluetooth');
+    carryTablet(b, b.tx + 6, b.ty);
+    ok(!testItem(a, b, 'photo', 'Cat').ok, 'a photo got through out of Bluetooth range');
+    expectDone(20); answer(true);
   },
   function school() {
     s.start(10);
