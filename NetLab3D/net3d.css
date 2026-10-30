@@ -84,6 +84,21 @@ p { margin: 0; }
 .mission .seg button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
 .mission .actions, .walk .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
+/* questions in the mission panel */
+.mission .ask { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--brand); border-radius: 12px; background: var(--brand-soft); }
+.mission .ask-q { font-size: .95rem; }
+.mission .ask-opts { display: grid; gap: 6px; }
+.mission .ask-opts .btn { justify-content: flex-start; text-align: left; border-radius: 10px; white-space: normal; }
+.mission .ask-row { display: flex; gap: 8px; }
+.mission .ask-row input { width: 90px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-variant-numeric: tabular-nums; }
+.mission .ask-fb:empty { display: none; }
+.mission .ask-fb.bad { color: var(--bad); font-size: .9rem; }
+/* Send: message, photo or file */
+.testbar .kinds { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; padding: 2px; gap: 2px; }
+.testbar .kinds button { border: 0; border-radius: 999px; background: transparent; color: var(--ink-soft); padding: 3px 10px; cursor: pointer; font-weight: 500; }
+.testbar .kinds button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+.testbar .picks { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.testbar input#nbMsg { padding: 5px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); width: 130px; }
 /* Walk me through it */
 .walk-back { position: fixed; inset: 0; background: var(--scrim, rgba(0, 0, 0, .55)); display: flex; align-items: flex-start; justify-content: center; padding: 16px; z-index: 10; overflow: auto; }
 .walk { width: min(640px, 100%); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 14px; padding: 14px 16px; display: grid; gap: 8px; }

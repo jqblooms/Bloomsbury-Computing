@@ -63,6 +63,36 @@ function keysTexture() {
   for (let r = 0; r < 4; r++) for (let k = 0; k < 14; k++) g.fillRect(6 + k * 17.6 + (r % 2) * 4, 6 + r * 22, 14, 17);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
+// A small picture of a shared photo or file, drawn into a canvas at (x, y) (its centre), s wide.
+//   kind 'photo' with pic 'Cat' | 'Beach' | 'Class'; kind 'file' with pic = the file's name.
+export function drawItem(g, kind, pic, x, y, s, alpha = 1) {
+  if (alpha <= 0) return;
+  g.save(); g.globalAlpha = alpha; g.lineJoin = 'round'; g.lineCap = 'round';
+  if (kind === 'photo') {
+    const w = s, h = s * 0.75, x0 = x - w / 2, y0 = y - h / 2;
+    g.fillStyle = '#ffffff'; g.fillRect(x0 - 4, y0 - 4, w + 8, h + 8);
+    if (pic === 'Beach') {
+      g.fillStyle = '#74c0fc'; g.fillRect(x0, y0, w, h * 0.55); g.fillStyle = '#1c7ed6'; g.fillRect(x0, y0 + h * 0.55, w, h * 0.2);
+      g.fillStyle = '#ffd43b'; g.fillRect(x0, y0 + h * 0.75, w, h * 0.25); g.beginPath(); g.arc(x0 + w * 0.78, y0 + h * 0.25, h * 0.13, 0, 7); g.fill();
+    } else if (pic === 'Class') {
+      g.fillStyle = '#d0ebff'; g.fillRect(x0, y0, w, h); g.fillStyle = '#495057';
+      for (let i = 0; i < 3; i++) { const cx = x0 + w * (0.25 + i * 0.25), cy = y0 + h * 0.4; g.beginPath(); g.arc(cx, cy, h * 0.11, 0, 7); g.fill(); g.fillRect(cx - h * 0.12, cy + h * 0.14, h * 0.24, h * 0.36); }
+    } else {
+      g.fillStyle = '#b2f2bb'; g.fillRect(x0, y0, w, h); g.fillStyle = '#f08c00';
+      const cx = x0 + w / 2, cy = y0 + h * 0.55, r = h * 0.26;
+      g.beginPath(); g.moveTo(cx - r, cy - r * 0.3); g.lineTo(cx - r * 0.7, cy - r * 1.3); g.lineTo(cx - r * 0.2, cy - r * 0.7); g.lineTo(cx + r * 0.2, cy - r * 0.7); g.lineTo(cx + r * 0.7, cy - r * 1.3); g.lineTo(cx + r, cy - r * 0.3); g.closePath(); g.fill();
+      g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill(); g.fillStyle = '#212529'; g.beginPath(); g.arc(cx - r * 0.4, cy - r * 0.1, r * 0.12, 0, 7); g.arc(cx + r * 0.4, cy - r * 0.1, r * 0.12, 0, 7); g.fill();
+    }
+  } else {
+    const w = s * 0.62, h = s * 0.8, x0 = x - w / 2, y0 = y - h / 2, f = w * 0.3;
+    g.fillStyle = '#ffffff'; g.strokeStyle = '#495057'; g.lineWidth = Math.max(2, s / 30);
+    g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 + w - f, y0); g.lineTo(x0 + w, y0 + f); g.lineTo(x0 + w, y0 + h); g.lineTo(x0, y0 + h); g.closePath(); g.fill(); g.stroke();
+    g.beginPath(); g.moveTo(x0 + w - f, y0); g.lineTo(x0 + w - f, y0 + f); g.lineTo(x0 + w, y0 + f); g.stroke();
+    g.strokeStyle = '#adb5bd'; for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(x0 + w * 0.15, y0 + h * (0.4 + i * 0.13)); g.lineTo(x0 + w * 0.85, y0 + h * (0.4 + i * 0.13)); g.stroke(); }
+    g.fillStyle = '#1c7ed6'; g.fillRect(x0 + w * 0.12, y0 + h * 0.12, w * 0.4, h * 0.14);
+  }
+  g.restore();
+}
 // A screen you can draw on. At rest it shows a desktop with the owner's name; show() draws a message on it:
 //   screen.show({ top, text, textAlpha, env, mark })   top = a line at the top ("To Kim", "From Hana"), text = the
 //   message, env = how much of an envelope to show (0 to 1), mark = 'tick' or 'cross'. screen.show(null) = desktop.
@@ -97,6 +127,8 @@ function makeScreen(name, w = 256, h = 170) {
     tex,
     get state() { return last; },
     get status() { return status; },
+    // paint(fn): the desktop background, then fn(g, w, h) draws the rest (packets being split up or put back together)
+    paint(fn) { last = { painted: true }; desktop(); fn(g, w, h); tex.needsUpdate = true; },
     setStatus(text, ok) { status = { text, ok }; if (!last) screen.show(null); },
     show(st) {
       last = st;
@@ -118,11 +150,12 @@ function makeScreen(name, w = 256, h = 170) {
         g.fillStyle = '#1c2533'; g.font = font(Math.round(h * 0.13)); g.textAlign = 'left'; g.textBaseline = 'middle';
         if (st.top) g.fillText(st.top, w * 0.1, h * 0.21);
         if (st.mark) mark(st.mark, w * 0.86, h * 0.21, h * 0.075);
+        if (st.item) drawItem(g, st.item.kind, st.item.pic, w * (st.text ? 0.22 : 0.5), h * 0.58, h * (st.text ? 0.36 : 0.46), st.itemAlpha ?? 1);
         if (st.text != null && (st.textAlpha ?? 1) > 0) {
           g.save(); g.globalAlpha = st.textAlpha ?? 1; g.fillStyle = '#111'; g.font = font(Math.round(h * 0.17), 600);
           let size = Math.round(h * 0.17);
           while (g.measureText(st.text + (st.caret ? '|' : '')).width > w * 0.78 && size > 10) { size--; g.font = font(size, 600); }
-          g.fillText(st.text + (st.caret ? '|' : ''), w * 0.1, st.sub ? h * 0.52 : h * 0.58); g.restore();
+          g.fillText(st.text + (st.caret ? '|' : ''), st.item ? w * 0.42 : w * 0.1, st.sub ? h * 0.52 : h * 0.58); g.restore();
         }
         if (st.sub) {
           g.fillStyle = '#4a5568'; let px = Math.round(h * 0.095); g.font = font(px, 600);
@@ -138,14 +171,15 @@ function makeScreen(name, w = 256, h = 170) {
   return screen;
 }
 // A printed page: the message in the middle of a white sheet.
-export function pageTexture(text, from) {
+export function pageTexture(text, from, item) {
   const c = document.createElement('canvas'); c.width = 256; c.height = 180; const g = c.getContext('2d');
   g.fillStyle = '#ffffff'; g.fillRect(0, 0, 256, 180);
   g.fillStyle = '#5c6470'; g.font = '600 20px "Segoe UI", Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
   g.fillText('From ' + from, 128, 34);
   g.fillStyle = '#111'; let size = 40; g.font = '700 ' + size + 'px "Segoe UI", Arial, sans-serif';
   while (g.measureText(text).width > 230 && size > 12) { size--; g.font = '700 ' + size + 'px "Segoe UI", Arial, sans-serif'; }
-  g.fillText(text, 128, 100);
+  if (item) drawItem(g, item.kind, item.pic, 128, 112, 110);
+  else g.fillText(text, 128, 100);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 

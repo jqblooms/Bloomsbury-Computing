@@ -136,6 +136,31 @@ function test(a, b) {
   // a test that finishes a tutorial step is used up at once, so read the message it showed
   return { ok: /^(Printed|Message arrived)/.test(s.toastText()) };
 }
+function testItem(a, b, kind, pic) {
+  $('nbFrom').value = String(a.id); $('nbFrom').dispatchEvent(new Event('change'));
+  $('nbTo').value = String(b.id); $('nbTo').dispatchEvent(new Event('change'));
+  $('testBar').querySelector('button').click();
+  [...$('testBar').querySelectorAll('.kinds button')].find(x => x.textContent.toLowerCase() === kind).click();
+  [...$('testBar').querySelectorAll('.picks button')].find(x => x.textContent.startsWith(pic)).click();
+  for (let i = 0; i < 900 && s.anim; i++) s.frame(1);
+  return { ok: /^(Printed|Message arrived)/.test(s.toastText()) };
+}
+function sendPackets(a, b, kind, value) {
+  $('nbFrom').value = String(a.id); $('nbFrom').dispatchEvent(new Event('change'));
+  $('nbTo').value = String(b.id); $('nbTo').dispatchEvent(new Event('change'));
+  $('testBar').querySelector('button').click();
+  [...$('testBar').querySelectorAll('.kinds button')].find(x => x.textContent.toLowerCase() === kind).click();
+  if (kind === 'photo') [...$('testBar').querySelectorAll('.picks button')].find(x => x.textContent.startsWith(value)).click();
+  else { $('nbMsg').value = value; [...$('testBar').querySelectorAll('button')].find(x => x.textContent === 'Send').click(); }
+  let order = null;
+  for (let i = 0; i < 1500 && s.anim; i++) { if (s.pk && s.pk.arrivals.length === s.pk.parts.length && !order) order = s.pk.arrivals.map(p => p.n); s.frame(1); }
+  return { ok: /^Message arrived/.test(s.toastText()), order };
+}
+function answer(right) {
+  const m = M().m, a = M().phase === 'ask' ? m.before : m.after;
+  const want = right ? a.options[0] : a.options[1];
+  [...document.querySelectorAll('#mission .ask-opts button')].find(x => x.textContent === want).click();
+}
 function predictRight() {
   const cards = [...document.querySelectorAll('#mission .job')];
   S().jobs.forEach((p, i) => { const yes = !!s.route(p[0], p[1]); [...cards[i].querySelectorAll('button')].find(b => b.textContent === (yes ? 'Yes' : 'No')).click(); });
@@ -171,8 +196,16 @@ const PLAY = [
     s.start(0); stepIs(0, 'start');
     const a = placeNew('laptop', 6, 8); stepIs(1, 'one laptop down');
     const b = placeNew('laptop', 15, 8); stepIs(2, 'two laptops down');
-    cable(a, b); stepIs(3, 'cable in');
-    ok(test(a, b).ok, 'send failed'); expectDone(0);
+    ok(!test(a, b).ok, 'a message got through with no cable'); stepIs(3, 'tried with no cable');
+    ok(a.k3.screen.state && a.k3.screen.state.mark === 'cross', 'no cross on the screen after a failed send');
+    cable(a, b); stepIs(4, 'cable in');
+    ok(test(a, b).ok, 'send failed'); stepIs(5, 'message sent');
+    ok(testItem(a, b, 'photo', 'Cat').ok, 'photo not sent');
+    ok(b.k3.screen.state && b.k3.screen.state.item && b.k3.screen.state.item.pic === 'Cat', "Kim's screen does not show the photo");
+    expectDone(0);
+    // the why question: a wrong answer explains and stays; the right one shows Next mission
+    answer(false); ok(!M().afterOk && /Not quite/.test(document.querySelector('#mission .ask-fb').textContent), 'a wrong answer was accepted');
+    answer(true); ok(M().afterOk && [...document.querySelectorAll('#mission button')].some(x => x.textContent === 'Next mission'), 'right answer did not unlock Next mission');
   },
   function addSwitch() {
     s.start(1);
@@ -194,10 +227,15 @@ const PLAY = [
   },
   function printer() {
     s.start(2);
+    ok(M().phase === 'ask', 'mission 3 did not start with the cable question');
+    press(0); ok(!s.hands[0].cable && !s.hands[0].dev, 'could build before answering'); letGo(0);
+    $('nbAsk').value = '4'; click('Check'); ok(M().phase === 'ask', 'a wrong count was accepted');
+    $('nbAsk').value = '5'; click('Check'); ok(M().phase === 'build', 'the right count did not start the build');
     const hub = placeNew('switch', 14, 10), ls = [[3, 3], [9, 3], [20, 3], [26, 3]].map(([x, y]) => placeNew('laptop', x, y)), pr = placeNew('printer', 14, 15);
     for (const d of ls.concat([pr])) cable(d, hub);
     ok(test(ls[0], pr).ok, 'print failed');
     click('Check my network'); expectDone(2);
+    answer(true); ok(M().afterOk, 'the printer question was not answered');
   },
   function wifi() {
     s.start(3);
@@ -256,6 +294,29 @@ const PLAY = [
     for (const d of ls.concat([pr, w])) cable(d, hub);
     click('Check my network'); expectDone(9);
   },
+  function packets() {
+    s.start(11);
+    const [a, b] = kind('laptop');
+    const r1 = sendPackets(a, b, 'message', 'Hi');
+    ok(!r1.ok && $('nbMsg'), 'a two-letter message was accepted for packets');
+    [...$('testBar').querySelectorAll('button')].find(x => x.textContent === 'Cancel').click();
+    const r = sendPackets(a, b, 'message', 'see you at lunch');
+    ok(r.ok, 'the message in packets did not arrive'); stepIs(1, 'words sent');
+    ok(b.k3.screen.state && b.k3.screen.state.text === 'see you at lunch', 'the message was not put back together: ' + JSON.stringify(b.k3.screen.state));
+    const r2 = sendPackets(a, b, 'photo', 'Beach');
+    ok(r2.ok, 'the photo in packets did not arrive'); expectDone(11);
+    answer(true); ok(M().afterOk, 'packet question not answered');
+  },
+  function paths() {
+    s.start(12);
+    const [a, b] = kind('laptop');
+    const r = sendPackets(a, b, 'photo', 'Cat');
+    ok(r.ok, 'photo did not arrive');
+    ok(r.order && r.order.join() !== [...r.order].sort((x, y) => x - y).join(), 'the packets arrived in number order, so the two paths made no difference: ' + (r.order || []).join());
+    const r2 = sendPackets(a, b, 'message', 'the cat sat on the mat');
+    ok(r2.ok && b.k3.screen.state && b.k3.screen.state.text === 'the cat sat on the mat', 'the words were not put back in order: ' + JSON.stringify(b.k3.screen.state));
+    expectDone(12); answer(true);
+  },
   function school() {
     s.start(10);
     const s2 = byName('Switch 2');
@@ -281,11 +342,13 @@ const BREAK = [
   function stepsGoBack() {
     s.start(0);
     const a = placeNew('laptop', 6, 8), b = placeNew('laptop', 15, 8); stepIs(2, 'two laptops');
-    cable(a, b); stepIs(3, 'cable');
-    moveEnd(s.cables()[0], 1, null); stepIs(2, 'after unplugging');
-    carryDevice(b, 15, 13); stepIs(2, 'after moving a laptop');
-    handTo(0, b.X + 1, b.Y + b.h - 0.2); press(0); ok(s.hands[0].dev === b, 'could not pick up laptop'); stepIs(1, 'while carrying a laptop');
-    walkTo(...crateFront('laptop'), 0); letGo(0); stepIs(1, 'after putting a laptop back');
+    test(a, b); stepIs(3, 'tried with no cable');
+    cable(a, b); stepIs(4, 'cable');
+    moveEnd(s.cables()[0], 1, null); stepIs(3, 'after unplugging');
+    carryDevice(b, 15, 13); stepIs(3, 'after moving a laptop');
+    // the failed send proved steps 1 to 3; the cable step still follows the floor
+    handTo(0, b.X + 1, b.Y + b.h - 0.2); press(0); ok(s.hands[0].dev === b, 'could not pick up laptop'); stepIs(3, 'while carrying a laptop');
+    walkTo(...crateFront('laptop'), 0); letGo(0); stepIs(3, 'after putting a laptop back');
   },
   function eventsOnlyAtTheirStep() {
     s.start(1);
@@ -309,7 +372,7 @@ const BREAK = [
     ok(s.free(s.pos.x, s.pos.y), 'a laptop was put down on top of you');
   },
   function checkWhileCarrying() {
-    s.start(2);
+    s.start(2); $('nbAsk').value = '5'; click('Check');
     takeFromCrate(0, 'laptop'); walkTo(10, 10, 0);
     click('Check my network');
     ok(M().phase === 'build', 'checked while carrying a laptop'); letGo(0);

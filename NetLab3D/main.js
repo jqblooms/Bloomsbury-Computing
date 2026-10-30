@@ -15,7 +15,7 @@
 import * as THREE from 'three';
 import { create } from './room.js';
 import { createBlob } from './blob.js';
-import { makeDevice, makeCrate, setLight, tape, pageTexture } from './devices.js';
+import { makeDevice, makeCrate, setLight, tape, pageTexture, drawItem } from './devices.js';
 const $ = id => document.getElementById(id);
 const T = 100, K = 22, OX = 1.5, OY = 1.5;          // world units a tile; desk units a tile; desk origin in tiles
 const MAPW = 34, MAPH = 27, DESK_BOTTOM = 20;        // the room; the desk is rows 1 to 20, the supply shelf below
@@ -108,9 +108,12 @@ const BUILD = [
     steps: [
       { text: 'Grab the <b>Laptop</b> crate on the supply shelf, carry the laptop onto the floor and let go.', show: 'crate-laptop', done: () => placed('laptop') >= 1 },
       { text: 'Put a second <b>Laptop</b> down.', show: 'crate-laptop', done: () => placed('laptop') >= 2 },
+      { text: 'Before any cable: try to send a message from one laptop to the other, in the Test bar at the bottom. Watch the screens.', show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok && S.cables.length === 0 },
       { text: 'Plug in a cable. ' + SOCK, show: 'crate-cable', done: () => S.cables.some(c => !isHeld(dev(c.a)) && !isHeld(dev(c.b))) },
-      { text: 'Test it. In the Test bar at the bottom, choose who sends and who gets it, then press <b>Send</b>.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok }
-    ], end: 'Two devices joined so they can share data: that is a <b>network</b>.' },
+      { text: 'Test it again: send a message. Now it gets there.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok },
+      { text: 'Share something: send the other laptop a <b>Photo</b> or a <b>File</b>.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && S.lastTest.kind && S.lastTest.kind !== 'message' }
+    ], end: 'Not joined, nothing could travel. Joined by a cable, messages, photos and files can travel: that is a <b>network</b>.',
+    after: { q: 'Why do people join computers in a network?', options: ['To communicate and share: messages, files, photos and printers', 'To make each computer run faster', 'So each computer uses less electricity'], why: 'A network lets data travel between computers. People can <b>communicate</b> (messages, emails, video calls) and <b>share</b> (files, photos, one printer).' } },
   { id: 'switch', group: 'Getting started', title: 'Add a Third Laptop', type: 'tutorial', setup() {
     S = fresh({ laptop: 3, 'switch': 1 }); const a = place('laptop', 150, 100), b = place('laptop', 490, 100); plug(a, b); },
     intro: 'A third person wants to join the network.',
@@ -123,6 +126,9 @@ const BUILD = [
       { text: 'Test it: send a message between two laptops. Watch it go through the switch.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok }
     ], end: 'A <b>switch</b> joins many devices. Data goes from one laptop, through the switch, to another.' },
   { id: 'printer', group: 'Getting started', title: 'Share the Printer', type: 'challenge', setup() { S = fresh({ laptop: 4, printer: 1, 'switch': 1 }); },
+    before: { q: 'Predict: four laptops and one printer are each plugged into one switch. How many cables will you need?', number: 5, why: 'Each laptop and the printer has <b>one</b> network socket, so each needs <b>one</b> cable to the switch: 4 laptops + 1 printer = <b>5 cables</b>.' },
+    after: { q: 'Why does a class share one printer on the network, and not buy a printer for every laptop?', options: ['It costs less: one printer for the whole class', 'One printer prints faster than many', 'A laptop cannot have its own printer'], why: 'Sharing <b>saves money</b>: one printer for the whole class. Sharing files <b>saves time</b> too: a file goes straight to a friend\'s laptop.' },
+    end: 'Every laptop shares the one printer.',
     intro: 'Build a network for a class: <b>four laptops</b> and <b>one printer</b>.',
     goals: ['Every laptop can print on the Printer.', 'Every laptop can send a message to every other laptop.', 'Test it with Send and Print before you check.'],
     check() {
@@ -294,7 +300,30 @@ const SCHOOL = { id: 'school', group: 'Design', title: 'The School Network', typ
     st.push({ text: 'Separate networks join with one cable between them: switch to switch, or Wi-Fi point to switch. Now plan yours.', visual: '' });
     return st;
   } };
-export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL];
+const PACKETS1 = { id: 'packets', group: 'Packets', title: 'Messages in Packets', type: 'tutorial', packets: true,
+  setup() { S = fresh({}); const sw = place('switch', 320, 230, 'Switch'), a = place('laptop', 160, 90), b = place('laptop', 480, 90); plug(a, sw); plug(b, sw); },
+  intro: 'A long message does not travel in one piece. It is split into small parts called <b>packets</b>.',
+  steps: [
+    { text: 'In the Test bar, press <b>Send</b>, choose <b>Message</b> and type a message of 3 to 6 words. Watch each word go into its own numbered <b>packet</b>.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && S.lastTest.kind === 'words' },
+    { text: 'Now send a <b>Photo</b>. Watch it split into blocks, one block in each packet.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && S.lastTest.kind === 'photoPackets' }
+  ],
+  end: 'Data is split into numbered <b>packets</b>. They travel one at a time and are put back together at the other end.',
+  after: { q: 'Why does each packet have a number?', options: ['So the other computer can put the packets back in the right order', 'So the packets travel faster', 'So the cable knows which laptop to go to'], why: 'Packets can arrive in a different order. Their numbers tell the computer which order to put them back in.' } };
+const PACKETS2 = { id: 'paths', group: 'Packets', title: 'Different Paths', type: 'tutorial', packets: true,
+  setup() {
+    S = fresh({});
+    const s1 = place('switch', 150, 170, 'Switch 1'), s2 = place('switch', 490, 170, 'Switch 2'), s3 = place('switch', 320, 362, 'Switch 3');
+    const a = place('laptop', 150, 80), b = place('laptop', 490, 80);
+    plug(a, s1); plug(b, s2); plug(s1, s2); plug(s1, s3); plug(s3, s2);
+  },
+  intro: 'This network has <b>two ways</b> from Switch 1 to Switch 2: straight across, or round through Switch 3.',
+  steps: [
+    { text: 'Send a <b>Photo</b> from one laptop to the other. Watch the packets take different paths and arrive in a different order.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && S.lastTest.kind === 'photoPackets' },
+    { text: 'Send a <b>Message</b> of 3 to 6 words. Watch the other laptop sort the packets by their numbers.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && S.lastTest.kind === 'words' }
+  ],
+  end: 'Packets can take different paths, so they can arrive in a different order. Their numbers put them back in order.',
+  after: { q: 'Packet 3 arrives before packet 2. What does the computer do?', options: ['Uses the packet numbers to put them back in order', 'Throws packet 3 away', 'Shows them in the order they arrived'], why: 'Each packet has a number. The computer waits for all the packets, then puts them in number order.' } };
+export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2];
 
 // ================================================================ the small pictures for Walk me through it (website drawing)
 function icon(d, x, y) {
@@ -547,7 +576,7 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // ---- hands: hold to grab, let go to put down or plug in (as the team game)
-  function locked() { return M.phase === 'predict' || M.phase === 'checked' || M.phase === 'done' || !!anim || !!fx; }
+  function locked() { return M.phase === 'ask' || M.phase === 'predict' || M.phase === 'checked' || M.phase === 'done' || !!anim || !!fx || !!pk; }
   function release(i) {
     const h = hands[i];
     if (h.dev) dropDevice(i, true);
@@ -559,7 +588,7 @@ export function startSolo({ container, myName, colour }) {
     h.down = down;
     $(i ? 'rightBtn' : 'leftBtn')?.classList.toggle('on', down);
     if (!down) { letGo(i); return; }
-    if (locked()) { toast(M.phase === 'predict' ? 'Predict first: choose Yes or No for each job, then press Check my predictions.' : anim ? 'Wait for the message to arrive.' : 'Press the button on the mission sheet to go on.', 'hint'); return; }
+    if (locked()) { toast(M.phase === 'ask' ? 'Answer the question on the right first.' : M.phase === 'predict' ? 'Predict first: choose Yes or No for each job, then press Check my predictions.' : anim ? 'Wait for the message to arrive.' : 'Press the button on the mission sheet to go on.', 'hint'); return; }
     if (h.cable || h.dev) return;
     const g = grabTarget(i);
     if (!g) return;
@@ -1088,7 +1117,7 @@ export function startSolo({ container, myName, colour }) {
     while (q.q.length > 6) q.q.shift();   // a long backlog drops its oldest news
   }
   function hold(scr, st, secs) { if (!scr) return; const q = Q(scr); scr.show(st); q.cur = { until: nowS() + secs }; q.shown = true; }
-  function owned(scr) { return fx && ((fx.a.k3.screen === scr && fx.stage !== 'wait') || (fx.b.k3.screen === scr && fx.stage === 'arrive' && fx.bOn)); }
+  function owned(scr) { if (pk && (pk.a.k3.screen === scr || pk.b.k3.screen === scr)) return true; return fx && ((fx.a.k3.screen === scr && fx.stage !== 'wait') || (fx.b.k3.screen === scr && fx.stage === 'arrive' && fx.bOn)); }
   function runQueues() {
     const now = nowS();
     for (const [scr, q] of queues) {
@@ -1104,8 +1133,8 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // Send or Print asks for a short message first, then plays it on the screens
-  function startMessage(a, b, text) {
-    fx = { a, b, text, t: 0, stage: 'wait' };
+  function startMessage(a, b, text, item) {
+    fx = { a, b, text, item: item || null, t: 0, stage: 'wait' };
     drawTest();
   }
   const ease = (t0, t1, t) => Math.max(0, Math.min(1, (t - t0) / (t1 - t0)));
@@ -1119,7 +1148,8 @@ export function startSolo({ container, myName, colour }) {
     const t = fx.t;
     if (fx.stage === 'type') {
       if (A) {
-        if (t < 1) A.show({ top: 'To ' + toName, text: fx.text.slice(0, Math.ceil(fx.text.length * t)), caret: true });
+        if (fx.item) A.show({ top: 'To ' + toName, item: fx.item, itemAlpha: 1 - ease(1.2, 1.8, t), sub: (fx.item.kind === 'photo' ? 'Photo: ' : 'File: ') + fx.item.pic });
+        else if (t < 1) A.show({ top: 'To ' + toName, text: fx.text.slice(0, Math.ceil(fx.text.length * t)), caret: true });
         else A.show({ top: 'To ' + toName, text: fx.text, textAlpha: 1 - ease(1, 1.3, t), env: t < 1.6 ? ease(1.3, 1.6, t) : 1 - ease(1.6, 1.9, t) });
       }
       if (t >= 1.9) {
@@ -1133,15 +1163,196 @@ export function startSolo({ container, myName, colour }) {
       }
     } else if (fx.stage === 'arrive') {
       if (B) {
-        if (t < 1) B.show({ top: 'New message', env: t < 0.4 ? ease(0, 0.4, t) : 1 - ease(0.7, 1, t) });
+        const what = fx.item ? (fx.item.kind === 'photo' ? 'New photo' : 'New file') : 'New message';
+        if (fx.item) B.show({ top: t < 0.7 ? what : 'From ' + fx.a.name, item: fx.item, itemAlpha: ease(0, 0.7, t), sub: (fx.item.kind === 'photo' ? 'Photo: ' : 'File: ') + fx.item.pic });
+        else if (t < 1) B.show({ top: what, env: t < 0.4 ? ease(0, 0.4, t) : 1 - ease(0.7, 1, t) });
         else B.show({ top: 'From ' + fx.a.name, text: fx.text, textAlpha: ease(1, 1.4, t) });
       }
       if (fx.page) { const k = ease(0, 0.8, t); fx.page.position.z = fx.page.userData.z0 + 55 * k; fx.page.material.opacity = Math.min(1, k * 2); }
       if (t >= 1.4) {
-        if (B) hold(B, { top: 'From ' + fx.a.name, text: fx.text }, 4);
+        if (B) hold(B, fx.item ? { top: 'From ' + fx.a.name, item: fx.item, sub: (fx.item.kind === 'photo' ? 'Photo: ' : 'File: ') + fx.item.pic } : { top: 'From ' + fx.a.name, text: fx.text }, 4);
         if (fx.page) { const pg = fx.page, dv = fx.b; pages.push({ until: nowS() + 6, done() { dv.k3.group.remove(pg); pg.geometry.dispose(); pg.material.map.dispose(); pg.material.dispose(); } }); }
         fx = null; drawTest();
       }
+    }
+  }
+  // ---------------- packets
+  let pk = null;
+  const PK_SPEED = 1300;   // world units a second along the cables
+  // the route a packet takes; with alt, a route that avoids the first link between two switches (a second path)
+  function routeAvoiding(a, b, x, y) {
+    const prev = {}, q = [a.id]; prev[a.id] = 0;
+    while (q.length) {
+      const n = q.shift(); if (n === b.id) break;
+      if (n !== a.id && dev(n).kind !== 'switch' && dev(n).kind !== 'wifi') continue;
+      links(n).forEach(m => { if ((n === x && m === y) || (n === y && m === x)) return; if (!(m in prev)) { prev[m] = n; q.push(m); } });
+    }
+    if (!(b.id in prev)) return null;
+    const out = [b]; let at = b.id; while (at !== a.id) { at = prev[at]; out.unshift(dev(at)); }
+    return out;
+  }
+  function hopsFor(r) {
+    const hops = [];
+    for (let i = 0; i + 1 < r.length; i++) {
+      const x = r[i], y = r[i + 1];
+      const c = cables3.find(c => c.ends[0] && c.ends[1] && ((c.ends[0].dev === x.id && c.ends[1].dev === y.id) || (c.ends[1].dev === x.id && c.ends[0].dev === y.id)));
+      let curve;
+      if (c) { const pts = cablePoints(c); if (c.ends[0].dev !== x.id) pts.reverse(); curve = new THREE.CatmullRomCurve3(pts); }
+      else { const [ax, ay] = centre(x), [bx, by] = centre(y); curve = new THREE.CatmullRomCurve3([new THREE.Vector3((ax + 0.5) * T, 140, (ay + 0.5) * T), new THREE.Vector3(((ax + bx) / 2 + 0.5) * T, 260, ((ay + by) / 2 + 0.5) * T), new THREE.Vector3((bx + 0.5) * T, 160, (by + 0.5) * T)]); }
+      hops.push({ curve, len: curve.getLength() });
+    }
+    return hops;
+  }
+  function envelopeTex(n) {
+    const c = document.createElement('canvas'); c.width = 96; c.height = 72; const g = c.getContext('2d');
+    g.fillStyle = '#fff8e1'; g.strokeStyle = '#8a6d1c'; g.lineWidth = 5; g.fillRect(6, 10, 84, 54); g.strokeRect(6, 10, 84, 54);
+    g.beginPath(); g.moveTo(6, 10); g.lineTo(48, 42); g.lineTo(90, 10); g.stroke();
+    g.fillStyle = '#1c7ed6'; g.beginPath(); g.arc(78, 56, 15, 0, 7); g.fill();
+    g.fillStyle = '#fff'; g.font = '700 20px "Segoe UI", Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 78, 57);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  }
+  // canvas helpers for the two screens
+  function envelope2d(g, x, y, ew, n, alpha) {
+    if (alpha <= 0) return;
+    const eh = ew * 0.66;
+    g.save(); g.globalAlpha = alpha;
+    g.fillStyle = '#fff8e1'; g.strokeStyle = '#8a6d1c'; g.lineWidth = 2.5;
+    g.fillRect(x - ew / 2, y - eh / 2, ew, eh); g.strokeRect(x - ew / 2, y - eh / 2, ew, eh);
+    g.beginPath(); g.moveTo(x - ew / 2, y - eh / 2); g.lineTo(x, y + eh * 0.08); g.lineTo(x + ew / 2, y - eh / 2); g.stroke();
+    badge(g, x + ew / 2 - 2, y + eh / 2 - 2, n);
+    g.restore();
+  }
+  function badge(g, x, y, n) {
+    g.fillStyle = '#1c7ed6'; g.beginPath(); g.arc(x, y, 9, 0, 7); g.fill();
+    g.fillStyle = '#fff'; g.font = '700 11px "Segoe UI", Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), x, y + 0.5);
+  }
+  function header(g, w, text) { g.fillStyle = 'rgba(255,255,255,.92)'; g.fillRect(0, 0, w, 26); g.fillStyle = '#1c2533'; g.font = '700 14px "Segoe UI", Arial, sans-serif'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(text, 8, 13); }
+  // words laid out left to right, wrapping; returns the centre of each word's box
+  function flow(g, words, w, top) {
+    g.font = '700 15px "Segoe UI", Arial, sans-serif';
+    const out = []; let x = 10, y = top;
+    for (const wd of words) {
+      const bw = g.measureText(wd).width + 14;
+      if (x + bw > w - 8 && x > 10) { x = 10; y += 34; }
+      out.push({ x: x + bw / 2, y, bw }); x += bw + 10;
+    }
+    return out;
+  }
+  function wordBox(g, wd, p, n, alpha) {
+    if (alpha <= 0) return;
+    g.save(); g.globalAlpha = alpha;
+    g.fillStyle = '#ffffff'; g.strokeStyle = '#74c0fc'; g.lineWidth = 2;
+    g.fillRect(p.x - p.bw / 2, p.y - 12, p.bw, 24); g.strokeRect(p.x - p.bw / 2, p.y - 12, p.bw, 24);
+    g.fillStyle = '#111'; g.font = '700 15px "Segoe UI", Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(wd, p.x, p.y + 1);
+    if (n) badge(g, p.x - p.bw / 2, p.y - 12, n);
+    g.restore();
+  }
+  // the photo, drawn once, cut into 3 x 2 blocks
+  function photoCanvas(pic) {
+    const c = document.createElement('canvas'); c.width = 150; c.height = 100; const g = c.getContext('2d');
+    g.save(); g.translate(75, 50); g.scale(150 / 120, 100 / 90); drawItem(g, 'photo', pic, 0, 0, 112); g.restore();
+    return c;
+  }
+  function block(g, img, k, x, y, bw, bh, alpha, n) {
+    if (alpha <= 0) return;
+    const col = k % 3, row = Math.floor(k / 3);
+    g.save(); g.globalAlpha = alpha;
+    g.drawImage(img, col * 50, row * 50, 50, 50, x - bw / 2, y - bh / 2, bw, bh);
+    g.strokeStyle = '#ffffff'; g.lineWidth = 1.5; g.strokeRect(x - bw / 2, y - bh / 2, bw, bh);
+    if (n) badge(g, x - bw / 2 + 2, y - bh / 2 + 2, n);
+    g.restore();
+  }
+  function startPackets(a, b, item) {
+    const words = item.kind === 'words' ? item.text.split(/\s+/).filter(Boolean) : null;
+    const count = words ? words.length : 6;
+    const main = route(a, b);
+    if (!main) {
+      hold(a.k3.screen, { top: 'Not sent', text: 'Not sent', mark: 'cross', sub: 'No connection to ' + b.name }, 3);
+      send(a, b); return;
+    }
+    // a second path: avoid the first link between two switches on the main route, if the network has another way
+    let alt = null;
+    for (let i = 1; i + 2 < main.length && !alt; i++) alt = routeAvoiding(a, b, main[i].id, main[i + 1].id);
+    const parts = [];
+    for (let n = 1; n <= count; n++) {
+      const r = alt && n % 2 === 0 ? alt : main, hops = hopsFor(r), len = hops.reduce((t, h) => t + h.len, 0);
+      parts.push({ n, word: words ? words[n - 1] : null, hops, len, leave: 0.9 + (n - 1) * 0.6, arrive: null, sprite: null, via: r.map(d => d.name) });
+    }
+    parts.forEach(p => { p.arriveAt = p.leave + p.len / PK_SPEED; });
+    pk = { a, b, kind: item.kind, pic: item.pic, words, parts, t: 0, img: item.kind === 'photo' ? photoCanvas(item.pic) : null, arrivals: [], g: new THREE.Group() };
+    scene.add(pk.g);
+    drawTest();
+  }
+  function stopPackets() { if (!pk) return; scene.remove(pk.g); pk.g.traverse(o => { if (o.material) { o.material.map?.dispose?.(); o.material.dispose(); } }); pk = null; }
+  function stepPackets(dt) {
+    if (!pk) return;
+    pk.t += dt;
+    const t = pk.t, P = pk.parts, A = pk.a.k3.screen, B = pk.b.k3.screen, N = P.length;
+    // ---- in 3D: each packet travels its path along the cables, one after another
+    for (const p of P) {
+      if (t < p.leave || p.arrive != null) continue;
+      if (!p.sprite) { p.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: envelopeTex(p.n), depthTest: false, transparent: true })); p.sprite.scale.set(84, 63, 1); p.sprite.renderOrder = 7; pk.g.add(p.sprite); }
+      let d = (t - p.leave) * PK_SPEED;
+      if (d >= p.len) { p.arrive = t; pk.arrivals.push(p); pk.g.remove(p.sprite); p.sprite.material.map.dispose(); p.sprite.material.dispose(); p.sprite = null; continue; }
+      let h = p.hops[0]; for (h of p.hops) { if (d <= h.len) break; d -= h.len; }
+      p.sprite.position.copy(h.curve.getPointAt(Math.min(1, d / h.len))).add(new THREE.Vector3(0, 45, 0));
+    }
+    // ---- the sender's screen: the data splits up, each part goes into a numbered envelope and flies off the side
+    const lastLeave = P[N - 1].leave;
+    if (A) A.paint((g, w, h) => {
+      header(g, w, t < lastLeave + 0.6 ? 'To ' + pk.b.name + ': ' + (t < 0.6 ? 'splitting into packets' : 'sending packet ' + Math.min(N, P.filter(p => t >= p.leave).length + (t < P[0].leave ? 0 : 0)) + ' of ' + N) : 'To ' + pk.b.name + ': ' + N + ' packets sent');
+      const split = Math.min(1, t / 0.6);
+      if (pk.words) {
+        const pos = flow(g, pk.words, w, 52);
+        P.forEach((p, i) => {
+          const k1 = Math.max(0, Math.min(1, (t - (p.leave - 0.4)) / 0.4)), k2 = Math.max(0, Math.min(1, (t - p.leave) / 0.6));
+          wordBox(g, p.word, pos[i], split > 0.5 ? p.n : 0, 1 - k1);
+          envelope2d(g, pos[i].x + k2 * w * 0.7, pos[i].y, 34, p.n, k1 * (1 - k2));
+        });
+      } else {
+        const gap = 6 * split, bw = 46, bh = 46, x0 = w / 2 - 1.5 * bw - gap, y0 = 40;
+        P.forEach((p, i) => {
+          const col = i % 3, row = Math.floor(i / 3), cx = x0 + col * (bw + gap) + bw / 2, cy = y0 + row * (bh + gap) + bh / 2;
+          const k1 = Math.max(0, Math.min(1, (t - (p.leave - 0.4)) / 0.4)), k2 = Math.max(0, Math.min(1, (t - p.leave) / 0.6));
+          block(g, pk.img, i, cx, cy, bw, bh, 1 - k1, split > 0.5 ? p.n : 0);
+          envelope2d(g, cx + k2 * w * 0.7, cy, 36, p.n, k1 * (1 - k2));
+        });
+      }
+    });
+    // ---- the receiver's screen: packets arrive (in any order), come out of their envelopes, then are sorted by number
+    const allIn = pk.arrivals.length === N, lastIn = allIn ? Math.max(...P.map(p => p.arrive)) : 1e9, sortAt = lastIn + 0.9, doneAt = sortAt + 1.2;
+    if (B && pk.arrivals.length) B.paint((g, w, h) => {
+      const k = Math.max(0, Math.min(1, (t - sortAt) / 1.0)), e = k * k * (3 - 2 * k);
+      header(g, w, t < sortAt ? 'From ' + pk.a.name + ': ' + pk.arrivals.length + ' of ' + N + ' packets' : 'Putting packets in order by number');
+      if (pk.words) {
+        const byArrival = flow(g, pk.arrivals.map(p => p.word), w, 52), byNumber = flow(g, pk.words, w, 52);
+        pk.arrivals.forEach((p, i) => {
+          const u = t - p.arrive, from = byArrival[i], to = byNumber[p.n - 1];
+          const at = { x: from.x + (to.x - from.x) * e, y: from.y + (to.y - from.y) * e, bw: from.bw };
+          envelope2d(g, at.x, at.y, 34, p.n, 1 - Math.max(0, Math.min(1, (u - 0.35) / 0.35)));
+          wordBox(g, p.word, at, p.n, Math.max(0, Math.min(1, (u - 0.35) / 0.35)));
+        });
+      } else {
+        const bw = 40, bh = 40, gx = 14, gy = 40;
+        g.strokeStyle = 'rgba(255,255,255,.5)'; g.setLineDash([4, 3]); g.strokeRect(gx, gy, bw * 3, bh * 2); g.setLineDash([]);
+        pk.arrivals.forEach((p, i) => {
+          const u = t - p.arrive, sx = w - 74 + (i % 2) * 36, sy = 46 + Math.floor(i / 2) * 36;
+          const tx = gx + ((p.n - 1) % 3) * bw + bw / 2, ty = gy + Math.floor((p.n - 1) / 3) * bh + bh / 2;
+          const x = sx + (tx - sx) * e, y = sy + (ty - sy) * e, s = 30 + (bw - 30) * e;
+          envelope2d(g, sx, sy, 30, p.n, 1 - Math.max(0, Math.min(1, (u - 0.35) / 0.35)) - e);
+          block(g, pk.img, p.n - 1, x, y, s, s, Math.max(0, Math.min(1, (u - 0.35) / 0.35)), k < 1 ? p.n : 0);
+        });
+      }
+    });
+    if (t >= doneAt) {
+      const { a, b, kind, words, pic } = pk;
+      const order = pk.arrivals.map(p => p.n).join(', ');
+      stopPackets();
+      hold(a.k3.screen, { top: 'To ' + b.name, text: words ? words.join(' ') : null, item: words ? null : { kind: 'photo', pic }, mark: 'tick', sub: N + ' packets sent' }, 4);
+      hold(b.k3.screen, words ? { top: 'From ' + a.name, text: words.join(' '), mark: 'tick', sub: 'Packets arrived: ' + order } : { top: 'From ' + a.name, item: { kind: 'photo', pic }, mark: 'tick', sub: 'Packets arrived: ' + order }, 5);
+      S.lastTest = { a: a.id, b: b.id, ok: true, kind: words ? 'words' : 'photoPackets' };
+      toast('Message arrived! ' + N + ' packets arrived in the order ' + order + ', then were put back in order.', 'good');
+      afterChange();
     }
   }
   // What each laptop and tablet knows about its connection, shown on its taskbar; a change joins its screen's queue.
@@ -1266,11 +1477,12 @@ export function startSolo({ container, myName, colour }) {
   }
   function arrived(a, b) {
     if (!fx || fx.a !== a || fx.b !== b) return;
-    if (a.k3.screen) hold(a.k3.screen, { top: 'To ' + (b.kind === 'printer' ? 'Printer' : b.name), text: fx.text, mark: 'tick', sub: b.kind === 'printer' ? 'Printed' : 'Delivered' }, 4);
+    S.lastTest.kind = fx.item ? fx.item.kind : 'message';
+    if (a.k3.screen) hold(a.k3.screen, { top: 'To ' + (b.kind === 'printer' ? 'Printer' : b.name), text: fx.item ? null : fx.text, item: fx.item, mark: 'tick', sub: b.kind === 'printer' ? 'Printed' : 'Delivered' }, 4);
     fx.stage = 'arrive'; fx.t = 0; fx.bOn = false;
     if (b.kind === 'printer') {
       // a page slides out of the printer's tray with the message on it
-      const pg = new THREE.Mesh(new THREE.PlaneGeometry(120, 84).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: pageTexture(fx.text, a.name), transparent: true, opacity: 0, side: THREE.DoubleSide }));
+      const pg = new THREE.Mesh(new THREE.PlaneGeometry(120, 84).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: pageTexture(fx.text, a.name, fx.item), transparent: true, opacity: 0, side: THREE.DoubleSide }));
       pg.position.set(0, 112, b.h * T / 2 - 60); pg.userData.z0 = pg.position.z; b.k3.group.add(pg); fx.page = pg;
     }
   }
@@ -1280,14 +1492,37 @@ export function startSolo({ container, myName, colour }) {
     if (compose && (!S.devs.includes(compose.a) || !S.devs.includes(compose.b) || M.phase === 'predict')) compose = null;
     if (compose) {
       const { a, b } = compose, verb = b.kind === 'printer' ? 'Print' : 'Send';
-      const box = el('input', { id: 'nbMsg', type: 'text', maxlength: '10', autocomplete: 'off', spellcheck: 'false', placeholder: '5 to 10 letters', 'aria-label': 'Message' });
+      compose.kind = compose.kind || 'message';
+      const tabs = el('div', { class: 'kinds', role: 'group', 'aria-label': 'What to send' });
+      (M.m.packets ? [['message', 'Message'], ['photo', 'Photo']] : [['message', 'Message'], ['photo', 'Photo'], ['file', 'File']]).forEach(([k, label]) => {
+        const kb = el('button', { type: 'button', 'aria-pressed': String(compose.kind === k) }, label);
+        kb.addEventListener('click', () => { compose.kind = k; drawTest(); });
+        tabs.appendChild(kb);
+      });
+      const head = el('b', {}, a.name + ' to ' + (b.kind === 'printer' ? 'the Printer' : b.name));
+      const cancel = btn('Cancel', '', () => { compose = null; drawTest(); });
+      if (compose.kind !== 'message') {
+        const picks = compose.kind === 'photo' ? ['Cat', 'Beach', 'Class'] : ['Story', 'Homework', 'Poster'], k = compose.kind;
+        const row = el('div', { class: 'picks' });
+        picks.forEach(p => row.appendChild(btn((k === 'photo' ? p + ' photo' : p), 'go', () => { compose = null; if (M.m.packets && k === 'photo') startPackets(a, b, { kind: 'photo', pic: p }); else startMessage(a, b, k === 'photo' ? p + ' photo' : p, { kind: k, pic: p }); })));
+        t.append(head, tabs, row, cancel);
+        return;
+      }
+      const long = !!M.m.packets;
+      const box = el('input', { id: 'nbMsg', type: 'text', maxlength: long ? '48' : '10', autocomplete: 'off', spellcheck: 'false', placeholder: long ? '3 to 6 words' : '5 to 10 letters', 'aria-label': 'Message' });
+      if (long) box.style.width = '220px';
       const submit = () => {
-        const v = box.value.trim();
+        const v = box.value.trim().replace(/\s+/g, ' ');
+        if (long) {
+          const ws = v.split(' ').filter(Boolean);
+          if (ws.length < 3 || ws.length > 6 || ws.some(x => x.length > 10)) { toast('Type 3 to 6 words, each up to 10 letters.', 'hint'); box.focus(); return; }
+          compose = null; box.blur(); startPackets(a, b, { kind: 'words', text: v }); return;
+        }
         if (v.length < 5 || v.length > 10) { toast('Type a message of 5 to 10 letters.', 'hint'); box.focus(); return; }
         compose = null; box.blur(); startMessage(a, b, v);
       };
       box.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } else if (e.key === 'Escape') { compose = null; drawTest(); } });
-      t.append(el('b', {}, a.name + ' to ' + (b.kind === 'printer' ? 'the Printer' : b.name)), box, btn(verb, 'go', submit), btn('Cancel', '', () => { compose = null; drawTest(); }));
+      t.append(head, tabs, box, btn(verb, 'go', submit), cancel);
       setTimeout(() => box.focus(), 0);
       return;
     }
@@ -1300,7 +1535,7 @@ export function startSolo({ container, myName, colour }) {
     else if (to.options.length > 1 && to.value === from.value) to.selectedIndex = 1;
     const go = btn('', 'go', () => {
       const a = dev(Number(from.value)), b = dev(Number(to.value));
-      if (!a || !b || anim || fx) return;
+      if (!a || !b || anim || fx || pk) return;
       if (a === b) { toast('Choose two different devices.', 'hint'); return; }
       compose = { a, b }; drawTest();
     });
@@ -1308,7 +1543,7 @@ export function startSolo({ container, myName, colour }) {
     from.addEventListener('change', () => { testFrom = from.value; from.blur(); });
     to.addEventListener('change', () => { testTo = to.value; label(); to.blur(); });
     label();
-    go.disabled = !!anim || !!fx || M.phase === 'predict';
+    go.disabled = !!anim || !!fx || !!pk || M.phase === 'predict';
     t.append(el('b', {}, 'Test'), el('span', {}, 'From'), from, el('span', {}, 'to'), to, go);
   }
 
@@ -1320,9 +1555,9 @@ export function startSolo({ container, myName, colour }) {
   function start(i) {
     missionAt = i;
     const m = MISSIONS[i];
-    M = { m, step: 0, phase: m.type === 'fix' ? 'predict' : 'build', picks: {}, show: null, walked: false, latched: [] };
+    M = { m, step: 0, phase: m.type === 'fix' ? 'predict' : m.before ? 'ask' : 'build', picks: {}, show: null, walked: false, latched: [], afterOk: !m.after };
     for (const h of hands) { h.cable = null; h.joint = -1; h.dev = null; }
-    anim = null; fx = null; compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
+    anim = null; fx = null; stopPackets(); compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
     m.setup();
     buildWorld();
     for (const d of S.devs) realise(d);
@@ -1449,8 +1684,11 @@ export function startSolo({ container, myName, colour }) {
     }
     if (M.phase === 'checked' && M.probs && M.probs.length) t.appendChild(el('ul', { class: 'probs' }, M.probs.slice(0, 5).map(p => '<li>' + p + '</li>').join('')));
     if (M.phase === 'done') t.appendChild(el('p', { class: 'win' }, 'Mission complete! ' + (m.end || '')));
+    if (M.phase === 'ask') t.appendChild(askBox(m.before, () => { M.phase = 'build'; updateShow(); drawAll(); }));
+    if (M.phase === 'done' && !M.afterOk) t.appendChild(askBox(m.after, () => { M.afterOk = true; drawAll(); }));
     const act = el('div', { class: 'actions' });
-    if (M.phase === 'done') act.appendChild(missionAt < MISSIONS.length - 1 ? btn('Next mission', 'go', () => start(missionAt + 1)) : btn('Play again', 'go', () => start(missionAt)));
+    if (M.phase === 'ask' || (M.phase === 'done' && !M.afterOk)) { /* answer first */ }
+    else if (M.phase === 'done') act.appendChild(missionAt < MISSIONS.length - 1 ? btn('Next mission', 'go', () => start(missionAt + 1)) : btn('Play again', 'go', () => start(missionAt)));
     else if (M.phase === 'checked') act.appendChild(btn(m.type === 'fix' ? 'New network' : 'Try again', 'go', () => start(missionAt)));
     else if (M.phase === 'predict') act.appendChild(btn('Check my predictions', 'go', checkPredict));
     else if (m.type !== 'tutorial') act.appendChild(btn('Check my network', 'go', checkMission));
@@ -1459,6 +1697,29 @@ export function startSolo({ container, myName, colour }) {
     t.appendChild(act);
     if (M.phase === 'done' || M.phase === 'checked') t.scrollTop = t.scrollHeight;   // the result and its button in view
     $('step').textContent = 'Mission ' + (missionAt + 1) + ' of ' + MISSIONS.length;
+  }
+  // A question in the mission panel: typed number or buttons. Wrong: why, then answer again (the buttons move).
+  function askBox(a, onRight) {
+    const box = el('div', { class: 'ask' });
+    box.appendChild(el('p', { class: 'ask-q' }, '<b>Think.</b> ' + a.q));
+    const fb = el('p', { class: 'ask-fb' });
+    const wrong = () => { fb.className = 'ask-fb bad'; fb.innerHTML = 'Not quite. ' + a.why + ' Try again.'; log.note('Question: "' + a.q + '" answered wrongly.'); };
+    const right = () => { log.note('Question: "' + a.q + '" answered right.'); toast('Yes!', 'good'); onRight(); };
+    if (a.number != null) {
+      const row = el('div', { class: 'ask-row' }), inp = el('input', { type: 'text', inputmode: 'numeric', id: 'nbAsk', 'aria-label': 'Your answer', autocomplete: 'off' });
+      const go = () => { const v = parseInt(inp.value.trim(), 10); if (isNaN(v)) { inp.focus(); return; } if (v === a.number) right(); else { wrong(); inp.value = ''; inp.focus(); } };
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+      row.append(inp, btn('Check', 'go', go)); box.appendChild(row);
+    } else {
+      const opts = el('div', { class: 'ask-opts' });
+      shuffle(a.options.map((o, i) => ({ o, i }))).forEach(({ o, i }) => opts.appendChild(btn(o, '', () => {
+        if (i === 0) right();
+        else { wrong(); const list = [...opts.children]; shuffle(list).forEach(x => opts.appendChild(x)); }
+      })));
+      box.appendChild(opts);
+    }
+    box.appendChild(fb);
+    return box;
   }
   function walkMe() {
     M.walked = true;
@@ -1557,6 +1818,7 @@ export function startSolo({ container, myName, colour }) {
     if (stepped) { drawCables(); hint(); }
     stepAnim(dt);
     stepFx(dt);
+    stepPackets(dt);
     updateScreens(false);
     updatePortGlow(ts);
     updateOutline(ts);
@@ -1625,6 +1887,6 @@ export function startSolo({ container, myName, colour }) {
   start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx; }, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk; }, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }
