@@ -66,6 +66,14 @@
     recentExams: function (a, b) {
       return JSON.stringify(unionList(a, b).sort(function (x, y) { return String(x.date || "").localeCompare(String(y.date || "")); }).slice(-10));
     },
+    // Finished flags (Network Builder 2D and 3D): a mission finished in either copy stays finished.
+    doneFlags: function (a, b) {
+      var x = parse(a, null), y = parse(b, null);
+      if (typeof x !== "object" || typeof y !== "object" || !x || !y) return JSON.stringify(!!x || !!y);
+      var out = {};
+      Object.keys(y).concat(Object.keys(x)).forEach(function (k) { if (x[k] || y[k]) out[k] = true; });
+      return JSON.stringify(out);
+    },
     // PyBot medals: per level, the better medal and fewer lines; this
     // browser's code where it has some.
     bestLevels: function (a, b) {

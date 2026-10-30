@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Network Builder 3D</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="css" href="net3d.css">
+</head>
+<body>
+<div class="nb3">
+  <div class="stage">
+    <div class="view" id="view"></div>
+    <div class="top">
+      <b class="title">Network Builder 3D</b>
+      <span class="chip" id="step"></span>
+      <span class="spacer"></span>
+      <button type="button" class="btn secondary" id="mapBtn">Map (M)</button>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="testbar" id="testBar" hidden></div>
+    <div class="bottom" id="bottom">
+      <div class="hint" id="hint"></div>
+      <div class="hands">
+        <button type="button" class="key" id="leftBtn"><b>J</b><small>Left hand</small></button>
+        <button type="button" class="key" id="rightBtn"><b>K</b><small>Right hand</small></button>
+      </div>
+    </div>
+    <div class="stick" id="stick"><div class="knob" id="knob"></div></div>
+    <div class="loading" id="loading">Loading the lab...</div>
+  </div>
+  <aside class="mission" id="mission" aria-label="Mission" aria-live="polite"></aside>
+</div>
+<div class="walk-back" id="cardWrap" hidden><div class="walk" id="card" role="dialog" aria-modal="true" aria-label="Walk me through it"></div></div>
+<p class="keys-help">Walk: W A S D or the arrow keys. Grab: hold the left or right mouse button (or J and K). Turn the camera: drag, or Q and E. Map: M.</p>
+<script>window.BC_CLOUD_SAVE = { app: 'netlab', patterns: ['^bc-netlab-v1:'], merge: [[':done', 'doneFlags']] };</script>
+<script src="../shared/cloud-save.js?v=20261030"></script>
+<script>
+// Network Builder 3D: the 2D Network Builder's eleven missions (NetLab/builder.js) played in a 3D lab.
+// Every module is loaded with the page's bcv through an import map; three.js is vendored in lib/.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = encodeURIComponent(params.get('bcv') || '1');
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('css').href = 'net3d.css?v=' + v;
+  var imports = { three: './lib/three.module.min.js' };
+  ['main', 'room', 'blob', 'devices'].forEach(function (n) { imports['./' + n + '.js'] = './' + n + '.js?v=' + v; });
+  var map = document.createElement('script');
+  map.type = 'importmap';
+  map.textContent = JSON.stringify({ imports: imports });
+  document.head.appendChild(map);
+  var boot = document.createElement('script');
+  boot.type = 'module';
+  boot.textContent = "import { startSolo } from './main.js';" +
+    "var msg = document.getElementById('loading');" +
+    "try { startSolo({ container: document.getElementById('view'), myName: '', colour: 1 }); msg.remove(); }" +
+    "catch (e) { msg.textContent = 'This computer could not start the 3D lab. Use Network Builder instead: it has the same missions.'; console.error(e); }";
+  document.body.appendChild(boot);
+  if (params.get('embed') === '1' && window.parent !== window) {
+    try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: 640 }, '*'); } catch (e) {}
+  }
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>
