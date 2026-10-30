@@ -221,7 +221,7 @@ export function makeDevice(d) {
   });
   const tagY = { laptop: 290, printer: 220, switch: 140, wifi: 260 }[d.kind] ?? 200;
   const tag = tape(d.title, { size: 0.034 }); tag.position.set(0, tagY, 0); g.add(tag);
-  return { group: g, lights, sockets, screen: g.userData.screen || null };
+  return { group: g, lights, sockets, screen: g.userData.screen || null, tag, tagY };
 }
 
 /** Lights a socket: green with a plug in it. */

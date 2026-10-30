@@ -119,7 +119,7 @@ const BUILD = [
       { text: 'Try to plug the new laptop into one of the other two laptops. Watch what happens.', show: 'crate-cable', event: true, done: () => S.refused },
       { text: 'Each laptop has only one network socket. Take a <b>Switch</b> from the shelf and put it down: it has eight sockets.', show: 'crate-switch', done: () => placed('switch') >= 1 },
       { text: 'Take out the old cable between the first two laptops: grab a plug and pull it out of its socket.', show: 'cable', done: () => !S.cables.some(c => dev(c.a).kind === 'laptop' && dev(c.b).kind === 'laptop') },
-      { text: 'Plug <b>all three</b> laptops into the switch.', show: 'switch', done: () => placed('laptop') >= 3 && placed('switch') >= 1 && laptops().every(l => !isHeld(l) && plugged(l, 'switch')) },
+      { text: 'Plug <b>all three</b> laptops into the switch. Any free port on the switch works.', show: 'switch', done: () => placed('laptop') >= 3 && placed('switch') >= 1 && laptops().every(l => !isHeld(l) && plugged(l, 'switch')) },
       { text: 'Test it: send a message between two laptops. Watch it go through the switch.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok }
     ], end: 'A <b>switch</b> joins many devices. Data goes from one laptop, through the switch, to another.' },
   { id: 'printer', group: 'Getting started', title: 'Share the Printer', type: 'challenge', setup() { S = fresh({ laptop: 4, printer: 1, 'switch': 1 }); },
@@ -468,10 +468,20 @@ export function startSolo({ container, myName, colour }) {
     for (const c of cables3) {
       const { P, Q, n } = c, pins = [];
       for (let j = 0; j <= n; j++) pins.push(pinOf(c, j));
+      const hi = hands.findIndex(h => h.cable === c), slide = hi >= 0 ? 0.7 : 0.4;   // a cable nobody holds settles quickly
       for (let i = 0; i <= n; i++) {
         if (pins[i]) { Q[2 * i] = P[2 * i]; Q[2 * i + 1] = P[2 * i + 1]; P[2 * i] = pins[i][0]; P[2 * i + 1] = pins[i][1]; continue; }
         const x = P[2 * i], y = P[2 * i + 1];
-        P[2 * i] += (x - Q[2 * i]) * 0.7; P[2 * i + 1] += (y - Q[2 * i + 1]) * 0.7; Q[2 * i] = x; Q[2 * i + 1] = y;
+        P[2 * i] += (x - Q[2 * i]) * slide; P[2 * i + 1] += (y - Q[2 * i + 1]) * slide; Q[2 * i] = x; Q[2 * i + 1] = y;
+      }
+      // a cable in your hand gathers up behind you as you walk (its loose end stays near you, not back at the crate)
+      if (hi >= 0) {
+        const [hx, hy] = handPos(hi);
+        for (let i = 0; i <= n; i++) {
+          if (pins[i]) continue;
+          const dx = hx - P[2 * i], dy = hy - P[2 * i + 1], d = Math.hypot(dx, dy);
+          if (d > 1.4) { const k = 0.07 * (d - 1.4) / d; P[2 * i] += dx * k; P[2 * i + 1] += dy * k; }
+        }
       }
       for (let it = 0; it < 12; it++) {
         for (let i = 0; i < n; i++) {
@@ -514,6 +524,16 @@ export function startSolo({ container, myName, colour }) {
     S.cables = cables3.filter(c => c.ends[0] && c.ends[1]).map(c => ({ a: c.ends[0].dev, b: c.ends[1].dev, c3: c }));
     for (const d of S.devs) for (let i = 0; i < d.k3.lights.length; i++) setLight(d.k3.lights[i], socketTaken(d, i));
     retitleCrates();
+    // a switch's label says how many of its ports are used
+    for (const d of S.devs) {
+      if (d.kind !== 'switch' || !d.k3 || !d.k3.tag) continue;
+      const n = d.k3.sockets.length, used = d.k3.sockets.filter((_, i) => socketTaken(d, i)).length;
+      const title = d.name + ': ' + used + ' of ' + n + ' ports used';
+      if (d.k3.tagText === title) continue;
+      d.k3.tagText = title;
+      const old = d.k3.tag; d.k3.group.remove(old); old.material.map.dispose(); old.material.dispose();
+      d.k3.tag = tape(title, { size: 0.034 }); d.k3.tag.position.set(0, d.k3.tagY, 0); d.k3.group.add(d.k3.tag);
+    }
   }
 
   // ---- hands: hold to grab, let go to put down or plug in (as the team game)
@@ -548,8 +568,9 @@ export function startSolo({ container, myName, colour }) {
     const tab = S.devs.find(d => d.kind === 'tablet' && !carried(d) && Math.hypot(d.tx - hx, d.ty - hy) < 0.8);
     if (tab) return { kind: 'tablet', d: tab };
     const j = nearestJoint(i, true);
-    if (j) return { kind: 'cable', ...j };
     const d = S.devs.filter(d => d.kind !== 'tablet' && !carried(d) && distToFoot(d, hx, hy) < 0.5).sort((a, b) => distToFoot(a, hx, hy) - distToFoot(b, hx, hy))[0];
+    const isEnd = j && (j.j === 0 || j.j === j.c.n);
+    if (j && (isEnd || !d)) return { kind: 'cable', ...j };
     if (d) return { kind: 'device', d };
     const crate = Object.values(CRATES).find(c => Math.hypot(pos.x - (c.x + 0.5), pos.y - (c.y + 0.5)) < 2.0);
     if (crate) return { kind: 'crate', crate };
@@ -563,7 +584,7 @@ export function startSolo({ container, myName, colour }) {
       if (d.kind === 'tablet' || carried(d) || !d.k3 || !d.k3.sockets.length) continue;
       let pd = 1e9;
       for (let k = 0; k < d.k3.sockets.length; k++) { const [px, py] = plugPin(d, k); pd = Math.min(pd, Math.hypot(hx - px, hy - py)); }
-      if ((pd < 0.6 || distToFoot(d, hx, hy) < 0.9) && pd < bd) { bd = pd; dv = d; }
+      if ((pd < 0.8 || distToFoot(d, hx, hy) < 1.1) && pd < bd) { bd = pd; dv = d; }
     }
     if (!dv) return null;
     let s = -1, sd = 1e9, any = -1, ad = 1e9;
@@ -583,14 +604,15 @@ export function startSolo({ container, myName, colour }) {
       const e = j === 0 ? 0 : j === c.n ? 1 : -1;
       if (e >= 0 && !press && c.ends[e]) continue;
       if (hands.some(o => o.cable === c && o.joint === j)) continue;
-      let d = Math.hypot(hx - c.P[2 * j], hy - c.P[2 * j + 1]); if (e >= 0) d -= c.ends[e] ? 0.4 : 0.4;
+      let d = Math.hypot(hx - c.P[2 * j], hy - c.P[2 * j + 1]); if (e >= 0) d -= c.ends[e] ? 0.25 : 0.45;
       if (d < 0.6 && (!best || d < best.d)) best = { c, j, d };
     }
     return best;
   }
   function grabJoint(i, best) {
     const h = hands[i], e = best.j === 0 ? 0 : best.j === best.c.n ? 1 : -1;
-    if (e >= 0 && best.c.ends[e]) { toast('Ethernet cable unplugged from ' + dev(best.c.ends[e].dev).name + '.', 'good'); best.c.ends[e] = null; afterChange(); }
+    h.pulledFrom = null;
+    if (e >= 0 && best.c.ends[e]) { h.pulledFrom = { ...best.c.ends[e] }; toast('Ethernet cable unplugged from ' + dev(best.c.ends[e].dev).name + '.', 'good'); best.c.ends[e] = null; afterChange(); }
     h.cable = best.c; h.joint = best.j; h.since = tickNo;
     return true;
   }
@@ -691,8 +713,12 @@ export function startSolo({ container, myName, colour }) {
       cables3 = cables3.filter(x => x !== c); toast('Cable put back in the crate.', 'good'); afterChange(); return;
     }
     if (end < 0) return;
-    // the port it goes into: the nearest free port of the device you let go next to
-    const best = plugChoice(hx, hy);
+    // the port it goes into: the nearest free port of the device you let go next to (but a plug just pulled out only
+    // goes back into that device if you push it right into the port)
+    const pf = h.pulledFrom; h.pulledFrom = null;
+    let best = plugChoice(hx, hy);
+    if (best && pf && best.d.id === pf.dev) { const [px, py] = plugPin(best.d, pf.sock); if (Math.hypot(hx - px, hy - py) > 0.35) best = null; }
+    if (!best && pf) return;
     if (!best) {
       const tab = S.devs.find(d => d.kind === 'tablet' && Math.hypot(d.tx - hx, d.ty - hy) < 1.0);
       if (tab) toast(tab.name + '\'s tablet has no network socket. It joins by Wi-Fi: put it inside a Wi-Fi point\'s green circle.', 'hint');
@@ -700,12 +726,13 @@ export function startSolo({ container, myName, colour }) {
       return;
     }
     const other = c.ends[1 - end];
-    if (other && other.dev === best.d.id) { toast('Both ends of one cable cannot go into the same device.', 'hint'); return; }
-    if (other && S.cables.some(x => (x.a === other.dev && x.b === best.d.id) || (x.b === other.dev && x.a === best.d.id))) { toast('These two are already joined.', 'hint'); return; }
+    // a plug that cannot go in drops at your feet, so it never lies on top of a port you want to reach later
+    const bounce = () => { const j = end ? c.n : 0; c.P[2 * j] = c.Q[2 * j] = pos.x; c.P[2 * j + 1] = c.Q[2 * j + 1] = pos.y; };
+    if (other && other.dev === best.d.id) { bounce(); toast('Both ends of one cable cannot go into the same device.', 'hint'); return; }
+    if (other && S.cables.some(x => (x.a === other.dev && x.b === best.d.id) || (x.b === other.dev && x.a === best.d.id))) { bounce(); toast('These two are already joined.', 'hint'); return; }
     if (socketTaken(best.d, best.s)) {
       // the website's refusal: a full device
-      const freeOne = best.d.k3.sockets.some((_, k) => !socketTaken(best.d, k));
-      if (freeOne) { toast('That port is taken. Try another RJ45 port on ' + best.d.name + '.', 'hint'); return; }
+      bounce();
       S.refused = true;
       toast(best.d.kind === 'switch' ? best.d.name + ' has no free sockets (RJ45 ports).' : best.d.name + ' has only <b>one</b> network socket (RJ45 port), and it is already used.', 'bad');
       afterChange(); return;
@@ -798,9 +825,16 @@ export function startSolo({ container, myName, colour }) {
   function guideTarget() {
     const show = M && M.phase === 'build' ? M.show : null;
     if (!show || show === 'test') return null;
+    // carrying a tablet on the Wi-Fi step: into the range of a Wi-Fi point that has a cable
+    const tabH = hands.find(h => h.dev && h.dev.kind === 'tablet');
+    if (tabH && show === 'crate-tablet') {
+      const w = S.devs.find(x => x.kind === 'wifi' && !carried(x) && cablesOf(x.id).length) || S.devs.find(x => x.kind === 'wifi' && !carried(x));
+      if (w) { const [cx, cy] = centre(w); return { x: cx, y: cy + 1.5, reach: RANGE / K * 0.6, ring: 1.2 }; }
+    }
     if (hands.some(h => h.dev)) return null;   // carrying a device: put it down anywhere
     const wantsCable = show === 'crate-cable' || show === 'switch' || show === 'wifi';
     const held = hands.find(h => h.cable && (h.joint === 0 || h.joint === h.cable.n));
+    if (held && !wantsCable) return null;
     if (held) {
       const c = held.cable, other = c.ends[held.joint === 0 ? 1 : 0], from = other && dev(other.dev);
       const otherKind = from ? from.kind : null;
@@ -1068,8 +1102,9 @@ export function startSolo({ container, myName, colour }) {
   function stepFx(dt) {
     if (!fx) return;
     const A = fx.a.k3.screen, B = fx.b.k3.screen, toName = fx.b.kind === 'printer' ? 'Printer' : fx.b.name;
-    if (fx.stage === 'wait') { if (busy(A)) return; fx.stage = 'type'; fx.t = 0; }
-    if (fx.stage === 'arrive' && !fx.bOn) { if (busy(B)) return; fx.bOn = true; fx.t = 0; }
+    // your own message comes first: it waits for a pop-up already showing for at most 0.6 s
+    if (fx.stage === 'wait') { fx.w = (fx.w || 0) + dt; if (busy(A) && fx.w < 0.6) return; if (A) Q(A).cur = null; fx.stage = 'type'; fx.t = 0; }
+    if (fx.stage === 'arrive' && !fx.bOn) { fx.w2 = (fx.w2 || 0) + dt; if (busy(B) && fx.w2 < 0.6) return; if (B) Q(B).cur = null; fx.bOn = true; fx.t = 0; }
     fx.t += dt;
     const t = fx.t;
     if (fx.stage === 'type') {
@@ -1178,10 +1213,15 @@ export function startSolo({ container, myName, colour }) {
   })();
   const glowMatP = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
   const portGlow = new THREE.Group(), glowPool = [];
-  const markMat = new THREE.SpriteMaterial({ map: null, color: 0xffffff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+  const ringTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+    g.strokeStyle = '#ffffff'; g.lineWidth = 12; g.beginPath(); g.arc(64, 64, 50, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 26; g.beginPath(); g.arc(64, 64, 50, 0, Math.PI * 2); g.stroke();
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
+  const markMat = new THREE.SpriteMaterial({ map: ringTex, color: 0xffffff, transparent: true, depthWrite: false, depthTest: false });
   const mark = new THREE.Sprite(markMat); mark.renderOrder = 6; mark.visible = false; portGlow.add(mark);
   function updatePortGlow(ts) {
-    markMat.map = markMat.map || glowTex;
     // where a plug in your hand would go if you let go now; otherwise the plug or port the tutorial step points at
     mark.visible = false;
     const heldI = hands.findIndex(h => h.cable && (h.joint === 0 || h.joint === h.cable.n));
@@ -1195,7 +1235,7 @@ export function startSolo({ container, myName, colour }) {
       if (g && g.sock) at = socketWorld(g.sock.d, g.sock.i).pos;
       else if (g && g.plug) at = cablePoints(g.plug.c)[g.plug.j];
     }
-    if (at) { mark.visible = true; mark.position.copy(at); const k = 120 + 40 * Math.sin(ts / 140); mark.scale.set(k, k, 1); }
+    if (at) { mark.visible = true; mark.position.copy(at); const k = 70 + 14 * Math.sin(ts / 140); mark.scale.set(k, k, 1); }
     const held = hands.find(h => h.cable && (h.joint === 0 || h.joint === h.cable.n));
     let n = 0;
     if (held) {

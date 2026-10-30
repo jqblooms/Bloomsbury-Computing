@@ -400,6 +400,28 @@ const BREAK = [
     ok(Math.abs(s.pos.y - y1) < 0.01, 'still walking after the message box opened');
     [...$('testBar').querySelectorAll('button')].find(x => x.textContent === 'Cancel').click();
   },
+  function refusedAndPulledPlugsBehave() {
+    s.start(1);
+    const [l1] = kind('laptop'); const l3 = placeNew('laptop', 14, 12);
+    const c = takeFromCrate(0, 'cable'); handTo(0, ...s.plugPin(l3, 0)); letGo(0);
+    grabEnd(1, c, 1); handTo(1, ...s.plugPin(l1, 0)); letGo(1);
+    const [ex, ey] = [c.P[2 * c.n], c.P[2 * c.n + 1]];
+    ok(Math.hypot(ex - s.pos.x, ey - s.pos.y) < 0.6, 'a refused plug should drop at your feet, it is ' + Math.hypot(ex - s.pos.x, ey - s.pos.y).toFixed(2) + ' away');
+    // pull the old cable's plug out of Lek and let go close by: it must stay out
+    const old = s.cables().find(x => x.ends[0] && x.ends[1]);
+    handTo(0, ...s.plugPin(l1, 0)); press(0);
+    ok(s.hands[0].cable === old, 'did not take the old cable plug');
+    handTo(0, s.plugPin(l1, 0)[0] + 0.5, s.plugPin(l1, 0)[1] + 0.4); letGo(0);
+    ok(!(old.ends[0] && old.ends[1]), 'a plug just pulled out went straight back in');
+  },
+  function tabletIsGuidedIntoRange() {
+    s.start(3);
+    const hub = sw(); const w = placeNew('wifi', 24, 10); cable(w, hub);
+    takeFromCrate(0, 'tablet'); s.frame(1);
+    const g = s.guideTarget();
+    ok(g && Math.hypot(g.x - s.centre(w)[0], g.y - s.centre(w)[1]) < 3, 'carrying a tablet, the guide does not point at the Wi-Fi range');
+    letGo(0);
+  },
   function cableCannotStretch() {
     // carrying a device with a cable in it: the cable never stretches past its length; it pulls out of the port
     s.start(0);

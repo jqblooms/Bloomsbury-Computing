@@ -31,9 +31,11 @@ p { margin: 0; }
 .chip:empty { display: none; }
 .toast { position: absolute; top: 56px; left: 50%; transform: translateX(-50%); z-index: 4; max-width: calc(100% - 32px); text-align: center; padding: 8px 14px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface); font-weight: 500; }
 .toast:empty { display: none; }
-.toast.good { border-color: var(--good-line); background: var(--good-soft); color: var(--good); }
-.toast.bad { border-color: var(--bad-line); background: var(--bad-soft); color: var(--bad); }
-.toast.hint { border-color: var(--warn-line); background: var(--warn-soft); color: var(--warn); }
+/* solid so it reads over the 3D lab; the colour is in the border and the text */
+.toast { box-shadow: var(--shadow-2); border-width: 2px; }
+.toast.good { border-color: var(--good); color: var(--good); }
+.toast.bad { border-color: var(--bad); color: var(--bad); }
+.toast.hint { border-color: var(--warn); color: var(--warn); }
 .testbar { position: absolute; left: 50%; bottom: 128px; transform: translateX(-50%); z-index: 3; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;
   background: var(--surface); border: 1px solid var(--line-strong); border-radius: 14px; padding: 8px 12px; max-width: calc(100% - 24px); box-shadow: var(--shadow-2); }
 .testbar select { padding: 5px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); }
