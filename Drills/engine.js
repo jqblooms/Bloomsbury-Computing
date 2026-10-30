@@ -194,6 +194,7 @@
     };
   }
   function persistRun() {
+    if (run && run.ladder) return; // a follow-up's progress lives on the student's account, not in this browser
     try { localStorage.setItem(RUN_KEY, JSON.stringify(run)); } catch (e) {}
   }
   function loadRun() {
@@ -536,7 +537,11 @@
     if (card.widget) return { options: [], correct: [], multi: false, widget: true };
     var show = card.show || DEFAULT_SHOW;
     var correct, pool;
-    if (card.type === "multi") {
+    if (card.type === "multi" && card.all) {
+      // A full-answer card: every mark-earning statement is shown and all of them must be ticked.
+      correct = card.answers.slice();
+      pool = correct.concat(sample(card.distractors, Math.max(1, Math.min(card.distractors.length, (card.show || correct.length + 3) - correct.length))));
+    } else if (card.type === "multi") {
       var maxCorrect = Math.min(card.answers.length, show - 2);
       var k = 1 + Math.floor(Math.random() * Math.max(1, maxCorrect));
       correct = sample(card.answers, k);
@@ -731,6 +736,7 @@
     if (isCodeDrill) { nextCodeCard(); return; }
     if (isExamSet) { nextExamCard(); return; }
     if (current && current.advanceTimer) clearTimeout(current.advanceTimer);
+    if (run.ladder) { ladderNextCard(); return; }
     persistRun();
     updateProgress();
     if (run.mode === "quiz" && !run.queue.length) return renderDone();
@@ -766,6 +772,8 @@
       category: card.category,
       type: card.type,
       show: card.show,
+      all: card.all,
+      pickThenType: card.pickThenType,
       prompt: instance.prompt,
       answers: instance.answers,
       keywords: instance.keywords,
@@ -861,7 +869,7 @@
     var textMode = typesAnswer(set);
 
     var kind = set.multi ? "Pick every correct answer, then submit" : card.pickThenType ? "Pick the answer that earns the mark, then type it out to lock it in" : (textMode ? answerFormat(card) : "Pick an answer");
-    var streakHtml = "";
+    var streakHtml = run.ladder ? ladderDotsHtml() : "";
     if (run.mode === "quiz") {
       var s = run.streak[current.cardId] || 0;
       var dots = "";
@@ -1062,6 +1070,7 @@
     var helpBtn = els.stage.querySelector("#help-btn");
     if (helpBtn) helpBtn.disabled = true;
     recordSupportResult(current.cardId, right);
+    if (run.ladder) ladderScore(right, fb);
 
     // ---- scoring ----
     if (run.mode === "quiz") {
@@ -1088,18 +1097,19 @@
     if (current.advanceTimer) clearTimeout(current.advanceTimer);
     var delay = (textMode && !right) ? TEXT_WRONG_ADVANCE_MS : ADVANCE_MS;
     // An exam-format card shows the mark scheme: it waits for Next instead of moving on by itself.
-    if (set.widget) {
+    if (set.widget || (run.ladder && current.ladderStop)) {
       var actions = els.stage.querySelector(".actions"), next = document.createElement("button");
       next.type = "button"; next.className = "btn"; next.textContent = "Next";
       next.addEventListener("click", function () { if (current.advanceTimer) clearTimeout(current.advanceTimer); advance(); });
       if (actions) actions.insertBefore(next, actions.firstChild);
-      if (right) { current.advanceTimer = setTimeout(advance, ADVANCE_MS); }
+      if (right && !current.ladderStop) { current.advanceTimer = setTimeout(advance, ADVANCE_MS); }
       return;
     }
     current.advanceTimer = setTimeout(advance, delay);
   }
 
   function advance() {
+    if (run.ladder) { nextCard(); return; }
     var learn = run.mode === "learn";
     if (learn) {
       run.seenInLearn[current.cardId] = true;
@@ -1972,8 +1982,111 @@
     try { window.parent.postMessage({ type: "BC_DRILL_STATE_REQUEST", drillId: drillId }, "*"); } catch (e) {}
   }
 
-  var restored = loadRun();
-  if (restored) {
+  // ---- Follow-up ladder (?ladder=, a homework set after an exam) ----------------
+  // The drill's `ladder` lists each exam subtopic with three tier categories: key facts, exam wording, full
+  // answer. The site sends which subtopics this student lost marks on and the tier each starts at (or has reached).
+  // Each subtopic in turn: 3 right in a row passes its tier, a wrong answer resets the 3, and a right answer with
+  // "I need help" on neither adds nor resets. Each pass is posted to the site as BC_DRILL_LADDER, which saves it.
+  var LADDER_STREAK = 3;
+  var TIER_NAMES = ["key facts", "exam wording", "full answer"];
+  function parseLadder() {
+    var raw = params.get("ladder");
+    if (!raw || !Array.isArray(drill.ladder)) return null;
+    var want;
+    try { want = JSON.parse(raw); } catch (e) { return null; }
+    if (!Array.isArray(want)) return null;
+    var plan = [];
+    drill.ladder.forEach(function (step) {
+      var w = want.filter(function (x) { return x && x.t === step.topic; })[0];
+      if (!w) return;
+      var tier = Math.max(0, Math.min(step.tiers.length, Number(w.s) || 0));
+      plan.push({ topic: step.topic, label: step.label || step.topic, tiers: step.tiers, tier: tier, streak: 0, last: null, done: tier >= step.tiers.length });
+    });
+    return plan;
+  }
+  function ladderTopic() { return run.ladderPlan[run.ladderAt]; }
+  function ladderDotsHtml() {
+    var t = ladderTopic(), dots = "";
+    if (!t) return "";
+    for (var i = 0; i < LADDER_STREAK; i++) dots += '<i class="' + (i < t.streak ? "on" : "") + '"></i>';
+    return '<span class="streakdots" title="Three in a row moves you up">' + dots + "</span>";
+  }
+  function ladderLabel() {
+    var plan = run.ladderPlan, t = ladderTopic();
+    var done = plan.filter(function (x) { return x.done; }).length;
+    if (t && t.done) els.scopeLabel.textContent = t.label + " \u00b7 finished";
+    else if (t) els.scopeLabel.textContent = t.label + " \u00b7 step " + (t.tier + 1) + " of " + t.tiers.length + ": " + (TIER_NAMES[t.tier] || "") + " \u00b7 " + t.streak + " of " + LADDER_STREAK + " in a row";
+    var steps = 0, passed = 0;
+    plan.forEach(function (x) { steps += x.tiers.length; passed += Math.min(x.tier, x.tiers.length); });
+    els.progressLabel.textContent = done + " of " + plan.length + " topics finished";
+    els.progressFill.style.width = (steps ? Math.round(100 * passed / steps) : 100) + "%";
+  }
+  function ladderNextCard() {
+    var plan = run.ladderPlan;
+    if (!plan.some(function (x) { return !x.done; })) { ladderDone(); return; }
+    // stay on a topic until its step is passed, then move round to the next unfinished topic
+    if (!ladderTopic() || ladderTopic().done || run.ladderMoveOn) {
+      run.ladderMoveOn = false;
+      for (var k = 1; k <= plan.length; k++) {
+        var at = (run.ladderAt + k) % plan.length;
+        if (!plan[at].done) { run.ladderAt = at; break; }
+      }
+    }
+    var t = ladderTopic();
+    var ids = categoryCardIds(t.tiers[t.tier]);
+    if (ids.length > 1) ids = ids.filter(function (id) { return id !== t.last; });
+    var cardId = ids[Math.floor(Math.random() * ids.length)];
+    t.last = cardId;
+    var instance = cardsById[cardId].randomize ? cardsById[cardId].randomize() : null;
+    var card = resolveCard(cardsById[cardId], instance);
+    current = { cardId: cardId, instance: instance, set: buildOptionSet(card), checked: false, usedHelp: false, hintReveal: 0 };
+    ladderLabel();
+    renderCard();
+  }
+  function ladderScore(right, fb) {
+    var t = ladderTopic();
+    var add = function (html) { if (fb) fb.insertAdjacentHTML("beforeend", '<span class="note"><strong>' + html + "</strong></span>"); };
+    current.ladderStop = !right;
+    if (!right) { t.streak = 0; add("Back to 0 in a row. Read why, then try the next one."); }
+    else if (current.usedHelp) add("Right, with help. It does not count toward 3 in a row, but your streak is kept.");
+    else {
+      t.streak++;
+      if (t.streak >= LADDER_STREAK) {
+        t.tier++; t.streak = 0; t.last = null; run.ladderMoveOn = true; current.ladderStop = true;
+        t.done = t.tier >= t.tiers.length;
+        add(t.done ? "3 in a row: " + t.label + " is finished." : "3 in a row: up to step " + (t.tier + 1) + ", " + TIER_NAMES[t.tier] + ".");
+        try { window.parent.postMessage({ type: "BC_DRILL_LADDER", drillId: drillId, topic: t.topic, tier: t.tier, done: t.done }, "*"); } catch (e) {}
+      }
+    }
+    ladderLabel();
+  }
+  function ladderDone() {
+    drillRunFinished = true;
+    els.scopeLabel.textContent = "Finished";
+    ladderLabel();
+    els.stage.innerHTML = '<div class="card"><p class="prompt">You finished every topic.</p><p>' + run.ladderPlan.map(function (x) { return escapeHtml(x.label); }).join(", ") + "</p></div>";
+  }
+  function startLadder(plan) {
+    run = freshRun("learn", "all", null, "mc", "all");
+    run.ladder = true;
+    run.ladderPlan = plan;
+    run.ladderAt = -1;
+    var css = document.createElement("style");
+    css.textContent = "#modebar, #change-selection-btn, #restart-btn, #notice-learn { display: none !important; }";
+    document.head.appendChild(css);
+    els.setupCard.style.display = "none";
+    els.runArea.style.display = "";
+    els.progress.style.display = "flex";
+    nextCard();
+  }
+
+  var ladderPlan = parseLadder();
+  var restored = ladderPlan ? null : loadRun();
+  if (ladderPlan) {
+    if (!ladderPlan.length) {
+      els.setupCard.innerHTML = '<p class="setup-lead">Nothing to practise here: you did not lose marks on any topic in this drill.</p>';
+    } else startLadder(ladderPlan);
+  } else if (restored) {
     run = restored;
     resumeRun();
   } else {
