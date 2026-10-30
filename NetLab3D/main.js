@@ -285,7 +285,7 @@ function faultyWifi() {
 }
 const FIXW = { id: 'fixw', group: 'Troubleshooting', title: 'Predict, then Fix: Wi-Fi', type: 'fix', rounds: NEED, setup: faultyWifi,
   intro: 'Something is wrong with this Wi-Fi network. First predict, then fix it.',
-  fixText: 'Fix it so <b>every</b> laptop and tablet can print and message each other. You can move devices and plug in cables. Test it, then check.',
+  fixText: 'Read the reason under each job above: it tells you what is wrong. Fix it so <b>every</b> laptop and tablet can print and message each other: plug in cables, or carry a tablet into the Wi-Fi range. Test it, then press Check my network.',
   check() { return kept(everyone()); } };
 const BUDGET = { id: 'budget', group: 'Design', title: 'Cable Budget', type: 'challenge', maxNew: 5,
   setup() { S = fresh({ laptop: 3, tablet: 2, printer: 1, 'switch': 1, wifi: 1 }); S.startCables = 0; },
@@ -2555,7 +2555,7 @@ export function startSolo({ container, myName, colour }) {
       if (m.maxNew != null) t.appendChild(el('p', {}, '<b>New cables used: ' + (S.cables.length - (S.startCables || 0)) + '</b> (at most ' + m.maxNew + ').'));
       t.appendChild(el('p', { class: 'note' }, 'One check only. A mistake means this build does not count.'));
     } else if (m.type === 'fix') {
-      t.appendChild(el('p', {}, M.phase === 'predict' ? '<b>Step 1 of 2: Predict.</b> Look at the cables. Will each job work? You cannot change the network yet.' : M.phase === 'build' ? '<b>Step 2 of 2: Fix it.</b> ' + (m.fixText || 'Fix the cables so <b>every</b> laptop can print and message every other laptop. Test it, then check.') : ''));
+      t.appendChild(el('p', {}, M.phase === 'predict' ? '<b>Step 1 of 2: Predict.</b> Look at the cables. Will each job work? You cannot change the network yet.' : M.phase === 'build' ? '<b>Step 2 of 2: Fix it.</b> ' + (m.fixText || 'Read the reason under each job above: it tells you what is wrong. Fix the cables so <b>every</b> laptop can print and message every other laptop. Test it, then press Check my network.') : ''));
       if (m.id === 'rooms' && M.phase === 'build') {
         const done = roomsSteps(), ol = el('ol', { class: 'steps' }), now = done.indexOf(false);
         ['Take an <b>Ethernet cable</b> from the cable crate.', 'Plug one end into a free port on <b>Switch 1</b>.', 'Plug the other end into <b>Switch 2</b>.', 'Test it: print from a laptop in <b>Room 1</b>.', 'Press <b>Check my network</b>.']
