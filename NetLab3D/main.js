@@ -211,9 +211,9 @@ const WIFI1 = { id: 'wifi', group: 'Wi-Fi', title: 'Join with Wi-Fi', type: 'tut
   steps: [
     { text: 'Take a <b>Wi-Fi point</b> from the shelf and put it down on the right-hand side of the room.', show: 'crate-wifi', done: () => placed('wifi') >= 1 },
     { text: 'Plug the Wi-Fi point into the switch with a cable.', show: 'wifi', done: () => S.devs.some(w => w.kind === 'wifi' && !isHeld(w) && plugged(w, 'switch')) },
-    { text: 'Take a <b>Tablet</b> and put it down <b>inside</b> the green circle. A dotted line shows it has joined the Wi-Fi.', show: 'crate-tablet', done: () => S.devs.some(t => t.kind === 'tablet' && !isHeld(t) && aps(t).some(w => !isHeld(w) && cablesOf(w.id).length)) },
+    { text: 'Take a <b>Tablet</b> and put it down <b>inside</b> the white circles (the Wi-Fi range). A dotted line shows it has joined the Wi-Fi.', show: 'crate-tablet', done: () => S.devs.some(t => t.kind === 'tablet' && !isHeld(t) && aps(t).some(w => !isHeld(w) && cablesOf(w.id).length)) },
     { text: 'Test it: print from the tablet.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && dev(S.lastTest.a).kind === 'tablet' && dev(S.lastTest.b).kind === 'printer' },
-    { text: 'Carry the tablet <b>outside</b> the green circle, then try to print again.', show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok && dev(S.lastTest.a).kind === 'tablet' }
+    { text: 'Carry the tablet <b>outside</b> the white circles, then try to print again.', show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok && dev(S.lastTest.a).kind === 'tablet' }
   ], end: 'Wi-Fi joins devices with no cable, but only inside its <b>range</b>. The Wi-Fi point itself still needs a cable to the switch.' };
 const WIFI2 = { id: 'range', group: 'Wi-Fi', title: 'Out of Range', type: 'challenge',
   setup() {
@@ -1217,7 +1217,7 @@ export function startSolo({ container, myName, colour }) {
     if (!best && pf) return;
     if (!best) {
       const tab = S.devs.find(d => d.kind === 'tablet' && Math.hypot(d.tx - hx, d.ty - hy) < 1.0);
-      if (tab) toast(tab.name + '\'s tablet has no network socket. It joins by Wi-Fi: put it inside a Wi-Fi point\'s green circle.', 'hint');
+      if (tab) toast(tab.name + '\'s tablet has no network socket. It joins by Wi-Fi: put it inside a Wi-Fi point\'s white circles.', 'hint');
       else { const near = S.devs.find(d => d.kind !== 'tablet' && distToFoot(d, hx, hy) < 1.0); if (near) toast('Push the plug right into a network socket on ' + near.name + ': the RJ45 port, a dark hole with gold pins.', 'hint'); }
       return;
     }
@@ -2254,6 +2254,18 @@ export function startSolo({ container, myName, colour }) {
   { const q = new URLSearchParams(location.search).get('lesson'); if (q && LESSONS.some(L => L.id === q)) { lessonMode.on = true; lessonMode.id = q; } }
   const lessonList = () => { const L = LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]; return L.missions.map(id => MISSIONS.findIndex(m => m.id === id)).filter(i => i >= 0); };
   const nextMission = () => { if (lessonMode.on) { const ids = lessonList(), k = ids.indexOf(missionAt); return k >= 0 && k + 1 < ids.length ? ids[k + 1] : null; } const sec = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === MISSIONS[missionAt].group).map(([, i]) => i), k = sec.indexOf(missionAt); return k >= 0 && k + 1 < sec.length ? sec[k + 1] : (missionAt + 1 < MISSIONS.length ? missionAt + 1 : null); };
+  // What the network looked like when the mission started; anything different (or any step done) is progress to lose.
+  function startSig() { return S.devs.map(d => d.id + '@' + Math.round(d.x) + ',' + Math.round(d.y)).join() + '|' + cables3.map(c => (c.ends[0] ? c.ends[0].dev + '.' + c.ends[0].sock : '-') + '/' + (c.ends[1] ? c.ends[1].dev + '.' + c.ends[1].sock : '-')).join(); }
+  function inProgress() {
+    if (!M || M.phase === 'done') return false;
+    return startSig() !== M.startSig || M.step > 0 || M.latched.some(Boolean) || !!M.predicted || !!M.qi || !!M.racePick || !!race || !!M.result;
+  }
+  // switching mission or lesson: straight away if nothing would be lost, otherwise ask (Leave / Stay) by the list
+  function leaveThen(go) {
+    if (!inProgress()) { go(); return; }
+    M.leave = go; drawPanel();
+    const box = document.querySelector('#mission .leave'); if (box) box.scrollIntoView({ block: 'nearest' });
+  }
   function startLesson() { const ids = lessonList(); start(ids.find(i => !done[i]) ?? ids[0]); }
   const openSecs = new Set();
   const done = load('all:done', {}) || {};   // the 2D app's key: the same eleven missions in the same order
@@ -2287,6 +2299,8 @@ export function startSolo({ container, myName, colour }) {
     updateShow();
     view.jump(pos.x, pos.y);
     drawAll();
+    M.startSig = startSig();
+    $('mission').scrollTop = 0;   // the new mission's instructions in view
     if (m.breakAtStart) topoBreak();   // an outage starts with a link already broken
   }
   function updateShow() { const st = M.m.steps && M.m.steps[M.step]; M.show = M.phase === 'build' && st ? st.show : null; }
@@ -2393,16 +2407,24 @@ export function startSolo({ container, myName, colour }) {
     const modeBar = el('div', { class: 'modebar seg', role: 'group', 'aria-label': 'Show' });
     [['all', 'All missions'], ['lesson', 'Lesson mode']].forEach(([k, label]) => {
       const b = el('button', { type: 'button', 'aria-pressed': String((lessonMode.on ? 'lesson' : 'all') === k) }, label);
-      b.addEventListener('click', () => { lessonMode.on = k === 'lesson'; save('lessonMode', lessonMode); if (lessonMode.on && !lessonList().includes(missionAt)) startLesson(); else drawAll(); });
+      b.addEventListener('click', () => { const on = k === 'lesson'; const go = () => { lessonMode.on = on; save('lessonMode', lessonMode); if (on && !lessonList().includes(missionAt)) startLesson(); else drawAll(); }; if (on && !lessonList().includes(missionAt)) leaveThen(go); else go(); });
       modeBar.appendChild(b);
     });
-    t.appendChild(modeBar);
+    const navBox = el('div', { class: 'navbox' });
+    navBox.appendChild(el('div', { class: 'head' }, '<span>Choose a mission</span>'));
+    if (M.leave) {
+      const box = el('div', { class: 'leave' }, '<b>Leave this mission?</b> What you have built so far will be lost.');
+      const row = el('div', { class: 'actions' });
+      row.append(btn('Leave', 'go', () => { const go = M.leave; M.leave = null; go(); }), btn('Stay', '', () => { M.leave = null; drawPanel(); }));
+      box.appendChild(row); navBox.appendChild(box);
+    }
+    navBox.appendChild(modeBar);
     const nav = el('div', { class: 'sections', role: 'navigation', 'aria-label': 'Missions' });
     if (lessonMode.on) {
       const pickL = el('select', { id: 'nbLesson', 'aria-label': 'Lesson' });
       LESSONS.forEach(L => pickL.appendChild(el('option', { value: L.id }, L.title)));
       pickL.value = lessonMode.id;
-      pickL.addEventListener('change', () => { lessonMode.id = pickL.value; save('lessonMode', lessonMode); startLesson(); });
+      pickL.addEventListener('change', () => { const want = pickL.value; pickL.value = lessonMode.id; leaveThen(() => { lessonMode.id = want; save('lessonMode', lessonMode); startLesson(); }); });
       nav.appendChild(pickL);
       const ids = lessonList(), total = ids.reduce((n, i) => n + minsOf(MISSIONS[i]), 0), left = ids.filter(i => !done[i]).reduce((n, i) => n + minsOf(MISSIONS[i]), 0);
       nav.appendChild(el('p', { class: 'note' }, ids.filter(i => done[i]).length + ' of ' + ids.length + ' done. About ' + total + ' minutes in all' + (left && left < total ? ', about ' + left + ' left.' : '.')));
@@ -2411,7 +2433,7 @@ export function startSolo({ container, myName, colour }) {
         const x = MISSIONS[i];
         const b = el('button', { type: 'button', 'aria-current': String(i === missionAt) }, (done[i] ? '<span class="tick">&#10003;</span> ' : '<span class="num">' + (k + 1) + '</span> ') + '<span class="t">' + x.title + '</span><span class="mins">' + minsOf(x) + ' min</span>');
         b.disabled = !(k === 0 || done[ids[k - 1]] || done[i]);
-        b.addEventListener('click', () => { have = 0; start(i); });
+        b.addEventListener('click', () => leaveThen(() => { have = 0; start(i); }));
         items.appendChild(b);
       });
       nav.appendChild(items);
@@ -2428,12 +2450,12 @@ export function startSolo({ container, myName, colour }) {
         const best = x.type === 'client' ? (load('all:stars', {}) || {})[i] : null;
         const b = el('button', { type: 'button', 'aria-current': String(i === missionAt) }, (done[i] ? '<span class="tick">&#10003;</span> ' : '<span class="num">' + (k + 1) + '</span> ') + '<span class="t">' + x.title + '</span>' + (best != null ? starsHtml(best) : ''));
         b.disabled = !(k === 0 || done[list[k - 1][1]] || done[i]);
-        b.addEventListener('click', () => { have = 0; start(i); });
+        b.addEventListener('click', () => leaveThen(() => { have = 0; start(i); }));
         items.appendChild(b);
       });
       det.appendChild(items); nav.appendChild(det);
     });
-    t.appendChild(nav);
+    navBox.appendChild(nav);
     const inSec = lessonMode.on && lessonList().includes(missionAt) ? lessonList().map(i => MISSIONS[i]) : MISSIONS.filter(x => x.group === m.group);
     t.appendChild(el('div', { class: 'head' }, '<span>' + m.group + '</span><span>Mission ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length + '</span>'));
     t.appendChild(el('h2', {}, m.title));
@@ -2515,7 +2537,8 @@ export function startSolo({ container, myName, colour }) {
     if (m.type === 'tutorial' && M.phase === 'build') act.appendChild(btn('Start again', '', () => start(missionAt)));
     if (!m.noHelp) act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
-    if (M.phase === 'done' || M.phase === 'checked') t.scrollTop = t.scrollHeight;   // the result and its button in view
+    t.appendChild(navBox);
+    if (M.phase === 'done' || M.phase === 'checked') act.scrollIntoView({ block: 'nearest' });   // the result and its button in view
     $('step').textContent = m.group + ': ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length;
   }
   // A question in the mission panel: typed number or buttons. Wrong: why, then answer again (the buttons move).

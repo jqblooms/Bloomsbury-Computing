@@ -747,6 +747,23 @@ const BREAK = [
     const [x] = crateFront('switch'); walkTo(x, 21, 0); press(0);
     ok(!s.hands[0].dev, 'the switch crate opened before the third laptop step'); letGo(0);
   },
+  function leavingAsksFirst() {
+    s.start(0);
+    const kids = [...$('mission').children];
+    ok(kids.findIndex(k => k.tagName === 'H2') < kids.findIndex(k => k.classList.contains('navbox')), 'the mission list comes before the instructions');
+    const other = () => [...document.querySelectorAll('#mission .sec-list button, #mission .lesson-list button')].find(b => b.textContent.includes('Add a Third Laptop') || b.textContent.includes('Join with Wi-Fi'));
+    // nothing done yet: switches straight away
+    s.start(3); const b0 = [...document.querySelectorAll('#mission .sec-list button')].find(b => b.textContent.includes('Join Two Laptops'));
+    b0.click(); ok(M().m.id === 'two', 'an untouched mission did not switch straight away');
+    placeNew('laptop', 6, 8);
+    const w = [...document.querySelectorAll('#mission .sec-list button')].find(b => b.textContent.includes('Join with Wi-Fi'));
+    w.click(); ok(M().m.id === 'two' && !!document.querySelector('#mission .leave'), 'leaving a mission in progress did not ask first');
+    [...document.querySelectorAll('#mission .leave button')].find(b => b.textContent === 'Stay').click();
+    ok(M().m.id === 'two' && !document.querySelector('#mission .leave') && kind('laptop').length === 1, 'Stay lost the work');
+    [...document.querySelectorAll('#mission .sec-list button')].find(b => b.textContent.includes('Join with Wi-Fi')).click();
+    [...document.querySelectorAll('#mission .leave button')].find(b => b.textContent === 'Leave').click();
+    ok(M().m.id === 'wifi', 'Leave did not switch');
+  },
   function cableCannotStretch() {
     // carrying a device with a cable in it: the cable never stretches past its length; it pulls out of the port
     s.start(0);
