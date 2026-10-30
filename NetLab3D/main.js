@@ -1134,8 +1134,10 @@ export function startSolo({ container, myName, colour }) {
       const e = j === 0 ? 0 : j === c.n ? 1 : -1;
       if (e >= 0 && !press && c.ends[e]) continue;
       if (hands.some(o => o.cable === c && o.joint === j)) continue;
-      let d = Math.hypot(hx - c.P[2 * j], hy - c.P[2 * j + 1]); if (e >= 0) d -= c.ends[e] ? 0.25 : 0.45;
-      if (d < 0.6 && (!best || d < best.d)) best = { c, j, d };
+      // plugs come first: any plug within about a tile beats every middle bit of cable; a loose plug beats one in a port
+      const raw = Math.hypot(hx - c.P[2 * j], hy - c.P[2 * j + 1]);
+      const d = e >= 0 ? raw - 10 + (c.ends[e] ? 0.15 : 0) : raw;
+      if ((e >= 0 ? raw < 1.0 : raw < 0.6) && (!best || d < best.d)) best = { c, j, d };
     }
     return best;
   }
