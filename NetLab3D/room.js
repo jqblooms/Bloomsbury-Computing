@@ -110,8 +110,8 @@ export function create(container) {
   }
   const el = renderer.domElement;
   let down = null;
-  // left and right buttons are the hands; only the middle button (or a touch drag) turns the camera
-  el.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button !== 1) return; down = { x: e.clientX, y: e.clientY, yaw, pitch, moved: false }; });
+  // the left button grabs; the right (or middle) button, or a touch drag, turns the camera
+  el.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button === 0) return; down = { x: e.clientX, y: e.clientY, yaw, pitch, moved: false }; });
   addEventListener('pointermove', e => {
     if (!down) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;

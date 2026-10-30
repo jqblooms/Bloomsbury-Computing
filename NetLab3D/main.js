@@ -1053,7 +1053,7 @@ export function startSolo({ container, myName, colour }) {
     if (plugged || g.kind === 'device' || g.kind === 'tablet') { h.pending = { g, at: clock }; hint(); return; }
     doGrab(i, g);
   }
-  const HOLD = 0;   // seconds: Space is the only grab key, so no delay is needed
+  const HOLD = 0.25;   // seconds: a quick click never pulls a plug out or moves a device
   function holdTick() {
     for (let i = 0; i < 2; i++) {
       const h = hands[i], p = h.pending;
@@ -2692,11 +2692,11 @@ export function startSolo({ container, myName, colour }) {
   function hint() {
     const held = hands.map(h => h.dev ? 'dev' : h.cable ? (h.joint === 0 || h.joint === h.cable.n ? 'plug' : 'cable') : null).filter(Boolean);
     let h = '';
-    if (held.includes('dev')) h = 'Keep holding Space and walk to where it should go, then let go. Let go at its crate to put it back.';
-    else if (held.includes('plug')) h = 'Walk the plug to an RJ45 port and let go of Space. A laptop\'s port is on its right-hand side.';
-    else if (held.length) h = 'Keep holding Space to carry. Let go to drop it.';
+    if (held.includes('dev')) h = 'Keep holding and walk to where it should go, then let go. Let go at its crate to put it back.';
+    else if (held.includes('plug')) h = 'Walk the plug to an RJ45 port and let go. A laptop\'s port is on its right-hand side.';
+    else if (held.length) h = 'Keep holding to carry. Let go to drop it.';
     else if (hands.some(x => x.pending)) h = 'Keep holding to pick it up (or pull the plug out).';
-    else h = 'Hold Space to grab what is in front of you. Let go of Space to put it down or plug it in.';
+    else h = 'Hold Space (or the left mouse button) to grab what is in front of you. Let go to put it down or plug it in. Right-drag turns the camera.';
     $('hint').textContent = h;
   }
 
@@ -2790,8 +2790,9 @@ export function startSolo({ container, myName, colour }) {
   // starting to type (the message box, a menu) lets go of every key you were holding, so you stop walking
   document.addEventListener('focusin', e => { if (typing(e)) { keys.clear(); stick = null; const kn = $('knob'); if (kn) kn.style.transform = ''; } });
   addEventListener('blur', () => { keys.clear(); setHand(0, false); setHand(1, false); });
-  // the mouse does not grab (Space does), so a click on the lab never picks anything up
-  addEventListener('pointerup', e => { if (e.pointerType === 'mouse' && (e.button === 0 || e.button === 2)) setHand(e.button === 0 ? 0 : 1, false); });
+  // left mouse button on the lab: hold to grab, like Space (right button turns the camera, in room.js)
+  container.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button === 0) setHand(0, true); });
+  addEventListener('pointerup', e => { if (e.pointerType === 'mouse' && e.button === 0) setHand(0, false); });
   container.addEventListener('contextmenu', e => e.preventDefault());
   for (const [id, i] of [['leftBtn', 0], ['rightBtn', 1]]) {
     const b = $(id);
