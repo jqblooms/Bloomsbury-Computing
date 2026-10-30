@@ -50,6 +50,9 @@ function links(x) {
   return out;
 }
 function count(kind) { return S.devs.filter(d => d.kind === kind).length; }
+// devices standing on the floor (not in someone's hands); set by the 3D lab
+let isHeld = () => false;
+function placed(kind) { return S.devs.filter(d => d.kind === kind && !isHeld(d)).length; }
 function ends() { return S.devs.filter(d => d.kind !== 'switch' && d.kind !== 'wifi'); }
 function place(kind, x, y, name) {
   const d = { id: S.nextId++, kind, x, y };
@@ -103,21 +106,21 @@ const BUILD = [
   { id: 'two', group: 'Getting started', title: 'Join Two Laptops', type: 'tutorial', setup() { S = fresh({ laptop: 2 }); },
     intro: 'Two laptops on their own cannot share anything. Join them to make a network.',
     steps: [
-      { text: 'Grab the <b>Laptop</b> crate on the supply shelf, carry the laptop onto the floor and let go.', show: 'crate-laptop', done: () => count('laptop') >= 1 },
-      { text: 'Put a second <b>Laptop</b> down.', show: 'crate-laptop', done: () => count('laptop') >= 2 },
-      { text: 'Plug in a cable. ' + SOCK, show: 'crate-cable', done: () => S.cables.length >= 1 },
-      { text: 'Test it. In the Test bar at the bottom, choose who sends and who gets it, then press <b>Send</b>.', show: 'test', done: () => S.lastTest && S.lastTest.ok }
+      { text: 'Grab the <b>Laptop</b> crate on the supply shelf, carry the laptop onto the floor and let go.', show: 'crate-laptop', done: () => placed('laptop') >= 1 },
+      { text: 'Put a second <b>Laptop</b> down.', show: 'crate-laptop', done: () => placed('laptop') >= 2 },
+      { text: 'Plug in a cable. ' + SOCK, show: 'crate-cable', done: () => S.cables.some(c => !isHeld(dev(c.a)) && !isHeld(dev(c.b))) },
+      { text: 'Test it. In the Test bar at the bottom, choose who sends and who gets it, then press <b>Send</b>.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok }
     ], end: 'Two devices joined so they can share data: that is a <b>network</b>.' },
   { id: 'switch', group: 'Getting started', title: 'Add a Third Laptop', type: 'tutorial', setup() {
     S = fresh({ laptop: 3, 'switch': 1 }); const a = place('laptop', 150, 100), b = place('laptop', 490, 100); plug(a, b); },
     intro: 'A third person wants to join the network.',
     steps: [
-      { text: 'Put a third <b>Laptop</b> down.', show: 'crate-laptop', done: () => count('laptop') >= 3 },
-      { text: 'Try to plug the new laptop into one of the other two laptops. Watch what happens.', show: 'crate-cable', done: () => S.refused },
-      { text: 'Each laptop has only one network socket. Take a <b>Switch</b> from the shelf and put it down: it has eight sockets.', show: 'crate-switch', done: () => count('switch') >= 1 },
+      { text: 'Put a third <b>Laptop</b> down.', show: 'crate-laptop', done: () => placed('laptop') >= 3 },
+      { text: 'Try to plug the new laptop into one of the other two laptops. Watch what happens.', show: 'crate-cable', event: true, done: () => S.refused },
+      { text: 'Each laptop has only one network socket. Take a <b>Switch</b> from the shelf and put it down: it has eight sockets.', show: 'crate-switch', done: () => placed('switch') >= 1 },
       { text: 'Take out the old cable between the first two laptops: grab a plug and pull it out of its socket.', show: 'cable', done: () => !S.cables.some(c => dev(c.a).kind === 'laptop' && dev(c.b).kind === 'laptop') },
-      { text: 'Plug <b>all three</b> laptops into the switch.', show: 'switch', done: () => laptops().length >= 3 && laptops().every(l => plugged(l, 'switch')) },
-      { text: 'Test it: send a message between two laptops. Watch it go through the switch.', show: 'test', done: () => S.lastTest && S.lastTest.ok }
+      { text: 'Plug <b>all three</b> laptops into the switch.', show: 'switch', done: () => placed('laptop') >= 3 && placed('switch') >= 1 && laptops().every(l => !isHeld(l) && plugged(l, 'switch')) },
+      { text: 'Test it: send a message between two laptops. Watch it go through the switch.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok }
     ], end: 'A <b>switch</b> joins many devices. Data goes from one laptop, through the switch, to another.' },
   { id: 'printer', group: 'Getting started', title: 'Share the Printer', type: 'challenge', setup() { S = fresh({ laptop: 4, printer: 1, 'switch': 1 }); },
     intro: 'Build a network for a class: <b>four laptops</b> and <b>one printer</b>.',
@@ -179,11 +182,11 @@ const WIFI1 = { id: 'wifi', group: 'Wi-Fi', title: 'Join with Wi-Fi', type: 'tut
   setup() { S = fresh({ wifi: 1, tablet: 1 }); const sw = place('switch', 170, 190, 'Switch'), l = place('laptop', 80, 70), p = place('printer', 80, 290); plug(l, sw); plug(p, sw); },
   intro: 'A tablet has no network socket. It joins the network with Wi-Fi.',
   steps: [
-    { text: 'Take a <b>Wi-Fi point</b> from the shelf and put it down on the right-hand side of the room.', show: 'crate-wifi', done: () => count('wifi') >= 1 },
-    { text: 'Plug the Wi-Fi point into the switch with a cable.', show: 'wifi', done: () => S.devs.some(w => w.kind === 'wifi' && plugged(w, 'switch')) },
-    { text: 'Take a <b>Tablet</b> and put it down <b>inside</b> the green circle. A dotted line shows it has joined the Wi-Fi.', show: 'crate-tablet', done: () => S.devs.some(t => t.kind === 'tablet' && aps(t).length) },
-    { text: 'Test it: print from the tablet.', show: 'test', done: () => S.lastTest && S.lastTest.ok && dev(S.lastTest.a).kind === 'tablet' && dev(S.lastTest.b).kind === 'printer' },
-    { text: 'Carry the tablet <b>outside</b> the green circle, then try to print again.', show: 'test', done: () => S.lastTest && !S.lastTest.ok && dev(S.lastTest.a).kind === 'tablet' }
+    { text: 'Take a <b>Wi-Fi point</b> from the shelf and put it down on the right-hand side of the room.', show: 'crate-wifi', done: () => placed('wifi') >= 1 },
+    { text: 'Plug the Wi-Fi point into the switch with a cable.', show: 'wifi', done: () => S.devs.some(w => w.kind === 'wifi' && !isHeld(w) && plugged(w, 'switch')) },
+    { text: 'Take a <b>Tablet</b> and put it down <b>inside</b> the green circle. A dotted line shows it has joined the Wi-Fi.', show: 'crate-tablet', done: () => S.devs.some(t => t.kind === 'tablet' && !isHeld(t) && aps(t).some(w => !isHeld(w) && cablesOf(w.id).length)) },
+    { text: 'Test it: print from the tablet.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && dev(S.lastTest.a).kind === 'tablet' && dev(S.lastTest.b).kind === 'printer' },
+    { text: 'Carry the tablet <b>outside</b> the green circle, then try to print again.', show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok && dev(S.lastTest.a).kind === 'tablet' }
   ], end: 'Wi-Fi joins devices with no cable, but only inside its <b>range</b>. The Wi-Fi point itself still needs a cable to the switch.' };
 const WIFI2 = { id: 'range', group: 'Wi-Fi', title: 'Out of Range', type: 'challenge',
   setup() {
@@ -434,6 +437,7 @@ export function startSolo({ container, myName, colour }) {
     return false;
   }
   const carried = d => hands.some(h => h.dev === d);
+  isHeld = d => !!d && carried(d);
   function free(x, y) { for (const [ox, oy] of [[-0.28, -0.28], [0.28, -0.28], [-0.28, 0.28], [0.28, 0.28]]) if (solidAt(Math.round(x + ox), Math.round(y + oy))) return false; return true; }
   function handPos(i) { const fx = Math.sin(pos.face), fy = Math.cos(pos.face), side = i === 0 ? 1 : -1; return [pos.x + fx * 0.42 + Math.cos(pos.face) * side * 0.2, pos.y + fy * 0.42 - Math.sin(pos.face) * side * 0.2]; }
 
@@ -519,16 +523,19 @@ export function startSolo({ container, myName, colour }) {
     if (locked()) { toast(M.phase === 'predict' ? 'Predict first: choose Yes or No for each job, then press Check my predictions.' : anim ? 'Wait for the message to arrive.' : 'Press the button on the mission sheet to go on.', 'hint'); return; }
     if (h.cable || h.dev) return;
     const [hx, hy] = handPos(i);
+    // a hand on a crate takes from that crate (not a cable lying next to it)
+    const onCrate = Object.values(CRATES).find(c => hx > c.x - 0.8 && hx < c.x + c.w - 0.2 && hy > c.y - 0.8 && hy < c.y + c.h - 0.2);
+    if (onCrate) { takeFrom(i, onCrate); return; }
     // a tablet in reach
     const tab = S.devs.find(d => d.kind === 'tablet' && !carried(d) && Math.hypot(d.tx - hx, d.ty - hy) < 0.8);
-    if (tab) { h.dev = tab; h.from = { tx: tab.tx, ty: tab.ty }; return; }
+    if (tab) { h.dev = tab; h.from = { tx: tab.tx, ty: tab.ty }; afterChange(); return; }
     if (tryGrab(i, true)) return;
+    // a device you are touching: pick it up and carry it
+    const d = S.devs.filter(d => d.kind !== 'tablet' && !carried(d) && distToFoot(d, hx, hy) < 0.5).sort((a, b) => distToFoot(a, hx, hy) - distToFoot(b, hx, hy))[0];
+    if (d) { h.dev = d; h.from = { X: d.X, Y: d.Y }; toast('Carrying ' + d.name + '. Let go to put it down. Let go at its crate to put it back.', 'hint'); afterChange(); return; }
     // a crate on the shelf
     const crate = Object.values(CRATES).find(c => Math.hypot(pos.x - (c.x + 0.5), pos.y - (c.y + 0.5)) < 2.0);
     if (crate) { takeFrom(i, crate); return; }
-    // a device: pick it up and carry it
-    const d = S.devs.find(d => d.kind !== 'tablet' && distToFoot(d, hx, hy) < 0.5);
-    if (d) { h.dev = d; h.from = { X: d.X, Y: d.Y }; toast('Carrying ' + d.name + '. Let go to put it down; let go at its crate to put it back.', 'hint'); }
   }
   function distToFoot(d, px, py) { const dx = Math.max(d.X - 0.5 - px, 0, px - (d.X + d.w - 0.5)), dy = Math.max(d.Y - 0.5 - py, 0, py - (d.Y + d.h - 0.5)); return Math.hypot(dx, dy); }
   function tryGrab(i, press) {
@@ -573,19 +580,46 @@ export function startSolo({ container, myName, colour }) {
   }
   function fits(d) {
     if (d.kind === 'tablet') return d.ty <= DESK_BOTTOM + 0.4 && d.ty >= 0.6 && d.tx >= 0.6 && d.tx <= MAPW - 1.6;
-    for (let y = d.Y; y < d.Y + d.h; y++) for (let x = d.X; x < d.X + d.w; x++) if (y > DESK_BOTTOM || solidAt(x, y, d)) return false;
-    return Math.hypot(pos.x - (d.X + (d.w - 1) / 2), pos.y - (d.Y + (d.h - 1) / 2)) > 0.3;
+    for (let y = d.Y; y < d.Y + d.h; y++) for (let x = d.X; x < d.X + d.w; x++) if (y < 1 || x < 1 || x > MAPW - 2 || y > DESK_BOTTOM || solidAt(x, y, d)) return false;
+    return !carried(d) && free(pos.x, pos.y) && shelfReachable();
+  }
+  // Can you still walk to the supply shelf? (Devices must never wall you in.)
+  function shelfReachable() {
+    const sx = Math.round(pos.x), sy = Math.round(pos.y), seen = new Set([sx + ',' + sy]), q = [[sx, sy]];
+    while (q.length) {
+      const [x, y] = q.shift();
+      if (y > DESK_BOTTOM) return true;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = x + dx, ny = y + dy, k = nx + ',' + ny;
+        if (seen.has(k) || solidAt(nx, ny)) continue;
+        seen.add(k); q.push([nx, ny]);
+      }
+    }
+    return false;
+  }
+  // The nearest free spot for a device that cannot go where it was let go (near (X, Y)), or null.
+  function nearestSpot(d, X, Y) {
+    for (let r = 0; r <= 12; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+      if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+      d.X = X + dx; d.Y = Y + dy;
+      if (fits(d)) return true;
+    }
+    return false;
   }
   function dropDevice(i, forced) {
     const h = hands[i], d = h.dev; h.dev = null;
     const crate = CRATES[d.kind];
     if (crate && Math.hypot(pos.x - (crate.x + 0.5), pos.y - (crate.y + 0.5)) < 2.4 && (S.palette[d.kind] ?? 0) > 0) { removeDevice(d); toast(d.name + ' is back on the shelf.', 'good'); return; }
     if (fits(d)) { placeGroup(d); toast(d.name + ' is on the floor.', 'good'); afterChange(); return; }
+    const why = d.kind !== 'tablet' && !free(pos.x, pos.y) ? 'You are standing there.' : d.kind !== 'tablet' && !shelfReachable() ? 'It would block your way back to the shelf.' : 'There is no room there.';
     if (h.from && d.kind === 'tablet') { d.tx = h.from.tx; d.ty = h.from.ty; }
-    else if (h.from) { d.X = h.from.X; d.Y = h.from.Y; }
-    else { removeDevice(d); toast('There is no room there, so it went back on the shelf.', 'hint'); return; }
+    else if (!h.from && crate) { removeDevice(d); toast(why + ' It went back on the shelf.', 'hint'); return; }
+    else if (!nearestSpot(d, h.from ? h.from.X : d.X, h.from ? h.from.Y : d.Y)) {
+      if (crate) { removeDevice(d); toast(why + ' It went back on the shelf.', 'hint'); return; }
+      d.X = h.from.X; d.Y = h.from.Y;
+    }
     placeGroup(d);
-    if (!forced) toast('There is no room there. Put it on an empty bit of floor.', 'hint');
+    if (!forced) toast(why + ' Put it on an empty bit of floor.', 'hint');
     afterChange();
   }
   function removeDevice(d) {
@@ -796,8 +830,8 @@ export function startSolo({ container, myName, colour }) {
     else if (to.options.length > 1 && to.value === from.value) to.selectedIndex = 1;
     const go = btn('', 'go', () => send(dev(Number(from.value)), dev(Number(to.value))));
     const label = () => { const b = dev(Number(to.value)); go.textContent = b && b.kind === 'printer' ? 'Print' : 'Send'; };
-    from.addEventListener('change', () => { testFrom = from.value; });
-    to.addEventListener('change', () => { testTo = to.value; label(); });
+    from.addEventListener('change', () => { testFrom = from.value; from.blur(); });
+    to.addEventListener('change', () => { testTo = to.value; label(); to.blur(); });
     label();
     go.disabled = !!anim || M.phase === 'predict';
     t.append(el('b', {}, 'Test'), el('span', {}, 'From'), from, el('span', {}, 'to'), to, go);
@@ -811,7 +845,7 @@ export function startSolo({ container, myName, colour }) {
   function start(i) {
     missionAt = i;
     const m = MISSIONS[i];
-    M = { m, step: 0, phase: m.type === 'fix' ? 'predict' : 'build', picks: {}, show: null, walked: false };
+    M = { m, step: 0, phase: m.type === 'fix' ? 'predict' : 'build', picks: {}, show: null, walked: false, latched: [] };
     for (const h of hands) { h.cable = null; h.joint = -1; h.dev = null; }
     anim = null; litCables.clear(); cables3 = [];
     m.setup();
@@ -839,8 +873,20 @@ export function startSolo({ container, myName, colour }) {
     sync();
     if (M.m.type === 'tutorial' && M.phase === 'build') {
       const before = M.step;
-      while (M.m.steps[M.step] && M.m.steps[M.step].done()) { M.step++; S.lastTest = null; S.refused = false; }
-      if (M.step >= M.m.steps.length) finishMission();
+      // a one-off event (a test, a refused plug) proves the steps before it, so they stay done after it
+      const st = M.m.steps; let i = M.latched.length ? M.latched.lastIndexOf(true) + 1 : 0;
+      for (; i < st.length; i++) {
+        if (st[i].event) {
+          if (M.latched[i]) continue;
+          if (i === before && st[i].done()) { M.latched[i] = true; S.lastTest = null; S.refused = false; continue; }
+          break;
+        }
+        if (!st[i].done()) break;
+      }
+      // events count only when they happen at their own step
+      if (i !== before) { S.lastTest = null; S.refused = false; }
+      M.step = i;
+      if (M.step >= st.length) finishMission();
       else if (M.step !== before) updateShow();
     }
     drawAll();
@@ -852,6 +898,8 @@ export function startSolo({ container, myName, colour }) {
     if (MISSIONS.every((x, i) => done[i])) log.finish();
   }
   function checkMission() {
+    if (hands.some(h => h.dev)) { toast('Put down what you are carrying first.', 'hint'); return; }
+    if (anim) return;
     const probs = M.m.check();
     M.phase = 'checked'; M.probs = probs;
     log.add(M.m.title + ': ' + (probs.length ? probs.length + ' problem' + (probs.length > 1 ? 's' : '') : 'everything works'), !probs.length);
@@ -1040,13 +1088,14 @@ export function startSolo({ container, myName, colour }) {
   document.addEventListener('keydown', e => {
     const k = e.key.toLowerCase();
     if (/input|select|textarea/i.test(e.target?.tagName || '')) return;
+    if (k === ' ' || k === 'j' || k === 'k') { e.preventDefault(); if (e.repeat) return; }
     if (k === 'm') { setOverview(!overview); return; }
     if (k === 'j' || k === ' ') { e.preventDefault(); setHand(0, true); }
     if (k === 'k' || k === ' ') { e.preventDefault(); setHand(1, true); }
     if (k.startsWith('arrow')) e.preventDefault();
     keys.add(k);
   });
-  document.addEventListener('keyup', e => { const k = e.key.toLowerCase(); keys.delete(k); if (k === 'j' || k === ' ') setHand(0, false); if (k === 'k' || k === ' ') setHand(1, false); });
+  document.addEventListener('keyup', e => { const k = e.key.toLowerCase(); keys.delete(k); if ((k === ' ' || k === 'j' || k === 'k') && !/input|select|textarea/i.test(e.target?.tagName || '')) e.preventDefault(); if (k === 'j' || k === ' ') setHand(0, false); if (k === 'k' || k === ' ') setHand(1, false); });
   addEventListener('blur', () => { keys.clear(); setHand(0, false); setHand(1, false); });
   container.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && (e.button === 0 || e.button === 2)) setHand(e.button === 0 ? 0 : 1, true); });
   addEventListener('pointerup', e => { if (e.pointerType === 'mouse' && (e.button === 0 || e.button === 2)) setHand(e.button === 0 ? 0 : 1, false); });
@@ -1072,6 +1121,6 @@ export function startSolo({ container, myName, colour }) {
   start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim; }, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, done, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim; }, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }
