@@ -280,8 +280,20 @@ const PLAY = [
   },
   function rooms() {
     s.start(5); predictRight(); ok(M().phase === 'build', 'predictions not accepted');
-    cable(byName('Switch 1'), byName('Switch 2'));
-    click('Check my network'); expectDone(5);
+    const stepsNow = () => [...document.querySelectorAll('#mission .steps li')].map(li => li.className);
+    ok(stepsNow().length === 5 && stepsNow()[0] === 'now', 'the fix steps are not shown: ' + stepsNow().join());
+    ok(s.guideTarget() && s.guideTarget().box, 'the guide does not point at the cable crate');
+    const c = takeFromCrate(0, 'cable'); s.frame(1);
+    ok(s.guideTarget() && s.guideTarget().sock && s.guideTarget().sock.d.name === 'Switch 1', 'the guide does not point at Switch 1');
+    handTo(0, ...s.plugPin(byName('Switch 1'), 3)); letGo(0); s.frame(1);
+    ok(stepsNow()[1] === 'done' && stepsNow()[2] === 'now', 'steps did not tick after plugging into Switch 1: ' + stepsNow().join());
+    grabEnd(1, c, 1); s.frame(1);
+    ok(s.guideTarget() && s.guideTarget().sock && s.guideTarget().sock.d.name === 'Switch 2', 'the guide does not point at Switch 2');
+    handTo(1, ...s.plugPin(byName('Switch 2'), 3)); letGo(1); s.frame(1);
+    const room1 = kind('laptop').filter(l => l.x < 320)[0], pr = kind('printer')[0];
+    ok(test(room1, pr).ok, 'Room 1 laptop could not print'); s.frame(1);
+    ok(stepsNow()[3] === 'done', 'the test step did not tick: ' + stepsNow().join());
+    click('Check my network'); expectDone(5); answer(true);
   },
   function full() {
     s.start(6);

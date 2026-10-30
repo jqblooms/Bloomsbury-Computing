@@ -194,8 +194,23 @@ const FIX = [
       return probs;
     } },
   { id: 'rooms', group: 'Bigger networks', title: 'Two Rooms', type: 'fix', rounds: 1, setup: rooms,
-    intro: 'Two classrooms each have a network. Only Room 2 has a printer.',
-    fixText: 'Fix it so <b>every laptop in both rooms</b> can print, using <b>one</b> new cable. Test it, then check.',
+    intro: 'Room 1 and Room 2 each have their own network, with its own switch. Only <b>Room 2</b> has the printer. First you predict who can print. Then you join the two rooms with <b>one</b> cable.',
+    fixText: 'Join the two rooms with <b>one</b> new cable, so <b>every laptop in both rooms</b> can print. Follow the steps:',
+    after: { q: 'Why does one cable from Switch 1 to Switch 2 let every laptop print?', options: ['The switches pass the data on, so Room 1 can reach the printer in Room 2', 'The printer moves into Room 1', 'Every laptop gets a second network socket'], why: 'A switch passes data on to everything plugged into it. Joining the two switches joins the two networks into one.' },
+    walk() {
+      S = fresh({}); S.rooms = [{ x: 14, w: 300, name: 'Room 1' }, { x: 326, w: 300, name: 'Room 2' }];
+      const s1 = place('switch', 164, 195, 'Switch 1'), s2 = place('switch', 476, 195, 'Switch 2');
+      const a = place('laptop', 84, 96, 'Ana'), b = place('laptop', 244, 96, 'Ben'), c = place('laptop', 396, 96, 'Chi'), p = place('printer', 476, 296, 'Printer');
+      plug(a, s1); plug(b, s1); plug(c, s2); plug(p, s2);
+      const ex = S, st = [], on = (x, y) => cablesOn(ex, [x, y]);
+      st.push({ text: '<b>A similar network.</b> Two rooms, each with its own switch. Ana and Ben are in Room 1. Chi and the Printer are in Room 2.', visual: mini(ex) });
+      st.push({ text: 'Can <b>Chi</b> print? Follow the cables: Chi, Switch 2, Printer. They are joined, so <span class="hl">Yes</span>.', visual: mini(ex, on(c, s2).concat(on(s2, p))) });
+      st.push({ text: 'Can <b>Ana</b> print? Ana\'s cable goes to Switch 1. Switch 1 only reaches Room 1. No cable goes to Room 2, so <span class="hl">No</span>.', visual: mini(ex, on(a, s1)) });
+      plug(s1, s2);
+      st.push({ text: 'The fix: <b>one</b> cable from <span class="hl">Switch 1 to Switch 2</span>. Each switch has a spare socket.', visual: mini(ex, on(s1, s2)) });
+      st.push({ text: 'Now Ana, Switch 1, Switch 2, Printer: <span class="hl">Yes</span>. Every laptop can print. Now do yours: predict, then join the rooms.', visual: mini(ex, on(a, s1).concat(on(s1, s2), on(s2, p))) });
+      return st;
+    },
     check() {
       const probs = [];
       if (S.devs.length < S.startDevs) probs.push('A device was put back on the shelf.');
@@ -1441,8 +1456,28 @@ export function startSolo({ container, myName, colour }) {
   }
   // Where the current tutorial step wants you to go: a crate, a device, the old cable, or (with a plug in your hand)
   // the socket it should go into. { x, y } in tiles, reach = how close counts as there, ring = the ring's size.
+  // Two Rooms, after the predictions: which of its fix steps are done
+  function roomsSteps() {
+    const s1 = S.devs.find(d => d.name === 'Switch 1'), s2 = S.devs.find(d => d.name === 'Switch 2');
+    const joined = !!s1 && !!s2 && hasCable(s1, s2);
+    const fresh3 = cables3.slice(M.c0 || 0);
+    const took = joined || fresh3.length > 0;
+    const inS1 = joined || fresh3.some(c => c.ends.some(e => e && dev(e.dev) === s1));
+    const tested = joined && !!M.tested;
+    return [took, inS1, joined, tested, false];
+  }
+  function roomsGuide() {
+    const s1 = S.devs.find(d => d.name === 'Switch 1'), s2 = S.devs.find(d => d.name === 'Switch 2');
+    if (!s1 || !s2 || hasCable(s1, s2)) return null;
+    const held = hands.find(h => h.cable && (h.joint === 0 || h.joint === h.cable.n));
+    const portOn = d => { let best = null; d.k3.sockets.forEach((_, i) => { if (socketTaken(d, i)) return; const [x, y] = plugPin(d, i), dd = Math.hypot(x - pos.x, y - pos.y); if (!best || dd < best.dd) best = { x, y, dd, sock: { d, i } }; }); return best && { x: best.x, y: best.y, reach: 0.9, ring: 0.45, sock: best.sock }; };
+    if (held) { const o = held.cable.ends[held.joint === 0 ? 1 : 0]; return portOn(o && dev(o.dev) === s1 ? s2 : s1); }
+    for (const c of cables3.slice(M.c0 || 0)) for (const e of [0, 1]) if (!c.ends[e] && c.ends[1 - e]) { const j = e ? c.n : 0; return { x: c.P[2 * j], y: c.P[2 * j + 1], reach: 0.9, ring: 0.45, plug: { c, j } }; }
+    const cr = CRATES.cable; return cr ? { x: cr.x + 0.5, y: cr.y + 0.5, reach: 1.7, ring: 1.6, box: [cr.x - 0.5, cr.y - 0.5, cr.x + cr.w - 0.5, cr.y + cr.h - 0.5] } : null;
+  }
   function guideTarget() {
     if (M && M.m.noHelp) return null;
+    if (M && M.m.id === 'rooms' && M.phase === 'build') return roomsGuide();
     const show = M && M.phase === 'build' ? M.show : null;
     if (!show || show === 'test') return null;
     // carrying a tablet on the Wi-Fi step: into the range of a Wi-Fi point that has a cable
@@ -2347,7 +2382,7 @@ export function startSolo({ container, myName, colour }) {
     updateShow();
     view.jump(pos.x, pos.y);
     drawAll();
-    M.startSig = startSig();
+    M.startSig = startSig(); M.c0 = cables3.length;
     $('mission').scrollTop = 0;   // the new mission's instructions in view
     if (m.breakAtStart) topoBreak();   // an outage starts with a link already broken
   }
@@ -2443,7 +2478,7 @@ export function startSolo({ container, myName, colour }) {
     log.add(M.m.title + ' predictions: ' + (wrong ? wrong + ' wrong' : 'all right'), !wrong);
     if (wrong) { have = 0; M.phase = 'checked'; M.probs = null; toast(M.m.breakAfter ? 'Not this time. Read why for each red job, then try another break.' : 'Not this time: this network does not count. Read why for each red job.', 'bad'); }
     else if (M.m.breakAfter) { finishMission(); toast('All three predictions right.', 'good'); }
-    else { M.phase = 'build'; toast('All three predictions right. Now fix it.', 'good'); }
+    else { M.phase = 'build'; toast('All three predictions right. Now fix it: follow the steps on the right.', 'good'); }
     drawAll();
   }
 
@@ -2520,7 +2555,13 @@ export function startSolo({ container, myName, colour }) {
       if (m.maxNew != null) t.appendChild(el('p', {}, '<b>New cables used: ' + (S.cables.length - (S.startCables || 0)) + '</b> (at most ' + m.maxNew + ').'));
       t.appendChild(el('p', { class: 'note' }, 'One check only. A mistake means this build does not count.'));
     } else if (m.type === 'fix') {
-      t.appendChild(el('p', {}, M.phase === 'predict' ? '<b>1. Predict.</b> Look at the cables. Will each job work? You cannot change the network yet.' : M.phase === 'build' ? '<b>2. Fix it.</b> ' + (m.fixText || 'Fix the cables so <b>every</b> laptop can print and message every other laptop. Test it, then check.') : ''));
+      t.appendChild(el('p', {}, M.phase === 'predict' ? '<b>Step 1 of 2: Predict.</b> Look at the cables. Will each job work? You cannot change the network yet.' : M.phase === 'build' ? '<b>Step 2 of 2: Fix it.</b> ' + (m.fixText || 'Fix the cables so <b>every</b> laptop can print and message every other laptop. Test it, then check.') : ''));
+      if (m.id === 'rooms' && M.phase === 'build') {
+        const done = roomsSteps(), ol = el('ol', { class: 'steps' }), now = done.indexOf(false);
+        ['Take an <b>Ethernet cable</b> from the cable crate.', 'Plug one end into a free port on <b>Switch 1</b>.', 'Plug the other end into <b>Switch 2</b>.', 'Test it: print from a laptop in <b>Room 1</b>.', 'Press <b>Check my network</b>.']
+          .forEach((x, i) => ol.appendChild(el('li', { class: done[i] ? 'done' : i === now ? 'now' : 'later' }, '<span>' + x + '</span>')));
+        t.appendChild(ol);
+      }
       if (m.rounds > 1) t.appendChild(el('p', { class: 'note' }, have + ' of ' + m.rounds + ' clean networks in a row.'));
       if (M.phase === 'predict' || M.predicted) t.appendChild(jobList());
     }
