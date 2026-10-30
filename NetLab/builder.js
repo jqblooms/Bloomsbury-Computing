@@ -141,7 +141,9 @@
       b.addEventListener('pointerdown', palDown);
       ui.pal.appendChild(b);
     });
-    ui.pal.appendChild(el('p', { class: 'small' }, 'Drag a device onto the desk. Drag from a green socket to another device to plug in a cable.'));
+    var any = Object.keys(S.palette).length > 0;
+    if (!any) ui.pal.innerHTML = '<div class="nb-h">Cables</div>';
+    ui.pal.appendChild(el('p', { class: 'small' }, (any ? 'Drag a device onto the desk. ' : '') + 'Drag from a green socket to another device to plug in a cable. To take a cable out, click it, then press Delete selected.'));
   }
   function drawTools() {
     ui.tools.innerHTML = '';
@@ -251,6 +253,7 @@
     function up(ev) {
       document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up);
       ghost.remove();
+      if (Math.hypot(ev.clientX - x0, ev.clientY - y0) > 5) moved = true;
       var r = ui.desk.getBoundingClientRect();
       if (moved && ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom) add(kind, pt(ev));
       else if (!moved) add(kind, spot());
@@ -387,7 +390,7 @@
     drawAll();
   }
   function finishMission() {
-    M.phase = 'done';
+    M.phase = 'done'; M.show = null;
     if (!done[missionAt]) { done[missionAt] = true; Lab.save(ACT + ':done', done); }
     log.note('Mission ' + (missionAt + 1) + ' (' + M.m.title + ') complete' + (M.walked ? ', used Walk me through it' : '') + '.');
     if (LIST.every(function (x, i) { return done[i]; })) log.finish();

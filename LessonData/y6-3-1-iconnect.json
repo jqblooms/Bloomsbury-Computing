@@ -1,0 +1,255 @@
+{
+ "id": "y6-3-1-iconnect",
+ "label": "6.3.1: What Is a Network?",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Fix the Score (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y6-31-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Fix the Score (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does set [score] to (1) never get past 1, however many fruit you catch?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>set always puts the score to the same number. It does not add to what was there before.</p></div></details><p class=\"lesson-lead\">Recap of 6.2.3 and 6.2.6. This is the Fruit script in a Fruit Catcher game.</p><div class=\"igame-two-col\"><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\nset [score v] to (0)\nforever\nif &lt;touching [Basket v] ?&gt; then\nset [score v] to (1)\ngo to x: (0) y: (180)\nend\nend</pre></div><div id=\"y6-31-do-now\"></div></div>",
+   "items": [
+    {
+     "prompt": "Every catch should add 1 to the score. After three catches the score is still 1. Which block should replace set [score] to (1)?",
+     "options": [
+      "change [score] by (1)",
+      "set [score] to (0)",
+      "go to x: (0) y: (0)"
+     ],
+     "correct": 0,
+     "explain": "set [score] to (1) puts the score back to 1 on every catch. change [score] by (1) adds 1 each time: 1, 2, 3."
+    },
+    {
+     "prompt": "Which block sends the fruit back to the top after a catch?",
+     "options": [
+      "go to x: (0) y: (180)",
+      "set [score] to (1)",
+      "forever"
+     ],
+     "correct": 0,
+     "explain": "go to x: (0) y: (180) moves the fruit to the middle of the top of the stage, so it can fall again."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: a variable that will not change",
+    "steps": [
+     {
+      "text": "<strong>A similar script.</strong> In a Bat game, the player loses a life each time the Bat touches the Cat. The game starts with 3 lives, but lives stays at 2.",
+      "visual": "<div class=\"wt-note\">set [lives] to (3) at the flag, then set [lives] to (2) when touching Bat</div>"
+     },
+     {
+      "text": "Play it in your head. Touch the Bat once: lives is set to 2.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">lives: 3 &rarr; <span class=\"wt-hl\">2</span></p>"
+     },
+     {
+      "text": "Touch the Bat again. The same block runs: lives is set to 2 again. It never goes lower.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">lives: 2 &rarr; <span class=\"wt-hl\">2</span></p>"
+     },
+     {
+      "text": "A <b>set</b> block always gives the same number. To go down by one each time, the game needs a block that takes 1 away from what is already there.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\"><span class=\"wt-hl\">change [lives] by (-1)</span>: 3, 2, 1, 0</p>"
+     },
+     {
+      "text": "Now look at the Fruit Catcher script. Which block keeps putting the score to the same number, and which block would add 1 each time?",
+      "visual": "<div class=\"wt-note\">set gives the same number; change adds to it</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Where Does It End? (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y6-31-do-now-2",
+   "validatorKey": "y6_31_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Where Does It End? (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the block after the loop run only once, but the block inside runs many times?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Only the blocks inside the repeat are repeated. The block after it runs once, when the loop has finished.</p></div></details><p class=\"lesson-lead\">Recap of 6.2.1 and 6.2.2. Run the script in your head.</p><div class=\"lesson-do-now-columns\"><div><div class=\"scratchblocks-card\"><pre class=\"blocks\">when flag clicked\ngo to x: (0) y: (0)\nrepeat (3)\nchange x by (20)\nend\nchange y by (-30)</pre></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6-31-do-now-2-a\">What is x at the end?</label><input id=\"y6-31-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Where Does It End? (2 of 2) part a\" autocomplete=\"off\" inputmode=\"numeric\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-31-do-now-2-b\">What is y at the end?</label><input id=\"y6-31-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Where Does It End? (2 of 2) part b\" autocomplete=\"off\" inputmode=\"numeric\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6-31-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6-31-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: tracing a loop",
+    "steps": [
+     {
+      "text": "<strong>A similar script.</strong> go to x: (0) y: (0), then repeat (4) with change x by (10) inside, then change y by (50) after the loop.",
+      "visual": "<div class=\"wt-note\">go to x: (0) y: (0) &middot; repeat (4) { change x by (10) } &middot; change y by (50)</div>"
+     },
+     {
+      "text": "Start: the sprite goes to x: 0, y: 0.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">x = 0, y = 0</p>"
+     },
+     {
+      "text": "The loop runs 4 times. Each time, x goes up by 10: 10, 20, 30, 40.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">x: 0 &rarr; 10 &rarr; 20 &rarr; 30 &rarr; <span class=\"wt-hl\">40</span></p>"
+     },
+     {
+      "text": "After the loop, change y by (50) runs once: y goes from 0 to 50.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">y: 0 &rarr; <span class=\"wt-hl\">50</span></p>"
+     },
+     {
+      "text": "Now do the same for the Do Now script: count the loops, add up the x changes, then do the block after the loop.",
+      "visual": "<div class=\"wt-note\">loop first, then the block after it</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y6-term1-revision",
+   "embedContainerId": "y6-31-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why keep practising Scratch when we start a new topic?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Skills you do not use are easy to forget. A few questions keep them fresh.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these Scratch questions from last term. Stuck? Turn on <strong>I need help</strong>.</p><div id=\"y6-31-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "What Is a Network?",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">6.3 Computer Networks</p><h2 class=\"lesson-h2\">What Is a Network?</h2><p>Year 6</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> what a computer <strong>network</strong> is.</li><li>Why people join computers together: to <strong>communicate</strong> and to <strong>share</strong>.</li><li>Build your own network, then fix one that is broken.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">You want to send a photo from your laptop to a friend's laptop in the same room. What would you need?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Some way for the two laptops to be joined, so the photo can travel from one to the other.</p></div></details>"
+  },
+  {
+   "id": "concept-network",
+   "label": "What Is a Network?",
+   "content": "<h2 class=\"lesson-h2\">What Is a Network?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Look at the two pictures. Predict: in which picture can Mai send Ben a photo? Why can she not in the other?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Only in the second picture. In the first, nothing joins the laptops, so the photo has no way to travel to Ben.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>network</strong> is two or more computers that are <strong>joined together</strong>.</li><li>They can be joined by <strong>cables</strong>, or with no cable, using <strong>Wi-Fi</strong>.</li><li>When they are joined, data such as a photo or a message can travel from one to another.</li><li>Computers that are not joined cannot share anything.</li></ul></div><div><div style=\"display:grid;gap:8px\"><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 300 120\" style=\"width:100%;max-width:300px;height:auto\"><g><rect x=\"46\" y=\"26\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"51\" y=\"31\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"39\" y=\"58\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"70\" y=\"84\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Mai</text></g><g><rect x=\"206\" y=\"26\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"211\" y=\"31\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"199\" y=\"58\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"230\" y=\"84\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Not joined</figcaption></figure><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 300 120\" style=\"width:100%;max-width:300px;height:auto\"><line x1=\"70\" y1=\"50\" x2=\"230\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"46\" y=\"26\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"51\" y=\"31\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"39\" y=\"58\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"70\" y=\"84\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Mai</text></g><g><rect x=\"206\" y=\"26\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"211\" y=\"31\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"199\" y=\"58\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"230\" y=\"84\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Joined by a cable</figcaption></figure></div></div></div>"
+  },
+  {
+   "id": "predict-network",
+   "label": "Predict: Is It a Network?",
+   "type": "multiple-choice",
+   "containerId": "y6-31-predict-network",
+   "content": "<h2 class=\"lesson-h2\">Predict: Is It a Network?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"the laptops are next to each other\" not enough to make a network?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Being close does not join them. Data can only travel if there is a cable or Wi-Fi between them.</p></div></details><div id=\"y6-31-predict-network\"></div>",
+   "items": [
+    {
+     "prompt": "Which of these is a network?",
+     "options": [
+      "Three laptops on a table, with no cables and no Wi-Fi",
+      "Three laptops joined together by cables",
+      "One laptop on its own"
+     ],
+     "correct": 1,
+     "explain": "A network needs two or more computers that are joined. Laptops sitting next to each other are not joined."
+    },
+    {
+     "prompt": "Mai and Ben's laptops are both on the school Wi-Fi. There is no cable. Are they on a network?",
+     "options": [
+      "Yes",
+      "No"
+     ],
+     "correct": 0,
+     "explain": "Wi-Fi joins computers with no cable. They are joined, so they are on a network."
+    }
+   ]
+  },
+  {
+   "id": "concept-switch",
+   "label": "Why Do We Need a Switch?",
+   "content": "<h2 class=\"lesson-h2\">Why Do We Need a Switch?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Ana's laptop is joined to Ben's by a cable. Chi wants to join too, but each laptop has only one place to plug in a network cable. Predict: how could all three be joined?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Plug each laptop into a box with lots of places for cables. Then data can go from one laptop, through the box, to another.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A laptop or a printer has <strong>one network socket</strong>: the place a network cable plugs in.</li><li>So two laptops can be joined by one cable, but a third cannot plug in.</li><li>A <strong>switch</strong> is a box with many sockets. Plug every device into the switch.</li><li>Data goes from one laptop, <strong>through the switch</strong>, to the device it is for.</li></ul></div><div><div style=\"display:grid;gap:8px\"><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 300 110\" style=\"width:100%;max-width:300px;height:auto\"><line x1=\"70\" y1=\"45\" x2=\"230\" y2=\"45\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"46\" y=\"21\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"51\" y=\"26\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"39\" y=\"53\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"70\" y=\"79\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ana</text></g><g><rect x=\"206\" y=\"21\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"211\" y=\"26\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"199\" y=\"53\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"230\" y=\"79\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Two laptops: one cable works</figcaption></figure><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 380 200\" style=\"width:100%;max-width:380px;height:auto\"><line x1=\"190\" y1=\"110\" x2=\"60\" y2=\"40\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"320\" y2=\"40\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"60\" y2=\"170\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"320\" y2=\"170\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"144\" y=\"96\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"152\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"162\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"172\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"182\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"192\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"202\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"212\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"222\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"190\" y=\"142\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Switch</text></g><g><rect x=\"36\" y=\"16\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"41\" y=\"21\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"29\" y=\"48\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"60\" y=\"74\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ana</text></g><g><rect x=\"296\" y=\"16\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"301\" y=\"21\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"289\" y=\"48\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"320\" y=\"74\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text></g><g><rect x=\"36\" y=\"146\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"41\" y=\"151\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"29\" y=\"178\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"60\" y=\"204\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Chi</text></g><g><rect x=\"305\" y=\"142\" width=\"30\" height=\"15\" rx=\"2\" fill=\"#f4f6fa\" stroke=\"var(--ink-soft)\"/><rect x=\"292\" y=\"155\" width=\"56\" height=\"28\" rx=\"6\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"320\" y=\"204\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Printer</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Every device plugged into a switch</figcaption></figure></div></div></div>"
+  },
+  {
+   "id": "concept-share",
+   "label": "Why Join Computers Together?",
+   "content": "<h2 class=\"lesson-h2\">Why Join Computers Together?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A school has 30 laptops. Predict: why might it buy just one printer, and not 30?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If the laptops are on a network, all 30 can use the same printer. One printer costs much less than 30.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Networks let people <strong>communicate</strong>: send messages and emails, and make video calls.</li><li>Networks let people <strong>share</strong>: files, photos, and devices such as a printer.</li><li>Sharing saves money: one printer for a whole class.</li><li>Sharing saves time: a file can go straight to a friend's laptop.</li></ul></div><div><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 380 200\" style=\"width:100%;max-width:380px;height:auto\"><line x1=\"190\" y1=\"110\" x2=\"60\" y2=\"40\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"320\" y2=\"40\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"60\" y2=\"170\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"320\" y2=\"170\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"144\" y=\"96\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"152\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"162\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"172\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"182\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"192\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"202\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"212\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"222\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"190\" y=\"142\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Switch</text></g><g><rect x=\"36\" y=\"16\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"41\" y=\"21\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"29\" y=\"48\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"60\" y=\"74\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ana</text></g><g><rect x=\"296\" y=\"16\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"301\" y=\"21\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"289\" y=\"48\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"320\" y=\"74\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text></g><g><rect x=\"36\" y=\"146\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"41\" y=\"151\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"29\" y=\"178\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"60\" y=\"204\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Chi</text></g><g><rect x=\"305\" y=\"142\" width=\"30\" height=\"15\" rx=\"2\" fill=\"#f4f6fa\" stroke=\"var(--ink-soft)\"/><rect x=\"292\" y=\"155\" width=\"56\" height=\"28\" rx=\"6\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"320\" y=\"204\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Printer</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Three laptops sharing one printer</figcaption></figure></div></div>"
+  },
+  {
+   "id": "predict-share",
+   "label": "Predict: Does It Need a Network?",
+   "type": "multiple-choice",
+   "containerId": "y6-31-predict-share",
+   "content": "<h2 class=\"lesson-h2\">Predict: Does It Need a Network?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can a video call not work between two computers that are not joined?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The sound and pictures have to travel from one computer to the other, and with nothing joining them they cannot.</p></div></details><div id=\"y6-31-predict-share\"></div>",
+   "items": [
+    {
+     "prompt": "Which of these needs a network?",
+     "options": [
+      "Mai video calls her grandma",
+      "Mai draws a picture on her laptop",
+      "Mai plays a game on her own laptop"
+     ],
+     "correct": 0,
+     "explain": "A video call sends pictures and sound between two computers, so they must be joined. The others happen on one laptop."
+    },
+    {
+     "prompt": "A class has 20 laptops and one printer, all on a network. Why is this better than a printer for every laptop?",
+     "options": [
+      "It costs less: they all share one printer",
+      "The printer prints faster",
+      "The laptops do not need charging"
+     ],
+     "correct": 0,
+     "explain": "Sharing one printer over the network means the school buys one printer, not twenty."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Build a Network",
+   "type": "embedded-app",
+   "appId": "network-builder",
+   "embedContainerId": "y6-31-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Build a Network</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why test with Send before you press Check?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Testing shows whether the data really gets there. You find a mistake before it counts.</p></div></details><p class=\"lesson-lead\">Follow the missions on the right. Drag devices onto the desk, drag from a green socket to plug in a cable, then test it with Send.</p><div id=\"y6-31-activity-1\"></div>",
+   "embedQuery": "activity=build"
+  },
+  {
+   "id": "check-cables",
+   "label": "Check: Count the Cables",
+   "type": "short-answer-validation",
+   "validatorId": "y6-31-check-cables",
+   "validatorKey": "y6_31_check_cables",
+   "content": "<h2 class=\"lesson-h2\">Check: Count the Cables</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a switch need lots of sockets, when a laptop needs only one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every device on the network plugs into the switch, so it needs a socket for each of them. A laptop only plugs into one thing.</p></div></details><p class=\"lesson-lead\">Every device is plugged into one switch. Each laptop and printer has one network socket.</p><div class=\"lesson-do-now-columns\"><div><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 380 200\" style=\"width:100%;max-width:380px;height:auto\"><line x1=\"190\" y1=\"110\" x2=\"60\" y2=\"40\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"320\" y2=\"40\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"60\" y2=\"170\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"110\" x2=\"320\" y2=\"170\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"144\" y=\"96\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"152\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"162\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"172\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"182\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"192\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"202\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"212\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"222\" y=\"105\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"190\" y=\"142\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Switch</text></g><g><rect x=\"36\" y=\"16\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"41\" y=\"21\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"29\" y=\"48\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"60\" y=\"74\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ana</text></g><g><rect x=\"296\" y=\"16\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"301\" y=\"21\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"289\" y=\"48\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"320\" y=\"74\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text></g><g><rect x=\"36\" y=\"146\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"41\" y=\"151\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"29\" y=\"178\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"60\" y=\"204\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Chi</text></g><g><rect x=\"305\" y=\"142\" width=\"30\" height=\"15\" rx=\"2\" fill=\"#f4f6fa\" stroke=\"var(--ink-soft)\"/><rect x=\"292\" y=\"155\" width=\"56\" height=\"28\" rx=\"6\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"320\" y=\"204\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Printer</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Example: 3 laptops and 1 printer</figcaption></figure></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6-31-check-cables-a\">4 laptops and 1 printer are joined by a switch. How many cables?</label><input id=\"y6-31-check-cables-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-cables-a\" aria-label=\"Check: Count the Cables part a\" autocomplete=\"off\" inputmode=\"numeric\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-31-check-cables-b\">2 more laptops join the same switch. How many cables now?</label><input id=\"y6-31-check-cables-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-cables-b\" aria-label=\"Check: Count the Cables part b\" autocomplete=\"off\" inputmode=\"numeric\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6-31-check-cables-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6-31-check-cables-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Predict, then Fix",
+   "type": "embedded-app",
+   "appId": "network-builder",
+   "embedContainerId": "y6-31-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Predict, then Fix</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict before you fix it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Predicting shows you can follow the cables yourself. Fixing first would hide what was wrong.</p></div></details><p class=\"lesson-lead\">First predict which jobs will work, then fix the network. One check each: a mistake means that network does not count.</p><div id=\"y6-31-activity-2\"></div>",
+   "embedQuery": "activity=fix"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Networks Drill",
+   "type": "embedded-app",
+   "appId": "drill-y6-3-1-iconnect",
+   "embedContainerId": "y6-31-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Networks Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the drill bring back a question you got wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right again later shows you remember it, not that you guessed once.</p></div></details><p class=\"lesson-lead\">What a network is, why we join computers, and switches. Your progress is saved.</p><div id=\"y6-31-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y6_31_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*60\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The loop runs 3 times. How much does x change each time?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[-−]\\s*30\\s*$",
+     "flags": "i"
+    },
+    "feedback": "y starts at 0. Which block changes y, and by how much?"
+   }
+  ],
+  "y6_31_check_cables": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Each device needs one cable, to the switch. How many devices are there?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Each new laptop needs its own cable."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

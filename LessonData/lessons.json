@@ -19,6 +19,13 @@
             "y6-idebug-l6",
             "y6-term1-test"
           ]
+        },
+        {
+          "code": "6.3",
+          "title": "Computer Networks",
+          "lessons": [
+            "y6-3-1-iconnect"
+          ]
         }
       ]
     },
