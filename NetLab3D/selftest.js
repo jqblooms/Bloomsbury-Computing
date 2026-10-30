@@ -387,6 +387,65 @@ const PLAY = [
     ok(!testItem(a, b, 'photo', 'Cat').ok, 'a photo got through out of Bluetooth range');
     expectDone(20); answer(true);
   },
+  function challengeHome() {
+    s.start(21);
+    ok(!s.guideTarget(), 'a challenge should give no guide');
+    ok(![...document.querySelectorAll('#mission button')].some(x => x.textContent === 'Walk me through it'), 'a challenge should have no Walk me through it');
+    click('Hand it over');
+    ok(M().phase === 'checked' && M().result && !M().result.met && M().result.n === 0, 'an empty network was accepted');
+    click('Try again');
+    const hub = placeNew('switch', 14, 10), ls = [[3, 3], [9, 3], [20, 3]].map(([x, y]) => placeNew('laptop', x, y)), pr = placeNew('printer', 14, 15);
+    for (const d of ls.concat([pr])) cable(d, hub);
+    ok(test(ls[0], pr).ok, 'print failed');
+    click('Hand it over');
+    ok(M().result && M().result.met && M().result.n === 3, 'a good, tested home office should get 3 stars: ' + JSON.stringify(M().result));
+    expectDone(21);
+  },
+  function challengeCafe() {
+    s.start(22);
+    const [b1, b2] = kind('bus');
+    const ls = [[4, 5], [9, 5], [19, 5]].map(([x, y]) => placeNew('laptop', x, y));
+    ls.forEach((l, i) => cable(l, i < 2 ? b1 : b2));
+    const w = placeNew('wifi', 24, 5); cable(w, b2);
+    const tab = placeNew('tablet', 25, 8.5);
+    click('Hand it over');
+    ok(M().result && M().result.met && M().result.n === 2 && !M().result.tested, 'untested cafe should get 2 stars: ' + JSON.stringify(M().result));
+  },
+  function challengeRing() {
+    s.start(23);
+    const ps = [[4, 3], [14, 3], [24, 3], [20, 13], [8, 13]].map(([x, y]) => placeNew('pc', x, y));
+    for (let i = 0; i < 5; i++) cable(ps[i], ps[(i + 1) % 5]);
+    ok(test(ps[0], ps[2]).ok, 'ring message failed');
+    click('Hand it over');
+    ok(M().result && M().result.n === 3, 'ring challenge: ' + JSON.stringify(M().result));
+  },
+  function challengeRooms() {
+    s.start(24);
+    const r1 = [[2, 3], [8, 3], [2, 12]].map(([x, y]) => placeNew('laptop', x, y)), s1 = placeNew('switch', 8, 10);
+    const r2 = [[18, 3], [25, 3]].map(([x, y]) => placeNew('laptop', x, y)), pr = placeNew('printer', 25, 12), s2 = placeNew('switch', 18, 10);
+    r1.forEach(l => cable(l, s1)); r2.concat([pr]).forEach(d => cable(d, s2)); cable(s1, s2);
+    ok(test(r1[0], pr).ok, 'print across rooms failed');
+    click('Hand it over');
+    ok(M().result && M().result.n === 3, 'rooms challenge: ' + JSON.stringify(M().result));
+  },
+  function challengeLibrary() {
+    s.start(25);
+    const w1 = placeNew('wifi', 5, 10), w2 = placeNew('wifi', 26, 10), hub = placeNew('switch', 13, 10), pr = placeNew('printer', 14, 15);
+    const ls = [[12, 3], [18, 3]].map(([x, y]) => placeNew('laptop', x, y));
+    [w1, w2, pr].concat(ls).forEach(d => cable(d, hub));
+    const tabs = kind('tablet'); ok(test(tabs[0], pr).ok, 'tablet could not print');
+    click('Hand it over');
+    ok(M().result && M().result.n === 3, 'library challenge: ' + JSON.stringify(M().result));
+  },
+  function challengeBackup() {
+    s.start(26);
+    const ps = [[5, 3], [20, 3], [20, 13], [5, 13]].map(([x, y]) => placeNew('pc', x, y));
+    // a line first would fail the any-cable-breaks requirement; a loop passes
+    for (let i = 0; i < 4; i++) cable(ps[i], ps[(i + 1) % 4]);
+    ok(test(ps[0], ps[2]).ok, 'message failed');
+    click('Hand it over');
+    ok(M().result && M().result.n === 3, 'backup challenge: ' + JSON.stringify(M().result));
+  },
   function school() {
     s.start(10);
     const s2 = byName('Switch 2');

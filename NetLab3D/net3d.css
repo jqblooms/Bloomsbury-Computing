@@ -101,6 +101,20 @@ p { margin: 0; }
 .mission .actions, .walk .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .mission .race-pick { flex-wrap: wrap; justify-self: start; }
+/* challenges */
+.mission .brief { padding: 10px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line-strong); font-size: .93rem; }
+.mission .result { display: grid; gap: 8px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface-2); }
+.mission .result-head { display: flex; align-items: center; gap: 10px; }
+.stars { display: inline-flex; gap: 2px; }
+.stars svg { width: 22px; height: 22px; fill: var(--surface-3); stroke: var(--muted); stroke-width: 1; }
+.stars svg.on { fill: #fcc419; stroke: #e67700; }
+.mission .sec-list .stars svg { width: 13px; height: 13px; }
+.mission .sec-list .t { flex: 1; }
+.mission .breakdown { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: .9rem; }
+.mission .breakdown li { padding-left: 24px; position: relative; }
+.mission .breakdown li::before { position: absolute; left: 0; top: 0; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: .7rem; font-weight: 700; color: #fff; }
+.mission .breakdown li.ok::before { content: "\2713"; background: var(--good); }
+.mission .breakdown li.no::before { content: "\2715"; background: var(--bad); }
 /* questions in the mission panel */
 .mission .ask { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--brand); border-radius: 12px; background: var(--brand-soft); }
 .mission .ask-q { font-size: .95rem; }

@@ -487,8 +487,71 @@ const BLUETOOTH = { id: 'bluetooth', group: 'Speeds', title: 'Bluetooth Range', 
   ],
   end: 'Bluetooth only reaches a few metres. Wi-Fi reaches across a room or a building.',
   after: { q: 'Which reaches further?', options: ['Wi-Fi', 'Bluetooth', 'They reach the same distance'], why: 'Bluetooth reaches only a few metres. Wi-Fi reaches across a room or more.' } };
-export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2, STAR, BUS, RING, MESH, SERIAL, DUPLEX, SPEEDRACE, BLUETOOTH];
-export const SECTIONS = ['Introduction', 'Wi-Fi', 'Bigger networks', 'Troubleshooting', 'Design', 'Packets', 'Topologies', 'Transmission modes', 'Speeds'];
+// ---- challenges: a client's brief and requirements, no help; stars for meeting them, few cables and testing first
+const allTalk = () => allPairs().every(p => route(p[0], p[1]));
+const inRoom = (d, r) => d.x >= r.x && d.x <= r.x + r.w;
+const C1 = { id: 'c-home', group: 'Challenges', title: 'Home Office', type: 'client', noHelp: true,
+  setup() { S = fresh({ laptop: 3, printer: 1, 'switch': 1 }); },
+  brief: 'The client works from home with two helpers. They want a <b>star network</b> so all three laptops can share one printer.',
+  reqs: [
+    { text: 'Three laptops and one printer.', test: () => laptops().length === 3 && count('printer') === 1 },
+    { text: 'A star network: every device plugged straight into one switch.', test: () => { const sw = S.devs.find(d => d.kind === 'switch'); return !!sw && ends().every(d => hasCable(d, sw)); } },
+    { text: 'Every laptop can print.', test: () => laptops().every(l => S.devs.some(p => p.kind === 'printer' && route(l, p))) },
+    { text: 'Every laptop can send a message to every other laptop.', test: allTalk }
+  ], minCables: 4 };
+const C2 = { id: 'c-cafe', group: 'Challenges', title: 'The Cafe', type: 'client', noHelp: true,
+  setup() { S = fresh({ laptop: 3, tablet: 1, wifi: 1 }); const b1 = place('bus', 170, 200, 'Main cable 1'), b2 = place('bus', 470, 200, 'Main cable 2'); plug(b1, b2); S.startDevs = S.devs.length; S.startCables = 1; },
+  brief: 'A cafe already has a main cable along the wall. The owner wants a <b>bus network</b> with <b>three laptops and a tablet</b> for the staff.',
+  reqs: [
+    { text: 'Three laptops, each plugged into the main cable.', test: () => laptops().length === 3 && laptops().every(l => plugged(l, 'bus')) },
+    { text: 'One tablet on the network (a tablet has no network socket).', test: () => S.devs.some(t => t.kind === 'tablet' && S.devs.some(w => w.kind === 'wifi' && inRange(t, w) && plugged(w, 'bus'))) },
+    { text: 'Everyone can send a message to everyone.', test: allTalk },
+    { text: 'The main cable is still joined in the middle.', test: () => { const [b1, b2] = S.devs.filter(d => d.kind === 'bus'); return !!b1 && !!b2 && hasCable(b1, b2); } }
+  ], minCables: 4 };
+const C3 = { id: 'c-ring', group: 'Challenges', title: 'Ring Road', type: 'client', noHelp: true,
+  setup() { S = fresh({ pc: 5 }); S.pcPorts = 2; },
+  brief: 'A small company wants its <b>five computers</b> in a <b>ring network</b>. Each computer has two ports.',
+  reqs: [
+    { text: 'Five computers.', test: () => pcs().length === 5 },
+    { text: 'A ring: each computer joined to the one before and the one after, in one loop.', test: () => !!ringOf(pcs()) },
+    { text: 'Every computer can send a message to every other computer.', test: allTalk }
+  ], minCables: 5 };
+const C4 = { id: 'c-rooms', group: 'Challenges', title: 'Two Classrooms', type: 'client', noHelp: true,
+  setup() { S = fresh({ laptop: 5, printer: 1, 'switch': 2 }); S.rooms = [{ x: 14, w: 300, name: 'Room 1' }, { x: 326, w: 300, name: 'Room 2' }]; },
+  brief: 'A school needs <b>three laptops in Room 1</b> and <b>two laptops and the printer in Room 2</b>. Each room must have <b>its own switch</b>. Cables cost money: the budget is <b>8 cables</b>.',
+  reqs: [
+    { text: 'Room 1: three laptops and a switch.', test: () => laptops().filter(l => inRoom(l, S.rooms[0])).length === 3 && S.devs.some(d => d.kind === 'switch' && inRoom(d, S.rooms[0])) },
+    { text: 'Room 2: two laptops, the printer and a switch.', test: () => laptops().filter(l => inRoom(l, S.rooms[1])).length === 2 && S.devs.some(d => d.kind === 'printer' && inRoom(d, S.rooms[1])) && S.devs.some(d => d.kind === 'switch' && inRoom(d, S.rooms[1])) },
+    { text: 'Every laptop in both rooms can print.', test: () => laptops().every(l => S.devs.some(p => p.kind === 'printer' && route(l, p))) },
+    { text: 'No more than 8 cables.', test: () => S.cables.length <= 8 }
+  ], minCables: 7 };
+const C5 = { id: 'c-library', group: 'Challenges', title: 'The Library', type: 'client', noHelp: true,
+  setup() {
+    S = fresh({ laptop: 2, printer: 1, 'switch': 1, wifi: 3 });
+    [[60, 60, 'Ana'], [580, 60, 'Ben'], [60, 320, 'Chi'], [580, 320, 'Dev']].forEach(q => place('tablet', q[0], q[1], q[2]));
+    S.tabletSpots = S.devs.filter(d => d.kind === 'tablet').map(t => [t.id, t.x, t.y]);
+  },
+  brief: 'Four tablets are fixed in the corners of the library, far apart. The librarian also needs <b>two laptops</b> and <b>a printer</b>. Everyone must be able to print.',
+  reqs: [
+    { text: 'The tablets stay where they are.', test: () => S.tabletSpots.every(([id, x, y]) => { const t = dev(id); return t && Math.hypot(t.x - x, t.y - y) < 12; }) },
+    { text: 'Two laptops and a printer.', test: () => laptops().length === 2 && count('printer') === 1 },
+    { text: 'Every tablet and laptop can print.', test: () => S.devs.filter(isClient).every(c => S.devs.some(p => p.kind === 'printer' && route(c, p))) },
+    { text: 'Everyone can send a message to everyone.', test: allTalk }
+  ], minCables: 5 };
+const C6 = { id: 'c-backup', group: 'Challenges', title: 'No Single Point', type: 'client', noHelp: true,
+  setup() { S = fresh({ pc: 4 }); S.pcPorts = 3; },
+  brief: 'A hospital office has <b>four computers</b>. If <b>any one cable breaks</b>, every computer must still reach every other. Each computer has three ports.',
+  reqs: [
+    { text: 'Four computers.', test: () => pcs().length === 4 },
+    { text: 'Every computer can send a message to every other computer.', test: allTalk },
+    { text: 'If any one cable breaks, everyone can still reach everyone.', test: () => {
+      const all = S.cables.slice();
+      const okAll = all.every(c => { S.cables = all.filter(x => x !== c); const r = allTalk(); S.cables = all; return r; });
+      S.cables = all; return all.length > 0 && okAll;
+    } }
+  ], minCables: 4 };
+export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2, STAR, BUS, RING, MESH, SERIAL, DUPLEX, SPEEDRACE, BLUETOOTH, C1, C2, C3, C4, C5, C6];
+export const SECTIONS = ['Introduction', 'Wi-Fi', 'Bigger networks', 'Troubleshooting', 'Design', 'Packets', 'Topologies', 'Transmission modes', 'Speeds', 'Challenges'];
 
 // ================================================================ the small pictures for Walk me through it (website drawing)
 function icon(d, x, y) {
@@ -1102,6 +1165,7 @@ export function startSolo({ container, myName, colour }) {
   // Where the current tutorial step wants you to go: a crate, a device, the old cable, or (with a plug in your hand)
   // the socket it should go into. { x, y } in tiles, reach = how close counts as there, ring = the ring's size.
   function guideTarget() {
+    if (M && M.m.noHelp) return null;
     const show = M && M.phase === 'build' ? M.show : null;
     if (!show || show === 'test') return null;
     // carrying a tablet on the Wi-Fi step: into the range of a Wi-Fi point that has a cable
@@ -1881,7 +1945,7 @@ export function startSolo({ container, myName, colour }) {
     missionAt = i;
     openSecs.add(MISSIONS[i].group);
     const m = MISSIONS[i];
-    M = { racePick: null, raced: false, m, step: 0, phase: m.type === 'fix' ? 'predict' : m.before ? 'ask' : 'build', picks: {}, show: null, walked: false, latched: [], afterOk: !m.after };
+    M = { result: null, tested: false, sig: '', racePick: null, raced: false, m, step: 0, phase: m.type === 'fix' ? 'predict' : m.before ? 'ask' : 'build', picks: {}, show: null, walked: false, latched: [], afterOk: !m.after };
     for (const h of hands) { h.cable = null; h.joint = -1; h.dev = null; }
     anim = null; fx = null; stopPackets(); if (race) { scene.remove(race.g); race = null; } compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
     m.setup();
@@ -1909,6 +1973,9 @@ export function startSolo({ container, myName, colour }) {
   function updateShow() { const st = M.m.steps && M.m.steps[M.step]; M.show = M.phase === 'build' && st ? st.show : null; }
   function afterChange() {
     sync();
+    const sig = S.cables.map(c => c.a + '-' + c.b).sort().join() + '|' + S.devs.map(d => d.id + '@' + Math.round(d.x) + ',' + Math.round(d.y)).join();
+    if (sig !== M.sig) { M.sig = sig; M.tested = false; }
+    if (S.lastTest && S.lastTest.ok) M.tested = true;
     if (M.m.type === 'tutorial' && M.phase === 'build') {
       const before = M.step;
       // a one-off event (a test, a refused plug) proves the steps before it, so they stay done after it
@@ -1968,6 +2035,24 @@ export function startSolo({ container, myName, colour }) {
     toast('Crack! A cable broke (it is red). Predict which jobs still work.', 'bad');
     drawAll();
   }
+  const starsHtml = n => '<span class="stars" aria-label="' + n + ' of 3 stars">' + [0, 1, 2].map(i => '<svg viewBox="0 0 24 24" class="' + (i < n ? 'on' : '') + '"><path d="M12 2l3 7 7 .6-5.3 4.7 1.6 7.2L12 17.8 5.7 21.5l1.6-7.2L2 9.6 9 9z"/></svg>').join('') + '</span>';
+  function handOver() {
+    if (hands.some(h => h.dev)) { toast('Put down what you are carrying first.', 'hint'); return; }
+    if (anim || fx || pk) return;
+    const m = M.m, res = m.reqs.map(r => ({ text: r.text, ok: !!r.test() }));
+    const met = res.every(r => r.ok), used = S.cables.length - (S.startCables || 0);
+    const few = met && used <= m.minCables, tested = met && !!M.tested;
+    const n = met ? 1 + (few ? 1 : 0) + (tested ? 1 : 0) : 0;
+    M.result = { res, met, used, few, tested, n };
+    M.phase = 'checked';
+    log.add(m.title + ': ' + res.filter(r => r.ok).length + ' of ' + res.length + ' requirements, ' + n + ' stars', met);
+    if (met) {
+      const best = load('all:stars', {}) || {};
+      if (!(best[missionAt] >= n)) { best[missionAt] = n; save('all:stars', best); }
+      finishMission(); M.phase = 'done'; toast(n + (n === 1 ? ' star' : ' stars') + '. The client is happy.', 'good');
+    } else toast('The client says no: some requirements are not met.', 'bad');
+    drawAll();
+  }
   function checkPredict() {
     if (S.jobs.some((p, i) => !M.picks[i])) { toast('Choose Yes or No for every job first.', 'hint'); return; }
     M.predAns = S.jobs.map(p => !!route(p[0], p[1])); M.predWhy = S.jobs.map(p => why(p[0], p[1]));
@@ -1995,7 +2080,8 @@ export function startSolo({ container, myName, colour }) {
       det.addEventListener('toggle', () => { if (det.open) openSecs.add(sec); else openSecs.delete(sec); });
       const items = el('div', { class: 'sec-list' });
       list.forEach(([x, i], k) => {
-        const b = el('button', { type: 'button', 'aria-current': String(i === missionAt) }, (done[i] ? '<span class="tick">&#10003;</span> ' : '<span class="num">' + (k + 1) + '</span> ') + x.title);
+        const best = x.type === 'client' ? (load('all:stars', {}) || {})[i] : null;
+        const b = el('button', { type: 'button', 'aria-current': String(i === missionAt) }, (done[i] ? '<span class="tick">&#10003;</span> ' : '<span class="num">' + (k + 1) + '</span> ') + '<span class="t">' + x.title + '</span>' + (best != null ? starsHtml(best) : ''));
         b.disabled = !(k === 0 || done[list[k - 1][1]] || done[i]);
         b.addEventListener('click', () => { have = 0; start(i); });
         items.appendChild(b);
@@ -2020,6 +2106,22 @@ export function startSolo({ container, myName, colour }) {
       t.appendChild(el('p', {}, M.phase === 'predict' ? '<b>1. Predict.</b> Look at the cables. Will each job work? You cannot change the network yet.' : M.phase === 'build' ? '<b>2. Fix it.</b> ' + (m.fixText || 'Fix the cables so <b>every</b> laptop can print and message every other laptop. Test it, then check.') : ''));
       if (m.rounds > 1) t.appendChild(el('p', { class: 'note' }, have + ' of ' + m.rounds + ' clean networks in a row.'));
       if (M.phase === 'predict' || M.predicted) t.appendChild(jobList());
+    }
+    if (m.type === 'client') {
+      t.appendChild(el('div', { class: 'brief' }, '<b>Client brief.</b> ' + m.brief));
+      t.appendChild(el('ul', { class: 'goals' }, m.reqs.map(r => '<li>' + r.text + '</li>').join('')));
+      if (!M.result) t.appendChild(el('p', { class: 'note' }, 'No help in challenges. Build it, test it, then hand it over. Stars: meet every requirement, use as few cables as you can, and test it after your last change.'));
+      else {
+        const R = M.result, box = el('div', { class: 'result' });
+        box.appendChild(el('div', { class: 'result-head' }, starsHtml(R.n) + '<b>' + (R.met ? R.n + ' of 3 stars' : 'Not accepted') + '</b>'));
+        const ul = el('ul', { class: 'breakdown' });
+        R.res.forEach(r => ul.appendChild(el('li', { class: r.ok ? 'ok' : 'no' }, r.text)));
+        ul.appendChild(el('li', { class: R.few ? 'ok' : 'no' }, 'Cables: you used ' + R.used + '. The fewest possible is ' + m.minCables + '.'));
+        ul.appendChild(el('li', { class: R.tested ? 'ok' : 'no' }, R.tested ? 'You tested it after your last change.' : 'You did not test it after your last change.'));
+        box.appendChild(ul);
+        if (!R.met) box.appendChild(el('p', { class: 'note' }, 'Every requirement must be met for the client to accept it. Start again and build it so it works first time.'));
+        t.appendChild(box);
+      }
     }
     if (m.type === 'race') {
       t.appendChild(el('ul', { class: 'goals' }, m.lanes.map(L => '<li><b>' + L.label + ':</b> ' + L.text + '</li>').join('')));
@@ -2049,10 +2151,11 @@ export function startSolo({ container, myName, colour }) {
     else if (M.phase === 'checked') act.appendChild(m.breakAfter && M.predicted ? btn('Try another break', 'go', topoBreak) : btn(m.type === 'fix' ? 'New network' : 'Try again', 'go', () => start(missionAt)));
     else if (M.phase === 'predict') act.appendChild(btn('Check my predictions', 'go', checkPredict));
     else if (m.breakAfter && M.predicted) { /* the result is shown; Try another break above */ }
+    else if (m.type === 'client') act.appendChild(btn('Hand it over', 'go', handOver));
     else if (m.type === 'race') { const r = btn(race ? 'Watch...' : 'Run it', 'go', runRace); r.disabled = !!race || !M.racePick; act.appendChild(r); }
     else if (m.type !== 'tutorial') act.appendChild(btn('Check my network', 'go', checkMission));
     if (m.type === 'tutorial' && M.phase === 'build') act.appendChild(btn('Start again', '', () => start(missionAt)));
-    act.appendChild(btn('Walk me through it', '', walkMe));
+    if (!m.noHelp) act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
     if (M.phase === 'done' || M.phase === 'checked') t.scrollTop = t.scrollHeight;   // the result and its button in view
     $('step').textContent = m.group + ': ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length;
@@ -2269,6 +2372,6 @@ export function startSolo({ container, myName, colour }) {
   start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, handOver, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }
