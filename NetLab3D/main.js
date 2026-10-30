@@ -125,9 +125,9 @@ const BUILD = [
   { id: 'two', group: 'Introduction', title: 'Join Two Laptops', type: 'tutorial', setup() { S = fresh({ laptop: 2 }); },
     intro: 'Two laptops on their own cannot share anything. Join them to make a network.',
     steps: [
-      { text: 'Grab the <b>Laptop</b> crate on the supply shelf, carry the laptop onto the floor and let go.', show: 'crate-laptop', done: () => placed('laptop') >= 1 },
-      { text: 'Put a second <b>Laptop</b> down.', show: 'crate-laptop', done: () => placed('laptop') >= 2 },
-      { text: 'Before any cable: try to send a message from one laptop to the other, in the Test bar at the bottom. Watch the screens.', show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok && S.cables.length === 0 },
+      { text: 'Grab the <b>Laptop</b> crate on the supply shelf, carry the laptop onto the floor and let go.', show: 'crate-laptop', done: () => placed('laptop') >= 1, wait: { join: 'First try sending a message with no cable: put both laptops down, then use the Test bar at the bottom.' } },
+      { text: 'Put a second <b>Laptop</b> down.', show: 'crate-laptop', done: () => placed('laptop') >= 2, wait: { join: 'First try sending a message with no cable: put both laptops down, then use the Test bar at the bottom.' } },
+      { text: 'Before any cable: try to send a message from one laptop to the other, in the Test bar at the bottom. Watch the screens.', show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok && S.cables.length === 0, wait: { join: 'First try sending a message with no cable: put both laptops down, then use the Test bar at the bottom.' } },
       { text: 'Plug in a cable. ' + SOCK, show: 'crate-cable', done: () => S.cables.some(c => !isHeld(dev(c.a)) && !isHeld(dev(c.b))) },
       { text: 'Test it again: send a message. Now it gets there.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok },
       { text: 'Share something: send the other laptop a <b>Photo</b> or a <b>File</b>.', show: 'test', event: true, done: () => S.lastTest && S.lastTest.ok && S.lastTest.kind && S.lastTest.kind !== 'message' }
@@ -137,8 +137,8 @@ const BUILD = [
     S = fresh({ laptop: 3, 'switch': 1 }); const a = place('laptop', 150, 100), b = place('laptop', 490, 100); plug(a, b); },
     intro: 'A third person wants to join the network.',
     steps: [
-      { text: 'Put a third <b>Laptop</b> down.', show: 'crate-laptop', done: () => placed('laptop') >= 3 },
-      { text: 'Try to plug the new laptop into one of the other two laptops. Watch what happens.', show: 'crate-cable', event: true, done: () => S.refused },
+      { text: 'Put a third <b>Laptop</b> down.', show: 'crate-laptop', done: () => placed('laptop') >= 3, wait: { 'switch': 'First try plugging the new laptop into one of the other laptops. Watch what happens.' } },
+      { text: 'Try to plug the new laptop into one of the other two laptops. Watch what happens.', show: 'crate-cable', event: true, done: () => S.refused, wait: { 'switch': 'First try plugging the new laptop into one of the other laptops. Watch what happens.' } },
       { text: 'Each laptop has only one network socket. Take a <b>Switch</b> from the shelf and put it down: it has eight sockets.', show: 'crate-switch', done: () => placed('switch') >= 1 },
       { text: 'Take out the old cable between the first two laptops: grab a plug and pull it out of its socket.', show: 'cable', done: () => !S.cables.some(c => dev(c.a).kind === 'laptop' && dev(c.b).kind === 'laptop') },
       { text: 'Plug <b>all three</b> laptops into the switch. Any free port on the switch works.', show: 'switch', done: () => placed('laptop') >= 3 && placed('switch') >= 1 && laptops().every(l => !isHeld(l) && plugged(l, 'switch')) },
@@ -868,8 +868,9 @@ export function startSolo({ container, myName, colour }) {
   // the nearest bit of cable to hand i; a plug counts as nearer (a plug in a port most of all), so reaching for the
   // plug in a laptop's port takes the plug, not the laptop
   function nearestJoint(i, press) {
-    const [hx, hy] = handPos(i); let best = null;
+    const [hx, hy] = handPos(i); let best = null, other = hands[1 - i].cable;
     for (const c of cables3) for (let j = 0; j <= c.n; j++) {
+      if (c === other || c.type) continue;   // one cable is held by one hand (Space presses both); race cables cannot be taken
       const e = j === 0 ? 0 : j === c.n ? 1 : -1;
       if (e >= 0 && !press && c.ends[e]) continue;
       if (hands.some(o => o.cable === c && o.joint === j)) continue;
@@ -890,13 +891,18 @@ export function startSolo({ container, myName, colour }) {
     const best = nearestJoint(i, press);
     return best ? grabJoint(i, best) : false;
   }
+  // a tutorial step can hold back something that belongs to a later step, so the steps happen in order
+  function waiting(what) {
+    if (!M || M.m.type !== 'tutorial' || M.phase !== 'build') return null;
+    const st = M.m.steps[M.step];
+    return st && st.wait && st.wait[what] || null;
+  }
   function takeFrom(i, crate) {
+    const held = waiting(crate.kind);
+    if (held) { toast(held, 'hint'); return; }
     const h = hands[i];
     const o = hands[1 - i];
-    if (crate.kind === 'cable' && o.cable && !o.cable.ends[0] && !o.cable.ends[1] && (o.joint === 0 || o.joint === o.cable.n) && tickNo - o.since < 20) {
-      h.cable = o.cable; h.joint = o.joint === 0 ? o.cable.n : 0; h.since = tickNo;
-      toast('You are holding both ends of one cable.', 'good'); return;
-    }
+    if (crate.kind === 'cable' && o.cable && tickNo - o.since < 20) return;   // both hands on the crate (Space): still one cable, in one hand
     if (crate.kind !== 'cable' && o.dev) return;   // both hands on one device crate: still one device
     if (crate.kind === 'cable') {
       const [hx, hy] = handPos(i);
@@ -1006,6 +1012,7 @@ export function startSolo({ container, myName, colour }) {
       toast(best.d.kind === 'switch' ? best.d.name + ' has no free sockets (RJ45 ports).' : best.d.name + ' has only <b>one</b> network socket (RJ45 port), and it is already used.', 'bad');
       afterChange(); return;
     }
+    if (other && waiting('join')) { bounce(); toast(waiting('join'), 'hint'); return; }
     c.ends[end] = { dev: best.d.id, sock: best.s };
     sync();
     if (c.ends[0] && c.ends[1]) toast('Ethernet cable connected: ' + dev(c.ends[0].dev).name + ' to ' + dev(c.ends[1].dev).name + '.', 'good');

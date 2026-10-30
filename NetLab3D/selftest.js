@@ -529,7 +529,10 @@ const BREAK = [
     const n = s.cables().length;
     document.body.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
     ok(s.cables().length === n + 1, 'Space took ' + (s.cables().length - n) + ' cables');
-    ok(s.hands[0].cable && s.hands[0].cable === s.hands[1].cable, 'Space should hold both ends of one cable');
+    ok(!!s.hands[0].cable !== !!s.hands[1].cable, 'Space should take one cable in one hand');
+    // holding Space while walking over that cable: the other hand never grabs another part of it
+    for (let k = 0; k < 10; k++) { s.pos.x -= 0.15; s.step(2); }
+    ok(!(s.hands[0].cable && s.hands[1].cable), 'both hands are holding parts of the same cable');
     document.body.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
   },
   function plugBeatsLaptopAndPortsGlow() {
@@ -554,6 +557,7 @@ const BREAK = [
     const a = placeNew('laptop', 6, 8), b = placeNew('laptop', 15, 8);
     const sa = a.k3.screen, sb = b.k3.screen; s.frame(1);
     ok(sa.status && /not connected/.test(sa.status.text), 'status before cable: ' + (sa.status && sa.status.text));
+    test(a, b); s.frame(200, 33);   // mission 1 asks for a send with no cable first
     const c = takeFromCrate(0, 'cable'); handTo(0, ...s.plugPin(a, 0)); letGo(0); s.frame(2);
     ok(/other end loose/.test(sa.status.text), 'status with one end in: ' + sa.status.text);
     ok(sa.state && /RJ45/.test(sa.state.sub || ''), 'screen did not name the RJ45 port: ' + JSON.stringify(sa.state));
@@ -589,7 +593,7 @@ const BREAK = [
   function typingStopsWalking() {
     // walking (W held, with a Thai layout so the key types a Thai letter) when the message box opens: you stop
     s.start(0);
-    const a = placeNew('laptop', 6, 8), b = placeNew('laptop', 15, 8); cable(a, b);
+    const a = placeNew('laptop', 6, 8), b = placeNew('laptop', 15, 8); test(a, b); cable(a, b);
     walkTo(10, 14, 0);
     document.body.dispatchEvent(new KeyboardEvent('keydown', { key: '\u0e44', code: 'KeyW', bubbles: true, cancelable: true }));
     const y0 = s.pos.y; s.frame(5, 33);
@@ -642,11 +646,23 @@ const BREAK = [
     document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true }));
     ok($('cardWrap').hidden, 'Escape did not close the card');
   },
+  function stepsHappenInOrder() {
+    s.start(0);
+    const a = placeNew('laptop', 6, 8), b = placeNew('laptop', 15, 8);
+    const c = takeFromCrate(0, 'cable'); handTo(0, ...s.plugPin(a, 0)); letGo(0);
+    grabEnd(1, c, 1); handTo(1, ...s.plugPin(b, 0)); letGo(1);
+    ok(!(c.ends[0] && c.ends[1]), 'the cable was joined before the no-cable test');
+    stepIs(2, 'still on the no-cable test');
+    ok(!test(a, b).ok, 'a message got through'); stepIs(3, 'no-cable test done');
+    s.start(1);
+    const [x] = crateFront('switch'); walkTo(x, 21, 0); press(0);
+    ok(!s.hands[0].dev, 'the switch crate opened before the third laptop step'); letGo(0);
+  },
   function cableCannotStretch() {
     // carrying a device with a cable in it: the cable never stretches past its length; it pulls out of the port
     s.start(0);
     const a = placeNew('laptop', 3, 3), b = placeNew('laptop', 8, 3);
-    cable(a, b);
+    test(a, b); cable(a, b);
     handTo(0, b.X + 1, b.Y + b.h - 0.2); press(0); ok(s.hands[0].dev === b, 'could not pick up the laptop');
     walkTo(30, 18, 0); s.step(5);
     const c = s.cables()[0], max = c.n * 0.5 * 1.15 + 0.7;
