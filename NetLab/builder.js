@@ -82,7 +82,7 @@
   function svgFor(state, opts) {
     var keep = S; S = state; opts = opts || {};
     var out = '<svg class="desk' + (opts.mini ? ' mini' : '') + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="The network desk">';
-    (state.rooms || []).forEach(function (r) { out += '<rect class="room" x="' + r.x + '" y="10" width="' + r.w + '" height="' + (H - 20) + '" rx="14"/><text class="room-t" x="' + (r.x + 14) + '" y="34">' + r.name + '</text>'; });
+    (state.rooms || []).forEach(function (r) { out += '<rect class="room" x="' + r.x + '" y="10" width="' + r.w + '" height="' + (H - 16) + '" rx="14"/><text class="room-t" x="' + (r.x + 14) + '" y="34">' + r.name + '</text>'; });
     state.cables.forEach(function (c, i) {
       var a = dev(c.a), b = dev(c.b), lit = opts.hl && opts.hl.indexOf(i) >= 0;
       out += '<line class="cable' + (state.sel && state.sel.cable === i ? ' sel' : '') + (lit ? ' lit' : '') + '" x1="' + a.x + '" y1="' + a.y + '" x2="' + b.x + '" y2="' + b.y + '"/>';
@@ -207,7 +207,7 @@
     var svg = ui.desk.querySelector('svg'), p = svg.createSVGPoint();
     p.x = e.clientX; p.y = e.clientY;
     var q = p.matrixTransform(svg.getScreenCTM().inverse());
-    return [Math.max(50, Math.min(W - 50, q.x)), Math.max(40, Math.min(H - 50, q.y))];
+    return [Math.max(50, Math.min(W - 50, q.x)), Math.max(40, Math.min(H - 64, q.y))];
   }
   function near(p, skip) {
     var best = null, bd = 60;
@@ -323,7 +323,7 @@
   function faulty() {
     for (;;) {
       S = fresh({});
-      var sw = place('switch', 320, 190, 'Switch'), spots = Lab.shuffle([[110, 80], [320, 64], [530, 80], [110, 300], [530, 300]]);
+      var sw = place('switch', 320, 190, 'Switch'), spots = Lab.shuffle([[110, 80], [320, 64], [530, 80], [110, 290], [530, 290]]);
       var pr = place('printer', spots[0][0], spots[0][1]), ls = [1, 2, 3].map(function (i) { return place('laptop', spots[i][0], spots[i][1]); });
       var all = [pr].concat(ls), fault = Lab.pick(['unplug', 'unplug', 'pair', 'printer']);
       if (fault === 'pair') { plug(ls[0], ls[1]); plug(ls[2], sw); plug(pr, sw); }
@@ -337,9 +337,9 @@
   function rooms() {
     S = fresh({});
     S.rooms = [{ x: 14, w: 300, name: 'Room 1' }, { x: 326, w: 300, name: 'Room 2' }];
-    var a = place('switch', 164, 205, 'Switch 1'), b = place('switch', 476, 205, 'Switch 2');
-    var a1 = place('laptop', 84, 96), a2 = place('laptop', 244, 96), a3 = place('laptop', 164, 316);
-    var b1 = place('laptop', 396, 96), b2 = place('laptop', 556, 96), pr = place('printer', 476, 316, 'Printer');
+    var a = place('switch', 164, 195, 'Switch 1'), b = place('switch', 476, 195, 'Switch 2');
+    var a1 = place('laptop', 84, 96), a2 = place('laptop', 244, 96), a3 = place('laptop', 164, 296);
+    var b1 = place('laptop', 396, 96), b2 = place('laptop', 556, 96), pr = place('printer', 476, 296, 'Printer');
     [a1, a2, a3].forEach(function (l) { plug(l, a); });
     [b1, b2, pr].forEach(function (l) { plug(l, b); });
     S.jobs = Lab.shuffle([[a1, pr], [b1, pr], [a2, a3], [a2, b2]]).slice(0, 3);
@@ -495,7 +495,7 @@
     } else if (m.type === 'challenge') {
       S = fresh({});
       var sw = place('switch', 320, 200, 'Switch'), pr = place('printer', 320, 70, 'Printer');
-      var a = place('laptop', 110, 300), b = place('laptop', 530, 300), c = place('laptop', 110, 90);
+      var a = place('laptop', 110, 290), b = place('laptop', 530, 290), c = place('laptop', 110, 90);
       var ex = S, list = [pr, a, b, c];
       steps.push({ text: '<b>A similar network.</b> Three laptops and a printer must all be joined.', visual: mini(ex) });
       steps.push({ text: 'Every laptop and the printer has only <b>one</b> socket, so they cannot all plug into each other. Put a <span class="hl">switch</span> in the middle.', visual: mini(ex) });
