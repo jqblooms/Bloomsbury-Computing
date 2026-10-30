@@ -734,6 +734,7 @@ export function startSolo({ container, myName, colour }) {
   }
   function stepCables() {
     for (const c of cables3) {
+      if (c.type) continue;   // the see-through cables of a race are laid once and never move (they would rebuild every frame)
       const { P, Q, n } = c, pins = [];
       for (let j = 0; j <= n; j++) pins.push(pinOf(c, j));
       const hi = hands.findIndex(h => h.cable === c), slide = hi >= 0 ? 0.7 : 0.4;   // a cable nobody holds settles quickly
@@ -1740,7 +1741,7 @@ export function startSolo({ container, myName, colour }) {
   }
   // What each laptop and tablet knows about its connection, shown on its taskbar; a change joins its screen's queue.
   function netState(d) {
-    if (d.kind === 'tablet' && S.bt) {
+    if (d.kind === 'tablet' && btPartner(d)) {
       const o = btPartner(d);
       return o && btOn(d) ? { key: 'bt:' + o.id, text: 'Bluetooth: connected to ' + o.name, ok: true, to: o.name } : { key: 'btoff', text: 'Bluetooth: out of range', ok: false };
     }
@@ -1975,7 +1976,8 @@ export function startSolo({ container, myName, colour }) {
     sync();
     const sig = S.cables.map(c => c.a + '-' + c.b).sort().join() + '|' + S.devs.map(d => d.id + '@' + Math.round(d.x) + ',' + Math.round(d.y)).join();
     if (sig !== M.sig) { M.sig = sig; M.tested = false; }
-    if (S.lastTest && S.lastTest.ok) M.tested = true;
+    // only a new test counts (every test makes a new lastTest), so testing, then changing it, is not "tested"
+    if (S.lastTest && S.lastTest !== M.seenTest) { M.seenTest = S.lastTest; if (S.lastTest.ok) M.tested = true; }
     if (M.m.type === 'tutorial' && M.phase === 'build') {
       const before = M.step;
       // a one-off event (a test, a refused plug) proves the steps before it, so they stay done after it
@@ -2372,6 +2374,6 @@ export function startSolo({ container, myName, colour }) {
   start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, handOver, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, handOver, missions: MISSIONS.length, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }

@@ -411,6 +411,16 @@ const PLAY = [
     click('Hand it over');
     ok(M().result && M().result.met && M().result.n === 2 && !M().result.tested, 'untested cafe should get 2 stars: ' + JSON.stringify(M().result));
   },
+  function challengeTestThenChange() {
+    // test, then change the network, then hand over: not "tested after the last change"
+    s.start(21);
+    const hub = placeNew('switch', 14, 10), ls = [[3, 3], [9, 3], [20, 3]].map(([x, y]) => placeNew('laptop', x, y)), pr = placeNew('printer', 14, 15);
+    for (const d of ls.slice(0, 2).concat([pr])) cable(d, hub);
+    ok(test(ls[0], pr).ok, 'print failed');
+    cable(ls[2], hub);
+    click('Hand it over');
+    ok(M().result && M().result.met && !M().result.tested && M().result.n === 2, 'a change after the test still counted as tested: ' + JSON.stringify(M().result));
+  },
   function challengeRing() {
     s.start(23);
     const ps = [[4, 3], [14, 3], [24, 3], [20, 13], [8, 13]].map(([x, y]) => placeNew('pc', x, y));
@@ -658,6 +668,8 @@ const BREAK = [
 function fuzz(i, n) {
   s.start(i);
   if (M().phase === 'predict') predictRight();
+  if (M().phase === 'ask' && $('nbAsk')) { $('nbAsk').value = String(M().m.before.number); click('Check'); }
+  if (M().m.type === 'race') { [...document.querySelectorAll('#mission .race-pick button')][0].click(); click('Run it'); }
   let rnd = 12345 + i * 7;
   const r = () => (rnd = (rnd * 16807) % 2147483647) / 2147483647;
   for (let k = 0; k < n; k++) {
@@ -684,20 +696,21 @@ function fuzz(i, n) {
 // run({ parts: ['play', 'break', 'fuzz'], fuzzN }); the result is also left in window.__selftest
 export function run({ fuzzN = 400, parts = ['play', 'break', 'fuzz'], only = null } = {}) {
   fails = []; log = []; s = window.__solo;
-  const keep = localStorage.getItem('bc-netlab-v1:all:done');
+  const keep = localStorage.getItem('bc-netlab-v1:all:done'), keepStars = localStorage.getItem('bc-netlab-v1:all:stars');
   const t0 = performance.now();
   const groups = [];
   if (parts.includes('play')) groups.push(PLAY);
   if (parts.includes('break')) groups.push(BREAK);
   for (const group of groups) for (const f of group) {
-    if (only && !only.includes(f.name)) continue;
+    if (only && Array.isArray(only) && !only.includes(f.name)) continue;
     const before = fails.length;
     try { f(); } catch (e) { fails.push(f.name + ': ' + e.message); }
     s.setHand(0, false); s.setHand(1, false);
     log.push((fails.length === before ? 'ok   ' : 'FAIL ') + f.name);
   }
-  if (parts.includes('fuzz')) for (let i = 0; i < 11; i++) { const before = fails.length; try { fuzz(i, fuzzN); } catch (e) { fails.push('fuzz ' + (i + 1) + ': ' + e.message); } log.push((fails.length === before ? 'ok   ' : 'FAIL ') + 'random play, mission ' + (i + 1)); }
+  if (parts.includes('fuzz')) for (let i = (only && only.from) || 0; i < ((only && only.to) || s.missions); i++) { const before = fails.length; try { fuzz(i, fuzzN); } catch (e) { fails.push('fuzz ' + (i + 1) + ': ' + e.message); } log.push((fails.length === before ? 'ok   ' : 'FAIL ') + 'random play, mission ' + (i + 1)); }
   try { if (keep == null) localStorage.removeItem('bc-netlab-v1:all:done'); else localStorage.setItem('bc-netlab-v1:all:done', keep); } catch (e) { }
+  try { if (keepStars == null) localStorage.removeItem('bc-netlab-v1:all:stars'); else localStorage.setItem('bc-netlab-v1:all:stars', keepStars); } catch (e) { }
   return (window.__selftest = { seconds: Math.round((performance.now() - t0) / 1000), log, fails });
 }
 export const helpers = { walkTo, handTo, placeNew, takeFromCrate, cable, moveEnd, carryTablet, press, letGo, setS: () => { s = window.__solo; } };
