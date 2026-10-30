@@ -201,6 +201,15 @@
    "embedQuery": "activity=fix"
   },
   {
+   "id": "activity-3",
+   "label": "Activity 3: Network Builder 3D",
+   "type": "embedded-app",
+   "appId": "network-builder-3d",
+   "embedContainerId": "y6-31-activity-3",
+   "content": "<h2 class=\"lesson-h2\">Activity 3: Network Builder 3D</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why test your network again after you change it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A change can stop something that worked before. Testing again shows it still works.</p></div></details><p class=\"lesson-lead\">Build networks in a 3D lab: walk with W A S D, carry laptops and switches, plug in the cables, then test them. Do the missions in order.</p><div id=\"y6-31-activity-3\"></div>",
+   "embedQuery": "lesson=2.1"
+  },
+  {
    "id": "plenary",
    "label": "Plenary: Networks Drill",
    "type": "embedded-app",

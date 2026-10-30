@@ -163,6 +163,10 @@ steps.push(embed('activity-2', 'Activity 2: Predict, then Fix', 'network-builder
   'First predict which jobs will work, then fix the network. One check each: a mistake means that network does not count.',
   ['Why predict before you fix it?', 'Predicting shows you can follow the cables yourself. Fixing first would hide what was wrong.'], 'activity=fix'));
 
+steps.push(embed('activity-3', 'Activity 3: Network Builder 3D', 'network-builder-3d',
+  'Build networks in a 3D lab: walk with W A S D, carry laptops and switches, plug in the cables, then test them. Do the missions in order.',
+  ['Why test your network again after you change it?', 'A change can stop something that worked before. Testing again shows it still works.'], 'lesson=2.1'));
+
 steps.push(embed('plenary', 'Plenary: Networks Drill', 'drill-' + ID,
   'What a network is, why we join computers, and switches. Your progress is saved.',
   ['Why does the drill bring back a question you got wrong?', 'Getting it right again later shows you remember it, not that you guessed once.']));
