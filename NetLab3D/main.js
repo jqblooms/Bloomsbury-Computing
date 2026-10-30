@@ -1038,7 +1038,11 @@ export function startSolo({ container, myName, colour }) {
     if (h.down === down) return;
     h.down = down;
     $(i ? 'rightBtn' : 'leftBtn')?.classList.toggle('on', down);
-    if (!down) { letGo(i); return; }
+    if (!down) { h.passive = false; letGo(i); return; }
+    // both hands pressed at once (Space): one press grabs one thing; the second hand just helps until it is let go
+    const o = hands[1 - i];
+    h.pressTick = tickNo;
+    if (o.down && o.pressTick === tickNo && (o.cable || o.dev)) { h.passive = true; return; }
     if (locked()) { toast(M.m.type === 'race' ? 'Watch this one: predict on the right, then press Run it.' : M.phase === 'ask' ? 'Answer the question on the right first.' : M.phase === 'predict' ? 'Predict first: choose Yes or No for each job, then press Check my predictions.' : anim ? 'Wait for the message to arrive.' : 'Press the button on the mission sheet to go on.', 'hint'); return; }
     if (h.cable || h.dev) return;
     const g = grabTarget(i);
@@ -2680,7 +2684,7 @@ export function startSolo({ container, myName, colour }) {
     acc += dt;
     let stepped = false;
     while (acc >= 0.05) { acc -= 0.05; tickNo++; stepCables(); stepped = true;
-      if (M && M.phase === 'build') for (let i = 0; i < 2; i++) if (hands[i].down && !hands[i].cable && !hands[i].dev) tryGrab(i, false); }
+      if (M && M.phase === 'build') for (let i = 0; i < 2; i++) if (hands[i].down && !hands[i].passive && !hands[i].cable && !hands[i].dev) tryGrab(i, false); }
     if (stepped) { drawCables(); hint(); }
     stepAnim(dt);
     stepFx(dt);

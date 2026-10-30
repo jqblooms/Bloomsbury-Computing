@@ -764,6 +764,19 @@ const BREAK = [
     [...document.querySelectorAll('#mission .leave button')].find(b => b.textContent === 'Leave').click();
     ok(M().m.id === 'wifi', 'Leave did not switch');
   },
+  function spaceGrabsOneThing() {
+    // Space over a plug in a Wi-Fi point: the plug comes out, the Wi-Fi point is not picked up as well
+    s.start(3);
+    const hub = sw(), w = placeNew('wifi', 24, 10); cable(w, hub);
+    const c = s.cables().find(x => x.ends.some(e => e && e.dev === w.id)), e = c.ends.findIndex(x => x && x.dev === w.id);
+    handTo(0, ...s.plugPin(w, c.ends[e].sock));
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
+    const held = s.hands.map(h => h.dev ? 'dev' : h.cable ? 'cable' : null).filter(Boolean);
+    ok(held.length === 1, 'Space grabbed ' + held.length + ' things: ' + held.join(', '));
+    for (let k = 0; k < 10; k++) { s.pos.x -= 0.15; s.frame(1, 33); }
+    ok(s.hands.filter(h => h.dev || h.cable).length === 1, 'the second hand grabbed something while Space was held');
+    document.body.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
+  },
   function cableCannotStretch() {
     // carrying a device with a cable in it: the cable never stretches past its length; it pulls out of the port
     s.start(0);
