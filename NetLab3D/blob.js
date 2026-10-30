@@ -95,7 +95,7 @@ export function createBlob(colourIndex, name) {
     const l = limb(skin, 11), foot = new THREE.Mesh(new THREE.SphereGeometry(12, 12, 8).scale(1, 0.7, 1.3), skin);
     foot.castShadow = true; parts.add(l, foot); return { l, foot };
   });
-  const tag = label(name || ''); tag.position.y = 150; group.add(tag);
+  const tag = label(name || ''); tag.position.y = 150; tag.visible = !!name; group.add(tag);
 
   // State that springs and lags.
   let x = null, y = null, heading = 0, phase = 0, walk = 0;

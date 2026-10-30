@@ -15,7 +15,7 @@
 import * as THREE from 'three';
 import { create } from './room.js';
 import { createBlob } from './blob.js';
-import { makeDevice, makeCrate, setLight, tape } from './devices.js';
+import { makeDevice, makeCrate, setLight, tape, pageTexture } from './devices.js';
 const $ = id => document.getElementById(id);
 const T = 100, K = 22, OX = 1.5, OY = 1.5;          // world units a tile; desk units a tile; desk origin in tiles
 const MAPW = 34, MAPH = 27, DESK_BOTTOM = 20;        // the room; the desk is rows 1 to 20, the supply shelf below
@@ -101,7 +101,7 @@ function kept(probs) { if (S.devs.length < S.startDevs) probs.unshift('A device 
 function routeText(r) { return r.map(d => d.name).join(' &rarr; '); }
 
 // ================================================================ the missions (the website's, worded for 3D)
-const SOCK = 'Take a cable from the <b>Cables</b> crate, push one plug into a socket (a laptop\'s is on its right-hand side), then carry the other plug to the other device\'s socket and let go.';
+const SOCK = 'Take an <b>Ethernet cable</b> from the cable crate, push one plug into a network socket (an <b>RJ45 port</b>; a laptop\'s is on its right-hand side), then carry the other plug to the other device\'s port and let go.';
 const BUILD = [
   { id: 'two', group: 'Getting started', title: 'Join Two Laptops', type: 'tutorial', setup() { S = fresh({ laptop: 2 }); },
     intro: 'Two laptops on their own cannot share anything. Join them to make a network.',
@@ -369,7 +369,8 @@ export function startSolo({ container, myName, colour }) {
   }
   function dropGroup(g) { if (!g) return; scene.remove(g); g.traverse(o => { if (o.userData.own) o.geometry.dispose(); }); }
   function buildWorld() {
-    if (!view) { view = create(container); scene = view.scene; scene.add(me.group, pulse); }
+    if (!view) { view = create(container); scene = view.scene; scene.add(me.group, pulse, arrows, portGlow, outlineG); }
+    guideKey = '';
     view.setRoom({ w: MAPW, h: MAPH, rows, regions: regionsFor(S.rooms) });
     for (const g of [devG, cableG, fxG, crateG]) dropGroup(g);
     drawn.clear(); wifiKey = null;
@@ -385,7 +386,7 @@ export function startSolo({ container, myName, colour }) {
     }
     setOverview(overview);
   }
-  function crateTitle(kind) { return kind === 'cable' ? 'Cables' : (kind === 'switch' ? 'Switches' : LABEL[kind] + 's') + ': ' + Math.max(0, (S.palette[kind] ?? 0) - count(kind)) + ' left'; }
+  function crateTitle(kind) { return kind === 'cable' ? 'Ethernet cables' : (kind === 'switch' ? 'Switches' : LABEL[kind] + 's') + ': ' + Math.max(0, (S.palette[kind] ?? 0) - count(kind)) + ' left'; }
   function retitleCrates() {
     for (const [kind, c] of Object.entries(CRATES)) {
       if (kind === 'cable') continue;
@@ -487,7 +488,15 @@ export function startSolo({ container, myName, colour }) {
         const a = pinned[k - 1], b = pinned[k], pa = pins[a], pb = pins[b];
         if (Math.hypot(pa[0] - pb[0], pa[1] - pb[1]) <= (b - a) * SEG * 1.15 + 0.6) continue;
         const hi = [0, 1].filter(i => hands[i].cable === c && (hands[i].joint === a || hands[i].joint === b)).sort((x, y) => hands[y].since - hands[x].since)[0];
-        if (hi != null) { release(hi); toast('The cable is not long enough: you let go.', 'hint'); }
+        if (hi != null) { release(hi); toast('The cable is not long enough: you let go.', 'hint'); continue; }
+        // no hand on it: a device being carried pulls the plug out of its own port
+        for (const j of [a, b]) {
+          const e = j === 0 ? 0 : j === c.n ? 1 : -1, end = e >= 0 && c.ends[e], d = end && dev(end.dev);
+          if (!d || !carried(d)) continue;
+          c.ends[e] = null;
+          toast('The Ethernet cable is not long enough: it pulled out of ' + d.name + "'s port.", 'hint');
+          afterChange(); break;
+        }
       }
     }
   }
@@ -508,7 +517,7 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // ---- hands: hold to grab, let go to put down or plug in (as the team game)
-  function locked() { return M.phase === 'predict' || M.phase === 'checked' || M.phase === 'done' || !!anim; }
+  function locked() { return M.phase === 'predict' || M.phase === 'checked' || M.phase === 'done' || !!anim || !!fx; }
   function release(i) {
     const h = hands[i];
     if (h.dev) dropDevice(i, true);
@@ -522,45 +531,87 @@ export function startSolo({ container, myName, colour }) {
     if (!down) { letGo(i); return; }
     if (locked()) { toast(M.phase === 'predict' ? 'Predict first: choose Yes or No for each job, then press Check my predictions.' : anim ? 'Wait for the message to arrive.' : 'Press the button on the mission sheet to go on.', 'hint'); return; }
     if (h.cable || h.dev) return;
+    const g = grabTarget(i);
+    if (!g) return;
+    if (g.kind === 'crate') { takeFrom(i, g.crate); return; }
+    if (g.kind === 'tablet') { h.dev = g.d; h.from = { tx: g.d.tx, ty: g.d.ty }; afterChange(); return; }
+    if (g.kind === 'cable') { grabJoint(i, g); return; }
+    if (g.kind === 'device') { const d = g.d; h.dev = d; h.from = { X: d.X, Y: d.Y }; toast('Carrying ' + d.name + '. Let go to put it down. Let go at its crate to put it back.', 'hint'); afterChange(); }
+  }
+  // What hand i would grab if pressed now, in this order: the crate under it, a tablet, a cable (a plug in a port
+  // first), the device it touches, then a crate near you. Nothing is changed.
+  function grabTarget(i) {
+    const h = hands[i]; if (h.cable || h.dev || !M || locked()) return null;
     const [hx, hy] = handPos(i);
-    // a hand on a crate takes from that crate (not a cable lying next to it)
     const onCrate = Object.values(CRATES).find(c => hx > c.x - 0.8 && hx < c.x + c.w - 0.2 && hy > c.y - 0.8 && hy < c.y + c.h - 0.2);
-    if (onCrate) { takeFrom(i, onCrate); return; }
-    // a tablet in reach
+    if (onCrate) return { kind: 'crate', crate: onCrate };
     const tab = S.devs.find(d => d.kind === 'tablet' && !carried(d) && Math.hypot(d.tx - hx, d.ty - hy) < 0.8);
-    if (tab) { h.dev = tab; h.from = { tx: tab.tx, ty: tab.ty }; afterChange(); return; }
-    if (tryGrab(i, true)) return;
-    // a device you are touching: pick it up and carry it
+    if (tab) return { kind: 'tablet', d: tab };
+    const j = nearestJoint(i, true);
+    if (j) return { kind: 'cable', ...j };
     const d = S.devs.filter(d => d.kind !== 'tablet' && !carried(d) && distToFoot(d, hx, hy) < 0.5).sort((a, b) => distToFoot(a, hx, hy) - distToFoot(b, hx, hy))[0];
-    if (d) { h.dev = d; h.from = { X: d.X, Y: d.Y }; toast('Carrying ' + d.name + '. Let go to put it down. Let go at its crate to put it back.', 'hint'); afterChange(); return; }
-    // a crate on the shelf
+    if (d) return { kind: 'device', d };
     const crate = Object.values(CRATES).find(c => Math.hypot(pos.x - (c.x + 0.5), pos.y - (c.y + 0.5)) < 2.0);
-    if (crate) { takeFrom(i, crate); return; }
+    if (crate) return { kind: 'crate', crate };
+    return null;
+  }
+  // Which port a plug let go at (hx, hy) goes into: of the devices near the hand (a port within reach, or the device
+  // itself within reach), the nearest; on it, the nearest free port, or the nearest port when all are used (refused).
+  function plugChoice(hx, hy) {
+    let dv = null, bd = 1e9;
+    for (const d of S.devs) {
+      if (d.kind === 'tablet' || carried(d) || !d.k3 || !d.k3.sockets.length) continue;
+      let pd = 1e9;
+      for (let k = 0; k < d.k3.sockets.length; k++) { const [px, py] = plugPin(d, k); pd = Math.min(pd, Math.hypot(hx - px, hy - py)); }
+      if ((pd < 0.6 || distToFoot(d, hx, hy) < 0.9) && pd < bd) { bd = pd; dv = d; }
+    }
+    if (!dv) return null;
+    let s = -1, sd = 1e9, any = -1, ad = 1e9;
+    for (let k = 0; k < dv.k3.sockets.length; k++) {
+      const [px, py] = plugPin(dv, k), dd = Math.hypot(hx - px, hy - py);
+      if (dd < ad) { ad = dd; any = k; }
+      if (!socketTaken(dv, k) && dd < sd) { sd = dd; s = k; }
+    }
+    return { d: dv, s: s >= 0 ? s : any, dd: s >= 0 ? sd : ad };
   }
   function distToFoot(d, px, py) { const dx = Math.max(d.X - 0.5 - px, 0, px - (d.X + d.w - 0.5)), dy = Math.max(d.Y - 0.5 - py, 0, py - (d.Y + d.h - 0.5)); return Math.hypot(dx, dy); }
-  function tryGrab(i, press) {
-    const h = hands[i]; if (!press && tickNo < h.noGrabUntil) return false;
+  // the nearest bit of cable to hand i; a plug counts as nearer (a plug in a port most of all), so reaching for the
+  // plug in a laptop's port takes the plug, not the laptop
+  function nearestJoint(i, press) {
     const [hx, hy] = handPos(i); let best = null;
     for (const c of cables3) for (let j = 0; j <= c.n; j++) {
       const e = j === 0 ? 0 : j === c.n ? 1 : -1;
       if (e >= 0 && !press && c.ends[e]) continue;
       if (hands.some(o => o.cable === c && o.joint === j)) continue;
-      let d = Math.hypot(hx - c.P[2 * j], hy - c.P[2 * j + 1]); if (e >= 0) d -= 0.2;
+      let d = Math.hypot(hx - c.P[2 * j], hy - c.P[2 * j + 1]); if (e >= 0) d -= c.ends[e] ? 0.4 : 0.4;
       if (d < 0.6 && (!best || d < best.d)) best = { c, j, d };
     }
-    if (!best) return false;
-    const e = best.j === 0 ? 0 : best.j === best.c.n ? 1 : -1;
-    if (e >= 0 && best.c.ends[e]) { toast('Unplugged from ' + dev(best.c.ends[e].dev).name + '.', 'good'); best.c.ends[e] = null; afterChange(); }
+    return best;
+  }
+  function grabJoint(i, best) {
+    const h = hands[i], e = best.j === 0 ? 0 : best.j === best.c.n ? 1 : -1;
+    if (e >= 0 && best.c.ends[e]) { toast('Ethernet cable unplugged from ' + dev(best.c.ends[e].dev).name + '.', 'good'); best.c.ends[e] = null; afterChange(); }
     h.cable = best.c; h.joint = best.j; h.since = tickNo;
     return true;
   }
+  function tryGrab(i, press) {
+    const h = hands[i]; if (!press && tickNo < h.noGrabUntil) return false;
+    const best = nearestJoint(i, press);
+    return best ? grabJoint(i, best) : false;
+  }
   function takeFrom(i, crate) {
     const h = hands[i];
+    const o = hands[1 - i];
+    if (crate.kind === 'cable' && o.cable && !o.cable.ends[0] && !o.cable.ends[1] && (o.joint === 0 || o.joint === o.cable.n) && tickNo - o.since < 20) {
+      h.cable = o.cable; h.joint = o.joint === 0 ? o.cable.n : 0; h.since = tickNo;
+      toast('You are holding both ends of one cable.', 'good'); return;
+    }
+    if (crate.kind !== 'cable' && o.dev) return;   // both hands on one device crate: still one device
     if (crate.kind === 'cable') {
       const [hx, hy] = handPos(i);
       const c = newCable([[hx, hy], [hx - Math.sin(pos.face) * 2, hy - Math.cos(pos.face) * 2]], CABLE_LEN);
       h.cable = c; h.joint = 0; h.since = tickNo;
-      toast('You took a cable. Keep holding to carry it.', 'good'); return;
+      toast('You took an Ethernet cable. Keep holding to carry it.', 'good'); return;
     }
     if ((S.palette[crate.kind] ?? 0) - count(crate.kind) <= 0) { toast('No ' + LABEL[crate.kind].toLowerCase() + 's left in this crate.', 'hint'); return; }
     const d = place(crate.kind, 320, 190); fromDesk(d);
@@ -574,7 +625,8 @@ export function startSolo({ container, myName, colour }) {
   function carryDevice(i) {
     const d = hands[i].dev; if (!d) return;
     if (d.kind === 'tablet') { const [hx, hy] = handPos(i); d.tx = hx; d.ty = hy; placeGroup(d); return; }
-    const fx = Math.sin(pos.face), fy = Math.cos(pos.face), reach = Math.max(d.w, d.h) / 2 + 0.7;
+    // held just in front of you: half its depth in the direction you face, plus a little
+    const fx = Math.sin(pos.face), fy = Math.cos(pos.face), reach = Math.abs(fx) * d.w / 2 + Math.abs(fy) * d.h / 2 + 0.7;
     d.X = Math.round(pos.x + fx * reach - (d.w - 1) / 2); d.Y = Math.round(pos.y + fy * reach - (d.h - 1) / 2);
     placeGroup(d);
   }
@@ -639,16 +691,12 @@ export function startSolo({ container, myName, colour }) {
       cables3 = cables3.filter(x => x !== c); toast('Cable put back in the crate.', 'good'); afterChange(); return;
     }
     if (end < 0) return;
-    // the nearest socket to the plug
-    let best = null;
-    for (const d of S.devs) for (let s = 0; s < d.k3.sockets.length; s++) {
-      const [px, py] = plugPin(d, s), dd = Math.hypot(hx - px, hy - py);
-      if (dd < 0.55 && (!best || dd < best.dd)) best = { d, s, dd };
-    }
+    // the port it goes into: the nearest free port of the device you let go next to
+    const best = plugChoice(hx, hy);
     if (!best) {
       const tab = S.devs.find(d => d.kind === 'tablet' && Math.hypot(d.tx - hx, d.ty - hy) < 1.0);
       if (tab) toast(tab.name + '\'s tablet has no network socket. It joins by Wi-Fi: put it inside a Wi-Fi point\'s green circle.', 'hint');
-      else { const near = S.devs.find(d => d.kind !== 'tablet' && distToFoot(d, hx, hy) < 1.0); if (near) toast('Push the plug right into a socket on ' + near.name + ': the dark hole with gold pins.', 'hint'); }
+      else { const near = S.devs.find(d => d.kind !== 'tablet' && distToFoot(d, hx, hy) < 1.0); if (near) toast('Push the plug right into a network socket on ' + near.name + ': the RJ45 port, a dark hole with gold pins.', 'hint'); }
       return;
     }
     const other = c.ends[1 - end];
@@ -657,15 +705,15 @@ export function startSolo({ container, myName, colour }) {
     if (socketTaken(best.d, best.s)) {
       // the website's refusal: a full device
       const freeOne = best.d.k3.sockets.some((_, k) => !socketTaken(best.d, k));
-      if (freeOne) { toast('That socket is taken. Try another socket on ' + best.d.name + '.', 'hint'); return; }
+      if (freeOne) { toast('That port is taken. Try another RJ45 port on ' + best.d.name + '.', 'hint'); return; }
       S.refused = true;
-      toast(best.d.kind === 'switch' ? best.d.name + ' has no free sockets.' : best.d.name + ' has only <b>one</b> network socket, and it is already used.', 'bad');
+      toast(best.d.kind === 'switch' ? best.d.name + ' has no free sockets (RJ45 ports).' : best.d.name + ' has only <b>one</b> network socket (RJ45 port), and it is already used.', 'bad');
       afterChange(); return;
     }
     c.ends[end] = { dev: best.d.id, sock: best.s };
     sync();
-    if (c.ends[0] && c.ends[1]) toast('Cable plugged in: ' + dev(c.ends[0].dev).name + ' to ' + dev(c.ends[1].dev).name + '.', 'good');
-    else toast('Plugged into ' + best.d.name + '. Now take the other plug to another device.', 'good');
+    if (c.ends[0] && c.ends[1]) toast('Ethernet cable connected: ' + dev(c.ends[0].dev).name + ' to ' + dev(c.ends[1].dev).name + '.', 'good');
+    else toast('Ethernet cable plugged into ' + best.d.name + '\'s RJ45 port. Now take the other plug to another device.', 'good');
     afterChange();
   }
 
@@ -726,10 +774,13 @@ export function startSolo({ container, myName, colour }) {
     wifiG = new THREE.Group(); scene.add(wifiG);
     for (const w of S.devs.filter(d => d.kind === 'wifi')) {
       const [cx, cy] = centre(w), R = RANGE / K * T, on = cablesOf(w.id).length > 0;
-      const ring = new THREE.Mesh(new THREE.RingGeometry(R - 8, R, 96).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: on ? 0x51cf66 : 0x9aa3ad, transparent: true, opacity: 0.8, depthWrite: false }));
-      const fill = new THREE.Mesh(new THREE.CircleGeometry(R, 64).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: on ? 0x51cf66 : 0x9aa3ad, transparent: true, opacity: 0.08, depthWrite: false }));
-      ring.position.set((cx + 0.5) * T, 3, (cy + 0.5) * T); fill.position.set((cx + 0.5) * T, 2, (cy + 0.5) * T);
-      ring.userData.own = fill.userData.own = true; wifiG.add(ring, fill);
+      // the range: a faint line where it ends, and white rings spreading out from the Wi-Fi point (grey when it has no cable)
+      const edge = new THREE.Mesh(new THREE.RingGeometry(R - 4, R, 96).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: on ? 0.3 : 0.15, depthWrite: false }));
+      edge.position.set((cx + 0.5) * T, 3, (cy + 0.5) * T); edge.userData.own = true; wifiG.add(edge);
+      for (let k = 0; k < 5; k++) {
+        const ring = new THREE.Mesh(new THREE.RingGeometry(0.97, 1, 72).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: on ? 0xffffff : 0x9aa3ad, transparent: true, opacity: 0.7, depthWrite: false }));
+        ring.position.set((cx + 0.5) * T, 4, (cy + 0.5) * T); ring.userData.own = true; ring.userData.wave = { k, R, on }; wifiG.add(ring);
+      }
       for (const t of S.devs.filter(d => d.kind === 'tablet' && inRange(d, w))) {
         const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3((t.tx + 0.5) * T, 120, (t.ty + 0.5) * T), new THREE.Vector3((cx + 0.5) * T, 170, (cy + 0.5) * T)]);
         const line = new THREE.Line(g, new THREE.LineDashedMaterial({ color: 0x2f9e44, dashSize: 18, gapSize: 12 })); line.computeLineDistances(); line.userData.own = true; wifiG.add(line);
@@ -738,13 +789,168 @@ export function startSolo({ container, myName, colour }) {
   }
   // the pulse on what a tutorial step points at
   function drawPulse() {
-    pulse.visible = false;
-    const show = M?.show;
-    let target = null;
-    if (show?.startsWith('crate-')) { const c = CRATES[show.slice(6)]; if (c) target = [c.x + 0.5, c.y + 0.5, 1.6]; }
-    else if (show === 'switch' || show === 'wifi') { const d = S.devs.find(x => x.kind === show); if (d) { const [cx, cy] = centre(d); target = [cx, cy, d.w / 2 + 0.6]; } }
-    else if (show === 'cable') { const c = cables3.find(c => c.ends[0] && c.ends[1] && dev(c.ends[0].dev).kind === 'laptop' && dev(c.ends[1].dev).kind === 'laptop'); if (c) { const m = c.n >> 1; target = [c.P[2 * m], c.P[2 * m + 1], 1.2]; } }
-    if (target) { pulse.visible = true; pulse.position.set((target[0] + 0.5) * T, 4, (target[1] + 0.5) * T); pulse.scale.setScalar(target[2]); }
+    const g = guideTarget();
+    pulse.visible = !!g;
+    if (g) { pulse.position.set((g.x + 0.5) * T, 4, (g.y + 0.5) * T); pulse.scale.setScalar(g.ring); }
+  }
+  // Where the current tutorial step wants you to go: a crate, a device, the old cable, or (with a plug in your hand)
+  // the socket it should go into. { x, y } in tiles, reach = how close counts as there, ring = the ring's size.
+  function guideTarget() {
+    const show = M && M.phase === 'build' ? M.show : null;
+    if (!show || show === 'test') return null;
+    if (hands.some(h => h.dev)) return null;   // carrying a device: put it down anywhere
+    const wantsCable = show === 'crate-cable' || show === 'switch' || show === 'wifi';
+    const held = hands.find(h => h.cable && (h.joint === 0 || h.joint === h.cable.n));
+    if (held) {
+      const c = held.cable, other = c.ends[held.joint === 0 ? 1 : 0], from = other && dev(other.dev);
+      const otherKind = from ? from.kind : null;
+      let kinds;
+      if (show === 'switch') kinds = otherKind === 'switch' ? ['laptop'] : ['switch'];
+      else if (show === 'wifi') kinds = otherKind === 'wifi' ? ['switch'] : otherKind === 'switch' ? ['wifi'] : ['wifi', 'switch'];
+      else kinds = ['laptop'];
+      const [hx, hy] = handPos(hands.indexOf(held));
+      let best = null;
+      for (const d of S.devs) {
+        if (d === from || kinds.indexOf(d.kind) < 0 || carried(d)) continue;
+        if (show === 'switch' && d.kind === 'laptop' && plugged(d, 'switch')) continue;
+        const socks = d.k3.sockets.map((_, i) => i), freeOnes = socks.filter(i => !socketTaken(d, i));
+        // the third-laptop step wants you to try a used socket, so a full laptop still counts there
+        for (const i of freeOnes.length ? freeOnes : (d.kind === 'laptop' ? socks : [])) {
+          const [px, py] = plugPin(d, i), dd = Math.hypot(px - hx, py - hy);
+          if (!best || dd < best.dd) best = { x: px, y: py, dd, sock: { d, i } };
+        }
+      }
+      return best && { x: best.x, y: best.y, reach: 0.9, ring: 0.45, sock: best.sock };
+    }
+    // empty hands at a cable step: a loose plug that belongs in this step first, then any spare cable, then the crate
+    if (wantsCable) {
+      let pick = null, pd = 1e9;
+      for (const c of cables3) for (const e of [0, 1]) {
+        if (c.ends[e]) continue;
+        const o = c.ends[1 - e], od = o && dev(o.dev);
+        let good;
+        if (show === 'switch') good = od && (od.kind === 'switch' ? laptops().some(l => !plugged(l, 'switch')) : od.kind === 'laptop' && !plugged(od, 'switch'));
+        else if (show === 'wifi') good = od && (od.kind === 'wifi' || od.kind === 'switch');
+        else good = !od || od.kind === 'laptop';
+        if (!good) continue;
+        const j = e ? c.n : 0, x = c.P[2 * j], y = c.P[2 * j + 1], dd = Math.hypot(x - pos.x, y - pos.y) - (od ? 100 : 0);
+        if (dd < pd) { pd = dd; pick = { x, y, reach: 0.9, ring: 0.45, plug: { c, j } }; }
+      }
+      if (pick) return pick;
+      if (show !== 'crate-cable' && laptops().every(l => plugged(l, 'switch')) && show === 'switch') return null;
+      if (show !== 'crate-cable') { const c = CRATES.cable; if (c) return { x: c.x + 0.5, y: c.y + 0.5, reach: 1.7, ring: 1.6, box: [c.x - 0.5, c.y - 0.5, c.x + c.w - 0.5, c.y + c.h - 0.5] }; }
+    }
+    if (show.startsWith('crate-')) { const c = CRATES[show.slice(6)]; return c ? { x: c.x + 0.5, y: c.y + 0.5, reach: 1.7, ring: 1.6, box: [c.x - 0.5, c.y - 0.5, c.x + c.w - 0.5, c.y + c.h - 0.5] } : null; }
+    if (show === 'switch' || show === 'wifi') { const d = S.devs.find(x => x.kind === show && !carried(x)); if (!d) return null; const [cx, cy] = centre(d); return { x: cx, y: cy, reach: Math.max(d.w, d.h) / 2 + 0.9, ring: d.w / 2 + 0.6, box: [d.X - 0.5, d.Y - 0.5, d.X + d.w - 0.5, d.Y + d.h - 0.5] }; }
+    if (show === 'cable') { const c = cables3.find(c => c.ends[0] && c.ends[1] && dev(c.ends[0].dev).kind === 'laptop' && dev(c.ends[1].dev).kind === 'laptop'); if (c) { const e = c.ends[0], [px, py] = plugPin(dev(e.dev), e.sock); return { x: px, y: py, reach: 0.9, ring: 0.6 }; } }
+    return null;
+  }
+  // ---- the guide: glowing yellow arrows on the floor tiles, from you to the target, round anything in the way
+  // A flat ribbon through the points (in tiles) with an arrow head at the end, as one shape. w = width in world units.
+  function arrowGeometry(pts, w, hl0) {
+    const P = pts.map(([x, y]) => [(x + 0.5) * T, (y + 0.5) * T]), n = P.length, half = w / 2, verts = [], idx = [];
+    const unit = (x, y) => { const l = Math.hypot(x, y) || 1; return [x / l, y / l]; };
+    for (let i = 0; i < n; i++) {
+      const a = P[Math.max(0, i - 1)], b = P[Math.min(n - 1, i + 1)], [tx, ty] = unit(b[0] - a[0], b[1] - a[1]);
+      let nx = -ty, ny = tx, k = 1;
+      if (i > 0 && i < n - 1) { const [sx, sy] = unit(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); k = Math.min(2, 1 / Math.max(0.3, nx * -sy + ny * sx)); }
+      verts.push(P[i][0] + nx * half * k, 3, P[i][1] + ny * half * k, P[i][0] - nx * half * k, 3, P[i][1] - ny * half * k);
+      if (i) { const o = (i - 1) * 2; idx.push(o, o + 1, o + 2, o + 1, o + 3, o + 2); }
+    }
+    // the head
+    const [ex, ey] = P[n - 1], [tx, ty] = unit(ex - P[n - 2][0], ey - P[n - 2][1]), hw = w * 1.35, hl = hl0 || w * 1.7, o = verts.length / 3;
+    verts.push(ex - ty * hw, 3, ey + tx * hw, ex + ty * hw, 3, ey - tx * hw, ex + tx * hl, 3, ey + ty * hl);
+    idx.push(o, o + 1, o + 2);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3)); g.setIndex(idx);
+    return g;
+  }
+  const arrowMat = new THREE.MeshBasicMaterial({ color: 0xffd43b, transparent: true, opacity: 0.9, depthWrite: false, side: THREE.DoubleSide });
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
+  const arrows = new THREE.Group(), arrowBody = new THREE.Mesh(new THREE.BufferGeometry(), arrowMat), arrowGlow = new THREE.Mesh(new THREE.BufferGeometry(), glowMat);
+  arrowBody.renderOrder = 3; arrowGlow.renderOrder = 2; arrowGlow.position.y = -0.5; arrows.add(arrowGlow, arrowBody);
+  arrows.count = 0;
+  let guideKey = '', guideAt = null, guideRoute = null, routeKey = '';
+  // The route along the floor grid with the fewest turns: steps cost 1, a turn costs 2 more, so it makes clean L shapes
+  // instead of staircases. Ends on the first tile close enough to the target. Returns tile centres, or null.
+  const DIRS = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+  function gridRoute(sx, sy, g) {
+    const N = MAPW * MAPH, cost = new Float64Array(N * 5).fill(Infinity), prev = new Int32Array(N * 5).fill(-1), buckets = [[]];
+    const st = (sy * MAPW + sx) * 5 + 4;
+    cost[st] = 0; buckets[0].push(st);
+    for (let c = 0; c < buckets.length; c++) {
+      const list = buckets[c]; if (!list) continue;
+      for (let li = 0; li < list.length; li++) {
+        const sid = list[li]; if (cost[sid] !== c) continue;
+        const cell = Math.floor(sid / 5), dir = sid % 5, x = cell % MAPW, y = Math.floor(cell / MAPW);
+        if (Math.hypot(x - g.x, y - g.y) <= g.reach) {
+          const out = []; let k = sid;
+          while (k !== -1) { const cc = Math.floor(k / 5); out.unshift([cc % MAPW, Math.floor(cc / MAPW)]); k = prev[k]; }
+          return out.filter((p, i) => i === 0 || p[0] !== out[i - 1][0] || p[1] !== out[i - 1][1]);
+        }
+        for (let d = 0; d < 4; d++) {
+          const nx = x + DIRS[d][0], ny = y + DIRS[d][1];
+          if (solidAt(nx, ny)) continue;
+          const nc = c + 1 + (dir !== 4 && dir !== d ? 2 : 0), nid = (ny * MAPW + nx) * 5 + d;
+          if (nc < cost[nid]) { cost[nid] = nc; prev[nid] = sid; (buckets[nc] || (buckets[nc] = [])).push(nid); }
+        }
+      }
+    }
+    return null;
+  }
+  function updateGuide(ts) {
+    arrowMat.opacity = 0.78 + 0.2 * Math.sin(ts / 220); glowMat.opacity = 0.22 + 0.18 * Math.sin(ts / 220);
+    const g = guideTarget();
+    if (!g || Math.hypot(g.x - pos.x, g.y - pos.y) < g.reach + 0.2) { arrows.visible = false; arrows.count = 0; guideKey = ''; return; }
+    const sx = Math.round(pos.x), sy = Math.round(pos.y);
+    const tk = g.x.toFixed(2) + ',' + g.y.toFixed(2) + ':' + S.devs.map(d => d.X + '.' + d.Y).join();
+    // the route changes only when you reach another tile or the target or floor changes; the arrow redraws as you move
+    if (tk + '@' + sx + ',' + sy !== routeKey) { routeKey = tk + '@' + sx + ',' + sy; guideRoute = gridRoute(sx, sy, g); }
+    if (tk === guideKey && guideAt && Math.hypot(pos.x - guideAt[0], pos.y - guideAt[1]) < 0.03) return;
+    guideKey = tk; guideAt = [pos.x, pos.y];
+    const tiles = guideRoute;
+    if (!tiles) { arrows.visible = false; return; }
+    // corners only: the tiles where the direction changes
+    const corners = [tiles[0]];
+    for (let i = 1; i < tiles.length - 1; i++) {
+      const p = tiles[i - 1], q = tiles[i], r = tiles[i + 1];
+      if ((q[0] - p[0]) !== (r[0] - q[0]) || (q[1] - p[1]) !== (r[1] - q[1])) corners.push(q);
+    }
+    if (tiles.length > 1) corners.push(tiles[tiles.length - 1]);
+    // start under you, on the grid line of your first leg, so the arrow slides along as you walk
+    let pts;
+    if (corners.length > 1) {
+      const [c0, c1] = corners;
+      pts = [c0[1] === c1[1] ? [pos.x, c0[1]] : [c0[0], pos.y]].concat(corners.slice(1));
+    } else pts = [[pos.x, pos.y]];
+    // the tip: the edge of the crate or device straight ahead of the last tile, or the port itself, reached by right angles
+    const last = pts[pts.length - 1];
+    let tip = [g.x, g.y];
+    if (g.box) { const [x0, y0, x1, y1] = g.box; tip = [Math.max(x0, Math.min(x1, last[0])), Math.max(y0, Math.min(y1, last[1]))]; }
+    if (Math.abs(tip[0] - last[0]) > 0.02 && Math.abs(tip[1] - last[1]) > 0.02) {
+      // one more right angle: along the current direction first, then turn to the tip
+      const prevPt = pts[pts.length - 2], horiz = prevPt ? Math.abs(prevPt[1] - last[1]) < 1e-6 : Math.abs(tip[0] - last[0]) > Math.abs(tip[1] - last[1]);
+      pts.push(horiz ? [tip[0], last[1]] : [last[0], tip[1]]);
+    }
+    pts.push(tip);
+    // trim: start just ahead of your feet, and stop a head's length short so the head's point lands on the tip
+    const trim = (list, len, fromEnd) => {
+      const p = fromEnd ? list.slice().reverse() : list.slice();
+      while (p.length > 1 && len > 0) {
+        const l = Math.hypot(p[1][0] - p[0][0], p[1][1] - p[0][1]);
+        if (l > len) { p[0] = [p[0][0] + (p[1][0] - p[0][0]) * len / l, p[0][1] + (p[1][1] - p[0][1]) * len / l]; len = 0; }
+        else { len -= l; p.shift(); }
+      }
+      return fromEnd ? p.reverse() : p;
+    };
+    let line = trim(pts, 0.45, false);
+    line = trim(line, 34 * 1.7 / T, true);
+    const clean = [line[0]];
+    for (const p of line) { const c = clean[clean.length - 1]; if (Math.hypot(p[0] - c[0], p[1] - c[1]) > 0.04) clean.push(p); }
+    if (clean.length < 2) { arrows.visible = false; return; }
+    arrowBody.geometry.dispose(); arrowGlow.geometry.dispose();
+    arrowBody.geometry = arrowGeometry(clean, 34); arrowGlow.geometry = arrowGeometry(clean, 64, 34 * 1.7 + 14);
+    arrows.visible = true; arrows.count = clean.length;
   }
   const pulse = new THREE.Mesh(new THREE.RingGeometry(88, 100, 64).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xf2c21b, transparent: true, opacity: 0.9, depthWrite: false }));
 
@@ -800,6 +1006,7 @@ export function startSolo({ container, myName, colour }) {
     if (anim.d >= anim.total) {
       scene.remove(ball); const { a, b } = anim; anim = null; litCables.clear();
       S.lastTest = { a: a.id, b: b.id, ok: true };
+      arrived(a, b);
       toast((b.kind === 'printer' ? 'Printed! ' : 'Message arrived! ') + why(a, b), 'good');
       drawCables(); afterChange(); return;
     }
@@ -817,10 +1024,223 @@ export function startSolo({ container, myName, colour }) {
       scene.add(ball); ball.position.copy(hop.air.getPointAt(f));
     }
   }
-  let testFrom = null, testTo = null;
+  let testFrom = null, testTo = null, compose = null, fx = null;
+  const pages = [];   // printed pages lying in a printer's tray: { until, done() }
+
+  // ---- each screen has a queue: what is showing stays up for its time, then the next thing shows. A message being
+  // sent owns the sender's screen (and, when it arrives, the receiver's) and waits until that screen is free.
+  const queues = new Map();   // screen -> { cur: { until } | null, q: [{ st, secs }], shown }
+  let clock = 0;
+  const nowS = () => clock;
+  function Q(scr) { let q = queues.get(scr); if (!q) queues.set(scr, q = { cur: null, q: [], shown: false }); return q; }
+  function busy(scr) { const q = scr && queues.get(scr); return !!(q && q.cur && nowS() < q.cur.until); }
+  function enqueue(scr, items) {
+    const q = Q(scr);
+    for (const [st, secs] of items) {
+      const last = q.q[q.q.length - 1];
+      if (last && last.st.top === st.top && last.st.text === st.text) continue;
+      q.q.push({ st, secs });
+    }
+    while (q.q.length > 6) q.q.shift();   // a long backlog drops its oldest news
+  }
+  function hold(scr, st, secs) { if (!scr) return; const q = Q(scr); scr.show(st); q.cur = { until: nowS() + secs }; q.shown = true; }
+  function owned(scr) { return fx && ((fx.a.k3.screen === scr && fx.stage !== 'wait') || (fx.b.k3.screen === scr && fx.stage === 'arrive' && fx.bOn)); }
+  function runQueues() {
+    const now = nowS();
+    for (const [scr, q] of queues) {
+      if (owned(scr)) continue;
+      if (q.cur && now < q.cur.until) continue;
+      q.cur = null;
+      if (q.q.length) {
+        const it = q.q.shift(), secs = q.q.length >= 2 ? Math.min(it.secs, 1.2) : it.secs;   // catch up when there is a backlog
+        scr.show(it.st); q.cur = { until: now + secs }; q.shown = true;
+      } else if (q.shown) { q.shown = false; scr.show(null); }
+    }
+    for (let i = pages.length - 1; i >= 0; i--) if (now > pages[i].until) { pages[i].done(); pages.splice(i, 1); }
+  }
+
+  // Send or Print asks for a short message first, then plays it on the screens
+  function startMessage(a, b, text) {
+    fx = { a, b, text, t: 0, stage: 'wait' };
+    drawTest();
+  }
+  const ease = (t0, t1, t) => Math.max(0, Math.min(1, (t - t0) / (t1 - t0)));
+  function stepFx(dt) {
+    if (!fx) return;
+    const A = fx.a.k3.screen, B = fx.b.k3.screen, toName = fx.b.kind === 'printer' ? 'Printer' : fx.b.name;
+    if (fx.stage === 'wait') { if (busy(A)) return; fx.stage = 'type'; fx.t = 0; }
+    if (fx.stage === 'arrive' && !fx.bOn) { if (busy(B)) return; fx.bOn = true; fx.t = 0; }
+    fx.t += dt;
+    const t = fx.t;
+    if (fx.stage === 'type') {
+      if (A) {
+        if (t < 1) A.show({ top: 'To ' + toName, text: fx.text.slice(0, Math.ceil(fx.text.length * t)), caret: true });
+        else A.show({ top: 'To ' + toName, text: fx.text, textAlpha: 1 - ease(1, 1.3, t), env: t < 1.6 ? ease(1.3, 1.6, t) : 1 - ease(1.6, 1.9, t) });
+      }
+      if (t >= 1.9) {
+        if (!route(fx.a, fx.b)) {
+          const { a, b } = fx; fx = null;
+          hold(A, { top: 'Not sent', text: b.kind === 'printer' ? 'No printer' : 'Not sent', mark: 'cross', sub: 'No connection to ' + toName }, 3);
+          send(a, b); drawTest(); return;
+        }
+        fx.stage = 'travel'; if (A) A.show({ top: 'Sending...', env: 0.35, sub: 'Data on its way' });
+        send(fx.a, fx.b);
+      }
+    } else if (fx.stage === 'arrive') {
+      if (B) {
+        if (t < 1) B.show({ top: 'New message', env: t < 0.4 ? ease(0, 0.4, t) : 1 - ease(0.7, 1, t) });
+        else B.show({ top: 'From ' + fx.a.name, text: fx.text, textAlpha: ease(1, 1.4, t) });
+      }
+      if (fx.page) { const k = ease(0, 0.8, t); fx.page.position.z = fx.page.userData.z0 + 55 * k; fx.page.material.opacity = Math.min(1, k * 2); }
+      if (t >= 1.4) {
+        if (B) hold(B, { top: 'From ' + fx.a.name, text: fx.text }, 4);
+        if (fx.page) { const pg = fx.page, dv = fx.b; pages.push({ until: nowS() + 6, done() { dv.k3.group.remove(pg); pg.geometry.dispose(); pg.material.map.dispose(); pg.material.dispose(); } }); }
+        fx = null; drawTest();
+      }
+    }
+  }
+  // What each laptop and tablet knows about its connection, shown on its taskbar; a change joins its screen's queue.
+  function netState(d) {
+    if (d.kind === 'tablet') {
+      const w = aps(d);
+      if (!w.length) return { key: 'none', text: 'Wi-Fi: no signal', ok: false };
+      const on = w.find(x => cablesOf(x.id).length);
+      return on ? { key: 'wifi:' + on.id, text: 'Wi-Fi: connected to ' + on.name, ok: true, to: on.name } : { key: 'nonet', text: 'Wi-Fi: signal, but no network', ok: false };
+    }
+    const full = S.cables.find(c => c.a === d.id || c.b === d.id);
+    if (full) { const o = dev(full.a === d.id ? full.b : full.a); return { key: 'eth:' + o.id, text: 'Ethernet: connected to ' + o.name, ok: true, to: o.name }; }
+    const loose = cables3.some(c => (c.ends[0] && c.ends[0].dev === d.id && !c.ends[1]) || (c.ends[1] && c.ends[1].dev === d.id && !c.ends[0]));
+    return loose ? { key: 'loose', text: 'Ethernet: cable in, other end loose', ok: false } : { key: 'off', text: 'Ethernet: not connected', ok: false };
+  }
+  function updateScreens(quiet) {
+    for (const d of S.devs) {
+      const scr = d.k3 && d.k3.screen; if (!scr) continue;
+      if (carried(d) && d.kind === 'tablet') { /* a tablet in your hand still updates */ }
+      const n = netState(d);
+      if (n.key === d.netKey) continue;
+      const was = d.netKey; d.netKey = n.key; scr.setStatus(n.text, n.ok);
+      if (quiet || was == null) continue;
+      if (d.kind === 'tablet') {
+        if (n.ok) enqueue(scr, [[{ top: 'Wi-Fi', text: 'Connected', mark: 'tick', sub: 'Joined by Wi-Fi: no cable' }, 1.2], [{ top: 'Wi-Fi', text: 'To ' + n.to, mark: 'tick', sub: 'Inside its range' }, 2]]);
+        else if (n.key === 'none') enqueue(scr, [[{ top: 'Wi-Fi', text: 'No signal', mark: 'cross', sub: 'Out of Wi-Fi range' }, 2.2]]);
+        else enqueue(scr, [[{ top: 'Wi-Fi', text: 'No network', mark: 'cross', sub: 'The Wi-Fi point has no cable' }, 2.2]]);
+      } else if (n.ok) enqueue(scr, [[{ top: 'Ethernet', text: 'Connected', mark: 'tick', sub: 'Both ends plugged in' }, 1.2], [{ top: 'Ethernet', text: 'To ' + n.to, mark: 'tick', sub: 'Connected to ' + n.to }, 2]]);
+      else if (n.key === 'loose') enqueue(scr, [[{ top: 'Ethernet', text: 'Cable in', sub: 'In the RJ45 port. Other end?' }, 2.2]]);
+      else enqueue(scr, [[{ top: 'Ethernet', text: 'Unplugged', mark: 'cross', sub: 'No Ethernet cable' }, 2.2]]);
+    }
+    runQueues();
+  }
+  // ---- an outline round whatever an empty hand would grab, so you know before you press
+  const outlineG = new THREE.Group();
+  const outMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, depthWrite: false });
+  const outLine = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 });
+  let plugGlowMat = null;
+  let outlineKey = '';
+  const HEIGHT = { laptop: 250, printer: 175, 'switch': 100, wifi: 230 };
+  function frameAround(cx, cz, w, d, h) {
+    // a thick frame on the floor and the edges of a box round the thing
+    const g = new THREE.Group(), th = 10;
+    for (const [x, z, sx, sz] of [[0, -d / 2, w + th, th], [0, d / 2, w + th, th], [-w / 2, 0, th, d], [w / 2, 0, th, d]]) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(sx, 3, sz), outMat); m.position.set(x, 3, z); m.userData.own = true; g.add(m);
+    }
+    const box = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, d)), outLine); box.position.y = h / 2; box.userData.own = true; g.add(box);
+    g.position.set(cx, 0, cz);
+    return g;
+  }
+  function updateOutline(ts) {
+    const targets = [0, 1].map(grabTarget).filter(Boolean);
+    const key = targets.map(t => t.kind + ':' + (t.d ? t.d.id + '@' + (t.d.kind === 'tablet' ? t.d.tx.toFixed(1) + ',' + t.d.ty.toFixed(1) : t.d.X + ',' + t.d.Y) : t.crate ? t.crate.kind : t.c.id + '.' + t.j + '@' + t.c.P[2 * t.j].toFixed(1) + ',' + t.c.P[2 * t.j + 1].toFixed(1))).join('|');
+    outMat.opacity = outLine.opacity = 0.6 + 0.35 * Math.sin(ts / 170);
+    if (key === outlineKey) return;
+    outlineKey = key;
+    for (const o of outlineG.children.slice()) { outlineG.remove(o); o.traverse(x => { if (x.userData.own) x.geometry.dispose(); }); }
+    const seen = new Set();
+    for (const t of targets) {
+      const k = t.d ? 'd' + t.d.id : t.crate ? 'k' + t.crate.kind : 'c' + t.c.id + '.' + t.j;
+      if (seen.has(k)) continue; seen.add(k);
+      if (t.kind === 'device') outlineG.add(frameAround(t.d.X * T + t.d.w * T / 2, t.d.Y * T + t.d.h * T / 2, t.d.w * T - 6, t.d.h * T - 6, HEIGHT[t.d.kind] || 150));
+      else if (t.kind === 'tablet') outlineG.add(frameAround((t.d.tx + 0.5) * T, (t.d.ty + 0.5) * T, 126, 96, 24));
+      else if (t.kind === 'crate') outlineG.add(frameAround((t.crate.x + t.crate.w / 2) * T, (t.crate.y + t.crate.h / 2) * T, t.crate.w * T - 4, t.crate.h * T - 4, 120));
+      else {
+        // a cable: a white glow on the plug or the bit of cable you would take
+        const e = t.j === 0 ? 0 : t.j === t.c.n ? 1 : -1, pts = cablePoints(t.c), p = pts[t.j];
+        plugGlowMat = plugGlowMat || new THREE.SpriteMaterial({ map: glowTex, color: 0xffffff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+        const sp = new THREE.Sprite(plugGlowMat); sp.position.copy(p); sp.scale.setScalar(e >= 0 ? 110 : 80); sp.renderOrder = 5;
+        outlineG.add(sp);
+      }
+    }
+  }
+  // ---- while you carry a cable plug, the free ports it could go into glow
+  const glowTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+    const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,236,140,1)'); gr.addColorStop(0.45, 'rgba(255,212,59,.75)'); gr.addColorStop(1, 'rgba(255,212,59,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
+  const glowMatP = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+  const portGlow = new THREE.Group(), glowPool = [];
+  const markMat = new THREE.SpriteMaterial({ map: null, color: 0xffffff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+  const mark = new THREE.Sprite(markMat); mark.renderOrder = 6; mark.visible = false; portGlow.add(mark);
+  function updatePortGlow(ts) {
+    markMat.map = markMat.map || glowTex;
+    // where a plug in your hand would go if you let go now; otherwise the plug or port the tutorial step points at
+    mark.visible = false;
+    const heldI = hands.findIndex(h => h.cable && (h.joint === 0 || h.joint === h.cable.n));
+    let at = null;
+    if (heldI >= 0) {
+      const ch = plugChoice(...handPos(heldI));
+      if (ch && !socketTaken(ch.d, ch.s)) at = socketWorld(ch.d, ch.s).pos;
+    }
+    if (!at) {
+      const g = guideTarget();
+      if (g && g.sock) at = socketWorld(g.sock.d, g.sock.i).pos;
+      else if (g && g.plug) at = cablePoints(g.plug.c)[g.plug.j];
+    }
+    if (at) { mark.visible = true; mark.position.copy(at); const k = 120 + 40 * Math.sin(ts / 140); mark.scale.set(k, k, 1); }
+    const held = hands.find(h => h.cable && (h.joint === 0 || h.joint === h.cable.n));
+    let n = 0;
+    if (held) {
+      const c = held.cable, other = c.ends[held.joint === 0 ? 1 : 0];
+      for (const d of S.devs) {
+        if (carried(d) || !d.k3 || (other && other.dev === d.id)) continue;
+        for (let i = 0; i < d.k3.sockets.length; i++) {
+          if (socketTaken(d, i)) continue;
+          let sp = glowPool[n];
+          if (!sp) { sp = new THREE.Sprite(glowMatP); sp.renderOrder = 4; glowPool.push(sp); portGlow.add(sp); }
+          const w = socketWorld(d, i); sp.position.copy(w.pos).addScaledVector(w.dir, -6); sp.visible = true; n++;
+        }
+      }
+    }
+    for (let i = n; i < glowPool.length; i++) glowPool[i].visible = false;
+    const k = 70 + 18 * Math.sin(ts / 160);
+    for (let i = 0; i < n; i++) glowPool[i].scale.set(k, k, 1);
+  }
+  function arrived(a, b) {
+    if (!fx || fx.a !== a || fx.b !== b) return;
+    if (a.k3.screen) hold(a.k3.screen, { top: 'To ' + (b.kind === 'printer' ? 'Printer' : b.name), text: fx.text, mark: 'tick', sub: b.kind === 'printer' ? 'Printed' : 'Delivered' }, 4);
+    fx.stage = 'arrive'; fx.t = 0; fx.bOn = false;
+    if (b.kind === 'printer') {
+      // a page slides out of the printer's tray with the message on it
+      const pg = new THREE.Mesh(new THREE.PlaneGeometry(120, 84).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: pageTexture(fx.text, a.name), transparent: true, opacity: 0, side: THREE.DoubleSide }));
+      pg.position.set(0, 112, b.h * T / 2 - 60); pg.userData.z0 = pg.position.z; b.k3.group.add(pg); fx.page = pg;
+    }
+  }
   function drawTest() {
     const t = $('testBar'); t.innerHTML = ''; t.hidden = false;
     t.classList.toggle('pulse', M.show === 'test');
+    if (compose && (!S.devs.includes(compose.a) || !S.devs.includes(compose.b) || M.phase === 'predict')) compose = null;
+    if (compose) {
+      const { a, b } = compose, verb = b.kind === 'printer' ? 'Print' : 'Send';
+      const box = el('input', { id: 'nbMsg', type: 'text', maxlength: '10', autocomplete: 'off', spellcheck: 'false', placeholder: '5 to 10 letters', 'aria-label': 'Message' });
+      const submit = () => {
+        const v = box.value.trim();
+        if (v.length < 5 || v.length > 10) { toast('Type a message of 5 to 10 letters.', 'hint'); box.focus(); return; }
+        compose = null; box.blur(); startMessage(a, b, v);
+      };
+      box.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } else if (e.key === 'Escape') { compose = null; drawTest(); } });
+      t.append(el('b', {}, a.name + ' to ' + (b.kind === 'printer' ? 'the Printer' : b.name)), box, btn(verb, 'go', submit), btn('Cancel', '', () => { compose = null; drawTest(); }));
+      setTimeout(() => box.focus(), 0);
+      return;
+    }
     const list = ends();
     if (list.length < 2) { t.appendChild(el('span', { class: 'small' }, 'Test: put two devices down, then send a message between them.')); return; }
     const from = el('select', { id: 'nbFrom', 'aria-label': 'From' }), to = el('select', { id: 'nbTo', 'aria-label': 'To' });
@@ -828,12 +1248,17 @@ export function startSolo({ container, myName, colour }) {
     if (testFrom && list.some(d => String(d.id) === testFrom && isClient(d))) from.value = testFrom;
     if (testTo && list.some(d => String(d.id) === testTo)) to.value = testTo;
     else if (to.options.length > 1 && to.value === from.value) to.selectedIndex = 1;
-    const go = btn('', 'go', () => send(dev(Number(from.value)), dev(Number(to.value))));
+    const go = btn('', 'go', () => {
+      const a = dev(Number(from.value)), b = dev(Number(to.value));
+      if (!a || !b || anim || fx) return;
+      if (a === b) { toast('Choose two different devices.', 'hint'); return; }
+      compose = { a, b }; drawTest();
+    });
     const label = () => { const b = dev(Number(to.value)); go.textContent = b && b.kind === 'printer' ? 'Print' : 'Send'; };
     from.addEventListener('change', () => { testFrom = from.value; from.blur(); });
     to.addEventListener('change', () => { testTo = to.value; label(); to.blur(); });
     label();
-    go.disabled = !!anim || M.phase === 'predict';
+    go.disabled = !!anim || !!fx || M.phase === 'predict';
     t.append(el('b', {}, 'Test'), el('span', {}, 'From'), from, el('span', {}, 'to'), to, go);
   }
 
@@ -847,7 +1272,7 @@ export function startSolo({ container, myName, colour }) {
     const m = MISSIONS[i];
     M = { m, step: 0, phase: m.type === 'fix' ? 'predict' : 'build', picks: {}, show: null, walked: false, latched: [] };
     for (const h of hands) { h.cable = null; h.joint = -1; h.dev = null; }
-    anim = null; litCables.clear(); cables3 = [];
+    anim = null; fx = null; compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
     m.setup();
     buildWorld();
     for (const d of S.devs) realise(d);
@@ -861,6 +1286,7 @@ export function startSolo({ container, myName, colour }) {
       const c = newCable([pa, pb], len); c.ends = [{ dev: a.id, sock: sa }, { dev: b.id, sock: sb }];
     }
     sync();
+    updateScreens(true);
     if (S.startCables != null) S.startCables = S.cables.length;
     pos.x = 16; pos.y = DESK_BOTTOM + 1.2; pos.face = Math.PI;
     toast('');
@@ -899,7 +1325,7 @@ export function startSolo({ container, myName, colour }) {
   }
   function checkMission() {
     if (hands.some(h => h.dev)) { toast('Put down what you are carrying first.', 'hint'); return; }
-    if (anim) return;
+    if (anim || fx) return;
     const probs = M.m.check();
     M.phase = 'checked'; M.probs = probs;
     log.add(M.m.title + ': ' + (probs.length ? probs.length + ' problem' + (probs.length > 1 ? 's' : '') : 'everything works'), !probs.length);
@@ -1041,7 +1467,7 @@ export function startSolo({ container, myName, colour }) {
     const held = hands.map(h => h.dev ? 'dev' : h.cable ? (h.joint === 0 || h.joint === h.cable.n ? 'plug' : 'cable') : null).filter(Boolean);
     let h = '';
     if (held.includes('dev')) h = 'Walk to where it should go, then let go. Let go at its crate to put it back.';
-    else if (held.includes('plug')) h = 'Push the plug into a socket, then let go. A laptop\'s socket is on its right-hand side.';
+    else if (held.includes('plug')) h = 'Push the Ethernet plug into an RJ45 port, then let go. A laptop\'s port is on its right-hand side.';
     else if (held.length) h = 'Keep holding to carry. Let go to drop it.';
     else h = 'Hold a mouse button to grab: left button = left hand, right button = right hand. Grab a device to carry it.';
     $('hint').textContent = h;
@@ -1055,6 +1481,7 @@ export function startSolo({ container, myName, colour }) {
     tick(ts);
   }
   function tick(ts) {
+    clock = ts / 1000;
     const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0.016; last = ts;
     if (!view) return;
     let dx = 0, dy = 0;
@@ -1078,7 +1505,18 @@ export function startSolo({ container, myName, colour }) {
       if (M && M.phase === 'build') for (let i = 0; i < 2; i++) if (hands[i].down && !hands[i].cable && !hands[i].dev) tryGrab(i, false); }
     if (stepped) { drawCables(); hint(); }
     stepAnim(dt);
+    stepFx(dt);
+    updateScreens(false);
+    updatePortGlow(ts);
+    updateOutline(ts);
+    if (wifiG) for (const r of wifiG.children) {
+      const w = r.userData.wave; if (!w) continue;
+      const p = ((ts / 1000) * (w.on ? 0.32 : 0.16) + w.k / 5) % 1;   // five rings, evenly spaced, always spreading out
+      r.scale.setScalar(Math.max(1, p * w.R));
+      r.material.opacity = (w.on ? 0.75 : 0.4) * Math.min(1, p * 6) * (1 - p * p);
+    }
     pulse.material.opacity = 0.5 + 0.4 * Math.sin(ts / 180);
+    updateGuide(ts); if (guideKey) drawPulse();
     me.update(dt, { x: pos.x, y: pos.y, face: pos.face, moving, hands: hands.map(h => ({ down: h.down, hold: h.cable ? 'cable' : h.dev ? 'dev' : null })) }, true);
     view.follow(pos.x, pos.y);
     view.render(dt);
@@ -1121,6 +1559,6 @@ export function startSolo({ container, myName, colour }) {
   start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim; }, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx; }, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }

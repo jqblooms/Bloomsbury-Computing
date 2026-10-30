@@ -63,14 +63,89 @@ function keysTexture() {
   for (let r = 0; r < 4; r++) for (let k = 0; k < 14; k++) g.fillRect(6 + k * 17.6 + (r % 2) * 4, 6 + r * 22, 14, 17);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
-// A screen showing the owner's name: a desktop with their name in the corner.
-function screenTexture(name) {
-  const c = document.createElement('canvas'); c.width = 256; c.height = 170; const g = c.getContext('2d');
-  const grad = g.createLinearGradient(0, 0, 0, 170); grad.addColorStop(0, '#5b8fd1'); grad.addColorStop(1, '#2d5a94');
-  g.fillStyle = grad; g.fillRect(0, 0, 256, 170);
-  g.fillStyle = '#ffffffcc'; for (let i = 0; i < 4; i++) g.fillRect(14, 14 + i * 30, 22, 20);
-  g.fillStyle = '#1c1b17'; g.fillRect(0, 150, 256, 20);
-  g.font = '700 26px Consolas, monospace'; g.fillStyle = '#fff'; g.textAlign = 'right'; g.fillText(name, 240, 40);
+// A screen you can draw on. At rest it shows a desktop with the owner's name; show() draws a message on it:
+//   screen.show({ top, text, textAlpha, env, mark })   top = a line at the top ("To Kim", "From Hana"), text = the
+//   message, env = how much of an envelope to show (0 to 1), mark = 'tick' or 'cross'. screen.show(null) = desktop.
+function makeScreen(name, w = 256, h = 170) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const font = (px, weight = 700) => weight + ' ' + px + 'px "Segoe UI", Arial, sans-serif';
+  function desktop() {
+    const grad = g.createLinearGradient(0, 0, 0, h); grad.addColorStop(0, '#5b8fd1'); grad.addColorStop(1, '#2d5a94');
+    g.fillStyle = grad; g.fillRect(0, 0, w, h);
+  }
+  function envelope(alpha) {
+    if (alpha <= 0) return;
+    const ew = w * 0.42, eh = ew * 0.66, x = (w - ew) / 2, y = (h - eh) / 2 + 8;
+    g.save(); g.globalAlpha = alpha;
+    g.fillStyle = '#fff8e1'; g.strokeStyle = '#8a6d1c'; g.lineWidth = 4;
+    g.beginPath(); g.rect(x, y, ew, eh); g.fill(); g.stroke();
+    g.beginPath(); g.moveTo(x, y); g.lineTo(x + ew / 2, y + eh * 0.58); g.lineTo(x + ew, y); g.stroke();
+    g.restore();
+  }
+  function mark(kind, x, y, r) {
+    g.save(); g.lineWidth = r * 0.32; g.lineCap = 'round'; g.lineJoin = 'round';
+    g.fillStyle = kind === 'tick' ? '#2f9e44' : '#c92a2a'; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = '#fff'; g.beginPath();
+    if (kind === 'tick') { g.moveTo(x - r * 0.45, y + r * 0.02); g.lineTo(x - r * 0.1, y + r * 0.38); g.lineTo(x + r * 0.5, y - r * 0.35); }
+    else { g.moveTo(x - r * 0.4, y - r * 0.4); g.lineTo(x + r * 0.4, y + r * 0.4); g.moveTo(x + r * 0.4, y - r * 0.4); g.lineTo(x - r * 0.4, y + r * 0.4); }
+    g.stroke(); g.restore();
+  }
+  let status = null;   // { text, ok }: the taskbar's network line
+  let last = null;
+  const screen = {
+    tex,
+    get state() { return last; },
+    get status() { return status; },
+    setStatus(text, ok) { status = { text, ok }; if (!last) screen.show(null); },
+    show(st) {
+      last = st;
+      desktop();
+      if (!st) {
+        g.fillStyle = '#ffffffcc'; for (let i = 0; i < 4; i++) g.fillRect(w * 0.055, h * 0.08 + i * h * 0.18, w * 0.086, h * 0.12);
+        g.fillStyle = '#1c1b17'; g.fillRect(0, h * 0.84, w, h * 0.16);
+        g.font = font(Math.round(h * 0.15)); g.fillStyle = '#fff'; g.textAlign = 'right'; g.textBaseline = 'alphabetic'; g.fillText(name, w * 0.94, h * 0.24);
+        if (status) {
+          g.fillStyle = status.ok ? '#51cf66' : '#ff8787'; g.beginPath(); g.arc(w * 0.05, h * 0.92, h * 0.035, 0, Math.PI * 2); g.fill();
+          g.fillStyle = '#fff'; g.textAlign = 'left'; g.textBaseline = 'middle'; let px = Math.round(h * 0.085); g.font = font(px, 600);
+          while (g.measureText(status.text).width > w * 0.86 && px > 8) { px--; g.font = font(px, 600); }
+          g.fillText(status.text, w * 0.09, h * 0.925);
+        }
+      } else {
+        // a message window
+        g.fillStyle = '#ffffff'; g.fillRect(w * 0.06, h * 0.1, w * 0.88, h * 0.8);
+        g.fillStyle = '#e7edf5'; g.fillRect(w * 0.06, h * 0.1, w * 0.88, h * 0.22);
+        g.fillStyle = '#1c2533'; g.font = font(Math.round(h * 0.13)); g.textAlign = 'left'; g.textBaseline = 'middle';
+        if (st.top) g.fillText(st.top, w * 0.1, h * 0.21);
+        if (st.mark) mark(st.mark, w * 0.86, h * 0.21, h * 0.075);
+        if (st.text != null && (st.textAlpha ?? 1) > 0) {
+          g.save(); g.globalAlpha = st.textAlpha ?? 1; g.fillStyle = '#111'; g.font = font(Math.round(h * 0.17), 600);
+          let size = Math.round(h * 0.17);
+          while (g.measureText(st.text + (st.caret ? '|' : '')).width > w * 0.78 && size > 10) { size--; g.font = font(size, 600); }
+          g.fillText(st.text + (st.caret ? '|' : ''), w * 0.1, st.sub ? h * 0.52 : h * 0.58); g.restore();
+        }
+        if (st.sub) {
+          g.fillStyle = '#4a5568'; let px = Math.round(h * 0.095); g.font = font(px, 600);
+          while (g.measureText(st.sub).width > w * 0.8 && px > 8) { px--; g.font = font(px, 600); }
+          g.fillText(st.sub, w * 0.1, h * 0.75);
+        }
+        envelope(st.env || 0);
+      }
+      tex.needsUpdate = true;
+    }
+  };
+  screen.show(null);
+  return screen;
+}
+// A printed page: the message in the middle of a white sheet.
+export function pageTexture(text, from) {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 180; const g = c.getContext('2d');
+  g.fillStyle = '#ffffff'; g.fillRect(0, 0, 256, 180);
+  g.fillStyle = '#5c6470'; g.font = '600 20px "Segoe UI", Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText('From ' + from, 128, 34);
+  g.fillStyle = '#111'; let size = 40; g.font = '700 ' + size + 'px "Segoe UI", Arial, sans-serif';
+  while (g.measureText(text).width > 230 && size > 12) { size--; g.font = '700 ' + size + 'px "Segoe UI", Arial, sans-serif'; }
+  g.fillText(text, 128, 100);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
@@ -86,9 +161,11 @@ const BUILD = {
     const lid = new THREE.Group(); lid.position.set(0, 62, -(D - 50) / 2 + 6); lid.rotation.x = -0.28;
     lid.add(at(rbox(W - 50, 12, 170, 0xb7bcc3, 12, { metalness: 0.4, roughness: 0.35 }), 0, 0, 0));
     lid.children[0].rotation.x = Math.PI / 2; lid.children[0].position.set(0, 85, -6);
-    const screen = new THREE.Mesh(new THREE.PlaneGeometry(W - 76, 150), new THREE.MeshStandardMaterial({ map: screenTexture(d.title), emissive: 0xffffff, emissiveMap: screenTexture(d.title), emissiveIntensity: 0.55 }));
+    const scr = makeScreen(d.title);
+    const screen = new THREE.Mesh(new THREE.PlaneGeometry(W - 76, 150), new THREE.MeshStandardMaterial({ map: scr.tex, emissive: 0xffffff, emissiveMap: scr.tex, emissiveIntensity: 0.6 }));
     lid.add(at(screen, 0, 85, 13));
     g.add(lid);
+    g.userData.screen = scr;
   },
   printer(g, d, W, D) {
     g.add(rbox(W - 20, 40, D - 20, 0x8a7356, 6));
@@ -120,10 +197,11 @@ export function makeDevice(d) {
   if (d.kind === 'tablet') {
     const body = new THREE.Group();
     body.add(rbox(110, 10, 80, 0x212529, 10));
-    const scr = new THREE.Mesh(new THREE.PlaneGeometry(94, 64).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x1b2a3a, emissive: 0x000000 }));
+    const screen = makeScreen(d.title, 240, 164);
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(94, 64).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ map: screen.tex, emissive: 0xffffff, emissiveMap: screen.tex, emissiveIntensity: 0.6 }));
     body.add(at(scr, 0, 10.5, 0)); g.add(body);
     const tag = tape(d.title, { size: 0.03 }); tag.position.set(0, 90, 0); g.add(tag);
-    return { group: g, lights: [], sockets: [], body, scr };
+    return { group: g, lights: [], sockets: [], body, scr, screen };
   }
   (BUILD[d.kind] || BUILD.laptop)(g, d, W, D);
   const lights = [], sockets = [];
@@ -143,7 +221,7 @@ export function makeDevice(d) {
   });
   const tagY = { laptop: 290, printer: 220, switch: 140, wifi: 260 }[d.kind] ?? 200;
   const tag = tape(d.title, { size: 0.034 }); tag.position.set(0, tagY, 0); g.add(tag);
-  return { group: g, lights, sockets };
+  return { group: g, lights, sockets, screen: g.userData.screen || null };
 }
 
 /** Lights a socket: green with a plug in it. */

@@ -72,6 +72,9 @@ export function create(container) {
       floor.setColorAt(i, col);
     });
     roomG.add(floor);
+    // grout under the tiles, so the gaps between them never show the dark background
+    const grout = new THREE.Mesh(new THREE.PlaneGeometry(W * T, H * T).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x4a515c }));
+    grout.position.set(W * T / 2, -10, H * T / 2); roomG.add(grout);
     const wall = new THREE.InstancedMesh(new THREE.BoxGeometry(T, WALL_H, T), new THREE.MeshStandardMaterial({ color: 0x4b5563, roughness: 0.8 }), wallTiles.length);
     wallTiles.forEach(([x, y], i) => { m4.makeTranslation(x * T + T / 2, WALL_H / 2 - 12, y * T + T / 2); wall.setMatrixAt(i, m4); });
     roomG.add(wall);

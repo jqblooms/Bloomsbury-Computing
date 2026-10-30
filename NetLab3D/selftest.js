@@ -73,7 +73,7 @@ function takeFromCrate(i, k) {
 function placeNew(k, X, Y) {
   const d = takeFromCrate(0, k);
   if (k === 'tablet') { handTo(0, X, Y); letGo(0); ok(!s.carried(d) && Math.abs(d.tx - X) < 0.3, k + ' not put down at ' + X + ',' + Y); return d; }
-  const reach = Math.max(d.w, d.h) / 2 + 0.7;
+  const reach = d.h / 2 + 0.7;   // facing south (face 0)
   walkTo(X + (d.w - 1) / 2, Y + (d.h - 1) / 2 - reach, 0); letGo(0);
   ok(!s.carried(d) && d.X === X && d.Y === Y, d.name + ' landed at ' + d.X + ',' + d.Y + ' not ' + X + ',' + Y + ' (' + s.toastText() + ')');
   return d;
@@ -112,7 +112,7 @@ function carryDevice(d, X, Y) {
   const cx = d.X + (d.w - 1) / 2, cy = d.Y + d.h - 0.5 + 0.3;
   handTo(0, cx, cy); press(0);
   if (!ok(s.hands[0].dev === d, 'could not pick up ' + d.name)) return;
-  const reach = Math.max(d.w, d.h) / 2 + 0.7;
+  const reach = d.h / 2 + 0.7;   // facing south (face 0)
   walkTo(X + (d.w - 1) / 2, Y + (d.h - 1) / 2 - reach, 0); letGo(0);
 }
 // ---------------------------------------------------------------- the panel and the Test bar, by clicking
@@ -127,7 +127,12 @@ function test(a, b) {
   from.value = String(a.id); from.dispatchEvent(new Event('change'));
   to.value = String(b.id); to.dispatchEvent(new Event('change'));
   $('testBar').querySelector('button').click();
-  for (let i = 0; i < 600 && s.anim; i++) s.frame(1);
+  const box = $('nbMsg');
+  if (!box) throw new Error('no message box after Send');
+  box.value = 'Hello'; [...$('testBar').querySelectorAll('button')].find(b => /^(Send|Print)$/.test(b.textContent)).click();
+  for (let i = 0; i < 900 && s.anim; i++) s.frame(1);
+  const sa = a.k3 && a.k3.screen;
+  if (sa && /^(Printed|Message arrived)/.test(s.toastText())) ok(sa.state && sa.state.mark === 'tick', a.name + "'s screen did not show the tick after sending: " + JSON.stringify(sa.state));
   // a test that finishes a tutorial step is used up at once, so read the message it showed
   return { ok: /^(Printed|Message arrived)/.test(s.toastText()) };
 }
@@ -316,6 +321,81 @@ const BREAK = [
     ok(e.defaultPrevented, 'Space on a focused button was not stopped');
     b.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', bubbles: true, cancelable: true }));
   },
+  function spaceTakesOneCable() {
+    s.start(0);
+    const [x, y] = crateFront('cable'); walkTo(x, y, 0);
+    const n = s.cables().length;
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
+    ok(s.cables().length === n + 1, 'Space took ' + (s.cables().length - n) + ' cables');
+    ok(s.hands[0].cable && s.hands[0].cable === s.hands[1].cable, 'Space should hold both ends of one cable');
+    document.body.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', bubbles: true, cancelable: true }));
+  },
+  function plugBeatsLaptopAndPortsGlow() {
+    s.start(0);
+    const a = placeNew('laptop', 6, 8), b = placeNew('laptop', 15, 8);
+    const c = takeFromCrate(0, 'cable'); handTo(0, ...s.plugPin(a, 0)); letGo(0);
+    // carrying the other end: free ports glow, the used one does not
+    grabEnd(1, c, 1); s.frame(1);
+    ok(s.glowing === 1, 'ports glowing while carrying a plug: ' + s.glowing + ', expected 1 (Kim only)');
+    letGo(1); s.frame(1); ok(s.glowing === 0, 'ports still glow after letting go');
+    // reaching for the plug in Gus's port takes the plug, and it is outlined
+    handTo(0, ...s.plugPin(a, 0)); s.frame(1);
+    const g = s.grabTarget(0);
+    ok(g && g.kind === 'cable', 'reaching for the plug in a port would grab: ' + (g && g.kind));
+    ok(s.outlined > 0, 'nothing outlined for the hand');
+    // standing at the laptop's far side, the laptop is outlined instead
+    handTo(0, a.X + 0.5, a.Y - 0.4); s.frame(1);
+    const g2 = s.grabTarget(0); ok(g2 && g2.kind === 'device' && g2.d === a, 'reaching for the laptop would grab: ' + (g2 && g2.kind));
+  },
+  function screensTellTheStory() {
+    s.start(0);
+    const a = placeNew('laptop', 6, 8), b = placeNew('laptop', 15, 8);
+    const sa = a.k3.screen, sb = b.k3.screen; s.frame(1);
+    ok(sa.status && /not connected/.test(sa.status.text), 'status before cable: ' + (sa.status && sa.status.text));
+    const c = takeFromCrate(0, 'cable'); handTo(0, ...s.plugPin(a, 0)); letGo(0); s.frame(2);
+    ok(/other end loose/.test(sa.status.text), 'status with one end in: ' + sa.status.text);
+    ok(sa.state && /RJ45/.test(sa.state.sub || ''), 'screen did not name the RJ45 port: ' + JSON.stringify(sa.state));
+    grabEnd(1, c, 1); handTo(1, ...s.plugPin(b, 0)); letGo(1); s.frame(2);
+    ok(/connected to Kim|connected to/.test(sa.status.text) && sa.status.ok && sb.status.ok, 'statuses after both ends: ' + sa.status.text + ' / ' + sb.status.text);
+    // queue: the first pop-up stays up its full time before the next
+    const first = JSON.stringify(sb.state); s.frame(10, 33);
+    ok(JSON.stringify(sb.state) === first, 'a pop-up was replaced before its time');
+    s.frame(60, 33); ok(sb.state && /To /.test(sb.state.text || ''), 'second pop-up (Connected to) did not follow: ' + JSON.stringify(sb.state));
+    s.frame(120, 33);
+    // a message: typed on Gus, arrives on Kim, Gus says delivered with a tick
+    const r = test(a, b);
+    ok(r.ok, 'message not delivered');
+    ok(sb.state && /From /.test(sb.state.top || '') && sb.state.text === 'Hello', "Kim's screen after the message: " + JSON.stringify(sb.state));
+    s.frame(200, 33); ok(sb.state === null, "Kim's screen did not go back to the desktop");
+  },
+  function plugSnapsAndGuideShowsThePlug() {
+    s.start(1);
+    const [l1] = kind('laptop');
+    placeNew('laptop', 14, 12);
+    // step 2 (try a used port): with a loose cable in Chi's laptop, the guide points at its loose plug
+    const c = takeFromCrate(0, 'cable'); const l3 = kind('laptop').find(l => l.X === 14);
+    handTo(0, ...s.plugPin(l3, 0)); letGo(0); s.frame(1);
+    const g = s.guideTarget();
+    ok(g && g.plug && g.plug.c === c, 'the guide did not point at the loose plug: ' + JSON.stringify(g && Object.keys(g)));
+    // letting go roughly in front of a switch (not on a port) still plugs in
+    grabEnd(1, c, 1); handTo(1, ...s.plugPin(l1, 0)); letGo(1);
+    const hub = placeNew('switch', 13, 17);
+    grabEnd(0, c, 1);
+    handTo(0, hub.X + 2.3, hub.Y + 1.15); letGo(0);
+    ok(c.ends[1] && c.ends[1].dev === hub.id, 'letting go in front of the switch did not plug in (' + s.toastText() + ')');
+  },
+  function cableCannotStretch() {
+    // carrying a device with a cable in it: the cable never stretches past its length; it pulls out of the port
+    s.start(0);
+    const a = placeNew('laptop', 3, 3), b = placeNew('laptop', 8, 3);
+    cable(a, b);
+    handTo(0, b.X + 1, b.Y + b.h - 0.2); press(0); ok(s.hands[0].dev === b, 'could not pick up the laptop');
+    walkTo(30, 18, 0); s.step(5);
+    const c = s.cables()[0], max = c.n * 0.5 * 1.15 + 0.7;
+    if (c.ends[0] && c.ends[1]) { const p = s.plugPin(a, 0), q = s.plugPin(b, 0); ok(Math.hypot(p[0] - q[0], p[1] - q[1]) <= max, 'the cable stretched to ' + Math.hypot(p[0] - q[0], p[1] - q[1]).toFixed(1) + ' tiles'); }
+    ok(!(c.ends[0] && c.ends[1]), 'the cable is still in both ports after carrying the laptop far away');
+    letGo(0);
+  },
   function wrongPredictionDoesNotCount() {
     s.start(7);
     const cards = [...document.querySelectorAll('#mission .job')];
@@ -342,7 +422,7 @@ function fuzz(i, n) {
         p.face = ang; s.step(1);
       }
     } else if (a < 0.8) { const h = r() < 0.5 ? 0 : 1; s.setHand(h, !s.hands[h].down); }
-    else if (a < 0.86) { const e = S().devs.filter(d => d.kind !== 'switch' && d.kind !== 'wifi'); if (e.length > 1 && $('nbFrom')) { const fr = e.filter(d => d.kind === 'laptop' || d.kind === 'tablet'); if (fr.length) test(fr[Math.floor(r() * fr.length)], e[Math.floor(r() * e.length)]); } }
+    else if (a < 0.86) { const e = S().devs.filter(d => d.kind !== 'switch' && d.kind !== 'wifi'); if (e.length > 1 && $('nbFrom')) { const fr = e.filter(d => d.kind === 'laptop' || d.kind === 'tablet'); if (fr.length) { const x = fr[Math.floor(r() * fr.length)], to = e.filter(d => d !== x); if (to.length) test(x, to[Math.floor(r() * to.length)]); } } }
     else s.step(3);
     if (!ok(s.free(s.pos.x, s.pos.y), 'fuzz ' + (i + 1) + ': you are inside something at action ' + k)) return;
     if (!ok(s.shelfReachable(), 'fuzz ' + (i + 1) + ': cut off from the shelf at action ' + k)) return;
