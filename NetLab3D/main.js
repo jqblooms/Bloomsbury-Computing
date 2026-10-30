@@ -2354,6 +2354,15 @@ export function startSolo({ container, myName, colour }) {
     if (HAND0.includes(k)) setHand(0, false);
     if (HAND1.includes(k)) setHand(1, false);
   });
+  // The keys only reach the game when its page has focus (inside the site it is a frame): ask for focus when it loads,
+  // and show "Click here to play" over the lab whenever it does not have it.
+  const focusMsg = $('focusMsg');
+  const showFocus = () => { const has = document.hasFocus(); focusMsg.hidden = has; if (!has) { keys.clear(); } };
+  focusMsg.addEventListener('click', () => { window.focus(); focusMsg.hidden = true; container.focus?.(); });
+  addEventListener('focus', showFocus); addEventListener('blur', showFocus);
+  document.addEventListener('pointerdown', () => { if (!document.hasFocus()) window.focus(); });
+  try { window.focus(); } catch (e) { }
+  setTimeout(showFocus, 300);
   // starting to type (the message box, a menu) lets go of every key you were holding, so you stop walking
   document.addEventListener('focusin', e => { if (typing(e)) { keys.clear(); stick = null; const kn = $('knob'); if (kn) kn.style.transform = ''; } });
   addEventListener('blur', () => { keys.clear(); setHand(0, false); setHand(1, false); });

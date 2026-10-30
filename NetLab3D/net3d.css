@@ -53,6 +53,10 @@ p { margin: 0; }
 .stick { position: absolute; left: 16px; bottom: 16px; width: 116px; height: 116px; border-radius: 50%; background: rgba(0, 0, 0, .35); border: 2px solid var(--line-strong); z-index: 3; touch-action: none; }
 .knob { position: absolute; left: 50%; top: 50%; width: 50px; height: 50px; margin: -25px 0 0 -25px; border-radius: 50%; background: var(--surface-3); border: 1px solid var(--line-strong); pointer-events: none; }
 @media (hover: hover) and (pointer: fine) { .stick { display: none; } }
+/* the keys only reach the game once it has focus: say so until it does */
+.focus-msg { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); z-index: 6; display: grid; gap: 4px; justify-items: center; padding: 16px 24px; border-radius: 16px; border: 2px solid var(--brand); background: var(--surface); color: var(--ink); box-shadow: var(--shadow-3); cursor: pointer; font: inherit; }
+.focus-msg b { font: 700 1.2rem/1.2 var(--font-display); }
+.focus-msg span { font-size: .9rem; color: var(--muted); }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: var(--muted); z-index: 5; background: var(--bg); }
 
 /* the mission panel */
