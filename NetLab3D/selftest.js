@@ -422,6 +422,24 @@ const BREAK = [
     ok(g && Math.hypot(g.x - s.centre(w)[0], g.y - s.centre(w)[1]) < 3, 'carrying a tablet, the guide does not point at the Wi-Fi range');
     letGo(0);
   },
+  function noLeakAcrossMissions() {
+    const info = s.view.renderer.info, counts = [];
+    for (let round = 0; round < 2; round++) { for (let i = 0; i < 11; i++) { s.start(i); s.frame(2); } s.start(0); s.frame(2); counts.push(info.memory.geometries); }
+    ok(counts[1] <= counts[0] + 5, 'memory grows with every mission: ' + counts.join(' then '));
+    let rings = 0; s.view.scene.traverse(o => { if (o.userData.wave) rings++; });
+    ok(rings === 0, 'Wi-Fi rings from another mission are still showing');
+  },
+  function walkCardBlocksKeys() {
+    s.start(0);
+    click('Walk me through it');
+    const x0 = s.pos.x;
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'd', code: 'KeyD', bubbles: true, cancelable: true }));
+    s.frame(5, 33);
+    ok(Math.abs(s.pos.x - x0) < 0.01, 'walked behind the Walk me through it card');
+    document.body.dispatchEvent(new KeyboardEvent('keyup', { key: 'd', code: 'KeyD', bubbles: true, cancelable: true }));
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true }));
+    ok($('cardWrap').hidden, 'Escape did not close the card');
+  },
   function cableCannotStretch() {
     // carrying a device with a cable in it: the cable never stretches past its length; it pulls out of the port
     s.start(0);

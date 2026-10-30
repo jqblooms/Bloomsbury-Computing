@@ -367,12 +367,22 @@ export function startSolo({ container, myName, colour }) {
     else rooms.forEach((r, i) => regs.push({ name: r.name, index: i, x0: Math.max(1, Math.floor(OX + r.x / K)), y0: 1, x1: Math.min(MAPW - 2, Math.floor(OX + (r.x + r.w) / K)), y1: DESK_BOTTOM }));
     return regs;
   }
+  // everything in a group: its shapes and its pictures (shared materials just upload again if used later)
+  function disposeAll(g) {
+    if (!g) return;
+    scene.remove(g);
+    g.traverse(o => {
+      o.geometry?.dispose?.();
+      for (const m of [].concat(o.material || [])) { m.map?.dispose?.(); m.emissiveMap?.dispose?.(); }
+    });
+  }
   function dropGroup(g) { if (!g) return; scene.remove(g); g.traverse(o => { if (o.userData.own) o.geometry.dispose(); }); }
   function buildWorld() {
     if (!view) { view = create(container); scene = view.scene; scene.add(me.group, pulse, arrows, portGlow, outlineG); }
     guideKey = '';
     view.setRoom({ w: MAPW, h: MAPH, rows, regions: regionsFor(S.rooms) });
-    for (const g of [devG, cableG, fxG, crateG]) dropGroup(g);
+    // the last mission's devices, crates, cables and Wi-Fi rings go, and so does their memory
+    dropGroup(cableG); dropGroup(fxG); dropGroup(wifiG); disposeAll(devG); disposeAll(crateG);
     drawn.clear(); wifiKey = null;
     devG = new THREE.Group(); cableG = new THREE.Group(); fxG = new THREE.Group(); crateG = new THREE.Group(); wifiG = null;
     scene.add(devG, cableG, fxG, crateG);
@@ -1497,6 +1507,7 @@ export function startSolo({ container, myName, colour }) {
       const back = btn('Back', '', () => { if (i > 0) { i--; draw(); } }); back.disabled = i === 0;
       act.append(back, btn(i === steps.length - 1 ? 'Done' : 'Next step', 'go', () => { if (i < steps.length - 1) { i++; draw(); } else { wrap.hidden = true; log.note('Walk me through it (' + (i + 1) + ' of ' + steps.length + ' steps).'); } }));
     };
+    keys.clear(); setHand(0, false); setHand(1, false);
     wrap.hidden = false; draw(); card.querySelector('.btn:not([disabled])')?.focus();
   }
   function drawAll() { drawPanel(); drawTest(); drawCables(); hint(); }
@@ -1570,6 +1581,8 @@ export function startSolo({ container, myName, colour }) {
   document.addEventListener('keydown', e => {
     const k = e.code;
     if (typing(e)) return;
+    // the Walk me through it card is open: the game behind it does not move; Escape closes the card
+    if (!$('cardWrap').hidden) { if (k === 'Escape') $('cardWrap').hidden = true; return; }
     if (k === 'Space' || k === 'KeyJ' || k === 'KeyK') { e.preventDefault(); if (e.repeat) return; }
     if (k === 'KeyM') { setOverview(!overview); return; }
     if (HAND0.includes(k)) setHand(0, true);
