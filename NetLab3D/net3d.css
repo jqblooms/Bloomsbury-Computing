@@ -62,6 +62,10 @@ p { margin: 0; }
 /* the mission panel */
 .mission { overflow: auto; padding: 14px; display: grid; gap: 10px; align-content: start; background: var(--surface); }
 .mission .sections { display: grid; gap: 4px; }
+.mission .modebar { justify-self: stretch; display: grid; grid-template-columns: 1fr 1fr; }
+.mission .modebar button { text-align: center; }
+.mission #nbLesson { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); font: inherit; font-weight: 600; }
+.mission .lesson-list .mins { font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; flex: none; }
 .mission .sec { border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
 .mission .sec.current { border-color: var(--brand); }
 .mission .sec summary { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 10px; cursor: pointer; font-weight: 700; font-size: .9rem; list-style: none; }

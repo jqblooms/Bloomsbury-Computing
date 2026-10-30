@@ -122,6 +122,7 @@ function makeScreen(name, w = 256, h = 170) {
     g.stroke(); g.restore();
   }
   let status = null;   // { text, ok }: the taskbar's network line
+  let addr = null;     // this device's address, shown under its name
   let last = null;
   const screen = {
     tex,
@@ -129,6 +130,7 @@ function makeScreen(name, w = 256, h = 170) {
     get status() { return status; },
     // paint(fn): the desktop background, then fn(g, w, h) draws the rest (packets being split up or put back together)
     paint(fn) { last = { painted: true }; desktop(); fn(g, w, h); tex.needsUpdate = true; },
+    setAddr(a) { addr = a; if (!last) screen.show(null); },
     setStatus(text, ok) { status = { text, ok }; if (!last) screen.show(null); },
     show(st) {
       last = st;
@@ -137,12 +139,35 @@ function makeScreen(name, w = 256, h = 170) {
         g.fillStyle = '#ffffffcc'; for (let i = 0; i < 4; i++) g.fillRect(w * 0.055, h * 0.08 + i * h * 0.18, w * 0.086, h * 0.12);
         g.fillStyle = '#1c1b17'; g.fillRect(0, h * 0.84, w, h * 0.16);
         g.font = font(Math.round(h * 0.15)); g.fillStyle = '#fff'; g.textAlign = 'right'; g.textBaseline = 'alphabetic'; g.fillText(name, w * 0.94, h * 0.24);
+        if (addr) { g.font = font(Math.round(h * 0.09), 600); g.fillStyle = '#e7f5ff'; g.fillText('Address: ' + addr, w * 0.94, h * 0.37); }
         if (status) {
           g.fillStyle = status.ok ? '#51cf66' : '#ff8787'; g.beginPath(); g.arc(w * 0.05, h * 0.92, h * 0.035, 0, Math.PI * 2); g.fill();
           g.fillStyle = '#fff'; g.textAlign = 'left'; g.textBaseline = 'middle'; let px = Math.round(h * 0.085); g.font = font(px, 600);
           while (g.measureText(status.text).width > w * 0.86 && px > 8) { px--; g.font = font(px, 600); }
           g.fillText(status.text, w * 0.09, h * 0.925);
         }
+      } else if (st.web) {
+        // a web browser: the address bar, then the page
+        g.fillStyle = '#ffffff'; g.fillRect(w * 0.04, h * 0.06, w * 0.92, h * 0.86);
+        g.fillStyle = '#e9ecef'; g.fillRect(w * 0.04, h * 0.06, w * 0.92, h * 0.16);
+        g.fillStyle = '#ffffff'; g.fillRect(w * 0.08, h * 0.09, w * 0.84, h * 0.1);
+        g.fillStyle = '#1c2533'; g.font = font(Math.round(h * 0.075), 600); g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(st.web, w * 0.1, h * 0.14);
+        const site = st.web;
+        g.fillStyle = site.includes('games') ? '#7048e8' : site.includes('news') ? '#c92a2a' : site.includes('school') ? '#1c7ed6' : '#f08c00';
+        g.fillRect(w * 0.04, h * 0.22, w * 0.92, h * 0.14);
+        g.fillStyle = '#fff'; g.font = font(Math.round(h * 0.09)); g.fillText(site.replace(/^www\./, '').replace(/\.example$/, '').toUpperCase(), w * 0.08, h * 0.29);
+        if (site.includes('cats')) drawItem(g, 'photo', 'Cat', w * 0.3, h * 0.62, h * 0.36);
+        else if (site.includes('games')) { for (let i = 0; i < 6; i++) { g.fillStyle = ['#ffd43b', '#69db7c', '#4dabf7', '#ff8787', '#da77f2', '#ffa94d'][i]; g.fillRect(w * (0.08 + (i % 3) * 0.14), h * (0.44 + Math.floor(i / 3) * 0.2), w * 0.11, h * 0.15); } }
+        else { g.fillStyle = '#adb5bd'; for (let i = 0; i < 5; i++) g.fillRect(w * 0.08, h * (0.44 + i * 0.09), w * (i % 2 ? 0.35 : 0.42), h * 0.04); }
+        g.fillStyle = '#495057'; for (let i = 0; i < 4; i++) g.fillRect(w * 0.56, h * (0.46 + i * 0.1), w * 0.34, h * 0.04);
+        if (st.sub) { g.fillStyle = 'rgba(28,37,51,.85)'; g.fillRect(0, h * 0.88, w, h * 0.12); g.fillStyle = '#fff'; g.font = font(Math.round(h * 0.075), 600); g.fillText(st.sub, w * 0.04, h * 0.94); }
+      } else if (st.lines) {
+        // a list (a trace): a heading and up to six lines
+        g.fillStyle = '#111827'; g.fillRect(w * 0.04, h * 0.06, w * 0.92, h * 0.86);
+        g.fillStyle = '#69db7c'; g.font = font(Math.round(h * 0.085), 700); g.textAlign = 'left'; g.textBaseline = 'middle';
+        g.fillText(st.top || '', w * 0.08, h * 0.15);
+        g.font = font(Math.round(h * 0.075), 600); g.fillStyle = '#e9ecef';
+        st.lines.slice(-6).forEach((l, i) => g.fillText(l, w * 0.08, h * (0.29 + i * 0.105)));
       } else {
         // a message window
         g.fillStyle = '#ffffff'; g.fillRect(w * 0.06, h * 0.1, w * 0.88, h * 0.8);
@@ -214,6 +239,20 @@ const BUILD = {
     g.add(at(rbox(W - 16, 70, D - 20, 0x4a5058, 8, { metalness: 0.5, roughness: 0.4 }), 0, 18, 0));
     g.add(at(new THREE.Mesh(new THREE.BoxGeometry(W - 30, 4, 2), M(0x2b6fd6, { emissive: 0x0b2a5c })), 0, 82, (D - 20) / 2 + 0.5));
   },
+  router(g, d, W, D) {
+    // a dark box with lights along the front and two antennas
+    g.add(rbox(W - 30, 50, D - 30, 0x343a40, 10, { roughness: 0.4, metalness: 0.3 }));
+    for (let i = 0; i < 5; i++) g.add(at(new THREE.Mesh(new THREE.BoxGeometry(10, 5, 2), M(0x51cf66, { emissive: 0x2b8a3e })), -40 + i * 20, 38, (D - 30) / 2 + 0.5));
+    for (const sx of [-1, 1]) { const a = cyl(4, 6, 110, 0x212529); a.rotation.z = sx * 0.25; g.add(at(a, sx * (W / 2 - 40), 100, -10)); }
+  },
+  server(g, d, W, D) {
+    // a tall rack with drive slots and green lights
+    g.add(rbox(W - 24, 230, D - 24, 0x212529, 8, { roughness: 0.45, metalness: 0.4 }));
+    for (let i = 0; i < 6; i++) {
+      g.add(at(new THREE.Mesh(new THREE.BoxGeometry(W - 60, 18, 2), M(0x495057)), 0, 70 + i * 26, (D - 24) / 2 + 0.5));
+      g.add(at(new THREE.Mesh(new THREE.BoxGeometry(6, 6, 2), M(0x51cf66, { emissive: 0x2f9e44 })), W / 2 - 40, 70 + i * 26, (D - 24) / 2 + 1.5));
+    }
+  },
   bus(g, d, W, D) {
     // a thick main cable on low stands, with a dark terminator cap at each end
     const cab = new THREE.Mesh(new THREE.CylinderGeometry(16, 16, W - 30, 18).rotateZ(Math.PI / 2), M(0x2b6fd6, { roughness: 0.5 }));
@@ -263,7 +302,7 @@ export function makeDevice(d) {
     lights.push(socket(g, lx, sy, front));
     sockets.push({ local: new THREE.Vector3(lx, sy, front + 4), dir: new THREE.Vector3(0, 0, -1) });
   });
-  const tagY = { laptop: 290, printer: 220, switch: 140, wifi: 260 }[d.kind] ?? 200;
+  const tagY = { laptop: 290, printer: 220, switch: 140, wifi: 260, router: 190, server: 300 }[d.kind] ?? 200;
   const tag = tape(d.title, { size: 0.034 }); tag.position.set(0, tagY, 0); g.add(tag);
   return { group: g, lights, sockets, screen: g.userData.screen || null, tag, tagY };
 }

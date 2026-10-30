@@ -20,14 +20,15 @@ const $ = id => document.getElementById(id);
 const T = 100, K = 22, OX = 1.5, OY = 1.5;          // world units a tile; desk units a tile; desk origin in tiles
 const MAPW = 34, MAPH = 27, DESK_BOTTOM = 20;        // the room; the desk is rows 1 to 20, the supply shelf below
 const SEG = 0.5, CABLE_LEN = 20, CABLE_R = 10, PLUG_LEN = 58, HAND_Y = 60, SPEED = 5.5;
-const PORTS = { laptop: 1, printer: 1, 'switch': 8, wifi: 1, tablet: 0, pc: 2, bus: 4 };
-const LABEL = { laptop: 'Laptop', printer: 'Printer', 'switch': 'Switch', wifi: 'Wi-Fi point', tablet: 'Tablet', pc: 'Computer', bus: 'Main cable' };
-const FORWARD = { 'switch': 1, wifi: 1, bus: 1, pc: 1 };   // devices that pass data on to the next device
+const PORTS = { laptop: 1, printer: 1, 'switch': 8, wifi: 1, tablet: 0, pc: 2, bus: 4, router: 4, server: 2 };
+const LABEL = { laptop: 'Laptop', printer: 'Printer', 'switch': 'Switch', wifi: 'Wi-Fi point', tablet: 'Tablet', pc: 'Computer', bus: 'Main cable', router: 'Router', server: 'Web server' };
+const FORWARD = { 'switch': 1, wifi: 1, bus: 1, pc: 1, router: 1 };
+const addrOf = d => (S.addrs && d && S.addrs[d.id]) || null;   // devices that pass data on to the next device
 const RANGE = 150;
 const NAMES = ['Ana', 'Ben', 'Chi', 'Dev', 'Eli', 'Fai', 'Gus', 'Hana', 'Ivy', 'Jon', 'Kim', 'Lek'];
 const W = 640, H = 380, NEED = 2;
-const SHELF = ['laptop', 'tablet', 'printer', 'switch', 'wifi', 'pc'];
-const CRATE_COL = { pc: 0x9775fa, laptop: 0x7fa8d8, tablet: 0x495057, printer: 0xd9d9d4, 'switch': 0x4a5058, wifi: 0x51cf66, cable: 0x2b6fd6 };
+const SHELF = ['laptop', 'tablet', 'printer', 'switch', 'wifi', 'pc', 'router'];
+const CRATE_COL = { router: 0x343a40, pc: 0x9775fa, laptop: 0x7fa8d8, tablet: 0x495057, printer: 0xd9d9d4, 'switch': 0x4a5058, wifi: 0x51cf66, cable: 0x2b6fd6 };
 
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const pick = list => list[Math.floor(Math.random() * list.length)];
@@ -55,10 +56,11 @@ function count(kind) { return S.devs.filter(d => d.kind === kind).length; }
 // devices standing on the floor (not in someone's hands); set by the 3D lab
 let isHeld = () => false;
 function placed(kind) { return S.devs.filter(d => d.kind === kind && !isHeld(d)).length; }
-function ends() { return S.devs.filter(d => d.kind !== 'switch' && d.kind !== 'wifi' && d.kind !== 'bus'); }
+function ends() { return S.devs.filter(d => !FORWARD[d.kind] || d.kind === 'pc'); }
 function place(kind, x, y, name) {
   const d = { id: S.nextId++, kind, x, y };
   if (kind === 'pc' && S.pcPorts) d.ports = S.pcPorts;
+  if (!name && S.newNames && S.newNames[kind] && !S.devs.some(o => o.name === S.newNames[kind])) d.name = name = S.newNames[kind];
   if (name) d.name = name;
   else if (kind === 'laptop' || kind === 'tablet') { const used = S.devs.map(o => o.name); d.name = S.names.filter(n => used.indexOf(n) < 0)[0]; }
   else d.name = count(kind) ? LABEL[kind] + ' ' + (count(kind) + 1) : LABEL[kind];
@@ -95,7 +97,7 @@ function route(a, b) {
   while (at !== a.id) { at = prev[at]; out.unshift(dev(at)); }
   return out;
 }
-function jobText(a, b) { return b.kind === 'printer' ? a.name + ' prints on the ' + b.name : a.name + ' sends a message to ' + b.name; }
+function jobText(a, b) { if (b.kind === 'server') return a.name + ' opens ' + (b.site || b.name); return b.kind === 'printer' ? a.name + ' prints on the ' + b.name : a.name + ' sends a message to ' + b.name; }
 function why(a, b) {
   const r = route(a, b);
   if (r) return r.map(d => d.name).join(' &rarr; ');
@@ -550,8 +552,224 @@ const C6 = { id: 'c-backup', group: 'Challenges', title: 'No Single Point', type
       S.cables = all; return all.length > 0 && okAll;
     } }
   ], minCables: 4 };
-export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2, STAR, BUS, RING, MESH, SERIAL, DUPLEX, SPEEDRACE, BLUETOOTH, C1, C2, C3, C4, C5, C6];
-export const SECTIONS = ['Introduction', 'Wi-Fi', 'Bigger networks', 'Troubleshooting', 'Design', 'Packets', 'Topologies', 'Transmission modes', 'Speeds', 'Challenges'];
+// ---- 2.2 iRoute: routers join networks; the internet is networks joined by routers
+const byN = n => S.devs.find(d => d.name === n);
+const linked = (a, b) => !!byN(a) && !!byN(b) && hasCable(byN(a), byN(b));
+const sent = (a, b, kind) => S.lastTest && S.lastTest.ok && (!a || S.lastTest.a === (byN(a) || {}).id) && (!b || S.lastTest.b === (byN(b) || {}).id) && (!kind || S.lastTest.kind === kind);
+function net(list) {
+  // list: [kind, x, y, name, address?]; then links: [[nameA, nameB], ...]
+  return (devices, links) => { devices.forEach(([k, x, y, n, ad, site]) => { const d = place(k, x, y, n); if (ad) { S.addrs = S.addrs || {}; S.addrs[d.id] = ad; } if (site) d.site = site; }); (links || []).forEach(([a, b]) => plug(byN(a), byN(b))); };
+}
+const build = net();
+const JOIN2 = { id: 'join2', group: 'Routers and the internet', title: 'Join Two Networks', type: 'tutorial', mins: 7,
+  setup() {
+    S = fresh({ router: 1 });
+    build([['switch', 150, 230, 'Home switch'], ['laptop', 80, 90, 'Ana'], ['laptop', 220, 90, 'Ben'], ['switch', 490, 230, 'School switch'], ['laptop', 420, 90, 'Chi'], ['laptop', 560, 90, 'Dev']],
+      [['Ana', 'Home switch'], ['Ben', 'Home switch'], ['Chi', 'School switch'], ['Dev', 'School switch']]);
+  },
+  intro: 'Two separate networks: one at home, one at school. A <b>router</b> joins networks together.',
+  steps: [
+    { text: 'Try to send a message from Ana (home) to Chi (school).', show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok },
+    { text: 'Take a <b>Router</b> from the shelf and put it down between the two networks.', show: 'crate-router', done: () => placed('router') >= 1 },
+    { text: 'Plug the router into the <b>Home switch</b>.', show: 'router', done: () => S.devs.some(r => r.kind === 'router' && !isHeld(r) && hasCable(r, byN('Home switch'))) },
+    { text: 'Plug the router into the <b>School switch</b> too.', show: 'router', done: () => S.devs.some(r => r.kind === 'router' && !isHeld(r) && hasCable(r, byN('Home switch')) && hasCable(r, byN('School switch'))) },
+    { text: 'Send the message from Ana to Chi again. Watch it go through the router.', show: 'test', event: true, done: () => sent('Ana', 'Chi') }
+  ],
+  end: 'A switch joins devices <b>inside</b> one network. A <b>router</b> joins <b>networks</b> together.',
+  after: { q: 'What does a router do?', options: ['It joins networks together and passes data between them', 'It keeps websites', 'It prints documents'], why: 'A switch joins the devices in one network. A <b>router</b> joins different networks and passes data from one to the other.' } };
+const INTERNET = { id: 'internet', group: 'Routers and the internet', title: 'The Internet', type: 'tutorial', mins: 8,
+  setup() {
+    S = fresh({});
+    build([['laptop', 90, 70, 'Ana'], ['router', 90, 210, 'Home router'], ['laptop', 550, 70, 'Ben'], ['router', 550, 210, 'School router'], ['laptop', 200, 296, 'Chi'], ['router', 330, 290, 'Cafe router'], ['router', 230, 120, 'Router A'], ['router', 420, 120, 'Router B']],
+      [['Ana', 'Home router'], ['Ben', 'School router'], ['Chi', 'Cafe router'], ['Cafe router', 'Router A']]);
+  },
+  intro: 'Home, a school and a cafe each have their own network with a router. <b>Router A</b> and <b>Router B</b> are part of the internet.',
+  steps: [
+    { text: 'Plug the <b>Home router</b> into <b>Router A</b>.', show: 'router', done: () => linked('Home router', 'Router A') },
+    { text: 'Plug the <b>School router</b> into <b>Router B</b>.', show: 'router', done: () => linked('School router', 'Router B') },
+    { text: 'Join <b>Router A</b> and <b>Router B</b>.', show: 'router', done: () => linked('Router A', 'Router B') },
+    { text: 'Send a message from Ana (home) to Ben (school). Watch it hop from router to router.', show: 'test', event: true, done: () => sent('Ana', 'Ben') },
+    { text: 'Send a message from Chi (cafe) to Ben.', show: 'test', event: true, done: () => sent('Chi', 'Ben') }
+  ],
+  end: 'The <b>internet</b> is many networks joined together by routers, all round the world.',
+  after: { q: 'What is the internet?', options: ['Many networks joined together by routers', 'One very big computer', 'A website'], why: 'The internet is a network of networks: homes, schools and businesses, joined by routers.' } };
+const HOPS = { id: 'hops', group: 'Routers and the internet', title: 'Hop by Hop', type: 'tutorial', mins: 6,
+  setup() {
+    S = fresh({});
+    build([['laptop', 90, 70, 'Ana'], ['router', 90, 200, 'Home router'], ['router', 210, 120, 'Router A'], ['router', 330, 200, 'Router B'], ['router', 450, 120, 'Router C'], ['router', 560, 200, 'School router'], ['laptop', 560, 70, 'Ben'], ['router', 330, 296, 'Cafe router'], ['laptop', 200, 296, 'Chi']],
+      [['Ana', 'Home router'], ['Home router', 'Router A'], ['Router A', 'Router B'], ['Router B', 'Router C'], ['Router C', 'School router'], ['School router', 'Ben'], ['Chi', 'Cafe router'], ['Cafe router', 'Router B']]);
+  },
+  intro: 'Across the internet, data hops from router to router. Each router passes it on towards where it is going.',
+  before: { q: 'Predict: Ana sends Ben a message. How many routers does it pass through?', number: 5, why: 'Follow the cables: Home router, Router A, Router B, Router C, School router. That is <b>5 routers</b>.' },
+  steps: [
+    { text: 'Send a message from Ana to Ben. Count the routers it passes through.', show: 'test', event: true, done: () => sent('Ana', 'Ben') },
+    { text: 'Send a message from Chi to Ana. Fewer routers this time?', show: 'test', event: true, done: () => sent('Chi', 'Ana') }
+  ],
+  end: 'Data crosses the internet one hop at a time, router to router.',
+  after: { q: 'Why does data pass through several routers?', options: ['Each router passes it on towards where it is going', 'Each router keeps a copy for later', 'Routers make the data bigger'], why: 'No single cable joins every place. Each router sends the data one step closer, until it arrives.' } };
+const FINDWAY = { id: 'findway', group: 'Routers and the internet', title: 'Find Another Way', type: 'challenge', breakAfter: true, breakAtStart: true, mins: 7,
+  setup() {
+    S = fresh({});
+    build([['laptop', 60, 60, 'Ana'], ['router', 60, 195, 'Home router'], ['router', 200, 120, 'Router A'], ['router', 440, 120, 'Router B'], ['router', 440, 270, 'Router C'], ['router', 200, 270, 'Router D'], ['router', 590, 195, 'School router'], ['laptop', 590, 60, 'Ben'], ['laptop', 320, 190, 'Chi'], ['router', 320, 40, 'Cafe router']],
+      [['Ana', 'Home router'], ['Home router', 'Router A'], ['Router A', 'Router B'], ['Router B', 'Router C'], ['Router C', 'Router D'], ['Router D', 'Router A'], ['Router C', 'School router'], ['School router', 'Ben'], ['Chi', 'Cafe router'], ['Cafe router', 'Router B']]);
+  },
+  intro: 'The internet has many paths. Routers A, B, C and D make a loop. A link has broken (red).',
+  goals: [],
+  breakPick: () => S.cables.filter(c => dev(c.a).kind === 'router' && dev(c.b).kind === 'router'),
+  end: 'When a link breaks, routers send the packets another way, if there is one.',
+  after: { q: 'A link between two routers breaks, but there is another path. What happens to the packets?', options: ['They go the other way', 'They are lost forever', 'They wait until it is mended'], why: 'Routers find another path. Only a device with no other way in, like Home behind its one router link, is cut off.' } };
+const QUIZ_R = { id: 'quiz-r', group: 'Routers and the internet', title: 'Switch or Router?', type: 'quiz', mins: 6,
+  setup() { S = fresh({}); },
+  intro: 'Quick questions on routers, the internet and packets. Get each one right to go on.',
+  items: [
+    { q: 'Which joins the laptops in one classroom together?', options: ['A switch', 'A router', 'A printer'], why: 'A switch joins devices inside one network.' },
+    { q: 'Which joins the school network to the internet?', options: ['A router', 'A switch', 'A Wi-Fi point'], why: 'A router joins networks, including your network to the internet.' },
+    { q: 'What is the internet?', options: ['Many networks joined together by routers', 'One giant computer', 'The same as a website'], why: 'A network of networks.' },
+    { q: 'How does a photo travel across the internet?', options: ['Split into packets that travel separately', 'In one piece, all at once', 'On a USB stick'], why: 'Big data is split into numbered packets.' },
+    { q: 'Why do packets have numbers?', options: ['So they can be put back in order', 'So they go faster', 'To make them bigger'], why: 'Packets can arrive in any order. The numbers put them back together.' },
+    { q: 'A router link breaks, but there is another path. What happens?', options: ['The packets go the other way', 'Nothing can be sent again', 'The packets wait for ever'], why: 'Routers send packets another way if there is one.' }
+  ] };
+// ---- 2.3 iTrace: addresses, web servers, the World Wide Web, tracing a website
+const ADDR = { id: 'addr', group: 'Addresses and the web', title: 'Every Device Has an Address', type: 'tutorial', mins: 7,
+  setup() {
+    S = fresh({});
+    build([['switch', 320, 190, 'Switch'], ['laptop', 110, 80, 'Ana', '192.168.1.2'], ['laptop', 530, 80, 'Ben', '192.168.1.3'], ['laptop', 110, 290, 'Chi', '192.168.1.4'], ['printer', 530, 290, 'Printer', '192.168.1.9']],
+      [['Ana', 'Switch'], ['Ben', 'Switch'], ['Chi', 'Switch'], ['Printer', 'Switch']]);
+  },
+  intro: 'Every device on a network has its own <b>address</b>: a number that tells data where to go. Look at each screen.',
+  steps: [
+    { text: 'In the Test bar, send a message from Ana to the device at <b>192.168.1.3</b>.', show: 'test', event: true, done: () => sent('Ana', 'Ben') },
+    { text: 'Print from Chi to the printer at <b>192.168.1.9</b>.', show: 'test', event: true, done: () => sent('Chi', 'Printer') }
+  ],
+  end: 'Every device has its own address, so data can find the right one.',
+  after: { q: 'What is Chi\'s address? (Look at Chi\'s screen.)', options: ['192.168.1.4', '192.168.1.2', '192.168.1.3'], why: 'Each screen shows its own address. Chi is <b>192.168.1.4</b>.' } };
+const homeToServer = (extra, links, chain) => {
+  build([['laptop', 90, 80, 'Ana', '192.168.1.2'], ['tablet', 90, 290, 'Bea', '192.168.1.3'], ['wifi', 200, 250, 'Wi-Fi point'], ['router', 200, 160, 'Home router', '192.168.1.1']].concat(extra),
+    [['Ana', 'Home router'], ['Wi-Fi point', 'Home router']].concat(links));
+};
+const WEBSITE = { id: 'website', group: 'Addresses and the web', title: 'Visit a Website', type: 'tutorial', mins: 8,
+  setup() { S = fresh({}); homeToServer([['router', 330, 100, 'Router A', '81.2.3.1'], ['router', 450, 210, 'Router B', '81.2.3.2'], ['server', 570, 110, 'Web server', '203.0.113.7', 'www.cats.example']], [['Home router', 'Router A'], ['Router A', 'Router B'], ['Router B', 'Web server']]); },
+  intro: 'A website is kept on a <b>web server</b>: a computer on the internet that sends web pages to anyone who asks.',
+  steps: [
+    { text: 'In the Test bar: from <b>Ana</b>, to <b>www.cats.example</b>, then press <b>Open website</b>. Watch the request go out and the page come back.', show: 'test', event: true, done: () => sent('Ana', 'Web server', 'web') },
+    { text: 'Now open the website on <b>Bea\'s tablet</b>. It joins by Wi-Fi.', show: 'test', event: true, done: () => sent('Bea', 'Web server', 'web') }
+  ],
+  end: 'The <b>World Wide Web</b> is all the web pages kept on web servers. The <b>internet</b> carries them to you.',
+  after: { q: 'Where is a website kept?', options: ['On a web server', 'In your keyboard', 'Inside the router'], why: 'Websites are kept on <b>web servers</b>. Your device asks the server, and the page travels back over the internet.' } };
+const WEBWIFI = { id: 'webwifi', group: 'Addresses and the web', title: 'Websites by Wi-Fi', type: 'tutorial', mins: 6,
+  setup() {
+    S = fresh({});
+    build([['laptop', 90, 80, 'Ana', '192.168.1.2'], ['tablet', 470, 300, 'Bea', '192.168.1.3'], ['wifi', 200, 250, 'Wi-Fi point'], ['router', 200, 160, 'Home router', '192.168.1.1'],
+      ['router', 330, 100, 'Router A', '81.2.3.1'], ['router', 450, 200, 'Router B', '81.2.3.2'], ['server', 570, 110, 'Web server', '203.0.113.9', 'www.news.example']],
+      [['Ana', 'Home router'], ['Home router', 'Router A'], ['Router A', 'Router B'], ['Router B', 'Web server']]);
+  },
+  intro: "Bea's tablet has no cable. To open a website it needs Wi-Fi, and the Wi-Fi point needs a way to the internet.",
+  steps: [
+    { text: "Try to open <b>www.news.example</b> on Bea's tablet.", show: 'test', event: true, done: () => S.lastTest && !S.lastTest.ok },
+    { text: 'Plug the <b>Wi-Fi point</b> into the <b>Home router</b>.', show: 'wifi', done: () => linked('Wi-Fi point', 'Home router') },
+    { text: "Carry Bea's tablet <b>inside</b> the Wi-Fi circle.", show: 'crate-tablet', done: () => { const t = byN('Bea'); return !!t && !isHeld(t) && aps(t).length > 0; } },
+    { text: 'Open <b>www.news.example</b> on the tablet now.', show: 'test', event: true, done: () => sent('Bea', 'Web server', 'web') }
+  ],
+  end: 'The web page came from the web server, through the routers to the Home router, then by Wi-Fi to the tablet.',
+  after: { q: "Bea's tablet has no cable. How does the web page reach it?", options: ['From the web server through the routers to the Home router, then by Wi-Fi', 'Straight from the web server through the air', 'It was already stored on the tablet'], why: 'Wi-Fi only covers the last step. The page crosses the internet through routers first.' } };
+const TRACE = { id: 'trace', group: 'Addresses and the web', title: 'Trace a Website', type: 'tutorial', mins: 8,
+  setup() { S = fresh({}); homeToServer([['router', 300, 90, 'Router A', '81.2.3.1'], ['router', 400, 200, 'Router B', '81.2.3.2'], ['router', 480, 296, 'Router C', '81.2.3.3'], ['server', 580, 150, 'Web server', '203.0.113.7', 'www.cats.example']], [['Home router', 'Router A'], ['Router A', 'Router B'], ['Router B', 'Router C'], ['Router C', 'Web server']]); },
+  intro: 'A <b>trace</b> shows every router on the way to a website\'s web server, one hop at a time, with each address.',
+  before: { q: 'Predict: how many routers are there between Ana and the web server?', number: 4, why: 'Home router, Router A, Router B, Router C: <b>4 routers</b>.' },
+  steps: [
+    { text: 'From Ana, choose <b>www.cats.example</b> and press <b>Trace route</b>. Read each hop on Ana\'s screen.', show: 'test', event: true, done: () => sent('Ana', 'Web server', 'trace') },
+    { text: 'Now open the website.', show: 'test', event: true, done: () => sent('Ana', 'Web server', 'web') }
+  ],
+  end: 'Tracing a website shows the routers on the way and the address of the web server that keeps it.',
+  after: { q: 'What does a trace show?', options: ['The routers on the way to the web server, and their addresses', 'The website\'s password', 'How many people visited the website'], why: 'A trace lists each hop: every router, then the web server, with its address.' } };
+const WHICH = { id: 'which', group: 'Addresses and the web', title: 'Which Server?', type: 'tutorial', mins: 9,
+  setup() {
+    S = fresh({});
+    build([['laptop', 90, 80, 'Ana', '192.168.1.2'], ['router', 90, 210, 'Home router', '192.168.1.1'], ['router', 250, 130, 'Router A', '81.2.3.1'], ['router', 400, 80, 'Router B', '81.2.3.2'], ['router', 400, 260, 'Router C', '81.2.3.3'],
+      ['server', 570, 60, 'Web server 1', '203.0.113.7', 'www.cats.example'], ['server', 570, 200, 'Web server 2', '198.51.100.4', 'www.games.example'], ['server', 240, 290, 'Web server 3', '192.0.2.10', 'www.news.example']],
+      [['Ana', 'Home router'], ['Home router', 'Router A'], ['Router A', 'Router B'], ['Router A', 'Router C'], ['Router B', 'Web server 1'], ['Router C', 'Web server 2'], ['Router C', 'Web server 3']]);
+  },
+  intro: 'Three websites, kept on three different web servers. Trace each one to find where it is kept.',
+  steps: [
+    { text: 'Trace <b>www.cats.example</b>.', show: 'test', event: true, done: () => sent('Ana', 'Web server 1', 'trace') },
+    { text: 'Trace <b>www.games.example</b>.', show: 'test', event: true, done: () => sent('Ana', 'Web server 2', 'trace') },
+    { text: 'Trace <b>www.news.example</b>.', show: 'test', event: true, done: () => sent('Ana', 'Web server 3', 'trace') }
+  ],
+  end: 'Each website is kept on a web server with its own address. A trace leads to it.',
+  after: { q: 'What is the address of the web server that keeps www.games.example?', options: ['198.51.100.4', '203.0.113.7', '192.0.2.10'], why: 'The trace to www.games.example ends at <b>198.51.100.4</b>.' } };
+const SITEDOWN = { id: 'sitedown', group: 'Addresses and the web', title: 'Website Down?', type: 'challenge', breakAfter: true, breakAtStart: true, mins: 7,
+  setup() {
+    S = fresh({});
+    homeToServer([['router', 300, 90, 'Router A', '81.2.3.1'], ['router', 440, 90, 'Router B', '81.2.3.2'], ['router', 370, 270, 'Router C', '81.2.3.3'], ['server', 580, 80, 'Cats server', '203.0.113.7', 'www.cats.example'], ['server', 580, 270, 'Games server', '198.51.100.4', 'www.games.example']],
+      [['Home router', 'Router A'], ['Router A', 'Router B'], ['Router A', 'Router C'], ['Router B', 'Router C'], ['Router B', 'Cats server'], ['Router C', 'Games server']]);
+  },
+  intro: 'A cable on the internet has broken (red). Will each website still open?',
+  goals: [],
+  breakPick: () => S.cables.filter(c => { const a = dev(c.a), b = dev(c.b); return (a.kind === 'router' || a.kind === 'server') && (b.kind === 'router' || b.kind === 'server'); }),
+  jobPairs: () => { const cl = S.devs.filter(isClient), sv = S.devs.filter(d => d.kind === 'server'), out = []; cl.forEach(c => sv.forEach(v => out.push([c, v]))); return out; },
+  end: 'A website opens if there is any path from you to its web server.',
+  after: { q: 'A cable on the internet breaks. Why might a website still open?', options: ['The data can go another way through other routers', 'Websites are kept in every router', 'The website is on your laptop'], why: 'Routers find another path to the web server, if there is one.' } };
+const QUIZ_W = { id: 'quiz-w', group: 'Addresses and the web', title: 'Internet or Web?', type: 'quiz', mins: 6,
+  setup() { S = fresh({}); },
+  intro: 'Quick questions on addresses, web servers and the World Wide Web. Get each one right to go on.',
+  items: [
+    { q: 'All the web pages kept on web servers.', options: ['The World Wide Web', 'The internet', 'A router'], why: 'The <b>World Wide Web</b> is the web pages. The internet carries them.' },
+    { q: 'Many networks joined together, all round the world.', options: ['The internet', 'The World Wide Web', 'A switch'], why: 'That is the <b>internet</b>.' },
+    { q: 'Every device on the internet has one.', options: ['Its own address', 'Its own printer', 'Its own web server'], why: 'Every device has its own address so data can find it.' },
+    { q: 'Where is www.cats.example kept?', options: ['On a web server', 'In every laptop', 'In the Wi-Fi point'], why: 'Websites are kept on web servers.' },
+    { q: 'What does a trace show?', options: ['The routers on the way to a web server', 'The password for a website', 'The number of visitors'], why: 'A trace lists every hop on the way.' },
+    { q: 'Why does each device need its own address?', options: ['So data goes to the right device', 'So it looks tidy', 'So it runs faster'], why: 'Two devices with one address would mix up their data.' }
+  ] };
+const C7 = { id: 'c-town', group: 'Challenges', title: 'Connect the Town', type: 'client', noHelp: true, mins: 10,
+  setup() {
+    S = fresh({});
+    build([['laptop', 80, 80, 'Ana'], ['router', 80, 250, 'Home router'], ['laptop', 560, 80, 'Ben'], ['router', 560, 250, 'School router'], ['laptop', 440, 296, 'Chi'], ['router', 320, 296, 'Library router'],
+      ['router', 210, 160, 'Router A'], ['router', 430, 160, 'Router B'], ['router', 320, 60, 'Router C']],
+      [['Ana', 'Home router'], ['Ben', 'School router'], ['Chi', 'Library router']]);
+    S.startCables = 3;
+  },
+  brief: 'A town has three networks: Home, School and the Library, each with its own router. Routers A, B and C are the internet. Join everyone up, and make it keep working if any one link between the internet routers breaks.',
+  reqs: [
+    { text: 'Each network joins the internet through its own router.', test: () => ['Home router', 'School router', 'Library router'].every(n => ['Router A', 'Router B', 'Router C'].some(m => linked(n, m))) },
+    { text: 'Everyone can send a message to everyone.', test: allTalk },
+    { text: 'If any one cable between Routers A, B and C breaks, everyone can still reach everyone.', test: () => {
+      const all = S.cables.slice(), inet = all.filter(c => /^Router [ABC]$/.test(dev(c.a).name) && /^Router [ABC]$/.test(dev(c.b).name));
+      const okAll = inet.length > 0 && inet.every(c => { S.cables = all.filter(x => x !== c); const r = allTalk(); S.cables = all; return r; });
+      S.cables = all; return okAll;
+    } }
+  ], minCables: 6 };
+const C8 = { id: 'c-online', group: 'Challenges', title: 'Get the School Online', type: 'client', noHelp: true, mins: 10,
+  setup() {
+    S = fresh({ router: 3 });   // Router A and B are in the room already, so one is left in the crate
+    S.newNames = { router: 'School router' };
+    build([['switch', 200, 230, 'School switch'], ['laptop', 90, 80, 'Ana', '10.0.0.2'], ['laptop', 230, 80, 'Ben', '10.0.0.3'], ['laptop', 90, 296, 'Chi', '10.0.0.4'],
+      ['router', 430, 110, 'Router A', '81.2.3.1'], ['router', 430, 290, 'Router B', '81.2.3.2'], ['server', 580, 200, 'Web server', '203.0.113.50', 'www.school.example']],
+      [['Ana', 'School switch'], ['Ben', 'School switch'], ['Chi', 'School switch'], ['Router A', 'Web server'], ['Router B', 'Web server']]);
+    S.startCables = 5;
+  },
+  brief: 'The school needs its laptops on the internet so everyone can open <b>www.school.example</b>. The website must still open if any one cable between the school and the web server breaks.',
+  reqs: [
+    { text: 'The school has its own router, plugged into the School switch.', test: () => S.devs.some(r => r.kind === 'router' && !/^Router [AB]$/.test(r.name) && hasCable(r, byN('School switch'))) },
+    { text: 'Every laptop can open www.school.example.', test: () => laptops().every(l => route(l, byN('Web server'))) },
+    { text: 'If any one cable between the school router and the web server breaks, every laptop can still open it.', test: () => {
+      const all = S.cables.slice(), srv = byN('Web server'), sw = byN('School switch');
+      // the internet side only: not the laptops' cables, not the one cable from the School switch to the school router
+      const mid = all.filter(c => { const a = dev(c.a), b = dev(c.b); return ![a, b].some(d => d.kind === 'laptop' || d === sw); });
+      const okAll = mid.length > 0 && mid.every(c => { S.cables = all.filter(x => x !== c); const r = laptops().every(l => route(l, srv)); S.cables = all; return r; });
+      S.cables = all; return okAll;
+    } }
+  ], minCables: 3 };
+export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2, STAR, BUS, RING, MESH, SERIAL, DUPLEX, SPEEDRACE, BLUETOOTH, C1, C2, C3, C4, C5, C6,
+  JOIN2, INTERNET, HOPS, FINDWAY, QUIZ_R, ADDR, WEBSITE, TRACE, WHICH, SITEDOWN, QUIZ_W, C7, C8, WEBWIFI];
+// Lesson mode: the activities for one lesson, in order (about an hour each)
+export const LESSONS = [
+  { id: '2.1', title: '2.1 iConnect: What Is a Network?', missions: ['two', 'switch', 'printer', 'wifi', 'range', 'rooms', 'full', 'predict', 'fixw', 'budget', 'school'] },
+  { id: '2.2', title: '2.2 iRoute: The Internet and Routers', missions: ['join2', 'internet', 'hops', 'packets', 'paths', 'findway', 'quiz-r', 'c-town'] },
+  { id: '2.3', title: '2.3 iTrace: Addresses and the Web', missions: ['addr', 'website', 'webwifi', 'trace', 'which', 'sitedown', 'quiz-w', 'c-online'] }
+];
+// rough minutes for a Year 6 student, by kind when a mission does not say
+const minsOf = m => m.mins || (m.type === 'client' ? 10 : m.type === 'fix' ? 8 : m.type === 'race' ? 4 : m.type === 'quiz' ? 6 : m.type === 'challenge' ? 7 : 6);
+export const SECTIONS = ['Introduction', 'Wi-Fi', 'Bigger networks', 'Troubleshooting', 'Design', 'Routers and the internet', 'Packets', 'Addresses and the web', 'Topologies', 'Transmission modes', 'Speeds', 'Challenges'];
 
 // ================================================================ the small pictures for Walk me through it (website drawing)
 function icon(d, x, y) {
@@ -561,6 +779,8 @@ function icon(d, x, y) {
     for (let i = 0; i < n; i++) s += '<rect class="port" x="' + (x - n * 5 + 2 + i * 10) + '" y="' + (y - 5) + '" width="7" height="7" rx="1"/>';
     return s;
   }
+  if (d.kind === 'router') return '<rect class="body sw" x="' + (x - 34) + '" y="' + (y - 12) + '" width="68" height="24" rx="6"/><line class="wave" x1="' + (x - 22) + '" y1="' + (y - 12) + '" x2="' + (x - 28) + '" y2="' + (y - 30) + '"/><line class="wave" x1="' + (x + 22) + '" y1="' + (y - 12) + '" x2="' + (x + 28) + '" y2="' + (y - 30) + '"/>';
+  if (d.kind === 'server') return '<rect class="body" x="' + (x - 20) + '" y="' + (y - 34) + '" width="40" height="64" rx="4"/><rect class="port" x="' + (x - 12) + '" y="' + (y - 24) + '" width="24" height="5"/><rect class="port" x="' + (x - 12) + '" y="' + (y - 12) + '" width="24" height="5"/><rect class="port" x="' + (x - 12) + '" y="' + y + '" width="24" height="5"/>';
   if (d.kind === 'bus') return '<rect class="body sw" x="' + (x - 70) + '" y="' + (y - 8) + '" width="140" height="16" rx="8"/>';
   if (d.kind === 'tablet') return '<rect class="body" x="' + (x - 20) + '" y="' + (y - 30) + '" width="40" height="56" rx="6"/><rect class="screen" x="' + (x - 15) + '" y="' + (y - 24) + '" width="30" height="42" rx="2"/>';
   if (d.kind === 'wifi') return '<path class="wave" d="M' + (x - 20) + ' ' + (y - 18) + ' Q' + x + ' ' + (y - 36) + ' ' + (x + 20) + ' ' + (y - 18) + '"/><path class="wave" d="M' + (x - 11) + ' ' + (y - 12) + ' Q' + x + ' ' + (y - 22) + ' ' + (x + 11) + ' ' + (y - 12) + '"/>' +
@@ -611,7 +831,7 @@ export function startSolo({ container, myName, colour }) {
   for (let y = 0; y < MAPH; y++) { let r = ''; for (let x = 0; x < MAPW; x++) r += (x === 0 || y === 0 || x === MAPW - 1 || y === MAPH - 1) ? '#' : '.'; rows.push(r); }
   let view = null, scene = null, devG = null, cableG = null, fxG = null, crateG = null;
   const CRATES = {};   // kind -> { x, y, w, h, k3 }
-  const shelfAt = { laptop: 2, tablet: 6, printer: 10, 'switch': 14, wifi: 18, pc: 22, cable: 27 };
+  const shelfAt = { laptop: 2, tablet: 6, printer: 10, 'switch': 14, wifi: 18, pc: 22, cable: 26, router: 30 };
   const pos = { x: 16, y: 21.5, face: Math.PI };
   let moving = false, overview = false, stick = null;
   const keys = new Set();
@@ -666,7 +886,7 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // ---- devices in 3D: footprints in tiles, kept in step with the desk position (x, y) the model uses
-  function size(kind, ports) { return kind === 'bus' ? [7, 1] : kind === 'switch' ? ((ports || 8) <= 4 ? [4, 1] : [5, 1]) : kind === 'wifi' ? [2, 1] : kind === 'tablet' ? [1, 1] : [3, 2]; }
+  function size(kind, ports) { return kind === 'router' ? [3, 1] : kind === 'server' ? [2, 2] : kind === 'bus' ? [7, 1] : kind === 'switch' ? ((ports || 8) <= 4 ? [4, 1] : [5, 1]) : kind === 'wifi' ? [2, 1] : kind === 'tablet' ? [1, 1] : [3, 2]; }
   function socketsFor(d) {
     const n = sockets(d), out = [];
     for (let i = 0; i < n; i++) out.push(d.kind === 'laptop' ? { x: d.X + d.w - 0.5 + 0.12, y: d.Y + d.h / 2 - 0.5, face: 'e' }
@@ -684,8 +904,9 @@ export function startSolo({ container, myName, colour }) {
   }
   function realise(d) {
     fromDesk(d);
-    d.k3 = makeDevice({ kind: d.kind, title: d.name, x: d.X ?? 0, y: d.Y ?? 0, w: d.w, h: d.h, sockets: d.kind === 'tablet' ? [] : socketsFor(d) });
+    d.k3 = makeDevice({ kind: d.kind, title: d.name + (addrOf(d) && (d.kind === 'router' || d.kind === 'server') ? ' ' + addrOf(d) : ''), x: d.X ?? 0, y: d.Y ?? 0, w: d.w, h: d.h, sockets: d.kind === 'tablet' ? [] : socketsFor(d) });
     devG.add(d.k3.group); placeGroup(d);
+    if (d.k3.screen && addrOf(d)) d.k3.screen.setAddr(addrOf(d));
   }
   function placeGroup(d) {
     if (d.kind === 'tablet') d.k3.group.position.set((d.tx + 0.5) * T, 0, (d.ty + 0.5) * T);
@@ -806,7 +1027,7 @@ export function startSolo({ container, myName, colour }) {
   }
 
   // ---- hands: hold to grab, let go to put down or plug in (as the team game)
-  function locked() { return M.phase === 'ask' || M.phase === 'predict' || M.phase === 'checked' || M.phase === 'done' || !!anim || !!fx || !!pk || !!race || M.m.type === 'race'; }
+  function locked() { return M.phase === 'ask' || M.phase === 'predict' || M.phase === 'checked' || M.phase === 'done' || busyNet() || !!race || M.m.type === 'race' || M.m.type === 'quiz'; }
   function release(i) {
     const h = hands[i];
     if (h.dev) dropDevice(i, true);
@@ -1183,14 +1404,15 @@ export function startSolo({ container, myName, colour }) {
       if (w) { const [cx, cy] = centre(w); return { x: cx, y: cy + 1.5, reach: RANGE / K * 0.6, ring: 1.2 }; }
     }
     if (hands.some(h => h.dev)) return null;   // carrying a device: put it down anywhere
-    const wantsCable = show === 'crate-cable' || show === 'switch' || show === 'wifi';
+    const wantsCable = show === 'crate-cable' || show === 'switch' || show === 'wifi' || show === 'router';
     const held = hands.find(h => h.cable && (h.joint === 0 || h.joint === h.cable.n));
     if (held && !wantsCable) return null;
     if (held) {
       const c = held.cable, other = c.ends[held.joint === 0 ? 1 : 0], from = other && dev(other.dev);
       const otherKind = from ? from.kind : null;
       let kinds;
-      if (show === 'switch') kinds = otherKind === 'switch' ? ['laptop'] : ['switch'];
+      if (show === 'router') kinds = otherKind === 'router' ? ['switch', 'router'] : ['router'];
+      else if (show === 'switch') kinds = otherKind === 'switch' ? ['laptop'] : ['switch'];
       else if (show === 'wifi') kinds = otherKind === 'wifi' ? ['switch'] : otherKind === 'switch' ? ['wifi'] : ['wifi', 'switch'];
       else kinds = ['laptop'];
       const [hx, hy] = handPos(hands.indexOf(held));
@@ -1226,7 +1448,7 @@ export function startSolo({ container, myName, colour }) {
       if (show !== 'crate-cable') { const c = CRATES.cable; if (c) return { x: c.x + 0.5, y: c.y + 0.5, reach: 1.7, ring: 1.6, box: [c.x - 0.5, c.y - 0.5, c.x + c.w - 0.5, c.y + c.h - 0.5] }; }
     }
     if (show.startsWith('crate-')) { const c = CRATES[show.slice(6)]; return c ? { x: c.x + 0.5, y: c.y + 0.5, reach: 1.7, ring: 1.6, box: [c.x - 0.5, c.y - 0.5, c.x + c.w - 0.5, c.y + c.h - 0.5] } : null; }
-    if (show === 'switch' || show === 'wifi') { const d = S.devs.find(x => x.kind === show && !carried(x)); if (!d) return null; const [cx, cy] = centre(d); return { x: cx, y: cy, reach: Math.max(d.w, d.h) / 2 + 0.9, ring: d.w / 2 + 0.6, box: [d.X - 0.5, d.Y - 0.5, d.X + d.w - 0.5, d.Y + d.h - 0.5] }; }
+    if (show === 'switch' || show === 'wifi' || show === 'router') { const d = S.devs.find(x => x.kind === show && !carried(x)); if (!d) return null; const [cx, cy] = centre(d); return { x: cx, y: cy, reach: Math.max(d.w, d.h) / 2 + 0.9, ring: d.w / 2 + 0.6, box: [d.X - 0.5, d.Y - 0.5, d.X + d.w - 0.5, d.Y + d.h - 0.5] }; }
     if (show === 'cable') { const c = cables3.find(c => c.ends[0] && c.ends[1] && dev(c.ends[0].dev).kind === 'laptop' && dev(c.ends[1].dev).kind === 'laptop'); if (c) { const e = c.ends[0], [px, py] = plugPin(dev(e.dev), e.sock); return { x: px, y: py, reach: 0.9, ring: 0.6 }; } }
     return null;
   }
@@ -1429,7 +1651,7 @@ export function startSolo({ container, myName, colour }) {
     while (q.q.length > 6) q.q.shift();   // a long backlog drops its oldest news
   }
   function hold(scr, st, secs) { if (!scr) return; const q = Q(scr); scr.show(st); q.cur = { until: nowS() + secs }; q.shown = true; }
-  function owned(scr) { if (pk && (pk.a.k3.screen === scr || pk.b.k3.screen === scr)) return true; return fx && ((fx.a.k3.screen === scr && fx.stage !== 'wait') || (fx.b.k3.screen === scr && fx.stage === 'arrive' && fx.bOn)); }
+  function owned(scr) { if ((wx && wx.a.k3.screen === scr) || (tr && tr.a.k3.screen === scr)) return true; if (pk && (pk.a.k3.screen === scr || pk.b.k3.screen === scr)) return true; return fx && ((fx.a.k3.screen === scr && fx.stage !== 'wait') || (fx.b.k3.screen === scr && fx.stage === 'arrive' && fx.bOn)); }
   function runQueues() {
     const now = nowS();
     for (const [scr, q] of queues) {
@@ -1485,6 +1707,84 @@ export function startSolo({ container, myName, colour }) {
         if (B) hold(B, fx.item ? { top: 'From ' + fx.a.name, item: fx.item, sub: (fx.item.kind === 'photo' ? 'Photo: ' : 'File: ') + fx.item.pic } : { top: 'From ' + fx.a.name, text: fx.text }, 4);
         if (fx.page) { const pg = fx.page, dv = fx.b; pages.push({ until: nowS() + 6, done() { dv.k3.group.remove(pg); pg.geometry.dispose(); pg.material.map.dispose(); pg.material.dispose(); } }); }
         fx = null; drawTest();
+      }
+    }
+  }
+  // ---------------- the web: open a website (a request goes to the web server, the page comes back in packets),
+  // and trace a route (each router on the way, one hop at a time, with its address)
+  let wx = null, tr = null;
+  const busyNet = () => !!(anim || fx || pk || wx || tr);
+  function travel(r, n, back, t0, gap, label) {
+    // n envelopes along route r (backwards if back), leaving gap seconds apart
+    const path = back ? r.slice().reverse() : r, hops = hopsFor(path), len = hops.reduce((t, h) => t + h.len, 0), out = [];
+    for (let k = 0; k < n; k++) out.push({ hops, len, t0: t0 + k * gap, n: label ? label(k) : k + 1, sprite: null, done: false });
+    return out;
+  }
+  function webFetch(a, srv) {
+    const r = route(a, srv);
+    if (!r) {
+      hold(a.k3.screen, { top: 'Website not found', text: srv.site || srv.name, mark: 'cross', sub: 'No connection to its web server' }, 3);
+      S.lastTest = { a: a.id, b: srv.id, ok: false, kind: 'web' }; toast('The website did not open. ' + why(a, srv), 'bad'); afterChange(); return;
+    }
+    const req = travel(r, 1, false, 0, 0, () => '?');
+    const back = req[0].len / PK_SPEED + 0.5;
+    wx = { a, srv, r, t: 0, items: req.concat(travel(r, 3, true, back, 0.5)), g: new THREE.Group(), doneAt: back + 1.0 + (req[0].len / PK_SPEED) + 0.6 };
+    scene.add(wx.g);
+    if (a.k3.screen) Q(a.k3.screen).cur = null;
+    drawTest();
+  }
+  function traceRoute(a, srv) {
+    const r = route(a, srv);
+    if (!r) {
+      hold(a.k3.screen, { top: 'Trace: ' + (srv.site || srv.name), lines: ['No route to the web server.'] }, 3);
+      S.lastTest = { a: a.id, b: srv.id, ok: false, kind: 'trace' }; toast('No route. ' + why(a, srv), 'bad'); afterChange(); return;
+    }
+    const hops = r.slice(1).filter(d => d.kind === 'router' || d === srv);
+    tr = { a, srv, r, hops, t: 0, shown: 0, lines: [], g: new THREE.Group(), doneAt: hops.length * 0.9 + 1.2 };
+    scene.add(tr.g);
+    drawTest();
+  }
+  function stopWeb() { for (const x of [wx, tr]) if (x) { scene.remove(x.g); x.g.traverse(o => { if (o.material) { o.material.map?.dispose?.(); o.material.dispose(); } }); } wx = tr = null; }
+  function stepWeb(dt) {
+    if (wx) {
+      wx.t += dt;
+      for (const it of wx.items) {
+        if (it.done || wx.t < it.t0) continue;
+        if (!it.sprite) { it.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: envelopeTex(it.n), depthTest: false, transparent: true })); it.sprite.scale.set(80, 60, 1); it.sprite.renderOrder = 7; wx.g.add(it.sprite); }
+        let d = (wx.t - it.t0) * PK_SPEED;
+        if (d >= it.len) { it.done = true; wx.g.remove(it.sprite); continue; }
+        let h = it.hops[0]; for (h of it.hops) { if (d <= h.len) break; d -= h.len; }
+        it.sprite.position.copy(h.curve.getPointAt(Math.min(1, d / h.len))).add(new THREE.Vector3(0, 45, 0));
+      }
+      const A = wx.a.k3.screen, site = wx.srv.site || wx.srv.name;
+      if (A) A.show(wx.items.every(i => i.done) ? { web: site, sub: 'From ' + (addrOf(wx.srv) || wx.srv.name) } : { top: 'Opening ' + site, text: wx.items[0].done ? 'Page on its way...' : 'Asking the web server...', sub: addrOf(wx.srv) ? 'Server address: ' + addrOf(wx.srv) : null });
+      if (wx.items.every(i => i.done) && wx.t >= wx.doneAt) {
+        const { a, srv } = wx; stopWeb();
+        hold(a.k3.screen, { web: srv.site || srv.name, sub: 'From the web server ' + (addrOf(srv) || '') }, 6);
+        S.lastTest = { a: a.id, b: srv.id, ok: true, kind: 'web' };
+        toast('Website opened: ' + (srv.site || srv.name) + ' came from its web server. ' + routeText(route(a, srv)), 'good');
+        afterChange();
+      }
+    }
+    if (tr) {
+      tr.t += dt;
+      const due = Math.min(tr.hops.length, Math.floor(tr.t / 0.9));
+      while (tr.shown < due) {
+        const d = tr.hops[tr.shown], k = ++tr.shown, [cx, cy] = centre(d);
+        tr.lines.push(k + '. ' + d.name + (addrOf(d) ? '  ' + addrOf(d) : ''));
+        const lab = tape('Hop ' + k + ': ' + (addrOf(d) || d.name), { bg: d === tr.srv ? '#2b8a3e' : '#1c7ed6', size: 0.032 }); lab.position.set((cx + 0.5) * T, 340, (cy + 0.5) * T); tr.g.add(lab);
+        const ring = new THREE.Mesh(new THREE.RingGeometry(80, 96, 40).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffd43b, transparent: true, opacity: 0.9, depthWrite: false }));
+        ring.position.set((cx + 0.5) * T, 5, (cy + 0.5) * T); tr.g.add(ring);
+      }
+      const A = tr.a.k3.screen;
+      if (A) A.show({ top: 'Trace: ' + (tr.srv.site || tr.srv.name), lines: tr.lines.length ? tr.lines : ['Tracing...'] });
+      if (tr.t >= tr.doneAt) {
+        const { a, srv, lines, hops, g } = tr; tr = null;
+        pages.push({ until: nowS() + 8, done() { scene.remove(g); g.traverse(o => { o.geometry?.dispose?.(); if (o.material) { o.material.map?.dispose?.(); o.material.dispose(); } }); } });
+        hold(a.k3.screen, { top: 'Trace: ' + (srv.site || srv.name) + ' (' + (hops.length - 1) + ' routers)', lines }, 8);
+        S.lastTest = { a: a.id, b: srv.id, ok: true, kind: 'trace', routers: hops.length - 1 };
+        toast('Trace done: ' + (hops.length - 1) + ' router' + (hops.length === 2 ? '' : 's') + ' on the way to the web server at ' + (addrOf(srv) || srv.name) + '.', 'good');
+        afterChange();
       }
     }
   }
@@ -1575,7 +1875,7 @@ export function startSolo({ container, myName, colour }) {
     const prev = {}, q = [a.id]; prev[a.id] = 0;
     while (q.length) {
       const n = q.shift(); if (n === b.id) break;
-      if (n !== a.id && dev(n).kind !== 'switch' && dev(n).kind !== 'wifi') continue;
+      if (n !== a.id && !FORWARD[dev(n).kind]) continue;
       links(n).forEach(m => { if ((n === x && m === y) || (n === y && m === x)) return; if (!(m in prev)) { prev[m] = n; q.push(m); } });
     }
     if (!(b.id in prev)) return null;
@@ -1882,8 +2182,8 @@ export function startSolo({ container, myName, colour }) {
     }
   }
   function drawTest() {
-    const t = $('testBar'); t.innerHTML = ''; t.hidden = M.m.type === 'race';
-    if (M.m.type === 'race') return;
+    const t = $('testBar'); t.innerHTML = ''; t.hidden = M.m.type === 'race' || M.m.type === 'quiz';
+    if (t.hidden) return;
     t.classList.toggle('pulse', M.show === 'test');
     if (compose && (!S.devs.includes(compose.a) || !S.devs.includes(compose.b) || M.phase === 'predict')) compose = null;
     if (compose) {
@@ -1925,26 +2225,36 @@ export function startSolo({ container, myName, colour }) {
     const list = ends();
     if (list.length < 2) { t.appendChild(el('span', { class: 'small' }, 'Test: put two devices down, then send a message between them.')); return; }
     const from = el('select', { id: 'nbFrom', 'aria-label': 'From' }), to = el('select', { id: 'nbTo', 'aria-label': 'To' });
-    list.forEach(d => { if (isClient(d)) from.appendChild(el('option', { value: d.id }, d.name)); to.appendChild(el('option', { value: d.id }, d.name)); });
+    const nameOf = d => (d.kind === 'server' && d.site ? d.site : d.name) + (addrOf(d) ? ' (' + addrOf(d) + ')' : '');
+    list.forEach(d => { if (isClient(d)) from.appendChild(el('option', { value: d.id }, nameOf(d))); to.appendChild(el('option', { value: d.id }, nameOf(d))); });
     if (testFrom && list.some(d => String(d.id) === testFrom && isClient(d))) from.value = testFrom;
     if (testTo && list.some(d => String(d.id) === testTo)) to.value = testTo;
     else if (to.options.length > 1 && to.value === from.value) to.selectedIndex = 1;
     const go = btn('', 'go', () => {
       const a = dev(Number(from.value)), b = dev(Number(to.value));
-      if (!a || !b || anim || fx || pk) return;
+      if (!a || !b || busyNet()) return;
       if (a === b) { toast('Choose two different devices.', 'hint'); return; }
+      if (b.kind === 'server') { webFetch(a, b); return; }
       compose = { a, b }; drawTest();
     });
-    const label = () => { const b = dev(Number(to.value)); go.textContent = b && b.kind === 'printer' ? 'Print' : 'Send'; };
+    const traceBtn = btn('Trace route', '', () => { const a = dev(Number(from.value)), b = dev(Number(to.value)); if (a && b && !busyNet()) traceRoute(a, b); });
+    const label = () => { const b = dev(Number(to.value)); go.textContent = b && b.kind === 'printer' ? 'Print' : b && b.kind === 'server' ? 'Open website' : 'Send'; traceBtn.hidden = !(b && b.kind === 'server'); };
     from.addEventListener('change', () => { testFrom = from.value; from.blur(); });
     to.addEventListener('change', () => { testTo = to.value; label(); to.blur(); });
     label();
-    go.disabled = !!anim || !!fx || !!pk || M.phase === 'predict';
-    t.append(el('b', {}, 'Test'), el('span', {}, 'From'), from, el('span', {}, 'to'), to, go);
+    go.disabled = busyNet() || M.phase === 'predict';
+    t.append(el('b', {}, 'Test'), el('span', {}, 'From'), from, el('span', {}, 'to'), to, go, traceBtn);
+    traceBtn.disabled = go.disabled;
   }
 
   // ---- missions
   let M = null, missionAt = 0, have = 0;
+  // lesson mode: on/off and which lesson; a link with ?lesson=2.2 opens that lesson
+  const lessonMode = Object.assign({ on: false, id: LESSONS[0].id }, load('lessonMode', {}) || {});
+  { const q = new URLSearchParams(location.search).get('lesson'); if (q && LESSONS.some(L => L.id === q)) { lessonMode.on = true; lessonMode.id = q; } }
+  const lessonList = () => { const L = LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]; return L.missions.map(id => MISSIONS.findIndex(m => m.id === id)).filter(i => i >= 0); };
+  const nextMission = () => { if (lessonMode.on) { const ids = lessonList(), k = ids.indexOf(missionAt); return k >= 0 && k + 1 < ids.length ? ids[k + 1] : null; } const sec = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === MISSIONS[missionAt].group).map(([, i]) => i), k = sec.indexOf(missionAt); return k >= 0 && k + 1 < sec.length ? sec[k + 1] : (missionAt + 1 < MISSIONS.length ? missionAt + 1 : null); };
+  function startLesson() { const ids = lessonList(); start(ids.find(i => !done[i]) ?? ids[0]); }
   const openSecs = new Set();
   const done = load('all:done', {}) || {};   // the 2D app's key: the same eleven missions in the same order
   function saveDone() { save('all:done', done); }
@@ -1955,7 +2265,7 @@ export function startSolo({ container, myName, colour }) {
     const m = MISSIONS[i];
     M = { result: null, tested: false, sig: '', racePick: null, raced: false, m, step: 0, phase: m.type === 'fix' ? 'predict' : m.before ? 'ask' : 'build', picks: {}, show: null, walked: false, latched: [], afterOk: !m.after };
     for (const h of hands) { h.cable = null; h.joint = -1; h.dev = null; }
-    anim = null; fx = null; stopPackets(); if (race) { scene.remove(race.g); race = null; } compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
+    anim = null; fx = null; stopPackets(); stopWeb(); if (race) { scene.remove(race.g); race = null; } compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
     m.setup();
     S.ringOrder = null;
     buildWorld();
@@ -1977,6 +2287,7 @@ export function startSolo({ container, myName, colour }) {
     updateShow();
     view.jump(pos.x, pos.y);
     drawAll();
+    if (m.breakAtStart) topoBreak();   // an outage starts with a link already broken
   }
   function updateShow() { const st = M.m.steps && M.m.steps[M.step]; M.show = M.phase === 'build' && st ? st.show : null; }
   function afterChange() {
@@ -2032,7 +2343,7 @@ export function startSolo({ container, myName, colour }) {
     const c = pick(pool.length ? pool : M.m.breakPick().map(x => x.c3)); c.broken = true; M.broken = c;
     sync();
     // three jobs: one that crosses the break if there is one, one that works, and one more
-    const pairs = shuffle(allPairs()), across = pairs.filter(p => !route(p[0], p[1])), fine = pairs.filter(p => route(p[0], p[1]));
+    const pairs = shuffle(M.m.jobPairs ? M.m.jobPairs() : allPairs()), across = pairs.filter(p => !route(p[0], p[1])), fine = pairs.filter(p => route(p[0], p[1]));
     const direct = pairs.find(p => (p[0].id === c.ends[0].dev && p[1].id === c.ends[1].dev) || (p[1].id === c.ends[0].dev && p[0].id === c.ends[1].dev));
     let jobs = [];
     if (across.length) jobs.push(across[0]);
@@ -2078,9 +2389,34 @@ export function startSolo({ container, myName, colour }) {
   function drawPanel() {
     const t = $('mission'), m = M.m;
     t.hidden = false; t.innerHTML = '';
-    // the missions in collapsible sections; in each section a mission opens when the one before it is done
+    // All missions (collapsible sections) or Lesson mode (one lesson's activities, in order)
+    const modeBar = el('div', { class: 'modebar seg', role: 'group', 'aria-label': 'Show' });
+    [['all', 'All missions'], ['lesson', 'Lesson mode']].forEach(([k, label]) => {
+      const b = el('button', { type: 'button', 'aria-pressed': String((lessonMode.on ? 'lesson' : 'all') === k) }, label);
+      b.addEventListener('click', () => { lessonMode.on = k === 'lesson'; save('lessonMode', lessonMode); if (lessonMode.on && !lessonList().includes(missionAt)) startLesson(); else drawAll(); });
+      modeBar.appendChild(b);
+    });
+    t.appendChild(modeBar);
     const nav = el('div', { class: 'sections', role: 'navigation', 'aria-label': 'Missions' });
-    SECTIONS.forEach(sec => {
+    if (lessonMode.on) {
+      const pickL = el('select', { id: 'nbLesson', 'aria-label': 'Lesson' });
+      LESSONS.forEach(L => pickL.appendChild(el('option', { value: L.id }, L.title)));
+      pickL.value = lessonMode.id;
+      pickL.addEventListener('change', () => { lessonMode.id = pickL.value; save('lessonMode', lessonMode); startLesson(); });
+      nav.appendChild(pickL);
+      const ids = lessonList(), total = ids.reduce((n, i) => n + minsOf(MISSIONS[i]), 0), left = ids.filter(i => !done[i]).reduce((n, i) => n + minsOf(MISSIONS[i]), 0);
+      nav.appendChild(el('p', { class: 'note' }, ids.filter(i => done[i]).length + ' of ' + ids.length + ' done. About ' + total + ' minutes in all' + (left && left < total ? ', about ' + left + ' left.' : '.')));
+      const items = el('div', { class: 'sec-list lesson-list' });
+      ids.forEach((i, k) => {
+        const x = MISSIONS[i];
+        const b = el('button', { type: 'button', 'aria-current': String(i === missionAt) }, (done[i] ? '<span class="tick">&#10003;</span> ' : '<span class="num">' + (k + 1) + '</span> ') + '<span class="t">' + x.title + '</span><span class="mins">' + minsOf(x) + ' min</span>');
+        b.disabled = !(k === 0 || done[ids[k - 1]] || done[i]);
+        b.addEventListener('click', () => { have = 0; start(i); });
+        items.appendChild(b);
+      });
+      nav.appendChild(items);
+    }
+    if (!lessonMode.on) SECTIONS.forEach(sec => {
       const list = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === sec);
       if (!list.length) return;
       const det = el('details', { class: 'sec' + (sec === m.group ? ' current' : '') });
@@ -2098,7 +2434,7 @@ export function startSolo({ container, myName, colour }) {
       det.appendChild(items); nav.appendChild(det);
     });
     t.appendChild(nav);
-    const inSec = MISSIONS.filter(x => x.group === m.group);
+    const inSec = lessonMode.on && lessonList().includes(missionAt) ? lessonList().map(i => MISSIONS[i]) : MISSIONS.filter(x => x.group === m.group);
     t.appendChild(el('div', { class: 'head' }, '<span>' + m.group + '</span><span>Mission ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length + '</span>'));
     t.appendChild(el('h2', {}, m.title));
     if (done[missionAt] && M.phase !== 'done') t.appendChild(el('p', { class: 'note' }, 'Done before. Play it again for practice.'));
@@ -2107,14 +2443,23 @@ export function startSolo({ container, myName, colour }) {
       const ol = el('ol', { class: 'steps' });
       m.steps.forEach((s, i) => ol.appendChild(el('li', { class: i < M.step || M.phase === 'done' ? 'done' : i === M.step ? 'now' : 'later' }, '<span>' + s.text + '</span>')));
       t.appendChild(ol);
+    } else if (m.type === 'challenge' && m.breakAtStart) {
+      /* an outage: the predictions below are the whole mission */
     } else if (m.type === 'challenge') {
       t.appendChild(el('ul', { class: 'goals' }, m.goals.map(g => '<li>' + g + '</li>').join('')));
       if (m.maxNew != null) t.appendChild(el('p', {}, '<b>New cables used: ' + (S.cables.length - (S.startCables || 0)) + '</b> (at most ' + m.maxNew + ').'));
       t.appendChild(el('p', { class: 'note' }, 'One check only. A mistake means this build does not count.'));
-    } else {
+    } else if (m.type === 'fix') {
       t.appendChild(el('p', {}, M.phase === 'predict' ? '<b>1. Predict.</b> Look at the cables. Will each job work? You cannot change the network yet.' : M.phase === 'build' ? '<b>2. Fix it.</b> ' + (m.fixText || 'Fix the cables so <b>every</b> laptop can print and message every other laptop. Test it, then check.') : ''));
       if (m.rounds > 1) t.appendChild(el('p', { class: 'note' }, have + ' of ' + m.rounds + ' clean networks in a row.'));
       if (M.phase === 'predict' || M.predicted) t.appendChild(jobList());
+    }
+    if (m.type === 'quiz') {
+      const k = M.qi || 0;
+      if (M.phase !== 'done' && k < m.items.length) {
+        t.appendChild(el('p', { class: 'note' }, 'Question ' + (k + 1) + ' of ' + m.items.length));
+        t.appendChild(askBox(m.items[k], () => { M.qi = k + 1; if (M.qi >= m.items.length) finishMission(); drawAll(); }));
+      }
     }
     if (m.type === 'client') {
       t.appendChild(el('div', { class: 'brief' }, '<b>Client brief.</b> ' + m.brief));
@@ -2156,7 +2501,11 @@ export function startSolo({ container, myName, colour }) {
     if (M.phase === 'done' && !M.afterOk) t.appendChild(askBox(m.after, () => { M.afterOk = true; drawAll(); }));
     const act = el('div', { class: 'actions' });
     if (M.phase === 'ask' || (M.phase === 'done' && !M.afterOk)) { /* answer first */ }
-    else if (M.phase === 'done') act.appendChild(missionAt < MISSIONS.length - 1 ? btn('Next mission', 'go', () => start(missionAt + 1)) : btn('Play again', 'go', () => start(missionAt)));
+    else if (M.phase === 'done') {
+      const nx = nextMission();
+      act.appendChild(nx != null ? btn('Next mission', 'go', () => start(nx)) : btn('Play again', 'go', () => start(missionAt)));
+      if (nx == null && lessonMode.on) t.appendChild(el('p', { class: 'win' }, 'Lesson complete! Every activity for this lesson is done.'));
+    }
     else if (M.phase === 'checked') act.appendChild(m.breakAfter && M.predicted ? btn('Try another break', 'go', topoBreak) : btn(m.type === 'fix' ? 'New network' : 'Try again', 'go', () => start(missionAt)));
     else if (M.phase === 'predict') act.appendChild(btn('Check my predictions', 'go', checkPredict));
     else if (m.breakAfter && M.predicted) { /* the result is shown; Try another break above */ }
@@ -2217,6 +2566,7 @@ export function startSolo({ container, myName, colour }) {
     M.walked = true;
     const keep = S, m = M.m; let steps = [];
     if (m.walk) steps = m.walk();
+    else if (m.type === 'quiz') steps = m.items.map((it, i) => ({ text: 'Question ' + (i + 1) + ': ' + it.q + ' <span class="hl">' + it.options[0] + '</span>. ' + it.why, visual: '' }));
     else if (m.type === 'race') steps = m.lanes.map(L => ({ text: '<b>' + L.label + '.</b> ' + L.text, visual: '' })).concat([{ text: 'Predict first, then press Run it and watch. ' + m.predict.why, visual: '' }]);
     else if (m.type === 'tutorial') {
       steps = m.steps.map((s, i) => ({ text: 'Step ' + (i + 1) + '. ' + s.text, visual: '' }));
@@ -2313,6 +2663,7 @@ export function startSolo({ container, myName, colour }) {
     stepFx(dt);
     stepPackets(dt);
     stepRace(dt);
+    stepWeb(dt);
     updateScreens(false);
     updatePortGlow(ts);
     updateOutline(ts);
@@ -2387,9 +2738,9 @@ export function startSolo({ container, myName, colour }) {
 
   let first = 0;
   while (first < MISSIONS.length - 1 && done[first]) first++;
-  start(first);
+  if (lessonMode.on) startLesson(); else start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, handOver, missions: MISSIONS.length, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race || wx || tr; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, webFetch, traceRoute, handOver, missions: MISSIONS.length, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }

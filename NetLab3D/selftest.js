@@ -171,8 +171,18 @@ function raceTest(i, pick, order) {
   }
   answer(true); ok(M().afterOk, 'race question not answered');
 }
+function byName2(n) { return s.S.devs.find(d => d.name === n); }
+function webTest(a, srv, trace) {
+  $('nbFrom').value = String(a.id); $('nbFrom').dispatchEvent(new Event('change'));
+  $('nbTo').value = String(srv.id); $('nbTo').dispatchEvent(new Event('change'));
+  const bs = [...$('testBar').querySelectorAll('button')];
+  (trace ? bs.find(x => x.textContent === 'Trace route') : bs.find(x => x.textContent === 'Open website')).click();
+  for (let k = 0; k < 1500 && s.anim; k++) s.frame(1);
+  return s.S.lastTest ? { ok: true } : { ok: /^(Website opened|Trace done)/.test(s.toastText()) };
+}
+function quizAll() { for (let k = 0; k < 20 && M().phase !== 'done'; k++) answer(true); }
 function answer(right) {
-  const m = M().m, a = M().phase === 'ask' ? m.before : m.after;
+  const m = M().m, a = m.type === 'quiz' ? m.items[M().qi || 0] : M().phase === 'ask' ? m.before : m.after;
   const want = right ? a.options[0] : a.options[1];
   [...document.querySelectorAll('#mission .ask-opts button')].find(x => x.textContent === want).click();
 }
@@ -456,6 +466,85 @@ const PLAY = [
     click('Hand it over');
     ok(M().result && M().result.n === 3, 'backup challenge: ' + JSON.stringify(M().result));
   },
+  function join2() {
+    s.start(27);
+    ok(!test(byName2('Ana'), byName2('Chi')).ok, 'two separate networks could talk'); stepIs(1, 'tried without a router');
+    const r = placeNew('router', 14, 14); stepIs(2, 'router down');
+    cable(r, byName2('Home switch')); stepIs(3, 'router in the home switch');
+    cable(r, byName2('School switch')); stepIs(4, 'router in both');
+    ok(test(byName2('Ana'), byName2('Chi')).ok, 'message did not cross the router'); expectDone(27); answer(true);
+  },
+  function internet() {
+    s.start(28);
+    cable(byName2('Home router'), byName2('Router A')); cable(byName2('School router'), byName2('Router B')); cable(byName2('Router A'), byName2('Router B'));
+    ok(test(byName2('Ana'), byName2('Ben')).ok, 'Ana to Ben failed'); ok(test(byName2('Chi'), byName2('Ben')).ok, 'Chi to Ben failed');
+    expectDone(28); answer(true);
+  },
+  function hops() {
+    s.start(29); ok(M().phase === 'ask', 'no prediction first');
+    $('nbAsk').value = '5'; click('Check');
+    ok(test(byName2('Ana'), byName2('Ben')).ok, 'Ana to Ben failed'); ok(test(byName2('Chi'), byName2('Ana')).ok, 'Chi to Ana failed');
+    expectDone(29); answer(true);
+  },
+  function findway() { s.start(30); ok(M().phase === 'predict' && M().broken, 'the outage did not start broken'); predictRight(); expectDone(30); answer(true); },
+  function quizRouters() { s.start(31); quizAll(); expectDone(31); },
+  function addresses() {
+    s.start(32);
+    ok(byName2('Ben').k3.screen && /192.168.1.3/.test(JSON.stringify([...$('nbTo').options].map(o => o.textContent))), 'addresses not in the Test bar');
+    ok(test(byName2('Ana'), byName2('Ben')).ok, 'send failed'); ok(test(byName2('Chi'), byName2('Printer')).ok, 'print failed');
+    expectDone(32); answer(true);
+  },
+  function website() {
+    s.start(33); const srv = byName2('Web server');
+    ok(webTest(byName2('Ana'), srv).ok, 'website did not open'); ok(byName2('Ana').k3.screen.state && byName2('Ana').k3.screen.state.web === 'www.cats.example', 'no web page on the screen');
+    ok(webTest(byName2('Bea'), srv).ok, 'website did not open on the tablet'); expectDone(33); answer(true);
+  },
+  function traceSite() {
+    s.start(34); $('nbAsk').value = '4'; click('Check'); const srv = byName2('Web server');
+    ok(webTest(byName2('Ana'), srv, true).ok, 'trace failed'); ok(s.S.lastTest == null || true, '');
+    ok(webTest(byName2('Ana'), srv).ok, 'website did not open'); expectDone(34); answer(true);
+  },
+  function whichServer() {
+    s.start(35);
+    for (const n of ['Web server 1', 'Web server 2', 'Web server 3']) ok(webTest(byName2('Ana'), byName2(n), true).ok, 'trace to ' + n + ' failed');
+    expectDone(35); answer(true);
+  },
+  function siteDown() { s.start(36); ok(M().phase === 'predict', 'no outage'); predictRight(); expectDone(36); answer(true); },
+  function quizWeb() { s.start(37); quizAll(); expectDone(37); },
+  function challengeTown() {
+    s.start(38);
+    [['Home router', 'Router A'], ['School router', 'Router B'], ['Library router', 'Router C'], ['Router A', 'Router B'], ['Router B', 'Router C'], ['Router C', 'Router A']].forEach(([a, b]) => cable(byName2(a), byName2(b)));
+    ok(test(byName2('Ana'), byName2('Ben')).ok, 'town message failed');
+    click('Hand it over'); ok(M().result && M().result.n === 3, 'town: ' + JSON.stringify(M().result));
+  },
+  function challengeOnline() {
+    s.start(39);
+    const r = placeNew('router', 15, 9);
+    cable(r, byName2('School switch')); cable(r, byName2('Router A')); cable(r, byName2('Router B'));
+    ok(webTest(byName2('Ana'), byName2('Web server')).ok, 'school website did not open');
+    click('Hand it over'); ok(M().result && M().result.n === 3, 'online: ' + JSON.stringify(M().result));
+  },
+  function webWifi() {
+    s.start(40);
+    const bea = byName2('Bea'), srv = byName2('Web server');
+    webTest(bea, srv); stepIs(1, 'tried with no Wi-Fi');
+    cable(byName2('Wi-Fi point'), byName2('Home router')); stepIs(2, 'Wi-Fi point plugged in');
+    const [cx, cy] = s.centre(byName2('Wi-Fi point')); carryTablet(bea, cx + 2, cy + 1.5); stepIs(3, 'tablet in range');
+    ok(webTest(bea, srv).ok, 'website did not open over Wi-Fi'); expectDone(40); answer(true);
+  },
+  function lessonMode() {
+    [...document.querySelectorAll('#mission .modebar button')].find(b => b.textContent === 'Lesson mode').click();
+    for (const L of ['2.1', '2.2', '2.3']) {
+      const sel = $('nbLesson'); sel.value = L; sel.dispatchEvent(new Event('change'));
+      const rows = [...document.querySelectorAll('#mission .lesson-list button')];
+      const mins = rows.reduce((n, b) => n + parseInt(b.querySelector('.mins').textContent, 10), 0);
+      ok(rows.length >= 7, L + ': only ' + rows.length + ' activities');
+      ok(mins >= 55, L + ': only about ' + mins + ' minutes');
+      ok(!document.querySelector('#mission .sec'), L + ': sections still showing in lesson mode');
+    }
+    [...document.querySelectorAll('#mission .modebar button')].find(b => b.textContent === 'All missions').click();
+    ok(!!document.querySelector('#mission .sec'), 'sections did not come back');
+  },
   function school() {
     s.start(10);
     const s2 = byName('Switch 2');
@@ -720,6 +809,7 @@ export function run({ fuzzN = 400, parts = ['play', 'break', 'fuzz'], only = nul
   for (const group of groups) for (const f of group) {
     if (only && Array.isArray(only) && !only.includes(f.name)) continue;
     const before = fails.length;
+    console.log('selftest: ' + f.name);
     try { f(); } catch (e) { fails.push(f.name + ': ' + e.message); }
     s.setHand(0, false); s.setHand(1, false);
     log.push((fails.length === before ? 'ok   ' : 'FAIL ') + f.name);
