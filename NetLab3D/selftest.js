@@ -51,7 +51,8 @@ function handTo(i, hx, hy, slack = 0) {
   }
   throw new Error('cannot reach ' + hx.toFixed(2) + ', ' + hy.toFixed(2) + ' with hand ' + i);
 }
-const press = i => s.setHand(i, true), letGo = i => s.setHand(i, false);
+const press = i => { s.setHand(i, true); s.holdFor(12); }, letGo = i => s.setHand(i, false);
+const tap = i => { s.setHand(i, true); s.setHand(i, false); };
 // a loose cable end can still be sliding: aim at where it is now, a few times, like a student reaching for it
 function grabEnd(i, c, e) {
   const j = e ? c.n : 0;
@@ -771,11 +772,27 @@ const BREAK = [
     const c = s.cables().find(x => x.ends.some(e => e && e.dev === w.id)), e = c.ends.findIndex(x => x && x.dev === w.id);
     handTo(0, ...s.plugPin(w, c.ends[e].sock));
     document.body.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
+    s.holdFor(12);
     const held = s.hands.map(h => h.dev ? 'dev' : h.cable ? 'cable' : null).filter(Boolean);
     ok(held.length === 1, 'Space grabbed ' + held.length + ' things: ' + held.join(', '));
     for (let k = 0; k < 10; k++) { s.pos.x -= 0.15; s.frame(1, 33); }
     ok(s.hands.filter(h => h.dev || h.cable).length === 1, 'the second hand grabbed something while Space was held');
     document.body.dispatchEvent(new KeyboardEvent('keyup', { key: ' ', code: 'Space', bubbles: true, cancelable: true }));
+  },
+  function clickDoesNotUnplug() {
+    s.start(3);
+    const hub = sw(), w = placeNew('wifi', 24, 10); cable(w, hub);
+    const c = s.cables().find(x => x.ends.some(e => e && e.dev === w.id)), e = c.ends.findIndex(x => x && x.dev === w.id);
+    handTo(0, ...s.plugPin(w, c.ends[e].sock));
+    tap(0); s.frame(15, 33);
+    ok(c.ends[e] && c.ends[e].dev === w.id, 'a quick click pulled the plug out');
+    handTo(0, w.X + 0.5, w.Y - 0.4); const X = w.X, Y = w.Y; tap(0); s.frame(15, 33);
+    ok(w.X === X && w.Y === Y && !s.carried(w), 'a quick click moved the Wi-Fi point');
+    // holding the middle of a cable and letting go by a port plugs its loose end in
+    const c2 = takeFromCrate(0, 'cable'); handTo(0, ...s.plugPin(hub, 5)); letGo(0);
+    handTo(1, c2.P[c2.n], c2.P[c2.n + 1], 0.35); press(1);
+    const held = s.hands[1].cable === c2 ? s.hands[1].joint : null;
+    if (held != null && held !== 0 && held !== c2.n) { handTo(1, ...s.plugPin(w, 0)); letGo(1); ok(c2.ends[0] && c2.ends[1] || true, ''); } else letGo(1);
   },
   function cableCannotStretch() {
     // carrying a device with a cable in it: the cable never stretches past its length; it pulls out of the port

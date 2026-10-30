@@ -1038,15 +1038,34 @@ export function startSolo({ container, myName, colour }) {
     if (h.down === down) return;
     h.down = down;
     $(i ? 'rightBtn' : 'leftBtn')?.classList.toggle('on', down);
-    if (!down) { h.passive = false; letGo(i); return; }
+    if (!down) { h.passive = false; h.pending = null; letGo(i); return; }
     // both hands pressed at once (Space): one press grabs one thing; the second hand just helps until it is let go
     const o = hands[1 - i];
     h.pressTick = tickNo;
-    if (o.down && o.pressTick === tickNo && (o.cable || o.dev)) { h.passive = true; return; }
+    if (o.down && o.pressTick === tickNo && (o.cable || o.dev || o.pending)) { h.passive = true; return; }
     if (locked()) { toast(M.m.type === 'race' ? 'Watch this one: predict on the right, then press Run it.' : M.phase === 'ask' ? 'Answer the question on the right first.' : M.phase === 'predict' ? 'Predict first: choose Yes or No for each job, then press Check my predictions.' : anim ? 'Wait for the message to arrive.' : 'Press the button on the mission sheet to go on.', 'hint'); return; }
     if (h.cable || h.dev) return;
     const g = grabTarget(i);
     if (!g) return;
+    // pulling a plug out of a port, or picking up a device or tablet, needs the button held a moment
+    const plugged = g.kind === 'cable' && (g.j === 0 || g.j === g.c.n) && g.c.ends[g.j === 0 ? 0 : 1];
+    if (plugged || g.kind === 'device' || g.kind === 'tablet') { h.pending = { g, at: clock }; hint(); return; }
+    doGrab(i, g);
+  }
+  const HOLD = 0.3;   // seconds
+  function holdTick() {
+    for (let i = 0; i < 2; i++) {
+      const h = hands[i], p = h.pending;
+      if (!p || !h.down || clock - p.at < HOLD) continue;
+      h.pending = null;
+      // still reaching for the same thing?
+      const g = grabTarget(i);
+      const same = g && g.kind === p.g.kind && (g.d ? g.d === p.g.d : g.c === p.g.c && g.j === p.g.j);
+      if (same) doGrab(i, g);
+    }
+  }
+  function doGrab(i, g) {
+    const h = hands[i];
     if (g.kind === 'crate') { takeFrom(i, g.crate); return; }
     if (g.kind === 'tablet') { h.dev = g.d; h.from = { tx: g.d.tx, ty: g.d.ty }; afterChange(); return; }
     if (g.kind === 'cable') { grabJoint(i, g); return; }
@@ -1078,7 +1097,7 @@ export function startSolo({ container, myName, colour }) {
       if (d.kind === 'tablet' || carried(d) || !d.k3 || !d.k3.sockets.length) continue;
       let pd = 1e9;
       for (let k = 0; k < d.k3.sockets.length; k++) { const [px, py] = plugPin(d, k); pd = Math.min(pd, Math.hypot(hx - px, hy - py)); }
-      if ((pd < 0.8 || distToFoot(d, hx, hy) < 1.1) && pd < bd) { bd = pd; dv = d; }
+      if ((pd < 1.0 || distToFoot(d, hx, hy) < 1.3) && pd < bd) { bd = pd; dv = d; }
     }
     if (!dv) return null;
     let s = -1, sd = 1e9, any = -1, ad = 1e9;
@@ -1107,7 +1126,7 @@ export function startSolo({ container, myName, colour }) {
   function grabJoint(i, best) {
     const h = hands[i], e = best.j === 0 ? 0 : best.j === best.c.n ? 1 : -1;
     h.pulledFrom = null;
-    if (e >= 0 && best.c.ends[e]) { h.pulledFrom = { ...best.c.ends[e] }; toast('Ethernet cable unplugged from ' + dev(best.c.ends[e].dev).name + '.', 'good'); best.c.ends[e] = null; afterChange(); }
+    if (e >= 0 && best.c.ends[e]) { h.pulledFrom = { ...best.c.ends[e] }; h.pulledAt = clock; toast('Ethernet cable unplugged from ' + dev(best.c.ends[e].dev).name + '.', 'good'); best.c.ends[e] = null; afterChange(); }
     h.cable = best.c; h.joint = best.j; h.since = tickNo;
     return true;
   }
@@ -1155,7 +1174,20 @@ export function startSolo({ container, myName, colour }) {
   function fits(d) {
     if (d.kind === 'tablet') return d.ty <= DESK_BOTTOM + 0.4 && d.ty >= 0.6 && d.tx >= 0.6 && d.tx <= MAPW - 1.6;
     for (let y = d.Y; y < d.Y + d.h; y++) for (let x = d.X; x < d.X + d.w; x++) if (y < 1 || x < 1 || x > MAPW - 2 || y > DESK_BOTTOM || solidAt(x, y, d)) return false;
+    if (tooClose(d)) return false;
     return !carried(d) && free(pos.x, pos.y) && shelfReachable();
+  }
+  // Every device keeps a clear space round it (two tiles on the side with its ports), so no port is ever blocked.
+  function room(d) {
+    const pad = { l: 1, r: 1, t: 1, b: 1 };
+    if (d.kind === 'laptop') pad.r = 2; else if (d.kind !== 'tablet') pad.b = 2;
+    return [d.X - pad.l, d.Y - pad.t, d.X + d.w - 1 + pad.r, d.Y + d.h - 1 + pad.b];
+  }
+  function overlaps(a, b) { return a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3]; }
+  function tooClose(d) {
+    const me = [d.X, d.Y, d.X + d.w - 1, d.Y + d.h - 1], mine = room(d);
+    return S.devs.some(o => o !== d && o.kind !== 'tablet' && !carried(o) && o.X != null &&
+      (overlaps(mine, [o.X, o.Y, o.X + o.w - 1, o.Y + o.h - 1]) || overlaps(room(o), me)));
   }
   // Can you still walk to the supply shelf? (Devices must never wall you in.)
   function shelfReachable() {
@@ -1185,7 +1217,11 @@ export function startSolo({ container, myName, colour }) {
     const crate = CRATES[d.kind];
     if (crate && Math.hypot(pos.x - (crate.x + 0.5), pos.y - (crate.y + 0.5)) < 2.4 && (S.palette[d.kind] ?? 0) > 0) { removeDevice(d); toast(d.name + ' is back on the shelf.', 'good'); return; }
     if (fits(d)) { placeGroup(d); toast(d.name + ' is on the floor.', 'good'); afterChange(); return; }
-    const why = d.kind !== 'tablet' && !free(pos.x, pos.y) ? 'You are standing there.' : d.kind !== 'tablet' && !shelfReachable() ? 'It would block your way back to the shelf.' : 'There is no room there.';
+    // too close (or no room): put it down at the nearest spot with room, and say why
+    if (d.kind !== 'tablet') { const want = [d.X, d.Y]; const reason = tooClose(d) ? 'Moved: too close to another device, so its ports would be blocked.' : null;
+      if (reason && nearestSpot(d, want[0], want[1])) { placeGroup(d); toast(d.name + ' is on the floor. ' + reason, 'hint'); afterChange(); return; } d.X = want[0]; d.Y = want[1]; }
+    const close = d.kind !== 'tablet' && tooClose(d) && S.devs.find(o => o !== d && o.kind !== 'tablet' && !carried(o) && o.X != null && (overlaps(room(d), [o.X, o.Y, o.X + o.w - 1, o.Y + o.h - 1]) || overlaps(room(o), [d.X, d.Y, d.X + d.w - 1, d.Y + d.h - 1])));
+    const why = close ? 'Too close to ' + close.name + ': leave a space so every port can be reached.' : d.kind !== 'tablet' && !free(pos.x, pos.y) ? 'You are standing there.' : d.kind !== 'tablet' && !shelfReachable() ? 'It would block your way back to the shelf.' : 'There is no room there.';
     if (h.from && d.kind === 'tablet') { d.tx = h.from.tx; d.ty = h.from.ty; }
     else if (!h.from && crate) { removeDevice(d); toast(why + ' It went back on the shelf.', 'hint'); return; }
     else if (!nearestSpot(d, h.from ? h.from.X : d.X, h.from ? h.from.Y : d.Y)) {
@@ -1205,20 +1241,27 @@ export function startSolo({ container, myName, colour }) {
     const h = hands[i];
     if (h.dev) { dropDevice(i); return; }
     if (!h.cable) return;
-    const c = h.cable, [hx, hy] = handPos(i), end = h.joint === 0 ? 0 : h.joint === c.n ? 1 : -1;
+    const c = h.cable, [hx, hy] = handPos(i); let end = h.joint === 0 ? 0 : h.joint === c.n ? 1 : -1;
     h.cable = null; h.joint = -1; h.noGrabUntil = tickNo + 8;
     // back in its crate
     const cc = CRATES.cable;
     if (cc && Math.hypot(pos.x - (cc.x + 0.5), pos.y - (cc.y + 0.5)) < 2.0 && !hands.some(o => o.cable === c) && !c.ends[0] && !c.ends[1]) {
       cables3 = cables3.filter(x => x !== c); toast('Cable put back in the crate.', 'good'); afterChange(); return;
     }
-    if (end < 0) return;
+    if (end < 0) {
+      // holding the middle of the cable: let go by a port and its nearest loose end goes in
+      const loose = [0, 1].filter(e => !c.ends[e] && !hands.some(o => o.cable === c && o.joint === (e ? c.n : 0)));
+      if (!loose.length || !plugChoice(hx, hy)) return;
+      const dist = e => { const j = e ? c.n : 0; return Math.hypot(c.P[2 * j] - hx, c.P[2 * j + 1] - hy); };
+      end = loose.sort((a, b) => dist(a) - dist(b))[0];
+    }
     // the port it goes into: the nearest free port of the device you let go next to (but a plug just pulled out only
     // goes back into that device if you push it right into the port)
     const pf = h.pulledFrom; h.pulledFrom = null;
     let best = plugChoice(hx, hy);
-    if (best && pf && best.d.id === pf.dev) { const [px, py] = plugPin(best.d, pf.sock); if (Math.hypot(hx - px, hy - py) > 0.35) best = null; }
-    if (!best && pf) return;
+    const quick = pf && clock - (h.pulledAt || 0) < 1;   // let go straight after pulling it out: it stays out
+    if (best && quick && best.d.id === pf.dev) { const [px, py] = plugPin(best.d, pf.sock); if (Math.hypot(hx - px, hy - py) > 0.35) best = null; }
+    if (!best && quick) return;
     if (!best) {
       const tab = S.devs.find(d => d.kind === 'tablet' && Math.hypot(d.tx - hx, d.ty - hy) < 1.0);
       if (tab) toast(tab.name + '\'s tablet has no network socket. It joins by Wi-Fi: put it inside a Wi-Fi point\'s white circles.', 'hint');
@@ -2651,6 +2694,7 @@ export function startSolo({ container, myName, colour }) {
     if (held.includes('dev')) h = 'Walk to where it should go, then let go. Let go at its crate to put it back.';
     else if (held.includes('plug')) h = 'Push the Ethernet plug into an RJ45 port, then let go. A laptop\'s port is on its right-hand side.';
     else if (held.length) h = 'Keep holding to carry. Let go to drop it.';
+    else if (hands.some(x => x.pending)) h = 'Keep holding to pick it up (or pull the plug out).';
     else h = 'Hold a mouse button to grab: left button = left hand, right button = right hand. Grab a device to carry it.';
     $('hint').textContent = h;
   }
@@ -2664,6 +2708,7 @@ export function startSolo({ container, myName, colour }) {
   }
   function tick(ts) {
     clock = Math.max(clock, ts / 1000);
+    holdTick();
     const dt = last ? Math.max(0, Math.min(0.1, (ts - last) / 1000)) : 0.016; last = Math.max(last, ts);   // time never runs backwards
     if (!view) return;
     let dx = 0, dy = 0;
@@ -2684,7 +2729,7 @@ export function startSolo({ container, myName, colour }) {
     acc += dt;
     let stepped = false;
     while (acc >= 0.05) { acc -= 0.05; tickNo++; stepCables(); stepped = true;
-      if (M && M.phase === 'build') for (let i = 0; i < 2; i++) if (hands[i].down && !hands[i].passive && !hands[i].cable && !hands[i].dev) tryGrab(i, false); }
+      if (M && M.phase === 'build') for (let i = 0; i < 2; i++) if (hands[i].down && !hands[i].passive && !hands[i].pending && !hands[i].cable && !hands[i].dev) tryGrab(i, false); }
     if (stepped) { drawCables(); hint(); }
     stepAnim(dt);
     stepFx(dt);
@@ -2768,6 +2813,6 @@ export function startSolo({ container, myName, colour }) {
   if (lessonMode.on) startLesson(); else start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race || wx || tr; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, webFetch, traceRoute, handOver, missions: MISSIONS.length, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race || wx || tr; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, holdFor: (n = 12) => { for (let k = 0; k < n; k++) tick((last || performance.now()) + 33); }, webFetch, traceRoute, handOver, missions: MISSIONS.length, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }
