@@ -16,7 +16,7 @@ import { makeCube, makeTray, makePad, makeBody, floorBar, sign, PAD_H, CUBE, GAP
 
 const NC = window.NotationCore, BC = window.BitCore, POW = NC.POW;
 const $ = id => document.getElementById(id);
-const T = 100, SPEED = 5.5, NEED = 2, HOLD = 0.25;
+const HOLD_OUT = 0.75, T = 100, SPEED = 5.5, NEED = 2, HOLD = 0.25;
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const pick = list => list[Math.floor(Math.random() * list.length)];
 const shuffle = list => { const a = list.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -266,7 +266,7 @@ export function startSolo({ container, myName, colour }) {
   const top = s => s.items[s.items.length - 1];
   function itemTarget(it) {
     if (it === hand.item) {
-      const [hx, hy] = handPos();
+      const hx = pos.x + Math.sin(pos.face) * HOLD_OUT, hy = pos.y + Math.cos(pos.face) * HOLD_OUT;   // held clear of the body: the cube is wider than the reach point
       return new THREE.Vector3((hx + 0.5) * T, it.tray ? 52 : 70, (hy + 0.5) * T);
     }
     const s = it.slot, k = s.items.indexOf(it);
