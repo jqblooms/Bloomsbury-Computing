@@ -163,18 +163,22 @@ steps.push(embed('activity-1', 'Activity 1: Who Does This Job?', 'cpu-lab',
 // The registers: one job each, in a table with an everyday comparison. No tracing of values (that is the
 // fetch-decode-execute lesson, 3.1.4).
 {
-  const ROWS = [['PC', 'program counter', 'the address of the <b>next</b> instruction', 'a bookmark: where to go next'],
-    ['MAR', 'memory address register', 'the <b>address</b> memory is about to read or write', 'the house number you are going to'],
-    ['MDR', 'memory data register', 'the <b>data or instruction</b> that came from memory', 'the parcel you collected from that house'],
-    ['CIR', 'current instruction register', 'the instruction being carried out <b>now</b>', 'the job you are doing now'],
-    ['ACC', 'accumulator', 'the <b>result</b> of a calculation from the ALU', 'the answer so far']];
-  const table = '<table style="border-collapse:collapse;width:100%;font-size:17px"><tr>' + ['Register', 'It holds', 'Think of it as'].map((h) => `<th style="text-align:left;padding:6px 10px;font-size:14px;color:var(--muted);border-bottom:1px solid var(--line)">${h}</th>`).join('') + '</tr>' +
-    ROWS.map(([r, full, holds, like]) => `<tr><td style="padding:8px 10px;border-bottom:1px solid var(--line)"><b style="font-size:20px">${r}</b><br><span style="font-size:13px;color:var(--muted)">${full}</span></td>` +
-      `<td style="padding:8px 10px;border-bottom:1px solid var(--line)">${holds}</td><td style="padding:8px 10px;border-bottom:1px solid var(--line);color:var(--ink-soft)">${like}</td></tr>`).join('') + '</table>';
-  steps.push(concept('concept-registers', 'Each Register Has One Job',
+  // Every component: its job and an example of what it holds or does, so students can copy it into their own table.
+  const ROWS = [['ALU', 'arithmetic logic unit', 'Carries out <b>calculations</b> and <b>logical operations</b> (comparing). Its results go in the ACC.', 'Works out 30 + 12, or checks: is 41 bigger than 30?'],
+    ['CU', 'control unit', 'Sends <b>control signals</b> to manage how data and instructions move. <b>Decodes</b> each instruction.', 'Works out that ADD 6 means: add the number at address 6.'],
+    ['PC', 'program counter', 'Holds the <b>address</b> of the <b>next</b> instruction.', '<b>4</b>: the next instruction is at address 4.'],
+    ['MAR', 'memory address register', 'Holds the <b>address</b> memory is about to read or write.', '<b>6</b>: memory is about to read address 6.'],
+    ['MDR', 'memory data register', 'Holds the <b>data or instruction</b> that has just come from memory (or is going to it).', '<b>12</b>: the number stored at address 6.'],
+    ['CIR', 'current instruction register (part of the CU)', 'Holds the instruction being decoded and carried out <b>now</b>.', '<b>ADD 6</b>'],
+    ['ACC', 'accumulator (part of the ALU)', 'Holds the <b>result</b> of a calculation from the ALU.', '<b>42</b>: the result of 30 + 12.']];
+  const cell = 'padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top';
+  const table = '<table style="border-collapse:collapse;width:100%;font-size:16px"><tr>' + ['Component', 'Its job', 'Example'].map((h) => `<th style="text-align:left;padding:4px 10px;font-size:14px;color:var(--muted);border-bottom:1px solid var(--line)">${h}</th>`).join('') + '</tr>' +
+    ROWS.map(([r, full, job, ex], i) => (i === 2 ? `<tr><td colspan="3" style="padding:8px 10px 2px;font-size:14px;color:var(--muted)">Registers: tiny, very fast stores inside the CPU. Each holds one thing.</td></tr>` : '') +
+      `<tr><td style="${cell}"><b style="font-size:19px">${r}</b><br><span style="font-size:13px;color:var(--muted)">${full}</span></td><td style="${cell}">${job}</td><td style="${cell};${MONO.replace('font-family', 'font-family')};font-size:15px">${ex}</td></tr>`).join('') + '</table>';
+  steps.push(concept('concept-registers', 'The Parts of the CPU',
     'Main memory holds the whole program, but it is outside the CPU. Predict: why does the CPU also keep a few values in tiny stores of its own?',
     '<p>Memory is slower to reach. The CPU keeps what it needs right now close by, so it can work fast.</p>',
-    '<p class="lesson-lead">A <strong>register</strong> is a tiny, very fast store <strong>inside the CPU</strong>. Each one holds one thing.</p>' + table));
+    '<p class="lesson-lead">Use this to make your own table: each part of the CPU, its job, and an example.</p>' + table));
 }
 
 steps.push(mcStep('predict-registers', 'Predict: Which Register?', '', [
