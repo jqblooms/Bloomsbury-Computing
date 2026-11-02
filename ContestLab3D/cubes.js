@@ -43,6 +43,16 @@ function faceTexture(sym, role) {
   // the symbol, as big as fits
   let px = sym.length > 2 ? 96 : sym.length > 1 ? 124 : 168;
   const font = n => '800 ' + n + 'px "Segoe UI", Arial, sans-serif';
+  if (sym.includes(' ')) {   // two words (an instruction such as LOAD 5): one line each
+    const [a, b2] = [sym.slice(0, sym.indexOf(' ')), sym.slice(sym.indexOf(' ') + 1)];
+    px = 92; g.font = font(px);
+    while (Math.max(g.measureText(a).width, g.measureText(b2).width) > S - 2 * b - 30 && px > 40) { px -= 4; g.font = font(px); }
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round'; g.lineWidth = Math.max(8, px / 10); g.strokeStyle = R.edge; g.fillStyle = R.ink;
+    for (const [t, y] of [[a, S / 2 - px * 0.52], [b2, S / 2 + px * 0.6]]) { g.strokeText(t, S / 2, y); g.fillText(t, S / 2, y); }
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+    texCache.set(key, tex);
+    return tex;
+  }
   g.font = font(px);
   while (g.measureText(sym).width > S - 2 * b - 30 && px > 40) { px -= 6; g.font = font(px); }
   g.textAlign = 'center'; g.textBaseline = 'middle';
@@ -74,6 +84,30 @@ export function makeCube(sym, role, size = 1) {
     group, mat,
     setGlow(on) { mat.emissiveIntensity = on ? base + 0.45 : base; },
     dispose() { mat.dispose(); }
+  };
+}
+
+// A job card (CPU Lab 3D): a white board tilted up towards the camera, with a sentence in sentence case.
+export function makeCard(text) {
+  const c = document.createElement('canvas'), g = c.getContext('2d'), W = 512, H = 320;
+  c.width = W; c.height = H;
+  g.fillStyle = '#fdfdf8'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#2b8a3e'; g.fillRect(0, 0, W, 16);
+  g.strokeStyle = '#495057'; g.lineWidth = 8; g.strokeRect(4, 4, W - 8, H - 8);
+  let px = 44, lines;
+  const wrap = () => { g.font = '700 ' + px + 'px "Segoe UI", Arial, sans-serif'; const out = []; let line = ''; for (const w of text.split(' ')) { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > W - 48 && line) { out.push(line); line = w; } else line = t; } out.push(line); return out; };
+  while ((lines = wrap()).length * px * 1.2 > H - 50 && px > 22) px -= 2;
+  g.fillStyle = '#16191d'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  lines.forEach((l, i) => g.fillText(l, W / 2, H / 2 + 8 + (i - (lines.length - 1) / 2) * px * 1.2));
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.6, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.15 });
+  const group = new THREE.Group();
+  const board = new THREE.Mesh(new THREE.BoxGeometry(176, 110, 6), [M(0x495057), M(0x495057), M(0x495057), M(0x495057), mat, M(0x495057)]);
+  board.userData.own = true; board.rotation.x = -0.75; board.position.y = 40; group.add(board);
+  return {
+    group,
+    setGlow(on) { mat.emissiveIntensity = on ? 0.6 : 0.15; },
+    dispose() { tex.dispose(); mat.dispose(); }
   };
 }
 

@@ -1,0 +1,10 @@
+/* CPU Lab 3D: the register table and memory list in the mission sheet (everything else is net3d.css and contest.css) */
+.cpu-regs { width: 100%; border-collapse: collapse; margin: 4px 0 8px; font-variant-numeric: tabular-nums; table-layout: fixed; }
+.cpu-regs th, .cpu-regs td { border: 1px solid var(--line-strong); padding: 4px 2px; text-align: center; font-size: .85rem; }
+.cpu-regs th { background: var(--surface-3); font-weight: 700; }
+.cpu-regs td { font-weight: 700; color: var(--ink); }
+.cpu-regs .hl { background: var(--brand-soft); outline: 2px solid #ffd43b; outline-offset: -2px; }
+.cpu-memrow { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.cpu-mem { font-size: .8rem; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); font-variant-numeric: tabular-nums; }
+.cpu-mem b { color: var(--muted); margin-right: 3px; }
+.walk .cpu-regs { max-width: 420px; }
