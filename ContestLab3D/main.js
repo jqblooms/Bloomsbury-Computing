@@ -72,11 +72,21 @@ function bitsExpr(len = 5) {
     () => a() + ' ' + b1 + ' ' + UN() + ' ' + a() + ' ' + b2 + ' ' + a()];
   for (;;) { const src = pick(forms)(); const ast = BC.parse(src); if (bitNodes(ast).filter(isOpNode).length === 3 && !/^(0+|1+)$/.test(BC.evaluate(ast))) return src; }
 }
+// contest length: three strings joined by two different binary operators, with two NOT / SHIFT / CIRC among them
+function bitsExpr4(len = 5) {
+  for (;;) {
+    const b1 = BIN(); let b2 = BIN(); while (b2 === b1) b2 = BIN();
+    const k = [0, 0, 0]; k[rnd(0, 2)]++; k[rnd(0, 2)]++;
+    const term = n => Array.from({ length: n }, UN).concat([bitsStr(len)]).join(' ');
+    const src = term(k[0]) + ' ' + b1 + ' ' + term(k[1]) + ' ' + b2 + ' ' + term(k[2]);
+    if (!/^(0+|1+)$/.test(BC.evaluate(BC.parse(src)))) return src;
+  }
+}
 // solve for x: one or two of NOT / LCIRC / RCIRC on x, then XOR a string, so there is exactly one answer
-function solveExpr() {
+function solveExpr(two) {
   for (;;) {
     const un = () => pick(['NOT', 'LCIRC-' + rnd(1, 4), 'RCIRC-' + rnd(1, 4)]);
-    const chain = Math.random() < 0.5 ? un() : un() + ' ' + un(), c = bitsStr(5);
+    const chain = !two && Math.random() < 0.5 ? un() : un() + ' ' + un(), c = bitsStr(5);
     const src = Math.random() < 0.7 ? chain + ' x XOR ' + c : c + ' XOR ' + chain + ' x';
     const sol = bitsStr(5), rhs = BC.evaluate(BC.parse(src), sol);
     if (/NOT NOT|LCIRC-\d RCIRC|RCIRC-\d LCIRC/.test(src)) continue;
@@ -159,14 +169,33 @@ const MISSIONS = [
     after: { q: 'Why does XOR 10101 undo XOR 10101?', options: ['XOR with the same string flips the same lamps, so doing it twice flips them back.', 'XOR always gives 00000.', 'XOR is the same as NOT.'], why: 'XOR with 1 flips a lamp and XOR with 0 keeps it, so the same string twice puts every lamp back.' } },
   { id: 'solve-c', group: 'Solve for x', title: 'Solve for x Challenge', type: 'challenge', kind: 'solve',
     intro: 'Set the x lamps so the machines give the target, then run them. Your first run must be right. Two clean rounds in a row.',
-    gen: () => solveExpr() }
+    gen: () => solveExpr() },
+  // Challenges: contest length, no Walk me through it, harder each time; stars for clean rounds
+  { id: 'c-post', group: 'Challenges', title: 'Postfix Pro', type: 'challenge', kind: 'stack', form: 'postfix', noHelp: true,
+    intro: 'Contest length: four operators, with / and ↑. No help. Two clean rounds in a row.',
+    gen: () => ({ t: stackTree({ n: 4, ops: ['+', '-', '*', '/', POW], max: 60 }) }) },
+  { id: 'c-pre', group: 'Challenges', title: 'Prefix Pro', type: 'challenge', kind: 'stack', form: 'prefix', noHelp: true,
+    intro: 'Contest length: four operators, with / and ↑. No help. Two clean rounds in a row.',
+    gen: () => ({ t: stackTree({ n: 4, ops: ['+', '-', '*', '/', POW], max: 60 }) }) },
+  { id: 'c-tree', group: 'Challenges', title: 'Convert Pro', type: 'challenge', kind: 'tree', noHelp: true,
+    intro: 'Four operators. Build the tree from one notation and read it in another. No help. Two clean rounds in a row.',
+    gen: () => { const from = pick(['infix', 'prefix', 'postfix']), read = pick(['prefix', 'postfix'].filter(x => x !== from)); let t; do t = NC.randomTree({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true }); while (NC.depth(t) > 3); return { t, from, read }; } },
+  { id: 'c-infix', group: 'Challenges', title: 'Brackets Pro', type: 'challenge', kind: 'infix', noHelp: true,
+    intro: 'Four operators and more than one pair of brackets. No help. Two clean rounds in a row.',
+    gen: () => { let t; do t = NC.randomTree({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true }); while (NC.depth(t) > 3 || (infixOf(t).match(/\(/g) || []).length < 2); return { t, from: pick(['prefix', 'postfix']) }; } },
+  { id: 'c-bits', group: 'Challenges', title: 'Bits Pro', type: 'challenge', kind: 'bits', noHelp: true,
+    intro: 'Contest length: four operators on three strings. No help. Two clean rounds in a row.',
+    gen: () => ({ src: bitsExpr4() }) },
+  { id: 'c-solve', group: 'Challenges', title: 'Solve Pro', type: 'challenge', kind: 'solve', noHelp: true,
+    intro: 'Two machines before the XOR. Your first run must be right. No help. Two clean rounds in a row.',
+    gen: () => solveExpr(true) }
 ];
 export { MISSIONS };
-const SECTIONS = ['Postfix', 'Prefix', 'Expression trees', 'Back to infix', 'Bit-string flicking', 'Solve for x'];
+const SECTIONS = ['Postfix', 'Prefix', 'Expression trees', 'Back to infix', 'Bit-string flicking', 'Solve for x', 'Challenges'];
 // Lesson mode (Years 7 to 9): one lesson's activities in order, about an hour each; ?lesson=bits opens one
 const LESSONS = [
-  { id: 'notation', title: 'Lesson 1: Prefix, Infix and Postfix', missions: ['post-t', 'post-c', 'pre-t', 'pre-c', 'tree-t', 'tree2-t', 'tree-c', 'infix-t', 'infix-c'] },
-  { id: 'bits', title: 'Lesson 2: Bit-String Flicking', missions: ['bits-t', 'gates-t', 'shift-t', 'shift-c', 'bits-c', 'solve-t', 'solve-c'] }
+  { id: 'notation', title: 'Lesson 1: Prefix, Infix and Postfix', missions: ['post-t', 'post-c', 'pre-t', 'pre-c', 'tree-t', 'tree2-t', 'tree-c', 'infix-t', 'infix-c'], ext: ['c-post', 'c-pre', 'c-tree', 'c-infix'] },
+  { id: 'bits', title: 'Lesson 2: Bit-String Flicking', missions: ['bits-t', 'gates-t', 'shift-t', 'shift-c', 'bits-c', 'solve-t', 'solve-c'], ext: ['c-bits', 'c-solve'] }
 ];
 // rough minutes for a Year 7 student: a tutorial is one round, a challenge needs two clean rounds
 const minsOf = m => m.mins || (m.type === 'challenge' ? 10 : m.kind === 'solve' ? 7 : 5);
@@ -329,11 +358,11 @@ export function startSolo({ container, myName, colour }) {
       const t = R.p.t, form = m.form, list = form === 'postfix' ? NC.toPostfix(t) : NC.toPrefix(t);
       newWorld(22, 14, 'Stack machine');
       R.list = list; R.order = list.map((_, i) => i); if (form === 'prefix') R.order.reverse();
-      R.next = 0; R.tok = 0; R.op = null; R.steps = NC.stackSteps(list, form);
+      R.next = 0; R.tok = 0; R.op = null; R.opsIn = 0; R.firstIn = 0; R.bothIn = 0; R.runs = 0; R.steps = NC.stackSteps(list, form);
       const bx = Math.floor((22 - list.length) / 2);
       R.belt = list.map((s, i) => {
         const sl = addSlot({ role: 'belt', x: bx + i, y: 3, idx: i,
-          take: () => R.order[R.next] !== i ? 'Take the cubes in order. ' + (form === 'postfix' ? 'Postfix is read from the left.' : 'Prefix is read from the right.') + ' The next one glows.'
+          take: () => R.order[R.next] !== i ? 'Take the cubes in order. ' + (form === 'postfix' ? 'Postfix is read from the left.' : 'Prefix is read from the right.') + ' The next one glows and has a yellow ring.'
             : (R.op || R.out.items.length) ? 'Finish the machine first.' : null,
           put: (it, from) => from === sl ? null : { msg: 'The belt only gives cubes out.' } });
         addItem(sl, cube(s, { val: Number(s) }));
@@ -373,12 +402,13 @@ export function startSolo({ container, myName, colour }) {
     placed(it, slot, from) {
       if (slot === R.stack && from.role === 'belt') { R.next++; R.tok++; }
       else if (slot === R.stack && from === R.out) R.tok++;
-      else if (slot === R.O) { R.next++; R.op = it; }
+      else if (slot === R.O) { R.next++; R.op = it; R.opsIn++; }
+      else if (slot === R.L || slot === R.R) { if (R.L.items.length && R.R.items.length) R.bothIn++; else R.firstIn++; }
       if (R.L.items.length && R.R.items.length && !R.ask) {
         const a = top(R.L).val, b = top(R.R).val, op = R.op.sym, v = NC.apply(op, a, b);
         R.ask = { type: 'num', q: 'What does the machine make? ' + C(String(a)) + ' ' + C(op) + ' ' + C(String(b)) + ' = ?', answer: v,
           hint: 'Work out ' + a + ' ' + op + ' ' + b + '. The left side comes first.', why: a + ' ' + op + ' ' + b + ' = ' + v + '.',
-          done: () => { for (const s of [R.L, R.R, R.O]) { s.items.forEach(killItem); s.items = []; } R.op = null; addItem(R.out, cube(String(v), { role: 'result', val: v })); toast('The machine made ' + v + '. Put it on the stack.', 'good'); } };
+          done: () => { R.runs++; for (const s of [R.L, R.R, R.O]) { s.items.forEach(killItem); s.items = []; } R.op = null; addItem(R.out, cube(String(v), { role: 'result', val: v })); toast('The machine made ' + v + '. Put it on the stack.', 'good'); } };
       }
     },
     check() {
@@ -402,10 +432,16 @@ export function startSolo({ container, myName, colour }) {
     },
     steps(R, m) {
       const left = m.form === 'postfix' ? 'RIGHT' : 'LEFT', right = m.form === 'postfix' ? 'LEFT' : 'RIGHT';
-      const out = R.order.map((i, k) => {
+      const out = []; let j = 0;
+      R.order.forEach((i, k) => {
         const s = R.list[i];
-        return { text: NC.isOp(s) ? C(s) + ' is an operator: put it in the machine\'s OP slot. Take the top cube of the stack to the <b>' + left + '</b>, then the next one to the <b>' + right + '</b>. Predict the answer, then put the answer cube on the stack.'
-          : C(s) + ' is a number: put it on the stack.', done: () => R.tok > k };
+        if (!NC.isOp(s)) { out.push({ text: C(s) + ' is a number: put it on the stack.', done: () => R.tok > k }); return; }
+        const n = j++;
+        out.push({ text: C(s) + ' is an operator: put it in the machine\'s <b>OP</b> slot.', done: () => R.opsIn > n });
+        out.push({ text: 'Take the top cube of the stack to the <b>' + left + '</b> side.', done: () => R.firstIn > n });
+        out.push({ text: 'Take the next cube of the stack to the <b>' + right + '</b> side.', done: () => R.bothIn > n });
+        out.push({ text: 'Predict the answer on the right.', done: () => R.runs > n });
+        out.push({ text: 'Put the answer cube on the stack.', done: () => R.tok > k });
       });
       out.push({ text: 'One cube is left on the stack. It is the answer.', done: () => R.over });
       return out;
@@ -551,7 +587,7 @@ export function startSolo({ container, myName, colour }) {
           put: (it, from) => it.sym === sym ? null : { msg: 'That crate is for ' + sym + ' cubes.' } });
         s.show = makeCube(sym, 'paren'); s.show.group.position.set((21 + 0.5) * T, PAD_H + CUBE / 2 + 2, (y + 0.5) * T); worldG.add(s.show.group);
       }
-      R.rail = addSlot({ role: 'rail', x: 3, y: 15, w: 16, grow: 'right', label: 'INFIX RAIL', tag: { tagY: 130 },
+      R.rail = addSlot({ role: 'rail', x: 2, y: 15, w: 18, grow: 'right', label: 'INFIX RAIL', tag: { tagY: 130 },
         take: () => 'It is on the rail. Keep going.',
         put: it => {
           const e = R.E[R.k];
@@ -669,9 +705,9 @@ export function startSolo({ container, myName, colour }) {
       if (R.ask) return null;
       const free = slots.filter(s => (s.role === 'shelf' || s.role === 'mout' || s.role === 'answer') && s.items.length).map(s => top(s));
       if (m.type === 'challenge') {
-        if (hand.item) return null;
-        const o = slots.find(s => s.role === 'mout' && s.items.length);
-        return o ? slotTarget(o) : boxTarget(R.shelf[0].x, 11, R.shelf[R.shelf.length - 1].x, 11);
+        if (hand.item) return areaTarget([...R.mach.values()].flatMap(mc => mc.ins).filter(x => !x.items.length));
+        const loose = slots.filter(s => (s.role === 'shelf' || s.role === 'mout') && s.items.length);
+        const t = areaTarget(loose); if (t) t.glowAll = loose.map(top); return t;
       }
       const work = bitNodes(R.ast).filter(isOpNode);
       const dest = it => { const par = R.parent.get(it.node); return par ? R.mach.get(par).ins.find(s => !s.items.length) : R.ans; };
@@ -821,6 +857,8 @@ export function startSolo({ container, myName, colour }) {
   // ---------------------------------------------------------------- the guide: the arrow on the floor, the ring, the outline
   function slotTarget(s) { return s ? { x: s.x + (s.w - 1) / 2, y: s.y, reach: 1.05 + (s.w - 1) / 2, box: [s.x - 0.5, s.y - 0.5, s.x + s.w - 0.5, s.y + 0.5], exact: true, slot: s } : null; }
   function boxTarget(x0, y0, x1, y1) { return { x: Math.max(x0, Math.min(x1, pos.x)), y: Math.max(y0, Math.min(y1, pos.y)), reach: 1.1, box: [x0 - 0.5, y0 - 0.5, x1 + 0.5, y1 + 0.5] }; }
+  // an arrow to the nearest of several pads, with no ring: you choose which one
+  function areaTarget(list) { if (!list.length) return null; const near = list.slice().sort((a, b) => rectDist(a, pos.x, pos.y) - rectDist(b, pos.x, pos.y))[0]; const t = slotTarget(near); t.exact = false; return t; }
   function guideTarget() { if (!M || !R || M.phase !== 'play' || R.over) return null; return KIND[M.m.kind].guide(R, M.m); }
   function arrowGeometry(pts, w, hl0) {
     const P = pts.map(([x, y]) => [(x + 0.5) * T, (y + 0.5) * T]), n = P.length, half = w / 2, verts = [], idx = [];
@@ -922,12 +960,20 @@ export function startSolo({ container, myName, colour }) {
   // an outline round what an empty hand would grab, or the pad a carried thing would go onto; the cube itself glows
   const outlineG = new THREE.Group();
   const outMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, depthWrite: false });
-  let outlineKey = '', glowing = null;
+  let outlineKey = '', glowing = new Set();
   function updateOutline(ts) {
     outMat.opacity = 0.6 + 0.35 * Math.sin(ts / 170);
     const g = grabTarget(), s = g ? g.slot : hand.item && !locked() ? nearestSlot(0.9, x => x.role !== 'lamp') : null;
-    const it = g && !g.slot.crate && g.slot.role !== 'lamp' ? top(g.slot) : null;
-    if (glowing !== it) { glowing?.k3?.setGlow(false); it?.k3?.setGlow(true); glowing = it; }
+    // what glows: the thing under your hand, the next thing the guide points at, and in a bit-string challenge every
+    // tray you could pick up (none of them is singled out)
+    const want = new Set();
+    if (g && !g.slot.crate && g.slot.role !== 'lamp' && top(g.slot)) want.add(top(g.slot));
+    const gt = !hand.item ? guideTarget() : null;
+    if (gt && gt.exact && gt.slot.items.length) want.add(top(gt.slot));
+    if (gt && gt.glowAll) gt.glowAll.forEach(x => want.add(x));
+    for (const x of glowing) if (!want.has(x)) x.k3?.setGlow(false);
+    for (const x of want) if (!glowing.has(x)) x.k3?.setGlow(true);
+    glowing = want;
     const key = s ? s.id + (g ? 'g' : 'd') : '';
     if (key === outlineKey) return;
     outlineKey = key;
@@ -951,7 +997,8 @@ export function startSolo({ container, myName, colour }) {
   // lesson mode: on or off, and which lesson (remembered on this computer)
   const lessonMode = Object.assign({ on: false, id: LESSONS[0].id }, load('lessonMode', {}) || {});
   { const q = new URLSearchParams(location.search).get('lesson'); if (q && LESSONS.some(L => L.id === q)) { lessonMode.on = true; lessonMode.id = q; } }
-  const lessonList = () => { const L = LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]; return L.missions.map(id => MISSIONS.findIndex(m => m.id === id)).filter(i => i >= 0); };
+  const lessonList = () => { const L = LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]; return L.missions.concat(L.ext || []).map(id => MISSIONS.findIndex(m => m.id === id)).filter(i => i >= 0); };
+  const isExt = i => ((LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]).ext || []).includes(MISSIONS[i].id);
   function startLesson() { const ids = lessonList(); start(ids.find(i => !done[MISSIONS[i].id]) ?? ids[0]); }
   const nextMission = () => {
     if (lessonMode.on) { const ids = lessonList(), k = ids.indexOf(missionAt); if (k >= 0) return k + 1 < ids.length ? ids[k + 1] : null; }
@@ -963,7 +1010,7 @@ export function startSolo({ container, myName, colour }) {
     t.hidden = false; t.innerHTML = '';
     const inLesson = lessonMode.on && lessonList().includes(missionAt), inSec = inLesson ? lessonList().map(i => MISSIONS[i]) : MISSIONS.filter(x => x.group === m.group);
     const where = inLesson ? (LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]).title.split(':')[0] : m.group;
-    t.appendChild(el('div', { class: 'head' }, '<span>' + (inLesson ? where + ': ' + m.group : m.group) + '</span><span>' + (inLesson ? 'Activity' : m.type === 'tutorial' ? 'Tutorial' : 'Challenge') + ' ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length + '</span>'));
+    t.appendChild(el('div', { class: 'head' }, '<span>' + (inLesson ? where + ': ' + m.group : m.group) + '</span><span>' + (inLesson ? (isExt(missionAt) ? 'Extension' : 'Activity') : m.type === 'tutorial' ? 'Tutorial' : 'Challenge') + ' ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length + '</span>'));
     t.appendChild(el('h2', {}, m.title));
     if (done[m.id] && M.phase !== 'done') t.appendChild(el('p', { class: 'note' }, 'Done before. Play it again for practice.'));
     t.appendChild(el('p', {}, m.intro));
@@ -977,9 +1024,9 @@ export function startSolo({ container, myName, colour }) {
       t.appendChild(el('ul', { class: 'goals' }, (m.kind === 'stack' ? ['A number goes on the stack. An operator goes in the machine.', m.form === 'postfix' ? 'The first cube off the stack goes on the RIGHT.' : 'The first cube off the stack goes on the LEFT.', 'Predict every answer cube.']
         : m.kind === 'tree' ? ['Build the tree, then read it onto the rail.', 'Prefix: a node before its sides. Postfix: both sides before the node.']
         : m.kind === 'infix' ? ['Left side, operator, right side.', 'Brackets only where the operator above would be worked first.']
-        : m.kind === 'bits' ? [ORDER_RULE, 'NOT, SHIFT and CIRC work on the string just after them.', 'Predict every new tray.']
+        : m.kind === 'bits' ? [ORDER_RULE, 'NOT, SHIFT and CIRC work on the string just after them.', 'Predict every new tray.', 'Carry the last tray to the Answer pad.']
         : ['Undo XOR with the same XOR.', 'Undo LCIRC with RCIRC by the same number, and RCIRC with LCIRC.', 'Undo NOT with NOT.']).map(g => '<li>' + g + '</li>').join('')));
-      t.appendChild(el('p', { class: 'note' }, (m.kind === 'solve' ? 'The arrow shows the lamps.' : 'No arrow while you carry: you decide where it goes.') + ' <b>' + M.have + ' of ' + NEED + ' clean rounds in a row.</b>'));
+      t.appendChild(el('p', { class: 'note' }, (m.kind === 'solve' ? 'The arrow shows the lamps.' : m.kind === 'bits' ? 'Every tray you can take glows. The arrow shows the nearest one: you decide which to take and where it goes.' : 'No arrow while you carry: you decide where it goes.') + ' <b>' + M.have + ' of ' + NEED + ' clean rounds in a row.</b>'));
     }
     if (R.ask) t.appendChild(predictBox(R.ask));
     if (R.why && !R.over) t.appendChild(el('p', { class: 'cl-why' }, '<b>Why:</b> ' + R.why));
@@ -989,11 +1036,11 @@ export function startSolo({ container, myName, colour }) {
     if (M.phase === 'ask') t.appendChild(askBox(m.before, () => { M.phase = 'play'; drawAll(); }));
     if (M.phase === 'done' && !M.afterOk) t.appendChild(askBox(m.after, () => { M.afterOk = true; drawAll(); }));
     const act = el('div', { class: 'actions' });
-    if (M.phase === 'done' && M.afterOk) { const nx = nextMission(); act.appendChild(nx != null ? btn('Next mission', 'go', () => start(nx)) : btn('Play again', 'go', () => start(missionAt))); if (nx == null && inLesson) t.appendChild(el('p', { class: 'win' }, 'Lesson complete! Every activity for this lesson is done.')); }
+    if (M.phase === 'done' && M.afterOk) { const nx = nextMission(); act.appendChild(nx != null ? btn('Next mission', 'go', () => start(nx)) : btn('Play again', 'go', () => start(missionAt))); if (inLesson && !isExt(missionAt) && (nx == null || isExt(nx))) t.appendChild(el('p', { class: 'win' }, 'Lesson complete! Every activity for this lesson is done.' + (nx != null ? ' Next: the extension challenges.' : ''))); }
     else if (M.phase === 'play' && R.over) act.appendChild(btn('Next round', 'go', () => newRound()));
     else if (M.phase === 'play' && m.kind === 'solve' && !R.ask) { const b = btn('Run the machines', 'go', () => { if (hand.item) return; KIND.solve.run(); }); b.id = 'clRun'; act.appendChild(b); }
     if (M.phase === 'play' && !R.over) act.appendChild(btn('Start again', '', () => leaveThen(() => { M.have = 0; newRound(); })));
-    act.appendChild(btn('Walk me through it', '', walkMe));
+    if (!m.noHelp) act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
     t.appendChild(navBox());
     if (R.over || M.phase === 'done' || R.ask) act.scrollIntoView({ block: 'nearest' });
@@ -1026,11 +1073,12 @@ export function startSolo({ container, myName, colour }) {
       pickL.value = lessonMode.id;
       pickL.addEventListener('change', () => { const want = pickL.value; pickL.value = lessonMode.id; leaveThen(() => { lessonMode.id = want; save('lessonMode', lessonMode); startLesson(); }); });
       nav.appendChild(pickL);
-      const ids = lessonList(), total = ids.reduce((n, i) => n + minsOf(MISSIONS[i]), 0), left = ids.filter(i => !done[MISSIONS[i].id]).reduce((n, i) => n + minsOf(MISSIONS[i]), 0);
-      nav.appendChild(el('p', { class: 'note' }, ids.filter(i => done[MISSIONS[i].id]).length + ' of ' + ids.length + ' done. About ' + total + ' minutes in all' + (left && left < total ? ', about ' + left + ' left.' : '.')));
+      const ids = lessonList(), core = ids.filter(i => !isExt(i)), total = core.reduce((n, i) => n + minsOf(MISSIONS[i]), 0), left = core.filter(i => !done[MISSIONS[i].id]).reduce((n, i) => n + minsOf(MISSIONS[i]), 0);
+      nav.appendChild(el('p', { class: 'note' }, core.filter(i => done[MISSIONS[i].id]).length + ' of ' + core.length + ' done. About ' + total + ' minutes in all' + (left && left < total ? ', about ' + left + ' left.' : '.')));
       const items = el('div', { class: 'sec-list lesson-list' });
       ids.forEach((i, k) => {
         const x = MISSIONS[i];
+        if (isExt(i) && !isExt(ids[k - 1])) items.appendChild(el('p', { class: 'note' }, '<b>Extension challenges</b> for anyone who finishes early.'));
         const b = el('button', { type: 'button', 'aria-current': String(i === missionAt) }, (done[x.id] ? '<span class="tick">&#10003;</span> ' : '<span class="num">' + (k + 1) + '</span> ') + '<span class="t">' + x.title + '</span>' + (stars[x.id] != null ? starsHtml(stars[x.id]) : '') + '<span class="mins">' + minsOf(x) + ' min</span>');
         b.disabled = !(k === 0 || done[MISSIONS[ids[k - 1]].id] || done[x.id]);
         b.addEventListener('click', () => leaveThen(() => start(i)));

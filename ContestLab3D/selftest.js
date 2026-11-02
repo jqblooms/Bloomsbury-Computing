@@ -56,7 +56,15 @@ function reach(sl) {
 const press = () => { s().setHand(true); s().frame(12); }, release = () => { s().setHand(false); s().frame(1); };
 function take(sl) { reach(sl); press(); return s().hand.item; }
 function put(sl) { reach(sl); release(); }
-function arrowCheck() { s().frame(2); const g = s().guideTarget(), p = s().pos; if (g && M().m.type === 'tutorial' && Math.hypot(g.x - p.x, g.y - p.y) > g.reach + 0.3) ok(s().arrows > 0, M().m.id + ': no arrow to ' + g.x + ',' + g.y);  }
+let lastDone = 0, lastId = '';
+function tickCheck() {
+  if (M().m.type !== 'tutorial' || M().phase !== 'play') return;
+  if (lastId !== R()) { lastId = R(); lastDone = 0; }
+  const n = document.querySelectorAll('#mission .steps li.done').length;
+  ok(n >= lastDone, M().m.id + ': a ticked step came unticked');
+  lastDone = n;
+}
+function arrowCheck() { tickCheck(); s().frame(2); const g = s().guideTarget(), p = s().pos; if (g && M().m.type === 'tutorial' && Math.hypot(g.x - p.x, g.y - p.y) > g.reach + 0.3) ok(s().arrows > 0, M().m.id + ': no arrow to ' + g.x + ',' + g.y);  }
 function carry(from, to) { arrowCheck(); const it = take(from); arrowCheck(); if (!it) throw new Error('nothing taken from ' + from.role + ' (' + s().toastText() + ')'); put(to); return it; }
 function clickBtn(text) { const b = [...document.querySelectorAll('#mission button, #card button')].find(x => x.textContent.trim() === text && !x.disabled); if (!b) throw new Error('no button ' + text); b.click(); s().frame(1); }
 const hasBtn = text => [...document.querySelectorAll('#mission button')].some(x => x.textContent.trim() === text && !x.disabled);
@@ -236,6 +244,14 @@ T.leavePrompt = () => {
   ok(!!document.querySelector('#mission .leave'), 'no Leave this mission prompt mid-round');
   clickBtn('Stay'); ok(M().m.id === 'post-t' && r.stack.items.length === 1, 'Stay lost the round');
 };
+T.challengeGlow = () => {
+  const lab = s(); lab.start(lab.missions.findIndex(m => m.id === 'bits-c')); lab.frame(2);
+  const loose = lab.slots.filter(x => (x.role === 'shelf' || x.role === 'mout') && x.items.length).map(x => x.items[x.items.length - 1]);
+  const g = lab.guideTarget();
+  ok(g && !g.exact && loose.every(x => lab.glowing.has(x)), 'bit-string challenge: not every tray glows, or one is singled out');
+  lab.start(0); lab.frame(2); const r = R();
+  ok(lab.glowing.has(r.belt[r.order[0]].items[0]), 'the next belt cube does not glow from a distance');
+};
 T.lessonMode = () => {
   const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
   lab.start(0); clickBtn('Lesson mode');
@@ -250,14 +266,16 @@ T.lessonMode = () => {
   lab.start(idx('bits-t'));
   ok(lab.nextMission() === idx('gates-t'), 'next activity is not the next one in the lesson');
   lab.start(idx('solve-c'));
-  ok(lab.nextMission() == null, 'the last activity of the lesson should have no next mission');
-  ok(/Lesson 2: [\s\S]*Activity 7 of 7/.test($('mission').textContent), 'panel does not show the lesson position');
+  ok(lab.nextMission() === idx('c-bits'), 'after the last activity the extension challenges should come next');
+  ok(/Lesson 2: [\s\S]*Activity 7 of 9/.test($('mission').textContent), 'panel does not show the lesson position');
   clickBtn('All missions');
-  ok(!lab.lessonMode.on && document.querySelectorAll('#mission details.sec').length === 6, 'All missions did not come back');
+  ok(!lab.lessonMode.on && document.querySelectorAll('#mission details.sec').length === 7, 'All missions did not come back');
 };
 T.walkthroughs = () => {
   for (let i = 0; i < s().missions.length; i++) {
-    s().start(i); clickBtn('Walk me through it');
+    s().start(i);
+    if (s().missions[i].noHelp) { ok(!hasBtn('Walk me through it'), s().missions[i].id + ' is a no-help challenge but shows Walk me through it'); continue; }
+    clickBtn('Walk me through it');
     const txt = $('card').textContent; ok(/Step 1 of/.test(txt), s().missions[i].id + ' walkthrough did not open');
     ok(!/[–—]/.test(txt), 'dash in walkthrough');
     for (let k = 0; k < 20 && !$('cardWrap').hidden; k++) [...$('card').querySelectorAll('button')].pop().click();
