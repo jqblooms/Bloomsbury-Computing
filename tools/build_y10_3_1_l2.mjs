@@ -3,8 +3,8 @@
 //   node tools/build_y10_3_1_l2.mjs
 // It writes the plenary drill y10-3-1-l2 and adds the lesson to the "3.1" unit after y10-3-1-l1.
 // The Do Now Extension reuses y10-3-1-l1 (the plenary of the lesson before, 15 cards).
-// Activities: CPU Lab (pages repo CpuLab/, registry id cpu-lab): activity=parts (Who Does This Job?) and
-// activity=regs (Watch the Registers).
+// Activities: CPU Lab activity=parts (Who Does This Job?, Activity 2 from the registers level), and a Canva poster
+// uploaded on the slide (Activity 3, file-upload step).
 // Buses and the full fetch-decode-execute cycle are 3.1.3 and 3.1.4: buses are not named in anything a student sees
 // (only in the teacher-side mark schemes), and the cycle is shown here only as the registers' jobs.
 // Real questions, each checked against its mark scheme in Desktop\0478 Past Papers\extract:
@@ -193,6 +193,18 @@ steps.push(mcStep('predict-registers', 'Predict: Which Register?', '', [
 steps.push(embed('activity-2', 'Activity 2: Which Register?', 'cpu-lab',
   'Now only the registers, then all seven parts. One check per set, and a mistake means it does not count.',
   ['Why do the PC and the MAR get mixed up?', 'Both hold an address. The PC holds the next instruction\'s address; the MAR holds the address being read right now.'], 'activity=parts&level=2'));
+
+// Activity 3: a research poster in Canva, uploaded on the slide (file-upload step, LessonUploads.gs): each file goes
+// to James's Drive in a folder with the student's name.
+steps.push({ id: 'activity-3', label: 'Activity 3: CPU Poster', type: 'file-upload', containerId: `${P}-activity-3`,
+  content: '<h2 class="lesson-h2">Activity 3: CPU Poster</h2>' +
+    why('Why is it a good idea to check a fact on two different websites?', 'One website can be wrong. If two good websites agree, the fact is more likely to be right.') +
+    columns('<p class="lesson-lead"><strong>Research, then design.</strong> Make a poster in <a href="https:' + '/' + '/www.canva.com" target="_blank" rel="noopener">Canva</a> (sign in with your school Google account). Use Google to find out more.</p>' +
+      facts(['Show <strong>every component</strong>: ALU, CU, PC, MAR, MDR, CIR and ACC.', 'For each one, write its <strong>role</strong> in your own words.',
+        'Draw <strong>where it sits</strong> in the CPU: which parts are inside the CU or the ALU, and where main memory is.',
+        'Search ideas: <em>Von Neumann architecture diagram</em>, <em>what does the MAR do</em>, <em>CPU registers IGCSE</em>.',
+        'Finished? In Canva press <strong>Share</strong>, <strong>Download</strong>, then PNG or PDF, and upload it here.']),
+      `<div id="${P}-activity-3"></div>`) });
 
 // ---------------------------------------------------------------- exam questions
 const ALU = '^\\s*(the\\s+)?(arithmetic\\s*(and\\s*)?logic(al)?\\s*unit|alu)\\s*(\\(\\s*alu\\s*\\))?\\s*\\.?\\s*$';

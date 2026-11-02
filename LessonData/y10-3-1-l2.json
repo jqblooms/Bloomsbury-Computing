@@ -209,6 +209,13 @@
    "embedQuery": "activity=parts&level=2"
   },
   {
+   "id": "activity-3",
+   "label": "Activity 3: CPU Poster",
+   "type": "file-upload",
+   "containerId": "y10-312-activity-3",
+   "content": "<h2 class=\"lesson-h2\">Activity 3: CPU Poster</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it a good idea to check a fact on two different websites?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One website can be wrong. If two good websites agree, the fact is more likely to be right.</p></div></details><div class=\"lesson-do-now-columns\"><div><p class=\"lesson-lead\"><strong>Research, then design.</strong> Make a poster in <a href=\"https://www.canva.com\" target=\"_blank\" rel=\"noopener\">Canva</a> (sign in with your school Google account). Use Google to find out more.</p><ul class=\"lesson-facts\"><li>Show <strong>every component</strong>: ALU, CU, PC, MAR, MDR, CIR and ACC.</li><li>For each one, write its <strong>role</strong> in your own words.</li><li>Draw <strong>where it sits</strong> in the CPU: which parts are inside the CU or the ALU, and where main memory is.</li><li>Search ideas: <em>Von Neumann architecture diagram</em>, <em>what does the MAR do</em>, <em>CPU registers IGCSE</em>.</li><li>Finished? In Canva press <strong>Share</strong>, <strong>Download</strong>, then PNG or PDF, and upload it here.</li></ul></div><div><div id=\"y10-312-activity-3\"></div></div></div>"
+  },
+  {
    "id": "exam-1",
    "label": "Exam Questions: Name the Part",
    "type": "short-answer-validation",
