@@ -78,12 +78,20 @@ const MISSIONS = [
     gen: () => fixed(...pick(EXAM)) },
   { id: 'speed-c', group: 'Exam sums', title: 'No Help', type: 'challenge', kind: 'add', denary: true, noHelp: true, need: 3,
     intro: 'Three 8-bit sums in a row with no help and no mistakes.',
-    gen: () => sum({ n: 8, carries: 4, min: 32, three: true }) }
+    gen: () => sum({ n: 8, carries: 4, min: 32, three: true }) },
+  // Extension: run the method backwards. A and the answer are given; find B one column at a time from the right.
+  { id: 'missing-t', group: 'Extension', title: 'Missing Number', type: 'tutorial', kind: 'add', missing: true,
+    intro: 'A and the answer are given. Find B. Start at the right: which bit of B makes the 1s in the column give the answer bit?',
+    gen: () => fixed('0101', '0011'),
+    after: { q: 'Why must you still start at the right to find B?', options: ['A carry from the right changes what B must be in the next column.', 'B is always smaller than A.', 'The left column is always 0.'], why: 'Each carry goes into the column on its left, so you need it first.' } },
+  { id: 'missing-c', group: 'Extension', title: 'Missing Number Challenge', type: 'challenge', kind: 'add', missing: true, denary: true,
+    intro: 'Find the missing 8-bit number B, then check it in denary. Two clean rounds in a row.',
+    gen: () => sum({ n: 8, carries: 3, min: 16 }) }
 ];
 export { MISSIONS };
-const SECTIONS = ['Adding bits', '8-bit addition', 'Exam sums'];
+const SECTIONS = ['Adding bits', '8-bit addition', 'Exam sums', 'Extension'];
 const LESSONS = [
-  { id: '1.6', title: '1.6: Binary Addition', missions: ['four-t', 'four-c', 'eight-t', 'eight-c', 'exam-c'], ext: ['speed-c'] }
+  { id: '1.6', title: '1.6: Binary Addition', missions: ['four-t', 'four-c', 'eight-t', 'eight-c', 'exam-c'], ext: ['missing-t', 'missing-c', 'speed-c'] }
 ];
 const minsOf = m => m.mins || (m.id === 'speed-c' ? 12 : m.type === 'challenge' ? (m.id === 'four-c' ? 10 : 12) : m.id === 'four-t' ? 7 : 10);
 
@@ -264,17 +272,18 @@ export function startSolo({ container, myName, colour }) {
   const KIND = {};
   const ROWS = { pv: 2, A: 3, B: 5, carry: 7, ans: 9, crate: 12 };
   const ones = n => n === 1 ? 'one 1' : n === 0 ? 'no 1s' : n + ' ones';
-  function boardHtml(p, done, active, carries) {
-    const n = p.n, A = bin(p.a, n), B = bin(p.b, n), cols = p.cols.slice().reverse();   // left to right
+  function boardHtml(p, done, active, carries, missing) {
+    const n = p.n, A = bin(p.a, n), B = missing ? done.map(x => x == null ? '' : x) : bin(p.b, n), cols = p.cols.slice().reverse();   // left to right
+    const ansRow = missing ? [...bin(p.a + p.b, n)] : done;
     const cell = (v, i, cls) => '<td class="' + (i === active ? 'act ' : '') + (cls || '') + '">' + v + '</td>';
     let h = '<table class="bin-board"><tr><th>Place value</th>' + cols.map((c, i) => cell(c.pv, i, 'pv')).join('') + '</tr>';
     h += '<tr><th>Carry</th>' + cols.map((c, i) => cell(carries[i] ? '1' : '', i, 'car')).join('') + '</tr>';
     h += '<tr><th>A</th>' + [...A].map((b, i) => cell(b, i)).join('') + '</tr><tr><th>+ B</th>' + [...B].map((b, i) => cell(b, i)).join('') + '</tr>';
-    h += '<tr class="ans"><th>Answer</th>' + cols.map((c, i) => cell(done[i] != null ? done[i] : '', i)).join('') + '</tr></table>';
+    h += '<tr class="ans"><th>Answer</th>' + cols.map((c, i) => cell(ansRow[i] != null ? ansRow[i] : '', i)).join('') + '</tr></table>';
     return h;
   }
   KIND.add = {
-    start() { return 'Start at the right, in the column worth 1. Carries only move left.'; },
+    start(m) { return m.missing ? 'A and the answer are given. Find B, starting at the right in the column worth 1.' : 'Start at the right, in the column worth 1. Carries only move left.'; },
     setup(R, m) {
       const p = R.p, n = p.n, W = Math.max(22, 2 * n + 9);
       newWorld(W, 15, 'Binary addition');
@@ -285,12 +294,13 @@ export function startSolo({ container, myName, colour }) {
       for (let i = 0; i < n; i++) {
         const pv = R.colOf(i).pv;
         addSign(String(pv), X(i), ROWS.pv, 120, { bg: '#ffd43b', ink: '#1a1200', size: 0.032 });
-        for (const [row, bits] of [['A', A], ['B', B]]) {
-          const s = addSlot({ role: 'num', pad: 'lamp', x: X(i), y: ROWS[row], take: () => 'These bits are the two numbers being added. Fetch 1 and 0 cubes from the crates.', put: () => ({ msg: 'These are the numbers being added. Put cubes in the carry row or the answer row.' }) });
+        const S = bin(p.a + p.b, n);
+        for (const [row, bits] of m.missing ? [['A', A], ['ans', S]] : [['A', A], ['B', B]]) {
+          const s = addSlot({ role: 'num', pad: row === 'ans' ? 'answer' : 'lamp', x: X(i), y: ROWS[row], take: () => m.missing ? 'A and the answer are given. Fetch 1 and 0 cubes from the crates for B.' : 'These bits are the two numbers being added. Fetch 1 and 0 cubes from the crates.', put: () => ({ msg: m.missing ? 'A and the answer are given. Put cubes in the B row or the carry row.' : 'These are the numbers being added. Put cubes in the carry row or the answer row.' }) });
           addItem(s, cube(bits[i]));
         }
         if (i < n - 1) R.car[i] = addSlot({ role: 'carry', pad: 'machine', x: X(i), y: ROWS.carry, col: i, take: () => 'The carry is in place.', put: (it) => carryPut(i, it) });
-        R.ans[i] = addSlot({ role: 'ans', pad: 'answer', x: X(i), y: ROWS.ans, col: i, take: () => 'This bit is in place.', put: (it) => ansPut(i, it) });
+        R.ans[i] = addSlot({ role: 'ans', pad: m.missing ? 'lamp' : 'answer', x: X(i), y: m.missing ? ROWS.B : ROWS.ans, col: i, take: () => 'This bit is in place.', put: (it) => ansPut(i, it) });
       }
       for (const [label, y] of [['A', ROWS.A], ['+ B', ROWS.B], ['CARRY', ROWS.carry], ['ANSWER', ROWS.ans]]) addSign(label, x0 - 2.2, y, 60, { bg: '#151515', size: 0.032 });
       const cx = Math.floor(W / 2);
@@ -307,7 +317,8 @@ export function startSolo({ container, myName, colour }) {
       const c = R.colOf(slot.col);
       if (slot.role === 'ans') {
         R.bits[slot.col] = it.sym;
-        explain('Column worth ' + c.pv + ': ' + ones(c.count) + ' (' + c.a + ' + ' + c.b + (c.cin ? ' + the carry' : '') + '). ' + c.count + ' is ' + COUNT_BIN[c.count] + ' in binary, so write ' + C(String(c.bit)) + (c.cout ? ' and carry 1 to the column worth ' + c.pv * 2 + '.' : '.'));
+        if (M.m.missing) explain('Column worth ' + c.pv + ': A is ' + c.a + (c.cin ? ', the carry is 1' : '') + ' and the answer bit is ' + c.bit + '. With B = ' + c.b + ' there are ' + ones(c.count) + ', ' + COUNT_BIN[c.count] + ' in binary: the answer bit is ' + c.bit + (c.cout ? ', and 1 is carried.' : '.'));
+        else explain('Column worth ' + c.pv + ': ' + ones(c.count) + ' (' + c.a + ' + ' + c.b + (c.cin ? ' + the carry' : '') + '). ' + c.count + ' is ' + COUNT_BIN[c.count] + ' in binary, so write ' + C(String(c.bit)) + (c.cout ? ' and carry 1 to the column worth ' + c.pv * 2 + '.' : '.'));
       } else if (slot.role === 'carry') {
         R.carried[slot.col] = true;
         slot.items.forEach(killItem); slot.items = []; addItem(slot, { sym: '1', role: 'on', size: 0.7 });
@@ -329,13 +340,16 @@ export function startSolo({ container, myName, colour }) {
       if (M.m.denary && !R.denaryDone) {
         if (!R.ask) {
           const p = R.p;
-          R.ask = { type: 'num', q: 'Check it in denary. A is ' + p.a + ' and B is ' + p.b + '. What is your answer, ' + R.bits.join('') + ', in denary?', answer: p.a + p.b,
+          if (M.m.missing) R.ask = { type: 'num', q: 'Check it in denary. The answer is ' + (p.a + p.b) + ' and A is ' + p.a + '. What is your B, ' + R.bits.join('') + ', in denary?', answer: p.b,
+            hint: 'Add the place values where B has a 1. It should be the answer take away A.', why: R.bits.join('') + ' is ' + p.b + ', and ' + (p.a + p.b) + ' - ' + p.a + ' = ' + p.b + '.',
+            done: () => { R.denaryDone = true; explain(p.a + ' + ' + p.b + ' = ' + (p.a + p.b) + '. B is right.'); } };
+          else R.ask = { type: 'num', q: 'Check it in denary. A is ' + p.a + ' and B is ' + p.b + '. What is your answer, ' + R.bits.join('') + ', in denary?', answer: p.a + p.b,
             hint: 'Add the place values where your answer has a 1.', why: R.bits.join('') + ' is ' + (p.a + p.b) + ', and ' + p.a + ' + ' + p.b + ' = ' + (p.a + p.b) + ', so the answer checks out.',
             done: () => { R.denaryDone = true; explain(p.a + ' + ' + p.b + ' = ' + (p.a + p.b) + ', the same as your answer. The binary sum is right.'); } };
         }
         return;
       }
-      finishRound('Answer: <b>' + R.bits.join('') + '</b> (' + (R.p.a + R.p.b) + ' in denary).');
+      finishRound(M.m.missing ? 'B is <b>' + R.bits.join('') + '</b> (' + R.p.b + ' in denary).' : 'Answer: <b>' + R.bits.join('') + '</b> (' + (R.p.a + R.p.b) + ' in denary).');
     },
     guide(R, m) {
       const a = active(); if (a < 0 || R.ask) return null;
@@ -354,18 +368,30 @@ export function startSolo({ container, myName, colour }) {
         const c = R.colOf(i);
         // the count and the answer show only once the column has been counted or done: predict first, then see it
         const seen = colDone(i) || (R.counted.has(i) && !(R.ask && active() === i));
+        if (M.m.missing && seen) { out.push({ text: 'Column worth <b>' + c.pv + '</b>: A ' + c.a + (c.cin ? ' + carry 1' : '') + ' + B ' + c.b + ' = ' + COUNT_BIN[c.count] + ', answer bit ' + c.bit + (c.cout ? ', carry 1.' : '.'), done: () => colDone(i) }); continue; }
         out.push({ text: seen ? 'Column worth <b>' + c.pv + '</b>: ' + c.a + ' + ' + c.b + (c.cin ? ' + carry 1' : '') + ' = ' + ones(c.count) + ' = ' + COUNT_BIN[c.count] + '. Write ' + C(String(c.bit)) + (c.cout ? ', then carry ' + C('1') + ' above the column worth ' + c.pv * 2 + '.' : '.')
-          : 'Column worth <b>' + c.pv + '</b>: count the 1s (A, B and the carry). Write the right digit, and carry 1 if there are two or three.', done: () => colDone(i) });
+          : M.m.missing ? 'Column worth <b>' + c.pv + '</b>: which bit of B makes A, B and the carry give the answer bit? Then carry 1 if the column has two or three 1s.' : 'Column worth <b>' + c.pv + '</b>: count the 1s (A, B and the carry). Write the right digit, and carry 1 if there are two or three.', done: () => colDone(i) });
       }
       if (M.m.denary) out.push({ text: 'Check the answer in denary.', done: () => R.denaryDone });
       return out;
     },
-    goals(m) { return ['Start at the right. Count the 1s in the column, with the carry.', 'No 1s or one 1: write it. Two (10): write 0, carry 1. Three (11): write 1, carry 1.'].concat(m.denary ? ['Check: the two numbers in denary must add up to your answer.'] : []); },
+    goals(m) { if (m.missing) return ['Start at the right.', 'Pick the B bit so the 1s in the column (A, B and the carry) give the answer bit.', 'Carry 1 when the column has two or three 1s.'].concat(m.denary ? ['Check: B in denary is the answer take away A.'] : []); return ['Start at the right. Count the 1s in the column, with the carry.', 'No 1s or one 1: write it. Two (10): write 0, carry 1. Three (11): write 1, carry 1.'].concat(m.denary ? ['Check: the two numbers in denary must add up to your answer.'] : []); },
     expr(R) {
       const n = R.p.n, carries = [...Array(n).keys()].map(i => R.carried[i]);
-      return (R.p.cite ? '<span class="note">' + R.p.cite + '</span>' : '') + boardHtml(R.p, R.bits, active(), carries);
+      return (R.p.cite ? '<span class="note">' + R.p.cite + '</span>' : '') + boardHtml(R.p, R.bits, active(), carries, M.m.missing);
     },
     walk(R, m) {
+      if (m.missing) {
+        let p; do p = sum({ n: R.p.n, carries: 2, min: R.p.n === 8 ? 16 : 1 }); while (p.key === R.p.key);
+        const n = p.n, bits = Array(n).fill(null), car = Array(n).fill(false);
+        const steps = [{ text: '<b>A different one.</b> ' + bin(p.a, n) + ' + B = ' + bin(p.a + p.b, n) + '. Start at the right.', visual: boardHtml(p, bits, n - 1, car, true) }];
+        for (const c of p.cols) {
+          bits[c.i] = String(c.b); if (c.cout && c.i > 0) car[c.i - 1] = true;
+          steps.push({ text: 'Column worth ' + c.pv + ': A is ' + c.a + (c.cin ? ', the carry is 1' : '') + ', the answer bit is ' + c.bit + '. B = ' + c.b + ' gives ' + ones(c.count) + ' = ' + COUNT_BIN[c.count] + (c.cout ? ', so 1 is carried.' : '.'), visual: boardHtml(p, bits, c.i, car, true) });
+        }
+        steps.push({ text: 'B is <span class="hl">' + bits.join('') + '</span>: ' + (p.a + p.b) + ' - ' + p.a + ' = ' + p.b + '. Now find yours.', visual: '' });
+        return steps;
+      }
       let p; do p = sum({ n: R.p.n, carries: 2, min: R.p.n === 8 ? 16 : 1 }); while (p.key === R.p.key);
       const n = p.n, bits = Array(n).fill(null), car = Array(n).fill(false);
       const steps = [{ text: '<b>A different sum.</b> ' + bin(p.a, n) + ' + ' + bin(p.b, n) + '. Start at the right.', visual: boardHtml(p, bits, n - 1, car) }];
@@ -382,10 +408,11 @@ export function startSolo({ container, myName, colour }) {
   function active() { for (let i = R.p.n - 1; i >= 0; i--) if (!colDone(i)) return i; return -1; }
   function ansPut(i, it) {
     const a = active(), c = R.colOf(i);
-    if (R.bits[i] != null) return { msg: 'This column already has its answer bit.' };
+    if (R.bits[i] != null) return { msg: 'This column already has its bit.' };
     if (a >= 0 && i === a - 1 && R.bits[a] != null && R.colOf(a).cout) return { msg: 'First carry the 1: put a 1 cube in the carry row above the column worth ' + c.pv + '. Every carry matters.', mistake: true };
     if (i !== a) return { msg: 'Start at the right: finish the column worth ' + R.colOf(a).pv + ' first. Carries only move left.', mistake: true };
-    if (it.sym !== String(c.bit)) return { msg: 'This column has ' + ones(c.count) + ' (' + c.a + ' + ' + c.b + (c.cin ? ' + the carry' : '') + '). ' + c.count + ' is ' + COUNT_BIN[c.count] + ' in binary, so write ' + c.bit + '.', mistake: true };
+    if (M.m.missing && it.sym !== String(c.b)) { const k = c.a + Number(it.sym) + c.cin; return { msg: 'With B = ' + it.sym + ', A ' + c.a + (c.cin ? ' + carry 1' : '') + ' + B ' + it.sym + ' = ' + COUNT_BIN[k] + ', so the answer bit would be ' + (k % 2) + '. The answer has ' + c.bit + ' here.', mistake: true }; }
+    if (!M.m.missing && it.sym !== String(c.bit)) return { msg: 'This column has ' + ones(c.count) + ' (' + c.a + ' + ' + c.b + (c.cin ? ' + the carry' : '') + '). ' + c.count + ' is ' + COUNT_BIN[c.count] + ' in binary, so write ' + c.bit + '.', mistake: true };
     return null;
   }
   function carryPut(i, it) {
@@ -395,7 +422,7 @@ export function startSolo({ container, myName, colour }) {
     if (R.carried[i]) return { msg: 'This column already has its carry.' };
     if (a >= 0 && i + 1 < a) return { msg: 'Start at the right: finish the column worth ' + R.colOf(a).pv + ' first. Carries only move left.', mistake: true };
     if (!src.cout) return { msg: 'The column worth ' + src.pv + ' has ' + ones(src.count) + ', so nothing is carried from it.', mistake: true };
-    if (R.bits[i + 1] == null) return { msg: 'Write the answer bit of the column worth ' + src.pv + ' first, then carry.' };
+    if (R.bits[i + 1] == null) return { msg: (M.m.missing ? 'Put the B bit' : 'Write the answer bit') + ' of the column worth ' + src.pv + ' first, then carry.' };
     return null;
   }
 

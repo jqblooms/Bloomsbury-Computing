@@ -89,7 +89,7 @@ function solveAdd() {
     if (r.ask) { answer(); continue; }
     const a = activeCol(r); if (a < 0) { lab.frame(1); continue; }
     const c = r.colOf(a);
-    if (r.bits[a] == null) carry(c.bit ? r.one : r.zero, r.ans[a]);
+    if (r.bits[a] == null) carry((M().m.missing ? c.b : c.bit) ? r.one : r.zero, r.ans[a]);
     else carry(r.one, r.car[a - 1]);
   }
   ok(r.over, 'addition round did not finish (' + s().toastText() + ')');
@@ -118,6 +118,13 @@ T.answersAreRight = () => {
     for (const c of p.cols) { v += c.bit * c.pv; ok(c.count === c.a + c.b + c.cin && c.bit === c.count % 2, m.id + ': a column is worked wrongly'); }
     ok(v === p.a + p.b && p.a + p.b < 2 ** p.n && p.a !== p.b, m.id + ': ' + p.a + ' + ' + p.b + ' does not fit or does not add up');
   }
+};
+T.missingNumber = () => {
+  s().start(idx('missing-c')); const r = R(); const a = activeCol(r), c = r.colOf(a);
+  ok(r.ans[a].y === 5 && !r.ans[a].items.length, 'the B row is not the one to fill');
+  carry(c.b ? r.zero : r.one, r.ans[a]);
+  ok(r.spoilt && r.bits[a] == null && /so the answer bit would be/.test(r.why || ''), 'a wrong B bit was accepted');
+  solveAdd(); ok(r.over && r.bits.join('') === r.p.b.toString(2).padStart(8, '0'), 'B was not found');
 };
 T.startAtTheRight = () => {
   s().start(idx('four-c')); const r = R();
