@@ -155,6 +155,20 @@ function playMission(i) {
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.distinctCubes = () => {
+  // no two cubes (or trays) in one round may look the same, in tutorials, challenges and walkthrough examples
+  const lab = s();
+  for (let i = 0; i < lab.missions.length; i++) {
+    const m = lab.missions[i];
+    for (let k = 0; k < (m.type === 'challenge' ? 30 : 1); k++) {
+      const p = m.gen(), seen = [];
+      if (p.t) (function go(n) { if (n.op) { go(n.l); go(n.r); } const inf = window.NotationCore.toInfix(n); seen.push(n.op ? (/[A-Z]/.test(inf) ? null : String(window.NotationCore.evaluate(n))) : n.v); })(p.t);
+      else if (p.src && !/x/.test(p.src)) { const B = window.BitCore, ast = B.parse(p.src); (function go(n) { if (n.t === 'not' || n.t === 'sh') go(n.a); else if (n.t === 'bin') { go(n.a); go(n.b); } seen.push(n.t === 'bits' ? n.v : B.evaluate(n)); })(ast); }
+      const vals = seen.filter(v => v != null);
+      ok(new Set(vals).size === vals.length, m.id + ': two cubes look the same: ' + vals.join(' '));
+    }
+  }
+};
 T.attention = () => {
   const lab = s(); lab.start(0); const r = R(), panel = $('mission');
   ok(panel.querySelector('.steps li.now.attn'), 'the step you are on does not glow');

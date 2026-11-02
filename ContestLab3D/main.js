@@ -64,13 +64,20 @@ const isOpNode = n => n.t === 'not' || n.t === 'sh' || n.t === 'bin';
 const bitsStr = n => { const r = []; for (let i = 0; i < n; i++) r.push(Math.random() < 0.5 ? '1' : '0'); const s = r.join(''); return /^(0+|1+)$/.test(s) ? bitsStr(n) : s; };
 const UN = () => pick(['NOT', 'LSHIFT-' + rnd(1, 3), 'RSHIFT-' + rnd(1, 3), 'LCIRC-' + rnd(1, 4), 'RCIRC-' + rnd(1, 4)]);
 const BIN = () => pick(['AND', 'OR', 'XOR']);
+// No two trays may look the same: every starting string and every machine's result is different, so the order
+// things happen in is always clear (James, 2026-11-02, after three 8 cubes in a row on the stack).
+function bitsDistinct(src) {
+  const ast = BC.parse(src), seen = new Set();
+  for (const n of bitNodes(ast)) { const v = n.t === 'bits' ? n.v : BC.evaluate(n); if (seen.has(v)) return false; seen.add(v); }
+  return true;
+}
 function bitsExpr(len = 5) {
   // three operators in a shape where the order of operations matters
   const a = () => bitsStr(len), b1 = BIN(); let b2 = BIN(); while (b2 === b1) b2 = BIN();
   const forms = [() => UN() + ' ' + a() + ' ' + b1 + ' ' + UN() + ' ' + a(), () => UN() + ' ' + UN() + ' ' + a() + ' ' + b1 + ' ' + a(),
     () => a() + ' ' + b1 + ' ' + a() + ' ' + b2 + ' ' + UN() + ' ' + a(), () => UN() + ' ' + a() + ' ' + b1 + ' ' + a() + ' ' + b2 + ' ' + a(),
     () => a() + ' ' + b1 + ' ' + UN() + ' ' + a() + ' ' + b2 + ' ' + a()];
-  for (;;) { const src = pick(forms)(); const ast = BC.parse(src); if (bitNodes(ast).filter(isOpNode).length === 3 && !/^(0+|1+)$/.test(BC.evaluate(ast))) return src; }
+  for (;;) { const src = pick(forms)(); const ast = BC.parse(src); if (bitNodes(ast).filter(isOpNode).length === 3 && !/^(0+|1+)$/.test(BC.evaluate(ast)) && bitsDistinct(src)) return src; }
 }
 // contest length: three strings joined by two different binary operators, with two NOT / SHIFT / CIRC among them
 function bitsExpr4(len = 5) {
@@ -79,7 +86,7 @@ function bitsExpr4(len = 5) {
     const k = [0, 0, 0]; k[rnd(0, 2)]++; k[rnd(0, 2)]++;
     const term = n => Array.from({ length: n }, UN).concat([bitsStr(len)]).join(' ');
     const src = term(k[0]) + ' ' + b1 + ' ' + term(k[1]) + ' ' + b2 + ' ' + term(k[2]);
-    if (!/^(0+|1+)$/.test(BC.evaluate(BC.parse(src)))) return src;
+    if (!/^(0+|1+)$/.test(BC.evaluate(BC.parse(src))) && bitsDistinct(src)) return src;
   }
 }
 // solve for x: one or two of NOT / LCIRC / RCIRC on x, then XOR a string, so there is exactly one answer
@@ -112,7 +119,15 @@ function undoSteps(src, rhs) {
 
 // ================================================================ missions
 const tree = s => NC.parseInfix(s), fromPost = s => NC.parsePostfix(s), fromPre = s => NC.parsePrefix(s);
-function stackTree(o) { return NC.randomTree(Object.assign({ letters: false, max: 40, noNeg: true }, o)); }
+// No two cubes in one expression may be the same: every operand is different, and (with numbers) every answer cube
+// differs from every operand and from every other answer, so the order things happen in is always clear.
+function cubesDistinct(t) {
+  const seen = new Set();
+  for (const n of postorder(t)) { const v = n.op ? (/[A-Z]/.test(NC.toInfix(n)) ? null : String(NC.evaluate(n))) : n.v; if (v == null) continue; if (seen.has(v)) return false; seen.add(v); }
+  return true;
+}
+function RT(o) { for (let k = 0; k < 3000; k++) { const t = NC.randomTree(o); if (cubesDistinct(t)) return t; } return NC.randomTree(o); }
+function stackTree(o) { return RT(Object.assign({ letters: false, max: 40, noNeg: true }, o)); }
 const MISSIONS = [
   { id: 'post-t', group: 'Postfix', title: 'Postfix with a Stack', type: 'tutorial', kind: 'stack', form: 'postfix',
     intro: 'Postfix puts the operator <b>after</b> its two values. A stack works it out. Read the belt from the <b>left</b>.',
@@ -137,17 +152,17 @@ const MISSIONS = [
     gen: () => ({ t: tree('(A - B) * C'), from: 'infix', read: 'postfix' }) },
   { id: 'tree-c', group: 'Expression trees', title: 'Convert', type: 'challenge', kind: 'tree',
     intro: 'Build the tree from one notation, then read it in another. Two clean rounds in a row.',
-    gen: () => { const from = pick(['infix', 'prefix', 'postfix']), read = pick(['prefix', 'postfix'].filter(x => x !== from)); return { t: NC.randomTree({ n: rnd(2, 3), ops: ['+', '-', '*', '/', POW], letters: true }), from, read }; } },
+    gen: () => { const from = pick(['infix', 'prefix', 'postfix']), read = pick(['prefix', 'postfix'].filter(x => x !== from)); return { t: RT({ n: rnd(2, 3), ops: ['+', '-', '*', '/', POW], letters: true }), from, read }; } },
   { id: 'infix-t', group: 'Back to infix', title: 'Brackets and Order', type: 'tutorial', kind: 'infix',
     intro: 'Infix puts the operator <b>between</b> its sides. Read the tree: left side, operator, right side. Add brackets where a part must be worked first.',
     gen: () => ({ t: fromPost('A B + C *'), from: 'postfix' }),
     after: { q: 'Why does A + B need brackets in (A + B) * C?', options: ['Without them, * is worked before +.', 'Brackets always go round letters.', 'The + sign must always come first.'], why: '* comes before + in the order of operations, so A + B * C means A + (B * C).' } },
   { id: 'infix-c', group: 'Back to infix', title: 'Brackets Challenge', type: 'challenge', kind: 'infix',
     intro: 'Write each tree in infix on the rail, with brackets only where they are needed. Two clean rounds in a row.',
-    gen: () => { let t; do t = NC.randomTree({ n: rnd(2, 3), ops: ['+', '-', '*', '/', POW], letters: true }); while (!/\(/.test(infixOf(t))); return { t, from: pick(['prefix', 'postfix']) }; } },
+    gen: () => { let t; do t = RT({ n: rnd(2, 3), ops: ['+', '-', '*', '/', POW], letters: true }); while (!/\(/.test(infixOf(t))); return { t, from: pick(['prefix', 'postfix']) }; } },
   { id: 'bits-t', group: 'Bit-string flicking', title: 'NOT and AND', type: 'tutorial', kind: 'bits',
     intro: 'A tray of lamps is a bit string: lit is 1, dark is 0. Carry trays through the machines. NOT is worked before AND.',
-    gen: () => ({ src: 'NOT 10110 AND 01101' }),
+    gen: () => ({ src: 'NOT 10110 AND 01110' }),
     after: { q: '10110 AND 01101 = 00100. Why is only one lamp lit?', options: ['AND lights a lamp only where both lamps are lit.', 'AND adds the two strings.', 'AND flips every lamp.'], why: 'Only the third lamp is lit in both strings.' } },
   { id: 'gates-t', group: 'Bit-string flicking', title: 'XOR and OR', type: 'tutorial', kind: 'bits',
     intro: 'XOR lights a lamp where the two lamps are different. OR lights it where either is lit. XOR is worked before OR.',
@@ -159,7 +174,7 @@ const MISSIONS = [
     after: { q: 'In RCIRC-1 LSHIFT-2 10011, why is LSHIFT-2 worked first?', options: ['It is next to the string, so the string goes into it first.', 'L comes before R in the alphabet.', 'Shifts are always worked last.'], why: 'NOT, SHIFT and CIRC work on what is just after them, so a row of them is worked from the right.' } },
   { id: 'shift-c', group: 'Bit-string flicking', title: 'Shifts Challenge', type: 'challenge', kind: 'bits',
     intro: 'Two or three NOT, SHIFT and CIRC machines in a row. Work them from the right. Predict every new tray. Two clean rounds in a row.',
-    gen: () => ({ src: (Math.random() < 0.5 ? UN() + ' ' : '') + UN() + ' ' + UN() + ' ' + bitsStr(5) }) },
+    gen: () => { let src; do src = (Math.random() < 0.5 ? UN() + ' ' : '') + UN() + ' ' + UN() + ' ' + bitsStr(5); while (!bitsDistinct(src)); return { src }; } },
   { id: 'bits-c', group: 'Bit-string flicking', title: 'Order of Operations', type: 'challenge', kind: 'bits',
     intro: 'Carry the trays through the machines in the right order. Predict every new tray. Two clean rounds in a row.',
     gen: () => ({ src: bitsExpr() }) },
@@ -179,10 +194,10 @@ const MISSIONS = [
     gen: () => ({ t: stackTree({ n: 4, ops: ['+', '-', '*', '/', POW], max: 60 }) }) },
   { id: 'c-tree', group: 'Challenges', title: 'Convert Pro', type: 'challenge', kind: 'tree', noHelp: true,
     intro: 'Four operators. Build the tree from one notation and read it in another. No help. Two clean rounds in a row.',
-    gen: () => { const from = pick(['infix', 'prefix', 'postfix']), read = pick(['prefix', 'postfix'].filter(x => x !== from)); let t; do t = NC.randomTree({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true }); while (NC.depth(t) > 3); return { t, from, read }; } },
+    gen: () => { const from = pick(['infix', 'prefix', 'postfix']), read = pick(['prefix', 'postfix'].filter(x => x !== from)); let t; do t = RT({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true }); while (NC.depth(t) > 3); return { t, from, read }; } },
   { id: 'c-infix', group: 'Challenges', title: 'Brackets Pro', type: 'challenge', kind: 'infix', noHelp: true,
     intro: 'Four operators and more than one pair of brackets. No help. Two clean rounds in a row.',
-    gen: () => { let t; do t = NC.randomTree({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true }); while (NC.depth(t) > 3 || (infixOf(t).match(/\(/g) || []).length < 2); return { t, from: pick(['prefix', 'postfix']) }; } },
+    gen: () => { let t; do t = RT({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true }); while (NC.depth(t) > 3 || (infixOf(t).match(/\(/g) || []).length < 2); return { t, from: pick(['prefix', 'postfix']) }; } },
   { id: 'c-bits', group: 'Challenges', title: 'Bits Pro', type: 'challenge', kind: 'bits', noHelp: true,
     intro: 'Contest length: four operators on three strings. No help. Two clean rounds in a row.',
     gen: () => ({ src: bitsExpr4() }) },
@@ -590,7 +605,7 @@ export function startSolo({ container, myName, colour }) {
     },
     expr(R) { return '<b>' + FORM_NAME[R.p.from] + ':</b> ' + Cs(sourceTokens(R.p)) + '<br><b>Read it as:</b> ' + FORM_NAME[R.p.read] + (R.stage === 'read' ? ' (' + R.readN + ' of ' + R.readOrder.length + ')' : ''); },
     walk(R, m) {
-      let t; do t = NC.randomTree({ n: 2, ops: ['+', '-', '*'], letters: true }); while (NC.toPrefix(t).join() === NC.toPrefix(R.p.t).join());
+      let t; do t = RT({ n: 2, ops: ['+', '-', '*'], letters: true }); while (NC.toPrefix(t).join() === NC.toPrefix(R.p.t).join());
       const from = R.p.from, read = R.p.read, src = sourceTokens({ t, from });
       const steps = [{ text: '<b>A different expression.</b> ' + FORM_NAME[from] + ': ' + Cs(src) + '.', visual: treeSvg(t, []) }];
       steps.push({ text: (from === 'prefix' ? 'In prefix the first token is the top: ' : from === 'postfix' ? 'In postfix the last token is the top: ' : 'The operator worked last goes at the top: ') + C(t.op) + '.', visual: treeSvg(t, [t]) });
@@ -675,7 +690,7 @@ export function startSolo({ container, myName, colour }) {
     },
     expr(R) { return '<b>' + FORM_NAME[R.p.from] + ':</b> ' + Cs(sourceTokens(R.p)) + '<br><b>Write it in infix</b> on the rail (' + R.k + ' cubes so far).'; },
     walk(R) {
-      let t; do t = NC.randomTree({ n: 2, ops: ['+', '-', '*', '/'], letters: true }); while (!/\(/.test(infixOf(t)) || NC.toPrefix(t).join() === NC.toPrefix(R.p.t).join());
+      let t; do t = RT({ n: 2, ops: ['+', '-', '*', '/'], letters: true }); while (!/\(/.test(infixOf(t)) || NC.toPrefix(t).join() === NC.toPrefix(R.p.t).join());
       const E = infixTokens(t), steps = [{ text: '<b>A different tree.</b> Read it in order: the left side, the operator, then the right side.', visual: treeSvg(t, []) }];
       for (const e of E) if (e.tok === '(') steps.push({ text: infixOf(e.sub) + ' sits under ' + C(e.parentOp) + '. ' + C(e.parentOp) + ' would be worked first, so ' + infixOf(e.sub) + ' needs brackets.', visual: treeSvg(t, nodesOf(e.sub)) });
       steps.push({ text: 'Without brackets: ' + NC.toInfix(t, {}).replace(/[()]/g, '') + ' would mean something else. With them: <span class="hl">' + infixOf(t) + '</span>.', visual: '' });
@@ -776,7 +791,7 @@ export function startSolo({ container, myName, colour }) {
     walk(R, m) { return bitsWalk(R.p.src, m.type === 'tutorial' ? (R.p.src.includes('CIRC') || R.p.src.includes('SHIFT') ? () => 'LCIRC-' + rnd(1, 3) + ' RSHIFT-' + rnd(1, 2) + ' ' + bitsStr(5) : () => 'NOT ' + bitsStr(5) + ' OR ' + bitsStr(5)) : () => bitsExpr()); }
   };
   function bitsWalk(cur, gen) {
-    let src; do src = gen(); while (src === cur);
+    let src; do src = gen(); while (src === cur || !bitsDistinct(src));
     const ast = BC.parse(src), steps = [{ text: '<b>A different expression.</b> <code class="cl-code">' + src + '</code>. ' + ORDER_RULE, visual: '' }];
     const val = new Map();
     for (const n of bitNodes(ast)) {
