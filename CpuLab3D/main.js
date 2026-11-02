@@ -309,7 +309,7 @@ export function startSolo({ container, myName, colour }) {
     R = { p, over: false, spoilt: false, ask: null, notes: [], moves: 0, why: null };
     KIND[m.kind].setup(R, m);
     pos.face = Math.PI; view.jump(pos.x, pos.y);
-    toast(''); explainReset(); explain(startLine(m, p)); afterChange(); $('mission').scrollTop = 0;
+    toast(''); explainReset(); explain(startLine(m, p)); $('mission').scrollTop = 0; afterChange();   // to the top first, so a question at the start can scroll into view
   }
   function startLine(m, p) { return KIND[m.kind].start(m, p); }
 

@@ -335,7 +335,7 @@ export function startSolo({ container, myName, colour }) {
     R = { p, over: false, spoilt: false, ask: null, notes: [], moves: 0, why: null };
     KIND[m.kind].setup(R, m);
     pos.face = Math.PI; view.jump(pos.x, pos.y);
-    toast(''); explainReset(); explain(startLine(m, p)); afterChange(); $('mission').scrollTop = 0;
+    toast(''); explainReset(); explain(startLine(m, p)); $('mission').scrollTop = 0; afterChange();   // to the top first, so a question at the start can scroll into view
   }
   function startLine(m, p) {
     if (m.kind === 'stack') return m.form === 'postfix' ? 'This is <b>postfix</b>, so we read the belt from <b>left to right</b>.' : 'This is <b>prefix</b>, so we read the belt from <b>right to left</b>.';
