@@ -135,6 +135,7 @@ T.wrongBit = () => {
   s().start(idx('eight-c')); const r = R(); const a = activeCol(r), c = r.colOf(a);
   carry(c.bit ? r.zero : r.one, r.ans[a]);
   ok(r.spoilt && r.bits[a] == null && /in binary, so write/.test(r.why || ''), 'a wrong bit was accepted');
+  { const g = s().guideTarget(); ok(g && g.exact && g.slot === (c.bit ? r.one : r.zero), 'after a mistake the guide does not show the right crate'); }
   solveAdd(); ok(M().have === 0, 'a spoilt round counted');
 };
 T.forgottenCarry = () => {

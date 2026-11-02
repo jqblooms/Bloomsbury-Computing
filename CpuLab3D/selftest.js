@@ -133,6 +133,8 @@ T.wrongMoveSpoils = () => {
   carry(r.slot.PC, r.slot.CIR);
   ok(r.spoilt && r.i === 0 && !/^\d/.test(r.regs.CIR) === !/^\d/.test(r.regs.CIR), 'PC into the CIR was not a mistake');
   ok(/Not this move/.test(r.why || ''), 'no reason for a wrong move');
+  ok(/^Not this time\. Not this move.*arrow now shows each move/.test((window.__explained || []).slice(-1)[0] || ''), 'the mistake is not in the What just happened card');
+  { const g = s().guideTarget(); ok(g && g.exact && g.slot === r.slot.PC, 'after a mistake the guide does not show the next move'); }
   solveCpu(); ok(M().have === 0, 'a spoilt round counted');
 };
 T.leverTooEarly = () => {

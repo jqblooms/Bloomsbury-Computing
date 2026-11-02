@@ -231,6 +231,7 @@ T.wrongSide = () => {
   for (let g = 0; g < 20 && !r.op; g++) { const b = r.belt[r.order[r.next]]; carry(b, top(b).role === 'op' ? r.O : r.stack); }
   carry(r.stack, r.L);   // postfix: the first cube off the stack belongs on the right
   ok(r.spoilt && !r.L.items.length && r.stack.items.length >= 2, 'first pop on the left was not a mistake');
+  take(r.stack); s().frame(2); { const g = s().guideTarget(); ok(g && g.exact && g.slot === r.R, 'after a mistake the guide does not show the RIGHT side'); } release();
 };
 T.tapNeedsHold = () => {
   s().start(0); const r = R();

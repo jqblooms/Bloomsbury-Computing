@@ -242,8 +242,10 @@ export function startSolo({ container, myName, colour }) {
   const keyOf = p => p.key;
   function mistake(msg) {
     R.why = msg; log.add(M.m.title + ': ' + msg.replace(/<[^>]+>/g, ''), false);
-    if (M.m.type === 'challenge') { if (!R.spoilt) toast('A mistake: this round does not count. ' + msg, 'bad'); else toast(msg, 'bad'); R.spoilt = true; }
+    const first = M.m.type === 'challenge' && !R.spoilt;
+    if (M.m.type === 'challenge') { if (first) toast('A mistake: this round does not count. ' + msg, 'bad'); else toast(msg, 'bad'); R.spoilt = true; }
     else toast(msg, 'bad');
+    explain('Not this time. ' + msg + (first ? (M.m.noHelp ? ' This round does not count.' : ' This round does not count, so the arrow now shows each move: watch the method, then try a new round.') : ''));
     drawAll();
   }
   function finishRound(msg) {
@@ -498,7 +500,12 @@ export function startSolo({ container, myName, colour }) {
   function boxTarget(x0, y0, x1, y1) { return { x: Math.max(x0, Math.min(x1, pos.x)), y: Math.max(y0, Math.min(y1, pos.y)), reach: 1.1, box: [x0 - 0.5, y0 - 0.5, x1 + 0.5, y1 + 0.5] }; }
   // an arrow to the nearest of several pads, with no ring: you choose which one
   function areaTarget(list) { if (!list.length) return null; const near = list.slice().sort((a, b) => rectDist(a, pos.x, pos.y) - rectDist(b, pos.x, pos.y))[0]; const t = slotTarget(near); t.exact = false; return t; }
-  function guideTarget() { if (!M || !R || M.phase !== 'play' || R.over) return null; return KIND[M.m.kind].guide(R, M.m); }
+  function guideTarget() {
+    if (!M || !R || M.phase !== 'play' || R.over) return null;
+    // a spoilt challenge round guides like a tutorial: it does not count any more, so show the method
+    const m = R.spoilt && M.m.type === 'challenge' && !M.m.noHelp ? Object.assign({}, M.m, { type: 'tutorial', countAsk: true }) : M.m;
+    return KIND[M.m.kind].guide(R, m);
+  }
   function arrowGeometry(pts, w, hl0) {
     const P = pts.map(([x, y]) => [(x + 0.5) * T, (y + 0.5) * T]), n = P.length, half = w / 2, verts = [], idx = [];
     const unit = (x, y) => { const l = Math.hypot(x, y) || 1; return [x / l, y / l]; };
