@@ -171,7 +171,7 @@ const at = id => s().missions.findIndex(m => m.id === id);
 // every question on the ACSL 2018-19 Junior Contest 2 paper gets the paper's answer here
 T.juniorPaper = () => {
   const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
-  lab.start(idx('pre-long-t')); solveStack(); ok(R().over && R().steps[R().steps.length - 1].value === 4, 'question 1 is not 4');
+  lab.start(idx('pre-paper-c')); solveStack(); ok(R().over && R().steps[R().steps.length - 1].value === 4, 'question 1 is not 4');
   const t2 = NotationCore.parseInfix('3(A + 2B) / (A^2 - B/4) + A(AB + B^2) / 2');
   ok(NotationCore.toPostfix(t2).join(' ').replace(/\u2191/g, '^') === '3 A 2 B * + * A 2 ^ B 4 / - / A A B * B 2 ^ + * 2 / +', 'question 2 postfix is wrong: ' + NotationCore.toPostfix(t2).join(' '));
   ok(BitCore.evaluate(BitCore.parse('10011 OR 01110 AND 10101')) === '10111', 'question 3 is not 10111');
@@ -197,7 +197,7 @@ T.traceRules = () => {
 };
 T.longPrefixFits = () => {
   const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
-  lab.start(idx('pre-long-t')); const r = R();
+  lab.start(idx('pre-paper-c')); const r = R();
   ok(r.belt.every(b => b.x >= 1 && lab.free(b.x, b.y + 1) !== undefined) && Math.min(...r.belt.map(b => b.x)) >= 1, 'the long belt runs off the room');
   const t0 = performance.now(); for (let k = 0; k < 5; k++) lab.missions[idx('pre-long-c')].gen(); ok(performance.now() - t0 < 4000, 'long prefix rounds are slow to make');
 };
@@ -216,10 +216,10 @@ T.liveStack = () => {
   ok(txt.includes('Stack(topfirst):24'), 'the live stack is wrong: ' + txt);
 };
 T.distinctCubes = () => {
-  // no two cubes (or trays) in one round may look the same, in tutorials, challenges and walkthrough examples
+  // no two cubes (or trays) in one tutorial round may look the same: repeats confuse while learning (challenges may repeat)
   const lab = s();
   for (let i = 0; i < lab.missions.length; i++) {
-    const m = lab.missions[i]; if (m.repeatsOk) continue;
+    const m = lab.missions[i]; if (m.type !== 'tutorial') continue;   // repeats are fine in a challenge, never while learning
     for (let k = 0; k < (m.type === 'challenge' ? 30 : 1); k++) {
       const p = m.gen(), seen = [];
       if (p.t) (function go(n) { if (n.op) { go(n.l); go(n.r); } const inf = window.NotationCore.toInfix(n); seen.push(n.op ? (/[A-Z]/.test(inf) ? null : String(window.NotationCore.evaluate(n))) : n.v); })(p.t);

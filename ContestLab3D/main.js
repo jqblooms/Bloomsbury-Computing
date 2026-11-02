@@ -71,22 +71,22 @@ function bitsDistinct(src) {
   for (const n of bitNodes(ast)) { const v = n.t === 'bits' ? n.v : BC.evaluate(n); if (seen.has(v)) return false; seen.add(v); }
   return true;
 }
-function bitsExpr(len = 5) {
+function bitsExpr(len = 5, repeatsOk = false) {
   // three operators in a shape where the order of operations matters
   const a = () => bitsStr(len), b1 = BIN(); let b2 = BIN(); while (b2 === b1) b2 = BIN();
   const forms = [() => UN() + ' ' + a() + ' ' + b1 + ' ' + UN() + ' ' + a(), () => UN() + ' ' + UN() + ' ' + a() + ' ' + b1 + ' ' + a(),
     () => a() + ' ' + b1 + ' ' + a() + ' ' + b2 + ' ' + UN() + ' ' + a(), () => UN() + ' ' + a() + ' ' + b1 + ' ' + a() + ' ' + b2 + ' ' + a(),
     () => a() + ' ' + b1 + ' ' + UN() + ' ' + a() + ' ' + b2 + ' ' + a(), () => '(' + UN() + ' ' + a() + ') ' + b1 + ' (' + UN() + ' ' + a() + ')'];
-  for (;;) { const src = pick(forms)(); const ast = BC.parse(src); if (bitNodes(ast).filter(isOpNode).length === 3 && !/^(0+|1+)$/.test(BC.evaluate(ast)) && bitsDistinct(src)) return src; }
+  for (;;) { const src = pick(forms)(); const ast = BC.parse(src); if (bitNodes(ast).filter(isOpNode).length === 3 && !/^(0+|1+)$/.test(BC.evaluate(ast)) && (repeatsOk || bitsDistinct(src))) return src; }
 }
 // contest length: three strings joined by two different binary operators, with two NOT / SHIFT / CIRC among them
-function bitsExpr4(len = 5) {
+function bitsExpr4(len = 5, repeatsOk = false) {
   for (;;) {
     const b1 = BIN(); let b2 = BIN(); while (b2 === b1) b2 = BIN();
     const k = [0, 0, 0]; k[rnd(0, 2)]++; k[rnd(0, 2)]++;
     const term = n => Array.from({ length: n }, UN).concat([bitsStr(len)]).join(' ');
     const src = term(k[0]) + ' ' + b1 + ' ' + term(k[1]) + ' ' + b2 + ' ' + term(k[2]);
-    if (!/^(0+|1+)$/.test(BC.evaluate(BC.parse(src))) && bitsDistinct(src)) return src;
+    if (!/^(0+|1+)$/.test(BC.evaluate(BC.parse(src))) && (repeatsOk || bitsDistinct(src))) return src;
   }
 }
 // solve for x: one or two of NOT / LCIRC / RCIRC on x, then XOR a string, so there is exactly one answer
@@ -240,7 +240,8 @@ function progMultiples() {
     { out: 's' }] };
 }
 
-function longTree(n) {
+function longTree(n, repeatsOk = false) {
+  if (repeatsOk) return NC.randomTree({ n, ops: ['+', '-', '*', '/', POW], max: 60, noNeg: true });
   let last = null;
   for (let k = 0; k < 30000; k++) {
     const t = NC.randomTree({ n, ops: ['+', '-', '*', '/', POW], max: 60, noNeg: true }), count = {};
@@ -261,7 +262,9 @@ function cubesDistinct(t) {
   return true;
 }
 function RT(o) { for (let k = 0; k < 3000; k++) { const t = NC.randomTree(o); if (cubesDistinct(t)) return t; } return NC.randomTree(o); }
-function stackTree(o) { return RT(Object.assign({ letters: false, max: 40, noNeg: true }, o)); }
+// Repeated values (two 8 cubes) confuse while learning but are fine once you know the method (James, 2026-11-02):
+// tutorials and walkthroughs keep every cube different; challenges pass repeatsOk, like a real contest paper.
+function stackTree(o) { const opt = Object.assign({ letters: false, max: 40, noNeg: true }, o); return o.repeatsOk ? NC.randomTree(opt) : RT(opt); }
 const MISSIONS = [
   { id: 'post-t', group: 'Postfix', title: 'Postfix with a Stack', type: 'tutorial', kind: 'stack', form: 'postfix',
     intro: 'Postfix puts the operator <b>after</b> its two values. A stack works it out. Read the belt from the <b>left</b>.',
@@ -269,22 +272,24 @@ const MISSIONS = [
     after: { q: 'In postfix, why does the <b>first</b> cube off the stack go on the RIGHT side?', options: ['It was put on the stack last, so it was written last: it is the right side.', 'The stack always swaps the answer round.', 'Bigger numbers always go on the right.'], why: 'The stack gives back the last cube it got first. In postfix that is the value written last, the right side.' } },
   { id: 'post-c', group: 'Postfix', title: 'Postfix Challenge', type: 'challenge', kind: 'stack', form: 'postfix',
     intro: 'Work out each postfix expression with the stack. Predict every answer cube. Two clean rounds in a row.',
-    gen: () => ({ t: stackTree({ n: 3, ops: ['+', '-', '*', '/'] }) }) },
+    gen: () => ({ t: stackTree({ n: 3, ops: ['+', '-', '*', '/'], repeatsOk: true }) }) },
   { id: 'pre-t', group: 'Prefix', title: 'Prefix with a Stack', type: 'tutorial', kind: 'stack', form: 'prefix',
     intro: 'Prefix puts the operator <b>before</b> its two values. Read the belt from the <b>right</b>, and the stack works it out.',
     gen: () => ({ t: fromPre('- * 3 4 5') }),
     after: { q: 'Why do we read prefix from the <b>right</b> with a stack?', options: ['So each operator finds its two values already on the stack.', 'Because the biggest numbers are on the right.', 'So the answer is always smaller.'], why: 'In prefix the values come after their operator. Reading from the right, the values reach the stack first.' } },
   { id: 'pre-c', group: 'Prefix', title: 'Prefix Challenge', type: 'challenge', kind: 'stack', form: 'prefix',
     intro: 'Work out each prefix expression with the stack. Predict every answer cube. Two clean rounds in a row.',
-    gen: () => ({ t: stackTree({ n: 3, ops: ['+', '-', '*', POW] }) }) },
-  { id: 'pre-long-t', group: 'Prefix', title: 'Contest Prefix', type: 'tutorial', kind: 'stack', form: 'prefix', mins: 12, repeatsOk: true,   // the real paper: its digits repeat
-   
-    intro: 'A real contest question: 13 operators, every number one digit, and ↑ for powers. The method is the same: read from the <b>right</b>, one cube at a time.',
-    gen: () => ({ t: fromPre('+ - / * 2 + 3 5 4 / 9 - ^ 2 2 1 / + * 3 5 * 6 2 ^ 3 2') }),
-    after: { q: 'This prefix has 13 operators. Why does the stack method still work?', options: ['Each operator only needs the two values on top of the stack, however long it is.', 'Long expressions are always added up.', 'The stack sorts the numbers.'], why: 'Every step looks only at the top two cubes.' } },
+    gen: () => ({ t: stackTree({ n: 3, ops: ['+', '-', '*', POW], repeatsOk: true }) }) },
+  { id: 'pre-long-t', group: 'Prefix', title: 'Contest Prefix', type: 'tutorial', kind: 'stack', form: 'prefix', mins: 10,
+    intro: 'A contest-length prefix: 6 operators, every number one digit, with / and ↑. The method is the same: read from the <b>right</b>, one cube at a time.',
+    gen: () => ({ t: fromPre('- + * 8 6 9 / - ^ 5 2 4 7') }),
+    after: { q: 'This prefix has 6 operators. Why does the stack method still work?', options: ['Each operator only needs the two values on top of the stack, however long it is.', 'Long expressions are always added up.', 'The stack sorts the numbers.'], why: 'Every step looks only at the top two cubes.' } },
   { id: 'pre-long-c', group: 'Prefix', title: 'Long Prefix', type: 'challenge', kind: 'stack', form: 'prefix', need: 1, mins: 12,
-    intro: 'Six operators, with / and ↑. One clean round.',
-    gen: () => ({ t: longTree(6) }) },
+    intro: 'Six or seven operators, with / and ↑. Numbers can repeat, as in a real contest. One clean round.',
+    gen: () => ({ t: longTree(rnd(6, 7), true) }) },
+  { id: 'pre-paper-c', group: 'Prefix', title: 'The Real Contest Question', type: 'challenge', kind: 'stack', form: 'prefix', need: 1, mins: 10,
+    intro: 'Question 1 from the ACSL 2018-19 Junior Contest 2: 13 operators, and some numbers repeat. One clean round.',
+    gen: () => ({ t: fromPre('+ - / * 2 + 3 5 4 / 9 - ^ 2 2 1 / + * 3 5 * 6 2 ^ 3 2'), key: 'paper' }) },
   { id: 'tree-t', group: 'Expression trees', title: 'Build and Read a Tree', type: 'tutorial', kind: 'tree', from: 'infix', read: 'prefix',
     intro: 'An expression tree has the operator worked <b>last</b> at the top. Build the tree, then read it as prefix.',
     gen: () => ({ t: tree('A + B * C'), from: 'infix', read: 'prefix' }),
@@ -323,14 +328,14 @@ const MISSIONS = [
     after: { q: 'In RCIRC-1 LSHIFT-2 10011, why is LSHIFT-2 worked first?', options: ['It is next to the string, so the string goes into it first.', 'L comes before R in the alphabet.', 'Shifts are always worked last.'], why: 'NOT, SHIFT and CIRC work on what is just after them, so a row of them is worked from the right.' } },
   { id: 'shift-c', group: 'Bit-string flicking', title: 'Shifts Challenge', type: 'challenge', kind: 'bits',
     intro: 'Two or three NOT, SHIFT and CIRC machines in a row. Work them from the right. Predict every new tray. Two clean rounds in a row.',
-    gen: () => { let src; do src = (Math.random() < 0.5 ? UN() + ' ' : '') + UN() + ' ' + UN() + ' ' + bitsStr(5); while (!bitsDistinct(src)); return { src }; } },
+    gen: () => ({ src: (Math.random() < 0.5 ? UN() + ' ' : '') + UN() + ' ' + UN() + ' ' + bitsStr(5) }) },
   { id: 'brack-t', group: 'Bit-string flicking', title: 'Brackets First', type: 'tutorial', kind: 'bits', mins: 6,
     intro: 'Brackets are worked first, as in maths. Each bracket here holds one machine. Then OR joins the two results.',
     gen: () => ({ src: '(LCIRC-2 01101) OR (RSHIFT-1 11001)' }),
     after: { q: 'Why are both brackets worked before the OR?', options: ['Brackets are always worked first, so OR needs both of their results.', 'OR is always worked first.', 'Brackets only show where the strings start.'], why: 'Brackets come before everything else.' } },
   { id: 'bits-c', group: 'Bit-string flicking', title: 'Order of Operations', type: 'challenge', kind: 'bits',
     intro: 'Carry the trays through the machines in the right order. Predict every new tray. Two clean rounds in a row.',
-    gen: () => ({ src: bitsExpr() }) },
+    gen: () => ({ src: bitsExpr(5, true) }) },
   { id: 'solve-t', group: 'Solve for x', title: 'Solve for x', type: 'tutorial', kind: 'solve',
     intro: 'Find the 5-bit string x that makes the machines give the target. Work backwards from the target, undoing each machine.',
     gen: () => ({ src: 'LCIRC-2 x XOR 10101', rhs: '11011', sol: '10011' }),
@@ -353,10 +358,10 @@ const MISSIONS = [
   // Challenges: contest length, no Walk me through it, harder each time; stars for clean rounds
   { id: 'c-post', group: 'Challenges', title: 'Postfix Pro', type: 'challenge', kind: 'stack', form: 'postfix', noHelp: true,
     intro: 'Contest length: four operators, with / and ↑. No help. Two clean rounds in a row.',
-    gen: () => ({ t: stackTree({ n: 4, ops: ['+', '-', '*', '/', POW], max: 60 }) }) },
+    gen: () => ({ t: stackTree({ n: 4, ops: ['+', '-', '*', '/', POW], max: 60, repeatsOk: true }) }) },
   { id: 'c-pre', group: 'Challenges', title: 'Prefix Pro', type: 'challenge', kind: 'stack', form: 'prefix', noHelp: true,
     intro: 'Contest length: four operators, with / and ↑. No help. Two clean rounds in a row.',
-    gen: () => ({ t: stackTree({ n: 4, ops: ['+', '-', '*', '/', POW], max: 60 }) }) },
+    gen: () => ({ t: stackTree({ n: 4, ops: ['+', '-', '*', '/', POW], max: 60, repeatsOk: true }) }) },
   { id: 'c-tree', group: 'Challenges', title: 'Convert Pro', type: 'challenge', kind: 'tree', noHelp: true,
     intro: 'Four operators. Build the tree from one notation and read it in another. No help. Two clean rounds in a row.',
     gen: () => { const from = pick(['infix', 'prefix', 'postfix']), read = pick(['prefix', 'postfix'].filter(x => x !== from)); let t; do t = RT({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true }); while (NC.depth(t) > 3); return { t, from, read }; } },
@@ -365,7 +370,7 @@ const MISSIONS = [
     gen: () => { let t; do t = RT({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true }); while (NC.depth(t) > 3 || (infixOf(t).match(/\(/g) || []).length < 2); return { t, from: pick(['prefix', 'postfix']) }; } },
   { id: 'c-bits', group: 'Challenges', title: 'Bits Pro', type: 'challenge', kind: 'bits', noHelp: true,
     intro: 'Contest length: four operators on three strings. No help. Two clean rounds in a row.',
-    gen: () => ({ src: bitsExpr4() }) },
+    gen: () => ({ src: bitsExpr4(5, true) }) },
   { id: 'c-solve', group: 'Challenges', title: 'Solve Pro', type: 'challenge', kind: 'solve', noHelp: true,
     intro: 'Two machines before the XOR. Your first run must be right. No help. Two clean rounds in a row.',
     gen: () => solveExpr(true) },
@@ -379,7 +384,7 @@ const SECTIONS = ['Postfix', 'Prefix', 'Expression trees', 'Back to infix', 'Bit
 const LESSONS = [
   { id: 'notation', title: 'Lesson 1: Prefix, Infix and Postfix', missions: ['post-t', 'post-c', 'pre-t', 'pre-c', 'tree-t', 'tree2-t', 'tree-c', 'infix-t', 'infix-c'], ext: ['c-post', 'c-pre', 'c-tree', 'c-infix'] },
   { id: 'bits', title: 'Lesson 2: Bit-String Flicking', missions: ['bits-t', 'gates-t', 'shift-t', 'shift-c', 'bits-c', 'solve-t', 'solve-c'], ext: ['c-bits', 'c-solve'] },
-  { id: 'junior', title: 'Lesson 3: Junior Contest 2', missions: ['pre-long-t', 'imp-t', 'brack-t', 'loop-t', 'loop2-t', 'loop-c'], ext: ['pre-long-c', 'imp-c', 'c-loop'] }
+  { id: 'junior', title: 'Lesson 3: Junior Contest 2', missions: ['pre-long-t', 'pre-paper-c', 'imp-t', 'brack-t', 'loop-t', 'loop2-t', 'loop-c'], ext: ['pre-long-c', 'imp-c', 'c-loop'] }
 ];
 // rough minutes for a Year 7 student: a tutorial is one round, a challenge needs two clean rounds
 const minsOf = m => m.mins || (m.type === 'challenge' ? 10 : m.kind === 'solve' ? 7 : 5);
@@ -669,7 +674,7 @@ export function startSolo({ container, myName, colour }) {
     },
     expr(R, m) { return '<div><b>' + FORM_NAME[m.form] + ':</b> ' + Cs(R.list) + '</div><div><b>Stack</b> (top first): ' + (R.stack && R.stack.items.length ? '<span class="cl-row">' + R.stack.items.slice().reverse().map(it => C(it.sym, it.role)).join('') + '</span>' : 'empty') + '</div>'; },
     walk(R, m) {
-      let t; do t = m.type === 'tutorial' ? stackTree({ n: 2, ops: ['+', '-', '*'] }) : M.m.gen().t; while (NC.toPrefix(t).join() === NC.toPrefix(R.p.t).join());
+      let t; do t = m.type === 'tutorial' ? stackTree({ n: 2, ops: ['+', '-', '*'] }) : stackTree({ n: 3, ops: ['+', '-', '*', '/'] }); while (NC.toPrefix(t).join() === NC.toPrefix(R.p.t).join());
       const list = m.form === 'postfix' ? NC.toPostfix(t) : NC.toPrefix(t), st = NC.stackSteps(list, m.form);
       const steps = [{ text: '<b>A different expression.</b> ' + FORM_NAME[m.form] + ': ' + Cs(list) + '. Read it from the ' + (m.form === 'postfix' ? 'left' : 'right') + '.', visual: '' }];
       for (const s of st) {
