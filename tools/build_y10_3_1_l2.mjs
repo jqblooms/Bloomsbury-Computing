@@ -156,61 +156,39 @@ steps.push(mcStep('predict-alu-cu', 'Predict: ALU or CU?', 'The program LOAD 5, 
 ], ['Before you answer, why should you ask "is this maths, or is this being in charge?"', 'Every job in the CPU is one or the other, so that one question tells you which unit does it.']));
 
 steps.push(embed('activity-1', 'Activity 1: Who Does This Job?', 'cpu-lab',
-  'Pick the part of the CPU that does each job. One check per set, and a mistake means it does not count. Three levels: ALU or CU, the registers, then all seven.',
+  'Is it the ALU or the CU? Pick the part that does each job. One check per set, and a mistake means it does not count.',
   ['Why do the PC and the MAR get mixed up?', 'Both hold an address. The PC holds the address of the next instruction; the MAR holds the address being read or written right now.'], 'activity=parts'));
 
 // ---------------------------------------------------------------- registers
-steps.push(concept('concept-registers', 'Why Does the CPU Need Registers?',
-  'Main memory holds the whole program, but it is outside the CPU. Predict: why does the CPU also keep a few values in tiny stores of its own?',
-  '<p>Memory is slower to reach. The CPU keeps what it needs right now, such as the next address and the current instruction, close by, so it can work fast.</p>',
-  columns(facts(['A <strong>register</strong> is a tiny, very fast store <strong>inside the CPU</strong>. It holds one data item, address or instruction for a short time.',
-    '<strong>PC</strong> (program counter): the address of the <strong>next</strong> instruction.', '<strong>MAR</strong> (memory address register): the <strong>address</strong> memory is about to read or write.',
-    '<strong>MDR</strong> (memory data register): the <strong>data or instruction</strong> that has just come from memory, or is about to go to it.',
-    '<strong>CIR</strong> (current instruction register): the instruction being decoded and carried out <strong>now</strong>. It is part of the CU.',
-    '<strong>ACC</strong> (accumulator): the <strong>result</strong> of a calculation from the ALU, part-way through the program.']),
-    cpuDiagram())));
-
-// One instruction, LOAD 5, with the memory 0 LOAD 5, 1 ADD 6, 2 OUTPUT, 3 STOP, 5 holds 30, 6 holds 12.
-const MEM = ['LOAD 5', 'ADD 6', 'OUTPUT', 'STOP', '', '30', '12'];
-const trace = [
-  ['MAR', '0', 'The address in the PC goes to the MAR.'], ['MDR', 'LOAD 5', 'Memory sends what is at address 0 into the MDR.'], ['PC', '1', 'The PC goes up by 1: the next instruction is at 1.'],
-  ['CIR', 'LOAD 5', 'The instruction is copied into the CIR, and the CU decodes it.'], ['MAR', '5', 'LOAD 5 needs address 5, so 5 goes to the MAR.'], ['MDR', '30', 'Memory sends the 30 at address 5 into the MDR.'], ['ACC', '30', 'LOAD copies 30 into the ACC.'],
-];
-// A stepper: one register change per step (Next, the arrow keys or the clicker), the memory address being read
-// outlined and the register that changed outlined. Each step's note asks or answers why.
+// The registers: one job each, in a table with an everyday comparison. No tracing of values (that is the
+// fetch-decode-execute lesson, 3.1.4).
 {
-  const NOTES = ['Why 0? A program starts at address 0.', 'Why the MAR? Memory needs an address to read, and the MAR is the register that holds it.',
-    'Why the MDR? It holds whatever has just come from memory.', 'Why now? The CPU is ready for the next instruction straight away.',
-    'Why copy it? The CIR keeps the instruction while the CU works out what it means.', 'Watch the PC: it still holds 1.',
-    'The MAR holds where to look. The MDR holds what was found there.', 'Next, ADD 6 can add to the 30 in the ACC.'];
-  const HIT = [null, 0, 0, null, null, 5, 5, null];
-  const regs = { PC: '0', MAR: '', MDR: '', CIR: '', ACC: '' };
-  const stepperSteps = [{ title: 'At the start: the PC holds 0, the address of the first instruction.', changed: 'PC' }]
-    .concat(trace.map(([r, v, t]) => ({ title: t, changed: r, set: [r, v] })))
-    .map((s, i) => {
-      if (s.set) regs[s.set[0]] = s.set[1];
-      return { title: s.title, note: NOTES[i], html: columns(memTable(MEM.map((m) => m || '-'), 0, HIT[i]), cpuDiagram(Object.assign({}, regs), [s.changed])) };
-    });
-  assert(stepperSteps.length === NOTES.length, 'one note per step');
-  steps.push({ id: 'concept-watch', label: 'Watch One Instruction', type: 'stepper', stepperId: `${P}-watch-stepper`, stepperSteps,
-    content: '<h2 class="lesson-h2">Watch One Instruction</h2>' +
-      tps('Watch what goes into the MAR each time. Predict: why does the CPU put the address into the MAR, and not just read memory using the PC?',
-        '<p>The PC must keep the address of the next instruction. The MAR is used for every address memory reads, including data addresses such as 5 in LOAD 5. Using the PC would lose the place in the program.</p>', 'Show the worked answer') +
-      `<div id="${P}-watch-stepper" class="lesson-stepper"></div>` });
+  const ROWS = [['PC', 'program counter', 'the address of the <b>next</b> instruction', 'a bookmark: where to go next'],
+    ['MAR', 'memory address register', 'the <b>address</b> memory is about to read or write', 'the house number you are going to'],
+    ['MDR', 'memory data register', 'the <b>data or instruction</b> that came from memory', 'the parcel you collected from that house'],
+    ['CIR', 'current instruction register', 'the instruction being carried out <b>now</b>', 'the job you are doing now'],
+    ['ACC', 'accumulator', 'the <b>result</b> of a calculation from the ALU', 'the answer so far']];
+  const table = '<table style="border-collapse:collapse;width:100%;font-size:17px"><tr>' + ['Register', 'It holds', 'Think of it as'].map((h) => `<th style="text-align:left;padding:6px 10px;font-size:14px;color:var(--muted);border-bottom:1px solid var(--line)">${h}</th>`).join('') + '</tr>' +
+    ROWS.map(([r, full, holds, like]) => `<tr><td style="padding:8px 10px;border-bottom:1px solid var(--line)"><b style="font-size:20px">${r}</b><br><span style="font-size:13px;color:var(--muted)">${full}</span></td>` +
+      `<td style="padding:8px 10px;border-bottom:1px solid var(--line)">${holds}</td><td style="padding:8px 10px;border-bottom:1px solid var(--line);color:var(--ink-soft)">${like}</td></tr>`).join('') + '</table>';
+  steps.push(concept('concept-registers', 'Each Register Has One Job',
+    'Main memory holds the whole program, but it is outside the CPU. Predict: why does the CPU also keep a few values in tiny stores of its own?',
+    '<p>Memory is slower to reach. The CPU keeps what it needs right now close by, so it can work fast.</p>',
+    '<p class="lesson-lead">A <strong>register</strong> is a tiny, very fast store <strong>inside the CPU</strong>. Each one holds one thing.</p>' + table));
 }
 
-steps.push(mcStep('predict-registers', 'Predict: What Do the Registers Hold?', 'The same memory: 0 LOAD 5, 1 ADD 6, 2 OUTPUT, 3 STOP; address 5 holds 30 and address 6 holds 12. LOAD 5 has finished, so the ACC holds 30 and the PC holds 1.', [
-  { prompt: 'The CPU takes the next instruction from memory. What does the MAR hold first?', options: ['0', '1', '6'], correct: 1,
-    explain: 'The address in the PC (1) is copied into the MAR, so memory reads address 1, where ADD 6 is stored.' },
-  { prompt: 'Once ADD 6 is in the CIR, what does the PC hold?', options: ['1', '2', '6'], correct: 1,
-    explain: 'The PC went up by 1 when the instruction was taken from memory. It now holds 2, the address of OUTPUT, the next instruction.' },
-  { prompt: 'ADD 6 has been carried out. What does the ACC hold?', options: ['12', '42', '36'], correct: 1,
-    explain: 'The MDR gets 12 from address 6. The ALU works out 30 + 12 = 42 and puts it in the ACC.' },
-], ['Straight after an instruction is taken from memory, why do the MDR and the CIR hold the same thing?', 'The instruction arrives in the MDR from memory, then it is copied into the CIR so the CU can decode it.']));
+steps.push(mcStep('predict-registers', 'Predict: Which Register?', '', [
+  { prompt: 'The CPU needs to know where the next instruction is. Which register holds that?', options: ['MDR', 'PC', 'ACC'], correct: 1,
+    explain: 'The PC (program counter) holds the address of the next instruction, like a bookmark.' },
+  { prompt: 'A number has just arrived from memory. Which register holds it?', options: ['MDR', 'MAR', 'CIR'], correct: 0,
+    explain: 'The MDR holds the data that came from memory. The MAR only holds its address.' },
+  { prompt: 'The ALU has worked out 25 + 17 = 42. Which register holds 42?', options: ['PC', 'CIR', 'ACC'], correct: 2,
+    explain: 'The ACC (accumulator) holds the result of a calculation from the ALU.' },
+], ['Two register names differ by one letter. How can a letter in a name help you remember its job?', 'Each letter stands for a word: A for address, D for data, I for instruction.']));
 
-steps.push(embed('activity-2', 'Activity 2: Watch the Registers', 'cpu-lab',
-  'Predict what each register will hold, then run the CPU one small step at a time to see why. Three levels; a wrong box means the round does not count.',
-  ['Why are there two registers for memory, the MAR and the MDR?', 'One holds where to look (the address); the other holds what was found there (the data or instruction).'], 'activity=regs'));
+steps.push(embed('activity-2', 'Activity 2: Which Register?', 'cpu-lab',
+  'Now only the registers, then all seven parts. One check per set, and a mistake means it does not count.',
+  ['Why do the PC and the MAR get mixed up?', 'Both hold an address. The PC holds the next instruction\'s address; the MAR holds the address being read right now.'], 'activity=parts&level=2'));
 
 // ---------------------------------------------------------------- exam questions
 const ALU = '^\\s*(the\\s+)?(arithmetic\\s*(and\\s*)?logic(al)?\\s*unit|alu)\\s*(\\(\\s*alu\\s*\\))?\\s*\\.?\\s*$';
@@ -295,12 +273,8 @@ const cards = [
     'From Cambridge IGCSE 0478/11, June 2025, Question 5(a).', ['It is part of the ALU.', 'What does the ALU make?']),
   card('r-05', 'regs', 'Give three registers that are built into the CPU.\nGive one of them.', ['Program counter (PC)', 'Memory address register (MAR)', 'Memory data register (MDR)', 'Current instruction register (CIR)', 'Accumulator (ACC)'], ['Arithmetic logic unit (ALU)', 'Control unit (CU)', 'Random access memory (RAM)', 'Binary counter (BC)'],
     'From Cambridge IGCSE 0478/13, June 2024, Question 8(b)(ii).', ['The ALU and the CU are units, not registers.', 'RAM is outside the CPU.']),
-  card('t-01', 'trace', 'The PC holds 3. The CPU takes the next instruction from memory.\nWhat does the MAR hold first?', ['3'], ['4', '0', '2'], 'The address in the PC is copied into the MAR.', ['Where does the MAR get its first address from?', 'The PC goes up after the address is copied.']),
-  card('t-02', 'trace', 'The PC holds 3. The instruction at address 3 has just been taken from memory.\nWhat does the PC hold now?', ['4'], ['3', '0', '5'], 'The PC goes up by 1, so it holds the address of the next instruction.', ['The PC always holds the address of the next instruction.', 'The next address after 3.']),
-  card('t-03', 'trace', 'The ACC holds 20. Address 7 holds 15. The CPU carries out ADD 7.\nWhat does the MDR hold?', ['15'], ['7', '20', '35'], 'The MDR holds what was found at address 7: the 15, not the address.', ['The MAR holds the address 7.', 'The MDR holds what memory sends back.']),
-  card('t-04', 'trace', 'The ACC holds 20. Address 7 holds 15. The CPU carries out ADD 7.\nWhat does the ACC hold after?', ['35'], ['15', '20', '27'], 'The ALU works out 20 + 15 = 35 and puts it in the ACC.', ['ADD adds the number at address 7 to the ACC.', '20 + 15.']),
 ];
-const drill = { title: 'Year 10, 3.1.2: CPU Components', subtitle: 'Cambridge IGCSE Computer Science 0478', categories: [['units', 'The ALU and the CU'], ['regs', 'The registers'], ['trace', 'Registers at work']], cards };
+const drill = { title: 'Year 10, 3.1.2: CPU Components', subtitle: 'Cambridge IGCSE Computer Science 0478', categories: [['units', 'The ALU and the CU'], ['regs', 'The registers']], cards };
 cards.forEach((c) => {
   assert(c.answers.length && c.distractors.length >= 3 && c.working.length >= 2, `card ${c.id} shape`);
   c.answers.forEach((a) => assert(!c.distractors.some((d) => d.toLowerCase() === a.toLowerCase()), `card ${c.id}: answer is a distractor`));

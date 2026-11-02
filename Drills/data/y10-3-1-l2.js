@@ -12,10 +12,6 @@ DrillData.register("y10-3-1-l2", {
   [
    "regs",
    "The registers"
-  ],
-  [
-   "trace",
-   "Registers at work"
   ]
  ],
  "cards": [
@@ -259,82 +255,6 @@ DrillData.register("y10-3-1-l2", {
    "working": [
     "The ALU and the CU are units, not registers.",
     "RAM is outside the CPU."
-   ],
-   "pickThenType": true
-  },
-  {
-   "id": "t-01",
-   "category": "trace",
-   "prompt": "The PC holds 3. The CPU takes the next instruction from memory.\nWhat does the MAR hold first?",
-   "answers": [
-    "3"
-   ],
-   "distractors": [
-    "4",
-    "0",
-    "2"
-   ],
-   "note": "The address in the PC is copied into the MAR.",
-   "working": [
-    "Where does the MAR get its first address from?",
-    "The PC goes up after the address is copied."
-   ],
-   "pickThenType": true
-  },
-  {
-   "id": "t-02",
-   "category": "trace",
-   "prompt": "The PC holds 3. The instruction at address 3 has just been taken from memory.\nWhat does the PC hold now?",
-   "answers": [
-    "4"
-   ],
-   "distractors": [
-    "3",
-    "0",
-    "5"
-   ],
-   "note": "The PC goes up by 1, so it holds the address of the next instruction.",
-   "working": [
-    "The PC always holds the address of the next instruction.",
-    "The next address after 3."
-   ],
-   "pickThenType": true
-  },
-  {
-   "id": "t-03",
-   "category": "trace",
-   "prompt": "The ACC holds 20. Address 7 holds 15. The CPU carries out ADD 7.\nWhat does the MDR hold?",
-   "answers": [
-    "15"
-   ],
-   "distractors": [
-    "7",
-    "20",
-    "35"
-   ],
-   "note": "The MDR holds what was found at address 7: the 15, not the address.",
-   "working": [
-    "The MAR holds the address 7.",
-    "The MDR holds what memory sends back."
-   ],
-   "pickThenType": true
-  },
-  {
-   "id": "t-04",
-   "category": "trace",
-   "prompt": "The ACC holds 20. Address 7 holds 15. The CPU carries out ADD 7.\nWhat does the ACC hold after?",
-   "answers": [
-    "35"
-   ],
-   "distractors": [
-    "15",
-    "20",
-    "27"
-   ],
-   "note": "The ALU works out 20 + 15 = 35 and puts it in the ACC.",
-   "working": [
-    "ADD adds the number at address 7 to the ACC.",
-    "20 + 15."
    ],
    "pickThenType": true
   }
