@@ -9,3 +9,11 @@
 .walk .bin-board { max-width: 460px; }
 .cl-choice { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .cl-choice .btn { justify-content: center; }
+/* the four column rules */
+.cl-choice.wide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.bin-rules { width: 100%; border-collapse: collapse; margin: 6px 0 4px; font-size: .8rem; }
+.bin-rules th { text-align: left; font-size: .7rem; color: var(--muted); padding: 2px 4px; border-bottom: 1px solid var(--line-strong); }
+.bin-rules td { padding: 4px; border-bottom: 1px solid var(--line); vertical-align: middle; line-height: 1.5; }
+.bin-rules td:nth-child(2) { font-family: var(--font-mono, Consolas, monospace); font-size: .76rem; }
+.bin-rules tr.hl td { background: var(--brand-soft); }
+.bin-rules tr.hl td:first-child { box-shadow: inset 3px 0 0 #ffd43b; font-weight: 700; }

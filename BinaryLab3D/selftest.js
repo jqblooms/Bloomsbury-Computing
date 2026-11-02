@@ -113,7 +113,7 @@ const idx = id => s().missions.findIndex(m => m.id === id);
 const T = {};
 T.history = () => {
   s().start(0); SOLVE[M().m.kind]();
-  const d = document.querySelector('#mission .cl-log summary'), n = d ? parseInt(d.textContent.split('(')[1], 10) : 0;
+  const d = document.querySelector('#mission .cl-log:not(.bin-rules-box) summary'), n = d ? parseInt(d.textContent.split('(')[1], 10) : 0;
   ok(d && d.textContent.startsWith('What has happened so far (') && n >= 3, 'no What has happened so far list: ' + (d ? d.textContent : 'none'));
 };
 T.answersAreRight = () => {
@@ -139,7 +139,7 @@ T.startAtTheRight = () => {
 T.wrongBit = () => {
   s().start(idx('eight-c')); const r = R(); const a = activeCol(r), c = r.colOf(a);
   carry(c.bit ? r.zero : r.one, r.ans[a]);
-  ok(r.spoilt && r.bits[a] == null && /in binary, so write/.test(r.why || ''), 'a wrong bit was accepted');
+  ok(r.spoilt && r.bits[a] == null && /so write/.test(r.why || ''), 'a wrong bit was accepted');
   { const g = s().guideTarget(); ok(g && g.exact && g.slot === (c.bit ? r.one : r.zero), 'after a mistake the guide does not show the right crate'); }
   solveAdd(); ok(M().have === 0, 'a spoilt round counted');
 };
@@ -163,6 +163,25 @@ T.countAndDenary = () => {
   s().start(idx('eight-t')); const r2 = R(); solveAdd();
   ok(r2.denaryDone && r2.over, 'the 8-bit tutorial did not check in denary');
 };
+T.columnRules = () => {
+  // the rules tutorial: count, then pick write and carry; the rules table lights the row only after both
+  const lab = s(); lab.start(idx('rules-t')); const r = R(), lit = () => document.querySelector('#mission .bin-rules tr.hl');
+  ok(document.querySelector('#mission details.bin-rules-box[open] .bin-rules'), 'the four rules are not shown open in the tutorial');
+  answer(); const a = activeCol(r), c = r.colOf(a);
+  ok(r.ask && /What do you write, and what do you carry/.test(r.ask.q) && !lit(), 'no write-and-carry question after the count, or the rule row shows early');
+  answer(false); ok(!!r.ask, 'a wrong rule moved on in the tutorial'); answer(true);
+  ok(lit() && lit().rowIndex === c.count + 1, 'the rule row for the column is not lit');
+  // every column's explanation breaks the carry down, and nothing says 10 in binary for a column
+  solveAdd(); const said = (window.__explained || []).join(' ');
+  ok(/make 2\. A column can only hold 0 or 1/.test(said) && /Three 1s: put two of them together/.test(said), 'the two and three 1s columns are not broken down');
+  ok(!/is 1[01] in binary/.test(said), 'a column is still explained as 10 or 11 in binary');
+  // the drill: a wrong rule spoils the round; no help hides the table
+  lab.start(idx('rules-c')); const r2 = R();
+  ok(r2.ask && r2.ask.answer === 'Write ' + r2.colOf(3).bit + ', carry ' + (r2.colOf(3).cout ? '1' : 'nothing'), 'the drill does not ask the rule first');
+  ok(!document.querySelector('#mission details.bin-rules-box[open]'), 'the rules are open in a challenge');
+  answer(false); ok(r2.spoilt, 'a wrong rule did not spoil the drill round');
+  lab.start(idx('speed-c')); ok(!document.querySelector('#mission .bin-rules'), 'No Help still shows the rules');
+};
 T.tapNeedsHold = () => {
   s().start(idx('four-t')); const r = R(); answer();
   const a = activeCol(r); carry(r.colOf(a).bit ? r.one : r.zero, r.ans[a]);
@@ -177,7 +196,7 @@ T.explains = () => {
   const lab = s(), last = () => (window.__explained || []).slice(-1)[0] || '';
   lab.start(idx('four-c')); const r = R(); ok(/Start at the right/.test(last()), 'no opening explanation');
   const a = activeCol(r), c = r.colOf(a); carry(c.bit ? r.one : r.zero, r.ans[a]);
-  ok(/Column worth 1: .* in binary, so write/.test(last()), 'no column explanation: ' + last());
+  ok(/Column worth 1: .* so write/.test(last()), 'no column explanation: ' + last());
 };
 T.attention = () => {
   const lab = s(); lab.start(idx('four-t')); const panel = $('mission');
