@@ -807,7 +807,14 @@ export function startSolo({ container, myName, colour }) {
     if (hand.down === down) return;
     hand.down = down;
     $('leftBtn')?.classList.toggle('on', down);
-    if (!down) { hand.pending = null; letGo(); hint(); return; }
+    if (!down) {
+      // let go too soon: say so, so a tap never just seems to do nothing
+      if (hand.pending) toast('Hold Space a little longer. A cube or tray that is already in place needs a short hold to pick up.', 'hint');
+      else if (hand.item && clock - (hand.since || 0) < 0.35 && nearestSlot(0.9, x => x.role !== 'lamp') === hand.from) { hand.quick = true; }
+      hand.pending = null; letGo();
+      if (hand.quick) { hand.quick = false; toast('Keep holding Space to carry it. Let go when you reach a pad.', 'hint'); }
+      hint(); return;
+    }
     if (locked()) {
       if (M && M.phase === 'play' && R && R.ask) toast('Predict first: answer on the right.', 'hint');
       else if (M && M.phase !== 'play') toast(M.phase === 'ask' ? 'Answer the question on the right first.' : 'Press the button on the mission sheet to go on.', 'hint');
@@ -820,17 +827,19 @@ export function startSolo({ container, myName, colour }) {
     doGrab(s);
   }
   function holdTick() {
-    const p = hand.pending; if (!p || !hand.down || clock - p.at < HOLD) return;
+    const p = hand.pending, bar = $('holdBar');
+    if (bar) bar.style.width = p && hand.down ? Math.min(100, (clock - p.at) / HOLD * 100) + '%' : '0%';
+    if (!p || !hand.down || clock - p.at < HOLD) return;
     hand.pending = null;
     const g = grabTarget();
     if (g && g.slot === p.s && top(p.s) === p.it) doGrab(p.s);
   }
   function doGrab(s) {
     if (s.role === 'lamp') { KIND.solve.toggle(s.lamp); toast('Lamp ' + (s.lamp + 1) + ' is ' + (R.x[s.lamp] === '1' ? 'on (1)' : 'off (0)') + '.', 'good'); afterChange(); return; }
-    if (s.crate) { hand.item = cube(s.crate, { role: 'paren' }); itemMesh(hand.item); hand.from = s; afterChange(); return; }
+    if (s.crate) { hand.item = cube(s.crate, { role: 'paren' }); itemMesh(hand.item); hand.from = s; hand.since = clock; afterChange(); return; }
     const it = top(s), why = s.take(it);
     if (why) { toast(why, 'hint'); return; }
-    s.items.pop(); hand.item = it; it.slot = null; hand.from = s; R.moves++;
+    s.items.pop(); hand.item = it; it.slot = null; hand.from = s; hand.since = clock; R.moves++;
     afterChange();
   }
   function letGo() {
@@ -1172,13 +1181,20 @@ export function startSolo({ container, myName, colour }) {
   let toastTimer = 0;
   function toast(msg, cls) { const t = $('toast'); t.innerHTML = msg || ''; t.className = 'toast ' + (cls === 'bad' ? 'bad' : cls === 'good' ? 'good' : 'hint'); clearTimeout(toastTimer); if (msg) toastTimer = setTimeout(() => { t.innerHTML = ''; }, cls === 'bad' ? 5200 : 3200); }
   function hint() {
-    let h;
-    if (hand.item) h = 'Keep holding and walk to a pad, then let go.';
-    else if (hand.pending) h = 'Keep holding to pick it up.';
+    // what Space does right now, for what is in front of you: HOLD (pick up and carry) or PRESS (switch a lamp)
+    let h, key = 'hold to grab', mode = '';
+    const g = grabTarget(), s = g && g.slot, what = s && (s.crate ? 'a ' + s.crate + ' cube' : s.items.length ? (top(s).tray ? 'the tray' : 'the ' + top(s).sym + ' cube') : '');
+    if (hand.item) { h = '<b>Keep holding Space</b> and walk to a pad. Let go of Space to put it down.'; key = 'keep holding'; mode = 'hold'; }
+    else if (hand.pending) { h = '<b>Keep holding Space</b>...'; key = 'keep holding'; mode = 'hold'; }
     else if (R && R.ask) h = 'Predict on the right first.';
-    else if (M && M.m.kind === 'solve') h = 'Stand at a lamp and press Space to switch it. Then press Run the machines.';
-    else h = 'Hold Space (or the left mouse button) to pick up what is in front of you. Let go to put it down. Right-drag turns the camera.';
-    $('hint').textContent = h;
+    else if (s && s.role === 'lamp') { h = '<b>Press Space</b> to switch this lamp on or off.'; key = 'press to switch'; mode = 'press'; }
+    else if (s && s.risky && !s.take(top(s))) { h = '<b>Hold Space</b> to pick up ' + what + '. It is already in place, so hold it down until the bar fills.'; key = 'hold to pick up'; mode = 'hold'; }
+    else if (s) { h = '<b>Hold Space</b> to pick up ' + what + ', and keep holding to carry it.'; key = 'hold to pick up'; mode = 'hold'; }
+    else if (M && M.m.kind === 'solve') h = 'Walk to a lamp, then <b>press Space</b> to switch it. Then press Run the machines.';
+    else h = 'Walk up to a cube. <b>Hold Space</b> (or the left mouse button) to pick it up, and keep holding to carry it. Right-drag turns the camera.';
+    if ($('hint').innerHTML !== h) $('hint').innerHTML = h;
+    const k = $('keyWhat'); if (k && k.textContent !== key) k.textContent = key;
+    const b = $('leftBtn'); if (b) b.dataset.mode = mode;
   }
 
   // ================================================================ the frame loop and input (as Network Builder 3D)
@@ -1208,6 +1224,7 @@ export function startSolo({ container, myName, colour }) {
     moveItems(dt);
     updateOutline(ts);
     updateGuide(ts);
+    hint();
     me.update(dt, { x: pos.x, y: pos.y, face: pos.face, moving, hands: [0, 0].map(() => ({ down: hand.down || !!hand.item, hold: hand.item ? 'dev' : null })) }, true);
     view.follow(pos.x, pos.y);
     view.render(dt);

@@ -155,6 +155,23 @@ function playMission(i) {
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.holdPrompts = () => {
+  const lab = s(), hint = () => $('hint').textContent, key = () => $('keyWhat').textContent;
+  lab.start(0); const r = R();
+  reach(r.belt[r.order[0]]); lab.frame(1);
+  ok(/Hold Space/.test(hint()) && /hold to pick up/i.test(key()), 'no Hold Space prompt at a belt cube: ' + hint());
+  lab.setHand(true); lab.frame(2); lab.setHand(false); lab.frame(1);
+  ok(/Keep holding Space to carry/.test(lab.toastText()) && top(r.belt[r.order[0]]), 'a quick tap on a belt cube gave no Keep holding message');
+  carry(r.belt[r.order[0]], r.stack); carry(r.belt[r.order[1]], r.stack); carry(r.belt[r.order[2]], r.O);
+  reach(r.stack); lab.frame(1);
+  ok(/already in place/.test(hint()), 'no hold-longer prompt at a placed cube: ' + hint());
+  lab.setHand(true); lab.frame(3);
+  ok(parseFloat($('holdBar').style.width) > 0 && !lab.hand.item, 'the hold bar does not fill during a hold');
+  lab.setHand(false); lab.frame(1);
+  ok(/Hold Space a little longer/.test(lab.toastText()) && r.stack.items.length === 2, 'a short hold on a placed cube gave no message');
+  lab.start(lab.missions.findIndex(m => m.id === 'solve-c')); reach(R().lamps[0]); lab.frame(1);
+  ok(/Press Space/.test(hint()) && /press/i.test(key()), 'no Press Space prompt at a lamp: ' + hint());
+};
 T.outOfOrder = () => {
   s().start(0); const r = R();
   const second = r.belt[r.order[1]];

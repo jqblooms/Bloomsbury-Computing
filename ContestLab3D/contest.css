@@ -31,3 +31,11 @@
 .cl-tree .lit rect { stroke: #ffffff; stroke-width: 4; }
 .cl-tree text { font: 800 17px var(--font-display); text-anchor: middle; }
 .ask .ask-row { flex-wrap: wrap; align-items: center; }
+/* the Space key says what it does now: HOLD (amber edge, a bar fills during a hold) or PRESS (a lamp) */
+.key.grab { position: relative; overflow: hidden; }
+.key.grab[data-mode="hold"] { border: 2px solid #f59f00; }
+.key.grab[data-mode="press"] { border: 2px solid var(--good); }
+.key.grab small { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.key .holdbar { position: absolute; left: 0; right: 0; bottom: 0; height: 8px; background: rgba(0, 0, 0, .25); }
+.key .holdbar i { display: block; height: 100%; width: 0; background: #ffd43b; }
+.hint b { color: var(--ink); }
