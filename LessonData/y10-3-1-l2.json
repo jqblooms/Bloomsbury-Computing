@@ -1,0 +1,433 @@
+{
+ "id": "y10-3-1-l2",
+ "label": "3.1.2: CPU Components",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: The Purpose of the CPU (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-312-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: The Purpose of the CPU (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the exam ask for the CPU's job, and not what it is called?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Knowing the name shows you remember it. Saying the job shows you understand what it does.</p></div></details><p class=\"lesson-lead\">Recap of the last lesson. Cambridge IGCSE 0478/12, March 2025, Question 3(b). A computer has a central processing unit (CPU), memory and secondary storage.</p><div id=\"y10-312-do-now\"></div>",
+   "items": [
+    {
+     "id": "cpu-purpose",
+     "prompt": "State the purpose of the CPU in the computer.",
+     "marks": 1,
+     "scheme": [
+      "To execute or process instructions",
+      "To perform the fetch-decode-execute cycle"
+     ],
+     "guidance": "One mark for either point. \"It processes data and instructions\" earns the mark. \"It is the brain of the computer\" earns no mark.",
+     "modelAnswer": "It executes instructions."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: stating a purpose",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> A greenhouse has a temperature sensor. State the purpose of the sensor.",
+      "visual": "<div class=\"wt-note\">\"purpose\" means: what job does it do?</div>"
+     },
+     {
+      "text": "\"State the purpose\" asks for the <b>job</b> it does, not what it looks like or where it is.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">purpose</span> = its job</p>"
+     },
+     {
+      "text": "A sensor's job: it measures something and sends the reading on. Here: it measures the temperature and sends it to the microprocessor.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">measures, then sends the reading</p>"
+     },
+     {
+      "text": "An answer such as \"it is a small part of the greenhouse\" earns nothing: it does not say what the sensor <b>does</b>.",
+      "visual": "<div class=\"wt-note\">a description is not a job</div>"
+     },
+     {
+      "text": "Now do the same for the CPU: one short sentence that says the job it does with instructions.",
+      "visual": "<div class=\"wt-note\">start with \"It ...\"</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: A Library Microprocessor (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-312-do-now-2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: A Library Microprocessor (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a library use a microprocessor for this job, and not a person with a notebook?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is fast, works all day, and does not make counting mistakes.</p></div></details><p class=\"lesson-lead\">Recap of the last lesson. Cambridge IGCSE 0478/13, June 2023, Question 2(g). A library has a self-checkout system. It is linked to a stock control system that is updated every time a book is borrowed. A microprocessor is used in the stock control system to update the stock.</p><div id=\"y10-312-do-now-2\"></div>",
+   "items": [
+    {
+     "id": "library",
+     "prompt": "Explain the role of the microprocessor in this system and how it is used to update the stock when a book is borrowed.",
+     "marks": 3,
+     "scheme": [
+      "It receives data from the self-checkout system",
+      "It compares the book data received to stored book data",
+      "... that is a database of stock",
+      "If the book is found it decrements (takes 1 off) the book stock",
+      "If the book is not found an error message is displayed"
+     ],
+     "guidance": "Any three, one mark each. The \"database of stock\" mark needs the compare point first. \"Updates the stock\" alone earns no mark: it must say the stock goes down by 1.",
+     "modelAnswer": "It receives the book data from the self-checkout. It compares it with the stored book data. If the book is found, it takes 1 off the stock."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: a microprocessor in a system",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> A car park barrier has a microprocessor. A driver scans a ticket. Explain how the microprocessor decides if the barrier opens.",
+      "visual": "<div class=\"wt-note\">input, process, output</div>"
+     },
+     {
+      "text": "Input: the microprocessor <b>receives</b> data. Here, the ticket number from the scanner.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">receives</span> the ticket number</p>"
+     },
+     {
+      "text": "Process: it <b>compares</b> the data with data it has stored. Here, the list of tickets that have been paid.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\"><span class=\"wt-hl\">compares</span> with the stored list</p>"
+     },
+     {
+      "text": "Output, part 1: <b>if</b> the ticket is found, it sends a signal to open the barrier.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">found: open the barrier</p>"
+     },
+     {
+      "text": "Output, part 2: <b>if not</b> found, it shows an error message. Each \"if\" is a separate mark.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">not found: error message</p>"
+     },
+     {
+      "text": "Now do the same for the library: what data does the microprocessor receive, what does it compare it with, and what happens if the book is found, or not found?",
+      "visual": "<div class=\"wt-note\">receive, compare, if found, if not found</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l1",
+   "embedContainerId": "y10-312-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise the last lesson before a new one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Today builds on it: the parts inside the CPU are how it processes instructions and data.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from the last lesson. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y10-312-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "CPU Components",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Computer Architecture</p><h2 class=\"lesson-h2\">CPU Components</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> the parts inside the CPU, and <strong>why</strong> each one is needed.</li><li>The <strong>ALU</strong> and the <strong>CU</strong>: the part that does the maths and the part in charge.</li><li>Five <strong>registers</strong>: PC, MAR, MDR, CIR and ACC.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Last lesson, the CPU ran a program stored in memory. Predict: what does the CPU need to remember while it runs a program?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Where the next instruction is, what it is doing now, and the answer so far. Something inside the CPU must hold each of these.</p></div></details>"
+  },
+  {
+   "id": "concept-alu-cu",
+   "label": "The ALU and the CU",
+   "content": "<h2 class=\"lesson-h2\">The ALU and the CU</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A program says: LOAD 5, then ADD 6. Predict: why might a CPU have one part that does the adding, and a different part that reads the program and decides what happens next?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Two different jobs. One part only has to calculate. The other is in charge: it works out what each instruction means and sends signals to make the right parts do it.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li><strong>ALU</strong>: arithmetic logic unit. It carries out <strong>calculations</strong> (such as 25 + 17) and <strong>logical operations</strong> (such as: is 41 bigger than 30?).</li><li>The ALU stores the result in a register called the <strong>accumulator</strong>.</li><li><strong>CU</strong>: control unit. It sends <strong>control signals</strong> to manage how data and instructions move through the CPU.</li><li>The CU <strong>decodes</strong> each instruction: it works out what the instruction means.</li><li>A CPU built this way, running a program stored in memory, has a <strong>Von Neumann architecture</strong>.</li></ul></div><div><div style=\"display:grid;gap:8px;padding:10px;border-radius:12px;border:2px solid var(--brand)\"><div style=\"font-weight:700;text-align:center\">CPU</div><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px\"><div style=\"display:grid;gap:6px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2)\"><div style=\"font-weight:700\">CU <span style=\"font-size:13px;color:var(--muted);font-weight:400\">control unit</span></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>CIR</b> <span style=\"font-size:13px;color:var(--muted)\">current instruction</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div></div><div style=\"display:grid;gap:6px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2)\"><div style=\"font-weight:700\">ALU <span style=\"font-size:13px;color:var(--muted);font-weight:400\">arithmetic logic unit</span></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>ACC</b> <span style=\"font-size:13px;color:var(--muted)\">accumulator</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div></div></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>PC</b> <span style=\"font-size:13px;color:var(--muted)\">program counter</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>MAR</b> <span style=\"font-size:13px;color:var(--muted)\">memory address register</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>MDR</b> <span style=\"font-size:13px;color:var(--muted)\">memory data register</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div></div></div></div>"
+  },
+  {
+   "id": "predict-alu-cu",
+   "label": "Predict: ALU or CU?",
+   "type": "multiple-choice",
+   "containerId": "y10-312-predict-alu-cu",
+   "content": "<h2 class=\"lesson-h2\">Predict: ALU or CU?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you answer, why should you ask \"is this maths, or is this being in charge?\"</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Every job in the CPU is one or the other, so that one question tells you which unit does it.</p></div></details><p class=\"lesson-lead\">The program LOAD 5, ADD 6, OUTPUT is running.</p><div id=\"y10-312-predict-alu-cu\"></div>",
+   "items": [
+    {
+     "prompt": "The CPU must work out that ADD 6 means \"add the number stored at address 6\". Which part does this?",
+     "options": [
+      "The ALU",
+      "The CU",
+      "The main memory"
+     ],
+     "correct": 1,
+     "explain": "Working out what an instruction means is decoding. The CU decodes instructions. The ALU only does the adding once it is told to."
+    },
+    {
+     "prompt": "Address 6 holds 17 and the CPU holds 25. Which part works out 25 + 17?",
+     "options": [
+      "The CU",
+      "The main memory",
+      "The ALU"
+     ],
+     "correct": 2,
+     "explain": "Adding is a calculation, so the ALU does it. The result, 42, goes into the accumulator."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Who Does This Job?",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-312-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Who Does This Job?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the PC and the MAR get mixed up?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Both hold an address. The PC holds the address of the next instruction; the MAR holds the address being read or written right now.</p></div></details><p class=\"lesson-lead\">Pick the part of the CPU that does each job. One check per set, and a mistake means it does not count. Three levels: ALU or CU, the registers, then all seven.</p><div id=\"y10-312-activity-1\"></div>",
+   "embedQuery": "activity=parts"
+  },
+  {
+   "id": "concept-registers",
+   "label": "Why Does the CPU Need Registers?",
+   "content": "<h2 class=\"lesson-h2\">Why Does the CPU Need Registers?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Main memory holds the whole program, but it is outside the CPU. Predict: why does the CPU also keep a few values in tiny stores of its own?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Memory is slower to reach. The CPU keeps what it needs right now, such as the next address and the current instruction, close by, so it can work fast.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>register</strong> is a tiny, very fast store <strong>inside the CPU</strong>. It holds one data item, address or instruction for a short time.</li><li><strong>PC</strong> (program counter): the address of the <strong>next</strong> instruction.</li><li><strong>MAR</strong> (memory address register): the <strong>address</strong> memory is about to read or write.</li><li><strong>MDR</strong> (memory data register): the <strong>data or instruction</strong> that has just come from memory, or is about to go to it.</li><li><strong>CIR</strong> (current instruction register): the instruction being decoded and carried out <strong>now</strong>. It is part of the CU.</li><li><strong>ACC</strong> (accumulator): the <strong>result</strong> of a calculation from the ALU, part-way through the program.</li></ul></div><div><div style=\"display:grid;gap:8px;padding:10px;border-radius:12px;border:2px solid var(--brand)\"><div style=\"font-weight:700;text-align:center\">CPU</div><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px\"><div style=\"display:grid;gap:6px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2)\"><div style=\"font-weight:700\">CU <span style=\"font-size:13px;color:var(--muted);font-weight:400\">control unit</span></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>CIR</b> <span style=\"font-size:13px;color:var(--muted)\">current instruction</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div></div><div style=\"display:grid;gap:6px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2)\"><div style=\"font-weight:700\">ALU <span style=\"font-size:13px;color:var(--muted);font-weight:400\">arithmetic logic unit</span></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>ACC</b> <span style=\"font-size:13px;color:var(--muted)\">accumulator</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div></div></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>PC</b> <span style=\"font-size:13px;color:var(--muted)\">program counter</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>MAR</b> <span style=\"font-size:13px;color:var(--muted)\">memory address register</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div><div style=\"display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;border:2px solid var(--line-strong);background:var(--surface)\"><span><b>MDR</b> <span style=\"font-size:13px;color:var(--muted)\">memory data register</span></span><b style=\"font-family:var(--font-mono, monospace)\"></b></div></div></div></div>"
+  },
+  {
+   "id": "concept-watch",
+   "label": "Watch One Instruction",
+   "content": "<h2 class=\"lesson-h2\">Watch One Instruction</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Look at steps 1 and 5 below. Predict: why does the CPU put the address into the MAR, and not just read memory using the PC?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The PC must keep the address of the next instruction. The MAR is used for every address memory reads, including data addresses such as 5 in LOAD 5. Using the PC would lose the place in the program.</p></div></details><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;margin:0 auto;font-size:16px\"><tr><th style=\"padding:2px 10px;font-size:13px;color:var(--muted)\">Address</th><th style=\"padding:2px 10px;font-size:13px;color:var(--muted)\">Memory</th></tr><tr style=\"background:var(--brand-soft)\"><td style=\"padding:2px 10px;color:var(--muted)\">0</td><td style=\"padding:2px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-keyword, #c58af9)\">LOAD 5</td></tr><tr><td style=\"padding:2px 10px;color:var(--muted)\">1</td><td style=\"padding:2px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-keyword, #c58af9)\">ADD 6</td></tr><tr><td style=\"padding:2px 10px;color:var(--muted)\">2</td><td style=\"padding:2px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-keyword, #c58af9)\">OUTPUT</td></tr><tr><td style=\"padding:2px 10px;color:var(--muted)\">3</td><td style=\"padding:2px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-keyword, #c58af9)\">STOP</td></tr><tr><td style=\"padding:2px 10px;color:var(--muted)\">4</td><td style=\"padding:2px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">-</td></tr><tr><td style=\"padding:2px 10px;color:var(--muted)\">5</td><td style=\"padding:2px 10px;font-family:var(--font-mono, monospace);font-weight:700;outline:2px solid var(--warn);outline-offset:-2px;color:var(--syn-number, #fdd663)\">30</td></tr><tr><td style=\"padding:2px 10px;color:var(--muted)\">6</td><td style=\"padding:2px 10px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">12</td></tr></table></div><div><div style=\"overflow-x:auto\"><table style=\"border-collapse:collapse;font-size:15px;width:100%\"><tr><th></th><th style=\"text-align:left;padding:2px 6px;font-size:13px;color:var(--muted)\">What happens</th><th style=\"padding:2px 6px;font-size:13px\">PC</th><th style=\"padding:2px 6px;font-size:13px\">MAR</th><th style=\"padding:2px 6px;font-size:13px\">MDR</th><th style=\"padding:2px 6px;font-size:13px\">CIR</th><th style=\"padding:2px 6px;font-size:13px\">ACC</th></tr><tr><td></td><td style=\"padding:2px 6px;color:var(--muted)\">At the start</td><td style=\"text-align:center;font-family:var(--font-mono, monospace)\">0</td><td></td><td></td><td></td><td></td></tr><tr><td style=\"padding:2px 6px;color:var(--muted)\">1</td><td style=\"padding:2px 6px\">The address in the PC goes to the MAR.</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">0</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;background:var(--brand-soft);font-weight:700\">0</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td></tr><tr><td style=\"padding:2px 6px;color:var(--muted)\">2</td><td style=\"padding:2px 6px\">Memory sends what is at address 0 into the MDR.</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">0</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">0</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;background:var(--brand-soft);font-weight:700\">LOAD 5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td></tr><tr><td style=\"padding:2px 6px;color:var(--muted)\">3</td><td style=\"padding:2px 6px\">The PC goes up by 1: the next instruction is at 1.</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;background:var(--brand-soft);font-weight:700\">1</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">0</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">LOAD 5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td></tr><tr><td style=\"padding:2px 6px;color:var(--muted)\">4</td><td style=\"padding:2px 6px\">The instruction is copied into the CIR, and the CU decodes it.</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">1</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">0</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">LOAD 5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;background:var(--brand-soft);font-weight:700\">LOAD 5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td></tr><tr><td style=\"padding:2px 6px;color:var(--muted)\">5</td><td style=\"padding:2px 6px\">LOAD 5 needs address 5, so 5 goes to the MAR.</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">1</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;background:var(--brand-soft);font-weight:700\">5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">LOAD 5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">LOAD 5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td></tr><tr><td style=\"padding:2px 6px;color:var(--muted)\">6</td><td style=\"padding:2px 6px\">Memory sends the 30 at address 5 into the MDR.</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">1</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;background:var(--brand-soft);font-weight:700\">30</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">LOAD 5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\"></td></tr><tr><td style=\"padding:2px 6px;color:var(--muted)\">7</td><td style=\"padding:2px 6px\">LOAD copies 30 into the ACC.</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">1</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">30</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;color:var(--muted)\">LOAD 5</td><td style=\"padding:2px 6px;font-family:var(--font-mono, monospace);text-align:center;background:var(--brand-soft);font-weight:700\">30</td></tr></table></div></div></div>"
+  },
+  {
+   "id": "predict-registers",
+   "label": "Predict: What Do the Registers Hold?",
+   "type": "multiple-choice",
+   "containerId": "y10-312-predict-registers",
+   "content": "<h2 class=\"lesson-h2\">Predict: What Do the Registers Hold?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Straight after an instruction is taken from memory, why do the MDR and the CIR hold the same thing?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The instruction arrives in the MDR from memory, then it is copied into the CIR so the CU can decode it.</p></div></details><p class=\"lesson-lead\">The same memory: 0 LOAD 5, 1 ADD 6, 2 OUTPUT, 3 STOP; address 5 holds 30 and address 6 holds 12. LOAD 5 has finished, so the ACC holds 30 and the PC holds 1.</p><div id=\"y10-312-predict-registers\"></div>",
+   "items": [
+    {
+     "prompt": "The CPU takes the next instruction from memory. What does the MAR hold first?",
+     "options": [
+      "0",
+      "1",
+      "6"
+     ],
+     "correct": 1,
+     "explain": "The address in the PC (1) is copied into the MAR, so memory reads address 1, where ADD 6 is stored."
+    },
+    {
+     "prompt": "Once ADD 6 is in the CIR, what does the PC hold?",
+     "options": [
+      "1",
+      "2",
+      "6"
+     ],
+     "correct": 1,
+     "explain": "The PC went up by 1 when the instruction was taken from memory. It now holds 2, the address of OUTPUT, the next instruction."
+    },
+    {
+     "prompt": "ADD 6 has been carried out. What does the ACC hold?",
+     "options": [
+      "12",
+      "42",
+      "36"
+     ],
+     "correct": 1,
+     "explain": "The MDR gets 12 from address 6. The ALU works out 30 + 12 = 42 and puts it in the ACC."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Watch the Registers",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-312-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Watch the Registers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why are there two registers for memory, the MAR and the MDR?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One holds where to look (the address); the other holds what was found there (the data or instruction).</p></div></details><p class=\"lesson-lead\">Predict what each register will hold, then run the CPU one small step at a time to see why. Three levels; a wrong box means the round does not count.</p><div id=\"y10-312-activity-2\"></div>",
+   "embedQuery": "activity=regs"
+  },
+  {
+   "id": "exam-1",
+   "label": "Exam Questions: Name the Part",
+   "type": "short-answer-validation",
+   "validatorId": "y10-312-exam-1",
+   "validatorKey": "y10_312_exam_1",
+   "content": "<h2 class=\"lesson-h2\">Exam Questions: Name the Part</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do these questions say \"identify\" or \"state\", and not \"describe\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They want only the name, for 1 mark. A long description takes time and earns nothing more.</p></div></details><p class=\"lesson-lead\">Four real 1-mark questions. Cambridge IGCSE 0478/11 November 2021 Q6(b); 0478/11 November 2023 Q1(c); 0478/11 June 2025 Q5(b); 0478/13 November 2025 Q2(b)(ii).</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-312-exam-1-a\">(a) Identify the component in the CPU that carries out calculations. [1]</label><input id=\"y10-312-exam-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-a\" aria-label=\"Exam Questions: Name the Part part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-312-exam-1-b\">(b) A component in the CPU sends signals to manage the fetch-decode-execute cycle. State the name of this component. [1]</label><input id=\"y10-312-exam-1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-b\" aria-label=\"Exam Questions: Name the Part part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-312-exam-1-c\">(c) Identify the component in the CPU that is responsible for decoding an instruction. [1]</label><input id=\"y10-312-exam-1-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-c\" aria-label=\"Exam Questions: Name the Part part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-312-exam-1-d\">(d) Give the name of the register that is part of the CU. [1]</label><input id=\"y10-312-exam-1-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-d\" aria-label=\"Exam Questions: Name the Part part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-312-exam-1-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y10-312-exam-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-2",
+   "label": "Exam Questions: The ALU and the CU",
+   "type": "self-marked-response",
+   "containerId": "y10-312-exam-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Questions: The ALU and the CU</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must each point in a \"describe\" answer be a different idea?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each mark is for one point. Saying the same idea twice in new words earns only one mark.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/13 June 2024 Q8(c) and 0478/13 November 2025 Q2(b)(i). Each \"describe\" mark is a separate point.</p><div id=\"y10-312-exam-2\"></div>",
+   "items": [
+    {
+     "id": "alu",
+     "prompt": "One component in the CPU is the arithmetic logic unit (ALU). Describe the purpose of the ALU.",
+     "marks": 3,
+     "scheme": [
+      "To execute instructions",
+      "To perform calculations (or an example, such as adding)",
+      "To perform logical operations (or an example, such as comparing)",
+      "To store interim results of calculations",
+      "It stores, reads or writes data to or from the accumulator"
+     ],
+     "guidance": "Any three, one mark each. An example of a calculation (adds two numbers) earns the calculation mark; an example of a logical operation (compares two numbers) earns the logic mark. \"It does maths\" is a calculation point.",
+     "modelAnswer": "It performs calculations and logical operations. It stores the results in the accumulator."
+    },
+    {
+     "id": "cu",
+     "prompt": "The CPU has a control unit (CU). Describe the role of the CU in the CPU.",
+     "marks": 3,
+     "scheme": [
+      "It sends control signals to other components",
+      "... using the control bus",
+      "... to manage the flow of data through the CPU",
+      "It decodes an instruction",
+      "... using an instruction set"
+     ],
+     "guidance": "Any three, one mark each. The \"control bus\" and \"flow of data\" marks follow the control signals point. The \"instruction set\" mark follows the decodes point. \"It controls the computer\" alone earns no mark.",
+     "modelAnswer": "It sends control signals to manage the flow of data through the CPU. It decodes instructions."
+    }
+   ]
+  },
+  {
+   "id": "exam-3",
+   "label": "Exam Question: ALU, CU or Main Memory?",
+   "type": "multiple-choice",
+   "containerId": "y10-312-exam-3",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: ALU, CU or Main Memory?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a CPU need one part that calculates and a different part that controls?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They are different jobs. Keeping them apart means each part can be simple and fast.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/13, June 2021, Question 10(a). Three components are the arithmetic logic unit (ALU), control unit (CU) and random access memory (RAM), the main memory. Which component does each statement apply to?</p><div id=\"y10-312-exam-3\"></div>",
+   "items": [
+    {
+     "prompt": "Stores data and instructions before they enter the CPU.",
+     "options": [
+      "ALU",
+      "CU",
+      "RAM"
+     ],
+     "correct": 2,
+     "explain": "Main memory (RAM) holds the program and its data. They go into the CPU when they are needed."
+    },
+    {
+     "prompt": "Contains a register called the accumulator.",
+     "options": [
+      "ALU",
+      "CU",
+      "RAM"
+     ],
+     "correct": 0,
+     "explain": "The accumulator is part of the ALU: it holds the ALU's results."
+    },
+    {
+     "prompt": "Manages the transmission of data and instructions to the correct components.",
+     "options": [
+      "ALU",
+      "CU",
+      "RAM"
+     ],
+     "correct": 1,
+     "explain": "Managing where data and instructions go is control, so it is the CU."
+    },
+    {
+     "prompt": "Carries out calculations on data.",
+     "options": [
+      "ALU",
+      "CU",
+      "RAM"
+     ],
+     "correct": 0,
+     "explain": "Calculations are done by the ALU."
+    }
+   ]
+  },
+  {
+   "id": "exam-4",
+   "label": "Exam Questions: The Registers",
+   "type": "self-marked-response",
+   "containerId": "y10-312-exam-4",
+   "content": "<h2 class=\"lesson-h2\">Exam Questions: The Registers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why should you read a register name twice before you answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Some names look alike, such as MAR and MDR, but they do different jobs.</p></div></details><p class=\"lesson-lead\">Cambridge IGCSE 0478/12 March 2021 Q8(b)(i) and 0478/11 November 2023 Q1(e). The CPU contains registers, including the program counter (PC) and the memory data register (MDR).</p><div id=\"y10-312-exam-4\"></div>",
+   "items": [
+    {
+     "id": "pc",
+     "prompt": "Describe the role of the Program Counter.",
+     "marks": 2,
+     "scheme": [
+      "It holds the address ...",
+      "... of the next (or current) instruction"
+     ],
+     "guidance": "One mark for holds an address, one for of the next instruction. \"Counts the instructions\" earns no mark.",
+     "modelAnswer": "It holds the address of the next instruction."
+    },
+    {
+     "id": "mdr",
+     "prompt": "Describe the role of the MDR in the fetch-decode-execute cycle.",
+     "marks": 2,
+     "scheme": [
+      "It stores data ...",
+      "... that has been fetched from memory, or is to be written to memory"
+     ],
+     "guidance": "One mark for stores data (or an instruction), one for that has been fetched from memory or is about to be written to memory. \"Stores the address\" earns no mark: that is the MAR.",
+     "modelAnswer": "It stores data that has been fetched from memory."
+    },
+    {
+     "id": "others",
+     "prompt": "Identify three other registers contained in the CPU.",
+     "marks": 3,
+     "scheme": [
+      "Memory address register (MAR)",
+      "Program counter (PC)",
+      "Current instruction register (CIR)",
+      "Accumulator (ACC)"
+     ],
+     "guidance": "Any three, one mark each. The MDR is in the question, so it earns no mark. Abbreviations alone (MAR, PC, CIR, ACC) earn the marks.",
+     "modelAnswer": "MAR, CIR, ACC"
+    }
+   ]
+  },
+  {
+   "id": "exam-5",
+   "label": "Exam Question: Definitions",
+   "type": "self-marked-response",
+   "containerId": "y10-312-exam-5",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Definitions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must a definition be exact, even for 1 mark?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The mark is for the one idea that makes this term different from every other term.</p></div></details><p class=\"lesson-lead\">Adapted from Cambridge IGCSE 0478/11, June 2025, Question 5(a). Complete the definition for each term.</p><div id=\"y10-312-exam-5\"></div>",
+   "items": [
+    {
+     "id": "cir",
+     "prompt": "Current instruction register (CIR). Give its definition.",
+     "marks": 1,
+     "scheme": [
+      "It stores the instruction that is being decoded or executed"
+     ],
+     "guidance": "One mark for holding the current instruction, or the instruction being decoded or executed. \"Stores instructions\" alone earns no mark: it must be the current one.",
+     "modelAnswer": "It stores the instruction being decoded or executed."
+    },
+    {
+     "id": "acc",
+     "prompt": "Accumulator. Give its definition.",
+     "marks": 1,
+     "scheme": [
+      "It stores the result of interim calculations"
+     ],
+     "guidance": "One mark for storing the results of (interim) calculations, or the results from the ALU.",
+     "modelAnswer": "It stores the result of interim calculations."
+    }
+   ]
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: CPU Components Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l2",
+   "embedContainerId": "y10-312-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: CPU Components Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a drill bring back a card you got wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right again later shows you remember it, not that you guessed once.</p></div></details><p class=\"lesson-lead\">The ALU, the CU and the five registers, with real exam wording. Pick the answer that earns the mark, then type it. Your progress is saved.</p><div id=\"y10-312-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y10_312_exam_1": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(arithmetic\\s*(and\\s*)?logic(al)?\\s*unit|alu)\\s*(\\(\\s*alu\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which part does the arithmetic?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(control\\s*unit|cu)\\s*(\\(\\s*cu\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which part is in charge and sends control signals?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(control\\s*unit|cu)\\s*(\\(\\s*cu\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Decoding means working out what the instruction means. Which part is in charge?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(current\\s*instruction\\s*register|instruction\\s*register|cir|ir)\\s*(\\(\\s*c?ir\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The CU decodes the instruction held in this register."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

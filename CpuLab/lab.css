@@ -62,6 +62,16 @@ button, input { font: inherit; }
 .answers label { display: inline-flex; gap: 6px; align-items: center; font-weight: 500; }
 .answers input { width: 90px; padding: 5px 9px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); }
 
+/* Watch the Registers */
+.reg { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); }
+.reg span { font-weight: 700; }
+.reg b { font: 700 17px var(--font-mono); font-variant-numeric: tabular-nums; }
+.reg.changed { border-color: var(--warn); background: var(--brand-soft); }
+.reg input { width: 110px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-family: var(--font-mono); }
+.say { min-height: 44px; margin-top: 8px; }
+.now-was { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: .9rem; }
+.now-was b { color: var(--ink); font-size: 15px; }
+
 /* Walk me through it */
 .walk-back { position: fixed; inset: 0; background: rgba(0, 0, 0, .55); display: flex; align-items: flex-start; justify-content: center; padding: 16px; z-index: 10; overflow: auto; }
 .walk { width: min(760px, 100%); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 14px; padding: 14px 16px; }
