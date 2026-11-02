@@ -176,15 +176,27 @@ const trace = [
   ['MAR', '0', 'The address in the PC goes to the MAR.'], ['MDR', 'LOAD 5', 'Memory sends what is at address 0 into the MDR.'], ['PC', '1', 'The PC goes up by 1: the next instruction is at 1.'],
   ['CIR', 'LOAD 5', 'The instruction is copied into the CIR, and the CU decodes it.'], ['MAR', '5', 'LOAD 5 needs address 5, so 5 goes to the MAR.'], ['MDR', '30', 'Memory sends the 30 at address 5 into the MDR.'], ['ACC', '30', 'LOAD copies 30 into the ACC.'],
 ];
+// A stepper: one register change per step (Next, the arrow keys or the clicker), the memory address being read
+// outlined and the register that changed outlined. Each step's note asks or answers why.
 {
+  const NOTES = ['Why 0? A program starts at address 0.', 'Why the MAR? Memory needs an address to read, and the MAR is the register that holds it.',
+    'Why the MDR? It holds whatever has just come from memory.', 'Why now? The CPU is ready for the next instruction straight away.',
+    'Why copy it? The CIR keeps the instruction while the CU works out what it means.', 'Watch the PC: it still holds 1.',
+    'The MAR holds where to look. The MDR holds what was found there.', 'Next, ADD 6 can add to the 30 in the ACC.'];
+  const HIT = [null, 0, 0, null, null, 5, 5, null];
   const regs = { PC: '0', MAR: '', MDR: '', CIR: '', ACC: '' };
-  const rows = trace.map(([r, v, t], i) => { regs[r] = v; return `<tr><td style="padding:2px 6px;color:var(--muted)">${i + 1}</td><td style="padding:2px 6px">${t}</td>` + ['PC', 'MAR', 'MDR', 'CIR', 'ACC'].map((k) => `<td style="padding:2px 6px;${MONO};text-align:center;${k === r ? 'background:var(--brand-soft);font-weight:700' : 'color:var(--muted)'}">${regs[k]}</td>`).join('') + '</tr>'; }).join('');
-  const table = `<div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:15px;width:100%"><tr><th></th><th style="text-align:left;padding:2px 6px;font-size:13px;color:var(--muted)">What happens</th>${['PC', 'MAR', 'MDR', 'CIR', 'ACC'].map((k) => `<th style="padding:2px 6px;font-size:13px">${k}</th>`).join('')}</tr>` +
-    `<tr><td></td><td style="padding:2px 6px;color:var(--muted)">At the start</td><td style="text-align:center;${MONO}">0</td><td></td><td></td><td></td><td></td></tr>${rows}</table></div>`;
-  steps.push(concept('concept-watch', 'Watch One Instruction',
-    'Look at steps 1 and 5 below. Predict: why does the CPU put the address into the MAR, and not just read memory using the PC?',
-    '<p>The PC must keep the address of the next instruction. The MAR is used for every address memory reads, including data addresses such as 5 in LOAD 5. Using the PC would lose the place in the program.</p>',
-    columns(memTable(MEM.map((m) => m || '-'), 0, 5), table)));
+  const stepperSteps = [{ title: 'At the start: the PC holds 0, the address of the first instruction.', changed: 'PC' }]
+    .concat(trace.map(([r, v, t]) => ({ title: t, changed: r, set: [r, v] })))
+    .map((s, i) => {
+      if (s.set) regs[s.set[0]] = s.set[1];
+      return { title: s.title, note: NOTES[i], html: columns(memTable(MEM.map((m) => m || '-'), 0, HIT[i]), cpuDiagram(Object.assign({}, regs), [s.changed])) };
+    });
+  assert(stepperSteps.length === NOTES.length, 'one note per step');
+  steps.push({ id: 'concept-watch', label: 'Watch One Instruction', type: 'stepper', stepperId: `${P}-watch-stepper`, stepperSteps,
+    content: '<h2 class="lesson-h2">Watch One Instruction</h2>' +
+      tps('Watch what goes into the MAR each time. Predict: why does the CPU put the address into the MAR, and not just read memory using the PC?',
+        '<p>The PC must keep the address of the next instruction. The MAR is used for every address memory reads, including data addresses such as 5 in LOAD 5. Using the PC would lose the place in the program.</p>', 'Show the worked answer') +
+      `<div id="${P}-watch-stepper" class="lesson-stepper"></div>` });
 }
 
 steps.push(mcStep('predict-registers', 'Predict: What Do the Registers Hold?', 'The same memory: 0 LOAD 5, 1 ADD 6, 2 OUTPUT, 3 STOP; address 5 holds 30 and address 6 holds 12. LOAD 5 has finished, so the ACC holds 30 and the PC holds 1.', [
