@@ -697,7 +697,9 @@ export function startSolo({ container, myName, colour }) {
       if (key !== lastFocus || off) focus.scrollIntoView({ block: ask ? 'center' : 'nearest' });   // instant: a smooth scroll never ends in a hidden frame
       lastFocus = key;
     }
-    $('step').textContent = where + ': ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length;
+    // in a challenge, one dot for each clean round needed, filled as they are won (the chip never changes size)
+    const need = m.need || NEED, won = M.phase === 'done' ? need : M.have;
+    $('step').innerHTML = where + ': ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length + (m.type === 'challenge' ? ' <span class="rdots" title="Clean rounds in a row" aria-label="' + won + ' of ' + need + ' clean rounds">' + Array.from({ length: need }, (_, i) => '<i class="' + (i < won ? 'on' : R && R.spoilt && i === won ? 'bad' : '') + '"></i>').join('') + '</span>' : '');
   }
   function navBox() {
     const box = el('div', { class: 'navbox' });

@@ -54,3 +54,8 @@
 .mission .attn { border-color: #ffd43b !important; box-shadow: 0 0 0 3px rgba(255, 212, 59, .55); animation: clattn 1.4s ease-in-out infinite; }
 @keyframes clattn { 0%, 100% { box-shadow: 0 0 0 2px rgba(255, 212, 59, .45); } 50% { box-shadow: 0 0 0 6px rgba(255, 212, 59, .8); } }
 @media (prefers-reduced-motion: reduce) { .mission .attn { animation: none; } }
+/* clean rounds in a row, in the top chip during a challenge: green when won, red outline on a round that no longer counts */
+.chip .rdots { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; }
+.chip .rdots i { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--line-strong); background: transparent; }
+.chip .rdots i.on { background: var(--good); border-color: var(--good); }
+.chip .rdots i.bad { border-color: var(--bad); }
