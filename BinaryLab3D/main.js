@@ -223,6 +223,7 @@ export function startSolo({ container, myName, colour }) {
   function explainReset() { xq.length = 0; clearTimeout(xTimer); xTimer = 0; xUntil = 0; const b = $('explain'); if (b) { b.hidden = true; b.innerHTML = ''; } }
   function explain(html) {
     if (!html) return;
+    if (R) (R.log = R.log || []).push(html);   // every explanation this round, for the list in the sheet
     xq.push(html); if (xq.length > 1) xq.splice(0, xq.length - 1);   // at most one step behind: the newest waits, older ones are skipped
     window.__explainCount = (window.__explainCount || 0) + 1;
     window.__explained = (window.__explained || []).concat([html.replace(/<[^>]+>/g, '')]).slice(-40);
@@ -651,7 +652,7 @@ export function startSolo({ container, myName, colour }) {
     const sec = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === MISSIONS[missionAt].group).map(([, i]) => i), k = sec.indexOf(missionAt); return k >= 0 && k + 1 < sec.length ? sec[k + 1] : (missionAt + 1 < MISSIONS.length ? missionAt + 1 : null); };
   const starsHtml = n => '<span class="stars" aria-label="' + n + ' of 3 stars">' + [0, 1, 2].map(i => '<svg viewBox="0 0 24 24" class="' + (i < n ? 'on' : '') + '"><path d="M12 2l3 7 7 .6-5.3 4.7 1.6 7.2L12 17.8 5.7 21.5l1.6-7.2L2 9.6 9 9z"/></svg>').join('') + '</span>';
 
-  let lastFocus = "";
+  let lastFocus = "", logOpen = false;
   function drawPanel() {
     const t = $('mission'), m = M.m, K = KIND[m.kind];
     t.hidden = false; t.innerHTML = '';
@@ -684,6 +685,14 @@ export function startSolo({ container, myName, colour }) {
     if (M.phase === 'play' && !R.over) act.appendChild(btn('Start again', '', () => leaveThen(() => { M.have = 0; newRound(); })));
     if (!m.noHelp) act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
+    // every step explained so far this round, newest first, folded away until opened (it stays open once opened)
+    if (R.log && R.log.length > 1) {
+      const d = el('details', { class: 'cl-log' }); d.open = logOpen;
+      d.appendChild(el('summary', {}, 'What has happened so far (' + R.log.length + ')'));
+      d.appendChild(el('ol', { reversed: '' }, R.log.slice().reverse().map(x => '<li>' + x + '</li>').join('')));
+      d.addEventListener('toggle', () => { logOpen = d.open; });
+      t.appendChild(d);
+    }
     t.appendChild(navBox());
     // what needs attention now glows and is scrolled into view: a question first (it glows until it is answered),
     // then the end of a round (the result and its button), then the step you are on

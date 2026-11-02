@@ -155,6 +155,16 @@ function playMission(i) {
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.history = () => {
+  s().start(0); SOLVE[M().m.kind]();
+  const d = document.querySelector('#mission .cl-log summary'), n = d ? parseInt(d.textContent.split('(')[1], 10) : 0;
+  ok(d && d.textContent.startsWith('What has happened so far (') && n >= 3, 'no What has happened so far list: ' + (d ? d.textContent : 'none'));
+};
+T.liveStack = () => {
+  s().start(0); const r = R(); carry(r.belt[r.order[0]], r.stack); carry(r.belt[r.order[1]], r.stack);
+  const txt = document.querySelector('.cl-expr').textContent.split(' ').join('').split('\n').join('').split('\t').join('');
+  ok(txt.includes('Stack(topfirst):24'), 'the live stack is wrong: ' + txt);
+};
 T.distinctCubes = () => {
   // no two cubes (or trays) in one round may look the same, in tutorials, challenges and walkthrough examples
   const lab = s();

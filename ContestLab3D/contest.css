@@ -59,3 +59,7 @@
 .chip .rdots i { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--line-strong); background: transparent; }
 .chip .rdots i.on { background: var(--good); border-color: var(--good); }
 .chip .rdots i.bad { border-color: var(--bad); }
+/* What has happened so far: every explanation this round, newest first */
+.mission .cl-log { border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); padding: 4px 10px; }
+.mission .cl-log summary { cursor: pointer; font-weight: 700; font-size: .86rem; padding: 4px 0; }
+.mission .cl-log ol { margin: 4px 0 6px; padding-left: 22px; display: grid; gap: 4px; font-size: .84rem; color: var(--ink-soft); max-height: 220px; overflow: auto; }

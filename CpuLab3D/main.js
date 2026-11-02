@@ -319,6 +319,7 @@ export function startSolo({ container, myName, colour }) {
   function explainReset() { xq.length = 0; clearTimeout(xTimer); xTimer = 0; xUntil = 0; const b = $('explain'); if (b) { b.hidden = true; b.innerHTML = ''; } }
   function explain(html) {
     if (!html) return;
+    if (R) (R.log = R.log || []).push(html);   // every explanation this round, for the list in the sheet
     xq.push(html); if (xq.length > 1) xq.splice(0, xq.length - 1);   // at most one step behind: the newest waits, older ones are skipped
     window.__explainCount = (window.__explainCount || 0) + 1;
     window.__explained = (window.__explained || []).concat([html.replace(/<[^>]+>/g, '')]).slice(-40);
@@ -475,6 +476,7 @@ export function startSolo({ container, myName, colour }) {
       R.slot.CU = addSlot({ role: 'cu', pad: 'machine', x: 3, y: 12, key: 'CU', label: 'IN', put: (it, from) => cpuPut(R.slot.CU, it, from) });
       R.slot.CUout = addSlot({ role: 'cuout', pad: 'out', x: 6, y: 12, key: 'CUout', label: 'OUT', put: (it, from) => from === R.slot.CUout ? null : { msg: PUT_WHY.CUout } });
       addBody(11, 11, 5, 0x1864ab, 'ALU (ARITHMETIC LOGIC UNIT)', 'gate');
+      aluSign(p.list[0].half === 'do' && (p.ins.op === 'ADD' || p.ins.op === 'SUB') ? 'THE CU TELLS THE ALU: ' + p.ins.op : 'THE ALU WAITS FOR THE CU');
       R.slot.ALU1 = addSlot({ role: 'alu', pad: 'machine', x: 11, y: 12, key: 'ALU1', label: 'IN', put: (it, from) => cpuPut(R.slot.ALU1, it, from) });
       R.slot.ALU2 = addSlot({ role: 'alu', pad: 'machine', x: 13, y: 12, key: 'ALU2', label: 'IN', put: (it, from) => cpuPut(R.slot.ALU2, it, from) });
       R.slot.ALUout = addSlot({ role: 'aluout', pad: 'out', x: 15, y: 12, key: 'ALUout', label: 'OUT', put: (it, from) => from === R.slot.ALUout ? null : { msg: PUT_WHY.ALUout } });
@@ -485,7 +487,7 @@ export function startSolo({ container, myName, colour }) {
     },
     placed(it, slot, from) {
       const e = R.p.list[R.i]; R.i++;
-      if (slot.role === 'reg') { setReg(slot.key, e.v, e.kind === 'result' ? 'data' : e.kind); }
+      if (slot.role === 'reg') { setReg(slot.key, e.v, e.kind === 'result' ? 'data' : e.kind); if (e.from === 'ALUout') aluSign('THE ALU WAITS FOR THE CU'); }
       else if (e.set) Object.assign(R.regs, e.set);
       if (e.decode) {
         killItem(it); slot.items = [];
@@ -494,7 +496,7 @@ export function startSolo({ container, myName, colour }) {
           : ins.op === 'OUTPUT' ? ['Send the number in the ACC to the screen', 'Copy the ACC into memory', 'End the program'] : ['End the program', 'Go back to address 0', 'Send the ACC to the screen'];
         R.ask = { type: 'choice', q: 'The CU works out what ' + C(text(ins), 'instr') + ' means. What does it tell the CPU to do?', options: opts, answer: opts[0],
           hint: 'The number after LOAD, ADD or SUB is an <b>address</b> in memory.', why: text(ins) + ' means: ' + opts[0] + '.',
-          done: () => { explain(e.say + ' ' + text(ins) + ' means: ' + opts[0].toLowerCase() + '.'); if (ins.a != null) addItem(R.slot.CUout, valueCube(ins.a, 'addr')); } };
+          done: () => { if (ins.op === 'ADD' || ins.op === 'SUB') aluSign('THE CU TELLS THE ALU: ' + ins.op); explain(e.say + ' ' + text(ins) + ' means: ' + opts[0].toLowerCase() + '.' + (ins.op === 'ADD' || ins.op === 'SUB' ? ' The CU tells the ALU which calculation to do: ' + ins.op + '.' : '')); if (ins.a != null) addItem(R.slot.CUout, valueCube(ins.a, 'addr')); } };
         return;
       }
       if (e.alu) {
@@ -547,6 +549,12 @@ export function startSolo({ container, myName, colour }) {
       return steps;
     }
   };
+  // the sign over the ALU: what the CU has told it to do
+  function aluSign(text) {
+    R.aluText = text;
+    if (R.aluSign) { worldG.remove(R.aluSign); R.aluSign.material.map.dispose(); R.aluSign.material.dispose(); }
+    R.aluSign = addSign(text, 13, 11, 320, { bg: text.includes('TELLS') ? '#ffd43b' : '#343a40', ink: text.includes('TELLS') ? '#1a1200' : '#f1f3f5', size: 0.034 });
+  }
   function cpuPut(slot, it, from) {
     const e = R.p.list[R.i];
     if (!e) return { msg: 'This instruction is finished.' };
@@ -787,7 +795,7 @@ export function startSolo({ container, myName, colour }) {
     const sec = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === MISSIONS[missionAt].group).map(([, i]) => i), k = sec.indexOf(missionAt); return k >= 0 && k + 1 < sec.length ? sec[k + 1] : (missionAt + 1 < MISSIONS.length ? missionAt + 1 : null); };
   const starsHtml = n => '<span class="stars" aria-label="' + n + ' of 3 stars">' + [0, 1, 2].map(i => '<svg viewBox="0 0 24 24" class="' + (i < n ? 'on' : '') + '"><path d="M12 2l3 7 7 .6-5.3 4.7 1.6 7.2L12 17.8 5.7 21.5l1.6-7.2L2 9.6 9 9z"/></svg>').join('') + '</span>';
 
-  let lastFocus = "";
+  let lastFocus = "", logOpen = false;
   function drawPanel() {
     const t = $('mission'), m = M.m, K = KIND[m.kind];
     t.hidden = false; t.innerHTML = '';
@@ -820,6 +828,14 @@ export function startSolo({ container, myName, colour }) {
     if (M.phase === 'play' && !R.over) act.appendChild(btn('Start again', '', () => leaveThen(() => { M.have = 0; newRound(); })));
     if (!m.noHelp) act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
+    // every step explained so far this round, newest first, folded away until opened (it stays open once opened)
+    if (R.log && R.log.length > 1) {
+      const d = el('details', { class: 'cl-log' }); d.open = logOpen;
+      d.appendChild(el('summary', {}, 'What has happened so far (' + R.log.length + ')'));
+      d.appendChild(el('ol', { reversed: '' }, R.log.slice().reverse().map(x => '<li>' + x + '</li>').join('')));
+      d.addEventListener('toggle', () => { logOpen = d.open; });
+      t.appendChild(d);
+    }
     t.appendChild(navBox());
     // what needs attention now glows and is scrolled into view: a question first (it glows until it is answered),
     // then the end of a round (the result and its button), then the step you are on

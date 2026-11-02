@@ -111,6 +111,11 @@ const idx = id => s().missions.findIndex(m => m.id === id);
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.history = () => {
+  s().start(0); SOLVE[M().m.kind]();
+  const d = document.querySelector('#mission .cl-log summary'), n = d ? parseInt(d.textContent.split('(')[1], 10) : 0;
+  ok(d && d.textContent.startsWith('What has happened so far (') && n >= 3, 'no What has happened so far list: ' + (d ? d.textContent : 'none'));
+};
 T.answersAreRight = () => {
   // every round the generators make: the bits and carries give a + b, and the sum fits in the bits
   for (const m of s().missions) for (let k = 0; k < (m.type === 'challenge' ? 40 : 1); k++) {

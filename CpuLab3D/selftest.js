@@ -118,6 +118,16 @@ const idx = id => s().missions.findIndex(m => m.id === id);
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.history = () => {
+  s().start(0); SOLVE[M().m.kind]();
+  const d = document.querySelector('#mission .cl-log summary'), n = d ? parseInt(d.textContent.split('(')[1], 10) : 0;
+  ok(d && d.textContent.startsWith('What has happened so far (') && n >= 3, 'no What has happened so far list: ' + (d ? d.textContent : 'none'));
+};
+T.cuTellsAlu = () => {
+  s().start(idx('add-t')); const r = R(); ok(r.aluText === 'THE CU TELLS THE ALU: ADD', 'ADD did not start with the CU telling the ALU: ' + r.aluText);
+  solveCpu(); ok(r.aluText === 'THE ALU WAITS FOR THE CU', 'the ALU sign did not go back to waiting');
+  s().start(idx('next-t')); ok(R().aluText === 'THE ALU WAITS FOR THE CU', 'the ALU sign is wrong before decoding');
+};
 T.copyKeepsValue = () => {
   s().start(idx('next-t')); const r = R();
   carry(r.slot.PC, r.slot.MAR);
