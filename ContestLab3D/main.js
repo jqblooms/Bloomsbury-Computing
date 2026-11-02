@@ -76,7 +76,7 @@ function bitsExpr(len = 5) {
   const a = () => bitsStr(len), b1 = BIN(); let b2 = BIN(); while (b2 === b1) b2 = BIN();
   const forms = [() => UN() + ' ' + a() + ' ' + b1 + ' ' + UN() + ' ' + a(), () => UN() + ' ' + UN() + ' ' + a() + ' ' + b1 + ' ' + a(),
     () => a() + ' ' + b1 + ' ' + a() + ' ' + b2 + ' ' + UN() + ' ' + a(), () => UN() + ' ' + a() + ' ' + b1 + ' ' + a() + ' ' + b2 + ' ' + a(),
-    () => a() + ' ' + b1 + ' ' + UN() + ' ' + a() + ' ' + b2 + ' ' + a()];
+    () => a() + ' ' + b1 + ' ' + UN() + ' ' + a() + ' ' + b2 + ' ' + a(), () => '(' + UN() + ' ' + a() + ') ' + b1 + ' (' + UN() + ' ' + a() + ')'];
   for (;;) { const src = pick(forms)(); const ast = BC.parse(src); if (bitNodes(ast).filter(isOpNode).length === 3 && !/^(0+|1+)$/.test(BC.evaluate(ast)) && bitsDistinct(src)) return src; }
 }
 // contest length: three strings joined by two different binary operators, with two NOT / SHIFT / CIRC among them
@@ -117,6 +117,140 @@ function undoSteps(src, rhs) {
   return { steps, x: v };
 }
 
+// ================================================================ What Does This Program Do? (loops)
+// A program is a list of statements: { sets: [[v, e], ...] } (one line, such as a = 0: c = 0), { for: v, from, to,
+// step, body, trace, means, wrong, explain }, { if: cond, body } and { out: v }. Expressions are written as in the
+// contest: ^ for powers and int( ) for the whole part. How a loop is traced:
+//   'each' (tutorials): a question for every new value on every pass;
+//   'end' (challenges): only the values when the loop ends;
+//   'means' (a long loop, any mission): first what the loop does (means is right, wrong are the other options),
+//   then its values when it ends.
+const showE = e => e.replace(/\^/g, ' ↑ ').replace(/\s+/g, ' ').trim();
+const jsOf = e => e.replace(/\^/g, '**').replace(/\bint\(/g, 'Math.floor(');
+function listing(prog) {
+  const lines = [], at = new Map();
+  const go = (list, ind) => {
+    for (const s of list) {
+      const pad = ' '.repeat(ind);
+      at.set(s, lines.length);
+      if (s.sets) lines.push(pad + s.sets.map(([v, e]) => v + ' = ' + showE(e)).join(': '));
+      else if (s.for) { lines.push(pad + 'for ' + s.for + ' = ' + showE(s.from) + ' to ' + showE(s.to) + (s.step && s.step !== '1' ? ' step ' + s.step : '')); go(s.body, ind + 4); lines.push(pad + 'next ' + s.for); }
+      else if (s.if) { lines.push(pad + 'if ' + showE(s.if) + ' then'); go(s.body, ind + 4); lines.push(pad + 'end if'); }
+      else if (s.out) lines.push(pad + 'output ' + s.out);
+    }
+  };
+  go(prog.body, 0); lines.push('end');
+  return { lines, at };
+}
+// Runs the program and makes the trace: a list of checkpoints. auto ones (a = 0) just happen; the rest are asked.
+function runProg(prog, contest) {
+  const { lines, at } = listing(prog), env = {}, cps = [], vars = [], loopVars = new Set(), loops = [];
+  const ev = e => { const n = Object.keys(env); return Function(...n, '"use strict"; return (' + jsOf(e) + ');')(...n.map(k => env[k])); };
+  const sub = e => showE(e.replace(/\b[a-z]\b/g, v => env[v] != null ? String(env[v]) : v));
+  const ctx = () => loops.map(v => v + ' = ' + env[v]).join(', ');
+  const assigned = list => { const out = []; (function go(l) { for (const s of l) { if (s.sets) s.sets.forEach(([v]) => { if (!out.includes(v)) out.push(v); }); if (s.body) go(s.body); } })(list); return out; };
+  function exec(list, ask, hist) {
+    for (const s of list) {
+      if (s.sets) for (const [v, e] of s.sets) {
+        const before = sub(e), val = ev(e);
+        if (!Number.isInteger(val)) throw new Error('not whole: ' + v + ' = ' + e);
+        env[v] = val; if (!vars.includes(v) && !loopVars.has(v)) vars.push(v);
+        if (hist) (hist[v] = hist[v] || []).push(val);
+        if (!ask) continue;
+        if (/^-?\d+$/.test(e.trim())) { cps.push({ auto: true, var: v, value: val, line: at.get(s) }); continue; }
+        cps.push({ var: v, value: val, line: at.get(s), ctx: ctx(),
+          q: (loops.length ? 'With ' + ctx() + ': ' : '') + v + ' = ' + showE(e) + '. What is ' + v + ' now?',
+          why: (loops.length ? 'With ' + ctx() + ': ' : '') + v + ' = ' + before + ' = ' + val + '.', hint: 'Put in the values from the pads: ' + v + ' = ' + before + '.' });
+      }
+      else if (s.for) {
+        const from = ev(s.from), to = ev(s.to), step = ev(s.step || '1'); loopVars.add(s.for);
+        const how = !ask ? 'quiet' : s.means ? 'means' : contest ? 'end' : (s.trace || 'each');
+        if (how === 'means') cps.push({ kind: 'choice', loop: s.for, line: at.get(s), q: 'Look at the ' + s.for + ' loop. What does it do?', options: shuffle([s.means].concat(s.wrong)), answer: s.means,
+          why: s.means, hint: s.hint || 'Try the first two or three passes on paper and look for the pattern.' });
+        const h = {};
+        loops.push(s.for);
+        for (let x = from; step > 0 ? x <= to : x >= to; x += step) { env[s.for] = x; exec(s.body, how === 'each', h); }
+        loops.pop();
+        if (hist) for (const [v, list] of Object.entries(h)) (hist[v] = hist[v] || []).push(...list);
+        if (how === 'end' || how === 'means') for (const v of assigned(s.body)) {
+          const seen = h[v] || [], val = env[v];
+          cps.push({ var: v, value: val, line: at.get(s), loop: s.for,
+            q: 'When the ' + s.for + ' loop has finished, what is ' + v + '?',
+            why: (s.explain ? s.explain(env) + ' ' : seen.length && seen.length <= 8 ? v + ' goes ' + seen.join(', ') + '. ' : '') + 'When the ' + s.for + ' loop ends, ' + v + ' = ' + val + '.',
+            hint: s.explain ? 'Go through k from ' + from + ' to ' + to + ' and count.' : 'Write ' + v + ' for each pass in a table: ' + s.for + ' = ' + from + ', then ' + (from + step) + ', and so on up to ' + to + '.' });
+        }
+      }
+      else if (s.if) { if (ev(s.if)) exec(s.body, ask, hist); }
+      else if (s.out && ask) cps.push({ var: s.out, value: env[s.out], line: at.get(s), final: true, q: 'What does the program output?', why: 'The program outputs ' + s.out + ', which is ' + env[s.out] + '.', hint: 'The output line shows ' + s.out + '. Look at its pad.' });
+    }
+  }
+  exec(prog.body, true, null);
+  return { lines, cps, vars, out: env[prog.body.find(s => s.out).out] };
+}
+const divisorsUpTo = (v, top) => { const out = []; for (let k = 2; k <= top; k++) if (v % k === 0) out.push(k); return out; };
+// the factor-counting loop at the end of the contest program: for k = 2 to d, one if for each variable
+function factorLoop(names) {
+  return { for: 'k', from: '2', to: 'd', means: 'For each k from 2 to d, it adds 1 to t when k divides ' + names.join(', ').replace(/, (\w)$/, ' or $1') + ' exactly. So t counts their factors from 2 to d.',
+    wrong: ['It adds k to t on every pass.', 'It counts how many numbers from 2 to d are even.'],
+    hint: 'a / k == int(a / k) is true only when a / k is a whole number: k divides a exactly.',
+    explain: env => names.map(v => v + ' = ' + env[v] + ': ' + (divisorsUpTo(env[v], env.d).join(', ') || 'none')).join('. ') + '.',
+    body: names.map(v => ({ if: v + ' / k == int(' + v + ' / k)', body: [{ sets: [['t', 't + 1']] }] })) };
+}
+// ACSL 2018-19 Junior Contest 2, question 5, exactly
+const PAPER_LOOPS = { cite: 'ACSL 2018-19 Junior Division, Contest 2, question 5.', body: [
+  { sets: [['a', '0'], ['c', '0'], ['t', '0']] },
+  { for: 'i', from: '1', to: '5', body: [{ sets: [['a', 'a + i ^ 2']] }] },
+  { sets: [['b', 'a / 11']] },
+  { for: 'j', from: '2', to: '10', step: '2', body: [{ sets: [['c', 'c + j * b']] }] },
+  { sets: [['d', 'c / b - a / 11']] },
+  factorLoop(['a', 'b', 'c', 'd']),
+  { out: 't' }] };
+// the same shape with new numbers: squares added up, a second loop, then counting factors
+function progFactors() {
+  for (;;) {
+    const n = rnd(3, 5), a = [0, 1, 5, 14, 30, 55][n], qs = divisorsUpTo(a, a - 1).filter(q => a / q >= 2 && a / q <= 6);
+    if (!qs.length) continue;
+    const q = pick(qs), m = rnd(3, 5), b = a / q, d = m * (m + 1) - b;
+    if (d < 6 || d > 30) continue;
+    return { body: [
+      { sets: [['a', '0'], ['c', '0'], ['t', '0']] },
+      { for: 'i', from: '1', to: String(n), body: [{ sets: [['a', 'a + i ^ 2']] }] },
+      { sets: [['b', 'a / ' + q]] },
+      { for: 'j', from: '2', to: String(2 * m), step: '2', body: [{ sets: [['c', 'c + j * b']] }] },
+      { sets: [['d', 'c / b - a / ' + q]] },
+      factorLoop(['a', 'b', 'c', 'd']),
+      { out: 't' }] };
+  }
+}
+const progDoubling = (n = rnd(3, 5)) => ({ body: [
+  { sets: [['x', '1'], ['s', '0']] },
+  { for: 'i', from: '1', to: String(n), body: [{ sets: [['x', 'x * 2'], ['s', 's + x']] }] },
+  { out: 's' }] });
+const progNested = (n = rnd(2, 3), m = rnd(3, 4)) => ({ body: [
+  { sets: [['c', '0']] },
+  { for: 'i', from: '1', to: String(n), body: [{ for: 'j', from: 'i', to: String(m), body: [{ sets: [['c', 'c + j']] }] }] },
+  { out: 'c' }] });
+function progMultiples() {
+  const p = rnd(3, 5), n = rnd(12, 20);
+  return { body: [
+    { sets: [['s', '0']] },
+    { for: 'i', from: '1', to: String(n), means: 'It adds up the numbers from 1 to ' + n + ' that ' + p + ' divides exactly.', wrong: ['It adds up every number from 1 to ' + n + '.', 'It counts how many numbers from 1 to ' + n + ' that ' + p + ' divides exactly.'],
+      hint: 'i / ' + p + ' == int(i / ' + p + ') is true only when ' + p + ' divides i exactly.',
+      body: [{ if: 'i / ' + p + ' == int(i / ' + p + ')', body: [{ sets: [['s', 's + i']] }] }] },
+    { out: 's' }] };
+}
+
+function longTree(n) {
+  let last = null;
+  for (let k = 0; k < 30000; k++) {
+    const t = NC.randomTree({ n, ops: ['+', '-', '*', '/', POW], max: 60, noNeg: true }), count = {};
+    for (const x of postorder(t)) { const v = x.op ? String(NC.evaluate(x)) : x.v; count[v] = (count[v] || 0) + 1; }
+    if (Math.max(...Object.values(count)) === 1) return t;   // no two cubes the same, as everywhere else
+    if (Math.max(...Object.values(count)) <= 2) last = t;
+  }
+  return last;
+}
+const progRound = prog => ({ prog, key: listing(prog).lines.join('|') });
 // ================================================================ missions
 const tree = s => NC.parseInfix(s), fromPost = s => NC.parsePostfix(s), fromPre = s => NC.parsePrefix(s);
 // No two cubes in one expression may be the same: every operand is different, and (with numbers) every answer cube
@@ -143,6 +277,14 @@ const MISSIONS = [
   { id: 'pre-c', group: 'Prefix', title: 'Prefix Challenge', type: 'challenge', kind: 'stack', form: 'prefix',
     intro: 'Work out each prefix expression with the stack. Predict every answer cube. Two clean rounds in a row.',
     gen: () => ({ t: stackTree({ n: 3, ops: ['+', '-', '*', POW] }) }) },
+  { id: 'pre-long-t', group: 'Prefix', title: 'Contest Prefix', type: 'tutorial', kind: 'stack', form: 'prefix', mins: 12, repeatsOk: true,   // the real paper: its digits repeat
+   
+    intro: 'A real contest question: 13 operators, every number one digit, and ↑ for powers. The method is the same: read from the <b>right</b>, one cube at a time.',
+    gen: () => ({ t: fromPre('+ - / * 2 + 3 5 4 / 9 - ^ 2 2 1 / + * 3 5 * 6 2 ^ 3 2') }),
+    after: { q: 'This prefix has 13 operators. Why does the stack method still work?', options: ['Each operator only needs the two values on top of the stack, however long it is.', 'Long expressions are always added up.', 'The stack sorts the numbers.'], why: 'Every step looks only at the top two cubes.' } },
+  { id: 'pre-long-c', group: 'Prefix', title: 'Long Prefix', type: 'challenge', kind: 'stack', form: 'prefix', need: 1, mins: 12,
+    intro: 'Six operators, with / and ↑. One clean round.',
+    gen: () => ({ t: longTree(6) }) },
   { id: 'tree-t', group: 'Expression trees', title: 'Build and Read a Tree', type: 'tutorial', kind: 'tree', from: 'infix', read: 'prefix',
     intro: 'An expression tree has the operator worked <b>last</b> at the top. Build the tree, then read it as prefix.',
     gen: () => ({ t: tree('A + B * C'), from: 'infix', read: 'prefix' }),
@@ -153,6 +295,13 @@ const MISSIONS = [
   { id: 'tree-c', group: 'Expression trees', title: 'Convert', type: 'challenge', kind: 'tree',
     intro: 'Build the tree from one notation, then read it in another. Two clean rounds in a row.',
     gen: () => { const from = pick(['infix', 'prefix', 'postfix']), read = pick(['prefix', 'postfix'].filter(x => x !== from)); return { t: RT({ n: rnd(2, 3), ops: ['+', '-', '*', '/', POW], letters: true }), from, read }; } },
+  { id: 'imp-t', group: 'Expression trees', title: 'Hidden Times Signs', type: 'tutorial', kind: 'tree', from: 'infix', read: 'postfix', mins: 8,
+    intro: 'Contest infix hides some times signs: 2(A + B) means 2 * (A + B), and 3B means 3 * B. A square, a small 2 written high, is ↑ 2. Build the tree, then read it as postfix.',
+    gen: () => ({ t: tree('3(A + B) / C ^ 2'), from: 'infix', read: 'postfix', implied: true }),
+    after: { q: 'In 3(A + B), why is the * worked after the +?', options: ['The brackets make A + B one value first, then 3 times it.', 'Times is always worked last.', 'The 2 is on the left.'], why: 'Brackets are worked first.' } },
+  { id: 'imp-c', group: 'Expression trees', title: 'Hidden Times Challenge', type: 'challenge', kind: 'tree', mins: 10,
+    intro: 'Contest infix with hidden times signs. Build the tree, then read it as postfix. Two clean rounds in a row.',
+    gen: () => { let t; do t = RT({ n: 4, ops: ['+', '-', '*', '/', POW], letters: true, digitChance: 0.45 }); while (NC.depth(t) > 3 || NC.toInfix(t, { implied: true }) === infixOf(t)); return { t, from: 'infix', read: 'postfix', implied: true }; } },
   { id: 'infix-t', group: 'Back to infix', title: 'Brackets and Order', type: 'tutorial', kind: 'infix',
     intro: 'Infix puts the operator <b>between</b> its sides. Read the tree: left side, operator, right side. Add brackets where a part must be worked first.',
     gen: () => ({ t: fromPost('A B + C *'), from: 'postfix' }),
@@ -175,6 +324,10 @@ const MISSIONS = [
   { id: 'shift-c', group: 'Bit-string flicking', title: 'Shifts Challenge', type: 'challenge', kind: 'bits',
     intro: 'Two or three NOT, SHIFT and CIRC machines in a row. Work them from the right. Predict every new tray. Two clean rounds in a row.',
     gen: () => { let src; do src = (Math.random() < 0.5 ? UN() + ' ' : '') + UN() + ' ' + UN() + ' ' + bitsStr(5); while (!bitsDistinct(src)); return { src }; } },
+  { id: 'brack-t', group: 'Bit-string flicking', title: 'Brackets First', type: 'tutorial', kind: 'bits', mins: 6,
+    intro: 'Brackets are worked first, as in maths. Each bracket here holds one machine. Then OR joins the two results.',
+    gen: () => ({ src: '(LCIRC-2 01101) OR (RSHIFT-1 11001)' }),
+    after: { q: 'Why are both brackets worked before the OR?', options: ['Brackets are always worked first, so OR needs both of their results.', 'OR is always worked first.', 'Brackets only show where the strings start.'], why: 'Brackets come before everything else.' } },
   { id: 'bits-c', group: 'Bit-string flicking', title: 'Order of Operations', type: 'challenge', kind: 'bits',
     intro: 'Carry the trays through the machines in the right order. Predict every new tray. Two clean rounds in a row.',
     gen: () => ({ src: bitsExpr() }) },
@@ -185,6 +338,18 @@ const MISSIONS = [
   { id: 'solve-c', group: 'Solve for x', title: 'Solve for x Challenge', type: 'challenge', kind: 'solve',
     intro: 'Set the x lamps so the machines give the target, then run them. Your first run must be right. Two clean rounds in a row.',
     gen: () => solveExpr() },
+  // What Does This Program Do? (loops), from ACSL Junior Contest 2
+  { id: 'loop-t', group: 'Loops', title: 'What Does This Program Do?', type: 'tutorial', kind: 'trace', mins: 14,
+    intro: 'A real contest program. Trace it one line at a time: walk to the variable that changes and give its new value. For a long loop, first say what it does.',
+    gen: () => ({ prog: PAPER_LOOPS, key: 'paper' }),
+    after: { q: 'Why find what the k loop does, instead of doing all 24 passes one by one?', options: ['Spotting the pattern (counting factors) is quicker and makes fewer mistakes.', 'The k loop never runs.', 'Only the first pass matters.'], why: 'The pattern gives the answer without checking 96 if lines.' } },
+  { id: 'loop2-t', group: 'Loops', title: 'Loops Inside Loops', type: 'tutorial', kind: 'trace', mins: 8,
+    intro: 'A loop inside a loop: for every pass of i, the j loop runs all the way through. Watch where j starts.',
+    gen: () => ({ prog: progNested(3, 3), key: 'nested' }),
+    after: { q: 'Why does the j loop run fewer times when i is bigger?', options: ['j starts at i, so a bigger i leaves fewer values of j up to 3.', 'j always runs 3 times.', 'The i loop stops the j loop.'], why: 'for j = i to 3 starts at i.' } },
+  { id: 'loop-c', group: 'Loops', title: 'Trace the Loops', type: 'challenge', kind: 'trace', mins: 12,
+    intro: 'Contest style: give each value when its loop ends, then the output. Two clean rounds in a row.',
+    gen: () => progRound(pick([progFactors, progDoubling, progNested, progMultiples])()) },
   // Challenges: contest length, no Walk me through it, harder each time; stars for clean rounds
   { id: 'c-post', group: 'Challenges', title: 'Postfix Pro', type: 'challenge', kind: 'stack', form: 'postfix', noHelp: true,
     intro: 'Contest length: four operators, with / and ↑. No help. Two clean rounds in a row.',
@@ -203,19 +368,23 @@ const MISSIONS = [
     gen: () => ({ src: bitsExpr4() }) },
   { id: 'c-solve', group: 'Challenges', title: 'Solve Pro', type: 'challenge', kind: 'solve', noHelp: true,
     intro: 'Two machines before the XOR. Your first run must be right. No help. Two clean rounds in a row.',
-    gen: () => solveExpr(true) }
+    gen: () => solveExpr(true) },
+  { id: 'c-loop', group: 'Challenges', title: 'Loops Pro', type: 'challenge', kind: 'trace', noHelp: true,
+    intro: 'The long contest programs. No help. Two clean rounds in a row.',
+    gen: () => progRound(pick([progFactors, progMultiples])()) }
 ];
 export { MISSIONS };
-const SECTIONS = ['Postfix', 'Prefix', 'Expression trees', 'Back to infix', 'Bit-string flicking', 'Solve for x', 'Challenges'];
+const SECTIONS = ['Postfix', 'Prefix', 'Expression trees', 'Back to infix', 'Bit-string flicking', 'Solve for x', 'Loops', 'Challenges'];
 // Lesson mode (Years 7 to 9): one lesson's activities in order, about an hour each; ?lesson=bits opens one
 const LESSONS = [
   { id: 'notation', title: 'Lesson 1: Prefix, Infix and Postfix', missions: ['post-t', 'post-c', 'pre-t', 'pre-c', 'tree-t', 'tree2-t', 'tree-c', 'infix-t', 'infix-c'], ext: ['c-post', 'c-pre', 'c-tree', 'c-infix'] },
-  { id: 'bits', title: 'Lesson 2: Bit-String Flicking', missions: ['bits-t', 'gates-t', 'shift-t', 'shift-c', 'bits-c', 'solve-t', 'solve-c'], ext: ['c-bits', 'c-solve'] }
+  { id: 'bits', title: 'Lesson 2: Bit-String Flicking', missions: ['bits-t', 'gates-t', 'shift-t', 'shift-c', 'bits-c', 'solve-t', 'solve-c'], ext: ['c-bits', 'c-solve'] },
+  { id: 'junior', title: 'Lesson 3: Junior Contest 2', missions: ['pre-long-t', 'imp-t', 'brack-t', 'loop-t', 'loop2-t', 'loop-c'], ext: ['pre-long-c', 'imp-c', 'c-loop'] }
 ];
 // rough minutes for a Year 7 student: a tutorial is one round, a challenge needs two clean rounds
 const minsOf = m => m.mins || (m.type === 'challenge' ? 10 : m.kind === 'solve' ? 7 : 5);
 const FORM_NAME = { postfix: 'Postfix', prefix: 'Prefix', infix: 'Infix' };
-function sourceTokens(p) { return p.from === 'prefix' ? NC.toPrefix(p.t) : p.from === 'postfix' ? NC.toPostfix(p.t) : NC.tokens(infixOf(p.t)); }
+function sourceTokens(p) { return p.from === 'prefix' ? NC.toPrefix(p.t) : p.from === 'postfix' ? NC.toPostfix(p.t) : NC.tokens(p.implied ? NC.toInfix(p.t, { implied: true }) : infixOf(p.t)); }
 
 // ================================================================ saving and results
 const STORE = 'bc-contest3d-v1:';
@@ -342,6 +511,7 @@ export function startSolo({ container, myName, colour }) {
     if (m.kind === 'tree') return 'Build the tree from the ' + p.from + '. The operator worked last goes at the top.';
     if (m.kind === 'infix') return 'Read the tree in order: left side, operator, right side. Add brackets only where a part must be worked first.';
     if (m.kind === 'bits') return ORDER_RULE;
+    if (m.kind === 'trace') return KIND.trace.start();
     return 'Work backwards from the target: undo the last machine first.';
   }
   // ---- what just happened: a card at the top of the lab after every step. Each one stays up for a while, the next
@@ -367,7 +537,7 @@ export function startSolo({ container, myName, colour }) {
     xUntil = Date.now() + 1800;   // each one stays up at least this long
     if (xq.length) xTimer = setTimeout(xNext, xUntil - Date.now());
   }
-  const keyOf = p => p.t ? NC.toPrefix(p.t).join(' ') : p.src;
+  const keyOf = p => p.key || (p.t ? NC.toPrefix(p.t).join(' ') : p.src);
   function mistake(msg) {
     R.why = msg; log.add(M.m.title + ': ' + msg.replace(/<[^>]+>/g, ''), false);
     const first = M.m.type === 'challenge' && !R.spoilt;
@@ -403,10 +573,10 @@ export function startSolo({ container, myName, colour }) {
   KIND.stack = {
     setup(R, m) {
       const t = R.p.t, form = m.form, list = form === 'postfix' ? NC.toPostfix(t) : NC.toPrefix(t);
-      newWorld(22, 14, 'Stack machine');
+      const SW = Math.max(22, list.length + 4); newWorld(SW, 14, 'Stack machine');
       R.list = list; R.order = list.map((_, i) => i); if (form === 'prefix') R.order.reverse();
       R.next = 0; R.tok = 0; R.op = null; R.opsIn = 0; R.firstIn = 0; R.bothIn = 0; R.runs = 0; R.steps = NC.stackSteps(list, form);
-      const bx = Math.floor((22 - list.length) / 2);
+      const bx = Math.floor((SW - list.length) / 2);
       R.belt = list.map((s, i) => {
         const sl = addSlot({ role: 'belt', x: bx + i, y: 3, idx: i,
           take: () => R.order[R.next] !== i ? 'Take the cubes in order. ' + (form === 'postfix' ? 'Postfix is read from the left.' : 'Prefix is read from the right.') + ' The next one glows and has a yellow ring.'
@@ -606,7 +776,7 @@ export function startSolo({ container, myName, colour }) {
         { text: R.p.read === 'prefix' ? 'Read it as prefix: take each cube to the rail. Visit a node <b>before</b> its sides, the left side first.' : 'Read it as postfix: take each cube to the rail. Visit both sides <b>before</b> the node, the left side first.', done: () => R.readN === R.readOrder.length }
       ];
     },
-    expr(R) { return '<b>' + FORM_NAME[R.p.from] + ':</b> ' + Cs(sourceTokens(R.p)) + '<br><b>Read it as:</b> ' + FORM_NAME[R.p.read] + (R.stage === 'read' ? ' (' + R.readN + ' of ' + R.readOrder.length + ')' : ''); },
+    expr(R) { return '<b>' + FORM_NAME[R.p.from] + ':</b> ' + Cs(sourceTokens(R.p)) + (R.p.implied ? '<br><span class="note">A number next to a letter or a bracket means times: 2(A + B) is 2 * (A + B).</span>' : '') + '<br><b>Read it as:</b> ' + FORM_NAME[R.p.read] + (R.stage === 'read' ? ' (' + R.readN + ' of ' + R.readOrder.length + ')' : ''); },
     walk(R, m) {
       let t; do t = RT({ n: 2, ops: ['+', '-', '*'], letters: true }); while (NC.toPrefix(t).join() === NC.toPrefix(R.p.t).join());
       const from = R.p.from, read = R.p.read, src = sourceTokens({ t, from });
@@ -866,11 +1036,90 @@ export function startSolo({ container, myName, colour }) {
     }
   };
 
+  // ---------------------------------------------------------------- What Does This Program Do?: a trace you walk round
+  // Each variable has a pad holding a cube with its value. A line changes one variable: walk to its pad, press Space
+  // and give the new value (the cube then shows it). A long loop first asks what it does. The panel shows the program
+  // with the line you are on, and the trace table so far.
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const progHtml = (lines, now) => '<pre class="cl-prog">' + lines.map((l, i) => '<span' + (i === now ? ' class="now"' : '') + '>' + esc(l) + '</span>').join('\n') + '</pre>';
+  function setPad(v, val) {
+    const s = R.vp[v]; s.items.forEach(killItem); s.items = [];
+    addItem(s, { sym: String(val), role: val === '?' ? 'unknown' : 'num' });
+  }
+  function autos() {
+    while (R.at < R.cps.length && R.cps[R.at].auto) { const c = R.cps[R.at]; R.disp[c.var] = c.value; R.hist[c.var].push(c.value); setPad(c.var, c.value); R.at++; }
+  }
+  function traced(cp) {
+    if (cp.var && !cp.final) { R.disp[cp.var] = cp.value; R.hist[cp.var].push(cp.value); setPad(cp.var, cp.value); }
+    R.at++; autos();
+    explain(cp.why);
+    if (R.at >= R.cps.length) finishRound('The program outputs <b>' + R.run.out + '</b>.');
+  }
+  function pressVar(v) {
+    if (!R || R.over || locked()) return;
+    const cp = R.cps[R.at]; if (!cp) return;
+    if (cp.kind === 'choice') { toast('Answer the question on the right first.', 'hint'); return; }
+    if (cp.var !== v) { toast((cp.final ? 'The program outputs ' + cp.var : 'The next change is to ' + cp.var) + '. Walk to the ' + cp.var + ' pad.', 'hint'); return; }
+    R.moves++;
+    R.ask = { type: 'num', q: cp.q, answer: cp.value, hint: cp.hint, why: cp.why, done: () => traced(cp) };
+  }
+  KIND.trace = {
+    start() { return 'Trace the program from the top, one line at a time. Each pad holds a variable.'; },
+    setup(R, m) {
+      R.run = runProg(R.p.prog, m.type === 'challenge'); R.cps = R.run.cps; R.at = 0;
+      const vars = R.run.vars, W = 22;
+      newWorld(W, 14, 'Program trace');
+      R.disp = {}; R.hist = {}; R.vp = {};
+      const x0 = Math.floor(W / 2) - Math.floor((vars.length - 1) * 3 / 2);
+      vars.forEach((v, i) => {
+        R.hist[v] = [];
+        R.vp[v] = addSlot({ role: 'var', pad: 'answer', x: x0 + i * 3, y: 6, label: v, tag: { tagY: 170, tagSize: 0.05 }, press: () => pressVar(v), pressText: 'to work out the new value of ' + v + '.' });
+        setPad(v, '?');
+      });
+      addSign('VARIABLES', Math.floor(W / 2), 3, 220, { bg: '#ffd43b', ink: '#1a1200', size: 0.034 });
+      pos.x = Math.floor(W / 2); pos.y = 10;
+      autos();
+    },
+    placed() { },
+    check() {
+      const cp = R.cps[R.at];
+      if (cp && cp.kind === 'choice' && !R.ask) R.ask = { type: 'choice', wide: true, q: cp.q, options: cp.options, answer: cp.answer, hint: cp.hint, why: cp.why, done: () => traced(cp) };
+    },
+    guide(R, m) {
+      const cp = R.cps[R.at]; if (!cp || !cp.var || R.ask || R.over) return null;
+      return m.type === 'tutorial' ? slotTarget(R.vp[cp.var]) : areaTarget(Object.values(R.vp));
+    },
+    steps(R) {
+      const out = [];
+      R.cps.forEach((cp, i) => {
+        if (cp.auto) return;
+        out.push({ text: i < R.at ? (cp.kind === 'choice' ? 'The ' + cp.loop + ' loop: ' + cp.answer : cp.final ? 'Output: <b>' + cp.value + '</b>.' : (cp.ctx ? cp.ctx + ': ' : cp.loop ? 'After the ' + cp.loop + ' loop: ' : '') + cp.var + ' = <b>' + cp.value + '</b>.')
+          : i === R.at ? (cp.kind === 'choice' ? cp.q : 'Walk to the <b>' + cp.var + '</b> pad and press Space. ' + cp.q)
+          : (cp.final ? 'The output.' : cp.kind === 'choice' ? 'What the ' + cp.loop + ' loop does.' : 'Then ' + cp.var + '.'), done: () => R.at > i });
+      });
+      return out;
+    },
+    goals() { return ['Go through the program one line at a time.', 'Walk to the variable that changes and give its new value.', 'For a long loop, first say what it does, then give the values when it ends.', 'a / k == int(a / k) is true when k divides a exactly.']; },
+    expr(R) {
+      const cp = R.cps[Math.min(R.at, R.cps.length - 1)];
+      return (R.p.prog.cite ? '<span class="note">' + R.p.prog.cite + '</span>' : '') + progHtml(R.run.lines, R.over ? -1 : cp.line)
+        + (cp && cp.ctx && !R.over ? '<div><b>Now:</b> ' + cp.ctx + '</div>' : '')
+        + '<table class="cl-trace"><tr><th>Variable</th><th>Values so far</th></tr>' + R.run.vars.map(v => '<tr><td>' + v + '</td><td>' + (R.hist[v].join(', ') || '') + '</td></tr>').join('') + '</table>';
+    },
+    walk(R, m) {
+      const prog = R.p.prog.body.some(s => s.for === 'i' && s.body.some(b => b.for)) ? progDoubling(3) : progNested(2, 3);
+      const run = runProg(prog, false), steps = [{ text: '<b>A different program.</b> Go through it from the top, one line at a time.', visual: progHtml(run.lines, -1) }];
+      for (const cp of run.cps) steps.push({ text: cp.auto ? cp.var + ' starts at ' + cp.value + '.' : cp.kind === 'choice' ? cp.q + ' ' + cp.answer : cp.final ? 'The output line: <span class="hl">' + cp.value + '</span>.' : cp.why.replace(/= (-?\d+)\.$/, '= <span class="hl">$1</span>.'), visual: progHtml(run.lines, cp.line) });
+      steps.push({ text: 'That is the whole trace. Now trace yours.', visual: '' });
+      return steps;
+    }
+  };
+
   // ---------------------------------------------------------------- the hand: hold to grab, let go to put down
   function locked() { return !M || M.phase !== 'play' || !R || R.over || !!R.ask || !$('cardWrap').hidden; }
   function grabTarget() {
     if (hand.item || locked()) return null;
-    const s = nearestSlot(0.62, s => s.crate || s.role === 'lamp' || s.items.length);
+    const s = nearestSlot(0.62, s => s.crate || s.role === 'lamp' || s.press || s.items.length);
     return s ? { slot: s } : null;
   }
   function setHand(down) {
@@ -880,7 +1129,7 @@ export function startSolo({ container, myName, colour }) {
     if (!down) {
       // let go too soon: say so, so a tap never just seems to do nothing
       if (hand.pending) toast('Hold Space a little longer. A cube or tray that is already in place needs a short hold to pick up.', 'hint');
-      else if (hand.item && clock - (hand.since || 0) < 0.35 && nearestSlot(0.9, x => x.role !== 'lamp') === hand.from) { hand.quick = true; }
+      else if (hand.item && clock - (hand.since || 0) < 0.35 && nearestSlot(0.9, x => x.role !== 'lamp' && !x.press) === hand.from) { hand.quick = true; }
       hand.pending = null; letGo();
       if (hand.quick) { hand.quick = false; toast('Keep holding Space to carry it. Let go when you reach a pad.', 'hint'); }
       hint(); return;
@@ -893,7 +1142,7 @@ export function startSolo({ container, myName, colour }) {
     }
     const g = grabTarget(); if (!g) return;
     const s = g.slot;
-    if (s.risky && !s.crate && s.role !== 'lamp' && !s.take(top(s))) { hand.pending = { s, at: clock, it: top(s) }; hint(); return; }
+    if (s.risky && !s.crate && s.role !== 'lamp' && !s.press && !s.take(top(s))) { hand.pending = { s, at: clock, it: top(s) }; hint(); return; }
     doGrab(s);
   }
   function holdTick() {
@@ -905,6 +1154,7 @@ export function startSolo({ container, myName, colour }) {
     if (g && g.slot === p.s && top(p.s) === p.it) doGrab(p.s);
   }
   function doGrab(s) {
+    if (s.press) { s.press(s); afterChange(); return; }   // a pad you press (a variable in a program trace)
     if (s.role === 'lamp') { KIND.solve.toggle(s.lamp); toast('Lamp ' + (s.lamp + 1) + ' is ' + (R.x[s.lamp] === '1' ? 'on (1)' : 'off (0)') + '.', 'good'); afterChange(); return; }
     if (s.crate) { hand.item = cube(s.crate, { role: 'paren' }); itemMesh(hand.item); hand.from = s; hand.since = clock; afterChange(); return; }
     const it = top(s), why = s.take(it);
@@ -916,7 +1166,7 @@ export function startSolo({ container, myName, colour }) {
     const it = hand.item; if (!it) return;
     const from = hand.from;
     const back = () => { hand.item = null; hand.from = null; if (from.crate) killItem(it); else { from.items.push(it); it.slot = from; } };
-    const s = nearestSlot(0.9, x => x.role !== 'lamp');
+    const s = nearestSlot(0.9, x => x.role !== 'lamp' && !x.press);
     if (!s) { back(); toast('Let go over a pad: the glowing ring shows where.', 'hint'); afterChange(); return; }
     if (s === from) { back(); afterChange(); return; }
     const res = s.put(it, from);
@@ -1047,11 +1297,11 @@ export function startSolo({ container, myName, colour }) {
   let outlineKey = '', glowing = new Set();
   function updateOutline(ts) {
     outMat.opacity = 0.6 + 0.35 * Math.sin(ts / 170);
-    const g = grabTarget(), s = g ? g.slot : hand.item && !locked() ? nearestSlot(0.9, x => x.role !== 'lamp') : null;
+    const g = grabTarget(), s = g ? g.slot : hand.item && !locked() ? nearestSlot(0.9, x => x.role !== 'lamp' && !x.press) : null;
     // what glows: the thing under your hand, the next thing the guide points at, and in a bit-string challenge every
     // tray you could pick up (none of them is singled out)
     const want = new Set();
-    if (g && !g.slot.crate && g.slot.role !== 'lamp' && top(g.slot)) want.add(top(g.slot));
+    if (g && !g.slot.crate && g.slot.role !== 'lamp' && !g.slot.press && top(g.slot)) want.add(top(g.slot));
     const gt = !hand.item ? guideTarget() : null;
     if (gt && gt.exact && gt.slot.items.length) want.add(top(gt.slot));
     if (gt && gt.glowAll) gt.glowAll.forEach(x => want.add(x));
@@ -1224,6 +1474,11 @@ export function startSolo({ container, myName, colour }) {
       const inp = el('input', { type: 'text', inputmode: 'numeric', id: 'clAsk', 'aria-label': 'Your answer', autocomplete: 'off' });
       inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
       row.appendChild(inp); read = () => { const v = inp.value.trim().replace(/−/g, '-'); return /^-?\d+$/.test(v) ? Number(v) : null; };
+    } else if (a.type === 'choice') {
+      let chosen = null;
+      const opts = el('div', { class: 'ask-opts cl-choice' + (a.wide ? ' wide' : '') });
+      a.options.forEach(o => opts.appendChild(btn(o, '', () => { chosen = o; go(); })));
+      row.appendChild(opts); read = () => chosen;
     } else {
       a.pick = a.pick || Array(a.len).fill('?');
       const lamps = el('div', { class: 'cl-pick', role: 'group', 'aria-label': 'Your tray' });
@@ -1243,7 +1498,7 @@ export function startSolo({ container, myName, colour }) {
       if (a.pick) a.pick = Array(a.len).fill('?');
       drawPanel(); $('clAsk')?.focus();
     };
-    row.appendChild(btn('Check', 'go', go));
+    if (a.type !== 'choice') row.appendChild(btn('Check', 'go', go));
     box.append(row, fb);
     return box;
   }
@@ -1285,9 +1540,11 @@ export function startSolo({ container, myName, colour }) {
     else if (hand.pending) { h = '<b>Keep holding Space</b>...'; key = 'keep holding'; mode = 'hold'; }
     else if (R && R.ask) h = 'Predict on the right first.';
     else if (s && s.role === 'lamp') { h = '<b>Press Space</b> to switch this lamp on or off.'; key = 'press to switch'; mode = 'press'; }
+    else if (s && s.press) { h = '<b>Press Space</b> ' + s.pressText; key = 'press'; mode = 'press'; }
     else if (s && s.risky && !s.take(top(s))) { h = '<b>Hold Space</b> to pick up ' + what + '. It is already in place, so hold it down until the bar fills.'; key = 'hold to pick up'; mode = 'hold'; }
     else if (s) { h = '<b>Hold Space</b> to pick up ' + what + ', and keep holding to carry it.'; key = 'hold to pick up'; mode = 'hold'; }
     else if (M && M.m.kind === 'solve') h = 'Walk to a lamp, then <b>press Space</b> to switch it. Then press Run the machines.';
+    else if (M && M.m.kind === 'trace') { h = 'Walk to the variable that changes next. <b>Press Space</b> on its pad. Right-drag turns the camera.'; key = 'press'; }
     else h = 'Walk up to a cube. <b>Hold Space</b> (or the left mouse button) to pick it up, and keep holding to carry it. Right-drag turns the camera.';
     if ($('hint').innerHTML !== h) $('hint').innerHTML = h;
     const k = $('keyWhat'); if (k && k.textContent !== key) k.textContent = key;
@@ -1376,7 +1633,7 @@ export function startSolo({ container, myName, colour }) {
   if (qi >= 0) start(qi); else if (lessonMode.on) startLesson(); else start(first);
   requestAnimationFrame(frame);
   if (/[?&]debug/.test(location.search)) window.__lab = {
-    get M() { return M; }, get R() { return R; }, pos, hand, setHand, start, newRound, free, solidAt, handPos, grabTarget, guideTarget, missions: MISSIONS,
+    get M() { return M; }, get R() { return R; }, pos, hand, setHand, start, newRound, free, solidAt, handPos, grabTarget, guideTarget, missions: MISSIONS, runProg, PAPER_LOOPS, progFactors, progDoubling, progNested, progMultiples,
     get slots() { return slots; }, get done() { return done; }, get arrows() { return arrows.count; }, get outlined() { return outlineG.children.length; }, get glowing() { return glowing; },
     toastText: () => $('toast').textContent, lessonMode, startLesson, nextMission, LESSONS, minsOf, KIND, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, nearestSlot
   };

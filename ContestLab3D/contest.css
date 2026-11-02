@@ -63,3 +63,11 @@
 .mission .cl-log { border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); padding: 4px 10px; }
 .mission .cl-log summary { cursor: pointer; font-weight: 700; font-size: .86rem; padding: 4px 0; }
 .mission .cl-log ol { margin: 4px 0 6px; padding-left: 22px; display: grid; gap: 4px; font-size: .84rem; color: var(--ink-soft); max-height: 220px; overflow: auto; }
+/* What Does This Program Do?: the program with the line you are on, the trace table, and long choices one per row */
+.cl-prog { margin: 6px 0; padding: 6px 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; font: 600 .78rem/1.45 var(--font-mono, Consolas, monospace); color: var(--ink); white-space: pre; overflow-x: auto; }
+.cl-prog .now { background: #ffd43b; color: #1a1200; border-radius: 3px; }
+.cl-trace { width: 100%; border-collapse: collapse; margin: 4px 0; font-size: .8rem; }
+.cl-trace th, .cl-trace td { text-align: left; padding: 3px 6px; border-bottom: 1px solid var(--line); }
+.cl-trace td:first-child { font: 700 .85rem var(--font-mono, Consolas, monospace); width: 3em; }
+.cl-choice.wide { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.cl-choice.wide .btn { justify-content: flex-start; text-align: left; white-space: normal; }

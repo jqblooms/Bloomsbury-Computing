@@ -70,6 +70,7 @@ function clickBtn(text) { const b = [...document.querySelectorAll('#mission butt
 const hasBtn = text => [...document.querySelectorAll('#mission button')].some(x => x.textContent.trim() === text && !x.disabled);
 function answer(right = true) {
   const a = R().ask; if (!a) throw new Error('no prediction waiting');
+  if (a.type === 'choice') { const want = right ? a.answer : a.options.find(o => o !== a.answer); const b = [...document.querySelectorAll('#mission .ask-opts button')].find(x => x.textContent.trim() === want); if (!b) throw new Error('no choice ' + want); b.click(); s().frame(1); return; }
   if (a.type === 'num') { const v = right ? a.answer : a.answer + 1; $('clAsk').value = String(v); }
   else {
     const want = right ? a.answer : a.answer.replace(/^./, c => c === '1' ? '0' : '1');
@@ -82,7 +83,7 @@ function afterQ() { const m = M().m; if (M().phase === 'done' && !M().afterOk) c
 // ---------------------------------------------------------------- solving each kind from whatever state it is in
 function solveStack() {
   const r = R(), form = M().m.form;
-  for (let guard = 0; guard < 60 && !r.over; guard++) {
+  for (let guard = 0; guard < 400 && !r.over; guard++) {
     if (s().hand.item) release();
     if (r.ask) { answer(); continue; }
     if (r.out.items.length) { carry(r.out, r.stack); continue; }
@@ -139,7 +140,18 @@ function solveSolve(right = true) {
   clickBtn('Run the machines');
   if (right) ok(r.over, 'solve round did not finish');
 }
-const SOLVE = { stack: solveStack, tree: solveTree, infix: solveInfix, bits: solveBits, solve: () => solveSolve(true) };
+// a program trace: answer what is asked, or walk to the variable that changes and press Space on it
+function solveTrace() {
+  const r = R();
+  for (let g = 0; g < 80 && !r.over; g++) {
+    if (r.ask) { answer(); continue; }
+    const cp = r.cps[r.at]; if (!cp) { s().frame(1); continue; }
+    reach(r.vp[cp.var]); s().setHand(true); s().frame(2); s().setHand(false); s().frame(1);
+    if (!r.ask) throw new Error('pressing ' + cp.var + ' asked nothing (' + s().toastText() + ')');
+  }
+  ok(r.over, 'trace round did not finish');
+}
+const SOLVE = { stack: solveStack, tree: solveTree, infix: solveInfix, bits: solveBits, solve: () => solveSolve(true), trace: solveTrace };
 function playMission(i) {
   s().start(i);
   const m = M().m;
@@ -155,6 +167,44 @@ function playMission(i) {
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+const at = id => s().missions.findIndex(m => m.id === id);
+// every question on the ACSL 2018-19 Junior Contest 2 paper gets the paper's answer here
+T.juniorPaper = () => {
+  const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
+  lab.start(idx('pre-long-t')); solveStack(); ok(R().over && R().steps[R().steps.length - 1].value === 4, 'question 1 is not 4');
+  const t2 = NotationCore.parseInfix('3(A + 2B) / (A^2 - B/4) + A(AB + B^2) / 2');
+  ok(NotationCore.toPostfix(t2).join(' ').replace(/\u2191/g, '^') === '3 A 2 B * + * A 2 ^ B 4 / - / A A B * B 2 ^ + * 2 / +', 'question 2 postfix is wrong: ' + NotationCore.toPostfix(t2).join(' '));
+  ok(BitCore.evaluate(BitCore.parse('10011 OR 01110 AND 10101')) === '10111', 'question 3 is not 10111');
+  ok(BitCore.evaluate(BitCore.parse('(LCIRC-2 01101) OR (RSHIFT-1 11111)')) === '11111', 'question 4 is not 11111');
+  const run = lab.runProg(lab.PAPER_LOOPS, false);
+  ok(run.out === 12, 'question 5 is not 12');
+  const asked = run.cps.filter(c => !c.auto);
+  ok(asked.filter(c => c.var === 'a').map(c => c.value).join() === '1,5,14,30,55' && asked.filter(c => c.var === 'c').map(c => c.value).join() === '10,30,60,100,150', 'the a and c passes are not the paper values');
+  ok(asked.some(c => c.kind === 'choice' && /factors/.test(c.answer)), 'no question on what the k loop does');
+};
+T.traceRules = () => {
+  const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
+  lab.start(idx('loop-t')); const r = R(), cp = r.cps[r.at];
+  const other = Object.keys(r.vp).find(v => v !== cp.var);
+  reach(r.vp[other]); s().setHand(true); s().frame(2); s().setHand(false); s().frame(1);
+  ok(!r.ask && !r.spoilt && /Walk to the/.test(s().toastText()), 'the wrong variable pad did not just point to the right one');
+  ok(s().guideTarget()?.slot === r.vp[cp.var], 'the tutorial arrow does not show the variable that changes');
+  lab.start(idx('loop-c')); const r2 = R();
+  ok(r2.cps.filter(c => !c.auto).length <= 8, 'a contest trace asks for every pass');
+  for (let g = 0; g < 5 && !r2.ask; g++) { const c = r2.cps[r2.at]; if (c.kind === 'choice') break; reach(r2.vp[c.var]); s().setHand(true); s().frame(2); s().setHand(false); s().frame(1); }
+  answer(false); ok(r2.spoilt, 'a wrong trace value did not spoil the challenge round');
+  for (const g of [lab.progFactors, lab.progDoubling, lab.progNested, lab.progMultiples]) for (let k = 0; k < 15; k++) { const run = lab.runProg(g(), true); ok(Number.isInteger(run.out) && run.cps.every(c => c.kind === 'choice' || Number.isInteger(c.value)), 'a generated program has a value that is not whole'); }
+};
+T.longPrefixFits = () => {
+  const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
+  lab.start(idx('pre-long-t')); const r = R();
+  ok(r.belt.every(b => b.x >= 1 && lab.free(b.x, b.y + 1) !== undefined) && Math.min(...r.belt.map(b => b.x)) >= 1, 'the long belt runs off the room');
+  const t0 = performance.now(); for (let k = 0; k < 5; k++) lab.missions[idx('pre-long-c')].gen(); ok(performance.now() - t0 < 4000, 'long prefix rounds are slow to make');
+};
+T.hiddenTimes = () => {
+  const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
+  lab.start(idx('imp-t')); ok(/2\(A/.test(document.querySelector('#mission .cl-expr').textContent.replace(/\s/g, '')) && /means times/.test(document.querySelector('#mission .cl-expr').textContent), 'hidden times signs are not shown');
+};
 T.history = () => {
   s().start(0); SOLVE[M().m.kind]();
   const d = document.querySelector('#mission .cl-log summary'), n = d ? parseInt(d.textContent.split('(')[1], 10) : 0;
@@ -169,7 +219,7 @@ T.distinctCubes = () => {
   // no two cubes (or trays) in one round may look the same, in tutorials, challenges and walkthrough examples
   const lab = s();
   for (let i = 0; i < lab.missions.length; i++) {
-    const m = lab.missions[i];
+    const m = lab.missions[i]; if (m.repeatsOk) continue;
     for (let k = 0; k < (m.type === 'challenge' ? 30 : 1); k++) {
       const p = m.gen(), seen = [];
       if (p.t) (function go(n) { if (n.op) { go(n.l); go(n.r); } const inf = window.NotationCore.toInfix(n); seen.push(n.op ? (/[A-Z]/.test(inf) ? null : String(window.NotationCore.evaluate(n))) : n.v); })(p.t);
@@ -271,20 +321,20 @@ T.wrongPredictChallenge = () => {
   ok(r.spoilt && !r.ask && r.out.items.length === 1, 'a wrong challenge prediction did not spoil the round and run the machine');
 };
 T.treeWrongSpot = () => {
-  s().start(4); const r = R(), t = r.p.t;
+  s().start(at('tree-t')); const r = R(), t = r.p.t;
   const leaf = r.supply.find(x => /[A-Z0-9]/.test(top(x).sym));
   carry(leaf, r.ped.get(t));
   ok(!r.ped.get(t).items.length && /top of the tree/.test(r.why || ''), 'a letter on the top pedestal was accepted');
   solveTree();
 };
 T.treeReadOrder = () => {
-  s().start(5); const r = R();
+  s().start(at('tree2-t')); const r = R();
   for (const nd of preorderOf(r.p.t)) carry(s().slots.find(x => x.role === 'supply' && x.items.length && top(x).sym === (nd.op || nd.v)), r.ped.get(nd));
   carry(r.ped.get(r.p.t), r.rail);   // postfix: the top comes last
   ok(r.readN === 0 && r.ped.get(r.p.t).items.length === 1, 'postfix read the top first');
 };
 T.infixBracket = () => {
-  s().start(7); const r = R();
+  s().start(at('infix-t')); const r = R();
   // tutorial: (A + B) * C. Bring A before the bracket: a mistake, refused
   carry(r.ped.get(r.E[1].node), r.rail);
   ok(r.k === 0 && /Open a bracket/.test(r.why || ''), 'A before ( was accepted');
@@ -293,7 +343,7 @@ T.infixBracket = () => {
   solveInfix();
 };
 T.bitsWrongMachine = () => {
-  s().start(9); const r = R();   // NOT 10110 AND 01101: 10110 belongs to NOT
+  s().start(at('bits-t')); const r = R();   // NOT 10110 AND 01101: 10110 belongs to NOT
   const notNode = [...r.mach.keys()].find(n => n.t === 'not'), andNode = [...r.mach.keys()].find(n => n.t === 'bin');
   const tr = r.shelf.find(x => r.parent.get(top(x).node) === notNode);
   carry(tr, r.mach.get(andNode).ins[0]);
@@ -322,7 +372,7 @@ T.challengeGlow = () => {
 T.lessonMode = () => {
   const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
   lab.start(0); clickBtn('Lesson mode');
-  ok(lab.lessonMode.on && $('nbLesson') && $('nbLesson').options.length === 2, 'lesson mode did not open with two lessons');
+  ok(lab.lessonMode.on && $('nbLesson') && $('nbLesson').options.length === 3, 'lesson mode did not open with three lessons');
   for (const L of lab.LESSONS) {
     const mins = L.missions.reduce((n, id) => n + lab.minsOf(lab.missions[idx(id)]), 0);
     ok(mins >= 50 && mins <= 75, L.id + ' lesson is ' + mins + ' minutes');
@@ -336,7 +386,7 @@ T.lessonMode = () => {
   ok(lab.nextMission() === idx('c-bits'), 'after the last activity the extension challenges should come next');
   ok(/Lesson 2: [\s\S]*Activity 7 of 9/.test($('mission').textContent), 'panel does not show the lesson position');
   clickBtn('All missions');
-  ok(!lab.lessonMode.on && document.querySelectorAll('#mission details.sec').length === 7, 'All missions did not come back');
+  ok(!lab.lessonMode.on && document.querySelectorAll('#mission details.sec').length === 8, 'All missions did not come back');
 };
 T.walkthroughs = () => {
   for (let i = 0; i < s().missions.length; i++) {
