@@ -39,3 +39,18 @@
 .key .holdbar { position: absolute; left: 0; right: 0; bottom: 0; height: 8px; background: rgba(0, 0, 0, .25); }
 .key .holdbar i { display: block; height: 100%; width: 0; background: #ffd43b; }
 .hint b { color: var(--ink); }
+/* What just happened: a card at the top of the lab after every step (toasts move down to make room) */
+.explain { position: absolute; top: 54px; left: 50%; transform: translateX(-50%); z-index: 4; width: min(640px, calc(100% - 32px)); display: grid; gap: 4px;
+  padding: 10px 16px 12px; border-radius: 14px; background: var(--surface); border: 2px solid var(--brand); border-left-width: 8px; box-shadow: var(--shadow-3); }
+.explain .xh { font-size: .74rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--brand); }
+.explain .xt { font-size: 1.12rem; font-weight: 600; line-height: 1.5; color: var(--ink); }
+.explain .cl-c { height: 26px; min-width: 26px; font-size: .95rem; }
+.explain .cl-l { width: 20px; height: 20px; font-size: .8rem; }
+.explain.flash { animation: clflash .9s ease-out; }
+@keyframes clflash { 0% { transform: translateX(-50%) scale(1.06); box-shadow: 0 0 0 6px var(--brand); } 100% { transform: translateX(-50%) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .explain.flash { animation: none; } }
+.stage .toast { top: auto; bottom: 150px; }
+/* the part of the mission sheet that needs attention now: a glowing border (questions glow until answered) */
+.mission .attn { border-color: #ffd43b !important; box-shadow: 0 0 0 3px rgba(255, 212, 59, .55); animation: clattn 1.4s ease-in-out infinite; }
+@keyframes clattn { 0%, 100% { box-shadow: 0 0 0 2px rgba(255, 212, 59, .45); } 50% { box-shadow: 0 0 0 6px rgba(255, 212, 59, .8); } }
+@media (prefers-reduced-motion: reduce) { .mission .attn { animation: none; } }

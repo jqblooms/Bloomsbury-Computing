@@ -155,6 +155,31 @@ function playMission(i) {
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.attention = () => {
+  const lab = s(); lab.start(0); const r = R(), panel = $('mission');
+  ok(panel.querySelector('.steps li.now.attn'), 'the step you are on does not glow');
+  carry(r.belt[r.order[0]], r.stack); carry(r.belt[r.order[1]], r.stack); carry(r.belt[r.order[2]], r.O); carry(r.stack, r.R); carry(r.stack, r.L);
+  const q = panel.querySelector('.ask'); ok(q && q.classList.contains('attn'), 'the prediction does not glow');
+  const box = panel.getBoundingClientRect(), qr = q.getBoundingClientRect();
+  ok(qr.top >= box.top - 1 && qr.bottom <= box.bottom + 1, 'the prediction is not scrolled into view');
+  answer(); ok(!panel.querySelector('.ask'), 'the prediction stayed after it was answered');
+};
+T.explains = () => {
+  const lab = s(), last = () => (window.__explained || []).slice(-1)[0] || '';
+  lab.start(0); const r = R();
+  ok(/postfix, so we read the belt from left to right/.test(last()), 'no postfix start explanation: ' + last());
+  carry(r.belt[r.order[0]], r.stack); ok(/is a number, so it goes on the stack/.test(last()), 'no push explanation: ' + last());
+  carry(r.belt[r.order[1]], r.stack); carry(r.belt[r.order[2]], r.O);
+  ok(/never goes on the stack/.test(last()), 'no operator explanation: ' + last());
+  carry(r.stack, r.R); ok(/first cube off the stack.*right side/.test(last()), 'no first-pop explanation: ' + last());
+  carry(r.stack, r.L); answer(); ok(/The machine works out/.test(last()), 'no machine explanation: ' + last());
+  ok(!$('explain').hidden && $('explain').textContent.length > 20, 'the What just happened card is not showing');
+  for (const id of ['tree-t', 'infix-t', 'bits-t', 'solve-t']) {
+    const before = window.__explainCount || 0;
+    lab.start(lab.missions.findIndex(m => m.id === id)); SOLVE[M().m.kind]();
+    ok((window.__explainCount || 0) - before >= 4, id + ': too few step explanations');
+  }
+};
 T.holdPrompts = () => {
   const lab = s(), hint = () => $('hint').textContent, key = () => $('keyWhat').textContent;
   lab.start(0); const r = R();

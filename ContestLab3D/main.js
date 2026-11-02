@@ -320,7 +320,36 @@ export function startSolo({ container, myName, colour }) {
     R = { p, over: false, spoilt: false, ask: null, notes: [], moves: 0, why: null };
     KIND[m.kind].setup(R, m);
     pos.face = Math.PI; view.jump(pos.x, pos.y);
-    toast(''); afterChange(); $('mission').scrollTop = 0;
+    toast(''); explainReset(); explain(startLine(m, p)); afterChange(); $('mission').scrollTop = 0;
+  }
+  function startLine(m, p) {
+    if (m.kind === 'stack') return m.form === 'postfix' ? 'This is <b>postfix</b>, so we read the belt from <b>left to right</b>.' : 'This is <b>prefix</b>, so we read the belt from <b>right to left</b>.';
+    if (m.kind === 'tree') return 'Build the tree from the ' + p.from + '. The operator worked last goes at the top.';
+    if (m.kind === 'infix') return 'Read the tree in order: left side, operator, right side. Add brackets only where a part must be worked first.';
+    if (m.kind === 'bits') return ORDER_RULE;
+    return 'Work backwards from the target: undo the last machine first.';
+  }
+  // ---- what just happened: a card at the top of the lab after every step. Each one stays up for a while, the next
+  // waits its turn (none is cut short), and the last one stays until something new happens.
+  const xq = []; let xTimer = 0, xUntil = 0;
+  function explainReset() { xq.length = 0; clearTimeout(xTimer); xTimer = 0; xUntil = 0; const b = $('explain'); if (b) { b.hidden = true; b.innerHTML = ''; } }
+  function explain(html) {
+    if (!html) return;
+    xq.push(html); if (xq.length > 1) xq.splice(0, xq.length - 1);   // at most one step behind: the newest waits, older ones are skipped
+    window.__explainCount = (window.__explainCount || 0) + 1;
+    window.__explained = (window.__explained || []).concat([html.replace(/<[^>]+>/g, '')]).slice(-40);
+    if (!xTimer) xNext();
+  }
+  function xNext() {
+    xTimer = 0;
+    if (!xq.length) return;
+    const wait = xUntil - Date.now();
+    if (wait > 0) { xTimer = setTimeout(xNext, wait); return; }
+    const b = $('explain'); if (!b) return;
+    b.hidden = false; b.innerHTML = '<span class="xh">What just happened</span><span class="xt">' + xq.shift() + '</span>';
+    b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash');
+    xUntil = Date.now() + 1800;   // each one stays up at least this long
+    if (xq.length) xTimer = setTimeout(xNext, xUntil - Date.now());
   }
   const keyOf = p => p.t ? NC.toPrefix(p.t).join(' ') : p.src;
   function mistake(msg) {
@@ -400,15 +429,19 @@ export function startSolo({ container, myName, colour }) {
       pos.x = 11; pos.y = 12;
     },
     placed(it, slot, from) {
-      if (slot === R.stack && from.role === 'belt') { R.next++; R.tok++; }
-      else if (slot === R.stack && from === R.out) R.tok++;
-      else if (slot === R.O) { R.next++; R.op = it; R.opsIn++; }
-      else if (slot === R.L || slot === R.R) { if (R.L.items.length && R.R.items.length) R.bothIn++; else R.firstIn++; }
+      const pf = M.m.form === 'postfix';
+      if (slot === R.stack && from.role === 'belt') { R.next++; R.tok++; explain(C(it.sym) + ' is a number, so it goes on the stack. It is now the top cube.'); }
+      else if (slot === R.stack && from === R.out) { R.tok++; explain('The answer cube ' + C(it.sym, 'result') + ' goes back on the stack, just like a number.'); }
+      else if (slot === R.O) { R.next++; R.op = it; R.opsIn++; explain(C(it.sym) + ' is an operator. An operator never goes on the stack: it goes in the machine and takes the top two cubes.'); }
+      else if (slot === R.L || slot === R.R) {
+        if (R.L.items.length && R.R.items.length) { R.bothIn++; explain('The next cube off the stack, ' + C(it.sym) + ', is the ' + (pf ? 'left' : 'right') + ' side.'); }
+        else { R.firstIn++; explain('The first cube off the stack, ' + C(it.sym) + ', is the ' + (pf ? '<b>right</b> side. In postfix it was written last.' : '<b>left</b> side. Prefix is read backwards, so it was written first.')); }
+      }
       if (R.L.items.length && R.R.items.length && !R.ask) {
         const a = top(R.L).val, b = top(R.R).val, op = R.op.sym, v = NC.apply(op, a, b);
         R.ask = { type: 'num', q: 'What does the machine make? ' + C(String(a)) + ' ' + C(op) + ' ' + C(String(b)) + ' = ?', answer: v,
           hint: 'Work out ' + a + ' ' + op + ' ' + b + '. The left side comes first.', why: a + ' ' + op + ' ' + b + ' = ' + v + '.',
-          done: () => { R.runs++; for (const s of [R.L, R.R, R.O]) { s.items.forEach(killItem); s.items = []; } R.op = null; addItem(R.out, cube(String(v), { role: 'result', val: v })); toast('The machine made ' + v + '. Put it on the stack.', 'good'); } };
+          done: () => { R.runs++; for (const s of [R.L, R.R, R.O]) { s.items.forEach(killItem); s.items = []; } R.op = null; addItem(R.out, cube(String(v), { role: 'result', val: v })); explain('The machine works out ' + C(String(a)) + ' ' + C(op) + ' ' + C(String(b)) + ' = ' + C(String(v), 'result') + '. The left side always comes first.'); } };
       }
     },
     check() {
@@ -519,8 +552,17 @@ export function startSolo({ container, myName, colour }) {
       pos.x = 11; pos.y = 16.2;
     },
     placed(it, slot, from) {
-      if (slot.role === 'pedestal' && from.role === 'supply') { it.node = slot.node; if ([...R.ped.values()].every(s => s.items.length)) { R.stage = 'read'; toast('The tree is built. Now read it as ' + R.p.read + ': take each cube to the rail.', 'good'); } }
-      if (slot === R.rail) R.readN++;
+      if (slot.role === 'pedestal' && from.role === 'supply') {
+        it.node = slot.node; const par = R.par.get(slot.node);
+        explain(!par ? C(it.sym) + ' goes at the top: ' + (R.p.from === 'prefix' ? 'in prefix the first token is the top.' : R.p.from === 'postfix' ? 'in postfix the last token is the top.' : 'it is the operator worked last.')
+          : C(it.sym) + ' is the ' + par[1] + ' side of ' + C(par[0].op) + (slot.node.op ? ', and it is an operator, so it has two sides of its own.' : '.'));
+        if ([...R.ped.values()].every(s => s.items.length)) { R.stage = 'read'; explain('The tree is built. Now read it as ' + R.p.read + ': ' + (R.p.read === 'prefix' ? 'each node <b>before</b> its sides, left side first.' : 'both sides <b>before</b> the node, left side first.')); }
+      }
+      if (slot === R.rail) {
+        R.readN++; const nd = it.node;
+        explain(R.p.read === 'prefix' ? (nd.op ? C(nd.op) + ' comes before its two sides. Next: its left side.' : C(nd.v) + ' has no sides, so go on to the next part of the tree.')
+          : (nd.op ? 'Both sides of ' + C(nd.op) + ' are on the rail, so now ' + C(nd.op) + ' comes.' : C(nd.v) + ' has no sides, so it goes straight on the rail.'));
+      }
     },
     check() { if (R.readN === R.readOrder.length && !hand.item) finishRound(FORM_NAME[R.p.read] + ': ' + Cs(R.readOrder.map(symOf)) + '.'); },
     guide(R, m) {
@@ -604,7 +646,14 @@ export function startSolo({ container, myName, colour }) {
         } });
       pos.x = 11; pos.y = 16.2;
     },
-    placed(it, slot) { if (slot === R.rail) R.k++; },
+    placed(it, slot) {
+      if (slot !== R.rail) return;
+      const e = R.E[R.k]; R.k++;
+      if (e.tok === '(') explain('A bracket opens: ' + infixOf(e.sub) + ' must be worked before the ' + C(e.parentOp) + ' next to it.');
+      else if (e.tok === ')') explain(infixOf(e.sub) + ' is finished, so the bracket closes.');
+      else if (e.node.op) explain(C(e.node.op) + ' goes <b>between</b> its two sides. Its left side is on the rail; its right side comes next.');
+      else explain(C(e.node.v) + ': infix reads the left side, then the operator, then the right side.');
+    },
     check() { if (R.k === R.E.length && !hand.item) finishRound('Infix: ' + Cs(R.E.map(e => e.tok)) + '.'); },
     guide(R, m) {
       if (hand.item) return slotTarget(R.rail);
@@ -693,11 +742,13 @@ export function startSolo({ container, myName, colour }) {
     },
     placed(it, slot) {
       const mc = slot.mach;
+      if (slot.role === 'min') explain(lampsHtml(it.bits) + ' goes into <b>' + BC.opName(mc.n) + '</b>' + (mc.n.t === 'bin' ? ': ' + mc.n.op + ' works on the two strings on each side of it, once both are worked out.' : ': it works on the string just after it.'));
+      if (slot.role === 'answer') explain('That was the last machine, so ' + lampsHtml(it.bits) + ' is the answer.');
       if (slot.role === 'min' && mc.ins.every(s => s.items.length) && !R.ask) {
         const n = mc.n, a = top(mc.ins[0]).bits, b = mc.ins[1] ? top(mc.ins[1]).bits : null, out = BC.apply(n, a, b);
         const q = n.t === 'bin' ? lampsHtml(a) + ' <b>' + n.op + '</b> ' + lampsHtml(b) : '<b>' + BC.opName(n) + '</b> ' + lampsHtml(a);
         R.ask = { type: 'bits', len: out.length, q: 'Predict the new tray: ' + q, answer: out, hint: ruleFor(n), why: ruleFor(n) + ' The answer is ' + out + '.',
-          done: () => { runBits(mc, out); toast('The machine made ' + out + '.', 'good'); } };
+          done: () => { runBits(mc, out); explain(ruleFor(n) + ' ' + q + ' = ' + lampsHtml(out)); } };
       }
     },
     check() { if (R.ans.items.length && !hand.item) finishRound('The answer is <b>' + top(R.ans).bits + '</b>.'); },
@@ -763,6 +814,7 @@ export function startSolo({ container, myName, colour }) {
       for (const mc of R.mach.values()) { mc.out.items.forEach(killItem); mc.out.items = []; }
       bitNodes(R.ast).filter(isOpNode).forEach((n, i) => addItem(R.mach.get(n).out, tray(steps[i].result, n)));
       R.shown = true; R.runs++; R.trace = steps; R.got = got;
+      steps.forEach(st => explain(st.op + ': ' + st.text.replace(/[01]{2,}/g, b => lampsHtml(b))));
       if (got === R.p.rhs) { toast('x = ' + R.x + ' gives the target ' + R.p.rhs + '.', 'good'); finishRound('x = <b>' + R.x + '</b> gives ' + R.p.rhs + '.'); }
       else if (M.m.type === 'challenge') { mistake('x = ' + R.x + ' gives ' + got + ', not ' + R.p.rhs + '. The answer was x = ' + R.p.sol + '.'); finishRound(''); }
       else mistake('x = ' + R.x + ' gives ' + got + ', not ' + R.p.rhs + '. Work backwards again: follow the steps.');
@@ -772,7 +824,7 @@ export function startSolo({ container, myName, colour }) {
     check() {
       if (M.m.type === 'tutorial' && !R.ask && R.undone < R.U.steps.length) {
         const u = R.U.steps[R.undone];
-        R.ask = { type: 'bits', len: 5, q: u.text, answer: u.out, hint: u.rule, why: u.rule + ' The answer is ' + u.out + '.', done: () => { R.undone++; } };
+        R.ask = { type: 'bits', len: 5, q: u.text, answer: u.out, hint: u.rule, why: u.rule + ' The answer is ' + u.out + '.', done: () => { R.undone++; explain(u.text.replace(/<\/?b>/g, '') + ' ' + lampsHtml(u.from) + ' becomes ' + lampsHtml(u.out) + '.'); } };
       }
     },
     guide(R, m) {
@@ -1014,6 +1066,7 @@ export function startSolo({ container, myName, colour }) {
     const sec = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === MISSIONS[missionAt].group).map(([, i]) => i), k = sec.indexOf(missionAt); return k >= 0 && k + 1 < sec.length ? sec[k + 1] : (missionAt + 1 < MISSIONS.length ? missionAt + 1 : null); };
   const starsHtml = n => '<span class="stars" aria-label="' + n + ' of 3 stars">' + [0, 1, 2].map(i => '<svg viewBox="0 0 24 24" class="' + (i < n ? 'on' : '') + '"><path d="M12 2l3 7 7 .6-5.3 4.7 1.6 7.2L12 17.8 5.7 21.5l1.6-7.2L2 9.6 9 9z"/></svg>').join('') + '</span>';
 
+  let lastFocus = "";
   function drawPanel() {
     const t = $('mission'), m = M.m, K = KIND[m.kind];
     t.hidden = false; t.innerHTML = '';
@@ -1052,7 +1105,18 @@ export function startSolo({ container, myName, colour }) {
     if (!m.noHelp) act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
     t.appendChild(navBox());
-    if (R.over || M.phase === 'done' || R.ask) act.scrollIntoView({ block: 'nearest' });
+    // what needs attention now glows and is scrolled into view: a question first (it glows until it is answered),
+    // then the end of a round (the result and its button), then the step you are on
+    const ask = t.querySelector('.ask'), step = t.querySelector('.steps li.now');
+    const focus = ask || (R.over || M.phase === 'done' ? act : step);
+    if (focus) {
+      if (focus !== act) focus.classList.add('attn');
+      const key = (ask ? 'ask:' + (R.ask ? R.ask.q : M.phase) : R.over || M.phase === 'done' ? 'end:' + M.phase : 'step:' + [...t.querySelectorAll('.steps li')].indexOf(step)) + '@' + missionAt;
+      const box = t.getBoundingClientRect(), r = focus.getBoundingClientRect(), off = r.top < box.top || r.bottom > box.bottom;
+      // scroll when it is new, and pull it back if it has been scrolled out of sight
+      if (key !== lastFocus || off) focus.scrollIntoView({ block: ask ? 'center' : 'nearest' });   // instant: a smooth scroll never ends in a hidden frame
+      lastFocus = key;
+    }
     $('step').textContent = where + ': ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length;
   }
   function navBox() {
@@ -1258,6 +1322,12 @@ export function startSolo({ container, myName, colour }) {
   container.addEventListener('contextmenu', e => e.preventDefault());
   { const b = $('leftBtn'); b.addEventListener('pointerdown', e => { e.preventDefault(); b.setPointerCapture(e.pointerId); setHand(true); }); b.addEventListener('pointerup', () => setHand(false)); b.addEventListener('pointercancel', () => setHand(false)); }
   $('mapBtn').addEventListener('click', () => setOverview(!overview));
+  // a question must never stay scrolled out of sight: a moment after the sheet stops scrolling, it comes back
+  { let st = 0; $('mission').addEventListener('scroll', () => { clearTimeout(st); st = setTimeout(() => {
+    const t = $('mission'), q = t.querySelector('.ask'); if (!q) return;
+    const box = t.getBoundingClientRect(), r = q.getBoundingClientRect();
+    if (r.bottom < box.top + 40 || r.top > box.bottom - 40) q.scrollIntoView({ block: 'center' });
+  }, 1500); }); }
   {
     const st = $('stick'), knob = $('knob');
     const at = e => { const r = st.getBoundingClientRect(); let x = (e.clientX - r.left - r.width / 2) / (r.width / 2), y = (e.clientY - r.top - r.height / 2) / (r.height / 2); const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; } stick = { x, y }; knob.style.transform = `translate(${x * 34}px, ${y * 34}px)`; };
