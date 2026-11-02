@@ -226,7 +226,7 @@ T.bitsWrongMachine = () => {
   solveBits();
 };
 T.solveWrongRun = () => {
-  s().start(13); solveSolve(false);
+  s().start(s().missions.findIndex(m => m.id === 'solve-c')); solveSolve(false);
   ok(R().over && R().spoilt && M().have === 0, 'a wrong first run counted');
 };
 T.leavePrompt = () => {
@@ -235,6 +235,25 @@ T.leavePrompt = () => {
   [...document.querySelectorAll('#mission .sec-list button')].find(b => !b.disabled && b.getAttribute('aria-current') === 'false')?.click();
   ok(!!document.querySelector('#mission .leave'), 'no Leave this mission prompt mid-round');
   clickBtn('Stay'); ok(M().m.id === 'post-t' && r.stack.items.length === 1, 'Stay lost the round');
+};
+T.lessonMode = () => {
+  const lab = s(), idx = id => lab.missions.findIndex(m => m.id === id);
+  lab.start(0); clickBtn('Lesson mode');
+  ok(lab.lessonMode.on && $('nbLesson') && $('nbLesson').options.length === 2, 'lesson mode did not open with two lessons');
+  for (const L of lab.LESSONS) {
+    const mins = L.missions.reduce((n, id) => n + lab.minsOf(lab.missions[idx(id)]), 0);
+    ok(mins >= 50 && mins <= 75, L.id + ' lesson is ' + mins + ' minutes');
+    ok(L.missions.every(id => idx(id) >= 0), L.id + ' names a missing mission');
+  }
+  const sel = $('nbLesson'); sel.value = 'bits'; sel.dispatchEvent(new Event('change'));
+  ok(lab.lessonMode.id === 'bits' && lab.LESSONS[1].missions.includes(M().m.id), 'choosing Lesson 2 did not open a bit-string activity');
+  lab.start(idx('bits-t'));
+  ok(lab.nextMission() === idx('gates-t'), 'next activity is not the next one in the lesson');
+  lab.start(idx('solve-c'));
+  ok(lab.nextMission() == null, 'the last activity of the lesson should have no next mission');
+  ok(/Lesson 2: [\s\S]*Activity 7 of 7/.test($('mission').textContent), 'panel does not show the lesson position');
+  clickBtn('All missions');
+  ok(!lab.lessonMode.on && document.querySelectorAll('#mission details.sec').length === 6, 'All missions did not come back');
 };
 T.walkthroughs = () => {
   for (let i = 0; i < s().missions.length; i++) {

@@ -139,10 +139,17 @@ const MISSIONS = [
     intro: 'A tray of lamps is a bit string: lit is 1, dark is 0. Carry trays through the machines. NOT is worked before AND.',
     gen: () => ({ src: 'NOT 10110 AND 01101' }),
     after: { q: '10110 AND 01101 = 00100. Why is only one lamp lit?', options: ['AND lights a lamp only where both lamps are lit.', 'AND adds the two strings.', 'AND flips every lamp.'], why: 'Only the third lamp is lit in both strings.' } },
+  { id: 'gates-t', group: 'Bit-string flicking', title: 'XOR and OR', type: 'tutorial', kind: 'bits',
+    intro: 'XOR lights a lamp where the two lamps are different. OR lights it where either is lit. XOR is worked before OR.',
+    gen: () => ({ src: '10110 XOR 01100 OR 00001' }),
+    after: { q: '10110 XOR 01100 = 11010. Why is the third lamp dark?', options: ['Both third lamps are lit, so they are the same, and XOR only lights different lamps.', 'XOR always makes the middle lamp dark.', 'XOR is the same as AND.'], why: 'XOR lights a lamp only where one is lit and the other is dark.' } },
   { id: 'shift-t', group: 'Bit-string flicking', title: 'Shifts and Circulates', type: 'tutorial', kind: 'bits',
     intro: 'Shift and circulate conveyors move the lamps. A shift drops lamps off the end; a circulate wraps them round. Two of them in a row are worked from the right.',
     gen: () => ({ src: 'RCIRC-1 LSHIFT-2 10011' }),
     after: { q: 'In RCIRC-1 LSHIFT-2 10011, why is LSHIFT-2 worked first?', options: ['It is next to the string, so the string goes into it first.', 'L comes before R in the alphabet.', 'Shifts are always worked last.'], why: 'NOT, SHIFT and CIRC work on what is just after them, so a row of them is worked from the right.' } },
+  { id: 'shift-c', group: 'Bit-string flicking', title: 'Shifts Challenge', type: 'challenge', kind: 'bits',
+    intro: 'Two or three NOT, SHIFT and CIRC machines in a row. Work them from the right. Predict every new tray. Two clean rounds in a row.',
+    gen: () => ({ src: (Math.random() < 0.5 ? UN() + ' ' : '') + UN() + ' ' + UN() + ' ' + bitsStr(5) }) },
   { id: 'bits-c', group: 'Bit-string flicking', title: 'Order of Operations', type: 'challenge', kind: 'bits',
     intro: 'Carry the trays through the machines in the right order. Predict every new tray. Two clean rounds in a row.',
     gen: () => ({ src: bitsExpr() }) },
@@ -156,6 +163,13 @@ const MISSIONS = [
 ];
 export { MISSIONS };
 const SECTIONS = ['Postfix', 'Prefix', 'Expression trees', 'Back to infix', 'Bit-string flicking', 'Solve for x'];
+// Lesson mode (Years 7 to 9): one lesson's activities in order, about an hour each; ?lesson=bits opens one
+const LESSONS = [
+  { id: 'notation', title: 'Lesson 1: Prefix, Infix and Postfix', missions: ['post-t', 'post-c', 'pre-t', 'pre-c', 'tree-t', 'tree2-t', 'tree-c', 'infix-t', 'infix-c'] },
+  { id: 'bits', title: 'Lesson 2: Bit-String Flicking', missions: ['bits-t', 'gates-t', 'shift-t', 'shift-c', 'bits-c', 'solve-t', 'solve-c'] }
+];
+// rough minutes for a Year 7 student: a tutorial is one round, a challenge needs two clean rounds
+const minsOf = m => m.mins || (m.type === 'challenge' ? 10 : m.kind === 'solve' ? 7 : 5);
 const FORM_NAME = { postfix: 'Postfix', prefix: 'Prefix', infix: 'Infix' };
 function sourceTokens(p) { return p.from === 'prefix' ? NC.toPrefix(p.t) : p.from === 'postfix' ? NC.toPostfix(p.t) : NC.tokens(infixOf(p.t)); }
 
@@ -934,14 +948,22 @@ export function startSolo({ container, myName, colour }) {
     hand.item = null; hand.from = null; hand.pending = null;
     newRound();
   }
-  const nextMission = () => { const sec = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === MISSIONS[missionAt].group).map(([, i]) => i), k = sec.indexOf(missionAt); return k >= 0 && k + 1 < sec.length ? sec[k + 1] : (missionAt + 1 < MISSIONS.length ? missionAt + 1 : null); };
+  // lesson mode: on or off, and which lesson (remembered on this computer)
+  const lessonMode = Object.assign({ on: false, id: LESSONS[0].id }, load('lessonMode', {}) || {});
+  { const q = new URLSearchParams(location.search).get('lesson'); if (q && LESSONS.some(L => L.id === q)) { lessonMode.on = true; lessonMode.id = q; } }
+  const lessonList = () => { const L = LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]; return L.missions.map(id => MISSIONS.findIndex(m => m.id === id)).filter(i => i >= 0); };
+  function startLesson() { const ids = lessonList(); start(ids.find(i => !done[MISSIONS[i].id]) ?? ids[0]); }
+  const nextMission = () => {
+    if (lessonMode.on) { const ids = lessonList(), k = ids.indexOf(missionAt); if (k >= 0) return k + 1 < ids.length ? ids[k + 1] : null; }
+    const sec = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === MISSIONS[missionAt].group).map(([, i]) => i), k = sec.indexOf(missionAt); return k >= 0 && k + 1 < sec.length ? sec[k + 1] : (missionAt + 1 < MISSIONS.length ? missionAt + 1 : null); };
   const starsHtml = n => '<span class="stars" aria-label="' + n + ' of 3 stars">' + [0, 1, 2].map(i => '<svg viewBox="0 0 24 24" class="' + (i < n ? 'on' : '') + '"><path d="M12 2l3 7 7 .6-5.3 4.7 1.6 7.2L12 17.8 5.7 21.5l1.6-7.2L2 9.6 9 9z"/></svg>').join('') + '</span>';
 
   function drawPanel() {
     const t = $('mission'), m = M.m, K = KIND[m.kind];
     t.hidden = false; t.innerHTML = '';
-    const inSec = MISSIONS.filter(x => x.group === m.group);
-    t.appendChild(el('div', { class: 'head' }, '<span>' + m.group + '</span><span>' + (m.type === 'tutorial' ? 'Tutorial' : 'Challenge') + ' ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length + '</span>'));
+    const inLesson = lessonMode.on && lessonList().includes(missionAt), inSec = inLesson ? lessonList().map(i => MISSIONS[i]) : MISSIONS.filter(x => x.group === m.group);
+    const where = inLesson ? (LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]).title.split(':')[0] : m.group;
+    t.appendChild(el('div', { class: 'head' }, '<span>' + (inLesson ? where + ': ' + m.group : m.group) + '</span><span>' + (inLesson ? 'Activity' : m.type === 'tutorial' ? 'Tutorial' : 'Challenge') + ' ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length + '</span>'));
     t.appendChild(el('h2', {}, m.title));
     if (done[m.id] && M.phase !== 'done') t.appendChild(el('p', { class: 'note' }, 'Done before. Play it again for practice.'));
     t.appendChild(el('p', {}, m.intro));
@@ -967,7 +989,7 @@ export function startSolo({ container, myName, colour }) {
     if (M.phase === 'ask') t.appendChild(askBox(m.before, () => { M.phase = 'play'; drawAll(); }));
     if (M.phase === 'done' && !M.afterOk) t.appendChild(askBox(m.after, () => { M.afterOk = true; drawAll(); }));
     const act = el('div', { class: 'actions' });
-    if (M.phase === 'done' && M.afterOk) { const nx = nextMission(); act.appendChild(nx != null ? btn('Next mission', 'go', () => start(nx)) : btn('Play again', 'go', () => start(missionAt))); }
+    if (M.phase === 'done' && M.afterOk) { const nx = nextMission(); act.appendChild(nx != null ? btn('Next mission', 'go', () => start(nx)) : btn('Play again', 'go', () => start(missionAt))); if (nx == null && inLesson) t.appendChild(el('p', { class: 'win' }, 'Lesson complete! Every activity for this lesson is done.')); }
     else if (M.phase === 'play' && R.over) act.appendChild(btn('Next round', 'go', () => newRound()));
     else if (M.phase === 'play' && m.kind === 'solve' && !R.ask) { const b = btn('Run the machines', 'go', () => { if (hand.item) return; KIND.solve.run(); }); b.id = 'clRun'; act.appendChild(b); }
     if (M.phase === 'play' && !R.over) act.appendChild(btn('Start again', '', () => leaveThen(() => { M.have = 0; newRound(); })));
@@ -975,7 +997,7 @@ export function startSolo({ container, myName, colour }) {
     t.appendChild(act);
     t.appendChild(navBox());
     if (R.over || M.phase === 'done' || R.ask) act.scrollIntoView({ block: 'nearest' });
-    $('step').textContent = m.group + ': ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length;
+    $('step').textContent = where + ': ' + (inSec.indexOf(m) + 1) + ' of ' + inSec.length;
   }
   function navBox() {
     const box = el('div', { class: 'navbox' });
@@ -985,8 +1007,39 @@ export function startSolo({ container, myName, colour }) {
       row.append(btn('Leave', 'go', () => { const go = M.leave; M.leave = null; go(); }), btn('Stay', '', () => { M.leave = null; drawPanel(); }));
       lv.appendChild(row); box.appendChild(lv);
     }
+    const modeBar = el('div', { class: 'modebar seg', role: 'group', 'aria-label': 'Show' });
+    [['all', 'All missions'], ['lesson', 'Lesson mode']].forEach(([k, label]) => {
+      const b = el('button', { type: 'button', 'aria-pressed': String((lessonMode.on ? 'lesson' : 'all') === k) }, label);
+      b.addEventListener('click', () => {
+        const on = k === 'lesson', leaving = on && !lessonList().includes(missionAt);
+        const go = () => { lessonMode.on = on; save('lessonMode', lessonMode); if (leaving) startLesson(); else drawAll(); };
+        if (leaving) leaveThen(go); else go();
+      });
+      modeBar.appendChild(b);
+    });
+    box.appendChild(modeBar);
     const nav = el('div', { class: 'sections', role: 'navigation', 'aria-label': 'Missions' });
     const stars = load('all:stars', {}) || {};
+    if (lessonMode.on) {
+      const pickL = el('select', { id: 'nbLesson', 'aria-label': 'Lesson' });
+      LESSONS.forEach(L => pickL.appendChild(el('option', { value: L.id }, L.title)));
+      pickL.value = lessonMode.id;
+      pickL.addEventListener('change', () => { const want = pickL.value; pickL.value = lessonMode.id; leaveThen(() => { lessonMode.id = want; save('lessonMode', lessonMode); startLesson(); }); });
+      nav.appendChild(pickL);
+      const ids = lessonList(), total = ids.reduce((n, i) => n + minsOf(MISSIONS[i]), 0), left = ids.filter(i => !done[MISSIONS[i].id]).reduce((n, i) => n + minsOf(MISSIONS[i]), 0);
+      nav.appendChild(el('p', { class: 'note' }, ids.filter(i => done[MISSIONS[i].id]).length + ' of ' + ids.length + ' done. About ' + total + ' minutes in all' + (left && left < total ? ', about ' + left + ' left.' : '.')));
+      const items = el('div', { class: 'sec-list lesson-list' });
+      ids.forEach((i, k) => {
+        const x = MISSIONS[i];
+        const b = el('button', { type: 'button', 'aria-current': String(i === missionAt) }, (done[x.id] ? '<span class="tick">&#10003;</span> ' : '<span class="num">' + (k + 1) + '</span> ') + '<span class="t">' + x.title + '</span>' + (stars[x.id] != null ? starsHtml(stars[x.id]) : '') + '<span class="mins">' + minsOf(x) + ' min</span>');
+        b.disabled = !(k === 0 || done[MISSIONS[ids[k - 1]].id] || done[x.id]);
+        b.addEventListener('click', () => leaveThen(() => start(i)));
+        items.appendChild(b);
+      });
+      nav.appendChild(items);
+      box.appendChild(nav);
+      return box;
+    }
     SECTIONS.forEach(sec => {
       const list = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === sec);
       const det = el('details', { class: 'sec' + (sec === M.m.group ? ' current' : '') });
@@ -1152,12 +1205,12 @@ export function startSolo({ container, myName, colour }) {
   let first = 0;
   while (first < MISSIONS.length - 1 && done[MISSIONS[first].id]) first++;
   const q = new URLSearchParams(location.search).get('mission'), qi = MISSIONS.findIndex(x => x.id === q);
-  start(qi >= 0 ? qi : first);
+  if (qi >= 0) start(qi); else if (lessonMode.on) startLesson(); else start(first);
   requestAnimationFrame(frame);
   if (/[?&]debug/.test(location.search)) window.__lab = {
     get M() { return M; }, get R() { return R; }, pos, hand, setHand, start, newRound, free, solidAt, handPos, grabTarget, guideTarget, missions: MISSIONS,
     get slots() { return slots; }, get done() { return done; }, get arrows() { return arrows.count; }, get outlined() { return outlineG.children.length; }, get glowing() { return glowing; },
-    toastText: () => $('toast').textContent, KIND, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, nearestSlot
+    toastText: () => $('toast').textContent, lessonMode, startLesson, nextMission, LESSONS, minsOf, KIND, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, nearestSlot
   };
   return { stop() { } };
 }
