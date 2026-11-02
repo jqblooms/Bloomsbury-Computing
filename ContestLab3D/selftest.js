@@ -1,0 +1,295 @@
+// Contest Lab 3D self-test. Plays every mission with the student's controls (walking, holding and letting go of
+// Space, typing predictions, the lamp buttons and the mission panel buttons), then tries to break it: out-of-order
+// cubes, mistakes in challenges, quick taps on placed cubes, grabbing during a prediction, leaving mid-round, and
+// random play that must never leave a mission unfinishable.
+// Run: open index.html?debug=1, then in the console:
+//   setTimeout(async () => { const t = await import('./selftest.js?' + Date.now()); await t.run({ parts: ['play', 'break', 'fuzz'] }); }, 0)
+// and read window.__selftest (or watch console.log('selftest: ...')).
+const s = () => window.__lab;
+const $ = id => document.getElementById(id);
+let fails = [];
+const ok = (c, msg) => { if (!c) fails.push(msg); return !!c; };
+const R = () => s().R, M = () => s().M;
+const top = sl => sl.items[sl.items.length - 1];
+
+// ---------------------------------------------------------------- moving like a student
+function bfs(gx, gy) {
+  const p = s().pos, sx = Math.round(p.x), sy = Math.round(p.y), key = (x, y) => x + ',' + y;
+  const prev = new Map([[key(sx, sy), null]]), q = [[sx, sy]];
+  while (q.length) {
+    const [x, y] = q.shift();
+    if (x === gx && y === gy) { const out = []; let k = key(x, y); while (k) { out.unshift(k.split(',').map(Number)); k = prev.get(k); } return out.slice(1); }
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nx = x + dx, ny = y + dy, k = key(nx, ny);
+      if (prev.has(k) || !s().free(nx, ny)) continue;
+      prev.set(k, key(x, y)); q.push([nx, ny]);
+    }
+  }
+  return null;
+}
+function walkTo(x, y, face) {
+  const p = s().pos, route = bfs(Math.round(x), Math.round(y));
+  if (!route) throw new Error('no way to walk to ' + x.toFixed(2) + ', ' + y.toFixed(2));
+  for (const [qx, qy] of route.concat([[x, y]])) {
+    for (let g = 0; g < 200; g++) {
+      const dx = qx - p.x, dy = qy - p.y, d = Math.hypot(dx, dy);
+      if (d < 1e-3) break;
+      const st = Math.min(0.2, d), nx = p.x + dx / d * st, ny = p.y + dy / d * st;
+      if (!s().free(nx, ny)) throw new Error('walked into something at ' + nx.toFixed(2) + ', ' + ny.toFixed(2));
+      p.x = nx; p.y = ny; p.face = Math.atan2(dx, dy);
+    }
+  }
+  if (face != null) p.face = face;
+  s().frame(1);
+}
+// stand next to a slot (one of its tiles), facing it, so the grab point is on it
+function reach(sl) {
+  for (let k = 0; k < sl.w; k++) for (const [dx, dy] of [[0, 1], [0, -1], [-1, 0], [1, 0]]) {
+    const tx = sl.x + k, px = tx + dx * 0.8, py = sl.y + dy * 0.8;
+    if (!s().free(px, py) || !bfs(Math.round(px), Math.round(py)) && !(Math.round(px) === Math.round(s().pos.x) && Math.round(py) === Math.round(s().pos.y))) continue;
+    walkTo(px, py, Math.atan2(-dx, -dy));
+    const n = s().nearestSlot(0.9, x => x.role !== 'lamp');
+    if (n === sl || sl.role === 'lamp') return;
+  }
+  throw new Error('cannot reach ' + sl.role + ' at ' + sl.x + ',' + sl.y);
+}
+const press = () => { s().setHand(true); s().frame(12); }, release = () => { s().setHand(false); s().frame(1); };
+function take(sl) { reach(sl); press(); return s().hand.item; }
+function put(sl) { reach(sl); release(); }
+function arrowCheck() { s().frame(2); const g = s().guideTarget(), p = s().pos; if (g && M().m.type === 'tutorial' && Math.hypot(g.x - p.x, g.y - p.y) > g.reach + 0.3) ok(s().arrows > 0, M().m.id + ': no arrow to ' + g.x + ',' + g.y);  }
+function carry(from, to) { arrowCheck(); const it = take(from); arrowCheck(); if (!it) throw new Error('nothing taken from ' + from.role + ' (' + s().toastText() + ')'); put(to); return it; }
+function clickBtn(text) { const b = [...document.querySelectorAll('#mission button, #card button')].find(x => x.textContent.trim() === text && !x.disabled); if (!b) throw new Error('no button ' + text); b.click(); s().frame(1); }
+const hasBtn = text => [...document.querySelectorAll('#mission button')].some(x => x.textContent.trim() === text && !x.disabled);
+function answer(right = true) {
+  const a = R().ask; if (!a) throw new Error('no prediction waiting');
+  if (a.type === 'num') { const v = right ? a.answer : a.answer + 1; $('clAsk').value = String(v); }
+  else {
+    const want = right ? a.answer : a.answer.replace(/^./, c => c === '1' ? '0' : '1');
+    for (let i = 0; i < want.length; i++) { const b = () => document.querySelectorAll('.cl-pick button')[i]; let k = 0; while (b().textContent !== want[i] && k++ < 3) b().click(); }
+  }
+  clickBtn('Check');
+}
+function afterQ() { const m = M().m; if (M().phase === 'done' && !M().afterOk) clickBtn(m.after.options[0]); }
+
+// ---------------------------------------------------------------- solving each kind from whatever state it is in
+function solveStack() {
+  const r = R(), form = M().m.form;
+  for (let guard = 0; guard < 60 && !r.over; guard++) {
+    if (s().hand.item) release();
+    if (r.ask) { answer(); continue; }
+    if (r.out.items.length) { carry(r.out, r.stack); continue; }
+    if (r.op) { const first = !r.L.items.length && !r.R.items.length; carry(r.stack, first ? (form === 'postfix' ? r.R : r.L) : (r.L.items.length ? r.R : r.L)); continue; }
+    const b = r.belt[r.order[r.next]]; if (!b) break;
+    carry(b, top(b).role === 'op' ? r.O : r.stack);
+  }
+  ok(r.over, 'stack round did not finish');
+}
+function solveTree() {
+  const r = R(), lab = s();
+  for (const nd of lab.KIND && r.stage === 'build' ? preorderOf(r.p.t) : []) {
+    const ped = r.ped.get(nd); if (ped.items.length) continue;
+    const sup = lab.slots.find(x => x.role === 'supply' && x.items.length && top(x).sym === (nd.op || nd.v));
+    carry(sup, ped);
+  }
+  ok(r.stage === 'read', 'tree not built');
+  while (r.readN < r.readOrder.length) carry(r.ped.get(r.readOrder[r.readN]), r.rail);
+  ok(r.over, 'tree round did not finish');
+}
+const preorderOf = t => { const out = []; (function go(n) { out.push(n); if (n.op) { go(n.l); go(n.r); } })(t); return out; };
+function solveInfix() {
+  const r = R();
+  while (r.k < r.E.length) {
+    const e = r.E[r.k];
+    if (e.tok === '(' || e.tok === ')') carry(s().slots.find(x => x.crate === e.tok), r.rail);
+    else carry(r.ped.get(e.node), r.rail);
+  }
+  ok(r.over, 'infix round did not finish');
+}
+function solveBits() {
+  const r = R(), lab = s();
+  const work = (function order(ast) { const out = []; (function go(n) { if (n.t === 'not' || n.t === 'sh') go(n.a); else if (n.t === 'bin') { go(n.a); go(n.b); } if (n.t !== 'bits') out.push(n); })(ast); return out; })(r.ast);
+  for (let guard = 0; guard < 30 && !r.over; guard++) {
+    if (lab.hand.item) release();
+    if (r.ask) { answer(); continue; }
+    const loose = lab.slots.filter(x => (x.role === 'shelf' || x.role === 'mout') && x.items.length);
+    const next = work.find(n => !r.ran.has(n));
+    if (!next) { carry(loose.find(x => top(x).node === r.ast), r.ans); continue; }
+    const tr = loose.find(x => r.parent.get(top(x).node) === next);
+    carry(tr, r.mach.get(next).ins.find(x => !x.items.length));
+  }
+  ok(r.over, 'bits round did not finish');
+}
+function setLamps(want) {
+  const r = R();
+  for (let k = 0; k < 5; k++) if (r.x[k] !== want[k]) { reach(r.lamps[k]); s().setHand(true); s().setHand(false); s().frame(1); }
+  ok(r.x === want, 'lamps are ' + r.x + ' not ' + want);
+}
+function solveSolve(right = true) {
+  const r = R();
+  while (r.ask) answer();
+  setLamps(right ? r.p.sol : r.p.sol.replace(/^./, c => c === '1' ? '0' : '1'));
+  clickBtn('Run the machines');
+  if (right) ok(r.over, 'solve round did not finish');
+}
+const SOLVE = { stack: solveStack, tree: solveTree, infix: solveInfix, bits: solveBits, solve: () => solveSolve(true) };
+function playMission(i) {
+  s().start(i);
+  const m = M().m;
+  for (let round = 0; round < 6 && M().phase !== 'done'; round++) {
+    if (R().over) clickBtn('Next round');
+    SOLVE[m.kind]();
+  }
+  ok(M().phase === 'done', m.id + ' not done (' + s().toastText() + ')');
+  afterQ();
+  ok(M().afterOk, m.id + ' why question not answered');
+  ok(s().done[m.id], m.id + ' not saved as done');
+}
+
+// ---------------------------------------------------------------- break tests
+const T = {};
+T.outOfOrder = () => {
+  s().start(0); const r = R();
+  const second = r.belt[r.order[1]];
+  reach(second); press();
+  ok(!s().hand.item, 'took a belt cube out of order');
+  release();
+};
+T.numberInMachine = () => {
+  s().start(1); const r = R();
+  const b = r.belt[r.order[0]];
+  carry(b, r.O);
+  ok(r.spoilt && top(b) && !r.O.items.length, 'a number in the OP slot was not a mistake, or the cube did not go back');
+  solveStack();
+  ok(M().have === 0, 'a spoilt round counted');
+};
+T.wrongSide = () => {
+  s().start(1); const r = R();
+  for (let g = 0; g < 20 && !r.op; g++) { const b = r.belt[r.order[r.next]]; carry(b, top(b).role === 'op' ? r.O : r.stack); }
+  carry(r.stack, r.L);   // postfix: the first cube off the stack belongs on the right
+  ok(r.spoilt && !r.L.items.length && r.stack.items.length >= 2, 'first pop on the left was not a mistake');
+};
+T.tapNeedsHold = () => {
+  s().start(0); const r = R();
+  carry(r.belt[r.order[0]], r.stack);
+  carry(r.belt[r.order[1]], r.stack);
+  carry(r.belt[r.order[2]], r.O);
+  reach(r.stack); s().setHand(true); s().setHand(false); s().frame(1);
+  ok(r.stack.items.length === 2 && !s().hand.item, 'a quick tap took a cube off the stack');
+};
+T.lockedDuringPredict = () => {
+  s().start(0); const r = R();
+  carry(r.belt[r.order[0]], r.stack); carry(r.belt[r.order[1]], r.stack); carry(r.belt[r.order[2]], r.O);
+  carry(r.stack, r.R); carry(r.stack, r.L);
+  ok(!!r.ask, 'no prediction after both sides');
+  reach(r.belt[r.order[3]]); press();
+  ok(!s().hand.item, 'grabbed while a prediction was waiting'); release();
+  answer(false); ok(!!r.ask && /Not quite/.test($('mission').textContent), 'tutorial wrong prediction should ask again');
+  answer(true); ok(!r.ask && r.out.items.length === 1, 'the machine did not run');
+};
+T.wrongPredictChallenge = () => {
+  s().start(3); const r = R();
+  for (let g = 0; g < 20 && !r.ask; g++) {
+    if (r.op) { const first = !r.L.items.length && !r.R.items.length; carry(r.stack, first ? r.L : r.R); continue; }
+    const b = r.belt[r.order[r.next]]; carry(b, top(b).role === 'op' ? r.O : r.stack);
+  }
+  answer(false);
+  ok(r.spoilt && !r.ask && r.out.items.length === 1, 'a wrong challenge prediction did not spoil the round and run the machine');
+};
+T.treeWrongSpot = () => {
+  s().start(4); const r = R(), t = r.p.t;
+  const leaf = r.supply.find(x => /[A-Z0-9]/.test(top(x).sym));
+  carry(leaf, r.ped.get(t));
+  ok(!r.ped.get(t).items.length && /top of the tree/.test(r.why || ''), 'a letter on the top pedestal was accepted');
+  solveTree();
+};
+T.treeReadOrder = () => {
+  s().start(5); const r = R();
+  for (const nd of preorderOf(r.p.t)) carry(s().slots.find(x => x.role === 'supply' && x.items.length && top(x).sym === (nd.op || nd.v)), r.ped.get(nd));
+  carry(r.ped.get(r.p.t), r.rail);   // postfix: the top comes last
+  ok(r.readN === 0 && r.ped.get(r.p.t).items.length === 1, 'postfix read the top first');
+};
+T.infixBracket = () => {
+  s().start(7); const r = R();
+  // tutorial: (A + B) * C. Bring A before the bracket: a mistake, refused
+  carry(r.ped.get(r.E[1].node), r.rail);
+  ok(r.k === 0 && /Open a bracket/.test(r.why || ''), 'A before ( was accepted');
+  carry(s().slots.find(x => x.crate === ')'), r.rail);
+  ok(r.k === 0 && !s().hand.item, 'a ) at the start was accepted');
+  solveInfix();
+};
+T.bitsWrongMachine = () => {
+  s().start(9); const r = R();   // NOT 10110 AND 01101: 10110 belongs to NOT
+  const notNode = [...r.mach.keys()].find(n => n.t === 'not'), andNode = [...r.mach.keys()].find(n => n.t === 'bin');
+  const tr = r.shelf.find(x => r.parent.get(top(x).node) === notNode);
+  carry(tr, r.mach.get(andNode).ins[0]);
+  ok(!r.mach.get(andNode).ins[0].items.length && top(tr) && /NOT/.test(r.why || ''), 'a tray went into the wrong machine');
+  solveBits();
+};
+T.solveWrongRun = () => {
+  s().start(13); solveSolve(false);
+  ok(R().over && R().spoilt && M().have === 0, 'a wrong first run counted');
+};
+T.leavePrompt = () => {
+  s().start(0); const r = R();
+  carry(r.belt[r.order[0]], r.stack);
+  [...document.querySelectorAll('#mission .sec-list button')].find(b => !b.disabled && b.getAttribute('aria-current') === 'false')?.click();
+  ok(!!document.querySelector('#mission .leave'), 'no Leave this mission prompt mid-round');
+  clickBtn('Stay'); ok(M().m.id === 'post-t' && r.stack.items.length === 1, 'Stay lost the round');
+};
+T.walkthroughs = () => {
+  for (let i = 0; i < s().missions.length; i++) {
+    s().start(i); clickBtn('Walk me through it');
+    const txt = $('card').textContent; ok(/Step 1 of/.test(txt), s().missions[i].id + ' walkthrough did not open');
+    ok(!/[–—]/.test(txt), 'dash in walkthrough');
+    for (let k = 0; k < 20 && !$('cardWrap').hidden; k++) [...$('card').querySelectorAll('button')].pop().click();
+    ok($('cardWrap').hidden, 'walkthrough did not close');
+  }
+};
+T.guideEverywhere = () => {
+  // tutorials: the arrow or ring always shows the next thing while nothing is waiting
+  for (const i of [0, 2, 4, 7, 9, 10]) {
+    s().start(i); s().pos.x = 2; s().pos.y = M().m.kind === 'tree' || M().m.kind === 'infix' ? 16 : s().pos.y; s().frame(2);
+    const g = s().guideTarget(); ok(!!g, s().missions[i].id + ' has no guide at the start'); ok(!g || s().arrows > 0, s().missions[i].id + ' guide arrow not drawn');
+  }
+};
+
+function fuzz(i, n) {
+  s().start(i);
+  const lab = s();
+  for (let k = 0; k < n; k++) {
+    if (R().over) break;
+    if (R().ask) { answer(Math.random() < 0.7); continue; }
+    const from = lab.slots.filter(x => x.items.length || x.crate || x.role === 'lamp');
+    const a = from[Math.floor(Math.random() * from.length)];
+    try {
+      reach(a);
+      if (a.role === 'lamp') { lab.setHand(true); lab.setHand(false); continue; }
+      press();
+      if (!lab.hand.item) { release(); continue; }
+      const to = lab.slots.filter(x => x.role !== 'lamp');
+      put(to[Math.floor(Math.random() * to.length)]);
+    } catch (e) { if (lab.hand.item) release(); }
+  }
+  if (lab.hand.item) release();
+  if (R().over && M().phase !== 'done') clickBtn('Next round');
+  // whatever happened, the mission can still be finished
+  for (let round = 0; round < 6 && M().phase !== 'done'; round++) {
+    if (R().over) clickBtn('Next round');
+    SOLVE[M().m.kind]();
+  }
+  ok(M().phase === 'done', 'after random play ' + M().m.id + ' could not be finished');
+}
+
+export async function run({ parts = ['play', 'break'] } = {}) {
+  fails = [];
+  const out = { parts, tests: 0 };
+  const step = async (name, fn) => { out.tests++; try { fn(); } catch (e) { fails.push(name + ': ' + e.message); } console.log('selftest: ' + name + (fails.length ? ' (' + fails.length + ' fails so far)' : '')); await new Promise(r => setTimeout(r, 0)); };
+  if (parts.includes('play')) for (let i = 0; i < s().missions.length; i++) await step('play ' + s().missions[i].id, () => playMission(i));
+  if (parts.includes('break')) for (const [k, fn] of Object.entries(T)) await step(k, fn);
+  if (parts.includes('fuzz')) for (let i = 0; i < s().missions.length; i++) await step('fuzz ' + s().missions[i].id, () => fuzz(i, 25));
+  out.fails = fails.slice();
+  window.__selftest = out;
+  console.log('selftest: DONE ' + out.tests + ' tests, ' + fails.length + ' fails' + (fails.length ? ': ' + fails.join(' | ') : ''));
+  return out;
+}
+export const helpers = { carry, reach, take, put, answer, walkTo };
