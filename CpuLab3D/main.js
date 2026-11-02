@@ -457,7 +457,10 @@ export function startSolo({ container, myName, colour }) {
         if (p.mem[a]) addItem(s, valueCube(text(p.mem[a]), p.mem[a].op ? 'instr' : 'data'));
         R.slot[s.key] = s;
       }
-      addSign('MAIN MEMORY (OUTSIDE THE CPU)', 11, 1, 300, { bg: '#2b8a3e', size: 0.036 });
+      addSign('MAIN MEMORY (OUTSIDE THE CPU)', 11, 1, 420, { bg: '#2b8a3e', size: 0.036 });
+      // two pointers that hang over memory and move with the registers: the PC's next instruction, the MAR's address
+      R.pcSign = addSign('PC: NEXT INSTRUCTION', 4, 2, 320, { bg: '#74c0fc', ink: '#08214a', size: 0.032 });
+      R.marSign = addSign('MAR: MEMORY READS HERE', 4, 2, 240, { bg: '#ffd43b', ink: '#1a1200', size: 0.032 });
       // the registers, with the PC's +1 lever beside it
       for (const r of REGS) {
         const [x, y] = POS[r];
@@ -524,7 +527,12 @@ export function startSolo({ container, myName, colour }) {
     steps(R) { return R.p.list.map((e, i) => ({ text: e.text, done: () => R.i > i })); },
     goals() { return ['A register gives you a copy. Memory only gives what is at the address in the MAR.', 'Next instruction: PC to MAR, memory to MDR, +1 lever, MDR to CIR, CIR to the CU.', 'LOAD: MDR to ACC. ADD, SUB: ACC and MDR into the ALU, result to the ACC. OUTPUT: ACC to the screen.']; },
     expr(R) {
-      const mem = R.p.mem.map((c, a) => c ? '<span class="cpu-mem"><b>' + a + '</b> ' + text(c) + '</span>' : '').join('');
+      // move the PC and MAR pointers over the memory boxes they hold (hidden while a register is empty)
+      const point = (sp, v, h) => { if (!sp) return; const a = v === '' ? NaN : Number(v); sp.visible = a >= 0 && a <= 7; if (sp.visible) sp.position.set((4 + a * 2 + 0.5) * T, h, (2 + 0.5) * T); };
+      point(R.pcSign, R.regs.PC, 270); point(R.marSign, R.regs.MAR, 205);
+      // the same pointers in the memory list, as coloured borders (nothing changes size as they move)
+      const cls = a => (String(a) === R.regs.PC ? ' pc' : '') + (String(a) === R.regs.MAR ? ' mar' : '');
+      const mem = R.p.mem.map((c, a) => c ? '<span class="cpu-mem' + cls(a) + '"><b>' + a + '</b> ' + text(c) + '</span>' : '').join('') + '<div class="cpu-key"><i class="pc"></i>PC: next instruction <i class="mar"></i>MAR: memory reads here</div>';
       return '<b>Registers</b>' + regTable(R.regs) + '<b>Main memory</b><div class="cpu-memrow">' + mem + '</div>';
     },
     walk(R, m) {

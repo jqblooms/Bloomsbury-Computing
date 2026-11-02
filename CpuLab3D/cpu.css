@@ -8,3 +8,11 @@
 .cpu-mem { font-size: .8rem; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); font-variant-numeric: tabular-nums; }
 .cpu-mem b { color: var(--muted); margin-right: 3px; }
 .walk .cpu-regs { max-width: 420px; }
+/* PC and MAR pointers in the memory list: coloured borders, so nothing changes size as they move */
+.cpu-mem { border-width: 2px; }
+.cpu-mem.pc { border-color: #74c0fc; }
+.cpu-mem.mar { border-color: #ffd43b; }
+.cpu-mem.pc.mar { border-color: #ffd43b; box-shadow: inset 0 0 0 2px #74c0fc; }
+.cpu-key { width: 100%; font-size: .74rem; color: var(--muted); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+.cpu-key i { width: 12px; height: 12px; border-radius: 3px; border: 2px solid; display: inline-block; margin-left: 6px; }
+.cpu-key i.pc { border-color: #74c0fc; } .cpu-key i.mar { border-color: #ffd43b; }
