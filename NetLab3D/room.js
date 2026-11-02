@@ -130,6 +130,8 @@ export function create(container) {
     follow(x, y) { want.set(x * T + T / 2, 0, y * T + T / 2); },
     jump(x, y) { want.set(x * T + T / 2, 0, y * T + T / 2); focus.copy(want); },
     setFit(fw) { overview = fw >= W; },
+    // how far back the camera starts, and how steeply it looks down (the wheel and a drag still change them)
+    zoom(d, p) { dist = Math.min(1600, Math.max(380, d)); if (p != null) pitch = Math.min(1.3, Math.max(0.3, p)); },
     // a key direction (dx right, dy down the screen) as a direction on the floor, relative to the camera
     rotateInput(dx, dy) { const a = overview ? 0 : yaw, c = Math.cos(a), s = Math.sin(a); return [dx * c + dy * s, -dx * s + dy * c]; },
     render(dt) { for (const l of labels) l.visible = overview; placeCamera(dt); renderer.render(scene, camera); }

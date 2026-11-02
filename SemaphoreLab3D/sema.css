@@ -1,0 +1,23 @@
+/* Semaphore Lab 3D: the flag figures, the card, the word boxes and the flag picker (everything else is net3d.css and contest.css) */
+.sem-svg { width: 44px; height: 44px; color: var(--ink); display: block; }
+.sem-svg.big, .sem-big .sem-svg { width: 120px; height: 120px; }
+.sem-now { display: flex; align-items: center; gap: 12px; margin: 4px 0 6px; }
+.sem-big { flex: none; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.sem-word { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 6px 0; }
+.sem-word b { margin-right: 4px; }
+.sem-box { min-width: 26px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--line-strong); border-radius: 6px; font: 700 1.05rem var(--font-mono, Consolas, monospace); color: var(--ink); background: var(--surface); }
+.sem-box.gap { border-style: dashed; min-width: 16px; }
+.sem-box.done { background: var(--brand-soft); }
+.sem-box.now { border-color: #ffd43b; box-shadow: 0 0 0 2px #ffd43b; }
+.sem-group { margin: 6px 0; }
+.sem-pat { font-size: .78rem; color: var(--muted); margin: 0 0 2px; }
+.sem-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.sem-card { display: inline-flex; flex-direction: column; align-items: center; padding: 2px 3px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.sem-card b { font-size: .85rem; line-height: 1.1; }
+.sem-pick { display: grid; grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(3, 64px); gap: 6px; justify-content: center; margin: 8px 0 4px; }
+.sem-dir { font-size: 1.6rem; border: 2px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; }
+.sem-dir.on { background: #ffd43b; border-color: #e0a800; color: #1a1200; }
+.sem-dir:focus-visible { outline: 3px solid var(--brand, #3e8ef7); }
+.sem-mid { display: flex; align-items: center; justify-content: center; }
+.sem-mid .sem-svg { width: 64px; height: 64px; }
+.walk .sem-now { justify-content: center; }

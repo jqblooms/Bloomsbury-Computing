@@ -148,7 +148,10 @@ export function createBlob(colourIndex, name) {
     arms.forEach((a, i) => {
       const sgn = i === 0 ? 1 : -1, hand = st.hands?.[i] || {};
       shoulders[i].getWorldPosition(S); group.worldToLocal(S);
-      if (hand.down) {
+      if (hand.dir) {
+        // posed: the arm points straight along dir (the blob's own space), as far as it reaches (Semaphore Lab flags)
+        want.copy(S).addScaledVector(hand.dir, UPPER + FORE);
+      } else if (hand.down) {
         // reaching forward (where the server's hand is: 42 forward, 20 to the side), a little lower when carrying
         want.set(sgn * 20, hand.hold ? 58 : 66 + Math.sin(phase * 0.5 + i) * 3, 42);
       } else {
@@ -156,7 +159,7 @@ export function createBlob(colourIndex, name) {
         want.set(S.x + sgn * 6, S.y - 44, S.z + Math.sin(phase + (i ? 0 : Math.PI)) * 14 * walk);
       }
       if (!a.p) a.p = want.clone();
-      const stiff = hand.down ? 220 : 60, damp = hand.down ? 22 : 7;
+      const firm = hand.down || hand.dir, stiff = firm ? 220 : 60, damp = firm ? 22 : 7;
       a.v.addScaledVector(P.subVectors(want, a.p), stiff * dt).multiplyScalar(Math.max(0, 1 - damp * dt));
       a.p.addScaledVector(a.v, dt);
       // keep the hand within reach of the shoulder
@@ -171,5 +174,5 @@ export function createBlob(colourIndex, name) {
   }
 
   function dispose() { group.traverse(o => { if (o.geometry && o.geometry !== limbGeo) o.geometry.dispose(); o.material?.map?.dispose?.(); }); }
-  return { group, update, dispose };
+  return { group, update, dispose, hands: arms.map(a => a.hand) };
 }
