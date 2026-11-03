@@ -159,7 +159,6 @@ T.sameOrderRefused = () => {
 T.starHelpsAfterMiss = () => {
   s().start(idx('star-t')); const r = R(), L = s().model;
   const miss = L.orders(r.p.given).find(o => { const e = L.endOf(r.p.start, o); return !(e.x === r.p.star.x && e.y === r.p.star.y); });
-  ok(!s().guideTarget() || s().guideTarget().slot.role !== 'tray' || true, '');
   fill(miss); goBtn();
   ok(!r.over && r.helped && r.misses === 1 && !M().spoilt, 'a miss in Find the Star did not let the pupil try again with help');
   const g = s().guideTarget(); ok(g && g.slot.role === 'tray' && top(g.slot).sym === r.p.answer[0], 'after a miss the arrow does not show the first arrow that works');

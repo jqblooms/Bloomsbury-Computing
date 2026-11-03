@@ -542,8 +542,9 @@ export function startSolo({ container, myName, colour }) {
   // ---------------------------------------------------------------- the guide: the arrow on the floor, the ring, the outline
   function slotTarget(s) { return s ? { x: s.x + (s.w - 1) / 2, y: s.y, reach: 1.05 + (s.w - 1) / 2, box: [s.x - 0.5, s.y - 0.5, s.x + s.w - 0.5, s.y + 0.5], exact: true, slot: s } : null; }
   function boxTarget(x0, y0, x1, y1) { return { x: Math.max(x0, Math.min(x1, pos.x)), y: Math.max(y0, Math.min(y1, pos.y)), reach: 1.1, box: [x0 - 0.5, y0 - 0.5, x1 + 0.5, y1 + 0.5] }; }
-  // an arrow to the nearest of several pads, with no ring: you choose which one
-  function areaTarget(list) { if (!list.length) return null; const near = list.slice().sort((a, b) => rectDist(a, pos.x, pos.y) - rectDist(b, pos.x, pos.y))[0]; const t = slotTarget(near); t.exact = false; return t; }
+  // the pupil chooses: one place gets an arrow (no ring); several get no arrow at all, because an arrow to the nearest
+  // one read as a hint and was often the wrong answer (glowAll can still light every choice the same)
+  function areaTarget(list) { if (!list.length) return null; if (list.length > 1) return { glowOnly: true }; const t = slotTarget(list[0]); t.exact = false; return t; }
   function guideTarget() {
     if (!M || !R || M.phase !== 'play' || R.over) return null;
     // a spoilt challenge round guides like a tutorial: it does not count any more, so show the method
@@ -604,7 +605,7 @@ export function startSolo({ container, myName, colour }) {
     const g = guideTarget();
     pulse.visible = !!(g && g.exact);
     if (g && g.exact) { pulse.position.set((g.x + 0.5) * T, PAD_H + 3, (g.y + 0.5) * T); pulse.scale.set(g.slot.w, 1, 1); pulse.material.opacity = 0.5 + 0.4 * Math.sin(ts / 180); }
-    if (!g || Math.hypot(g.x - pos.x, g.y - pos.y) < g.reach + 0.2) { arrows.visible = false; arrows.count = 0; guideKey = ''; return; }
+    if (!g || g.glowOnly || Math.hypot(g.x - pos.x, g.y - pos.y) < g.reach + 0.2) { arrows.visible = false; arrows.count = 0; guideKey = ''; return; }
     const sx = Math.round(pos.x), sy = Math.round(pos.y);
     const tk = g.x.toFixed(2) + ',' + g.y.toFixed(2);
     if (tk + '@' + sx + ',' + sy !== routeKey) { routeKey = tk + '@' + sx + ',' + sy; guideRoute = gridRoute(sx, sy, g); }
