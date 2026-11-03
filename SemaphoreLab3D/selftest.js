@@ -38,17 +38,23 @@ function walkTo(x, y, face) {
   if (face != null) p.face = face;
   s().frame(1);
 }
-// walk up to a pad and press Space on it, like a pupil
-function pressPad(sl) {
+// stand next to a pad, facing it, until here() says the hand is over it
+function reach(sl, here) {
   for (let k = 0; k < sl.w; k++) for (const [dx, dy] of [[0, 1], [0, -1], [-1, 0], [1, 0]]) {
     const px = sl.x + k + dx * 0.8, py = sl.y + dy * 0.8;
     if (!s().free(px, py)) continue;
     try { walkTo(px, py, Math.atan2(-dx, -dy)); } catch (e) { continue; }
-    if (s().grabTarget()?.slot !== sl) continue;
-    s().setHand(true); s().frame(2); s().setHand(false); s().frame(1);
-    return;
+    if (here()) return;
   }
-  throw new Error('cannot reach the ' + sl.letter + ' pad');
+  throw new Error('cannot reach the ' + (sl.letter != null ? JSON.stringify(sl.letter) + ' crate' : sl.role + ' box'));
+}
+// like a pupil: hold Space at a letter crate, carry the cube to a box, let go
+function deliver(from, to) {
+  reach(from, () => s().grabTarget()?.slot === from);
+  s().setHand(true); s().frame(12);
+  if (!s().hand.item) throw new Error('nothing picked up from ' + JSON.stringify(from.letter));
+  reach(to, () => s().nearestSlot(0.9, x => !x.press) === to);
+  s().setHand(false); s().frame(1);
 }
 function clickBtn(text) { const b = [...document.querySelectorAll('#mission button, #card button')].find(x => x.textContent.trim() === text && !x.disabled); if (!b) throw new Error('no button ' + text); b.click(); s().frame(1); }
 const hasBtn = text => [...document.querySelectorAll('#mission button')].some(x => x.textContent.trim() === text && !x.disabled);
@@ -64,7 +70,7 @@ function solve() {
   const r = R();
   for (let g = 0; g < 40 && !r.over; g++) {
     const want = r.p.text[r.at];
-    if (M().m.kind === 'read') pressPad(r.pad[want]);
+    if (M().m.kind === 'read') deliver(r.pad[want], r.out[r.at]);
     else { flags(s().POSE[want]); sendBtn().click(); s().frame(1); }
   }
   ok(r.over, M().m.id + ': round did not finish (' + s().toastText() + ')');
@@ -96,10 +102,21 @@ T.wordsFit = () => {
 };
 T.wrongLetter = () => {
   s().start(idx('read-c')); const r = R(), want = r.p.text[0], wrong = want === 'A' ? 'B' : 'A';
-  pressPad(r.pad[wrong]);
+  deliver(r.pad[wrong], r.out[0]);
+  ok(!r.out[0].items.length, 'a wrong letter cube stayed in the box');
   ok(r.spoilt && r.at === 0 && /The flags show/.test(r.why || ''), 'a wrong letter was accepted');
   const g = s().guideTarget(); ok(g && g.slot === r.pad[want], 'after a slip the arrow does not show the right letter');
   solve(); ok(M().have === 0, 'a spoilt round counted');
+};
+T.carryNotPress = () => {
+  s().start(s().missions.findIndex(m => m.id === 'read-t')); const r = R(), want = r.p.text[0];
+  ok(!Object.values(r.pad).some(p => p.press), 'a letter is still pressed instead of carried');
+  deliver(r.pad[r.p.text[1]], r.out[1]);
+  ok(!r.spoilt && !r.out[1].items.length && /in order/.test(s().toastText()), 'a cube in a later box was not just sent back with a hint');
+  reach(r.pad[want], () => s().grabTarget()?.slot === r.pad[want]); s().setHand(true); s().frame(12);
+  const g = s().guideTarget(); ok(g && g.slot === r.out[0], 'carrying a cube, the ring does not show the next box');
+  reach(r.out[0], () => s().nearestSlot(0.9, x => !x.press) === r.out[0]); s().setHand(false); s().frame(1);
+  ok(r.at === 1 && r.out[0].items.length === 1 && r.out[0].items[0].sym === want, 'the right cube did not stay in the box');
 };
 T.tutorialNoArrowFirst = () => {
   s().start(idx('read-t')); ok(!s().guideTarget(), 'the tutorial points at the answer before the pupil tries');
@@ -163,7 +180,7 @@ function fuzz(i, n) {
   const r = R();
   for (let k = 0; k < n && !r.over; k++) {
     try {
-      if (M().m.kind === 'read') { const pads = Object.values(r.pad); pressPad(pads[Math.floor(Math.random() * pads.length)]); }
+      if (M().m.kind === 'read') { const pads = Object.values(r.pad); deliver(pads[Math.floor(Math.random() * pads.length)], r.out[Math.floor(Math.random() * r.out.length)]); }
       else { flags([Math.floor(Math.random() * 8), Math.floor(Math.random() * 8)]); sendBtn()?.click(); s().frame(1); }
     } catch (e) { }
   }

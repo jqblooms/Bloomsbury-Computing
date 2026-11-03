@@ -81,11 +81,11 @@ const MESSAGES = ['MEET AT TEN', 'SHIP IS LATE', 'HELP IS NEAR', 'LOOK UP', 'RUN
 // ================================================================ missions
 const MISSIONS = [
   { id: 'ag-t', group: 'Reading flags', title: 'Flags Make Letters', type: 'tutorial', kind: 'read', mins: 8, card: 'ABCDEFG',
-    intro: 'The signaller holds two flags. Each letter is a different pair of flag positions. Read the flags, find them on the card, then walk to that letter on the floor and press Space.',
+    intro: 'The signaller holds two flags. Each letter is a different pair of flag positions. Read the flags and find them on the card. Then pick up that letter cube and carry it to the next box.',
     gen: () => word('CAGE'),
     after: { q: 'What is the pattern for the letters A to G?', options: ['One flag stays down. The other flag moves round, one step for each letter.', 'Both flags move together for each letter.', 'Each letter uses only one flag.'], why: 'Look at A, B, C and D on the card: which flag never moves?' } },
   { id: 'read-t', group: 'Reading flags', title: 'Decode a Word', type: 'tutorial', kind: 'read', mins: 8,
-    intro: 'Now any letter can come up. Find the same flags on the semaphore card, then walk to the letter.',
+    intro: 'Now any letter can come up. Find the same flags on the semaphore card, then carry that letter cube to the next box.',
     gen: () => word('SIGNAL'),
     after: { q: 'Why must the signaller and the reader use the same card?', options: ['The card is the rule. With a different rule, the reader gets the wrong letters.', 'So the flags look nicer.', 'The card makes the signaller faster.'], why: 'A signal only works when both people know the same rule.' } },
   { id: 'read-c', group: 'Reading flags', title: 'Word Decoder', type: 'challenge', kind: 'read', mins: 10,
@@ -99,7 +99,7 @@ const MISSIONS = [
     intro: 'Send each word with no mistakes. Two clean words in a row.',
     gen: () => word(pick(SEND_WORDS)) },
   { id: 'msg-c', group: 'Secret messages', title: 'Secret Message', type: 'challenge', kind: 'read', mins: 12, spaces: true,
-    intro: 'Decode a whole message. Both flags down means a space between words: walk to the SPACE pad. Two clean messages in a row.',
+    intro: 'Decode a whole message. Both flags down means a space between words: carry a blank cube from the SPACE crate. Two clean messages in a row.',
     gen: () => word(pick(MESSAGES)) },
   { id: 'nocard-c', group: 'Secret messages', title: 'No Card', type: 'challenge', kind: 'read', noHelp: true, need: 3, mins: 12,
     intro: 'Decode three words in a row with the card hidden. Use the patterns you have learned.',
@@ -352,20 +352,22 @@ export function startSolo({ container, myName, colour }) {
     return h;
   };
   const boxes = (text, at) => '<div class="sem-word">' + [...text].map((c, i) => '<span class="sem-box' + (i === at ? ' now' : '') + (i < at ? ' done' : '') + (c === ' ' ? ' gap' : '') + '">' + (i < at && c !== ' ' ? c : '') + '</span>').join('') + '</div>';
+  // a crate of letter cubes: hold Space to take one, carry it to the next answer box and let go (a blank cube is a space)
   function letterPad(L, x, y, w = 1) {
-    const s = addSlot({ role: 'letter', pad: L === ' ' ? 'machine' : 'lamp', x, y, w, letter: L, label: L === ' ' ? 'SPACE' : undefined,
-      press: () => choose(L), pressText: L === ' ' ? 'to choose a space.' : 'to choose ' + L + '.' });
-    if (L !== ' ') addItem(s, { sym: L, role: 'num' });
+    const s = addSlot({ role: 'letter', pad: L === ' ' ? 'machine' : 'crate', x, y, w, letter: L, crate: L, crateRole: 'num', label: L === ' ' ? 'SPACE' : undefined,
+      put: it => it.sym === L ? null : { msg: 'That crate is for ' + nameOf(L) + ' cubes.' } });
+    s.show = makeCube(L, 'num'); s.show.group.position.set((x + w / 2) * T, PAD_H + CUBE / 2 + 2, (y + 0.5) * T); worldG.add(s.show.group);
     return s;
   }
+  // the answer boxes fill in order; a wrong letter is a mistake (the cube goes back to its crate)
+  function outPut(i, it) {
+    if (R.out[i].items.length) return { msg: 'This box is already decoded.' };
+    if (i !== R.at) return { msg: 'Fill the boxes in order, from the left. The next one has the yellow ring.' };
+    const want = R.p.text[R.at], L = it.sym;
+    if (L !== want) { R.helpAt = R.at; return { msg: 'The flags show ' + describe(POSE[want]) + '. That is ' + nameOf(want) + ', not ' + nameOf(L) + '.' + (want === ' ' ? '' : ' ' + groupNote(want)), mistake: true }; }
+    return null;
+  }
   function choose(L) {
-    const want = R.p.text[R.at]; R.moves++;
-    if (L !== want) {
-      R.helpAt = R.at;
-      mistake('The flags show ' + describe(POSE[want]) + '. That is ' + nameOf(want) + ', not ' + nameOf(L) + '.' + (want === ' ' ? '' : ' ' + groupNote(want)));
-      return;
-    }
-    if (L !== ' ') addItem(R.out[R.at], { sym: L, role: 'result' });
     R.at++;
     explain(L === ' ' ? 'Both flags down: a space between words.' : 'The flags show ' + describe(POSE[L]) + '. That is ' + L + '. ' + groupNote(L));
     if (R.at >= R.p.text.length) finishRound('The ' + (M.m.spaces ? 'message' : 'word') + ' is <b>' + R.p.text + '</b>.');
@@ -373,14 +375,14 @@ export function startSolo({ container, myName, colour }) {
   KIND.read = {
     rulesName: 'Semaphore card',
     start(m) { return 'The signaller is sending a ' + (m.spaces ? 'message' : 'word') + '. Read the flags for the first letter.'; },
-    idle() { return 'Read the flags. Walk to that letter and <b>press Space</b> on it.'; },
+    idle() { return 'Read the flags. <b>Hold Space</b> to pick up that letter cube, then carry it to the next box.'; },
     setup(R, m) {
       const W = 29, n = R.p.text.length;
       newWorld(W, 15, 'Semaphore'); view.zoom?.(1150, 0.75); me.group.scale.setScalar(1);   // far back: the signaller and the letters both in view
       R.at = 0; R.helpAt = -1;
       addSignaller(14, 2);
       const x0 = Math.floor((W - n) / 2);
-      R.out = [...R.p.text].map((c, i) => addSlot({ role: 'out', pad: 'answer', x: x0 + i, y: 5 }));
+      R.out = [...R.p.text].map((c, i) => addSlot({ role: 'out', pad: 'answer', x: x0 + i, y: 5, take: () => 'This letter is decoded.', put: it => outPut(i, it) }));
       R.pad = {};
       [...'ABCDEFGHIJKLM'].forEach((L, i) => { R.pad[L] = letterPad(L, 2 + 2 * i, 7); });
       [...'NOPQRSTUVWXYZ'].forEach((L, i) => { R.pad[L] = letterPad(L, 2 + 2 * i, 10); });
@@ -393,9 +395,12 @@ export function startSolo({ container, myName, colour }) {
       sig.update(dt, { x: R.sigAt[0], y: R.sigAt[1], face: 0, moving: false, hands: dirs.map(d => ({ dir: d })) });
       placeFlags(sig, sigFlags, dirs);
     },
-    placed() { },
+    placed(it, slot) { if (slot.role === 'out') choose(it.sym); },
     check() { },
     guide(R, m) {
+      if (R.over) return null;
+      // carrying a cube: the ring shows the next box (where, not what)
+      if (hand.item) return m.type === 'tutorial' ? slotTarget(R.out[R.at]) : areaTarget([R.out[R.at]]);
       // after a slip (or once a challenge round no longer counts) the arrow shows the right letter; before, you decide
       if (R.over || !(m.type === 'tutorial' && (R.helpAt === R.at || R.spoilt))) return null;
       return slotTarget(R.pad[R.p.text[R.at]]);
@@ -403,11 +408,11 @@ export function startSolo({ container, myName, colour }) {
     steps(R, m) {
       return [...R.p.text].map((c, i) => ({
         text: i < R.at ? 'Letter ' + (i + 1) + ': ' + describe(POSE[c]) + (c === ' ' ? ': a space.' : ' is <b>' + c + '</b>.')
-          : i === R.at ? 'Letter ' + (i + 1) + ': read the flags. Find them on the card, then walk to the ' + (m.spaces ? 'letter or SPACE pad' : 'letter') + ' and press Space.'
+          : i === R.at ? 'Letter ' + (i + 1) + ': read the flags. Find them on the card, then carry that ' + (m.spaces ? 'letter cube (or a blank SPACE cube)' : 'letter cube') + ' to box ' + (i + 1) + '.'
           : 'Letter ' + (i + 1) + '.',
         done: () => R.at > i }));
     },
-    goals(m) { return ['Read the two flags as you see them.', 'Find the same flags on the semaphore card.', 'Walk to that letter and press Space.'].concat(m.spaces ? ['Both flags down means a space.'] : []); },
+    goals(m) { return ['Read the two flags as you see them.', 'Find the same flags on the semaphore card.', 'Carry that letter cube to the next box.'].concat(m.spaces ? ['Both flags down means a space: carry a blank cube from SPACE.'] : []); },
     rules(R, m) { return card(m); },
     expr(R, m) {
       const t = R.p.text, done = R.at >= t.length;
@@ -915,8 +920,8 @@ export function startSolo({ container, myName, colour }) {
   function toast(msg, cls) { const t = $('toast'); t.innerHTML = msg || ''; t.className = 'toast ' + (cls === 'bad' ? 'bad' : cls === 'good' ? 'good' : 'hint'); clearTimeout(toastTimer); if (msg) toastTimer = setTimeout(() => { t.innerHTML = ''; }, cls === 'bad' ? 5200 : 3200); }
   function hint() {
     // what Space does right now, for what is in front of you: HOLD (pick up and carry) or PRESS (switch a lamp)
-    let h, key = 'press', mode = '';
-    const g = grabTarget(), s = g && g.slot, what = s && (s.crate ? 'a ' + s.crate + ' cube' : s.items.length ? ('the ' + top(s).sym + ' cube') : '');
+    let h, key = 'hold to grab', mode = '';
+    const g = grabTarget(), s = g && g.slot, what = s && (s.crate ? (s.crate === ' ' ? 'a blank space cube' : 'a ' + s.crate + ' cube') : s.items.length ? ('the ' + top(s).sym + ' cube') : '');
     if (hand.item) { h = '<b>Keep holding Space</b> and walk to a pad. Let go of Space to put it down.'; key = 'keep holding'; mode = 'hold'; }
     else if (hand.pending) { h = '<b>Keep holding Space</b>...'; key = 'keep holding'; mode = 'hold'; }
     else if (R && R.ask) h = 'Predict on the right first.';
