@@ -463,14 +463,15 @@
         return;
       }
       var why = [];
-      if (!okB) why.push('the bottom of this column should be ' + r.write);
-      if (!okC) why.push(r.carry ? 'there should be a carry 1 at the top of the next column' : 'there is no carry, so the top of the next column stays blank');
-      fb('Not quite: ' + why.join(', and ') + '. Watch.' + res.extra, 'bad');
+      if (!okB) why.push('you wrote <b>' + bottom.dataset.v + '</b> at the bottom of this column. It should be <b>' + r.write + '</b>');
+      if (!okC) why.push(r.carry ? 'you left the top of the next column blank. It should have a <b>carry 1</b>' : 'you put a carry 1 at the top of the next column. There is <b>no carry</b>, so it stays blank');
+      fb('Not quite: ' + why.join('. Also, ') + '. Watch.' + res.extra, 'bad');
+      var whyText = '<br>' + why.map(function (s) { return s.charAt(0).toUpperCase() + s.slice(1) + '.'; }).join('<br>');
       countAnim([g.cells.carry[1], g.cells.top[1], g.cells.bottom[1]], function () {
         bottom.classList.remove('ok', 'bad'); carryNext.classList.remove('ok', 'bad');
         setCell(bottom, ''); setCell(carryNext, '');
         placeRule(g.cells.top[1], bottom, carryNext, p.ones, function () {
-          fb(ones(p.ones) + ' means: <b>' + BAR.RULE_TEXT[p.ones] + '</b>.' + res.extra, 'hint');
+          fb(ones(p.ones) + ' means: <b>' + BAR.RULE_TEXT[p.ones] + '</b>.' + whyText + res.extra, 'hint');
           showNext();
         });
       });
@@ -533,7 +534,7 @@
       function walk(k) {
         actions.innerHTML = '';
         if (k >= bad.length) {
-          fb(summary + 'Now every column is right. ' + denary(), 'hint');
+          fb(summary + 'Now every column is right. The answer is <b>' + sol.answer.join('') + '</b>. ' + denary(), 'hint');
           showNext('Next sum');
           return;
         }
@@ -543,6 +544,10 @@
         if (i > 0) C.carry[i - 1].classList.add('walkcol');
         var n = sol.ones[i];
         fb(summary + 'Column ' + (w - i) + ' from the right. Count the 1s.', 'hint');
+        var wasA = C.answer[i].dataset.v, wasC = i > 0 ? val(C.carry[i - 1]) : 0;
+        var mine = [];
+        if (+wasA !== sol.answer[i]) mine.push('You wrote <b>' + wasA + '</b> at the bottom. It should be <b>' + sol.answer[i] + '</b>.');
+        if (i > 0 && wasC !== sol.carries[i - 1]) mine.push(sol.carries[i - 1] ? 'You left the top of the next column blank. It should have a <b>carry 1</b>.' : 'You put a carry 1 at the top of the next column. There is <b>no carry</b>, so it stays blank.');
         countAnim([C.carry[i], C.top[i], C.bottom[i]], function () {
           C.answer[i].classList.remove('ok', 'bad');
           if (i > 0) C.carry[i - 1].classList.remove('ok', 'bad');
@@ -550,7 +555,7 @@
           placeRule(C.top[i], C.answer[i], i > 0 ? C.carry[i - 1] : null, n, function () {
             C.answer[i].classList.add('fixed');
             if (i > 0 && sol.carries[i - 1]) C.carry[i - 1].classList.add('fixed');
-            fb(summary + 'Column ' + (w - i) + ' has ' + ones(n) + '. That means <b>' + BAR.RULE_TEXT[n] + '</b>.', 'hint');
+            fb(summary + 'Column ' + (w - i) + ' has ' + ones(n) + '. That means <b>' + BAR.RULE_TEXT[n] + '</b>.<br>' + mine.join(' '), 'hint');
             var more = k < bad.length - 1;
             var b = btn(more ? 'Next column to fix' : 'Done', 'next-btn', function () { walk(k + 1); });
             actions.appendChild(b);
