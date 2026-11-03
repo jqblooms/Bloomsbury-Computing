@@ -1,0 +1,538 @@
+{
+ "id": "y10-3-1-l3",
+ "label": "3.1.3: Buses and Data Movement",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Name the Part (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y10-313-do-now",
+   "validatorKey": "y10_313_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Name the Part (1 of 2)</h2><p class=\"lesson-lead\">Recap of the last lesson. Cambridge IGCSE 0478/12, November 2024, Question 6. The table contains descriptions of components in a CPU. Give the missing component names. <strong>What to do:</strong> type a name in each box, then press Check answers.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-313-do-now-a\">(a) ........ sends signals to manage the flow of data through the CPU. [1]</label><input id=\"y10-313-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Name the Part (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-313-do-now-b\">(b) ........ stores the address of the data that is about to be fetched from random access memory (RAM) into the CPU. [1]</label><input id=\"y10-313-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Name the Part (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-313-do-now-c\">(c) ........ stores an instruction when it is being decoded. [1]</label><input id=\"y10-313-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Name the Part (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-313-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-313-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: name the part from its job",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> \"........ holds the address of the next instruction.\" Name the part.",
+      "visual": "<div class=\"wt-note\">read the job, find the clue words</div>"
+     },
+     {
+      "text": "Find the clue words. Here they are <span class=\"wt-hl\">address</span> and <span class=\"wt-hl\">next</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">holds the <span class=\"wt-hl\">address</span> of the <span class=\"wt-hl\">next</span> instruction</p>"
+     },
+     {
+      "text": "Which part holds the address of the <b>next</b> instruction? The program counter (PC).",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">address + next = program counter (PC)</p>"
+     },
+     {
+      "text": "<strong>Another.</strong> \"........ holds the data that has just come from memory.\" The clue words are <span class=\"wt-hl\">data</span> and <span class=\"wt-hl\">from memory</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">data from memory = memory data register (MDR)</p>"
+     },
+     {
+      "text": "Now do the same for each row: find the clue words (signals, address, decoded), then name the part. Its full name or its letters both earn the mark.",
+      "visual": "<div class=\"wt-note\">clue words, then the part</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: The Accumulator (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-313-do-now-2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: The Accumulator (2 of 2)</h2><p class=\"lesson-lead\">Recap of the last lesson. Cambridge IGCSE 0478/11, November 2022, Question 2(c). Type your answer, then press <strong>Submit answer</strong> (or <strong>Check my answer</strong> to have it marked). Done when you have marked it against the model answer.</p><div id=\"y10-313-do-now-2\"></div>",
+   "items": [
+    {
+     "id": "acc",
+     "prompt": "Identify the component within the CPU that the accumulator is built into and describe the purpose of the accumulator.",
+     "marks": 3,
+     "scheme": [
+      "Arithmetic logic unit (ALU)",
+      "To temporarily store data",
+      "It stores the result of interim calculations"
+     ],
+     "guidance": "One mark for the component: the arithmetic logic unit (ALU). Then any two from the purpose points, one mark each: it stores data temporarily; it stores the result of interim calculations. \"It stores data\" with no \"temporarily\" earns no mark for point 2.",
+     "modelAnswer": "The ALU. It temporarily stores data. It stores the results of interim calculations."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: describe a register's purpose",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> \"Describe the purpose of the program counter (PC).\" It is worth 2 marks.",
+      "visual": "<div class=\"wt-note\">2 marks: give 2 separate points</div>"
+     },
+     {
+      "text": "Point 1: what does it <b>hold</b>? The PC holds an <span class=\"wt-hl\">address</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">the PC holds an <span class=\"wt-hl\">address</span></p>"
+     },
+     {
+      "text": "Point 2: <b>which</b> address? The address of the <span class=\"wt-hl\">next instruction</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">... of the <span class=\"wt-hl\">next instruction</span></p>"
+     },
+     {
+      "text": "Check: two separate points, one mark each. \"It holds things\" alone would earn nothing: say exactly what.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">holds an address + of the next instruction = 2 marks</p>"
+     },
+     {
+      "text": "Now the accumulator question (3 marks). 1 mark: name the part of the CPU it is built into. 2 marks: two separate points about its purpose, each one exact.",
+      "visual": "<div class=\"wt-note\">1 part name + 2 exact points</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l2",
+   "embedContainerId": "y10-313-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from the last lesson. Pick the answer that earns the mark, then type it. Stuck? Switch on <strong>I need help</strong>. Go to the next slide when you are ready.</p><div id=\"y10-313-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Buses and Data Movement",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Computer Architecture</p><h2 class=\"lesson-h2\">Buses and Data Movement</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> how values and messages travel between the CPU and memory, and <strong>why</strong>.</li><li>Three <strong>buses</strong>: what each one carries, and which way it goes.</li><li><strong>How this lesson works:</strong> on each slide, read the question, <strong>predict</strong> by picking an answer, then read why. Then go to the next slide.</li></ul>"
+  },
+  {
+   "id": "concept-buses",
+   "label": "Why the CPU Needs Buses",
+   "type": "multiple-choice",
+   "containerId": "y10-313-concept-buses",
+   "content": "<h2 class=\"lesson-h2\">Why the CPU Needs Buses</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the two lines, look at the picture, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>The CPU and memory are separate parts. They are joined by wires.</li><li>A <strong>bus</strong> is a set of wires that carries signals between parts, such as the CPU and memory.</li></ul><div class=\"lesson-do-now-columns\"><div><div style=\"display:grid;grid-template-columns:78px minmax(0,1fr) 130px;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface)\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:14px 4px;text-align:center\"><b>CPU</b></div><div style=\"display:grid;gap:6px\"><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Address bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #6aa9ff;display:flex;align-items:center;justify-content:center\"></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Data bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #fdd663;display:flex;align-items:center;justify-content:center\"></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Control bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #f28b82;display:flex;align-items:center;justify-content:center\"></span></div></div><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:4px 6px;text-align:center\"><b>Memory</b><table style=\"border-collapse:collapse;margin:2px auto 0;font-size:14px\"><tr><th style=\"font-size:12px;color:var(--muted);padding:0 8px\">Address</th><th style=\"font-size:12px;color:var(--muted);padding:0 8px\">Holds</th></tr><tr><td style=\"padding:1px 8px;color:var(--muted)\">5</td><td style=\"padding:1px 8px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">31</td></tr><tr style=\"outline:2px solid var(--warn);outline-offset:-2px\"><td style=\"padding:1px 8px;color:var(--muted)\">6</td><td style=\"padding:1px 8px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">12</td></tr><tr><td style=\"padding:1px 8px;color:var(--muted)\">7</td><td style=\"padding:1px 8px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">25</td></tr><tr><td style=\"padding:1px 8px;color:var(--muted)\">8</td><td style=\"padding:1px 8px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">17</td></tr></table></div></div><p style=\"margin:4px 0 0;text-align:center;font-size:15px\">The three buses join the CPU and memory.</p></div><div><div id=\"y10-313-concept-buses\"></div></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: the CPU wants the number stored at address 6. What must the CPU send to memory?",
+     "options": [
+      "Where the number is, and a message: read it",
+      "Nothing: memory knows what the CPU needs",
+      "The number 12"
+     ],
+     "correct": 0,
+     "explain": "Memory only does what it is told. The CPU sends where (the address 6) and what to do (read). Then memory sends back what it holds there (12). Three different things travel, so there are three buses: the address bus, the data bus and the control bus."
+    }
+   ]
+  },
+  {
+   "id": "note-buses",
+   "label": "Your Note: Why Three Buses",
+   "content": "<h2 class=\"lesson-h2\">Your Note: Why Three Buses</h2><p class=\"lesson-lead\"><strong>What to do:</strong> write each note in your book, in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your book: in your own words, explain WHY the CPU needs three buses, not one.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> The CPU sends where (an address) and what to do (a signal), and the value travels too (data). These are three different things, so there are three buses.</p></div></details>"
+  },
+  {
+   "id": "concept-address",
+   "label": "Which Way Does the Address Bus Go?",
+   "type": "multiple-choice",
+   "containerId": "y10-313-concept-address",
+   "content": "<h2 class=\"lesson-h2\">Which Way Does the Address Bus Go?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the line, look at the picture, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>The <strong>address bus</strong> carries an <strong>address</strong>: the place in memory to read or write.</li><li>The CPU wants the value at address 6, so 6 goes on the address bus.</li></ul><div class=\"lesson-do-now-columns\"><div><div style=\"display:grid;grid-template-columns:78px minmax(0,1fr) 130px;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface)\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:14px 4px;text-align:center\"><b>CPU</b></div><div style=\"display:grid;gap:6px\"><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Address bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #6aa9ff;display:flex;align-items:center;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);white-space:nowrap;font-weight:700;font-size:16px;padding:1px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong)\">6 &rarr;</span></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Data bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #fdd663;display:flex;align-items:center;justify-content:center\"></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Control bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #f28b82;display:flex;align-items:center;justify-content:center\"></span></div></div><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:4px 6px;text-align:center\"><b>Memory</b><table style=\"border-collapse:collapse;margin:2px auto 0;font-size:14px\"><tr><th style=\"font-size:12px;color:var(--muted);padding:0 8px\">Address</th><th style=\"font-size:12px;color:var(--muted);padding:0 8px\">Holds</th></tr><tr><td style=\"padding:1px 8px;color:var(--muted)\">5</td><td style=\"padding:1px 8px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">31</td></tr><tr style=\"outline:2px solid var(--warn);outline-offset:-2px\"><td style=\"padding:1px 8px;color:var(--muted)\">6</td><td style=\"padding:1px 8px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">12</td></tr><tr><td style=\"padding:1px 8px;color:var(--muted)\">7</td><td style=\"padding:1px 8px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">25</td></tr><tr><td style=\"padding:1px 8px;color:var(--muted)\">8</td><td style=\"padding:1px 8px;font-family:var(--font-mono, monospace);font-weight:700;color:var(--syn-number, #fdd663)\">17</td></tr></table></div></div><p style=\"margin:4px 0 0;text-align:center;font-size:15px\">The CPU sends the address 6.</p></div><div><div id=\"y10-313-concept-address\"></div></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: memory never chooses which address the CPU uses. Which way does the address bus need to go?",
+     "options": [
+      "Out of the CPU to memory only",
+      "Into the CPU from memory only",
+      "Both ways"
+     ],
+     "correct": 0,
+     "explain": "Out of the CPU only. The CPU chooses the address and sends it to memory. Memory never needs to send an address back, so the address bus goes one way."
+    }
+   ]
+  },
+  {
+   "id": "explain-address",
+   "label": "Explain It: The Address Bus",
+   "type": "self-marked-response",
+   "containerId": "y10-313-explain-address",
+   "content": "<h2 class=\"lesson-h2\">Explain It: The Address Bus</h2><p class=\"lesson-lead\">Type your answer in your own words, then press <strong>Check my answer</strong> to have it marked, and <strong>Submit answer</strong> to see the model answer. Fix your answer, then copy your best version into your book.</p><div id=\"y10-313-explain-address\"></div>",
+   "items": [
+    {
+     "id": "address-why",
+     "prompt": "In your own words: which way does the address bus carry an address, and WHY?",
+     "marks": 2,
+     "scheme": [
+      "Out of the CPU to memory only (one way)",
+      "Because the CPU chooses the address // memory never needs to send an address back"
+     ],
+     "guidance": "One mark for the direction: out of the CPU to memory, or one way from the CPU. One mark for the reason: the CPU chooses or sends the address, or memory never sends an address back. \"It goes one way\" with no reason earns the first mark only.",
+     "modelAnswer": "Out of the CPU only. The CPU chooses the address, so memory never sends one back."
+    }
+   ]
+  },
+  {
+   "id": "concept-data",
+   "label": "Which Way Does the Data Bus Go?",
+   "type": "multiple-choice",
+   "containerId": "y10-313-concept-data",
+   "content": "<h2 class=\"lesson-h2\">Which Way Does the Data Bus Go?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> compare the two pictures, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>The <strong>data bus</strong> carries <strong>data and instructions</strong>: the value itself.</li></ul><div class=\"lesson-do-now-columns\"><div><div style=\"display:grid;gap:8px\"><div style=\"display:grid;grid-template-columns:78px minmax(0,1fr) 130px;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface)\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:14px 4px;text-align:center\"><b>CPU</b></div><div style=\"display:grid;gap:6px\"><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Address bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #6aa9ff;display:flex;align-items:center;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);white-space:nowrap;font-weight:700;font-size:16px;padding:1px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong)\">6 &rarr;</span></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Data bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #fdd663;display:flex;align-items:center;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);white-space:nowrap;font-weight:700;font-size:16px;padding:1px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong)\">12</span></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Control bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #f28b82;display:flex;align-items:center;justify-content:center\"></span></div></div><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:4px 6px;text-align:center\"><b>Memory</b></div></div><p style=\"margin:4px 0 0;text-align:center;font-size:15px\"><b>Read:</b> the CPU wants the value at address 6. It holds 12.</p><div style=\"display:grid;grid-template-columns:78px minmax(0,1fr) 130px;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface)\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:14px 4px;text-align:center\"><b>CPU</b></div><div style=\"display:grid;gap:6px\"><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Address bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #6aa9ff;display:flex;align-items:center;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);white-space:nowrap;font-weight:700;font-size:16px;padding:1px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong)\">8 &rarr;</span></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Data bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #fdd663;display:flex;align-items:center;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);white-space:nowrap;font-weight:700;font-size:16px;padding:1px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong)\">42</span></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Control bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #f28b82;display:flex;align-items:center;justify-content:center\"></span></div></div><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:4px 6px;text-align:center\"><b>Memory</b></div></div><p style=\"margin:4px 0 0;text-align:center;font-size:15px\"><b>Write:</b> the CPU stores 42 at address 8.</p></div></div><div><div id=\"y10-313-concept-data\"></div></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: in the read, 12 travels on the data bus. In the write, 42 travels on the data bus. Which way must the data bus go?",
+     "options": [
+      "Into the CPU only",
+      "Out of the CPU only",
+      "Both ways"
+     ],
+     "correct": 2,
+     "explain": "Both ways. In the read, 12 comes into the CPU from memory. In the write, 42 goes out of the CPU to memory. One bus does both jobs, so it must go both ways."
+    }
+   ]
+  },
+  {
+   "id": "concept-control",
+   "label": "Why the Control Bus Is Needed",
+   "type": "multiple-choice",
+   "containerId": "y10-313-concept-control",
+   "content": "<h2 class=\"lesson-h2\">Why the Control Bus Is Needed</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the lines, then pick a prediction for each question. The reason appears under each one.</p><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>The <strong>control bus</strong> carries <strong>control signals</strong>.</li><li>The control unit (CU) sends signals such as <strong>read</strong> and <strong>write</strong>.</li><li>Devices send signals too. The keyboard tells the CU: a key has been pressed.</li></ul><div style=\"display:grid;grid-template-columns:78px minmax(0,1fr) 130px;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface)\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:14px 4px;text-align:center\"><b>CPU</b></div><div style=\"display:grid;gap:6px\"><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Address bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #6aa9ff;display:flex;align-items:center;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);white-space:nowrap;font-weight:700;font-size:16px;padding:1px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong)\">6 &rarr;</span></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Data bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #fdd663;display:flex;align-items:center;justify-content:center\"></span></div><div style=\"display:grid;grid-template-columns:118px 1fr;align-items:center;gap:6px\"><span style=\"font-weight:600;font-size:15px\">Control bus</span><span style=\"height:28px;border-radius:999px;background:var(--surface-3, var(--surface-2));border:2px solid #f28b82;display:flex;align-items:center;justify-content:center\"><span style=\"font-family:var(--font-mono, monospace);white-space:nowrap;font-weight:700;font-size:16px;padding:1px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong)\">?</span></span></div></div><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:4px 6px;text-align:center\"><b>Memory</b></div></div><p style=\"margin:4px 0 0;text-align:center;font-size:15px\">Address 6 is on its way. What else must memory be told?</p></div><div><div id=\"y10-313-concept-control\"></div></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: the CPU sends address 6 to memory. How does memory know whether to send its value back or to store a new value?",
+     "options": [
+      "A read or a write signal tells it",
+      "It looks at how big the number is",
+      "It always sends its value back"
+     ],
+     "correct": 0,
+     "explain": "The address only says where. The CU also sends a read or a write signal on the control bus, so memory knows what to do."
+    },
+    {
+     "prompt": "Predict: a key is pressed. The keyboard sends a signal to the CU. Which way does this signal go?",
+     "options": [
+      "Into the CPU",
+      "Out of the CPU",
+      "It cannot be sent"
+     ],
+     "correct": 0,
+     "explain": "Into the CPU. The CU sends signals out (read, write), and devices send signals in. So the control bus carries signals both ways."
+    }
+   ]
+  },
+  {
+   "id": "predict-bus",
+   "label": "Check: Which Bus?",
+   "type": "multiple-choice",
+   "containerId": "y10-313-predict-bus",
+   "content": "<h2 class=\"lesson-h2\">Check: Which Bus?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick the bus for each question. Ask: is it a place, a value, or a command? Done when both are answered.</p><div id=\"y10-313-predict-bus\"></div>",
+   "items": [
+    {
+     "prompt": "The CPU wants the value stored at address 9. Memory holds 25 there. Which bus carries the 9?",
+     "options": [
+      "Address bus",
+      "Data bus",
+      "Control bus"
+     ],
+     "correct": 0,
+     "explain": "9 is the place in memory, so it is an address. Addresses go on the address bus."
+    },
+    {
+     "prompt": "The CPU wants memory to store a value. Which bus carries the write signal?",
+     "options": [
+      "Data bus",
+      "Address bus",
+      "Control bus"
+     ],
+     "correct": 2,
+     "explain": "Write is a command from the CU. Commands and signals go on the control bus."
+    }
+   ]
+  },
+  {
+   "id": "note-data-control",
+   "label": "Your Notes: Data, Control and Which Bus",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Data, Control and Which Bus</h2><p class=\"lesson-lead\"><strong>What to do:</strong> write each note in your book, in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your book: in your own words, explain WHY the data bus must go both ways. Use the word read and the word write.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> In a read, the value comes into the CPU from memory. In a write, the value goes out of the CPU to memory. One bus does both, so it goes both ways.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your book: in your own words, explain WHY memory needs a read or a write signal as well as the address.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> The address only says where. The signal says what to do: send the value back (read) or store a new value (write).</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your book: explain WHY the 9 goes on the address bus, and not on the data bus.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> 9 is a place in memory, so it is an address. The value stored there (25) is data, so it goes on the data bus.</p></div></details>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Which Bus, Which Way?",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-313-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Which Bus, Which Way?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick the bus for every row (from level 2, also which way it goes), then press Check. One check per round, and a mistake means the round does not count. <strong>Done</strong> when you have cleared level 2 (two clean rounds in a row at each level). The help gets less as you go up.</p><div id=\"y10-313-activity-1\"></div>",
+   "embedQuery": "activity=buses&level=1&upto=2"
+  },
+  {
+   "id": "compare-read-write",
+   "label": "Compare: A Read and a Write",
+   "type": "multiple-choice",
+   "containerId": "y10-313-compare-read-write",
+   "content": "<h2 class=\"lesson-h2\">Compare: A Read and a Write</h2><p class=\"lesson-lead\"><strong>What to do:</strong> the table shows what each bus carries in a read and in a write. Picture which way each one travels, then pick your prediction.</p><table style=\"border-collapse:collapse;width:100%;font-size:16px\"><tr><th style=\"padding:5px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;color:var(--muted)\"></th><th style=\"padding:5px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;color:var(--muted)\">Read: the value at address 6 (it holds 12)</th><th style=\"padding:5px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;color:var(--muted)\">Write: store 42 at address 8</th></tr><tr><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-weight:700\">Address bus</td><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-family:var(--font-mono, monospace)\">6</td><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-family:var(--font-mono, monospace)\">8</td></tr><tr><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-weight:700\">Data bus</td><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-family:var(--font-mono, monospace)\">12</td><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-family:var(--font-mono, monospace)\">42</td></tr><tr><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-weight:700\">Control bus</td><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-family:var(--font-mono, monospace)\">Read</td><td style=\"padding:5px 10px;border-bottom:1px solid var(--line);font-family:var(--font-mono, monospace)\">Write</td></tr></table><div id=\"y10-313-compare-read-write\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: which bus changes direction between the read and the write?",
+     "options": [
+      "Data bus",
+      "Address bus",
+      "Control bus"
+     ],
+     "correct": 0,
+     "explain": "Only the data bus. In both jobs the address and the read or write signal go out of the CPU. The value comes in for a read (12) and goes out for a write (42)."
+    }
+   ]
+  },
+  {
+   "id": "predict-way",
+   "label": "Check: Which Way?",
+   "type": "multiple-choice",
+   "containerId": "y10-313-predict-way",
+   "content": "<h2 class=\"lesson-h2\">Check: Which Way?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick the way for each question. Ask: where does it start, and where does it end up? Done when both are answered.</p><div id=\"y10-313-predict-way\"></div>",
+   "items": [
+    {
+     "prompt": "The CPU stores 30 at address 7. Which way does 30 travel on the data bus?",
+     "options": [
+      "Out of the CPU",
+      "Into the CPU",
+      "Both ways at once"
+     ],
+     "correct": 0,
+     "explain": "30 starts in the CPU and ends up in memory, so it goes out of the CPU."
+    },
+    {
+     "prompt": "The CPU wants the value at address 5. Which way does the address 5 travel?",
+     "options": [
+      "Into the CPU",
+      "Out of the CPU",
+      "Both ways at once"
+     ],
+     "correct": 1,
+     "explain": "The CPU chooses the address and sends it to memory. An address only ever goes out of the CPU."
+    }
+   ]
+  },
+  {
+   "id": "explain-write",
+   "label": "Explain It: A Write",
+   "type": "self-marked-response",
+   "containerId": "y10-313-explain-write",
+   "content": "<h2 class=\"lesson-h2\">Explain It: A Write</h2><p class=\"lesson-lead\">Type your answer in your own words, then press <strong>Check my answer</strong> to have it marked, and <strong>Submit answer</strong> to see the model answer. Fix your answer, then copy your best version into your book.</p><div id=\"y10-313-explain-write\"></div>",
+   "items": [
+    {
+     "id": "write-why",
+     "prompt": "The CPU stores 19 at address 4. In your own words, say what each bus carries and which way it goes. Then explain WHY the data bus goes that way.",
+     "marks": 4,
+     "scheme": [
+      "Address bus: carries 4 (the address), out of the CPU to memory",
+      "Control bus: carries a write signal, out of the CPU (from the CU) to memory",
+      "Data bus: carries 19 (the value), out of the CPU to memory",
+      "Because in a write the value starts in the CPU and ends up in memory"
+     ],
+     "guidance": "One mark for each point. Points 1 to 3 need both what the bus carries and the direction. Point 4 needs the reason (the value starts in the CPU, or is going to be stored in memory). A bus with the wrong value or direction earns no mark for that point.",
+     "modelAnswer": "Address bus: 4, out to memory. Control bus: write, out to memory. Data bus: 19, out to memory, because the value starts in the CPU and is stored in memory."
+    }
+   ]
+  },
+  {
+   "id": "note-read-write",
+   "label": "Your Notes: A Read and a Write",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: A Read and a Write</h2><p class=\"lesson-lead\"><strong>What to do:</strong> write each note in your book, in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your book: explain WHY a read signal goes on the control bus, and not on the data bus.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> A read signal is a command from the CU, not a value. Commands go on the control bus.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your book: explain WHY only the data bus changes direction between a read and a write.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> The address and the read or write signal always start in the CPU. The value starts in memory for a read, and in the CPU for a write.</p></div></details>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Trace a Read and a Write",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-313-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Trace a Read and a Write</h2><p class=\"lesson-lead\"><strong>What to do:</strong> for each bus, pick what it carries and which way it goes, for a read and a write. One check per round, and a mistake means the round does not count. <strong>Done</strong> when you have cleared level 4, where there is no help.</p><div id=\"y10-313-activity-2\"></div>",
+   "embedQuery": "activity=buses&level=3&upto=4"
+  },
+  {
+   "id": "exam-1",
+   "label": "Exam Questions: Name the Bus",
+   "type": "short-answer-validation",
+   "validatorId": "y10-313-exam-1",
+   "validatorKey": "y10_313_exam_1",
+   "content": "<h2 class=\"lesson-h2\">Exam Questions: Name the Bus</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13 November 2021 Q5; 0478/12 November 2024 Q6; adapted from 0478/11 November 2024 Q5(d). <strong>What to do:</strong> type each answer, then press Check answers.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-313-exam-1-a\">(a) Give the component name: \"........ This carries addresses around the CPU.\" [1]</label><input id=\"y10-313-exam-1-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-a\" aria-label=\"Exam Questions: Name the Bus part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-313-exam-1-b\">(b) Give the component name: \"........ transmits data between the RAM and the CPU.\" [1]</label><input id=\"y10-313-exam-1-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-b\" aria-label=\"Exam Questions: Name the Bus part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-313-exam-1-c\">(c) Buses are used in the CPU to transmit data. Type the three words from this list that name buses: fetch, address, register, execute, data, decode, calculation, central, value, binary, control. [3]</label><input id=\"y10-313-exam-1-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-1-c\" aria-label=\"Exam Questions: Name the Bus part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-313-exam-1-check\">Check answers</button><strong>Total: 5 marks</strong></div><div id=\"y10-313-exam-1-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-2",
+   "label": "Exam Question: Two Other Buses",
+   "type": "self-marked-response",
+   "containerId": "y10-313-exam-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Two Other Buses</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/11, November 2022, Question 2(a). Phil has a computer that is designed using the Von Neumann model. Type your answer, then press <strong>Submit answer</strong> (or <strong>Check my answer</strong> to have it marked). Done when you have marked it against the model answer.</p><div id=\"y10-313-exam-2\"></div>",
+   "items": [
+    {
+     "id": "two-buses",
+     "prompt": "One type of component within the CPU is an address bus. Identify two other types of bus and state what each is responsible for transmitting in the CPU.",
+     "marks": 4,
+     "scheme": [
+      "Data bus",
+      "... responsible for transmitting data or instructions",
+      "Control bus",
+      "... responsible for transmitting control signals"
+     ],
+     "guidance": "One mark for each correct bus (max 2) and one mark for the matching description of what it transmits. A description earns its mark only next to the matching bus. The address bus is in the question, so it earns no mark.",
+     "modelAnswer": "Data bus: transmits data and instructions. Control bus: transmits control signals."
+    }
+   ]
+  },
+  {
+   "id": "exam-3",
+   "label": "Exam Question: The Control Bus",
+   "type": "self-marked-response",
+   "containerId": "y10-313-exam-3",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Control Bus</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2021, Question 8(b)(ii). Type your answer, then press <strong>Submit answer</strong> (or <strong>Check my answer</strong> to have it marked). Done when you have marked it against the model answer.</p><div id=\"y10-313-exam-3\"></div>",
+   "items": [
+    {
+     "id": "control-role",
+     "prompt": "Describe the role of the control bus.",
+     "marks": 2,
+     "scheme": [
+      "It carries or transfers control signals (or commands)",
+      "... from the CPU or CU to components, or from devices to the CPU or CU",
+      "To synchronise the cycle the CPU carries out"
+     ],
+     "guidance": "Any two, one mark each. Point 2 follows point 1. \"It controls the computer\" earns no mark.",
+     "modelAnswer": "It carries control signals from the CU to other components."
+    }
+   ]
+  },
+  {
+   "id": "exam-3b",
+   "label": "Exam Question: One Bus and Its Purpose",
+   "type": "self-marked-response",
+   "containerId": "y10-313-exam-3b",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: One Bus and Its Purpose</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2023, Question 2(c)(ii). The fetch-decode-execute cycle is the next lesson. For now, name a bus and explain what it carries. Type your answer, then press <strong>Submit answer</strong> (or <strong>Check my answer</strong> to have it marked). Done when you have marked it against the model answer.</p><div id=\"y10-313-exam-3b\"></div>",
+   "items": [
+    {
+     "id": "one-bus",
+     "prompt": "The CPU contains registers and buses. Identify one bus that can be found in the CPU and explain its purpose in the fetch-decode-execute cycle.",
+     "marks": 3,
+     "scheme": [
+      "Names a bus: address bus, data bus or control bus",
+      "It transmits or carries addresses (address bus), data (data bus) or control signals (control bus)",
+      "... between components in the CPU (for the control bus: from the control unit to other components)"
+     ],
+     "guidance": "One mark for the correct name of a bus. Two marks for the matching description: what it carries (point 2) and where (point 3). The description must match the bus named.",
+     "modelAnswer": "Address bus. It carries addresses between components in the CPU."
+    }
+   ]
+  },
+  {
+   "id": "exam-4",
+   "label": "Exam Questions: Which Part Uses the Bus?",
+   "type": "multiple-choice",
+   "containerId": "y10-313-exam-4",
+   "content": "<h2 class=\"lesson-h2\">Exam Questions: Which Part Uses the Bus?</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13 June 2021 Q10(a) and 0478/11 November 2021 Q6(a), one row of each table. <strong>What to do:</strong> pick the component each statement applies to.</p><div id=\"y10-313-exam-4\"></div>",
+   "items": [
+    {
+     "prompt": "Uses the data bus to send data into or out of the CPU.",
+     "options": [
+      "Random access memory (RAM)",
+      "Arithmetic logic unit (ALU)",
+      "Control unit (CU)"
+     ],
+     "correct": 0,
+     "explain": "RAM is outside the CPU. It sends data into the CPU, and receives data out of it, on the data bus."
+    },
+    {
+     "prompt": "It uses the address bus to send an address to another component.",
+     "options": [
+      "Memory data register (MDR)",
+      "Program counter (PC)",
+      "Memory address register (MAR)"
+     ],
+     "correct": 2,
+     "explain": "The MAR holds the address memory is about to read or write, and sends it out on the address bus."
+    }
+   ]
+  },
+  {
+   "id": "notes-check",
+   "label": "Notes Check: Your WHY Notes",
+   "content": "<h2 class=\"lesson-h2\">Notes Check: Your WHY Notes</h2><p class=\"lesson-lead\"><strong>What to do:</strong> look in your book. You should have each note below, in your own words. Missing one? Go back to the slide named, write it, and press Check my note. Then go to the next slide.</p><ul class=\"lesson-facts\"><li><strong>WHY there are three buses, not one.</strong> Slide: Your Note: Why Three Buses.</li><li><strong>Which way the address bus goes, and WHY.</strong> Slide: Explain It: The Address Bus.</li><li><strong>WHY the data bus goes both ways</strong>, using read and write. <strong>WHY memory needs a read or a write signal.</strong> <strong>WHY an address is not data.</strong> Slide: Your Notes: Data, Control and Which Bus.</li><li><strong>A write, bus by bus</strong>, and WHY the data bus goes out. Slide: Explain It: A Write.</li><li><strong>WHY a read signal goes on the control bus. WHY only the data bus changes direction.</strong> Slide: Your Notes: A Read and a Write.</li></ul>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Buses Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l3",
+   "embedContainerId": "y10-313-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Buses Drill</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer every card. Pick the answer that earns the mark, then type it. Got one wrong? Go back to the slide it names, make a note in your book, then carry on. Your progress is saved.</p><div id=\"y10-313-plenary\"></div>"
+  },
+  {
+   "id": "exam-paper",
+   "label": "Practice Paper: Buses",
+   "type": "app-link",
+   "appId": "exampaper",
+   "appQuery": "paper=y10-3-1-l3-paper",
+   "buttonId": "y10-313-open-paper",
+   "content": "<h2 class=\"lesson-h2\">Practice Paper: Buses</h2><p class=\"lesson-lead\"><strong>What to do:</strong> Open the practice paper. Answer every question, then press Submit paper. You get all your marks at once. You can take it again to improve.</p><p><button type=\"button\" class=\"donow-btn\" id=\"y10-313-open-paper\">Open the practice paper</button></p>"
+  }
+ ],
+ "validators": {
+  "y10_313_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(control\\s*unit|cu)\\s*(\\(\\s*cu\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which part is in charge and sends signals?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(memory\\s*address\\s*register|mar)\\s*(\\(\\s*mar\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It holds an address. Which register holds the address memory is about to read?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?(current\\s*instruction\\s*register|instruction\\s*register|cir|ir)\\s*(\\(\\s*c?ir\\s*\\))?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which register holds the instruction being worked on now?"
+   }
+  ],
+  "y10_313_exam_1": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?address\\s*bus\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It carries addresses. Name the bus."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+)?data\\s*bus\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It carries data. Name the bus."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\baddress\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/]+$",
+     "flags": "i"
+    },
+    "feedback": "Type three words from the list, each the name of a bus, such as: word, word, word."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\bdata\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/]+$",
+     "flags": "i"
+    },
+    "feedback": "Type three words from the list, each the name of a bus, such as: word, word, word."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^(?=.*\\bcontrol\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/]+$",
+     "flags": "i"
+    },
+    "feedback": "Type three words from the list, each the name of a bus, such as: word, word, word."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

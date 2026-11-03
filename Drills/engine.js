@@ -55,6 +55,10 @@
   drill.cards.forEach(function (c) { cardsById[c.id] = c; });
   var isCodeDrill = !!drill.codeDrill;
   var isExamSet = !!drill.isExamSet;
+  // noHelp: true (James, 2026-11-03, first used by the Y10 3.1 L3 plenary): a lesson the student works through alone.
+  // No "I need help" switch, the right option is never marked after a miss and the answer is never shown: a wrong
+  // answer names the lesson slide to go back to (card.goBack) and waits for Next. Every other drill is unchanged.
+  var noHelp = !!drill.noHelp;
   var CODE_MASTERY_STREAK = 3;
 
   var els = {
@@ -91,6 +95,7 @@
   els.title.textContent = drill.title;
   els.sub.textContent = drill.subtitle || "";
   document.title = "Drill: " + drill.title;
+  if (noHelp && els.noticeLearn) els.noticeLearn.textContent = "Learn mode · nothing is recorded here. Stuck? Each wrong answer names the lesson slide to go back to. Make notes in your book, then try again.";
 
   var RUN_KEY = "bc_drill_" + drillId + "_run";
   var EVER_KEY = "bc_drill_" + drillId + "_ever";
@@ -409,6 +414,11 @@
     if (/<-|^(OUTPUT|INPUT|IF|ELSE|ENDIF|FOR|NEXT|WHILE|ENDWHILE|DECLARE|REPEAT|UNTIL|CALL)\b/.test(a)) return "Type the whole line";
     if (/^(Say|Move|Point in direction|Turn)\b/.test(a)) return "Type the whole box";
     return "Type your answer";
+  }
+  // A noHelp drill's wrong-answer message: the lesson slide to go back to, never the answer.
+  function goBackHtml(card) {
+    var where = card.goBack ? "Go back to the slide “" + escapeHtml(card.goBack) + "”." : "Go back over the lesson slides.";
+    return "Not yet. " + where + " Make notes in your book, then try again.";
   }
   function nearMissReason(answer, typed) {
     var a = String(answer).trim(), t = String(typed).trim();
@@ -786,6 +796,7 @@
       flow: instance.flow != null ? instance.flow : card.flow,
       working: instance.working != null ? instance.working : card.working,
       example: instance.example != null ? instance.example : card.example,
+      goBack: instance.goBack != null ? instance.goBack : card.goBack,
       walk: instance.walk != null ? instance.walk : card.walk,
       // A randomised exam-format card (exam-widgets.js) draws a fresh table or program each time.
       widget: instance.widget != null ? instance.widget : card.widget,
@@ -813,7 +824,7 @@
       '<div class="feedback" id="fb"></div>' +
       '<div class="actions">' +
       '<button type="button" class="btn" id="submit-btn">Check</button>' +
-      (learn ? '<button type="button" class="help-toggle" id="help-btn" aria-pressed="false"><span class="help-track" aria-hidden="true"></span><span>I need help</span></button>' : "") +
+      (learn && !noHelp ? '<button type="button" class="help-toggle" id="help-btn" aria-pressed="false"><span class="help-track" aria-hidden="true"></span><span>I need help</span></button>' : "") +
       '<span class="spacer"></span>' +
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
       "</div></div>";
@@ -910,7 +921,7 @@
       '<div class="feedback" id="fb"></div>' +
       '<div class="actions">' +
       (textMode ? '<button type="button" class="btn" id="submit-btn">Check</button>' : (set.multi ? '<button type="button" class="btn" id="submit-btn">Submit</button>' : "")) +
-      (learn ? '<button type="button" class="help-toggle" id="help-btn" aria-pressed="false"><span class="help-track" aria-hidden="true"></span><span>I need help</span></button>' : "") +
+      (learn && !noHelp ? '<button type="button" class="help-toggle" id="help-btn" aria-pressed="false"><span class="help-track" aria-hidden="true"></span><span>I need help</span></button>' : "") +
       '<span class="spacer"></span>' +
       '<button type="button" class="btn ghost" id="restart-btn" title="Wipe this run and start it again">Restart run</button>' +
       "</div></div>";
@@ -1031,7 +1042,8 @@
       input.disabled = true;
       fb = els.stage.querySelector("#fb");
       fb.className = "feedback show " + (right ? "ok" : "no");
-      fb.innerHTML = (right ? "Correct." : "Not quite." + nearMissReason(set.correct[0], value) +
+      if (noHelp) fb.innerHTML = right ? "Correct." + (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "") : goBackHtml(card);
+      else fb.innerHTML = (right ? "Correct." : "Not quite." + nearMissReason(set.correct[0], value) +
           '<span class="compare"><span>You typed: <code>' + escapeHtml(value.trim()) + '</code></span><span>The answer: <code>' + escapeHtml(set.correct[0]) + "</code></span></span>") +
         (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
     } else {
@@ -1055,13 +1067,15 @@
         var opt = set.options[idx];
         var isCorrect = set.correct.indexOf(opt) !== -1;
         var wasPicked = picked.indexOf(opt) !== -1;
-        if (isCorrect) el.classList.add("is-correct");
+        // noHelp: after a miss only the student's own pick is marked, so the right option is never shown.
+        if (isCorrect && (right || !noHelp)) el.classList.add("is-correct");
         else if (wasPicked) el.classList.add("is-wrong");
       });
 
       fb = els.stage.querySelector("#fb");
       fb.className = "feedback show " + (right ? "ok" : "no");
-      fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
+      if (noHelp) fb.innerHTML = right ? "Correct." + (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "") : goBackHtml(card);
+      else fb.innerHTML = (right ? "Correct." : "Not quite - the correct answer" + (set.correct.length > 1 ? "s are" : " is") + " highlighted in green.") +
         (card.note && run.mode === "learn" ? '<span class="note">' + escapeHtml(card.note) + "</span>" : "");
     }
 
@@ -1097,7 +1111,8 @@
     if (current.advanceTimer) clearTimeout(current.advanceTimer);
     var delay = (textMode && !right) ? TEXT_WRONG_ADVANCE_MS : ADVANCE_MS;
     // An exam-format card shows the mark scheme: it waits for Next instead of moving on by itself.
-    if (set.widget || (run.ladder && current.ladderStop)) {
+    // A noHelp miss waits too, so the student can go back to the slide it names.
+    if (set.widget || (run.ladder && current.ladderStop) || (noHelp && !right)) {
       var actions = els.stage.querySelector(".actions"), next = document.createElement("button");
       next.type = "button"; next.className = "btn"; next.textContent = "Next";
       next.addEventListener("click", function () { if (current.advanceTimer) clearTimeout(current.advanceTimer); advance(); });
