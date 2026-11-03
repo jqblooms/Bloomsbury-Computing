@@ -8,7 +8,8 @@
 // Pair, Share (it is teacher-only). The fetch-decode-execute cycle is 3.1.4: no step of the cycle is taught here, only
 // what each bus carries, which way, and why.
 // Activities: CPU Lab activity=buses (Which Bus, Which Way?), levels 1 to 2 on Activity 1, 3 to 4 on Activity 2, with the
-// help fading a step each level.
+// help fading a step each level. Activity 3 is the game: CPU Lab 3D in lesson mode 3.1.3 (carry each cube onto its bus,
+// at the end for the way it goes; then trace a read and a write from a tray with two cubes that do not belong).
 // Real questions, each checked against its mark scheme in Desktop\0478 Past Papers\extract:
 //   Do Now:  0478/12 November 2024 Q6 (the CU, MAR and CIR rows); 0478/11 November 2022 Q2(c)
 //   Exam:    0478/13 November 2021 Q5 (the address bus row); 0478/12 November 2024 Q6 (the data bus row);
@@ -245,6 +246,10 @@ steps.push(noteSlide('note-read-write', 'Your Notes: A Read and a Write', [['exp
 steps.push(embed('activity-2', 'Activity 2: Trace a Read and a Write', 'cpu-lab',
   '<strong>What to do:</strong> for each bus, pick what it carries and which way it goes, for a read and a write. One check per round, and a mistake means the round does not count. <strong>Done</strong> when you have cleared level 4, where there is no help.',
   'activity=buses&level=3&upto=4'));
+
+steps.push(embed('activity-3', 'Activity 3: The Bus Game', 'cpu-lab-3d',
+  '<strong>What to do:</strong> walk round the lab with W A S D. Hold <strong>Space</strong> to pick up a cube, carry it onto its bus and let go. The pad near the CPU sends it <strong>into the CPU</strong>; the pad near memory sends it <strong>out of the CPU</strong>. A mistake means that round does not count. <strong>Done</strong> when the four activities in the game are complete; Trace on Your Own is the extension.',
+  'lesson=3.1.3'));
 
 // ---------------------------------------------------------------- exam questions
 const ADDR_BUS = '^\\s*(the\\s+)?address\\s*bus\\s*\\.?\\s*$';

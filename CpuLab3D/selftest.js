@@ -101,7 +101,18 @@ function solveCpu() {
   }
   ok(r.over, 'cpu round did not finish (' + s().toastText() + ')');
 }
-const SOLVE = { sort: solveSort, cpu: solveCpu };
+// buses: carry each cube to the pad for its bus and its way (events), or each job's three cubes from the tray (trace)
+function solveBus() {
+  const r = R(), lab = s();
+  for (let g = 0; g < 40 && !r.over; g++) {
+    if (lab.hand.item) release();
+    if (r.p.mode === 'events') { const e = r.ev; if (!e) break; carry(r.next, r.pad[e.bus][e.dir]); continue; }
+    const j = r.job; if (!j) break;
+    const row = j.rows.find(x => !x.done); carry(r.tray.find(x => x.items.length && top(x).sym === row.value), r.pad[row.bus][row.dir]);
+  }
+  ok(r.over, 'bus round did not finish (' + s().toastText() + ')');
+}
+const SOLVE = { sort: solveSort, cpu: solveCpu, bus: solveBus };
 function playMission(i) {
   s().start(i);
   const m = M().m;
@@ -118,6 +129,36 @@ const idx = id => s().missions.findIndex(m => m.id === id);
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.busRules = () => {
+  const lab = s();
+  lab.start(idx('bus-c')); const r = R(), e = r.ev;
+  const wrongBus = ['addr', 'data', 'ctrl'].find(b => b !== e.bus);
+  carry(r.next, r.pad[wrongBus][e.dir]);
+  ok(r.spoilt && /Not the/.test(r.why), 'a cube on the wrong bus did not spoil the challenge round');
+  ok(top(r.next)?.sym === e.value, 'the cube did not go back to the NEXT pad');
+  lab.start(idx('bus-c')); const r2 = R(), e2 = r2.ev;
+  carry(r2.next, r2.pad[e2.bus][e2.dir === 'in' ? 'out' : 'in']);
+  ok(r2.spoilt && /wrong way/.test(r2.why), 'the wrong way did not spoil the round with a reason');
+  for (let k = 0; k < 40; k++) { const p = lab.missions[idx('bus-c')].gen(); ok(new Set(p.items.map(x => x.bus)).size === 3 && p.items.some(x => x.dir === 'in') && p.items.some(x => x.bus === 'data' && x.dir === 'out'), 'a bus round can be done one way only'); }
+};
+T.traceRules = () => {
+  const lab = s();
+  lab.start(idx('trace-c')); const r = R();
+  let j = r.job;
+  if (j.kind === 'write') { solveBusJob(); j = r.job; }
+  const data = j.rows.find(x => x.bus === 'data');
+  carry(r.tray.find(x => x.items.length && top(x).sym === data.value), r.pad.data.in);
+  ok(!r.spoilt && !data.done && /Send those out first/.test(s().toastText()), 'the read value went before the address and read signal');
+  const extra = String(j.extra[0][0]);
+  carry(r.tray.find(x => x.items.length && top(x).sym === extra), r.pad.data.in);
+  ok(r.spoilt && /holds/.test(r.why), 'a value from the wrong address did not spoil the round');
+  lab.start(idx('trace-t')); const r2 = R();
+  if (r2.job.kind === 'read') solveBusJob();
+  const w = r2.job, a = w.writes.a; solveBusJob();
+  ok(top(r2.memSlot[a]).sym === String(w.writes.v), 'the write did not change memory');
+  for (let k = 0; k < 40; k++) { const p = lab.missions[idx('trace-c')].gen(); for (const jj of p.jobs) ok(new Set(jj.tray.map(x => x[0])).size === 5, 'two tray cubes look the same'); }
+};
+function solveBusJob() { const r = R(), j = r.job; for (const row of j.rows) if (!row.done) carry(r.tray.find(x => x.items.length && top(x).sym === row.value), r.pad[row.bus][row.dir]); }
 T.history = () => {
   s().start(0); SOLVE[M().m.kind]();
   const d = document.querySelector('#mission .cl-log summary'), n = d ? parseInt(d.textContent.split('(')[1], 10) : 0;
@@ -211,6 +252,7 @@ T.lessonMode = () => {
   const L = lab.LESSONS[0], mins = L.missions.reduce((n, id) => n + lab.minsOf(lab.missions[idx(id)]), 0);
   ok(mins >= 50 && mins <= 70, 'the lesson is ' + mins + ' minutes');
   lab.start(idx('next-c')); ok(lab.nextMission() === idx('load-t'), 'the extensions do not follow the lesson');
+  ok(lab.LESSONS.length === 2 && lab.LESSONS[1].missions.every(id => idx(id) >= 0), 'lesson 3.1.3 is missing its missions');
   clickBtn('All missions'); ok(!lab.lessonMode.on, 'All missions did not come back');
 };
 T.walkthroughs = () => {

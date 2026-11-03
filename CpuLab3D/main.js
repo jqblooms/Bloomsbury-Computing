@@ -142,6 +142,69 @@ function sortProblem(level, tutorial) {
   return { parts, cards: cards.map(([t, a]) => ({ text: t, answer: a })), key: cards.map(c => c[0]).join('|') };
 }
 
+// ---- the buses (Y10 3.1.3, as CpuLab/buses.js): what each bus carries, which way, and why
+// Mark-scheme wording: the data bus carries data and instructions (0478/11 November 2022 Q2(a)), the address bus
+// carries addresses (0478/13 November 2021 Q5), the control bus carries control signals from the CU to components and
+// from devices to the CU (0478/12 March 2021 Q8(b)(ii)).
+const BUS_NAME = { addr: 'Address bus', data: 'Data bus', ctrl: 'Control bus' };
+const BUS_CARRIES = {
+  addr: 'The <b>address bus</b> carries an <b>address</b>: the place in memory to read or write.',
+  data: 'The <b>data bus</b> carries <b>data and instructions</b>: the value itself.',
+  ctrl: 'The <b>control bus</b> carries <b>control signals</b>, such as read and write.'
+};
+const BUS_WAYS = {
+  addr: 'Only the CPU chooses an address, so the address bus only goes <b>out of the CPU</b>.',
+  data: 'Data comes <b>into</b> the CPU when it reads, and goes <b>out</b> when it writes, so the data bus goes both ways.',
+  ctrl: 'The CU sends signals <b>out</b> (read, write). Devices send signals <b>in</b> (a key was pressed). So the control bus goes both ways.'
+};
+const WAY = { out: 'out of the CPU', in: 'into the CPU' };
+// four addresses next to each other, each holding a different number (no address is also a value)
+function busMem() { const start = rnd(3, 6), vals = shuffle([12, 17, 23, 25, 31, 38, 42, 45, 50, 56]).slice(0, 4); return vals.map((v, i) => ({ a: start + i, v })); }
+function newValue(mem) { return pick([9, 14, 28, 33, 47, 60].filter(n => mem.every(m => m.v !== n && m.a !== n))); }
+// One small event: a cube (value, cube colour), the bus and the way it goes, what it is and where it starts and ends.
+function busEvents(mem) {
+  const r = pick(mem), w = pick(mem.filter(m => m !== r)), wv = newValue(mem);
+  return [
+    { k: 'r-addr', ctx: 'The CPU wants the value stored at address ' + r.a + '.', value: String(r.a), cube: 'var', bus: 'addr', dir: 'out', what: 'an address', path: 'The CPU chooses the address and sends it to memory.' },
+    { k: 'r-ctrl', ctx: 'The CPU reads address ' + r.a + '. The CU tells memory to read.', value: 'READ', cube: 'on', bus: 'ctrl', dir: 'out', what: 'a control signal', path: 'The CU sends the read signal to memory.' },
+    { k: 'r-data', ctx: 'The CPU reads address ' + r.a + '. Memory holds ' + r.v + ' there.', value: String(r.v), cube: 'num', bus: 'data', dir: 'in', what: 'data', path: 'The value starts in memory and ends up in the CPU.' },
+    { k: 'w-addr', ctx: 'The CPU stores ' + wv + ' at address ' + w.a + '.', value: String(w.a), cube: 'var', bus: 'addr', dir: 'out', what: 'an address', path: 'The CPU chooses the address and sends it to memory.' },
+    { k: 'w-ctrl', ctx: 'The CPU stores ' + wv + ' at address ' + w.a + '. The CU tells memory to write.', value: 'WRITE', cube: 'on', bus: 'ctrl', dir: 'out', what: 'a control signal', path: 'The CU sends the write signal to memory.' },
+    { k: 'w-data', ctx: 'The CPU stores ' + wv + ' at address ' + w.a + '.', value: String(wv), cube: 'num', bus: 'data', dir: 'out', what: 'data', path: 'The value starts in the CPU and is stored in memory.', writes: { a: w.a, v: wv } },
+    { k: 'i-data', ctx: 'Memory sends the instruction ADD ' + r.a + ' to the CPU.', value: 'ADD ' + r.a, cube: 'op', bus: 'data', dir: 'in', what: 'an instruction', path: 'The instruction starts in memory and ends up in the CPU.' },
+    { k: 'k-ctrl', ctx: 'A key is pressed. The keyboard tells the CU.', value: 'KEY PRESSED', cube: 'on', bus: 'ctrl', dir: 'in', what: 'a control signal', path: 'The keyboard sends the signal to the CU.' }
+  ];
+}
+// tutorial: a read, then a write's value, then a key press (every bus, both ways). Challenge: four events with all
+// three buses, at least one coming in and one data value going out, so no single way works for every one.
+function busRound(tutorial) {
+  const mem = busMem(), E = busEvents(mem), by = k => E.find(e => e.k === k);
+  if (tutorial) { const items = ['r-addr', 'r-ctrl', 'r-data', 'w-data', 'k-ctrl'].map(by); return { mode: 'events', mem, items, key: items.map(e => e.value).join('|') }; }
+  for (let t = 0; t < 200; t++) {
+    const items = shuffle(E).slice(0, 4);
+    if (new Set(items.map(e => e.bus)).size < 3) continue;
+    if (!items.some(e => e.dir === 'in') || !items.some(e => e.bus === 'data' && e.dir === 'out')) continue;
+    return { mode: 'events', mem, items, key: items.map(e => e.value).join('|') };
+  }
+  return busRound(true);
+}
+// A read and a write: each job puts three cubes on the three buses; the tray also holds two cubes that do not belong.
+function traceRound() {
+  const mem = busMem(), r = pick(mem), w = pick(mem.filter(m => m !== r)), wv = newValue(mem), other = pick(mem.filter(m => m !== r && m !== w));
+  const row = (bus, value, dir, cube, path) => ({ bus, value: String(value), dir, cube, path, done: false });
+  const read = { kind: 'read', target: r.a, title: 'Read: the CPU wants the value stored at address ' + r.a + '.',
+    rows: [row('addr', r.a, 'out', 'var', 'The CPU chooses the address and sends it to memory.'), row('ctrl', 'READ', 'out', 'on', 'The CU sends the read signal to memory.'), row('data', r.v, 'in', 'num', 'The value starts in memory and ends up in the CPU.')],
+    extra: [[other.v, 'num'], ['WRITE', 'on']],
+    wrong: { [other.v]: 'Address ' + other.a + ' holds ' + other.v + '. The CPU wants address ' + r.a + ', which holds ' + r.v + '.', WRITE: 'This job is a read, so the CU sends a read signal, not write.' } };
+  const write = { kind: 'write', target: w.a, title: 'Write: the CPU stores ' + wv + ' at address ' + w.a + '.', writes: { a: w.a, v: wv },
+    rows: [row('addr', w.a, 'out', 'var', 'The CPU chooses the address and sends it to memory.'), row('ctrl', 'WRITE', 'out', 'on', 'The CU sends the write signal to memory.'), row('data', wv, 'out', 'num', 'The value starts in the CPU and is stored in memory.')],
+    extra: [[w.v, 'num'], ['READ', 'on']],
+    wrong: { [w.v]: 'Address ' + w.a + ' holds ' + w.v + ' now. A write sends the new value, ' + wv + ', out to replace it.', READ: 'This job is a write, so the CU sends a write signal, not read.' } };
+  for (const j of [read, write]) j.tray = shuffle(j.rows.map(x => [x.value, x.cube]).concat(j.extra.map(([v, c]) => [String(v), c])));
+  const jobs = Math.random() < 0.5 ? [read, write] : [write, read];
+  return { mode: 'trace', mem, jobs, key: jobs.map(j => j.title).join('|') };
+}
+
 // ================================================================ missions
 const MISSIONS = [
   { id: 'alucu-t', group: 'ALU or CU', title: 'Meet the ALU and the CU', type: 'tutorial', kind: 'sort', level: 'alucu',
@@ -181,13 +244,32 @@ const MISSIONS = [
     gen: () => cpuProblem({ from: 1, to: 3 }) },
   { id: 'run-c', group: 'Run a program', title: 'Run the Program', type: 'challenge', kind: 'cpu', need: 1, noHelp: true,
     intro: 'The whole program, from address 0 to STOP, with no help. One clean run.',
-    gen: () => cpuProblem({ whole: true, k: 0 }) }
+    gen: () => cpuProblem({ whole: true, k: 0 }) },
+  { id: 'bus-t', group: 'Buses', title: 'Three Buses', type: 'tutorial', kind: 'bus', mins: 5,
+    intro: 'Three buses join the CPU to memory and the keyboard. Carry each cube onto the right bus, at the right end: the end near the CPU sends it <b>into the CPU</b>, the end near memory sends it <b>out of the CPU</b>.',
+    gen: () => busRound(true),
+    after: { q: 'Why does the address bus only go out of the CPU?', options: ['Only the CPU chooses which address to read or write.', 'Memory is too slow to send an address.', 'An address is too big for the data bus.'], why: 'The CPU decides where in memory to read or write, so addresses only ever leave the CPU.' } },
+  { id: 'bus-c', group: 'Buses', title: 'Which Bus, Which Way?', type: 'challenge', kind: 'bus', mins: 7,
+    intro: 'Four things to send. For each cube, ask: is it a place in memory, a value, or a command? Where does it start? Two clean rounds in a row.',
+    gen: () => busRound(false) },
+  { id: 'trace-t', group: 'Buses', title: 'Trace a Read and a Write', type: 'tutorial', kind: 'bus', mins: 6,
+    intro: 'A read and a write each use all three buses. Pick the right three cubes from the tray and put each one on its bus, the right way. Two cubes in the tray do not belong.',
+    gen: () => traceRound(),
+    after: { q: 'Between a read and a write, why does only the data bus change direction?', options: ['The address and the signal always start in the CPU. The value comes in for a read and goes out for a write.', 'The data bus is the only bus that can carry numbers.', 'Memory sends the address back after a write.'], why: 'The CPU always chooses the address and gives the command. Only the value changes where it starts.' } },
+  { id: 'trace-c', group: 'Buses', title: 'Trace Challenge', type: 'challenge', kind: 'bus', mins: 8,
+    intro: 'A read and a write. Look at memory to find the values. Every cube must go on the right bus, the right way. Two clean rounds in a row.',
+    gen: () => traceRound() },
+  { id: 'trace-own-c', group: 'Buses', title: 'Trace on Your Own', type: 'challenge', kind: 'bus', noHelp: true, mins: 8,
+    intro: 'The same as the Trace Challenge with no rules, no arrow and no walk through. Two clean rounds in a row.',
+    gen: () => traceRound() }
 ];
 export { MISSIONS };
-const SECTIONS = ['ALU or CU', 'Registers', 'Take the next instruction', 'Carry it out', 'Run a program'];
-// Lesson mode: 3.1.2 CPU Components (about an hour), with the instruction missions as extensions
+const SECTIONS = ['ALU or CU', 'Registers', 'Take the next instruction', 'Carry it out', 'Run a program', 'Buses'];
+// Lesson mode: 3.1.2 CPU Components (about an hour), with the instruction missions as extensions; 3.1.3 Buses (one
+// activity of that lesson, about 25 minutes)
 const LESSONS = [
-  { id: '3.1.2', title: '3.1.2: CPU Components', missions: ['alucu-t', 'alucu-c', 'regs-t', 'regs-c', 'parts-c', 'next-t', 'next-c'], ext: ['load-t', 'add-t', 'do-c', 'one-c', 'run-c'] }
+  { id: '3.1.2', title: '3.1.2: CPU Components', missions: ['alucu-t', 'alucu-c', 'regs-t', 'regs-c', 'parts-c', 'next-t', 'next-c'], ext: ['load-t', 'add-t', 'do-c', 'one-c', 'run-c'] },
+  { id: '3.1.3', title: '3.1.3: Buses and Data Movement', missions: ['bus-t', 'bus-c', 'trace-t', 'trace-c'], ext: ['trace-own-c'] }
 ];
 const minsOf = m => m.mins || (m.id === 'run-c' ? 15 : m.type === 'challenge' ? (m.kind === 'cpu' ? 10 : 8) : m.kind === 'cpu' ? 8 : 5);
 
@@ -254,6 +336,7 @@ export function startSolo({ container, myName, colour }) {
     // placed cubes square up to face the camera, so a + never reads as a times sign
     for (const s of slots) for (const it of s.items) if (it.k3) { const g = it.k3.group; g.position.lerp(itemTarget(it), k); g.rotation.y += (Math.round(g.rotation.y / (Math.PI * 2)) * Math.PI * 2 - g.rotation.y) * k; }
     if (hand.item && hand.item.k3) { hand.item.k3.group.position.lerp(itemTarget(hand.item), Math.min(1, dt * 24)); hand.item.k3.group.rotation.y = pos.face; }
+    if (M && M.m.kind === 'bus') flyTick(dt);
   }
   const rectDist = (s, px, py) => Math.hypot(Math.max(s.x - 0.5 - px, 0, px - (s.x + s.w - 0.5)), Math.max(s.y - 0.5 - py, 0, py - (s.y + 0.5)));
   function handPos() { return [pos.x + Math.sin(pos.face) * 0.45, pos.y + Math.cos(pos.face) * 0.45]; }
@@ -308,9 +391,12 @@ export function startSolo({ container, myName, colour }) {
     M.lastKey = keyOf(p);
     R = { p, over: false, spoilt: false, ask: null, notes: [], moves: 0, why: null };
     KIND[m.kind].setup(R, m);
-    pos.face = Math.PI; view.jump(pos.x, pos.y);
+    view.zoom?.(m.kind === 'bus' ? 1600 : 760, m.kind === 'bus' ? 0.95 : 0.75);   // the buses: far enough back to see the CPU and memory at both ends
+    pos.face = Math.PI; view.jump(pos.x, pos.y - camAhead());
     toast(''); explainReset(); explain(startLine(m, p)); $('mission').scrollTop = 0; afterChange();   // to the top first, so a question at the start can scroll into view
   }
+  // the buses: look a little ahead of the player, so the address bus at the back is not under the card at the top
+  const camAhead = () => M && M.m.kind === 'bus' ? Math.min(3.5, Math.max(0, pos.y - 6)) : 0;
   function startLine(m, p) { return KIND[m.kind].start(m, p); }
 
   // ---- what just happened: a card at the top of the lab after every step. Each one stays up for a while, the next
@@ -363,7 +449,8 @@ export function startSolo({ container, myName, colour }) {
       M.stars = n; if (!(best[id] >= n)) { best[id] = n; save('all:stars', best); }
     }
     log.note('Mission ' + M.m.title + ' complete' + (M.walked ? ', used Walk me through it' : '') + '.');
-    if (MISSIONS.every(x => done[x.id])) log.finish();
+    const L = lessonMode.on && LESSONS.find(x => x.id === lessonMode.id);   // in lesson mode the lesson's own activities finish it
+    if (L ? L.missions.every(x => done[x]) : MISSIONS.every(x => done[x.id])) log.finish();
     toast('Mission complete!', 'good');
   }
 
@@ -570,6 +657,187 @@ export function startSolo({ container, myName, colour }) {
       hint: 'The lever adds 1 to the address in the PC.', why: pc + ' + 1 = ' + (pc + 1) + '.',
       done: () => { R.i++; setReg('PC', String(pc + 1), 'addr'); explain(e.say); } };
   }
+
+  // ---------------------------------------------------------------- the buses: carry each cube onto its bus, the right way
+  // The CPU stands on the left, memory and the keyboard on the right, and the three buses run across the floor between
+  // them. Each bus has two pads: the one near the CPU sends a cube into the CPU, the one near memory sends it out of
+  // the CPU. A cube put on the right pad travels along its bus to where it is going.
+  const LANE_Y = { addr: 4, data: 7, ctrl: 10 }, LANE_COL = { addr: '#e8590c', data: '#1864ab', ctrl: '#862e9c' }, BUS_X = { in: 5, out: 19 };
+  function laneMesh(bus, arrows) {
+    const c = document.createElement('canvas'); c.width = 2048; c.height = 96; const g = c.getContext('2d');
+    g.fillStyle = LANE_COL[bus]; g.fillRect(0, 0, 2048, 96);
+    g.fillStyle = 'rgba(255,255,255,.9)'; g.font = '800 54px "Segoe UI", Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(BUS_NAME[bus].toUpperCase(), 1024, 50);
+    if (arrows) {   // chevrons: the address bus one way (out, to the right), the others both ways
+      g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 10; g.lineJoin = 'round';
+      for (const x of [240, 420, 600, 1450, 1630, 1810]) {
+        const R2 = bus === 'addr' || x > 1024;
+        g.beginPath(); if (R2) { g.moveTo(x - 24, 22); g.lineTo(x + 18, 48); g.lineTo(x - 24, 74); } else { g.moveTo(x + 24, 22); g.lineTo(x - 18, 48); g.lineTo(x + 24, 74); } g.stroke();
+      }
+    }
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+    const x0 = 4, x1 = 20, m = new THREE.Mesh(new THREE.PlaneGeometry((x1 - x0 + 1) * T, T * 0.6).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex }));
+    m.position.set((x0 + x1 + 1) / 2 * T, 1.5, (LANE_Y[bus] + 0.5) * T); m.userData.own = true; m.userData.ownMat = true;
+    worldG.add(m);
+  }
+  function busCube(value, role) { return { sym: String(value), role }; }
+  // a cube on the right pad leaves it and travels along its bus to the CPU or to memory (only a picture: nothing waits on it)
+  const flyers = [];
+  function flyAway(it, slot) {
+    slot.items.splice(slot.items.indexOf(it), 1); it.slot = null;
+    const y = LANE_Y[slot.bus], end = slot.dir === 'in' ? [2, y] : [21, y], dest = slot.dir === 'in' ? [2, 7] : slot.bus === 'ctrl' && R.p.mode === 'events' && R.ev && R.ev.k === 'k-ctrl' ? [22, 11] : [22, 4.5];
+    flyers.push({ it, pts: [[slot.dir === 'in' ? 4 : 20, y], end, dest] });
+  }
+  function flyTick(dt) {
+    for (let i = flyers.length - 1; i >= 0; i--) {
+      const f = flyers[i], g = f.it.k3 && f.it.k3.group; if (!g) { flyers.splice(i, 1); continue; }
+      const [tx, ty] = f.pts[0], want = new THREE.Vector3((tx + 0.5) * T, 70, (ty + 0.5) * T), d = g.position.distanceTo(want), st = dt * 900;
+      if (d <= st) { g.position.copy(want); f.pts.shift(); if (!f.pts.length) { killItem(f.it); flyers.splice(i, 1); } }
+      else g.position.lerp(want, st / d);
+    }
+  }
+  function memCell(a) { return R.memSlot[a]; }
+  function setMem(a, v) { const s = memCell(a); if (!s) return; s.items.forEach(killItem); s.items = []; addItem(s, busCube(v, 'num')); const m = R.p.mem.find(x => x.a === a); if (m) m.v = v; }
+  function jobSign(text) {
+    if (R.jobSign) { worldG.remove(R.jobSign); R.jobSign.material.map.dispose(); R.jobSign.material.dispose(); }
+    R.jobSign = null; R.jobText = text;   // the job is in the sheet's Now line: a sign this long covered the buses
+  }
+  // events: the next thing to send waits on the NEXT pad; trace: the job's five cubes wait in the tray
+  function busNext() {
+    if (R.p.mode === 'events') {
+      R.ev = R.p.items[R.at] || null;
+      if (R.ev) { addItem(R.next, busCube(R.ev.value, R.ev.cube)); jobSign(R.ev.ctx.toUpperCase()); } else jobSign('');
+      return;
+    }
+    for (const s of R.tray) { s.items.forEach(killItem); s.items = []; }
+    R.job = R.p.jobs[R.j] || null;
+    if (!R.job) { jobSign(''); return; }
+    R.job.tray.forEach(([v, c], i) => addItem(R.tray[i], busCube(v, c)));
+    jobSign(R.job.title.toUpperCase());
+  }
+  // why a pad is wrong for a cube that belongs on another one
+  function wrongPad(slot, e) {
+    if (slot.bus !== e.bus) return 'Not the ' + BUS_NAME[slot.bus].toLowerCase() + '. ' + e.value + ' is ' + e.what + '. ' + BUS_CARRIES[e.bus];
+    return 'Right bus, wrong way. ' + e.path + ' So it goes <b>' + WAY[e.dir] + '</b>. ' + BUS_WAYS[e.bus];
+  }
+  function busPut(slot, it, from) {
+    if (from === slot) return null;
+    if (R.p.mode === 'events') { const e = R.ev; return !e ? { msg: 'Everything has been sent.' } : slot.bus === e.bus && slot.dir === e.dir ? null : { msg: wrongPad(slot, e), mistake: true }; }
+    const j = R.job, row = j && j.rows.find(r => r.value === it.sym && !r.done);
+    if (!row) return { msg: (j && j.wrong[it.sym]) || 'That cube is not part of this job.', mistake: true };
+    if (slot.bus !== row.bus || slot.dir !== row.dir) return { msg: wrongPad(slot, Object.assign({ what: row.bus === 'addr' ? 'an address' : row.bus === 'ctrl' ? 'a control signal' : 'data' }, row)), mistake: true };
+    if (j.kind === 'read' && row.bus === 'data' && !j.rows.filter(r => r.bus !== 'data').every(r => r.done)) return { msg: 'Memory only sends the value after the address and the read signal have reached it. Send those out first.' };
+    return null;
+  }
+  const memHtml = (mem, hl) => '<table class="cpu-regs"><tr><th>Address</th>' + mem.map(m => '<th' + (hl === m.a ? ' class="hl"' : '') + '>' + m.a + '</th>').join('') + '</tr><tr><th>Holds</th>' + mem.map(m => '<td' + (hl === m.a ? ' class="hl"' : '') + '>' + m.v + '</td>').join('') + '</tr></table>';
+  KIND.bus = {
+    start(m, p) { return p.mode === 'events' ? 'Each cube is something the CPU sends or gets. Carry it onto its bus, at the end for the way it goes.' : 'First job: ' + p.jobs[0].title + ' Pick the three cubes it needs from the tray.'; },
+    setup(R, m) {
+      const p = R.p; R.at = 0; R.j = 0; R.memSlot = {}; R.pad = {};
+      flyers.forEach(f => f.it.k3?.dispose()); flyers.length = 0;
+      newWorld(25, 16, 'The buses');
+      // the CPU: a tall block on the left
+      const cpu = new THREE.Mesh(new THREE.BoxGeometry(3 * T - 16, 150, 9 * T - 16), new THREE.MeshStandardMaterial({ color: 0x5f3dc4, roughness: 0.45, metalness: 0.15 }));
+      cpu.position.set(2.5 * T, 75, 7.5 * T); cpu.castShadow = true; cpu.userData.own = true; cpu.userData.ownMat = true; worldG.add(cpu);
+      blocks.push([1, 3, 3, 11]);
+      addSign('CPU (WITH THE CU)', 2, 7, 280, { bg: '#5f3dc4', ink: '#ffffff', size: 0.04 });
+      // memory on the right: four addresses, each holding a value
+      addBody(21, 2, 3, 0x2b8a3e, 'MAIN MEMORY');
+      p.mem.forEach((c, i) => {
+        const s = addSlot({ role: 'mem', pad: 'rail', x: 21, y: 3 + i, w: 3, a: c.a, label: 'ADDRESS ' + c.a, tag: { tagY: 120 },
+          take: () => 'Memory keeps its values. Take cubes from the ' + (p.mode === 'events' ? 'NEXT pad' : 'tray') + '.',
+          put: (it, from) => from === s ? null : { msg: 'Put cubes on a bus. The bus takes them to memory.' } });
+        addItem(s, busCube(c.v, 'num')); R.memSlot[c.a] = s;
+      });
+      addBody(21, 11, 3, 0x495057, 'KEYBOARD');
+      // the buses, each with an IN pad by the CPU and an OUT pad by memory
+      for (const bus of ['addr', 'data', 'ctrl']) {
+        laneMesh(bus, m.id === 'bus-t');
+        R.pad[bus] = {};
+        for (const dir of ['in', 'out']) {
+          const s = addSlot({ role: 'bus', pad: dir === 'in' ? 'stack' : 'out', x: BUS_X[dir], y: LANE_Y[bus], bus, dir, label: dir === 'in' ? 'INTO THE CPU' : 'OUT OF THE CPU', tag: { tagY: 120, tagBg: LANE_COL[bus] },
+            put: (it, from) => busPut(s, it, from) });
+          R.pad[bus][dir] = s;
+        }
+      }
+      if (p.mode === 'events') {
+        R.next = addSlot({ role: 'next', pad: 'supply', x: 12, y: 12, label: 'NEXT', put: (it, from) => from === R.next ? null : { msg: 'Put it on a bus: the pads at each end of the buses.' } });
+      } else {
+        R.tray = [8, 10, 12, 14, 16].map(x => { const s = addSlot({ role: 'tray', pad: 'supply', x, y: 12, put: (it, from) => from === s ? null : s.items.length ? { msg: 'That spot is full.' } : null }); return s; });
+      }
+      busNext();
+      pos.x = 12; pos.y = 14;
+    },
+    placed(it, slot) {
+      if (slot.role !== 'bus') return;
+      if (R.p.mode === 'events') {
+        const e = R.ev;
+        explain('<b>' + e.value + '</b> is ' + e.what + ', so it goes on the <b>' + BUS_NAME[e.bus].toLowerCase() + '</b>. ' + e.path + ' So it goes <b>' + WAY[e.dir] + '</b>.');
+        flyAway(it, slot);
+        if (e.writes) setMem(e.writes.a, e.writes.v);
+        R.at++; busNext(); return;
+      }
+      const j = R.job, row = j.rows.find(r => r.value === it.sym && !r.done); row.done = true;
+      explain('<b>' + row.value + '</b> goes on the <b>' + BUS_NAME[row.bus].toLowerCase() + '</b>, ' + WAY[row.dir] + '. ' + row.path);
+      flyAway(it, slot);
+      if (j.rows.every(r => r.done)) {
+        if (j.writes) setMem(j.writes.a, j.writes.v);
+        explain(j.kind === 'read' ? 'The read is done: the CPU has the value ' + j.rows[2].value + ' from address ' + j.target + '. All three buses were used.' : 'The write is done: address ' + j.target + ' now holds ' + j.rows[2].value + '. All three buses were used, and every one went out of the CPU.');
+        R.j++; busNext();
+      }
+    },
+    check() { if (!hand.item && (R.p.mode === 'events' ? R.at >= R.p.items.length : R.j >= R.p.jobs.length)) finishRound(R.p.mode === 'events' ? 'Every cube went on the right bus, the right way.' : 'The read and the write each used all three buses.'); },
+    guide(R, m) {
+      const pads = ['addr', 'data', 'ctrl'].flatMap(b => [R.pad[b].in, R.pad[b].out]);
+      if (R.p.mode === 'events') {
+        const e = R.ev; if (!e) return null;
+        if (m.type === 'challenge') return hand.item ? areaTarget(pads) : areaTarget([R.next]);
+        return hand.item ? slotTarget(R.pad[e.bus][e.dir]) : slotTarget(R.next);
+      }
+      const j = R.job; if (!j) return null;
+      if (m.type === 'challenge') { const full = R.tray.filter(s => s.items.length); return hand.item ? areaTarget(pads) : areaTarget(full); }
+      if (hand.item) { const row = j.rows.find(r => r.value === hand.item.sym && !r.done); return row ? slotTarget(R.pad[row.bus][row.dir]) : areaTarget(R.tray.filter(s => !s.items.length)); }
+      const row = j.rows.find(r => !r.done); return row ? slotTarget(R.tray.find(s => s.items.length && top(s).sym === row.value)) : null;
+    },
+    steps(R) {
+      if (R.p.mode === 'events') return R.p.items.map((e, i) => ({ text: e.ctx + ' Carry <b>' + e.value + '</b> onto the <b>' + BUS_NAME[e.bus].toLowerCase() + '</b>, ' + WAY[e.dir] + '.', done: () => R.at > i }));
+      return R.p.jobs.flatMap((j, ji) => j.rows.map(r => ({ text: (j.kind === 'read' ? 'Read' : 'Write') + ': carry <b>' + r.value + '</b> onto the <b>' + BUS_NAME[r.bus].toLowerCase() + '</b>, ' + WAY[r.dir] + '.', done: () => r.done || R.j > ji })));
+    },
+    goals(m) {
+      if (m.noHelp) return ['No rules this time. Look at memory, then send each cube the right way.'];
+      if (m.id === 'bus-c') return [BUS_CARRIES.addr, BUS_CARRIES.data, BUS_CARRIES.ctrl, 'Ask where it starts: in the CPU means out of the CPU; in memory or a device means into the CPU.'];
+      return ['Look at memory to find the value an address holds.', 'A read and a write each use all three buses.'];
+    },
+    expr(R, m) {
+      const tut = m.type === 'tutorial';
+      if (R.p.mode === 'events') {
+        const e = R.ev;
+        return (e ? '<b>Now:</b> ' + e.ctx + '<br><b>Send:</b> ' + C(e.value, e.cube === 'var' ? 'addr' : e.cube === 'op' ? 'instr' : 'data') : '<b>Everything has been sent.</b>') +
+          '<br><b>Main memory</b>' + memHtml(R.p.mem) + (tut ? '<ul class="goals">' + ['addr', 'data', 'ctrl'].map(b => '<li>' + BUS_CARRIES[b] + ' ' + BUS_WAYS[b] + '</li>').join('') + '</ul>' : '');
+      }
+      const j = R.job;
+      return (j ? '<b>Job ' + (R.j + 1) + ' of 2:</b> ' + j.title + '<br><b>Sent so far:</b> ' + (j.rows.filter(r => r.done).map(r => C(r.value, r.cube === 'var' ? 'addr' : 'data') + ' on the ' + BUS_NAME[r.bus].toLowerCase()).join(', ') || 'nothing yet') : '<b>Both jobs are done.</b>') +
+        '<br><b>Main memory</b>' + memHtml(R.p.mem, tut && j && j.kind === 'read' ? j.target : null);
+    },
+    walk(R, m) {
+      if (R.p.mode === 'events') {
+        let p; do p = busRound(true); while (p.key === R.p.key);
+        const steps = [{ text: '<b>Different cubes.</b> For each one ask two things: what is it (an address, a value or instruction, or a signal), and where does it start?', visual: memHtml(p.mem) }];
+        p.items.forEach(e => steps.push({ text: e.ctx + ' <span class="hl">' + e.value + '</span> is ' + e.what + ': the <b>' + BUS_NAME[e.bus].toLowerCase() + '</b>. ' + e.path + ' So <b>' + WAY[e.dir] + '</b>.', visual: '' }));
+        steps.push({ text: 'Now send your own cubes the same way.', visual: '' });
+        return steps;
+      }
+      let p; do p = traceRound(); while (p.key === R.p.key);
+      const steps = [{ text: '<b>A different read and write.</b> Memory holds these values.', visual: memHtml(p.mem) }];
+      for (const j of p.jobs) {
+        steps.push({ text: j.title + ' Three cubes, one for each bus.', visual: memHtml(p.mem, j.target) });
+        j.rows.forEach(r => steps.push({ text: '<span class="hl">' + r.value + '</span> on the <b>' + BUS_NAME[r.bus].toLowerCase() + '</b>, ' + WAY[r.dir] + '. ' + r.path, visual: '' }));
+        steps.push({ text: 'Left in the tray: ' + j.extra.map(x => x[0]).join(' and ') + '. ' + Object.values(j.wrong).join(' '), visual: '' });
+      }
+      steps.push({ text: 'Now do your own read and write the same way.', visual: '' });
+      return steps;
+    }
+  };
 
   // ---------------------------------------------------------------- the hand: hold to grab, let go to put down
   function locked() { return !M || M.phase !== 'play' || !R || R.over || !!R.ask || !$('cardWrap').hidden; }
@@ -1030,7 +1298,7 @@ export function startSolo({ container, myName, colour }) {
     updateGuide(ts);
     hint();
     me.update(dt, { x: pos.x, y: pos.y, face: pos.face, moving, hands: [0, 0].map(() => ({ down: hand.down || !!hand.item, hold: hand.item ? 'dev' : null })) }, true);
-    view.follow(pos.x, pos.y);
+    view.follow(pos.x, pos.y - camAhead());
     view.render(dt);
   }
   const typing = e => /input|select|textarea/i.test(e.target?.tagName || '');
