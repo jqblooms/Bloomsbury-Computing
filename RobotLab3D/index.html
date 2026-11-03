@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Robot Lab 3D</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="css" href="../NetLab3D/net3d.css">
+  <link rel="stylesheet" id="css2" href="../ContestLab3D/contest.css">
+  <link rel="stylesheet" id="css3" href="robot.css">
+</head>
+<body>
+<div class="nb3">
+  <div class="stage">
+    <div class="view" id="view"></div>
+    <div class="top">
+      <b class="title">Robot Lab 3D</b>
+      <span class="chip" id="step"></span>
+      <span class="spacer"></span>
+      <button type="button" class="btn secondary" id="mapBtn">Map (M)</button>
+    </div>
+    <div class="explain" id="explain" role="status" aria-live="polite" hidden></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="bottom" id="bottom">
+      <div class="hint" id="hint"></div>
+      <div class="hands">
+        <button type="button" class="key grab" id="leftBtn"><b>Space</b><small id="keyWhat">tap to grab</small><span class="holdbar" aria-hidden="true"><i id="holdBar"></i></span></button>
+      </div>
+    </div>
+    <div class="stick" id="stick"><div class="knob" id="knob"></div></div>
+    <button type="button" class="focus-msg" id="focusMsg" hidden><b>Click here to play</b><span>Then walk with W A S D or the arrow keys</span></button>
+    <div class="loading" id="loading">Loading the lab...</div>
+  </div>
+  <aside class="mission" id="mission" aria-label="Mission" aria-live="polite"></aside>
+</div>
+<div class="walk-back" id="cardWrap" hidden><div class="walk" id="card" role="dialog" aria-modal="true" aria-label="Walk me through it"></div></div>
+<script>window.BC_CLOUD_SAVE = { app: 'robotlab3d', patterns: ['^bc-robot3d-v1:'], merge: [[':done', 'doneFlags']] };</script>
+<script src="../shared/cloud-save.js?v=20261030"></script>
+<script>
+// Robot Lab 3D: Year 2 floor robot in the lab of Network Builder 3D and Contest Lab 3D. room.js, blob.js,
+// devices.js and three.js come from NetLab3D and cubes.js from ContestLab3D through the import map, so all three
+// apps keep the same world and controls.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = encodeURIComponent(params.get('bcv') || '1');
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('css').href = '../NetLab3D/net3d.css?v=' + v;
+  document.getElementById('css2').href = '../ContestLab3D/contest.css?v=' + v;
+  document.getElementById('css3').href = 'robot.css?v=' + v;
+  var imports = { three: '../NetLab3D/lib/three.module.min.js' };
+  ['room', 'blob', 'devices'].forEach(function (n) { imports['./' + n + '.js'] = '../NetLab3D/' + n + '.js?v=' + v; });
+  imports['./cubes.js'] = '../ContestLab3D/cubes.js?v=' + v;
+  imports['../ContestLab3D/devices.js'] = '../NetLab3D/devices.js?v=' + v;   // cubes.js asks for ./devices.js beside it
+  imports['./main.js'] = './main.js?v=' + v;
+  var map = document.createElement('script');
+  map.type = 'importmap';
+  map.textContent = JSON.stringify({ imports: imports });
+  document.head.appendChild(map);
+  var boot = document.createElement('script');
+  boot.type = 'module';
+  boot.textContent = "var msg = document.getElementById('loading');" +
+    "import('./main.js').then(function (mod) { mod.startSolo({ container: document.getElementById('view'), myName: '', colour: 5 }); msg.remove(); })" +
+    ".catch(function (e) { msg.textContent = 'This computer could not start the 3D lab. Use CPU Lab instead.'; console.error(e); });";
+  document.body.appendChild(boot);
+  if (params.get('embed') === '1' && window.parent !== window) {
+    try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: 640 }, '*'); } catch (e) {}
+  }
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+/* Robot Lab 3D: the mat picture, program boxes and arrow key in the mission sheet (everything else is net3d.css and contest.css) */
+.ra-sheet { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; margin: 4px 0 6px; }
+.ra-mat { flex: none; border-radius: 6px; }
+.ra-prog { display: inline-flex; gap: 4px; margin: 3px 0 6px; }
+.ra-box { width: 34px; height: 34px; border: 2px dashed var(--line-strong); border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; position: relative; }
+.ra-box i { position: absolute; top: -9px; left: -6px; font-style: normal; font-size: .7rem; font-weight: 800; background: #1864ab; color: #fff; border-radius: 999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.ra-ic { vertical-align: middle; }
+.ra-key { font-size: .85rem; line-height: 2; margin: 2px 0 6px; }
+.walk .ra-mat { width: 190px; height: 190px; }
+#mission { font-size: 1.05rem; }
