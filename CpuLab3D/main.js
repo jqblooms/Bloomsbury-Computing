@@ -368,7 +368,7 @@ export function startSolo({ container, myName, colour }) {
   function newWorld(w, h, name) {
     if (!view) { view = create(container); scene = view.scene; scene.add(me.group, arrows, pulse, outlineG); }
     disposeWorld();
-    slots = []; blocks = []; hand.item = null; hand.from = null; hand.pending = null; guideKey = ''; routeKey = ''; outlineKey = '';
+    slots = []; blocks = []; hand.item = null; hand.from = null; hand.pending = null; hand.sticky = false; hand.tapDrop = false; guideKey = ''; routeKey = ''; outlineKey = '';
     MAPW = w; MAPH = h; rows = [];
     for (let y = 0; y < h; y++) { let r = ''; for (let x = 0; x < w; x++) r += (x === 0 || y === 0 || x === w - 1 || y === h - 1) ? '#' : '.'; rows.push(r); }
     view.setRoom({ w, h, rows, regions: [{ name, index: 0, x0: 1, y0: 1, x1: w - 2, y1: h - 2 }] });
@@ -383,7 +383,7 @@ export function startSolo({ container, myName, colour }) {
 
   // ================================================================ rounds
   // R: the round being played. R.ask is a prediction waiting in the mission panel (nothing can be grabbed meanwhile).
-  function newRound() {
+  function newRound(after) {
     const m = M.m;
     let p = m.gen();
     // a challenge never repeats the round just played
@@ -393,7 +393,9 @@ export function startSolo({ container, myName, colour }) {
     KIND[m.kind].setup(R, m);
     view.zoom?.(m.kind === 'bus' ? 1600 : 760, m.kind === 'bus' ? 0.95 : 0.75);   // the buses: far enough back to see the CPU and memory at both ends
     pos.face = Math.PI; view.jump(pos.x, pos.y - camAhead());
-    toast(''); explainReset(); explain(startLine(m, p)); $('mission').scrollTop = 0; afterChange();   // to the top first, so a question at the start can scroll into view
+    toast(''); explainReset();
+    if (after) { explain('Not this time. ' + after + ' A new round has started.'); R.why = after; toast('A mistake, so a new round has started. ' + after, 'bad'); }
+    explain(startLine(m, p)); $('mission').scrollTop = 0; afterChange();   // to the top first, so a question at the start can scroll into view
   }
   // the buses: look a little ahead of the player, so the address bus at the back is not under the card at the top
   const camAhead = () => M && M.m.kind === 'bus' ? Math.min(3.5, Math.max(0, pos.y - 6)) : 0;
@@ -423,13 +425,11 @@ export function startSolo({ container, myName, colour }) {
     if (xq.length) xTimer = setTimeout(xNext, xUntil - Date.now());
   }
   const keyOf = p => p.key;
+  // a mistake in a challenge ends that round (it could no longer count) and starts a new one, with the reason shown
   function mistake(msg) {
-    R.why = msg; log.add(M.m.title + ': ' + msg.replace(/<[^>]+>/g, ''), false);
-    const first = M.m.type === 'challenge' && !R.spoilt;
-    if (M.m.type === 'challenge') { if (first) toast('A mistake: this round does not count. ' + msg, 'bad'); else toast(msg, 'bad'); R.spoilt = true; }
-    else toast(msg, 'bad');
-    explain('Not this time. ' + msg + (first ? (M.m.noHelp ? ' This round does not count.' : ' This round does not count, so the arrow now shows each move: watch the method, then try a new round.') : ''));
-    drawAll();
+    log.add(M.m.title + ': ' + msg.replace(/<[^>]+>/g, ''), false);
+    if (M.m.type === 'challenge') { R.why = msg; R.spoilt = true; R.over = true; M.have = 0; M.spoilt++; newRound(msg); return; }
+    R.why = msg; toast(msg, 'bad'); explain('Not this time. ' + msg); drawAll();
   }
   function finishRound(msg) {
     R.over = true; R.endMsg = msg;
@@ -851,13 +851,15 @@ export function startSolo({ container, myName, colour }) {
     hand.down = down;
     $('leftBtn')?.classList.toggle('on', down);
     if (!down) {
-      // let go too soon: say so, so a tap never just seems to do nothing
-      if (hand.pending) toast('Hold Space a little longer. A cube or card that is already in place needs a short hold to pick up.', 'hint');
-      else if (hand.item && clock - (hand.since || 0) < 0.35 && nearestSlot(0.9, x => !x.press) === hand.from) { hand.quick = true; }
-      hand.pending = null; letGo();
-      if (hand.quick) { hand.quick = false; toast('Keep holding Space to carry it. Let go when you reach a pad.', 'hint'); }
-      hint(); return;
+      if (hand.tapDrop) { hand.tapDrop = false; hint(); return; }   // the end of the tap that put something down
+      const p = hand.pending, tap = clock - (hand.downAt || 0) < 0.3; hand.pending = null;
+      // a tap picks up (a cube already in place too) and keeps carrying until the next tap; a hold puts down on release
+      if (p && tap) { const g = grabTarget(); if (g && g.slot === p.s && top(p.s) === p.it) doGrab(p.s); }
+      if (hand.item && tap) { hand.sticky = true; hint(); return; }
+      letGo(); hint(); return;
     }
+    hand.downAt = clock;
+    if (hand.item && hand.sticky) { hand.sticky = false; hand.tapDrop = true; letGo(); hint(); return; }
     if (locked()) {
       if (M && M.phase === 'play' && R && R.ask) toast('Predict first: answer on the right.', 'hint');
       else if (M && M.phase !== 'play') toast(M.phase === 'ask' ? 'Answer the question on the right first.' : 'Press the button on the mission sheet to go on.', 'hint');
@@ -891,7 +893,7 @@ export function startSolo({ container, myName, colour }) {
     const from = hand.from;
     const back = () => { hand.item = null; hand.from = null; if (from.crate || from.copyOut) killItem(it); else { from.items.push(it); it.slot = from; } };
     const s = nearestSlot(0.9, x => !x.press);
-    if (!s) { back(); toast('Let go over a pad: the glowing ring shows where.', 'hint'); afterChange(); return; }
+    if (!s) { back(); toast('Put it down over a pad: the glowing ring shows where.', 'hint'); afterChange(); return; }
     if (s === from) { back(); afterChange(); return; }
     const res = s.put(it, from);
     if (res) { back(); if (res.mistake) mistake(res.msg); else toast(res.msg, 'hint'); afterChange(); return; }
@@ -1213,7 +1215,7 @@ export function startSolo({ container, myName, colour }) {
       const v = read();
       if (v == null) { fb.className = 'ask-fb bad'; fb.textContent = a.type === 'num' ? 'Type a whole number.' : 'Switch every lamp on or off first.'; return; }
       if (v === a.answer) { log.note('Predicted ' + v + ' (right).'); R.ask = null; R.why = null; toast('Right!', 'good'); a.done(); afterChange(); return; }
-      if (M.m.type === 'challenge') { R.ask = null; mistake('You predicted ' + v + '. ' + a.why); a.done(); afterChange(); return; }
+      if (M.m.type === 'challenge') { R.ask = null; mistake('You predicted ' + v + '. ' + a.why); return; }
       a.fb = 'Not quite. ' + a.hint + ' Try again.'; log.note('Predicted ' + v + ' (wrong).');
       if (a.pick) a.pick = Array(a.len).fill('?'); a.order = null;
       drawPanel(); $('clAsk')?.focus();
@@ -1254,16 +1256,16 @@ export function startSolo({ container, myName, colour }) {
   function toast(msg, cls) { const t = $('toast'); t.innerHTML = msg || ''; t.className = 'toast ' + (cls === 'bad' ? 'bad' : cls === 'good' ? 'good' : 'hint'); clearTimeout(toastTimer); if (msg) toastTimer = setTimeout(() => { t.innerHTML = ''; }, cls === 'bad' ? 5200 : 3200); }
   function hint() {
     // what Space does right now, for what is in front of you: HOLD (pick up and carry) or PRESS (switch a lamp)
-    let h, key = 'hold to grab', mode = '';
+    let h, key = 'tap to grab', mode = '';
     const g = grabTarget(), s = g && g.slot, what = s && (s.crate ? 'a ' + s.crate + ' cube' : s.items.length ? (top(s).card ? 'the card "' + top(s).text + '"' : 'the ' + top(s).sym + ' cube') : '');
-    if (hand.item) { h = '<b>Keep holding Space</b> and walk to a pad. Let go of Space to put it down.' + (hand.item.card ? ' Card: "' + hand.item.text + '"' : ''); key = 'keep holding'; mode = 'hold'; }
+    if (hand.item) { h = (hand.sticky ? 'Walk to a pad and <b>tap Space</b> to put it down.' : '<b>Keep holding Space</b> and walk to a pad. Let go of Space to put it down.') + (hand.item.card ? ' Card: "' + hand.item.text + '"' : ''); key = hand.sticky ? 'tap to put down' : 'keep holding'; mode = 'hold'; }
     else if (hand.pending) { h = '<b>Keep holding Space</b>...'; key = 'keep holding'; mode = 'hold'; }
     else if (R && R.ask) h = 'Predict on the right first.';
     else if (s && s.press) { h = '<b>Press Space</b> ' + s.pressText; key = 'press'; mode = 'press'; }
-    else if (s && s.copyOut) { h = '<b>Hold Space</b> to take a copy of ' + (s.items.length ? 'the ' + top(s).sym + ' cube' : 'it') + ', and keep holding to carry it. The ' + (s.role === 'mem' ? 'memory box' : 'register') + ' keeps its value.'; key = 'hold to copy'; mode = 'hold'; }
-    else if (s && s.risky && !s.take(top(s))) { h = '<b>Hold Space</b> to pick up ' + what + '. It is already in place, so hold it down until the bar fills.'; key = 'hold to pick up'; mode = 'hold'; }
-    else if (s) { h = '<b>Hold Space</b> to pick up ' + what + ', and keep holding to carry it.'; key = 'hold to pick up'; mode = 'hold'; }
-    else h = 'Walk up to a cube or card. <b>Hold Space</b> (or the left mouse button) to pick it up, and keep holding to carry it. Right-drag turns the camera.';
+    else if (s && s.copyOut) { h = '<b>Tap Space</b> to take a copy of ' + (s.items.length ? 'the ' + top(s).sym + ' cube' : 'it') + ', then tap again at a pad to put it down (or hold Space to carry it). The ' + (s.role === 'mem' ? 'memory box' : 'register') + ' keeps its value.'; key = 'tap to copy'; mode = 'hold'; }
+    else if (s && s.risky && !s.take(top(s))) { h = '<b>Tap Space</b> to pick up ' + what + ', then tap again at a pad to put it down.'; key = 'tap to pick up'; mode = 'hold'; }
+    else if (s) { h = '<b>Tap Space</b> to pick up ' + what + ', then tap again at a pad to put it down (or hold Space to carry it).'; key = 'tap to pick up'; mode = 'hold'; }
+    else h = 'Walk up to a cube or card. <b>Tap Space</b> (or click) to pick it up and tap again to put it down, or hold Space to carry it. Right-drag turns the camera.';
     if ($('hint').innerHTML !== h) $('hint').innerHTML = h;
     const k = $('keyWhat'); if (k && k.textContent !== key) k.textContent = key;
     const b = $('leftBtn'); if (b) b.dataset.mode = mode;

@@ -248,7 +248,7 @@ steps.push(embed('activity-2', 'Activity 2: Trace a Read and a Write', 'cpu-lab'
   'activity=buses&level=3&upto=4'));
 
 steps.push(embed('activity-3', 'Activity 3: The Bus Game', 'cpu-lab-3d',
-  '<strong>What to do:</strong> walk round the lab with W A S D. Hold <strong>Space</strong> to pick up a cube, carry it onto its bus and let go. The pad near the CPU sends it <strong>into the CPU</strong>; the pad near memory sends it <strong>out of the CPU</strong>. A mistake means that round does not count. <strong>Done</strong> when the four activities in the game are complete; Trace on Your Own is the extension.',
+  '<strong>What to do:</strong> walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a cube, carry it onto its bus and tap <strong>Space</strong> again to put it down (or hold Space and let go). The pad near the CPU sends it <strong>into the CPU</strong>; the pad near memory sends it <strong>out of the CPU</strong>. A mistake ends that round and a new one starts. <strong>Done</strong> when the four activities in the game are complete; Trace on Your Own is the extension.',
   'lesson=3.1.3'));
 
 // ---------------------------------------------------------------- exam questions

@@ -105,8 +105,7 @@ T.wrongLetter = () => {
   deliver(r.pad[wrong], r.out[0]);
   ok(!r.out[0].items.length, 'a wrong letter cube stayed in the box');
   ok(r.spoilt && r.at === 0 && /The flags show/.test(r.why || ''), 'a wrong letter was accepted');
-  const g = s().guideTarget(); ok(g && g.slot === r.pad[want], 'after a slip the arrow does not show the right letter');
-  solve(); ok(M().have === 0, 'a spoilt round counted');
+  ok(R() !== r && M().have === 0 && /new round/.test(s().toastText()), 'a mistake did not start a new round');
 };
 T.carryNotPress = () => {
   s().start(s().missions.findIndex(m => m.id === 'read-t')); const r = R(), want = r.p.text[0];

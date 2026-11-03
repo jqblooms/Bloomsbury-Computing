@@ -129,7 +129,8 @@ T.missingNumber = () => {
   ok(r.ans[a].y === 5 && !r.ans[a].items.length, 'the B row is not the one to fill');
   carry(c.b ? r.zero : r.one, r.ans[a]);
   ok(r.spoilt && r.bits[a] == null && /so the answer bit would be/.test(r.why || ''), 'a wrong B bit was accepted');
-  solveAdd(); ok(r.over && r.bits.join('') === r.p.b.toString(2).padStart(8, '0'), 'B was not found');
+  ok(R() !== r && M().have === 0 && /new round/.test(s().toastText()), 'a mistake did not start a new round');
+  solveAdd(); ok(R().over && R().bits.join('') === R().p.b.toString(2).padStart(8, '0'), 'B was not found');
 };
 T.startAtTheRight = () => {
   s().start(idx('four-c')); const r = R();
@@ -140,8 +141,7 @@ T.wrongBit = () => {
   s().start(idx('eight-c')); const r = R(); const a = activeCol(r), c = r.colOf(a);
   carry(c.bit ? r.zero : r.one, r.ans[a]);
   ok(r.spoilt && r.bits[a] == null && /so write/.test(r.why || ''), 'a wrong bit was accepted');
-  { const g = s().guideTarget(); ok(g && g.exact && g.slot === (c.bit ? r.one : r.zero), 'after a mistake the guide does not show the right crate'); }
-  solveAdd(); ok(M().have === 0, 'a spoilt round counted');
+  ok(R() !== r && M().have === 0 && /new round/.test(s().toastText()), 'a mistake did not start a new round');
 };
 T.forgottenCarry = () => {
   s().start(idx('eight-t')); const r = R();
@@ -190,7 +190,9 @@ T.tapNeedsHold = () => {
 };
 T.holdPrompts = () => {
   const lab = s(), hint = () => $('hint').textContent;
-  lab.start(idx('four-c')); reach(R().one); lab.frame(1); ok(/Hold Space/.test(hint()), 'no Hold Space prompt at a crate: ' + hint());
+  lab.start(idx('four-c')); reach(R().one); lab.frame(1); ok(/Tap Space/.test(hint()), 'no Tap Space prompt at a crate: ' + hint());
+  lab.setHand(true); lab.setHand(false); lab.frame(1); ok(lab.hand.item && lab.hand.sticky, 'a tap on a crate did not pick up a cube');
+  lab.setHand(true); lab.setHand(false); lab.frame(1); ok(!lab.hand.item, 'a second tap did not put the cube down');
 };
 T.explains = () => {
   const lab = s(), last = () => (window.__explained || []).slice(-1)[0] || '';

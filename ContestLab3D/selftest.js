@@ -258,16 +258,20 @@ T.holdPrompts = () => {
   const lab = s(), hint = () => $('hint').textContent, key = () => $('keyWhat').textContent;
   lab.start(0); const r = R();
   reach(r.belt[r.order[0]]); lab.frame(1);
-  ok(/Hold Space/.test(hint()) && /hold to pick up/i.test(key()), 'no Hold Space prompt at a belt cube: ' + hint());
+  ok(/Tap Space/.test(hint()) && /tap to pick up/i.test(key()), 'no Tap Space prompt at a belt cube: ' + hint());
   lab.setHand(true); lab.frame(2); lab.setHand(false); lab.frame(1);
-  ok(/Keep holding Space to carry/.test(lab.toastText()) && top(r.belt[r.order[0]]), 'a quick tap on a belt cube gave no Keep holding message');
+  ok(lab.hand.item && lab.hand.sticky && /tap Space/.test(hint()), 'a tap on a belt cube did not pick it up and keep carrying');
+  lab.setHand(true); lab.setHand(false); lab.frame(1);
+  ok(!lab.hand.item && top(r.belt[r.order[0]]), 'a second tap did not put the cube back');
   carry(r.belt[r.order[0]], r.stack); carry(r.belt[r.order[1]], r.stack); carry(r.belt[r.order[2]], r.O);
   reach(r.stack); lab.frame(1);
-  ok(/already in place/.test(hint()), 'no hold-longer prompt at a placed cube: ' + hint());
+  ok(/Tap Space/.test(hint()), 'no Tap Space prompt at a placed cube: ' + hint());
   lab.setHand(true); lab.frame(3);
   ok(parseFloat($('holdBar').style.width) > 0 && !lab.hand.item, 'the hold bar does not fill during a hold');
   lab.setHand(false); lab.frame(1);
-  ok(/Hold Space a little longer/.test(lab.toastText()) && r.stack.items.length === 2, 'a short hold on a placed cube gave no message');
+  ok(lab.hand.item && lab.hand.sticky && r.stack.items.length === 1, 'a tap on a placed cube did not pick it up');
+  lab.setHand(true); lab.setHand(false); lab.frame(1);
+  ok(!lab.hand.item && r.stack.items.length === 2, 'a second tap did not put the stack cube back');
   lab.start(lab.missions.findIndex(m => m.id === 'solve-c')); reach(R().lamps[0]); lab.frame(1);
   ok(/Press Space/.test(hint()) && /press/i.test(key()), 'no Press Space prompt at a lamp: ' + hint());
 };
@@ -283,23 +287,25 @@ T.numberInMachine = () => {
   const b = r.belt[r.order[0]];
   carry(b, r.O);
   ok(r.spoilt && top(b) && !r.O.items.length, 'a number in the OP slot was not a mistake, or the cube did not go back');
-  solveStack();
-  ok(M().have === 0, 'a spoilt round counted');
+  ok(R() !== r && M().have === 0 && /new round/.test(s().toastText()), 'a mistake did not start a new round');
 };
 T.wrongSide = () => {
   s().start(1); const r = R();
   for (let g = 0; g < 20 && !r.op; g++) { const b = r.belt[r.order[r.next]]; carry(b, top(b).role === 'op' ? r.O : r.stack); }
   carry(r.stack, r.L);   // postfix: the first cube off the stack belongs on the right
   ok(r.spoilt && !r.L.items.length && r.stack.items.length >= 2, 'first pop on the left was not a mistake');
-  take(r.stack); s().frame(2); { const g = s().guideTarget(); ok(g && g.exact && g.slot === r.R, 'after a mistake the guide does not show the RIGHT side'); } release();
+  ok(R() !== r && !R().spoilt && R().why, 'a mistake did not start a new round with the reason');
 };
-T.tapNeedsHold = () => {
+T.tapPicksUp = () => {
   s().start(0); const r = R();
   carry(r.belt[r.order[0]], r.stack);
   carry(r.belt[r.order[1]], r.stack);
   carry(r.belt[r.order[2]], r.O);
   reach(r.stack); s().setHand(true); s().setHand(false); s().frame(1);
-  ok(r.stack.items.length === 2 && !s().hand.item, 'a quick tap took a cube off the stack');
+  ok(r.stack.items.length === 1 && s().hand.item && s().hand.sticky, 'a tap did not pick up the stack cube');
+  reach(r.R);   // carried with no key held: walk to the RIGHT pad and tap again
+  s().setHand(true); s().setHand(false); s().frame(1);
+  ok(!s().hand.item && r.R.items.length === 1, 'a tap at the RIGHT pad did not put the cube down');
 };
 T.lockedDuringPredict = () => {
   s().start(0); const r = R();
@@ -318,7 +324,7 @@ T.wrongPredictChallenge = () => {
     const b = r.belt[r.order[r.next]]; carry(b, top(b).role === 'op' ? r.O : r.stack);
   }
   answer(false);
-  ok(r.spoilt && !r.ask && r.out.items.length === 1, 'a wrong challenge prediction did not spoil the round and run the machine');
+  ok(r.spoilt && R() !== r && !R().ask && M().have === 0, 'a wrong challenge prediction did not start a new round');
 };
 T.treeWrongSpot = () => {
   s().start(at('tree-t')); const r = R(), t = r.p.t;
@@ -352,7 +358,7 @@ T.bitsWrongMachine = () => {
 };
 T.solveWrongRun = () => {
   s().start(s().missions.findIndex(m => m.id === 'solve-c')); solveSolve(false);
-  ok(R().over && R().spoilt && M().have === 0, 'a wrong first run counted');
+  ok(M().spoilt > 0 && !R().over && M().have === 0, 'a wrong first run did not start a new round');
 };
 T.leavePrompt = () => {
   s().start(0); const r = R();
