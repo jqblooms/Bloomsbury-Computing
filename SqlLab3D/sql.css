@@ -1,0 +1,13 @@
+/* SQL Lab 3D: the table, SQL and output in the mission sheet (everything else is net3d.css and contest.css) */
+.sq-wrap { overflow-x: auto; margin: 4px 0 8px; }
+.sq-t { border-collapse: collapse; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.sq-t th, .sq-t td { border: 1px solid var(--line-strong); padding: 3px 6px; text-align: left; white-space: nowrap; }
+.sq-t th { background: #1864ab; color: #fff; font-weight: 700; }
+.sq-t th small { font-weight: 600; color: #ffe066; }
+.sq-t tr.good td { background: #d3f9d8; color: #0b3d17; }
+.sq-t tr.bad td { background: #ffe3e3; color: #5c0f0f; }
+.sq-t td.hl { background: #ffe066; color: #1a1200; font-weight: 700; }
+.sq-t.out { margin: 4px 0 8px; }
+.sq-code { font-family: Consolas, "Courier New", monospace; font-size: .95rem; font-weight: 700; background: var(--surface-3); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin: 4px 0 8px; white-space: pre-wrap; }
+.sq-task { font-weight: 600; margin: 2px 0 6px; }
+.walk .sq-t { font-size: .85rem; }
