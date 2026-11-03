@@ -99,8 +99,11 @@ function sqlLines(tb, q) {
 // a condition that some records meet and some do not
 function randomCond(tb, o = {}) {
   for (let t = 0; t < 200; t++) {
-    const f = pick(tb.fields.filter(x => x.name !== tb.key && x.type !== 'date/time' && (!o.numOnly || isNum(x.type)) && (!o.no || x.name !== o.no))), vals = [...new Set(tb.rows.map(r => r[f.name]))];
-    const op = isNum(f.type) ? pick(o.simple ? ['<', '>', '='] : OPS) : f.type === 'Boolean' ? '=' : pick(o.simple ? ['='] : ['=', '<>']);
+    const fl = tb.fields.filter(x => x.name !== tb.key && x.type !== 'date/time' && (!o.numOnly || isNum(x.type)) && (!o.type || x.type === o.type) && (!o.no || x.name !== o.no)); if (!fl.length) return null;
+    const f = pick(fl), vals = [...new Set(tb.rows.map(r => r[f.name]))];
+    let allowed = isNum(f.type) ? (o.simple ? ['<', '>', '='] : OPS) : f.type === 'Boolean' ? ['='] : (o.simple ? ['='] : ['=', '<>']);
+    if (o.ops) allowed = allowed.filter(x => o.ops.includes(x)); if (!allowed.length) continue;
+    const op = pick(allowed);
     let v = pick(vals); if (isNum(f.type) && Math.random() < 0.4 && op !== '=' && op !== '<>') v = f.type === 'integer' ? Number(v) + pick([-1, 1]) : money(Number(v) + 0.5);
     const c = { f: f.name, op, v: String(v) }, n = tb.rows.filter(r => test(tb, r, c)).length;
     if (n >= 2 && n <= tb.rows.length - 2) return c;
@@ -112,7 +115,7 @@ function makeQuery(tb, o = {}) {
   for (let t = 0; t < 300; t++) {
     const c1 = randomCond(tb, o); if (!c1) continue;
     const q = { select: pickN(tb.fields.map(x => x.name), o.fields || 2).sort((a, b) => tb.fields.findIndex(x => x.name === a) - tb.fields.findIndex(x => x.name === b)), where: [c1] };
-    if (o.two) { const c2 = randomCond(tb, { no: c1.f }); if (!c2) continue; q.where.push(c2); q.join = pick(['AND', 'OR']); }
+    if (o.two) { const c2 = randomCond(tb, { no: c1.f }); if (!c2) continue; q.where.push(c2); q.join = o.join || pick(['AND', 'OR']); }
     if (o.agg) { q.agg = o.agg; q.aggField = o.agg === 'SUM' ? pick(tb.fields.filter(x => isNum(x.type) && x.name !== tb.key)).name : pick(tb.fields).name; delete q.select; }
     const rows = runQuery(tb, q);
     if (rows.length < 2 || rows.length > tb.rows.length - 1) continue;
@@ -133,16 +136,47 @@ function taskWords(tb, q) {
   return 'Show the ' + q.select.join(' and ') + ' of every ' + tb.noun + ' where ' + cond + (q.order ? ', in order of ' + q.order + (isNum(typeOf(tb, q.order)) ? ' (smallest first)' : ' (A to Z)') : '') + '.';
 }
 // the SQL as tokens, with the ones the pupil fills in. keywords: blank the keywords too (challenge)
-function sqlTokens(tb, q, keywords) {
-  const T2 = [], add = (s, blank, role) => T2.push({ s, blank: !!blank, role });
-  add('SELECT', keywords, 'kw');
-  if (q.agg) { add(q.agg, keywords, 'kw'); add('(', false, 'sym'); add(q.aggField, true, 'field'); add(')', false, 'sym'); }
-  else q.select.forEach((f, i) => { if (i) add(',', false, 'sym'); add(f, true, 'field'); });
-  add('FROM', keywords, 'kw'); add(tb.name, true, 'table');
-  q.where.forEach((c, i) => { add(i ? q.join : 'WHERE', keywords, 'kw'); add(c.f, true, 'field'); add(c.op, true, 'op'); add(lit(tb, c), true, 'value'); });
-  if (q.order) { add('ORDER BY', keywords, 'kw'); add(q.order, true, 'field'); }
+// mode: { keywords: blank the keywords too, only: 'kw' or 'where' (blank just those), none: no gaps }
+function sqlTokens(tb, q, mode) {
+  const o = mode && typeof mode === 'object' ? mode : { keywords: !!mode };
+  const kw = !o.none && !!(o.keywords || o.only === 'kw'), part = sec => !o.none && (!o.only || o.only === sec);
+  const T2 = [], add = (s, blank, role, sec) => T2.push({ s, blank: !!blank, role, sec });
+  add('SELECT', kw, 'kw');
+  if (q.agg) { add(q.agg, kw, 'kw'); add('(', false, 'sym'); add(q.aggField, part('select') && q.agg !== 'COUNT', 'field', 'select'); add(')', false, 'sym'); }
+  else q.select.forEach((f, i) => { if (i) add(',', false, 'sym'); add(f, part('select'), 'field', 'select'); });
+  add('FROM', kw, 'kw'); add(tb.name, part('from'), 'table', 'from');
+  q.where.forEach((c, i) => { add(i ? q.join : 'WHERE', kw, 'kw'); add(c.f, part('where'), 'field', 'where'); add(c.op, part('where'), 'op', 'where'); add(lit(tb, c), part('where'), 'value', 'where'); });
+  if (q.order) { add('ORDER BY', kw, 'kw'); add(q.order, part('order'), 'field', 'order'); }
   add(';', false, 'sym');
   return T2;
+}
+// the same query changed in one way, for the wrong descriptions of what it does
+const FLIP = { '=': '<>', '<>': '=', '<': '>', '>': '<', '<=': '>', '>=': '<' };
+function purposeOptions(tb, q) {
+  const right = taskWords(tb, q), out = [right], tries = [];
+  tries.push(Object.assign({}, q, { where: q.where.map((c, i) => i ? c : Object.assign({}, c, { op: FLIP[c.op] })) }));
+  if (q.join) tries.push(Object.assign({}, q, { join: q.join === 'AND' ? 'OR' : 'AND' }));
+  if (q.agg) tries.push(Object.assign({}, q, { agg: q.agg === 'SUM' ? 'COUNT' : 'SUM', aggField: q.agg === 'SUM' ? q.aggField : (tb.fields.find(x => isNum(x.type) && x.name !== tb.key) || {}).name }));
+  else { const other = tb.fields.map(x => x.name).filter(x => !q.select.includes(x)); tries.push(Object.assign({}, q, { select: [q.select[0], pick(other)] })); if (q.order) tries.push(Object.assign({}, q, { order: null })); }
+  for (const t of shuffle(tries)) { const w = taskWords(tb, t); if (!out.includes(w)) out.push(w); if (out.length === 3) break; }
+  return out;
+}
+// Fix the SQL: one part changed so the query no longer does the task, with the reason it is wrong
+function makeBad(tb, q, toks) {
+  const sel = q.select || [q.aggField];
+  for (let t = 0; t < 100; t++) {
+    const i = pick(toks.map((k, j) => j).filter(j => ['field', 'op', 'value', 'table'].includes(toks[j].role) && !(q.agg === 'COUNT' && toks[j].sec === 'select'))), k = toks[i];
+    let w = null, why = '';
+    if (k.role === 'table') { w = pick(['Orders', 'Staff', 'Stock']); why = 'The table is called ' + tb.name + ', not ' + w + '.'; }
+    if (k.role === 'field') { const c = tb.fields.map(x => x.name).filter(x => x !== k.s && !sel.includes(x) && !(q.where || []).some(c2 => c2.f === x)); if (!c.length) continue; w = pick(c); why = 'The task asks for ' + k.s + ', not ' + w + '.'; }
+    if (k.role === 'op') { w = FLIP[k.s]; why = 'The task says "' + OP_WORD[k.s] + '", so the comparison is ' + k.s + ', not ' + w + '.'; }
+    if (k.role === 'value') {
+      if (k.s.startsWith("'")) { w = k.s.slice(1, -1); why = 'Text must go in quotes: ' + k.s + ', not ' + w + '.'; }
+      else { const c = q.where.find(c2 => lit(tb, c2) === k.s), others = c ? [...new Set(tb.rows.map(r => String(r[c.f])))].filter(v => v !== c.v) : []; if (!others.length) continue; w = pick(others); why = 'The task asks for ' + k.s + ', not ' + w + '.'; }
+    }
+    if (w && w !== k.s) return { i, w, why };
+  }
+  return { i: toks.findIndex(k => k.role === 'table'), w: 'Orders', why: 'The table is called ' + tb.name + ', not Orders.' };
 }
 // each kind of round, made from one table
 function tableRound(o) { const tb = makeTable({ n: o.n || 6 }); return { tb, key: tb.name + tb.rows.map(r => r[tb.key]).join() }; }
@@ -163,6 +197,9 @@ const MISSIONS = [
   { id: 'pk-c', group: 'Fields and records', title: 'Fields, Records and Keys', type: 'challenge', kind: 'db', task: 'pk', counts: true, mins: 8,
     intro: 'Count the fields and the records, then find the primary key. Two clean rounds in a row.',
     gen: () => tableRound({ n: rnd(5, 7) }) },
+  { id: 'pk-pro-c', group: 'Fields and records', title: 'Keys Pro', type: 'challenge', kind: 'db', task: 'pk', counts: true, noHelp: true, mins: 6,
+    intro: 'Seven records and no help. Count the fields and the records, then find the primary key. Two clean rounds in a row.',
+    gen: () => tableRound({ n: 7 }) },
   { id: 'dt-t', group: 'Data types', title: 'Data Types', type: 'tutorial', kind: 'db', task: 'dt', mins: 7,
     intro: 'Each field has a data type. Look at the data in a field, then carry the right data type cube to it.',
     gen: () => tableRound({ n: 6 }),
@@ -170,34 +207,96 @@ const MISSIONS = [
   { id: 'dt-c', group: 'Data types', title: 'Data Types Challenge', type: 'challenge', kind: 'db', task: 'dt', mins: 8,
     intro: 'Give every field its data type. Two clean rounds in a row.',
     gen: () => tableRound({ n: 6 }) },
-  { id: 'out-t', group: 'SQL output', title: 'What Does This SQL Show?', type: 'tutorial', kind: 'db', task: 'out', mins: 8,
+  { id: 'dt-pro-c', group: 'Data types', title: 'Data Types Pro', type: 'challenge', kind: 'db', task: 'dt', noHelp: true, mins: 7,
+    intro: 'Every field, with no help and no list of types. Two clean rounds in a row.',
+    gen: () => tableRound({ n: 7 }) },
+  { id: 'out-t', group: 'Reading SQL', title: 'What Does This SQL Show?', type: 'tutorial', kind: 'db', task: 'out', mins: 8,
     intro: 'Check each record against WHERE, top to bottom. Carry each record where it is true to OUTPUT. The output shows only the fields after SELECT.',
     gen: () => queryRound({ simple: true }),
     after: { q: 'The output shows only some of the fields. Why?', options: ['SELECT lists the fields to show.', 'WHERE removes the other fields.', 'FROM chooses the fields.'], why: 'SELECT lists the fields to show. WHERE chooses the records.' } },
-  { id: 'out-c', group: 'SQL output', title: 'Output Challenge', type: 'challenge', kind: 'db', task: 'out', mins: 10,
+  { id: 'ops-t', group: 'Reading SQL', title: 'Not Equal, At Least, At Most', type: 'tutorial', kind: 'db', task: 'out', mins: 5,
+    intro: '&lt;&gt; means not equal to. &gt;= means greater than or equal to. &lt;= means less than or equal to. Check each record, then carry the ones that are in to OUTPUT.',
+    gen: () => queryRound({ ops: ['<>', '>=', '<='] }),
+    after: { q: 'WHERE Lifespan >= 10. A bird has Lifespan 10. Is it in the output?', options: ['Yes: >= includes 10 itself.', 'No: it must be more than 10.', 'Only if it is the last record.'], why: '>= means greater than or equal to, so 10 counts.' } },
+  { id: 'bool-t', group: 'Reading SQL', title: 'TRUE and FALSE Fields', type: 'tutorial', kind: 'db', task: 'out', mins: 5,
+    intro: 'A Boolean field holds only TRUE or FALSE. WHERE Paid = TRUE keeps only the records where Paid is TRUE.',
+    gen: () => queryRound({ type: 'Boolean' }) },
+  { id: 'out-c', group: 'Reading SQL', title: 'Output Challenge', type: 'challenge', kind: 'db', task: 'out', mins: 10,
     intro: 'Say which fields the output shows, then carry the records it shows to OUTPUT in the right order, then press DONE. Two clean rounds in a row.',
     gen: () => queryRound(pick([{ fields: 2 }, { fields: 3, order: true }, { fields: 2, two: true }, { fields: 3 }])) },
-  { id: 'agg-t', group: 'SQL output', title: 'SUM and COUNT', type: 'tutorial', kind: 'db', task: 'agg', mins: 7,
+  { id: 'purpose-t', group: 'Reading SQL', title: 'What Does This SQL Do?', type: 'tutorial', kind: 'db', task: 'purpose', mins: 5,
+    intro: 'Read the SQL line by line: SELECT, FROM, WHERE, ORDER BY. Then choose what it does.',
+    gen: () => queryRound({ fields: 2, order: Math.random() < 0.4 }) },
+  { id: 'purpose-c', group: 'Reading SQL', title: 'Explain the SQL', type: 'challenge', kind: 'db', task: 'purpose', need: 3, mins: 6,
+    intro: 'Choose what each SQL statement does. Three clean rounds in a row.',
+    gen: () => queryRound(pick([{ fields: 2 }, { fields: 2, two: true }, { fields: 3, order: true }, { agg: 'SUM' }, { agg: 'COUNT' }])) },
+  { id: 'and-t', group: 'AND and OR', title: 'AND', type: 'tutorial', kind: 'db', task: 'out', mins: 6,
+    intro: 'With AND, a record is in the output only when <b>both</b> conditions are true.',
+    gen: () => queryRound({ two: true, join: 'AND' }),
+    after: { q: 'With AND, one condition is true and the other is false. Is the record in the output?', options: ['No: AND needs both to be true.', 'Yes: one true is enough.', 'Only if the first one is true.'], why: 'AND means both conditions must be true.' } },
+  { id: 'or-t', group: 'AND and OR', title: 'OR', type: 'tutorial', kind: 'db', task: 'out', mins: 6,
+    intro: 'With OR, a record is in the output when <b>at least one</b> condition is true.',
+    gen: () => queryRound({ two: true, join: 'OR' }),
+    after: { q: 'With OR, one condition is true and the other is false. Is the record in the output?', options: ['Yes: OR needs only one to be true.', 'No: OR needs both to be true.', 'Only if the second one is true.'], why: 'OR means at least one condition must be true.' } },
+  { id: 'andor-c', group: 'AND and OR', title: 'AND or OR Challenge', type: 'challenge', kind: 'db', task: 'out', mins: 8,
+    intro: 'Two conditions joined by AND or OR. Carry the records in the output to OUTPUT, in order, then press DONE. Two clean rounds in a row.',
+    gen: () => queryRound({ two: true, fields: 2 }) },
+  { id: 'order-t', group: 'ORDER BY', title: 'ORDER BY', type: 'tutorial', kind: 'db', task: 'out', sortAfter: true, mins: 7,
+    intro: 'ORDER BY sorts the output: numbers smallest first, text A to Z. First check each record, then carry the ones that are in, in sorted order.',
+    gen: () => queryRound({ fields: 2, order: true, simple: true }),
+    after: { q: 'A query has no ORDER BY. What order is its output in?', options: ['The same order as the table.', 'Smallest first.', 'A to Z.'], why: 'Without ORDER BY, the records come out in the order they are in the table.' } },
+  { id: 'order-c', group: 'ORDER BY', title: 'ORDER BY Challenge', type: 'challenge', kind: 'db', task: 'out', mins: 8,
+    intro: 'Every query has ORDER BY. Carry the output records in sorted order, then press DONE. Two clean rounds in a row.',
+    gen: () => queryRound({ fields: 2, order: true }) },
+  { id: 'out-pro-c', group: 'ORDER BY', title: 'Output Pro', type: 'challenge', kind: 'db', task: 'out', noHelp: true, mins: 10,
+    intro: 'Three fields, two conditions and ORDER BY, with no help. Two clean rounds in a row.',
+    gen: () => queryRound({ fields: 3, two: true, order: true }) },
+  { id: 'agg-t', group: 'SUM and COUNT', title: 'SUM and COUNT', type: 'tutorial', kind: 'db', task: 'agg', mins: 7,
     intro: 'SUM adds up the values in a field. COUNT gives the number of records. Both use only the records where WHERE is true.',
     gen: () => queryRound({ agg: pick(['SUM', 'COUNT']), simple: true }),
     after: { q: 'Which keyword returns the number of records?', options: ['COUNT', 'SUM', 'ORDER BY'], why: 'COUNT returns the number of records. SUM adds up values.' } },
-  { id: 'agg-c', group: 'SQL output', title: 'SUM and COUNT Challenge', type: 'challenge', kind: 'db', task: 'agg', mins: 8,
+  { id: 'agg-c', group: 'SUM and COUNT', title: 'SUM and COUNT Challenge', type: 'challenge', kind: 'db', task: 'agg', mins: 8,
     intro: 'Put every record that meets the condition in the machine, press DONE, then give the answer. Two clean rounds in a row.',
     gen: () => queryRound({ agg: pick(['SUM', 'COUNT']), two: Math.random() < 0.4 }) },
+  { id: 'agg2-c', group: 'SUM and COUNT', title: 'SUM and COUNT with AND or OR', type: 'challenge', kind: 'db', task: 'agg', mins: 8,
+    intro: 'Two conditions this time. Put every record that meets them in the machine, press DONE, then give the answer. Two clean rounds in a row.',
+    gen: () => queryRound({ agg: pick(['SUM', 'COUNT']), two: true }) },
+  { id: 'kw-t', group: 'Write SQL', title: 'Keywords in Order', type: 'tutorial', kind: 'db', task: 'sql', only: 'kw', mins: 5,
+    intro: 'Only the keywords are missing. SELECT comes first, then FROM, then WHERE, then ORDER BY. Carry each keyword into its gap.',
+    gen: () => queryRound(pick([{ fields: 2, order: true, simple: true }, { fields: 2, two: true }])),
+    after: { q: 'Which keyword comes first in an SQL statement?', options: ['SELECT', 'FROM', 'WHERE'], why: 'SELECT comes first, then FROM, then WHERE, then ORDER BY.' } },
+  { id: 'where-t', group: 'Write SQL', title: 'Write the WHERE', type: 'tutorial', kind: 'db', task: 'sql', only: 'where', mins: 5,
+    intro: 'Only the condition is missing: a field, a comparison and a value. Text values go in quotes.',
+    gen: () => queryRound({ fields: 2 }) },
   { id: 'sql-t', group: 'Write SQL', title: 'Complete the SQL', type: 'tutorial', kind: 'db', task: 'sql', mins: 8,
     intro: 'Read the task. Carry a cube into each gap to complete the SQL. Field names, the table name, a comparison and a value.',
     gen: () => queryRound({ simple: true }),
     after: { q: 'In WHERE Type = \'Twin\', why is Twin in quotes?', options: ['It is text.', 'It is a field name.', 'It is a number.'], why: 'Text values go in quotes. Numbers and TRUE or FALSE do not.' } },
   { id: 'sql-c', group: 'Write SQL', title: 'Write the SQL', type: 'challenge', kind: 'db', task: 'sql', keywords: true, mins: 10,
     intro: 'Now the keywords are gaps too: SELECT, FROM, WHERE, ORDER BY, SUM, COUNT, AND, OR. Two clean rounds in a row.',
-    gen: () => queryRound(pick([{ fields: 2 }, { fields: 2, order: true }, { agg: 'SUM' }, { agg: 'COUNT' }, { fields: 2, two: true }])) }
+    gen: () => queryRound(pick([{ fields: 2 }, { fields: 2, order: true }, { agg: 'SUM' }, { agg: 'COUNT' }, { fields: 2, two: true }])) },
+  { id: 'sumw-c', group: 'Write SQL', title: 'Write SUM and COUNT', type: 'challenge', kind: 'db', task: 'sql', keywords: true, mins: 8,
+    intro: 'Tasks that ask for a total or a count. Fill every gap, the keywords too. Two clean rounds in a row.',
+    gen: () => queryRound({ agg: pick(['SUM', 'COUNT']) }) },
+  { id: 'sql-pro-c', group: 'Write SQL', title: 'SQL Pro', type: 'challenge', kind: 'db', task: 'sql', keywords: true, noHelp: true, mins: 10,
+    intro: 'Two conditions or ORDER BY, every gap, no help. Two clean rounds in a row.',
+    gen: () => queryRound(pick([{ fields: 2, two: true }, { fields: 2, order: true }, { fields: 3, two: true }])) },
+  { id: 'fix-t', group: 'Fix the SQL', title: 'Fix the SQL', type: 'tutorial', kind: 'db', task: 'fix', mins: 6,
+    intro: 'One part of this SQL does not do what the task says. Find it, carry it to the BIN, then put the right cube in its place.',
+    gen: () => queryRound({ fields: 2, simple: true }),
+    after: { q: 'WHERE Container = Can. What is wrong?', options: ['Can is text, so it must be in quotes.', 'Container must be in quotes.', 'The = should be <>.'], why: "Text values go in quotes: 'Can'." } },
+  { id: 'fix-c', group: 'Fix the SQL', title: 'Fix the SQL Challenge', type: 'challenge', kind: 'db', task: 'fix', mins: 8,
+    intro: 'Find the mistake, put it in the BIN, then put the right part in. Only the wrong part goes in the BIN. Two clean rounds in a row.',
+    gen: () => queryRound(pick([{ fields: 2 }, { fields: 2, order: true }, { agg: 'SUM' }, { fields: 2, two: true }])) }
 ];
 export { MISSIONS };
-const SECTIONS = ['Fields and records', 'Data types', 'SQL output', 'Write SQL'];
-// Lesson mode: two Year 11 lessons on databases (0478 section 9)
+const SECTIONS = ['Fields and records', 'Data types', 'Reading SQL', 'AND and OR', 'ORDER BY', 'SUM and COUNT', 'Write SQL', 'Fix the SQL'];
+// Lesson mode: four Year 11 lessons on databases (0478 section 9), each about 35 to 50 minutes with extensions
 const LESSONS = [
-  { id: 'tables', title: 'Databases 1: Tables, Keys and Data Types', missions: ['fr-t', 'pk-t', 'pk-c', 'dt-t', 'dt-c'], ext: [] },
-  { id: 'sql', title: 'Databases 2: SQL', missions: ['out-t', 'out-c', 'agg-t', 'agg-c', 'sql-t', 'sql-c'], ext: [] }
+  { id: 'tables', title: 'Databases 1: Tables, Keys and Data Types', missions: ['fr-t', 'pk-t', 'pk-c', 'dt-t', 'dt-c'], ext: ['pk-pro-c', 'dt-pro-c'] },
+  { id: 'sql', title: 'Databases 2: Reading SQL', missions: ['out-t', 'ops-t', 'bool-t', 'out-c', 'purpose-t', 'agg-t', 'agg-c'], ext: ['purpose-c'] },
+  { id: 'logic', title: 'Databases 3: AND, OR and ORDER BY', missions: ['and-t', 'or-t', 'andor-c', 'order-t', 'order-c', 'agg2-c'], ext: ['out-pro-c'] },
+  { id: 'write', title: 'Databases 4: Writing and Fixing SQL', missions: ['kw-t', 'where-t', 'sql-t', 'sql-c', 'fix-t', 'fix-c'], ext: ['sumw-c', 'sql-pro-c'] }
 ];
 const minsOf = m => m.mins || 8;
 
@@ -244,7 +343,18 @@ export function startSolo({ container, myName, colour }) {
     s.g.position.set(s.x * T + T / 2, 0, s.y * T + T / 2); worldG.add(s.g);
     slots.push(s); return s;
   }
-  function itemMesh(it) { it.k3 = it.card ? makeCard(it.text) : makeCube(it.sym, it.role); worldG.add(it.k3.group); }
+  // long words on a cube face shrink until they cannot be read: split them onto two lines (the cube draws a space as a
+  // new line), and the six data type cubes are bigger
+  const SPLIT = { alphanumeric: 'alpha- numeric', 'date/time': 'date/ time', character: 'charac- ter' };
+  function cubeText(sym) {
+    if (SPLIT[sym]) return SPLIT[sym];
+    if (sym.includes(' ') || sym.length <= 7) return sym;
+    const caps = [...sym].map((c, i) => i && /[A-Z]/.test(c) && /[a-z]/.test(sym[i - 1]) ? i : -1).filter(i => i > 0);
+    if (!caps.length) return sym;
+    const at = caps.sort((a, b) => Math.abs(a - sym.length / 2) - Math.abs(b - sym.length / 2))[0];
+    return sym.slice(0, at) + ' ' + sym.slice(at);
+  }
+  function itemMesh(it) { it.k3 = it.card ? makeCard(it.text) : makeCube(cubeText(it.sym), it.role, TYPES.includes(it.sym) ? 1.35 : 1); worldG.add(it.k3.group); }
   function addItem(slot, it) { it.id = it.id || 'i' + nextId++; if (!it.k3) itemMesh(it); slot.items.push(it); it.slot = slot; snapItem(it); return it; }
   function killItem(it) { if (!it || !it.k3) return; worldG.remove(it.k3.group); it.k3.dispose(); it.k3.group.traverse(o => { if (o.userData.own) o.geometry.dispose(); }); it.k3 = null; }
   function cube(sym, extra) { return Object.assign({ sym: String(sym), role: roleOf(String(sym)) }, extra || {}); }
@@ -437,9 +547,12 @@ export function startSolo({ container, myName, colour }) {
       const p = R.p, tb = p.tb, F = tb.fields.length, n = tb.rows.length, t = m.task;
       R.hl = {}; R.out = []; R.slips = new Set(); R.typed = {}; R.stage = 0; R.k = 0;
       const x0 = TX + F * CW + 2;
-      R.toks = t === 'sql' ? sqlTokens(tb, p.q, m.keywords) : null;
-      const crateList = t === 'sql' ? sqlCrates(tb, p.q, m.keywords) : [];
+      const mode = { keywords: m.keywords, only: m.only };
+      R.toks = t === 'sql' ? sqlTokens(tb, p.q, mode) : t === 'fix' ? sqlTokens(tb, p.q, { none: true }) : null;
+      if (t === 'fix') R.bad = makeBad(tb, p.q, R.toks);
+      const crateList = t === 'sql' ? sqlCrates(tb, p.q, mode) : t === 'fix' ? fixCrates(tb, p.q) : [];
       const W = Math.max(26, x0 + 6, crateList.length + 4, R.toks ? R.toks.length + 4 : 0);
+      R.chosen = [];
       newWorld(W, 16, 'The database');
       drawTable(); blocks.push([TX, TY, TX + F * CW - 1, TY + n]);
       addSign('TABLE: ' + tb.name.toUpperCase(), TX + F * CW / 2, TY - 2, 300, { bg: '#1864ab', ink: '#ffffff', size: 0.045 });
@@ -447,7 +560,7 @@ export function startSolo({ container, myName, colour }) {
       R.rec = tb.rows.map((r, k) => { const s = addSlot({ role: 'rec', pad: 'supply', x: TX - 2, y: TY + 1 + k, rec: k, put: (it, from) => from === s ? null : it.card && it.rec === k ? null : t === 'fr' && it.sym === 'RECORD' ? null : { msg: it.card ? 'Put a record back on its own row.' : 'Records go on the OUTPUT pad.' } }); return s; });
       if (t === 'fr') { R.crF = crateAt('FIELD', 'result', x0, 4, 'FIELD'); R.crR = crateAt('RECORD', 'result', x0, 7, 'RECORD'); }
       if (t === 'pk') { R.crK = crateAt('KEY', 'op', x0, 5, 'PRIMARY KEY'); if (m.counts) askCounts(() => { }); }
-      if (t === 'dt') R.crT = TYPES.map((ty, i) => crateAt(ty, 'paren', x0 + (i % 2) * 2, 3 + Math.floor(i / 2) * 3));
+      if (t === 'dt') R.crT = TYPES.map((ty, i) => crateAt(ty, 'paren', x0 + (i % 2) * 4, 3 + Math.floor(i / 2) * 3, ty.toUpperCase()));
       if (t === 'out' || t === 'agg') {
         tb.rows.forEach((r, k) => addItem(R.rec[k], { card: true, text: String(r[tb.key]), sym: String(r[tb.key]), rec: k, role: 'card' }));
         R.outPad = addSlot({ role: 'output', pad: 'out', x: x0, y: 5, w: 2, grow: 'pile', label: t === 'agg' ? p.q.agg + ' MACHINE' : 'OUTPUT', tag: { tagY: 140 },
@@ -456,6 +569,18 @@ export function startSolo({ container, myName, colour }) {
         if (m.type === 'tutorial') checkNext();
         else if (t === 'out') { const all = tb.fields.map(f => f.name), sel = p.q.select, w = p.q.where[0].f; const o1 = sel.join(', '), o2 = all.join(', '), o3 = sel.includes(w) ? all.filter(f => !sel.includes(f)).slice(0, 2).join(', ') : sel.concat([w]).join(', ');
           setAsk({ type: 'choice', q: 'Which fields will the output show?', options: [o1, o2, o3], answer: o1, wide: true, hint: 'Look at the line that starts with SELECT.', why: KW_DOES.SELECT + ': ' + o1 + '.', done: () => explain('The output shows only ' + o1 + '. Now find the records.') }); }
+      }
+      if (t === 'purpose') { const opts = purposeOptions(tb, p.q); setAsk({ type: 'choice', q: 'What does this SQL do?', options: opts, answer: opts[0], wide: true, hint: 'Read it line by line: SELECT (which fields), FROM (which table), WHERE (which records)' + (p.q.order ? ', ORDER BY (which order)' : '') + '.', why: 'It does this: ' + opts[0], done: () => { explain('Right: ' + opts[0]); finishRound('You read the SQL.'); } }); }
+      if (t === 'fix') {
+        R.tokSlot = R.toks.map((k, i) => {
+          const s = addSlot({ role: 'tok', pad: k.role === 'sym' ? 'pedestal' : 'rail', x: 2 + i, y: 12, tok: i,
+            take: () => k.role === 'sym' ? 'This part is right.' : null,
+            put: (it, from) => from === s ? null : s.items.length ? { msg: 'That place is full.' } : i === R.bad.i ? fixPut(it) : { msg: 'Put it back where it came from.' } });
+          addItem(s, cube(i === R.bad.i ? R.bad.w : k.s, { role: ROLE_OF_TOKEN[k.role] }));
+          return s;
+        });
+        R.bin = addSlot({ role: 'bin', pad: 'target', x: x0, y: 8, grow: 'pile', label: 'BIN', tag: { tagY: 140 }, take: () => 'That cube is in the BIN.', put: (it, from) => binPut(it, from) });
+        R.crates = crateList.map((c, i) => crateAt(c.s, ROLE_OF_TOKEN[c.role], 2 + i, 14));
       }
       if (t === 'sql') {
         R.blank = []; R.tokSlot = R.toks.map((k, i) => {
@@ -466,7 +591,7 @@ export function startSolo({ container, myName, colour }) {
         });
         R.crates = crateList.map((c, i) => crateAt(c.s, ROLE_OF_TOKEN[c.role], 2 + i, 14));
       }
-      pos.x = Math.min(W - 3, x0 + 1); pos.y = t === 'sql' ? 13 : 12;
+      pos.x = Math.min(W - 3, x0 + 1); pos.y = t === 'sql' || t === 'fix' ? 13 : 12;
     },
     placed(it, slot) {
       const tb = R.p.tb, m = M.m;
@@ -479,12 +604,14 @@ export function startSolo({ container, myName, colour }) {
       if (slot.role === 'rec' && it.sym === 'RECORD') { explain('This row is a record: all the data about one ' + tb.noun + ' (' + tb.rows[slot.rec][tb.key] + '). The row of field names at the top is not a record.'); askCounts(() => finishRound('You counted the fields and the records.')); return; }
       if (slot.role === 'output') {
         R.out.push(it.rec);
-        R.hl.good = new Set(R.out); drawTable();
+        R.hl.good = new Set(R.out.concat(R.chosen)); drawTable();
         const r = tb.rows[it.rec];
         explain(rowName(tb, it.rec) + ': ' + condWhy(tb, R.p.q, r) + '.' + (m.task === 'out' ? ' The output shows its ' + R.p.q.select.join(' and ') + ': ' + R.p.q.select.map(f => r[f]).join(', ') + '.' : ''));
-        if (m.type === 'tutorial') { R.k++; checkNext(); }
+        if (m.type === 'tutorial' && !m.sortAfter) { R.k++; checkNext(); }
         return;
       }
+      if (slot.role === 'bin') { R.binned = true; explain(it.sym + ' was the mistake. ' + R.bad.why + ' Now carry the right cube into the gap.'); return; }
+      if (slot.role === 'tok') { explain('Fixed: ' + it.sym + '. The SQL now does the task.'); return; }
       if (slot.role === 'blank') {
         const k = R.toks[slot.tok];
         explain(k.role === 'kw' ? KW_DOES[it.sym] + '.' : k.role === 'field' ? '<b>' + it.sym + '</b> is a field in the table.' : k.role === 'table' ? 'FROM ' + it.sym + ': the table is called ' + it.sym + '.' : k.role === 'op' ? it.sym + ' means ' + OP_SAY[it.sym] + '.' : 'The value is ' + it.sym + (it.sym.startsWith("'") ? ': text goes in quotes.' : '.'));
@@ -495,13 +622,14 @@ export function startSolo({ container, myName, colour }) {
       const t = M.m.task;
       if (t === 'pk' && R.keyed) finishRound('You found the primary key.');
       if (t === 'dt' && R.head.every(s => s.items.length)) finishRound('Every field has the right data type.');
+      if (t === 'fix' && R.binned && R.tokSlot[R.bad.i].items.length) { explain('The SQL is right now: ' + sqlLines(R.p.tb, R.p.q).join(' ')); finishRound('You found and fixed the mistake.'); }
       if (t === 'sql' && R.blank.every(s => s.items.length)) { explain('The SQL is complete: ' + sqlLines(R.p.tb, R.p.q).join(' ')); finishRound('Your SQL does the task.'); }
     },
     guide(R, m) {
       if (R.ask) return null;
       const t = m.task, tb = R.p.tb;
       if (t === 'fr') {
-        if (hand.item) return hand.item.sym === 'FIELD' ? areaTarget(R.head) : areaTarget(R.rec);
+        if (hand.item) return slotTarget(nearestOf(hand.item.sym === 'FIELD' ? R.head : R.rec));   // any field (or any record) is right
         return R.head.some(s => s.items.length) ? slotTarget(R.crR) : slotTarget(R.crF);
       }
       if (t === 'pk') return hand.item ? (m.type === 'tutorial' && R.slips.size ? slotTarget(R.head[fieldIdx(tb.key)]) : areaTarget(R.head)) : slotTarget(R.crK);
@@ -513,15 +641,23 @@ export function startSolo({ container, myName, colour }) {
       }
       if (t === 'out' || t === 'agg') {
         const exp = expected();
+        if (m.type === 'tutorial' && m.sortAfter && R.k >= tb.rows.length) { if (hand.item) return slotTarget(R.outPad); const nx = exp.find(k => !R.out.includes(k)); return nx == null ? slotTarget(R.done) : slotTarget(R.rec[nx]); }
         if (m.type === 'tutorial') { if (hand.item) return slotTarget(R.outPad); if (R.k >= tb.rows.length) return slotTarget(R.done); const k = R.rows[R.k]; return k != null && R.ok ? slotTarget(R.rec[k]) : null; }
         if (hand.item) return slotTarget(R.outPad);
-        return exp.length > R.out.length ? areaTarget(R.rec.filter(s => s.items.length)) : slotTarget(R.done);
+        return null;   // which records, and when to press DONE, are the pupil's to decide
+      }
+      if (t === 'fix') {
+        const gap = R.tokSlot[R.bad.i], helped = m.type === 'tutorial' && R.slips.size > 0;
+        if (!R.binned) { if (hand.item) return helped ? slotTarget(hand.from === gap ? R.bin : hand.from) : null; return helped ? slotTarget(gap) : null; }
+        if (hand.item) return slotTarget(gap);
+        return helped ? slotTarget(R.crates.find(c => c.crate === R.toks[R.bad.i].s)) : null;
       }
       if (t === 'sql') {
         const next = R.blank.find(s => !s.items.length); if (!next) return null;
-        const helped = m.type === 'tutorial' && R.slips.has(next.tok);
-        if (hand.item) return slotTarget(next);
-        return helped ? slotTarget(R.crates.find(c => wantFor(next.tok).includes(c.crate))) : areaTarget(R.crates);
+        if (m.type !== 'tutorial') return null;
+        // carrying: the gap this cube fits (none if it fits nowhere); after a slip: the crate for the next gap
+        if (hand.item) { const fit = R.blank.find(x => !x.items.length && wantFor(x.tok).includes(hand.item.sym)); return fit ? slotTarget(fit) : null; }
+        return R.slips.has(next.tok) ? slotTarget(R.crates.find(c => wantFor(next.tok).includes(c.crate))) : null;
       }
       return null;
     },
@@ -533,6 +669,12 @@ export function startSolo({ container, myName, colour }) {
         { text: 'Count the fields and the records.', done: () => R.over }];
       if (t === 'pk') return [{ text: 'Look down each field. Does any value appear twice?', done: () => R.keyed || R.slips.size > 0 }, { text: 'Carry the <b>KEY</b> cube to the field where every value is different.', done: () => R.keyed }];
       if (t === 'dt') return tb.fields.map(f => ({ text: '<b>' + f.name + '</b> holds ' + sampleVals(tb, f.name) + '. Carry its data type to it.', done: () => !!R.typed[f.name] }));
+      if (t === 'fix') return [
+        { text: 'Read the task. Find the part of the SQL that does not do what the task says.', done: () => R.binned },
+        { text: 'Carry that cube to the <b>BIN</b>.', done: () => R.binned },
+        { text: 'Carry the right cube into the gap.', done: () => R.over }];
+      if (t === 'purpose') return [{ text: 'Read the SQL line by line, then choose what it does.', done: () => R.over }];
+      if (m.sortAfter) { const out = tb.rows.map((r, k) => ({ text: 'Record ' + r[tb.key] + ': is the WHERE condition true?', done: () => R.k > k })); out.push({ text: 'Carry the records that are in to OUTPUT, sorted by ' + R.p.q.order + (isNum(typeOf(tb, R.p.q.order)) ? ' (smallest first).' : ' (A to Z).'), done: () => R.out.length >= expected().length }); out.push({ text: 'Press <b>DONE</b>.', done: () => R.over }); return out; }
       if (t === 'sql') return R.toks.map((k, i) => k.blank ? { text: (k.role === 'field' ? 'A field the task names' : k.role === 'table' ? 'The table name (after FROM)' : k.role === 'op' ? 'The comparison: =, <>, <, >, <= or >=' : k.role === 'value' ? 'The value to compare with' : 'A keyword') + '.', done: () => R.tokSlot[i].items.length > 0 } : null).filter(Boolean);
       const out = tb.rows.map((r, k) => ({ text: 'Record ' + r[tb.key] + ': is the WHERE condition true?', done: () => R.k > k }));
       out.push({ text: 'Press <b>DONE</b>.' + (t === 'agg' ? ' Then work out the ' + R.p.q.agg + '.' : ''), done: () => R.over });
@@ -540,15 +682,17 @@ export function startSolo({ container, myName, colour }) {
     },
     goals(m) {
       const t = m.task;
+      if (m.noHelp) return ['No help this time. You can do it.'];
       return t === 'pk' ? ['A primary key is a field that is different in every record, so it identifies one record.', 'Fields: the field names. Records: the rows below them.']
         : t === 'dt' ? ['alphanumeric: letters, or letters and numbers', 'character: one letter or symbol', 'Boolean: TRUE or FALSE', 'integer: whole numbers', 'real: numbers with a decimal point', 'date/time: dates']
-        : t === 'sql' ? Object.values(KW_DOES).map(x => x + '.') : ['WHERE: keep only the records where the condition is true.', 'SELECT: show only those fields.', 'ORDER BY: numbers smallest first, text A to Z. No ORDER BY: keep the order of the table.'];
+        : t === 'sql' || t === 'fix' ? Object.values(KW_DOES).map(x => x + '.').concat(t === 'fix' ? ['Text values go in quotes.'] : []) : ['WHERE: keep only the records where the condition is true.', 'SELECT: show only those fields.', 'ORDER BY: numbers smallest first, text A to Z. No ORDER BY: keep the order of the table.'];
     },
     expr(R, m) {
       const tb = R.p.tb, t = m.task, hlRow = new Set(R.out);
       let h = '<div class="sq-wrap"><table class="sq-t"><tr>' + tb.fields.map(f => '<th>' + f.name + (R.typed[f.name] ? '<br><small>' + R.typed[f.name] + '</small>' : '') + '</th>').join('') + '</tr>' +
         tb.rows.map((r, k) => '<tr class="' + (hlRow.has(k) ? 'good' : '') + (R.hl.bad && R.hl.bad.has(k) ? ' bad' : '') + '">' + tb.fields.map(f => '<td' + (R.hl.cells && R.hl.cells.has(k + ',' + f.name) ? ' class="hl"' : '') + '>' + r[f.name] + '</td>').join('') + '</tr>').join('') + '</table></div>';
-      if (R.p.q && t !== 'sql') h += '<b>The SQL</b><pre class="sq-code">' + sqlLines(tb, R.p.q).join('\n') + '</pre>';
+      if (t === 'fix') h += '<b>The task</b><p class="sq-task">' + taskWords(tb, R.p.q) + '</p><b>The SQL</b><pre class="sq-code">' + R.toks.map((k, i) => R.tokSlot[i].items.length ? top(R.tokSlot[i]).sym : '____').join(' ').replace(/ ,/g, ',').replace(/ ;/g, ';').replace(/\( /g, '(').replace(/ \)/g, ')') + '</pre>';
+      if (R.p.q && t !== 'sql' && t !== 'fix') h += '<b>The SQL</b><pre class="sq-code">' + sqlLines(tb, R.p.q).join('\n') + '</pre>';
       if (t === 'out' && R.out.length) h += '<b>Output so far</b><table class="sq-t out"><tr>' + R.p.q.select.map(f => '<th>' + f + '</th>').join('') + '</tr>' + R.out.map(k => '<tr>' + R.p.q.select.map(f => '<td>' + tb.rows[k][f] + '</td>').join('') + '</tr>').join('') + '</table>';
       if (t === 'agg' && R.out.length) h += '<b>In the ' + R.p.q.agg + ' machine:</b> ' + R.out.map(k => tb.rows[k][tb.key] + (R.p.q.agg === 'SUM' ? ' (' + tb.rows[k][R.p.q.aggField] + ')' : '')).join(', ');
       if (t === 'sql') h += '<b>The task</b><p class="sq-task">' + taskWords(tb, R.p.q) + '</p><b>Your SQL</b><pre class="sq-code">' + R.toks.map((k, i) => R.tokSlot[i].items.length ? top(R.tokSlot[i]).sym : '____').join(' ').replace(/ ,/g, ',').replace(/ ;/g, ';').replace(/\( /g, '(').replace(/ \)/g, ')') + '</pre>';
@@ -562,6 +706,21 @@ export function startSolo({ container, myName, colour }) {
         if (t === 'fr') { steps.push({ text: 'Fields: count the field names along the top. <span class="hl">' + tb.fields.length + ' fields</span>.', visual: tbl }); steps.push({ text: 'Records: count the rows of data under the field names. <span class="hl">' + tb.rows.length + ' records</span>. The row of field names is not a record.', visual: tbl }); }
         if (t === 'pk') { for (const f of tb.fields) { const rep = repeatOf(tb, f.name); steps.push({ text: '<b>' + f.name + '</b>: ' + (rep ? rep.v + ' appears twice, so it is not a primary key.' : 'every value is different, so it is <span class="hl">the primary key</span>.'), visual: '' }); } }
         if (t === 'dt') for (const f of tb.fields) steps.push({ text: '<b>' + f.name + '</b> holds ' + sampleVals(tb, f.name) + ': ' + TYPE_WHY[f.type].replace(/<b>|<\/b>/g, '') + '.', visual: '' });
+      } else if (t === 'fix') {
+        const p = queryRound({ fields: 2 }), toks = sqlTokens(p.tb, p.q, { none: true }), bad = makeBad(p.tb, p.q, toks);
+        const shown = toks.map((k, i) => i === bad.i ? bad.w : k.s).join(' ').replace(/ ,/g, ',').replace(/ ;/g, ';');
+        steps.push({ text: '<b>A different task.</b> ' + taskWords(p.tb, p.q), visual: tableHtml(p.tb) + '<pre class="sq-code">' + shown + '</pre>' });
+        steps.push({ text: 'Check each part against the task: the fields after SELECT, the table after FROM, then the field, comparison and value after WHERE.', visual: '' });
+        steps.push({ text: 'The mistake: <span class="hl">' + bad.w + '</span>. ' + bad.why, visual: '' });
+        steps.push({ text: 'Fixed: ' + sqlLines(p.tb, p.q).join(' '), visual: '' });
+      } else if (t === 'purpose') {
+        const p = queryRound({ fields: 2, order: Math.random() < 0.5 }), L2 = sqlLines(p.tb, p.q);
+        steps.push({ text: '<b>A different SQL.</b>', visual: '<pre class="sq-code">' + L2.join('\n') + '</pre>' });
+        steps.push({ text: L2[0] + ': it shows ' + p.q.select.join(' and ') + '.', visual: '' });
+        steps.push({ text: L2[1] + ': from the ' + p.tb.name + ' table.', visual: '' });
+        steps.push({ text: L2[2].replace(/;$/, '') + ': only the records where ' + p.q.where.map(c => c.f + ' ' + OP_WORD[c.op] + ' ' + c.v).join(' ' + (p.q.join || '').toLowerCase() + ' ') + '.', visual: '' });
+        if (p.q.order) steps.push({ text: 'ORDER BY ' + p.q.order + ': sorted by ' + p.q.order + '.', visual: '' });
+        steps.push({ text: 'Together: <span class="hl">' + taskWords(p.tb, p.q) + '</span>', visual: '' });
       } else if (t === 'sql') {
         const p = queryRound({ order: m.keywords && Math.random() < 0.5 }), toks = sqlTokens(p.tb, p.q, true);
         steps.push({ text: '<b>A different task.</b> ' + taskWords(p.tb, p.q), visual: tableHtml(p.tb) });
@@ -616,16 +775,18 @@ export function startSolo({ container, myName, colour }) {
       const k = R.k, r = tb.rows[k], yes = matches(tb, q, r);
       setAsk({ type: 'choice', q: rowName(tb, k) + ': ' + q.where.map(c => c.f + ' is ' + r[c.f]).join(', ') + '. Is the condition <b>' + q.where.map(c => condText(tb, c)).join(' ' + (q.join || '') + ' ') + '</b> true?', options: ['True', 'False'], answer: yes ? 'True' : 'False',
         hint: q.where.length > 1 ? (q.join === 'AND' ? 'AND: both parts must be true.' : 'OR: one part true is enough.') : 'Compare ' + r[q.where[0].f] + ' with ' + q.where[0].v + '.', why: condWhy(tb, q, r) + '.',
-        done: () => { if (yes) { R.ok = true; explain(condWhy(tb, q, r) + '. Carry ' + rowName(tb, k) + ' to the ' + (M.m.task === 'agg' ? q.agg + ' machine' : 'OUTPUT') + '.'); } else { R.hl.bad = (R.hl.bad || new Set()).add(k); drawTable(); explain(condWhy(tb, q, r) + '. It is not in.'); R.k++; checkNext(); } } });
+        done: () => { if (yes && M.m.sortAfter) { R.chosen.push(k); R.hl.good = new Set(R.chosen); drawTable(); explain(condWhy(tb, q, r) + '. It is in. You will carry it after checking every record.'); R.k++; checkNext(); return; } if (yes) { R.ok = true; explain(condWhy(tb, q, r) + '. Carry ' + rowName(tb, k) + ' to the ' + (M.m.task === 'agg' ? q.agg + ' machine' : 'OUTPUT') + '.'); } else { R.hl.bad = (R.hl.bad || new Set()).add(k); drawTable(); explain(condWhy(tb, q, r) + '. It is not in.'); R.k++; checkNext(); } } });
       return;
     }
     R.ask = null;
+    if (M.m.sortAfter) explain('Every record is checked. Now carry the ' + R.chosen.length + ' records that are in to OUTPUT, sorted by ' + q.order + (isNum(typeOf(tb, q.order)) ? ', smallest first.' : ', A to Z.'));
   }
   function outPut(it, from) {
     const tb = R.p.tb, m = M.m, q = R.p.q;
     if (!it.card) return { msg: 'Only record cards go here.' };
     const r = tb.rows[it.rec];
-    if (m.type === 'tutorial' && it.rec !== R.k) return { msg: 'Check the records in order. Next is ' + rowName(tb, R.k) + '.' };
+    if (m.type === 'tutorial' && m.sortAfter && R.k < tb.rows.length) return { msg: 'Check every record first.' };
+    if (m.type === 'tutorial' && !m.sortAfter && it.rec !== R.k) return { msg: 'Check the records in order. Next is ' + rowName(tb, R.k) + '.' };
     if (!matches(tb, q, r)) { R.hl.bad = new Set([it.rec]); drawTable(); return { msg: rowName(tb, it.rec) + ': ' + condWhy(tb, q, r) + '. It is not in the output.', mistake: m.type === 'challenge' }; }
     if (m.task === 'out') {
       const next = expected().find(k => !R.out.includes(k));
@@ -653,14 +814,39 @@ export function startSolo({ container, myName, colour }) {
     }
     return [k.s];
   }
-  function sqlCrates(tb, q, keywords) {
+  function sqlCrates(tb, q, mode) {
+    const o = mode && typeof mode === 'object' ? mode : { keywords: !!mode }, part = sec => !o.only || o.only === sec;
     const list = [], add = (s, role) => { if (!list.some(c => c.s === s)) list.push({ s, role }); };
-    if (keywords) ['SELECT', 'FROM', 'WHERE', 'ORDER BY', 'SUM', 'COUNT', 'AND', 'OR'].forEach(k => add(k, 'kw'));
+    if (o.keywords || o.only === 'kw') ['SELECT', 'FROM', 'WHERE', 'ORDER BY', 'SUM', 'COUNT', 'AND', 'OR'].forEach(k => add(k, 'kw'));
+    if (o.only === 'kw') return list;
     tb.fields.forEach(f => add(f.name, 'field'));
-    add(tb.name, 'table'); add(pick(['Orders', 'Staff', 'Stock'].filter(x => x !== tb.name)), 'table');
-    OPS.forEach(o => add(o, 'op'));
+    if (part('from')) { add(tb.name, 'table'); add(pick(['Orders', 'Staff', 'Stock'].filter(x => x !== tb.name)), 'table'); }
+    OPS.forEach(o2 => add(o2, 'op'));
     for (const c of q.where) { add(lit(tb, c), 'value'); for (const v of shuffle([...new Set(tb.rows.map(r => String(r[c.f])))]).filter(v => v !== c.v).slice(0, 2)) add(lit(tb, { f: c.f, v }), 'value'); }
     return list;
+  }
+  // Fix the SQL: the right cube and four that do not belong, of the same kind
+  function fixCrates(tb, q) {
+    const k = R.toks[R.bad.i], list = [{ s: k.s, role: k.role }], add = s => { if (s && !list.some(c => c.s === s)) list.push({ s, role: k.role }); };
+    add(R.bad.w);
+    if (k.role === 'table') ['Orders', 'Staff', 'Stock', 'Data'].forEach(add);
+    if (k.role === 'field') tb.fields.forEach(f => add(f.name));
+    if (k.role === 'op') OPS.forEach(add);
+    if (k.role === 'value') { const c = q.where.find(c2 => lit(tb, c2) === k.s); if (c) shuffle([...new Set(tb.rows.map(r => String(r[c.f])))]).forEach(v => { add(lit(tb, { f: c.f, v })); if (!isNum(typeOf(tb, c.f))) add(v); }); }
+    return shuffle(list.slice(0, 7));
+  }
+  function binPut(it, from) {
+    if (!from || from.role !== 'tok') return { msg: 'The BIN is for the part of the SQL that is wrong.' };
+    if (from.tok === R.bad.i) return null;
+    R.slips.add('find');
+    const k = R.toks[from.tok];
+    return { msg: it.sym + ' is right. ' + (k.role === 'kw' ? KW_DOES[k.s] + '.' : 'It matches the task.') + ' Find the part that does not match the task.', mistake: M.m.type === 'challenge' };
+  }
+  function fixPut(it) {
+    const want = R.toks[R.bad.i].s;
+    if (it.sym === want) return null;
+    R.slips.add('fill');
+    return { msg: 'Not ' + it.sym + '. ' + R.bad.why, mistake: M.m.type === 'challenge' };
   }
   function blankPut(i, it, from) {
     const k = R.toks[i], m = M.m, s = R.tokSlot[i];
@@ -745,7 +931,8 @@ export function startSolo({ container, myName, colour }) {
   function slotTarget(s) { return s ? { x: s.x + (s.w - 1) / 2, y: s.y, reach: 1.05 + (s.w - 1) / 2, box: [s.x - 0.5, s.y - 0.5, s.x + s.w - 0.5, s.y + 0.5], exact: true, slot: s } : null; }
   function boxTarget(x0, y0, x1, y1) { return { x: Math.max(x0, Math.min(x1, pos.x)), y: Math.max(y0, Math.min(y1, pos.y)), reach: 1.1, box: [x0 - 0.5, y0 - 0.5, x1 + 0.5, y1 + 0.5] }; }
   // an arrow to the nearest of several pads, with no ring: you choose which one
-  function areaTarget(list) { if (!list.length) return null; const near = list.slice().sort((a, b) => rectDist(a, pos.x, pos.y) - rectDist(b, pos.x, pos.y))[0]; const t = slotTarget(near); t.exact = false; return t; }
+  function areaTarget(list) { if (list.length !== 1) return null; const t = slotTarget(list[0]); t.exact = false; return t; }   // several choices: no arrow, so it never looks like a hint
+  const nearestOf = list => list.slice().sort((a, b) => rectDist(a, pos.x, pos.y) - rectDist(b, pos.x, pos.y))[0];
   function guideTarget() {
     if (!M || !R || M.phase !== 'play' || R.over) return null;
     // a spoilt challenge round guides like a tutorial: it does not count any more, so show the method
@@ -1185,7 +1372,7 @@ export function startSolo({ container, myName, colour }) {
   if (qi >= 0) start(qi); else if (lessonMode.on) startLesson(); else start(first);
   requestAnimationFrame(frame);
   if (/[?&]debug/.test(location.search)) window.__lab = {
-    get M() { return M; }, get R() { return R; }, pos, hand, setHand, start, newRound, free, solidAt, handPos, grabTarget, guideTarget, missions: MISSIONS, model: { makeTable, makeQuery, runQuery, aggValue, sqlLines, sqlTokens, queryRound, tableRound, TYPES, matches },
+    get M() { return M; }, get R() { return R; }, pos, hand, setHand, start, newRound, free, solidAt, handPos, grabTarget, guideTarget, missions: MISSIONS, model: { purposeOptions, makeBad, makeTable, makeQuery, runQuery, aggValue, sqlLines, sqlTokens, queryRound, tableRound, TYPES, matches },
     get slots() { return slots; }, get done() { return done; }, get arrows() { return arrows.count; }, get outlined() { return outlineG.children.length; }, get glowing() { return glowing; },
     toastText: () => $('toast').textContent, lessonMode, startLesson, nextMission, LESSONS, minsOf, KIND, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, nearestSlot
   };

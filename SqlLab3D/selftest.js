@@ -90,11 +90,12 @@ function solveDb() {
     if (m.task === 'pk') { carry(r.crK, r.head[tb.fields.findIndex(f => f.name === tb.key)]); continue; }
     if (m.task === 'dt') { const h = r.head.find(x => !x.items.length); carry(r.crT[L().TYPES.indexOf(tb.fields.find(f => f.name === h.field).type)], h); continue; }
     if (m.task === 'out' || m.task === 'agg') {
-      if (m.type === 'tutorial') { if (r.k >= tb.rows.length) { pressPad(r.done); continue; } carry(r.rec[r.k], r.outPad); continue; }
+      if (m.type === 'tutorial') { if (r.k < tb.rows.length) { carry(r.rec[r.k], r.outPad); continue; } const nx = expIdx(r).find(k => !r.out.includes(k)); if (nx == null) pressPad(r.done); else carry(r.rec[nx], r.outPad); continue; }
       const next = expIdx(r).find(k => !r.out.includes(k));
       if (next == null) { pressPad(r.done); continue; }
       carry(r.rec[next], r.outPad); continue;
     }
+    if (m.task === 'fix') { if (!r.binned) carry(r.tokSlot[r.bad.i], r.bin); else carry(r.crates.find(c => c.crate === r.toks[r.bad.i].s), r.tokSlot[r.bad.i]); continue; }
     if (m.task === 'sql') { const i = r.tokSlot.findIndex((x, j) => r.toks[j].blank && !x.items.length); carry(r.crates.find(c => c.crate === r.toks[i].s), r.tokSlot[i]); continue; }
   }
   ok(r.over, m.id + ' round did not finish (' + s().toastText() + ')');
@@ -117,6 +118,48 @@ const newRoundAfter = r => R() !== r && M().have === 0 && M().spoilt >= 1 && /ne
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.arrowNeverHints = () => {
+  s().start(idx('pk-c')); answer(); answer(); take(R().crK); s().frame(2); ok(!s().guideTarget(), 'carrying the KEY in a challenge, the arrow points at a field'); release();
+  s().start(idx('out-c')); answer(); s().frame(2); ok(!s().guideTarget(), 'in the output challenge the arrow points at a record');
+  const r = R(); for (const k of expIdx(r)) carry(r.rec[k], r.outPad); s().frame(2); ok(!s().guideTarget(), 'with every record in, the arrow gives away DONE');
+  s().start(idx('sql-c')); take(R().crates[0]); s().frame(2); ok(!s().guideTarget(), 'carrying a cube in the SQL challenge, the arrow points at a gap'); release();
+  s().start(idx('dt-t')); s().frame(2); ok(!s().guideTarget(), 'the data types tutorial points at a crate before any try');
+  s().start(idx('sql-t')); const r2 = R(), i = r2.toks.findIndex(x => x.blank);
+  const wrongCrate = r2.crates.find(c => !r2.toks.some((x, j) => x.blank && (j === i ? [x.s] : [x.s]).includes(c.crate)) && !(r2.p.q.select || []).includes(c.crate));
+  if (wrongCrate) { take(wrongCrate); s().frame(2); ok(!s().guideTarget(), 'carrying a cube that fits no gap, the arrow still points somewhere'); release(); }
+};
+T.newLevels = () => {
+  const L2 = L();
+  for (let k = 0; k < 15; k++) {
+    ok(s().missions[idx('and-t')].gen().q.join === 'AND' && s().missions[idx('or-t')].gen().q.join === 'OR', 'AND or OR is not forced');
+    const b = s().missions[idx('bool-t')].gen(); ok(b.tb.fields.find(f => f.name === b.q.where[0].f).type === 'Boolean', 'the TRUE and FALSE level is not on a Boolean field');
+    ok(['<>', '>=', '<='].includes(s().missions[idx('ops-t')].gen().q.where[0].op), 'the comparisons level uses = or < or >');
+    const c = s().missions[idx('sumw-c')].gen(); if (c.q.agg === 'COUNT') ok(!L2.sqlTokens(c.tb, c.q, { keywords: true }).some(x => x.blank && x.role === 'field' && x.sec === 'select'), 'COUNT asks for a field the task never names');
+  }
+  s().start(idx('kw-t')); ok(R().toks.filter(x => x.blank).every(x => x.role === 'kw'), 'Keywords in Order has gaps that are not keywords');
+  s().start(idx('where-t')); ok(R().toks.filter(x => x.blank).every(x => x.sec === 'where') && R().toks.some(x => x.blank), 'Write the WHERE has gaps outside WHERE');
+};
+T.fixTheSql = () => {
+  s().start(idx('fix-t')); const r = R();
+  ok(top(r.tokSlot[r.bad.i]).sym === r.bad.w && r.bad.w !== r.toks[r.bad.i].s, 'the wrong part is not in the SQL');
+  const good = r.tokSlot.find((x, j) => j !== r.bad.i && r.toks[j].role !== 'sym');
+  carry(good, r.bin); ok(!r.binned && top(good) && !M().spoilt && /is right/.test(s().toastText()), 'a right part in the BIN was not just a hint in the tutorial');
+  carry(r.tokSlot[r.bad.i], r.bin); ok(r.binned, 'the wrong part did not go in the BIN');
+  const wrong = r.crates.find(c => c.crate !== r.toks[r.bad.i].s); carry(wrong, r.tokSlot[r.bad.i]); ok(!r.tokSlot[r.bad.i].items.length && !M().spoilt, 'a wrong fix was taken');
+  s().start(idx('fix-c')); const r2 = R(), good2 = r2.tokSlot.find((x, j) => j !== r2.bad.i && r2.toks[j].role !== 'sym');
+  carry(good2, r2.bin); ok(newRoundAfter(r2), 'a right part in the BIN did not start a new round in the challenge');
+};
+T.purpose = () => {
+  for (let k = 0; k < 20; k++) { const p = s().missions[idx('purpose-c')].gen(), o = L().purposeOptions(p.tb, p.q); ok(o.length === 3 && new Set(o).size === 3, 'the SQL descriptions are not three different ones'); }
+  s().start(idx('purpose-c')); const r = R(); answer(false); ok(newRoundAfter(r), 'a wrong description did not start a new round');
+};
+T.orderTutorial = () => {
+  s().start(idx('order-t')); const r = R();
+  while (r.ask) answer();
+  const e = expIdx(r); carry(r.rec[e[1]], r.outPad);
+  ok(!r.out.length && /comes first/.test(s().toastText()) && !M().spoilt, 'ORDER BY order was not taught in the tutorial');
+  s().frame(2); ok(s().guideTarget()?.slot === r.rec[e[0]], 'the arrow does not show the record that comes first');
+};
 T.onlyKeyUnique = () => {
   for (let k = 0; k < 60; k++) { const tb = L().makeTable({ n: 7 }); for (const f of tb.fields) { const n = new Set(tb.rows.map(x => String(x[f.name]))).size; ok(f.name === tb.key ? n === 7 : n < 7, tb.name + ': ' + f.name + (f.name === tb.key ? ' repeats' : ' is also unique')); } }
 };
@@ -175,7 +218,6 @@ T.sqlGaps = () => {
   const wrong = r.crates.find(c => c.crate !== want && !(r.p.q.select || []).includes(c.crate));
   carry(wrong, r.tokSlot[i]);
   ok(!r.tokSlot[i].items.length && /^Not /.test(s().toastText()) && !M().spoilt, 'a wrong cube in a gap was not just a hint in the tutorial');
-  take(wrong); s().frame(2); ok(s().guideTarget()?.slot === r.tokSlot[i], 'carrying, the arrow does not show the gap'); release();
   s().frame(2); ok(s().guideTarget()?.slot?.crate === want || (r.p.q.select || []).includes(s().guideTarget()?.slot?.crate), 'after a slip the arrow does not show the right crate');
   s().start(idx('sql-c')); const r2 = R();
   ok(r2.toks[0].blank && r2.toks[0].s === 'SELECT', 'the challenge does not blank the keywords');
@@ -189,13 +231,14 @@ T.selectAnyOrder = () => {
 };
 T.lessonMode = () => {
   const lab = s(); lab.start(0); clickBtn('Lesson mode');
-  ok(lab.lessonMode.on && $('nbLesson') && $('nbLesson').options.length === 2, 'lesson mode did not open with two lessons');
+  ok(lab.lessonMode.on && $('nbLesson') && $('nbLesson').options.length === 4, 'lesson mode did not open with four lessons');
   for (const L2 of lab.LESSONS) { const mins = L2.missions.reduce((n, id) => n + lab.minsOf(lab.missions[idx(id)]), 0); ok(mins >= 30 && mins <= 60, L2.id + ' is ' + mins + ' minutes'); }
   clickBtn('All missions'); ok(!lab.lessonMode.on, 'All missions did not come back');
 };
 T.walkthroughs = () => {
   for (let i = 0; i < s().missions.length; i++) {
     s().start(i);
+    if (s().missions[i].noHelp) { ok(![...document.querySelectorAll('#mission button')].some(b => b.textContent.trim() === 'Walk me through it'), s().missions[i].id + ' is no-help but shows Walk me through it'); continue; }
     clickBtn('Walk me through it');
     const txt = $('card').textContent; ok(/Step 1 of/.test(txt), s().missions[i].id + ' walkthrough did not open');
     ok(!/[–—]/.test(txt), 'dash in walkthrough');
