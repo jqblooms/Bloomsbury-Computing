@@ -319,17 +319,25 @@ export function startSolo({ container, myName, colour }) {
     });
   }
   const myFlags = [makeFlag(), makeFlag()]; me.group.add(...myFlags); myFlags.forEach(f => f.visible = false);
-  // the signaller: a big blob on a stage, made once and moved into each new room
+  // A thin podium: a flag held straight down reaches about 24 below the feet of a blob (more when it is scaled up),
+  // and it is held in front, so a raised narrow column keeps every flag above the floor and clear of the column.
+  const SIG_LIFT = 75, ME_LIFT = 50;
+  function podium(x, y, h, r) {
+    const g = new THREE.Group(), mat = new THREE.MeshStandardMaterial({ color: 0x5c6f82, roughness: 0.6 }), capMat = new THREE.MeshStandardMaterial({ color: 0xced4da, roughness: 0.5 });
+    const col = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.7, r * 0.8, h - 6, 24), mat); col.position.y = (h - 6) / 2;
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 6, 32), capMat); cap.position.y = h - 3;
+    for (const m of [col, cap]) { m.userData.own = true; m.userData.ownMat = true; m.castShadow = true; g.add(m); }
+    g.position.set((x + 0.5) * T, 0, (y + 0.5) * T); return g;
+  }
+  // the signaller: a big blob on a podium, made once and moved into each new room
   let sig = null, sigFlags = null, sigHolder = null;
   function addSignaller(x, y) {
     if (!sig) {
       sig = createBlob(4, ''); sig.group.scale.setScalar(2.1);
       sigFlags = [makeFlag(), makeFlag()]; sig.group.add(...sigFlags);
-      sigHolder = new THREE.Group(); sigHolder.add(sig.group); sigHolder.position.y = 30;
+      sigHolder = new THREE.Group(); sigHolder.add(sig.group); sigHolder.position.y = SIG_LIFT;
     }
-    const stage = new THREE.Mesh(new THREE.BoxGeometry(5 * T - 10, 30, 3 * T - 10), new THREE.MeshStandardMaterial({ color: 0x5c6f82, roughness: 0.7 }));
-    stage.userData.own = true; stage.userData.ownMat = true;
-    stage.position.set((x + 0.5) * T, 15, (y + 0.5) * T); worldG.add(stage, sigHolder);
+    worldG.add(podium(x, y, SIG_LIFT, 44), sigHolder);
     blocks.push([x - 2, y - 1, x + 2, y + 1]);
     R.sigAt = [x, y];
   }
@@ -448,11 +456,13 @@ export function startSolo({ container, myName, colour }) {
       R.at = 0; R.pose = [];
       const x0 = Math.floor((W - n) / 2);
       R.out = [...R.p.text].map((c, i) => addSlot({ role: 'out', pad: 'answer', x: x0 + i, y: 4 }));
-      addSign('SEND', 14, 4, 170, { bg: '#151515', size: 0.032 });
       pos.x = 14; pos.y = 7; R.face = 0;
+      worldG.add(podium(14, 7, ME_LIFT, 34));   // you signal from a podium, so your flags never reach the floor
     },
     // your blob faces the reader (the camera) whenever you stand still, so the flags read the right way round
-    tick() { if (!moving && R && !R.over) pos.face = 0; },
+    // you stay on your podium facing the reader (the camera), so the flags read the right way round
+    tick() { pos.x = 14; pos.y = 7; pos.face = 0; },
+    lift: () => ME_LIFT,
     myHands() { return R && M.m.kind === 'send' ? armDirs(R.pose.length === 2 ? R.pose : R.pose.length === 1 ? [R.pose[0], R.pose[0] === 0 ? 1 : 0] : [0, 0]) : null; },
     placed() { },
     check() { },
@@ -951,7 +961,8 @@ export function startSolo({ container, myName, colour }) {
     const mine = K?.myHands?.();   // posed flags when sending, the usual grabbing hands otherwise
     me.update(dt, { x: pos.x, y: pos.y, face: pos.face, moving, hands: mine ? mine.map(d => ({ dir: d })) : [0, 0].map(() => ({ down: hand.down || !!hand.item, hold: hand.item ? 'dev' : null })) }, true);
     placeFlags(me, myFlags, mine);
-    view.follow(pos.x, overview || !(M && M.m.kind === 'read') ? pos.y : pos.y - 2.6);   // looking up the room, so the signaller on the stage stays in view
+    if (K?.lift) me.group.position.y = K.lift();   // standing on a podium (update puts the blob on the floor)
+    view.follow(pos.x, overview || !(M && M.m.kind === 'read') ? pos.y : pos.y - 3.1);   // looking up the room, so the signaller on the stage stays in view
     view.render(dt);
   }
   const typing = e => /input|select|textarea/i.test(e.target?.tagName || '');
@@ -1004,7 +1015,7 @@ export function startSolo({ container, myName, colour }) {
   if (qi >= 0) start(qi); else if (lessonMode.on) startLesson(); else start(first);
   requestAnimationFrame(frame);
   if (/[?&]debug/.test(location.search)) window.__lab = {
-    get M() { return M; }, get R() { return R; }, pos, hand, setHand, start, newRound, free, solidAt, handPos, grabTarget, guideTarget, missions: MISSIONS, POSE, LETTER_OF, figSvg,
+    get M() { return M; }, get R() { return R; }, pos, hand, setHand, start, newRound, free, solidAt, handPos, grabTarget, guideTarget, missions: MISSIONS, POSE, LETTER_OF, figSvg, get flags() { return (sigFlags || []).concat(myFlags); },
     get slots() { return slots; }, get done() { return done; }, get arrows() { return arrows.count; }, get outlined() { return outlineG.children.length; }, get glowing() { return glowing; },
     toastText: () => $('toast').textContent, lessonMode, startLesson, nextMission, LESSONS, minsOf, KIND, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, nearestSlot
   };

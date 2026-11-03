@@ -142,6 +142,17 @@ T.walkthroughs = () => {
     ok($('cardWrap').hidden, 'walkthrough did not close');
   }
 };
+// no flag may go into the floor or the podium, for any letter, held by the signaller or by you
+T.flagsClearFloor = () => {
+  const lab = s(), lowest = list => { let low = Infinity; for (const f of list) { if (!f.visible) continue; f.updateWorldMatrix(true, true); f.traverse(o => { const p = o.geometry?.attributes?.position; if (!p) return; const v = f.position.clone(); for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); o.localToWorld(v); low = Math.min(low, v.y); } }); } return low; };
+  lab.start(lab.missions.findIndex(m => m.id === 'read-c')); const r = R();
+  let worst = Infinity, worstL = '';
+  for (const L of Object.keys(lab.POSE)) { r.p.text = L; r.at = 0; lab.frame(60); const low = lowest(lab.flags.slice(0, 2)); if (low < worst) { worst = low; worstL = L; } }
+  ok(worst > 2, 'a signaller flag goes into the floor for ' + JSON.stringify(worstL) + ' (' + worst.toFixed(1) + ')');
+  lab.start(lab.missions.findIndex(m => m.id === 'send-c')); worst = Infinity;
+  for (const L of Object.keys(lab.POSE)) { if (L === ' ') continue; R().pose = lab.POSE[L].slice(); lab.frame(60); const low = lowest(lab.flags.slice(2)); if (low < worst) { worst = low; worstL = L; } }
+  ok(worst > 2, 'one of your flags goes into the floor for ' + worstL + ' (' + worst.toFixed(1) + ')');
+};
 T.noDashes = () => {
   const all = JSON.stringify(s().missions.map(m => [m.title, m.intro, m.after])) + $('mission').textContent;
   ok(!/[–—]/.test(all), 'a dash in the wording');
