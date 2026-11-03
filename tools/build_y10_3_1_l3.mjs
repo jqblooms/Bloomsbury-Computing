@@ -82,12 +82,12 @@ function checkStep(id, label, lead, parts, extra = '', grid = 0) {
 const NOTES = [];
 function noteBox(q, model) {
   NOTES.push({ q, model });
-  return `<details class="lesson-note"><summary><span class="lesson-note-q">Note in your book: ${q}</span>` +
+  return `<details class="lesson-note"><summary><span class="lesson-note-q">Note in your notes: ${q}</span>` +
     `<span class="lesson-note-reveal">Check my note</span></summary><div class="lesson-note-a"><p><strong>A model note:</strong> ${model}</p></div></details>`;
 }
 function noteSlide(id, label, notes) {
   return { id, label, content: `<h2 class="lesson-h2">${label}</h2>` +
-    todo('write each note in your book, in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.') +
+    todo('open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.') +
     notes.map(([q, m]) => noteBox(q, m)).join('') };
 }
 function mcStep(id, label, lead, items, extra = '') {
@@ -105,7 +105,7 @@ function embed(id, label, appId, lead, embedQuery) {
     content: `<h2 class="lesson-h2">${label}</h2>` + (lead ? `<p class="lesson-lead">${lead}</p>` : '') + `<div id="${P}-${id}"></div>` }, embedQuery ? { embedQuery } : {});
 }
 const steps = [];
-const OWN_DO = 'Type your answer in your own words, then press <strong>Check my answer</strong> to have it marked, and <strong>Submit answer</strong> to see the model answer. Fix your answer, then copy your best version into your book.';
+const OWN_DO = 'Type your answer in your own words, then press <strong>Check my answer</strong> to have it marked, and <strong>Submit answer</strong> to see the model answer. Fix your answer, then copy your best version into your notes.';
 const WRITE_DO = 'Type your answer, then press <strong>Submit answer</strong> (or <strong>Check my answer</strong> to have it marked). Done when you have marked it against the model answer.';
 
 // ---------------------------------------------------------------- Do Now 1: 0478/12 November 2024 Q6
@@ -235,10 +235,10 @@ steps.push(mcStep('predict-way', 'Check: Which Way?',
   ]));
 
 steps.push(written('explain-write', 'Explain It: A Write', OWN_DO, [
-    { id: 'write-why', prompt: 'The CPU stores 19 at address 4. In your own words, say what each bus carries and which way it goes. Then explain WHY the data bus goes that way.', marks: 4,
-      scheme: ['Address bus: carries 4 (the address), out of the CPU to memory', 'Control bus: carries a write signal, out of the CPU (from the CU) to memory', 'Data bus: carries 19 (the value), out of the CPU to memory', 'Because in a write the value starts in the CPU and ends up in memory'],
-      guidance: 'One mark for each point. Points 1 to 3 need both what the bus carries and the direction. Point 4 needs the reason (the value starts in the CPU, or is going to be stored in memory). A bus with the wrong value or direction earns no mark for that point.',
-      modelAnswer: 'Address bus: 4, out to memory. Control bus: write, out to memory. Data bus: 19, out to memory, because the value starts in the CPU and is stored in memory.' },
+    { id: 'write-why', prompt: 'The CPU saves a number into memory. In your own words, explain which way the number travels on the data bus, and WHY.', marks: 2,
+      scheme: ['Out of the CPU to memory', 'Because the number starts in the CPU and is being stored in memory'],
+      guidance: 'One mark for the direction: out of the CPU to memory. One mark for the reason: the number starts in the CPU, or it is going to be stored in memory. A reason with the wrong direction earns no marks.',
+      modelAnswer: 'Out of the CPU to memory, because the number starts in the CPU and is being stored in memory.' },
   ]));
 steps.push(noteSlide('note-read-write', 'Your Notes: A Read and a Write', [['explain WHY a read signal goes on the control bus, and not on the data bus.', 'A read signal is a command from the CU, not a value. Commands go on the control bus.'], ['explain WHY only the data bus changes direction between a read and a write.', 'The address and the read or write signal always start in the CPU. The value starts in memory for a read, and in the CPU for a write.']]));
 
@@ -295,15 +295,15 @@ steps.push(mcStep('exam-4', 'Exam Questions: Which Part Uses the Bus?',
 
 // ---------------------------------------------------------------- notes check
 steps.push({ id: 'notes-check', label: 'Notes Check: Your WHY Notes',
-  content: '<h2 class="lesson-h2">Notes Check: Your WHY Notes</h2>' + todo('look in your book. You should have each note below, in your own words. Missing one? Go back to the slide named, write it, and press Check my note. Then go to the next slide.') +
+  content: '<h2 class="lesson-h2">Notes Check: Your WHY Notes</h2>' + todo('open your notes (the notepad button at the top). You should have each note below, in your own words. Missing one? Go back to the slide named, write it, and press Check my note. Then go to the next slide.') +
     facts(['<strong>WHY there are three buses, not one.</strong> Slide: Your Note: Why Three Buses.', '<strong>Which way the address bus goes, and WHY.</strong> Slide: Explain It: The Address Bus.',
       '<strong>WHY the data bus goes both ways</strong>, using read and write. <strong>WHY memory needs a read or a write signal.</strong> <strong>WHY an address is not data.</strong> Slide: Your Notes: Data, Control and Which Bus.',
-      '<strong>A write, bus by bus</strong>, and WHY the data bus goes out. Slide: Explain It: A Write.',
+      '<strong>Which way the data bus goes in a write, and WHY.</strong> Slide: Explain It: A Write.',
       '<strong>WHY a read signal goes on the control bus. WHY only the data bus changes direction.</strong> Slide: Your Notes: A Read and a Write.']) });
 
 // ---------------------------------------------------------------- plenary (the drill is built separately)
 steps.push(embed('plenary', 'Plenary: Buses Drill', 'drill-' + ID,
-  '<strong>What to do:</strong> answer every card. Pick the answer that earns the mark, then type it. Got one wrong? Go back to the slide it names, make a note in your book, then carry on. Your progress is saved.'));
+  '<strong>What to do:</strong> answer every card. Pick the answer that earns the mark, then type it. Got one wrong? Go back to the slide it names, add it to your notes, then carry on. Your progress is saved.'));
 
 // ---------------------------------------------------------------- the practice paper (shell EXAM_PAPERS y10-3-1-l3-paper)
 steps.push({ id: 'exam-paper', label: 'Practice Paper: Buses', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l3-paper', buttonId: `${P}-open-paper`,

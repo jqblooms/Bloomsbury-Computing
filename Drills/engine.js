@@ -95,7 +95,7 @@
   els.title.textContent = drill.title;
   els.sub.textContent = drill.subtitle || "";
   document.title = "Drill: " + drill.title;
-  if (noHelp && els.noticeLearn) els.noticeLearn.textContent = "Learn mode · nothing is recorded here. Stuck? Each wrong answer names the lesson slide to go back to. Make notes in your book, then try again.";
+  if (noHelp && els.noticeLearn) els.noticeLearn.textContent = "Learn mode · nothing is recorded here. Stuck? Each wrong answer names the lesson slide to go back to. Add it to your notes (the notepad button at the top), then try again.";
 
   var RUN_KEY = "bc_drill_" + drillId + "_run";
   var EVER_KEY = "bc_drill_" + drillId + "_ever";
@@ -418,7 +418,7 @@
   // A noHelp drill's wrong-answer message: the lesson slide to go back to, never the answer.
   function goBackHtml(card) {
     var where = card.goBack ? "Go back to the slide “" + escapeHtml(card.goBack) + "”." : "Go back over the lesson slides.";
-    return "Not yet. " + where + " Make notes in your book, then try again.";
+    return "Not yet. " + where + " Add it to your notes (the notepad button at the top), then try again.";
   }
   function nearMissReason(answer, typed) {
     var a = String(answer).trim(), t = String(typed).trim();
