@@ -109,6 +109,9 @@ function fixedMem() { const m = [{ op: 'LOAD', a: 5 }, { op: 'ADD', a: 6 }, { op
 
 // ---- the jobs (mark-scheme wording, as CpuLab/parts.js)
 const WHY = {
+  INPUT: '<b>Input</b> is data going <b>into</b> the CPU from a device such as a keyboard, a scanner or a sensor.',
+  PROCESS: '<b>Process</b> is the CPU (or microprocessor) <b>working on</b> the data: calculating, comparing or deciding.',
+  OUTPUT: '<b>Output</b> is a result the CPU sends <b>out</b>: shown on a screen, played, or a signal that makes something happen.',
   ALU: 'The <b>ALU</b> (arithmetic logic unit) carries out calculations and logical operations, such as comparing two numbers.',
   CU: 'The <b>CU</b> (control unit) sends signals to manage how data and instructions move, and works out what each instruction means.',
   PC: 'The <b>PC</b> (program counter) holds the address of the <b>next</b> instruction.',
@@ -205,8 +208,89 @@ function traceRound() {
   return { mode: 'trace', mem, jobs, key: jobs.map(j => j.title).join('|') };
 }
 
+
+// ---- 3.1.1: input, process, output (devices from CpuLab/ipo.js: 0478/11 June 2021 Q6, 0478/11 November 2021 Q9,
+// 0478/12 June 2021 Q6, 0478/12 March 2026 Q3)
+const I = 'INPUT', P = 'PROCESS', O = 'OUTPUT';
+const IPO_COMPUTERS = [
+    ['A calculator app', [['You type 12 + 30 on the keyboard', I], ['The CPU adds 12 and 30', P], ['The screen shows 42', O]]],
+    ['A self-checkout', [['The barcode scanner reads the barcode', I], ['The CPU looks up the price of the item', P], ['The CPU adds the price to the total', P], ['The screen shows the new total', O]]],
+    ['A games console', [['You press jump on the controller', I], ['The CPU works out the character\'s new position', P], ['The screen shows the character jumping', O], ['The speaker plays a jump sound', O]]],
+    ['A music app', [['You tap play on the touch screen', I], ['The CPU reads the music file and turns it into sound data', P], ['The speaker plays the song', O]]],
+    ['A word processor', [['You press the A key', I], ['The CPU stores the letter in the document', P], ['The screen shows the letter A', O]]],
+    ['A digital camera', [['You press the shutter button', I], ['The CPU compresses the photo', P], ['The screen shows the photo', O]]],
+    ['A cash machine', [['You type your PIN on the keypad', I], ['The CPU checks the PIN is correct', P], ['The screen shows your balance', O]]]
+  ];
+const IPO_SENSORS = [
+    ['A greenhouse heater', [['The temperature sensor sends a reading to the microprocessor', I], ['The microprocessor compares the reading with the stored value', P], ['The microprocessor finds the reading is below 25', P], ['The microprocessor sends a signal to turn the heater on', O]]],
+    ['A washing machine', [['The temperature sensor sends data to the microprocessor', I], ['The microprocessor checks if the data is below 30', P], ['The microprocessor sends a signal to switch the heater on', O]]],
+    ['A security light', [['The light sensor and the infra-red sensor send data to the microprocessor', I], ['The microprocessor checks both readings against the stored values', P], ['The microprocessor sends a signal to switch the light on', O], ['The microprocessor counts until the timer reaches 1 minute', P], ['The microprocessor sends a signal to switch the light off', O]]],
+    ['A drone that must not crash', [['The proximity sensor sends data to the microprocessor', I], ['The microprocessor compares the distance with the stored value', P], ['The microprocessor sends a signal to the motors to change direction', O]]],
+    ['An air conditioner', [['The temperature sensor sends a reading to the microprocessor', I], ['The microprocessor finds the reading is above 24', P], ['The microprocessor sends a signal to turn the fan on', O]]]
+  ];
+// cards: a device's steps (tutorial: one device, in order) or steps from two devices mixed (challenge)
+function ipoProblem(level, tutorial) {
+  const pool = level === 'computers' ? IPO_COMPUTERS : level === 'sensors' ? IPO_SENSORS : IPO_COMPUTERS.concat(IPO_SENSORS);
+  const devs = shuffle(pool).slice(0, tutorial ? 1 : 2), short = d => d.replace(/^(A|An) /, '');
+  let cards = devs.flatMap(([d, steps]) => steps.map(([t, a]) => [short(d) + ': ' + t, a]));
+  if (!tutorial) cards = shuffle(cards).slice(0, 7);
+  return { parts: [I, P, O], cards: cards.map(([t, a]) => ({ text: t, answer: a })), key: cards.map(c => c[0]).join('|'), device: devs.map(d => d[0]).join(' and ') };
+}
+// ---- 3.1.1: the stored program. One memory holds the instructions (from address 0) and the data after them.
+const RUN_MEANS = { LOAD: 'copies the number stored at address A into the CPU', ADD: 'adds the number stored at address A to the number in the CPU', SUB: 'takes the number stored at address A away from the number in the CPU', OUTPUT: 'sends the number in the CPU to the screen', STOP: 'ends the program' };
+const runMeans = c => RUN_MEANS[c.op].replace('A', c.a);
+// what happens at each address in turn: { k, ins, a (data address), before, after, out }
+function runTrace(mem) {
+  const out = []; let acc = 0;
+  for (let k = 0; k < mem.length; k++) {
+    const c = mem[k]; if (!c || !c.op) break;
+    const e = { k, ins: c, before: acc };
+    if (c.a != null) { const v = mem[c.a].n; acc = c.op === 'LOAD' ? v : c.op === 'ADD' ? acc + v : acc - v; e.a = c.a; e.v = v; }
+    if (c.op === 'OUTPUT') e.out = acc;
+    e.after = acc; out.push(e);
+    if (c.op === 'STOP') break;
+  }
+  return out;
+}
+// tutorial: one fixed program; otherwise random, the number in the CPU never below 0; two: the program outputs twice
+function runProblem(o = {}) {
+  for (let t = 0; t < 200; t++) {
+    let mem;
+    if (o.fixed) { mem = [{ op: 'LOAD', a: 5 }, { op: 'ADD', a: 6 }, { op: 'OUTPUT' }, { op: 'STOP' }]; mem[5] = { n: 14 }; mem[6] = { n: 9 }; }
+    else if (o.two) { const d = shuffle([6, 7, 8]); mem = [{ op: 'LOAD', a: d[0] }, { op: pick(['ADD', 'SUB']), a: d[1] }, { op: 'OUTPUT' }, { op: pick(['ADD', 'SUB']), a: d[2] }, { op: 'OUTPUT' }, { op: 'STOP' }]; for (const a of d) mem[a] = { n: rnd(3, 30) }; mem[d[0]] = { n: rnd(20, 45) }; }
+    else { const d = shuffle([5, 6, 7]); mem = [{ op: 'LOAD', a: d[0] }, { op: pick(['ADD', 'SUB']), a: d[1] }, { op: pick(['ADD', 'SUB']), a: d[2] }, { op: 'OUTPUT' }, { op: 'STOP' }]; for (const a of d) mem[a] = { n: rnd(3, 25) }; mem[d[0]] = { n: rnd(20, 45) }; }
+    const tr = runTrace(mem);
+    if (tr.some(e => e.after < 0)) continue;
+    const vals = mem.filter(c => c && c.n != null).map(c => c.n); if (new Set(vals).size !== vals.length) continue;   // no two data values the same
+    return { mem, trace: tr, key: mem.map(text).join('|') };
+  }
+  return runProblem({ fixed: true });
+}
+
 // ================================================================ missions
 const MISSIONS = [
+  { id: 'ipo-t', group: 'Input, process, output', title: 'Input, Process, Output', type: 'tutorial', guided: true, kind: 'sort', level: 'computers', mins: 5,
+    intro: 'A computer takes data in, works on it, and sends a result out. Carry each step to <b>INPUT</b>, <b>PROCESS</b> or <b>OUTPUT</b>.',
+    gen: () => ipoProblem('computers', true),
+    after: { q: 'Why does the CPU need an input before it can process?', options: ['It works on the instructions and data that are input.', 'It needs a screen to be switched on first.', 'The output has to come first.'], why: 'The CPU processes the instructions and data that are input, so that a result can be output.' } },
+  { id: 'sensor-t', group: 'Input, process, output', title: 'Sensor Systems', type: 'tutorial', kind: 'sort', level: 'sensors', mins: 5,
+    intro: 'Many devices have a <b>microprocessor</b> inside: one integrated circuit that does the job of a CPU. A sensor is its input. Carry each step to INPUT, PROCESS or OUTPUT.',
+    gen: () => ipoProblem('sensors', true),
+    after: { q: 'What is a microprocessor?', options: ['One integrated circuit that carries out the functions of a CPU.', 'A sensor that measures the temperature.', 'A memory that stores the program.'], why: 'A microprocessor is an integrated circuit that can carry out the functions of a CPU, often inside a device.' } },
+  { id: 'ipo-c', group: 'Input, process, output', title: 'Input, Process or Output?', type: 'challenge', kind: 'sort', level: 'mix', mins: 8,
+    intro: 'Steps from two devices, mixed up. Carry each one to INPUT, PROCESS or OUTPUT. Two clean rounds in a row.',
+    gen: () => ipoProblem('mix', false) },
+  { id: 'run-t', group: 'Stored program', title: 'Program and Data in One Memory', type: 'tutorial', guided: true, kind: 'run', mins: 7,
+    intro: 'Memory holds the program <b>and</b> its data. The CPU runs the instructions one after another, starting at address 0. Carry each instruction to the CPU, then the data it needs.',
+    gen: () => runProblem({ fixed: true }),
+    after: { q: 'Why does the CPU need the data from memory as well as the instruction?', options: ['ADD 6 says where the number is: the number itself is stored at address 6.', 'The instruction is too long for the CPU.', 'Memory sends everything at once.'], why: 'The number after LOAD, ADD or SUB is an address. The data is stored there, in the same memory as the program.' } },
+  { id: 'run2-t', group: 'Stored program', title: 'Two Calculations', type: 'tutorial', kind: 'run', mins: 7,
+    intro: 'A longer program. Run it one instruction at a time and predict what the CPU holds after each one.',
+    gen: () => runProblem() },
+  { id: 'run-c', group: 'Stored program', title: 'Predict, then Run', type: 'challenge', kind: 'run', predict: true, mins: 10,
+    intro: 'Predict what the screen will show first, then run the program to check. Two clean rounds in a row.',
+    gen: () => runProblem(pick([{}, { two: true }])) },
+
   { id: 'alucu-t', group: 'ALU or CU', title: 'Meet the ALU and the CU', type: 'tutorial', guided: true, kind: 'sort', level: 'alucu',
     intro: 'Each card is a job. Carry it to the part that does that job. Ask: is it maths, or is it being in charge?',
     gen: () => sortProblem('alucu', true),
@@ -264,10 +348,11 @@ const MISSIONS = [
     gen: () => traceRound() }
 ];
 export { MISSIONS };
-const SECTIONS = ['ALU or CU', 'Registers', 'Take the next instruction', 'Carry it out', 'Run a program', 'Buses'];
+const SECTIONS = ['Input, process, output', 'Stored program', 'ALU or CU', 'Registers', 'Take the next instruction', 'Carry it out', 'Run a program', 'Buses'];
 // Lesson mode: 3.1.2 CPU Components (about an hour), with the instruction missions as extensions; 3.1.3 Buses (one
 // activity of that lesson, about 25 minutes)
 const LESSONS = [
+  { id: '3.1.1', title: '3.1.1: CPU and Microprocessors', missions: ['ipo-t', 'sensor-t', 'ipo-c', 'run-t', 'run2-t', 'run-c'], ext: [] },
   { id: '3.1.2', title: '3.1.2: CPU Components', missions: ['alucu-t', 'alucu-c', 'regs-t', 'regs-c', 'parts-c', 'next-t', 'next-c'], ext: ['load-t', 'add-t', 'do-c', 'one-c', 'run-c'] },
   { id: '3.1.3', title: '3.1.3: Buses and Data Movement', missions: ['bus-t', 'bus-c', 'trace-t', 'trace-c'], ext: ['trace-own-c'] }
 ];
@@ -391,7 +476,7 @@ export function startSolo({ container, myName, colour }) {
     M.lastKey = keyOf(p);
     R = { p, over: false, spoilt: false, ask: null, notes: [], moves: 0, why: null };
     KIND[m.kind].setup(R, m);
-    view.zoom?.(m.kind === 'bus' ? 1600 : 760, m.kind === 'bus' ? 0.95 : 0.75);   // the buses: far enough back to see the CPU and memory at both ends
+    view.zoom?.(m.kind === 'bus' ? 1600 : m.kind === 'run' ? 1250 : 760, m.kind === 'bus' ? 0.95 : m.kind === 'run' ? 0.9 : 0.75);   // the buses: far enough back to see the CPU and memory at both ends
     pos.face = Math.PI; view.jump(pos.x, pos.y - camAhead());
     toast(''); explainReset();
     if (after) { explain('Not this time. ' + after + ' A new round has started.'); R.why = after; toast('A mistake, so a new round has started. ' + after, 'bad'); }
@@ -456,7 +541,7 @@ export function startSolo({ container, myName, colour }) {
 
   // ---------------------------------------------------------------- job cards: carry each card to the part that does the job
   const KIND = {};
-  const NAME_COL = { ALU: 0x1864ab, CU: 0x5f3dc4 };
+  const NAME_COL = { ALU: 0x1864ab, CU: 0x5f3dc4, INPUT: 0x2b8a3e, PROCESS: 0x1864ab, OUTPUT: 0xe8590c };
   KIND.sort = {
     start() { return 'Each card is a job. Carry it to the part of the CPU that does that job.'; },
     setup(R, m) {
@@ -497,7 +582,7 @@ export function startSolo({ container, myName, colour }) {
     },
     steps(R, m) {
       return R.p.cards.map(c => ({
-        text: m.level === 'alucu' ? 'Carry "' + c.text + '" to the <b>' + c.answer + '</b>. ' + (c.answer === 'ALU' ? 'It is maths or comparing.' : 'It is being in charge.') : '"' + c.text + '": find the clue word, then carry it to that register.',
+        text: ['computers', 'sensors', 'mix'].includes(m.level) ? (m.guided ? 'Carry "' + c.text + '" to <b>' + c.answer + '</b>. ' + WHY[c.answer] : '"' + c.text + '": going in, being worked on, or going out?') : m.level === 'alucu' ? 'Carry "' + c.text + '" to the <b>' + c.answer + '</b>. ' + (c.answer === 'ALU' ? 'It is maths or comparing.' : 'It is being in charge.') : '"' + c.text + '": find the clue word, then carry it to that register.',
         done: () => R.pads.some(s => s.items.some(x => x.text === c.text))
       }));
     },
@@ -507,7 +592,8 @@ export function startSolo({ container, myName, colour }) {
       return '<b>Cards with the right part:</b> ' + R.placedN + ' of ' + R.p.cards.length + (c ? '<br><b>You are carrying:</b> "' + c.text + '"' : '<br>Walk up to a card to read it.');
     },
     walk(R, m) {
-      const p = sortProblem(m.level, true), steps = [{ text: '<b>Different cards.</b> For each job, ask: is it maths, being in charge, or holding something? If it holds something, what: an address, data, an instruction, or a result?', visual: '' }];
+      const ipoLevel = ['computers', 'sensors', 'mix'].includes(m.level);
+      const p = ipoLevel ? ipoProblem(m.level === 'mix' ? 'sensors' : m.level, true) : sortProblem(m.level, true), steps = [{ text: ipoLevel ? '<b>A different device: ' + p.device + '.</b> For each step, ask: is data going in, is it being worked on, or is a result going out?' : '<b>Different cards.</b> For each job, ask: is it maths, being in charge, or holding something? If it holds something, what: an address, data, an instruction, or a result?', visual: '' }];
       p.cards.forEach(c => steps.push({ text: '"' + c.text + '": <span class="hl">' + c.answer + '</span>. ' + WHY[c.answer], visual: '' }));
       steps.push({ text: 'Now carry your own cards.', visual: '' });
       return steps;
@@ -636,6 +722,93 @@ export function startSolo({ container, myName, colour }) {
       return steps;
     }
   };
+  // ---------------------------------------------------------------- 3.1.1 the stored program: carry each instruction to the CPU in order
+  KIND.run = {
+    start(m, p) { return 'The CPU starts at address 0. Memory holds the program (addresses 0 to ' + (p.trace.length - 1) + ') and its data.'; },
+    setup(R, m) {
+      const p = R.p; R.i = 0; R.acc = 0; R.phase = 'ins'; R.outs = []; R.slot = {};
+      newWorld(25, 16, 'The stored program');
+      for (let a = 0; a < 10; a++) {
+        const c = p.mem[a];
+        const s = addSlot({ role: 'mem', pad: 'rail', x: 3 + a * 2, y: 2, key: 'mem:' + a, addr: a, label: String(a), tag: { tagY: 150, tagSize: 0.06 },
+          copyOut: () => c ? valueCube(text(c), c.op ? 'instr' : 'data') : 'Address ' + a + ' is empty.',
+          put: () => ({ msg: 'Memory keeps its values. Take a copy to the CPU.' }) });
+        if (c) addItem(s, valueCube(text(c), c.op ? 'instr' : 'data'));
+        R.slot[s.key] = s;
+      }
+      addSign('MEMORY (ADDRESSES 0 TO 9): THE PROGRAM AND ITS DATA', 12, 1, 330, { bg: '#2b8a3e', size: 0.036 });
+      addBody(8, 8, 7, 0x5f3dc4, 'CPU', 'gate');
+      R.slot.ins = addSlot({ role: 'cpuins', pad: 'machine', x: 9, y: 9, label: 'INSTRUCTION', tag: { tagY: 130 }, put: (it, from) => runPut('ins', it, from) });
+      R.slot.data = addSlot({ role: 'cpudata', pad: 'machine', x: 12, y: 9, label: 'DATA', tag: { tagY: 130 }, put: (it, from) => runPut('data', it, from) });
+      R.slot.out = addSlot({ role: 'cpuout', pad: 'out', x: 14, y: 9, label: 'OUT', tag: { tagY: 130 }, put: (it, from) => from === R.slot.out ? null : { msg: 'The CPU gives out its number here.' } });
+      addBody(19, 8, 3, 0x343a40, 'SCREEN');
+      R.slot.screen = addSlot({ role: 'screen', pad: 'target', x: 20, y: 9, label: 'SCREEN', tag: { tagY: 130 }, grow: 'right', put: (it, from) => runPut('screen', it, from) });
+      cpuSign();
+      if (m.predict) { const first = p.trace.find(e => e.out != null).out; R.ask = { type: 'num', plain: true, q: 'Before you run it: what will the screen show' + (p.trace.filter(e => e.out != null).length > 1 ? ' <b>first</b>' : '') + '?', answer: first, hint: 'Start at address 0 and work through the instructions in order.', why: 'Running it gives ' + first + '.', done: () => explain('Now run it to see why.') }; }
+      pos.x = 12; pos.y = 13;
+    },
+    placed(it, slot) {
+      const e = R.p.trace[R.i];
+      if (slot === R.slot.ins) {
+        explain('Address ' + e.k + ' holds ' + C(text(e.ins), 'instr') + '. It ' + runMeans(e.ins) + '.');
+        if (e.ins.op === 'STOP') { R.i++; return; }
+        if (e.ins.op === 'OUTPUT') { R.phase = 'out'; addItem(R.slot.out, valueCube(R.acc, 'result')); return; }
+        R.phase = 'data'; return;
+      }
+      if (slot === R.slot.data) {
+        R.ask = { type: 'num', plain: true, q: C(text(e.ins), 'instr') + ' with ' + C(String(e.v), 'data') + '. The CPU held ' + e.before + '. What does it hold now?', answer: e.after,
+          hint: e.ins.op === 'LOAD' ? 'LOAD copies the number in: the old number is replaced.' : (e.ins.op === 'ADD' ? 'Add ' : 'Take away ') + e.v + '.', why: e.ins.op === 'LOAD' ? 'LOAD copies ' + e.v + ' in.' : e.before + (e.ins.op === 'ADD' ? ' + ' : ' - ') + e.v + ' = ' + e.after + '.',
+          done: () => { R.acc = e.after; cpuSign(); for (const k of ['ins', 'data']) { R.slot[k].items.forEach(killItem); R.slot[k].items = []; } explain('The CPU holds ' + e.after + ' now. Next: address ' + (e.k + 1) + '.'); R.i++; R.phase = 'ins'; } };
+        return;
+      }
+      if (slot === R.slot.screen) { R.outs.push(R.acc); explain('The screen shows ' + R.acc + '. Next: address ' + (e.k + 1) + '.'); R.slot.ins.items.forEach(killItem); R.slot.ins.items = []; R.i++; R.phase = 'ins'; }
+    },
+    check() { if (R.i >= R.p.trace.length && !R.ask && !hand.item) finishRound('STOP: the program has finished. The screen showed ' + R.outs.join(' then ') + '.'); },
+    guide(R) {
+      const e = R.p.trace[R.i]; if (!e || R.ask) return null;
+      if (R.phase === 'ins') return hand.item ? slotTarget(R.slot.ins) : slotTarget(R.slot['mem:' + e.k]);
+      if (R.phase === 'data') return hand.item ? slotTarget(R.slot.data) : slotTarget(R.slot['mem:' + e.a]);
+      return hand.item ? slotTarget(R.slot.screen) : slotTarget(R.slot.out);
+    },
+    steps(R, m) {
+      return R.p.trace.map((e, i) => ({ text: m.guided ? 'Address ' + e.k + ': carry ' + C(text(e.ins), 'instr') + ' to the CPU' + (e.a != null ? ', then the data at address ' + e.a + '.' : e.ins.op === 'OUTPUT' ? ', then carry its number to the screen.' : '.') : 'Address ' + e.k + '.', done: () => R.i > i }));
+    },
+    goals() { return ['The CPU runs the instructions in order, from address 0.', 'The number after LOAD, ADD or SUB is an address: the data is stored there.']; },
+    expr(R, m) {
+      const tut = m.type === 'tutorial', nx = R.p.trace[R.i];
+      const mem = R.p.mem.map((c, a) => c ? '<span class="cpu-mem' + (tut && nx && a === nx.k ? ' pc' : '') + '"><b>' + a + '</b> ' + text(c) + '</span>' : '').join('');
+      return '<b>The CPU holds:</b> ' + R.acc + '<br><b>Memory</b><div class="cpu-memrow">' + mem + '</div>' + (R.outs.length ? '<b>Screen:</b> ' + R.outs.join(', ') : '');
+    },
+    walk(R) {
+      let p; do p = runProblem(); while (p.key === R.p.key);
+      const steps = [{ text: '<b>A different program.</b> Memory holds the program and its data. The CPU starts at address 0.', visual: '<div class="cpu-memrow">' + p.mem.map((c, a) => c ? '<span class="cpu-mem"><b>' + a + '</b> ' + text(c) + '</span>' : '').join('') + '</div>' }];
+      for (const e of p.trace) steps.push({ text: 'Address ' + e.k + ': ' + C(text(e.ins), 'instr') + ' ' + runMeans(e.ins) + '.' + (e.a != null ? ' Address ' + e.a + ' holds ' + e.v + ', so the CPU holds <span class="hl">' + e.after + '</span>.' : e.out != null ? ' The screen shows <span class="hl">' + e.out + '</span>.' : ''), visual: '' });
+      steps.push({ text: 'Now run yours the same way.', visual: '' });
+      return steps;
+    }
+  };
+  function cpuSign() {
+    if (R.cpuSignG) { worldG.remove(R.cpuSignG); R.cpuSignG.material.map.dispose(); R.cpuSignG.material.dispose(); }
+    R.cpuSignG = addSign('THE CPU HOLDS: ' + R.acc, 11, 8, 235, { bg: '#ffd43b', ink: '#1a1200', size: 0.04 });
+  }
+  function runPut(where, it, from) {
+    const e = R.p.trace[R.i]; if (!e) return { msg: 'The program has finished.' };
+    const ch = M.m.type === 'challenge';
+    if (where === 'ins') {
+      if (R.phase !== 'ins') return { msg: R.phase === 'data' ? 'The CPU needs the data for ' + text(e.ins) + ' first: the number stored at address ' + e.a + '.' : 'Carry the number from OUT to the screen first.', mistake: ch };
+      if (!from || from.role !== 'mem') return { msg: 'Instructions come from memory.' };
+      if (from.addr === e.k) return null;
+      return { msg: from.addr >= R.p.trace.length ? 'Address ' + from.addr + ' holds data, not an instruction. The CPU runs the instructions in order: next is address ' + e.k + '.' : 'The CPU runs the instructions in order, one after another: next is address ' + e.k + '.', mistake: true };
+    }
+    if (where === 'data') {
+      if (R.phase !== 'data') return { msg: R.phase === 'ins' ? 'Bring the next instruction first: address ' + e.k + '.' : 'Carry the number from OUT to the screen first.', mistake: ch };
+      if (!from || from.role !== 'mem') return { msg: 'Data comes from memory.' };
+      if (from.addr === e.a) return null;
+      return { msg: text(e.ins) + ' uses the number stored at address ' + e.a + ', not address ' + from.addr + '.', mistake: true };
+    }
+    if (R.phase !== 'out' || from !== R.slot.out) return { msg: 'Only the CPU\'s output goes to the screen, when the instruction is OUTPUT.', mistake: ch };
+    return null;
+  }
   // the sign over the ALU: what the CU has told it to do
   function aluSign(text) {
     R.aluText = text;
@@ -1190,7 +1363,7 @@ export function startSolo({ container, myName, colour }) {
   // is a mistake, the answer is shown and the machine runs.
   function predictBox(a) {
     const box = el('div', { class: 'ask' });
-    box.appendChild(el('p', { class: 'ask-q' }, '<b>Predict.</b> ' + a.q));
+    box.appendChild(el('p', { class: 'ask-q' }, (a.plain ? '' : '<b>Predict.</b> ') + a.q));
     const fb = el('p', { class: 'ask-fb' + (a.fb ? ' bad' : '') }, a.fb || '');
     let read;
     const row = el('div', { class: 'ask-row' });

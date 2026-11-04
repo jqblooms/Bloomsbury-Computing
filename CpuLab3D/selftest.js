@@ -112,7 +112,19 @@ function solveBus() {
   }
   ok(r.over, 'bus round did not finish (' + s().toastText() + ')');
 }
-const SOLVE = { sort: solveSort, cpu: solveCpu, bus: solveBus };
+function solveRun() {
+  const r = R(), lab = s();
+  for (let g = 0; g < 60 && !r.over; g++) {
+    if (lab.hand.item) release();
+    if (r.ask) { answer(); continue; }
+    const e = r.p.trace[r.i]; if (!e) break;
+    if (r.phase === 'ins') carry(r.slot['mem:' + e.k], r.slot.ins);
+    else if (r.phase === 'data') carry(r.slot['mem:' + e.a], r.slot.data);
+    else carry(r.slot.out, r.slot.screen);
+  }
+  ok(r.over, 'run round did not finish (' + s().toastText() + ')');
+}
+const SOLVE = { sort: solveSort, cpu: solveCpu, bus: solveBus, run: solveRun };
 function playMission(i) {
   s().start(i);
   const m = M().m;
@@ -129,6 +141,26 @@ const idx = id => s().missions.findIndex(m => m.id === id);
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.storedProgram = () => {
+  const lab = s();
+  lab.start(idx('run-t')); const r = R();
+  ok(r.p.trace.map(e => e.after).join() === '0,14,23,23,23' || r.p.trace.length === 4, 'the fixed program does not run as LOAD 5, ADD 6, OUTPUT, STOP');
+  carry(r.slot['mem:1'], r.slot.ins); ok(r.phase === 'ins' && !r.slot.ins.items.length && /in order/.test(r.why || ''), 'an instruction out of order was taken');
+  lab.start(idx('run2-t')); const r2 = R(); carry(r2.slot['mem:0'], r2.slot.ins); const e = r2.p.trace[0], wrongA = [5, 6, 7].find(a => a !== e.a);
+  carry(r2.slot['mem:' + wrongA], r2.slot.data); ok(r2.phase === 'data' && /uses the number stored at address/.test(r2.why || ''), 'the wrong data address was taken');
+  ok(!!lab.guideTarget(), 'after a slip the arrow does not show the way');
+  lab.start(idx('run-c')); const r3 = R(); ok(r3.ask && /screen show/.test(r3.ask.q), 'the challenge does not ask for a prediction first');
+  answer(false); ok(R() !== r3 && M().spoilt >= 1, 'a wrong prediction did not start a new round');
+  for (let k = 0; k < 30; k++) { const p = lab.missions[idx('run-c')].gen(); ok(p.trace.every(x => x.after >= 0) && p.trace[p.trace.length - 1].ins.op === 'STOP', 'a program goes below 0 or never stops'); }
+};
+T.ipoCards = () => {
+  const lab = s();
+  lab.start(idx('ipo-t')); const r = R(); ok(r.p.parts.join() === 'INPUT,PROCESS,OUTPUT' && r.p.cards.length >= 3, 'the IPO round has the wrong machines');
+  const c = r.shelf.find(x => x.items.length), want = top(c).answer, wrong = r.pads.find(p => p.part !== want);
+  lab.start(idx('ipo-c')); const r2 = R(), c2 = r2.shelf.find(x => x.items.length); carry(c2, r2.pads.find(p => p.part !== top(c2).answer));
+  ok(R() !== r2 && M().spoilt >= 1, 'a wrong IPO card in the challenge did not start a new round'); void wrong;
+  for (const m of lab.missions.filter(x => ['ipo-t', 'sensor-t', 'ipo-c', 'run-t', 'run2-t', 'run-c'].includes(x.id))) ok(!/register|\bbus|fetch|decode|\bMAR\b|\bPC\b|\bACC\b/i.test(m.intro + (m.after ? m.after.q + m.after.options.join(' ') : '')), m.id + ' names a part from a later lesson');
+};
 T.helpLevels = () => {
   const lab = s();
   for (const m of lab.missions.filter(x => x.type === 'challenge')) {
@@ -260,10 +292,10 @@ T.leavePrompt = () => {
 T.lessonMode = () => {
   const lab = s(); lab.start(0); clickBtn('Lesson mode');
   ok(lab.lessonMode.on && $('nbLesson'), 'lesson mode did not open');
-  const L = lab.LESSONS[0], mins = L.missions.reduce((n, id) => n + lab.minsOf(lab.missions[idx(id)]), 0);
+  const L = lab.LESSONS.find(x => x.id === '3.1.2'), mins = L.missions.reduce((n, id) => n + lab.minsOf(lab.missions[idx(id)]), 0);
   ok(mins >= 50 && mins <= 70, 'the lesson is ' + mins + ' minutes');
   lab.start(idx('next-c')); ok(lab.nextMission() === idx('load-t'), 'the extensions do not follow the lesson');
-  ok(lab.LESSONS.length === 2 && lab.LESSONS[1].missions.every(id => idx(id) >= 0), 'lesson 3.1.3 is missing its missions');
+  ok(lab.LESSONS.length === 3 && ['3.1.1', '3.1.2', '3.1.3'].every(id => lab.LESSONS.find(x => x.id === id).missions.every(m => idx(m) >= 0)), 'a lesson is missing its missions');
   clickBtn('All missions'); ok(!lab.lessonMode.on, 'All missions did not come back');
 };
 T.walkthroughs = () => {
