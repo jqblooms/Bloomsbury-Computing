@@ -71,3 +71,16 @@
 .cl-trace td:first-child { font: 700 .85rem var(--font-mono, Consolas, monospace); width: 3em; }
 .cl-choice.wide { display: grid; grid-template-columns: 1fr; gap: 6px; }
 .cl-choice.wide .btn { justify-content: flex-start; text-align: left; white-space: normal; }
+
+/* expression trees: the split of a part of the expression (left side blue, the node yellow, right side green) and the
+   line round the tree for reading */
+.cl-split { font-weight: 800; font-family: Consolas, "Courier New", monospace; letter-spacing: .02em; }
+.cl-split .l { color: #1971c2; } .cl-split .r { color: #2b8a3e; }
+.cl-split .root { background: #ffd43b; color: #1a1200; border-radius: 5px; padding: 0 5px; }
+.cl-splitrow { margin-top: 4px; font-size: 1.05rem; }
+.cl-tree .sl rect { stroke: #1971c2; stroke-width: 4; } .cl-tree .sr rect { stroke: #2b8a3e; stroke-width: 4; } .cl-tree .sroot rect { stroke: #f08c00; stroke-width: 5; }
+.cl-tree .empty rect { fill: none; stroke: var(--ink-soft); stroke-dasharray: 4 3; }
+.cl-tree .empty.sl rect { stroke: #1971c2; } .cl-tree .empty.sr rect { stroke: #2b8a3e; } .cl-tree .empty.sroot rect { stroke: #f08c00; }
+.cl-tree line.bl { stroke: #4dabf7; stroke-width: 6; } .cl-tree line.br { stroke: #51cf66; stroke-width: 6; }
+.cl-tree .tour { fill: none; stroke: #cc5de8; stroke-width: 3; stroke-linejoin: round; }
+.cl-tree .dot { fill: #f08c00; } .cl-tree .dotn { fill: #fff; font-size: 11px; font-weight: 800; text-anchor: middle; }

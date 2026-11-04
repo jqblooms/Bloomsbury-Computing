@@ -34,6 +34,14 @@ const preorder = t => nodesOf(t);
 const postorder = t => { const out = []; (function go(n) { if (n.op) { go(n.l); go(n.r); } out.push(n); })(t); return out; };
 const inorder = t => { const out = []; (function go(n) { if (n.op) go(n.l); out.push(n); if (n.op) go(n.r); })(t); return out; };
 const symOf = n => n.op || n.v;
+// the part of the tree under node n, written in a notation, each token marked as the node itself (root) or its left
+// or right side
+function partTokens(n, form) {
+  const inL = x => !!(x && n.op && nodesOf(n.l).includes(x));
+  if (form === 'prefix' || form === 'postfix') return (form === 'prefix' ? preorder(n) : postorder(n)).map(x => ({ s: symOf(x), side: x === n ? 'root' : inL(x) ? 'l' : 'r' }));
+  return infixTokens(n).map(e => ({ s: e.tok, side: e.node === n ? 'root' : inL(e.node || e.sub) ? 'l' : 'r' }));
+}
+const splitHtml = (n, form) => '<span class="cl-split">' + partTokens(n, form).map(p => '<span class="' + p.side + '">' + p.s + '</span>').join(' ') + '</span>';
 function parentMap(t) { const p = new Map(); (function go(n) { if (n.op) { p.set(n.l, [n, 'left']); p.set(n.r, [n, 'right']); go(n.l); go(n.r); } })(t); return p; }
 // infix tokens with the reason for every bracket (NotationCore.needs decides where brackets go)
 function infixTokens(t) {
@@ -508,7 +516,9 @@ export function startSolo({ container, myName, colour }) {
     M.lastKey = keyOf(p);
     R = { p, over: false, spoilt: false, ask: null, notes: [], moves: 0, why: null };
     KIND[m.kind].setup(R, m);
-    pos.face = Math.PI; view.jump(pos.x, pos.y);
+    const wide = m.kind === 'tree' || m.kind === 'infix';   // trees: far enough back to see the whole tree, its labels and the rail
+    view.zoom?.(wide ? 1400 : 760, wide ? 0.95 : 0.75);
+    pos.face = Math.PI; view.jump(pos.x, wide ? pos.y - 4 : pos.y);
     toast(''); explainReset();
     if (after) { explain('Not this time. ' + after + ' A new round has started.'); R.why = after; toast('A mistake, so a new round has started. ' + after, 'bad'); }
     explain(startLine(m, p)); $('mission').scrollTop = 0; afterChange();   // to the top first, so a question at the start can scroll into view
@@ -717,6 +727,72 @@ export function startSolo({ container, myName, colour }) {
     }
     R.stage = prebuilt ? 'read' : 'build';
   }
+  const SIDE_COL = { l: '#74c0fc', r: '#8ce99a', root: '#ffd43b' };
+  // a floating label: the part of the expression a spot stands for, its two sides coloured
+  function splitSign(parts) {
+    const c = document.createElement('canvas'), g = c.getContext('2d'), font = '800 64px "Segoe UI", Arial, sans-serif'; g.font = font;
+    const pad = 24, gap = 14, ws = parts.map(p => g.measureText(p.s).width + pad), W = Math.ceil(ws.reduce((a, b) => a + b, 0) + gap * (parts.length - 1) + 36), H = 112;
+    c.width = W; c.height = H; g.font = font; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = 'rgba(16,18,22,.9)'; g.beginPath(); g.roundRect(0, 0, W, H, 22); g.fill();
+    let x = 18;
+    parts.forEach((p, i) => {
+      if (p.side === 'root') { g.fillStyle = SIDE_COL.root; g.beginPath(); g.roundRect(x, 10, ws[i], H - 20, 12); g.fill(); g.fillStyle = '#1a1200'; }
+      else g.fillStyle = SIDE_COL[p.side];
+      g.fillText(p.s, x + ws[i] / 2, H / 2 + 3); x += ws[i] + gap;
+    });
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true }));
+    sp.scale.set(W * 1.05, H * 1.05, 1); sp.renderOrder = 12; return sp;
+  }
+  function ringAt(x, y, col, r = 64) {
+    const m = new THREE.Mesh(new THREE.RingGeometry(r - 12, r, 40).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.95, depthWrite: false }));
+    m.position.set((x + 0.5) * T, PAD_H + 3, (y + 0.5) * T); m.userData.own = true; m.userData.ownMat = true; m.renderOrder = 4; return m;
+  }
+  function clearShow(key) { for (const o of R[key] || []) { worldG.remove(o); o.geometry?.dispose(); if (!o.userData.sharedMat) [].concat(o.material || []).forEach(mm => { mm.map?.dispose?.(); mm.dispose?.(); }); } R[key] = []; }
+  // building, in tutorials: the next spot to fill shows its part of the expression, split
+  function showSplit() {
+    clearShow('splitG'); R.splitNode = null;
+    if (!M || M.m.type !== 'tutorial' || R.stage !== 'build') return;
+    const n = preorder(R.p.t).find(nd => !R.ped.get(nd).items.length); if (!n) return;
+    R.splitNode = n;
+    const at = R.lay.at.get(n), sp = splitSign(partTokens(n, R.p.from));
+    sp.position.set((at.x + 0.5) * T, 200, (at.y + 1.1) * T); worldG.add(sp); R.splitG.push(sp);   // low and a little in front, clear of the card at the top
+    R.splitG.push(ringAt(at.x, at.y, 0xffd43b)); worldG.add(R.splitG[R.splitG.length - 1]);
+    if (n.op) for (const [ch, side] of [[n.l, 'l'], [n.r, 'r']]) {
+      const b = R.lay.at.get(ch), col = side === 'l' ? 0x74c0fc : 0x8ce99a, bar = floorBar(at.x, at.y, b.x, b.y, col);
+      bar.position.y = 5; bar.scale.x = 2.4; bar.userData.sharedMat = true; worldG.add(bar); R.splitG.push(bar);
+      for (const x of nodesOf(ch)) { const p = R.lay.at.get(x), rg = ringAt(p.x, p.y, col, x === ch ? 64 : 52); worldG.add(rg); R.splitG.push(rg); }
+    }
+  }
+  // reading: the line round the outside of the tree, starting at the top on the left; each node is passed on its left
+  // (where prefix takes it), under it, and on its right (where postfix takes it)
+  function tourPoints(n, at, out = []) {   // at(node) -> { x, y } in tiles
+    const a = at(n);
+    out.push({ p: [a.x - 0.8, a.y - 0.25], node: n, when: 'prefix' });
+    if (n.op) { tourPoints(n.l, at, out); out.push({ p: [a.x, a.y + 1.0] }); tourPoints(n.r, at, out); } else out.push({ p: [a.x, a.y + 0.8] });
+    out.push({ p: [a.x + 0.8, a.y - 0.25], node: n, when: 'postfix' });
+    return out;
+  }
+  function showTour() {
+    clearShow('tourG');
+    if (!M || M.m.type !== 'tutorial' || R.stage !== 'read') return;
+    const pts = tourPoints(R.p.t, n => R.lay.at.get(n));
+    const line = new THREE.Mesh(arrowGeometry(pts.map(q => q.p), 24, 46), new THREE.MeshBasicMaterial({ color: 0xda77f2, transparent: true, opacity: 0.85, depthWrite: false, side: THREE.DoubleSide }));
+    line.userData.own = true; line.userData.ownMat = true; line.renderOrder = 3; worldG.add(line); R.tourG.push(line);
+    const st = sign('START', { bg: '#9c36b5', ink: '#ffffff', size: 0.03 }); st.position.set((pts[0].p[0] + 0.5) * T, 120, (pts[0].p[1] + 0.5) * T); worldG.add(st); R.tourG.push(st);
+    showDots();
+  }
+  function showDots() {
+    clearShow('dotG');
+    if (!M || M.m.type !== 'tutorial' || R.stage !== 'read') return;
+    const read = new Set(R.readOrder.slice(0, R.readN)), next = R.readOrder[R.readN];
+    for (const q of tourPoints(R.p.t, n => R.lay.at.get(n))) {
+      if (q.when !== R.p.read) continue;
+      const col = read.has(q.node) ? 0x40c057 : q.node === next ? 0xffd43b : 0xffffff, r = q.node === next ? 40 : 26;
+      const d = new THREE.Mesh(new THREE.CircleGeometry(r, 28).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: col, depthWrite: false }));
+      d.position.set((q.p[0] + 0.5) * T, 5, (q.p[1] + 0.5) * T); d.userData.own = true; d.userData.ownMat = true; d.renderOrder = 5; worldG.add(d); R.dotG.push(d);
+    }
+  }
   function buildWhy(nd) {
     const p = R.p, par = R.par.get(nd);
     if (!par) return p.from === 'prefix' ? 'In prefix the <b>first</b> token is the top of the tree: ' + C(symOf(nd)) + '.' : p.from === 'postfix' ? 'In postfix the <b>last</b> token is the top of the tree: ' + C(symOf(nd)) + '.' : 'The top of the tree holds the operator worked <b>last</b>: ' + C(symOf(nd)) + '.';
@@ -734,6 +810,7 @@ export function startSolo({ container, myName, colour }) {
       });
       addSign('CUBES', 1, 2, 240);
       R.readOrder = R.p.read === 'prefix' ? preorder(t) : postorder(t); R.readN = 0;
+      R.splitG = []; R.tourG = []; R.dotG = [];
       R.rail = addSlot({ role: 'rail', x: Math.floor((23 - nodes.length) / 2), y: 15, w: nodes.length, grow: 'right', label: FORM_NAME[R.p.read].toUpperCase() + ' RAIL', tag: { tagY: 130 },
         take: () => 'It is on the rail. Keep going.',
         put: (it, from) => {
@@ -743,16 +820,18 @@ export function startSolo({ container, myName, colour }) {
           return null;
         } });
       pos.x = 11; pos.y = 16.2;
+      showSplit();
     },
     placed(it, slot, from) {
       if (slot.role === 'pedestal' && from.role === 'supply') {
         it.node = slot.node; const par = R.par.get(slot.node);
         explain(!par ? C(it.sym) + ' goes at the top: ' + (R.p.from === 'prefix' ? 'in prefix the first token is the top.' : R.p.from === 'postfix' ? 'in postfix the last token is the top.' : 'it is the operator worked last.')
           : C(it.sym) + ' is the ' + par[1] + ' side of ' + C(par[0].op) + (slot.node.op ? ', and it is an operator, so it has two sides of its own.' : '.'));
-        if ([...R.ped.values()].every(s => s.items.length)) { R.stage = 'read'; explain('The tree is built. Now read it as ' + R.p.read + ': ' + (R.p.read === 'prefix' ? 'each node <b>before</b> its sides, left side first.' : 'both sides <b>before</b> the node, left side first.')); }
+        if ([...R.ped.values()].every(s => s.items.length)) { R.stage = 'read'; explain('The tree is built. Now read it as ' + R.p.read + ': ' + (R.p.read === 'prefix' ? 'each node <b>before</b> its sides, left side first.' : 'both sides <b>before</b> the node, left side first.')); showTour(); }
+        showSplit();
       }
       if (slot === R.rail) {
-        R.readN++; const nd = it.node;
+        R.readN++; const nd = it.node; showDots();
         explain(R.p.read === 'prefix' ? (nd.op ? C(nd.op) + ' comes before its two sides. Next: its left side.' : C(nd.v) + ' has no sides, so go on to the next part of the tree.')
           : (nd.op ? 'Both sides of ' + C(nd.op) + ' are on the rail, so now ' + C(nd.op) + ' comes.' : C(nd.v) + ' has no sides, so it goes straight on the rail.'));
       }
@@ -775,21 +854,25 @@ export function startSolo({ container, myName, colour }) {
     steps(R, m) {
       const t = R.p.t, filled = list => list.every(nd => R.ped.get(nd).items.length || R.stage === 'read');
       return [
-        { text: 'Put the top of the tree on the top pedestal: ' + (R.p.from === 'infix' ? 'the operator worked <b>last</b>, ' : '') + C(t.op) + '.', done: () => filled([t]) },
+        { text: 'The label over each spot shows its part of the expression. The <b>yellow</b> cube goes on the spot; the <b>blue</b> part goes down the left branch, the <b>green</b> part down the right.', done: () => filled([t]) },
         { text: 'Build the left side: ' + Cs(NC.tokens(infixOf(t.l))) + '.', done: () => filled(nodesOf(t.l)) },
         { text: 'Build the right side: ' + Cs(NC.tokens(infixOf(t.r))) + '.', done: () => filled(nodesOf(t.r)) },
-        { text: R.p.read === 'prefix' ? 'Read it as prefix: take each cube to the rail. Visit a node <b>before</b> its sides, the left side first.' : 'Read it as postfix: take each cube to the rail. Visit both sides <b>before</b> the node, the left side first.', done: () => R.readN === R.readOrder.length }
+        { text: 'Read it as ' + R.p.read + ': follow the purple line round the tree from START. Take each cube to the rail when the line reaches its dot (on its <b>' + (R.p.read === 'prefix' ? 'left' : 'right') + '</b> side).', done: () => R.readN === R.readOrder.length }
       ];
     },
-    expr(R) { return '<b>' + FORM_NAME[R.p.from] + ':</b> ' + Cs(sourceTokens(R.p)) + (R.p.implied ? '<br><span class="note">A number next to a letter or a bracket means times: 2(A + B) is 2 * (A + B).</span>' : '') + '<br><b>Read it as:</b> ' + FORM_NAME[R.p.read] + (R.stage === 'read' ? ' (' + R.readN + ' of ' + R.readOrder.length + ')' : ''); },
+    expr(R) { return '<b>' + FORM_NAME[R.p.from] + ':</b> ' + Cs(sourceTokens(R.p)) + (R.splitNode ? '<div class="cl-splitrow"><b>Next spot:</b> ' + splitHtml(R.splitNode, R.p.from) + '</div>' : '') + (R.p.implied ? '<br><span class="note">A number next to a letter or a bracket means times: 2(A + B) is 2 * (A + B).</span>' : '') + '<br><b>Read it as:</b> ' + FORM_NAME[R.p.read] + (R.stage === 'read' ? ' (' + R.readN + ' of ' + R.readOrder.length + ')' : ''); },
     walk(R, m) {
       let t; do t = RT({ n: 2, ops: ['+', '-', '*'], letters: true }); while (NC.toPrefix(t).join() === NC.toPrefix(R.p.t).join());
       const from = R.p.from, read = R.p.read, src = sourceTokens({ t, from });
-      const steps = [{ text: '<b>A different expression.</b> ' + FORM_NAME[from] + ': ' + Cs(src) + '.', visual: treeSvg(t, []) }];
-      steps.push({ text: (from === 'prefix' ? 'In prefix the first token is the top: ' : from === 'postfix' ? 'In postfix the last token is the top: ' : 'The operator worked last goes at the top: ') + C(t.op) + '.', visual: treeSvg(t, [t]) });
-      steps.push({ text: 'Its left side is ' + infixOf(t.l) + '. Its right side is ' + infixOf(t.r) + '.', visual: treeSvg(t, nodesOf(t)) });
+      const steps = [{ text: '<b>A different expression.</b> ' + FORM_NAME[from] + ': ' + Cs(src) + '.', visual: treeSvg(t, [], { shown: new Set() }) }];
+      const placed = new Set();
+      preorder(t).forEach((n, i) => {
+        steps.push({ text: splitHtml(n, from) + (i === 0 ? '<br>' + (from === 'prefix' ? 'The first' : from === 'postfix' ? 'The last' : 'The one worked last') + ' (yellow) goes on top. Blue goes down the left, green down the right.' : ''), visual: treeSvg(t, [], { shown: new Set([...placed, n]), split: n }) });
+        placed.add(n);
+      });
       const ord = read === 'prefix' ? preorder(t) : postorder(t);
-      steps.push({ text: (read === 'prefix' ? 'Prefix visits a node before its sides: ' : 'Postfix visits both sides before the node: ') + Cs(ord.map(symOf)) + '.', visual: '' });
+      steps.push({ text: 'To read it, follow a line round the outside from the top, on the left. ' + (read === 'prefix' ? 'Prefix: take each cube as the line passes its <b>left</b> side.' : 'Postfix: take each cube as the line passes its <b>right</b> side.'), visual: treeSvg(t, [], { tour: read }) });
+      steps.push({ text: FORM_NAME[read] + ': ' + Cs(ord.map(symOf)) + '.', visual: treeSvg(t, [], { tour: read, upto: ord.length }) });
       steps.push({ text: 'Now build and read yours the same way.', visual: '' });
       return steps;
     }
@@ -800,14 +883,27 @@ export function startSolo({ container, myName, colour }) {
     if (nd.op && !(seen.has(nd.l) && seen.has(nd.r))) return 'In postfix both sides come <b>before</b> the operator. Read the sides of ' + C(nd.op) + ' first.';
     return 'Read the whole left side before the right side.';
   }
-  function treeSvg(t, hl) {
+  // o.shown: only these spots have their cube (the rest are empty); o.split: colour that node's sides; o.tour: the line
+  // round the tree with a dot on each node's left (prefix) or right (postfix), numbered up to o.upto
+  function treeSvg(t, hl, o = {}) {
     const ino = inorder(t), par = parentMap(t), at = new Map();
     const depth = n => { let d = 0, q = n; while (par.has(q)) { q = par.get(q)[0]; d++; } return d; };
-    ino.forEach((n, i) => at.set(n, [30 + i * 44, 30 + depth(n) * 56]));
-    const w = 60 + (ino.length - 1) * 44, h = 60 + Math.max(...ino.map(depth)) * 56;
+    ino.forEach((n, i) => at.set(n, [40 + i * 48, 40 + depth(n) * 64]));
+    const w = 80 + (ino.length - 1) * 48, h = 90 + Math.max(...ino.map(depth)) * 64;
+    const side = n => !o.split ? '' : n === o.split ? ' sroot' : o.split.op && nodesOf(o.split.l).includes(n) ? ' sl' : o.split.op && nodesOf(o.split.r).includes(n) ? ' sr' : '';
     let s = '<svg class="cl-tree" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="An expression tree">';
-    for (const n of ino) if (n.op) for (const c of [n.l, n.r]) { const a = at.get(n), b = at.get(c); s += '<line x1="' + a[0] + '" y1="' + a[1] + '" x2="' + b[0] + '" y2="' + b[1] + '"/>'; }
-    for (const n of ino) { const [x, y] = at.get(n); s += '<g class="' + roleOf(symOf(n)) + (hl.includes(n) ? ' lit' : '') + '"><rect x="' + (x - 17) + '" y="' + (y - 17) + '" width="34" height="34" rx="6"/><text x="' + x + '" y="' + (y + 7) + '">' + symOf(n) + '</text></g>'; }
+    for (const n of ino) if (n.op) for (const c of [n.l, n.r]) { const a = at.get(n), b = at.get(c); s += '<line class="' + (o.split === n ? (c === n.l ? 'bl' : 'br') : '') + '" x1="' + a[0] + '" y1="' + a[1] + '" x2="' + b[0] + '" y2="' + b[1] + '"/>'; }
+    if (o.tour) {
+      const pts = tourPoints(t, n => { const [x, y] = at.get(n); return { x: x / 24, y: y / 24 }; });
+      s += '<polyline class="tour" points="' + pts.map(q => (q.p[0] * 24).toFixed(1) + ',' + (q.p[1] * 24).toFixed(1)).join(' ') + '"/>';
+      const ord = o.tour === 'prefix' ? preorder(t) : postorder(t);
+      for (const q of pts) if (q.when === o.tour) { const k = ord.indexOf(q.node), x = q.p[0] * 24, y = q.p[1] * 24; s += '<circle class="dot" cx="' + x + '" cy="' + y + '" r="' + (k < (o.upto || 0) ? 9 : 5) + '"/>' + (k < (o.upto || 0) ? '<text class="dotn" x="' + x + '" y="' + (y + 4) + '">' + (k + 1) + '</text>' : ''); }
+    }
+    for (const n of ino) {
+      const [x, y] = at.get(n), show = !o.shown || o.shown.has(n);
+      s += show ? '<g class="' + roleOf(symOf(n)) + (hl.includes(n) ? ' lit' : '') + side(n) + '"><rect x="' + (x - 17) + '" y="' + (y - 17) + '" width="34" height="34" rx="6"/><text x="' + x + '" y="' + (y + 7) + '">' + symOf(n) + '</text></g>'
+        : '<g class="empty' + side(n) + '"><rect x="' + (x - 17) + '" y="' + (y - 17) + '" width="34" height="34" rx="6"/></g>';
+    }
     return s + '</svg>';
   }
   function treeBox() { const xs = [...R.ped.values()].map(s => s.x), ys = [...R.ped.values()].map(s => s.y); return boxTarget(Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)); }
@@ -1588,7 +1684,7 @@ export function startSolo({ container, myName, colour }) {
     updateGuide(ts);
     hint();
     me.update(dt, { x: pos.x, y: pos.y, face: pos.face, moving, hands: [0, 0].map(() => ({ down: hand.down || !!hand.item, hold: hand.item ? 'dev' : null })) }, true);
-    view.follow(pos.x, pos.y);
+    view.follow(pos.x, M && (M.m.kind === 'tree' || M.m.kind === 'infix') ? pos.y - Math.min(4, Math.max(0, pos.y - 8)) : pos.y);
     view.render(dt);
   }
   const typing = e => /input|select|textarea/i.test(e.target?.tagName || '');
