@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shifts and Circulates</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <style>
+    /* LCIRC, RCIRC, LSHIFT and RSHIFT by 1, animated side by side: a circulate carries the end bit round on a belt to the
+       other end; a shift drops it off and a 0 comes in. Lit bits are 1, dark bits are 0 (as Bit Flicker's lamps). */
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+    main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr 1fr; gap: 14px; min-height: 100vh; padding: 14px 16px; box-sizing: border-box; }
+    header { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    header h1 { margin: 0; font-size: 26px; font-weight: 800; }
+    header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .ctl { display: flex; gap: 8px; align-items: center; }
+    .ctl label { color: var(--muted); font-size: 14px; }
+    .ctl input { width: 6.5em; font: 700 16px var(--font-mono); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); letter-spacing: .12em; }
+    .ctl button { font: inherit; font-weight: 700; padding: 5px 14px; border-radius: 999px; border: 0; background: var(--brand); color: var(--on-brand); cursor: pointer; }
+    .ctl button.secondary { background: var(--surface-3); color: var(--ink); }
+    section { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
+              display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px; overflow: hidden; min-height: 280px; }
+    h2 { margin: 0; font: 800 clamp(22px, 2.6vw, 34px) var(--font-mono); color: var(--brand); text-align: center; }
+    h2 small { display: block; font: 500 14px var(--font-body); color: var(--muted); margin-top: 2px; }
+    .stage { position: relative; width: 340px; height: 190px; flex: none; }
+    .slot { position: absolute; top: 60px; width: 56px; height: 56px; border: 2px dashed var(--line-strong); border-radius: 10px; box-sizing: border-box; }
+    .belt { position: absolute; left: 0; right: 0; top: 140px; height: 8px; border-radius: 4px; background: repeating-linear-gradient(90deg, var(--brand) 0 12px, transparent 12px 20px); opacity: .5; }
+    .bit { position: absolute; top: 60px; width: 56px; height: 56px; border-radius: 10px; display: grid; place-items: center; font: 800 30px/1 var(--font-mono);
+           transition: left .7s ease-in-out, top .5s ease-in-out, opacity .5s, transform .6s; }
+    .bit.b1 { background: #ffd43b; color: #1a1200; box-shadow: 0 0 16px #ffd43b88; }
+    .bit.b0 { background: var(--surface-4); color: var(--ink-soft); }
+    .bit.moving { outline: 3px solid var(--brand); }
+    .bit.falling { outline: 3px solid var(--bad); }
+    .bit.new { outline: 3px solid var(--good); }
+    .str { font: 700 22px var(--font-mono); letter-spacing: .3em; color: var(--ink-soft); }
+    .note { font-size: 15px; color: var(--muted); min-height: 1.4em; text-align: center; max-width: 34em; }
+    @media (max-width: 760px) { main { grid-template-columns: 1fr; grid-template-rows: none; } .stage { transform: scale(.85); } }
+    @media (prefers-reduced-motion: reduce) { .bit { transition-duration: .01s; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1>Shifts and Circulates</h1><p>Each one moves the bits one place. Watch what happens to the bit at the end.</p></div>
+    <div class="ctl"><label for="start">Start with</label><input id="start" value="10110" maxlength="8" inputmode="numeric" aria-label="Starting bit string">
+      <button type="button" id="go">Start again</button><button type="button" class="secondary" id="pause">Pause</button></div>
+  </header>
+  <section id="LCIRC"><h2>LCIRC-1<small>every bit moves 1 left; the end bit goes round to the right</small></h2><div class="stage"></div><div class="str"></div><div class="note"></div></section>
+  <section id="RCIRC"><h2>RCIRC-1<small>every bit moves 1 right; the end bit goes round to the left</small></h2><div class="stage"></div><div class="str"></div><div class="note"></div></section>
+  <section id="LSHIFT"><h2>LSHIFT-1<small>every bit moves 1 left; the end bit falls off and a 0 comes in on the right</small></h2><div class="stage"></div><div class="str"></div><div class="note"></div></section>
+  <section id="RSHIFT"><h2>RSHIFT-1<small>every bit moves 1 right; the end bit falls off and a 0 comes in on the left</small></h2><div class="stage"></div><div class="str"></div><div class="note"></div></section>
+</main>
+<script>
+var STEP = 64, ROW = 60, UNDER = 128, paused = false, run = 0;
+var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+async function wait(ms) { await sleep(ms); while (paused) await sleep(150); }
+
+function lab(kind, START) {
+  var N = START.length, SW = Math.max(340, N * STEP + 20), X0 = Math.round((SW - (N * STEP - 8)) / 2), xOf = function (i) { return X0 + i * STEP; };
+  var sec = document.getElementById(kind), stage = sec.querySelector('.stage'), str = sec.querySelector('.str'), note = sec.querySelector('.note');
+  var circ = /CIRC$/.test(kind), left = kind.charAt(0) === 'L', me = run;
+  stage.innerHTML = ''; note.textContent = '';
+  stage.style.width = SW + 'px';
+  for (var i = 0; i < N; i++) { var s = document.createElement('div'); s.className = 'slot'; s.style.left = xOf(i) + 'px'; stage.appendChild(s); }
+  if (circ) { var b = document.createElement('div'); b.className = 'belt'; stage.appendChild(b); }
+  var bits = [];
+  function make(v, i) { var e = document.createElement('div'); e.className = 'bit b' + v; e.textContent = v; e.style.left = xOf(i) + 'px'; stage.appendChild(e); return { v: v, e: e }; }
+  function show() { str.textContent = bits.map(function (b) { return b.v; }).join(''); }
+  function reset() { bits.forEach(function (b) { b.e.remove(); }); bits = START.split('').map(make); show(); }
+  reset();
+  async function step() {
+    var end = left ? bits[0] : bits[N - 1], rest = left ? bits.slice(1) : bits.slice(0, N - 1);
+    var slide = function () { rest.forEach(function (b, k) { b.e.style.left = xOf(left ? k : k + 1) + 'px'; }); };
+    if (circ) {
+      note.textContent = 'The ' + end.v + ' on the ' + (left ? 'left' : 'right') + ' end rides the belt round to the other end.';
+      end.e.classList.add('moving');
+      end.e.style.top = (ROW + UNDER - 40) + 'px'; await wait(500);
+      slide(); end.e.style.left = xOf(left ? N - 1 : 0) + 'px'; await wait(750);
+      end.e.style.top = ROW + 'px'; await wait(550);
+      end.e.classList.remove('moving');
+      bits = left ? rest.concat([end]) : [end].concat(rest);
+    } else {
+      note.textContent = 'The ' + end.v + ' on the ' + (left ? 'left' : 'right') + ' end falls off. A 0 comes in on the ' + (left ? 'right' : 'left') + '.';
+      end.e.classList.add('falling');
+      end.e.style.left = (xOf(left ? 0 : N - 1) + (left ? -40 : 40)) + 'px'; end.e.style.top = (ROW + 150) + 'px'; end.e.style.opacity = 0; end.e.style.transform = 'rotate(' + (left ? -70 : 70) + 'deg)';
+      slide(); await wait(700); end.e.remove();
+      var z = make('0', left ? N - 1 : 0); z.e.classList.add('new'); z.e.style.top = '-60px'; z.e.style.opacity = 0;
+      await sleep(30); z.e.style.top = ROW + 'px'; z.e.style.opacity = 1; await wait(600); z.e.classList.remove('new');
+      bits = left ? rest.concat([z]) : [z].concat(rest);
+    }
+    show();
+  }
+  (async function loop() {
+    for (;;) {
+      await wait(1400); if (me !== run) return;
+      await step(); if (me !== run) return;
+      if (!circ && bits.every(function (b) { return b.v === '0'; })) { note.textContent = 'Every 1 has fallen off. Starting again with ' + START + '.'; await wait(2200); if (me !== run) return; reset(); note.textContent = ''; }
+    }
+  })();
+}
+function startAll() {
+  var v = document.getElementById('start').value.replace(/[^01]/g, '').slice(0, 8);
+  if (v.length < 2) v = '10110';
+  document.getElementById('start').value = v;
+  run++; paused = false; document.getElementById('pause').textContent = 'Pause';
+  ['LCIRC', 'RCIRC', 'LSHIFT', 'RSHIFT'].forEach(function (k) { lab(k, v); });
+}
+document.getElementById('go').addEventListener('click', startAll);
+document.getElementById('start').addEventListener('keydown', function (e) { if (e.key === 'Enter') startAll(); });
+document.getElementById('pause').addEventListener('click', function () { paused = !paused; this.textContent = paused ? 'Play' : 'Pause'; });
+startAll();
+</script>
+</body>
+</html>
