@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOT, AND, OR and XOR</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <style>
+    /* NOT, AND, OR and XOR on bit strings, animated side by side, one column at a time: the two bits above drop into the
+       operator and the result bit comes out below. Lit bits are 1, dark bits are 0 (as Bit Flicker's lamps). */
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+    main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr 1fr; gap: 14px; min-height: 100vh; padding: 14px 16px; box-sizing: border-box; }
+    header { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    header h1 { margin: 0; font-size: 26px; font-weight: 800; }
+    header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .ctl label { color: var(--muted); font-size: 14px; }
+    .ctl input { width: 6.5em; font: 700 16px var(--font-mono); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); letter-spacing: .12em; }
+    .ctl button { font: inherit; font-weight: 700; padding: 5px 14px; border-radius: 999px; border: 0; background: var(--brand); color: var(--on-brand); cursor: pointer; }
+    .ctl button.secondary { background: var(--surface-3); color: var(--ink); }
+    section { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
+              display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px; overflow: hidden; min-height: 300px; }
+    h2 { margin: 0; font: 800 clamp(22px, 2.6vw, 34px) var(--font-mono); color: var(--brand); text-align: center; }
+    h2 small { display: block; font: 500 14px var(--font-body); color: var(--muted); margin-top: 2px; }
+    .stage { position: relative; height: 236px; flex: none; }
+    .lbl { position: absolute; left: 0; width: 64px; height: 50px; display: grid; place-items: center end; padding-right: 8px; box-sizing: border-box; font: 700 15px var(--font-mono); color: var(--muted); text-align: right; line-height: 1.1; }
+    .slot { position: absolute; width: 50px; height: 50px; border: 2px dashed var(--line-strong); border-radius: 9px; box-sizing: border-box; }
+    .bit { position: absolute; width: 50px; height: 50px; border-radius: 9px; display: grid; place-items: center; font: 800 26px/1 var(--font-mono);
+           transition: left .6s ease-in-out, top .6s ease-in-out, opacity .45s, transform .45s; }
+    .bit.b1 { background: #ffd43b; color: #1a1200; box-shadow: 0 0 14px #ffd43b88; }
+    .bit.b0 { background: var(--surface-4); color: var(--ink-soft); }
+    .bit.now { outline: 3px solid var(--brand); }
+    .bit.ghost { opacity: .9; }
+    .gate { position: absolute; top: 128px; width: 58px; height: 32px; border-radius: 8px; background: var(--brand); color: var(--on-brand); display: grid; place-items: center;
+            font: 800 14px var(--font-mono); transition: left .5s ease-in-out; }
+    .eq { font: 700 18px var(--font-mono); color: var(--ink-soft); min-height: 1.4em; }
+    .note { font-size: 15px; color: var(--muted); min-height: 1.4em; text-align: center; max-width: 34em; }
+    @media (max-width: 760px) { main { grid-template-columns: 1fr; grid-template-rows: none; } .stage { transform: scale(.85); } }
+    @media (prefers-reduced-motion: reduce) { .bit, .gate { transition-duration: .01s; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1>NOT, AND, OR and XOR</h1><p>One column at a time: the bits above go into the operator and the answer bit comes out below.</p></div>
+    <div class="ctl"><label for="a">A</label><input id="a" value="10110" maxlength="8" inputmode="numeric" aria-label="Bit string A">
+      <label for="b">B</label><input id="b" value="01100" maxlength="8" inputmode="numeric" aria-label="Bit string B">
+      <button type="button" id="go">Start again</button><button type="button" class="secondary" id="pause">Pause</button></div>
+  </header>
+  <section id="NOT"><h2>NOT A<small>flips every bit: 1 becomes 0 and 0 becomes 1</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+  <section id="AND"><h2>A AND B<small>1 only where both bits are 1</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+  <section id="OR"><h2>A OR B<small>1 where either bit is 1</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+  <section id="XOR"><h2>A XOR B<small>1 where the two bits are different</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
+</main>
+<script>
+var STEP = 58, LW = 72, ROWA = 0, ROWB = 64, ROWO = 180, paused = false, run = 0;
+var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+async function wait(ms) { await sleep(ms); while (paused) await sleep(150); }
+var RULE = {
+  NOT: function (a) { return a === '1' ? '1 is flipped to 0.' : '0 is flipped to 1.'; },
+  AND: function (a, b) { return a === '1' && b === '1' ? 'Both are 1, so the answer is 1.' : 'They are not both 1, so the answer is 0.'; },
+  OR: function (a, b) { return a === '1' || b === '1' ? 'At least one is 1, so the answer is 1.' : 'Neither is 1, so the answer is 0.'; },
+  XOR: function (a, b) { return a !== b ? 'They are different, so the answer is 1.' : 'They are the same, so the answer is 0.'; }
+};
+var OUT = {
+  NOT: function (a) { return a === '1' ? '0' : '1'; },
+  AND: function (a, b) { return a === '1' && b === '1' ? '1' : '0'; },
+  OR: function (a, b) { return a === '1' || b === '1' ? '1' : '0'; },
+  XOR: function (a, b) { return a !== b ? '1' : '0'; }
+};
+
+function lab(op, A, B) {
+  var one = op === 'NOT', N = A.length, me = run;
+  var sec = document.getElementById(op), stage = sec.querySelector('.stage'), eq = sec.querySelector('.eq'), note = sec.querySelector('.note');
+  var xOf = function (i) { return LW + i * STEP; }, rowA = one ? ROWB : ROWA;
+  stage.innerHTML = ''; eq.textContent = ''; note.textContent = '';
+  stage.style.width = (LW + N * STEP + 4) + 'px';
+  function el(cls, x, y, text) { var e = document.createElement('div'); e.className = cls; e.style.left = x + 'px'; e.style.top = y + 'px'; if (text != null) e.textContent = text; stage.appendChild(e); return e; }
+  function bit(v, x, y) { return el('bit b' + v, x, y, v); }
+  el('lbl', 0, rowA, 'A'); if (!one) el('lbl', 0, ROWB, 'B'); el('lbl', 0, ROWO, one ? 'NOT A' : 'A ' + op + ' B');
+  var a = [], b = [], outs = [];
+  for (var i = 0; i < N; i++) {
+    el('slot', xOf(i), ROWO);
+    a.push(bit(A[i], xOf(i), rowA)); if (!one) b.push(bit(B[i], xOf(i), ROWB));
+  }
+  var gate = el('gate', xOf(0) - 4, 128, op);
+  (async function loop() {
+    for (;;) {
+      await wait(900);
+      for (var i = 0; i < N; i++) {
+        if (me !== run) return;
+        gate.style.left = (xOf(i) - 4) + 'px';
+        a[i].classList.add('now'); if (!one) b[i].classList.add('now');
+        var va = A[i], vb = one ? null : B[i], r = OUT[op](va, vb);
+        eq.textContent = one ? 'NOT ' + va + ' = ' + r : va + ' ' + op + ' ' + vb + ' = ' + r;
+        note.textContent = RULE[op](va, vb);
+        await wait(700); if (me !== run) return;
+        // copies of the bits drop into the operator, then the answer comes out below it
+        var ga = bit(va, xOf(i), rowA), gb = one ? null : bit(vb, xOf(i), ROWB);
+        ga.classList.add('ghost'); if (gb) gb.classList.add('ghost');
+        await sleep(30);
+        ga.style.top = '120px'; ga.style.opacity = 0; ga.style.transform = 'scale(.5)';
+        if (gb) { gb.style.top = '120px'; gb.style.opacity = 0; gb.style.transform = 'scale(.5)'; }
+        await wait(600); ga.remove(); if (gb) gb.remove();
+        var o = bit(r, xOf(i), 130); o.style.opacity = 0; o.style.transform = 'scale(.5)'; outs.push(o);
+        await sleep(30); o.style.top = ROWO + 'px'; o.style.opacity = 1; o.style.transform = 'scale(1)';
+        await wait(650);
+        a[i].classList.remove('now'); if (!one) b[i].classList.remove('now');
+      }
+      var ans = A.split('').map(function (x, k) { return OUT[op](x, one ? null : B[k]); }).join('');
+      eq.textContent = (one ? 'NOT ' + A : A + ' ' + op + ' ' + B) + ' = ' + ans;
+      note.textContent = 'That is every column. Starting again.';
+      await wait(3000); if (me !== run) return;
+      outs.forEach(function (o) { o.remove(); }); outs = []; eq.textContent = ''; note.textContent = '';
+    }
+  })();
+}
+function clean(id, dflt) { var v = document.getElementById(id).value.replace(/[^01]/g, '').slice(0, 8); return v.length >= 2 ? v : dflt; }
+function startAll() {
+  var A = clean('a', '10110'), B = clean('b', '01100'), n = Math.max(A.length, B.length);
+  A = A.padStart(n, '0'); B = B.padStart(n, '0');
+  document.getElementById('a').value = A; document.getElementById('b').value = B;
+  run++; paused = false; document.getElementById('pause').textContent = 'Pause';
+  ['NOT', 'AND', 'OR', 'XOR'].forEach(function (k) { lab(k, A, B); });
+}
+document.getElementById('go').addEventListener('click', startAll);
+['a', 'b'].forEach(function (id) { document.getElementById(id).addEventListener('keydown', function (e) { if (e.key === 'Enter') startAll(); }); });
+document.getElementById('pause').addEventListener('click', function () { paused = !paused; this.textContent = paused ? 'Play' : 'Pause'; });
+startAll();
+</script>
+</body>
+</html>
