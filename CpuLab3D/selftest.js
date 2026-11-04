@@ -124,7 +124,21 @@ function solveRun() {
   }
   ok(r.over, 'run round did not finish (' + s().toastText() + ')');
 }
-const SOLVE = { sort: solveSort, cpu: solveCpu, bus: solveBus, run: solveRun };
+function solveOrder() {
+  const r = R();
+  for (let g = 0; g < 10 && !r.over; g++) { if (s().hand.item) release(); const nx = r.rail.find(x => !x.items.length); if (!nx) break; carry(r.shelf.find(x => x.items.length && top(x).k === nx.k), nx); }
+  ok(r.over, 'order round did not finish');
+}
+function solveControl() {
+  const r = R(), lab = s();
+  for (let g = 0; g < 30 && !r.over; g++) {
+    if (lab.hand.item) release();
+    if (r.phase === 'read') { carry(r.sensor, r.mp); continue; }
+    reach(r.p.on[r.n] ? r.onPad : r.offPad); lab.setHand(true); lab.setHand(false); lab.frame(1);
+  }
+  ok(r.over, 'control round did not finish (' + s().toastText() + ')');
+}
+const SOLVE = { sort: solveSort, cpu: solveCpu, bus: solveBus, run: solveRun, order: solveOrder, control: solveControl };
 function playMission(i) {
   s().start(i);
   const m = M().m;
@@ -149,9 +163,22 @@ T.storedProgram = () => {
   lab.start(idx('run2-t')); const r2 = R(); carry(r2.slot['mem:0'], r2.slot.ins); const e = r2.p.trace[0], wrongA = [5, 6, 7].find(a => a !== e.a);
   carry(r2.slot['mem:' + wrongA], r2.slot.data); ok(r2.phase === 'data' && /uses the number stored at address/.test(r2.why || ''), 'the wrong data address was taken');
   ok(!!lab.guideTarget(), 'after a slip the arrow does not show the way');
-  lab.start(idx('run-c')); const r3 = R(); ok(r3.ask && /screen show/.test(r3.ask.q), 'the challenge does not ask for a prediction first');
+  lab.start(idx('run-c')); const r3 = R(); ok(r3.ask && /screen show|was changed/.test(r3.ask.q), 'the challenge does not ask for a prediction first');
   answer(false); ok(R() !== r3 && M().spoilt >= 1, 'a wrong prediction did not start a new round');
   for (let k = 0; k < 30; k++) { const p = lab.missions[idx('run-c')].gen(); ok(p.trace.every(x => x.after >= 0) && p.trace[p.trace.length - 1].ins.op === 'STOP', 'a program goes below 0 or never stops'); }
+};
+T.newSteps311 = () => {
+  const lab = s();
+  lab.start(idx('order-t')); const r = R(), wrong = r.shelf.find(x => x.items.length && top(x).k !== 0);
+  carry(wrong, r.rail[0]); ok(!r.rail[0].items.length && /comes/.test(s().toastText()) && !M().spoilt, 'a step out of order was taken, or the tutorial counted it as a mistake');
+  lab.start(idx('ctrl-c')); const r2 = R(); carry(r2.sensor, r2.mp);
+  reach(r2.p.on[0] ? r2.offPad : r2.onPad); lab.setHand(true); lab.setHand(false); lab.frame(1);
+  ok(R() !== r2 && M().spoilt >= 1, 'a wrong signal in the challenge did not start a new round');
+  for (let k = 0; k < 20; k++) { const p = lab.missions[idx('ctrl-c')].gen(); ok(p.readings.includes(p.dev.stored) && p.on.some(Boolean) && !p.on.every(Boolean), 'a control round has no boundary reading, or every signal is the same'); }
+  for (let k = 0; k < 20; k++) { const p = lab.missions[idx('change-t')].gen(); ok(p.change && p.change.out0 !== p.change.out1 && p.trace.every(x => x.after >= 0), 'a change-the-memory round does not change the output'); }
+  lab.start(idx('change-t')); ok(R().ask && /was changed/.test(R().ask.q), 'Change the Memory does not ask first');
+  lab.start(idx('mem-t')); ok(R().p.parts.join() === 'INSTRUCTION,DATA', 'Instructions or Data? has the wrong machines');
+  ok(lab.LESSONS.find(x => x.id === '3.1.1').missions[0] === 'dev-t', '3.1.1 does not start with the devices');
 };
 T.ipoCards = () => {
   const lab = s();

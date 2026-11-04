@@ -109,6 +109,8 @@ function fixedMem() { const m = [{ op: 'LOAD', a: 5 }, { op: 'ADD', a: 6 }, { op
 
 // ---- the jobs (mark-scheme wording, as CpuLab/parts.js)
 const WHY = {
+  INSTRUCTION: 'An <b>instruction</b> tells the CPU what to do: LOAD, ADD, SUB, OUTPUT, STOP.',
+  DATA: '<b>Data</b> is a number the instructions work on. It is stored in the same memory as the program.',
   INPUT: '<b>Input</b> is data going <b>into</b> the CPU from a device such as a keyboard, a scanner or a sensor.',
   PROCESS: '<b>Process</b> is the CPU (or microprocessor) <b>working on</b> the data: calculating, comparing or deciding.',
   OUTPUT: '<b>Output</b> is a result the CPU sends <b>out</b>: shown on a screen, played, or a signal that makes something happen.',
@@ -236,6 +238,47 @@ function ipoProblem(level, tutorial) {
   if (!tutorial) cards = shuffle(cards).slice(0, 7);
   return { parts: [I, P, O], cards: cards.map(([t, a]) => ({ text: t, answer: a })), key: cards.map(c => c[0]).join('|'), device: devs.map(d => d[0]).join(' and ') };
 }
+// devices that send data into the CPU, and devices the CPU sends results out to
+const IN_DEVICES = ['Keyboard', 'Mouse', 'Microphone', 'Barcode scanner', 'Temperature sensor', 'Light sensor', 'Touch pad', 'Camera'];
+const OUT_DEVICES = ['Screen', 'Speaker', 'Printer', 'Motor', 'Heater', 'Light bulb', 'Buzzer', 'Fan'];
+function deviceProblem(tutorial) {
+  const ins = shuffle(IN_DEVICES).slice(0, tutorial ? 3 : 4), outs = shuffle(OUT_DEVICES).slice(0, tutorial ? 3 : 4);
+  let cards = ins.map(d => [d, I]).concat(outs.map(d => [d, O])); if (!tutorial) cards = shuffle(cards);
+  else cards = [cards[0], cards[3], cards[1], cards[4], cards[2], cards[5]];
+  return { parts: [I, O], cards: cards.map(([t, a]) => ({ text: t, answer: a })), key: cards.map(c => c[0]).join('|') };
+}
+// the contents of a memory: instructions and data, side by side
+function memoryProblem(tutorial) {
+  const p = runProblem(), cards = p.mem.map(c => c && [text(c), c.op ? 'INSTRUCTION' : 'DATA']).filter(Boolean);
+  const pick2 = tutorial ? cards.slice(0, 2).concat(cards.slice(-2)) : shuffle(cards).slice(0, 6);
+  return { parts: ['INSTRUCTION', 'DATA'], cards: pick2.map(([t, a]) => ({ text: t, answer: a })), key: pick2.map(c => c[0]).join('|') };
+}
+// a device's three steps, to put in order: input, then process, then output
+function orderProblem() {
+  const pool = IPO_COMPUTERS.concat(IPO_SENSORS).filter(([, st]) => st.length === 3 && st[0][1] === I && st[1][1] === P && st[2][1] === O);
+  const [d, st] = pick(pool);
+  return { device: d, steps: st.map(([t, a], k) => ({ text: t, type: a, k })), key: d };
+}
+// a microprocessor's checking loop: a sensor reading, compared with a stored value, then a signal; it repeats
+const CONTROLS = [
+  { name: 'Washing machine', sensor: 'temperature sensor', unit: ' °C', stored: 30, below: true, thing: 'heater', on: 'HEATER ON', off: 'HEATER OFF', onSay: 'switch the heater on', offSay: 'switch the heater off' },
+  { name: 'Greenhouse', sensor: 'temperature sensor', unit: ' °C', stored: 25, below: true, thing: 'heater', on: 'HEATER ON', off: 'HEATER OFF', onSay: 'switch the heater on', offSay: 'switch the heater off' },
+  { name: 'Air conditioner', sensor: 'temperature sensor', unit: ' °C', stored: 24, below: false, thing: 'fan', on: 'FAN ON', off: 'FAN OFF', onSay: 'switch the fan on', offSay: 'switch the fan off' },
+  { name: 'Security light', sensor: 'light sensor', unit: '', stored: 40, below: true, thing: 'light', on: 'LIGHT ON', off: 'LIGHT OFF', onSay: 'switch the light on', offSay: 'switch the light off' },
+  { name: 'Drone', sensor: 'proximity sensor', unit: ' cm', stored: 50, below: true, thing: 'motors', on: 'CHANGE DIRECTION', off: 'KEEP GOING', onSay: 'change direction', offSay: 'keep going' }
+];
+// tutorial: the washing machine, never a reading equal to the stored value; challenge: any device, one reading equal to it
+function controlProblem(tutorial) {
+  const d = tutorial ? CONTROLS[0] : pick(CONTROLS), n = 5;
+  for (let t = 0; t < 100; t++) {
+    const r = Array.from({ length: n }, () => d.stored + pick([-6, -4, -3, -2, -1, 1, 2, 3, 4, 6]));
+    if (!tutorial) r[rnd(1, n - 1)] = d.stored;
+    const on = r.map(v => d.below ? v < d.stored : v > d.stored);
+    if (new Set(r).size < (tutorial ? n : n - 1) || !on.some(Boolean) || on.every(Boolean)) continue;   // tutorials: every reading different
+    return { dev: d, readings: r, on, key: d.name + r.join() };
+  }
+  return { dev: d, readings: [d.stored - 3, d.stored + 2, d.stored - 1, d.stored + 4, d.stored - 2], on: d.below ? [true, false, true, false, true] : [false, true, false, true, false], key: 'fixed' };
+}
 // ---- 3.1.1: the stored program. One memory holds the instructions (from address 0) and the data after them.
 const RUN_MEANS = { LOAD: 'copies the number stored at address A into the CPU', ADD: 'adds the number stored at address A to the number in the CPU', SUB: 'takes the number stored at address A away from the number in the CPU', OUTPUT: 'sends the number in the CPU to the screen', STOP: 'ends the program' };
 const runMeans = c => RUN_MEANS[c.op].replace('A', c.a);
@@ -262,24 +305,54 @@ function runProblem(o = {}) {
     const tr = runTrace(mem);
     if (tr.some(e => e.after < 0)) continue;
     const vals = mem.filter(c => c && c.n != null).map(c => c.n); if (new Set(vals).size !== vals.length) continue;   // no two data values the same
-    return { mem, trace: tr, key: mem.map(text).join('|') };
+    const p = { mem, trace: tr, key: mem.map(text).join('|') };
+    if (o.change) {
+      const outs0 = tr.filter(e => e.out != null).map(e => e.out), dataAddrs = mem.map((c, a) => c && c.n != null ? a : -1).filter(a => a >= 0);
+      const insChange = Math.random() < 0.35, mem2 = mem.map(c => c && Object.assign({}, c));
+      let ch;
+      if (insChange) { const k = tr.findIndex(e => e.ins.op === 'ADD' || e.ins.op === 'SUB'); if (k < 0) continue; const other = dataAddrs.find(a => a !== mem[k].a && !tr.some(e => e.a === a)) ?? dataAddrs.find(a => a !== mem[k].a); mem2[k] = { op: mem[k].op, a: other }; ch = { a: k, from: text(mem[k]), to: text(mem2[k]) }; }
+      else { const a = pick(tr.filter(e => e.a != null).map(e => e.a)), nv = rnd(3, 30); if (nv === mem[a].n || vals.includes(nv)) continue; mem2[a] = { n: nv }; ch = { a, from: String(mem[a].n), to: String(nv) }; }
+      const tr2 = runTrace(mem2); if (tr2.some(e => e.after < 0)) continue;
+      const outs1 = tr2.filter(e => e.out != null).map(e => e.out); if (outs1[0] === outs0[0]) continue;
+      return { mem: mem2, trace: tr2, key: mem2.map(text).join('|') + '>' + ch.a, change: Object.assign(ch, { out0: outs0[0], out1: outs1[0] }) };
+    }
+    return p;
   }
   return runProblem({ fixed: true });
 }
 
 // ================================================================ missions
 const MISSIONS = [
+  { id: 'dev-t', group: 'Input, process, output', title: 'In and Out of the CPU', type: 'tutorial', guided: true, kind: 'sort', level: 'devices', mins: 4,
+    intro: 'The CPU is the part of a computer that works on data. Some devices send data <b>in</b> to it; others get its results <b>out</b>. Carry each device to INPUT or OUTPUT.',
+    gen: () => deviceProblem(true),
+    after: { q: 'A temperature sensor goes to INPUT. Why?', options: ['It sends data into the CPU.', 'It shows a result to the user.', 'It works out the temperature.'], why: 'An input device sends data in. The CPU works on it. An output device shows or does the result.' } },
   { id: 'ipo-t', group: 'Input, process, output', title: 'Input, Process, Output', type: 'tutorial', guided: true, kind: 'sort', level: 'computers', mins: 5,
     intro: 'A computer takes data in, works on it, and sends a result out. Carry each step to <b>INPUT</b>, <b>PROCESS</b> or <b>OUTPUT</b>.',
     gen: () => ipoProblem('computers', true),
     after: { q: 'Why does the CPU need an input before it can process?', options: ['It works on the instructions and data that are input.', 'It needs a screen to be switched on first.', 'The output has to come first.'], why: 'The CPU processes the instructions and data that are input, so that a result can be output.' } },
-  { id: 'sensor-t', group: 'Input, process, output', title: 'Sensor Systems', type: 'tutorial', kind: 'sort', level: 'sensors', mins: 5,
+  { id: 'sensor-t', group: 'Microprocessors', title: 'Sensor Systems', type: 'tutorial', kind: 'sort', level: 'sensors', mins: 5,
     intro: 'Many devices have a <b>microprocessor</b> inside: one integrated circuit that does the job of a CPU. A sensor is its input. Carry each step to INPUT, PROCESS or OUTPUT.',
     gen: () => ipoProblem('sensors', true),
     after: { q: 'What is a microprocessor?', options: ['One integrated circuit that carries out the functions of a CPU.', 'A sensor that measures the temperature.', 'A memory that stores the program.'], why: 'A microprocessor is an integrated circuit that can carry out the functions of a CPU, often inside a device.' } },
+  { id: 'order-t', group: 'Input, process, output', title: 'In Order', type: 'tutorial', kind: 'order', mins: 5,
+    intro: 'Three steps from one device, mixed up. Put them in the order they happen: 1 first, 3 last.',
+    gen: () => orderProblem(),
+    after: { q: 'Why can the CPU not show the result before the data is input?', options: ['The result comes from processing the input, so the input must come first.', 'The screen is switched off until the end.', 'The CPU always waits 3 seconds.'], why: 'The CPU processes the data that is input. Without the input there is nothing to process.' } },
   { id: 'ipo-c', group: 'Input, process, output', title: 'Input, Process or Output?', type: 'challenge', kind: 'sort', level: 'mix', mins: 8,
     intro: 'Steps from two devices, mixed up. Carry each one to INPUT, PROCESS or OUTPUT. Two clean rounds in a row.',
     gen: () => ipoProblem('mix', false) },
+  { id: 'ctrl-t', group: 'Microprocessors', title: 'Keep Checking', type: 'tutorial', guided: true, kind: 'control', mins: 6,
+    intro: 'A washing machine keeps its water at 30 °C. The sensor sends a reading, the microprocessor compares it with the stored value, then sends a signal to the heater. Then it checks again.',
+    gen: () => controlProblem(true),
+    after: { q: 'Why does the microprocessor keep checking, again and again?', options: ['The temperature can change at any time, so it must keep comparing.', 'It forgets the stored value.', 'The sensor only works once.'], why: 'The process repeats continuously, so the heater is switched on or off whenever the reading changes.' } },
+  { id: 'ctrl-c', group: 'Microprocessors', title: 'Keep Checking Challenge', type: 'challenge', kind: 'control', mins: 7,
+    intro: 'Different devices, different stored values. Send each reading to the microprocessor and choose the signal. Watch for a reading equal to the stored value. Two clean rounds in a row.',
+    gen: () => controlProblem(false) },
+  { id: 'mem-t', group: 'Stored program', title: 'Instructions or Data?', type: 'tutorial', guided: true, kind: 'sort', level: 'memory', mins: 4,
+    intro: 'A computer stores its program in memory, and the data the program uses goes in the <b>same</b> memory. Carry each thing from memory to INSTRUCTION or DATA.',
+    gen: () => memoryProblem(true),
+    after: { q: 'Where are the instructions and the data stored?', options: ['Together, in the same memory.', 'The instructions in the CPU, the data in memory.', 'The data in the CPU, the instructions in memory.'], why: 'This is the stored program idea: instructions and data are both stored in memory.' } },
   { id: 'run-t', group: 'Stored program', title: 'Program and Data in One Memory', type: 'tutorial', guided: true, kind: 'run', mins: 7,
     intro: 'Memory holds the program <b>and</b> its data. The CPU runs the instructions one after another, starting at address 0. Carry each instruction to the CPU, then the data it needs.',
     gen: () => runProblem({ fixed: true }),
@@ -287,9 +360,13 @@ const MISSIONS = [
   { id: 'run2-t', group: 'Stored program', title: 'Two Calculations', type: 'tutorial', kind: 'run', mins: 7,
     intro: 'A longer program. Run it one instruction at a time and predict what the CPU holds after each one.',
     gen: () => runProblem() },
+  { id: 'change-t', group: 'Stored program', title: 'Change the Memory', type: 'tutorial', kind: 'run', mins: 7,
+    intro: 'The program in memory ran once. Then one address was changed. Predict the new output, then run the program to see why.',
+    gen: () => runProblem({ change: true }),
+    after: { q: 'Why does changing memory change what the program does?', options: ['The CPU runs whatever instructions and data are stored in memory.', 'The screen remembers the old answer.', 'Changing memory restarts the computer.'], why: 'The program is stored in memory, so a change there changes what runs. No rewiring is needed.' } },
   { id: 'run-c', group: 'Stored program', title: 'Predict, then Run', type: 'challenge', kind: 'run', predict: true, mins: 10,
     intro: 'Predict what the screen will show first, then run the program to check. Two clean rounds in a row.',
-    gen: () => runProblem(pick([{}, { two: true }])) },
+    gen: () => runProblem(pick([{}, { two: true }, { change: true }])) },
 
   { id: 'alucu-t', group: 'ALU or CU', title: 'Meet the ALU and the CU', type: 'tutorial', guided: true, kind: 'sort', level: 'alucu',
     intro: 'Each card is a job. Carry it to the part that does that job. Ask: is it maths, or is it being in charge?',
@@ -348,11 +425,11 @@ const MISSIONS = [
     gen: () => traceRound() }
 ];
 export { MISSIONS };
-const SECTIONS = ['Input, process, output', 'Stored program', 'ALU or CU', 'Registers', 'Take the next instruction', 'Carry it out', 'Run a program', 'Buses'];
+const SECTIONS = ['Input, process, output', 'Microprocessors', 'Stored program', 'ALU or CU', 'Registers', 'Take the next instruction', 'Carry it out', 'Run a program', 'Buses'];
 // Lesson mode: 3.1.2 CPU Components (about an hour), with the instruction missions as extensions; 3.1.3 Buses (one
 // activity of that lesson, about 25 minutes)
 const LESSONS = [
-  { id: '3.1.1', title: '3.1.1: CPU and Microprocessors', missions: ['ipo-t', 'sensor-t', 'ipo-c', 'run-t', 'run2-t', 'run-c'], ext: [] },
+  { id: '3.1.1', title: '3.1.1: CPU and Microprocessors', missions: ['dev-t', 'ipo-t', 'order-t', 'ipo-c', 'sensor-t', 'ctrl-t', 'mem-t', 'run-t', 'change-t'], ext: ['ctrl-c', 'run2-t', 'run-c'] },
   { id: '3.1.2', title: '3.1.2: CPU Components', missions: ['alucu-t', 'alucu-c', 'regs-t', 'regs-c', 'parts-c', 'next-t', 'next-c'], ext: ['load-t', 'add-t', 'do-c', 'one-c', 'run-c'] },
   { id: '3.1.3', title: '3.1.3: Buses and Data Movement', missions: ['bus-t', 'bus-c', 'trace-t', 'trace-c'], ext: ['trace-own-c'] }
 ];
@@ -476,7 +553,8 @@ export function startSolo({ container, myName, colour }) {
     M.lastKey = keyOf(p);
     R = { p, over: false, spoilt: false, ask: null, notes: [], moves: 0, why: null };
     KIND[m.kind].setup(R, m);
-    view.zoom?.(m.kind === 'bus' ? 1600 : m.kind === 'run' ? 1250 : 760, m.kind === 'bus' ? 0.95 : m.kind === 'run' ? 0.9 : 0.75);   // the buses: far enough back to see the CPU and memory at both ends
+    const far = m.kind === 'run' || m.kind === 'control' || m.kind === 'order';   // these rooms are wide: see both ends
+    view.zoom?.(m.kind === 'bus' ? 1600 : far ? 1300 : 760, m.kind === 'bus' ? 0.95 : far ? 0.9 : 0.75);   // the buses: far enough back to see the CPU and memory at both ends
     pos.face = Math.PI; view.jump(pos.x, pos.y - camAhead());
     toast(''); explainReset();
     if (after) { explain('Not this time. ' + after + ' A new round has started.'); R.why = after; toast('A mistake, so a new round has started. ' + after, 'bad'); }
@@ -541,7 +619,7 @@ export function startSolo({ container, myName, colour }) {
 
   // ---------------------------------------------------------------- job cards: carry each card to the part that does the job
   const KIND = {};
-  const NAME_COL = { ALU: 0x1864ab, CU: 0x5f3dc4, INPUT: 0x2b8a3e, PROCESS: 0x1864ab, OUTPUT: 0xe8590c };
+  const NAME_COL = { ALU: 0x1864ab, CU: 0x5f3dc4, INPUT: 0x2b8a3e, PROCESS: 0x1864ab, OUTPUT: 0xe8590c, INSTRUCTION: 0xf59f00, DATA: 0x1f5fd1 };
   KIND.sort = {
     start() { return 'Each card is a job. Carry it to the part of the CPU that does that job.'; },
     setup(R, m) {
@@ -568,7 +646,7 @@ export function startSolo({ container, myName, colour }) {
       R.placedN = 0;
       pos.x = Math.floor(W / 2); pos.y = 12.5;
     },
-    placed(it, slot) { if (slot.role === 'part') { R.placedN++; explain('"' + it.text + '" is a job for the <b>' + slot.part + '</b>. ' + WHY[slot.part]); } },
+    placed(it, slot) { if (slot.role === 'part') { R.placedN++; explain(['devices', 'memory', 'computers', 'sensors', 'mix'].includes(M.m.level) ? '"' + it.text + '": <b>' + slot.part + '</b>. ' + WHY[slot.part] : '"' + it.text + '" is a job for the <b>' + slot.part + '</b>. ' + WHY[slot.part]); } },
     check() { if (R.placedN === R.p.cards.length && !hand.item) finishRound('Every job is with the right part.'); },
     guide(R, m) {
       const cards = R.shelf.filter(s => s.items.length);
@@ -582,7 +660,7 @@ export function startSolo({ container, myName, colour }) {
     },
     steps(R, m) {
       return R.p.cards.map(c => ({
-        text: ['computers', 'sensors', 'mix'].includes(m.level) ? (m.guided ? 'Carry "' + c.text + '" to <b>' + c.answer + '</b>. ' + WHY[c.answer] : '"' + c.text + '": going in, being worked on, or going out?') : m.level === 'alucu' ? 'Carry "' + c.text + '" to the <b>' + c.answer + '</b>. ' + (c.answer === 'ALU' ? 'It is maths or comparing.' : 'It is being in charge.') : '"' + c.text + '": find the clue word, then carry it to that register.',
+        text: m.level === 'devices' ? 'Carry the <b>' + c.text + '</b> to <b>' + c.answer + '</b>. ' + (c.answer === I ? 'It sends data in.' : 'It gets a result out.') : m.level === 'memory' ? 'Carry <b>' + c.text + '</b> to <b>' + c.answer + '</b>. ' + WHY[c.answer] : ['computers', 'sensors', 'mix'].includes(m.level) ? (m.guided ? 'Carry "' + c.text + '" to <b>' + c.answer + '</b>. ' + WHY[c.answer] : '"' + c.text + '": going in, being worked on, or going out?') : m.level === 'alucu' ? 'Carry "' + c.text + '" to the <b>' + c.answer + '</b>. ' + (c.answer === 'ALU' ? 'It is maths or comparing.' : 'It is being in charge.') : '"' + c.text + '": find the clue word, then carry it to that register.',
         done: () => R.pads.some(s => s.items.some(x => x.text === c.text))
       }));
     },
@@ -592,6 +670,7 @@ export function startSolo({ container, myName, colour }) {
       return '<b>Cards with the right part:</b> ' + R.placedN + ' of ' + R.p.cards.length + (c ? '<br><b>You are carrying:</b> "' + c.text + '"' : '<br>Walk up to a card to read it.');
     },
     walk(R, m) {
+      if (m.level === 'devices' || m.level === 'memory') { const p = m.level === 'devices' ? deviceProblem(true) : memoryProblem(true); return [{ text: m.level === 'devices' ? '<b>Different devices.</b> Ask: does it send data in, or show or do a result?' : '<b>A different memory.</b> Ask: is it a command (LOAD, ADD, SUB, OUTPUT, STOP) or a number?', visual: '' }].concat(p.cards.map(c => ({ text: c.text + ': <span class="hl">' + c.answer + '</span>.', visual: '' })), [{ text: 'Now carry your own.', visual: '' }]); }
       const ipoLevel = ['computers', 'sensors', 'mix'].includes(m.level);
       const p = ipoLevel ? ipoProblem(m.level === 'mix' ? 'sensors' : m.level, true) : sortProblem(m.level, true), steps = [{ text: ipoLevel ? '<b>A different device: ' + p.device + '.</b> For each step, ask: is data going in, is it being worked on, or is a result going out?' : '<b>Different cards.</b> For each job, ask: is it maths, being in charge, or holding something? If it holds something, what: an address, data, an instruction, or a result?', visual: '' }];
       p.cards.forEach(c => steps.push({ text: '"' + c.text + '": <span class="hl">' + c.answer + '</span>. ' + WHY[c.answer], visual: '' }));
@@ -722,6 +801,92 @@ export function startSolo({ container, myName, colour }) {
       return steps;
     }
   };
+  // ---------------------------------------------------------------- 3.1.1 in order: input, then process, then output
+  const ORDER_WHY = { 0: 'The input comes first: the CPU needs data before it can do anything.', 1: 'Processing comes after the input and before the output: the CPU works on the data that was input.', 2: 'The output comes last: it is the result of the processing.' };
+  KIND.order = {
+    start(m, p) { return p.device + ': three steps, mixed up.'; },
+    setup(R, m) {
+      newWorld(22, 15, 'In order'); R.placedN = 0;
+      addSign(R.p.device.toUpperCase(), 11, 2, 300, { bg: '#1864ab', ink: '#ffffff', size: 0.045 });
+      addBody(4, 4, 15, 0x5f3dc4, 'WHAT HAPPENS, IN ORDER');
+      R.rail = [0, 1, 2].map(k => addSlot({ role: 'step', pad: 'answer', x: 6 + k * 5, y: 5, k, label: ['1 FIRST', '2 NEXT', '3 LAST'][k], tag: { tagY: 140 },
+        put: (it, from) => from && from.role === 'step' ? { msg: 'It is in place.' } : it.k === k ? null : (R.slipped = true, { msg: 'Not here. ' + ORDER_WHY[it.k], mistake: M.m.type === 'challenge' }) }));
+      R.shelf = shuffle(R.p.steps).map((st, i) => { const s = addSlot({ role: 'shelf', pad: 'supply', x: 6 + i * 5, y: 10, put: (it, from) => from === s ? null : s.items.length ? { msg: 'That spot is full.' } : null }); addItem(s, { card: true, text: st.text, sym: st.text, k: st.k, type: st.type, role: 'card' }); return s; });
+      for (const s of R.rail) s.take = () => 'It is in place.';
+      pos.x = 11; pos.y = 12.5;
+    },
+    placed(it, slot) { if (slot.role === 'step') { R.placedN++; explain('Step ' + (it.k + 1) + ': "' + it.text + '". ' + ORDER_WHY[it.k]); } },
+    check() { if (R.placedN === 3 && !hand.item) finishRound('Input, then process, then output.'); },
+    guide(R) { const next = R.rail.find(s => !s.items.length); if (!next) return null; if (hand.item) return hand.item.k === next.k ? slotTarget(next) : null; const sh = R.shelf.find(s => s.items.length && top(s).k === next.k); return sh ? slotTarget(sh) : null; },
+    steps(R) { return [0, 1, 2].map(k => ({ text: ['Which step happens <b>first</b>?', 'Which step comes <b>next</b>?', 'Which step comes <b>last</b>?'][k], done: () => R.rail[k].items.length > 0 })); },
+    goals() { return []; },
+    expr(R) { return '<b>' + R.p.device + '</b><br>' + R.rail.map((s, k) => (k + 1) + '. ' + (s.items.length ? top(s).text : '...')).join('<br>'); },
+    walk(R) {
+      let p; do p = orderProblem(); while (p.key === R.p.key);
+      return [{ text: '<b>A different device: ' + p.device + '.</b> Ask for each step: is data going in, being worked on, or going out?', visual: '' }]
+        .concat(p.steps.map(st => ({ text: (st.k + 1) + '. "' + st.text + '": <span class="hl">' + (st.type === I ? 'input' : st.type === P ? 'process' : 'output') + '</span>. ' + ORDER_WHY[st.k], visual: '' })), [{ text: 'Now put yours in order.', visual: '' }]);
+    }
+  };
+
+  // ---------------------------------------------------------------- 3.1.1 a microprocessor keeps checking: sensor, compare, signal, repeat
+  KIND.control = {
+    start(m, p) { return p.dev.name + ': the stored value is ' + p.dev.stored + p.dev.unit + '.'; },
+    setup(R, m) {
+      const d = R.p.dev; R.n = 0; R.phase = 'read';
+      newWorld(23, 15, d.name);
+      addBody(4, 5, 3, 0x2b8a3e, d.sensor.toUpperCase());
+      R.sensor = addSlot({ role: 'sensor', pad: 'supply', x: 5, y: 6, label: 'READING', tag: { tagY: 130 },
+        copyOut: () => R.phase === 'read' && R.n < R.p.readings.length ? valueCube(R.p.readings[R.n], 'data') : R.phase === 'act' ? 'The microprocessor has this reading. Choose the signal.' : 'No new reading.',
+        put: () => ({ msg: 'Readings go to the microprocessor.' }) });
+      addBody(9, 5, 5, 0x5f3dc4, 'MICROPROCESSOR', 'gate');
+      R.mp = addSlot({ role: 'mp', pad: 'machine', x: 11, y: 6, label: 'COMPARE', tag: { tagY: 130 }, put: (it, from) => from === R.sensor ? (R.phase === 'read' ? null : { msg: 'Choose the signal for this reading first.' }) : { msg: 'Readings come from the sensor.' } });
+      addSign('STORED VALUE: ' + d.stored + d.unit.toUpperCase(), 11, 5, 340, { bg: '#ffd43b', ink: '#1a1200', size: 0.042 });
+      addBody(15, 5, 4, 0x495057, d.thing.toUpperCase());
+      R.onPad = addSlot({ role: 'sig', pad: 'answer', x: 15, y: 6, label: d.on, tag: { tagY: 130 }, press: () => signal(true), pressText: 'to send the signal: ' + d.onSay + '.' });
+      R.offPad = addSlot({ role: 'sig', pad: 'target', x: 18, y: 6, label: d.off, tag: { tagY: 130 }, press: () => signal(false), pressText: 'to send the signal: ' + d.offSay + '.' });
+      thingSign(null); sensorShow();
+      pos.x = 11; pos.y = 11;
+    },
+    placed(it, slot) {
+      if (slot !== R.mp) return;
+      const d = R.p.dev, v = R.p.readings[R.n];
+      R.phase = 'act';
+      explain('The ' + d.sensor + ' sends ' + v + d.unit + ' to the microprocessor. It compares ' + v + ' with the stored value, ' + d.stored + '.');
+    },
+    check() { if (R.n >= R.p.readings.length && !hand.item && !R.over) finishRound('The microprocessor keeps checking like this, again and again.'); },
+    guide(R, m) {
+      if (R.phase === 'read') return hand.item ? slotTarget(R.mp) : slotTarget(R.sensor);
+      return R.slipped ? slotTarget(R.p.on[R.n] ? R.onPad : R.offPad) : null;   // which signal is the pupil's to decide
+    },
+    steps(R) { return R.p.readings.map((v, i) => ({ text: 'Reading ' + (i + 1) + ': carry it to the microprocessor, then send a signal.', done: () => R.n > i })); },
+    goals() { return []; },
+    expr(R) {
+      const d = R.p.dev;
+      return '<b>' + d.name + '</b><br><b>Stored value:</b> ' + d.stored + d.unit + '<br><b>Rule:</b> ' + (d.below ? 'reading below ' : 'reading above ') + d.stored + ': ' + d.onSay + '; otherwise ' + d.offSay + '.' +
+        '<br><b>Readings so far:</b> ' + (R.p.readings.slice(0, R.n).map((v, i) => v + d.unit + ' (' + (R.p.on[i] ? d.on : d.off).toLowerCase() + ')').join(', ') || 'none');
+    },
+    walk(R) {
+      const p = controlProblem(false), d = p.dev;
+      return [{ text: '<b>A different device: ' + d.name + '.</b> The stored value is ' + d.stored + d.unit + '. The rule: ' + (d.below ? 'below ' : 'above ') + d.stored + ', ' + d.onSay + '.', visual: '' }]
+        .concat(p.readings.map((v, i) => ({ text: 'The ' + d.sensor + ' sends ' + v + d.unit + '. ' + v + (v === d.stored ? ' equals ' : v < d.stored ? ' is below ' : ' is above ') + d.stored + ', so the microprocessor sends a signal to <span class="hl">' + (p.on[i] ? d.onSay : d.offSay) + '</span>.', visual: '' })),
+          [{ text: 'It repeats: the sensor sends a new reading and the microprocessor compares again.', visual: '' }]);
+    }
+  };
+  // the sensor pad shows the reading it is sending now (taking it gives a copy)
+  function sensorShow() { R.sensor.items.forEach(killItem); R.sensor.items = []; if (R.n < R.p.readings.length) addItem(R.sensor, valueCube(R.p.readings[R.n], 'data')); }
+  function thingSign(on) {
+    if (R.thingSign) { worldG.remove(R.thingSign); R.thingSign.material.map.dispose(); R.thingSign.material.dispose(); }
+    const d = R.p.dev; R.thingSign = addSign(on == null ? d.thing.toUpperCase() + ': WAITING' : (on ? d.on : d.off), 16, 5, 215, { bg: on ? '#40c057' : '#343a40', ink: '#ffffff', size: 0.04 });
+  }
+  function signal(on) {
+    const d = R.p.dev, v = R.p.readings[R.n];
+    if (R.phase !== 'act') { toast('First carry the reading from the sensor to the microprocessor.', 'hint'); return; }
+    const right = R.p.on[R.n], why = v + d.unit + (v === d.stored ? ' equals ' : v < d.stored ? ' is below ' : ' is above ') + 'the stored value ' + d.stored + ', so the microprocessor sends a signal to ' + (right ? d.onSay : d.offSay) + '.';
+    if (on !== right) { if (M.m.type === 'challenge') { mistake(why); return; } R.slipped = true; R.why = why; toast(why, 'bad'); explain('Not this time. ' + why); drawAll(); return; }
+    thingSign(on); explain(why + ' Then the sensor sends the next reading.');
+    R.mp.items.forEach(killItem); R.mp.items = []; R.n++; R.phase = 'read'; R.moves++; sensorShow(); afterChange();
+  }
+
   // ---------------------------------------------------------------- 3.1.1 the stored program: carry each instruction to the CPU in order
   KIND.run = {
     start(m, p) { return 'The CPU starts at address 0. Memory holds the program (addresses 0 to ' + (p.trace.length - 1) + ') and its data.'; },
@@ -744,7 +909,8 @@ export function startSolo({ container, myName, colour }) {
       addBody(19, 8, 3, 0x343a40, 'SCREEN');
       R.slot.screen = addSlot({ role: 'screen', pad: 'target', x: 20, y: 9, label: 'SCREEN', tag: { tagY: 130 }, grow: 'right', put: (it, from) => runPut('screen', it, from) });
       cpuSign();
-      if (m.predict) { const first = p.trace.find(e => e.out != null).out; R.ask = { type: 'num', plain: true, q: 'Before you run it: what will the screen show' + (p.trace.filter(e => e.out != null).length > 1 ? ' <b>first</b>' : '') + '?', answer: first, hint: 'Start at address 0 and work through the instructions in order.', why: 'Running it gives ' + first + '.', done: () => explain('Now run it to see why.') }; }
+      if (p.change) { const c = p.change; R.ask = { type: 'num', plain: true, q: 'This program output ' + c.out0 + '. Then address ' + c.a + ' was changed from ' + C(c.from, /^[A-Z]/.test(c.from) ? 'instr' : 'data') + ' to ' + C(c.to, /^[A-Z]/.test(c.to) ? 'instr' : 'data') + '. What will it output now?', answer: c.out1, hint: 'Work through the program from address 0 with the new value at address ' + c.a + '.', why: 'With ' + c.to + ' at address ' + c.a + ', the output is ' + c.out1 + '.', done: () => explain('Now run it to see why the output changed.') }; }
+      else if (m.predict) { const first = p.trace.find(e => e.out != null).out; R.ask = { type: 'num', plain: true, q: 'Before you run it: what will the screen show' + (p.trace.filter(e => e.out != null).length > 1 ? ' <b>first</b>' : '') + '?', answer: first, hint: 'Start at address 0 and work through the instructions in order.', why: 'Running it gives ' + first + '.', done: () => explain('Now run it to see why.') }; }
       pos.x = 12; pos.y = 13;
     },
     placed(it, slot) {
@@ -776,7 +942,7 @@ export function startSolo({ container, myName, colour }) {
     goals() { return ['The CPU runs the instructions in order, from address 0.', 'The number after LOAD, ADD or SUB is an address: the data is stored there.']; },
     expr(R, m) {
       const tut = m.type === 'tutorial', nx = R.p.trace[R.i];
-      const mem = R.p.mem.map((c, a) => c ? '<span class="cpu-mem' + (tut && nx && a === nx.k ? ' pc' : '') + '"><b>' + a + '</b> ' + text(c) + '</span>' : '').join('');
+      const mem = R.p.mem.map((c, a) => c ? '<span class="cpu-mem' + (tut && nx && a === nx.k ? ' pc' : '') + (R.p.change && R.p.change.a === a ? ' mar' : '') + '"><b>' + a + '</b> ' + text(c) + '</span>' : '').join('');
       return '<b>The CPU holds:</b> ' + R.acc + '<br><b>Memory</b><div class="cpu-memrow">' + mem + '</div>' + (R.outs.length ? '<b>Screen:</b> ' + R.outs.join(', ') : '');
     },
     walk(R) {
