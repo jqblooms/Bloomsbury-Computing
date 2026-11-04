@@ -9,7 +9,7 @@
     /* NOT, AND, OR and XOR on bit strings, animated side by side, one column at a time: the two bits above drop into the
        operator and the result bit comes out below. Lit bits are 1, dark bits are 0 (as Bit Flicker's lamps). */
     body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
-    main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr 1fr; gap: 14px; min-height: 100vh; padding: 14px 16px; box-sizing: border-box; }
+    main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr 1fr; gap: 12px; min-height: 100vh; padding: 12px 16px; box-sizing: border-box; }
     header { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     header h1 { margin: 0; font-size: 26px; font-weight: 800; }
     header p { margin: 0; color: var(--muted); font-size: 15px; }
@@ -19,19 +19,19 @@
     .ctl button { font: inherit; font-weight: 700; padding: 5px 14px; border-radius: 999px; border: 0; background: var(--brand); color: var(--on-brand); cursor: pointer; }
     .ctl button.secondary { background: var(--surface-3); color: var(--ink); }
     section { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
-              display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px; overflow: hidden; min-height: 300px; }
-    h2 { margin: 0; font: 800 clamp(22px, 2.6vw, 34px) var(--font-mono); color: var(--brand); text-align: center; }
+              display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px; overflow: hidden; min-height: 0; }
+    h2 { margin: 0; font: 800 clamp(20px, 2.2vw, 28px) var(--font-mono); color: var(--brand); text-align: center; }
     h2 small { display: block; font: 500 14px var(--font-body); color: var(--muted); margin-top: 2px; }
-    .stage { position: relative; height: 236px; flex: none; }
-    .lbl { position: absolute; left: 0; width: 64px; height: 50px; display: grid; place-items: center end; padding-right: 8px; box-sizing: border-box; font: 700 15px var(--font-mono); color: var(--muted); text-align: right; line-height: 1.1; }
-    .slot { position: absolute; width: 50px; height: 50px; border: 2px dashed var(--line-strong); border-radius: 9px; box-sizing: border-box; }
-    .bit { position: absolute; width: 50px; height: 50px; border-radius: 9px; display: grid; place-items: center; font: 800 26px/1 var(--font-mono);
+    .stage { position: relative; height: 196px; flex: none; }
+    .lbl { position: absolute; left: 0; width: 80px; height: 46px; display: grid; place-items: center end; padding-right: 8px; box-sizing: border-box; font: 700 15px var(--font-mono); color: var(--muted); text-align: right; line-height: 1.1; }
+    .slot { position: absolute; width: 46px; height: 46px; border: 2px dashed var(--line-strong); border-radius: 9px; box-sizing: border-box; }
+    .bit { position: absolute; width: 46px; height: 46px; border-radius: 9px; display: grid; place-items: center; font: 800 24px/1 var(--font-mono);
            transition: left .6s ease-in-out, top .6s ease-in-out, opacity .45s, transform .45s; }
     .bit.b1 { background: #ffd43b; color: #1a1200; box-shadow: 0 0 14px #ffd43b88; }
     .bit.b0 { background: var(--surface-4); color: var(--ink-soft); }
     .bit.now { outline: 3px solid var(--brand); }
     .bit.ghost { opacity: .9; }
-    .gate { position: absolute; top: 128px; width: 58px; height: 32px; border-radius: 8px; background: var(--brand); color: var(--on-brand); display: grid; place-items: center;
+    .gate { position: absolute; top: 106px; width: 54px; height: 28px; border-radius: 8px; background: var(--brand); color: var(--on-brand); display: grid; place-items: center;
             font: 800 14px var(--font-mono); transition: left .5s ease-in-out; }
     .eq { font: 700 18px var(--font-mono); color: var(--ink-soft); min-height: 1.4em; }
     .note { font-size: 15px; color: var(--muted); min-height: 1.4em; text-align: center; max-width: 34em; }
@@ -53,7 +53,7 @@
   <section id="XOR"><h2>A XOR B<small>1 where the two bits are different</small></h2><div class="stage"></div><div class="eq"></div><div class="note"></div></section>
 </main>
 <script>
-var STEP = 58, LW = 72, ROWA = 0, ROWB = 64, ROWO = 180, paused = false, run = 0;
+var STEP = 54, LW = 86, ROWA = 0, ROWB = 54, ROWO = 148, paused = false, run = 0;
 var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
 async function wait(ms) { await sleep(ms); while (paused) await sleep(150); }
 var RULE = {
@@ -83,7 +83,7 @@ function lab(op, A, B) {
     el('slot', xOf(i), ROWO);
     a.push(bit(A[i], xOf(i), rowA)); if (!one) b.push(bit(B[i], xOf(i), ROWB));
   }
-  var gate = el('gate', xOf(0) - 4, 128, op);
+  var gate = el('gate', xOf(0) - 4, 106, op);
   (async function loop() {
     for (;;) {
       await wait(900);
@@ -99,10 +99,10 @@ function lab(op, A, B) {
         var ga = bit(va, xOf(i), rowA), gb = one ? null : bit(vb, xOf(i), ROWB);
         ga.classList.add('ghost'); if (gb) gb.classList.add('ghost');
         await sleep(30);
-        ga.style.top = '120px'; ga.style.opacity = 0; ga.style.transform = 'scale(.5)';
-        if (gb) { gb.style.top = '120px'; gb.style.opacity = 0; gb.style.transform = 'scale(.5)'; }
+        ga.style.top = '98px'; ga.style.opacity = 0; ga.style.transform = 'scale(.5)';
+        if (gb) { gb.style.top = '98px'; gb.style.opacity = 0; gb.style.transform = 'scale(.5)'; }
         await wait(600); ga.remove(); if (gb) gb.remove();
-        var o = bit(r, xOf(i), 130); o.style.opacity = 0; o.style.transform = 'scale(.5)'; outs.push(o);
+        var o = bit(r, xOf(i), 110); o.style.opacity = 0; o.style.transform = 'scale(.5)'; outs.push(o);
         await sleep(30); o.style.top = ROWO + 'px'; o.style.opacity = 1; o.style.transform = 'scale(1)';
         await wait(650);
         a[i].classList.remove('now'); if (!one) b[i].classList.remove('now');
