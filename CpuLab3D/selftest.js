@@ -129,6 +129,18 @@ const idx = id => s().missions.findIndex(m => m.id === id);
 
 // ---------------------------------------------------------------- break tests
 const T = {};
+T.helpLevels = () => {
+  const lab = s();
+  for (const m of lab.missions.filter(x => x.type === 'challenge')) {
+    lab.start(idx(m.id)); lab.frame(2);
+    ok(!lab.guideTarget(), m.id + ': a challenge shows an arrow');
+    ok(!/Clue words|PC to MAR|carries an <b>address/.test($('mission').innerHTML.replace(/<li>No help[^<]*<\/li>/, '')) || m.kind === 'bus' && false, m.id + ': a challenge lists the rules');
+  }
+  lab.start(idx('next-c')); lab.frame(2); ok(!$('mission').querySelector('.cpu-mem.mar') && !$('mission').querySelector('.cpu-key'), 'the challenge marks where the MAR points');
+  lab.start(idx('regs-t')); lab.frame(2); ok(!lab.guideTarget(), 'Five Registers points the way before any slip');
+  ok(!/to the <b>(PC|MAR|MDR|CIR|ACC)<\/b>/.test($('mission').innerHTML), 'Five Registers names the register for each card');
+  lab.start(idx('alucu-t')); lab.frame(2); ok(!!lab.guideTarget(), 'the first tutorial has no arrow');
+};
 T.busRules = () => {
   const lab = s();
   lab.start(idx('bus-c')); const r = R(), e = r.ev;
@@ -257,7 +269,7 @@ T.lessonMode = () => {
 T.walkthroughs = () => {
   for (let i = 0; i < s().missions.length; i++) {
     s().start(i);
-    if (s().missions[i].noHelp) { ok(!hasBtn('Walk me through it'), s().missions[i].id + ' is no-help but shows Walk me through it'); continue; }
+    if (s().missions[i].noHelp || s().missions[i].type === 'challenge') { ok(!hasBtn('Walk me through it'), s().missions[i].id + ' is a challenge but shows Walk me through it'); continue; }
     clickBtn('Walk me through it');
     const txt = $('card').textContent; ok(/Step 1 of/.test(txt), s().missions[i].id + ' walkthrough did not open');
     ok(!/[–—]/.test(txt), 'dash in walkthrough');

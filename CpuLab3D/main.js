@@ -207,7 +207,7 @@ function traceRound() {
 
 // ================================================================ missions
 const MISSIONS = [
-  { id: 'alucu-t', group: 'ALU or CU', title: 'Meet the ALU and the CU', type: 'tutorial', kind: 'sort', level: 'alucu',
+  { id: 'alucu-t', group: 'ALU or CU', title: 'Meet the ALU and the CU', type: 'tutorial', guided: true, kind: 'sort', level: 'alucu',
     intro: 'Each card is a job. Carry it to the part that does that job. Ask: is it maths, or is it being in charge?',
     gen: () => sortProblem('alucu', true),
     after: { q: 'Why does a CPU have one part that calculates and a different part that controls?', options: ['They are different jobs, so each part can be simple and fast.', 'The ALU is too small to hold a program.', 'The CU cannot add numbers because it has no memory.'], why: 'One part only has to do maths; the other is in charge of everything else.' } },
@@ -221,7 +221,7 @@ const MISSIONS = [
     intro: 'Six jobs, five registers. Carry each card to the right register. Two clean rounds in a row.', gen: () => sortProblem('regs', false) },
   { id: 'parts-c', group: 'Registers', title: 'All Seven Parts', type: 'challenge', kind: 'sort', level: 'all',
     intro: 'Moments from a running program. Ask: is it an address, data, an instruction, or a result? Two clean rounds in a row.', gen: () => sortProblem('all', false) },
-  { id: 'next-t', group: 'Take the next instruction', title: 'Take the Next Instruction', type: 'tutorial', kind: 'cpu',
+  { id: 'next-t', group: 'Take the next instruction', title: 'Take the Next Instruction', type: 'tutorial', guided: true, kind: 'cpu',
     intro: 'The PC says where the next instruction is. Move the values from part to part and watch the registers change.',
     gen: () => cpuProblem({ mem: fixedMem, k: 0, half: 'next' }),
     after: { q: 'Why does the PC go up by 1?', options: ['So it holds the address of the next instruction.', 'So the ALU has a number to add.', 'So memory knows the instruction has finished.'], why: 'The program is stored in order, so the next instruction is at the next address.' } },
@@ -245,7 +245,7 @@ const MISSIONS = [
   { id: 'run-c', group: 'Run a program', title: 'Run the Program', type: 'challenge', kind: 'cpu', need: 1, noHelp: true,
     intro: 'The whole program, from address 0 to STOP, with no help. One clean run.',
     gen: () => cpuProblem({ whole: true, k: 0 }) },
-  { id: 'bus-t', group: 'Buses', title: 'Three Buses', type: 'tutorial', kind: 'bus', mins: 5,
+  { id: 'bus-t', group: 'Buses', title: 'Three Buses', type: 'tutorial', guided: true, kind: 'bus', mins: 5,
     intro: 'Three buses join the CPU to memory and the keyboard. Carry each cube onto the right bus, at the right end: the end near the CPU sends it <b>into the CPU</b>, the end near memory sends it <b>out of the CPU</b>.',
     gen: () => busRound(true),
     after: { q: 'Why does the address bus only go out of the CPU?', options: ['Only the CPU chooses which address to read or write.', 'Memory is too slow to send an address.', 'An address is too big for the data bus.'], why: 'The CPU decides where in memory to read or write, so addresses only ever leave the CPU.' } },
@@ -429,7 +429,7 @@ export function startSolo({ container, myName, colour }) {
   function mistake(msg) {
     log.add(M.m.title + ': ' + msg.replace(/<[^>]+>/g, ''), false);
     if (M.m.type === 'challenge') { R.why = msg; R.spoilt = true; R.over = true; M.have = 0; M.spoilt++; newRound(msg); return; }
-    R.why = msg; toast(msg, 'bad'); explain('Not this time. ' + msg); drawAll();
+    R.why = msg; R.slipped = true; toast(msg, 'bad'); explain('Not this time. ' + msg + (M.m.guided ? '' : ' The arrow now shows the way.')); drawAll();
   }
   function finishRound(msg) {
     R.over = true; R.endMsg = msg;
@@ -497,7 +497,7 @@ export function startSolo({ container, myName, colour }) {
     },
     steps(R, m) {
       return R.p.cards.map(c => ({
-        text: 'Carry "' + c.text + '" to the <b>' + c.answer + '</b>. ' + (m.level === 'alucu' ? (c.answer === 'ALU' ? 'It is maths or comparing.' : 'It is being in charge.') : WHY[c.answer].replace(/^The <b>\w+<\/b> \([^)]*\) /, 'It ')),
+        text: m.level === 'alucu' ? 'Carry "' + c.text + '" to the <b>' + c.answer + '</b>. ' + (c.answer === 'ALU' ? 'It is maths or comparing.' : 'It is being in charge.') : '"' + c.text + '": find the clue word, then carry it to that register.',
         done: () => R.pads.some(s => s.items.some(x => x.text === c.text))
       }));
     },
@@ -617,11 +617,11 @@ export function startSolo({ container, myName, colour }) {
     goals() { return ['A register gives you a copy. Memory only gives what is at the address in the MAR.', 'Next instruction: PC to MAR, memory to MDR, +1 lever, MDR to CIR, CIR to the CU.', 'LOAD: MDR to ACC. ADD, SUB: ACC and MDR into the ALU, result to the ACC. OUTPUT: ACC to the screen.']; },
     expr(R) {
       // move the PC and MAR pointers over the memory boxes they hold (hidden while a register is empty)
-      const point = (sp, v, h) => { if (!sp) return; const a = v === '' ? NaN : Number(v); sp.visible = a >= 0 && a <= 7; if (sp.visible) sp.position.set((4 + a * 2 + 0.5) * T, h, (2 + 0.5) * T); };
+      const point = (sp, v, h) => { if (!sp) return; const a = v === '' ? NaN : Number(v); sp.visible = a >= 0 && a <= 7 && M.m.type === 'tutorial'; if (sp.visible) sp.position.set((4 + a * 2 + 0.5) * T, h, (2 + 0.5) * T); };
       point(R.pcSign, R.regs.PC, 270); point(R.marSign, R.regs.MAR, 205);
       // the same pointers in the memory list, as coloured borders (nothing changes size as they move)
-      const cls = a => (String(a) === R.regs.PC ? ' pc' : '') + (String(a) === R.regs.MAR ? ' mar' : '');
-      const mem = R.p.mem.map((c, a) => c ? '<span class="cpu-mem' + cls(a) + '"><b>' + a + '</b> ' + text(c) + '</span>' : '').join('') + '<div class="cpu-key"><i class="pc"></i>PC: next instruction <i class="mar"></i>MAR: memory reads here</div>';
+      const tut = M.m.type === 'tutorial', cls = a => !tut ? '' : (String(a) === R.regs.PC ? ' pc' : '') + (String(a) === R.regs.MAR ? ' mar' : '');
+      const mem = R.p.mem.map((c, a) => c ? '<span class="cpu-mem' + cls(a) + '"><b>' + a + '</b> ' + text(c) + '</span>' : '').join('') + (!tut ? '' : '<div class="cpu-key"><i class="pc"></i>PC: next instruction <i class="mar"></i>MAR: memory reads here</div>');
       return '<b>Registers</b>' + regTable(R.regs) + '<b>Main memory</b><div class="cpu-memrow">' + mem + '</div>';
     },
     walk(R, m) {
@@ -801,6 +801,7 @@ export function startSolo({ container, myName, colour }) {
     },
     steps(R) {
       if (R.p.mode === 'events') return R.p.items.map((e, i) => ({ text: e.ctx + ' Carry <b>' + e.value + '</b> onto the <b>' + BUS_NAME[e.bus].toLowerCase() + '</b>, ' + WAY[e.dir] + '.', done: () => R.at > i }));
+      if (!M.m.guided) return R.p.jobs.map((j, ji) => ({ text: j.title + ' Choose its three cubes, and put each on its bus, the right way.', done: () => R.j > ji }));
       return R.p.jobs.flatMap((j, ji) => j.rows.map(r => ({ text: (j.kind === 'read' ? 'Read' : 'Write') + ': carry <b>' + r.value + '</b> onto the <b>' + BUS_NAME[r.bus].toLowerCase() + '</b>, ' + WAY[r.dir] + '.', done: () => r.done || R.j > ji })));
     },
     goals(m) {
@@ -917,9 +918,10 @@ export function startSolo({ container, myName, colour }) {
   function areaTarget(list) { if (!list.length) return null; if (list.length > 1) return { glowOnly: true }; const t = slotTarget(list[0]); t.exact = false; return t; }
   function guideTarget() {
     if (!M || !R || M.phase !== 'play' || R.over) return null;
-    // a spoilt challenge round guides like a tutorial: it does not count any more, so show the method
-    const m = R.spoilt && M.m.type === 'challenge' && !M.m.noHelp ? Object.assign({}, M.m, { type: 'tutorial', countAsk: true }) : M.m;
-    return KIND[M.m.kind].guide(R, m);
+    // no help in a challenge; in a tutorial after the first of a topic, the arrow comes only after a slip this round
+    if (M.m.type === 'challenge') return null;
+    if (!M.m.guided && !R.slipped) return null;
+    return KIND[M.m.kind].guide(R, M.m);
   }
   function arrowGeometry(pts, w, hl0) {
     const P = pts.map(([x, y]) => [(x + 0.5) * T, (y + 0.5) * T]), n = P.length, half = w / 2, verts = [], idx = [];
@@ -1083,8 +1085,8 @@ export function startSolo({ container, myName, colour }) {
       st.forEach((s, i) => ol.appendChild(el('li', { class: i < now || (now < 0) ? 'done' : i === now ? 'now' : 'later' }, '<span>' + s.text + '</span>')));
       t.appendChild(ol);
     } else {
-      t.appendChild(el('ul', { class: 'goals' }, K.goals(m).map(g => '<li>' + g + '</li>').join('')));
-      t.appendChild(el('p', { class: 'note' }, 'The arrow shows where to go, not what to do: you decide each move. <b>' + M.have + ' of ' + (m.need || NEED) + ' clean ' + ((m.need || NEED) === 1 ? 'run' : 'rounds in a row') + '.</b>'));
+      t.appendChild(el('ul', { class: 'goals' }, '<li>No help in a challenge: you decide every move.</li>'));
+      t.appendChild(el('p', { class: 'note' }, '<b>' + M.have + ' of ' + (m.need || NEED) + ' clean ' + ((m.need || NEED) === 1 ? 'run' : 'rounds in a row') + '.</b>'));
     }
     if (R.ask) t.appendChild(predictBox(R.ask));
     if (R.why && !R.over) t.appendChild(el('p', { class: 'cl-why' }, '<b>Why:</b> ' + R.why));
@@ -1097,7 +1099,7 @@ export function startSolo({ container, myName, colour }) {
     if (M.phase === 'done' && M.afterOk) { const nx = nextMission(); act.appendChild(nx != null ? btn('Next mission', 'go', () => start(nx)) : btn('Play again', 'go', () => start(missionAt))); if (inLesson && !isExt(missionAt) && (nx == null || isExt(nx))) t.appendChild(el('p', { class: 'win' }, 'Lesson complete! Every activity for this lesson is done.' + (nx != null ? ' Next: the extension challenges.' : ''))); }
     else if (M.phase === 'play' && R.over) act.appendChild(btn('Next round', 'go', () => newRound()));
     if (M.phase === 'play' && !R.over) act.appendChild(btn('Start again', '', () => leaveThen(() => { M.have = 0; newRound(); })));
-    if (!m.noHelp) act.appendChild(btn('Walk me through it', '', walkMe));
+    if (!m.noHelp && m.type !== 'challenge') act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
     // every step explained so far this round, newest first, folded away until opened (it stays open once opened)
     if (R.log && R.log.length > 1) {
