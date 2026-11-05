@@ -1,0 +1,358 @@
+{
+ "id": "y10-3-hw-sensors",
+ "label": "Homework: Sensors, Analogue and Digital",
+ "steps": [
+  {
+   "id": "title",
+   "label": "Homework: Sensors, Analogue and Digital",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Homework</p><h2 class=\"lesson-h2\">Sensors, Analogue and Digital</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Part 1:</strong> learn. On each slide, <strong>predict</strong> by picking an answer, then read why.</li><li><strong>Part 2:</strong> a test drill at the end. It saves your progress.</li><li>About one hour. Write your notes when a slide asks.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A shop door opens by itself when you walk up to it. How do you think the door knows you are there?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Something in the door system measures what is in front of it. You will find out what it is called, and how it works.</p></div></details>"
+  },
+  {
+   "id": "what-sensor",
+   "label": "What Is a Sensor?",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-what-sensor",
+   "content": "<h2 class=\"lesson-h2\">What Is a Sensor?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A phone screen gets brighter when you go out into the sun.</li><li>Nobody pressed a button. A small part in the phone measured the light.</li></ul><div id=\"y10-3hw-what-sensor\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: what does that small part do?",
+     "options": [
+      "It makes light for the screen",
+      "It measures the light and sends the reading to the phone",
+      "It stores photos taken in the sun"
+     ],
+     "correct": 1,
+     "explain": "It measures something in the world around it (here, light) and sends the reading to the computer in the phone. A part that does this is called a <strong>sensor</strong>. A sensor is an input device: it sends data into the computer."
+    }
+   ]
+  },
+  {
+   "id": "why-sensor",
+   "label": "Why Use a Sensor?",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-why-sensor",
+   "content": "<h2 class=\"lesson-h2\">Why Use a Sensor?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A greenhouse must stay warm all day and all night.</li><li>A sensor can measure the temperature every second.</li></ul><div id=\"y10-3hw-why-sensor\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: why use a sensor and not a person checking a thermometer?",
+     "options": [
+      "A sensor never needs any power at all",
+      "A sensor takes readings all the time, day and night",
+      "A person cannot read a thermometer"
+     ],
+     "correct": 1,
+     "explain": "A sensor never gets tired and never forgets. It can take a reading every second, all day and all night, and it is more accurate. A person cannot check that often."
+    }
+   ]
+  },
+  {
+   "id": "sensors-1",
+   "label": "Common Sensors (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-sensors-1",
+   "content": "<h2 class=\"lesson-h2\">Common Sensors (1 of 2)</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the table, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start\"><div><table style=\"border-collapse:collapse;font-size:15px;margin:0\"><tr><th style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;color:var(--muted)\">Sensor</th><th style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;color:var(--muted)\">What it measures</th></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Temperature</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how hot or cold it is</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Light</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how bright it is</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Moisture</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how wet the soil is</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Humidity</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how much water vapour is in the air</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">pH</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how acidic or alkaline it is</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Pressure</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how hard something presses on it</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Gas</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how much of a gas there is, such as carbon dioxide</td></tr></table></div><div id=\"y10-3hw-sensors-1\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: a farmer wants to know when the soil in a field is too dry. Which sensor fits best?",
+     "options": [
+      "Humidity",
+      "Moisture",
+      "Pressure"
+     ],
+     "correct": 1,
+     "explain": "Moisture. A moisture sensor measures water in the soil. Humidity is water vapour in the air, not in the soil."
+    }
+   ]
+  },
+  {
+   "id": "sensors-2",
+   "label": "Common Sensors (2 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-sensors-2",
+   "content": "<h2 class=\"lesson-h2\">Common Sensors (2 of 2)</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the table, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start\"><div><table style=\"border-collapse:collapse;font-size:15px;margin:0\"><tr><th style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;color:var(--muted)\">Sensor</th><th style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;color:var(--muted)\">What it measures</th></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Acoustic</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">sound: how loud it is</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Accelerometer</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">speeding up, slowing down and tilting</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Flow</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how much liquid or gas flows through a pipe</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Level</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how high a liquid is in a tank</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Infra-red</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">infra-red light, such as body heat, or a beam being broken</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Magnetic field</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">a magnetic field, such as a magnet near it</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">Proximity</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">how close an object is</td></tr></table></div><div id=\"y10-3hw-sensors-2\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: a phone turns the picture round when you turn the phone on its side. Which sensor fits best?",
+     "options": [
+      "Proximity",
+      "Acoustic",
+      "Accelerometer"
+     ],
+     "correct": 2,
+     "explain": "Accelerometer. It measures movement and tilting, so the phone knows it has been turned. Proximity measures how close something is."
+    }
+   ]
+  },
+  {
+   "id": "note-sensor",
+   "label": "Your Notes: Sensors",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Sensors</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: in your own words, say what a sensor is.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> A sensor is an input device. It measures something in the world around it, such as temperature or light, and sends the reading to a computer.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY a system uses a sensor and not a person.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> A sensor takes readings all the time, day and night, and is more accurate. A person gets tired and cannot check that often.</p></div></details>"
+  },
+  {
+   "id": "analogue",
+   "label": "Readings That Change Smoothly",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-analogue",
+   "content": "<h2 class=\"lesson-h2\">Readings That Change Smoothly</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A room warms up from 21 &deg;C to 22 &deg;C.</li><li>On the way, it is 21.3 &deg;C, then 21.34 &deg;C, then 21.341 &deg;C ...</li></ul><div id=\"y10-3hw-analogue\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: how many different temperatures are there between 21 and 22?",
+     "options": [
+      "Only 2",
+      "Exactly 10",
+      "No limit: any value"
+     ],
+     "correct": 2,
+     "explain": "There is no limit. The temperature changes smoothly and can be any value, with no gaps. Data like this is called <strong>analogue</strong> data. Temperature, sound and light in the real world are analogue."
+    }
+   ]
+  },
+  {
+   "id": "digital",
+   "label": "Data Inside a Computer",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-digital",
+   "content": "<h2 class=\"lesson-h2\">Data Inside a Computer</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A computer stores everything in binary: 1s and 0s.</li><li>A register holds a fixed number of bits, such as 8.</li></ul><div id=\"y10-3hw-digital\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: 8 bits can hold 256 different patterns. Can 8 bits hold every temperature between 21 and 22?",
+     "options": [
+      "Yes, every one of them",
+      "No: only some separate values",
+      "Yes, if the bits are big"
+     ],
+     "correct": 1,
+     "explain": "No. Binary has separate steps with gaps between them, so it can only hold some values. Data stored as separate values in binary is called <strong>digital</strong> data."
+    }
+   ]
+  },
+  {
+   "id": "compare-ad",
+   "label": "Compare: Analogue or Digital?",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-compare-ad",
+   "content": "<h2 class=\"lesson-h2\">Compare: Analogue or Digital?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> compare the two boxes, then pick a prediction for each question. The reason appears under each one.</p><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0\"><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>Analogue</b><div style=\"margin-top:3px\">Changes smoothly.</div><div style=\"margin-top:3px\">Any value, no gaps.</div></div><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>Digital</b><div style=\"margin-top:3px\">Separate values, in steps.</div><div style=\"margin-top:3px\">Stored in binary.</div></div></div><div id=\"y10-3hw-compare-ad\"></div>",
+   "items": [
+    {
+     "prompt": "The sound of your voice moving through the air. Which is it?",
+     "options": [
+      "Analogue",
+      "Digital"
+     ],
+     "correct": 0,
+     "explain": "Analogue. The air pressure changes smoothly, with no gaps."
+    },
+    {
+     "prompt": "The number 01101001 stored in a register. Which is it?",
+     "options": [
+      "Analogue",
+      "Digital"
+     ],
+     "correct": 1,
+     "explain": "Digital. It is binary: separate values with nothing in between."
+    }
+   ]
+  },
+  {
+   "id": "why-digital",
+   "label": "Why the Microprocessor Needs Digital",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-why-digital",
+   "content": "<h2 class=\"lesson-h2\">Why the Microprocessor Needs Digital</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A <strong>microprocessor</strong> is a small CPU built into a device, such as a washing machine.</li><li>Like every CPU, it only works with binary.</li></ul><div id=\"y10-3hw-why-digital\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: a temperature sensor gives an analogue reading. Can the microprocessor process it as it is?",
+     "options": [
+      "Yes, a CPU can use any data",
+      "No: it must be turned into binary first",
+      "Yes, but only at night"
+     ],
+     "correct": 1,
+     "explain": "No. A CPU or microprocessor can only process digital (binary) data. An analogue reading has no separate values, so it must be changed into binary first."
+    }
+   ]
+  },
+  {
+   "id": "adc",
+   "label": "Sensor In: The ADC",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-adc",
+   "content": "<h2 class=\"lesson-h2\">Sensor In: The ADC</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>The sensor gives analogue data.</li><li>The microprocessor needs digital data.</li></ul><div id=\"y10-3hw-adc\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: what must sit between the sensor and the microprocessor?",
+     "options": [
+      "Something that turns analogue into digital",
+      "Something that turns digital into analogue",
+      "Nothing: they connect straight in"
+     ],
+     "correct": 0,
+     "explain": "Something that turns analogue into digital. It is called an <strong>analogue to digital converter (ADC)</strong>. The ADC measures the reading and gives a binary number for it."
+    }
+   ]
+  },
+  {
+   "id": "dac",
+   "label": "Output: The DAC",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-dac",
+   "content": "<h2 class=\"lesson-h2\">Output: The DAC</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A microprocessor sends music to a speaker. The music is stored as binary.</li><li>A speaker makes sound by moving smoothly in and out.</li></ul><div id=\"y10-3hw-dac\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: what must sit between the microprocessor and the speaker?",
+     "options": [
+      "Something that turns analogue into digital",
+      "Something that turns digital into analogue",
+      "Another sensor, to hear the music"
+     ],
+     "correct": 1,
+     "explain": "Something that turns digital into analogue. It is called a <strong>digital to analogue converter (DAC)</strong>. A motor that needs a smooth signal to change its speed can need a DAC too."
+    }
+   ]
+  },
+  {
+   "id": "compare-convert",
+   "label": "Compare: ADC or DAC?",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-compare-convert",
+   "content": "<h2 class=\"lesson-h2\">Compare: ADC or DAC?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick a prediction for each question. Ask: which way is the data going? The reason appears under each one.</p><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0\"><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>ADC</b><div style=\"margin-top:3px\">Analogue in, digital out.</div><div style=\"margin-top:3px\">Sensor to microprocessor.</div></div><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>DAC</b><div style=\"margin-top:3px\">Digital in, analogue out.</div><div style=\"margin-top:3px\">Microprocessor to speaker or motor.</div></div></div><div id=\"y10-3hw-compare-convert\"></div>",
+   "items": [
+    {
+     "prompt": "A microphone records your voice into a computer. Which converter is needed?",
+     "options": [
+      "ADC",
+      "DAC"
+     ],
+     "correct": 0,
+     "explain": "ADC. Your voice is analogue and goes into the computer, which needs digital."
+    },
+    {
+     "prompt": "A computer plays a video with sound through headphones. Which converter is needed?",
+     "options": [
+      "ADC",
+      "DAC"
+     ],
+     "correct": 1,
+     "explain": "DAC. The sound is stored as digital and must come out as analogue."
+    }
+   ]
+  },
+  {
+   "id": "note-convert",
+   "label": "Your Notes: ADC and DAC",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: ADC and DAC</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY a sensor reading must go through an ADC.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> The sensor gives analogue data. The microprocessor can only process digital (binary) data, so the ADC turns analogue into digital.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY a speaker needs a DAC.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> The sound is stored as digital data. The speaker moves smoothly, so it needs analogue. The DAC turns digital into analogue.</p></div></details>"
+  },
+  {
+   "id": "control-1",
+   "label": "Using Sensor Data: Compare",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-control-1",
+   "content": "<h2 class=\"lesson-h2\">Using Sensor Data: Compare</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A greenhouse has a temperature sensor, a microprocessor and a heater.</li><li>The microprocessor stores the value 20 &deg;C.</li></ul><div id=\"y10-3hw-control-1\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: the sensor reads 17 &deg;C. The ADC turns it into binary. What does the microprocessor do with it?",
+     "options": [
+      "Compares it with the stored value 20",
+      "Stores it and does nothing else",
+      "Sends it back to the sensor"
+     ],
+     "correct": 0,
+     "explain": "It compares the reading with the stored value. 17 is less than 20, so the greenhouse is too cold."
+    }
+   ]
+  },
+  {
+   "id": "control-2",
+   "label": "Using Sensor Data: Act",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-control-2",
+   "content": "<h2 class=\"lesson-h2\">Using Sensor Data: Act</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A greenhouse has a temperature sensor, a microprocessor and a heater.</li><li>The microprocessor stores the value 20 &deg;C.</li></ul><div id=\"y10-3hw-control-2\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: 17 is less than 20. What does the microprocessor do next?",
+     "options": [
+      "Waits for a person to switch on the heater",
+      "Sends a signal to switch the heater on",
+      "Changes the stored value to 17"
+     ],
+     "correct": 1,
+     "explain": "It sends a signal to switch the heater on. A device that the microprocessor switches on or off to make something happen is called an <strong>actuator</strong>. A motor, a pump and a valve are actuators too."
+    }
+   ]
+  },
+  {
+   "id": "control-3",
+   "label": "Using Sensor Data: Repeat",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-control-3",
+   "content": "<h2 class=\"lesson-h2\">Using Sensor Data: Repeat</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the slide, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>A greenhouse has a temperature sensor, a microprocessor and a heater.</li><li>The microprocessor stores the value 20 &deg;C.</li></ul><div id=\"y10-3hw-control-3\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: the heater is on. What does the system do next?",
+     "options": [
+      "Stops: the job is done",
+      "Turns the sensor off to save power",
+      "Takes a new reading and checks again"
+     ],
+     "correct": 2,
+     "explain": "It takes a new reading and checks again, over and over. When the reading reaches 20, the heater is switched off. The steps are: read, convert (ADC), compare, act, repeat."
+    }
+   ]
+  },
+  {
+   "id": "control-order",
+   "label": "Check: The Steps in Order",
+   "type": "multiple-choice",
+   "containerId": "y10-3hw-control-order",
+   "content": "<h2 class=\"lesson-h2\">Check: The Steps in Order</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick the best order. Done when it is answered.</p><div id=\"y10-3hw-control-order\"></div>",
+   "items": [
+    {
+     "prompt": "A water tank fills by itself. A level sensor is used. Which order is right?",
+     "options": [
+      "Compare, read, convert, act, repeat",
+      "Read, convert, compare, act, repeat",
+      "Read, act, convert, compare, repeat"
+     ],
+     "correct": 1,
+     "explain": "Read the level, convert it with the ADC, compare it with the stored level, act (switch the pump on or off), then repeat. You cannot compare a reading before it is read and converted."
+    }
+   ]
+  },
+  {
+   "id": "exam-tap",
+   "label": "Exam Question: The Automatic Tap",
+   "type": "self-marked-response",
+   "containerId": "y10-3hw-exam-tap",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Automatic Tap</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2022, Question 2(a). <strong>What to do:</strong> type your answer, then press <strong>Submit answer</strong>. Use the steps: read, convert, compare, act, repeat.</p><div id=\"y10-3hw-exam-tap\"></div>",
+   "items": [
+    {
+     "id": "tap",
+     "prompt": "An automated water tap system uses a sensor and a microprocessor to operate. Water flows from the tap when a person's hands are placed underneath the tap. Water stops flowing when the person's hands are removed from underneath the tap. Explain how the water tap system uses a sensor and a microprocessor to operate.",
+     "marks": 6,
+     "scheme": [
+      "Motion/proximity/infra-red sensor is used",
+      "Sensor sends data to microprocessor",
+      "Data is converted from analogue to digital (using ADC)",
+      "Data is compared to stored/set value(s)",
+      "If data is inside range/outside range/greater than/less than, signal is sent to turn water tap on",
+      "If data is outside range/inside range/less than/greater than, tap remains off // signal is sent to turn water tap off",
+      "Actuator is used to turn the tap off/on",
+      "Whole process is continuous"
+     ],
+     "guidance": "Six from the points, one mark each.",
+     "modelAnswer": "A proximity sensor sends data to the microprocessor. An ADC converts it to digital. It is compared with a stored value. If hands are near, a signal makes an actuator turn the tap on, otherwise off. This repeats continuously."
+    }
+   ]
+  },
+  {
+   "id": "test",
+   "label": "Test: Sensors Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-hw-sensors",
+   "embedContainerId": "y10-3hw-test",
+   "content": "<h2 class=\"lesson-h2\">Test: Sensors Drill</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer every card. Pick the answer that earns the mark, then type it. Stuck? Switch on <strong>I need help</strong>. Your progress is saved.</p><div id=\"y10-3hw-test\"></div>"
+  }
+ ],
+ "validators": {},
+ "pseudocodeValidators": {}
+}
