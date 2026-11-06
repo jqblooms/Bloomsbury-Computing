@@ -133,10 +133,10 @@ steps.push(mcStep('predict-router', 'Predict: Switch or Router?', '', [
 ], ['Why is it not enough for the home network and the school network to be close to each other?', 'Being close does not join them. Data can only travel along a cable or Wi-Fi.']));
 
 // ---------------------------------------------------------------- the internet
-const netOfNets = pic(470, 250, BOX(5, 5, 120, 110, 'Home') + BOX(345, 5, 120, 110, 'School') + BOX(175, 160, 120, 85, 'Shop') +
-  CABLE(65, 50, 65, 85) + CABLE(405, 50, 405, 85) + CABLE(235, 200, 235, 160, false) +
-  CABLE(65, 85, 175, 130) + CABLE(405, 85, 295, 130) + CABLE(175, 130, 295, 130) + CABLE(235, 160, 175, 130) + CABLE(235, 160, 295, 130) +
-  LAPTOP(65, 42, 'Ana') + LAPTOP(405, 42, 'Ben') + ROUTER(65, 88, '') + ROUTER(405, 88, '') + ROUTER(235, 205, '') + ROUTER(175, 130, '') + ROUTER(295, 130, ''),
+const netOfNets = pic(520, 335, BOX(10, 10, 160, 172, 'Home') + BOX(350, 10, 160, 172, 'School') + BOX(170, 248, 180, 82, 'Shop') +
+  CABLE(90, 80, 90, 152) + CABLE(430, 80, 430, 152) +
+  CABLE(90, 152, 190, 218) + CABLE(430, 152, 330, 218) + CABLE(190, 218, 330, 218) + CABLE(275, 302, 190, 218) + CABLE(275, 302, 330, 218) +
+  LAPTOP(90, 80, 'Ana') + LAPTOP(430, 80, 'Ben') + ROUTER(90, 152, '') + ROUTER(430, 152, '') + ROUTER(275, 302, '') + ROUTER(190, 218, '') + ROUTER(330, 218, ''),
   'Each network has a router. The routers are joined to each other.');
 steps.push(concept('concept-internet', 'What Is the Internet?',
   'There are millions of networks in homes, schools and shops. Predict: how could a laptop in Bangkok send a message to a laptop in London?',
