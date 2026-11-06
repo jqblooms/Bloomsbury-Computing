@@ -779,7 +779,9 @@ export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FUL
 // Lesson mode: the activities for one lesson, in order (about an hour each)
 export const LESSONS = [
   { id: '2.1', title: '2.1 iConnect: What Is a Network?', missions: ['two', 'switch', 'printer', 'wifi', 'range', 'rooms', 'full', 'predict', 'fixw', 'budget', 'school'] },
-  { id: '2.2', title: '2.2 iRoute: The Internet and Routers', missions: ['join2', 'internet', 'hops', 'packets', 'paths', 'findway', 'quiz-r', 'c-town'] },
+  { id: '2.2', title: '2.2 iRoute: The Internet and Routers', missions: ['join2', 'internet', 'hops', 'packets', 'paths', 'findway', 'quiz-r', 'c-town'],
+    // ?lesson=2.2&part=1 shows only part of the lesson (one lesson activity slide each)
+    parts: { 1: ['join2', 'internet', 'hops'], 2: ['packets', 'paths', 'findway', 'c-town'] } },
   { id: '2.3', title: '2.3 iTrace: Addresses and the Web', missions: ['addr', 'website', 'webwifi', 'trace', 'which', 'sitedown', 'quiz-w', 'c-online'] }
 ];
 // rough minutes for a Year 6 student, by kind when a mission does not say
@@ -2337,7 +2339,8 @@ export function startSolo({ container, myName, colour }) {
   // lesson mode: on/off and which lesson; a link with ?lesson=2.2 opens that lesson
   const lessonMode = Object.assign({ on: false, id: LESSONS[0].id }, load('lessonMode', {}) || {});
   { const q = new URLSearchParams(location.search).get('lesson'); if (q && LESSONS.some(L => L.id === q)) { lessonMode.on = true; lessonMode.id = q; } }
-  const lessonList = () => { const L = LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]; return L.missions.map(id => MISSIONS.findIndex(m => m.id === id)).filter(i => i >= 0); };
+  let lessonPart = new URLSearchParams(location.search).get('part');
+  const lessonList = () => { const L = LESSONS.find(x => x.id === lessonMode.id) || LESSONS[0]; return ((lessonPart && L.parts && L.parts[lessonPart]) || L.missions).map(id => MISSIONS.findIndex(m => m.id === id)).filter(i => i >= 0); };
   const nextMission = () => { if (lessonMode.on) { const ids = lessonList(), k = ids.indexOf(missionAt); return k >= 0 && k + 1 < ids.length ? ids[k + 1] : null; } const sec = MISSIONS.map((x, i) => [x, i]).filter(([x]) => x.group === MISSIONS[missionAt].group).map(([, i]) => i), k = sec.indexOf(missionAt); return k >= 0 && k + 1 < sec.length ? sec[k + 1] : (missionAt + 1 < MISSIONS.length ? missionAt + 1 : null); };
   // What the network looked like when the mission started; anything different (or any step done) is progress to lose.
   function startSig() { return S.devs.map(d => d.id + '@' + Math.round(d.x) + ',' + Math.round(d.y)).join() + '|' + cables3.map(c => (c.ends[0] ? c.ends[0].dev + '.' + c.ends[0].sock : '-') + '/' + (c.ends[1] ? c.ends[1].dev + '.' + c.ends[1].sock : '-')).join(); }
@@ -2509,7 +2512,7 @@ export function startSolo({ container, myName, colour }) {
       const pickL = el('select', { id: 'nbLesson', 'aria-label': 'Lesson' });
       LESSONS.forEach(L => pickL.appendChild(el('option', { value: L.id }, L.title)));
       pickL.value = lessonMode.id;
-      pickL.addEventListener('change', () => { const want = pickL.value; pickL.value = lessonMode.id; leaveThen(() => { lessonMode.id = want; save('lessonMode', lessonMode); startLesson(); }); });
+      pickL.addEventListener('change', () => { const want = pickL.value; pickL.value = lessonMode.id; leaveThen(() => { lessonMode.id = want; lessonPart = null; save('lessonMode', lessonMode); startLesson(); }); });
       nav.appendChild(pickL);
       const ids = lessonList(), total = ids.reduce((n, i) => n + minsOf(MISSIONS[i]), 0), left = ids.filter(i => !done[i]).reduce((n, i) => n + minsOf(MISSIONS[i]), 0);
       nav.appendChild(el('p', { class: 'note' }, ids.filter(i => done[i]).length + ' of ' + ids.length + ' done. About ' + total + ' minutes in all' + (left && left < total ? ', about ' + left + ' left.' : '.')));
@@ -2617,7 +2620,7 @@ export function startSolo({ container, myName, colour }) {
     else if (M.phase === 'done') {
       const nx = nextMission();
       act.appendChild(nx != null ? btn('Next mission', 'go', () => start(nx)) : btn('Play again', 'go', () => start(missionAt)));
-      if (nx == null && lessonMode.on) t.appendChild(el('p', { class: 'win' }, 'Lesson complete! Every activity for this lesson is done.'));
+      if (nx == null && lessonMode.on) t.appendChild(el('p', { class: 'win' }, lessonPart ? 'Part complete! Every activity for this part is done.' : 'Lesson complete! Every activity for this lesson is done.'));
     }
     else if (M.phase === 'checked') act.appendChild(m.breakAfter && M.predicted ? btn('Try another break', 'go', topoBreak) : btn(m.type === 'fix' ? 'New network' : 'Try again', 'go', () => start(missionAt)));
     else if (M.phase === 'predict') act.appendChild(btn('Check my predictions', 'go', checkPredict));
