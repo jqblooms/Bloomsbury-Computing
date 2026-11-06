@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Network Builder 3D</title>
+  <title>Network Lab 3D</title>
   <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
   <link rel="stylesheet" id="css" href="net3d.css">
 </head>
@@ -12,7 +12,7 @@
   <div class="stage">
     <div class="view" id="view"></div>
     <div class="top">
-      <b class="title">Network Builder 3D</b>
+      <b class="title">Network Lab 3D</b>
       <span class="chip" id="step"></span>
       <span class="spacer"></span>
       <button type="button" class="btn secondary" id="mapBtn">Map (M)</button>
@@ -33,11 +33,11 @@
   <aside class="mission" id="mission" aria-label="Mission" aria-live="polite"></aside>
 </div>
 <div class="walk-back" id="cardWrap" hidden><div class="walk" id="card" role="dialog" aria-modal="true" aria-label="Walk me through it"></div></div>
-<p class="keys-help">Walk: W A S D or the arrow keys. Grab: hold Space or the left mouse button. Turn the camera: right-drag, or Q and E. Map: M.</p>
+<p class="keys-help">Walk: W A S D or the arrow keys. Grab: tap Space or click to pick up a cable, tap again to put it down or plug it in; hold to pick up a device or pull a plug out. Turn the camera: right-drag, or Q and E. Map: M.</p>
 <script>window.BC_CLOUD_SAVE = { app: 'netlab', patterns: ['^bc-netlab-v1:'], merge: [[':done', 'doneFlags']] };</script>
 <script src="../shared/cloud-save.js?v=20261030"></script>
 <script>
-// Network Builder 3D: the 2D Network Builder's eleven missions (NetLab/builder.js) played in a 3D lab.
+// Network Lab 3D (registry id network-builder-3d): the 2D Network Builder's eleven missions (NetLab/builder.js) played in a 3D lab.
 // Every module is loaded with the page's bcv through an import map; three.js is vendored in lib/.
 (function () {
   var params = new URLSearchParams(location.search);

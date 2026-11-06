@@ -1,4 +1,5 @@
-// Network Builder 3D: the site's Network Builder (NetLab/builder.js) played in 3D. You walk round a lab, carry
+// Network Lab 3D (until November 2026 called Network Builder 3D; registry id network-builder-3d, folder NetLab3D and
+// the save keys are unchanged): the site's Network Builder (NetLab/builder.js) played in 3D. You walk round a lab, carry
 // devices from the supply shelf, push cable plugs into real sockets, carry tablets into Wi-Fi range, and test with
 // Send and Print (the message travels along the cables). The network model, the eleven missions, their checks, the
 // reasons ("Ana is not plugged in.") and Walk me through it are the 2D app's, so the two stay the same; only the
@@ -842,7 +843,7 @@ function results(id, label) {
 
 // ================================================================ the 3D lab
 export function startSolo({ container, myName, colour }) {
-  const log = results('netlab3d', 'Network Builder 3D');
+  const log = results('netlab3d', 'Network Lab 3D');
   // ---- the room: one big floor (the desk), the supply shelf along the bottom
   const rows = [];
   for (let y = 0; y < MAPH; y++) { let r = ''; for (let x = 0; x < MAPW; x++) r += (x === 0 || y === 0 || x === MAPW - 1 || y === MAPH - 1) ? '#' : '.'; rows.push(r); }
@@ -1056,7 +1057,14 @@ export function startSolo({ container, myName, colour }) {
     if (h.down === down) return;
     h.down = down;
     $(i ? 'rightBtn' : 'leftBtn')?.classList.toggle('on', down);
-    if (!down) { h.passive = false; h.pending = null; letGo(i); return; }
+    if (!down) {
+      if (h.tapDrop) { h.tapDrop = false; hint(); return; }   // the end of the tap that put something down
+      const tap = clock - (h.downAt || 0) < 0.3;
+      if ((h.cable || h.dev) && tap && !h.fromHold) { h.passive = false; h.pending = null; h.sticky = true; hint(); return; }   // a tap: keep carrying
+      h.passive = false; h.pending = null; h.fromHold = false; h.sticky = false; letGo(i); return;
+    }
+    h.downAt = clock;
+    if (h.sticky && (h.cable || h.dev)) { h.sticky = false; h.tapDrop = true; letGo(i); hint(); return; }   // the second tap puts it down
     // both hands pressed at once (Space): one press grabs one thing; the second hand just helps until it is let go
     const o = hands[1 - i];
     h.pressTick = tickNo;
@@ -1079,7 +1087,7 @@ export function startSolo({ container, myName, colour }) {
       // still reaching for the same thing?
       const g = grabTarget(i);
       const same = g && g.kind === p.g.kind && (g.d ? g.d === p.g.d : g.c === p.g.c && g.j === p.g.j);
-      if (same) doGrab(i, g);
+      if (same) { doGrab(i, g); h.fromHold = true; }   // picked up by holding: letting go puts it down
     }
   }
   function doGrab(i, g) {
@@ -1172,7 +1180,7 @@ export function startSolo({ container, myName, colour }) {
       const [hx, hy] = handPos(i);
       const c = newCable([[hx, hy], [hx - Math.sin(pos.face) * 2, hy - Math.cos(pos.face) * 2]], CABLE_LEN);
       h.cable = c; h.joint = 0; h.since = tickNo;
-      toast('You took an Ethernet cable. Keep holding to carry it.', 'good'); return;
+      toast('You took an Ethernet cable. Carry it to a port to plug it in.', 'good'); return;
     }
     if ((S.palette[crate.kind] ?? 0) - count(crate.kind) <= 0) { toast('No ' + LABEL[crate.kind].toLowerCase() + 's left in this crate.', 'hint'); return; }
     const d = place(crate.kind, 320, 190); fromDesk(d);
@@ -2629,7 +2637,7 @@ export function startSolo({ container, myName, colour }) {
     else if (m.type === 'race') { const r = btn(race ? 'Watch...' : 'Run it', 'go', runRace); r.disabled = !!race || !M.racePick; act.appendChild(r); }
     else if (m.type !== 'tutorial') act.appendChild(btn('Check my network', 'go', checkMission));
     if (m.type === 'tutorial' && M.phase === 'build') act.appendChild(btn('Start again', '', () => start(missionAt)));
-    if (!m.noHelp) act.appendChild(btn('Walk me through it', '', walkMe));
+    if (!m.noHelp && m.type !== 'challenge' && m.type !== 'client') act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
     t.appendChild(navBox);
     if (M.phase === 'done' || M.phase === 'checked') act.scrollIntoView({ block: 'nearest' });   // the result and its button in view
@@ -2739,10 +2747,10 @@ export function startSolo({ container, myName, colour }) {
     const held = hands.map(h => h.dev ? 'dev' : h.cable ? (h.joint === 0 || h.joint === h.cable.n ? 'plug' : 'cable') : null).filter(Boolean);
     let h = '';
     if (held.includes('dev')) h = 'Keep holding and walk to where it should go, then let go. Let go at its crate to put it back.';
-    else if (held.includes('plug')) h = 'Walk the plug to an RJ45 port and let go. A laptop\'s port is on its right-hand side.';
-    else if (held.length) h = 'Keep holding to carry. Let go to drop it.';
+    else if (held.includes('plug')) h = (hands.some(x => x.sticky) ? 'Walk the plug to an RJ45 port and tap Space.' : 'Walk the plug to an RJ45 port and let go.') + ' A laptop\'s port is on its right-hand side.';
+    else if (held.length) h = hands.some(x => x.sticky) ? 'Tap Space to put it down.' : 'Keep holding to carry. Let go to drop it.';
     else if (hands.some(x => x.pending)) h = 'Keep holding to pick it up (or pull the plug out).';
-    else h = 'Hold Space (or the left mouse button) to grab what is in front of you. Let go to put it down or plug it in. Right-drag turns the camera.';
+    else h = 'Tap Space (or click) to pick up a cable, and tap again at a port to plug it in. Hold Space to pick up a device or pull a plug out. Right-drag turns the camera.';
     $('hint').textContent = h;
   }
 
