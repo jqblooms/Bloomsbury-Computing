@@ -1,0 +1,365 @@
+{
+ "id": "y8-2-2-data-types",
+ "label": "2.2: Data Types and Constants",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Library Functions (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y822-do-now",
+   "validatorKey": "y822_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Library Functions (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does DIV need two values in its brackets?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The first value is the number to divide. The second is the number to divide by.</p></div></details><p class=\"lesson-lead\">From 2.1: library functions. 45 is typed in.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Days : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;INPUT Days</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;OUTPUT DIV(Days, 7)</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;OUTPUT MOD(Days, 7)</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT ROUND(Days / 7, 1)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y822-do-now-a\">(a) What does line 3 output? [1]</label><input id=\"y822-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Library Functions (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-do-now-b\">(b) What does line 4 output? [1]</label><input id=\"y822-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Library Functions (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-do-now-c\">(c) What does line 5 output? [1]</label><input id=\"y822-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Library Functions (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y822-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y822-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: library functions",
+    "steps": [
+     {
+      "text": "This is a different program. 50 is typed in. Do the same steps with your program.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Eggs : INTEGER</div><div class=\"lesson-code-line\">INPUT Eggs</div><div class=\"lesson-code-line\">OUTPUT DIV(Eggs, 12)</div><div class=\"lesson-code-line\">OUTPUT MOD(Eggs, 12)</div><div class=\"lesson-code-line\">OUTPUT ROUND(Eggs / 12, 1)</div></div>"
+     },
+     {
+      "text": "DIV gives the whole number of times. How many 12s fit into 50? 12 x 4 = 48, and 12 x 5 = 60 is too many.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Eggs : INTEGER</div><div class=\"lesson-code-line\">INPUT Eggs</div><div class=\"lesson-code-line wt-hl\">OUTPUT DIV(Eggs, 12)</div><div class=\"lesson-code-line\">OUTPUT MOD(Eggs, 12)</div><div class=\"lesson-code-line\">OUTPUT ROUND(Eggs / 12, 1)</div></div><div class=\"wt-note\">DIV(50, 12) = <span class=\"wt-hl\">4</span></div>"
+     },
+     {
+      "text": "MOD gives what is left over: 50 - 48 = <strong>2</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Eggs : INTEGER</div><div class=\"lesson-code-line\">INPUT Eggs</div><div class=\"lesson-code-line\">OUTPUT DIV(Eggs, 12)</div><div class=\"lesson-code-line wt-hl\">OUTPUT MOD(Eggs, 12)</div><div class=\"lesson-code-line\">OUTPUT ROUND(Eggs / 12, 1)</div></div><div class=\"wt-note\">MOD(50, 12) = <span class=\"wt-hl\">2</span></div>"
+     },
+     {
+      "text": "The last line divides first: 50 / 12 = 4.1666...",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Eggs : INTEGER</div><div class=\"lesson-code-line\">INPUT Eggs</div><div class=\"lesson-code-line\">OUTPUT DIV(Eggs, 12)</div><div class=\"lesson-code-line\">OUTPUT MOD(Eggs, 12)</div><div class=\"lesson-code-line wt-hl\">OUTPUT ROUND(Eggs / 12, 1)</div></div><div class=\"wt-note\">50 / 12 = 4.1666...</div>"
+     },
+     {
+      "text": "ROUND keeps 1 decimal place. The digit after the 1 is five or more, so 4.1 rounds up to <strong>4.2</strong>. Now do yours.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Eggs : INTEGER</div><div class=\"lesson-code-line\">INPUT Eggs</div><div class=\"lesson-code-line\">OUTPUT DIV(Eggs, 12)</div><div class=\"lesson-code-line\">OUTPUT MOD(Eggs, 12)</div><div class=\"lesson-code-line wt-hl\">OUTPUT ROUND(Eggs / 12, 1)</div></div><div class=\"wt-note\">ROUND(4.1666, 1) = <span class=\"wt-hl\">4.2</span></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Linear Search (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y822-do-now-2",
+   "validatorKey": "y822_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Linear Search (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the search use a flag that starts as FALSE?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Nothing has matched before the loop starts. The flag only changes when a value matches.</p></div></details><p class=\"lesson-lead\">From Unit 1: linear search.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\"><strong>Codes</strong> already holds:</p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">17</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">42</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">8</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">30</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">25</td></tr></table><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Found : BOOLEAN</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;Found &lt;- FALSE</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;FOR Index &lt;- 1 TO 5</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Codes[Index] = 42 THEN</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Found &lt;- TRUE</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;IF Found = TRUE THEN</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Found\"</div><div class=\"lesson-code-line\">11&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Not found\"</div><div class=\"lesson-code-line\">13&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y822-do-now-2-a\">(a) What is output? [1]</label><input id=\"y822-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Linear Search (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-do-now-2-b\">(b) Line 5 is changed to look for 9. What is output now? [1]</label><input id=\"y822-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Linear Search (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y822-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y822-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: a linear search",
+    "steps": [
+     {
+      "text": "This is a different search. Ages holds 12, 15, 11, 14, 16, and it looks for 11. Do the same steps with yours.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Seen : BOOLEAN</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Seen &lt;- FALSE</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 5</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Ages[Index] = 11 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seen &lt;- TRUE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">IF Seen = TRUE THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"In the list\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Missing\"</div><div class=\"lesson-code-line\">ENDIF</div></div>"
+     },
+     {
+      "text": "Seen starts as FALSE: nothing has matched yet.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Seen : BOOLEAN</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line wt-hl\">Seen &lt;- FALSE</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 5</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Ages[Index] = 11 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seen &lt;- TRUE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">IF Seen = TRUE THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"In the list\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Missing\"</div><div class=\"lesson-code-line\">ENDIF</div></div><div class=\"wt-note\">Seen = FALSE</div>"
+     },
+     {
+      "text": "The loop checks each value in turn: is it 11? 12 is not. 15 is not.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Seen : BOOLEAN</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Seen &lt;- FALSE</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 5</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Ages[Index] = 11 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seen &lt;- TRUE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">IF Seen = TRUE THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"In the list\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Missing\"</div><div class=\"lesson-code-line\">ENDIF</div></div><div class=\"wt-note\">Seen = FALSE</div>"
+     },
+     {
+      "text": "The third value is 11. It matches, so Seen becomes TRUE.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Seen : BOOLEAN</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Seen &lt;- FALSE</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 5</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Ages[Index] = 11 THEN</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seen &lt;- TRUE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">IF Seen = TRUE THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"In the list\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Missing\"</div><div class=\"lesson-code-line\">ENDIF</div></div><div class=\"wt-note\">Seen = <span class=\"wt-hl\">TRUE</span></div>"
+     },
+     {
+      "text": "After the loop, the IF checks Seen. It is TRUE, so the output is <strong>In the list</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Seen : BOOLEAN</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Seen &lt;- FALSE</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 5</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Ages[Index] = 11 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seen &lt;- TRUE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line wt-hl\">IF Seen = TRUE THEN</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"In the list\"</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Missing\"</div><div class=\"lesson-code-line\">ENDIF</div></div>"
+     },
+     {
+      "text": "Now look for 13. No value matches, so Seen stays FALSE and the ELSE line runs: <strong>Missing</strong>. Now do yours.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Seen : BOOLEAN</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Seen &lt;- FALSE</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 5</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Ages[Index] = 11 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seen &lt;- TRUE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">IF Seen = TRUE THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"In the list\"</div><div class=\"lesson-code-line wt-hl\">ELSE</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Missing\"</div><div class=\"lesson-code-line\">ENDIF</div></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-1-libraries",
+   "embedContainerId": "y822-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on libraries and library functions from 2.1. Stuck? Switch on <strong>I need help</strong> for a nudge or a similar question worked through.</p><div id=\"y822-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "2.2: Data Types and Constants",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Programming, Logic and Testing</p><h2 class=\"lesson-h2\">2.2: Data Types and Constants</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> choose the right kind of variable for each value, and keep a fixed value in one place.</li><li><strong>The big question:</strong> why must a program know what kind of value it holds?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">13, 13.5, \"thirteen\" and TRUE. Why might a computer keep these four values in different ways?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They are different kinds of value. You can add 13 and 13.5, but not \"thirteen\". TRUE is only ever yes or no.</p></div></details>"
+  },
+  {
+   "id": "data-type",
+   "label": "What Is a Data Type?",
+   "content": "<h2 class=\"lesson-h2\">What Is a Data Type?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: the program says DECLARE Age : INTEGER, then Age &lt;- \"thirteen\". What happens? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The program stops on line 2.</p><p><strong>Why?</strong> Age was declared for whole numbers only. \"thirteen\" is text. The error says: Age is declared as INTEGER but you tried to store a STRING (\"thirteen\") in it..</p></div></details><p class=\"lesson-lead\">A <strong>data type</strong> says what kind of value a variable can hold.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">DECLARE Town : STRING</div></div></div><div><ul class=\"lesson-facts\"><li>You give each variable its data type when you DECLARE it.</li><li>The program then only lets in that kind of value.</li><li>The wrong kind of value stops the program with an error.</li></ul></div></div>"
+  },
+  {
+   "id": "int-real",
+   "label": "Compare: INTEGER and REAL",
+   "content": "<h2 class=\"lesson-h2\">Compare: INTEGER and REAL</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: which program runs? Why does the other one stop?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>B runs and outputs <strong>1.62</strong>. A stops on line 2.</p><p><strong>Why?</strong> An INTEGER holds whole numbers only, and 1.62 has a decimal part. The error says: Height is an INTEGER and cannot hold 1.62.</p></div></details><p class=\"lesson-lead\">A height in metres: 1.62.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Height : INTEGER</div><div class=\"lesson-code-line\">Height &lt;- 1.62</div><div class=\"lesson-code-line\">OUTPUT Height</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Height : REAL</div><div class=\"lesson-code-line\">Height &lt;- 1.62</div><div class=\"lesson-code-line\">OUTPUT Height</div></div></div></div><ul class=\"lesson-facts\"><li><strong>INTEGER:</strong> a whole number, like 13, 0 or -4.</li><li><strong>REAL:</strong> a number with a decimal part, like 1.62 or 9.5.</li></ul>"
+  },
+  {
+   "id": "int-real-check",
+   "label": "Your Turn: INTEGER or REAL?",
+   "type": "multiple-choice",
+   "containerId": "y822-int-real-check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: INTEGER or REAL?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the computer need to know if a number can have a decimal part?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It stores and checks whole numbers and decimal numbers in different ways.</p></div></details><p class=\"lesson-lead\">Choose the data type for each value.</p><div id=\"y822-int-real-check\"></div>",
+   "items": [
+    {
+     "prompt": "The number of pupils in a class, like 28.",
+     "options": [
+      "INTEGER",
+      "REAL",
+      "STRING",
+      "BOOLEAN"
+     ],
+     "correct": 0,
+     "explain": "You count pupils in whole numbers. There is never half a pupil."
+    },
+    {
+     "prompt": "A runner's time in seconds, like 12.85.",
+     "options": [
+      "INTEGER",
+      "BOOLEAN",
+      "REAL",
+      "STRING"
+     ],
+     "correct": 2,
+     "explain": "A time can have a decimal part, so it needs a REAL."
+    }
+   ]
+  },
+  {
+   "id": "string",
+   "label": "Compare: \"13\" and 13",
+   "content": "<h2 class=\"lesson-h2\">Compare: \"13\" and 13</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: which program outputs 14? Why can the other one not add 1?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>B outputs <strong>14</strong>. A stops on line 3.</p><p><strong>Why?</strong> \"13\" in quotes is text, not an amount. The error says: \"+\" needs two numbers.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : STRING</div><div class=\"lesson-code-line\">Age &lt;- \"13\"</div><div class=\"lesson-code-line\">OUTPUT Age + 1</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Age : INTEGER</div><div class=\"lesson-code-line\">Age &lt;- 13</div><div class=\"lesson-code-line\">OUTPUT Age + 1</div></div></div></div><ul class=\"lesson-facts\"><li><strong>STRING:</strong> text in quotes, like \"Hat Yai\" or \"13\".</li><li>A STRING is kept as characters. You cannot do sums with it.</li></ul>"
+  },
+  {
+   "id": "boolean",
+   "label": "BOOLEAN: Only TRUE or FALSE",
+   "content": "<h2 class=\"lesson-h2\">BOOLEAN: Only TRUE or FALSE</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: why is BOOLEAN a better data type for Passed than STRING?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A BOOLEAN can only be TRUE or FALSE. With a STRING, a typing slip like \"Ture\" could get in, and an IF that checks for \"TRUE\" would miss it.</p></div></details><p class=\"lesson-lead\"><strong>BOOLEAN:</strong> a value that can only be TRUE or FALSE, like Found in a linear search.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">DECLARE Passed : BOOLEAN</div><div class=\"lesson-code-line\">INPUT Mark</div><div class=\"lesson-code-line\">IF Mark &gt;= 50 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;Passed &lt;- TRUE</div><div class=\"lesson-code-line\">ELSE</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;Passed &lt;- FALSE</div><div class=\"lesson-code-line\">ENDIF</div><div class=\"lesson-code-line\">OUTPUT Passed</div></div></div><div><ul class=\"lesson-facts\"><li>62 is typed in: the output is TRUE.</li><li>Passed &lt;- \"Yes\" stops the program: \"Yes\" is not TRUE or FALSE.</li><li>Use BOOLEAN for a yes or no question: paid, locked, found.</li></ul></div></div>"
+  },
+  {
+   "id": "types-check",
+   "label": "Your Turn: Name the Data Type",
+   "type": "short-answer-validation",
+   "validatorId": "y822-types-check",
+   "validatorKey": "y822_types_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Name the Data Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does \"13\" in quotes not count as a number?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The quotes make it text. The computer treats it as characters, not as an amount it can add.</p></div></details><p class=\"lesson-lead\">Type INTEGER, REAL, STRING or BOOLEAN for each value.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y822-types-check-a\">(a) 4.5 [1]</label><input id=\"y822-types-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-check-a\" aria-label=\"Your Turn: Name the Data Type part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-types-check-b\">(b) \"Yes\" [1]</label><input id=\"y822-types-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-check-b\" aria-label=\"Your Turn: Name the Data Type part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-types-check-c\">(c) FALSE [1]</label><input id=\"y822-types-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-check-c\" aria-label=\"Your Turn: Name the Data Type part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-types-check-d\">(d) -3 [1]</label><input id=\"y822-types-check-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-check-d\" aria-label=\"Your Turn: Name the Data Type part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y822-types-check-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y822-types-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Choose the Data Type",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-2-types",
+   "embedContainerId": "y822-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Choose the Data Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict first, then check?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A wrong prediction shows you which rule to look at again.</p></div></details><p class=\"lesson-lead\">Choose the data type, then predict whether each program runs. The values change every time.</p><div id=\"y822-activity-1\"></div>"
+  },
+  {
+   "id": "constant",
+   "label": "What Is a Constant?",
+   "content": "<h2 class=\"lesson-h2\">What Is a Constant?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what happens if a later line says TicketPrice &lt;- 50? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The program stops on that line.</p><p><strong>Why?</strong> TicketPrice is a CONSTANT, so its value cannot be changed while the program runs.</p></div></details><p class=\"lesson-lead\">A <strong>constant</strong> is a value that is set once and never changes while the program runs.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">CONSTANT TicketPrice &lt;- 45</div><div class=\"lesson-code-line\">DECLARE Tickets : INTEGER</div><div class=\"lesson-code-line\">INPUT Tickets</div><div class=\"lesson-code-line\">OUTPUT Tickets * TicketPrice</div></div></div><div><ul class=\"lesson-facts\"><li>Write CONSTANT, a name, &lt;- and the value.</li><li>Put constants at the top of the program.</li><li>Every line can use it. No line can change it.</li></ul></div></div>"
+  },
+  {
+   "id": "compare-constant",
+   "label": "Compare: A Typed Number or a Constant",
+   "content": "<h2 class=\"lesson-h2\">Compare: A Typed Number or a Constant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The price goes up to 50. How many lines must you change in A? In B? Why is B safer?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A: <strong>3</strong> lines. B: <strong>1</strong> line.</p><p><strong>Why safer?</strong> In A it is easy to miss one 45, and that line gives a wrong price. In B every line uses Price, so one change fixes them all. The name Price also says what 45 means.</p></div></details><p class=\"lesson-lead\">A snack costs 45 baht. Both programs work out the cost of the snacks sold.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: 45 typed in</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Monday : INTEGER</div><div class=\"lesson-code-line\">DECLARE Tuesday : INTEGER</div><div class=\"lesson-code-line\">INPUT Monday</div><div class=\"lesson-code-line\">INPUT Tuesday</div><div class=\"lesson-code-line\">OUTPUT Monday * 45</div><div class=\"lesson-code-line\">OUTPUT Tuesday * 45</div><div class=\"lesson-code-line\">OUTPUT (Monday + Tuesday) * 45</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: a constant</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">CONSTANT Price &lt;- 45</div><div class=\"lesson-code-line\">DECLARE Monday : INTEGER</div><div class=\"lesson-code-line\">DECLARE Tuesday : INTEGER</div><div class=\"lesson-code-line\">INPUT Monday</div><div class=\"lesson-code-line\">INPUT Tuesday</div><div class=\"lesson-code-line\">OUTPUT Monday * Price</div><div class=\"lesson-code-line\">OUTPUT Tuesday * Price</div><div class=\"lesson-code-line\">OUTPUT (Monday + Tuesday) * Price</div></div></div></div>"
+  },
+  {
+   "id": "constant-check",
+   "label": "Your Turn: Using a Constant",
+   "type": "short-answer-validation",
+   "validatorId": "y822-constant-check",
+   "validatorKey": "y822_constant_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Using a Constant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why are constants written at the top of the program?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They are easy to find and change there, and they are set before any line uses them.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;CONSTANT PassMark &lt;- 50</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Mark : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;INPUT Mark</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;IF Mark &gt;= PassMark THEN</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Pass\"</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Try again\"</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y822-constant-check-a\">(a) 62 is typed in. What is output? [1]</label><input id=\"y822-constant-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"constant-check-a\" aria-label=\"Your Turn: Using a Constant part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-constant-check-b\">(b) The pass mark changes to 70. Which line do you change? [1]</label><input id=\"y822-constant-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"constant-check-b\" aria-label=\"Your Turn: Using a Constant part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y822-constant-check-c\">(c) A line PassMark <- 40 is added at the end. Will the program run? Type yes or no. [1]</label><input id=\"y822-constant-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"constant-check-c\" aria-label=\"Your Turn: Using a Constant part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y822-constant-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y822-constant-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: The Right Types and a Constant",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-2-code",
+   "embedContainerId": "y822-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: The Right Types and a Constant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the drill type in new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program must work for any value it is given, not just one.</p></div></details><p class=\"lesson-lead\">Write each program with the right data types. Some must use a constant. New values are typed in every time.</p><div id=\"y822-activity-2\"></div>"
+  },
+  {
+   "id": "why-constant",
+   "label": "Explain: Why Use a Constant?",
+   "type": "self-marked-response",
+   "containerId": "y822-why-constant",
+   "content": "<h2 class=\"lesson-h2\">Explain: Why Use a Constant?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A point, then what it means for the program, joined with so.</p></div></details><div id=\"y822-why-constant\"></div>",
+   "items": [
+    {
+     "id": "why-constant",
+     "prompt": "A program uses the speed limit 90 in six places. Explain why the programmer should make the speed limit a constant.",
+     "marks": 2,
+     "modelAnswer": "If the limit changes, only one line needs to change (1), so no place can be missed and every line uses the same value (1).",
+     "scheme": [
+      "A change to the value is made in one place only / only one line to edit",
+      "So no use of it can be missed / every line uses the same value / fewer errors / the name says what 90 means"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Fix the Data Types",
+   "type": "short-answer-validation",
+   "validatorId": "y822-practice",
+   "validatorKey": "y822_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Fix the Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can the wrong data type stop a program that has no other mistakes?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each variable only lets in its own kind of value. One wrong type means one value is refused.</p></div></details><p class=\"lesson-lead\">Ploy types in her name, 1.58 for her height in metres, and 4 visits. The program stops.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Name : STRING</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Height : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;DECLARE Member : STRING</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;DECLARE Visits : INTEGER</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;INPUT Name</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;INPUT Height</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;INPUT Visits</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;Member &lt;- TRUE</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y822-practice-a\">(a) Which line declares the wrong data type for Height? [1]</label><input id=\"y822-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Fix the Data Types part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-practice-b\">(b) Which data type should Height have? [1]</label><input id=\"y822-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Fix the Data Types part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y822-practice-c\">(c) Member holds TRUE or FALSE. Which data type should line 3 use? [1]</label><input id=\"y822-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Fix the Data Types part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y822-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y822-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Data Types and Constants",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-2-data-types",
+   "embedContainerId": "y822-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Data Types and Constants</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can choose the type for any value, you really know the four types.</p></div></details><p class=\"lesson-lead\">The four data types, choosing one, whether a program runs, and constants. Your progress is saved.</p><div id=\"y822-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y822_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "DIV counts how many whole 7s fit into the number."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "MOD gives what is left over after taking away all the whole 7s."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6\\.40*\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Divide first, then keep one decimal place. Is the next digit five or more?"
+   }
+  ],
+  "y822_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*found\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check each value in Codes. Does any of them match 42?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*not\\s+found\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check each value against 9. If none match, the flag stays the same as it started."
+   }
+  ],
+  "y822_types_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?real(\\s+number)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is it a number? Does it have a decimal part?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(string|str)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the quotes first."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(boolean|bool)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "No quotes. Which data type has only two values?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(integer|int)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A minus sign is fine. Is there a decimal part?"
+   }
+  ],
+  "y822_constant_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*pass\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Put 62 and the value of PassMark into the IF line. Is it TRUE?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*1(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Where is the value of PassMark set?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(no|nope|it\\s+(will\\s+)?(not|won'?t|does\\s*n[o']?t)(\\s+run)?|it\\s+stops|(an?\\s+)?error)\\b[^?]*$",
+     "flags": "i"
+    },
+    "feedback": "What kind of value is PassMark? Can a program change it?"
+   }
+  ],
+  "y822_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find the line that DECLAREs Height. Can that type hold 1.58?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?real(\\s+number)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "1.58 has a decimal part."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(boolean|bool)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which data type has only two values?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

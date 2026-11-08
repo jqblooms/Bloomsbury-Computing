@@ -64,6 +64,14 @@
           ]
         },
         {
+          "code": "7P",
+          "title": "Text-based Programming",
+          "lessons": [
+            "y7-2-1-variables",
+            "y7-2-2-input-output"
+          ]
+        },
+        {
           "code": "",
           "title": "Competition Practice",
           "lessons": [
@@ -109,6 +117,14 @@
         },
         {
           "code": "",
+          "title": "Programming, Logic and Testing",
+          "lessons": [
+            "y8-2-1-libraries",
+            "y8-2-2-data-types"
+          ]
+        },
+        {
+          "code": "",
           "title": "Competition Practice",
           "lessons": [
             "y8-comp-practice"
@@ -136,6 +152,8 @@
           "lessons": [
             "y9-2-2-loops",
             "y9-2-3-arrays",
+            "y9-2-4-binary-search",
+            "y9-2-5-strings",
             "y9-2-6-errors",
             "y9-term1a-test"
           ]

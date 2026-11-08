@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>String Lab</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="st-css" href="lab.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="activity" aria-live="polite"></section>
+</main>
+<script>
+// String Lab (Year 9, 2.5 String Manipulation). ?activity= picks one task:
+//   predict  predict exactly what a short program outputs: LENGTH, then UCASE and LCASE, then both (levels 1 to 3)
+//   check    a program checks what the user types: mark each input Accepted or Rejected, then run it (levels 1 to 4)
+// ?level= is the first level, ?upto= the last one the slide needs. ?embed=1 sits it on a lesson slide.
+// Every output is worked out by running the program in shared/pseudocode-engine.js.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = encodeURIComponent(params.get('bcv') || '1');
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('st-css').href = 'lab.css?v=' + v;
+  ['../shared/pseudocode-engine.js', 'lab.js'].forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + v;
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

@@ -16,7 +16,8 @@
 //
 // Public API:
 //   PseudocodeError(message, line)
-//   runPseudocode(source, initialVars, maxSteps, inputs) -> { vars, outputs, error }
+//   runPseudocode(source, initialVars, maxSteps, inputs) -> { vars, outputs, constants, error }
+//     - constants: the names set with CONSTANT, whose values can never change
 //     - inputs: the values typed in, in order, one per INPUT that runs
 //     - vars: final value of every variable that exists after running
 //       (starts from a fresh copy of initialVars)
@@ -164,6 +165,32 @@
     };
   }
 
+  // ---- library routines (Year 8 2.1; the 0478 syllabus names MOD, DIV, ROUND and RANDOM) ----
+  // ROUND(Number, Places) gives Number rounded to Places decimal places. RANDOM() gives a random REAL from 0 to 1.
+  // RANDOM is seeded at the start of every run, so the same program gives the same numbers each time it runs:
+  // a pupil's program and the reference draw the same values in the same order.
+  var LIBRARY_FUNCTIONS = { ROUND: 2, RANDOM: 0 };
+  var LIBRARY_FUNCTION_FORMS = { ROUND: 'two values, e.g. ROUND(Price, 2): the number, then how many decimal places', RANDOM: 'nothing inside its brackets: RANDOM()' };
+  var randomState = 1;
+  function seedRandom(seed) { randomState = (seed >>> 0) || 1; }
+  function nextRandom() {
+    randomState = (randomState + 0x6D2B79F5) >>> 0;
+    var t = randomState;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+  function makeLibraryFunction(fname, fargs, line) {
+    return function (vars) {
+      if (fname === 'RANDOM') return nextRandom();
+      var n = fargs[0](vars), places = fargs[1](vars);
+      if (typeof n !== 'number') throw new PseudocodeError('ROUND needs a number to round, but was given ' + describeValue(n) + ' (' + JSON.stringify(n) + ').', line);
+      if (typeof places !== 'number' || !Number.isInteger(places) || places < 0) throw new PseudocodeError('ROUND needs a whole number of decimal places (0 or more) as its second value.', line);
+      var f = Math.pow(10, places);
+      return Math.round(n * f + (n >= 0 ? 1e-9 : -1e-9)) / f;
+    };
+  }
+
   // Builds a recursive-descent parser over `tokens`. `parseExpr` covers
   // arithmetic/concatenation (used inside expressions AND as the operands
   // of a comparison); `parseCondition` covers OR/AND/NOT/comparison on top
@@ -219,6 +246,18 @@
         expectOp(')');
         if (fargs.length !== STRING_FUNCTIONS[fname]) throw new PseudocodeError(fname + ' needs ' + STRING_FUNCTION_FORMS[fname] + '.', line);
         return makeStringFunction(fname, fargs, line);
+      }
+      if (t.type === 'ident' && LIBRARY_FUNCTIONS.hasOwnProperty(t.value.toUpperCase()) && isOp(tokens[pos + 1], '(')) {
+        next(); next();
+        var lname = t.value.toUpperCase();
+        var largs = [];
+        if (!isOp(peek(), ')')) {
+          largs.push(parseExpr());
+          while (isOp(peek(), ',')) { next(); largs.push(parseExpr()); }
+        }
+        expectOp(')');
+        if (largs.length !== LIBRARY_FUNCTIONS[lname]) throw new PseudocodeError(lname + ' needs ' + LIBRARY_FUNCTION_FORMS[lname] + '.', line);
+        return makeLibraryFunction(lname, largs, line);
       }
       if (t.type === 'ident') {
         next();
@@ -432,6 +471,13 @@
       }
       if (/^DECLARE\b/i.test(line)) throw new PseudocodeError('DECLARE needs a name, a colon and a type, e.g. DECLARE Total : INTEGER', lineNo);
 
+      // CONSTANT Rate <- 0.07: a value set once that the program can never change (CONSTANT Rate = 0.07 also accepted).
+      if ((m = line.match(/^CONSTANT\s+([A-Za-z_]\w*)\s*(?:<-|=)\s*(.+)$/i))) {
+        instructions.push({ type: 'CONSTANT', name: m[1], exprCode: compileExpression(m[2], lineNo), line: lineNo });
+        continue;
+      }
+      if (/^CONSTANT\b/i.test(line)) throw new PseudocodeError('CONSTANT needs a name, <- and a value, e.g. CONSTANT Rate <- 0.07', lineNo);
+
       if ((m = line.match(/^IF\s+(.+?)\s+THEN\s*$/i))) {
         var ifIndex = instructions.length;
         instructions.push({ type: 'IF', conditionCode: compileCondition(m[1], lineNo), rootIndex: ifIndex, line: lineNo });
@@ -535,7 +581,7 @@
         throw new PseudocodeError('Use "<-" for assignment, not "=": ' + m[1] + ' <- ' + m[2], lineNo);
       }
       // A string function on its own line: its result goes nowhere, and the variable inside does not change.
-      if ((m = line.match(/^(LENGTH|SUBSTRING|UCASE|LCASE)\s*\(/i))) {
+      if ((m = line.match(/^(LENGTH|SUBSTRING|UCASE|LCASE|ROUND|RANDOM)\s*\(/i))) {
         throw new PseudocodeError(m[1].toUpperCase() + '(...) gives back a new value, but this line does not store it or output it. Store it, e.g. Name <- UCASE(Name), or output it, e.g. OUTPUT UCASE(Name).', lineNo);
       }
       throw new PseudocodeError('I can’t understand this line: "' + line + '"', lineNo);
@@ -562,12 +608,15 @@
     Object.keys(initialVars || {}).forEach(function (k) { var v = initialVars[k]; vars[k] = Array.isArray(v) ? v.slice() : v; types[k] = null; });
     var given = Object.keys(types);
     var outputs = [];
+    var constants = {};
+    seedRandom(2026);
 
     function requireDeclared(name, line, exampleType) {
       if (!(name in vars)) throw new PseudocodeError(undeclaredMessage(name, exampleType || 'INTEGER'), line);
     }
     function store(name, value, line) {
       requireDeclared(name, line);
+      if (constants[name]) throw new PseudocodeError(name + ' is a CONSTANT, so its value cannot be changed while the program runs.', line);
       var kind = types[name];
       vars[name] = kind ? coerce(value, kind, name, line) : value;
     }
@@ -576,7 +625,7 @@
     try {
       instructions = compile(source);
     } catch (e) {
-      return { vars: vars, outputs: outputs, error: { message: e.message, line: e.line } };
+      return { vars: vars, outputs: outputs, constants: Object.keys(constants), error: { message: e.message, line: e.line } };
     }
 
     var ifTaken = {};
@@ -610,6 +659,13 @@
               types[dn] = instr.spec.kind;
             }
           }
+          pc++; continue;
+        }
+        if (instr.type === 'CONSTANT') {
+          if (instr.name in vars && given.indexOf(instr.name) === -1) throw new PseudocodeError(instr.name + ' has already been declared.', instr.line);
+          vars[instr.name] = instr.exprCode(vars);
+          types[instr.name] = null;
+          constants[instr.name] = true;
           pc++; continue;
         }
         if (instr.type === 'ASSIGN') { store(instr.var, instr.exprCode(vars), instr.line); pc++; continue; }
@@ -661,15 +717,17 @@
           var typed = inputQueue.shift();
           // What the user types arrives as text; a number variable reads it as a number.
           if ((types[instr.var] === 'INTEGER' || types[instr.var] === 'REAL') && typeof typed === 'string' && typed.trim() !== '' && !isNaN(Number(typed))) typed = Number(typed);
+          // A BOOLEAN reads TRUE or FALSE typed in.
+          if (types[instr.var] === 'BOOLEAN' && typeof typed === 'string' && /^\s*(true|false)\s*$/i.test(typed)) typed = /true/i.test(typed);
           store(instr.var, typed, instr.line);
           pc++; continue;
         }
         pc++;
       }
     } catch (e) {
-      return { vars: vars, outputs: outputs, error: { message: e.message, line: e.line } };
+      return { vars: vars, outputs: outputs, constants: Object.keys(constants), error: { message: e.message, line: e.line } };
     }
-    return { vars: vars, outputs: outputs, error: null };
+    return { vars: vars, outputs: outputs, constants: Object.keys(constants), error: null };
   }
 
   var api = { PseudocodeError: PseudocodeError, compile: compile, runPseudocode: runPseudocode };

@@ -1,0 +1,404 @@
+{
+ "id": "y7-2-1-variables",
+ "label": "2.1: Data Types and Variables",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Read the Plan",
+   "type": "short-answer-validation",
+   "validatorId": "y721-do-now",
+   "validatorKey": "y721_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Read the Plan</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each task in a plan have one name next to it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Everyone knows which jobs are theirs. No job is done twice, and none is forgotten.</p></div></details><p class=\"lesson-lead\">From 3.2. A team plans a Catch game.</p><div class=\"lesson-do-now-columns\"><div><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\">Task</th><th style=\"padding:6px 10px;text-align:left\">Who</th><th style=\"padding:6px 10px;text-align:left\">Deadline</th><th style=\"padding:6px 10px;text-align:left\">Needs</th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">1 Draw the flowchart</td><td style=\"padding:6px 10px;text-align:left\">Nat</td><td style=\"padding:6px 10px;text-align:left\">Monday</td><td style=\"padding:6px 10px;text-align:left\">paper</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">2 Draw the sprites</td><td style=\"padding:6px 10px;text-align:left\">Ploy</td><td style=\"padding:6px 10px;text-align:left\">Tuesday</td><td style=\"padding:6px 10px;text-align:left\">task 1</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">3 Build the game</td><td style=\"padding:6px 10px;text-align:left\">Nat</td><td style=\"padding:6px 10px;text-align:left\">Wednesday</td><td style=\"padding:6px 10px;text-align:left\">tasks 1 and 2</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">4 Test the game</td><td style=\"padding:6px 10px;text-align:left\">Ploy</td><td style=\"padding:6px 10px;text-align:left\">Thursday</td><td style=\"padding:6px 10px;text-align:left\">task 3</td></tr></tbody></table></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y721-do-now-a\">(a) Who builds the game? [1]</label><input id=\"y721-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Read the Plan part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y721-do-now-b\">(b) Task 3 is late. Which task has to wait? [1]</label><input id=\"y721-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Read the Plan part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y721-do-now-c\">(c) What is the deadline for Draw the sprites? [1]</label><input id=\"y721-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Read the Plan part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y721-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y721-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: read a plan",
+    "steps": [
+     {
+      "text": "This is a different plan, for a quiz app. We answer the same kinds of question.",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\">Task</th><th style=\"padding:6px 10px;text-align:left\">Who</th><th style=\"padding:6px 10px;text-align:left\">Deadline</th><th style=\"padding:6px 10px;text-align:left\">Needs</th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">1 Write the questions</td><td style=\"padding:6px 10px;text-align:left\">Lek</td><td style=\"padding:6px 10px;text-align:left\">Monday</td><td style=\"padding:6px 10px;text-align:left\">paper</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">2 Draw the buttons</td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\">Wednesday</td><td style=\"padding:6px 10px;text-align:left\">task 1</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">3 Make the quiz</td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\">Thursday</td><td style=\"padding:6px 10px;text-align:left\">tasks 1 and 2</td></tr></tbody></table>"
+     },
+     {
+      "text": "<strong>Who</strong> makes the quiz? Find the task in the Task column. Then read across to the Who column.",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\">Task</th><th style=\"padding:6px 10px;text-align:left\">Who</th><th style=\"padding:6px 10px;text-align:left\">Deadline</th><th style=\"padding:6px 10px;text-align:left\">Needs</th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">1 Write the questions</td><td style=\"padding:6px 10px;text-align:left\">Lek</td><td style=\"padding:6px 10px;text-align:left\">Monday</td><td style=\"padding:6px 10px;text-align:left\">paper</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">2 Draw the buttons</td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\">Wednesday</td><td style=\"padding:6px 10px;text-align:left\">task 1</td></tr><tr><td style=\"padding:6px 10px;text-align:left\"><span class=\"wt-hl\">3 Make the quiz</span></td><td style=\"padding:6px 10px;text-align:left\"><span class=\"wt-hl\">Fah</span></td><td style=\"padding:6px 10px;text-align:left\">Thursday</td><td style=\"padding:6px 10px;text-align:left\">tasks 1 and 2</td></tr></tbody></table><div class=\"wt-note\">Who makes the quiz: <span class=\"wt-hl\">Fah</span></div>"
+     },
+     {
+      "text": "A task is <strong>late</strong>. Which task has to wait? Look down the Needs column for that task number.",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\">Task</th><th style=\"padding:6px 10px;text-align:left\">Who</th><th style=\"padding:6px 10px;text-align:left\">Deadline</th><th style=\"padding:6px 10px;text-align:left\">Needs</th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">1 Write the questions</td><td style=\"padding:6px 10px;text-align:left\">Lek</td><td style=\"padding:6px 10px;text-align:left\">Monday</td><td style=\"padding:6px 10px;text-align:left\">paper</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">2 Draw the buttons</td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\">Wednesday</td><td style=\"padding:6px 10px;text-align:left\">task 1</td></tr><tr><td style=\"padding:6px 10px;text-align:left\"><span class=\"wt-hl\">3 Make the quiz</span></td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\">Thursday</td><td style=\"padding:6px 10px;text-align:left\"><span class=\"wt-hl\">tasks 1 and 2</span></td></tr></tbody></table><div class=\"wt-note\">Task 2 late: task 3 needs it, so <span class=\"wt-hl\">Make the quiz</span> waits</div>"
+     },
+     {
+      "text": "A <strong>deadline</strong>: find the task, then read across to the Deadline column.",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\">Task</th><th style=\"padding:6px 10px;text-align:left\">Who</th><th style=\"padding:6px 10px;text-align:left\">Deadline</th><th style=\"padding:6px 10px;text-align:left\">Needs</th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">1 Write the questions</td><td style=\"padding:6px 10px;text-align:left\">Lek</td><td style=\"padding:6px 10px;text-align:left\">Monday</td><td style=\"padding:6px 10px;text-align:left\">paper</td></tr><tr><td style=\"padding:6px 10px;text-align:left\"><span class=\"wt-hl\">2 Draw the buttons</span></td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\"><span class=\"wt-hl\">Wednesday</span></td><td style=\"padding:6px 10px;text-align:left\">task 1</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">3 Make the quiz</td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\">Thursday</td><td style=\"padding:6px 10px;text-align:left\">tasks 1 and 2</td></tr></tbody></table><div class=\"wt-note\">Draw the buttons: <span class=\"wt-hl\">Wednesday</span></div>"
+     },
+     {
+      "text": "Now do the same with your plan: find the row first, then read across.",
+      "visual": "<table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\">Task</th><th style=\"padding:6px 10px;text-align:left\">Who</th><th style=\"padding:6px 10px;text-align:left\">Deadline</th><th style=\"padding:6px 10px;text-align:left\">Needs</th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\">1 Write the questions</td><td style=\"padding:6px 10px;text-align:left\">Lek</td><td style=\"padding:6px 10px;text-align:left\">Monday</td><td style=\"padding:6px 10px;text-align:left\">paper</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">2 Draw the buttons</td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\">Wednesday</td><td style=\"padding:6px 10px;text-align:left\">task 1</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">3 Make the quiz</td><td style=\"padding:6px 10px;text-align:left\">Fah</td><td style=\"padding:6px 10px;text-align:left\">Thursday</td><td style=\"padding:6px 10px;text-align:left\">tasks 1 and 2</td></tr></tbody></table>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Follow the Decision",
+   "type": "short-answer-validation",
+   "validatorId": "y721-do-now-2",
+   "validatorKey": "y721_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Follow the Decision</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can the same flowchart say different things?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The decision looks at the number. A different number can follow a different arrow.</p></div></details><p class=\"lesson-lead\">From 3.1. Begin at Start. Put the number into the decision.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:300px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 252\" width=\"388\" height=\"252\" role=\"img\" aria-label=\"Start; Score &gt; 50? (True to Say &quot;Pass&quot;, False to Say &quot;Try again&quot;); Say &quot;Pass&quot;; End; Say &quot;Try again&quot;\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc7a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 67\" marker-end=\"url(#fc7a)\"/><path class=\"fc-e\" d=\"M100 125 L100 142\" marker-end=\"url(#fc7a)\"/><text class=\"fc-l\" x=\"110\" y=\"139\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M100 178 L100 208\" marker-end=\"url(#fc7a)\"/><path class=\"fc-e\" d=\"M188 96 L296 96 L296 142\" marker-end=\"url(#fc7a)\"/><text class=\"fc-l\" x=\"196\" y=\"90\" text-anchor=\"start\">False</text><path class=\"fc-e\" d=\"M296 178 L296 224 L152 224\" marker-end=\"url(#fc7a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-d\" points=\"100,67 188,96 100,125 12,96\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"100.5\">Score &gt; 50?</text><circle class=\"fc-n\" cx=\"14\" cy=\"69\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"73.5\">2</text><polygon class=\"fc-b\" points=\"34,142 180,142 166,178 20,178\"/><text class=\"fc-x\" x=\"100\" y=\"164.5\">Say &quot;Pass&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"144\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"148.5\">3</text><rect class=\"fc-t\" x=\"48\" y=\"208\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"210\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"214.5\">4</text><polygon class=\"fc-b\" points=\"230,142 376,142 362,178 216,178\"/><text class=\"fc-x\" x=\"296\" y=\"164.5\">Say &quot;Try again&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"144\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"148.5\">5</text></svg></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y721-do-now-2-a\">(a) Score is 64. What does the sprite say? [1]</label><input id=\"y721-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Follow the Decision part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y721-do-now-2-b\">(b) Score is 50. What does the sprite say? [1]</label><input id=\"y721-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Follow the Decision part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y721-do-now-2-c\">(c) Score is 30. Which box number runs after box 2? [1]</label><input id=\"y721-do-now-2-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-c\" aria-label=\"Do Now: Follow the Decision part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y721-do-now-2-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y721-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: follow a decision",
+    "steps": [
+     {
+      "text": "This is a different flowchart. We try it twice: Coins is 15, then Coins is 10.",
+      "visual": "<div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:280px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; Say &quot;Hi&quot;; Coins &gt; 10? (True to Say &quot;Shop&quot;, False to Say &quot;Wait&quot;); Say &quot;Shop&quot;; End; Say &quot;Wait&quot;\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc1a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc1a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc1a)\"/><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc1a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">False</text><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc1a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-b\" points=\"34,78 180,78 166,114 20,114\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">Say &quot;Hi&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"164.5\">Coins &gt; 10?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">Say &quot;Shop&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">5</text><polygon class=\"fc-b\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">Say &quot;Wait&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">6</text></svg></div>"
+     },
+     {
+      "text": "Begin at <strong>Start</strong>. Box 2 says \"Hi\". Then the arrow goes to the decision, box 3.",
+      "visual": "<div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:280px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; Say &quot;Hi&quot;; Coins &gt; 10? (True to Say &quot;Shop&quot;, False to Say &quot;Wait&quot;); Say &quot;Shop&quot;; End; Say &quot;Wait&quot;\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc2a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc2a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc2a)\"/><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc2a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">False</text><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc2a)\"/><rect class=\"fc-t\" style=\"stroke:var(--warn);stroke-width:5;fill:rgba(253,214,99,.3)\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-b\" style=\"stroke:var(--warn);stroke-width:5;fill:rgba(253,214,99,.3)\" points=\"34,78 180,78 166,114 20,114\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">Say &quot;Hi&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"164.5\">Coins &gt; 10?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">Say &quot;Shop&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">5</text><polygon class=\"fc-b\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">Say &quot;Wait&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">6</text></svg></div>"
+     },
+     {
+      "text": "Coins is 15. Put the number in: is 15 bigger than 10? Yes, so it is <strong>True</strong>. Follow True to Say \"Shop\".",
+      "visual": "<div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:280px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; Say &quot;Hi&quot;; Coins &gt; 10? (True to Say &quot;Shop&quot;, False to Say &quot;Wait&quot;); Say &quot;Shop&quot;; End; Say &quot;Wait&quot;\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc3a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc3a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc3a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc3a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc3a)\"/><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc3a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">False</text><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc3a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-b\" points=\"34,78 180,78 166,114 20,114\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">Say &quot;Hi&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" style=\"stroke:var(--warn);stroke-width:5;fill:rgba(253,214,99,.3)\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"164.5\">Coins &gt; 10?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" style=\"stroke:var(--warn);stroke-width:5;fill:rgba(253,214,99,.3)\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">Say &quot;Shop&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">5</text><polygon class=\"fc-b\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">Say &quot;Wait&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">6</text></svg></div><div class=\"wt-note\">15 &gt; 10? <span class=\"wt-hl\">True</span></div>"
+     },
+     {
+      "text": "Now Coins is 10. Is 10 bigger than 10? No. The same is not bigger, so it is <strong>False</strong>.",
+      "visual": "<div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:280px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; Say &quot;Hi&quot;; Coins &gt; 10? (True to Say &quot;Shop&quot;, False to Say &quot;Wait&quot;); Say &quot;Shop&quot;; End; Say &quot;Wait&quot;\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc4a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc4a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc4a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc4a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc4a)\"/><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc4a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">False</text><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc4a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-b\" points=\"34,78 180,78 166,114 20,114\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">Say &quot;Hi&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" style=\"stroke:var(--warn);stroke-width:5;fill:rgba(253,214,99,.3)\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"164.5\">Coins &gt; 10?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">Say &quot;Shop&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">5</text><polygon class=\"fc-b\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">Say &quot;Wait&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">6</text></svg></div><div class=\"wt-note\">10 &gt; 10? <span class=\"wt-hl\">False</span></div>"
+     },
+     {
+      "text": "Follow the False arrow to the box it reaches. Read the number on that box: 6. It says \"Wait\".",
+      "visual": "<div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:280px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; Say &quot;Hi&quot;; Coins &gt; 10? (True to Say &quot;Shop&quot;, False to Say &quot;Wait&quot;); Say &quot;Shop&quot;; End; Say &quot;Wait&quot;\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc5a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc5a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc5a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc5a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc5a)\"/><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc5a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">False</text><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc5a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-b\" points=\"34,78 180,78 166,114 20,114\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">Say &quot;Hi&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"164.5\">Coins &gt; 10?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">Say &quot;Shop&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">5</text><polygon class=\"fc-b\" style=\"stroke:var(--warn);stroke-width:5;fill:rgba(253,214,99,.3)\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">Say &quot;Wait&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">6</text></svg></div><div class=\"wt-note\">Next box: <span class=\"wt-hl\">6</span></div>"
+     },
+     {
+      "text": "Now do the same with your numbers: put the number in, then follow that arrow.",
+      "visual": "<div class=\"lesson-fc\" style=\"--fc-box:var(--surface-2);--fc-edge:var(--brand);--fc-term:var(--muted);--fc-ink:var(--ink);--fc-dec:rgba(253,214,99,.12);--fc-dec-edge:var(--warn);--fc-arrow:var(--brand);--fc-label:var(--warn);--fc-badge:var(--warn);--fc-badge-ink:#1f1400;display:flex;justify-content:center\"><svg style=\"max-width:100%;max-height:280px;height:auto\" class=\"fc-svg\" viewBox=\"0 0 388 316\" width=\"388\" height=\"316\" role=\"img\" aria-label=\"Start; Say &quot;Hi&quot;; Coins &gt; 10? (True to Say &quot;Shop&quot;, False to Say &quot;Wait&quot;); Say &quot;Shop&quot;; End; Say &quot;Wait&quot;\"><style>.fc-b{fill:var(--fc-box,#262a5a);stroke:var(--fc-edge,#8ab4f8);stroke-width:2}.fc-t{fill:var(--fc-box,#262a5a);stroke:var(--fc-term,#9aa0c8);stroke-width:2}.fc-d{fill:var(--fc-dec,#3a2f10);stroke:var(--fc-dec-edge,#fdd663);stroke-width:2}.fc-line{stroke:var(--fc-edge,#8ab4f8);stroke-width:2;fill:none}.fc-e{stroke:var(--fc-arrow,#9aa6ff);stroke-width:2;fill:none}.fc-x{fill:var(--fc-ink,#eef0ff);font:600 14px/1 system-ui,Roboto,sans-serif;text-anchor:middle}.fc-sm{font-size:13px}.fc-l{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-title{fill:var(--fc-label,#fdd663);font:700 13px system-ui,Roboto,sans-serif}.fc-n{fill:var(--fc-badge,#fdd663)}.fc-nt{fill:var(--fc-badge-ink,#1f1400);font:800 13px system-ui,sans-serif;text-anchor:middle}</style><defs><marker id=\"fc6a\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" style=\"fill:var(--fc-arrow,#9aa6ff)\"/></marker></defs><path class=\"fc-e\" d=\"M100 48 L100 78\" marker-end=\"url(#fc6a)\"/><path class=\"fc-e\" d=\"M100 114 L100 131\" marker-end=\"url(#fc6a)\"/><path class=\"fc-e\" d=\"M100 189 L100 206\" marker-end=\"url(#fc6a)\"/><text class=\"fc-l\" x=\"110\" y=\"203\" text-anchor=\"start\">True</text><path class=\"fc-e\" d=\"M100 242 L100 272\" marker-end=\"url(#fc6a)\"/><path class=\"fc-e\" d=\"M188 160 L296 160 L296 206\" marker-end=\"url(#fc6a)\"/><text class=\"fc-l\" x=\"196\" y=\"154\" text-anchor=\"start\">False</text><path class=\"fc-e\" d=\"M296 242 L296 288 L152 288\" marker-end=\"url(#fc6a)\"/><rect class=\"fc-t\" x=\"48\" y=\"16\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"36.5\">Start</text><circle class=\"fc-n\" cx=\"50\" cy=\"18\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"22.5\">1</text><polygon class=\"fc-b\" points=\"34,78 180,78 166,114 20,114\"/><text class=\"fc-x\" x=\"100\" y=\"100.5\">Say &quot;Hi&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"80\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"84.5\">2</text><polygon class=\"fc-d\" points=\"100,131 188,160 100,189 12,160\"/><text class=\"fc-x fc-sm\" x=\"100\" y=\"164.5\">Coins &gt; 10?</text><circle class=\"fc-n\" cx=\"14\" cy=\"133\" r=\"11\"/><text class=\"fc-nt\" x=\"14\" y=\"137.5\">3</text><polygon class=\"fc-b\" points=\"34,206 180,206 166,242 20,242\"/><text class=\"fc-x\" x=\"100\" y=\"228.5\">Say &quot;Shop&quot;</text><circle class=\"fc-n\" cx=\"22\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"22\" y=\"212.5\">4</text><rect class=\"fc-t\" x=\"48\" y=\"272\" width=\"104\" height=\"32\" rx=\"16\"/><text class=\"fc-x\" x=\"100\" y=\"292.5\">End</text><circle class=\"fc-n\" cx=\"50\" cy=\"274\" r=\"11\"/><text class=\"fc-nt\" x=\"50\" y=\"278.5\">5</text><polygon class=\"fc-b\" points=\"230,206 376,206 362,242 216,242\"/><text class=\"fc-x\" x=\"296\" y=\"228.5\">Say &quot;Wait&quot;</text><circle class=\"fc-n\" cx=\"218\" cy=\"208\" r=\"11\"/><text class=\"fc-nt\" x=\"218\" y=\"212.5\">6</text></svg></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y7-3-2-ext",
+   "embedContainerId": "y721-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 3.1 and the Flowcharts unit. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y721-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "2.1: Data Types and Variables",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Text-based Programming</p><h2 class=\"lesson-h2\">2.1: Data Types and Variables</h2><p>Year 7</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> write programs as text, and store values in them.</li><li><strong>The big question:</strong> why does a program need to know what kind of value it stores?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A game shows your score going up. Where does the computer keep that score while you play? Why must it be able to change?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It keeps it in its memory, under a name. Every time you score, the program changes the value it stores. Today we learn how.</p></div></details>"
+  },
+  {
+   "id": "python",
+   "label": "Programs Written as Text",
+   "content": "<h2 class=\"lesson-h2\">Programs Written as Text</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does this program show on the screen? Why are the words in quote marks?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Hello, then Bye on the next line. The quote marks show Python where the text starts and ends.</p></div></details><p class=\"lesson-lead\"><strong>Python</strong> is a programming language. We type each instruction as a line of text.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">print(&quot;Hello&quot;)</div><div class=\"lesson-code-line\">print(&quot;Bye&quot;)</div></div></div><div><ul class=\"lesson-facts\"><li><strong>print</strong> shows a message on the screen, like a Say box.</li><li>The text goes inside <strong>quote marks</strong>.</li><li>Python runs the lines in order, from the top.</li></ul></div></div>"
+  },
+  {
+   "id": "variable",
+   "label": "A Variable Stores a Value",
+   "content": "<h2 class=\"lesson-h2\">A Variable Stores a Value</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what is the difference between print(score) and print(\"score\")? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>print(score) shows 5, the value stored in score. print(\"score\") shows the word score, because quote marks mean the text itself.</p></div></details><p class=\"lesson-lead\">A <strong>variable</strong> is a named store in the computer's memory. It holds one value.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">score = 5</div><div class=\"lesson-code-line\">print(score)</div></div><div style=\"margin-top:10px;display:inline-block;padding:10px 26px;border:2px solid var(--brand);border-radius:10px;font:700 20px var(--font-mono,monospace)\"><span style=\"display:block;font:600 14px var(--font-body);color:var(--muted)\">score</span>5</div></div><div><ul class=\"lesson-facts\"><li><strong>=</strong> means store: put 5 in the variable called score.</li><li><strong>print(score)</strong> shows the value stored in score.</li><li>No quote marks round score: it is a name, not text.</li></ul></div></div>"
+  },
+  {
+   "id": "store-again",
+   "label": "Store a New Value",
+   "content": "<h2 class=\"lesson-h2\">Store a New Value</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does this program print? Why does it not print 5 and 8?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It prints 8. A variable holds one value at a time, so storing 8 replaces the 5. There is only one print, at the end.</p></div></details><p class=\"lesson-lead\">Predict first. Then the teacher shows the answer.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">score = 5</div><div class=\"lesson-code-line\">score = 8</div><div class=\"lesson-code-line\">print(score)</div></div></div><div><ul class=\"lesson-facts\"><li>A variable holds <strong>one value</strong> at a time.</li><li>Storing a new value <strong>replaces</strong> the old one.</li><li>That is why it is called a variable: its value can vary.</li></ul></div></div>"
+  },
+  {
+   "id": "change",
+   "label": "Change a Variable Using Its Own Value",
+   "content": "<h2 class=\"lesson-h2\">Change a Variable Using Its Own Value</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does this program print? Why is coins = coins + 5 not a maths mistake?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It prints 15. In Python = does not mean \"is the same as\". It means: work out the right side, then store the answer in the variable on the left.</p></div></details><p class=\"lesson-lead\">Predict first. Then the teacher shows the answer.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">coins = 10</div><div class=\"lesson-code-line\">coins = coins + 5</div><div class=\"lesson-code-line\">print(coins)</div></div></div><div><ul class=\"lesson-facts\"><li>Python works out the <strong>right side first</strong>: coins + 5.</li><li>Then it <strong>stores</strong> the answer back in coins.</li><li>This is how a game adds to a score.</li></ul></div></div>"
+  },
+  {
+   "id": "compare-order",
+   "label": "Compare: Change, Then Print",
+   "type": "multiple-choice",
+   "containerId": "y721-compare-order",
+   "content": "<h2 class=\"lesson-h2\">Compare: Change, Then Print</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both programs have the same three lines. How can you tell what each one prints?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Talk in pairs. Follow each program one line at a time, then choose your answer.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program A</p><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">score = 5</div><div class=\"lesson-code-line\">score = score + 3</div><div class=\"lesson-code-line\">print(score)</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program B</p><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">score = 5</div><div class=\"lesson-code-line\">print(score)</div><div class=\"lesson-code-line\">score = score + 3</div></div></div></div><div id=\"y721-compare-order\"></div>",
+   "items": [
+    {
+     "prompt": "What does each program print, and why?",
+     "options": [
+      "A prints 8 and B prints 5: B prints before the change",
+      "Both print 8: both programs have the same lines",
+      "A prints 5 and B prints 8: the last line runs first",
+      "Both print 5: score = 5 is the first line in both"
+     ],
+     "correct": 0,
+     "explain": "Lines run in order. A changes score to 8, then prints. B prints while score is still 5, and changes it after."
+    }
+   ]
+  },
+  {
+   "id": "vars-check",
+   "label": "Your Turn: What Does It Print?",
+   "type": "short-answer-validation",
+   "validatorId": "y721-vars-check",
+   "validatorKey": "y721_vars_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: What Does It Print?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we follow a program one line at a time, from the top?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Python runs the lines in order. Each line uses the values the lines above it stored.</p></div></details><p class=\"lesson-lead\">Follow the program one line at a time.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">lives = 3</div><div class=\"lesson-code-line\">lives = lives - 1</div><div class=\"lesson-code-line\">points = 10</div><div class=\"lesson-code-line\">points = points + lives</div><div class=\"lesson-code-line\">print(lives)</div><div class=\"lesson-code-line\">print(points)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y721-vars-check-a\">(a) What does the first print show? [1]</label><input id=\"y721-vars-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"vars-check-a\" aria-label=\"Your Turn: What Does It Print? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y721-vars-check-b\">(b) What does the second print show? [1]</label><input id=\"y721-vars-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"vars-check-b\" aria-label=\"Your Turn: What Does It Print? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y721-vars-check-c\">(c) Line 2 is changed to lives = 5. What does the second print show now? [1]</label><input id=\"y721-vars-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"vars-check-c\" aria-label=\"Your Turn: What Does It Print? part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y721-vars-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y721-vars-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Predict, Then Run",
+   "type": "embedded-app",
+   "appId": "python-lab",
+   "embedContainerId": "y721-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Predict, Then Run</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict before you run the program?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A prediction shows what you really think each line does. When it is wrong, you find out what to learn.</p></div></details><p class=\"lesson-lead\">Type what each program prints. Then run it in Python. A round with a mistake does not count.</p><div id=\"y721-activity-1\"></div>",
+   "embedQuery": "activity=vars"
+  },
+  {
+   "id": "types",
+   "label": "Three Data Types",
+   "content": "<h2 class=\"lesson-h2\">Three Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is \"12\" a String, but 12 an Integer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The quote marks. Inside quote marks Python stores the characters as text, even when they are digits.</p></div></details><p class=\"lesson-lead\">A <strong>data type</strong> is the kind of value a variable stores.</p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\">Data type</th><th style=\"padding:6px 10px;text-align:left\">In Python</th><th style=\"padding:6px 10px;text-align:left\">It stores</th><th style=\"padding:6px 10px;text-align:left\">Examples</th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\"><strong>Integer</strong></td><td style=\"padding:6px 10px;text-align:left\">int</td><td style=\"padding:6px 10px;text-align:left\">a whole number</td><td style=\"padding:6px 10px;text-align:left\">12 &nbsp; -3 &nbsp; 0</td></tr><tr><td style=\"padding:6px 10px;text-align:left\"><strong>Real</strong></td><td style=\"padding:6px 10px;text-align:left\">float</td><td style=\"padding:6px 10px;text-align:left\">a number with a decimal point</td><td style=\"padding:6px 10px;text-align:left\">2.5 &nbsp; -0.75 &nbsp; 4.0</td></tr><tr><td style=\"padding:6px 10px;text-align:left\"><strong>String</strong></td><td style=\"padding:6px 10px;text-align:left\">str</td><td style=\"padding:6px 10px;text-align:left\">text, in quote marks</td><td style=\"padding:6px 10px;text-align:left\">\"Mia\" &nbsp; \"12\"</td></tr></tbody></table><ul class=\"lesson-facts\"><li><strong>/</strong> always gives a Real: 8 / 2 is 4.0.</li></ul>"
+  },
+  {
+   "id": "types-check",
+   "label": "Your Turn: Which Data Type?",
+   "type": "short-answer-validation",
+   "validatorId": "y721-types-check",
+   "validatorKey": "y721_types_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Which Data Type?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Python need to know the kind of value it stores?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The kind of value decides what Python can do with it: numbers can be added, text can be joined.</p></div></details><p class=\"lesson-lead\">Type <strong>Integer</strong>, <strong>Real</strong> or <strong>String</strong> for the value each line stores.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y721-types-check-a\">(a) <code>age = 12</code> [1]</label><input id=\"y721-types-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-check-a\" aria-label=\"Your Turn: Which Data Type? part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y721-types-check-b\">(b) <code>price = 2.50</code> [1]</label><input id=\"y721-types-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-check-b\" aria-label=\"Your Turn: Which Data Type? part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y721-types-check-c\">(c) <code>phone = &quot;0812345678&quot;</code> [1]</label><input id=\"y721-types-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-check-c\" aria-label=\"Your Turn: Which Data Type? part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y721-types-check-d\">(d) <code>half = 9 / 2</code> [1]</label><input id=\"y721-types-check-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"types-check-d\" aria-label=\"Your Turn: Which Data Type? part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y721-types-check-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y721-types-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "compare-plus",
+   "label": "Compare: 5 + 5 or \"5\" + \"5\"?",
+   "type": "multiple-choice",
+   "containerId": "y721-compare-plus",
+   "content": "<h2 class=\"lesson-h2\">Compare: 5 + 5 or \"5\" + \"5\"?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both programs use the same + sign. How can they print different things?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Talk in pairs about what is different between the two lines. Then choose your answer.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program A</p><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">print(5 + 5)</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">Program B</p><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">print(&quot;5&quot; + &quot;5&quot;)</div></div></div></div><div id=\"y721-compare-plus\"></div>",
+   "items": [
+    {
+     "prompt": "What does each program print, and why?",
+     "options": [
+      "A prints 10 and B prints 55: B joins two Strings",
+      "A prints 10 and B prints 10: + always adds numbers",
+      "A prints 55 and B prints 10: quote marks add numbers",
+      "A prints 10 and B stops: Strings cannot use +"
+     ],
+     "correct": 0,
+     "explain": "In A, 5 and 5 are Integers, so + adds them: 10. In B, \"5\" and \"5\" are Strings, so + joins them: 55."
+    }
+   ]
+  },
+  {
+   "id": "why-types",
+   "label": "Why the Data Type Matters",
+   "content": "<h2 class=\"lesson-h2\">Why the Data Type Matters</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: is a score in a game an Integer, a Real or a String? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>An Integer. It is a whole number, and the game adds to it.</p></div></details><p class=\"lesson-lead\">Choose the data type from what the value is and what the program does with it.</p><ul class=\"lesson-facts\"><li>The data type decides what <strong>+</strong> does: Integers add, Strings join.</li><li>A <strong>Real</strong> keeps the part after the decimal point: a price of 2.5 stays 2.5.</li><li>A phone number is a <strong>String</strong>: it starts with 0, and we never add phone numbers.</li><li>A name is always a <strong>String</strong>.</li></ul>"
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Which Data Type?",
+   "type": "embedded-app",
+   "appId": "python-lab",
+   "embedContainerId": "y721-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Which Data Type?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What do you look for first to find a data type?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Quote marks first: they make a String. Then a decimal point or /: they make a Real. A whole number is an Integer.</p></div></details><p class=\"lesson-lead\">Pick the data type first. Then Python shows the type it really is. A round with a mistake does not count.</p><div id=\"y721-activity-2\"></div>",
+   "embedQuery": "activity=types"
+  },
+  {
+   "id": "explain",
+   "label": "Explain: Choose the Data Type",
+   "type": "self-marked-response",
+   "containerId": "y721-explain",
+   "content": "<h2 class=\"lesson-h2\">Explain: Choose the Data Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two connected points: what is wrong now, and what to use instead, joined with \"so\" or \"because\".</p></div></details><p class=\"lesson-lead\">A program stores a pupil's height of 1.52 metres as <code>height = 1</code>.</p><div id=\"y721-explain\"></div>",
+   "items": [
+    {
+     "id": "height-type",
+     "prompt": "Explain why this data type is wrong for the height, and say which data type to use. [2]",
+     "marks": 2,
+     "scheme": [
+      "1 is an Integer / a whole number, so the part after the decimal point (.52) is lost",
+      "Use a Real (float), because a height has a decimal point / 1.52"
+     ],
+     "guidance": "Award 1 mark for each point. Accept float for Real and int for Integer. Do not accept \"it is a number\" alone for either mark.",
+     "modelAnswer": "height = 1 is an Integer, so the .52 is lost (1 mark). Use a Real (float), because 1.52 has a decimal point (1 mark)."
+    }
+   ]
+  },
+  {
+   "id": "activity-3",
+   "label": "Activity 3: Write the Program",
+   "type": "embedded-app",
+   "appId": "python-lab",
+   "embedContainerId": "y721-activity-3",
+   "content": "<h2 class=\"lesson-h2\">Activity 3: Write the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Check test your program, not just look at what it prints?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program can print the right thing by luck. Check also looks at the variables and their data types.</p></div></details><p class=\"lesson-lead\">Type real Python. Run it as often as you like. Check tests it: three checks for each task.</p><div id=\"y721-activity-3\"></div>",
+   "embedQuery": "activity=write"
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Variables and Data Types",
+   "type": "short-answer-validation",
+   "validatorId": "y721-practice",
+   "validatorKey": "y721_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Variables and Data Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why write down each variable's value as you go?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A later line may use or change it. Writing it down means you never lose track.</p></div></details><p class=\"lesson-lead\">Use the program for (a) to (c).</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">name = &quot;Ploy&quot;</div><div class=\"lesson-code-line\">age = 12</div><div class=\"lesson-code-line\">age = age + 1</div><div class=\"lesson-code-line\">half = age / 2</div><div class=\"lesson-code-line\">print(age)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y721-practice-a\">(a) What does the program print? [1]</label><input id=\"y721-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Variables and Data Types part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y721-practice-b\">(b) What data type is half? [1]</label><input id=\"y721-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Variables and Data Types part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y721-practice-c\">(c) What data type is name? [1]</label><input id=\"y721-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Variables and Data Types part c\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y721-practice-d\">(d) New program: <code>print(\"age\" + \"1\")</code>. What does it print? [1]</label><input id=\"y721-practice-d\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-d\" aria-label=\"Practice: Variables and Data Types part d\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y721-practice-check\">Check answers</button><strong>Total: 4 marks</strong></div><div id=\"y721-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Data Types and Variables",
+   "type": "embedded-app",
+   "appId": "drill-y7-2-1-variables",
+   "embedContainerId": "y721-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Data Types and Variables</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can do it with any values, you really understand it.</p></div></details><p class=\"lesson-lead\">Variables, data types and what + does. Your progress is saved.</p><div id=\"y721-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y721_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*(say\\s*:?\\s*)?[\"'\\u201c]?\\s*nat\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find the task in the Task column. Read across to Who."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*((task\\s*)?(4|four)(\\s*[:.,]?\\s*test(ing)?\\s+(the\\s+)?game)?|test(ing)?\\s+(the\\s+)?game)\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look down the Needs column. Which task needs task 3?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*(say\\s*:?\\s*)?[\"'\\u201c]?\\s*(on\\s+)?tues(day)?\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find the task. Read across to the Deadline column."
+   }
+  ],
+  "y721_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*(say\\s*:?\\s*)?[\"'\\u201c]?\\s*pass\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 64 bigger than 50? Then follow that arrow."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*(say\\s*:?\\s*)?[\"'\\u201c]?\\s*try\\s+again\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 50 bigger than 50? Then follow that arrow."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(box\\s*)?5\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Is 30 bigger than 50? Follow that arrow and read the number on its box."
+   }
+  ],
+  "y721_vars_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2\\s*$",
+     "flags": "i"
+    },
+    "feedback": "lives starts at 3. The next line changes it. What does it hold now?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*12\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 4 adds lives to points. Use the value lives holds at that line."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*15\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Follow it again from the top with the new line."
+   }
+  ],
+  "y721_types_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look for quote marks first. Then look for a decimal point or a /."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look for quote marks first. Then look for a decimal point or a /."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look for quote marks first. Then look for a decimal point or a /."
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look for quote marks first. Then look for a decimal point or a /."
+   }
+  ],
+  "y721_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*13\\s*$",
+     "flags": "i"
+    },
+    "feedback": "age starts at 12. Follow line 3."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at the sign line 4 uses to work it out."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look at line 1. What is round the value?"
+   },
+   {
+    "suffix": "d",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*age1\\s*[\"'\\u201d]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Both values are in quote marks. What does + do with them?"
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

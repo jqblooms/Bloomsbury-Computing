@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python Lab</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="pl-css" href="lab.css">
+</head>
+<body>
+<main>
+  <section class="panel" id="activity" aria-live="polite"></section>
+</main>
+<script>
+// Python Lab (Year 7, 2.1 Data Types and Variables, 2.2 Input and Output). Real Python (Skulpt) in the page.
+// ?activity= picks one task:
+//   vars     predict what a program with variables prints, then run it
+//   types    pick the data type (Integer, Real, String) a variable holds, then Python shows it
+//   write    write programs that store values with the right data types
+//   io       predict what a program with input() prints (part=1 text, part=2 numbers and errors), then run it
+//   fix      fix programs with an input or output mistake, checked on hidden inputs
+//   iowrite  write programs that ask, work it out and print, checked on hidden inputs
+// With no activity it lists them. ?embed=1 sits it on a lesson slide. Every file is loaded with the page's bcv.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = params.get('bcv') || '1';
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('pl-css').href = 'lab.css?v=' + encodeURIComponent(v);
+  ['../assets/js/skulpt.min.js', '../assets/js/skulpt-stdlib.js', 'bank.js', 'common.js', 'types.js', 'predict.js', 'code.js', 'main.js'].forEach(function (file) {
+    var s = document.createElement('script');
+    s.src = file + '?v=' + encodeURIComponent(v);
+    s.async = false;
+    document.body.appendChild(s);
+  });
+})();
+</script>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+</body>
+</html>

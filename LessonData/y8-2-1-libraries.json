@@ -1,0 +1,370 @@
+{
+ "id": "y8-2-1-libraries",
+ "label": "2.1: Libraries and Library Functions",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Data a Model Needs (1 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y821-do-now",
+   "validatorKey": "y821_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Data a Model Needs (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a model give a wrong cost when it is given last year's price?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The rule only uses the numbers it is given. An old number in gives an old answer out.</p></div></details><p class=\"lesson-lead\">From 3.2: the data a model needs.</p><div class=\"lesson-do-now-columns\"><div><div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Cinema trip model</strong><br>Rule: cost = price of the bus + price of one ticket x students going.<br>Bus: 1500. One ticket: 120. Students going: 25.</div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y821-do-now-a\">(a) What cost does the model predict? [1]</label><input id=\"y821-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Data a Model Needs (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y821-do-now-b\">(b) Someone uses last year's ticket price, 100. What does the model predict now? [1]</label><input id=\"y821-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Data a Model Needs (1 of 2) part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response is-line\"><label for=\"y821-do-now-c\">(c) Does the model need the length of the film? Type yes or no. [1]</label><input id=\"y821-do-now-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-c\" aria-label=\"Do Now: Data a Model Needs (1 of 2) part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y821-do-now-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y821-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: running a model",
+    "steps": [
+     {
+      "text": "This is a different model with three questions like yours. Do the same steps with your model.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Bowling trip model</strong><br>Rule: cost = price of the lane + price of one game x players.<br>Price of the lane: 300<br>Price of one game: 80<br>Players: 6</div>"
+     },
+     {
+      "text": "Read the rule. It says what to work out first: the price of one game x players.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Bowling trip model</strong><br><span class=\"wt-hl\">Rule: cost = price of the lane + price of one game x players.</span><br>Price of the lane: 300<br>Price of one game: 80<br>Players: 6</div>"
+     },
+     {
+      "text": "80 x 6 = <strong>480</strong>.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Bowling trip model</strong><br>Rule: cost = price of the lane + price of one game x players.<br>Price of the lane: 300<br><span class=\"wt-hl\">Price of one game: 80</span><br>Players: 6</div><div class=\"wt-note\">80 x 6 = 480</div>"
+     },
+     {
+      "text": "Add the price of the lane: 300 + 480 = <strong>780</strong>.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Bowling trip model</strong><br>Rule: cost = price of the lane + price of one game x players.<br><span class=\"wt-hl\">Price of the lane: 300</span><br>Price of one game: 80<br>Players: 6</div><div class=\"wt-note\">300 + 480 = <span class=\"wt-hl\">780</span></div>"
+     },
+     {
+      "text": "Last year one game cost 70. Put 70 into the rule in place of 80: 300 + 70 x 6 = <strong>720</strong>.",
+      "visual": "<div class=\"wt-note\">300 + 70 x 6 = <span class=\"wt-hl\">720</span></div>"
+     },
+     {
+      "text": "Does the model use the colour of the balls? Look at the rule. The colour is never in it, so it can never change the cost. Ask the same about your question.",
+      "visual": "<div style=\"border:2px solid var(--brand);border-radius:10px;padding:8px 12px;background:var(--surface-2);font-size:16px;line-height:1.4\"><strong>Bowling trip model</strong><br><span class=\"wt-hl\">Rule: cost = price of the lane + price of one game x players.</span><br>Price of the lane: 300<br>Price of one game: 80<br>Players: 6</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: An Array in a Loop (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y821-do-now-2",
+   "validatorKey": "y821_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: An Array in a Loop (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the IF line sit inside the loop?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The loop visits every value in the array. The IF checks each value as it is visited.</p></div></details><p class=\"lesson-lead\">From Unit 1: arrays and loops.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px\"><strong>Points</strong> already holds:</p><table class=\"donow-table\" style=\"margin:0 0 8px\"><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Index</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace);text-align:left\">Value</th><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">7</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">3</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">9</td><td style=\"padding:5px 12px;text-align:center;font:700 17px var(--font-mono, monospace)\">5</td></tr></table><div class=\"lesson-code\" style=\"line-height:1.2;padding-top:8px;padding-bottom:8px\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 0</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Points[Index] &gt; 5 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Points[Index]</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">OUTPUT Total</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y821-do-now-2-a\">(a) What does the program output? [1]</label><input id=\"y821-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: An Array in a Loop (2 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y821-do-now-2-b\">(b) How many times does the line Total <- Total + Points[Index] run? [1]</label><input id=\"y821-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: An Array in a Loop (2 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y821-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y821-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: an array in a loop",
+    "steps": [
+     {
+      "text": "This is a different program. Marks holds 6, 3, 9, 5. Do the same steps with your program.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 0</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Marks[Index] &gt; 4 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Marks[Index]</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">OUTPUT Total</div></div>"
+     },
+     {
+      "text": "Total starts at <strong>0</strong>. The loop then visits each value in Marks, from the first to the last.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line wt-hl\">Total &lt;- 0</div><div class=\"lesson-code-line wt-hl\">FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Marks[Index] &gt; 4 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Marks[Index]</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">OUTPUT Total</div></div><div class=\"wt-note\">Total = 0</div>"
+     },
+     {
+      "text": "The first value is 6. Is 6 more than 4? Yes, so the next line adds it. Total = <strong>6</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 0</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Marks[Index] &gt; 4 THEN</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Marks[Index]</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">OUTPUT Total</div></div><div class=\"wt-note\">Total = 6, added once</div>"
+     },
+     {
+      "text": "The second value is 3. Is 3 more than 4? No, so the adding line is skipped. Total stays 6.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 0</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Marks[Index] &gt; 4 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Marks[Index]</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">OUTPUT Total</div></div><div class=\"wt-note\">Total = 6</div>"
+     },
+     {
+      "text": "The third value is 9. 9 is more than 4, so it is added. Total = 6 + 9 = <strong>15</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 0</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Marks[Index] &gt; 4 THEN</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Marks[Index]</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">OUTPUT Total</div></div><div class=\"wt-note\">Total = 15, added twice</div>"
+     },
+     {
+      "text": "The last value is 5. 5 is more than 4, so it is added. Total = 15 + 5 = <strong>20</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 0</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;IF Marks[Index] &gt; 4 THEN</div><div class=\"lesson-code-line wt-hl\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Marks[Index]</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line\">OUTPUT Total</div></div><div class=\"wt-note\">Total = 20, added three times</div>"
+     },
+     {
+      "text": "The loop ends. The output is <strong>20</strong>, and the adding line ran <strong>3 times</strong>: once for each value more than 4. Now do yours.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 0</div><div class=\"lesson-code-line\">FOR Index &lt;- 1 TO 4</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;IF Marks[Index] &gt; 4 THEN</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total &lt;- Total + Marks[Index]</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">NEXT Index</div><div class=\"lesson-code-line wt-hl\">OUTPUT Total</div></div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y8-revision-2-ext",
+   "embedContainerId": "y821-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these Unit 1 questions on programs, loops and arrays. Stuck? Switch on <strong>I need help</strong> to see a similar question worked through.</p><div id=\"y821-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "2.1: Libraries and Library Functions",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Programming, Logic and Testing</p><h2 class=\"lesson-h2\">2.1: Libraries and Library Functions</h2><p>Year 8</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> use code that someone has already written.</li><li><strong>The big question:</strong> why write code again when it is already written?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Programmers share code they have written. Why might that help other programmers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Other programmers do not have to write the same code again. They can spend their time on the new parts of their program.</p></div></details>"
+  },
+  {
+   "id": "compare-write",
+   "label": "Compare: Write It, or Use It?",
+   "content": "<h2 class=\"lesson-h2\">Compare: Write It, or Use It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict the output of each program. Why would a programmer choose B?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Both output <strong>2</strong>.</p><p><strong>Why B?</strong> It is one line, not four. MOD is already written and tested, so there is less to write and less that can go wrong.</p></div></details><p class=\"lesson-lead\">20 sweets go into bags of 6. How many sweets are left over?</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: write it yourself</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Left : INTEGER</div><div class=\"lesson-code-line\">Left &lt;- 20</div><div class=\"lesson-code-line\">WHILE Left &gt;= 6 DO</div><div class=\"lesson-code-line\">&nbsp;&nbsp;&nbsp;&nbsp;Left &lt;- Left - 6</div><div class=\"lesson-code-line\">ENDWHILE</div><div class=\"lesson-code-line\">OUTPUT Left</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: use MOD</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Left : INTEGER</div><div class=\"lesson-code-line\">Left &lt;- MOD(20, 6)</div><div class=\"lesson-code-line\">OUTPUT Left</div></div></div></div><ul class=\"lesson-facts\"><li><strong>MOD</strong> gives the remainder: what is left over after dividing.</li><li>A takes 6 away again and again. Someone already wrote that for B.</li></ul>"
+  },
+  {
+   "id": "library",
+   "label": "What Is a Library?",
+   "content": "<h2 class=\"lesson-h2\">What Is a Library?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: why is code from a library less likely to have errors than code you write today?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Many programmers have already used and tested it. Errors in it have been found and fixed.</p></div></details><p class=\"lesson-lead\">A <strong>library</strong> is a collection of code that is already written and tested, ready to use in your programs.</p><ul class=\"lesson-facts\"><li>Each piece of code in a library has a name. It is a <strong>library function</strong>. MOD is one.</li><li>It saves time: you do not write it again.</li><li>It has fewer errors: it is already tested.</li><li>You only need to know what goes in and what comes out, not the lines inside.</li></ul>"
+  },
+  {
+   "id": "purpose-check",
+   "label": "Your Turn: Why Use a Library?",
+   "type": "multiple-choice",
+   "containerId": "y821-purpose-check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Why Use a Library?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it risky to copy the same long piece of code into ten programs?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A mistake in it is then in ten places, and each one must be found and fixed.</p></div></details><div id=\"y821-purpose-check\"></div>",
+   "items": [
+    {
+     "prompt": "Why do programmers use library functions?",
+     "options": [
+      "They are already written and tested",
+      "They make every program run faster",
+      "Programs that use them need no testing",
+      "They let you leave out DECLARE lines"
+     ],
+     "correct": 0,
+     "explain": "Someone has already written and tested them, so you save time and avoid errors. Your own program still needs testing."
+    },
+    {
+     "prompt": "Mai uses MOD in 10 programs. What does she write each time?",
+     "options": [
+      "The lines inside MOD, again",
+      "One line that uses MOD",
+      "A new library for each program",
+      "Nothing: MOD runs by itself"
+     ],
+     "correct": 1,
+     "explain": "The lines inside MOD are already in the library. Each program only needs the line that uses it."
+    }
+   ]
+  },
+  {
+   "id": "calling",
+   "label": "Calling a Library Function",
+   "content": "<h2 class=\"lesson-h2\">Calling a Library Function</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does DIV(20, 6) give? Why is it not 3.33?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>3</strong>.</p><p><strong>Why?</strong> DIV only counts how many whole times 6 goes into 20. It throws the remainder away.</p></div></details><p class=\"lesson-lead\">To <strong>call</strong> a library function, write its name, then the values it needs in brackets.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">Left &lt;- MOD(20, 6)</div><div class=\"lesson-code-line\">Bags &lt;- DIV(20, 6)</div></div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Call</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">What it gives back</th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">MOD(20, 6)</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">2: the remainder</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">DIV(20, 6)</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">?: the whole number of times</td></tr></table></div><div><ul class=\"lesson-facts\"><li>The values in the brackets go in.</li><li>The function gives back one value.</li><li>Store it with &lt;- or show it with OUTPUT.</li><li>DECLARE, INPUT and OUTPUT are not library functions. They are part of the language.</li></ul></div></div>"
+  },
+  {
+   "id": "more-functions",
+   "label": "More Library Functions",
+   "content": "<h2 class=\"lesson-h2\">More Library Functions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does LENGTH(\"Hat Yai\") give? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>7</strong>.</p><p><strong>Why?</strong> LENGTH counts every character, and the space is a character too.</p></div></details><p class=\"lesson-lead\">Each library function does one job. Read its name and its brackets.</p><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Call</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">What goes in</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">What it gives back</th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">ROUND(3.456, 1)</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">a number, then how many decimal places</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">3.5: the number rounded</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">LENGTH(\"Hat Yai\")</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">some text</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">?: how many characters</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">UCASE(\"cat\")</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">some text</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">\"CAT\": the text in capital letters</td></tr></table>"
+  },
+  {
+   "id": "spot-check",
+   "label": "Your Turn: Find the Library Functions",
+   "type": "short-answer-validation",
+   "validatorId": "y821-spot-check",
+   "validatorKey": "y821_spot_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Find the Library Functions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a library function always have brackets after its name?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The brackets hold the values it works on. They show that the line uses a library function.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Name : STRING</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Minutes : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;INPUT Name</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;INPUT Minutes</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;OUTPUT UCASE(Name)</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;OUTPUT Minutes * 2</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;OUTPUT MOD(Minutes, 60)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y821-spot-check-a\">(a) How many lines call a library function? [1]</label><input id=\"y821-spot-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"spot-check-a\" aria-label=\"Your Turn: Find the Library Functions part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y821-spot-check-b\">(b) Sam is typed in for Name. What does line 5 output? [1]</label><input id=\"y821-spot-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"spot-check-b\" aria-label=\"Your Turn: Find the Library Functions part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y821-spot-check-c\">(c) 135 is typed in for Minutes. What does line 7 output? [1]</label><input id=\"y821-spot-check-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"spot-check-c\" aria-label=\"Your Turn: Find the Library Functions part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y821-spot-check-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y821-spot-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Predict the Output",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-1-predict",
+   "embedContainerId": "y821-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Predict the Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict the output before you check it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A prediction shows what you think the function does. A wrong prediction shows you what to learn.</p></div></details><p class=\"lesson-lead\">Predict what each program outputs, then type it. The numbers change every time.</p><div id=\"y821-activity-1\"></div>"
+  },
+  {
+   "id": "compare-round",
+   "label": "Compare: With and Without ROUND",
+   "content": "<h2 class=\"lesson-h2\">Compare: With and Without ROUND</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict what each program outputs. Why would a shop use B?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>A outputs <strong>6.666666666666667</strong>. B outputs <strong>6.7</strong>.</p><p><strong>Why B?</strong> People read 6.7 quickly. Nobody pays 6.666666666666667 baht.</p></div></details><p class=\"lesson-lead\">20 points shared by 3 players.</p><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A: no ROUND</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 20</div><div class=\"lesson-code-line\">OUTPUT Total / 3</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B: ROUND to 1 decimal place</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">Total &lt;- 20</div><div class=\"lesson-code-line\">OUTPUT ROUND(Total / 3, 1)</div></div></div></div><ul class=\"lesson-facts\"><li>Without ROUND, the computer shows every digit it has.</li><li>ROUND keeps only the decimal places you ask for.</li></ul>"
+  },
+  {
+   "id": "round-check",
+   "label": "Your Turn: Rounding",
+   "type": "short-answer-validation",
+   "validatorId": "y821-round-check",
+   "validatorKey": "y821_round_check",
+   "content": "<h2 class=\"lesson-h2\">Your Turn: Rounding</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does ROUND need two values in its brackets?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The first value is the number to round. The second says how many decimal places to keep.</p></div></details><p class=\"lesson-lead\">47 / 6 = 7.8333...</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Total : INTEGER</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;Total &lt;- 47</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;OUTPUT ROUND(Total / 6, 1)</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;OUTPUT ROUND(Total / 6, 0)</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y821-round-check-a\">(a) What does line 3 output? [1]</label><input id=\"y821-round-check-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"round-check-a\" aria-label=\"Your Turn: Rounding part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y821-round-check-b\">(b) What does line 4 output? [1]</label><input id=\"y821-round-check-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"round-check-b\" aria-label=\"Your Turn: Rounding part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y821-round-check-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y821-round-check-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "random",
+   "label": "Random Numbers",
+   "type": "multiple-choice",
+   "containerId": "y821-random",
+   "content": "<h2 class=\"lesson-h2\">Random Numbers</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do games need a library function for random numbers?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A game must be different each time. Good random numbers are hard to write, so programmers use one already written.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A dice game needs a whole number from 1 to 6.</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">Dice &lt;- ROUND(RANDOM() * 5, 0) + 1</div></div></div><div><table class=\"donow-table\" style=\"width:100%\"><tr><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Part</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Smallest</th><th style=\"padding:5px 10px;text-align:left;font-size:16px\">Largest</th></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">RANDOM()</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">0</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">1</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">RANDOM() * 5</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">0</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">5</td></tr><tr><td style=\"padding:5px 10px;text-align:left;font-size:16px\">ROUND(..., 0) + 1</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">1</td><td style=\"padding:5px 10px;text-align:left;font-size:16px\">6, whole</td></tr></table></div></div><div id=\"y821-random\"></div>",
+   "items": [
+    {
+     "prompt": "A game needs a whole number from 1 to 10. Which line gives it?",
+     "options": [
+      "ROUND(RANDOM() * 9, 0) + 1",
+      "ROUND(RANDOM() * 10, 0)",
+      "ROUND(RANDOM() * 10, 0) + 1",
+      "RANDOM() * 10 + 1"
+     ],
+     "correct": 0,
+     "explain": "RANDOM() * 9 gives 0 to 9. ROUND makes it a whole number. + 1 gives 1 to 10."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Use a Library Function",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-1-code",
+   "embedContainerId": "y821-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Use a Library Function</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the drill type in new values every time you run it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program that only works for one value is not finished. New values show that it works for any value.</p></div></details><p class=\"lesson-lead\">Write each program. It runs with new values every time, so it must work for any value.</p><div id=\"y821-activity-2\"></div>"
+  },
+  {
+   "id": "why-library",
+   "label": "Explain: Why Use a Library Function?",
+   "type": "self-marked-response",
+   "containerId": "y821-why-library",
+   "content": "<h2 class=\"lesson-h2\">Explain: Why Use a Library Function?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">What makes an explanation worth 2 marks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Two different reasons. Each one says what it means for the programmer.</p></div></details><div id=\"y821-why-library\"></div>",
+   "items": [
+    {
+     "id": "why-library",
+     "prompt": "Ali writes his own four lines to find a remainder. Kim calls MOD from the library. Explain two reasons why Kim's way is better.",
+     "marks": 2,
+     "modelAnswer": "MOD is already written, so Kim writes less code and saves time (1). MOD is already tested, so it is less likely to have errors (1).",
+     "scheme": [
+      "MOD is already written, so less code to write / saves time / quicker",
+      "MOD is already tested / used by many programmers, so fewer errors / more reliable"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "practice",
+   "label": "Practice: Two Library Functions",
+   "type": "short-answer-validation",
+   "validatorId": "y821-practice",
+   "validatorKey": "y821_practice",
+   "content": "<h2 class=\"lesson-h2\">Practice: Two Library Functions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is LENGTH used before MOD in this program?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>MOD needs a number. LENGTH turns the word into a number first.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">1&nbsp;&nbsp;DECLARE Word : STRING</div><div class=\"lesson-code-line\">2&nbsp;&nbsp;DECLARE Size : INTEGER</div><div class=\"lesson-code-line\">3&nbsp;&nbsp;INPUT Word</div><div class=\"lesson-code-line\">4&nbsp;&nbsp;Size &lt;- LENGTH(Word)</div><div class=\"lesson-code-line\">5&nbsp;&nbsp;IF MOD(Size, 2) = 0 THEN</div><div class=\"lesson-code-line\">6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Even\"</div><div class=\"lesson-code-line\">7&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Odd\"</div><div class=\"lesson-code-line\">9&nbsp;&nbsp;ENDIF</div></div></div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y821-practice-a\">(a) How many different library functions does this program call? [1]</label><input id=\"y821-practice-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-a\" aria-label=\"Practice: Two Library Functions part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y821-practice-b\">(b) Bangkok is typed in. What is output? [1]</label><input id=\"y821-practice-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-b\" aria-label=\"Practice: Two Library Functions part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y821-practice-c\">(c) Phuket is typed in. What is output? [1]</label><input id=\"y821-practice-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"practice-c\" aria-label=\"Practice: Two Library Functions part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y821-practice-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y821-practice-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Libraries and Library Functions",
+   "type": "embedded-app",
+   "appId": "drill-y8-2-1-libraries",
+   "embedContainerId": "y821-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Libraries and Library Functions</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new numbers every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If you can predict the output for any numbers, you really know what each function does.</p></div></details><p class=\"lesson-lead\">What a library is, why programmers use one, and reading and using library functions. Your progress is saved.</p><div id=\"y821-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y821_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4500(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Work out the price of one ticket x students going first. Then add the price of the bus."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4000(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Put the new ticket price into the rule, then work it out again."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(no|nope|not\\s+needed|it\\s+does\\s*n[o']?t(\\s+need\\s+it)?|it\\s+is\\s*n[o']?t\\s+needed)\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Read the rule. Is the length of the film anywhere in it?"
+   }
+  ],
+  "y821_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*16(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Go through Points one value at a time. Add a value only when it is more than 5."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the values that are more than 5. Is 5 more than 5?"
+   }
+  ],
+  "y821_spot_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Look for a name with brackets after it. INPUT and OUTPUT are part of the language."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*SAM\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": ""
+    },
+    "feedback": "UCASE gives the text back in capital letters. Check every letter."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*15(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "MOD gives the remainder. How many whole times does 60 go into 135? What is left?"
+   }
+  ],
+  "y821_round_check": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\.80*\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Keep one decimal place. Look at the next digit: 5 or more rounds up."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*8(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Keep no decimal places. Look at the first digit after the point."
+   }
+  ],
+  "y821_practice": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2(\\.0+)?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Find each name with brackets after it. IF and OUTPUT are part of the language."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*odd\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the characters first. Then find the remainder after dividing by 2."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"'\\u201c]?\\s*even\\s*[\"'\\u201d]?\\s*[.!]?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count the characters first. Then find the remainder after dividing by 2."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

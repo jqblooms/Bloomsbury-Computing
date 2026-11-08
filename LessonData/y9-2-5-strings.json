@@ -1,0 +1,349 @@
+{
+ "id": "y9-2-5-strings",
+ "label": "2.5: String Manipulation",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Question 1",
+   "type": "short-answer-validation",
+   "validatorId": "y9l25-do-now",
+   "validatorKey": "y9l25_do_now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Binary Search</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the list be in order for a binary search?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One check of the middle then shows which side the target is on, so the other side can be thrown away.</p></div></details><p class=\"lesson-lead\">From 2.4. The target is 71. The list is in order.</p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);text-align:left;font-size:13px\">Index</th><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">1</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">2</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">3</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">4</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">5</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">6</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">7</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">8</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">9</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">10</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">11</td></tr><tr><th style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);text-align:left;font-size:13px\">Value</th><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">6</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">11</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">19</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">24</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">32</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">40</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">47</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">55</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">63</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">71</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">88</td></tr></table><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l25-do-now-a\">(a) How many comparisons does the binary search make? [1]</label><input id=\"y9l25-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Binary Search part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l25-do-now-b\">(b) How many comparisons does a linear search make? [1]</label><input id=\"y9l25-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Binary Search part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l25-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9l25-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: binary search, then linear search",
+    "steps": [
+     {
+      "text": "A similar list of 9 items, in order. The target is <strong>58</strong>. Low = 1, High = 9.",
+      "visual": "<table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">7</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">8</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">9</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">14</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">20</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">27</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">35</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">42</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">58</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">66</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">80</td></tr></table>"
+     },
+     {
+      "text": "Middle = (1 + 9) / 2 = <strong>5</strong>. Index 5 holds 35. That is comparison 1.",
+      "visual": "<table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">5</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">7</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">8</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">9</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">14</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">20</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">27</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">35</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">42</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">58</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">66</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">80</td></tr></table><div class=\"wt-note\">Comparison 1: 35</div>"
+     },
+     {
+      "text": "58 is bigger than 35, so keep the right part: Low = 5 + 1. Now Low = 6 and High = 9.",
+      "visual": "<table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">6</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">7</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">8</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">9</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">14</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">20</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">27</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">35</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">42</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">58</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">66</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">80</td></tr></table><div class=\"wt-note\">Left: index 6 to 9</div>"
+     },
+     {
+      "text": "Middle = (6 + 9) / 2 = 7.5, rounded down: <strong>7</strong>. Index 7 holds 58. Found, with comparison 2.",
+      "visual": "<table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">5</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">7</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">8</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">9</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">14</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">20</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">27</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">35</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">42</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">58</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">66</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">80</td></tr></table><div class=\"wt-note\">Binary search: 2 comparisons</div>"
+     },
+     {
+      "text": "A linear search checks index 1, 2, 3 and on until it reaches 58 at index 7: <strong>7</strong> comparisons. Now do your list the same way.",
+      "visual": "<table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">5</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">6</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">7</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">8</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">9</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">4</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">14</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">20</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">27</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">35</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">42</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">58</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">66</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">80</td></tr></table><div class=\"wt-note\">Linear search: 7 comparisons</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Question 2",
+   "type": "short-answer-validation",
+   "validatorId": "y9l25-do-now-2",
+   "validatorKey": "y9l25_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Count the Matches</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Count start at 0 before the loop, not inside it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So it is set only once. Inside the loop it would go back to 0 on every pass.</p></div></details><p class=\"lesson-lead\">From 2.3 Arrays and 3.1. Names holds \"Ben\", \"Mai\", \"Ben\", \"Joy\", \"Ben\", \"Tom\".</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Names : ARRAY[1:6] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Count &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Index &larr; 1 TO 6</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Names[Index] = \"Ben\" THEN</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count &larr; Count + 1</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;OUTPUT Count</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l25-do-now-2-a\">(a) What does the program output? [1]</label><input id=\"y9l25-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Count the Matches part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l25-do-now-2-b\">(b) How many times does line 6 run? [1]</label><input id=\"y9l25-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Count the Matches part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l25-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9l25-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: count matching strings in a loop",
+    "steps": [
+     {
+      "text": "A similar program. Pets holds \"Cat\", \"Dog\", \"Cat\", \"Fish\". It counts the \"Cat\" values.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Pets : ARRAY[1:4] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Count &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Index &larr; 1 TO 4</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Pets[Index] = \"Cat\" THEN</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count &larr; Count + 1</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;OUTPUT Count</div></div><table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Cat\"</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Dog\"</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Cat\"</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">\"Fish\"</td></tr></table>"
+     },
+     {
+      "text": "Line 4 sets Count to 0, once, before the loop.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Pets : ARRAY[1:4] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line wt-hl\">04&nbsp;&nbsp;Count &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Index &larr; 1 TO 4</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Pets[Index] = \"Cat\" THEN</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count &larr; Count + 1</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;OUTPUT Count</div></div><div class=\"wt-note\">Count = 0</div>"
+     },
+     {
+      "text": "Pass 1: is Pets[1] = \"Cat\"? Yes, TRUE. Line 7 runs: Count = <strong>1</strong>.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Pets : ARRAY[1:4] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Count &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Index &larr; 1 TO 4</div><div class=\"lesson-code-line wt-hl\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Pets[Index] = \"Cat\" THEN</div><div class=\"lesson-code-line wt-hl\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count &larr; Count + 1</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;OUTPUT Count</div></div><table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Cat</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Dog</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Fish</td></tr></table><div class=\"wt-note\">Count = 1</div>"
+     },
+     {
+      "text": "Pass 2: \"Dog\" is not \"Cat\". FALSE. Count stays 1.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Pets : ARRAY[1:4] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Count &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Index &larr; 1 TO 4</div><div class=\"lesson-code-line wt-hl\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Pets[Index] = \"Cat\" THEN</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count &larr; Count + 1</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;OUTPUT Count</div></div><table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">4</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Dog</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Fish</td></tr></table><div class=\"wt-note\">Count = 1</div>"
+     },
+     {
+      "text": "The third pass: \"Cat\" again, TRUE: Count = <strong>2</strong>. The last pass: \"Fish\", FALSE.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Pets : ARRAY[1:4] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Count &larr; 0</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;FOR Index &larr; 1 TO 4</div><div class=\"lesson-code-line wt-hl\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Pets[Index] = \"Cat\" THEN</div><div class=\"lesson-code-line wt-hl\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count &larr; Count + 1</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line\">10&nbsp;&nbsp;OUTPUT Count</div></div><table class=\"donow-table\"><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Index</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">1</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\">2</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">3</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace);color:var(--muted)\" class=\"wt-hl\">4</td></tr><tr><th style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Value</th><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Cat</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\">Dog</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Cat</td><td style=\"padding:5px 9px;text-align:center;font:700 17px var(--font-mono, monospace)\" class=\"wt-hl\">Fish</td></tr></table><div class=\"wt-note\">Count = 2</div>"
+     },
+     {
+      "text": "The IF line ran once on every pass: Index went 1 TO 4, so it ran <strong>4</strong> times. Line 10 outputs Count. Now trace your program the same way.",
+      "visual": "<div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Pets : ARRAY[1:4] OF STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Index : INTEGER</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Count : INTEGER</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Count &larr; 0</div><div class=\"lesson-code-line wt-hl\">05&nbsp;&nbsp;FOR Index &larr; 1 TO 4</div><div class=\"lesson-code-line wt-hl\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF Pets[Index] = \"Cat\" THEN</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count &larr; Count + 1</div><div class=\"lesson-code-line\">08&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDIF</div><div class=\"lesson-code-line\">09&nbsp;&nbsp;NEXT Index</div><div class=\"lesson-code-line wt-hl\">10&nbsp;&nbsp;OUTPUT Count</div></div><div class=\"wt-note\">Output: 2</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-4-binary-search",
+   "embedContainerId": "y9l25-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions from 2.4 Binary Search. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y9l25-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "String Manipulation",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Algorithm Design and Text Programming</p><h2 class=\"lesson-h2\">String Manipulation</h2><p>Year 9, 2.5</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> count the characters in a string, and change it to capitals or small letters. Then use them to check what a user types.</li><li><strong>You already know:</strong> the STRING data type, IF and loops.</li><li><strong>Activities:</strong> String Lab: predict the output, then accept or reject inputs. Then write your own string code.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A website says \"Your username is too long.\" How can a program know that?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It counts the characters that were typed, then compares the count with the limit.</p></div></details>"
+  },
+  {
+   "id": "length",
+   "label": "Counting Characters: LENGTH",
+   "content": "<h2 class=\"lesson-h2\">Counting Characters: LENGTH</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does this program output? Why is it not 6?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It outputs <strong>7</strong>. H, a, t, the space, Y, a, i. The space is a character too.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Word : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;Word &larr; \"Hat Yai\"</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;OUTPUT LENGTH(Word)</div></div><p style=\"margin:0 0 4px\"><strong>Word</strong></p><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);text-align:left;font-size:13px\">Position</th><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">1</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">2</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">3</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">4</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">5</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">6</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">7</td></tr><tr><th style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);text-align:left;font-size:13px\">Character</th><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">H</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">a</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">t</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);background:var(--warn-soft)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">Y</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">a</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">i</td></tr></table></div><div><ul class=\"lesson-facts\"><li>A string is <strong>characters in order</strong>. Each one has a position, from 1.</li><li><strong>LENGTH(Word)</strong> gives the number of characters in Word.</li><li>Letters, digits, spaces and symbols all count.</li></ul></div></div>"
+  },
+  {
+   "id": "compare-space",
+   "label": "Compare: One Space",
+   "content": "<h2 class=\"lesson-h2\">Compare: One Space</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict what A and B output. Why are they different?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> outputs 7. <strong>B</strong> outputs 6.</p><p>A has a space between Room and 12. LENGTH counts it.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Room : STRING</div><div class=\"lesson-code-line\">Room &larr; \"Room 12\"</div><div class=\"lesson-code-line\">OUTPUT LENGTH(Room)</div></div><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);text-align:left;font-size:13px\">Position</th><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">1</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">2</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">3</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">4</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">5</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">6</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">7</td></tr><tr><th style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);text-align:left;font-size:13px\">Character</th><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">R</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">o</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">o</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">m</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);background:var(--warn-soft)\">&nbsp;</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">1</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">2</td></tr></table></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">DECLARE Room : STRING</div><div class=\"lesson-code-line\">Room &larr; \"Room12\"</div><div class=\"lesson-code-line\">OUTPUT LENGTH(Room)</div></div><table class=\"donow-table\" style=\"margin:0 0 4px\"><tr><th style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);text-align:left;font-size:13px\">Position</th><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">1</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">2</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">3</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">4</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">5</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);color:var(--muted);font-size:13px\">6</td></tr><tr><th style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace);text-align:left;font-size:13px\">Character</th><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">R</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">o</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">o</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">m</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">1</td><td style=\"padding:4px 8px;text-align:center;font:700 16px var(--font-mono, monospace)\">2</td></tr></table></div></div><ul class=\"lesson-facts\"><li>To a person they look the same. To the computer the space is one more character.</li></ul>"
+  },
+  {
+   "id": "check-length",
+   "label": "Check: Count the Characters",
+   "type": "short-answer-validation",
+   "validatorId": "y9l25-check-length",
+   "validatorKey": "y9l25_check_length",
+   "content": "<h2 class=\"lesson-h2\">Check: Count the Characters</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Test it: LENGTH(\"a b\"). Why is the answer 3, not 2?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The space between a and b is a character too, so there are three characters.</p></div></details><p class=\"lesson-lead\">Use the program for every part.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Word : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Food : STRING</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;DECLARE Code : STRING</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Word &larr; \"Computer\"</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;Food &larr; \"Ice cream\"</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;Code &larr; \"A-12\"</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l25-check-length-a\">(a) What does OUTPUT LENGTH(Word) output? [1]</label><input id=\"y9l25-check-length-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-length-a\" aria-label=\"Check: Count the Characters part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l25-check-length-b\">(b) What does OUTPUT LENGTH(Food) output? [1]</label><input id=\"y9l25-check-length-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-length-b\" aria-label=\"Check: Count the Characters part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l25-check-length-c\">(c) What does OUTPUT LENGTH(Code) output? [1]</label><input id=\"y9l25-check-length-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-length-c\" aria-label=\"Check: Count the Characters part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l25-check-length-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y9l25-check-length-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "case",
+   "label": "Capital Letters: UCASE and LCASE",
+   "content": "<h2 class=\"lesson-h2\">Capital Letters: UCASE and LCASE</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict both outputs. Why do the 7 and the space not change?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Line 3 outputs <strong>LAB 7B</strong>. Line 4 outputs <strong>lab 7b</strong>.</p><p>Only letters have a capital and a small form. Digits, spaces and symbols stay the same.</p></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Room : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;Room &larr; \"Lab 7b\"</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;OUTPUT UCASE(Room)</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;OUTPUT LCASE(Room)</div></div></div><div><ul class=\"lesson-facts\"><li><strong>Upper case</strong> means capital letters: A B C. <strong>Lower case</strong> means small letters: a b c.</li><li><strong>UCASE(Room)</strong> gives Room in upper case.</li><li><strong>LCASE(Room)</strong> gives Room in lower case.</li><li>Only the letters change.</li></ul></div></div>"
+  },
+  {
+   "id": "compare-store",
+   "label": "Compare: Show It or Store It",
+   "content": "<h2 class=\"lesson-h2\">Compare: Show It or Store It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict what line 4 outputs in A and in B. Why are they different?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> line 4 outputs <strong>Mai</strong>. <strong>B</strong> line 4 outputs <strong>MAI</strong>.</p><p>UCASE gives a new string. In A it is only output. In B it is stored back in Name, so Name changes.</p></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Name : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;Name &larr; \"Mai\"</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;OUTPUT UCASE(Name)</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;OUTPUT Name</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Name : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;Name &larr; \"Mai\"</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;Name &larr; UCASE(Name)</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;OUTPUT Name</div></div></div></div><ul class=\"lesson-facts\"><li>UCASE and LCASE never change a variable on their own.</li><li>To keep the new string, store it: Name &larr; UCASE(Name).</li></ul>"
+  },
+  {
+   "id": "check-case",
+   "label": "Check: Upper and Lower Case",
+   "type": "short-answer-validation",
+   "validatorId": "y9l25-check-case",
+   "validatorKey": "y9l25_check_case",
+   "content": "<h2 class=\"lesson-h2\">Check: Upper and Lower Case</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might a program store every name in upper case before saving it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then every name is stored the same way, so names are easy to compare and to sort.</p></div></details><p class=\"lesson-lead\">Type each output exactly, with the right capital letters.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE City : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;DECLARE Room : STRING</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;City &larr; \"Hat Yai\"</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;Room &larr; \"Music 3A\"</div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9l25-check-case-a\">(a) What does OUTPUT UCASE(City) output? [1]</label><input id=\"y9l25-check-case-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-case-a\" aria-label=\"Check: Upper and Lower Case part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l25-check-case-b\">(b) What does OUTPUT LCASE(Room) output? [1]</label><input id=\"y9l25-check-case-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-case-b\" aria-label=\"Check: Upper and Lower Case part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l25-check-case-c\">(c) What does OUTPUT LENGTH(UCASE(City)) output? [1]</label><input id=\"y9l25-check-case-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-case-c\" aria-label=\"Check: Upper and Lower Case part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l25-check-case-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y9l25-check-case-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "compare-equal",
+   "label": "Compare: Why Capitals Matter",
+   "content": "<h2 class=\"lesson-h2\">Compare: Why Capitals Matter</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">The user types Yes. Predict what A and B output. Why are they different?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p><strong>A</strong> outputs Try again: \"Yes\" is not the same as \"yes\". <strong>B</strong> outputs OK: LCASE makes it \"yes\" first.</p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Typed in</th><th style=\"padding:6px 12px;text-align:left\">A outputs</th><th style=\"padding:6px 12px;text-align:left\">B outputs</th></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"yes\"</td><td style=\"padding:6px 12px;text-align:left\">OK</td><td style=\"padding:6px 12px;text-align:left\">OK</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"Yes\"</td><td style=\"padding:6px 12px;text-align:left\">Try again</td><td style=\"padding:6px 12px;text-align:left\">OK</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"YES\"</td><td style=\"padding:6px 12px;text-align:left\">Try again</td><td style=\"padding:6px 12px;text-align:left\">OK</td></tr></table></div></details><div class=\"lesson-do-now-columns\"><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">A</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Reply : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;INPUT Reply</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;IF Reply = \"yes\" THEN</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"OK\"</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Try again\"</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;ENDIF</div></div></div><div><p style=\"margin:0 0 6px;font-weight:700;text-align:center\">B</p><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Reply : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;INPUT Reply</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;IF LCASE(Reply) = \"yes\" THEN</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"OK\"</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Try again\"</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;ENDIF</div></div></div></div><ul class=\"lesson-facts\"><li>= compares every character. Y and y are <strong>different characters</strong>.</li><li>Change the input with LCASE or UCASE first, so capital letters do not matter.</li></ul>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Predict the Output",
+   "type": "embedded-app",
+   "appId": "string-lab",
+   "embedContainerId": "y9l25-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Predict the Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the app show every character in a box after you answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So you can count the characters and see which ones changed. That shows where a wrong answer went wrong.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> type exactly what each program outputs, then run it. A mistake means the round does not count. <strong>Done</strong> when you have passed level 3.</p><div id=\"y9l25-activity-1\"></div>",
+   "embedQuery": "activity=predict"
+  },
+  {
+   "id": "check-input",
+   "label": "Checking What the User Types",
+   "content": "<h2 class=\"lesson-h2\">Checking What the User Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A password must have at least 8 characters. Predict the output for secret, password and pass wd. Why is password accepted?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>\"password\" has exactly 8 characters, and 8 &gt;= 8 is TRUE.</p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><tr><th style=\"padding:6px 12px;text-align:left\">Typed in</th><th style=\"padding:6px 12px;text-align:left\">LENGTH</th><th style=\"padding:6px 12px;text-align:left\">Output</th></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"secret\"</td><td style=\"padding:6px 12px;text-align:left\">6</td><td style=\"padding:6px 12px;text-align:left\">Too short</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"password\"</td><td style=\"padding:6px 12px;text-align:left\">8</td><td style=\"padding:6px 12px;text-align:left\">Accepted</td></tr><tr><td style=\"padding:6px 12px;text-align:left\">\"pass wd\"</td><td style=\"padding:6px 12px;text-align:left\">7</td><td style=\"padding:6px 12px;text-align:left\">Too short</td></tr></table></div></details><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Password : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;INPUT Password</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;IF LENGTH(Password) &gt;= 8 THEN</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Accepted\"</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Too short\"</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;ENDIF</div></div></div><div><ul class=\"lesson-facts\"><li>A program can check what is typed <strong>before</strong> it uses it.</li><li>LENGTH in an IF line tests how many characters were typed.</li><li>\"At least 8\" includes 8 itself, so use &gt;=.</li></ul></div></div>"
+  },
+  {
+   "id": "hinge",
+   "label": "Hinge Question: Choose the IF Line",
+   "type": "multiple-choice",
+   "containerId": "y9l25-hinge",
+   "content": "<h2 class=\"lesson-h2\">Hinge Question: Choose the IF Line</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A quiz answer is Bangkok. Why might a program mark a correct student wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The student may type bangkok or BANGKOK. = compares capital letters too, so they do not match.</p></div></details><div id=\"y9l25-hinge\"></div>",
+   "items": [
+    {
+     "prompt": "Which IF line accepts paris, Paris and PARIS?",
+     "options": [
+      "IF UCASE(City) = \"Paris\" THEN",
+      "IF City = UCASE(\"paris\") THEN",
+      "IF UCASE(City) = \"PARIS\" THEN",
+      "IF LCASE(City) = \"Paris\" THEN"
+     ],
+     "correct": 2,
+     "explain": "UCASE turns every input into PARIS, so compare it with \"PARIS\". \"Paris\" has small letters, so UCASE(City) can never equal it."
+    },
+    {
+     "prompt": "A password needs at least 8 characters. Which IF line is TRUE for a good password?",
+     "options": [
+      "IF LENGTH(Password) >= 8 THEN",
+      "IF LENGTH(Password) > 8 THEN",
+      "IF Password >= 8 THEN",
+      "IF LENGTH(Password) <= 8 THEN"
+     ],
+     "correct": 0,
+     "explain": "\"At least 8\" includes 8, so it is >= 8. Password >= 8 compares the text with a number, not its length."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Accepted or Rejected?",
+   "type": "embedded-app",
+   "appId": "string-lab",
+   "embedContainerId": "y9l25-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Accepted or Rejected?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why are some inputs exactly on the limit?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Inputs on the limit show whether you read the operator: &gt; and &gt;= give different answers there.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> read the program. Predict Accepted or Rejected for every input, then run it. All five must be right. <strong>Done</strong> when you have passed level 4.</p><div id=\"y9l25-activity-2\"></div>",
+   "embedQuery": "activity=check"
+  },
+  {
+   "id": "activity-3",
+   "label": "Activity 3: Write the String Code",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-5-code",
+   "embedContainerId": "y9l25-activity-3",
+   "content": "<h2 class=\"lesson-h2\">Activity 3: Write the String Code</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is your program run with different typed inputs each time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A correct program must work for any input, not just one. New inputs catch code that only works by luck.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> write each program in Cambridge pseudocode, with DECLARE lines. Your code is run with new inputs and checked straight away.</p><div id=\"y9l25-activity-3\"></div>"
+  },
+  {
+   "id": "exam-explain",
+   "label": "Exam-Style Question: Explain the Error",
+   "type": "self-marked-response",
+   "containerId": "y9l25-exam-explain",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Explain the Error</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">This part has 2 marks. How do you plan the answer?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Answer both parts of the question: first why it goes wrong, then the change. One mark each.</p></div></details><p class=\"lesson-lead\">A student types PARIS and the program outputs Wrong. This part has 2 marks.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">01&nbsp;&nbsp;DECLARE Answer : STRING</div><div class=\"lesson-code-line\">02&nbsp;&nbsp;INPUT Answer</div><div class=\"lesson-code-line\">03&nbsp;&nbsp;IF Answer = \"Paris\" THEN</div><div class=\"lesson-code-line\">04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Correct\"</div><div class=\"lesson-code-line\">05&nbsp;&nbsp;ELSE</div><div class=\"lesson-code-line\">06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OUTPUT \"Wrong\"</div><div class=\"lesson-code-line\">07&nbsp;&nbsp;ENDIF</div></div></div><div><div id=\"y9l25-exam-explain\"></div></div></div>",
+   "items": [
+    {
+     "id": "case-explain",
+     "prompt": "Explain why the program outputs Wrong, and how line 3 should be changed. [2]",
+     "marks": 2,
+     "scheme": [
+      "= compares every character / the comparison is case sensitive, so PARIS is not the same as Paris",
+      "Change the input with UCASE or LCASE before comparing, for example IF UCASE(Answer) = \"PARIS\" THEN (or LCASE with \"paris\")"
+     ],
+     "guidance": "One mark for each point. For point 2 the comparison text must match the case used: UCASE with \"PARIS\" or LCASE with \"paris\". Do not accept UCASE(Answer) = \"Paris\".",
+     "modelAnswer": "Capital letters are different characters, so \"PARIS\" is not equal to \"Paris\". Line 3 should be IF UCASE(Answer) = \"PARIS\" THEN."
+    }
+   ]
+  },
+  {
+   "id": "exam-line",
+   "label": "Exam-Style Question: Write the IF Line",
+   "type": "short-answer-validation",
+   "validatorId": "y9l25-exam-line",
+   "validatorKey": "y9l25_exam_line",
+   "content": "<h2 class=\"lesson-h2\">Exam-Style Question: Write the IF Line</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do programs limit how long a username can be?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So it fits on the screen, and in the space kept to store it.</p></div></details><p class=\"lesson-lead\">A username must have at most 12 characters. The variable is Username.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response is-line\"><label for=\"y9l25-exam-line-a\">(a) Write an IF line that is TRUE when the username is too long. [1]</label><input id=\"y9l25-exam-line-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-line-a\" aria-label=\"Exam-Style Question: Write the IF Line part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9l25-exam-line-b\">(b) The user types Mai Tran Smith. How many characters is that? [1]</label><input id=\"y9l25-exam-line-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-line-b\" aria-label=\"Exam-Style Question: Write the IF Line part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9l25-exam-line-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9l25-exam-line-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: String Manipulation Drill",
+   "type": "embedded-app",
+   "appId": "drill-y9-2-5-strings",
+   "embedContainerId": "y9l25-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: String Manipulation Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do the cards ask what a program outputs, not what it should do?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You must see exactly what each line does before you can write or fix your own string code.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> answer every card. Type outputs exactly, with the right capital letters. Stuck? Switch on <strong>I need help</strong>. Your progress is saved.</p><div id=\"y9l25-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y9l25_do_now": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*(comparisons?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Low = 1, High = 11. Check the middle, keep the part 71 is in, repeat. Count every check."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*10\\s*(comparisons?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Start at index 1. Count every item up to and including 71."
+   }
+  ],
+  "y9l25_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*3\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Check each name in turn. Add 1 to Count each time it is \"Ben\"."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*6\\s*(times?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Line 6 is inside the loop. How many passes does FOR Index &larr; 1 TO 6 make?"
+   }
+  ],
+  "y9l25_check_length": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*8\\s*(characters?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count every character of \"Computer\"."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*9\\s*(characters?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count every character of \"Ice cream\". Is the space a character?"
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*(characters?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count every character of \"A-12\". The - is a character, and so is each digit."
+   }
+  ],
+  "y9l25_check_case": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"']?HAT YAI[\"']?\\s*\\.?\\s*$",
+     "flags": ""
+    },
+    "feedback": "Every letter becomes a capital. The space stays."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*[\"']?music 3a[\"']?\\s*\\.?\\s*$",
+     "flags": ""
+    },
+    "feedback": "Every letter becomes small. The digit and the space stay the same."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*7\\s*(characters?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Does UCASE change how many characters there are?"
+   }
+  ],
+  "y9l25_exam_line": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*if\\s+(length\\s*\\(\\s*username\\s*\\)\\s*(>\\s*12|>=\\s*13)|(12\\s*<|13\\s*<=)\\s*length\\s*\\(\\s*username\\s*\\))\\s*(then)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Too long means MORE than 12. Use LENGTH(Username) in the condition."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*14\\s*(characters?)?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count every letter and both spaces."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

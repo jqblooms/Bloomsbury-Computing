@@ -1675,7 +1675,12 @@
       var varsMatch = checkVars.every(function (v) { return studentResult.vars[v] === referenceResult.vars[v]; });
       var outputsMatch = !card.checkOutput || JSON.stringify(studentResult.outputs) === JSON.stringify(referenceResult.outputs);
       right = varsMatch && outputsMatch;
-      if (right) {
+      // A card can name values that must be set with CONSTANT (Year 8 2.2), not typed in as numbers or as variables.
+      var notConstant = (card.mustBeConstant || []).filter(function (n) { return (studentResult.constants || []).indexOf(n) === -1; });
+      if (right && notConstant.length) {
+        right = false;
+        message = "Not quite. The output is right, but " + notConstant[0] + " must be a CONSTANT, set once at the top of the program.";
+      } else if (right) {
         message = "Correct.";
       } else {
         var bits = [];
