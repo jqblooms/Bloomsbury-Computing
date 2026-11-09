@@ -1,0 +1,595 @@
+{
+ "id": "y10-3-1-l5",
+ "label": "3.1.5: CPU Performance",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Fetching a Value (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Fetching a Value (1 of 2)</h2><p class=\"lesson-lead\">Recap of 3.1.2 to 3.1.4. Cambridge IGCSE 0478/12, June 2026, Question 2(c). <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><p style=\"margin:0\">A computer has a central processing unit (CPU). The memory address register (MAR) and the memory data register (MDR) are two registers built into the CPU.</p><div id=\"y10-315-do-now\"></div>",
+   "items": [
+    {
+     "id": "mar-mdr-fetch",
+     "prompt": "A value is fetched from random access memory (RAM) to the CPU. Explain how the MAR and MDR are used in this process.",
+     "marks": 3,
+     "scheme": [
+      "The MAR stores the address or location of the value // the address is sent or copied to the MAR ...",
+      "... the address of the value or data that is to be fetched, in RAM",
+      "The MDR stores the value or data // the value or data is sent or copied to the MDR"
+     ],
+     "guidance": "Three from the points, one mark each. Point 2 follows on from point 1. Points 2 and 3: benefit of the doubt for instruction in place of value or data.",
+     "modelAnswer": "The address of the value in RAM is sent to the MAR. The value at that address is sent to the MDR."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: how two parts are used",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> \"Two numbers are added in the CPU. Explain how the ALU and the ACC are used.\" It is worth 3 marks.",
+      "visual": "<div class=\"wt-note\">3 marks: give 3 separate points</div>"
+     },
+     {
+      "text": "Take one part at a time. What does the <b>ALU</b> do in this process? It <span class=\"wt-hl\">carries out the addition</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">ALU: <span class=\"wt-hl\">carries out the addition</span></p>"
+     },
+     {
+      "text": "Now the <b>ACC</b>: what does it hold, and which one? It <span class=\"wt-hl\">stores the result</span> of the addition.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">ACC: <span class=\"wt-hl\">stores the result</span></p>"
+     },
+     {
+      "text": "A third point is the detail: <b>which</b> thing it is, or <b>where</b> it comes from. \"The result is stored in the ACC, ready for the next calculation.\"",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">what it does + what it holds + which one</p>"
+     },
+     {
+      "text": "Now your question. Take the MAR, then the MDR. For each one: what does it hold in this fetch, and where does that come from?",
+      "visual": "<div class=\"wt-note\">MAR: what? MDR: what? where from?</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Inside the CPU (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-do-now-2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Inside the CPU (2 of 2)</h2><p class=\"lesson-lead\">Recap of 3.1.2. Cambridge IGCSE 0478/13, November 2023, Question 3(a) (adapted: typed, not circled). A computer has a central processing unit (CPU). <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-do-now-2\"></div>",
+   "items": [
+    {
+     "id": "built-in",
+     "prompt": "(a) Type the three components that are built into the CPU: accumulator (ACC), control unit (CU), graphics card, hard disk drive (HDD), motherboard, program counter (PC), random access memory (RAM), read only memory (ROM).",
+     "marks": 3,
+     "scheme": [
+      "Accumulator (ACC)",
+      "Control unit (CU)",
+      "Program counter (PC)"
+     ],
+     "guidance": "One mark for each correct component. Online the components are typed instead of circled: if more than three are given, mark only the first three.",
+     "modelAnswer": "ACC, CU, PC."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: inside the CPU or not?",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> \"Circle two components that are <b>not</b> built into the CPU: ALU, keyboard, MAR, printer, CIR.\"",
+      "visual": "<div class=\"wt-note\">ask the same question about every item</div>"
+     },
+     {
+      "text": "For each item ask: is it a <b>register</b> or a <b>unit</b> that the CPU uses to run instructions? Those are built into the CPU.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">register or unit? <span class=\"wt-hl\">inside the CPU</span></p>"
+     },
+     {
+      "text": "ALU: a unit, inside. MAR: a register, inside. CIR: a register, inside.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">ALU, MAR, CIR: <span class=\"wt-hl\">inside</span></p>"
+     },
+     {
+      "text": "Keyboard and printer: devices joined to the computer, <span class=\"wt-hl\">outside</span> the CPU. So the answer is keyboard and printer.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">keyboard, printer: <span class=\"wt-hl\">outside</span></p>"
+     },
+     {
+      "text": "Now your list. Which three are registers or units inside the CPU? The others are cards, disks or memory outside it.",
+      "visual": "<div class=\"wt-note\">three inside, five outside</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l4",
+   "embedContainerId": "y10-315-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these questions on the fetch-decode-execute cycle. Pick the answer that earns the mark, then type it. Stuck? Switch on <strong>I need help</strong>. Go to the next slide when you are ready.</p><div id=\"y10-315-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "CPU Performance",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">3.1 Computer Architecture</p><h2 class=\"lesson-h2\">CPU Performance</h2><p>Year 10</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> three things inside a CPU that make it run programs faster, and <strong>why</strong> each one works.</li><li>Small numbers all lesson: two CPUs, one task, which finishes first?</li><li><strong>How this lesson works:</strong> on each slide, read the facts, <strong>predict</strong> by picking an answer, then read why.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Two computers open the same game. One opens it sooner. Predict: what could be different inside the faster one?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Ideas to collect: it carries out more instructions each second, it waits less for data, it works on more than one thing at once. Today tests each idea.</p></div></details>"
+  },
+  {
+   "id": "why-faster",
+   "label": "Why One CPU Finishes First",
+   "type": "multiple-choice",
+   "containerId": "y10-315-why-faster",
+   "content": "<h2 class=\"lesson-h2\">Why One CPU Finishes First</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the facts, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>CPU A and CPU B run the same program: 12 instructions.</li></ul><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU A</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">3 instructions a second</div></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU B</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">6 instructions a second</div></div></div><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do people care how fast a computer runs a program?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Programs open and respond sooner, games run smoothly, and big jobs such as video finish in less time.</p></div></details></div><div id=\"y10-315-why-faster\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: which CPU finishes the program first?",
+     "options": [
+      "CPU B, after 2 seconds",
+      "CPU A, after 4 seconds",
+      "Both at the same time"
+     ],
+     "correct": 0,
+     "explain": "B: 12 &divide; 6 = 2 seconds. A: 12 &divide; 3 = 4 seconds. How fast a CPU carries out instructions is its <strong>performance</strong>. Better performance: programs finish sooner."
+    }
+   ]
+  },
+  {
+   "id": "clock",
+   "label": "The Clock: One Cycle Each Pulse",
+   "type": "multiple-choice",
+   "containerId": "y10-315-clock",
+   "content": "<h2 class=\"lesson-h2\">The Clock: One Cycle Each Pulse</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the facts, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>Inside the CPU is a <strong>clock</strong>. It sends out pulses, one after another.</li><li>On each pulse, the CPU carries out one FDE cycle: one instruction is fetched, decoded and executed.</li></ul><div style=\"text-align:center;font-family:var(--font-mono, monospace);font-size:22px;letter-spacing:6px;margin:6px 0\">pulse pulse pulse pulse pulse</div><p style=\"margin:0;text-align:center\">5 pulses = 5 FDE cycles = 5 instructions</p></div><div id=\"y10-315-clock\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: a tiny CPU's clock sends 5 pulses each second. How long does a program of 20 instructions take?",
+     "options": [
+      "4 seconds",
+      "20 seconds",
+      "100 seconds"
+     ],
+     "correct": 0,
+     "explain": "One instruction on each pulse, 5 pulses a second: 5 instructions a second. 20 &divide; 5 = 4 seconds."
+    }
+   ]
+  },
+  {
+   "id": "clock-speed",
+   "label": "Clock Speed and GHz",
+   "type": "multiple-choice",
+   "containerId": "y10-315-clock-speed",
+   "content": "<h2 class=\"lesson-h2\">Clock Speed and GHz</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the facts, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li><strong>Clock speed</strong>: the number of FDE cycles the CPU carries out in one second.</li><li>It is measured in hertz (Hz): 1 Hz is 1 cycle a second.</li><li>1 GHz (gigahertz) is 1 billion cycles a second.</li></ul><div id=\"y10-315-clock-speed\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: a CPU has a clock speed of 3.2 GHz. How many FDE cycles does it carry out in one second?",
+     "options": [
+      "3.2 billion",
+      "3.2",
+      "3.2 million"
+     ],
+     "correct": 0,
+     "explain": "G means billion. 3.2 GHz is 3.2 billion FDE cycles every second, so up to 3.2 billion instructions every second."
+    }
+   ]
+  },
+  {
+   "id": "clock-compare",
+   "label": "Compare: 2 GHz and 4 GHz",
+   "type": "multiple-choice",
+   "containerId": "y10-315-clock-compare",
+   "content": "<h2 class=\"lesson-h2\">Compare: 2 GHz and 4 GHz</h2><p class=\"lesson-lead\"><strong>What to do:</strong> compare the two CPUs, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>Both CPUs run the same program: 8 billion instructions.</li><li>Everything else about them is the same.</li></ul><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU A: 2 GHz</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">2 billion FDE cycles a second</div></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU B: 4 GHz</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">4 billion FDE cycles a second</div></div></div></div><div id=\"y10-315-clock-compare\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: how long does each CPU take?",
+     "options": [
+      "A: 4 seconds, B: 2 seconds",
+      "A: 2 seconds, B: 4 seconds",
+      "Both: 8 seconds"
+     ],
+     "correct": 0,
+     "explain": "A: 8 &divide; 2 = 4 seconds. B: 8 &divide; 4 = 2 seconds. A higher clock speed means more FDE cycles each second, so more instructions are processed each second: better performance."
+    }
+   ]
+  },
+  {
+   "id": "note-clock",
+   "label": "Your Notes: Clock Speed",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Clock Speed</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain what a clock speed of 3 GHz means.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> 3 billion FDE cycles each second. So up to 3 billion instructions can be processed each second.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY a higher clock speed can improve performance.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> More FDE cycles happen each second, so more instructions are processed each second. Programs finish sooner.</p></div></details>"
+  },
+  {
+   "id": "exam-clock",
+   "label": "Exam Question: Clock Speed (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-clock",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Clock Speed (1 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2023, Question 3(a)(i). A user's computer has a central processing unit (CPU) that has a clock speed of 2 GHz. She wants to change it to a CPU that has a clock speed of 3 GHz. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-exam-clock\"></div>",
+   "items": [
+    {
+     "id": "clock-what",
+     "prompt": "(i) State what is meant by clock speed.",
+     "marks": 1,
+     "scheme": [
+      "The (maximum) number of FDE cycles or instructions a CPU can perform, process or execute in a second"
+     ],
+     "guidance": "One mark. It must say per second (or a second). \"How fast the CPU is\" earns no mark.",
+     "modelAnswer": "The number of FDE cycles the CPU can carry out in a second."
+    }
+   ]
+  },
+  {
+   "id": "exam-clock-2",
+   "label": "Exam Question: Clock Speed (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-clock-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Clock Speed (2 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, November 2023, Question 3(a)(ii). A user's computer has a central processing unit (CPU) that has a clock speed of 2 GHz. She wants to change it to a CPU that has a clock speed of 3 GHz. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-exam-clock-2\"></div>",
+   "items": [
+    {
+     "id": "clock-effect",
+     "prompt": "(ii) Explain the effect this change will have on the performance of the CPU.",
+     "marks": 2,
+     "scheme": [
+      "It increases or improves the performance // tasks can be performed quicker or faster",
+      "... because more FDE cycles or instructions can be processed in a second"
+     ],
+     "guidance": "Two from the points, one mark each. Point 2 follows on from point 1.",
+     "modelAnswer": "It improves the performance, because more FDE cycles can be processed in a second."
+    }
+   ]
+  },
+  {
+   "id": "ram-wait",
+   "label": "Why the CPU Waits for RAM",
+   "type": "multiple-choice",
+   "containerId": "y10-315-ram-wait",
+   "content": "<h2 class=\"lesson-h2\">Why the CPU Waits for RAM</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the facts, then pick your prediction. The reason appears under it.</p><ul class=\"lesson-facts\"><li>Instructions and data are stored in RAM, outside the CPU.</li><li>RAM is much slower than the CPU. Each fetch from RAM makes the CPU wait.</li></ul><div id=\"y10-315-ram-wait\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: a game uses the same picture data again and again. How could the CPU wait less?",
+     "options": [
+      "Keep a copy of that data close, inside the CPU",
+      "Fetch it from RAM more often",
+      "Use a slower clock"
+     ],
+     "correct": 0,
+     "explain": "Keep a copy close. A small, fast memory inside the CPU (or very near it) holds frequently used data and instructions. It is called <strong>cache</strong>. Cache is faster to access than RAM, so the CPU waits less."
+    }
+   ]
+  },
+  {
+   "id": "cache-compare",
+   "label": "Compare: A Small Cache and a Big Cache",
+   "type": "multiple-choice",
+   "containerId": "y10-315-cache-compare",
+   "content": "<h2 class=\"lesson-h2\">Compare: A Small Cache and a Big Cache</h2><p class=\"lesson-lead\"><strong>What to do:</strong> compare the two CPUs, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>Both CPUs run the same game. It uses 6 MB of data again and again.</li></ul><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU A: 2 MB cache</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">3 GHz</div></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU B: 8 MB cache</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">3 GHz</div></div></div></div><div id=\"y10-315-cache-compare\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: which CPU runs the game faster, and why?",
+     "options": [
+      "B: all 6 MB fits in its cache, so it waits less for RAM",
+      "A: a small cache is quicker to fill",
+      "Neither: the clock speeds are the same"
+     ],
+     "correct": 0,
+     "explain": "6 MB fits in B's cache but not in A's, so A keeps fetching data from the slower RAM. More cache: more frequently used data is found quickly, so performance improves."
+    }
+   ]
+  },
+  {
+   "id": "exam-cache-tick",
+   "label": "Exam Question: The Purpose of Cache (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y10-315-exam-cache-tick",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Purpose of Cache (1 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2025, Question 2(c)(i). The computer has primary storage. One example of primary storage is cache. <strong>What to do:</strong> pick one statement.</p><div id=\"y10-315-exam-cache-tick\"></div>",
+   "items": [
+    {
+     "prompt": "Tick one box to show the correct statement that describes the purpose of cache.",
+     "options": [
+      "It stores important instructions.",
+      "It stores the next instruction to be processed.",
+      "It stores frequently used instructions.",
+      "It stores instructions so they are not lost when the power is turned off."
+     ],
+     "correct": 2,
+     "explain": "Cache stores frequently used instructions (and data), so the CPU finds them quickly without waiting for RAM."
+    }
+   ]
+  },
+  {
+   "id": "exam-cache",
+   "label": "Exam Question: The Purpose of Cache (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-cache",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Purpose of Cache (2 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2023, Question 3(b). A computer has a central processing unit (CPU). The CPU has cache. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-exam-cache\"></div>",
+   "items": [
+    {
+     "id": "cache-purpose",
+     "prompt": "(b) Explain the purpose of the cache.",
+     "marks": 2,
+     "scheme": [
+      "It is a type of storage ...",
+      "... that stores frequently used data or instructions",
+      "To speed up access ...",
+      "... as it is faster to access than RAM",
+      "It has different levels, for example L1 to L3"
+     ],
+     "guidance": "Any two from the points, one mark each. A point marked ... follows on from the point before it.",
+     "modelAnswer": "It stores frequently used data, because it is faster to access than RAM."
+    }
+   ]
+  },
+  {
+   "id": "note-cache",
+   "label": "Your Notes: Cache",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Cache</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain what cache is.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Small, fast memory inside or near the CPU. It holds frequently used data and instructions.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY more cache can improve performance.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> More frequently used data and instructions can be stored in it. They are found quickly, so the CPU waits less for the slower RAM.</p></div></details>"
+  },
+  {
+   "id": "core",
+   "label": "More Than One Core",
+   "type": "multiple-choice",
+   "containerId": "y10-315-core",
+   "content": "<h2 class=\"lesson-h2\">More Than One Core</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read the facts, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>So far each CPU had one CU, one ALU and one set of registers, running one FDE cycle at a time. One set like this is a <strong>core</strong>.</li><li>A dual-core CPU has 2 cores. A quad-core CPU has 4. Each core runs its own FDE cycle at the same time.</li></ul><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:4px 8px\"><div style=\"text-align:center;font-weight:700\">CPU</div><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:8px\"><div style=\"border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);padding:4px 8px;text-align:center\"><b>Core 1</b><div style=\"font-size:13px\">CU, ALU, registers</div><div style=\"font-size:13px;color:var(--muted)\">its own FDE cycle</div></div><div style=\"border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);padding:4px 8px;text-align:center\"><b>Core 2</b><div style=\"font-size:13px\">CU, ALU, registers</div><div style=\"font-size:13px;color:var(--muted)\">its own FDE cycle</div></div></div></div></div><div id=\"y10-315-core\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: a dual-core CPU has a clock speed of 2 GHz. How many instructions can it process in one second?",
+     "options": [
+      "4 billion",
+      "2 billion",
+      "1 billion"
+     ],
+     "correct": 0,
+     "explain": "Each core: 2 billion instructions a second. Both cores work at the same time: 2 + 2 = 4 billion a second."
+    }
+   ]
+  },
+  {
+   "id": "cores-compare",
+   "label": "Compare: 1 Core and 4 Cores",
+   "type": "multiple-choice",
+   "containerId": "y10-315-cores-compare",
+   "content": "<h2 class=\"lesson-h2\">Compare: 1 Core and 4 Cores</h2><p class=\"lesson-lead\"><strong>What to do:</strong> compare the two CPUs, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>The task: edit 4 photos, 12 billion instructions.</li><li>It can be split: each core edits one photo.</li></ul><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU A: 1 core</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">3 GHz</div></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU B: 4 cores</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">3 GHz</div></div></div></div><div id=\"y10-315-cores-compare\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: how long does each CPU take?",
+     "options": [
+      "A: 4 seconds, B: 1 second",
+      "A: 1 second, B: 4 seconds",
+      "Both: 4 seconds"
+     ],
+     "correct": 0,
+     "explain": "A: 12 &divide; 3 = 4 seconds. B: 4 cores &times; 3 billion = 12 billion a second, so 12 &divide; 12 = 1 second. More cores: more instructions are processed at the same time."
+    }
+   ]
+  },
+  {
+   "id": "cannot-split",
+   "label": "Compare: A Task That Cannot Be Split",
+   "type": "multiple-choice",
+   "containerId": "y10-315-cannot-split",
+   "content": "<h2 class=\"lesson-h2\">Compare: A Task That Cannot Be Split</h2><p class=\"lesson-lead\"><strong>What to do:</strong> compare the two CPUs, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:start\"><div><ul class=\"lesson-facts\"><li>A new task: a calculation of 12 billion steps.</li><li>Each step needs the answer from the step before, so it cannot be split.</li></ul><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU A: 1 core</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">3 GHz</div></div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>CPU B: 4 cores</b><div style=\"margin-top:3px;font-family:var(--font-mono, monospace);font-size:15px\">3 GHz</div></div></div></div><div id=\"y10-315-cannot-split\"></div></div>",
+   "items": [
+    {
+     "prompt": "Predict: how long does each CPU take now?",
+     "options": [
+      "Both: 4 seconds",
+      "A: 4 seconds, B: 1 second",
+      "A: 1 second, B: 4 seconds"
+     ],
+     "correct": 0,
+     "explain": "Only one core can work on it, so the other three wait. Both take 12 &divide; 3 = 4 seconds. More cores only help if a task can be split. Cores must also communicate with each other, which takes time, so 4 cores are not always 4 times as fast."
+    }
+   ]
+  },
+  {
+   "id": "note-cores",
+   "label": "Your Notes: Cores",
+   "content": "<h2 class=\"lesson-h2\">Your Notes: Cores</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain what a core is.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> A processing unit inside the CPU. It runs its own FDE cycle: it fetches, decodes and executes instructions.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY more cores can improve performance.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Each core processes its own instructions at the same time, so more instructions are processed at once.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY more cores do not always help.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Some tasks cannot be split, so only one core works on them. The cores also have to communicate, which takes time.</p></div></details>"
+  },
+  {
+   "id": "exam-cores",
+   "label": "Exam Question: Cores (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-cores",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Cores (1 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2023, Question 2(a). A library has a self-checkout system. The self-checkout system has a central processing unit (CPU). The CPU has two cores. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-exam-cores\"></div>",
+   "items": [
+    {
+     "id": "core-purpose",
+     "prompt": "(a) State the purpose of a core in the CPU.",
+     "marks": 1,
+     "scheme": [
+      "To perform a fetch-decode-execute cycle // to process or execute an instruction"
+     ],
+     "guidance": "Any one, one mark.",
+     "modelAnswer": "To process instructions."
+    }
+   ]
+  },
+  {
+   "id": "exam-cores-2",
+   "label": "Exam Question: Cores (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-cores-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Cores (2 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2023, Question 2(b). A library has a self-checkout system. The self-checkout system has a central processing unit (CPU). The CPU has two cores. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-exam-cores-2\"></div>",
+   "items": [
+    {
+     "id": "four-cores",
+     "prompt": "(b) The CPU is replaced with one that has four cores. Explain the effect this has on the performance of the self-checkout system.",
+     "marks": 2,
+     "scheme": [
+      "It may increase the performance",
+      "... because more instructions can be processed simultaneously"
+     ],
+     "guidance": "Two from the points, one mark each. Point 2 follows on from point 1.",
+     "modelAnswer": "It may increase the performance, because more instructions can be processed at the same time."
+    }
+   ]
+  },
+  {
+   "id": "check-change",
+   "label": "Check: Which Change Helps?",
+   "type": "multiple-choice",
+   "containerId": "y10-315-check-change",
+   "content": "<h2 class=\"lesson-h2\">Check: Which Change Helps?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick the change that helps each task. Ask: can the task be split? Is the CPU waiting for RAM? Done when both are answered.</p><div id=\"y10-315-check-change\"></div>",
+   "items": [
+    {
+     "prompt": "A photo app keeps fetching the same 6 MB of data from RAM. The CPU has 2 MB of cache, and most of its time is spent waiting. Which change helps most?",
+     "options": [
+      "A bigger cache",
+      "More cores",
+      "A lower clock speed"
+     ],
+     "correct": 0,
+     "explain": "A bigger cache. With 8 MB of cache the 6 MB of data fits, so the CPU stops waiting for RAM."
+    },
+    {
+     "prompt": "A task cannot be split. Which change makes it finish sooner?",
+     "options": [
+      "More cores",
+      "A higher clock speed",
+      "Neither"
+     ],
+     "correct": 1,
+     "explain": "A higher clock speed: more FDE cycles each second on the one core that works on it. Extra cores would have nothing to do."
+    }
+   ]
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: CPU Race",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-315-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: CPU Race</h2><p class=\"lesson-lead\"><strong>What to do:</strong> two CPUs race on the same task. Level 1: pick which finishes first, and why. Level 2: type how many seconds each one takes, then pick. One check per round, and a mistake means the round does not count. <strong>Done</strong> when you have cleared level 2 (two clean rounds in a row at each level). The help gets less as you go up.</p><div id=\"y10-315-activity-1\"></div>",
+   "embedQuery": "activity=perf&level=1&upto=2"
+  },
+  {
+   "id": "exam-names",
+   "label": "Exam Questions: Name It",
+   "type": "short-answer-validation",
+   "validatorId": "y10-315-exam-names",
+   "validatorKey": "y10_315_exam_names",
+   "content": "<h2 class=\"lesson-h2\">Exam Questions: Name It</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13 November 2023 Q3(c); 0478/11 June 2025 Q5(a). <strong>What to do:</strong> type each answer, then press Check answers.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y10-315-exam-names-a\">(a) The CPU has a component that regulates the number of fetch-decode-execute cycles the CPU can perform in a second. State the name of this component. [1]</label><input id=\"y10-315-exam-names-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-names-a\" aria-label=\"Exam Questions: Name It part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-315-exam-names-b\">(b) Give the term: this is a processing unit within the CPU that can fetch, decode and execute instructions. [1]</label><input id=\"y10-315-exam-names-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-names-b\" aria-label=\"Exam Questions: Name It part b\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y10-315-exam-names-c\">(c) Give the term: this is a list of all the commands that can be processed by the CPU. [1]</label><input id=\"y10-315-exam-names-c\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"exam-names-c\" aria-label=\"Exam Questions: Name It part c\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y10-315-exam-names-check\">Check answers</button><strong>Total: 3 marks</strong></div><div id=\"y10-315-exam-names-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>"
+  },
+  {
+   "id": "exam-three-1",
+   "label": "Exam Question: Three Computers (1 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-three-1",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Three Computers (1 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2025, Question 3(c)(i). <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;font-size:15px;margin:0\"><tr><th style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;color:var(--muted)\">Computer</th><th style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;color:var(--muted)\">Processor</th></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">A</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">2.1 GHz quad-core</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">B</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">2.5 GHz dual-core</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">C</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">5.2 GHz single-core</td></tr></table></div><div><div id=\"y10-315-exam-three-1\"></div></div></div>",
+   "items": [
+    {
+     "id": "three-simultaneous",
+     "prompt": "(i) Identify which computer is most likely to execute more instructions simultaneously. Justify your answer.",
+     "marks": 3,
+     "scheme": [
+      "Computer A",
+      "It has 4 cores or processors",
+      "... each core will execute one instruction at a time",
+      "4 instructions can be executed simultaneously (the others can only execute 1 or 2)"
+     ],
+     "guidance": "1 mark for Computer A. Then any two from the other points for the justification, one mark each. Point 3 follows on from point 2.",
+     "modelAnswer": "Computer A. It has 4 cores, so 4 instructions can be executed at the same time."
+    }
+   ]
+  },
+  {
+   "id": "exam-three-2",
+   "label": "Exam Question: Three Computers (2 of 2)",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-three-2",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Three Computers (2 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, March 2025, Question 3(c)(ii). <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div class=\"lesson-do-now-columns\"><div><table style=\"border-collapse:collapse;font-size:15px;margin:0\"><tr><th style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;color:var(--muted)\">Computer</th><th style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;color:var(--muted)\">Processor</th></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">A</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">2.1 GHz quad-core</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">B</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">2.5 GHz dual-core</td></tr><tr><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">C</td><td style=\"padding:2px 8px;border-bottom:1px solid var(--line);text-align:left\">5.2 GHz single-core</td></tr></table></div><div><div id=\"y10-315-exam-three-2\"></div></div></div>",
+   "items": [
+    {
+     "id": "three-per-second",
+     "prompt": "(ii) Explain why Computer C can execute more instructions per second than Computer B.",
+     "marks": 2,
+     "scheme": [
+      "C has a higher clock speed // B has at most 5 GHz in total",
+      "C can run 5.2 billion instructions or FDE cycles per second",
+      "B can only run 5 billion instructions or FDE cycles per second",
+      "A single core has less latency"
+     ],
+     "guidance": "Any two from the points, one mark each.",
+     "modelAnswer": "C can run 5.2 billion instructions per second, but B can only run 5 billion."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: The Task Matters",
+   "type": "embedded-app",
+   "appId": "cpu-lab",
+   "embedContainerId": "y10-315-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: The Task Matters</h2><p class=\"lesson-lead\"><strong>What to do:</strong> now read each task carefully: can it be split, and does its data fit in the cache? Type how long each CPU takes. At level 4, pick the best upgrade for one CPU and type its new time. A mistake means the round does not count. <strong>Done</strong> when you have cleared level 4, with no help.</p><div id=\"y10-315-activity-2\"></div>",
+   "embedQuery": "activity=perf&level=3&upto=4"
+  },
+  {
+   "id": "exam-why",
+   "label": "Exam Question: Why a Different CPU Can Be Faster",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-why",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: Why a Different CPU Can Be Faster</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, June 2024, Question 8(d). A student has a computer that has a central processing unit (CPU). <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-exam-why\"></div>",
+   "items": [
+    {
+     "id": "different-cpu",
+     "prompt": "(d) The student wants to replace the CPU to increase the performance of the computer. Explain why a different CPU can increase the performance.",
+     "marks": 4,
+     "scheme": [
+      "It could have more cores",
+      "... increasing the number of FDE cycles or instructions it can perform at the same time",
+      "It could have a higher clock speed",
+      "... increasing the number of FDE cycles or instructions per second it can perform",
+      "It could have a greater cache size",
+      "... meaning more frequently used data can be accessed faster"
+     ],
+     "guidance": "Any four from the points, one mark each. A point marked ... follows on from the point before it.",
+     "modelAnswer": "It could have more cores, so more instructions are performed at the same time. It could have a higher clock speed, so more FDE cycles are performed per second."
+    }
+   ]
+  },
+  {
+   "id": "notes-check",
+   "label": "Notes Check: Your WHY Notes",
+   "content": "<h2 class=\"lesson-h2\">Notes Check: Your WHY Notes</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top). You should have each note below, in your own words. Missing one? Go back to the slide named, write it, and press Check my note. Then go to the next slide.</p><ul class=\"lesson-facts\"><li><strong>What 3 GHz means. WHY a higher clock speed can improve performance.</strong> Slide: Your Notes: Clock Speed.</li><li><strong>What cache is. WHY more cache can improve performance.</strong> Slide: Your Notes: Cache.</li><li><strong>What a core is. WHY more cores can improve performance. WHY more cores do not always help.</strong> Slide: Your Notes: Cores.</li></ul>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: CPU Performance Drill",
+   "type": "embedded-app",
+   "appId": "drill-y10-3-1-l5",
+   "embedContainerId": "y10-315-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: CPU Performance Drill</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer every card. Pick the answer that earns the mark, then type it. Stuck? Switch on <strong>I need help</strong>. Your progress is saved.</p><div id=\"y10-315-plenary\"></div>"
+  },
+  {
+   "id": "exam-paper",
+   "label": "Practice Paper: CPU Performance",
+   "type": "app-link",
+   "appId": "exampaper",
+   "appQuery": "paper=y10-3-1-l5-paper",
+   "buttonId": "y10-315-open-paper",
+   "content": "<h2 class=\"lesson-h2\">Practice Paper: CPU Performance</h2><p class=\"lesson-lead\"><strong>What to do:</strong> Open the practice paper. Answer every question, then press Submit paper. You get all your marks at once. You can take it again to improve.</p><p><button type=\"button\" class=\"donow-btn\" id=\"y10-315-open-paper\">Open the practice paper</button></p>"
+  }
+ ],
+ "validators": {
+  "y10_315_exam_names": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?(system\\s+)?clock\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "It sends out a pulse for each FDE cycle."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?(processor\\s+|processing\\s+)?cores?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "A dual-core CPU has two of these."
+   },
+   {
+    "suffix": "c",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*(the\\s+|an?\\s+)?instruction\\s*sets?\\s*\\.?\\s*$",
+     "flags": "i"
+    },
+    "feedback": "The CU uses it to decode each instruction."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

@@ -151,3 +151,25 @@ button, input { font: inherit; }
 .good-text { color: var(--good); }
 .bad-text { color: var(--bad); }
 @media (max-width: 760px) { .fde-pic { grid-template-columns: 1fr; } }
+
+/* CPU Race */
+.perf-task { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; margin-bottom: 8px; }
+.perf-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 14px; font-size: .92rem; margin-top: 2px; }
+.perf-cpus { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 8px; }
+.perf-cpus.one { grid-template-columns: minmax(0, 320px); }
+.perf-cpu { border: 2px solid var(--brand); border-radius: 12px; background: var(--surface-2); padding: 4px 10px 6px; }
+.perf-cpu-head { font-weight: 700; text-align: center; }
+.perf-cpu table { width: 100%; border-collapse: collapse; }
+.perf-cpu td { padding: 2px 6px; border-top: 1px solid var(--line); }
+.perf-cpu td b { font: 700 16px var(--font-mono); }
+.perf-cpu tr.lit td { background: var(--brand-soft); outline: 2px solid var(--warn); outline-offset: -2px; }
+.perf-q { grid-template-columns: minmax(0, 1fr); }
+.perf-q .seg { margin-top: 2px; }
+.perf-time { font-weight: 500; }
+.perf-time input { width: 80px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-family: var(--font-mono); }
+.perf-race { display: grid; gap: 4px; margin-top: 8px; }
+.perf-lane { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 8px; align-items: center; font-size: .9rem; }
+.perf-track { background: var(--surface-3); border-radius: 999px; height: 22px; display: block; }
+.perf-fill { display: block; height: 22px; border-radius: 999px; background: var(--line-strong); color: var(--ink); font: 700 13px var(--font-mono); text-align: right; padding: 2px 8px; white-space: nowrap; }
+.perf-fill.win { background: var(--good-line); }
+@media (max-width: 640px) { .perf-facts, .perf-cpus { grid-template-columns: 1fr; } .perf-lane { grid-template-columns: 1fr; } }
