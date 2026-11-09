@@ -47,7 +47,7 @@
   window.addEventListener('message', function (e) { var d = e.data; if (d && d.type === 'BC_IDENTITY' && d.name) window.__bcPlayerName = d.name; });
   window.postToParent = function (payload) { try { if (window.parent !== window) window.parent.postMessage(payload, '*'); } catch (e) { } };
   var v = encodeURIComponent(new URLSearchParams(location.search).get('bcv') || '');
-  ['../../assets/js/skulpt.min.js', '../../assets/js/skulpt-stdlib.js', '../../shared/pseudocode-engine.js', 'run.js', 'content.js', 'field.js', 'game.js'].forEach(function (f) {
+  ['../../assets/js/skulpt.min.js', '../../assets/js/skulpt-stdlib.js', '../../shared/pseudocode-engine.js', 'run.js', 'content.js', 'content2.js', 'field.js', 'game.js'].forEach(function (f) {
     document.write('<script src="' + f + '?v=' + v + '"><\/script>');
   });
 </script>

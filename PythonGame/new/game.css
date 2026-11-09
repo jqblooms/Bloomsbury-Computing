@@ -59,6 +59,8 @@ button:focus-visible, [tabindex]:focus-visible, textarea:focus-visible { outline
 .pd-code.pick li:hover { background: var(--surface-3); }
 .pd-code.pick li.on { background: var(--bad-soft); border-left-color: var(--bad); }
 .pd-ans { width: 100%; box-sizing: border-box; font: 15px/1.6 var(--font-mono); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); resize: vertical; tab-size: 4; }
+.pd-typed { margin: 0 0 8px; color: var(--ink-soft); }
+.pd-typed kbd { font: 700 14px var(--font-mono); padding: 1px 7px; border-radius: 6px; background: var(--surface-3); border: 1px solid var(--line-strong); }
 .pd-want { margin: 0 0 10px; padding: 8px 12px; border-radius: 10px; background: var(--good-soft); border: 1px solid var(--good-line); font: 15px/1.5 var(--font-mono); white-space: pre-wrap; }
 .pd-opts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
 .pd-opts.col { flex-direction: column; align-items: stretch; }

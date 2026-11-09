@@ -31,7 +31,7 @@
             '<span class="pd-stars" aria-label="' + stars + ' of 3 stars">' + [1, 2, 3].map(function (k) { return '<i class="' + (k <= stars ? 'on' : '') + '"></i>'; }).join('') + '</span>' +
             '<span class="pd-best">' + (b ? b.score : '') + '</span></button></li>';
         }).join('') + '</ol></article>';
-    }).join('') + '<p class="pd-more">More stages are on the way: input, selection, loops, lists, strings, totals, validation, searching and sorting, and IGCSE Paper 2 questions.</p>';
+    }).join('') + '<p class="pd-more">Coming next: IGCSE Paper 2 questions from real past papers.</p>';
   }
   $('stages').addEventListener('click', function (e) { var b = e.target.closest('[data-level]'); if (b) start(+b.dataset.level); });
   $('homeBtn').addEventListener('click', menu);
@@ -82,14 +82,17 @@
       return '<li' + (clickable ? ' tabindex="0" role="button" data-line="' + (i + 1) + '"' : '') + '><code>' + (esc(l) || ' ') + '</code></li>';
     }).join('') + '</ol>';
   }
+  // what the user types, shown under the code
+  function typed(inputs) { return inputs && inputs.length ? '<p class="pd-typed">The user types: ' + inputs.map(function (v) { return '<kbd>' + esc(v) + '</kbd>'; }).join(' then ') + '</p>' : ''; }
   function render(t) {
     var code = codeOf(t.code), h = '<div class="pd-time" aria-hidden="true"><i></i></div><div class="pd-kind">' + KIND_HEAD[t.kind] + ' <span>' + LANG_NAME[lang] + '</span></div>';
-    if (t.kind === 'predict') h += '<p class="pd-q">Type exactly what this program shows, one line at a time.</p>' + codeBox(code) + '<textarea id="ans" class="pd-ans" rows="3" spellcheck="false" autocomplete="off" aria-label="What it shows"></textarea>';
-    else if (t.kind === 'errortype') h += '<p class="pd-q">' + esc(T(t.intent)) + ' Is there an error? If there is, pick its type, then click the line it is on.</p>' + codeBox(code, true) +
+    if (t.kind === 'predict') h += '<p class="pd-q">Type exactly what this program shows, one line at a time.</p>' + codeBox(code) + typed(t.inputs) + '<textarea id="ans" class="pd-ans" rows="3" spellcheck="false" autocomplete="off" aria-label="What it shows"></textarea>';
+    else if (t.kind === 'errortype') h += '<p class="pd-q">' + esc(T(t.intent)) + ' Is there an error? If there is, pick its type, then click the line it is on.</p>' + codeBox(code, true) + typed(t.inputs) +
       '<div class="pd-opts" role="group" aria-label="Type of error">' + ['syntax', 'logic', 'runtime', 'none'].map(function (k) { return '<button type="button" class="pd-opt" data-err="' + k + '">' + (k === 'none' ? 'No error' : k[0].toUpperCase() + k.slice(1) + ' error') + '</button>'; }).join('') + '</div>';
     else if (t.kind === 'fix' || t.kind === 'write') {
-      h += '<p class="pd-q">' + (t.kind === 'fix' ? (t.intent ? esc(T(t.intent)) + ' ' : '') + 'Change the program so it works. It should show:' : esc(T(t.intent)) + (lang === 'ps' ? ' Declare every variable first.' : '') + ' It should show:') + '</p>' +
-        '<pre class="pd-want" id="want">...</pre><textarea id="ans" class="pd-ans pd-editor" rows="' + Math.max(4, code.split('\n').length + 1) + '" spellcheck="false" autocomplete="off" aria-label="Your program">' + esc(t.kind === 'fix' ? code : '') + '</textarea>';
+      var ex = t.tests && t.tests[0] && t.tests[0].length;
+      h += '<p class="pd-q">' + (t.kind === 'fix' ? (t.intent ? esc(T(t.intent)) + ' ' : '') + 'Change the program so it works.' + (ex ? '' : ' It should show:') : esc(T(t.intent)) + (lang === 'ps' ? ' Declare every variable first.' : '') + (ex ? '' : ' It should show:')) + '</p>' +
+        (t.tests && t.tests[0] && t.tests[0].length ? '<p class="pd-typed">For example, when the user types ' + t.tests[0].map(function (v) { return '<kbd>' + esc(v) + '</kbd>'; }).join(' then ') + ', it should show:</p>' : '') + '<pre class="pd-want" id="want">...</pre><textarea id="ans" class="pd-ans pd-editor" rows="' + Math.max(5, (t.kind === 'fix' ? code : t.start ? codeOf(t.start) : '').split('\n').length + 3) + '" spellcheck="false" autocomplete="off" aria-label="Your program">' + esc(t.kind === 'fix' ? code : t.start ? codeOf(t.start) : '') + '</textarea>';
       expected(t).then(function (r) { var w = $('want'); if (w && W && W.task === t) w.textContent = r.out.join('\n'); });
     }
     else if (t.kind === 'choice') {
@@ -152,7 +155,7 @@
       });
     }
     if (t.kind === 'errortype') {
-      return RUN.run(lang, code, []).then(function (r) {
+      return RUN.run(lang, code, t.inputs || []).then(function (r) {
         var line = t.line ? t.line[lang] : null, okType = W.pick === t.error, okLine = t.error === 'none' || W.line === line;
         var name = t.error === 'none' ? 'no error' : 'a ' + t.error + ' error' + (line ? ' on line ' + line : '');
         return { ok: okType && okLine, why: okType && !okLine ? 'Right type, wrong line: it is ' + name + '.' : 'It has ' + name + '.', html: screen('When it runs', r.out, r.error) + '<p>' + esc(why) + '</p>' };
@@ -169,7 +172,7 @@
         return Promise.all([RUN.run(lang, mine, inputs), RUN.run(lang, codeOf(t.model), inputs)]).then(function (rr) {
           var me = rr[0], want = rr[1];
           if (me.error) return { ok: false, why: (me.error.kind === 'syntax' ? 'Your program has a syntax error' : 'Your program stopped with a runtime error') + (me.error.line ? ' on line ' + me.error.line : '') + '.', html: screen('Your program', me.out, me.error) + screen('It should show', want.out) };
-          if (!RUN.same(me.out, want.out)) return { ok: false, why: 'Your program runs, but shows something different.', html: screen('Your program', me.out) + screen('It should show', want.out) };
+          if (!RUN.same(me.out, want.out)) return { ok: false, why: 'Your program runs, but shows something different' + (inputs.length ? ' when the user types ' + inputs.join(' then ') : '') + '.', html: screen('Your program', me.out) + screen('It should show', want.out) };
           var bad = (t.vars || []).find(function (v) { return me.vars[v[lang]] !== v.value; });
           if (bad) return { ok: false, why: 'It shows the right thing, but ' + bad[lang] + ' should end up holding ' + bad.value + '. Use the variable, do not just show the answer.', html: '' };
           return { ok: true, html: screen('Your program', me.out) };
@@ -240,7 +243,7 @@
               var c = t.code ? (typeof t.code === 'string' ? t.code : t.code[L]) : null, say = function (m) { fails.push(L + ' L' + lvl.id + ' ' + t.kind + ': ' + m + '\n' + (c || (t.model && t.model[L]) || '')); };
               if (t.kind === 'predict') { var r = await RUN.run(L, c, t.inputs || []); if (r.error) say('predict code fails: ' + r.error.message); if (!r.out.length) say('predict shows nothing'); }
               if (t.kind === 'errortype') {
-                var r2 = await RUN.run(L, c, []), want = t.error;
+                var r2 = await RUN.run(L, c, t.inputs || []), want = t.error;
                 if (want === 'syntax' || want === 'runtime') { if (!r2.error || r2.error.kind !== want) say('expected ' + want + ', got ' + (r2.error ? r2.error.kind + ' ' + r2.error.message : 'no error')); else if (r2.error.line && t.line && r2.error.line !== t.line[L]) say('line ' + t.line[L] + ' but error on ' + r2.error.line); }
                 else if (r2.error) say(want + ' task but it errors: ' + r2.error.message);
               }
@@ -249,7 +252,8 @@
                 if (m.error) say('model fails: ' + m.error.message);
                 (t.vars || []).forEach(function (v) { if (m.vars[v[L]] !== v.value) say('model var ' + v[L] + ' = ' + m.vars[v[L]]); });
                 (t.needs || []).forEach(function (nd) { if (!new RegExp(nd.re).test(t.model[L])) say('model misses need ' + nd.re); });
-                if (t.kind === 'fix') { var b2 = await RUN.run(L, c, []); if (!b2.error && RUN.same(b2.out, m.out)) say('broken code already works'); }
+                if (t.kind === 'fix') { var broken = true; for (var tin of (t.tests || [[]])) { var b2 = await RUN.run(L, c, tin), m2 = await RUN.run(L, t.model[L], tin); if (b2.error || !RUN.same(b2.out, m2.out)) broken = false; } if (broken) say('broken code already works on every test'); }
+                for (var tin2 of (t.tests || [[]])) { var m3 = await RUN.run(L, t.model[L], tin2); if (m3.error) say('model fails on ' + tin2.join(',') + ': ' + m3.error.message); }
               }
               if (t.kind === 'choice' && !(t.answer >= 0 && t.answer < t.options.length)) say('bad answer index');
             }

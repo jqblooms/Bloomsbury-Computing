@@ -185,5 +185,7 @@ var CONTENT = (function () {
     var gens = level.mix.length >= level.bugs ? shuffle(level.mix).slice(0, level.bugs) : Array.from({ length: level.bugs }, function (_, i) { return level.mix[i % level.mix.length]; });
     return gens.map(function (g) { var t; for (var k = 0; k < 20; k++) { t = g(lang); if (!t.lang || t.lang === lang) break; } return t; });
   }
-  return { STAGES: STAGES, waveTasks: waveTasks, lineOf: lineOf };
+  // the building blocks, for the later stages (content2.js)
+  var H = { rnd: rnd, pick: pick, shuffle: shuffle, distinct: distinct, PEOPLE: PEOPLE, WORDS: WORDS, V: V, q: q, prog: prog, out: out, decl: decl, set: set, com: com, WHY_ERR: WHY_ERR };
+  return { STAGES: STAGES, waveTasks: waveTasks, lineOf: lineOf, H: H };
 })();

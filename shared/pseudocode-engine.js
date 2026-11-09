@@ -524,8 +524,9 @@
         continue;
       }
 
-      if ((m = line.match(/^FOR\s+([A-Za-z_]\w*)\s*(?:<-)\s*(.+?)\s+TO\s+(.+)$/i))) {
-        instructions.push({ type: 'FOR', var: m[1], startCode: compileExpression(m[2], lineNo), endCode: compileExpression(m[3], lineNo), line: lineNo });
+      // FOR Count <- 1 TO 10, or with a STEP (the 0478 syllabus): FOR Count <- 10 TO 1 STEP -1
+      if ((m = line.match(/^FOR\s+([A-Za-z_]\w*)\s*(?:<-)\s*(.+?)\s+TO\s+(.+?)(?:\s+STEP\s+(.+))?$/i))) {
+        instructions.push({ type: 'FOR', var: m[1], startCode: compileExpression(m[2], lineNo), endCode: compileExpression(m[3], lineNo), stepCode: m[4] ? compileExpression(m[4], lineNo) : null, line: lineNo });
         blockStack.push({ type: 'FOR', index: instructions.length - 1, var: m[1], line: lineNo });
         continue;
       }
@@ -547,6 +548,21 @@
         instructions[top.index].pairedNextIndex = nextIndex;
         continue;
       }
+
+      // REPEAT ... UNTIL condition (the 0478 syllabus): the body runs at least once
+      if (/^REPEAT$/i.test(line)) {
+        instructions.push({ type: 'REPEAT', line: lineNo });
+        blockStack.push({ type: 'REPEAT', index: instructions.length - 1, line: lineNo });
+        continue;
+      }
+      if ((m = line.match(/^UNTIL\s+(.+)$/i))) {
+        var topR = blockStack[blockStack.length - 1];
+        if (!topR || topR.type !== 'REPEAT') throw new PseudocodeError('UNTIL has no matching REPEAT.', lineNo);
+        blockStack.pop();
+        instructions.push({ type: 'UNTIL', conditionCode: compileCondition(m[1], lineNo), pairedRepeatIndex: topR.index, line: lineNo });
+        continue;
+      }
+      if (/^UNTIL\b/i.test(line)) throw new PseudocodeError('UNTIL needs a condition, e.g. UNTIL Total > 10', lineNo);
 
       if (/^ENDWHILE$/i.test(line)) {
         var top2 = blockStack[blockStack.length - 1];
@@ -591,6 +607,7 @@
       var unclosed = blockStack[0];
       if (unclosed.type === 'IF') throw new PseudocodeError('IF is missing its ENDIF.', unclosed.line);
       if (unclosed.type === 'FOR') throw new PseudocodeError('FOR ' + unclosed.var + ' is missing its NEXT ' + unclosed.var + '.', unclosed.line);
+      if (unclosed.type === 'REPEAT') throw new PseudocodeError('REPEAT is missing its UNTIL.', unclosed.line);
       throw new PseudocodeError('WHILE is missing its ENDWHILE.', unclosed.line);
     }
     return instructions;
@@ -697,17 +714,21 @@
         if (instr.type === 'FOR') {
           var startVal = instr.startCode(vars), endVal = instr.endCode(vars);
           if (typeof startVal !== 'number' || typeof endVal !== 'number') throw new PseudocodeError('FOR needs numbers.', instr.line);
+          var stepVal = instr.stepCode ? instr.stepCode(vars) : 1;
+          if (typeof stepVal !== 'number' || stepVal === 0) throw new PseudocodeError('FOR needs a STEP that is a number other than 0.', instr.line);
           store(instr.var, startVal, instr.line);
-          instr.currentEnd = endVal;
-          pc = startVal > endVal ? instr.pairedNextIndex + 1 : pc + 1;
+          instr.currentEnd = endVal; instr.currentStep = stepVal;
+          pc = (stepVal > 0 ? startVal > endVal : startVal < endVal) ? instr.pairedNextIndex + 1 : pc + 1;
           continue;
         }
         if (instr.type === 'NEXT') {
-          var forInstr = instructions[instr.pairedForIndex];
-          vars[forInstr.var] = vars[forInstr.var] + 1;
-          pc = vars[forInstr.var] <= forInstr.currentEnd ? instr.pairedForIndex + 1 : pc + 1;
+          var forInstr = instructions[instr.pairedForIndex], st = forInstr.currentStep || 1;
+          vars[forInstr.var] = vars[forInstr.var] + st;
+          pc = (st > 0 ? vars[forInstr.var] <= forInstr.currentEnd : vars[forInstr.var] >= forInstr.currentEnd) ? instr.pairedForIndex + 1 : pc + 1;
           continue;
         }
+        if (instr.type === 'REPEAT') { pc++; continue; }
+        if (instr.type === 'UNTIL') { pc = instr.conditionCode(vars) ? pc + 1 : instr.pairedRepeatIndex + 1; continue; }
         if (instr.type === 'WHILE') { pc = instr.conditionCode(vars) ? pc + 1 : instr.pairedEndIndex + 1; continue; }
         if (instr.type === 'ENDWHILE') { pc = instr.pairedWhileIndex; continue; }
         if (instr.type === 'OUTPUT') { outputs.push(instr.exprCode(vars)); pc++; continue; }
