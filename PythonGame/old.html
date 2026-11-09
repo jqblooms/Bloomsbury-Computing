@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://skulpt.org/js/skulpt.min.js" type="text/javascript"></script>
+    <script src="https://skulpt.org/js/skulpt-stdlib.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Python Defense</title>
+    <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+    <script>document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "") + '">');</script>
+    <script src="../shared/bc-support.js?v=20260928"></script>
+</head>
+
+<body>
+
+    <script>
+      // Bloomsbury Computing identity bridge: when embedded in the main
+      // site, the parent posts the signed-in user's display name here
+      // instead of this game asking for one itself.
+      window.__bcPlayerName = null;
+      window.addEventListener('message', function (event) {
+        var data = event.data;
+        if (data && data.type === 'BC_IDENTITY' && data.name) {
+          window.__bcPlayerName = data.name;
+          var el = document.getElementById('bc-player-name');
+          if (el) { el.textContent = data.name; el.hidden = false; }
+        }
+      });
+
+      // Report progress up to the parent (which persists it to the
+      // Progress sheet) so students never have to manually export
+      // anything; a teacher sees it live in the admin dashboard instead.
+      window.postToParent = function (payload) {
+        if (window.parent !== window) {
+          window.parent.postMessage(payload, '*');
+        }
+      };
+    </script>
+
+    <div id="top-bar">
+        <div class="hud-group"><span>Score</span><b id="score" class="hud-value">0</b></div>
+        <div class="hud-group"><span>Level</span><b id="level" class="hud-value">1</b></div>
+        <div class="hud-group"><span>Stage</span><b id="stage" class="hud-value">1</b></div>
+        <div class="hud-group"><span>Streak</span><b id="streak" class="hud-value">0</b></div>
+        <button type="button" class="btn-home" onclick="resetGame()" aria-label="Back to the menu" title="Back to the menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5"/><path d="M6.5 10v9h11v-9"/><path d="M10 19v-5h4v5"/></svg>
+        </button>
+    </div>
+
+    <div id="console-bar">
+        <div id="console-history"></div>
+        <div id="console-input-wrapper">
+            <span id="console-prompt">&gt;</span>
+            <input type="text" id="console-real-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+    </div>
+
+    <div id="game-area">
+        <div id="ceiling"></div>
+        <div id="danger-overlay"></div>
+        <div id="logic-notice"></div>
+        <div id="well-done-msg">Well done!</div>
+
+        <div id="powerups-panel">
+            <button type="button" id="powerups-toggle" onclick="togglePowerups()" aria-label="Show or hide power-ups">&#9654;</button>
+            <div id="powerups-content">
+                <div class="powerup-header">Power-ups</div>
+                <div class="powerup-item" data-type="bomb" onclick="activatePowerup('bomb')" title="Bomb">
+                    <img src="assets/bomb_static_icon.svg" class="powerup-icon" alt="Bomb" draggable="false">
+                    <span class="powerup-count">0</span>
+                </div>
+                <div class="powerup-item" data-type="ice" onclick="activatePowerup('ice')" title="Ice">
+                    <img src="assets/ice_static_icon.svg" class="powerup-icon" alt="Ice" draggable="false">
+                    <span class="powerup-count">0</span>
+                </div>
+                <div class="powerup-item" data-type="hammer" onclick="activatePowerup('hammer')" title="Hammer">
+                    <img src="assets/hammer_static_icon.svg" class="powerup-icon" alt="Hammer" draggable="false">
+                    <span class="powerup-count">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-screen" class="screen active">
+        <div class="pg-menu">
+            <header class="pg-menu-head">
+                <div class="pg-brand">
+                    <svg class="pg-logo" viewBox="0 0 40 40" aria-hidden="true">
+                        <path d="M20 4 34 9v10c0 8.5-6 14.5-14 17-8-2.5-14-8.5-14-17V9z"/>
+                        <path d="m15 16-4 4 4 4M25 16l4 4-4 4M22 14l-4 12"/>
+                    </svg>
+                    <div>
+                        <h1>Python Defense</h1>
+                        <p>Fix and write Python before the bugs reach the ceiling.</p>
+                    </div>
+                </div>
+                <div class="pg-menu-tools">
+                    <span class="pg-player" id="bc-player-name" hidden></span>
+                    <button type="button" class="pg-switch" id="hard-mode-toggle" aria-pressed="false" onclick="toggleHardMode()"
+                        title="Blocks fall two and a half times faster and score 2.5 each"><span class="pg-switch-track" aria-hidden="true"></span><span>Hard mode</span></button>
+                    <span id="support-slot"></span>
+                </div>
+            </header>
+
+            <nav class="pg-tabs" id="menu-tabs" role="tablist" aria-label="Level pages"></nav>
+
+            <div class="pg-menu-body">
+                <aside class="pg-dev" id="test-panel" hidden>
+                    <h2>Custom levels</h2>
+                    <button type="button" class="bc-btn is-tonal" onclick="openLoadLevelModal('level')">Load level JSON</button>
+                    <button type="button" class="bc-btn is-tonal" onclick="openLoadLevelModal('exam')">Load exam JSON</button>
+                    <button type="button" class="bc-btn is-outline" onclick="window.open('https://jquinney-hue.github.io/PythonGameAnalyser/', '_blank')">Class analyser</button>
+                </aside>
+                <div class="pg-stages" id="menu-pages"></div>
+            </div>
+
+            <footer class="pg-menu-foot">
+                <button type="button" class="bc-btn is-outline" onclick="openPythonInterpreter()">Write Python</button>
+                <button type="button" class="bc-btn is-text" onclick="showHelp()">How to play</button>
+            </footer>
+        </div>
+    </div>
+
+    <div id="exam-screen" class="screen">
+        <div class="pg-panel">
+            <div class="exam-header" id="exam-title">Final exam</div>
+            <div class="exam-count">Question <span id="exam-q-num">1</span> of <span id="exam-q-total">10</span></div>
+            <div id="exam-container" class="exam-question-box"></div>
+            <button type="button" class="bc-btn" id="exam-submit-btn" onclick="submitExamAnswer()">Next</button>
+        </div>
+    </div>
+
+    <div id="exam-results-screen" class="screen">
+        <div class="pg-panel">
+            <div class="exam-header">Exam results</div>
+            <div class="exam-score" id="exam-final-score">0</div>
+            <div class="screen-content" id="exam-feedback-list"></div>
+            <button type="button" class="bc-btn" onclick="resetGame()">Back to the menu</button>
+        </div>
+    </div>
+
+    <div id="load-level-modal">
+        <div class="pg-dialog">
+            <h2>Load a custom level</h2>
+            <div class="pg-tabs is-small">
+                <button type="button" class="pg-tab is-active" onclick="setLoadTab('url')" id="tab-url">From a link</button>
+                <button type="button" class="pg-tab" onclick="setLoadTab('json')" id="tab-json">Paste JSON</button>
+            </div>
+            <div id="load-tab-url">
+                <p>The direct link to the level's JSON file.</p>
+                <input type="text" id="level-url-input" placeholder="https://example.com/level.json">
+            </div>
+            <div id="load-tab-json" hidden>
+                <p>Paste the JSON here.</p>
+                <textarea id="level-json-input" rows="8" placeholder='{"questions": [...]}'></textarea>
+            </div>
+            <div class="pg-dialog-actions">
+                <button type="button" class="bc-btn is-text" onclick="closeLoadLevelModal()">Cancel</button>
+                <button type="button" class="bc-btn" id="load-level-go" onclick="submitCustomLevelAuto()">Load</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="python-interpreter-modal" role="dialog" aria-label="Write Python">
+        <div id="python-modal-header">
+            <span>Write Python</span>
+            <button type="button" class="pg-icon-btn" onclick="closePythonInterpreter()" aria-label="Close">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+        </div>
+        <div id="python-editor-wrapper">
+            <textarea id="python-input" spellcheck="false" autocomplete="off" placeholder="# Write Python here...
+print('Hello, World!')"></textarea>
+        </div>
+        <div id="python-toolbar">
+            <button type="button" class="bc-btn" onclick="runPython()">Run</button>
+            <button type="button" class="bc-btn is-outline" onclick="savePython()">Save</button>
+            <button type="button" class="bc-btn is-outline" onclick="loadPython()">Open</button>
+            <button type="button" class="bc-btn is-text" onclick="clearPythonOutput()">Clear output</button>
+            <span class="pg-toolbar-note">Ctrl + Enter runs it</span>
+        </div>
+        <div id="python-output-label">Output</div>
+        <div id="python-output"></div>
+    </div>
+    <div id="python-interpreter-overlay" onclick="closePythonInterpreter()"></div>
+
+    <div id="help-screen" class="screen">
+        <div class="pg-panel screen-content">
+            <h1>How to play</h1>
+            <p class="pg-lede">Code blocks fall from the top. Click one, answer it below, and it disappears. Each wrong answer lowers the ceiling; if a block reaches the ceiling, the game is over.</p>
+            <div class="info-grid">
+                <div class="info-box" style="--tone: var(--bad)"><h3>Syntax error</h3><p>The code breaks Python's rules, so it will not run. Fix the spelling or the punctuation.</p></div>
+                <div class="info-box" style="--tone: var(--good)"><h3>Logic error</h3><p>The code runs but does the wrong thing. Fix what it does.</p></div>
+                <div class="info-box" style="--tone: var(--brand)"><h3>Comments</h3><p>A line starting with # explains the code. Match the comment to the code it describes.</p></div>
+                <div class="info-box" style="--tone: var(--warn)"><h3>More than one line</h3><p>Write the comment on one line and the code on the next. Press Enter for a new line.</p></div>
+                <div class="info-box" style="--tone: #c58af9"><h3>Several steps</h3><p>Write a comment and a line of code for each thing the block asks for, in order.</p></div>
+                <div class="info-box" style="--tone: #78d9ec"><h3>Variables</h3><p>Store a value with a name, for example name = "Bob" or age = 15.</p></div>
+                <div class="info-box" style="--tone: #fcad70"><h3>Power-ups</h3><p>10 right in a row earns a bomb that clears the blocks where you drop it, 20 earns ice that freezes every block for 30 seconds, and 30 earns a hammer that smashes one block.</p></div>
+                <div class="info-box" style="--tone: var(--brand)"><h3>Support</h3><p>Turn Support on to see a model of the answer to type over, or wrong options ruled out. It fades as you get blocks right. It is never used in exams.</p></div>
+            </div>
+            <button type="button" class="bc-btn" onclick="closeHelp()">Got it</button>
+        </div>
+    </div>
+
+    <div id="game-over-screen" class="screen">
+        <div class="pg-panel pg-game-over">
+            <h1>Game over</h1>
+            <p>The bugs reached the ceiling.</p>
+            <div class="pg-final">Final score <b id="final-score">0</b></div>
+            <button type="button" class="bc-btn" onclick="resetGame()">Back to the menu</button>
+        </div>
+    </div>
+
+    <div id="controls">
+        <div id="support-hint" class="pg-support" aria-live="polite" hidden></div>
+        <div id="controls-text" class="control-panel">
+            <div id="input-label" class="pg-input-label">Tap a block, then type the corrected code:</div>
+            <div class="input-group">
+                <input type="text" id="code-input" placeholder="Type code..." autocomplete="off" autocorrect="off"
+                    autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitTextAnswer()">
+                <button type="button" class="bc-btn btn-fix" onclick="submitTextAnswer()">Fix</button>
+            </div>
+        </div>
+        <div id="controls-mcq" class="control-panel">
+            <button type="button" class="btn-option" id="opt-0" onclick="submitMCQAnswer(0)"></button>
+            <button type="button" class="btn-option" id="opt-1" onclick="submitMCQAnswer(1)"></button>
+            <button type="button" class="btn-option" id="opt-2" onclick="submitMCQAnswer(2)"></button>
+            <button type="button" class="btn-option" id="opt-3" onclick="submitMCQAnswer(3)"></button>
+        </div>
+        <div id="controls-multi" class="control-panel">
+            <div id="input-label-multi" class="pg-input-label">Type the comment and the code (Enter for a new line):</div>
+            <div class="input-group is-multi">
+                <textarea id="code-input-area" placeholder="" spellcheck="false" autocomplete="off"></textarea>
+                <button type="button" class="bc-btn btn-fix" onclick="submitMultiAnswer()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      // In load order: the streak and power-ups, where the level files live,
+      // the stats, the game itself, the custom level loader, answers, exams,
+      // running Python, the Write Python window, support mode, then the
+      // menu, which starts the page. Level content is fetched as JSON at
+      // play time. Every file carries this page's bcv, so a new
+      // GH_PAGES_BUILD from the shell refreshes them together.
+      (function () {
+        var v = encodeURIComponent(new URLSearchParams(location.search).get("bcv") || "");
+        ["js/powerups.js", "js/data.js", "js/stats.js", "js/play.js", "js/loader.js", "js/answers.js", "js/exams.js",
+          "js/runner.js", "js/interpreter.js", "js/support.js", "js/menu.js"].forEach(function (file) {
+          document.write('<script src="' + file + "?v=" + v + '"><\/script>');
+        });
+      })();
+    </script>
+</body>
+
+</html>

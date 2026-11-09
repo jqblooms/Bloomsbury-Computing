@@ -31,7 +31,7 @@
             '<span class="pd-stars" aria-label="' + stars + ' of 3 stars">' + [1, 2, 3].map(function (k) { return '<i class="' + (k <= stars ? 'on' : '') + '"></i>'; }).join('') + '</span>' +
             '<span class="pd-best">' + (b ? b.score : '') + '</span></button></li>';
         }).join('') + '</ol></article>';
-    }).join('') + '<p class="pd-more">Coming next: IGCSE Paper 2 questions from real past papers.</p>';
+    }).join('');
   }
   $('stages').addEventListener('click', function (e) { var b = e.target.closest('[data-level]'); if (b) start(+b.dataset.level); });
   $('homeBtn').addEventListener('click', menu);
@@ -225,7 +225,8 @@
   }
   function report(clean) {
     if (W.reported) return; W.reported = true;
-    postToParent({ type: 'PG_PROGRESS', kind: 'level', level: W.level.id, score: clean ? W.score : 0, duration: Date.now() - W.t0, correct: W.correct, wrong: W.wrong, lang: lang });
+    // levels go to the site as 101 and up: 1 to 52 are the old game's records, which meant other levels
+    postToParent({ type: 'PG_PROGRESS', kind: 'level', level: 100 + W.level.id, score: clean ? W.score : 0, duration: Date.now() - W.t0, correct: W.correct, wrong: W.wrong, lang: lang });
   }
 
   FIELD.init($('field'));

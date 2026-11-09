@@ -451,4 +451,6 @@
       { id: 60, title: 'Write a linear search', bugs: 3, mix: [S11.write] },
       { id: 61, title: 'Stage 11 boss wave', bugs: 6, boss: true, mix: [S11.predictSearch, S11.why, S11.predictPass, S11.fix, S11.write, S11.why] }] }
   );
+  // the building blocks, for content3.js
+  CONTENT.H2 = { ind: ind, cmp: cmp, IF: IF, CHAIN: CHAIN, FOR: FOR, WHILE: WHILE, INP: INP, add: add, ARR: ARR, at: at, T: T, outv: outv, dI: dI, dS: dS, choice: choice, err: err, M: M, pred: pred, fix: fix, write: write, LOOP: LOOP, IFNEED: IFNEED };
 })();
