@@ -119,6 +119,11 @@ T.carryNotPress = () => {
 };
 T.tutorialNoArrowFirst = () => {
   s().start(idx('read-t')); ok(!s().guideTarget(), 'the tutorial points at the answer before the pupil tries');
+  const r = R(), want = r.p.text[0], wrong = want === 'A' ? 'B' : 'A';
+  deliver(r.pad[wrong], r.out[0]); s().frame(2);
+  ok(r.helpAt === 0 && !s().guideTarget(), 'a wrong guess makes the arrow point at the right letter');
+  ok(!new RegExp('That is ' + want + '\\b').test(s().toastText() + ' ' + (r.why || '')), 'a wrong guess names the right letter');
+  ok(document.querySelector('.sem-group.hint'), 'a wrong guess does not light the card row');
 };
 T.wrongFlags = () => {
   s().start(idx('send-c')); const r = R(), want = r.p.text[0];

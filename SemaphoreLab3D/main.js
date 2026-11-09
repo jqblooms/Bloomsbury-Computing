@@ -344,10 +344,10 @@ export function startSolo({ container, myName, colour }) {
 
   // ---------------------------------------------------------------- reading flags: walk to the letter the flags show
   const KIND = {};
-  const card = m => {
+  const card = (m, hl) => {
     const groups = GROUPS.map(g => ({ g, ls: [...g.letters].filter(L => !m.card || m.card.includes(L)) })).filter(x => x.ls.length);
     let h = '<p class="note">Left and right are as you look at the signaller.</p>';
-    for (const { g, ls } of groups) h += '<div class="sem-group"><p class="sem-pat">' + g.pattern + '</p><div class="sem-row">' + ls.map(L => '<span class="sem-card">' + figSvg(POSE[L]) + '<b>' + L + '</b></span>').join('') + '</div></div>';
+    for (const { g, ls } of groups) h += '<div class="sem-group' + (hl && g.letters.includes(hl) ? ' hint' : '') + '"><p class="sem-pat">' + g.pattern + '</p><div class="sem-row">' + ls.map(L => '<span class="sem-card">' + figSvg(POSE[L]) + '<b>' + L + '</b></span>').join('') + '</div></div>';
     if (m.spaces) h += '<div class="sem-group"><p class="sem-pat">A space between words: both flags down.</p><div class="sem-row"><span class="sem-card">' + figSvg([0, 0]) + '<b>space</b></span></div></div>';
     return h;
   };
@@ -364,7 +364,7 @@ export function startSolo({ container, myName, colour }) {
     if (R.out[i].items.length) return { msg: 'This box is already decoded.' };
     if (i !== R.at) return { msg: 'Fill the boxes in order, from the left. The next one has the yellow ring.' };
     const want = R.p.text[R.at], L = it.sym;
-    if (L !== want) { R.helpAt = R.at; return { msg: 'The flags show ' + describe(POSE[want]) + '. That is ' + nameOf(want) + ', not ' + nameOf(L) + '.' + (want === ' ' ? '' : ' ' + groupNote(want)), mistake: true }; }
+    if (L !== want) { R.helpAt = R.at; return { msg: 'That is not ' + nameOf(L) + '. The flags show ' + describe(POSE[want]) + '. Find those flags on the card.' + (want === ' ' || M.m.type !== 'tutorial' ? '' : ' The row to look in is lit up.'), mistake: true }; }
     return null;
   }
   function choose(L) {
@@ -401,9 +401,8 @@ export function startSolo({ container, myName, colour }) {
       if (R.over) return null;
       // carrying a cube: the ring shows the next box (where, not what)
       if (hand.item) return m.type === 'tutorial' ? slotTarget(R.out[R.at]) : areaTarget([R.out[R.at]]);
-      // after a slip (or once a challenge round no longer counts) the arrow shows the right letter; before, you decide
-      if (R.over || !(m.type === 'tutorial' && (R.helpAt === R.at || R.spoilt))) return null;
-      return slotTarget(R.pad[R.p.text[R.at]]);
+      // never an arrow to the letter: that skips the decoding. After a slip the card lights the right row instead.
+      return null;
     },
     steps(R, m) {
       return [...R.p.text].map((c, i) => ({
@@ -413,7 +412,7 @@ export function startSolo({ container, myName, colour }) {
         done: () => R.at > i }));
     },
     goals(m) { return ['Read the two flags as you see them.', 'Find the same flags on the semaphore card.', 'Carry that letter cube to the next box.'].concat(m.spaces ? ['Both flags down means a space: carry a blank cube from SPACE.'] : []); },
-    rules(R, m) { return card(m); },
+    rules(R, m) { return card(m, m.type === 'tutorial' && R.helpAt === R.at ? R.p.text[R.at] : null); },
     expr(R, m) {
       const t = R.p.text, done = R.at >= t.length;
       return '<div class="sem-now"><div class="sem-big">' + figSvg(done ? [0, 0] : POSE[t[R.at]]) + '</div><div><b>The flags now</b><br>' + (done ? 'All done.' : 'Letter ' + (R.at + 1) + ' of ' + t.length + '.') + '</div></div>' + boxes(t, R.at);

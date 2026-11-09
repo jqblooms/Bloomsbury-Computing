@@ -21,3 +21,4 @@
 .sem-mid { display: flex; align-items: center; justify-content: center; }
 .sem-mid .sem-svg { width: 64px; height: 64px; }
 .walk .sem-now { justify-content: center; }
+.sem-group.hint { outline: 3px solid #ffd43b; border-radius: 8px; padding: 2px 4px; }
