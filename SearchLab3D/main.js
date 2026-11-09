@@ -319,7 +319,7 @@ export function startSolo({ container, myName, colour }) {
       R.found = addSlot({ role: 'found', pad: 'answer', x: BX - 3, y: 6, label: 'FOUND', tag: { tagY: 130 }, press: () => sayEnd(true), pressText: 'to say: found it.' });
       R.none = addSlot({ role: 'none', pad: 'target', x: BX + n + 2, y: 6, label: 'NOT FOUND', tag: { tagY: 130 }, press: () => sayEnd(false), pressText: 'to say: it is not in the list.' });
       countSign();
-      if (m.predict) R.ask = { type: 'num', plain: true, q: 'Before you start: how many comparisons will a linear search make to look for ' + p.target + '?', answer: linearCount(p.list, p.target),
+      if (m.predict) R.ask = { type: 'num', plain: true, q: 'Before you start, here is the list. How many comparisons will a linear search make to look for ' + p.target + '?', answer: linearCount(p.list, p.target),
         hint: 'Count the boxes it opens, from index 1, until it finds the target. If the target is not there, it opens every box.', why: 'A linear search makes ' + linearCount(p.list, p.target) + ' comparisons here.', done: () => explain('Now do the search to see.') };
       else askMiddle();
       pos.x = BX + Math.floor(n / 2); pos.y = 6;
@@ -361,7 +361,9 @@ export function startSolo({ container, myName, colour }) {
     expr(R) {
       const p = R.p;
       const row = p.list.map((v, k) => '<td class="' + R.state[k] + (binary() && k + 1 === R.lo ? ' lo' : '') + (binary() && k + 1 === R.hi ? ' hi' : '') + '">' + (R.state[k] === 'open' ? v : R.state[k] === 'gone' ? '' : '?') + '</td>').join('');
-      return '<b>Find:</b> ' + p.target + (binary() ? ' &nbsp; <b>Low:</b> ' + R.lo + ' &nbsp; <b>High:</b> ' + R.hi : '') + ' &nbsp; <b>Comparisons:</b> ' + R.cmp +
+      // a prediction needs the list, so it is never a guess: shown until it is answered, then the boxes stay closed
+      if (R.ask && M.m.predict) return '<b>Find:</b> ' + p.target + '<div class="sr-wrap">' + listHtml(p.list) + '</div><p class="note">The list is shown for your prediction. Then you search the closed boxes in order.</p>';
+      return '<b>Find:</b> ' + p.target + (binary() ?' &nbsp; <b>Low:</b> ' + R.lo + ' &nbsp; <b>High:</b> ' + R.hi : '') + ' &nbsp; <b>Comparisons:</b> ' + R.cmp +
         '<div class="sr-wrap"><table class="sr-row"><tr>' + p.list.map((v, k) => '<th>' + (k + 1) + '</th>').join('') + '</tr><tr>' + row + '</tr></table></div>';
     },
     walk(R) {

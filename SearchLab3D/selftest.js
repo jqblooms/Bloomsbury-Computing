@@ -131,7 +131,7 @@ T.linearRules = () => {
   s().start(idx('lin-t')); const r = R();
   pressPad(r.box[2]); ok(r.cmp === 0 && !M().spoilt && /in order, starting at index 1/.test(s().toastText()), 'box 3 opened before box 1');
   ok(!!s().guideTarget(), 'after a slip the tutorial arrow does not show box 1');
-  s().start(idx('lin-c')); const r2 = R(); answer();
+  s().start(idx('lin-c')); ok(R().p.list.every(v => document.getElementById('mission').textContent.includes(String(v))), 'the linear prediction is asked without showing the list'); const r2 = R(); answer();
   pressPad(r2.none); ok(newRoundAfter(r2) && /every item/.test(r2.why || ''), 'NOT FOUND before checking every item did not start a new round');
 };
 T.binaryRules = () => {
