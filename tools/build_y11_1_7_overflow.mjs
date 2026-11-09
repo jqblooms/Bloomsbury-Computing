@@ -261,6 +261,13 @@ steps.push(concept('concept-spot', 'Compare: How to Spot Overflow',
   columns(box(boxTitle('140 + 90 = 230') + addTable(...EXN, { label: false, of: true }) + verdict('No carry out. 230 is not greater than 255: no overflow.', true)),
     box(boxTitle('140 + 120 = 260') + addTable(...EXY, { label: false, of: true }) + verdict('Carry out. 260 is greater than 255: overflow.', false)))));
 
+// Overflow Lab (pages OverflowLab/, registry overflow-lab): lesson mode shows only the first two stages and posts
+// BC_APP_RESULT, so the slide saves the student's progress.
+steps.push({ ...embed('activity-lab', 'Activity: Overflow Lab', 'overflow-lab', 'Activity: Overflow Lab',
+  'Work through Will it fit? and Watch and predict. Press Watch it to see any answer again. Done when both stages show mastered.',
+  ['Why does the register store a smaller number when a carry leaves the 128 column?', 'That carry is worth 256. The register cannot keep it, so the stored value is 256 less.']),
+  embedQuery: 'stages=fit,watch' });
+
 steps.push(embed('activity-1', 'Activity 1: Overflow or Not?', 'drill-y11-1-7-spot', 'Activity 1: Overflow or Not?',
   'Decide: overflow or not? Then what the register keeps. Get each card right 3 times in a row.',
   ['Why can you check for overflow without doing the whole binary addition?', 'Convert both numbers to denary and add. Greater than 255 means it cannot fit.']));
