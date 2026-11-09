@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Defense</title>
+  <link rel="stylesheet" href="../../shared/bc-theme.css?v=20260927s">
+  <script>document.write('<link rel="stylesheet" href="game.css?v=' + encodeURIComponent(new URLSearchParams(location.search).get('bcv') || '') + '">');</script>
+</head>
+<body>
+<main id="app">
+  <header class="pd-top">
+    <button type="button" class="pd-home" id="homeBtn" hidden aria-label="Back to the levels">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg><span>Levels</span>
+    </button>
+    <h1 class="pd-title">Python Defense</h1>
+    <div class="pd-lang" role="group" aria-label="Language">
+      <button type="button" data-lang="py" aria-pressed="true">Python</button>
+      <button type="button" data-lang="ps" aria-pressed="false">Pseudocode</button>
+    </div>
+    <label class="pd-slow"><input type="checkbox" id="slowBugs"> Slow bugs</label>
+  </header>
+
+  <!-- the levels: a card per stage -->
+  <section id="menu" class="pd-menu" aria-label="Levels">
+    <p class="pd-lead">Bugs crawl along the circuit towards the CPU. Get each task right to fire your debuggers at them. One bug through and the wave does not count.</p>
+    <div id="stages" class="pd-stages"></div>
+  </section>
+
+  <!-- playing a wave -->
+  <section id="play" class="pd-play" hidden>
+    <div class="pd-board">
+      <canvas id="field" width="960" height="300" aria-label="The circuit board: bugs crawl towards the CPU"></canvas>
+      <div class="pd-hud">
+        <span id="hudLevel"></span>
+        <span class="pd-dots" id="hudDots" aria-label="Bugs in this wave"></span>
+        <span id="hudScore">0</span>
+      </div>
+    </div>
+    <div class="pd-task" id="task" aria-live="polite"></div>
+  </section>
+</main>
+
+<script>
+  // the identity bridge and progress messages to the site (as the old game: PG_PROGRESS)
+  window.__bcPlayerName = null;
+  window.addEventListener('message', function (e) { var d = e.data; if (d && d.type === 'BC_IDENTITY' && d.name) window.__bcPlayerName = d.name; });
+  window.postToParent = function (payload) { try { if (window.parent !== window) window.parent.postMessage(payload, '*'); } catch (e) { } };
+  var v = encodeURIComponent(new URLSearchParams(location.search).get('bcv') || '');
+  ['../../assets/js/skulpt.min.js', '../../assets/js/skulpt-stdlib.js', '../../shared/pseudocode-engine.js', 'run.js', 'content.js', 'field.js', 'game.js'].forEach(function (f) {
+    document.write('<script src="' + f + '?v=' + v + '"><\/script>');
+  });
+</script>
+</body>
+</html>
