@@ -1,0 +1,10 @@
+/* Overflow Lab 3D: the written sum in the mission sheet (everything else is net3d.css and contest.css) */
+.ov-wrap { overflow-x: auto; margin: 6px 0 8px; }
+.ov-sum { border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: .85rem; }
+.ov-sum th { color: var(--muted); font-weight: 700; font-size: .7rem; padding: 0 3px; text-align: center; }
+.ov-sum td { border: 2px solid var(--line-strong); min-width: 24px; height: 24px; text-align: center; font-weight: 800; }
+.ov-sum td.car { border-style: dashed; color: #e8590c; font-size: .75rem; }
+.ov-sum tr.ans td { border-top-width: 4px; }
+.ov-sum .out { background: rgba(201, 42, 42, .14); }
+.ov-sum td.lost { color: #c92a2a; text-decoration: line-through; }
+.ov-sum th.now, .ov-sum td.now { box-shadow: inset 0 0 0 2px #ffd43b; }
