@@ -47,7 +47,7 @@ var FDE = (function () {
     var list = [
       { id: 'f1', stage: 'F', to: 'MAR', from: 'PC', value: String(p), bus: 'Address bus', set: { MAR: String(p) },
         short: 'PC to MAR', text: 'The address ' + p + ' is copied from the PC into the MAR.',
-        why: 'Memory only reads the address in the MAR. An address travels on the address bus.' },
+        why: 'Memory only reads the address in the MAR.' },
       { id: 'f2', stage: 'F', to: 'Memory', from: 'MAR', value: null, bus: 'Address bus', set: {},
         short: 'MAR to memory', text: 'The MAR sends ' + p + ', the address from the PC, to memory. The CU sends a read signal.',
         why: 'Memory needs the address (on the address bus) and a read signal (on the control bus), so it sends back what it holds there.' },
@@ -56,7 +56,7 @@ var FDE = (function () {
         why: 'Everything that comes from memory arrives in the MDR, on the data bus.' },
       { id: 'f4', stage: 'F', to: 'PC', from: 'PC', value: String(p + 1), bus: 'No bus', set: { PC: String(p + 1) },
         short: 'PC + 1', text: 'The PC goes up by 1, to ' + (p + 1) + '.',
-        why: 'The program is stored in order, so the next instruction is at the next address. The PC changes itself: no bus is used.' },
+        why: 'The program is stored in order, so the next instruction is at the next address. This happens during fetch, before decode.' },
       { id: 'f5', stage: 'F', to: 'CIR', from: 'MDR', value: ins, bus: 'Data bus', set: { CIR: ins },
         short: 'MDR to CIR', text: ins + ' is copied from the MDR into the CIR, inside the CU.',
         why: 'The next value from memory will arrive in the MDR and replace it, so the instruction is kept safe in the CIR.' },
@@ -94,8 +94,9 @@ var FDE = (function () {
   var MOVE_IDS = ['f1', 'f2', 'f3', 'f4', 'f5', 'd', 'e1', 'e2', 'e3', 'e4L', 'e4A'];
   var STAGES = [
     { id: 'stage', name: 'Which stage?', items: MOVE_IDS.slice() },
-    { id: 'next', name: 'What comes next?', items: ['start'].concat(MOVE_IDS) },
-    { id: 'where', name: 'Where does it go?', items: ['f1', 'f2', 'f3', 'f4', 'f5', 'e1', 'e2', 'e3', 'e4L', 'e4A'] },
+    // The PC can go up by 1 at more than one point in fetch, so "what comes next" never asks about it.
+    { id: 'next', name: 'What comes next?', items: ['start'].concat(MOVE_IDS.filter(function (m) { return m !== 'f4'; })) },
+    { id: 'where', name: 'Where does it go?', items: ['f1', 'f2', 'f3', 'f5', 'e1', 'e2', 'e3', 'e4L', 'e4A'] },
     { id: 'hold', name: 'What does it hold?', items: ['f1', 'f3', 'f4', 'f5', 'e1', 'e3', 'e4L', 'e4A'] },
     { id: 'run', name: 'Run the cycle', items: ['LOAD', 'ADD', 'BOTH'] }
   ];
@@ -154,7 +155,7 @@ var FDE = (function () {
 
   // Stage 2: what happens after the move just done. Options: the right next move and two others from the same run.
   function nextQuestion(item, r) {
-    var c = caseOf(memory(r), opFor(item, r)), list = moves(c);
+    var c = caseOf(memory(r), opFor(item, r)), list = moves(c).filter(function (m) { return m.id !== 'f4'; });
     var i = item === 'start' ? -1 : list.indexOf(moveOf(list, item));
     var right = i + 1 < list.length ? list[i + 1] : nextFetch(c);
     var done = i >= 0 ? list[i] : null;

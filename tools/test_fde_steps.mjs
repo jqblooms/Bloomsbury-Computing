@@ -34,6 +34,8 @@ FDE.STAGES.forEach(st => st.items.forEach(it => {
       const q = FDE.nextQuestion(it);
       ok(q.options.length === 3 && new Set(q.options.map(m => m.text)).size === 3, 'next options ' + it);
       ok(q.options.includes(q.right), 'next has right ' + it);
+      ok(it !== 'f4' && q.options.every(m => m.id !== 'f4'), 'PC + 1 never in what comes next ' + it);
+      if (it === 'f3') ok(q.right.id === 'f5', 'after memory to MDR comes MDR to CIR');
     } else if (st.id !== 'run') {
       const c = FDE.caseOf(FDE.memory(), FDE.opFor(it)), m = FDE.moveOf(FDE.moves(c), it);
       ok(m && m.id === it, 'move found ' + st.id + ' ' + it);

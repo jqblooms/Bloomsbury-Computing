@@ -155,10 +155,10 @@
   // ---------- How it works ----------
   var HOW = {
     stage: '<p><b>Fetch</b>: the instruction is coming into the CPU. <b>Decode</b>: the CU works out what it means. <b>Execute</b>: it is carried out.</p>',
-    next: '<p>Fetch has 5 moves: PC to MAR, MAR to memory, memory to MDR, PC + 1, MDR to CIR. Then decode. Then execute: address to MAR, MAR to memory, memory to MDR, then the ACC.</p>',
-    where: '<p>Pick the box the value goes to, then the bus. Addresses travel on the address bus. Instructions and numbers travel on the data bus. The PC going up by 1 uses no bus.</p>',
+    next: '<p>Fetch: PC to MAR, MAR to memory, memory to MDR, MDR to CIR. The PC also goes up by 1 during fetch. Then decode. Then execute: address to MAR, MAR to memory, memory to MDR, then the ACC.</p>',
+    where: '<p>Pick the box the value goes to. When the value goes to or from memory, also pick the bus: addresses go to memory on the address bus, and instructions and numbers come back on the data bus.</p>',
     hold: '<p>Look at the boxes. Work out the one move that happens, then what the box holds after it. Watch out: an address is not the number stored there.</p>',
-    run: '<p>Run a whole instruction. For each move, click the box that changes next, then pick what it holds. For decode, click the CU. One mistake means the run does not count.</p>'
+    run: '<p>Run a whole instruction. For each move, click the box that changes next, then pick what it holds. For decode, click the CU. The PC can go up by 1 at any point in fetch once the MAR has the address. One mistake means the run does not count.</p>'
   };
   howBtn.addEventListener('click', function () {
     var open = howEl.hidden;
@@ -284,8 +284,7 @@
       f1: 'Fetch starts. The PC holds ' + p + '. Where is ' + p + ' copied to?',
       f2: 'The MAR holds ' + p + '. Where does it send ' + p + '?',
       f3: 'Memory sends back ' + ins + '. Where does it go?',
-      f4: ins + ' is in the MDR. Which box now changes to ' + (p + 1) + '?',
-      f5: ins + ' is in the MDR. Where is it copied next?',
+      f5: ins + ' is in the MDR. Where is it copied before decode?',
       e1: 'The CU has decoded ' + ins + '. Where does the ' + a + ' go?',
       e2: 'The MAR holds ' + a + '. Where does it send ' + a + '?',
       e3: 'Memory sends back ' + n + '. Where does it go?',
@@ -293,17 +292,16 @@
       e4A: 'The MDR holds ' + n + '. The ALU adds it to ' + c.acc + '. Where does the result go?'
     }[m.id];
   }
-  function busPrompt(m, c) {
-    if (m.id === 'f4') return 'Which bus does the PC use to go up by 1?';
-    if (m.id === 'e4A') return 'Which bus carries ' + c.n + ' from the MDR to the ALU?';
-    var what = m.id === 'f2' || m.id === 'e2' ? m.before.MAR : m.value;
-    return 'Which bus carries ' + what + '?';
+  // Buses are asked only between the CPU and memory, where there is one clear answer.
+  var BUS_MOVES = { f2: 1, e2: 1, f3: 1, e3: 1 };
+  function busPrompt(m) {
+    return m.id === 'f2' || m.id === 'e2' ? 'Which bus carries ' + m.before.MAR + ' to memory?' : 'Which bus carries ' + m.value + ' from memory to the MDR?';
   }
   function askWhere() {
     var c = FDE.caseOf(FDE.memory(), FDE.opFor(cur.item)), m = FDE.moveOf(FDE.moves(c), cur.item);
     qText.textContent = wherePrompt(m, c);
     if (cur.help >= 1) qArea.appendChild(picture(c, m.before, { from: cur.help === 2 ? m.from : null, memFrom: cur.help === 2 && m.from === 'Memory' ? m.before.MAR : null }));
-    if (cur.help === 2) qArea.appendChild(tip('Addresses go on the address bus. Instructions and numbers go on the data bus.'));
+    if (cur.help === 2 && BUS_MOVES[m.id]) qArea.appendChild(tip('Addresses go to memory on the address bus. Instructions and numbers come back on the data bus.'));
     var dests = ['PC', 'MAR', 'MDR', 'CIR', 'ACC', 'Memory'];
     var row = choices(dests.map(function (d) { return { label: d, value: d }; }), 'word', function (v, b) {
       row.mark(m.to, b);
@@ -313,10 +311,15 @@
         showNext();
         return;
       }
+      if (!BUS_MOVES[m.id]) {
+        fb('Right: <b>' + m.to + '</b>. ' + esc(m.why) + score(true), 'good');
+        showNext();
+        return;
+      }
       fb('Right: <b>' + m.to + '</b>.', 'good');
-      var bp = el('p', 'q-text', esc(busPrompt(m, c)));
+      var bp = el('p', 'q-text', esc(busPrompt(m)));
       qArea.appendChild(bp);
-      var row2 = choices(['Address bus', 'Data bus', 'No bus'].map(function (d) { return { label: d, value: d }; }), 'word', function (v2, b2) {
+      var row2 = choices(['Address bus', 'Data bus', 'Control bus'].map(function (d) { return { label: d, value: d }; }), 'word', function (v2, b2) {
         var ok = v2 === m.bus;
         row2.mark(m.bus, b2);
         var extra = score(ok);
@@ -370,6 +373,15 @@
         if (done) return;
         done = true;
         Object.keys(pic.boxes).forEach(function (n) { pic.boxes[n].disabled = true; });
+        // The PC can go up by 1 at any point in fetch after its address is copied to the MAR, as long as it
+        // is before decode. So clicking the PC early brings that move forward, and doing the MDR to CIR
+        // copy first pushes it back.
+        var f4 = -1;
+        for (var j = k; j < list.length && list[j].id !== 'd'; j++) if (list[j].id === 'f4') { f4 = j; break; }
+        if (f4 > k && name === 'PC' && m.stage === 'F' && m.id !== 'f1') { list.splice(k, 0, list.splice(f4, 1)[0]); m = list[k]; }
+        else if (m.id === 'f4' && list[k + 1] && list[k + 1].id === 'f5' && (name === 'CU' || name === 'CIR')) {
+          var t = list[k]; list[k] = list[k + 1]; list[k + 1] = t; m = list[k];
+        }
         var want = m.to === 'CU' ? 'CU' : m.to;
         var ok = name === want || (want === 'CIR' && name === 'CU' && m.id === 'f5');
         if (!ok) {
