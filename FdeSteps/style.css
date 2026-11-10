@@ -227,3 +227,5 @@ button.mem:hover:not(:disabled) { border-color: var(--brand); background: var(--
 .mem td:first-child { color: var(--muted); }
 .mem tr.from td { background: var(--warn-soft); }
 @media (max-width: 520px) { .cpu { grid-template-columns: repeat(3, minmax(0, 1fr)); flex: 1; } }
+.card-row { align-items: stretch; }
+.card-row .card { flex: 1 1 320px; margin-bottom: 0; display: flex; flex-direction: column; justify-content: center; }

@@ -72,6 +72,16 @@
   }
   function card(label, html) { return el('div', 'card', (label ? '<span class="lbl">' + label + '</span>' : '') + html); }
   function tip(html) { return el('p', 'tip', html); }
+  // The move's card beside a small memory table, so every number in the move can be found.
+  function withMemory(c, cardNode) {
+    var row = el('div', 'cpu-pic card-row');
+    row.appendChild(cardNode);
+    var mem = el('div', 'mem');
+    mem.innerHTML = '<div class="mt">Memory</div><table><tr><td>Address</td><td>Holds</td></tr>' +
+      c.M.addrs.map(function (a) { return '<tr><td>' + a + '</td><td>' + esc(c.M.cells[a]) + '</td></tr>'; }).join('') + '</table>';
+    row.appendChild(mem);
+    return row;
+  }
   // Where a move sits in the run: 5 fetch moves, decode, 4 execute moves.
   function strip(index) {
     var s = el('div', 'strip');
@@ -236,7 +246,7 @@
   function askStage() {
     var c = FDE.caseOf(FDE.memory(), FDE.opFor(cur.item)), m = FDE.moveOf(FDE.moves(c), cur.item);
     qText.textContent = 'Which stage is this move in?';
-    qArea.appendChild(card('', esc(m.text)));
+    qArea.appendChild(withMemory(c, card('', esc(m.text))));
     if (cur.help === 2) qArea.appendChild(tip('Ask: is the instruction coming in, being worked out, or being carried out?'));
     else if (cur.help === 1) qArea.appendChild(tip('Coming in, worked out, or carried out?'));
     var row = choices(['F', 'D', 'E'].map(function (k) { return { label: FDE.STAGE_NAMES[k], value: k }; }), 'word', function (v, b) {
@@ -256,7 +266,7 @@
     qText.textContent = 'What happens next?';
     if (cur.help === 2) qArea.appendChild(strip(q.index + 1 < 10 ? q.index + 1 : 0));
     if (cur.help >= 1 && q.index + 1 < 10) qArea.appendChild(el('span', 'where-tag', 'Next move is in: ' + FDE.STAGE_NAMES[q.right.stage]));
-    qArea.appendChild(q.done ? card('Just done', esc(q.done.text)) : card('Start', 'The PC holds ' + q.c.pc + '. The instruction at address ' + q.c.pc + ' is ' + esc(q.c.ins) + '.'));
+    qArea.appendChild(withMemory(q.c, q.done ? card('Just done', esc(q.done.text)) : card('Start', 'The PC holds ' + q.c.pc + '. The instruction at address ' + q.c.pc + ' is ' + esc(q.c.ins) + '.')));
     var row = choices(q.options.map(function (m) { return { label: m.text, value: m.text }; }), 'line', function (v, b) {
       var ok = v === q.right.text;
       row.mark(q.right.text, b);
