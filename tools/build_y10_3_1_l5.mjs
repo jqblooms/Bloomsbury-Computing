@@ -4,13 +4,14 @@
 // It adds the lesson to the "3.1" unit after y10-3-1-l4. The drill is registered in the shell (js/registries.html).
 // One idea per slide, each a prediction and then the reason, with small numbers: performance (how many instructions a
 // second), the clock (one FDE cycle per pulse), clock speed in GHz, a 2 GHz and 4 GHz compare; RAM is slow, so cache;
-// a small and a big cache compare; cores, a 1 core and 4 cores compare, then a task that cannot be split. Notes go on
-// their own slides after the slides they are about (Check my note).
+// a teaching slide on what cache is and why it helps, then a small and a big cache compare; cores, a 1 core and 4 cores compare, then a task that cannot be split. Notes go on
+// their own slides after the slides they are about (Check my note). Nothing is asked before it is taught (2026-11-10
+// audit): the Do Now and Extension use 3.1.1 to 3.1.4 only, and the builder asserts it.
 // Activities: CPU Lab activity=perf (CPU Race: CpuLab/perf.js, model test tools/test_cpulab_perf.mjs), levels 1 to 2
 // on Activity 1 and 3 to 4 on Activity 2.
 // Real questions, each checked against its mark scheme in Desktop\0478 Past Papers\extract:
-//   Do Now:  0478/12 June 2026 Q2(c); 0478/13 November 2023 Q3(a) (typed, not circled)
-//   Exam:    0478/12 November 2023 Q3(a)(i) and (ii); 0478/13 November 2025 Q2(c)(i); 0478/13 November 2023 Q3(b);
+//   Do Now:  0478/12 June 2026 Q2(c); 0478/12 June 2025 Q4(a) (the CU, ALU and PC rows)
+//   Exam:    0478/12 November 2023 Q3(a)(i) and (ii); 0478/12 June 2025 Q4(a) (cache row); 0478/13 November 2023 Q3(b);
 //            0478/13 June 2023 Q2(a) and (b); 0478/13 November 2023 Q3(c); 0478/11 June 2025 Q5(a) (core and
 //            instruction set rows); 0478/12 March 2025 Q3(c)(i) and (ii); 0478/13 June 2024 Q8(d)
 //   Drill:   0478/12 June 2026 Q2(d); 0478/11 June 2025 Q5(a) (cache row)
@@ -121,21 +122,26 @@ steps.push(written('do-now', 'Do Now: Fetching a Value (1 of 2)',
   ], '<p style="margin:0">A computer has a central processing unit (CPU). The memory address register (MAR) and the memory data register (MDR) are two registers built into the CPU.</p>'));
 steps[steps.length - 1].walkthrough = WT_DN1;
 
-// ---------------------------------------------------------------- Do Now 2: 0478/13 November 2023 Q3(a)
-// Mark scheme: accumulator (ACC); control unit (CU); program counter (PC). Typed here instead of circled.
-const WT_DN2 = { title: 'Walk me through it: inside the CPU or not?', steps: [
-  { text: '<strong>A similar question.</strong> "Circle two components that are <b>not</b> built into the CPU: ALU, keyboard, MAR, printer, CIR."', visual: note('ask the same question about every item') },
-  { text: 'For each item ask: is it a <b>register</b> or a <b>unit</b> that the CPU uses to run instructions? Those are built into the CPU.', visual: line('register or unit? ' + kw('inside the CPU')) },
-  { text: 'ALU: a unit, inside. MAR: a register, inside. CIR: a register, inside.', visual: line('ALU, MAR, CIR: ' + kw('inside')) },
-  { text: 'Keyboard and printer: devices joined to the computer, ' + kw('outside') + ' the CPU. So the answer is keyboard and printer.', visual: line('keyboard, printer: ' + kw('outside')) },
-  { text: 'Now your list. Which three are registers or units inside the CPU? The others are cards, disks or memory outside it.', visual: note('three inside, five outside') },
+// ---------------------------------------------------------------- Do Now 2: 0478/12 June 2025 Q4(a), three of its rows
+// Mark scheme, one mark each: control unit // CU; arithmetic and logic unit // ALU; (PC) it stores the address of the
+// next instruction to be fetched. The cache and clock rows of the same table are taught later in this lesson (the
+// cache row is the first cache exam question). This replaced 0478/13 November 2023 Q3(a), whose options (graphics
+// card, hard disk drive, motherboard, ROM) were never taught in 3.1.1 to 3.1.4.
+const WT_DN2 = { title: 'Walk me through it: complete a table of CPU parts', steps: [
+  { text: '<strong>A similar question.</strong> Two rows of a table. Row 1 gives a component: the accumulator (ACC). Row 2 gives a description: "It holds the instruction while it is decoded and executed."', visual: note('one row gives a component, one gives a description') },
+  { text: 'Row 1 gives a component. Say what it ' + kw('stores or does') + ', in one sentence. The ACC ' + kw('stores the result of a calculation') + '.', visual: line('ACC: ' + kw('stores the result of a calculation')) },
+  { text: 'Row 2 gives a description. Find its ' + kw('key words') + ': "the instruction while it is decoded". Which register holds the current instruction?', visual: line('key words: ' + kw('the current instruction')) },
+  { text: 'It is the ' + kw('current instruction register (CIR)') + '. The full name or the letters both earn the mark.', visual: line('CIR: ' + kw('current instruction register')) },
+  { text: 'Now your table. Two rows give a description: find the key words in each. One row gives a component: say what it stores.', visual: note('2 descriptions, 1 component') },
 ] };
-steps.push(written('do-now-2', 'Do Now: Inside the CPU (2 of 2)',
-  'Recap of 3.1.2. ' + cite('0478/13, November 2023, Question 3(a) (adapted: typed, not circled)') + ' A computer has a central processing unit (CPU). ' + WRITE_DO, [
-    { id: 'built-in', prompt: '(a) Type the three components that are built into the CPU: accumulator (ACC), control unit (CU), graphics card, hard disk drive (HDD), motherboard, program counter (PC), random access memory (RAM), read only memory (ROM).', marks: 3,
-      scheme: ['Accumulator (ACC)', 'Control unit (CU)', 'Program counter (PC)'],
-      guidance: 'One mark for each correct component. Online the components are typed instead of circled: if more than three are given, mark only the first three.',
-      modelAnswer: 'ACC, CU, PC.' },
+steps.push(written('do-now-2', 'Do Now: Parts of the CPU (2 of 2)',
+  'Recap of 3.1.2 and 3.1.3. ' + cite('0478/12, June 2025, Question 4(a) (adapted: three of the six rows)') + ' An employee uses a computer that has a Von Neumann architecture. The computer has a central processing unit (CPU). Complete the table of components in the CPU and their descriptions. ' + WRITE_DO, [
+    { id: 'row-signals', prompt: 'Description: "It sends signals to all the components in the CPU to manage the flow of data through the CPU." Give the component.', marks: 1,
+      scheme: ['Control unit // CU'], guidance: 'One mark.', modelAnswer: 'Control unit (CU).' },
+    { id: 'row-operations', prompt: 'Description: "It carries out all the arithmetic and logic operations in the CPU." Give the component.', marks: 1,
+      scheme: ['Arithmetic and logic unit // ALU'], guidance: 'One mark.', modelAnswer: 'Arithmetic and logic unit (ALU).' },
+    { id: 'row-pc', prompt: 'Component: program counter (PC). Give the description.', marks: 1,
+      scheme: ['It stores the address of the next instruction to be fetched'], guidance: 'One mark.', modelAnswer: 'It stores the address of the next instruction to be fetched.' },
   ]));
 steps[steps.length - 1].walkthrough = WT_DN2;
 
@@ -199,16 +205,32 @@ steps.push(mcStep('ram-wait', 'Why the CPU Waits for RAM', todo(PREDICT) +
     { prompt: 'Predict: a game uses the same picture data again and again. How could the CPU wait less?', options: ['Keep a copy of that data close, inside the CPU', 'Fetch it from RAM more often', 'Use a slower clock'], correct: 0,
       explain: 'Keep a copy close. A small, fast memory inside the CPU (or very near it) holds frequently used data and instructions. It is called <strong>cache</strong>. Cache is faster to access than RAM, so the CPU waits less.' },
   ]));
+// The teaching slide for cache: what it is and why it makes the CPU faster, before any question uses the word.
+const box = (t, extra = '') => `<div style="border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px;text-align:center${extra}">${t}</div>`;
+steps.push({ id: 'cache', label: 'Cache: Why the CPU Waits Less',
+  content: '<h2 class="lesson-h2">Cache: Why the CPU Waits Less</h2>' +
+    facts(['<strong>Cache</strong> is a small, fast memory inside the CPU (or very near it).',
+      'It holds a copy of <strong>frequently used</strong> data and instructions: the ones the CPU uses again and again.',
+      'Cache is <strong>faster to access</strong> than RAM. When the data is in cache, the CPU does not wait for RAM.',
+      'Cache is small. Data that does not fit in the cache must still be fetched from the slower RAM.']) +
+    `<div style="display:flex;gap:14px;align-items:center;justify-content:center;margin:8px 0">` +
+    box('<b>CPU</b><div style="display:flex;gap:8px;margin-top:4px"><div style="border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);padding:4px 8px">CU, ALU, registers</div><div style="border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);padding:4px 8px"><b>Cache</b>: fast</div></div>') +
+    `<div style="${MONO};font-size:15px;text-align:center">slow fetch<br>&larr;&rarr;</div>` + box('<b>RAM</b><div style="font-size:14px;margin-top:4px">all the data and instructions</div>') + '</div>' +
+    tps('Why does the CPU spend less time waiting when the data it needs is already in cache?', 'Cache is faster to access than RAM, so each fetch of that data takes less time. Less waiting means more instructions are processed each second.') });
 steps.push(mcStep('cache-compare', 'Compare: A Small Cache and a Big Cache', todo(COMPARE) +
   facts(['Both CPUs run the same game. It uses 6 MB of data again and again.']), [
     { prompt: 'Predict: which CPU runs the game faster, and why?', options: ['B: all 6 MB fits in its cache, so it waits less for RAM', 'A: a small cache is quicker to fill', 'Neither: the clock speeds are the same'], correct: 0,
       explain: '6 MB fits in B\'s cache but not in A\'s, so A keeps fetching data from the slower RAM. More cache: more frequently used data is found quickly, so performance improves.' },
   ], cmp(['CPU A: 2 MB cache', ['3 GHz']], ['CPU B: 8 MB cache', ['3 GHz']])));
-// 0478/13 November 2025 Q2(c)(i): C (it stores frequently used instructions).
-steps.push(mcStep('exam-cache-tick', 'Exam Question: The Purpose of Cache (1 of 2)',
-  `<p class="lesson-lead">${cite('0478/13, November 2025, Question 2(c)(i)')} The computer has primary storage. One example of primary storage is cache. <strong>What to do:</strong> pick one statement.</p>`, [
-    { prompt: 'Tick one box to show the correct statement that describes the purpose of cache.', options: ['It stores important instructions.', 'It stores the next instruction to be processed.', 'It stores frequently used instructions.', 'It stores instructions so they are not lost when the power is turned off.'], correct: 2,
-      explain: 'Cache stores frequently used instructions (and data), so the CPU finds them quickly without waiting for RAM.' },
+// 0478/12 June 2025 Q4(a), the cache row (its other rows are the second Do Now): it stores frequently used
+// data/instructions. This replaced 0478/13 November 2025 Q2(c)(i), whose stem uses primary storage and whose options
+// use data lost when the power is turned off, neither taught yet.
+steps.push(written('exam-cache-row', 'Exam Question: The Purpose of Cache (1 of 2)',
+  cite('0478/12, June 2025, Question 4(a) (adapted: the cache row only)') + ' The computer has a central processing unit (CPU). Complete the table of components in the CPU and their descriptions. ' + WRITE_DO, [
+    { id: 'cache-row', prompt: 'Component: cache. Give the description.', marks: 1,
+      scheme: ['It stores frequently used data or instructions'],
+      guidance: 'One mark. "Stores data" alone earns no mark: it must say frequently used.',
+      modelAnswer: 'It stores frequently used data and instructions.' },
   ]));
 // 0478/13 November 2023 Q3(b), two from: a type of storage ...; ... that stores frequently used data or instructions;
 // to speed up access ...; ... as it is faster to access than RAM; it has different levels, for example L1 to L3.
@@ -352,10 +374,10 @@ const cards = [
     { keywords: [/^(?=.*\b(more|faster)\b)(?=.*\b(cycles?|instructions?|pulses?)\b)(?=.*\bsecond\b).*$/i] }),
   card('k-05', 'clock', 'What happens on each pulse of the CPU clock?', ['One FDE cycle is carried out'], ['One byte is stored in cache', 'One core is switched on', 'RAM is cleared'],
     'On each pulse the CPU fetches, decodes and executes one instruction: one FDE cycle.', ['Think of the three stages from the last lesson.', 'One pulse, one ...?'], null),
-  card('c-01', 'cache', 'What is cache?', ['Small, fast memory in the CPU that holds frequently used data'], ['Large, slow storage that keeps data when the power is off', 'A register that holds the address of the next instruction', 'A unit inside the CPU that does the calculations'],
+  card('c-01', 'cache', 'What is cache?', ['Small, fast memory in the CPU that holds frequently used data'], ['Large, slow memory outside the CPU that holds all programs', 'A register that holds the address of the next instruction', 'A unit inside the CPU that does the calculations'],
     'Cache is small, fast memory inside or near the CPU. It holds frequently used data and instructions.', ['It is a kind of memory.', 'Which data does it hold: all of it, or what is used again and again?'], null,
     { keywords: [/^(?=.*\b(memory|storage)\b)(?=.*\b(frequent(ly)?|often|again|most used|commonly)\b).*$/i] }),
-  card('c-02', 'cache', 'Why does the CPU fetch from cache instead of RAM when it can?', ['Cache is faster to access, so the CPU waits less'], ['Cache holds more data than RAM', 'Cache keeps data when the power is off', 'Cache does the calculations for the ALU'],
+  card('c-02', 'cache', 'Why does the CPU fetch from cache instead of RAM when it can?', ['Cache is faster to access, so the CPU waits less'], ['Cache holds more data than RAM', 'Cache sends out the clock pulses', 'Cache does the calculations for the ALU'],
     'Cache is faster to access than RAM, so the CPU spends less time waiting.', ['RAM is outside the CPU and slower.', 'What does the CPU do while it fetches from RAM?'], null,
     { keywords: [/^(?=.*\b(faster|quicker|less time|wait(s|ing)? less|speeds? up|quick(ly)?)\b).*$/i] }),
   card('c-03', 'cache', 'CPU A has 2 MB of cache. CPU B has 8 MB. Everything else is the same.\nA game uses 6 MB of data again and again. Which CPU runs the game faster?', ['CPU B'], ['CPU A', 'Both the same'],
@@ -363,7 +385,7 @@ const cards = [
     'A similar question: the data is 3 MB. CPU X has 1 MB of cache, CPU Y has 4 MB.\nFirst: 3 MB does not fit in 1 MB.\nThen: 3 MB fits in 4 MB.\nSo Y waits less for RAM and is faster.\nNow your question: check which cache the 6 MB fits in.',
     { keywords: [/^\s*(cpu\s*)?b\b(?!.*\b(same|both|a)\b).*$/i] }),
   card('c-04', 'cache', 'Why can more cache improve performance?', ['More frequently used data can be stored, so the CPU waits less for RAM'],
-    ['More FDE cycles happen each second', 'More instructions are processed at the same time', 'More data is kept when the power is off'],
+    ['More FDE cycles happen each second', 'More instructions are processed at the same time', 'The program has fewer instructions'],
     'More cache holds more of the data and instructions used again and again, so less is fetched from the slower RAM.', ['What does cache hold?', 'What does the CPU do less of?'], null,
     { keywords: [/^(?=.*\b(data|instructions?)\b)(?=.*\b(faster|quick(ly|er)?|less|wait(s|ing)?|ram)\b)(?!.*\bpower\b).*$/i] }),
   card('r-01', 'cores', 'What is a core?', ['A processing unit that runs its own FDE cycle'], ['A small, fast memory for frequently used data', 'The clock that sends out pulses', 'The bus that carries instructions'],
@@ -397,7 +419,7 @@ const cards = [
   card('e-04', 'apply', 'The CPU has a clock speed of 3 GHz.\nDescribe what is meant by a 3 GHz clock speed.', ['3 billion FDE cycles per second'], ['3 FDE cycles per second', '3 billion bytes per second', '3 cores working at once'],
     'From Cambridge IGCSE 0478/12, June 2026, Question 2(d): 3 billion, the (maximum) number of instructions or FDE cycles processed per second.', ['What does the G stand for?', 'What is counted each second?'], null,
     { keywords: [/^(?=.*\b(3\s*billion|3,?000,?000,?000)\b)(?=.*\b(cycles?|instructions?|pulses?|ticks?)\b)(?=.*\b(second|sec)\b).*$/i] }),
-  card('e-05', 'apply', 'Give the definition of cache.', ['It stores frequently used data and instructions'], ['It stores the result of interim calculations', 'It stores the instruction that is being decoded', 'It stores data when the power is off'],
+  card('e-05', 'apply', 'Give the definition of cache.', ['It stores frequently used data and instructions'], ['It stores the result of interim calculations', 'It stores the instruction that is being decoded', 'It stores the address of the next instruction'],
     'From Cambridge IGCSE 0478/11, June 2025, Question 5(a): stores frequently used data/instructions.', ['It is a kind of fast memory.', 'Which data: all of it, or what is used most?'], null,
     { keywords: [/\b(frequent(ly)?|often|commonly|most used|again and again)\b/i] }),
 ];
@@ -440,13 +462,19 @@ ok('exam-names', 2, ['instruction set', 'an instruction set'], ['instructions', 
 NOTES.forEach((n) => assert(n.q && n.model, 'note shape'));
 // Walkthroughs never hold their slide's answers.
 WT_DN1.steps.forEach((s) => assert(!/address|location|\bvalue\b|fetched|in RAM/i.test(s.text + s.visual), 'WT_DN1 gives an answer: ' + s.text));
-WT_DN2.steps.forEach((s) => assert(!/accumulator|\bACC\b|control unit|\bCU\b|program counter|\bPC\b/i.test(s.text + s.visual), 'WT_DN2 gives an answer: ' + s.text));
+WT_DN2.steps.forEach((s) => assert(!/control unit|\bCU\b|arithmetic and logic unit|\bALU\b|program counter|\bPC\b|next instruction|address/i.test(s.text + s.visual), 'WT_DN2 gives an answer: ' + s.text));
 // What a student sees: no dashes; no term before the slide that teaches it (the Do Now recaps earlier lessons' exam
 // questions, and the title names the lesson).
 const seen = (s) => JSON.stringify(Object.assign({}, s, { walkthrough: s.walkthrough, validatorKey: undefined, items: (s.items || []).map((it) => Object.assign({}, it, { scheme: undefined, guidance: undefined })) }));
 const all = JSON.stringify(steps) + drillSrc;
 assert(!/[–—]|&mdash;|&ndash;/.test(all), 'dash found');
 assert(!/\bmario|\bdecimal\b|unidirectional|bidirectional/i.test(steps.map(seen).join('') + drillSrc), 'term outside this lesson');
+// Never taught in 3.1.1 to 3.1.5, so never shown (the Do Now included): storage types, other hardware, volatility.
+const untaught = /primary storage|secondary storage|graphics card|motherboard|hard disk|\bROM\b|read only memory|power is (turned )?off|volatile|latency|\bL[123]\b/i;
+steps.forEach((s) => assert(!untaught.test(seen(s)), 'untaught idea on ' + s.id + ': ' + (seen(s).match(untaught) || [])[0]));
+assert(!untaught.test(drillSrc), 'untaught idea in the drill: ' + (drillSrc.match(untaught) || [])[0]);
+// Cache is taught (what it is and why it helps) on its own slide before any question uses it.
+assert(steps.findIndex((s) => s.id === 'cache') < steps.findIndex((s) => s.id === 'cache-compare'), 'cache taught before cache-compare');
 const firstTaught = { performance: 'why-faster', clock: 'clock', 'clock speed': 'clock-speed', 'GHz': 'clock-speed', hertz: 'clock-speed', cache: 'ram-wait', core: 'core' };
 const skip = new Set(['do-now', 'do-now-2', 'do-now-ext', 'title']);
 for (const [term, at] of Object.entries(firstTaught)) {

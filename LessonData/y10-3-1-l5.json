@@ -50,46 +50,64 @@
   },
   {
    "id": "do-now-2",
-   "label": "Do Now: Inside the CPU (2 of 2)",
+   "label": "Do Now: Parts of the CPU (2 of 2)",
    "type": "self-marked-response",
    "containerId": "y10-315-do-now-2",
-   "content": "<h2 class=\"lesson-h2\">Do Now: Inside the CPU (2 of 2)</h2><p class=\"lesson-lead\">Recap of 3.1.2. Cambridge IGCSE 0478/13, November 2023, Question 3(a) (adapted: typed, not circled). A computer has a central processing unit (CPU). <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-do-now-2\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Parts of the CPU (2 of 2)</h2><p class=\"lesson-lead\">Recap of 3.1.2 and 3.1.3. Cambridge IGCSE 0478/12, June 2025, Question 4(a) (adapted: three of the six rows). An employee uses a computer that has a Von Neumann architecture. The computer has a central processing unit (CPU). Complete the table of components in the CPU and their descriptions. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-do-now-2\"></div>",
    "items": [
     {
-     "id": "built-in",
-     "prompt": "(a) Type the three components that are built into the CPU: accumulator (ACC), control unit (CU), graphics card, hard disk drive (HDD), motherboard, program counter (PC), random access memory (RAM), read only memory (ROM).",
-     "marks": 3,
+     "id": "row-signals",
+     "prompt": "Description: \"It sends signals to all the components in the CPU to manage the flow of data through the CPU.\" Give the component.",
+     "marks": 1,
      "scheme": [
-      "Accumulator (ACC)",
-      "Control unit (CU)",
-      "Program counter (PC)"
+      "Control unit // CU"
      ],
-     "guidance": "One mark for each correct component. Online the components are typed instead of circled: if more than three are given, mark only the first three.",
-     "modelAnswer": "ACC, CU, PC."
+     "guidance": "One mark.",
+     "modelAnswer": "Control unit (CU)."
+    },
+    {
+     "id": "row-operations",
+     "prompt": "Description: \"It carries out all the arithmetic and logic operations in the CPU.\" Give the component.",
+     "marks": 1,
+     "scheme": [
+      "Arithmetic and logic unit // ALU"
+     ],
+     "guidance": "One mark.",
+     "modelAnswer": "Arithmetic and logic unit (ALU)."
+    },
+    {
+     "id": "row-pc",
+     "prompt": "Component: program counter (PC). Give the description.",
+     "marks": 1,
+     "scheme": [
+      "It stores the address of the next instruction to be fetched"
+     ],
+     "guidance": "One mark.",
+     "modelAnswer": "It stores the address of the next instruction to be fetched."
     }
    ],
    "walkthrough": {
-    "title": "Walk me through it: inside the CPU or not?",
+    "title": "Walk me through it: complete a table of CPU parts",
     "steps": [
      {
-      "text": "<strong>A similar question.</strong> \"Circle two components that are <b>not</b> built into the CPU: ALU, keyboard, MAR, printer, CIR.\"",
-      "visual": "<div class=\"wt-note\">ask the same question about every item</div>"
+      "text": "<strong>A similar question.</strong> Two rows of a table. Row 1 gives a component: the accumulator (ACC). Row 2 gives a description: \"It holds the instruction while it is decoded and executed.\"",
+      "visual": "<div class=\"wt-note\">one row gives a component, one gives a description</div>"
      },
      {
-      "text": "For each item ask: is it a <b>register</b> or a <b>unit</b> that the CPU uses to run instructions? Those are built into the CPU.",
-      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">register or unit? <span class=\"wt-hl\">inside the CPU</span></p>"
+      "text": "Row 1 gives a component. Say what it <span class=\"wt-hl\">stores or does</span>, in one sentence. The ACC <span class=\"wt-hl\">stores the result of a calculation</span>.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">ACC: <span class=\"wt-hl\">stores the result of a calculation</span></p>"
      },
      {
-      "text": "ALU: a unit, inside. MAR: a register, inside. CIR: a register, inside.",
-      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">ALU, MAR, CIR: <span class=\"wt-hl\">inside</span></p>"
+      "text": "Row 2 gives a description. Find its <span class=\"wt-hl\">key words</span>: \"the instruction while it is decoded\". Which register holds the current instruction?",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">key words: <span class=\"wt-hl\">the current instruction</span></p>"
      },
      {
-      "text": "Keyboard and printer: devices joined to the computer, <span class=\"wt-hl\">outside</span> the CPU. So the answer is keyboard and printer.",
-      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">keyboard, printer: <span class=\"wt-hl\">outside</span></p>"
+      "text": "It is the <span class=\"wt-hl\">current instruction register (CIR)</span>. The full name or the letters both earn the mark.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px\">CIR: <span class=\"wt-hl\">current instruction register</span></p>"
      },
      {
-      "text": "Now your list. Which three are registers or units inside the CPU? The others are cards, disks or memory outside it.",
-      "visual": "<div class=\"wt-note\">three inside, five outside</div>"
+      "text": "Now your table. Two rows give a description: find the key words in each. One row gives a component: say what it stores.",
+      "visual": "<div class=\"wt-note\">2 descriptions, 1 component</div>"
      }
     ]
    }
@@ -247,6 +265,11 @@
    ]
   },
   {
+   "id": "cache",
+   "label": "Cache: Why the CPU Waits Less",
+   "content": "<h2 class=\"lesson-h2\">Cache: Why the CPU Waits Less</h2><ul class=\"lesson-facts\"><li><strong>Cache</strong> is a small, fast memory inside the CPU (or very near it).</li><li>It holds a copy of <strong>frequently used</strong> data and instructions: the ones the CPU uses again and again.</li><li>Cache is <strong>faster to access</strong> than RAM. When the data is in cache, the CPU does not wait for RAM.</li><li>Cache is small. Data that does not fit in the cache must still be fetched from the slower RAM.</li></ul><div style=\"display:flex;gap:14px;align-items:center;justify-content:center;margin:8px 0\"><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px;text-align:center\"><b>CPU</b><div style=\"display:flex;gap:8px;margin-top:4px\"><div style=\"border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);padding:4px 8px\">CU, ALU, registers</div><div style=\"border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);padding:4px 8px\"><b>Cache</b>: fast</div></div></div><div style=\"font-family:var(--font-mono, monospace);font-size:15px;text-align:center\">slow fetch<br>&larr;&rarr;</div><div style=\"border:2px solid var(--brand);border-radius:10px;background:var(--surface-2);padding:6px 12px;text-align:center\"><b>RAM</b><div style=\"font-size:14px;margin-top:4px\">all the data and instructions</div></div></div><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the CPU spend less time waiting when the data it needs is already in cache?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Cache is faster to access than RAM, so each fetch of that data takes less time. Less waiting means more instructions are processed each second.</p></div></details>"
+  },
+  {
    "id": "cache-compare",
    "label": "Compare: A Small Cache and a Big Cache",
    "type": "multiple-choice",
@@ -266,22 +289,21 @@
    ]
   },
   {
-   "id": "exam-cache-tick",
+   "id": "exam-cache-row",
    "label": "Exam Question: The Purpose of Cache (1 of 2)",
-   "type": "multiple-choice",
-   "containerId": "y10-315-exam-cache-tick",
-   "content": "<h2 class=\"lesson-h2\">Exam Question: The Purpose of Cache (1 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/13, November 2025, Question 2(c)(i). The computer has primary storage. One example of primary storage is cache. <strong>What to do:</strong> pick one statement.</p><div id=\"y10-315-exam-cache-tick\"></div>",
+   "type": "self-marked-response",
+   "containerId": "y10-315-exam-cache-row",
+   "content": "<h2 class=\"lesson-h2\">Exam Question: The Purpose of Cache (1 of 2)</h2><p class=\"lesson-lead\">Cambridge IGCSE 0478/12, June 2025, Question 4(a) (adapted: the cache row only). The computer has a central processing unit (CPU). Complete the table of components in the CPU and their descriptions. <strong>What to do:</strong> type your answer, then press <strong>Check my answer</strong> or <strong>Submit answer</strong>.</p><div id=\"y10-315-exam-cache-row\"></div>",
    "items": [
     {
-     "prompt": "Tick one box to show the correct statement that describes the purpose of cache.",
-     "options": [
-      "It stores important instructions.",
-      "It stores the next instruction to be processed.",
-      "It stores frequently used instructions.",
-      "It stores instructions so they are not lost when the power is turned off."
+     "id": "cache-row",
+     "prompt": "Component: cache. Give the description.",
+     "marks": 1,
+     "scheme": [
+      "It stores frequently used data or instructions"
      ],
-     "correct": 2,
-     "explain": "Cache stores frequently used instructions (and data), so the CPU finds them quickly without waiting for RAM."
+     "guidance": "One mark. \"Stores data\" alone earns no mark: it must say frequently used.",
+     "modelAnswer": "It stores frequently used data and instructions."
     }
    ]
   },

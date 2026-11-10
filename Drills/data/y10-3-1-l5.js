@@ -142,7 +142,7 @@ DrillData.register("y10-3-1-l5", {
     "Small, fast memory in the CPU that holds frequently used data"
    ],
    "distractors": [
-    "Large, slow storage that keeps data when the power is off",
+    "Large, slow memory outside the CPU that holds all programs",
     "A register that holds the address of the next instruction",
     "A unit inside the CPU that does the calculations"
    ],
@@ -165,7 +165,7 @@ DrillData.register("y10-3-1-l5", {
    ],
    "distractors": [
     "Cache holds more data than RAM",
-    "Cache keeps data when the power is off",
+    "Cache sends out the clock pulses",
     "Cache does the calculations for the ALU"
    ],
    "note": "Cache is faster to access than RAM, so the CPU spends less time waiting.",
@@ -210,7 +210,7 @@ DrillData.register("y10-3-1-l5", {
    "distractors": [
     "More FDE cycles happen each second",
     "More instructions are processed at the same time",
-    "More data is kept when the power is off"
+    "The program has fewer instructions"
    ],
    "note": "More cache holds more of the data and instructions used again and again, so less is fetched from the slower RAM.",
    "working": [
@@ -435,7 +435,7 @@ DrillData.register("y10-3-1-l5", {
    "distractors": [
     "It stores the result of interim calculations",
     "It stores the instruction that is being decoded",
-    "It stores data when the power is off"
+    "It stores the address of the next instruction"
    ],
    "note": "From Cambridge IGCSE 0478/11, June 2025, Question 5(a): stores frequently used data/instructions.",
    "working": [
