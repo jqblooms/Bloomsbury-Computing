@@ -264,8 +264,7 @@
   function askNext() {
     var q = FDE.nextQuestion(cur.item);
     qText.textContent = 'What happens next?';
-    if (cur.help === 2) qArea.appendChild(strip(q.index + 1 < 10 ? q.index + 1 : 0));
-    if (cur.help >= 1 && q.index + 1 < 10) qArea.appendChild(el('span', 'where-tag', 'Next move is in: ' + FDE.STAGE_NAMES[q.right.stage]));
+    if (cur.help >= 1) qArea.appendChild(el('span', 'where-tag', 'Next move is in: ' + FDE.STAGE_NAMES[q.right.stage] + (q.index + 1 >= 10 ? ' (the next instruction)' : '')));
     qArea.appendChild(withMemory(q.c, q.done ? card('Just done', esc(q.done.text)) : card('Start', 'The PC holds ' + q.c.pc + '. The instruction at address ' + q.c.pc + ' is ' + esc(q.c.ins) + '.')));
     var row = choices(q.options.map(function (m) { return { label: m.text, value: m.text }; }), 'line', function (v, b) {
       var ok = v === q.right.text;
@@ -365,7 +364,6 @@
       var m = list[k], index = k % 10;
       holder.innerHTML = '';
       cur.keys = null;
-      if (cur.help === 2) holder.appendChild(strip(index));
       if (cur.help >= 1) holder.appendChild(el('span', 'where-tag', FDE.STAGE_NAMES[m.stage] + (cur.help === 2 ? ', move ' + (m.stage === 'F' ? index + 1 + ' of 5' : m.stage === 'E' ? index - 5 + ' of 4' : '1 of 1') : '')));
       var done = false;
       var pic = picture(m.c, regs, { from: cur.help === 2 ? m.from : null, cuAsDecode: true, memFrom: cur.help === 2 && m.from === 'Memory' ? regs.MAR : null, pick: function (name, node) {
