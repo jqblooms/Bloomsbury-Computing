@@ -29,6 +29,7 @@ const TPS = {
   'do-now-2': ['Why does the search use a flag that starts as FALSE?', 'Nothing has matched before the loop starts. The flag only changes when a value matches.'],
   'int-real-check': ['Why does the computer need to know if a number can have a decimal part?', 'It stores and checks whole numbers and decimal numbers in different ways.'],
   'types-check': ['Why does "13" in quotes not count as a number?', 'The quotes make it text. The computer treats it as characters, not as an amount it can add.'],
+  'lab-3d': ['Why does each box in the lab need a type cube before it can hold a value?', 'DECLARE comes first. The data type decides what kind of value the variable lets in.'],
   'activity-1': ['Why predict first, then check?', 'A wrong prediction shows you which rule to look at again.'],
   'constant-check': ['Why are constants written at the top of the program?', 'They are easy to find and change there, and they are set before any line uses them.'],
   'activity-2': ['Why does the drill type in new values every time?', 'A program must work for any value it is given, not just one.'],
@@ -150,6 +151,9 @@ steps.push(checkStep('types-check', 'Your Turn: Name the Data Type', 'Your Turn:
 
 steps.push(embed('activity-1', 'Activity 1: Choose the Data Type', 'drill-y8-2-2-types', 'Activity 1: Choose the Data Type',
   'Choose the data type, then predict whether each program runs. The values change every time.'));
+
+steps.push(Object.assign(embed('lab-3d', 'Lab: Data Types in 3D', 'pseudocode-lab-3d', 'Lab: Data Types in 3D',
+  'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Each box only lets in its own data type. A mistake in a challenge starts a new round. <strong>Done</strong> when Four Data Types, Data Type Challenge, Choose the Type and The Wrong Kind of Value are complete.'), { embedQuery: 'lesson=8-2.2' }));
 
 // ---------------------------------------------------------------- constants
 const ERR_C = runError(['CONSTANT TicketPrice <- 45', 'TicketPrice <- 50']);

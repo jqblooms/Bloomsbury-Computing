@@ -766,7 +766,7 @@ export function startSolo({ container, myName, colour }) {
     placed(it, slot) { if (slot.role === 'pad') { R.placedN++; explain(it.text + ' is ' + (it.t === 'int' ? 'an <b>Integer</b>' : it.t === 'float' ? 'a <b>Real</b>' : 'a <b>String</b>') + '. ' + typeWhy(it)); } },
     check() { if (R.placedN === R.p.cards.length && !hand.item) finishRound('Every card is sorted.'); },
     guide(R) {
-      if (hand.item) return hand.item.card ? slotTarget(R.pads[hand.item.t]) : null;
+      if (hand.item) return null;   // never an arrow to the answer: the pupil decides the type
       const s = R.shelf.find(x => x.items.length); return s ? slotTarget(s) : null;
     },
     steps(R) { return R.p.cards.map(c => ({ text: 'Sort <b>' + esc(c.text) + '</b>.', done: () => Object.values(R.pads).some(s => s.items.some(x => x.text === c.text)) })); },

@@ -153,6 +153,15 @@
    "content": "<h2 class=\"lesson-h2\">Activity 1: Choose the Data Type</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why predict first, then check?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A wrong prediction shows you which rule to look at again.</p></div></details><p class=\"lesson-lead\">Choose the data type, then predict whether each program runs. The values change every time.</p><div id=\"y822-activity-1\"></div>"
   },
   {
+   "id": "lab-3d",
+   "label": "Lab: Data Types in 3D",
+   "type": "embedded-app",
+   "appId": "pseudocode-lab-3d",
+   "embedContainerId": "y822-lab-3d",
+   "content": "<h2 class=\"lesson-h2\">Lab: Data Types in 3D</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each box in the lab need a type cube before it can hold a value?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>DECLARE comes first. The data type decides what kind of value the variable lets in.</p></div></details><p class=\"lesson-lead\">Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Each box only lets in its own data type. A mistake in a challenge starts a new round. <strong>Done</strong> when Four Data Types, Data Type Challenge, Choose the Type and The Wrong Kind of Value are complete.</p><div id=\"y822-lab-3d\"></div>",
+   "embedQuery": "lesson=8-2.2"
+  },
+  {
    "id": "constant",
    "label": "What Is a Constant?",
    "content": "<h2 class=\"lesson-h2\">What Is a Constant?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what happens if a later line says TicketPrice &lt;- 50? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The program stops on that line.</p><p><strong>Why?</strong> TicketPrice is a CONSTANT, so its value cannot be changed while the program runs.</p></div></details><p class=\"lesson-lead\">A <strong>constant</strong> is a value that is set once and never changes while the program runs.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">CONSTANT TicketPrice &lt;- 45</div><div class=\"lesson-code-line\">DECLARE Tickets : INTEGER</div><div class=\"lesson-code-line\">INPUT Tickets</div><div class=\"lesson-code-line\">OUTPUT Tickets * TicketPrice</div></div></div><div><ul class=\"lesson-facts\"><li>Write CONSTANT, a name, &lt;- and the value.</li><li>Put constants at the top of the program.</li><li>Every line can use it. No line can change it.</li></ul></div></div>"

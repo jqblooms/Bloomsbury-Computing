@@ -24,6 +24,7 @@ const TPS = {
   'do-now-2': ['Why does the IF line sit inside the loop?', 'The loop visits every value in the array. The IF checks each value as it is visited.'],
   'purpose-check': ['Why is it risky to copy the same long piece of code into ten programs?', 'A mistake in it is then in ten places, and each one must be found and fixed.'],
   'spot-check': ['Why does a library function always have brackets after its name?', 'The brackets hold the values it works on. They show that the line uses a library function.'],
+  'lab-3d': ['Why must DIV(20, 6) get its values in that order?', 'The first value is divided by the second. Swap them and it works out a different sum.'],
   'activity-1': ['Why predict the output before you check it?', 'A prediction shows what you think the function does. A wrong prediction shows you what to learn.'],
   'round-check': ['Why does ROUND need two values in its brackets?', 'The first value is the number to round. The second says how many decimal places to keep.'],
   'random': ['Why do games need a library function for random numbers?', 'A game must be different each time. Good random numbers are hard to write, so programmers use one already written.'],
@@ -149,6 +150,9 @@ steps.push(checkStep('spot-check', 'Your Turn: Find the Library Functions', 'You
 
 steps.push(embed('activity-1', 'Activity 1: Predict the Output', 'drill-y8-2-1-predict', 'Activity 1: Predict the Output',
   'Predict what each program outputs, then type it. The numbers change every time.'));
+
+steps.push(Object.assign(embed('lab-3d', 'Lab: Library Functions in 3D', 'pseudocode-lab-3d', 'Lab: Library Functions in 3D',
+  'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. DECLARE each variable, then work out each library function on the WORK bench. A mistake in a challenge starts a new round. <strong>Done</strong> when Call MOD, DIV and MOD, ROUND and LENGTH and UCASE are complete.'), { embedQuery: 'lesson=8-2.1' }));
 
 // ---------------------------------------------------------------- ROUND
 const RA = ['DECLARE Total : INTEGER', 'Total <- 20', 'OUTPUT Total / 3'];

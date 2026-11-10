@@ -188,7 +188,8 @@ T.walkthroughs = () => {
 };
 T.noArrowInChallenges = () => { for (const m of s().missions.filter(x => x.type === 'challenge')) { s().start(idx(m.id)); s().frame(2); ok(!s().guideTarget(), m.id + ': a challenge shows an arrow'); } };
 T.noArrowBeforeSlip = () => { for (const m of s().missions.filter(x => x.type === 'tutorial' && !x.guided)) { s().start(idx(m.id)); s().frame(2); ok(!s().guideTarget(), m.id + ': an unguided tutorial shows an arrow before a slip'); } };
-T.textClean = () => { for (let i = 0; i < s().missions.length; i++) { s().start(i); const t = $('mission').textContent; ok(!/[–—]|undefined|NaN|\[object/.test(t), s().missions[i].id + ': bad text in the sheet'); } };
+T.noAnswerArrow = () => { s().start(idx('types-t')); take(R().shelf[0]); s().frame(2); ok(!s().guideTarget(), 'the arrow points at the answer for a carried card'); release(); };
+T.textClean =() => { for (let i = 0; i < s().missions.length; i++) { s().start(i); const t = $('mission').textContent; ok(!/[–—]|undefined|NaN|\[object/.test(t), s().missions[i].id + ': bad text in the sheet'); } };
 
 function fuzz(i, n) {
   s().start(i);
