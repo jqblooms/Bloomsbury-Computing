@@ -328,6 +328,8 @@ steps.push(mcStep('check-stage', 'Check: Which Stage?',
 steps.push(embed('activity-2', 'Activity 2: The Whole Cycle', 'cpu-lab',
   '<strong>What to do:</strong> say which stage starts, then pick each move: the box the value goes to, the bus and the value. A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 5: two instructions in a row with no help.',
   'activity=fde&level=3&upto=5'));
+steps.push(embed('activity-3', 'Activity 3: FDE Steps', 'fde-steps',
+  '<strong>What to do:</strong> answer one small question at a time. Start at stage 1 and move on when a stage is mastered. The help gets less as you get questions right. Stage 5 runs a whole instruction with no help. Keep going: it saves your progress.'));
 steps.push(embed('extension-3d', 'Extension: One Whole Instruction in 3D', 'cpu-lab-3d',
   '<strong>Extension:</strong> finished Activity 2? Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap it again to put it down. Take the next instruction from memory, then carry it out. A mistake ends that round and a new one starts. Go to the next slide when you are ready.',
   'mission=one-c'));

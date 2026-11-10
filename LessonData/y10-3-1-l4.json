@@ -483,6 +483,14 @@
    "embedQuery": "activity=fde&level=3&upto=5"
   },
   {
+   "id": "activity-3",
+   "label": "Activity 3: FDE Steps",
+   "type": "embedded-app",
+   "appId": "fde-steps",
+   "embedContainerId": "y10-314-activity-3",
+   "content": "<h2 class=\"lesson-h2\">Activity 3: FDE Steps</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer one small question at a time. Start at stage 1 and move on when a stage is mastered. The help gets less as you get questions right. Stage 5 runs a whole instruction with no help. Keep going: it saves your progress.</p><div id=\"y10-314-activity-3\"></div>"
+  },
+  {
    "id": "extension-3d",
    "label": "Extension: One Whole Instruction in 3D",
    "type": "embedded-app",
