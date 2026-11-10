@@ -56,6 +56,7 @@ const TPS = {
   'convert': ['Why does Python not turn what you type into a number by itself?', 'Python cannot tell what you mean. "0812345678" is a phone number, not an amount. You choose the data type.'],
   'convert-check': ['What two questions help you choose for each value?', 'First: will the program do maths with it? Then: can it have a decimal point?'],
   'compare-error': ['Both programs do age + 1. How can one of them work and not the other?', 'Talk in pairs about the data type of age in each program. Then choose your answer.'],
+  'lab-3d': ['Why must the program say int() or str()? Why can Python not choose for you?', 'Python cannot tell what you mean. You choose the data type.'],
   'str-join': ['Predict: what do both print lines show? Why does the first need str()?', 'Both show Age: 12. + can only join two Strings, so str(age) turns 12 into "12" first. A comma does not need it.'],
   'activity-2': ['What do you check first in a line with +?', 'The data types on each side. Two numbers add. Two Strings join. A String and a number stop the program.'],
   'activity-3': ['Why is a program tested with more than one input?', 'A program can work for one input by luck. Different inputs show whether it works every time.'],
@@ -207,6 +208,9 @@ steps.push(checkStep('convert-check', 'Your Turn: Which Function?', 'Your Turn: 
       '<p class="lesson-lead">+ can only join a String to a String.</p>' +
       columns(code(C), facts(['<strong>str(age)</strong> turns the Integer 12 into the String "12", so + can join it.', 'A <strong>comma</strong> in print works too: it adds the space.', 'print("Age: " + age) stops with an error.'])) });
 }
+
+steps.push(embed('lab-3d', 'Lab: Input in the Lab', 'variables-lab-3d', 'Lab: Input in the Lab',
+  'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Run each program one line at a time. A mistake in a challenge starts a new round. <strong>Done</strong> when The User Types It, Turn a String into a Number, Text and a Number and It Stops with an Error are complete.', 'lesson=2.2'));
 
 steps.push(lab('activity-2', 'Activity 2: Numbers from Input', 'Activity 2: Numbers from Input',
   'Predict what each program prints, or choose "It stops with an error". Then run it. A round with a mistake does not count.', 'activity=io&part=2'));

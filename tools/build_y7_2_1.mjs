@@ -47,6 +47,7 @@ const TPS = {
   'variable': ['Predict: what is the difference between print(score) and print("score")? Why?', 'print(score) shows 5, the value stored in score. print("score") shows the word score, because quote marks mean the text itself.'],
   'store-again': ['Predict: what does this program print? Why does it not print 5 and 8?', 'It prints 8. A variable holds one value at a time, so storing 8 replaces the 5. There is only one print, at the end.'],
   'change': ['Predict: what does this program print? Why is coins = coins + 5 not a maths mistake?', 'It prints 15. In Python = does not mean "is the same as". It means: work out the right side, then store the answer in the variable on the left.'],
+  'lab-3d': ['Why does each variable box hold only one cube?', 'A variable holds one value at a time. A new value replaces the old one.'],
   'compare-order': ['Both programs have the same three lines. How can you tell what each one prints?', 'Talk in pairs. Follow each program one line at a time, then choose your answer.'],
   'vars-check': ['Why do we follow a program one line at a time, from the top?', 'Python runs the lines in order. Each line uses the values the lines above it stored.'],
   'activity-1': ['Why predict before you run the program?', 'A prediction shows what you really think each line does. When it is wrong, you find out what to learn.'],
@@ -155,6 +156,9 @@ steps.push({ id: 'change', label: 'Change a Variable Using Its Own Value',
       'Then it <strong>stores</strong> the answer back in coins.',
       'This is how a game adds to a score.',
     ])) });
+
+steps.push(embed('lab-3d', 'Lab: Run It Line by Line', 'variables-lab-3d', 'Lab: Run It Line by Line',
+  'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Run each program one line at a time. A mistake in a challenge starts a new round. <strong>Done</strong> when A Variable Stores a Value, Store a New Value, Run the Program and Use Its Own Value are complete.', 'lesson=2.1'));
 
 {
   const A = 'score = 5\nscore = score + 3\nprint(score)', B = 'score = 5\nprint(score)\nscore = score + 3';

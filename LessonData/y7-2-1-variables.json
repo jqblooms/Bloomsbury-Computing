@@ -106,6 +106,15 @@
    "content": "<h2 class=\"lesson-h2\">Change a Variable Using Its Own Value</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does this program print? Why is coins = coins + 5 not a maths mistake?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It prints 15. In Python = does not mean \"is the same as\". It means: work out the right side, then store the answer in the variable on the left.</p></div></details><p class=\"lesson-lead\">Predict first. Then the teacher shows the answer.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">coins = 10</div><div class=\"lesson-code-line\">coins = coins + 5</div><div class=\"lesson-code-line\">print(coins)</div></div></div><div><ul class=\"lesson-facts\"><li>Python works out the <strong>right side first</strong>: coins + 5.</li><li>Then it <strong>stores</strong> the answer back in coins.</li><li>This is how a game adds to a score.</li></ul></div></div>"
   },
   {
+   "id": "lab-3d",
+   "label": "Lab: Run It Line by Line",
+   "type": "embedded-app",
+   "appId": "variables-lab-3d",
+   "embedContainerId": "y721-lab-3d",
+   "content": "<h2 class=\"lesson-h2\">Lab: Run It Line by Line</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each variable box hold only one cube?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A variable holds one value at a time. A new value replaces the old one.</p></div></details><p class=\"lesson-lead\">Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Run each program one line at a time. A mistake in a challenge starts a new round. <strong>Done</strong> when A Variable Stores a Value, Store a New Value, Run the Program and Use Its Own Value are complete.</p><div id=\"y721-lab-3d\"></div>",
+   "embedQuery": "lesson=2.1"
+  },
+  {
    "id": "compare-order",
    "label": "Compare: Change, Then Print",
    "type": "multiple-choice",

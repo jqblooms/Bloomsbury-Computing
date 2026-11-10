@@ -1,0 +1,14 @@
+/* Variables Lab 3D: the program, the variables and the screen in the mission sheet (everything else is net3d.css and contest.css) */
+.vl-prog { margin: 6px 0; border: 2px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+.vl-line { display: flex; gap: 8px; padding: 2px 8px; font-size: .9rem; }
+.vl-line code { background: none; white-space: pre-wrap; word-break: break-word; }
+.vl-line.done { opacity: .55; }
+.vl-line.now { background: rgba(255, 212, 59, .28); box-shadow: inset 4px 0 0 #f2c21b; }
+.vl-n { color: var(--muted); min-width: 1.2em; text-align: right; font-variant-numeric: tabular-nums; }
+.vl-vars { border-collapse: collapse; margin: 6px 0; font-size: .85rem; }
+.vl-vars th, .vl-vars td { border: 2px solid var(--line-strong); padding: 2px 10px; text-align: center; min-width: 48px; }
+.vl-vars th { color: var(--muted); font-size: .75rem; }
+.vl-vars td { font-weight: 800; font-family: Consolas, monospace; white-space: pre; }
+.vl-screen { background: #0b3d1f; color: #b2f2bb; border-radius: 8px; padding: 6px 10px; font-family: Consolas, monospace; font-size: .85rem; white-space: pre; margin: 6px 0; }
+.vl-sh { display: block; font-size: .65rem; letter-spacing: .08em; opacity: .7; }
+.vl-empty { opacity: .5; }

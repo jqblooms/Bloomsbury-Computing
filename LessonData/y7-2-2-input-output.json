@@ -179,6 +179,15 @@
    "content": "<h2 class=\"lesson-h2\">Text and a Number in One Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what do both print lines show? Why does the first need str()?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Both show Age: 12. + can only join two Strings, so str(age) turns 12 into \"12\" first. A comma does not need it.</p></div></details><p class=\"lesson-lead\">+ can only join a String to a String.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">age = 12</div><div class=\"lesson-code-line\">print(&quot;Age: &quot; + str(age))</div><div class=\"lesson-code-line\">print(&quot;Age:&quot;, age)</div></div></div><div><ul class=\"lesson-facts\"><li><strong>str(age)</strong> turns the Integer 12 into the String \"12\", so + can join it.</li><li>A <strong>comma</strong> in print works too: it adds the space.</li><li>print(\"Age: \" + age) stops with an error.</li></ul></div></div>"
   },
   {
+   "id": "lab-3d",
+   "label": "Lab: Input in the Lab",
+   "type": "embedded-app",
+   "appId": "variables-lab-3d",
+   "embedContainerId": "y722-lab-3d",
+   "content": "<h2 class=\"lesson-h2\">Lab: Input in the Lab</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the program say int() or str()? Why can Python not choose for you?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Python cannot tell what you mean. You choose the data type.</p></div></details><p class=\"lesson-lead\">Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Run each program one line at a time. A mistake in a challenge starts a new round. <strong>Done</strong> when The User Types It, Turn a String into a Number, Text and a Number and It Stops with an Error are complete.</p><div id=\"y722-lab-3d\"></div>",
+   "embedQuery": "lesson=2.2"
+  },
+  {
    "id": "activity-2",
    "label": "Activity 2: Numbers from Input",
    "type": "embedded-app",
