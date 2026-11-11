@@ -736,13 +736,13 @@ export function startSolo({ container, myName, colour }) {
         R.box[n] = s; boxSign(n);
       });
       R.screen_ = addSlot({ role: 'screen', pad: 'target', x: 18, y: 7, w: 3, label: 'SCREEN', tag: { tagY: 110 }, put: (it, from) => destPut(R.screen_, it, from) });
-      R.code = [0, 1].map(k => addSlot({ role: 'code', pad: 'supply', x: 2 + k * 2, y: 8, label: 'CODE', tag: { tagY: 110, tagSize: 0.032 },
-        copyOut: s => s.items.length ? valCube(top(s).val) : 'Line ' + (R.li + 1) + ' has no value written here.', put: () => ({ msg: 'The CODE pads give the values written in the line.' }) }));
+      R.code = [0, 1].map(k => addSlot({ role: 'code', pad: 'supply', x: 2 + k * 2, y: 8, label: 'CODE', tag: { tagY: 110, tagSize: 0.032 }, put: () => ({ msg: 'The CODE pads give the values written in the line.' }) }));
       R.arg = [0, 1].map(k => addSlot({ role: 'arg', pad: 'pedestal', x: 11 + k * 2, y: 8, label: 'ABC'[k], tag: { tagY: 110 }, put: (it, from) => argPut(k, R.arg[k], it, from) }));
       R.run = addSlot({ role: 'run', pad: 'answer', x: 12, y: 10, label: 'RUN', tag: { tagY: 110 }, press: () => runBench(), pressText: 'to work it out.' });
       R.out = addSlot({ role: 'out', pad: 'answer', x: 15, y: 8, label: 'OUT', tag: { tagY: 110, tagSize: 0.032 }, put: () => ({ msg: 'Answers come out here.' }) });
       R.tcrate = {};
-      TYPES.forEach((t, i) => { R.tcrate[t] = addSlot({ role: 'tcrate', pad: 'crate', x: 12 + i * 3, y: 2, crate: t, crateRole: 'paren', tcube: true, label: t, tag: { tagY: 110, tagSize: 0.03 } }); });
+      const stock = Math.max(1, p.prog.filter(l => l.op === 'declare').length);
+      TYPES.forEach((t, i) => { const s = addSlot({ role: 'tcrate', pad: 'crate', x: 12 + i * 3, y: 2, label: t, tag: { tagY: 110, tagSize: 0.03 }, put: it => it.tcube && it.sym === t ? null : { msg: 'Only ' + t + ' type cubes go back on this pile.' } }); R.tcrate[t] = s; for (let k = 0; k < stock; k++) addItem(s, cube(t, { role: 'paren', tcube: true })); });
       if (p.prog.some(l => l.op === 'input')) {
         R.kb = addSlot({ role: 'keyboard', pad: 'target', x: 2, y: 11, w: 2, label: 'KEYBOARD', tag: { tagY: 110 }, press: () => pressKeyboard(), pressText: 'to let the user type.' });
         R.kbOut = addSlot({ role: 'kb', pad: 'supply', x: 5, y: 11, label: 'TYPED', tag: { tagY: 110, tagSize: 0.032 }, put: () => ({ msg: 'Only what the user types goes here.' }) });

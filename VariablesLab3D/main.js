@@ -660,8 +660,7 @@ export function startSolo({ container, myName, colour }) {
         R.box[n] = s; codeSign(n, 3 + i * 3, 4, 125, { bg: '#151515', ink: '#f4f4f0', size: 0.04 });
       });
       R.screen_ = addSlot({ role: 'screen', pad: 'target', x: 18, y: 4, w: 3, label: 'SCREEN', tag: { tagY: 120 }, put: (it, from) => destPut(R.screen_, it, from) });
-      R.code = [0, 1].map(k => addSlot({ role: 'code', pad: 'supply', x: 3 + k * 2, y: 8, label: 'CODE', tag: { tagY: 120, tagSize: 0.032 },
-        copyOut: s => s.items.length ? valCube(top(s).val) : 'Line ' + (R.li + 1) + ' has no value written here.', put: () => ({ msg: 'The CODE pads give the values written in the line.' }) }));
+      R.code = [0, 1].map(k => addSlot({ role: 'code', pad: 'supply', x: 3 + k * 2, y: 8, label: 'CODE', tag: { tagY: 120, tagSize: 0.032 }, put: () => ({ msg: 'The CODE pads give the values written in the line.' }) }));
       R.L = addSlot({ role: 'benchL', pad: 'pedestal', x: 11, y: 8, label: 'WORK', tag: { tagY: 120, tagSize: 0.032 }, put: (it, from) => benchPut('L', R.L, it, from) });
       R.opPad = addSlot({ role: 'op', pad: 'rail', x: 12, y: 8, take: () => 'This is the sign from the line.', put: () => ({ msg: 'Put a value on the left or the right.' }) });
       R.R = addSlot({ role: 'benchR', pad: 'pedestal', x: 13, y: 8, put: (it, from) => benchPut('R', R.R, it, from) });
