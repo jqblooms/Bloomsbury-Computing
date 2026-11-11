@@ -208,11 +208,17 @@
   // ── Skulpt loader ─────────────────────────────────────────────
   function loadSkulpt(cb) {
     if (window.Sk) { cb(); return; }
-    function loadScript(src, next) {
+    // A failed download is tried twice more: one network blip used to leave PyScratch blank for good.
+    function loadScript(src, next, attempt) {
+      attempt = attempt || 0;
       var s = document.createElement('script');
-      s.src = src;
+      s.src = src + (attempt ? (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + attempt : '');
       s.onload = next;
-      s.onerror = function () { console.error('PyScratch: could not load', src); };
+      s.onerror = function () {
+        console.error('PyScratch: could not load', s.src);
+        s.remove();
+        if (attempt < 2) setTimeout(function () { loadScript(src, next, attempt + 1); }, 1500 * (attempt + 1));
+      };
       document.head.appendChild(s);
     }
     loadScript(SKULPT_BASE + 'skulpt.min.js', function () {

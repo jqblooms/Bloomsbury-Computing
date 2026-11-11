@@ -41,6 +41,29 @@
           frame.setAttribute('allow', 'microphone; camera');
           frame.src = '../scratch/editor.html?pyscratch=1&pstask=' + id + '&bcv=' + bcv + (p.get('pstest') === '1' ? '&pstest=1' : '');
           document.body.appendChild(frame);
+          // Watchdog: TurboWarp sometimes never finishes starting (a slow or failed download). If the task has not
+          // started after 30 seconds, reload the editor once by itself; after that, offer a Reload button.
+          var reloads = 0;
+          function ready() { try { return !!frame.contentWindow.__psTaskReady; } catch (e) { return false; } }
+          function watch() {
+            setTimeout(function () {
+              if (ready()) return;
+              if (document.hidden || window.innerHeight < 50) { watch(); return; } // preloaded on a hidden slide: wait until it shows
+              if (reloads === 0) { reloads++; frame.src = frame.src.replace(/&reload=\d+/, '') + '&reload=1'; watch(); return; }
+              if (document.getElementById('ps-stuck')) return;
+              var box = document.createElement('div');
+              box.id = 'ps-stuck';
+              box.style.cssText = 'position:fixed;left:50%;top:40%;transform:translateX(-50%);padding:16px 20px;border-radius:12px;background:var(--surface-2,#222);color:var(--ink,#eee);border:1px solid var(--line,#444);text-align:center;font:16px system-ui,sans-serif;z-index:9';
+              box.innerHTML = '<p style="margin:0 0 10px">PyScratch is taking a long time to load.</p>';
+              var b = document.createElement('button');
+              b.textContent = 'Reload PyScratch';
+              b.style.cssText = 'font:inherit;padding:8px 16px;border-radius:999px;border:0;background:var(--brand,#8ab4f8);color:var(--on-brand,#111);cursor:pointer';
+              b.onclick = function () { box.remove(); frame.src = frame.src.replace(/&reload=\d+/, '') + '&reload=' + (++reloads); watch(); };
+              box.appendChild(b);
+              document.body.appendChild(box);
+            }, 30000);
+          }
+          watch();
           // Passes the editor's BC_* messages (BC_APP_RESULT) up to the lesson slide.
           var relay = document.createElement('script');
           relay.src = '../shared/frame-relay.js?v=20260926';

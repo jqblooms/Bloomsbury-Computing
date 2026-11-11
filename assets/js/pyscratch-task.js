@@ -293,6 +293,7 @@
       api.loadCodeToEditor();
       S.taskReset();
       buildBar();
+      window.__psTaskReady = true; // the task page's watchdog looks for this
       var timer = null;
       api.ui.editor.addEventListener('input', function () {
         clearTimeout(timer);
