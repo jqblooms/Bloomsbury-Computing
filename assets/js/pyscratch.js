@@ -434,8 +434,10 @@
       if (r === null || r === undefined) return Sk.builtin.none.none$;
       if (r && typeof r.then === 'function') {
         var susp = new Sk.misceval.Suspension();
-        susp.data = { type: 'Sk.promise', promise: r.then(function () { return undefined; }) };
-        susp.resume = function () { return Sk.builtin.none.none$; };
+        // A waiting call keeps its result (ask gives the answer); the rest resolve to nothing, so None.
+        var done = r.then(function (v) { susp.value = v; return undefined; });
+        susp.data = { type: 'Sk.promise', promise: done };
+        susp.resume = function () { var v = susp.value; return (v && typeof v.then === 'function') ? Sk.builtin.none.none$ : skVal(v); };
         return susp;
       }
       if (typeof r === 'boolean') return r ? Sk.builtin.bool.true$ : Sk.builtin.bool.false$;
@@ -1174,6 +1176,7 @@
           showAskDialog(askQ, resolve);
         }).then(function (ans) {
           S.lastAnswer = String(ans == null ? '' : ans);
+          return S.lastAnswer; // name = ask("...") gets the answer, like input()
         });
         return askPromise;
       }
@@ -5043,7 +5046,7 @@
         { code:'key_pressed("space")', desc:'True while a key is held. Keys: space, up, down, left, right, a-z, 0-9.' },
         { code:'mouse_x() / mouse_y()', desc:'Mouse position in Scratch coordinates (0,0 = centre).' },
         { code:'mouse_down()', desc:'True while the left mouse button is held.' },
-        { code:'ask(question)', desc:'Show a text-input dialog over the stage. Waits for the student to type and press Enter.' },
+        { code:'ask(question)', desc:'Show a text-input dialog over the stage. Waits for the student to type and press Enter, then gives back what they typed: name = ask("Name?").' },
         { code:'answer()', desc:'Return the last text submitted by ask().' },
         { code:'timer()', desc:'Seconds elapsed since the green flag was pressed (or reset_timer() was called).' },
         { code:'reset_timer()', desc:'Reset the timer back to zero.' },
