@@ -155,8 +155,6 @@ steps.push(checkStep('spot-check', 'Your Turn: Find the Library Functions', 'You
 steps.push(embed('activity-1', 'Activity 1: Predict the Output', 'drill-y8-2-1-predict', 'Activity 1: Predict the Output',
   'Predict what each program outputs, then type it. The numbers change every time.'));
 
-steps.push(Object.assign(embed('lab-3d', 'Lab: Library Functions in 3D', 'pseudocode-lab-3d', 'Lab: Library Functions in 3D',
-  'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. DECLARE each variable, then work out each library function on the WORK bench. A mistake in a challenge starts a new round. <strong>Done</strong> when Call MOD, DIV and MOD, ROUND and LENGTH and UCASE are complete.'), { embedQuery: 'lesson=8-2.1' }));
 
 // ---------------------------------------------------------------- ROUND
 const RA = ['DECLARE Total : INTEGER', 'Total <- 20', 'OUTPUT Total / 3'];

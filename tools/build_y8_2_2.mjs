@@ -6,7 +6,7 @@
 // Cambridge pseudocode as in 2.1 (tools/build_y8_2_1.mjs, shared pieces in tools/y8_unit2_kit.mjs). The engine
 // (shared/pseudocode-engine.js) checks every DECLAREd type and the CONSTANT statement, so each "will it run?" answer
 // and error message on a slide is the engine's own. The Extension reuses the 2.1 plenary drill. Three PyScratch Task
-// slides embed pages PyScratchTask/ (tasks in PyScratchTask/tasks/y8-2-2.js): task 1 after the 3D lab, 2 and 3 after Activity 2.
+// slides embed pages PyScratchTask/ (tasks in PyScratchTask/tasks/y8-2-2.js): task 1 after Activity 1, 2 and 3 after Activity 2.
 import fs from 'node:fs';
 import path from 'node:path';
 import {
@@ -156,8 +156,6 @@ steps.push(checkStep('types-check', 'Your Turn: Name the Data Type', 'Your Turn:
 steps.push(embed('activity-1', 'Activity 1: Choose the Data Type', 'drill-y8-2-2-types', 'Activity 1: Choose the Data Type',
   'Choose the data type, then predict whether each program runs. The values change every time.'));
 
-steps.push(Object.assign(embed('lab-3d', 'Lab: Data Types in 3D', 'pseudocode-lab-3d', 'Lab: Data Types in 3D',
-  'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Each box only lets in its own data type. A mistake in a challenge starts a new round. <strong>Done</strong> when Four Data Types, Data Type Challenge, Choose the Type and The Wrong Kind of Value are complete.'), { embedQuery: 'lesson=8-2.2' }));
 
 // ---------------------------------------------------------------- PyScratch Tasks (pages PyScratchTask/tasks/y8-2-2.js)
 // Each runs the student's pseudocode on a Scratch stage and checks what happened; help fades from task 1 to 3.
