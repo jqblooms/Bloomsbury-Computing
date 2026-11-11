@@ -45,7 +45,7 @@ const TPS = {
   'title': ['A game shows your score going up. Where does the computer keep that score while you play? Why must it be able to change?', 'It keeps it in its memory, under a name. Every time you score, the program changes the value it stores. Today we learn how.'],
   'python': ['Predict: what does this program show on the screen? Why are the words in quote marks?', 'Hello, then Bye on the next line. The quote marks show Python where the text starts and ends.'],
   'variable': ['Predict: what is the difference between print(score) and print("score")? Why?', 'print(score) shows 5, the value stored in score. print("score") shows the word score, because quote marks mean the text itself.'],
-  'store-again': ['Predict: what does this program print? Why does it not print 5 and 8?', 'It prints 8. A variable holds one value at a time, so storing 8 replaces the 5. There is only one print, at the end.'],
+  'store-again': ['Predict: what does this program print? Why?', 'It prints 8. A variable holds one value at a time, so storing 8 replaces the 5. There is only one print, at the end. That is why it is called a variable: its value can vary.'],
   'change': ['Predict: what does this program print? Why is coins = coins + 5 not a maths mistake?', 'It prints 15. In Python = does not mean "is the same as". It means: work out the right side, then store the answer in the variable on the left.'],
   'pyscratch-1': ['Why does the sprite move a different amount the second time?', 'Line 3 stores a new value in steps. The second move uses the new value.'],
   'pyscratch-2': ['Why does the sprite say 55 and not 10?', 'Talk in pairs about what the quote marks do. Then change the program and test it.'],
@@ -54,10 +54,10 @@ const TPS = {
   'vars-check': ['Why do we follow a program one line at a time, from the top?', 'Python runs the lines in order. Each line uses the values the lines above it stored.'],
   'activity-1': ['Why predict before you run the program?', 'A prediction shows what you really think each line does. When it is wrong, you find out what to learn.'],
   'types': ['Why is "12" a String, but 12 an Integer?', 'The quote marks. Inside quote marks Python stores the characters as text, even when they are digits.'],
-  'types-check': ['Why does Python need to know the kind of value it stores?', 'The kind of value decides what Python can do with it: numbers can be added, text can be joined.'],
+  'types-check': ['Why does Python need to know the kind of value it stores?', 'The kind of value decides what Python can do with it: numbers can be worked out, text cannot.'],
   'compare-plus': ['Both programs use the same + sign. How can they print different things?', 'Talk in pairs about what is different between the two lines. Then choose your answer.'],
   'why-types': ['Predict: is a score in a game an Integer, a Real or a String? Why?', 'An Integer. It is a whole number, and the game adds to it.'],
-  'activity-2': ['What do you look for first to find a data type?', 'Quote marks first: they make a String. Then a decimal point or /: they make a Real. A whole number is an Integer.'],
+  'activity-2': ['Why can "7" and 7 be different data types?', 'Python looks at how the value is written, not how it looks to us.'],
   'explain': ['What makes an explanation worth 2 marks?', 'Two connected points: what is wrong now, and what to use instead, joined with "so" or "because".'],
   'activity-3': ['Why does Check test your program, not just look at what it prints?', 'A program can print the right thing by luck. Check also looks at the variables and their data types.'],
   'practice': ['Why write down each variable\'s value as you go?', 'A later line may use or change it. Writing it down means you never lose track.'],
@@ -134,7 +134,6 @@ steps.push({ id: 'variable', label: 'A Variable Stores a Value',
     columns(code(V1) + '<div style="margin-top:10px;display:inline-block;padding:10px 26px;border:2px solid var(--brand);border-radius:10px;font:700 20px var(--font-mono,monospace)"><span style="display:block;font:600 14px var(--font-body);color:var(--muted)">score</span>5</div>', facts([
       '<strong>=</strong> means store: put 5 in the variable called score.',
       '<strong>print(score)</strong> shows the value stored in score.',
-      'No quote marks round score: it is a name, not text.',
     ])) });
 
 const V2 = 'score = 5\nscore = 8\nprint(score)';
@@ -143,9 +142,9 @@ steps.push({ id: 'store-again', label: 'Store a New Value',
   content: '<h2 class="lesson-h2">Store a New Value</h2>' +
     '<p class="lesson-lead">Predict first. Then the teacher shows the answer.</p>' +
     columns(code(V2), facts([
-      'A variable holds <strong>one value</strong> at a time.',
-      'Storing a new value <strong>replaces</strong> the old one.',
-      'That is why it is called a variable: its value can vary.',
+      'Line 1 stores 5 in score.',
+      'Line 2 stores 8 in score.',
+      'There is one print, at the end.',
     ])) });
 
 const V3 = 'coins = 10\ncoins = coins + 5\nprint(coins)';
@@ -154,8 +153,8 @@ steps.push({ id: 'change', label: 'Change a Variable Using Its Own Value',
   content: '<h2 class="lesson-h2">Change a Variable Using Its Own Value</h2>' +
     '<p class="lesson-lead">Predict first. Then the teacher shows the answer.</p>' +
     columns(code(V3), facts([
-      'Python works out the <strong>right side first</strong>: coins + 5.',
-      'Then it <strong>stores</strong> the answer back in coins.',
+      'In Python, <strong>+</strong> adds, <strong>-</strong> takes away, <strong>*</strong> times and <strong>/</strong> divides.',
+      '<strong>best = coins</strong> stores a copy of the value in coins in best.',
       'This is how a game adds to a score.',
     ])) });
 
@@ -199,7 +198,7 @@ steps.push({ id: 'types', label: 'Three Data Types',
       ['<strong>Integer</strong>', 'int', 'a whole number', '12 &nbsp; -3 &nbsp; 0'],
       ['<strong>Real</strong>', 'float', 'a number with a decimal point', '2.5 &nbsp; -0.75 &nbsp; 4.0'],
       ['<strong>String</strong>', 'str', 'text, in quote marks', '"Mia" &nbsp; "12"'],
-    ]) + facts(['<strong>/</strong> always gives a Real: 8 / 2 is 4.0.']) });
+    ]) + facts(['<strong>/</strong> means divide. It always gives a Real: 8 / 2 is 4.0.', 'A whole number and a Real together give a Real: 3 + 0.5 is 3.5.']) });
 
 {
   const parts = [['age = 12', 'int'], ['price = 2.50', 'float'], ['phone = "0812345678"', 'str'], ['half = 9 / 2', 'float']];
