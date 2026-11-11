@@ -203,7 +203,11 @@
       if (R.level >= 1) picksBox.appendChild(seg('Way for row ' + (i + 1), [OUT, IN], p.dir, function (o) { p.dir = o; }, checked));
       card.appendChild(picksBox);
       if (checked) {
-        var why = el('div', { class: 'why' }, (wrong.indexOf(i) >= 0 ? 'It is the <b>' + e.bus + '</b>' + (R.level >= 1 ? ', ' + low(e.dir) : '') + '. ' : 'Right. ') + CARRIES[e.bus] + (R.level >= 1 ? ' ' + WAYS[e.bus] : ''));
+        // Say which half was wrong: the bus, or only the way.
+        var bad = wrong.indexOf(i) >= 0, start = 'Right. ';
+        if (bad && p.bus === e.bus) start = 'Right bus, wrong way. It goes <b>' + low(e.dir) + '</b>. ';
+        else if (bad) start = (p.bus ? 'You picked the ' + p.bus.toLowerCase() + '. ' : '') + 'It is the <b>' + e.bus + '</b>' + (R.level >= 1 ? ', ' + low(e.dir) : '') + '. ';
+        var why = el('div', { class: 'why' }, start + CARRIES[e.bus] + (R.level >= 1 ? ' ' + WAYS[e.bus] : ''));
         why.appendChild(document.createTextNode(' '));
         why.appendChild(showBtn({ bus: e.bus, value: e.value, dir: e.dir }));
         card.appendChild(why);

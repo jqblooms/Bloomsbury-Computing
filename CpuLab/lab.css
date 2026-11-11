@@ -79,7 +79,7 @@ button, input { font: inherit; }
 .walk .text { margin: 8px 0; font-size: 1rem; }
 .walk .hl { background: var(--brand-soft); color: var(--ink); padding: 0 4px; border-radius: 4px; font-weight: 700; }
 
-.embed, .embed body { background: transparent; font-size: 14px; }
+.embed, .embed body { background: transparent; font-size: 15px; }
 .embed body { --surface: #1f232b; --surface-2: #272c35; --surface-3: #2f3540; --line: #343b46; --line-strong: #454d5a; }
 .embed main { padding: 0; }
 .embed .panel { border: 0; border-radius: 0; padding: 4px 8px; background: transparent; }
