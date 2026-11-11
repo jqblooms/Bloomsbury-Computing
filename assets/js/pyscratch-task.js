@@ -59,6 +59,8 @@
     if ((m = /could not convert string to float: '?([^']*)'?/.exec(msg))) return 'float() cannot turn "' + m[1] + '" into a number.';
     if ((m = /NameError: name '([^']+)' is not defined/.exec(msg))) return 'Python does not know ' + m[1] + '. If ' + m[1] + ' is text, put quote marks round it. If it is a variable, give it a value first and check the spelling.';
     if (/ZeroDivisionError/.test(msg)) return 'The program divides by 0.';
+    if (/builtin_function_or_method|function_or_method/.test(msg)) return 'input needs brackets: input("How old are you? ").';
+    if (/say\(\) takes .* positional arguments? but \d+ (were|was) given/.test(msg)) return 'say() shows one String. Join the parts with + and use str() for a number.';
     // Anything else: drop the Python error name and the long hint after it.
     return msg.replace(/^\w+Error:\s*/, '').replace(/\. (To join|Check the spelling|Add global|Use int)[\s\S]*$/, '.');
   }

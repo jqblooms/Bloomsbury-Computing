@@ -86,7 +86,7 @@ DrillData.register("y7-2-2-input-output", {
   }
   function floatGen() {
     var a = rnd(2, 9), m = rnd(2, 4), lines = ["n = float(input(\"Number? \"))", "print(n * " + m + ")"], ans = real(a * m);
-    return { prompt: ask(lines, [a], "What does this program print?"), answer: ans, re: outRe(ans), wrong: uniq(ans, outRe(ans), [String(a * m), String(a) + String(a), "Error", ans + "0"]),
+    return { prompt: ask(lines, [a], "What does this program print?"), answer: ans, re: outRe(ans), wrong: uniq(ans, outRe(ans), [String(a * m), String(a).repeat(m), "Error", ans + "0"]),
       steps: ["float() turns " + a + " into the Real " + a + ".0.", "A Real times an Integer is a Real, shown with a decimal point."], working: ["What data type does float() give?", "How does Python show a Real that is a whole number?"],
       note: a + ".0 * " + m + " = " + ans + ". A Real always shows a decimal point.", py: { code: prog(lines), inputs: [String(a)] } };
   }
@@ -106,14 +106,14 @@ DrillData.register("y7-2-2-input-output", {
     else { isErr = false; lines = ["age = int(input(\"Age? \"))", "print(age * 2)"]; typed = [a]; ans = String(a * 2); why = "int() turns " + a + " into an Integer, so it works."; }
     ans = isErr ? "It stops with an error" : ans;
     var re = isErr ? ERR_RE : outRe(ans);
-    return { prompt: ask(lines, typed, "What does this program print? If it stops, type error."), answer: ans, re: re, wrong: uniq(ans, re, isErr ? [a + 1, a + "1", "Age: " + a, d * 2] : ["It stops with an error", ans + "0", typed[0] + "1", "Error"]).slice(0, 3),
+    return { prompt: ask(lines, typed, "What does this program print? If it stops, type error."), answer: ans, re: re, wrong: uniq(ans, re, isErr ? (kind === 0 ? [a + 1, a + "1", "Age: " + a] : kind === 1 ? [real(Number(d) * 2), d + d, String(Math.round(Number(d) * 2))] : ["Age: " + a, "Age:" + a, "Age: " + (a + 1)]) : ["It stops with an error", ans + "0", typed[0] + "1", "Error"]).slice(0, 3),
       steps: ["Check the data type of each value at each line.", why], working: ["What data type does each variable hold after line 1?", "Can the second line do that with those data types?"],
       note: why, py: isErr ? { code: prog(lines), inputs: typed.map(String), error: true } : { code: prog(lines), inputs: typed.map(String) } };
   }
   function whichGen() {
     var k = pick([["the user's age in years", "int"], ["how many pets the user has", "int"], ["the number of goals scored", "int"], ["the price of a cake, like 2.75", "float"], ["the user's height in metres", "float"], ["the time for a race in seconds, like 12.4", "float"], ["the user's name", "none"], ["the user's favourite colour", "none"]]);
     var ans = k[1] === "none" ? "none" : k[1], re = k[1] === "int" ? /^\s*(int(\s*\(\s*\))?|integer)\s*\.?\s*$/i : k[1] === "float" ? /^\s*(float(\s*\(\s*\))?|real)\s*\.?\s*$/i : /^\s*(none|nothing|no\s+function|neither|(just\s+)?input(\s*\(\s*\))?)\s*\.?\s*$/i;
-    return { prompt: "A program asks for " + k[0] + ". Which function goes round input(): int, float or none?", answer: ans, re: re, wrong: ["int", "float", "none", "str"].filter(function (x) { return x !== ans; }),
+    return { prompt: "A program asks for " + k[0] + ". Which function goes round input(): int, float or none?", answer: ans, re: re, wrong: ans === "none" ? ["int", "float", "int and float"] : ["int", "float", "none", "str"].filter(function (x) { return x !== ans; }),
       steps: [k[1] === "none" ? "It is text, not a number. input() already gives a String." : k[1] === "int" ? "It is always a whole number." : "It can have a decimal point.", "So: " + ans + "."],
       working: ["Is it a number? If not, input() already gives the right data type.", "If it is a number, can it have a decimal point?"], format: "Type int, float or none",
       note: k[1] === "none" ? "Text stays a String, so no function is needed." : k[1] === "int" ? "A whole number: int()." : "It can have a decimal point: float()." };

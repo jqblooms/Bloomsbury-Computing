@@ -48,18 +48,18 @@ const TPS = {
   'do-now': ['Why does Python run the lines of a program from the top?', 'Each line can use what the lines above it stored. The order is part of the program.'],
   'do-now-2': ['Why does a key decision need someone to press a key?', 'The flowchart asks the user a question with the key. What happens next depends on what the user does.'],
   'title': ['A quiz app asks your name and then says hello to you. How does the program know your name? Why can it not know it before you type?', 'You type it, and the program stores it. It only knows what you give it. Today we learn how.'],
-  'output': ['Predict: what does each line show? Why is there a space after the colon in the second one?', 'Hi Mia, then Score: 7. A comma in print shows both things with one space between them.'],
+  'output': ['Predict: what does each line show? Why is there a space after the colon in the second one?', 'Hi Mia, then Score: 7. + joins two Strings with no space added, so Hi needs its own space. A comma in print shows both things with one space between them.'],
   'input': ['Predict: the user types Mia. What is on the screen at the end? Why store input() in a variable?', 'What is your name? Mia, then Hello Mia. The variable keeps what the user typed, so later lines can use it.'],
   'input-check': ['Why does the order of the input() lines matter?', 'The first thing typed goes into the first input(), the second into the second. Swap the lines and the values swap too.'],
   'activity-1': ['Why does the question inside input() not show when you print the variable?', 'The question is only shown to the user. The variable stores only what the user typed.'],
-  'compare-input': ['Both programs read the same two numbers. How can they print different things?', 'Talk in pairs about what is different in the first two lines. Then choose your answer.'],
+  'compare-input': ['What data type does input() give, even when the user types digits?', 'A String. It looks like a number, but Python stores it as text.'],
   'convert': ['Why does Python not turn what you type into a number by itself?', 'Python cannot tell what you mean. "0812345678" is a phone number, not an amount. You choose the data type.'],
   'convert-check': ['What two questions help you choose for each value?', 'First: will the program do maths with it? Then: can it have a decimal point?'],
   'compare-error': ['Both programs do age + 1. How can one of them work and not the other?', 'Talk in pairs about the data type of age in each program. Then choose your answer.'],
   'pyscratch-1': ['Why does the error only come on the last line, and not on the line with input()?', 'input() works and stores what was typed. The problem only shows when the program tries to use it as a number.'],
   'pyscratch-2': ['Why does the check type in three different names and ages?', 'A program can work for one input by luck. Different inputs show it works every time.'],
   'pyscratch-3': ['Why might a user type a number with a decimal point here?', 'Distances are not always whole numbers. The program must work for 2.5 as well as 3.'],
-  'str-join': ['Predict: what do both print lines show? Why does the first need str()?', 'Both show Age: 12. + can only join two Strings, so str(age) turns 12 into "12" first. A comma does not need it.'],
+  'str-join': ['Predict: what do both print lines show? Why does the first need str()?', 'Both show Age: 12. + can only join two Strings, so str(age) turns 12 into "12" first. A comma does not need it: it adds the space. print("Age: " + age) stops with an error.'],
   'activity-2': ['What do you check first in a line with +?', 'The data types on each side. Two numbers add. Two Strings join. A String and a number stop the program.'],
   'activity-3': ['Why is a program tested with more than one input?', 'A program can work for one input by luck. Different inputs show whether it works every time.'],
   'explain': ['What makes an explanation worth 2 marks?', 'Two connected points: why it goes wrong, and what fixes it, joined with "so" or "because".'],
@@ -133,7 +133,7 @@ steps.push({ id: 'title', label: '2.2: Input and Output',
   steps.push({ id: 'output', label: 'Output: print Shows It',
     content: '<h2 class="lesson-h2">Output: print Shows It</h2>' +
       '<p class="lesson-lead"><strong>Output</strong> is what a program shows the user. In Python, <strong>print</strong> makes output.</p>' +
-      columns(code(C), facts(['<strong>+</strong> joins two Strings, with no space added.', 'A <strong>comma</strong> shows both things, with one space between.', 'Each print starts a new line.'])) });
+      columns(code(C), facts(['Each print starts a new line.'])) });
 }
 
 // ---------------------------------------------------------------- input
@@ -143,7 +143,7 @@ steps.push({ id: 'title', label: '2.2: Input and Output',
   steps.push({ id: 'input', label: 'Input: The User Types It',
     content: '<h2 class="lesson-h2">Input: The User Types It</h2>' +
       '<p class="lesson-lead"><strong>Input</strong> is data the user gives the program. In Python, <strong>input()</strong> gets it from the keyboard.</p>' +
-      columns(code(C), facts(['input() shows its question and <strong>waits</strong>.', 'The user types, then presses Enter.', 'What they typed is <strong>stored in the variable</strong>: here, name.'])) });
+      columns(code(C), facts(['input() shows its question and <strong>waits</strong>.', 'The user types, then presses Enter.', 'What they typed is <strong>stored in the variable</strong>: here, name.', 'input() always gives a <strong>String</strong>, even when the user types digits.'])) });
 }
 
 {
@@ -164,22 +164,22 @@ steps.push(lab('activity-1', 'Activity 1: Predict with Input', 'Activity 1: Pred
 {
   const A = 'a = input("Number? ")\nb = input("Number? ")\nprint(a + b)', B = 'a = int(input("Number? "))\nb = int(input("Number? "))\nprint(a + b)';
   assert((await py(A, ['4', '5'])).out[0] === '45' && (await py(B, ['4', '5'])).out[0] === '9', 'compare-input');
-  steps.push(mcStep('compare-input', 'Compare: Adding What the User Types', 'Compare: Adding What the User Types', 'The user types <strong>4</strong> then <strong>5</strong> into each program.', [
-    { prompt: 'What does each program print, and why?', options: ['A prints 45 and B prints 9: input() gives a String', 'A prints 9 and B prints 9: both read the numbers 4 and 5',
-      'A prints 9 and B prints 45: int() joins the two numbers', 'A prints 45 and B prints 45: + always joins what is typed'], correct: 0,
-      explain: 'input() always gives a String, so in A + joins "4" and "5": 45. In B, int() turns each String into an Integer first, so + adds: 9.' },
-  ], columns(paneTitle('Program A') + code(A), paneTitle('Program B') + code(B))));
+  steps.push(mcStep('compare-input', 'Predict: Adding What the User Types', 'Predict: Adding What the User Types', 'The user types <strong>4</strong> then <strong>5</strong>.', [
+    { prompt: 'What does this program print?', options: ['45', '9', '4 5', 'Nothing: it stops'], correct: 0,
+      explain: 'input() gives the String "4" and the String "5", so + joins them: 45. The next slide shows how to make + add them.' },
+  ], code(A)));
 }
 
 {
   const r = await py('print(int("12") + 1)\nprint(float("2.5") * 2)\nprint(str(12) + "3")');
-  assert(r.out.join() === '13,5.0,123' && (await py('int("2.5")')).error, 'convert');
+  assert(r.out.join() === '13,5.0,123' && (await py('int("2.5")')).error && (await py('print(float("3"))')).out[0] === '3.0', 'convert');
   steps.push({ id: 'convert', label: 'Turn a String into a Number',
     content: '<h2 class="lesson-h2">Turn a String into a Number</h2>' +
       '<p class="lesson-lead">input() <strong>always</strong> gives a String. To use it as a number, change its data type.</p>' +
       table(['Function', 'It turns', 'Example', 'Gives'], [
         ['<strong>int()</strong>', 'a String into an Integer', 'int("12")', '12'],
         ['<strong>float()</strong>', 'a String into a Real', 'float("2.5")', '2.5'],
+        ['float()', 'a whole number String into a Real', 'float("3")', '3.0'],
         ['<strong>str()</strong>', 'a number into a String', 'str(12)', '"12"'],
         ['int()', 'a String with a decimal point', 'int("2.5")', 'an <strong>error</strong>: the program stops'],
       ]) + '<div style="margin-top:8px">' + code('age = int(input("Age? "))') + '</div>' });
@@ -207,8 +207,8 @@ steps.push(checkStep('convert-check', 'Your Turn: Which Function?', 'Your Turn: 
   assert((await py(C)).out.join('|') === 'Age: 12|Age: 12' && (await py('age = 12\nprint("Age: " + age)')).error, 'str-join');
   steps.push({ id: 'str-join', label: 'Text and a Number in One Output',
     content: '<h2 class="lesson-h2">Text and a Number in One Output</h2>' +
-      '<p class="lesson-lead">+ can only join a String to a String.</p>' +
-      columns(code(C), facts(['<strong>str(age)</strong> turns the Integer 12 into the String "12", so + can join it.', 'A <strong>comma</strong> in print works too: it adds the space.', 'print("Age: " + age) stops with an error.'])) });
+      '<p class="lesson-lead">Two ways to show text and a number together.</p>' +
+      columns(code(C), facts(['Predict both lines first.'])) });
 }
 
 // ---------------------------------------------------------------- PyScratch Tasks (pages PyScratchTask/tasks/y7-2-2.js)
@@ -268,7 +268,7 @@ assert(V('input-check', 0, 'tea and rice') && V('input-check', 0, '"tea and rice
 assert(V('convert-check', 0, 'int') && V('convert-check', 0, 'int()') && !V('convert-check', 0, 'float') && V('convert-check', 1, 'float') && V('convert-check', 1, 'float()') && !V('convert-check', 1, 'int') && V('convert-check', 2, 'none') && V('convert-check', 2, 'nothing') && !V('convert-check', 2, 'str') && !V('convert-check', 2, 'int') && V('convert-check', 3, 'int'), 'convert-check marks');
 assert(V('practice', 0, 'Total: 10.0') && !V('practice', 0, 'Total: 10') && V('practice', 1, 'Integer') && V('practice', 2, 'Total: 6.0') && !V('practice', 2, 'Total: 6') && V('practice', 3, 'error') && V('practice', 3, 'It stops with an error') && V('practice', 3, 'it crashes') && !V('practice', 3, 'Total: 5.0'), 'practice marks');
 checkLesson(steps, validators, {
-  teach: [[/\binput\b/i, 'input'], [/\boutputs?\b/i, 'output'], [/\bint\(/, 'compare-input'], [/\bfloat\(/, 'convert'], [/\bstr\(/, 'convert'], [/\berrors?\b/i, 'convert']],
+  teach: [[/\binput\b/i, 'input'], [/\boutputs?\b/i, 'output'], [/\bint\(/, 'convert'], [/\bfloat\(/, 'convert'], [/\bstr\(/, 'convert'], [/\berrors?\b/i, 'convert']],
   walkLeaks: { 'do-now': /\b12\b|\bReal\b|float|6\.0/i, 'do-now-2': /\bJump\b|\bWait\b|\b20\b|Space/i },
 });
 
@@ -317,7 +317,7 @@ function plenaryCards() {
   }
   function floatGen() {
     var a = rnd(2, 9), m = rnd(2, 4), lines = ["n = float(input(\"Number? \"))", "print(n * " + m + ")"], ans = real(a * m);
-    return { prompt: ask(lines, [a], "What does this program print?"), answer: ans, re: outRe(ans), wrong: uniq(ans, outRe(ans), [String(a * m), String(a) + String(a), "Error", ans + "0"]),
+    return { prompt: ask(lines, [a], "What does this program print?"), answer: ans, re: outRe(ans), wrong: uniq(ans, outRe(ans), [String(a * m), String(a).repeat(m), "Error", ans + "0"]),
       steps: ["float() turns " + a + " into the Real " + a + ".0.", "A Real times an Integer is a Real, shown with a decimal point."], working: ["What data type does float() give?", "How does Python show a Real that is a whole number?"],
       note: a + ".0 * " + m + " = " + ans + ". A Real always shows a decimal point.", py: { code: prog(lines), inputs: [String(a)] } };
   }
@@ -337,14 +337,14 @@ function plenaryCards() {
     else { isErr = false; lines = ["age = int(input(\"Age? \"))", "print(age * 2)"]; typed = [a]; ans = String(a * 2); why = "int() turns " + a + " into an Integer, so it works."; }
     ans = isErr ? "It stops with an error" : ans;
     var re = isErr ? ERR_RE : outRe(ans);
-    return { prompt: ask(lines, typed, "What does this program print? If it stops, type error."), answer: ans, re: re, wrong: uniq(ans, re, isErr ? [a + 1, a + "1", "Age: " + a, d * 2] : ["It stops with an error", ans + "0", typed[0] + "1", "Error"]).slice(0, 3),
+    return { prompt: ask(lines, typed, "What does this program print? If it stops, type error."), answer: ans, re: re, wrong: uniq(ans, re, isErr ? (kind === 0 ? [a + 1, a + "1", "Age: " + a] : kind === 1 ? [real(Number(d) * 2), d + d, String(Math.round(Number(d) * 2))] : ["Age: " + a, "Age:" + a, "Age: " + (a + 1)]) : ["It stops with an error", ans + "0", typed[0] + "1", "Error"]).slice(0, 3),
       steps: ["Check the data type of each value at each line.", why], working: ["What data type does each variable hold after line 1?", "Can the second line do that with those data types?"],
       note: why, py: isErr ? { code: prog(lines), inputs: typed.map(String), error: true } : { code: prog(lines), inputs: typed.map(String) } };
   }
   function whichGen() {
     var k = pick([["the user's age in years", "int"], ["how many pets the user has", "int"], ["the number of goals scored", "int"], ["the price of a cake, like 2.75", "float"], ["the user's height in metres", "float"], ["the time for a race in seconds, like 12.4", "float"], ["the user's name", "none"], ["the user's favourite colour", "none"]]);
     var ans = k[1] === "none" ? "none" : k[1], re = k[1] === "int" ? /^\s*(int(\s*\(\s*\))?|integer)\s*\.?\s*$/i : k[1] === "float" ? /^\s*(float(\s*\(\s*\))?|real)\s*\.?\s*$/i : /^\s*(none|nothing|no\s+function|neither|(just\s+)?input(\s*\(\s*\))?)\s*\.?\s*$/i;
-    return { prompt: "A program asks for " + k[0] + ". Which function goes round input(): int, float or none?", answer: ans, re: re, wrong: ["int", "float", "none", "str"].filter(function (x) { return x !== ans; }),
+    return { prompt: "A program asks for " + k[0] + ". Which function goes round input(): int, float or none?", answer: ans, re: re, wrong: ans === "none" ? ["int", "float", "int and float"] : ["int", "float", "none", "str"].filter(function (x) { return x !== ans; }),
       steps: [k[1] === "none" ? "It is text, not a number. input() already gives a String." : k[1] === "int" ? "It is always a whole number." : "It can have a decimal point.", "So: " + ans + "."],
       working: ["Is it a number? If not, input() already gives the right data type.", "If it is a number, can it have a decimal point?"], format: "Type int, float or none",
       note: k[1] === "none" ? "Text stays a String, so no function is needed." : k[1] === "int" ? "A whole number: int()." : "It can have a decimal point: float()." };
