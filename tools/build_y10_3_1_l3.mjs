@@ -232,7 +232,7 @@ steps.push(mcStep('predict-way', 'Check: Which Way?',
     { prompt: 'The CPU stores 30 at address 7. Which way does 30 travel on the data bus?', options: ['Out of the CPU', 'Into the CPU', 'Both ways at once'], correct: 0,
       explain: '30 starts in the CPU and ends up in memory, so it goes out of the CPU.' },
     { prompt: 'The CPU wants the value at address 5. Which way does the address 5 travel?', options: ['Into the CPU', 'Out of the CPU', 'Both ways at once'], correct: 1,
-      explain: 'The CPU chooses the address and sends it to memory. An address only ever goes out of the CPU.' },
+      explain: 'The CPU chooses the address and sends it towards memory. Memory never sends an address back, so the address bus goes one way.' },
   ]));
 
 steps.push(written('explain-write', 'Explain It: A Write', OWN_DO, [
@@ -279,18 +279,18 @@ steps.push(written('exam-3', 'Exam Question: The Control Bus',
   ]));
 
 steps.push(written('exam-3b', 'Exam Question: One Bus and Its Purpose',
-  cite('0478/13, June 2023, Question 2(c)(ii)') + ' The fetch-decode-execute cycle is the next lesson. For now, name a bus and explain what it carries. ' + WRITE_DO, [
+  cite('0478/13, June 2023, Question 2(c)(ii)') + ' The fetch-decode-execute cycle is the next lesson. For now, name a bus, say what it carries, and say where it carries it. ' + WRITE_DO, [
     { id: 'one-bus', prompt: 'The CPU contains registers and buses. Identify one bus that can be found in the CPU and explain its purpose in the fetch-decode-execute cycle.', marks: 3,
       scheme: ['Names a bus: address bus, data bus or control bus', 'It transmits or carries addresses (address bus), data (data bus) or control signals (control bus)', '... between components in the CPU (for the control bus: from the control unit to other components)'],
       guidance: 'One mark for the correct name of a bus. Two marks for the matching description: what it carries (point 2) and where (point 3). The description must match the bus named.',
-      modelAnswer: 'Address bus. It carries addresses between components in the CPU.' },
+      modelAnswer: 'Control bus. It transmits control signals from the control unit to other components in the CPU.' },
   ]));
 
 steps.push(mcStep('exam-4', 'Exam Questions: Which Part Uses the Bus?',
   '<p class="lesson-lead">' + cite('0478/13 June 2021 Q10(a) and 0478/11 November 2021 Q6(a), one row of each table') + ' <strong>What to do:</strong> pick the component each statement applies to.</p>', [
-    { prompt: 'Uses the data bus to send data into or out of the CPU.', options: ['Random access memory (RAM)', 'Arithmetic logic unit (ALU)', 'Control unit (CU)'], correct: 0,
+    { prompt: 'Uses the data bus to send data into or out of the CPU.', options: ['Random access memory (RAM)', 'Memory address register (MAR)', 'Control unit (CU)'], correct: 0,
       explain: 'RAM is outside the CPU. It sends data into the CPU, and receives data out of it, on the data bus.' },
-    { prompt: 'It uses the address bus to send an address to another component.', options: ['Memory data register (MDR)', 'Program counter (PC)', 'Memory address register (MAR)'], correct: 2,
+    { prompt: 'It uses the address bus to send an address to another component.', options: ['Memory data register (MDR)', 'Arithmetic logic unit (ALU)', 'Memory address register (MAR)'], correct: 2,
       explain: 'The MAR holds the address memory is about to read or write, and sends it out on the address bus.' },
   ]));
 
@@ -298,7 +298,7 @@ steps.push(mcStep('exam-4', 'Exam Questions: Which Part Uses the Bus?',
 steps.push({ id: 'notes-check', label: 'Notes Check: Your WHY Notes',
   content: '<h2 class="lesson-h2">Notes Check: Your WHY Notes</h2>' + todo('open your notes (the notepad button at the top). You should have each note below, in your own words. Missing one? Go back to the slide named, write it, and press Check my note. Then go to the next slide.') +
     facts(['<strong>WHY there are three buses, not one.</strong> Slide: Your Note: Why Three Buses.', '<strong>Which way the address bus goes, and WHY.</strong> Slide: Explain It: The Address Bus.',
-      '<strong>WHY the data bus goes both ways</strong>, using read and write. <strong>WHY memory needs a read or a write signal.</strong> <strong>WHY an address is not data.</strong> Slide: Your Notes: Data, Control and Which Bus.',
+      '<strong>WHY the data bus goes both ways</strong>, using read and write. <strong>WHY memory needs a read or a write signal.</strong> <strong>WHY the 9 goes on the address bus, not the data bus.</strong> Slide: Your Notes: Data, Control and Which Bus.',
       '<strong>Which way the data bus goes in a write, and WHY.</strong> Slide: Explain It: A Write.',
       '<strong>WHY a read signal goes on the control bus. WHY only the data bus changes direction.</strong> Slide: Your Notes: A Read and a Write.']) });
 

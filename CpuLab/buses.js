@@ -26,7 +26,7 @@
     'Control bus': 'The <b>control bus</b> carries <b>control signals</b>, such as read and write.'
   };
   var WAYS = {
-    'Address bus': 'Only the CPU chooses an address, so the address bus only goes <b>out of the CPU</b>.',
+    'Address bus': 'Only the CPU chooses an address, so the address bus goes <b>one way</b>: from the CPU towards memory, never back.',
     'Data bus': 'Data comes <b>into</b> the CPU when it reads, and goes <b>out</b> when it writes, so the data bus goes both ways.',
     'Control bus': 'The CU sends signals <b>out</b> (read, write); devices send signals <b>in</b> (a key was pressed). So the control bus goes both ways.'
   };

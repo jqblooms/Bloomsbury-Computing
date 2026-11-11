@@ -142,21 +142,21 @@
         prompt: "Why does the address bus only go one way?",
         answers: ["Only the CPU chooses which address to use"],
         keywords: [/^(?!.*\b(memory|ram|devices?)\s+(chooses|picks|sends|decides)\b)(?=.*\b(only|just)\b)(?=.*\b(cpu|processor)\b).*\b(address\w*|chooses|choose|picks|decides|places?)\b/i],
-        distractors: ["Memory chooses which address to send", "Data is read and written in memory", "Signals go to devices and come back"],
-        note: "Memory never sends an address back, so the address only goes out of the CPU to memory."
+        distractors: ["Memory chooses which address to send", "Data is read and written in memory", "The CU sends signals out and devices send signals in"],
+        note: "Memory never sends an address back, so the address bus goes one way: from the CPU towards memory."
       },
       {
         id: "y-03", category: "way", goBack: SLIDE.dataWhy, pickThenType: true,
         prompt: "Why does the data bus go both ways?",
         answers: ["Data is read from memory and written to it"],
         keywords: [/^(?!.*\bonly\b)(?=.*\b(read\w*|load\w*|fetch\w*)\b)(?=.*\b(writ\w*|wrote|sav\w*|stor\w*)\b)/i, /^(?!.*\bonly\b)(?=.*\b(sends?|sent|gives?)\b)(?=.*\b(receiv\w*|gets?|takes?)\b).*\b(data|values?|cpu)\b/i],
-        distractors: ["Only the CPU chooses which address to use", "Signals go to devices and come back", "Memory chooses which data the CPU needs"],
+        distractors: ["Only the CPU chooses which address to use", "The CU sends signals out and devices send signals in", "Memory chooses which data the CPU needs"],
         note: "In a read the value comes into the CPU. In a write it goes out to memory. One bus does both jobs."
       },
       {
         id: "y-04", category: "way", goBack: SLIDE.ctrlWhy, pickThenType: true,
         prompt: "Why does the control bus go both ways?",
-        answers: ["Signals go to devices and come back from them"],
+        answers: ["The CU sends signals out and devices send signals in"],
         keywords: [/^(?!.*\bonly\b)(?=.*\b(signals?|messages?)\b)(?=.*\b(back|return\w*|repl(y|ies)|respond\w*|from\s+(the\s+)?(devices?|keyboard|memory)|(devices?|keyboard)\s+(send|sends)|in\s+and\s+out|to\s+and\s+from)\b)/i],
         distractors: ["Only the CPU chooses which address to use", "Data is read from memory and written to it", "Signals only ever go out from the CPU"],
         note: "The CPU sends read or write out. Devices send signals in, for example a key has been pressed."
@@ -220,13 +220,13 @@
           /^(?!.*\b(bi-?\s?directional|both)\b).*\b(uni-?\s?directional|one[\s-]+way|one\s+direction)\b/i
         ],
         distractors: ["It carries data and instructions", "It goes both ways", "It carries control signals", "It sends addresses into the CPU from memory"],
-        note: "Based on the mark scheme for Cambridge IGCSE 0478/13, June 2023, Question 2(c)(ii)."
+        note: "What the address bus does."
       },
       {
         id: "e-03", category: "exam", goBack: SLIDE.examCtrl, pickThenType: true,
         prompt: "Describe the role of the control bus.\nGive one point that earns a mark.",
-        answers: ["It carries control signals", "It carries signals such as read and write", "It goes both ways"],
-        keywords: [/^(?!.*\b(address\w*|data|instructions?)\b).*\b(signals?|commands?)\b/i, /^(?!.*\b(uni-?\s?directional|one[\s-]+way|only)\b).*\b(bi-?\s?directional|both\s+ways|two[\s-]+ways?|both\s+directions)\b/i],
+        answers: ["It carries control signals", "It carries signals such as read and write", "It carries signals from devices to the CU"],
+        keywords: [/^(?!.*\b(address\w*|data|instructions?)\b).*\b(signals?|commands?)\b/i, /\bfrom\s+(the\s+)?(devices?|peripherals?|keyboard|memory)\b.*\b(cpu|cu|control\s+unit|processor)\b/i],
         distractors: ["It carries memory addresses", "It carries data and instructions", "It goes one way only", "It carries the address of the data"],
         note: "From Cambridge IGCSE 0478/12, March 2021, Question 8(b)(ii)."
       },
