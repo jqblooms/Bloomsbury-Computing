@@ -247,10 +247,6 @@ steps.push(embed('activity-2', 'Activity 2: Trace a Read and a Write', 'cpu-lab'
   '<strong>What to do:</strong> for each bus, pick what it carries and which way it goes, for a read and a write. One check per round, and a mistake means the round does not count. <strong>Done</strong> when you have cleared level 4, where there is no help.',
   'activity=buses&level=3&upto=4'));
 
-steps.push(embed('activity-3', 'Activity 3: The Bus Game', 'cpu-lab-3d',
-  '<strong>What to do:</strong> walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a cube, carry it onto its bus and tap <strong>Space</strong> again to put it down (or hold Space and let go). The pad near the CPU sends it <strong>into the CPU</strong>; the pad near memory sends it <strong>out of the CPU</strong>. A mistake ends that round and a new one starts. <strong>Done</strong> when the four activities in the game are complete; Trace on Your Own is the extension.',
-  'lesson=3.1.3'));
-
 // ---------------------------------------------------------------- exam questions
 const ADDR_BUS = '^\\s*(the\\s+)?address\\s*bus\\s*\\.?\\s*$';
 const DATA_BUS = '^\\s*(the\\s+)?data\\s*bus\\s*\\.?\\s*$';
