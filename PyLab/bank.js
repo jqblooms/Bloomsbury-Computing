@@ -156,7 +156,7 @@ var PLBANK = (function () {
       var a = rnd(5, 20), b = rnd(3, 9);
       return { title: 'Change a variable', brief: 'A player has <b>' + a + '</b> coins. Store it in a variable called <b>coins</b>. Then the player finds <b>' + b + '</b> more. Change <b>coins</b> using its own value. Then print coins.',
         starter: '', ref: 'coins = ' + a + '\ncoins = coins + ' + b + '\nprint(coins)', tests: [[]], vars: { coins: ['int', a + b] },
-        rules: [{ re: new RegExp('coins\\s*=\\s*' + a + '\\s*(\\n|$)'), msg: 'Start by storing ' + a + ' in coins.' }, { re: /coins\s*(=\s*coins\s*\+|\+=)/, msg: 'Change coins using its own value: coins = coins + ...' },
+        rules: [{ re: new RegExp('coins\\s*=\\s*' + a + '\\s*(\\n|$)'), msg: 'Start by storing ' + a + ' in coins.' }, { re: /coins\s*(=\s*coins\s*\+|\+=|=\s*\d+\s*\+\s*coins\b)/, msg: 'Change coins using its own value: coins = coins + ...' },
           { re: new RegExp('\\b' + (a + b) + '\\b'), not: true, msg: 'Let Python work out the new number. Do not type it yourself.' }, { re: /print\s*\(\s*coins\s*\)/, msg: 'Print the variable: print(coins).' }] };
     },
     // Level 3: text and a number in one print.

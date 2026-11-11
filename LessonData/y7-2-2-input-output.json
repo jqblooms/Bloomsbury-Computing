@@ -284,7 +284,7 @@
     "suffix": "b",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Look at the sign the line uses to work out bonus."
@@ -409,7 +409,7 @@
     "suffix": "b",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Look at the function round input() on line 2."

@@ -27,7 +27,11 @@
     checks: [
       function (T) {
         var line3 = T.lineOf(/^\s*steps\s*=/) ? 3 : 0;
-        return T.run().then(function (r) {
+        return T.run({ allowError: true }).then(function (r) {
+          // steps = "100" moves the sprite (Scratch reads the digits) but is a String: say that, not the odd distance.
+          if (r.vars.steps && r.vars.steps.type === 'STRING') return T.fail('steps holds a String', 'Take away the quote marks, so steps holds a number', T.lineOf(/^\s*steps\s*=\s*["']/) || line3);
+          var stop = T.stopped(r);
+          if (stop) return stop;
           var m = moves(T, r);
           if (m.join() !== '50,100') return T.fail('The sprite moved ' + (m.length ? m.join(' then ') : 'no') + ' steps', 'It moves 50, then 100', line3);
           return T.run({ code: T.withLine(/^\s*steps\s*=\s*50\s*$/, 'steps = 30') }).then(function (r2) {
@@ -40,7 +44,7 @@
     ],
     test: {
       solution: DOUBLE.replace('steps = \n', 'steps = steps * 2\n'),
-      wrong: [DOUBLE.replace('steps = \n', 'steps = 100\n'), DOUBLE.replace('steps = \n', 'steps = steps + 2\n'), DOUBLE.replace('steps = \n', 'steps * 2\n')]
+      wrong: [DOUBLE.replace('steps = \n', 'steps = 100\n'), DOUBLE.replace('steps = \n', 'steps = "100"\n'), DOUBLE.replace('steps = \n', 'steps = steps + 2\n'), DOUBLE.replace('steps = \n', 'steps * 2\n')]
     }
   });
 
@@ -62,16 +66,18 @@
         if (!T.lineOf(/^\s*say\(\s*a\s*\+\s*b\s*\)\s*$/)) return T.fail('Line 3 was changed', 'Line 3 stays say(a + b). Change the values in lines 1 and 2', 3);
         return T.run().then(function (r) {
           var a = r.vars.a, b = r.vars.b, s = said(T, r);
-          if (!a || a.type !== 'INTEGER' || a.value !== 5) return T.fail('a holds ' + kind(a), 'a holds the whole number 5', T.lineOf(/^\s*a\s*=/));
-          if (!b || b.type !== 'INTEGER' || b.value !== 5) return T.fail('b holds ' + kind(b), 'b holds the whole number 5', T.lineOf(/^\s*b\s*=/));
-          if (s[s.length - 1] !== '10') return T.fail('The sprite said ' + (s.length ? s[s.length - 1] : 'nothing'), 'The sprite says 10', 3);
+          // Any two whole numbers that add up to 10 (a reviewer typed 4 and 6).
+          if (!a || a.type !== 'INTEGER') return T.fail('a holds ' + kind(a), 'a holds a whole number', T.lineOf(/^\s*a\s*=/));
+          if (!b || b.type !== 'INTEGER') return T.fail('b holds ' + kind(b), 'b holds a whole number', T.lineOf(/^\s*b\s*=/));
+          if (s[s.length - 1] !== '10') return T.fail('The sprite said ' + (s.length ? s[s.length - 1] : 'nothing'), 'The sprite says 10: a + b adds up to 10', T.lineOf(/^\s*a\s*=/));
           return null;
         });
       }
     ],
     test: {
       solution: 'a = 5\nb = 5\nsay(a + b)\n',
-      wrong: ['a = 5.0\nb = 5.0\nsay(a + b)\n', 'a = 5\nb = "5"\nsay(a + b)\n', 'a = "1"\nb = "0"\nsay(a + b)\n']
+      also: ['a = 4\nb = 6\nsay(a + b)\n'],
+      wrong: ['a = 5.0\nb = 5.0\nsay(a + b)\n', 'a = 4\nb = 5\nsay(a + b)\n', 'a = 5\nb = "5"\nsay(a + b)\n', 'a = "1"\nb = "0"\nsay(a + b)\n']
     }
   });
 
@@ -92,7 +98,7 @@
       function (T) {
         return T.run().then(function (r) {
           var v = r.vars;
-          if (!v.name || v.name.type !== 'STRING' || v.name.value !== 'Pip') return T.fail('name holds ' + kind(v.name), 'name holds the String "Pip"', T.lineOf(/^\s*name\s*=/));
+          if (!v.name || v.name.type !== 'STRING' || v.name.value !== 'Pip') return T.fail(v.name ? 'name holds ' + kind(v.name) : 'There is no variable called name yet', 'name holds the String "Pip"', T.lineOf(/^\s*name\s*=/));
           if (!v.speed || v.speed.type !== 'REAL' || v.speed.value !== 1.5) return T.fail('speed holds ' + kind(v.speed), 'speed holds the Real 1.5', T.lineOf(/^\s*speed\s*=/));
           if (!v.lives || v.lives.type !== 'INTEGER') return T.fail('lives holds ' + kind(v.lives), 'lives holds an Integer', T.lineOf(/^\s*lives\s*=/));
           if (v.lives.value !== 2) return T.fail('At the end, lives holds ' + v.lives.value, 'lives starts at 3 and loses 1, so it ends at 2', T.lineOf(/^\s*lives\s*=/));
@@ -105,7 +111,12 @@
           return T.run({ code: T.withLine(/^\s*lives\s*=\s*3\s*$/, 'lives = 7') }).then(function (r2) {
             var o2 = r2.out.length ? r2.out[r2.out.length - 1] : '';
             if (o2 !== '6') return T.fail('When lives started at 7, it printed ' + (o2 || 'nothing'), 'It prints 6: lives changes using its own value', T.lineOf(/^\s*lives\s*=\s*lives/) || T.lineOf(/^\s*lives\s*=/));
-            return null;
+            // The move must use speed, not a typed 150.
+            return T.run({ code: T.withLine(/^\s*speed\s*=\s*1\.5\s*$/, 'speed = 2.5') }).then(function (r3) {
+              var m3 = moves(T, r3).reduce(function (a, b) { return a + b; }, 0);
+              if (m3 !== 250) return T.fail('When speed was changed to 2.5, the sprite moved ' + m3 + ' steps', 'It moves 2.5 * 100 = 250 steps: the move uses speed', T.lineOf(/move_steps/));
+              return null;
+            });
           });
         });
       }
@@ -116,6 +127,7 @@
         'name = "Pip"\nlives = 3\nspeed = 1.5\nmove_steps(speed * 100)\nlives = 2\nsay(name)\nprint(lives)\n',
         'name = "Pip"\nlives = "3"\nspeed = 1.5\nmove_steps(speed * 100)\nlives = lives - 1\nsay(name)\nprint(lives)\n',
         'name = "Pip"\nlives = 3\nspeed = 1\nmove_steps(speed * 100)\nlives = lives - 1\nsay(name)\nprint(lives)\n',
+        'name = "Pip"\nlives = 3\nspeed = 1.5\nmove_steps(150)\nlives = lives - 1\nsay(name)\nprint(lives)\n',
         'name = Pip\nlives = 3\nspeed = 1.5\nmove_steps(speed * 100)\nlives = lives - 1\nsay(name)\nprint(lives)\n'
       ]
     }

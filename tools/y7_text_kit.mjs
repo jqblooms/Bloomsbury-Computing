@@ -88,9 +88,10 @@ export const num = (n) => `^\\s*${String(n).replace('.', '\\.')}\\s*$`;
 // A printed line: optional quote marks round it, any case, spaces as typed.
 export const outRe = (s) => `^\\s*["'\\u201c]?\\s*${s.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+')}\\s*["'\\u201d]?\\s*$`;
 export const TYPE_RE = {
-  int: '^\\s*(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$',
-  float: '^\\s*(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$',
-  str: '^\\s*(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$',
+  // Fair EAL forms too: "integer number", "real number", "it is a string" (review, 2026-11-11).
+  int: '^\\s*(it\\s+is\\s+|it\'?s\\s+)?(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$',
+  float: '^\\s*(it\\s+is\\s+|it\'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$',
+  str: '^\\s*(it\\s+is\\s+|it\'?s\\s+)?(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$',
 };
 
 // ---------------------------------------------------------------- lesson self-checks
@@ -138,7 +139,7 @@ export function prelude() {
   var NAMES = ["Mia", "Tom", "Ana", "Ben", "Lily", "Sam", "Nok", "Kai"];
   var FOODS = ["cake", "rice", "soup", "pie", "tea", "jam"];
   var VARS = ["score", "coins", "lives", "points", "steps", "gems"];
-  var TYPE_RE = { int: /^\s*(an?\s+)?(integer|int)(\s*\(\s*int\s*\))?(\s+data\s+type)?\s*\.?\s*$/i, float: /^\s*(an?\s+)?(real|float)(\s*\(\s*float\s*\))?(\s+data\s+type)?\s*\.?\s*$/i, str: /^\s*(an?\s+)?(string|str)(\s*\(\s*str\s*\))?(\s+data\s+type)?\s*\.?\s*$/i };
+  var TYPE_RE = { int: /^\s*(it\s+is\s+|it'?s\s+)?(an?\s+)?(integer|int)(\s*\(\s*int\s*\))?(\s+number)?(\s+data\s+type)?\s*\.?\s*$/i, float: /^\s*(it\s+is\s+|it'?s\s+)?(an?\s+)?(real|float)(\s*\(\s*float\s*\))?(\s+number)?(\s+data\s+type)?\s*\.?\s*$/i, str: /^\s*(it\s+is\s+|it'?s\s+)?(an?\s+)?(string|str)(\s*\(\s*str\s*\))?(\s+data\s+type)?\s*\.?\s*$/i };
   var TYPE_NAME = { int: "Integer", float: "Real", str: "String" };
   function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
   function pick(list) { return list[Math.floor(Math.random() * list.length)]; }

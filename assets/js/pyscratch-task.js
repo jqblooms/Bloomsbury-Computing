@@ -44,6 +44,25 @@
   }
   function codeLines(code) { return String(code || '').split('\n').map(stripComment); }
 
+  // Python's own error messages in plain words (the pseudocode engine's are plain already), as PyLab's friendly()
+  // in PyLab/common.js. The line stays in the Fail, shown as "Look at line N".
+  function plainError(msg, line) {
+    msg = String(msg || '');
+    if (!PY) return msg;
+    var at = line ? ' line ' + line : ' this line';
+    var m;
+    if (/SyntaxError|ParseError|TokenError|bad input|EOF in multi-line/.test(msg)) return 'Python cannot read' + at + '. Check it is finished, and check the quote marks and brackets.';
+    if (/IndentationError|unexpected indent|unindent/.test(msg)) return 'A line starts with spaces it should not have, or is missing them.';
+    if (/unsupported operand type\(s\) for [-*\/%]|can't multiply sequence/.test(msg)) return '- * and / only work on numbers. Is one of these a String?';
+    if (/concatenate|unsupported operand type\(s\) for \+|must be str|can only concatenate/.test(msg)) return '+ cannot join a String and a number. Is one of them in quote marks?';
+    if ((m = /invalid literal for int\(\) with base 10: '([^']*)'/.exec(msg))) return 'int() cannot turn "' + m[1] + '" into a whole number.';
+    if ((m = /could not convert string to float: '?([^']*)'?/.exec(msg))) return 'float() cannot turn "' + m[1] + '" into a number.';
+    if ((m = /NameError: name '([^']+)' is not defined/.exec(msg))) return 'Python does not know ' + m[1] + '. If ' + m[1] + ' is text, put quote marks round it. If it is a variable, give it a value first and check the spelling.';
+    if (/ZeroDivisionError/.test(msg)) return 'The program divides by 0.';
+    // Anything else: drop the Python error name and the long hint after it.
+    return msg.replace(/^\w+Error:\s*/, '').replace(/\. (To join|Check the spelling|Add global|Use int)[\s\S]*$/, '.');
+  }
+
   // A check failed: what was seen, what was expected, and the line (0 = no line).
   function Fail(saw, expected, line) { this.saw = saw; this.expected = expected; this.line = line || 0; }
 
@@ -97,11 +116,17 @@
         opts = opts || {};
         return runOnce(api, task, opts).then(function (r) {
           if (!opts.allowError) {
-            if (r.error) throw new Fail('Your program stopped: ' + r.error.msg, 'A program that runs to the end with no error', r.error.line);
-            if (r.timedOut) throw new Fail('Your program was still running after ' + (RUN_LIMIT_MS / 1000) + ' seconds', 'A program that ends. Does a loop never stop?', 0);
+            var f = T.stopped(r);
+            if (f) throw f;
           }
           return r;
         });
+      },
+      // The failure for a run that stopped with an error or never ended, or null.
+      stopped: function (r) {
+        if (r.error) return new Fail('Your program stopped: ' + plainError(r.error.msg, r.error.line), 'A program that runs to the end with no error', r.error.line);
+        if (r.timedOut) return new Fail('Your program was still running after ' + (RUN_LIMIT_MS / 1000) + ' seconds', 'A program that ends. Does a loop never stop?', 0);
+        return null;
       },
       // Sprite commands of one kind, from a run: [[arg1, arg2, ...], ...].
       callsTo: function (r, fn) {

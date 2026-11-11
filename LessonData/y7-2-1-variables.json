@@ -355,7 +355,7 @@
     "suffix": "a",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(integer|int)(\\s*\\(\\s*int\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Look for quote marks first. Then look for a decimal point or a /."
@@ -364,7 +364,7 @@
     "suffix": "b",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Look for quote marks first. Then look for a decimal point or a /."
@@ -373,7 +373,7 @@
     "suffix": "c",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Look for quote marks first. Then look for a decimal point or a /."
@@ -382,7 +382,7 @@
     "suffix": "d",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Look for quote marks first. Then look for a decimal point or a /."
@@ -402,7 +402,7 @@
     "suffix": "b",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(real|float)(\\s*\\(\\s*float\\s*\\))?(\\s+number)?(\\s+data\\s+type)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Look at the sign line 4 uses to work it out."
@@ -411,7 +411,7 @@
     "suffix": "c",
     "pattern": {
      "__regex": true,
-     "source": "^\\s*(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
+     "source": "^\\s*(it\\s+is\\s+|it'?s\\s+)?(an?\\s+)?(string|str)(\\s*\\(\\s*str\\s*\\))?(\\s+data\\s+type)?\\s*\\.?\\s*$",
      "flags": "i"
     },
     "feedback": "Look at line 1. What is round the value?"

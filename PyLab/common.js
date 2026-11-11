@@ -66,10 +66,12 @@ var PL = (function () {
     var msg = e && e.toString ? e.toString() : String(e);
     var line = /on line (\d+)/.exec(msg), at = line ? ' (line ' + line[1] + ')' : '';
     if (/TimeLimitError|run time limit/.test(msg)) return 'Your program ran too long.';
+    // + gets the join message; - * / with a String get their own (a reviewer saw "5" - 1 called a join).
+    if (/unsupported operand type\(s\) for [-*\/%]|can't multiply sequence/.test(msg)) return 'Error' + at + ': - * and / only work on numbers. Is one of these a String?';
     if (/concatenate|unsupported operand|must be str|can only concatenate/.test(msg)) return 'Error' + at + ': + cannot join a String and a number. Turn one into the other type first.';
     if (/invalid literal for int\(\)/.test(msg)) return 'Error' + at + ': int() was given text that is not a whole number.';
     if (/could not convert string to float|invalid literal for float/.test(msg)) return 'Error' + at + ': float() was given text that is not a number.';
-    if (/NameError/.test(msg)) { var n = /name '([^']+)'/.exec(msg); return 'Error' + at + ': Python does not know ' + (n ? '"' + n[1] + '"' : 'a name') + '. Store a value in it first, and check the spelling.'; }
+    if (/NameError/.test(msg)) { var n = /name '([^']+)'/.exec(msg); return 'Error' + at + ': Python does not know ' + (n ? '"' + n[1] + '"' : 'a name') + '. Store a value in it first, and check the spelling. If it is text, put quote marks round it.'; }
     if (/SyntaxError|ParseError|TokenError/.test(msg)) return 'Error' + at + ': Python cannot read this line. Check brackets, quote marks and the = sign.';
     if (/IndentationError/.test(msg)) return 'Error' + at + ': a line starts with spaces it should not have.';
     return 'Error' + at + ': ' + msg.replace(/ on line \d+/, '');

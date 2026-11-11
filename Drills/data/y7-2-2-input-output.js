@@ -15,7 +15,7 @@ DrillData.register("y7-2-2-input-output", {
   var NAMES = ["Mia", "Tom", "Ana", "Ben", "Lily", "Sam", "Nok", "Kai"];
   var FOODS = ["cake", "rice", "soup", "pie", "tea", "jam"];
   var VARS = ["score", "coins", "lives", "points", "steps", "gems"];
-  var TYPE_RE = { int: /^\s*(an?\s+)?(integer|int)(\s*\(\s*int\s*\))?(\s+data\s+type)?\s*\.?\s*$/i, float: /^\s*(an?\s+)?(real|float)(\s*\(\s*float\s*\))?(\s+data\s+type)?\s*\.?\s*$/i, str: /^\s*(an?\s+)?(string|str)(\s*\(\s*str\s*\))?(\s+data\s+type)?\s*\.?\s*$/i };
+  var TYPE_RE = { int: /^\s*(it\s+is\s+|it'?s\s+)?(an?\s+)?(integer|int)(\s*\(\s*int\s*\))?(\s+number)?(\s+data\s+type)?\s*\.?\s*$/i, float: /^\s*(it\s+is\s+|it'?s\s+)?(an?\s+)?(real|float)(\s*\(\s*float\s*\))?(\s+number)?(\s+data\s+type)?\s*\.?\s*$/i, str: /^\s*(it\s+is\s+|it'?s\s+)?(an?\s+)?(string|str)(\s*\(\s*str\s*\))?(\s+data\s+type)?\s*\.?\s*$/i };
   var TYPE_NAME = { int: "Integer", float: "Real", str: "String" };
   function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
   function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
