@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PyScratch Tasks</title>
+    <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 100%; height: 100%; background: var(--surface, #0f1115); color: var(--ink, #111); font-family: var(--font-body, system-ui, sans-serif); }
+      body.has-task { overflow: hidden; }
+      iframe { display: block; width: 100%; height: 100%; border: none; }
+      .pick { max-width: 760px; margin: 0 auto; padding: 24px 16px; }
+      .pick h1 { font-size: 24px; margin: 0 0 6px; }
+      .pick p { margin: 0 0 16px; color: var(--muted, #555); }
+      .pick h2 { font-size: 17px; margin: 18px 0 8px; }
+      .pick ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+      .pick button { width: 100%; text-align: left; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line, #ccc);
+        background: var(--surface-2, #fff); color: var(--ink, #111); font: inherit; cursor: pointer; }
+      .pick button:hover { border-color: var(--brand, #4c6ef5); }
+      .pick button b { display: block; }
+      .pick button span { color: var(--muted, #555); font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <!-- PyScratch Tasks: a small, self-checking Cambridge pseudocode task on a lesson slide (registry id pyscratch-task,
+         embedQuery task=<id>). The editor does the work (assets/js/pyscratch-task.js); the tasks are in tasks/<lesson>.js.
+         With no task (opened from the Apps page) it lists the tasks in SETS. See the shell's docs/pyscratch.md. -->
+    <script>
+      (function () {
+        var SETS = [['y8-2-1', 'Year 8, 2.1: Libraries and Library Functions'], ['y8-2-2', 'Year 8, 2.2: Data Types and Constants']];
+        var p = new URLSearchParams(location.search);
+        var bcv = encodeURIComponent(p.get('bcv') || '1');
+        var task = p.get('task') || '';
+
+        function open(id) {
+          document.body.innerHTML = '';
+          document.body.className = 'has-task';
+          var frame = document.createElement('iframe');
+          frame.title = 'PyScratch Task';
+          frame.setAttribute('allow', 'microphone; camera');
+          frame.src = '../scratch/editor.html?pyscratch=1&pstask=' + id + '&bcv=' + bcv + (p.get('pstest') === '1' ? '&pstest=1' : '');
+          document.body.appendChild(frame);
+          // Passes the editor's BC_* messages (BC_APP_RESULT) up to the lesson slide.
+          var relay = document.createElement('script');
+          relay.src = '../shared/frame-relay.js?v=20260926';
+          document.body.appendChild(relay);
+        }
+
+        if (/^[a-z0-9-]{1,40}$/.test(task)) {
+          document.addEventListener('DOMContentLoaded', function () { open(task); });
+          if (p.get('embed') === '1' && window.parent !== window) {
+            try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: 640 }, '*'); } catch (e) {}
+          }
+          return;
+        }
+
+        // No task: list them all.
+        var left = SETS.length;
+        SETS.forEach(function (s) {
+          var tag = document.createElement('script');
+          tag.src = 'tasks/' + s[0] + '.js?v=' + bcv;
+          tag.onload = tag.onerror = function () { if (--left === 0) list(); };
+          document.head.appendChild(tag);
+        });
+        function list() {
+          var all = window.PyScratchTasks || [];
+          var box = document.createElement('div');
+          box.className = 'pick';
+          var h = document.createElement('h1'); h.textContent = 'PyScratch Tasks'; box.appendChild(h);
+          var lead = document.createElement('p');
+          lead.textContent = 'Short pseudocode programs for a Scratch sprite. Each one checks itself when you click Check my program.';
+          box.appendChild(lead);
+          SETS.forEach(function (s) {
+            var tasks = all.filter(function (t) { return t.id.indexOf(s[0] + '-') === 0; });
+            if (!tasks.length) return;
+            var h2 = document.createElement('h2'); h2.textContent = s[1]; box.appendChild(h2);
+            var ul = document.createElement('ul');
+            tasks.forEach(function (t) {
+              var li = document.createElement('li'), b = document.createElement('button'), title = document.createElement('b'), sub = document.createElement('span');
+              b.type = 'button';
+              title.textContent = t.tag + ': ' + t.title;
+              sub.textContent = t.brief.replace(/<[^>]+>/g, '');
+              b.appendChild(title); b.appendChild(sub);
+              b.addEventListener('click', function () { open(t.id); });
+              li.appendChild(b); ul.appendChild(li);
+            });
+            box.appendChild(ul);
+          });
+          document.body.appendChild(box);
+        }
+      })();
+    </script>
+    <script src="../shared/bc-clicker.js?v=20260929c"></script>
+  </body>
+</html>

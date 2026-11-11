@@ -312,9 +312,21 @@
     else if (/[?&]scratchcheck/.test(location.search)) window.BC_CLOUD_SAVE = { app: 'scratchcheck', patterns: ['^scratchcheck:done:'] };
   </script>
   <script src="../shared/cloud-save.js?v=20260926"></script>
-  <script src="../assets/js/pyscratch-tutorials.js?v=20261009ps"></script>
-  <script src="../assets/js/pyscratch-pseudo.js?v=20261009ps"></script>
-  <script src="../assets/js/pyscratch.js?v=20261009ps"></script>
+  <script src="../assets/js/pyscratch-tutorials.js?v=20261111pt"></script>
+  <script src="../assets/js/pyscratch-pseudo.js?v=20261111pt"></script>
+  <script src="../assets/js/pyscratch.js?v=20261111pt"></script>
+  <!-- PyScratch Tasks: a checked task on a lesson slide (PyScratchTask/). No-op unless ?pstask is in the URL. -->
+  <!-- Its files take the page's bcv: the task data file for the lesson, then the task runner. -->
+  <script>
+    (function () {
+      var p = new URLSearchParams(location.search), id = p.get('pstask');
+      if (!id || !/[?&]pyscratch/.test(location.search)) return;
+      var v = encodeURIComponent(p.get('bcv') || '20261111pt');
+      var set = (/^(y\d+-\d+-\d+)/.exec(id) || [])[1];
+      if (set) document.write('<script src="../PyScratchTask/tasks/' + set + '.js?v=' + v + '"><\/script>');
+      document.write('<script src="../assets/js/pyscratch-task.js?v=' + v + '"><\/script>');
+    })();
+  </script>
   <!-- FlowScratch: flowchart editor overlay. No-op unless ?flowscratch is in URL. -->
   <script src="../assets/js/flowscratch-tutorials.js?v=20260925split"></script>
   <script src="../assets/js/flowscratch.js?v=20260927i"></script>

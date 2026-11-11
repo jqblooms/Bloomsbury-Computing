@@ -5,7 +5,8 @@
 //   node tools/build_y8_2_2.mjs
 // Cambridge pseudocode as in 2.1 (tools/build_y8_2_1.mjs, shared pieces in tools/y8_unit2_kit.mjs). The engine
 // (shared/pseudocode-engine.js) checks every DECLAREd type and the CONSTANT statement, so each "will it run?" answer
-// and error message on a slide is the engine's own. The Extension reuses the 2.1 plenary drill.
+// and error message on a slide is the engine's own. The Extension reuses the 2.1 plenary drill. Three PyScratch Task
+// slides embed pages PyScratchTask/ (tasks in PyScratchTask/tasks/y8-2-2.js): task 1 after the 3D lab, 2 and 3 after Activity 2.
 import fs from 'node:fs';
 import path from 'node:path';
 import {
@@ -32,6 +33,9 @@ const TPS = {
   'lab-3d': ['Why does each box in the lab need a type cube before it can hold a value?', 'DECLARE comes first. The data type decides what kind of value the variable lets in.'],
   'activity-1': ['Why predict first, then check?', 'A wrong prediction shows you which rule to look at again.'],
   'constant-check': ['Why are constants written at the top of the program?', 'They are easy to find and change there, and they are set before any line uses them.'],
+  'pyscratch-1': ['Why does the program stop on the line that stores the value, and not on its DECLARE line?', 'DECLARE only gives the variable its data type. The error comes when a value of the wrong kind is stored.'],
+  'pyscratch-2': ['Why is one constant better than typing the same number four times?', 'One change to the constant changes every line that uses it, so no line can be missed.'],
+  'pyscratch-3': ['Why does Check my program change FishPoints and run your program again?', 'If the score changes too, the program really uses the constant. A number typed into a line would not change.'],
   'activity-2': ['Why does the drill type in new values every time?', 'A program must work for any value it is given, not just one.'],
   'why-constant': ['What makes an explanation worth 2 marks?', 'A point, then what it means for the program, joined with so.'],
   'practice': ['Why can the wrong data type stop a program that has no other mistakes?', 'Each variable only lets in its own kind of value. One wrong type means one value is refused.'],
@@ -155,6 +159,13 @@ steps.push(embed('activity-1', 'Activity 1: Choose the Data Type', 'drill-y8-2-2
 steps.push(Object.assign(embed('lab-3d', 'Lab: Data Types in 3D', 'pseudocode-lab-3d', 'Lab: Data Types in 3D',
   'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Each box only lets in its own data type. A mistake in a challenge starts a new round. <strong>Done</strong> when Four Data Types, Data Type Challenge, Choose the Type and The Wrong Kind of Value are complete.'), { embedQuery: 'lesson=8-2.2' }));
 
+// ---------------------------------------------------------------- PyScratch Tasks (pages PyScratchTask/tasks/y8-2-2.js)
+// Each runs the student's pseudocode on a Scratch stage and checks what happened; help fades from task 1 to 3.
+const PST_LEAD = '<strong>What to do:</strong> write the program in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>.';
+const pst = (id, task, n, what) => Object.assign(embed(id, `Activity: PyScratch Task ${n}`, 'pyscratch-task', `Activity: PyScratch Task ${n} of 3`,
+  (n === 1 ? PST_LEAD + ' ' : '') + what), { embedQuery: 'task=' + task });
+steps.push(pst('pyscratch-1', 'y8-2-2-fix', 1, 'Task 1 of 3: fix a program that is nearly finished.'));
+
 // ---------------------------------------------------------------- constants
 const ERR_C = runError(['CONSTANT TicketPrice <- 45', 'TicketPrice <- 50']);
 assert(ERR_C && ERR_C.line === 2, 'constant error');
@@ -186,6 +197,8 @@ steps.push(checkStep('constant-check', 'Your Turn: Using a Constant', 'Your Turn
 
 steps.push(embed('activity-2', 'Activity 2: The Right Types and a Constant', 'drill-y8-2-2-code', 'Activity 2: The Right Types and a Constant',
   'Write each program with the right data types. Some must use a constant. New values are typed in every time.'));
+steps.push(pst('pyscratch-2', 'y8-2-2-constant', 2, 'Task 2 of 3: change a program that already works.'));
+steps.push(pst('pyscratch-3', 'y8-2-2-score', 3, 'Task 3 of 3: write the whole program yourself.'));
 
 steps.push(selfMarked('why-constant', 'Explain: Why Use a Constant?', 'Explain: Why Use a Constant?', '', [
   { id: 'why-constant', prompt: 'A program uses the speed limit 90 in six places. Explain why the programmer should make the speed limit a constant.', marks: 2,

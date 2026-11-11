@@ -162,6 +162,15 @@
    "embedQuery": "lesson=8-2.2"
   },
   {
+   "id": "pyscratch-1",
+   "label": "Activity: PyScratch Task 1",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y822-pyscratch-1",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 1 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the program stop on the line that stores the value, and not on its DECLARE line?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>DECLARE only gives the variable its data type. The error comes when a value of the wrong kind is stored.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> write the program in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>. Task 1 of 3: fix a program that is nearly finished.</p><div id=\"y822-pyscratch-1\"></div>",
+   "embedQuery": "task=y8-2-2-fix"
+  },
+  {
    "id": "constant",
    "label": "What Is a Constant?",
    "content": "<h2 class=\"lesson-h2\">What Is a Constant?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what happens if a later line says TicketPrice &lt;- 50? Why?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>The program stops on that line.</p><p><strong>Why?</strong> TicketPrice is a CONSTANT, so its value cannot be changed while the program runs.</p></div></details><p class=\"lesson-lead\">A <strong>constant</strong> is a value that is set once and never changes while the program runs.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\"><div class=\"lesson-code-line\">CONSTANT TicketPrice &lt;- 45</div><div class=\"lesson-code-line\">DECLARE Tickets : INTEGER</div><div class=\"lesson-code-line\">INPUT Tickets</div><div class=\"lesson-code-line\">OUTPUT Tickets * TicketPrice</div></div></div><div><ul class=\"lesson-facts\"><li>Write CONSTANT, a name, &lt;- and the value.</li><li>Put constants at the top of the program.</li><li>Every line can use it. No line can change it.</li></ul></div></div>"
@@ -186,6 +195,24 @@
    "appId": "drill-y8-2-2-code",
    "embedContainerId": "y822-activity-2",
    "content": "<h2 class=\"lesson-h2\">Activity 2: The Right Types and a Constant</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the drill type in new values every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program must work for any value it is given, not just one.</p></div></details><p class=\"lesson-lead\">Write each program with the right data types. Some must use a constant. New values are typed in every time.</p><div id=\"y822-activity-2\"></div>"
+  },
+  {
+   "id": "pyscratch-2",
+   "label": "Activity: PyScratch Task 2",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y822-pyscratch-2",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 2 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is one constant better than typing the same number four times?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One change to the constant changes every line that uses it, so no line can be missed.</p></div></details><p class=\"lesson-lead\">Task 2 of 3: change a program that already works.</p><div id=\"y822-pyscratch-2\"></div>",
+   "embedQuery": "task=y8-2-2-constant"
+  },
+  {
+   "id": "pyscratch-3",
+   "label": "Activity: PyScratch Task 3",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y822-pyscratch-3",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 3 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Check my program change FishPoints and run your program again?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If the score changes too, the program really uses the constant. A number typed into a line would not change.</p></div></details><p class=\"lesson-lead\">Task 3 of 3: write the whole program yourself.</p><div id=\"y822-pyscratch-3\"></div>",
+   "embedQuery": "task=y8-2-2-score"
   },
   {
    "id": "why-constant",

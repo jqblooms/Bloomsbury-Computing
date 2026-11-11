@@ -7,7 +7,8 @@
 // (every variable DECLAREd with its type). The library functions are the syllabus library routines MOD, DIV, ROUND
 // and RANDOM, plus LENGTH and UCASE. Only INTEGER and STRING are declared: REAL comes in 2.2, so decimals only
 // appear as values that are output, never stored. EAL-light and Term 1b "why", as tools/build_y8_3_2.mjs.
-// Year 8 has no exam board papers, so nothing carries a citation.
+// Year 8 has no exam board papers, so nothing carries a citation. Three PyScratch Task slides after Activity 2 embed
+// pages PyScratchTask/ (tasks in PyScratchTask/tasks/y8-2-1.js).
 import fs from 'node:fs';
 import path from 'node:path';
 import {
@@ -29,6 +30,9 @@ const TPS = {
   'round-check': ['Why does ROUND need two values in its brackets?', 'The first value is the number to round. The second says how many decimal places to keep.'],
   'random': ['Why do games need a library function for random numbers?', 'A game must be different each time. Good random numbers are hard to write, so programmers use one already written.'],
   'activity-2': ['Why does the drill type in new values every time you run it?', 'A program that only works for one value is not finished. New values show that it works for any value.'],
+  'pyscratch-1': ['Why does the sprite land in a different place each time the program runs?', 'RANDOM() gives a new number every time it is called, so the position changes on every run.'],
+  'pyscratch-2': ['Why would a game show a speed rounded to 1 decimal place?', 'A short number is quick to read. The extra digits do not help the player.'],
+  'pyscratch-3': ['Why does Check my program run your spinner many times?', 'One run could be right by luck. Many runs show that it works every time.'],
   'why-library': ['What makes an explanation worth 2 marks?', 'Two different reasons. Each one says what it means for the programmer.'],
   'practice': ['Why is LENGTH used before MOD in this program?', 'MOD needs a number. LENGTH turns the word into a number first.'],
   'plenary': ['Why practise with new numbers every time?', 'If you can predict the output for any numbers, you really know what each function does.'],
@@ -182,6 +186,15 @@ steps.push(mcStep('random', 'Random Numbers', 'Random Numbers', '',
 
 steps.push(embed('activity-2', 'Activity 2: Use a Library Function', 'drill-y8-2-1-code', 'Activity 2: Use a Library Function',
   'Write each program. It runs with new values every time, so it must work for any value.'));
+
+// ---------------------------------------------------------------- PyScratch Tasks (pages PyScratchTask/tasks/y8-2-1.js)
+// Each runs the student's pseudocode on a Scratch stage and checks what happened; help fades from task 1 to 3.
+const PST_LEAD = '<strong>What to do:</strong> write the program in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>.';
+[['pyscratch-1', 'y8-2-1-random', 'Task 1 of 3: finish one line.'], ['pyscratch-2', 'y8-2-1-speed', 'Task 2 of 3: change a program that already works.'],
+  ['pyscratch-3', 'y8-2-1-spin', 'Task 3 of 3: write the whole program yourself.']].forEach(([id, task, what], i) => {
+  steps.push(Object.assign(embed(id, `Activity: PyScratch Task ${i + 1}`, 'pyscratch-task', `Activity: PyScratch Task ${i + 1} of 3`,
+    (i === 0 ? PST_LEAD + ' ' : '') + what), { embedQuery: 'task=' + task }));
+});
 
 steps.push(selfMarked('why-library', 'Explain: Why Use a Library Function?', 'Explain: Why Use a Library Function?', '', [
   { id: 'why-library', prompt: 'Ali writes his own four lines to find a remainder. Kim calls MOD from the library. Explain two reasons why Kim\'s way is better.', marks: 2,

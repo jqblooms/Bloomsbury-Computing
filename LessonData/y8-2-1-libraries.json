@@ -211,6 +211,33 @@
    "content": "<h2 class=\"lesson-h2\">Activity 2: Use a Library Function</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the drill type in new values every time you run it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program that only works for one value is not finished. New values show that it works for any value.</p></div></details><p class=\"lesson-lead\">Write each program. It runs with new values every time, so it must work for any value.</p><div id=\"y821-activity-2\"></div>"
   },
   {
+   "id": "pyscratch-1",
+   "label": "Activity: PyScratch Task 1",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y821-pyscratch-1",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 1 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the sprite land in a different place each time the program runs?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>RANDOM() gives a new number every time it is called, so the position changes on every run.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> write the program in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>. Task 1 of 3: finish one line.</p><div id=\"y821-pyscratch-1\"></div>",
+   "embedQuery": "task=y8-2-1-random"
+  },
+  {
+   "id": "pyscratch-2",
+   "label": "Activity: PyScratch Task 2",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y821-pyscratch-2",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 2 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why would a game show a speed rounded to 1 decimal place?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A short number is quick to read. The extra digits do not help the player.</p></div></details><p class=\"lesson-lead\">Task 2 of 3: change a program that already works.</p><div id=\"y821-pyscratch-2\"></div>",
+   "embedQuery": "task=y8-2-1-speed"
+  },
+  {
+   "id": "pyscratch-3",
+   "label": "Activity: PyScratch Task 3",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y821-pyscratch-3",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 3 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Check my program run your spinner many times?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>One run could be right by luck. Many runs show that it works every time.</p></div></details><p class=\"lesson-lead\">Task 3 of 3: write the whole program yourself.</p><div id=\"y821-pyscratch-3\"></div>",
+   "embedQuery": "task=y8-2-1-spin"
+  },
+  {
    "id": "why-library",
    "label": "Explain: Why Use a Library Function?",
    "type": "self-marked-response",

@@ -28,6 +28,9 @@
   var DEMO_MODE      = /[?&]pyscratch_demo/.test(location.search);
   var DEMO_LOOP_SECS = parseInt(((location.search.match(/[?&]demo_loop=(\d+)/) || [])[1]) || '8', 10) || 8;
   var DEMO_SPRITE    = decodeURIComponent(((location.search.match(/[?&]demo_sprite=([^&]*)/) || [])[1]) || '');
+  // PyScratch Tasks (?pstask=<id>): a self-checking task on a lesson slide. assets/js/pyscratch-task.js runs it
+  // through window.PyScratchTaskBoot, using the hooks below (S.task*); see the shell's docs/pyscratch.md.
+  var TASK_MODE      = /[?&]pstask=/.test(location.search) && !DEMO_MODE;
 
   // Tutorials and challenges live in pyscratch-tutorials.js, loaded just
   // before this file by scratch/editor.html. If a stale cached editor.html
@@ -174,6 +177,14 @@
     nameById:         {},    // target id → sprite name, to notice renames
     lastError:        null,  // { sprite, threadIdx, line } of the last runtime error, marked in the editor
     infos:            {},    // thread module details by id, for mapping error lines
+    taskHook:         null,  // task mode: function (fn, sprite, args) called before every sprite command; { value } replaces it
+    taskOut:          null,  // task mode: OUTPUT text is also pushed here
+    taskErrors:       null,  // task mode: errors are also pushed here as { line, msg }
+    taskMods:         null,  // task mode: each finished thread's module, by sprite name (its variables)
+    taskReset:        null,  // task mode: puts the sprites back before every run
+    taskCode:         null,  // task mode: a check runs this pseudocode in place of the editor's
+    taskMsgFilter:    null,  // task mode: rewrites console messages (a term the lesson has not taught yet)
+    runPromises:      [],    // one per thread started by the last startAll, settled when it ends
     infoSeq:          0
   };
 
@@ -785,6 +796,10 @@
   }
 
   function callAPI(fn, spriteName, args) {
+    if (S.taskHook) {
+      var hooked = S.taskHook(fn, spriteName, args);
+      if (hooked && hooked.hasOwnProperty('value')) return hooked.value;
+    }
     var target = getTargetByName(spriteName);
     var a = args[0], b = args[1], c = args[2];
 
@@ -1510,7 +1525,7 @@
     var userLines;
     if (lang === 'pseudo') {
       if (!PSEUDO) { logError('Pseudocode mode did not load. Reload the page.'); return null; }
-      var tr = PSEUDO.transpile(threadCode(thread, 'pseudo'));
+      var tr = PSEUDO.transpile(S.taskCode != null && !isClone ? S.taskCode : threadCode(thread, 'pseudo'));
       if (tr.errors.length) {
         if (!isClone) reportStaticError(spriteName, thread, tr.errors[0]);
         return null;
@@ -1631,12 +1646,14 @@
     } else {
       msg = friendlyPython(msg);
     }
+    if (S.taskErrors) S.taskErrors.push({ line: line, msg: msg });
     var where = info ? displaySpriteName(info.sprite) + ' / ' + info.thread.name + (info.isClone ? ' (clone)' : '') : 'Event';
     logError(where + (line ? ', line ' + line : '') + ': ' + msg);
     markErrorLine(info, line);
   }
 
   function reportStaticError(spriteName, thread, e) {
+    if (S.taskErrors) S.taskErrors.push({ line: e.line, msg: e.message, before: true });
     logError(displaySpriteName(spriteName) + ' / ' + thread.name + ', line ' + e.line + ': ' + e.message);
     markErrorLine({ sprite: spriteName, thread: thread }, e.line);
   }
@@ -1671,6 +1688,8 @@
     S.currentInfo = built.info;
     return Sk.misceval.asyncToPromise(function () {
       return Sk.importMainWithBody(label, false, built.code, true);
+    }).then(function (mod) {
+      if (S.taskMods && !isClone) S.taskMods[displaySpriteName(spriteName)] = mod;
     }).catch(function (err) {
       reportRunError(err, built.info);
     });
@@ -1718,13 +1737,14 @@
     updateIndentGutter();
     saveCurrentCode();
     // Snapshot the full project on every run so the Snapshots panel has history.
-    if (!S.activeTut) takeProjectSnapshot('Run', 'auto');
+    if (!S.activeTut && !TASK_MODE) takeProjectSnapshot('Run', 'auto');
+    if (S.taskReset) { try { S.taskReset(); } catch (e) {} }
 
     // Configure Skulpt ONCE per run, before any threads start.
     // IMPORTANT: Sk.configure resets Sk.sysmodules (the module cache), so it
     // must not be called per thread while other threads are running.
     Sk.configure({
-      output: function (text) { log(text); },
+      output: function (text) { log(text); if (S.taskOut) S.taskOut.push(String(text)); },
       read: function (x) {
         if (Sk.builtinFiles && Sk.builtinFiles.files[x]) return Sk.builtinFiles.files[x];
         throw new Error("File not found: '" + x + "'");
@@ -1737,10 +1757,11 @@
     startFrameClock();
 
     var currentGen = S.gen;
+    S.runPromises = [];
     getSprites().forEach(function (t) {
       var name = t.sprite.name;
       loadThreads(name).forEach(function (thread) {
-        runThread(name, thread, currentGen);
+        S.runPromises.push(runThread(name, thread, currentGen));
       });
     });
 
@@ -5628,6 +5649,7 @@
   }
   function logError(msg) {
     if (!ui.console) return;
+    if (S.taskMsgFilter) msg = S.taskMsgFilter(msg);
     var span = document.createElement('span');
     span.className = 'ps-con-err';
     span.textContent = '⚠ ' + msg + '\n';
@@ -6394,6 +6416,13 @@
         // (in the PyScratch app) bring back the last session's project.
         setTimeout(sync, 600);
         setTimeout(function () { restoreSession(); }, 1200);
+        if (TASK_MODE && window.PyScratchTaskBoot) {
+          window.PyScratchTaskBoot({ S: S, ui: ui, PSEUDO: PSEUDO, startAll: startAll, stopAll: stopAll, setLang: setLang,
+            selectSpriteByName: selectSpriteByName, loadCodeToEditor: loadCodeToEditor, saveCurrentCode: saveCurrentCode,
+            hideUiElements: hideUiElements, adjustOverlay: adjustOverlay, getTargetByName: getTargetByName, getSprites: getSprites,
+            clearConsole: clearConsole, logError: logError, sync: sync, renderThreadList: renderThreadList, markErrorLine: markErrorLine,
+            updateIndentGutter: updateIndentGutter });
+        }
         document.addEventListener('visibilitychange', function () {
           if (document.visibilityState === 'hidden' && _sessionTimer) saveSessionNow();
         });
