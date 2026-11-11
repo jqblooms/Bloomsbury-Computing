@@ -106,8 +106,8 @@ function embed(id, label, appId, lead, embedQuery) {
     content: `<h2 class="lesson-h2">${label}</h2>` + (lead ? `<p class="lesson-lead">${lead}</p>` : '') + `<div id="${P}-${id}"></div>` }, embedQuery ? { embedQuery } : {});
 }
 const steps = [];
-const OWN_DO = 'Type your answer in your own words, then press <strong>Check my answer</strong> to have it marked, and <strong>Submit answer</strong> to see the model answer. Fix your answer, then copy your best version into your notes.';
-const WRITE_DO = 'Type your answer, then press <strong>Submit answer</strong> (or <strong>Check my answer</strong> to have it marked). Done when you have marked it against the model answer.';
+const OWN_DO = '1. Type your answer in your own words. 2. Press <strong>Check my answer</strong> and fix it until you are happy. 3. Press <strong>Submit answer</strong> to see the model answer. Then copy your best version into your notes.';
+const WRITE_DO = '1. Type your answer. 2. Press <strong>Check my answer</strong> and fix it until you are happy. 3. Press <strong>Submit answer</strong> to see the model answer.';
 
 // ---------------------------------------------------------------- Do Now 1: 0478/12 November 2024 Q6
 // Mark scheme: Control unit // CU; Memory address register // MAR; Current instruction register // CIR (one mark each).
@@ -165,15 +165,15 @@ steps.push(mcStep('concept-buses', 'Why the CPU Needs Buses',
   todo('read the two lines, look at the picture, then pick your prediction. The reason appears under it.') +
   facts(['The CPU and memory are separate parts. They are joined by wires.', 'A <strong>bus</strong> is a set of wires that carries signals between parts, such as the CPU and memory.']), [
     { prompt: 'Predict: the CPU wants the number stored at address 6. What must the CPU send to memory?', options: ['Where the number is, and a message: read it', 'Nothing: memory knows what the CPU needs', 'The number 12'], correct: 0,
-      explain: 'Memory only does what it is told. The CPU sends where (the address 6) and what to do (read). Then memory sends back what it holds there (12). Three different things travel, so there are three buses: the address bus, the data bus and the control bus.' },
+      explain: 'The CPU does not know the 12 yet, and memory only does what it is told. The CPU sends where (the address 6) and what to do (read). Then memory sends back what it holds there (12). Three different things travel, so there are three buses: the address bus, the data bus and the control bus.' },
   ], busPic({}, MEM, 6, 'The three buses join the CPU and memory.')));
 steps.push(noteSlide('note-buses', 'Your Note: Why Three Buses', [['in your own words, explain WHY the CPU needs three buses, not one.', 'The CPU sends where (an address) and what to do (a signal), and the value travels too (data). These are three different things, so there are three buses.']]));
 
 steps.push(mcStep('concept-address', 'Which Way Does the Address Bus Go?',
   todo('read the line, look at the picture, then pick your prediction. The reason appears under it.') +
   facts(['The <strong>address bus</strong> carries an <strong>address</strong>: the place in memory to read or write.', 'The CPU wants the value at address 6, so 6 goes on the address bus.']), [
-    { prompt: 'Predict: memory never chooses which address the CPU uses. Which way does the address bus need to go?', options: ['Out of the CPU to memory only', 'Into the CPU from memory only', 'Both ways'], correct: 0,
-      explain: 'Out of the CPU only. The CPU chooses the address and sends it to memory. Memory never needs to send an address back, so the address bus goes one way.' },
+    { prompt: 'Predict: who chooses the address, the CPU or memory? So which way does the address bus need to go?', options: ['Out of the CPU to memory only', 'Into the CPU from memory only', 'Both ways'], correct: 0,
+      explain: 'The CPU chooses the address and sends it towards memory. Memory never needs to send an address back, so the address bus goes one way.' },
   ], busPic({ addr: { v: '6', dir: 'out' } }, MEM, 6, 'The CPU sends the address 6.')));
 
 steps.push(written('explain-address', 'Explain It: The Address Bus', OWN_DO, [
@@ -185,7 +185,7 @@ steps.push(written('explain-address', 'Explain It: The Address Bus', OWN_DO, [
 
 steps.push(mcStep('concept-data', 'Which Way Does the Data Bus Go?',
   todo('compare the two pictures, then pick your prediction. The reason appears under it.') +
-  facts(['The <strong>data bus</strong> carries <strong>data and instructions</strong>: the value itself.']), [
+  facts(['The <strong>data bus</strong> carries <strong>data and instructions</strong>: the value itself.', 'Memory (RAM) sends and receives data on the data bus.']), [
     { prompt: 'Predict: in the read, 12 travels on the data bus. In the write, 42 travels on the data bus. Which way must the data bus go?', options: ['Into the CPU only', 'Out of the CPU only', 'Both ways'], correct: 2,
       explain: 'Both ways. In the read, 12 comes into the CPU from memory. In the write, 42 goes out of the CPU to memory. One bus does both jobs, so it must go both ways.' },
   ], '<div style="display:grid;gap:8px">' + busPic({ addr: { v: '6', dir: 'out' }, data: { v: '12', dir: '' } }, [], null, '<b>Read:</b> the CPU wants the value at address 6. It holds 12.') +
@@ -223,8 +223,8 @@ const cmpTable = (() => {
 })();
 steps.push(mcStep('compare-read-write', 'Compare: A Read and a Write',
   todo('the table shows what each bus carries in a read and in a write. Picture which way each one travels, then pick your prediction.') + cmpTable, [
-    { prompt: 'Predict: which bus changes direction between the read and the write?', options: ['Data bus', 'Address bus', 'Control bus'], correct: 0,
-      explain: 'Only the data bus. In both jobs the address and the read or write signal go out of the CPU. The value comes in for a read (12) and goes out for a write (42).' },
+    { prompt: 'Predict: in this read and this write, which bus carries something in a different direction?', options: ['Data bus', 'Address bus', 'Control bus'], correct: 0,
+      explain: 'Only the data bus. In both jobs the address and the read or write signal go out of the CPU. The value comes in for a read (12) and goes out for a write (42). The control bus can go both ways (a key press comes in), but here the CU sends read and write out both times.' },
   ]));
 
 steps.push(mcStep('predict-way', 'Check: Which Way?',
@@ -256,10 +256,10 @@ const LIST = 'fetch|address|register|execute|data|decode|calculation|central|val
 const busWord = (w) => `^(?=.*\\b${w}\\b)(?!(?:.*?\\b(${LIST})\\b){4})[a-z0-9\\s,;.()&/'"-]+$`;
 steps.push(checkStep('exam-1', 'Exam Questions: Name the Bus',
   cite('0478/13 November 2021 Q5; 0478/12 November 2024 Q6; adapted from 0478/11 November 2024 Q5(d)') + ' <strong>What to do:</strong> type each answer, then press Check answers.', [
-    { label: '(a) Give the component name: "........ This carries addresses around the CPU."', answer: ADDR_BUS, feedback: 'It carries addresses. Name the bus.' },
+    { label: '(a) Give the component name: "........ This carries addresses around the CPU."', answer: ADDR_BUS, feedback: 'It carries addresses. Write the full name of the bus, ending in the word bus.' },
     { label: '(b) Give the component name: "........ transmits data between the RAM and the CPU."', answer: DATA_BUS, feedback: 'It carries data. Name the bus.' },
     { label: '(c) Buses are used in the CPU to transmit data. Type the three words from this list that name buses: fetch, address, register, execute, data, decode, calculation, central, value, binary, control.',
-      answers: ['address', 'data', 'control'].map((w) => ({ answer: busWord(w), feedback: 'Type three words from the list, each the name of a bus, such as: word, word, word.' })) },
+      answers: ['address', 'data', 'control'].map((w) => ({ answer: busWord(w), feedback: 'Use only words from the list that name a bus.' })) },
   ]));
 
 steps.push(written('exam-2', 'Exam Question: Two Other Buses',

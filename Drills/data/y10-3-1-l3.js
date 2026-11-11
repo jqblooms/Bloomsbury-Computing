@@ -89,7 +89,7 @@
         note: "The place in memory is the address. It goes on the address bus.",
         randomize: function () {
           var d = draw(), c = busCard("addr");
-          c.prompt = "The CPU wants the value stored at place " + d.a + " in memory.\nWhich bus carries the number " + d.a + "?";
+          c.prompt = "The CPU wants the value stored at address " + d.a + " in memory.\nWhich bus carries the number " + d.a + "?";
           return c;
         }
       }),
@@ -167,8 +167,8 @@
         randomize: function () {
           var d = draw(), c = wayCard("addr", "toMem");
           c.prompt = drillPick([
-            "The CPU reads the value stored at place " + d.a + " in memory.\nWhich bus carries the number " + d.a + ", and which way?",
-            "The CPU writes " + d.v + " into place " + d.a + " in memory.\nWhich bus carries the number " + d.a + ", and which way?"
+            "The CPU reads the value stored at address " + d.a + " in memory.\nWhich bus carries the number " + d.a + ", and which way?",
+            "The CPU writes " + d.v + " into address " + d.a + " in memory.\nWhich bus carries the number " + d.a + ", and which way?"
           ]);
           return c;
         }
@@ -178,7 +178,7 @@
         note: "In a read, the value comes into the CPU from memory on the data bus.",
         randomize: function () {
           var d = draw(), c = wayCard("data", "toCpu");
-          c.prompt = "The CPU reads place " + d.a + " in memory. The value stored there is " + d.v + ".\nWhich bus carries " + d.v + ", and which way?";
+          c.prompt = "The CPU reads address " + d.a + " in memory. The value stored there is " + d.v + ".\nWhich bus carries " + d.v + ", and which way?";
           return c;
         }
       }),
@@ -187,7 +187,7 @@
         note: "In a write, the value goes out of the CPU to memory on the data bus.",
         randomize: function () {
           var d = draw(), c = wayCard("data", "toMem");
-          c.prompt = "The CPU writes the value " + d.v + " into place " + d.a + " in memory.\nWhich bus carries " + d.v + ", and which way?";
+          c.prompt = "The CPU writes the value " + d.v + " into address " + d.a + " in memory.\nWhich bus carries " + d.v + ", and which way?";
           return c;
         }
       }),
@@ -197,8 +197,8 @@
         randomize: function () {
           var d = draw(), c = busCard("ctrl");
           c.prompt = drillPick([
-            "The CPU reads place " + d.a + " in memory.\nWhich bus tells memory to read, not write?",
-            "The CPU writes " + d.v + " into place " + d.a + " in memory.\nWhich bus tells memory to write, not read?"
+            "The CPU reads address " + d.a + " in memory.\nWhich bus tells memory to read, not write?",
+            "The CPU writes " + d.v + " into address " + d.a + " in memory.\nWhich bus tells memory to write, not read?"
           ]);
           return c;
         }
