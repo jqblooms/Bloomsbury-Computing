@@ -23,9 +23,9 @@
 
   var BUS_OPTS = { addr: "Address bus", data: "Data bus", ctrl: "Control bus" };
   var BUS_RE = {
-    addr: /^\s*(the\s+)?address(\s+bus)?\s*$/i,
-    data: /^\s*(the\s+)?data(\s+bus)?\s*$/i,
-    ctrl: /^\s*(the\s+)?control(\s+bus)?\s*$/i
+    addr: /^\s*(the\s+)?add?ress?(\s+bus(es)?)?\s*$/i,
+    data: /^\s*(the\s+)?data(\s+bus(es)?)?\s*$/i,
+    ctrl: /^\s*(the\s+)?cont?roll?(\s+bus(es)?)?\s*$/i
   };
   function busCard(which) {
     return {
@@ -38,8 +38,8 @@
 
   // Which way: "out of the CPU (to memory)" or "into the CPU (from memory)", in the words a student might type.
   var CPU = "(cpu|processor)", MEM = "(memory|ram|main\\s+memory)";
-  var TO_MEM = "\\b(out\\s+of|from|leaves?)\\s+(the\\s+)?" + CPU + "\\b|\\b(in)?to\\s+(the\\s+)?" + MEM + "\\b|\\b" + CPU + "\\s*(->|\u2192)\\s*" + MEM + "\\b";
-  var TO_CPU = "\\b(out\\s+of|from|leaves?)\\s+(the\\s+)?" + MEM + "\\b|\\b(in)?to\\s+(the\\s+)?" + CPU + "\\b|\\b" + MEM + "\\s*(->|\u2192)\\s*(the\\s+)?" + CPU + "\\b";
+  var TO_MEM = "\\b(out\\s+of|from|leaves?)\\s+(the\\s+)?" + CPU + "\\b|\\b(in)?to\\s+(the\\s+)?" + MEM + "\\b|\\b" + CPU + "\\s*(->|\u2192)\\s*" + MEM + "\\b|\\bout(\\s+only)?\\s*$";
+  var TO_CPU = "\\b(out\\s+of|from|leaves?)\\s+(the\\s+)?" + MEM + "\\b|\\b(in)?to\\s+(the\\s+)?" + CPU + "\\b|\\b" + MEM + "\\s*(->|\u2192)\\s*(the\\s+)?" + CPU + "\\b|\\bin(\\s+only)?\\s*$";
   var WAY_RE = {
     toMem: "(?=.*(" + TO_MEM + "))(?!.*(" + TO_CPU + "))(?!.*\\bboth\\b)",
     toCpu: "(?=.*(" + TO_CPU + "))(?!.*(" + TO_MEM + "))(?!.*\\bboth\\b)"
@@ -69,8 +69,8 @@
     return base;
   }
 
-  var ONE_WAY = new RegExp("^(?!.*\\bboth\\b)(?!.*(" + TO_CPU + "))(\\s*(it\\s+)?(is\\s+|goes\\s+)?(uni-?\\s?directional|(in\\s+)?one[\\s-]+(way|direction)|(out|out\\s+of\\s+the\\s+" + CPU + ")(\\s+only)?\\b)|.*(" + TO_MEM + "))", "i");
-  var BOTH_WAYS = /^(?!.*\b(uni-?\s?directional|one[\s-]+(way|direction)|only)\b).*\b(bi-?\s?directional|both\s+(ways|directions)|two[\s-]+(ways?|directions?)|in(to)?\s+and\s+out|to\s+and\s+from)\b/i;
+  var ONE_WAY = new RegExp("^(?!.*\\bboth\\b)(?!.*(" + TO_CPU + "))(\\s*(it\\s+)?(is\\s+|goes\\s+)?(only\\s+)?(uni-?\\s?directional|(in\\s+)?one[\\s-]+(way|direction)|(out|out\\s+of\\s+the\\s+" + CPU + ")(\\s+only)?\\b)|.*(" + TO_MEM + "))", "i");
+  var BOTH_WAYS = /^(?!.*\b(uni-?\s?directional|one[\s-]+(way|direction)|only)\b).*\b(bi-?\s?directional|both\s+(ways?|directions?)|^\s*both\s*$|two[\s-]+(ways?|directions?)|in(to)?\s+and\s+out|to\s+and\s+from)\b/i;
   var WAY_OPTS = ["Out of the CPU only", "Into the CPU only", "Both ways"];
 
   DrillData.register("y10-3-1-l3", {
@@ -207,17 +207,16 @@
         id: "e-01", category: "exam", goBack: SLIDE.examTwo, pickThenType: true,
         prompt: "One type of bus is the address bus.\nIdentify one other type of bus and state what it is responsible for transmitting.",
         answers: ["Data bus: transmits data and instructions", "Control bus: transmits control signals"],
-        keywords: [/^\s*(the\s+)?data\s+bus\b(?!.*\b(control|address\w*)\b).*\b(data|instructions?)\b/i, /^\s*(the\s+)?control\s+bus\b(?!.*\b(data|instructions?|address\w*)\b).*\bsignals?\b/i],
+        keywords: [/^\s*(the\s+)?data\s+bus\b(?!.*\b(control|address\w*)\b).*\b(data|instructions?)\b/i, /^\s*(the\s+)?control\s+bus\b(?!.*\b(data|instructions?|address\w*)\b).*\b(signals?|commands?)\b/i],
         distractors: ["Data bus: transmits control signals", "Control bus: transmits memory addresses", "Data bus: transmits memory addresses", "Control bus: transmits data and instructions"],
         note: "From Cambridge IGCSE 0478/11, November 2022, Question 2(a)."
       },
       {
         id: "e-02", category: "exam", goBack: SLIDE.examOne, pickThenType: true,
         prompt: "Describe the address bus.\nGive one point that earns a mark.",
-        answers: ["It carries memory addresses", "It sends addresses out of the CPU to memory", "It goes one way only"],
+        answers: ["It carries memory addresses", "It sends addresses out of the CPU to memory"],
         keywords: [
-          new RegExp("^(?!.*\\b(data|instructions?|control|signals?|both)\\b)(?!.*(" + TO_CPU + "))(?=.*\\baddress(es)?\\b).*\\b(carr\\w*|transmit\\w*|sends?|moves?|holds?|go(es)?|travels?)\\b", "i"),
-          /^(?!.*\b(bi-?\s?directional|both)\b).*\b(uni-?\s?directional|one[\s-]+way|one\s+direction)\b/i
+          new RegExp("^(?!.*\\b(data|instructions?|control|signals?|both)\\b)(?!.*(" + TO_CPU + "))(?=.*\\baddress(es)?\\b).*\\b(carr\\w*|transmit\\w*|sends?|moves?|holds?|go(es)?|travels?)\\b", "i")
         ],
         distractors: ["It carries data and instructions", "It goes both ways", "It carries control signals", "It sends addresses into the CPU from memory"],
         note: "What the address bus does."
@@ -236,7 +235,7 @@
         answers: ["The address bus goes one way but the data bus goes both ways", "The address bus carries addresses but the data bus carries data"],
         keywords: [/^(?!.*\baddress\s+bus\s+(goes\s+|is\s+)?(both|bi|two))(?!.*\bdata\s+bus\s+(goes\s+|is\s+)?(one|uni))(?=.*\baddress\s+bus\b.*\b(uni-?\s?directional|one[\s-]+way|one\s+direction)\b.*\bdata\s+bus\b.*\b(bi-?\s?directional|both\s+(ways|directions)|two[\s-]+ways?)\b)/i, /^(?!.*\bdata\s+bus\s+(goes\s+|is\s+)?(one|uni))(?!.*\baddress\s+bus\s+(goes\s+|is\s+)?(both|bi|two)).*\bdata\s+bus\b.*\b(bi-?\s?directional|both\s+(ways|directions)|two[\s-]+ways?)\b.*\baddress\s+bus\b.*\b(uni-?\s?directional|one[\s-]+way|one\s+direction)\b/i, /^.*\baddress\s+bus\b.*\b(carr\w*|transmit\w*|sends?)\s+(memory\s+)?addresses\b.*\bdata\s+bus\b.*\b(carr\w*|transmit\w*|sends?)\s+data\b/i],
         distractors: ["The address bus goes both ways but the data bus goes one way", "The address bus carries data but the data bus carries addresses", "The address bus carries signals but the data bus carries addresses"],
-        note: "Either difference earns the mark: which way each bus goes, or what each bus carries."
+        note: "Either difference is right: which way each bus goes, or what each bus carries."
       }
     ]
   });

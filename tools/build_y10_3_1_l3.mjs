@@ -253,7 +253,7 @@ const DATA_BUS = '^\\s*(the\\s+)?data\\s*bus\\s*\\.?\\s*$';
 // One mark per bus named (the mark scheme gives one mark for each). Each pattern needs its own word and at most three
 // words from the list, so typing every word earns nothing.
 const LIST = 'fetch|address|register|execute|data|decode|calculation|central|value|binary|control';
-const busWord = (w) => `^(?=.*\\b${w}\\b)(?!(?:.*?\\b(${LIST})\\b){4})[a-z0-9\\s,;.()&/]+$`;
+const busWord = (w) => `^(?=.*\\b${w}\\b)(?!(?:.*?\\b(${LIST})\\b){4})[a-z0-9\\s,;.()&/'"-]+$`;
 steps.push(checkStep('exam-1', 'Exam Questions: Name the Bus',
   cite('0478/13 November 2021 Q5; 0478/12 November 2024 Q6; adapted from 0478/11 November 2024 Q5(d)') + ' <strong>What to do:</strong> type each answer, then press Check answers.', [
     { label: '(a) Give the component name: "........ This carries addresses around the CPU."', answer: ADDR_BUS, feedback: 'It carries addresses. Name the bus.' },
@@ -304,7 +304,7 @@ steps.push({ id: 'notes-check', label: 'Notes Check: Your WHY Notes',
 
 // ---------------------------------------------------------------- plenary (the drill is built separately)
 steps.push(embed('plenary', 'Plenary: Buses Drill', 'drill-' + ID,
-  '<strong>What to do:</strong> answer every card. Pick the answer that earns the mark, then type it. Got one wrong? Go back to the slide it names, add it to your notes, then carry on. Your progress is saved.'));
+  '<strong>What to do:</strong> answer every card. Type your answer, or pick then type where options are shown. Got one wrong? Go back to the slide it names, add it to your notes, then carry on. Your progress is saved.'));
 
 // ---------------------------------------------------------------- the practice paper (shell EXAM_PAPERS y10-3-1-l3-paper)
 steps.push({ id: 'exam-paper', label: 'Practice Paper: Buses', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l3-paper', buttonId: `${P}-open-paper`,

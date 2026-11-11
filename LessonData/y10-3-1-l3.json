@@ -442,7 +442,7 @@
    "type": "embedded-app",
    "appId": "drill-y10-3-1-l3",
    "embedContainerId": "y10-313-plenary",
-   "content": "<h2 class=\"lesson-h2\">Plenary: Buses Drill</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer every card. Pick the answer that earns the mark, then type it. Got one wrong? Go back to the slide it names, add it to your notes, then carry on. Your progress is saved.</p><div id=\"y10-313-plenary\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Plenary: Buses Drill</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer every card. Type your answer, or pick then type where options are shown. Got one wrong? Go back to the slide it names, add it to your notes, then carry on. Your progress is saved.</p><div id=\"y10-313-plenary\"></div>"
   },
   {
    "id": "exam-paper",
@@ -507,7 +507,7 @@
     "suffix": "c",
     "pattern": {
      "__regex": true,
-     "source": "^(?=.*\\baddress\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/]+$",
+     "source": "^(?=.*\\baddress\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/'\"-]+$",
      "flags": "i"
     },
     "feedback": "Type three words from the list, each the name of a bus, such as: word, word, word."
@@ -516,7 +516,7 @@
     "suffix": "c",
     "pattern": {
      "__regex": true,
-     "source": "^(?=.*\\bdata\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/]+$",
+     "source": "^(?=.*\\bdata\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/'\"-]+$",
      "flags": "i"
     },
     "feedback": "Type three words from the list, each the name of a bus, such as: word, word, word."
@@ -525,7 +525,7 @@
     "suffix": "c",
     "pattern": {
      "__regex": true,
-     "source": "^(?=.*\\bcontrol\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/]+$",
+     "source": "^(?=.*\\bcontrol\\b)(?!(?:.*?\\b(fetch|address|register|execute|data|decode|calculation|central|value|binary|control)\\b){4})[a-z0-9\\s,;.()&/'\"-]+$",
      "flags": "i"
     },
     "feedback": "Type three words from the list, each the name of a bus, such as: word, word, word."
