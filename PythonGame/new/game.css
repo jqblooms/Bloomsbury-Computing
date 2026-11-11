@@ -88,3 +88,12 @@ button:focus-visible, [tabindex]:focus-visible, textarea:focus-visible { outline
 .pd-clear .pd-actions { justify-content: center; }
 @media (max-width: 640px) { .pd-title { font-size: 21px; } .pd-level { grid-template-columns: 26px 1fr auto; } .pd-best { display: none; } }
 @media (prefers-reduced-motion: reduce) { .pd-time i { transition: none; } }
+
+/* before a level: the Learn screen */
+.pd-learn { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 16px 18px; box-shadow: var(--shadow-1); display: grid; gap: 12px; }
+.pd-learn-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.pd-learn-head h2 { margin: 2px 0 0; font-size: 22px; }
+.pd-topic h3 { margin: 0 0 6px; font-size: 18px; }
+.pd-topic ul { margin: 0 0 10px; padding-left: 20px; display: grid; gap: 4px; line-height: 1.5; max-width: 75ch; }
+.pd-ex { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 10px; }
+.pd-ex-why { margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--brand); background: var(--brand-soft); border-radius: 0 8px 8px 0; max-width: 75ch; line-height: 1.5; }

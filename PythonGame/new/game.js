@@ -22,7 +22,7 @@
   // ---------------------------------------------------------------- the menu
   function menu() {
     W = null;
-    $('menu').hidden = false; $('play').hidden = true; $('homeBtn').hidden = true;
+    $('menu').hidden = false; $('play').hidden = true; $('learn').hidden = true; $('homeBtn').hidden = true; learnId = null;
     $('stages').innerHTML = CONTENT.STAGES.map(function (s) {
       return '<article class="pd-stage"><header><span class="pd-stage-n">Stage ' + s.stage + '</span><h2>' + esc(s.title) + '</h2><span class="pd-band">' + s.band + '</span></header><ol>' +
         s.levels.map(function (l) {
@@ -41,15 +41,53 @@
       if (W && !confirm('Change language? This wave starts again.')) return;
       lang = b.dataset.lang; save('lang', lang);
       document.querySelectorAll('.pd-lang button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.lang === lang)); });
-      if (W) start(W.level.id);
+      if (W) begin(W.level.id); else if (learnId) start(learnId);
     });
   });
   $('slowBugs').checked = !!slow;
   $('slowBugs').addEventListener('change', function () { slow = $('slowBugs').checked; save('slow', slow); });
 
   // ---------------------------------------------------------------- a wave
+  // ---------------------------------------------------------------- before a level: what to know, with examples to run
+  // start() shows the Learn screen; its Start button (or Play again) begins the wave. A boss wave shows a recap of its stage.
+  var learnId = null;
   function start(id) {
     var level = allLevels().find(function (l) { return l.id === id; });
+    W = null; learnId = id;
+    $('menu').hidden = true; $('play').hidden = true; $('learn').hidden = false; $('homeBtn').hidden = false;
+    var keys = level.boss ? level.stage.levels.map(function (l) { return LEARN.LEVEL[l.id]; }).filter(function (k, i, a) { return k && a.indexOf(k) === i; }) : [LEARN.LEVEL[id]].filter(Boolean);
+    var go = '<button type="button" class="btn pd-go">Start the wave</button>';
+    var h = '<header class="pd-learn-head"><div><span class="pd-stage-n">Before level ' + id + '</span><h2>' + esc(level.title) + '</h2></div>' + go + '</header>';
+    if (level.boss) {
+      h += '<p class="pd-lead">The boss wave mixes everything from stage ' + level.stage.stage + '. Here is what you need.</p>' +
+        keys.map(function (k) { var t = LEARN.TOPICS[k]; return '<section class="pd-topic"><h3>' + esc(T(t.title)) + '</h3><ul>' + t.points.map(function (p) { return '<li>' + esc(T(p)) + '</li>'; }).join('') + '</ul></section>'; }).join('');
+    } else keys.forEach(function (k) {
+      var t = LEARN.TOPICS[k];
+      h += '<section class="pd-topic"><h3>' + esc(T(t.title)) + '</h3><ul>' + t.points.map(function (p) { return '<li>' + esc(T(p)) + '</li>'; }).join('') + '</ul>';
+      if (t.examples.length) h += '<p class="pd-lead">Predict what each example does. Then press Run it to check.</p>';
+      h += t.examples.map(function (ex, i) {
+        return '<div class="pd-ex" data-k="' + k + '" data-i="' + i + '">' + codeBox(codeOf(ex.code)) + typed(ex.inputs) +
+          '<button type="button" class="btn secondary pd-run">Run it</button><div class="pd-ex-out" hidden></div><p class="pd-ex-why" hidden>' + esc(T(ex.note)) + '</p></div>';
+      }).join('') + '</section>';
+    });
+    h += '<div class="pd-actions">' + go + '</div>';
+    $('learn').innerHTML = h;
+    $('learn').querySelectorAll('.pd-go').forEach(function (b) { b.addEventListener('click', function () { begin(id); }); });
+    $('learn').querySelectorAll('.pd-run').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var box = b.closest('.pd-ex'), ex = LEARN.TOPICS[box.dataset.k].examples[+box.dataset.i];
+        b.disabled = true;
+        RUN.run(lang, codeOf(ex.code), ex.inputs).then(function (r) {
+          var o = box.querySelector('.pd-ex-out'); o.hidden = false; o.innerHTML = screen('It shows', r.out, r.error);
+          box.querySelector('.pd-ex-why').hidden = false; b.hidden = true;
+        });
+      });
+    });
+    window.scrollTo(0, 0);
+  }
+  function begin(id) {
+    var level = allLevels().find(function (l) { return l.id === id; });
+    learnId = null; $('learn').hidden = true;
     W = { level: level, tasks: CONTENT.waveTasks(level, lang), i: 0, score: 0, correct: 0, wrong: 0, t0: Date.now(), used: [], over: false };
     $('menu').hidden = true; $('play').hidden = false; $('homeBtn').hidden = false;
     FIELD.wave(level.bugs, level.boss);
@@ -203,7 +241,7 @@
     fb.innerHTML = '<div class="pd-fb-h">A bug got through to the CPU</div><p>' + esc(why) + '</p>' + (html || '') + '<p class="pd-small">This wave does not count. Try a new wave: it has new code each time.</p>' +
       '<div class="pd-actions"><button type="button" class="btn" id="againBtn">New wave</button> <button type="button" class="btn secondary" id="menuBtn">Levels</button></div>';
     $('checkBtn').hidden = true;
-    $('againBtn').addEventListener('click', function () { start(W.level.id); });
+    $('againBtn').addEventListener('click', function () { begin(W.level.id); });
     $('menuBtn').addEventListener('click', menu);
     report(false);
     hud();
@@ -219,7 +257,7 @@
       '<p>Every bug squashed. ' + W.score + ' points. ' + (stars < 3 ? 'Answer faster for more stars.' : 'Top speed.') + '</p><div class="pd-actions">' +
       (nextL ? '<button type="button" class="btn" id="nextLvl">Next level: ' + esc(nextL.title) + '</button> ' : '') + '<button type="button" class="btn secondary" id="againLvl">Play again</button> <button type="button" class="btn secondary" id="toMenu">Levels</button></div></div>';
     if (nextL) $('nextLvl').addEventListener('click', function () { start(nextL.id); });
-    $('againLvl').addEventListener('click', function () { start(id); });
+    $('againLvl').addEventListener('click', function () { begin(id); });
     $('toMenu').addEventListener('click', menu);
     hud();
   }
@@ -261,6 +299,9 @@
           }
         }
       }
+      for (var L2 of ['py', 'ps']) for (var key in LEARN.TOPICS) LEARN.TOPICS[key].examples.forEach(function (ex) { count++; fails.push(RUN.run(L2, typeof ex.code === 'string' ? ex.code : ex.code[L2], ex.inputs).then((function (L3, k) { return function (r) { var got = r.error ? r.error.kind : 'ok', want = typeof ex.expect === 'string' ? ex.expect : ex.expect[L3]; return got === want ? null : L3 + ' learn ' + k + ': expected ' + want + ', got ' + got + (r.error ? ' ' + r.error.message : '') + ' | ' + r.out.join(' / '); }; })(L2, key))); });
+      fails = (await Promise.all(fails.map(function (f) { return Promise.resolve(f); }))).filter(Boolean);
+      for (var lv of allLevels()) if (!lv.boss && !LEARN.LEVEL[lv.id]) fails.push('no Learn topic for level ' + lv.id);
       var res = { tasks: count, fails: fails.length, first: fails.slice(0, 12) };
       console.log('PD selftest', JSON.stringify(res, null, 1));
       return res;
