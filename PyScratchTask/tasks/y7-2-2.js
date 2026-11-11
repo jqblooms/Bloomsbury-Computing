@@ -95,7 +95,7 @@
     tag: 'Task 3 of 3',
     title: 'Walk the Metres',
     brief: 'Write a program that walks the sprite. There is no starter code this time.',
-    todo: ['Ask <code>"How many metres? "</code> and store the answer in <strong>metres</strong>. The user can type a decimal, like 2.5.',
+    todo: ['Ask <code>"How many metres? "</code> and store the answer in <strong>metres</strong> as a number. The user can type a decimal, like 2.5.',
       'Move the sprite metres x 100 steps.', 'Print <strong>You walked 2.5 metres</strong>, with the number the user typed.'],
     help: 'Can the user type a decimal point? Choose the function round input() for that. Check the spaces in what you print.',
     sprites: [{ name: 'Sprite1', x: -200, y: 0 }],
