@@ -106,13 +106,13 @@
    "content": "<h2 class=\"lesson-h2\">Change a Variable Using Its Own Value</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does this program print? Why is coins = coins + 5 not a maths mistake?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>It prints 15. In Python = does not mean \"is the same as\". It means: work out the right side, then store the answer in the variable on the left.</p></div></details><p class=\"lesson-lead\">Predict first. Then the teacher shows the answer.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">coins = 10</div><div class=\"lesson-code-line\">coins = coins + 5</div><div class=\"lesson-code-line\">print(coins)</div></div></div><div><ul class=\"lesson-facts\"><li>Python works out the <strong>right side first</strong>: coins + 5.</li><li>Then it <strong>stores</strong> the answer back in coins.</li><li>This is how a game adds to a score.</li></ul></div></div>"
   },
   {
-   "id": "lab-3d",
-   "label": "Lab: Run It Line by Line",
+   "id": "pyscratch-1",
+   "label": "Activity: PyScratch Task 1",
    "type": "embedded-app",
-   "appId": "variables-lab-3d",
-   "embedContainerId": "y721-lab-3d",
-   "content": "<h2 class=\"lesson-h2\">Lab: Run It Line by Line</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each variable box hold only one cube?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A variable holds one value at a time. A new value replaces the old one.</p></div></details><p class=\"lesson-lead\">Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Run each program one line at a time. A mistake in a challenge starts a new round. <strong>Done</strong> when A Variable Stores a Value, Store a New Value, Run the Program and Use Its Own Value are complete.</p><div id=\"y721-lab-3d\"></div>",
-   "embedQuery": "lesson=2.1"
+   "appId": "pyscratch-task",
+   "embedContainerId": "y721-pyscratch-1",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 1 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the sprite move a different amount the second time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Line 3 stores a new value in steps. The second move uses the new value.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> write the Python in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>. Task 1 of 3: finish one line.</p><div id=\"y721-pyscratch-1\"></div>",
+   "embedQuery": "task=y7-2-1-double"
   },
   {
    "id": "compare-order",
@@ -199,6 +199,15 @@
    "embedQuery": "activity=types"
   },
   {
+   "id": "pyscratch-2",
+   "label": "Activity: PyScratch Task 2",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y721-pyscratch-2",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 2 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the sprite say 55 and not 10?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Talk in pairs about what the quote marks do. Then change the program and test it.</p></div></details><p class=\"lesson-lead\">Task 2 of 3: change a program that already works.</p><div id=\"y721-pyscratch-2\"></div>",
+   "embedQuery": "task=y7-2-1-add"
+  },
+  {
    "id": "explain",
    "label": "Explain: Choose the Data Type",
    "type": "self-marked-response",
@@ -226,6 +235,15 @@
    "embedContainerId": "y721-activity-3",
    "content": "<h2 class=\"lesson-h2\">Activity 3: Write the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Check test your program, not just look at what it prints?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program can print the right thing by luck. Check also looks at the variables and their data types.</p></div></details><p class=\"lesson-lead\">Type real Python. Run it as often as you like. Check tests it: three checks for each task.</p><div id=\"y721-activity-3\"></div>",
    "embedQuery": "activity=write"
+  },
+  {
+   "id": "pyscratch-3",
+   "label": "Activity: PyScratch Task 3",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y721-pyscratch-3",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 3 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the check start lives at another number and run your program again?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If the answer changes too, lives really changes using its own value. A typed answer would not change.</p></div></details><p class=\"lesson-lead\">Task 3 of 3: write the whole program yourself.</p><div id=\"y721-pyscratch-3\"></div>",
+   "embedQuery": "task=y7-2-1-pip"
   },
   {
    "id": "practice",

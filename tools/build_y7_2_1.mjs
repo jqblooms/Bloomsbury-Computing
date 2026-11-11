@@ -47,7 +47,9 @@ const TPS = {
   'variable': ['Predict: what is the difference between print(score) and print("score")? Why?', 'print(score) shows 5, the value stored in score. print("score") shows the word score, because quote marks mean the text itself.'],
   'store-again': ['Predict: what does this program print? Why does it not print 5 and 8?', 'It prints 8. A variable holds one value at a time, so storing 8 replaces the 5. There is only one print, at the end.'],
   'change': ['Predict: what does this program print? Why is coins = coins + 5 not a maths mistake?', 'It prints 15. In Python = does not mean "is the same as". It means: work out the right side, then store the answer in the variable on the left.'],
-  'lab-3d': ['Why does each variable box hold only one cube?', 'A variable holds one value at a time. A new value replaces the old one.'],
+  'pyscratch-1': ['Why does the sprite move a different amount the second time?', 'Line 3 stores a new value in steps. The second move uses the new value.'],
+  'pyscratch-2': ['Why does the sprite say 55 and not 10?', 'Talk in pairs about what the quote marks do. Then change the program and test it.'],
+  'pyscratch-3': ['Why does the check start lives at another number and run your program again?', 'If the answer changes too, lives really changes using its own value. A typed answer would not change.'],
   'compare-order': ['Both programs have the same three lines. How can you tell what each one prints?', 'Talk in pairs. Follow each program one line at a time, then choose your answer.'],
   'vars-check': ['Why do we follow a program one line at a time, from the top?', 'Python runs the lines in order. Each line uses the values the lines above it stored.'],
   'activity-1': ['Why predict before you run the program?', 'A prediction shows what you really think each line does. When it is wrong, you find out what to learn.'],
@@ -157,8 +159,13 @@ steps.push({ id: 'change', label: 'Change a Variable Using Its Own Value',
       'This is how a game adds to a score.',
     ])) });
 
-steps.push(embed('lab-3d', 'Lab: Run It Line by Line', 'variables-lab-3d', 'Lab: Run It Line by Line',
-  'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Run each program one line at a time. A mistake in a challenge starts a new round. <strong>Done</strong> when A Variable Stores a Value, Store a New Value, Run the Program and Use Its Own Value are complete.', 'lesson=2.1'));
+// ---------------------------------------------------------------- PyScratch Tasks (pages PyScratchTask/tasks/y7-2-1.js)
+// Python on a Scratch stage, checked by running it. They replace the Variables Lab 3D slide (James, 2026-11-11: the
+// 3D labs are not great for this topic). Task 1 comes before the data types slide, so it never names a data type.
+const PST_LEAD = '<strong>What to do:</strong> write the Python in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>.';
+const pst = (id, task, n, what) => embed(id, `Activity: PyScratch Task ${n}`, 'pyscratch-task', `Activity: PyScratch Task ${n} of 3`,
+  (n === 1 ? PST_LEAD + ' ' : '') + what, 'task=' + task);
+steps.push(pst('pyscratch-1', 'y7-2-1-double', 1, 'Task 1 of 3: finish one line.'));
 
 {
   const A = 'score = 5\nscore = score + 3\nprint(score)', B = 'score = 5\nprint(score)\nscore = score + 3';
@@ -223,6 +230,7 @@ steps.push({ id: 'why-types', label: 'Why the Data Type Matters',
 
 steps.push(lab('activity-2', 'Activity 2: Which Data Type?', 'Activity 2: Which Data Type?',
   'Pick the data type first. Then Python shows the type it really is. A round with a mistake does not count.', 'activity=types'));
+steps.push(pst('pyscratch-2', 'y7-2-1-add', 2, 'Task 2 of 3: change a program that already works.'));
 
 steps.push(selfMarked('explain', 'Explain: Choose the Data Type', 'Explain: Choose the Data Type',
   '<p class="lesson-lead">A program stores a pupil\'s height of 1.52 metres as <code>height = 1</code>.</p>', [
@@ -234,6 +242,7 @@ steps.push(selfMarked('explain', 'Explain: Choose the Data Type', 'Explain: Choo
 
 steps.push(lab('activity-3', 'Activity 3: Write the Program', 'Activity 3: Write the Program',
   'Type real Python. Run it as often as you like. Check tests it: three checks for each task.', 'activity=write'));
+steps.push(pst('pyscratch-3', 'y7-2-1-pip', 3, 'Task 3 of 3: write the whole program yourself.'));
 
 {
   const C = 'name = "Ploy"\nage = 12\nage = age + 1\nhalf = age / 2\nprint(age)';

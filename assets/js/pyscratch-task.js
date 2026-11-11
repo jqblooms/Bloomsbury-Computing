@@ -31,12 +31,13 @@
   function read(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 
   // ---------------------------------------------------------------- reading the program
+  var PY = false;   // the task's language is Python (task.lang 'python'); otherwise Cambridge pseudocode
   function stripComment(line) {
     var out = '', q = false;
     for (var i = 0; i < line.length; i++) {
       var ch = line[i];
       if (ch === '"') q = !q;
-      if (!q && ch === '/' && line[i + 1] === '/') break;
+      if (!q && (PY ? ch === '#' : ch === '/' && line[i + 1] === '/')) break;
       out += ch;
     }
     return out;
@@ -74,6 +75,12 @@
           if (m && m[1] === name) return { value: m[3], line: i + 1 };
         }
         return null;
+      },
+      // The program with the first line matching re replaced by line (Python: start a variable at another value).
+      withLine: function (re, line) {
+        var all = String(code).split('\n');
+        for (var i = 0; i < all.length; i++) if (re.test(stripComment(all[i]))) { all[i] = line; break; }
+        return all.join('\n');
       },
       // The program with name's CONSTANT value changed, to show every line uses the constant.
       withConstant: function (name, value) {
@@ -124,9 +131,10 @@
     var d = mod && mod.$d;
     if (!d) return vars;
     Object.keys(d).forEach(function (k) {
-      if (k.indexOf('v_') !== 0) return;
+      if (PY ? k.charAt(0) === '_' : k.indexOf('v_') !== 0) return;
       var val = skValue(d[k]);
-      if (val) vars[k.slice(2)] = val;
+      // Skulpt renames globals that are JavaScript words (name is name_$rw$).
+      if (val) vars[PY ? k.replace(/_\$rw\$$/, '') : k.slice(2)] = val;
     });
     return vars;
   }
@@ -140,6 +148,7 @@
       if (S.running) { try { S.vm.stopAll(); } catch (e) { api.stopAll(); } }
       S.taskOut = out; S.taskErrors = errs; S.taskMods = mods;
       S.taskCode = opts.code != null ? opts.code : null;
+      S.taskInput = function () { return inputs.length ? String(inputs.shift()) : ''; };
       S.taskHook = function (fn, sprite, args) {
         calls.push({ fn: fn, sprite: sprite, args: args.slice() });
         if (fn === 'pick_random') {
@@ -147,6 +156,7 @@
           if (opts.random === 'min') return { value: Number(args[0]) };
           if (opts.random === 'max') return { value: Number(args[1]) };
         }
+        if (fn === 'ask' && PY) return null;
         if (fn === 'ask') {
           S.lastAnswer = inputs.length ? String(inputs.shift()) : '';
           return { value: S.lastAnswer };
@@ -166,7 +176,7 @@
         var t3 = api.getTargetByName(main);
         var sprite = t3 ? { x: t3.x, y: t3.y, direction: t3.direction, visible: t3.visible } : null;
         try { S.vm.stopAll(); } catch (e) { api.stopAll(); }
-        S.taskHook = null; S.taskOut = null; S.taskErrors = null; S.taskMods = null; S.taskCode = null;
+        S.taskHook = null; S.taskInput = null; S.taskOut = null; S.taskErrors = null; S.taskMods = null; S.taskCode = null;
         var text = out.join('');
         var lines = text.split('\n');
         if (lines.length && lines[lines.length - 1] === '') lines.pop();
@@ -219,7 +229,8 @@
       api.logError('This task was not found: ' + TASK_ID);
       return;
     }
-    api.setLang('pseudo', false);
+    PY = task.lang === 'python';
+    api.setLang(PY ? 'python' : 'pseudo', false);
     if (task.fixMessage) S.taskMsgFilter = task.fixMessage;
     var CODE_KEY = 'pstask:' + task.id + ':code', DONE_KEY = 'pstask:' + task.id + ':done';
     var main = task.sprites[0];
@@ -248,7 +259,7 @@
       }
       var saved = read(CODE_KEY);
       var code = saved != null ? saved : (task.starter || '');
-      S.spriteCode[main.name] = [{ id: 't_task', name: 'Main', code: '', pseudo: code }];
+      S.spriteCode[main.name] = [PY ? { id: 't_task', name: 'Main', code: code } : { id: 't_task', name: 'Main', code: '', pseudo: code }];
       api.sync();
       api.selectSpriteByName(main.name);
       S.activeThreadIdx = 0;
@@ -316,7 +327,7 @@
     }
 
     function markLine(line) {
-      S.lastError = line ? { sprite: main.name, threadIdx: 0, line: line, lang: 'pseudo' } : null;
+      S.lastError = line ? { sprite: main.name, threadIdx: 0, line: line, lang: PY ? 'python' : 'pseudo' } : null;
       api.updateIndentGutter();
     }
 
@@ -354,7 +365,7 @@
       markLine(0);
       resultEl.innerHTML = '<div class="pst-busy">Running your program...</div>';
       var result;
-      var tr = api.PSEUDO.transpile(code);
+      var tr = PY ? { errors: [] } : api.PSEUDO.transpile(code);
       if (tr.errors.length) {
         result = Promise.resolve(new Fail('The program has a mistake: ' + tr.errors[0].message, 'A program with no mistakes, so it can run', tr.errors[0].line));
       } else {

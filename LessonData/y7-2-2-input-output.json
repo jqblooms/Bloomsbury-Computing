@@ -179,13 +179,13 @@
    "content": "<h2 class=\"lesson-h2\">Text and a Number in One Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what do both print lines show? Why does the first need str()?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Both show Age: 12. + can only join two Strings, so str(age) turns 12 into \"12\" first. A comma does not need it.</p></div></details><p class=\"lesson-lead\">+ can only join a String to a String.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">age = 12</div><div class=\"lesson-code-line\">print(&quot;Age: &quot; + str(age))</div><div class=\"lesson-code-line\">print(&quot;Age:&quot;, age)</div></div></div><div><ul class=\"lesson-facts\"><li><strong>str(age)</strong> turns the Integer 12 into the String \"12\", so + can join it.</li><li>A <strong>comma</strong> in print works too: it adds the space.</li><li>print(\"Age: \" + age) stops with an error.</li></ul></div></div>"
   },
   {
-   "id": "lab-3d",
-   "label": "Lab: Input in the Lab",
+   "id": "pyscratch-1",
+   "label": "Activity: PyScratch Task 1",
    "type": "embedded-app",
-   "appId": "variables-lab-3d",
-   "embedContainerId": "y722-lab-3d",
-   "content": "<h2 class=\"lesson-h2\">Lab: Input in the Lab</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why must the program say int() or str()? Why can Python not choose for you?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Python cannot tell what you mean. You choose the data type.</p></div></details><p class=\"lesson-lead\">Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Run each program one line at a time. A mistake in a challenge starts a new round. <strong>Done</strong> when The User Types It, Turn a String into a Number, Text and a Number and It Stops with an Error are complete.</p><div id=\"y722-lab-3d\"></div>",
-   "embedQuery": "lesson=2.2"
+   "appId": "pyscratch-task",
+   "embedContainerId": "y722-pyscratch-1",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 1 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the error only come on the last line, and not on the line with input()?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>input() works and stores what was typed. The problem only shows when the program tries to use it as a number.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> write the Python in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>. Task 1 of 3: fix one line.</p><div id=\"y722-pyscratch-1\"></div>",
+   "embedQuery": "task=y7-2-2-fix"
   },
   {
    "id": "activity-2",
@@ -233,6 +233,24 @@
    "embedContainerId": "y722-activity-4",
    "content": "<h2 class=\"lesson-h2\">Activity 4: Write the Program</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Where do you start when you write a program from a task?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Read the sample. Find what the user types (input), what is worked out, and what is shown (output).</p></div></details><p class=\"lesson-lead\">Write each program from its task. Check tests it with inputs you cannot see: three checks for each task.</p><div id=\"y722-activity-4\"></div>",
    "embedQuery": "activity=iowrite"
+  },
+  {
+   "id": "pyscratch-2",
+   "label": "Activity: PyScratch Task 2",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y722-pyscratch-2",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 2 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the check type in three different names and ages?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A program can work for one input by luck. Different inputs show it works every time.</p></div></details><p class=\"lesson-lead\">Task 2 of 3: change a program that already works.</p><div id=\"y722-pyscratch-2\"></div>",
+   "embedQuery": "task=y7-2-2-age"
+  },
+  {
+   "id": "pyscratch-3",
+   "label": "Activity: PyScratch Task 3",
+   "type": "embedded-app",
+   "appId": "pyscratch-task",
+   "embedContainerId": "y722-pyscratch-3",
+   "content": "<h2 class=\"lesson-h2\">Activity: PyScratch Task 3 of 3</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might a user type a number with a decimal point here?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Distances are not always whole numbers. The program must work for 2.5 as well as 3.</p></div></details><p class=\"lesson-lead\">Task 3 of 3: write the whole program yourself.</p><div id=\"y722-pyscratch-3\"></div>",
+   "embedQuery": "task=y7-2-2-metres"
   },
   {
    "id": "practice",

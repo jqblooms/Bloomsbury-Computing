@@ -182,7 +182,8 @@
     taskErrors:       null,  // task mode: errors are also pushed here as { line, msg }
     taskMods:         null,  // task mode: each finished thread's module, by sprite name (its variables)
     taskReset:        null,  // task mode: puts the sprites back before every run
-    taskCode:         null,  // task mode: a check runs this pseudocode in place of the editor's
+    taskCode:         null,  // task mode: a check runs this code in place of the editor's
+    taskInput:        null,  // task mode: answers Python input() during a check
     taskMsgFilter:    null,  // task mode: rewrites console messages (a term the lesson has not taught yet)
     runPromises:      [],    // one per thread started by the last startAll, settled when it ends
     infoSeq:          0
@@ -1534,7 +1535,7 @@
       userLines = tr.python;
       info.hasMain = tr.hasMain;
     } else {
-      userLines = toLines(threadCode(thread, 'python'));
+      userLines = toLines(S.taskCode != null && !isClone ? S.taskCode : threadCode(thread, 'python'));
       if (!isClone) warnMisspeltEvents(spriteName, thread);
     }
     userLines = injectFrameYields(injectDisplayVarGlobals(userLines));
@@ -1721,6 +1722,7 @@
   // input() in Python asks with the on-stage box (window.prompt is blocked in
   // the site's frame).
   function askForInput(promptText) {
+    if (S.taskInput) return Promise.resolve(String(S.taskInput(promptText)));
     return new Promise(function (resolve) {
       showAskDialog(promptText == null ? '' : String(promptText), function (ans) { resolve(String(ans == null ? '' : ans)); });
     });

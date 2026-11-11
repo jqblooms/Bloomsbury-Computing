@@ -56,7 +56,9 @@ const TPS = {
   'convert': ['Why does Python not turn what you type into a number by itself?', 'Python cannot tell what you mean. "0812345678" is a phone number, not an amount. You choose the data type.'],
   'convert-check': ['What two questions help you choose for each value?', 'First: will the program do maths with it? Then: can it have a decimal point?'],
   'compare-error': ['Both programs do age + 1. How can one of them work and not the other?', 'Talk in pairs about the data type of age in each program. Then choose your answer.'],
-  'lab-3d': ['Why must the program say int() or str()? Why can Python not choose for you?', 'Python cannot tell what you mean. You choose the data type.'],
+  'pyscratch-1': ['Why does the error only come on the last line, and not on the line with input()?', 'input() works and stores what was typed. The problem only shows when the program tries to use it as a number.'],
+  'pyscratch-2': ['Why does the check type in three different names and ages?', 'A program can work for one input by luck. Different inputs show it works every time.'],
+  'pyscratch-3': ['Why might a user type a number with a decimal point here?', 'Distances are not always whole numbers. The program must work for 2.5 as well as 3.'],
   'str-join': ['Predict: what do both print lines show? Why does the first need str()?', 'Both show Age: 12. + can only join two Strings, so str(age) turns 12 into "12" first. A comma does not need it.'],
   'activity-2': ['What do you check first in a line with +?', 'The data types on each side. Two numbers add. Two Strings join. A String and a number stop the program.'],
   'activity-3': ['Why is a program tested with more than one input?', 'A program can work for one input by luck. Different inputs show whether it works every time.'],
@@ -209,8 +211,13 @@ steps.push(checkStep('convert-check', 'Your Turn: Which Function?', 'Your Turn: 
       columns(code(C), facts(['<strong>str(age)</strong> turns the Integer 12 into the String "12", so + can join it.', 'A <strong>comma</strong> in print works too: it adds the space.', 'print("Age: " + age) stops with an error.'])) });
 }
 
-steps.push(embed('lab-3d', 'Lab: Input in the Lab', 'variables-lab-3d', 'Lab: Input in the Lab',
-  'Walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Run each program one line at a time. A mistake in a challenge starts a new round. <strong>Done</strong> when The User Types It, Turn a String into a Number, Text and a Number and It Stops with an Error are complete.', 'lesson=2.2'));
+// ---------------------------------------------------------------- PyScratch Tasks (pages PyScratchTask/tasks/y7-2-2.js)
+// Python on a Scratch stage, checked by running it (the check types the input itself). They replace the Variables Lab 3D
+// slide (James, 2026-11-11: the 3D labs are not great for this topic). Help fades from task 1 to 3.
+const PST_LEAD = '<strong>What to do:</strong> write the Python in the box on the left. Click the green flag above the stage to run it. When it works, click <strong>Check my program</strong>.';
+const pst = (id, task, n, what) => embed(id, `Activity: PyScratch Task ${n}`, 'pyscratch-task', `Activity: PyScratch Task ${n} of 3`,
+  (n === 1 ? PST_LEAD + ' ' : '') + what, 'task=' + task);
+steps.push(pst('pyscratch-1', 'y7-2-2-fix', 1, 'Task 1 of 3: fix one line.'));
 
 steps.push(lab('activity-2', 'Activity 2: Numbers from Input', 'Activity 2: Numbers from Input',
   'Predict what each program prints, or choose "It stops with an error". Then run it. A round with a mistake does not count.', 'activity=io&part=2'));
@@ -228,6 +235,8 @@ steps.push(selfMarked('explain', 'Explain: Why 34?', 'Explain: Why 34?',
 
 steps.push(lab('activity-4', 'Activity 4: Write the Program', 'Activity 4: Write the Program',
   'Write each program from its task. Check tests it with inputs you cannot see: three checks for each task.', 'activity=iowrite'));
+steps.push(pst('pyscratch-2', 'y7-2-2-age', 2, 'Task 2 of 3: change a program that already works.'));
+steps.push(pst('pyscratch-3', 'y7-2-2-metres', 3, 'Task 3 of 3: write the whole program yourself.'));
 
 {
   const C = 'price = float(input("Price? "))\ncount = int(input("How many? "))\ntotal = price * count\nprint("Total: " + str(total))';
