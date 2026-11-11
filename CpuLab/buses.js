@@ -48,6 +48,7 @@
   // One small event: { ctx, q, clue, bus, dir, show: { bus, value, dir } }.
   function events(mem) {
     var r = pick(mem), w = pick(mem.filter(function (m) { return m !== r; }));
+    var ia = pick(mem.filter(function (m) { return m !== r && m !== w; })).a; // the instruction names another address, so no number plays two parts
     var wv = pick([9, 14, 28, 33, 47, 60].filter(function (n) { return mem.every(function (m) { return m.v !== n && m.a !== n; }); }));
     var E = [
       { k: 'r-addr', ctx: 'The CPU wants the value stored at address ' + r.a + '.', q: 'Which bus carries the ' + r.a + '?', clue: 'address ' + r.a, bus: 'Address bus', dir: OUT, value: String(r.a) },
@@ -56,7 +57,7 @@
       { k: 'w-addr', ctx: 'The CPU stores ' + wv + ' at address ' + w.a + '.', q: 'Which bus carries the ' + w.a + '?', clue: 'address ' + w.a, bus: 'Address bus', dir: OUT, value: String(w.a) },
       { k: 'w-data', ctx: 'The CPU stores ' + wv + ' at address ' + w.a + '.', q: 'Which bus carries the ' + wv + '?', clue: 'stores ' + wv, bus: 'Data bus', dir: OUT, value: String(wv) },
       { k: 'w-ctrl', ctx: 'The CPU stores ' + wv + ' at address ' + w.a + '.', q: 'Which bus carries the write signal?', clue: 'signal', bus: 'Control bus', dir: OUT, value: 'Write' },
-      { k: 'i-data', ctx: 'Memory sends the instruction ADD ' + r.a + ' to the CPU.', q: 'Which bus carries ADD ' + r.a + '?', clue: 'instruction', bus: 'Data bus', dir: IN, value: 'ADD ' + r.a },
+      { k: 'i-data', ctx: 'Memory sends the instruction ADD ' + ia + ' to the CPU.', q: 'Which bus carries ADD ' + ia + '?', clue: 'instruction', bus: 'Data bus', dir: IN, value: 'ADD ' + ia },
       { k: 'k-ctrl', ctx: 'A key is pressed. The keyboard tells the CU.', q: 'Which bus carries this signal?', clue: 'signal', bus: 'Control bus', dir: IN, value: 'Key pressed' }
     ];
     return E;
@@ -77,6 +78,7 @@
   // A read and a write (random order). Each job has three rows, one per bus: what it carries and which way.
   function traceRound(mem) {
     var r = pick(mem), w = pick(mem.filter(function (m) { return m !== r; }));
+    var ia = pick(mem.filter(function (m) { return m !== r && m !== w; })).a; // the instruction names another address, so no number plays two parts
     var wv = pick([9, 14, 28, 33, 47, 60].filter(function (n) { return mem.every(function (m) { return m.v !== n && m.a !== n; }); }));
     var other = pick(mem.filter(function (m) { return m !== r && m !== w; }));
     var read = { title: 'Read: the CPU wants the value stored at address ' + r.a + '.', kind: 'read', target: r.a,

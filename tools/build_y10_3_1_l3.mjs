@@ -196,8 +196,8 @@ steps.push(mcStep('concept-control', 'Why the Control Bus Is Needed',
     { prompt: 'Predict: the CPU sends address 6 to memory. How does memory know whether to send its value back or to store a new value?', options: ['A read or a write signal tells it', 'It looks at how big the number is', 'It always sends its value back'], correct: 0,
       explain: 'The address only says where. The CU also sends a read or a write signal on the control bus, so memory knows what to do.' },
     { prompt: 'Predict: a key is pressed. The keyboard sends a signal to the CU. Which way does this signal go?', options: ['Into the CPU', 'Out of the CPU', 'It cannot be sent'], correct: 0,
-      explain: 'Into the CPU. The CU sends signals out (read, write), and devices send signals in. So the control bus carries signals both ways.' },
-  ], facts(['The <strong>control bus</strong> carries <strong>control signals</strong>.', 'The control unit (CU) sends signals such as <strong>read</strong> and <strong>write</strong>.', 'Devices send signals too. The keyboard tells the CU: a key has been pressed.']) +
+      explain: 'Into the CPU. The CU sends signals out, such as read and write, and devices send signals in, such as a key has been pressed. So the control bus carries signals both ways.' },
+  ], facts(['The <strong>control bus</strong> carries <strong>control signals</strong>: short commands and messages.']) +
     busPic({ addr: { v: '6', dir: 'out' }, ctrl: { v: '?', dir: '' } }, [], null, 'Address 6 is on its way. What else must memory be told?')));
 
 steps.push(mcStep('predict-bus', 'Check: Which Bus?',
@@ -304,7 +304,7 @@ steps.push({ id: 'notes-check', label: 'Notes Check: Your WHY Notes',
 
 // ---------------------------------------------------------------- plenary (the drill is built separately)
 steps.push(embed('plenary', 'Plenary: Buses Drill', 'drill-' + ID,
-  '<strong>What to do:</strong> answer every card. Type your answer, or pick then type where options are shown. Got one wrong? Go back to the slide it names, add it to your notes, then carry on. Your progress is saved.'));
+  '<strong>What to do:</strong> choose <strong>Quiz</strong> (Learn mode is not recorded) and press Start, then answer every card. Type your answer, or pick then type where options are shown. Got one wrong? Go back to the slide it names, add it to your notes, then carry on. Your progress is saved.'));
 
 // ---------------------------------------------------------------- the practice paper (shell EXAM_PAPERS y10-3-1-l3-paper)
 steps.push({ id: 'exam-paper', label: 'Practice Paper: Buses', type: 'app-link', appId: 'exampaper', appQuery: 'paper=y10-3-1-l3-paper', buttonId: `${P}-open-paper`,
