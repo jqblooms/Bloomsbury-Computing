@@ -31,7 +31,7 @@ for (let lv = 0; lv < F.LEVELS.length; lv++) {
       }
       ok(F.DEST.includes(m.to) && (m.bus === null || F.BUSES.includes(m.bus)) && F.STAGES.includes(m.stage), `L${lv + 1} move ${i} shape`);
       const ph = F.phases(m);
-      ok(ph.includes('to') && (m.to === 'CU') === !ph.includes('bus'), `L${lv + 1} move ${i} phases ${ph}`);
+      ok(ph.includes('to') && !!(m.bus && (m.to === 'Memory' || m.from === 'Memory')) === ph.includes('bus'), `L${lv + 1} move ${i} phases ${ph}`);
       ok(L.values ? (!!m.ask === ph.includes('value')) : !ph.includes('value'), `L${lv + 1} values phase`);
       ph.forEach((p) => { ok(F.judge(m, p, F.right(m, p)), 'right passes'); });
       ok(!F.judge(m, 'to', m.to === 'MAR' ? 'MDR' : 'MAR'), 'wrong box fails');

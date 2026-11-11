@@ -96,7 +96,7 @@
       hint: 'The address is in the MAR. Where must it go now?' });
     mv({ stage: 'Execute', to: 'MDR', from: 'Memory', bus: 'Data bus', value: String(n), set: { MDR: String(n) }, lit: { bus: 'Data bus', value: String(n), dir: 'in' }, read: a,
       ask: others(n, [a, M.cells[a === M.base + 2 ? M.base + 3 : M.base + 2].n]), valueQ: 'What does memory send back?',
-      say: 'Memory sends back the number stored at address ' + a + ', ' + n + ', into the <b>MDR</b> on the data bus.',
+      say: 'Memory sends back the number stored at address ' + a + ', ' + n + ', into the <b>MDR</b> on the data bus. This is still execute: it is the number ' + it + ' asked for, not a new instruction.',
       hint: 'What comes back from memory goes into the same register as before.' });
     mv({ stage: 'Execute', to: 'ACC', from: 'MDR', bus: 'Data bus', value: String(res), set: { ACC: String(res) }, lit: { bus: 'Data bus', value: String(n), dir: '' },
       ask: others(res, ins.op === 'LOAD' ? [a, Number(r.PC)] : [n, ins.op === 'ADD' ? acc - n : acc + n]), valueQ: 'What does the ACC hold now?',
@@ -130,7 +130,7 @@
     var p = [];
     if (m.askStage) p.push('stage');
     p.push('to');
-    if (m.bus) p.push('bus');
+    if (m.bus && (m.to === 'Memory' || m.from === 'Memory')) p.push('bus'); // buses only to and from memory: one clear answer
     if (m.askValue) p.push('value');
     return p;
   }
@@ -197,7 +197,7 @@
     return g;
   }
   function question(m, phase) {
-    if (phase === 'stage') return 'A new stage starts now. Which stage is it?';
+    if (phase === 'stage') return 'A new stage starts now. Is the CPU getting the next instruction, working out what it means, or carrying it out?';
     if (phase === 'to') return 'What happens next? Pick the box the value goes to next.';
     var place = function (x) { return x === 'Memory' ? 'memory' : 'the ' + x; };
     if (phase === 'bus') return m.to === 'PC' ? 'The PC changes. Which bus does this use?' : 'Which bus carries it from ' + place(m.from) + ' to ' + place(m.to) + '?';
@@ -211,7 +211,7 @@
     var bar = Lab.bar('Level ' + (lv + 1) + ' of ' + LEVELS.length + ': ' + L.name, have, L.need);
     bar.querySelector('.level').insertAdjacentHTML('beforeend', ' <span class="help-tag h' + Math.min(lv, 3) + '">' + L.help + '</span>');
     host.appendChild(bar);
-    if (L.rules) host.appendChild(el('div', { class: 'rule' }, '<b>Addresses</b> travel on the <b>address bus</b>. <b>Instructions and data</b> travel on the <b>data bus</b>. The PC going up by 1 uses <b>no bus</b>.'));
+    if (L.rules) host.appendChild(el('div', { class: 'rule' }, '<b>Fetch</b> gets the next <b>instruction</b> from memory. <b>Execute</b> carries it out: LOAD and ADD get a <b>number</b> from memory. Addresses go to memory on the <b>address bus</b>. Instructions and numbers come back on the <b>data bus</b>.'));
     var m = S.done ? null : cur();
     var help = !S.done && (L.lit || S.spoilt);
     var lastMove = S.i > 0 ? R.moves[S.i - 1] : null;
@@ -231,7 +231,7 @@
       q.appendChild(el('div', { class: 'task-q' }, lead + question(m, phase)));
       var opts = phase === 'stage' ? STAGES : phase === 'to' ? DEST : phase === 'bus' ? BUSES : m.options;
       q.appendChild(seg(question(m, phase), opts, function (o) { answer(o); }));
-      if (S.hint && L.hint) q.appendChild(el('div', { class: 'rule hint-box' }, 'Hint: ' + (phase === 'stage' ? 'Has the instruction come into the CPU yet? Has the CU worked out what it means yet?' : m.hint)));
+      if (S.hint && L.hint) q.appendChild(el('div', { class: 'rule hint-box' }, 'Hint: ' + (phase === 'stage' ? 'Is the CPU getting the next instruction (fetch), working out what it means (decode), or carrying it out (execute)? Execute can also get a number from memory.' : m.hint)));
       host.appendChild(q);
     }
     var act = el('div', { class: 'actions' });
@@ -242,7 +242,22 @@
     host.appendChild(act);
     Lab.reportHeight();
   }
+  // The PC can go up by 1 at any point in fetch after its address is in the MAR, as long as it is before decode:
+  // picking the PC early brings that move forward, and doing MDR to CIR first pushes it back.
+  function reorderForPc(choice) {
+    var m = cur();
+    if (S.ph !== phases(m).indexOf('to') || m.stage !== 'Fetch') return;
+    var j = -1;
+    for (var x = S.i; x < R.moves.length && R.moves[x].stage === 'Fetch'; x++) if (R.moves[x].to === 'PC') { j = x; break; }
+    if (j < 0) return;
+    if (choice === 'PC' && j > S.i && m.to !== 'MAR') R.moves.splice(S.i, 0, R.moves.splice(j, 1)[0]);
+    else if (j === S.i && choice === 'CIR' && R.moves[j + 1] && R.moves[j + 1].to === 'CIR') { var t = R.moves[j]; R.moves[j] = R.moves[j + 1]; R.moves[j + 1] = t; }
+    else return;
+    var r = Object.assign({}, R.start);
+    R.moves.forEach(function (mv) { Object.assign(r, mv.set || {}); mv.regs = Object.assign({}, r); });
+  }
   function answer(choice) {
+    if (phases(cur())[S.ph] === 'to') reorderForPc(choice);
     var m = cur(), phase = phases(m)[S.ph];
     var ok = judge(m, phase, choice);
     if (!ok) {

@@ -337,49 +337,6 @@ DrillData.register("y10-3-1-l4", {
    "example": "A similar question: ADD 7 has been executed and the PC holds 6. What next?\nStep 1: after execute, the cycle starts again with fetch.\nStep 2: fetch uses the address in the PC: 6.\nNow your question: use the PC's number."
   },
   {
-   "id": "c-03",
-   "category": "cycle",
-   "prompt": "Why is it called a cycle?",
-   "answers": [
-    "The same stages repeat for every instruction"
-   ],
-   "distractors": [
-    "It goes round the CPU in a circle",
-    "Each stage happens only once",
-    "The PC goes back to 0 every time"
-   ],
-   "note": "After execute the CPU fetches the next instruction, and the three stages repeat until the program stops.",
-   "working": [
-    "What happens after an instruction is executed?",
-    "Does the CPU stop after one instruction?"
-   ],
-   "pickThenType": true,
-   "keywords": [
-    /^(?=.*\b(repeat(s|ed|ing)?|again|over and over)\b)(?!.*\b(once|circle|round|0|zero)\b).*$/i
-   ]
-  },
-  {
-   "id": "c-04",
-   "category": "cycle",
-   "prompt": "The PC goes up by 1.\nWhich stage is this?",
-   "answers": [
-    "Fetch"
-   ],
-   "distractors": [
-    "Decode",
-    "Execute"
-   ],
-   "note": "The PC goes up by 1 while the instruction is fetched.",
-   "working": [
-    "Is the instruction coming in, being worked out, or being carried out?",
-    "This happens just after the instruction arrives in the MDR."
-   ],
-   "pickThenType": true,
-   "keywords": [
-    /^\s*(the\s+|an?\s+)?(fetch(ing)?(\s*stage)?)\s*\.?\s*$/i
-   ]
-  },
-  {
    "id": "c-05",
    "category": "cycle",
    "prompt": "The CU works out what LOAD 6 means, using the instruction set.\nWhich stage is this?",
@@ -398,6 +355,48 @@ DrillData.register("y10-3-1-l4", {
    "pickThenType": true,
    "keywords": [
     /^\s*(the\s+|an?\s+)?(decod(e|ing)(\s*stage)?)\s*\.?\s*$/i
+   ]
+  },
+  {
+   "id": "c-06",
+   "category": "cycle",
+   "prompt": "LOAD 6 is in the CIR. Memory sends the number 12 into the MDR.\nWhich stage is this?",
+   "answers": [
+    "Execute"
+   ],
+   "distractors": [
+    "Fetch",
+    "Decode"
+   ],
+   "note": "A number has come back because LOAD 6 asked for it, so LOAD 6 is being carried out. Fetch only gets the next instruction.",
+   "working": [
+    "What has come back from memory: an instruction or a number?",
+    "Is the CPU getting the next instruction, or a number that an instruction asked for?"
+   ],
+   "pickThenType": true,
+   "keywords": [
+    /^\s*(the\s+|an?\s+)?(execut(e|ing)(s*stage)?)\s*\.?\s*$/i
+   ]
+  },
+  {
+   "id": "c-07",
+   "category": "cycle",
+   "prompt": "The PC holds 5. Memory sends the instruction ADD 7 into the MDR.\nWhich stage is this?",
+   "answers": [
+    "Fetch"
+   ],
+   "distractors": [
+    "Execute",
+    "Decode"
+   ],
+   "note": "An instruction is coming into the CPU, so this is fetch.",
+   "working": [
+    "What has come back from memory: an instruction or a number?",
+    "Is the CPU getting the next instruction, or a number that an instruction asked for?"
+   ],
+   "pickThenType": true,
+   "keywords": [
+    /^\s*(the\s+|an?\s+)?(fetch(ing)?(s*stage)?)\s*\.?\s*$/i
    ]
   },
   {

@@ -154,7 +154,7 @@
 
   // ---------- How it works ----------
   var HOW = {
-    stage: '<p><b>Fetch</b>: the instruction is coming into the CPU. <b>Decode</b>: the CU works out what it means. <b>Execute</b>: it is carried out.</p>',
+    stage: '<p><b>Fetch</b>: the CPU gets the next instruction from memory. <b>Decode</b>: the CU works out what it means. <b>Execute</b>: it is carried out, and LOAD and ADD get the number they need from memory. So an instruction coming back means fetch, and a number coming back means execute.</p>',
     next: '<p>Fetch: PC to MAR, MAR to memory, memory to MDR, MDR to CIR. The PC also goes up by 1 during fetch. Then decode. Then execute: address to MAR, MAR to memory, memory to MDR, then the ACC.</p>',
     where: '<p>Pick the box the value goes to. When the value goes to or from memory, also pick the bus: addresses go to memory on the address bus, and instructions and numbers come back on the data bus.</p>',
     hold: '<p>Look at the boxes. Work out the one move that happens, then what the box holds after it. Watch out: an address is not the number stored there.</p>',
@@ -242,13 +242,13 @@
   function wrongText(picked, right) { return 'You picked <b>' + esc(picked) + '</b>. It should be <b>' + esc(right) + '</b>. '; }
 
   // ---------- Stage 1: Which stage? ----------
-  var STAGE_WHY = { F: 'The instruction is still coming into the CPU.', D: 'The CU is working out what the instruction means.', E: 'The instruction is being carried out.' };
+  var STAGE_WHY = { F: 'The CPU is getting the next instruction.', D: 'The CU is working out what the instruction means.', E: 'The instruction is being carried out. In execute, LOAD and ADD get the number they need from memory.' };
   function askStage() {
     var c = FDE.caseOf(FDE.memory(), FDE.opFor(cur.item)), m = FDE.moveOf(FDE.moves(c), cur.item);
     qText.textContent = 'Which stage is this move in?';
     qArea.appendChild(withMemory(c, card('', esc(m.text))));
-    if (cur.help === 2) qArea.appendChild(tip('Ask: is the instruction coming in, being worked out, or being carried out?'));
-    else if (cur.help === 1) qArea.appendChild(tip('Coming in, worked out, or carried out?'));
+    if (cur.help === 2) qArea.appendChild(tip('Is the CPU getting the next instruction (fetch), working out what it means (decode), or carrying it out (execute)? Execute can also get a number from memory.'));
+    else if (cur.help === 1) qArea.appendChild(tip('An instruction from memory means fetch. A number from memory means execute.'));
     var row = choices(['F', 'D', 'E'].map(function (k) { return { label: FDE.STAGE_NAMES[k], value: k }; }), 'word', function (v, b) {
       var ok = v === m.stage;
       row.mark(m.stage, b);

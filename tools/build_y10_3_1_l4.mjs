@@ -242,7 +242,7 @@ steps.push(written('exam-fetch-2', 'Exam Question: Buses in Fetch (2 of 2)',
   ]));
 
 steps.push(embed('activity-1', 'Activity 1: Fetch, One Move at a Time', 'cpu-lab',
-  '<strong>What to do:</strong> for each move, click the box the value goes to next, then the bus (from level 2, also the value). A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 2 (two rounds in a row with every move right, at each level). The help gets less as you go up.',
+  '<strong>What to do:</strong> for each move, click the box the value goes to next, then the bus when something goes to or from memory (from level 2, also the value). A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 2 (two rounds in a row with every move right, at each level). The help gets less as you go up.',
   'activity=fde&level=1&upto=2'));
 
 // 0478/12 June 2024 Q5(a): address; MAR; RAM; MDR; data; CIR; CU, one mark each in the correct place.
@@ -317,16 +317,28 @@ steps.push(noteSlide('note-cycle', 'Your Notes: Decode, Execute and the Cycle', 
   ['explain WHY the CU decodes an instruction before it is executed.', 'Each instruction needs different parts to do different jobs. Decoding tells the CU what to do. It uses the instruction set.'],
   ['explain WHY LOAD 6 puts 12 into the ACC, and not 6.', 'The 6 is an address. The CPU reads the number stored at address 6, which is 12.'],
   ['explain WHY it is called a cycle.', 'After execute, the CPU goes back to fetch the next instruction, using the PC. The same three stages repeat for every instruction.']]));
+// Fetch and execute both use the MAR, memory and the MDR: what comes back from memory tells them apart.
+steps.push(mcStep('fetch-or-execute', 'Compare: Fetch or Execute?', todo('compare the two columns, then pick your prediction. The reason appears under it.') +
+  cmp(['Fetch: getting the next instruction', ['The MAR gets the address from the <b>PC</b>: 4.', 'Memory sends back an <b>instruction</b>: LOAD 6.', 'It goes into the MDR, then the CIR.']],
+    ['Execute: LOAD 6 is carried out', ['The MAR gets the address in <b>LOAD 6</b>: 6.', 'Memory sends back a <b>number</b>: 12.', 'It goes into the MDR, then the ACC.']]) +
+  tps('Both columns use the MAR, memory and the MDR. So what is different about them?', 'Where the address comes from, and what comes back. The left column uses the address in the PC and gets an instruction. The right column uses the address in the instruction and gets a number.'), [
+    { prompt: 'Predict: the MAR holds 7 and memory sends the number 30 into the MDR, because ADD 7 needs it. Which stage is this?', options: ['Fetch', 'Execute'], correct: 1,
+      explain: 'Execute. A number has come back, because the instruction ADD 7 asked for it. Fetch only ever gets the next instruction.' },
+  ]));
 steps.push(mcStep('check-stage', 'Check: Which Stage?',
-  todo('pick the stage for each move. Ask: is the instruction coming in, being worked out, or being carried out? Done when both are answered.'), [
+  todo('pick the stage for each move. Ask: is the CPU getting the next instruction (fetch), working out what it means (decode), or carrying it out (execute)? Done when all four are answered.'), [
     { prompt: 'The PC goes up by 1. Which stage is this?', options: ['Fetch', 'Decode', 'Execute'], correct: 0,
       explain: 'Fetch. The PC goes up by 1 while the instruction is being fetched, so it holds the address of the next one.' },
+    { prompt: 'Memory sends the instruction ADD 7 into the MDR. Which stage is this?', options: ['Execute', 'Fetch', 'Decode'], correct: 1,
+      explain: 'Fetch. An instruction is coming into the CPU.' },
+    { prompt: 'LOAD 6 is in the CIR. Memory sends the number 12 into the MDR. Which stage is this?', options: ['Fetch', 'Decode', 'Execute'], correct: 2,
+      explain: 'Execute. LOAD 6 is being carried out, and it needs the number at address 6. A number, not an instruction, has come back.' },
     { prompt: 'The ALU works out 12 + 30. Which stage is this?', options: ['Decode', 'Execute', 'Fetch'], correct: 1,
       explain: 'Execute. The instruction ADD 7 has been fetched and decoded; now it is carried out.' },
   ]));
 
 steps.push(embed('activity-2', 'Activity 2: The Whole Cycle', 'cpu-lab',
-  '<strong>What to do:</strong> say which stage starts, then pick each move: the box the value goes to, the bus and the value. A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 5: two instructions in a row with no help.',
+  '<strong>What to do:</strong> say which stage starts, then pick each move: the box the value goes to, the bus when memory is used, and the value. A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 5: two instructions in a row with no help.',
   'activity=fde&level=3&upto=5'));
 steps.push(embed('activity-3', 'Activity 3: FDE Steps', 'fde-steps',
   '<strong>What to do:</strong> answer one small question at a time. Start at stage 1 and move on when a stage is mastered. The help gets less as you get questions right. Stage 5 runs a whole instruction with no help. Keep going: it saves your progress.'));
@@ -436,12 +448,12 @@ const cards = [
   card('c-02', 'cycle', 'LOAD 6 has been executed. The PC holds 5.\nWhat does the CPU do next?', ['Fetch the instruction at address 5'], ['Stop: LOAD 6 is finished', 'Execute LOAD 6 again', 'Decode LOAD 6 again'], 'It goes back to fetch, using the address in the PC. The stages repeat for every instruction.',
     ['After execute, which stage comes next?', 'The PC says where the next instruction is.'],
     'A similar question: ADD 7 has been executed and the PC holds 6. What next?\nStep 1: after execute, the cycle starts again with fetch.\nStep 2: fetch uses the address in the PC: 6.\nNow your question: use the PC\'s number.'),
-  card('c-03', 'cycle', 'Why is it called a cycle?', ['The same stages repeat for every instruction'], ['It goes round the CPU in a circle', 'Each stage happens only once', 'The PC goes back to 0 every time'], 'After execute the CPU fetches the next instruction, and the three stages repeat until the program stops.',
-    ['What happens after an instruction is executed?', 'Does the CPU stop after one instruction?'], null, { keywords: [/^(?=.*\b(repeat(s|ed|ing)?|again|over and over)\b)(?!.*\b(once|circle|round|0|zero)\b).*$/i] }),
-  card('c-04', 'cycle', 'The PC goes up by 1.\nWhich stage is this?', ['Fetch'], ['Decode', 'Execute'], 'The PC goes up by 1 while the instruction is fetched.',
-    ['Is the instruction coming in, being worked out, or being carried out?', 'This happens just after the instruction arrives in the MDR.'], null, K('fetch(ing)?(\\s*stage)?')),
   card('c-05', 'cycle', 'The CU works out what LOAD 6 means, using the instruction set.\nWhich stage is this?', ['Decode'], ['Fetch', 'Execute'], 'Working out what an instruction means is decode.',
     ['The instruction is already in the CIR.', 'Nothing is carried out yet.'], null, K('decod(e|ing)(\\s*stage)?')),
+  card('c-06', 'cycle', 'LOAD 6 is in the CIR. Memory sends the number 12 into the MDR.\nWhich stage is this?', ['Execute'], ['Fetch', 'Decode'], 'A number has come back because LOAD 6 asked for it, so LOAD 6 is being carried out. Fetch only gets the next instruction.',
+    ['What has come back from memory: an instruction or a number?', 'Is the CPU getting the next instruction, or a number that an instruction asked for?'], null, K('execut(e|ing)(\s*stage)?')),
+  card('c-07', 'cycle', 'The PC holds 5. Memory sends the instruction ADD 7 into the MDR.\nWhich stage is this?', ['Fetch'], ['Execute', 'Decode'], 'An instruction is coming into the CPU, so this is fetch.',
+    ['What has come back from memory: an instruction or a number?', 'Is the CPU getting the next instruction, or a number that an instruction asked for?'], null, K('fetch(ing)?(\s*stage)?')),
   card('e-01', 'exam', 'Identify two components within the CPU that are used in the fetch stage of the cycle.\nGive one.', [R.MAR, R.MDR, R.PC, R.CU, 'Address bus', 'Data bus', 'Control bus'], [R.ALU, R.ACC, 'Hard disk drive (HDD)', 'Instruction set'],
     'From Cambridge IGCSE 0478/11, June 2022, Question 2(a)(iii).', ['Think of the moves in fetch: PC to MAR, memory to MDR, MDR to CIR.', 'The ALU and the ACC are used in execute.'], null),
   card('e-02', 'exam', 'State what is meant by an instruction set.', ['A list of commands that can be processed by the CPU'], ['The set of registers in the CPU', 'A list of addresses in memory', 'The bus that carries instructions'], 'From Cambridge IGCSE 0478/12, June 2024, Question 5(b).',

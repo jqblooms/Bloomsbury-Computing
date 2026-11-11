@@ -276,7 +276,7 @@
    "type": "embedded-app",
    "appId": "cpu-lab",
    "embedContainerId": "y10-314-activity-1",
-   "content": "<h2 class=\"lesson-h2\">Activity 1: Fetch, One Move at a Time</h2><p class=\"lesson-lead\"><strong>What to do:</strong> for each move, click the box the value goes to next, then the bus (from level 2, also the value). A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 2 (two rounds in a row with every move right, at each level). The help gets less as you go up.</p><div id=\"y10-314-activity-1\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Fetch, One Move at a Time</h2><p class=\"lesson-lead\"><strong>What to do:</strong> for each move, click the box the value goes to next, then the bus when something goes to or from memory (from level 2, also the value). A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 2 (two rounds in a row with every move right, at each level). The help gets less as you go up.</p><div id=\"y10-314-activity-1\"></div>",
    "embedQuery": "activity=fde&level=1&upto=2"
   },
   {
@@ -445,11 +445,29 @@
    "content": "<h2 class=\"lesson-h2\">Your Notes: Decode, Execute and the Cycle</h2><p class=\"lesson-lead\"><strong>What to do:</strong> open your notes (the notepad button at the top) and write each note in your own words. Then press <strong>Check my note</strong> and compare. Fix your note if it misses an idea.</p><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY the CU decodes an instruction before it is executed.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> Each instruction needs different parts to do different jobs. Decoding tells the CU what to do. It uses the instruction set.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY LOAD 6 puts 12 into the ACC, and not 6.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> The 6 is an address. The CPU reads the number stored at address 6, which is 12.</p></div></details><details class=\"lesson-note\"><summary><span class=\"lesson-note-q\">Note in your notes: explain WHY it is called a cycle.</span><span class=\"lesson-note-reveal\">Check my note</span></summary><div class=\"lesson-note-a\"><p><strong>A model note:</strong> After execute, the CPU goes back to fetch the next instruction, using the PC. The same three stages repeat for every instruction.</p></div></details>"
   },
   {
+   "id": "fetch-or-execute",
+   "label": "Compare: Fetch or Execute?",
+   "type": "multiple-choice",
+   "containerId": "y10-314-fetch-or-execute",
+   "content": "<h2 class=\"lesson-h2\">Compare: Fetch or Execute?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> compare the two columns, then pick your prediction. The reason appears under it.</p><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0\"><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>Fetch: getting the next instruction</b><div style=\"margin-top:3px\">The MAR gets the address from the <b>PC</b>: 4.</div><div style=\"margin-top:3px\">Memory sends back an <b>instruction</b>: LOAD 6.</div><div style=\"margin-top:3px\">It goes into the MDR, then the CIR.</div></div><div style=\"border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-2);padding:6px 12px\"><b>Execute: LOAD 6 is carried out</b><div style=\"margin-top:3px\">The MAR gets the address in <b>LOAD 6</b>: 6.</div><div style=\"margin-top:3px\">Memory sends back a <b>number</b>: 12.</div><div style=\"margin-top:3px\">It goes into the MDR, then the ACC.</div></div></div><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Both columns use the MAR, memory and the MDR. So what is different about them?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Where the address comes from, and what comes back. The left column uses the address in the PC and gets an instruction. The right column uses the address in the instruction and gets a number.</p></div></details><div id=\"y10-314-fetch-or-execute\"></div>",
+   "items": [
+    {
+     "prompt": "Predict: the MAR holds 7 and memory sends the number 30 into the MDR, because ADD 7 needs it. Which stage is this?",
+     "options": [
+      "Fetch",
+      "Execute"
+     ],
+     "correct": 1,
+     "explain": "Execute. A number has come back, because the instruction ADD 7 asked for it. Fetch only ever gets the next instruction."
+    }
+   ]
+  },
+  {
    "id": "check-stage",
    "label": "Check: Which Stage?",
    "type": "multiple-choice",
    "containerId": "y10-314-check-stage",
-   "content": "<h2 class=\"lesson-h2\">Check: Which Stage?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick the stage for each move. Ask: is the instruction coming in, being worked out, or being carried out? Done when both are answered.</p><div id=\"y10-314-check-stage\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Check: Which Stage?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> pick the stage for each move. Ask: is the CPU getting the next instruction (fetch), working out what it means (decode), or carrying it out (execute)? Done when all four are answered.</p><div id=\"y10-314-check-stage\"></div>",
    "items": [
     {
      "prompt": "The PC goes up by 1. Which stage is this?",
@@ -460,6 +478,26 @@
      ],
      "correct": 0,
      "explain": "Fetch. The PC goes up by 1 while the instruction is being fetched, so it holds the address of the next one."
+    },
+    {
+     "prompt": "Memory sends the instruction ADD 7 into the MDR. Which stage is this?",
+     "options": [
+      "Execute",
+      "Fetch",
+      "Decode"
+     ],
+     "correct": 1,
+     "explain": "Fetch. An instruction is coming into the CPU."
+    },
+    {
+     "prompt": "LOAD 6 is in the CIR. Memory sends the number 12 into the MDR. Which stage is this?",
+     "options": [
+      "Fetch",
+      "Decode",
+      "Execute"
+     ],
+     "correct": 2,
+     "explain": "Execute. LOAD 6 is being carried out, and it needs the number at address 6. A number, not an instruction, has come back."
     },
     {
      "prompt": "The ALU works out 12 + 30. Which stage is this?",
@@ -479,7 +517,7 @@
    "type": "embedded-app",
    "appId": "cpu-lab",
    "embedContainerId": "y10-314-activity-2",
-   "content": "<h2 class=\"lesson-h2\">Activity 2: The Whole Cycle</h2><p class=\"lesson-lead\"><strong>What to do:</strong> say which stage starts, then pick each move: the box the value goes to, the bus and the value. A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 5: two instructions in a row with no help.</p><div id=\"y10-314-activity-2\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: The Whole Cycle</h2><p class=\"lesson-lead\"><strong>What to do:</strong> say which stage starts, then pick each move: the box the value goes to, the bus when memory is used, and the value. A wrong pick means the round does not count. <strong>Done</strong> when you have cleared level 5: two instructions in a row with no help.</p><div id=\"y10-314-activity-2\"></div>",
    "embedQuery": "activity=fde&level=3&upto=5"
   },
   {
