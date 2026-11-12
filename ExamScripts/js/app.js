@@ -144,7 +144,7 @@
 
     function check() {
       if (cur.answered) return;
-      var res = ES.mark(sc, cur.vi, ta.value);
+      var res = ES.mark(sc, cur.vi, ta.value, cur.level);
       if (res.empty) { note.className = 'note warn'; note.textContent = 'Type your answer first.'; ta.focus(); return; }
       cur.answered = true;
       ta.readOnly = true;

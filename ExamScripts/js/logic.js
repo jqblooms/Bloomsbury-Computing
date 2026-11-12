@@ -84,8 +84,12 @@ var ES = (function () {
     return s.trim().split(' ').filter(Boolean);
   }
   // How many of a point's groups one sentence holds (all of them = the point is met).
+  // Words that turn a right sentence wrong ("the data that has been erased from memory"): a sentence with one of
+  // these never earns a point, whatever key words it also holds.
+  var CONTRADICT = ['erase', 'erasing', 'delete', 'deleting', 'wipe', 'wiping', 'destroy', 'remove', 'removing', 'lose', 'losing', 'lost', 'forget', 'forgot'];
   function groupsHit(point, toks) {
     if (point.not && point.not.some(function (p) { return find(toks, p) >= 0; })) return { hit: 0, all: false };
+    if (CONTRADICT.some(function (w) { return toks.indexOf(w) >= 0 || (w.length >= 5 && toks.some(function (t) { return t.indexOf(w) === 0; })); })) return { hit: 0, all: false };
     var hit = 0, pos = 0, all = true;
     point.g.forEach(function (group) {
       var at = findAny(toks, group, point.ord ? pos : 0);
@@ -109,7 +113,33 @@ var ES = (function () {
   }
   // Marks an answer: { score, marks, full, met: [point ids], missing: [{ need, quote }], rival, empty }.
   // missing lists only as many points as the marks still needed, the model answer's own points first.
-  function mark(script, vi, answer) {
+  // At levels 1 to 3 the sentences are on screen and only the key words are hidden, so every key word of the model
+  // must be in the answer: a wrong word in a gap ("erased" for "fetched") must never pass because the rest of the
+  // sentence, copied from the screen, holds other key words.
+  function mark(script, vi, answer, level) {
+    var res = markPoints(script, vi, answer);
+    if (!level || level >= 4 || res.empty || res.rival) return res;
+    // Each key word must appear as many times as in the model answer: the copied frame holds its other copies, so a
+    // wrong word in one gap ("data" written once where the model has it twice) is still caught.
+    var toks = tokens(answer), gaps = [], models = script.variants[vi || 0].model, lines = scaffold(script, vi, 2);
+    var modelToks = tokens(models.join(' ').replace(/[\[\]|]/g, ' '));
+    function count(list, phrase) { var n = 0, at = -1; while ((at = find(list, phrase, at + 1)) >= 0) n++; return n; }
+    var checked = {};
+    models.forEach(function (s, si) {
+      (s.match(/\[[^\]]*\]/g) || []).forEach(function (b) {
+        var want = tokens(b.slice(1, -1)).join(' ');
+        if (!want || checked[want]) return;
+        checked[want] = true;
+        if (count(toks, want) < count(modelToks, want)) gaps.push({ id: 'gap-' + want, need: 'the right word in each gap: ' + lines[si], quote: '' });
+      });
+    });
+    if (!gaps.length) return res;
+    res.score = Math.min(res.score, Math.max(0, res.marks - gaps.length));
+    res.full = false;
+    res.missing = gaps.slice(0, 2).concat(res.missing).slice(0, Math.max(1, res.marks - res.score));
+    return res;
+  }
+  function markPoints(script, vi, answer) {
     var marks = script.marks, pts = pointsOf(script, vi);
     var sents = sentences(answer).map(function (s) { return { text: s, toks: stripPhrases(tokens(s), script.strip) }; });
     if (!sents.length || !sents.some(function (s) { return s.toks.length; })) return { score: 0, marks: marks, full: false, met: [], missing: [], empty: true };

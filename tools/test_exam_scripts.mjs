@@ -132,6 +132,27 @@ CASES.forEach(([id, vi, ans, score, miss]) => {
   ok(r.missing.length === Math.max(0, r.marks - r.score), `${id}: missing lists the marks still needed`);
 });
 ok(ES.mark(ES.BY_ID.fetch, 0, '   ').empty, 'an empty answer is flagged');
+// 2026-11-12: a wrong word in a gap ("erased" for "fetched") passed because the copied frame held other key words.
+{
+  const regs = ES.BY_ID.registers || ES.SCRIPTS.find((s) => /MDR/.test(JSON.stringify(s.variants)));
+  regs.variants.forEach((v, vi) => {
+    const model = v.model.map((m) => m.replace(/[[\]|]/g, '')).join(' ');
+    for (const lv of [1, 2, 3, 4, 5, 6]) ok(ES.mark(regs, vi, model, lv).full, `registers ${vi}: model full at level ${lv}`);
+    if (/fetched/.test(model)) {
+      const bad = model.replace(/fetched/g, 'erased');
+      for (const lv of [1, 2, 3, 5, 6]) ok(!ES.mark(regs, vi, bad, lv).full, `registers ${vi}: "erased" for "fetched" fails at level ${lv}`);
+    }
+  });
+  ES.SCRIPTS.forEach((s) => s.variants.forEach((v, vi) => {
+    const model = v.model.map((m) => m.replace(/[[\]|]/g, '')).join(' ');
+    [1, 2, 3].forEach((lv) => ok(ES.mark(s, vi, model, lv).full, `${s.id} ${vi}: model full at level ${lv}`));
+    const words = (v.model.join(' ').match(/\[[^\]]*\]/g) || []).map((b) => b.slice(1, -1));
+    if (words.length) {
+      const swapped = model.replace(words[0], 'banana');
+      if (swapped !== model) ok(!ES.mark(s, vi, swapped, 2).full, `${s.id} ${vi}: a wrong word in the first gap fails at level 2`);
+    }
+  }));
+}
 // The quote shows what the student wrote about a point they half made.
 {
   const r = ES.mark(ES.BY_ID['sensor-control'], 0, 'The sensor sends data to the microprocessor. It compares the data. If it is close a signal is sent. An actuator stops it. It repeats.');
