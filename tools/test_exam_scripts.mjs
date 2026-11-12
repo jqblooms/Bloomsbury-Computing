@@ -203,6 +203,21 @@ ES.SCRIPTS.forEach((s) => {
   o = ES.record(st, id, 1, false); ok(o.lost && !r.secure && r.level === 5 && r.passes.length === 0 && r.everSecure, 'a miss on a secure script: back to level 5, passes lost, everSecure kept');
   ES.record(st, id, 0, true); st.n += 3; ES.record(st, id, 1, false); ok(r.passes.length === 0 && r.level === 5, 'a miss after one pass loses the pass');
 }
+// 2026-11-12: secure scripts kept coming while plenty were not secure. A student who always answers right should
+// rarely see a secure script while unsecure ones remain, and should still reach all secure.
+for (const topic of ['all', 'robots', 'cpu']) {
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const st = ES.fixState(null);
+  let picks = 0, secureWhileLearning = 0, guard = 0;
+  while (!ES.allSecure(st, topic) && guard++ < 2000) {
+    const p = ES.pick(st, topic, rnd);
+    const unsecureLeft = Object.keys(st.scripts).filter((id) => (topic === 'all' || ES.BY_ID[id].topic === topic) && !st.scripts[id].secure).length;
+    if (unsecureLeft >= 4) { picks++; if (st.scripts[p.id].secure) secureWhileLearning++; }
+    ES.record(st, p.id, p.vi, true);
+  }
+  ok(ES.allSecure(st, topic), `${topic}: a student who answers right reaches all secure (${guard} answers)`);
+  ok(secureWhileLearning <= Math.ceil(picks * 0.2), `${topic}: secure scripts come rarely while 4 or more are unsecure (${secureWhileLearning} of ${picks})`);
+}
 // A fixed state survives junk.
 {
   const st = ES.fixState({ v: 1, n: 'x', open: ['nope', 'fetch'], scripts: { fetch: { level: 99, passes: 'bad' } } });

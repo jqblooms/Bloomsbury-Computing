@@ -249,9 +249,24 @@ var ES = (function () {
   function pick(state, topic, rnd) {
     rnd = rnd || Math.random;
     openMore(state, topic);
-    var cands = state.open.filter(function (id) { return inTopic(id, topic); });
-    var pool = cands.filter(function (id) { var r = state.scripts[id]; return r.last < 0 || state.n - r.last > GAP; });
+    var cands, pool, learning;
+    function ready(id) { var r = state.scripts[id]; return r.last < 0 || state.n - r.last > GAP; }
+    function notSecure(id) { return !state.scripts[id].secure; }
+    // James 2026-11-12: secure scripts kept coming while plenty were not secure. When every open unsecure script is
+    // waiting its turn, open a new one rather than fill the gap with a secure script.
+    for (;;) {
+      cands = state.open.filter(function (id) { return inTopic(id, topic); });
+      pool = cands.filter(ready);
+      learning = pool.filter(notSecure);
+      if (learning.length) break;
+      var next = ORDER.filter(function (id) { return inTopic(id, topic) && state.open.indexOf(id) < 0; })[0];
+      if (!next) break;
+      state.open.push(next);
+    }
+    // A secure script comes back only as an occasional review (about 1 answer in 8) while others are still learning.
+    if (learning.length) pool = rnd() < 0.12 ? pool : learning;
     if (!pool.length) {
+      // Nothing is ready (only near the end, when every script is open): anything but the one just answered.
       var lastId = null, lastN = -2;
       cands.forEach(function (id) { if (state.scripts[id].last > lastN) { lastN = state.scripts[id].last; lastId = id; } });
       pool = cands.length > 1 ? cands.filter(function (id) { return id !== lastId; }) : cands;
