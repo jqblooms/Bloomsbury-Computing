@@ -76,12 +76,9 @@ var ES_SCRIPTS = (function () {
       sensor('A security light only comes on when it is dark. Identify the sensor that checks if it is dark.', 'A| [light] sensor.', ['light']),
       sensor('A security light only comes on when movement is detected. Identify the sensor that detects the movement.', 'An| [infra-red] sensor.', ['infrared', 'infra red', 'motion', 'pir']),
       // 0478/12 November 2022 Q2(b): spray paint garage air dry enough: moisture / humidity; headlights when dark:
-      // light; greenhouse soil acidity: pH.
+      // light. (Kept to everyday sensors: James 2026-11-12, the question gives the context; pH, level, magnetic field and flow left out.)
       sensor('A system checks that the air is dry enough in a garage that spray paints cars. Identify the most suitable sensor.', 'A| [humidity] sensor.', ['humidity', 'moisture']),
       sensor('A car automatically switches on its headlights when it is dark. Identify the most suitable sensor.', 'A| [light] sensor.', ['light']),
-      sensor('A system checks that the soil in a greenhouse has the correct level of acidity. Identify the most suitable sensor.', 'A| [pH] sensor.', ['ph']),
-      // 0478/11 June 2023 Q5(a): automatic animal water bowl refill: level; pressure; moisture.
-      sensor('A farm has a water bowl for its animals. When the bowl is empty, it is refilled automatically. Identify the most appropriate sensor.', 'A| [level] sensor.', ['level', 'pressure', 'moisture']),
       // 0478/12 November 2024 Q8(a): robot vacuum cleaner navigating round obstacles: proximity.
       sensor('A robot vacuum cleaner uses a sensor to move around obstacles in a room. Identify the most suitable sensor.', 'A| [proximity] sensor.', ['proximity']),
       // 0478/11 November 2021 Q9(a): washing machine: water is 30 °C: temperature; weight of clothes: pressure.
@@ -90,7 +87,6 @@ var ES_SCRIPTS = (function () {
       // 0478/13 June 2024 Q6(c) (use given, here the sensor is asked for): counting vehicles that cross a bridge:
       // magnetic field; person approaching automatic doors: infra-red; kettle boiling: temperature; greenhouse air
       // moist enough: humidity.
-      sensor('A system counts the vehicles that cross a bridge. Identify a suitable sensor.', 'A| [magnetic field] sensor.', ['magnetic']),
       sensor('Automatic doors open when a person comes near them. Identify a suitable sensor.', 'An| [infra-red] sensor.', ['infrared', 'infra red', 'motion', 'proximity', 'pir']),
       sensor('A kettle checks whether the water in it is boiling. Identify a suitable sensor.', 'A| [temperature] sensor.', ['temperature']),
       sensor('A system checks whether the air is moist enough in a greenhouse. Identify a suitable sensor.', 'A| [humidity] sensor.', ['humidity', 'moisture']),
@@ -100,8 +96,6 @@ var ES_SCRIPTS = (function () {
       sensor('A smart speaker takes voice commands as input. Identify the input device that allows voice commands to be used as input.', 'A| [microphone].', ['microphone', 'mic', 'acoustic', 'sound']),
       // 0478/11 June 2021 Q5: greenhouse kept between 25 °C and 30 °C with a temperature sensor.
       sensor('A greenhouse must stay between 25 °C and 30 °C. Identify the sensor the system uses.', 'A| [temperature] sensor.', ['temperature']),
-      // 0478/12 November 2023 Q11(a) (asked the other way): a flow sensor measures the amount of liquid or gas flowing.
-      sensor('A factory measures the amount of liquid flowing through a pipe. Identify the sensor it uses.', 'A| [flow] sensor.', ['flow']),
       // 0478/13 November 2021 Q2(d)(i): counting people entering a stadium: pressure sensor; motion sensor.
       sensor('Sensors at the entrance of a stadium count the number of people going in. Identify a sensor that could be used.', 'A| [pressure] sensor.', ['pressure', 'motion', 'infrared', 'infra red'])
     ]

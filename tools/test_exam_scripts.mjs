@@ -169,9 +169,9 @@ sensors.variants.forEach((v, i) => {
   ok(ES.mark(sensors, i, wrong + ' sensor').score === 0, `sensor ${i}: "${wrong}" is wrong`);
   ok(ES.mark(sensors, i, stems[0] + ' or ' + wrong).score === 0, `sensor ${i}: two guesses score 0`);
 });
-ok(ES.mark(sensors, 7, 'temprature').full, 'sensor spelling slip: temprature');
+ok(ES.mark(sensors, sensors.variants.findIndex((v) => /temperature/.test(v.model[0])), 'temprature').full, 'sensor spelling slip: temprature');
 ok(ES.mark(sensors, 1, 'infra-red').full, 'sensor: infra-red with a hyphen');
-ok(ES.mark(sensors, 4, 'PH sensor').full, 'sensor: PH');
+ok(!sensors.variants.some((v) => /pH|magnetic|flow|level]/.test(v.model[0])), 'sensors: only everyday sensors (James 2026-11-12)');
 
 // ---------------------------------------------------------------- scaffolds
 ES.SCRIPTS.forEach((s) => {
