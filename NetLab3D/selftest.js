@@ -173,6 +173,19 @@ function raceTest(i, pick, order) {
   answer(true); ok(M().afterOk, 'race question not answered');
 }
 function byName2(n) { return s.S.devs.find(d => d.name === n); }
+// the terminal: run a command, send to a typed address (waits for it to arrive), a device's address
+const ip = n => s.S.addrs[byName2(n).id];
+function cmd(text) {
+  const i = $('termIn'); if (!i) throw new Error('no terminal open');
+  i.value = text; i.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  return [...$('term').querySelectorAll('.term-l')].map(x => x.textContent);
+}
+function sendAddr(text) {
+  const i = $('termTo'); if (!i) throw new Error('no Send to box');
+  i.value = text; i.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  for (let k = 0; k < 1500 && s.anim; k++) s.frame(1);
+  return s.toastText();
+}
 function webTest(a, srv, trace) {
   $('nbFrom').value = String(a.id); $('nbFrom').dispatchEvent(new Event('change'));
   $('nbTo').value = String(srv.id); $('nbTo').dispatchEvent(new Event('change'));
@@ -503,14 +516,39 @@ const PLAY = [
   function quizRouters() { s.start(31); quizAll(); expectDone(31); },
   function addresses() {
     s.start(32);
-    ok(byName2('Ben').k3.screen && /192.168.1.3/.test(JSON.stringify([...$('nbTo').options].map(o => o.textContent))), 'addresses not in the Test bar');
-    ok(test(byName2('Ana'), byName2('Ben')).ok, 'send failed'); ok(test(byName2('Chi'), byName2('Printer')).ok, 'print failed');
+    const ben = byName2('Ben'), chi = byName2('Chi');
+    ok(!$('nbTo'), 'the Test bar still lists the devices in a typed mission');
+    // walk up to Ben's laptop and press T
+    let at = null;
+    for (const [x, y] of [[ben.X + 1, ben.Y + ben.h + 1], [ben.X - 1, ben.Y + 1], [ben.X + 1, ben.Y - 1], [ben.X + ben.w + 1, ben.Y + 1]]) { try { walkTo(x, y); if (s.nearTermDev() === ben) { at = [x, y]; break; } } catch (e) { } }
+    ok(!!at, 'could not stand at Ben\'s laptop');
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyT', key: 't', bubbles: true }));
+    ok(s.term && s.term.d === ben, 'T did not open Ben\'s terminal'); stepIs(1, 'opened the terminal');
+    ok(/C:\\Users\\Ben>/.test($('term').textContent), 'no prompt with the name');
+    const p0 = [s.pos.x, s.pos.y];
+    $('termIn').dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyW', key: 'w', bubbles: true })); s.frame(10);
+    $('termIn').dispatchEvent(new KeyboardEvent('keyup', { code: 'KeyW', key: 'w', bubbles: true }));
+    ok(s.pos.x === p0[0] && s.pos.y === p0[1], 'typing in the terminal moved the player');
+    let out = cmd('dir'); ok(/Type ipconfig/.test(out[out.length - 1]), 'unknown command: ' + out[out.length - 1]);
+    out = cmd('  IPCONFIG '); ok(out.some(l => l.includes('IPv4 Address') && l.endsWith(ip('Ben'))), 'ipconfig: ' + out.join(' | ')); stepIs(2, 'ipconfig on Ben');
+    $('termIn').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); ok(!s.term && $('term').hidden, 'Esc did not close the terminal');
+    s.openTerm(chi); out = cmd('ipconfig'); ok(out.some(l => l.endsWith(ip('Chi'))), 'Chi ipconfig'); s.closeTerm(); stepIs(3, 'ipconfig on Chi');
+    s.openTerm(ben);
+    for (const [v, re] of [['192.168.1', /4 numbers/], ['192.168.1.300', /bigger than 255/], ['192.168.l.4', /only numbers/], ['', /Type an address/]]) { sendAddr(v); ok(re.test(s.toastText()), '"' + v + '": ' + s.toastText()); ok(!!s.term, 'a bad address closed the terminal'); }
+    sendAddr(ip('Printer')); ok(/is Printer's address/.test(s.toastText()), 'wrong device: ' + s.toastText()); stepIs(3, 'wrong device refused');
+    sendAddr(ip('Ben')); ok(/own address/.test(s.toastText()), 'own address: ' + s.toastText());
+    sendAddr('10.9.9.9'); ok(/No device/.test(s.toastText()), 'no device: ' + s.toastText());
+    sendAddr(ip('Chi')); ok(/Message arrived/.test(s.toastText()), 'send to Chi: ' + s.toastText()); stepIs(4, 'sent to Chi');
+    s.openTerm(chi); sendAddr(ip('Printer'));
     expectDone(32); answer(true);
   },
   function website() {
     s.start(33); const srv = byName2('Web server');
-    ok(webTest(byName2('Ana'), srv).ok, 'website did not open'); ok(byName2('Ana').k3.screen.state && byName2('Ana').k3.screen.state.web === 'www.cats.example', 'no web page on the screen');
-    ok(webTest(byName2('Bea'), srv).ok, 'website did not open on the tablet'); expectDone(33); answer(true);
+    s.openTerm(srv); ok(!$('termTo'), 'a web server terminal has a Send box'); const out = cmd('ipconfig'); ok(out.some(l => l.endsWith(ip('Web server'))), 'server ipconfig'); s.closeTerm(); stepIs(1, 'server address found');
+    s.openTerm(byName2('Ana')); sendAddr(ip('Web server')); stepIs(2, 'website opened on Ana');
+    ok(byName2('Ana').k3.screen.state && byName2('Ana').k3.screen.state.web === 'www.cats.example', 'no web page on the screen');
+    s.openTerm(byName2('Bea')); sendAddr(ip('Web server'));
+    expectDone(33); answer(true);
   },
   function traceSite() {
     s.start(34); $('nbAsk').value = '4'; click('Check'); const srv = byName2('Web server');
@@ -549,14 +587,36 @@ const PLAY = [
     s.start(41);
     ok(M().phase === 'ask', 'no prediction first'); answer(true);
     const ana = byName2('Ana'), ben = byName2('Ben'), chi = byName2('Chi');
-    ok(!test(ana, ben).ok, 'a message to a shared address got there'); ok(/both have the address/.test(s.toastText()), 'no reason for the shared address: ' + s.toastText()); stepIs(1, 'tried the shared address');
-    const pickBtn = t => [...document.querySelectorAll('#mission .ask-opts button')].find(x => x.textContent === t);
-    pickBtn('192.168.1.9').click(); ok(/Printer already has/.test(s.toastText()), 'a taken address was accepted'); stepIs(1, 'taken address refused');
-    pickBtn('192.168.1.3').click(); stepIs(1, 'Ben\'s address refused');
-    pickBtn('192.168.1.6').click(); stepIs(2, 'Chi has a free address');
-    ok(/192.168.1.6/.test(JSON.stringify([...$('nbTo').options].map(o => o.textContent))), 'new address not in the Test bar');
-    ok(test(ana, ben).ok, 'send to Ben failed after the fix');
-    ok(test(ana, chi).ok, 'send to Chi failed after the fix'); expectDone(41); answer(true); ok(M().afterOk, 'after question not answered');
+    ok(ip('Ben') === ip('Chi'), 'Ben and Chi do not share an address');
+    s.openTerm(ben); cmd('ipconfig'); s.closeTerm(); s.openTerm(chi); cmd('ipconfig'); s.closeTerm(); stepIs(1, 'both addresses found');
+    s.openTerm(ana); sendAddr(ip('Ben')); ok(/both have the address/.test(s.toastText()), 'no reason for the shared address: ' + s.toastText()); stepIs(2, 'tried the shared address');
+    const set = v => { const i = $('nbSetAddr'); i.value = v; i.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); return s.toastText(); };
+    ok(/is Printer's address already/.test(set(ip('Printer'))), 'a taken address was accepted: ' + s.toastText());
+    ok(/is Ben's address already/.test(set(ip('Ben'))), 'Ben\'s address was accepted');
+    ok(/4 numbers/.test(set('192.168.1')), 'short address');
+    ok(/bigger than 255/.test(set('192.168.1.256')), '256');
+    ok(/Keep 192\.168\.1\. at the start/.test(set('10.0.0.5')), 'other network: ' + s.toastText());
+    ok(/1 to 254/.test(set('192.168.1.0')), 'last number 0');
+    stepIs(2, 'bad addresses refused');
+    let free = 2; while (S().devs.some(d => S().addrs[d.id] === '192.168.1.' + free)) free++;
+    set('192.168.1.' + free); stepIs(3, 'Chi has a free address');
+    ok(ip('Chi') === '192.168.1.' + free, 'Chi\'s address did not change');
+    s.openTerm(ana); sendAddr(ip('Chi'));
+    expectDone(41); answer(true); ok(M().afterOk, 'after question not answered');
+  },
+  function findSend() {
+    s.start(42);
+    ok(!!M().job, 'no job'); ok(!document.querySelector('#mission ol.steps'), 'the challenge shows steps');
+    ok(![...document.querySelectorAll('#mission button')].some(b => b.textContent === 'Walk me through it'), 'the challenge has help');
+    let j = M().job;
+    const wrong = S().devs.find(d => (d.kind === 'laptop' || d.kind === 'printer') && d.name !== j.to && d.name !== j.from);
+    s.openTerm(byName2(j.from)); sendAddr(ip(wrong.name));
+    ok(/does not count/.test(s.toastText()) && /ipconfig/.test(s.toastText()) && new RegExp('is ' + wrong.name + "'s address").test(s.toastText()), 'wrong address: ' + s.toastText());
+    ok((M().have || 0) === 0, 'a wrong job counted');
+    j = M().job; const other = S().devs.find(d => d.kind === 'laptop' && d.name !== j.from);
+    s.openTerm(other); sendAddr(ip(j.to)); ok(/the job says from/.test(s.toastText()), 'wrong sender: ' + s.toastText());
+    for (let k = 0; k < 3; k++) { j = M().job; ok(!!j, 'no job ' + k); s.openTerm(byName2(j.from)); sendAddr(ip(j.to)); }
+    expectDone(42); answer(true);
   },
   function lessonMode() {
     [...document.querySelectorAll('#mission .modebar button')].find(b => b.textContent === 'Lesson mode').click();

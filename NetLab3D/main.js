@@ -39,7 +39,18 @@ const btn = (label, cls, fn) => { const b = el('button', { type: 'button', class
 
 // ================================================================ the network model (the website's builder.js)
 let S = null;
-function fresh(palette) { return { devs: [], cables: [], names: shuffle(NAMES), palette: palette || {}, refused: false, lastTest: null, rooms: null, nextId: 1 }; }
+function fresh(palette) { return { devs: [], cables: [], names: shuffle(NAMES), palette: palette || {}, refused: false, lastTest: null, rooms: null, nextId: 1, ipc: new Set(), opened: new Set() }; }
+// A typed IP address: null when it is well formed, or what is wrong with it, in plain words.
+function ipProblem(s) {
+  const v = String(s == null ? '' : s).trim();
+  if (!v) return 'Type an address first.';
+  if (/[^0-9.]/.test(v)) return 'An address has only numbers and dots, like 192.168.1.7.';
+  const p = v.split('.');
+  if (p.length !== 4 || p.some(x => x === '')) return 'An address has 4 numbers with dots between them, like 192.168.1.7.';
+  if (p.some(x => Number(x) > 255)) return 'That address has a number bigger than 255. Each number is from 0 to 255.';
+  return null;
+}
+const ipNorm = s => String(s).trim().split('.').map(x => String(Number(x))).join('.');
 function dev(id) { return S.devs.find(d => d.id === id); }
 function cablesOf(id) { return S.cables.filter(c => c.a === id || c.b === id); }
 function sockets(d) { return d.ports || PORTS[d.kind]; }
@@ -646,49 +657,70 @@ const QUIZ_R = { id: 'quiz-r', group: 'Routers and the internet', title: 'Switch
     { q: 'A router link breaks, but there is another path. What happens?', options: ['The packets go the other way', 'Nothing can be sent again', 'The packets wait for ever'], why: 'Routers send packets another way if there is one.' }
   ] };
 // ---- 2.3 iTrace: addresses, web servers, the World Wide Web, tracing a website
-const ADDR = { id: 'addr', group: 'Addresses and the web', title: 'Every Device Has an Address', type: 'tutorial', mins: 7,
+// Missions with typed: true hide every address (screens, labels, Test bar): the student finds each one with ipconfig in a
+// device's terminal (T) and types it in the terminal's Send to box. A step's term: { from, to } names the devices it wants.
+const lan = n => shuffle(Array.from({ length: 80 }, (_, i) => i + 2)).slice(0, n).map(k => '192.168.1.' + k);
+const ipcDone = n => { const d = byN(n); return !!d && !!S.ipc && S.ipc.has(d.id); };
+const opened = n => { const d = byN(n); return !!d && !!S.opened && S.opened.has(d.id); };
+const ADDR = { id: 'addr', group: 'Addresses and the web', title: 'Every Device Has an Address', type: 'tutorial', mins: 9, typed: true,
   setup() {
     S = fresh({});
-    build([['switch', 320, 190, 'Switch'], ['laptop', 110, 80, 'Ana', '192.168.1.2'], ['laptop', 530, 80, 'Ben', '192.168.1.3'], ['laptop', 110, 290, 'Chi', '192.168.1.4'], ['printer', 530, 290, 'Printer', '192.168.1.9']],
+    const a = lan(4);
+    build([['switch', 320, 190, 'Switch'], ['laptop', 110, 80, 'Ana', a[0]], ['laptop', 530, 80, 'Ben', a[1]], ['laptop', 110, 290, 'Chi', a[2]], ['printer', 530, 290, 'Printer', a[3]]],
       [['Ana', 'Switch'], ['Ben', 'Switch'], ['Chi', 'Switch'], ['Printer', 'Switch']]);
   },
-  intro: 'Every device on a network has its own <b>address</b>: a number that tells data where to go. Look at each screen.',
+  intro: 'Every device on a network has its own <b>IP address</b>: four numbers with dots, like 192.168.1.7. Data uses it to find the right device. The screens do not show it, so you will ask each computer.',
   steps: [
-    { text: 'In the Test bar, send a message from Ana to the device at <b>192.168.1.3</b>.', show: 'test', event: true, done: () => sent('Ana', 'Ben') },
-    { text: 'Print from Chi to the printer at <b>192.168.1.9</b>.', show: 'test', event: true, done: () => sent('Chi', 'Printer') }
+    { text: 'Walk to <b>Ben\'s laptop</b> (follow the yellow ring). Press <b>T</b> to open its <b>terminal</b>: a window where you type commands.', show: 'dev:Ben', done: () => opened('Ben') },
+    { text: 'Type <b>ipconfig</b> and press <b>Enter</b>. The <b>IPv4 Address</b> line is Ben\'s address. Write it in your book. <i>Why? This number is how data finds Ben.</i>', show: 'dev:Ben', done: () => ipcDone('Ben') },
+    { text: 'Press <b>Esc</b> to close the terminal. Now find <b>Chi\'s</b> address the same way.', show: 'dev:Chi', done: () => ipcDone('Chi') },
+    { text: 'Walk back to <b>Ben\'s laptop</b> and open its terminal. Type Chi\'s address in the <b>Send to</b> box, then press <b>Send</b>. <i>Why exactly? One wrong number is a different device, or no device at all.</i>', show: 'dev:Ben', event: true, term: { from: 'Ben', to: 'Chi' }, done: () => sent('Ben', 'Chi') },
+    { text: 'Print: from <b>Chi\'s</b> terminal, send to the <b>Printer\'s</b> address. Find it first.', show: 'dev:Printer', event: true, term: { from: 'Chi', to: 'Printer' }, done: () => sent('Chi', 'Printer') }
   ],
-  end: 'Every device has its own address, so data can find the right one.',
-  after: { q: 'What is Chi\'s address? (Look at Chi\'s screen.)', options: ['192.168.1.4', '192.168.1.2', '192.168.1.3'], why: 'Each screen shows its own address. Chi is <b>192.168.1.4</b>.' } };
+  end: 'Every device has its own IP address. ipconfig shows it, and data uses it to find the right device.',
+  after: { q: 'Why did Ben need Chi\'s address before sending?', options: ['The address tells the data which device to go to', 'So the message is shorter', 'So the cable works faster'], why: 'Data carries the address of the device it is going to. Without it, the network cannot tell where to send it.' } };
 // another device with the same address as d, if there is one
 const twinOf = d => { const a = addrOf(d); return a ? S.devs.find(x => x !== d && addrOf(x) === a) || null : null; };
-const SAMEADDR = { id: 'sameaddr', group: 'Addresses and the web', title: 'Two the Same?', type: 'tutorial', mins: 6,
+const SAMEADDR = { id: 'sameaddr', group: 'Addresses and the web', title: 'Two the Same?', type: 'tutorial', mins: 8, typed: true,
   setup() {
     S = fresh({});
-    build([['switch', 320, 190, 'Switch'], ['laptop', 110, 80, 'Ana', '192.168.1.2'], ['laptop', 530, 80, 'Ben', '192.168.1.3'], ['laptop', 110, 290, 'Chi', '192.168.1.3'], ['printer', 530, 290, 'Printer', '192.168.1.9']],
+    const a = lan(3);
+    build([['switch', 320, 190, 'Switch'], ['laptop', 110, 80, 'Ana', a[0]], ['laptop', 530, 80, 'Ben', a[1]], ['laptop', 110, 290, 'Chi', a[1]], ['printer', 530, 290, 'Printer', a[2]]],
       [['Ana', 'Switch'], ['Ben', 'Switch'], ['Chi', 'Switch'], ['Printer', 'Switch']]);
   },
-  intro: 'Someone gave Ben and Chi the <b>same address</b>. Look at their screens.',
-  before: { q: 'Predict: Ana sends a message to Ben at 192.168.1.3. Chi has 192.168.1.3 too. What will happen?', options: ['The network cannot tell which laptop it is for', 'Ben gets it', 'Chi gets it'],
-    why: 'Two laptops have the address 192.168.1.3, so the network cannot tell which one the message is for.' },
+  intro: 'Someone gave Ben and Chi the <b>same IP address</b> by mistake. Find out what happens.',
+  before: { q: 'Predict: Ben and Chi have the same address. Ana sends a message to that address. What will happen?', options: ['The network cannot tell which laptop it is for', 'Ben gets it', 'Chi gets it'],
+    why: 'Two laptops have one address, so the network cannot tell which one the message is for.' },
   steps: [
-    { text: 'In the Test bar, send a message from Ana to <b>Ben</b>. Watch what happens.', show: 'test', event: true, done: () => !!(S.lastTest && S.lastTest.dup) },
-    { text: 'Give <b>Chi</b> a new address. Look at every screen first: the new address must not be used by any other device.', done: () => { const c = byN('Chi'); return !!c && !twinOf(c); },
-      pick: ['192.168.1.2', '192.168.1.3', '192.168.1.6', '192.168.1.9'] },
-    { text: 'Send Ana\'s message to <b>Ben</b> again.', show: 'test', event: true, done: () => sent('Ana', 'Ben') },
-    { text: 'Now send a message to <b>Chi</b> at Chi\'s new address.', show: 'test', event: true, done: () => sent(null, 'Chi') }
+    { text: 'Use <b>ipconfig</b> on <b>Ben\'s</b> laptop and on <b>Chi\'s</b> laptop. Are the addresses the same?', show: 'dev:Ben', done: () => ipcDone('Ben') && ipcDone('Chi') },
+    { text: 'From <b>Ana\'s</b> terminal, send a message to Ben\'s address. Watch what happens.', show: 'dev:Ana', event: true, term: { from: 'Ana' }, done: () => !!(S.lastTest && S.lastTest.dup) },
+    { text: 'Give Chi a new address: type it in the box below. Keep <b>192.168.1.</b> at the start and change only the last number. No other device may have it, so check them with ipconfig.', done: () => { const c = byN('Chi'); return !!c && !twinOf(c); }, setAddr: 'Chi' },
+    { text: 'From <b>Ana\'s</b> terminal, send a message to <b>Chi\'s new address</b>.', show: 'dev:Ana', event: true, term: { from: 'Ana', to: 'Chi' }, done: () => sent('Ana', 'Chi') }
   ],
   end: 'Every device needs its own address. Then data can find the right one.',
   after: { q: 'Why must every device on a network have a different address?', options: ['So data goes to the right device', 'So the cables can be shorter', 'So the laptops run faster'], why: 'If two devices share an address, the network cannot tell which one the data is for.' } };
+// Find and Send: no help. Each job names two devices; a wrong address means the job does not count. 3 clean jobs in a row.
+const FINDSEND = { id: 'findsend', group: 'Addresses and the web', title: 'Find and Send', type: 'jobs', noHelp: true, rounds: 3, mins: 8, typed: true,
+  setup() {
+    S = fresh({});
+    const a = lan(5);
+    build([['switch', 320, 190, 'Switch'], ['laptop', 100, 70, 'Ana', a[0]], ['laptop', 320, 50, 'Ben', a[1]], ['laptop', 540, 70, 'Chi', a[2]], ['laptop', 100, 300, 'Dev', a[3]], ['printer', 540, 300, 'Printer', a[4]]],
+      [['Ana', 'Switch'], ['Ben', 'Switch'], ['Chi', 'Switch'], ['Dev', 'Switch'], ['Printer', 'Switch']]);
+  },
+  intro: 'No help this time. Each job says who sends and who gets it. Find the address you need, then send from the right terminal.',
+  end: 'Three jobs in a row, every address right.',
+  after: { q: 'You type an address with one number wrong. What happens?', options: ['It goes to a different device, or to no device', 'It still finds the right device', 'The network fixes the number'], why: 'The network only knows the number you type. One wrong number is a different address.' } };
 const homeToServer = (extra, links, chain) => {
   build([['laptop', 90, 80, 'Ana', '192.168.1.2'], ['tablet', 90, 290, 'Bea', '192.168.1.3'], ['wifi', 200, 250, 'Wi-Fi point'], ['router', 200, 160, 'Home router', '192.168.1.1']].concat(extra),
     [['Ana', 'Home router'], ['Wi-Fi point', 'Home router']].concat(links));
 };
-const WEBSITE = { id: 'website', group: 'Addresses and the web', title: 'Visit a Website', type: 'tutorial', mins: 8,
-  setup() { S = fresh({}); homeToServer([['router', 330, 100, 'Router A', '81.2.3.1'], ['router', 450, 210, 'Router B', '81.2.3.2'], ['server', 570, 110, 'Web server', '203.0.113.7', 'www.cats.example']], [['Home router', 'Router A'], ['Router A', 'Router B'], ['Router B', 'Web server']]); },
-  intro: 'A website is kept on a <b>web server</b>: a computer on the internet that sends web pages to anyone who asks.',
+const WEBSITE = { id: 'website', group: 'Addresses and the web', title: 'Visit a Website', type: 'tutorial', mins: 8, typed: true,
+  setup() { S = fresh({}); homeToServer([['router', 330, 100, 'Router A', '81.2.3.1'], ['router', 450, 210, 'Router B', '81.2.3.2'], ['server', 570, 110, 'Web server', '203.0.113.' + (10 + Math.floor(Math.random() * 240)), 'www.cats.example']], [['Home router', 'Router A'], ['Router A', 'Router B'], ['Router B', 'Web server']]); },
+  intro: 'A website is kept on a <b>web server</b>: a computer on the internet that sends web pages to anyone who asks. A web server has an IP address too.',
   steps: [
-    { text: 'In the Test bar: from <b>Ana</b>, to <b>www.cats.example</b>, then press <b>Open website</b>. Watch the request go out and the page come back.', show: 'test', event: true, done: () => sent('Ana', 'Web server', 'web') },
-    { text: 'Now open the website on <b>Bea\'s tablet</b>. It joins by Wi-Fi.', show: 'test', event: true, done: () => sent('Bea', 'Web server', 'web') }
+    { text: 'Find the <b>web server\'s</b> address with ipconfig in its terminal.', show: 'dev:Web server', done: () => ipcDone('Web server') },
+    { text: 'From <b>Ana\'s</b> terminal, send a request to that address. Watch the request go out and the page come back.', show: 'dev:Ana', event: true, term: { from: 'Ana', to: 'Web server' }, done: () => sent('Ana', 'Web server', 'web') },
+    { text: 'Now open it on <b>Bea\'s tablet</b> the same way. It joins by Wi-Fi.', show: 'dev:Bea', event: true, term: { from: 'Bea', to: 'Web server' }, done: () => sent('Bea', 'Web server', 'web') }
   ],
   end: 'The <b>World Wide Web</b> is all the web pages kept on web servers. The <b>internet</b> carries them to you.',
   after: { q: 'Where is a website kept?', options: ['On a web server', 'In your keyboard', 'Inside the router'], why: 'Websites are kept on <b>web servers</b>. Your device asks the server, and the page travels back over the internet.' } };
@@ -796,15 +828,15 @@ const C8 = { id: 'c-online', group: 'Challenges', title: 'Get the School Online'
     } }
   ], minCables: 3 };
 export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2, STAR, BUS, RING, MESH, SERIAL, DUPLEX, SPEEDRACE, BLUETOOTH, C1, C2, C3, C4, C5, C6,
-  JOIN2, INTERNET, HOPS, FINDWAY, QUIZ_R, ADDR, WEBSITE, TRACE, WHICH, SITEDOWN, QUIZ_W, C7, C8, WEBWIFI, SAMEADDR];
+  JOIN2, INTERNET, HOPS, FINDWAY, QUIZ_R, ADDR, WEBSITE, TRACE, WHICH, SITEDOWN, QUIZ_W, C7, C8, WEBWIFI, SAMEADDR, FINDSEND];
 // Lesson mode: the activities for one lesson, in order (about an hour each)
 export const LESSONS = [
   { id: '2.1', title: '2.1 iConnect: What Is a Network?', missions: ['two', 'switch', 'printer', 'wifi', 'range', 'rooms', 'full', 'predict', 'fixw', 'budget', 'school'] },
   { id: '2.2', title: '2.2 iRoute: The Internet and Routers', missions: ['join2', 'internet', 'hops', 'packets', 'paths', 'findway', 'quiz-r', 'c-town'],
     // ?lesson=2.2&part=1 shows only part of the lesson (one lesson activity slide each)
     parts: { 1: ['join2', 'internet', 'hops'], 2: ['packets', 'paths', 'findway', 'c-town'] } },
-  { id: '2.3', title: '2.3 iTrace: Addresses and the Web', missions: ['addr', 'sameaddr', 'website', 'webwifi', 'trace', 'which', 'sitedown', 'quiz-w', 'c-online'],
-    parts: { 1: ['addr', 'sameaddr'], 2: ['website', 'trace', 'which', 'sitedown', 'c-online'] } }
+  { id: '2.3', title: '2.3 iTrace: Addresses and the Web', missions: ['addr', 'sameaddr', 'findsend', 'website', 'webwifi', 'trace', 'which', 'sitedown', 'quiz-w', 'c-online'],
+    parts: { 1: ['addr', 'sameaddr', 'findsend'], 2: ['website', 'trace', 'which', 'sitedown', 'c-online'] } }
 ];
 // rough minutes for a Year 6 student, by kind when a mission does not say
 const minsOf = m => m.mins || (m.type === 'client' ? 10 : m.type === 'fix' ? 8 : m.type === 'race' ? 4 : m.type === 'quiz' ? 6 : m.type === 'challenge' ? 7 : 6);
@@ -943,9 +975,9 @@ export function startSolo({ container, myName, colour }) {
   }
   function realise(d) {
     fromDesk(d);
-    d.k3 = makeDevice({ kind: d.kind, title: d.name + (addrOf(d) && (d.kind === 'router' || d.kind === 'server') ? ' ' + addrOf(d) : ''), x: d.X ?? 0, y: d.Y ?? 0, w: d.w, h: d.h, sockets: d.kind === 'tablet' ? [] : socketsFor(d) });
+    d.k3 = makeDevice({ kind: d.kind, title: d.name + (addrOf(d) && !(M && M.m.typed) && (d.kind === 'router' || d.kind === 'server') ? ' ' + addrOf(d) : ''), x: d.X ?? 0, y: d.Y ?? 0, w: d.w, h: d.h, sockets: d.kind === 'tablet' ? [] : socketsFor(d) });
     devG.add(d.k3.group); placeGroup(d);
-    if (d.k3.screen && addrOf(d)) d.k3.screen.setAddr(addrOf(d));
+    if (d.k3.screen && addrOf(d) && !(M && M.m.typed)) d.k3.screen.setAddr(addrOf(d));
   }
   function placeGroup(d) {
     if (d.kind === 'tablet') d.k3.group.position.set((d.tx + 0.5) * T, 0, (d.ty + 0.5) * T);
@@ -1512,6 +1544,7 @@ export function startSolo({ container, myName, colour }) {
     if (M && M.m.noHelp) return null;
     if (M && M.m.id === 'rooms' && M.phase === 'build') return roomsGuide();
     const show = M && M.phase === 'build' ? M.show : null;
+    if (show && show.startsWith('dev:')) { const d = byN(show.slice(4)); if (!d || carried(d) || term) return null; const [cx, cy] = centre(d); return { x: cx, y: cy + (d.kind === 'tablet' ? 1 : d.h / 2 + 0.8), reach: 1.4, ring: 0.9 }; }
     if (!show || show === 'test') return null;
     // carrying a tablet on the Wi-Fi step: into the range of a Wi-Fi point that has a cable
     const tabH = hands.find(h => h.dev && h.dev.kind === 'tablet');
@@ -1750,6 +1783,165 @@ export function startSolo({ container, myName, colour }) {
     }
   }
   let testFrom = null, testTo = null, compose = null, fx = null;
+
+  // ---- the terminal (T): a command window on a laptop, tablet or web server. ipconfig shows its IP address; the
+  // Send to box sends a message (or, to a web server, a request for its page) to an address the student types.
+  let term = null, termNear = null;
+  const termKinds = ['laptop', 'tablet', 'server'];
+  const promptOf = d => 'C:\\Users\\' + d.name.replace(/\s+/g, '') + '>';
+  const termEl = el('div', { class: 'term', id: 'term', role: 'dialog', 'aria-label': 'Terminal' });
+  termEl.hidden = true;
+  container.closest('.stage')?.appendChild(termEl);
+  const termBtn = el('button', { type: 'button', class: 'key term-key', id: 'termBtn' });
+  termBtn.hidden = true;
+  termBtn.addEventListener('click', () => { if (termNear) openTerm(termNear); });
+  document.querySelector('.hands')?.appendChild(termBtn);
+  // the device you are standing at: within 1.6 tiles of its footprint
+  function nearTermDev() {
+    if (!M || !S.addrs) return null;
+    let best = null, bd = 1.6;
+    for (const d of S.devs) {
+      if (!termKinds.includes(d.kind) || !addrOf(d) || carried(d)) continue;
+      const [x0, y0, w, h] = d.kind === 'tablet' ? [d.tx, d.ty, 1, 1] : [d.X, d.Y, d.w, d.h];
+      const dx = Math.max(x0 - 0.5 - pos.x, 0, pos.x - (x0 + w - 0.5)), dy = Math.max(y0 - 0.5 - pos.y, 0, pos.y - (y0 + h - 0.5));
+      const dd = Math.hypot(dx, dy);
+      if (dd < bd) { bd = dd; best = d; }
+    }
+    return best;
+  }
+  function updateTermNear() {
+    const d = nearTermDev();
+    if (term && !S.devs.includes(term.d)) closeTerm();
+    if (term && d !== term.d && (!d || d.id !== term.d.id)) {
+      const [cx, cy] = centre(term.d); if (Math.hypot(cx - pos.x, cy - pos.y) > 4) closeTerm();
+    }
+    if (d === termNear && termBtn.hidden === !d) return;
+    termNear = d;
+    termBtn.hidden = !d || !!term;
+    if (d) termBtn.innerHTML = '<b>T</b><small>Open ' + d.name + '\'s terminal</small>';
+  }
+  function termPrint(text, cls) { const p = el('div', { class: 'term-l' + (cls ? ' ' + cls : '') }); p.textContent = text; term.out.appendChild(p); term.out.scrollTop = term.out.scrollHeight; }
+  function openTerm(d) {
+    if (!d) { toast('Walk up to a computer first, then press T.', 'hint'); return; }
+    if (hands.some(h => h.dev || h.cable)) { toast('Put down what you are carrying first.', 'hint'); return; }
+    keys.clear();
+    termEl.innerHTML = '';
+    const top = el('div', { class: 'term-top' }, '<b>Terminal: ' + d.name + '</b>');
+    top.appendChild(btn('Close (Esc)', '', closeTerm));
+    const out = el('div', { class: 'term-out', 'aria-live': 'polite' });
+    const line = el('div', { class: 'term-line' }), pr = el('span', { class: 'term-prompt' });
+    pr.textContent = promptOf(d);
+    const inp = el('input', { type: 'text', id: 'termIn', autocomplete: 'off', spellcheck: 'false', 'aria-label': 'Command' });
+    line.append(pr, inp);
+    termEl.append(top, out, line);
+    term = { d, out, inp };
+    if (d.kind !== 'server') {
+      const row = el('div', { class: 'term-send' }), to = el('input', { type: 'text', id: 'termTo', inputmode: 'decimal', autocomplete: 'off', spellcheck: 'false', placeholder: 'an IP address', 'aria-label': 'Send to address' });
+      row.append(el('label', { for: 'termTo' }, 'Send to'), to, btn('Send', 'go', () => sendTo(d, to.value)));
+      to.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendTo(d, to.value); } else if (e.key === 'Escape') closeTerm(); });
+      termEl.appendChild(row);
+      term.to = to;
+    }
+    termPrint('Type a command, then press Enter. Try ipconfig.', 'dim');
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runCmd(inp.value); inp.value = ''; } else if (e.key === 'Escape') closeTerm(); });
+    termEl.hidden = false; termBtn.hidden = true; $('focusMsg').hidden = true;
+    setTimeout(() => inp.focus(), 0);
+    S.opened.add(d.id);
+    log.note('Opened ' + d.name + '\'s terminal.');
+    afterChange();
+  }
+  function closeTerm() { if (!term) return; term = null; termEl.hidden = true; termEl.innerHTML = ''; termNear = null; try { document.activeElement?.blur(); } catch (e) { } window.focus(); updateTermNear(); }
+  function runCmd(raw) {
+    const d = term.d, c = String(raw || '').trim().replace(/\s+/g, ' ');
+    termPrint(promptOf(d) + c);
+    if (!c) return;
+    const lc = c.toLowerCase();
+    if (lc === 'cls' || lc === 'clear') { term.out.innerHTML = ''; return; }
+    if (lc === 'ipconfig' || lc === 'ipconfig /all') {
+      termPrint('Windows IP Configuration');
+      termPrint(d.kind === 'tablet' ? 'Wireless LAN adapter Wi-Fi:' : 'Ethernet adapter Ethernet:');
+      termPrint('   IPv4 Address. . . . . . . . . . . : ' + addrOf(d), 'hl');
+      S.ipc.add(d.id);
+      log.note('ipconfig on ' + d.name + '.');
+      afterChange();
+      return;
+    }
+    termPrint('Type ipconfig to see this computer\'s address.', 'dim');
+  }
+  // send from device a to the address the student typed: checks the format, then who has that address
+  function sendTo(a, typed) {
+    if (busyNet()) { toast('Wait for the last message to arrive.', 'hint'); return; }
+    const bad = ipProblem(typed);
+    if (bad) { toast(bad, 'bad'); term?.to?.focus(); return; }
+    const v = ipNorm(typed), b = S.devs.find(d => addrOf(d) === v) || null;
+    const st = M.m.type === 'tutorial' && M.phase === 'build' && M.m.steps[M.step], want = st && st.term;
+    if (M.m.type === 'jobs') {
+      if (M.phase !== 'build' || !M.job) return;
+      const j = M.job, to = byN(j.to);
+      let wrong = null;
+      if (a.name !== j.from) wrong = 'You sent from ' + a.name + '\'s terminal, but the job says from ' + j.from + '.';
+      else if (!b) wrong = 'No device has the address ' + v + '.';
+      else if (b !== to) wrong = v + ' is ' + b.name + '\'s address, not ' + to.name + '\'s.';
+      if (wrong) {
+        M.have = 0; log.add('Find and Send: ' + wrong, false);
+        toast('Not this time: ' + wrong + ' This job does not count. The way: open ' + to.name + '\'s terminal, type ipconfig, and copy the IPv4 Address exactly.', 'bad');
+        newJob(); drawAll(); return;
+      }
+      M.have = (M.have || 0) + 1; log.add('Find and Send: ' + j.from + ' to ' + j.to + ', right address', true);
+      closeTerm();
+      startMessage(a, b, 'Hello');
+      if (M.have >= M.m.rounds) { M.job = null; finishMission(); toast('Every address right. Mission complete!', 'good'); }
+      else { toast('Right address! ' + M.have + ' of ' + M.m.rounds + ' jobs in a row.', 'good'); newJob(); }
+      drawAll(); return;
+    }
+    if (!b) { toast('No device on this network has the address ' + v + '. Check it with ipconfig on the device you want.', 'bad'); term?.to?.focus(); return; }
+    if (b === a) { toast(v + ' is this computer\'s own address. Type the address of the device you want to send to.', 'bad'); term?.to?.focus(); return; }
+    if (want && want.from && a.name !== want.from) { toast('Use ' + want.from + '\'s terminal for this step.', 'hint'); return; }
+    if (want && want.to && b.name !== want.to && !twinOf(b)) {
+      const t = byN(want.to);
+      toast(v + ' is ' + b.name + '\'s address. This step wants ' + want.to + '\'s address: find it with ipconfig on ' + want.to + (t && t.kind === 'server' ? '.' : '\'s ' + (t ? t.kind : 'device') + '.'), 'bad');
+      log.note('Typed ' + b.name + '\'s address when the step wanted ' + want.to + '.');
+      term?.to?.focus(); return;
+    }
+    closeTerm();
+    if (b.kind === 'server') webFetch(a, b);
+    else startMessage(a, b, 'Hello');
+  }
+  function newJob() {
+    const cl = S.devs.filter(d => d.kind === 'laptop'), all = S.devs.filter(d => d.kind === 'laptop' || d.kind === 'printer');
+    let j = null;
+    for (let k = 0; k < 20; k++) {
+      const f = pick(cl), t = pick(all.filter(x => x !== f));
+      j = { from: f.name, to: t.name };
+      if (!M.job || M.job.from !== j.from || M.job.to !== j.to) break;
+    }
+    M.job = j;
+  }
+  // the address box for a step with setAddr: keep the first three numbers, a free last number from 1 to 254
+  function setAddrBox(who) {
+    const row = el('div', { class: 'ask-row' });
+    const inp = el('input', { type: 'text', id: 'nbSetAddr', inputmode: 'decimal', autocomplete: 'off', spellcheck: 'false', placeholder: 'new address', 'aria-label': 'New address for ' + who.name });
+    inp.style.width = '170px';
+    inp.value = M.setVal || '';
+    inp.addEventListener('input', () => { M.setVal = inp.value; });
+    const go = () => {
+      const bad = ipProblem(inp.value); if (bad) { toast(bad, 'bad'); inp.focus(); return; }
+      const v = ipNorm(inp.value), other = S.devs.find(d => d !== who && addrOf(d)), pre = addrOf(other).split('.').slice(0, 3).join('.');
+      const last = Number(v.split('.')[3]);
+      if (v.split('.').slice(0, 3).join('.') !== pre) { toast('Keep ' + pre + '. at the start, like every other device here. Change only the last number.', 'bad'); inp.focus(); return; }
+      if (last < 1 || last > 254) { toast('The last number must be from 1 to 254.', 'bad'); inp.focus(); return; }
+      const owner = S.devs.find(d => d !== who && addrOf(d) === v);
+      if (owner) { log.note('Gave ' + who.name + ' ' + v + ', which ' + owner.name + ' already has.'); toast(v + ' is ' + owner.name + '\'s address already. Two devices would share it again. Try another last number.', 'bad'); inp.focus(); return; }
+      S.addrs[who.id] = v; M.setVal = '';
+      if (!M.m.typed && who.k3 && who.k3.screen) { who.k3.screen.setAddr(v); who.k3.screen.show(null); }
+      toast(who.name + ' is now ' + v + '. No other device has it, so the network can tell them apart.', 'good');
+      log.note('Gave ' + who.name + ' the free address ' + v + '.');
+      afterChange();
+    };
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+    row.append(inp, btn('Set address', 'go', go));
+    return row;
+  }
   const pages = [];   // printed pages lying in a printer's tray: { until, done() }
 
   // ---- each screen has a queue: what is showing stays up for its time, then the next thing shows. A message being
@@ -2340,6 +2532,7 @@ export function startSolo({ container, myName, colour }) {
       setTimeout(() => box.focus(), 0);
       return;
     }
+    if (M.m.typed) { t.appendChild(el('span', { class: 'small' }, 'Send from a terminal: walk up to a computer and press <b>T</b>.')); return; }
     const list = ends();
     if (list.length < 2) { t.appendChild(el('span', { class: 'small' }, 'Test: put two devices down, then send a message between them.')); return; }
     const from = el('select', { id: 'nbFrom', 'aria-label': 'From' }), to = el('select', { id: 'nbTo', 'aria-label': 'To' });
@@ -2397,6 +2590,7 @@ export function startSolo({ container, myName, colour }) {
     M = { result: null, tested: false, sig: '', racePick: null, raced: false, m, step: 0, phase: m.type === 'fix' ? 'predict' : m.before ? 'ask' : 'build', picks: {}, show: null, walked: false, latched: [], afterOk: !m.after };
     for (const h of hands) { h.cable = null; h.joint = -1; h.dev = null; }
     anim = null; fx = null; stopPackets(); stopWeb(); if (race) { scene.remove(race.g); race = null; } compose = null; queues.clear(); for (const p of pages) p.done(); pages.length = 0; litCables.clear(); cables3 = [];
+    closeTerm();
     m.setup();
     S.ringOrder = null;
     buildWorld();
@@ -2520,6 +2714,7 @@ export function startSolo({ container, myName, colour }) {
 
   // ---- the mission sheet (right) and Walk me through it
   function drawPanel() {
+    const focusSet = document.activeElement && document.activeElement.id === 'nbSetAddr';
     const t = $('mission'), m = M.m;
     t.hidden = false; t.innerHTML = '';
     // All missions (collapsible sections) or Lesson mode (one lesson's activities, in order)
@@ -2584,20 +2779,12 @@ export function startSolo({ container, myName, colour }) {
       const ol = el('ol', { class: 'steps' });
       m.steps.forEach((s, i) => ol.appendChild(el('li', { class: i < M.step || M.phase === 'done' ? 'done' : i === M.step ? 'now' : 'later' }, '<span>' + s.text + '</span>')));
       t.appendChild(ol);
-      // a step that sets a device's address: buttons, a taken address is refused with whose it is
       const cur = M.phase === 'build' && m.steps[M.step];
-      if (cur && cur.pick) {
-        const opts = el('div', { class: 'ask-opts' }), who = byN('Chi');
-        cur.pick.forEach(o => opts.appendChild(btn(o, '', () => {
-          const owner = S.devs.find(d => d !== who && addrOf(d) === o);
-          if (owner) { log.note('Gave Chi ' + o + ', which ' + owner.name + ' already has.'); toast('Not that one: ' + owner.name + ' already has ' + o + '. Two devices would share it.', 'bad'); return; }
-          S.addrs[who.id] = o;
-          if (who.k3 && who.k3.screen) { who.k3.screen.setAddr(o); who.k3.screen.show(null); }
-          toast('Chi is now ' + o + '. No other device has it.', 'good');
-          afterChange();
-        })));
-        t.appendChild(opts);
-      }
+      if (cur && cur.setAddr && byN(cur.setAddr)) { const box = setAddrBox(byN(cur.setAddr)); t.appendChild(box); if (focusSet) setTimeout(() => box.querySelector('input').focus(), 0); }
+    } else if (m.type === 'jobs') {
+      if (!M.job && M.phase === 'build') newJob();
+      if (M.job && M.phase === 'build') t.appendChild(el('div', { class: 'brief' }, '<b>Job ' + ((M.have || 0) + 1) + ' of ' + m.rounds + ':</b> ' + (byN(M.job.to).kind === 'printer' ? 'print from <b>' + M.job.from + '</b>.' : 'send a message from <b>' + M.job.from + '</b> to <b>' + M.job.to + '</b>.')));
+      t.appendChild(el('p', { class: 'note' }, '<b>' + (M.have || 0) + ' of ' + m.rounds + '</b> jobs right in a row. A wrong address means the job does not count, and you start again from 0.'));
     } else if (m.type === 'challenge' && m.breakAtStart) {
       /* an outage: the predictions below are the whole mission */
     } else if (m.type === 'challenge') {
@@ -2672,7 +2859,7 @@ export function startSolo({ container, myName, colour }) {
     else if (m.breakAfter && M.predicted) { /* the result is shown; Try another break above */ }
     else if (m.type === 'client') act.appendChild(btn('Hand it over', 'go', handOver));
     else if (m.type === 'race') { const r = btn(race ? 'Watch...' : 'Run it', 'go', runRace); r.disabled = !!race || !M.racePick; act.appendChild(r); }
-    else if (m.type !== 'tutorial') act.appendChild(btn('Check my network', 'go', checkMission));
+    else if (m.type !== 'tutorial' && m.type !== 'jobs') act.appendChild(btn('Check my network', 'go', checkMission));
     if (m.type === 'tutorial' && M.phase === 'build') act.appendChild(btn('Start again', '', () => start(missionAt)));
     if (!m.noHelp && m.type !== 'challenge' && m.type !== 'client') act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
@@ -2839,6 +3026,7 @@ export function startSolo({ container, myName, colour }) {
     }
     pulse.material.opacity = 0.5 + 0.4 * Math.sin(ts / 180);
     updateGuide(ts); if (guideKey) drawPulse();
+    updateTermNear();
     me.update(dt, { x: pos.x, y: pos.y, face: pos.face, moving, hands: [0, 0].map(() => { const h = hands[0]; return { down: h.down, hold: h.cable ? 'cable' : h.dev ? 'dev' : null }; }) }, true);
     view.follow(pos.x, pos.y);
     view.render(dt);
@@ -2856,6 +3044,7 @@ export function startSolo({ container, myName, colour }) {
     if (!$('cardWrap').hidden) { if (k === 'Escape') $('cardWrap').hidden = true; return; }
     if (k === 'Space') { e.preventDefault(); if (e.repeat) return; }
     if (k === 'KeyM') { setOverview(!overview); return; }
+    if (k === 'KeyT' && !e.repeat) { if (M && S.addrs) openTerm(nearTermDev()); return; }
     if (HAND0.includes(k)) setHand(0, true);
     if (HAND1.includes(k)) setHand(1, true);
     if (k.startsWith('Arrow')) e.preventDefault();
@@ -2872,7 +3061,7 @@ export function startSolo({ container, myName, colour }) {
   // The keys only reach the game when its page has focus (inside the site it is a frame): ask for focus when it loads,
   // and show "Click here to play" over the lab whenever it does not have it.
   const focusMsg = $('focusMsg');
-  const showFocus = () => { const has = document.hasFocus(); focusMsg.hidden = has; if (!has) { keys.clear(); } };
+  const showFocus = () => { const has = document.hasFocus(); focusMsg.hidden = has || !!term; if (!has) { keys.clear(); } };
   focusMsg.addEventListener('click', () => { window.focus(); focusMsg.hidden = true; container.focus?.(); });
   addEventListener('focus', showFocus); addEventListener('blur', showFocus);
   document.addEventListener('pointerdown', () => { if (!document.hasFocus()) window.focus(); });
@@ -2906,6 +3095,6 @@ export function startSolo({ container, myName, colour }) {
   if (lessonMode.on) startLesson(); else start(first);
   requestAnimationFrame(frame);
   // ?debug: drive it from a script (tests only)
-  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race || wx || tr; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, holdFor: (n = 12) => { for (let k = 0; k < n; k++) tick((last || performance.now()) + 33); }, webFetch, traceRoute, handOver, missions: MISSIONS.length, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
+  if (/[?&]debug/.test(location.search)) window.__solo = { get S() { return S; }, get M() { return M; }, get anim() { return anim || fx || pk || race || wx || tr; }, runRace, startMessage, stepAnim, pos, hands, setHand, start, send, CRATES, plugPin, cables: () => cables3, handPos, centre, fits, shelfReachable, free, solidAt, holdFor: (n = 12) => { for (let k = 0; k < n; k++) tick((last || performance.now()) + 33); }, webFetch, traceRoute, handOver, missions: MISSIONS.length, get pk() { return pk; }, grabTarget, get glowing() { return glowPool.filter(x => x.visible).length; }, get outlined() { return outlineG.children.length; }, enqueue, guideTarget, get arrows() { return arrows.count; }, get view() { return view; }, carried, toastText: () => $("toast").textContent, get done() { return done; }, openTerm, closeTerm, nearTermDev, get term() { return term; }, sendTo, frame: (n, ms = 33) => { for (let i = 0; i < n; i++) tick((last || performance.now()) + ms); }, step: n => { for (let i = 0; i < n; i++) { tickNo++; stepCables(); for (let k = 0; k < 2; k++) if (hands[k].dev) carryDevice(k); } drawCables(); }, checkMission, checkPredict, route };
   return { stop() { view?.destroy(); view = null; } };
 }

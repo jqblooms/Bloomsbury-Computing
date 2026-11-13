@@ -114,6 +114,59 @@ DrillData.register("y6-3-3-itrace", {
    "note": "Chi needs an address no other device has. 192.168.1.2 and 192.168.1.9 are taken."
   },
   {
+   "id": "a-cmd",
+   "category": "address",
+   "prompt": "Which command shows a computer's IP address?",
+   "answers": [
+    "ipconfig"
+   ],
+   "distractors": [
+    "print",
+    "send",
+    "open"
+   ],
+   "working": [
+    "Think of the terminal in the 3D lab.",
+    "What did you type before you saw the address?"
+   ],
+   "note": "Type ipconfig in the terminal. The IPv4 Address line is the address."
+  },
+  {
+   "id": "a-bad",
+   "category": "address",
+   "prompt": "Why is 192.168.1.300 not a real IP address?",
+   "answers": [
+    "A number is bigger than 255"
+   ],
+   "distractors": [
+    "It has too many dots",
+    "It has letters in it",
+    "It is too short"
+   ],
+   "working": [
+    "How many numbers, and how big can each one be?",
+    "Look at the last number."
+   ],
+   "note": "Each of the 4 numbers is from 0 to 255, and 300 is bigger than 255."
+  },
+  {
+   "id": "a-typo",
+   "category": "address",
+   "prompt": "Ana means to type Ben's address, but gets one number wrong. What happens?",
+   "answers": [
+    "It goes to a different device, or to no device"
+   ],
+   "distractors": [
+    "It still reaches Ben",
+    "The network fixes the number"
+   ],
+   "working": [
+    "Think of Find and Send in the 3D lab.",
+    "Does the network know who Ana meant?"
+   ],
+   "note": "The network only knows the number she types. A different number is a different address."
+  },
+  {
    "id": "s-where",
    "category": "server",
    "prompt": "Where is a website kept?",

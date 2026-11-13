@@ -5,9 +5,9 @@
 // It writes the plenary drill y6-3-3-itrace and adds the lesson after y6-3-2-iroute in lessons.json.
 // Do Now: 6.3.1 and 6.3.2 (follow the cables; packets and routers); the Extension reuses the y6-3-2-iroute drill.
 // Activities: Network Builder 3D (pages repo NetLab3D/, registry id network-builder-3d) in lesson mode 2.3,
-// part=1 (Every Device Has an Address, Two the Same?) and part=2 (Visit a Website, Trace a Website, Which Server?,
+// part=1 (Every Device Has an Address, Two the Same?, Find and Send: terminals, ipconfig, typed addresses) and part=2 (Visit a Website, Trace a Website, Which Server?,
 // Website Down?, Get the School Online).
-// Terms taught here, each on its own slide: address (IP address), web server and website, World Wide Web, trace.
+// Terms taught here, each on its own slide: address (IP address), terminal and ipconfig, web server and website, World Wide Web, trace.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -158,8 +158,26 @@ steps.push(concept('concept-same', 'Compare: Two the Same?',
   columns(pair('Different addresses', '192.168.1.5', true), pair('The same address', '192.168.1.3', false)) +
   facts(['If two devices have the same address, data cannot tell which one it is for.', 'So every device on a network must have a <strong>different</strong> address, like the houses on a street.'])));
 
+// ---------------------------------------------------------------- terminal and ipconfig
+const termPic = `<div style="font-family:var(--font-mono, monospace);font-size:16px;line-height:1.5;background:#0d0f12;color:#e8e8e8;border-radius:10px;padding:10px 14px;max-width:440px;margin:0 auto">` +
+  `<div style="color:#8fd18f">C:\\Users\\Ben&gt; <span style="color:#fff">ipconfig</span></div><div>Windows IP Configuration</div><div>Ethernet adapter Ethernet:</div>` +
+  `<div style="color:#ffe08a;font-weight:700">&nbsp;&nbsp;&nbsp;IPv4 Address. . . : 192.168.1.23</div></div>` +
+  `<p style="margin:6px 0 0;text-align:center;font-size:15px;color:var(--muted)">Ben's terminal after ipconfig</p>`;
+steps.push(concept('concept-ipconfig', 'Ask the Computer: ipconfig',
+  'In the 3D lab, the screens do not show the addresses. Predict: how could you find out Ben\'s address?',
+  '<p>Ask Ben\'s computer. You type a command, and the computer shows its own address.</p>',
+  columns(facts(['A <strong>terminal</strong> is a window where you type commands for the computer.', 'Type <strong>ipconfig</strong> and press Enter. The computer shows its IP address on the <strong>IPv4 Address</strong> line.',
+    'An IP address is 4 numbers with dots between them. Each number is from 0 to 255.', 'To send to a device, type its address <strong>exactly</strong>.']), termPic)));
+
+steps.push(mcStep('predict-ipconfig', 'Predict: Type the Address', 'Ben typed ipconfig and saw: IPv4 Address 192.168.1.23.', [
+  { prompt: 'Ana wants to send Ben a message. What must she type in the Send to box?', options: ['ipconfig', 'Ben', '192.168.1.23'], correct: 2,
+    explain: 'The Send to box needs Ben\'s IP address: 192.168.1.23. ipconfig is the command that shows it.' },
+  { prompt: 'Ana types 192.168.1.32 by mistake. What happens?', options: ['It still reaches Ben', 'It goes to a different device, or to no device', 'The network fixes the number'], correct: 1,
+    explain: 'The network only knows the number she types. 192.168.1.32 is a different address.' },
+], ['A phone number has one digit wrong. Why does it ring someone else?', 'Each number belongs to one phone. A different number is a different phone.']));
+
 steps.push(embed('activity-1', 'Activity 1: Every Device Has an Address', 'network-builder-3d',
-  'Do the missions on the right in order: Every Device Has an Address, then Two the Same? Predict before you send. Walk with W A S D.',
+  'Do the missions on the right in order: Every Device Has an Address, Two the Same?, then the Find and Send challenge (no help). Walk up to a computer and press <strong>T</strong> to open its terminal.',
   ['Why send a message before you give Chi a new address?', 'You see it fail first. Then you know the address was the problem.'], 'lesson=2.3&part=1'));
 
 // ---------------------------------------------------------------- web server
@@ -210,7 +228,7 @@ steps.push(mcStep('predict-trace', 'Predict: Read the Trace', 'Read the trace.',
 ], ['Why might two websites have traces that end at different addresses?', 'Each website can be kept on its own web server, and each web server has its own address.'], gamesTrace));
 
 steps.push(embed('activity-2', 'Activity 2: Trace a Website', 'network-builder-3d',
-  'Do the missions on the right in order: Visit a Website, Trace a Website, Which Server?, Website Down?, then the Get the School Online challenge (no help).',
+  'Do the missions on the right in order: Visit a Website (find the web server\'s address with ipconfig first), Trace a Website, Which Server?, Website Down?, then the Get the School Online challenge (no help).',
   ['Why trace a website, and not only open it?', 'Opening it only shows the page. The trace shows the way it came and which web server keeps it.'], 'lesson=2.3&part=2'));
 
 const CHK = { routers: 4, server: '192.0.2.10' };
@@ -232,6 +250,9 @@ const cards = [
   card('a-ip', 'address', 'What is an address on the internet called?', ['An IP address'], ['A web server', 'A packet number', 'A router name'], 'Every device on the internet has an IP address.', ['It is a number for each device.', 'It has two letters before the word address.']),
   card('a-same', 'address', 'Ben and Chi both have 192.168.1.3. A message goes to 192.168.1.3. What happens?', ['The network cannot tell which one it is for'], ['Ben gets it, because he was first', 'Chi gets it, because she is newer', 'It goes to both, much faster'], 'Two devices with one address: the network cannot tell which one the data is for.', ['Think of Two the Same? in the 3D lab.', 'What happened when Ana sent to Ben?']),
   card('a-fix', 'address', 'Ana is 192.168.1.2 and the Printer is 192.168.1.9. Which new address can Chi have?', ['192.168.1.6'], ['192.168.1.2', '192.168.1.9'], 'Chi needs an address no other device has. 192.168.1.2 and 192.168.1.9 are taken.', ['Which addresses are taken already?', 'Pick one no other device has.']),
+  card('a-cmd', 'address', 'Which command shows a computer\'s IP address?', ['ipconfig'], ['print', 'send', 'open'], 'Type ipconfig in the terminal. The IPv4 Address line is the address.', ['Think of the terminal in the 3D lab.', 'What did you type before you saw the address?']),
+  card('a-bad', 'address', 'Why is 192.168.1.300 not a real IP address?', ['A number is bigger than 255'], ['It has too many dots', 'It has letters in it', 'It is too short'], 'Each of the 4 numbers is from 0 to 255, and 300 is bigger than 255.', ['How many numbers, and how big can each one be?', 'Look at the last number.']),
+  card('a-typo', 'address', 'Ana means to type Ben\'s address, but gets one number wrong. What happens?', ['It goes to a different device, or to no device'], ['It still reaches Ben', 'The network fixes the number'], 'The network only knows the number she types. A different number is a different address.', ['Think of Find and Send in the 3D lab.', 'Does the network know who Ana meant?']),
   card('s-where', 'server', 'Where is a website kept?', ['On a web server'], ['On your keyboard', 'Inside the Wi-Fi point', 'In every router'], 'Websites are kept on web servers, computers on the internet.', ['Think of Visit a Website in the 3D lab.', 'Where did the page come from?']),
   card('s-what', 'server', 'What does a web server do?', ['Sends web pages to anyone who asks'], ['Joins the laptops in one classroom', 'Prints every web page it keeps', 'Splits the routers into packets'], 'A web server keeps web pages and sends them to anyone who asks.', ['Your laptop asks it for a page.', 'What does it send back?']),
   card('s-back', 'server', 'How does a web page travel from the web server to your laptop?', ['In packets, router to router'], ['In one jump through the air', 'On a USB stick', 'Through the printer'], 'The page is split into packets that cross the internet router to router.', ['Think of last lesson: how does data cross the internet?', 'What passes it on, one step at a time?']),
@@ -272,7 +293,7 @@ const all = JSON.stringify(steps) + JSON.stringify(drill);
 assert(!/[–—]|&mdash;|&ndash;/.test(all), 'dash found');
 assert(!/mario|\bURL\b|\bLAN\b|\bWAN\b|\bDNS\b/i.test(all), 'a term this lesson does not teach');
 // each new term is taught on its own slide: nothing before that slide may use it (pictures included)
-[['concept-address', /address|\bIP\b/i], ['concept-server', /server|website/i], ['concept-www', /world wide web|web page|\bthe web\b(?! server)/i], ['concept-trace', /trac(e|ing)/i]].forEach(([at, rx]) => {
+[['concept-address', /address|\bIP\b/i], ['concept-ipconfig', /ipconfig|terminal/i], ['concept-server', /server|website/i], ['concept-www', /world wide web|web page|\bthe web\b(?! server)/i], ['concept-trace', /trac(e|ing)/i]].forEach(([at, rx]) => {
   const k = steps.findIndex((s) => s.id === at);
   assert(k > 0, 'slide ' + at);
   const before = JSON.stringify(steps.slice(0, k));

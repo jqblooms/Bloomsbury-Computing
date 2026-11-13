@@ -176,3 +176,18 @@ p { margin: 0; }
   .key { width: 88px; }
 }
 .embed body { font-size: 14px; }
+/* the terminal (T): a command window over the top left of the lab; its text stays dark-on-light-proof in both themes */
+.key.term-key { width: 190px; border-color: var(--brand); }
+.term { position: absolute; left: 12px; top: 52px; z-index: 5; width: min(470px, calc(100% - 24px)); max-height: calc(100% - 190px); display: flex; flex-direction: column; border-radius: 10px; border: 1px solid #3a3a3a; background: #0d0f12; color: #e8e8e8; box-shadow: var(--shadow-3); overflow: hidden; }
+.term-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px 6px 12px; background: #23262b; color: #f4f4f0; }
+.term-top .btn { padding: 3px 10px; font-size: .82rem; }
+.term-out { flex: 1 1 auto; min-height: 70px; overflow-y: auto; padding: 8px 12px 0; font: 15px/1.45 var(--font-mono, Consolas, monospace); white-space: pre-wrap; }
+.term-l.dim { color: #a9b0b8; }
+.term-l.hl { color: #ffe08a; font-weight: 700; }
+.term-line { display: flex; align-items: center; gap: 6px; padding: 4px 12px 10px; font: 15px/1.45 var(--font-mono, Consolas, monospace); }
+.term-prompt { color: #8fd18f; white-space: nowrap; }
+.term-line input { flex: 1; min-width: 60px; background: transparent; border: 0; border-bottom: 1px solid #555; color: #fff; font: inherit; padding: 2px 0; outline: none; }
+.term-line input:focus { border-bottom-color: #8fd18f; }
+.term-send { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-top: 1px solid #333; background: #171a1f; }
+.term-send label { font-weight: 700; color: #f4f4f0; white-space: nowrap; }
+.term-send input { flex: 1; min-width: 80px; padding: 5px 8px; border-radius: 6px; border: 1px solid #555; background: #0d0f12; color: #fff; font: 15px var(--font-mono, Consolas, monospace); }
