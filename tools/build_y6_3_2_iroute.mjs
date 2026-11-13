@@ -19,7 +19,7 @@ const re = (source) => ({ __regex: true, source, flags: 'i' });
 const facts = (items) => '<ul class="lesson-facts">' + items.map((i) => `<li>${i}</li>`).join('') + '</ul>';
 const columns = (a, b) => `<div class="lesson-do-now-columns"><div>${a}</div><div>${b}</div></div>`;
 function tps(question, answer, reveal = 'Show the answer') {
-  return `<details class="lesson-tps"><summary><span class="lesson-tps-steps">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span>` +
+  return `<details class="lesson-tps"><summary><span class="lesson-tps-steps">Think <b>→</b> Pair <b>→</b> Share</span>` +
     `<span class="lesson-tps-q">${question}</span><span class="lesson-tps-reveal">${reveal}</span></summary><div class="lesson-tps-a">${answer}</div></details>`;
 }
 const why = (q, a) => tps(q, `<p>${a}</p>`);
@@ -77,15 +77,15 @@ const officePic = pic(380, 200, CABLE(190, 110, 60, 40) + CABLE(190, 110, 320, 4
   SWITCH(190, 110) + LAPTOP(60, 40, 'Ana') + LAPTOP(320, 40, 'Ben') + LAPTOP(60, 170, 'Chi') + PRINTER(320, 170), 'Follow the cables');
 steps.push(mcStep('do-now', 'Do Now: Follow the Cables (1 of 2)', 'Recap of 6.3.1. Look at the cables in the picture.', [
   { prompt: 'Can Ana print on the Printer?', options: ['Yes', 'No'], correct: 0,
-    explain: 'Ana &rarr; Switch &rarr; Printer. Both are plugged into the switch, so the data gets there.' },
+    explain: 'Ana → Switch → Printer. Both are plugged into the switch, so the data gets there.' },
   { prompt: 'Can Chi send Ben a message?', options: ['Yes', 'No'], correct: 1,
     explain: 'Chi has no cable. Chi is not joined to the switch, so nothing can travel from Chi.' },
 ], ['Why might a school join all its laptops into one network?', 'So people can communicate, and share things such as files and one printer.'], officePic));
 steps[steps.length - 1].walkthrough = { title: 'Walk me through it: following the cables', steps: [
   { text: '<strong>A similar network.</strong> Mai and Tom are plugged into a switch. The Printer is plugged in too. Sam is on the table with no cable.', visual: note('Mai, Tom, Printer: cables to the switch. Sam: no cable.') },
-  { text: 'Can Mai print? Start at Mai and follow her cable.', visual: line('Mai &rarr; ' + kw('Switch')) },
-  { text: 'The switch passes the data on. Is the Printer plugged into the switch too? Yes, so the data gets there.', visual: line('Mai &rarr; Switch &rarr; ' + kw('Printer')) },
-  { text: 'Can Sam send Tom a message? Start at Sam. There is no cable to follow, so the message cannot leave.', visual: line('Sam &rarr; ' + kw('?')) },
+  { text: 'Can Mai print? Start at Mai and follow her cable.', visual: line('Mai → ' + kw('Switch')) },
+  { text: 'The switch passes the data on. Is the Printer plugged into the switch too? Yes, so the data gets there.', visual: line('Mai → Switch → ' + kw('Printer')) },
+  { text: 'Can Sam send Tom a message? Start at Sam. There is no cable to follow, so the message cannot leave.', visual: line('Sam → ' + kw('?')) },
   { text: 'Now look at the Do Now picture. Start at Ana, then start at Chi. Follow each cable to the switch, then on.', visual: note('start at the sender, follow the cable') },
 ] };
 
@@ -99,7 +99,7 @@ steps[steps.length - 1].walkthrough = { title: 'Walk me through it: counting cab
   { text: '<strong>A similar question.</strong> 4 laptops and 2 printers are each plugged into one switch. How many cables?', visual: note('4 laptops, 2 printers, 1 switch') },
   { text: 'Each device has one socket, so each device has one cable, going to the switch.', visual: line('1 device = 1 cable') },
   { text: 'Count the devices: 4 laptops and 2 printers.', visual: line('4 + 2 = ' + kw('6') + ' cables') },
-  { text: '<strong>Two rooms.</strong> Room A and Room B each have a switch. A switch has many sockets, so one switch can plug into the other.', visual: line('Switch A &rarr; ' + kw('Switch B')) },
+  { text: '<strong>Two rooms.</strong> Room A and Room B each have a switch. A switch has many sockets, so one switch can plug into the other.', visual: line('Switch A → ' + kw('Switch B')) },
   { text: 'Now do the Do Now: count the devices for part a. For part b, think how few cables join the two switches.', visual: note('one cable each; switches can join switches') },
 ] };
 
@@ -152,7 +152,7 @@ const chain = (labels, caption, broken = -1) => {
   labels.forEach((l, i) => { s += (i === 0 || i === labels.length - 1) ? LAPTOP(xs[i], 60, l) : ROUTER(xs[i], 60, l); });
   return pic(xs[xs.length - 1] + 40, 110, s, caption);
 };
-const routePic = chain(['Ana', 'Home', 'A', 'B', 'School', 'Ben'], 'Ana &rarr; Home router &rarr; Router A &rarr; Router B &rarr; School router &rarr; Ben');
+const routePic = chain(['Ana', 'Home', 'A', 'B', 'School', 'Ben'], 'Ana → Home router → Router A → Router B → School router → Ben');
 steps.push(concept('concept-route', 'Router to Router',
   'Look at the picture. No cable goes straight from Ana to Ben. Predict: how does Ana\'s message still get to Ben?',
   '<p>Each router passes the message on to the next one, one step closer to Ben, until it arrives.</p>',
