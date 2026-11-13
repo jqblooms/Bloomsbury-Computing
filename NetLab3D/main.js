@@ -675,7 +675,8 @@ const ADDR = { id: 'addr', group: 'Addresses and the web', title: 'Every Device 
     { text: 'Type <b>ipconfig</b> and press <b>Enter</b>. The <b>IPv4 Address</b> line is Ben\'s address. Write it in your book. <i>Why? This number is how data finds Ben.</i>', show: 'dev:Ben', done: () => ipcDone('Ben') },
     { text: 'Press <b>Esc</b> to close the terminal. Now find <b>Chi\'s</b> address the same way.', show: 'dev:Chi', done: () => ipcDone('Chi') },
     { text: 'Walk back to <b>Ben\'s laptop</b> and open its terminal. Type Chi\'s address in the <b>Send to</b> box, then press <b>Send</b>. <i>Why exactly? One wrong number is a different device, or no device at all.</i>', show: 'dev:Ben', event: true, term: { from: 'Ben', to: 'Chi' }, done: () => sent('Ben', 'Chi') },
-    { text: 'Print: from <b>Chi\'s</b> terminal, send to the <b>Printer\'s</b> address. Find it first.', show: 'dev:Printer', event: true, term: { from: 'Chi', to: 'Printer' }, done: () => sent('Chi', 'Printer') }
+    { text: 'Walk to the <b>printer</b> and press <b>T</b>. A printer has no terminal: it shows its IP address on its own small screen. Write it down.', show: 'dev:Printer', done: () => ipcDone('Printer') },
+    { text: 'Go to <b>Chi\'s laptop</b> and open its terminal. Type the printer\'s address in <b>Send to</b>, then press <b>Send</b>.', show: 'dev:Chi', event: true, term: { from: 'Chi', to: 'Printer' }, done: () => sent('Chi', 'Printer') }
   ],
   end: 'Every device has its own IP address. ipconfig shows it, and data uses it to find the right device.',
   after: { q: 'Why did Ben need Chi\'s address before sending?', options: ['The address tells the data which device to go to', 'So the message is shorter', 'So the cable works faster'], why: 'Data carries the address of the device it is going to. Without it, the network cannot tell where to send it.' } };
@@ -694,7 +695,7 @@ const SAMEADDR = { id: 'sameaddr', group: 'Addresses and the web', title: 'Two t
   steps: [
     { text: 'Use <b>ipconfig</b> on <b>Ben\'s</b> laptop and on <b>Chi\'s</b> laptop. Are the addresses the same?', show: 'dev:Ben', done: () => ipcDone('Ben') && ipcDone('Chi') },
     { text: 'From <b>Ana\'s</b> terminal, send a message to Ben\'s address. Watch what happens.', show: 'dev:Ana', event: true, term: { from: 'Ana' }, done: () => !!(S.lastTest && S.lastTest.dup) },
-    { text: 'Give Chi a new address: type it in the box below. Keep <b>192.168.1.</b> at the start and change only the last number. No other device may have it, so check them with ipconfig.', done: () => { const c = byN('Chi'); return !!c && !twinOf(c); }, setAddr: 'Chi' },
+    { text: 'Give Chi a new address: type it in the box below. Keep <b>192.168.1.</b> at the start and change only the last number. No other device may have it: check each laptop with ipconfig, and read the printer\'s address on its screen (walk to it and press T).', done: () => { const c = byN('Chi'); return !!c && !twinOf(c); }, setAddr: 'Chi' },
     { text: 'From <b>Ana\'s</b> terminal, send a message to <b>Chi\'s new address</b>.', show: 'dev:Ana', event: true, term: { from: 'Ana', to: 'Chi' }, done: () => sent('Ana', 'Chi') }
   ],
   end: 'Every device needs its own address. Then data can find the right one.',
@@ -707,7 +708,7 @@ const FINDSEND = { id: 'findsend', group: 'Addresses and the web', title: 'Find 
     build([['switch', 320, 190, 'Switch'], ['laptop', 100, 70, 'Ana', a[0]], ['laptop', 320, 50, 'Ben', a[1]], ['laptop', 540, 70, 'Chi', a[2]], ['laptop', 100, 300, 'Dev', a[3]], ['printer', 540, 300, 'Printer', a[4]]],
       [['Ana', 'Switch'], ['Ben', 'Switch'], ['Chi', 'Switch'], ['Dev', 'Switch'], ['Printer', 'Switch']]);
   },
-  intro: 'No help this time. Each job says who sends and who gets it. Find the address you need, then send from the right terminal.',
+  intro: 'No help this time. Each job says who sends and who gets it. Find the address you need (ipconfig on a laptop; a printer shows its address on its screen when you press T), then send from the right terminal.',
   end: 'Three jobs in a row, every address right.',
   after: { q: 'You type an address with one number wrong. What happens?', options: ['It goes to a different device, or to no device', 'It still finds the right device', 'The network fixes the number'], why: 'The network only knows the number you type. One wrong number is a different address.' } };
 const homeToServer = (extra, links, chain) => {
@@ -1787,7 +1788,7 @@ export function startSolo({ container, myName, colour }) {
   // ---- the terminal (T): a command window on a laptop, tablet or web server. ipconfig shows its IP address; the
   // Send to box sends a message (or, to a web server, a request for its page) to an address the student types.
   let term = null, termNear = null;
-  const termKinds = ['laptop', 'tablet', 'server'];
+  const termKinds = ['laptop', 'tablet', 'server', 'printer'];
   const promptOf = d => 'C:\\Users\\' + d.name.replace(/\s+/g, '') + '>';
   const termEl = el('div', { class: 'term', id: 'term', role: 'dialog', 'aria-label': 'Terminal' });
   termEl.hidden = true;
@@ -1818,7 +1819,7 @@ export function startSolo({ container, myName, colour }) {
     if (d === termNear && termBtn.hidden === !d) return;
     termNear = d;
     termBtn.hidden = !d || !!term;
-    if (d) termBtn.innerHTML = '<b>T</b><small>Open ' + d.name + '\'s terminal</small>';
+    if (d) termBtn.innerHTML = '<b>T</b><small>' + (d.kind === 'printer' ? 'Read the printer\'s screen' : 'Open ' + d.name + '\'s terminal') + '</small>';
   }
   function termPrint(text, cls) { const p = el('div', { class: 'term-l' + (cls ? ' ' + cls : '') }); p.textContent = text; term.out.appendChild(p); term.out.scrollTop = term.out.scrollHeight; }
   function openTerm(d) {
@@ -1826,6 +1827,22 @@ export function startSolo({ container, myName, colour }) {
     if (hands.some(h => h.dev || h.cable)) { toast('Put down what you are carrying first.', 'hint'); return; }
     keys.clear();
     termEl.innerHTML = '';
+    // a printer has no terminal: its own small screen shows its address (nothing to type)
+    if (d.kind === 'printer') {
+      const top = el('div', { class: 'term-top' }, '<b>' + d.name + ' screen</b>');
+      top.appendChild(btn('Close (Esc)', '', closeTerm));
+      const scr = el('div', { class: 'printer-screen' }, '<div>Ready</div><div class="hl">IP address: ' + addrOf(d) + '</div>');
+      termEl.append(top, scr);
+      term = { d, out: scr, inp: null };
+      termEl.hidden = false; termBtn.hidden = true; $('focusMsg').hidden = true;
+      const closeBtn = top.querySelector('button');
+      closeBtn.addEventListener('keydown', e => { if (e.key === 'Escape') closeTerm(); });
+      setTimeout(() => closeBtn.focus(), 0);
+      S.opened.add(d.id); S.ipc.add(d.id);
+      log.note('Read the address on ' + d.name + '\'s screen.');
+      afterChange();
+      return;
+    }
     const top = el('div', { class: 'term-top' }, '<b>Terminal: ' + d.name + '</b>');
     top.appendChild(btn('Close (Esc)', '', closeTerm));
     const out = el('div', { class: 'term-out', 'aria-live': 'polite' });
@@ -2860,7 +2877,7 @@ export function startSolo({ container, myName, colour }) {
     else if (m.type === 'client') act.appendChild(btn('Hand it over', 'go', handOver));
     else if (m.type === 'race') { const r = btn(race ? 'Watch...' : 'Run it', 'go', runRace); r.disabled = !!race || !M.racePick; act.appendChild(r); }
     else if (m.type !== 'tutorial' && m.type !== 'jobs') act.appendChild(btn('Check my network', 'go', checkMission));
-    if (m.type === 'tutorial' && M.phase === 'build') act.appendChild(btn('Start again', '', () => start(missionAt)));
+    if ((m.type === 'tutorial' || m.type === 'jobs') && M.phase === 'build') act.appendChild(btn('Start again', '', () => start(missionAt)));
     if (!m.noHelp && m.type !== 'challenge' && m.type !== 'client') act.appendChild(btn('Walk me through it', '', walkMe));
     t.appendChild(act);
     t.appendChild(navBox);
@@ -3044,6 +3061,7 @@ export function startSolo({ container, myName, colour }) {
     if (!$('cardWrap').hidden) { if (k === 'Escape') $('cardWrap').hidden = true; return; }
     if (k === 'Space') { e.preventDefault(); if (e.repeat) return; }
     if (k === 'KeyM') { setOverview(!overview); return; }
+    if (term && k === 'Escape') { closeTerm(); return; }
     if (k === 'KeyT' && !e.repeat) { if (M && S.addrs) openTerm(nearTermDev()); return; }
     if (HAND0.includes(k)) setHand(0, true);
     if (HAND1.includes(k)) setHand(1, true);

@@ -191,3 +191,5 @@ p { margin: 0; }
 .term-send { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-top: 1px solid #333; background: #171a1f; }
 .term-send label { font-weight: 700; color: #f4f4f0; white-space: nowrap; }
 .term-send input { flex: 1; min-width: 80px; padding: 5px 8px; border-radius: 6px; border: 1px solid #555; background: #0d0f12; color: #fff; font: 15px var(--font-mono, Consolas, monospace); }
+.printer-screen { margin: 10px 12px 12px; padding: 10px 14px; border-radius: 8px; background: #1d3b2a; color: #d9f5e3; font: 700 17px/1.5 var(--font-mono, Consolas, monospace); }
+.printer-screen .hl { color: #ffe08a; }

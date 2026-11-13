@@ -539,6 +539,12 @@ const PLAY = [
     sendAddr(ip('Ben')); ok(/own address/.test(s.toastText()), 'own address: ' + s.toastText());
     sendAddr('10.9.9.9'); ok(/No device/.test(s.toastText()), 'no device: ' + s.toastText());
     sendAddr(ip('Chi')); ok(/Message arrived/.test(s.toastText()), 'send to Chi: ' + s.toastText()); stepIs(4, 'sent to Chi');
+    s.openTerm(chi); sendAddr(ip('Printer')); ok(/is Printer's address/.test(s.toastText()) === false, 'printer refused at the read step');
+    stepIs(4, 'cannot skip reading the printer');
+    const prn = byName2('Printer');
+    s.openTerm(prn); ok(!$('termIn') && !$('termTo'), 'the printer has a terminal'); ok($('term').textContent.includes('IP address: ' + ip('Printer')), 'printer screen: ' + $('term').textContent);
+    document.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape', key: 'Escape', bubbles: true })); ok(!s.term, 'Esc did not close the printer screen');
+    stepIs(5, 'printer address read');
     s.openTerm(chi); sendAddr(ip('Printer'));
     expectDone(32); answer(true);
   },
@@ -603,6 +609,51 @@ const PLAY = [
     ok(ip('Chi') === '192.168.1.' + free, 'Chi\'s address did not change');
     s.openTerm(ana); sendAddr(ip('Chi'));
     expectDone(41); answer(true); ok(M().afterOk, 'after question not answered');
+  },
+  // Softlock audit: play every typed mission to the end the way a student must: walk to each device, press T, and use
+  // only the addresses the terminal or the printer's screen shows (never the model's own list).
+  function playByScreens() {
+    const reachOpen = d => {
+      s.closeTerm();
+      const [x0, y0, w, h] = d.kind === 'tablet' ? [d.tx, d.ty, 1, 1] : [d.X, d.Y, d.w, d.h];
+      const spots = [];
+      for (let x = x0 - 1; x <= x0 + w; x++) spots.push([x, y0 + h], [x, y0 - 1]);
+      for (let y = y0; y < y0 + h; y++) spots.push([x0 - 1, y], [x0 + w, y]);
+      for (const [x, y] of spots) { if (!s.free(x, y)) continue; try { walkTo(x, y); } catch (e) { continue; } s.frame(1); if (s.nearTermDev() === d) break; }
+      if (!ok(s.nearTermDev() === d, 'cannot stand at ' + d.name + ' to press T')) throw new Error('unreachable ' + d.name);
+      document.body.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyT', key: 't', bubbles: true }));
+      if (!ok(s.term && s.term.d === d, 'T did not open ' + d.name)) throw new Error('no terminal for ' + d.name);
+    };
+    const read = n => {
+      const d = byName2(n); reachOpen(d);
+      if (d.kind !== 'printer') cmd('ipconfig');
+      const shown = $('term').querySelector('.term-out, .printer-screen'), m = /(\d+\.\d+\.\d+\.\d+)\s*$/.exec(shown ? shown.textContent.trim() : '');
+      s.closeTerm();
+      if (!ok(!!m, 'no address shown for ' + n)) throw new Error('no address for ' + n);
+      return m[1];
+    };
+    const sendFrom = (from, addr) => { reachOpen(byName2(from)); return sendAddr(addr); };
+    const tutorial = (i, plan) => {
+      s.start(i);
+      if (M().phase === 'ask') answer(true);
+      const book = {};
+      for (const [what, a, b] of plan) {
+        if (what === 'read') book[a] = read(a);
+        else if (what === 'send') sendFrom(a, book[b]);
+        else if (what === 'set') { const v = a(book); const inp = $('nbSetAddr'); ok(!!inp, 'no address box'); inp.value = v; inp.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); book.Chi = v; }
+      }
+      expectDone(i); answer(true);
+    };
+    tutorial(32, [['read', 'Ben'], ['read', 'Chi'], ['send', 'Ben', 'Chi'], ['read', 'Printer'], ['send', 'Chi', 'Printer']]);
+    tutorial(41, [['read', 'Ben'], ['read', 'Chi'], ['send', 'Ana', 'Ben'], ['read', 'Ana'], ['read', 'Printer'],
+      ['set', bk => { let k = 2; while (Object.values(bk).includes('192.168.1.' + k)) k++; return '192.168.1.' + k; }], ['send', 'Ana', 'Chi']]);
+    tutorial(33, [['read', 'Web server'], ['send', 'Ana', 'Web server'], ['send', 'Bea', 'Web server']]);
+    // the challenge: three jobs, reading each address it needs
+    s.start(42);
+    for (let k = 0; k < 3 && M().phase !== 'done'; k++) { const j = M().job; sendFrom(j.from, read(j.to)); }
+    expectDone(42); answer(true);
+    // a wrong move never leaves you stuck: Start again is there in every typed mission while it is being played
+    for (const i of [32, 33, 41, 42]) { s.start(i); if (M().phase === 'ask') answer(true); ok([...document.querySelectorAll('#mission button')].some(b => b.textContent === 'Start again'), 'no Start again in mission ' + (i + 1)); }
   },
   function findSend() {
     s.start(42);
