@@ -287,9 +287,6 @@ steps.push(embed('activity-2', 'Activity 2: Accepted or Rejected?', 'string-lab'
   '<strong>What to do:</strong> read the program. Predict Accepted or Rejected for every input, then run it. All five must be right. <strong>Done</strong> when you have passed level 4.',
   ['Why are some inputs exactly on the limit?', 'Inputs on the limit show whether you read the operator: &gt; and &gt;= give different answers there.'], 'activity=check'));
 
-steps.push(embed('lab-3d', 'Lab: Strings in 3D', 'pseudocode-lab-3d', 'Lab: Strings in 3D',
-  '<strong>What to do:</strong> walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Work out LENGTH, UCASE and LCASE on the WORK bench, then sort typed inputs by what the program outputs. A mistake in a challenge starts a new round. <strong>Done</strong> when Count the Characters, UCASE and LCASE, Show It or Store It and Accepted or Too Short? are complete.',
-  ['Why is the string shown with a position under every character?', 'So you can count every character, spaces too, and see which ones a function changes.'], 'lesson=9-2.5'));
 
 // ---------------------------------------------------------------- activity 3: write string code
 steps.push(embed('activity-3', 'Activity 3: Write the String Code', 'drill-y9-2-5-code', 'Activity 3: Write the String Code',

@@ -181,15 +181,6 @@
    "embedQuery": "activity=check"
   },
   {
-   "id": "lab-3d",
-   "label": "Lab: Strings in 3D",
-   "type": "embedded-app",
-   "appId": "pseudocode-lab-3d",
-   "embedContainerId": "y9l25-lab-3d",
-   "content": "<h2 class=\"lesson-h2\">Lab: Strings in 3D</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is the string shown with a position under every character?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>So you can count every character, spaces too, and see which ones a function changes.</p></div></details><p class=\"lesson-lead\"><strong>What to do:</strong> walk round the lab with W A S D. Tap <strong>Space</strong> to pick up a value and tap again to put it down. Work out LENGTH, UCASE and LCASE on the WORK bench, then sort typed inputs by what the program outputs. A mistake in a challenge starts a new round. <strong>Done</strong> when Count the Characters, UCASE and LCASE, Show It or Store It and Accepted or Too Short? are complete.</p><div id=\"y9l25-lab-3d\"></div>",
-   "embedQuery": "lesson=9-2.5"
-  },
-  {
    "id": "activity-3",
    "label": "Activity 3: Write the String Code",
    "type": "embedded-app",
