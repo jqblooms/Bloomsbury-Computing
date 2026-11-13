@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Binary Search Buddies</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <link rel="stylesheet" id="css" href="style.css">
+</head>
+<body>
+<div class="sb">
+  <div class="stage">
+    <div class="view" id="view"></div>
+    <div class="top">
+      <b class="title">Binary Search Buddies</b>
+      <span class="chip" id="findChip"></span>
+      <span class="spacer"></span>
+      <button type="button" class="btn secondary small" id="viewBtn" title="Drag to turn the camera. Use the mouse wheel to zoom.">Reset camera</button>
+    </div>
+    <div class="bubble" id="bubble" hidden></div>
+    <div class="banner" id="banner" role="status" hidden></div>
+    <div class="controls" id="controls">
+      <button type="button" class="btn" id="playBtn">Play</button>
+      <button type="button" class="btn secondary" id="stepBtn">Next step</button>
+      <button type="button" class="btn secondary" id="restartBtn">Restart</button>
+      <button type="button" class="btn secondary" id="setupBtn">Change settings</button>
+    </div>
+    <div class="loading" id="loading">Loading the buddies...</div>
+  </div>
+  <aside class="panel" aria-label="Binary search">
+    <div class="find"><span>Find</span><b id="pTarget">-</b><span class="msg" id="pList"></span></div>
+    <div class="vars">
+      <div class="var low" id="vLow"><small>LOW</small><b>-</b></div>
+      <div class="var high" id="vHigh"><small>HIGH</small><b>-</b></div>
+      <div class="var mid" id="vMid"><small>MID</small><b>-</b></div>
+      <div class="var" id="vFound"><small>FOUND</small><b>-</b></div>
+      <div class="var" id="vCmp"><small>CHECKS</small><b>0</b></div>
+    </div>
+    <div class="calc" id="calc"></div>
+    <p class="say" id="say" aria-live="polite"></p>
+    <ol class="code" id="code" aria-label="Pseudocode"></ol>
+  </aside>
+</div>
+
+<div class="setup-back" id="setup">
+  <form class="setup" id="setupForm" aria-labelledby="setupTitle" novalidate onsubmit="return false">
+    <div>
+      <h2 id="setupTitle">Binary Search Buddies</h2>
+      <p class="lead">Each buddy holds a number. The buddies stand in order. Choose the list and the number to find, then press Start.</p>
+    </div>
+    <div class="cols">
+      <div class="box">
+        <h3>1. The list</h3>
+        <div class="seg" role="radiogroup" aria-label="Values">
+          <label><input type="radio" name="vals" value="random" checked><span>Random numbers</span></label>
+          <label><input type="radio" name="vals" value="typed"><span>Type my own</span></label>
+        </div>
+        <div id="randomBox" class="row">
+          <label for="count">Buddies</label>
+          <input type="range" id="count" min="7" max="31" value="15">
+          <span class="count" id="countOut">15</span>
+          <button type="button" class="btn secondary small" id="newVals">New numbers</button>
+        </div>
+        <div id="typedBox" hidden>
+          <label for="typed" class="msg">Whole numbers, smallest first, with commas between them (up to 31).</label>
+          <textarea id="typed" spellcheck="false" autocomplete="off">4, 9, 15, 22, 30, 38, 41, 57, 63, 70, 88</textarea>
+          <div class="row"><button type="button" class="btn secondary small" id="sortBtn">Sort them for me</button></div>
+        </div>
+        <p class="msg" id="listMsg" aria-live="polite"></p>
+        <div class="preview" id="preview" aria-label="The list"></div>
+      </div>
+      <div class="box">
+        <h3>2. The number to find</h3>
+        <div class="seg" role="radiogroup" aria-label="Target">
+          <label><input type="radio" name="tmode" value="pick" checked><span>Pick from the list</span></label>
+          <label><input type="radio" name="tmode" value="type"><span>Type a number</span></label>
+        </div>
+        <div id="pickBox" class="row"><select id="pick" aria-label="Number to find"></select></div>
+        <div id="typeBox" class="row" hidden><input type="text" id="typedTarget" inputmode="numeric" autocomplete="off" aria-label="Number to find" value="50"><span class="msg">It does not have to be in the list.</span></div>
+        <div class="row">
+          <button type="button" class="btn secondary small" data-quick="first">First</button>
+          <button type="button" class="btn secondary small" data-quick="last">Last</button>
+          <button type="button" class="btn secondary small" data-quick="any">Any</button>
+          <button type="button" class="btn secondary small" data-quick="missing">Not in the list</button>
+        </div>
+        <p class="msg" id="targetMsg" aria-live="polite"></p>
+        <h3>3. The middle</h3>
+        <div class="seg" role="radiogroup" aria-label="Middle">
+          <label><input type="radio" name="mid" value="down" checked><span>Round down</span></label>
+          <label><input type="radio" name="mid" value="up"><span>Round up</span></label>
+        </div>
+        <p class="mono" id="midRule"></p>
+        <h3>4. How it plays</h3>
+        <div class="row">
+          <div class="seg" role="radiogroup" aria-label="Play">
+            <label><input type="radio" name="play" value="step" checked><span>Step by step</span></label>
+            <label><input type="radio" name="play" value="auto"><span>Auto play</span></label>
+          </div>
+          <div class="seg" role="radiogroup" aria-label="Speed">
+            <label><input type="radio" name="speed" value="slow"><span>Slow</span></label>
+            <label><input type="radio" name="speed" value="normal" checked><span>Normal</span></label>
+            <label><input type="radio" name="speed" value="fast"><span>Fast</span></label>
+          </div>
+        </div>
+        <p class="msg" id="playMsg"></p>
+      </div>
+    </div>
+    <div class="go">
+      <span class="msg bad" id="startMsg" aria-live="polite"></span>
+      <button type="button" class="btn secondary" id="cancelBtn" hidden>Back</button>
+      <button type="submit" class="btn" id="startBtn">Start</button>
+    </div>
+  </form>
+</div>
+
+<script>
+// Binary Search Buddies: a 3D binary search acted out by little characters holding signs. js/search.js is the
+// search itself (tested by tools/test_search_buddies.mjs); stage.js, buddy.js and main.js are the 3D parts, loaded
+// as modules with the page's bcv. three.js is the copy in NetLab3D/lib, shared with the other 3D labs.
+(function () {
+  var params = new URLSearchParams(location.search);
+  var v = encodeURIComponent(params.get('bcv') || '1');
+  if (params.get('embed') === '1') document.documentElement.classList.add('embed');
+  document.getElementById('css').href = 'style.css?v=' + v;
+  var plain = document.createElement('script');
+  plain.src = 'js/search.js?v=' + v;
+  plain.onload = function () {
+    var imports = { three: '../NetLab3D/lib/three.module.min.js' };
+    ['stage', 'buddy', 'main'].forEach(function (n) { imports['./js/' + n + '.js'] = './js/' + n + '.js?v=' + v; });
+    var map = document.createElement('script');
+    map.type = 'importmap';
+    map.textContent = JSON.stringify({ imports: imports });
+    document.head.appendChild(map);
+    var boot = document.createElement('script');
+    boot.type = 'module';
+    boot.textContent = "import('./js/main.js').then(function (m) { m.start(); })" +
+      ".catch(function (e) { document.getElementById('loading').textContent = 'This computer could not start the 3D buddies. Try the Linear and Binary Search animation instead.'; console.error(e); });";
+    document.body.appendChild(boot);
+  };
+  document.body.appendChild(plain);
+  if (params.get('embed') === '1' && window.parent !== window) {
+    try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: 640 }, '*'); } catch (e) {}
+  }
+})();
+</script>
+</body>
+</html>
