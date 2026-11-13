@@ -1,0 +1,311 @@
+{
+ "id": "y6-3-3-itrace",
+ "label": "6.3.3: Addresses and the Web",
+ "steps": [
+  {
+   "id": "do-now",
+   "label": "Do Now: Follow the Cables (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y6-33-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Follow the Cables (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a home network need a router before it can reach the school network?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A switch joins devices inside one network. A router joins one network to another.</p></div></details><p class=\"lesson-lead\">Recap of 6.3.1 and 6.3.2. Look at the cables in the picture.</p><div class=\"igame-two-col\"><div><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 480 290\" style=\"width:100%;max-width:480px;height:auto\"><rect x=\"10\" y=\"10\" width=\"250\" height=\"270\" rx=\"12\" fill=\"none\" stroke=\"var(--muted)\" stroke-width=\"2\" stroke-dasharray=\"6 5\"/><text x=\"20\" y=\"30\" fill=\"var(--muted)\" font-size=\"15\" font-weight=\"700\">Home</text><rect x=\"360\" y=\"10\" width=\"110\" height=\"270\" rx=\"12\" fill=\"none\" stroke=\"var(--muted)\" stroke-width=\"2\" stroke-dasharray=\"6 5\"/><text x=\"370\" y=\"30\" fill=\"var(--muted)\" font-size=\"15\" font-weight=\"700\">School</text><line x1=\"130\" y1=\"140\" x2=\"50\" y2=\"225\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"130\" y1=\"140\" x2=\"210\" y2=\"225\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"130\" y1=\"140\" x2=\"310\" y2=\"140\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"310\" y1=\"140\" x2=\"415\" y2=\"140\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"415\" y1=\"140\" x2=\"415\" y2=\"225\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"84\" y=\"126\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"92\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"102\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"112\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"122\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"132\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"142\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"152\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"162\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"130\" y=\"172\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\"></text></g><text x=\"130\" y=\"118\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Switch</text><g><rect x=\"26\" y=\"201\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"31\" y=\"206\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"19\" y=\"233\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"50\" y=\"259\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ana</text></g><g><rect x=\"195\" y=\"197\" width=\"30\" height=\"15\" rx=\"2\" fill=\"#f4f6fa\" stroke=\"var(--ink-soft)\"/><rect x=\"182\" y=\"210\" width=\"56\" height=\"28\" rx=\"6\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"210\" y=\"259\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Printer</text></g><g><rect x=\"166\" y=\"36\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"171\" y=\"41\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"159\" y=\"68\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"190\" y=\"94\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text></g><g><line x1=\"290\" y1=\"128\" x2=\"284\" y2=\"110\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"330\" y1=\"128\" x2=\"336\" y2=\"110\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"276\" y=\"128\" width=\"68\" height=\"24\" rx=\"6\" fill=\"#fde7c7\" stroke=\"#c77700\" stroke-width=\"2\"/><circle cx=\"290\" cy=\"140\" r=\"3\" fill=\"#2f9e44\"/><circle cx=\"300\" cy=\"140\" r=\"3\" fill=\"#2f9e44\"/><text x=\"310\" y=\"170\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Router</text></g><g><rect x=\"369\" y=\"126\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"377\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"387\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"397\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"407\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"417\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"427\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"437\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"447\" y=\"135\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"415\" y=\"172\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\"></text></g><g><rect x=\"391\" y=\"201\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"396\" y=\"206\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"384\" y=\"233\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"415\" y=\"259\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Chi</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Follow the cables</figcaption></figure></div><div id=\"y6-33-do-now\"></div></div>",
+   "items": [
+    {
+     "prompt": "Can Ben print on the Printer?",
+     "options": [
+      "Yes",
+      "No"
+     ],
+     "correct": 1,
+     "explain": "Ben has no cable. He is not joined to the switch, so nothing can travel from Ben."
+    },
+    {
+     "prompt": "Can Ana send Chi at school a message?",
+     "options": [
+      "Yes",
+      "No"
+     ],
+     "correct": 0,
+     "explain": "Ana, then the switch, then the router, then the school switch, then Chi. The router joins the two networks."
+    }
+   ],
+   "walkthrough": {
+    "title": "Walk me through it: following the cables",
+    "steps": [
+     {
+      "text": "<strong>A similar picture.</strong> At home, Mai and Tom are plugged into a switch. The switch is plugged into a router. Lee is at the library, on a network joined to the same router. Sam has no cable.",
+      "visual": "<div class=\"wt-note\">Mai, Tom: cables to the switch. Switch to router. Router to the library. Sam: no cable.</div>"
+     },
+     {
+      "text": "Can Mai print? Start at Mai and follow her cable to the switch.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">Mai &rarr; <span class=\"wt-hl\">Switch</span></p>"
+     },
+     {
+      "text": "Is the printer plugged into that switch too? Then the data can get there.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">Mai &rarr; Switch &rarr; <span class=\"wt-hl\">Printer</span></p>"
+     },
+     {
+      "text": "Can Mai send Lee a message? Lee is on another network. Look for a router between the two networks.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">Mai &rarr; Switch &rarr; <span class=\"wt-hl\">Router</span> &rarr; Library &rarr; Lee</p>"
+     },
+     {
+      "text": "Can Sam send anything? Start at Sam. There is no cable to follow, so nothing can leave.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">Sam &rarr; <span class=\"wt-hl\">?</span></p>"
+     },
+     {
+      "text": "Now look at the Do Now picture. Start at the sender, and follow each cable one step at a time.",
+      "visual": "<div class=\"wt-note\">start at the sender, follow the cables</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-2",
+   "label": "Do Now: Packets and Routers (2 of 2)",
+   "type": "short-answer-validation",
+   "validatorId": "y6-33-do-now-2",
+   "validatorKey": "y6_33_do_now_2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Packets and Routers (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is a photo split into small packets before it crosses the internet?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>If one small packet is lost, only that one is sent again. And many people can share the cables, taking turns.</p></div></details><p class=\"lesson-lead\">Recap of 6.3.2. Type a number for each.</p><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6-33-do-now-2-a\">A photo is split into packets numbered 1 to 9. Packets 1, 2, 3, 5, 6, 7 and 9 arrive. How many packets are missing?</label><input id=\"y6-33-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Packets and Routers (2 of 2) part a\" autocomplete=\"off\" inputmode=\"decimal\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-33-do-now-2-b\">Ana's message goes: Ana, Home router, Router A, Router B, School router, Ben. How many routers does it pass through?</label><input id=\"y6-33-do-now-2-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-b\" aria-label=\"Do Now: Packets and Routers (2 of 2) part b\" autocomplete=\"off\" inputmode=\"decimal\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6-33-do-now-2-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6-33-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div>",
+   "walkthrough": {
+    "title": "Walk me through it: packets and routers",
+    "steps": [
+     {
+      "text": "<strong>A similar question.</strong> Packets numbered 1 to 8 are sent. Packets 1, 2, 4, 5, 6, 7 and 8 arrive.",
+      "visual": "<div class=\"wt-note\">sent: 1 to 8</div>"
+     },
+     {
+      "text": "Write every number from 1 to 8. Cross out each packet that arrived.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">1 2 <span class=\"wt-hl\">3</span> 4 5 6 7 8</p>"
+     },
+     {
+      "text": "The numbers left are the missing packets. Here only packet 3 is left, so <span class=\"wt-hl\">1</span> packet is missing.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">missing: <span class=\"wt-hl\">1</span></p>"
+     },
+     {
+      "text": "<strong>Routers.</strong> Mai, Home router, Router X, School router, Tom. Mai and Tom are laptops, so do not count them.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\">Home router, Router X, School router</p>"
+     },
+     {
+      "text": "Count only the routers.",
+      "visual": "<p style=\"margin:10px 0 0;text-align:center;font-size:20px;font-family:var(--font-mono, monospace)\"><span class=\"wt-hl\">3</span> routers</p>"
+     },
+     {
+      "text": "Now do the Do Now in the same way: cross out what arrived, then count only the routers.",
+      "visual": "<div class=\"wt-note\">cross out, then count</div>"
+     }
+    ]
+   }
+  },
+  {
+   "id": "do-now-ext",
+   "label": "Extension: Do Now Challenge",
+   "type": "embedded-app",
+   "appId": "drill-y6-3-2-iroute",
+   "embedContainerId": "y6-33-do-now-ext",
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise last lesson before we learn something new?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Today builds on routers and packets. If you remember them, today is easier.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try more questions from last lesson. Stuck? Turn on <strong>I need help</strong>.</p><div id=\"y6-33-do-now-ext\"></div>"
+  },
+  {
+   "id": "title",
+   "label": "Finding Things on the Internet",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">6.3 Computer Networks</p><h2 class=\"lesson-h2\">Finding Things on the Internet</h2><p>Year 6</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> how data finds the right computer.</li><li>Where the pages you look at on the internet come from.</li><li>Follow data to the right computer in the 3D lab.</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">There are millions of computers on the internet. Predict: how does a message find the one computer it is for?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each computer has something that is only its own, and the message carries it, so the routers know where to send it.</p></div></details>"
+  },
+  {
+   "id": "concept-address",
+   "label": "Every Device Has an Address",
+   "content": "<h2 class=\"lesson-h2\">Every Device Has an Address</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A class has 30 laptops on one network. Ana sends a message to Ben. Predict: how does the network know which laptop is Ben's?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each laptop has its own number. The message carries Ben's number, so it goes to Ben and no one else.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>Every device on a network has its own <strong>address</strong>: a number, like 192.168.1.3.</li><li>Data carries the address of the device it is going to.</li><li>Switches and routers read the address and send the data the right way.</li><li>On the internet it is called an <strong>IP address</strong>. Every device on the internet has one.</li></ul></div><div><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 480 300\" style=\"width:100%;max-width:480px;height:auto\"><line x1=\"240\" y1=\"150\" x2=\"70\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"240\" y1=\"150\" x2=\"410\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"240\" y1=\"150\" x2=\"70\" y2=\"210\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"240\" y1=\"150\" x2=\"410\" y2=\"210\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"194\" y=\"136\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"202\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"212\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"222\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"232\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"242\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"252\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"262\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"272\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"240\" y=\"182\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Switch</text></g><g><rect x=\"46\" y=\"26\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"51\" y=\"31\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"39\" y=\"58\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"70\" y=\"84\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ana</text><text x=\"70\" y=\"102\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">192.168.1.2</text></g><g><rect x=\"386\" y=\"26\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"391\" y=\"31\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"379\" y=\"58\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"410\" y=\"84\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text><text x=\"410\" y=\"102\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">192.168.1.3</text></g><g><rect x=\"46\" y=\"186\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"51\" y=\"191\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"39\" y=\"218\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"70\" y=\"244\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Chi</text><text x=\"70\" y=\"262\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">192.168.1.4</text></g><g><rect x=\"395\" y=\"182\" width=\"30\" height=\"15\" rx=\"2\" fill=\"#f4f6fa\" stroke=\"var(--ink-soft)\"/><rect x=\"382\" y=\"195\" width=\"56\" height=\"28\" rx=\"6\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"410\" y=\"244\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Printer</text><text x=\"410\" y=\"262\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">192.168.1.9</text></g><g><rect x=\"160\" y=\"24\" width=\"160\" height=\"32\" rx=\"6\" fill=\"var(--surface)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><text x=\"240\" y=\"46\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">To: 192.168.1.3</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Ana's message carries Ben's address</figcaption></figure></div></div>"
+  },
+  {
+   "id": "predict-address",
+   "label": "Predict: Who Gets It?",
+   "type": "multiple-choice",
+   "containerId": "y6-33-predict-address",
+   "content": "<h2 class=\"lesson-h2\">Predict: Who Gets It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A pizza is going to a house on a long street. Why does the driver need the house number, not only the street name?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Many houses are on one street. The number picks out exactly one house.</p></div></details><p class=\"lesson-lead\">Look at the address under each device.</p><div class=\"igame-two-col\"><div><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 480 300\" style=\"width:100%;max-width:480px;height:auto\"><line x1=\"240\" y1=\"150\" x2=\"70\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"240\" y1=\"150\" x2=\"410\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"240\" y1=\"150\" x2=\"70\" y2=\"210\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"240\" y1=\"150\" x2=\"410\" y2=\"210\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"194\" y=\"136\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"202\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"212\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"222\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"232\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"242\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"252\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"262\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"272\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"240\" y=\"182\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Switch</text></g><g><rect x=\"46\" y=\"26\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"51\" y=\"31\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"39\" y=\"58\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"70\" y=\"84\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ana</text><text x=\"70\" y=\"102\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">10.0.0.5</text></g><g><rect x=\"386\" y=\"26\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"391\" y=\"31\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"379\" y=\"58\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"410\" y=\"84\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text><text x=\"410\" y=\"102\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">10.0.0.8</text></g><g><rect x=\"46\" y=\"186\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"51\" y=\"191\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"39\" y=\"218\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"70\" y=\"244\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Chi</text><text x=\"70\" y=\"262\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">10.0.0.2</text></g><g><rect x=\"395\" y=\"182\" width=\"30\" height=\"15\" rx=\"2\" fill=\"#f4f6fa\" stroke=\"var(--ink-soft)\"/><rect x=\"382\" y=\"195\" width=\"56\" height=\"28\" rx=\"6\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"410\" y=\"244\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Printer</text><text x=\"410\" y=\"262\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">10.0.0.7</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Each device has its own address</figcaption></figure></div><div id=\"y6-33-predict-address\"></div></div>",
+   "items": [
+    {
+     "prompt": "Ana sends a message to 10.0.0.2. Which device gets it?",
+     "options": [
+      "Ben",
+      "Chi",
+      "The Printer"
+     ],
+     "correct": 1,
+     "explain": "Chi's address is 10.0.0.2, so the message goes to Chi."
+    },
+    {
+     "prompt": "Ben prints. Which address does his data carry?",
+     "options": [
+      "10.0.0.7",
+      "10.0.0.8",
+      "10.0.0.5"
+     ],
+     "correct": 0,
+     "explain": "The data carries the address of the device it is going to: the Printer, 10.0.0.7."
+    }
+   ]
+  },
+  {
+   "id": "concept-same",
+   "label": "Compare: Two the Same?",
+   "content": "<h2 class=\"lesson-h2\">Compare: Two the Same?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Look at the right picture. Ben and Chi both have the address 192.168.1.3. Predict: a message goes to 192.168.1.3. What happens, and why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The network cannot tell which laptop the message is for. It may not arrive, or it may go to the wrong laptop.</p></div></details><div class=\"lesson-do-now-columns\"><div><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 300 230\" style=\"width:100%;max-width:300px;height:auto\"><text x=\"150\" y=\"22\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"17\" font-weight=\"700\">Different addresses</text><line x1=\"150\" y1=\"150\" x2=\"60\" y2=\"70\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"150\" y1=\"150\" x2=\"240\" y2=\"70\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"104\" y=\"136\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"112\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"122\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"132\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"142\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"152\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"162\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"172\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"182\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"150\" y=\"182\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Switch</text></g><g><rect x=\"36\" y=\"46\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"41\" y=\"51\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"29\" y=\"78\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"60\" y=\"104\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text><text x=\"60\" y=\"122\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">192.168.1.3</text></g><g><rect x=\"216\" y=\"46\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"221\" y=\"51\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"209\" y=\"78\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"240\" y=\"104\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Chi</text><text x=\"240\" y=\"122\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">192.168.1.5</text></g><g><rect x=\"70\" y=\"189\" width=\"160\" height=\"32\" rx=\"6\" fill=\"var(--surface)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><text x=\"150\" y=\"211\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">To: 192.168.1.3</text></g><path d=\"M254 190 L264 201 L283 178\" fill=\"none\" stroke=\"#2f9e44\" stroke-width=\"5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Only Ben has 192.168.1.3</figcaption></figure></div><div><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 300 230\" style=\"width:100%;max-width:300px;height:auto\"><text x=\"150\" y=\"22\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"17\" font-weight=\"700\">The same address</text><line x1=\"150\" y1=\"150\" x2=\"60\" y2=\"70\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"150\" y1=\"150\" x2=\"240\" y2=\"70\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><rect x=\"104\" y=\"136\" width=\"92\" height=\"28\" rx=\"5\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><rect x=\"112\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"122\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"132\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"142\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"152\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"162\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"172\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><rect x=\"182\" y=\"145\" width=\"7\" height=\"7\" rx=\"1\" fill=\"var(--surface)\" stroke=\"var(--brand)\"/><text x=\"150\" y=\"182\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Switch</text></g><g><rect x=\"36\" y=\"46\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"41\" y=\"51\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"29\" y=\"78\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"60\" y=\"104\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ben</text><text x=\"60\" y=\"122\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">192.168.1.3</text></g><g><rect x=\"216\" y=\"46\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"221\" y=\"51\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"209\" y=\"78\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"240\" y=\"104\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Chi</text><text x=\"240\" y=\"122\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">192.168.1.3</text></g><g><rect x=\"70\" y=\"189\" width=\"160\" height=\"32\" rx=\"6\" fill=\"var(--surface)\" stroke=\"var(--brand)\" stroke-width=\"2\"/><text x=\"150\" y=\"211\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">To: 192.168.1.3</text></g><text x=\"268\" y=\"202\" text-anchor=\"middle\" fill=\"#c92a2a\" font-size=\"34\" font-weight=\"800\">?</text></svg><figcaption style=\"font-size:15px;color:var(--muted)\">Ben and Chi both have 192.168.1.3</figcaption></figure></div></div><ul class=\"lesson-facts\"><li>If two devices have the same address, data cannot tell which one it is for.</li><li>So every device on a network must have a <strong>different</strong> address, like the houses on a street.</li></ul>"
+  },
+  {
+   "id": "activity-1",
+   "label": "Activity 1: Every Device Has an Address",
+   "type": "embedded-app",
+   "appId": "network-builder-3d",
+   "embedContainerId": "y6-33-activity-1",
+   "content": "<h2 class=\"lesson-h2\">Activity 1: Every Device Has an Address</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why send a message before you give Chi a new address?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You see it fail first. Then you know the address was the problem.</p></div></details><p class=\"lesson-lead\">Do the missions on the right in order: Every Device Has an Address, then Two the Same? Predict before you send. Walk with W A S D.</p><div id=\"y6-33-activity-1\"></div>",
+   "embedQuery": "lesson=2.3&part=1"
+  },
+  {
+   "id": "concept-server",
+   "label": "Where Is a Website Kept?",
+   "content": "<h2 class=\"lesson-h2\">Where Is a Website Kept?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">You open a website about cats. It is not saved on your laptop. Predict: where do its pages come from?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>From another computer, far away on the internet. It keeps the pages and sends them to anyone who asks.</p></div></details><ul class=\"lesson-facts\"><li>A <strong>website</strong>, like www.cats.example, is kept on a <strong>web server</strong>.</li><li>A web server is a computer on the internet. It has its own address.</li><li>Your laptop asks the web server for a page. The web server sends the page back, in packets, router to router.</li></ul><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 560 230\" style=\"width:100%;max-width:560px;height:auto\"><line x1=\"50\" y1=\"120\" x2=\"170\" y2=\"120\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"170\" y1=\"120\" x2=\"300\" y2=\"120\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"300\" y1=\"120\" x2=\"470\" y2=\"120\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"70\" y1=\"40\" x2=\"440\" y2=\"40\" stroke=\"var(--brand)\" stroke-width=\"3\"/><path d=\"M438 33 L450 40 L438 47 Z\" fill=\"var(--brand)\"/><text x=\"260\" y=\"30\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"15\" font-weight=\"700\">Asks for the page</text><line x1=\"450\" y1=\"215\" x2=\"80\" y2=\"215\" stroke=\"var(--brand)\" stroke-width=\"3\"/><path d=\"M82 208 L70 215 L82 222 Z\" fill=\"var(--brand)\"/><text x=\"260\" y=\"210\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"15\" font-weight=\"700\">Sends the page back</text><g><rect x=\"26\" y=\"96\" width=\"48\" height=\"32\" rx=\"4\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"31\" y=\"101\" width=\"38\" height=\"22\" rx=\"2\" fill=\"var(--brand-soft)\"/><rect x=\"19\" y=\"128\" width=\"62\" height=\"7\" rx=\"3\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><text x=\"50\" y=\"154\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Ana</text></g><g><line x1=\"150\" y1=\"108\" x2=\"144\" y2=\"90\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"190\" y1=\"108\" x2=\"196\" y2=\"90\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"136\" y=\"108\" width=\"68\" height=\"24\" rx=\"6\" fill=\"#fde7c7\" stroke=\"#c77700\" stroke-width=\"2\"/><circle cx=\"150\" cy=\"120\" r=\"3\" fill=\"#2f9e44\"/><circle cx=\"160\" cy=\"120\" r=\"3\" fill=\"#2f9e44\"/><text x=\"170\" y=\"150\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Home</text></g><g><line x1=\"280\" y1=\"108\" x2=\"274\" y2=\"90\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"320\" y1=\"108\" x2=\"326\" y2=\"90\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"266\" y=\"108\" width=\"68\" height=\"24\" rx=\"6\" fill=\"#fde7c7\" stroke=\"#c77700\" stroke-width=\"2\"/><circle cx=\"280\" cy=\"120\" r=\"3\" fill=\"#2f9e44\"/><circle cx=\"290\" cy=\"120\" r=\"3\" fill=\"#2f9e44\"/><text x=\"300\" y=\"150\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Router A</text></g><g><rect x=\"448\" y=\"78\" width=\"44\" height=\"64\" rx=\"5\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"456\" y=\"87\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><rect x=\"456\" y=\"102\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><rect x=\"456\" y=\"117\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><circle cx=\"480\" cy=\"132\" r=\"3\" fill=\"#2f9e44\"/><text x=\"470\" y=\"162\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">Web server</text><text x=\"470\" y=\"180\" text-anchor=\"middle\" fill=\"var(--brand)\" font-size=\"14\" font-weight=\"700\" font-family=\"var(--font-mono, monospace)\">203.0.113.7</text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">www.cats.example is kept on this web server</figcaption></figure>"
+  },
+  {
+   "id": "concept-www",
+   "label": "The Internet and the Web",
+   "content": "<h2 class=\"lesson-h2\">The Internet and the Web</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">People say \"the internet\" and \"the web\" as if they mean the same thing. Predict: are they the same? Why, or why not?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>No. The internet is the networks and routers that carry data. The web is the web pages on web servers. The internet carries the web pages to you.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>The <strong>World Wide Web</strong> (the web) is all the web pages kept on web servers.</li><li>The <strong>internet</strong> is the networks joined by routers. It carries the web pages to you.</li><li>The internet carries other things too, like messages and video calls.</li></ul></div><div><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 300 150\" style=\"width:100%;max-width:300px;height:auto\"><line x1=\"40\" y1=\"80\" x2=\"150\" y2=\"80\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><line x1=\"150\" y1=\"80\" x2=\"260\" y2=\"80\" stroke=\"var(--ink-soft)\" stroke-width=\"5\" stroke-linecap=\"round\"/><g><line x1=\"20\" y1=\"68\" x2=\"14\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"60\" y1=\"68\" x2=\"66\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"6\" y=\"68\" width=\"68\" height=\"24\" rx=\"6\" fill=\"#fde7c7\" stroke=\"#c77700\" stroke-width=\"2\"/><circle cx=\"20\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><circle cx=\"30\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><text x=\"40\" y=\"110\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\"></text></g><g><line x1=\"130\" y1=\"68\" x2=\"124\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"170\" y1=\"68\" x2=\"176\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"116\" y=\"68\" width=\"68\" height=\"24\" rx=\"6\" fill=\"#fde7c7\" stroke=\"#c77700\" stroke-width=\"2\"/><circle cx=\"130\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><circle cx=\"140\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><text x=\"150\" y=\"110\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\"></text></g><g><line x1=\"240\" y1=\"68\" x2=\"234\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><line x1=\"280\" y1=\"68\" x2=\"286\" y2=\"50\" stroke=\"var(--ink-soft)\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"226\" y=\"68\" width=\"68\" height=\"24\" rx=\"6\" fill=\"#fde7c7\" stroke=\"#c77700\" stroke-width=\"2\"/><circle cx=\"240\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><circle cx=\"250\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><text x=\"260\" y=\"110\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\"></text></g></svg><figcaption style=\"font-size:15px;color:var(--muted)\">The internet: networks joined by routers</figcaption></figure><figure style=\"margin:0;text-align:center\"><svg viewBox=\"0 0 300 150\" style=\"width:100%;max-width:300px;height:auto\"><g><rect x=\"38\" y=\"26\" width=\"44\" height=\"64\" rx=\"5\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"46\" y=\"35\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><rect x=\"46\" y=\"50\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><rect x=\"46\" y=\"65\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><circle cx=\"70\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><text x=\"60\" y=\"110\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\"></text></g><g><rect x=\"128\" y=\"26\" width=\"44\" height=\"64\" rx=\"5\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"136\" y=\"35\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><rect x=\"136\" y=\"50\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><rect x=\"136\" y=\"65\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><circle cx=\"160\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><text x=\"150\" y=\"110\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\"></text></g><g><rect x=\"218\" y=\"26\" width=\"44\" height=\"64\" rx=\"5\" fill=\"var(--surface-3)\" stroke=\"var(--ink-soft)\" stroke-width=\"2\"/><rect x=\"226\" y=\"35\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><rect x=\"226\" y=\"50\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><rect x=\"226\" y=\"65\" width=\"28\" height=\"6\" rx=\"2\" fill=\"var(--brand-soft)\" stroke=\"var(--brand)\"/><circle cx=\"250\" cy=\"80\" r=\"3\" fill=\"#2f9e44\"/><text x=\"240\" y=\"110\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\"></text></g><text x=\"150\" y=\"130\" text-anchor=\"middle\" fill=\"var(--ink)\" font-size=\"15\" font-weight=\"600\">web pages on web servers</text></svg><figcaption style=\"font-size:15px;color:var(--muted)\">The World Wide Web: all the web pages</figcaption></figure></div></div>"
+  },
+  {
+   "id": "predict-web",
+   "label": "Predict: Internet or Web?",
+   "type": "multiple-choice",
+   "containerId": "y6-33-predict-web",
+   "content": "<h2 class=\"lesson-h2\">Predict: Internet or Web?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Roads and shops: why are the roads not the same thing as the shops?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The roads carry you to the shops. The shops hold the things you want.</p></div></details><div id=\"y6-33-predict-web\"></div>",
+   "items": [
+    {
+     "prompt": "Which is the World Wide Web?",
+     "options": [
+      "All the networks joined by routers",
+      "All the web pages kept on web servers",
+      "One very big computer"
+     ],
+     "correct": 1,
+     "explain": "The web is the web pages. The networks and routers are the internet."
+    },
+    {
+     "prompt": "What carries a web page from the web server to your laptop?",
+     "options": [
+      "The internet: routers pass it on",
+      "The World Wide Web",
+      "The web server's screen"
+     ],
+     "correct": 0,
+     "explain": "The page travels in packets across the internet, router to router."
+    },
+    {
+     "prompt": "You open www.games.example. Where do its pages come from?",
+     "options": [
+      "Your laptop's keyboard",
+      "The Wi-Fi point",
+      "A web server"
+     ],
+     "correct": 2,
+     "explain": "Websites are kept on web servers. Your laptop asks, and the server sends the pages."
+    }
+   ]
+  },
+  {
+   "id": "concept-trace",
+   "label": "Trace a Website",
+   "content": "<h2 class=\"lesson-h2\">Trace a Website</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A website is slow to open. Predict: how could you find out which way its data goes, and where it comes from?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>List every router on the way, one at a time, until you reach the computer that keeps the website.</p></div></details><div class=\"lesson-do-now-columns\"><div><ul class=\"lesson-facts\"><li>A <strong>trace</strong> lists each hop on the way to a website: every router, then its web server.</li><li>Each hop shows its address.</li><li>The last hop is the web server that keeps the website.</li><li>Different websites can be kept on different web servers, with different addresses.</li></ul></div><div><div style=\"font-family:var(--font-mono, monospace);font-size:17px;background:var(--surface-2);border:1px solid var(--line, var(--muted));border-radius:10px;padding:10px 14px;max-width:420px;margin:0 auto\"><div style=\"font-weight:700;margin-bottom:6px\">Trace route to www.cats.example</div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">1.</span><span style=\"flex:1\">Home router</span><span style=\"color:var(--brand);font-weight:700\">192.168.1.1</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">2.</span><span style=\"flex:1\">Router A</span><span style=\"color:var(--brand);font-weight:700\">81.2.3.1</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">3.</span><span style=\"flex:1\">Router B</span><span style=\"color:var(--brand);font-weight:700\">81.2.3.2</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">4.</span><span style=\"flex:1\">Web server</span><span style=\"color:var(--brand);font-weight:700\">203.0.113.7</span></div></div></div></div>"
+  },
+  {
+   "id": "predict-trace",
+   "label": "Predict: Read the Trace",
+   "type": "multiple-choice",
+   "containerId": "y6-33-predict-trace",
+   "content": "<h2 class=\"lesson-h2\">Predict: Read the Trace</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might two websites have traces that end at different addresses?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each website can be kept on its own web server, and each web server has its own address.</p></div></details><p class=\"lesson-lead\">Read the trace.</p><div class=\"igame-two-col\"><div><div style=\"font-family:var(--font-mono, monospace);font-size:17px;background:var(--surface-2);border:1px solid var(--line, var(--muted));border-radius:10px;padding:10px 14px;max-width:420px;margin:0 auto\"><div style=\"font-weight:700;margin-bottom:6px\">Trace route to www.games.example</div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">1.</span><span style=\"flex:1\">Home router</span><span style=\"color:var(--brand);font-weight:700\">192.168.1.1</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">2.</span><span style=\"flex:1\">Router A</span><span style=\"color:var(--brand);font-weight:700\">81.2.3.1</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">3.</span><span style=\"flex:1\">Router C</span><span style=\"color:var(--brand);font-weight:700\">81.2.3.3</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">4.</span><span style=\"flex:1\">Web server</span><span style=\"color:var(--brand);font-weight:700\">198.51.100.4</span></div></div></div><div id=\"y6-33-predict-trace\"></div></div>",
+   "items": [
+    {
+     "prompt": "What is the address of the web server that keeps www.games.example?",
+     "options": [
+      "81.2.3.3",
+      "198.51.100.4",
+      "192.168.1.1"
+     ],
+     "correct": 1,
+     "explain": "The last hop is the web server: 198.51.100.4. The others are routers."
+    },
+    {
+     "prompt": "How many routers are on the way to the web server?",
+     "options": [
+      "3",
+      "4",
+      "5"
+     ],
+     "correct": 0,
+     "explain": "Home router, Router A, Router C: 3 routers. Hop 4 is the web server, not a router."
+    }
+   ]
+  },
+  {
+   "id": "activity-2",
+   "label": "Activity 2: Trace a Website",
+   "type": "embedded-app",
+   "appId": "network-builder-3d",
+   "embedContainerId": "y6-33-activity-2",
+   "content": "<h2 class=\"lesson-h2\">Activity 2: Trace a Website</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why trace a website, and not only open it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Opening it only shows the page. The trace shows the way it came and which web server keeps it.</p></div></details><p class=\"lesson-lead\">Do the missions on the right in order: Visit a Website, Trace a Website, Which Server?, Website Down?, then the Get the School Online challenge (no help).</p><div id=\"y6-33-activity-2\"></div>",
+   "embedQuery": "lesson=2.3&part=2"
+  },
+  {
+   "id": "check-trace",
+   "label": "Check: Read a Trace",
+   "type": "short-answer-validation",
+   "validatorId": "y6-33-check-trace",
+   "validatorKey": "y6_33_check_trace",
+   "content": "<h2 class=\"lesson-h2\">Check: Read a Trace</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does a trace show an address for every hop, and not only a name?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Data finds each device by its address, so the address shows exactly which device the data went through.</p></div></details><p class=\"lesson-lead\">Read the trace, then type your answers.</p><div class=\"lesson-do-now-columns\"><div><div style=\"font-family:var(--font-mono, monospace);font-size:17px;background:var(--surface-2);border:1px solid var(--line, var(--muted));border-radius:10px;padding:10px 14px;max-width:420px;margin:0 auto\"><div style=\"font-weight:700;margin-bottom:6px\">Trace route to www.news.example</div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">1.</span><span style=\"flex:1\">Home router</span><span style=\"color:var(--brand);font-weight:700\">192.168.1.1</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">2.</span><span style=\"flex:1\">Router A</span><span style=\"color:var(--brand);font-weight:700\">81.2.3.1</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">3.</span><span style=\"flex:1\">Router B</span><span style=\"color:var(--brand);font-weight:700\">81.2.3.2</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">4.</span><span style=\"flex:1\">Router D</span><span style=\"color:var(--brand);font-weight:700\">81.2.3.4</span></div><div style=\"display:flex;gap:10px\"><span style=\"width:22px\">5.</span><span style=\"flex:1\">Web server</span><span style=\"color:var(--brand);font-weight:700\">192.0.2.10</span></div></div></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y6-33-check-trace-a\">How many routers are on the way to the web server?</label><input id=\"y6-33-check-trace-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-trace-a\" aria-label=\"Check: Read a Trace part a\" autocomplete=\"off\" inputmode=\"decimal\"></div><div class=\"lesson-do-now-response\"><label for=\"y6-33-check-trace-b\">Type the address of the web server that keeps www.news.example.</label><input id=\"y6-33-check-trace-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"check-trace-b\" aria-label=\"Check: Read a Trace part b\" autocomplete=\"off\" inputmode=\"decimal\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y6-33-check-trace-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y6-33-check-trace-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>"
+  },
+  {
+   "id": "plenary",
+   "label": "Plenary: Addresses and the Web Drill",
+   "type": "embedded-app",
+   "appId": "drill-y6-3-3-itrace",
+   "embedContainerId": "y6-33-plenary",
+   "content": "<h2 class=\"lesson-h2\">Plenary: Addresses and the Web Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does the drill bring back a question you got wrong?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Getting it right again later shows you remember it, not that you guessed once.</p></div></details><p class=\"lesson-lead\">Addresses, web servers, the World Wide Web and traces. Your progress is saved.</p><div id=\"y6-33-plenary\"></div>"
+  }
+ ],
+ "validators": {
+  "y6_33_do_now_2": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*2\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Write the numbers 1 to 9. Which ones did not arrive?"
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count only the routers. Ana and Ben are laptops."
+   }
+  ],
+  "y6_33_check_trace": [
+   {
+    "suffix": "a",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*4\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Count only the routers. The last hop is not a router."
+   },
+   {
+    "suffix": "b",
+    "pattern": {
+     "__regex": true,
+     "source": "^\\s*192\\.0\\.2\\.10\\s*$",
+     "flags": "i"
+    },
+    "feedback": "Which hop is the web server? Copy its address exactly, dots and all."
+   }
+  ]
+ },
+ "pseudocodeValidators": {}
+}

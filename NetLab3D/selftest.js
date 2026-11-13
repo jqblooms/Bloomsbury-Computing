@@ -545,6 +545,19 @@ const PLAY = [
     const [cx, cy] = s.centre(byName2('Wi-Fi point')); carryTablet(bea, cx + 2, cy + 1.5); stepIs(3, 'tablet in range');
     ok(webTest(bea, srv).ok, 'website did not open over Wi-Fi'); expectDone(40); answer(true);
   },
+  function sameAddress() {
+    s.start(41);
+    ok(M().phase === 'ask', 'no prediction first'); answer(true);
+    const ana = byName2('Ana'), ben = byName2('Ben'), chi = byName2('Chi');
+    ok(!test(ana, ben).ok, 'a message to a shared address got there'); ok(/both have the address/.test(s.toastText()), 'no reason for the shared address: ' + s.toastText()); stepIs(1, 'tried the shared address');
+    const pickBtn = t => [...document.querySelectorAll('#mission .ask-opts button')].find(x => x.textContent === t);
+    pickBtn('192.168.1.9').click(); ok(/Printer already has/.test(s.toastText()), 'a taken address was accepted'); stepIs(1, 'taken address refused');
+    pickBtn('192.168.1.3').click(); stepIs(1, 'Ben\'s address refused');
+    pickBtn('192.168.1.6').click(); stepIs(2, 'Chi has a free address');
+    ok(/192.168.1.6/.test(JSON.stringify([...$('nbTo').options].map(o => o.textContent))), 'new address not in the Test bar');
+    ok(test(ana, ben).ok, 'send to Ben failed after the fix');
+    ok(test(ana, chi).ok, 'send to Chi failed after the fix'); expectDone(41); answer(true); ok(M().afterOk, 'after question not answered');
+  },
   function lessonMode() {
     [...document.querySelectorAll('#mission .modebar button')].find(b => b.textContent === 'Lesson mode').click();
     for (const L of ['2.1', '2.2', '2.3']) {

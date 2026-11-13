@@ -25,7 +25,8 @@
           "title": "Computer Networks",
           "lessons": [
             "y6-3-1-iconnect",
-            "y6-3-2-iroute"
+            "y6-3-2-iroute",
+            "y6-3-3-itrace"
           ]
         }
       ]

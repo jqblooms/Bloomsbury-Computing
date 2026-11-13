@@ -659,6 +659,26 @@ const ADDR = { id: 'addr', group: 'Addresses and the web', title: 'Every Device 
   ],
   end: 'Every device has its own address, so data can find the right one.',
   after: { q: 'What is Chi\'s address? (Look at Chi\'s screen.)', options: ['192.168.1.4', '192.168.1.2', '192.168.1.3'], why: 'Each screen shows its own address. Chi is <b>192.168.1.4</b>.' } };
+// another device with the same address as d, if there is one
+const twinOf = d => { const a = addrOf(d); return a ? S.devs.find(x => x !== d && addrOf(x) === a) || null : null; };
+const SAMEADDR = { id: 'sameaddr', group: 'Addresses and the web', title: 'Two the Same?', type: 'tutorial', mins: 6,
+  setup() {
+    S = fresh({});
+    build([['switch', 320, 190, 'Switch'], ['laptop', 110, 80, 'Ana', '192.168.1.2'], ['laptop', 530, 80, 'Ben', '192.168.1.3'], ['laptop', 110, 290, 'Chi', '192.168.1.3'], ['printer', 530, 290, 'Printer', '192.168.1.9']],
+      [['Ana', 'Switch'], ['Ben', 'Switch'], ['Chi', 'Switch'], ['Printer', 'Switch']]);
+  },
+  intro: 'Someone gave Ben and Chi the <b>same address</b>. Look at their screens.',
+  before: { q: 'Predict: Ana sends a message to Ben at 192.168.1.3. Chi has 192.168.1.3 too. What will happen?', options: ['The network cannot tell which laptop it is for', 'Ben gets it', 'Chi gets it'],
+    why: 'Two laptops have the address 192.168.1.3, so the network cannot tell which one the message is for.' },
+  steps: [
+    { text: 'In the Test bar, send a message from Ana to <b>Ben</b>. Watch what happens.', show: 'test', event: true, done: () => !!(S.lastTest && S.lastTest.dup) },
+    { text: 'Give <b>Chi</b> a new address. Look at every screen first: the new address must not be used by any other device.', done: () => { const c = byN('Chi'); return !!c && !twinOf(c); },
+      pick: ['192.168.1.2', '192.168.1.3', '192.168.1.6', '192.168.1.9'] },
+    { text: 'Send Ana\'s message to <b>Ben</b> again.', show: 'test', event: true, done: () => sent('Ana', 'Ben') },
+    { text: 'Now send a message to <b>Chi</b> at Chi\'s new address.', show: 'test', event: true, done: () => sent(null, 'Chi') }
+  ],
+  end: 'Every device needs its own address. Then data can find the right one.',
+  after: { q: 'Why must every device on a network have a different address?', options: ['So data goes to the right device', 'So the cables can be shorter', 'So the laptops run faster'], why: 'If two devices share an address, the network cannot tell which one the data is for.' } };
 const homeToServer = (extra, links, chain) => {
   build([['laptop', 90, 80, 'Ana', '192.168.1.2'], ['tablet', 90, 290, 'Bea', '192.168.1.3'], ['wifi', 200, 250, 'Wi-Fi point'], ['router', 200, 160, 'Home router', '192.168.1.1']].concat(extra),
     [['Ana', 'Home router'], ['Wi-Fi point', 'Home router']].concat(links));
@@ -776,14 +796,15 @@ const C8 = { id: 'c-online', group: 'Challenges', title: 'Get the School Online'
     } }
   ], minCables: 3 };
 export const MISSIONS = [BUILD[0], BUILD[1], BUILD[2], WIFI1, WIFI2, FIX[1], FULL, FIX[0], FIXW, BUDGET, SCHOOL, PACKETS1, PACKETS2, STAR, BUS, RING, MESH, SERIAL, DUPLEX, SPEEDRACE, BLUETOOTH, C1, C2, C3, C4, C5, C6,
-  JOIN2, INTERNET, HOPS, FINDWAY, QUIZ_R, ADDR, WEBSITE, TRACE, WHICH, SITEDOWN, QUIZ_W, C7, C8, WEBWIFI];
+  JOIN2, INTERNET, HOPS, FINDWAY, QUIZ_R, ADDR, WEBSITE, TRACE, WHICH, SITEDOWN, QUIZ_W, C7, C8, WEBWIFI, SAMEADDR];
 // Lesson mode: the activities for one lesson, in order (about an hour each)
 export const LESSONS = [
   { id: '2.1', title: '2.1 iConnect: What Is a Network?', missions: ['two', 'switch', 'printer', 'wifi', 'range', 'rooms', 'full', 'predict', 'fixw', 'budget', 'school'] },
   { id: '2.2', title: '2.2 iRoute: The Internet and Routers', missions: ['join2', 'internet', 'hops', 'packets', 'paths', 'findway', 'quiz-r', 'c-town'],
     // ?lesson=2.2&part=1 shows only part of the lesson (one lesson activity slide each)
     parts: { 1: ['join2', 'internet', 'hops'], 2: ['packets', 'paths', 'findway', 'c-town'] } },
-  { id: '2.3', title: '2.3 iTrace: Addresses and the Web', missions: ['addr', 'website', 'webwifi', 'trace', 'which', 'sitedown', 'quiz-w', 'c-online'] }
+  { id: '2.3', title: '2.3 iTrace: Addresses and the Web', missions: ['addr', 'sameaddr', 'website', 'webwifi', 'trace', 'which', 'sitedown', 'quiz-w', 'c-online'],
+    parts: { 1: ['addr', 'sameaddr'], 2: ['website', 'trace', 'which', 'sitedown', 'c-online'] } }
 ];
 // rough minutes for a Year 6 student, by kind when a mission does not say
 const minsOf = m => m.mins || (m.type === 'client' ? 10 : m.type === 'fix' ? 8 : m.type === 'race' ? 4 : m.type === 'quiz' ? 6 : m.type === 'challenge' ? 7 : 6);
@@ -1686,6 +1707,8 @@ export function startSolo({ container, myName, colour }) {
     if (!a || !b || anim) return;
     if (a === b) { toast('Choose two different devices.', 'hint'); return; }
     const r = route(a, b);
+    const twin = twinOf(b);
+    if (twin) { S.lastTest = { a: a.id, b: b.id, ok: false, dup: true }; toast('It did not get there. ' + b.name + ' and ' + twin.name + ' both have the address ' + addrOf(b) + ', so the network cannot tell which one it is for.', 'bad'); afterChange(); return; }
     if (!r) { S.lastTest = { a: a.id, b: b.id, ok: false }; toast('It did not get there. ' + why(a, b), 'bad'); afterChange(); return; }
     // one hop per pair of devices on the route: along a cable (forwards or backwards), or through the air
     const hops = [];
@@ -1782,9 +1805,9 @@ export function startSolo({ container, myName, colour }) {
         else A.show({ top: 'To ' + toName, text: fx.text, textAlpha: 1 - ease(1, 1.3, t), env: t < 1.6 ? ease(1.3, 1.6, t) : 1 - ease(1.6, 1.9, t) });
       }
       if (t >= 1.9) {
-        if (!route(fx.a, fx.b)) {
+        if (!route(fx.a, fx.b) || twinOf(fx.b)) {
           const { a, b } = fx; fx = null;
-          hold(A, { top: 'Not sent', text: b.kind === 'printer' ? 'No printer' : 'Not sent', mark: 'cross', sub: 'No connection to ' + toName }, 3);
+          hold(A, { top: 'Not sent', text: b.kind === 'printer' ? 'No printer' : 'Not sent', mark: 'cross', sub: twinOf(b) ? 'Two devices have ' + addrOf(b) : 'No connection to ' + toName }, 3);
           send(a, b); drawTest(); return;
         }
         fx.stage = 'travel'; if (A) A.show({ top: 'Sending...', env: 0.35, sub: 'Data on its way' });
@@ -2561,6 +2584,20 @@ export function startSolo({ container, myName, colour }) {
       const ol = el('ol', { class: 'steps' });
       m.steps.forEach((s, i) => ol.appendChild(el('li', { class: i < M.step || M.phase === 'done' ? 'done' : i === M.step ? 'now' : 'later' }, '<span>' + s.text + '</span>')));
       t.appendChild(ol);
+      // a step that sets a device's address: buttons, a taken address is refused with whose it is
+      const cur = M.phase === 'build' && m.steps[M.step];
+      if (cur && cur.pick) {
+        const opts = el('div', { class: 'ask-opts' }), who = byN('Chi');
+        cur.pick.forEach(o => opts.appendChild(btn(o, '', () => {
+          const owner = S.devs.find(d => d !== who && addrOf(d) === o);
+          if (owner) { log.note('Gave Chi ' + o + ', which ' + owner.name + ' already has.'); toast('Not that one: ' + owner.name + ' already has ' + o + '. Two devices would share it.', 'bad'); return; }
+          S.addrs[who.id] = o;
+          if (who.k3 && who.k3.screen) { who.k3.screen.setAddr(o); who.k3.screen.show(null); }
+          toast('Chi is now ' + o + '. No other device has it.', 'good');
+          afterChange();
+        })));
+        t.appendChild(opts);
+      }
     } else if (m.type === 'challenge' && m.breakAtStart) {
       /* an outage: the predictions below are the whole mission */
     } else if (m.type === 'challenge') {
