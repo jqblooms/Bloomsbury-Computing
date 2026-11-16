@@ -1,77 +1,119 @@
 {
  "id": "y9-abw",
- "label": "Anti-Bullying Week: Can Code Stop Cyberbullying?",
+ "label": "Anti-Bullying Week: Be an Upstander Online",
  "steps": [
   {
    "id": "do-now",
-   "label": "Do Now: Strings (1 of 2)",
-   "type": "short-answer-validation",
-   "validatorId": "y9abw-do-now",
-   "validatorKey": "y9abw_do_now",
-   "content": "<h2 class=\"lesson-h2\">Do Now: Strings (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do programs often change text to capitals before comparing it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then \"Hi\", \"HI\" and \"hi\" all count as the same word.</p></div></details><p class=\"lesson-lead\">Recap of 2.5 String Manipulation. What does this program output?</p><div class=\"lesson-do-now-columns\"><div><pre class=\"pseudocode-block\">DECLARE Word : STRING\nWord ← \"Upstander\"\nOUTPUT UCASE(Word)\nOUTPUT LENGTH(Word)</pre></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9abw-do-now-a\">(a) The first OUTPUT [1]</label><input id=\"y9abw-do-now-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-a\" aria-label=\"Do Now: Strings (1 of 2) part a\" autocomplete=\"off\"></div><div class=\"lesson-do-now-response\"><label for=\"y9abw-do-now-b\">(b) The second OUTPUT [1]</label><input id=\"y9abw-do-now-b\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-b\" aria-label=\"Do Now: Strings (1 of 2) part b\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9abw-do-now-check\">Check answers</button><strong>Total: 2 marks</strong></div><div id=\"y9abw-do-now-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "label": "Do Now: Is It Cyberbullying? (1 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y9abw-do-now",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Is It Cyberbullying? (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How can you tell a joke from bullying?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A joke is funny for everyone. Bullying is meant to hurt, or carries on when someone is upset.</p></div></details><p class=\"lesson-lead\">Read each situation. Choose the best answer.</p><div id=\"y9abw-do-now\"></div>",
+   "items": [
+    {
+     "prompt": "A classmate shares an embarrassing photo of someone in a group chat, and others add laughing faces. Is this cyberbullying?",
+     "options": [
+      "Yes: it is shared to hurt, and others join in",
+      "No: it is only a photo",
+      "No: nobody typed anything unkind"
+     ],
+     "correct": 0,
+     "explain": "Sharing something to embarrass someone, with others joining in, is cyberbullying even without unkind words."
+    },
+    {
+     "prompt": "Two friends tease each other about a football match in a chat, and both of them find it funny. Is this cyberbullying?",
+     "options": [
+      "Yes: any teasing online is bullying",
+      "No: both are joking, and both find it funny",
+      "Yes: it happened in a chat"
+     ],
+     "correct": 1,
+     "explain": "Friendly teasing that both people enjoy is not bullying. It becomes bullying when it is meant to hurt, or keeps going when someone is upset."
+    }
+   ],
    "walkthrough": {
-    "title": "Walk me through it: UCASE and LENGTH",
+    "title": "Walk me through it: is it cyberbullying?",
     "steps": [
      {
-      "text": "<strong>A similar question.</strong> Word holds \"Kind\".",
-      "visual": "<pre class=\"pseudocode-block\">Word ← \"Kind\"\nOUTPUT UCASE(Word)\nOUTPUT LENGTH(Word)</pre>"
+      "text": "<strong>A similar situation.</strong> A student keeps posting comments under a classmate's videos saying the videos are rubbish.",
+      "visual": "<div class=\"wt-note\">comment after comment</div>"
      },
      {
-      "text": "<span class=\"wt-hl\">UCASE</span> changes every lower case letter to a capital. \"Kind\" becomes \"KIND\".",
-      "visual": "<div class=\"wt-note\">K i n d &rarr; K I N D</div>"
+      "text": "Ask: is it <span class=\"wt-hl\">meant to hurt</span>? Comments saying someone's work is rubbish, again and again, are meant to upset.",
+      "visual": "<div class=\"wt-note\">meant to hurt?</div>"
      },
      {
-      "text": "Letters that are already capitals stay the same.",
-      "visual": "<div class=\"wt-note\">K stays K</div>"
+      "text": "Ask: is it <span class=\"wt-hl\">repeated</span>, or <span class=\"wt-hl\">shared</span> with others? Here it happens again and again, where everyone can see.",
+      "visual": "<div class=\"wt-note\">again and again, in public</div>"
      },
      {
-      "text": "<span class=\"wt-hl\">LENGTH</span> counts the characters, one at a time: K, i, n, d.",
-      "visual": "<div class=\"wt-note\">1 2 3 4</div>"
+      "text": "Ask: does the other person <span class=\"wt-hl\">find it funny</span> too? The classmate is not laughing.",
+      "visual": "<div class=\"wt-note\">only one side is laughing</div>"
      },
      {
-      "text": "So this program outputs KIND, then 4.",
-      "visual": "<div class=\"wt-note\">KIND &nbsp; 4</div>"
+      "text": "Meant to hurt, repeated and public, and not funny for both: this is cyberbullying.",
+      "visual": "<div class=\"wt-note\">yes, cyberbullying</div>"
      },
      {
-      "text": "Now do the same for the question: capitals first, then count every character.",
-      "visual": "<div class=\"wt-note\">UCASE &nbsp; then LENGTH</div>"
+      "text": "Now ask the same three questions about each situation on the slide.",
+      "visual": "<div class=\"wt-note\">meant to hurt? &nbsp; repeated or shared? &nbsp; funny for both?</div>"
      }
     ]
    }
   },
   {
    "id": "do-now-2",
-   "label": "Do Now: Following Pseudocode (2 of 2)",
-   "type": "short-answer-validation",
-   "validatorId": "y9abw-do-now-2",
-   "validatorKey": "y9abw_do_now_2",
-   "content": "<h2 class=\"lesson-h2\">Do Now: Following Pseudocode (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do we trace a loop one value at a time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then we can see exactly when Count changes, and why.</p></div></details><p class=\"lesson-lead\">Recap of 3.1 Following and Correcting Pseudocode. What does this program output?</p><div class=\"lesson-do-now-columns\"><div><pre class=\"pseudocode-block\">DECLARE Words : ARRAY[1:4] OF STRING\nDECLARE Count : INTEGER\nDECLARE i : INTEGER\nWords[1] ← \"hello\"\nWords[2] ← \"ok\"\nWords[3] ← \"thanks\"\nWords[4] ← \"brilliant\"\nCount ← 0\nFOR i ← 1 TO 4\n    IF LENGTH(Words[i]) &gt; 4 THEN\n        Count ← Count + 1\n    ENDIF\nNEXT i\nOUTPUT Count</pre></div><div><div class=\"lesson-exam-card\"><div class=\"lesson-do-now-responses\"><div class=\"lesson-do-now-response\"><label for=\"y9abw-do-now-2-a\">The OUTPUT [1]</label><input id=\"y9abw-do-now-2-a\" class=\"pseudocode-output-input lesson-exam-answer\" data-answer-kind=\"short\" data-answer-id=\"do-now-2-a\" aria-label=\"Do Now: Following Pseudocode (2 of 2) part a\" autocomplete=\"off\"></div></div><div class=\"lesson-do-now-actions\"><button type=\"button\" class=\"donow-btn\" id=\"y9abw-do-now-2-check\">Check answers</button><strong>Total: 1 mark</strong></div><div id=\"y9abw-do-now-2-feedback\" class=\"pseudocode-feedback\" role=\"status\" aria-live=\"polite\"></div></div></div></div>",
+   "label": "Do Now: What Should You Do? (2 of 2)",
+   "type": "multiple-choice",
+   "containerId": "y9abw-do-now-2",
+   "content": "<h2 class=\"lesson-h2\">Do Now: What Should You Do? (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it better not to reply straight away?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A reply can make it worse, and once it is sent you cannot take it back.</p></div></details><p class=\"lesson-lead\">Choose the best first step.</p><div id=\"y9abw-do-now-2\"></div>",
+   "items": [
+    {
+     "prompt": "Someone you do not know messages you and asks for a photo of you. What should you do?",
+     "options": [
+      "Reply and ask who they are",
+      "Send a photo that does not show your face",
+      "Do not reply, block them, and tell a trusted adult"
+     ],
+     "correct": 2,
+     "explain": "Never send photos to people you do not know. Do not reply, block them, and tell a trusted adult."
+    },
+    {
+     "prompt": "An account posts something unkind about you. What is the best first step?",
+     "options": [
+      "Post something unkind back",
+      "Save the evidence before you do anything else",
+      "Delete your own account"
+     ],
+     "correct": 1,
+     "explain": "Save the evidence first, privately. Then report, block, and tell a trusted adult."
+    }
+   ],
    "walkthrough": {
-    "title": "Walk me through it: a loop over an array",
+    "title": "Walk me through it: what should you do?",
     "steps": [
      {
-      "text": "<strong>A similar question.</strong> The array holds \"hi\", \"great\", \"no\". Count goes up when a word has more than 2 characters.",
-      "visual": "<div class=\"wt-note\">\"hi\" &nbsp; \"great\" &nbsp; \"no\"</div>"
+      "text": "<strong>A similar situation.</strong> Someone keeps sending you unkind comments in a game chat.",
+      "visual": "<div class=\"wt-note\">unkind game chat messages</div>"
      },
      {
-      "text": "Count starts at <span class=\"wt-hl\">0</span>.",
-      "visual": "<div class=\"wt-note\">Count = 0</div>"
+      "text": "First, <span class=\"wt-hl\">do not reply</span>. A reply can start an argument and make it worse.",
+      "visual": "<div class=\"wt-note\">1. do not reply</div>"
      },
      {
-      "text": "\"hi\" has 2 characters. 2 is not more than 2, so Count stays 0.",
-      "visual": "<div class=\"wt-note\">hi: 2 &rarr; no change</div>"
+      "text": "Next, <span class=\"wt-hl\">save the evidence</span>: a private screenshot to show an adult, never to share.",
+      "visual": "<div class=\"wt-note\">2. save it privately</div>"
      },
      {
-      "text": "\"great\" has 5 characters. 5 is more than 2, so Count becomes 1.",
-      "visual": "<div class=\"wt-note\">great: 5 &rarr; Count = 1</div>"
+      "text": "Then <span class=\"wt-hl\">report</span> it in the game, and <span class=\"wt-hl\">block</span> the sender.",
+      "visual": "<div class=\"wt-note\">3. report and block</div>"
      },
      {
-      "text": "\"no\" has 2 characters, so Count stays 1. The loop ends and the program outputs 1.",
-      "visual": "<div class=\"wt-note\">OUTPUT 1</div>"
+      "text": "Last, <span class=\"wt-hl\">tell a trusted adult</span>, so it can be stopped.",
+      "visual": "<div class=\"wt-note\">4. tell an adult</div>"
      },
      {
-      "text": "Now do the same for the question: one word at a time, count the characters, compare with 4.",
-      "visual": "<div class=\"wt-note\">LENGTH &gt; 4 ?</div>"
+      "text": "Now choose the answer on the slide that matches the safest first step.",
+      "visual": "<div class=\"wt-note\">safest first step?</div>"
      }
     ]
    }
@@ -80,14 +122,14 @@
    "id": "do-now-ext",
    "label": "Extension: Do Now Challenge",
    "type": "embedded-app",
-   "appId": "drill-y9-3-1-ext",
+   "appId": "drill-y9-abw-ext",
    "embedContainerId": "y9abw-do-now-ext",
-   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card use new values?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you practise the method, not one answer.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these pseudocode cards from 3.1. Stuck? Switch on <strong>I need help</strong>.</p><div id=\"y9abw-do-now-ext\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card show a different situation?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you practise deciding, not remembering one answer.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these online safety situations.</p><div id=\"y9abw-do-now-ext\"></div>"
   },
   {
    "id": "title",
-   "label": "Can Code Stop Cyberbullying?",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Anti-Bullying Week</p><h2 class=\"lesson-h2\">Can Code Stop Cyberbullying?</h2><p>Year 9</p></div><p class=\"lesson-lead\"><strong>Today:</strong> test a filter, see how fast a post spreads, and learn what an upstander does.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why might a school want a computer to check messages?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>There are too many messages for people to read them all.</p></div></details>"
+   "label": "Be an Upstander Online",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Anti-Bullying Week</p><h2 class=\"lesson-h2\">Be an Upstander Online</h2><p>Year 9</p></div><p class=\"lesson-lead\"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can online bullying feel worse than bullying in person?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It can follow someone home, it can be seen by many people, and it is hard to take back.</p></div></details>"
   },
   {
    "id": "game-filter",
@@ -95,7 +137,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-filter",
-   "content": "<h2 class=\"lesson-h2\">Mission 1: The Filter</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: what kind of unkind message might a word filter miss?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Take a few guesses, then test them in the game.</p></div></details><p class=\"lesson-lead\">Niran wrote a filter for the class chat. Collect messages from people around the school and test it on your phone. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-filter\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 1: The Filter</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: what kind of unkind message might a banned-word filter miss?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Take a few guesses, then test them in the game.</p></div></details><p class=\"lesson-lead\">The class chat app hides messages with banned words. Collect messages from people around the school and test the filter on your phone. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-filter\"></div>",
    "embedQuery": "lesson=abw&mission=filter"
   },
   {
@@ -103,21 +145,21 @@
    "label": "Explain It: Can a Filter Stop It?",
    "type": "self-marked-response",
    "containerId": "y9abw-explain-filter",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Can a Filter Stop It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do people have to test a program with real data?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Real data has cases the programmer never thought of.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y9abw-explain-filter\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Can a Filter Stop It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can people often get round a rule that a computer checks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They can change the spelling, or say something unkind without the banned words.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y9abw-explain-filter\"></div>",
    "items": [
     {
      "id": "explain-filter-q",
      "aiModel": "haiku",
-     "context": "In the game, Niran's filter flagged any message with LOSER, UGLY, STUPID or WEIRDO inside it. It flagged harmless messages (\"losers' bracket\", \"stupid slow laptop\") and missed unkind ones (\"l0s3r\", sarcasm, \"everyone except Sam\"). In your own words, explain why a keyword filter cannot catch all cyberbullying.",
-     "prompt": "In your own words, explain why a keyword filter cannot catch all cyberbullying.",
+     "context": "In the game, the class chat app hid any message with LOSER, UGLY, STUPID or WEIRDO inside it. It hid harmless messages (\"losers' bracket\", \"stupid slow laptop\") and let unkind ones through (\"l0s3r\", sarcasm, \"everyone come to football, except\" one person). In your own words, explain why a banned-word filter cannot stop all cyberbullying.",
+     "prompt": "In your own words, explain why a banned-word filter cannot stop all cyberbullying.",
      "marks": 2,
      "scheme": [
-      "It only checks for blocked words / letters, not what the message means",
-      "Unkind messages with no blocked word get through (sarcasm, leaving someone out, changed spellings)",
-      "Harmless messages that contain a blocked word get flagged (false alarms)"
+      "It only checks for banned words, not what the message means",
+      "Unkind messages with no banned word get through (sarcasm, leaving someone out, changed spellings)",
+      "Harmless messages that contain a banned word get hidden (false alarms)"
      ],
      "guidance": "Any two points, one mark each, in the student's own words. An example counts as the point it shows. \"It is not clever enough\" alone earns nothing.",
-     "modelAnswer": "It only looks for blocked words, not meaning. So \"everyone except Sam\" gets through, and \"losers' bracket\" gets flagged."
+     "modelAnswer": "It only looks for banned words, not meaning. So leaving someone out gets through, and \"losers' bracket\" gets hidden."
     }
    ]
   },
@@ -127,7 +169,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-spread",
-   "content": "<h2 class=\"lesson-h2\">Mission 2: One Screenshot</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: if everyone forwards a post to 2 new people, how fast does it grow?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Say a guess, then check it in the game.</p></div></details><p class=\"lesson-lead\">Krit posted a screenshot of Sam. Find out how far one post can travel. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-spread\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 2: One Screenshot</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: if everyone forwards a post to 2 new people, how fast does it grow?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Say a guess, then check it in the game.</p></div></details><p class=\"lesson-lead\">A classmate shared a screenshot of someone. Find out how far one post can travel. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-spread\"></div>",
    "embedQuery": "lesson=abw&mission=spread"
   },
   {
@@ -135,17 +177,17 @@
    "label": "Explain It: Why Deleting Is Not Enough",
    "type": "self-marked-response",
    "containerId": "y9abw-explain-spread",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Why Deleting Is Not Enough</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does doubling grow so fast?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Each step adds more new people than all the steps before it put together.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y9abw-explain-spread\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Why Deleting Is Not Enough</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why should you think before you share anything about someone else?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Once it is shared you cannot control where it goes.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y9abw-explain-spread\"></div>",
    "items": [
     {
      "id": "explain-spread-q",
      "aiModel": "haiku",
-     "context": "In the game, every person who got the screenshot forwarded it to 2 new people: 1, 3, 7, 15 people, and 255 after 8 steps. Then Krit deleted his post. In your own words, explain why deleting a post does not stop it spreading.",
+     "context": "In the game, every person who got the screenshot forwarded it to 2 new people: 1, 3, 7, 15 people, and 255 after 8 steps. Then the person who shared it first deleted their post. In your own words, explain why deleting a post does not stop it spreading.",
      "prompt": "In your own words, explain why deleting a post does not stop it spreading.",
      "marks": 2,
      "scheme": [
       "Copies have already been forwarded / saved on other people's phones",
-      "Each person can forward it again, so it keeps spreading (it doubles each step)"
+      "Each person can forward it again, so it keeps spreading"
      ],
      "guidance": "One mark for each point, in the student's own words. \"It is on the internet forever\" alone earns 1 mark only if it says copies exist elsewhere.",
      "modelAnswer": "Other people already have copies on their phones, and each of them can forward it again."
@@ -158,7 +200,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-upstander",
-   "content": "<h2 class=\"lesson-h2\">Mission 3: Be an Upstander</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: what is the difference between a bystander and an upstander?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A bystander sees it and does nothing. An upstander does something to help.</p></div></details><p class=\"lesson-lead\">The class chat is piling on Sam. Do the right things, in the right order. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-upstander\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 3: Be an Upstander</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: what is the difference between a bystander and an upstander?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A bystander sees it and does nothing. An upstander does something to help.</p></div></details><p class=\"lesson-lead\">The class chat is ganging up on someone. Do the right things, in the right order. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-upstander\"></div>",
    "embedQuery": "lesson=abw&mission=upstander"
   },
   {
@@ -189,46 +231,14 @@
    "type": "embedded-app",
    "appId": "drill-y9-abw",
    "embedContainerId": "y9abw-plenary",
-   "content": "<h2 class=\"lesson-h2\">Plenary: Upstander Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new messages every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you know how the filter works, not just the game's messages.</p></div></details><p class=\"lesson-lead\">Filters, false alarms and misses, how far posts spread, and what an upstander does. Your progress is saved.</p><div id=\"y9abw-plenary\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Plenary: Upstander Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new situations every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you can decide what to do in any situation, not just the game's.</p></div></details><p class=\"lesson-lead\">Filters, how far posts spread, and what an upstander does. Your progress is saved.</p><div id=\"y9abw-plenary\"></div>"
   },
   {
    "id": "help",
    "label": "Where to Get Help",
-   "content": "<h2 class=\"lesson-h2\">Where to Get Help</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is telling an adult not \"snitching\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is how bullying actually stops, and it protects the person being targeted.</p></div></details><p class=\"lesson-lead\">If anything online is worrying you, or someone you know:</p><ul class=\"lesson-facts\"><li>Talk to your <strong>form tutor</strong>, <strong>any teacher you trust</strong>, or the <strong>school counsellor</strong>.</li><li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply.</li><li>You will not get in trouble for telling.</li></ul>"
+   "content": "<h2 class=\"lesson-h2\">Where to Get Help</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is telling an adult the right thing to do?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is how bullying actually stops, and it protects the person being targeted.</p></div></details><p class=\"lesson-lead\">If anything online is worrying you, or someone you know:</p><ul class=\"lesson-facts\"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Year</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li><li>Staff will listen, and they will pass what you tell them to the safeguarding team so you get the right help.</li><li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply.</li><li>You will not get in trouble for telling.</li></ul>"
   }
  ],
- "validators": {
-  "y9abw_do_now": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*\"?\\s*UPSTANDER\\s*\"?\\s*\\.?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "UCASE changes every letter to a capital letter."
-   },
-   {
-    "suffix": "b",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*9\\s*\\.?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "LENGTH counts every character in the string."
-   }
-  ],
-  "y9abw_do_now_2": [
-   {
-    "suffix": "a",
-    "pattern": {
-     "__regex": true,
-     "source": "^\\s*3\\s*\\.?\\s*$",
-     "flags": "i"
-    },
-    "feedback": "Go through the array one word at a time. Add 1 to Count only when the word has more than 4 characters."
-   }
-  ]
- },
+ "validators": {},
  "pseudocodeValidators": {}
 }

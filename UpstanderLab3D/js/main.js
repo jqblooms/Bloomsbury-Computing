@@ -1,8 +1,9 @@
-// Upstander Lab 3D (Year 9, Anti-Bullying Week): a walk and talk game in the lab world of Network Builder 3D.
-// Walk round a school (W A S D or arrows, by key position so a Thai layout works), press Space near someone to talk,
-// choose what to say (1 2 3), and use your phone (P). Four missions: The Filter (test a keyword filter: false alarms
-// and misses), One Screenshot (how far a forwarded post spreads: 2^n - 1), Be an Upstander (save evidence, report,
-// support, tell an adult) and a no-help Challenge. ?lesson=abw shows the lesson's missions; ?mission=<id> opens one.
+// Upstander Lab 3D (Year 9, Anti-Bullying Week, an online safety game): a walk and talk game in the lab world of
+// Network Builder 3D. Walk round a school (W A S D or arrows, by key position so a Thai layout works), press Space near
+// someone to talk, choose what to say (1 2 3), and use your phone (P). Every name is drawn at random each visit
+// (story.js). Four missions: The Filter (does the chat app's banned-word filter stop unkind messages? false alarms and
+// misses), One Screenshot (how far a forwarded post spreads), Be an Upstander (save evidence, report, support, tell an
+// adult) and a no-help Challenge. ?lesson=abw shows the lesson's missions; ?mission=<id> opens one.
 // Wrong choices show why and count as slips: 0 slips = 3 stars, 1 to 2 = 2 stars, more = 1 star.
 // Everything that matters (talking, checking, saving, results) runs from events, never from a frame, so a hidden
 // frame never gets stuck.
@@ -10,7 +11,7 @@ import * as THREE from 'three';
 import { create } from '../room.js';
 import { createBlob } from '../blob.js';
 import { buildWorld } from './world.js';
-import { MISSIONS, LESSONS, IDLE } from './story.js';
+import { MISSIONS, LESSONS, IDLE, fill } from './story.js';
 import { createTalk } from './talk.js';
 import { createPhone } from './phone.js';
 
@@ -18,7 +19,7 @@ const STORE = 'bc-upstander3d-v1:';
 const load = (k, d) => { try { const v = localStorage.getItem(STORE + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
 const save = (k, v) => { try { localStorage.setItem(STORE + k, JSON.stringify(v)); } catch (e) { } };
 const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const esc = (s) => fill(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const SPEED = 5.5, TALK_D = 1.5, BUBBLE_D = 2.6;
 const START = { x: 5, y: 6.6, face: Math.PI };
 
@@ -93,7 +94,7 @@ export function startSolo({ container }) {
     h += '<div class="up-head"><h2>' + esc(M.title) + '</h2><p class="note">' + esc(M.intro) + '</p></div>';
     h += '<ol class="steps">' + steps.map((s, k) => {
       const first = steps.findIndex((x) => !x.done);
-      return '<li class="' + (s.done ? 'done' : k === first ? 'now' : 'later') + '"><span>' + s.text + '</span></li>';
+      return '<li class="' + (s.done ? 'done' : k === first ? 'now' : 'later') + '"><span>' + fill(s.text) + '</span></li>';
     }).join('') + '</ol>';
     if (finished) {
       h += '<div class="win"><p><b>Mission complete.</b> ' + starsHtml(stars[M.id] || 1) + '</p><p class="small">' + (slips ? slips + ' choice' + (slips === 1 ? '' : 's') + ' you had to think again about.' : 'Every choice right first time.') + '</p>' +

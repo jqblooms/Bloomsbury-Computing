@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { createBlob } from '../blob.js';
 import { tape } from '../devices.js';
-import { PEOPLE } from './story.js';
+import { ROLES, nameOf } from './story.js';
 
 const T = 100;
 export const MAP = {
@@ -26,11 +26,11 @@ export const MAP = {
     '########################',
   ],
   regions: [
-    { name: 'Computing Room', x0: 1, x1: 9, y0: 1, y1: 4, index: 0 },
+    { name: 'Classroom', x0: 1, x1: 9, y0: 1, y1: 4, index: 0 },
     { name: 'Library', x0: 11, x1: 22, y0: 1, y1: 4, index: 2 },
     { name: 'Corridor', x0: 1, x1: 22, y0: 5, y1: 7, index: 1 },
     { name: 'Canteen', x0: 1, x1: 11, y0: 8, y1: 12, index: 1 },
-    { name: 'Counsellor', x0: 13, x1: 17, y0: 8, y1: 12, index: 0 },
+    { name: 'Safeguarding', x0: 13, x1: 17, y0: 8, y1: 12, index: 0 },
     { name: 'Playground', x0: 19, x1: 22, y0: 8, y1: 12, index: 2 },
   ],
 };
@@ -43,7 +43,7 @@ const PROPS = [
   [20, 12, 2, 1, 30, 0x5b7a3a, 'bench'],
 ];
 // Signs over the doors, readable while walking.
-const SIGNS = [['COMPUTING', 4, 5], ['LIBRARY', 13.5, 5], ['CANTEEN', 4, 8], ['COUNSELLOR', 13, 8], ['PLAYGROUND', 20, 8]];
+const SIGNS = [['CLASSROOM', 4, 5], ['LIBRARY', 13.5, 5], ['CANTEEN', 4, 8], ['SAFEGUARDING', 13, 8], ['PLAYGROUND', 20, 8]];
 
 export function buildWorld(view) {
   view.setRoom(MAP);
@@ -65,11 +65,12 @@ export function buildWorld(view) {
 
   const solidAt = (tx, ty) => tx < 0 || ty < 0 || tx >= MAP.w || ty >= MAP.h || MAP.rows[ty][tx] === '#' || blocked.has(tx + ',' + ty);
   const people = {};
-  for (const [id, p] of Object.entries(PEOPLE)) {
-    const b = createBlob(p.colour, p.name);
+  for (const [id, p] of Object.entries(ROLES)) {
+    const name = nameOf(id);   // drawn at random for this visit (story.js randomiseNames)
+    const b = createBlob(p.colour, name);
     view.scene.add(b.group);
     const mark = tape('!', { bg: '#3e8ef7', size: 0.05 }); mark.position.y = 205; mark.visible = false; b.group.add(mark);
-    people[id] = { id, name: p.name, where: p.where, x: p.x, y: p.y, face: 0, blob: b, mark, home: { x: p.x, y: p.y } };
+    people[id] = { id, name, where: p.where, x: p.x, y: p.y, face: 0, blob: b, mark, home: { x: p.x, y: p.y } };
   }
   // Free for a body at (x, y): no wall or furniture under its four corners, and not inside a person.
   const R = 0.28;

@@ -1,46 +1,38 @@
-// Builds LessonData/y9-abw.json: Year 9, Anti-Bullying Week: Can Code Stop Cyberbullying? (James, 2026-11-16).
+// Builds LessonData/y9-abw.json: Year 9, Anti-Bullying Week: Be an Upstander Online (James, 2026-11-16).
 //   node tools/build_y9_abw.mjs
-// It also writes the plenary drill Drills/data/y9-abw.js and adds an "Anti-Bullying Week" unit to Year 9 in
-// lessons.json (after Pseudocode and Software Development).
-// The teaching is Upstander Lab 3D (pages UpstanderLab3D/, registry upstander-lab-3d), a walk and talk game, one
-// mission per slide (?lesson=abw&mission=...), each followed by an own-words Explain It marked by Haiku (policy 2b).
-// The Do Now recaps 2.5 strings and 3.1 pseudocode; every output is worked out by shared/pseudocode-engine.js.
-// Safeguarding: no slide or Explain It asks students about their own experiences; the last slide says where to get
-// help. Year 9 has no exam board papers, so nothing is cited.
+// It also writes the drills Drills/data/y9-abw.js (plenary) and y9-abw-ext.js (Do Now Extension), and adds an
+// "Anti-Bullying Week" unit to Year 9 in lessons.json (after Pseudocode and Software Development).
+// James: an online safety lesson, not a coding one ("don't force code where it doesn't belong"); fully suitable for
+// Year 9 (13 to 14) and local norms; no staff or student names anywhere. So: no pseudocode, no names on any slide
+// or in any drill (people are "a classmate", "the new student"), and the game draws its names at random each visit.
+// The teaching is Upstander Lab 3D (pages UpstanderLab3D/, registry upstander-lab-3d), one mission per slide
+// (?lesson=abw&mission=...), each followed by an own-words Explain It marked by Haiku (policy 2b).
+// Safeguarding (a British school in Thailand with a UK-style safeguarding team: DSL and deputies): nothing asks about
+// the student's own experiences; the last slide says where to get help by role only (form tutor, Head of Year, the
+// DSL and deputies, someone at home) and says plainly that staff pass concerns on to the safeguarding team, so no
+// slide promises secrecy.
+// The Do Now is an online safety starter (the week's lesson stands apart from the scheme of work), so nothing is cited.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createRequire } from 'node:module';
 import { flagged, verdict } from '../UpstanderLab3D/js/filter.js';
+import { NAME_POOL } from '../UpstanderLab3D/js/story.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { runPseudocode } = createRequire(import.meta.url)(path.join(ROOT, 'shared', 'pseudocode-engine.js'));
 const ID = 'y9-abw', P = 'y9abw';
-const re = (source) => ({ __regex: true, source, flags: 'i' });
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 function assert(ok, msg) { if (!ok) throw new Error('Check failed: ' + msg); }
 function tps(q, a) {
   return `<details class="lesson-tps"><summary><span class="lesson-tps-steps">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span>` +
     `<span class="lesson-tps-q">${q}</span><span class="lesson-tps-reveal">Show the answer</span></summary><div class="lesson-tps-a"><p>${a}</p></div></details>`;
 }
 const why = (w) => tps(w[0], w[1]);
-const run = (lines) => { const r = runPseudocode(lines.join('\n'), {}, 20000, []); if (r.error) throw new Error(r.error.message + '\n' + lines.join('\n')); return r.outputs.map(String); };
-const code = (lines) => '<pre class="pseudocode-block">' + esc(lines.join('\n').replace(/<-/g, '←')) + '</pre>';
 const kw = (t) => `<span class="wt-hl">${t}</span>`;
 const note = (t) => `<div class="wt-note">${t}</div>`;
-const ARW = '';
 
-// ---------------------------------------------------------------- step builders (as the other builders)
-const validators = {}, steps = [];
-function checkStep(id, label, lead, parts, whyQ, extra) {
-  const key = `${P}_${id}`.replace(/-/g, '_'), vid = `${P}-${id}`;
-  validators[key] = parts.map((p, i) => ({ suffix: 'abcd'[i], pattern: re(p.answer), feedback: p.feedback }));
-  const inputs = parts.map((p, i) => `<div class="lesson-do-now-response"><label for="${vid}-${'abcd'[i]}">${parts.length > 1 ? '(' + 'abcd'[i] + ') ' : ''}${p.label} [1]</label>` +
-    `<input id="${vid}-${'abcd'[i]}" class="pseudocode-output-input lesson-exam-answer" data-answer-kind="short" data-answer-id="${id}-${'abcd'[i]}" aria-label="${label} part ${'abcd'[i]}" autocomplete="off"></div>`).join('');
-  const card = `<div class="lesson-exam-card"><div class="lesson-do-now-responses">${inputs}</div><div class="lesson-do-now-actions"><button type="button" class="donow-btn" id="${vid}-check">Check answers</button><strong>Total: ${parts.length} mark${parts.length > 1 ? 's' : ''}</strong></div>` +
-    `<div id="${vid}-feedback" class="pseudocode-feedback" role="status" aria-live="polite"></div></div>`;
-  return { id, label, type: 'short-answer-validation', validatorId: vid, validatorKey: key,
-    content: `<h2 class="lesson-h2">${label}</h2>` + why(whyQ) + `<p class="lesson-lead">${lead}</p>` + `<div class="lesson-do-now-columns"><div>${extra}</div><div>${card}</div></div>` };
+const steps = [];
+function mcStep(id, label, lead, items, whyQ) {
+  const cid = `${P}-${id}`;
+  return { id, label, type: 'multiple-choice', containerId: cid, content: `<h2 class="lesson-h2">${label}</h2>` + why(whyQ) + `<p class="lesson-lead">${lead}</p><div id="${cid}"></div>`, items };
 }
 function embed(id, label, appId, lead, whyQ, query) {
   return Object.assign({ id, label, type: 'embedded-app', appId, embedContainerId: `${P}-${id}`,
@@ -54,69 +46,69 @@ function explain(id, label, about, part, whyQ) {
     items: [Object.assign({ id: `${id}-q`, aiModel: 'haiku', context: about + ' ' + part.prompt }, part)] };
 }
 
-// ---------------------------------------------------------------- Do Now: 2.5 strings and 3.1 pseudocode
-const DN1 = ['DECLARE Word : STRING', 'Word <- "Upstander"', 'OUTPUT UCASE(Word)', 'OUTPUT LENGTH(Word)'];
-const dn1 = run(DN1);
-assert(dn1[0] === 'UPSTANDER' && dn1[1] === '9', 'Do Now 1 ' + dn1);
-steps.push(checkStep('do-now', 'Do Now: Strings (1 of 2)', 'Recap of 2.5 String Manipulation. What does this program output?', [
-  { label: 'The first OUTPUT', answer: '^\\s*"?\\s*UPSTANDER\\s*"?\\s*\\.?\\s*$', feedback: 'UCASE changes every letter to a capital letter.' },
-  { label: 'The second OUTPUT', answer: '^\\s*9\\s*\\.?\\s*$', feedback: 'LENGTH counts every character in the string.' },
-], ['Why do programs often change text to capitals before comparing it?', 'Then "Hi", "HI" and "hi" all count as the same word.'], code(DN1)));
-steps[0].walkthrough = { title: 'Walk me through it: UCASE and LENGTH', steps: [
-  { text: '<strong>A similar question.</strong> Word holds "Kind".', visual: code(['Word <- "Kind"', 'OUTPUT UCASE(Word)', 'OUTPUT LENGTH(Word)']) },
-  { text: `${kw('UCASE')} changes every lower case letter to a capital. "Kind" becomes "KIND".`, visual: note('K i n d &rarr; K I N D') },
-  { text: 'Letters that are already capitals stay the same.', visual: note('K stays K') },
-  { text: `${kw('LENGTH')} counts the characters, one at a time: K, i, n, d.`, visual: note('1 2 3 4') },
-  { text: 'So this program outputs KIND, then 4.', visual: note('KIND &nbsp; 4') },
-  { text: 'Now do the same for the question: capitals first, then count every character.', visual: note('UCASE &nbsp; then LENGTH') },
+// ---------------------------------------------------------------- Do Now: an online safety starter
+steps.push(mcStep('do-now', 'Do Now: Is It Cyberbullying? (1 of 2)', 'Read each situation. Choose the best answer.', [
+  { prompt: 'A classmate shares an embarrassing photo of someone in a group chat, and others add laughing faces. Is this cyberbullying?',
+    options: ['Yes: it is shared to hurt, and others join in', 'No: it is only a photo', 'No: nobody typed anything unkind'], correct: 0,
+    explain: 'Sharing something to embarrass someone, with others joining in, is cyberbullying even without unkind words.' },
+  { prompt: 'Two friends tease each other about a football match in a chat, and both of them find it funny. Is this cyberbullying?',
+    options: ['Yes: any teasing online is bullying', 'No: both are joking, and both find it funny', 'Yes: it happened in a chat'], correct: 1,
+    explain: 'Friendly teasing that both people enjoy is not bullying. It becomes bullying when it is meant to hurt, or keeps going when someone is upset.' },
+], ['How can you tell a joke from bullying?', 'A joke is funny for everyone. Bullying is meant to hurt, or carries on when someone is upset.']));
+steps[0].walkthrough = { title: 'Walk me through it: is it cyberbullying?', steps: [
+  { text: '<strong>A similar situation.</strong> A student keeps posting comments under a classmate\'s videos saying the videos are rubbish.', visual: note('comment after comment') },
+  { text: `Ask: is it ${kw('meant to hurt')}? Comments saying someone's work is rubbish, again and again, are meant to upset.`, visual: note('meant to hurt?') },
+  { text: `Ask: is it ${kw('repeated')}, or ${kw('shared')} with others? Here it happens again and again, where everyone can see.`, visual: note('again and again, in public') },
+  { text: `Ask: does the other person ${kw('find it funny')} too? The classmate is not laughing.`, visual: note('only one side is laughing') },
+  { text: 'Meant to hurt, repeated and public, and not funny for both: this is cyberbullying.', visual: note('yes, cyberbullying') },
+  { text: 'Now ask the same three questions about each situation on the slide.', visual: note('meant to hurt? &nbsp; repeated or shared? &nbsp; funny for both?') },
 ] };
-
-const WORDS = ['hello', 'ok', 'thanks', 'brilliant'];
-const DN2 = ['DECLARE Words : ARRAY[1:4] OF STRING', 'DECLARE Count : INTEGER', 'DECLARE i : INTEGER',
-  ...WORDS.map((w, i) => `Words[${i + 1}] <- "${w}"`), 'Count <- 0', 'FOR i <- 1 TO 4', '    IF LENGTH(Words[i]) > 4 THEN', '        Count <- Count + 1', '    ENDIF', 'NEXT i', 'OUTPUT Count'];
-const dn2 = run(DN2);
-assert(dn2.length === 1 && dn2[0] === String(WORDS.filter((w) => w.length > 4).length), 'Do Now 2 ' + dn2);
-steps.push(checkStep('do-now-2', 'Do Now: Following Pseudocode (2 of 2)', 'Recap of 3.1 Following and Correcting Pseudocode. What does this program output?', [
-  { label: 'The OUTPUT', answer: `^\\s*${dn2[0]}\\s*\\.?\\s*$`, feedback: 'Go through the array one word at a time. Add 1 to Count only when the word has more than 4 characters.' },
-], ['Why do we trace a loop one value at a time?', 'Then we can see exactly when Count changes, and why.'], code(DN2)));
-steps[1].walkthrough = { title: 'Walk me through it: a loop over an array', steps: [
-  { text: '<strong>A similar question.</strong> The array holds "hi", "great", "no". Count goes up when a word has more than 2 characters.', visual: note('"hi" &nbsp; "great" &nbsp; "no"') },
-  { text: `Count starts at ${kw('0')}.`, visual: note('Count = 0') },
-  { text: '"hi" has 2 characters. 2 is not more than 2, so Count stays 0.', visual: note('hi: 2 &rarr; no change') },
-  { text: '"great" has 5 characters. 5 is more than 2, so Count becomes 1.', visual: note('great: 5 &rarr; Count = 1') },
-  { text: '"no" has 2 characters, so Count stays 1. The loop ends and the program outputs 1.', visual: note('OUTPUT 1') },
-  { text: 'Now do the same for the question: one word at a time, count the characters, compare with 4.', visual: note('LENGTH &gt; 4 ?') },
+steps.push(mcStep('do-now-2', 'Do Now: What Should You Do? (2 of 2)', 'Choose the best first step.', [
+  { prompt: 'Someone you do not know messages you and asks for a photo of you. What should you do?',
+    options: ['Reply and ask who they are', 'Send a photo that does not show your face', 'Do not reply, block them, and tell a trusted adult'], correct: 2,
+    explain: 'Never send photos to people you do not know. Do not reply, block them, and tell a trusted adult.' },
+  { prompt: 'An account posts something unkind about you. What is the best first step?',
+    options: ['Post something unkind back', 'Save the evidence before you do anything else', 'Delete your own account'], correct: 1,
+    explain: 'Save the evidence first, privately. Then report, block, and tell a trusted adult.' },
+], ['Why is it better not to reply straight away?', 'A reply can make it worse, and once it is sent you cannot take it back.']));
+steps[1].walkthrough = { title: 'Walk me through it: what should you do?', steps: [
+  { text: '<strong>A similar situation.</strong> Someone keeps sending you unkind comments in a game chat.', visual: note('unkind game chat messages') },
+  { text: `First, ${kw('do not reply')}. A reply can start an argument and make it worse.`, visual: note('1. do not reply') },
+  { text: `Next, ${kw('save the evidence')}: a private screenshot to show an adult, never to share.`, visual: note('2. save it privately') },
+  { text: `Then ${kw('report')} it in the game, and ${kw('block')} the sender.`, visual: note('3. report and block') },
+  { text: `Last, ${kw('tell a trusted adult')}, so it can be stopped.`, visual: note('4. tell an adult') },
+  { text: 'Now choose the answer on the slide that matches the safest first step.', visual: note('safest first step?') },
 ] };
-steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y9-3-1-ext', '<strong>Extension:</strong> finished the Do Now? Try these pseudocode cards from 3.1. Stuck? Switch on <strong>I need help</strong>.',
-  ['Why does each card use new values?', 'Then you practise the method, not one answer.']));
+steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y9-abw-ext', '<strong>Extension:</strong> finished the Do Now? Try these online safety situations.',
+  ['Why does each card show a different situation?', 'Then you practise deciding, not remembering one answer.']));
 
 // ---------------------------------------------------------------- title and the game
-steps.push({ id: 'title', label: 'Can Code Stop Cyberbullying?',
-  content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Anti-Bullying Week</p><h2 class="lesson-h2">Can Code Stop Cyberbullying?</h2><p>Year 9</p></div>' +
-    '<p class="lesson-lead"><strong>Today:</strong> test a filter, see how fast a post spreads, and learn what an upstander does.</p>' +
-    why(['Why might a school want a computer to check messages?', 'There are too many messages for people to read them all.']) });
+steps.push({ id: 'title', label: 'Be an Upstander Online',
+  content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Anti-Bullying Week</p><h2 class="lesson-h2">Be an Upstander Online</h2><p>Year 9</p></div>' +
+    '<p class="lesson-lead"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does.</p>' +
+    why(['Why can online bullying feel worse than bullying in person?', 'It can follow someone home, it can be seen by many people, and it is hard to take back.']) });
 
-steps.push(game('game-filter', 'Mission 1: The Filter', 'filter', 'Niran wrote a filter for the class chat. Collect messages from people around the school and test it on your phone.',
-  ['Before you play: what kind of unkind message might a word filter miss?', 'Take a few guesses, then test them in the game.']));
+steps.push(game('game-filter', 'Mission 1: The Filter', 'filter', 'The class chat app hides messages with banned words. Collect messages from people around the school and test the filter on your phone.',
+  ['Before you play: what kind of unkind message might a banned-word filter miss?', 'Take a few guesses, then test them in the game.']));
 steps.push(explain('explain-filter', 'Explain It: Can a Filter Stop It?',
-  "In the game, Niran's filter flagged any message with LOSER, UGLY, STUPID or WEIRDO inside it. It flagged harmless messages (\"losers' bracket\", \"stupid slow laptop\") and missed unkind ones (\"l0s3r\", sarcasm, \"everyone except Sam\").",
-  { prompt: 'In your own words, explain why a keyword filter cannot catch all cyberbullying.', marks: 2,
-    scheme: ['It only checks for blocked words / letters, not what the message means', 'Unkind messages with no blocked word get through (sarcasm, leaving someone out, changed spellings)', 'Harmless messages that contain a blocked word get flagged (false alarms)'],
+  'In the game, the class chat app hid any message with LOSER, UGLY, STUPID or WEIRDO inside it. It hid harmless messages ("losers\' bracket", "stupid slow laptop") and let unkind ones through ("l0s3r", sarcasm, "everyone come to football, except" one person).',
+  { prompt: 'In your own words, explain why a banned-word filter cannot stop all cyberbullying.', marks: 2,
+    scheme: ['It only checks for banned words, not what the message means', 'Unkind messages with no banned word get through (sarcasm, leaving someone out, changed spellings)', 'Harmless messages that contain a banned word get hidden (false alarms)'],
     guidance: 'Any two points, one mark each, in the student\'s own words. An example counts as the point it shows. "It is not clever enough" alone earns nothing.',
-    modelAnswer: 'It only looks for blocked words, not meaning. So "everyone except Sam" gets through, and "losers\' bracket" gets flagged.' },
-  ['Why do people have to test a program with real data?', 'Real data has cases the programmer never thought of.']));
+    modelAnswer: 'It only looks for banned words, not meaning. So leaving someone out gets through, and "losers\' bracket" gets hidden.' },
+  ['Why can people often get round a rule that a computer checks?', 'They can change the spelling, or say something unkind without the banned words.']));
 
-steps.push(game('game-spread', 'Mission 2: One Screenshot', 'spread', 'Krit posted a screenshot of Sam. Find out how far one post can travel.',
+steps.push(game('game-spread', 'Mission 2: One Screenshot', 'spread', 'A classmate shared a screenshot of someone. Find out how far one post can travel.',
   ['Before you play: if everyone forwards a post to 2 new people, how fast does it grow?', 'Say a guess, then check it in the game.']));
 steps.push(explain('explain-spread', 'Explain It: Why Deleting Is Not Enough',
-  'In the game, every person who got the screenshot forwarded it to 2 new people: 1, 3, 7, 15 people, and 255 after 8 steps. Then Krit deleted his post.',
+  'In the game, every person who got the screenshot forwarded it to 2 new people: 1, 3, 7, 15 people, and 255 after 8 steps. Then the person who shared it first deleted their post.',
   { prompt: 'In your own words, explain why deleting a post does not stop it spreading.', marks: 2,
-    scheme: ['Copies have already been forwarded / saved on other people\'s phones', 'Each person can forward it again, so it keeps spreading (it doubles each step)'],
+    scheme: ['Copies have already been forwarded / saved on other people\'s phones', 'Each person can forward it again, so it keeps spreading'],
     guidance: 'One mark for each point, in the student\'s own words. "It is on the internet forever" alone earns 1 mark only if it says copies exist elsewhere.',
     modelAnswer: 'Other people already have copies on their phones, and each of them can forward it again.' },
-  ['Why does doubling grow so fast?', 'Each step adds more new people than all the steps before it put together.']));
+  ['Why should you think before you share anything about someone else?', 'Once it is shared you cannot control where it goes.']));
 
-steps.push(game('game-upstander', 'Mission 3: Be an Upstander', 'upstander', 'The class chat is piling on Sam. Do the right things, in the right order.',
+steps.push(game('game-upstander', 'Mission 3: Be an Upstander', 'upstander', 'The class chat is ganging up on someone. Do the right things, in the right order.',
   ['Before you play: what is the difference between a bystander and an upstander?', 'A bystander sees it and does nothing. An upstander does something to help.']));
 steps.push(explain('explain-evidence', 'Explain It: Evidence First',
   'In the game, the right order in the chat was: do not reply, save the evidence (a private screenshot), report it, then block, and tell a trusted adult. Blocking before saving lost the messages.',
@@ -126,69 +118,89 @@ steps.push(explain('explain-evidence', 'Explain It: Evidence First',
     modelAnswer: 'Blocking can hide the messages. An adult needs to see them to help.' },
   ['Why is replying in the chat a bad idea, even to defend someone?', 'It can start an argument and give the people being unkind more attention.']));
 
-steps.push(embed('plenary', 'Plenary: Upstander Drill', 'drill-y9-abw', 'Filters, false alarms and misses, how far posts spread, and what an upstander does. Your progress is saved.',
-  ['Why practise with new messages every time?', 'Then you know how the filter works, not just the game\'s messages.']));
+steps.push(embed('plenary', 'Plenary: Upstander Drill', 'drill-y9-abw', 'Filters, how far posts spread, and what an upstander does. Your progress is saved.',
+  ['Why practise with new situations every time?', 'Then you can decide what to do in any situation, not just the game\'s.']));
 
 steps.push({ id: 'help', label: 'Where to Get Help',
-  content: '<h2 class="lesson-h2">Where to Get Help</h2>' + why(['Why is telling an adult not "snitching"?', 'It is how bullying actually stops, and it protects the person being targeted.']) +
+  content: '<h2 class="lesson-h2">Where to Get Help</h2>' + why(['Why is telling an adult the right thing to do?', 'It is how bullying actually stops, and it protects the person being targeted.']) +
     '<p class="lesson-lead">If anything online is worrying you, or someone you know:</p>' +
-    '<ul class="lesson-facts"><li>Talk to your <strong>form tutor</strong>, <strong>any teacher you trust</strong>, or the <strong>school counsellor</strong>.</li>' +
+    '<ul class="lesson-facts"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Year</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li>' +
+    '<li>Staff will listen, and they will pass what you tell them to the safeguarding team so you get the right help.</li>' +
     '<li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply.</li><li>You will not get in trouble for telling.</li></ul>' });
 
 // ---------------------------------------------------------------- self-checks
-const V = (k) => validators[`${P}_${k}`.replace(/-/g, '_')];
-const T = (k, i, s) => new RegExp(V(k)[i].pattern.source, 'i').test(s);
-[['UPSTANDER', 'upstander', '"UPSTANDER"'], ['9']].forEach((ys, i) => ys.forEach((y) => assert(T('do-now', i, y), 'do-now ' + i + ' rejects ' + y)));
-['Upstander', 'UPSTANDER9'].forEach((n) => assert(!T('do-now', 1, n), 'do-now 1 accepts ' + n));
-assert(T('do-now-2', 0, '3') && !T('do-now-2', 0, '4') && !T('do-now-2', 0, '2'), 'do-now-2 marking');
-const plain = (h) => h.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ');
-steps.filter((s) => s.walkthrough).forEach((s) => V(s.id).forEach((v, i) => s.walkthrough.steps.forEach((w, n) => assert(!new RegExp(v.pattern.source, 'i').test(plain(w.text)), `${s.id} walkthrough ${n} gives part ${i}`))));
-assert(!/UPSTANDER|\b9\b/.test(JSON.stringify(steps[0].walkthrough)), 'Do Now 1 walkthrough shows the answer');
-assert(!/\b3\b/.test(JSON.stringify(steps[1].walkthrough)), 'Do Now 2 walkthrough shows the answer');
 GAMES.forEach((id) => { const i = steps.findIndex((s) => s.id === id); assert(steps[i + 1].type === 'self-marked-response' && steps[i + 1].items[0].aiModel === 'haiku', id + ' is followed by a Haiku Explain It'); });
 for (const s of steps) if (s.id !== 'do-now-ext') assert(s.content.includes('lesson-tps'), 'Think, Pair, Share on ' + s.id);
-// safeguarding: nothing asks about the student's own experiences
-assert(!/\b(have you ever|your own experience|tell us about a time|happened to you|were you)\b/i.test(JSON.stringify(steps)), 'a slide asks about the student\'s own life');
+steps.filter((s) => s.type === 'multiple-choice').forEach((s) => {
+  assert(s.items.length <= 2, s.id + ' has more than two questions');
+  const t = /<div class="lesson-tps-a">([\s\S]*?)<\/div>/.exec(s.content)[1].toLowerCase();
+  s.items.forEach((it) => assert(!t.includes(it.options[it.correct].toLowerCase().split(':')[0]), s.id + ' TPS gives the option'));
+});
+assert(new Set(steps.filter((s) => s.items && s.type === 'multiple-choice').flatMap((s) => s.items.map((it) => it.correct))).size > 1, 'MC correct positions vary');
+const all = JSON.stringify(steps);
+// safeguarding and James's rules: nothing about the student's own life, no names, no code
+assert(!/\b(have you ever|your own experience|tell us about a time|happened to you|were you)\b/i.test(all), 'a slide asks about the student\'s own life');
+for (const n of NAME_POOL.concat(['Niran', 'Leo', 'Mali', 'Ava', 'Krit', 'Ploy', 'Ben', 'Sam'])) assert(!new RegExp('\\b' + n + '\\b').test(all), 'a name on a slide: ' + n);
+assert(!/DECLARE|ENDIF|pseudocode|UCASE|LENGTH\(|coding/.test(all), 'code in the online safety lesson');
+assert(!/\b(secret|keep it between us|won.t tell anyone|confidential)\b/i.test(all), 'a slide promises secrecy');
+assert(/Designated Safeguarding Lead/.test(steps.find((s) => s.id === 'help').content), 'the help slide names the safeguarding team');
 assert(new Set(steps.map((s) => s.id)).size === steps.length, 'step ids unique');
 
-// ---------------------------------------------------------------- plenary drill
+// ---------------------------------------------------------------- drills (plenary and Do Now Extension)
 const POOL = [
   ['nice goal today!', false], ['you are so stupid', true], ['this game is stupid hard', false], ['nobody wants you here', true],
-  ['ur so ugIy', true], ['the ugly sweater party is friday', false], ['go away weirdo', true], ['what a weird day', false],
-  ['everyone sit together except Ben', true], ['great work on the project', false], ['l0ser', true], ['our team was the biggest loser at quiz night, lol', false],
+  ['ur so ugIy', true], ['my handwriting is so ugly today lol', false], ['go away weirdo', true], ['what a weird day', false],
+  ['everyone sit together except the new student', true], ['great work on the project', false], ['l0ser', true], ['our team was the biggest loser at quiz night, lol', false],
 ];
-POOL.forEach(([t]) => assert(!/[–—]/.test(t), 'dash in pool'));
-const INJECT = { POOL };
-function abwCards() {
+const SITUATIONS = [
+  ['A stranger online asks for a photo of you.', 'Do not reply, block them and tell a trusted adult', ['Send a photo without your face', 'Ask them to prove who they are']],
+  ['A group chat is ganging up on a classmate.', 'Do not join in: save the evidence, report it and tell an adult', ['Add a laughing face so you fit in', 'Leave the chat and forget about it']],
+  ['Someone sends you an embarrassing photo of a classmate.', 'Do not forward it, and tell an adult', ['Forward it to one close friend', 'Post it so the classmate sees it']],
+  ['You see a classmate is upset after unkind comments online.', 'Check they are OK and help them tell an adult', ['Tell them to ignore it', 'Ask what they did to cause it']],
+  ['A friend wants your password to help you in a game.', 'Do not share it, even with friends', ['Share it if they promise not to tell', 'Write it in the group chat']],
+  ['A new student is being left out of a game squad on purpose.', 'Invite them in and tell an adult about the chat', ['Say they should practise more', 'Stay out of it']],
+];
+const INJECT = { POOL, SITUATIONS };
+function abwCards(which) {
   var BLOCKED = ["LOSER", "UGLY", "STUPID", "WEIRDO"];
   function flagged(t) { var u = t.toUpperCase(); return BLOCKED.some(function (w) { return u.indexOf(w) >= 0; }); }
   function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
-  var POOL = [] /*POOL*/;
-  var YES = /^\s*(yes|y|flagged|it is flagged)\s*\.?\s*$/i, NO = /^\s*(no|n|passed|not flagged|it passes)\s*\.?\s*$/i;
-  var RULE = "The filter flags a message if LOSER, UGLY, STUPID or WEIRDO is anywhere inside it (after UCASE).";
+  var POOL = [] /*POOL*/, SITUATIONS = [] /*SITUATIONS*/;
+  var YES = /^\s*(yes|y|hidden|it is hidden)\s*\.?\s*$/i, NO = /^\s*(no|n|not hidden|let through|it gets through)\s*\.?\s*$/i;
+  var RULE = "The chat app hides a message if LOSER, UGLY, STUPID or WEIRDO is anywhere inside it, in any capitals.";
   function flagCard() {
     var p = drillPick(POOL), f = flagged(p[0]);
-    return { prompt: RULE + ' Is "' + p[0] + '" flagged? Type yes or no.', answers: [f ? "yes" : "no"], keywords: [f ? YES : NO], distractors: [f ? "no" : "yes"],
-      working: ["Change the whole message to capitals first.", "Look for each blocked word anywhere inside it, even inside a longer word."],
-      note: '"' + p[0].toUpperCase() + '" ' + (f ? "contains a blocked word." : "contains none of the blocked words.") };
+    return { prompt: RULE + ' Is "' + p[0] + '" hidden? Type yes or no.', answers: [f ? "yes" : "no"], keywords: [f ? YES : NO], distractors: [f ? "no" : "yes"],
+      working: ["Read the message in capitals.", "Look for each banned word anywhere inside it, even inside a longer word."],
+      note: '"' + p[0].toUpperCase() + '" ' + (f ? "contains a banned word." : "contains none of the banned words.") };
   }
   var V = { right: /^\s*(right|correct)\s*\.?\s*$/i, alarm: /^\s*(a\s+)?false\s*alarm\s*\.?\s*$/i, miss: /^\s*(a\s+)?miss(ed)?\s*\.?\s*$/i };
   function verdictCard() {
     var p = drillPick(POOL), f = flagged(p[0]), k = f === p[1] ? "right" : f ? "alarm" : "miss", word = { right: "Right", alarm: "False alarm", miss: "Missed" };
     return { prompt: RULE + ' "' + p[0] + '" is ' + (p[1] ? "unkind" : "not unkind") + '. Did the filter get it right, raise a false alarm, or miss it? Type right, false alarm or missed.',
       answers: [word[k]], keywords: [V[k]], distractors: ["Right", "False alarm", "Missed"].filter(function (x) { return x !== word[k]; }),
-      working: ["First work out if the filter flags it.", "If flagged and unkind match (both yes or both no), the filter did its job. If not, which mistake did it make?"],
-      note: (f ? "Flagged" : "Not flagged") + " and " + (p[1] ? "unkind" : "not unkind") + "." };
+      working: ["First work out if the filter hides it.", "If hidden and unkind match (both yes or both no), the filter did its job. If not, which mistake did it make?"],
+      note: (f ? "Hidden" : "Let through") + " and " + (p[1] ? "unkind" : "not unkind") + "." };
   }
   function spreadCard() {
     var n = rnd(3, 8), v = Math.pow(2, n) - 1;
-    return { prompt: "Step 1: one person posts a screenshot. At every step, everyone who just got it forwards it to 2 new people. How many people have it after step " + n + "?",
+    return { prompt: "Step 1: one person shares a screenshot. At every step, everyone who just got it forwards it to 2 new people. How many people have it after step " + n + "?",
       answers: [String(v)], keywords: [new RegExp("^\\s*" + v + "\\s*(people)?\\s*\\.?\\s*$", "i")], distractors: drillWrongNumbers(v, [Math.pow(2, n), 2 * n, Math.pow(2, n - 1), v - 1], 3),
       working: ["Write down the new people at each step: 1, 2, 4, 8 ...", "Add up all the new people, one step at a time."],
       note: "1 + 2 + 4 + ... doubling for " + n + " steps gives " + v + "." };
   }
+  function situation(s, i) {
+    return { id: "sx-" + (i + 1), category: "sx-what", prompt: s[0] + " What is the best thing to do?", answers: [s[1]], distractors: s[2], pickThenType: true,
+      working: ["Which choice keeps everyone safest?", "Does it involve a trusted adult?"], note: s[1] + "." };
+  }
   function word(id, prompt, answer, re, distractors, working, note) { return { id: id, category: "ab-words", prompt: prompt, answers: [answer], keywords: [re], distractors: distractors, working: working, note: note }; }
   function why(id, prompt, answer, distractors, note, working) { return { id: id, category: "ab-why", prompt: prompt, answers: [answer], distractors: distractors, note: note, working: working, pickThenType: true }; }
+  if (which === "ext") return SITUATIONS.map(situation).concat([
+    word("sx-7", "Someone sees bullying and does something to help. What are they called?", "Upstander", /^\s*(an\s+)?upstander\s*\.?\s*$/i, ["Bystander", "Moderator"],
+      ["They stand up for the person targeted.", "It is the opposite of a bystander."], "An upstander acts to help; a bystander watches and does nothing."),
+    word("sx-8", "Before you block someone who is being unkind, what should you do first?", "Save the evidence", /^\s*(save|keep|screenshot)\b.*\b(evidence|messages?|screenshot|it)\b|^\s*screenshot\s*(it)?\s*\.?\s*$/i, ["Reply to them", "Forward it to friends"],
+      ["Blocking can hide the messages.", "What would an adult need to see?"], "Save the evidence first (privately), then report and block, and tell a trusted adult.")
+  ]).map(function (c) { if (c.category === "ab-words") c.category = "sx-words"; return c; });
   return [
     { id: "ab-01", category: "ab-filter", randomize: flagCard },
     { id: "ab-02", category: "ab-filter", randomize: flagCard },
@@ -202,23 +214,28 @@ function abwCards() {
       ["They are standing by.", "They watch but do not help."], "A bystander watches; an upstander helps."),
     word("ab-09", "When you see cyberbullying in a chat, what should you do before you block anyone?", "Save the evidence", /^\s*(save|keep|screenshot)\b.*\b(evidence|messages?|screenshot|it)\b|^\s*screenshot\s*(it)?\s*\.?\s*$/i, ["Reply to them", "Forward it to friends"],
       ["Blocking can hide the messages.", "What would an adult need to see?"], "Save the evidence first (privately), then report and block, and tell a trusted adult."),
-    why("ab-10", "Why can a keyword filter not catch all cyberbullying?", "It checks for words, not what a message means",
-      ["It runs too slowly", "It only works in capitals", "It cannot read long messages"], "\"everyone except Sam\" has no blocked word, but it leaves Sam out.", ["What does the filter actually look for?", "Can an unkind message use only kind words?"]),
+    why("ab-10", "Why can a banned-word filter not stop all cyberbullying?", "It checks for words, not what a message means",
+      ["It runs too slowly", "It only works in capitals", "It cannot read long messages"], "Leaving someone out uses no banned word, but it is still unkind.", ["What does the filter actually look for?", "Can an unkind message use only kind words?"]),
     why("ab-11", "Why does deleting a post not stop it spreading?", "Other people already have copies they can forward",
       ["Deleted posts come back after a day", "The app keeps the original", "Only the first person can forward it"], "Copies on other phones stay, and each can be forwarded again.", ["Where else is the post now?", "Can those people still send it?"]),
-    why("ab-12", "Why should you not reply to a pile-on in a chat?", "Replying can make it worse and gives it more attention",
-      ["Replies are always deleted", "It uses up your data", "The filter will flag you"], "Do not reply: save, report, block and tell an adult.", ["What happens when people get a reaction?", "What would help the person targeted more?"]),
+    why("ab-12", "Why should you not reply when a group chat gangs up on someone?", "Replying can make it worse and gives it more attention",
+      ["Replies are always deleted", "It uses up your data", "The filter will hide you"], "Do not reply: save, report, block and tell an adult.", ["What happens when people get a reaction?", "What would help the person targeted more?"]),
     why("ab-13", "Why is telling a trusted adult important?", "An adult can act to stop it and protect the person targeted",
       ["It gets the bullies in trouble online", "Adults can delete every copy", "Then you do not need to save evidence"], "Adults can step in, and you will not get in trouble for telling.", ["Who can actually stop it?", "What can a student not do alone?"]),
   ];
 }
-{
+const DRILLS = [
+  ['y9-abw', 'Year 9: Be an Upstander Online', 'plenary', [['ab-filter', 'The Filter'], ['ab-spread', 'How Far It Spreads'], ['ab-words', 'Upstanders'], ['ab-why', 'Why It Matters']]],
+  ['y9-abw-ext', 'Year 9: Online Safety Situations', 'ext', [['sx-what', 'What Should You Do?'], ['sx-words', 'Upstanders']]],
+];
+for (const [id, title, which, cats] of DRILLS) {
   let body = abwCards.toString();
   Object.entries(INJECT).forEach(([k, v]) => { body = body.split(`[] /*${k}*/`).join(JSON.stringify(v)); });
-  const src = `// Year 9 Anti-Bullying Week: plenary drill (filter, spread, upstander words, why).\n// Loaded by Drills/index.html?drill=y9-abw\n// Generated by tools/build_y9_abw.mjs: edit that, then run it.\n` +
-    `DrillData.register("y9-abw", {\n  title: "Year 9: Can Code Stop Cyberbullying?",\n  subtitle: "Anti-Bullying Week",\n  categories: [\n    ["ab-filter", "The Filter"],\n    ["ab-spread", "How Far It Spreads"],\n    ["ab-words", "Upstanders"],\n    ["ab-why", "Why It Matters"]\n  ],\n  cards: (${body})()\n});\n`;
-  assert(!/[–—]|&mdash;|&ndash;/.test(src), 'dash in drill');
-  fs.writeFileSync(path.join(ROOT, 'Drills', 'data', 'y9-abw.js'), src);
+  const src = `// Year 9 Anti-Bullying Week (online safety): ${which === 'ext' ? 'Do Now Extension' : 'plenary'} drill.\n// Loaded by Drills/index.html?drill=${id}\n// Generated by tools/build_y9_abw.mjs: edit that, then run it.\n` +
+    `DrillData.register(${JSON.stringify(id)}, {\n  title: ${JSON.stringify(title)},\n  subtitle: "Anti-Bullying Week",\n  categories: [\n${cats.map((c) => '    ' + JSON.stringify(c)).join(',\n')}\n  ],\n  cards: (${body})(${JSON.stringify(which)})\n});\n`;
+  assert(!/[\u2013\u2014]|&mdash;|&ndash;/.test(src), 'dash in drill ' + id);
+  for (const n of NAME_POOL.concat(['Niran', 'Leo', 'Mali', 'Ava', 'Krit', 'Ploy', 'Ben', 'Sam'])) assert(!new RegExp('\\b' + n + '\\b').test(src.replace(/^\/\/.*$/gm, '')), 'a name in drill ' + id + ': ' + n);
+  fs.writeFileSync(path.join(ROOT, 'Drills', 'data', id + '.js'), src);
   // draw every card many times: own answer passes and is right, distractors fail, working never gives the answer
   const vm = await import('node:vm');
   const ctx = { console, DrillData: { register: (k, d) => { ctx.out = d; } } };
@@ -226,7 +243,8 @@ function abwCards() {
   vm.runInContext(fs.readFileSync(path.join(ROOT, 'Drills', 'helpers.js'), 'utf8'), ctx);
   vm.runInContext(src, ctx);
   const d = ctx.out;
-  assert(d.cards.every((c) => d.categories.some((k) => k[0] === c.category)), 'card categories');
+  assert(d.cards.every((c) => d.categories.some((k) => k[0] === c.category)), id + ' card categories');
+  assert(new Set(d.cards.map((c) => c.id)).size === d.cards.length, id + ' card ids');
   for (const card of d.cards) for (let n = 0; n < (card.randomize ? 300 : 1); n++) {
     const r = card.randomize ? { ...card, ...card.randomize() } : card, ans = String(r.answers[0]);
     assert(r.working && r.working.length >= 2 && r.distractors.length >= 1, card.id + ' working and distractors');
@@ -235,7 +253,7 @@ function abwCards() {
     assert(pass(ans) && pass(ans.toLowerCase()), card.id + ': own answer fails: ' + ans);
     r.distractors.forEach((x) => assert(!pass(x), card.id + ': distractor passes: ' + x));
     let m;
-    if ((m = /Is "(.*)" flagged\?/.exec(r.prompt))) assert(ans === (flagged(m[1]) ? 'yes' : 'no'), card.id + ' flag ' + m[1]);
+    if ((m = /Is "(.*)" hidden\?/.exec(r.prompt))) assert(ans === (flagged(m[1]) ? 'yes' : 'no'), card.id + ' flag ' + m[1]);
     if ((m = /^.*"(.*)" is (unkind|not unkind)\. Did the filter/.exec(r.prompt))) {
       const v = verdict(flagged(m[1]), m[2] === 'unkind');
       assert(ans === { right: 'Right', 'false-alarm': 'False alarm', missed: 'Missed' }[v], card.id + ' verdict ' + m[1]);
@@ -243,11 +261,11 @@ function abwCards() {
     if ((m = /after step (\d+)\?/.exec(r.prompt))) assert(+ans === 2 ** +m[1] - 1, card.id + ' spread');
     r.working.forEach((w) => assert(!new RegExp('(^|\\W)' + ans.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(\\W|$)', 'i').test(w), card.id + ': working shows the answer: ' + w));
   }
-  console.log('y9-abw drill: ' + d.cards.length + ' cards');
+  console.log(id + ' drill: ' + d.cards.length + ' cards');
 }
 
-assert(!/[–—]|&mdash;|&ndash;/.test(JSON.stringify({ steps, validators })), 'dash found');
-fs.writeFileSync(path.join(ROOT, 'LessonData', ID + '.json'), JSON.stringify({ id: ID, label: 'Anti-Bullying Week: Can Code Stop Cyberbullying?', steps, validators, pseudocodeValidators: {} }, null, 1) + '\n');
+assert(!/[\u2013\u2014]|&mdash;|&ndash;/.test(JSON.stringify(steps)), 'dash found');
+fs.writeFileSync(path.join(ROOT, 'LessonData', ID + '.json'), JSON.stringify({ id: ID, label: 'Anti-Bullying Week: Be an Upstander Online', steps, validators: {}, pseudocodeValidators: {} }, null, 1) + '\n');
 
 // ---------------------------------------------------------------- register: a Year 9 "Anti-Bullying Week" unit
 {

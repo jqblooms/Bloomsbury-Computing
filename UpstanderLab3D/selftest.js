@@ -4,7 +4,7 @@
 //        choices and using the phone, ending with 3 stars and no slips.
 // break: every wrong choice and wrong phone action is refused with a reason, counts one slip, and moves nothing on.
 // Results in window.__selftest.
-import { MISSIONS, MESSAGES } from './js/story.js';
+import { MISSIONS, MESSAGES, fill, NAMES, NAME_POOL } from './js/story.js';
 import { flagged, verdict } from './js/filter.js';
 
 const L = () => window.__lab;
@@ -63,41 +63,45 @@ function chat(id) {
 const PLAY = {
   filter() {
     const lab = L();
-    chat('niran');
+    chat('rep');
     for (const m of MESSAGES.slice(1)) chat(m.from);
     lab.phone.open();
-    for (const m of MESSAGES) { lab.phone.run(m.id); assert(lab.phone.classify(m.id, verdict(flagged(m.text), m.unkind)), 'classify ' + m.id); }
+    for (const m of MESSAGES) { lab.phone.run(m.id); assert(lab.phone.classify(m.id, verdict(flagged(fill(m.text)), m.unkind)), 'classify ' + m.id); }
     lab.phone.close();
-    chat('niran');
+    chat('rep');
   },
   spread() {
     const lab = L();
-    chat('krit');
+    chat('poster');
     lab.phone.open(); lab.phone.spreadNext(); lab.phone.spreadNext();
     assert(lab.phone.answer('q4', 15) && lab.phone.answer('q8', 255), 'spread answers');
     lab.phone.close();
-    chat('krit'); chat('sam');
+    chat('poster'); chat('target');
   },
   upstander() {
     const lab = L();
     lab.phone.open(); assert(lab.phone.act('save') && lab.phone.act('report') && lab.phone.act('block'), 'chat actions'); lab.phone.close();
-    chat('sam'); chat('mali'); chat('coun');
+    chat('target'); chat('bystander'); chat('coun');
   },
   challenge() {
     const lab = L();
     lab.phone.open(); assert(lab.phone.act('save'), 'save'); lab.phone.close();
-    chat('leo'); chat('krit'); chat('coun');
+    chat('newcomer'); chat('poster'); chat('coun');
   },
 };
 
 function play() {
   const lab = L(), out = [];
+  // every person on screen has this visit's random name; nothing still shows a {role} token
+  for (const p of Object.values(lab.people)) assert(p.name === NAMES[p.id] && (p.id === 'coun' || NAME_POOL.includes(p.name)), 'name for ' + p.id);
+  assert(new Set(Object.values(NAMES)).size === Object.keys(NAMES).length, 'names repeat');
   for (const m of MISSIONS) {
     lab.start(lab.list().findIndex((x) => x.id === m.id));
     assert(lab.M.id === m.id, 'started ' + m.id);
     PLAY[m.id]();
     assert(lab.finished, m.id + ' not finished: ' + JSON.stringify(lab.S));
     assert(lab.slips === 0 && lab.stars[m.id] === 3, m.id + ' slips ' + lab.slips);
+    assert(!/\{\w+\}/.test(document.getElementById('mission').textContent + document.getElementById('hint').textContent), m.id + ': a {role} token is showing');
     out.push(m.id);
   }
   return 'played ' + out.join(', ');
@@ -116,7 +120,7 @@ function breakIt() {
         for (let j = 0; j < li; j++) if (!s[j].choices) lab.talk.next(); else break;
         if (lab.talk.line() !== line) { lab.talk.close(); return; }
         assert(!lab.talk.choose(k), id + ': wrong choice taken: ' + c.t);
-        assert(lab.talk.feedback() === c.why && c.why, id + ': no reason shown for ' + c.t);
+        assert(c.why && lab.talk.feedback() === fill(c.why), id + ': no reason shown for ' + c.t);
         assert(lab.slips === slips + 1, id + ': slip not counted');
         lab.talk.close();
         if (li === 0) assert(JSON.stringify(lab.S) === before, id + ': a wrong first choice changed the state');
