@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Two's Complement Animations</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <style>
+    /* Two's complement shown as 2D vector (SVG) animations, one idea per scene, stepped or played:
+       ?scene=column  why the left column is worth -128 (the number line folds below 0)    ?bits=10000101
+       ?scene=read    two's complement binary to denary, one 1 at a time                    ?bits=10010110
+       ?scene=flip    a negative denary number: flip every bit, then add 1 (with carries)   ?n=-20
+       ?scene=pos     a positive number: ordinary binary, 0 in the -128 column              ?n=10
+       ?embed=1 sits it on a lesson slide (no tabs or own-number box, transparent, reports its height).
+       Every animation is a CSS transition between step states driven by timers, so a hidden frame never gets stuck. */
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+    main { max-width: 1000px; margin: 0 auto; padding: 12px 16px; display: grid; gap: 10px; box-sizing: border-box; }
+    .embed, .embed body { background: transparent; }
+    .embed main { padding: 2px 4px 40px; gap: 8px; } /* room under the drawing for the slide's Full screen button */
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .top h1 { margin: 0; font-size: 24px; font-weight: 800; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tabs button, .bar button, .try button { font: inherit; font-weight: 700; padding: 7px 16px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .tabs button[aria-selected="true"] { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+    .stage { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 6px; }
+    #svg { width: 100%; height: auto; display: block; }
+    .cap { font-size: 22px; font-weight: 700; text-align: center; min-height: 2.5em; line-height: 1.25; display: flex; align-items: center; justify-content: center; padding: 0 8px; }
+    .cap b { color: var(--brand); }
+    .bar { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .bar button.primary { background: var(--brand); color: var(--on-brand); border-color: var(--brand); min-width: 7.5em; justify-content: center; }
+    .bar button:disabled { opacity: .45; cursor: default; }
+    .bar svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .count { color: var(--muted); font-size: 15px; min-width: 6.5em; text-align: center; }
+    .try { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; color: var(--muted); }
+    .try input { width: 8em; font: 700 17px var(--font-mono); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+    .try .err { color: var(--bad); }
+    .embed .top, .embed .try { display: none; }
+    /* On a slide: the drawing on the left, the caption and buttons on the right, so Play is never below the fold. */
+    @media (min-width: 700px) {
+      .embed main { grid-template-columns: minmax(0, 1fr) 250px; grid-template-rows: 1fr auto; align-items: center; column-gap: 14px; }
+      .embed .stage { grid-column: 1; grid-row: 1 / span 2; }
+      .embed .cap { grid-column: 2; grid-row: 1; align-self: end; font-size: 20px; justify-content: flex-start; text-align: left; min-height: 0; padding: 0; }
+      .embed .bar { grid-column: 2; grid-row: 2; align-self: start; justify-content: flex-start; }
+      .embed .bar button.primary { order: -1; flex-basis: 100%; }
+      .embed .count { text-align: left; }
+    }
+    /* the drawing */
+    #svg text { font-family: var(--font-mono); font-weight: 700; dominant-baseline: central; text-anchor: middle; }
+    #svg .mv { transition: transform .8s cubic-bezier(.4, 0, .2, 1), opacity .5s; }
+    #svg .fl { transform-box: fill-box; transform-origin: center; transition: transform .22s ease-in; }
+    #svg .fd { transition: opacity .5s; }
+    .instant #svg *, .instant #svg { transition: none !important; }
+    .cell { fill: var(--surface-2); stroke: var(--line-strong); stroke-width: 1.5; }
+    .cell.head { fill: var(--surface-3, var(--surface-2)); }
+    .cell.hl { stroke: var(--brand); stroke-width: 4; }
+    .cell.glow { fill: var(--brand-soft); }
+    .t-head { fill: var(--muted); font-size: 20px; }
+    .t-bit { fill: var(--ink); font-size: 34px; }
+    .t-bit.z { fill: var(--muted-2); }
+    .t-bit.new { fill: var(--brand-dark); }
+    .neg { fill: var(--bad) !important; }
+    .lab { fill: var(--muted); font-size: 17px; font-family: var(--font-body) !important; text-anchor: end !important; }
+    .tok rect { fill: var(--brand-soft); stroke: var(--brand); stroke-width: 2; }
+    .tok text { fill: var(--brand-dark); font-size: 22px; }
+    .tok.ntok rect { fill: var(--surface); stroke: var(--bad); }
+    .tok.ntok text { fill: var(--bad); }
+    .op { fill: var(--muted); font-size: 24px; }
+    .tot { fill: var(--ink); font-size: 34px; }
+    .carry text { fill: var(--brand-dark); font-size: 20px; }
+    .carry circle { fill: var(--brand-soft); stroke: var(--brand); stroke-width: 1.5; }
+    .seg-pos { fill: var(--brand); opacity: .75; }
+    .seg-neg { fill: var(--bad); opacity: .75; }
+    .tick { fill: var(--ink); font-size: 17px; }
+    .mark path { fill: var(--ink); }
+    .mark text { fill: var(--ink); font-size: 19px; }
+    .mark.good path { fill: var(--good); } .mark.good text { fill: var(--good); }
+    .mark.bad path { fill: var(--bad); } .mark.bad text { fill: var(--bad); }
+    .rule { stroke: var(--ink); stroke-width: 3; }
+    .axis { stroke: var(--line-strong); stroke-width: 2; }
+    @media (prefers-reduced-motion: reduce) { #svg .mv, #svg .fl, #svg .fd { transition-duration: .01s; } }
+  </style>
+</head>
+<body>
+<main id="main">
+  <div class="top"><h1>Two's Complement Animations</h1><div class="tabs" id="tabs" role="tablist"></div></div>
+  <div class="stage"><svg id="svg" viewBox="0 0 960 440" role="img" aria-label="Two's complement animation"></svg></div>
+  <div class="cap" id="cap" aria-live="polite"></div>
+  <div class="bar">
+    <button type="button" id="back" aria-label="Back one step"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Back</button>
+    <button type="button" id="play" class="primary"></button>
+    <button type="button" id="next" aria-label="Next step">Next<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button type="button" id="again"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>Start again</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="try" id="try"><label for="own" id="ownLab"></label><input id="own" autocomplete="off"><button type="button" id="ownGo">Show me</button><span class="err" id="ownErr"></span></div>
+</main>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var params = new URLSearchParams(location.search);
+  var EMBED = params.get('embed') === '1';
+  if (EMBED) document.documentElement.classList.add('embed');
+  var svg = document.getElementById('svg'), capEl = document.getElementById('cap'), countEl = document.getElementById('count');
+  var playBtn = document.getElementById('play'), backBtn = document.getElementById('back'), nextBtn = document.getElementById('next');
+
+  // ------------------------------------------------------------ numbers
+  var PV = [128, 64, 32, 16, 8, 4, 2, 1], TPV = [-128, 64, 32, 16, 8, 4, 2, 1];
+  function val(b) { return parseInt(b, 2); }
+  function tc(b) { return val(b) - (b[0] === '1' ? 256 : 0); }
+  function bin8(n) { var s = (n < 0 ? n + 256 : n).toString(2); while (s.length < 8) s = '0' + s; return s; }
+  function flip(b) { return b.split('').map(function (c) { return c === '1' ? '0' : '1'; }).join(''); }
+  function sp(b) { return b.slice(0, 4) + ' ' + b.slice(4); }
+  function onesAt(b) { var o = []; for (var i = 0; i < 8; i++) if (b[i] === '1') o.push(i); return o; }
+
+  // ------------------------------------------------------------ drawing helpers
+  var CW = 88, GAP = 8, X0 = 112;
+  function colX(i) { return X0 + i * (CW + GAP); }
+  function colC(i) { return colX(i) + CW / 2; }
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
+  function text(parent, x, y, s, cls) { var t = el('text', { x: x, y: y, 'class': cls || '' }, parent); t.textContent = s; return t; }
+  function at(g, x, y, extra) { g.style.transform = 'translate(' + x + 'px,' + y + 'px)' + (extra || ''); }
+  function show(g, on) { g.style.opacity = on ? 1 : 0; }
+  // A row of 8 cells at height y. Each cell flips (scaleY) when its text changes.
+  function row(y, h, label, head) {
+    var cells = [];
+    if (label) text(svg, X0 - 14, y + h / 2, label, 'lab');
+    for (var i = 0; i < 8; i++) {
+      var g = el('g', { 'class': 'mv' }); at(g, colX(i), y);
+      var f = el('g', { 'class': 'fl' }, g);
+      var r = el('rect', { width: CW, height: h, rx: 10, 'class': 'cell' + (head ? ' head' : '') }, f);
+      var t = text(f, CW / 2, h / 2, '', head ? 't-head' : 't-bit');
+      cells.push({ g: g, f: f, r: r, t: t, x: colX(i), y: y });
+    }
+    return cells;
+  }
+  function setBit(c, s, cls) { c.t.textContent = s; c.t.setAttribute('class', 't-bit' + (s === '0' ? ' z' : '') + (cls ? ' ' + cls : '')); }
+  function setHead(c, s, neg) { c.t.textContent = s; c.t.setAttribute('class', 't-head' + (neg ? ' neg' : '')); }
+  function mark(c, cls, on) { var k = (c.r.getAttribute('class') || '').split(' ').filter(function (x) { return x && x !== cls; }); if (on) k.push(cls); c.r.setAttribute('class', k.join(' ')); }
+  function flipCell(c, apply) { c.f.style.transform = 'scaleY(0)'; later(function () { apply(); c.f.style.transform = 'scaleY(1)'; }, 230); }
+  // A token: a place value lifted out of the header, moved along to the sum line.
+  function token(s, neg) {
+    var g = el('g', { 'class': 'tok mv' + (neg ? ' ntok' : '') });
+    var w = Math.max(56, 16 + s.length * 15);
+    el('rect', { x: -w / 2, y: -22, width: w, height: 44, rx: 10 }, g); text(g, 0, 0, s);
+    g.w = w; show(g, 0); return g;
+  }
+  // The sum line "a + b + c = t", laid out centred at height y.
+  function sumLayout(vals, y) {
+    var items = [], x = 0;
+    vals.forEach(function (v, k) { var w = Math.max(56, 16 + String(v).length * 15); if (k) { items.push({ op: '+', x: x + 18 }); x += 36; } items.push({ v: v, x: x + w / 2 }); x += w; });
+    items.push({ op: '=', x: x + 22 }); x += 44; var totX = x + 60; x += 120;
+    var shift = 480 - x / 2;
+    items.forEach(function (it) { it.x += shift; });
+    return { items: items, totX: totX + shift, y: y };
+  }
+  var counters = [];
+  function countTo(t, from, to, neg) {
+    t.setAttribute('class', 'tot' + (neg ? ' neg' : ''));
+    if (instant || from === to) { t.textContent = String(to); return; }
+    var k = 0, n = 14, id = setInterval(function () { k++; t.textContent = String(Math.round(from + (to - from) * k / n)); if (k >= n) clearInterval(id); }, 35);
+    counters.push({ id: id, finish: function () { t.textContent = String(to); } });
+  }
+  // Number line from lo to hi between x 80 and 880 (used for the fold in "column" and the +1 in "flip").
+  function lineX(v, lo, hi) { return 80 + (v - lo) * 800 / (hi - lo); }
+  function marker(cls, y) { var g = el('g', { 'class': 'mark mv ' + (cls || '') }); el('path', { d: 'M -11 -18 L 11 -18 L 0 0 Z' }, g); var t = text(g, 0, -36, ''); g.t = t; g.yy = y; show(g, 0); return g; }
+
+  // ------------------------------------------------------------ step engine
+  var scene = null, steps = [], cur = 0, playing = false, playTimer = null, instant = false, pend = [];
+  // Delayed parts of a step. Moving forward finishes them at once (flush), so a quick Next never leaves a step half done.
+  function later(fn, ms) {
+    if (instant) { fn(); return; }
+    var p = { fn: fn, done: false };
+    p.id = setTimeout(function () { p.done = true; fn(); }, ms);
+    pend.push(p);
+  }
+  function stopPend(flush) {
+    var list = pend; pend = [];
+    counters.forEach(function (c) { clearInterval(c.id); if (flush) c.finish(); }); counters = [];
+    if (!flush) { list.forEach(function (p) { clearTimeout(p.id); }); return; }
+    var was = instant; instant = true; document.documentElement.classList.add('instant');
+    list.forEach(function (p) { clearTimeout(p.id); if (!p.done) { p.done = true; p.fn(); } });
+    svg.getBoundingClientRect(); Array.prototype.forEach.call(svg.querySelectorAll('g'), function (g) { getComputedStyle(g).transform; });
+    instant = was; if (!was) document.documentElement.classList.remove('instant');
+  }
+  function render(k, animate) {
+    k = Math.max(0, Math.min(steps.length - 1, k));
+    stopPend(animate && k > cur);
+    if (!animate || k < cur || k === 0) {
+      document.documentElement.classList.add('instant'); instant = true;
+      svg.innerHTML = ''; scene.setup();
+      for (var i = 0; i < k; i++) steps[i].run();
+      svg.getBoundingClientRect(); Array.prototype.forEach.call(svg.querySelectorAll('g'), function (g) { getComputedStyle(g).transform; });
+      instant = false; document.documentElement.classList.remove('instant');
+    }
+    cur = k;
+    var s = steps[k];
+    capEl.innerHTML = '<span>' + s.cap + '</span>'; svg.setAttribute('aria-label', capEl.textContent);
+    if (k === 0 && animate) { svg.getBoundingClientRect(); }
+    s.run();
+    bar();
+  }
+  function bar() {
+    countEl.textContent = 'Step ' + (cur + 1) + ' of ' + steps.length;
+    backBtn.disabled = cur === 0; nextBtn.disabled = cur >= steps.length - 1;
+    var end = cur >= steps.length - 1;
+    playBtn.innerHTML = playing ? '<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>Pause' :
+      (end ? '<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>Watch again' : '<svg viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z"/></svg>Play');
+  }
+  function tick() {
+    clearTimeout(playTimer);
+    if (!playing) return;
+    playTimer = setTimeout(function () {
+      if (!playing) return;
+      if (cur >= steps.length - 1) { playing = false; bar(); return; }
+      render(cur + 1, true); tick();
+    }, steps[cur].dur || 2700);
+  }
+  playBtn.addEventListener('click', function () {
+    if (playing) { playing = false; clearTimeout(playTimer); bar(); return; }
+    playing = true;
+    if (cur >= steps.length - 1) render(0, false);
+    bar(); tick();
+  });
+  nextBtn.addEventListener('click', function () { playing = false; clearTimeout(playTimer); render(cur + 1, true); });
+  backBtn.addEventListener('click', function () { playing = false; clearTimeout(playTimer); render(cur - 1, false); });
+  document.getElementById('again').addEventListener('click', function () { playing = false; clearTimeout(playTimer); render(0, false); });
+
+  // ------------------------------------------------------------ scene: why -128?
+  function sceneColumn(bits) {
+    var S = {}, ones = onesAt(bits), u = val(bits), v = tc(bits), neg = bits[0] === '1';
+    var L1 = sumLayout(ones.map(function (i) { return PV[i]; }), 236), L2 = sumLayout(ones.map(function (i) { return TPV[i]; }), 236);
+    function lay(L, toks) { var k = 0; L.items.forEach(function (it) { if (it.op) return; at(toks[k], it.x, L.y); show(toks[k], 1); k++; }); }
+    function home(toks) { toks.forEach(function (g, k) { at(g, colC(ones[k]), 30); show(g, 0); }); }
+    return {
+      setup: function () {
+        S.head = row(10, 40, 'Place value', true); S.row = row(58, 64, 'Bit');
+        S.head.forEach(function (c, i) { setHead(c, String(PV[i])); }); S.row.forEach(function (c, i) { setBit(c, bits[i]); });
+        S.t1 = ones.map(function (i) { return token(String(PV[i])); }); S.t2 = ones.map(function (i) { return token(String(TPV[i]), i === 0); });
+        home(S.t1); home(S.t2);
+        S.ops1 = el('g', { 'class': 'fd' }); L1.items.forEach(function (it) { if (it.op) text(S.ops1, it.x, L1.y, it.op, 'op'); }); show(S.ops1, 0);
+        S.ops2 = el('g', { 'class': 'fd' }); L2.items.forEach(function (it) { if (it.op) text(S.ops2, it.x, L2.y, it.op, 'op'); }); show(S.ops2, 0);
+        S.tot1 = text(svg, L1.totX, L1.y, '', 'tot'); S.tot2 = text(svg, L2.totX, L2.y, '', 'tot');
+        // the number line: two halves that swap sides
+        S.line = el('g', { 'class': 'fd' }); show(S.line, 0);
+        S.lo = el('g', { 'class': 'mv' }, S.line); S.hi = el('g', { 'class': 'mv' }, S.line);
+        el('rect', { x: 80, y: 330, width: 398, height: 16, rx: 4, 'class': 'seg-pos' }, S.lo);
+        S.loA = text(S.lo, 92, 368, '0', 'tick'); S.loB = text(S.lo, 462, 368, '127', 'tick');
+        el('rect', { x: 482, y: 330, width: 398, height: 16, rx: 4, 'class': 'seg-neg' }, S.hi);
+        S.hiA = text(S.hi, 498, 368, '128', 'tick'); S.hiB = text(S.hi, 866, 368, '255', 'tick');
+        at(S.lo, 0, 0); at(S.hi, 0, 0);
+        S.zero = text(S.line, 480, 400, '', 'tick');
+        S.mk = marker('', 328);
+      },
+      steps: [
+        { cap: 'Ordinary binary: every place value is <b>positive</b>.', run: function () { mark(S.head[0], 'hl', false); } },
+        { cap: 'Add the place values of the 1s: <b>' + ones.map(function (i) { return PV[i]; }).join(' + ') + ' = ' + u + '</b>.', dur: 3200,
+          run: function () { lay(L1, S.t1); show(S.ops1, 1); later(function () { countTo(S.tot1, 0, u); }, 600); } },
+        { cap: 'Ordinary binary goes from 0 to 255. <b>Nothing is below 0.</b>', dur: 3200,
+          run: function () { show(S.line, 1); at(S.mk, lineX(u, 0, 256), 328); S.mk.t.textContent = String(u); show(S.mk, 1); } },
+        { cap: 'Two\'s complement changes one thing: the left column is worth <b>-128</b>.', dur: 3200,
+          run: function () { home(S.t1); show(S.ops1, 0); S.tot1.textContent = ''; mark(S.head[0], 'hl', true); flipCell(S.head[0], function () { setHead(S.head[0], '-128', true); }); } },
+        { cap: 'Add them again: <b>' + ones.map(function (i) { return TPV[i]; }).join(' + ') + ' = ' + v + '</b>.', dur: 3400,
+          run: function () { lay(L2, S.t2); show(S.ops2, 1); later(function () { countTo(S.tot2, 0, v, v < 0); }, 600); } },
+        { cap: 'Every number with a 1 in the left column moves <b>below 0</b>.', dur: 3600,
+          run: function () {
+            at(S.hi, -402, 0); at(S.lo, 402, 0);
+            later(function () { S.hiA.textContent = '-128'; S.hiB.textContent = '-1'; S.loA.textContent = '0'; S.loB.textContent = '127'; }, 400);
+            at(S.mk, neg ? lineX(v, -128, 128) : lineX(v, -128, 128), 328); S.mk.t.textContent = String(v);
+          } },
+        { cap: '8 bits now store <b>-128 to 127</b>. Left bit 1: negative. Left bit 0: positive.', dur: 3600,
+          run: function () { mark(S.row[0], 'hl', true); mark(S.row[0], 'glow', true); } },
+        { cap: 'Use the -128 column <b>only when the question says two\'s complement</b>.', dur: 3200, run: function () {} }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ scene: read it
+  function sceneRead(bits) {
+    var S = {}, ones = onesAt(bits), v = tc(bits), L = sumLayout(ones.map(function (i) { return TPV[i]; }), 250), list = [];
+    var st = [{ cap: bits[0] === '1' ? 'Two\'s complement: write <b>-128</b> over the left bit.' : 'Two\'s complement: write -128 over the left bit. Here it is a <b>0</b>.',
+      run: function () { mark(S.head[0], 'hl', true); } }];
+    var k = 0, run = 0;
+    ones.forEach(function (i, n) {
+      var idx = n, pv = TPV[i], before = run; run += pv;
+      st.push({ cap: (i === 0 ? 'A 1 in the -128 column: <b>start at -128</b>.' : 'A 1 under ' + pv + ': <b>add ' + pv + '</b>.'), dur: 2400,
+        run: function () {
+          S.head.forEach(function (c, j) { mark(c, 'hl', j === i); }); mark(S.row[i], 'glow', true);
+          var it = L.items.filter(function (x) { return !x.op; })[idx]; at(S.toks[idx], it.x, L.y); show(S.toks[idx], 1);
+          L.items.forEach(function (x, q) { if (x.op && q < L.items.indexOf(it)) show(S.ops[q], 1); });
+          countTo(S.tot, before, before + pv, before + pv < 0);
+        } });
+    });
+    st.push({ cap: 'So ' + sp(bits) + ' is <b>' + v + '</b>.', dur: 3200, run: function () { S.head.forEach(function (c) { mark(c, 'hl', false); }); show(S.ops[L.items.length - 1], 1); } });
+    return {
+      setup: function () {
+        S.head = row(30, 40, 'Place value', true); S.row = row(78, 64, 'Bit');
+        S.head.forEach(function (c, i) { setHead(c, String(TPV[i]), i === 0); }); S.row.forEach(function (c, i) { setBit(c, bits[i]); });
+        S.toks = ones.map(function (i) { var g = token(String(TPV[i]), i === 0); at(g, colC(i), 50); return g; });
+        S.ops = L.items.map(function (it) { if (!it.op) return null; var t = text(svg, it.x, L.y, it.op, 'op fd'); show(t, 0); return t; });
+        S.tot = text(svg, L.totX, L.y, '0', 'tot');
+        text(svg, 480, 292, 'Running total', 'lab').setAttribute('style', 'text-anchor:middle');
+      },
+      steps: st
+    };
+  }
+
+  // ------------------------------------------------------------ scene: flip and add 1
+  function sceneFlip(n) {
+    var S = {}, m = -n, pos = bin8(m), fl = flip(pos), ans = bin8(n), st = [];
+    var RY = { pos: 52, fl: 112, one: 172, ans: 240 }, H = 52;
+    st.push({ cap: 'To store <b>' + n + '</b>, start with <b>' + m + '</b> in 8 bits: ' + onesAt(pos).map(function (i) { return PV[i]; }).join(' + ') + '.', dur: 3000,
+      run: function () { S.pos.forEach(function (c, i) { setBit(c, pos[i]); show(c.g, 1); }); } });
+    st.push({ cap: '<b>Flip</b> every bit: 0 becomes 1, 1 becomes 0.', dur: 3600,
+      run: function () {
+        S.fl.forEach(function (c, i) { setBit(c, pos[i]); at(c.g, c.x, RY.pos); show(c.g, 1); });
+        later(function () { S.fl.forEach(function (c) { at(c.g, c.x, RY.fl); }); }, 50);
+        S.fl.forEach(function (c, i) { later(function () { flipCell(c, function () { setBit(c, fl[i], 'new'); }); }, 700 + i * 150); });
+      } });
+    st.push({ cap: 'Now <b>add 1</b>, starting at the right.', dur: 2600,
+      run: function () { S.fl.forEach(function (c, i) { setBit(c, fl[i]); }); S.one.forEach(function (c) { show(c.g, 1); }); show(S.rule, 1); } });
+    // add 1, column by column from the right, until no carry is left
+    var carry = 0, out = [], i = 7;
+    for (; i >= 0; i--) {
+      var a = +fl[i], b = i === 7 ? 1 : 0, t = a + b + carry, w = t % 2, c = t > 1 ? 1 : 0;
+      out[i] = w;
+      var what = (i === 7 ? a + ' + 1' : a + ' + the carry 1') + ' = ' + (t > 1 ? '10' : String(t)) + ': write <b>' + w + '</b>' + (c ? ', carry <b>1</b>' : '') + '.';
+      (function (i, w, c) {
+        st.push({ cap: 'The ' + PV[i] + ' column: ' + what, dur: 2600,
+          run: function () {
+            S.fl.forEach(function (q, j) { mark(q.r ? q : q, 'hl', j === i); });
+            setBit(S.ans[i], String(w), 'new'); show(S.ans[i].g, 1);
+            if (c && i > 0) { at(S.car[i - 1], colX(i - 1) + CW - 15, RY.fl + 15); show(S.car[i - 1], 1); }
+          } });
+      })(i, w, c);
+      carry = c;
+      if (!carry && i < 7) break;
+      if (!carry && i === 7) break;
+    }
+    var stop = i;
+    if (stop > 0) st.push({ cap: 'No carry left: <b>copy the rest</b> down.', dur: 2600,
+      run: function () { S.fl.forEach(function (q) { mark(q, 'hl', false); }); for (var j = 0; j < stop; j++) { setBit(S.ans[j], fl[j]); show(S.ans[j].g, 1); } } });
+    var L = sumLayout(onesAt(ans).map(function (j) { return TPV[j]; }), 345);
+    st.push({ cap: 'Check with -128: <b>' + onesAt(ans).map(function (j) { return TPV[j]; }).join(' + ') + ' = ' + n + '</b>.', dur: 3600,
+      run: function () {
+        S.fl.forEach(function (q) { mark(q, 'hl', false); });
+        for (var j = 0; j < 8; j++) { setBit(S.ans[j], ans[j]); show(S.ans[j].g, 1); }
+        var k = 0; L.items.forEach(function (it, q) { if (it.op) { show(S.ops[q], 1); return; } at(S.toks[k], it.x, L.y); show(S.toks[k], 1); k++; });
+        countTo(S.tot, 0, n, true);
+      } });
+    var f = tc(fl), lo = n - 4, hi = n + 4;
+    st.push({ cap: 'Flip only gives <b>' + f + '</b>: one too low. Adding 1 moves it up to <b>' + n + '</b>.', dur: 3800,
+      run: function () {
+        show(S.sum, 0); show(S.mini, 1);
+        at(S.mkF, lineX(f, lo, hi), 404); S.mkF.t.textContent = 'flip only ' + f; show(S.mkF, 1);
+        at(S.mkA, lineX(f, lo, hi), 404); S.mkA.t.textContent = ''; show(S.mkA, 1);
+        later(function () { at(S.mkA, lineX(n, lo, hi), 404); S.mkA.t.textContent = '+1: ' + n; }, 700);
+      } });
+    return {
+      setup: function () {
+        S.head = row(6, 38, '', true); S.head.forEach(function (c, i) { setHead(c, String(TPV[i]), i === 0); });
+        S.pos = row(RY.pos, H, '+' + m); S.pos.forEach(function (c) { show(c.g, 0); });
+        S.fl = row(RY.pos, H, ''); S.fl.forEach(function (c) { show(c.g, 0); }); text(svg, X0 - 14, RY.fl + H / 2, 'Flipped', 'lab');
+        S.one = row(RY.one, H, '+ 1'); S.one.forEach(function (c, i) { setBit(c, i === 7 ? '1' : '0'); show(c.g, 0); });
+        S.rule = el('line', { x1: colX(0), x2: colX(7) + CW, y1: RY.ans - 5, y2: RY.ans - 5, 'class': 'rule fd' }); show(S.rule, 0);
+        S.ans = row(RY.ans, H, 'Answer'); S.ans.forEach(function (c) { show(c.g, 0); });
+        S.car = [0, 1, 2, 3, 4, 5, 6].map(function (j) { var g = el('g', { 'class': 'carry mv' }); el('circle', { r: 12 }, g); text(g, 0, 0, '1'); at(g, colX(j + 1) + CW - 15, RY.fl + 15); show(g, 0); return g; });
+        S.sum = el('g', { 'class': 'fd' });
+        var L = sumLayout(onesAt(ans).map(function (j) { return TPV[j]; }), 345);
+        S.toks = onesAt(ans).map(function (j) { var g = token(String(TPV[j]), j === 0); S.sum.appendChild(g); at(g, colC(j), RY.ans + 26); return g; });
+        S.ops = L.items.map(function (it) { if (!it.op) return null; var t = text(S.sum, it.x, L.y, it.op, 'op fd'); show(t, 0); return t; });
+        S.tot = text(S.sum, L.totX, L.y, '', 'tot');
+        S.mini = el('g', { 'class': 'fd' }); show(S.mini, 0);
+        el('line', { x1: 80, x2: 880, y1: 410, y2: 410, 'class': 'axis' }, S.mini);
+        for (var v = lo; v <= hi; v++) { el('line', { x1: lineX(v, lo, hi), x2: lineX(v, lo, hi), y1: 404, y2: 416, 'class': 'axis' }, S.mini); text(S.mini, lineX(v, lo, hi), 430, String(v), 'tick'); }
+        S.mkF = marker('bad'); S.mkA = marker('good'); S.mini.appendChild(S.mkF); S.mini.appendChild(S.mkA); S.mkA.t.setAttribute('y', -64);
+      },
+      steps: st
+    };
+  }
+
+  // ------------------------------------------------------------ scene: positive numbers
+  function scenePos(n) {
+    var S = {}, b = bin8(n), ones = onesAt(b), nb = bin8(-n), lead = b.indexOf('1');
+    return {
+      setup: function () {
+        S.head = row(30, 40, 'Place value', true); S.head.forEach(function (c, i) { setHead(c, String(TPV[i]), i === 0); });
+        S.row = row(78, 64, '+' + n); S.row.forEach(function (c) { setBit(c, ''); });
+        S.neg = row(200, 64, String(-n)); S.neg.forEach(function (c, i) { setBit(c, nb[i]); show(c.g, 0); });
+      },
+      steps: [
+        { cap: '<b>' + n + '</b> is positive.', run: function () {} },
+        { cap: 'Which place values make ' + n + '? <b>' + ones.map(function (i) { return PV[i]; }).join(' + ') + '</b>.', dur: 3000,
+          run: function () { ones.forEach(function (i, k) { later(function () { flipCell(S.row[i], function () { setBit(S.row[i], '1', 'new'); }); mark(S.head[i], 'hl', true); }, k * 300); }); } },
+        { cap: 'Put a <b>0</b> in every other column, the -128 column too.', dur: 3200,
+          run: function () { S.head.forEach(function (c) { mark(c, 'hl', false); }); for (var i = 0; i < 8; i++) if (b[i] === '0') (function (i) { later(function () { flipCell(S.row[i], function () { setBit(S.row[i], '0'); }); }, i * 160); })(i); } },
+        { cap: 'A 0 in the -128 column takes nothing away, so it <b>stays positive</b>.', dur: 3200,
+          run: function () { for (var i = 0; i < 8; i++) setBit(S.row[i], b[i], b[i] === '1' ? 'new' : ''); mark(S.head[0], 'hl', true); mark(S.row[0], 'hl', true); } },
+        { cap: 'All 8 bits: <b>' + sp(b) + '</b>. The leading zeros must be there.', dur: 3200,
+          run: function () { mark(S.head[0], 'hl', false); mark(S.row[0], 'hl', false); for (var i = 0; i < lead; i++) mark(S.row[i], 'glow', true); } },
+        { cap: '<b>' + (-n) + '</b> is different: flip and add 1 gives ' + sp(nb) + ', with a 1 in the -128 column.', dur: 3600,
+          run: function () { for (var i = 0; i < lead; i++) mark(S.row[i], 'glow', false); S.neg.forEach(function (c, i) { later(function () { show(c.g, 1); }, i * 90); }); mark(S.neg[0], 'hl', true); } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ choosing a scene
+  var SCENES = {
+    column: { label: 'Why -128?', make: sceneColumn, h: 412, def: '10000101', ask: 'Your own 8 bits', ok: function (s) { return /^[01]{8}$/.test(s) && s[0] === '1' && onesAt(s).length >= 2; }, err: '8 bits starting with 1' },
+    read: { label: 'Read it', make: sceneRead, h: 312, def: '10010110', ask: 'Your own 8 bits', ok: function (s) { return /^[01]{8}$/.test(s) && s !== '00000000'; }, err: '8 bits, not all 0' },
+    flip: { label: 'Flip and add 1', h: 440, make: function (s) { return sceneFlip(+s); }, def: '-20', ask: 'A negative number', ok: function (s) { return /^-\d{1,3}$/.test(s) && +s >= -127 && +s <= -1; }, err: '-1 to -127' },
+    pos: { label: 'Positive numbers', h: 280, make: function (s) { return scenePos(+s); }, def: '10', ask: 'A positive number', ok: function (s) { return /^\d{1,3}$/.test(s) && +s >= 1 && +s <= 127; }, err: '1 to 127' }
+  };
+  var sceneKey = SCENES[params.get('scene')] ? params.get('scene') : 'column';
+  function start(key, value) {
+    var d = SCENES[key];
+    if (!d.ok(value)) value = d.def;
+    sceneKey = key; scene = d.make(value); steps = scene.steps;
+    svg.setAttribute('viewBox', '0 0 960 ' + d.h);
+    playing = false; clearTimeout(playTimer); cur = 0;
+    document.getElementById('ownLab').textContent = d.ask;
+    document.getElementById('own').value = value; document.getElementById('ownErr').textContent = '';
+    Array.prototype.forEach.call(document.querySelectorAll('#tabs button'), function (b) { b.setAttribute('aria-selected', String(b.dataset.k === key)); });
+    render(0, false);
+  }
+  var tabs = document.getElementById('tabs');
+  Object.keys(SCENES).forEach(function (k) {
+    var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.k = k; b.textContent = SCENES[k].label;
+    b.addEventListener('click', function () { start(k, SCENES[k].def); }); tabs.appendChild(b);
+  });
+  function own() {
+    var v = document.getElementById('own').value.replace(/\s+/g, '').replace(/−/g, '-'), d = SCENES[sceneKey];
+    if (!d.ok(v)) { document.getElementById('ownErr').textContent = 'Type ' + d.err + '.'; return; }
+    start(sceneKey, v);
+  }
+  document.getElementById('ownGo').addEventListener('click', own);
+  document.getElementById('own').addEventListener('keydown', function (e) { if (e.key === 'Enter') own(); });
+  var q = sceneKey === 'flip' || sceneKey === 'pos' ? params.get('n') : params.get('bits');
+  start(sceneKey, q || SCENES[sceneKey].def);
+
+  // Height for a lesson embed.
+  var main = document.getElementById('main');
+  function reportHeight() { if (window.parent === window) return; try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: Math.ceil(main.getBoundingClientRect().height) + 12 }, '*'); } catch (e) {} }
+  if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(main);
+  reportHeight();
+  window.__twosAnim = { steps: function () { return steps.length; }, go: function (k) { render(k, false); }, cur: function () { return cur; }, tc: tc, bin8: bin8 };
+})();
+</script>
+</body>
+</html>

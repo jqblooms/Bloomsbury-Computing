@@ -162,8 +162,21 @@ function embed(id, label, appId, heading, lead, whyQ) {
   return { id, label, type: 'embedded-app', appId, embedContainerId: `${P}-${id}`,
     content: `<h2 class="lesson-h2">${heading}</h2>` + why(whyQ[0], whyQ[1]) + (lead ? `<p class="lesson-lead">${lead}</p>` : '') + `<div id="${P}-${id}"></div>` };
 }
-function concept(id, label, tpsQ, tpsA, body) {
-  return { id, label, content: `<h2 class="lesson-h2">${label}</h2>` + tps(tpsQ, tpsA, 'Show the worked answer') + body };
+// An animation slide: a heading, one line, and the Two's Complement Animations app (pages TwosAnim/) on one scene.
+const ANIMS = {};
+function anim(id, label, query, whyQ) {
+  ANIMS[id] = query;
+  return { id, label, type: 'embedded-app', appId: 'twos-anim', embedQuery: query, embedContainerId: `${P}-${id}`,
+    content: `<h2 class="lesson-h2">${label}</h2>` + why(whyQ[0], whyQ[1]) +
+      '<p class="lesson-lead">Press <strong>Play</strong>, or <strong>Next</strong> for one step at a time.</p>' + `<div id="${P}-${id}"></div>` };
+}
+// Explain it in your own words, straight after an animation: AI-marked by Haiku only (aiModel "haiku"), James 2026-11-16.
+function explain(id, label, about, part, whyQ) {
+  const cid = `${P}-${id}`;
+  return { id, label, type: 'self-marked-response', containerId: cid,
+    content: `<h2 class="lesson-h2">${label}</h2>` + why(whyQ[0], whyQ[1]) +
+      '<p class="lesson-lead">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p>' + `<div id="${cid}"></div>`,
+    items: [Object.assign({ id: `${id}-q`, aiModel: 'haiku', context: about + ' ' + part.prompt }, part)] };
 }
 const steps = [];
 const cap = (t) => t[0].toUpperCase() + t.slice(1);
@@ -264,19 +277,22 @@ steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y11-1-8-shi
 // ---------------------------------------------------------------- title
 steps.push({ id: 'title', label: "Two's Complement",
   content: `<div class="lesson-title-slide"><p class="lesson-title-kicker">1.1 Number Systems</p><h2 class="lesson-h2">Two's Complement</h2><p>Year 11</p></div>` +
-    facts(['<strong>Today:</strong> store <strong>negative</strong> numbers in 8-bit binary.', 'Convert two\'s complement binary to denary.', 'Convert a negative denary number to two\'s complement: <strong>flip and add 1</strong>.']) +
+    '<p class="lesson-lead"><strong>Today:</strong> store negative numbers in 8-bit binary.</p>' +
     why('Why might a computer need to store a number below zero?', 'A temperature or a bank balance can go below zero.') });
 
 // ---------------------------------------------------------------- the -128 column
-const EXN = '10000101', EXP = '00000101';
-assert(tc(EXN) === -123 && tc(EXP) === 5, 'concept examples');
-steps.push(concept('concept-twos', "What Is Two's Complement?",
-  'Why must one column be worth a negative amount?',
-  '<p>Adding only positive place values can never give a total below 0.</p>',
-  columns(facts(['Ordinary binary has only positive place values, so it cannot show a number below 0.', '<strong>Two\'s complement</strong> stores positive and negative whole numbers in binary.',
-    'The left column (the most significant bit) is worth <strong>-128</strong>. The other columns are the same as before.', 'Left bit <strong>1</strong>: the number is negative. Left bit <strong>0</strong>: it is positive.',
-    'In 8 bits it stores <strong>-128 to 127</strong>.']),
-    '<div style="display:grid;gap:8px">' + tcTable(EXN) + line(`${termText(EXN)} = <strong>${tc(EXN)}</strong>`) + tcTable(EXP) + line(`${termText(EXP)} = <strong>${tc(EXP)}</strong>`) + '</div>')));
+const AN_COL = '10000101';
+assert(tc(AN_COL) === -123 && val(AN_COL) === 133, 'column animation value');
+steps.push(anim('anim-column', 'Watch: Why the Left Column Is -128', `scene=column&bits=${AN_COL}`,
+  ['Before you watch: how could 8 bits show a number below 0?', 'Take a few guesses. The animation shows the way computers do it.']));
+steps.push(explain('explain-column', 'Explain It: Why -128?',
+  'The animation showed ordinary binary (place values 128 to 1, totals 0 to 255), then the left column changed to -128, so 10000101 went from 133 to -123 and the numbers with a 1 on the left moved below 0, giving -128 to 127.',
+  { prompt: 'In your own words, explain why the left column is worth -128 in two\'s complement.', marks: 2,
+    scheme: ['Ordinary binary has only positive place values, so it cannot show a number below 0', 'A 1 in the -128 column makes the number negative / below 0',
+      'A 0 in the left column means the number is positive', 'It lets 8 bits store -128 to 127'],
+    guidance: 'Any two points, one mark each. Credit each point in the student\'s own words; no technical words are needed. "It makes the number smaller" without saying below 0 or negative earns nothing.',
+    modelAnswer: 'The other columns are all positive, so they can never make a number below 0. A 1 in the -128 column makes the number negative.' },
+  ['Where else do we need numbers below zero?', 'Temperatures in winter, or a bank account that is overdrawn.']));
 
 const EXR = '10000001';
 assert(tc(EXR) === -127, 'predict example');
@@ -285,14 +301,17 @@ steps.push(mcStep('predict-read', 'Check: Read a Two\'s Complement Number', 'Che
     explain: `The left 1 is worth -128 and the right 1 is worth 1: -128 + 1 = ${tc(EXR)}.` },
 ], ['Why is 129 the answer for ordinary binary but not here?', 'Ordinary binary gives the left column 128. Two\'s complement gives it -128.'], tcTable(EXR, { show: true })));
 
-const EXU = '10110100';
-assert(val(EXU) === 180 && tc(EXU) === -76, 'unsigned compare');
-steps.push(concept('compare-unsigned', 'Compare: Same Bits, Two Answers',
-  'Why can the same 8 bits give two different numbers?',
-  '<p>The bits do not change. Only the value of the left column changes: 128 in ordinary binary, -128 in two\'s complement.</p>',
-  facts(['Read a number as two\'s complement <strong>only when the question says two\'s complement</strong>.', 'Otherwise it is ordinary binary and the left column is worth 128.']) +
-  columns(box(boxTitle('Ordinary binary') + tcTable(EXU, { unsigned: true, label: false }) + boxLine(`${sumText(EXU)} = <strong>${val(EXU)}</strong>`) + verdict('Left column worth 128.', true)),
-    box(boxTitle('Two\'s complement') + tcTable(EXU, { label: false }) + boxLine(`${termText(EXU)} = <strong>${tc(EXU)}</strong>`) + verdict('Left column worth -128.', true)))));
+const AN_READ = '11010011';
+assert(tc(AN_READ) === -45, 'read animation value');
+steps.push(anim('anim-read', 'Watch: Reading Two\'s Complement', `scene=read&bits=${AN_READ}`,
+  ['Before you watch: what will the 1 in the left column do to the total?', 'Say a prediction, then check it against the first step.']));
+steps.push(explain('explain-read', 'Explain It: Two\'s Complement to Denary',
+  'The animation converted 11010011 to denary: -128 over the left bit, then each 1 added its place value to a running total: -128 + 64 + 16 + 2 + 1 = -45.',
+  { prompt: 'In your own words, explain how to convert a two\'s complement binary number to denary.', marks: 2,
+    scheme: ['The left bit / most significant bit is worth -128', 'Add the place values of the 1s / the columns that hold a 1 (the left 1 counting as -128)'],
+    guidance: 'One mark for each point, in the student\'s own words. "Add up the bits" alone earns no mark for point 2: it must be the place values. Do not accept 128 for the left column.',
+    modelAnswer: 'The left column is worth -128. Add the place values of all the 1s.' },
+  ['Why is a running total useful?', 'You can check each step, so a slip is easy to find.']));
 
 // The real binary to denary questions. v is worked out in code and checked against the mark scheme value ms.
 const RD = {
@@ -335,38 +354,24 @@ readStep('mar24bi', 4, NRD);
 readStep('nov24e', 5, NRD);
 
 // ---------------------------------------------------------------- flip and add 1
-const EX6 = 10, EX6P = bin8(EX6), EX6F = flip(EX6P), EX6A = bin8(-EX6);
-assert(EX6P === '00001010' && EX6F === '11110101' && EX6A === '11110110' && tc(EX6F) === -11, '-10 example');
-steps.push(concept('concept-flip', 'Making a Negative Number: Flip and Add 1',
-  'Why can we not just put a 1 in the left column of 00001010 to make -10?',
-  `<p>10001010 is -128 + 8 + 2 = ${tc('10001010')}, not -10.</p>`,
-  columns(facts(['To store a <strong>negative</strong> number in two\'s complement:', '<strong>Step 1:</strong> write the number without its minus sign as 8-bit binary.',
-    '<strong>Step 2:</strong> <strong>flip</strong> every bit: 0 becomes 1, 1 becomes 0.', '<strong>Step 3:</strong> <strong>add 1</strong>.', '<strong>Check:</strong> the place values of the 1s, with -128, give the number.',
-    'Mark schemes give a mark for the working: show the flipped bits.']),
-    '<div style="display:grid;gap:8px">' + flipTable(EX6, 2) + line(`Check: ${termText(EX6A)} = <strong>${tc(EX6A)}</strong>`) + '</div>')));
-
-steps.push(concept('compare-flip', 'Compare: Flip Only, or Flip and Add 1?',
-  'Flipping alone gives -11 for 10. Why does adding 1 fix it?',
-  '<p>Flipping alone always gives a number 1 below the right answer. Adding 1 moves it up to the right number.</p>',
-  columns(box(boxTitle('Flip only') + monoLine(spaced(EX6F)) + boxLine(`${termText(EX6F)} = <strong>${tc(EX6F)}</strong>`) + verdict('Wrong: 1 too low.', false)),
-    box(boxTitle('Flip and add 1') + monoLine(spaced(EX6A)) + boxLine(`${termText(EX6A)} = <strong>${tc(EX6A)}</strong>`) + verdict('Right: -10.', true)))));
-
-// A stepper the student drives: -20, where adding 1 carries twice.
-const EXW = 20, EXWA = bin8(-EXW);
-assert(EXWA === '11101100' && flip(bin8(EXW)) === '11101011', '-20 example');
-steps.push({ id: 'watch-flip', label: 'Watch: -20 Step by Step', type: 'stepper', stepperId: `${P}-watch`,
-  stepperSteps: [
-    { title: 'Step 1: 20 in 8 bits', html: line(`20 = ${sumText(bin8(EXW))}. Write it as 8 bits.`) + flipTable(EXW, 0), note: 'Say the flipped bits before you press Next.' },
-    { title: 'Step 2: flip every bit', html: line('Every 0 becomes 1 and every 1 becomes 0.') + flipTable(EXW, 1), note: 'This row is your working.' },
-    { title: 'Step 3: add 1, the 1 column', html: line('1 + 1 = 10: write 0, carry 1 to the 2 column.') + flipTable(EXW, 2, { done: 1 }), note: 'Say what happens in the 2 column.' },
-    { title: 'Step 3: the 2 column', html: line('1 + the carry 1 = 10: write 0, carry 1 to the 4 column.') + flipTable(EXW, 2, { done: 2 }), note: 'Say what happens in the 4 column.' },
-    { title: 'Step 3: the 4 column', html: line('0 + the carry 1 = 1: write 1. No more carries.') + flipTable(EXW, 2, { done: 3 }), note: 'With no carry left, copy the rest.' },
-    { title: 'Step 3: copy the rest', html: line(`Copy the other bits down: ${spaced(EXWA)}.`) + flipTable(EXW, 2), note: 'Now check it.' },
-    { title: 'Check with -128', html: line(`${termText(EXWA)} = <strong>${tc(EXWA)}</strong>`) + tcTable(EXWA), note: 'Right: -20.' },
-  ],
-  content: '<h2 class="lesson-h2">Watch: -20 Step by Step</h2>' +
-    why('Why say each step out loud before you press Next?', 'Predicting first shows you if you really know the method. A wrong prediction tells you what to fix.') +
-    `<p class="lesson-lead">Press <strong>Next step</strong>. Before each press, say what comes next.</p><div id="${P}-watch"></div>` });
+const AN_FLIP = -20;
+assert(bin8(AN_FLIP) === '11101100' && tc(flip(bin8(-AN_FLIP))) === AN_FLIP - 1, 'flip animation value');
+steps.push(anim('anim-flip', 'Watch: Flip and Add 1', `scene=flip&n=${AN_FLIP}`,
+  ['Before you watch: what do you think it means to flip a bit?', 'Turn it over: a 0 becomes a 1 and a 1 becomes a 0.']));
+steps.push(explain('explain-flip', 'Explain It: Making a Negative Number',
+  'The animation stored -20: 20 written as 8 bits (00010100), every bit flipped (11101011), then 1 added from the right with carries (11101100), checked as -128 + 64 + 32 + 8 + 4 = -20.',
+  { prompt: 'In your own words, explain how to store a negative denary number in 8-bit two\'s complement.', marks: 3,
+    scheme: ['Write the number without its minus sign / the positive number in 8-bit binary', 'Flip / invert every bit (0s become 1s and 1s become 0s)', 'Add 1 (to the flipped bits)'],
+    guidance: 'One mark for each step, in the student\'s own words ("swap the 0s and 1s" is fine for flip). The add 1 mark needs the flip before it. "Change the left bit to 1" earns nothing.',
+    modelAnswer: 'Write the number without its minus sign in 8 bits. Flip every bit. Add 1.' },
+  ['Why do written methods keep their steps in a fixed order?', 'Each step works on what the step before it made.']));
+steps.push(explain('explain-add1', 'Explain It: Why Add 1?',
+  'At the end of the animation a number line showed that flipping the bits of 20 alone gives -21, and adding 1 moves it up to -20.',
+  { prompt: 'In your own words, explain why we add 1 after flipping the bits.', marks: 2,
+    scheme: ['Flipping alone gives a number that is 1 too low / one less than it should be (for example -21 instead of -20)', 'Adding 1 moves it up to the right number'],
+    guidance: 'One mark for each point, in the student\'s own words. "Because that is the rule" earns nothing.',
+    modelAnswer: 'Flipping alone gives a number 1 too low. Adding 1 makes it the right number.' },
+  ['Why is it a good idea to check an answer by working backwards?', 'If it does not give the number you started with, you know something went wrong.']));
 
 // The real negative denary to binary questions.
 const MK = {
@@ -413,13 +418,16 @@ makeStep('jun23c', 5, NMK);
 makeStep('nov23d', 6, NMK);
 
 // ---------------------------------------------------------------- positive numbers
-const EX6N = bin8(-EX6);
-steps.push(concept('compare-positive', 'Compare: 10 and -10',
-  'Why must a positive number have a 0 in the left column?',
-  '<p>A 1 there would add -128 and make the number negative.</p>',
-  facts(['A <strong>positive</strong> number is stored as ordinary binary, with a <strong>0</strong> on the left. No flipping.', 'Write all 8 bits: <strong>leading zeros must be present</strong>.']) +
-  columns(box(boxTitle('10: positive') + tcTable(EX6P, { label: false }) + boxLine(`${termText(EX6P)} = <strong>10</strong>`) + verdict('Ordinary binary.', true)),
-    box(boxTitle('-10: negative') + tcTable(EX6N, { label: false }) + boxLine(`${termText(EX6N)} = <strong>-10</strong>`) + verdict('Flip and add 1.', true)))));
+const AN_POS = 10;
+steps.push(anim('anim-pos', 'Watch: Positive Numbers', `scene=pos&n=${AN_POS}`,
+  ['Before you watch: will a positive number need flipping?', 'Say yes or no, then watch.']));
+steps.push(explain('explain-pos', 'Explain It: Positive Numbers',
+  'The animation stored 10 as 00001010: the place values 8 and 2 get a 1, every other column a 0, including the -128 column, so nothing is taken away; the leading zeros are written. -10 is 11110110, with a 1 in the -128 column.',
+  { prompt: 'In your own words, explain why a positive number in two\'s complement must have a 0 in the left column.', marks: 1,
+    scheme: ['A 1 in the left column would add -128 / make the number negative'],
+    guidance: '1 mark, in the student\'s own words. "Because it is positive" alone earns nothing: the answer must say what a 1 there would do.',
+    modelAnswer: 'A 1 there would add -128 and make the number negative.' },
+  ['Why is it worth knowing the reason for a rule, not just the rule?', 'Then you can use it on any number, even one you have not seen.']));
 
 const PS = {
   nov23d13: { n: 123, ms: '01111011', ref: '0478/13, November 2023, Question 2(d)', wt: 77,
@@ -543,14 +551,20 @@ steps.filter((s) => s.walkthrough).forEach((s) => {
 }
 {
   const qs = [...Object.values(RD).flatMap((q) => [q.bits, bin8(q.v)]), ...Object.values(MK).flatMap((q) => [q.ans, q.fl]), ...Object.values(PS).map((q) => q.ans), ...J26.ms, ...J26B.map((x) => x[0])];
-  [EXN, EXP, EXR, EXU, EX6P, EX6F, EX6A, EXWA, '01011010', '10010110', '11010011', '10101100', '11100101', '11011001'].forEach((b) => assert(!qs.includes(b), `example ${b} is also in a question`));
+  [AN_COL, EXR, AN_READ, bin8(AN_FLIP), flip(bin8(-AN_FLIP)), bin8(-AN_FLIP), bin8(AN_POS), bin8(-AN_POS), flip(bin8(AN_POS)),
+    '01011010', '10010110', '11010011', '10101100', '11100101', '11011001'].forEach((b) => assert(!qs.includes(b), `example ${b} is also in a question`));
   const nums = [...Object.values(RD).map((q) => q.v), ...Object.values(MK).map((q) => q.n), ...Object.values(PS).map((q) => q.n), 32, -14, 35, -22];
-  [-123, 5, -127, -76, 10, -10, -11, -20, ...Object.values(MK).map((q) => q.wt), ...Object.values(PS).map((q) => q.wt)].forEach((n) => assert(!nums.includes(n), `example ${n} is also a question value`));
+  [tc(AN_COL), -127, tc(AN_READ), AN_FLIP, AN_FLIP - 1, AN_POS, -AN_POS, ...Object.values(MK).map((q) => q.wt), ...Object.values(PS).map((q) => q.wt)].forEach((n) => assert(!nums.includes(n), `example ${n} is also a question value`));
+  // Every animation slide is followed straight away by its own-words explanation, marked by Haiku only.
+  Object.keys(ANIMS).forEach((id) => { const i = steps.findIndex((s) => s.id === id); assert(steps[i + 1].type === 'self-marked-response' && steps[i + 1].items.every((it) => it.aiModel === 'haiku' && it.scheme.length >= it.marks), `${id} is followed by a Haiku explain slide`); });
+  // The animation app draws the same numbers the lesson names.
+  assert(ANIMS['anim-column'] === `scene=column&bits=${AN_COL}` && ANIMS['anim-flip'] === `scene=flip&n=${AN_FLIP}`, 'animation queries');
+  assert(fs.readFileSync(path.join(ROOT, 'TwosAnim', 'index.html'), 'utf8').includes("make: sceneColumn"), 'TwosAnim app present');
 }
 // No term before the slide that teaches it (the title slide only names today's topic). Later or off-syllabus terms never.
 {
   const at = (id) => steps.findIndex((s) => s.id === id);
-  const teach = [[/two.s complement/i, 'concept-twos'], [/\bflip/i, 'concept-flip'],
+  const teach = [[/two.s complement/i, 'anim-column'], [/\bflip/i, 'anim-flip'],
     [/sign and magnitude|one.s complement|\bhex|\bRAM\b|random access|ascii|\bbytes?\b|mario|\bdecimal\b|overflow/i, null]];
   steps.forEach((s, i) => {
     if (s.id === 'title') return;
