@@ -28,10 +28,10 @@ const todo = (t, done) => `<p class="lesson-lead"><strong>What to do:</strong> $
 const kw = (t) => `<span class="wt-hl">${t}</span>`;
 const note = (t) => `<div class="wt-note">${t}</div>`;
 // The one exception to "save the evidence" (UK guidance on nude and sexual images of under-18s): never keep or share it.
-const IMAGE_RULE = 'If it is a nude or sexual picture of anyone under 18, do not screenshot, save or forward it: tell a trusted adult straight away.';
+const IMAGE_RULE = 'The one exception: if it is a nude or sexual picture of anyone under 18, never screenshot, save or forward it. Tell a trusted adult straight away, and you will not be in trouble.';
 // What Haiku does if a student writes about a real person or themselves (the lesson is done alone, so nobody reads the
 // answer straight away): no marking, just a pointer to an adult. Added to every Explain It's guidance.
-const DISCLOSURE = ' If the answer describes a real person, a real event or the student\'s own experience instead of the game, do not mark or comment on it: award 0 and reply only "Thank you. Please talk to your form tutor or the safeguarding team about this today."';
+const DISCLOSURE = ' If the answer describes a real person, a real event or the student\'s own experience instead of the game, do not mark or comment on it: award 0 and reply only "Thank you for telling us. This box only marks answers about the game, so it has not been marked. What you wrote matters: please talk to your form tutor or the safeguarding team about it today. You will not be in trouble."';
 const SUPPORT = 'If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Secondary or the safeguarding team.';
 
 const steps = [];

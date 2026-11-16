@@ -22,10 +22,12 @@ export const ROLES = {
   // A British school: students tell any trusted adult, and the safeguarding team (the DSL and deputies) acts on it.
   coun: { colour: 8, x: 15.5, y: 10.2, where: 'the Safeguarding office', staff: 'Safeguarding Lead' },
 };
-// Short first names from many backgrounds; eight are drawn at random each visit.
-export const NAME_POOL = ['Arin', 'Bo', 'Cai', 'Dara', 'Eli', 'Fai', 'Gem', 'Hana', 'Ira', 'Jun', 'Kai', 'Lani', 'Mika', 'Nori', 'Oak',
-  'Pax', 'Quinn', 'Rin', 'Sol', 'Tam', 'Uma', 'Vee', 'Wren', 'Xan', 'Yuki', 'Zed', 'Ari', 'Bex', 'Cy', 'Dev', 'Echo', 'Fin', 'Gale',
-  'Hux', 'Indy', 'Jas', 'Kio', 'Lux', 'Moe', 'Nyx', 'Ode', 'Pip', 'Rue', 'Sky', 'Tao', 'Ula', 'Vin', 'Wes', 'Yen', 'Zia'];
+// Made-up names that no real student has (James, 2026-11-16, after the content review: real names and Thai nicknames
+// could land on a classmate as the target). Checked: not English words, not names or nicknames in use, no Thai rude
+// words or insulting prefixes ("Ai", "Ee"), nothing mocking. Eight are drawn at random each visit.
+export const NAME_POOL = ['Zuvi', 'Pexo', 'Ravlo', 'Tivra', 'Morvi', 'Quilo', 'Yaxo', 'Brivo', 'Delvi', 'Fenvo', 'Gorvi', 'Jexa',
+  'Kivro', 'Lumvi', 'Nuvra', 'Ovri', 'Pavri', 'Sivro', 'Tovri', 'Ulvo', 'Vanro', 'Wivo', 'Xavo', 'Yenvi', 'Zarvo', 'Bivra', 'Cirvo',
+  'Davri', 'Elvo', 'Firvo', 'Gevri', 'Hovra', 'Ivro', 'Jovra', 'Korvi', 'Lavro', 'Mivro', 'Novri', 'Orvi', 'Pirvo'];
 export const NAMES = {};
 export function randomiseNames(rand = Math.random) {
   const pool = NAME_POOL.slice();

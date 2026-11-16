@@ -27,6 +27,16 @@ for (let i = 0; i < 20; i++) {
 }
 assert.ok(draws.size > 15, 'names are not random enough');
 assert.equal(new Set(NAME_POOL).size, NAME_POOL.length, 'pool has repeats');
+// Made-up names only: none of the real names or Thai nicknames used before, no Thai insult or rude sound, no English
+// word that could mock the person targeted.
+const REAL = ['Arin', 'Bo', 'Cai', 'Dara', 'Eli', 'Fai', 'Gem', 'Hana', 'Ira', 'Jun', 'Kai', 'Lani', 'Mika', 'Nori', 'Oak', 'Pax', 'Quinn', 'Rin',
+  'Sol', 'Tam', 'Uma', 'Wren', 'Yuki', 'Sky', 'Fin', 'Niran', 'Leo', 'Mali', 'Ava', 'Krit', 'Ploy', 'Ben', 'Sam', 'Max', 'Mint', 'Ice', 'Bank'];
+for (const n of NAME_POOL) {
+  assert.ok(!REAL.includes(n), n + ' is a real name or nickname');
+  assert.ok(n.length >= 4, n + ' is short enough to be a real nickname');
+  assert.ok(!/^(ai|ee|i-)/i.test(n), n + ' starts with an insulting Thai prefix');
+  assert.ok(!/kuay|kwai|hia|hee|yed|maa|sat|ass|sex|gay|tit|fat|poo|pee|kill|vex|cum|dum|ugl|los|stup|weird/i.test(n), n + ' contains a rude or mocking sound');
+}
 assert.ok(NAME_POOL.length >= Object.keys(ROLES).length * 4, 'pool too small to randomise');
 
 // No fixed names anywhere in the game's text: every person is a {role} token.
