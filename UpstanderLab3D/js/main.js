@@ -61,6 +61,25 @@ export function startSolo({ container }) {
   });
   const phone = createPhone({ el: $('phone'), onSlip: () => { slips++; drawPanel(); }, onChange: () => { check(); drawPanel(); } });
 
+  // ---------------------------------------------------------------- how to play (the lesson is done alone, James 2026-11-16)
+  const ON_SLIDE = params.get('embed') === '1' && !!params.get('mission');
+  function howToPlay() {
+    keys.clear(); stick = null; talk.close(); phone.close();
+    $('card').innerHTML = '<h2>How to play</h2>' +
+      '<ul class="up-how"><li><b>Walk</b> with W A S D or the arrow keys. Right-drag (or Q and E) turns the camera. M shows a map.</li>' +
+      '<li><b>Talk</b>: walk up to someone and press <b>Space</b>. Choose what to say with <b>1</b>, <b>2</b> or <b>3</b>, or click.</li>' +
+      '<li><b>Your phone</b>: press <b>P</b> to open and close it.</li>' +
+      '<li>The <b>!</b> over someone shows who to talk to next. The list on the right ticks off each step.</li>' +
+      '<li>If you choose something unkind or unsafe, the game tells you why and you choose again.</li>' +
+      '<li>Everyone in the game is made up. ' + (ON_SLIDE ? 'When the game says <b>Mission complete</b>, press <b>Next</b> on the slide.' : 'Finish a mission to unlock stars.') + '</li></ul>' +
+      '<div class="actions"><button type="button" class="btn go" id="howGo">Start</button></div>';
+    $('cardWrap').hidden = false;
+    $('howGo').addEventListener('click', closeHow);
+    $('howGo').focus({ preventScroll: true });
+  }
+  function closeHow() { $('cardWrap').hidden = true; try { window.focus(); } catch (e) { } }
+  $('howBtn').addEventListener('click', howToPlay);
+
   // ---------------------------------------------------------------- missions
   function list() { return lessonMode.on ? lesson.missions.concat(lesson.ext).map((id) => MISSIONS.find((m) => m.id === id)) : MISSIONS; }
   function start(i) {
@@ -98,7 +117,8 @@ export function startSolo({ container }) {
     }).join('') + '</ol>';
     if (finished) {
       h += '<div class="win"><p><b>Mission complete.</b> ' + starsHtml(stars[M.id] || 1) + '</p><p class="small">' + (slips ? slips + ' choice' + (slips === 1 ? '' : 's') + ' you had to think again about.' : 'Every choice right first time.') + '</p>' +
-        (mi < L.length - 1 ? '<div class="actions"><button type="button" class="btn" id="ulNext">Next mission: ' + esc(L[mi + 1].title) + '</button></div>' : '') + '</div>';
+        (ON_SLIDE ? '<p>Now press <b>Next</b> on the slide.</p>' :
+          mi < L.length - 1 ? '<div class="actions"><button type="button" class="btn" id="ulNext">Next mission: ' + esc(L[mi + 1].title) + '</button></div>' : '') + '</div>';
     } else h += '<p class="small">Slips so far: ' + slips + '. Space talks, P opens your phone, M shows the map.</p>';
     $('mission').innerHTML = h;
   }
@@ -194,6 +214,7 @@ export function startSolo({ container }) {
   document.addEventListener('keydown', (e) => {
     const k = e.code;
     if (typing(e)) { if (k === 'Escape') e.target.blur(); return; }
+    if (!$('cardWrap').hidden) { if (k === 'Escape' || k === 'Enter') { e.preventDefault(); closeHow(); } return; }
     if (k === 'Escape') { if (talk.isOpen()) talk.close(); else if (phone.isOpen()) phone.close(); return; }
     if (talk.isOpen()) {
       if ((k === 'Space' || k === 'Enter') && e.target.closest?.('#talk button')) return;   // the focused button clicks itself
@@ -233,6 +254,7 @@ export function startSolo({ container }) {
   const L = list(), q = params.get('mission'), qi = L.findIndex((m) => m.id === q);
   let first = 0; while (first < L.length - 1 && done[L[first].id]) first++;
   start(qi >= 0 ? qi : first);
+  if (!/[?&]debug/.test(location.search)) howToPlay();   // every visit: the lesson is done without a teacher
   requestAnimationFrame(frame);
   if (/[?&]debug/.test(location.search)) window.__lab = {
     get M() { return M; }, get S() { return S; }, get slips() { return slips; }, get finished() { return finished; }, pos, people, free, start, talk, phone, talkTo, nearest,

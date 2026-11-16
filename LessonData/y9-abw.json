@@ -3,11 +3,16 @@
  "label": "Anti-Bullying Week: Be an Upstander Online",
  "steps": [
   {
+   "id": "title",
+   "label": "Be an Upstander Online",
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Anti-Bullying Week</p><h2 class=\"lesson-h2\">Be an Upstander Online</h2><p>Year 9</p></div><p class=\"lesson-lead\"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does. You work through this lesson on your own: every slide says what to do and when you are done.</p><p class=\"lesson-lead\"><strong>Before you start:</strong> this lesson is about bullying online. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team. You will not get in trouble for telling.</p><p class=\"lesson-lead\"><strong>What to do:</strong> read this slide, then press Next.</p>"
+  },
+  {
    "id": "do-now",
    "label": "Do Now: Is It Cyberbullying? (1 of 2)",
    "type": "multiple-choice",
    "containerId": "y9abw-do-now",
-   "content": "<h2 class=\"lesson-h2\">Do Now: Is It Cyberbullying? (1 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">How can you tell a joke from bullying?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A joke is funny for everyone. Bullying is meant to hurt, or carries on when someone is upset.</p></div></details><p class=\"lesson-lead\">Read each situation. Choose the best answer.</p><div id=\"y9abw-do-now\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Is It Cyberbullying? (1 of 2)</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read each situation and choose the best answer. Stuck? Press <strong>Walk me through it</strong>. <strong>Done</strong> when you have answered both questions and read why.</p><div id=\"y9abw-do-now\"></div>",
    "items": [
     {
      "prompt": "A classmate shares an embarrassing photo of someone in a group chat, and others add laughing faces. Is this cyberbullying?",
@@ -65,7 +70,7 @@
    "label": "Do Now: What Should You Do? (2 of 2)",
    "type": "multiple-choice",
    "containerId": "y9abw-do-now-2",
-   "content": "<h2 class=\"lesson-h2\">Do Now: What Should You Do? (2 of 2)</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is it better not to reply straight away?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A reply can make it worse, and once it is sent you cannot take it back.</p></div></details><p class=\"lesson-lead\">Choose the best first step.</p><div id=\"y9abw-do-now-2\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Do Now: What Should You Do? (2 of 2)</h2><p class=\"lesson-lead\"><strong>What to do:</strong> choose the best first step for each situation. Stuck? Press <strong>Walk me through it</strong>. <strong>Done</strong> when you have answered both questions and read why.</p><div id=\"y9abw-do-now-2\"></div>",
    "items": [
     {
      "prompt": "Someone you do not know messages you and asks for a photo of you. What should you do?",
@@ -124,12 +129,7 @@
    "type": "embedded-app",
    "appId": "drill-y9-abw-ext",
    "embedContainerId": "y9abw-do-now-ext",
-   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does each card show a different situation?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you practise deciding, not remembering one answer.</p></div></details><p class=\"lesson-lead\"><strong>Extension:</strong> finished the Do Now? Try these online safety situations.</p><div id=\"y9abw-do-now-ext\"></div>"
-  },
-  {
-   "id": "title",
-   "label": "Be an Upstander Online",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Anti-Bullying Week</p><h2 class=\"lesson-h2\">Be an Upstander Online</h2><p>Year 9</p></div><p class=\"lesson-lead\"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does.</p><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can online bullying feel worse than bullying in person?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It can follow someone home, it can be seen by many people, and it is hard to take back.</p></div></details>"
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>What to do:</strong> <strong>Extension, if you have time:</strong> decide what to do in each online safety situation. <strong>Done</strong> when you have tried a few cards. You can move on whenever you are ready.</p><div id=\"y9abw-do-now-ext\"></div>"
   },
   {
    "id": "game-filter",
@@ -137,7 +137,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-filter",
-   "content": "<h2 class=\"lesson-h2\">Mission 1: The Filter</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: what kind of unkind message might a banned-word filter miss?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Take a few guesses, then test them in the game.</p></div></details><p class=\"lesson-lead\">The class chat app hides messages with banned words. Collect messages from people around the school and test the filter on your phone. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-filter\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 1: The Filter</h2><p class=\"lesson-lead\"><strong>What to do:</strong> The class chat app hides messages with banned words. Collect messages from people around the school and test the filter on your phone. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-filter\"></div>",
    "embedQuery": "lesson=abw&mission=filter"
   },
   {
@@ -145,7 +145,7 @@
    "label": "Explain It: Can a Filter Stop It?",
    "type": "self-marked-response",
    "containerId": "y9abw-explain-filter",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Can a Filter Stop It?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why can people often get round a rule that a computer checks?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>They can change the spelling, or say something unkind without the banned words.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y9abw-explain-filter\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Can a Filter Stop It?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team.</p><div id=\"y9abw-explain-filter\"></div>",
    "items": [
     {
      "id": "explain-filter-q",
@@ -169,7 +169,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-spread",
-   "content": "<h2 class=\"lesson-h2\">Mission 2: One Screenshot</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: if everyone forwards a post to 2 new people, how fast does it grow?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Say a guess, then check it in the game.</p></div></details><p class=\"lesson-lead\">A classmate shared a screenshot of someone. Find out how far one post can travel. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-spread\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 2: One Screenshot</h2><p class=\"lesson-lead\"><strong>What to do:</strong> A classmate shared a screenshot of someone. Find out how far one post can travel. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-spread\"></div>",
    "embedQuery": "lesson=abw&mission=spread"
   },
   {
@@ -177,7 +177,7 @@
    "label": "Explain It: Why Deleting Is Not Enough",
    "type": "self-marked-response",
    "containerId": "y9abw-explain-spread",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Why Deleting Is Not Enough</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why should you think before you share anything about someone else?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Once it is shared you cannot control where it goes.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y9abw-explain-spread\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Why Deleting Is Not Enough</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team.</p><div id=\"y9abw-explain-spread\"></div>",
    "items": [
     {
      "id": "explain-spread-q",
@@ -200,7 +200,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-upstander",
-   "content": "<h2 class=\"lesson-h2\">Mission 3: Be an Upstander</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you play: what is the difference between a bystander and an upstander?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A bystander sees it and does nothing. An upstander does something to help.</p></div></details><p class=\"lesson-lead\">The class chat is ganging up on someone. Do the right things, in the right order. Press <strong>Full screen</strong> for the best view.</p><div id=\"y9abw-game-upstander\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 3: Be an Upstander</h2><p class=\"lesson-lead\"><strong>What to do:</strong> The class chat is ganging up on someone. Do the right things, in the right order. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-upstander\"></div>",
    "embedQuery": "lesson=abw&mission=upstander"
   },
   {
@@ -208,7 +208,7 @@
    "label": "Explain It: Evidence First",
    "type": "self-marked-response",
    "containerId": "y9abw-explain-evidence",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Evidence First</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is replying in the chat a bad idea, even to defend someone?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It can start an argument and give the people being unkind more attention.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y9abw-explain-evidence\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Evidence First</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team.</p><div id=\"y9abw-explain-evidence\"></div>",
    "items": [
     {
      "id": "explain-evidence-q",
@@ -231,12 +231,12 @@
    "type": "embedded-app",
    "appId": "drill-y9-abw",
    "embedContainerId": "y9abw-plenary",
-   "content": "<h2 class=\"lesson-h2\">Plenary: Upstander Drill</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why practise with new situations every time?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Then you can decide what to do in any situation, not just the game's.</p></div></details><p class=\"lesson-lead\">Filters, how far posts spread, and what an upstander does. Your progress is saved.</p><div id=\"y9abw-plenary\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Plenary: Upstander Drill</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer the cards on filters, how far posts spread, and what an upstander does. Stuck? Switch on <strong>I need help</strong>. Your progress is saved. <strong>Done</strong> when you have mastered every card (3 right in a row), or the lesson time is up.</p><div id=\"y9abw-plenary\"></div>"
   },
   {
    "id": "help",
    "label": "Where to Get Help",
-   "content": "<h2 class=\"lesson-h2\">Where to Get Help</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why is telling an adult the right thing to do?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It is how bullying actually stops, and it protects the person being targeted.</p></div></details><p class=\"lesson-lead\">If anything online is worrying you, or someone you know:</p><ul class=\"lesson-facts\"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Year</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li><li>Staff will listen, and they will pass what you tell them to the safeguarding team so you get the right help.</li><li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply.</li><li>You will not get in trouble for telling.</li></ul>"
+   "content": "<h2 class=\"lesson-h2\">Where to Get Help</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read this slide. It is the end of the lesson.</p><p class=\"lesson-lead\">If anything online is worrying you, or someone you know:</p><ul class=\"lesson-facts\"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Year</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li><li>Staff will listen, and they will pass what you tell them to the safeguarding team so you get the right help.</li><li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply.</li><li>You will not get in trouble for telling.</li></ul>"
   }
  ],
  "validators": {},

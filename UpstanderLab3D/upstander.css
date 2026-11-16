@@ -56,6 +56,7 @@
 .ph-actions .btn { justify-content: flex-start; text-align: left; }
 .ph-actions .btn.done { background: var(--good); color: #fff; opacity: .9; }
 
+.up-how { margin: 8px 0 12px; padding-left: 20px; display: grid; gap: 8px; font-size: 16px; line-height: 1.4; }
 .mission .up-head { margin: 4px 0 8px; }
 .mission .up-head .note { margin: 4px 0 0; }
 .mission .up-missions { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 4px; }

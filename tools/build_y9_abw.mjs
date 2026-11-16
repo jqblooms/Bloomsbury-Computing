@@ -21,40 +21,46 @@ import { NAME_POOL } from '../UpstanderLab3D/js/story.js';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ID = 'y9-abw', P = 'y9abw';
 function assert(ok, msg) { if (!ok) throw new Error('Check failed: ' + msg); }
-function tps(q, a) {
-  return `<details class="lesson-tps"><summary><span class="lesson-tps-steps">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span>` +
-    `<span class="lesson-tps-q">${q}</span><span class="lesson-tps-reveal">Show the answer</span></summary><div class="lesson-tps-a"><p>${a}</p></div></details>`;
-}
-const why = (w) => tps(w[0], w[1]);
+// James, 2026-11-16: "This lesson needs to be independent, completed without teacher intervention." So, as y10-3-1-l3
+// (built to be done alone): no Think, Pair, Share (it is teacher-led), and every slide says what to do and when it is
+// done. Support is signposted at the start as well as the end, because no adult is watching the room.
+const todo = (t, done) => `<p class="lesson-lead"><strong>What to do:</strong> ${t}${done ? ' <strong>Done</strong> when ' + done : ''}</p>`;
 const kw = (t) => `<span class="wt-hl">${t}</span>`;
 const note = (t) => `<div class="wt-note">${t}</div>`;
+const SUPPORT = 'If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team.';
 
 const steps = [];
-function mcStep(id, label, lead, items, whyQ) {
+function mcStep(id, label, items, todoText, done) {
   const cid = `${P}-${id}`;
-  return { id, label, type: 'multiple-choice', containerId: cid, content: `<h2 class="lesson-h2">${label}</h2>` + why(whyQ) + `<p class="lesson-lead">${lead}</p><div id="${cid}"></div>`, items };
+  return { id, label, type: 'multiple-choice', containerId: cid, content: `<h2 class="lesson-h2">${label}</h2>` + todo(todoText, done) + `<div id="${cid}"></div>`, items };
 }
-function embed(id, label, appId, lead, whyQ, query) {
+function embed(id, label, appId, todoText, done, query) {
   return Object.assign({ id, label, type: 'embedded-app', appId, embedContainerId: `${P}-${id}`,
-    content: `<h2 class="lesson-h2">${label}</h2>` + why(whyQ) + `<p class="lesson-lead">${lead}</p><div id="${P}-${id}"></div>` }, query ? { embedQuery: query } : {});
+    content: `<h2 class="lesson-h2">${label}</h2>` + todo(todoText, done) + `<div id="${P}-${id}"></div>` }, query ? { embedQuery: query } : {});
 }
 const GAMES = [];
-function game(id, label, mission, lead, whyQ) { GAMES.push(id); return embed(id, label, 'upstander-lab-3d', lead + ' Press <strong>Full screen</strong> for the best view.', whyQ, `lesson=abw&mission=${mission}`); }
-function explain(id, label, about, part, whyQ) {
+const CONTROLS = 'Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view.';
+function game(id, label, mission, story) {
+  GAMES.push(id);
+  return embed(id, label, 'upstander-lab-3d', story + ' ' + CONTROLS, 'the game says <strong>Mission complete</strong>. Then press Next.', `lesson=abw&mission=${mission}`);
+}
+function explain(id, label, about, part) {
   return { id, label, type: 'self-marked-response', containerId: `${P}-${id}`,
-    content: `<h2 class="lesson-h2">${label}</h2>` + why(whyQ) + '<p class="lesson-lead">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p>' + `<div id="${P}-${id}"></div>`,
+    content: `<h2 class="lesson-h2">${label}</h2>` +
+      todo('explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again.', 'you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.') +
+      '<p class="lesson-lead small">Only write about the game here, not about yourself or anyone you know. ' + SUPPORT + '</p>' + `<div id="${P}-${id}"></div>`,
     items: [Object.assign({ id: `${id}-q`, aiModel: 'haiku', context: about + ' ' + part.prompt }, part)] };
 }
 
 // ---------------------------------------------------------------- Do Now: an online safety starter
-steps.push(mcStep('do-now', 'Do Now: Is It Cyberbullying? (1 of 2)', 'Read each situation. Choose the best answer.', [
+steps.push(mcStep('do-now', 'Do Now: Is It Cyberbullying? (1 of 2)', [
   { prompt: 'A classmate shares an embarrassing photo of someone in a group chat, and others add laughing faces. Is this cyberbullying?',
     options: ['Yes: it is shared to hurt, and others join in', 'No: it is only a photo', 'No: nobody typed anything unkind'], correct: 0,
     explain: 'Sharing something to embarrass someone, with others joining in, is cyberbullying even without unkind words.' },
   { prompt: 'Two friends tease each other about a football match in a chat, and both of them find it funny. Is this cyberbullying?',
     options: ['Yes: any teasing online is bullying', 'No: both are joking, and both find it funny', 'Yes: it happened in a chat'], correct: 1,
     explain: 'Friendly teasing that both people enjoy is not bullying. It becomes bullying when it is meant to hurt, or keeps going when someone is upset.' },
-], ['How can you tell a joke from bullying?', 'A joke is funny for everyone. Bullying is meant to hurt, or carries on when someone is upset.']));
+], 'read each situation and choose the best answer. Stuck? Press <strong>Walk me through it</strong>.', 'you have answered both questions and read why.'));
 steps[0].walkthrough = { title: 'Walk me through it: is it cyberbullying?', steps: [
   { text: '<strong>A similar situation.</strong> A student keeps posting comments under a classmate\'s videos saying the videos are rubbish.', visual: note('comment after comment') },
   { text: `Ask: is it ${kw('meant to hurt')}? Comments saying someone's work is rubbish, again and again, are meant to upset.`, visual: note('meant to hurt?') },
@@ -63,14 +69,14 @@ steps[0].walkthrough = { title: 'Walk me through it: is it cyberbullying?', step
   { text: 'Meant to hurt, repeated and public, and not funny for both: this is cyberbullying.', visual: note('yes, cyberbullying') },
   { text: 'Now ask the same three questions about each situation on the slide.', visual: note('meant to hurt? &nbsp; repeated or shared? &nbsp; funny for both?') },
 ] };
-steps.push(mcStep('do-now-2', 'Do Now: What Should You Do? (2 of 2)', 'Choose the best first step.', [
+steps.push(mcStep('do-now-2', 'Do Now: What Should You Do? (2 of 2)', [
   { prompt: 'Someone you do not know messages you and asks for a photo of you. What should you do?',
     options: ['Reply and ask who they are', 'Send a photo that does not show your face', 'Do not reply, block them, and tell a trusted adult'], correct: 2,
     explain: 'Never send photos to people you do not know. Do not reply, block them, and tell a trusted adult.' },
   { prompt: 'An account posts something unkind about you. What is the best first step?',
     options: ['Post something unkind back', 'Save the evidence before you do anything else', 'Delete your own account'], correct: 1,
     explain: 'Save the evidence first, privately. Then report, block, and tell a trusted adult.' },
-], ['Why is it better not to reply straight away?', 'A reply can make it worse, and once it is sent you cannot take it back.']));
+], 'choose the best first step for each situation. Stuck? Press <strong>Walk me through it</strong>.', 'you have answered both questions and read why.'));
 steps[1].walkthrough = { title: 'Walk me through it: what should you do?', steps: [
   { text: '<strong>A similar situation.</strong> Someone keeps sending you unkind comments in a game chat.', visual: note('unkind game chat messages') },
   { text: `First, ${kw('do not reply')}. A reply can start an argument and make it worse.`, visual: note('1. do not reply') },
@@ -79,63 +85,66 @@ steps[1].walkthrough = { title: 'Walk me through it: what should you do?', steps
   { text: `Last, ${kw('tell a trusted adult')}, so it can be stopped.`, visual: note('4. tell an adult') },
   { text: 'Now choose the answer on the slide that matches the safest first step.', visual: note('safest first step?') },
 ] };
-steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y9-abw-ext', '<strong>Extension:</strong> finished the Do Now? Try these online safety situations.',
-  ['Why does each card show a different situation?', 'Then you practise deciding, not remembering one answer.']));
+steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y9-abw-ext', '<strong>Extension, if you have time:</strong> decide what to do in each online safety situation.', 'you have tried a few cards. You can move on whenever you are ready.'));
 
 // ---------------------------------------------------------------- title and the game
+// The title slide carries the content note and the support routes up front: nobody is in the room to notice.
 steps.push({ id: 'title', label: 'Be an Upstander Online',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Anti-Bullying Week</p><h2 class="lesson-h2">Be an Upstander Online</h2><p>Year 9</p></div>' +
-    '<p class="lesson-lead"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does.</p>' +
-    why(['Why can online bullying feel worse than bullying in person?', 'It can follow someone home, it can be seen by many people, and it is hard to take back.']) });
+    '<p class="lesson-lead"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does. You work through this lesson on your own: every slide says what to do and when you are done.</p>' +
+    '<p class="lesson-lead"><strong>Before you start:</strong> this lesson is about bullying online. ' + SUPPORT + ' You will not get in trouble for telling.</p>' +
+    todo('read this slide, then press Next.') });
 
-steps.push(game('game-filter', 'Mission 1: The Filter', 'filter', 'The class chat app hides messages with banned words. Collect messages from people around the school and test the filter on your phone.',
-  ['Before you play: what kind of unkind message might a banned-word filter miss?', 'Take a few guesses, then test them in the game.']));
+steps.push(game('game-filter', 'Mission 1: The Filter', 'filter', 'The class chat app hides messages with banned words. Collect messages from people around the school and test the filter on your phone.'));
 steps.push(explain('explain-filter', 'Explain It: Can a Filter Stop It?',
   'In the game, the class chat app hid any message with LOSER, UGLY, STUPID or WEIRDO inside it. It hid harmless messages ("losers\' bracket", "stupid slow laptop") and let unkind ones through ("l0s3r", sarcasm, "everyone come to football, except" one person).',
   { prompt: 'In your own words, explain why a banned-word filter cannot stop all cyberbullying.', marks: 2,
     scheme: ['It only checks for banned words, not what the message means', 'Unkind messages with no banned word get through (sarcasm, leaving someone out, changed spellings)', 'Harmless messages that contain a banned word get hidden (false alarms)'],
     guidance: 'Any two points, one mark each, in the student\'s own words. An example counts as the point it shows. "It is not clever enough" alone earns nothing.',
-    modelAnswer: 'It only looks for banned words, not meaning. So leaving someone out gets through, and "losers\' bracket" gets hidden.' },
-  ['Why can people often get round a rule that a computer checks?', 'They can change the spelling, or say something unkind without the banned words.']));
+    modelAnswer: 'It only looks for banned words, not meaning. So leaving someone out gets through, and "losers\' bracket" gets hidden.' }));
 
-steps.push(game('game-spread', 'Mission 2: One Screenshot', 'spread', 'A classmate shared a screenshot of someone. Find out how far one post can travel.',
-  ['Before you play: if everyone forwards a post to 2 new people, how fast does it grow?', 'Say a guess, then check it in the game.']));
+steps.push(game('game-spread', 'Mission 2: One Screenshot', 'spread', 'A classmate shared a screenshot of someone. Find out how far one post can travel.'));
 steps.push(explain('explain-spread', 'Explain It: Why Deleting Is Not Enough',
   'In the game, every person who got the screenshot forwarded it to 2 new people: 1, 3, 7, 15 people, and 255 after 8 steps. Then the person who shared it first deleted their post.',
   { prompt: 'In your own words, explain why deleting a post does not stop it spreading.', marks: 2,
     scheme: ['Copies have already been forwarded / saved on other people\'s phones', 'Each person can forward it again, so it keeps spreading'],
     guidance: 'One mark for each point, in the student\'s own words. "It is on the internet forever" alone earns 1 mark only if it says copies exist elsewhere.',
-    modelAnswer: 'Other people already have copies on their phones, and each of them can forward it again.' },
-  ['Why should you think before you share anything about someone else?', 'Once it is shared you cannot control where it goes.']));
+    modelAnswer: 'Other people already have copies on their phones, and each of them can forward it again.' }));
 
-steps.push(game('game-upstander', 'Mission 3: Be an Upstander', 'upstander', 'The class chat is ganging up on someone. Do the right things, in the right order.',
-  ['Before you play: what is the difference between a bystander and an upstander?', 'A bystander sees it and does nothing. An upstander does something to help.']));
+steps.push(game('game-upstander', 'Mission 3: Be an Upstander', 'upstander', 'The class chat is ganging up on someone. Do the right things, in the right order.'));
 steps.push(explain('explain-evidence', 'Explain It: Evidence First',
   'In the game, the right order in the chat was: do not reply, save the evidence (a private screenshot), report it, then block, and tell a trusted adult. Blocking before saving lost the messages.',
   { prompt: 'In your own words, explain why you should save the evidence before you block someone.', marks: 2,
     scheme: ['Blocking can hide / remove the messages', 'An adult needs the evidence to see what happened and act on it'],
     guidance: 'One mark for each point, in the student\'s own words. Saving evidence means keeping it privately for an adult; an answer about sharing or posting the screenshot earns nothing.',
-    modelAnswer: 'Blocking can hide the messages. An adult needs to see them to help.' },
-  ['Why is replying in the chat a bad idea, even to defend someone?', 'It can start an argument and give the people being unkind more attention.']));
+    modelAnswer: 'Blocking can hide the messages. An adult needs to see them to help.' }));
 
-steps.push(embed('plenary', 'Plenary: Upstander Drill', 'drill-y9-abw', 'Filters, how far posts spread, and what an upstander does. Your progress is saved.',
-  ['Why practise with new situations every time?', 'Then you can decide what to do in any situation, not just the game\'s.']));
+steps.push(embed('plenary', 'Plenary: Upstander Drill', 'drill-y9-abw', 'answer the cards on filters, how far posts spread, and what an upstander does. Stuck? Switch on <strong>I need help</strong>. Your progress is saved.',
+  'you have mastered every card (3 right in a row), or the lesson time is up.'));
 
 steps.push({ id: 'help', label: 'Where to Get Help',
-  content: '<h2 class="lesson-h2">Where to Get Help</h2>' + why(['Why is telling an adult the right thing to do?', 'It is how bullying actually stops, and it protects the person being targeted.']) +
+  content: '<h2 class="lesson-h2">Where to Get Help</h2>' + todo('read this slide. It is the end of the lesson.') +
     '<p class="lesson-lead">If anything online is worrying you, or someone you know:</p>' +
     '<ul class="lesson-facts"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Year</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li>' +
     '<li>Staff will listen, and they will pass what you tell them to the safeguarding team so you get the right help.</li>' +
     '<li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply.</li><li>You will not get in trouble for telling.</li></ul>' });
 
+// The title slide, with its content note and support routes, comes first: before the Do Now, which is already about
+// bullying (the lesson is done alone, so nobody else can give that warning).
+steps.unshift(steps.splice(steps.findIndex((s) => s.id === 'title'), 1)[0]);
+
 // ---------------------------------------------------------------- self-checks
+assert(steps[0].id === 'title', 'the content note comes first');
 GAMES.forEach((id) => { const i = steps.findIndex((s) => s.id === id); assert(steps[i + 1].type === 'self-marked-response' && steps[i + 1].items[0].aiModel === 'haiku', id + ' is followed by a Haiku Explain It'); });
-for (const s of steps) if (s.id !== 'do-now-ext') assert(s.content.includes('lesson-tps'), 'Think, Pair, Share on ' + s.id);
-steps.filter((s) => s.type === 'multiple-choice').forEach((s) => {
-  assert(s.items.length <= 2, s.id + ' has more than two questions');
-  const t = /<div class="lesson-tps-a">([\s\S]*?)<\/div>/.exec(s.content)[1].toLowerCase();
-  s.items.forEach((it) => assert(!t.includes(it.options[it.correct].toLowerCase().split(':')[0]), s.id + ' TPS gives the option'));
-});
+// done alone: every slide says what to do, nothing needs a teacher (no Think, Pair, Share, no "your teacher")
+for (const s of steps) {
+  assert(s.content.includes('<strong>What to do:</strong>'), 'no What to do on ' + s.id);
+  assert(!/lesson-tps|your teacher|ask (the|your) teacher|teacher will/i.test(s.content), s.id + ' needs a teacher');
+}
+steps.filter((s) => s.type === 'multiple-choice').forEach((s) => assert(s.items.length <= 2, s.id + ' has more than two questions'));
+// support is signposted before any content about bullying, and on every Explain It
+assert(/stop and talk to an adult you trust/.test(steps.find((s) => s.id === 'title').content), 'support on the title slide');
+steps.filter((s) => s.type === 'self-marked-response').forEach((s) => assert(/not about yourself/.test(s.content) && /safeguarding team/.test(s.content), s.id + ' support note'));
 assert(new Set(steps.filter((s) => s.items && s.type === 'multiple-choice').flatMap((s) => s.items.map((it) => it.correct))).size > 1, 'MC correct positions vary');
 const all = JSON.stringify(steps);
 // safeguarding and James's rules: nothing about the student's own life, no names, no code
