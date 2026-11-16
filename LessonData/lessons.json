@@ -306,7 +306,8 @@
             "y11-1-5-hexuse",
             "y11-1-6-binadd",
             "y11-1-7-overflow",
-            "y11-1-8-shifts"
+            "y11-1-8-shifts",
+            "y11-1-9-twos"
           ]
         },
         {
