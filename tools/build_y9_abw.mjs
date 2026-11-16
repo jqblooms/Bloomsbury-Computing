@@ -8,7 +8,7 @@
 // The teaching is Upstander Lab 3D (pages UpstanderLab3D/, registry upstander-lab-3d), one mission per slide
 // (?lesson=abw&mission=...), each followed by an own-words Explain It marked by Haiku (policy 2b).
 // Safeguarding (a British school in Thailand with a UK-style safeguarding team: DSL and deputies): nothing asks about
-// the student's own experiences; the last slide says where to get help by role only (form tutor, Head of Year, the
+// the student's own experiences; the last slide says where to get help by role only (form tutor, Head of Secondary, the
 // DSL and deputies, someone at home) and says plainly that staff pass concerns on to the safeguarding team, so no
 // slide promises secrecy.
 // The Do Now is an online safety starter (the week's lesson stands apart from the scheme of work), so nothing is cited.
@@ -27,7 +27,12 @@ function assert(ok, msg) { if (!ok) throw new Error('Check failed: ' + msg); }
 const todo = (t, done) => `<p class="lesson-lead"><strong>What to do:</strong> ${t}${done ? ' <strong>Done</strong> when ' + done : ''}</p>`;
 const kw = (t) => `<span class="wt-hl">${t}</span>`;
 const note = (t) => `<div class="wt-note">${t}</div>`;
-const SUPPORT = 'If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team.';
+// The one exception to "save the evidence" (UK guidance on nude and sexual images of under-18s): never keep or share it.
+const IMAGE_RULE = 'If it is a nude or sexual picture of anyone under 18, do not screenshot, save or forward it: tell a trusted adult straight away.';
+// What Haiku does if a student writes about a real person or themselves (the lesson is done alone, so nobody reads the
+// answer straight away): no marking, just a pointer to an adult. Added to every Explain It's guidance.
+const DISCLOSURE = ' If the answer describes a real person, a real event or the student\'s own experience instead of the game, do not mark or comment on it: award 0 and reply only "Thank you. Please talk to your form tutor or the safeguarding team about this today."';
+const SUPPORT = 'If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Secondary or the safeguarding team.';
 
 const steps = [];
 function mcStep(id, label, items, todoText, done) {
@@ -49,7 +54,7 @@ function explain(id, label, about, part) {
     content: `<h2 class="lesson-h2">${label}</h2>` +
       todo('explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again.', 'you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.') +
       '<p class="lesson-lead small">Only write about the game here, not about yourself or anyone you know. ' + SUPPORT + '</p>' + `<div id="${P}-${id}"></div>`,
-    items: [Object.assign({ id: `${id}-q`, aiModel: 'haiku', context: about + ' ' + part.prompt }, part)] };
+    items: [Object.assign({ id: `${id}-q`, aiModel: 'haiku', context: about + ' ' + part.prompt }, part, { guidance: part.guidance + DISCLOSURE })] };
 }
 
 // ---------------------------------------------------------------- Do Now: an online safety starter
@@ -71,11 +76,11 @@ steps[0].walkthrough = { title: 'Walk me through it: is it cyberbullying?', step
 ] };
 steps.push(mcStep('do-now-2', 'Do Now: What Should You Do? (2 of 2)', [
   { prompt: 'Someone you do not know messages you and asks for a photo of you. What should you do?',
-    options: ['Reply and ask who they are', 'Send a photo that does not show your face', 'Do not reply, block them, and tell a trusted adult'], correct: 2,
-    explain: 'Never send photos to people you do not know. Do not reply, block them, and tell a trusted adult.' },
+    options: ['Reply and ask who they are', 'Send a photo that does not show your face', 'Send nothing: save the chat, report, block, tell an adult'], correct: 2,
+    explain: 'Never send photos to people you do not know. Do not reply or send anything. Save the chat, report and block them, and tell a trusted adult.' },
   { prompt: 'An account posts something unkind about you. What is the best first step?',
     options: ['Post something unkind back', 'Save the evidence before you do anything else', 'Delete your own account'], correct: 1,
-    explain: 'Save the evidence first, privately. Then report, block, and tell a trusted adult.' },
+    explain: 'Save the evidence first, privately. Then report, block, and tell a trusted adult. ' + IMAGE_RULE },
 ], 'choose the best first step for each situation. Stuck? Press <strong>Walk me through it</strong>.', 'you have answered both questions and read why.'));
 steps[1].walkthrough = { title: 'Walk me through it: what should you do?', steps: [
   { text: '<strong>A similar situation.</strong> Someone keeps sending you unkind comments in a game chat.', visual: note('unkind game chat messages') },
@@ -91,7 +96,7 @@ steps.push(embed('do-now-ext', 'Extension: Do Now Challenge', 'drill-y9-abw-ext'
 // The title slide carries the content note and the support routes up front: nobody is in the room to notice.
 steps.push({ id: 'title', label: 'Be an Upstander Online',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Anti-Bullying Week</p><h2 class="lesson-h2">Be an Upstander Online</h2><p>Year 9</p></div>' +
-    '<p class="lesson-lead"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does. You work through this lesson on your own: every slide says what to do and when you are done.</p>' +
+    '<p class="lesson-lead"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does. You work through this lesson on your own: every slide says what to do, about how long it takes, and when you are done. The whole lesson takes about 55 minutes. Finished early? Try the <strong>Extension</strong> slides near the end.</p>' +
     '<p class="lesson-lead"><strong>Before you start:</strong> this lesson is about bullying online. ' + SUPPORT + ' You will not get in trouble for telling.</p>' +
     todo('read this slide, then press Next.') });
 
@@ -113,32 +118,69 @@ steps.push(explain('explain-spread', 'Explain It: Why Deleting Is Not Enough',
 
 steps.push(game('game-upstander', 'Mission 3: Be an Upstander', 'upstander', 'The class chat is ganging up on someone. Do the right things, in the right order.'));
 steps.push(explain('explain-evidence', 'Explain It: Evidence First',
-  'In the game, the right order in the chat was: do not reply, save the evidence (a private screenshot), report it, then block, and tell a trusted adult. Blocking before saving lost the messages.',
+  'In the game, the right order in the chat was: do not reply, save the evidence (a private screenshot), report it, then block, and tell a trusted adult. The game would not let you block before saving, because blocking can hide the messages.',
   { prompt: 'In your own words, explain why you should save the evidence before you block someone.', marks: 2,
     scheme: ['Blocking can hide / remove the messages', 'An adult needs the evidence to see what happened and act on it'],
     guidance: 'One mark for each point, in the student\'s own words. Saving evidence means keeping it privately for an adult; an answer about sharing or posting the screenshot earns nothing.',
     modelAnswer: 'Blocking can hide the messages. An adult needs to see them to help.' }));
 
 steps.push(embed('plenary', 'Plenary: Upstander Drill', 'drill-y9-abw', 'answer the cards on filters, how far posts spread, and what an upstander does. Stuck? Switch on <strong>I need help</strong>. Your progress is saved.',
-  'you have mastered every card (3 right in a row), or the lesson time is up.'));
+  'you have mastered every card (3 right in a row), or 5 minutes before the end of the lesson. Then press Next: <strong>Where to Get Help</strong> comes next.'));
 
+// The help slide comes straight after the plenary, before the extensions, so every student reaches it (review: many
+// would stop at the end of the plenary and never see it).
 steps.push({ id: 'help', label: 'Where to Get Help',
-  content: '<h2 class="lesson-h2">Where to Get Help</h2>' + todo('read this slide. It is the end of the lesson.') +
+  content: '<h2 class="lesson-h2">Where to Get Help</h2>' + todo('read this slide before you finish.', 'you have read it. That is the end of the main lesson: if you still have time, try the Extension slides next.') +
     '<p class="lesson-lead">If anything online is worrying you, or someone you know:</p>' +
-    '<ul class="lesson-facts"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Year</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li>' +
+    '<ul class="lesson-facts"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Secondary</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li>' +
     '<li>Staff will listen, and they will pass what you tell them to the safeguarding team so you get the right help.</li>' +
-    '<li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply.</li><li>You will not get in trouble for telling.</li></ul>' });
+    '<li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply. You can tell an adult even if you have not saved anything.</li>' +
+    '<li>' + IMAGE_RULE + '</li><li>You will not get in trouble for telling.</li></ul>' });
+
+// ---------------------------------------------------------------- extensions for fast finishers (James: the lesson must
+// fill 55 minutes, with appropriate extensions available)
+steps.push(game('ext-challenge', 'Extension: The Squad Chat Challenge', 'challenge', '<strong>Extension, if you finish early.</strong> A new student is being left out of a game squad chat. This time there are no hints and no <strong>!</strong>: work out what to do yourself. Aim for 3 stars.'));
+steps.push(explain('ext-design', 'Extension: Design a Safer App',
+  'This extension asks students to suggest an app feature that could help reduce cyberbullying and to explain one limitation of it. In the game they met a banned-word filter (false alarms and misses), forwarding (copies spread fast), and saving evidence, reporting and blocking.',
+  { prompt: 'Suggest one feature a chat app could add to help stop cyberbullying. Explain how it would help, and one limitation it would have.', marks: 3,
+    scheme: ['A sensible feature (for example a report button, a "pause before posting" prompt, limits on forwarding, human moderators, privacy settings for who can message or add you)',
+      'How the feature helps (what it prevents or makes easier, linked to the feature)',
+      'A limitation of that feature (for example people can get round it, it can raise false alarms, it relies on someone reporting, it cannot understand meaning, it can be slow)'],
+    guidance: 'One mark for each point, in the student\'s own words. The limitation must be about the feature they suggested. A feature that harms privacy or punishes people without checking (for example "read everyone\'s messages", "ban anyone reported") earns the feature mark only if the student also names that problem as its limitation.',
+    modelAnswer: 'A "pause before posting" prompt when a message looks unkind. It gives people a moment to change their mind. But it cannot spot unkind messages that use kind words.' }));
 
 // The title slide, with its content note and support routes, comes first: before the Do Now, which is already about
 // bullying (the lesson is done alone, so nobody else can give that warning).
 steps.unshift(steps.splice(steps.findIndex((s) => s.id === 'title'), 1)[0]);
 
+// How long each slide takes a Year 9 working alone (James: a full 55-minute lesson, with extensions). Shown on every
+// slide's What to do line. Core route about 55 minutes; extensions are for fast finishers.
+const MINS = { title: 2, 'do-now': 3, 'do-now-2': 3, 'game-filter': 11, 'explain-filter': 4, 'game-spread': 7, 'explain-spread': 4,
+  'game-upstander': 10, 'explain-evidence': 4, plenary: 6, help: 1, 'do-now-ext': 5, 'ext-challenge': 8, 'ext-design': 6 };
+const EXTENSIONS = ['do-now-ext', 'ext-challenge', 'ext-design'];
+for (const s of steps) {
+  assert(MINS[s.id], 'no time for ' + s.id);
+  s.content = s.content.replace('<strong>What to do:</strong>', `<strong>What to do</strong> (about ${MINS[s.id]} minute${MINS[s.id] === 1 ? '' : 's'}${EXTENSIONS.includes(s.id) ? ', extension' : ''}):`);
+}
+{
+  const core = steps.filter((s) => !EXTENSIONS.includes(s.id)).reduce((t, s) => t + MINS[s.id], 0);
+  const ext = EXTENSIONS.reduce((t, id) => t + MINS[id], 0);
+  assert(core >= 52 && core <= 58, 'core route is ' + core + ' minutes, not about 55');
+  assert(ext >= 15, 'extensions give fast finishers ' + ext + ' minutes');
+  console.log(`timing: core ${core} minutes, extensions ${ext} more`);
+}
+
 // ---------------------------------------------------------------- self-checks
 assert(steps[0].id === 'title', 'the content note comes first');
+assert(steps.findIndex((s) => s.id === 'help') === steps.findIndex((s) => s.id === 'plenary') + 1, 'help comes straight after the plenary, before the extensions');
+assert(steps.slice(steps.findIndex((s) => s.id === 'help') + 1).every((s) => /Extension/.test(s.label)), 'only extensions after the help slide');
+assert(/nude or sexual/.test(steps.find((s) => s.id === 'help').content), 'the help slide has the image rule');
+steps.filter((s) => s.type === 'self-marked-response').forEach((s) => assert(/do not mark or comment on it/.test(s.items[0].guidance), s.id + ' has no disclosure rule for Haiku'));
+assert(!/save the evidence (on your phone )?first, so you can show/i.test(JSON.stringify(steps)), 'telling an adult made to wait for evidence');
 GAMES.forEach((id) => { const i = steps.findIndex((s) => s.id === id); assert(steps[i + 1].type === 'self-marked-response' && steps[i + 1].items[0].aiModel === 'haiku', id + ' is followed by a Haiku Explain It'); });
 // done alone: every slide says what to do, nothing needs a teacher (no Think, Pair, Share, no "your teacher")
 for (const s of steps) {
-  assert(s.content.includes('<strong>What to do:</strong>'), 'no What to do on ' + s.id);
+  assert(/<strong>What to do<\/strong> \(about \d+ minutes?(, extension)?\):/.test(s.content), 'no What to do (with its time) on ' + s.id);
   assert(!/lesson-tps|your teacher|ask (the|your) teacher|teacher will/i.test(s.content), s.id + ' needs a teacher');
 }
 steps.filter((s) => s.type === 'multiple-choice').forEach((s) => assert(s.items.length <= 2, s.id + ' has more than two questions'));
@@ -162,7 +204,7 @@ const POOL = [
   ['everyone sit together except the new student', true], ['great work on the project', false], ['l0ser', true], ['our team was the biggest loser at quiz night, lol', false],
 ];
 const SITUATIONS = [
-  ['A stranger online asks for a photo of you.', 'Do not reply, block them and tell a trusted adult', ['Send a photo without your face', 'Ask them to prove who they are']],
+  ['A stranger online asks for a photo of you.', 'Send nothing: save the chat, report, block and tell an adult', ['Send a photo without your face', 'Ask them to prove who they are']],
   ['A group chat is ganging up on a classmate.', 'Do not join in: save the evidence, report it and tell an adult', ['Add a laughing face so you fit in', 'Leave the chat and forget about it']],
   ['Someone sends you an embarrassing photo of a classmate.', 'Do not forward it, and tell an adult', ['Forward it to one close friend', 'Post it so the classmate sees it']],
   ['You see a classmate is upset after unkind comments online.', 'Check they are OK and help them tell an adult', ['Tell them to ignore it', 'Ask what they did to cause it']],
@@ -208,7 +250,7 @@ function abwCards(which) {
     word("sx-7", "Someone sees bullying and does something to help. What are they called?", "Upstander", /^\s*(an\s+)?upstander\s*\.?\s*$/i, ["Bystander", "Moderator"],
       ["They stand up for the person targeted.", "It is the opposite of a bystander."], "An upstander acts to help; a bystander watches and does nothing."),
     word("sx-8", "Before you block someone who is being unkind, what should you do first?", "Save the evidence", /^\s*(save|keep|screenshot)\b.*\b(evidence|messages?|screenshot|it)\b|^\s*screenshot\s*(it)?\s*\.?\s*$/i, ["Reply to them", "Forward it to friends"],
-      ["Blocking can hide the messages.", "What would an adult need to see?"], "Save the evidence first (privately), then report and block, and tell a trusted adult.")
+      ["Blocking can hide the messages.", "What would an adult need to see?"], "Save the evidence first (privately), then report and block, and tell a trusted adult. Never save or share a nude or sexual picture of anyone under 18: tell an adult instead.")
   ]).map(function (c) { if (c.category === "ab-words") c.category = "sx-words"; return c; });
   return [
     { id: "ab-01", category: "ab-filter", randomize: flagCard },
@@ -222,7 +264,7 @@ function abwCards(which) {
     word("ab-08", "Someone sees bullying and does nothing. What are they called?", "Bystander", /^\s*(a\s+)?bystander\s*\.?\s*$/i, ["Upstander", "Reporter"],
       ["They are standing by.", "They watch but do not help."], "A bystander watches; an upstander helps."),
     word("ab-09", "When you see cyberbullying in a chat, what should you do before you block anyone?", "Save the evidence", /^\s*(save|keep|screenshot)\b.*\b(evidence|messages?|screenshot|it)\b|^\s*screenshot\s*(it)?\s*\.?\s*$/i, ["Reply to them", "Forward it to friends"],
-      ["Blocking can hide the messages.", "What would an adult need to see?"], "Save the evidence first (privately), then report and block, and tell a trusted adult."),
+      ["Blocking can hide the messages.", "What would an adult need to see?"], "Save the evidence first (privately), then report and block, and tell a trusted adult. Never save or share a nude or sexual picture of anyone under 18: tell an adult instead."),
     why("ab-10", "Why can a banned-word filter not stop all cyberbullying?", "It checks for words, not what a message means",
       ["It runs too slowly", "It only works in capitals", "It cannot read long messages"], "Leaving someone out uses no banned word, but it is still unkind.", ["What does the filter actually look for?", "Can an unkind message use only kind words?"]),
     why("ab-11", "Why does deleting a post not stop it spreading?", "Other people already have copies they can forward",

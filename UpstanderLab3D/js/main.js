@@ -11,7 +11,9 @@ import * as THREE from 'three';
 import { create } from '../room.js';
 import { createBlob } from '../blob.js';
 import { buildWorld } from './world.js';
-import { MISSIONS, LESSONS, IDLE, fill } from './story.js';
+import { MISSIONS, LESSONS, IDLE, ROLES, fill } from './story.js';
+// How a person is named in a sentence: a student by their name, a staff role with "the" (the Safeguarding Lead).
+const called = (p) => (ROLES[p.id] && ROLES[p.id].staff ? 'the ' : '') + p.name;
 import { createTalk } from './talk.js';
 import { createPhone } from './phone.js';
 
@@ -153,10 +155,10 @@ export function startSolo({ container }) {
     const p = !talk.isOpen() && !phone.isOpen() && nearest(TALK_D), st = M && !finished && curStep();
     if (talk.isOpen()) h = talk.line()?.choices ? 'Choose with <b>1</b>, <b>2</b> or <b>3</b>, or click.' : '<b>Space</b> for the next line.';
     else if (phone.isOpen()) h = 'Use your phone, then press <b>P</b> to close it.';
-    else if (p) h = '<b>Press Space</b> to talk to ' + esc(p.name) + '.';
+    else if (p) h = '<b>Press Space</b> to talk to ' + esc(called(p)) + '.';
     else if (finished) h = 'Mission complete. Choose the next mission on the right.';
     else if (st && st.phone && !M.noHelp) h = 'Press <b>P</b> to open your phone.';
-    else if (st && st.who && !M.noHelp) h = 'Find <b>' + esc(people[st.who].name) + '</b> in ' + esc(people[st.who].where) + '. The <b>!</b> shows who.';
+    else if (st && st.who && !M.noHelp) h = 'Find <b>' + esc(called(people[st.who])) + '</b> in ' + esc(people[st.who].where) + '. The <b>!</b> shows who.';
     else h = 'Walk with W A S D or the arrow keys. Right-drag turns the camera.';
     if ($('hint').innerHTML !== h) $('hint').innerHTML = h;
   }

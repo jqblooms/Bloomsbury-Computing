@@ -155,7 +155,7 @@ export const MISSIONS = [
     talk: {
       poster(S) {
         if (!S.krit1) return [
-          say("Look, I shared that old photo of {target} pulling a face. It's only funny."),
+          say("Look, I shared a screenshot of {target} pulling a face. It's only funny."),
           say('Want me to send it to you?', { choices: [
             { t: "No. It isn't fair on {target}. Who did you send it to?", ok: true },
             { t: 'Yes, send it.', ok: false, why: 'Every person who forwards it makes it spread further, and {target} has no say in it.' },
@@ -227,15 +227,16 @@ export const MISSIONS = [
           ] }),
         ];
       },
+      // Telling an adult never waits for evidence (UK practice: tell straight away; evidence helps but is not needed).
       coun(S) {
         if (S.told) return [say('Thank you. The safeguarding team will look after it from here.')];
-        if (!S.saved) return [say('Hello. Is something wrong?'), say('(Save the evidence on your phone first, so you can show what happened.)')];
         return [
           say('Hello. Is something wrong?', { choices: [
-            { t: 'People are ganging up on {target} in the class chat. I saved the messages so you can see them.', ok: true, act: (S) => { S.told = true; } },
+            { t: 'People are ganging up on {target} in the class chat.' + (S.saved ? ' I saved the messages so you can see them.' : ''), ok: true, act: (S) => { S.told = true; } },
             { t: 'Nothing. Never mind.', ok: false, why: 'Telling a trusted adult is how it actually stops. You will not get in trouble for telling.' },
           ] }),
-          say('Thank you for telling me, and for saving the messages. You did the right thing. Any adult in school would have passed this on to us, so you can tell any of them.'),
+          say(S.saved ? 'Thank you for telling me, and for saving the messages. You did the right thing.' : 'Thank you for telling me. You were right to come, even without the messages. If you can, show me them on your phone, but never forward them.'),
+          say('Any adult in school would have passed this on to us, so you can always tell any of them.'),
         ];
       },
     },
@@ -255,7 +256,7 @@ export const MISSIONS = [
           say("I'm new. Everyone's in a squad except me.", { choices: [
             { t: "That's not fair. Come and play with us. I'm telling a teacher about the chat.", ok: true, act: (S) => { S.leo = true; } },
             { t: 'Maybe practise more and they will add you.', ok: false, why: 'Leaving {newcomer} out is the problem, not how good anyone is at the game.' },
-            { t: 'Just play on your own.', ok: false, why: 'Leaving someone out on purpose is bullying too. {newcomer} needs someone on their side.' },
+            { t: 'Just play on your own.', ok: false, why: 'Leaving someone out on purpose, again and again, is bullying too. {newcomer} needs someone on their side.' },
           ] }),
         ];
       },
@@ -272,10 +273,10 @@ export const MISSIONS = [
         if (S.told) return [say('Thank you. The safeguarding team will deal with the squad chat.')];
         return [
           say('Hello. What is it?', { choices: [
-            { t: '{newcomer} is being left out of the squad chat on purpose. I saved the messages.', ok: true, act: (S) => { if (S.saved) S.told = true; },
-              check: (S) => S.saved, notYet: 'Save the evidence on your phone first, so you can show what happened.' },
-            { t: 'Nothing.', ok: false, why: 'Telling a trusted adult is how it stops.' },
+            { t: '{newcomer} is being left out of the squad chat on purpose.' + (S.saved ? ' I saved the messages.' : ''), ok: true, act: (S) => { S.told = true; } },
+            { t: 'Nothing.', ok: false, why: 'Telling a trusted adult is how it stops. You will not get in trouble for telling.' },
           ] }),
+          say(S.saved ? 'Thank you for telling me, and for saving the messages.' : 'Thank you for telling me. You were right to come. If you can, show me the messages on your phone, but never forward them.'),
         ];
       },
     },

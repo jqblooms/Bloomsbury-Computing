@@ -5,14 +5,14 @@
   {
    "id": "title",
    "label": "Be an Upstander Online",
-   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Anti-Bullying Week</p><h2 class=\"lesson-h2\">Be an Upstander Online</h2><p>Year 9</p></div><p class=\"lesson-lead\"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does. You work through this lesson on your own: every slide says what to do and when you are done.</p><p class=\"lesson-lead\"><strong>Before you start:</strong> this lesson is about bullying online. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team. You will not get in trouble for telling.</p><p class=\"lesson-lead\"><strong>What to do:</strong> read this slide, then press Next.</p>"
+   "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Anti-Bullying Week</p><h2 class=\"lesson-h2\">Be an Upstander Online</h2><p>Year 9</p></div><p class=\"lesson-lead\"><strong>Today:</strong> what apps can and cannot stop, how fast a post spreads, and what an upstander does. You work through this lesson on your own: every slide says what to do, about how long it takes, and when you are done. The whole lesson takes about 55 minutes. Finished early? Try the <strong>Extension</strong> slides near the end.</p><p class=\"lesson-lead\"><strong>Before you start:</strong> this lesson is about bullying online. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Secondary or the safeguarding team. You will not get in trouble for telling.</p><p class=\"lesson-lead\"><strong>What to do</strong> (about 2 minutes): read this slide, then press Next.</p>"
   },
   {
    "id": "do-now",
    "label": "Do Now: Is It Cyberbullying? (1 of 2)",
    "type": "multiple-choice",
    "containerId": "y9abw-do-now",
-   "content": "<h2 class=\"lesson-h2\">Do Now: Is It Cyberbullying? (1 of 2)</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read each situation and choose the best answer. Stuck? Press <strong>Walk me through it</strong>. <strong>Done</strong> when you have answered both questions and read why.</p><div id=\"y9abw-do-now\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Do Now: Is It Cyberbullying? (1 of 2)</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 3 minutes): read each situation and choose the best answer. Stuck? Press <strong>Walk me through it</strong>. <strong>Done</strong> when you have answered both questions and read why.</p><div id=\"y9abw-do-now\"></div>",
    "items": [
     {
      "prompt": "A classmate shares an embarrassing photo of someone in a group chat, and others add laughing faces. Is this cyberbullying?",
@@ -70,17 +70,17 @@
    "label": "Do Now: What Should You Do? (2 of 2)",
    "type": "multiple-choice",
    "containerId": "y9abw-do-now-2",
-   "content": "<h2 class=\"lesson-h2\">Do Now: What Should You Do? (2 of 2)</h2><p class=\"lesson-lead\"><strong>What to do:</strong> choose the best first step for each situation. Stuck? Press <strong>Walk me through it</strong>. <strong>Done</strong> when you have answered both questions and read why.</p><div id=\"y9abw-do-now-2\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Do Now: What Should You Do? (2 of 2)</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 3 minutes): choose the best first step for each situation. Stuck? Press <strong>Walk me through it</strong>. <strong>Done</strong> when you have answered both questions and read why.</p><div id=\"y9abw-do-now-2\"></div>",
    "items": [
     {
      "prompt": "Someone you do not know messages you and asks for a photo of you. What should you do?",
      "options": [
       "Reply and ask who they are",
       "Send a photo that does not show your face",
-      "Do not reply, block them, and tell a trusted adult"
+      "Send nothing: save the chat, report, block, tell an adult"
      ],
      "correct": 2,
-     "explain": "Never send photos to people you do not know. Do not reply, block them, and tell a trusted adult."
+     "explain": "Never send photos to people you do not know. Do not reply or send anything. Save the chat, report and block them, and tell a trusted adult."
     },
     {
      "prompt": "An account posts something unkind about you. What is the best first step?",
@@ -90,7 +90,7 @@
       "Delete your own account"
      ],
      "correct": 1,
-     "explain": "Save the evidence first, privately. Then report, block, and tell a trusted adult."
+     "explain": "Save the evidence first, privately. Then report, block, and tell a trusted adult. If it is a nude or sexual picture of anyone under 18, do not screenshot, save or forward it: tell a trusted adult straight away."
     }
    ],
    "walkthrough": {
@@ -129,7 +129,7 @@
    "type": "embedded-app",
    "appId": "drill-y9-abw-ext",
    "embedContainerId": "y9abw-do-now-ext",
-   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>What to do:</strong> <strong>Extension, if you have time:</strong> decide what to do in each online safety situation. <strong>Done</strong> when you have tried a few cards. You can move on whenever you are ready.</p><div id=\"y9abw-do-now-ext\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Extension: Do Now Challenge</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 5 minutes, extension): <strong>Extension, if you have time:</strong> decide what to do in each online safety situation. <strong>Done</strong> when you have tried a few cards. You can move on whenever you are ready.</p><div id=\"y9abw-do-now-ext\"></div>"
   },
   {
    "id": "game-filter",
@@ -137,7 +137,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-filter",
-   "content": "<h2 class=\"lesson-h2\">Mission 1: The Filter</h2><p class=\"lesson-lead\"><strong>What to do:</strong> The class chat app hides messages with banned words. Collect messages from people around the school and test the filter on your phone. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-filter\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 1: The Filter</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 11 minutes): The class chat app hides messages with banned words. Collect messages from people around the school and test the filter on your phone. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-filter\"></div>",
    "embedQuery": "lesson=abw&mission=filter"
   },
   {
@@ -145,7 +145,7 @@
    "label": "Explain It: Can a Filter Stop It?",
    "type": "self-marked-response",
    "containerId": "y9abw-explain-filter",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Can a Filter Stop It?</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team.</p><div id=\"y9abw-explain-filter\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Can a Filter Stop It?</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 4 minutes): explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Secondary or the safeguarding team.</p><div id=\"y9abw-explain-filter\"></div>",
    "items": [
     {
      "id": "explain-filter-q",
@@ -158,7 +158,7 @@
       "Unkind messages with no banned word get through (sarcasm, leaving someone out, changed spellings)",
       "Harmless messages that contain a banned word get hidden (false alarms)"
      ],
-     "guidance": "Any two points, one mark each, in the student's own words. An example counts as the point it shows. \"It is not clever enough\" alone earns nothing.",
+     "guidance": "Any two points, one mark each, in the student's own words. An example counts as the point it shows. \"It is not clever enough\" alone earns nothing. If the answer describes a real person, a real event or the student's own experience instead of the game, do not mark or comment on it: award 0 and reply only \"Thank you. Please talk to your form tutor or the safeguarding team about this today.\"",
      "modelAnswer": "It only looks for banned words, not meaning. So leaving someone out gets through, and \"losers' bracket\" gets hidden."
     }
    ]
@@ -169,7 +169,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-spread",
-   "content": "<h2 class=\"lesson-h2\">Mission 2: One Screenshot</h2><p class=\"lesson-lead\"><strong>What to do:</strong> A classmate shared a screenshot of someone. Find out how far one post can travel. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-spread\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 2: One Screenshot</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 7 minutes): A classmate shared a screenshot of someone. Find out how far one post can travel. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-spread\"></div>",
    "embedQuery": "lesson=abw&mission=spread"
   },
   {
@@ -177,7 +177,7 @@
    "label": "Explain It: Why Deleting Is Not Enough",
    "type": "self-marked-response",
    "containerId": "y9abw-explain-spread",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Why Deleting Is Not Enough</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team.</p><div id=\"y9abw-explain-spread\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Why Deleting Is Not Enough</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 4 minutes): explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Secondary or the safeguarding team.</p><div id=\"y9abw-explain-spread\"></div>",
    "items": [
     {
      "id": "explain-spread-q",
@@ -189,7 +189,7 @@
       "Copies have already been forwarded / saved on other people's phones",
       "Each person can forward it again, so it keeps spreading"
      ],
-     "guidance": "One mark for each point, in the student's own words. \"It is on the internet forever\" alone earns 1 mark only if it says copies exist elsewhere.",
+     "guidance": "One mark for each point, in the student's own words. \"It is on the internet forever\" alone earns 1 mark only if it says copies exist elsewhere. If the answer describes a real person, a real event or the student's own experience instead of the game, do not mark or comment on it: award 0 and reply only \"Thank you. Please talk to your form tutor or the safeguarding team about this today.\"",
      "modelAnswer": "Other people already have copies on their phones, and each of them can forward it again."
     }
    ]
@@ -200,7 +200,7 @@
    "type": "embedded-app",
    "appId": "upstander-lab-3d",
    "embedContainerId": "y9abw-game-upstander",
-   "content": "<h2 class=\"lesson-h2\">Mission 3: Be an Upstander</h2><p class=\"lesson-lead\"><strong>What to do:</strong> The class chat is ganging up on someone. Do the right things, in the right order. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-upstander\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Mission 3: Be an Upstander</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 10 minutes): The class chat is ganging up on someone. Do the right things, in the right order. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-game-upstander\"></div>",
    "embedQuery": "lesson=abw&mission=upstander"
   },
   {
@@ -208,19 +208,19 @@
    "label": "Explain It: Evidence First",
    "type": "self-marked-response",
    "containerId": "y9abw-explain-evidence",
-   "content": "<h2 class=\"lesson-h2\">Explain It: Evidence First</h2><p class=\"lesson-lead\"><strong>What to do:</strong> explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Year or the safeguarding team.</p><div id=\"y9abw-explain-evidence\"></div>",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Evidence First</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 4 minutes): explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Secondary or the safeguarding team.</p><div id=\"y9abw-explain-evidence\"></div>",
    "items": [
     {
      "id": "explain-evidence-q",
      "aiModel": "haiku",
-     "context": "In the game, the right order in the chat was: do not reply, save the evidence (a private screenshot), report it, then block, and tell a trusted adult. Blocking before saving lost the messages. In your own words, explain why you should save the evidence before you block someone.",
+     "context": "In the game, the right order in the chat was: do not reply, save the evidence (a private screenshot), report it, then block, and tell a trusted adult. The game would not let you block before saving, because blocking can hide the messages. In your own words, explain why you should save the evidence before you block someone.",
      "prompt": "In your own words, explain why you should save the evidence before you block someone.",
      "marks": 2,
      "scheme": [
       "Blocking can hide / remove the messages",
       "An adult needs the evidence to see what happened and act on it"
      ],
-     "guidance": "One mark for each point, in the student's own words. Saving evidence means keeping it privately for an adult; an answer about sharing or posting the screenshot earns nothing.",
+     "guidance": "One mark for each point, in the student's own words. Saving evidence means keeping it privately for an adult; an answer about sharing or posting the screenshot earns nothing. If the answer describes a real person, a real event or the student's own experience instead of the game, do not mark or comment on it: award 0 and reply only \"Thank you. Please talk to your form tutor or the safeguarding team about this today.\"",
      "modelAnswer": "Blocking can hide the messages. An adult needs to see them to help."
     }
    ]
@@ -231,12 +231,44 @@
    "type": "embedded-app",
    "appId": "drill-y9-abw",
    "embedContainerId": "y9abw-plenary",
-   "content": "<h2 class=\"lesson-h2\">Plenary: Upstander Drill</h2><p class=\"lesson-lead\"><strong>What to do:</strong> answer the cards on filters, how far posts spread, and what an upstander does. Stuck? Switch on <strong>I need help</strong>. Your progress is saved. <strong>Done</strong> when you have mastered every card (3 right in a row), or the lesson time is up.</p><div id=\"y9abw-plenary\"></div>"
+   "content": "<h2 class=\"lesson-h2\">Plenary: Upstander Drill</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 6 minutes): answer the cards on filters, how far posts spread, and what an upstander does. Stuck? Switch on <strong>I need help</strong>. Your progress is saved. <strong>Done</strong> when you have mastered every card (3 right in a row), or 5 minutes before the end of the lesson. Then press Next: <strong>Where to Get Help</strong> comes next.</p><div id=\"y9abw-plenary\"></div>"
   },
   {
    "id": "help",
    "label": "Where to Get Help",
-   "content": "<h2 class=\"lesson-h2\">Where to Get Help</h2><p class=\"lesson-lead\"><strong>What to do:</strong> read this slide. It is the end of the lesson.</p><p class=\"lesson-lead\">If anything online is worrying you, or someone you know:</p><ul class=\"lesson-facts\"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Year</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li><li>Staff will listen, and they will pass what you tell them to the safeguarding team so you get the right help.</li><li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply.</li><li>You will not get in trouble for telling.</li></ul>"
+   "content": "<h2 class=\"lesson-h2\">Where to Get Help</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 1 minute): read this slide before you finish. <strong>Done</strong> when you have read it. That is the end of the main lesson: if you still have time, try the Extension slides next.</p><p class=\"lesson-lead\">If anything online is worrying you, or someone you know:</p><ul class=\"lesson-facts\"><li>Talk to <strong>any adult in school</strong> you trust: your <strong>form tutor</strong>, your <strong>Head of Secondary</strong>, or the <strong>safeguarding team</strong> (the <strong>Designated Safeguarding Lead</strong> and the deputies). Or talk to someone at home.</li><li>Staff will listen, and they will pass what you tell them to the safeguarding team so you get the right help.</li><li><strong>Save</strong> the messages, <strong>report</strong> and <strong>block</strong>. Do not reply. You can tell an adult even if you have not saved anything.</li><li>If it is a nude or sexual picture of anyone under 18, do not screenshot, save or forward it: tell a trusted adult straight away.</li><li>You will not get in trouble for telling.</li></ul>"
+  },
+  {
+   "id": "ext-challenge",
+   "label": "Extension: The Squad Chat Challenge",
+   "type": "embedded-app",
+   "appId": "upstander-lab-3d",
+   "embedContainerId": "y9abw-ext-challenge",
+   "content": "<h2 class=\"lesson-h2\">Extension: The Squad Chat Challenge</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 8 minutes, extension): <strong>Extension, if you finish early.</strong> A new student is being left out of a game squad chat. This time there are no hints and no <strong>!</strong>: work out what to do yourself. Aim for 3 stars. Walk with <strong>W A S D</strong> or the arrow keys, press <strong>Space</strong> to talk, <strong>1 2 3</strong> to choose, <strong>P</strong> for your phone. The <strong>!</strong> shows who to talk to next. Press <strong>Full screen</strong> for the best view. <strong>Done</strong> when the game says <strong>Mission complete</strong>. Then press Next.</p><div id=\"y9abw-ext-challenge\"></div>",
+   "embedQuery": "lesson=abw&mission=challenge"
+  },
+  {
+   "id": "ext-design",
+   "label": "Extension: Design a Safer App",
+   "type": "self-marked-response",
+   "containerId": "y9abw-ext-design",
+   "content": "<h2 class=\"lesson-h2\">Extension: Design a Safer App</h2><p class=\"lesson-lead\"><strong>What to do</strong> (about 6 minutes, extension): explain it in your own words, then press <strong>Check my answer</strong>. Read the feedback, improve your answer and check again. <strong>Done</strong> when you have full marks, or you have pressed <strong>Submit answer</strong> and marked it against the model answer.</p><p class=\"lesson-lead small\">Only write about the game here, not about yourself or anyone you know. If anything in this lesson worries or upsets you, you can stop and talk to an adult you trust: your form tutor, your Head of Secondary or the safeguarding team.</p><div id=\"y9abw-ext-design\"></div>",
+   "items": [
+    {
+     "id": "ext-design-q",
+     "aiModel": "haiku",
+     "context": "This extension asks students to suggest an app feature that could help reduce cyberbullying and to explain one limitation of it. In the game they met a banned-word filter (false alarms and misses), forwarding (copies spread fast), and saving evidence, reporting and blocking. Suggest one feature a chat app could add to help stop cyberbullying. Explain how it would help, and one limitation it would have.",
+     "prompt": "Suggest one feature a chat app could add to help stop cyberbullying. Explain how it would help, and one limitation it would have.",
+     "marks": 3,
+     "scheme": [
+      "A sensible feature (for example a report button, a \"pause before posting\" prompt, limits on forwarding, human moderators, privacy settings for who can message or add you)",
+      "How the feature helps (what it prevents or makes easier, linked to the feature)",
+      "A limitation of that feature (for example people can get round it, it can raise false alarms, it relies on someone reporting, it cannot understand meaning, it can be slow)"
+     ],
+     "guidance": "One mark for each point, in the student's own words. The limitation must be about the feature they suggested. A feature that harms privacy or punishes people without checking (for example \"read everyone's messages\", \"ban anyone reported\") earns the feature mark only if the student also names that problem as its limitation. If the answer describes a real person, a real event or the student's own experience instead of the game, do not mark or comment on it: award 0 and reply only \"Thank you. Please talk to your form tutor or the safeguarding team about this today.\"",
+     "modelAnswer": "A \"pause before posting\" prompt when a message looks unkind. It gives people a moment to change their mind. But it cannot spot unkind messages that use kind words."
+    }
+   ]
   }
  ],
  "validators": {},

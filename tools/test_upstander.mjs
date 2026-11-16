@@ -45,6 +45,16 @@ assert.ok(report.some((L) => (L.choices || []).some((c) => /Three unkind message
 // a name in a message can never change the filter's result
 for (let i = 0; i < 20; i++) { randomiseNames(); MESSAGES.forEach((m, k) => assert.equal(verdict(flagged(fill(m.text)), m.unkind), v[k], 'name changes ' + m.id)); }
 
+// Telling an adult never needs evidence first (UK practice): with nothing saved, the right choice is still taken.
+for (const id of ['upstander', 'challenge']) {
+  const m = MISSIONS.find((x) => x.id === id), S = m.fresh();
+  const lines = m.talk.coun(S), c = lines[0].choices.find((x) => x.ok);
+  assert.ok(c && !c.check, id + ': telling the adult is gated');
+  c.act(S); assert.equal(S.told, true, id + ': telling without evidence does not count');
+  assert.ok(lines.some((L) => /right to come/.test(L.say || '')), id + ': the adult does not welcome a tell without evidence');
+  assert.ok(!/save the evidence on your phone first/i.test(JSON.stringify(lines)), id + ': evidence demanded before telling');
+}
+
 // The spread: 2^n - 1 after step n, and the answers the phone accepts.
 assert.deepEqual([1, 2, 3, 4, 8].map(peopleAfter), [1, 3, 7, 15, 255]);
 for (const q of SPREAD_Q) assert.equal(peopleAfter(q.step), q.answer);
