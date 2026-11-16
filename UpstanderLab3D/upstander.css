@@ -1,0 +1,65 @@
+/* Upstander Lab 3D: the talk panel, the phone, the speech bubble and the mission list, on top of NetLab3D's
+   net3d.css (layout, buttons, hint bar, mission sheet). Site tokens only. */
+.bubble { position: absolute; z-index: 6; transform: translate(-50%, -100%); max-width: 240px; padding: 8px 12px; border-radius: 14px;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); box-shadow: var(--shadow-1); font-weight: 700; font-size: 15px; pointer-events: none; text-align: center; }
+.bubble::after { content: ''; position: absolute; left: 50%; bottom: -8px; margin-left: -8px; border: 8px solid transparent; border-bottom: 0; border-top-color: var(--surface); }
+
+.talk { position: absolute; z-index: 8; left: 12px; right: 12px; bottom: 12px; max-height: 70%; overflow: auto; padding: 14px 16px;
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-lg); box-shadow: var(--shadow-2, var(--shadow-1)); }
+.talk-who { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.talk-who b { font-size: 18px; color: var(--brand); }
+.talk-read { font-size: 13px; padding: 4px 10px; }
+.talk-say { margin: 6px 0 10px; font-size: 19px; line-height: 1.35; }
+.talk-code { margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); font: 14px/1.4 var(--font-mono); overflow-x: auto; }
+.talk-choices { display: grid; gap: 8px; }
+.talk-choice { justify-content: flex-start; text-align: left; font-weight: 600; background: var(--surface-2); color: var(--ink); border: 1px solid var(--line-strong); }
+.talk-choice:hover { border-color: var(--brand); }
+.talk-choice .num { display: inline-grid; place-items: center; width: 24px; height: 24px; margin-right: 10px; border-radius: 6px; background: var(--brand); color: var(--on-brand); font-weight: 800; flex: none; }
+.talk-actions { display: flex; justify-content: flex-end; }
+.talk-actions small { opacity: .75; font-weight: 500; }
+.talk-fb { margin-top: 8px; font-size: 16px; }
+.talk-fb:empty { display: none; }
+.talk-fb.bad { color: var(--bad); }
+
+.phone { position: absolute; z-index: 9; top: 56px; right: 12px; bottom: 70px; width: min(440px, calc(100% - 24px)); overflow: auto;
+  background: var(--surface); border: 2px solid var(--line-strong); border-radius: 22px; box-shadow: var(--shadow-2, var(--shadow-1)); }
+.ph-top { position: sticky; top: 0; display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.ph-top .spacer { flex: 1; }
+.ph-body { padding: 12px 14px; display: grid; gap: 10px; }
+.ph-empty, .ph-lead { margin: 0; color: var(--muted); }
+.ph-code summary { cursor: pointer; font-weight: 700; }
+.ph-code pre { margin: 8px 0 0; padding: 10px; border-radius: 10px; background: var(--surface-2); font: 12.5px/1.4 var(--font-mono); overflow-x: auto; }
+.ph-msgs { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.ph-msg { padding: 10px; border-radius: 12px; background: var(--surface-2); display: grid; gap: 8px; justify-items: start; }
+.ph-msg.done { opacity: .85; }
+.ph-text { margin: 0; font-weight: 700; }
+.ph-res { font: 800 13px var(--font-mono); padding: 3px 10px; border-radius: 999px; }
+.ph-res.flag { background: var(--bad); color: #fff; }
+.ph-res.pass { background: var(--good); color: #fff; }
+.ph-verdicts { display: flex; gap: 6px; flex-wrap: wrap; }
+.ph-why { margin: 0; font-size: 14.5px; }
+.ph-why.good { color: var(--good); }
+.ph-why.bad { color: var(--bad); }
+.ph-tree { width: 100%; height: auto; }
+.ph-node { fill: var(--bad); }
+.ph-node.first { fill: var(--brand); }
+.ph-edge { stroke: var(--line-strong); stroke-width: 2; }
+.ph-count { margin: 0; font-size: 18px; text-align: center; }
+.ph-ask { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ph-ask label { flex-basis: 100%; font-weight: 700; }
+.ph-ask input { width: 7em; font: 700 17px var(--font-mono); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+.ph-chat-title { font-weight: 800; }
+.ph-chat { display: grid; gap: 6px; }
+.ph-bubble { justify-self: start; max-width: 85%; padding: 7px 11px; border-radius: 14px 14px 14px 4px; background: var(--surface-2); }
+.ph-bubble b { display: block; font-size: 12.5px; color: var(--muted); }
+.ph-actions { display: grid; gap: 6px; }
+.ph-actions .btn { justify-content: flex-start; text-align: left; }
+.ph-actions .btn.done { background: var(--good); color: #fff; opacity: .9; }
+
+.mission .up-head { margin: 4px 0 8px; }
+.mission .up-head .note { margin: 4px 0 0; }
+.mission .up-missions { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 4px; }
+.mission .up-missions button { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px; text-align: left; padding: 7px 10px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+.mission .up-missions button[aria-current="true"] { border-color: var(--brand); box-shadow: inset 3px 0 0 var(--brand); }
+.mission .up-missions small { color: var(--muted); font-weight: 500; }
