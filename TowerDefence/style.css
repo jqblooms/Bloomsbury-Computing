@@ -82,6 +82,7 @@ html.is-embed .cs-brand { font-size: 17px; }
 .cs-fb { margin-top: 16px; padding: 14px 16px; border-radius: var(--radius); border: 1px solid var(--line-strong); background: var(--surface-2); }
 .cs-fb[hidden] { display: none; }
 .cs-fb p { margin: 8px 0 0; color: var(--ink-soft); font-size: 17px; line-height: 1.5; }
+.cs-fb #fbText { white-space: pre-line; }
 .cs-fb.is-good { border-color: var(--good-line); background: var(--good-soft); }
 .cs-fb.is-part { border-color: var(--warn-line); background: var(--warn-soft); }
 .cs-fb.is-bad { border-color: var(--bad-line); background: var(--bad-soft); }
