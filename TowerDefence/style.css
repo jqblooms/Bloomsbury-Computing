@@ -45,6 +45,11 @@ html.is-embed .cs-brand { font-size: 17px; }
 .cs-tip[hidden] { display: none; }
 .cs-board { position: relative; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line); }
 .cs-board canvas { display: block; width: 100%; height: auto; cursor: crosshair; }
+/* Full screen: opaque page, board as big as the screen allows with the shop and buttons below. */
+html.cs-fs, html.cs-fs body { background: var(--bg); }
+html.cs-fs body { height: 100vh; overflow: auto; padding: 8px 12px; box-sizing: border-box; }
+html.cs-fs .cs-board { width: fit-content; max-width: 100%; margin: 0 auto; }
+html.cs-fs .cs-board canvas { width: auto; max-width: 100%; height: calc(100vh - 200px); min-height: 280px; }
 .cs-toast { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); max-width: 90%; padding: 8px 16px; border-radius: 999px;
   background: var(--surface-3); border: 1px solid var(--line-strong); color: var(--ink); font-size: 15px; text-align: center; pointer-events: none; }
 .cs-toast[hidden] { display: none; }
@@ -103,3 +108,4 @@ html.is-embed .cs-brand { font-size: 17px; }
   .cs-q-text { font-size: 20px; }
 }
 .cs-controls [hidden], .cs-tip[hidden] { display: none !important; }
+.cs-fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; padding: 6px 12px; font-size: 13px; }

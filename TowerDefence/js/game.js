@@ -201,7 +201,7 @@
       '<div class="cs-board" id="board"><canvas id="cv" width="' + W + '" height="' + H + '"></canvas><div class="cs-toast" id="toast" hidden></div></div>' +
       '<div class="cs-panel"><div class="cs-shop" id="shop"></div>' +
       '<div class="cs-controls"><button class="bc-btn cs-big" id="startWave">Start wave ' + (S.wave + 1) + '</button>' +
-      '<div class="cs-ctl-row"><button class="bc-btn is-outline" id="speed">Speed 1x</button><button class="bc-btn is-outline" id="pause" disabled>Pause</button></div>' +
+      '<div class="cs-ctl-row"><button class="bc-btn is-outline" id="speed">Speed 1x</button><button class="bc-btn is-outline" id="pause" disabled>Pause</button></div>' +
       '<button class="bc-btn is-outline" id="stormBtn" hidden>Storm: 1000 coins</button></div></div>';
     canvas = $('cv'); ctx = canvas.getContext('2d');
     bg = document.createElement('canvas'); bg.width = W; bg.height = H; Art.drawBoard(bg.getContext('2d'));
@@ -211,7 +211,7 @@
     $('startWave').onclick = startWave;
     $('speed').onclick = function () { ui.speed = ui.speed === 1 ? 2 : 1; this.textContent = 'Speed ' + ui.speed + 'x'; };
     $('pause').onclick = function () { ui.paused = !ui.paused; this.textContent = ui.paused ? 'Play' : 'Pause'; };
-    $('stormBtn').onclick = useStorm;
+    $('stormBtn').onclick = useStorm;
     $('speed').textContent = 'Speed ' + ui.speed + 'x';
     $('tipOk').onclick = tipOk;
     drawShop();
@@ -757,4 +757,27 @@
   window.__circuitSiege = { state: function () { return { S: S, R: R, ui: ui }; }, step: function () { if (R) Eng.step(R); render(); } };
   setId = WANT_SET;
   showStart();
+
+  // Full screen: the real thing when the browser allows it; otherwise the lesson page makes the game fill
+  // its window (its own Full screen mode). html.cs-fs lays the board out to fit the screen height.
+  function csIsFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function csAskParentFull() { try { if (window.parent !== window) window.parent.postMessage({ type: 'BC_APP_FULLSCREEN' }, '*'); } catch (e) {} }
+  function csToggleFull() {
+    var el = document.documentElement;
+    if (csIsFull()) { (document.exitFullscreen || document.webkitExitFullscreen || function () {}).call(document); return; }
+    var req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (!req) { csAskParentFull(); return; }
+    try { var p = req.call(el); if (p && p.catch) p.catch(csAskParentFull); } catch (e) { csAskParentFull(); }
+  }
+  function csOnFullChange() {
+    document.documentElement.classList.toggle('cs-fs', csIsFull());
+    var b = document.getElementById('fsBtn'); if (b) b.textContent = csIsFull() ? 'Exit full screen' : 'Full screen';
+  }
+  (function () {
+    var b = document.createElement('button');
+    b.type = 'button'; b.id = 'fsBtn'; b.className = 'bc-btn is-outline cs-fs-btn'; b.textContent = 'Full screen';
+    b.onclick = csToggleFull; document.body.appendChild(b);
+  })();
+  document.addEventListener('fullscreenchange', csOnFullChange);
+  document.addEventListener('webkitfullscreenchange', csOnFullChange);
 })();
