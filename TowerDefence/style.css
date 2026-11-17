@@ -108,4 +108,6 @@ html.cs-fs .cs-board canvas { width: auto; max-width: 100%; height: calc(100vh -
   .cs-q-text { font-size: 20px; }
 }
 .cs-controls [hidden], .cs-tip[hidden] { display: none !important; }
+.cs-speed input[type=range] { width: 110px; accent-color: var(--brand, #8ab4f8); cursor: pointer; }
+.cs-speed b { min-width: 2.6em; text-align: right; }
 .cs-fs-btn { position: fixed; top: 8px; right: 8px; z-index: 50; padding: 6px 12px; font-size: 13px; }

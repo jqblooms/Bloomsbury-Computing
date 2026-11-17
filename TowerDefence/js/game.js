@@ -201,7 +201,7 @@
       '<div class="cs-board" id="board"><canvas id="cv" width="' + W + '" height="' + H + '"></canvas><div class="cs-toast" id="toast" hidden></div></div>' +
       '<div class="cs-panel"><div class="cs-shop" id="shop"></div>' +
       '<div class="cs-controls"><button class="bc-btn cs-big" id="startWave">Start wave ' + (S.wave + 1) + '</button>' +
-      '<div class="cs-ctl-row"><button class="bc-btn is-outline" id="speed">Speed 1x</button><button class="bc-btn is-outline" id="pause" disabled>Pause</button></div>' +
+      '<div class="cs-ctl-row"><button class="bc-btn is-outline" id="pause" disabled>Pause</button></div>' +
       '<button class="bc-btn is-outline" id="stormBtn" hidden>Storm: 1000 coins</button></div></div>';
     canvas = $('cv'); ctx = canvas.getContext('2d');
     bg = document.createElement('canvas'); bg.width = W; bg.height = H; Art.drawBoard(bg.getContext('2d'));
@@ -209,10 +209,8 @@
     canvas.addEventListener('mouseleave', function () { ui.hover = null; mouse.on = false; });
     canvas.addEventListener('click', onClick);
     $('startWave').onclick = startWave;
-    $('speed').onclick = function () { ui.speed = ui.speed === 1 ? 2 : 1; this.textContent = 'Speed ' + ui.speed + 'x'; };
     $('pause').onclick = function () { ui.paused = !ui.paused; this.textContent = ui.paused ? 'Play' : 'Pause'; };
     $('stormBtn').onclick = useStorm;
-    $('speed').textContent = 'Speed ' + ui.speed + 'x';
     $('tipOk').onclick = tipOk;
     drawShop();
     updateHud();
@@ -527,12 +525,12 @@
     if (R && !ui.paused) {
       ui.acc += real * D.FPS * ui.speed;
       var guard = 0;
-      while (ui.acc >= 1 && R && guard++ < 10) {
+      while (ui.acc >= 1 && R && guard++ < 24) {
         Eng.step(R); ui.acc -= 1;
         if (S.lives - R.livesLost <= 0) { gameOver(); return; }
         if (R.done) { waveCleared(); return; }
       }
-      if (ui.acc > 2) ui.acc = 0;
+      if (ui.acc > 8) ui.acc = 0;
       hudT += real;
       if (hudT > 0.25) { hudT = 0; updateHud(); updateStorm(); }
     }
@@ -777,6 +775,15 @@
     var b = document.createElement('button');
     b.type = 'button'; b.id = 'fsBtn'; b.className = 'bc-btn is-outline cs-fs-btn'; b.textContent = 'Full screen';
     b.onclick = csToggleFull; document.body.appendChild(b);
+  })();
+  // Speed slider in the top bar (James 2026-11-17): 1x to 4x in half steps, remembered.
+  (function () {
+    var sl = document.getElementById('hudSpeed'), out = document.getElementById('hudSpeedVal');
+    if (!sl) return;
+    var v = Number(load('speed', 1)); if (!(v >= 1 && v <= 4)) v = 1;
+    var apply = function (n) { ui.speed = n; sl.value = String(n); if (out) out.textContent = n + 'x'; store('speed', n); };
+    apply(v);
+    sl.addEventListener('input', function () { apply(Math.max(1, Math.min(4, Number(sl.value) || 1))); });
   })();
   document.addEventListener('fullscreenchange', csOnFullChange);
   document.addEventListener('webkitfullscreenchange', csOnFullChange);

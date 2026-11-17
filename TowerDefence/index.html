@@ -9,7 +9,7 @@
   (function () {
     var p = new URLSearchParams(location.search), v = p.get('bcv') || '20261117a';
     if (p.get('embed') === '1') document.documentElement.classList.add('is-embed');
-    document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(v) + '&g=9">');
+    document.write('<link rel="stylesheet" href="style.css?v=' + encodeURIComponent(v) + '&g=10">');
     window.CS_VERSION = v;
   })();
 </script>
@@ -25,6 +25,7 @@
       <span class="cs-stat" title="Lives"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" fill="none" stroke="currentColor" stroke-width="2"/></svg><b id="hudLives">150</b></span>
       <span class="cs-stat cs-coins" title="Coins" id="hudCoinsWrap"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8v8M9.5 10h4a1.5 1.5 0 010 3h-3a1.5 1.5 0 000 3h4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><b id="hudCoins">0</b></span>
       <span class="cs-stat" title="Wave">Wave <b id="hudWave">1</b> of <b id="hudWaves">60</b></span>
+      <label class="cs-stat cs-speed" title="Game speed">Speed <input type="range" id="hudSpeed" min="1" max="4" step="0.5" value="1" aria-label="Game speed"><b id="hudSpeedVal">1x</b></label>
     </div>
   </header>
   <section id="screen"></section>
@@ -33,10 +34,10 @@
 <script>
   document.write('<script src="../shared/exam-game-client.js?v=20261117b"><\/script>');
   document.write('<script src="js/stub.js?v=' + encodeURIComponent(window.CS_VERSION) + '"><\/script>');
-  document.write('<script src="js/data.js?v=' + encodeURIComponent(window.CS_VERSION) + '&g=9"><\/script>');
-  document.write('<script src="js/engine.js?v=' + encodeURIComponent(window.CS_VERSION) + '&g=9"><\/script>');
-  document.write('<script src="js/art.js?v=' + encodeURIComponent(window.CS_VERSION) + '&g=9"><\/script>');
-  document.write('<script src="js/game.js?v=' + encodeURIComponent(window.CS_VERSION) + '&g=9"><\/script>');
+  document.write('<script src="js/data.js?v=' + encodeURIComponent(window.CS_VERSION) + '&g=10"><\/script>');
+  document.write('<script src="js/engine.js?v=' + encodeURIComponent(window.CS_VERSION) + '&g=10"><\/script>');
+  document.write('<script src="js/art.js?v=' + encodeURIComponent(window.CS_VERSION) + '&g=10"><\/script>');
+  document.write('<script src="js/game.js?v=' + encodeURIComponent(window.CS_VERSION) + '&g=10"><\/script>');
 </script>
 </body>
 </html>
