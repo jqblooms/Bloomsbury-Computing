@@ -120,6 +120,7 @@
   }
 
   function drawStart(fixed) {
+    if (api().warm) api().warm(setId);   // the student's history for this set, once, and a warm relay
     var cur = sets.filter(function (s) { return s.setId === setId; })[0];
     setTitle = cur ? (cur.title || cur.setId) : setId;
     var saved = load('game:' + setId, null);
@@ -399,6 +400,7 @@
 
   // ---------------------------------------------------------------- waves
   function startWave() {
+    if (api().warm) api().warm(setId);   // keeps Apps Script warm for the next round's first submit
     if (R || S.phase !== 'build') return;
     hideTip();
     var n = S.wave + 1;
@@ -571,6 +573,7 @@
   // Strokes are kept in canvas units (PEN_W x PEN_H) and replayed for the screen and for the PNG.
   var PEN_W = 800, PEN_H = 320, PEN_INK = 3, PEN_MARGIN = 16, PEN_MAX_SIDE = 800;
   var pen = { key: '', strokes: [], locked: false };
+  var ansBox = null, ansSaveT = 0;   // the answer box (shared/answer-box.js): monospace text with an optional table
 
   function penDraw(c, strokes) {
     c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#000'; c.fillStyle = '#000'; c.lineWidth = PEN_INK;
@@ -667,25 +670,28 @@
       '<div class="cs-pen-tools"><button class="bc-btn is-outline" id="penUndo" type="button">Undo</button>' +
       '<button class="bc-btn is-outline" id="penClear" type="button">Clear</button></div></div>' +
       '<p class="cs-label">Your answer (you must type it):</p>' +
-      '<textarea id="ans" rows="4" placeholder="Type your final answer here. You can type working here too."></textarea>' +
+      '<div id="ans" class="cs-ans"></div>' +
       '<div class="cs-q-actions" id="qActs"><button class="bc-btn cs-big" id="submit">Submit</button></div>' +
       '<div class="cs-fb" id="fb" hidden></div></div>';
     $('qText').textContent = q.text;
-    var ans = $('ans');
-    ans.value = cur.answer || '';
-    ans.oninput = function () { cur.answer = ans.value; };
+    ansBox = window.BCAnswerBox.mount($('ans'), { doc: cur.doc, text: cur.answer || '', rows: 4, maxLength: 800, label: 'Your answer',
+      placeholder: 'Type your final answer here. You can type working here too.',
+      onChange: function (text, doc) {
+        cur.answer = text; cur.doc = doc;
+        clearTimeout(ansSaveT); ansSaveT = setTimeout(save, 400);   // a reload keeps the typing and the table
+      } });
     penMount(r.n + '|' + r.i + '|' + q.qid);
     $('submit').onclick = submit;
     if (cur.fb) showFeedback(cur.fb);
-    else setTimeout(function () { try { ans.focus(); } catch (e) {} }, 30);
+    else setTimeout(function () { try { ansBox.focus(); } catch (e) {} }, 30);
   }
 
   function submit() {
-    var r = S.round, q = r.qs[r.i], cur = r.cur, ans = $('ans'), btn2 = $('submit');
-    var text = ans.value.trim();
-    if (!text) { ans.focus(); return; }
-    cur.answer = ans.value;
-    btn2.disabled = true; btn2.textContent = 'Marking...'; ans.readOnly = true; pen.locked = true;
+    var r = S.round, q = r.qs[r.i], cur = r.cur, btn2 = $('submit');
+    var text = ansBox ? ansBox.text() : '';
+    if (!text.trim()) { if (ansBox) ansBox.focus(); return; }
+    cur.answer = text; cur.doc = ansBox.doc();
+    btn2.disabled = true; btn2.textContent = 'Marking...'; ansBox.setReadOnly(true); pen.locked = true;
     var attempt = cur.attempt, image = penImage();
     call(function () { return api().submit(q.qid, cur.answer, attempt, image); }).then(function (res) {
       if (S.round !== r || r.cur !== cur) return;
@@ -699,7 +705,7 @@
       if ($('submit')) { updateHud(); coinPop(pay); showFeedback(cur.fb); }
     }).catch(function (e) {
       if (!$('submit')) return;
-      btn2.disabled = false; btn2.textContent = 'Submit'; ans.readOnly = false; pen.locked = false;
+      btn2.disabled = false; btn2.textContent = 'Submit'; ansBox.setReadOnly(false); pen.locked = false;
       var fb = $('fb'); fb.hidden = false; fb.className = 'cs-fb is-bad';
       fb.innerHTML = '<p>' + esc(errText(e)) + '</p><div class="cs-q-actions"><button class="bc-btn is-text" id="skipQ">Skip this question</button></div>';
       $('skipQ').onclick = function () {
@@ -710,7 +716,7 @@
 
   function showFeedback(fb) {
     var r = S.round, cur = r.cur;
-    $('ans').readOnly = true;
+    if (ansBox) ansBox.setReadOnly(true);
     pen.locked = true;
     $('qActs').hidden = true;
     var box = $('fb');

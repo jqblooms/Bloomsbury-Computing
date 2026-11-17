@@ -1,0 +1,454 @@
+{
+ "v": 1,
+ "sets": [
+  {
+   "setId": "twos-complement",
+   "title": "Two's Complement",
+   "questions": [
+    {
+     "qid": "tc-23j11-1c",
+     "text": "Cambridge IGCSE 0478/11, June 2023, Question 1(c)\nBinary numbers are stored in registers.\nNegative denary numbers can be represented as binary using two's complement.\nComplete the binary register for the denary number -78\nYou must show all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-23n12-2d",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(d)\nThe negative denary number -99 needs to be stored in the register.\nComplete the register to show the binary number that would be stored, using two's complement. Show all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-23n13-2d",
+     "text": "Cambridge IGCSE 0478/13, November 2023, Question 2(d)\nConvert the positive denary number 123 to 8-bit binary using two's complement.\nShow all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-24m12-8bi",
+     "text": "Cambridge IGCSE 0478/12, March 2024, Question 8(b)(i)\nTwo's complement can be used to represent positive and negative binary integers.\nConvert the two's complement integer 10110111 into denary.\nShow all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-24m12-8bii",
+     "text": "Cambridge IGCSE 0478/12, March 2024, Question 8(b)(ii)\nTwo's complement can be used to represent positive and negative binary integers.\nConvert the denary number 45 into an 8-bit two's complement integer.",
+     "marks": 1
+    },
+    {
+     "qid": "tc-24j11-3c",
+     "text": "Cambridge IGCSE 0478/11, June 2024, Question 3(c)\n10100011 can be stored as a two's complement integer.\nConvert the two's complement integer 10100011 to denary. Show all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-24j12-3d",
+     "text": "Cambridge IGCSE 0478/12, June 2024, Question 3(d)\nThe denary integer -32 is stored as a two's complement integer.\nCalculate the two's complement integer that would be stored.\nShow all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-24j13-3e",
+     "text": "Cambridge IGCSE 0478/13, June 2024, Question 3(e)\nThe health value for a character in the computer game can sometimes be a negative value.\nThe negative values are stored as two's complement 8-bit integers.\nA character has a health value of -25.\nCalculate the two's complement 8-bit integer for -25. Show all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-24n12-3e",
+     "text": "Cambridge IGCSE 0478/12, November 2024, Question 3(e)\nA negative binary integer needs to be stored in a register in the computer.\nGive the name of the number system that can be used to represent negative binary integers.",
+     "marks": 1
+    },
+    {
+     "qid": "tc-24n13-1e",
+     "text": "Cambridge IGCSE 0478/13, November 2024, Question 1(e)\nCalculate the denary number for the two's complement binary integer 10001110. Show all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-25j12-1g",
+     "text": "Cambridge IGCSE 0478/12, June 2025, Question 1(g)\nThe negative denary number -22 is stored in RAM.\nNegative denary numbers can be represented as binary using two's complement.\nGive the two's complement 8-bit binary integer that would be stored for the denary number -22.\nYou must show all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-25j13-1d",
+     "text": "Cambridge IGCSE 0478/13, June 2025, Question 1(d)\nThe two's complement 8-bit binary integer 11001001 is stored.\nConvert the two's complement 8-bit binary integer to denary. Show all of your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-25n11-1f",
+     "text": "Cambridge IGCSE 0478/11, November 2025, Question 1(f)\nA calculator has 8-bit registers.\nThe result of a calculation could be a negative denary number.\nState how the calculator could represent a negative denary number as a binary number.",
+     "marks": 1
+    },
+    {
+     "qid": "tc-25n13-1d",
+     "text": "Cambridge IGCSE 0478/13, November 2025, Question 1(d)\nIf the owner of the shop wants to make the room very cold, she may need to enter a negative denary number.\nThe negative denary number could be represented using two's complement.\nGive the two's complement 8-bit binary integer that would be stored for the temperature -5.\nShow all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-26m12-6d",
+     "text": "Cambridge IGCSE 0478/12, March 2026, Question 6(d)\nConvert the two's complement binary integer 01110101 into denary.",
+     "marks": 1
+    },
+    {
+     "qid": "tc-26j12-1ci",
+     "text": "Cambridge IGCSE 0478/12, June 2026, Question 1(c)(i)\nOne item of data displayed on the smartwatch is the current outdoor temperature. The temperature is stored in a register as a two's complement binary integer.\nShow whether two's complement is a base 2, base 8, base 10 or base 16 number system. Type one letter.\nA base 2\nB base 8\nC base 10\nD base 16",
+     "marks": 1
+    },
+    {
+     "qid": "tc-26j12-1cii",
+     "text": "Cambridge IGCSE 0478/12, June 2026, Question 1(c)(ii)\nThe outdoor temperature is stored in a register as a two's complement binary integer.\nGive the two's complement 8-bit binary integer that would be stored for the temperature of 32 degrees Celsius.",
+     "marks": 1
+    },
+    {
+     "qid": "tc-26j12-1ciii",
+     "text": "Cambridge IGCSE 0478/12, June 2026, Question 1(c)(iii)\nThe outdoor temperature is stored in a register as a two's complement binary integer.\nGive the two's complement 8-bit binary integer that would be stored for the temperature of -14 degrees Celsius.",
+     "marks": 1
+    },
+    {
+     "qid": "tc-26j13-8di",
+     "text": "Cambridge IGCSE 0478/13, June 2026, Question 8(d)(i)\nA display screen next to the keypad displays the current temperature inside the building.\nThe current temperature is stored as a two's complement binary integer and is displayed as a denary number.\nGive the denary number that would be displayed for each of the two's complement binary integers.\n00100011\n11101010",
+     "marks": 2
+    },
+    {
+     "qid": "tc-26j13-8dii",
+     "text": "Cambridge IGCSE 0478/13, June 2026, Question 8(d)(ii)\nThe current temperature is stored as a two's complement binary integer and is displayed as a denary number.\nGive the two's complement binary integer that would be stored when the denary number 14 is displayed.",
+     "marks": 1
+    },
+    {
+     "qid": "tc-own-freezer",
+     "text": "A freezer stores its temperature as a two's complement 8-bit binary integer.\nGive the two's complement 8-bit binary integer that would be stored for the temperature -18.\nShow all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-own-read40",
+     "text": "Convert the two's complement 8-bit binary integer 11011000 to denary.\nShow all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-own-weather",
+     "text": "A weather station in a very cold place stores the wind chill as a two's complement 8-bit binary integer.\nGive the two's complement 8-bit binary integer that would be stored for the denary number -100.\nShow all your working.",
+     "marks": 2
+    },
+    {
+     "qid": "tc-own-lift",
+     "text": "A lift stores the floor number as a two's complement 8-bit binary integer.\nThe lowest floor of the car park is floor -3.\nGive the two's complement 8-bit binary integer that would be stored for floor -3.\nShow all your working.",
+     "marks": 2
+    }
+   ]
+  },
+  {
+   "setId": "logical-shifts",
+   "title": "Logical Shifts",
+   "questions": [
+    {
+     "qid": "ls-23j12-2bi",
+     "text": "Cambridge IGCSE 0478/12, June 2023, Question 2(b)(i)\nA value is stored as a binary number in a register.\n01111010\nA logical right shift of three places is performed on the binary number.\nComplete the binary register to show its contents after this logical right shift.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-23j12-2bii",
+     "text": "Cambridge IGCSE 0478/12, June 2023, Question 2(b)(ii)\nA value is stored as a binary number in a register.\n01111010\nA logical right shift of three places is performed on the binary number.\nState one effect this logical shift has on the binary number.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-23j13-1ci",
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(c)(i)\nComputers store data as binary. The binary number 10101110 is stored.\nA logical left shift of three places is performed on the binary number.\nGive the 8-bit binary number that would be stored after this logical left shift.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-23j13-1cii",
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(c)(ii)\nThe binary number 10101110 is stored.\nA logical left shift of three places is performed on the binary number.\nShow which statement is true about the impact the logical left binary shift would have on the binary number. Type one letter.\nA The least significant bits are lost.\nB The most significant bits are lost.\nC The number has been divided by six.\nD The number stays the same.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-23n12-2c",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(c)\nA register stores the binary number:\n11100011\nA logical left shift of two places is performed on the binary number stored in the register.\nComplete the binary register to show its contents after this logical left shift.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-24j11-3a",
+     "text": "Cambridge IGCSE 0478/11, June 2024, Question 3(a)\nThe binary number 10100011 is stored in random access memory (RAM).\nA logical left shift of three places is performed on the binary number.\nGive the 8-bit binary number that will be stored after the shift has taken place.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-24j11-3b",
+     "text": "Cambridge IGCSE 0478/11, June 2024, Question 3(b)\nThe binary number 10100011 is stored in random access memory (RAM).\nShow which statement about a logical left shift of two places is correct. Type one letter.\nA It would divide the binary number by 2.\nB It would multiply the binary number by 2.\nC It would divide the binary number by 4.\nD It would multiply the binary number by 4.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-24m12-8c",
+     "text": "Cambridge IGCSE 0478/12, March 2024, Question 8(c)\nLogical shifts are performed on binary integers.\nState the mathematical effect of a right shift of four places on a positive binary integer.",
+     "marks": 2
+    },
+    {
+     "qid": "ls-24n11-3ciii",
+     "text": "Cambridge IGCSE 0478/11, November 2024, Question 3(c)(iii)\nThe character 'y' is represented by the binary ASCII number 01111001.\nA logical right shift of two places is performed on the binary ASCII number 01111001.\nGive the binary number after the logical right shift of two places is performed.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-24n12-3di",
+     "text": "Cambridge IGCSE 0478/12, November 2024, Question 3(d)(i)\nA binary integer that is stored in a register in the computer has a logical left shift performed on it.\nDescribe the process of the logical left shift that is performed on the binary integer.",
+     "marks": 2
+    },
+    {
+     "qid": "ls-24n12-3dii",
+     "text": "Cambridge IGCSE 0478/12, November 2024, Question 3(d)(ii)\nA binary integer that is stored in a register in the computer has a logical left shift performed on it.\nState what effect this will have on the binary integer.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-25j13-1ciii",
+     "text": "Cambridge IGCSE 0478/13, June 2025, Question 1(c)(iii)\nA logical right shift of two places is performed on the binary number 10100100.\nGive the binary number that would be stored after the logical shift has taken place.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-25n12-2b",
+     "text": "Cambridge IGCSE 0478/12, November 2025, Question 2(b)\nA logic right shift of three places is performed on the binary number 11110101.\nGive the denary number for the binary number that would be stored after the logical shift of three places has occurred. Show all of your working.",
+     "marks": 3
+    },
+    {
+     "qid": "ls-26m12-6c",
+     "text": "Cambridge IGCSE 0478/12, March 2026, Question 6(c)\nGive the 8-bit binary value after a logical binary shift left of two places is performed on the binary number 00110101.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-own-sensor",
+     "text": "A sensor stores a reading as the binary number 00011010.\nA logical left shift of two places is performed on the binary number.\nGive the 8-bit binary number that would be stored after this logical left shift.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-own-register",
+     "text": "A register stores the binary number:\n11001000\nA logical right shift of three places is performed on the binary number.\nComplete the binary register to show its contents after this logical right shift.",
+     "marks": 1
+    },
+    {
+     "qid": "ls-own-score",
+     "text": "A game stores a player's score as the binary number 00010111.\nA logical left shift of three places is performed on the binary number.\nGive the denary number for the binary number that would be stored after the logical shift of three places has occurred. Show all of your working.",
+     "marks": 3
+    },
+    {
+     "qid": "ls-own-odd",
+     "text": "The binary number 00101101 is stored in a register.\nA logical right shift of one place is performed on the binary number.\nGive the denary number for the binary number that would be stored after the logical shift has occurred. Show all of your working.",
+     "marks": 3
+    },
+    {
+     "qid": "ls-own-effect8",
+     "text": "Logical shifts are performed on binary integers.\nState the mathematical effect of a left shift of three places on a positive binary integer.",
+     "marks": 2
+    },
+    {
+     "qid": "ls-own-lost",
+     "text": "A register stores the binary number 11010010.\nA logical left shift of two places is performed on the binary number.\nState one effect this logical shift has on the binary number.",
+     "marks": 1
+    }
+   ]
+  },
+  {
+   "setId": "overflow",
+   "title": "Overflow",
+   "questions": [
+    {
+     "qid": "ov-23j11-1e",
+     "text": "Cambridge IGCSE 0478/11, June 2023, Question 1(e)\nTwo binary numbers are added by a computer and an overflow error occurs.\nExplain why the overflow error occurred.",
+     "marks": 2
+    },
+    {
+     "qid": "ov-23j13-1d",
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(d)\nAdd the two 8-bit binary numbers 11101110 and 00110001 using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-23n12-2e",
+     "text": "Cambridge IGCSE 0478/12, November 2023, Question 2(e)\nThe number 01001100 is added to 11100011\nAdd the two 8-bit binary numbers, using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-24n13-1d",
+     "text": "Cambridge IGCSE 0478/13, November 2024, Question 1(d)\nBinary integers can be added together.\nAdd the two binary integers 11100011 and 11001100 using binary addition. Show all your working. Give your answer in binary.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-25m12-1c",
+     "text": "Cambridge IGCSE 0478/12, March 2025, Question 1(c)\nBinary addition can result in overflow.\nShow the correct definition of overflow in binary addition. Type one letter.\nA The answer has created a negative number that cannot be represented in binary addition.\nB The answer is the result of a logical shift that cannot be performed in binary addition.\nC The answer is too large to represent in the number of bits available.\nD The answer is too small to represent in the number of bits available.",
+     "marks": 1
+    },
+    {
+     "qid": "ov-25j12-1f",
+     "text": "Cambridge IGCSE 0478/12, June 2025, Question 1(f)\nAn overflow occurs when two other 8-bit binary numbers are added together.\nExplain why the overflow error occurs.",
+     "marks": 2
+    },
+    {
+     "qid": "ov-25n12-2a",
+     "text": "Cambridge IGCSE 0478/12, November 2025, Question 2(a)\nTwo binary numbers are stored in a computer.\nAdd the two binary numbers 11110101 and 00111001 using binary addition.\nGive your answer in binary. Show all of your working.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-26j11-3f",
+     "text": "Cambridge IGCSE 0478/11, June 2026, Question 3(f)\nAdd the binary numbers 10011101 and 11110000 using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-own-score",
+     "text": "A games console stores each player's score in an 8-bit register.\nThe scores 10101010 and 01110111 are added together.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-own-steps",
+     "text": "A step counter stores numbers in 8-bit registers.\nAdd the two 8-bit binary numbers 11011011 and 00101101 using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-own-plain",
+     "text": "Add the two 8-bit binary numbers 01111000 and 10011100 using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-own-carpark",
+     "text": "A car park counts the cars on each floor in 8-bit registers.\nThe two numbers 11001001 and 01100111 are added to give the total.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 4
+    },
+    {
+     "qid": "ov-own-will-1",
+     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n10010110 + 01110101\nWill this addition cause overflow? Explain your answer. Show your working.",
+     "marks": 2
+    },
+    {
+     "qid": "ov-own-will-2",
+     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n10010110 + 01011010\nWill this addition cause overflow? Explain your answer. Show your working.",
+     "marks": 2
+    },
+    {
+     "qid": "ov-own-will-3",
+     "text": "A thermometer stores readings in 8-bit registers.\nTwo readings, 11000011 and 01000001, are added together.\nWill this addition cause overflow? Explain your answer. Show your working.",
+     "marks": 2
+    },
+    {
+     "qid": "ov-own-will-4",
+     "text": "Two 8-bit binary numbers are added in an 8-bit register:\n01101110 + 10010001\nWill this addition cause overflow? Explain your answer. Show your working.",
+     "marks": 2
+    },
+    {
+     "qid": "ov-own-what",
+     "text": "Two 8-bit binary numbers are added together.\nExplain what is meant by overflow.",
+     "marks": 2
+    },
+    {
+     "qid": "ov-own-lost",
+     "text": "Two 8-bit binary numbers are added in an 8-bit register.\nThe real total is 290, but the register stores 00100010, which is 34 in denary.\nExplain why the register stores the wrong value.",
+     "marks": 2
+    },
+    {
+     "qid": "ov-own-largest",
+     "text": "Binary numbers are stored in 8-bit registers.\nGive the largest denary number that can be stored in an 8-bit register.",
+     "marks": 1
+    },
+    {
+     "qid": "ov-own-keeps",
+     "text": "The 8-bit binary numbers 10110100 and 10010110 are added in an 8-bit register. Overflow occurs.\nGive the 8-bit binary number that the register keeps, and its denary value.\nShow all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "ov-own-tick",
+     "text": "Each option shows two 8-bit binary numbers that are added in an 8-bit register.\nShow which addition will cause overflow. Type one letter.\nA 01111111 + 00000001\nB 11000000 + 01000000\nC 10000000 + 01111111\nD 00111111 + 01000000",
+     "marks": 1
+    }
+   ]
+  },
+  {
+   "setId": "binary-addition",
+   "title": "Binary Addition",
+   "questions": [
+    {
+     "qid": "add-23j11-1d",
+     "text": "Cambridge IGCSE 0478/11, June 2023, Question 1(d)\nTwo 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00110011\n+ 01100001",
+     "marks": 3
+    },
+    {
+     "qid": "add-24j12-3c",
+     "text": "Cambridge IGCSE 0478/12, June 2024, Question 3(c)\nThe two binary integers 00110000 and 01100110 are added together.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-25j12-1e",
+     "text": "Adapted from Cambridge IGCSE 0478/12, June 2025, Question 1(e)\nThe 8-bit binary numbers 01100101 and 01110000 are stored in a computer.\nThe binary numbers are added together.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. You must show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-23n13-2e",
+     "text": "Cambridge IGCSE 0478/13, November 2023, Question 2(e)\nAdd the binary values 00110011 and 01111000 using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-25n11-1e",
+     "text": "Cambridge IGCSE 0478/11, November 2025, Question 1(e)\nA calculator has 8-bit registers.\nTwo binary numbers stored in the registers are 01110110 and 00110000\nAdd the binary numbers using binary addition. Show all your working.\nGive your answer in binary.",
+     "marks": 3
+    },
+    {
+     "qid": "add-25m12-1b",
+     "text": "Cambridge IGCSE 0478/12, March 2025, Question 1(b)\nTwo 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  10011011\n+ 00010011",
+     "marks": 3
+    },
+    {
+     "qid": "add-24n11-3d",
+     "text": "Adapted from Cambridge IGCSE 0478/11, November 2024, Question 3(d)\nThe character 'T' is stored as the binary number 01010100.\nThe character 't' is stored as the binary number 01110100.\nAdd the two binary numbers using binary addition. Give your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-26m12-6e",
+     "text": "Cambridge IGCSE 0478/12, March 2026, Question 6(e)\nAdd the two binary integers using binary addition and give your answer in binary. Show all your working.\n  00011010\n+ 01101110",
+     "marks": 3
+    },
+    {
+     "qid": "add-23j13-1d",
+     "text": "Cambridge IGCSE 0478/13, June 2023, Question 1(d)\nAdd the two 8-bit binary numbers 11101110 and 00110001 using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-26j11-3f",
+     "text": "Cambridge IGCSE 0478/11, June 2026, Question 3(f)\nAdd the binary numbers 10011101 and 11110000 using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-1",
+     "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00100100\n+ 01000110",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-2",
+     "text": "A game stores the number of coins a player has as an 8-bit binary number.\nA player has 01001101 coins and then wins 00101010 more coins.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-3",
+     "text": "The two binary integers 01000011 and 00100101 are stored in registers.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-4",
+     "text": "A shop stores the number of items in stock as an 8-bit binary number.\nThere are 00110110 items in stock. A delivery brings 01010011 more items.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-5",
+     "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  00101111\n+ 01001011",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-6",
+     "text": "The 8-bit binary numbers 00011101 and 01010111 are stored in a computer.\nThe binary numbers are added together.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-7",
+     "text": "A counter stores a value as an 8-bit binary number. The value is 00111111.\nThe binary number 00000011 is added to it.\nAdd the two binary numbers using binary addition.\nGive your answer in binary. Show all your working.",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-8",
+     "text": "Two 8-bit binary numbers are given.\nAdd the two 8-bit binary numbers using binary addition.\nGive your answer in binary. Show all your working.\n  10010111\n+ 00111001",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-9",
+     "text": "A calculator has 8-bit registers.\nTwo binary numbers stored in the registers are 01100111 and 00011101\nAdd the binary numbers using binary addition. Show all your working.\nGive your answer in binary.",
+     "marks": 3
+    },
+    {
+     "qid": "add-own-10",
+     "text": "The two binary integers 01111011 and 00000101 are added together.\nAdd the binary integers using binary addition and show your answer in binary. Show all your working.",
+     "marks": 3
+    }
+   ]
+  }
+ ]
+}
