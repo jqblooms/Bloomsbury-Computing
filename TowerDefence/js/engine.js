@@ -51,7 +51,7 @@
       n: o.n, diff: o.diff, towers: o.towers, items: o.items, frame: 0, rnd: rng(o.seed || (o.n * 7919 + 13)),
       queue: D.buildRound(o.n), qi: 0, gap: D.spawnGap(o.n), spawnT: 0, bonus: D.speedBonus(o.n, o.diff),
       enemies: [], epool: [], shots: [], spool: [], fx: [], fxpool: [],
-      livesLost: 0, pops: 0, done: false, nextId: 1, mouse: o.mouse || { x: -1, y: -1, on: false },
+      livesLost: 0, leak: {}, pops: 0, done: false, nextId: 1, mouse: o.mouse || { x: -1, y: -1, on: false },
       onNew: o.onNew || null, seen: o.seen || {}, dirty: true, stormCd: 0
     };
     return w;
@@ -71,11 +71,11 @@
   function kill(w, e) { if (!e.dead) { e.dead = true; } }
 
   // Break layers off a bug. Returns nothing; children appear around it.
-  function pop(w, e, layers, moab) {
+  function pop(w, e, layers, carrier) {
     if (e.dead) return;
     var def = e.def;
     if (def.hits) {
-      e.hp -= layers + (def.zep ? moab : 0);
+      e.hp -= layers + (def.zep ? carrier : 0);
       w.pops += 1;
       if (e.hp > 0) return;
       layers = 1;
@@ -87,7 +87,7 @@
     for (var i = 0; i < n; i++) {
       var c = addEnemy(w, kids[i], e.d + (i - (n - 1) / 2) * 7);
       if (e.soak && e.glue > 0 && !c.def.noGlue) { c.glue = e.glue; c.soak = true; c.corrode = e.corrode; c.corT = e.corT; }
-      if (i === 0 && layers > 1) pop(w, c, layers - 1, moab);
+      if (i === 0 && layers > 1) pop(w, c, layers - 1, carrier);
     }
   }
 
@@ -97,7 +97,7 @@
     if (def.lead && !a.lead) return 5;
     if (e.frozen > 0 && !a.ice) return 1;
     if (a.blastHit && def.noBlast) return 0;
-    pop(w, e, a.layers || 1, a.moab || 0);
+    pop(w, e, a.layers || 1, a.carrier || 0);
     return 1;
   }
 
@@ -134,8 +134,8 @@
   function shot(w, tw, s, x, y, ang) {
     var p = w.spool.pop() || { hits: [] };
     p.x = x; p.y = y; p.vx = Math.cos(ang) * (s.spd || 10); p.vy = Math.sin(ang) * (s.spd || 10); p.ang = ang;
-    p.pierce = s.pierce; p.rad = s.rad || 4; p.path = 0; p.life = Math.ceil((s.range * 1.25 + 20) / (s.spd || 10));
-    p.lead = !!s.lead; p.ice = !!s.ice; p.layers = s.layers || 1; p.moab = s.moab || 0; p.blast = s.blast || 0; p.blastHit = false;
+    p.pierce = s.pierce; p.rad = s.rad || 4; p.path = 0; p.life = Math.ceil((Math.min(s.range, 600) * 2 + 40) / (s.spd || 10));
+    p.lead = !!s.lead; p.ice = !!s.ice; p.layers = s.layers || 1; p.carrier = s.carrier || 0; p.blast = s.blast || 0; p.blastHit = false;
     p.glue = s.glue || 0; p.soak = !!s.soak; p.corrode = s.corrode || 0; p.tornado = false; p.tempest = false; p.fire = false;
     p.look = s.look; p.hits.length = 0; p.dead = false; p.from = tw;
     w.shots.push(p);
@@ -228,6 +228,7 @@
     return best;
   }
 
+  var LEAD = { x: 0, y: 0, dir: 0 }, SPOT = { d: 0 };
   function stepTowers(w) {
     var ts = w.towers, es = w.enemies;
     for (var i = 0; i < ts.length; i++) {
@@ -257,7 +258,7 @@
         }
         if (tw.cd > 0) continue;
         tw.cd += s.rate;
-        var tries = 0, spot = { d: 0 };
+        var tries = 0, spot = SPOT;
         while (tries++ < 12) {
           var aa = w.rnd() * Math.PI * 2, rr = Math.sqrt(w.rnd()) * R;
           var gx = tw.x + Math.cos(aa) * rr, gy = tw.y + Math.sin(aa) * rr;
@@ -271,9 +272,8 @@
         var mx = w.mouse.on ? w.mouse.x : -1, my = w.mouse.y;
         if (mx < 0) { var ft = findTarget(w, tw, 9999, 0); if (!ft) continue; mx = ft.x; my = ft.y; }
         tw.ang = Math.atan2(my - tw.y, mx - tw.x);
-        var big = { range: 900 };
         var p = shot(w, tw, s, tw.x + Math.cos(tw.ang) * 18, tw.y + Math.sin(tw.ang) * 18, tw.ang + (w.rnd() - 0.5) * 2 * s.scatter);
-        p.life = Math.ceil(big.range / s.spd);
+        p.life = Math.ceil(900 / s.spd);
         continue;
       }
       if (tw.cd > 0) { if (def.kind !== 'drone' && def.kind !== 'ring' && def.kind !== 'freeze') { var tt = findTarget(w, tw, R, tw.tgt | 0); if (tt) tw.ang = Math.atan2(tt.y - tw.y, tt.x - tw.x); } continue; }
@@ -331,7 +331,13 @@
         }
         continue;
       }
-      tw.ang = Math.atan2(tg.y - tw.y, tg.x - tw.x);
+      // aim where the bug will be when the shot arrives
+      if (s.spd) {
+        var tdx = tg.x - tw.x, tdy = tg.y - tw.y, tt2 = Math.sqrt(tdx * tdx + tdy * tdy) / s.spd;
+        var mv = tg.frozen > 0 ? 0 : (tg.def.spd + w.bonus) * (tg.glue > 0 ? 1 / 3 : tg.chill ? 0.5 : 1);
+        place(LEAD, Math.min(PATH_LEN, tg.d + mv * tt2));
+        tw.ang = Math.atan2(LEAD.y - tw.y, LEAD.x - tw.x);
+      } else tw.ang = Math.atan2(tg.y - tw.y, tg.x - tw.x);
       if (def.kind === 'boomer') {
         var bp = shot(w, tw, s, tw.x, tw.y, tw.ang);
         var dx = tg.x - tw.x, dy = tg.y - tw.y, dist = Math.max(30, Math.sqrt(dx * dx + dy * dy));
@@ -388,7 +394,7 @@
       if (it.type === 'fuse') {
         if (it.t == null) it.t = T.fuse.base.delay;
         if (--it.t <= 0) {
-          explode(w, it.x, it.y, T.fuse.base.blast, T.fuse.base.pierce, { lead: true, ice: true, blastHit: true, layers: 1, moab: 0, fire: true });
+          explode(w, it.x, it.y, T.fuse.base.blast, T.fuse.base.pierce, { lead: true, ice: true, blastHit: true, layers: 1, carrier: 0, fire: true });
           its.splice(i, 1);
         }
         continue;
@@ -432,7 +438,7 @@
         if (e.arctic >= w.frame - 1 && f > 1 / 3) f = 1 / 3;
       }
       e.d += (e.def.spd + w.bonus) * f;
-      if (e.d >= PATH_LEN) { e.dead = true; e.escaped = true; w.livesLost += e.def.rbe; continue; }
+      if (e.d >= PATH_LEN) { e.dead = true; e.escaped = true; w.livesLost += e.def.rbe; w.leak[e.t] = (w.leak[e.t] || 0) + 1; continue; }
       place(e, e.d);
     }
     stepTowers(w);

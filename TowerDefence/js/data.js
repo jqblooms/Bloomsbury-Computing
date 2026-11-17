@@ -150,7 +150,7 @@
         { name: 'Big Charge', cost: 400, line: 'Bigger blast. Hits 28 bugs.', fx: function (s) { s.blast *= 1.5; s.pierce += 10; } },
         { name: 'Long Range', cost: 200, line: 'Range 120 to 140.', fx: function (s) { s.range = 140; } },
         { name: 'Rocket Charge', cost: 210, line: 'Fast rockets. Fires faster.', fx: function (s) { s.spd = 25; s.rate -= 8; s.range += 5; s.pierce += 5; } },
-        { name: 'Botnet Breaker', cost: 900, line: 'Hits Botnets 11 times as hard.', fx: function (s) { s.rate -= 5; s.pierce += 5; s.blast *= 1.2; s.moab = 10; } }
+        { name: 'Botnet Breaker', cost: 900, line: 'Hits Botnets 11 times as hard.', fx: function (s) { s.rate -= 5; s.pierce += 5; s.blast *= 1.2; s.carrier = 10; } }
       ] },
     pins: { name: 'Pin Strip', cost: 30, kind: 'item', place: 'track', blurb: 'Put on the track. Breaks 10 bugs.', base: { pierce: 10 }, up: [] },
     cryo: { name: 'Cryo Fan', cost: 380, kind: 'freeze', look: 'fan', blurb: 'Freezes bugs near it for a moment.',
@@ -263,7 +263,7 @@
   function stats(type, lv) {
     var k = type + lv;
     if (statCache[k]) return statCache[k];
-    var d = TOWERS[type], s = { look: d.look, n: 1, layers: 1, moab: 0 };
+    var d = TOWERS[type], s = { look: d.look, n: 1, layers: 1, carrier: 0 };
     Object.keys(d.base).forEach(function (f) { s[f] = d.base[f]; });
     for (var i = 0; i < lv - 1; i++) d.up[i].fx(s);
     return (statCache[k] = s);

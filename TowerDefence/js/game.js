@@ -282,7 +282,7 @@
         var c = cost(up.cost);
         acts.appendChild(btn('', 'Upgrade: ' + c + ' coins', function () { upgrade(ui.sel); }, S.cash < c));
       }
-      if (def.kind !== 'aura' && def.kind !== 'farm' && def.kind !== 'mortar' && def.kind !== 'cursor' && def.kind !== 'drone' && def.kind !== 'printer') {
+      if (def.kind === 'shot' || def.kind === 'boomer') {
         acts.appendChild(btn('is-outline', 'Target: ' + TARGETS[tw.tgt | 0], function () { tw.tgt = ((tw.tgt | 0) + 1) % 4; save(); drawShop(); }));
       }
       if (def.kind === 'mortar') acts.appendChild(btn('is-outline', ui.aiming ? 'Click the board' : 'Move target', function () { ui.aiming = true; drawShop(); toast('Click the spot to strike.'); }));

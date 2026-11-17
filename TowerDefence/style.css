@@ -96,3 +96,4 @@ html.is-embed .cs-brand { font-size: 17px; }
   .cs-diffs { grid-template-columns: 1fr; }
   .cs-q-text { font-size: 20px; }
 }
+.cs-controls [hidden], .cs-tip[hidden] { display: none !important; }

@@ -51,8 +51,13 @@ check(D.price(825, 'easy') === 700 && D.price(825, 'hard') === 890 && D.price(30
 check(D.roundPool(1, 'hard', 0) === 114, 'round 1 pool = 14 pops + 100 bonus');
 
 // ---- 3. play a whole game headless
-const SPOTS = { A: [155, 255], B: [310, 245], C: [455, 155], D: [560, 310], E: [685, 290], F: [415, 300], G: [100, 135], H: [305, 105], I: [612, 150], J: [105, 255], K: [200, 255], L: [560, 165] };
+const SPOTS = { A: [155, 255], B: [310, 245], C: [455, 155], D: [560, 310], E: [685, 290], F: [415, 300], G: [100, 135], H: [305, 105], I: [612, 150], J: [105, 255], K: [200, 255], L: [800, 180] };
 const W1 = [330, 470], W2 = [905, 300];
+function spotOk(tw, towers) {
+  const dist = Eng.nearest(tw.x, tw.y), water = D.TOWERS[tw.type].place === 'water';
+  if (water ? !Eng.inWater(tw.x, tw.y, 14) : (dist < D.TRACK / 2 + 16 || Eng.inWater(tw.x, tw.y, -18))) return false;
+  return !towers.some(t => Math.abs(t.x - tw.x) < 38 && Math.abs(t.y - tw.y) < 38);
+}
 function play(diff, markShare, plan, verbose) {
   const N = D.DIFF[diff].rounds;
   let cash = D.START_CASH, lives = D.DIFF[diff].lives;
@@ -67,6 +72,7 @@ function play(diff, markShare, plan, verbose) {
         const at = spot === 'W1' ? W1 : spot === 'W2' ? W2 : SPOTS[spot];
         const tw = { type, x: at[0], y: at[1], lv: 1, spent: c, tgt: 0 };
         if (type === 'mortar') tw.aim = { x: 470, y: 300 };
+        check(spotOk(tw, towers), 'spot ' + spot + ' is a legal place for ' + type);
         towers.push(tw); placed[key] = tw; cash -= c;
       } else {
         const [, key, lv] = st, tw = placed[key], up = D.TOWERS[tw.type].up[lv - 2];
@@ -88,7 +94,7 @@ function play(diff, markShare, plan, verbose) {
     }
     lives -= w.livesLost;
     items.length = 0;
-    if (verbose) console.log(diff, 'round', n, 'lives', lives, 'cash', cash, 'towers', towers.length, 'frames', w.frame);
+    if (verbose) console.log(diff, 'round', n, 'lives', lives, 'cash', cash, 'towers', towers.length, 'frames', w.frame, JSON.stringify(w.leak), towers.map(t=>t.type[0]+t.lv).join(' '));
     if (lives <= 0) return { won: false, round: n };
     if (n < N) {
       const income = towers.reduce((a, t) => a + (t.type === 'farm' ? D.stats('farm', t.lv).income : 0), 0);
@@ -99,18 +105,95 @@ function play(diff, markShare, plan, verbose) {
 }
 
 const PLAN = [
-  ['buy', 'p1', 'pulse', 'A'], ['buy', 'p2', 'pulse', 'D'], ['buy', 'p3', 'pulse', 'C'],
-  ['up', 'p1', 2], ['up', 'p2', 2], ['buy', 'sp1', 'spark', 'E'], ['up', 'p3', 2], ['up', 'p1', 3], ['up', 'p2', 3],
-  ['buy', 'b1', 'router', 'F'], ['up', 'sp1', 2], ['buy', 's1', 'surge', 'B'], ['up', 'b1', 2],
-  ['up', 's1', 2], ['up', 'p1', 4], ['up', 'p2', 4], ['up', 's1', 3], ['buy', 'm1', 'mortar', 'L'],
-  ['buy', 'h1', 'hydro', 'W1'], ['up', 'h1', 2], ['up', 'h1', 3], ['up', 'b1', 3], ['up', 's1', 4], ['buy', 's2', 'surge', 'K'], ['up', 's2', 2], ['up', 's2', 3], ['up', 's2', 4],
-  ['up', 'b1', 4], ['buy', 'a1', 'aicore', 'I'], ['up', 'a1', 2], ['up', 'a1', 3], ['buy', 'f1', 'farm', 'G'], ['up', 'f1', 2], ['up', 'f1', 3], ['up', 'h1', 4],
-  ['up', 'm1', 2], ['up', 'm1', 3], ['up', 'm1', 4], ['up', 's1', 5], ['up', 's2', 5], ['buy', 'q1', 'quantum', 'J'], ['up', 'f1', 4], ['up', 'q1', 2], ['up', 'q1', 3], ['up', 'q1', 4],
-  ['up', 'p1', 5], ['up', 'b1', 5], ['up', 'h1', 5], ['up', 'm1', 5], ['buy', 's3', 'surge', 'H'], ['up', 's3', 2], ['up', 's3', 3], ['up', 's3', 4], ['up', 's3', 5],
-  ['up', 'a1', 4], ['up', 'q1', 5], ['buy', 'q2', 'quantum', 'D2'], ['up', 'q2', 2], ['up', 'q2', 3], ['up', 'q2', 4]
+  ['buy','p1','pulse','A'],
+  ['buy','p2','pulse','D'],
+  ['buy','p3','pulse','C'],
+  ['up','p1',2],
+  ['up','p2',2],
+  ['up','p3',2],
+  ['up','p1',3],
+  ['up','p2',3],
+  ['up','p3',3],
+  ['buy','t1','spark','E'],
+  ['up','p1',4],
+  ['up','p2',4],
+  ['up','p3',4],
+  ['up','t1',2],
+  ['buy','b1','surge','B'],
+  ['buy','p4','pulse','F'],
+  ['up','p4',2],
+  ['up','p4',3],
+  ['up','p4',4],
+  ['up','b1',2],
+  ['up','b1',3],
+  ['up','b1',4],
+  ['buy','p5','pulse','H'],
+  ['up','p5',2],
+  ['up','p5',3],
+  ['up','p5',4],
+  ['buy','t2','spark','N'],
+  ['up','t2',2],
+  ['up','t2',3],
+  ['up','t1',3],
+  ['buy','d1','drone','Q'],
+  ['up','d1',2],
+  ['up','d1',3],
+  ['buy','p6','pulse','O'],
+  ['up','p6',2],
+  ['up','p6',3],
+  ['up','p6',4],
+  ['buy','b2','surge','K'],
+  ['up','b2',2],
+  ['up','b2',3],
+  ['up','b2',4],
+  ['buy','f1','farm','G'],
+  ['up','f1',2],
+  ['up','f1',3],
+  ['up','p1',5],
+  ['up','p2',5],
+  ['up','b1',5],
+  ['up','b2',5],
+  ['up','p3',5],
+  ['up','p4',5],
+  ['buy','f2','farm','L'],
+  ['up','f2',2],
+  ['up','f2',3],
+  ['up','f1',4],
+  ['buy','m1','mortar','I'],
+  ['up','m1',2],
+  ['up','m1',3],
+  ['up','m1',4],
+  ['up','m1',5],
+  ['buy','q1','quantum','J'],
+  ['up','q1',2],
+  ['up','q1',3],
+  ['up','q1',4],
+  ['up','f2',4],
+  ['buy','b3','surge','D2'],
+  ['up','b3',2],
+  ['up','b3',3],
+  ['up','b3',4],
+  ['up','b3',5],
+  ['buy','q2','quantum','M2'],
+  ['up','q2',2],
+  ['up','q2',3],
+  ['up','q2',4],
+  ['buy','b4','surge','I2'],
+  ['up','b4',2],
+  ['up','b4',3],
+  ['up','b4',4],
+  ['up','b4',5],
+  ['buy','q3','quantum','R'],
+  ['up','q3',2],
+  ['up','q3',3],
+  ['up','q3',4],
+  ['up','q1',5],
+  ['up','q2',5],
+  ['up','q3',5]
 ];
-SPOTS.D2 = [612, 300];
+SPOTS.D2 = [612, 300]; SPOTS.N = [690, 180]; SPOTS.O = [400, 400]; SPOTS.M2 = [200, 380]; SPOTS.Q = [350, 330]; SPOTS.I2 = [690, 120]; SPOTS.R = [250, 420];
 const verbose = process.argv.includes('-v');
+if (process.env.CS_PLAN) { PLAN.length = 0; JSON.parse(require('fs').readFileSync(process.env.CS_PLAN, 'utf8')).forEach(x => PLAN.push(x)); }
 const full = play('medium', 1, PLAN, verbose);
 console.log('Medium, full marks:', full.won ? 'won with ' + full.lives + ' lives' : 'lost on wave ' + full.round);
 check(full.won, 'scripted build clears Medium with full marks');
