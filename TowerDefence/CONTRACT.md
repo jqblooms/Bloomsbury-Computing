@@ -1,0 +1,41 @@
+# TowerDefence: embed and question contract
+
+Folder: `TowerDefence/` (entry `TowerDefence/index.html`). Lesson slide embeds it as
+`TowerDefence/index.html?embed=1&set=twos-complement&bcv=<build>` on the Y11 lesson `y11-1-9-defence` (slide `game`; shell registry id `tower-defence`, iframeSrc `TowerDefence/index.html?bcv=...`, the slide adds `&embed=1&set=twos-complement`).
+
+## Questions come from the shell, never from the game
+
+Load the client (answers and mark schemes stay on the server):
+
+```html
+<script src="../shared/exam-game-client.js?v=20261117a"></script>
+```
+
+All calls return Promises.
+
+- `ExamGame.sets()` -> `[{ setId, title, count }]`
+- `ExamGame.next(setId, { count, maxMarks })` -> `[{ qid, text, marks }]`
+  - `count`: how many questions (default 1, max 10). `maxMarks`: skip questions worth more than this.
+  - No repeats for a student until they have seen the whole pool, then their weakest come first.
+  - `text` is plain text with `\n` line breaks (show it in a `white-space: pre-wrap` box).
+- `ExamGame.submit(qid, answer, attempt)` -> `{ marks, max, feedback, canRetry, attempt, full }`
+  - `answer`: the student's working and answer, typed in ONE text box (textarea).
+  - `attempt`: 1 or 2. Only one second attempt is allowed, and only when `canRetry` was true.
+  - `feedback`: plain English; on a part-marked answer it explains what earns the marks without the final answer.
+  - The game pays half for a second-attempt mark (`attempt === 2`).
+  - Marking takes a few seconds (AI). Show a "Marking..." state; never block the game loop on it.
+- `ExamGame.isStub()` says whether the local stub is in use; `ExamGame.useStub(true)` forces it.
+- Errors reject with an `Error` whose message is safe to show ("Sign in to play", "No answer from the site...").
+
+## Testing without the shell
+
+Open `TowerDefence/index.html?examStub=1` (or call `ExamGame.useStub(true)` before the first call).
+The stub serves three practice questions and marks by checking the final number locally.
+It is detected automatically when the page is not in an iframe.
+
+## Rules for the game
+
+- Timers only, never gate start-up on `requestAnimationFrame` (lessons preload apps in a hidden iframe).
+- Site theme: `../shared/bc-theme.css`. No emoji, no em or en dashes. Say "denary", never "decimal".
+- Optional: report a finished run to the slide with
+  `parent.postMessage({ type: 'BC_APP_RESULT', ... }, '*')` as ProjectPlanner does.
