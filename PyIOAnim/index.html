@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Input and Output Animations</title>
+  <link rel="stylesheet" href="../shared/bc-theme.css?v=20260927s">
+  <style>
+    /* Python input and output as 2D vector (SVG) animations, one idea per scene, predicted first, then stepped or
+       played (Y7 2.2):
+       ?scene=print    text in quote marks against a variable name in print()
+       ?scene=input    input() shows its question, waits, and stores what was typed as a String
+       ?scene=convert  "3" + 1 stops with an error; int(), float() and str() change the data type
+       ?scene=join     "Age: " + age needs str(); a comma in print also works
+       ?embed=1 sits it on a lesson slide (no tabs, transparent, reports its height, posts BC_APP_RESULT).
+       The step engine is InstrAnim's (from TwosAnim): every motion is a CSS transition between step states driven by
+       timers, so a hidden frame never sticks, and Next finishes the step before. Play pauses when the page is hidden. */
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+    main { max-width: 1000px; margin: 0 auto; padding: 12px 16px; display: grid; gap: 10px; box-sizing: border-box; }
+    .embed, .embed body { background: transparent; }
+    .embed main { padding: 2px 4px 12px; gap: 8px; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .top h1 { margin: 0; font-size: 24px; font-weight: 800; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tabs button, .bar button, .opts button { font: inherit; font-weight: 700; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .bar button { font-size: 17px; }
+    .tabs button[aria-selected="true"] { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+    .stage { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 6px; }
+    #svg { width: 100%; height: auto; display: block; }
+    .pred { background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: var(--radius-lg); padding: 10px 12px; display: grid; gap: 8px; }
+    .pred .q { font-weight: 700; font-size: 17px; line-height: 1.3; }
+    .pred .q code, .cap code { font-family: var(--font-mono); color: var(--syn-string); }
+    .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+    .opts button { font-size: 16px; padding: 7px 14px; font-family: var(--font-mono); }
+    .opts button[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft-strong); }
+    .opts button.right { border-color: var(--good-line); background: var(--good-soft); color: var(--good); }
+    .opts button.wrong { border-color: var(--bad-line); background: var(--bad-soft); color: var(--bad); }
+    .opts button:disabled { cursor: default; }
+    .pred .say { font-size: 15px; color: var(--muted); min-height: 1.2em; }
+    .pred .say b { color: var(--ink); }
+    .cap { font-size: 22px; font-weight: 700; text-align: center; min-height: 2.5em; line-height: 1.25; display: flex; align-items: center; justify-content: center; padding: 0 8px; }
+    .cap b { color: var(--brand); }
+    .bar { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .bar button.primary { background: var(--brand); color: var(--on-brand); border-color: var(--brand); min-width: 7.5em; justify-content: center; }
+    .bar button:disabled { opacity: .45; cursor: default; }
+    .bar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .count { color: var(--muted); font-size: 15px; min-width: 6.5em; text-align: center; }
+    .embed .top { display: none; }
+    @media (min-width: 700px) {
+      .embed main { grid-template-columns: minmax(0, 1fr) 312px; grid-template-rows: auto 1fr auto; align-items: center; column-gap: 14px; }
+      .embed .stage { grid-column: 1; grid-row: 1 / span 3; }
+      .embed .pred { grid-column: 2; grid-row: 1; align-self: start; }
+      .embed .cap { grid-column: 2; grid-row: 2; align-self: center; font-size: 18px; justify-content: flex-start; text-align: left; min-height: 0; padding: 0; }
+      .embed .bar { grid-column: 2; grid-row: 3; align-self: end; justify-content: flex-start; }
+      .embed .bar button.primary { order: -1; flex-basis: 100%; }
+      .embed .bar { display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 6px; }
+      .embed .bar button { padding: 7px 6px; font-size: 15px; justify-content: center; }
+      .embed .bar button.primary { grid-column: 1 / -1; }
+      .embed #again svg { display: none; }
+      .embed .count { display: none; }
+      .embed .pred { padding: 8px 10px; gap: 6px; }
+      .embed .pred .q { font-size: 16px; }
+      .embed .opts button { padding: 5px 11px; font-size: 15px; }
+      .embed .pred .say { font-size: 14px; }
+      .embed .count { text-align: left; }
+    }
+    /* the drawing */
+    #svg text { font-family: var(--font-mono); font-weight: 700; dominant-baseline: central; text-anchor: middle; }
+    #svg .mv { transition: transform .8s cubic-bezier(.4, 0, .2, 1), opacity .5s; }
+    #svg .fl { transform-box: fill-box; transform-origin: center; transition: transform .22s ease-in; }
+    #svg .fd { transition: opacity .5s; }
+    #svg .shake { animation: shake .5s ease-in-out 2; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-9px); } 75% { transform: translateX(9px); } }
+    .instant #svg *, .instant #svg { transition: none !important; animation: none !important; }
+    .box { fill: var(--surface-2); stroke: var(--line-strong); stroke-width: 1.5; }
+    .box.code { fill: var(--code-bg); }
+    .box.hl { stroke: var(--brand); stroke-width: 4; }
+    .box.glow { fill: var(--brand-soft); }
+    .box.badbox { stroke: var(--bad); stroke-width: 4; }
+    .box.mach { fill: var(--surface-3); stroke: var(--syn-function); stroke-width: 3; }
+    .lineHl { fill: var(--brand-soft-strong); stroke: var(--brand); stroke-width: 1.5; }
+    .wordHl { fill: none; stroke: var(--accent); stroke-width: 3; }
+    .name { fill: var(--muted); font-size: 18px; font-family: var(--font-body) !important; }
+    .name.big { fill: var(--ink); font-size: 20px; }
+    .t-left { text-anchor: start !important; }
+    .c-line { font-size: 24px; fill: var(--ink); }
+    .c-str { fill: var(--syn-string); }
+    .c-num { fill: var(--syn-number); }
+    .c-fn { fill: var(--syn-function); }
+    .c-op { fill: var(--syn-operator); }
+    .scr { font-size: 24px; fill: var(--ink); }
+    .scr.err { fill: var(--bad); }
+    .cursor { fill: var(--ink); animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .tok rect { fill: var(--surface-3); stroke: var(--line-strong); stroke-width: 2; }
+    .tok text { fill: var(--ink); font-size: 24px; }
+    .tok.str rect { stroke: var(--syn-string); } .tok.str text { fill: var(--syn-string); }
+    .tok.num rect { stroke: var(--syn-number); } .tok.num text { fill: var(--syn-number); }
+    .tok.bad rect { stroke: var(--bad); stroke-width: 4; fill: var(--bad-soft); }
+    .tok .tag { font-family: var(--font-body); font-size: 16px; fill: var(--muted); }
+    .mlab { font-size: 24px; fill: var(--syn-function); }
+    .op { font-size: 30px; fill: var(--syn-operator); }
+    .key rect { fill: var(--surface-3); stroke: var(--line-strong); stroke-width: 2; }
+    .key text { font-family: var(--font-body) !important; font-size: 16px; fill: var(--ink); }
+    @media (prefers-reduced-motion: reduce) { #svg .mv, #svg .fl, #svg .fd { transition-duration: .01s; } #svg .shake, .cursor { animation: none; } }
+  </style>
+</head>
+<body>
+<main id="main">
+  <div class="top"><h1>Input and Output Animations</h1><div class="tabs" id="tabs" role="tablist"></div></div>
+  <div class="stage"><svg id="svg" viewBox="0 0 960 400" role="img" aria-label="Input and output animation"></svg></div>
+  <div class="pred" id="pred"><div class="q" id="pq"></div><div class="opts" id="popts"></div><div class="say" id="psay" aria-live="polite"></div></div>
+  <div class="cap" id="cap" aria-live="polite"></div>
+  <div class="bar">
+    <button type="button" id="back" aria-label="Back one step"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Back</button>
+    <button type="button" id="play" class="primary"></button>
+    <button type="button" id="next" aria-label="Next step">Next<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button type="button" id="again"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>Start again</button>
+    <span class="count" id="count"></span>
+  </div>
+</main>
+<script src="../shared/bc-clicker.js?v=20260929c"></script>
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var params = new URLSearchParams(location.search);
+  var EMBED = params.get('embed') === '1';
+  if (EMBED) document.documentElement.classList.add('embed');
+  var svg = document.getElementById('svg'), capEl = document.getElementById('cap'), countEl = document.getElementById('count');
+  var playBtn = document.getElementById('play'), backBtn = document.getElementById('back'), nextBtn = document.getElementById('next'), againBtn = document.getElementById('again');
+  var pq = document.getElementById('pq'), popts = document.getElementById('popts'), psay = document.getElementById('psay');
+
+  // ------------------------------------------------------------ drawing helpers
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
+  function text(parent, x, y, s, c) { var t = el('text', { x: x, y: y, 'class': c || '' }, parent); t.textContent = s; return t; }
+  function at(g, x, y) { g.x = x; g.y = y; g.style.transform = 'translate(' + x + 'px,' + y + 'px)'; }
+  function show(g, on) { g.style.opacity = on ? 1 : 0; }
+  function cls(node, c, on) { var k = (node.getAttribute('class') || '').split(' ').filter(function (x) { return x && x !== c; }); if (on) k.push(c); node.setAttribute('class', k.join(' ')); }
+  function box(parent, x, y, w, h, c) { return el('rect', { x: x, y: y, width: w, height: h, rx: 10, 'class': 'box ' + (c || '') }, parent); }
+  function fade(parent) { var g = el('g', { 'class': 'fd' }, parent); show(g, 0); return g; }
+  var CW = 14.4; // one character of code at 24px on a fixed grid
+  function kindOf(s) { return /^["']/.test(s) ? 'str' : /^[0-9.]+$/.test(s) ? 'num' : ''; }
+  function tokW(s) { return Math.max(56, s.length * CW + 30); }
+  // A value that moves (outer g), shakes (middle g) and flips when its text changes (inner g), with a data type tag.
+  function token(s, x, y) {
+    var g = el('g', { 'class': 'tok mv ' + kindOf(s) }), sh = el('g', {}, g), f = el('g', { 'class': 'fl' }, sh);
+    g.r = el('rect', { x: -tokW(s) / 2, y: -22, width: tokW(s), height: 44, rx: 10 }, f); g.t = text(f, 0, 0, s); g.f = f; g.sh = sh;
+    g.tag = text(g, 0, 40, '', 'tag');
+    at(g, x, y); show(g, 1); return g;
+  }
+  function setTok(g, s) { g.t.textContent = s; g.r.setAttribute('x', -tokW(s) / 2); g.r.setAttribute('width', tokW(s)); cls(g, 'str', kindOf(s) === 'str'); cls(g, 'num', kindOf(s) === 'num'); }
+  function flipTo(g, s) { g.f.style.transform = 'scaleY(0)'; later(function () { setTok(g, s); g.f.style.transform = 'scaleY(1)'; }, 230); }
+  function tag(g, s) { g.tag.textContent = s; }
+  function shake(list) { list.forEach(function (g) { cls(g, 'bad', true); cls(g.sh, 'shake', false); g.sh.getBoundingClientRect(); if (!instant) cls(g.sh, 'shake', true); }); }
+
+  // The Python panel: lines on a fixed character grid, coloured as the site colours code, one line highlighted.
+  function codePanel(x, y, w, n) {
+    var P = { x: x, y: y, lines: [] };
+    box(svg, x, y, w, 40 + n * 46, 'code'); text(svg, x + 16, y + 18, 'Python', 'name t-left');
+    P.hl = el('rect', { x: x + 8, y: 0, width: w - 16, height: 40, rx: 8, 'class': 'lineHl mv' }); show(P.hl, 0);
+    P.word = el('rect', { x: 0, y: 0, width: 0, height: 38, rx: 6, 'class': 'wordHl fd' }); show(P.word, 0);
+    for (var i = 0; i < n; i++) P.lines.push(el('g', { 'class': 'fd' }));
+    P.ly = function (i) { return y + 58 + i * 46; };
+    P.cx = function (col) { return x + 24 + col * CW; };
+    return P;
+  }
+  var TOKRE = /("[^"]*"|\b(?:print|input|int|float|str)\b|\d+(?:\.\d+)?|[+=,]|[A-Za-z_]\w*|\s+|[()])/g;
+  function setLine(P, i, src) {
+    var g = P.lines[i]; g.innerHTML = ''; g.src = src;
+    var col = 0;
+    (src.match(TOKRE) || []).forEach(function (t) {
+      if (/^\s+$/.test(t)) { col += t.length; return; }
+      var c = t[0] === '"' ? 'c-str' : /^(print|input|int|float|str)$/.test(t) ? 'c-fn' : /^\d/.test(t) ? 'c-num' : /^[+=,]$/.test(t) ? 'c-op' : '';
+      var e = el('text', { x: P.cx(col), y: P.ly(i), 'class': 'c-line t-left ' + c, textLength: t.length * CW, lengthAdjust: 'spacingAndGlyphs' }, g);
+      e.textContent = t; col += t.length;
+    });
+    show(g, 1);
+  }
+  function flipLine(P, i, src) { show(P.lines[i], 0); later(function () { setLine(P, i, src); }, instant ? 0 : 450); }
+  function hlLine(P, i) { if (i < 0) { show(P.hl, 0); return; } P.hl.style.transform = 'translate(0px,' + (P.ly(i) - 20) + 'px)'; show(P.hl, 1); }
+  // Where a piece of a code line sits: its centre, so a token can lift straight out of the code.
+  function codeAt(P, i, piece) { var col = P.lines[i].src.indexOf(piece); return { x: P.cx(col) + piece.length * CW / 2, y: P.ly(i) }; }
+  function markWord(P, i, piece) {
+    if (!piece) { show(P.word, 0); return; }
+    var col = P.lines[i].src.indexOf(piece);
+    P.word.setAttribute('x', P.cx(col) - 4); P.word.setAttribute('y', P.ly(i) - 19); P.word.setAttribute('width', piece.length * CW + 8); show(P.word, 1);
+  }
+  // The screen: what print and input show.
+  function screen(x, y, w, h, n) {
+    var S = { rows: [], x: x };
+    box(svg, x, y, w, h, 'code'); text(svg, x + 16, y + 18, 'Screen', 'name t-left');
+    for (var i = 0; i < n; i++) S.rows.push(text(svg, x + 20, y + 60 + i * 40, '', 'scr t-left'));
+    S.at = function (i, s, extra) { return { x: x + 20 + (extra || 0) + tokW(s) / 2 - 15, y: y + 60 + i * 40 }; };
+    S.clear = function () { S.rows.forEach(function (r) { r.textContent = ''; r.setAttribute('class', 'scr t-left'); }); };
+    return S;
+  }
+  // A token travels to a screen row and becomes the text shown there.
+  function toScreen(S, g, row, shown, err) {
+    var p = S.at(row, g.t.textContent); at(g, p.x, p.y);
+    later(function () { show(g, 0); S.rows[row].textContent += shown; if (err) S.rows[row].setAttribute('class', 'scr t-left err'); }, 850);
+  }
+  // A variable: a named box that holds a value.
+  function variable(x, y, name) {
+    var V = { x: x + 95, y: y + 32 };
+    V.b = box(svg, x, y, 190, 64); text(svg, x + 95, y - 16, name, 'name big');
+    return V;
+  }
+  // A function machine: a value goes in at the top and comes out changed.
+  function machine(x, y, label) {
+    var M = fade(); M.b = box(M, x - 90, y - 50, 180, 100, 'mach'); M.l = text(M, x, y - 32, label, 'mlab'); M.x = x; M.y = y + 10;
+    return M;
+  }
+
+  // ------------------------------------------------------------ step engine (as InstrAnim and TwosAnim)
+  var scene = null, steps = [], cur = 0, playing = false, playTimer = null, instant = false, pend = [], key = '', maxSeen = 0;
+  function later(fn, ms) {
+    if (instant) { fn(); return; }
+    var p = { fn: fn, done: false };
+    p.id = setTimeout(function () { p.done = true; fn(); }, ms);
+    pend.push(p);
+  }
+  function settle() { svg.getBoundingClientRect(); Array.prototype.forEach.call(svg.querySelectorAll('g'), function (g) { getComputedStyle(g).transform; }); }
+  function stopPend(flush) {
+    var list = pend; pend = [];
+    if (!flush) { list.forEach(function (p) { clearTimeout(p.id); }); return; }
+    var was = instant; instant = true; document.documentElement.classList.add('instant');
+    list.forEach(function (p) { clearTimeout(p.id); if (!p.done) { p.done = true; p.fn(); } });
+    settle();
+    instant = was; if (!was) document.documentElement.classList.remove('instant');
+  }
+  function render(k, animate) {
+    k = Math.max(0, Math.min(steps.length - 1, k));
+    stopPend(animate && k > cur);
+    if (!animate || k < cur || k === 0) {
+      document.documentElement.classList.add('instant'); instant = true;
+      svg.innerHTML = ''; scene.setup();
+      for (var i = 0; i < k; i++) steps[i].run();
+      settle();
+      instant = false; document.documentElement.classList.remove('instant');
+    }
+    cur = k;
+    var s = steps[k];
+    capEl.innerHTML = '<span>' + s.cap + '</span>'; svg.setAttribute('aria-label', capEl.textContent);
+    s.run();
+    if (cur > maxSeen) maxSeen = cur;
+    predShow();
+    bar();
+    if (cur === steps.length - 1) report();
+  }
+  function bar() {
+    var locked = scene.pick == null;
+    countEl.textContent = 'Step ' + (cur + 1) + ' of ' + steps.length;
+    backBtn.disabled = locked || cur === 0; nextBtn.disabled = locked || cur >= steps.length - 1; playBtn.disabled = locked; againBtn.disabled = locked;
+    var end = cur >= steps.length - 1;
+    playBtn.innerHTML = playing ? '<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>Pause' :
+      (end ? '<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5"/></svg>Watch again' : '<svg viewBox="0 0 24 24"><path d="M7 4l12 8-12 8z"/></svg>Play');
+  }
+  function tick() {
+    clearTimeout(playTimer);
+    if (!playing) return;
+    playTimer = setTimeout(function () {
+      if (!playing) return;
+      if (cur >= steps.length - 1) { playing = false; bar(); return; }
+      render(cur + 1, true); tick();
+    }, steps[cur].dur || 3200);
+  }
+  function stop() { playing = false; clearTimeout(playTimer); }
+  playBtn.addEventListener('click', function () {
+    if (playing) { stop(); bar(); return; }
+    playing = true;
+    if (cur >= steps.length - 1) render(0, false);
+    bar(); tick();
+  });
+  nextBtn.addEventListener('click', function () { stop(); render(cur + 1, true); });
+  backBtn.addEventListener('click', function () { stop(); render(cur - 1, false); });
+  againBtn.addEventListener('click', function () { stop(); render(0, false); });
+  // A hidden page (a slide the class has moved past, a hidden tab) pauses; it never plays on unseen.
+  document.addEventListener('visibilitychange', function () { if (document.hidden && playing) { stop(); bar(); } });
+
+  // ------------------------------------------------------------ predict, then watch
+  function predSetup() {
+    var p = scene.predict;
+    pq.innerHTML = p.q; popts.innerHTML = '';
+    p.opts.forEach(function (o, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = o; b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', function () {
+        if (scene.pick != null) return;
+        scene.pick = i; predShow(); bar(); report();
+      });
+      popts.appendChild(b);
+    });
+    predShow();
+  }
+  function predShow() {
+    var p = scene.predict, picked = scene.pick != null, shown = picked && maxSeen >= p.reveal;
+    Array.prototype.forEach.call(popts.children, function (b, i) {
+      b.disabled = picked; b.setAttribute('aria-pressed', String(scene.pick === i));
+      cls(b, 'right', shown && i === p.correct); cls(b, 'wrong', shown && i === scene.pick && i !== p.correct);
+    });
+    psay.innerHTML = !picked ? 'Predict first: choose an answer. Then press <b>Play</b> or <b>Next</b>.' :
+      !shown ? 'Your prediction is in. Now watch.' : scene.pick === p.correct ? '<b>You predicted it.</b> Watch to the end to see why.' : '<b>Not what you predicted.</b> Watch why.';
+  }
+  function report() {
+    if (window.parent === window) return;
+    var p = scene.predict, done = maxSeen >= steps.length - 1;
+    var summary = SCENES[key].label + ': predicted "' + (scene.pick == null ? 'nothing yet' : p.opts[scene.pick]) + '"' +
+      (scene.pick == null ? '' : scene.pick === p.correct ? ' (right)' : ' (answer: "' + p.opts[p.correct] + '")') + '. Watched ' + (maxSeen + 1) + ' of ' + steps.length + ' steps.';
+    try { window.parent.postMessage({ type: 'BC_APP_RESULT', questionId: 'py-io-anim-' + key, label: 'Input and Output Animations: ' + SCENES[key].label, summary: summary, complete: done && scene.pick != null }, '*'); } catch (e) {}
+  }
+
+  // ------------------------------------------------------------ scene: print, text in quote marks against a variable
+  function scenePrint() {
+    var S = {}, SRC = ['name = "Mia"', 'print("Hi")', 'print(name)', 'print("name")'];
+    return {
+      predict: { q: 'Line 3 is <code>print(name)</code>. What will it show?', opts: ['Mia', 'name', '"Mia"'], correct: 0, reveal: 4 },
+      setup: function () {
+        S.P = codePanel(20, 20, 540, 4); SRC.forEach(function (s, i) { setLine(S.P, i, s); });
+        S.scr = screen(600, 20, 340, 190, 3);
+        S.v = variable(640, 270, 'name');
+      },
+      steps: [
+        { cap: 'A program with four lines. Python runs them from the top.', run: function () {} },
+        { cap: 'Line 1 stores the text "Mia" in a variable called <b>name</b>.', run: function () {
+          hlLine(S.P, 0); var p = codeAt(S.P, 0, '"Mia"'); S.mia = token('"Mia"', p.x, p.y); later(function () { at(S.mia, S.v.x, S.v.y); }, 300);
+        } },
+        { cap: 'Text in quote marks is shown <b>exactly as written</b>. The quote marks are not shown.', dur: 3600, run: function () {
+          hlLine(S.P, 1); var p = codeAt(S.P, 1, '"Hi"'), t = token('"Hi"', p.x, p.y); later(function () { toScreen(S.scr, t, 0, 'Hi'); }, 300);
+        } },
+        { cap: 'No quote marks: <b>name</b> is a variable. Python looks inside it.', run: function () { hlLine(S.P, 2); markWord(S.P, 2, 'name'); cls(S.v.b, 'hl', true); } },
+        { cap: 'It shows what the variable holds: <b>Mia</b>.', dur: 3400, run: function () {
+          var t = token('"Mia"', S.v.x, S.v.y); later(function () { toScreen(S.scr, t, 1, 'Mia'); }, 200);
+        } },
+        { cap: 'With quote marks, "name" is just text. It shows <b>name</b>.', dur: 3600, run: function () {
+          markWord(S.P, 2, null); cls(S.v.b, 'hl', false); hlLine(S.P, 3); var p = codeAt(S.P, 3, '"name"'), t = token('"name"', p.x, p.y); later(function () { toScreen(S.scr, t, 2, 'name'); }, 300);
+        } },
+        { cap: 'In quote marks: shown as written. No quote marks: Python shows the <b>value in the variable</b>.', dur: 4200, run: function () { hlLine(S.P, -1); } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ scene: input, the user types and it is stored as a String
+  function sceneInput() {
+    var S = {}, SRC = ['age = input("Age? ")', 'print(age)'];
+    return {
+      predict: { q: 'The user types <code>12</code>. What will the variable age hold?', opts: ['the number 12', 'the text "12"', 'the text "Age? "'], correct: 1, reveal: 5 },
+      setup: function () {
+        S.P = codePanel(20, 20, 540, 2); SRC.forEach(function (s, i) { setLine(S.P, i, s); });
+        S.scr = screen(600, 20, 340, 190, 3);
+        S.v = variable(260, 230, 'age');
+        S.cur = el('rect', { x: 0, y: 0, width: 13, height: 28, 'class': 'cursor' }); show(S.cur, 0);
+        S.key = fade(); var k = el('g', { 'class': 'key' }, S.key); el('rect', { x: 800, y: 228, width: 110, height: 40, rx: 8 }, k); text(k, 855, 248, 'Enter');
+      },
+      steps: [
+        { cap: 'A program that asks the user a question.', run: function () {} },
+        { cap: 'input() shows its question on the screen.', run: function () {
+          hlLine(S.P, 0); var p = codeAt(S.P, 0, '"Age? "'), t = token('"Age? "', p.x, p.y); later(function () { toScreen(S.scr, t, 0, 'Age? '); }, 300);
+        } },
+        { cap: 'Then the program <b>waits</b> for the user to type.', run: function () { S.cur.setAttribute('x', 620 + 5 * CW); S.cur.setAttribute('y', 66); show(S.cur, 1); } },
+        { cap: 'The user types 12 and presses Enter.', dur: 3600, run: function () {
+          later(function () { S.scr.rows[0].textContent = 'Age? 1'; S.cur.setAttribute('x', 620 + 6 * CW); }, 400);
+          later(function () { S.scr.rows[0].textContent = 'Age? 12'; S.cur.setAttribute('x', 620 + 7 * CW); }, 900);
+          later(function () { show(S.key, 1); show(S.cur, 0); }, 1500);
+        } },
+        { cap: 'What the user typed goes into the variable <b>age</b>.', run: function () {
+          show(S.key, 0); S.t = token('12', 620 + 6.5 * CW, 60); later(function () { at(S.t, S.v.x, S.v.y); }, 200);
+        } },
+        { cap: 'input() always gives a <b>String</b>: the text "12", even though it is digits.', dur: 3800, run: function () { flipTo(S.t, '"12"'); later(function () { tag(S.t, 'String'); cls(S.v.b, 'glow', true); }, 300); } },
+        { cap: 'print(age) shows what age holds. On the screen, the String looks just like a number.', dur: 4200, run: function () {
+          hlLine(S.P, 1); var t = token('"12"', S.v.x, S.v.y); later(function () { toScreen(S.scr, t, 1, '12'); }, 200);
+        } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ scene: int(), float() and str() change the data type
+  var L = { x: 190, y: 330 }, R = { x: 400, y: 330 }, MID = { x: 295, y: 330 };
+  function sceneConvert() {
+    var S = {};
+    function slots(a, b) {
+      S.a = token(a, L.x, L.y); S.b = token(b, R.x, R.y); show(S.a, 0); show(S.b, 0); show(S.plus, 0);
+      var pa = codeAt(S.P, 0, a), pb = codeAt(S.P, 0, b);
+      at(S.a, pa.x, pa.y); at(S.b, pb.x, pb.y); show(S.a, 1); show(S.b, 1);
+      later(function () { at(S.a, L.x, L.y); at(S.b, R.x, R.y); show(S.plus, 1); }, 250);
+    }
+    function clearWork() { [S.a, S.b, S.r].forEach(function (g) { if (g) show(g, 0); }); show(S.plus, 0); S.scr.clear(); cls(S.m.b, 'badbox', false); }
+    function through(g, out, typeName) { at(g, S.m.x, S.m.y); later(function () { flipTo(g, out); tag(g, ''); }, 850); later(function () { tag(g, typeName); }, 1150); }
+    return {
+      predict: { q: 'What will <code>print("3" + 1)</code> do?', opts: ['show 4', 'show 31', 'stop with an error'], correct: 2, reveal: 2 },
+      setup: function () {
+        S.P = codePanel(20, 20, 540, 1); setLine(S.P, 0, 'print("3" + 1)');
+        S.scr = screen(600, 20, 340, 130, 2);
+        S.m = machine(L.x, 205, 'int()');
+        S.plus = fade(); text(S.plus, MID.x, MID.y, '+', 'op');
+        text(svg, 760, 300, 'A new one-line program', 'name'); S.note = svg.lastChild; show(S.note, 0); cls(S.note, 'fd', true);
+      },
+      steps: [
+        { cap: 'A one-line program: print("3" + 1).', run: function () {} },
+        { cap: '"3" has quote marks, so it is a <b>String</b>. 1 is an Integer.', dur: 3600, run: function () {
+          hlLine(S.P, 0); slots('"3"', '1'); later(function () { tag(S.a, 'String'); tag(S.b, 'Integer'); }, 1000);
+        } },
+        { cap: '+ cannot add a number to a String. The program <b>stops with an error</b>.', dur: 3800, run: function () {
+          shake([S.a, S.b]); S.scr.rows[0].textContent = 'Error'; S.scr.rows[0].setAttribute('class', 'scr t-left err');
+        } },
+        { cap: 'Fix it: put the String into <b>int()</b>.', run: function () {
+          S.scr.clear(); cls(S.a, 'bad', false); cls(S.b, 'bad', false); flipLine(S.P, 0, 'print(int("3") + 1)'); show(S.m, 1);
+        } },
+        { cap: 'int() turns the String "3" into the Integer <b>3</b>. No quote marks now.', dur: 3800, run: function () {
+          through(S.a, '3', 'Integer'); later(function () { at(S.a, L.x, L.y); }, 1500);
+        } },
+        { cap: 'Now + adds two numbers: 3 + 1 = <b>4</b>.', dur: 3600, run: function () {
+          at(S.a, MID.x, MID.y); at(S.b, MID.x, MID.y); show(S.plus, 0);
+          later(function () { show(S.a, 0); show(S.b, 0); S.r = token('4', MID.x, MID.y); tag(S.r, 'Integer'); }, 800);
+          later(function () { tag(S.r, ''); toScreen(S.scr, S.r, 0, '4'); }, 1500);
+        } },
+        { cap: '<b>float()</b> turns a String into a Real: "2.5" becomes 2.5.', dur: 4200, run: function () {
+          clearWork(); show(S.note, 1); flipLine(S.P, 0, 'print(float("2.5"))'); S.m.l.textContent = 'float()';
+          later(function () { var p = codeAt(S.P, 0, '"2.5"'); S.a = token('"2.5"', p.x, p.y); tag(S.a, 'String'); through(S.a, '2.5', 'Real'); later(function () { tag(S.a, ''); toScreen(S.scr, S.a, 0, '2.5'); }, 1700); }, 500);
+        } },
+        { cap: 'int() cannot turn "2.5" into a whole number. The program <b>stops with an error</b>.', dur: 4000, run: function () {
+          clearWork(); flipLine(S.P, 0, 'print(int("2.5"))'); S.m.l.textContent = 'int()';
+          later(function () {
+            var p = codeAt(S.P, 0, '"2.5"'); S.a = token('"2.5"', p.x, p.y); tag(S.a, 'String'); at(S.a, S.m.x, S.m.y);
+            later(function () { cls(S.m.b, 'badbox', true); shake([S.a]); S.scr.rows[0].textContent = 'Error'; S.scr.rows[0].setAttribute('class', 'scr t-left err'); }, 900);
+          }, 500);
+        } },
+        { cap: '<b>str()</b> goes the other way: the Integer 12 becomes the String "12", so + joins: <b>123</b>.', dur: 5200, run: function () {
+          clearWork(); flipLine(S.P, 0, 'print(str(12) + "3")'); S.m.l.textContent = 'str()';
+          later(function () {
+            slots('12', '"3"'); tag(S.b, 'String');
+            later(function () { tag(S.a, 'Integer'); }, 300);
+            later(function () { through(S.a, '"12"', 'String'); later(function () { at(S.a, L.x, L.y); }, 1500); }, 900);
+            later(function () { at(S.a, MID.x, MID.y); at(S.b, MID.x, MID.y); show(S.plus, 0); }, 2700);
+            later(function () { show(S.a, 0); show(S.b, 0); S.r = token('"123"', MID.x, MID.y); }, 3400);
+            later(function () { toScreen(S.scr, S.r, 0, '123'); }, 3900);
+          }, 500);
+        } },
+        { cap: 'int() and float() make numbers you can do maths with. str() makes a String.', dur: 4200, run: function () { hlLine(S.P, -1); show(S.note, 0); } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ scene: str() joins a number to text in output
+  function sceneJoin() {
+    var S = {}, L = { x: 190, y: 380 }, R = { x: 400, y: 380 }, MID = { x: 295, y: 380 };
+    return {
+      predict: { q: 'age is 12. What will <code>print("Age: " + age)</code> do?', opts: ['show Age: 12', 'show Age: 13', 'stop with an error'], correct: 2, reveal: 3 },
+      setup: function () {
+        S.P = codePanel(20, 20, 540, 3); setLine(S.P, 0, 'age = 12'); setLine(S.P, 1, 'print("Age: " + age)');
+        S.scr = screen(600, 20, 340, 150, 2);
+        S.v = variable(700, 228, 'age');
+        S.m = machine(R.x, 255, 'str()');
+        S.plus = fade(); text(S.plus, MID.x, MID.y, '+', 'op');
+      },
+      steps: [
+        { cap: 'A program that shows text and a number together.', run: function () {} },
+        { cap: 'Line 1 stores the Integer <b>12</b> in age.', run: function () {
+          hlLine(S.P, 0); var p = codeAt(S.P, 0, '12'); S.n = token('12', p.x, p.y); later(function () { at(S.n, S.v.x, S.v.y); }, 300); later(function () { tag(S.n, 'Integer'); }, 1100);
+        } },
+        { cap: 'Line 2: + is given the String "Age: " and the Integer 12.', dur: 3600, run: function () {
+          hlLine(S.P, 1); var p = codeAt(S.P, 1, '"Age: "'); S.a = token('"Age: "', p.x, p.y); S.b = token('12', S.v.x, S.v.y);
+          later(function () { at(S.a, L.x - 20, L.y); at(S.b, R.x, R.y); show(S.plus, 1); }, 300);
+          later(function () { tag(S.a, 'String'); tag(S.b, 'Integer'); }, 1100);
+        } },
+        { cap: '+ joins two Strings, but not a String and a number. The program <b>stops with an error</b>.', dur: 3800, run: function () {
+          shake([S.a, S.b]); S.scr.rows[0].textContent = 'Error'; S.scr.rows[0].setAttribute('class', 'scr t-left err');
+        } },
+        { cap: 'Fix it: put the number into <b>str()</b>.', run: function () {
+          S.scr.clear(); cls(S.a, 'bad', false); cls(S.b, 'bad', false); flipLine(S.P, 1, 'print("Age: " + str(age))'); show(S.m, 1);
+        } },
+        { cap: 'str() turns the Integer 12 into the String <b>"12"</b>.', dur: 3800, run: function () {
+          at(S.b, S.m.x, S.m.y); later(function () { flipTo(S.b, '"12"'); tag(S.b, ''); }, 850); later(function () { tag(S.b, 'String'); at(S.b, R.x, R.y); }, 1300);
+        } },
+        { cap: 'Now + joins two Strings: <b>Age: 12</b>. The space is inside the quote marks.', dur: 4000, run: function () {
+          at(S.a, MID.x, MID.y); at(S.b, MID.x, MID.y); show(S.plus, 0);
+          later(function () { show(S.a, 0); show(S.b, 0); S.r = token('"Age: 12"', MID.x, MID.y); tag(S.r, 'String'); }, 800);
+          later(function () { tag(S.r, ''); toScreen(S.scr, S.r, 0, 'Age: 12'); }, 1600);
+        } },
+        { cap: 'A comma in print also works. It shows both, with a space between.', dur: 4200, run: function () {
+          setLine(S.P, 2, 'print("Age:", age)'); hlLine(S.P, 2); later(function () { S.scr.rows[1].textContent = 'Age: 12'; }, 700);
+        } }
+      ]
+    };
+  }
+
+  // ------------------------------------------------------------ choosing a scene
+  var SCENES = {
+    print: { label: 'print', make: scenePrint },
+    input: { label: 'input()', make: sceneInput },
+    convert: { label: 'int(), float(), str()', make: sceneConvert },
+    join: { label: 'str() in output', make: sceneJoin, h: 440 }
+  };
+  function start(k) {
+    key = k; scene = SCENES[k].make(); svg.setAttribute('viewBox', '0 0 960 ' + (SCENES[k].h || 400)); steps = scene.steps; scene.pick = null; maxSeen = 0;
+    stop(); cur = 0;
+    Array.prototype.forEach.call(document.querySelectorAll('#tabs button'), function (b) { b.setAttribute('aria-selected', String(b.dataset.k === k)); });
+    predSetup();
+    render(0, false);
+  }
+  var tabs = document.getElementById('tabs');
+  Object.keys(SCENES).forEach(function (k) {
+    var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.k = k; b.textContent = SCENES[k].label;
+    b.addEventListener('click', function () { start(k); }); tabs.appendChild(b);
+  });
+  start(SCENES[params.get('scene')] ? params.get('scene') : 'print');
+
+  var main = document.getElementById('main');
+  function reportHeight() { if (window.parent === window) return; try { window.parent.postMessage({ type: 'TT_CONTENT_HEIGHT', height: Math.ceil(main.getBoundingClientRect().height) + 12 }, '*'); } catch (e) {} }
+  if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(main);
+  reportHeight();
+  window.__pyIoAnim = { steps: function () { return steps.length; }, go: function (k) { render(k, false); }, cur: function () { return cur; }, pick: function (i) { popts.children[i].click(); } };
+})();
+</script>
+</body>
+</html>

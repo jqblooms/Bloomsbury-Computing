@@ -110,14 +110,66 @@
    "content": "<div class=\"lesson-title-slide\"><p class=\"lesson-title-kicker\">Text-based Programming</p><h2 class=\"lesson-h2\">2.2: Input and Output</h2><p>Year 7</p></div><ul class=\"lesson-facts\"><li><strong>Today:</strong> write programs that ask the user, and show an answer.</li><li><strong>The big question:</strong> why can the number a user types not be added up straight away?</li></ul><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A quiz app asks your name and then says hello to you. How does the program know your name? Why can it not know it before you type?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>You type it, and the program stores it. It only knows what you give it. Today we learn how.</p></div></details>"
   },
   {
-   "id": "output",
-   "label": "Output: print Shows It",
-   "content": "<h2 class=\"lesson-h2\">Output: print Shows It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what does each line show? Why is there a space after the colon in the second one?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Hi Mia, then Score: 7. + joins two Strings with no space added, so Hi needs its own space. A comma in print shows both things with one space between them.</p></div></details><p class=\"lesson-lead\"><strong>Output</strong> is what a program shows the user. In Python, <strong>print</strong> makes output.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">name = &quot;Mia&quot;</div><div class=\"lesson-code-line\">print(&quot;Hi &quot; + name)</div><div class=\"lesson-code-line\">print(&quot;Score:&quot;, 7)</div></div></div><div><ul class=\"lesson-facts\"><li>Each print starts a new line.</li></ul></div></div>"
+   "id": "anim-print",
+   "label": "Watch: print Shows Output",
+   "type": "embedded-app",
+   "appId": "py-io-anim",
+   "embedQuery": "scene=print",
+   "embedContainerId": "y722-anim-print",
+   "content": "<h2 class=\"lesson-h2\">Watch: print Shows Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: why might some words in a program have quote marks, and some not?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Make a guess with your partner. Then watch to check.</p></div></details><div id=\"y722-anim-print\"></div>"
   },
   {
-   "id": "input",
-   "label": "Input: The User Types It",
-   "content": "<h2 class=\"lesson-h2\">Input: The User Types It</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: the user types Mia. What is on the screen at the end? Why store input() in a variable?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>What is your name? Mia, then Hello Mia. The variable keeps what the user typed, so later lines can use it.</p></div></details><p class=\"lesson-lead\"><strong>Input</strong> is data the user gives the program. In Python, <strong>input()</strong> gets it from the keyboard.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">name = input(&quot;What is your name? &quot;)</div><div class=\"lesson-code-line\">print(&quot;Hello &quot; + name)</div></div></div><div><ul class=\"lesson-facts\"><li>input() shows its question and <strong>waits</strong>.</li><li>The user types, then presses Enter.</li><li>What they typed is <strong>stored in the variable</strong>: here, name.</li><li>input() always gives a <strong>String</strong>, even when the user types digits.</li></ul></div></div>"
+   "id": "explain-print",
+   "label": "Explain It: Quote Marks or Not",
+   "type": "self-marked-response",
+   "containerId": "y722-explain-print",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Quote Marks or Not</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Where have you seen a program show your own name on the screen?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>A game shows your player name. A website says Welcome and your name. Each user sees a different name.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y722-explain-print\"></div>",
+   "items": [
+    {
+     "id": "explain-print-q",
+     "aiModel": "haiku",
+     "context": "The animation ran name = \"Mia\", print(\"Hi\"), print(name) and print(\"name\"). Line 1 stored \"Mia\" in the variable name. print(\"Hi\") showed Hi, without the quote marks. print(name) has no quote marks, so Python looked in the variable and showed Mia. print(\"name\") showed the word name. In your own words, explain why print(name) shows Mia, but print(\"name\") shows name.",
+     "prompt": "In your own words, explain why print(name) shows Mia, but print(\"name\") shows name.",
+     "marks": 2,
+     "scheme": [
+      "Without quote marks, name is a variable, so print shows the value it holds (Mia)",
+      "With quote marks, \"name\" is text / a String, so print shows it exactly as written"
+     ],
+     "guidance": "One mark for each point, in the student's own words. \"It has quote marks\" alone earns nothing.",
+     "modelAnswer": "name is a variable, so print shows what it holds: Mia. \"name\" in quote marks is text, so it is shown as written."
+    }
+   ]
+  },
+  {
+   "id": "anim-input",
+   "label": "Watch: input Gets What the User Types",
+   "type": "embedded-app",
+   "appId": "py-io-anim",
+   "embedQuery": "scene=input",
+   "embedContainerId": "y722-anim-input",
+   "content": "<h2 class=\"lesson-h2\">Watch: input Gets What the User Types</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: how could a program know your age before you tell it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>It cannot. Guess how it gets your age from you, then watch to check.</p></div></details><div id=\"y722-anim-input\"></div>"
+  },
+  {
+   "id": "explain-input",
+   "label": "Explain It: What input Gives",
+   "type": "self-marked-response",
+   "containerId": "y722-explain-input",
+   "content": "<h2 class=\"lesson-h2\">Explain It: What input Gives</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">A user types their phone number into a program. Will the program ever add 1 to it? Why?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>No. A phone number is a label, not an amount. Nobody does maths with it.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y722-explain-input\"></div>",
+   "items": [
+    {
+     "id": "explain-input-q",
+     "aiModel": "haiku",
+     "context": "The animation ran age = input(\"Age? \") and print(age). input() showed the question Age? on the screen and waited. The user typed 12 and pressed Enter. What was typed went into the variable age as the String \"12\": input() always gives a String, even when the user types digits. print(age) showed 12. The user types 12 into age = input(\"Age? \"). In your own words, explain what data type age holds, and why.",
+     "prompt": "The user types 12 into age = input(\"Age? \"). In your own words, explain what data type age holds, and why.",
+     "marks": 2,
+     "scheme": [
+      "age holds a String / text, not a number",
+      "input() always gives a String / text, even for digits"
+     ],
+     "guidance": "One mark for each point, in the student's own words. \"It holds 12\" alone earns nothing.",
+     "modelAnswer": "A String. input() always gives a String, even when the user types digits."
+    }
+   ]
   },
   {
    "id": "input-check",
@@ -165,9 +217,35 @@
    ]
   },
   {
-   "id": "convert",
-   "label": "Turn a String into a Number",
-   "content": "<h2 class=\"lesson-h2\">Turn a String into a Number</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why does Python not turn what you type into a number by itself?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Python cannot tell what you mean. \"0812345678\" is a phone number, not an amount. You choose the data type.</p></div></details><p class=\"lesson-lead\">input() <strong>always</strong> gives a String. To use it as a number, change its data type.</p><table class=\"donow-table\" style=\"font-size:17px;width:100%\"><thead><tr><th style=\"padding:6px 10px;text-align:left\">Function</th><th style=\"padding:6px 10px;text-align:left\">It turns</th><th style=\"padding:6px 10px;text-align:left\">Example</th><th style=\"padding:6px 10px;text-align:left\">Gives</th></tr></thead><tbody><tr><td style=\"padding:6px 10px;text-align:left\"><strong>int()</strong></td><td style=\"padding:6px 10px;text-align:left\">a String into an Integer</td><td style=\"padding:6px 10px;text-align:left\">int(\"12\")</td><td style=\"padding:6px 10px;text-align:left\">12</td></tr><tr><td style=\"padding:6px 10px;text-align:left\"><strong>float()</strong></td><td style=\"padding:6px 10px;text-align:left\">a String into a Real</td><td style=\"padding:6px 10px;text-align:left\">float(\"2.5\")</td><td style=\"padding:6px 10px;text-align:left\">2.5</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">float()</td><td style=\"padding:6px 10px;text-align:left\">a whole number String into a Real</td><td style=\"padding:6px 10px;text-align:left\">float(\"3\")</td><td style=\"padding:6px 10px;text-align:left\">3.0</td></tr><tr><td style=\"padding:6px 10px;text-align:left\"><strong>str()</strong></td><td style=\"padding:6px 10px;text-align:left\">a number into a String</td><td style=\"padding:6px 10px;text-align:left\">str(12)</td><td style=\"padding:6px 10px;text-align:left\">\"12\"</td></tr><tr><td style=\"padding:6px 10px;text-align:left\">int()</td><td style=\"padding:6px 10px;text-align:left\">a String with a decimal point</td><td style=\"padding:6px 10px;text-align:left\">int(\"2.5\")</td><td style=\"padding:6px 10px;text-align:left\">an <strong>error</strong>: the program stops</td></tr></tbody></table><div style=\"margin-top:8px\"><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">age = int(input(&quot;Age? &quot;))</div></div></div>"
+   "id": "anim-convert",
+   "label": "Watch: int(), float() and str()",
+   "type": "embedded-app",
+   "appId": "py-io-anim",
+   "embedQuery": "scene=convert",
+   "embedContainerId": "y722-anim-convert",
+   "content": "<h2 class=\"lesson-h2\">Watch: int(), float() and str()</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: \"3\" and 3 look almost the same. Why might Python treat them differently?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Make a guess with your partner. Then watch to check.</p></div></details><div id=\"y722-anim-convert\"></div>"
+  },
+  {
+   "id": "explain-convert",
+   "label": "Explain It: Why int()?",
+   "type": "self-marked-response",
+   "containerId": "y722-explain-convert",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Why int()?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Where else must you change something into a different form before you can use it?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Money into a different currency before you spend it abroad. Frozen food thawed before you cook it.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y722-explain-convert\"></div>",
+   "items": [
+    {
+     "id": "explain-convert-q",
+     "aiModel": "haiku",
+     "context": "The animation ran print(\"3\" + 1): \"3\" is a String and 1 is an Integer, and the program stopped with an error. Then int() turned the String \"3\" into the Integer 3, so print(int(\"3\") + 1) showed 4. float(\"2.5\") gave the Real 2.5; int(\"2.5\") stopped with an error; str(12) gave the String \"12\". In your own words, explain why print(\"3\" + 1) stops with an error, but print(int(\"3\") + 1) shows 4.",
+     "prompt": "In your own words, explain why print(\"3\" + 1) stops with an error, but print(int(\"3\") + 1) shows 4.",
+     "marks": 2,
+     "scheme": [
+      "\"3\" is a String / text, and + cannot add a String and a number",
+      "int() turns \"3\" into the Integer / number 3, so + adds 3 + 1"
+     ],
+     "guidance": "One mark for each point, in the student's own words. \"It is wrong\" earns nothing.",
+     "modelAnswer": "\"3\" is a String, so + cannot add 1 to it. int() makes it the number 3, so 3 + 1 = 4."
+    }
+   ]
   },
   {
    "id": "convert-check",
@@ -206,9 +284,35 @@
    ]
   },
   {
-   "id": "str-join",
-   "label": "Text and a Number in One Output",
-   "content": "<h2 class=\"lesson-h2\">Text and a Number in One Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Predict: what do both print lines show? Why does the first need str()?</span><span class=\"lesson-tps-reveal\">Show the worked answer</span></summary><div class=\"lesson-tps-a\"><p>Both show Age: 12. + can only join two Strings, so str(age) turns 12 into \"12\" first. A comma does not need it: it adds the space. print(\"Age: \" + age) stops with an error.</p></div></details><p class=\"lesson-lead\">Two ways to show text and a number together.</p><div class=\"lesson-do-now-columns\"><div><div class=\"lesson-code\" style=\"font-size:19px\"><div class=\"lesson-code-line\">age = 12</div><div class=\"lesson-code-line\">print(&quot;Age: &quot; + str(age))</div><div class=\"lesson-code-line\">print(&quot;Age:&quot;, age)</div></div></div><div><ul class=\"lesson-facts\"><li>Predict both lines first.</li></ul></div></div>"
+   "id": "anim-join",
+   "label": "Watch: Text and a Number in One Output",
+   "type": "embedded-app",
+   "appId": "py-io-anim",
+   "embedQuery": "scene=join",
+   "embedContainerId": "y722-anim-join",
+   "content": "<h2 class=\"lesson-h2\">Watch: Text and a Number in One Output</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Before you watch: what might + do with one String and one number?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>Make a guess with your partner. Then watch to check.</p></div></details><div id=\"y722-anim-join\"></div>"
+  },
+  {
+   "id": "explain-join",
+   "label": "Explain It: Why str()?",
+   "type": "self-marked-response",
+   "containerId": "y722-explain-join",
+   "content": "<h2 class=\"lesson-h2\">Explain It: Why str()?</h2><details class=\"lesson-tps\"><summary><span class=\"lesson-tps-steps\">Think <b>&rarr;</b> Pair <b>&rarr;</b> Share</span><span class=\"lesson-tps-q\">Why do programs show words next to a number, like \"Score: 7\"?</span><span class=\"lesson-tps-reveal\">Show the answer</span></summary><div class=\"lesson-tps-a\"><p>The words tell the user what the number means. 7 alone could mean anything.</p></div></details><p class=\"lesson-lead\">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p><div id=\"y722-explain-join\"></div>",
+   "items": [
+    {
+     "id": "explain-join-q",
+     "aiModel": "haiku",
+     "context": "The animation ran age = 12 and print(\"Age: \" + age): + was given the String \"Age: \" and the Integer 12, and the program stopped with an error. Then str(age) turned 12 into the String \"12\", so + joined two Strings and showed Age: 12. A comma, print(\"Age:\", age), also showed Age: 12. age holds 12. In your own words, explain why print(\"Age: \" + age) stops with an error, and how str() fixes it.",
+     "prompt": "age holds 12. In your own words, explain why print(\"Age: \" + age) stops with an error, and how str() fixes it.",
+     "marks": 2,
+     "scheme": [
+      "+ cannot join a String and an Integer / a number",
+      "str() turns 12 into the String \"12\", so + joins two Strings"
+     ],
+     "guidance": "One mark for each point, in the student's own words. \"Use str()\" alone earns nothing: it must make the number text.",
+     "modelAnswer": "+ cannot join text and a number. str(age) makes 12 the String \"12\", so + joins them."
+    }
+   ]
   },
   {
    "id": "pyscratch-1",

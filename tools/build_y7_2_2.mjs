@@ -33,18 +33,22 @@ const TPS = {
   'exam-types': ['What data type fits the price of a drink, like 1.25? Why?', 'A Real, because a price can have a decimal point.'],
   'exam-ipo': ['Think of the program that asks your age and shows the year you were born. Which part is the input? Which is the output? Which part works something out?', 'Input: the age you type in. Process: working out the year. Output: the year shown on the screen.'],
   'title': ['A quiz app asks your name and then says hello to you. How does the program know your name? Why can it not know it before you type?', 'You type it, and the program stores it. It only knows what you give it. Today we learn how.'],
-  'output': ['Predict: what does each line show? Why is there a space after the colon in the second one?', 'Hi Mia, then Score: 7. + joins two Strings with no space added, so Hi needs its own space. A comma in print shows both things with one space between them.'],
-  'input': ['Predict: the user types Mia. What is on the screen at the end? Why store input() in a variable?', 'What is your name? Mia, then Hello Mia. The variable keeps what the user typed, so later lines can use it.'],
+  'anim-print': ['Before you watch: why might some words in a program have quote marks, and some not?', 'Make a guess with your partner. Then watch to check.'],
+  'explain-print': ['Where have you seen a program show your own name on the screen?', 'A game shows your player name. A website says Welcome and your name. Each user sees a different name.'],
+  'anim-input': ['Before you watch: how could a program know your age before you tell it?', 'It cannot. Guess how it gets your age from you, then watch to check.'],
+  'explain-input': ['A user types their phone number into a program. Will the program ever add 1 to it? Why?', 'No. A phone number is a label, not an amount. Nobody does maths with it.'],
   'input-check': ['Why does the order of the input() lines matter?', 'The first thing typed goes into the first input(), the second into the second. Swap the lines and the values swap too.'],
   'activity-1': ['Why does the question inside input() not show when you print the variable?', 'The question is only shown to the user. The variable stores only what the user typed.'],
   'compare-input': ['What two things do you need to know before you can say what + does?', 'The data type of the value on each side of +. Then use what + does with that data type.'],
-  'convert': ['Why does Python not turn what you type into a number by itself?', 'Python cannot tell what you mean. "0812345678" is a phone number, not an amount. You choose the data type.'],
+  'anim-convert': ['Before you watch: "3" and 3 look almost the same. Why might Python treat them differently?', 'Make a guess with your partner. Then watch to check.'],
+  'explain-convert': ['Where else must you change something into a different form before you can use it?', 'Money into a different currency before you spend it abroad. Frozen food thawed before you cook it.'],
   'convert-check': ['What two questions help you choose for each value?', 'First: will the program do maths with it? Then: can it have a decimal point?'],
   'compare-error': ['Both programs do age + 1. How can one of them work and not the other?', 'Talk in pairs about the data type of age in each program. Then choose your answer.'],
   'pyscratch-1': ['Why does the error only come on the last line, and not on the line with input()?', 'input() works and stores what was typed. The problem only shows when the program tries to use it as a number.'],
   'pyscratch-2': ['Why does the check type in three different names and ages?', 'A program can work for one input by luck. Different inputs show it works every time.'],
   'pyscratch-3': ['Why might a user type a number with a decimal point here?', 'Distances are not always whole numbers. The program must work for 2.5 as well as 3.'],
-  'str-join': ['Predict: what do both print lines show? Why does the first need str()?', 'Both show Age: 12. + can only join two Strings, so str(age) turns 12 into "12" first. A comma does not need it: it adds the space. print("Age: " + age) stops with an error.'],
+  'anim-join': ['Before you watch: what might + do with one String and one number?', 'Make a guess with your partner. Then watch to check.'],
+  'explain-join': ['Why do programs show words next to a number, like "Score: 7"?', 'The words tell the user what the number means. 7 alone could mean anything.'],
   'activity-2': ['What do you check first in a line with +?', 'The data types on each side. Two numbers add. Two Strings join. A String and a number stop the program.'],
   'activity-3': ['Why is a program tested with more than one input?', 'A program can work for one input by luck. Different inputs show whether it works every time.'],
   'explain': ['What makes an explanation worth 2 marks?', 'Two connected points: why it goes wrong, and what fixes it, joined with "so" or "because".'],
@@ -54,6 +58,24 @@ const TPS = {
 };
 
 const steps = [];
+
+// Teaching animations (James, 2026-11-16, docs/lessons.md 2b): each idea is a 2D animation in the pages app PyIOAnim/
+// (registry py-io-anim, one scene each), predicted first and then played, followed straight away by an own-words
+// Explain It marked by Haiku. Every program a scene runs is run in Python here.
+const ANIMS = {};
+function anim(id, label, scene) {
+  ANIMS[id] = scene;
+  return { id, label, type: 'embedded-app', appId: 'py-io-anim', embedQuery: 'scene=' + scene, embedContainerId: `${P}-${id}`,
+    // The app itself says what to do (predict, then Play or Next), so the slide has no lead line and nothing scrolls.
+    content: `<h2 class="lesson-h2">${label}</h2>` + `<div id="${P}-${id}"></div>` };
+}
+function explain(id, label, about, part) {
+  const cid = `${P}-${id}`;
+  return { id, label, type: 'self-marked-response', containerId: cid,
+    content: `<h2 class="lesson-h2">${label}</h2>` +
+      '<p class="lesson-lead">Explain it in your own words. Press <strong>Check my answer</strong> to have it marked.</p>' + `<div id="${cid}"></div>`,
+    items: [Object.assign({ id: `${id}-q`, aiModel: 'haiku', context: about + ' ' + part.prompt }, part)] };
+}
 
 // ---------------------------------------------------------------- Do Now 1 (2.1): a real exam question, marked by Haiku
 // Cambridge IGCSE 0478/21, June 2024, Question 3, with its mark scheme. Haiku marks every check (aiModel).
@@ -109,24 +131,30 @@ steps.push({ id: 'title', label: '2.2: Input and Output',
   content: '<div class="lesson-title-slide"><p class="lesson-title-kicker">Text-based Programming</p><h2 class="lesson-h2">2.2: Input and Output</h2><p>Year 7</p></div>' +
     facts(['<strong>Today:</strong> write programs that ask the user, and show an answer.', '<strong>The big question:</strong> why can the number a user types not be added up straight away?']) });
 
-// ---------------------------------------------------------------- output
+// ---------------------------------------------------------------- output: print (PyIOAnim scene=print)
 {
-  const C = 'name = "Mia"\nprint("Hi " + name)\nprint("Score:", 7)';
-  assert((await py(C)).out.join('|') === 'Hi Mia|Score: 7', 'output');
-  steps.push({ id: 'output', label: 'Output: print Shows It',
-    content: '<h2 class="lesson-h2">Output: print Shows It</h2>' +
-      '<p class="lesson-lead"><strong>Output</strong> is what a program shows the user. In Python, <strong>print</strong> makes output.</p>' +
-      columns(code(C), facts(['Each print starts a new line.'])) });
+  const C = 'name = "Mia"\nprint("Hi")\nprint(name)\nprint("name")';
+  assert((await py(C)).out.join('|') === 'Hi|Mia|name', 'anim-print');
+  steps.push(anim('anim-print', 'Watch: print Shows Output', 'print'));
+  steps.push(explain('explain-print', 'Explain It: Quote Marks or Not',
+    'The animation ran name = "Mia", print("Hi"), print(name) and print("name"). Line 1 stored "Mia" in the variable name. print("Hi") showed Hi, without the quote marks. print(name) has no quote marks, so Python looked in the variable and showed Mia. print("name") showed the word name.',
+    { prompt: 'In your own words, explain why print(name) shows Mia, but print("name") shows name.', marks: 2,
+      scheme: ['Without quote marks, name is a variable, so print shows the value it holds (Mia)', 'With quote marks, "name" is text / a String, so print shows it exactly as written'],
+      guidance: 'One mark for each point, in the student\'s own words. "It has quote marks" alone earns nothing.',
+      modelAnswer: 'name is a variable, so print shows what it holds: Mia. "name" in quote marks is text, so it is shown as written.' }));
 }
 
-// ---------------------------------------------------------------- input
+// ---------------------------------------------------------------- input (PyIOAnim scene=input)
 {
-  const C = 'name = input("What is your name? ")\nprint("Hello " + name)';
-  assert((await py(C, ['Mia'])).out.join() === 'Hello Mia', 'input');
-  steps.push({ id: 'input', label: 'Input: The User Types It',
-    content: '<h2 class="lesson-h2">Input: The User Types It</h2>' +
-      '<p class="lesson-lead"><strong>Input</strong> is data the user gives the program. In Python, <strong>input()</strong> gets it from the keyboard.</p>' +
-      columns(code(C), facts(['input() shows its question and <strong>waits</strong>.', 'The user types, then presses Enter.', 'What they typed is <strong>stored in the variable</strong>: here, name.', 'input() always gives a <strong>String</strong>, even when the user types digits.'])) });
+  const C = 'age = input("Age? ")\nprint(age)\nprint(type(age).__name__)';
+  assert((await py(C, ['12'])).out.join('|') === '12|str', 'anim-input');
+  steps.push(anim('anim-input', 'Watch: input Gets What the User Types', 'input'));
+  steps.push(explain('explain-input', 'Explain It: What input Gives',
+    'The animation ran age = input("Age? ") and print(age). input() showed the question Age? on the screen and waited. The user typed 12 and pressed Enter. What was typed went into the variable age as the String "12": input() always gives a String, even when the user types digits. print(age) showed 12.',
+    { prompt: 'The user types 12 into age = input("Age? "). In your own words, explain what data type age holds, and why.', marks: 2,
+      scheme: ['age holds a String / text, not a number', 'input() always gives a String / text, even for digits'],
+      guidance: 'One mark for each point, in the student\'s own words. "It holds 12" alone earns nothing.',
+      modelAnswer: 'A String. input() always gives a String, even when the user types digits.' }));
 }
 
 {
@@ -163,19 +191,17 @@ steps.push(lab('activity-1', 'Activity 1: Predict with Input', 'Activity 1: Pred
   sideBySide(steps.at(-1), SIDE);
 }
 
+// ---------------------------------------------------------------- int(), float() and str() (PyIOAnim scene=convert)
 {
-  const r = await py('print(int("12") + 1)\nprint(float("2.5") * 2)\nprint(str(12) + "3")');
-  assert(r.out.join() === '13,5.0,123' && (await py('int("2.5")')).error && (await py('print(float("3"))')).out[0] === '3.0', 'convert');
-  steps.push({ id: 'convert', label: 'Turn a String into a Number',
-    content: '<h2 class="lesson-h2">Turn a String into a Number</h2>' +
-      '<p class="lesson-lead">input() <strong>always</strong> gives a String. To use it as a number, change its data type.</p>' +
-      table(['Function', 'It turns', 'Example', 'Gives'], [
-        ['<strong>int()</strong>', 'a String into an Integer', 'int("12")', '12'],
-        ['<strong>float()</strong>', 'a String into a Real', 'float("2.5")', '2.5'],
-        ['float()', 'a whole number String into a Real', 'float("3")', '3.0'],
-        ['<strong>str()</strong>', 'a number into a String', 'str(12)', '"12"'],
-        ['int()', 'a String with a decimal point', 'int("2.5")', 'an <strong>error</strong>: the program stops'],
-      ]) + '<div style="margin-top:8px">' + code('age = int(input("Age? "))') + '</div>' });
+  assert((await py('print("3" + 1)')).error && (await py('print(int("3") + 1)')).out[0] === '4' && (await py('print(float("2.5"))')).out[0] === '2.5' &&
+    (await py('print(int("2.5"))')).error && (await py('print(str(12) + "3")')).out[0] === '123', 'anim-convert');
+  steps.push(anim('anim-convert', 'Watch: int(), float() and str()', 'convert'));
+  steps.push(explain('explain-convert', 'Explain It: Why int()?',
+    'The animation ran print("3" + 1): "3" is a String and 1 is an Integer, and the program stopped with an error. Then int() turned the String "3" into the Integer 3, so print(int("3") + 1) showed 4. float("2.5") gave the Real 2.5; int("2.5") stopped with an error; str(12) gave the String "12".',
+    { prompt: 'In your own words, explain why print("3" + 1) stops with an error, but print(int("3") + 1) shows 4.', marks: 2,
+      scheme: ['"3" is a String / text, and + cannot add a String and a number', 'int() turns "3" into the Integer / number 3, so + adds 3 + 1'],
+      guidance: 'One mark for each point, in the student\'s own words. "It is wrong" earns nothing.',
+      modelAnswer: '"3" is a String, so + cannot add 1 to it. int() makes it the number 3, so 3 + 1 = 4.' }));
 }
 
 steps.push(checkStep('convert-check', 'Your Turn: Which Function?', 'Your Turn: Which Function?', 'The program asks the user for each value. Type <strong>int</strong>, <strong>float</strong> or <strong>none</strong> for what goes round input().', [
@@ -204,13 +230,17 @@ steps.push(checkStep('exam-types', 'Exam Question: Which Data Type?', 'Exam Ques
   sideBySide(steps.at(-1), SIDE);
 }
 
+// ---------------------------------------------------------------- str() in output (PyIOAnim scene=join)
 {
   const C = 'age = 12\nprint("Age: " + str(age))\nprint("Age:", age)';
-  assert((await py(C)).out.join('|') === 'Age: 12|Age: 12' && (await py('age = 12\nprint("Age: " + age)')).error, 'str-join');
-  steps.push({ id: 'str-join', label: 'Text and a Number in One Output',
-    content: '<h2 class="lesson-h2">Text and a Number in One Output</h2>' +
-      '<p class="lesson-lead">Two ways to show text and a number together.</p>' +
-      columns(code(C), facts(['Predict both lines first.'])) });
+  assert((await py(C)).out.join('|') === 'Age: 12|Age: 12' && (await py('age = 12\nprint("Age: " + age)')).error, 'anim-join');
+  steps.push(anim('anim-join', 'Watch: Text and a Number in One Output', 'join'));
+  steps.push(explain('explain-join', 'Explain It: Why str()?',
+    'The animation ran age = 12 and print("Age: " + age): + was given the String "Age: " and the Integer 12, and the program stopped with an error. Then str(age) turned 12 into the String "12", so + joined two Strings and showed Age: 12. A comma, print("Age:", age), also showed Age: 12.',
+    { prompt: 'age holds 12. In your own words, explain why print("Age: " + age) stops with an error, and how str() fixes it.', marks: 2,
+      scheme: ['+ cannot join a String and an Integer / a number', 'str() turns 12 into the String "12", so + joins two Strings'],
+      guidance: 'One mark for each point, in the student\'s own words. "Use str()" alone earns nothing: it must make the number text.',
+      modelAnswer: '+ cannot join text and a number. str(age) makes 12 the String "12", so + joins them.' }));
 }
 
 // ---------------------------------------------------------------- PyScratch Tasks (pages PyScratchTask/tasks/y7-2-2.js)
@@ -271,7 +301,7 @@ steps.push(pst('pyscratch-3', 'y7-2-2-metres', 3, 'Task 3 of 3: write the whole 
 steps.push(embed('plenary', 'Plenary: Input and Output', 'drill-y7-2-2-input-output', 'Plenary: Input and Output',
   'input(), print(), int(), float() and str(). Your progress is saved.'));
 
-const WORKED = ['output', 'input', 'str-join'];
+const WORKED = [];
 for (const st of steps) if (TPS[st.id]) st.content = st.content.replace('</h2>', '</h2>' + tps(TPS[st.id][0], `<p>${TPS[st.id][1]}</p>`, WORKED.includes(st.id) ? 'Show the worked answer' : 'Show the answer'));
 {
   const t = steps.find((s) => s.id === 'title');
@@ -288,10 +318,14 @@ assert(V('input-check', 0, 'tea and rice') && V('input-check', 0, '"tea and rice
 assert(V('convert-check', 0, 'int') && V('convert-check', 0, 'int()') && !V('convert-check', 0, 'float') && V('convert-check', 1, 'float') && V('convert-check', 1, 'float()') && !V('convert-check', 1, 'int') && V('convert-check', 2, 'none') && V('convert-check', 2, 'nothing') && !V('convert-check', 2, 'str') && !V('convert-check', 2, 'int') && V('convert-check', 3, 'int'), 'convert-check marks');
 assert(V('practice', 0, 'Total: 10.0') && !V('practice', 0, 'Total: 10') && V('practice', 1, 'Integer') && V('practice', 2, 'Total: 6.0') && !V('practice', 2, 'Total: 6') && V('practice', 3, 'error') && V('practice', 3, 'It stops with an error') && V('practice', 3, 'it crashes') && !V('practice', 3, 'Total: 5.0'), 'practice marks');
 checkLesson(steps, validators, {
-  teach: [[/\binput\b/i, 'input'], [/\boutputs?\b/i, 'output'], [/\bint\(/, 'convert'], [/\bfloat\(/, 'convert'], [/\bstr\(/, 'convert'], [/\berrors?\b/i, 'convert']],
+  teach: [[/\binput\b/i, 'anim-input'], [/\boutputs?\b/i, 'anim-print'], [/\bint\(/, 'anim-convert'], [/\bfloat\(/, 'anim-convert'], [/\bstr\(/, 'anim-convert'], [/\berrors?\b/i, 'anim-convert']],
   walkLeaks: { 'do-now': /whole|fraction|decimal|\d\.\d|\b27\b/i, 'do-now-2': /\b12\b|\bReal\b|float|6\.0/i },
   cited: ['do-now', 'exam-io', 'exam-types', 'exam-ipo'],
 });
+
+// Every animation is followed straight away by its Haiku-marked Explain It.
+Object.keys(ANIMS).forEach((id) => { const i = steps.findIndex((s) => s.id === id); const e = steps[i + 1]; assert(e && e.type === 'self-marked-response' && e.items.every((it) => it.aiModel === 'haiku' && it.scheme.length >= it.marks && it.context && it.modelAnswer), `${id} is followed by a Haiku Explain It`); });
+assert(new Set(steps.map((s) => s.id)).size === steps.length, 'step ids unique');
 
 writeLesson(ID, '2.2: Input and Output', steps, validators);
 
