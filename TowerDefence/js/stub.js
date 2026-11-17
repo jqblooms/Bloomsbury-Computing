@@ -48,7 +48,7 @@
       }
       return wait(200).then(function () { return out; });
     },
-    submit: function (qid, answer, attempt) {
+    submit: function (qid, answer, attempt, image) {
       if (!standalone) return refuse();
       var item = bank[qid];
       return wait(500).then(function () {

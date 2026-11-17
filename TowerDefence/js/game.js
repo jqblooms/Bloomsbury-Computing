@@ -568,6 +568,80 @@
     });
   }
 
+  // ---------------------------------------------------------------- pen working
+  // One drawing per question, in memory only: Try again shows it again, the next question starts blank.
+  // Strokes are kept in canvas units (PEN_W x PEN_H) and replayed for the screen and for the PNG.
+  var PEN_W = 800, PEN_H = 320, PEN_INK = 3, PEN_MARGIN = 16, PEN_MAX_SIDE = 800;
+  var pen = { key: '', strokes: [], locked: false };
+
+  function penDraw(c, strokes) {
+    c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#000'; c.fillStyle = '#000'; c.lineWidth = PEN_INK;
+    strokes.forEach(function (s) {
+      if (s.length === 1) { c.beginPath(); c.arc(s[0][0], s[0][1], PEN_INK / 2, 0, Math.PI * 2); c.fill(); return; }
+      c.beginPath(); c.moveTo(s[0][0], s[0][1]);
+      for (var i = 1; i < s.length; i++) c.lineTo(s[i][0], s[i][1]);
+      c.stroke();
+    });
+  }
+
+  function penRedraw() {
+    var cv = $('pen'); if (!cv) return;
+    var c = cv.getContext('2d');
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.fillStyle = '#fff'; c.fillRect(0, 0, PEN_W, PEN_H);
+    penDraw(c, pen.strokes);
+  }
+
+  function penMount(key) {
+    if (pen.key !== key) pen = { key: key, strokes: [], locked: false };
+    pen.locked = false;
+    var cv = $('pen'), live = null;
+    function at(e) {
+      var b = cv.getBoundingClientRect();
+      return [Math.round((e.clientX - b.left) * PEN_W / b.width * 10) / 10, Math.round((e.clientY - b.top) * PEN_H / b.height * 10) / 10];
+    }
+    cv.onpointerdown = function (e) {
+      if (pen.locked || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      e.preventDefault();
+      try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+      live = [at(e)]; pen.strokes.push(live); penRedraw();
+    };
+    cv.onpointermove = function (e) {
+      if (!live) return;
+      var p = at(e), last = live[live.length - 1];
+      if (Math.abs(p[0] - last[0]) + Math.abs(p[1] - last[1]) < 1) return;
+      live.push(p);
+      var c = cv.getContext('2d');
+      c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#000'; c.lineWidth = PEN_INK;
+      c.beginPath(); c.moveTo(last[0], last[1]); c.lineTo(p[0], p[1]); c.stroke();
+    };
+    cv.onpointerup = cv.onpointercancel = function () { live = null; };
+    $('penUndo').onclick = function () { if (!pen.locked) { pen.strokes.pop(); penRedraw(); } };
+    $('penClear').onclick = function () { if (!pen.locked) { pen.strokes = []; penRedraw(); } };
+    penRedraw();
+  }
+
+  // The drawing as a base64 PNG (no data: prefix): cropped to the ink plus a margin, longest side at most
+  // PEN_MAX_SIDE, black on white. '' when nothing is drawn.
+  function penImage() {
+    if (!pen.strokes.length) return '';
+    var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    pen.strokes.forEach(function (s) { s.forEach(function (p) {
+      x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]);
+    }); });
+    var m = PEN_MARGIN + PEN_INK;
+    x0 = Math.max(0, Math.floor(x0 - m)); y0 = Math.max(0, Math.floor(y0 - m));
+    x1 = Math.min(PEN_W, Math.ceil(x1 + m)); y1 = Math.min(PEN_H, Math.ceil(y1 + m));
+    var w = x1 - x0, h = y1 - y0, k = Math.min(1, PEN_MAX_SIDE / Math.max(w, h));
+    var out = document.createElement('canvas');
+    out.width = Math.max(1, Math.round(w * k)); out.height = Math.max(1, Math.round(h * k));
+    var c = out.getContext('2d');
+    c.fillStyle = '#fff'; c.fillRect(0, 0, out.width, out.height);
+    c.setTransform(k, 0, 0, k, -x0 * k, -y0 * k);
+    penDraw(c, pen.strokes);
+    try { return out.toDataURL('image/png').split(',')[1] || ''; } catch (e) { return ''; }
+  }
+
   function roundTotal() { return S.round.qs.reduce(function (a, q) { return a + q.marks; }, 0); }
 
   function showQuestion() {
@@ -590,13 +664,19 @@
       '<div class="cs-q-meta"><span>Question ' + (r.i + 1) + ' of ' + r.qs.length + '</span><span class="cs-pill">' + q.marks + (q.marks === 1 ? ' mark' : ' marks') + '</span>' +
       (cur.attempt === 2 ? '<span class="cs-pill is-warn">Second try: half coins</span>' : '') + '</div>' +
       '<div class="cs-q-text" id="qText"></div>' +
-      '<textarea id="ans" rows="5" placeholder="Write your working and your answer here."></textarea>' +
+      '<p class="cs-label">Show your working: draw it or type it.</p>' +
+      '<div class="cs-pen"><canvas id="pen" width="' + PEN_W + '" height="' + PEN_H + '" aria-label="Drawing box for your working"></canvas>' +
+      '<div class="cs-pen-tools"><button class="bc-btn is-outline" id="penUndo" type="button">Undo</button>' +
+      '<button class="bc-btn is-outline" id="penClear" type="button">Clear</button></div></div>' +
+      '<p class="cs-label">Your answer (you must type it):</p>' +
+      '<textarea id="ans" rows="4" placeholder="Type your final answer here. You can type working here too."></textarea>' +
       '<div class="cs-q-actions" id="qActs"><button class="bc-btn cs-big" id="submit">Submit</button></div>' +
       '<div class="cs-fb" id="fb" hidden></div></div>';
     $('qText').textContent = q.text;
     var ans = $('ans');
     ans.value = cur.answer || '';
     ans.oninput = function () { cur.answer = ans.value; };
+    penMount(r.n + '|' + r.i + '|' + q.qid);
     $('submit').onclick = submit;
     if (cur.fb) showFeedback(cur.fb);
     else setTimeout(function () { try { ans.focus(); } catch (e) {} }, 30);
@@ -607,9 +687,9 @@
     var text = ans.value.trim();
     if (!text) { ans.focus(); return; }
     cur.answer = ans.value;
-    btn2.disabled = true; btn2.textContent = 'Marking...'; ans.readOnly = true;
-    var attempt = cur.attempt;
-    call(function () { return api().submit(q.qid, cur.answer, attempt); }).then(function (res) {
+    btn2.disabled = true; btn2.textContent = 'Marking...'; ans.readOnly = true; pen.locked = true;
+    var attempt = cur.attempt, image = penImage();
+    call(function () { return api().submit(q.qid, cur.answer, attempt, image); }).then(function (res) {
       if (S.round !== r || r.cur !== cur) return;
       var max = Number(res.max) || q.marks, marks = Math.max(0, Math.min(max, Number(res.marks) || 0));
       var pay;
@@ -621,7 +701,7 @@
       if ($('submit')) { updateHud(); coinPop(pay); showFeedback(cur.fb); }
     }).catch(function (e) {
       if (!$('submit')) return;
-      btn2.disabled = false; btn2.textContent = 'Submit'; ans.readOnly = false;
+      btn2.disabled = false; btn2.textContent = 'Submit'; ans.readOnly = false; pen.locked = false;
       var fb = $('fb'); fb.hidden = false; fb.className = 'cs-fb is-bad';
       fb.innerHTML = '<p>' + esc(errText(e)) + '</p><div class="cs-q-actions"><button class="bc-btn is-text" id="skipQ">Skip this question</button></div>';
       $('skipQ').onclick = function () {
@@ -633,6 +713,7 @@
   function showFeedback(fb) {
     var r = S.round, cur = r.cur;
     $('ans').readOnly = true;
+    pen.locked = true;
     $('qActs').hidden = true;
     var box = $('fb');
     box.hidden = false;

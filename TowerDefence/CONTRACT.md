@@ -8,7 +8,7 @@ Folder: `TowerDefence/` (entry `TowerDefence/index.html`). Lesson slide embeds i
 Load the client (answers and mark schemes stay on the server):
 
 ```html
-<script src="../shared/exam-game-client.js?v=20261117a"></script>
+<script src="../shared/exam-game-client.js?v=20261117b"></script>
 ```
 
 All calls return Promises.
@@ -18,8 +18,11 @@ All calls return Promises.
   - `count`: how many questions (default 1, max 10). `maxMarks`: skip questions worth more than this.
   - No repeats for a student until they have seen the whole pool, then their weakest come first.
   - `text` is plain text with `\n` line breaks (show it in a `white-space: pre-wrap` box).
-- `ExamGame.submit(qid, answer, attempt)` -> `{ marks, max, feedback, canRetry, attempt, full }`
-  - `answer`: the student's working and answer, typed in ONE text box (textarea).
+- `ExamGame.submit(qid, answer, attempt, image)` -> `{ marks, max, feedback, canRetry, attempt, full }`
+  - `answer`: the student's working and answer, typed in ONE text box (textarea). Required: the final answer mark comes only from this text.
+  - `image` (optional): pen working as a base64 PNG string WITHOUT the `data:` prefix, or `''`. Haiku sees it with the text and gives working marks for it; the keyword fallback ignores it.
+    - Before sending: crop to the drawn area plus about 16px margin, downscale so the longest side is at most 800px, black strokes on white. Send `''` for a blank canvas.
+    - The server ignores an image over 400000 base64 characters, or one that is not a PNG, and marks the text alone. The Exam Game log shows `Image: yes` when one was used.
   - `attempt`: 1 or 2. Only one second attempt is allowed, and only when `canRetry` was true.
   - `feedback`: plain English; on a part-marked answer it explains what earns the marks without the final answer.
   - The game pays half for a second-attempt mark (`attempt === 2`).

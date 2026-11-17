@@ -3,7 +3,8 @@
 // (BC_EXAM_GAME_REQUEST -> BC_EXAM_GAME_RESULT), which runs ExamGame.gs as the signed-in student.
 //   ExamGame.sets()                           -> Promise [{ setId, title, count }]
 //   ExamGame.next(setId, { count, maxMarks }) -> Promise [{ qid, text, marks }]
-//   ExamGame.submit(qid, answer, attempt)     -> Promise { marks, max, feedback, canRetry, attempt, full }
+//   ExamGame.submit(qid, answer, attempt, image) -> Promise { marks, max, feedback, canRetry, attempt, full }
+//     image: optional pen working, a base64 PNG without the data: prefix ('' for none). AI marking only.
 // Stub mode (no shell): ?examStub=1, ExamGame.useStub(true), or automatically when the page is not in a frame.
 // Three practice questions, marked by checking the final number only.
 (function () {
@@ -40,7 +41,7 @@
     { qid: 'stub-2', marks: 2, text: 'Practice question\nConvert the two\'s complement 8-bit binary integer 11110000 to denary.\nShow all your working.', den: -16 },
     { qid: 'stub-3', marks: 1, text: 'Practice question\nGive the two\'s complement 8-bit binary integer for the denary number 9.', bin: '00001001' }
   ];
-  var stubOpen = {}, stubTurn = 0;
+  var stubOpen = {}, stubTurn = 0, stubLast = null;
   function lastBits(t) { var m = String(t).replace(/([01]{4})\s([01]{4})/g, '$1$2').match(/[01]{8}/g); return m ? m[m.length - 1] : ''; }
   function lastInt(t) { var m = String(t).replace(/−/g, '-').match(/-?\d+/g); return m ? Number(m[m.length - 1]) : NaN; }
   var STUB = {
@@ -55,6 +56,7 @@
     submit: function (p) {
       var q = STUB_QS.filter(function (x) { return x.qid === p.qid; })[0];
       if (!q) throw new Error('That question does not exist.');
+      stubLast = { qid: p.qid, answerChars: String(p.answer || '').length, imageChars: p.image ? String(p.image).length : 0 };
       var attempt = Number(p.attempt) === 2 ? 2 : 1;
       if (attempt === 2 && !stubOpen[q.qid]) throw new Error('There is no second try on this question.');
       var right = q.bin ? lastBits(p.answer) === q.bin : lastInt(p.answer) === q.den;
@@ -73,9 +75,14 @@
       opts = opts || {};
       return request('next', { setId: String(setId || ''), count: opts.count, maxMarks: opts.maxMarks });
     },
-    submit: function (qid, answer, attempt) {
-      return request('submit', { qid: String(qid || ''), answer: String(answer == null ? '' : answer), attempt: attempt === 2 ? 2 : 1 });
+    // image: the pen working as a base64 PNG without the data: prefix, or '' for none.
+    submit: function (qid, answer, attempt, image) {
+      var p = { qid: String(qid || ''), answer: String(answer == null ? '' : answer), attempt: attempt === 2 ? 2 : 1 };
+      if (typeof image === 'string' && image) { p.image = image; p.imageType = 'image/png'; }
+      return request('submit', p);
     },
+    // Stub only: what the last submit sent ({ qid, answerChars, imageChars }).
+    lastStubSubmit: function () { return stubLast; },
     useStub: function (on) { stub = on !== false; },
     isStub: function () { return stub; }
   };
