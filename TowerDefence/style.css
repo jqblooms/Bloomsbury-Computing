@@ -1,0 +1,98 @@
+/* Circuit Siege: site theme chrome around a canvas game board. */
+* { box-sizing: border-box; }
+body { margin: 0; }
+html.is-embed, html.is-embed body { background: transparent; }
+main { max-width: 1000px; margin: 0 auto; padding: 16px; }
+html.is-embed main { padding: 4px 8px; }
+
+.cs-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.cs-brand { display: flex; align-items: center; gap: 8px; color: var(--brand); font: 800 20px var(--font-display); }
+.cs-brand span { color: var(--ink); }
+html.is-embed .cs-brand { font-size: 17px; }
+.cs-hud { display: flex; gap: 10px; flex-wrap: wrap; }
+.cs-stat { position: relative; display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 14px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-soft); font-size: 15px; }
+.cs-stat svg { color: var(--brand); }
+.cs-stat b { color: var(--ink); font-size: 17px; }
+.cs-coins svg { color: var(--accent); }
+.cs-coins.is-bump { animation: cs-bump .5s ease; }
+@keyframes cs-bump { 40% { transform: scale(1.15); border-color: var(--accent); } }
+.cs-pop { position: absolute; left: 50%; top: -4px; transform: translateX(-50%); white-space: nowrap; color: var(--accent);
+  font: 800 16px var(--font-display); pointer-events: none; animation: cs-rise 1.4s ease-out forwards; }
+@keyframes cs-rise { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -34px); } }
+
+.cs-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; }
+.cs-start { max-width: 640px; margin: 0 auto; text-align: center; }
+.cs-start h1 { margin: 6px 0 8px; font-size: 30px; }
+.cs-start-art canvas { width: 100%; max-width: 480px; height: auto; display: block; margin: 0 auto; }
+.cs-lead { color: var(--ink-soft); font-size: 17px; line-height: 1.5; margin: 8px 0; }
+.cs-label { color: var(--muted); font-size: 14px; margin: 18px 0 8px; }
+.cs-choice-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.cs-pill { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line-strong);
+  background: transparent; color: var(--ink-soft); font: 500 14px var(--font-body); cursor: pointer; }
+.cs-pill.is-on { background: var(--brand-soft-strong); border-color: var(--brand); color: var(--brand-dark); }
+.cs-pill.is-warn { border-color: var(--warn-line); color: var(--warn); cursor: default; }
+.cs-diffs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cs-diff { display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: var(--radius); border: 1px solid var(--line-strong);
+  background: var(--surface-2); color: var(--ink-soft); cursor: pointer; text-align: left; font: 400 13px/1.4 var(--font-body); }
+.cs-diff b { color: var(--ink); font: 700 16px var(--font-display); }
+.cs-diff.is-on { border-color: var(--brand); background: var(--brand-soft); }
+.cs-start-go { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.bc-btn.cs-big { min-height: 44px; padding: 0 26px; font-size: 16px; font-weight: 700; }
+
+.cs-tip { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; padding: 10px 14px;
+  border-radius: var(--radius); background: var(--brand-soft); border: 1px solid var(--brand); color: var(--ink); font-size: 16px; }
+.cs-tip[hidden] { display: none; }
+.cs-board { position: relative; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line); }
+.cs-board canvas { display: block; width: 100%; height: auto; cursor: crosshair; }
+.cs-toast { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); max-width: 90%; padding: 8px 16px; border-radius: 999px;
+  background: var(--surface-3); border: 1px solid var(--line-strong); color: var(--ink); font-size: 15px; text-align: center; pointer-events: none; }
+.cs-toast[hidden] { display: none; }
+
+.cs-panel { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-top: 10px; align-items: stretch; }
+.cs-shop { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.cs-buy { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: var(--radius); border: 1px solid var(--line-strong);
+  background: var(--surface-2); color: var(--ink-soft); cursor: pointer; text-align: left; font: 400 12px/1.3 var(--font-body); }
+.cs-buy:hover { border-color: var(--brand); }
+.cs-buy.is-on { border-color: var(--brand); background: var(--brand-soft-strong); }
+.cs-buy.is-poor { opacity: .5; }
+.cs-buy .cs-icon { width: 44px; height: 44px; flex: none; }
+.cs-buy-text { display: flex; flex-direction: column; gap: 1px; }
+.cs-buy-text b { color: var(--ink); font: 700 13px var(--font-display); }
+.cs-buy-text em { color: var(--accent); font-style: normal; font-weight: 700; }
+.cs-sel { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 12px; border-radius: var(--radius);
+  border: 1px solid var(--brand); background: var(--surface-2); }
+.cs-sel .cs-icon { width: 48px; height: 48px; }
+.cs-sel > div:not(.cs-sel-acts) { display: flex; flex-direction: column; color: var(--ink-soft); font-size: 14px; flex: 1; min-width: 160px; }
+.cs-sel > div b { color: var(--ink); font: 700 16px var(--font-display); }
+.cs-sel-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.cs-controls { min-width: 220px; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+.cs-ctl-row { display: flex; gap: 8px; }
+.cs-ctl-row .bc-btn { flex: 1; white-space: nowrap; padding: 0 10px; }
+
+.cs-q { max-width: 760px; margin: 0 auto; }
+.cs-q h2 { margin: 0 0 8px; font-size: 26px; }
+.cs-q-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; color: var(--muted); font-size: 15px; margin-bottom: 14px; }
+.cs-q-text { white-space: pre-wrap; color: var(--ink); font: 600 24px/1.45 var(--font-display); margin: 0 0 18px; }
+.cs-q textarea { display: block; width: 100%; min-height: 130px; padding: 12px 14px; font: 18px/1.5 var(--font-mono); resize: vertical; }
+.cs-q-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; flex-wrap: wrap; }
+.cs-q-actions[hidden] { display: none; }
+.cs-intro { text-align: center; }
+.cs-intro .cs-q-actions { justify-content: center; }
+.cs-fb { margin-top: 16px; padding: 14px 16px; border-radius: var(--radius); border: 1px solid var(--line-strong); background: var(--surface-2); }
+.cs-fb[hidden] { display: none; }
+.cs-fb p { margin: 8px 0 0; color: var(--ink-soft); font-size: 17px; line-height: 1.5; }
+.cs-fb.is-good { border-color: var(--good-line); background: var(--good-soft); }
+.cs-fb.is-part { border-color: var(--warn-line); background: var(--warn-soft); }
+.cs-fb.is-bad { border-color: var(--bad-line); background: var(--bad-soft); }
+.cs-fb-head { display: flex; align-items: center; gap: 14px; }
+.cs-fb-head b { font: 800 22px var(--font-display); color: var(--ink); }
+.cs-coin-pop { color: var(--accent); font: 800 22px var(--font-display); animation: cs-coin 0.7s ease-out; }
+@keyframes cs-coin { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1); } }
+
+@media (max-width: 760px) {
+  .cs-panel { grid-template-columns: 1fr; }
+  .cs-shop { grid-template-columns: repeat(2, 1fr); }
+  .cs-diffs { grid-template-columns: 1fr; }
+  .cs-q-text { font-size: 20px; }
+}
