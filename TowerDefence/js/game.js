@@ -108,7 +108,7 @@
       var fixed = WANT_SET && sets.filter(function (s) { return s.setId === WANT_SET; })[0];
       if (fixed) setId = fixed.setId;
       if (!setId || !sets.some(function (s) { return s.setId === setId; })) setId = sets[0].setId;
-      drawStart(!!fixed);
+      drawStart(false); // a preset topic is only the default choice; every topic stays on the start screen
     }).catch(function (e) {
       scr.innerHTML = '<div class="cs-card cs-start"><h1>Circuit Siege</h1><p class="cs-lead">' + esc(errText(e)) + '</p><button class="bc-btn" id="retry">Try again</button></div>';
       $('retry').onclick = showStart;
@@ -201,7 +201,7 @@
       '<div class="cs-board" id="board"><canvas id="cv" width="' + W + '" height="' + H + '"></canvas><div class="cs-toast" id="toast" hidden></div></div>' +
       '<div class="cs-panel"><div class="cs-shop" id="shop"></div>' +
       '<div class="cs-controls"><button class="bc-btn cs-big" id="startWave">Start wave ' + (S.wave + 1) + '</button>' +
-      '<div class="cs-ctl-row"><button class="bc-btn is-outline" id="speed">Speed 1x</button><button class="bc-btn is-outline" id="pause" disabled>Pause</button></div>' +
+      '<div class="cs-ctl-row"><button class="bc-btn is-outline" id="speed">Speed 1x</button><button class="bc-btn is-outline" id="pause" disabled>Pause</button></div>' +
       '<button class="bc-btn is-outline" id="stormBtn" hidden>Storm: 1000 coins</button></div></div>';
     canvas = $('cv'); ctx = canvas.getContext('2d');
     bg = document.createElement('canvas'); bg.width = W; bg.height = H; Art.drawBoard(bg.getContext('2d'));
@@ -211,7 +211,7 @@
     $('startWave').onclick = startWave;
     $('speed').onclick = function () { ui.speed = ui.speed === 1 ? 2 : 1; this.textContent = 'Speed ' + ui.speed + 'x'; };
     $('pause').onclick = function () { ui.paused = !ui.paused; this.textContent = ui.paused ? 'Play' : 'Pause'; };
-    $('stormBtn').onclick = useStorm;
+    $('stormBtn').onclick = useStorm;
     $('speed').textContent = 'Speed ' + ui.speed + 'x';
     $('tipOk').onclick = tipOk;
     drawShop();
