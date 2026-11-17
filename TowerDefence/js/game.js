@@ -1,37 +1,19 @@
 // Circuit Siege: a tower defence where exam marks are the only money.
 // Bugs crawl along a copper track to the CPU. Between waves the player answers a short round of exam
-// questions (ExamGame client); every mark pays coins. No coins for kills or for finishing a wave.
+// questions (ExamGame client); full marks pay what the balance reference would have paid for that wave.
 // Timers only, never requestAnimationFrame: lessons preload the page in a hidden iframe.
 (function () {
   'use strict';
+  var D = window.CSData, Eng = window.CSEngine;
   var P = new URLSearchParams(location.search);
   var EMBED = P.get('embed') === '1';
   var WANT_SET = P.get('set') || P.get('mode') || '';
   var GOAL = Math.max(1, parseInt(P.get('goal'), 10) || 3);
-  var KEY = 'bc-circuitsiege-v1:';
-  var WAVES = 15;
-  var W = Art.W, H = Art.H;
-
-  var DIFF = {
-    easy: { name: 'Easy', lives: 30, hp: 0.8, bonus: 1.2, cash: 130, line: '30 lives. Slower bugs. Marks pay 20% extra.' },
-    medium: { name: 'Medium', lives: 20, hp: 1, bonus: 1.1, cash: 110, line: '20 lives. Marks pay 10% extra.' },
-    hard: { name: 'Hard', lives: 12, hp: 1.25, bonus: 1, cash: 100, line: '12 lives. Tough bugs.' }
-  };
-  var TOWERS = {
-    pulse: { name: 'Pulse Node', cost: 50, up: [60, 110], range: [105, 118, 132], rate: [0.55, 0.45, 0.34], dmg: [1, 1.6, 2.6], blurb: 'Fast shots at one bug.' },
-    fan: { name: 'Cooling Fan', cost: 70, up: [70, 120], range: [78, 90, 104], slow: [0.35, 0.5, 0.6], dps: [0.6, 1.1, 2], blurb: 'Slows bugs near it.' },
-    surge: { name: 'Surge Capacitor', cost: 90, up: [90, 150], range: [96, 106, 118], rate: [1.3, 1.1, 0.9], dmg: [2, 3.2, 5], splash: [46, 56, 68], blurb: 'Shocks a group of bugs.' },
-    laser: { name: 'Laser Diode', cost: 110, up: [100, 170], range: [200, 235, 275], rate: [1.6, 1.35, 1.1], dmg: [5, 9, 15], blurb: 'Long range. Cuts through armour.' }
-  };
-  var BUGS = {
-    bug: { hp: 4, spd: 48, armour: 0, r: 11, lives: 1 },
-    worm: { hp: 3, spd: 90, armour: 0, r: 8, lives: 1 },
-    swarm: { hp: 1.5, spd: 66, armour: 0, r: 7, lives: 1 },
-    trojan: { hp: 12, spd: 34, armour: 1, r: 14, lives: 2 },
-    rootkit: { hp: 70, spd: 26, armour: 1, r: 20, lives: 5 }
-  };
+  var KEY = 'bc-circuitsiege-v2:';
+  var W = D.W, H = D.H;
+  var TARGETS = ['First', 'Last', 'Strong', 'Weak'];
   var TIPS = [
-    'Bugs crawl along the copper track to your CPU. Each bug that gets in costs a life.',
+    'Bugs crawl along the copper track to your CPU. Each bug that gets in costs lives.',
     'Pick a tower below. Then click an empty spot on the board to build it.',
     'Click a tower to upgrade it or sell it. Press Start wave when you are ready.'
   ];
@@ -45,6 +27,8 @@
   function api() { return window.ExamGame; }
   function call(fn) { try { return Promise.resolve(fn()); } catch (e) { return Promise.reject(e); } }
   function errText(e) { return (e && e.message) || 'Something went wrong. Try again.'; }
+  function waves() { return D.DIFF[S.diff].rounds; }
+  function cost(base) { return D.price(base, S.diff); }
 
   function reportHeight() {
     if (window.parent === window) return;
@@ -54,49 +38,37 @@
   if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(document.getElementById('app'));
   window.addEventListener('load', reportHeight);
 
-  // ---------------------------------------------------------------- path maths
-  var SEG = [], PATH_LEN = 0;
-  (function () {
-    var p = Art.PATH;
-    for (var i = 1; i < p.length; i++) {
-      var dx = p[i][0] - p[i - 1][0], dy = p[i][1] - p[i - 1][1], len = Math.sqrt(dx * dx + dy * dy);
-      SEG.push({ x: p[i - 1][0], y: p[i - 1][1], dx: dx / len, dy: dy / len, len: len, at: PATH_LEN });
-      PATH_LEN += len;
-    }
-  })();
-  function posAt(d) {
-    for (var i = 0; i < SEG.length; i++) {
-      var s = SEG[i];
-      if (d <= s.at + s.len || i === SEG.length - 1) {
-        var k = d - s.at;
-        return { x: s.x + s.dx * k, y: s.y + s.dy * k, dir: Math.atan2(s.dy, s.dx) };
-      }
-    }
-  }
-  function distToPath(x, y) {
-    var best = 1e9;
-    SEG.forEach(function (s) {
-      var k = Math.max(0, Math.min(s.len, (x - s.x) * s.dx + (y - s.y) * s.dy));
-      var px = s.x + s.dx * k, py = s.y + s.dy * k;
-      best = Math.min(best, Math.hypot(x - px, y - py));
-    });
-    return best;
-  }
-
   // ---------------------------------------------------------------- state
   var sets = [], setId = '', setTitle = '';
   var S = null;           // saved game
-  var R = null;           // live wave: { queue, time, enemies, shots, fx }
-  var ui = { place: null, sel: -1, hover: null, speed: 1, paused: false, t: 0 };
-  var nextId = 1;
+  var R = null;           // live wave (engine world)
+  var ui = { place: null, sel: -1, hover: null, speed: 1, paused: false, t: 0, aiming: false, acc: 0 };
+  var mouse = { x: -1, y: -1, on: false };
 
   function newGame(diff) {
-    var d = DIFF[diff];
-    S = { v: 1, set: setId, diff: diff, wave: 0, cash: d.cash, lives: d.lives, towers: [], phase: 'build', round: null,
-      stats: { marks: 0, max: 0, rounds: 0, log: [] } };
+    var d = D.DIFF[diff];
+    S = { v: 2, set: setId, diff: diff, wave: 0, cash: D.START_CASH, lives: d.lives, towers: [], items: [], phase: 'build', round: null,
+      seen: {}, stats: { marks: 0, max: 0, rounds: 0, log: [] } };
     save();
   }
-  function save() { if (S) store('game:' + setId, S); }
+  function save() {
+    if (!S) return;
+    store('game:' + setId, S, function () {});
+  }
+  // towers carry runtime fields from the engine; strip them on save
+  var SAVE_FIELDS = ['type', 'x', 'y', 'lv', 'spent', 'tgt', 'aim'];
+  store = (function (orig) {
+    return function (k, v) {
+      if (v && k.indexOf('game:') === 0 && v.towers) {
+        var copy = {}; Object.keys(v).forEach(function (f) { copy[f] = v[f]; });
+        copy.towers = v.towers.map(function (t) { var o = {}; SAVE_FIELDS.forEach(function (f) { if (t[f] != null) o[f] = t[f]; }); return o; });
+        copy.items = (v.items || []).filter(function (it) { return it.type === 'pins' || it.type === 'patch' || it.type === 'fuse'; })
+          .map(function (it) { return { type: it.type, d: it.d, x: it.x, y: it.y, left: it.left, t: it.t, hits: [] }; });
+        return orig(k, copy);
+      }
+      return orig(k, v);
+    };
+  })(store);
 
   // ---------------------------------------------------------------- results for the lesson slide
   function postResult() {
@@ -106,7 +78,7 @@
     if (done) store('done:' + setId, true);
     var before = !!load('done:' + setId, false);
     var head = done ? 'Finished.' : before ? 'Finished on an earlier visit.' : 'Not finished yet.';
-    var line = ' ' + DIFF[S.diff].name + '. Waves cleared ' + S.wave + ' of ' + WAVES + '. Marks ' + S.stats.marks + ' of ' + S.stats.max + ' in ' + S.stats.rounds + ' exam rounds.';
+    var line = ' ' + D.DIFF[S.diff].name + '. Waves cleared ' + S.wave + ' of ' + waves() + '. Marks ' + S.stats.marks + ' of ' + S.stats.max + ' in ' + S.stats.rounds + ' exam rounds.';
     if (S.phase === 'over') line += ' The bugs reached the CPU.';
     if (S.phase === 'won') line += ' All waves beaten.';
     try {
@@ -115,14 +87,15 @@
     } catch (e) {}
   }
 
-  // ---------------------------------------------------------------- start screen
+  // ---------------------------------------------------------------- HUD and start screen
   function setHud(on) { $('hud').hidden = !on; if (on) updateHud(); }
+  function livesNow() { return Math.max(0, S.lives - (R ? R.livesLost : 0)); }
   function updateHud() {
     if (!S) return;
-    $('hudLives').textContent = S.lives;
+    $('hudLives').textContent = livesNow();
     $('hudCoins').textContent = S.cash;
-    $('hudWave').textContent = Math.min(WAVES, S.wave + 1);
-    $('hudWaves').textContent = WAVES;
+    $('hudWave').textContent = Math.min(waves(), S.wave + 1);
+    $('hudWaves').textContent = waves();
   }
 
   function showStart() {
@@ -142,12 +115,17 @@
     });
   }
 
+  function validSave(s) {
+    return s && s.v === 2 && D.DIFF[s.diff] && s.phase !== 'over' && s.phase !== 'won' && Array.isArray(s.towers);
+  }
+
   function drawStart(fixed) {
     var cur = sets.filter(function (s) { return s.setId === setId; })[0];
     setTitle = cur ? (cur.title || cur.setId) : setId;
     var saved = load('game:' + setId, null);
-    if (saved && (saved.phase === 'over' || saved.phase === 'won' || !DIFF[saved.diff])) saved = null;
+    if (!validSave(saved)) saved = null;
     var diff = load('diff', 'medium');
+    if (!D.DIFF[diff]) diff = 'medium';
     var h = '<div class="cs-card cs-start">' +
       '<div class="cs-start-art"><canvas id="startArt" width="480" height="110"></canvas></div>' +
       '<h1>Circuit Siege</h1>' +
@@ -160,11 +138,11 @@
       }).join('') + '</div>';
     }
     if (saved) {
-      h += '<div class="cs-start-go"><button class="bc-btn cs-big" id="cont">Continue: wave ' + Math.min(WAVES, saved.wave + 1) + ', ' + DIFF[saved.diff].name + '</button>' +
+      h += '<div class="cs-start-go"><button class="bc-btn cs-big" id="cont">Continue: wave ' + Math.min(D.DIFF[saved.diff].rounds, saved.wave + 1) + ', ' + D.DIFF[saved.diff].name + '</button>' +
         '<button class="bc-btn is-outline" id="fresh">New game</button></div>';
     } else {
-      h += '<p class="cs-label">Pick a level</p><div class="cs-diffs">' + Object.keys(DIFF).map(function (k) {
-        return '<button class="cs-diff' + (k === diff ? ' is-on' : '') + '" data-diff="' + k + '"><b>' + DIFF[k].name + '</b><span>' + DIFF[k].line + '</span></button>';
+      h += '<p class="cs-label">Pick a level</p><div class="cs-diffs">' + Object.keys(D.DIFF).map(function (k) {
+        return '<button class="cs-diff' + (k === diff ? ' is-on' : '') + '" data-diff="' + k + '"><b>' + D.DIFF[k].name + '</b><span>' + D.DIFF[k].line + '</span></button>';
       }).join('') + '</div><div class="cs-start-go"><button class="bc-btn cs-big" id="go">Start</button></div>';
     }
     h += '</div>';
@@ -176,8 +154,8 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-diff]'), function (b) {
       b.onclick = function () { store('diff', b.getAttribute('data-diff')); drawStart(fixed); };
     });
-    if ($('go')) $('go').onclick = function () { newGame(load('diff', 'medium')); enterBuild(); };
-    if ($('cont')) $('cont').onclick = function () { S = saved; resume(); };
+    if ($('go')) $('go').onclick = function () { newGame(diff); enterBuild(); };
+    if ($('cont')) $('cont').onclick = function () { S = saved; S.items = S.items || []; resume(); };
     if ($('fresh')) $('fresh').onclick = function () {
       if (this.getAttribute('data-sure')) { store('game:' + setId, null); drawStart(fixed); return; }
       this.setAttribute('data-sure', '1'); this.textContent = 'Click again to start over';
@@ -189,12 +167,10 @@
     var g = c.getContext('2d');
     g.fillStyle = '#0c1d1a'; Art.roundRect(g, 0, 0, 480, 110, 12); g.fill();
     g.strokeStyle = '#8a5a2b'; g.lineWidth = 26; g.beginPath(); g.moveTo(0, 62); g.lineTo(480, 62); g.stroke();
-    var kinds = ['bug', 'worm', 'swarm', 'trojan', 'bug'];
-    kinds.forEach(function (k, i) {
-      var b = BUGS[k];
-      Art.drawEnemy(g, { type: k, x: 40 + i * 52, y: 62, dir: 0, r: b.r, id: i, hp: 1, maxHp: 1, slowT: 0 }, i * .3);
+    ['glitch', 'worm', 'spam', 'trojan', 'packet', 'ransom'].forEach(function (k, i) {
+      Art.drawEnemy(g, { t: k, def: D.ENEMIES[k], x: 30 + i * 44, y: 62, dir: 0, r: D.ENEMIES[k].r, hp: 1, frozen: 0, glue: 0 });
     });
-    ['pulse', 'fan', 'surge', 'laser'].forEach(function (k, i) { Art.drawTower(g, k, 320 + i * 44, 24 + (i % 2) * 64, 1, Math.PI, .2, .75); });
+    ['pulse', 'cryo', 'surge', 'hydro'].forEach(function (k, i) { Art.drawTower(g, k, 320 + i * 44, 24 + (i % 2) * 64, 1, Math.PI, .2, .75); });
   }
 
   // ---------------------------------------------------------------- game screen
@@ -205,37 +181,64 @@
     enterBuild();
   }
 
+  function unlocked(type) { return D.unlockRound(type, S.diff) <= S.wave + 1; }
+  function tier4Open(type) { return D.unlockRound(type, S.diff, true) <= S.wave + 1; }
+  function unlockNews() {
+    var n = S.wave + 1, out = [];
+    if (n <= 1) return out;
+    D.TOWER_ORDER.forEach(function (k) { if (D.unlockRound(k, S.diff) === n) out.push('New: ' + D.TOWERS[k].name + '. ' + D.TOWERS[k].blurb); });
+    D.TIER4_ORDER.forEach(function (k) { if (D.unlockRound(k, S.diff, true) === n) out.push('New level 4 upgrade: ' + D.TOWERS[k].up[3].name + ' for the ' + D.TOWERS[k].name + '.'); });
+    return out;
+  }
+
   function enterBuild() {
     stopWave();
     S.phase = 'build'; save();
     setHud(true);
-    ui.place = null; ui.sel = -1;
+    ui.place = null; ui.sel = -1; ui.aiming = false;
     $('screen').innerHTML =
       '<div class="cs-tip" id="tip" hidden><span id="tipText"></span><button class="bc-btn is-tonal" id="tipOk">OK</button></div>' +
       '<div class="cs-board" id="board"><canvas id="cv" width="' + W + '" height="' + H + '"></canvas><div class="cs-toast" id="toast" hidden></div></div>' +
       '<div class="cs-panel"><div class="cs-shop" id="shop"></div>' +
       '<div class="cs-controls"><button class="bc-btn cs-big" id="startWave">Start wave ' + (S.wave + 1) + '</button>' +
-      '<div class="cs-ctl-row"><button class="bc-btn is-outline" id="speed">Speed 1x</button><button class="bc-btn is-outline" id="pause" disabled>Pause</button></div></div></div>';
+      '<div class="cs-ctl-row"><button class="bc-btn is-outline" id="speed">Speed 1x</button><button class="bc-btn is-outline" id="pause" disabled>Pause</button></div>' +
+      '<button class="bc-btn is-outline" id="stormBtn" hidden>Storm: 1000 coins</button></div></div>';
     canvas = $('cv'); ctx = canvas.getContext('2d');
     bg = document.createElement('canvas'); bg.width = W; bg.height = H; Art.drawBoard(bg.getContext('2d'));
     canvas.addEventListener('mousemove', onMove);
-    canvas.addEventListener('mouseleave', function () { ui.hover = null; });
+    canvas.addEventListener('mouseleave', function () { ui.hover = null; mouse.on = false; });
     canvas.addEventListener('click', onClick);
     $('startWave').onclick = startWave;
     $('speed').onclick = function () { ui.speed = ui.speed === 1 ? 2 : 1; this.textContent = 'Speed ' + ui.speed + 'x'; };
     $('pause').onclick = function () { ui.paused = !ui.paused; this.textContent = ui.paused ? 'Play' : 'Pause'; };
+    $('stormBtn').onclick = useStorm;
     $('speed').textContent = 'Speed ' + ui.speed + 'x';
-    $('tipOk').onclick = function () { var n = load('tut', 0); store('tut', n + 1); hideTip(); if (n + 1 < 2) showTip(n + 1); };
+    $('tipOk').onclick = tipOk;
     drawShop();
     updateHud();
+    var news = unlockNews();
     if (load('tut', 0) < 2) showTip(load('tut', 0));
     else if (load('tut', 0) === 2 && S.towers.length) showTip(2);
+    else if (news.length) note(news.join(' '));
     render();
   }
 
+  // One line at the top of the board. Tutorial lines advance; other notes just close.
+  var noteOn = false;
+  function tipOk() {
+    hideTip();
+    if (noteOn) { noteOn = false; return; }
+    var n = load('tut', 0); store('tut', n + 1);
+    if (n + 1 < 2) showTip(n + 1);
+  }
   function showTip(i) {
     if (load('tut', 0) !== i || !$('tip')) return;
-    $('tipText').textContent = TIPS[i]; $('tip').hidden = false;
+    noteOn = false; $('tipText').textContent = TIPS[i]; $('tip').hidden = false;
+  }
+  function note(text) {
+    if (!$('tip')) return;
+    noteOn = true; $('tipText').textContent = text; $('tip').hidden = false;
+    clearTimeout(note.timer); note.timer = setTimeout(function () { if (noteOn) { noteOn = false; hideTip(); } }, 9000);
   }
   function hideTip() { if ($('tip')) $('tip').hidden = true; }
   function tipDone(i) { if (load('tut', 0) === i) { store('tut', i + 1); hideTip(); } }
@@ -253,40 +256,55 @@
     wrap.classList.remove('is-bump'); void wrap.offsetWidth; wrap.classList.add('is-bump');
   }
 
+  function btn(cls, text, fn, disabled) {
+    var b = document.createElement('button'); b.className = 'bc-btn ' + (cls || ''); b.textContent = text;
+    if (disabled) b.disabled = true; else b.onclick = fn;
+    return b;
+  }
+
   function drawShop() {
     var shop = $('shop'); if (!shop) return;
     shop.innerHTML = '';
+    updateStorm();
     if (ui.sel >= 0 && S.towers[ui.sel]) {
-      var tw = S.towers[ui.sel], def = TOWERS[tw.type], up = def.up[tw.lv - 1];
+      var tw = S.towers[ui.sel], def = D.TOWERS[tw.type], up = def.up[tw.lv - 1];
       var info = document.createElement('div'); info.className = 'cs-sel';
       info.appendChild(Art.towerIcon(tw.type));
       var box = document.createElement('div');
-      box.innerHTML = '<b>' + def.name + '</b><span>Level ' + tw.lv + ' of 3. ' + def.blurb + '</span>';
+      var line;
+      if (!up) line = 'Top level.';
+      else if (tw.lv === 4 && !tier4Open(tw.type)) line = 'Next: ' + up.name + '. Opens at wave ' + D.unlockRound(tw.type, S.diff, true) + '.';
+      else line = 'Next: ' + up.name + '. ' + up.line;
+      box.innerHTML = '<b>' + def.name + '</b><span>Level ' + tw.lv + ' of 5. ' + esc(line) + '</span>';
       info.appendChild(box);
       var acts = document.createElement('div'); acts.className = 'cs-sel-acts';
-      var ub = document.createElement('button'); ub.className = 'bc-btn';
-      if (up == null) { ub.textContent = 'Top level'; ub.disabled = true; }
-      else { ub.textContent = 'Upgrade: ' + up + ' coins'; ub.disabled = S.cash < up; ub.onclick = function () { upgrade(ui.sel); }; }
-      var sb = document.createElement('button'); sb.className = 'bc-btn is-outline'; sb.textContent = 'Sell: +' + Math.floor(tw.spent * 0.7);
-      sb.onclick = function () { sell(ui.sel); };
-      var cb = document.createElement('button'); cb.className = 'bc-btn is-text'; cb.textContent = 'Done';
-      cb.onclick = function () { ui.sel = -1; drawShop(); };
-      acts.appendChild(ub); acts.appendChild(sb); acts.appendChild(cb);
+      if (up && !(tw.lv === 4 && !tier4Open(tw.type))) {
+        var c = cost(up.cost);
+        acts.appendChild(btn('', 'Upgrade: ' + c + ' coins', function () { upgrade(ui.sel); }, S.cash < c));
+      }
+      if (def.kind !== 'aura' && def.kind !== 'farm' && def.kind !== 'mortar' && def.kind !== 'cursor' && def.kind !== 'drone' && def.kind !== 'printer') {
+        acts.appendChild(btn('is-outline', 'Target: ' + TARGETS[tw.tgt | 0], function () { tw.tgt = ((tw.tgt | 0) + 1) % 4; save(); drawShop(); }));
+      }
+      if (def.kind === 'mortar') acts.appendChild(btn('is-outline', ui.aiming ? 'Click the board' : 'Move target', function () { ui.aiming = true; drawShop(); toast('Click the spot to strike.'); }));
+      acts.appendChild(btn('is-outline', 'Sell: +' + Math.floor(tw.spent * D.SELL), function () { sell(ui.sel); }));
+      acts.appendChild(btn('is-text', 'Done', function () { ui.sel = -1; ui.aiming = false; drawShop(); }));
       info.appendChild(acts);
       shop.appendChild(info);
       return;
     }
-    Object.keys(TOWERS).forEach(function (k) {
-      var d = TOWERS[k], b = document.createElement('button');
-      b.className = 'cs-buy' + (ui.place === k ? ' is-on' : '') + (S.cash < d.cost ? ' is-poor' : '');
+    D.TOWER_ORDER.forEach(function (k) {
+      if (!unlocked(k)) return;
+      var d = D.TOWERS[k], c = cost(d.cost), b = document.createElement('button');
+      b.className = 'cs-buy' + (ui.place === k ? ' is-on' : '') + (S.cash < c ? ' is-poor' : '');
+      b.title = d.blurb;
       b.appendChild(Art.towerIcon(k));
       var t = document.createElement('span'); t.className = 'cs-buy-text';
-      t.innerHTML = '<b>' + d.name + '</b><span>' + d.blurb + '</span><em>' + d.cost + ' coins</em>';
+      t.innerHTML = '<b>' + d.name + '</b><em>' + c + ' coins</em>';
       b.appendChild(t);
       b.onclick = function () {
-        if (S.cash < d.cost) { toast('Not enough coins. Earn coins with marks after the wave.'); return; }
+        if (S.cash < c) { toast('Not enough coins. Earn coins with marks after the wave.'); return; }
         ui.place = ui.place === k ? null : k; drawShop();
-        if (ui.place) toast('Click an empty spot on the board.');
+        if (ui.place) toast(d.blurb + (d.place === 'track' ? ' Click the track.' : d.place === 'water' ? ' Click the coolant.' : ' Click an empty spot.'));
       };
       shop.appendChild(b);
     });
@@ -296,160 +314,119 @@
     var r = canvas.getBoundingClientRect();
     return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height };
   }
-  function canPlace(x, y) {
-    if (x < 24 || y < 24 || x > W - 24 || y > H - 24) return false;
-    if (distToPath(x, y) < Art.TRACK / 2 + 22) return false;
-    if (Math.abs(x - Art.CPU.x) < 70 && Math.abs(y - Art.CPU.y) < 70) return false;
-    if (x < 50 && y < 150) return false;
-    return !S.towers.some(function (t) { return Math.hypot(t.x - x, t.y - y) < 44; });
+  var spot = { d: 0 };
+  function canPlace(type, x, y) {
+    var d = D.TOWERS[type];
+    if (x < 20 || y < 20 || x > W - 20 || y > H - 20) return false;
+    var dist = Eng.nearest(x, y, spot);
+    if (d.place === 'track') return dist < D.TRACK / 2 + 4 && spot.d > 10 && spot.d < Eng.PATH_LEN - 20;
+    if (d.place === 'water') { if (!Eng.inWater(x, y, 14)) return false; }
+    else {
+      if (dist < D.TRACK / 2 + 16) return false;
+      if (Eng.inWater(x, y, -18)) return false;
+      if (Math.abs(x - D.CPU.x) < 62 && Math.abs(y - D.CPU.y) < 62) return false;
+      if (x < 46 && y < 130) return false;
+    }
+    return !S.towers.some(function (t) { return Math.abs(t.x - x) < 38 && Math.abs(t.y - y) < 38; });
   }
   function towerAt(x, y) {
-    for (var i = 0; i < S.towers.length; i++) if (Math.abs(S.towers[i].x - x) < 22 && Math.abs(S.towers[i].y - y) < 22) return i;
+    for (var i = 0; i < S.towers.length; i++) if (Math.abs(S.towers[i].x - x) < 21 && Math.abs(S.towers[i].y - y) < 21) return i;
     return -1;
   }
-  function onMove(e) { ui.hover = boardXY(e); if (!R) render(); }
+  function onMove(e) { ui.hover = boardXY(e); mouse.x = ui.hover.x; mouse.y = ui.hover.y; mouse.on = true; if (!R) render(); }
   function onClick(e) {
     var p = boardXY(e);
+    if (ui.aiming && ui.sel >= 0 && S.towers[ui.sel]) {
+      S.towers[ui.sel].aim = { x: Math.round(p.x), y: Math.round(p.y) };
+      ui.aiming = false; save(); drawShop(); return;
+    }
     if (ui.place) {
-      var d = TOWERS[ui.place];
-      if (!canPlace(p.x, p.y)) { toast('You cannot build there. Pick a dark spot away from the track.'); return; }
-      if (S.cash < d.cost) { ui.place = null; drawShop(); return; }
-      S.cash -= d.cost;
-      S.towers.push({ type: ui.place, x: Math.round(p.x), y: Math.round(p.y), lv: 1, spent: d.cost, cd: 0, ang: -Math.PI / 2 });
-      if (S.cash < d.cost) ui.place = null;
+      var k = ui.place, d = D.TOWERS[k], c = cost(d.cost);
+      if (!canPlace(k, p.x, p.y)) {
+        toast(d.place === 'track' ? 'Put it on the copper track.' : d.place === 'water' ? 'This tower only goes in the blue coolant.' : 'You cannot build there. Pick a dark spot away from the track.');
+        return;
+      }
+      if (S.cash < c) { ui.place = null; drawShop(); return; }
+      S.cash -= c;
+      if (d.place === 'track') {
+        Eng.nearest(p.x, p.y, spot);
+        var it = { type: k, d: spot.d, left: d.base.pierce, hits: [] };
+        if (k === 'fuse') it.t = d.base.delay;
+        Eng.place(it, spot.d);
+        S.items.push(it);
+      } else {
+        var tw = { type: k, x: Math.round(p.x), y: Math.round(p.y), lv: 1, spent: c, tgt: 0, ang: -Math.PI / 2 };
+        if (k === 'mortar') { var aim = { x: 0, y: 0 }; Eng.place(aim, spot.d); tw.aim = { x: Math.round(aim.x), y: Math.round(aim.y) }; }
+        S.towers.push(tw);
+        if (R) R.dirty = true;
+      }
+      if (S.cash < c) ui.place = null;
       save(); updateHud(); drawShop();
       tipDone(1); showTip(2);
       return;
     }
     var i = towerAt(p.x, p.y);
-    ui.sel = i; drawShop();
+    ui.sel = i; ui.aiming = false; drawShop();
     if (i >= 0) tipDone(2);
   }
   function upgrade(i) {
-    var tw = S.towers[i], cost = TOWERS[tw.type].up[tw.lv - 1];
-    if (cost == null || S.cash < cost) return;
-    S.cash -= cost; tw.spent += cost; tw.lv++;
+    var tw = S.towers[i], up = D.TOWERS[tw.type].up[tw.lv - 1];
+    if (!up) return;
+    var c = cost(up.cost);
+    if (S.cash < c || (tw.lv === 4 && !tier4Open(tw.type))) return;
+    S.cash -= c; tw.spent += c; tw.lv++;
+    if (R) R.dirty = true;
     save(); updateHud(); drawShop();
   }
   function sell(i) {
     var tw = S.towers[i];
-    S.cash += Math.floor(tw.spent * 0.7);
-    S.towers.splice(i, 1); ui.sel = -1;
+    S.cash += Math.floor(tw.spent * D.SELL);
+    S.towers.splice(i, 1); ui.sel = -1; ui.aiming = false;
+    if (R) R.dirty = true;
     save(); updateHud(); drawShop();
+  }
+  function stormReady() {
+    return S.towers.some(function (t) { return t.type === 'booster' && D.stats('booster', t.lv).storm; });
+  }
+  function updateStorm() {
+    var b = $('stormBtn'); if (!b) return;
+    var on = stormReady();
+    b.hidden = !on;
+    if (on) { b.disabled = !R || R.stormCd > 0 || S.cash < 1000; b.textContent = R && R.stormCd > 0 ? 'Storm recharging' : 'Storm: 1000 coins'; }
+  }
+  function useStorm() {
+    if (!R || R.stormCd > 0 || S.cash < 1000 || !stormReady()) return;
+    S.cash -= 1000; Eng.storm(R); R.stormCd = 1050; save(); updateHud(); updateStorm();
   }
 
   // ---------------------------------------------------------------- waves
-  function buildWave(n) {
-    var q = [], t = 0;
-    function add(type, count, gap) { for (var i = 0; i < count; i++) { q.push({ type: type, at: t }); t += gap; } t += 0.9; }
-    add('bug', 4 + 2 * n, Math.max(0.38, 0.85 - 0.03 * n));
-    if (n >= 3) add('worm', n - 1, 0.55);
-    if (n >= 4) add('swarm', 3 * Math.floor(n / 2), 0.26);
-    if (n >= 5) add('trojan', n - 3, 1.1);
-    if (n >= 8) add('bug', n, 0.35);
-    if (n % 5 === 0) add('rootkit', n / 5, 3);
-    return q;
-  }
-
   function startWave() {
     if (R || S.phase !== 'build') return;
     hideTip();
     var n = S.wave + 1;
-    R = { n: n, queue: buildWave(n), time: 0, enemies: [], shots: [], fx: [] };
-    S.towers.forEach(function (t) { t.cd = 0; });
+    S.items.forEach(function (it) { it.hits = []; });
+    R = Eng.create({ n: n, diff: S.diff, towers: S.towers, items: S.items, mouse: mouse, seen: S.seen, onNew: newEnemy });
+    ui.acc = 0;
     $('startWave').disabled = true; $('startWave').textContent = 'Wave ' + n + ' running';
     $('pause').disabled = false; ui.paused = false; $('pause').textContent = 'Pause';
+    updateStorm();
   }
   function stopWave() { R = null; }
-
-  function spawn(type, n) {
-    var b = BUGS[type], hp = b.hp * DIFF[S.diff].hp * (1 + 0.15 * (n - 1));
-    var p = posAt(0);
-    R.enemies.push({ id: nextId++, type: type, hp: hp, maxHp: hp, spd: b.spd * (S.diff === 'easy' ? 0.9 : 1), armour: b.armour, r: b.r, lives: b.lives,
-      d: 0, x: p.x, y: p.y, dir: p.dir, slow: 0, slowT: 0 });
-  }
-
-  function hurt(e, dmg, pierce) {
-    if (e.hp <= 0) return;
-    e.hp -= pierce ? dmg : Math.max(dmg * 0.3, dmg - e.armour);
-    if (e.hp <= 0) R.fx.push({ k: 'burst', x: e.x, y: e.y, t: 0, max: 0.35, col: e.type === 'swarm' ? '#c58af9' : '#f28b82', r: e.r });
-  }
-
-  function step(dt) {
-    var i, e;
-    R.time += dt;
-    while (R.queue.length && R.queue[0].at <= R.time) spawn(R.queue.shift().type, R.n);
-    // move bugs
-    for (i = R.enemies.length - 1; i >= 0; i--) {
-      e = R.enemies[i];
-      var f = e.slowT > 0 ? 1 - e.slow : 1;
-      e.d += e.spd * f * dt;
-      e.slowT -= dt; if (e.slowT <= 0) e.slow = 0;
-      if (e.d >= PATH_LEN) {
-        S.lives = Math.max(0, S.lives - e.lives); R.enemies.splice(i, 1); updateHud();
-        R.fx.push({ k: 'ring', x: Art.CPU.x, y: Art.CPU.y, t: 0, max: 0.5, col: '#f28b82', r: 30 });
-        continue;
-      }
-      var p = posAt(e.d); e.x = p.x; e.y = p.y; e.dir = p.dir;
-    }
-    // towers
-    S.towers.forEach(function (tw) {
-      var def = TOWERS[tw.type], L = tw.lv - 1, range = def.range[L];
-      if (tw.type === 'fan') {
-        R.enemies.forEach(function (en) {
-          if (Math.hypot(en.x - tw.x, en.y - tw.y) <= range + en.r) {
-            en.slow = Math.max(en.slow, def.slow[L]); en.slowT = 0.15; hurt(en, def.dps[L] * dt, true);
-          }
-        });
-        return;
-      }
-      tw.cd -= dt;
-      var target = null;
-      R.enemies.forEach(function (en) {
-        if (en.hp > 0 && Math.hypot(en.x - tw.x, en.y - tw.y) <= range + en.r && (!target || en.d > target.d)) target = en;
-      });
-      if (!target) return;
-      tw.ang = Math.atan2(target.y - tw.y, target.x - tw.x);
-      if (tw.cd > 0) return;
-      tw.cd = def.rate[L];
-      if (tw.type === 'laser') {
-        hurt(target, def.dmg[L], true);
-        R.fx.push({ k: 'beam', x: tw.x, y: tw.y, x2: target.x, y2: target.y, t: 0, max: 0.14, col: Art.COL.laser });
-      } else {
-        R.shots.push({ type: tw.type, x: tw.x + Math.cos(tw.ang) * 18, y: tw.y + Math.sin(tw.ang) * 18, target: target, tx: target.x, ty: target.y,
-          spd: tw.type === 'pulse' ? 460 : 320, dmg: def.dmg[L], splash: def.splash ? def.splash[L] : 0 });
-      }
-    });
-    // shots
-    for (i = R.shots.length - 1; i >= 0; i--) {
-      var s = R.shots[i];
-      if (s.target && s.target.hp > 0) { s.tx = s.target.x; s.ty = s.target.y; }
-      var dx = s.tx - s.x, dy = s.ty - s.y, dist = Math.hypot(dx, dy), mv = s.spd * dt;
-      if (dist <= mv + 4) {
-        if (s.splash) {
-          R.enemies.forEach(function (en) { if (Math.hypot(en.x - s.tx, en.y - s.ty) <= s.splash + en.r) hurt(en, s.dmg, false); });
-          R.fx.push({ k: 'ring', x: s.tx, y: s.ty, t: 0, max: 0.3, col: Art.COL.surge, r: s.splash });
-        } else if (s.target && s.target.hp > 0) hurt(s.target, s.dmg, false);
-        R.shots.splice(i, 1);
-      } else { s.x += dx / dist * mv; s.y += dy / dist * mv; }
-    }
-    R.enemies = R.enemies.filter(function (en) { return en.hp > 0; });
-    R.fx = R.fx.filter(function (fx) { fx.t += dt; return fx.t < fx.max; });
-
-    if (S.lives <= 0) { gameOver(); return; }
-    if (!R.queue.length && !R.enemies.length) waveCleared();
-  }
+  function newEnemy(type) { note('New bug. ' + D.ENEMIES[type].tip); save(); }
 
   function waveCleared() {
     var n = R.n;
+    S.lives = livesNow();
     stopWave();
+    S.items = [];
     S.wave = n;
-    if (S.wave >= WAVES) { S.phase = 'won'; save(); postResult(); showEnd(true); return; }
+    if (S.wave >= waves()) { S.phase = 'won'; save(); postResult(); showEnd(true); return; }
     save();
     startRound(false);
   }
 
   function gameOver() {
+    S.lives = 0;
     stopWave();
     S.phase = 'over'; save(); postResult();
     showEnd(false);
@@ -459,7 +436,7 @@
     setHud(true);
     var st = S.stats;
     $('screen').innerHTML = '<div class="cs-card cs-start"><h1>' + (won ? 'The CPU is safe' : 'The bugs got into the CPU') + '</h1>' +
-      '<p class="cs-lead">' + (won ? 'You beat all ' + WAVES + ' waves.' : 'You cleared ' + S.wave + ' of ' + WAVES + ' waves.') + '</p>' +
+      '<p class="cs-lead">' + (won ? 'You beat all ' + waves() + ' waves.' : 'You cleared ' + S.wave + ' of ' + waves() + ' waves.') + '</p>' +
       '<p class="cs-lead">You earned ' + st.marks + ' of ' + st.max + ' marks in ' + st.rounds + ' exam rounds.</p>' +
       '<div class="cs-start-go"><button class="bc-btn cs-big" id="again">Play again</button></div></div>';
     $('again').onclick = function () { store('game:' + setId, null); S = null; showStart(); };
@@ -470,39 +447,68 @@
     if (!ctx) return;
     var t = ui.t, i;
     ctx.drawImage(bg, 0, 0);
-    if (R) R.enemies.forEach(function (e) { Art.drawEnemy(ctx, e, t); });
-    S.towers.forEach(function (tw, idx) {
-      if (idx === ui.sel) rangeRing(tw.x, tw.y, TOWERS[tw.type].range[tw.lv - 1], true);
-      if (tw.type === 'fan' && R && R.enemies.length) {
-        ctx.fillStyle = 'rgba(120, 217, 236, .06)'; ctx.beginPath(); ctx.arc(tw.x, tw.y, TOWERS.fan.range[tw.lv - 1], 0, 7); ctx.fill();
+    for (i = 0; i < S.items.length; i++) { var it = S.items[i]; Art.drawItem(ctx, it.type === 'pile' || it.type === 'pinStorm' ? (it.lead ? 'hot' : 'pins') : it.type, it.x, it.y, t); }
+    if (R) for (i = 0; i < R.enemies.length; i++) Art.drawEnemy(ctx, R.enemies[i]);
+    for (i = 0; i < S.towers.length; i++) {
+      var tw = S.towers[i];
+      if (i === ui.sel) {
+        var st = D.stats(tw.type, tw.lv);
+        if (st.range < 2000) rangeRing(tw.x, tw.y, st.range * (tw.rm || 1), true);
+        if (tw.aim) { ctx.strokeStyle = '#f28b82'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(tw.aim.x, tw.aim.y, st.scatter + 8, 0, 7); ctx.moveTo(tw.aim.x - 10, tw.aim.y); ctx.lineTo(tw.aim.x + 10, tw.aim.y); ctx.moveTo(tw.aim.x, tw.aim.y - 10); ctx.lineTo(tw.aim.x, tw.aim.y + 10); ctx.stroke(); }
       }
-      Art.drawTower(ctx, tw.type, tw.x, tw.y, tw.lv, tw.ang || 0, tw.type === 'fan' ? (R ? t : t * 0.15) : t);
-    });
+      Art.drawTower(ctx, tw.type, tw.x, tw.y, tw.lv, tw.ang || 0, tw.type === 'cryo' ? (R ? t : t * 0.15) : t);
+      if (tw.type === 'drone' && R && tw.px != null) drawPlane(tw);
+    }
     if (R) {
-      R.shots.forEach(function (s) {
-        ctx.fillStyle = Art.COL[s.type];
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.type === 'surge' ? 5 : 3.5, 0, 7); ctx.fill();
-      });
-      R.fx.forEach(function (fx) {
-        var k = fx.t / fx.max;
+      for (i = 0; i < R.shots.length; i++) drawShot(R.shots[i]);
+      for (i = 0; i < R.fx.length; i++) {
+        var fx = R.fx[i], k = fx.t / fx.max;
         ctx.globalAlpha = 1 - k;
-        if (fx.k === 'beam') { ctx.strokeStyle = fx.col; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(fx.x, fx.y); ctx.lineTo(fx.x2, fx.y2); ctx.stroke(); }
-        else if (fx.k === 'ring') { ctx.strokeStyle = fx.col; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(fx.x, fx.y, fx.r * (0.4 + k * 0.6), 0, 7); ctx.stroke(); }
-        else { ctx.fillStyle = fx.col; for (i = 0; i < 6; i++) { var a = i * 1.05; ctx.beginPath(); ctx.arc(fx.x + Math.cos(a) * fx.r * k * 1.6, fx.y + Math.sin(a) * fx.r * k * 1.6, 2.5, 0, 7); ctx.fill(); } }
+        if (fx.k === 'ring') { ctx.strokeStyle = fx.c === 1 ? '#ff7043' : fx.c === 2 ? '#78d9ec' : '#fdd663'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(fx.x, fx.y, fx.r * (0.4 + k * 0.6), 0, 7); ctx.stroke(); }
+        else if (fx.k === 'boom') { ctx.fillStyle = fx.c ? 'rgba(255, 112, 67, .45)' : 'rgba(253, 214, 99, .4)'; ctx.beginPath(); ctx.arc(fx.x, fx.y, fx.r * (0.5 + k * 0.5), 0, 7); ctx.fill(); }
+        else { ctx.fillStyle = '#fdd663'; for (var j = 0; j < 4; j++) { var a = j * 1.57 + fx.c; ctx.fillRect(fx.x + Math.cos(a) * fx.r * k * 1.4 - 1.5, fx.y + Math.sin(a) * fx.r * k * 1.4 - 1.5, 3, 3); } }
         ctx.globalAlpha = 1;
-      });
+      }
     }
     if (ui.place && ui.hover) {
-      var ok = canPlace(ui.hover.x, ui.hover.y);
-      rangeRing(ui.hover.x, ui.hover.y, TOWERS[ui.place].range[0], ok);
-      ctx.globalAlpha = ok ? 0.75 : 0.35;
-      Art.drawTower(ctx, ui.place, ui.hover.x, ui.hover.y, 1, -Math.PI / 2, 0);
-      ctx.globalAlpha = 1;
+      var ok = canPlace(ui.place, ui.hover.x, ui.hover.y), pd = D.TOWERS[ui.place];
+      if (pd.place === 'track') { ctx.globalAlpha = ok ? 0.85 : 0.35; Art.drawItem(ctx, ui.place, ui.hover.x, ui.hover.y, t); ctx.globalAlpha = 1; }
+      else {
+        var r0 = D.stats(ui.place, 1).range;
+        if (r0 < 2000) rangeRing(ui.hover.x, ui.hover.y, r0, ok);
+        ctx.globalAlpha = ok ? 0.75 : 0.35;
+        Art.drawTower(ctx, ui.place, ui.hover.x, ui.hover.y, 1, -Math.PI / 2, 0);
+        ctx.globalAlpha = 1;
+      }
     }
     if (ui.paused && R) {
       ctx.fillStyle = 'rgba(4, 6, 10, .5)'; ctx.fillRect(0, 0, W, H);
       ctx.fillStyle = '#e8eaed'; ctx.font = '800 40px Figtree, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Paused', W / 2, H / 2);
     }
+  }
+  function drawPlane(tw) {
+    ctx.save(); ctx.translate(tw.px, tw.py); ctx.rotate(tw.pa + Math.PI / 2);
+    ctx.fillStyle = '#e8eaed'; ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(-10, -12); ctx.lineTo(-5, 0); ctx.lineTo(-10, 12); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  var SHOT_COL = { dart: '#8ab4f8', ball: '#c9cdd4', tack: '#fdd663', blade: '#fde293', boomer: '#81c995', plasma: '#ff8bcb', bomb: '#fcad70',
+    glue: '#c58af9', grape: '#4fc3f7', orb: '#ff8bcb', fire: '#ff7043', wind: '#b0bec5', laser: '#f28b82', sun: '#fde293', mortar: '#f28b82' };
+  function drawShot(p) {
+    var look = p.path === 2 ? 'mortar' : p.look, col = SHOT_COL[look] || '#e8eaed';
+    if (look === 'dart' || look === 'laser' || look === 'tack' || look === 'grape') {
+      var sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 1, L = look === 'laser' ? 14 : 8;
+      ctx.strokeStyle = col; ctx.lineWidth = look === 'laser' ? 3 : 2.5;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx / sp * L, p.y - p.vy / sp * L); ctx.stroke();
+      return;
+    }
+    ctx.fillStyle = col;
+    if (look === 'boomer' || look === 'blade') {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.ang); ctx.strokeStyle = col; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(0, 0, p.rad, 0, 4); ctx.stroke(); ctx.restore(); return;
+    }
+    if (look === 'wind') { ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(p.x, p.y, p.rad * 0.8, ui.t * 10, ui.t * 10 + 4.5); ctx.stroke(); return; }
+    var r = look === 'mortar' ? 6 + Math.sin(Math.PI * Math.max(0, p.life) / 30) * 5 : Math.max(3, p.rad * (look === 'sun' ? 1 : 0.8));
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.fill();
   }
   function rangeRing(x, y, r, ok) {
     ctx.fillStyle = ok ? 'rgba(138, 180, 248, .10)' : 'rgba(242, 139, 130, .14)';
@@ -511,24 +517,36 @@
   }
 
   // One timer drives everything. It does nothing while the page is hidden (a preloaded lesson slide).
-  var last = Date.now();
+  // The logic runs in frames of 1/35 s, so the reference numbers apply unchanged.
+  var last = Date.now(), hudT = 0;
   setInterval(function () {
     var now = Date.now(), real = Math.min(0.1, (now - last) / 1000);
     last = now;
     if (hiddenNow() || !S || !ctx || !document.body.contains(canvas)) return;
     ui.t += real;
     if (R && !ui.paused) {
-      var dt = real * ui.speed;
-      while (dt > 0 && R) { var h = Math.min(0.034, dt); step(h); dt -= h; }
+      ui.acc += real * D.FPS * ui.speed;
+      var guard = 0;
+      while (ui.acc >= 1 && R && guard++ < 10) {
+        Eng.step(R); ui.acc -= 1;
+        if (S.lives - R.livesLost <= 0) { gameOver(); return; }
+        if (R.done) { waveCleared(); return; }
+      }
+      if (ui.acc > 2) ui.acc = 0;
+      hudT += real;
+      if (hudT > 0.25) { hudT = 0; updateHud(); updateStorm(); }
     }
     if (ctx && document.body.contains(canvas)) render();
   }, 33);
 
   // ---------------------------------------------------------------- exam rounds
-  // S.round = { n, qs, i, rate, paid, cur: { attempt, first, fb, answer } }
+  // S.round = { n, qs, i, rate, pool, paid, cur: { attempt, first, fb, answer } }
+  function farmIncome() {
+    return S.towers.reduce(function (a, t) { return a + (t.type === 'farm' ? D.stats('farm', t.lv).income : 0); }, 0);
+  }
   function startRound(resuming) {
     S.phase = 'questions';
-    if (!resuming || !S.round) S.round = { n: S.wave, qs: null, i: 0, rate: 0, paid: 0, cur: null, intro: true };
+    if (!resuming || !S.round) S.round = { n: S.wave, qs: null, i: 0, rate: 0, pool: 0, paid: 0, cur: null, intro: true };
     save(); setHud(true); ctx = null;
     var r = S.round;
     if (r.qs) { showQuestion(); return; }
@@ -538,7 +556,8 @@
       if (!list.length) throw new Error('No questions right now.');
       var total = list.reduce(function (a, q) { return a + (Number(q.marks) || 1); }, 0);
       r.qs = list.map(function (q) { return { qid: q.qid, text: q.text, marks: Number(q.marks) || 1 }; });
-      r.rate = (100 + r.n) * DIFF[S.diff].bonus / total;
+      r.pool = D.roundPool(r.n, S.diff, farmIncome());
+      r.rate = r.pool / total;
       save();
       showQuestion();
     }).catch(function (e) {
@@ -554,10 +573,9 @@
   function showQuestion() {
     var r = S.round;
     if (r.intro) {
-      var per = Math.round(r.rate);
       var first = !load('seenRound', false);
       $('screen').innerHTML = '<div class="cs-card cs-q cs-intro"><h2>Exam round ' + r.n + '</h2>' +
-        '<p class="cs-q-text">' + r.qs.length + ' questions, ' + roundTotal() + ' marks.\nEvery mark pays about ' + per + ' coins.</p>' +
+        '<p class="cs-q-text">' + r.qs.length + ' questions, ' + roundTotal() + ' marks.\nFull marks pays ' + (r.pool || Math.round(r.rate * roundTotal())) + ' coins.</p>' +
         (first ? '<p class="cs-lead">Marks are the only way to earn coins. Spend them on towers before the next wave.</p>' : '') +
         '<div class="cs-start-go"><button class="bc-btn cs-big" id="go">Start</button></div></div>';
       $('go').onclick = function () { r.intro = false; store('seenRound', true); save(); showQuestion(); };
@@ -585,11 +603,11 @@
   }
 
   function submit() {
-    var r = S.round, q = r.qs[r.i], cur = r.cur, ans = $('ans'), btn = $('submit');
+    var r = S.round, q = r.qs[r.i], cur = r.cur, ans = $('ans'), btn2 = $('submit');
     var text = ans.value.trim();
     if (!text) { ans.focus(); return; }
     cur.answer = ans.value;
-    btn.disabled = true; btn.textContent = 'Marking...'; ans.readOnly = true;
+    btn2.disabled = true; btn2.textContent = 'Marking...'; ans.readOnly = true;
     var attempt = cur.attempt;
     call(function () { return api().submit(q.qid, cur.answer, attempt); }).then(function (res) {
       if (S.round !== r || r.cur !== cur) return;
@@ -603,7 +621,7 @@
       if ($('submit')) { updateHud(); coinPop(pay); showFeedback(cur.fb); }
     }).catch(function (e) {
       if (!$('submit')) return;
-      btn.disabled = false; btn.textContent = 'Submit'; ans.readOnly = false;
+      btn2.disabled = false; btn2.textContent = 'Submit'; ans.readOnly = false;
       var fb = $('fb'); fb.hidden = false; fb.className = 'cs-fb is-bad';
       fb.innerHTML = '<p>' + esc(errText(e)) + '</p><div class="cs-q-actions"><button class="bc-btn is-text" id="skipQ">Skip this question</button></div>';
       $('skipQ').onclick = function () {
@@ -655,7 +673,7 @@
     $('screen').innerHTML = '<div class="cs-card cs-start"><h1>Circuit Siege</h1><p class="cs-lead">The question service did not load. Reload the page.</p></div>';
     return;
   }
-  window.__circuitSiege = { state: function () { return { S: S, R: R, ui: ui }; }, step: function (dt) { if (R) step(dt); render(); } };
+  window.__circuitSiege = { state: function () { return { S: S, R: R, ui: ui }; }, step: function () { if (R) Eng.step(R); render(); } };
   setId = WANT_SET;
   showStart();
 })();

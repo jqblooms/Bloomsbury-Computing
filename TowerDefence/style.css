@@ -50,13 +50,13 @@ html.is-embed .cs-brand { font-size: 17px; }
 .cs-toast[hidden] { display: none; }
 
 .cs-panel { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-top: 10px; align-items: stretch; }
-.cs-shop { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.cs-shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; align-content: start; }
 .cs-buy { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: var(--radius); border: 1px solid var(--line-strong);
   background: var(--surface-2); color: var(--ink-soft); cursor: pointer; text-align: left; font: 400 12px/1.3 var(--font-body); }
 .cs-buy:hover { border-color: var(--brand); }
 .cs-buy.is-on { border-color: var(--brand); background: var(--brand-soft-strong); }
 .cs-buy.is-poor { opacity: .5; }
-.cs-buy .cs-icon { width: 44px; height: 44px; flex: none; }
+.cs-buy .cs-icon { width: 40px; height: 40px; flex: none; }
 .cs-buy-text { display: flex; flex-direction: column; gap: 1px; }
 .cs-buy-text b { color: var(--ink); font: 700 13px var(--font-display); }
 .cs-buy-text em { color: var(--accent); font-style: normal; font-weight: 700; }
@@ -92,7 +92,7 @@ html.is-embed .cs-brand { font-size: 17px; }
 
 @media (max-width: 760px) {
   .cs-panel { grid-template-columns: 1fr; }
-  .cs-shop { grid-template-columns: repeat(2, 1fr); }
+  .cs-shop { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
   .cs-diffs { grid-template-columns: 1fr; }
   .cs-q-text { font-size: 20px; }
 }
